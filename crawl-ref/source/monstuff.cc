@@ -2299,6 +2299,44 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
 
 //#define DEBUG_PATHFIND
 
+// Check all grids in LoS and mark lava and/or water as seen if the
+// appropriate grids are encountered, so we later only need to do the
+// visibility check for monsters that can't pass a feature potentially in
+// the way. We don't care about shallow water as  most monsters can safely
+// cross that, and fire elementals alone aren't really worth the extra
+// hassle. :)
+static void _check_lava_water_in_sight()
+{
+    // Check the player's vision for lava or deep water,
+    // to avoid unnecessary pathfinding later.
+    you.lava_in_sight = you.water_in_sight = 0;
+    coord_def gp;
+    for (gp.y = (you.y_pos - 8); (gp.y <= you.y_pos + 8); gp.y++)
+        for (gp.x = (you.x_pos - 8); (gp.x <= you.x_pos + 8); gp.x++)
+        {
+            if (!in_bounds(gp))
+                continue;
+
+            const coord_def ep = gp - you.pos() + coord_def(9, 9);
+            if (env.show(ep))
+            {
+                dungeon_feature_type feat = grd[gp.x][gp.y];
+                if (feat == DNGN_LAVA)
+                {
+                    you.lava_in_sight = 1;
+                    if (you.water_in_sight > 0)
+                        break;
+                }
+                else if (feat == DNGN_DEEP_WATER)
+                {
+                    you.water_in_sight = 1;
+                    if (you.lava_in_sight > 0)
+                        break;
+                }
+            }
+        }
+}
+
 // If a monster can see but not directly reach the player, and then fails to
 // find a path to get him, mark all surrounding (in a radius of 2) monsters
 // of the same (or greater) movement restrictions as also being unable to
@@ -2355,7 +2393,7 @@ static void _mark_neighbours_player_unreachable(monsters *mon)
                 continue;
 
             // Same for a swimming one, around water.
-            if (you.water_in_sight && !amphibious && mons_amphibious(m))
+            if (you.water_in_sight > 0 && !amphibious && mons_amphibious(m))
                 continue;
 
             if (m->travel_target == MTRAV_NONE)
@@ -2666,14 +2704,21 @@ static void _handle_behaviour(monsters *mon)
                 bool potentially_blocking = trans_wall_block;
 
                 // Smart monsters that can fire through walls won't use
-                // pathfinding.
+                // pathfinding, and it's also not necessary if the monster
+                // is already adjacent to you.
                 if (potentially_blocking && mons_intel(mon->type) >= I_NORMAL
-                    && mons_has_los_ability(mon->type))
+                        && mons_has_los_ability(mon->type)
+                    || grid_distance(mon->x, mon->y, you.x_pos, you.y_pos) == 1)
                 {
                     potentially_blocking = false;
                 }
                 else
                 {
+                    // If we don't already know whether there's water or lava
+                    // in LoS of the player, find out now.
+                    if (you.lava_in_sight == -1 || you.water_in_sight == -1)
+                        _check_lava_water_in_sight();
+
                     // Flying monsters don't see water/lava as obstacle.
                     // Also don't use pathfinding if the monster can shoot
                     // across the blocking terrain, and is smart enough to
@@ -2684,9 +2729,9 @@ static void _handle_behaviour(monsters *mon)
                                && !mons_has_ranged_attack(mon)))
                     {
                         const habitat_type habit = mons_habitat(mon);
-                        if (you.lava_in_sight && habit != HT_LAVA
-                            || you.water_in_sight && habit != HT_WATER
-                               && !mons_amphibious(mon))
+                        if (you.lava_in_sight > 0 && habit != HT_LAVA
+                            || you.water_in_sight > 0 && habit != HT_WATER
+                               && can_move != DNGN_DEEP_WATER)
                         {
                             potentially_blocking = true;
                         }
@@ -6539,7 +6584,7 @@ bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
     const int targ_cloud_num  = env.cgrid[ targ_x ][ targ_y ];
     const int targ_cloud_type =
         targ_cloud_num == EMPTY_CLOUD ? CLOUD_NONE
-                                     : env.cloud[targ_cloud_num].type;
+                                      : env.cloud[targ_cloud_num].type;
 
     const int curr_cloud_num = env.cgrid[ monster->x ][ monster->y ];
     const int curr_cloud_type =
@@ -6731,7 +6776,6 @@ static bool _monster_move(monsters *monster)
 {
     FixedArray < bool, 3, 3 > good_move;
     int count_x, count_y, count;
-    int okmove = DNGN_SHALLOW_WATER; // what does this actually do?
 
     const habitat_type habitat = mons_habitat(monster);
     bool deep_water_available = false;
@@ -6805,13 +6849,6 @@ static bool _monster_move(monsters *monster)
     if (mmov_x == 0 && mmov_y == 0)
         return (false);
 
-    if (mons_flies(monster) != FL_NONE
-        || habitat != HT_LAND
-        || mons_amphibious(monster))
-    {
-        okmove = DNGN_MINMOVE;
-    }
-
     for (count_x = 0; count_x < 3; count_x++)
         for (count_y = 0; count_y < 3; count_y++)
         {
@@ -6840,9 +6877,8 @@ static bool _monster_move(monsters *monster)
     // Normal/smart monsters know about secret doors
     // (they _live_ in the dungeon!)
     if (grd(newpos) == DNGN_CLOSED_DOOR
-        || (grd(newpos) == DNGN_SECRET_DOOR
-            && (mons_intel(monster_index(monster)) == I_HIGH
-                || mons_intel(monster_index(monster)) == I_NORMAL)))
+        || grd(newpos) == DNGN_SECRET_DOOR
+           && mons_intel(monster_index(monster)) >= I_NORMAL)
     {
         if (mons_is_zombified(monster))
         {

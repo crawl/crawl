@@ -1364,34 +1364,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     return false;
 }
 
-static void _check_lava_water_in_sight()
-{
-    // Check the player's vision for lava or deep water,
-    // to avoid unnecessary pathfinding later.
-    you.lava_in_sight = you.water_in_sight = false;
-    coord_def gp;
-    for (gp.y = (you.y_pos - 8); (gp.y <= you.y_pos + 8); gp.y++)
-        for (gp.x = (you.x_pos - 8); (gp.x <= you.x_pos + 8); gp.x++)
-        {
-            if (!in_bounds(gp))
-                continue;
-
-            const coord_def ep = gp - you.pos() + coord_def(9, 9);
-            if (env.show(ep))
-            {
-                dungeon_feature_type feat = grd[gp.x][gp.y];
-                if (feat == DNGN_LAVA)
-                    you.lava_in_sight = true;
-                else if (feat == DNGN_DEEP_WATER)
-                    you.water_in_sight = true;
-
-                if (you.lava_in_sight && you.water_in_sight)
-                    break;
-            }
-        }
-}
-
-
 // Used to determine whether to apply the berserk penalty at end of round.
 bool apply_berserk_penalty = false;
 
@@ -1429,8 +1401,8 @@ static void _input()
     {
         if (Options.tutorial_left)
         {
-            if ( 2*you.hp < you.hp_max
-                 || 2*you.magic_points < you.max_magic_points )
+            if (2 * you.hp < you.hp_max
+                || 2 * you.magic_points < you.max_magic_points)
             {
                 tutorial_healing_reminder();
             }
@@ -1461,7 +1433,7 @@ static void _input()
             learned_something_new(TUT_RETREAT_CASTER);
     }
 
-    if ( you.cannot_act() )
+    if (you.cannot_act())
     {
         crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
                                       "repetition.");
@@ -1491,9 +1463,6 @@ static void _input()
         // To prevent spam in case the weapon can't be switched back to.
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
     }
-
-    if (!you.turn_is_over)
-        _check_lava_water_in_sight();
 
     handle_delay();
 
@@ -3082,7 +3051,7 @@ static void _world_reacts()
     stealth = check_stealth();
 
 #if 0
-    // too annoying for regular diagnostics
+    // Too annoying for regular diagnostics.
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth );
 #endif
 
@@ -3947,7 +3916,7 @@ static bool _initialise(void)
     you.unique_creatures.init(false);
     you.unique_items.init(UNIQ_NOT_EXISTS);
 
-    // set up the Lua interpreter for the dungeon builder.
+    // Set up the Lua interpreter for the dungeon builder.
     init_dungeon_lua();
 
     // Read special levels and vaults.
@@ -4039,6 +4008,10 @@ static bool _initialise(void)
     update_turn_count();
 
     trackers_init_new_level(false);
+
+    // Reset lava/water nearness check to unknown, so it'll be
+    // recalculated for the next monster that tries to reach us.
+    you.lava_in_sight = you.water_in_sight = -1;
 
     // set vision radius to player's current vision
     setLOSRadius( you.current_vision );

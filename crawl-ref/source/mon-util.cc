@@ -4124,7 +4124,10 @@ void monsters::wield_melee_weapon(int near)
     if (!weap || (!weap->cursed() && is_range_weapon(*weap)))
     {
         const item_def *alt = mslot_item(MSLOT_ALT_WEAPON);
-        if (alt && (!weap || !is_range_weapon(*alt)))
+
+        // Switch to the alternate weapon if it's not a ranged weapon, too,
+        // or switch away from our main weapon if it's a ranged weapon.
+        if (alt && !is_range_weapon(*alt) || weap && !alt)
             swap_weapons(near);
     }
 }

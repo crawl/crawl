@@ -661,7 +661,7 @@ void untransform(void)
         modify_stat(STAT_STRENGTH, -10, true,
                     "losing the dragon transformation" );
 
-        // re-check terrain now that be may no longer be flying.
+        // Re-check terrain now that be may no longer be flying.
         move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
 
         hp_downscale = 16;

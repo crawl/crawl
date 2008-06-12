@@ -118,10 +118,10 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                                             : grd[you.x_pos][you.y_pos];
     const dungeon_feature_type new_grid = grd[x][y];
 
-    // really must be clear
+    // Really must be clear.
     ASSERT( you.can_pass_through_feat( new_grid ) );
 
-    // better not be an unsubmerged monster either:
+    // Better not be an unsubmerged monster either.
     ASSERT(mgrd[x][y] == NON_MONSTER
            || mons_is_submerged( &menv[ mgrd[x][y] ] ));
 
@@ -199,7 +199,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
             }
             else
 #ifdef CLUA_BINDINGS
-                 // prompt for any trap where you might not have enough hp
+                 // Prompt for any trap where you might not have enough hp
                  // as defined in init.txt (see trapwalk.lua)
                  if (new_grid != DNGN_TRAP_MECHANICAL
                      || !clua.callbooleanfn(false, "ch_cross_trap",
@@ -222,7 +222,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
         }
     }
 
-    // only consider terrain if player is not levitating
+    // Only consider terrain if player is not levitating.
     if (!player_is_airborne())
     {
         // XXX: at some point we're going to need to fix the swimming
@@ -239,18 +239,18 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                 return (false);
             }
 
-            // have to move now so fall_into_a_pool will work
+            // Have to move now so fall_into_a_pool will work.
             you.moveto(x, y);
 
             viewwindow( true, false );
 
-            // if true, we were shifted and so we're done.
+            // If true, we were shifted and so we're done.
             if (fall_into_a_pool( entry_x, entry_y, allow_shift, new_grid ))
                 return (true);
         }
         else if (new_grid == DNGN_SHALLOW_WATER || new_grid == DNGN_DEEP_WATER)
         {
-            // safer water effects
+            // Safer water effects.
             if (you.species == SP_MERFOLK)
             {
                 if (old_grid != DNGN_SHALLOW_WATER
@@ -264,7 +264,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                     merfolk_start_swimming();
                 }
             }
-            else if ( !player_likes_water() )
+            else if (!player_likes_water())
             {
                 ASSERT( new_grid != DNGN_DEEP_WATER );
 
@@ -293,7 +293,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
         }
     }
 
-    // move the player to location
+    // Move the player to new location.
     you.moveto(x, y);
 
 #ifdef USE_TILE
@@ -310,15 +310,15 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     viewwindow( true, false );
 
     // Other Effects:
-    // clouds -- do we need this? (always seems to double up with acr.cc call)
+    // Clouds -- do we need this? (always seems to double up with acr.cc call)
     // if (is_cloud( you.x_pos, you.y_pos ))
     //     in_a_cloud();
 
-    // icy shield goes down over lava
+    // Icy shield goes down over lava.
     if (new_grid == DNGN_LAVA)
         expose_player_to_element( BEAM_LAVA );
 
-    // traps go off:
+    // Traps go off.
     if (new_grid >= DNGN_TRAP_MECHANICAL && new_grid <= DNGN_UNDISCOVERED_TRAP)
     {
         id = trap_at_xy( you.x_pos, you.y_pos );
@@ -5421,8 +5421,8 @@ void player::init()
     banished_by.clear();
 
     entering_level = false;
-    lava_in_sight  = false;
-    water_in_sight = false;
+    lava_in_sight  = -1;
+    water_in_sight = -1;
     transit_stair  = DNGN_UNSEEN;
 
     berserk_penalty = 0;
@@ -6553,7 +6553,7 @@ void player::moveto(int x, int y)
 
 void player::moveto(const coord_def &c)
 {
-    const bool real_move = c != pos();
+    const bool real_move = (c != pos());
     x_pos = c.x;
     y_pos = c.y;
     crawl_view.set_player_at(c);
@@ -6562,6 +6562,10 @@ void player::moveto(const coord_def &c)
     {
         you.reset_prev_move();
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
+
+        // Reset lava/water nearness check to unknown, so it'll be
+        // recalculated for the next monster that tries to reach us.
+        you.lava_in_sight = you.water_in_sight = -1;
     }
 }
 

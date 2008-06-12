@@ -5232,14 +5232,12 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
     else
     {
         const coord_def oldc = vgrdc;
-        const int xmarg =
-            Options.scroll_margin_x + LOS_RADIUS <= viewhalfsz.x
-            ? Options.scroll_margin_x
-            : viewhalfsz.x - LOS_RADIUS;
-        const int ymarg =
-            Options.scroll_margin_y + LOS_RADIUS <= viewhalfsz.y
-            ? Options.scroll_margin_y
-            : viewhalfsz.y - LOS_RADIUS;
+        const int xmarg = Options.scroll_margin_x + LOS_RADIUS <= viewhalfsz.x
+                            ? Options.scroll_margin_x
+                            : viewhalfsz.x - LOS_RADIUS;
+        const int ymarg = Options.scroll_margin_y + LOS_RADIUS <= viewhalfsz.y
+                            ? Options.scroll_margin_y
+                            : viewhalfsz.y - LOS_RADIUS;
 
         if (Options.view_lock_x)
             vgrdc.x = c.x;

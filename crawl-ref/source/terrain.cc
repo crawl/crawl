@@ -537,7 +537,7 @@ void dungeon_terrain_changed(const coord_def &pos,
     set_terrain_changed(pos.x, pos.y);
 }
 
-// returns true if we manage to scramble free.
+// Returns true if we manage to scramble free.
 bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
                        unsigned char terrain )
 {
@@ -646,7 +646,7 @@ bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
         ouch( INSTANT_DEATH, 0, KILLED_BY_WATER );
 
     return (false);
-}                               // end fall_into_a_pool()
+}
 
 typedef std::map<std::string, dungeon_feature_type> feat_desc_map;
 static feat_desc_map feat_desc_cache;

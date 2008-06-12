@@ -743,8 +743,8 @@ public:
   // failures
   dungeon_feature_type transit_stair;
   bool entering_level;
-  bool lava_in_sight;       // Is there lava in LoS?
-  bool water_in_sight;      // Is there deep water in LoS?
+  int lava_in_sight;       // Is there lava in LoS?
+  int water_in_sight;      // Is there deep water in LoS?
 
   // Warning: these two are quite different.
   //
