@@ -1405,9 +1405,9 @@ bool cast_call_canine_familiar(int pow, bool god_gift)
 //              postal on the caster (after taking into account
 //              chance of that happening to unskilled casters
 //              anyway).
-bool summon_elemental(int pow, bool god_gift,
-                      monster_type restricted_type,
-                      int unfriendly)
+bool cast_summon_elemental(int pow, bool god_gift,
+                           monster_type restricted_type,
+                           int unfriendly)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 

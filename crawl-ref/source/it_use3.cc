@@ -621,7 +621,7 @@ bool evoke_wielded()
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
             {
-                summon_elemental(100, false, MONS_AIR_ELEMENTAL, 4);
+                cast_summon_elemental(100, false, MONS_AIR_ELEMENTAL, 4);
                 pract = (one_chance_in(5) ? 1 : 0);
             }
             break;
@@ -631,7 +631,7 @@ bool evoke_wielded()
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
             {
-                summon_elemental(100, false, MONS_FIRE_ELEMENTAL, 4);
+                cast_summon_elemental(100, false, MONS_FIRE_ELEMENTAL, 4);
                 pract = (one_chance_in(5) ? 1 : 0);
             }
             break;
@@ -641,7 +641,7 @@ bool evoke_wielded()
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
             {
-                summon_elemental(100, false, MONS_EARTH_ELEMENTAL, 4);
+                cast_summon_elemental(100, false, MONS_EARTH_ELEMENTAL, 4);
                 pract = (one_chance_in(5) ? 1 : 0);
             }
             break;

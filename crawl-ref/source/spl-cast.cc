@@ -1445,7 +1445,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_SUMMON_ELEMENTAL:
-        if (!summon_elemental(powc, god_gift))
+        if (!cast_summon_elemental(powc, god_gift))
             return (SPRET_ABORT);
         break;
 

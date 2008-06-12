@@ -39,14 +39,6 @@ char burn_freeze(int pow, beam_type b_f);
 int corpse_rot(int power);
 
 
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: it_use3 - spell
- * *********************************************************************** */
-bool summon_elemental(int pow, bool god_gift = false,
-                      monster_type restricted_type = MONS_PROGRAM_BUG,
-                      int unfriendly = 2);
-
 struct dist;
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
@@ -133,6 +125,19 @@ bool cast_summon_swarm(int pow, bool god_gift = false,
  * called from: ability - spell
  * *********************************************************************** */
 bool cast_call_canine_familiar(int pow, bool god_gift = false);
+
+// last updated 24may2000 {dlb}
+/* ***********************************************************************
+ * called from: it_use3 - spell
+ * *********************************************************************** */
+bool cast_summon_elemental(int pow, bool god_gift = false,
+                           monster_type restricted_type = MONS_PROGRAM_BUG,
+                           int unfriendly = 2);
+
+// last updated 24may2000 {dlb}
+/* ***********************************************************************
+ * called from: ability - spell
+ * *********************************************************************** */
 bool cast_summon_ice_beast(int pow, bool god_gift = false);
 bool cast_summon_ugly_thing(int pow, bool god_gift = false);
 bool cast_summon_dragon(int pow, bool god_gift = false);
