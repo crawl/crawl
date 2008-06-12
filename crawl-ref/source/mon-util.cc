@@ -2140,6 +2140,27 @@ bool mons_is_paralysed(const monsters *m)
     return (m->has_ench(ENCH_PARALYSIS));
 }
 
+bool mons_is_petrified(const monsters *m)
+{
+    return (m->has_ench(ENCH_PETRIFIED));
+}
+
+bool mons_is_petrifying(const monsters *m)
+{
+    return (m->has_ench(ENCH_PETRIFYING));
+}
+
+bool mons_cannot_act(const monsters *m)
+{
+    return (mons_is_paralysed(m)
+            || mons_is_petrified(m) && !mons_is_petrifying(m));
+}
+
+bool mons_cannot_move(const monsters *m)
+{
+    return (mons_cannot_act(m) || mons_is_petrifying(m));
+}
+
 bool mons_is_confused(const monsters *m)
 {
     return (m->has_ench(ENCH_CONFUSION)
@@ -2181,8 +2202,7 @@ bool mons_looks_stabbable(const monsters *m)
     return (mons_behaviour_perceptible(m)
             && !mons_friendly(m)
             && (mons_is_sleeping(m)
-                || mons_is_paralysed(m)
-                || mons_is_caught(m)));
+                || mons_cannot_act(m)));
 }
 
 bool mons_looks_distracted(const monsters *m)
@@ -2192,7 +2212,8 @@ bool mons_looks_distracted(const monsters *m)
             && (m->foe != MHITYOU && !mons_is_batty(m) && !mons_neutral(m)
                 || mons_is_confused(m)
                 || mons_is_fleeing(m)
-                || mons_is_caught(m)));
+                || mons_is_caught(m)
+                || mons_is_petrifying(m)));
 }
 
 bool mons_should_fire(struct bolt &beam)
@@ -4242,8 +4263,8 @@ bool monsters::fumbles_attack(bool verbose)
 
 bool monsters::cannot_fight() const
 {
-    return mons_class_flag(type, M_NO_EXP_GAIN)
-        || mons_is_statue(type);
+    return (mons_class_flag(type, M_NO_EXP_GAIN)
+            || mons_is_statue(type));
 }
 
 void monsters::attacking(actor * /* other */)
@@ -4308,6 +4329,16 @@ bool monsters::confused() const
 bool monsters::paralysed() const
 {
     return (mons_is_paralysed(this));
+}
+
+bool monsters::cannot_act() const
+{
+    return (mons_cannot_act(this));
+}
+
+bool monsters::cannot_move() const
+{
+    return (mons_cannot_move(this));
 }
 
 bool monsters::asleep() const
@@ -4548,6 +4579,16 @@ void monsters::paralyse(int strength)
     bolt paralysis;
     paralysis.flavour = BEAM_PARALYSIS;
     mons_ench_f2(this, paralysis);
+}
+
+void monsters::petrify(int strength)
+{
+    if (mons_is_insubstantial(type))
+        return;
+
+    bolt petrif;
+    petrif.flavour = BEAM_PETRIFY;
+    mons_ench_f2(this, petrif);
 }
 
 void monsters::slow_down(int strength)
@@ -5066,6 +5107,23 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
+    case ENCH_PETRIFIED:
+        if (!quiet)
+            simple_monster_message(this, " is no longer petrified.");
+        del_ench(ENCH_PETRIFYING);
+
+        behaviour_event(this, ME_EVAL);
+        break;
+
+    case ENCH_PETRIFYING:
+        if (!has_ench(ENCH_PETRIFIED))
+            break;
+
+        if (!quiet)
+            simple_monster_message(this, " stops moving altogether!");
+        behaviour_event(this, ME_EVAL);
+        break;
+
     case ENCH_FEAR:
         snprintf( info, INFO_SIZE, " seems to regain %s courage.",
                   mons_pronoun(static_cast<monster_type>(this->type),
@@ -5308,6 +5366,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_SLOW:  case ENCH_HASTE:  case ENCH_FEAR:
         case ENCH_INVIS: case ENCH_CHARM:  case ENCH_SLEEP_WARY:
         case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
+        case ENCH_PETRIFYING: case ENCH_PETRIFIED:
         case ENCH_BATTLE_FRENZY: case ENCH_NEUTRAL:
             lose_ench_levels(i->second, levels);
             break;
@@ -5433,6 +5492,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_HASTE:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
+    case ENCH_PETRIFYING:
+    case ENCH_PETRIFIED:
     case ENCH_SICK:
     case ENCH_BACKLIGHT:
     case ENCH_ABJ:
@@ -5447,7 +5508,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_HELD:
     {
-        if (mons_is_stationary(this) || mons_is_paralysed(this)
+        if (mons_is_stationary(this) || mons_cannot_act(this)
             || this->behaviour == BEH_SLEEP)
         {
             break;
@@ -6173,7 +6234,14 @@ int monsters::action_energy(energy_use_type et) const
 
 void monsters::lose_energy(energy_use_type et, int div, int mult)
 {
-    speed_increment -= div_round_up(mult * action_energy(et), div);
+    int energy_loss  = div_round_up(mult * action_energy(et), div);
+    if (has_ench(ENCH_PETRIFYING))
+    {
+        energy_loss *= 3;
+        energy_loss /= 2;
+    }
+
+    speed_increment -= energy_loss;
 }
 
 static inline monster_type _royal_jelly_ejectable_monster()
@@ -6250,7 +6318,7 @@ static const char *enchant_names[] =
     "rot", "summon", "abj", "backlit", "charm", "fire",
     "gloshifter", "shifter", "tp", "wary", "submerged",
     "short lived", "paralysis", "sick", "sleep", "fatigue", "held",
-    "blood-lust", "neutral", "bug"
+    "blood-lust", "neutral", "petrifying", "petrified", "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6347,7 +6415,7 @@ int mon_enchant::calc_duration(const monsters *mons,
     const int deg = newdegree? newdegree : 1;
 
     // Beneficial enchantments (like Haste) should not be throttled by
-    // monster HD!
+    // monster HD via modded_speed(). Use mod_speed instead!
     switch (ench)
     {
     case ENCH_HASTE:
@@ -6364,6 +6432,12 @@ int mon_enchant::calc_duration(const monsters *mons,
         break;
     case ENCH_PARALYSIS:
         cturn = std::max(90 / modded_speed(mons, 5), 3);
+        break;
+    case ENCH_PETRIFIED:
+        cturn = std::max(8, 150 / (1 + modded_speed(mons, 5)));
+        break;
+    case ENCH_PETRIFYING:
+        cturn = 50 / _mod_speed(10, mons->speed);
         break;
     case ENCH_CONFUSION:
         cturn = std::max(100 / modded_speed(mons, 5), 3);

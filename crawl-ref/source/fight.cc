@@ -316,11 +316,11 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
             unchivalric = UCAT_INVISIBLE;
 
         // held in a net
-        if (def->has_ench(ENCH_HELD))
+        if (def->has_ench(ENCH_HELD) || def->has_ench(ENCH_PETRIFYING))
             unchivalric = UCAT_HELD_IN_NET;
 
         // paralysed
-        if (def->has_ench(ENCH_PARALYSIS))
+        if (def->cannot_act())
             unchivalric = UCAT_PARALYSED;
 
         // sleeping
@@ -1305,8 +1305,10 @@ bool melee_attack::player_hits_monster()
 
     return (to_hit >= def->ev
             || one_chance_in(20)
-            || ((mons_is_paralysed(def) || def->behaviour == BEH_SLEEP)
-                && !one_chance_in(10 + you.skills[SK_STABBING])));
+            || ((mons_cannot_act(def) || def->behaviour == BEH_SLEEP)
+                && !one_chance_in(10 + you.skills[SK_STABBING]))
+            || mons_is_petrifying(def)
+               && !one_chance_in(2 + you.skills[SK_STABBING]));
 }
 
 int melee_attack::player_stat_modify_damage(int damage)
@@ -1517,7 +1519,7 @@ int melee_attack::player_stab(int damage)
 
         if (def->behaviour == BEH_SLEEP)
         {
-            // Sleeping moster wakes up when stabbed but may be groggy
+            // Sleeping moster wakes up when stabbed but may be groggy.
             if (random2(200) <= you.skills[SK_STABBING] + you.dex)
             {
                 int stun = random2( you.dex + 1 );
@@ -1530,6 +1532,8 @@ int melee_attack::player_stab(int damage)
         }
 
         damage = player_stab_weapon_bonus(damage);
+        if (mons_is_petrified(def))
+            damage /= 3;
     }
 
     return (damage);

@@ -1997,14 +1997,21 @@ static std::string _describe_mons_enchantment(const monsters &mons,
 {
     // Suppress silly-looking combinations, even if they're
     // internally valid.
-    if (paralysed && (ench.ench == ENCH_SLOW || ench.ench == ENCH_HASTE))
+    if (paralysed && (ench.ench == ENCH_SLOW || ench.ench == ENCH_HASTE
+                      || ench.ench == ENCH_PETRIFIED
+                      || ench.ench == ENCH_PETRIFYING))
+    {
         return "";
+    }
 
     if ((ench.ench == ENCH_HASTE || ench.ench == ENCH_BATTLE_FRENZY)
         && mons.has_ench(ENCH_BERSERK))
     {
         return "";
     }
+
+    if (ench.ench == ENCH_PETRIFIED && mons.has_ench(ENCH_PETRIFYING))
+        return "";
 
     switch (ench.ench)
     {
@@ -2034,6 +2041,10 @@ static std::string _describe_mons_enchantment(const monsters &mons,
         return "covered in liquid flames";
     case ENCH_HELD:
         return "entangled in a net";
+    case ENCH_PETRIFIED:
+        return "petrified";
+    case ENCH_PETRIFYING:
+        return "slowly petrifying";
     default:
         return "";
     }

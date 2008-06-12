@@ -190,19 +190,19 @@ void ghost_demon::init_random_demon()
                || brand == SPWPN_FROST);
     }
 
-    // is demon a spellcaster?
-    // upped from one_chance_in(3)... spellcasters are more interesting
+    // Is demon a spellcaster?
+    // Upped from one_chance_in(3)... spellcasters are more interesting
     // and I expect named demons to typically have a trick or two -- bwr
     spellcaster = !one_chance_in(10);
 
-    // does demon fly?
+    // Does demon fly?
     fly = (one_chance_in(3)? FL_NONE :
            one_chance_in(5)? FL_LEVITATE : FL_FLY);
 
     // hit dice:
     xl = 10 + roll_dice(2, 10);
 
-    // does demon cycle colours?
+    // Does demon cycle colours?
     cycle_colours = one_chance_in(10);
 
     spells.init(SPELL_NO_SPELL);
@@ -225,7 +225,7 @@ void ghost_demon::init_random_demon()
         if (coinflip())
         {
             spells[3] = RANDOM_ELEMENT(search_order_misc);
-            if ( spells[3] == SPELL_DIG )
+            if (spells[3] == SPELL_DIG)
                 spells[3] = SPELL_NO_SPELL;
         }
 
@@ -457,6 +457,8 @@ spell_type ghost_demon::translate_spell(spell_type spel) const
         return (SPELL_SYMBOL_OF_TORMENT);
     case SPELL_DELAYED_FIREBALL:
         return (SPELL_FIREBALL);
+    case SPELL_PETRIFY:
+        return (SPELL_PARALYSE);
     default:
         break;
     }

@@ -1053,7 +1053,8 @@ enum floor_property_type
     FPROP_NONE,          // 0
     FPROP_SANCTUARY_1,
     FPROP_SANCTUARY_2,
-    FPROP_BLOODY // bloody floor and sanctuary are exclusive, so that's okay
+    FPROP_BLOODY
+    // Bloody floor and sanctuary are exclusive, so that's okay.
 };
 
 enum duration_type
@@ -1116,6 +1117,8 @@ enum duration_type
     DUR_SAGE,
     DUR_TELEPATHY,
     DUR_VITALISATION_CHAIN,
+    DUR_PETRIFIED,
+
     NUM_DURATIONS
 };
 
@@ -1147,9 +1150,11 @@ enum enchant_type
     ENCH_SICK,
     ENCH_SLEEPY,         // Monster can't wake until this wears off.
     ENCH_FATIGUE,        // Post-berserk fatigue.
-    ENCH_HELD,           // caught in a net
-    ENCH_BATTLE_FRENZY,  // Monster is in a battle frenzy
+    ENCH_HELD,           // Caught in a net.
+    ENCH_BATTLE_FRENZY,  // 25 -- Monster is in a battle frenzy
     ENCH_NEUTRAL,
+    ENCH_PETRIFYING,
+    ENCH_PETRIFIED,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.
@@ -2585,28 +2590,29 @@ enum spell_type
     SPELL_EXCRUCIATING_WOUNDS,
     SPELL_PORTAL_PROJECTILE,
     SPELL_SUMMON_UGLY_THING,           //  205
+    SPELL_PETRIFY,
 
     // Mostly monster-only spells after this point:
     SPELL_HELLFIRE_BURST,
     SPELL_VAMPIRE_SUMMON,
     SPELL_BRAIN_FEED,
-    SPELL_FAKE_RAKSHASA_SUMMON,
-    SPELL_STEAM_BALL,                  //  210
+    SPELL_FAKE_RAKSHASA_SUMMON,        //  210
+    SPELL_STEAM_BALL,
     SPELL_SUMMON_UFETUBUS,
     SPELL_SUMMON_BEAST,
     SPELL_ENERGY_BOLT,
-    SPELL_POISON_SPLASH,
-    SPELL_SUMMON_UNDEAD,               //  215
+    SPELL_POISON_SPLASH,               //  215
+    SPELL_SUMMON_UNDEAD,
     SPELL_CANTRIP,
     SPELL_QUICKSILVER_BOLT,
     SPELL_METAL_SPLINTERS,
-    SPELL_MIASMA,
-    SPELL_SUMMON_DRAKES,               //  220
+    SPELL_MIASMA,                      //  220
+    SPELL_SUMMON_DRAKES,
     SPELL_BLINK_OTHER,
     SPELL_SUMMON_MUSHROOMS,
 
     NUM_SPELLS,
-    SPELL_NO_SPELL = 250               //  255 - added 22jan2000 {dlb}
+    SPELL_NO_SPELL = 250
 };
 
 enum slot_select_mode

@@ -4198,9 +4198,8 @@ static bool _beogh_followers_abandon_you()
         const int xend   = MIN(GXM - 1, you.x_pos + 9);
 
         // monster check
-        for ( int y = ystart; y <= yend; ++y )
-        {
-            for ( int x = xstart; x <= xend; ++x )
+        for (int y = ystart; y <= yend; ++y)
+            for (int x = xstart; x <= xend; ++x)
             {
                 const unsigned short targ_monst = mgrd[x][y];
                 if ( targ_monst != NON_MONSTER )
@@ -4213,11 +4212,11 @@ static bool _beogh_followers_abandon_you()
                         if (mons_player_visible(monster)
                             && !mons_is_sleeping(monster)
                             && !mons_is_confused(monster)
-                            && !mons_is_paralysed(monster))
+                            && !mons_cannot_act(monster))
                         {
                             const int hd = monster->hit_dice;
 
-                            // during penance followers get a saving throw
+                            // During penance followers get a saving throw.
                             if (random2((you.piety-you.penance[GOD_BEOGH])/18) +
                                 random2(you.skills[SK_INVOCATIONS]-6)
                                   > random2(hd) + hd + random2(5))
@@ -4227,7 +4226,7 @@ static bool _beogh_followers_abandon_you()
 
                             monster->attitude = ATT_HOSTILE;
                             behaviour_event(monster, ME_ALERT, MHITYOU);
-                            // for now CREATED_FRIENDLY stays
+                            // For now CREATED_FRIENDLY stays.
 
                             if (player_monster_visible(monster))
                                 num_reconvert++; // only visible ones
@@ -4237,7 +4236,6 @@ static bool _beogh_followers_abandon_you()
                     }
                 }
             }
-        }
     }
 
     if (reconvert) // maybe all of them are invisible

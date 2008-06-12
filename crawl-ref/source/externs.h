@@ -158,6 +158,7 @@ public:
     virtual void poison(actor *attacker, int amount = 1) = 0;
     virtual bool sicken(int amount) = 0;
     virtual void paralyse(int strength) = 0;
+    virtual void petrify(int strength) = 0;
     virtual void slow_down(int strength) = 0;
     virtual void confuse(int strength) = 0;
     virtual void rot(actor *attacker, int rotlevel, int immediate_rot) = 0;
@@ -199,6 +200,7 @@ public:
     virtual bool airborne() const;
 
     virtual bool paralysed() const = 0;
+    virtual bool cannot_move() const = 0;
     virtual bool confused() const = 0;
     virtual bool caught() const = 0;
     virtual bool asleep() const { return (false); }
@@ -209,7 +211,7 @@ public:
 
     virtual bool incapacitated() const
     {
-        return paralysed() || asleep() || confused() || caught();
+        return cannot_move() || asleep() || confused() || caught();
     }
 
     virtual int holy_aura() const
@@ -855,6 +857,7 @@ public:
     void poison(actor *agent, int amount = 1);
     bool sicken(int amount);
     void paralyse(int str);
+    void petrify(int str);
     void slow_down(int str);
     void confuse(int strength);
     void rot(actor *agent, int rotlevel, int immed_rot);
@@ -883,6 +886,7 @@ public:
     bool permanent_flight() const;
 
     bool paralysed() const;
+    bool cannot_move() const;
     bool confused() const;
     bool caught() const;
     bool backlit(bool check_haloed = true) const;
@@ -1215,6 +1219,8 @@ public:
     bool can_see(const actor *target) const;
     bool is_icy() const;
     bool paralysed() const;
+    bool cannot_move() const;
+    bool cannot_act() const;
     bool confused() const;
     bool caught() const;
     bool asleep() const;
@@ -1231,6 +1237,7 @@ public:
     void poison(actor *agent, int amount = 1);
     bool sicken(int strength);
     void paralyse(int str);
+    void petrify(int str);
     void slow_down(int str);
     void confuse(int strength);
     void rot(actor *agent, int rotlevel, int immed_rot);

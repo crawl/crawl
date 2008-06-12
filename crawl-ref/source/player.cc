@@ -2234,7 +2234,7 @@ int player_evasion()
     int ev = 10 + 2 * size_factor;
 
     // Repulsion fields and size are all that matters when paralysed.
-    if (you.paralysed())
+    if (you.cannot_move())
     {
         ev = 2 + size_factor;
         if (player_mutation_level(MUT_REPULSION_FIELD) > 0)
@@ -2611,18 +2611,18 @@ bool player_beheld_by( const monsters *mon )
     return false;
 }
 
-// removes a monster from the list of beholders
-// if force == true (e.g. monster dead) or one of
-// several cases is met
+// Removes a monster from the list of beholders if force == true
+// (e.g. monster dead) or one of several cases is met.
 void update_beholders(const monsters *mon, bool force)
 {
-    if (!player_beheld_by(mon)) // not in list?
+    if (!player_beheld_by(mon)) // Not in list?
         return;
 
-    // is an update even necessary?
+    // Is an update even necessary?
     if (force || !mons_near(mon) || mons_friendly(mon) || mon->submerged()
-        || mon->has_ench(ENCH_CONFUSION) || mons_is_paralysed(mon) || mon->asleep()
-        || silenced(you.x_pos, you.y_pos) || silenced(mon->x, mon->y))
+        || mon->has_ench(ENCH_CONFUSION) || mons_cannot_move(mon)
+        || mon->asleep() || silenced(you.x_pos, you.y_pos)
+        || silenced(mon->x, mon->y))
     {
         const std::vector<int> help = you.beheld_by;
         you.beheld_by.clear();
@@ -3875,9 +3875,11 @@ void display_char_status()
     if (you.duration[DUR_BEHELD])
         mpr( "You are beheld." );
 
-    // how exactly did you get to show the status?
+    // How exactly did you get to show the status?
     if (you.duration[DUR_PARALYSIS])
         mpr( "You are paralysed." );
+    if (you.duration[DUR_PETRIFIED])
+        mpr( "You are petrified." );
     if (you.duration[DUR_SLEEP])
         mpr( "You are asleep." );
 
@@ -5346,7 +5348,7 @@ level_id actor::shaft_dest() const
 
 bool actor::airborne() const
 {
-    return (is_levitating() || (flight_mode() == FL_FLY && !paralysed()));
+    return (is_levitating() || (flight_mode() == FL_FLY && !cannot_move()));
 }
 
 bool actor::can_pass_through(int x, int y) const
@@ -5770,7 +5772,7 @@ bool player::cannot_speak() const
     if (silenced(x_pos, y_pos))
         return (true);
 
-    if (you.duration[DUR_PARALYSIS]) // we allow talking during sleep ;)
+    if (you.cannot_move()) // we allow talking during sleep ;)
         return (true);
 
     // No transform that prevents the player from speaking yet.
@@ -6088,6 +6090,11 @@ int player::warding() const
 bool player::paralysed() const
 {
     return (duration[DUR_PARALYSIS]);
+}
+
+bool player::cannot_move() const
+{
+    return (duration[DUR_PARALYSIS] || duration[DUR_PETRIFIED]);
 }
 
 bool player::confused() const
@@ -6409,6 +6416,20 @@ void player::paralyse(int str)
         paralysis = 13;
 }
 
+void player::petrify(int str)
+{
+    int &petrif(duration[DUR_PETRIFIED]);
+
+    mprf( "You %s the ability to move!",
+          petrif ? "still haven't" : "suddenly lose" );
+
+    if (str > petrif && (petrif < 3 || one_chance_in(petrif)))
+        petrif = str;
+
+    if (petrif > 13)
+        petrif = 13;
+}
+
 void player::slow_down(int str)
 {
     ::slow_player( str );
@@ -6587,7 +6608,7 @@ bool player::asleep() const
 
 bool player::cannot_act() const
 {
-    return (asleep() || paralysed());
+    return (asleep() || cannot_move());
 }
 
 bool player::can_throw_rocks() const

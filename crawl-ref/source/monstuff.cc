@@ -5603,7 +5603,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
         _monster_regenerate(monster);
 
-        if (mons_is_paralysed(monster))
+        if (mons_cannot_act(monster))
         {
             monster->speed_increment -= non_move_energy;
             continue;
@@ -5690,7 +5690,7 @@ static void _handle_monster_move(int i, monsters *monster)
             // Struggling against the net takes time.
             _swim_or_move_energy(monster);
         }
-        else
+        else if (!mons_is_petrified(monster))
         {
             // Calculates mmov_x, mmov_y based on monster target.
             _handle_movement(monster);
@@ -5877,7 +5877,6 @@ static void _handle_monster_move(int i, monsters *monster)
                         || monster->type == MONS_BALL_LIGHTNING)
                     && monster->hit_points < 1)
                 {
-
                     // Detach monster from the grid first, so it
                     // doesn't get hit by its own explosion. (GDL)
                     mgrd[monster->x][monster->y] = NON_MONSTER;
@@ -5902,7 +5901,7 @@ static void _handle_monster_move(int i, monsters *monster)
                 continue;
             }
 
-            if (!_monster_move(monster))
+            if (mons_cannot_move(monster) || !_monster_move(monster))
                 monster->speed_increment -= non_move_energy;
         }
         update_beholders(monster);
@@ -6178,10 +6177,10 @@ static bool _mons_can_displace(const monsters *mpusher, const monsters *mpushee)
     // can't push. Note that sleeping monsters can't be pushed
     // past, either, but they may be woken up by a crowd trying to
     // elbow past them, and the wake-up check happens downstream.
-    if (mons_is_confused(mpusher)     || mons_is_confused(mpushee)
-        || mons_is_paralysed(mpusher) || mons_is_paralysed(mpushee)
-        || mons_is_sleeping(mpusher)  || mons_is_stationary(mpusher)
-        || mons_is_stationary(mpushee))
+    if (mons_is_confused(mpusher)      || mons_is_confused(mpushee)
+        || mons_cannot_move(mpusher)   || mons_cannot_move(mpushee)
+        || mons_is_stationary(mpusher) || mons_is_stationary(mpushee)
+        || mons_is_sleeping(mpusher))
     {
         return (false);
     }

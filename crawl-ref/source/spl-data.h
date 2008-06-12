@@ -375,6 +375,16 @@
 },
 
 {
+    SPELL_PETRIFY, "Petrify",
+     SPTYP_ENCHANTMENT | SPTYP_TRANSMIGRATION,
+     SPFLAG_DIR_OR_TARGET,
+     4,
+     200,
+     NULL,
+     true
+},
+
+{
     SPELL_CONFUSE, "Confuse",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET,

@@ -2462,14 +2462,14 @@ static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
         you.duration[dur]--;
         if (you.duration[dur] == midpoint)
         {
-            if ( midmsg )
+            if (midmsg)
                 mpr(midmsg, chan);
             you.duration[dur] -= midloss;
         }
     }
     else if (you.duration[dur] == 1)
     {
-        if ( endmsg )
+        if (endmsg)
             mpr(endmsg, chan);
 
         rc = true;
@@ -2593,7 +2593,7 @@ static void _decrement_durations()
         }
     }
 
-    //jmf: more flexible weapon branding code
+    //jmf: More flexible weapon branding code.
     if (you.duration[DUR_WEAPON_BRAND] > 1)
         you.duration[DUR_WEAPON_BRAND]--;
     else if (you.duration[DUR_WEAPON_BRAND] == 1)
@@ -2656,7 +2656,7 @@ static void _decrement_durations()
         }
     }
 
-    // must come after transformation duration
+    // Must come after transformation duration.
     _decrement_a_duration(DUR_BREATH_WEAPON, "You have got your breath back.",
                           -1, 0, NULL, MSGCH_RECOVERY);
 
@@ -2717,7 +2717,7 @@ static void _decrement_durations()
 
     if ( _decrement_a_duration(DUR_TELEPORT) )
     {
-        // only to a new area of the abyss sometimes (for abyss teleports)
+        // Only to a new area of the abyss sometimes (for abyss teleports).
         you_teleport_now( true, one_chance_in(5) );
         untag_followers();
     }
@@ -2748,8 +2748,17 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_BARGAIN, "You feel less charismatic.");
     _decrement_a_duration(DUR_CONF, "You feel less confused.");
 
-    if (_decrement_a_duration(DUR_PARALYSIS, "You can move again."))
-        you.redraw_evasion = true;
+    if (you.duration[DUR_PARALYSIS] || you.duration[DUR_PETRIFIED])
+    {
+        _decrement_a_duration(DUR_PARALYSIS);
+        _decrement_a_duration(DUR_PETRIFIED);
+
+        if (!you.duration[DUR_PARALYSIS] && !you.duration[DUR_PETRIFIED])
+        {
+            mpr("You can move again.", MSGCH_DURATION);
+            you.redraw_evasion = true;
+        }
+    }
 
     _decrement_a_duration(DUR_EXHAUSTED, "You feel less fatigued.");
 
@@ -2774,7 +2783,7 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_BERSERKER, "You are no longer berserk."))
     {
-        //jmf: guilty for berserking /after/ berserk
+        //jmf: Guilty for berserking /after/ berserk.
         did_god_conduct( DID_STIMULANTS, 6 + random2(6) );
 
         // Sometimes berserk leaves us physically drained.
@@ -2804,23 +2813,26 @@ static void _decrement_durations()
             {
                 mpr("Trog's vigour flows through your veins.");
             }
-            else if ( one_chance_in(chance) )
+            else if (one_chance_in(chance))
             {
                 mpr("You pass out from exhaustion.", MSGCH_WARN);
                 you.duration[DUR_PARALYSIS] += roll_dice( 1, 4 );
             }
         }
 
-        if ( you.duration[DUR_PARALYSIS] == 0 )
+        if (you.duration[DUR_PARALYSIS] == 0
+            && you.duration[DUR_PETRIFIED] == 0)
+        {
             mpr("You are exhausted.", MSGCH_WARN);
+        }
 
-        // this resets from an actual penalty or from NO_BERSERK_PENALTY
+        // This resets from an actual penalty or from NO_BERSERK_PENALTY.
         you.berserk_penalty = 0;
 
         int dur = 12 + roll_dice( 2, 12 );
         you.duration[DUR_EXHAUSTED] += dur;
 
-        // Don't trigger too many tutorial messages
+        // Don't trigger too many tutorial messages.
         const bool tut_slow = Options.tutorial_events[TUT_YOU_ENCHANTED];
         Options.tutorial_events[TUT_YOU_ENCHANTED] = false;
 
@@ -3148,7 +3160,7 @@ static void _world_reacts()
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield();
 
-    // food death check:
+    // Food death check.
     if (you.is_undead != US_UNDEAD && you.hunger <= 500)
     {
         if (!you.cannot_act() && one_chance_in(40))
@@ -4624,7 +4636,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SP_VAMPIRE == 34              , c3);
     COMPILE_CHECK(SPELL_BOLT_OF_MAGMA == 18     , c4);
     COMPILE_CHECK(SPELL_POISON_ARROW == 94      , c5);
-    COMPILE_CHECK(SPELL_SUMMON_MUSHROOMS == 222 , c6);
+    COMPILE_CHECK(SPELL_SUMMON_MUSHROOMS == 223 , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPELLS < SPELL_NO_SPELL   , c7);

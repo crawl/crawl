@@ -96,6 +96,7 @@ static int  _affect_player(bolt &beam, item_def *item = NULL);
 static int  _affect_monster(bolt &beam, monsters *mon, item_def *item = NULL);
 static int  _affect_monster_enchantment(bolt &beam, monsters *mon);
 static void _beam_paralyses_monster( bolt &pbolt, monsters *monster );
+static void _beam_petrifies_monster( bolt &pbolt, monsters *monster );
 static int  _range_used_on_hit(bolt &beam);
 static void _explosion1(bolt &pbolt);
 static void _explosion_map(bolt &beam, int x, int y,
@@ -571,6 +572,12 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
         pbolt.flavour        = BEAM_PARALYSIS;
         break;
 
+    case ZAP_PETRIFY:
+        pbolt.name           = "0";
+        pbolt.rangeMax       = 12;
+        pbolt.flavour        = BEAM_PETRIFY;
+        break;
+
     case ZAP_CONFUSION:
         pbolt.name           = "0";
         pbolt.rangeMax       = 12;
@@ -953,6 +960,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_SLOWING:
     case ZAP_HASTING:
     case ZAP_PARALYSIS:
+    case ZAP_PETRIFY:
     case ZAP_BACKLIGHT:
     case ZAP_SLEEP:
     case ZAP_CONFUSION:
@@ -1537,6 +1545,12 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_PARALYSIS:
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_PARALYSIS;
+        // pbolt.is_beam = true;
+        break;
+
+    case ZAP_PETRIFY:
+        pbolt.name           = "0";
+        pbolt.flavour        = BEAM_PETRIFY;
         // pbolt.is_beam = true;
         break;
 
@@ -2495,7 +2509,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
             && !mons_is_stationary(monster)
             && monster->add_ench(mon_enchant(ENCH_SLOW, 0, _whose_kill(pbolt))))
         {
-            if (!mons_is_paralysed(monster)
+            if (!mons_is_paralysed(monster) && !mons_is_petrified(monster)
                 && simple_monster_message(monster, " seems to slow down."))
             {
                 pbolt.obvious_effect = true;
@@ -2517,7 +2531,7 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
             && !mons_is_stationary(monster)
             && monster->add_ench(ENCH_HASTE))
         {
-            if (!mons_is_paralysed(monster)
+            if (!mons_is_paralysed(monster) && !mons_is_petrified(monster)
                 && simple_monster_message(monster, " seems to speed up."))
             {
                 pbolt.obvious_effect = true;
@@ -2552,6 +2566,10 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
 
     case BEAM_PARALYSIS:
         _beam_paralyses_monster(pbolt, monster);
+        return (MON_AFFECTED);
+
+    case BEAM_PETRIFY:
+        _beam_petrifies_monster(pbolt, monster);
         return (MON_AFFECTED);
 
     case BEAM_CONFUSION:
@@ -2635,9 +2653,37 @@ static void _slow_monster(monsters *mon, int /* degree */)
 static void _beam_paralyses_monster(bolt &pbolt, monsters *monster)
 {
     if (!monster->has_ench(ENCH_PARALYSIS)
-        && monster->add_ench(ENCH_PARALYSIS))
+        && monster->add_ench(ENCH_PARALYSIS)
+        && (!monster->has_ench(ENCH_PETRIFIED)
+            || monster->has_ench(ENCH_PETRIFYING)))
     {
         if (simple_monster_message(monster, " suddenly stops moving!"))
+            pbolt.obvious_effect = true;
+
+        mons_check_pool(monster, pbolt.killer(), pbolt.beam_source);
+    }
+}
+
+static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
+{
+    int petrifying = monster->has_ench(ENCH_PETRIFYING);
+    if (monster->has_ench(ENCH_PETRIFIED))
+    {
+        if (petrifying > 0)
+        {
+            monster->del_ench(ENCH_PETRIFYING, true);
+            if (!monster->has_ench(ENCH_PARALYSIS)
+                && simple_monster_message(monster, " stops moving altogether!"))
+            {
+                pbolt.obvious_effect = true;
+            }
+        }
+    }
+    else if (monster->add_ench(ENCH_PETRIFIED)
+             && !monster->has_ench(ENCH_PARALYSIS))
+    {
+        monster->add_ench(ENCH_PETRIFYING);
+        if (simple_monster_message(monster, " is moving more slowly."))
             pbolt.obvious_effect = true;
 
         mons_check_pool(monster, pbolt.killer(), pbolt.beam_source);
@@ -3785,6 +3831,11 @@ static int _affect_player( bolt &beam, item_def *item )
             potion_effect( POT_PARALYSIS, beam.ench_power );
             beam.obvious_effect = true;
             break;     // paralysis
+
+        case BEAM_PETRIFY:
+            you.petrify( beam.ench_power );
+            beam.obvious_effect = true;
+            break;
 
         case BEAM_CONFUSION:
             potion_effect( POT_CONFUSION, beam.ench_power );
@@ -4986,6 +5037,7 @@ static int _range_used_on_hit(bolt &beam)
         case BEAM_HASTE:
         case BEAM_HEALING:
         case BEAM_PARALYSIS:
+        case BEAM_PETRIFY:
         case BEAM_CONFUSION:
         case BEAM_INVISIBILITY:
         case BEAM_TELEPORT:
@@ -5557,7 +5609,8 @@ killer_type bolt::killer() const
     {
     case KILL_YOU:
     case KILL_YOU_MISSILE:
-        return (flavour == BEAM_PARALYSIS? KILL_YOU : KILL_YOU_MISSILE);
+        return (flavour == BEAM_PARALYSIS
+                || flavour == BEAM_PETRIFY) ? KILL_YOU : KILL_YOU_MISSILE;
 
     case KILL_MON:
     case KILL_MON_MISSILE:

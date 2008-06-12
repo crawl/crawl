@@ -1171,7 +1171,7 @@ bool cast_revivification(int pow)
     }
 
     return (success);
-}                               // end cast_revivification()
+}
 
 void cast_cure_poison(int mabil)
 {
@@ -1181,7 +1181,7 @@ void cast_cure_poison(int mabil)
         reduce_poison_player( 2 + random2(mabil) + random2(3) );
 
     return;
-}                               // end cast_cure_poison()
+}
 
 void purification(void)
 {
@@ -1193,7 +1193,8 @@ void purification(void)
     you.duration[DUR_SLOW] = 0;
     you.disease = 0;
     you.duration[DUR_PARALYSIS] = 0;          // can't currently happen -- bwr
-}                               // end purification()
+    you.duration[DUR_PETRIFIED] = 0;
+}
 
 int allowed_deaths_door_hp(void)
 {
@@ -1275,7 +1276,7 @@ void antimagic()
         DUR_FORESCRY, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_BARGAIN,
         DUR_INSULATION, DUR_RESIST_POISON, DUR_RESIST_FIRE, DUR_RESIST_COLD,
-        DUR_SLAYING, DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_SAGE
+        DUR_SLAYING, DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_SAGE, DUR_PETRIFIED
     };
 
     if (!you.permanent_levitation() && !you.permanent_flight()
