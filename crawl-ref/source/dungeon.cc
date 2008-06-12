@@ -904,7 +904,7 @@ static void _fixup_branch_stairs()
 
     // Branches that consist of only 1 level (Hall of Blades).
     // No down staircases, thanks!
-    if (player_branch_depth() == 1)
+    if (player_branch_depth() == 1 && at_branch_bottom())
     {
         for (int x = 1; x < GXM; x++)
             for (int y = 1; y < GYM; y++)
