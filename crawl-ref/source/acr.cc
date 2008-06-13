@@ -917,7 +917,7 @@ static void _handle_wizard_command( void )
         break;
 
     case 'X':
-        xom_acts(abs(you.piety - (MAX_PIETY / 2)));
+        xom_acts(abs(you.piety - 100));
         break;
 
     case 'z':
