@@ -507,6 +507,31 @@ xcwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwcx
 xcccccccccccccccccccccccccccccccccccccccccccccccccccx
 ENDMAP
 
+##########################################################################
+# Zaba's temple
+
+NAME:    zaba_temple_1
+PLACE:   Temple
+FLAGS:   no_rotate
+ORIENT:  encompass
+COLOUR:  b = magenta
+SHUFFLE: {[
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxbbbbbbbbbxxxxxbbbbbbbbbxxxxxbbbbbbbbbxxxxx
+xxxbbb.......bbbxbbb.......bbbxbbb.......bbbxxx
+xxbb...B...B...bbb...B...B...bbb...B...B...bbxx
+xxb.............b.............b.............bxx
+xxbb...........bbb...........bbb...........bbxx
+xxxbbb...(.............[.............{....bbxxx
+xxbb...........bbb...........bbb...........bbxx
+xxb.............b.............b.............bxx
+xxbb...B...B...bbb...B...B...bbb...B...B...bbxx
+xxxbbb.......bbbxbbb.......bbbxbbb.......bbbxxx
+xxxxxbbbbbbbbbxxxxxbbbbbbbbbxxxxxbbbbbbbbbxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 ##########################################################################
 # Five rooms temple (David Ploog). 12 + 3 = 5 x 3
@@ -564,4 +589,3 @@ xxxxxxxxxxxxxxx........x........xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
-
