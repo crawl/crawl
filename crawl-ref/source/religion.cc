@@ -4439,15 +4439,15 @@ void excommunication(god_type new_god)
     you.religion = GOD_NO_GOD;
     you.piety = 0;
     you.piety_hysteresis = 0;
-    redraw_skill( you.your_name, player_title() );
+    redraw_skill(you.your_name, player_title());
 
     mpr("You have lost your religion!");
     more();
 
     if (god_hates_your_god(old_god, new_god))
     {
-        snprintf( info, INFO_SIZE, " does not appreciate desertion%s!",
-            god_hates_your_god_reaction(old_god, new_god).c_str() );
+        snprintf(info, INFO_SIZE, " does not appreciate desertion%s!",
+            god_hates_your_god_reaction(old_god, new_god).c_str());
 
         simple_god_message(info, old_god);
     }
@@ -4456,69 +4456,69 @@ void excommunication(god_type new_god)
     {
     case GOD_XOM:
         xom_acts(false, abs(you.piety - 100) * 2);
-        _inc_penance( old_god, 50 );
+        _inc_penance(old_god, 50);
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        miscast_effect( SPTYP_NECROMANCY, 5 + you.experience_level,
-                        random2avg(88, 3), 100, "the malice of Kikubaaqudgha" );
-        _inc_penance( old_god, 30 );
+        miscast_effect(SPTYP_NECROMANCY, 5 + you.experience_level,
+                       random2avg(88, 3), 100, "the malice of Kikubaaqudgha");
+        _inc_penance(old_god, 30);
         break;
 
     case GOD_YREDELEMNUL:
-        miscast_effect( SPTYP_NECROMANCY, 5 + you.experience_level,
-                        random2avg(88, 3), 100, "the anger of Yredelemnul" );
-        _inc_penance( old_god, 30 );
+        miscast_effect(SPTYP_NECROMANCY, 5 + you.experience_level,
+                       random2avg(88, 3), 100, "the anger of Yredelemnul");
+        _inc_penance(old_god, 30);
         break;
 
     case GOD_VEHUMET:
-        miscast_effect( (coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
-                        8 + you.experience_level, random2avg(98, 3), 100,
-                        "the wrath of Vehumet" );
+        miscast_effect((coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
+                       8 + you.experience_level, random2avg(98, 3), 100,
+                       "the wrath of Vehumet");
         _inc_penance( old_god, 25 );
         break;
 
     case GOD_MAKHLEB:
-        miscast_effect( (coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
-                        8 + you.experience_level, random2avg(98, 3), 100,
-                        "the fury of Makhleb" );
-        _inc_penance( old_god, 25 );
+        miscast_effect((coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
+                       8 + you.experience_level, random2avg(98, 3), 100,
+                       "the fury of Makhleb");
+        _inc_penance(old_god, 25);
         break;
 
     case GOD_TROG:
         _make_god_gifts_hostile(false);
 
         // Penance has to come before retribution to prevent "mollify"
-        _inc_penance( old_god, 50 );
-        divine_retribution( old_god );
+        _inc_penance(old_god, 50);
+        divine_retribution(old_god);
         break;
 
     case GOD_BEOGH:
         _beogh_followers_abandon_you(); // friendly orcs around turn hostile
 
         // You might have lost water walking at a bad time...
-        if ( _need_water_walking() )
+        if (_need_water_walking())
         {
-            fall_into_a_pool( you.x_pos, you.y_pos, true,
-                              grd[you.x_pos][you.y_pos] );
+            fall_into_a_pool(you.x_pos, you.y_pos, true,
+                             grd[you.x_pos][you.y_pos]);
         }
 
         // Penance has to come before retribution to prevent "mollify"
-        _inc_penance( old_god, 50 );
-        divine_retribution( old_god );
+        _inc_penance(old_god, 50);
+        divine_retribution(old_god);
         break;
 
     case GOD_SIF_MUNA:
-        _inc_penance( old_god, 50 );
+        _inc_penance(old_god, 50);
         break;
 
     case GOD_NEMELEX_XOBEH:
         nemelex_shuffle_decks();
-        _inc_penance( old_god, 150 ); // Nemelex penance is special
+        _inc_penance(old_god, 150); // Nemelex penance is special
         break;
 
     case GOD_LUGONU:
-        if ( you.level_type == LEVEL_DUNGEON )
+        if (you.level_type == LEVEL_DUNGEON)
         {
             simple_god_message(" casts you into the Abyss!", old_god);
             banished(DNGN_ENTER_ABYSS, "Lugonu's wrath");
@@ -4540,7 +4540,7 @@ void excommunication(god_type new_god)
         // but not his servants) alone.
         if (!is_good_god(new_god))
         {
-            _inc_penance( old_god, 50 );
+            _inc_penance(old_god, 50);
             _make_god_gifts_hostile(false);
         }
         else
@@ -4568,7 +4568,7 @@ void excommunication(god_type new_god)
         // (originally from TSO) abandon you.
         if (!is_good_god(new_god))
         {
-            _inc_penance( old_god, 25 );
+            _inc_penance(old_god, 25);
             _make_god_gifts_hostile(false);
         }
         break;
@@ -4578,13 +4578,13 @@ void excommunication(god_type new_god)
         // followers (originally from TSO) abandon you.
         if (!is_good_god(new_god))
         {
-            _inc_penance( old_god, 30 );
+            _inc_penance(old_god, 30);
             _make_god_gifts_hostile(false);
         }
         break;
 
     default:
-        _inc_penance( old_god, 25 );
+        _inc_penance(old_god, 25);
         break;
     }
 
@@ -4593,7 +4593,7 @@ void excommunication(god_type new_god)
     if (!is_good_god(new_god) && _holy_beings_attitude_change())
         mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
 
-    learned_something_new(TUT_EXCOMMUNICATE, (int) new_god, old_piety);
+    learned_something_new(TUT_EXCOMMUNICATE, (int)new_god, old_piety);
 }                               // end excommunication()
 
 static bool _bless_weapon( god_type god, int brand, int colour )
