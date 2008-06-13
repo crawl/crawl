@@ -6087,6 +6087,12 @@ static bool _handle_pickup(monsters *monster)
             if (!_is_item_jelly_edible(mitm[item]))
                 continue;
 
+#if DEBUG_DIAGNOSTICS || DEBUG_EATERS
+            mprf(MSGCH_DIAGNOSTICS,
+                 "%s eating %s", monster->name(DESC_PLAIN, true).c_str(),
+                 mitm[item].name(DESC_PLAIN).c_str());
+#endif
+
             if (mitm[igrd[monster->x][monster->y]].base_type != OBJ_GOLD)
             {
                 if (quant > max_eat - eaten)

@@ -2886,7 +2886,7 @@ void update_level( double elapsedTime )
         {
             heal_monster( mon, turns, false );
         }
-        else
+        else if (!mons_class_flag(mon->type, M_NO_REGEN))
         {
             // Set a lower ceiling of 0.1 on the regen rate.
             const int regen_rate =
