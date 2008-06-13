@@ -128,7 +128,8 @@ bool remove_one_equip(equipment_type eq)
 
 // Returns true if any piece of equipment that has to be removed is cursed.
 // Useful for keeping low level transformations from being too useful.
-static bool check_for_cursed_equipment(const std::set<equipment_type> &remove)
+static bool check_for_cursed_equipment(const std::set<equipment_type> &remove,
+                                       bool quiet = false)
 {
     std::set<equipment_type>::const_iterator iter;
     for (iter = remove.begin(); iter != remove.end(); ++iter )
@@ -139,8 +140,11 @@ static bool check_for_cursed_equipment(const std::set<equipment_type> &remove)
 
         if (item_cursed( you.inv[ you.equip[e] ] ))
         {
-            mpr( "Your cursed equipment won't allow you to complete the "
-                 "transformation." );
+            if (!quiet)
+            {
+                mpr( "Your cursed equipment won't allow you to complete the "
+                     "transformation." );
+            }
 
             return (true);
         }
@@ -154,8 +158,8 @@ static bool check_for_cursed_equipment(const std::set<equipment_type> &remove)
 // as well. If the sum of all boosts of a stat is equal to or greater than
 // the current stat, give a message and return true.
 bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
-                                    int str_loss, int dex_loss, int int_loss,
-                                    bool quiet)
+                                    bool quiet, int str_loss, int dex_loss,
+                                    int int_loss)
 {
     // Initialize with additional losses, if any.
     int prop_str = str_loss;
@@ -168,6 +172,17 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
     // and Might running out at an inopportune moment.
     if (you.duration[DUR_MIGHT])
         prop_str += 5;
+
+    if (prop_str >= you.strength || prop_int >= you.intel
+        || prop_dex >= you.dex)
+    {
+        if (!quiet)
+        {
+            mpr("This transformation would result in fatal stat loss!",
+                MSGCH_WARN);
+        }
+        return (true);
+    }
 
     // Check over all items to be removed.
     std::set<equipment_type>::const_iterator iter;
@@ -254,7 +269,9 @@ size_type player::transform_size(int psize) const
     }
 }
 
-bool transform(int pow, transformation_type which_trans)
+// Transforms you into the specified form. If quiet is true, fails silently
+// (if it fails).
+bool transform(int pow, transformation_type which_trans, bool quiet)
 {
     if (you.species == SP_MERFOLK && player_is_swimming()
         && which_trans != TRAN_DRAGON)
@@ -265,7 +282,8 @@ bool transform(int pow, transformation_type which_trans)
         // form is completely over-riding any other... goes well with
         // the forced transform when entering water)... but merfolk can
         // transform into dragons, because dragons fly. -- bwr
-        mpr("You cannot transform out of your normal form while in water.");
+        if (!quiet)
+            mpr("You cannot transform out of your normal form while in water.");
         return (false);
     }
 
@@ -274,7 +292,7 @@ bool transform(int pow, transformation_type which_trans)
     {
         if (you.duration[DUR_TRANSFORMATION] < 100)
         {
-            mpr( "You extend your transformation's duration." );
+            mpr("You extend your transformation's duration.");
             you.duration[DUR_TRANSFORMATION] += random2(pow);
 
             if (you.duration[DUR_TRANSFORMATION] > 100)
@@ -284,7 +302,8 @@ bool transform(int pow, transformation_type which_trans)
         }
         else
         {
-            mpr( "You cannot extend your transformation any further!" );
+            if (!quiet)
+                mpr("You cannot extend your transformation any further!");
             return (false);
         }
     }
@@ -296,7 +315,8 @@ bool transform(int pow, transformation_type which_trans)
         && (you.species != SP_VAMPIRE
             || which_trans != TRAN_BAT && you.hunger_state <= HS_SATIATED))
     {
-        mpr("Your unliving flesh cannot be transformed in this way.");
+        if (!quiet)
+            mpr("Your unliving flesh cannot be transformed in this way.");
         return (false);
     }
 
@@ -321,7 +341,11 @@ bool transform(int pow, transformation_type which_trans)
     switch (which_trans)
     {
     case TRAN_SPIDER:           // also AC +3, ev +3, fast_run
-        if (check_for_cursed_equipment( rem_stuff ))
+        if (check_for_cursed_equipment(rem_stuff, quiet))
+            return (false);
+
+        // Check in case we'll auto-remove stat boosting equipment.
+        if (check_transformation_stat_loss(rem_stuff, quiet))
             return (false);
 
         mpr("You turn into a venomous arachnid creature.");
@@ -341,10 +365,10 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_BAT:
-        if (check_for_cursed_equipment(rem_stuff))
+        if (check_for_cursed_equipment(rem_stuff, quiet))
             return (false);
 
-        if (check_transformation_stat_loss(rem_stuff, 5)) // Str loss = 5
+        if (check_transformation_stat_loss(rem_stuff, quiet, 5)) // Str loss = 5
             return (false);
 
         mprf("You turn into a %sbat.",
@@ -369,10 +393,14 @@ bool transform(int pow, transformation_type which_trans)
        return (true);
 
     case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1
-        if (check_for_cursed_equipment( rem_stuff ))
+        if (check_for_cursed_equipment(rem_stuff, quiet))
             return (false);
 
-        mpr( "You turn into a creature of crystalline ice." );
+        // Check in case we'll auto-remove stat boosting equipment.
+        if (check_transformation_stat_loss(rem_stuff, quiet))
+            return (false);
+
+        mpr("You turn into a creature of crystalline ice.");
 
         remove_equipment( rem_stuff );
 
@@ -385,7 +413,7 @@ bool transform(int pow, transformation_type which_trans)
         extra_hp(12);   // must occur after attribute set
 
         if (you.duration[DUR_ICY_ARMOUR])
-            mpr( "Your new body merges with your icy armour." );
+            mpr("Your new body merges with your icy armour.");
 
         you.symbol = 'I';
         you.colour = WHITE;
@@ -400,6 +428,10 @@ bool transform(int pow, transformation_type which_trans)
         if (check_for_cursed_equipment( rem_stuff ))
             return (false);
 
+        // Check in case we'll auto-remove stat boosting equipment.
+        if (check_transformation_stat_loss(rem_stuff, quiet))
+            return (false);
+
         mpr("Your hands turn into razor-sharp scythe blades.");
         remove_equipment( rem_stuff );
 
@@ -411,18 +443,18 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_STATUE: // also AC +20, ev -5, elec +1, pois +1, neg +1, slow
-        if (check_for_cursed_equipment( rem_stuff ))
+        if (check_for_cursed_equipment(rem_stuff, quiet))
             return (false);
 
-        if (check_transformation_stat_loss(rem_stuff, 0, 2)) // Dex loss = 2
+        if (check_transformation_stat_loss(rem_stuff, quiet, 0, 2)) // Dex loss = 2
             return (false);
 
         if (you.species == SP_GNOME && coinflip())
-            mpr( "Look, a garden gnome.  How cute!" );
+            mpr("Look, a garden gnome.  How cute!");
         else if (player_genus(GENPC_DWARVEN) && one_chance_in(10))
-            mpr( "You inwardly fear your resemblance to a lawn ornament." );
+            mpr("You inwardly fear your resemblance to a lawn ornament.");
         else
-            mpr( "You turn into a living statue of rough stone." );
+            mpr("You turn into a living statue of rough stone.");
 
         // Too stiff to make use of shields, gloves, or armour -- bwr
         remove_equipment( rem_stuff );
@@ -440,15 +472,19 @@ bool transform(int pow, transformation_type which_trans)
         extra_hp(15);   // must occur after attribute set
 
         if (you.duration[DUR_STONEMAIL] || you.duration[DUR_STONESKIN])
-            mpr( "Your new body merges with your stone armour." );
+            mpr("Your new body merges with your stone armour.");
 
         you.symbol = '8';
         you.colour = LIGHTGREY;
         return (true);
 
     case TRAN_DRAGON:  // also AC +10, ev -3, cold -1, fire +2, pois +1, flight
-        if (check_for_cursed_equipment( rem_stuff ))
-            return false;
+        if (check_for_cursed_equipment(rem_stuff, quiet))
+            return (false);
+
+        // Check in case we'll auto-remove stat boosting equipment.
+        if (check_transformation_stat_loss(rem_stuff, quiet))
+            return (false);
 
         if (you.species == SP_MERFOLK && player_is_swimming())
         {
@@ -490,8 +526,11 @@ bool transform(int pow, transformation_type which_trans)
         // spec_death +1, and drain attack (if empty-handed)
         if (you.duration[DUR_DEATHS_DOOR])
         {
-            mpr( "The transformation conflicts with an enchantment "
-                 "already in effect." );
+            if (!quiet)
+            {
+                mpr( "The transformation conflicts with an enchantment "
+                     "already in effect." );
+            }
 
             return (false);
         }
@@ -501,7 +540,7 @@ bool transform(int pow, transformation_type which_trans)
         // undead cannot regenerate -- bwr
         if (you.duration[DUR_REGENERATION])
         {
-            mpr( "You stop regenerating.", MSGCH_DURATION );
+            mpr("You stop regenerating.", MSGCH_DURATION);
             you.duration[DUR_REGENERATION] = 0;
         }
 
@@ -528,9 +567,13 @@ bool transform(int pow, transformation_type which_trans)
         if (check_for_cursed_equipment( rem_stuff ))
             return false;
 
+        // Check in case we'll auto-remove stat boosting equipment.
+        if (check_transformation_stat_loss(rem_stuff, quiet))
+            return (false);
+
         // also AC 20, ev +20, regen/2, no hunger, fire -2, cold -2, air +2,
         // pois +1, spec_earth -1
-        mpr( "You feel diffuse..." );
+        mpr("You feel diffuse...");
 
         remove_equipment(rem_stuff);
 
@@ -558,11 +601,15 @@ bool transform(int pow, transformation_type which_trans)
         return (true);
 
     case TRAN_SERPENT_OF_HELL:
-        if (check_for_cursed_equipment( rem_stuff ))
+        if (check_for_cursed_equipment(rem_stuff, quiet))
             return false;
 
+        // Check in case we'll auto-remove stat boosting equipment.
+        if (check_transformation_stat_loss(rem_stuff, quiet))
+            return (false);
+
         // also AC +10, ev -5, fire +2, pois +1, life +2, slow
-        mpr( "You transform into a huge demonic serpent!" );
+        mpr("You transform into a huge demonic serpent!");
 
         remove_equipment(rem_stuff);
 

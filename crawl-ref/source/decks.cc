@@ -1465,14 +1465,26 @@ static void _flight_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
 
-    if ( power_level == 0 )
-        transform(random2(power/4), coinflip() ? TRAN_SPIDER : TRAN_BAT);
-    if ( power_level >= 1 )
+    // Assume something _will_ happen.
+    bool success = true;
+
+    if (power_level == 0)
+    {
+        if (!transform(random2(power/4), coinflip() ? TRAN_SPIDER : TRAN_BAT,
+                       true))
+        {
+            // Oops, something went wrong here (either because of cursed
+            // equipment or the possibility of stat loss).
+            success = false;
+        }
+    }
+    else if (power_level >= 1)
     {
         cast_fly(random2(power/4));
         cast_swiftness(random2(power/4));
     }
-    if ( power_level == 2 )
+
+    if (power_level == 2) // Stacks with the above.
     {
         if (is_valid_shaft_level() && grd[you.x_pos][you.y_pos] == DNGN_FLOOR)
         {
@@ -1484,8 +1496,10 @@ static void _flight_card(int power, deck_rarity_type rarity)
             }
         }
     }
-    if ( one_chance_in(4 - power_level) )
+    if (one_chance_in(4 - power_level))
         potion_effect(POT_INVISIBILITY, random2(power)/4);
+    else if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
 }
 
 static void _minefield_card(int power, deck_rarity_type rarity)
@@ -1682,9 +1696,6 @@ static void _battle_lust_card(int power, deck_rarity_type rarity)
         potion_effect(POT_MIGHT, random2(power/4));
 }
 
-// Doesn't allow transformation into bat.
-// The sudden stat drain of Str-5 would be fatal to some characters!
-// XXX: Maybe we could allow it if it would be non-fatal, at least.
 static void _metamorphosis_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
@@ -1695,9 +1706,16 @@ static void _metamorphosis_card(int power, deck_rarity_type rarity)
     else if (power_level == 1)
         trans = coinflip() ? TRAN_STATUE : TRAN_BLADE_HANDS;
     else
-        trans = coinflip() ? TRAN_SPIDER : TRAN_ICE_BEAST;
+    {
+        trans = one_chance_in(3) ? TRAN_SPIDER :
+                coinflip()       ? TRAN_ICE_BEAST
+                                 : TRAN_BAT;
+    }
 
-    transform(random2(power/4), trans);
+    // Might fail, e.g. because of cursed equipment or potential death by
+    // stat loss. Aren't we being nice?
+    if (!transform(random2(power/4), trans, true))
+        canned_msg(MSG_NOTHING_HAPPENS);
 }
 
 static void _helm_card(int power, deck_rarity_type rarity)
