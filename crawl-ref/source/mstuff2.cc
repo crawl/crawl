@@ -2243,7 +2243,7 @@ bolt mons_spells( int spell_cast, int power )
 }                               // end mons_spells()
 
 static int _monster_abjure_square(const coord_def &pos,
-                                  int power, int actual,
+                                  int pow, int actual,
                                   int wont_attack)
 {
     const int mindex = mgrd(pos);
@@ -2258,17 +2258,17 @@ static int _monster_abjure_square(const coord_def &pos,
     if (abj.ench == ENCH_NONE)
         return (0);
 
-    power = std::max(20, fuzz_value(power, 40, 25));
+    pow = std::max(20, fuzz_value(pow, 40, 25));
 
     if (!actual)
-        return (power > 40 || power >= abj.duration);
+        return (pow > 40 || pow >= abj.duration);
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Abj: dur: %d, pow: %d, ndur: %d",
-         abj.duration, power, abj.duration - power);
+         abj.duration, pow, abj.duration - pow);
 #endif
 
-    if (!target->lose_ench_duration(abj, power))
+    if (!target->lose_ench_duration(abj, pow))
         simple_monster_message(target, " shudders.");
 
     return (1);
