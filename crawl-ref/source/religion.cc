@@ -4039,7 +4039,8 @@ static bool _magic_users_attitude_change()
 static bool _make_god_gifts_on_level_disappear(bool seen = false)
 {
     int count = 0;
-    for ( int i = 0; i < MAX_MONSTERS; ++i )
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
         if (monster->alive()
