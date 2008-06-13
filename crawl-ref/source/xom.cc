@@ -84,7 +84,7 @@ const char *describe_xom_favour()
 bool xom_is_nice()
 {
     // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
-    return (you.gift_timeout > 0 && you.piety > 100) || coinflip();
+    return (you.gift_timeout > 0 && you.piety > (MAX_PIETY / 2)) || coinflip();
 }
 
 static const char* xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =

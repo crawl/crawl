@@ -5455,7 +5455,7 @@ void handle_god_time()
                 you.gift_timeout -= random2(2);
 
             if (one_chance_in(20))
-                xom_acts(abs(you.piety - 100));
+                xom_acts(abs(you.piety - (MAX_PIETY / 2)));
             break;
         }
 
