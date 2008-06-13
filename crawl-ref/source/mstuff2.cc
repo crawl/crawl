@@ -2243,7 +2243,7 @@ bolt mons_spells( int spell_cast, int power )
 }                               // end mons_spells()
 
 static int _monster_abjure_square(const coord_def &pos,
-                                  int power, int test_only,
+                                  int power, int actual,
                                   int wont_attack)
 {
     const int mindex = mgrd(pos);
@@ -2317,7 +2317,7 @@ static int _monster_abjuration(const monsters *caster, bool actual)
         int number_hit =
             _apply_radius_around_square(caster->pos(), rad,
                                         _monster_abjure_square,
-                                        pow, !actual, wont_attack);
+                                        pow, actual, wont_attack);
 
         maffected += number_hit;
 
