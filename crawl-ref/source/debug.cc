@@ -333,7 +333,7 @@ void wizard_change_species( void )
 
     case SP_DEMONSPAWN:
     {
-        int powers;
+        int powers = 0;
 
         if (you.experience_level < 4)
             powers = 0;
