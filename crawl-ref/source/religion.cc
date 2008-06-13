@@ -538,7 +538,7 @@ static void _inc_penance(god_type god, int val)
             if (you.duration[DUR_DIVINE_SHIELD])
                 remove_divine_shield();
 
-            _make_god_gifts_disappear(true); // only on level
+            _make_god_gifts_disappear(); // only on level
         }
     }
 
@@ -3848,7 +3848,7 @@ static bool _holy_beings_on_level_attitude_change()
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
-        if (monster->type != -1
+        if (monster->alive()
             && mons_is_holy(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
@@ -3903,7 +3903,7 @@ static bool _evil_beings_on_level_attitude_change()
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
-        if (monster->type != -1
+        if (monster->alive()
             && mons_is_evil_or_unholy(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
@@ -3946,7 +3946,7 @@ static bool _chaotic_beings_on_level_attitude_change()
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
-        if (monster->type != -1
+        if (monster->alive()
             && mons_is_chaotic(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
@@ -3989,7 +3989,7 @@ static bool _magic_users_on_level_attitude_change()
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
-        if (monster->type != -1
+        if (monster->alive()
             && mons_is_magic_user(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
