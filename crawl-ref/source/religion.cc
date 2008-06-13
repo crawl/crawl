@@ -5152,7 +5152,7 @@ void god_pitch(god_type which_god)
     if (you.religion == GOD_XOM)
     {
         // Xom uses piety and gift_timeout differently.
-        you.piety = 100;
+        you.piety = (MAX_PIETY / 2);
         you.gift_timeout = random2(40) + random2(40);
     }
     else
@@ -5454,17 +5454,17 @@ void handle_god_time()
             // Xom semi-randomly drifts your piety.
             int delta;
             const char *origfavour = describe_xom_favour();
-            const bool good = you.piety >= 100;
+            const bool good = you.piety > (MAX_PIETY / 2);
             int size = abs(you.piety - 100);
             delta = (random2(1000) < 511) ? 1 : -1;
             size += delta;
-            you.piety = 100 + (good ? size : -size);
+            you.piety = (MAX_PIETY / 2) + (good ? size : -size);
             const char *newfavour = describe_xom_favour();
             if (strcmp(origfavour, newfavour))
             {
                 // Dampen oscillation across announcement boundaries.
                 size += delta * 2;
-                you.piety = 100 + (good ? size : -size);
+                you.piety = (MAX_PIETY / 2) + (good ? size : -size);
             }
 
             // ...but he gets bored... (I re-use gift_timeout for this
