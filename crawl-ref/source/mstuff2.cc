@@ -2260,7 +2260,7 @@ static int _monster_abjure_square(const coord_def &pos,
 
     power = std::max(20, fuzz_value(power, 40, 25));
 
-    if (test_only)
+    if (!actual)
         return (power > 40 || power >= abj.duration);
 
 #ifdef DEBUG_DIAGNOSTICS
