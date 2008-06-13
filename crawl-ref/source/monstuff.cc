@@ -5347,8 +5347,8 @@ static bool _handle_throw(monsters *monster, bolt & beem)
         return (false);
     }
 
-    // throwing a net at a target that is already caught would be
-    // completely useless, so bail out
+    // Throwing a net at a target that is already caught would be
+    // completely useless, so bail out.
     if (mitm[mon_item].base_type == OBJ_MISSILES
         && mitm[mon_item].sub_type == MI_THROWING_NET
         && ( beem.target_x == you.x_pos && beem.target_y == you.y_pos
