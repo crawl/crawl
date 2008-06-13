@@ -48,7 +48,7 @@
 #include "traps.h"
 #include "view.h"
 
-static int _monster_abjuration(const monsters *mons, bool test);
+static int _monster_abjuration(const monsters *mons, bool actual);
 
 // NB: only works because grid location already verified
 //     to be some sort of trap prior to function call: {dlb}
@@ -433,10 +433,10 @@ void mons_trap(struct monsters *monster)
 
 static bool _mons_abjured(monsters *monster, bool nearby)
 {
-    if (nearby && _monster_abjuration(monster, true) > 0
+    if (nearby && _monster_abjuration(monster, false) > 0
         && coinflip())
     {
-        _monster_abjuration(monster, false);
+        _monster_abjuration(monster, true);
         return (true);
     }
 
@@ -2301,12 +2301,12 @@ static int _apply_radius_around_square( const coord_def &c, int radius,
     return (res);
 }
 
-static int _monster_abjuration(const monsters *caster, bool test)
+static int _monster_abjuration(const monsters *caster, bool actual)
 {
     const bool wont_attack = mons_wont_attack(caster);
     int maffected = 0;
 
-    if (!test)
+    if (actual)
         mpr("Send 'em back where they came from!");
 
     int pow = std::min(caster->hit_dice * 90, 2500);
@@ -2317,7 +2317,7 @@ static int _monster_abjuration(const monsters *caster, bool test)
         int number_hit =
             _apply_radius_around_square( caster->pos(), rad,
                                          _monster_abjure_square,
-                                         pow, test, wont_attack);
+                                         pow, !actual, wont_attack);
 
         maffected += number_hit;
 
