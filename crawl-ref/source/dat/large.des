@@ -57,7 +57,7 @@ ENDMAP
 NAME:    statuecave_lemuel
 ORIENT:  northeast
 DEPTH:   D:7-27, Lair, Crypt
-MONS:    ice statue/orange crystal statue
+MONS:    ice statue / orange crystal statue
 SHUFFLE: 1|/!*
 SUBST:   *:*$, ?:x., !:., '=w.
 ITEM:    ring of teleportation / ring of levitation 
@@ -92,7 +92,7 @@ ENDMAP
 NAME:    dragon1_lemuel
 ORIENT:  northeast
 DEPTH:   D:9-20, Lair
-MONS:    dragon, ice dragon
+MONS:    patrolling dragon, patrolling ice dragon
 ITEM:    potion of levitation / scroll of teleportation
 SUBST:   ! : ?x
 SHUFFLE: 1?/2W
@@ -166,7 +166,7 @@ ENDMAP
 NAME:    Giant_Chief_Lemuel
 DEPTH:   D:11-22, Orc:3-4
 ORIENT:  north
-MONS:    stone giant, frost giant, fire giant
+MONS:    patrolling stone giant, patrolling frost giant, patrolling fire giant
 MONS:    hill giant, cyclops
 MONS:    w:50 ogre / w:5 ogre-mage / two-headed ogre
 MONS:    wolf / warg
@@ -924,8 +924,8 @@ NAME:   orc_temple
 ORIENT: southwest
 TAGS:   no_rotate
 DEPTH:  D:14-26, Orc:2-4
-MONS:   orc warlord, orc priest, orc high priest, orc warrior, orc wizard
-MONS:   orc knight, orc sorcerer
+MONS:   orc warlord, patrolling orc priest, patrolling orc high priest
+MONS:   orc warrior, orc wizard, orc knight, orc sorcerer
 KFEAT:  C = altar_beogh
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
@@ -1177,8 +1177,8 @@ DEPTH:   D:10-16
 ORIENT:  south
 TAGS:    no_pool_fixup no_rotate uniq_rubicon
 CHANCE:  6
-ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
-ITEM:    nothing, nothing, nothing
+ITEM:    ring of levitation / potion of levitation / nothing
+ITEM:    potion of levitation / nothing, nothing, nothing, nothing
 SHUFFLE: {[(, )gh
 SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
 MAP
@@ -1212,8 +1212,8 @@ DEPTH:   D:10-16
 ORIENT:  south
 TAGS:    no_rotate uniq_rubicon
 CHANCE:  4
-ITEM:    ring of levitation / potion of levitation / nothing, potion of levitation
-ITEM:    nothing, nothing, nothing, nothing
+ITEM:    ring of levitation / potion of levitation / nothing
+ITEM:    potion of levitation, nothing, nothing, nothing, nothing
 SHUFFLE: {[(, fgW, )hi
 SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
 MAP

@@ -116,10 +116,10 @@ DEPTH:  D:2-18, Swamp, Shoal
 CHANCE: 9
 : local brnd = crawl.random2(13)
 : if brnd > 10 then
-TAGS: no_monster_gen no_rotate
+TAGS:   no_monster_gen no_rotate
 # this case almost always has altar access
 : else
-TAGS: no_monster_gen no_pool_fixup no_rotate
+TAGS:   no_monster_gen no_pool_fixup no_rotate
 : end
 MAP
    .........   
@@ -273,9 +273,9 @@ ENDMAP
 NAME:  lemuel_angel_altar
 DEPTH: D:3-18, Vault
 : if you.absdepth() > 12 then
-MONS: Daeva / Angel
+MONS: patrolling Daeva / patrolling Angel
 : else
-MONS:  Angel
+MONS:  patrolling Angel
 : end
 KFEAT: C = altar_elyvilon / altar_zin / altar_shining_one
 MAP
@@ -321,7 +321,7 @@ ENDMAP
 
 NAME:  david_defended_altar_orc
 DEPTH: D:7-20, Orc
-MONS:  orc priest
+MONS:  patrolling orc priest
 TAGS:  uniq_defended_altar
 KFEAT: D = altar_beogh / w:1 altar_okawaru / w:1 altar_makhleb / w:1 altar_trog
 MAP
@@ -334,7 +334,7 @@ ENDMAP
 
 NAME:  david_defended_altar_elf
 DEPTH: D:7-20, Elf
-MONS:  deep elf priest / w:30 nothing
+MONS:  patrolling deep elf priest / w:30 nothing
 TAGS:  uniq_defended_altar
 MAP
 ccccc...

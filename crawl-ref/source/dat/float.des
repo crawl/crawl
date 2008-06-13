@@ -151,7 +151,8 @@ ENDMAP
 NAME:    MiniTomb
 ORIENT:  float
 DEPTH:   D:15-26, Crypt
-MONS:    large zombie/nothing, mummy, guardian mummy, greater mummy, large zombie
+MONS:    large zombie/nothing, mummy, patrolling guardian mummy
+MONS:    patrolling greater mummy, large zombie
 MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
 MAP
@@ -241,8 +242,11 @@ ENDMAP
 NAME:   troll_bridge
 DEPTH:  D:9-18
 ORIENT: float
-TAGS: no_pool_fixup
-MONS: patrolling troll w:50 / patrolling rock troll / patrolling iron troll w:5
+TAGS:   no_pool_fixup
+SUBST:  1 = 1:50 2 3:5
+MONS:   patrolling troll 
+MONS:   patrolling rock troll
+MONS:   patrolling iron troll
 MAP
 xxxxx...........................xxxxxx
 xwwwx...........................xxxxxx

@@ -101,10 +101,11 @@ ENDMAP
 
 #######################################################################
 # An item encased in glass.  If the player wants it, it can be dug out.
-NAME:  item_on_display_a
-DEPTH: D, Elf, Crypt, Vault
+NAME:   item_on_display_a
+DEPTH:  D, Elf, Crypt, Vault
 CHANCE: 9
-TAGS:  no_monster_gen no_item_gen
+SUBST:  % = %%%*
+TAGS:   no_monster_gen no_item_gen
 MAP
 .....
 .mmm.
@@ -115,10 +116,11 @@ ENDMAP
 
 #####################################################################
 # A good item encased in transparent stone.
-NAME:  item_on_display_b
-DEPTH: D, Elf, Crypt, Vault
+NAME:   item_on_display_b
+DEPTH:  D, Elf, Crypt, Vault
 CHANCE: 1
-TAGS:  no_monster_gen no_item_gen
+SUBST:  * = ***|
+TAGS:   no_monster_gen no_item_gen
 MAP
 .....
 .nnn.
@@ -381,10 +383,10 @@ ENDMAP
 # Should work without explicit floor margin (dp)
 NAME:  hive_lemuel
 DEPTH: D:9-27,Hive:*
-MONS:  killer bee, yellow wasp, red wasp, spiny worm, killer bee zombie
+MONS:  killer bee, yellow wasp, red wasp, spiny worm
 SUBST: ? : .w
 SUBST: 1 = 1 a:2
-SUBST: 1 : 1:15 2 3:2 4:1 5:2
+SUBST: 1 : 1:15 2 3:2 4:1
 SUBST: * : * R:3
 MAP
   ????????
@@ -452,7 +454,7 @@ ENDMAP
 #
 NAME:  water_maze_lemuel
 TAGS:  no_pool_fixup uniq_water_maze_lemuel
-ITEM:  ring of teleportation
+ITEM:  ring of teleportation / scroll of teleportation q:3
 DEPTH: D:5-27
 MAP
    wwwwwwwww
@@ -472,11 +474,11 @@ wwccwwcwcwwccww
    wwwwwwwww
 ENDMAP
 
-NAME:  water_boxes_lemuel
-TAGS:  no_pool_fixup uniq_water_maze_lemuel
-DEPTH: D:5-27, Swamp
-KMONS: * = fungus
-KFEAT: * = *
+NAME:   water_boxes_lemuel
+TAGS:   no_pool_fixup uniq_water_maze_lemuel
+DEPTH:  D:5-27, Swamp
+KMONS:  * = fungus
+KFEAT:  * = *
 NSUBST: a = 1:= / *:x
 NSUBST: b = 1:= / *:x
 NSUBST: c = 1:= / *:x
@@ -533,11 +535,11 @@ ENDMAP
 ##############################################################################
 # Greed's colour
 
-NAME: david_greed
-CHANCE: 4
-DEPTH: D:10-26, Vault, Elf
-ITEM: nothing / any good_item
-MONS: silver statue / orange crystal statue / ice statue
+NAME:    david_greed
+CHANCE:  4
+DEPTH:   D:10-26, Vault, Elf
+ITEM:    nothing / any good_item
+MONS:    silver statue / orange crystal statue / ice statue
 SHUFFLE: d|
 MAP
 xxxxxxxxx
@@ -634,7 +636,7 @@ ENDMAP
 #
 NAME: minivault_7
 TAGS: allow_dup
-MONS: queen bee, killer bee, killer bee larva
+MONS: patrolling queen bee, patrolling killer bee, killer bee larva
 MAP
 ............
 ....aaaa....
@@ -655,7 +657,7 @@ ENDMAP
 #
 NAME: minivault_8
 TAGS: allow_dup
-MONS: molten gargoyle
+MONS: patrolling molten gargoyle
 MAP
 x.x.x.x.x.x.
 .c.c.c.c.c.x
@@ -801,8 +803,8 @@ ENDMAP
 ###################################
 # Lava pond
 #
-NAME: minivault_15
-MONS: silver statue / ice statue
+NAME:  minivault_15
+MONS:  silver statue / ice statue
 KFEAT: 1 = <
 MAP
 .........
@@ -818,12 +820,12 @@ ENDMAP
 
 ###################################
 
-NAME: minivault_16
-TAGS: allow_dup
-CHANCE: 40
+NAME:    minivault_16
+TAGS:    allow_dup
+CHANCE:  40
 # as this replaces the former statue only minivaults
 SHUFFLE: G111
-MONS: orange crystal statue / silver statue / ice statue
+MONS:    orange crystal statue / silver statue / ice statue
 MAP
 ...........
 ...........
@@ -1056,7 +1058,8 @@ ENDMAP
 #
 NAME: minivault_29
 TAGS: allow_dup
-MONS: queen ant, soldier ant, giant ant, ant larva
+MONS: patrolling queen ant, patrolling soldier ant
+MONS: patrolling giant ant, ant larva
 MAP
 .3......3...
 ...x.xx.x.2.
@@ -1101,9 +1104,9 @@ ENDMAP
 ###################################
 # Solitary fountain
 #
-NAME: solitary_fountain
+NAME:  solitary_fountain
 DEPTH: D, Elf, Vault
-TAGS: allow_dup
+TAGS:  allow_dup
 SUBST: ?=TUV
 MAP
 .....
@@ -1116,8 +1119,8 @@ ENDMAP
 ###################################
 # Fountainhead
 #
-NAME: fountainhead
-TAGS: allow_dup
+NAME:  fountainhead
+TAGS:  allow_dup
 SUBST: ?=TUV
 MAP
 ..............
@@ -1139,12 +1142,12 @@ ENDMAP
 ###################################
 # Billiards (David Ploog)
 #
-NAME: billiards
-MONS: orc wizard, deep elf conjurer
+NAME:    billiards
+MONS:    orc wizard, deep elf conjurer
 SHUFFLE: 1*/2d
-SUBST: * = * |:1 %:4
-SUBST: d = * |
-NSUBST: X = + / x
+SUBST:   * = * |:1 %:4
+SUBST:   d = * |
+NSUBST:  X = + / x
 MAP
 .............
 .xxxxxxxxxxx.
@@ -1325,11 +1328,12 @@ ENDMAP
 NAME:    onia_ninara_009_dug_in_and_dangerous
 TAGS:    allow_dup
 DEPTH:   D:8-26, Vault
-SHUFFLE: vcb, AB?/CD!, d<>
+SHUFFLE: vcb, AB?/CD!, d<>, de
 SUBST:   A=9, B=8, C=1, D=9
 SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
-ITEM:    wand of digging/wand of disintegration/ring of teleportation/stone of earth elementals
+ITEM:    wand of digging / wand of disintegration
+ITEM:    ring of teleportation / stone of earth elementals
 MAP
 ...........
 .vvnvvvnvv.
@@ -1355,7 +1359,7 @@ SUBST: 3 = 3.
 SUBST: . = . 1:1
 KFEAT: ? = *
 KMONS: ? = plant
-TAGS: no_monster_gen
+TAGS:  no_monster_gen
 MAP
 ..wwwww...
 .wwwwwwww2
@@ -1397,10 +1401,10 @@ ENDMAP
 ##############################
 # Secret library minivault
 #
-NAME: library
+NAME:  library
 DEPTH: 1-27
-TAGS: mini_float allow_dup
-ITEM: any book w:20/any scroll/nothing
+TAGS:  mini_float allow_dup
+ITEM:  any book w:20 / any scroll / nothing
 MAP
 x=xx
 xddx
