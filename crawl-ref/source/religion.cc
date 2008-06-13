@@ -2713,11 +2713,16 @@ bool is_evil_item(const item_def& item)
 
 bool god_dislikes_item_handling(const item_def &item)
 {
-    return (item_type_known(item)
-            && (is_good_god(you.religion) && is_evil_item(item)
-                || you.religion == GOD_TROG && item.base_type == OBJ_BOOKS
-                   && item.sub_type != BOOK_MANUAL
-                   && item.sub_type != BOOK_DESTRUCTION));
+    if (you.religion == GOD_TROG)
+    {
+        return (item.base_type == OBJ_BOOKS
+                && item.sub_type != BOOK_MANUAL
+                && (!item_type_known(item)
+                    || item.sub_type != BOOK_DESTRUCTION));
+    }
+
+    return (is_good_god(you.religion) && is_evil_item(item)
+            && item_type_known(item));
 }
 
 // Is the destroyed weapon valuable enough to gain piety by doing so?
@@ -2810,7 +2815,7 @@ bool ely_destroy_weapons()
     return success;
 }
 
-// returns false if invocation fails (no books in sight etc.)
+// Returns false if the invocation fails (no books in sight etc.).
 bool trog_burn_books()
 {
     if (you.religion != GOD_TROG)
@@ -2877,47 +2882,44 @@ bool trog_burn_books()
                     continue;
                 }
 
-                 rarity += book_rarity(mitm[i].sub_type);
-                 // Piety increases by 2 for books never picked up, else by 1.
-                 if (mitm[i].flags & ISFLAG_DROPPED
-                     || mitm[i].flags & ISFLAG_THROWN)
-                 {
-                     totalpiety++;
-                 }
-                 else
-                     totalpiety += 2;
+                rarity += book_rarity(mitm[i].sub_type);
+                // Piety increases by 2 for books never cracked open, else 1.
+                // Conversely, rarity influences the duration of the pyre.
+                if (!item_type_known(mitm[i]))
+                    totalpiety += 2;
+                else
+                    totalpiety++;
 
 #ifdef DEBUG_DIAGNOSTICS
-                 mprf(MSGCH_DIAGNOSTICS, "Burned book rarity: %d", rarity);
+                mprf(MSGCH_DIAGNOSTICS, "Burned book rarity: %d", rarity);
 #endif
+                destroy_item(i);
+                count++;
+                i = next;
+            }
 
-                 destroy_item(i);
-                 count++;
-                 i = next;
-             }
+            if (count)
+            {
+                if (cloud != EMPTY_CLOUD)
+                {
+                    // Reinforce the cloud.
+                    mpr( "The fire roars with new energy!" );
+                    const int extra_dur = count + random2(rarity/2);
+                    env.cloud[cloud].decay += extra_dur * 5;
+                    env.cloud[cloud].whose = KC_YOU;
+                    continue;
+                }
 
-             if (count)
-             {
-                  if ( cloud != EMPTY_CLOUD )
-                  {
-                     // reinforce the cloud
-                     mpr( "The fire roars with new energy!" );
-                     const int extra_dur = count + random2(rarity/2);
-                     env.cloud[cloud].decay += extra_dur * 5;
-                     env.cloud[cloud].whose = KC_YOU;
-                     continue;
-                  }
+                int durat = 4 + count + random2(rarity/2);
 
-                  int durat = 4 + count + random2(rarity/2);
+                if (durat > 23)
+                    durat = 23;
 
-                  if (durat > 23)
-                      durat = 23;
+                place_cloud( CLOUD_FIRE, xpos, ypos, durat, KC_YOU );
 
-                  place_cloud( CLOUD_FIRE, xpos, ypos, durat, KC_YOU );
-
-                  mpr(count == 1 ? "The book bursts into flames."
-                      : "The books burst into flames.", MSGCH_GOD);
-             }
+                mpr(count == 1 ? "The book bursts into flames."
+                               : "The books burst into flames.", MSGCH_GOD);
+            }
 
         }
 

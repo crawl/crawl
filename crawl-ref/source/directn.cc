@@ -2112,7 +2112,7 @@ static std::string _stair_destination_description(const coord_def &pos)
 
 static void _describe_monster(const monsters *mon)
 {
-    // first print type and equipment
+    // First print type and equipment.
     std::string text = get_monster_desc(mon);
     text += ".";
     print_formatted_paragraph(text, get_number_of_cols());
@@ -2346,9 +2346,9 @@ static void _describe_cell(int mx, int my)
         {
             std::string msg;
 #ifdef USE_TILE
-            msg = "(Right-click for more information.)";
+            msg = "(<w>Right-click</w> for more information.)";
 #else
-            msg = "(Press <w>v<lightgray> for more information.)";
+            msg = "(Press <w>v</w> for more information.)";
 #endif
             print_formatted_paragraph(msg, get_number_of_cols());
         }
@@ -2427,9 +2427,9 @@ static void _describe_cell(int mx, int my)
     if (Options.tutorial_left && tutorial_pos_interesting(mx, my))
     {
 #ifdef USE_TILE
-        feature_desc += " (Right-click for more information.)";
+        feature_desc += " (<w>Right-click</w> for more information.)";
 #else
-        feature_desc += " (Press <w>v<lightgray> for more information.)";
+        feature_desc += " (Press <w>v</w> for more information.)";
 #endif
         print_formatted_paragraph(feature_desc, get_number_of_cols());
     }

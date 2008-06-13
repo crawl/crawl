@@ -247,7 +247,7 @@ int main( int argc, char *argv[] )
 
     const bool game_start = _initialise();
 
-    // override some options for tutorial
+    // Override some options for tutorial.
     init_tutorial_options();
 
     msg::stream << "Welcome, " << you.your_name << " the "
@@ -264,15 +264,17 @@ int main( int argc, char *argv[] )
 
     _god_greeting_message( game_start );
 
-    // warn player about their weapon, if unsuitable
+    // Warn player about their weapon, if unsuitable.
     wield_warning(false);
 
-    if ( game_start )
+    if (game_start)
     {
         if (Options.tutorial_left)
             _startup_tutorial();
         _take_starting_note();
     }
+    else
+        learned_something_new(TUT_LOAD_SAVED_GAME);
 
     while (true)
         _input();
@@ -1215,11 +1217,8 @@ static bool _recharge_rod( item_def &rod, bool wielded )
 static void _recharge_rods()
 {
     const int wielded = you.equip[EQ_WEAPON];
-    if (wielded != -1)
-    {
-        if (_recharge_rod( you.inv[wielded], true ))
-            return ;
-    }
+    if (wielded != -1 && _recharge_rod( you.inv[wielded], true ))
+        return;
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
@@ -1259,7 +1258,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_READ_MESSAGES:
     case CMD_SEARCH_STASHES:
         mpr("You can't repeat informational commands.");
-        return false;
+        return (false);
 
     // Multi-turn commands
     case CMD_PICKUP:
@@ -1275,7 +1274,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_EXPLORE:
     case CMD_INTERLEVEL_TRAVEL:
         mpr("You can't repeat multi-turn commands.");
-        return false;
+        return (false);
 
     // Miscellaneous non-repeatable commands.
     case CMD_TOGGLE_AUTOPICKUP:
@@ -1297,20 +1296,20 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_MAKE_NOTE:
     case CMD_CYCLE_QUIVER_FORWARD:
         mpr("You can't repeat that command.");
-        return false;
+        return (false);
 
     case CMD_DISPLAY_MAP:
         mpr("You can't repeat map commands.");
-        return false;
+        return (false);
 
     case CMD_MOUSE_MOVE:
     case CMD_MOUSE_CLICK:
         mpr("You can't repeat mouse clicks or movements.");
-        return false;
+        return (false);
 
     case CMD_REPEAT_CMD:
         mpr("You can't repeat the repeat command!");
-        return false;
+        return (false);
 
     case CMD_RUN_LEFT:
     case CMD_RUN_DOWN:
@@ -1321,14 +1320,14 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_RUN_UP_RIGHT:
     case CMD_RUN_DOWN_RIGHT:
         mpr("Why would you want to repeat a run command?");
-        return false;
+        return (false);
 
     case CMD_PREV_CMD_AGAIN:
         ASSERT(!is_again);
         if (crawl_state.prev_cmd == CMD_NO_CMD)
         {
             mpr("No previous command to repeat.");
-            return false;
+            return (false);
         }
 
         return _cmd_is_repeatable(crawl_state.prev_cmd, true);
@@ -1336,7 +1335,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_MOVE_NOWHERE:
     case CMD_REST:
     case CMD_SEARCH:
-        return i_feel_safe(true);
+        return (i_feel_safe(true));
 
     case CMD_MOVE_LEFT:
     case CMD_MOVE_DOWN:
@@ -1347,20 +1346,22 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_MOVE_UP_RIGHT:
     case CMD_MOVE_DOWN_RIGHT:
         if (!i_feel_safe())
+        {
             return yesno("Really repeat movement command while monsters "
                          "are nearby?", false, 'n');
+        }
 
-        return true;
+        return (true);
 
     case CMD_NO_CMD:
         mpr("Unknown command, not repeating.");
-        return false;
+        return (false);
 
     default:
-        return true;
+        return (true);
     }
 
-    return false;
+    return (false);
 }
 
 // Used to determine whether to apply the berserk penalty at end of round.
@@ -1390,15 +1391,19 @@ static void _input()
 
     fire_monster_alerts();
 
-    Options.tut_just_triggered = false;
-
     bool player_feels_safe = i_feel_safe();
 
-    // He, we don't want those "Whew, it's safe to rest now" messages when
-    // you were just cast into the Abyss. Right?
-    if (player_feels_safe && you.level_type != LEVEL_ABYSS)
+    if (Options.tutorial_left)
     {
-        if (Options.tutorial_left)
+        Options.tut_just_triggered = false;
+
+        if (you.attribute[ATTR_HELD])
+        {
+            learned_something_new(TUT_CAUGHT_IN_NET);
+        }
+        // We don't want those "Whew, it's safe to rest now" messages when
+        // you were just cast into the Abyss. Right?
+        else if (player_feels_safe && you.level_type != LEVEL_ABYSS)
         {
             if (2 * you.hp < you.hp_max
                 || 2 * you.magic_points < you.max_magic_points)
@@ -1422,14 +1427,14 @@ static void _input()
                 learned_something_new(TUT_MAP_VIEW);
             }
         }
-    }
-    else
-    {
-        if (2*you.hp < you.hp_max)
-            learned_something_new(TUT_RUN_AWAY);
+        else
+        {
+            if (2*you.hp < you.hp_max)
+                learned_something_new(TUT_RUN_AWAY);
 
-        if (Options.tutorial_type == TUT_MAGIC_CHAR && you.magic_points < 1)
-            learned_something_new(TUT_RETREAT_CASTER);
+            if (Options.tutorial_type == TUT_MAGIC_CHAR && you.magic_points < 1)
+                learned_something_new(TUT_RETREAT_CASTER);
+        }
     }
 
     if (you.cannot_act())

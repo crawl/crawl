@@ -1574,10 +1574,10 @@ void blood_smell( int strength, int blood_x, int blood_y )
          blood_x, blood_y, range);
 #endif
 
-    // of the player species, only vampires can smell blood
+    // Of the player species, only Vampires can smell blood.
     if (you.species == SP_VAMPIRE)
     {
-        // whether they actually do so, depends on their hunger state
+        // Whether they actually do so, depends on their hunger state.
         int vamp_strength = strength - 2 * (you.hunger_state - 1);
         if (vamp_strength > 0)
         {
@@ -1594,7 +1594,7 @@ void blood_smell( int strength, int blood_x, int blood_y )
                      you.x_pos, you.y_pos, player_distance);
 #endif
                 you.check_awaken(range - player_distance);
-                // don't message if you can see the square
+                // Don't message if you can see the square.
                 if (!see_grid(blood_x, blood_y))
                 {
                     mprf("You smell fresh blood%s.",
@@ -1616,7 +1616,7 @@ void blood_smell( int strength, int blood_x, int blood_y )
 
         if (distance(monster->x, monster->y, blood_x, blood_y) <= range)
         {
-            // let sleeping hounds lie
+            // Let sleeping hounds lie.
             if (mons_is_sleeping(monster)
                 && mons_species(monster->type) != MONS_VAMPIRE)
             {

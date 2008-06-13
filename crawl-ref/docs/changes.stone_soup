@@ -23,7 +23,7 @@ Interface
 * Overhauled (f)iring interface: abolish (t)hrowing, output quiver in status.
 * Allow selection of equipment slots from '%' overview screen.
 * Improved butchering interface.
-* Greatly improved the tutorial.
+* Many new tutorial information triggers.
 * Allow searching item/monster/spell descriptions ('?/' command).
 * Allow swapping (' command) to non-weapons that need to be wielded for spells.
 * Fixed weapon swap ignoring {!w}.

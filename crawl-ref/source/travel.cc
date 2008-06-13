@@ -1437,17 +1437,18 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
 
     ignore_hostile = false;
 
-    // Set the seed point.
     // For each round, circumference will store all points that were discovered
-    // in the previous round of a given distance. We use an array of size 2,
-    // so we can comfortably switch between the list of points to be
-    // investigated this round and the slowly growing list of points to be
-    // inspected next round. Once we've finished with the current round, i.e.
-    // there are no more points to be looked at in the current array, we switch
-    // circ_index over to !circ_index (between 0 and 1), so the "next round"
-    // becomes the current one, and the old points can be overwritten with
-    // newer ones. Since we count the number of points for next round in
-    // next_iter_points, we don't even need to reset the array.
+    // in the previous round of a given distance. Because we check all grids of
+    // a certain distance from the starting point in one round, and move
+    // outwards in concentric circles, this is an implementation of Dijkstra.
+    // We use an array of size 2, so we can comfortably switch between the list
+    // of points to be investigated this round and the slowly growing list of
+    // points to be inspected next round. Once we've finished with the current
+    // round, i.e. there are no more points to be looked at in the current
+    // array, we switch circ_index over to !circ_index (between 0 and 1), so
+    // the "next round" becomes the current one, and the old points can be
+    // overwritten with newer ones. Since we count the number of points for
+    // next round in next_iter_points, we don't even need to reset the array.
     circumference[circ_index][0] = start;
 
     // Zap out previous distances array

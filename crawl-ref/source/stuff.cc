@@ -831,13 +831,14 @@ void canned_msg(canned_message_type which_message)
     case MSG_SOMETHING_APPEARS:
         mprf("Something appears %s!",
              (you.species == SP_NAGA || player_mutation_level(MUT_HOOVES))
-             ? "before you" : "at your feet");
+                 ? "before you" : "at your feet");
         break;
     case MSG_NOTHING_HAPPENS:
         mpr("Nothing appears to happen.");
         break;
     case MSG_YOU_RESIST:
         mpr("You resist.");
+        learned_something_new(TUT_YOU_RESIST);
         break;
     case MSG_YOU_PARTIALLY_RESIST:
         mpr("You partially resist.");

@@ -2669,82 +2669,90 @@ enum trap_type                         // env.trap_type[]
     TRAP_RANDOM = 255                  // set at 255 to avoid potential conflicts {dlb}
 };
 
-// any change in this list warrants an increase in the
-// version number in tutorial.cc
+// Any change in this list warrants an increase in the version number in
+// tutorial.cc.
 enum tutorial_event_type
 {
-    TUT_SEEN_FIRST_OBJECT,  // 0
+    TUT_SEEN_FIRST_OBJECT,    // 0
     // seen certain items
     TUT_SEEN_POTION,
     TUT_SEEN_SCROLL,
     TUT_SEEN_WAND,
     TUT_SEEN_SPBOOK,
-    TUT_SEEN_JEWELLERY,     // 5
+    TUT_SEEN_JEWELLERY,       // 5
     TUT_SEEN_MISC,
     TUT_SEEN_STAFF,
     TUT_SEEN_WEAPON,
     TUT_SEEN_MISSILES,
-    TUT_SEEN_ARMOUR,        // 10
+    TUT_SEEN_ARMOUR,          // 10
     TUT_SEEN_RANDART,
     TUT_SEEN_FOOD,
     TUT_SEEN_CARRION,
     TUT_SEEN_GOLD,
     // encountered dungeon features
-    TUT_SEEN_STAIRS,        // 15
+    TUT_SEEN_STAIRS,          // 15
     TUT_SEEN_ESCAPE_HATCH,
     TUT_SEEN_BRANCH,
     TUT_SEEN_TRAP,
     TUT_SEEN_ALTAR,
-    TUT_SEEN_SHOP,          // 20
+    TUT_SEEN_SHOP,            // 20
     TUT_SEEN_DOOR,
     TUT_SEEN_SECRET_DOOR,
     // other 'first events'
     TUT_SEEN_MONSTER,
     TUT_MONSTER_BRAND,
-    TUT_MONSTER_FRIENDLY,   // 25
+    TUT_MONSTER_FRIENDLY,     // 25
     TUT_KILLED_MONSTER,
     TUT_NEW_LEVEL,
     TUT_SKILL_RAISE,
+    TUT_GAINED_MAGICAL_SKILL,
+    TUT_GAINED_MELEE_SKILL,   // 30
+    TUT_GAINED_RANGED_SKILL,
+    TUT_CHOOSE_STAT,
     TUT_MAKE_CHUNKS,
-    TUT_OFFER_CORPSE,       // 30
-    TUT_NEW_ABILITY,
+    TUT_OFFER_CORPSE,
+    TUT_NEW_ABILITY,          // 35
     TUT_FLEEING_MONSTER,
     TUT_ROTTEN_FOOD,
     TUT_CONVERT,
-    TUT_GOD_DISPLEASED,     // 35
-    TUT_EXCOMMUNICATE,
+    TUT_GOD_DISPLEASED,
+    TUT_EXCOMMUNICATE,        // 40
     TUT_SPELL_MISCAST,
     TUT_SPELL_HUNGER,
     TUT_GLOWING,
+    TUT_YOU_RESIST,
     // status changes
-    TUT_YOU_ENCHANTED,      // 40
+    TUT_YOU_ENCHANTED,        // 45
     TUT_YOU_SICK,
     TUT_YOU_POISON,
     TUT_YOU_ROTTING,
     TUT_YOU_CURSED,
-    TUT_YOU_HUNGRY,         // 45
+    TUT_YOU_HUNGRY,           // 50
     TUT_YOU_STARVING,
     TUT_YOU_MUTATED,
+    TUT_CAN_BERSERK,
     TUT_POSTBERSERK,
+    TUT_CAUGHT_IN_NET,        // 55
     // warning
     TUT_RUN_AWAY,
-    TUT_RETREAT_CASTER,     // 50
+    TUT_RETREAT_CASTER,
     TUT_WIELD_WEAPON,
     TUT_NEED_HEALING,
-    TUT_NEED_POISON_HEALING,
+    TUT_NEED_POISON_HEALING,  // 60
     TUT_INVISIBLE_DANGER,
-    TUT_NEED_HEALING_INVIS, // 55
+    TUT_NEED_HEALING_INVIS,
     TUT_ABYSS,
     // interface
     TUT_MULTI_PICKUP,
-    TUT_HEAVY_LOAD,
+    TUT_HEAVY_LOAD,           // 65
     TUT_SHIFT_RUN,
-    TUT_MAP_VIEW,           // 60
+    TUT_MAP_VIEW,
     TUT_DONE_EXPLORE,
     TUT_STAIR_BRAND,
-    TUT_EVENTS_NUM          // 63
+    TUT_LOAD_SAVED_GAME,     // 70
+    TUT_EVENTS_NUM           // 71
 };
-// NOTE: For numbers higher than 70 change size of tutorial_events in externs.h.
+// NOTE: For numbers higher than 75 change size of tutorial_events in externs.h.
 
 enum tutorial_types
 {

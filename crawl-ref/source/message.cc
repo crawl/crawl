@@ -861,7 +861,7 @@ void more(void)
             message_out(crawl_view.msgsz.y - 1,
                         LIGHTGREY,
                         "--more--                        "
-                        "Press Ctrl-P to reread old messages",
+                        "Press Ctrl-P to reread old messages.",
                         2, false);
         }
         else

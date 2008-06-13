@@ -2186,11 +2186,13 @@ bool player_light_armour(bool with_skill)
     const int arm = you.equip[EQ_BODY_ARMOUR];
 
     if (arm == -1)
-        return true;
+        return (true);
 
-    if (with_skill &&
-        property(you.inv[arm], PARM_EVASION) + you.skills[SK_ARMOUR]/3 >= 0)
-        return true;
+    if (with_skill
+        && property(you.inv[arm], PARM_EVASION) + you.skills[SK_ARMOUR]/3 >= 0)
+    {
+        return (true);
+    }
 
     return (is_light_armour(you.inv[arm]));
 }                               // end player_light_armour()
@@ -2925,13 +2927,15 @@ void level_change(bool skip_attribute_increase)
             inc_hp( 4, true );
             inc_mp( 1, true );
         }
-        else  // character has gained a new level
+        else  // Character has gained a new level
         {
             if (you.experience_level == 27)
                mprf(MSGCH_INTRINSIC_GAIN, "You have reached level 27, the final one!");
             else
+            {
                mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d!",
-                   you.experience_level );
+                    you.experience_level);
+            }
             if (!skip_more)
                 more();
 
@@ -3178,7 +3182,7 @@ void level_change(bool skip_attribute_increase)
             case SP_WHITE_DRACONIAN:
             case SP_GREEN_DRACONIAN:
             case SP_YELLOW_DRACONIAN:
-/* Grey is later */
+            // Grey is handled later.
             case SP_BLACK_DRACONIAN:
             case SP_PURPLE_DRACONIAN:
             case SP_MOTTLED_DRACONIAN:
@@ -3626,6 +3630,7 @@ static void _attribute_increase()
     mpr("Your experience leads to an increase in your attributes!",
         MSGCH_INTRINSIC_GAIN);
 
+    learned_something_new(TUT_CHOOSE_STAT);
     more();
     mesclr();
 

@@ -39,13 +39,14 @@ void tutorial_dissection_reminder(bool healthy);
 void tutorial_healing_reminder(void);
 
 void taken_new_item(unsigned char item_type);
+void tut_gained_new_skill(int skill);
 void tutorial_first_monster(const monsters& mon);
 void tutorial_first_item(const item_def& item);
-void learned_something_new(tutorial_event_type seen_what, int x=0, int y=0);
+void learned_something_new(tutorial_event_type seen_what, int x = 0, int y = 0);
 formatted_string tut_abilities_info(void);
 void print_tut_skills_info(void);
 
-// additional information for tutorial players
+// Additional information for tutorial players.
 void tutorial_describe_item(const item_def &item);
 void tutorial_inscription_info(bool autoinscribe);
 bool tutorial_pos_interesting(int x, int y);

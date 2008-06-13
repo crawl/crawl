@@ -1656,7 +1656,7 @@ inline static void _monster_warning(activity_interrupt_type ai,
         {
             std::string text = mon->name(DESC_CAP_A);
             // For named monsters also mention the base type.
-            if (!(mon->mname).empty())
+            if (!(mon->mname).empty() && mon->type != MONS_PLAYER_GHOST)
                 text += " the " + mon->name(DESC_BASENAME);
 
             if (at.context == "thin air")

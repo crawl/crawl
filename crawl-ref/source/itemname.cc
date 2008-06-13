@@ -2355,10 +2355,6 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_ARMOUR:
         return (!can_wear_armour(item, false, true));
 
-    case OBJ_BOOKS:
-        return (item.sub_type != BOOK_DESTRUCTION
-                && item.sub_type != BOOK_MANUAL && you.religion == GOD_TROG);
-
     case OBJ_SCROLLS:
         if (!item_type_known(item))
             return (false);

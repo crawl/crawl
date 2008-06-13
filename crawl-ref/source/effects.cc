@@ -1959,29 +1959,27 @@ void yell(bool force)
     }
 
     mpr("What do you say?", MSGCH_PROMPT);
-    mprf(" t - %s", cap_shout.c_str());
+    mprf(" t - %s!", cap_shout.c_str());
 
     if (!you.duration[DUR_BERSERKER])
     {
-        mpr(" a - Order allies to attack a monster");
-
+        std::string previous = "";
         if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
         {
             monsters *target = &menv[you.prev_targ];
             if (target->alive() && mons_near(target)
                 && player_monster_visible(target))
             {
-                mpr(" p - Order allies to attack your previous target");
+                previous = "   p - Attack previous target.";
                 targ_prev = true;
             }
         }
 
-        mpr(" s - Order allies to stop attacking");
-        mpr(" w - Order allies to wait here");
-        mpr(" f - Order allies to follow you");
+        mprf("Orders for allies: a - Attack new target.%s", previous.c_str());
+        mpr( "                   s - Stop attacking.");
+        mpr( "                   w - Wait here.           f - Follow me.");
    }
-
-    mprf(" Anything else - Stay silent%s",
+    mprf(" Anything else - Stay silent%s.",
          one_chance_in(20)? " (and be thought a fool)" : "");
 
     unsigned char keyn = get_ch();

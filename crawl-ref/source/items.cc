@@ -701,7 +701,7 @@ static int _item_name_specialness(const item_def& item)
     }
     if (item_type_known(item))
     {
-        if ( is_artefact(item) )
+        if (is_artefact(item))
             return 2;
 
         // XXX Unite with l_item_branded() in clua.cc

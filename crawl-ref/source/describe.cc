@@ -1641,7 +1641,7 @@ std::string get_item_description( const item_def &item, bool verbose,
             break;
         // intentional fall-through
     case OBJ_FOOD:
-        if (item.sub_type == FOOD_CHUNK)
+        if (item.base_type == OBJ_CORPSES || item.sub_type == FOOD_CHUNK)
         {
             if (food_is_rotten(item))
             {
@@ -1682,13 +1682,14 @@ std::string get_item_description( const item_def &item, bool verbose,
             case CE_CONTAMINATED:
                 if (player_mutation_level(MUT_SAPROVOROUS) < 3)
                 {
-                    description << "$$Chunks like this may occasionally cause "
+                    description << "$$Meat like this may occasionally cause "
                                    "sickness.";
                 }
                 break;
             default:
                 break;
             }
+
             if (is_good_god(you.religion) && is_player_same_species(item.plus)
                 || you.religion == GOD_ZIN
                    && mons_intel(item.plus) >= I_NORMAL)

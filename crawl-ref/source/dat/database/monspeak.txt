@@ -2248,7 +2248,7 @@ w:5
 
 @The_monster@ seems like @pronoun@ is about to say something to you, then stops.
 
-@The_monster@ says, "When this is all over, I'm going to start a fungus farm."
+@The_monster@ @mutters@, "When this is all over, I'm going to start a fungus farm."
 %%%%
 ################################################
 # Make this work for other predefined orcs!

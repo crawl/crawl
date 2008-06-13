@@ -398,8 +398,6 @@ static bool _have_corpses_in_pack(bool remind)
         pronoun = "them";
     }
 
-    std::ostringstream text;
-
     if (remind)
     {
         mprf("You might want to also %s the %s in your pack.", verb.c_str(),
@@ -410,8 +408,6 @@ static bool _have_corpses_in_pack(bool remind)
         mprf("If you dropped the %s in your pack you could %s %s.",
              verb.c_str(), noun.c_str(), pronoun.c_str());
     }
-
-    mpr(text.str().c_str());
 
     return (true);
 }

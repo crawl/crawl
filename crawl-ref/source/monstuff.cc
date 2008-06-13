@@ -2833,20 +2833,24 @@ static void _handle_behaviour(monsters *mon)
                         range = 3;
                         break;
                     case I_ANIMAL:
-                        range = 5;
+                        range = 4;
                         break;
                     case I_NORMAL:
-                        range = 10;
+                        range = 8;
                         break;
                     default:
                         // Highly intelligent monsters can find their way
-                        // anywhere.
-                        range = 0;
+                        // anywhere. (range == 0 means no restriction.)
                         break;
                     }
 
-                    if (range && native)
-                        range += 3;
+                    if (range)
+                    {
+                        if (native)
+                            range += 3;
+                        else if (mons_class_flag(mon->type, M_BLOOD_SCENT))
+                            range++;
+                    }
 
                     if (range > 0 && dist > range)
                     {
@@ -3116,10 +3120,10 @@ static void _handle_behaviour(monsters *mon)
                             // currently no distinction between smart and
                             // stupid monsters when it comes to travelling
                             // back to the patrol point. This is in part due
-                            // to the flavourness of bees finding their way
-                            // back to the Hive (patrolling should really be
-                            // restricted to cases like this), and for the
-                            // other part it's not that important because
+                            // to the flavour in e.g. bees finding their way
+                            // back to the Hive (and patrolling should really
+                            // be restricted to cases like this), and for the
+                            // other part it's not all that important because
                             // we calculate the path once and then follow it
                             // home, and the player won't ever see the
                             // orderly fashion the bees will trudge along.
@@ -3139,8 +3143,7 @@ static void _handle_behaviour(monsters *mon)
                                 else
                                 {
                                     // We're so close we don't even need
-                                    // a path. (Shouldn't happen as that
-                                    // should have been found above.)
+                                    // a path.
                                     mon->target_x = mon->patrol_point.x;
                                     mon->target_y = mon->patrol_point.y;
                                 }

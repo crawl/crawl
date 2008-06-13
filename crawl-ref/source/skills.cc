@@ -188,7 +188,7 @@ static int _exercise2( int exsk )
     // being good at some weapons makes others easier to learn:
     if (exsk < SK_ARMOUR)
     {
-        /* blades to blades */
+        // Blades to Blades.
         if ((exsk == SK_SHORT_BLADES || exsk == SK_LONG_BLADES)
             && (you.skills[SK_SHORT_BLADES] > you.skills[exsk]
                 || you.skills[SK_LONG_BLADES] > you.skills[exsk]))
@@ -196,7 +196,7 @@ static int _exercise2( int exsk )
             bonus += random2(3);
         }
 
-        /* Axes and Polearms */
+        // Axes and Polearms.
         if ((exsk == SK_AXES || exsk == SK_POLEARMS)
             && (you.skills[SK_AXES] > you.skills[exsk]
                 || you.skills[SK_POLEARMS] > you.skills[exsk]))
@@ -204,7 +204,7 @@ static int _exercise2( int exsk )
             bonus += random2(3);
         }
 
-        /* Polearms and Staves */
+        // Polearms and Staves.
         if ((exsk == SK_POLEARMS || exsk == SK_STAVES)
             && (you.skills[SK_POLEARMS] > you.skills[exsk]
                 || you.skills[SK_STAVES] > you.skills[exsk]))
@@ -212,7 +212,7 @@ static int _exercise2( int exsk )
             bonus += random2(3);
         }
 
-        /* Axes and Maces */
+        // Axes and Maces.
         if ((exsk == SK_AXES || exsk == SK_MACES_FLAILS)
             && (you.skills[SK_AXES] > you.skills[exsk]
                 || you.skills[SK_MACES_FLAILS] > you.skills[exsk]))
@@ -220,7 +220,7 @@ static int _exercise2( int exsk )
             bonus += random2(3);
         }
 
-        /* Slings and Throwing */
+        // Slings and Throwing.
         if ((exsk == SK_SLINGS || exsk == SK_THROWING)
             && (you.skills[SK_SLINGS] > you.skills[exsk]
                 || you.skills[SK_THROWING] > you.skills[exsk]))
@@ -234,7 +234,7 @@ static int _exercise2( int exsk )
     if (exsk == SK_STEALTH)
         bonus += random2(3);
 
-    // spell casting is cheaper early on, and elementals hinder each other
+    // Spellcasting is cheaper early on, and elementals hinder each other.
     if (exsk >= SK_SPELLCASTING)
     {
         if (you.skill_cost_level < 5)
@@ -247,7 +247,7 @@ static int _exercise2( int exsk )
             skill_change /= 20;
         }
 
-        // being good at elemental magic makes other elements harder to learn:
+        // Being good at elemental magic makes other elements harder to learn.
         if (exsk >= SK_FIRE_MAGIC && exsk <= SK_EARTH_MAGIC
             && (you.skills[SK_FIRE_MAGIC] > you.skills[exsk]
                 || you.skills[SK_ICE_MAGIC] > you.skills[exsk]
@@ -258,12 +258,12 @@ static int _exercise2( int exsk )
                 return (0);
         }
 
-        // some are direct opposites
+        // Some are direct opposites.
         if ((exsk == SK_FIRE_MAGIC || exsk == SK_ICE_MAGIC)
             && (you.skills[SK_FIRE_MAGIC] > you.skills[exsk]
                 || you.skills[SK_ICE_MAGIC] > you.skills[exsk]))
         {
-            // of course, this is cumulative with the one above.
+            // Of course, this is cumulative with the one above.
             if (!one_chance_in(3))
                 return (0);
         }
@@ -276,7 +276,7 @@ static int _exercise2( int exsk )
                 return (0);
         }
 
-        // experimental restriction (too many spell schools) -- bwr
+        // Experimental restriction (too many spell schools). -- bwr
         int skill_rank = 1;
 
         for (i  = SK_CONJURATIONS; i <= SK_DIVINATIONS; i++)
@@ -293,7 +293,7 @@ static int _exercise2( int exsk )
     int spending_limit = (you.exp_available < MAX_SPENDING_LIMIT)
                                     ? you.exp_available : MAX_SPENDING_LIMIT;
 
-    // handle fractional learning
+    // Handle fractional learning.
     if (skill_change > spending_limit)
     {
         // This system is a bit hard on missile weapons in the late game
@@ -415,6 +415,8 @@ static int _exercise2( int exsk )
         {
             mprf(MSGCH_INTRINSIC_GAIN,
                  "You have gained %s skill!", skill_name( exsk ) );
+
+            tut_gained_new_skill(exsk);
         }
         else
         {

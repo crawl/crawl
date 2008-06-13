@@ -9,12 +9,14 @@
  */
 
 #include "AppHdr.h"
+#include "cio.h"
 
 #include <cstring>
 #include <sstream>
 
 #include "tutorial.h"
-#include "cio.h"
+
+#include "abl-show.h"
 #include "cloud.h"
 #include "command.h"
 #include "food.h"
@@ -29,6 +31,7 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "monstuff.h"
+#include "mutation.h"
 #include "newgame.h"
 #include "output.h"
 #include "player.h"
@@ -52,7 +55,7 @@ static void         _tutorial_describe_cloud(int x, int y);
 static bool         _water_is_disturbed(int x, int y);
 
 //#define TUTORIAL_DEBUG
-#define TUTORIAL_VERSION 113
+#define TUTORIAL_VERSION  8
 
 static int _get_tutorial_cols()
 {
@@ -68,7 +71,7 @@ void save_tutorial(writer& outf)
 {
     marshallLong( outf, TUTORIAL_VERSION);
     marshallShort( outf, Options.tutorial_type);
-    for ( long i = 0; i < TUT_EVENTS_NUM; ++i )
+    for (long i = 0; i < TUT_EVENTS_NUM; ++i)
         marshallShort( outf, Options.tutorial_events[i] );
 }
 
@@ -161,7 +164,7 @@ bool pick_tutorial()
             Options.tut_melee_counter   = 0;
             Options.tut_berserk_counter = 0;
 
-            // for occasional healing reminders
+            // For occasional healing reminders.
             Options.tut_last_healed = 0;
 
             // Did the player recently see a monster turn invisible?
@@ -175,7 +178,6 @@ bool pick_tutorial()
         if (keyn == CK_BKSP || keyn == ' ')
         {
             // In this case, undo previous choices.
-            // set_startup_options();
             you.species    = SP_UNKNOWN;
             you.char_class = JOB_UNKNOWN;
             Options.race   = 0;
@@ -303,132 +305,144 @@ static std::string _tut_debug_list(int event)
 {
     switch(event)
     {
-      case TUT_SEEN_FIRST_OBJECT:
-          return "seen first object";
-      case TUT_SEEN_POTION:
-          return "seen first potion";
-      case TUT_SEEN_SCROLL:
-          return "seen first scroll";
-      case TUT_SEEN_WAND:
-          return "seen first wand";
-      case TUT_SEEN_SPBOOK:
-          return "seen first spellbook";
-      case TUT_SEEN_WEAPON:
-          return "seen first weapon";
-      case TUT_SEEN_MISSILES:
-          return "seen first missiles";
-      case TUT_SEEN_ARMOUR:
-          return "seen first armour";
-      case TUT_SEEN_RANDART:
-          return "seen first random artefact";
-      case TUT_SEEN_FOOD:
-          return "seen first food";
-      case TUT_SEEN_CARRION:
-          return "seen first corpse";
-      case TUT_SEE_GOLD:
-          return "seen first pile of gold";
-      case TUT_SEEN_JEWELLERY:
-          return "seen first jewellery";
-      case TUT_SEEN_MISC:
-          return "seen first misc. item";
-      case TUT_SEEN_MONSTER:
-          return "seen first monster";
-      case TUT_SEEN_STAIRS:
-          return "seen first stairs";
-      case TUT_SEEN_ESCAPE_HATCH:
-          return "seen first escape hatch";
-      case TUT_SEEN_BRANCH:
-          return "seen first branch entrance";
-      case TUT_SEEN_TRAP:
-          return "encountered a trap";
-      case TUT_SEEN_ALTAR:
-          return "seen an altar";
-      case TUT_SEEN_SHOP:
-          return "seen a shop";
-      case TUT_SEEN_DOOR:
-          return "seen a closed door";
-      case TUT_SEEN_SECRET_DOOR:
-          return "found a secret door";
-      case TUT_KILLED_MONSTER:
-          return "killed first monster";
-      case TUT_NEW_LEVEL:
-          return "gained a new level";
-      case TUT_SKILL_RAISE:
-          return "raised a skill";
-      case TUT_YOU_ENCHANTED:
-          return "caught an enchantment";
-      case TUT_YOU_SICK:
-          return "became sick";
-      case TUT_YOU_POISON:
-          return "were poisoned";
-      case TUT_YOU_ROTTING:
-          return "were rotting";
-      case TUT_YOU_CURSED:
-          return "had something cursed";
-      case TUT_YOU_HUNGRY:
-          return "felt hungry";
-      case TUT_YOU_STARVING:
-          return "were starving";
-      case TUT_MAKE_CHUNKS:
-          return "learned about chunks";
-      case TUT_OFFER_CORPSE:
-          return "learned about sacrifice";
-      case TUT_MULTI_PICKUP:
-          return "read about pickup menu";
-      case TUT_HEAVY_LOAD:
-          return "were encumbered";
-      case TUT_ROTTEN_FOOD:
-          return "carried rotten food";
-      case TUT_NEED_HEALING:
-          return "needed healing";
-      case TUT_NEED_POISON_HEALING:
-          return "needed healing for poison";
-      case TUT_INVISIBLE_DANGER:
-          return "encountered an invisible foe";
-      case TUT_NEED_HEALING_INVIS:
-          return "had to heal near an unseen monster";
-      case TUT_ABYSS:
-          return "was cast into the Abyss";
-      case TUT_POSTBERSERK:
-          return "learned about Berserk aftereffects";
-      case TUT_RUN_AWAY:
-          return "were told to run away";
-      case TUT_RETREAT_CASTER:
-          return "were told to retreat as a caster";
-      case TUT_SHIFT_RUN:
-          return "learned about shift-run";
-      case TUT_MAP_VIEW:
-          return "learned about the level map";
-      case TUT_DONE_EXPLORE:
-          return "explored a level";
-      case TUT_YOU_MUTATED:
-          return "caught a mutation";
-      case TUT_NEW_ABILITY:
-          return "gained a divine ability";
-      case TUT_WIELD_WEAPON:
-          return "wielded an unsuitable weapon";
-      case TUT_FLEEING_MONSTER:
-          return "made a monster flee";
-      case TUT_MONSTER_BRAND:
-          return "learned about colour brandings";
-      case TUT_MONSTER_FRIENDLY:
-          return "seen first friendly monster";
-      case TUT_CONVERT:
-          return "converted to a god";
-      case TUT_GOD_DISPLEASED:
-          return "piety ran low";
-      case TUT_EXCOMMUNICATE:
-          return "excommunicated by a god";
-      case TUT_SPELL_MISCAST:
-          return "spell miscast";
-      case TUT_SPELL_HUNGER:
-          return "spell casting caused hunger";
-      case TUT_GLOWING:
-          return "player glowing from contamination";
-      case TUT_STAIR_BRAND:
-          return "saw stairs with objects on it";
-      default:
-          return "faced a bug";
+    case TUT_SEEN_FIRST_OBJECT:
+        return "seen first object";
+    case TUT_SEEN_POTION:
+        return "seen first potion";
+    case TUT_SEEN_SCROLL:
+        return "seen first scroll";
+    case TUT_SEEN_WAND:
+        return "seen first wand";
+    case TUT_SEEN_SPBOOK:
+        return "seen first spellbook";
+    case TUT_SEEN_WEAPON:
+        return "seen first weapon";
+    case TUT_SEEN_MISSILES:
+        return "seen first missiles";
+    case TUT_SEEN_ARMOUR:
+        return "seen first armour";
+    case TUT_SEEN_RANDART:
+        return "seen first random artefact";
+    case TUT_SEEN_FOOD:
+        return "seen first food";
+    case TUT_SEEN_CARRION:
+        return "seen first corpse";
+    case TUT_SEE_GOLD:
+        return "seen first pile of gold";
+    case TUT_SEEN_JEWELLERY:
+        return "seen first jewellery";
+    case TUT_SEEN_MISC:
+        return "seen first misc. item";
+    case TUT_SEEN_MONSTER:
+        return "seen first monster";
+    case TUT_SEEN_STAIRS:
+        return "seen first stairs";
+    case TUT_SEEN_ESCAPE_HATCH:
+        return "seen first escape hatch";
+    case TUT_SEEN_BRANCH:
+        return "seen first branch entrance";
+    case TUT_SEEN_TRAP:
+        return "encountered a trap";
+    case TUT_SEEN_ALTAR:
+        return "seen an altar";
+    case TUT_SEEN_SHOP:
+        return "seen a shop";
+    case TUT_SEEN_DOOR:
+        return "seen a closed door";
+    case TUT_SEEN_SECRET_DOOR:
+        return "found a secret door";
+    case TUT_KILLED_MONSTER:
+        return "killed first monster";
+    case TUT_NEW_LEVEL:
+        return "gained a new level";
+    case TUT_SKILL_RAISE:
+        return "raised a skill";
+    case TUT_YOU_ENCHANTED:
+        return "caught an enchantment";
+    case TUT_YOU_SICK:
+        return "became sick";
+    case TUT_YOU_POISON:
+        return "were poisoned";
+    case TUT_YOU_ROTTING:
+        return "were rotting";
+    case TUT_YOU_CURSED:
+        return "had something cursed";
+    case TUT_YOU_HUNGRY:
+        return "felt hungry";
+    case TUT_YOU_STARVING:
+        return "were starving";
+    case TUT_MAKE_CHUNKS:
+        return "learned about chunks";
+    case TUT_OFFER_CORPSE:
+        return "learned about sacrifice";
+    case TUT_MULTI_PICKUP:
+        return "read about pickup menu";
+    case TUT_HEAVY_LOAD:
+        return "were encumbered";
+    case TUT_ROTTEN_FOOD:
+        return "carried rotten food";
+    case TUT_NEED_HEALING:
+        return "needed healing";
+    case TUT_NEED_POISON_HEALING:
+        return "needed healing for poison";
+    case TUT_INVISIBLE_DANGER:
+        return "encountered an invisible foe";
+    case TUT_NEED_HEALING_INVIS:
+        return "had to heal near an unseen monster";
+    case TUT_ABYSS:
+        return "was cast into the Abyss";
+    case TUT_POSTBERSERK:
+        return "learned about Berserk after-effects";
+    case TUT_RUN_AWAY:
+        return "were told to run away";
+    case TUT_RETREAT_CASTER:
+        return "were told to retreat as a caster";
+    case TUT_SHIFT_RUN:
+        return "learned about shift-run";
+    case TUT_MAP_VIEW:
+        return "learned about the level map";
+    case TUT_DONE_EXPLORE:
+        return "explored a level";
+    case TUT_YOU_MUTATED:
+        return "caught a mutation";
+    case TUT_NEW_ABILITY:
+        return "gained a divine ability";
+    case TUT_WIELD_WEAPON:
+        return "wielded an unsuitable weapon";
+    case TUT_FLEEING_MONSTER:
+        return "made a monster flee";
+    case TUT_MONSTER_BRAND:
+        return "learned about colour brandings";
+    case TUT_MONSTER_FRIENDLY:
+        return "seen first friendly monster";
+    case TUT_CONVERT:
+        return "converted to a god";
+    case TUT_GOD_DISPLEASED:
+        return "piety ran low";
+    case TUT_EXCOMMUNICATE:
+        return "excommunicated by a god";
+    case TUT_SPELL_MISCAST:
+        return "spell miscast";
+    case TUT_SPELL_HUNGER:
+        return "spell casting caused hunger";
+    case TUT_GLOWING:
+        return "player glowing from contamination";
+    case TUT_STAIR_BRAND:
+        return "saw stairs with objects on it";
+    case TUT_YOU_RESIST:
+        return "resisted some magic";
+    case TUT_CAUGHT_IN_NET:
+        return "were caught in a net";
+    case TUT_LOAD_SAVED_GAME:
+        return "restored a saved game";
+    case TUT_GAINED_MAGICAL_SKILL:
+        return "gained a new magical skill";
+    case TUT_CHOOSE_STAT:
+        return "could choose a stat";
+    case TUT_CAN_BERSERK:
+        return "were told to Berserk";
+    default:
+        return "faced a bug";
     }
 }
 
@@ -495,7 +509,7 @@ static formatted_string _tutorial_map_intro()
     result += "</";
     result += colour_to_str(channel_to_colour(MSGCH_TUTORIAL));
     result += ">" EOL;
-    result += " --more--                               Press <white>Escape</white> to skip the basics";
+    result += " --more--                               Press <white>Escape</white> to skip the basics.";
 
     linebreak_string2(result, _get_tutorial_cols());
     return formatted_string::parse_block(result, false);
@@ -548,7 +562,7 @@ static void _tutorial_message_intro()
               "you missed something, previous messages can be read again with "
               "<w>Ctrl-P</w>"
 #ifdef USE_TILE
-              " or by clicking into the message area"
+              " or by <w>clicking into the message area</w>"
 #endif
               "." EOL;
     result += " --more--                               Press <w>Escape</w> to skip the basics";
@@ -999,6 +1013,151 @@ void taken_new_item(unsigned char item_type)
     }
 }
 
+// Give a special message if you gain a skill you didn't have before.
+void tut_gained_new_skill(int skill)
+{
+    learned_something_new(TUT_SKILL_RAISE);
+
+    switch (skill)
+    {
+    // Special cases first.
+    case SK_FIGHTING:
+        mpr("Apart from making you more proficient in hand-to-hand combat, "
+            "Fighting also increases your maximum hitpoints.", MSGCH_TUTORIAL);
+        break;
+
+    case SK_ARMOUR:
+        mpr("Armour skill helps lessen the hinderance of heavy armour on "
+            "moving, spellcasting and other actions.", MSGCH_TUTORIAL);
+        break;
+
+    case SK_STEALTH:
+        mpr("By training stealth, you can make it less likely that monsters "
+            "will notice you. Note that monsters become more suspicious and "
+            "observant as you descend.", MSGCH_TUTORIAL);
+        break;
+
+    case SK_STABBING:
+        mpr("Stabbing is the skill that governs the likeliness of doing a "
+            "great amount of damage on a distracted or helpless creature. "
+            "Some gods may disapprove of this.", MSGCH_TUTORIAL);
+        break;
+
+    case SK_TRAPS_DOORS:
+        mpr("A character trained in Traps & Doors will be more observant to "
+            "his or her surroundings and be quicker in noticing traps and "
+            "secret doors.", MSGCH_TUTORIAL);
+        break;
+
+    case SK_UNARMED_COMBAT:
+    {
+        std::string text;
+        text = "A character trained in unarmed combat will occasionally do an "
+               "additional melee attack, provided they have the means to do "
+               "so.";
+
+        if (you.species == SP_MINOTAUR)
+        {
+            text += " For example, with your horns you can do a dangerous "
+                    "headbutt attack.";
+        }
+        else if (you.species == SP_CENTAUR)
+            text += " For example, with your hooves you can kick your enemies.";
+
+        text += " Of course, this skill also trains your proficiency in "
+                "barehanded combat.";
+
+        mpr(text.c_str(), MSGCH_TUTORIAL);
+        break;
+    }
+    case SK_INVOCATIONS:
+        mpr("Your Invocations skill affects the likelihood trying to use a "
+            "divine ability will be successful.", MSGCH_TUTORIAL);
+        break;
+
+    case SK_EVOCATIONS:
+        mpr("Evocations is all about using magical items like wands, decks or "
+            "other objects. The higher your skill, the more likely is a "
+            "positive outcome when evoking items.", MSGCH_TUTORIAL);
+        break;
+
+    case SK_DODGING:
+        mpr("Obviously, the Dodging skill will affect your chance of dodging "
+            "an attack, be it melee, ranged, or magical. You cannot dodge "
+            "enchantments, sadly. You'll need magic resistance to resist them.",
+            MSGCH_TUTORIAL);
+        break;
+
+    case SK_SHIELDS:
+        mpr("A high Shields skill of blocking a melee or ranged attack with "
+            "your equipped (or a magical) shield.", MSGCH_TUTORIAL);
+        break;
+
+    case SK_THROWING:
+        mpr("Training Throwing will make thrown weapons (as opposed to ones "
+            "fired from a launcher) more effective. In particular, it makes "
+            "weapons of returning more likely to actually return to the "
+            "thrower.", MSGCH_TUTORIAL);
+        break;
+
+    case SK_SPELLCASTING:
+    {
+        std::string text;
+        text = "Now that you have the basic Spellcasting skill, you can learn "
+               "and cast spells, if you wish to. ";
+
+        if (you.religion == GOD_TROG)
+            text += "Note that Trog will disapprove of this, though.";
+        else
+        {
+            text += "In addition, gaining another level in Spellcasting will "
+                    "occasionally grant your more magic and \"spell slots\" to "
+                    "spend on new spells. A high Spellcasting skill will also "
+                    "decrease the amount by which casting a high level spell "
+                    "makes you hunger.";
+        }
+        mpr(text.c_str(), MSGCH_TUTORIAL);
+        break;
+    }
+    // Only one message for all magic skills (except Spellcasting).
+    case SK_CONJURATIONS:
+    case SK_ENCHANTMENTS:
+    case SK_SUMMONINGS:
+    case SK_NECROMANCY:
+    case SK_TRANSLOCATIONS:
+    case SK_TRANSMIGRATION:
+    case SK_DIVINATIONS:
+    case SK_FIRE_MAGIC:
+    case SK_ICE_MAGIC:
+    case SK_AIR_MAGIC:
+    case SK_EARTH_MAGIC:
+    case SK_POISON_MAGIC:
+        learned_something_new(TUT_GAINED_MAGICAL_SKILL);
+        break;
+
+    // Melee skills.
+    case SK_SHORT_BLADES:
+    case SK_LONG_BLADES:
+    case SK_AXES:
+    case SK_MACES_FLAILS:
+    case SK_POLEARMS:
+    case SK_STAVES:
+        learned_something_new(TUT_GAINED_MELEE_SKILL);
+        break;
+
+    // Ranged skills.
+    case SK_SLINGS:
+    case SK_BOWS:
+    case SK_CROSSBOWS:
+    case SK_DARTS:
+        learned_something_new(TUT_GAINED_RANGED_SKILL);
+        break;
+
+    default:
+        break;
+    }
+}
+
 #ifndef USE_TILE
 // As safely as possible, colourize the passed glyph.
 // Handles quoting "<", MBCS-ing unicode, and
@@ -1084,6 +1243,14 @@ void tutorial_first_monster(const monsters &mon)
         if (mons_friendly(&mon))
             learned_something_new(TUT_MONSTER_FRIENDLY);
 
+        if (!Options.tut_just_triggered
+            && one_chance_in(4)
+            && you.religion == GOD_TROG && !you.duration[DUR_BERSERKER]
+            && !you.duration[DUR_EXHAUSTED]
+            && you.hunger_state >= HS_SATIATED)
+        {
+            learned_something_new(TUT_CAN_BERSERK);
+        }
         return;
     }
 
@@ -1183,22 +1350,23 @@ void tutorial_first_monster(const monsters &mon)
 
 void tutorial_first_item(const item_def &item)
 {
+    // Happens if monster is standing on dropped corpse or item.
+    if (mgrd[item.x][item.y] != NON_MONSTER)
+        return;
+
     if (!Options.tutorial_events[TUT_SEEN_FIRST_OBJECT]
         || Options.tut_just_triggered)
     {
         // NOTE: Since a new player might not think to pick up a
         // corpse, TUT_SEEN_CARRION is done when a corpse is first seen.
-        if (item.base_type == OBJ_CORPSES
+        if (!Options.tut_just_triggered
+            && item.base_type == OBJ_CORPSES
             && mgrd[item.x][item.y] == NON_MONSTER)
         {
             learned_something_new(TUT_SEEN_CARRION, item.x, item.y);
         }
         return;
     }
-
-    // happens if monster standing on dropped corpse or item
-    if (mgrd[item.x][item.y] != NON_MONSTER)
-       return;
 
     stop_running();
 
@@ -1229,11 +1397,14 @@ void tutorial_first_item(const item_def &item)
             "button</w> while standing on its square. "
 #endif
             "Also, several types of objects will usually be picked up "
-            "automatically. " EOL
-            "Once it is in your inventory, you can drop it again with "
+            "automatically. "
+#ifdef USE_TILE
+            "(In Tiles, these will be marked with a green frame around them.)"
+#endif
+            EOL "Once it is in your inventory, you can drop it again with "
 #ifdef USE_TILE
             "a <w>left mouse click</w> while pressing the <w>Shift key</w>. "
-            "Whenever you <w>right-click</w> on an item "
+            "Whenever you <w>right-click</w> on an item"
 #else
             "<w>d</w>. Any time you look at an item in your <w>i</w>nventory"
 #endif
@@ -1244,11 +1415,6 @@ void tutorial_first_item(const item_def &item)
     // Force more() to highlight this item.
     more();
 #endif
-
-    // NOTE: Since a new player might not think to pick up a corpse,
-    // TUT_SEEN_CARRION is done when a corpse is first seen.
-    if (item.base_type == OBJ_CORPSES)
-        learned_something_new(TUT_SEEN_CARRION, item.x, item.y);
 }
 
 static void _new_god_conduct()
@@ -1308,7 +1474,7 @@ static void _new_god_conduct()
 
     case GOD_TROG:
         likes.push_back("destroy spell books (especially ones you've"
-                        "never touched) via the <w>a</w> command");
+                        "never read) via the <w>a</w> command");
         break;
 
     case GOD_NEMELEX_XOBEH:
@@ -1631,7 +1797,11 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
                 "to wield it, but be aware that this weapon "
                 "might train a different skill from your current one. You can "
-                "view the weapon's properties from your <w>i</w>nventory.";
+                "view the weapon's properties from your <w>i</w>nventory"
+#ifdef USE_TILE
+                " or by <w>right-clicking</w> on it"
+#endif
+                ".";
 
         if (Options.tutorial_type == TUT_BERSERK_CHAR)
         {
@@ -1717,9 +1887,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_SEEN_CARRION:
-        // NOTE: This is called when a corpse is first seen, rather than
-        // first picked up, since a new player might not think to pick
-        // up a corpse.
+        // NOTE: This is called when a corpse is first seen as well as when
+        //       first picked up, since a new player might not think to pick
+        //        up a corpse.
 
         if (x <= 0 || y <= 0)
             text << "Ah, a corpse!";
@@ -1842,6 +2012,13 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 "your inventory, takes up no space in your inventory, weighs "
                 "nothing and can't be dropped. Gold can be used to buy "
                 "items from shops, and can also be sacrificed to some gods.";
+
+        if (!Options.show_gold_turns)
+        {
+            text << "Whenever you pick up some gold, your current amount will "
+                    "be mentioned. If you'd like to check your wealth at other "
+                    "times, it will be listed on the <w>%</w> screen.";
+        }
         break;
 
     case TUT_SEEN_STAIRS:
@@ -2028,7 +2205,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 "<w>C</w>, followed by the direction, or simply "
                 "<w>Ctrl-Direction</w>.";
 #ifdef USE_TILE
-        text << "\nIn tiles, the same can be achieved by clicking on an "
+        text << "\nIn Tiles, the same can be achieved by clicking on an "
                 "adjacent door square.";
 #endif
         break;
@@ -2101,7 +2278,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                     "(the Spellcasting skill also does this). For now, you "
                     "should try to memorise the second spell of your "
                     "starting book with <w>Mcb</w>, which can then be zapped "
-                    "zapped with <w>zb</w>.";
+                    "with <w>zb</w>.";
 #ifdef USE_TILE
             text << " Memorising is also possible by doing a <w>left "
                     "click</w> on the book in your inventory.";
@@ -2112,6 +2289,46 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     case TUT_SKILL_RAISE:
         text << "One of your skills just got raised. To view or manage your "
                 "skill set, type <w>m</w>.";
+        break;
+
+    case TUT_GAINED_MAGICAL_SKILL:
+        text << "Being skilled in a magical \"school\" makes it easier to "
+                "learn and cast spells of this school. Many spells belong to "
+                "a combination of several schools, in which case the average "
+                "skill in these schools will decide on spellcasting success "
+                "and power.";
+        break;
+
+    case TUT_GAINED_MELEE_SKILL:
+        text << "Being skilled with a particular type of weapon will make it "
+                "easier to fight with all weapons of this type and make you "
+                "deal more damage with them. It is generally recommended to "
+                "concentrate your efforts on one or two weapon types to become "
+                "more powerful in them. Some weapons are closely related, and "
+                "being trained in one will ease training the other. This is "
+                "true for the following pairs: Short Blades/Long Blades, "
+                "Axes/Polearms, Polearms/Staves, Axes/Maces, and (though not "
+                "strictly a weapon skill) Slings/Throwing.";
+        break;
+
+    case TUT_GAINED_RANGED_SKILL:
+        text << "Being skilled in a particular type of ranged attack will let "
+                "you deal more damage when using the appropriate weapons. It "
+                "is usually best to concentrate on one type of ranged attack "
+                "(including spells), and to add another one as back-up.";
+        break;
+
+    case TUT_CHOOSE_STAT:
+        text << "Every third level you may choose what stat to invest in, "
+                "Strength, Dexterity, or Intelligence.\n"
+                "<w>Strength</w> influences the amount you can carry, and "
+                "increases the damage you deal in melee.\n"
+                "<w>Dexterity</w> increases your evasion and thus influences "
+                "your chance of dodging attacks or traps.\n"
+                "<w>Intelligence</w> increases your success in casting spells "
+                "and decreases the amount by which you hunger when you do so."
+                "\nNote that it is generally recommended to raise all your "
+                "stats to a minimum of 7, so as to prevent death by stat loss.";
         break;
 
     case TUT_YOU_ENCHANTED:
@@ -2137,7 +2354,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
         text << "wait with <w>5</w>"
 #ifdef USE_TILE
-                "or by clicking onto the stats area"
+                " or by clicking into the stats area"
 #endif
                 "), or you could quaff a potion of healing. ";
         break;
@@ -2161,11 +2378,12 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_YOU_ROTTING:
-        // Hack: reset tut_just_triggered, to force recursive calling of
-        // learned_something_new().
+        // Hack: Reset tut_just_triggered, to force recursive calling of
+        //       learned_something_new().
         Options.tut_just_triggered = false;
         learned_something_new(TUT_YOU_ENCHANTED);
         Options.tut_just_triggered = true;
+
         text << "Ugh, your flesh is rotting!  Not only does this slowly "
                 "reduce your HP, it also slowly reduces your <w>maximum</w> "
                 "HP (your usual maximum HP will be indicated by a number in "
@@ -2256,8 +2474,15 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         text << "How lucky! That monster left a corpse which you can now "
                 "<w>c</w>hop up. One or more chunks will appear that you "
                 "can then <w>e</w>at. Beware that some chunks may be, "
-                "sometimes or always, hazardous. Only experience can help "
-                "you here.";
+                "sometimes or always, hazardous. You can find out whether "
+                "that might be the case by "
+#ifdef USE_TILE
+                "clicking with your <w>right mouse button</w> onto the corpse "
+                "or chunk.";
+#else
+                "<w>v</w>iewing a corpse or chunk on the floor or by having a "
+                "look at it in your <w>i</w>nventory.";
+#endif
 
         if (you.duration[DUR_PRAYER]
             && (god_likes_butchery(you.religion)
@@ -2320,7 +2545,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                     "spots; use <w>s</w>, <w>.</w> or for 100 turns with "
                     "<w>5</w> "
 #ifdef USE_TILE
-                    "(or alternatively click on the stat area) "
+                    "(or alternatively click into the stat area) "
 #endif
                     "to do so.";
         }
@@ -2337,7 +2562,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                     "down stairs. Unexplored parts can often be accessed via "
                     "another level or through secret doors. To find the "
                     "latter, search the adjacent squares of walls for one "
-                    "turn with <w>s</w> or <w>.</w>, or for 100 turns with "
+                    "turn with <w>.</w> or <w>s</w>, or for 100 turns with "
                     "<w>5</w> or <w>Shift-numpad 5</w>"
 #ifdef USE_TILE
                     ", or by clicking on the stat area"
@@ -2355,7 +2580,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 "interrupted by a wandering monster. Press <w>5</w> or "
                 "<w>shift-numpad-5</w>"
 #ifdef USE_TILE
-                ", or click on the stat area"
+                ", or click into the stat area"
 #endif
                 " to do so.";
         break;
@@ -2389,6 +2614,16 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         Options.tut_last_healed = you.num_turns;
         break;
 
+    case TUT_CAN_BERSERK:
+        // Don't print this information if the player already knows it.
+        if (!Options.tut_berserk_counter)
+        {
+            text << "Against particularly difficult foes, you should use your "
+                    "Berserk <w>a</w>bility. Berserk will last longer if you "
+                    "kill a lot of monsters.";
+        }
+        break;
+
     case TUT_POSTBERSERK:
         text << "Berserking is extremely exhausting! It burns a lot of "
                 "nutrition, and afterwards you are slowed down and "
@@ -2408,10 +2643,10 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                     "running is an option!";
         }
 
-        text << "If retreating to another level, keep in mind that monsters "
+        text << " If retreating to another level, keep in mind that monsters "
                 "may follow you if they're standing right next to you when "
                 "you start climbing or descending the stairs. And even if "
-                " you'vemanaged to shake them off, they'll still be there when "
+                "you've managed to shake them off, they'll still be there when "
                 "you come back, though, so you'll want to use a different set "
                 "of stairs when you return.";
 
@@ -2452,14 +2687,18 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         case GOD_KIKUBAAQUDGHA: case GOD_YREDELEMNUL: case GOD_NEMELEX_XOBEH:
         case GOD_ZIN:           case GOD_OKAWARU:     case GOD_SIF_MUNA:
         case GOD_TROG:          case GOD_ELYVILON:    case GOD_LUGONU:
-            text <<  "You just gained a new ability. Press <w>a</w> to "
-                     "take a look at your abilities or to use one of them.";
+            text << "You just gained a new ability. Press <w>a</w> to "
+                    "take a look at your abilities or to use one of them.";
             break;
 
         // Gods where first granted ability is passive.
         default:
-            text <<  "You just gained a new ability. Press <w>^</w> to "
-                     "take a look at your ability.";
+            text << "You just gained a new ability. Press <w>^</w> "
+#ifdef USE_TILE
+                    "or press <w>Shift</w> and <w>right-click</w> on the "
+                    "player tile "
+#endif
+                    "to take a look at your abilities.";
             break;
         }
         break;
@@ -2470,20 +2709,26 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     case TUT_GOD_DISPLEASED:
         text << "Uh-oh, " << god_name(you.religion) << " is growing "
-                "displeased because your piety is running low. This can be "
-                "caused by your doing things to annoy him";
+                "displeased because your piety is running low. Possibly this "
+                "is the case because you're committing heretic acts";
 
         if (!is_good_god(you.religion))
         {
-            // Piety decreases over time for non-good gods
-            text << ", not doing things to please him frequently enough, or "
-                    "a combination of the two";
+            // Piety decreases over time for non-good gods.
+            text << ", because " << god_name(you.religion) << " finds your "
+                    "worship lacking, or a combination of the two";
         }
-        text << ". ";
-
-        text << "If your piety goes to zero, then you'll be excommunicated. "
+        text << ". If your piety goes to zero, then you'll be excommunicated. "
                 "Better get cracking on raising your piety, and/or stop "
-                "annoying your god.";
+                "annoying your god. ";
+
+        text << "In any case, you'd better reread the religious description. "
+                "To do so, "
+#ifdef USE_TILE
+                "press <w>Shift</w> and <w>right-click</w> on your avatar.";
+#else
+                "type <w>^</w>.";
+#endif
         break;
 
     case TUT_EXCOMMUNICATE:
@@ -2502,49 +2747,87 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         const std::string old_god_name  = god_name(old_god);
         const std::string new_god_name  = god_name(new_god);
 
-        // FIXME: Modify the tutorial texts to be more generic concerning
-        //        the gods' genders.
         if (new_god == GOD_NO_GOD)
         {
             if (old_piety < 1)
             {
-                text << "Uh-oh, " << old_god << " just excommunicated you "
+                text << "Uh-oh, " << old_god_name << " just excommunicated you "
                         "for running out of piety (your divine favour went "
-                        "to nothing). Maybe you repeatedly annoyed him, "
-                        "or maybe you weren't doing things that pleased him "
-                        "often enough, or some combination of the two.  If you "
-                        "can find an altar dedicated to " << old_god;
+                        "to nothing). Maybe you repeatedly violated the "
+                        "religious rules, or maybe you failed to please your "
+                        "deity often enough, or some combination of the two. "
+                        "If you can find an altar dedicated to "
+                     << old_god_name;
             }
             else
             {
-                text << "If you decide that abandoning " << old_god << "wasn't "
-                        "such a smart move after all, and you'd like to return "
-                        "to your old faith you'll have to find an altar "
-                        "dedicated to " << old_god << " where";
+                text << "Should you decide that abandoning " << old_god_name
+                     << "wasn't such a smart move after all, and you'd like to "
+                        "return to your old faith you'll have to find an altar "
+                        "dedicated to " << old_god_name << " where";
             }
-            text << " you can re-convert and all will be well; otherwise "
-                    "you'll have to weather this god's displeasure until their "
+            text << " you can re-convert, and all will be well. Otherwise "
+                    "you'll have to weather this god's displeasure until all "
                     "divine wrath is spent.";
 
         }
         else
         {
-            if (is_good_god(old_god) && is_good_god(new_god))
+            bool angry = false;
+            if (is_good_god(old_god))
             {
-                text << "Fortunately, it seems that " << old_god << " didn't "
-                        "mind you converting to " << new_god << ".  This "
-                        "is only the case when converting from one of the "
-                        "three good gods to a different good god, so don't "
-                        "expect this to be the norm.";
+                if (is_good_god(new_god))
+                {
+                    text << "Fortunately, it seems that " << old_god_name <<
+                            " didn't mind you converting to " << new_god_name
+                         << ". ";
+
+                    if (old_piety > 30)
+                        text << "You even kept some of your piety! ";
+
+                    text << "Note that this kind of alliance only exists "
+                            "between the three good gods, so don't expect this "
+                            "to be the norm.";
+                }
+                else if (!god_hates_your_god(old_god))
+                {
+                    text << "Fortunately, it seems that " << old_god_name <<
+                            " didn't mind you converting to " << new_god_name
+                         << ". That's because " << old_god_name << " is one of "
+                            "the good gods who generally are rather forgiving "
+                            "about change of faith - unless you switch over to "
+                            "the path of evil, in which case their retribution "
+                            "can be nasty indeed!";
+                }
+                else
+                {
+                    text << "Looks like " << old_god_name << " didn't "
+                            "appreciate you converting to " << new_god_name
+                         << "! But really, changing from one of the good gods "
+                            "to an evil one, what did you expect!? For any god "
+                            "not on the opposing side of the faith, "
+                         << old_god_name << " would have been much more "
+                            "forgiving. ";
+
+                    angry = true;
+                }
             }
             else
             {
-                text << "Looks like " << old_god << " didn't appreciate you "
-                        "converting to " << new_god << "! (It's only safe to "
-                        "convert between the three good gods.) Unfortunately, "
-                        "converting back to " << old_god << " will annoy "
-                     << new_god << ", so you're stuck with having to suffer "
-                        "the wrath of one god or another.";
+                text << "Looks like " << old_god_name << " didn't appreciate "
+                        "you converting to " << new_god_name << "! (Actually, "
+                        "only the three good gods will sometimes be forgiving "
+                        "about this kind of faithlessness.) ";
+
+                angry = true;
+            }
+
+            if (angry)
+            {
+                text << "Unfortunately, while converting back would appease "
+                     << old_god_name << ", it would annoy " << new_god_name
+                     << ", so you're stuck with having to suffer the wrath of "
+                        "one god or another.";
             }
         }
 
@@ -2567,8 +2850,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         text << "While unsporting, it is sometimes useful to attack a "
                 "fleeing monster by throwing something after it. To do this, "
 #ifdef USE_TILE
-                "in tiles, you can choose your firing "
-                "ammunition by <w>left-clicking</w> on it with your mouse. "
+                "you can choose your firing ammunition by <w>left-clicking</w> "
+                "on it with your mouse. "
                 "In the case of weapons (rather than missiles) you need to "
                 "be pressing <w>Ctrl</w> at the same time, to distinguish "
                 "the action from wielding. Then target the monster by "
@@ -2589,11 +2872,11 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
         text << "That monster looks a bit unusual. You might wish to examine "
-                "it a bit more closely by pressing "
+                "it a bit more closely by "
 #ifdef USE_TILE
                 "hovering your mouse over its tile";
 #else
-                "<w>x</w> and moving the cursor onto its square.";
+                "pressing <w>x</w> and moving the cursor onto its square.";
 #endif
         break;
 
@@ -2602,15 +2885,15 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         tile_place_cursor(ep.x-1,ep.y-1,true);
 #endif
         text << "That monster is friendly to you and will attack your "
-                "enemies, though you get only half the experience for "
-                "monsters killed by allies that you'd get for killing them "
+                "enemies, though you'll get only half the experience for "
+                "monsters killed by allies of what you'd get for killing them "
                 "yourself. You can command your allies by pressing <w>t</w> "
-                "to talk to them, and can tell them which items to pick up "
-                "(or not pick up) by pressing <w>Ctrl-T</w>.";
+                "to talk to them.";
         break;
 
     case TUT_SEEN_MONSTER:
     case TUT_SEEN_FIRST_OBJECT:
+        // Handled in special functions.
         break;
 
     case TUT_ABYSS:
@@ -2618,16 +2901,19 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 "place where you cannot remember or map where you've been; it "
                 "is filled with nasty monsters, and you're probably going to "
                 "die.\n";
-        text << "You can increase your chances of survival until you can find "
-                "the exit (a flickering <w>\\</w>), keep moving, don't fight "
-                "any of the monsters, and don't bother picking up any items "
-                "on the ground. If you're encumbered or overburdened then "
-                "lighten up your load, and if the monsters are closing in, try "
-                "to use items of speed to get away. And where possible, move "
-                "in a direction slightly off from a compass direction (for "
-                "example, north-by-northwest instead of north or northwest), "
-                "as you'll likely miss the exit if you keep heading solely "
-                "in a compass direction.";
+        text << "To increase your chances of survival until you can find the "
+                "exit"
+#ifndef USE_TILE
+                " (a flickering <w>\\</w>)"
+#endif
+                ", keep moving, don't fight any of the monsters, and don't "
+                "bother picking up any items on the ground. If you're "
+                "encumbered or overburdened then lighten up your load, and if "
+                "the monsters are closing in, try to use items of speed to get "
+                "away. Also, wherever possible, move in a direction slightly "
+                "off from a compass direction (for example, north-by-northwest "
+                "instead of north or northwest), as you're more likely to miss "
+                "the exit if you keep heading solely in a compass direction.";
         break;
 
     case TUT_SPELL_MISCAST:
@@ -2662,16 +2948,80 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 "or potions of resistance. This normally isn't a problem as "
                 "contamination slowly bleeds off on its own, but it seems that "
                 "you've accumulated so much contamination over a short amount "
-                "of time, that it can have nasty effects, such as mutate you "
+                "of time that it can have nasty effects, such as mutate you "
                 "or deal direct damage. In addition, glowing is going to make "
                 "you much more noticeable.";
         break;
 
+    case TUT_YOU_RESIST:
+        text << "There are many dangers in Crawl. Luckily, there are ways to "
+                "(at least partially) resist some of them, if you are "
+                "fortunate enough to find them. There are two basic variants "
+                "of resistances: the innate magic resistance that depends on "
+                "your species, grows with the experience level, and protects "
+                "against hostile enchantments; and the specific resistances "
+                "against certain types of magic and also other effects, e.g. "
+                "fire or draining.\n"
+                "You can find items in the dungeon or gain mutations that will "
+                "increase (or lower) one or more of your resistances. To view "
+                "your current set of resistances, "
+#ifdef USE_TILE
+                "<w>right-click</w> on the player avatar.";
+#else
+                "press <w>%%</w>.";
+#endif
+        break;
+
+    case TUT_CAUGHT_IN_NET:
+        text << "While you are held in a net, you cannot move around or engage "
+                "monsters in combat. Instead, any movement you take is counted "
+                "as an attempt to struggle free from the net. With a wielded "
+                "bladed weapon you will be able to cut the net faster";
+
+        if (Options.tutorial_type == TUT_BERSERK_CHAR)
+            text << ", especially if you're berserking while doing so";
+
+        text << ". Small races may also wriggle out of a net, only damaging it "
+                "a bit, so as to then <w>f</w>ire it at a monster.";
+
+        if (Options.tutorial_type == TUT_MAGIC_CHAR)
+            text << " Note that casting spells is still very much possible.";
+        break;
+
+    case TUT_LOAD_SAVED_GAME:
+    {
+        text << "Welcome back! If it's been a while since you last played this "
+                "character, you should take some time to refresh your memory "
+                "of your character's progress. It is recommended to at least "
+                "have a look through your <w>i</w>nventory, but you should "
+                "also check ";
+
+        std::vector<std::string> listed;
+        if (!your_talents(false).empty())
+            listed.push_back("your <w>a</w>bilities");
+        if (Options.tutorial_type != TUT_MAGIC_CHAR || how_mutated())
+            listed.push_back("your set of mutations (<w>A</w>)");
+        if (you.religion != GOD_NO_GOD)
+            listed.push_back("your religious standing (<w>^</w>)");
+
+        listed.push_back("the character overview screen (<w>%</w>).");
+        text << comma_separated_line(listed.begin(), listed.end(),
+                                     " and ", ", ");
+
+        text << "\nAlternatively, you can dump all information pertaining to "
+                "your character into a text file with the <w>#</w> command. "
+                "You can then find said file in the <w>/morgue</w> folder ("
+             << you.your_name << ".txt) and read it at your leasure. Also, "
+                "such a file will automatically be created upon death (the "
+                "filename will then also contain the date) but that won't be "
+                "of much use to you now.";
+        break;
+    }
     default:
         text << "You've found something new (but I don't know what)!";
     }
 
-    if ( !text.str().empty() )
+    if (!text.str().empty())
     {
         std::string s = text.str();
         formatted_message_history(s, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
@@ -2693,15 +3043,16 @@ formatted_string tut_abilities_info()
 
     if (you.religion != GOD_NO_GOD)
     {
-       text <<
-         "<w>Renounce Religion</w> will make your character leave your god" EOL
-         "(and usually anger said god)";
-       if (you.religion == GOD_TROG)
-       {
-         text << ", while <w>Berserk</w> temporarily increases your" EOL
-                 "damage output in melee fights";
-       }
-       text << ".";
+        text <<
+          "<w>Renounce Religion</w> will make your character leave your god" EOL
+          "(and usually anger said god)";
+
+        if (you.religion == GOD_TROG)
+        {
+            text << ", while <w>Berserk</w> temporarily increases your" EOL
+                    "damage output in melee fights";
+        }
+        text << ".";
     }
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -2848,7 +3199,7 @@ void tutorial_describe_item(const item_def &item)
 
                if (you.skills[curr_wpskill] + 2 < you.skills[best_wpskill])
                {
-                    ostr << "\nOn second look you've been training in <w>"
+                    ostr << "\nOn second look, you've been training in <w>"
                          << skill_name(best_wpskill)
                          << "</w> for a while, so maybe you should "
                             "continue training that rather than <w>"
@@ -2964,6 +3315,22 @@ void tutorial_describe_item(const item_def &item)
                         ".";
             }
 
+            if (Options.tutorial_type == TUT_MAGIC_CHAR
+                && !is_light_armour(item))
+            {
+                ostr << "\nNote that body armour with high evasion penalties "
+                        "may hinder your ability to learn and cast spells. "
+                        "Light armour such as robes, leather armour or any "
+                        "elven armour will be generally safe for any aspiring "
+                        "spellcaster.";
+            }
+            else if (Options.tutorial_type == TUT_RANGER_CHAR
+                     && is_shield(item))
+            {
+                ostr << "\nNote that wearing a shield will greatly decrease "
+                        "the speed at which you can shoot arrows.";
+            }
+
             if (!item_type_known(item)
                 && (is_artefact(item)
                     || get_equip_desc( item ) != ISFLAG_NO_DESC))
@@ -3049,7 +3416,7 @@ void tutorial_describe_item(const item_def &item)
             ostr << "Jewellery can be <w>P</w>ut on or <w>R</w>emoved "
                     "again"
 #ifdef USE_TILE
-                    ", though in tiles, either can be done by clicking on the "
+                    ", though in Tiles, either can be done by clicking on the "
                     "item in your inventory"
 #endif
                     ".";
@@ -3101,7 +3468,7 @@ void tutorial_describe_item(const item_def &item)
                         "this will drain said pool, so only use this manual "
                         "if you think you need the skill in question.";
             }
-            else // it's a spellbook
+            else // It's a spellbook!
             {
                 if (you.religion == GOD_TROG
                     && (item.sub_type != BOOK_DESTRUCTION
@@ -3145,7 +3512,7 @@ void tutorial_describe_item(const item_def &item)
                             "you've learned the basics of Spellcasting by "
                             "reading lots of scrolls.";
                 }
-                else // actually can cast spells
+                else // You actually can cast spells.
                 {
                     if (player_can_memorise(item))
                     {
@@ -3208,11 +3575,11 @@ void tutorial_describe_item(const item_def &item)
 #endif
                 ostr << "If there are several items in your inventory you'd "
                         "like to drop, the most convenient way is to use the "
-                        "<w>d</w>rop menu. On a related note, offering several "
-                        "corpses on a floor square is facilitated by using the "
-                        "<w>c</w>hop prompt where <w>c</w> is a valid synonym "
-                        "for <w>y</w>es or you can directly chop <w>a</w>ll "
-                        "corpses.";
+                        "<w>d</w>rop menu. On a related note, butchering "
+                        "several corpses on a floor square is facilitated by "
+                        "using the <w>c</w>hop prompt where <w>c</w> is a "
+                        "valid synonym for <w>y</w>es or you can directly chop "
+                        "<w>a</w>ll corpses.";
             }
             Options.tutorial_events[TUT_SEEN_CARRION] = 0;
             break;
@@ -3452,7 +3819,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                     "down (<w>></w>). To get back to this level again, "
                     "press <w><<</w> while standing on the upstairs.";
 #ifdef USE_TILE
-            ostr << " In tiles, you can achieve the same, in either direction, "
+            ostr << " In Tiles, you can achieve the same, in either direction, "
                     "by clicking the <w>left mouse button</w> while pressing "
                     "<w>Shift</w>. ";
 #endif
@@ -3479,7 +3846,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                         "level again, press <w>></w> while standing on the "
                         "downstairs.";
 #ifdef USE_TILE
-                ostr << " In tiles, you can perform either action simply by "
+                ostr << " In Tiles, you can perform either action simply by "
                         "clicking the <w>left mouse button</w> while pressing "
                         "<w>Shift</w> instead. ";
 #endif
@@ -3692,56 +4059,101 @@ void tutorial_describe_monster(const monsters *mons)
     std::ostringstream ostr;
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
+    bool dangerous = false;
     if (mons_is_unique(mons->type))
     {
         ostr << "Did you think you were the only adventurer in the dungeon? "
                 "Well, you thought wrong! These unique adversaries often "
                 "possess skills that normal monster wouldn't, so be "
                 "careful.\n\n";
+        dangerous = true;
     }
     else if (mons->type == MONS_PLAYER_GHOST)
     {
         ostr << "The ghost of a deceased adventurer, it would like nothing "
                 "better than to send you the same way.\n\n";
+        dangerous = true;
     }
     else
     {
-       // 8 is the default value for the note-taking of OOD monsters.
-       int level_diff = mons_level(mons->type) - (you.your_level + 8);
+        // 8 is the default value for the note-taking of OOD monsters.
+        // Since I'm too lazy to come up with any measurement of my own
+        // I'll simply reuse that one.
+        int level_diff = mons_level(mons->type) - (you.your_level + 8);
 
-       if (you.level_type == LEVEL_DUNGEON && level_diff >= 0)
-       {
-           ostr << "This kind of monster is usually only encountered "
-                << (level_diff > 5 ? "much " : "")
-                << "deeper in the dungeon, so it's probably "
-                << (level_diff > 5 ? "extremely" : "very")
-                << " dangerous!\n\n";
-       }
+        if (you.level_type == LEVEL_DUNGEON && level_diff >= 0)
+        {
+            ostr << "This kind of monster is usually only encountered "
+                 << (level_diff > 5 ? "much " : "")
+                 << "deeper in the dungeon, so it's probably "
+                 << (level_diff > 5 ? "extremely" : "very")
+                 << " dangerous!\n\n";
+            dangerous = true;
+        }
     }
 
     if (mons->has_ench(ENCH_BERSERK))
-        ostr << "A berserking monster is bloodthirsty and fighting madly.\n";
+    {
+        ostr << "A berserking monster is bloodthirsty and fighting madly. "
+                "Such a blood rage makes it particularly dangerous!\n\n";
+        dangerous = true;
+    }
 
     // Monster is highlighted.
     if (mons_friendly(mons))
     {
         ostr << "Friendly monsters will follow you around and attempt to aid "
-                "you in battle.";
+                "you in battle. You can order your allies by <w>t</w>alking "
+                "to them.";
+    }
+    else if (dangerous)
+    {
+        if (!Options.tut_explored && mons->foe != MHITYOU)
+        {
+            ostr << "You can easily mark its square as dangerous to avoid "
+                    "accidentally entering into its field of view when using "
+                    "auto-explore or auto-travel. To do so, enter the level "
+                    "map with <w>X</w> and then press <w>Ctrl-X</w> when your "
+                    "cursor is hovering over the monster's grid. Doing so will "
+                    "mark this grid and all surrounding ones within a radius "
+                    "of 8 as \"excluded\" ones that explore or travel modus "
+                    "won't enter.\n";
+#ifdef USE_TILE
+            ostr << "Upon returning to the main map, you'll even find all "
+                    "surrounding grids visibly highlighted.";
+#endif
+        }
+        else
+        {
+            ostr << "This might be a good time to run away";
+
+            if (you.religion == GOD_TROG && !you.duration[DUR_BERSERKER]
+                && !you.duration[DUR_EXHAUSTED]
+                && you.hunger_state >= HS_SATIATED)
+            {
+                ostr << " or apply your Berserk <w>a</w>bility";
+            }
+            ostr << ".";
+        }
     }
     else if (Options.stab_brand != CHATTR_NORMAL
              && mons_looks_stabbable(mons))
     {
         ostr << "Apparently "
              << mons_pronoun((monster_type) mons->type, PRONOUN_NOCAP)
-             << " has not noticed you - yet.";
+             << " has not noticed you - yet. Note that you do not have to "
+                "engage every monster you meet. Sometimes, discretion is the "
+                "better part of valour.";
     }
     else if (Options.may_stab_brand != CHATTR_NORMAL
              && mons_looks_distracted(mons))
     {
         ostr << "Apparently "
              << mons_pronoun((monster_type) mons->type, PRONOUN_NOCAP)
-             << " has been distracted by something.";
+             << " has been distracted by something. You could use this "
+                "opportunity to sneak up on this monster - or to sneak away.";
     }
+
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     std::string broken = ostr.str();

@@ -2814,7 +2814,7 @@ void jewellery_wear_effects(item_def &item)
             xom_is_stimulated(128);
     }
 
-    // cursed or not, we know that since we've put the ring on
+    // Cursed or not, we know that since we've put the ring on.
     set_ident_flags( item, ISFLAG_KNOW_CURSE );
 
     mpr( item.name(DESC_INVENTORY_EQUIP).c_str() );
@@ -4373,6 +4373,7 @@ void read_scroll( int slot )
         {
             // Also sets wield_change.
             do_curse_item( you.inv[nthing], false );
+            learned_something_new(TUT_YOU_CURSED);
         }
         break;
 
@@ -4459,10 +4460,10 @@ void read_scroll( int slot )
         break;
 
     case SCR_ENCHANT_ARMOUR:
-        if ( !item_type_known(scroll) )
-             id_the_scroll = scroll_modify_item(which_scroll);
+        if (!item_type_known(scroll))
+            id_the_scroll = scroll_modify_item(which_scroll);
         else
-             _handle_enchant_armour(-1);
+            _handle_enchant_armour(-1);
         break;
 
     case SCR_CURSE_ARMOUR:
@@ -4485,11 +4486,10 @@ void read_scroll( int slot )
             id_the_scroll = false;
             break;
         }
-        else
-        {
-            // Make the name before we curse it.
-            do_curse_item( you.inv[you.equip[affected]], false );
-        }
+
+        // Make the name before we curse it.
+        do_curse_item( you.inv[you.equip[affected]], false );
+        learned_something_new(TUT_YOU_CURSED);
         break;
 
     case SCR_HOLY_WORD:

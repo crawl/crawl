@@ -2466,7 +2466,7 @@ bool monster_pathfind::calc_path_to_neighbours()
             dist[npos.x][npos.y] = distance;
 
             // Set backtracking information.
-            // Converts the Compass direction to their counterpart.
+            // Converts the Compass direction to its counterpart.
             //      0  1  2         4  5  6
             //      7  .  3   ==>   3  .  7       e.g. (3 + 4) % 8          = 7
             //      6  5  4         2  1  0            (7 + 4) % 8 = 11 % 8 = 3
@@ -2557,11 +2557,11 @@ std::vector<coord_def> monster_pathfind::backtrack()
 
 // Reduces the path coordinates to only a couple of key waypoints needed
 // to reach the target. Waypoints are chosen such that from one waypoint you
-// can only just see the next one. Note that grid_see_grid() is probably
-// rather too conservative in these estimates.
-// This is done because Crawl's path finding once a target can be seen is
-// very robust and because it allows for more natural traversing if there are
-// other monsters in the way.
+// can see (and, more importantly, reach) the next one. Note that
+// grid_see_grid() is probably rather too conservative in these estimates.
+// This is done because Crawl's pathfinding once a target is in sight and easy
+// reach is both very robust and natural, especially if we want to flexibly
+// avoid plants and other monsters in the way.
 
 std::vector<coord_def> monster_pathfind::calc_waypoints()
 {
