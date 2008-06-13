@@ -1261,13 +1261,19 @@ void abjuration(int pow)
             {
                 sockage = sockage * monster->hit_dice / 45;
                 if (sockage < abj.duration)
-                    simple_god_message(" protects a fellow warrior from your evil magic!");
+                {
+                    simple_god_message(" protects a fellow warrior from your evil magic!",
+                                       GOD_SHINING_ONE);
+                }
             }
             else if (monster->god == GOD_TROG)
             {
                 sockage = sockage * 8 / 15;
                 if (sockage < abj.duration)
-                    simple_god_message(" shields an ally from your puny magic!");
+                {
+                    simple_god_message(" shields an ally from your puny magic!",
+                                       GOD_TROG);
+                }
             }
 
             if (!monster->lose_ench_duration(abj, sockage))
