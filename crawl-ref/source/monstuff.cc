@@ -3907,6 +3907,22 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             used = moth_incite_monsters(monster);
         break;
 
+    case MONS_SNORG:
+        if (monster->has_ench(ENCH_CONFUSION))
+            break;
+
+        if (monster->foe == MHITNOT)
+            break;
+
+        // There's a 5% chance of Snorg spontaneously going berserk that
+        // increases to 20% once Snorg is wounded.
+        if (monster->hit_points == monster->max_hit_points && !one_chance_in(4))
+            break;
+
+        if (one_chance_in(5))
+            monster->go_berserk(true);
+        break;
+
     case MONS_PIT_FIEND:
         if (one_chance_in(3))
             break;

@@ -18,6 +18,7 @@ msc = lightred:Some of your food is covered with spores
 msc = lightred:lose your buoyancy
 msc = lightred:sense of stasis
 msc = lightred:clumsily bash
+msc = lightred:goes berserk!
 
 # Less urgent, but still significant messages
 #
