@@ -2822,7 +2822,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     if (you.religion == GOD_XOM && !rc)
     {
         god_speaks(GOD_XOM, "\"How boring, let's spice things up a little.\"");
-        xom_acts(abs(you.piety - 100));
+        xom_acts(abs(you.piety - (MAX_PIETY / 2)));
     }
 
     if (you.religion == GOD_NEMELEX_XOBEH && !rc)

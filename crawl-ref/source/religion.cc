@@ -3794,7 +3794,7 @@ void divine_retribution( god_type god )
     switch (god)
     {
     // One in ten chance that Xom might do something good...
-    case GOD_XOM: xom_acts(one_chance_in(10), abs(you.piety - 100)); break;
+    case GOD_XOM: xom_acts(one_chance_in(10), abs(you.piety - (MAX_PIETY / 2))); break;
     case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
     case GOD_ZIN:           do_more = _zin_retribution(); break;
     case GOD_MAKHLEB:       do_more = _makhleb_retribution(); break;
@@ -4453,7 +4453,7 @@ void excommunication(god_type new_god)
     switch (old_god)
     {
     case GOD_XOM:
-        xom_acts(false, abs(you.piety - 100) * 2);
+        xom_acts(false, abs(you.piety - (MAX_PIETY / 2)) * 2);
         _inc_penance( old_god, 50 );
         break;
 
