@@ -3982,7 +3982,7 @@ void tile_place_item_bk(int gx, int gy, int idx)
 
 void tile_place_tile_bk(int gx, int gy, int tileidx)
 {
-    env.tile_bk_fg[gx][gy] = tileidx;
+    env.tile_bk_fg[gx][gy] = get_base_idx_from_mcache(tileidx);
 }
 
 // Called from item() in view.cc
@@ -4154,7 +4154,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     }
     else
     {
-        env.tile_bk_fg[gc.x][gc.y] = t0;
+        env.tile_bk_fg[gc.x][gc.y] = get_base_idx_from_mcache(t0);
     }
 }
 
