@@ -1057,7 +1057,7 @@ ENDMAP
 # Anthill
 #
 NAME: minivault_29
-TAGS: allow_dup
+TAGS: allow_dup patrolling
 MONS: patrolling queen ant, patrolling soldier ant
 MONS: patrolling giant ant, ant larva
 MAP

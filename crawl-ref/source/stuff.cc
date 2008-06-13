@@ -115,11 +115,11 @@ void radius_iterator::step()
 
     // Sweep L-R, U-D
     location.x++;
-    if ( location.x > maxx )
+    if (location.x > maxx)
     {
         location.x = minx;
         location.y++;
-        if ( location.y > maxy )
+        if (location.y > maxy)
             iter_done = true;
     }
 }

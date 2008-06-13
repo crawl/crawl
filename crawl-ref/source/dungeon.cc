@@ -3227,7 +3227,7 @@ static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
 
             const int roll = random2( die_size );
 
-            // density skip (no need to iterate)
+            // Density skip (no need to iterate).
             if (roll >= rare_sum)
                 continue;
 
@@ -3480,6 +3480,7 @@ static void _beehive(spec_room &sr)
     const int queenx = sr.x1 + random2(sr.x2 - sr.x1);
     const int queeny = sr.y1 + random2(sr.y2 - sr.y1);
 
+    // Mark all kinds of bees at patrolling to make them return to their hive.
     for (x = sr.x1; x <= sr.x2; x++)
         for (y = sr.y1; y <= sr.y2; y++)
         {
@@ -3492,14 +3493,15 @@ static void _beehive(spec_room &sr)
                 mgen_data::sleeper_at(
                     one_chance_in(7) ? MONS_KILLER_BEE_LARVA
                                      : MONS_KILLER_BEE,
-                    coord_def(x, y)));
+                    coord_def(x, y),
+                    MG_PATROLLING));
         }
 
     mons_place(
         mgen_data::sleeper_at(
             MONS_QUEEN_BEE,
             coord_def(queenx, queeny ),
-            MG_PATROLLING)); // Queen bees will return to their hive.
+            MG_PATROLLING));
 }
 
 // Used for placement of vaults.

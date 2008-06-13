@@ -5682,6 +5682,13 @@ void monster_los::check_los_beam(int dx, int dy)
     for (int tx = target1_x; tx <= target2_x; tx++)
         for (int ty = target1_y; ty <= target2_y; ty++)
         {
+            // If (tx, ty) lies outside the level boundaries, there's nothing
+            // that shooting a ray into that direction could bring us, esp.
+            // as earlier grids in the ray will already have been handled, and
+            // out of bounds grids are simply skipped in any LoS check.
+            if (!map_bounds(tx, ty));
+                continue;
+
             // Already calculated a beam to (tx, ty), don't do so again.
             if (!is_unknown(tx, ty))
                 continue;
@@ -5690,13 +5697,17 @@ void monster_los::check_los_beam(int dx, int dy)
             ray.fullray_idx = -1; // to quiet valgrind
             find_ray( gridx, gridy, tx, ty, true, ray, 0, true, true );
 
-            ASSERT(in_bounds(ray.x(), ray.y()));
             if (ray.x() == gridx && ray.y() == gridy)
                 ray.advance(true);
 
             while (dist++ <= max_dist)
             {
-                ASSERT(in_bounds(ray.x(), ray.y()));
+                // The ray brings is out of bounds of the level map.
+                // Since we're always shooting outwards there's nothing more
+                // to look at in that direction, and we can break the loop.
+                if (!map_bounds(ray.x(), ray.y()))
+                    break;
+
                 if (blocked)
                 {
                     // Earlier grid blocks this beam, set to blocked if

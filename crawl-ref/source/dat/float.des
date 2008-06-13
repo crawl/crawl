@@ -242,11 +242,11 @@ ENDMAP
 NAME:   troll_bridge
 DEPTH:  D:9-18
 ORIENT: float
-TAGS:   no_pool_fixup
+TAGS:   no_pool_fixup patrolling
 SUBST:  1 = 1:50 2 3:5
-MONS:   patrolling troll 
-MONS:   patrolling rock troll
-MONS:   patrolling iron troll
+MONS:   troll 
+MONS:   rock troll
+MONS:   iron troll
 MAP
 xxxxx...........................xxxxxx
 xwwwx...........................xxxxxx

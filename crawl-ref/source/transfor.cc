@@ -151,7 +151,7 @@ static bool check_for_cursed_equipment(const std::set<equipment_type> &remove)
 
 // Count the stat boosts yielded by all items to be removed, and count
 // future losses (caused by the transformation) like a current stat boost,
-// as well. If the sum of all bosts of a stat is equal to or greater than
+// as well. If the sum of all boosts of a stat is equal to or greater than
 // the current stat, give a message and return true.
 bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
                                     int str_loss, int dex_loss, int int_loss,
@@ -161,6 +161,13 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
     int prop_str = str_loss;
     int prop_dex = dex_loss;
     int prop_int = int_loss;
+
+    // Might is very much temporary and might run out at any point during
+    // your transformation, possibly resulting in stat loss caused by a
+    // combination of an unequipping (and/or stat lowering) transformation
+    // and Might running out at an inopportune moment.
+    if (you.duration[DUR_MIGHT])
+        prop_str += 5;
 
     // Check over all items to be removed.
     std::set<equipment_type>::const_iterator iter;
