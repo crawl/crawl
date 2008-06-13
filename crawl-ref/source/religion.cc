@@ -4080,7 +4080,8 @@ static bool _make_god_gifts_disappear(bool level_only)
 static bool _make_holy_god_gifts_on_level_good_neutral(bool seen = false)
 {
     int count = 0;
-    for ( int i = 0; i < MAX_MONSTERS; ++i )
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
         if (monster->alive()
@@ -4121,7 +4122,8 @@ static bool _make_holy_god_gifts_good_neutral(bool level_only)
 static bool _make_god_gifts_on_level_hostile(bool seen = false)
 {
     int count = 0;
-    for ( int i = 0; i < MAX_MONSTERS; ++i )
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
         if (monster->alive()
@@ -4160,7 +4162,7 @@ static bool _orcish_followers_on_level_abandon_you()
 {
     bool success = false;
 
-    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
         if (is_orcish_follower(monster))
@@ -4206,6 +4208,7 @@ static bool _beogh_followers_abandon_you()
 
         // monster check
         for (int y = ystart; y <= yend; ++y)
+        {
             for (int x = xstart; x <= xend; ++x)
             {
                 const unsigned short targ_monst = mgrd[x][y];
@@ -4243,6 +4246,7 @@ static bool _beogh_followers_abandon_you()
                     }
                 }
             }
+        }
     }
 
     if (reconvert) // maybe all of them are invisible
