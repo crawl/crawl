@@ -819,24 +819,32 @@ static void _give_nemelex_gift()
     }
 }
 
-bool is_good_follower(const monsters* mon)
-{
-    return (mon->alive() && !mons_is_evil_or_unholy(mon)
-            && mons_friendly(mon));
-}
-
 bool is_orcish_follower(const monsters* mon)
 {
     return (mon->alive() && mons_species(mon->type) == MONS_ORC
             && mon->attitude == ATT_FRIENDLY && mons_is_god_gift(mon));
 }
 
+bool is_good_lawful_follower(const monsters* mon)
+{
+    return (mon->alive() && !mons_is_evil_or_unholy(mon)
+            && !mons_is_chaotic(mon) && mons_friendly(mon));
+}
+
+bool is_good_follower(const monsters* mon)
+{
+    return (mon->alive() && !mons_is_evil_or_unholy(mon)
+            && mons_friendly(mon));
+}
+
 bool is_follower(const monsters* mon)
 {
-    if (is_good_god(you.religion))
-        return is_good_follower(mon);
-    else if (you.religion == GOD_BEOGH)
+    if (you.religion == GOD_BEOGH)
         return is_orcish_follower(mon);
+    else if (you.religion == GOD_ZIN)
+        return is_good_lawful_follower(mon);
+    else if (is_good_god(you.religion))
+        return is_good_follower(mon);
     else
         return (mon->alive() && mons_friendly(mon));
 }
