@@ -2315,9 +2315,9 @@ static int _monster_abjuration(const monsters *caster, bool actual)
     for (int rad = 1; rad < 5 && pow >= 30; ++rad)
     {
         int number_hit =
-            _apply_radius_around_square( caster->pos(), rad,
-                                         _monster_abjure_square,
-                                         pow, !actual, wont_attack);
+            _apply_radius_around_square(caster->pos(), rad,
+                                        _monster_abjure_square,
+                                        pow, !actual, wont_attack);
 
         maffected += number_hit;
 

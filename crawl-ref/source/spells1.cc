@@ -1259,7 +1259,7 @@ void abjuration(int pow)
                 simple_monster_message(monster, " shudders.");
         }
     }
-}                               // end abjuration()
+}
 
 // Antimagic is sort of an anti-extension... it sets a lot of magical
 // durations to 1 so it's very nasty at times (and potentially lethal,

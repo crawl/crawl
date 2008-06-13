@@ -744,7 +744,7 @@ static void _give_nemelex_gift()
 
     // Nemelex will give at least one gift early.
     if (you.num_gifts[GOD_NEMELEX_XOBEH] == 0
-           && random2(piety_breakpoint(1)) < you.piety
+           && random2(piety_breakpoint(1)) <= you.piety
         || random2(MAX_PIETY) <= you.piety && one_chance_in(3)
            && !you.attribute[ATTR_CARD_COUNTDOWN])
     {
@@ -2598,8 +2598,7 @@ void gain_piety(int pgn)
     int old_piety = you.piety;
 
     you.piety += pgn;
-    if (you.piety > MAX_PIETY)
-        you.piety = MAX_PIETY;
+    you.piety = MIN(MAX_PIETY, you.piety);
 
     for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
     {
@@ -5453,14 +5452,10 @@ void handle_god_time()
                 you.gift_timeout = 0;
             }
             else if (you.gift_timeout > 1)
-            {
                 you.gift_timeout -= random2(2);
-            }
 
             if (one_chance_in(20))
-            {
                 xom_acts(abs(you.piety - 100));
-            }
             break;
         }
 

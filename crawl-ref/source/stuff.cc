@@ -806,25 +806,23 @@ void modify_all_stats(int STmod, int IQmod, int DXmod)
     {
         you.strength += STmod;
         you.max_strength += STmod;
-        you.redraw_strength = 1;
+        you.redraw_strength = true;
     }
 
     if (IQmod)
     {
         you.intel += IQmod;
         you.max_intel += IQmod;
-        you.redraw_intelligence = 1;
+        you.redraw_intelligence = true;
     }
 
     if (DXmod)
     {
         you.dex += DXmod;
         you.max_dex += DXmod;
-        you.redraw_dexterity = 1;
+        you.redraw_dexterity = true;
     }
-
-    return;
-}                               // end modify_stat()
+}
 
 void canned_msg(canned_message_type which_message)
 {
