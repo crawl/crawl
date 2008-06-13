@@ -1259,7 +1259,7 @@ void abjuration(int pow)
             // TSO and Trog's abjuration protection.
             if (monster->god == GOD_SHINING_ONE)
             {
-                sockage = sockage * monster->hit_dice / 45;
+                sockage = sockage * (30 - monster->hit_dice) / 45;
                 if (sockage < abj.duration)
                 {
                     simple_god_message(" protects a fellow warrior from your evil magic!",

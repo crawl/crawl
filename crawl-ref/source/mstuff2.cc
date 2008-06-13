@@ -2267,7 +2267,7 @@ static int _monster_abjure_square(const coord_def &pos,
     // TSO and Trog's abjuration protection.
     if (you.religion == GOD_SHINING_ONE)
     {
-        pow = pow * target->hit_dice / 30;
+        pow = pow * (30 - target->hit_dice) / 30;
         if (pow < abj.duration)
             simple_god_message(" protects your fellow warrior from evil magic!");
     }
