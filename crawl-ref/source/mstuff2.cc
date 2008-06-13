@@ -40,6 +40,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-cast.h"
@@ -2262,6 +2263,20 @@ static int _monster_abjure_square(const coord_def &pos,
 
     if (!actual)
         return (pow > 40 || pow >= abj.duration);
+
+    // TSO and Trog's abjuration protection.
+    if (you.religion == GOD_SHINING_ONE)
+    {
+        pow = pow * target->hit_dice / 30;
+        if (pow < abj.duration)
+            simple_god_message(" protects your fellow warrior from evil magic!");
+    }
+    else if (you.religion == GOD_TROG)
+    {
+        pow = pow * 4 / 5;
+        if (pow < abj.duration)
+            simple_god_message(" shields your ally from puny magic!");
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Abj: dur: %d, pow: %d, ndur: %d",

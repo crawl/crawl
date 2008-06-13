@@ -1250,11 +1250,26 @@ void abjuration(int pow)
         mon_enchant abj = monster->get_ench(ENCH_ABJ);
         if (abj.ench != ENCH_NONE)
         {
-            const int sockage = std::max(fuzz_value(abjdur, 60, 30), 40);
+            int sockage = std::max(fuzz_value(abjdur, 60, 30), 40);
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "%s abj: dur: %d, abj: %d",
                  monster->name(DESC_PLAIN).c_str(), abj.duration, sockage);
 #endif
+
+            // TSO and Trog's abjuration protection.
+            if (monster->god == GOD_SHINING_ONE)
+            {
+                sockage = sockage * monster->hit_dice / 45;
+                if (sockage < abj.duration)
+                    simple_god_message(" protects a fellow warrior from your evil magic!");
+            }
+            else if (monster->god == GOD_TROG)
+            {
+                sockage = sockage * 8 / 15;
+                if (sockage < abj.duration)
+                    simple_god_message(" shields an ally from your puny magic!");
+            }
+
             if (!monster->lose_ench_duration(abj, sockage))
                 simple_monster_message(monster, " shudders.");
         }
