@@ -238,13 +238,11 @@ ENDMAP
 #############################################################################
 # Troll bridge (Lemuel)
 #
-# possibility to script the trolls guard the bridge would be great here -evk
-#
 NAME:   troll_bridge
 DEPTH:  D:9-18
 ORIENT: float
-TAGS:   no_pool_fixup
-MONS:   troll w:50 / rock troll / iron troll w:5
+TAGS: no_pool_fixup
+MONS: patrolling troll w:50 / patrolling rock troll / patrolling iron troll w:5
 MAP
 xxxxx...........................xxxxxx
 xwwwx...........................xxxxxx

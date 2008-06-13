@@ -452,7 +452,7 @@ ENDMAP
 #
 NAME:  water_maze_lemuel
 TAGS:  no_pool_fixup uniq_water_maze_lemuel
-ITEM:  ring of levitation / ring of teleportation
+ITEM:  ring of teleportation
 DEPTH: D:5-27
 MAP
    wwwwwwwww
@@ -1198,7 +1198,7 @@ ENDMAP
 #
 NAME:  fake_naga_vault
 DEPTH: D:15-26, Vault, Elf, Snake
-MONS:  mimic, guardian naga
+MONS:  mimic, patrolling guardian naga
 ITEM:  any good_item
 : local b = crawl.random2(10)
 : if b > 7 then
