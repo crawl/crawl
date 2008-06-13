@@ -4837,6 +4837,90 @@ static void _give_sac_group_feedback(int which)
          names[which]);
 }
 
+// God effects of sacrificing one item from a stack (e.g., a weapon, one
+// out of 20 arrows, etc.) Does not modify the actual item in any way.
+static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
+{
+    piety_gain_t relative_piety_gain = PIETY_NONE;
+    // item_value() multiplies by quantity
+    const int value = item_value(item) / item.quantity;
+
+    switch (you.religion)
+    {
+    case GOD_NEMELEX_XOBEH:
+        if (you.attribute[ATTR_CARD_COUNTDOWN] && random2(800) < value)
+        {
+            you.attribute[ATTR_CARD_COUNTDOWN]--;
+#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_SACRIFICE
+            mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
+                 you.attribute[ATTR_CARD_COUNTDOWN]);
+#endif
+        }
+        if (item.base_type == OBJ_CORPSES && one_chance_in(2+you.piety/50)
+            // Nemelex piety gain is fairly fast...at least
+            // when you have low piety.
+            || value/2 >= random2(30 + you.piety/2))
+        {
+            if ( is_artefact(item) )
+            {
+                gain_piety(2);
+                relative_piety_gain = PIETY_LOTS;
+            }
+            else
+            {
+                gain_piety(1);
+                relative_piety_gain = PIETY_SOME;
+            }
+        }
+
+        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
+            // No sacrifice value for chunks of flesh, since food
+            // value goes towards decks of wonder.
+            ;
+        else if (item.base_type == OBJ_CORPSES)
+        {
+#if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
+            mprf(MSGCH_DIAGNOSTICS, "Corpse mass is %d",
+                 item_mass(item));
+#endif
+            you.sacrifice_value[item.base_type] += item_mass(item);
+        }
+        else
+            you.sacrifice_value[item.base_type] += value;
+        break;
+
+    case GOD_OKAWARU:
+    case GOD_MAKHLEB:
+        if (item.base_type == OBJ_CORPSES
+            || value >= random2(200)
+            || (player_under_penance() && value >= random2(5)))
+        {
+            gain_piety(1);
+            relative_piety_gain = PIETY_SOME;
+        }
+        break;
+
+    case GOD_SIF_MUNA:
+        if (value >= 150)       // no point in saccing stacks to Sif
+        {
+            gain_piety(1 + random2(3));
+            relative_piety_gain = PIETY_SOME;
+        }
+        break;
+
+    case GOD_KIKUBAAQUDGHA:
+    case GOD_TROG:
+    case GOD_SHINING_ONE:
+        gain_piety(1);
+        relative_piety_gain = PIETY_SOME;
+        break;
+
+    default:
+        break;
+    }
+    return relative_piety_gain;
+}
+
 void offer_items()
 {
     if (you.religion == GOD_NO_GOD)
@@ -4846,7 +4930,8 @@ void offer_items()
 
     if (!god_likes_items(you.religion) && i != NON_ITEM)
     {
-        simple_god_message(" doesn't care about such mundane gifts.", you.religion);
+        simple_god_message(" doesn't care about such mundane gifts.",
+                           you.religion);
         return;
     }
 
@@ -4864,7 +4949,7 @@ void offer_items()
         if (!yesno("Do you wish to part with all of your money?", true, 'n'))
             return;
 
-        int donation_value = (int) (you.gold/200 * log((double)you.gold));
+        const int donation_value = (int) (you.gold/200 * log((double)you.gold));
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
         mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
              "increase of piety by %d.", you.gold, donation_value);
@@ -4878,7 +4963,7 @@ void offer_items()
             return;
         }
 
-        int estimated_piety = you.piety + donation_value;
+        const int estimated_piety = you.piety + donation_value;
 
         you.duration[DUR_PIETY_POOL] += donation_value;
         if (you.duration[DUR_PIETY_POOL] > 500)
@@ -4887,9 +4972,9 @@ void offer_items()
         if (you.penance[GOD_ZIN])
         {
             if (estimated_piety >= you.penance[GOD_ZIN])
-                mpr("You feel that soon you will be absolved of all your sins.");
+                mpr("You feel that you will soon be absolved of all your sins.");
             else
-                mpr("You feel that soon your burden of sins will be lighter.");
+                mpr("You feel that your burden of sins will soon be lighter.");
             return;
         }
 
@@ -4925,8 +5010,7 @@ void offer_items()
     while (i != NON_ITEM)
     {
         item_def &item(mitm[i]);
-        const int next  = item.link;  // in case we can't get it later.
-        const int value = item_value( item, true );
+        const int next = item.link;  // in case we can't get it later.
 
         if (item_is_stationary(item) || !_god_likes_item(you.religion, item))
         {
@@ -4958,82 +5042,22 @@ void offer_items()
         piety_gain_t relative_piety_gain = PIETY_NONE;
 
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE
-        mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
+        mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d",
+             item_value(item));
 #endif
-
-        switch (you.religion)
+        
+        for ( int j = 0; j < item.quantity; ++j )
         {
-        case GOD_NEMELEX_XOBEH:
-            if (you.attribute[ATTR_CARD_COUNTDOWN] && random2(800) < value)
+            const piety_gain_t gain = _sacrifice_one_item_noncount(item);
+
+            // Update piety gain if necessary.
+            if ( gain != PIETY_NONE )
             {
-                you.attribute[ATTR_CARD_COUNTDOWN]--;
-#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_SACRIFICE
-                mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
-                     you.attribute[ATTR_CARD_COUNTDOWN]);
-#endif
-            }
-            if (item.base_type == OBJ_CORPSES
-                    && one_chance_in(2+you.piety/50)
-                // Nemelex piety gain is fairly fast...at least
-                // when you have low piety.
-                || value/2 >= random2(30 + you.piety/2))
-            {
-                if ( is_artefact(item) )
-                {
-                    gain_piety(2);
+                if ( relative_piety_gain == PIETY_NONE )
+                    relative_piety_gain = gain;
+                else            // some + some = lots
                     relative_piety_gain = PIETY_LOTS;
-                }
-                else
-                {
-                    gain_piety(1);
-                    relative_piety_gain = PIETY_SOME;
-                }
             }
-
-            if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
-                // No sacrifice value for chunks of flesh, since food
-                // value goes towards decks of wonder.
-                ;
-            else if (item.base_type == OBJ_CORPSES)
-            {
-#if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
-                mprf(MSGCH_DIAGNOSTICS, "Corpse mass is %d",
-                     item_mass(item));
-#endif
-                you.sacrifice_value[item.base_type] += item_mass(item);
-            }
-            else
-                you.sacrifice_value[item.base_type] += value;
-            break;
-
-        case GOD_OKAWARU:
-        case GOD_MAKHLEB:
-            if (mitm[i].base_type == OBJ_CORPSES
-                || random2(value) >= 50
-                || player_under_penance())
-            {
-                gain_piety(1);
-                relative_piety_gain = PIETY_SOME;
-            }
-            break;
-
-        case GOD_SIF_MUNA:
-            if (value >= 150)
-            {
-                gain_piety(1 + random2(3));
-                relative_piety_gain = PIETY_SOME;
-            }
-            break;
-
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_TROG:
-        case GOD_SHINING_ONE:
-            gain_piety(1);
-            relative_piety_gain = PIETY_SOME;
-            break;
-
-        default:
-            break;
         }
 
         _print_sacrifice_message(you.religion, mitm[i], relative_piety_gain);
