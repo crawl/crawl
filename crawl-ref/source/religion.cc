@@ -4034,7 +4034,7 @@ static bool _make_god_gifts_on_level_disappear(bool seen = false)
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
-        if (monster->type != -1
+        if (monster->alive()
             && monster->attitude == ATT_FRIENDLY
             && monster->has_ench(ENCH_ABJ)
             && mons_is_god_gift(monster))
@@ -4075,7 +4075,7 @@ static bool _make_holy_god_gifts_on_level_good_neutral(bool seen = false)
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
-        if (monster->type != -1
+        if (monster->alive()
             && mons_is_holy(monster)
             && monster->attitude == ATT_FRIENDLY
             && mons_is_god_gift(monster))
@@ -4116,7 +4116,7 @@ static bool _make_god_gifts_on_level_hostile(bool seen = false)
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
-        if (monster->type != -1
+        if (monster->alive()
             && monster->attitude == ATT_FRIENDLY
             && mons_is_god_gift(monster))
         {
@@ -4155,8 +4155,7 @@ static bool _orcish_followers_on_level_abandon_you()
     for ( int i = 0; i < MAX_MONSTERS; ++i )
     {
         monsters *monster = &menv[i];
-        if (monster->type != -1
-            && is_orcish_follower(monster))
+        if (is_orcish_follower(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Orc abandoning: %s on level %d, branch %d",
