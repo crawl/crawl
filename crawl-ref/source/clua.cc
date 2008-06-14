@@ -731,6 +731,7 @@ LUARET1(you_god_likes_butchery, boolean,
         god_likes_butchery(you.religion))
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
+LUARET2(you_pos, number, you.x_pos, you.y_pos)
 LUARET1(you_hunger, string, hunger_level())
 LUARET2(you_strength, number, you.strength, you.max_strength)
 LUARET2(you_intelligence, number, you.intel, you.max_intel)
@@ -759,6 +760,9 @@ LUARET1(you_subdepth, number, level_id::current().depth)
 // Increase by 1 because check happens on old level.
 LUARET1(you_absdepth, number, you.your_level + 1)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
+LUARET1(you_taking_stairs, boolean,
+        current_delay_action() == DELAY_ASCENDING_STAIRS
+        || current_delay_action() == DELAY_DESCENDING_STAIRS)
 LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_see_grid, boolean,
         see_grid(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
@@ -826,6 +830,7 @@ static const struct luaL_reg you_lib[] =
     { "evil_god"    , you_evil_god },
     { "hp"          , you_hp },
     { "mp"          , you_mp },
+    { "pos"         , you_pos },
     { "hunger"      , you_hunger },
     { "strength"    , you_strength },
     { "intelligence", you_intelligence },
@@ -851,6 +856,7 @@ static const struct luaL_reg you_lib[] =
     { "can_consume_corpses", you_can_consume_corpses },
 
     { "stop_activity", you_stop_activity },
+    { "taking_stairs", you_taking_stairs },
 
     { "floor_items",  you_floor_items },
 

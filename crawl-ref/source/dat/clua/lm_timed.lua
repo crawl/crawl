@@ -52,6 +52,15 @@ end
 
 function TimedMarker:timeout(marker, verbose, affect_player)
   local x, y = marker:pos()
+
+  if you.pos() == marker:pos() and you.taking_stairs() then
+    if verbose then
+      crawl.mpr( dgn.feature_desc_at(x, y, "The") .. " vanishes " ..
+                "just as you enter it!")
+      return
+    end
+  end
+
   if verbose then
     if you.see_grid(marker:pos()) then
       crawl.mpr( self.disappear or
