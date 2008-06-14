@@ -2156,10 +2156,12 @@ void behaviour_event( monsters *mon, int event, int src,
             break;
 
         default:
-            if (mon->has_ench(ENCH_SUBMERGED))
-                if(!mon->del_ench(ENCH_SUBMERGED))
-                    // Couldn't unsubmerge.
-                    mon->behaviour = BEH_LURK;
+            if (mon->has_ench(ENCH_SUBMERGED)
+                && !mon->del_ench(ENCH_SUBMERGED))
+            {
+                // Couldn't unsubmerge.
+                mon->behaviour = BEH_LURK;
+            }
             break;
         }
     }
@@ -2452,7 +2454,7 @@ static void _handle_behaviour(monsters *mon)
 
     // Validate current target exists.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
-        && menv[mon->foe].type == -1)
+        && !menv[mon->foe].alive())
     {
         mon->foe = MHITNOT;
     }
@@ -3256,7 +3258,7 @@ static void _handle_behaviour(monsters *mon)
 
         mon->foe = new_foe;
     }
-}                               // end handle_behaviour()
+}
 
 static bool _mons_check_set_foe(monsters *mon, int x, int y,
                                 bool friendly, bool neutral)
