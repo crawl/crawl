@@ -102,11 +102,13 @@ enum mons_class_flags
     M_CONFUSED          = (1<<10),        // monster is perma-confused,
     M_BATTY             = (1<<11),        // monster is batty
     M_SPLITS            = (1<<12),        // monster can split
-    M_AMPHIBIOUS        = (1<<13),        // monster can swim in water,
+    M_AMPHIBIOUS        = (1<<13),        // monster can swim in water
     M_STATIONARY        = (1<<14),        // monster is stationary
     M_BLOOD_SCENT       = (1<<15),        // monster can smell blood
-    M_COLD_BLOOD        = (1<<16),        // susceptible to cold
-    M_WARM_BLOOD        = (1<<17),        // no effect currently
+    M_COLD_BLOOD        = (1<<16),        // susceptible to cold,
+                                          // drainable by vampires
+    M_WARM_BLOOD        = (1<<17),        // no effect currently,
+                                          // drainable by vampires
     M_REGEN             = (1<<18),        // regenerates quickly
     M_BURROWS           = (1<<19),        // monster digs through rock
     M_EVIL              = (1<<20),        // monster vulnerable to holy spells
