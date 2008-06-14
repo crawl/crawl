@@ -212,7 +212,7 @@ struct mgen_data
                                 const coord_def &where,
                                 unsigned flags = 0)
     {
-        return mgen_data(what, BEH_SLEEP, 0, where);
+        return mgen_data(what, BEH_SLEEP, 0, where, 0, flags);
     }
 
     static mgen_data hostile_at(monster_type what,
