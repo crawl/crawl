@@ -2829,8 +2829,7 @@ static int _create_fsim_monster(int mtype, int hp)
     const int mi =
         create_monster(
             mgen_data::hostile_at(
-                static_cast<monster_type>(mtype),
-                you.pos() ) );
+                static_cast<monster_type>(mtype), you.pos()));
 
     if (mi == -1)
         return (mi);

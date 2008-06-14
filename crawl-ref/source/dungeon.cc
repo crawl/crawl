@@ -4751,7 +4751,8 @@ static int _vault_grid( vault_placement &place,
     {
         vgrid = '.';
         create_monster(
-            mgen_data::hostile_at( _random_evil_statue(), coord_def(vx, vy) ));
+            mgen_data::hostile_at(
+                _random_evil_statue(), coord_def(vx, vy)));
     }
 
     // First, set base tile for grids {dlb}:
@@ -4927,7 +4928,7 @@ static int _vault_grid( vault_placement &place,
         grd[vx][vy] = DNGN_FLOOR;
 
         create_monster(
-            mgen_data::hostile_at( mtype, coord_def(vx, vy) ));
+            mgen_data::hostile_at(mtype, coord_def(vx, vy)));
     }
 
     // Finally, handle grids that place monsters {dlb}:
