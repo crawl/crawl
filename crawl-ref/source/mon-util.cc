@@ -701,9 +701,7 @@ shout_type mons_shouts(int mc, bool demon_shout)
     {
         const int max_shout = (u == S_RANDOM ? NUM_SHOUTS : NUM_LOUDNESS);
         do
-        {
             u = static_cast<shout_type>(random2(max_shout));
-        }
         while (!_shout_fits_monster(mc, u));
     }
 
