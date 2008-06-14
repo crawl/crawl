@@ -3912,11 +3912,14 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (monster->foe == MHITNOT)
+        if (monster->foe == MHITNOT
+            || monster->foe == MHITYOU && mons_friendly(monster))
+        {
             break;
+        }
 
         // There's a 5% chance of Snorg spontaneously going berserk that
-        // increases to 20% once Snorg is wounded.
+        // increases to 20% once he is wounded.
         if (monster->hit_points == monster->max_hit_points && !one_chance_in(4))
             break;
 
