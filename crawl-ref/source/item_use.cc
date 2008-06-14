@@ -3598,8 +3598,6 @@ void drink( int slot )
         return;
     }
 
-
-
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
     // potions on monsters.
