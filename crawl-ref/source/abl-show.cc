@@ -1400,7 +1400,7 @@ static bool _do_ability(const ability_def& abil)
         const int pow = ( 2*skill_bump(SK_INVOCATIONS) + you.piety / 5 ) / 2;
         start_delay(DELAY_RECITE, 3, pow, you.hp);
 
-        exercise( SK_INVOCATIONS, 2 );
+        exercise(SK_INVOCATIONS, 2);
         break;
     }
 
@@ -1419,7 +1419,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_TSO_DIVINE_SHIELD:
         cast_divine_shield();
-        exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
+        exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
@@ -1427,7 +1427,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
 
         if (!zapping(ZAP_CLEANSING_FLAME, 20 + you.skills[SK_INVOCATIONS] * 6,
-            beam, true))
+                     beam, true))
         {
             return (false);
         }
@@ -1435,7 +1435,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_SUMMON_DAEVA:
-        summon_daeva(you.skills[SK_INVOCATIONS] * 4);
+        summon_daeva(you.skills[SK_INVOCATIONS] * 4, GOD_SHINING_ONE);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
 
