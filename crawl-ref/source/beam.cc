@@ -60,6 +60,7 @@
 #include "spells1.h"
 #include "spells3.h"
 #include "spells4.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
@@ -3501,9 +3502,13 @@ static void _affect_place_explosion_clouds(bolt &beam, int x, int y)
         if (grd[x][y] == DNGN_FLOOR && mgrd[x][y] == NON_MONSTER
             && one_chance_in(4))
         {
+            const god_type god =
+                (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
+                                              : GOD_NO_GOD;
+
             mons_place(
                 mgen_data::hostile_at(
-                    MONS_FIRE_VORTEX, coord_def(x, y)));
+                    MONS_FIRE_VORTEX, coord_def(x, y), 0, 0, false, god));
         }
     }
 }

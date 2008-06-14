@@ -216,19 +216,15 @@ struct mgen_data
     }
 
     static mgen_data hostile_at(monster_type what,
-                                const coord_def &where)
+                                const coord_def &where,
+                                int abj_deg = 0,
+                                unsigned flags = 0,
+                                bool alert = false,
+                                god_type god = GOD_NO_GOD)
     {
-        return mgen_data(what, BEH_HOSTILE, 0, where);
-    }
-
-    static mgen_data alert_hostile_at(monster_type what,
-                                      const coord_def &where,
-                                      int abj_deg = 0,
-                                      unsigned flags = 0,
-                                      god_type god = GOD_NO_GOD)
-    {
-        return mgen_data(what, BEH_HOSTILE, abj_deg, where, MHITYOU, flags,
-                         god);
+        return mgen_data(what, BEH_HOSTILE, abj_deg, where,
+                         alert ? MHITYOU : MHITNOT,
+                         flags, god);
     }
 };
 

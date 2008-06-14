@@ -856,9 +856,9 @@ static bool xom_is_bad(int sever)
                 for (int i = 0; i < numdemons; ++i)
                 {
                     if (create_monster(
-                            mgen_data::alert_hostile_at(
+                            mgen_data::hostile_at(
                                 xom_random_punishment_demon(sever),
-                                you.pos(), 4, 0, GOD_XOM)) != -1)
+                                you.pos(), 4, 0, true, GOD_XOM)) != -1)
                     {
                         success = true;
                     }

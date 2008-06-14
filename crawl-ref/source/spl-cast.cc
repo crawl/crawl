@@ -2404,8 +2404,8 @@ static void _miscast_translocation(int severity, const char* cause)
             break;
         case 5:
             if (create_monster(
-                    mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
-                        you.pos(), 3, 0, god)) != -1)
+                    mgen_data::hostile_at(MONS_SPATIAL_VORTEX,
+                        you.pos(), 3, 0, false, god)) != -1)
             {
                 mpr("Space twists in upon itself!");
             }
@@ -2443,8 +2443,8 @@ static void _miscast_translocation(int severity, const char* cause)
             for (int i = 1 + random2(3); i >= 0; --i)
             {
                 if (create_monster(
-                        mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
-                            you.pos(), 3, 0, god)) != -1)
+                        mgen_data::hostile_at(MONS_SPATIAL_VORTEX,
+                            you.pos(), 3, 0, false, god)) != -1)
                 {
                     success = true;
                 }
@@ -2546,8 +2546,8 @@ static void _miscast_summoning(int severity, const char* cause)
             break;
         case 3:
             if (create_monster(
-                    mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
-                        you.pos(), 3, 0, god)) != -1)
+                    mgen_data::hostile_at(MONS_SPATIAL_VORTEX,
+                        you.pos(), 3, 0, false, god)) != -1)
             {
                 mpr("Space twists in upon itself!");
             }
@@ -2557,9 +2557,9 @@ static void _miscast_summoning(int severity, const char* cause)
         case 4:
         case 5:
             if (create_monster(
-                    mgen_data::alert_hostile_at(
+                    mgen_data::hostile_at(
                         summon_any_demon(DEMON_LESSER),
-                        you.pos(), 5, 0, god)) != -1)
+                        you.pos(), 5, 0, true, god)) != -1)
             {
                 mpr("Something appears in a flash of light!");
             }
@@ -2579,8 +2579,8 @@ static void _miscast_summoning(int severity, const char* cause)
             for (int i = 1 + random2(3); i >= 0; --i)
             {
                 if (create_monster(
-                        mgen_data::alert_hostile_at(MONS_SPATIAL_VORTEX,
-                            you.pos(), 3, 0, god)) != -1)
+                        mgen_data::hostile_at(MONS_SPATIAL_VORTEX,
+                            you.pos(), 3, 0, false, god)) != -1)
                 {
                     success = true;
                 }
@@ -2596,9 +2596,9 @@ static void _miscast_summoning(int severity, const char* cause)
         case 1:
         case 2:
             if (create_monster(
-                    mgen_data::alert_hostile_at(
+                    mgen_data::hostile_at(
                         summon_any_demon(DEMON_COMMON),
-                        you.pos(), 5, 0, god)) != -1)
+                        you.pos(), 5, 0, true, god)) != -1)
             {
                 mpr("Something forms out of thin air!");
             }
@@ -2615,9 +2615,9 @@ static void _miscast_summoning(int severity, const char* cause)
             for (int i = 1 + random2(2); i >= 0; --i)
             {
                 if (create_monster(
-                        mgen_data::alert_hostile_at(
+                        mgen_data::hostile_at(
                             summon_any_demon(DEMON_LESSER),
-                            you.pos(), 5, 0, god)) != -1)
+                            you.pos(), 5, 0, true, god)) != -1)
                 {
                     success = true;
                 }
@@ -2637,8 +2637,8 @@ static void _miscast_summoning(int severity, const char* cause)
         {
         case 0:
             if (create_monster(
-                    mgen_data::alert_hostile_at(MONS_ABOMINATION_SMALL,
-                        you.pos(), 0, 0, god)) != -1)
+                    mgen_data::hostile_at(MONS_ABOMINATION_SMALL,
+                        you.pos(), 0, 0, true, god)) != -1)
             {
                 mpr("Something forms out of thin air.");
             }
@@ -2648,9 +2648,9 @@ static void _miscast_summoning(int severity, const char* cause)
 
         case 1:
             if (create_monster(
-                    mgen_data::alert_hostile_at(
+                    mgen_data::hostile_at(
                         summon_any_demon(DEMON_GREATER),
-                        you.pos(), 0, 0, god)) != -1)
+                        you.pos(), 0, 0, true, god)) != -1)
             {
                 mpr("You sense a hostile presence.");
             }
@@ -2665,9 +2665,9 @@ static void _miscast_summoning(int severity, const char* cause)
             for (int i = 1 + random2(2); i >= 0; --i)
             {
                 if (create_monster(
-                        mgen_data::alert_hostile_at(
+                        mgen_data::hostile_at(
                             summon_any_demon(DEMON_COMMON),
-                            you.pos(), 3, 0, god)) != -1)
+                            you.pos(), 3, 0, true, god)) != -1)
                 {
                     success = true;
                 }
@@ -2897,8 +2897,8 @@ static void _miscast_necromancy(int severity, const char* cause)
             for (int i = random2(3); i >= 0; --i)
             {
                 if (create_monster(
-                        mgen_data::alert_hostile_at(MONS_SHADOW,
-                            you.pos(), 2, 0, god)) != -1)
+                        mgen_data::hostile_at(MONS_SHADOW,
+                            you.pos(), 2, 0, true, god)) != -1)
                 {
                     success = true;
                 }
@@ -2962,8 +2962,8 @@ static void _miscast_necromancy(int severity, const char* cause)
 
         case 4:
             if (create_monster(
-                    mgen_data::alert_hostile_at(MONS_SOUL_EATER,
-                        you.pos(), 4, 0, god)) != -1)
+                    mgen_data::hostile_at(MONS_SOUL_EATER,
+                        you.pos(), 4, 0, true, god)) != -1)
             {
                 mpr("Something reaches out for you...");
             }
@@ -2973,8 +2973,8 @@ static void _miscast_necromancy(int severity, const char* cause)
 
         case 5:
             if (create_monster(
-                    mgen_data::alert_hostile_at(MONS_REAPER,
-                        you.pos(), 4, 0, god)) != -1)
+                    mgen_data::hostile_at(MONS_REAPER,
+                        you.pos(), 4, 0, true, god)) != -1)
             {
                 mpr("Death has come for you...");
             }
