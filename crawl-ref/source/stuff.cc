@@ -72,6 +72,7 @@
 #include "notes.h"
 #include "output.h"
 #include "player.h"
+#include "religion.h"
 #include "skills2.h"
 #include "tutorial.h"
 #include "view.h"
@@ -259,8 +260,8 @@ static bool tag_follower_at(const coord_def &pos)
             return (false);
 
         // Orcs will follow Beogh worshippers.
-        if (mons_species(fmenv->type) != MONS_ORC
-            || you.religion != GOD_BEOGH)
+        if (you.religion != GOD_BEOGH
+            || !is_orcish_follower(fmenv))
         {
             return (false);
         }
