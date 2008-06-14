@@ -409,7 +409,7 @@ static void _give_monster_experience( monsters *victim,
     {
         if (mon->gain_exp(experience))
         {
-            if (!god_gives_permanent_followers(you.religion)
+            if (you.religion == GOD_SHINING_ONE || you.religion == GOD_BEOGH
                 || player_under_penance()
                 || one_chance_in(3))
             {
