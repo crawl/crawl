@@ -49,11 +49,11 @@ ENDMAP
 
 #############################################################################
 # Watery exit 
-NAME: labyrinth_watery
-TAGS: minotaur generate_loot no_pool_fixup allow_dup
-MONS: patrolling minotaur
+NAME:    labyrinth_watery
+TAGS:    minotaur generate_loot no_pool_fixup allow_dup
+MONS:    patrolling minotaur
 SHUFFLE: def
-SUBST: d=~, e=~, f=., c:vvc
+SUBST:   d=~, e=~, f=., c:vvc
 MAP
 .........
 .ccccccc.
@@ -81,9 +81,9 @@ ENDMAP
 
 #############################################################################
 # Spiral exit
-NAME: labyrinth_spiral
-TAGS: minotaur generate_loot allow_dup
-MONS: patrolling minotaur
+NAME:  labyrinth_spiral
+TAGS:  minotaur generate_loot allow_dup
+MONS:  patrolling minotaur
 SUBST: c : cvz, z = vc
 MAP
 ............
@@ -101,11 +101,11 @@ ENDMAP
 
 #############################################################################
 # Hidden exit, and trapped loot
-NAME: labyrinth_hidden_loot
-TAGS: minotaur generate_loot allow_dup
-MONS: patrolling minotaur
+NAME:   labyrinth_hidden_loot
+TAGS:   minotaur generate_loot allow_dup
+MONS:   patrolling minotaur
 NSUBST: d = 1 / %
-SUBST: c : cvv
+SUBST:  c : cvv
 MAP
 ............
 .cccccccccc.
@@ -116,22 +116,22 @@ MAP
 .cxx...U=dc.
 .cxx.<..xxc.
 .cxxxx+xxxc.
-.cxxxx.xxxc.
+.cxxxx1xxxc.
 .ccccc+cccc.
 ............
 ENDMAP
 
 #############################################################################
 # Mini labyrinth exit
-NAME: labyrinth_mini_lab
-TAGS: minotaur generate_loot allow_dup
+NAME:    labyrinth_mini_lab
+TAGS:    minotaur generate_loot allow_dup
 SHUFFLE: def, ghi, klm
-SUBST: d : c, e : ., f : c
-SUBST: g : c, h : ., i : c
-SUBST: k = <, l = ., m = .
-KMONS: < = patrolling minotaur
-KFEAT: < = <
-SUBST: c : vvc
+SUBST:   d : c, e : ., f : c
+SUBST:   g : c, h : ., i : c
+SUBST:   k = <, l = ., m = .
+KMONS:   < = patrolling minotaur
+KFEAT:   < = <
+SUBST:   c : vvc
 
 # should not be necessary
 validate {{ return has_exit_from_glyph('<') }}
@@ -164,7 +164,7 @@ NSUBST:  D = 1:. / *:D
 KFEAT:   d = axe trap / dart trap / needle trap / blade trap
 KFEAT:   D = teleport trap
 SUBST:   c : vvc
-CHANCE: 1
+CHANCE:  2
 MAP
 ..............
 .cccccccccccc.
@@ -179,22 +179,22 @@ ENDMAP
 
 #############################################################################
 # Another trapped exit - most evil again! 
-NAME: labyrinth_trapped_2
-TAGS: lab allow_dup generate_loot
-ITEM: potion of porridge
+NAME:    labyrinth_trapped_2
+TAGS:    lab allow_dup generate_loot
+ITEM:    potion of porridge
 SHUFFLE: XYZ
 SHUFFLE: GH, LM, fghijklmn, FHIJKLN
-KFEAT: f = teleport trap
-KFEAT: n = teleport trap
-KFEAT: F = teleport trap
-KFEAT: N = teleport trap
-SUBST: g=., h=., i=., j=., k=., l=., m=.
-SUBST: G=., H=., I=., J=., K=., L=., M=.
-SUBST: Y=*, Z=*
-KFEAT: X = <
-KMONS: X = patrolling minotaur
-KFEAT: S = granite_statue
-CHANCE: 2
+KFEAT:   f = teleport trap
+KFEAT:   n = teleport trap
+KFEAT:   F = teleport trap
+KFEAT:   N = teleport trap
+SUBST:   g=., h=., i=., j=., k=., l=., m=.
+SUBST:   G=., H=., I=., J=., K=., L=., M=.
+SUBST:   Y=*, Z=*
+KFEAT:   X = <
+KMONS:   X = patrolling minotaur
+KFEAT:   S = granite_statue
+CHANCE:  2
 MAP
 .............
 .vvvvvvvvvvv.
@@ -233,8 +233,8 @@ ENDMAP
 
 ############################################################################
 # Labyrinth furniture
-NAME: lab_block
-TAGS: lab allow_dup
+NAME:    lab_block
+TAGS:    lab allow_dup
 SHUFFLE: vcx
 MAP
 .....
@@ -260,10 +260,10 @@ ENDMAP
 
 ############################################################################
 # Labyrinth hedge
-NAME: lab_hedge
-TAGS: lab allow_dup
+NAME:    lab_hedge
+TAGS:    lab allow_dup
 SHUFFLE: 1l
-MONS: plant
+MONS:    plant
 MAP
 .......
 .11111.
@@ -278,8 +278,8 @@ ENDMAP
 
 ############################################################################
 # Teaser: inaccessible loot
-NAME: labyrinth_glass_1
-TAGS: lab allow_dup
+NAME:  labyrinth_glass_1
+TAGS:  lab allow_dup
 SUBST: % = %*
 MAP
 ......
@@ -290,8 +290,8 @@ MAP
 ......
 ENDMAP
 
-NAME: labyrinth_glass_2
-TAGS: lab allow_dup
+NAME:   labyrinth_glass_2
+TAGS:   lab allow_dup
 CHANCE: 1
 MAP
 ......
@@ -319,12 +319,12 @@ ENDMAP
 
 ############################################################################
 # Baited teleport trap - this is evil!
-NAME: labyrinth_baited_teleportation_trap
-TAGS: lab allow_dup
-KFEAT: Y = teleport trap
-KITEM: Y = any good_item
+NAME:    labyrinth_baited_teleportation_trap
+TAGS:    lab allow_dup
+KFEAT:   Y = teleport trap
+KITEM:   Y = any good_item
 SHUFFLE: cxv
-CHANCE: 1
+CHANCE:  1
 MAP
 .....
 .x=x.
@@ -335,8 +335,8 @@ ENDMAP
 
 ############################################################################
 # Teaser: fake exit
-NAME: labyrinth_fake_exit
-TAGS: lab allow_dup
+NAME:  labyrinth_fake_exit
+TAGS:  lab allow_dup
 KFEAT: X = enter_abyss
 MAP
 ........

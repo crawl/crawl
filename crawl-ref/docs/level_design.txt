@@ -384,7 +384,10 @@ TAGS:     Tags go an a TAGS: line and are space-separated. Valid tags are:
              player doesn't get bored of the same few entries recycled
              ad nauseam.
           * "mnoleg" or the name of some other pandemonium lord. This makes
-             the map eligible for said pan lord's lair.
+             the map eligible for said pan lord's lair. See pan.des.
+          * "minotaur" turns this into a labyrinth exit vault. 
+            "lab" turns this into an additional labyrinth flavour vault.
+            See lab.des for examples and details.
           * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
              the vaults with this tag can be used in a game.
           * "no_rotate":  Normally, the dungeon builder can, at its whim,
