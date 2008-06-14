@@ -638,7 +638,7 @@ mon_attitude_type mons_attitude(const monsters *m);
 bool mons_behaviour_perceptible(const monsters *mon);
 bool mons_is_native_in_branch(const monsters *monster,
                               const branch_type branch);
-bool mons_is_god_gift(const monsters *mon);
+bool mons_is_god_gift(const monsters *mon, god_type god = you.religion);
 bool mons_is_chaotic(const monsters *mon);
 bool mons_is_poisoner(const monsters *mon);
 bool mons_is_confused(const monsters *m);

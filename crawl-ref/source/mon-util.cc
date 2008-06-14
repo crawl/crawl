@@ -490,9 +490,12 @@ bool mons_is_native_in_branch(const monsters *monster,
     }
 }
 
-bool mons_is_god_gift(const monsters *mon)
+bool mons_is_god_gift(const monsters *mon, god_type god)
 {
-    return (mon->god != GOD_NO_GOD);
+    if (god == GOD_NO_GOD)
+        return (false);
+
+    return (mon->god == god);
 }
 
 bool mons_is_chaotic(const monsters *mon)

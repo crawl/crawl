@@ -508,6 +508,8 @@ static void _inc_penance(god_type god, int val)
 {
     if (you.penance[god] == 0 && val > 0)
     {
+        god_acting gdact(god, true);
+
         take_note(Note(NOTE_PENANCE, god));
 
         // orcish bonuses don't apply under penance
@@ -822,7 +824,7 @@ static void _give_nemelex_gift()
 bool is_orcish_follower(const monsters* mon)
 {
     return (mon->alive() && mons_species(mon->type) == MONS_ORC
-            && mon->attitude == ATT_FRIENDLY && mons_is_god_gift(mon));
+            && mons_friendly(mon) && mons_is_god_gift(mon, GOD_BEOGH));
 }
 
 bool is_good_lawful_follower(const monsters* mon)
@@ -4038,15 +4040,17 @@ static bool _magic_users_attitude_change()
 // where the player can see the change, and output a message.
 static bool _make_god_gifts_on_level_disappear(bool seen = false)
 {
+    const god_type god =
+        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
+                                      : GOD_NO_GOD;
     int count = 0;
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
-        if (monster->alive()
-            && monster->attitude == ATT_FRIENDLY
+        if (is_follower(monster)
             && monster->has_ench(ENCH_ABJ)
-            && mons_is_god_gift(monster))
+            && mons_is_god_gift(monster, god))
         {
             if (!seen || simple_monster_message(monster, " abandons you!"))
                 count++;
@@ -4080,15 +4084,18 @@ static bool _make_god_gifts_disappear(bool level_only)
 // change, and output a message.
 static bool _make_holy_god_gifts_on_level_good_neutral(bool seen = false)
 {
+    const god_type god =
+        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
+                                      : GOD_NO_GOD;
     int count = 0;
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
-        if (monster->alive()
+        if (is_follower(monster)
+            && !monster->has_ench(ENCH_CHARM)
             && mons_is_holy(monster)
-            && monster->attitude == ATT_FRIENDLY
-            && mons_is_god_gift(monster))
+            && mons_is_god_gift(monster, god))
         {
             // monster changes attitude
             monster->attitude = ATT_GOOD_NEUTRAL;
@@ -4122,17 +4129,20 @@ static bool _make_holy_god_gifts_good_neutral(bool level_only)
 // output a message.
 static bool _make_god_gifts_on_level_hostile(bool seen = false)
 {
+    const god_type god =
+        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
+                                      : GOD_NO_GOD;
     int count = 0;
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
-        if (monster->alive()
-            && monster->attitude == ATT_FRIENDLY
-            && mons_is_god_gift(monster))
+        if (is_follower(monster)
+            && mons_is_god_gift(monster, god))
         {
             // monster changes attitude and behaviour
             monster->attitude = ATT_HOSTILE;
+            monster->del_ench(ENCH_CHARM, true);
             behaviour_event(monster, ME_ALERT, MHITYOU);
 
             if (!seen || simple_monster_message(monster, " turns against you!"))
@@ -4236,6 +4246,7 @@ static bool _beogh_followers_abandon_you()
                             }
 
                             monster->attitude = ATT_HOSTILE;
+                            monster->del_ench(ENCH_CHARM, true);
                             behaviour_event(monster, ME_ALERT, MHITYOU);
                             // For now CREATED_FRIENDLY stays.
 
@@ -4581,6 +4592,9 @@ void excommunication(god_type new_god)
         if (!is_good_god(new_god))
         {
             _inc_penance(old_god, 25);
+
+            god_acting good_gdact(GOD_SHINING_ONE, true);
+
             _make_god_gifts_hostile(false);
         }
         break;
@@ -4591,6 +4605,9 @@ void excommunication(god_type new_god)
         if (!is_good_god(new_god))
         {
             _inc_penance(old_god, 30);
+
+            god_acting good_gdact(GOD_SHINING_ONE, true);
+
             _make_god_gifts_hostile(false);
         }
         break;
