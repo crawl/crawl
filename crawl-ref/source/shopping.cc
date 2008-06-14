@@ -339,6 +339,12 @@ static void _purchase( int shop, int item_got, int cost, bool id )
 
     origin_purchased(item);
 
+    // This is so that note_messages can be used to note items being
+    // bought, and also so you can use message history to review
+    // what you bought.
+    mprf("You bought %s.", item.name(DESC_NOCAP_A, false, id).c_str());
+    mesclr();
+
     if ( id )
     {
         // Identify the item and its type.

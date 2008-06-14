@@ -2145,7 +2145,8 @@ bool is_interesting_item( const item_def& item )
         return (true);
     }
 
-    const std::string iname = item.name(DESC_PLAIN);
+    const std::string iname = menu_colour_item_prefix(item, false)
+        + item.name(DESC_PLAIN);
     for (unsigned i = 0; i < Options.note_items.size(); ++i)
         if (Options.note_items[i].matches(iname))
             return (true);
