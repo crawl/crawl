@@ -328,6 +328,9 @@ Scorpion
 # amphibians and reptiles
 Rattle-Snake
 
+# fish
+Shark
+
 Lamprey
 
 # birds
