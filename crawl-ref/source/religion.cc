@@ -4487,7 +4487,7 @@ void excommunication(god_type new_god)
         miscast_effect((coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
                        8 + you.experience_level, random2avg(98, 3), 100,
                        "the wrath of Vehumet");
-        _inc_penance( old_god, 25 );
+        _inc_penance(old_god, 25);
         break;
 
     case GOD_MAKHLEB:
