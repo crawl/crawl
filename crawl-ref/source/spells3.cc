@@ -514,7 +514,7 @@ bool summon_demon_type(monster_type mon, int pow, god_type god)
 {
     return _summon_demon_wrapper(pow, god, mon,
                                  std::min(2 + (random2(pow) / 4), 6),
-                                 false, random2(pow) > 3, false);
+                                 random2(pow) > 3, false, false);
 }
 
 bool cast_summon_demon(int pow, god_type god)
