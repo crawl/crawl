@@ -455,10 +455,11 @@ bool is_priest_god(god_type god)
 
 bool god_gives_permanent_followers(god_type god)
 {
-    // Only TSO and Beogh do this, but if you switch from TSO to another
-    // good god, you keep your (non-daeva) permanent followers, so count
-    // the other good gods here as well.
+    // Only TSO, Yredelemnul, and Beogh do this, but if you switch from
+    // TSO to another good god, you keep your (non-daeva) permanent
+    // followers, so count the other good gods here as well.
     return (is_good_god(god)
+            || god == GOD_YREDELEMNUL
             || god == GOD_BEOGH);
 }
 
