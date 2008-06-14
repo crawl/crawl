@@ -1047,9 +1047,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                         }
                     }
                 }
-                else if (you.religion == GOD_VEHUMET
+                else if (you.religion == GOD_SHINING_ONE
+                         || you.religion == GOD_VEHUMET
                          || you.religion == GOD_MAKHLEB
-                         || you.religion == GOD_SHINING_ONE
+                         || you.religion == GOD_LUGONU
                          || !anon && mons_is_god_gift(&menv[i]))
                 {
                     // Yes, we are splitting undead pets from the others
