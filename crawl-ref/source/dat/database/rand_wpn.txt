@@ -328,12 +328,14 @@ Scorpion
 # amphibians and reptiles
 Rattle-Snake
 
+Lamprey
+
 # birds
 Penguin
 
 Puffin
 
-Lamprey
+Fulmar
 
 # mammals
 Weasel
@@ -629,6 +631,8 @@ philosophy_or_science
 philosophy_name
 
 Monotheism
+
+Polytheism
 
 Atheism
 
