@@ -453,6 +453,15 @@ bool is_priest_god(god_type god)
             || god == GOD_BEOGH);
 }
 
+bool god_gives_permanent_followers(god_type god)
+{
+    // Only TSO and Beogh do this, but if you switch from TSO to another
+    // good god, you keep your (non-daeva) permanent followers, so count
+    // the other good gods here as well.
+    return (is_good_god(god)
+            || god == GOD_BEOGH);
+}
+
 void dec_penance(god_type god, int val)
 {
     if (you.penance[god] > 0)
@@ -5191,17 +5200,17 @@ void god_pitch(god_type which_god)
         you.gift_timeout = 0;
     }
 
-    if (you.religion == GOD_BEOGH || you.religion == GOD_SHINING_ONE)
+    if (god_gives_permanent_followers(you.religion))
     {
-        // With these two, you can get permanent followers, so enable
-        // ally pickup control.
+        // Enable ally pickup control for gods that give you permanent
+        // followers.
         you.friendly_pickup = Options.default_friendly_pickup;
     }
     else
     {
-        // With other gods you can only get stupid (zombies!), summoned
-        // or charmed allies, so pickup control makes no sense.
-        // Sorry about that!
+        // With other gods, you can only get stupid (zombies!),
+        // summoned, or charmed allies, so pickup control makes no
+        // sense.  Sorry about that!
         you.friendly_pickup = FRIENDLY_PICKUP_NONE;
     }
 

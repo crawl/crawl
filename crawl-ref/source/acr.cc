@@ -1952,7 +1952,7 @@ void process_command( command_type cmd )
 
     case CMD_TOGGLE_FRIENDLY_PICKUP:
     {
-        if (you.religion != GOD_SHINING_ONE && you.religion != GOD_BEOGH)
+        if (!god_gives_permanent_followers(you.religion))
         {
             mpr("I'm sorry, your allies won't ever be able to pick up items.");
             if (Options.tutorial_left)
@@ -4061,7 +4061,7 @@ static bool _initialise(void)
     if (newc) // start a new game
     {
         you.friendly_pickup = FRIENDLY_PICKUP_NONE;
-        if (you.religion == GOD_BEOGH || you.religion == GOD_SHINING_ONE)
+        if (god_gives_permanent_followers(you.religion))
             you.friendly_pickup = Options.default_friendly_pickup;
 
         // Mark items in inventory as of unknown origin.

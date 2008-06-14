@@ -2057,7 +2057,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     if (newlevel)
     {
         // When entering a new level, reset friendly_pickup to default.
-        if (you.religion == GOD_BEOGH || you.religion == GOD_SHINING_ONE)
+        if (god_gives_permanent_followers(you.religion))
             you.friendly_pickup = Options.default_friendly_pickup;
 
         switch(you.level_type)
