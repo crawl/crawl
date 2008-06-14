@@ -1257,7 +1257,7 @@ void abjuration(int pow)
 #endif
 
             // TSO and Trog's abjuration protection.
-            if (monster->god == GOD_SHINING_ONE)
+            if (mons_is_god_gift(monster, GOD_SHINING_ONE))
             {
                 sockage = sockage * (30 - monster->hit_dice) / 45;
                 if (sockage < abj.duration)
@@ -1266,7 +1266,7 @@ void abjuration(int pow)
                                        GOD_SHINING_ONE);
                 }
             }
-            else if (monster->god == GOD_TROG)
+            else if (mons_is_god_gift(monster, GOD_TROG))
             {
                 sockage = sockage * 8 / 15;
                 if (sockage < abj.duration)
