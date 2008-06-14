@@ -691,8 +691,8 @@ static void _fire_monster_death_event(monsters *monster,
                 apply_to_level(
                     target,
                     true,
-                    target == level_id::current()?
-                    _slime_pit_unlock_onlevel : _slime_pit_unlock_offlevel );
+                    target == level_id::current() ? _slime_pit_unlock_onlevel
+                                                  : _slime_pit_unlock_offlevel);
             }
         }
     }
@@ -1188,6 +1188,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             monster->set_transit( level_id(LEVEL_ABYSS) );
             in_transit = true;
             monster->destroy_inventory();
+            // Make monster stop patrolling and/or travelling.
+            monster->patrol_point = coord_def(0,0);
+            monster->travel_path.clear();
+            monster->travel_target = MTRAV_NONE;
             break;
 
         case KILL_DISMISSED:

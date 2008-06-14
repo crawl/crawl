@@ -1753,31 +1753,38 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     // Transformations.
     case SPELL_BLADE_HANDS:
-        transform(powc, TRAN_BLADE_HANDS);
+        if (!transform(powc, TRAN_BLADE_HANDS))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_SPIDER_FORM:
-        transform(powc, TRAN_SPIDER);
+        if (!transform(powc, TRAN_SPIDER))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_STATUE_FORM:
-        transform(powc, TRAN_STATUE);
+        if (!transform(powc, TRAN_STATUE))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_ICE_FORM:
-        transform(powc, TRAN_ICE_BEAST);
+        if (!transform(powc, TRAN_ICE_BEAST))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_DRAGON_FORM:
-        transform(powc, TRAN_DRAGON);
+        if (!transform(powc, TRAN_DRAGON))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_NECROMUTATION:
-        transform(powc, TRAN_LICH);
+        if (!transform(powc, TRAN_LICH))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_AIR_WALK:
-        transform(powc, TRAN_AIR);
+        if (!transform(powc, TRAN_AIR))
+            canned_msg(MSG_SPELL_FIZZLES);
         break;
 
     case SPELL_ALTER_SELF:
@@ -1803,6 +1810,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     // General enhancement.
     case SPELL_BERSERKER_RAGE:
+        if (!berserk_check_wielded_weapon())
+           return (SPRET_ABORT);
+
         cast_berserk();
         break;
 

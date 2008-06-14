@@ -184,15 +184,15 @@ bool can_wield(const item_def *weapon, bool say_reason,
 
 static bool _valid_weapon_swap(const item_def &item)
 {
-    // weapons and staves are valid weapons
+    // Weapons and staves are valid weapons.
     if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
-        return true;
+        return (true);
 
-    // misc. items need to be wielded to be evoked
+    // Misc. items need to be wielded to be evoked.
     if (item.base_type == OBJ_MISCELLANY && item.sub_type != MISC_RUNE_OF_ZOT)
-        return true;
+        return (true);
 
-    // some missiles need to be wielded for spells
+    // Some missiles need to be wielded for spells.
     if (item.base_type == OBJ_MISSILES)
     {
         if (item.sub_type == MI_STONE)
@@ -201,19 +201,19 @@ static bool _valid_weapon_swap(const item_def &item)
         if (item.sub_type == MI_ARROW)
             return (player_knows_spell(SPELL_STICKS_TO_SNAKES));
 
-        return false;
+        return (false);
     }
 
-    // Boneshards
+    // Boneshards.
     if (item.base_type == OBJ_CORPSES)
     {
         return (item.sub_type == CORPSE_SKELETON
                 && player_knows_spell(SPELL_BONE_SHARDS));
     }
 
-    // Sublimation of Blood
+    // Sublimation of Blood.
     if (!player_knows_spell(SPELL_SUBLIMATION_OF_BLOOD))
-        return false;
+        return (false);
 
     if (item.base_type == OBJ_FOOD)
         return (item.sub_type == FOOD_CHUNK);
@@ -224,7 +224,7 @@ static bool _valid_weapon_swap(const item_def &item)
                || item.sub_type == POT_BLOOD_COAGULATED);
     }
 
-    return false;
+    return (false);
 }
 
 bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
@@ -3584,13 +3584,21 @@ void drink( int slot )
 
     const bool alreadyknown = item_type_known(you.inv[item_slot]);
 
-    if (you.hunger_state == HS_ENGORGED && alreadyknown
+    if (alreadyknown && you.hunger_state == HS_ENGORGED
         && (is_blood_potion(you.inv[item_slot])
             || you.inv[item_slot].sub_type == POT_PORRIDGE))
     {
         mpr("You are much too full right now.");
         return;
     }
+
+    if (alreadyknown && you.inv[item_slot].sub_type == POT_BERSERK_RAGE
+        && !berserk_check_wielded_weapon())
+    {
+        return;
+    }
+
+
 
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown

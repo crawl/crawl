@@ -806,7 +806,7 @@ std::vector<const char*> get_ability_names()
 {
     std::vector<talent> talents = your_talents(false);
     std::vector<const char*> result;
-    for ( unsigned int i = 0; i < talents.size(); ++i )
+    for (unsigned int i = 0; i < talents.size(); ++i)
         result.push_back(get_ability_def(talents[i].which).name);
     return result;
 }
@@ -930,7 +930,7 @@ static bool _activate_talent(const talent& tal)
         return (false);
     }
 
-    // some abilities don't need a hunger check
+    // Some abilities don't need a hunger check.
     bool hungerCheck = true;
     switch (tal.which)
     {
@@ -957,7 +957,7 @@ static bool _activate_talent(const talent& tal)
 
     const ability_def& abil = get_ability_def(tal.which);
 
-    // check that we can afford to pay the costs
+    // Check that we can afford to pay the costs.
     if (!enough_mp( abil.mp_cost, false ))
     {
         crawl_state.zero_turns_taken();
@@ -977,8 +977,8 @@ static bool _activate_talent(const talent& tal)
         return (false);
     }
 
-    // don't insta-starve the player
-    // (happens at 100, losing consciousness possible from 500 downward)
+    // Don't insta-starve the player.
+    // (Happens at 100, losing consciousness possible from 500 downward.)
     if (hungerCheck && you.species != SP_VAMPIRE)
     {
         const int expected_hunger = you.hunger - abil.food_cost * 2;
@@ -987,7 +987,7 @@ static bool _activate_talent(const talent& tal)
              "hunger: %d, max. food_cost: %d, expected hunger: %d",
              you.hunger, abil.food_cost * 2, expected_hunger);
 #endif
-        // safety margin for natural hunger, mutations etc.
+        // Safety margin for natural hunger, mutations etc.
         if (expected_hunger <= 150)
         {
             mpr("You're too hungry.");
@@ -996,7 +996,14 @@ static bool _activate_talent(const talent& tal)
         }
     }
 
-    // no turning back now... {dlb}
+    if ((tal.which == ABIL_EVOKE_BERSERK || tal.which == ABIL_TROG_BERSERK)
+        && !berserk_check_wielded_weapon())
+    {
+        crawl_state.zero_turns_taken();
+        return (false);
+    }
+
+    // No turning back now... {dlb}
     if (random2avg(100, 3) < tal.fail)
     {
         mpr("You fail to use your ability.");

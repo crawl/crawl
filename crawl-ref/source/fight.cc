@@ -4001,17 +4001,37 @@ int melee_attack::mons_to_hit()
 
 ///////////////////////////////////////////////////////////////////////////
 
-static void wielded_weapon_check(const item_def *weapon)
+static bool wielded_weapon_check(const item_def *weapon)
 {
-    if (you.received_weapon_warning == false
-        && weapon && weapon->base_type != OBJ_STAVES
-        && (weapon->base_type != OBJ_WEAPONS || is_range_weapon(*weapon)))
+    bool result = true;
+    if (!you.received_weapon_warning
+           && weapon && weapon->base_type != OBJ_STAVES
+           && (weapon->base_type != OBJ_WEAPONS || is_range_weapon(*weapon))
+        || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
     {
-        mpr("You might want to wield a more suitable implement when "
-            "attacking monsters.", MSGCH_WARN);
+        if (item_cursed(*weapon))
+        {
+            mpr("You might want to wield a more suitable implement when "
+                "attacking monsters.", MSGCH_WARN);
+        }
+        else
+        {
+            std::string prompt  = "Really attack while wielding "
+                                  + weapon->name(DESC_NOCAP_YOUR) + "? ";
+
+            result = yesno(prompt.c_str(), true, 'n');
+        }
+
         learned_something_new(TUT_WIELD_WEAPON); // for tutorial Rangers
-        you.received_weapon_warning = true;
+
+        // Don't warn again if you decide to continue your attack.
+        if (result)
+        {
+            you.received_weapon_warning = true;
+            you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+        }
     }
+    return (result);
 }
 
 // Returns true if you hit the monster.
@@ -4025,7 +4045,11 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     interrupt_activity(AI_HIT_MONSTER, defender);
 
     // Check if the player is fighting with something unsuitable.
-    wielded_weapon_check(attk.weapon);
+    if (!wielded_weapon_check(attk.weapon))
+    {
+        you.turn_is_over = false;
+        return (false);
+    }
 
     bool attack = attk.attack();
     if (!attack)

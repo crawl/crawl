@@ -749,6 +749,33 @@ int get_player_wielded_weapon()
     return (player_weapon_wielded()? get_player_wielded_item() : -1);
 }
 
+// Returns false if the player is wielding a weapon inappropriate for Berserk.
+bool berserk_check_wielded_weapon()
+{
+    if (you.equip[EQ_WEAPON] == -1)
+        return (true);
+
+    const item_def weapon = you.inv[you.equip[EQ_WEAPON]];
+    if (is_valid_item(weapon) && weapon.base_type != OBJ_STAVES
+           && (weapon.base_type != OBJ_WEAPONS || is_range_weapon(weapon))
+        || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
+    {
+        std::string prompt = "Do you really want to go berserk while "
+                             "wielding " + weapon.name(DESC_NOCAP_YOUR)
+                             + "? ";
+
+        if (!yesno(prompt.c_str(), true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
+
+        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+    }
+
+    return (true);
+}
+
 // Looks in equipment "slot" to see if there is an equipped "sub_type".
 // Returns number of matches (in the case of rings, both are checked)
 int player_equip( equipment_type slot, int sub_type, bool calc_unid )

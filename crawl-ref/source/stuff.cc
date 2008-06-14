@@ -243,7 +243,7 @@ static bool tag_follower_at(const coord_def &pos)
     if (fmenv->speed_increment < 50)
         return (false);
 
-    // only friendly monsters, or those actively seeking the
+    // Only friendly monsters, or those actively seeking the
     // player, will follow up/down stairs.
     if (!mons_friendly(fmenv)
         && (fmenv->behaviour != BEH_SEEK || fmenv->foe != MHITYOU))
@@ -266,8 +266,13 @@ static bool tag_follower_at(const coord_def &pos)
         }
     }
 
-    // monster is chasing player through stairs:
+    // Monster is chasing player through stairs.
     fmenv->flags |= MF_TAKING_STAIRS;
+
+    // Clear patrolling/travel markers.
+    fmenv->patrol_point = coord_def(0,0);
+    fmenv->travel_path.clear();
+    fmenv->travel_target = MTRAV_NONE;
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",

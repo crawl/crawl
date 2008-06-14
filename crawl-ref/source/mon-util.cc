@@ -4013,7 +4013,7 @@ bool monsters::pickup_misc(item_def &item, int near)
     return pickup(item, MSLOT_MISCELLANY, near);
 }
 
-// Jellies are handled elsewhere, in _handle_pickup()) in monstuff.cc.
+// Jellies are handled elsewhere, in _handle_pickup() in monstuff.cc.
 bool monsters::pickup_item(item_def &item, int near, bool force)
 {
     // Equipping stuff can be forced when initially equipping monsters.

@@ -4739,15 +4739,15 @@ static void _print_sacrifice_message(god_type god, const item_def &item,
 
 static void _altar_prayer()
 {
-    // different message from when first joining a religion
-    mpr( "You prostrate yourself in front of the altar and pray." );
+    // Different message from when first joining a religion.
+    mpr("You prostrate yourself in front of the altar and pray.");
 
     if (you.religion == GOD_XOM)
         return;
 
     god_acting gdact;
 
-    // TSO blesses weapons with holy wrath, and long blades specially
+    // TSO blesses weapons with holy wrath, and long blades specially.
     if (you.religion == GOD_SHINING_ONE
         && !you.num_gifts[GOD_SHINING_ONE]
         && !player_under_penance()
@@ -4763,7 +4763,7 @@ static void _altar_prayer()
         }
     }
 
-    // Lugonu blesses weapons with distortion
+    // Lugonu blesses weapons with distortion.
     if (you.religion == GOD_LUGONU
         && !you.num_gifts[GOD_LUGONU]
         && !player_under_penance()
@@ -4776,7 +4776,7 @@ static void _altar_prayer()
     }
 
     offer_items();
-}                               // end _altar_prayer()
+}
 
 bool god_hates_attacking_friend(god_type god, const actor *fr)
 {
@@ -5076,7 +5076,7 @@ void offer_items()
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d",
              item_value(item));
 #endif
-        
+
         for ( int j = 0; j < item.quantity; ++j )
         {
             const piety_gain_t gain = _sacrifice_one_item_noncount(item);
@@ -5132,9 +5132,9 @@ void god_pitch(god_type which_god)
     // return, or not allow worshippers from other religions.  -- bwr
 
     // Gods can be racist...
-    const bool you_evil = you.is_undead || you.species == SP_DEMONSPAWN;
-    if ( (you_evil && is_good_god(which_god)) ||
-         (you.species != SP_HILL_ORC && which_god == GOD_BEOGH) )
+    const bool you_evil = (you.is_undead || you.species == SP_DEMONSPAWN);
+    if (you_evil && is_good_god(which_god)
+        || which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
     {
         you.turn_is_over = false;
         simple_god_message(" does not accept worship from those such as you!",
@@ -5190,6 +5190,21 @@ void god_pitch(god_type which_god)
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
     }
+
+    if (you.religion == GOD_BEOGH || you.religion == GOD_SHINING_ONE)
+    {
+        // With these two, you can get permanent followers, so enable
+        // ally pickup control.
+        you.friendly_pickup = Options.default_friendly_pickup;
+    }
+    else
+    {
+        // With other gods you can only get stupid (zombies!), summoned
+        // or charmed allies, so pickup control makes no sense.
+        // Sorry about that!
+        you.friendly_pickup = FRIENDLY_PICKUP_NONE;
+    }
+
 
     set_god_ability_slots();    // remove old god's slots, reserve new god's
 #ifdef DGL_WHEREIS
@@ -5251,7 +5266,7 @@ void god_pitch(god_type which_god)
         }
     }
 
-    // note that you.worshipped[] has already been incremented
+    // Note that you.worshipped[] has already been incremented.
     if (you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1)
         gain_piety(20);         // allow instant access to first power
 
