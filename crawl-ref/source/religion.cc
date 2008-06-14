@@ -5593,8 +5593,8 @@ int god_colour( god_type god ) //mv - added
 {
     switch (god)
     {
-    case GOD_SHINING_ONE:
     case GOD_ZIN:
+    case GOD_SHINING_ONE:
     case GOD_ELYVILON:
     case GOD_OKAWARU:
         return(CYAN);
@@ -5617,7 +5617,6 @@ int god_colour( god_type god ) //mv - added
     case GOD_SIF_MUNA:
         return(LIGHTBLUE);
 
-    case GOD_NO_GOD:
     default:
         break;
     }
