@@ -644,11 +644,11 @@ void Stash::write(std::ostream &os, int refx, int refy,
                   std::string place, bool identify)
     const
 {
-    bool note_status = notes_are_active();
-    activate_notes(false);
-
     if (!enabled || (items.size() == 0 && verified))
         return;
+
+    bool note_status = notes_are_active();
+    activate_notes(false);
 
     os << "(" << ((int) x - refx) << ", " << ((int) y - refy)
        << (place.length()? ", " + place : "")

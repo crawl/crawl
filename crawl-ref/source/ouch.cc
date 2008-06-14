@@ -875,6 +875,9 @@ void ouch( int dam, int death_source, kill_method_type death_type,
         } // else hp <= 0
     }
 
+    // construct scorefile entry.
+    scorefile_entry se(dam, death_source, death_type, aux);
+
 #ifdef WIZARD
     if (death_type != KILLED_BY_QUITTING
         && death_type != KILLED_BY_WINNING
@@ -882,6 +885,8 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     {
         if (you.wizard)
         {
+            const std::string death_desc
+                = se.death_description(scorefile_entry::DDV_VERBOSE);
 #ifdef USE_OPTIONAL_WIZARD_DEATH
 
 #if DEBUG_DIAGNOSTICS
@@ -890,6 +895,8 @@ void ouch( int dam, int death_source, kill_method_type death_type,
 
             if (!yesno("Die?", false, 'n'))
             {
+                take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
+                                death_desc.c_str()), true);
                 set_hp(you.hp_max, false);
                 return;
             }
@@ -897,6 +904,8 @@ void ouch( int dam, int death_source, kill_method_type death_type,
             mpr("Since you're a debugger, I'll let you live.");
             mpr("Be more careful next time, okay?");
 
+            take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
+                            death_desc.c_str()), true);
             set_hp(you.hp_max, false);
             return;
 #endif  // USE_OPTIONAL_WIZARD_DEATH
@@ -909,16 +918,12 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     crawl_state.need_save       = false;
     crawl_state.updating_scores = true;
 
-    take_note(
-         Note( NOTE_DEATH, you.hp, you.hp_max,
-           scorefile_entry(dam, death_source, death_type, aux)
-           .death_description(scorefile_entry::DDV_NORMAL).c_str()), true );
+    take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
+                    se.death_description(scorefile_entry::DDV_NORMAL).c_str()),
+              true);
 
     // prevent bogus notes
     activate_notes(false);
-
-    // construct scorefile entry.
-    scorefile_entry se(dam, death_source, death_type, aux);
 
 #ifdef SCORE_WIZARD_CHARACTERS
     // add this highscore to the score file.

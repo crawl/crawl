@@ -392,6 +392,17 @@ static void _take_starting_note()
     notestr.str("");
     notestr.clear();
 
+#ifdef WIZARD
+    if (you.wizard)
+    {
+        notestr << "You started the game in wizard mode.";
+        take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
+
+        notestr.str("");
+        notestr.clear();
+    }
+#endif
+
     notestr << "HP: " << you.hp << "/" << you.hp_max
             << " MP: " << you.magic_points << "/" << you.max_magic_points;
 
@@ -448,6 +459,8 @@ static void _handle_wizard_command( void )
 
         if (!yesno( "Do you really want to enter wizard mode?", false, 'n' ))
             return;
+
+        take_note(Note(NOTE_MESSAGE, 0, 0, "Entered wizard mode."));
 
         you.wizard = true;
         redraw_screen();
