@@ -3448,7 +3448,7 @@ void melee_attack::check_defender_train_armour()
 
 void melee_attack::mons_set_weapon(const mon_attack_def &attk)
 {
-    weapon = attk.type == AT_HIT? attacker->weapon(attack_number) : NULL;
+    weapon = (attk.type == AT_HIT) ? attacker->weapon(attack_number) : NULL;
     damage_brand = attacker->damage_brand(attack_number);
 }
 

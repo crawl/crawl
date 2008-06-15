@@ -884,7 +884,7 @@ mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
         }
     }
 
-    return (zombified? downscale_zombie_attack(mons, attk) : attk);
+    return (zombified ? downscale_zombie_attack(mons, attk) : attk);
 }
 
 int mons_damage(int mc, int rt)
@@ -3121,7 +3121,7 @@ item_def *monsters::weapon(int which_attack)
         }
     }
 
-    return (weap == NON_ITEM? NULL : &mitm[weap]);
+    return (weap == NON_ITEM) ? NULL : &mitm[weap];
 }
 
 
