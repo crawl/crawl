@@ -3905,8 +3905,8 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet, item_def &wpn )
     {
         if (!quiet)
         {
-            mprf("%s %s red for a moment.", iname.c_str(),
-                 wpn.quantity > 1 ? "glow" : "glows");
+            mprf("%s glow%s red for a moment.", iname.c_str(),
+                 wpn.quantity > 1 ? "" : "s");
         }
 
         wpn.plus++;
