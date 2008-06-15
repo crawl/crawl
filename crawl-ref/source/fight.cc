@@ -349,7 +349,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
       weapon(NULL), damage_brand(SPWPN_NORMAL),
       wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE),
       spwld(SPWLD_NONE), hand_half_bonus(false),
-      art_props(0), attack_verb(), verb_degree(),
+      art_props(0), attack_verb("bug"), verb_degree(),
       no_damage_message(), special_damage_message(), unarmed_attack(),
       shield(NULL), defender_shield(NULL),
       heavy_armour_penalty(0), can_do_unarmed(false),
@@ -807,7 +807,7 @@ bool melee_attack::player_attack()
             bleed_onto_floor(where.x, where.y, defender->id(), blood, true);
         }
 
-        if (damage_done > 0 || !defender_visible)
+        if (damage_done > 0 || !defender_visible && !shield_blocked)
             player_announce_hit();
         else if (!shield_blocked && damage_done <= 0)
         {
@@ -3827,7 +3827,7 @@ void melee_attack::mons_perform_attack_rounds()
         {
             if (attack_shield_blocked(true))
             {
-                shield_blocked = true;
+                shield_blocked   = true;
                 perceived_attack = true;
                 this_round_hit = did_hit = true;
             }
@@ -3864,6 +3864,10 @@ void melee_attack::mons_perform_attack_rounds()
 
         if (damage_done > 0)
         {
+#ifdef DEBUG_DIAGNOSTICS
+            if (shield_blocked)
+                mpr("ERROR: Non-zero damage after shield block!");
+#endif
             mons_announce_hit(attk);
             check_defender_train_armour();
 

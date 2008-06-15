@@ -129,64 +129,63 @@ static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
 
 static std::string _get_version_changes(void)
 {
-    std::string result = "";
-
-    bool start = false;
     // Attempts to print "Highlights" of the latest version.
-    FILE* fp = fopen(datafile_path("changes.stone_soup", true).c_str(), "r");
-    if (fp)
-    {
-        char buf[200];
-        std::string help;
-        bool skip_lines = true;
-        while (fgets(buf, sizeof buf, fp))
-        {
-            // Remove trailing spaces.
-            for (int i = strlen(buf) - 1; i >= 0; i++)
-            {
-                if (isspace( buf[i] ))
-                    buf[i] = 0;
-                else
-                    break;
-            }
-            help = buf;
-            // Give up if you encountered the second set of underliners
-            // and still haven't found Highlights.
-            if (help.find("---") != std::string::npos)
-            {
-                if (skip_lines)
-                {
-                    skip_lines = false;
-                    continue;
-                }
-                else if (!start)
-                    break;
-            }
+    FILE* fp = fopen(datafile_path("changes.stone_soup", false).c_str(), "r");
+    if (!fp)
+        return "";
 
-            if (help.find("Highlights") != std::string::npos)
+    std::string result = "";
+    std::string help;
+    char buf[200];
+    bool start = false;
+    bool skip_lines = true;
+    while (fgets(buf, sizeof buf, fp))
+    {
+        // Remove trailing spaces.
+        for (int i = strlen(buf) - 1; i >= 0; i++)
+        {
+            if (isspace( buf[i] ))
+                buf[i] = 0;
+            else
+                break;
+        }
+        help = buf;
+        // Give up if you encountered the second set of underliners
+        // and still haven't found Highlights.
+        if (help.find("---") != std::string::npos)
+        {
+            if (skip_lines)
             {
-                // Highlight the Highlights, so to speak.
-                std::string text  = "<w>";
-                            text += buf;
-                            text += "</w>";
-                            text += EOL;
-                result += text;
-                // And start printing from now on.
-                start = true;
+                skip_lines = false;
+                continue;
             }
             else if (!start)
-                continue;
-            else if (buf[0] == 0)
-            {
-                // Stop reading and copying text with the first empty line
-                // following the Highlights section.
                 break;
-            }
-            else
-            {
-                result += buf;
-                result += EOL;
-            }
+        }
+
+        if (help.find("Highlights") != std::string::npos)
+        {
+            // Highlight the Highlights, so to speak.
+            std::string text  = "<w>";
+                        text += buf;
+                        text += "</w>";
+                        text += EOL;
+            result += text;
+            // And start printing from now on.
+            start = true;
+        }
+        else if (!start)
+            continue;
+        else if (buf[0] == 0)
+        {
+            // Stop reading and copying text with the first empty line
+            // following the Highlights section.
+            break;
+        }
+        else
+        {
+            result += buf;
+            result += EOL;
         }
     }
     fclose(fp);
@@ -230,7 +229,7 @@ static void _print_version(void)
     cmd_version.add_text(_get_version_changes());
 
     // Read in information about changes in comparison to the latest version.
-    FILE* fp = fopen(datafile_path("034_changes.txt", true).c_str(), "r");
+    FILE* fp = fopen(datafile_path("034_changes.txt", false).c_str(), "r");
     if (fp)
     {
         char buf[200];
@@ -257,8 +256,8 @@ static void _print_version(void)
             else
                 cmd_version.add_text(buf);
         }
+        fclose(fp);
     }
-    fclose(fp);
 
     cmd_version.show();
 }
