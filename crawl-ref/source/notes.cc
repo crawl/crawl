@@ -89,16 +89,16 @@ static bool _is_noteworthy_dlevel( unsigned short place )
 
     // Special levels (Abyss, etc.) are always interesting.
     if (lev == 0xFF)
-        return true;
+        return (true);
 
     if (lev == _dungeon_branch_depth(branch)
         || branch == BRANCH_MAIN_DUNGEON && (lev % 5) == 0
         || branch != BRANCH_MAIN_DUNGEON && lev == 1)
     {
-        return true;
+        return (true);
     }
 
-    return false;
+    return (false);
 }
 
 // Is a note worth taking?
@@ -124,7 +124,7 @@ static bool _is_noteworthy( const Note& note )
         || note.type == NOTE_MOLLIFY_GOD
         || note.type == NOTE_DEATH)
     {
-        return true;
+        return (true);
     }
 
     // Never noteworthy, hooked up for fun or future use.
@@ -132,21 +132,21 @@ static bool _is_noteworthy( const Note& note )
         || note.type == NOTE_MAXHP_CHANGE
         || note.type == NOTE_MAXMP_CHANGE)
     {
-        return false;
+        return (false);
     }
 
     // God powers might be noteworthy if it's an actual power.
     if (note.type == NOTE_GOD_POWER
         && _real_god_power(note.first, note.second) == -1)
     {
-        return false;
+        return (false);
     }
 
     // HP noteworthiness is handled in its own function.
     if (note.type == NOTE_HP_CHANGE
         && !_is_noteworthy_hp(note.first, note.second))
     {
-        return false;
+        return (false);
     }
 
     // Skills are noteworthy if in the skill value list or if
@@ -157,27 +157,28 @@ static bool _is_noteworthy( const Note& note )
             || _is_noteworthy_skill_level(note.second)
             || Options.note_skill_max && _is_highest_skill(note.first))
         {
-            return true;
+            return (true);
         }
-        return false;
+        return (false);
     }
 
     if (note.type == NOTE_DUNGEON_LEVEL_CHANGE)
     {
         if (!_is_noteworthy_dlevel(note.packed_place))
-            return false;
+            return (false);
 
-        // Labyrinths are always interesting.
+        // Labyrinths and portal vaults are always interesting.
         if ((note.packed_place & 0xFF) == 0xFF
-            && (note.packed_place >> 8) == LEVEL_LABYRINTH)
+            && ((note.packed_place >> 8) == LEVEL_LABYRINTH
+                || (note.packed_place >> 8) == LEVEL_PORTAL_VAULT))
         {
-            return true;
+            return (true);
         }
     }
 
     // Learning a spell is always noteworthy if note_all_spells is set.
     if (note.type == NOTE_LEARN_SPELL && Options.note_all_spells)
-        return true;
+        return (true);
 
     for (unsigned i = 0; i < note_list.size(); ++i)
     {
@@ -189,18 +190,18 @@ static bool _is_noteworthy( const Note& note )
         {
         case NOTE_DUNGEON_LEVEL_CHANGE:
             if (rnote.packed_place == note.packed_place)
-                return false;
+                return (false);
             break;
         case NOTE_LEARN_SPELL:
             if (spell_difficulty(static_cast<spell_type>(rnote.first))
                 >= spell_difficulty(static_cast<spell_type>(note.first)))
             {
-                return false;
+                return (false);
             }
             break;
         case NOTE_GOD_POWER:
             if (rnote.first == note.first && rnote.second == note.second)
-                return false;
+                return (false);
             break;
         case NOTE_HP_CHANGE:
             // Not if we have a recent warning
@@ -208,17 +209,17 @@ static bool _is_noteworthy( const Note& note )
             if (note.turn - rnote.turn < 5
                 && note.first * 2 >= rnote.first)
             {
-                return false;
+                return (false);
             }
             break;
         default:
             mpr("Buggy note passed: unknown note type");
             // Return now, rather than give a "Buggy note passed" message
             // for each note of the matching type in the note list.
-            return true;
+            return (true);
         }
     }
-    return true;
+    return (true);
 }
 
 static const char* _number_to_ordinal( int number )
@@ -377,7 +378,7 @@ void Note::check_milestone() const
     if (type == NOTE_DUNGEON_LEVEL_CHANGE)
     {
         const int br = place_branch(packed_place),
-            dep = place_depth(packed_place);
+                 dep = place_depth(packed_place);
 
         if (br != -1)
         {

@@ -49,16 +49,18 @@ unsigned short get_packed_place( branch_type branch, int subdepth,
 {
     unsigned short place = (unsigned short)
         ( (static_cast<int>(branch) << 8) | (subdepth & 0xFF) );
+
     if (level_type != LEVEL_DUNGEON)
         place = (unsigned short) ( (static_cast<int>(level_type) << 8) | 0xFF );
+
     return place;
 }
 
 unsigned short get_packed_place()
 {
-    return get_packed_place( you.where_are_you,
-                      subdungeon_depth(you.where_are_you, you.your_level),
-                      you.level_type );
+    return get_packed_place(you.where_are_you,
+                            subdungeon_depth(you.where_are_you, you.your_level),
+                            you.level_type);
 }
 
 bool single_level_branch( branch_type branch )
@@ -87,10 +89,12 @@ std::string place_name( unsigned short place, bool long_name,
         case LEVEL_LABYRINTH:
             return ( long_name ? "a Labyrinth" : "Lab" );
         case LEVEL_PORTAL_VAULT:
-            if ( you.level_type_name == "bazaar" )
+        // FIXME: While there are no further portal vaults, declare all
+        //        portal vaults as bazaars.
+//            if (you.level_type_name == "bazaar")
                 return ( long_name ? "a Bazaar" : "Bazaar" );
 
-            return ( long_name ? "a Portal Chamber" : "Port" );
+//            return ( long_name ? "a Portal Chamber" : "Port" );
         default:
             return ( long_name ? "Buggy Badlands" : "Bug" );
         }
@@ -135,9 +139,8 @@ std::string prep_branch_level_name(unsigned short packed_place)
     std::string place = place_name( packed_place, true, true );
     if (place.length() && place != "Pandemonium")
         place[0] = tolower(place[0]);
-    return (place.find("level") == 0?
-            "on " + place
-          : "in " + place);
+    return (place.find("level") == 0 ? "on " + place
+                                     : "in " + place);
 }
 
 // Use current branch and depth
