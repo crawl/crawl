@@ -3358,7 +3358,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "gore"
     };
 
-    return attack_types[ attk.type ];
+    return attack_types[attk.type];
 }
 
 std::string melee_attack::mons_weapon_desc()
