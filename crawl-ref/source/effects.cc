@@ -2680,7 +2680,7 @@ void handle_time(long time_delta)
                 && random2(item_mass(you.inv[you.equip[EQ_BODY_ARMOUR]])) < 100)
             && you.skills[SK_STEALTH] <= 2 + random2(3) && one_chance_in(18))
         {
-             exercise(SK_STEALTH, 1);
+            exercise(SK_STEALTH, 1);
         }
     }
 }
