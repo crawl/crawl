@@ -323,7 +323,6 @@ static const ability_def Ability_List[] =
 
 
 const struct ability_def & get_ability_def( ability_type abil )
-/****************************************************/
 {
     for (unsigned int i = 0;
          i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++)

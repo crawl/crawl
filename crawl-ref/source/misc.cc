@@ -2367,36 +2367,25 @@ void get_playervisible_monsters(std::vector<monsters*> &mons,
     if (range == -1)
         range = LOS_RADIUS;
 
-    const int ystart = MAX(0,       you.y_pos - range);
-    const int yend   = MIN(GYM - 1, you.y_pos + range);
-    const int xstart = MAX(0,       you.x_pos - range);
-    const int xend   = MIN(GXM - 1, you.x_pos + range);
+    // Sweep every square within range.
+    radius_iterator ri(you.pos(), range);
 
-    // Monster check.
-    for (int y = ystart; y <= yend; ++y)
+    for ( ; ri; ++ri )
     {
-        for (int x = xstart; x <= xend; ++x)
+        const unsigned short targ_monst = env.mgrid(*ri);
+        if (targ_monst != NON_MONSTER)
         {
-            const unsigned short targ_monst = env.mgrid[x][y];
-            if (targ_monst != NON_MONSTER)
+            if (see_grid(*ri))
             {
-                if (see_grid(x, y))
+                monsters *mon = &env.mons[targ_monst];
+                if (player_monster_visible(mon)
+                    && !mons_is_submerged(mon)
+                    && (!mons_is_mimic(mon->type) || mons_is_known_mimic(mon))
+                    && (!dangerous_only || !mons_is_safe(mon, want_move)))
                 {
-                    monsters *mon = &env.mons[targ_monst];
-
-                    if (player_monster_visible(mon)
-                        && !mons_is_submerged(mon)
-                        && (!mons_is_mimic(mon->type)
-                            || mons_is_known_mimic(mon))
-                        && (!dangerous_only || !mons_is_safe(mon, want_move)))
-                    {
-                        mons.push_back(mon);
-                        if (just_check)
-                        {
-                            // One monster found, that's enough.
-                            return;
-                        }
-                    }
+                    mons.push_back(mon);
+                    if (just_check) // stop once you find one
+                        return;
                 }
             }
         }
