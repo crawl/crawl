@@ -1349,10 +1349,10 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
         && (is_fixed_artefact(wpn)
             || is_random_artefact(wpn)))
     {
-        return (uncurse && item_cursed( wpn )); // ?EW may uncurse artefacts
+        return (uncurse && item_cursed( wpn )); // ?EW may uncurse artefacts.
     }
 
-    // Nor can highly enchanted items (missiles only have one stat)
+    // Nor can highly enchanted items (missiles only have one stat).
     if (wpn.plus >= 9
         || wpn.base_type == OBJ_WEAPONS && wpn.plus2 >= 9)
     {
