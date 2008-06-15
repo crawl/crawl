@@ -1959,8 +1959,8 @@ void process_command( command_type cmd )
             {
                 mpr("Only intelligent permanent allies may equip themselves, "
                     "and these two restrictions are only met by allies of the "
-                    "followers of two gods in the pantheon: the Shining One "
-                    "and Beogh.", MSGCH_TUTORIAL);
+                    "followers of three gods in the pantheon: the Shining "
+                    "One, Yredelemnul, and Beogh.", MSGCH_TUTORIAL);
             }
             break;
         }
