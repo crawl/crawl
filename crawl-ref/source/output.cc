@@ -49,7 +49,7 @@
 #include "stuff.h"
 #include "transfor.h"
 #ifdef USE_TILE
- #include "tiles.h"
+#include "tiles.h"
 #endif
 #include "travel.h"
 #include "view.h"
@@ -445,7 +445,7 @@ static void _print_stats_ac(int x, int y)
         textcolor( HUD_VALUE_COLOR );
     cprintf( "%2d ", player_AC() );
 
-    // Sh: (two lines lower)
+    // SH: (two lines lower)
     cgotoxy(x+4, y+2, GOTO_STAT);
     if (you.duration[DUR_CONDENSATION_SHIELD] || you.duration[DUR_DIVINE_SHIELD])
         textcolor( LIGHTBLUE );
@@ -1732,13 +1732,7 @@ static std::vector<formatted_string> _get_overview_stats()
     snprintf(buf, sizeof buf, "EV %2d" , player_evasion());
     cols1.add_formatted(1, buf, false);
 
-    if (you.equip[EQ_SHIELD] == -1)
-    {
-        textcolor( DARKGREY );
-        snprintf(buf, sizeof buf, "SH  <darkgrey>-</darkgrey>");
-    }
-    else
-        snprintf(buf, sizeof buf, "SH %2d", player_shield_class());
+    snprintf(buf, sizeof buf, "SH %2d", player_shield_class());
     cols1.add_formatted(1, buf, false);
 
     if (you.strength == you.max_strength)
