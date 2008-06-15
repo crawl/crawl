@@ -439,6 +439,12 @@ Passwall
 
 This spell tunes the caster's body such that it can instantly pass through solid rock. This can be dangerous, since it is possible for the spell to expire while the caster is en route, and it also takes time for the caster to attune to the rock, during which time they will be helpless. 
 %%%%
+Petrify
+
+This spell attempts to petrify a monster. If successful, the monster is slowed
+down for a while until it is temporarily turned into stone. In this state, a
+monster will take less damage upon being hit.
+%%%%
 Poison Ammunition
 
 This spell envenoms missile ammunition held by the caster. 
