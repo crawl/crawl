@@ -865,7 +865,7 @@ bool deck_mark()
         return false;
     }
 
-    // lose some cards, but keep at least two
+    // Lose some cards, but keep at least two.
     if ( cards_in_deck(deck) > 2 )
     {
         const int num_lost = std::min(cards_in_deck(deck)-2, random2(3) + 1);
