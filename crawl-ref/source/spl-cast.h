@@ -25,9 +25,10 @@ enum spflag_type
     SPFLAG_DIR                  = 0x0008,       // use DIR_DIR targeting
     SPFLAG_TARGETING_MASK       = 0x000f,       // used to test for targeting
     SPFLAG_HELPFUL              = 0x0010,       // TARG_FRIENDS used
-    SPFLAG_NOT_SELF             = 0x0020,       // aborts on isMe
-    SPFLAG_UNHOLY               = 0x0040,       // counts at "unholy"
-    SPFLAG_MAPPING              = 0x0080        // a mapping spell of some kind
+    SPFLAG_NEUTRAL              = 0x0020,       // TARG_ANY used
+    SPFLAG_NOT_SELF             = 0x0040,       // aborts on isMe
+    SPFLAG_UNHOLY               = 0x0080,       // counts at "unholy"
+    SPFLAG_MAPPING              = 0x0100        // a mapping spell of some kind
 };
 
 enum spret_type

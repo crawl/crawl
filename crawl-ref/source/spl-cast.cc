@@ -940,6 +940,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         targ_mode_type targ =
             (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
 
+        if (testbits(flags, SPFLAG_NEUTRAL))
+            targ = TARG_ANY;
+
         targeting_type dir  =
             (testbits( flags, SPFLAG_TARGET ) ? DIR_TARGET :
              testbits( flags, SPFLAG_GRID )   ? DIR_TARGET :
