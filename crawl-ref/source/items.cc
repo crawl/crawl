@@ -2099,8 +2099,27 @@ void drop(void)
     // over to items_for_multidrop
     items_for_multidrop.clear();
     for ( unsigned int i = 0; i < tmp_items.size(); ++i )
-        if ( check_warning_inscriptions( *(tmp_items[i].item), OPER_DROP))
-            items_for_multidrop.push_back(tmp_items[i]);
+    {
+        SelItem& si(tmp_items[i]);
+
+        const int item_quant = si.item->quantity;
+
+        // EVIL HACK: fix item quantity to match the quantity we will drop,
+        // in order to prevent misleading messages when dropping
+        // 15 of 25 arrows inscribed with {!d}.
+        if ( si.quantity && si.quantity != item_quant )
+            const_cast<item_def*>(si.item)->quantity = si.quantity;
+
+        // Check if we can add it to the multidrop list
+        bool warning_ok = check_warning_inscriptions(*(si.item), OPER_DROP);
+
+        // Restore the item quantity if we mangled it
+        if ( item_quant != si.item->quantity )
+            const_cast<item_def*>(si.item)->quantity = item_quant;
+
+        if ( warning_ok )
+            items_for_multidrop.push_back(si);
+    }
 
     if ( items_for_multidrop.empty() ) // only one item
     {
