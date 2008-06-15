@@ -1353,7 +1353,7 @@ std::string randart_name(const item_def &item, bool appearance)
         result += item_base_name(item) + " ";
 
         int tries = 100;
-        std::string name = "";
+        std::string name;
         do
         {
             name = getRandNameString(lookup);

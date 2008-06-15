@@ -1786,26 +1786,26 @@ static void _display_skill_table(bool show_aptitudes)
 
             if (you.skills[x] < 27)
             {
-                const int needed      = skill_exp_needed(you.skills[x] + 1);
-                const int prev_needed = skill_exp_needed(you.skills[x]);
-                int spec_abil         = species_skills(x, you.species);
+                const int spec_abil = species_skills(x, you.species);
 
                 if (!show_aptitudes)
                 {
-                    int percent_done = ((you.skill_points[x] -
-                                       (prev_needed * spec_abil) / 100) * 100) /
-                        (((needed - prev_needed) * spec_abil) / 100);
+                    const int needed =
+                        (skill_exp_needed(you.skills[x] + 1) * spec_abil) / 100;
+                    const int prev_needed =
+                        (skill_exp_needed(you.skills[x]    ) * spec_abil) / 100;
 
-                    // But wouldn't that put us way into the next level?
-                    // Shouldn't it be 0 then, or maybe the difference?
-                    if (percent_done >= 100)
+                    const int amt_done = you.skill_points[x] - prev_needed;
+                    int percent_done = (amt_done*100) / (needed - prev_needed);
+
+                    if (percent_done >= 100) // paranoia (1)
                         percent_done = 99;
 
-                    if (percent_done <= 0)
-                        percent_done = 1; // This'll just be turned to 0 anyway.
+                    if (percent_done < 0)    // paranoia (2)
+                        percent_done = 0;
 
                     textcolor(CYAN);
-                    // Round down by 5 digits.
+                    // Round down to multiple of 5.
                     cprintf( " (%2d%%)", (percent_done / 5) * 5 );
                 }
                 else
