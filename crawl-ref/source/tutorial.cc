@@ -1466,213 +1466,17 @@ static void _new_god_conduct()
                               _get_tutorial_cols());
     text.str("");
 
-    std::vector<std::string> likes;
-
-    // Unique/unusual piety gain methods first.
-    switch(you.religion)
-    {
-    case GOD_SIF_MUNA:
-        likes.push_back("train your various spell casting skills");
-        break;
-
-    case GOD_TROG:
-        likes.push_back("destroy spell books (especially ones you've"
-                        "never read) via the <w>a</w> command");
-        break;
-
-    case GOD_NEMELEX_XOBEH:
-        likes.push_back("draw unmarked cards and use up decks");
-        break;
-
-    case GOD_ELYVILON:
-        likes.push_back("destroy weapons (especially evil ones) via "
-                        "the <w>a</w> command");
-        break;
-
-    default:
-        break;
-    }
-
-    switch(you.religion)
-    {
-    case GOD_SHINING_ONE:   case GOD_KIKUBAAQUDGHA: case GOD_OKAWARU:
-    case GOD_MAKHLEB:       case GOD_SIF_MUNA:      case GOD_TROG:
-        likes.push_back("sacrifice items (by dropping them on an altar "
-                        "and praying)");
-        break;
-
-    case GOD_NEMELEX_XOBEH:
-        likes.push_back("sacrifice items (by standing over them and "
-                        "praying)");
-        break;
-
-    case GOD_ZIN:
-        likes.push_back("sacrifice gold (by praying at an altar)");
-        break;
-
-    default:
-        break;
-    }
-
-    if (god_likes_butchery(you.religion))
-        likes.push_back("butcher corpses while praying");
-
-    switch(you.religion)
-    {
-    case GOD_KIKUBAAQUDGHA: case GOD_YREDELEMNUL: case GOD_OKAWARU:
-    case GOD_VEHUMET:       case GOD_MAKHLEB:     case GOD_TROG:
-    case GOD_BEOGH:         case GOD_LUGONU:
-        likes.push_back("kill living beings");
-        break;
-
-    default:
-        break;
-    }
-
-    switch(you.religion)
-    {
-    case GOD_SHINING_ONE: case GOD_OKAWARU: case GOD_VEHUMET:
-    case GOD_MAKHLEB:     case GOD_LUGONU:
-        likes.push_back("kill the undead");
-        break;
-
-    default:
-        break;
-    }
-
-    switch(you.religion)
-    {
-    case GOD_SHINING_ONE: case GOD_OKAWARU: case GOD_MAKHLEB:
-        likes.push_back("kill demons");
-        break;
-
-    default:
-        break;
-    }
-
-    // Unusual kills.
-    switch(you.religion)
-    {
-    case GOD_ZIN:
-        likes.push_back("kill monsters which cause mutation or rotting");
-        break;
-
-    case GOD_SHINING_ONE:
-        likes.push_back("kill living evil beings");
-        break;
-
-    case GOD_BEOGH:
-        likes.push_back("kill the priests of other religions");
-        break;
-
-    case GOD_TROG:
-        likes.push_back("kill wizards and other users of magic");
-        break;
-
-    default:
-        break;
-    }
-
-    if (likes.size() == 0)
-    {
-        mprf(MSGCH_ERROR,
-             " %s doesn't like anything?  This a bug; please report it.",
-             new_god_name.c_str());
-    }
-    else
-    {
-        text << new_god_name << " likes it when you ";
-        text << comma_separated_line(likes.begin(), likes.end(),
-                                     " and ", ", ");
-        text << ".";
-        formatted_message_history(text.str(), MSGCH_TUTORIAL, 0,
-                                  _get_tutorial_cols());
-        text.str("");
-    }
-
-    std::vector<std::string> dislikes;
-
-    if (god_hates_butchery(you.religion))
-        dislikes.push_back("butcher corpses while praying");
-
-    if (is_good_god(you.religion))
-    {
-        dislikes.push_back("drink blood");
-        dislikes.push_back("perform cannibalism");
-        dislikes.push_back("use necromancy");
-        dislikes.push_back("use unholy magic or items");
-        dislikes.push_back("attack holy beings");
-        dislikes.push_back("attack neutral beings");
-    }
-
-    switch(you.religion)
-    {
-    case GOD_ZIN:     case GOD_SHINING_ONE:  case GOD_ELYVILON:
-    case GOD_OKAWARU:
-        dislikes.push_back("attack allies");
-        break;
-
-    case GOD_BEOGH:
-        dislikes.push_back("attack allied orcs");
-        break;
-
-    default:
-        break;
-    }
-
-    switch(you.religion)
-    {
-    case GOD_ELYVILON: case GOD_ZIN: case GOD_OKAWARU:
-        dislikes.push_back("allow an ally to die");
-        break;
-
-    default:
-        break;
-    }
-
-    switch(you.religion)
-    {
-    case GOD_ZIN:
-        dislikes.push_back("cause yourself to mutate in a way that could "
-                           "have been avoided");
-        dislikes.push_back("eat the flesh of sentient beings");
-        break;
-
-    case GOD_SHINING_ONE:
-        dislikes.push_back("poison a monster");
-        dislikes.push_back("attack in an unchivalric manner");
-        break;
-
-    case GOD_ELYVILON:
-        dislikes.push_back("kill a living thing while praying");
-        break;
-
-    case GOD_TROG:
-        dislikes.push_back("memorize spells");
-        dislikes.push_back("cast spells");
-        break;
-
-    default:
-        break;
-    }
-
-    if (dislikes.size() > 0)
-    {
-        text << "\n";
-        text << new_god_name << " dislikes it when you ";
-        text << comma_separated_line(dislikes.begin(), dislikes.end(),
-                                     " or ", ", ");
-        text << ".";
-        formatted_message_history(text.str(), MSGCH_TUTORIAL, 0,
-                                  _get_tutorial_cols());
-    }
+    formatted_message_history(print_god_likes(you.religion, true).c_str(),
+                              MSGCH_TUTORIAL, 0, _get_tutorial_cols());
+    formatted_message_history(print_god_dislikes(you.religion, true).c_str(),
+                              MSGCH_TUTORIAL, 0, _get_tutorial_cols());
 
     text.str("");
     text << "\nYou can check your god's likes and dislikes, as well as your "
             "current standing and divine abilites, at any time by typing "
             "<w>^</w> "
 #ifdef USE_TILE
-            "(alternatively press <w>Control</w> while "
+            "(alternatively press <w>Shift</w> while "
             "<w>right-clicking</w> on your avatar)"
 #endif
             ".";
@@ -3915,7 +3719,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                          << god_name(you.religion)
                          << " press <w>^</w>"
 #ifdef USE_TILE
-                            ", or press <w>Control</w> while clicking with "
+                            ", or press <w>Shift</w> while clicking with "
                             "your <w>right mouse button</w> on your avatar"
 #endif
                             ".";

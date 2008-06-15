@@ -1069,53 +1069,71 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
 static bool _do_description(std::string key, std::string footer = "")
 {
     std::string desc = getLongDescription(key);
+    int width = get_number_of_cols();
+    if (width > 80)
+        width = 80;
 
-    monster_type mon_num = get_monster_by_name(key, true);
-    if (mon_num != MONS_PROGRAM_BUG)
+    god_type which_god = string_to_god(key.c_str());
+    if (which_god != GOD_NO_GOD)
     {
-        if (mons_genus(mon_num) == MONS_DRACONIAN)
+        desc += EOL EOL;
+        desc += print_god_likes(which_god);
+
+        std::string help = print_god_dislikes(which_god);
+        if (!help.empty())
         {
-            monsters mon;
-
-            mon.type = mon_num;
-
-            switch (mon_num)
+            desc += EOL EOL;
+            desc += help;
+        }
+    }
+    else
+    {
+        monster_type mon_num = get_monster_by_name(key, true);
+        if (mon_num != MONS_PROGRAM_BUG)
+        {
+            if (mons_genus(mon_num) == MONS_DRACONIAN)
             {
-            case MONS_BLACK_DRACONIAN:
-            case MONS_MOTTLED_DRACONIAN:
-            case MONS_YELLOW_DRACONIAN:
-            case MONS_GREEN_DRACONIAN:
-            case MONS_PURPLE_DRACONIAN:
-            case MONS_RED_DRACONIAN:
-            case MONS_WHITE_DRACONIAN:
-            case MONS_PALE_DRACONIAN:
-                mon.base_monster = mon_num;
-                break;
-            default:
-                mon.base_monster = MONS_PROGRAM_BUG;
-                break;
+                monsters mon;
+
+                mon.type = mon_num;
+
+                switch (mon_num)
+                {
+                case MONS_BLACK_DRACONIAN:
+                case MONS_MOTTLED_DRACONIAN:
+                case MONS_YELLOW_DRACONIAN:
+                case MONS_GREEN_DRACONIAN:
+                case MONS_PURPLE_DRACONIAN:
+                case MONS_RED_DRACONIAN:
+                case MONS_WHITE_DRACONIAN:
+                case MONS_PALE_DRACONIAN:
+                    mon.base_monster = mon_num;
+                    break;
+                default:
+                    mon.base_monster = MONS_PROGRAM_BUG;
+                    break;
+                }
+
+                describe_monsters(mon);
+                return (false);
             }
 
-            describe_monsters(mon);
-            return (false);
+            std::string symbol = "";
+            symbol += get_monster_data(mon_num)->showchar;
+            if (isupper(symbol[0]))
+                symbol = "cap-" + symbol;
+
+            std::string symbol_prefix = "__";
+            symbol_prefix += symbol;
+            symbol_prefix += "_prefix";
+            desc = getLongDescription(symbol_prefix) + desc;
+
+            std::string symbol_suffix = "__";
+            symbol_suffix += symbol;
+            symbol_suffix += "_suffix";
+            desc += getLongDescription(symbol_suffix);
         }
-
-        std::string symbol = "";
-        symbol += get_monster_data(mon_num)->showchar;
-        if (isupper(symbol[0]))
-            symbol = "cap-" + symbol;
-
-        std::string symbol_prefix = "__";
-        symbol_prefix += symbol;
-        symbol_prefix += "_prefix";
-        desc = getLongDescription(symbol_prefix) + desc;
-
-        std::string symbol_suffix = "__";
-        symbol_suffix += symbol;
-        symbol_suffix += "_suffix";
-        desc += getLongDescription(symbol_suffix);
     }
-
     key = uppercase_first(key);
     key += "$$";
 
@@ -1124,11 +1142,14 @@ static bool _do_description(std::string key, std::string footer = "")
 
     if (footer != "")
     {
-        const int numcols = get_number_of_cols();
-        int num_lines = linebreak_string2(footer, numcols);
+        int num_lines = linebreak_string2(footer, width);
         num_lines++;
 
-        cgotoxy(1, get_number_of_lines() - num_lines);
+        // So the footer doesn't get lonely on large displays. :)
+        int bottom_line = get_number_of_lines();
+        if (bottom_line > 30)
+            bottom_line = 30;
+        cgotoxy(1, bottom_line - num_lines);
 
         cprintf(footer.c_str());
     }
@@ -1215,6 +1236,7 @@ static bool _find_description(bool &again, std::string& error_inout)
         mprf(MSGCH_PROMPT,
              "Describe a %s; partial names and regexps are fine.%s",
              type.c_str(), extra.c_str());
+
         mpr("Describe what? ", MSGCH_PROMPT);
         char buf[80];
         if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
@@ -1231,7 +1253,7 @@ static bool _find_description(bool &again, std::string& error_inout)
         if (regex == "")
         {
             error_inout = "Description must contain at least "
-                "one non-space.";
+                          "one non-space.";
             return (false);
         }
     }
@@ -1396,7 +1418,7 @@ static bool _find_description(bool &again, std::string& error_inout)
 
             if (_do_description(key))
             {
-                if ( getch() == 0 )
+                if (getch() == 0)
                     getch();
             }
         }

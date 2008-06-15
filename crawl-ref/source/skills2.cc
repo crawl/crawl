@@ -1835,7 +1835,7 @@ static void _display_skill_table(bool show_aptitudes)
         if (_player_knows_aptitudes())
         {
             cgotoxy(1, bottom_line);
-            formatted_string::parse_string("Press '!' to toggle between "
+            formatted_string::parse_string("Press '<w>!</w>' to toggle between "
                                            "<cyan>progress</cyan> and "
                                            "<red>aptitude</red> "
                                            "display.").display();

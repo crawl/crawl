@@ -23,6 +23,7 @@ Interface
 * Overhauled (f)iring interface: abolish (t)hrowing, output quiver in status.
 * Allow selection of equipment slots from '%' overview screen.
 * Improved butchering interface.
+* Added coloured HP/Magic bars.
 * Many new tutorial information triggers.
 * Allow searching item/monster/spell descriptions ('?/' command).
 * Allow swapping (' command) to non-weapons that need to be wielded for spells.
@@ -38,6 +39,7 @@ Interface
 * (W)ear and (P)ut on menus allow removal of equipped items.
 * Arriving via stairs calls autopickup and lists items on square.
 * Refuse to eat rotten meat for non-saprovorous characters.
+* Added harmful effects (poison etc.) to chunk descriptions.
 * Evaporate can now be cancelled during potion/direction choice.
 * Portaled Projectile now allows choice of ammunition.
 * greedy_explore now defaults to true.
@@ -87,7 +89,7 @@ Items
 * Thrown potions of poison won't poison monsters anymore.
 * Limit racial properties applying to only some fitting item types.
 * Prompt when attempting to sacrifice important items.
-* Fix books in shops being noted as identified over and over again.
+* Fixed books in shops being noted as identified over and over again.
 
 Monsters
 --------
@@ -118,11 +120,12 @@ Monsters
 * Implemented Dispel Undead for monsters.
 * Fix nagas/centaurs never being generating with bardings.
 * Monsters may use wands of disintegration and polymorph other (mutates).
+* Make paralysed monsters stabbable.
 * Give a message for kills out of LOS.
 * No experience for killing summoned monsters.
 * Give half xp for enslaved monsters dying.
-* Monster blink is now restricted to their LOS.
-* Introduced fish zombies (vault defined only).
+* Monster blink is now (mostly) restricted to their LOS.
+* Introduced fish zombies.
 * Fixed several spell/invocation attacks not waking monsters.
 * Improved monster shields.
 * More refined monster speech. (See /docs/monster_speech.txt.)
@@ -162,8 +165,8 @@ Miscellaneous
 * Train Stealth by sneaking around sleeping monsters.
 * Train Traps & Doors by setting off traps.
 * Increase cost for self-banishment, and nerf Banishment spell.
+* Replace Paralyse spell with new spell Petrify.
 * Better feedback on Detect Traps.
-* Added coloured HP/Magic bars.
 * Identify post-mortem inventory in morgue.txt.
 * Dump command also dumps level map.
 * init.txt/crawlrc allow loading of external options/macro files.

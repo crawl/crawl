@@ -1819,9 +1819,8 @@ void describe_feature_wide(int x, int y)
     desc += "$$";
 
     // Get rid of trailing .$$ before lookup
-    desc +=
-        getLongDescription(grd[x][y] == DNGN_ENTER_SHOP? "A shop"
-                           : desc.substr(0, desc.length() - 3));
+    desc += getLongDescription(grd[x][y] == DNGN_ENTER_SHOP ? "A shop"
+                               : desc.substr(0, desc.length() - 3));
 
     // For things which require logic
     desc += _get_feature_description_wide(grd[x][y]);
@@ -2659,6 +2658,62 @@ static int _piety_level()
 
 }
 
+static void _detailed_god_description(god_type which_god)
+{
+    clrscr();
+    int width = get_number_of_cols();
+    if (width > 80)
+        width = 80;
+
+    std::string godname = god_name(which_god, true);
+    int len = get_number_of_cols() - godname.length();
+    textcolor(god_colour(which_god));
+    cprintf("%s%s" EOL, std::string(len / 2, ' ').c_str(), godname.c_str());
+    textcolor(LIGHTGREY);
+    cprintf(EOL);
+
+    if (which_god == GOD_XOM)
+    {
+        cprintf("To worship Xom is to live riskily. In a good mood Xom may "
+                "shower you " EOL
+                "with gifts, while at other times this capricious god could "
+                "decide to " EOL
+                "\"spice things up a little\" and send you to your doom. If "
+                "you prove " EOL
+                "yourself the stronger, so much the better; if not, well, "
+                "there'll be " EOL
+                "other playthings..." EOL);
+    }
+    else
+    {
+        std::string broken = print_god_likes(which_god, true);
+        linebreak_string2(broken, width);
+        formatted_string::parse_block(broken, false).display();
+        cprintf(EOL);
+        cprintf(EOL);
+        broken = print_god_dislikes(which_god, true);
+        linebreak_string2(broken, width);
+        formatted_string::parse_block(broken, false).display();
+    }
+
+    int bottom_line = get_number_of_lines();
+    if (bottom_line > 30)
+        bottom_line = 30;
+
+    cgotoxy(1, bottom_line-1);
+    formatted_string::parse_string(
+        "Press '<w>!</w>' to toggle between the overview and the more detailed "
+        "description.").display();
+
+#ifdef USE_TILE
+    mouse_control mc(MOUSE_MODE_MORE);
+#endif
+
+    const int keyin = getch();
+    if (keyin == '!')
+        describe_god(which_god, true);
+}
+
 void describe_god( god_type which_god, bool give_title )
 {
     int colour;              // Colour used for some messages.
@@ -2783,9 +2838,10 @@ void describe_god( god_type which_god, bool give_title )
         {
             have_any = true;
             if (you.piety >= 30)
+            {
                 cprintf("Praying to %s will provide sustenance if starving."
-                            EOL, god_name(which_god).c_str());
-
+                         EOL, god_name(which_god).c_str());
+            }
             const char *how = (you.piety >= 150) ? "carefully" : // res mut. 3
                               (you.piety >= 100) ? "often" :
                               (you.piety >=  50) ? "sometimes" :
@@ -2849,9 +2905,20 @@ void describe_god( god_type which_god, bool give_title )
                                      numcols).c_str());
     }
 
+    int bottom_line = get_number_of_lines();
+    if (bottom_line > 30)
+        bottom_line = 30;
+    cgotoxy(1, bottom_line-1);
+    textcolor(LIGHTGRAY);
+    formatted_string::parse_string(
+        "Press '<w>!</w>' to toggle between the overview and the more detailed "
+        "description.").display();
+
 #ifdef USE_TILE
     mouse_control mc(MOUSE_MODE_MORE);
 #endif
 
-    get_ch();
+    const int keyin = getch();
+    if (keyin == '!')
+        _detailed_god_description(which_god);
 }
