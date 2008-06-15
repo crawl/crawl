@@ -366,9 +366,6 @@ int get_item_slot( int reserve )
 
 void unlink_item( int dest )
 {
-    int c = 0;
-    int cy = 0;
-
     // Don't destroy non-items, may be called after an item has been
     // reduced to zero quantity however.
     if (dest == NON_ITEM || !is_valid_item( mitm[dest] ))
@@ -380,14 +377,14 @@ void unlink_item( int dest )
         // although it also contains items that are not linked in yet.
         //
         // Check if a monster has it:
-        for (c = 0; c < MAX_MONSTERS; c++)
+        for (int c = 0; c < MAX_MONSTERS; c++)
         {
-            struct monsters *monster = &menv[c];
+            monsters *monster = &menv[c];
 
             if (monster->type == -1)
                 continue;
 
-            for (cy = 0; cy < NUM_MONSTER_SLOTS; cy++)
+            for (int cy = 0; cy < NUM_MONSTER_SLOTS; cy++)
             {
                 if (monster->inv[cy] == dest)
                 {
@@ -428,7 +425,7 @@ void unlink_item( int dest )
         }
 
         // Okay, item is buried, find item that's on top of it.
-        for (c = igrd[ mitm[dest].x ][ mitm[dest].y ]; c != NON_ITEM;
+        for (int c = igrd[ mitm[dest].x ][ mitm[dest].y ]; c != NON_ITEM;
              c = mitm[c].link)
         {
             // Find item linking to dest item.
@@ -466,7 +463,7 @@ void unlink_item( int dest )
     mitm[dest].props.clear();
 
     // Look through all items for links to this item.
-    for (c = 0; c < MAX_ITEMS; c++)
+    for (int c = 0; c < MAX_ITEMS; c++)
     {
         if (is_valid_item( mitm[c] ) && mitm[c].link == dest)
         {
@@ -482,8 +479,8 @@ void unlink_item( int dest )
     }
 
     // Now check the grids to see if it's linked as a list top.
-    for (c = 2; c < (GXM - 1); c++)
-        for (cy = 2; cy < (GYM - 1); cy++)
+    for (int c = 2; c < (GXM - 1); c++)
+        for (int cy = 2; cy < (GYM - 1); cy++)
         {
             if (igrd[c][cy] == dest)
             {
@@ -604,10 +601,7 @@ void lose_item_stack( int x, int y )
         if (is_valid_item( mitm[o] ))
         {
             item_was_lost(mitm[o]);
-
-            mitm[o].base_type = OBJ_UNASSIGNED;
-            mitm[o].quantity = 0;
-            mitm[o].props.clear();
+            mitm[o].clear();
         }
 
         o = next;
@@ -627,10 +621,7 @@ void destroy_item_stack( int x, int y, int cause )
         if (is_valid_item( mitm[o] ))
         {
             item_was_destroyed(mitm[o], cause);
-
-            mitm[o].base_type = OBJ_UNASSIGNED;
-            mitm[o].quantity  = 0;
-            mitm[o].props.clear();
+            mitm[o].clear();
         }
 
         o = next;

@@ -5704,7 +5704,7 @@ void monster_los::check_los_beam(int dx, int dy)
 
             while (dist++ <= max_dist)
             {
-                // The ray brings is out of bounds of the level map.
+                // The ray brings us out of bounds of the level map.
                 // Since we're always shooting outwards there's nothing more
                 // to look at in that direction, and we can break the loop.
                 if (!map_bounds(ray.x(), ray.y()))

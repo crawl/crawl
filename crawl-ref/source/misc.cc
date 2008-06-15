@@ -2396,11 +2396,10 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
 {
     if (!just_monsters)
     {
-        if (in_bounds(you.x_pos, you.y_pos)
-            && env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
+        // check clouds
+        if (in_bounds(you.pos()) && env.cgrid(you.pos()) != EMPTY_CLOUD)
         {
-            const cloud_type type =
-                    env.cloud[ env.cgrid[you.x_pos][you.y_pos] ].type;
+            const cloud_type type = env.cloud[env.cgrid(you.pos())].type;
 
             if (is_damaging_cloud(type, false))
             {
@@ -2557,7 +2556,7 @@ void setup_environment_effects()
 
 static void apply_environment_effect(const coord_def &c)
 {
-    const int grid = grd[c.x][c.y];
+    const dungeon_feature_type grid = grd(c);
     if (grid == DNGN_LAVA)
         check_place_cloud( CLOUD_BLACK_SMOKE,
                            c.x, c.y, random_range( 4, 8 ), KC_OTHER );
@@ -2604,19 +2603,20 @@ void run_environment_effects()
     run_corruption_effects(you.time_taken);
 }
 
-coord_def pick_adjacent_free_square(int x, int y)
+coord_def pick_adjacent_free_square(const coord_def& p)
 {
     int num_ok = 0;
     coord_def result(-1, -1);
-    for ( int ux = x-1; ux <= x+1; ++ux )
+    for ( int ux = p.x-1; ux <= p.x+1; ++ux )
     {
-        for ( int uy = y-1; uy <= y+1; ++uy )
+        for ( int uy = p.y-1; uy <= p.y+1; ++uy )
         {
-            if ( ux == x && uy == y )
+            if ( ux == p.x && uy == p.y )
                 continue;
 
-            if ( ux >= 0 && ux < GXM && uy >= 0 && uy < GYM &&
-                 grd[ux][uy] == DNGN_FLOOR && mgrd[ux][uy] == NON_MONSTER )
+            if ( in_bounds(ux, uy)
+                 && grd[ux][uy] == DNGN_FLOOR
+                 && mgrd[ux][uy] == NON_MONSTER )
             {
                 ++num_ok;
                 if ( one_chance_in(num_ok) )
@@ -2669,12 +2669,7 @@ std::string your_hand(bool plural)
     case TRAN_NONE:
     case TRAN_STATUE:
     case TRAN_LICH:
-        if (you.has_usable_claws())
-        {
-            result = "claw";
-            break;
-        }
-        // deliberate fall through
+        result = (you.has_usable_claws() ? "claw" : "hand");
     case TRAN_ICE_BEAST:
         result = "hand";
         break;

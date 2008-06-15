@@ -2338,7 +2338,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
         else
         {
             // Do-nothing (effectively): create a cosmetic feature
-            coord_def pos = pick_adjacent_free_square(you.x_pos, you.y_pos);
+            const coord_def pos = pick_adjacent_free_square(you.pos());
             if ( pos.x >= 0 && pos.y >= 0 )
             {
                 const dungeon_feature_type statfeat[] = {
