@@ -2865,10 +2865,10 @@ static int _place_uniques(int level_number, char level_type)
         if (which_unique == MONS_PROGRAM_BUG)
             break;
 
-        mgen_data mg( which_unique, BEH_SLEEP, 0,
-                      coord_def(), MHITNOT, MG_PERMIT_BANDS,
-                      GOD_NO_GOD, MONS_PROGRAM_BUG, 0, BLACK,
-                      level_number, PROX_ANYWHERE );
+        mgen_data mg(which_unique, BEH_SLEEP, 0,
+                     coord_def(), MHITNOT, MG_PERMIT_BANDS,
+                     GOD_NO_GOD, MONS_PROGRAM_BUG, 0, BLACK,
+                     level_number, PROX_ANYWHERE);
         mg.map_mask = MMT_NO_MONS;
 
         const int mindex = place_monster(mg);
@@ -2994,10 +2994,10 @@ static void _builder_monsters(int level_number, char level_type, int mon_wanted)
     else
     {
         if (one_chance_in(3))
-            mons_place( mgen_data( MONS_CURSE_SKULL, BEH_SLEEP ) );
+            mons_place(mgen_data(MONS_CURSE_SKULL, BEH_SLEEP));
 
         if (one_chance_in(7))
-            mons_place( mgen_data( MONS_CURSE_SKULL, BEH_SLEEP ) );
+            mons_place(mgen_data(MONS_CURSE_SKULL, BEH_SLEEP));
     }
 }
 
@@ -3176,7 +3176,7 @@ static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
     int i, x, y;
 
     // Make distribution cumulative.
-    for (i = 1; i < MAX_PIT_MONSTERS; i++)
+    for (i = 1; i < MAX_PIT_MONSTERS; ++i)
     {
         // assuming that the first zero rarity is the end of the list:
         if (!pit_list[i].rare)
@@ -3192,7 +3192,7 @@ static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
     const int die_size = (rare_sum * 100) / density;
 
 #if DEBUG_DIAGNOSTICS
-    for (i = 0; i < num_types; i++)
+    for (i = 0; i < num_types; ++i)
     {
         const int delta = ((i > 0) ? pit_list[i].rare - pit_list[i - 1].rare
                                    : pit_list[i].rare);
@@ -3218,8 +3218,9 @@ static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
     }
 
     // Place monsters and give them items {dlb}:
-    for (x = sr.x1; x <= sr.x2; x++)
-        for (y = sr.y1; y <= sr.y2; y++)
+    for (x = sr.x1; x <= sr.x2; ++x)
+    {
+        for (y = sr.y1; y <= sr.y2; ++y)
         {
             // Avoid the boss (or anyone else we may have dropped already).
             if (mgrd[x][y] != NON_MONSTER)
@@ -3232,15 +3233,18 @@ static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
                 continue;
 
             // Run through the cumulative chances and place a monster.
-            for (i = 0; i < num_types; i++)
+            for (i = 0; i < num_types; ++i)
+            {
                 if (roll < pit_list[i].rare)
                 {
                     mons_place(
-                        mgen_data::sleeper_at( pit_list[i].type,
-                                               coord_def(x, y)));
+                        mgen_data::sleeper_at(pit_list[i].type,
+                                              coord_def(x, y)));
                     break;
                 }
+            }
         }
+    }
 }
 
 static void _special_room(int level_number, spec_room &sr)
@@ -3266,8 +3270,8 @@ static void _special_room(int level_number, spec_room &sr)
     int room_y2 = room_y1 + 4 + random2avg(6,2);
 
     // Do special walls & floor.
-    _make_box( room_x1, room_y1, room_x2, room_y2,
-               DNGN_BUILDER_SPECIAL_FLOOR, DNGN_BUILDER_SPECIAL_WALL );
+    _make_box(room_x1, room_y1, room_x2, room_y2,
+              DNGN_BUILDER_SPECIAL_FLOOR, DNGN_BUILDER_SPECIAL_WALL);
 
     // Set up passed in spec_room structure.
     sr.created   = true;
@@ -4576,7 +4580,7 @@ bool dgn_place_monster(mons_spec &mspec,
 
         mgen_data mg(static_cast<monster_type>(mid));
         mg.power     = monster_level;
-        mg.behaviour = (m_generate_awake ? BEH_WANDER : BEH_SLEEP);
+        mg.behaviour = (m_generate_awake) ? BEH_WANDER : BEH_SLEEP;
         mg.base_type = mspec.monbase;
         mg.number    = mspec.number;
         mg.colour    = mspec.colour;

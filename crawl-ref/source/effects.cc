@@ -2245,12 +2245,13 @@ static void _hell_effects()
         if (summon_instead)
         {
             create_monster(
-                mgen_data( which_beastie, BEH_HOSTILE, 0, you.pos(), MHITYOU ));
+                mgen_data::hostile_at(which_beastie,
+                    you.pos(), 0, 0, true));
         }
         else
         {
-            miscast_effect( which_miscast, 4 + random2(6),
-                            random2avg(97, 3), 100, "the effects of Hell" );
+            miscast_effect(which_miscast, 4 + random2(6),
+                           random2avg(97, 3), 100, "the effects of Hell");
         }
     }
 
@@ -2267,9 +2268,11 @@ static void _hell_effects()
         mg.foe = MHITYOU;
         create_monster(mg);
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; ++i)
+        {
             if (one_chance_in(3))
                 create_monster(mg);
+        }
     }
 }
 
