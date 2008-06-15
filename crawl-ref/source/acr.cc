@@ -3216,8 +3216,6 @@ static void _world_reacts()
 
     if (you.cannot_act() && any_messages())
         more();
-
-    spawn_random_monsters();
 }
 
 #ifdef DGL_SIMPLE_MESSAGING
