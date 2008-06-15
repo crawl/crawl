@@ -5360,6 +5360,10 @@ static bool _handle_throw(monsters *monster, bolt & beem)
         return (false);
     }
 
+    // Greatly lowered chances if the monster is fleeing.
+    if (mons_is_fleeing(monster) && !one_chance_in(8))
+        return (false);
+
     item_def *launcher = NULL;
     const item_def *weapon = NULL;
     const int mon_item = mons_pick_best_missile(monster, &launcher);
@@ -5408,6 +5412,9 @@ static bool _handle_throw(monsters *monster, bolt & beem)
     // Good idea?
     if (mons_should_fire( beem ))
     {
+        // Monsters shouldn't shoot if fleeing, so let them "turn to attack".
+        _make_mons_stop_fleeing(monster);
+
         if (launcher && launcher != weapon)
             monster->swap_weapons();
 

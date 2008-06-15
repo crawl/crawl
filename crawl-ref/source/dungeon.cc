@@ -889,6 +889,7 @@ static void _fixup_branch_stairs()
         const dungeon_feature_type exit = your_branch().exit_stairs;
         for (int x = 1; x < GXM; x++)
             for (int y = 1; y < GYM; y++)
+            {
                 if (grd[x][y] >= DNGN_STONE_STAIRS_UP_I
                     && grd[x][y] <= DNGN_ESCAPE_HATCH_UP)
                 {
@@ -900,6 +901,7 @@ static void _fixup_branch_stairs()
                     }
                     grd[x][y] = exit;
                 }
+            }
     }
 
     // Branches that consist of only 1 level (Hall of Blades).
@@ -3017,7 +3019,7 @@ static void _builder_items(int level_number, char level_type, int items_wanted)
     }
     else if (player_in_branch( BRANCH_ORCISH_MINES ))
     {
-        specif_type = OBJ_GOLD; /* lots of gold in the orcish mines */
+        specif_type = OBJ_GOLD; // Lots of gold in the orcish mines.
     }
 
     if (player_in_branch( BRANCH_VESTIBULE_OF_HELL )
@@ -3026,7 +3028,7 @@ static void _builder_items(int level_number, char level_type, int items_wanted)
         || player_in_branch( BRANCH_HALL_OF_BLADES )
         || player_in_branch( BRANCH_ECUMENICAL_TEMPLE ))
     {
-        /* No random items in hell, the slime pits, the temple, the hall */
+        // No random items in hell, the slime pits, the temple, the hall.
         return;
     }
     else

@@ -192,6 +192,7 @@ static bool _is_noteworthy( const Note& note )
             if (rnote.packed_place == note.packed_place)
                 return (false);
             break;
+
         case NOTE_LEARN_SPELL:
             if (spell_difficulty(static_cast<spell_type>(rnote.first))
                 >= spell_difficulty(static_cast<spell_type>(note.first)))
@@ -199,10 +200,12 @@ static bool _is_noteworthy( const Note& note )
                 return (false);
             }
             break;
+
         case NOTE_GOD_POWER:
             if (rnote.first == note.first && rnote.second == note.second)
                 return (false);
             break;
+
         case NOTE_HP_CHANGE:
             // Not if we have a recent warning
             // unless we've lost half our HP since then.
@@ -212,6 +215,7 @@ static bool _is_noteworthy( const Note& note )
                 return (false);
             }
             break;
+
         default:
             mpr("Buggy note passed: unknown note type");
             // Return now, rather than give a "Buggy note passed" message
@@ -419,7 +423,7 @@ void Note::load(reader& inf)
     type = static_cast<NOTE_TYPES>(unmarshallLong( inf ));
     turn = unmarshallLong( inf );
     packed_place = unmarshallShort( inf );
-    first = unmarshallLong( inf );
+    first  = unmarshallLong( inf );
     second = unmarshallLong( inf );
     unmarshallString4( inf, name );
     unmarshallString4( inf, desc );

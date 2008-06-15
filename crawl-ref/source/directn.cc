@@ -146,8 +146,6 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
         }
     }
     while ( !moves.isCancel && moves.dx == 0 && moves.dy == 0 );
-
-    return;
 }
 
 static int _targeting_cmd_to_compass( command_type command )
@@ -1800,6 +1798,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("stone staircase leading up");
     case DNGN_ENTER_HELL:
         return ("gateway to Hell");
+    case DNGN_EXIT_HELL:
+        return ("gateway back into the Dungeon");
     case DNGN_TRAP_MECHANICAL:
         return ("mechanical trap");
     case DNGN_TRAP_MAGICAL:

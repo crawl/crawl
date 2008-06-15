@@ -656,22 +656,18 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         }
         else
             return DNGN_ESCAPE_HATCH_UP;
-        break;
 
     case LEVEL_ABYSS:
         return DNGN_EXIT_ABYSS;
-        break;
 
     case LEVEL_PANDEMONIUM:
         if (down)
             return DNGN_TRANSIT_PANDEMONIUM;
         else
             return DNGN_EXIT_PANDEMONIUM;
-        break;
 
     case LEVEL_PORTAL_VAULT:
         return DNGN_EXIT_PORTAL_VAULT;
-        break;
 
     default:
         mpr("Unknown level type.");

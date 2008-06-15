@@ -1530,7 +1530,7 @@ void up_stairs(dungeon_feature_type force_stair,
     }
 
     if (you.your_level == 0
-          && !yesno("Are you sure you want to leave the Dungeon?", false, 'n'))
+        && !yesno("Are you sure you want to leave the Dungeon?", false, 'n'))
     {
         mpr("Alright, then stay!");
         return;
@@ -1594,9 +1594,9 @@ void up_stairs(dungeon_feature_type force_stair,
     }
 
     // Did we take a branch stair?
-    for ( i = 0; i < NUM_BRANCHES; ++i )
+    for (i = 0; i < NUM_BRANCHES; ++i)
     {
-        if ( branches[i].exit_stairs == stair_find )
+        if (branches[i].exit_stairs == stair_find)
         {
             you.where_are_you = branches[i].parent_branch;
 
@@ -1685,7 +1685,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
             // First we update the old level's stair.
             level_pos lp;
-            lp.id  = new_level_id;
+            lp.id    = new_level_id;
             lp.pos.x = you.x_pos;
             lp.pos.y = you.y_pos;
 
@@ -1899,9 +1899,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     // Welcome message.
     // Try to find a branch stair.
     bool entered_branch = false;
-    for ( i = 0; i < NUM_BRANCHES; ++i )
+    for (i = 0; i < NUM_BRANCHES; ++i)
     {
-        if ( branches[i].entry_stairs == stair_find )
+        if (branches[i].entry_stairs == stair_find)
         {
             entered_branch = true;
             you.where_are_you = branches[i].id;
@@ -2317,7 +2317,7 @@ bool go_berserk(bool intentional)
 
 bool mons_is_safe(const struct monsters *mon, bool want_move)
 {
-    int  dist   = grid_distance(you.x_pos, you.y_pos, mon->x, mon->y);
+    int  dist    = grid_distance(you.x_pos, you.y_pos, mon->x, mon->y);
 
     bool is_safe = (mons_wont_attack(mon)
                     || mons_class_flag(mon->type, M_NO_EXP_GAIN)

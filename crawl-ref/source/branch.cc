@@ -245,7 +245,7 @@ Branch branches[] = {
       0, 'G', false, true },
 
     { BRANCH_VESTIBULE_OF_HELL, BRANCH_MAIN_DUNGEON, 1, -1, 0, 0,
-      DNGN_ENTER_HELL, NUM_FEATURES, // sentinel
+      DNGN_ENTER_HELL, DNGN_EXIT_HELL, // sentinel
       "Hell", "The Vestibule of Hell", "Hell",
       NULL,
       false, true, LIGHTGREY, LIGHTGREY,

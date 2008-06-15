@@ -722,6 +722,7 @@ static void _handle_wizard_command( void )
 
     case 'h':
         you.rotting = 0;
+        you.duration[DUR_CONF] = 0;
         you.duration[DUR_POISONING] = 0;
         you.disease = 0;
         set_hp( abs(you.hp_max), false );
@@ -730,13 +731,14 @@ static void _handle_wizard_command( void )
 
     case 'H':
         you.rotting = 0;
+        you.duration[DUR_CONF] = 0;
         you.duration[DUR_POISONING] = 0;
         if (you.duration[DUR_BEHELD])
         {
             you.duration[DUR_BEHELD] = 0;
             you.beheld_by.clear();
         }
-        you.duration[DUR_CONF] = 0;
+        you.duration[DUR_LIQUID_FLAMES] = 0;
         you.disease = 0;
         inc_hp( 10, true );
         set_hp( you.hp_max, false );
@@ -3214,6 +3216,8 @@ static void _world_reacts()
 
     if (you.cannot_act() && any_messages())
         more();
+
+    spawn_random_monsters();
 }
 
 #ifdef DGL_SIMPLE_MESSAGING
