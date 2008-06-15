@@ -3182,9 +3182,7 @@ static void _world_reacts()
         _check_banished();
     }
     else
-    {
         you.synch_time -= you.time_taken;
-    }
 
     manage_clouds();
 

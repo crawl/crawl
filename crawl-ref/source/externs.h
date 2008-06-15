@@ -576,7 +576,7 @@ public:
 
   double elapsed_time;        // total amount of elapsed time in the game
 
-  unsigned char synch_time;   // amount to wait before calling handle_time
+  unsigned char synch_time;   // amount to wait before calling handle_time()
 
   unsigned char disease;
 

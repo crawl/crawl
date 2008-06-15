@@ -294,7 +294,7 @@ int torment(int caster, int x, int y)
     return apply_area_within_radius(torment_monsters, x, y, 0, 8, caster);
 }
 
-static std::string who_banished(const std::string &who)
+static std::string _who_banished(const std::string &who)
 {
     return (who.empty()? who : " (" + who + ")");
 }
@@ -305,12 +305,12 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
     if (gate_type == DNGN_ENTER_ABYSS)
     {
         mark_milestone("abyss.enter",
-                       "is cast into the Abyss!" + who_banished(who));
+                       "is cast into the Abyss!" + _who_banished(who));
     }
     else if (gate_type == DNGN_EXIT_ABYSS)
     {
         mark_milestone("abyss.exit",
-                       "escaped from the Abyss!" + who_banished(who));
+                       "escaped from the Abyss!" + _who_banished(who));
     }
 #endif
 
@@ -429,7 +429,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
 
     if (cast_into != "" && you.entry_cause != EC_SELF_EXPLICIT)
     {
-        const std::string what = "Cast into " + cast_into + who_banished(who);
+        const std::string what = "Cast into " + cast_into + _who_banished(who);
         take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
     }
 
@@ -797,7 +797,7 @@ void random_uselessness(int scroll_slot)
     }
 }
 
-static armour_type random_nonbody_armour_type()
+static armour_type _random_nonbody_armour_type()
 {
     const armour_type at =
         static_cast<armour_type>(
@@ -806,8 +806,8 @@ static armour_type random_nonbody_armour_type()
     return (at);
 }
 
-static int find_acquirement_subtype(object_class_type class_wanted,
-                                    int &quantity)
+static int _find_acquirement_subtype(object_class_type class_wanted,
+                                     int &quantity)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
@@ -1000,7 +1000,7 @@ static int find_acquirement_subtype(object_class_type class_wanted,
         //
         // OBJ_RANDOM is body armour and handled below
         type_wanted = (coinflip())? OBJ_RANDOM :
-            static_cast<int>(random_nonbody_armour_type());
+            static_cast<int>(_random_nonbody_armour_type());
 
         // some species specific fitting problems
         switch (you.species)
@@ -1516,7 +1516,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         int quant = 1;
         for (int item_tries = 0; item_tries < 40; item_tries++)
         {
-            int type_wanted = find_acquirement_subtype(class_wanted, quant);
+            int type_wanted = _find_acquirement_subtype(class_wanted, quant);
 
             // Clobber class_wanted for vampires.
             if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
@@ -2151,9 +2151,7 @@ bool vitrify_area(int radius)
     return (something_happened);
 }
 
-///////////////////////////////////////////////////////////////////////
-
-static void hell_effects()
+static void _hell_effects()
 {
     int temp_rand = random2(17);
     spschool_flag_type which_miscast = SPTYP_RANDOM;
@@ -2275,7 +2273,7 @@ static void hell_effects()
     }
 }
 
-static bool food_item_needs_time_check(item_def &item)
+static bool _food_item_needs_time_check(item_def &item)
 {
     if (!is_valid_item(item))
         return false;
@@ -2302,7 +2300,7 @@ static bool food_item_needs_time_check(item_def &item)
     return true;
 }
 
-static void rot_inventory_food(long time_delta)
+static void _rot_inventory_food(long time_delta)
 {
     // Update all of the corpses and food chunks in the player's
     // inventory {should be moved elsewhere - dlb}
@@ -2313,7 +2311,7 @@ static void rot_inventory_food(long time_delta)
         if (you.inv[i].quantity < 1)
             continue;
 
-        if (!food_item_needs_time_check(you.inv[i]))
+        if (!_food_item_needs_time_check(you.inv[i]))
             continue;
 
         if (you.inv[i].base_type == OBJ_POTIONS)
@@ -2435,19 +2433,13 @@ static void rot_inventory_food(long time_delta)
     }
 }
 
-//---------------------------------------------------------------
-//
-// handle_time
-//
 // Do various time related actions...
 // This function is called about every 20 turns.
-//
-//---------------------------------------------------------------
-void handle_time( long time_delta )
+void handle_time(long time_delta)
 {
-    // BEGIN - Nasty things happen to people who spend too long in Hell:
+    // Nasty things happen to people who spend too long in Hell.
     if (player_in_hell() && coinflip())
-        hell_effects();
+        _hell_effects();
 
     // Adjust the player's stats if s/he's diseased (or recovering).
     if (!you.disease)
@@ -2647,7 +2639,7 @@ void handle_time( long time_delta )
         }
     }
 
-    // Check to see if an upset god wants to do something to the player
+    // Check to see if an upset god wants to do something to the player.
     // jmf: moved huge thing to religion.cc
     handle_god_time();
 
@@ -2657,21 +2649,24 @@ void handle_time( long time_delta )
         yell(true);
     }
 
-    // Update all of the corpses, food chunks and potions of blood on the floor.
+    // Update all of the corpses, food chunks and potions of blood on
+    // the floor.
     update_corpses(time_delta);
 
-    rot_inventory_food(time_delta);
+    _rot_inventory_food(time_delta);
 
     // exercise armour *xor* stealth skill: {dlb}
     if (!player_light_armour(true))
     {
-        if (random2(1000) <= item_mass( you.inv[you.equip[EQ_BODY_ARMOUR]] ))
-            return;
-
-        if (one_chance_in(6))   // lowered random roll from 7 to 6 -- bwross
+        // lowered random roll from 7 to 6 -- bwross
+        if (random2(1000) > item_mass(you.inv[you.equip[EQ_BODY_ARMOUR]])
+            && one_chance_in(6))
+        {
             exercise(SK_ARMOUR, 1);
+        }
     }
-    else                        // exercise stealth skill:
+    // exercise stealth skill:
+    else
     {
         if (you.burden_state != BS_UNENCUMBERED || you.duration[DUR_BERSERKER])
             return;
@@ -2693,7 +2688,7 @@ void handle_time( long time_delta )
 
 // Move monsters around to fake them walking around while player was
 // off-level.
-static void catchup_monster_moves(monsters *mon, int turns)
+static void _catchup_monster_moves(monsters *mon, int turns)
 {
     // Summoned monsters might have disappeared.
     if (!mon->alive())
@@ -2839,7 +2834,7 @@ static void catchup_monster_moves(monsters *mon, int turns)
 // Update the level when the player returns to it.
 //
 //---------------------------------------------------------------
-void update_level( double elapsedTime )
+void update_level(double elapsedTime)
 {
     const int turns = static_cast<int>(elapsedTime / 10.0);
 
@@ -2896,7 +2891,7 @@ void update_level( double elapsedTime )
                           false );
         }
 
-        catchup_monster_moves( mon, turns );
+        _catchup_monster_moves(mon, turns);
 
         if (turns >= 10 && mon->alive())
             mon->timeout_enchantments( turns / 10 );
@@ -2972,7 +2967,7 @@ void update_corpses(double elapsedTime)
     {
         item_def &it = mitm[c];
 
-        if (!food_item_needs_time_check(it))
+        if (!_food_item_needs_time_check(it))
             continue;
 
         if (it.base_type == OBJ_POTIONS)

@@ -5448,7 +5448,7 @@ static bool _need_free_piety()
     return (you.piety < 150 || you.gift_timeout || you.penance[you.religion]);
 }
 
-//jmf: moved stuff from items::handle_time()
+//jmf: moved stuff from effects::handle_time()
 void handle_god_time()
 {
     if (one_chance_in(100))
