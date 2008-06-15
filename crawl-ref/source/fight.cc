@@ -1650,7 +1650,7 @@ int melee_attack::player_weapon_type_modify(int damage)
         return (damage);
     }
 
-    switch (weapon? get_damage_type(*weapon) : -1)
+    switch (weapon ? get_damage_type(*weapon) : -1)
     {
     case DAM_PIERCE:
         if (damage < HIT_MED)
