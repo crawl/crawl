@@ -1286,7 +1286,7 @@ void melee_attack::player_warn_miss()
 {
     did_hit = false;
 
-    // upset only non-sleeping monsters if we missed
+    // Upset only non-sleeping monsters if we missed.
     if (def->behaviour != BEH_SLEEP)
         behaviour_event( def, ME_WHACK, MHITYOU );
 
@@ -1496,7 +1496,7 @@ int melee_attack::player_stab(int damage)
     // The stabbing message looks better here:
     if (stab_attempt)
     {
-        // construct reasonable message
+        // Construct reasonable message.
         stab_message( def, stab_bonus );
 
         exercise(SK_STABBING, 1 + random2avg(5, 4));
@@ -1506,14 +1506,14 @@ int melee_attack::player_stab(int damage)
     else
     {
         stab_bonus = 0;
-        // ok.. if you didn't backstab, you wake up the neighborhood.
+        // Ok.. if you didn't backstab, you wake up the neighborhood.
         // I can live with that.
         alert_nearby_monsters();
     }
 
     if (stab_bonus)
     {
-        // lets make sure we have some damage to work with...
+        // Lets make sure we have some damage to work with...
         if (damage < 1)
             damage = 1;
 
@@ -1532,8 +1532,6 @@ int melee_attack::player_stab(int damage)
         }
 
         damage = player_stab_weapon_bonus(damage);
-        if (mons_is_petrified(def))
-            damage /= 3;
     }
 
     return (damage);
@@ -1543,7 +1541,7 @@ int melee_attack::player_apply_monster_ac(int damage)
 {
     if (stab_bonus)
     {
-        // when stabbing we can get by some of the armour
+        // When stabbing we can get by some of the armour.
         if (def->ac > 0)
         {
             const int ac = def->ac
@@ -1555,10 +1553,13 @@ int melee_attack::player_apply_monster_ac(int damage)
     }
     else
     {
-        // apply AC normally
+        // Apply AC normally.
         if (def->ac > 0)
             damage -= random2(1 + def->ac);
     }
+
+    if (mons_is_petrified(def))
+        damage /= 3;
 
     return (damage);
 }
@@ -2671,7 +2672,8 @@ void melee_attack::player_calc_hit_damage()
     damage_done = player_stab(damage_done);
     damage_done = player_apply_monster_ac(damage_done);
 
-    // This doesn't actually modify damage -- bwr
+    // This doesn't actually modify damage. -- bwr
+    // It only chooses the appropriate verb.
     damage_done = player_weapon_type_modify( damage_done );
 
     if (damage_done < 0)
@@ -3949,7 +3951,7 @@ void melee_attack::mons_check_attack_perceived()
     {
         interrupt_activity(AI_MONSTER_ATTACKS, atk);
 
-        // if a friend wants to help, they can attack <monster_attacking>
+        // If a friend wants to help, they can attack the attacking monster.
         if (you.pet_target == MHITNOT)
             you.pet_target = monster_index(atk);
     }

@@ -1016,6 +1016,9 @@ void taken_new_item(unsigned char item_type)
 // Give a special message if you gain a skill you didn't have before.
 void tut_gained_new_skill(int skill)
 {
+    if (!Options.tutorial_left)
+        return;
+
     learned_something_new(TUT_SKILL_RAISE);
 
     switch (skill)

@@ -786,10 +786,10 @@ bool eat_food(bool run_hook, int slot)
     if (igrd[you.x_pos][you.y_pos] != NON_ITEM && slot == -1)
     {
         const int res = eat_from_floor();
-        if ( res == 1 )
-            return true;
-        if ( res == -1 )
-            return false;
+        if (res == 1)
+            return (true);
+        if (res == -1)
+            return (false);
     }
 
     return (prompt_eat_from_inventory(slot));

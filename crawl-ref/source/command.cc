@@ -229,7 +229,7 @@ static void _print_version(void)
     cmd_version.add_text(_get_version_features());
     cmd_version.add_text(_get_version_changes());
 
-    // Read in information about changed in comparison to the latest version.
+    // Read in information about changes in comparison to the latest version.
     FILE* fp = fopen(datafile_path("034_changes.txt", true).c_str(), "r");
     if (fp)
     {
