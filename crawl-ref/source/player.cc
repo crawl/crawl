@@ -3646,11 +3646,10 @@ int check_stealth(void)
     if (you.duration[DUR_SILENCE])
         stealth -= 50;
 
-    if (stealth < 0)
-        stealth = 0;
+    stealth = std::max(0, stealth);
 
     return (stealth);
-}                               // end check_stealth()
+}
 
 static void _attribute_increase()
 {

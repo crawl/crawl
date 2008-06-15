@@ -2674,15 +2674,14 @@ void handle_time(long time_delta)
         if (you.special_wield == SPWLD_SHADOW)
             return;
 
-        if (you.equip[EQ_BODY_ARMOUR] != -1
-            && random2( item_mass( you.inv[you.equip[EQ_BODY_ARMOUR]] )) >= 100)
+        // diminishing returns for stealth training by waiting
+        if ((you.equip[EQ_BODY_ARMOUR] == -1
+            || you.equip[EQ_BODY_ARMOUR] != -1
+                && random2(item_mass(you.inv[you.equip[EQ_BODY_ARMOUR]])) < 100)
+            && you.skills[SK_STEALTH] <= 2 + random2(3) && one_chance_in(18))
         {
-            return;
+             exercise(SK_STEALTH, 1);
         }
-
-        // diminishing returns for Stealth training by waiting
-        if (you.skills[SK_STEALTH] <= 2 + random2(3) && one_chance_in(18))
-            exercise(SK_STEALTH, 1);
     }
 }
 
