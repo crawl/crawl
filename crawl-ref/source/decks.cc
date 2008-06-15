@@ -2548,7 +2548,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
         mgen_data(mon_chosen,
                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                   3, coord_def(chosen_x, chosen_y),
-                  friendly ? MHITNOT : MHITYOU));
+                  friendly ? you.pet_target : MHITYOU));
 }
 
 static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
