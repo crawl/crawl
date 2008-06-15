@@ -2554,7 +2554,7 @@ std::string _status_mut_abilities()
                 current = info;
                 break;
 
-            /* demonspawn mutations */
+            // demonspawn mutations
             case MUT_TORMENT_RESISTANCE:
                 current = "torment resistance";
                 break;
@@ -2601,7 +2601,7 @@ std::string _status_mut_abilities()
             case MUT_SMITE:
                 current = "invoke powers of Tartarus";
                 break;
-            /* end of demonspawn mutations */
+            // end of demonspawn mutations
 
             case MUT_CLAWS:
                 snprintf(info, INFO_SIZE, "claws %d", level);
