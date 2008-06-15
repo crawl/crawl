@@ -899,7 +899,7 @@ void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast
         return;
     }
 
-    // the below are no-ops since they don't involve direct_effect,
+    // The below are no-ops since they don't involve direct_effect,
     // fire_tracer, or beam.
     switch (spell_cast)
     {
