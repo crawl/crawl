@@ -2354,8 +2354,8 @@ static bool _shaft_is_in_corridor(int x, int y)
         return (true);
     }
 
-    // No corridor (found).
-    return false;
+    // No corridor found.
+    return (false);
 }
 
 static void _place_traps(int level_number)
@@ -2437,8 +2437,8 @@ static void _place_fog_machines(int level_number)
             break;
 
         place_fog_machine(data, x, y);
-    }                           // end "for i"
-}                               // end place_traps()
+    }
+}
 
 static void _place_specific_feature(dungeon_feature_type feat)
 {
@@ -7233,13 +7233,13 @@ bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type)
         if (env.trap[tcount].type == TRAP_UNASSIGNED)
         {
             env.trap[tcount].type = spec_type;
-            env.trap[tcount].x = spec_x;
-            env.trap[tcount].y = spec_y;
-            grd[spec_x][spec_y] = DNGN_UNDISCOVERED_TRAP;
-            return true;
+            env.trap[tcount].x    = spec_x;
+            env.trap[tcount].y    = spec_y;
+            grd[spec_x][spec_y]   = DNGN_UNDISCOVERED_TRAP;
+            return (true);
         }
 
-    return false;
+    return (false);
 }
 
 static void _build_river( dungeon_feature_type river_type ) //mv

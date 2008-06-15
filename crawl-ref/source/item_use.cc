@@ -1311,6 +1311,10 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
     const int next_item = get_next_fire_item(m_slot, +1);
     bool no_other_items = (next_item == -1 || next_item == m_slot);
 
+    // How many letters are only needed for formatting, but won't ever
+    // be printed.
+    int colour_length = 0;
+
     mesclr();
 
     if (pre_text)
@@ -1322,7 +1326,8 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
     else
     {
         const item_def& item_def = you.inv[m_slot];
-        const launch_retval projected = is_launched(&you, you.weapon(), item_def);
+        const launch_retval projected = is_launched(&you, you.weapon(),
+                                                    item_def);
 
         if (projected == LRET_FUMBLED)
             msg << "Awkwardly throwing ";
@@ -1334,22 +1339,32 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
             msg << "Buggy ";
     }
 
-    msg << (no_other_items ? "(i - inventory)" : "(i - inventory. (,) - cycle)")
+    msg << (no_other_items ? "(i - inventory)"
+                           : "(i - inventory. (,) - cycle)")
         << ": ";
 
     if (m_slot == -1)
     {
         msg << "<red>" << m_noitem_reason << "</red>";
+        colour_length = 5;
     }
     else
     {
-        const char* color = (selected_from_inventory ? "grey" : "w");
-        msg << "<" << color << ">"
+        const char* colour = (selected_from_inventory ? "lightgrey" : "w");
+        msg << "<" << colour << ">"
             << you.inv[m_slot].name(DESC_INVENTORY_EQUIP)
-            << "</" << color << ">";
+            << "</" << colour << ">";
+        colour_length = (selected_from_inventory ? 11 : 3);
     }
 
-    formatted_message_history(msg.str(), MSGCH_PROMPT);
+#ifdef USE_TILE
+    if (selected_from_inventory)
+        tile_draw_inv(REGION_INV1);
+#endif
+
+    formatted_message_history(msg.str()
+                              .substr(0, crawl_view.msgsz.x + colour_length),
+                              MSGCH_PROMPT);
 }
 
 bool fire_target_behaviour::should_redraw()
@@ -1381,7 +1396,7 @@ command_type fire_target_behaviour::get_command(int key)
               m_slot = next;
               selected_from_inventory = false;
           }
-          // Do this stuff unconditionally to make the prompt redraw
+          // Do this stuff unconditionally to make the prompt redraw.
           message_ammo_prompt();
           need_prompt = true;
           break;
@@ -1397,7 +1412,7 @@ command_type fire_target_behaviour::get_command(int key)
           }
           message_ammo_prompt( err.length() ? &err : NULL );
           need_prompt = true;
-          return CMD_NO_CMD;
+          return (CMD_NO_CMD);
       }
       case '?':
           show_targeting_help();
@@ -1446,7 +1461,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
     // If ammo was chosen via 'fi', it's not supposed to get quivered.
     // Otherwise, if the user chose different ammo, quiver it.
     // Same for items selected in tile mode.
-    if (was_chosen || ! beh.selected_from_inventory)
+    if (was_chosen || !beh.selected_from_inventory)
     {
         you.m_quiver->on_item_fired(you.inv[beh.m_slot]);
     }
@@ -3977,7 +3992,7 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
         TilePlayerRefresh();
 #endif
 
-        // no additional enchantment
+        // No additional enchantment.
         return (true);
     }
 

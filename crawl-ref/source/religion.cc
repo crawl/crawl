@@ -458,7 +458,8 @@ bool god_gives_permanent_followers(god_type god)
     // Only TSO, Yredelemnul, and Beogh do this, but if you switch from
     // TSO to another good god, you keep your (non-daeva) permanent
     // followers, so count the other good gods here as well.
-    return (is_good_god(god)
+    return (god == GOD_SHINING_ONE
+            || you.worshipped[GOD_SHINING_ONE] && is_good_god(god)
             || god == GOD_YREDELEMNUL
             || god == GOD_BEOGH);
 }

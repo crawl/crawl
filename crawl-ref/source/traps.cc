@@ -472,10 +472,10 @@ void handle_traps(trap_type trt, int i, bool trap_known)
 
 void destroy_trap( const coord_def& pos )
 {
-    for ( int i = 0; i < MAX_TRAPS; ++i )
+    for (int i = 0; i < MAX_TRAPS; ++i)
     {
-        if ( env.trap[i].x == pos.x && env.trap[i].y == pos.y &&
-             env.trap[i].type != TRAP_UNASSIGNED )
+        if (env.trap[i].x == pos.x && env.trap[i].y == pos.y
+            && env.trap[i].type != TRAP_UNASSIGNED)
         {
             grd(pos) = DNGN_FLOOR;
             env.trap[i].type = TRAP_UNASSIGNED;
@@ -954,7 +954,7 @@ bool is_valid_shaft_level(const level_id &place)
     if (place.level_type != LEVEL_DUNGEON)
         return (false);
 
-    // disallow shafts on the first two levels
+    // Disallow shafts on the first two levels.
     if (place.branch == BRANCH_MAIN_DUNGEON
         && you.your_level < 2)
     {
@@ -1147,9 +1147,9 @@ static trap_type random_trap_default(int level_number, const level_id &place)
     if (random2(1 + level_number) > 11)
         type = TRAP_BLADE;
 
-    if ((random2(1 + level_number) > 14 && one_chance_in(3))
-        || (place.branch == BRANCH_HALL_OF_ZOT &&
-            place.level_type == LEVEL_DUNGEON && coinflip()))
+    if (random2(1 + level_number) > 14 && one_chance_in(3)
+        || (place.branch == BRANCH_HALL_OF_ZOT
+            && place.level_type == LEVEL_DUNGEON && coinflip()))
     {
         type = TRAP_ZOT;
     }
@@ -1168,7 +1168,7 @@ trap_type random_trap_for_place(int level_number, const level_id &place)
 {
     if (level_number == -1)
     {
-        switch(place.level_type)
+        switch (place.level_type)
         {
         case LEVEL_DUNGEON:
             level_number = absdungeon_depth(place.branch, place.depth);
@@ -1184,7 +1184,7 @@ trap_type random_trap_for_place(int level_number, const level_id &place)
         }
     }
 
-    switch(place.level_type)
+    switch (place.level_type)
     {
     case LEVEL_DUNGEON:
         if (branches[place.branch].rand_trap_function != NULL)

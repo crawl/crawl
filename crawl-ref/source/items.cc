@@ -1921,14 +1921,14 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
         && !copy_item_to_grid( you.inv[item_dropped],
                                you.x_pos, you.y_pos, quant_drop, true ))
     {
-        mpr( "Too many items on this level, not dropping the item." );
+        mpr("Too many items on this level, not dropping the item.");
         return (false);
     }
 
     mprf("You drop %s.",
          quant_name(you.inv[item_dropped], quant_drop, DESC_NOCAP_A).c_str());
 
-    if ( grid_destroys_items(my_grid) )
+    if (grid_destroys_items(my_grid))
     {
         if ( !silenced(you.pos()) )
             mprf(MSGCH_SOUND, grid_item_destruction_message(my_grid));

@@ -1278,10 +1278,11 @@ static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
     else
         mode = convert_cursor_pos(mouse_x, mouse_y, &cx, &cy);
 
-    if (oldcx == cx && oldcy == cy && oldmode == mode) return 0;
+    if (oldcx == cx && oldcy == cy && oldmode == mode)
+        return 0;
 
     // erase old cursor
-    if ( oldmode == REGION_DNGN && mode != oldmode)
+    if (oldmode == REGION_DNGN && mode != oldmode)
     {
         oldcx = -10;
         //_setcursortype(0);

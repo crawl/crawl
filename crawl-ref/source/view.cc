@@ -2670,7 +2670,7 @@ void losight(env_show_grid &sh,
 bool is_feature(int feature, int x, int y)
 {
     if (!env.map[x][y].object)
-        return false;
+        return (false);
 
     // 'grid' can fit in an unsigned char, but making this a short shuts up
     // warnings about out-of-range case values.
@@ -2702,9 +2702,9 @@ bool is_feature(int feature, int x, int y)
         case DNGN_ALTAR_ELYVILON:
         case DNGN_ALTAR_LUGONU:
         case DNGN_ALTAR_BEOGH:
-            return true;
+            return (true);
         default:
-            return false;
+            return (false);
         }
     case '\t':
     case '\\':
@@ -2727,9 +2727,9 @@ bool is_feature(int feature, int x, int y)
         case DNGN_TRANSIT_PANDEMONIUM:
         case DNGN_ENTER_ZOT:
         case DNGN_RETURN_FROM_ZOT:
-            return true;
+            return (true);
         default:
-            return false;
+            return (false);
         }
     case '<':
         switch (grid)
@@ -2752,9 +2752,9 @@ bool is_feature(int feature, int x, int y)
         case DNGN_RETURN_FROM_SWAMP:
         case DNGN_RETURN_FROM_SHOALS:
         case DNGN_EXIT_PORTAL_VAULT:
-            return true;
+            return (true);
         default:
-            return false;
+            return (false);
         }
     case '>':
         switch (grid)
@@ -2776,9 +2776,9 @@ bool is_feature(int feature, int x, int y)
         case DNGN_ENTER_TOMB:
         case DNGN_ENTER_SWAMP:
         case DNGN_ENTER_SHOALS:
-            return true;
+            return (true);
         default:
-            return false;
+            return (false);
         }
     case '^':
         switch (grid)
@@ -2786,9 +2786,9 @@ bool is_feature(int feature, int x, int y)
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_MAGICAL:
         case DNGN_TRAP_NATURAL:
-            return true;
+            return (true);
         default:
-            return false;
+            return (false);
         }
     default:
         return get_envmap_char(x, y) == (unsigned) feature;
@@ -3161,8 +3161,10 @@ void show_map( coord_def &spec_place, bool travel_mode )
         getty = unmangle_direction_keys(getchm(KC_LEVELMAP), KC_LEVELMAP,
                                         false, false);
 #ifdef USE_TILE
-        if (getty == CK_MOUSE_B4) getty = '-';
-        if (getty == CK_MOUSE_B5) getty = '+';
+        if (getty == CK_MOUSE_B4)
+            getty = '-';
+        else if (getty == CK_MOUSE_B5)
+            getty = '+';
 #endif
 
         c_input_reset(false);
@@ -3613,7 +3615,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         }
 
 #ifdef USE_TILE
-    GmapInit(true); // re-draw tile backup
+    GmapInit(true); // Re-draw tile backup.
     tile_clear_buf();
 #endif
 
@@ -5303,24 +5305,24 @@ void crawl_view_geometry::init_geometry()
     }
 
     const _layout* winner = &lay_inline;
-    if (   Options.mlist_allow_alternate_layout
-       && !Options.classic_hud
-       &&  lay_mlist.valid)
+    if (Options.mlist_allow_alternate_layout
+        && !Options.classic_hud
+        && lay_mlist.valid)
     {
         winner = &lay_mlist;
     }
 
-    msgp  = winner->msgp;
-    msgsz = winner->msgsz;
-    viewp = winner->viewp;
-    viewsz = winner->viewsz;
-    hudp = winner->hudp;
-    hudsz = winner->hudsz;
-    mlistp = winner->mlistp;
+    msgp    = winner->msgp;
+    msgsz   = winner->msgsz;
+    viewp   = winner->viewp;
+    viewsz  = winner->viewsz;
+    hudp    = winner->hudp;
+    hudsz   = winner->hudsz;
+    mlistp  = winner->mlistp;
     mlistsz = winner->mlistsz;
 
 #ifdef USE_TILE
-    // libgui may redefine these based on its own settings
+    // libgui may redefine these based on its own settings.
     gui_init_view_params(*this);
 #endif
 

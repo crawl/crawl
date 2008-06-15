@@ -105,7 +105,7 @@ class colour_bar
 #endif
 
         const int width = crawl_view.hudsz.x - (ox-1);
-        const int disp = width * val / max_val;
+        const int disp  = width * val / max_val;
         const int old_disp = (m_old_disp < 0) ? disp : m_old_disp;
         m_old_disp = disp;
 
@@ -528,7 +528,8 @@ static void _print_stats_qv(int y)
     else if (item != NULL && is_valid_item(*item))
     {
         textcolor(item->colour);
-        cprintf("-) %s", item->name(DESC_PLAIN, true).c_str());
+        cprintf("-) %s", item->name(DESC_PLAIN, true)
+                         .substr(0, crawl_view.hudsz.x - 15).c_str());
         textcolor(RED);
         cprintf(" (empty)");
     }
@@ -1489,7 +1490,7 @@ void update_monster_pane()
     }
 }
 #else
-// FIXME: implement this for tiles
+// FIXME: Implement this for Tiles!
 void update_monster_pane() {}
 #endif
 

@@ -34,8 +34,8 @@ static FixedArray < unsigned int, GXM, GYM > tile_dngn;
 
 bool is_bazaar()
 {
-    return (you.level_type == LEVEL_PORTAL_VAULT &&
-            you.level_type_name == "bazaar");
+    return (you.level_type == LEVEL_PORTAL_VAULT
+            && you.level_type_name == "bazaar");
 }
 
 unsigned short get_bazaar_special_colour()
@@ -391,7 +391,7 @@ static int _tileidx_monster_base(int mon_idx, bool detected)
     {
         // Use item tile
         item_def item = mitm[menv[mon_idx].inv[MSLOT_WEAPON]];
-        return tileidx_item(item) | TILE_FLAG_ANIM_WEP; 
+        return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
     }
 
     case MONS_TITAN:

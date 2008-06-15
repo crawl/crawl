@@ -2853,7 +2853,8 @@ void TileDrawInvData(int n, int flag, int *tiles, int *num, int *idx,
                      int *iflags)
 {
     int i;
-    TileRegionClass *r = (flag == REGION_INV1) ? region_item:region_item2;
+    TileRegionClass *r = (flag == REGION_INV1 ? region_item
+                                              : region_item2);
 
     r->flag = true;
 
@@ -2869,19 +2870,19 @@ void TileDrawInvData(int n, int flag, int *tiles, int *num, int *idx,
         if (i == MAX_ITEMLIST)
             break;
 
-        int tile0 = (i>=n) ? -1 : tiles[i];
-        int idx0  = (i>=n) ? -1 : idx[i];
+        int tile0 = (i >= n) ? -1 : tiles[i];
+        int idx0  = (i >= n) ? -1 : idx[i];
         char key  = (iflags[i] & TILEI_FLAG_FLOOR) ? 0
                                                    : index_to_letter(idx[i]);
 
-        if ( flag == itemlist_flag
-             && tile0  == itemlist[i]
-             && num[i] == itemlist_num[i]
-             && key    == itemlist_key[i]
-             && idx0   == itemlist_idx[i]
-             && iflags[i] == itemlist_iflag[i]
-             && !force_redraw_inv
-             && i < old_itemlist_n)
+        if (flag == itemlist_flag
+            && tile0  == itemlist[i]
+            && num[i] == itemlist_num[i]
+            && key    == itemlist_key[i]
+            && idx0   == itemlist_idx[i]
+            && iflags[i] == itemlist_iflag[i]
+            && !force_redraw_inv
+            && i < old_itemlist_n)
         {
             continue;
         }
