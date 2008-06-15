@@ -231,7 +231,7 @@ card_type get_card_and_flags(const item_def& deck, int idx,
     const CrawlVector    &cards = props["cards"].get_vector();
     const CrawlVector    &flags = props["card_flags"].get_vector();
 
-    // negative idx means read from the end
+    // Negative idx means read from the end.
     if (idx < 0)
         idx += static_cast<int>(cards.size());
 
