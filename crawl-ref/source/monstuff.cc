@@ -5704,9 +5704,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
         if (igrd[monster->x][monster->y] != NON_ITEM
             && (mons_itemuse(monster->type) == MONUSE_WEAPONS_ARMOUR
-                || mons_itemuse(monster->type) == MONUSE_EATS_ITEMS
-                || monster->type == MONS_NECROPHAGE
-                || monster->type == MONS_GHOUL))
+                || mons_itemuse(monster->type) == MONUSE_EATS_ITEMS))
         {
             // Keep neutral and charmed monsters from picking up stuff.
             // Same for friendlies if friendly_pickup is set to "none".
