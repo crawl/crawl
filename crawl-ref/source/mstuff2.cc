@@ -912,6 +912,7 @@ void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast
     case SPELL_SUMMON_UGLY_THING:
     case SPELL_ANIMATE_DEAD:
     case SPELL_CALL_IMP:
+    case SPELL_SUMMON_SCORPIONS:
     case SPELL_SUMMON_UFETUBUS:
     case SPELL_SUMMON_BEAST:       // Geryon
     case SPELL_SUMMON_UNDEAD:      // summon undead around player
