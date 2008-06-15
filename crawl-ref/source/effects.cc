@@ -2502,7 +2502,7 @@ void handle_time(long time_delta)
 
     // we take off about .5 points per turn
     if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE] && coinflip())
-        added_contamination -= 1;
+        added_contamination--;
 
     // only punish if contamination caused by mutagenic randarts
     // (haste and invisibility already penalized earlier)
@@ -2536,10 +2536,9 @@ void handle_time(long time_delta)
                 // the magical contamination has a harder time dissipating
                 // through non-living flesh. :-)
                 boom.damage =
-                    dice_def( 3,
-                              you.magic_contamination
-                              * (you.is_undead? 4 : 2)
-                              / 4 );
+                    dice_def(3,
+                             you.magic_contamination
+                             * (you.is_undead ? 4 : 2) / 4);
                 boom.thrower      = KILL_MISC;
                 boom.aux_source   = "a magical explosion";
                 boom.beam_source  = NON_MONSTER;
@@ -2549,9 +2548,7 @@ void handle_time(long time_delta)
                 boom.name = "magical storm";
 
                 boom.ench_power = (you.magic_contamination * 5);
-                boom.ex_size = (you.magic_contamination / 15);
-                if (boom.ex_size > 9)
-                    boom.ex_size = 9;
+                boom.ex_size = std::min(9, you.magic_contamination / 15);
 
                 explosion(boom);
             }
@@ -2565,7 +2562,7 @@ void handle_time(long time_delta)
             // we're meaner now, what with explosions and whatnot, but
             // we dial down the contamination a little faster if its actually
             // mutating you.  -- GDL
-            contaminate_player( -(random2(you.magic_contamination / 4) + 1) );
+            contaminate_player(-(random2(you.magic_contamination / 4) + 1));
         }
     }
 
@@ -2644,7 +2641,7 @@ void handle_time(long time_delta)
     handle_god_time();
 
     if (player_mutation_level(MUT_SCREAM)
-        && (random2(100) <= 2 + player_mutation_level(MUT_SCREAM) * 3) )
+        && (random2(100) <= 2 + player_mutation_level(MUT_SCREAM) * 3))
     {
         yell(true);
     }
