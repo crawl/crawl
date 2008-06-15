@@ -2675,6 +2675,8 @@ void handle_time(long time_delta)
             exercise(SK_STEALTH, 1);
         }
     }
+
+    spawn_random_monsters();
 }
 
 // Move monsters around to fake them walking around while player was
