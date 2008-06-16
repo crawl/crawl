@@ -1757,17 +1757,20 @@ void debug_stethoscope(int mon)
 
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) god=%s",
-         ((hab == HT_WATER)                   ? "water" :
-          (hab == HT_LAVA)                    ? "lava" :
-          (hab == HT_ROCK)                    ? "rock" :
-          (hab == HT_LAND)                    ? "floor"
-                                              : "unknown"),
-         ((menv[i].behaviour == BEH_SLEEP)    ? "sleep" :
-          (menv[i].behaviour == BEH_WANDER)   ? "wander" :
-          (menv[i].behaviour == BEH_SEEK)     ? "seek" :
-          (menv[i].behaviour == BEH_FLEE)     ? "flee" :
-          (menv[i].behaviour == BEH_CORNERED) ? "cornered"
-                                              : "unknown"),
+         ((hab == HT_WATER)                      ? "water" :
+          (hab == HT_LAVA)                       ? "lava" :
+          (hab == HT_ROCK)                       ? "rock" :
+          (hab == HT_LAND)                       ? "floor"
+                                                 : "unknown"),
+         ((menv[i].behaviour == BEH_SLEEP)       ? "sleep" :
+          (menv[i].behaviour == BEH_WANDER)      ? "wander" :
+          (menv[i].behaviour == BEH_SEEK)        ? "seek" :
+          (menv[i].behaviour == BEH_FLEE)        ? "flee" :
+          (menv[i].behaviour == BEH_CORNERED)    ? "cornered" :
+          (menv[i].behaviour == BEH_PANIC)       ? "panic" :
+          (menv[i].behaviour == BEH_INVESTIGATE) ? "investigate" :
+          (menv[i].behaviour == BEH_LURK)        ? "lurk"
+                                                 : "unknown"),
          menv[i].behaviour,
          ((menv[i].foe == MHITYOU)            ? "you" :
           (menv[i].foe == MHITNOT)            ? "none" :

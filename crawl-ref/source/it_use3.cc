@@ -383,7 +383,7 @@ static bool evoke_horn_of_geryon()
         mpr("You produce a hideous howling noise!", MSGCH_SOUND);
         create_monster(
             mgen_data(MONS_BEAST, BEH_HOSTILE,
-                       4, you.pos(), MHITYOU));
+                      4, you.pos(), MHITYOU));
     }
     return rc;
 }
@@ -400,8 +400,8 @@ static bool evoke_sceptre_of_asmodeus()
                                     summon_any_demon(DEMON_COMMON));
         const bool good_summon =
             create_monster(
-                mgen_data( mtype, BEH_HOSTILE,
-                           6, you.pos(), MHITYOU )) != -1;
+                mgen_data(mtype, BEH_HOSTILE,
+                          6, you.pos(), MHITYOU)) != -1;
 
         if (good_summon)
         {
@@ -893,8 +893,8 @@ void tome_of_power(int slot)
     else if (one_chance_in(36))
     {
         if (create_monster(
-                mgen_data( MONS_ABOMINATION_SMALL, BEH_HOSTILE, 6,
-                           you.pos(), MHITYOU )) != -1)
+                mgen_data(MONS_ABOMINATION_SMALL, BEH_HOSTILE,
+                          6, you.pos(), MHITYOU)) != -1)
         {
             mpr("A horrible Thing appears!");
             mpr("It doesn't look too friendly.");
