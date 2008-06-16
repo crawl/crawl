@@ -2691,16 +2691,16 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         return;
 
     // Don't move non-land or stationary monsters around.
-    if (mons_habitat( mon ) != HT_LAND
-        || mons_is_zombified( mon )
+    if (mons_habitat(mon) != HT_LAND
+        || mons_is_zombified(mon)
            && mons_habitat_by_type(mon->base_monster) != HT_LAND
-        || mons_is_stationary( mon ))
+        || mons_is_stationary(mon))
     {
         return;
     }
 
     // Let sleeping monsters lie.
-    if (mon->behaviour == BEH_SLEEP || mons_is_paralysed(mon))
+    if (mons_is_sleeping(mon) || mons_is_paralysed(mon))
         return;
 
     const int range = (turns * mon->speed) / 10;
@@ -2725,9 +2725,9 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         return;
 
     if (long_time
-        && (mon->behaviour == BEH_FLEE
-            || mon->behaviour == BEH_CORNERED
-            || testbits( mon->flags, MF_BATTY )
+        && (mons_is_fleeing(mon)
+            || mons_is_cornered(mon)
+            || mons_is_batty(mon)
             || ranged_attack
             || coinflip()))
     {
@@ -2793,7 +2793,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         coord_def inc(mon->target_pos() - pos);
         inc = coord_def(sgn(inc.x), sgn(inc.y));
 
-        if (mon->behaviour == BEH_FLEE)
+        if (mons_is_fleeing(mon))
             inc *= -1;
 
         if (pos.x + inc.x < 0 || pos.x + inc.x >= GXM)

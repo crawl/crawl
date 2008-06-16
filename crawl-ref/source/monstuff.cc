@@ -3225,7 +3225,8 @@ static void _handle_behaviour(monsters *mon)
             }
             else if (proxFoe)
             {
-                // Try to flee _from_ the correct position.
+                // Special-cased below so that it will flee *from* the
+                // correct position.
                 mon->target_x = foe_x;
                 mon->target_y = foe_y;
             }
@@ -3686,7 +3687,7 @@ static void _handle_nearby_ability(monsters *monster)
     case MONS_EYE_OF_DRAINING:
         if (coinflip() && !mons_friendly(monster)
             && monster->behaviour != BEH_WANDER
-            && monster->behaviour != BEH_FLEE)
+            && mons_is_fleeing(monster))
         {
             simple_monster_message(monster, " stares at you.");
 

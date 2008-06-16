@@ -4393,7 +4393,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 
                 if (you.religion == GOD_BEOGH
                     && mons_species(mon->type) == MONS_ORC
-                    && mon->behaviour == BEH_SLEEP && !player_under_penance()
+                    && mons_is_sleeping(mon) && !player_under_penance()
                     && you.piety >= piety_breakpoint(2) && mons_near(mon))
                 {
                     hit_woke_orc = true;
@@ -4578,7 +4578,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         }
 
         if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
-            && mon->behaviour == BEH_SLEEP && YOU_KILL(beam.thrower)
+            && mons_is_sleeping(mon) && YOU_KILL(beam.thrower)
             && !player_under_penance() && you.piety >= piety_breakpoint(2)
             && mons_near(mon))
         {

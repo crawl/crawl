@@ -2124,19 +2124,20 @@ static void _describe_monster(const monsters *mon)
 
     if (!mons_is_mimic(mon->type) && mons_behaviour_perceptible(mon))
     {
-        if (mon->behaviour == BEH_SLEEP)
+        if (mons_is_sleeping(mon))
         {
             mprf(MSGCH_EXAMINE, "%s appears to be resting.",
                  mon->pronoun(PRONOUN_CAP).c_str());
         }
         // Applies to both friendlies and hostiles
-        else if (mon->behaviour == BEH_FLEE)
+        else if (mons_is_fleeing(mon))
         {
             mprf(MSGCH_EXAMINE, "%s is retreating.",
                  mon->pronoun(PRONOUN_CAP).c_str());
         }
         // hostile with target != you
-        else if (!mons_friendly(mon) && !mons_neutral(mon) && mon->foe != MHITYOU)
+        else if (!mons_friendly(mon) && !mons_neutral(mon)
+            && mon->foe != MHITYOU)
         {
             // special case: batty monsters get set to BEH_WANDER as
             // part of their special behaviour.

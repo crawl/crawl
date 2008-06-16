@@ -295,7 +295,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     {
         // Distracted (but not batty); this only applies to players.
         if (attacker->atype() == ACT_PLAYER && def->foe != MHITYOU
-            && !testbits(def->flags, MF_BATTY))
+            && !mons_is_batty(def))
         {
             unchivalric = UCAT_DISTRACTED;
         }
@@ -308,7 +308,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
         }
 
         // fleeing
-        if (def->behaviour == BEH_FLEE)
+        if (mons_is_fleeing(def))
             unchivalric = UCAT_FLEEING;
 
         // invisible
@@ -316,7 +316,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
             unchivalric = UCAT_INVISIBLE;
 
         // held in a net
-        if (def->has_ench(ENCH_HELD) || def->has_ench(ENCH_PETRIFYING))
+        if (mons_is_caught(def) || mons_is_petrifying(def))
             unchivalric = UCAT_HELD_IN_NET;
 
         // paralysed
@@ -324,7 +324,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
             unchivalric = UCAT_PARALYSED;
 
         // sleeping
-        if (def->behaviour == BEH_SLEEP)
+        if (mons_is_sleeping(def))
             unchivalric = UCAT_SLEEPING;
     }
 
@@ -787,7 +787,7 @@ bool melee_attack::player_attack()
 
         bool hit_woke_orc = false;
         if (you.religion == GOD_BEOGH && mons_species(def->type) == MONS_ORC
-            && def->behaviour == BEH_SLEEP && !player_under_penance()
+            && mons_is_sleeping(def) && !player_under_penance()
             && you.piety >= piety_breakpoint(2) && mons_near(def))
         {
             hit_woke_orc = true;
@@ -1287,8 +1287,8 @@ void melee_attack::player_warn_miss()
     did_hit = false;
 
     // Upset only non-sleeping monsters if we missed.
-    if (def->behaviour != BEH_SLEEP)
-        behaviour_event( def, ME_WHACK, MHITYOU );
+    if (!mons_is_sleeping(def))
+        behaviour_event(def, ME_WHACK, MHITYOU);
 
     msg::stream << player_why_missed()
                 << def->name(DESC_NOCAP_THE)
@@ -1305,7 +1305,7 @@ bool melee_attack::player_hits_monster()
 
     return (to_hit >= def->ev
             || one_chance_in(20)
-            || ((mons_cannot_act(def) || def->behaviour == BEH_SLEEP)
+            || ((mons_cannot_act(def) || mons_is_sleeping(def))
                 && !one_chance_in(10 + you.skills[SK_STABBING]))
             || mons_is_petrifying(def)
                && !one_chance_in(2 + you.skills[SK_STABBING]));
@@ -1514,10 +1514,9 @@ int melee_attack::player_stab(int damage)
     if (stab_bonus)
     {
         // Lets make sure we have some damage to work with...
-        if (damage < 1)
-            damage = 1;
+        damage = std::max(1, damage);
 
-        if (def->behaviour == BEH_SLEEP)
+        if (mons_is_sleeping(def))
         {
             // Sleeping moster wakes up when stabbed but may be groggy.
             if (random2(200) <= you.skills[SK_STABBING] + you.dex)
