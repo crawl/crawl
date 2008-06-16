@@ -2096,6 +2096,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
             item.sub_type = ARM_NAGA_BARDING;
         else if (one_chance_in(7))
             item.sub_type = ARM_CENTAUR_BARDING;
+        else
+            set_equip_race(item, _determine_armour_race(item, item_race));
     }
     else
         set_equip_race(item, _determine_armour_race(item, item_race));
@@ -4212,21 +4214,11 @@ armour_type get_random_armour_type(int item_level)
         // same chance each
         switch (random2(5))
         {
-        case 0:
-            armtype = ARM_SHIELD;
-            break;
-        case 1:
-            armtype = ARM_CLOAK;
-            break;
-        case 2:
-            armtype = ARM_HELMET;
-            break;
-        case 3:
-            armtype = ARM_GLOVES;
-            break;
-        case 4:
-            armtype = ARM_BOOTS;
-            break;
+        case 0: armtype = ARM_SHIELD; break;
+        case 1: armtype = ARM_CLOAK;  break;
+        case 2: armtype = ARM_HELMET; break;
+        case 3: armtype = ARM_GLOVES; break;
+        case 4: armtype = ARM_BOOTS;  break;
         }
 
         if (armtype == ARM_HELMET && one_chance_in(3))

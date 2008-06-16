@@ -3746,13 +3746,14 @@ static bool _beogh_retribution()
 
         // Need a species check, in case this retribution is a result of
         // drawing the Wrath card.
+        const bool am_orc = (you.species == SP_HILL_ORC);
+
         for (int i = 0; i < num_to_create; ++i)
         {
             // Create item.
             int slot = items(0, OBJ_WEAPONS, WPN_CLUB + random2(13),
                              true, you.experience_level,
-                             (you.species == SP_HILL_ORC) ?
-                                 MAKE_ITEM_NO_RACE : MAKE_ITEM_ORCISH);
+                             am_orc ? MAKE_ITEM_NO_RACE : MAKE_ITEM_ORCISH);
 
             if (slot == -1)
                 continue;
@@ -3761,8 +3762,7 @@ static bool _beogh_retribution()
 
             // Set item ego type.
             set_item_ego_type(item, OBJ_WEAPONS,
-                (you.species == SP_HILL_ORC) ?
-                    SPWPN_ORC_SLAYING : SPWPN_ELECTROCUTION);
+                              am_orc ? SPWPN_ORC_SLAYING : SPWPN_ELECTROCUTION);
 
             // Manually override item plusses.
             item.plus  = random2(3);
@@ -3799,10 +3799,12 @@ static bool _beogh_retribution()
         }
         if (num_created > 0)
         {
-            snprintf(info, INFO_SIZE, " throws %s of %s at you.",
-                num_created > 1 ? "implements" : "an implement",
-                you.species == SP_HILL_ORC ? "orc slaying" : "electrocution");
-            simple_god_message(info, god);
+            std::ostringstream msg;
+            msg << " throws "
+                << (num_created > 1 ? "implements" : "an implement")
+                << " of " << (am_orc ? "orc slaying" : "electrocution")
+                << " at you.";                    
+            simple_god_message(msg.str().c_str(), god);
             break;
         } // else fall through
     }

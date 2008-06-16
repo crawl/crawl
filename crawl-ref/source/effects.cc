@@ -1523,7 +1523,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 class_wanted = OBJ_POTIONS;
 
             thing_created = items( 1, class_wanted, type_wanted, true,
-                                   MAKE_GOOD_ITEM, 250 );
+                                   MAKE_GOOD_ITEM, MAKE_ITEM_RANDOM_RACE );
 
             if (thing_created == NON_ITEM)
                 continue;
