@@ -2009,8 +2009,8 @@ int player_AC(void)
 
         AC += item.plus * 100;
 
-        // The deformed don't fit into body armour very well
-        // (this includes nagas and centaurs)
+        // The deformed don't fit into body armour very well.
+        // (This includes nagas and centaurs.)
         if (i == EQ_BODY_ARMOUR && player_mutation_level(MUT_DEFORMED))
             AC -= ac_value / 2;
     }
@@ -2281,7 +2281,7 @@ int player_evasion()
     if (dodge_bonus > max_bonus)
         dodge_bonus = max_bonus;
 
-    // Some lesser armours have small penalties now (shields, barding)
+    // Some lesser armours have small penalties now (shields, barding).
     for (int i = EQ_CLOAK; i < EQ_BODY_ARMOUR; i++)
     {
         if (you.equip[i] == -1)
@@ -2289,7 +2289,7 @@ int player_evasion()
 
         int pen = property( you.inv[ you.equip[i] ], PARM_EVASION );
 
-        // reducing penalty of larger shields for larger characters
+        // Reducing penalty of larger shields for larger characters.
         if (i == EQ_SHIELD && torso > SIZE_MEDIUM)
             pen += (torso - SIZE_MEDIUM);
 
@@ -2297,7 +2297,7 @@ int player_evasion()
             ev += pen;
     }
 
-    // handle main body armour penalty
+    // Handle main body armour penalty.
     if (you.equip[EQ_BODY_ARMOUR] != -1)
     {
         // XXX: magnify arm_penalty for weak characters?

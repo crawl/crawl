@@ -1918,6 +1918,8 @@ void describe_item( item_def &item, bool allow_inscribe )
         cgotoxy(1, wherey() + 2);
         inscribe_item(item, false);
     }
+    else if (getch() == 0)
+        getch();
 }
 
 // There are currently two ways to inscribe an item:

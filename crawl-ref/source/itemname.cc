@@ -214,11 +214,11 @@ std::string item_def::name(description_level_type descrip,
             equipped = true;
         }
         else if (this->link == you.equip[EQ_CLOAK]
-                || this->link == you.equip[EQ_HELMET]
-                || this->link == you.equip[EQ_GLOVES]
-                || this->link == you.equip[EQ_BOOTS]
-                || this->link == you.equip[EQ_SHIELD]
-                || this->link == you.equip[EQ_BODY_ARMOUR])
+                 || this->link == you.equip[EQ_HELMET]
+                 || this->link == you.equip[EQ_GLOVES]
+                 || this->link == you.equip[EQ_BOOTS]
+                 || this->link == you.equip[EQ_SHIELD]
+                 || this->link == you.equip[EQ_BODY_ARMOUR])
         {
             buff << " (worn)";
             equipped = true;
@@ -1245,9 +1245,15 @@ std::string item_def::name_aux( description_level_type desc,
 
             if (sparm != SPARM_NORMAL)
             {
-                if ( !terse )
+                if (!terse)
                     buff << " of ";
-                buff << armour_ego_name(sparm, terse);
+
+                // "naga barding of running" doesn't make any sense, and yes,
+                // they are possible.
+                if (sub_type == ARM_NAGA_BARDING && sparm == SPARM_RUNNING)
+                    buff << (terse ? "speed" : "speedy slithering");
+                else
+                    buff << armour_ego_name(sparm, terse);
             }
         }
 

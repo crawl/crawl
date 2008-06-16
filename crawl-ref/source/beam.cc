@@ -5098,21 +5098,19 @@ static int _range_used_on_hit(bolt &beam)
     return (0);
 }
 
-/*
-   Takes a bolt and refines it for use in the explosion function. Called
-   from missile() and beam() in beam.cc. Explosions which do not follow from
-   beams (eg scrolls of immolation) bypass this function.
- */
+// Takes a bolt and refines it for use in the explosion function. Called
+// from missile() and beam() in beam.cc. Explosions which do not follow from
+// beams (eg scrolls of immolation) bypass this function.
 static void _explosion1(bolt &pbolt)
 {
     int ex_size = 1;
     // convenience
     int x = pbolt.target_x;
     int y = pbolt.target_y;
-    const char *seeMsg = NULL;
+    const char *seeMsg  = NULL;
     const char *hearMsg = NULL;
 
-    // assume that the player can see/hear the explosion, or
+    // Assume that the player can see/hear the explosion, or
     // gets burned by it anyway.  :)
     pbolt.msg_generated = true;
 
@@ -5190,14 +5188,16 @@ static void _explosion1(bolt &pbolt)
     {
         seeMsg     = "The ball expands into a vile cloud!";
         hearMsg    = "You hear a gentle \'poof\'.";
-        pbolt.name = "stinking cloud";
+        if (!pbolt.is_tracer)
+            pbolt.name = "stinking cloud";
     }
 
     if (pbolt.name == "potion")
     {
         seeMsg     = "The potion explodes!";
         hearMsg    = "You hear an explosion!";
-        pbolt.name = "cloud";
+        if (!pbolt.is_tracer)
+            pbolt.name = "cloud";
     }
 
     if (seeMsg == NULL)
@@ -5228,12 +5228,11 @@ static void _explosion1(bolt &pbolt)
 
 #define MAX_EXPLOSION_RADIUS 9
 
-// explosion is considered to emanate from beam->target_x, target_y
+// explosion() is considered to emanate from beam->target_x, target_y
 // and has a radius equal to ex_size.  The explosion will respect
 // boundaries like walls, but go through/around statues/idols/etc.
-
-// for each cell affected by the explosion, affect() is called.
-
+//
+// For each cell affected by the explosion, affect() is called.
 void explosion( bolt &beam, bool hole_in_the_middle,
                 bool explode_in_wall, bool stop_at_statues,
                 bool stop_at_walls, bool show_more)

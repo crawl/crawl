@@ -1295,7 +1295,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
     }
     else
     {
-        // Note: some transformation include all of the above as well
+        // Note: Some transformations include all of the above as well.
         if (item.sub_type == ARM_NAGA_BARDING
             || item.sub_type == ARM_CENTAUR_BARDING)
         {
@@ -1573,7 +1573,7 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
         ret = HANDS_TWO;
         break;
 
-    case OBJ_ARMOUR:    // barding and body armours are unwieldy
+    case OBJ_ARMOUR:    // Bardings and body armours are unwieldy.
         if (item.sub_type == ARM_NAGA_BARDING
             || item.sub_type == ARM_CENTAUR_BARDING
             || get_armour_slot( item ) == EQ_BODY_ARMOUR)
@@ -2582,7 +2582,7 @@ size_type item_size( const item_def &item )
             size = SIZE_SMALL;
             break;
 
-        default:        // body armours and bardings
+        default:        // Body armours and bardings.
             size = SIZE_MEDIUM;
             break;
         }
@@ -2641,8 +2641,8 @@ bool is_colourful_item( const item_def &item )
 
 bool is_shield(const item_def &item)
 {
-    return item.base_type == OBJ_ARMOUR
-           && get_armour_slot(item) == EQ_SHIELD;
+    return (item.base_type == OBJ_ARMOUR
+            && get_armour_slot(item) == EQ_SHIELD);
 }
 
 // Returns true if the given item cannot be wielded with the given shield.

@@ -1002,7 +1002,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
         type_wanted = (coinflip())? OBJ_RANDOM :
             static_cast<int>(_random_nonbody_armour_type());
 
-        // some species specific fitting problems
+        // Some species specific fitting problems.
         switch (you.species)
         {
         case SP_OGRE:

@@ -1444,37 +1444,42 @@ static void _display_vampire_attributes()
 
     std::string result;
 
-    const int lines = 13;
+    const int lines = 14;
     std::string column[lines][7] =
     {
        {"                     ", "<lightgreen>Alive</lightgreen>      ", "<green>Full</green>    ",
         "Satiated  ", "<yellow>Thirsty</yellow>  ", "<yellow>Near...</yellow>  ",
         "<lightred>Bloodless</lightred>"},
-                                //Alive          Full       Satiated       Thirsty   Near...      Bloodless
-       {"Metabolism           ", "very fast  ", "fast    ", "fast      ",  "normal   ", "slow     ", "none  "},
+                                //Alive          Full       Satiated      Thirsty   Near...      Bloodless
+       {"Metabolism           ", "very fast  ", "fast    ", "fast      ", "normal   ", "slow     ", "none  "},
 
-       {"Regeneration         ", "very fast  ", "fast    ", "normal    ",  "normal   ", "slow     ", "none  "},
+       {"Regeneration         ", "very fast  ", "fast    ", "normal    ", "normal   ", "slow     ", "none  "},
 
-       {"Poison resistance    ", "           ", "        ", "          ",  " +       ", " +       ", " +    "},
+       {"Stealth boost        ", "none       ", "none    ", "none      ", "minor    ", "major    ", "large "},
 
-       {"Cold resistance      ", "           ", "        ", "          ",  " +       ", " +       ", " ++   "},
+       {"Spell hunger         ", "full       ", "full    ", "full      ", "halved   ", "none     ", "none  "},
 
-       {"Negative resistance  ", "           ", "        ", "          ",  " +       ", " ++      ", " +++  "},
+       {EOL EOL "<w>Resistances</w>" EOL
+        "Poison resistance    ", "           ", "        ", "          ", " +       ", " +       ", " +    "},
 
-       {"Torment resistance   ", "           ", "        ", "          ",  "         ", "         ", " +    "},
+       {"Cold resistance      ", "           ", "        ", "          ", " +       ", " +       ", " ++   "},
 
-       {"Mutation chance      ", "always     ", "often   ", "sometimes ",  "never    ", "never    ", "never "},
+       {"Negative resistance  ", "           ", "        ", "          ", " +       ", " ++      ", " +++  "},
+
+       {"Torment resistance   ", "           ", "        ", "          ", "         ", "         ", " +    "},
+
+       {EOL EOL "<w>Other effects</w>" EOL
+        "Mutation chance      ", "always     ", "often   ", "sometimes ", "never    ", "never    ", "never "},
 
        {"Non-physical " EOL
-        "mutation effects     ", "full       ", "capped  ", "capped    ",  "none     ", "none     ", "none  "},
+        "mutation effects     ", "full       ", "capped  ", "capped    ", "none     ", "none     ", "none  "},
 
-       {"Potion effects       ", "full       ", "full    ", "full      ",  "halved   ", "halved   ", "halved"},
+       {"Potion effects       ", "full       ", "full    ", "full      ", "halved   ", "halved   ", "halved"},
 
-       {"Bat Form             ", "no         ", "no      ", "yes       ",  "yes      ", "yes      ", "yes   "},
+       {"Bat Form             ", "no         ", "no      ", "yes       ", "yes      ", "yes      ", "yes   "},
 
-       {"Stealth boost        ", "none       ", "none    ", "none      ",  "minor    ", "major    ", "large "},
-
-       {"Spell hunger         ", "full       ", "full    ", "full      ",  "halved   ", "none     ", "none  "}
+       {"Other transformation " EOL
+        "or going berserk     ", "yes        ", "yes     ", "no        ", "no       ", "no       ", "no    "}
     };
 
     int current = 0;

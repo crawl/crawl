@@ -4013,7 +4013,7 @@ void give_armour(monsters *mon, int level)
         force_colour = WHITE; //mv: always white
         break;
 
-    // centaurs sometimes wear barding
+    // Centaurs sometimes wear barding.
     case MONS_CENTAUR:
     case MONS_CENTAUR_WARRIOR:
     case MONS_YAKTAUR:
@@ -4025,7 +4025,7 @@ void give_armour(monsters *mon, int level)
                          /* mon->type == MONS_YAKTAUR_CAPTAIN ? */ :  200))
         {
             mitm[bp].base_type = OBJ_ARMOUR;
-            mitm[bp].sub_type = ARM_CENTAUR_BARDING;
+            mitm[bp].sub_type  = ARM_CENTAUR_BARDING;
         }
         break;
 
@@ -4040,12 +4040,12 @@ void give_armour(monsters *mon, int level)
                                                            :  100 ))
         {
             mitm[bp].base_type = OBJ_ARMOUR;
-            mitm[bp].sub_type = ARM_NAGA_BARDING;
+            mitm[bp].sub_type  = ARM_NAGA_BARDING;
         }
         else if (mon->type == MONS_GREATER_NAGA || one_chance_in(3))
         {
             mitm[bp].base_type = OBJ_ARMOUR;
-            mitm[bp].sub_type = ARM_ROBE;
+            mitm[bp].sub_type  = ARM_ROBE;
         }
         break;
 
