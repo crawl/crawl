@@ -2043,7 +2043,7 @@ void behaviour_event( monsters *mon, int event, int src,
         // the head, of course, always triggers this code.
         if (event == ME_WHACK
             || ((wontAttack != sourceWontAttack || isSmart)
-                && mon->behaviour != BEH_FLEE && mon->behaviour != BEH_PANIC))
+                && !mons_is_fleeing(mon) && !mons_is_panicking(mon)))
         {
             // (Plain) plants and fungi cannot flee or fight back.
             if (mon->type == MONS_FUNGUS || mon->type == MONS_PLANT)
@@ -2074,8 +2074,8 @@ void behaviour_event( monsters *mon, int event, int src,
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
-        if (mon->behaviour != BEH_CORNERED && mon->behaviour != BEH_PANIC
-            && mon->behaviour != BEH_FLEE)
+        if (!mons_is_fleeing(mon) && !mons_is_panicking(mon)
+            && !mons_is_cornered(mon))
         {
             mon->behaviour = BEH_SEEK;
         }
@@ -3528,7 +3528,7 @@ static void _handle_movement(monsters *monster)
     mmov_x = (dx > 0) ? 1 : ((dx < 0) ? -1 : 0);
     mmov_y = (dy > 0) ? 1 : ((dy < 0) ? -1 : 0);
 
-    if (monster->behaviour == BEH_FLEE
+    if (mons_is_fleeing(monster)
         && (!mons_friendly(monster)
             || monster->target_x != you.x_pos
             || monster->target_y != you.y_pos))
@@ -3585,7 +3585,7 @@ static void _handle_movement(monsters *monster)
 
 static void _make_mons_stop_fleeing(monsters *mon)
 {
-    if (mon->behaviour == BEH_FLEE)
+    if (mons_is_fleeing(mon))
         behaviour_event(mon, ME_CORNERED);
 }
 
@@ -3627,7 +3627,7 @@ static void _handle_nearby_ability(monsters *monster)
             chance *= 10;
 
         // However, confused and fleeing monsters are more interesting.
-        if (monster->behaviour == BEH_FLEE)
+        if (mons_is_fleeing(monster))
             chance /= 2;
         if (monster->has_ench(ENCH_CONFUSION))
             chance /= 2;
@@ -4446,7 +4446,7 @@ static bool _handle_scroll(monsters *monster)
         case SCR_TELEPORTATION:
             if (!monster->has_ench(ENCH_TP))
             {
-                if (monster->behaviour == BEH_FLEE || monster->has_ench(ENCH_HELD))
+                if (mons_is_fleeing(monster) || mons_is_caught(monster))
                 {
                     simple_monster_message(monster, " reads a scroll.");
                     monster_teleport(monster, false);
@@ -4457,7 +4457,7 @@ static bool _handle_scroll(monsters *monster)
             break;
 
         case SCR_BLINKING:
-            if (monster->behaviour == BEH_FLEE || monster->has_ench(ENCH_HELD))
+            if (mons_is_fleeing(monster) || mons_is_caught(monster))
             {
                 if (mons_near(monster))
                 {
@@ -4496,7 +4496,7 @@ static bool _handle_scroll(monsters *monster)
 
         return read;
     }
-}                               // end handle_scroll()
+}
 
 //---------------------------------------------------------------
 //
@@ -4994,7 +4994,6 @@ static bool _handle_spell( monsters *monster, bolt & beem )
             {
                 // Since the player isn't around, we'll extend the monster's
                 // normal fleeing choices to include the self-enchant slot.
-
                 int foundcount = 0;
                 for (int i = NUM_MONSTER_SPELL_SLOTS - 1; i >= 0; --i)
                 {
@@ -7091,7 +7090,7 @@ static bool _monster_move(monsters *monster)
                 continue;
 
             // Which one was better? -- depends on FLEEING or not.
-            if (monster->behaviour == BEH_FLEE)
+            if (mons_is_fleeing(monster))
             {
                 if (dist[0] >= dist[1] && dist[0] >= current_distance)
                 {
@@ -7225,7 +7224,7 @@ forget_it:
 
         // Fleeing monsters that can't move will panic and possibly
         // turn to face their attacker.
-        if (monster->behaviour == BEH_FLEE)
+        if (mons_is_fleeing(monster))
             behaviour_event(monster, ME_CORNERED);
     }
 

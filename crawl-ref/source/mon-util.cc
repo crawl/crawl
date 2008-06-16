@@ -2175,6 +2175,16 @@ bool mons_is_fleeing(const monsters *m)
     return (m->behaviour == BEH_FLEE);
 }
 
+bool mons_is_panicking(const monsters *m)
+{
+    return (m->behaviour == BEH_PANIC);
+}
+
+bool mons_is_cornered(const monsters *m)
+{
+    return (m->behaviour == BEH_CORNERED);
+}
+
 bool mons_is_sleeping(const monsters *m)
 {
     return (m->behaviour == BEH_SLEEP);
