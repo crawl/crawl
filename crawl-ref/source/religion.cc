@@ -3457,17 +3457,16 @@ static void _ely_dull_inventory_weapons()
         if (you.inv[i].base_type == OBJ_WEAPONS
             || you.inv[i].base_type == OBJ_MISSILES)
         {
-            // Don't dull artefacts.
-            if (is_artefact(you.inv[i]))
-                continue;
-
-            // Don't dull weapons below -1/-1.
-            if (you.inv[i].base_type == OBJ_WEAPONS
-                && you.inv[i].plus <= -1 && you.inv[i].plus2 <= -1)
+            // Don't dull artefacts at all, or weapons below -1/-1.
+            if (you.inv[i].base_type == OBJ_WEAPONS)
             {
-                continue;
+                if (is_artefact(you.inv[i]) || you.inv[i].plus <= -1
+                    && you.inv[i].plus2 <= -1)
+                {
+                    continue;
+                }
             }
-            // Don't dull ammo below -1.
+            // Don't dull missiles below -1.
             else if (you.inv[i].plus <= -1)
                 continue;
 
@@ -3483,7 +3482,7 @@ static void _ely_dull_inventory_weapons()
             if (you.inv[i].link == quiver_link)
                 quivered = true;
 
-            // Dull the weapon/ammo.
+            // Dull the weapon or missile(s).
             if (you.inv[i].plus > -1)
                 you.inv[i].plus--;
 
