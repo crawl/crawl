@@ -602,7 +602,7 @@ void big_cloud(cloud_type cl_type, kill_category whose,
 static bool _mons_hostile(const monsters *mon)
 {
     // Needs to be done this way because of friendly/neutral enchantments.
-    return (!mons_friendly(mon) && !mons_neutral(mon));
+    return (!mons_wont_attack(mon) && !mons_neutral(mon));
 }
 
 static bool _can_pacify_monster(const monsters *mon, const int healed)
@@ -732,15 +732,9 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
         else
         {
             simple_monster_message( monster, " turns neutral." );
-            monster->attitude = ATT_NEUTRAL;
-            monster->flags |= MF_WAS_NEUTRAL;
+            mons_pacify(monster);
 
-            // give half of the monster's xp
-            unsigned int exp_gain = 0, avail_gain = 0;
-            gain_exp( exper_value(monster) / 2 + 1, &exp_gain, &avail_gain );
-            monster->flags |= MF_GOT_HALF_XP;
-
-            // finally give a small piety return
+            // give a small piety return
             gain_piety(1 + random2(healed/15));
         }
     }

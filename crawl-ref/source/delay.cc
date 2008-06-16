@@ -198,23 +198,15 @@ static int _recite_to_monsters(int x, int y, int pow, int unused)
                 }
                 else
                 {
-                    // permanently neutral
-                    mons->attitude = ATT_NEUTRAL;
-                    mons->flags |= MF_WAS_NEUTRAL;
-
-                    // give half of the monster's xp
-                    unsigned int exp_gain = 0, avail_gain = 0;
-                    gain_exp( exper_value(mons) / 2 + 1, &exp_gain, &avail_gain );
-                    mons->flags |= MF_GOT_HALF_XP;
-
                     simple_monster_message(mons, " seems fully impressed!");
+                    mons_pacify(mons);
                 }
             }
             break;
     }
 
     return (1);
-}       // end recite_to_monsters()
+}
 
 static const char* _get_recite_speech(const std::string key, int weight)
 {

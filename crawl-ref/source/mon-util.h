@@ -586,6 +586,12 @@ void define_monster(monsters &mons);
 
 // last updated 4jan2001 (gdl)
 /* ***********************************************************************
+ * called from: delay - monstuff - spells1
+ * *********************************************************************** */
+void mons_pacify(monsters *mon);
+
+// last updated 4jan2001 (gdl)
+/* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
 bool mons_should_fire(struct bolt &beam);
@@ -673,7 +679,7 @@ bool mons_is_stationary(const monsters *mon);
 bool mons_is_wall_shielded(int mc);
 bool mons_is_insubstantial(int mc);
 bool mons_has_blood(int mc);
-bool mons_is_submerged(const monsters *mon);
+bool mons_is_submerged(const monsters *m);
 
 bool invalid_monster(const monsters *mon);
 bool invalid_monster_class(int mclass);

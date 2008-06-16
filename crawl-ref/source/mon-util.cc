@@ -2127,10 +2127,10 @@ mon_attitude_type mons_attitude(const monsters *m)
         return ATT_HOSTILE;
 }
 
-bool mons_is_submerged(const monsters *mon)
+bool mons_is_submerged(const monsters *m)
 {
     // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
-    return (mon->has_ench(ENCH_SUBMERGED));
+    return (m->has_ench(ENCH_SUBMERGED));
 }
 
 bool mons_is_paralysed(const monsters *m)
@@ -2212,6 +2212,21 @@ bool mons_looks_distracted(const monsters *m)
                 || mons_is_fleeing(m)
                 || mons_is_caught(m)
                 || mons_is_petrifying(m)));
+}
+
+void mons_pacify(monsters *mon)
+{
+    // Make the monster permanently neutral.
+    mon->attitude = ATT_NEUTRAL;
+    mon->flags |= MF_WAS_NEUTRAL;
+
+    if (!testbits(mon->flags, MF_GOT_HALF_XP))
+    {
+        // Give the player half of the monster's XP.
+        unsigned int exp_gain = 0, avail_gain = 0;
+        gain_exp(exper_value(mon) / 2 + 1, &exp_gain, &avail_gain);
+        mon->flags |= MF_GOT_HALF_XP;
+    }
 }
 
 bool mons_should_fire(struct bolt &beam)
