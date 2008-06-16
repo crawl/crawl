@@ -2547,7 +2547,7 @@ static void _handle_behaviour(monsters *mon)
 
     // Validate target again.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
-        && menv[mon->foe].type == -1)
+        && !menv[mon->foe].alive())
     {
         mon->foe = MHITNOT;
     }
