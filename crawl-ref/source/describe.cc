@@ -2441,8 +2441,8 @@ static bool _print_god_abil_desc( int god, int numpower )
     const char* pmsg = god_gain_power_messages[god][numpower];
 
     // If no message then no power.
-    if ( !pmsg[0] )
-        return false;
+    if (!pmsg[0])
+        return (false);
 
     std::ostringstream buf;
 
@@ -2957,6 +2957,10 @@ void describe_god( god_type which_god, bool give_title )
             cprintf( "None." EOL );
     }
 
+    int bottom_line = get_number_of_lines();
+    if (bottom_line > 30)
+        bottom_line = 30;
+
     // Only give this additional information for worshippers.
     if (which_god == you.religion)
     {
@@ -2964,19 +2968,16 @@ void describe_god( god_type which_god, bool give_title )
             || you.religion == GOD_SHINING_ONE
             || you.religion == GOD_ELYVILON)
         {
-            cgotoxy(1, get_number_of_lines() - 1, GOTO_CRT);
+            cgotoxy(1, bottom_line - 1, GOTO_CRT);
         }
         else
-            cgotoxy(1, get_number_of_lines() - 2, GOTO_CRT);
+            cgotoxy(1, bottom_line - 2, GOTO_CRT);
 
         textcolor(LIGHTGRAY);
         cprintf(get_linebreak_string(_religion_help(which_god),
                                      numcols).c_str());
     }
 
-    int bottom_line = get_number_of_lines();
-    if (bottom_line > 30)
-        bottom_line = 30;
     cgotoxy(1, bottom_line-1);
     textcolor(LIGHTGRAY);
     formatted_string::parse_string(

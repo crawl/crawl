@@ -11,6 +11,11 @@ local function can_butcher(it, name)
         return false
     end
 
+    -- If we're already wielding a weapon capable of butchering, okay.
+    if item.equipped(it) then
+        return true
+    end
+
     -- Don't make the user wield a known cursed weapon.
     if item.cursed(it) then
         return false

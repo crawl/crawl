@@ -1252,19 +1252,24 @@ bool randart_wpn_known_prop( const item_def &item, randart_prop_type prop )
     return known;
 }
 
-static std::string _get_artefact_type(const item_def &item)
+static std::string _get_artefact_type(const item_def &item,
+                                      bool appear = false)
 {
     switch (item.base_type)
     {
-     case OBJ_WEAPONS:
-         return "weapon";
-     case OBJ_ARMOUR:
-         return "armour";
-     case OBJ_JEWELLERY:
-         if (jewellery_is_amulet(item))
-             return "amulet";
-         else
-             return "ring";
+    case OBJ_WEAPONS:
+        return "weapon";
+    case OBJ_ARMOUR:
+        return "armour";
+    case OBJ_JEWELLERY:
+        // Only in appearance distinguish between amulets and rings.
+        if (!appear)
+            return "jewellery";
+
+        if (jewellery_is_amulet(item))
+            return "amulet";
+        else
+            return "ring";
      default:
          return "artefact";
     }
@@ -1322,7 +1327,7 @@ std::string randart_name(const item_def &item, bool appearance)
     }
 
     // get base type
-    lookup += _get_artefact_type(item);
+    lookup += _get_artefact_type(item, appearance);
 
     rng_save_excursion rng_state;
     seed_rng( seed );
@@ -1331,7 +1336,7 @@ std::string randart_name(const item_def &item, bool appearance)
     {
         std::string appear = getRandNameString(lookup, " appearance");
         if (appear.empty() // nothing found for lookup
-            // don't allow "jewelled jewelled helmet"
+            // Don't allow "jewelled jewelled helmet".
             || item.base_type == OBJ_ARMOUR
                && item.sub_type == ARM_HELMET
                && appear == "jewelled"
@@ -1360,13 +1365,13 @@ std::string randart_name(const item_def &item, bool appearance)
 
             if (name.empty() && god_gift)
             {
-                // if nothing found, try god name alone
+                // If nothing found, try god name alone.
                 name = getRandNameString(
                            god_name(static_cast<god_type>(item_orig), false));
 
                 if (name.empty())
                 {
-                    // if still nothing found, try base type alone
+                    // If still nothing found, try base type alone.
                     name = getRandNameString(
                                _get_artefact_type(item).c_str());
                 }

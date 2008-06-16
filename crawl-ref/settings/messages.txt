@@ -31,9 +31,9 @@ msc = yellow:fails to return
 
 # Unimportant messages and combat clutter
 #
-message_colour = darkgrey:You start (resting|searching)
-message_colour = darkgrey:Unknown command
-message_colour = darkgrey:disappears in a puff of smoke
+msc = darkgrey:You start (resting|searching)
+msc = darkgrey:Unknown command
+msc = darkgrey:disappears in a puff of smoke
 #
-message_colour = darkgrey:miss(es)? (the|you|it)
-message_colour = darkgrey:but (do no|doesn't do any) damage
+msc = darkgrey:miss(es)? (the|you|it)
+msc = darkgrey:but (do no|doesn't do any) damage
