@@ -2689,11 +2689,86 @@ static void _detailed_god_description(god_type which_god)
         std::string broken = print_god_likes(which_god, true);
         linebreak_string2(broken, width);
         formatted_string::parse_block(broken, false).display();
-        cprintf(EOL);
-        cprintf(EOL);
+
         broken = print_god_dislikes(which_god, true);
-        linebreak_string2(broken, width);
-        formatted_string::parse_block(broken, false).display();
+        if (!broken.empty())
+        {
+            cprintf(EOL);
+            cprintf(EOL);
+            linebreak_string2(broken, width);
+            formatted_string::parse_block(broken, false).display();
+        }
+        // Some special handling.
+        broken = "";
+        switch (which_god)
+        {
+        case GOD_TROG:
+            broken = "Note that Trog does not demand training of the "
+                     "Invocations skill. All abilities are purely based on "
+                     "piety.";
+            break;
+
+        case GOD_ELYVILON:
+            broken = "Under prayer, there is a chance, depending on your "
+                     "piety, that Elyvilon will protect you from deadly "
+                     "damage. On the other hand, Elyvilon will put you "
+                     "under penance should you be praying and attack a "
+                     "being which is neither evil nor undead. "
+                     EOL EOL
+                     "You can use your divine healing abilities on "
+                     "monsters. This may turn hostile ones neutral, "
+                     "temporarily or permanently. Neutralising works "
+                     "better on natural beasts and worse on demons and "
+                     "undead. If the neutralisation does not succeed, the "
+                     "Magic will be spent, but the monster will not be "
+                     "healed. If you manage to neutralise the monster, you "
+                     "gain piety and the monster is healed. Should a "
+                     "monster become permanently neutral, then you gain "
+                     "half of its experience value and the monster tries "
+                     "to leave the level as quickly as possible (and "
+                     "vanishes thereafter).";
+            break;
+
+        case GOD_NEMELEX_XOBEH:
+            if (which_god == you.religion)
+            {
+                broken = "The piety increase when sacrificing mostly depends "
+                         "on the value of the item. To prevent items from "
+                         "being accidentally sacrificed, you can "
+                         "<w>i</w>nscribe them with <w>!p</w> (protects the "
+                         "whole stack), with <w>=p</w> (protects only the "
+                         "item), or with <w>!D</w> (causes item to be ignored "
+                         "in sacrifices)."
+                         EOL EOL
+                         "Nemelex Xobeh gifts various types of decks of cards. "
+                         "Each deck type comes in three power levels: common, "
+                         "ornate, legendary. The latter contain very powerful "
+                         "card effects, potentially hazardous. High piety and "
+                         "Evocations skill help here, as the power of Nemelex' "
+                         "abilities is governed by Evocations instead of "
+                         "Invocations."
+                         EOL
+                         "The type of the deck gifts strongly depends on the "
+                         "dominating item class sacrificed:" EOL
+                         "  decks of Escape      -- armour" EOL
+                         "  decks of Destruction -- weapons and ammunition" EOL
+                         "  decks of Dungeons    -- jewellery, books, "
+                                                    "miscellaneous items" EOL
+                         "  decks of Summoning   -- corpses" EOL
+                         "  decks of Wonders     -- consumables: potions, "
+                                                    "scrolls, wands" EOL;
+            }
+        default:
+            break;
+        }
+
+        if (!broken.empty())
+        {
+            cprintf(EOL);
+            cprintf(EOL);
+            linebreak_string2(broken, width);
+            formatted_string::parse_block(broken, false).display();
+        }
     }
 
     const int bottom_line = std::min(30, get_number_of_lines());

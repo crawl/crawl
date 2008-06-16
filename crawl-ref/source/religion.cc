@@ -490,12 +490,18 @@ std::string print_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_NEMELEX_XOBEH:
-        likes.push_back("draw unmarked cards and use up decks");
+        snprintf(info, INFO_SIZE, "draw unmarked cards and use up decks%s",
+                 verbose ? " (by <w>w</w>ielding and e<w>v</w>oking them)"
+                         : "");
+
+        likes.push_back(info);
         break;
 
     case GOD_ELYVILON:
         snprintf(info, INFO_SIZE, "destroy weapons (especially evil ones)%s",
-                 verbose ? "via the <w>a</w> command" : "");
+                 verbose ? " via the <w>a</w> command (inscribe items with "
+                           "<w>!D</w> to prevent their accidental destruction)"
+                         : "");
 
         likes.push_back(info);
         break;
@@ -517,7 +523,6 @@ std::string print_god_likes(god_type which_god, bool verbose)
     case GOD_NEMELEX_XOBEH:
         snprintf(info, INFO_SIZE, "sacrifice items%s",
                  verbose ? " (by standing over them and praying)" : "");
-
         likes.push_back(info);
         break;
 
@@ -533,7 +538,12 @@ std::string print_god_likes(god_type which_god, bool verbose)
     }
 
     if (god_likes_butchery(which_god))
-        likes.push_back("butcher corpses while praying");
+    {
+        snprintf(info, INFO_SIZE, "butcher corpses while praying%s",
+                 verbose ? " (press <w>pc</w> to do so)" : "");
+
+        likes.push_back(info);
+    }
 
     switch (which_god)
     {
