@@ -1351,7 +1351,7 @@ static bool _jelly_divide(monsters * parent)
     {
         child = &menv[k];
 
-        if (child->type == -1)
+        if (!child->alive())
             break;
         else if (k == MAX_MONSTERS - 1)
             return (false);
@@ -1955,7 +1955,7 @@ void mons_get_damage_level( const monsters* monster, std::string& desc,
 
 void print_wounds(const monsters *monster)
 {
-    if (monster->type == -1)
+    if (!monster->alive())
         return;
 
     if (monster->hit_points == monster->max_hit_points
@@ -3780,7 +3780,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         {
             monsters *targ = &menv[i];
 
-            if (targ->type == -1 || targ->type == NON_MONSTER)
+            if (!targ->alive() || targ->type == NON_MONSTER)
                 continue;
 
             if (distance( monster->x, monster->y, targ->x, targ->y ) >= 5)
@@ -5566,7 +5566,7 @@ static void _handle_monster_move(int i, monsters *monster)
         // giant spores and ball lightning exploding at the end of the
         // function, but do return if the monster's data has been
         // reset, since then the monster type is invalid.
-        if (monster->type == -1)
+        if (!monster->alive())
             return;
         if (monster->hit_points < 1)
             break;
@@ -5640,7 +5640,7 @@ static void _handle_monster_move(int i, monsters *monster)
                 break;
             }
 
-            if (monster->type == -1)
+            if (!monster->alive())
             {
                 monster->speed_increment -= entry->energy_usage.move;
                 break;  // problem with vortices
@@ -5648,7 +5648,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
             _mons_in_cloud(monster);
 
-            if (monster->type == -1)
+            if (!monster->alive())
             {
                 monster->speed_increment = 1;
                 break;
@@ -6009,7 +6009,7 @@ void handle_monsters(void)
     {
         monsters *monster = &menv[i];
 
-        if (monster->type == -1 || immobile_monster[i])
+        if (!monster->alive() || immobile_monster[i])
             continue;
 
         const int mx = monster->x, my = monster->y;
