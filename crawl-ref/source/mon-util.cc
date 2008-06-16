@@ -1993,7 +1993,7 @@ mon_intel_type mons_intel(int mc)
 habitat_type mons_habitat_by_type(int mc)
 {
     const monsterentry *me = get_monster_data(mc);
-    return (me? me->habitat : HT_LAND);
+    return (me ? me->habitat : HT_LAND);
 }
 
 habitat_type mons_habitat(const monsters *m)

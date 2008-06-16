@@ -1732,14 +1732,10 @@ int halo_radius()
     if (you.religion == GOD_SHINING_ONE && you.piety >= piety_breakpoint(0)
         && !you.penance[GOD_SHINING_ONE])
     {
-        int radius = you.piety / 20;
-        if (radius > 8)
-            radius = 8;
-
-        return radius;
+        return std::min(8, you.piety / 20);
     }
-    else
-        return 0;
+
+    return 0;
 }
 
 bool inside_halo(int posx, int posy)
