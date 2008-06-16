@@ -4986,7 +4986,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
             {
                 // The player's out of sight!
                 // Quick, let's take a turn to heal ourselves. -- bwr
-                spell_cast = monster->has_spell(SPELL_GREATER_HEALING)?
+                spell_cast = monster->has_spell(SPELL_GREATER_HEALING) ?
                              SPELL_GREATER_HEALING : SPELL_LESSER_HEALING;
                 finalAnswer = true;
             }
