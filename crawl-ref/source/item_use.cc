@@ -3534,7 +3534,7 @@ void prompt_inscribe_item()
         return;
     }
 
-    inscribe_item(you.inv[item_slot]);
+    inscribe_item(you.inv[item_slot], true);
 }
 
 void drink( int slot )

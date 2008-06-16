@@ -3475,7 +3475,7 @@ void tutorial_describe_item(const item_def &item)
     formatted_string::parse_block(broken, false).display();
 }        // tutorial_describe_item()
 
-void tutorial_inscription_info(bool autoinscribe)
+void tutorial_inscription_info(bool autoinscribe, std::string prompt)
 {
     // Don't print anything if there's not enough space.
     if (wherey() >= get_number_of_lines() - 1)
@@ -3500,8 +3500,7 @@ void tutorial_inscription_info(bool autoinscribe)
     {
         text << EOL
          "Artefacts can be autoinscribed to give a brief overview of their " EOL
-         "known properties. Here, doing a <w>left mouse click</w> will autoinscribe " EOL
-         "this item.";
+         "known properties.";
 
         longtext = true;
     }
@@ -3511,20 +3510,9 @@ void tutorial_inscription_info(bool autoinscribe)
 
     formatted_string::parse_string(text.str()).display();
 
-    if (longtext && wherey() <= get_number_of_lines() - 2)
-    {
-        if (autoinscribe)
-        {
-            formatted_string::parse_string(
-                "<cyan>So, do you wish to inscribe this item? "
-                "('a' to autoinscribe) ").display();
-        }
-        else
-        {
-            formatted_string::parse_string(
-                "<cyan>So, do you wish to inscribe this item? ").display();
-        }
-    }
+    // Ask a second time, if it's been a longish interruption.
+    if (longtext && !prompt.empty() && wherey() <= get_number_of_lines() - 2)
+        formatted_string::parse_string(prompt).display();
 }
 
 bool tutorial_pos_interesting(int x, int y)

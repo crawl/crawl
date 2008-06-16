@@ -1916,83 +1916,65 @@ void describe_item( item_def &item, bool allow_inscribe )
     if (allow_inscribe && wherey() <= get_number_of_lines() - 3)
     {
         cgotoxy(1, wherey() + 2);
-
-        std::string ainscrip;
-
-        if (is_random_artefact(item))
-            ainscrip = _randart_auto_inscription(item);
-
-        // Only allow autoinscription if we don't have all the text
-        // already.
-        const bool allow_autoinscribe =
-            is_random_artefact(item)
-            && !ainscrip.empty()
-            && item.inscription.find(ainscrip) == std::string::npos;
-
-        if (allow_autoinscribe)
-        {
-            formatted_string::parse_string(
-                "<cyan>Do you wish to inscribe this item? "
-                "('a' to autoinscribe) ").display();
-        }
-        else
-        {
-            formatted_string::parse_string(
-                "<cyan>Do you wish to inscribe this item? ").display();
-        }
-
-        if (Options.tutorial_left && wherey() <= get_number_of_lines() - 5)
-            tutorial_inscription_info(allow_autoinscribe);
-
-#ifdef USE_TILE
-        const int keyin = getch_ck();
-        if (toupper(keyin) == 'Y')
-#else
-        const int keyin = getch();
-        if (toupper(keyin) == 'Y')
-#endif
-        {
-            char buf[79];
-            cprintf("\nInscribe with what? ");
-            if (!cancelable_get_line(buf, sizeof buf))
-            {
-                item.inscription = buf;
-            }
-        }
-        else if (allow_autoinscribe
-                 && (toupper(keyin) == 'A' || keyin == CK_MOUSE_B1))
-        {
-            // Remove previous randart inscription
-            _trim_randart_inscrip(item);
-
-            if (!item.inscription.empty())
-                item.inscription += ", ";
-
-            item.inscription += ainscrip;
-        }
+        inscribe_item(item, false);
     }
-    else if (getch() == 0)
-        getch();
 }
 
-void inscribe_item(item_def &item)
+// There are currently two ways to inscribe an item:
+// * using the inscribe command ('{') -> proper_prompt = true
+// * from the inventory when viewing an item -> proper_prompt = false
+//
+// Thus, proper_prompt also controls whether a tutorial explanation can be
+// shown, or whether the pre- and post-inscription item names need to be
+// printed.
+void inscribe_item(item_def &item, bool proper_prompt)
 {
-    mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
+    if (proper_prompt)
+        mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
 
+    const bool is_inscribed = !item.inscription.empty();
     std::string ainscrip;
-
-    if (is_random_artefact(item))
-        ainscrip = _randart_auto_inscription(item);
 
     // Only allow autoinscription if we don't have all the text
     // already.
-    const bool autoinscribe =
-            is_random_artefact(item)
-            && !ainscrip.empty()
-            && item.inscription.find(ainscrip) == std::string::npos;
+    bool need_autoinscribe = false;
+    if (is_random_artefact(item))
+    {
+        ainscrip = _randart_auto_inscription(item);
+        if (!ainscrip.empty()
+            && (!is_inscribed
+                || item.inscription.find(ainscrip) == std::string::npos))
+        {
+            need_autoinscribe = true;
+        }
+    }
 
-    mprf( MSGCH_PROMPT, "Inscribe with what%s? ",
-          autoinscribe ? " ('a' to autoinscribe)" : "" );
+    std::string prompt = (is_inscribed ? "Add what to inscription? "
+                                       : "Inscribe with what? ");
+    if (need_autoinscribe || is_inscribed)
+    {
+        prompt += "(You may also ";
+        if (need_autoinscribe)
+        {
+            prompt += "(a)utoinscribe";
+            if (is_inscribed)
+                prompt += " or ";
+        }
+        if (is_inscribed)
+            prompt += "(c)lear it";
+        prompt += ".) ";
+    }
+
+    if (proper_prompt)
+        mpr(prompt.c_str(), MSGCH_PROMPT);
+    else
+    {
+        prompt = "<cyan>" + prompt + "</cyan>";
+        formatted_string::parse_string(prompt).display();
+
+        if (Options.tutorial_left  && wherey() <= get_number_of_lines() - 5)
+            tutorial_inscription_info(need_autoinscribe, prompt);
+    }
 
     char buf[79];
     if (!cancelable_get_line(buf, sizeof buf))
@@ -2006,7 +1988,8 @@ void inscribe_item(item_def &item)
                 break;
         }
 
-        if (autoinscribe && buf[1] == 0 && (buf[0] == 'a' || buf[0] == 'A'))
+        if (need_autoinscribe && buf[1] == 0
+            && (buf[0] == 'a' || buf[0] == 'A'))
         {
             // Remove previous randart inscription
             _trim_randart_inscrip(item);
@@ -2016,16 +1999,27 @@ void inscribe_item(item_def &item)
 
             item.inscription += ainscrip;
         }
-        else
-            item.inscription = std::string(buf);
+        else if (is_inscribed && buf[1] == 0
+                 && (buf[0] == 'c' || buf[0] == 'C'))
+        {
+            item.inscription.clear();
+        }
+        else if (strlen(buf) > 0)
+        {
+            if (is_inscribed)
+                item.inscription += ", ";
 
-        mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
-        you.wield_change  = true;
+            item.inscription += std::string(buf);
+        }
+
+        if (proper_prompt)
+        {
+            mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
+            you.wield_change  = true;
+        }
     }
-    else
-    {
+    else if (proper_prompt)
         canned_msg(MSG_OK);
-    }
 }
 //---------------------------------------------------------------
 //

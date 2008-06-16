@@ -48,7 +48,7 @@ void print_tut_skills_info(void);
 
 // Additional information for tutorial players.
 void tutorial_describe_item(const item_def &item);
-void tutorial_inscription_info(bool autoinscribe);
+void tutorial_inscription_info(bool autoinscribe, std::string prompt);
 bool tutorial_pos_interesting(int x, int y);
 void tutorial_describe_pos(int x, int y);
 bool tutorial_feat_interesting(dungeon_feature_type feat);

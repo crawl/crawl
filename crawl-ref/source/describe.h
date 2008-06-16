@@ -61,7 +61,7 @@ void describe_feature_wide(int x, int y);
  * called from: item_use - shopping
  * *********************************************************************** */
 void describe_item( item_def &item, bool allow_inscribe = false );
-void inscribe_item( item_def &item );
+void inscribe_item( item_def &item, bool proper_prompt );
 
 // last updated 12 Jun 2008 {jpeg}
 /* ***********************************************************************
