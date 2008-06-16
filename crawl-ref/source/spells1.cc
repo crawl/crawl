@@ -693,8 +693,7 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
     monsters *monster = &menv[mgr];
 
     // don't heal monster you can't pacify
-    if (you.religion == GOD_ELYVILON && _mons_hostile(monster)
-        && !_can_pacify_monster(monster, healed))
+    if (you.religion == GOD_ELYVILON && !_can_pacify_monster(monster, healed))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return -1;

@@ -62,9 +62,9 @@ static void _finish_delay(const delay_queue_item &delay);
 static bool _recite_mons_useless(const monsters *mon)
 {
     return (mons_intel(mon->type) < I_NORMAL
-            || mons_friendly(mon)
             || mons_is_fleeing(mon)
             || mons_is_sleeping(mon)
+            || mons_wont_attack(mon)
             || mons_neutral(mon)
             || mons_is_confused(mon)
             || mons_is_paralysed(mon)
