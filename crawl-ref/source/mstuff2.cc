@@ -2363,7 +2363,7 @@ bool silver_statue_effects(monsters *mons)
             mgen_data(
                 summon_any_demon((coinflip() ? DEMON_COMMON
                                              : DEMON_LESSER)),
-                BEH_HOSTILE, 5, you.pos(), MHITYOU ));
+                BEH_HOSTILE, 5, you.pos(), MHITYOU));
         return (true);
     }
     return (false);

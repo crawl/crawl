@@ -4085,8 +4085,8 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
 
             if (itype == OBJ_WEAPONS || itype == OBJ_MISSILES)
             {
-                // Fleeing monster only pick up emergency equipment.
-                if (behaviour == BEH_FLEE)
+                // Fleeing monsters only pick up emergency equipment.
+                if (mons_is_fleeing(this))
                     return (false);
 
                 // While occupied, hostile monsters won't pick up items
@@ -5532,7 +5532,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_HELD:
     {
         if (mons_is_stationary(this) || mons_cannot_act(this)
-            || this->behaviour == BEH_SLEEP)
+            || mons_is_sleeping(this))
         {
             break;
         }

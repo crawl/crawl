@@ -255,7 +255,7 @@ bool mons_speaks(const monsters *monster)
     else
         prefixes.push_back("hostile");
 
-    if (monster->behaviour == BEH_FLEE)
+    if (mons_is_fleeing(monster))
         prefixes.push_back("fleeing");
 
     bool silence = silenced(you.x_pos, you.y_pos);

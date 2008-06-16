@@ -982,10 +982,10 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 // Don't allow 0-headed hydras to become spectral hydras.
                 if ((spectre != MONS_HYDRA || monster->number != 0)
                     && create_monster(
-                        mgen_data( MONS_SPECTRAL_THING, BEH_FRIENDLY,
-                                   0, monster->pos(), you.pet_target,
-                                   0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                                   spectre, monster->number )) != -1)
+                        mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY,
+                                  0, monster->pos(), you.pet_target,
+                                  0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
+                                  spectre, monster->number)) != -1)
                 {
                     if (death_message)
                         mpr("A glowing mist starts to gather...");
@@ -2051,7 +2051,7 @@ void behaviour_event( monsters *mon, int event, int src,
 
             mon->foe = src;
 
-            if (mon->behaviour != BEH_CORNERED)
+            if (!mons_is_cornered(mon))
                 mon->behaviour = BEH_SEEK;
 
             if (src == MHITYOU)
@@ -4980,7 +4980,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                              SPELL_GREATER_HEALING : SPELL_LESSER_HEALING;
                 finalAnswer = true;
             }
-            else if (monster->behaviour == BEH_FLEE)
+            else if (mons_is_fleeing(monster))
             {
                 // Since the player isn't around, we'll extend the monster's
                 // normal fleeing choices to include the self-enchant slot.
@@ -5024,8 +5024,8 @@ static bool _handle_spell( monsters *monster, bolt & beem )
             // get here... even if the monster is on its last HP.  That
             // way we don't have to worry about monsters infinitely casting
             // Healing on themselves (e.g. orc high priests).
-            if (monster->behaviour == BEH_FLEE
-                && ms_low_hitpoint_cast( monster, hspell_pass[5] ))
+            if (mons_is_fleeing(monster)
+                && ms_low_hitpoint_cast(monster, hspell_pass[5]))
             {
                 spell_cast = hspell_pass[5];
                 finalAnswer = true;
@@ -5086,7 +5086,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
 
                 // Setup spell - fleeing monsters will always try to
                 // choose their emergency spell.
-                if (monster->behaviour == BEH_FLEE)
+                if (mons_is_fleeing(monster))
                 {
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
                                                    : hspell_pass[5]);
@@ -5590,7 +5590,7 @@ static void _handle_monster_move(int i, monsters *monster)
     // hit and run. -- bwr
     if (monster->foe != MHITNOT
         && monster->behaviour == BEH_WANDER
-        && testbits( monster->flags, MF_BATTY ))
+        && mons_is_batty(monster))
     {
         monster->behaviour = BEH_SEEK;
     }
@@ -7070,8 +7070,8 @@ static bool _monster_move(monsters *monster)
                 }
                 else
                 {
-                    dist[i] = (monster->behaviour == BEH_FLEE) ? (-FAR_AWAY)
-                                                               : FAR_AWAY;
+                    dist[i] = (mons_is_fleeing(monster)) ? (-FAR_AWAY)
+                                                         : FAR_AWAY;
                 }
             }
 
