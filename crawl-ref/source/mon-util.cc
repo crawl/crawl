@@ -3076,12 +3076,12 @@ int monsters::damage_brand(int which_attack)
             return (SPWPN_NORMAL);
     }
 
-    return (!is_range_weapon(*mweap)? get_weapon_brand(*mweap) : SPWPN_NORMAL);
+    return (!is_range_weapon(*mweap) ? get_weapon_brand(*mweap) : SPWPN_NORMAL);
 }
 
 item_def *monsters::missiles()
 {
-    return (inv[MSLOT_MISSILE] != NON_ITEM? &mitm[inv[MSLOT_MISSILE]] : NULL);
+    return (inv[MSLOT_MISSILE] != NON_ITEM ? &mitm[inv[MSLOT_MISSILE]] : NULL);
 }
 
 int monsters::missile_count()
