@@ -876,20 +876,17 @@ bool animate_a_corpse(int x, int y, corpse_type class_allowed,
 {
     bool success = false;
 
-    int corps = igrd[x][y];
-
-    // This searches all the items on the ground for a corpse.
-    while (corps != NON_ITEM)
+    // Search all the items on the ground for a corpse.
+    for (stack_iterator si(igrd[x][y]); si; ++si)
     {
-        const item_def& item = mitm[corps];
-
-        if (_is_animatable_corpse(item)
+        if (_is_animatable_corpse(*si)
             && (class_allowed == CORPSE_BODY
-                || item.sub_type == CORPSE_SKELETON))
+                || si->sub_type == CORPSE_SKELETON))
         {
-            const bool was_butchering = is_being_butchered(item);
+            const bool was_butchering = is_being_butchered(*si);
 
-            success = _raise_corpse(x, y, corps, beha, hitting, god, actual);
+            success = _raise_corpse(x, y, si.link(), beha, hitting, god,
+                                    actual);
 
             if (actual && success)
             {
@@ -907,8 +904,6 @@ bool animate_a_corpse(int x, int y, corpse_type class_allowed,
             }
             break;
         }
-
-        corps = item.link;
     }
 
     return (success);
@@ -963,31 +958,22 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
             if (!in_bounds(a) || !see_grid(los, c, a))
                 continue;
 
-            int corps = igrd(a);
-
-            if (corps != NON_ITEM)
+            // Search all the items on the ground for a corpse.  Only
+            // one of a stack will be raised.
+            for (stack_iterator si(a); si; ++si)
             {
-                // This searches all the items on the ground for a
-                // corpse.  Only one of a stack will be raised.
-                while (corps != NON_ITEM)
+                if (is_being_butchered(*si, false))
+                    was_butchering = true;
+
+                if (animate_a_corpse(a.x, a.y, CORPSE_BODY, beha,
+                                     hitting, god, actual, true))
                 {
-                    const item_def& item = mitm[corps];
+                    number_raised++;
 
-                    if (is_being_butchered(item, false))
-                        was_butchering = true;
+                    if (see_grid(env.show, you.pos(), a))
+                         number_seen++;
 
-                    if (animate_a_corpse(a.x, a.y, CORPSE_BODY, beha,
-                                         hitting, god, actual, true))
-                    {
-                        number_raised++;
-
-                        if (see_grid(env.show, you.pos(), a))
-                            number_seen++;
-
-                        break;
-                    }
-
-                    corps = item.link;
+                    break;
                 }
             }
         }
