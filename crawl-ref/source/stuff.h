@@ -60,6 +60,7 @@ public:
 
     operator bool() const;
     item_def& operator *() const;
+    item_def* operator->() const;
     int link() const;
 
     const stack_iterator& operator ++ ();
@@ -81,6 +82,7 @@ public:
     void reset();
     operator bool() const { return !done(); }
     coord_def operator *() const;
+    const coord_def* operator->() const;
 
     const radius_iterator& operator ++ ();
     const radius_iterator& operator -- ();

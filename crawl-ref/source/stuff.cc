@@ -106,6 +106,12 @@ item_def& stack_iterator::operator*() const
     return mitm[cur_link];
 }
 
+item_def* stack_iterator::operator->() const
+{
+    ASSERT( cur_link != NON_ITEM );
+    return &mitm[cur_link];
+}
+
 int stack_iterator::link() const
 {
     return cur_link;
@@ -155,6 +161,11 @@ bool radius_iterator::done() const
 coord_def radius_iterator::operator *() const
 {
     return location;
+}
+
+const coord_def* radius_iterator::operator->() const
+{
+    return &location;
 }
 
 void radius_iterator::step()

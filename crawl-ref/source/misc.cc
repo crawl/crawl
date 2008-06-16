@@ -2368,9 +2368,7 @@ void get_playervisible_monsters(std::vector<monsters*> &mons,
         range = LOS_RADIUS;
 
     // Sweep every square within range.
-    radius_iterator ri(you.pos(), range);
-
-    for ( ; ri; ++ri )
+    for ( radius_iterator ri(you.pos(), range); ri; ++ri )
     {
         const unsigned short targ_monst = env.mgrid(*ri);
         if (targ_monst != NON_MONSTER)
