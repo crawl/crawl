@@ -2043,11 +2043,8 @@ bool mons_aligned(int m1, int m2)
 
 bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2)
 {
-    if (fr1 == ATT_GOOD_NEUTRAL)
-        fr1 = ATT_FRIENDLY;
-
-    if (fr2 == ATT_GOOD_NEUTRAL)
-        fr2 = ATT_FRIENDLY;
+    if (mons_att_wont_attack(fr1) && mons_att_wont_attack(fr2))
+        return (true);
 
     return (fr1 == fr2);
 }
