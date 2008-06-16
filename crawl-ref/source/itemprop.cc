@@ -1327,16 +1327,16 @@ bool check_armour_shape( const item_def &item, bool quiet )
 // If known is true, only returns true for *known* weapons of electrocution.
 bool item_is_rechargable(const item_def &it, bool known)
 {
-    // These are obvious
+    // These are obvious...
     if (it.base_type == OBJ_WANDS || item_is_rod(it))
         return (true);
 
-    // ... but electro-weapons can also be charged
-    return ( it.base_type == OBJ_WEAPONS
-             && !is_random_artefact(it)
-             && !is_fixed_artefact(it)
-             && get_weapon_brand(it) == SPWPN_ELECTROCUTION
-             && (!known || item_type_known(it)) );
+    // ...but electric weapons can also be charged.
+    return (it.base_type == OBJ_WEAPONS
+            && !is_random_artefact(it)
+            && !is_fixed_artefact(it)
+            && get_weapon_brand(it) == SPWPN_ELECTROCUTION
+            && (!known || item_type_known(it)));
 }
 
 bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
@@ -1344,20 +1344,18 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
     if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES)
         return (false);
 
-    // Artefacts cannot be enchanted (missiles can't be artefacts).
-    if (wpn.base_type == OBJ_WEAPONS
-        && (is_fixed_artefact(wpn)
-            || is_random_artefact(wpn)))
+    // Artefacts or highly enchanted weapons cannot be enchanted, only
+    // uncursed.
+    if (wpn.base_type == OBJ_WEAPONS)
     {
-        return (uncurse && item_cursed( wpn )); // ?EW may uncurse artefacts.
+        if (is_artefact(wpn) || wpn.plus >= 9 && wpn.plus2 >= 9)
+            return (uncurse && item_cursed(wpn));
     }
-
-    // Nor can highly enchanted items (missiles only have one stat).
-    if (wpn.plus >= 9
-        || wpn.base_type == OBJ_WEAPONS && wpn.plus2 >= 9)
-    {
-        return (uncurse && item_cursed( wpn )); // ?EW may uncurse items.
-    }
+    // Highly enchanted missiles, which have only one stat, cannot be
+    // enchanted or uncursed, since missiles cannot be artefacts or
+    // cursed.
+    else if (wpn.plus >= 9)
+        return (false);
 
     return (true);
 }
@@ -1367,19 +1365,13 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse)
     if (arm.base_type != OBJ_ARMOUR)
         return (false);
 
-    // Artefacts cannot be enchanted.
-    if (is_fixed_artefact(arm)
-        || is_random_artefact(arm))
-    {
-        return (uncurse && item_cursed(arm)); // ?EA may uncurse artefacts.
-    }
-
-    // Nor can highly enchanted items.
-    if (arm.plus >= 2
+    // Artefacts or highly enchanted armour cannot be enchanted, only
+    // uncursed.
+    if (is_artefact(arm) || (arm.plus >= 2
         && (arm.sub_type >= ARM_CLOAK && arm.sub_type <= ARM_BOOTS
-            || is_shield(arm)))
+            || is_shield(arm))))
     {
-        return (uncurse && item_cursed(arm)); // ?EA may uncurse items.
+        return (uncurse && item_cursed(arm));
     }
 
     return (true);
