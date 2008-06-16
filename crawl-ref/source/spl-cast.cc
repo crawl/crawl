@@ -1510,7 +1510,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_ANIMATE_SKELETON:
         mpr("You attempt to give life to the dead...");
-        animate_a_corpse(you.x_pos, you.y_pos, CORPSE_SKELETON, BEH_FRIENDLY,
+        animate_a_corpse(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
                          you.pet_target, god);
         break;
 

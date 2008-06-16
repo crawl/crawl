@@ -805,7 +805,7 @@ static void _equip_undead(int x, int y, int corps, int monster, int monnum)
 #endif
 }
 
-static bool _raise_corpse(int x, int y, int corps, beh_type beha,
+static bool _raise_corpse(const coord_def &a, int corps, beh_type beha,
                           unsigned short hitting, god_type god, bool actual)
 {
     const item_def& item = mitm[corps];
@@ -841,7 +841,7 @@ static bool _raise_corpse(int x, int y, int corps, beh_type beha,
 
     const int monster = create_monster(
                             mgen_data(mon, beha, 0,
-                                      coord_def(x, y), hitting,
+                                      a, hitting,
                                       0, god,
                                       zombie_type, number));
 
@@ -859,7 +859,7 @@ static bool _raise_corpse(int x, int y, int corps, beh_type beha,
                 menv[monster].mname = "Blork";
         }
 
-        _equip_undead(x, y, corps, monster, monnum);
+        _equip_undead(a.x, a.y, corps, monster, monnum);
 
         destroy_item(corps);
 
@@ -869,7 +869,7 @@ static bool _raise_corpse(int x, int y, int corps, beh_type beha,
     return (false);
 }
 
-bool animate_a_corpse(int x, int y, corpse_type class_allowed,
+bool animate_a_corpse(const coord_def &a, corpse_type class_allowed,
                       beh_type beha, unsigned short hitting,
                       god_type god, bool actual,
                       bool quiet)
@@ -877,7 +877,7 @@ bool animate_a_corpse(int x, int y, corpse_type class_allowed,
     bool success = false;
 
     // Search all the items on the ground for a corpse.
-    for (stack_iterator si(igrd[x][y]); si; ++si)
+    for (stack_iterator si(a); si; ++si)
     {
         if (_is_animatable_corpse(*si)
             && (class_allowed == CORPSE_BODY
@@ -885,8 +885,7 @@ bool animate_a_corpse(int x, int y, corpse_type class_allowed,
         {
             const bool was_butchering = is_being_butchered(*si);
 
-            success = _raise_corpse(x, y, si.link(), beha, hitting, god,
-                                    actual);
+            success = _raise_corpse(a, si.link(), beha, hitting, god, actual);
 
             if (actual && success)
             {
@@ -895,7 +894,7 @@ bool animate_a_corpse(int x, int y, corpse_type class_allowed,
                     if (was_butchering)
                         mpr("The corpse you are butchering rises to attack!");
 
-                    if (is_terrain_seen(x, y))
+                    if (is_terrain_seen(a))
                         mpr("The dead are walking!");
                 }
 
@@ -965,8 +964,8 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                 if (is_being_butchered(*si, false))
                     was_butchering = true;
 
-                if (animate_a_corpse(a.x, a.y, CORPSE_BODY, beha,
-                                     hitting, god, actual, true))
+                if (animate_a_corpse(a, CORPSE_BODY, beha, hitting, god,
+                                     actual, true))
                 {
                     number_raised++;
 
