@@ -1400,11 +1400,11 @@ void alert_nearby_monsters(void)
         // alert monsters that aren't sleeping.  For cases where an
         // event should wake up monsters and alert them, I'd suggest
         // calling noisy() before calling this function. -- bwr
-        if (monster->type != -1
-            && monster->behaviour != BEH_SLEEP
-            && mons_near(monster))
+        if (monster->alive()
+            && mons_near(monster)
+            && !mons_is_sleeping(monster))
         {
-            behaviour_event( monster, ME_ALERT, MHITYOU );
+            behaviour_event(monster, ME_ALERT, MHITYOU);
         }
     }
 }
@@ -1834,7 +1834,7 @@ bool swap_places(monsters *monster)
 
     const int mgrid = grd[monster->x][monster->y];
 
-    if (monster->has_ench(ENCH_HELD))
+    if (mons_is_caught(monster))
     {
         simple_monster_message(monster, " is held in a net!");
         return (false);
@@ -2017,7 +2017,7 @@ void behaviour_event( monsters *mon, int event, int src,
     {
     case ME_DISTURB:
         // Assumes disturbed by noise...
-        if (mon->behaviour == BEH_SLEEP)
+        if (mons_is_sleeping(mon))
             mon->behaviour = BEH_WANDER;
 
         // A bit of code to make Project Noise actually do
@@ -3599,8 +3599,8 @@ static void _make_mons_stop_fleeing(monsters *mon)
 //---------------------------------------------------------------
 static void _handle_nearby_ability(monsters *monster)
 {
-    if (!mons_near( monster )
-        || monster->behaviour == BEH_SLEEP
+    if (!mons_near(monster)
+        || mons_is_sleeping(monster)
         || monster->has_ench(ENCH_SUBMERGED))
     {
         return;
@@ -3673,7 +3673,7 @@ static void _handle_nearby_ability(monsters *monster)
     case MONS_GIANT_EYEBALL:
         if (coinflip() && !mons_friendly(monster)
             && monster->behaviour != BEH_WANDER
-            && monster->behaviour != BEH_FLEE)
+            && mons_is_fleeing(monster))
         {
             simple_monster_message(monster, " stares at you.");
 
@@ -3725,8 +3725,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                                   ? draco_subspecies( monster )
                                   : static_cast<monster_type>( monster->type );
 
-    if (!mons_near( monster )
-        || monster->behaviour == BEH_SLEEP
+    if (!mons_near(monster)
+        || mons_is_sleeping(monster)
         || monster->has_ench(ENCH_SUBMERGED))
     {
         return (false);
@@ -4136,7 +4136,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         // Won't sing if either of you silenced, or it's friendly,
         // confused or fleeing.
         if (monster->has_ench(ENCH_CONFUSION)
-            || monster->behaviour == BEH_FLEE
+            || mons_is_fleeing(monster)
             || mons_friendly(monster)
             || silenced(monster->x, monster->y)
             || silenced(you.x_pos, you.y_pos))
@@ -4228,7 +4228,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 
 //---------------------------------------------------------------
 //
-// handle_potion
+// _handle_potion
 //
 // Give the monster a chance to quaff a potion. Returns true if
 // the monster imbibed.
@@ -4237,120 +4237,117 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 static bool _handle_potion(monsters *monster, bolt & beem)
 {
     // Yes, there is a logic to this ordering {dlb}:
-    if (monster->behaviour == BEH_SLEEP)
-        return (false);
-    else if (monster->inv[MSLOT_POTION] == NON_ITEM)
-        return (false);
-    else if (!one_chance_in(3))
-        return (false);
-    else
+    if (mons_is_sleeping(monster)
+        || monster->inv[MSLOT_POTION] == NON_ITEM
+        || !one_chance_in(3))
     {
-        bool                    imbibed     = false;
-        item_type_id_state_type ident       = ID_UNKNOWN_TYPE;
-        bool                    was_visible =
-            mons_near(monster) && player_monster_visible(monster);
+        return (false);
+    }
 
-        const int potion_type = mitm[monster->inv[MSLOT_POTION]].sub_type;
-        switch (potion_type)
+    bool                    imbibed     = false;
+    item_type_id_state_type ident       = ID_UNKNOWN_TYPE;
+    bool                    was_visible =
+        mons_near(monster) && player_monster_visible(monster);
+
+    const int potion_type = mitm[monster->inv[MSLOT_POTION]].sub_type;
+    switch (potion_type)
+    {
+    case POT_HEALING:
+    case POT_HEAL_WOUNDS:
+        if (monster->hit_points <= monster->max_hit_points / 2
+            && mons_holiness(monster) != MH_UNDEAD
+            && mons_holiness(monster) != MH_NONLIVING
+            && mons_holiness(monster) != MH_PLANT)
         {
-        case POT_HEALING:
-        case POT_HEAL_WOUNDS:
-            if (monster->hit_points <= monster->max_hit_points / 2
-                && mons_holiness(monster) != MH_UNDEAD
-                && mons_holiness(monster) != MH_NONLIVING
-                && mons_holiness(monster) != MH_PLANT)
+            simple_monster_message(monster, " drinks a potion.");
+
+            if (heal_monster(monster, 5 + random2(7), false))
             {
-                simple_monster_message(monster, " drinks a potion.");
-
-                if (heal_monster(monster, 5 + random2(7), false))
-                {
-                    simple_monster_message(monster, " is healed!");
-                    ident = ID_MON_TRIED_TYPE;
-                }
-
-                if (mitm[monster->inv[MSLOT_POTION]].sub_type
-                                                    == POT_HEAL_WOUNDS)
-                {
-                    heal_monster(monster, 10 + random2avg(28, 3), false);
-                }
-
-                if (potion_type == POT_HEALING)
-                {
-                    monster->del_ench(ENCH_POISON);
-                    monster->del_ench(ENCH_SICK);
-                    if (monster->del_ench(ENCH_CONFUSION))
-                        ident = ID_KNOWN_TYPE;
-                    if (monster->del_ench(ENCH_ROT))
-                        ident = ID_KNOWN_TYPE;
-                }
-
-                imbibed = true;
+                simple_monster_message(monster, " is healed!");
+                ident = ID_MON_TRIED_TYPE;
             }
+
+            if (mitm[monster->inv[MSLOT_POTION]].sub_type == POT_HEAL_WOUNDS)
+            {
+                heal_monster(monster, 10 + random2avg(28, 3), false);
+            }
+
+            if (potion_type == POT_HEALING)
+            {
+                monster->del_ench(ENCH_POISON);
+                monster->del_ench(ENCH_SICK);
+                if (monster->del_ench(ENCH_CONFUSION))
+                    ident = ID_KNOWN_TYPE;
+                if (monster->del_ench(ENCH_ROT))
+                    ident = ID_KNOWN_TYPE;
+            }
+
+            imbibed = true;
+        }
+        break;
+
+    case POT_BLOOD:
+    case POT_BLOOD_COAGULATED:
+        if (mons_species(monster->type) == MONS_VAMPIRE
+            && monster->hit_points <= monster->max_hit_points / 2)
+        {
+            simple_monster_message(monster, " drinks a potion.");
+
+            if (heal_monster(monster, 10 + random2avg(28, 3), false))
+            {
+                simple_monster_message(monster, " is healed!");
+                ident = ID_MON_TRIED_TYPE;
+            }
+
+            imbibed = true;
+        }
+        break;
+
+    case POT_SPEED:
+        // Notice that these are the same odd colours used in
+        // mons_ench_f2() {dlb}
+        if (monster->has_ench(ENCH_HASTE))
             break;
 
-        case POT_BLOOD:
-        case POT_BLOOD_COAGULATED:
-            if (mons_species(monster->type) == MONS_VAMPIRE
-                && monster->hit_points <= monster->max_hit_points / 2)
-            {
-                simple_monster_message(monster, " drinks a potion.");
-
-                if (heal_monster(monster, 10 + random2avg(28, 3), false))
-                {
-                    simple_monster_message(monster, " is healed!");
-                    ident = ID_MON_TRIED_TYPE;
-                }
-
-                imbibed = true;
-            }
-            break;
-
-        case POT_SPEED:
-            // Notice that these are the same odd colours used in
-            // mons_ench_f2() {dlb}
-            if (monster->has_ench(ENCH_HASTE))
+        beem.flavour = BEAM_HASTE;
+        // intentional fall through
+    case POT_INVISIBILITY:
+        if (mitm[monster->inv[MSLOT_POTION]].sub_type == POT_INVISIBILITY)
+        {
+            if (monster->has_ench(ENCH_INVIS))
                 break;
 
-            beem.flavour = BEAM_HASTE;
-            // intentional fall through
-        case POT_INVISIBILITY:
-            if (mitm[monster->inv[MSLOT_POTION]].sub_type == POT_INVISIBILITY)
-            {
-                if (monster->has_ench(ENCH_INVIS))
-                    break;
-
-                beem.flavour = BEAM_INVISIBILITY;
-                // Friendly monsters won't go invisible if the player
-                // can't see invisible. We're being nice.
-                if (mons_friendly(monster) && !player_see_invis(false))
-                    break;
-            }
-
-            // Allow monsters to drink these when player in sight. (jpeg)
-            simple_monster_message(monster, " drinks a potion.");
-            mons_ench_f2(monster, beem);
-            imbibed = true;
-            if (beem.obvious_effect)
-                ident = ID_KNOWN_TYPE;
-            break;
+            beem.flavour = BEAM_INVISIBILITY;
+            // Friendly monsters won't go invisible if the player can't
+            // see invisible. We're being nice.
+            if (mons_friendly(monster) && !player_see_invis(false))
+                break;
         }
 
-        if (imbibed)
-        {
-            if (dec_mitm_item_quantity( monster->inv[MSLOT_POTION], 1 ))
-                monster->inv[MSLOT_POTION] = NON_ITEM;
-            else if (is_blood_potion(mitm[monster->inv[MSLOT_POTION]]))
-                remove_oldest_blood_potion(mitm[monster->inv[MSLOT_POTION]]);
-
-            if (ident != ID_UNKNOWN_TYPE && was_visible)
-                set_ident_type(OBJ_POTIONS, potion_type, ident);
-
-            monster->lose_energy(EUT_ITEM);
-        }
-
-        return (imbibed);
+        // Allow monsters to drink these when player in sight. (jpeg)
+        simple_monster_message(monster, " drinks a potion.");
+        mons_ench_f2(monster, beem);
+        imbibed = true;
+        if (beem.obvious_effect)
+            ident = ID_KNOWN_TYPE;
+        break;
     }
-}                               // end handle_potion()
+
+    if (imbibed)
+    {
+        if (dec_mitm_item_quantity( monster->inv[MSLOT_POTION], 1 ))
+            monster->inv[MSLOT_POTION] = NON_ITEM;
+        else if (is_blood_potion(mitm[monster->inv[MSLOT_POTION]]))
+            remove_oldest_blood_potion(mitm[monster->inv[MSLOT_POTION]]);
+
+        if (ident != ID_UNKNOWN_TYPE && was_visible)
+            set_ident_type(OBJ_POTIONS, potion_type, ident);
+
+        monster->lose_energy(EUT_ITEM);
+    }
+
+    return (imbibed);
+}
 
 static bool _handle_reaching(monsters *monster)
 {
@@ -4422,80 +4419,76 @@ static bool _handle_reaching(monsters *monster)
 static bool _handle_scroll(monsters *monster)
 {
     // Yes, there is a logic to this ordering {dlb}:
-    if (monster->has_ench(ENCH_CONFUSION)
-        || monster->behaviour == BEH_SLEEP
-        || monster->has_ench(ENCH_SUBMERGED))
+    if (mons_is_sleeping(monster)
+        || monster->has_ench(ENCH_CONFUSION)
+        || monster->has_ench(ENCH_SUBMERGED)
+        || monster->inv[MSLOT_SCROLL] == NON_ITEM
+        || !one_chance_in(3))
     {
         return (false);
     }
-    else if (monster->inv[MSLOT_SCROLL] == NON_ITEM)
-        return (false);
-    else if (!one_chance_in(3))
-        return (false);
-    else
+
+    bool                    read        = false;
+    item_type_id_state_type ident       = ID_UNKNOWN_TYPE;
+    bool                    was_visible =
+        mons_near(monster) && player_monster_visible(monster);
+
+    // Notice how few cases are actually accounted for here {dlb}:
+    const int scroll_type = mitm[monster->inv[MSLOT_SCROLL]].sub_type;
+    switch (scroll_type)
     {
-        bool                    read        = false;
-        item_type_id_state_type ident       = ID_UNKNOWN_TYPE;
-        bool                    was_visible =
-            mons_near(monster) && player_monster_visible(monster);
-
-        // Notice how few cases are actually accounted for here {dlb}:
-        const int scroll_type = mitm[monster->inv[MSLOT_SCROLL]].sub_type;
-        switch (scroll_type)
+    case SCR_TELEPORTATION:
+        if (!monster->has_ench(ENCH_TP))
         {
-        case SCR_TELEPORTATION:
-            if (!monster->has_ench(ENCH_TP))
-            {
-                if (mons_is_fleeing(monster) || mons_is_caught(monster))
-                {
-                    simple_monster_message(monster, " reads a scroll.");
-                    monster_teleport(monster, false);
-                    read  = true;
-                    ident = ID_KNOWN_TYPE;
-                }
-            }
-            break;
-
-        case SCR_BLINKING:
             if (mons_is_fleeing(monster) || mons_is_caught(monster))
             {
-                if (mons_near(monster))
-                {
-                    simple_monster_message(monster, " reads a scroll.");
-                    simple_monster_message(monster, " blinks!");
-                    monster_blink(monster);
-                    read  = true;
-                    ident = ID_KNOWN_TYPE;
-                }
-            }
-            break;
-
-        case SCR_SUMMONING:
-            if (mons_near(monster))
-            {
                 simple_monster_message(monster, " reads a scroll.");
-                create_monster(
-                    mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(monster),
-                              2, monster->pos(), monster->foe) );
+                monster_teleport(monster, false);
                 read  = true;
                 ident = ID_KNOWN_TYPE;
             }
-            break;
         }
+        break;
 
-        if (read)
+    case SCR_BLINKING:
+        if (mons_is_fleeing(monster) || mons_is_caught(monster))
         {
-            if (dec_mitm_item_quantity( monster->inv[MSLOT_SCROLL], 1 ))
-                monster->inv[MSLOT_SCROLL] = NON_ITEM;
-
-            if (ident != ID_UNKNOWN_TYPE && was_visible)
-                set_ident_type(OBJ_SCROLLS, scroll_type, ident);
-
-            monster->lose_energy(EUT_ITEM);
+            if (mons_near(monster))
+            {
+                simple_monster_message(monster, " reads a scroll.");
+                simple_monster_message(monster, " blinks!");
+                monster_blink(monster);
+                read  = true;
+                ident = ID_KNOWN_TYPE;
+            }
         }
+        break;
 
-        return read;
+    case SCR_SUMMONING:
+        if (mons_near(monster))
+        {
+            simple_monster_message(monster, " reads a scroll.");
+            create_monster(
+                mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(monster),
+                          2, monster->pos(), monster->foe) );
+            read  = true;
+            ident = ID_KNOWN_TYPE;
+        }
+        break;
     }
+
+    if (read)
+    {
+        if (dec_mitm_item_quantity(monster->inv[MSLOT_SCROLL], 1))
+            monster->inv[MSLOT_SCROLL] = NON_ITEM;
+
+        if (ident != ID_UNKNOWN_TYPE && was_visible)
+            set_ident_type(OBJ_SCROLLS, scroll_type, ident);
+
+        monster->lose_energy(EUT_ITEM);
+    }
+
+    return read;
 }
 
 //---------------------------------------------------------------
@@ -4509,179 +4502,175 @@ static bool _handle_scroll(monsters *monster)
 static bool _handle_wand(monsters *monster, bolt &beem)
 {
     // Yes, there is a logic to this ordering {dlb}:
-    if (monster->behaviour == BEH_SLEEP)
-        return (false);
-    else if (!mons_near(monster))
-        return (false);
-    else if (monster->has_ench(ENCH_SUBMERGED))
-        return (false);
-    else if (monster->inv[MSLOT_WAND] == NON_ITEM
-             || mitm[monster->inv[MSLOT_WAND]].plus <= 0)
+    if (!mons_near(monster)
+        || mons_is_sleeping(monster)
+        || monster->has_ench(ENCH_SUBMERGED)
+        || monster->inv[MSLOT_WAND] == NON_ITEM
+        || mitm[monster->inv[MSLOT_WAND]].plus <= 0
+        || coinflip())
     {
         return (false);
     }
-    else if (coinflip())
-    {
-        bool niceWand    = false;
-        bool zap         = false;
-        bool was_visible
-                 = mons_near(monster) && player_monster_visible(monster);
 
-        item_def &wand(mitm[monster->inv[MSLOT_WAND]]);
+    bool niceWand    = false;
+    bool zap         = false;
+    bool was_visible
+             = mons_near(monster) && player_monster_visible(monster);
 
-        // map wand type to monster spell type
-        const spell_type mzap = _map_wand_to_mspell(wand.sub_type);
-        if (mzap == SPELL_NO_SPELL)
-            return (false);
+    item_def &wand(mitm[monster->inv[MSLOT_WAND]]);
 
-        // set up the beam
-        int power         = 30 + monster->hit_dice;
-        bolt theBeam      = mons_spells(mzap, power);
+    // map wand type to monster spell type
+    const spell_type mzap = _map_wand_to_mspell(wand.sub_type);
+    if (mzap == SPELL_NO_SPELL)
+        return (false);
 
-        beem.name         = theBeam.name;
-        beem.beam_source  = monster_index(monster);
-        beem.source_x     = monster->x;
-        beem.source_y     = monster->y;
-        beem.colour       = theBeam.colour;
-        beem.range        = theBeam.range;
-        beem.rangeMax     = theBeam.rangeMax;
-        beem.damage       = theBeam.damage;
-        beem.ench_power   = theBeam.ench_power;
-        beem.hit          = theBeam.hit;
-        beem.type         = theBeam.type;
-        beem.flavour      = theBeam.flavour;
-        beem.thrower      = theBeam.thrower;
-        beem.is_beam      = theBeam.is_beam;
-        beem.is_explosion = theBeam.is_explosion;
+    // set up the beam
+    int power         = 30 + monster->hit_dice;
+    bolt theBeam      = mons_spells(mzap, power);
+
+    beem.name         = theBeam.name;
+    beem.beam_source  = monster_index(monster);
+    beem.source_x     = monster->x;
+    beem.source_y     = monster->y;
+    beem.colour       = theBeam.colour;
+    beem.range        = theBeam.range;
+    beem.rangeMax     = theBeam.rangeMax;
+    beem.damage       = theBeam.damage;
+    beem.ench_power   = theBeam.ench_power;
+    beem.hit          = theBeam.hit;
+    beem.type         = theBeam.type;
+    beem.flavour      = theBeam.flavour;
+    beem.thrower      = theBeam.thrower;
+    beem.is_beam      = theBeam.is_beam;
+    beem.is_explosion = theBeam.is_explosion;
 
 #if HISCORE_WEAPON_DETAIL
-        beem.aux_source =
-            wand.name(DESC_QUALNAME, false, true, false, false);
+    beem.aux_source =
+        wand.name(DESC_QUALNAME, false, true, false, false);
 #else
-        beem.aux_source =
-            wand.name(DESC_QUALNAME, false, true, false, false,
-                      ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
+    beem.aux_source =
+        wand.name(DESC_QUALNAME, false, true, false, false,
+                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
 #endif
 
-        const int wand_type = wand.sub_type;
-        switch (wand_type)
+    const int wand_type = wand.sub_type;
+    switch (wand_type)
+    {
+    case WAND_DISINTEGRATION:
+        // Dial down damage from wands of disintegration, since
+        // disintegration beams can do large amounts of damage.
+        beem.damage.size = beem.damage.size * 2 / 3;
+        break;
+
+    case WAND_ENSLAVEMENT:
+    case WAND_DIGGING:
+    case WAND_RANDOM_EFFECTS:
+        // These have been deemed "too tricky" at this time {dlb}:
+        return (false);
+
+    case WAND_POLYMORPH_OTHER:
+         // Monsters can be very trigger happy with wands, reduce this
+         // for polymorph.
+         if (!one_chance_in(5))
+             return false;
+         break;
+
+    // These are wands that monsters will aim at themselves {dlb}:
+    case WAND_HASTING:
+        if (!monster->has_ench(ENCH_HASTE))
         {
-        case WAND_DISINTEGRATION:
-            // Dial down damage from wands of disintegration, since
-            // disintegration beams can do large amounts of damage.
-            beem.damage.size = beem.damage.size * 2 / 3;
+            beem.target_x = monster->x;
+            beem.target_y = monster->y;
+
+            niceWand = true;
             break;
+        }
+        return (false);
 
-            // These have been deemed "too tricky" at this time {dlb}:
-        case WAND_ENSLAVEMENT:
-        case WAND_DIGGING:
-        case WAND_RANDOM_EFFECTS:
-            return (false);
+    case WAND_HEALING:
+        if (monster->hit_points <= monster->max_hit_points / 2)
+        {
+            beem.target_x = monster->x;
+            beem.target_y = monster->y;
 
-        case WAND_POLYMORPH_OTHER:
-            // Monsters can be very trigger happy with wands, reduce this
-            // for polymorph.
-            if (!one_chance_in(5))
-                return false;
+            niceWand = true;
             break;
-
-        // These are wands that monsters will aim at themselves {dlb}:
-        case WAND_HASTING:
-            if (!monster->has_ench(ENCH_HASTE))
-            {
-                beem.target_x = monster->x;
-                beem.target_y = monster->y;
-
-                niceWand = true;
-                break;
-            }
-            return (false);
-
-        case WAND_HEALING:
-            if (monster->hit_points <= monster->max_hit_points / 2)
-            {
-                beem.target_x = monster->x;
-                beem.target_y = monster->y;
-
-                niceWand = true;
-                break;
-            }
-            return (false);
-
-        case WAND_INVISIBILITY:
-            if (!monster->has_ench(ENCH_INVIS)
-                && !monster->has_ench(ENCH_SUBMERGED)
-                && (!mons_friendly(monster) || player_see_invis(false)))
-            {
-                beem.target_x = monster->x;
-                beem.target_y = monster->y;
-
-                niceWand = true;
-                break;
-            }
-            return (false);
-
-        case WAND_TELEPORTATION:
-            if (monster->hit_points <= monster->max_hit_points / 2
-                || mons_is_caught(monster))
-            {
-                if (!monster->has_ench(ENCH_TP)
-                    && !one_chance_in(20))
-                {
-                    beem.target_x = monster->x;
-                    beem.target_y = monster->y;
-
-                    niceWand = true;
-                    break;
-                }
-                // This break causes the wand to be tried on the player.
-                break;
-            }
-            return (false);
         }
+        return (false);
 
-        // Fire tracer, if necessary.
-        if (!niceWand)
+    case WAND_INVISIBILITY:
+        if (!monster->has_ench(ENCH_INVIS)
+            && !monster->has_ench(ENCH_SUBMERGED)
+            && (!mons_friendly(monster) || player_see_invis(false)))
         {
-            fire_tracer( monster, beem );
+            beem.target_x = monster->x;
+            beem.target_y = monster->y;
 
-            // Good idea?
-            zap = mons_should_fire( beem );
+            niceWand = true;
+            break;
         }
+        return (false);
 
-        if (niceWand || zap)
+    case WAND_TELEPORTATION:
+        if (monster->hit_points <= monster->max_hit_points / 2
+            || mons_is_caught(monster))
         {
-            if (!simple_monster_message(monster, " zaps a wand."))
+            if (!monster->has_ench(ENCH_TP)
+                && !one_chance_in(20))
             {
-                if (!silenced(you.x_pos, you.y_pos))
-                    mpr("You hear a zap.", MSGCH_SOUND);
+                beem.target_x = monster->x;
+                beem.target_y = monster->y;
+
+                niceWand = true;
+                break;
             }
-
-            // charge expenditure {dlb}
-            wand.plus--;
-            beem.is_tracer = false;
-            fire_beam( beem );
-
-            if (was_visible)
-            {
-                if (niceWand || beem.name != "0" || beem.obvious_effect)
-                    set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
-                else
-                    set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
-
-                // Increment zap count.
-                if (wand.plus2 >= 0)
-                    wand.plus2++;
-            }
-
-            monster->lose_energy(EUT_ITEM);
-
-            return (true);
+            // This break causes the wand to be tried on the player.
+            break;
         }
+        return (false);
+    }
+
+    // Fire tracer, if necessary.
+    if (!niceWand)
+    {
+        fire_tracer( monster, beem );
+
+        // Good idea?
+        zap = mons_should_fire(beem);
+    }
+
+    if (niceWand || zap)
+    {
+        if (!simple_monster_message(monster, " zaps a wand."))
+        {
+            if (!silenced(you.x_pos, you.y_pos))
+                mpr("You hear a zap.", MSGCH_SOUND);
+        }
+
+        // charge expenditure {dlb}
+        wand.plus--;
+        beem.is_tracer = false;
+        fire_beam(beem);
+
+        if (was_visible)
+        {
+            if (niceWand || beem.name != "0" || beem.obvious_effect)
+                set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
+            else
+                set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
+
+            // Increment zap count.
+            if (wand.plus2 >= 0)
+                wand.plus2++;
+        }
+
+        monster->lose_energy(EUT_ITEM);
+
+        return (true);
     }
 
     return (false);
-}                               // end handle_wand()
+}
 
 // Returns a suitable breath weapon for the draconian; does not handle all
 // draconians, does fire a tracer.
@@ -4936,10 +4925,10 @@ static bool _handle_spell( monsters *monster, bolt & beem )
     const spell_type draco_breath = _get_draconian_breath_spell(monster);
 
     // Yes, there is a logic to this ordering {dlb}:
-    if (monster->behaviour == BEH_SLEEP
+    if (mons_is_sleeping(monster)
+        || monster->has_ench(ENCH_SUBMERGED)
         || !mons_class_flag(monster->type, M_SPELLCASTER)
-           && draco_breath == SPELL_NO_SPELL
-        || monster->has_ench(ENCH_SUBMERGED))
+           && draco_breath == SPELL_NO_SPELL)
     {
         return (false);
     }
@@ -5251,7 +5240,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
     } // end "if mons_class_flag(monster->type, M_SPELLCASTER) ...
 
     return (true);
-}                               // end handle_spell()
+}
 
 // Returns a rough estimate of damage from throwing the wielded weapon.
 int mons_thrown_weapon_damage(const item_def *weap)
@@ -5837,7 +5826,7 @@ static void _handle_monster_move(int i, monsters *monster)
         beem.target_x = monster->target_x;
         beem.target_y = monster->target_y;
 
-        if (monster->behaviour != BEH_SLEEP
+        if (!mons_is_sleeping(monster)
             && monster->behaviour != BEH_WANDER
 
             // Berserking monsters are limited to running up and
@@ -5863,7 +5852,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
                 if (_handle_potion(monster, beem))
                 {
-                    DEBUG_ENERGY_USE("handle_potion()");
+                    DEBUG_ENERGY_USE("_handle_potion()");
                     continue;
                 }
 
@@ -6090,11 +6079,11 @@ static bool _handle_pickup(monsters *monster)
     bool monsterNearby = mons_near(monster);
     int  item = NON_ITEM;
 
-    if (monster->has_ench(ENCH_SUBMERGED))
+    if (mons_is_sleeping(monster)
+        || monster->has_ench(ENCH_SUBMERGED))
+    {
         return (false);
-
-    if (monster->behaviour == BEH_SLEEP)
-        return (false);
+    }
 
     if (mons_itemuse(monster->type) == MONUSE_EATS_ITEMS)
     {
@@ -7409,7 +7398,7 @@ static void _mons_in_cloud(monsters *monster)
     }
 
     // A sleeping monster that sustains damage will wake up.
-    if ((wake || hurted > 0) && monster->behaviour == BEH_SLEEP)
+    if ((wake || hurted > 0) && mons_is_sleeping(monster))
     {
         // We have no good coords to give the monster as the source of the
         // disturbance other than the cloud itself.
