@@ -5023,7 +5023,7 @@ void crawl_view_buffer::size(const coord_def &sz)
 #define MSG_MIN_HEIGHT 7
 #define MSG_MAX_HEIGHT Options.msg_max_height
 #define MLIST_MIN_HEIGHT Options.mlist_min_height
-#define MLIST_MIN_WIDTH 25  /* non-inline layout only */
+#define MLIST_MIN_WIDTH 25  // non-inline layout only
 #define MLIST_MAX_WIDTH 42
 #define MLIST_GUTTER 1
 #define HUD_MIN_GUTTER 2
