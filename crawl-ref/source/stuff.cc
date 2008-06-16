@@ -77,6 +77,55 @@
 #include "tutorial.h"
 #include "view.h"
 
+stack_iterator::stack_iterator(const coord_def& pos)
+{
+    cur_link = igrd(pos);
+    if ( cur_link != NON_ITEM )
+        next_link = mitm[cur_link].link;
+    else
+        next_link = NON_ITEM;
+}
+
+stack_iterator::stack_iterator(int start_link)
+{
+    cur_link = start_link;
+    if ( cur_link != NON_ITEM )
+        next_link = mitm[cur_link].link;
+    else
+        next_link = NON_ITEM;
+}
+
+stack_iterator::operator bool() const
+{
+    return ( cur_link != NON_ITEM );
+}
+
+item_def& stack_iterator::operator*() const
+{
+    ASSERT( cur_link != NON_ITEM );
+    return mitm[cur_link];
+}
+
+int stack_iterator::link() const
+{
+    return cur_link;
+}
+
+const stack_iterator& stack_iterator::operator ++ ()
+{
+    cur_link = next_link;
+    if ( cur_link != NON_ITEM )
+        next_link = mitm[cur_link].link;
+    return *this;
+}
+
+stack_iterator stack_iterator::operator++(int dummy)
+{
+    const stack_iterator copy = *this;
+    ++(*this);
+    return copy;
+}
+
 radius_iterator::radius_iterator( const coord_def& _center, int _radius,
                                   bool _roguelike_metric, bool _require_los,
                                   bool _exclude_center )

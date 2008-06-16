@@ -3021,35 +3021,30 @@ bool ely_destroy_weapons()
     god_acting gdact;
 
     bool success = false;
-    int i = igrd[you.x_pos][you.y_pos];
-    while (i != NON_ITEM)
+    for ( stack_iterator si(you.pos()); si; ++si )
     {
-        const int next = mitm[i].link;  // In case we can't get it later.
-
-        if (mitm[i].base_type != OBJ_WEAPONS
-                && mitm[i].base_type != OBJ_MISSILES
-            || item_is_stationary(mitm[i])) // Held in a net?
+        item_def& item(*si);
+        if ( (item.base_type != OBJ_WEAPONS
+              && item.base_type != OBJ_MISSILES)
+             || item_is_stationary(item)) // Held in a net?
         {
-            i = next;
             continue;
         }
 
-        if (!check_warning_inscriptions(mitm[i], OPER_DESTROY))
+        if (!check_warning_inscriptions(item, OPER_DESTROY))
         {
             mpr("Won't destroy {!D} inscribed item.");
-            i = next;
             continue;
         }
 
-        const int value = item_value( mitm[i], true );
+        const int value = item_value( item, true );
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Destroyed weapon value: %d", value);
 #endif
 
         piety_gain_t pgain = PIETY_NONE;
-        bool is_evil_weapon = is_evil_item(mitm[i]);
-        if (is_evil_weapon
-            || _destroyed_valuable_weapon(value, mitm[i].base_type))
+        const bool is_evil_weapon = is_evil_item(item);
+        if (is_evil_weapon || _destroyed_valuable_weapon(value, item.base_type))
         {
             pgain = PIETY_SOME;
             gain_piety(1);
@@ -3057,7 +3052,7 @@ bool ely_destroy_weapons()
 
         // Elyvilon doesn't care about item sacrifices at altars, so
         // I'm stealing _Sacrifice_Messages.
-        _print_sacrifice_message(GOD_ELYVILON, mitm[i], pgain);
+        _print_sacrifice_message(GOD_ELYVILON, item, pgain);
         if (is_evil_weapon)
         {
             // Print this is addition to the above!
@@ -3065,9 +3060,8 @@ bool ely_destroy_weapons()
                                GOD_ELYVILON);
         }
 
-        destroy_item(i);
+        destroy_item( si.link() );
         success = true;
-        i = next;
     }
 
     if (!success)

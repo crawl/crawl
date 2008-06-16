@@ -48,6 +48,27 @@ int roll_dice( int num, int size );
 int roll_dice( const struct dice_def &dice );
 void scale_dice( dice_def &dice, int threshold = 24 );
 
+// stack_iterator guarantees validity so long as you don't manually
+// mess with item_def.link: i.e., you can kill the item you're
+// examining but you can't kill the item linked to it.
+class stack_iterator : public std::iterator<std::forward_iterator_tag,
+                                            item_def>
+{
+public:
+    stack_iterator( const coord_def& pos );
+    stack_iterator( int start_link );
+
+    operator bool() const;
+    item_def& operator *() const;
+    int link() const;
+
+    const stack_iterator& operator ++ ();
+    stack_iterator operator ++ (int);
+private:
+    int cur_link;
+    int next_link;
+};
+
 class radius_iterator : public std::iterator<std::bidirectional_iterator_tag,
                         coord_def>
 {
