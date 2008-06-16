@@ -1709,7 +1709,6 @@ static bool _player_knows_aptitudes()
 static void _display_skill_table(bool show_aptitudes)
 {
     menu_letter lcount = 'a';
-    const int num_lines = get_number_of_lines();
 
     cgotoxy(1, 1);
     textcolor(LIGHTGREY);
@@ -1728,8 +1727,9 @@ static void _display_skill_table(bool show_aptitudes)
 
     int scrln = 3, scrcol = 1;
     int x;
+
     // Don't want the help line to appear too far down a big window.
-    const int bottom_line = ((num_lines > 30) ? 30 : num_lines);
+    const int bottom_line = std::min(30, get_number_of_lines());
 
     for (int i = 0; i < ndisplayed_skills; ++i)
     {

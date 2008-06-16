@@ -2696,9 +2696,7 @@ static void _detailed_god_description(god_type which_god)
         formatted_string::parse_block(broken, false).display();
     }
 
-    int bottom_line = get_number_of_lines();
-    if (bottom_line > 30)
-        bottom_line = 30;
+    const int bottom_line = std::min(30, get_number_of_lines());
 
     cgotoxy(1, bottom_line-1);
     formatted_string::parse_string(

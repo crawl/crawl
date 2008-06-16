@@ -2119,7 +2119,7 @@ std::string god_name( god_type which_god, bool long_name )
 god_type string_to_god(const char *name)
 {
     god_type god;
-    for (int i = 0; i < NUM_GODS; i++)
+    for (int i = 0; i < NUM_GODS; ++i)
     {
         god = (god_type) i;
         if (name == god_name(god, false))
@@ -3363,7 +3363,7 @@ static bool _zin_retribution()
     {
         simple_god_message(" draws some chaos from your body!", god);
         bool success = false;
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 7; ++i)
             if (random2(10) > i
                 && delete_mutation(RANDOM_GOOD_MUTATION))
             {
@@ -3633,7 +3633,7 @@ static bool _yredelemnul_retribution()
         int count = 0;
         int how_many = 1 + random2(1 + (you.experience_level / 5));
 
-        for (int i = 0; i < how_many; i++)
+        for (int i = 0; i < how_many; ++i)
         {
             monster_type punisher = _random_servant(GOD_YREDELEMNUL);
 
@@ -3768,11 +3768,11 @@ static bool _beogh_retribution()
     case 2: // send out one or two dancing weapons (12.5%)
     {
         int num_created = 0;
-        int num_to_create = (coinflip() ? 1 : 2);
+        int num_to_create = (coinflip()) ? 1 : 2;
 
         // Need a species check, in case this retribution is a result of
         // drawing the Wrath card.
-        for (int i = 0; i < num_to_create; i++)
+        for (int i = 0; i < num_to_create; ++i)
         {
             // Create item.
             int slot = items(0, OBJ_WEAPONS, WPN_CLUB + random2(13),
@@ -3821,11 +3821,9 @@ static bool _beogh_retribution()
                     menv[mons].flags |= MF_HARD_RESET;
             }
             else // Didn't work out! Delete item.
-            {
                 mitm[slot].clear();
-            }
         }
-        if (num_created)
+        if (num_created > 0)
         {
             snprintf(info, INFO_SIZE, " throws %s of %s at you.",
                 num_created > 1 ? "implements" : "an implement",
@@ -3883,7 +3881,7 @@ static bool _okawaru_retribution()
     bool success = false;
     const int how_many = 1 + (you.experience_level / 5);
 
-    for (int i = 0; i < how_many; i++)
+    for (int i = 0; i < how_many; ++i)
     {
         monster_type punisher = _random_servant(GOD_OKAWARU);
 
@@ -4929,7 +4927,7 @@ static bool _bless_weapon( god_type god, int brand, int colour )
             holy_word(100, HOLY_WORD_SHINING_ONE, you.x_pos, you.y_pos, true);
 
             // Un-bloodify surrounding squares.
-            for (int i = -3; i <= 3; i++)
+            for (int i = -3; i <= 3; ++i)
                 for (int j = -3; j <= 3; j++)
                 {
                      if (is_bloodcovered(you.x_pos+i, you.y_pos+j))
@@ -5658,7 +5656,7 @@ void god_smites_you(god_type god, kill_method_type death_type,
 
         int divine_hurt = 10 + random2(10);
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; ++i)
             divine_hurt += random2( you.experience_level );
 
         simple_god_message( " smites you!", god );
@@ -5722,7 +5720,7 @@ void handle_god_time()
         god_type which_god = GOD_NO_GOD;
         unsigned int count = 0;
 
-        for (int i = GOD_NO_GOD; i < NUM_GODS; i++)
+        for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
         {
             // Nemelex penance is special: it's only "active"
             // when penance > 100, else it's passive.

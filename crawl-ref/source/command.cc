@@ -1146,9 +1146,8 @@ static bool _do_description(std::string key, std::string footer = "")
         num_lines++;
 
         // So the footer doesn't get lonely on large displays. :)
-        int bottom_line = get_number_of_lines();
-        if (bottom_line > 30)
-            bottom_line = 30;
+        const int bottom_line = std::min(30, get_number_of_lines());
+
         cgotoxy(1, bottom_line - num_lines);
 
         cprintf(footer.c_str());
