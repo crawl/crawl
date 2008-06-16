@@ -3592,10 +3592,8 @@ int check_stealth(void)
         }
     }
 
-    if (you.burden_state == BS_ENCUMBERED)
-        stealth /= 2;
-    else if (you.burden_state == BS_OVERLOADED)
-        stealth /= 5;
+    if (you.burden_state > BS_UNENCUMBERED)
+        stealth /= you.burden_state;
 
     if (you.duration[DUR_CONF])
         stealth /= 3;
