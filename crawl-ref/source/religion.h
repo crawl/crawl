@@ -70,8 +70,10 @@ void dec_penance(god_type god, int val);
 
 bool did_god_conduct(conduct_type thing_done, int pgain, bool known = true,
                      const monsters *victim = NULL);
-void set_attack_conducts(const monsters *mon, god_conduct_trigger& conduct,
+void set_attack_conducts(god_conduct_trigger conduct[4], const monsters *mon,
                          bool known = true);
+void enable_attack_conducts(god_conduct_trigger conduct[4]);
+void disable_attack_conducts(god_conduct_trigger conduct[4]);
 
 void excommunication(god_type new_god = GOD_NO_GOD);
 void gain_piety(int pgn);

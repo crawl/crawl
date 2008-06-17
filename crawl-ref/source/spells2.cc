@@ -910,14 +910,14 @@ char burn_freeze(int pow, beam_type flavour)
 
     monsters *monster = &menv[mgr];
 
-    god_conduct_trigger conduct;
-    conduct.enabled = false;
+    god_conduct_trigger conducts[4];
+    disable_attack_conducts(conducts);
 
     bool success = !stop_attack_prompt(monster, false, false);
 
     if (success)
     {
-        set_attack_conducts(monster, conduct);
+        set_attack_conducts(conducts, monster);
 
         mprf("You %s %s.",
              (flavour == BEAM_FIRE)        ? "burn" :
@@ -930,7 +930,7 @@ char burn_freeze(int pow, beam_type flavour)
         behaviour_event(monster, ME_ANNOY, MHITYOU);
     }
 
-    conduct.enabled = true;
+    enable_attack_conducts(conducts);
 
     if (success)
     {

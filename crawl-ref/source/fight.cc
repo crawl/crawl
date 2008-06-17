@@ -608,8 +608,8 @@ bool melee_attack::attack()
     check_autoberserk();
     check_special_wield_effects();
 
-    god_conduct_trigger conduct;
-    conduct.enabled = false;
+    god_conduct_trigger conducts[4];
+    disable_attack_conducts(conducts);
 
     if (attacker->atype() == ACT_PLAYER)
     {
@@ -619,7 +619,7 @@ bool melee_attack::attack()
             return (false);
         }
         else
-            set_attack_conducts(def, conduct);
+            set_attack_conducts(conducts, def);
     }
 
     // Trying to stay general beyond this point is a recipe for insanity.
@@ -628,7 +628,7 @@ bool melee_attack::attack()
                    (defender->atype() == ACT_PLAYER) ? mons_attack_you()
                                                      : mons_attack_mons());
 
-    conduct.enabled = true;
+    enable_attack_conducts(conducts);
 
     return retval;
 }

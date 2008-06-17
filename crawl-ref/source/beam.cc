@@ -4374,8 +4374,8 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         if (submerged)
             return (0);
 
-        god_conduct_trigger conduct;
-        conduct.enabled = false;
+        god_conduct_trigger conducts[4];
+        disable_attack_conducts(conducts);
 
         // Nasty enchantments will annoy the monster, and are considered
         // naughty (even if a monster might resist).
@@ -4389,7 +4389,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                     remove_sanctuary(true);
                 }
 
-                set_attack_conducts(mon, conduct);
+                set_attack_conducts(conducts, mon);
 
                 if (you.religion == GOD_BEOGH
                     && mons_species(mon->type) == MONS_ORC
@@ -4405,7 +4405,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         else
             behaviour_event(mon, ME_ALERT, _beam_source(beam));
 
-        conduct.enabled = true;
+        enable_attack_conducts(conducts);
 
         // !@#*( affect_monster_enchantment() has side-effects on
         // the beam structure which screw up range_used_on_hit(),
@@ -4557,8 +4557,8 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     // fire elementals on their side - the elementals won't give a sh*t,
     // after all).
 
-    god_conduct_trigger conduct;
-    conduct.enabled = false;
+    god_conduct_trigger conducts[4];
+    disable_attack_conducts(conducts);
 
     if (_nasty_beam(mon, beam))
     {
@@ -4574,7 +4574,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 remove_sanctuary(true);
             }
 
-            set_attack_conducts(mon, conduct, !okay);
+            set_attack_conducts(conducts, mon, !okay);
         }
 
         if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
@@ -4630,7 +4630,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 
     _update_hurt_or_helped(beam, mon);
 
-    conduct.enabled = true;
+    enable_attack_conducts(conducts);
 
     // The beam hit.
     if (mons_near(mon))

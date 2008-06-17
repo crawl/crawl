@@ -2743,19 +2743,31 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     return (ret);
 }
 
-void set_attack_conducts(const monsters *mon, god_conduct_trigger& conduct,
+void set_attack_conducts(god_conduct_trigger conduct[4], const monsters *mon,
                          bool known)
 {
     if (mons_friendly(mon))
-        conduct.set(DID_ATTACK_FRIEND, 5, known, mon);
+        conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
     else if (mons_neutral(mon))
-        conduct.set(DID_ATTACK_NEUTRAL, 5, known, mon);
+        conduct[1].set(DID_ATTACK_NEUTRAL, 5, known, mon);
 
     if (is_unchivalric_attack(&you, mon, mon))
-        conduct.set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
+        conduct[2].set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
 
     if (mons_is_holy(mon))
-        conduct.set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
+        conduct[3].set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
+}
+
+void enable_attack_conducts(god_conduct_trigger conduct[4])
+{
+    for (int i = 0; i < 4; ++i)
+        conduct[i].enabled = true;
+}
+
+void disable_attack_conducts(god_conduct_trigger conduct[4])
+{
+    for (int i = 0; i < 4; ++i)
+        conduct[i].enabled = false;
 }
 
 static void _dock_piety(int piety_loss, int penance)

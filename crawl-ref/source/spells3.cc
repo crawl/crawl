@@ -205,14 +205,14 @@ int cast_smiting(int power, dist &beam)
     {
         monsters *monster = &menv[mgrd[beam.tx][beam.ty]];
 
-        god_conduct_trigger conduct;
-        conduct.enabled = false;
+        god_conduct_trigger conducts[4];
+        disable_attack_conducts(conducts);
 
         success = !stop_attack_prompt(monster, false, false);
 
         if (success)
         {
-            set_attack_conducts(monster, conduct);
+            set_attack_conducts(conducts, monster);
 
             mprf("You smite %s!", monster->name(DESC_NOCAP_THE).c_str());
 
@@ -221,7 +221,7 @@ int cast_smiting(int power, dist &beam)
                 mimic_alert(monster);
         }
 
-        conduct.enabled = true;
+        enable_attack_conducts(conducts);
 
         if (success)
         {
@@ -250,14 +250,14 @@ int airstrike(int power, dist &beam)
     {
         monsters *monster = &menv[mgrd[beam.tx][beam.ty]];
 
-        god_conduct_trigger conduct;
-        conduct.enabled = false;
+        god_conduct_trigger conducts[4];
+        disable_attack_conducts(conducts);
 
         success = !stop_attack_prompt(monster, false, false);
 
         if (success)
         {
-            set_attack_conducts(monster, conduct);
+            set_attack_conducts(conducts, monster);
 
             mprf("The air twists around and strikes %s!",
                  monster->name(DESC_NOCAP_THE).c_str());
@@ -267,7 +267,7 @@ int airstrike(int power, dist &beam)
                 mimic_alert(monster);
         }
 
-        conduct.enabled = true;
+        enable_attack_conducts(conducts);
 
         if (success)
         {
