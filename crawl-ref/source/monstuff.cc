@@ -2954,7 +2954,6 @@ static void _handle_behaviour(monsters *mon)
                 // XXX: Uncomment this next block to actually enable
                 // leaving the level.
                 /*
-                new_foe = MHITNOT;
                 new_beh = BEH_LEAVE;
                 break;
                 */
@@ -3346,7 +3345,7 @@ void _set_nearest_monster_foe(monsters *mon)
     const int mx = mon->x;
     const int my = mon->y;
 
-    for (int k = 1; k <= LOS_RADIUS; k++)
+    for (int k = 1; k <= LOS_RADIUS; ++k)
     {
         for (int x = mx - k; x <= mx + k; ++x)
             if (_mons_check_set_foe(mon, x, my - k, friendly, neutral)
@@ -5590,8 +5589,8 @@ static void _handle_monster_move(int i, monsters *monster)
     bolt beem;
     FixedArray <unsigned int, 19, 19> show;
 
-    if (monster->hit_points > monster->max_hit_points)
-        monster->hit_points = monster->max_hit_points;
+    monster->hit_points = std::min(monster->max_hit_points,
+                                   monster->hit_points);
 
     // Monster just summoned (or just took stairs), skip this action.
     if (testbits( monster->flags, MF_JUST_SUMMONED ))
@@ -6025,7 +6024,7 @@ static void _handle_monster_move(int i, monsters *monster)
         // surroundings have changed (it may have moved,
         // or died for that matter.  Don't bother for
         // dead monsters.  :)
-        if (monster->type != -1)
+        if (!monster->alive())
             _handle_behaviour(monster);
 
     }                   // end while
