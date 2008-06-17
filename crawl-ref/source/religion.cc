@@ -681,7 +681,7 @@ std::string print_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_TROG:
-        dislikes.push_back("memorize spells");
+        dislikes.push_back("memorise spells");
         dislikes.push_back("cast spells");
         break;
 
