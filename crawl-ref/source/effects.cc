@@ -2731,7 +2731,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
             || ranged_attack
             || coinflip()))
     {
-        if (mon->behaviour != BEH_WANDER)
+        if (!mons_is_wandering(mon))
         {
             mon->behaviour = BEH_WANDER;
             mon->foe = MHITNOT;

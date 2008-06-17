@@ -652,6 +652,8 @@ bool mons_is_poisoner(const monsters *mon);
 bool mons_is_confused(const monsters *m);
 bool mons_is_caught(const monsters *m);
 bool mons_is_sleeping(const monsters *m);
+bool mons_is_wandering(const monsters *m);
+bool mons_is_seeking(const monsters *m);
 bool mons_is_fleeing(const monsters *m);
 bool mons_is_panicking(const monsters *m);
 bool mons_is_cornered(const monsters *m);

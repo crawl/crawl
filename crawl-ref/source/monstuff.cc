@@ -2025,7 +2025,7 @@ void behaviour_event( monsters *mon, int event, int src,
         // monsters who aren't otherwise occupied will at
         // least consider the (apparent) source of the noise
         // interesting for a moment. -- bwr
-        if (!isSmart || mon->foe == MHITNOT || mon->behaviour == BEH_WANDER)
+        if (!isSmart || mon->foe == MHITNOT || mons_is_wandering(mon))
         {
             if (mon->is_patrolling())
                 break;
@@ -2114,7 +2114,7 @@ void behaviour_event( monsters *mon, int event, int src,
         }
 
         // Just set behaviour... foe doesn't change.
-        if (mon->behaviour != BEH_CORNERED)
+        if (!mons_is_cornered(mon))
             simple_monster_message(mon, " turns to fight!");
 
         mon->behaviour = BEH_CORNERED;
@@ -3473,7 +3473,7 @@ static bool _mon_on_interesting_grid(monsters *mon)
 // if it left it for fighting, seeking etc.
 static void _maybe_set_patrol_route(monsters *monster)
 {
-    if (monster->behaviour == BEH_WANDER
+    if (mons_is_wandering(monster)
         && !mons_friendly(monster)
         && !monster->is_patrolling()
         && _mon_on_interesting_grid(monster))
@@ -3610,7 +3610,7 @@ static void _handle_nearby_ability(monsters *monster)
 #define MON_SPEAK_CHANCE 21
 
     if (mons_class_flag(monster->type, M_SPEAKS)
-        && (monster->behaviour != BEH_WANDER || monster->attitude == ATT_NEUTRAL)
+        && (!mons_is_wandering(monster) || monster->attitude == ATT_NEUTRAL)
         && one_chance_in(MON_SPEAK_CHANCE))
     {
         mons_speaks(monster);
@@ -3673,7 +3673,7 @@ static void _handle_nearby_ability(monsters *monster)
 
     case MONS_GIANT_EYEBALL:
         if (coinflip() && !mons_friendly(monster)
-            && monster->behaviour != BEH_WANDER
+            && !mons_is_wandering(monster)
             && mons_is_fleeing(monster))
         {
             simple_monster_message(monster, " stares at you.");
@@ -3686,7 +3686,7 @@ static void _handle_nearby_ability(monsters *monster)
 
     case MONS_EYE_OF_DRAINING:
         if (coinflip() && !mons_friendly(monster)
-            && monster->behaviour != BEH_WANDER
+            && !mons_is_wandering(monster)
             && mons_is_fleeing(monster))
         {
             simple_monster_message(monster, " stares at you.");
@@ -4965,7 +4965,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
         {
             // Forces the casting of dig when player not visible - this is EVIL!
             if (monster->has_spell(SPELL_DIG)
-                && monster->behaviour == BEH_SEEK)
+                && mons_is_seeking(monster))
             {
                 spell_cast = SPELL_DIG;
                 finalAnswer = true;
@@ -5589,7 +5589,7 @@ static void _handle_monster_move(int i, monsters *monster)
     // every single movement, and we want these monsters to
     // hit and run. -- bwr
     if (monster->foe != MHITNOT
-        && monster->behaviour == BEH_WANDER
+        && mons_is_wandering(monster)
         && mons_is_batty(monster))
     {
         monster->behaviour = BEH_SEEK;
@@ -5828,7 +5828,7 @@ static void _handle_monster_move(int i, monsters *monster)
         beem.target_y = monster->target_y;
 
         if (!mons_is_sleeping(monster)
-            && monster->behaviour != BEH_WANDER
+            && !mons_is_wandering(monster)
 
             // Berserking monsters are limited to running up and
             // hitting their foes.

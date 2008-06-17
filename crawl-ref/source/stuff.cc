@@ -307,7 +307,7 @@ static bool tag_follower_at(const coord_def &pos)
     // Only friendly monsters, or those actively seeking the
     // player, will follow up/down stairs.
     if (!mons_friendly(fmenv)
-        && (fmenv->behaviour != BEH_SEEK || fmenv->foe != MHITYOU))
+        && (!mons_is_seeking(fmenv) || fmenv->foe != MHITYOU))
     {
         return (false);
     }

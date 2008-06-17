@@ -2175,6 +2175,16 @@ bool mons_is_sleeping(const monsters *m)
     return (m->behaviour == BEH_SLEEP);
 }
 
+bool mons_is_wandering(const monsters *m)
+{
+    return (m->behaviour == BEH_WANDER);
+}
+
+bool mons_is_seeking(const monsters *m)
+{
+    return (m->behaviour == BEH_SEEK);
+}
+
 bool mons_is_fleeing(const monsters *m)
 {
     return (m->behaviour == BEH_FLEE);
@@ -3652,7 +3662,7 @@ bool monsters::pickup_throwable_weapon(item_def &item, int near)
     // If occupied, don't pick up a throwable weapons if it would just
     // stack with an existing one. (Upgrading is possible.)
     if (mslot_item(MSLOT_MISSILE)
-        && (behaviour == BEH_WANDER || mons_friendly(this) && foe == MHITYOU)
+        && (mons_is_wandering(this) || mons_friendly(this) && foe == MHITYOU)
         && pickup(item, MSLOT_MISSILE, near, true))
     {
         return (true);
@@ -3875,7 +3885,7 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
 
         // Monsters in a fight will only pick up missiles if doing so
         // is worthwhile.
-        if (behaviour != BEH_WANDER && (!mons_friendly(this) || foe != MHITYOU)
+        if (!mons_is_wandering(this) && (!mons_friendly(this) || foe != MHITYOU)
             && (item.quantity < 5 || miss && miss->quantity >= 7))
         {
             return (false);
@@ -4046,7 +4056,7 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
     {
         // If a monster isn't otherwise occupied (has a foe, is fleeing, etc.)
         // it is considered wandering.
-        bool wandering = (behaviour == BEH_WANDER
+        bool wandering = (mons_is_wandering(this)
                           || mons_friendly(this) && foe == MHITYOU);
         const int itype = item.base_type;
 
@@ -5259,7 +5269,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SUBMERGED:
-        if (behaviour == BEH_WANDER)
+        if (mons_is_wandering(this))
         {
             behaviour = BEH_SEEK;
             behaviour_event(this, ME_EVAL);

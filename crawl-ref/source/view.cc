@@ -1128,8 +1128,8 @@ void monster_grid(bool do_updates)
 
         if (monster->type != -1 && mons_near(monster))
         {
-            if (do_updates && (monster->behaviour == BEH_SLEEP
-                               || monster->behaviour == BEH_WANDER)
+            if (do_updates && mons_is_sleeping(monster)
+                                || mons_is_wandering(monster))
                 && check_awaken(monster))
             {
                 behaviour_event( monster, ME_ALERT, MHITYOU );
@@ -1240,7 +1240,7 @@ bool check_awaken(monsters* monster)
     // still actively on guard for the player, even if they can't see you.
     // Give them a large bonus -- handle_behaviour() will nuke 'foe' after
     // a while, removing this bonus.
-    if (monster->behaviour == BEH_WANDER && monster->foe == MHITYOU)
+    if (mons_is_wandering(monster) && monster->foe == MHITYOU)
         mons_perc += 15;
 
     if (!mons_player_visible(monster))
@@ -1249,7 +1249,7 @@ bool check_awaken(monsters* monster)
         unnatural_stealthy = true;
     }
 
-    if (monster->behaviour == BEH_SLEEP)
+    if (mons_is_sleeping(monster))
     {
         if (mon_holy == MH_NATURAL)
         {
