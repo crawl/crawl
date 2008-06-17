@@ -88,9 +88,8 @@ Trog
 
 Trog is an ancient God of anger and violence. Followers are expected to 
 kill in Trog's name and sacrifice the dead, and in return gain power in 
-battle and occasional rewards. Trog hates wizards, and loves to see 
-their magical books burn. Followers are forbidden the use of spell 
-magic.
+battle and occasional rewards. Trog hates all wizards, and loves to see 
+their spellbooks burn. Followers are forbidden the use of spell magic.
 %%%%
 Nemelex Xobeh
 
