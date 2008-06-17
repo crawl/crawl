@@ -458,7 +458,7 @@ static monster_type _pick_random_wraith()
 static monster_type _pick_horrible_thing()
 {
     return (one_chance_in(4) ? MONS_TENTACLED_MONSTROSITY
-            : MONS_ABOMINATION_LARGE);
+                             : MONS_ABOMINATION_LARGE);
 }
 
 static monster_type _pick_undead_summon()
@@ -467,9 +467,7 @@ static monster_type _pick_undead_summon()
 
     // FIXME: This is ridiculous.
     do
-    {
-        summonik = random2(241);        // hmmmm ... {dlb}
-    }
+        summonik = random2(MONS_PROGRAM_BUG); // hmmmm ... {dlb}
     while (mons_class_holiness(summonik) != MH_UNDEAD);
 
     return static_cast<monster_type>(summonik);
@@ -559,30 +557,18 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
             if (!one_chance_in(3))
             {
-                switch (random2(4))
-                {
-                case 0:
-                    mon = MONS_ORANGE_RAT;
-                    break;
+                int temp_rand = random2(4);
 
-                case 1:
-                    mon = MONS_GREEN_RAT;
-                    break;
+                mon = (temp_rand == 0) ? MONS_ORANGE_RAT :
+                      (temp_rand == 1) ? MONS_GREEN_RAT :
+                      (temp_rand == 2) ? MONS_GREY_RAT
+                                       : MONS_RAT;
 
-                case 2:
-                    mon = MONS_GREY_RAT;
-                    break;
-
-                case 3:
-                default:
-                    mon = MONS_RAT;
-                    break;
-                }
             }
 
             create_monster(
-                mgen_data(mon, SAME_ATTITUDE(monster), 5,
-                          monster->pos(), monster->foe));
+                mgen_data(mon, SAME_ATTITUDE(monster),
+                          5, monster->pos(), monster->foe));
         }
         return;
 
@@ -863,7 +849,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 }
 
 // Set up bolt structure for monster spell casting.
-void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast)
+void setup_mons_cast(const monsters *monster, bolt &pbolt, int spell_cast)
 {
     // always set these -- used by things other than fire_beam()
 
@@ -976,7 +962,7 @@ void setup_mons_cast(const monsters *monster, struct bolt &pbolt, int spell_cast
         pbolt.target_x = monster->target_x;
         pbolt.target_y = monster->target_y;
     }
-}                               // end setup_mons_cast()
+}
 
 void monster_teleport(struct monsters *monster, bool instan, bool silent)
 {
