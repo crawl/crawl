@@ -205,7 +205,7 @@ int cast_smiting(int power, dist &beam)
     {
         monsters *monster = &menv[mgrd[beam.tx][beam.ty]];
 
-        god_conduct_trigger conducts[4];
+        god_conduct_trigger conducts[3];
         disable_attack_conducts(conducts);
 
         success = !stop_attack_prompt(monster, false, false);
@@ -250,7 +250,7 @@ int airstrike(int power, dist &beam)
     {
         monsters *monster = &menv[mgrd[beam.tx][beam.ty]];
 
-        god_conduct_trigger conducts[4];
+        god_conduct_trigger conducts[3];
         disable_attack_conducts(conducts);
 
         success = !stop_attack_prompt(monster, false, false);

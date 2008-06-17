@@ -4374,7 +4374,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         if (submerged)
             return (0);
 
-        god_conduct_trigger conducts[4];
+        god_conduct_trigger conducts[3];
         disable_attack_conducts(conducts);
 
         // Nasty enchantments will annoy the monster, and are considered
@@ -4557,7 +4557,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     // fire elementals on their side - the elementals won't give a sh*t,
     // after all).
 
-    god_conduct_trigger conducts[4];
+    god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
     if (_nasty_beam(mon, beam))

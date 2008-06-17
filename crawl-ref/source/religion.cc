@@ -2743,30 +2743,30 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     return (ret);
 }
 
-void set_attack_conducts(god_conduct_trigger conduct[4], const monsters *mon,
+void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
                          bool known)
 {
     if (mons_friendly(mon))
         conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
     else if (mons_neutral(mon))
-        conduct[1].set(DID_ATTACK_NEUTRAL, 5, known, mon);
+        conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
 
     if (is_unchivalric_attack(&you, mon, mon))
-        conduct[2].set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
+        conduct[1].set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
 
     if (mons_is_holy(mon))
-        conduct[3].set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
+        conduct[2].set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
 }
 
-void enable_attack_conducts(god_conduct_trigger conduct[4])
+void enable_attack_conducts(god_conduct_trigger conduct[3])
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 3; ++i)
         conduct[i].enabled = true;
 }
 
-void disable_attack_conducts(god_conduct_trigger conduct[4])
+void disable_attack_conducts(god_conduct_trigger conduct[3])
 {
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 3; ++i)
         conduct[i].enabled = false;
 }
 

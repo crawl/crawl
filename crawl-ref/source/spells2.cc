@@ -910,7 +910,7 @@ char burn_freeze(int pow, beam_type flavour)
 
     monsters *monster = &menv[mgr];
 
-    god_conduct_trigger conducts[4];
+    god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
     bool success = !stop_attack_prompt(monster, false, false);

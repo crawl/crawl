@@ -608,7 +608,7 @@ bool melee_attack::attack()
     check_autoberserk();
     check_special_wield_effects();
 
-    god_conduct_trigger conducts[4];
+    god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
     if (attacker->atype() == ACT_PLAYER)
