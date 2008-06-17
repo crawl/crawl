@@ -3617,7 +3617,7 @@ static int _affect_player( bolt &beam, item_def *item )
     if (beam.is_tracer)
     {
         // Check whether thrower can see player, unless thrower == player.
-        if (beam.thrower != KILL_YOU_MISSILE
+        if (beam.thrower != KILL_YOU_MISSILE && beam.thrower != KILL_YOU
             && (beam.can_see_invis || !you.invisible()
                 || _fuzz_invis_tracer(beam)))
         {
