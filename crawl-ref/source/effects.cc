@@ -68,10 +68,7 @@ int holy_word_player(int pow, int caster)
     if (!you.is_undead && you.species != SP_DEMONSPAWN)
         return 0;
 
-    int hploss = you.hp / 2 - 1;
-
-    if (hploss < 0)
-        hploss = 0;
+    int hploss = std::max(0, you.hp / 2 - 1);
 
     if (!hploss)
         return 0;
@@ -113,8 +110,7 @@ int holy_word_monsters(int x, int y, int pow, int caster)
     int retval = 0;
 
     // doubt this will ever happen, but it's here as a safety -- bwr
-    if (pow > 300)
-        pow = 300;
+    pow = std::min(300, pow);
 
     // Is the player in this cell?
     if (x == you.x_pos && y == you.y_pos)
@@ -135,10 +131,7 @@ int holy_word_monsters(int x, int y, int pow, int caster)
         return retval;
     }
 
-    int hploss = roll_dice(2, 15) + (random2(pow) / 3);
-
-    if (hploss < 0)
-        hploss = 0;
+    int hploss = std::max(0, roll_dice(2, 15) + (random2(pow) / 3));
 
     // Currently, holy word annoys the monsters it affects because it
     // can kill them, and because hostile monsters don't use it.
@@ -189,10 +182,7 @@ int torment_player(int pow, int caster)
     if (!player_res_torment())
     {
         // Negative energy resistance can alleviate torment.
-        hploss = you.hp * (50 - player_prot_life() * 5) / 100 - 1;
-
-        if (hploss < 0)
-            hploss = 0;
+        hploss = std::max(0, you.hp * (50 - player_prot_life() * 5) / 100 - 1);
     }
 
     if (!hploss)
@@ -265,10 +255,7 @@ int torment_monsters(int x, int y, int pow, int caster)
     if (invalid_monster(monster) || mons_res_negative_energy(monster) == 3)
         return retval;
 
-    int hploss = monster->hit_points / 2 - 1;
-
-    if (hploss < 0)
-        hploss = 0;
+    int hploss = std::max(0, monster->hit_points / 2 - 1);
 
     // Currently, torment doesn't annoy the monsters it affects because
     // it can't kill them, and because hostile monsters use it.
