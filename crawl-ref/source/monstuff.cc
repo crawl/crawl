@@ -2945,7 +2945,7 @@ static void _handle_behaviour(monsters *mon)
             // Batty monsters don't automatically reseek so that
             // they'll flitter away, we'll reset them just before
             // they get movement in handle_monsters() instead. -- bwr
-            if (proxFoe && !testbits( mon->flags, MF_BATTY ))
+            if (proxFoe && mons_is_batty(mon))
             {
                 new_beh = BEH_SEEK;
                 break;
