@@ -4103,32 +4103,27 @@ static bool _holy_beings_on_level_attitude_change()
                  static_cast<int>(you.where_are_you));
 #endif
 
-            if (is_good_god(you.religion))
+            // If you worship a good god, you get another chance to make
+            // neutral and hostile holy beings good neutral.
+            if (is_good_god(you.religion) && !mons_wont_attack(monster))
             {
-                // If you worship a good god, you get another chance to
-                // make hostile holy beings good neutral.
-                if (monster->attitude == ATT_HOSTILE &&
-                    (monster->flags & MF_ATT_CHANGE_ATTEMPT))
+                if (!testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
                 {
                     monster->flags &= ~MF_ATT_CHANGE_ATTEMPT;
 
                     success = true;
                 }
             }
-            // If you don't worship a good god, you make all non-hostile
-            // holy beings hostile.
-            else if (!is_good_god(you.religion))
+            // If you don't worship a good god, you make all friendly
+            // and good neutral holy beings hostile.
+            else if (!is_good_god(you.religion) && mons_wont_attack(monster))
             {
-                if (monster->attitude != ATT_HOSTILE
-                    || monster->has_ench(ENCH_CHARM))
-                {
-                    monster->attitude = ATT_HOSTILE;
-                    monster->del_ench(ENCH_CHARM, true);
-                    behaviour_event(monster, ME_ALERT, MHITYOU);
-                    // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+                monster->attitude = ATT_HOSTILE;
+                monster->del_ench(ENCH_CHARM, true);
+                behaviour_event(monster, ME_ALERT, MHITYOU);
+                // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
 
-                    success = true;
-                }
+                success = true;
             }
         }
     }
@@ -4158,20 +4153,16 @@ static bool _evil_beings_on_level_attitude_change()
                  static_cast<int>(you.where_are_you));
 #endif
 
-            if (is_good_god(you.religion))
+            // If you worship a good god, you make all friendly and good
+            // neutral evil and unholy beings hostile.
+            if (is_good_god(you.religion) && mons_wont_attack(monster))
             {
-                // If you worship a good god, you make all non-hostile
-                // evil and unholy beings hostile.
-                if (monster->attitude != ATT_HOSTILE
-                    || monster->has_ench(ENCH_CHARM))
-                {
-                    monster->attitude = ATT_HOSTILE;
-                    monster->del_ench(ENCH_CHARM, true);
-                    behaviour_event(monster, ME_ALERT, MHITYOU);
-                    // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+                monster->attitude = ATT_HOSTILE;
+                monster->del_ench(ENCH_CHARM, true);
+                behaviour_event(monster, ME_ALERT, MHITYOU);
+                // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
 
-                    success = true;
-                }
+                success = true;
             }
         }
     }
@@ -4203,18 +4194,14 @@ static bool _chaotic_beings_on_level_attitude_change()
 
             // If you worship Zin, you make all non-hostile chaotic
             // beings hostile.
-            if (is_lawful_god(you.religion))
+            if (is_lawful_god(you.religion) && mons_wont_attack(monster))
             {
-                if (monster->attitude != ATT_HOSTILE
-                    || monster->has_ench(ENCH_CHARM))
-                {
-                    monster->attitude = ATT_HOSTILE;
-                    monster->del_ench(ENCH_CHARM, true);
-                    behaviour_event(monster, ME_ALERT, MHITYOU);
-                    // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+                monster->attitude = ATT_HOSTILE;
+                monster->del_ench(ENCH_CHARM, true);
+                behaviour_event(monster, ME_ALERT, MHITYOU);
+                // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
 
-                    success = true;
-                }
+                success = true;
             }
         }
     }
@@ -4246,18 +4233,14 @@ static bool _magic_users_on_level_attitude_change()
 
             // If you worship Trog, you make all non-hostile magic users
             // hostile.
-            if (you.religion == GOD_TROG)
+            if (you.religion == GOD_TROG && mons_wont_attack(monster))
             {
-                if (monster->attitude != ATT_HOSTILE
-                    || monster->has_ench(ENCH_CHARM))
-                {
-                    monster->attitude = ATT_HOSTILE;
-                    monster->del_ench(ENCH_CHARM, true);
-                    behaviour_event(monster, ME_ALERT, MHITYOU);
-                    // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+                monster->attitude = ATT_HOSTILE;
+                monster->del_ench(ENCH_CHARM, true);
+                behaviour_event(monster, ME_ALERT, MHITYOU);
+                // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
 
-                    success = true;
-                }
+                success = true;
             }
         }
     }

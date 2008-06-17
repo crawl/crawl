@@ -2023,25 +2023,25 @@ bool player_will_anger_monster(monsters *mon, bool *holy,
                                bool *unholy, bool *lawful,
                                bool *antimagical)
 {
-    const bool is_holy =
+    const bool isHoly =
         (is_good_god(you.religion) && mons_is_evil_or_unholy(mon));
-    const bool is_unholy =
+    const bool isUnholy =
         (is_evil_god(you.religion) && mons_is_holy(mon));
-    const bool is_lawful =
+    const bool isLawful =
         (is_lawful_god(you.religion) && mons_is_chaotic(mon));
-    const bool is_antimagical =
+    const bool isAntimagical =
         (you.religion == GOD_TROG && mons_is_magic_user(mon));
 
     if (holy)
-        *holy = is_holy;
+        *holy = isHoly;
     if (unholy)
-        *unholy = is_unholy;
+        *unholy = isUnholy;
     if (lawful)
-        *lawful = is_lawful;
+        *lawful = isLawful;
     if (antimagical)
-        *antimagical = is_antimagical;
+        *antimagical = isAntimagical;
 
-    return (is_holy || is_unholy || is_lawful || is_antimagical);
+    return (isHoly || isUnholy || isLawful || isAntimagical);
 }
 
 bool player_angers_monster(monsters *mon)
@@ -2052,30 +2052,28 @@ bool player_angers_monster(monsters *mon)
     bool antimagical;
 
     // Get the drawbacks, not the benefits... (to prevent e.g. demon-scumming).
-    if (player_will_anger_monster(mon, &holy, &unholy, &lawful, &antimagical))
+    if (player_will_anger_monster(mon, &holy, &unholy, &lawful, &antimagical)
+        && mons_wont_attack(mon))
     {
-        if (mon->attitude != ATT_HOSTILE || mon->has_ench(ENCH_CHARM))
+        mon->attitude = ATT_HOSTILE;
+        mon->del_ench(ENCH_CHARM);
+        behaviour_event(mon, ME_ALERT, MHITYOU);
+
+        if (see_grid(mon.pos()) && player_monster_visible(mon))
         {
-            mon->attitude = ATT_HOSTILE;
-            mon->del_ench(ENCH_CHARM);
-            behaviour_event(mon, ME_ALERT, MHITYOU);
+            std::string aura = "";
 
-            if (see_grid(mon->x, mon->y) && player_monster_visible(mon))
-            {
-                std::string aura = "";
+            if (holy)
+                aura = "holy";
+            else if (unholy)
+                aura = "unholy";
+            else if (lawful)
+                aura = "lawful";
+            else if (antimagical)
+                aura = "anti-magical";
 
-                if (holy)
-                    aura = "holy";
-                else if (unholy)
-                    aura = "unholy";
-                else if (lawful)
-                    aura = "lawful";
-                else if (antimagical)
-                    aura = "anti-magical";
-
-                mprf("%s is enraged by your %s aura!",
-                     mon->name(DESC_CAP_THE).c_str(), aura.c_str());
-            }
+            mprf("%s is enraged by your %s aura!",
+                 mon->name(DESC_CAP_THE).c_str(), aura.c_str());
         }
 
         return (true);

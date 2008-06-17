@@ -798,7 +798,7 @@ static void _good_god_follower_attitude_change(monsters *monster)
     if (is_good_god(you.religion)
         && monster->foe == MHITYOU
         && mons_is_holy(monster)
-        && !(monster->flags & MF_ATT_CHANGE_ATTEMPT)
+        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons_wont_attack(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
@@ -833,7 +833,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
     if (you.religion == GOD_BEOGH
         && monster->foe == MHITYOU
         && mons_species(monster->type) == MONS_ORC
-        && !(monster->flags & MF_ATT_CHANGE_ATTEMPT)
+        && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)
         && !mons_is_confused(monster) && !mons_is_paralysed(monster))
