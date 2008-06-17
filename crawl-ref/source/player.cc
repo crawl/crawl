@@ -4936,10 +4936,7 @@ void contaminate_player(int change, bool controlled, bool status_only)
     // figure out new level
     new_level = _get_contamination_level();
 
-    if (new_level >= 1)
-        learned_something_new(TUT_GLOWING);
-
-    if (status_only)
+    if (status_only || (new_level >= 1 && old_level == 0))
     {
         if (new_level > 0)
         {
@@ -4958,15 +4955,19 @@ void contaminate_player(int change, bool controlled, bool status_only)
                      (new_level == 3) ? "!" : ".");
             }
         }
-        return;
     }
-
-    if (new_level != old_level)
+    else if (new_level != old_level)
     {
         mprf((change > 0) ? MSGCH_WARN : MSGCH_RECOVERY,
              "You feel %s contaminated with magical energies.",
              (change > 0) ? "more" : "less" );
     }
+
+    if (new_level >= 1)
+        learned_something_new(TUT_GLOWING);
+
+    if (status_only)
+        return;
 
     // Zin doesn't like mutations or mutagenic radiation.
     if (you.religion == GOD_ZIN)
