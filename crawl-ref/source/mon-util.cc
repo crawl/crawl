@@ -2170,6 +2170,11 @@ bool mons_is_caught(const monsters *m)
     return (m->has_ench(ENCH_HELD));
 }
 
+bool mons_is_sleeping(const monsters *m)
+{
+    return (m->behaviour == BEH_SLEEP);
+}
+
 bool mons_is_fleeing(const monsters *m)
 {
     return (m->behaviour == BEH_FLEE);
@@ -2185,9 +2190,9 @@ bool mons_is_cornered(const monsters *m)
     return (m->behaviour == BEH_CORNERED);
 }
 
-bool mons_is_sleeping(const monsters *m)
+bool mons_is_lurking(const monsters *m)
 {
-    return (m->behaviour == BEH_SLEEP);
+    return (m->behaviour == BEH_LURK);
 }
 
 bool mons_is_batty(const monsters *m)
@@ -4932,7 +4937,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         if (has_ench(ENCH_SUBMERGED))
             del_ench(ENCH_SUBMERGED);
 
-        if (behaviour == BEH_LURK)
+        if (mons_is_lurking(this))
         {
             behaviour = BEH_WANDER;
             behaviour_event(this, ME_EVAL);
@@ -4976,7 +4981,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         if (type == MONS_TRAPDOOR_SPIDER && has_ench(ENCH_SUBMERGED))
             del_ench(ENCH_SUBMERGED);
 
-        if (behaviour == BEH_LURK)
+        if (mons_is_lurking(this))
         {
             behaviour = BEH_WANDER;
             behaviour_event(this, ME_EVAL);
@@ -5691,7 +5696,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         else if (type == MONS_TRAPDOOR_SPIDER)
         {
             // This should probably never happen.
-            if (behaviour != BEH_LURK)
+            if (!mons_is_lurking(this))
                 del_ench(ENCH_SUBMERGED);
             break;
         }

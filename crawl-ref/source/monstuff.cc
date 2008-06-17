@@ -2147,7 +2147,7 @@ void behaviour_event( monsters *mon, int event, int src,
     // Do any resultant foe or state changes.
     _handle_behaviour( mon );
 
-    if (old_behaviour == BEH_LURK && mon->behaviour != BEH_LURK)
+    if (old_behaviour == BEH_LURK && !mons_is_lurking(mon))
     {
         switch(event)
         {
@@ -3640,10 +3640,10 @@ static void _handle_nearby_ability(monsters *monster)
 
     if (monster_can_submerge(monster, grd[monster->x][monster->y])
         && !player_beheld_by(monster) // No submerging if player entranced.
-        && monster->behaviour != BEH_LURK // Handled elsewhere
+        && !mons_is_lurking(monster)  // Handled elsewhere.
         && (one_chance_in(5)
-            || grid_distance( monster->x, monster->y,
-                              you.x_pos, you.y_pos ) > 1
+            || grid_distance(monster->x, monster->y,
+                             you.x_pos, you.y_pos) > 1
                // FIXME This is better expressed as a
                // function such as
                // monster_has_ranged_attack:
@@ -5709,10 +5709,10 @@ static void _handle_monster_move(int i, monsters *monster)
             }
         }
 
-        if (monster->behaviour == BEH_LURK)
+        if (mons_is_lurking(monster))
         {
             // Lurking monsters only stop lurking if their target is right
-            // next tp them, otherwise they just sit there.
+            // next to them, otherwise they just sit there.
             if (monster->foe != MHITNOT
                 && abs(monster->target_x - monster->x) <= 1
                 && abs(monster->target_y - monster->y) <= 1)

@@ -1000,7 +1000,7 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
     }
 
     bool was_seen = player_monster_visible(monster) && mons_near(monster)
-                    && monster->behaviour != BEH_LURK;
+                    && !mons_is_lurking(monster);
 
     if (!silent)
         simple_monster_message(monster, " disappears!");
