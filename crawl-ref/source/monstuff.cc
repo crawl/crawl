@@ -2945,7 +2945,7 @@ static void _handle_behaviour(monsters *mon)
             // Batty monsters don't automatically reseek so that
             // they'll flitter away, we'll reset them just before
             // they get movement in handle_monsters() instead. -- bwr
-            if (proxFoe && mons_is_batty(mon))
+            if (proxFoe && !mons_is_batty(mon))
             {
                 new_beh = BEH_SEEK;
                 break;
@@ -2961,8 +2961,7 @@ static void _handle_behaviour(monsters *mon)
             // wandering monsters at least appear to have some sort of
             // attention span.  -- bwr
             if (mon->x == mon->target_x && mon->y == mon->target_y
-                || one_chance_in(20)
-                || testbits( mon->flags, MF_BATTY ))
+                || mons_is_batty(mon) || one_chance_in(20))
             {
                 bool need_target = true;
                 if (travelling)
@@ -5588,8 +5587,7 @@ static void _handle_monster_move(int i, monsters *monster)
     // of in handle_behaviour() since that will be called with
     // every single movement, and we want these monsters to
     // hit and run. -- bwr
-    if (monster->foe != MHITNOT
-        && mons_is_wandering(monster)
+    if (monster->foe != MHITNOT && mons_is_wandering(monster)
         && mons_is_batty(monster))
     {
         monster->behaviour = BEH_SEEK;
@@ -5894,7 +5892,7 @@ static void _handle_monster_move(int i, monsters *monster)
                 // Figure out if they fight.
                 if (monsters_fight(i, targmon))
                 {
-                    if (testbits(monster->flags, MF_BATTY))
+                    if (mons_is_batty(monster))
                     {
                         monster->behaviour = BEH_WANDER;
                         monster->target_x = 10 + random2(GXM - 10);
@@ -5923,7 +5921,7 @@ static void _handle_monster_move(int i, monsters *monster)
                     monster_attack(i);
                     attacked = true;
 
-                    if (testbits(monster->flags, MF_BATTY))
+                    if (mons_is_batty(monster))
                     {
                         monster->behaviour = BEH_WANDER;
                         monster->target_x = 10 + random2(GXM - 10);
