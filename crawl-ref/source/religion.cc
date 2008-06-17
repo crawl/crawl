@@ -4090,7 +4090,7 @@ static bool _holy_beings_on_level_attitude_change()
 {
     bool success = false;
 
-    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
         if (monster->alive()
@@ -4140,7 +4140,7 @@ static bool _evil_beings_on_level_attitude_change()
 {
     bool success = false;
 
-    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
         if (monster->alive()
@@ -4179,7 +4179,7 @@ static bool _chaotic_beings_on_level_attitude_change()
 {
     bool success = false;
 
-    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
         if (monster->alive()
@@ -4192,8 +4192,8 @@ static bool _chaotic_beings_on_level_attitude_change()
                  static_cast<int>(you.where_are_you));
 #endif
 
-            // If you worship Zin, you make all non-hostile chaotic
-            // beings hostile.
+            // If you worship Zin, you make all friendly and good neutral
+            // chaotic beings hostile.
             if (is_lawful_god(you.religion) && mons_wont_attack(monster))
             {
                 monster->attitude = ATT_HOSTILE;
@@ -4218,7 +4218,7 @@ static bool _magic_users_on_level_attitude_change()
 {
     bool success = false;
 
-    for ( int i = 0; i < MAX_MONSTERS; ++i )
+    for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
         if (monster->alive()
@@ -4231,8 +4231,8 @@ static bool _magic_users_on_level_attitude_change()
                  static_cast<int>(you.where_are_you));
 #endif
 
-            // If you worship Trog, you make all non-hostile magic users
-            // hostile.
+            // If you worship Trog, you make all friendly and good neutral
+            // magic users hostile.
             if (you.religion == GOD_TROG && mons_wont_attack(monster))
             {
                 monster->attitude = ATT_HOSTILE;
