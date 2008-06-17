@@ -189,7 +189,7 @@ void init_mon_name_cache()
                 || mon == MONS_POTION_MIMIC
                 || mon == MONS_ABOMINATION_LARGE)
             {
-                // Leep previous entry.
+                // Keep previous entry.
                 continue;
             }
             else
