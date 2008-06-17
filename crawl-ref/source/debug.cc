@@ -1768,7 +1768,7 @@ void debug_stethoscope(int mon)
           (menv[i].behaviour == BEH_FLEE)        ? "flee" :
           (menv[i].behaviour == BEH_CORNERED)    ? "cornered" :
           (menv[i].behaviour == BEH_PANIC)       ? "panic" :
-          (menv[i].behaviour == BEH_INVESTIGATE) ? "investigate" :
+          (menv[i].behaviour == BEH_LEAVE)       ? "leave" :
           (menv[i].behaviour == BEH_LURK)        ? "lurk"
                                                  : "unknown"),
          menv[i].behaviour,

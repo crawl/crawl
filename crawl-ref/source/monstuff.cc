@@ -2147,27 +2147,24 @@ void behaviour_event(monsters *mon, int event, int src,
     // Do any resultant foe or state changes.
     _handle_behaviour(mon);
 
-    if (old_behaviour == BEH_LURK && !mons_is_lurking(mon))
-    {
-        switch(event)
-        {
-        case ME_EVAL:
-        case ME_DISTURB:
-        case ME_ALERT:
-            // Lurking monsters won't stop lurking just because they
-            // noticed something.
-            mon->behaviour = BEH_LURK;
-            break;
+    const bool wasLurking =
+        (old_behaviour == BEH_LURK && !mons_is_lurking(mon));
+    const bool wasLeaving =
+        (old_behaviour == BEH_LEAVE && !mons_is_leaving(mon));
 
-        default:
-            if (mon->has_ench(ENCH_SUBMERGED)
-                && !mon->del_ench(ENCH_SUBMERGED))
-            {
-                // Lurking monsters that can't unsubmerge keep lurking.
-                mon->behaviour = BEH_LURK;
-            }
-            break;
-        }
+    if ((wasLurking || wasLeaving)
+        && (event == ME_DISTURB || event == ME_ALERT || event == ME_EVAL))
+    {
+        // Lurking monsters or monsters leaving the level won't stop
+        // doing so just because they noticed something.
+        mon->behaviour = old_behaviour;
+    }
+    else if (wasLurking && mon->has_ench(ENCH_SUBMERGED)
+            && !mon->del_ench(ENCH_SUBMERGED))
+    {
+        // The same goes for lurking submerged monsters, if they can't
+        // unsubmerge.
+        mon->behaviour = BEH_LURK;
     }
 }
 
@@ -2406,6 +2403,16 @@ static void _mark_neighbours_player_unreachable(monsters *mon)
             if (m->travel_target == MTRAV_NONE)
                 m->travel_target = MTRAV_UNREACHABLE;
         }
+}
+
+static void _make_mons_leave_level(monsters *mon)
+{
+    if (mons_is_leaving(mon))
+    {
+        // Monsters leaving the level take their stuff with them.
+        mon->flags |= MF_HARD_RESET;
+        monster_die(mon, KILL_DISMISSED, 0);
+    }
 }
 
 //---------------------------------------------------------------
@@ -2941,6 +2948,14 @@ static void _handle_behaviour(monsters *mon)
             break;
 
         case BEH_WANDER:
+            // Monsters that have been pacified leave the level.
+            if (mons_is_pacified(mon))
+            {
+                new_foe = MHITNOT;
+                new_beh = BEH_LEAVE;
+                break;
+            }
+
             // Is our foe in LOS?
             // Batty monsters don't automatically reseek so that
             // they'll flitter away, we'll reset them just before
@@ -3197,6 +3212,31 @@ static void _handle_behaviour(monsters *mon)
                     mon->travel_path.clear();
                     mon->travel_target = MTRAV_NONE;
                 }
+            }
+            break;
+
+        case BEH_LEAVE:
+            // If the monster can't move at all (or even teleport, as a
+            // mimic would), it obviously can't leave, so get out.
+            if (mons_is_truly_stationary(mon))
+                break;
+
+            // If the monster can submerge where it is, make it do so
+            // and leave the level.
+            if (monster_can_submerge(mon, grd(mon->pos())))
+            {
+                mon->add_ench(ENCH_SUBMERGED);
+                _make_mons_leave_level(mon);
+                return;
+            }
+
+            // If the monster is far enough away from the player, make
+            // it leave the level.
+            if (distance(mon->x, mon->y, you.x_pos, you.y_pos)
+                >= LOS_RADIUS * LOS_RADIUS * 4)
+            {
+                _make_mons_leave_level(mon);
+                return;
             }
             break;
 
@@ -3673,7 +3713,8 @@ static void _handle_nearby_ability(monsters *monster)
     case MONS_GIANT_EYEBALL:
         if (coinflip() && !mons_friendly(monster)
             && !mons_is_wandering(monster)
-            && !mons_is_fleeing(monster))
+            && !mons_is_fleeing(monster)
+            && !mons_is_leaving(monster))
         {
             simple_monster_message(monster, " stares at you.");
 
@@ -3686,7 +3727,8 @@ static void _handle_nearby_ability(monsters *monster)
     case MONS_EYE_OF_DRAINING:
         if (coinflip() && !mons_friendly(monster)
             && !mons_is_wandering(monster)
-            && !mons_is_fleeing(monster))
+            && !mons_is_fleeing(monster)
+            && !mons_is_leaving(monster))
         {
             simple_monster_message(monster, " stares at you.");
 
@@ -4135,9 +4177,10 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         }
 
         // Won't sing if either of you silenced, or it's friendly,
-        // confused or fleeing.
+        // confused, fleeing, or leaving the level.
         if (monster->has_ench(ENCH_CONFUSION)
             || mons_is_fleeing(monster)
+            || mons_is_leaving(monster)
             || mons_friendly(monster)
             || silenced(monster->x, monster->y)
             || silenced(you.x_pos, you.y_pos))
@@ -4441,7 +4484,8 @@ static bool _handle_scroll(monsters *monster)
     case SCR_TELEPORTATION:
         if (!monster->has_ench(ENCH_TP))
         {
-            if (mons_is_fleeing(monster) || mons_is_caught(monster))
+            if (mons_is_fleeing(monster) || mons_is_leaving(monster)
+                || mons_is_caught(monster))
             {
                 simple_monster_message(monster, " reads a scroll.");
                 monster_teleport(monster, false);
@@ -4452,7 +4496,8 @@ static bool _handle_scroll(monsters *monster)
         break;
 
     case SCR_BLINKING:
-        if (mons_is_fleeing(monster) || mons_is_caught(monster))
+        if (mons_is_fleeing(monster) || mons_is_leaving(monster)
+            || mons_is_caught(monster))
         {
             if (mons_near(monster))
             {
@@ -5353,9 +5398,13 @@ static bool _handle_throw(monsters *monster, bolt & beem)
         return (false);
     }
 
-    // Greatly lowered chances if the monster is fleeing.
-    if (mons_is_fleeing(monster) && !one_chance_in(8))
+    // Greatly lowered chances if the monster is fleeing or leaving the
+    // level.
+    if ((mons_is_fleeing(monster) || mons_is_leaving(monster))
+        && !one_chance_in(8))
+    {
         return (false);
+    }
 
     item_def *launcher = NULL;
     const item_def *weapon = NULL;

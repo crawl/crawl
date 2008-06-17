@@ -425,6 +425,13 @@ bool mons_is_stationary(const monsters *mon)
     return mons_class_is_stationary(mon->type);
 }
 
+// Mimics can teleport, so they're not truly stationary.
+// XXX: There should be a more generic way to check for this!
+bool mons_is_truly_stationary(const monsters *mon)
+{
+    return (mons_is_stationary(mon) && !mons_is_mimic(mon->type));
+}
+
 bool mons_is_insubstantial(int mc)
 {
     return mons_class_flag(mc, M_INSUBSTANTIAL);
@@ -2105,6 +2112,11 @@ bool mons_good_neutral(const monsters *m)
     return (m->attitude == ATT_GOOD_NEUTRAL);
 }
 
+bool mons_is_pacified(const monsters *m)
+{
+    return (m->attitude == ATT_NEUTRAL && testbits(m->flags, MF_GOT_HALF_XP));
+}
+
 bool mons_wont_attack(const monsters *m)
 {
     return (mons_friendly(m) || mons_good_neutral(m));
@@ -2200,6 +2212,11 @@ bool mons_is_cornered(const monsters *m)
     return (m->behaviour == BEH_CORNERED);
 }
 
+bool mons_is_leaving(const monsters *m)
+{
+    return (m->behaviour == BEH_LEAVE);
+}
+
 bool mons_is_lurking(const monsters *m)
 {
     return (m->behaviour == BEH_LURK);
@@ -2252,6 +2269,9 @@ void mons_pacify(monsters *mon)
         gain_exp(exper_value(mon) / 2 + 1, &exp_gain, &avail_gain);
         mon->flags |= MF_GOT_HALF_XP;
     }
+
+    // Make the monster leave the level.
+    behaviour_event(mon, ME_EVAL);
 }
 
 bool mons_should_fire(struct bolt &beam)
