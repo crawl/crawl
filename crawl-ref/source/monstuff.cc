@@ -4918,7 +4918,7 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
 // a spell was cast.
 //
 //---------------------------------------------------------------
-static bool _handle_spell( monsters *monster, bolt & beem )
+static bool _handle_spell(monsters *monster, bolt &beem)
 {
     bool monsterNearby = mons_near(monster);
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
@@ -4962,7 +4962,8 @@ static bool _handle_spell( monsters *monster, bolt & beem )
 
         if (!mon_enemies_around(monster))
         {
-            // Forces the casting of dig when player not visible - this is EVIL!
+            // Force the casting of dig when the player is not visible -
+            // this is EVIL!
             if (monster->has_spell(SPELL_DIG)
                 && mons_is_seeking(monster))
             {
@@ -5079,7 +5080,7 @@ static bool _handle_spell( monsters *monster, bolt & beem )
             }
 
             // Up to four tries to pick a spell.
-            for (int loopy = 0; loopy < 4; loopy ++)
+            for (int loopy = 0; loopy < 4; ++loopy)
             {
                 bool spellOK = false;
 
@@ -5126,17 +5127,19 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                         spellOK = false;
                     }
                     else if (ms_direct_nasty(spell_cast)
-                             && mons_aligned(monster_index(monster), monster->foe))
+                             && mons_aligned(monster_index(monster),
+                                             monster->foe))
                     {
                         spellOK = false;
                     }
-                    else if (monster->foe == MHITYOU || monster->foe == MHITNOT)
+                    else if (monster->foe == MHITYOU
+                            || monster->foe == MHITNOT)
                     {
                         // XXX: Note the crude hack so that monsters can
                         // use ME_ALERT to target (we should really have
                         // a measure of time instead of peeking to see
                         // if the player is still there). -- bwr
-                        if (!mons_player_visible( monster )
+                        if (!mons_player_visible(monster)
                             && (monster->target_x != you.x_pos
                                 || monster->target_y != you.y_pos
                                 || coinflip()))
@@ -5144,7 +5147,8 @@ static bool _handle_spell( monsters *monster, bolt & beem )
                             spellOK = false;
                         }
                     }
-                    else if (!mon_can_see_monster(monster, &menv[monster->foe]))
+                    else if (!mon_can_see_monster(monster,
+                                                  &menv[monster->foe]))
                     {
                         spellOK = false;
                     }
