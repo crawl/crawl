@@ -2059,7 +2059,7 @@ bool player_angers_monster(monsters *mon)
         mon->del_ench(ENCH_CHARM);
         behaviour_event(mon, ME_ALERT, MHITYOU);
 
-        if (see_grid(mon.pos()) && player_monster_visible(mon))
+        if (see_grid(mon->pos()) && player_monster_visible(mon))
         {
             std::string aura = "";
 
