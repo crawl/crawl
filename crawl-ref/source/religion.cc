@@ -802,12 +802,12 @@ static void _inc_penance(god_type god, int val)
          fall_into_a_pool( you.x_pos, you.y_pos, true,
                            grd[you.x_pos][you.y_pos] );
     }
-}                               // end _inc_penance()
+}
 
 static void _inc_penance(int val)
 {
     _inc_penance(you.religion, val);
-}                               // end _inc_penance()
+}
 
 static void _inc_gift_timeout(int val)
 {
@@ -2146,8 +2146,8 @@ void god_speaks( god_type god, const char *mesg )
 
 // This function is the merger of done_good() and naughty().
 // Returns true if god was interested (good or bad) in conduct.
-bool did_god_conduct( conduct_type thing_done, int level, bool known,
-                      const monsters *victim )
+bool did_god_conduct(conduct_type thing_done, int level, bool known,
+                     const monsters *victim)
 {
     bool ret = false;
     int piety_change = 0;
@@ -2787,10 +2787,10 @@ static void _dock_piety(int piety_loss, int penance)
     else if (penance)       // only if still in religion
     {
         if (last_penance_lecture != you.num_turns)
-            god_speaks( you.religion,
-                        "\"You will pay for your transgression, mortal!\"" );
+            god_speaks(you.religion,
+                       "\"You will pay for your transgression, mortal!\"");
         last_penance_lecture = you.num_turns;
-        _inc_penance( penance );
+        _inc_penance(penance);
     }
 }
 
