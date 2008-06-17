@@ -1997,8 +1997,8 @@ static bool _wounded_damaged(int monster_type)
 // 2. Call handle_behaviour to re-evaluate AI state and target x,y
 //
 //---------------------------------------------------------------
-void behaviour_event( monsters *mon, int event, int src,
-                      int src_x, int src_y )
+void behaviour_event(monsters *mon, int event, int src,
+                     int src_x, int src_y)
 {
     beh_type old_behaviour = mon->behaviour;
 
@@ -2039,7 +2039,7 @@ void behaviour_event( monsters *mon, int event, int src,
     case ME_ANNOY:
         // Will turn monster against <src>, unless they
         // are BOTH friendly or good neutral AND stupid,
-        // or else fleeing anyway. Hitting someone over
+        // or else fleeing anyway.  Hitting someone over
         // the head, of course, always triggers this code.
         if (event == ME_WHACK
             || ((wontAttack != sourceWontAttack || isSmart)
@@ -2061,7 +2061,7 @@ void behaviour_event( monsters *mon, int event, int src,
             }
         }
 
-        // Now set target x,y so that monster can whack
+        // Now set target x, y so that monster can whack
         // back (once) at an invisible foe.
         if (event == ME_WHACK)
             setTarget = true;
@@ -2145,7 +2145,7 @@ void behaviour_event( monsters *mon, int event, int src,
         mon->del_ench(ENCH_CHARM);
 
     // Do any resultant foe or state changes.
-    _handle_behaviour( mon );
+    _handle_behaviour(mon);
 
     if (old_behaviour == BEH_LURK && !mons_is_lurking(mon))
     {
@@ -2163,7 +2163,7 @@ void behaviour_event( monsters *mon, int event, int src,
             if (mon->has_ench(ENCH_SUBMERGED)
                 && !mon->del_ench(ENCH_SUBMERGED))
             {
-                // Couldn't unsubmerge.
+                // Lurking monsters that can't unsubmerge keep lurking.
                 mon->behaviour = BEH_LURK;
             }
             break;
