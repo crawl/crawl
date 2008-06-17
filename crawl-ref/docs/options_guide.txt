@@ -1619,6 +1619,13 @@ ood_interesting = 8
         Unique monsters are always noted, regardless of this setting.
         OOD monsters are only noted in the main dungeon.
 
+rare_interesting = 9
+        Monsters which are rare for the location they're in will be
+        noted.  Increasing the number causes more common monsters to
+        be noted, while decreasing it causes only the most rare of
+        monsters to be noted; setting it to 0 will turn noting of rare
+        monsters off.
+
 note_hp_percent = 5
         If your HP falls below a certain note_hp_percentage of your max 
         hit points, a note will be taken. There is some code to avoid

@@ -1769,6 +1769,23 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
     // If it's never going to attack us, then not interesting
     else if (behaviour == BEH_FRIENDLY)
         interesting = false;
+    else if (you.where_are_you == BRANCH_MAIN_DUNGEON
+             && you.level_type == LEVEL_DUNGEON
+             && mons_level(monster->type) >= you.your_level + _ood_limit()
+             && mons_level(monster->type) < 99
+             && !(monster->type >= MONS_EARTH_ELEMENTAL
+                  && monster->type <= MONS_AIR_ELEMENTAL)
+             && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
+    {
+        interesting = true;
+    }
+    else if ((you.level_type == LEVEL_DUNGEON ||
+              you.level_type == LEVEL_ABYSS)
+             && mons_rarity(monster->type) <= Options.rare_interesting
+             && mons_rarity(monster->type) > 0)
+    {
+        interesting = true;
+    }
     // Don't waste time on moname() if user isn't using this option
     else if (Options.note_monsters.size() > 0)
     {
@@ -1781,16 +1798,6 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
                 break;
             }
         }
-    }
-    else if (you.where_are_you == BRANCH_MAIN_DUNGEON
-             && you.level_type == LEVEL_DUNGEON
-             && mons_level(monster->type) >= you.your_level + _ood_limit()
-             && mons_level(monster->type) < 99
-             && !(monster->type >= MONS_EARTH_ELEMENTAL
-                  && monster->type <= MONS_AIR_ELEMENTAL)
-             && !mons_class_flag( monster->type, M_NO_EXP_GAIN ))
-    {
-        interesting = true;
     }
 
     if (interesting)

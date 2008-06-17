@@ -1663,6 +1663,7 @@ public:
     std::string user_note_prefix;// Prefix for user notes
     int         note_hp_percent; // percentage hp for notetaking
     int         ood_interesting; // how many levels OOD is noteworthy?
+    int         rare_interesting; // what monster rarity is noteworthy?
     int         easy_confirm;    // make yesno() confirming easier
     int         easy_quit_item_prompts; // make item prompts quitable on space
     int         colour[16];      // macro fg colours to other colours
