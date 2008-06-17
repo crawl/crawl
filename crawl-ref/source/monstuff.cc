@@ -3673,7 +3673,7 @@ static void _handle_nearby_ability(monsters *monster)
     case MONS_GIANT_EYEBALL:
         if (coinflip() && !mons_friendly(monster)
             && !mons_is_wandering(monster)
-            && mons_is_fleeing(monster))
+            && !mons_is_fleeing(monster))
         {
             simple_monster_message(monster, " stares at you.");
 
@@ -3686,7 +3686,7 @@ static void _handle_nearby_ability(monsters *monster)
     case MONS_EYE_OF_DRAINING:
         if (coinflip() && !mons_friendly(monster)
             && !mons_is_wandering(monster)
-            && mons_is_fleeing(monster))
+            && !mons_is_fleeing(monster))
         {
             simple_monster_message(monster, " stares at you.");
 
@@ -3894,6 +3894,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         break;
 
     case MONS_ACID_BLOB:
+    case MONS_OKLOB_PLANT:
     case MONS_YELLOW_DRACONIAN:
         if (monster->has_ench(ENCH_CONFUSION))
             break;

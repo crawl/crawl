@@ -960,7 +960,6 @@ void direction(dist& moves, targeting_type restricts,
                 && mode == TARG_ENEMY
                 && !yesno("Really target yourself?", false, 'n'))
             {
-                mpr("not self-targetting");
                 mesclr();
                 show_prompt = true;
             }
