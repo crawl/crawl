@@ -2279,7 +2279,7 @@ bool melee_attack::apply_damage_brand()
         int hp_boost = 0;
 
         // Thus is probably more valuable on larger weapons?
-        if (weapon && is_fixed_artefact( *weapon )
+        if (weapon && is_fixed_artefact(*weapon)
             && weapon->special == SPWPN_VAMPIRES_TOOTH)
         {
             hp_boost = damage_done;
@@ -2292,7 +2292,7 @@ bool melee_attack::apply_damage_brand()
         if (attacker->hunger_level() != HS_ENGORGED)
             attacker->make_hungry(-random2avg(59, 2));
 
-        attacker->god_conduct( DID_NECROMANCY, 2 );
+        attacker->god_conduct(DID_NECROMANCY, 2);
         break;
     }
     case SPWPN_PAIN:
