@@ -448,8 +448,8 @@ static monster_type _pick_random_wraith()
 {
     static monster_type wraiths[] =
     {
-        MONS_WRAITH, MONS_FREEZING_WRAITH, MONS_SPECTRAL_WARRIOR,
-        MONS_SHADOW_WRAITH
+        MONS_WRAITH, MONS_SHADOW_WRAITH, MONS_FREEZING_WRAITH,
+        MONS_SPECTRAL_WARRIOR
     };
 
     return wraiths[ random2(sizeof(wraiths) / sizeof(*wraiths)) ];
@@ -463,14 +463,16 @@ static monster_type _pick_horrible_thing()
 
 static monster_type _pick_undead_summon()
 {
-    int summonik = MONS_PROGRAM_BUG;
+    static monster_type undead[] =
+    {
+        MONS_NECROPHAGE, MONS_GHOUL, MONS_ROTTING_HULK, MONS_PHANTOM,
+        MONS_HUNGRY_GHOST, MONS_FLAYED_GHOST, MONS_ZOMBIE_SMALL,
+        MONS_SKELETON_SMALL, MONS_SIMULACRUM_SMALL, MONS_SKELETAL_WARRIOR,
+        MONS_FLYING_SKULL, MONS_CURSE_SKULL, MONS_CURSE_TOE,
+        MONS_SKELETAL_DRAGON
+    };
 
-    // FIXME: This is ridiculous.
-    do
-        summonik = random2(MONS_PROGRAM_BUG); // hmmmm ... {dlb}
-    while (mons_class_holiness(summonik) != MH_UNDEAD);
-
-    return static_cast<monster_type>(summonik);
+    return undead[ random2(sizeof(undead) / sizeof(*undead)) ];
 }
 
 static void _do_high_level_summon(monsters *monster, bool monsterNearby,
