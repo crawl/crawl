@@ -47,7 +47,7 @@ Interface
 Gods
 ----
 * Overhauled the good gods: Zin/TSO completely new, Elyvilon more interesting.
-* Greatly improved Beogh and Nemelex.
+* Greatly improved Beogh and Nemelex, and made Xom more interesting.
 * Vehumet isn't evil anymore, and all boosts apply without prayer.
 * Increase cost for Lugonu's self-banishment.
 * Removed autoprayer and option to stop prayer.
@@ -97,7 +97,7 @@ Monsters
 * New glyphs and colours for many monsters.
   (See /settings/034_monster_glyphs.txt.)
 * Draconian ghosts of xl >= 7 get the shadow dragon breath attack.
-* Ghosts get freezing cloud.
+* Ghosts get Dispel Undead, Freezing Cloud, etc.
 * Mummy curses now only decay a random amount of a stack of potions.
 * Angels and Daevas may appear randomly in the Abyss.
 * Holy monsters may turn neutral if the player follows a good god.
@@ -166,6 +166,7 @@ Miscellaneous
 * Train Stealth by sneaking around sleeping monsters.
 * Train Traps & Doors by setting off traps.
 * Disallow self-banishment via Banishment spell.
+* New spell: Summon Ugly Thing.
 * Replace Paralyse spell with new spell Petrify.
 * Better feedback on Detect Traps.
 * Identify post-mortem inventory in morgue.txt.
