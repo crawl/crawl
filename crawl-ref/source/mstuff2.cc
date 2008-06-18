@@ -428,9 +428,7 @@ void mons_trap(struct monsters *monster)
             monster->speed_increment = 1;
         }
     }
-
-    return;
-}                               // end mons_trap()
+}
 
 static bool _mons_abjured(monsters *monster, bool nearby)
 {
