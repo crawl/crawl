@@ -3911,7 +3911,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             if (distance( monster->x, monster->y, targ->x, targ->y ) >= 5)
                 continue;
 
-            if (monster->attitude == targ->attitude)
+            if (mons_atts_aligned(monster->attitude, targ->attitude))
                 continue;
 
             // Faking LOS by checking the neighbouring square.
