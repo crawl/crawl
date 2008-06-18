@@ -3113,7 +3113,7 @@ bool trog_burn_books()
     }
 
     int totalpiety = 0;
-    
+
     for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, true); ri; ++ri)
     {
         // If a grid is blocked, books lying there will be ignored.
@@ -3135,14 +3135,14 @@ bool trog_burn_books()
             {
                 continue;
             }
-                
+
             // Ignore {!D} inscribed books.
             if (!check_warning_inscriptions( *si, OPER_DESTROY))
             {
                 mpr("Won't ignite {!D} inscribed book.");
                 continue;
             }
-                
+
             rarity += book_rarity( si->sub_type );
             // Piety increases by 2 for books never cracked open, else 1.
             // Conversely, rarity influences the duration of the pyre.
@@ -3826,7 +3826,7 @@ static bool _beogh_retribution()
             msg << " throws "
                 << (num_created > 1 ? "implements" : "an implement")
                 << " of " << (am_orc ? "orc slaying" : "electrocution")
-                << " at you.";                    
+                << " at you.";
             simple_god_message(msg.str().c_str(), god);
             break;
         } // else fall through
