@@ -5622,9 +5622,9 @@ static void _handle_monster_move(int i, monsters *monster)
         // giant spores and ball lightning exploding at the end of the
         // function, but do return if the monster's data has been
         // reset, since then the monster type is invalid.
-        if (!monster->alive())
+        if (monster->type == -1)
             return;
-        if (monster->hit_points < 1)
+        if (monster->hit_points < 0)
             break;
     }
 
@@ -6029,7 +6029,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
     }                   // end while
 
-    if (monster->type != -1 && monster->hit_points < 1)
+    if (monster->type != -1 && monster->hit_points < 0)
     {
         if (monster->type == MONS_GIANT_SPORE
             || monster->type == MONS_BALL_LIGHTNING)
