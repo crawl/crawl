@@ -2380,10 +2380,10 @@ static void _mons_find_level_exits(const monsters *mon,
         if (is_stair(grd(*ri)))
             e.push_back(*ri);
 
-        // Teleportation and shaft traps: only known traps if the
-        // monster isn't native to the branch, or all traps if it is.
+        // Teleportation traps: only known traps if the monster isn't
+        // native to the branch, or all traps if it is.
         trap_type tt = trap_type_at_xy((*ri).x, (*ri).y);
-        if ((tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
+        if (tt == TRAP_TELEPORT
             && (grd[(*ri).x][(*ri).y] != DNGN_UNDISCOVERED_TRAP
                 || mons_is_native_in_branch(mon)))
         {
