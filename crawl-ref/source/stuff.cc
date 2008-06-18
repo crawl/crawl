@@ -722,6 +722,13 @@ void end(int exit_code, bool print_error, const char *format, ...)
 
 void redraw_screen(void)
 {
+    if (!crawl_state.need_save)
+    {
+        // if the game hasn't started, don't do much
+        clrscr();
+        return;
+    }
+    
     draw_border();
 
     you.redraw_hit_points = true;
