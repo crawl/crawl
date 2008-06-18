@@ -14,7 +14,9 @@ Short Blades
 Being skilled with a particular type of weapon will make it easier to 
 fight with all weapons of this type and make you deal more damage with 
 them. It is generally recommended to concentrate your efforts on one or 
-two weapon types to become more powerful in them.
+two weapon types to become more powerful in them. Short Blades have a 
+reputation for producing rather little damage in the late game, but on
+the other hand they are the best implements for stabbing. 
 
 If you're already skilled in Short Blades, it is easier to become 
 skilled in Long Blades.
@@ -78,12 +80,12 @@ faster, and vice versa.
 Bows
 
 Being skilled in a particular type of ranged attack will let you deal 
-more damage when using the appropriate launcher an dammunition.
+more damage when using the appropriate launcher and ammunition.
 %%%%
 Crossbows
 
 Being skilled in a particular type of ranged attack will let you deal 
-more damage when using the appropriate launcher an dammunition.
+more damage when using the appropriate launcher and ammunition.
 %%%%
 Darts
 
@@ -113,7 +115,8 @@ sadly. Rather, to resist them, you'll need magic resistance.
 Stealth
 
 By training stealth, you can make it less likely that monsters will 
-notice you. Note that monsters become more suspicious and observant as 
+notice you. This skill is trained by moving in the vicinity of unaware
+monsters. Note that monsters become more suspicious and observant as 
 you descend.
 %%%%
 Stabbing
@@ -124,7 +127,7 @@ Some gods may disapprove of this.
 %%%%
 Shields
 
-A high Shields skill of blocking a melee or ranged attack with your 
+A high Shields skill helps blocking a melee or ranged attack with your 
 equipped (or a magical) shield.
 %%%%
 Traps & Doors
@@ -144,8 +147,8 @@ Spellcasting
 Now that you have the basic Spellcasting skill, you can learn and cast 
 spells, if you wish to. In addition, gaining another level in 
 Spellcasting will occasionally grant your more magic and "spell slots" 
-to spend on new spells. A high Spellcasting skill will also decrease 
-the amount by which casting a high level spell makes you hunger.
+to spend on new spells. Spellcasting skill and your intelligence are
+the only factors countering spell hunger.
 %%%%
 Conjurations
 
@@ -153,6 +156,9 @@ Being skilled in a magical "school" makes it easier to learn and cast
 spells of this school. Many spells belong to a combination of several 
 schools, in which case the average skill in these schools will decide 
 on spellcasting success and power.
+
+Conjurations are battle oriented spells, all dealing damage in various 
+ways.
 %%%%
 Enchantments
 
@@ -160,6 +166,9 @@ Being skilled in a magical "school" makes it easier to learn and cast
 spells of this school. Many spells belong to a combination of several 
 schools, in which case the average skill in these schools will decide 
 on spellcasting success and power.
+
+Enchantments try to affect nearby beings in manifold possibilities. 
+This includes a list of beneficial Enchantments, like Haste.
 %%%%
 Summonings
 
@@ -174,6 +183,9 @@ Being skilled in a magical "school" makes it easier to learn and cast
 spells of this school. Many spells belong to a combination of several 
 schools, in which case the average skill in these schools will decide 
 on spellcasting success and power.
+
+Necromancy is the art of draining and gaining life, although most often
+associated with zombies and other undead.
 %%%%
 Translocations
 
@@ -181,6 +193,8 @@ Being skilled in a magical "school" makes it easier to learn and cast
 spells of this school. Many spells belong to a combination of several 
 schools, in which case the average skill in these schools will decide 
 on spellcasting success and power.
+
+Translocations focus on spatial movement of beings or objects.
 %%%%
 Transmigration
 
@@ -188,6 +202,9 @@ Being skilled in a magical "school" makes it easier to learn and cast
 spells of this school. Many spells belong to a combination of several 
 schools, in which case the average skill in these schools will decide 
 on spellcasting success and power.
+
+Transmigrations deal with changing shapes. It is possible to become a
+powerful dragon, for example.
 %%%%
 Divinations
 
@@ -195,6 +212,8 @@ Being skilled in a magical "school" makes it easier to learn and cast
 spells of this school. Many spells belong to a combination of several 
 schools, in which case the average skill in these schools will decide 
 on spellcasting success and power.
+
+Divinations are concerned with detection of instances far away.
 %%%%
 Fire Magic
 
@@ -242,11 +261,17 @@ Being skilled in a magical "school" makes it easier to learn and cast
 spells of this school. Many spells belong to a combination of several 
 schools, in which case the average skill in these schools will decide 
 on spellcasting success and power.
+
+Poison magic is particularly useful early on as many monsters are
+resistant to poison in the later game. There are poison spells of high
+utility throughout the game, though.
 %%%%
 Invocations
 
 Your Invocations skill affects the likelihood trying to use a
-divine ability will be successful.
+divine ability will be successful. Also, the Invocations skill 
+affects your magical reserve, much like, but less than, the
+Spellcasting skill.
 %%%%
 Evocations
 
