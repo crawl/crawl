@@ -116,7 +116,7 @@ int apply_area_around_square( int (*func) (int, int, int, int),
                               int targ_x, int targ_y, int power );
 
 int apply_random_around_square( int (*func) (int, int, int, int),
-                                int targ_x, int targ_y, bool hole_in_middle, 
+                                int targ_x, int targ_y, bool hole_in_middle,
                                 int power, int max_targs );
 
 int apply_one_neighbouring_square(int (*func) (int, int, int, int),
