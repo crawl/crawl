@@ -118,6 +118,9 @@ void get_mimic_item( const monsters *mimic, item_def &item )
 
     int prop = 127 * mimic->x + 269 * mimic->y;
 
+    rng_save_excursion exc;
+    seed_rng( prop );
+
     switch (mimic->type)
     {
     case MONS_WEAPON_MIMIC:
@@ -127,13 +130,7 @@ void get_mimic_item( const monsters *mimic, item_def &item )
         prop %= 100;
 
         if (prop < 20)
-        {
             make_item_randart(item);
-            // Override special - this could cause a "bad" (no-properties)
-            // randart, but we only need the name anyway. We have to
-            // do this in order to get a consistent name for the mimic item.
-            item.special = (((mimic->x << 8) + mimic->y) & RANDART_SEED_MASK);
-        }
         else if (prop < 50)
             set_equip_desc( item, ISFLAG_GLOWING );
         else if (prop < 80)
@@ -153,11 +150,7 @@ void get_mimic_item( const monsters *mimic, item_def &item )
         prop %= 100;
 
         if (prop < 20)
-        {
             make_item_randart(item);
-            // See comment above for randart weapon mimics.
-            item.special = (((mimic->x << 8) + mimic->y) & RANDART_SEED_MASK);
-        }
         else if (prop < 40)
             set_equip_desc(item, ISFLAG_GLOWING);
         else if (prop < 60)
