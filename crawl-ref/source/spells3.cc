@@ -666,7 +666,8 @@ static bool _is_animatable_corpse(const item_def& item)
 // undead can be equipped with the second monster's items if the second
 // monster is either of the same type as the first, or if the second
 // monster wasn't killed by the player or a player's pet.
-static void _equip_undead(int x, int y, int corps, int monster, int monnum)
+static void _equip_undead(const coord_def &a, int corps, int monster,
+                          int monnum)
 {
 // Delay this until after 0.4
 #if 0
@@ -685,7 +686,7 @@ static void _equip_undead(int x, int y, int corps, int monster, int monnum)
     // A monster's corpse is last in the linked list after its items,
     // so (for example) the first item after the second-to-last corpse
     // is the first item belonging to the last corpse.
-    int objl      = igrd[x][y];
+    int objl      = igrd(a);
     int first_obj = NON_ITEM;
 
     while (objl != NON_ITEM && objl != corps)
@@ -859,7 +860,7 @@ static bool _raise_corpse(const coord_def &a, int corps, beh_type beha,
                 menv[monster].mname = "Blork";
         }
 
-        _equip_undead(a.x, a.y, corps, monster, monnum);
+        _equip_undead(a, corps, monster, monnum);
 
         destroy_item(corps);
 
