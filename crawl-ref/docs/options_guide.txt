@@ -25,8 +25,8 @@ The contents of this text are:
 4-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 autopickup_no_burden, pickup_thrown, pickup_dropped,
-                assign_item_slot, drop_mode, pickup_mode, drop_filter,
-                default_friendly_pickup
+                chunks_autopickup, assign_item_slot, drop_mode, 
+                pickup_mode, drop_filter, default_friendly_pickup
 4-b     Targeting.
                 target_zero_exp, target_oos, target_los_first,
                 default_target, target_unshifted_dirs
@@ -58,7 +58,7 @@ The contents of this text are:
                 stash_remove_decay
 4-i     Command Enhancements.
                 auto_list, easy_open, easy_unequip, easy_confirm, 
-                easy_butcher, always_confirm_butcher, chunks_autopickup,
+                easy_butcher, always_confirm_butcher, 
                 swap_when_safe, easy_quit_item_prompts, easy_exit_menu, 
                 sort_menus
 4-j     Message and Display Improvements.
@@ -417,6 +417,15 @@ pickup_dropped = false
         pickup_dropped lets autopickup affect objects you've dropped. 
         Set to false to block autopickup for dropped objects. This can 
         be convenient.
+
+chunks_autopickup = true
+        If true then butchered flesh will be automatically picked up
+        right after they're generated (and after switching back from
+        the butchering weapon to the usual weapon, if necessary).
+        Respects all of the autopickup options.  Requires '%' to be
+        in the autopickup line.
+        Does not apply to Vampires who will pick up bottled potions
+        of blood regardless of this option, and not pick up chunks.
 
 assign_item_slot = (forward | backward)
         When picking up items, the inventory slot into which the item 
@@ -977,15 +986,6 @@ always_confirm_butcher = false
         false, butchering will proceed automatically if there is exactly 
         one corpse on the square. If there are multiple corpses on a 
         square, you will always be prompted, regardless of this option.
-
-chunks_autopickup = true
-        If true then butchered flesh will be automatically picked up
-        right after they're generated (and after switching back from
-        the butchering weapon to the usual weapon, if necessary).
-        Respects all of the autopickup options.  Requires '%' to be
-        in the autopickup line.
-        Does not apply to Vampires who will pick up bottled potions
-        of blood regardless of this option, and not pick up chunks.
 
 swap_when_safe = true
         If both this and easy_butcher are true, then if an auto-switch

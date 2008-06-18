@@ -98,6 +98,7 @@ include = autopickup_exceptions.txt
 # autopickup_no_burden = true
 # pickup_thrown = false
 # pickup_dropped = true
+# chunks_autopickup = false
 # assign_item_slot = (forward | backward)
 #
 # drop_mode = (multi | single)
@@ -204,7 +205,6 @@ include = travel_stoppers.txt
 # easy_confirm = (none | safe)
 # easy_butcher = false
 # always_confirm_butcher = true
-# chunks_autopickup      = false
 # swap_when_safe         = false
 # easy_quit_item_prompts = false
 # easy_exit_menu         = false
