@@ -1451,7 +1451,7 @@ void update_monster_pane()
     if (lines_needed > (unsigned int) max_print)
     {
         // Use type names rather than full names ("small zombie" vs
-        // "rat zobmie") in order to take up less lines.
+        // "rat zombie") in order to take up less lines.
         for (unsigned int i=1; i < mons.size(); i++)
             mons[i].m_fullname = false;
         std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);

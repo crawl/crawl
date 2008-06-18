@@ -2935,8 +2935,15 @@ void describe_god( god_type which_god, bool give_title )
         else if (which_god == GOD_TROG)
         {
             have_any = true;
-            cprintf("You can call upon %s to burn books in your surroundings."
-                    EOL, god_name(which_god).c_str());
+            // XXX Mega-hack. Duplicates code in _print_god_abil_desc().
+            // FIXME.
+            std::ostringstream buf;
+            buf << "You can call upon " << god_name(which_god)
+                << " to burn books in your surroundings.";
+            const int spacesleft = 79 - buf.str().length();
+            const std::string cost = "(Food)";
+            buf << std::setw(spacesleft) << cost;
+            cprintf("%s" EOL, buf.str().c_str());
         }
         else if (which_god == GOD_ELYVILON)
         {

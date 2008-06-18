@@ -483,7 +483,7 @@ std::string print_god_likes(god_type which_god, bool verbose)
 
     case GOD_TROG:
         snprintf(info, INFO_SIZE, "destroy spellbooks (especially ones you've"
-                                  "never read)%s",
+                                  " never read)%s",
                  verbose ? " via the <w>a</w> command" : "");
 
         likes.push_back(info);
