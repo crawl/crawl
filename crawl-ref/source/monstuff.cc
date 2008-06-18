@@ -5215,10 +5215,9 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             {
                 bool spellOK = false;
 
-                // Setup spell - monsters that are fleeing or leaving
-                // the level will always try to choose their emergency
-                // spell.
-                if (mons_is_fleeing(monster) || mons_is_leaving(monster))
+                // Setup spell - monsters that are fleeing will always
+                // try to choose their emergency spell.
+                if (mons_is_fleeing(monster))
                 {
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
                                                    : hspell_pass[5]);
