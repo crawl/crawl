@@ -607,6 +607,7 @@ bool is_stair(dungeon_feature_type gridc)
 {
     return (is_travelable_stair(gridc)
             || gridc == DNGN_ENTER_ABYSS
+            || gridc == DNGN_EXIT_ABYSS
             || gridc == DNGN_ENTER_LABYRINTH
             || gridc == DNGN_ENTER_PANDEMONIUM
             || gridc == DNGN_EXIT_PANDEMONIUM

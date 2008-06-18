@@ -503,8 +503,10 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 static int _is_near_stairs(coord_def &p)
 {
     int result = 0;
-    for (int i = -1; i <= 1; i++)
-        for (int j = -1; j <= 1; j++)
+
+    for (int i = -1; i <= 1; ++i)
+    {
+        for (int j = -1; j <= 1; ++j)
         {
             if (!in_bounds(p))
                 continue;
@@ -519,9 +521,10 @@ static int _is_near_stairs(coord_def &p)
                 // Should there be several stairs, don't overwrite the
                 // player on stairs info.
                 if (result < 2)
-                    result = (p == you.pos() ? 2 : 1);
+                    result = (p == you.pos()) ? 2 : 1;
             }
         }
+    }
 
     return result;
 }

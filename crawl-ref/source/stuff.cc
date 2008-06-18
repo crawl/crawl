@@ -1493,13 +1493,14 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
 // Returns 0 if the point is not near stairs.
 // Returns 1 if the point is near unoccupied stairs.
 // Returns 2 if the point is near player-occupied stairs.
-int near_stairs(const coord_def &p, int max_dist,
-                dungeon_char_type &stair_type,
-                branch_type &branch)
+int near_stairs(const coord_def &p, int max_dist, bool allow_hatches,
+                dungeon_char_type &stair_type, branch_type *branch)
 {
     coord_def inc;
-    for (inc.x = -max_dist; inc.x <= max_dist; inc.x++)
-        for (inc.y = -max_dist; inc.y <= max_dist; inc.y++)
+
+    for (inc.x = -max_dist; inc.x <= max_dist; ++inc.x)
+    {
+        for (inc.y = -max_dist; inc.y <= max_dist; ++inc.y)
         {
             const coord_def np(p + inc);
 
@@ -1529,9 +1530,10 @@ int near_stairs(const coord_def &p, int max_dist,
                          break;
                      }
                 }
-                return (np == you.pos()? 2 : 1);
+                return (np == you.pos()) ? 2 : 1;
             }
         }
+    }
 
     return false;
 }
