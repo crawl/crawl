@@ -279,7 +279,7 @@ Flame Tongue
 
 This spell creates a short burst of flame.
 %%%%
-Fly
+Flight
 
 This spell grants to the caster the ability to fly through the air. 
 %%%%

@@ -1390,6 +1390,12 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
             {
                 you.attribute[ATTR_HELD] = 10;
                 mpr("You become entangled in the net!");
+
+                // Xom thinks this is hilarious if you trap yourself this way.
+                if (you_caught)
+                    xom_is_stimulated(16);
+                else
+                    xom_is_stimulated(255);
             }
 
             if (!you_caught)

@@ -38,8 +38,10 @@
 
 #include "abyss.h"
 #include "beam.h"
+#include "database.h"
 #include "decks.h"
 #include "delay.h"
+#include "describe.h"
 #include "effects.h"
 #include "food.h"
 #include "it_use2.h"
@@ -208,7 +210,7 @@ static const ability_def Ability_List[] =
     // as exhaustion's only (and designed) effect is preventing Berserk. -- bwr
     { ABIL_FLY_II, "Fly", 0, 0, 25, 0, ABFLAG_NONE },
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball", 0, 0, 0, 0, ABFLAG_INSTANT },
-    { ABIL_MUMMY_RESTORATION, "Restoration", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
+    { ABIL_MUMMY_RESTORATION, "Self-Restoration", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
 
     // EVOKE abilities use Evocations and come from items:
     // Mapping, Teleportation, and Blink can also come from mutations
@@ -320,7 +322,6 @@ static const ability_def Ability_List[] =
 
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
-
 
 const struct ability_def & get_ability_def( ability_type abil )
 {
@@ -810,6 +811,35 @@ std::vector<const char*> get_ability_names()
     return result;
 }
 
+static void _print_talent_description(talent tal)
+{
+    clrscr();
+
+    std::string name   = get_ability_def(tal.which).name;
+
+    // The suffix is necessary to distinguish between similarly named spells.
+    // Yes, this is a hack. (XXX)
+    std::string lookup = getLongDescription(name + "ability");
+    if (lookup.empty())
+    {
+        // Try again without the suffix.
+        lookup = getLongDescription(name);
+    }
+
+    if (lookup.empty()) // Still nothing found?
+        cprintf("No description found.");
+    else
+    {
+        std::ostringstream data;
+        data << name << "$$" << lookup;
+        print_description(data.str());
+    }
+    if (getch() == 0)
+        getch();
+
+    clrscr();
+}
+
 bool activate_ability()
 {
     if (you.duration[DUR_BERSERKER])
@@ -855,7 +885,8 @@ bool activate_ability()
     int selected = -1;
     while (selected < 0)
     {
-        msg::streams(MSGCH_PROMPT) << "Use which ability? (? or * to list)"
+        msg::streams(MSGCH_PROMPT) << "Use which ability? (? or * to list, ! "
+                                      "for descriptions)"
                                    << std::endl;
 
         const int keyin = get_ch();
@@ -869,15 +900,28 @@ bool activate_ability()
                 return (false);
             }
         }
-        else if (keyin == ESCAPE || keyin == ' '
-                 || keyin == '\r' || keyin == '\n')
+        else if (keyin == '!')
+        {
+            while (true)
+            {
+                selected = choose_ability_menu(talents, true);
+                if (selected == -1)
+                {
+                    canned_msg( MSG_OK );
+                    return (false);
+                }
+                _print_talent_description(talents[selected]);
+            }
+        }
+        else if (keyin == ESCAPE || keyin == ' ' || keyin == '\r'
+                 || keyin == '\n')
         {
             canned_msg( MSG_OK );
             return (false);
         }
         else if ( isalpha(keyin) )
         {
-            // try to find the hotkey
+            // Try to find the hotkey.
             for (unsigned int i = 0; i < talents.size(); ++i)
             {
                 if (talents[i].hotkey == keyin)
@@ -887,7 +931,7 @@ bool activate_ability()
                 }
             }
 
-            // if we can't, cancel out
+            // If we can't, cancel out.
             if (selected < 0)
             {
                 mpr("You can't do that.");
@@ -1902,24 +1946,34 @@ static void _pay_ability_costs(const ability_def& abil)
         lose_piety( piety_cost );
 }
 
-int choose_ability_menu(const std::vector<talent>& talents)
+int choose_ability_menu(const std::vector<talent>& talents, bool describe)
 {
     Menu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE, "ability");
+
     abil_menu.set_highlighter(NULL);
     abil_menu.set_title(
         new MenuEntry("  Ability                           "
                       "Cost                    Success"));
 
+    if (describe)
+    {
+        abil_menu.set_more(formatted_string::parse_string(
+                                "Choose any ability to read its description, "
+                                "or exit the menu with Escape."));
+        abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE |
+                            MF_ALWAYS_SHOW_MORE);
+    }
+
     int numbers[52];
-    for ( int i = 0; i < 52; ++i )
+    for (int i = 0; i < 52; ++i)
         numbers[i] = i;
 
     bool found_invocations = false;
 
-    // first add all non-invocations
-    for ( unsigned int i = 0; i < talents.size(); ++i )
+    // First add all non-invocations.
+    for (unsigned int i = 0; i < talents.size(); ++i)
     {
-        if ( talents[i].is_invocation )
+        if (talents[i].is_invocation)
             found_invocations = true;
         else
         {
@@ -1930,12 +1984,12 @@ int choose_ability_menu(const std::vector<talent>& talents)
         }
     }
 
-    if ( found_invocations )
+    if (found_invocations)
     {
         abil_menu.add_entry(new MenuEntry("    Invocations - ", MEL_SUBTITLE));
-        for ( unsigned int i = 0; i < talents.size(); ++i )
+        for (unsigned int i = 0; i < talents.size(); ++i)
         {
-            if ( talents[i].is_invocation )
+            if (talents[i].is_invocation)
             {
                 MenuEntry* me = new MenuEntry(_describe_talent(talents[i]),
                                               MEL_ITEM, 1, talents[i].hotkey);

@@ -1836,7 +1836,7 @@ void describe_feature_wide(int x, int y)
     if (Options.tutorial_left)
         tutorial_describe_pos(x, y);
 
-    if ( getch() == 0 )
+    if (getch() == 0)
         getch();
 }
 
@@ -1853,7 +1853,8 @@ static bool _show_item_description(const item_def &item)
     if (item.has_spells())
     {
         if (item.base_type == OBJ_BOOKS && !player_can_read_spellbook( item ))
-            return false;
+            return (false);
+
         formatted_string fs;
         item_def dup = item;
         spellbook_contents( dup,
@@ -1862,10 +1863,10 @@ static bool _show_item_description(const item_def &item)
                   : RBOOK_USE_STAFF,
                 &fs );
         fs.display(2, -2);
-        return true;
+        return (true);
     }
 
-    return false;
+    return (false);
 }
 
 static bool _describe_spells(const item_def &item)

@@ -66,6 +66,7 @@ static TextDB AllDBs[] =
             "descript/gods.txt",
             "descript/branches.txt",
             "descript/skills.txt",
+            "descript/ability.txt",
             NULL),
 
     TextDB( "db/randart",
@@ -89,12 +90,12 @@ static TextDB AllDBs[] =
             "database/insult.txt",   // imp/demon taunts, again
             NULL),
 
-    TextDB( "db/help",
-            "database/help.txt",
-            NULL),
-
     TextDB( "db/misc",
             "database/miscname.txt", // names for miscellaneous things
+            NULL),
+
+    TextDB( "db/help",               // database for outsourced help texts
+            "database/help.txt",
             NULL),
 };
 
@@ -309,7 +310,7 @@ static void _execute_embedded_lua(std::string &str)
         str.replace(pos, lua_full.length(), result);
 
         pos = str.find("{{", pos + result.length());
-    } // while (pos != std::string::npos)
+    }
 }
 
 static void _trim_leading_newlines(std::string &s)

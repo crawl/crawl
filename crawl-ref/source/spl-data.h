@@ -1404,7 +1404,7 @@
 },
 
 {
-    SPELL_FLY, "Fly",
+    SPELL_FLY, "Flight",
      SPTYP_ENCHANTMENT | SPTYP_AIR,
      SPFLAG_NONE,
      4,

@@ -23,6 +23,7 @@ Interface
 * Overhauled (f)iring interface: abolish (t)hrowing, output quiver in status.
 * Allow selection of equipment slots from '%' overview screen.
 * Improved butchering interface.
+* Improved religion and skills interface. (Press ^! and m?, respectively.)
 * Added coloured HP/Magic bars.
 * Many new tutorial information triggers.
 * Allow searching item/monster/spell descriptions ('?/' command).

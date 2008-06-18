@@ -1,0 +1,350 @@
+%%%%
+No ability
+
+If you get this description, it is a bug.
+%%%%
+Spit Poison
+
+There's currently no description for this ability...
+%%%%
+Sense Surroundings
+
+There's currently no description for this ability...
+%%%%
+Teleportation
+
+There's currently no description for this ability...
+%%%%
+Blink ability
+
+There's currently no description for this ability...
+%%%%
+Breathe Fire
+
+There's currently no description for this ability...
+%%%%
+Breathe Frost
+
+There's currently no description for this ability...
+%%%%
+Breathe Poison Gas
+
+There's currently no description for this ability...
+%%%%
+Breathe Lightning
+
+There's currently no description for this ability...
+%%%%
+Breathe Power
+
+There's currently no description for this ability...
+%%%%
+Breathe Sticky Flame
+
+There's currently no description for this ability...
+%%%%
+Breathe Steam
+
+There's currently no description for this ability...
+%%%%
+Bat Form
+
+There's currently no description for this ability...
+%%%%
+Spit Acid
+
+There's currently no description for this ability...
+%%%%
+# Both for Fly I and II.
+Fly
+
+There's currently no description for this ability...
+%%%%
+Summon Minor Demon
+
+There's currently no description for this ability...
+%%%%
+Summon Demon
+
+There's currently no description for this ability...
+%%%%
+Hellfire
+
+There's currently no description for this ability...
+%%%%
+Torment
+
+There's currently no description for this ability...
+%%%%
+Raise Dead
+
+There's currently no description for this ability...
+%%%%
+Control Demon
+
+There's currently no description for this ability...
+%%%%
+Gate Yourself to Pandemonium
+
+There's currently no description for this ability...
+%%%%
+Channeling
+
+There's currently no description for this ability...
+%%%%
+Throw Flame ability
+
+There's currently no description for this ability...
+%%%%
+Throw Frost ability
+
+There's currently no description for this ability...
+%%%%
+Bolt of Draining ability
+
+There's currently no description for this ability...
+%%%%
+Release Delayed Fireball
+
+There's currently no description for this ability...
+%%%%
+Self-Restoration
+
+There's currently no description for this ability...
+%%%%
+Evoke Sense Surroundings
+
+There's currently no description for this ability...
+%%%%
+Evoke Teleportation
+
+There's currently no description for this ability...
+%%%%
+Evoke Blink
+
+There's currently no description for this ability...
+%%%%
+Evoke Berserk Rage
+
+There's currently no description for this ability...
+%%%%
+Evoke Invisibility
+
+There's currently no description for this ability...
+%%%%
+Turn Visible
+
+There's currently no description for this ability...
+%%%%
+Evoke Levitation
+
+There's currently no description for this ability...
+%%%%
+Stop Levitating
+
+There's currently no description for this ability...
+%%%%
+End Transformation
+
+There's currently no description for this ability...
+%%%%
+# Zin
+Recite
+
+Preaching to monsters about Zin's laws leads to various results. It 
+works best on humanoids, worse on demons and not at all on beasts.
+%%%%
+Vitalisation
+
+If Zin is most pleased with you, you can Vitalise yourself. This will
+restore Health, Magic, attribute points, or unrot you. In case none of
+these is necessary, you gain temporary boosts to your attributes
+instead. It is possible to Vitalise several times in succession for
+greater effect.
+%%%%
+Sanctuary
+
+There's currently no description for this ability...
+%%%%
+# The Shining One
+Divine Shield
+
+Conjures up a divine shield that stacks with an ordinary shield and can 
+be used even when wielding a two-handed weapon, as the Divine Shield is 
+managed by the Shining One.
+%%%%
+Cleansing Flame
+
+Hurls a huge blast of divine fury, severely damaging undead and demons. 
+All other hostiles also take damage, if less so, whereas allies are 
+never affected.
+%%%%
+Summon Daeva
+
+Summoned Daevas are powerful warriors against evil. They might be blessed 
+by the Shining One to stay longer or even permanently in this world.
+%%%%
+# Both Kikubaaqudgha and Yredelmnul.
+Recall Undead Slaves
+
+There's currently no description for this ability...
+%%%%
+# Kikubaaqudgha
+Enslave Undead
+
+There's currently no description for this ability...
+%%%%
+Invoke Death
+
+There's currently no description for this ability...
+%%%%
+# Yredelemnul
+Animate Corpse
+
+There's currently no description for this ability...
+%%%%
+Animate Dead ability
+
+There's currently no description for this ability...
+%%%%
+Drain Life
+
+There's currently no description for this ability...
+%%%%
+Control Undead
+
+There's currently no description for this ability...
+%%%%
+# Okawaru
+Might
+
+There's currently no description for this ability...
+%%%%
+Haste
+
+There's currently no description for this ability...
+%%%%
+# Makhleb
+Minor Destruction
+
+There's currently no description for this ability...
+%%%%
+Lesser Servant of Makhleb
+
+There's currently no description for this ability...
+%%%%
+Major Destruction
+
+There's currently no description for this ability...
+%%%%
+Greater Servant of Makhleb
+
+There's currently no description for this ability...
+%%%%
+# Sif Muna
+Channel Energy
+
+There's currently no description for this ability...
+%%%%
+Forget Spell
+
+There's currently no description for this ability...
+%%%%
+# Trog
+Burn Books
+
+There's currently no description for this ability...
+%%%%
+Berserk
+
+There's currently no description for this ability...
+%%%%
+Trog's Hand
+
+There's currently no description for this ability...
+%%%%
+Brothers in Arms
+
+There's currently no description for this ability...
+%%%%
+# Elyvilon
+Destroy Weapons
+
+There's currently no description for this ability...
+%%%%
+Lesser Healing
+
+There's currently no description for this ability...
+%%%%
+Purification
+
+There's currently no description for this ability...
+%%%%
+Healing
+
+There's currently no description for this ability...
+%%%%
+Restoration
+
+There's currently no description for this ability...
+%%%%
+Greater Healing
+
+There's currently no description for this ability...
+%%%%
+# Lugonu
+Depart the Abyss
+
+There's currently no description for this ability...
+%%%%
+Bend Space
+
+There's currently no description for this ability...
+%%%%
+Banish
+
+There's currently no description for this ability...
+%%%%
+Corrupt
+
+There's currently no description for this ability...
+%%%%
+Enter the Abyss
+
+There's currently no description for this ability...
+%%%%
+# Nemelex Xobeh
+Draw One
+
+There's currently no description for this ability...
+%%%%
+Peek at Two
+
+There's currently no description for this ability...
+%%%%
+Triple Draw
+
+There's currently no description for this ability...
+%%%%
+Mark Four
+
+There's currently no description for this ability...
+%%%%
+Stack Five
+
+There's currently no description for this ability...
+%%%%
+# Beogh
+Smiting
+
+There's currently no description for this ability...
+%%%%
+Recall Orcish Followers
+
+There's currently no description for this ability...
+%%%%
+Renounce Religion
+
+Renouncing your faith will make your character leave your god (and 
+usually anger said god).
+%%%%
