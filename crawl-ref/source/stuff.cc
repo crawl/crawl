@@ -787,9 +787,9 @@ void redraw_screen(void)
      bar = (bar - 6) / 2 + 6;
  */
 
-// I hope this permits easier/more experimentation with value stepdowns in
-// the code it really needs to be rewritten to accept arbitrary (unevenly
-// spaced) steppings
+// I hope this permits easier/more experimentation with value stepdowns
+// in the code.  It really needs to be rewritten to accept arbitrary
+// (unevenly spaced) steppings.
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value)
 {
