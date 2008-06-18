@@ -41,6 +41,7 @@ void mark_net_trapping(int x, int y);
 void monster_caught_in_net(monsters *mon, bolt &pbolt);
 void player_caught_in_net(void);
 void clear_trapping_net(void);
+void check_net_will_hold_monster(monsters *mon);
 
 void itrap(struct bolt &pbolt, int trapped);
 void destroy_trap( const coord_def& pos );

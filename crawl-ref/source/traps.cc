@@ -179,6 +179,48 @@ void player_caught_in_net()
     }
 }
 
+void check_net_will_hold_monster(monsters *mons)
+{
+    if (mons->body_size(PSIZE_BODY) >= SIZE_GIANT)
+    {
+        int net = get_trapping_net(mons->x, mons->y);
+        if (net != NON_ITEM)
+            destroy_item(net);
+
+        if (see_grid(mons->x, mons->y))
+        {
+            if (player_monster_visible(mons))
+            {
+                mprf("The net rips apart, and %s comes free!",
+                     mons->name(DESC_NOCAP_THE).c_str());
+            }
+            else
+                mpr("All of a sudden the net rips apart!");
+        }
+    }
+    else if (mons_is_insubstantial(mons->type)
+             || mons->type == MONS_OOZE
+             || mons->type == MONS_PULSATING_LUMP)
+    {
+        const int net = get_trapping_net(mons->x, mons->y);
+        if (net != NON_ITEM)
+            remove_item_stationary(mitm[net]);
+
+        if (mons_is_insubstantial(mons->type))
+        {
+            simple_monster_message(mons,
+                                   " drifts right through the net!");
+        }
+        else
+        {
+            simple_monster_message(mons,
+                                   " oozes right through the net!");
+        }
+    }
+    else
+        mons->add_ench(ENCH_HELD);
+}
+
 static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison)
 {
     int damage_taken = 0;
@@ -509,10 +551,17 @@ void disarm_trap( struct dist &disa )
         }
     }
 
-    if (trap_category(env.trap[i].type) == DNGN_TRAP_MAGICAL)
+    switch (trap_category(env.trap[i].type))
     {
+    case DNGN_TRAP_MECHANICAL:
         mpr("You can't disarm that trap.");
         return;
+    case DNGN_TRAP_NATURAL:
+        // Only shafts for now.
+        mpr("You can't disarm a shaft.");
+        return;
+    default:
+        break;
     }
 
     if (random2(you.skills[SK_TRAPS_DOORS] + 2) <= random2(you.your_level + 5))

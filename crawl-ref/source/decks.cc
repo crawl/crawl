@@ -1354,6 +1354,8 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
     {
         monsters& mon(*mon_to_swap);
         const coord_def newpos = mon.pos();
+        bool mon_caught = mons_is_caught(&mon);
+        bool you_caught = you.attribute[ATTR_HELD];
 
         // Pick the monster up.
         mgrd(newpos) = NON_MONSTER;
@@ -1361,11 +1363,38 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
         mon.x = you.x_pos;
         mon.y = you.y_pos;
 
-        // plunk it down
+        // Plunk it down
         mgrd(mon.pos()) = monster_index(mon_to_swap);
 
-        // move you to its previous location
+        if (you_caught)
+        {
+            check_net_will_hold_monster(&mon);
+            if (!mon_caught)
+                you.attribute[ATTR_HELD] = 0;
+        }
+
+        // Move you to its previous location.
         you.moveto(newpos);
+
+        if (mon_caught)
+        {
+            if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
+            {
+                mpr("The net rips apart!");
+                you.attribute[ATTR_HELD] = 0;
+                int net = get_trapping_net(you.x_pos, you.y_pos);
+                if (net != NON_ITEM)
+                    destroy_item(net);
+            }
+            else
+            {
+                you.attribute[ATTR_HELD] = 10;
+                mpr("You become entangled in the net!");
+            }
+
+            if (!you_caught)
+                mon.del_ench(ENCH_HELD, true);
+        }
     }
 }
 

@@ -1626,46 +1626,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
         seen_monster(monster);
 
     if (old_mon_caught)
-    {
-        if (monster->body_size(PSIZE_BODY) >= SIZE_GIANT)
-        {
-            int net = get_trapping_net(monster->x, monster->y);
-            if (net != NON_ITEM)
-                destroy_item(net);
-
-            if (see_grid(monster->x, monster->y))
-            {
-                if (player_monster_visible(monster))
-                {
-                    mprf("The net rips apart, and %s comes free!",
-                         monster->name(DESC_NOCAP_THE).c_str());
-                }
-                else
-                    mpr("All of a sudden the net rips apart!");
-            }
-        }
-        else if (mons_is_insubstantial(monster->type)
-                 || monster->type == MONS_OOZE
-                 || monster->type == MONS_PULSATING_LUMP)
-        {
-            const int net = get_trapping_net(monster->x, monster->y);
-            if (net != NON_ITEM)
-                remove_item_stationary(mitm[net]);
-
-            if (mons_is_insubstantial(monster->type))
-            {
-                simple_monster_message(monster,
-                                       " drifts right through the net!");
-            }
-            else
-            {
-                simple_monster_message(monster,
-                                       " oozes right through the net!");
-            }
-        }
-        else
-            monster->add_ench(ENCH_HELD);
-    }
+        check_net_will_hold_monster(monster);
 
     player_angers_monster(monster);
 

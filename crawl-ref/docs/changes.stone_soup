@@ -49,6 +49,7 @@ Gods
 * Overhauled the good gods: Zin/TSO completely new, Elyvilon more interesting.
 * Greatly improved Beogh and Nemelex.
 * Vehumet isn't evil anymore, and all boosts apply without prayer.
+* Increase cost for Lugonu's self-banishment.
 * Removed autoprayer and option to stop prayer.
 * Upon failed sacrifice hint on accepted item types.
 * Divine summons will leave on penance, or turn hostile on abandonment.
@@ -138,7 +139,7 @@ Levels
 * Fixed some levels having the wrong amount of stairs.
 * Fixed wonky vaults on lava etc.
 * Treat adjacent doors as one (large) gate, opening/closing together.
-* Minotaurs may map labyrinths.
+* Player minotaurs will now map labyrinths.
 * Removed amnesia traps.
 * Introduced shafts.
 * Added blood spattering.
@@ -164,7 +165,7 @@ Miscellaneous
 * New scoring system.
 * Train Stealth by sneaking around sleeping monsters.
 * Train Traps & Doors by setting off traps.
-* Increase cost for self-banishment, and nerf Banishment spell.
+* Disallow self-banishment via Banishment spell.
 * Replace Paralyse spell with new spell Petrify.
 * Better feedback on Detect Traps.
 * Identify post-mortem inventory in morgue.txt.
