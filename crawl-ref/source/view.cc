@@ -5292,7 +5292,7 @@ void crawl_view_geometry::init_geometry()
     if (! lay_inline.valid)
     {
 #ifndef USE_TILE
-        // Terminal too small; exit with an error
+        // Terminal too small; exit with an error.
         if (!crawl_state.need_save)
         {
             end(1, false, "Terminal too small (%d,%d); need at least (%d,%d)",
