@@ -79,6 +79,10 @@ static bool _handle_pickup(monsters *monster);
 static void _handle_behaviour(monsters *monster);
 static void _set_nearest_monster_foe(monsters *monster);
 static void _mons_in_cloud(monsters *monster);
+static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
+                                 const int count_y, bool just_check = false);
+static bool _is_trap_safe(const monsters *monster, const int trap_x,
+                          const int trap_y, bool just_check = false);
 static bool _monster_move(monsters *monster);
 static bool _plant_spit(monsters *monster, bolt &pbolt);
 static spell_type _map_wand_to_mspell(int wand_type);
@@ -2380,12 +2384,10 @@ static void _mons_find_level_exits(const monsters *mon,
         if (is_stair(grd(*ri)))
             e.push_back(*ri);
 
-        // Teleportation traps: only known traps if the monster isn't
-        // native to the branch, or all traps if it is.
+        // Teleportation or shaft traps.
         trap_type tt = trap_type_at_xy((*ri).x, (*ri).y);
-        if (tt == TRAP_TELEPORT
-            && (grd[(*ri).x][(*ri).y] != DNGN_UNDISCOVERED_TRAP
-                || mons_is_native_in_branch(mon)))
+        if ((tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
+            && _is_trap_safe(mon, (*ri).x, (*ri).y))
         {
             e.push_back(*ri);
         }
@@ -3257,6 +3259,8 @@ static void _handle_behaviour(monsters *mon)
 
             // If the monster is far enough away from the player, make
             // it leave the level.
+            // XXX: If it's on a new level, thanks to a shaft trap, it
+            // should also do this.
             if (distance(mon->x, mon->y, you.x_pos, you.y_pos)
                 >= LOS_RADIUS * LOS_RADIUS * 4)
             {
@@ -3264,9 +3268,9 @@ static void _handle_behaviour(monsters *mon)
                 return;
             }
 
-            // If the monster isn't travelling toward an exit, make it
-            // start doing so.
-            if (mon->travel_target != MTRAV_EXIT)
+            // If the monster isn't travelling toward an exit or a trap,
+            // make it start doing so.
+            if (mon->travel_target == MTRAV_NONE)
             {
                 coord_def e;
                 if (_mons_find_nearest_level_exit(mon, e))
@@ -3274,7 +3278,9 @@ static void _handle_behaviour(monsters *mon)
                     mon->foe = MHITNOT;
                     mon->target_x = e.x;
                     mon->target_y = e.y;
-                    mon->travel_target = MTRAV_EXIT;
+                    mon->travel_target =
+                        (trap_at_xy(mon->target_x, mon->target_y) != -1) ?
+                            MTRAV_TRAP : MTRAV_EXIT;
                 }
             }
             // If it is, and it's on the exit, make it leave the level.
@@ -6550,14 +6556,11 @@ static int _estimated_trap_damage(trap_type trap)
     }
 }
 
-static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
-                                 const int count_y, bool just_check = false);
-
 // Check whether a given trap (described by trap position) can be
 // regarded as safe. Takes in account monster intelligence and allegiance.
 // (just_check is used for intelligent monsters trying to avoid traps.)
 static bool _is_trap_safe(const monsters *monster, const int trap_x,
-                          const int trap_y, bool just_check = false)
+                          const int trap_y, bool just_check)
 {
     const int intel = mons_intel(monster->type);
 
@@ -6569,8 +6572,11 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
 
     if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
     {
-        if (mons_is_fleeing(monster) && intel >= I_NORMAL)
+        if ((mons_is_fleeing(monster) || mons_is_leaving(monster))
+            && intel >= I_NORMAL)
+        {
             return (true);
+        }
         return (false);
     }
 
@@ -6647,9 +6653,10 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
         return (true);
     }
 
-    // Friendly monsters don't enjoy Zot trap perks, handle accordingly.
-    if (mons_friendly(monster))
-        return (mechanical? mons_flies(monster) : trap.type != TRAP_ZOT);
+    // Friendly and good neutral monsters don't enjoy Zot trap perks;
+    // handle accordingly.
+    if (mons_wont_attack(monster))
+        return (mechanical ? mons_flies(monster) : trap.type != TRAP_ZOT);
     else
         return (!mechanical || mons_flies(monster));
 }
@@ -6709,8 +6716,8 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
 // Check whether a monster can move to given square (described by its relative
 // coordinates to the current monster position). just_check is true only for
 // calls from is_trap_safe when checking the surrounding squares of a trap.
-bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
-                         const int count_y, bool just_check)
+static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
+                                 const int count_y, bool just_check)
 {
     const int targ_x = monster->x + count_x;
     const int targ_y = monster->y + count_y;
