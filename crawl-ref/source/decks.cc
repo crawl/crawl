@@ -2417,8 +2417,8 @@ static void _genie_card(int power, deck_rarity_type rarity)
     {
         mpr("A genie takes form and thunders: "
             "\"You disturbed me, fool!\"");
-        // use 41 not 40 to tell potion_effect() that this isn't
-        // a real potion
+        // Use 41, not 40, to tell potion_effect() that this isn't a
+        // real potion.
         potion_effect( coinflip() ? POT_DEGENERATION : POT_DECAY, 41 );
     }
 }
