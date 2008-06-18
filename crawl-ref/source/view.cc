@@ -3660,10 +3660,10 @@ bool mon_enemies_around(const monsters *monster)
     if (monster->foe != MHITNOT && monster->foe != MHITYOU)
         return (true);
 
-    if (mons_friendly(monster))
+    if (mons_wont_attack(monster))
     {
-        // Additionally, if an ally is nearby and *you* have a foe, consider
-        // it as the ally's enemy too.
+        // Additionally, if an ally is nearby and *you* have a foe,
+        // consider it as the ally's enemy too.
         return (mons_near(monster) && !i_feel_safe());
     }
     else

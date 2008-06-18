@@ -5110,10 +5110,10 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                              SPELL_GREATER_HEALING : SPELL_LESSER_HEALING;
                 finalAnswer = true;
             }
-            else if (mons_is_fleeing(monster))
+            else if (mons_is_fleeing(monster) || mons_is_leaving(monster))
             {
                 // Since the player isn't around, we'll extend the monster's
-                // normal fleeing choices to include the self-enchant slot.
+                // normal choices to include the self-enchant slot.
                 int foundcount = 0;
                 for (int i = NUM_MONSTER_SPELL_SLOTS - 1; i >= 0; --i)
                 {
@@ -5154,7 +5154,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             // get here... even if the monster is on its last HP.  That
             // way we don't have to worry about monsters infinitely casting
             // Healing on themselves (e.g. orc high priests).
-            if (mons_is_fleeing(monster)
+            if ((mons_is_fleeing(monster) || mons_is_leaving(monster))
                 && ms_low_hitpoint_cast(monster, hspell_pass[5]))
             {
                 spell_cast = hspell_pass[5];
@@ -5178,8 +5178,9 @@ static bool _handle_spell(monsters *monster, bolt &beem)
 
         if (!finalAnswer)
         {
-            // If nothing found by now, safe friendlies will rarely cast.
-            if (mons_friendly(monster) && !mon_enemies_around(monster)
+            // If nothing found by now, safe friendlies and good
+            // neutrals will rarely cast.
+            if (mons_wont_attack(monster) && !mon_enemies_around(monster)
                 && !one_chance_in(10))
             {
                 return (false);
@@ -5214,9 +5215,10 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             {
                 bool spellOK = false;
 
-                // Setup spell - fleeing monsters will always try to
-                // choose their emergency spell.
-                if (mons_is_fleeing(monster))
+                // Setup spell - monsters that are fleeing or leaving
+                // the level will always try to choose their emergency
+                // spell.
+                if (mons_is_fleeing(monster) || mons_is_leaving(monster))
                 {
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
                                                    : hspell_pass[5]);
