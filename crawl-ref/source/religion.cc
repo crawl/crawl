@@ -1072,7 +1072,8 @@ static void _give_nemelex_gift()
 bool is_orcish_follower(const monsters* mon)
 {
     return (mon->alive() && mons_species(mon->type) == MONS_ORC
-            && mons_friendly(mon) && mons_is_god_gift(mon, GOD_BEOGH));
+            && mon->attitude == ATT_FRIENDLY
+            && mons_is_god_gift(mon, GOD_BEOGH));
 }
 
 bool is_good_lawful_follower(const monsters* mon)
@@ -4453,7 +4454,7 @@ static bool _beogh_followers_abandon_you()
             for (int x = xstart; x <= xend; ++x)
             {
                 const unsigned short targ_monst = mgrd[x][y];
-                if ( targ_monst != NON_MONSTER )
+                if (targ_monst != NON_MONSTER)
                 {
                     monsters *monster = &menv[targ_monst];
                     if (is_orcish_follower(monster))
@@ -4476,7 +4477,6 @@ static bool _beogh_followers_abandon_you()
                             }
 
                             monster->attitude = ATT_HOSTILE;
-                            monster->del_ench(ENCH_CHARM, true);
                             behaviour_event(monster, ME_ALERT, MHITYOU);
                             // For now CREATED_FRIENDLY stays.
 

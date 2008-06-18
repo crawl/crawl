@@ -600,7 +600,7 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
         else if (MON_KILL(killer) && !invalid_monster_index(i))
         {
             monsters *mon = &menv[i];
-            if (is_orcish_follower(mon) && !one_chance_in(3))
+            if (is_follower(mon) && !one_chance_in(3))
                 convert = true;
         }
     }

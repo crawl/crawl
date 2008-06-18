@@ -320,11 +320,8 @@ static bool tag_follower_at(const coord_def &pos)
             return (false);
 
         // Orcs will follow Beogh worshippers.
-        if (you.religion != GOD_BEOGH
-            || !is_orcish_follower(fmenv))
-        {
+        if (you.religion != GOD_BEOGH || !is_orcish_follower(fmenv))
             return (false);
-        }
     }
 
     // Monster is chasing player through stairs.
