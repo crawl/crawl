@@ -2941,7 +2941,8 @@ void describe_god( god_type which_god, bool give_title )
             buf << "You can call upon " << god_name(which_god)
                 << " to burn books in your surroundings.";
             const int spacesleft = 79 - buf.str().length();
-            const std::string cost = "(Food)";
+            const std::string cost = "(" + make_cost_description(
+                                                ABIL_TROG_BURN_BOOKS) + ")";
             buf << std::setw(spacesleft) << cost;
             cprintf("%s" EOL, buf.str().c_str());
         }

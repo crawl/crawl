@@ -5296,8 +5296,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
 
         if (you.pos() == this->pos())
+        {
             mprf(MSGCH_ERROR, "%s is on the same square as you!",
                  name(DESC_CAP_A).c_str());
+        }
 
         if (you.can_see(this))
         {
@@ -5331,7 +5333,8 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 }
             }
         }
-        else if (mons_near(this) && monster_habitable_grid(this, DNGN_FLOOR))
+        else if (mons_near(this)
+                 && grid_compatible(grd[this->x][this->y], DNGN_DEEP_WATER))
         {
             mpr("Something invisible bursts forth from the water.");
             interrupt_activity( AI_FORCE_INTERRUPT );

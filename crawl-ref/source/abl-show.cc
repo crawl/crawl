@@ -1682,13 +1682,13 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ELYVILON_DESTROY_WEAPONS:
-        if ( !ely_destroy_weapons() )
-            return false;
+        if (!ely_destroy_weapons())
+            return (false);
         break;
 
     case ABIL_ELYVILON_LESSER_HEALING:
         if (!cast_healing( 3 + (you.skills[SK_INVOCATIONS] / 6) ))
-            return false;
+            return (false);
 
         exercise( SK_INVOCATIONS, 1 );
         break;
@@ -1700,7 +1700,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_ELYVILON_HEALING:
         if (!cast_healing( 10 + (you.skills[SK_INVOCATIONS] / 3) ))
-            return false;
+            return (false);
 
         exercise( SK_INVOCATIONS, 3 + random2(5) );
         break;
@@ -1714,7 +1714,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_ELYVILON_GREATER_HEALING:
         if (!cast_healing( 20 + you.skills[SK_INVOCATIONS] * 2 ))
-            return false;
+            return (false);
 
         exercise( SK_INVOCATIONS, 6 + random2(10) );
         break;
@@ -1723,7 +1723,7 @@ static bool _do_ability(const ability_def& abil)
         if ( you.level_type != LEVEL_ABYSS )
         {
             mpr("You aren't in the Abyss!");
-            return false;       // don't incur costs
+            return (false);       // Don't incur costs.
         }
         banished(DNGN_EXIT_ABYSS);
         exercise(SK_INVOCATIONS, 8 + random2(10));
@@ -1762,12 +1762,12 @@ static bool _do_ability(const ability_def& abil)
         if (you.level_type == LEVEL_ABYSS)
         {
             mpr("You're already here.");
-            return false;
+            return (false);
         }
         else if (you.level_type == LEVEL_PANDEMONIUM)
         {
             mpr("That doesn't work from Pandemonium.");
-            return false;
+            return (false);
         }
 
         // Move permanent hp/mp loss from leaving to entering the Abyss. (jpeg)
@@ -1779,56 +1779,58 @@ static bool _do_ability(const ability_def& abil)
         if (you.hp_max < 1)
             you.hp_max = 1;
 
-        // Deflate HP
+        // Deflate HP.
         set_hp( 1 + random2(you.hp), false );
 
-        // Lose 1d2 permanent MP
+        // Lose 1d2 permanent MP.
         rot_mp(coinflip() ? 2 : 1);
 
-        // Deflate MP
+        // Deflate MP.
         if (you.magic_points)
             set_mp(random2(you.magic_points), false);
 
         bool note_status = notes_are_active();
-        activate_notes(false);  // this banishment shouldn't be noted
+        activate_notes(false);  // This banishment shouldn't be noted.
         banished(DNGN_ENTER_ABYSS);
         activate_notes(note_status);
         break;
     }
     case ABIL_NEMELEX_DRAW_ONE:
-        if ( !choose_deck_and_draw() )
-            return false;
+        if (!choose_deck_and_draw())
+            return (false);
         exercise(SK_EVOCATIONS, 1 + random2(2));
         break;
 
     case ABIL_NEMELEX_PEEK_TWO:
-        if ( !deck_peek() )
-            return false;
+        if (!deck_peek())
+            return (false);
         exercise(SK_EVOCATIONS, 2 + random2(2));
         break;
 
     case ABIL_NEMELEX_TRIPLE_DRAW:
-        if ( !deck_triple_draw() )
-            return false;
+        if (!deck_triple_draw())
+            return (false);
         exercise(SK_EVOCATIONS, 3 + random2(3));
         break;
 
     case ABIL_NEMELEX_MARK_FOUR:
-        if ( !deck_mark() )
-            return false;
+        if (!deck_mark())
+            return (false);
         exercise(SK_EVOCATIONS, 4 + random2(4));
         break;
 
     case ABIL_NEMELEX_STACK_FIVE:
-        if ( !deck_stack() )
-            return false;
+        if (!deck_stack())
+            return (false);
         exercise(SK_EVOCATIONS, 5 + random2(5));
         break;
 
     case ABIL_BEOGH_SMITING:
         if (your_spells( SPELL_SMITING, (2 + skill_bump(SK_INVOCATIONS)) * 6,
                          false ) == SPRET_ABORT)
+        {
             return (false);
+        }
         exercise( SK_INVOCATIONS, (coinflip()? 3 : 2) );
         break;
 
