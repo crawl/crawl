@@ -6029,7 +6029,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
     }                   // end while
 
-    if (monster->type != -1 && monster->hit_points < 0)
+    if (monster->type != -1 && monster->hit_points < 1)
     {
         if (monster->type == MONS_GIANT_SPORE
             || monster->type == MONS_BALL_LIGHTNING)
