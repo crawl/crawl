@@ -928,7 +928,6 @@ dungeon_feature_type trap_category(trap_type type)
 // Returns index of the trap for a given (x,y) coordinate pair {dlb}
 int trap_at_xy(int which_x, int which_y)
 {
-
     for (int which_trap = 0; which_trap < MAX_TRAPS; which_trap++)
     {
         if (env.trap[which_trap].x == which_x

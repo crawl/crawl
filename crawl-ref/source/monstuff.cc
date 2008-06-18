@@ -2405,6 +2405,68 @@ static void _mark_neighbours_player_unreachable(monsters *mon)
         }
 }
 
+static void _mons_find_level_exits(const monsters *mon,
+                                   std::vector<coord_def> &e,
+                                   int range = -1)
+{
+    if (range == -1)
+        range = LOS_RADIUS;
+
+    // Sweep every square within range.
+    for (radius_iterator ri(mon->pos(), range, true, false); ri; ++ri)
+    {
+        // All types of stairs.
+        if (is_stair(grd(*ri)))
+            e.push_back(*ri);
+
+        // Teleportation and shaft traps: only known traps if the
+        // monster isn't native to the branch, or all traps if it is.
+        trap_type tt = trap_type_at_xy((*ri).x, (*ri).y);
+        if ((tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
+            && (grd[(*ri).x][(*ri).y] != DNGN_UNDISCOVERED_TRAP
+                || mons_is_native_in_branch(mon)))
+        {
+            e.push_back(*ri);
+        }
+
+        // Any place the monster can submerge.
+        if (monster_can_submerge(mon, grd(*ri)))
+            e.push_back(*ri);
+    }
+}
+
+static bool _mons_find_nearest_level_exit(const monsters *mon,
+                                          coord_def &e)
+{
+    std::vector<coord_def> level_exits;
+
+    _mons_find_level_exits(mon, level_exits);
+
+    e.x = -1;
+    e.y = -1;
+
+    int old_dist = -1;
+
+    for (unsigned int i = 0; i < level_exits.size(); ++i)
+    {
+        int dist = distance(mon->x, mon->y, level_exits[i].x,
+                            level_exits[i].y);
+
+        if (old_dist == -1 || old_dist >= dist)
+        {
+            if (old_dist == dist && coinflip())
+                continue;
+
+            old_dist = dist;
+
+            e.x = level_exits[i].x;
+            e.y = level_exits[i].y;
+        }
+    }
+
+    return (old_dist != -1);
+}
+
 static void _make_mons_leave_level(monsters *mon)
 {
     if (mons_is_leaving(mon))
@@ -2834,8 +2896,7 @@ static void _handle_behaviour(monsters *mon)
 #ifdef DEBUG_PATHFIND
                     mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
-                    const bool native =
-                        mons_is_native_in_branch(mon, you.where_are_you);
+                    const bool native = mons_is_native_in_branch(mon);
 
                     int range = 0;
                     switch (mons_intel(mon->type))
@@ -3237,6 +3298,26 @@ static void _handle_behaviour(monsters *mon)
             // it leave the level.
             if (distance(mon->x, mon->y, you.x_pos, you.y_pos)
                 >= LOS_RADIUS * LOS_RADIUS * 4)
+            {
+                _make_mons_leave_level(mon);
+                return;
+            }
+
+            // If the monster isn't travelling toward an exit, make it
+            // start doing so.
+            if (mon->travel_target != MTRAV_EXIT)
+            {
+                coord_def e;
+                if (_mons_find_nearest_level_exit(mon, e))
+                {
+                    mon->foe = MHITNOT;
+                    mon->target_x = e.x;
+                    mon->target_y = e.y;
+                    mon->travel_target = MTRAV_EXIT;
+                }
+            }
+            // If it is, and it's on the exit, make it leave the level.
+            else if (mon->x == mon->target_x && mon->y == mon->target_y)
             {
                 _make_mons_leave_level(mon);
                 return;
@@ -6546,7 +6627,7 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
     // * very intelligent monsters can be assumed to have a high T&D skill
     //   (or have memorised part of the dungeon layout ;) )
     if (intel >= I_NORMAL && mechanical
-        && (mons_is_native_in_branch(monster, you.where_are_you)
+        && (mons_is_native_in_branch(monster)
             || monster->attitude == ATT_FRIENDLY
                && player_knows_trap
             || intel >= I_HIGH && one_chance_in(3)))

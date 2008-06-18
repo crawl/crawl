@@ -2635,7 +2635,7 @@ bool monster_pathfind::traversable(coord_def p)
     // at home in this branch.
     if (grd(p) == DNGN_SECRET_DOOR && mons_friendly(mons)
         && (mons_intel(mons->type) < I_NORMAL
-            || !mons_is_native_in_branch(mons, you.where_are_you)))
+            || !mons_is_native_in_branch(mons)))
     {
         return (false);
     }
@@ -2696,8 +2696,7 @@ int monster_pathfind::travel_cost(coord_def npos)
         bool knows_trap = (!mons_friendly(mons)
                            || grd(npos) != DNGN_UNDISCOVERED_TRAP
                            || mons_intel(mons->type) >= I_NORMAL
-                              && mons_is_native_in_branch(mons,
-                                                          you.where_are_you));
+                              && mons_is_native_in_branch(mons));
 
         trap_type tt = env.trap[trap].type;
         if (tt == TRAP_ALARM || tt == TRAP_ZOT)
