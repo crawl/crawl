@@ -1363,7 +1363,7 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
         mon.x = you.x_pos;
         mon.y = you.y_pos;
 
-        // Plunk it down
+        // Plunk it down.
         mgrd(mon.pos()) = monster_index(mon_to_swap);
 
         if (you_caught)
