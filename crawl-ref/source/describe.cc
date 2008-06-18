@@ -3075,7 +3075,7 @@ std::string get_skill_description(int skill, bool need_title)
         else if (you.religion == GOD_TROG)
         {
             result += EOL;
-            result += "Note that Trog doesn't use Invocations, it being too "
+            result += "Note that Trog doesn't use Invocations, its being too "
                       "closely connected to magic.";
         }
         else if (you.religion == GOD_NEMELEX_XOBEH)
