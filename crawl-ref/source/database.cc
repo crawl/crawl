@@ -65,6 +65,7 @@ static TextDB AllDBs[] =
             "descript/spells.txt",
             "descript/gods.txt",
             "descript/branches.txt",
+            "descript/skills.txt",
             NULL),
 
     TextDB( "db/randart",
@@ -232,8 +233,8 @@ std::vector<std::string> database_find_keys(DBM *database,
     {
         std::string key((const char *)dbKey.dptr, dbKey.dsize);
 
-        if (tpat.matches(key) &&
-            key.find("__") == std::string::npos
+        if (tpat.matches(key)
+            && key.find("__") == std::string::npos
             && (filter == NULL || !(*filter)(key, "")))
         {
             matches.push_back(key);

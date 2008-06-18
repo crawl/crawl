@@ -58,6 +58,7 @@
 #include "spl-book.h"
 #include "stuff.h"
 #include "spl-util.h"
+#include "transfor.h"
 #include "tutorial.h"
 #include "xom.h"
 
@@ -2991,4 +2992,132 @@ void describe_god( god_type which_god, bool give_title )
     const int keyin = getch();
     if (keyin == '!')
         _detailed_god_description(which_god);
+}
+
+std::string get_skill_description(int skill, bool need_title)
+{
+    std::string lookup = skill_name(skill);
+    std::string result = "";
+
+    if (need_title)
+    {
+        result = lookup;
+        result += EOL EOL;
+    }
+
+    result += getLongDescription(lookup);
+
+    switch (skill)
+    {
+    case SK_UNARMED_COMBAT:
+    {
+        // Give a detailed listing of what attacks the character may perform.
+        std::vector<std::string> unarmed_attacks;
+
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+            || player_genus(GENPC_DRACONIAN)
+            || (you.species == SP_MERFOLK && player_is_swimming())
+            || player_mutation_level( MUT_STINGER ))
+        {
+            unarmed_attacks.push_back("slap monsters with your tail");
+        }
+
+        if (player_mutation_level(MUT_FANGS)
+            || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+        {
+            unarmed_attacks.push_back("bite other creatures");
+        }
+
+        if (you.species == SP_KENKU)
+            unarmed_attacks.push_back("peck at monsters with your beak");
+
+        if (player_mutation_level(MUT_HORNS))
+            unarmed_attacks.push_back("do a headbutt attack with your horns");
+        else if (you.species == SP_NAGA)
+            unarmed_attacks.push_back("do a headbutt attack");
+
+        if (player_mutation_level(MUT_HOOVES))
+        {
+            unarmed_attacks.push_back("kick your enemies with your hooves");
+        }
+        else if (player_mutation_level(MUT_TALONS))
+        {
+            unarmed_attacks.push_back("claw at your enemies with your talons");
+        }
+        else if (you.species != SP_NAGA
+                 && (you.species != SP_MERFOLK || !player_is_swimming()))
+        {
+            unarmed_attacks.push_back("kick your enemies");
+        }
+
+        unarmed_attacks.push_back("punch monsters with your free hand");
+
+        if (!unarmed_attacks.empty())
+        {
+            std::string broken = "For example, you could ";
+                        broken += comma_separated_line(unarmed_attacks.begin(),
+                                                       unarmed_attacks.end(),
+                                                       " or ", ", ");
+                        broken += ".";
+            linebreak_string2(broken, 72);
+
+            result += EOL;
+            result += broken;
+        }
+        break;
+    }
+    case SK_INVOCATIONS:
+        if (you.species == SP_DEMIGOD)
+        {
+            result += EOL;
+            result += "How on earth did you manage to pick this up?";
+        }
+        else if (you.religion == GOD_TROG)
+        {
+            result += EOL;
+            result += "Note that Trog doesn't use Invocations, it being too "
+                      "closely connected to magic.";
+        }
+        else if (you.religion == GOD_NEMELEX_XOBEH)
+        {
+            result += EOL;
+            result += "Note that Nemelex uses Evocations rather than "
+                      "Invocations.";
+        }
+        break;
+
+    case SK_EVOCATIONS:
+        if (you.religion == GOD_NEMELEX_XOBEH)
+        {
+            result += EOL;
+            result += "This is the skill all of Nemelex' abilities rely on.";
+        }
+        break;
+
+    case SK_SPELLCASTING:
+        if (you.religion == GOD_TROG)
+        {
+            result += EOL;
+            result += "Keep in mind, though, that Trog will greatly disapprove "
+                      "of this.";
+        }
+        break;
+    default:
+        // No further information.
+        break;
+    }
+
+    return result;
+}
+
+void describe_skill(int skill)
+{
+    std::ostringstream data;
+
+    data << get_skill_description(skill, true);
+
+    clrscr();
+    print_description(data.str());
+    if (getch() == 0)
+        getch();
 }

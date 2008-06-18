@@ -21,6 +21,8 @@
 #include "skills2.h"
 
 #include <algorithm>
+#include <string>
+#include <sstream>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,6 +32,7 @@
  #include <conio.h>
 #endif
 
+#include "describe.h"
 #include "externs.h"
 #include "fight.h"
 #include "itemprop.h"
@@ -41,11 +44,10 @@
 #include "tutorial.h"
 #include "view.h"
 
-/* Basic goals for titles:
-   The higher titles must come last.
-   Referring to the skill itself is fine ("Transmuter") but not impressive.
-   No overlaps, high diversity.
-*/
+// Basic goals for titles:
+// The higher titles must come last.
+// Referring to the skill itself is fine ("Transmuter") but not impressive.
+// No overlaps, high diversity.
 
 // Replace @genus@ with lowercase genus, @Genus@ with uppercase, and %s
 // with special cases defined below, including but not limited to species.
@@ -53,6 +55,8 @@
 // NOTE:  Even though %s could be used with most of these, remember that
 // the character's race will be listed on the next line.  It's only really
 // intended for cases where things might be really awkward without it. -- bwr
+
+// NOTE: If a skill name is changed, remember to also adapt the database entry.
 const char *skills[50][6] =
 {
   //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27
@@ -1706,7 +1710,7 @@ static bool _player_knows_aptitudes()
 
 }
 
-static void _display_skill_table(bool show_aptitudes)
+static void _display_skill_table(bool show_aptitudes, bool show_description)
 {
     menu_letter lcount = 'a';
 
@@ -1714,9 +1718,10 @@ static void _display_skill_table(bool show_aptitudes)
     textcolor(LIGHTGREY);
 
 #if DEBUG_DIAGNOSTICS
-    cprintf( "You have %d points of unallocated experience "
-             " (cost lvl %d; total %d)." EOL EOL,
-             you.exp_available, you.skill_cost_level, you.total_skill_points );
+    cprintf("You have %d points of unallocated experience "
+            " (cost lvl %d; total %d)." EOL EOL,
+            you.exp_available, you.skill_cost_level,
+            you.total_skill_points);
 #else
     cprintf(" You have %s unallocated experience." EOL EOL,
             you.exp_available == 0? "no" :
@@ -1828,10 +1833,32 @@ static void _display_skill_table(bool show_aptitudes)
     else
     {
         // NOTE: If any more skills added, must adapt letters to go into caps.
-        cgotoxy(1, bottom_line-1);
+        cgotoxy(1, bottom_line-2);
         textcolor(LIGHTGREY);
-        cprintf("Press the letter of a skill to choose "
-                "whether you want to practise it.");
+
+        if (show_description)
+        {
+            cprintf("Press the letter of a skill to read its description.      "
+                    "            ");
+        }
+        else
+        {
+            cprintf("Press the letter of a skill to choose whether you want to "
+                    "practise it.");
+        }
+
+        cgotoxy(1, bottom_line-1);
+        if (show_description)
+        {
+            formatted_string::parse_string("Press '<w>?</w>' to choose which "
+                                           "skills to train.  ").display();
+        }
+        else
+        {
+            formatted_string::parse_string("Press '<w>?</w>' to read the "
+                                           "skills' descriptions.").display();
+        }
+
         if (_player_knows_aptitudes())
         {
             cgotoxy(1, bottom_line);
@@ -1845,11 +1872,12 @@ static void _display_skill_table(bool show_aptitudes)
 
 void show_skills()
 {
-    bool show_aptitudes = false;
+    bool show_aptitudes   = false;
+    bool show_description = false;
     clrscr();
     while (true)
     {
-        _display_skill_table(show_aptitudes);
+        _display_skill_table(show_aptitudes, show_description);
 
         const int keyin = getch();
         if (keyin == '!' && _player_knows_aptitudes())
@@ -1858,7 +1886,14 @@ void show_skills()
             continue;
         }
 
-        if ( !isalpha(keyin) )
+        if (keyin == '?')
+        {
+            // Show skill description.
+            show_description = !show_description;
+            continue;
+        }
+
+        if (!isalpha(keyin))
             break;
 
         menu_letter lcount = 'a';       // toggle skill practise
@@ -1874,7 +1909,13 @@ void show_skills()
 
             if (keyin == lcount)
             {
-                you.practise_skill[x] = !you.practise_skill[x];
+                if (!show_description)
+                    you.practise_skill[x] = !you.practise_skill[x];
+                else
+                {
+                    describe_skill(x);
+                    clrscr();
+                }
                 break;
             }
             ++lcount;

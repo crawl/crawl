@@ -44,6 +44,7 @@
 #include "player.h"
 #include "quiver.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
@@ -1035,6 +1036,24 @@ static bool _item_filter(std::string key, std::string body)
     return (item_types_by_name(key).base_type == OBJ_UNASSIGNED);
 }
 
+static bool _skill_filter(std::string key, std::string body)
+{
+    key = lowercase_string(key);
+    std::string name;
+    for (int i = 0; i < NUM_SKILLS; i++)
+    {
+        // There are a couple of NULL entries in the skill set.
+        if (!skill_name(i))
+            continue;
+
+        name = lowercase_string(skill_name(i));
+
+        if (name.find(key) != std::string::npos)
+            return (false);
+    }
+    return (true);
+}
+
 static bool _feature_filter(std::string key, std::string body)
 {
     return (feat_by_desc(key) == DNGN_UNSEEN);
@@ -1165,7 +1184,7 @@ static bool _find_description(bool &again, std::string& error_inout)
 
     if (! error_inout.empty())
         mpr(error_inout.c_str(), MSGCH_PROMPT);
-    mpr("Describe a (M)onster, (S)pell, (I)tem, (F)eature, (G)od "
+    mpr("Describe a (M)onster, (S)pell, s(K)ill, (I)tem, (F)eature, (G)od "
         "or (B)ranch?", MSGCH_PROMPT);
 
     int ch = toupper(getch());
@@ -1194,6 +1213,10 @@ static bool _find_description(bool &again, std::string& error_inout)
     case 'S':
         type   = "spell";
         filter = _spell_filter;
+        break;
+    case 'K':
+        type   = "skill";
+        filter = _skill_filter;
         break;
     case 'I':
         type        = "item";
@@ -1295,19 +1318,19 @@ static bool _find_description(bool &again, std::string& error_inout)
         {
             error_inout  = "No monsters with symbol '";
             error_inout += regex;
-            error_inout += "'";
+            error_inout += "'.";
         }
         else if (by_item_symbol)
         {
             error_inout  = "No items with symbol '";
             error_inout += regex;
-            error_inout += "'";
+            error_inout += "'.";
         }
         else
         {
             error_inout  = "No matching ";
             error_inout += type;
-            error_inout += "s";
+            error_inout += "s.";
         }
         return (false);
     }

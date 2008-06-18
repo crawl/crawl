@@ -98,6 +98,7 @@ spell_type spell_by_name(std::string name, bool partial_match)
 {
     if (name.empty())
         return (SPELL_NO_SPELL);
+
     lowercase(name);
 
     if (!partial_match)
@@ -129,8 +130,8 @@ spell_type spell_by_name(std::string name, bool partial_match)
         }
     }
 
-    return (spellmatch != -1? static_cast<spell_type>(spellmatch)
-            : SPELL_NO_SPELL);
+    return (spellmatch != -1 ? static_cast<spell_type>(spellmatch)
+                             : SPELL_NO_SPELL);
 }
 
 int get_spell_slot_by_letter( char letter )

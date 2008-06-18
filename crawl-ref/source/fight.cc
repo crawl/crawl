@@ -969,12 +969,19 @@ bool melee_attack::player_aux_unarmed()
                 continue;
             }
 
-            unarmed_attack = (you.species == SP_KENKU) ? "peck" : "headbutt";
-
-            aux_damage = 5 + player_mutation_level(MUT_HORNS) * 3;
-
-            // minotaurs used to get +5 damage here, now they get
-            // +6 because of the horns.
+            if (you.species == SP_KENKU
+                && (!player_mutation_level(MUT_HORNS) || coinflip()))
+            {
+                unarmed_attack = "peck";
+                aux_damage = 6;
+            }
+            else
+            {
+                // Minotaurs used to get +5 damage here, now they get
+                // +6 because of the horns.
+                unarmed_attack = "headbutt";
+                aux_damage = 5 + player_mutation_level(MUT_HORNS) * 3;
+            }
 
             if (you.equip[EQ_HELMET] != -1)
             {

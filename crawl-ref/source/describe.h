@@ -81,6 +81,10 @@ void describe_spell(spell_type spelled);
  * *********************************************************************** */
 std::string get_ghost_description(const monsters &mons, bool concise = false);
 
+std::string get_skill_description(int skill, bool need_title = false);
+
+void describe_skill(int skill);
+
 void print_description( const std::string &d );
 
 const char *trap_name(trap_type trap);

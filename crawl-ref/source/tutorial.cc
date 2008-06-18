@@ -19,6 +19,7 @@
 #include "abl-show.h"
 #include "cloud.h"
 #include "command.h"
+#include "describe.h"
 #include "food.h"
 #include "format.h"
 #include "initfile.h"
@@ -1025,103 +1026,20 @@ void tut_gained_new_skill(int skill)
     {
     // Special cases first.
     case SK_FIGHTING:
-        mpr("Apart from making you more proficient in hand-to-hand combat, "
-            "Fighting also increases your maximum hitpoints.", MSGCH_TUTORIAL);
-        break;
-
     case SK_ARMOUR:
-        mpr("Armour skill helps lessen the hinderance of heavy armour on "
-            "moving, spellcasting and other actions.", MSGCH_TUTORIAL);
-        break;
-
     case SK_STEALTH:
-        mpr("By training stealth, you can make it less likely that monsters "
-            "will notice you. Note that monsters become more suspicious and "
-            "observant as you descend.", MSGCH_TUTORIAL);
-        break;
-
     case SK_STABBING:
-        mpr("Stabbing is the skill that governs the likeliness of doing a "
-            "great amount of damage on a distracted or helpless creature. "
-            "Some gods may disapprove of this.", MSGCH_TUTORIAL);
-        break;
-
     case SK_TRAPS_DOORS:
-        mpr("A character trained in Traps & Doors will be more observant to "
-            "his or her surroundings and be quicker in noticing traps and "
-            "secret doors.", MSGCH_TUTORIAL);
-        break;
-
     case SK_UNARMED_COMBAT:
-    {
-        std::string text;
-        text = "A character trained in unarmed combat will occasionally do an "
-               "additional melee attack, provided they have the means to do "
-               "so.";
-
-        if (you.species == SP_MINOTAUR)
-        {
-            text += " For example, with your horns you can do a dangerous "
-                    "headbutt attack.";
-        }
-        else if (you.species == SP_CENTAUR)
-            text += " For example, with your hooves you can kick your enemies.";
-
-        text += " Of course, this skill also trains your proficiency in "
-                "barehanded combat.";
-
-        mpr(text.c_str(), MSGCH_TUTORIAL);
-        break;
-    }
     case SK_INVOCATIONS:
-        mpr("Your Invocations skill affects the likelihood trying to use a "
-            "divine ability will be successful.", MSGCH_TUTORIAL);
-        break;
-
     case SK_EVOCATIONS:
-        mpr("Evocations is all about using magical items like wands, decks or "
-            "other objects. The higher your skill, the more likely is a "
-            "positive outcome when evoking items.", MSGCH_TUTORIAL);
-        break;
-
     case SK_DODGING:
-        mpr("Obviously, the Dodging skill will affect your chance of dodging "
-            "an attack, be it melee, ranged, or magical. You cannot dodge "
-            "enchantments, sadly. You'll need magic resistance to resist them.",
-            MSGCH_TUTORIAL);
-        break;
-
     case SK_SHIELDS:
-        mpr("A high Shields skill of blocking a melee or ranged attack with "
-            "your equipped (or a magical) shield.", MSGCH_TUTORIAL);
-        break;
-
     case SK_THROWING:
-        mpr("Training Throwing will make thrown weapons (as opposed to ones "
-            "fired from a launcher) more effective. In particular, it makes "
-            "weapons of returning more likely to actually return to the "
-            "thrower.", MSGCH_TUTORIAL);
-        break;
-
     case SK_SPELLCASTING:
-    {
-        std::string text;
-        text = "Now that you have the basic Spellcasting skill, you can learn "
-               "and cast spells, if you wish to. ";
-
-        if (you.religion == GOD_TROG)
-            text += "Note that Trog will disapprove of this, though.";
-        else
-        {
-            text += "In addition, gaining another level in Spellcasting will "
-                    "occasionally grant your more magic and \"spell slots\" to "
-                    "spend on new spells. A high Spellcasting skill will also "
-                    "decrease the amount by which casting a high level spell "
-                    "makes you hunger.";
-        }
-        mpr(text.c_str(), MSGCH_TUTORIAL);
+        mpr(get_skill_description(skill).c_str(), MSGCH_TUTORIAL);
         break;
-    }
+
     // Only one message for all magic skills (except Spellcasting).
     case SK_CONJURATIONS:
     case SK_ENCHANTMENTS:
