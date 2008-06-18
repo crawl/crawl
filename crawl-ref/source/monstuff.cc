@@ -2385,9 +2385,9 @@ static void _mons_find_level_exits(const monsters *mon,
             e.push_back(*ri);
 
         // Teleportation or shaft traps.
-        trap_type tt = trap_type_at_xy((*ri).x, (*ri).y);
+        trap_type tt = trap_type_at_xy(ri->x, ri->y);
         if ((tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
-            && _is_trap_safe(mon, (*ri).x, (*ri).y))
+            && _is_trap_safe(mon, ri->x, ri->y))
         {
             e.push_back(*ri);
         }

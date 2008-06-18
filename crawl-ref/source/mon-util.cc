@@ -6236,9 +6236,9 @@ bool monsters::do_shaft()
         return (false);
 
     set_transit(lev);
-    bool reveal = false;
-    if (simple_monster_message(this, " falls through a shaft!"))
-        reveal = true;;
+
+    const bool reveal =
+        simple_monster_message(this, " falls through a shaft!");
 
     handle_items_on_shaft(this->x, this->y, false);
 
