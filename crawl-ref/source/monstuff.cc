@@ -3336,7 +3336,7 @@ static bool _mons_check_set_foe(monsters *mon, int x, int y,
     return (false);
 }
 
-// Choose nearest monster as a foe. (Used for berserking monsters.)
+// Choose nearest monster as a foe.  (Used for berserking monsters.)
 void _set_nearest_monster_foe(monsters *mon)
 {
     const bool friendly = mons_friendly(mon);
