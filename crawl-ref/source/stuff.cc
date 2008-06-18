@@ -817,7 +817,7 @@ int stepdown_value(int base_value, int stepping, int first_step,
     else
         return return_value;    // otherwise, value returned "as is"
 
-}                               // end stepdown_value()
+}
 
 int skill_bump( int skill )
 {
