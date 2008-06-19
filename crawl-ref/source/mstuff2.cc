@@ -1573,7 +1573,7 @@ bool mons_thrown_object_destroyed( item_def *item, int x, int y,
 }
 
 // XXX: Should really do something about mons_hit, but can't be bothered.
-void spore_goes_pop(struct monsters *monster)
+void spore_goes_pop(monsters *monster)
 {
     bolt beam;
     const int type = monster->type;

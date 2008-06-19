@@ -1744,8 +1744,7 @@ static bool _affect_mon_in_wall(bolt &pbolt, item_def *item, int tx, int ty)
  *
  */
 
-
-void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
+void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
 {
     bool beamTerminate;     // Has beam been 'stopped' by something?
     int &tx(pbolt.pos.x), &ty(pbolt.pos.y);     // test(new) x,y - integer
@@ -1873,16 +1872,14 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
                 do
                 {
                     do
-                    {
                         ray.regress();
-                    }
                     while (grid_is_solid(grd(ray.pos())));
 
                     ray.advance_and_bounce();
                     --rangeRemaining;
                 }
-                while ( rangeRemaining > 0
-                        && grid_is_solid(grd[ray.x()][ray.y()]) );
+                while (rangeRemaining > 0
+                        && grid_is_solid(grd[ray.x()][ray.y()]));
 
                 if (rangeRemaining < 1)
                     break;
@@ -1933,7 +1930,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
         }
 
         // Always decrease range by 1.
-        rangeRemaining -= 1;
+        rangeRemaining--;
 
         // Check for range termination.
         if (rangeRemaining <= 0)
@@ -2000,7 +1997,7 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 
     // Leave an object, if applicable.
     if (drop_item && item)
-        beam_drop_object( pbolt, item, tx, ty );
+        beam_drop_object(pbolt, item, tx, ty);
 
     ASSERT(!drop_item || item);
 
@@ -2055,8 +2052,8 @@ void fire_beam( bolt &pbolt, item_def *item, bool drop_item )
 
 // Returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
 // attack -- damage from clouds and branded weapons handled elsewhere.
-int mons_adjust_flavoured( monsters *monster, bolt &pbolt,
-                           int hurted, bool doFlavouredEffects )
+int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
+                          bool doFlavouredEffects)
 {
     // If we're not doing flavored effects, must be preliminary
     // damage check only.
@@ -3518,21 +3515,21 @@ static int _beam_ouch_agent(const bolt &beam)
 }
 
 // A little helper function to handle the calling of ouch()...
-static void _beam_ouch( int dam, bolt &beam )
+static void _beam_ouch(int dam, bolt &beam)
 {
     // The order of this is important.
-    if (YOU_KILL( beam.thrower ) && beam.aux_source.empty())
+    if (YOU_KILL(beam.thrower) && beam.aux_source.empty())
     {
-        ouch( dam, 0, KILLED_BY_TARGETTING );
+        ouch(dam, 0, KILLED_BY_TARGETTING);
     }
-    else if (MON_KILL( beam.thrower ))
+    else if (MON_KILL(beam.thrower))
     {
         if (beam.flavour == BEAM_SPORE)
-            ouch( dam, beam.beam_source, KILLED_BY_SPORE );
+            ouch(dam, beam.beam_source, KILLED_BY_SPORE);
         else
         {
-            ouch( dam, beam.beam_source, KILLED_BY_BEAM,
-                  beam.aux_source.c_str() );
+            ouch(dam, beam.beam_source, KILLED_BY_BEAM,
+                 beam.aux_source.c_str());
         }
     }
     else // KILL_MISC || (YOU_KILL && aux_source)

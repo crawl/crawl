@@ -176,7 +176,7 @@ bool test_beam_hit(int attack, int defence);
 /* ***********************************************************************
  * called from: bang - it_use2 - monstuff - mstuff2
  * *********************************************************************** */
-void fire_beam( bolt &pbolt, item_def *item = NULL, bool drop_item = false );
+void fire_beam(bolt &pbolt, item_def *item = NULL, bool drop_item = false);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -193,8 +193,8 @@ void explosion( bolt &pbolt, bool hole_in_the_middle = false,
 /* ***********************************************************************
  * called from: effects - spells2 - spells4
  * *********************************************************************** */
-int mons_adjust_flavoured( monsters *monster, struct bolt &pbolt,
-                           int hurted, bool doFlavouredEffects = true );
+int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
+                          bool doFlavouredEffects = true);
 
 
 /* ***********************************************************************
