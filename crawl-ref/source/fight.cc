@@ -2680,10 +2680,7 @@ void melee_attack::player_calc_hit_damage()
 
     // This doesn't actually modify damage. -- bwr
     // It only chooses the appropriate verb.
-    damage_done = player_weapon_type_modify( damage_done );
-
-    if (damage_done < 0)
-        damage_done = 0;
+    damage_done = std::max(0, player_weapon_type_modify(damage_done));
 }
 
 int melee_attack::calc_to_hit(bool random)
