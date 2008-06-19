@@ -5703,7 +5703,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
     while (monster->has_action_energy())
     {   // The continues & breaks are WRT this.
-        if (monster->type == -1)
+        if (!monster->alive())
             break;
 
         if (monster->speed_increment >= old_energy)
