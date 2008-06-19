@@ -6063,7 +6063,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
         // Reevaluate behaviour, since the monster's
         // surroundings have changed (it may have moved,
-        // or died for that matter.  Don't bother for
+        // or died for that matter).  Don't bother for
         // dead monsters.  :)
         if (monster->alive())
             _handle_behaviour(monster);
