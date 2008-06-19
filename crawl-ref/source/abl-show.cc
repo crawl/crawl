@@ -1965,6 +1965,14 @@ int choose_ability_menu(const std::vector<talent>& talents, bool describe)
         abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE |
                             MF_ALWAYS_SHOW_MORE);
     }
+    else if (Options.tutorial_left)
+    {
+        // XXX This could be buggy if you manage to pick up lots and lots
+        // of abilities during the tutorial.
+        abil_menu.set_more(tut_abilities_info());
+        abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE |
+                            MF_ALWAYS_SHOW_MORE);
+    }
 
     int numbers[52];
     for (int i = 0; i < 52; ++i)
@@ -2001,14 +2009,6 @@ int choose_ability_menu(const std::vector<talent>& talents, bool describe)
         }
     }
 
-    if (Options.tutorial_left)
-    {
-        // XXX This could be buggy if you manage to pick up lots and lots
-        // of abilities during the tutorial.
-        abil_menu.set_more(tut_abilities_info());
-        abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE |
-                            MF_ALWAYS_SHOW_MORE);
-    }
     std::vector<MenuEntry*> sel = abil_menu.show(false);
     redraw_screen();
     if (sel.empty())

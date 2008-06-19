@@ -1259,12 +1259,22 @@ monster_pane_info::less_than(const monster_pane_info& m1,
     if (m1.m_mon->type == MONS_DANCING_WEAPON)
         return (false);
 
-    // Because of the type checks above, if one of the two is zombified, so is
-    // the other, and of the same type.
-    if (zombified && mons_is_zombified(m1.m_mon)
-        && m1.m_mon->base_monster < m2.m_mon->base_monster)
+    if (zombified)
     {
-        return (true);
+        // Because of the type checks above, if one of the two is zombified, so is
+        // the other, and of the same type.
+        if (mons_is_zombified(m1.m_mon)
+            && m1.m_mon->base_monster < m2.m_mon->base_monster)
+        {
+            return (true);
+        }
+
+        // Both monsters are hydras or hydra zombies, sort by number of heads.
+        if (m1.m_mon->has_hydra_multi_attack()
+            && m1.m_mon->number > m2.m_mon->number)
+        {
+            return (true);
+        }
     }
 
     if (m1.m_fullname && m2.m_fullname || m1.m_mon->type == MONS_PLAYER_GHOST)
@@ -1288,7 +1298,7 @@ void monster_pane_info::to_string( int count, std::string& desc,
 
     if (count == 1)
     {
-        if (m_fullname && !mons_is_mimic(m_mon->type))
+        if (!mons_is_mimic(m_mon->type))
             out << m_mon->name(DESC_PLAIN);
         else
             out << mons_type_name(m_mon->type, DESC_PLAIN);

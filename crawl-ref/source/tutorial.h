@@ -45,6 +45,7 @@ void tutorial_first_item(const item_def& item);
 void learned_something_new(tutorial_event_type seen_what, int x = 0, int y = 0);
 formatted_string tut_abilities_info(void);
 void print_tut_skills_info(void);
+void print_tut_skills_description_info(void);
 
 // Additional information for tutorial players.
 void tutorial_describe_item(const item_def &item);

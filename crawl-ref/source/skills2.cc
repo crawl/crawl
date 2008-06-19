@@ -1826,9 +1826,18 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 
     if (Options.tutorial_left)
     {
-        cgotoxy(1, bottom_line-5);
-        // Doesn't mention the toggle between progress/aptitudes.
-        print_tut_skills_info();
+        if (show_description)
+        {
+            cgotoxy(1, bottom_line-2);
+            // Doesn't mention the toggle between progress/aptitudes.
+            print_tut_skills_description_info();
+        }
+        else
+        {
+            cgotoxy(1, bottom_line-5);
+            // Doesn't mention the toggle between progress/aptitudes.
+            print_tut_skills_info();
+        }
     }
     else
     {
@@ -1838,6 +1847,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 
         if (show_description)
         {
+            // We need the extra spaces to override the alternative sentence.
             cprintf("Press the letter of a skill to read its description.      "
                     "            ");
         }
@@ -1890,6 +1900,8 @@ void show_skills()
         {
             // Show skill description.
             show_description = !show_description;
+            if (Options.tutorial_left)
+                clrscr();
             continue;
         }
 

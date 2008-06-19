@@ -1830,7 +1830,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
     // Done here to cover cases of undead versions of hydras.
     if (nametype == MONS_HYDRA
-        && mon.number > 0 && desc != DESC_PLAIN && desc != DESC_DBNAME)
+        && mon.number > 0 && desc != DESC_DBNAME)
     {
         if (mon.number < 11)
         {

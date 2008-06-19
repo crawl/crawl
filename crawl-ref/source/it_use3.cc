@@ -453,8 +453,8 @@ bool evoke_wielded()
     bool unevokable = false;
 
     // Check inscriptions.
-    if ( !check_warning_inscriptions(wpn, OPER_EVOKE) )
-        return false;
+    if (!check_warning_inscriptions(wpn, OPER_EVOKE))
+        return (false);
 
     switch (wpn.base_type)
     {

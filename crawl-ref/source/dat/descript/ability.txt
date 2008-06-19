@@ -259,10 +259,14 @@ about which books of madness burst into flames.
 %%%%
 Berserk
 
-You enter a state of frenzied rage. It is prolonged by killing. Once
-over, you are slowed and exhausted, unable to immediately berserk 
-again. Unless other sources of rage, Trog prevents you from passing
-out.
+Berserk greatly if temporarily increases your hit points and damage 
+output in melee fights. It will time out quickly if you don't kill
+anything, but may be extended by multiple kills. While berserk, you
+cannot perform a number of actions such as, for example, (un)wield a
+weapon, quaff something, zap wands, or evoke items.
+Such a rage is usually followed by deep exhaustion, a time during
+which you are slowed down, and cannot berserk again. Unlike other 
+sources of rage, Trog prevents you from passing out.
 %%%%
 Trog's Hand
 

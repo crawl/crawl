@@ -2012,8 +2012,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_SKILL_RAISE:
-        text << "One of your skills just got raised. To view or manage your "
-                "skill set, type <w>m</w>.";
+        text << "One of your skills just got raised. You can train your skills "
+                "or pick up new ones by performing the corresponding actions. "
+                "To view or manage your skill set, type <w>m</w>.";
         break;
 
     case TUT_GAINED_MAGICAL_SKILL:
@@ -2735,8 +2736,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
         text << "\nAlternatively, you can dump all information pertaining to "
                 "your character into a text file with the <w>#</w> command. "
-                "You can then find said file in the <w>/morgue</w> folder ("
-             << you.your_name << ".txt) and read it at your leasure. Also, "
+                "You can then find said file in the <w>/morgue</w> folder (<w>"
+             << you.your_name << ".txt</w>) and read it at your leasure. Also, "
                 "such a file will automatically be created upon death (the "
                 "filename will then also contain the date) but that won't be "
                 "of much use to you now.";
@@ -2760,25 +2761,14 @@ formatted_string tut_abilities_info()
 {
     std::ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    text <<
-        "This screen shows your character's set of talents. You can gain new   " EOL
-        "abilities via certain items, through religion or by way of mutations. " EOL
-        "Activation of an ability usually comes at a cost, e.g. nutrition or   " EOL
-        "Magic power. ";
+    std::string broken = "This screen shows your character's set of talents. "
+        "You can gain new abilities via certain items, through religion or by "
+        "way of mutations. Activation of an ability usually comes at a cost, "
+        "e.g. nutrition or Magic power. If, from the main screen, you press "
+        "<w>a!</w> you can read your abilities' descriptions.";
+    linebreak_string2(broken, _get_tutorial_cols());
+    text << broken;
 
-    if (you.religion != GOD_NO_GOD)
-    {
-        text <<
-          "<w>Renounce Religion</w> will make your character leave your god" EOL
-          "(and usually anger said god)";
-
-        if (you.religion == GOD_TROG)
-        {
-            text << ", while <w>Berserk</w> temporarily increases your" EOL
-                    "damage output in melee fights";
-        }
-        text << ".";
-    }
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     return formatted_string::parse_string(text.str(), false);
@@ -2791,13 +2781,32 @@ void print_tut_skills_info()
     textcolor(channel_to_colour(MSGCH_TUTORIAL));
     std::ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    text <<
-        "This screen shows the skill set of your character. You can pick up new" EOL
-        "skills by performing the corresponding actions. The number next to the" EOL
-        "skill is your current level, the higher the better. The <cyan>cyan percent  " EOL
-        "value</cyan> shows your progress towards the next skill level. You can toggle" EOL
-        "which skills to train by pressing their slot letters. A <darkgrey>greyish</darkgrey> skill " EOL
-        "will increase at a decidedly slower rate and ease training of others. ";
+    std::string broken = "This screen shows the skill set of your character. "
+        "The number next to the skill is your current level, the higher the "
+        "better. The <cyan>cyan percent value</cyan> shows your progress "
+        "towards the next skill level. You can toggle which skills to train by "
+        "pressing their slot letters. A <darkgrey>greyish</darkgrey> skill "
+        "will increase at a decidedly slower rate and ease training of others. "
+        "Press <w>?</w> to read your skills' descriptions.";
+    linebreak_string2(broken, _get_tutorial_cols());
+    text << broken;
+    text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+
+    formatted_string::parse_string(text.str(), false).display();
+}
+
+void print_tut_skills_description_info()
+{
+    textcolor(channel_to_colour(MSGCH_TUTORIAL));
+    std::ostringstream text;
+    text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    std::string broken = "This screen shows the skill set of your character. "
+                         "Press the letter of a skill to read its description, "
+                         "or press <w>?</w> again to return to the skill "
+                         "selection.";
+
+    linebreak_string2(broken, _get_tutorial_cols());
+    text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     formatted_string::parse_string(text.str(), false).display();
