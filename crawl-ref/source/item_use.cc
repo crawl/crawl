@@ -1947,20 +1947,14 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
 
     // baseHit and damage for generic objects
-    baseHit = you.strength - item_mass(item) / 10;
-    if (baseHit > 0)
-        baseHit = 0;
+    baseHit = std::min(0, you.strength - item_mass(item) / 10);
 
     baseDam = item_mass(item) / 100;
 
     // special: might be throwing generic weapon;
     // use base wep. damage, w/ penalty
     if (wepClass == OBJ_WEAPONS)
-    {
-        baseDam = property( item, PWPN_DAMAGE ) - 4;
-        if (baseDam < 0)
-            baseDam = 0;
-    }
+        baseDam = std::max(0, property(item, PWPN_DAMAGE) - 4);
 
     // Extract launcher bonuses due to magic.
     if (projected == LRET_LAUNCHED)
@@ -2018,18 +2012,18 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // Check for matches; dwarven, elven, orcish.
         if (!get_equip_race(you.inv[you.equip[EQ_WEAPON]]) == 0)
         {
-            if (get_equip_race( you.inv[you.equip[EQ_WEAPON]] )
-                        == get_equip_race( item ))
+            if (get_equip_race(you.inv[you.equip[EQ_WEAPON]])
+                        == get_equip_race(item))
             {
-                baseHit += 1;
-                baseDam += 1;
+                baseHit++;
+                baseDam++;
 
                 // elves with elven bows
                 if (get_equip_race(you.inv[you.equip[EQ_WEAPON]])
                         == ISFLAG_ELVEN
                     && player_genus(GENPC_ELVEN))
                 {
-                    baseHit += 1;
+                    baseHit++;
                 }
             }
         }
@@ -2103,16 +2097,14 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             strbonus = (strbonus * (2 * baseDam + ammoDamBonus)) / 20;
 
             // cap
-            if (strbonus > lnchDamBonus + 1)
-                strbonus = lnchDamBonus + 1;
+            strbonus = std::min(lnchDamBonus + 1, strbonus);
 
             exDamBonus += strbonus;
             // Add skill for slings... helps to find those vulnerable spots.
             dice_mult = dice_mult * (14 + random2(1 + effSkill)) / 14;
 
             // Now kill the launcher damage bonus.
-            if (lnchDamBonus > 0)
-                lnchDamBonus = 0;
+            lnchDamBonus = std::min(0, lnchDamBonus);
             break;
         }
         // Blowguns take a _very_ steady hand;  a lot of the bonus
@@ -2126,10 +2118,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             // exDamBonus = 0;
 
             // Now kill the launcher damage and ammo bonuses.
-            if (lnchDamBonus > 0)
-                lnchDamBonus = 0;
-            if (ammoDamBonus > 0)
-                ammoDamBonus = 0;
+            lnchDamBonus = std::min(0, lnchDamBonus);
+            ammoDamBonus = std::min(0, ammoDamBonus);
             break;
 
         case SK_BOWS:
@@ -2144,8 +2134,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             // Cap; reduced this cap, because we don't want to allow
             // the extremely-strong to quadruple the enchantment bonus.
-            if (strbonus > lnchDamBonus + 1)
-                strbonus = lnchDamBonus + 1;
+            strbonus = std::min(lnchDamBonus + 1, strbonus);
 
             exDamBonus += strbonus;
 
@@ -2155,8 +2144,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             dice_mult = dice_mult * (17 + random2(1 + effSkill)) / 17;
 
             // Now kill the launcher damage bonus.
-            if (lnchDamBonus > 0)
-                lnchDamBonus = 0;
+            lnchDamBonus = std::min(0, lnchDamBonus);
             break;
         }
             // Crossbows are easy for unskilled people.
@@ -2306,7 +2294,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             if (get_equip_race(item) == ISFLAG_ELVEN
                 && player_genus(GENPC_ELVEN))
             {
-                baseHit += 1;
+                baseHit++;
             }
 
             // Give an appropriate 'tohit':
@@ -2319,10 +2307,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 switch (wepType)
                 {
                     case WPN_DAGGER:
-                        baseHit += 1;
+                        baseHit++;
                         break;
                     case WPN_SPEAR:
-                        baseHit -= 1;
+                        baseHit--;
                         break;
                     default:
                         baseHit -= 5;
@@ -2337,7 +2325,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         baseHit += 2;
                         break;
                     case MI_JAVELIN:
-                        baseHit += 1;
+                        baseHit++;
                         break;
                     default:
                         break;
@@ -2346,7 +2334,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             exHitBonus = you.skills[SK_THROWING] * 2;
 
-            baseDam = property( item, PWPN_DAMAGE );
+            baseDam = property(item, PWPN_DAMAGE);
 
             // Dwarves/orcs with dwarven/orcish weapons.
             if (get_equip_race(item) == ISFLAG_DWARVEN
@@ -2354,7 +2342,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 || get_equip_race(item) == ISFLAG_ORCISH
                    && you.species == SP_HILL_ORC)
             {
-                baseDam += 1;
+                baseDam++;
             }
 
             exDamBonus =
@@ -2488,9 +2476,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.hit = baseHit - random2avg(0 - (exHitBonus - 1), 2);
 
     if (exDamBonus >= 0)
-        pbolt.damage = dice_def( 1, baseDam + random2(exDamBonus + 1) );
+        pbolt.damage = dice_def(1, baseDam + random2(exDamBonus + 1));
     else
-        pbolt.damage = dice_def( 1, baseDam - random2(0 - (exDamBonus - 1)) );
+        pbolt.damage = dice_def(1, baseDam - random2(0 - (exDamBonus - 1)));
 
     pbolt.damage.size  = dice_mult * pbolt.damage.size / 100;
     pbolt.damage.size += slayDam;
@@ -2506,7 +2494,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (acc_bonus != DEBUG_COOKIE)
         pbolt.hit += acc_bonus;
 
-    scale_dice( pbolt.damage );
+    scale_dice(pbolt.damage);
 
 #if DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS,
@@ -2536,9 +2524,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (teleport)
     {
         // Violating encapsulation somewhat...oh well.
-        hit = (affect( pbolt, pbolt.target_x, pbolt.target_y ) != 0);
+        hit = (affect(pbolt, pbolt.target_x, pbolt.target_y) != 0);
         if (acc_bonus != DEBUG_COOKIE)
-            beam_drop_object( pbolt, &item, pbolt.target_x, pbolt.target_y );
+            beam_drop_object(pbolt, &item, pbolt.target_x, pbolt.target_y);
     }
     else
     {
@@ -2580,7 +2568,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             msg::stream << item.name(DESC_CAP_THE)
                         << " fails to return to your pack!" << std::endl;
         }
-        dec_inv_item_quantity( throw_2, 1 );
+        dec_inv_item_quantity(throw_2, 1);
     }
 
     // Throwing and blowguns are silent...
