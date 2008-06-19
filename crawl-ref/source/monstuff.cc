@@ -1485,8 +1485,8 @@ static bool _is_poly_power_unsuitable(
 // power of the new monster, relative to the current monster.
 // Relaxation still takes effect when needed, no matter what relpower
 // says.
-bool monster_polymorph( monsters *monster, monster_type targetc,
-                        poly_power_type power )
+bool monster_polymorph(monsters *monster, monster_type targetc,
+                       poly_power_type power)
 {
     std::string str_polymon;
     int source_power, target_power, relax;
@@ -1508,22 +1508,22 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
 
             // Valid targets are always base classes ([ds] which is unfortunate
             // in that well-populated monster classes will dominate polymorphs).
-            targetc = mons_species( targetc );
+            targetc = mons_species(targetc);
 
-            target_power = mons_power( targetc );
+            target_power = mons_power(targetc);
 
             if (one_chance_in(200))
                 relax++;
 
             if (relax > 50)
-                return (simple_monster_message( monster, " shudders." ));
+                return (simple_monster_message( monster, " shudders."));
         }
-        while (tries-- && (!_valid_morph( monster, targetc )
+        while (tries-- && (!_valid_morph(monster, targetc)
                            || _is_poly_power_unsuitable(power, source_power,
                                                         target_power, relax)));
     }
 
-    if (!_valid_morph( monster, targetc ))
+    if (!_valid_morph(monster, targetc))
         return simple_monster_message(monster, " looks momentarily different.");
 
     // If old monster is visible to the player, and is interesting,
@@ -1536,8 +1536,8 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
     }
 
     // Messaging.
-    bool invis = (!player_see_invis() && (mons_class_flag( targetc, M_INVIS )
-                                          || monster->invisible()));
+    bool invis = (!player_see_invis() && (mons_class_flag(targetc, M_INVIS)
+                                            || monster->invisible()));
 
     if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
         str_polymon = " changes into ";
@@ -1594,7 +1594,7 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
 
     monster->ench_countdown = old_ench_countdown;
 
-    if (mons_class_flag( monster->type, M_INVIS ))
+    if (mons_class_flag(monster->type, M_INVIS))
         monster->add_ench(ENCH_INVIS);
 
     if (!player_messaged && mons_near(monster)
@@ -1608,8 +1608,8 @@ bool monster_polymorph( monsters *monster, monster_type targetc,
                                 * ((old_hp * 100) / old_hp_max) / 100
                                 + random2(monster->max_hit_points);
 
-    if (monster->hit_points > monster->max_hit_points)
-        monster->hit_points = monster->max_hit_points;
+    monster->hit_points = std::min(monster->max_hit_points,
+                                   monster->hit_points);
 
     monster->speed_increment = 67 + random2(6);
 
