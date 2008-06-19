@@ -6079,12 +6079,12 @@ static void _handle_monster_move(int i, monsters *monster)
             // doesn't get hit by its own explosion. (GDL)
             mgrd[monster->x][monster->y] = NON_MONSTER;
 
-            spore_goes_pop( monster );
-            monster_cleanup( monster );
+            spore_goes_pop(monster);
+            monster_cleanup(monster);
             return;
         }
         else
-            monster_die( monster, KILL_MISC, 0 );
+            monster_die(monster, KILL_MISC, 0);
     }
 }
 
