@@ -1242,9 +1242,21 @@ monster_pane_info::less_than(const monster_pane_info& m1,
     else if (m1.m_difficulty < m2.m_difficulty)
         return (false);
 
+    // Force mimics of different types to be treated like the same one.
+    if (mons_is_mimic(m1.m_mon->type)
+        && mons_is_mimic(m2.m_mon->type))
+    {
+        return (false);
+    }
+
     if (m1.m_mon->type < m2.m_mon->type)
         return (true);
     else if (m1.m_mon->type > m2.m_mon->type)
+        return (false);
+
+    // Never distinguish between dancing weapons.
+    // The above checks guarantee that *both* monsters are of this type.
+    if (m1.m_mon->type == MONS_DANCING_WEAPON)
         return (false);
 
     // Because of the type checks above, if one of the two is zombified, so is
@@ -1255,7 +1267,7 @@ monster_pane_info::less_than(const monster_pane_info& m1,
         return (true);
     }
 
-    if (m1.m_fullname && m2.m_fullname)
+    if (m1.m_fullname && m2.m_fullname || m1.m_mon->type == MONS_PLAYER_GHOST)
         return (m1.m_mon->name(DESC_PLAIN) < m1.m_mon->name(DESC_PLAIN));
 
 #if 0 // for now, sort brands together.
@@ -1276,14 +1288,18 @@ void monster_pane_info::to_string( int count, std::string& desc,
 
     if (count == 1)
     {
-        if (m_fullname)
+        if (m_fullname && !mons_is_mimic(m_mon->type))
             out << m_mon->name(DESC_PLAIN);
         else
             out << mons_type_name(m_mon->type, DESC_PLAIN);
     }
     else
     {
-        if (m_fullname)
+        // Don't differentiate between dancing weapons or mimics
+        // of different types.
+        if (m_fullname
+            && m_mon->type != MONS_DANCING_WEAPON
+            && !mons_is_mimic(m_mon->type))
         {
             out << count << " "
                 << pluralise(m_mon->name(DESC_PLAIN));
