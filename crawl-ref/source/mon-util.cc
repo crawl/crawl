@@ -1892,7 +1892,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 std::string mons_type_name(int type, description_level_type desc )
 {
     std::string result;
-    if ( !mons_is_unique(type) )
+    if (!mons_is_unique(type))
     {
         switch (desc)
         {
@@ -1914,6 +1914,7 @@ std::string mons_type_name(int type, description_level_type desc )
     {
         result.insert(1, "n");
     }
+
     return result;
 }
 
@@ -3883,26 +3884,30 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
 {
     const item_def *miss = missiles();
 
-    if (item.sub_type == MI_THROWING_NET)
+    if (!force)
     {
-        // Monster may not pick up trapping net.
-        if (mons_is_caught(this) && item_is_stationary(item))
-            return (false);
-    }
-    else // None of these exceptions hold for throwing nets.
-    {
-        // Spellcasters should not waste time with ammunition.
-        if (mons_has_ranged_spell(this))
-            return (false);
-
-        // Monsters in a fight will only pick up missiles if doing so
-        // is worthwhile.
-        if (!mons_is_wandering(this) && (!mons_friendly(this) || foe != MHITYOU)
-            && (item.quantity < 5 || miss && miss->quantity >= 7))
+        if (item.sub_type == MI_THROWING_NET)
         {
-            return (false);
+            // Monster may not pick up trapping net.
+            if (mons_is_caught(this) && item_is_stationary(item))
+                return (false);
+        }
+        else // None of these exceptions hold for throwing nets.
+        {
+            // Spellcasters should not waste time with ammunition.
+            if (mons_has_ranged_spell(this))
+                return (false);
+
+            // Monsters in a fight will only pick up missiles if doing so
+            // is worthwhile.
+            if (!mons_is_wandering(this) && (!mons_friendly(this) || foe != MHITYOU)
+                && (item.quantity < 5 || miss && miss->quantity >= 7))
+            {
+                return (false);
+            }
         }
     }
+
     if (miss && items_stack(*miss, item))
         return (pickup(item, MSLOT_MISSILE, near));
 

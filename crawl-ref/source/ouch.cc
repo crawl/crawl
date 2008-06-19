@@ -488,8 +488,8 @@ static void _expose_invent_to_element(beam_type flavour, int strength)
 
         if (is_valid_item(you.inv[i])
             && (you.inv[i].base_type == target_class
-                || (target_class == OBJ_FOOD
-                    && you.inv[i].base_type == OBJ_CORPSES)))
+                || target_class == OBJ_FOOD
+                   && you.inv[i].base_type == OBJ_CORPSES))
         {
             if (player_item_conserve() && !one_chance_in(10))
                 continue;
@@ -634,7 +634,7 @@ void expose_player_to_element(beam_type flavour, int strength)
 
 void lose_level()
 {
-    // because you.experience is unsigned long, if it's going to be -ve
+    // Because you.experience is unsigned long, if it's going to be -ve
     // must die straightaway.
     if (you.experience_level == 1)
     {
@@ -758,10 +758,10 @@ static void xom_checks_damage(kill_method_type death_type,
         xom_is_stimulated(255);
         return;
     }
-    else if ((death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM)
+    else if (death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM
              || death_source < 0 || death_source >= MAX_MONSTERS)
     {
-        return ;
+        return;
     }
 
     int amusementvalue = 1;
@@ -875,7 +875,7 @@ void ouch( int dam, int death_source, kill_method_type death_type,
         } // else hp <= 0
     }
 
-    // construct scorefile entry.
+    // Construct scorefile entry.
     scorefile_entry se(dam, death_source, death_type, aux);
 
 #ifdef WIZARD
@@ -913,8 +913,7 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     }
 #endif  // WIZARD
 
-    //okay, so you're dead:
-
+    // Okay, so you're dead.
     crawl_state.need_save       = false;
     crawl_state.updating_scores = true;
 
@@ -922,17 +921,17 @@ void ouch( int dam, int death_source, kill_method_type death_type,
                     se.death_description(scorefile_entry::DDV_NORMAL).c_str()),
               true);
 
-    // prevent bogus notes
+    // Prevent bogus notes.
     activate_notes(false);
 
 #ifdef SCORE_WIZARD_CHARACTERS
-    // add this highscore to the score file.
+    // Add this highscore to the score file.
     hiscores_new_entry(se);
     logfile_new_entry(se);
 #else
 
-    // only add non-wizards to the score file.
-    // never generate bones files of wizard characters -- bwr
+    // Only add non-wizards to the score file.
+    // Never generate bones files of wizard characters -- bwr
     if (!you.wizard)
     {
         hiscores_new_entry(se);
@@ -945,7 +944,6 @@ void ouch( int dam, int death_source, kill_method_type death_type,
             save_ghost();
         }
     }
-
 #endif
 
     end_game(se);

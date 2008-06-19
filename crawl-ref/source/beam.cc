@@ -5209,7 +5209,7 @@ static void _explosion1(bolt &pbolt)
 
     if (!pbolt.is_tracer && *seeMsg && *hearMsg)
     {
-        // check for see/hear/no msg
+        // Check for see/hear/no msg.
         if (see_grid(x,y) || x == you.x_pos && y == you.y_pos)
             mpr(seeMsg);
         else
@@ -5399,10 +5399,10 @@ void explosion( bolt &beam, bool hole_in_the_middle,
 
             // new-- delay after every 'ring' {gdl}
             // If we don't refresh curses we won't
-            // guarantee that the explosion is visible
+            // guarantee that the explosion is visible.
             if (drawing)
                 update_screen();
-            // only delay on real explosion
+            // Only delay on real explosion.
             if (!beam.is_tracer && drawing)
                 delay(50);
         }
@@ -5426,7 +5426,7 @@ void explosion( bolt &beam, bool hole_in_the_middle,
         set_buffering(oldValue);
 #endif
 
-    // duplicate old behaviour - pause after entire explosion
+    // Duplicate old behaviour - pause after entire explosion
     // has been drawn.
     if (!beam.is_tracer && seen_anything && show_more)
         more();
@@ -5440,10 +5440,10 @@ static void _explosion_cell(bolt &beam, int x, int y, bool drawOnly)
 
     if (!drawOnly)
     {
-        // Random beams: randomize before affect.
+        // Random beams: randomize before affect().
         if (beam.flavour == BEAM_RANDOM)
         {
-            random_beam = true;
+            random_beam  = true;
             beam.flavour = static_cast<beam_type>(
                                random_range(BEAM_FIRE, BEAM_ACID) );
         }
@@ -5463,7 +5463,7 @@ static void _explosion_cell(bolt &beam, int x, int y, bool drawOnly)
         int drawx = grid2viewX(realx);
         int drawy = grid2viewY(realy);
 
-        if (see_grid(realx, realy) || (realx == you.x_pos && realy == you.y_pos))
+        if (see_grid(realx, realy) || realx == you.x_pos && realy == you.y_pos)
         {
 #ifdef USE_TILE
             if (in_los_bounds(drawx, drawy))

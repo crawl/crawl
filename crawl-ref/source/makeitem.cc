@@ -2905,6 +2905,11 @@ static void _give_monster_item(monsters *mon, int thing,
 {
     item_def &mthing = mitm[thing];
 
+#ifdef DEBUG_DIAGNOSTICS
+    mprf("Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
+                               mon->name(DESC_PLAIN).c_str());
+#endif
+
     mthing.x = 0;
     mthing.y = 0;
     mthing.link = NON_ITEM;
@@ -3674,11 +3679,12 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     return (item_race);
 }
 
+// Hands out ammunition fitting the monster's launcher (if any), or else any
+// throwable weapon depending on the monster type.
 static void _give_ammo(monsters *mon, int level,
                        item_make_species_type item_race)
 {
-    // mv: gives ammunition
-    // note that item_race is not reset for this section
+    // Note that item_race is not reset for this section.
     if (const item_def *launcher = mon->launcher())
     {
         const object_class_type xitc = OBJ_MISSILES;
@@ -3691,8 +3697,6 @@ static void _give_ammo(monsters *mon, int level,
         if (thing_created == NON_ITEM)
             return;
 
-        // monsters will always have poisoned needles -- otherwise
-        // they are just going to behave badly --GDL
         if (xitt == MI_NEEDLE)
         {
             set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
@@ -3705,7 +3709,7 @@ static void _give_ammo(monsters *mon, int level,
             mitm[thing_created].quantity *= 2;
 
         _give_monster_item(mon, thing_created);
-    }                           // end if needs ammo
+    }
     else
     {
         // Give some monsters throwing weapons.
@@ -4146,7 +4150,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
 jewellery_type get_random_amulet_type()
 {
     return (jewellery_type)
-        (AMU_FIRST_AMULET + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
+                (AMU_FIRST_AMULET + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
 }
 
 static jewellery_type _get_raw_random_ring_type()

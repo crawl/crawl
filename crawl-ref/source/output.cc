@@ -1192,7 +1192,7 @@ class monster_pane_info
 {
  public:
     static bool less_than(const monster_pane_info& m1,
-                          const monster_pane_info& m2);
+                          const monster_pane_info& m2, bool zombified = true);
 
     monster_pane_info(const monsters* m)
         : m_mon(m)
@@ -1229,23 +1229,31 @@ class monster_pane_info
 //   brand
 bool // static
 monster_pane_info::less_than(const monster_pane_info& m1,
-                             const monster_pane_info& m2)
+                             const monster_pane_info& m2, bool zombified)
 {
     if (m1.m_attitude < m2.m_attitude)
-        return true;
+        return (true);
     else if (m1.m_attitude > m2.m_attitude)
-        return false;
+        return (false);
 
     // By descending difficulty
     if (m1.m_difficulty > m2.m_difficulty)
-        return true;
+        return (true);
     else if (m1.m_difficulty < m2.m_difficulty)
-        return false;
+        return (false);
 
     if (m1.m_mon->type < m2.m_mon->type)
-        return true;
+        return (true);
     else if (m1.m_mon->type > m2.m_mon->type)
-        return false;
+        return (false);
+
+    // Because of the type checks above, if one of the two is zombified, so is
+    // the other, and of the same type.
+    if (zombified && mons_is_zombified(m1.m_mon)
+        && m1.m_mon->base_monster < m2.m_mon->base_monster)
+    {
+        return (true);
+    }
 
     if (m1.m_fullname && m2.m_fullname)
         return (m1.m_mon->name(DESC_PLAIN) < m1.m_mon->name(DESC_PLAIN));
@@ -1258,7 +1266,7 @@ monster_pane_info::less_than(const monster_pane_info& m1,
         return false;
 #endif
 
-    return false;
+    return (false);
 }
 
 void monster_pane_info::to_string( int count, std::string& desc,
@@ -1276,11 +1284,15 @@ void monster_pane_info::to_string( int count, std::string& desc,
     else
     {
         if (m_fullname)
+        {
             out << count << " "
                 << pluralise(m_mon->name(DESC_PLAIN));
+        }
         else
+        {
             out << count << " "
                 << pluralise(mons_type_name(m_mon->type, DESC_PLAIN));
+        }
     }
 
 #if DEBUG_DIAGNOSTICS
@@ -1321,15 +1333,16 @@ void monster_pane_info::to_string( int count, std::string& desc,
     desc = out.str();
 }
 
-static void
-_print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
+static void _print_next_monster_desc(
+    const std::vector<monster_pane_info>& mons, int& start,
+    bool zombified = false)
 {
     // Skip forward to past the end of the range of identical monsters.
     unsigned int end;
-    for (end=start+1; end < mons.size(); ++end)
+    for (end = start + 1; end < mons.size(); ++end)
     {
         // Array is sorted, so if !(m1 < m2), m1 and m2 are "equal".
-        if (monster_pane_info::less_than(mons[start], mons[end]))
+        if (monster_pane_info::less_than(mons[start], mons[end], zombified))
             break;
     }
     // Postcondition: all monsters in [start, end) are "equal"
@@ -1339,7 +1352,7 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
         int printed = 0;
 
         // One glyph for each monster.
-        for (unsigned int i_mon=start; i_mon<end; i_mon++)
+        for (unsigned int i_mon = start; i_mon < end; i_mon++)
         {
             unsigned int glyph;
             unsigned short glyph_color;
@@ -1350,7 +1363,8 @@ _print_next_monster_desc(const std::vector<monster_pane_info>& mons, int& start)
                 cprintf("%%");
             else
                 cprintf( stringize_glyph(glyph).c_str() );
-            ++ printed;
+            ++printed;
+
             // Printing too many looks pretty bad, though.
             if (i_mon > 6)
                 break;
@@ -1444,22 +1458,25 @@ void update_monster_pane()
 
     // Count how many groups of monsters there are
     unsigned int lines_needed = mons.size();
-    for (unsigned int i=1; i < mons.size(); i++)
-        if (! monster_pane_info::less_than(mons[i-1], mons[i]))
-            -- lines_needed;
+    for (unsigned int i = 1; i < mons.size(); i++)
+        if (!monster_pane_info::less_than(mons[i-1], mons[i]))
+            --lines_needed;
 
+    bool zombified = true;
     if (lines_needed > (unsigned int) max_print)
     {
+        zombified = false;
+
         // Use type names rather than full names ("small zombie" vs
         // "rat zombie") in order to take up less lines.
-        for (unsigned int i=1; i < mons.size(); i++)
+        for (unsigned int i = 0; i < mons.size(); i++)
             mons[i].m_fullname = false;
         std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
 
         lines_needed = mons.size();
-        for (unsigned int i=1; i < mons.size(); i++)
-            if (! monster_pane_info::less_than(mons[i-1], mons[i]))
-                -- lines_needed;
+        for (unsigned int i = 1; i < mons.size(); i++)
+            if (!monster_pane_info::less_than(mons[i-1], mons[i], false))
+                --lines_needed;
     }
 
 #if BOTTOM_JUSTIFY_MONSTER_LIST
@@ -1477,12 +1494,12 @@ void update_monster_pane()
         cgotoxy(1, 1+i_print, GOTO_MLIST);
         // i_mons is incremented by _print_next_monster_desc
         if ((i_print >= skip_lines) && (i_mons < (int)mons.size()))
-            _print_next_monster_desc(mons, i_mons);
+            _print_next_monster_desc(mons, i_mons, zombified);
         else
             cprintf("%s", blank.c_str());
     }
 
-    if (i_mons < (int)mons.size())
+    if (i_mons < (int) mons.size())
     {
         // Didn't get to all of them.
         cgotoxy(crawl_view.mlistsz.x-4, crawl_view.mlistsz.y, GOTO_MLIST);

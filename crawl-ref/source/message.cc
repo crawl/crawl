@@ -696,7 +696,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param)
     }
 
     mpr_store_messages(imsg, channel, param);
-}                               // end mpr()
+}
 
 
 static void mpr_formatted_output(formatted_string fs, int colour)
@@ -818,7 +818,7 @@ void mesclr( bool force )
 {
     New_Message_Count = 0;
 
-    // if no messages, return.
+    // If no messages, return.
     if (!any_messages())
         return;
 
@@ -875,7 +875,9 @@ void more(void)
 #endif
 
         do
+        {
             keypress = getch();
+        }
         while (keypress != ' ' && keypress != '\r' && keypress != '\n'
                && keypress != -1);
     }
