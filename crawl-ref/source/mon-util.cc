@@ -4560,7 +4560,7 @@ void monsters::teleport(bool now, bool)
 
 bool monsters::alive() const
 {
-    return (type != -1 && hit_points > 0);
+    return (hit_points > 0 && type != -1);
 }
 
 god_type monsters::deity() const
