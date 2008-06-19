@@ -703,8 +703,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     if (!silent && _monster_avoided_death(monster, killer, i))
         return;
 
-    if (mons_is_caught(monster))
-        mons_clear_trapping_net(monster);
+    mons_clear_trapping_net(monster);
 
     // Update list of monsters beholding player.
     update_beholders(monster, true);
@@ -1645,8 +1644,7 @@ bool monster_blink(monsters *monster)
         }
     }
 
-    if (mons_is_caught(monster))
-        mons_clear_trapping_net(monster);
+    mons_clear_trapping_net(monster);
 
     mgrd[monster->x][monster->y] = NON_MONSTER;
 

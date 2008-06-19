@@ -996,8 +996,7 @@ void monster_teleport(struct monsters *monster, bool instan, bool silent)
     // Pick the monster up.
     mgrd(oldplace) = NON_MONSTER;
 
-    if (mons_is_caught(monster))
-        mons_clear_trapping_net(monster);
+    mons_clear_trapping_net(monster);
 
     int newx, newy;
     while (true)
@@ -2541,14 +2540,14 @@ bool moth_incite_monsters(const monsters *mon)
     return (false);
 }
 
-void mons_clear_trapping_net(monsters *mons)
+void mons_clear_trapping_net(monsters *mon)
 {
-    if (!mons_is_caught(mons))
+    if (!mons_is_caught(mon))
         return;
 
-    const int net = get_trapping_net(mons->x, mons->y);
+    const int net = get_trapping_net(mon->x, mon->y);
     if (net != NON_ITEM)
         remove_item_stationary(mitm[net]);
 
-    mons->del_ench(ENCH_HELD, true);
+    mon->del_ench(ENCH_HELD, true);
 }

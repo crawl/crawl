@@ -4104,19 +4104,16 @@ static void _move_monster(int x, int y, int mid1)
     if (!moves.isValid || !in_bounds(moves.tx, moves.ty))
         return;
 
-    struct monsters* mon1 = &menv[mid1];
-    if (mons_is_caught(mon1))
-        mons_clear_trapping_net(mon1);
+    monsters* mon1 = &menv[mid1];
+    mons_clear_trapping_net(mon1);
 
-    int              mid2 = mgrd[moves.tx][moves.ty];
-    struct monsters* mon2 = NULL;
+    int mid2 = mgrd[moves.tx][moves.ty];
+    monsters* mon2 = NULL;
 
     if (mid2 != NON_MONSTER)
     {
         mon2 = &menv[mid2];
-
-        if (mons_is_caught(mon2))
-            mons_clear_trapping_net(mon2);
+        mons_clear_trapping_net(mon2);
     }
 
     mon1->x = moves.tx;
