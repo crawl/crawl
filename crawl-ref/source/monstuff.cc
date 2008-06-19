@@ -5665,7 +5665,7 @@ static void _handle_monster_move(int i, monsters *monster)
         // reset, since then the monster type is invalid.
         if (monster->type == -1)
             return;
-        if (monster->hit_points < 1)
+        else if (monster->hit_points < 1)
             break;
     }
 
