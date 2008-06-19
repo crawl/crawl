@@ -967,7 +967,11 @@ static void _milestone_check(const item_def &item)
 
 static void _check_note_item(item_def &item)
 {
-    if (!(item.flags & ISFLAG_NOTED_GET) && is_interesting_item(item))
+    if (item.flags & (ISFLAG_NOTED_GET | ISFLAG_NOTED_ID))
+        return;
+
+    if (is_rune(item) || item.base_type == OBJ_ORBS
+        || is_artefact(item))
     {
         take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
                        origin_desc(item).c_str()));
@@ -1457,13 +1461,7 @@ static void _got_item(item_def& item, int quant)
     }
 
     item.flags |= ISFLAG_BEEN_IN_INV;
-    if (!(item.flags & ISFLAG_NOTED_GET))
-    {
-        take_note(Note(NOTE_GET_ITEM, 0, 0,
-                       item.name(DESC_NOCAP_A).c_str()));
-        // Don't take another note.
-        item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
-    }
+    _check_note_item(item);
 }
 
 // Returns quantity of items moved into player's inventory and -1 if
@@ -1626,12 +1624,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         && you.char_direction == GDT_DESCENDING)
     {
         // Take a note!
-        if (!(item.flags & ISFLAG_NOTED_GET))
-        {
-            take_note(Note(NOTE_GET_ITEM, 0, 0,
-                           item.name(DESC_NOCAP_A).c_str()));
-            item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
-        }
+        _check_note_item(item);
 
         if (!quiet)
             mpr("Now all you have to do is get back out of the dungeon!");

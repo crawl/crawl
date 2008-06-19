@@ -1582,8 +1582,8 @@ The following events are logged:
         - Being put under penance and being forgiven
         - Receiving a gift from a god (except Xom)
         - Being able to invoke a godly power for the first time
-        - Picking up a rune or the orb of zot for the first time
-        - Identifying items, or picking them up for the first time (see below)
+        - Picking up a rune, the Orb of Zot, or an artefact for the first time.
+        - Identifying items.
         - Killing OOD or unique monsters (see below)
         - Reaching critical HP levels (see below)
         - Gaining or losing mutations
@@ -1596,14 +1596,14 @@ user_note_prefix = <string>
         them easier to find.
 
 note_items = <regexes>
-        When an item is identified or picked up for the first time, it will
-        be noted if its short description matches a regex. E.g.
+        When an item is identified for the first time, it will be
+        noted if its short description matches a regex. E.g.
              note_items = rod,book,acquirement
         Artefacts (fixed, unrand, or random) will always be noted when
         identified, regardless of note_items.
 
         The description matched against has the same prefixes as notes
-        for the menu_colour option (e.g., "identified", "know", etc).
+        for the menu_colour option (e.g., "emergency_item").
 
 note_monsters = <regex list>
         Monsters whose name matches an item in this comma-separated list 
