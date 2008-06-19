@@ -7311,8 +7311,7 @@ forget_it:
 
         // Fleeing monsters that can't move will panic and possibly
         // turn to face their attacker.
-        if (mons_is_fleeing(monster))
-            behaviour_event(monster, ME_CORNERED);
+        _make_mons_stop_fleeing(monster);
     }
 
     if (mmov_x || mmov_y || (monster->confused() && one_chance_in(6)))
