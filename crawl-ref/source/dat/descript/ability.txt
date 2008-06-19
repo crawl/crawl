@@ -9,7 +9,7 @@ There's currently no description for this ability...
 %%%%
 Sense Surroundings
 
-There's currently no description for this ability...
+You can map your vicinity.
 %%%%
 Teleportation
 
@@ -253,24 +253,30 @@ There's currently no description for this ability...
 # Trog
 Burn Books
 
-There's currently no description for this ability...
+All spellbooks within your line of sight are set on fire. The fire is 
+fueled by Trog's hate, and Trog likes it most when you don't even care
+about which books of madness burst into flames.
 %%%%
 Berserk
 
-There's currently no description for this ability...
+You enter a state of frenzied rage. It is prolonged by killing. Once
+over, you are slowed and exhausted, unable to immediately berserk 
+again. Unless other sources of rage, Trog prevents you from passing
+out.
 %%%%
 Trog's Hand
 
-There's currently no description for this ability...
+A powerful regeneration ability, stacks with all other sources.
 %%%%
 Brothers in Arms
 
-There's currently no description for this ability...
+Sends angry, huge allies to roam the dungeon.
 %%%%
 # Elyvilon
 Destroy Weapons
 
-There's currently no description for this ability...
+Destroys all weapons on the ground. In order to prevent a weapon from
+being accidentally destroyed, use the !D inscription.
 %%%%
 Lesser Healing
 
@@ -311,7 +317,7 @@ There's currently no description for this ability...
 %%%%
 Enter the Abyss
 
-There's currently no description for this ability...
+You can transfer yourself to Lugonu's realm instantly... but at a cost.
 %%%%
 # Nemelex Xobeh
 Draw One
