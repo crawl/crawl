@@ -1347,7 +1347,7 @@ static bool _jelly_divide(monsters * parent)
     {
         child = &menv[k];
 
-        if (!child->alive())
+        if (child->type == -1)
             break;
         else if (k == MAX_MONSTERS - 1)
             return (false);
@@ -1396,7 +1396,7 @@ void alert_nearby_monsters(void)
         // alert monsters that aren't sleeping.  For cases where an
         // event should wake up monsters and alert them, I'd suggest
         // calling noisy() before calling this function. -- bwr
-        if (monster->alive()
+        if (monster->type != -1
             && mons_near(monster)
             && !mons_is_sleeping(monster))
         {
@@ -1911,7 +1911,7 @@ void mons_get_damage_level( const monsters* monster, std::string& desc,
 
 void print_wounds(const monsters *monster)
 {
-    if (!monster->alive())
+    if (monster->type == -1)
         return;
 
     if (monster->hit_points == monster->max_hit_points
@@ -2481,7 +2481,7 @@ static void _handle_behaviour(monsters *mon)
 
     // Validate current target exists.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
-        && !menv[mon->foe].alive())
+        && menv[mon->foe].type == -1)
     {
         mon->foe = MHITNOT;
     }
@@ -2568,9 +2568,9 @@ static void _handle_behaviour(monsters *mon)
         mon->foe = MHITYOU;
     }
 
-    // Validate target again.
+    // Validate current target again.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
-        && !menv[mon->foe].alive())
+        && menv[mon->foe].type == -1)
     {
         mon->foe = MHITNOT;
     }
@@ -3863,7 +3863,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         {
             monsters *targ = &menv[i];
 
-            if (!targ->alive() || targ->type == NON_MONSTER)
+            if (targ->type == -1 || targ->type == NON_MONSTER)
                 continue;
 
             if (distance( monster->x, monster->y, targ->x, targ->y ) >= 5)
@@ -5703,7 +5703,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
     while (monster->has_action_energy())
     {   // The continues & breaks are WRT this.
-        if (!monster->alive())
+        if (monster->type == -1)
             break;
 
         if (monster->speed_increment >= old_energy)
@@ -5736,7 +5736,7 @@ static void _handle_monster_move(int i, monsters *monster)
                 break;
             }
 
-            if (!monster->alive())
+            if (monster->type == -1)
             {
                 monster->speed_increment -= entry->energy_usage.move;
                 break;  // problem with vortices
@@ -5744,7 +5744,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
             _mons_in_cloud(monster);
 
-            if (!monster->alive())
+            if (monster->type == -1)
             {
                 monster->speed_increment = 1;
                 break;
@@ -6065,7 +6065,7 @@ static void _handle_monster_move(int i, monsters *monster)
         // surroundings have changed (it may have moved,
         // or died for that matter).  Don't bother for
         // dead monsters.  :)
-        if (monster->alive())
+        if (monster->type != -1)
             _handle_behaviour(monster);
 
     }                   // end while
@@ -6105,7 +6105,7 @@ void handle_monsters(void)
     {
         monsters *monster = &menv[i];
 
-        if (!monster->alive() || immobile_monster[i])
+        if (monster->type == -1 || immobile_monster[i])
             continue;
 
         const int mx = monster->x, my = monster->y;
