@@ -1679,13 +1679,12 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         break;
     }
 
-    if ( wearing_amulet(AMU_INACCURACY) )
+    if (wearing_amulet(AMU_INACCURACY))
     {
         pbolt.hit -= 5;
-        if ( pbolt.hit < 0 )
-            pbolt.hit = 0;
+        pbolt.hit = std::max(0, pbolt.hit);
     }
-}                               // end zappy()
+}
 
 /*  NEW (GDL):
  *  Now handles all beamed/thrown items and spells, tracers, and their effects.
