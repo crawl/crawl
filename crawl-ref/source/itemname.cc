@@ -1517,9 +1517,14 @@ std::string item_def::name_aux( description_level_type desc,
             buff << (item_typ == BOOK_MANUAL ? "manual" : "book");
         else if (!know_type)
         {
-            buff << book_secondary_string(this->special / 10)
-                 << book_primary_string(this->special % 10)
-                 << (item_typ == BOOK_MANUAL ? "manual" : "book");
+            if (item_typ == BOOK_DESTRUCTION)
+                buff << "ancient heavily glowing book";
+            else
+            {
+                buff << book_secondary_string(this->special / 10)
+                     << book_primary_string(this->special % 10)
+                     << (item_typ == BOOK_MANUAL ? "manual" : "book");
+            }
         }
         else if (item_typ == BOOK_MANUAL)
         {

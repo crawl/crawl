@@ -3111,11 +3111,11 @@ bool trog_burn_books()
 
     god_acting gdact;
 
-    for ( stack_iterator si(you.pos()); si; ++si )
+    for (stack_iterator si(you.pos()); si; ++si)
     {
-        if ( si->base_type == OBJ_BOOKS
-             && si->sub_type != BOOK_MANUAL
-             && si->sub_type != BOOK_DESTRUCTION )
+        if (si->base_type == OBJ_BOOKS
+            && si->sub_type != BOOK_MANUAL
+            && si->sub_type != BOOK_DESTRUCTION)
         {
             mpr("Burning your own feet might not be such a smart idea!");
             return (false);
@@ -3137,17 +3137,17 @@ bool trog_burn_books()
 
         int count = 0;
         int rarity = 0;
-        for ( stack_iterator si(*ri); si; ++si )
+        for (stack_iterator si(*ri); si; ++si)
         {
-            if ( si->base_type != OBJ_BOOKS
-                 || si->sub_type == BOOK_MANUAL
-                 || si->sub_type == BOOK_DESTRUCTION )
+            if (si->base_type != OBJ_BOOKS
+                || si->sub_type == BOOK_MANUAL
+                || si->sub_type == BOOK_DESTRUCTION)
             {
                 continue;
             }
 
             // Ignore {!D} inscribed books.
-            if (!check_warning_inscriptions( *si, OPER_DESTROY))
+            if (!check_warning_inscriptions(*si, OPER_DESTROY))
             {
                 mpr("Won't ignite {!D} inscribed book.");
                 continue;
@@ -3188,13 +3188,13 @@ bool trog_burn_books()
             place_cloud( CLOUD_FIRE, ri->x, ri->y, durat, KC_YOU );
 
             mpr(count == 1 ? "The book bursts into flames."
-                : "The books burst into flames.", MSGCH_GOD);
+                           : "The books burst into flames.", MSGCH_GOD);
         }
     }
 
     if (!totalpiety)
     {
-         mpr("There are no books in sight to burn!");
+         mpr("There are no spellbooks in sight to burn!");
          return (false);
     }
     else
