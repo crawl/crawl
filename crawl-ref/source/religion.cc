@@ -1069,6 +1069,16 @@ static void _give_nemelex_gift()
     }
 }
 
+void mons_make_god_gift(monsters *mon, god_type god)
+{
+    mon->god = god;
+}
+
+bool mons_is_god_gift(const monsters *mon, god_type god)
+{
+    return (mon->god == god);
+}
+
 bool is_orcish_follower(const monsters* mon)
 {
     return (mon->alive() && mons_species(mon->type) == MONS_ORC
@@ -1320,7 +1330,7 @@ static bool _tso_blessing_friendliness(monsters* mon)
     // become hostile later on, it won't count as a good kill.
     mon->flags |= MF_CREATED_FRIENDLY;
 
-    mon->god = GOD_SHINING_ONE;
+    mons_make_god_gift(mon, GOD_SHINING_ONE);
 
     // If the monster is charmed, make it permanently friendly.  Note
     // that we have to delete the enchantment without removing the
@@ -2150,12 +2160,12 @@ void god_speaks( god_type god, const char *mesg )
 bool did_god_conduct(conduct_type thing_done, int level, bool known,
                      const monsters *victim)
 {
+    if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
+        return (false);
+
     bool ret = false;
     int piety_change = 0;
     int penance = 0;
-
-    if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
-        return (false);
 
     god_acting gdact;
 
@@ -4659,7 +4669,7 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     // become hostile later on, it won't count as a good kill.
     orc->flags |= MF_CREATED_FRIENDLY;
 
-    orc->god = GOD_BEOGH;
+    mons_make_god_gift(orc, GOD_BEOGH);
 
     if (orc->is_patrolling())
     {

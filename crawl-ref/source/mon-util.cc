@@ -497,14 +497,6 @@ bool mons_is_native_in_branch(const monsters *monster,
     }
 }
 
-bool mons_is_god_gift(const monsters *mon, god_type god)
-{
-    if (god == GOD_NO_GOD)
-        return (false);
-
-    return (mon->god == god);
-}
-
 bool mons_is_chaotic(const monsters *mon)
 {
     if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
@@ -5281,11 +5273,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_SHORT_LIVED:
         add_ench(mon_enchant(ENCH_ABJ));
 
-        // Just for flavour.
-        if (mons_is_god_gift(this) && this->has_ench(ENCH_BERSERK))
+        if (this->has_ench(ENCH_BERSERK))
             simple_monster_message(this, " is no longer berserk.");
 
-        monster_die( this, quiet ? KILL_DISMISSED : KILL_RESET, 0 );
+        monster_die(this, quiet ? KILL_DISMISSED : KILL_RESET, 0);
         break;
 
     case ENCH_SUBMERGED:

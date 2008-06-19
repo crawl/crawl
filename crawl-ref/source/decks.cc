@@ -2487,31 +2487,25 @@ static void _crusade_card(int power, deck_rarity_type rarity)
             // (though not immunity) check. Specifically,
             // you can convert Killer Klowns this way.
             // Might be too good.
-            if ( monster->hit_dice * 35 < random2(power) )
+            if (monster->hit_dice * 35 < random2(power))
             {
-                bool converted = false;
+                simple_monster_message(monster, " is converted.");
 
-                if ( one_chance_in(5 - power_level) )
+                if (one_chance_in(5 - power_level))
                 {
-                    if (you.religion == GOD_BEOGH &&
-                        mons_species(monster->type) == MONS_ORC)
+                    monster->attitude = ATT_FRIENDLY;
+
+                    // If you worship a god that lets you recruit
+                    // permanent followers, count this as a recruitment.
+                    if (you.religion == GOD_SHINING_ONE
+                        || you.religion == GOD_BEOGH
+                            && mons_species(monster->type) == MONS_ORC)
                     {
-                        beogh_convert_orc(monster, false);
-                    }
-                    else
-                    {
-                        monster->attitude = ATT_FRIENDLY;
-                        converted = true;
+                        mons_make_god_gift(monster);
                     }
                 }
                 else
-                {
                     monster->add_ench(ENCH_CHARM);
-                    converted = true;
-                }
-
-                if (converted)
-                    simple_monster_message(monster, " is converted.");
             }
         }
     }
