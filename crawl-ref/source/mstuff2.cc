@@ -49,11 +49,11 @@
 #include "traps.h"
 #include "view.h"
 
-static int _monster_abjuration(const monsters *mons, bool actual);
+static int _monster_abjuration(const monsters *caster, bool actual);
 
 // NB: only works because grid location already verified
 //     to be some sort of trap prior to function call: {dlb}
-void mons_trap(struct monsters *monster)
+void mons_trap(monsters *monster)
 {
     if (!is_trap_square(grd[monster->x][monster->y]))
         return;
