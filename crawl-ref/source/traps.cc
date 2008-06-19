@@ -553,7 +553,7 @@ void disarm_trap( struct dist &disa )
 
     switch (trap_category(env.trap[i].type))
     {
-    case DNGN_TRAP_MECHANICAL:
+    case DNGN_TRAP_MAGICAL:
         mpr("You can't disarm that trap.");
         return;
     case DNGN_TRAP_NATURAL:
