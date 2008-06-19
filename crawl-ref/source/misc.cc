@@ -2485,8 +2485,11 @@ int str_to_shoptype(const std::string &s)
 
 // General threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters.
 // Highest threat = highest_logexpervalue_of_nearby_unfriendly_monsters.
-void monster_threat_values(double *general, double *highest)
+static void monster_threat_values(double *general, double *highest,
+                                  bool *invis)
 {
+    *invis = false;
+
     double sum = 0;
     int highest_xp = -1;
 
@@ -2505,17 +2508,23 @@ void monster_threat_values(double *general, double *highest)
                 highest_xp = xp;
                 *highest   = log_xp;
             }
+            if (!you.can_see(monster))
+                *invis = true;
         }
     }
 
     *general = sum;
 }
 
-bool player_in_a_dangerous_place()
+bool player_in_a_dangerous_place(bool *invis)
 {
+    bool junk;
+    if (invis == NULL)
+        invis = &junk;
+
     const double logexp = log((double)you.experience);
     double gen_threat = 0.0, hi_threat = 0.0;
-    monster_threat_values(&gen_threat, &hi_threat);
+    monster_threat_values(&gen_threat, &hi_threat, invis);
 
     return (gen_threat > logexp * 1.3 || hi_threat > logexp / 2);
 }
