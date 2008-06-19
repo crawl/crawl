@@ -21,7 +21,7 @@ TAGS:     mnoleg
 ORIENT:   northeast
 FLOORCOL: yellow
 ROCKCOL:  red
-MONS:     Mnoleg, neqoxec
+MONS:     patrolling Mnoleg, neqoxec
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -69,7 +69,7 @@ TAGS:     lom_lobon
 ORIENT:   north
 FLOORCOL: lightgrey
 ROCKCOL:  white
-MONS:     Lom Lobon, giant orange brain, rakshasa, wizard
+MONS:     patrolling Lom Lobon, giant orange brain, rakshasa, wizard
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -117,7 +117,7 @@ TAGS:     cerebov
 ORIENT:   northeast
 FLOORCOL: red
 ROCKCOL:  red
-MONS: Cerebov, Balrug, Pit Fiend
+MONS:     patrolling Cerebov, Balrug, Pit Fiend
 #
 # you might not want to teleport too much on this level - unless you can 
 # reliably teleport away again.
@@ -169,7 +169,7 @@ TAGS:     gloorx_vloq
 ORIENT:   southwest
 FLOORCOL: darkgrey
 ROCKCOL:  darkgrey
-MONS:     Gloorx Vloq, Executioner, demonic crawler, shadow demon
+MONS:     patrolling Gloorx Vloq, Executioner, demonic crawler, shadow demon
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx@.xxxxxxxxxxxxxxx
 xxxxxxxxx..............................x
