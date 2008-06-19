@@ -2496,12 +2496,14 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                     monster->attitude = ATT_FRIENDLY;
 
                     // If you worship a god that lets you recruit
-                    // permanent followers, count this as a recruitment.
-                    if (you.religion == GOD_SHINING_ONE
+                    // permanent followers, or a god allied with one,
+                    // count this as a recruitment.
+                    if (is_good_god(you.religion)
                         || you.religion == GOD_BEOGH
                             && mons_species(monster->type) == MONS_ORC)
                     {
-                        mons_make_god_gift(monster);
+                        mons_make_god_gift(monster, is_good_god(you.religion) ?
+                                           GOD_SHINING_ONE : GOD_BEOGH);
                     }
                 }
                 else
