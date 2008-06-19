@@ -451,9 +451,7 @@ void identify(int power, int item_slot)
             continue;
         }
 
-        if (!is_artefact(item))
-            set_ident_type( item.base_type, item.sub_type, ID_KNOWN_TYPE );
-
+        set_ident_type( item, ID_KNOWN_TYPE );
         set_ident_flags( item, ISFLAG_IDENT_MASK );
 
         // output identified item

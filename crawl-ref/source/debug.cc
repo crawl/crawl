@@ -1815,7 +1815,7 @@ static void _dump_item( const char *name, int num, const item_def &item )
 
     mprf("    quant: %d; colour: %d; ident: 0x%08lx; ident_type: %d",
          item.quantity, item.colour, item.flags,
-         get_ident_type( item.base_type, item.sub_type ) );
+         get_ident_type( item ) );
 
     mprf("    x: %d; y: %d; link: %d", item.x, item.y, item.link );
 

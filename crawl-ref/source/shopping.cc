@@ -349,7 +349,7 @@ static void _purchase( int shop, int item_got, int cost, bool id )
     {
         // Identify the item and its type.
         // This also takes the ID note if necessary.
-        set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
+        set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
     }
 

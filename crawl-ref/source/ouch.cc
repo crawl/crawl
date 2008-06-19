@@ -985,8 +985,7 @@ void end_game( scorefile_entry &se )
     {
         if (you.inv[i].base_type != 0)
         {
-            set_ident_type( you.inv[i].base_type,
-                            you.inv[i].sub_type, ID_KNOWN_TYPE );
+            set_ident_type( you.inv[i], ID_KNOWN_TYPE );
         }
     }
 

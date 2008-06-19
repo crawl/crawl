@@ -248,7 +248,7 @@ std::string item_def::name(description_level_type descrip,
         if (tried)
         {
             item_type_id_state_type id_type =
-                get_ident_type(this->base_type, this->sub_type);
+                get_ident_type(*this);
             if (id_type == ID_MON_TRIED_TYPE)
                 tried_str = "tried by monster";
             else
@@ -1751,6 +1751,29 @@ id_arr& get_typeid_array()
     return type_ids;
 }
 
+void set_ident_type( item_def &item, item_type_id_state_type setting,
+                     bool force )
+{
+    if (is_artefact(item))
+        return;
+
+    item_type_id_state_type old_setting = get_ident_type(item);
+    set_ident_type(item.base_type, item.sub_type, setting, force);
+
+    if (setting == ID_KNOWN_TYPE && old_setting != ID_KNOWN_TYPE
+        && notes_are_active() && is_interesting_item(item)
+        && !(item.flags & (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET)))
+    {
+        // Make a note of it.
+        take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
+                       origin_desc(item).c_str()));
+
+        // Sometimes (e.g. shops) you can ID an item before you get it;
+        // don't note twice in those cases.
+        item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+    }
+}
+
 void set_ident_type( object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force )
 {
@@ -1773,6 +1796,14 @@ void set_ident_type( object_class_type basetype, int subtype,
             request_autoinscribe();
         }
     }
+}
+
+item_type_id_state_type get_ident_type(const item_def &item)
+{
+    if (is_artefact(item))
+        return ID_UNKNOWN_TYPE;
+
+    return get_ident_type(item.base_type, item.sub_type);
 }
 
 item_type_id_state_type get_ident_type(object_class_type basetype, int subtype)
@@ -2488,7 +2519,7 @@ const std::string menu_colour_item_prefix(const item_def &item, bool temp)
         prefixes.push_back("identified");
     else
     {
-        if (get_ident_type(item.base_type, item.sub_type) == ID_KNOWN_TYPE)
+        if (get_ident_type(item) == ID_KNOWN_TYPE)
         {
             // Wands are only fully identified if we know the
             // number of charges.

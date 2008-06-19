@@ -1270,8 +1270,7 @@ game_start:
             you.inv[i].flags |= ISFLAG_BEEN_IN_INV;
 
             // Identify all items in pack.
-            set_ident_type( you.inv[i].base_type,
-                            you.inv[i].sub_type, ID_KNOWN_TYPE );
+            set_ident_type( you.inv[i], ID_KNOWN_TYPE );
             // link properly
             you.inv[i].x = -1;
             you.inv[i].y = -1;

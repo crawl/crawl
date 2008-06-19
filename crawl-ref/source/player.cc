@@ -5122,10 +5122,9 @@ void haste_player( int amount )
     if (amu_eff)
     {
         mpr( "Your amulet glows brightly." );
-        const item_def *amulet = you.slot_item(EQ_AMULET);
+        item_def *amulet = you.slot_item(EQ_AMULET);
         if (amulet && !item_type_known(*amulet))
-            set_ident_type( amulet->base_type, amulet->sub_type,
-                            ID_KNOWN_TYPE );
+            set_ident_type( *amulet, ID_KNOWN_TYPE );
     }
 
     if (you.duration[DUR_HASTE] == 0)

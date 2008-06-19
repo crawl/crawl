@@ -582,6 +582,7 @@ void set_ident_flags( item_def &item, unsigned long flags )
     }
 
     if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
+        && get_ident_type(item) != ID_KNOWN_TYPE
         && fully_identified(item) && is_interesting_item(item))
     {
         // Make a note of it.

@@ -131,7 +131,7 @@ static void fully_identify_item(item_def *item)
 
     set_ident_flags( *item, ISFLAG_IDENT_MASK );
     if (item->base_type != OBJ_WEAPONS)
-        set_ident_type( item->base_type, item->sub_type, ID_KNOWN_TYPE );
+        set_ident_type( *item, ID_KNOWN_TYPE );
 }
 
 // ----------------------------------------------------------------------

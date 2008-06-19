@@ -2811,7 +2811,7 @@ void jewellery_wear_effects(item_def &item)
     }
     else
     {
-        set_ident_type( item.base_type, item.sub_type, ident );
+        set_ident_type( item, ident );
 
         if (ident == ID_KNOWN_TYPE)
             set_ident_flags( item, ISFLAG_EQ_JEWELLERY_MASK );
@@ -3484,11 +3484,11 @@ void zap_wand( int slot )
     // Identify if necessary.
     if (!alreadyknown && (beam.obvious_effect || type_zapped == ZAP_FIREBALL))
     {
-        set_ident_type( wand.base_type, wand.sub_type, ID_KNOWN_TYPE );
+        set_ident_type( wand, ID_KNOWN_TYPE );
         mpr(wand.name(DESC_INVENTORY_EQUIP).c_str());
     }
     else
-        set_ident_type( wand.base_type, wand.sub_type, ID_TRIED_TYPE );
+        set_ident_type( wand, ID_TRIED_TYPE );
 
     if (item_type_known(wand)
         && (item_ident( wand, ISFLAG_KNOW_PLUSES )
@@ -3624,13 +3624,11 @@ void drink( int slot )
     {
         set_ident_flags( you.inv[item_slot], ISFLAG_IDENT_MASK );
 
-        set_ident_type( you.inv[item_slot].base_type,
-                        you.inv[item_slot].sub_type, ID_KNOWN_TYPE );
+        set_ident_type( you.inv[item_slot], ID_KNOWN_TYPE );
     }
     else
     {
-        set_ident_type( you.inv[item_slot].base_type,
-                        you.inv[item_slot].sub_type, ID_TRIED_TYPE );
+        set_ident_type( you.inv[item_slot], ID_TRIED_TYPE );
     }
     if (!alreadyknown && dangerous)
     {
@@ -4128,7 +4126,7 @@ static bool scroll_modify_item(const scroll_type scroll)
         if ( !fully_identified(item) )
         {
             mpr("This is a scroll of identify!");
-            set_ident_type( OBJ_SCROLLS, SCR_IDENTIFY, ID_KNOWN_TYPE );
+            set_ident_type( item, ID_KNOWN_TYPE );
             identify(-1, item_slot);
             return (true);
         }
@@ -4545,6 +4543,9 @@ void read_scroll( int slot )
         break;
     }                           // end switch
 
+    set_ident_type( scroll,
+                    (id_the_scroll) ? ID_KNOWN_TYPE : ID_TRIED_TYPE );
+
     // finally, destroy and identify the scroll
     // scrolls of immolation were already destroyed earlier
     if (which_scroll != SCR_PAPER && which_scroll != SCR_IMMOLATION)
@@ -4554,9 +4555,6 @@ void read_scroll( int slot )
 
         dec_inv_item_quantity( item_slot, 1 );
     }
-
-    set_ident_type( OBJ_SCROLLS, which_scroll,
-                    (id_the_scroll) ? ID_KNOWN_TYPE : ID_TRIED_TYPE );
 
     if (!alreadyknown && dangerous)
     {
