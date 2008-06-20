@@ -3298,8 +3298,8 @@ static void _handle_behaviour(monsters *mon)
                 return;
             }
 
-            // If the monster isn't travelling toward an exit or a trap,
-            // make it start doing so.
+            // If the monster isn't travelling toward someplace from
+            // which it can leave the level, make it start doing so.
             if (mon->travel_target == MTRAV_NONE)
             {
                 level_exit e;
@@ -3312,15 +3312,12 @@ static void _handle_behaviour(monsters *mon)
                 }
             }
 
-            // If it's on a stair, next to a trap, or can submerge where
-            // it is, make it leave the level.
+            // If the monster is leaving the level via a stair or
+            // submersion, and has reached its goal, handle it here.
             if (mon->x == mon->target_x && mon->y == mon->target_y
                 && (mon->travel_target == MTRAV_STAIR
-                    || mon->travel_target == MTRAV_SUBMERSIBLE
-                        && monster_can_submerge(mon, grd(mon->pos()))))
+                    || mon->travel_target == MTRAV_SUBMERSIBLE))
             {
-                if (mon->travel_target == MTRAV_SUBMERSIBLE)
-                    mon->add_ench(ENCH_SUBMERGED);
                 _make_mons_leave_level(mon);
                 return;
             }
@@ -6025,8 +6022,8 @@ static void _handle_monster_move(int i, monsters *monster)
 
         if (!mons_is_caught(monster))
         {
-            // If the monster is about to step on a trap to leave the
-            // level, handle it.
+            // If the monster is leaving the level via a trap, and is
+            // about to reach its goal, handle it here.
             if (mons_is_leaving(monster)
                 && monster->travel_target == MTRAV_TRAP
                 && monster->x + mmov_x == monster->target_x
