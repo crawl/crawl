@@ -2418,34 +2418,63 @@ static bool _mons_find_nearest_level_exit(const monsters *mon, level_exit &e)
     return (old_dist != -1);
 }
 
-// If _mons_find_level_exits() is ever expanded to handle more trap
+// If _mons_find_level_exits() is ever expanded to handle more grid
 // types, this should be expanded along with it.
-static void _mons_handle_trap_level_exit(const monsters *mon, int x, int y)
+static void _mons_handle_level_exit(const monsters *mon, int x, int y)
 {
-    trap_type trap = trap_type_at_xy(x, y);
-
-    if (trap == NUM_TRAPS)
-        return;
-
-    switch (trap)
+    switch (mon->travel_target)
     {
-        case TRAP_TELEPORT:
-            simple_monster_message(mon, " disappears!");
-            break;
-        case TRAP_SHAFT:
-            simple_monster_message(mon, " falls through a shaft!");
-            break;
-        default:
-            break;
+    case MTRAV_STAIR:
+    {
+        if (is_travelable_stair(grd[x][y]))
+        {
+            command_type dir = grid_stair_direction(grd[x][y]);
+            simple_monster_message(mon,
+                make_stringf(" %s the stairs.",
+                    dir == CMD_GO_UPSTAIRS   ? "goes up" :
+                    dir == CMD_GO_DOWNSTAIRS ? "goes down"
+                                             : "takes").c_str());
+        }
+        else if (is_gate(grd[x][y]))
+            simple_monster_message(mon, " passes through the gate.");
+        break;
     }
-
-    grd[x][y] = trap_category(trap);
+    case MTRAV_TRAP:
+    {
+        trap_type trap = trap_type_at_xy(x, y);
+        switch (trap)
+        {
+            case TRAP_TELEPORT:
+                simple_monster_message(mon, " disappears!");
+                break;
+            case TRAP_SHAFT:
+                simple_monster_message(mon, " falls through a shaft!");
+                break;
+            default:
+                break;
+        }
+        if (trap != NUM_TRAPS)
+            grd[x][y] = trap_category(trap);
+        break;
+    }
+    case MTRAV_SUBMERSIBLE:
+        simple_monster_message(mon,
+            make_stringf(" disappears into %s!",
+                mons_habitat(mon) == HT_LAVA  ? "the lava" :
+                mons_habitat(mon) == HT_WATER ? "the water"
+                                              : "thin air").c_str());
+        break;
+    default:
+        break;
+    }
 }
 
 static void _make_mons_leave_level(monsters *mon)
 {
     if (mons_is_leaving(mon))
     {
+        _mons_handle_level_exit(mon, mon->target_x, mon->target_y);
+
         // Monsters leaving the level take their stuff with them.
         mon->flags |= MF_HARD_RESET;
         monster_die(mon, KILL_DISMISSED, 0);
@@ -3290,6 +3319,8 @@ static void _handle_behaviour(monsters *mon)
                     || mon->travel_target == MTRAV_SUBMERSIBLE
                         && monster_can_submerge(mon, grd(mon->pos()))))
             {
+                if (mon->travel_target == MTRAV_SUBMERSIBLE)
+                    mon->add_ench(ENCH_SUBMERGED);
                 _make_mons_leave_level(mon);
                 return;
             }
@@ -6001,8 +6032,6 @@ static void _handle_monster_move(int i, monsters *monster)
                 && monster->x + mmov_x == monster->target_x
                 && monster->y + mmov_y == monster->target_y)
             {
-                _mons_handle_trap_level_exit(monster, monster->target_x,
-                                             monster->target_y);
                 _make_mons_leave_level(monster);
                 break;
             }
