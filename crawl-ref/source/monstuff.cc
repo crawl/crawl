@@ -2365,7 +2365,7 @@ static void _mons_find_level_exits(const monsters *mon,
                                    std::vector<level_exit> &e, int range = -1)
 {
     if (range == -1)
-        range = LOS_RADIUS;
+        range = LOS_RADIUS * 2;
 
     // Sweep every square within range.
     for (radius_iterator ri(mon->pos(), range, true, false); ri; ++ri)
