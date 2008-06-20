@@ -34,6 +34,20 @@ enum mon_desc_type   // things that cross categorical lines {dlb}
     MDSC_NOMSG_WOUNDS
 };
 
+struct level_exit
+{
+    coord_def target;
+    montravel_target_type target_type;
+
+public:
+    level_exit(coord_def c = coord_def(-1, -1),
+               montravel_target_type m = MTRAV_NONE)
+
+        : target(c), target_type(m)
+    {
+    }
+};
+
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)

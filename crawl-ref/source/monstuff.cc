@@ -2362,8 +2362,7 @@ static void _mark_neighbours_player_unreachable(monsters *mon)
 }
 
 static void _mons_find_level_exits(const monsters *mon,
-                                   std::vector<coord_def> &e,
-                                   int range = -1)
+                                   std::vector<level_exit> &e, int range = -1)
 {
     if (range == -1)
         range = LOS_RADIUS;
@@ -2373,38 +2372,37 @@ static void _mons_find_level_exits(const monsters *mon,
     {
         // All types of stairs.
         if (is_stair(grd(*ri)))
-            e.push_back(*ri);
+            e.push_back(level_exit(*ri, MTRAV_STAIR));
 
         // Teleportation or shaft traps.
         trap_type tt = trap_type_at_xy(ri->x, ri->y);
         if ((tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
             && _is_trap_safe(mon, ri->x, ri->y))
         {
-            e.push_back(*ri);
+            e.push_back(level_exit(*ri, MTRAV_TRAP));
         }
 
         // Any place the monster can submerge.
         if (monster_can_submerge(mon, grd(*ri)))
-            e.push_back(*ri);
+            e.push_back(level_exit(*ri, MTRAV_SUBMERSIBLE));
     }
 }
 
-static bool _mons_find_nearest_level_exit(const monsters *mon,
-                                          coord_def &e)
+static bool _mons_find_nearest_level_exit(const monsters *mon, level_exit &e)
 {
-    std::vector<coord_def> level_exits;
 
-    _mons_find_level_exits(mon, level_exits);
+    std::vector<level_exit> all_exits;
 
-    e.x = -1;
-    e.y = -1;
+    _mons_find_level_exits(mon, all_exits);
+
+    e = level_exit();
 
     int old_dist = -1;
 
-    for (unsigned int i = 0; i < level_exits.size(); ++i)
+    for (unsigned int i = 0; i < all_exits.size(); ++i)
     {
-        int dist = distance(mon->x, mon->y, level_exits[i].x,
-                            level_exits[i].y);
+        int dist = distance(mon->x, mon->y, all_exits[i].target.x,
+                            all_exits[i].target.y);
 
         if (old_dist == -1 || old_dist >= dist)
         {
@@ -2413,8 +2411,7 @@ static bool _mons_find_nearest_level_exit(const monsters *mon,
 
             old_dist = dist;
 
-            e.x = level_exits[i].x;
-            e.y = level_exits[i].y;
+            e = all_exits[i];
         }
     }
 
@@ -3261,19 +3258,17 @@ static void _handle_behaviour(monsters *mon)
             // make it start doing so.
             if (mon->travel_target == MTRAV_NONE)
             {
-                coord_def e;
+                level_exit e;
                 if (_mons_find_nearest_level_exit(mon, e))
                 {
                     mon->foe = MHITNOT;
-                    mon->target_x = e.x;
-                    mon->target_y = e.y;
-                    mon->travel_target =
-                        (trap_at_xy(mon->target_x, mon->target_y) != -1) ?
-                            MTRAV_TRAP : MTRAV_EXIT;
+                    mon->target_x = e.target.x;
+                    mon->target_y = e.target.y;
+                    mon->travel_target = e.target_type;
                 }
             }
-            // If it's on an exit, make it leave the level.
-            else if (mon->travel_target == MTRAV_EXIT
+            // If it's on a stair, make it leave the level.
+            else if (mon->travel_target == MTRAV_STAIR
                 && mon->x == mon->target_x && mon->y == mon->target_y)
             {
                 _make_mons_leave_level(mon);

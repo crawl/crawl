@@ -2790,8 +2790,9 @@ enum montravel_target_type
     MTRAV_PLAYER,       // Travelling to reach the player.
     MTRAV_PATROL,       // Travelling to reach the patrol point.
     MTRAV_UNREACHABLE,  // Not travelling because player is unreachable.
-    MTRAV_EXIT,         // Travelling to reach a level exit.
-    MTRAV_TRAP          // Travelling to reach a trap.
+    MTRAV_STAIR,        // Travelling to reach a stair.
+    MTRAV_TRAP,         // Travelling to reach a trap.
+    MTRAV_SUBMERSIBLE   // Travelling to reach a submersible place.
 };
 
 #ifdef WIZARD
