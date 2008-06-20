@@ -3250,8 +3250,6 @@ static void _handle_behaviour(monsters *mon)
 
             // If the monster is far enough away from the player, make
             // it leave the level.
-            // XXX: If it's on a new level, thanks to a shaft trap, it
-            // should also do this.
             if (distance(mon->x, mon->y, you.x_pos, you.y_pos)
                 >= LOS_RADIUS * LOS_RADIUS * 4)
             {
@@ -3274,12 +3272,21 @@ static void _handle_behaviour(monsters *mon)
                             MTRAV_TRAP : MTRAV_EXIT;
                 }
             }
-            // If it is, and it's on the exit, make it leave the level.
-            else if (mon->x == mon->target_x && mon->y == mon->target_y)
+            // If it's on an exit, make it leave the level.
+            else if (mon->travel_target == MTRAV_EXIT
+                && mon->x == mon->target_x && mon->y == mon->target_y)
             {
                 _make_mons_leave_level(mon);
                 return;
             }
+            // If it's next to a trap, make it leave the level.
+            else if (mon->travel_target == MTRAV_TRAP
+                && distance(mon->x, mon->y, mon->target_x, mon->target_y) == 1)
+            {
+                _make_mons_leave_level(mon);
+                return;
+            }
+
             break;
 
         case BEH_FLEE:
