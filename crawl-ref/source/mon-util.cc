@@ -6185,7 +6185,6 @@ bool monsters::move_to_pos(const coord_def &newpos)
     return (true);
 }
 
-
 // Returns true if the trap should be revealed to the player.
 bool monsters::do_shaft()
 {
