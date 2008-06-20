@@ -3267,7 +3267,7 @@ static void _handle_behaviour(monsters *mon)
                                 mon->target_y) == 1)
                 || (mon->travel_target == MTRAV_SUBMERSIBLE
                     && mon->x == mon->target_x && mon->y == mon->target_y
-                    && monster_can_submerge(mon, mon->pos())))
+                    && monster_can_submerge(mon, grd(mon->pos()))))
             {
                 _make_mons_leave_level(mon);
                 return;
