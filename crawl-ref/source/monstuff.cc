@@ -756,8 +756,8 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             you.duration[DUR_MIGHT] += bonus;
             haste_player( bonus );
 
-            mpr( "You feel the power of Trog in you as your rage grows.",
-                 MSGCH_GOD, GOD_TROG );
+            mpr("You feel the power of Trog in you as your rage grows.",
+                MSGCH_GOD, GOD_TROG);
         }
         else if (wearing_amulet( AMU_RAGE ) && one_chance_in(30))
         {
@@ -767,7 +767,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             you.duration[DUR_MIGHT] += bonus;
             haste_player( bonus );
 
-            mpr( "Your amulet glows a violent red." );
+            mpr("Your amulet glows a violent red.");
         }
     }
 
@@ -1308,13 +1308,13 @@ void monster_cleanup(monsters *monster)
         you.pet_target = MHITNOT;
 }
 
-static bool _jelly_divide(monsters * parent)
+static bool _jelly_divide(monsters *parent)
 {
     int jex = 0, jey = 0;       // loop variables {dlb}
     bool foundSpot = false;     // to rid code of hideous goto {dlb}
     monsters *child = NULL;     // value determined with loop {dlb}
 
-    if (!mons_class_flag( parent->type, M_SPLITS ) || parent->hit_points == 1)
+    if (!mons_class_flag(parent->type, M_SPLITS) || parent->hit_points == 1)
         return (false);
 
     // First, find a suitable spot for the child {dlb}:
@@ -7502,24 +7502,23 @@ static void _mons_in_cloud(monsters *monster)
         behaviour_event(monster, ME_DISTURB, MHITNOT, monster->x, monster->y);
     }
 
-    if (hurted < 0)
-        hurted = 0;
-    else if (hurted > 0)
+    hurted = std::max(0, hurted);
+
+    if (hurted > 0)
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "%s takes %d damage from cloud.",
-             monster->name(DESC_CAP_THE).c_str(),
-             hurted);
+             monster->name(DESC_CAP_THE).c_str(), hurted);
 #endif
         hurt_monster(monster, hurted);
 
         if (monster->hit_points < 1)
         {
-            mon_enchant death_ench( ENCH_NONE, 0, cloud.whose );
+            mon_enchant death_ench(ENCH_NONE, 0, cloud.whose);
             monster_die(monster, death_ench.killer(), death_ench.kill_agent());
         }
     }
-}                               // end mons_in_cloud()
+}
 
 bool monster_descriptor(int which_class, unsigned char which_descriptor)
 {

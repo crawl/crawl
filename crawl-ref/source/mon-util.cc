@@ -5750,14 +5750,14 @@ void monsters::apply_enchantment(const mon_enchant &me)
         int dam = (poisonval >= 4) ? 1 : 0;
 
         if (coinflip())
-            dam += roll_dice( 1, poisonval + 1 );
+            dam += roll_dice(1, poisonval + 1);
 
         if (mons_res_poison(this) < 0)
-            dam += roll_dice( 2, poisonval ) - 1;
+            dam += roll_dice(2, poisonval) - 1;
 
         if (dam > 0)
         {
-            hurt_monster( this, dam );
+            hurt_monster(this, dam);
 
 #if DEBUG_DIAGNOSTICS
             // For debugging, we don't have this silent.
@@ -5798,7 +5798,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         if (dam > 0)
         {
-            hurt_monster( this, dam );
+            hurt_monster(this, dam);
             simple_monster_message(this, " burns!");
 
 #if DEBUG_DIAGNOSTICS
