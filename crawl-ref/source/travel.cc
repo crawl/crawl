@@ -3746,11 +3746,11 @@ const runrest &runrest::operator = (int newrunmode)
 static dungeon_feature_type _base_grid_type( dungeon_feature_type grid )
 {
     // Don't stop for undiscovered traps:
-    if (grid == DNGN_UNDISCOVERED_TRAP)
+    if ((grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
+        || grid == DNGN_UNDISCOVERED_TRAP)
+    {
         return (DNGN_FLOOR);
-
-    if (grid == DNGN_FLOOR_SPECIAL)
-        return (DNGN_FLOOR);
+    }
 
     // Merge walls and secret doors.
     if (grid_is_wall(grid) || grid == DNGN_SECRET_DOOR)
