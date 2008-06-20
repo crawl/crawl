@@ -3236,15 +3236,6 @@ static void _handle_behaviour(monsters *mon)
             if (mons_is_truly_stationary(mon))
                 break;
 
-            // If the monster can submerge where it is, make it do so
-            // and leave the level.
-            if (monster_can_submerge(mon, grd(mon->pos())))
-            {
-                mon->add_ench(ENCH_SUBMERGED);
-                _make_mons_leave_level(mon);
-                return;
-            }
-
             // If the monster is far enough away from the player, make
             // it leave the level.
             if (distance(mon->x, mon->y, you.x_pos, you.y_pos)
@@ -3281,6 +3272,14 @@ static void _handle_behaviour(monsters *mon)
                 _make_mons_leave_level(mon);
                 return;
             }
+            // If it's in a submersible place, make it leave the level.
+            else if (mon->travel_target == MTRAV_SUBMERSIBLE
+                && monster_can_submerge(mon, grd(mon->pos())))
+            {
+                _make_mons_leave_level(mon);
+                return;
+            }
+
 
             break;
 
