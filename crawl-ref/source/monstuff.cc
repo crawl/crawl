@@ -2420,8 +2420,13 @@ static bool _mons_find_nearest_level_exit(const monsters *mon, level_exit &e)
 
 // If _mons_find_level_exits() is ever expanded to handle more trap
 // types, this should be expanded along with it.
-static void _mons_handle_trap_level_exit(const monsters *mon, trap_type trap)
+static void _mons_handle_trap_level_exit(const monsters *mon, int x, int y)
 {
+    trap_type trap = trap_type_at_xy(x, y);
+
+    if (trap == NUM_TRAPS)
+        return;
+
     switch (trap)
     {
         case TRAP_TELEPORT:
@@ -2433,6 +2438,8 @@ static void _mons_handle_trap_level_exit(const monsters *mon, trap_type trap)
         default:
             break;
     }
+
+    grd[x][y] = trap_category(trap);
 }
 
 static void _make_mons_leave_level(monsters *mon)
@@ -3287,8 +3294,8 @@ static void _handle_behaviour(monsters *mon)
             {
                 if (mon->travel_target == MTRAV_TRAP)
                 {
-                    _mons_handle_trap_level_exit(
-                        mon, trap_type_at_xy(mon->target_x, mon->target_y));
+                    _mons_handle_trap_level_exit(mon, mon->target_x,
+                                                 mon->target_y);
                 }
                 else if (mon->travel_target == MTRAV_SUBMERSIBLE)
                     mon->add_ench(ENCH_SUBMERGED);
