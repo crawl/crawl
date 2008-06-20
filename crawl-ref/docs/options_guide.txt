@@ -67,8 +67,8 @@ The contents of this text are:
                 message_colour, show_inventory_weights, show_gold_turns,
                 show_beam, item_stack_summary_minimum, list_rotten,
                 mlist_min_height, msg_max_height, classic_hud,
-                menu_colour, menu_colour_prefix_id,
-                menu_colour_prefix_class, message_colour,
+                menu_colour, menu_colour_prefix_id, menu_colour_prefix_class,
+                message_colour, force_more_message,
                 msg_condense_repeats
 4-k     Missiles.
                 fire_items_start, fire_order
@@ -830,12 +830,6 @@ travel_stop_message = <list of regexes>
         list of such options. It can be included by
         include = travel_stoppers.txt
 
-force_more_message = <list of regexes>
-        Any message that contains a regex specified here, will enforce a
-        -More- prompt, so it can be used to highlight really important
-        events.
-        The syntax is identical to that of travel_stop_message.
-
 runrest_ignore_message = <string>
         This only works if runrest.lua has already been sourced in 
         init.txt. Any message containing the string will *not* stop your 
@@ -1303,6 +1297,12 @@ message_colour = <colour>:[<channel>:]<regex>
              message_colour = lightred:god:xom
         If you don't want to see a message at all, you can mute it:
              message_colour = mute:You start resting
+
+force_more_message = <list of regexes>
+        Any message that contains a regex specified here, will enforce a
+        -More- prompt, so it can be used to highlight really important
+        events.
+        The syntax is identical to that of travel_stop_message (4-g).
 
 msg_condense_repeats = true
         If the same message is repeated multiple times without repition,

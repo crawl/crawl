@@ -277,6 +277,9 @@ menu_colour = notes:white:Reached XP level
 # message_colour = mute:(HP|Magic) restored
 # message_colour = mute:warning:Not with.*(in view|monsters around)
 
+# You can also enforce a -more- prompt for messages
+# force_more_message = You are starting to lose your buoyancy
+
 ##### 4-k	Firing Commands #######################
 #
 # fire_items_start = a
