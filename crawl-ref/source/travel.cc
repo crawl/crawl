@@ -605,13 +605,7 @@ bool is_branch_stair(int gridx, int gridy)
 
 bool is_stair(dungeon_feature_type gridc)
 {
-    return (is_travelable_stair(gridc)
-            || gridc == DNGN_ENTER_ABYSS
-            || gridc == DNGN_EXIT_ABYSS
-            || gridc == DNGN_ENTER_LABYRINTH
-            || gridc == DNGN_ENTER_PANDEMONIUM
-            || gridc == DNGN_EXIT_PANDEMONIUM
-            || gridc == DNGN_TRANSIT_PANDEMONIUM);
+    return (is_travelable_stair(gridc) || is_gate(gridc));
 }
 
 // Returns true if the given dungeon feature can be considered a stair.
@@ -660,6 +654,23 @@ bool is_travelable_stair(dungeon_feature_type gridc)
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
+        return true;
+    default:
+        return false;
+    }
+}
+
+// Returns true if the given dungeon feature can be considered a gate.
+bool is_gate(dungeon_feature_type gridc)
+{
+    switch (gridc)
+    {
+    case DNGN_ENTER_ABYSS:
+    case DNGN_EXIT_ABYSS:
+    case DNGN_ENTER_LABYRINTH:
+    case DNGN_ENTER_PANDEMONIUM:
+    case DNGN_EXIT_PANDEMONIUM:
+    case DNGN_TRANSIT_PANDEMONIUM:
         return true;
     default:
         return false;
