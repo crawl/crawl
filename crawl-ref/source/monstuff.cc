@@ -3285,21 +3285,11 @@ static void _handle_behaviour(monsters *mon)
 
             // If it's on a stair, next to a trap, or can submerge where
             // it is, make it leave the level.
-            if ((mon->x == mon->target_x && mon->y == mon->target_y
+            if (mon->x == mon->target_x && mon->y == mon->target_y
                 && (mon->travel_target == MTRAV_STAIR
                     || mon->travel_target == MTRAV_SUBMERSIBLE
                         && monster_can_submerge(mon, grd(mon->pos()))))
-                || distance(mon->x, mon->y, mon->target_x, mon->target_y) == 1
-                    && mon->travel_target == MTRAV_TRAP)
             {
-                if (mon->travel_target == MTRAV_TRAP)
-                {
-                    _mons_handle_trap_level_exit(mon, mon->target_x,
-                                                 mon->target_y);
-                }
-                else if (mon->travel_target == MTRAV_SUBMERSIBLE)
-                    mon->add_ench(ENCH_SUBMERGED);
-
                 _make_mons_leave_level(mon);
                 return;
             }
@@ -6004,6 +5994,19 @@ static void _handle_monster_move(int i, monsters *monster)
 
         if (!mons_is_caught(monster))
         {
+            // If the monster is about to step on a trap to leave the
+            // level, handle it.
+            if (mons_is_leaving(monster)
+                && monster->travel_target == MTRAV_TRAP
+                && monster->x + mmov_x == monster->target_x
+                && monster->y + mmov_y == monster->target_y)
+            {
+                _mons_handle_trap_level_exit(monster, monster->target_x,
+                                             monster->target_y);
+                _make_mons_leave_level(monster);
+                break;
+            }
+
             // See if we move into (and fight) an unfriendly monster.
             int targmon = mgrd[monster->x + mmov_x][monster->y + mmov_y];
             if (targmon != NON_MONSTER
