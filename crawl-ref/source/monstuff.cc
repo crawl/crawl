@@ -3258,29 +3258,20 @@ static void _handle_behaviour(monsters *mon)
                     mon->travel_target = e.target_type;
                 }
             }
-            // If it's on a stair, make it leave the level.
-            else if (mon->travel_target == MTRAV_STAIR
-                && mon->x == mon->target_x && mon->y == mon->target_y)
+            // If it's on a stair, next to a trap, or can submerge where
+            // it is, make it leave the level.
+            else if ((mon->travel_target == MTRAV_STAIR
+                    && mon->x == mon->target_x && mon->y == mon->target_y)
+                || (mon->travel_target == MTRAV_TRAP
+                    && distance(mon->x, mon->y, mon->target_x,
+                                mon->target_y) == 1)
+                || (mon->travel_target == MTRAV_SUBMERSIBLE
+                    && mon->x == mon->target_x && mon->y == mon->target_y
+                    && monster_can_submerge(mon, mon->pos())))
             {
                 _make_mons_leave_level(mon);
                 return;
             }
-            // If it's next to a trap, make it leave the level.
-            else if (mon->travel_target == MTRAV_TRAP
-                && distance(mon->x, mon->y, mon->target_x, mon->target_y) == 1)
-            {
-                _make_mons_leave_level(mon);
-                return;
-            }
-            // If it's in a submersible place, make it leave the level.
-            else if (mon->travel_target == MTRAV_SUBMERSIBLE
-                && monster_can_submerge(mon, grd(mon->pos())))
-            {
-                _make_mons_leave_level(mon);
-                return;
-            }
-
-
             break;
 
         case BEH_FLEE:
