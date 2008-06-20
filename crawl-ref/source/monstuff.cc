@@ -2481,7 +2481,7 @@ static void _handle_behaviour(monsters *mon)
 
     // Validate current target exists.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
-        && menv[mon->foe].type == -1)
+        && !menv[mon->foe].alive())
     {
         mon->foe = MHITNOT;
     }
@@ -2570,7 +2570,7 @@ static void _handle_behaviour(monsters *mon)
 
     // Validate current target again.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
-        && menv[mon->foe].type == -1)
+        && !menv[mon->foe].alive())
     {
         mon->foe = MHITNOT;
     }
