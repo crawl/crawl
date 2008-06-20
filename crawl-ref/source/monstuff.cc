@@ -3258,16 +3258,15 @@ static void _handle_behaviour(monsters *mon)
                     mon->travel_target = e.target_type;
                 }
             }
+
             // If it's on a stair, next to a trap, or can submerge where
             // it is, make it leave the level.
-            else if ((mon->travel_target == MTRAV_STAIR
-                    && mon->x == mon->target_x && mon->y == mon->target_y)
-                || (mon->travel_target == MTRAV_TRAP
-                    && distance(mon->x, mon->y, mon->target_x,
-                                mon->target_y) == 1)
-                || (mon->travel_target == MTRAV_SUBMERSIBLE
-                    && mon->x == mon->target_x && mon->y == mon->target_y
-                    && monster_can_submerge(mon, grd(mon->pos()))))
+            if ((mon->x == mon->target_x && mon->y == mon->target_y
+                && (mon->travel_target == MTRAV_STAIR
+                    || mon->travel_target == MTRAV_SUBMERSIBLE
+                        && monster_can_submerge(mon, grd(mon->pos()))))
+                || distance(mon->x, mon->y, mon->target_x, mon->target_y) == 1
+                    && mon->travel_target == MTRAV_TRAP)
             {
                 _make_mons_leave_level(mon);
                 return;
