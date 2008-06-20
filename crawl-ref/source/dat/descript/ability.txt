@@ -49,7 +49,11 @@ There's currently no description for this ability...
 %%%%
 Bat Form
 
-There's currently no description for this ability...
+Turn into a speedy vampire bat. In bat form you cannot interact with
+items in any form (except picking them up or dropping them), nor cast 
+spells. Note that Bat Form will decrease your current strength while
+increasing your dexterity. Thus, you won't be able to change form if 
+your strength is too low.
 %%%%
 Spit Acid
 
@@ -114,7 +118,7 @@ There's currently no description for this ability...
 %%%%
 Evoke Sense Surroundings
 
-There's currently no description for this ability...
+You can map your vicinity.
 %%%%
 Evoke Teleportation
 
@@ -126,7 +130,14 @@ There's currently no description for this ability...
 %%%%
 Evoke Berserk Rage
 
-There's currently no description for this ability...
+Berserk greatly if temporarily increases your hit points and damage 
+output in melee fights. It will time out quickly if you don't kill
+anything, but may be extended by multiple kills. While berserk, you
+cannot perform a number of actions such as, for example, (un)wield a
+weapon, quaff something, zap wands, evoke items, or cast spells.
+Such a rage is usually followed by deep exhaustion, a time during
+which you are slowed down, cannot berserk again, and occasionally
+even pass out.
 %%%%
 Evoke Invisibility
 
@@ -134,19 +145,23 @@ There's currently no description for this ability...
 %%%%
 Turn Visible
 
-There's currently no description for this ability...
+Pretty self-explanatory: turn visible again.
 %%%%
 Evoke Levitation
 
-There's currently no description for this ability...
+Start levitating. During levitation you can safely cross water and 
+similar obstacles. Be warned, though, that levitation may time out at
+inopportune moments and cause you to fall to your death.
+While levitating, you cannot interact with items on the floor or pick
+them up.
 %%%%
 Stop Levitating
 
-There's currently no description for this ability...
+Pretty self-explanatory: stop levitating.
 %%%%
 End Transformation
 
-There's currently no description for this ability...
+With a short delay, you revert to your normal form.
 %%%%
 # Zin
 Recite
@@ -218,7 +233,7 @@ There's currently no description for this ability...
 # Okawaru
 Might
 
-There's currently no description for this ability...
+Temporarily increases your Strength and damage output.
 %%%%
 Haste
 
@@ -274,7 +289,7 @@ A powerful regeneration ability, stacks with all other sources.
 %%%%
 Brothers in Arms
 
-Sends angry, huge allies to roam the dungeon.
+Sends huge angry allies to roam the dungeon.
 %%%%
 # Elyvilon
 Destroy Weapons
@@ -347,11 +362,12 @@ There's currently no description for this ability...
 # Beogh
 Smiting
 
-There's currently no description for this ability...
+Smites an enemy within your field of vision. Doesn't require a direct 
+path.
 %%%%
 Recall Orcish Followers
 
-There's currently no description for this ability...
+Recall all of your orcish followers on the level to your vicinity.
 %%%%
 Renounce Religion
 
