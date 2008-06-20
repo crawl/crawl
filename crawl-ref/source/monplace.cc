@@ -485,8 +485,11 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             }
         } // end proximity check
 
-        if (place.branch == BRANCH_HALL_OF_BLADES)
+        if (place.branch == BRANCH_HALL_OF_BLADES
+            && place.level_type == LEVEL_DUNGEON)
+        {
             mon_type = MONS_DANCING_WEAPON;
+        }
         else
         {
             // Now pick a monster of the given branch and level.
