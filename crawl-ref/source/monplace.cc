@@ -1785,9 +1785,10 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
     {
         interesting = true;
     }
-    else if ((you.level_type == LEVEL_DUNGEON ||
-              you.level_type == LEVEL_ABYSS)
+    else if ((you.level_type == LEVEL_DUNGEON
+                || you.level_type == LEVEL_ABYSS)
              && mons_rarity(monster->type) <= Options.rare_interesting
+             && monster->hit_dice > 2 // Don't note the really low-hd monsters.
              && mons_rarity(monster->type) > 0)
     {
         interesting = true;
@@ -2150,7 +2151,7 @@ bool empty_surrounds(int emx, int emy, dungeon_feature_type spc_wanted,
             if (tx == you.x_pos && ty == you.y_pos)
                 continue;
 
-            if ( !in_bounds(tx,ty) )
+            if (!in_bounds(tx,ty))
                 continue;
 
             if (mgrd[tx][ty] != NON_MONSTER)

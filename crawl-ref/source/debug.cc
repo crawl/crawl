@@ -505,6 +505,13 @@ void wizard_create_spec_monster_name()
         type = mspec.monbase;
 
     coord_def place = find_newmons_square(type, coord_def(x, y));
+    if (!in_bounds(place))
+    {
+        // Try again with habitat HT_LAND.
+        // (Will be changed to the necessary terrain type in dgn_place_monster.)
+        place = find_newmons_square(MONS_PROGRAM_BUG, coord_def(x,y));
+    }
+
     if (in_bounds(place))
     {
         x = place.x;
@@ -512,9 +519,8 @@ void wizard_create_spec_monster_name()
     }
     else
     {
-        // Reset to your position.
-        x = you.x_pos;
-        y = you.y_pos;
+        mpr("Found no space to place monster.", MSGCH_DIAGNOSTICS);
+        return;
     }
 
     // Wizmode users should be able to conjure up uniques even if they
