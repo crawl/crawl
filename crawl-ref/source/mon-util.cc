@@ -5057,7 +5057,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
                 continue;
 
             if (in_bounds(pos) && mgrd(pos) == NON_MONSTER
-                && monster_can_submerge(mons, grd(pos)))
+                && monster_can_submerge(mon, grd(pos)))
             {
                 if (one_chance_in(++okay_squares))
                     target_square = pos;
@@ -5066,8 +5066,8 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 
     if (okay_squares > 0)
     {
-        int mnum = mgrd(mons->pos());
-        mgrd(mons->pos()) = NON_MONSTER;
+        int mnum = mgrd(mon->pos());
+        mgrd(mon->pos()) = NON_MONSTER;
 
         mgrd(target_square) = mnum;
         mon->x = target_square.x;
@@ -5090,7 +5090,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
                 continue;
 
             if (in_bounds(pos) && mgrd(pos) == NON_MONSTER
-                && monster_habitable_grid(mons, grd(pos))
+                && monster_habitable_grid(mon, grd(pos))
                 && trap_type_at_xy(pos.x, pos.y) == NUM_TRAPS)
             {
                 if (one_chance_in(++okay_squares))
@@ -5100,8 +5100,8 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 
     if (okay_squares > 0)
     {
-        int mnum = mgrd(mons->pos());
-        mgrd(mons->pos()) = NON_MONSTER;
+        int mnum = mgrd(mon->pos());
+        mgrd(mon->pos()) = NON_MONSTER;
 
         mgrd(target_square) = mnum;
         mons->x = target_square.x;
