@@ -2140,7 +2140,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
     const int patrol_y = mon->patrol_point.y;
 
     // If there's no chance we'll find the patrol point, quit right away.
-    if (grid_distance(mon->x, mon->y, patrol_x, patrol_y) > 2*LOS_RADIUS)
+    if (grid_distance(mon->x, mon->y, patrol_x, patrol_y) > 2 * LOS_RADIUS)
         return (false);
 
     const bool patrol_seen = mon->mon_see_grid(patrol_x, patrol_y,
@@ -2398,8 +2398,8 @@ static bool _mons_find_nearest_level_exit(const monsters *mon, level_exit &e)
 
     for (unsigned int i = 0; i < all_exits.size(); ++i)
     {
-        int dist = distance(mon->x, mon->y, all_exits[i].target.x,
-                            all_exits[i].target.y);
+        int dist = grid_distance(mon->x, mon->y, all_exits[i].target.x,
+                                 all_exits[i].target.y);
 
         if (old_dist == -1 || old_dist >= dist)
         {
@@ -3280,8 +3280,8 @@ static void _handle_behaviour(monsters *mon)
 
             // If the monster is far enough away from the player, make
             // it leave the level.
-            if (distance(mon->x, mon->y, you.x_pos, you.y_pos)
-                >= LOS_RADIUS * LOS_RADIUS * 4)
+            if (grid_distance(mon->x, mon->y, you.x_pos, you.y_pos)
+                    >= LOS_RADIUS * LOS_RADIUS * 4)
             {
                 _make_mons_leave_level(mon);
                 return;
@@ -3677,7 +3677,7 @@ static void _handle_movement(monsters *monster)
     //
     // Added a check so that oblique movement paths aren't used when
     // close to the target square. -- bwr
-    if (grid_distance( dx, dy, 0, 0 ) > 3)
+    if (grid_distance(dx, dy, 0, 0) > 3)
     {
         if (abs(dx) > abs(dy))
         {
@@ -3882,7 +3882,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             break;
 
         if (monster->attitude == ATT_HOSTILE
-            && distance( you.x_pos, you.y_pos, monster->x, monster->y ) <= 5)
+            && distance(you.x_pos, you.y_pos, monster->x, monster->y) <= 5)
         {
             monster->hit_points = -1;
             used = true;
@@ -3896,7 +3896,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             if (targ->type == -1 || targ->type == NON_MONSTER)
                 continue;
 
-            if (distance( monster->x, monster->y, targ->x, targ->y ) >= 5)
+            if (distance(monster->x, monster->y, targ->x, targ->y) >= 5)
                 continue;
 
             if (mons_atts_aligned(monster->attitude, targ->attitude))
@@ -7159,9 +7159,9 @@ static bool _monster_move(monsters *monster)
     // If neither does, do nothing.
     if (good_move[mmov_x + 1][mmov_y + 1] == false)
     {
-        int current_distance = grid_distance( monster->x, monster->y,
-                                              monster->target_x,
-                                              monster->target_y );
+        int current_distance = grid_distance(monster->x, monster->y,
+                                             monster->target_x,
+                                             monster->target_y);
 
         int dir = -1;
         int i, mod, newdir;
@@ -7202,10 +7202,10 @@ static bool _monster_move(monsters *monster)
                 newdir = (dir + 8 + mod) % 8;
                 if (good_move[compass_x[newdir] + 1][compass_y[newdir] + 1])
                 {
-                    dist[i] = grid_distance( monster->x + compass_x[newdir],
-                                             monster->y + compass_y[newdir],
-                                             monster->target_x,
-                                             monster->target_y );
+                    dist[i] = grid_distance(monster->x + compass_x[newdir],
+                                            monster->y + compass_y[newdir],
+                                            monster->target_x,
+                                            monster->target_y);
                 }
                 else
                 {
