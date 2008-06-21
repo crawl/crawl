@@ -2827,7 +2827,7 @@ void update_level(double elapsedTime)
     mprf(MSGCH_DIAGNOSTICS, "turns: %d", turns );
 #endif
 
-    update_corpses( elapsedTime );
+    update_corpses(elapsedTime);
 
     if (env.sanctuary_time)
     {
@@ -2851,6 +2851,13 @@ void update_level(double elapsedTime)
         mons_total++;
 #endif
 
+        // Pacified monsters that can move leave the level.
+        if (mons_is_pacified(mon) && !mons_is_truly_stationary(mon))
+        {
+            make_mons_leave_level(mon);
+            continue;
+        }
+
         // following monsters don't get movement
         if (mon->flags & MF_JUST_SUMMONED)
             continue;
@@ -2859,10 +2866,10 @@ void update_level(double elapsedTime)
         // const bool healthy = (mon->hit_points * 2 > mon->max_hit_points);
 
         // This is the monster healing code, moved here from tag.cc:
-        if (monster_descriptor( mon->type, MDSC_REGENERATES )
+        if (monster_descriptor(mon->type, MDSC_REGENERATES)
             || mon->type == MONS_PLAYER_GHOST)
         {
-            heal_monster( mon, turns, false );
+            heal_monster(mon, turns, false);
         }
         else if (!mons_class_flag(mon->type, M_NO_REGEN))
         {
@@ -2870,14 +2877,14 @@ void update_level(double elapsedTime)
             const int regen_rate =
                 std::max(mons_natural_regen_rate(mon) * 2, 5);
 
-            heal_monster( mon, div_rand_round(turns * regen_rate, 50),
-                          false );
+            heal_monster(mon, div_rand_round(turns * regen_rate, 50),
+                         false);
         }
 
         _catchup_monster_moves(mon, turns);
 
         if (turns >= 10 && mon->alive())
-            mon->timeout_enchantments( turns / 10 );
+            mon->timeout_enchantments(turns / 10);
     }
 
 #if DEBUG_DIAGNOSTICS
@@ -2885,7 +2892,7 @@ void update_level(double elapsedTime)
 #endif
 
     for (int i = 0; i < MAX_CLOUDS; i++)
-        delete_cloud( i );
+        delete_cloud(i);
 }
 
 static void _maybe_restart_fountain_flow(const int x, const int y,

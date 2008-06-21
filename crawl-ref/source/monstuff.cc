@@ -2417,7 +2417,7 @@ static bool _mons_find_nearest_level_exit(const monsters *mon, level_exit &e)
 
 // If _mons_find_level_exits() is ever expanded to handle more grid
 // types, this should be expanded along with it.
-static void _mons_handle_level_exit(const monsters *mon, int x, int y)
+static void _mons_indicate_level_exit(const monsters *mon, int x, int y)
 {
     switch (mon->travel_target)
     {
@@ -2461,11 +2461,12 @@ static void _mons_handle_level_exit(const monsters *mon, int x, int y)
     }
 }
 
-static void _make_mons_leave_level(monsters *mon)
+void make_mons_leave_level(monsters *mon)
 {
     if (mons_is_leaving(mon))
     {
-        _mons_handle_level_exit(mon, mon->target_x, mon->target_y);
+        if (mons_near(mon) && player_monster_visible(mon))
+            _mons_indicate_level_exit(mon, mon->target_x, mon->target_y);
 
         // Monsters leaving the level take their stuff with them.
         mon->flags |= MF_HARD_RESET;
@@ -3286,7 +3287,7 @@ static void _handle_behaviour(monsters *mon)
             if (grid_distance(mon->x, mon->y, you.x_pos, you.y_pos)
                     >= LOS_RADIUS * LOS_RADIUS * 4)
             {
-                _make_mons_leave_level(mon);
+                make_mons_leave_level(mon);
                 return;
             }
 
@@ -3310,7 +3311,7 @@ static void _handle_behaviour(monsters *mon)
                 || mon->travel_target == MTRAV_SUBMERSIBLE)
                     && mon->x == mon->target_x && mon->y == mon->target_y)
             {
-                _make_mons_leave_level(mon);
+                make_mons_leave_level(mon);
                 return;
             }
             break;
@@ -6021,7 +6022,7 @@ static void _handle_monster_move(int i, monsters *monster)
                 && monster->x + mmov_x == monster->target_x
                 && monster->y + mmov_y == monster->target_y)
             {
-                _make_mons_leave_level(monster);
+                make_mons_leave_level(monster);
                 break;
             }
 

@@ -136,6 +136,8 @@ bool simple_monster_message(const monsters *monster, const char *event,
                             int param = 0,
                             description_level_type descrip = DESC_CAP_THE);
 
+void make_mons_leave_level(monsters *mon);
+
 bool choose_any_monster(const monsters* mon);
 monsters *choose_random_nearby_monster(
     int weight,
