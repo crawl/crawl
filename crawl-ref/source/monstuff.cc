@@ -3303,9 +3303,9 @@ static void _handle_behaviour(monsters *mon)
 
             // If the monster is leaving the level via a stair or
             // submersion, and has reached its goal, handle it here.
-            if (mon->x == mon->target_x && mon->y == mon->target_y
-                && (mon->travel_target == MTRAV_STAIR
-                    || mon->travel_target == MTRAV_SUBMERSIBLE))
+            if ((mon->travel_target == MTRAV_STAIR
+                || mon->travel_target == MTRAV_SUBMERSIBLE)
+                    && mon->x == mon->target_x && mon->y == mon->target_y)
             {
                 _make_mons_leave_level(mon);
                 return;
