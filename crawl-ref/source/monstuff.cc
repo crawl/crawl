@@ -2374,13 +2374,10 @@ static void _mons_find_level_exits(const monsters *mon,
         if (is_stair(grd(*ri)))
             e.push_back(level_exit(*ri, MTRAV_STAIR));
 
-        // Teleportation or shaft traps.
+        // Shaft traps.
         trap_type tt = trap_type_at_xy(ri->x, ri->y);
-        if ((tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
-            && _is_trap_safe(mon, ri->x, ri->y))
-        {
+        if (tt == TRAP_SHAFT && _is_trap_safe(mon, ri->x, ri->y))
             e.push_back(level_exit(*ri, MTRAV_TRAP));
-        }
 
         // Any place the monster can submerge.
         if (monster_can_submerge(mon, grd(*ri)))
@@ -2441,20 +2438,12 @@ static void _mons_handle_level_exit(const monsters *mon, int x, int y)
     }
     case MTRAV_TRAP:
     {
-        trap_type trap = trap_type_at_xy(x, y);
-        switch (trap)
+        trap_type tt = trap_type_at_xy(x, y);
+        if (tt == TRAP_SHAFT)
         {
-            case TRAP_TELEPORT:
-                simple_monster_message(mon, " disappears!");
-                break;
-            case TRAP_SHAFT:
-                simple_monster_message(mon, " falls through a shaft!");
-                break;
-            default:
-                break;
+            simple_monster_message(mon, " falls through a shaft!");
+            grd[x][y] = trap_category(tt);
         }
-        if (trap != NUM_TRAPS)
-            grd[x][y] = trap_category(trap);
         break;
     }
     case MTRAV_SUBMERSIBLE:
