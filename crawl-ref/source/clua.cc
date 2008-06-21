@@ -1141,6 +1141,20 @@ static int l_item_pickup(lua_State *ls)
 
 static int l_item_equipped(lua_State *ls)
 {
+    LUA_ITEM(item, 1);
+    if (!item || !in_inventory(*item))
+        return (0);
+
+    int eq = get_equip_slot(item);
+    if (eq < 0 || eq >= NUM_EQUIP)
+        return (0);
+
+    return (1);
+}
+
+// Returns item equipped in a slot defined in an argument.
+static int l_item_equipped_at(lua_State *ls)
+{
     int eq = -1;
     if (lua_isnumber(ls, 1))
         eq = luaL_checkint(ls, 1);
@@ -1481,7 +1495,8 @@ static const struct luaL_reg item_lib[] =
     { "remove",            l_item_remove },
     { "drop",              l_item_drop },
     { "pickup",            l_item_pickup },
-    { "equipped_at",       l_item_equipped },
+    { "equipped_at",       l_item_equipped_at },
+    { "equipped",          l_item_equipped },
     { "equip_type",        l_item_equip_type },
     { "weap_skill",        l_item_weap_skill },
     { "dropped",           l_item_dropped },
