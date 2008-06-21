@@ -6624,13 +6624,13 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
     // Smarter trap handling for intelligent monsters
     // * monsters native to a branch can be assumed to know the trap
     //   locations and thus be able to avoid them
-    // * permanent friendlies can be assumed to have been warned by the
-    //   player about all traps s/he knows about
-    // * very intelligent monsters can be assumed to have a high T&D skill
-    //   (or have memorised part of the dungeon layout ;) )
+    // * friendlies and good neutrals can be assumed to have been warned
+    //   by the player about all traps s/he knows about
+    // * very intelligent monsters can be assumed to have a high T&D
+    //   skill (or have memorised part of the dungeon layout ;) )
     if (intel >= I_NORMAL && mechanical
         && (mons_is_native_in_branch(monster)
-            || monster->attitude == ATT_FRIENDLY
+            || mons_wont_attack(monster)
                && player_knows_trap
             || intel >= I_HIGH && one_chance_in(3)))
     {
@@ -6687,8 +6687,9 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
         return (true);
     }
 
-    // Friendly monsters don't enjoy Zot trap perks; handle accordingly.
-    if (mons_friendly(monster))
+    // Friendly and good neutral monsters don't enjoy Zot trap perks;
+    // handle accordingly.
+    if (mons_wont_attack(monster))
         return (mechanical ? mons_flies(monster) : trap.type != TRAP_ZOT);
     else
         return (!mechanical || mons_flies(monster));
