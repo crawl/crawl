@@ -2436,6 +2436,7 @@ static void _mons_handle_level_exit(const monsters *mon, int x, int y)
             simple_monster_message(mon, " passes through the gate.");
         break;
     }
+
     case MTRAV_TRAP:
     {
         trap_type tt = trap_type_at_xy(x, y);
@@ -2446,6 +2447,7 @@ static void _mons_handle_level_exit(const monsters *mon, int x, int y)
         }
         break;
     }
+
     case MTRAV_SUBMERSIBLE:
         simple_monster_message(mon,
             make_stringf(" disappears into %s!",
@@ -2453,6 +2455,7 @@ static void _mons_handle_level_exit(const monsters *mon, int x, int y)
                 mons_habitat(mon) == HT_WATER ? "the water"
                                               : "thin air").c_str());
         break;
+
     default:
         break;
     }
