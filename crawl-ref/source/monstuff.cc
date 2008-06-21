@@ -7770,8 +7770,8 @@ void seen_monster(monsters *monster)
 //
 // shift_monster
 //
-// Moves a monster to approximately (x,y) and returns true
-// if monster was moved.
+// Moves a monster to approximately (x, y) and returns true if
+// the monster was moved.
 //
 //---------------------------------------------------------------
 bool shift_monster( monsters *mon, int x, int y )
