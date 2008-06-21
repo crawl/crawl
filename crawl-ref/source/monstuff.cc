@@ -7,7 +7,7 @@
  *
  *  Change History (most recent first):
  *
- *      <8>      7 Aug  2001   MV      Inteligent monsters now pick up gold
+ *      <8>      7 Aug  2001   MV      Intelligent monsters now pick up gold
  *      <7>     26 Mar  2001   GDL     Fixed monster reaching
  *      <6>     13 Mar  2001   GDL     Rewrite of monster AI
  *      <5>     31 July 2000   GDL     More Manticore fixes.
