@@ -2851,8 +2851,8 @@ void update_level(double elapsedTime)
         mons_total++;
 #endif
 
-        // Pacified monsters that can move leave the level.
-        if (mons_is_pacified(mon) && !mons_is_truly_stationary(mon))
+        // Monsters that are leaving the level often do so now.
+        if (mons_is_leaving(mon) && turns > random2(20) + 21)
         {
             make_mons_leave_level(mon);
             continue;

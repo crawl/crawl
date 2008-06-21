@@ -3006,7 +3006,7 @@ static void _handle_behaviour(monsters *mon)
             break;
 
         case BEH_WANDER:
-            // Monsters that have been pacified leave the level.
+            // Monsters that have been pacified begin leaving the level.
             if (mons_is_pacified(mon))
             {
                 // XXX: Uncomment this next block to actually enable
@@ -3277,11 +3277,6 @@ static void _handle_behaviour(monsters *mon)
             break;
 
         case BEH_LEAVE:
-            // If the monster can't move at all (or even teleport, as a
-            // mimic would), it obviously can't leave, so get out.
-            if (mons_is_truly_stationary(mon))
-                break;
-
             // If the monster is far enough away from the player, make
             // it leave the level.
             if (grid_distance(mon->x, mon->y, you.x_pos, you.y_pos)
@@ -3292,8 +3287,10 @@ static void _handle_behaviour(monsters *mon)
             }
 
             // If the monster isn't travelling toward someplace from
-            // which it can leave the level, make it start doing so.
-            if (mon->travel_target == MTRAV_NONE)
+            // which it can leave the level, and it can move (or at
+            // least teleport, as a mimic can), make it start doing so.
+            if (mon->travel_target == MTRAV_NONE
+                && !mons_is_truly_stationary(mon))
             {
                 level_exit e;
                 if (_mons_find_nearest_level_exit(mon, e))
