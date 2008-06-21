@@ -5036,13 +5036,13 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     }
 }
 
-static bool _prepare_del_ench(monsters* mons, const mon_enchant &me)
+static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 {
     if (me.ench != ENCH_SUBMERGED)
-        return true;
+        return (true);
 
-    if (mons->pos() != you.pos())
-        return true;
+    if (mon->pos() != you.pos())
+        return (true);
 
     // Monster un-submerging while under player.  Try to move to an
     // adjacent square in which the monster could have been submerged
@@ -5050,8 +5050,8 @@ static bool _prepare_del_ench(monsters* mons, const mon_enchant &me)
     coord_def pos, target_square;
     int       okay_squares = 0;
 
-    for (pos.x = you.x_pos - 1; pos.x <= you.x_pos + 1; pos.x++)
-        for (pos.y = you.y_pos - 1; pos.y <= you.y_pos + 1; pos.y++)
+    for (pos.x = you.x_pos - 1; pos.x <= you.x_pos + 1; ++pos.x)
+        for (pos.y = you.y_pos - 1; pos.y <= you.y_pos + 1; ++pos.y)
         {
             if (pos == you.pos())
                 continue;
@@ -5070,21 +5070,21 @@ static bool _prepare_del_ench(monsters* mons, const mon_enchant &me)
         mgrd(mons->pos()) = NON_MONSTER;
 
         mgrd(target_square) = mnum;
-        mons->x = target_square.x;
-        mons->y = target_square.y;
+        mon->x = target_square.x;
+        mon->y = target_square.y;
 
-        return true;
+        return (true);
     }
 
     // No available adjacent squares from which the monster could also
     // have unsubmerged.  Can it just stay submerged where it is?
-    if ( monster_can_submerge(mons, grd( mons->pos() )) )
-        return false;
+    if (monster_can_submerge(mon, grd(mon->pos())))
+        return (false);
 
     // The terrain changed and the monster can't remain submerged.
     // Try to move to an adjacent square where it would be happy.
-    for (pos.x = you.x_pos - 1; pos.x <= you.x_pos + 1; pos.x++)
-        for (pos.y = you.y_pos - 1; pos.y <= you.y_pos + 1; pos.y++)
+    for (pos.x = you.x_pos - 1; pos.x <= you.x_pos + 1; ++pos.x)
+        for (pos.y = you.y_pos - 1; pos.y <= you.y_pos + 1; ++pos.y)
         {
             if (pos == you.pos())
                 continue;
@@ -5108,7 +5108,7 @@ static bool _prepare_del_ench(monsters* mons, const mon_enchant &me)
         mons->y = target_square.y;
     }
 
-    return ( true );
+    return (true);
 }
 
 bool monsters::del_ench(enchant_type ench, bool quiet, bool effect)
