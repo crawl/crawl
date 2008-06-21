@@ -2852,7 +2852,7 @@ void update_level(double elapsedTime)
 #endif
 
         // Monsters that are leaving the level often do so now.
-        if (mons_is_leaving(mon) && turns > random2(20) + 21)
+        if (mons_is_leaving(mon) && turns > random2(40) + 21)
         {
             make_mons_leave_level(mon);
             continue;
