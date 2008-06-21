@@ -6590,8 +6590,9 @@ static int _estimated_trap_damage(trap_type trap)
 }
 
 // Check whether a given trap (described by trap position) can be
-// regarded as safe. Takes in account monster intelligence and allegiance.
-// (just_check is used for intelligent monsters trying to avoid traps.)
+// regarded as safe. Takes in account monster intelligence and
+// allegiance.  (just_check is used for intelligent monsters trying to
+// avoid traps.)
 static bool _is_trap_safe(const monsters *monster, const int trap_x,
                           const int trap_y, bool just_check)
 {
@@ -6613,9 +6614,9 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
         return (false);
     }
 
-    // Monsters are not afraid of non-mechanical traps. XXX: If we add
-    // any non-mechanical traps that can damage monsters, must add
-    // check here.
+    // Monsters are not afraid of non-mechanical traps.  XXX: If we add
+    // any non-mechanical traps that can damage monsters, we must add
+    // checks for them here.
     const bool mechanical = trap_category(trap.type) == DNGN_TRAP_MECHANICAL;
 
     const bool player_knows_trap = (grd[trap_x][trap_y] != DNGN_UNDISCOVERED_TRAP);
@@ -6686,9 +6687,8 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
         return (true);
     }
 
-    // Friendly and good neutral monsters don't enjoy Zot trap perks;
-    // handle accordingly.
-    if (mons_wont_attack(monster))
+    // Friendly monsters don't enjoy Zot trap perks; handle accordingly.
+    if (mons_friendly(monster))
         return (mechanical ? mons_flies(monster) : trap.type != TRAP_ZOT);
     else
         return (!mechanical || mons_flies(monster));
