@@ -5104,8 +5104,8 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
         mgrd(mon->pos()) = NON_MONSTER;
 
         mgrd(target_square) = mnum;
-        mons->x = target_square.x;
-        mons->y = target_square.y;
+        mon->x = target_square.x;
+        mon->y = target_square.y;
     }
 
     return (true);
