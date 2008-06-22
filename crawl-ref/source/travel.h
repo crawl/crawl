@@ -258,6 +258,17 @@ public:
         return (branch < id.branch) || (branch==id.branch && depth < id.depth);
     }
 
+    bool operator == ( const branch_type _branch ) const
+    {
+        return (branch == _branch && level_type == LEVEL_DUNGEON);
+    }
+
+    bool operator != ( const branch_type _branch  ) const
+    {
+        return !operator == (_branch);
+    }
+
+
     int absdepth() const;
 
     void save(writer&) const;

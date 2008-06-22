@@ -151,7 +151,7 @@ static altar_map_type get_notable_altars(const altar_map_type &altars)
     for ( altar_map_type::const_iterator na_iter = altars.begin();
           na_iter != altars.end(); ++na_iter )
     {
-        if (na_iter->first.id.branch != BRANCH_ECUMENICAL_TEMPLE)
+        if (na_iter->first.id != BRANCH_ECUMENICAL_TEMPLE)
             notable_altars[na_iter->first] = na_iter->second;
     }
     return (notable_altars);

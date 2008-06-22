@@ -1003,7 +1003,7 @@ bool is_valid_shaft_level(const level_id &place)
         return (false);
 
     // Disallow shafts on the first two levels.
-    if (place.branch == BRANCH_MAIN_DUNGEON
+    if (place == BRANCH_MAIN_DUNGEON
         && you.your_level < 2)
     {
         return (false);
@@ -1196,8 +1196,7 @@ static trap_type random_trap_default(int level_number, const level_id &place)
         type = TRAP_BLADE;
 
     if (random2(1 + level_number) > 14 && one_chance_in(3)
-        || (place.branch == BRANCH_HALL_OF_ZOT
-            && place.level_type == LEVEL_DUNGEON && coinflip()))
+        || (place == BRANCH_HALL_OF_ZOT && coinflip()))
     {
         type = TRAP_ZOT;
     }

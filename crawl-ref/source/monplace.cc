@@ -272,13 +272,13 @@ monster_type pick_random_monster(const level_id &place,
 
     lev_mons = power;
 
-    if (place.branch == BRANCH_MAIN_DUNGEON
+    if (place == BRANCH_MAIN_DUNGEON
         && lev_mons != 51 && one_chance_in(4))
     {
         lev_mons = random2(power);
     }
 
-    if (place.branch == BRANCH_MAIN_DUNGEON
+    if (place == BRANCH_MAIN_DUNGEON
         && lev_mons < 28)
     {
         // If on D:1, allow moderately out-of-depth monsters only after
@@ -485,11 +485,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             }
         } // end proximity check
 
-        if (place.branch == BRANCH_HALL_OF_BLADES
-            && place.level_type == LEVEL_DUNGEON)
-        {
+        if (place == BRANCH_HALL_OF_BLADES)
             mon_type = MONS_DANCING_WEAPON;
-        }
         else
         {
             // Now pick a monster of the given branch and level.

@@ -1699,8 +1699,8 @@ void up_stairs(dungeon_feature_type force_stair,
             // to Hell as shortcuts between dungeon levels, which won't work,
             // and will confuse the dickens out of the player (well, it confused
             // the dickens out of me when it happened).
-            if (new_level_id.branch == BRANCH_MAIN_DUNGEON
-                && old_level_id.branch == BRANCH_VESTIBULE_OF_HELL)
+            if (new_level_id == BRANCH_MAIN_DUNGEON
+                && old_level_id == BRANCH_VESTIBULE_OF_HELL)
             {
                 lp.id.depth = -1;
                 lp.pos.x = lp.pos.y = -1;
@@ -1713,7 +1713,7 @@ void up_stairs(dungeon_feature_type force_stair,
             // and that we can descend that downstair and get back to where we
             // came from. This assumption is guaranteed false when climbing out
             // of one of the branches of Hell.
-            if (new_level_id.branch != BRANCH_VESTIBULE_OF_HELL)
+            if (new_level_id != BRANCH_VESTIBULE_OF_HELL)
             {
                 // Set the new level's stair, assuming arbitrarily that going
                 // downstairs will land you on the same upstairs you took to
