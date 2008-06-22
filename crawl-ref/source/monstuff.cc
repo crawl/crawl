@@ -2417,9 +2417,8 @@ static int _mons_find_nearest_level_exit(const monsters *mon,
 
         if (old_dist == -1 || old_dist >= dist)
         {
-            old_dist = dist;
-
             retval = i;
+            old_dist = dist;
         }
     }
 
