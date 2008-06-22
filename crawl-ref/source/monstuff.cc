@@ -3305,7 +3305,7 @@ static void _handle_behaviour(monsters *mon)
             {
                 e_index = _mons_find_nearest_level_exit(mon, e);
 
-                if (!e[e_index].unreachable)
+                if (e_index != -1)
                 {
                     mon->foe = MHITNOT;
                     mon->target_x = e[e_index].target.x;
