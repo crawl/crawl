@@ -2362,28 +2362,32 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
 }
 
 static void _mons_find_level_exits(const monsters *mon,
-                                   std::vector<level_exit> &e, int range = -1)
+                                   std::vector<level_exit> &e)
 {
     e.clear();
 
-    if (range == -1)
-        range = LOS_RADIUS * 2;
-
-    // Sweep every square within range.
-    for (radius_iterator ri(mon->pos(), range, true, false); ri; ++ri)
+    for (int y = 0; y < GXM; ++y)
     {
-        // All types of stairs.
-        if (is_stair(grd(*ri)))
-            e.push_back(level_exit(*ri, MTRAV_STAIR));
+        for (int x = 0; x < GXM; ++x)
+        {
+            if (in_bounds(x, y))
+            {
+                dungeon_feature_type gridc = grd[x][y];
 
-        // Shaft traps.
-        trap_type tt = trap_type_at_xy(ri->x, ri->y);
-        if (tt == TRAP_SHAFT && _is_trap_safe(mon, ri->x, ri->y))
-            e.push_back(level_exit(*ri, MTRAV_TRAP));
+                // All types of stairs.
+                if (is_stair(gridc))
+                    e.push_back(level_exit(coord_def(x, y), MTRAV_STAIR));
 
-        // Any place the monster can submerge.
-        if (monster_can_submerge(mon, grd(*ri)))
-            e.push_back(level_exit(*ri, MTRAV_SUBMERSIBLE));
+                // Shaft traps.
+                trap_type tt = trap_type_at_xy(x, y);
+                if (tt == TRAP_SHAFT && _is_trap_safe(mon, x, y))
+                    e.push_back(level_exit(coord_def(x, y), MTRAV_TRAP));
+
+                // Any place the monster can submerge.
+                if (monster_can_submerge(mon, gridc))
+                    e.push_back(level_exit(coord_def(x, y), MTRAV_SUBMERSIBLE));
+            }
+        }
     }
 }
 
