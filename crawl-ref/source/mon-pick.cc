@@ -2123,8 +2123,6 @@ int mons_swamp_level(int mcls)
     case MONS_SWAMP_DRAKE:
     case MONS_WORM:
     case MONS_SWAMP_WORM:
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
         mlev++;
         break;
 
@@ -2202,7 +2200,6 @@ int mons_swamp_rare(int mcls)
         return 61;
 
     case MONS_SLIME_CREATURE:
-    case MONS_MERFOLK:
         return 54;
 
     case MONS_SNAKE:
@@ -2684,8 +2681,6 @@ int mons_standard_level(int mcls)
     case MONS_DEEP_ELF_MASTER_ARCHER:
         return 33;
 
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
     case MONS_BIG_FISH:
     case MONS_ELECTRICAL_EEL:
     case MONS_GIANT_GOLDFISH:
@@ -2706,8 +2701,6 @@ int mons_standard_rare(int mcls)
 {
     switch (mcls)
     {
-    case MONS_MERFOLK:
-    case MONS_MERMAID:
     case MONS_BIG_FISH:
     case MONS_ELECTRICAL_EEL:
     case MONS_GIANT_GOLDFISH:
@@ -2742,6 +2735,8 @@ int mons_standard_rare(int mcls)
     case MONS_SNAKE:
         return 80;
 
+    case MONS_MERFOLK:
+    case MONS_MERMAID:
     case MONS_FLYING_SKULL:
     case MONS_SLIME_CREATURE:
         return 75;

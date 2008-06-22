@@ -3009,8 +3009,7 @@ bool god_dislikes_item_handling(const item_def &item)
     {
         return (item.base_type == OBJ_BOOKS
                 && item.sub_type != BOOK_MANUAL
-                && (!item_type_known(item)
-                    || item.sub_type != BOOK_DESTRUCTION));
+                && item.sub_type != BOOK_DESTRUCTION);
     }
 
     return (is_good_god(you.religion) && is_evil_item(item)
@@ -5040,32 +5039,23 @@ bool god_likes_items(god_type god)
 {
     switch (god)
     {
-    case GOD_ZIN:      case GOD_SHINING_ONE:   case GOD_KIKUBAAQUDGHA:
-    case GOD_OKAWARU:  case GOD_MAKHLEB:       case GOD_SIF_MUNA:
-    case GOD_TROG:     case GOD_NEMELEX_XOBEH:
+    case GOD_ZIN:      case GOD_SHINING_ONE:   case GOD_NEMELEX_XOBEH:
         return (true);
-
-    case GOD_YREDELEMNUL: case GOD_XOM:        case GOD_VEHUMET:
-    case GOD_LUGONU:      case GOD_BEOGH:      case GOD_ELYVILON:
-        return (false);
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM:
         mprf(MSGCH_ERROR, "Bad god, no biscuit! %d", static_cast<int>(god) );
+    default:
         return (false);
     }
-    return (false);
 }
 
 static bool _god_likes_item(god_type god, const item_def& item)
 {
     if (!god_likes_items(god))
-        return false;
+        return (false);
 
     switch (god)
     {
-    case GOD_KIKUBAAQUDGHA: case GOD_TROG:
-        return (item.base_type == OBJ_CORPSES || is_blood_potion(item));
-
     case GOD_NEMELEX_XOBEH:
         return !is_deck(item);
 
@@ -5076,7 +5066,7 @@ static bool _god_likes_item(god_type god, const item_def& item)
         return item.base_type == OBJ_GOLD;
 
     default:
-        return true;
+        return (false);
     }
 }
 
@@ -5336,10 +5326,10 @@ void offer_items()
         num_sacced++;
     }
 
-    if ( num_sacced > 0 && you.religion == GOD_NEMELEX_XOBEH )
+    if (num_sacced > 0 && you.religion == GOD_NEMELEX_XOBEH)
     {
         const int new_leading = _leading_sacrifice_group();
-        if ( old_leading != new_leading || one_chance_in(50) )
+        if (old_leading != new_leading || one_chance_in(50))
             _give_sac_group_feedback(new_leading);
 
 #if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
@@ -5348,13 +5338,13 @@ void offer_items()
     }
     else if (num_sacced == 0) // explanatory messages if nothing sacrificed
     {
-        if (you.religion == GOD_KIKUBAAQUDGHA || you.religion == GOD_TROG)
-            simple_god_message(" only cares about primal sacrifices!", you.religion);
-        else if (you.religion == GOD_NEMELEX_XOBEH)
+        // Zin was handled above, and the other gods don't care about
+        // sacrifices.
+
+        if (you.religion == GOD_NEMELEX_XOBEH)
             simple_god_message(" expects you to use your decks, not offer them!", you.religion);
         else if (you.religion == GOD_SHINING_ONE)
             simple_god_message(" only cares about evil items!", you.religion);
-        // everyone else was handled above (Zin!) or likes everything
     }
 }
 

@@ -56,6 +56,6 @@ ae   = >ring.*(sustenance)
 # Defaults for normal items
 #
 menu = lightred:.*equipped.* cursed
-menu = green:.*equipped.*
+menu = lightgreen:.*equipped.*
 menu = green:uncursed
 menu = red:cursed
