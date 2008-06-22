@@ -50,12 +50,9 @@ static void _init_equipment_removal(std::set<equipment_type> &rem_stuff,
         break;
 
     case TRAN_BAT:
-        // Bats CAN wear soft helmets.
-        if (you.equip[EQ_HELMET] == -1
-            || !is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
-        {
-            rem_stuff.erase(EQ_HELMET);
-        }
+        // Bats can't wear rings.
+        rem_stuff.insert(EQ_LEFT_RING);
+        rem_stuff.insert(EQ_RIGHT_RING);
         break;
 
     case TRAN_ICE_BEAST:

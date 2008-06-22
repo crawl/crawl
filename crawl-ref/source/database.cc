@@ -654,7 +654,7 @@ std::string getShoutString(const std::string &monst,
 
 /////////////////////////////////////////////////////////////////////////////
 // Speak DB specific functions.
-std::string getSpeakString(const std::string &monst)
+std::string getSpeakString(const std::string &key)
 {
     if (!SpeakDB)
         return ("");
@@ -662,9 +662,9 @@ std::string getSpeakString(const std::string &monst)
     int num_replacements = 0;
 
 #ifdef DEBUG_MONSPEAK
-    mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s", monst.c_str());
+    mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s", key.c_str());
 #endif
-    return _getRandomizedStr(SpeakDB, monst, "", num_replacements);
+    return _getRandomizedStr(SpeakDB, key, "", num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////

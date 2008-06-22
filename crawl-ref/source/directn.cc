@@ -2524,10 +2524,10 @@ command_type targeting_behaviour::get_command(int key)
     case CONTROL('C'): return CMD_TARGET_CYCLE_BEAM;
 #endif
     case ':':  return CMD_TARGET_HIDE_BEAM;
+    case '!':  return CMD_TARGET_SELECT;
     case '\r': return CMD_TARGET_SELECT;
-    case '.':  return CMD_TARGET_SELECT;
     case '5':  return CMD_TARGET_SELECT;
-    case '!':  return CMD_TARGET_SELECT_ENDPOINT;
+    case '.':  return CMD_TARGET_SELECT_ENDPOINT;
 
     case '\\':
     case '\t': return CMD_TARGET_FIND_PORTAL;

@@ -3038,7 +3038,7 @@ int melee_attack::player_calc_base_unarmed_damage()
             damage = 5;
             break;
         case TRAN_BAT:
-            damage = (you.species == SP_VAMPIRE ? 1 : coinflip());
+            damage = (you.species == SP_VAMPIRE ? 2 : 1);
             break;
         case TRAN_ICE_BEAST:
             damage = 12;
@@ -3075,7 +3075,7 @@ int melee_attack::player_calc_base_unarmed_damage()
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
     {
         // Bats really don't do a lot of damage.
-        damage += random2(you.skills[SK_UNARMED_COMBAT]/5 + 1);
+        damage += you.skills[SK_UNARMED_COMBAT]/5;
     }
     else
         damage += you.skills[SK_UNARMED_COMBAT];

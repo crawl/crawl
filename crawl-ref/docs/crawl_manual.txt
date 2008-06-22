@@ -1016,12 +1016,13 @@ screen. Else, you use the following commands:
    nearer to further away. Similarly, '-' cycles backwards.
  - Any direction key moves the cursor by one square. Occasionally, it
    can be useful to target non-inhabited squares.
- - When you are content with your choice of target, press one of '.' 
-   (period), Del, Enter, or Space to fire at the target. If you press 
-   '!', you also fire, but the spell/missile will stop at the target's 
-   square if it misses. This can be useful to keep friendlies out of the
-   fire, and is also the only way to attack submerged creatures. You can
-   press Escape if you changed your mind - no turns are deducted.
+ - When you are content with your choice of target, press one of '!' 
+   Del, Enter, or Space to fire at the target. If you press '.'
+   (period), you also fire, but the spell/missile will stop at the 
+   target's square if it misses. This can be useful to keep friendlies 
+   out of the fire, and is also the only way to attack submerged 
+   creatures. You can press Escape if you changed your mind - no turns 
+   are deducted.
 
 There are some shortcuts while targeting:
  - Typing Shift-direction on your keypad fires straight away in that 

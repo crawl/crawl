@@ -101,10 +101,11 @@ bool can_wield(const item_def *weapon, bool say_reason,
         SAY(canned_msg(MSG_TOO_BERSERK));
         return false;
     }
+
     if (!can_equip( EQ_WEAPON, ignore_temporary_disability ))
     {
         SAY(mpr("You can't wield anything in your present form."));
-        return false;
+        return (false);
     }
 
     if (!ignore_temporary_disability
@@ -113,7 +114,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
         && item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
     {
         SAY(mpr("You can't unwield your weapon to draw a new one!"));
-        return false;
+        return (false);
     }
 
     // If we don't have an actual weapon to check, return now.
@@ -818,6 +819,12 @@ static bool cloak_is_being_removed( void )
 //---------------------------------------------------------------
 void wear_armour( int slot ) // slot is for tiles
 {
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    {
+        mpr("You can't wear anything in your present form.");
+        return;
+    }
+
     int armour_wear_2 = 0;
 
     if (slot != -1)
@@ -2848,7 +2855,9 @@ static int prompt_ring_to_remove(int new_ring)
 
     int c;
     do
+    {
         c = getch();
+    }
     while (c != lslot && c != rslot && c != ESCAPE && c != ' ');
 
     mesclr();
@@ -3072,6 +3081,12 @@ bool puton_item(int item_slot, bool prompt_finger)
 
 bool puton_ring(int slot, bool prompt_finger)
 {
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    {
+        mpr("You can't put on anything in your present form.");
+        return (false);
+    }
+
     int item_slot;
 
     if (inv_count() < 1)
@@ -3186,6 +3201,12 @@ void jewellery_remove_effects(item_def &item)
 
 bool remove_ring(int slot, bool announce)
 {
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    {
+        mpr("You can't wear or remove anything in your present form.");
+        return (false);
+    }
+
     equipment_type hand_used = EQ_NONE;
     int ring_wear_2;
 
@@ -4804,26 +4825,34 @@ void tile_use_item(int idx, InvAction act)
 
     // Use it
     const int type = item.base_type;
+/*
+    if ((type == OBJ_ARMOUR || type == OBJ_JEWELLERY)
+        && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    {
+        canned_msg(MSG_PRESENT_FORM);
+        return;
+    }
+*/
     switch (type)
     {
         case OBJ_WEAPONS:
         case OBJ_STAVES:
         case OBJ_MISCELLANY:
-            // wield any unwielded item of these types
+            // Wield any unwielded item of these types.
             if (!equipped)
             {
                 if (check_warning_inscriptions(item, OPER_WIELD))
                     wield_weapon(true, idx);
                 return;
             }
-            // evoke misc. items and rods
+            // Evoke misc. items and rods.
             if (type == OBJ_MISCELLANY || item_is_rod(item))
             {
                 if (check_warning_inscriptions(item, OPER_EVOKE))
                     evoke_wielded();
                 return;
             }
-            // unwield staves or weapons
+            // Unwield staves or weapons.
             if (check_warning_inscriptions(item, OPER_WIELD))
                 wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
             return;

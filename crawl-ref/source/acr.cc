@@ -1856,8 +1856,9 @@ void process_command( command_type cmd )
     case CMD_REST:
         if (i_feel_safe())
         {
-            if ( you.hp == you.hp_max
-                 && you.magic_points == you.max_magic_points )
+            if ((you.hp == you.hp_max || you.species == SP_VAMPIRE
+                                         && you.hunger_state == HS_STARVING)
+                && you.magic_points == you.max_magic_points )
             {
                 mpr("You start searching.");
             }
@@ -2075,6 +2076,11 @@ void process_command( command_type cmd )
 
     case CMD_REMOVE_ARMOUR:
     {
+        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+            mpr("You can't wear or remove anything in your present form.");
+            break;
+        }
         int index = 0;
 
         if (armour_prompt("Take off which item?", &index, OPER_TAKEOFF))
@@ -2083,20 +2089,10 @@ void process_command( command_type cmd )
     break;
 
     case CMD_REMOVE_JEWELLERY:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-        {
-           canned_msg(MSG_PRESENT_FORM);
-           break;
-        }
         remove_ring();
         break;
 
     case CMD_WEAR_JEWELLERY:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-        {
-           canned_msg(MSG_PRESENT_FORM);
-           break;
-        }
         puton_ring(-1, false);
         break;
 

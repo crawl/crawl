@@ -424,7 +424,6 @@ void mpr(const char *inf, msg_channel_type channel, int param)
         return;
     }
 
-
     char mbuf[400];
     size_t i = 0;
     const int stepsize = get_number_of_cols() - 1;
@@ -434,24 +433,26 @@ void mpr(const char *inf, msg_channel_type channel, int param)
     // If a message is exactly STEPSIZE characters long,
     // it should precisely fit in one line. The printing is thus
     // from I to I + STEPSIZE - 1. Stop when I reaches MSGLEN.
-    while ( i < msglen || i == 0 )
+    while (i < msglen || i == 0)
     {
         strncpy( mbuf, inf + i, stepsize );
         mbuf[stepsize] = 0;
         // Did the message break?
-        if ( i + stepsize < msglen )
+        if (i + stepsize < msglen)
         {
             // Aes, find a nicer place to break it.
             int lookback, where = 0;
-            for ( lookback = 0; lookback < lookback_size; ++lookback )
+            for (lookback = 0; lookback < lookback_size; ++lookback)
             {
                 where = stepsize - 1 - lookback;
-                if ( where >= 0 && isspace(mbuf[where]) )
+                if (where >= 0 && isspace(mbuf[where]))
+                {
                     // aha!
                     break;
+                }
             }
 
-            if ( lookback != lookback_size )
+            if (lookback != lookback_size)
             {
                 // Found a good spot to break.
                 mbuf[where] = 0;
@@ -463,7 +464,7 @@ void mpr(const char *inf, msg_channel_type channel, int param)
         else
             i += stepsize;
 
-        base_mpr( mbuf, channel, param );
+        base_mpr(mbuf, channel, param);
     }
 }
 
@@ -658,6 +659,7 @@ static int prepare_message(const std::string& imsg, msg_channel_type channel,
         if (New_Message_Count == num_lines - 1)
             more();
     }
+
     return colour;
 }
 
@@ -710,9 +712,9 @@ static void mpr_formatted_output(formatted_string fs, int colour)
         need_prefix = false;
     }
 
-    for ( unsigned i = 0; i < fs.ops.size(); ++i )
+    for (unsigned i = 0; i < fs.ops.size(); ++i)
     {
-        switch ( fs.ops[i].type )
+        switch (fs.ops[i].type)
         {
         case FSOP_COLOUR:
             colour = fs.ops[i].x;
@@ -726,7 +728,7 @@ static void mpr_formatted_output(formatted_string fs, int colour)
             break;
         }
     }
-    message_out( Message_Line, colour, "", Options.delay_message_clear? 2 : 1);
+    message_out(Message_Line, colour, "", Options.delay_message_clear? 2 : 1);
 }
 
 // Line wrapping is not available here!

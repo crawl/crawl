@@ -2150,8 +2150,8 @@ god_type string_to_god(const char *name)
 
 void god_speaks( god_type god, const char *mesg )
 {
-    mpr( mesg, MSGCH_GOD, god );
-}                               // end god_speaks()
+    mpr(mesg, MSGCH_GOD, god);
+}
 
 // This function is the merger of done_good() and naughty().
 // Returns true if god was interested (good or bad) in conduct.
@@ -2808,8 +2808,10 @@ static void _dock_piety(int piety_loss, int penance)
     else if (penance)       // only if still in religion
     {
         if (last_penance_lecture != you.num_turns)
+        {
             god_speaks(you.religion,
                        "\"You will pay for your transgression, mortal!\"");
+        }
         last_penance_lecture = you.num_turns;
         _inc_penance(penance);
     }
@@ -2902,7 +2904,7 @@ void gain_piety(int pgn)
             const char first = pmsg[0];
             if ( first )
             {
-                if ( isupper(first) )
+                if (isupper(first))
                     god_speaks(you.religion, pmsg);
                 else
                 {
@@ -3244,9 +3246,9 @@ void lose_piety(int pgn)
             {
                 const char* pmsg = god_lose_power_messages[you.religion][i];
                 const char first = pmsg[0];
-                if ( first )
+                if (first)
                 {
-                    if ( isupper(first) )
+                    if (isupper(first))
                         god_speaks(you.religion, pmsg);
                     else
                     {
@@ -3255,7 +3257,7 @@ void lose_piety(int pgn)
                     }
                 }
 
-                if ( _need_water_walking() && !beogh_water_walk() )
+                if (_need_water_walking() && !beogh_water_walk())
                 {
                     fall_into_a_pool( you.x_pos, you.y_pos, true,
                                       grd[you.x_pos][you.y_pos] );

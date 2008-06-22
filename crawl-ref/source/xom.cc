@@ -117,10 +117,11 @@ static const char* _get_xom_speech(const std::string key)
     if (result.empty())
         result = getSpeakString("Xom general effect");
 
-    if (!result.empty())
-        return (result.c_str());
+    if (result.empty())
+        return ("Xom makes something happen.");
 
-    return ("Xom makes something happen.");
+//    mprf(MSGCH_DIAGNOSTICS, "Xom speech result: %s", result.c_str());
+    return (result.c_str());
 }
 
 static void _xom_is_stimulated(int maxinterestingness,
