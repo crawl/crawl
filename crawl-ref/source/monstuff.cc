@@ -2297,11 +2297,11 @@ static void _check_lava_water_in_sight()
         }
 }
 
-// If a monster can see but not directly reach the player, and then fails to
-// find a path to get him, mark all surrounding (in a radius of 2) monsters
+// If a monster can see but not directly reach the target, and then fails to
+// find a path to get there, mark all surrounding (in a radius of 2) monsters
 // of the same (or greater) movement restrictions as also being unable to
 // find a path, so we won't need to calculate again.
-// Should there be a direct path to the player for a monster thus marked, it
+// Should there be a direct path to the target for a monster thus marked, it
 // will still be able to come nearer (and the mark will then be cleared).
 static void _mark_neighbours_target_unreachable(monsters *mon)
 {
@@ -2984,6 +2984,7 @@ static void _handle_behaviour(monsters *mon)
                             mpr("No path found!");
 #endif
                             mon->travel_target = MTRAV_UNREACHABLE;
+                            // Pass information on to nearby monsters.
                             _mark_neighbours_target_unreachable(mon);
                         }
                     }
@@ -3297,11 +3298,15 @@ static void _handle_behaviour(monsters *mon)
                 return;
             }
 
+            // If the monster can't move (or at least teleport, as a
+            // mimic can), get out.
+            if (mons_is_truly_stationary(mon))
+                break;
+
             // If the monster isn't travelling toward someplace from
             // which it can leave the level, and it can move (or at
             // least teleport, as a mimic can), make it start doing so.
-            if (mon->travel_target == MTRAV_NONE
-                && !mons_is_truly_stationary(mon))
+            if (mon->travel_target == MTRAV_NONE)
             {
                 e_index = _mons_find_nearest_level_exit(mon, e);
 
@@ -3424,6 +3429,7 @@ static void _handle_behaviour(monsters *mon)
                         mpr("No path found!");
 #endif
                         mon->travel_target = MTRAV_UNREACHABLE;
+                        // Pass information on to nearby monsters.
                         _mark_neighbours_target_unreachable(mon);
                     }
                 }
