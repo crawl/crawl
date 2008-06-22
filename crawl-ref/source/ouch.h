@@ -87,14 +87,6 @@ void weapon_acid(char acid_strength);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
- * called from: acr - bang - beam - effects - fight - misc - spells -
- *              spells2
- * *********************************************************************** */
-void scrolls_burn(char burn_strength, char target_class);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
  * called from: acr - bang - beam - command - effects - fight - misc -
  *              ouch - output - religion - spells - spells2 - spells4
  * *********************************************************************** */

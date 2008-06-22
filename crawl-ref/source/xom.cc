@@ -383,7 +383,7 @@ bool xom_gives_item(int power)
 static bool choose_mutatable_monster(const monsters* mon)
 {
     return (mon->alive() && mon->can_safely_mutate()
-        && !mons_is_submerged(mon));
+            && !mons_is_submerged(mon));
 }
 
 static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
@@ -699,18 +699,18 @@ static bool xom_is_good(int sever)
         mpr("The area is suffused with divine lightning!");
 
         bolt beam;
-        beam.beam_source = NON_MONSTER;
-        beam.type = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage = dice_def( 3, 30 );
-        beam.flavour = BEAM_ELECTRICITY;
-        beam.target_x = you.x_pos;
-        beam.target_y = you.y_pos;
-        beam.name = "blast of lightning";
-        beam.colour = LIGHTCYAN;
-        beam.thrower = KILL_MISC;
-        beam.aux_source = "Xom's lightning strike";
-        beam.ex_size = 2;
-        beam.is_tracer = false;
+        beam.beam_source  = NON_MONSTER;
+        beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+        beam.damage       = dice_def( 3, 30 );
+        beam.flavour      = BEAM_ELECTRICITY;
+        beam.target_x     = you.x_pos;
+        beam.target_y     = you.y_pos;
+        beam.name         = "blast of lightning";
+        beam.colour       = LIGHTCYAN;
+        beam.thrower      = KILL_MISC;
+        beam.aux_source   = "Xom's lightning strike";
+        beam.ex_size      = 2;
+        beam.is_tracer    = false;
         beam.is_explosion = true;
         explosion(beam);
 

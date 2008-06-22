@@ -103,8 +103,8 @@ static TextDB& DescriptionDB = AllDBs[0];
 static TextDB& RandartDB     = AllDBs[1];
 static TextDB& SpeakDB       = AllDBs[2];
 static TextDB& ShoutDB       = AllDBs[3];
-static TextDB& HelpDB        = AllDBs[4];
-static TextDB& MiscDB        = AllDBs[5];
+static TextDB& MiscDB        = AllDBs[4];
+static TextDB& HelpDB        = AllDBs[5];
 
 // ----------------------------------------------------------------------
 // TextDB

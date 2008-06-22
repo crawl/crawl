@@ -4343,6 +4343,7 @@ void read_scroll( int slot )
     case SCR_IMMOLATION:
         mpr("The scroll explodes in your hands!");
         // We do this here to prevent it from blowing itself up.
+        set_ident_type( scroll, ID_KNOWN_TYPE );
         dec_inv_item_quantity( item_slot, 1 );
 
         // unsure about this    // BEAM_EXPLOSION instead? {dlb}
@@ -4534,8 +4535,8 @@ void read_scroll( int slot )
     set_ident_type( scroll,
                     (id_the_scroll) ? ID_KNOWN_TYPE : ID_TRIED_TYPE );
 
-    // finally, destroy and identify the scroll
-    // scrolls of immolation were already destroyed earlier
+    // Finally, destroy and identify the scroll.
+    // Scrolls of immolation were already destroyed earlier.
     if (which_scroll != SCR_PAPER && which_scroll != SCR_IMMOLATION)
     {
         if (id_the_scroll)

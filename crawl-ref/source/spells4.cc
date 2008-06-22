@@ -2065,11 +2065,12 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     // Permarock and floor are unaffected -- bwr
     //
     case DNGN_PERMAROCK_WALL:
+    case DNGN_CLEAR_PERMAROCK_WALL:
     case DNGN_FLOOR:
         explode = false;
         mprf("%s seems to be unnaturally hard.",
-             (grid == DNGN_PERMAROCK_WALL) ? "That wall"
-                                           : "The dungeon floor");
+             (grid == DNGN_FLOOR) ? "The dungeon floor"
+                                  : "That wall");
         break;
 
     default:

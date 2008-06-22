@@ -2107,14 +2107,14 @@ bool forget_inventory(bool quiet)
     return (items_forgotten > 0);
 }
 
-// returns true if there was a visible change
+// Returns true if there was a visible change.
 bool vitrify_area(int radius)
 {
     if (radius < 2)
         return (false);
 
     const int radius2 = radius * radius;
-    // this hinges on clear wall types having the same order as non-clear ones
+    // This hinges on clear wall types having the same order as non-clear ones!
     const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
     bool something_happened = false;
     for ( int x = X_BOUND_1; x <= X_BOUND_2; ++x )
