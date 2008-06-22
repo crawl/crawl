@@ -728,7 +728,7 @@ void redraw_screen(void)
         clrscr();
         return;
     }
-    
+
     draw_border();
 
     you.redraw_hit_points = true;
