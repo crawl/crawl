@@ -57,7 +57,7 @@ class formatted_string;
 
 void formatted_mpr(const formatted_string& fs,
                    msg_channel_type channel = MSGCH_PLAIN, int param = 0);
-                   
+
 void formatted_message_history(const std::string &st,
                                msg_channel_type channel = MSGCH_PLAIN,
                                int param = 0,
@@ -70,7 +70,7 @@ void mpr_comma_separated_list(const std::string prefix,
                               const std::string &comma = ", ",
                               const msg_channel_type channel = MSGCH_PLAIN,
                               const int param = 0);
-                               
+
 class no_messages
 {
 public:
