@@ -3160,7 +3160,6 @@ static void _handle_behaviour(monsters *mon)
                             }
                         }
                     }
-
                     // Else, we can see the next waypoint and are making good
                     // progress. Carry on, then!
                 }
