@@ -2511,7 +2511,7 @@ static void _handle_behaviour(monsters *mon)
     bool isPacified = mons_is_pacified(mon);
     bool travelling = mon->is_travelling();
     bool patrolling = mon->is_patrolling();
-    level_exit e;
+    static level_exit e;
 
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
@@ -3299,6 +3299,33 @@ static void _handle_behaviour(monsters *mon)
                     mon->target_x = e.target.x;
                     mon->target_y = e.target.y;
                     mon->travel_target = e.target_type;
+                }
+            }
+            else if (mon->travel_target != MTRAV_UNREACHABLE
+                        || one_chance_in(12))
+            {
+#ifdef DEBUG_PATHFIND
+                mprf("%s: Level exit out of reach! What now?",
+                     mon->name(DESC_PLAIN).c_str());
+#endif
+                // If we're already on our way, do nothing.
+                if (travelling && mon->travel_target == MTRAV_PLAYER)
+                {
+                    // Current target still valid?
+                    if (mon->x == mon->travel_path[0].x
+                        && mon->y == mon->travel_path[0].y)
+                    {
+                        // Get next waypoint.
+                        mon->travel_path.erase(
+                            mon->travel_path.begin() );
+
+                        if (!mon->travel_path.empty())
+                        {
+                            mon->target_x = mon->travel_path[0].x;
+                            mon->target_y = mon->travel_path[0].y;
+                            break;
+                        }
+                    }
                 }
             }
             else
