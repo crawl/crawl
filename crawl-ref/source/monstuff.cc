@@ -3388,18 +3388,6 @@ static void _handle_behaviour(monsters *mon)
                 }
             }
 
-            // If the monster can't leave the level, make it start
-            // fleeing instead.
-            if (mon->travel_target == MTRAV_UNREACHABLE)
-            {
-                mon->foe = MHITYOU;
-                mon->target_x = you.x_pos;
-                mon->target_y = you.y_pos;
-                mon->travel_target = MTRAV_NONE;
-                new_beh = BEH_FLEE;
-                break;
-            }
-
             // If the monster is leaving the level via a stair or
             // submersion, and has reached its goal, handle it here.
             if ((mon->travel_target == MTRAV_STAIR
