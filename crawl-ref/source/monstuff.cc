@@ -3315,7 +3315,7 @@ static void _handle_behaviour(monsters *mon)
                      mon->name(DESC_PLAIN).c_str());
 #endif
                 // If we're already on our way, do nothing.
-                if (travelling && mon->travel_target == MTRAV_PLAYER)
+                if (travelling)
                 {
                     // Current target still valid?
                     if (mon->x == mon->travel_path[0].x
