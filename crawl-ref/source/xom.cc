@@ -701,7 +701,7 @@ static bool xom_is_good(int sever)
         bolt beam;
         beam.beam_source  = NON_MONSTER;
         beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = dice_def( 3, 30 );
+        beam.damage       = dice_def(3, 30);
         beam.flavour      = BEAM_ELECTRICITY;
         beam.target_x     = you.x_pos;
         beam.target_y     = you.y_pos;
