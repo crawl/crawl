@@ -2303,7 +2303,7 @@ static void _check_lava_water_in_sight()
 // find a path, so we won't need to calculate again.
 // Should there be a direct path to the player for a monster thus marked, it
 // will still be able to come nearer (and the mark will then be cleared).
-static void _mark_neighbours_player_unreachable(monsters *mon)
+static void _mark_neighbours_target_unreachable(monsters *mon)
 {
     // Highly intelligent monsters are perfectly capable of pathfinding
     // and don't need their neighbour's advice.
@@ -2317,8 +2317,8 @@ static void _mark_neighbours_player_unreachable(monsters *mon)
 
     int x, y;
     monsters *m;
-    for (int i = -2; i <= 2; i++)
-        for (int j = -2; j <= 2; j++)
+    for (int i = -2; i <= 2; ++i)
+        for (int j = -2; j <= 2; ++j)
         {
             if (i == 0 && j == 0)
                 continue;
@@ -2508,8 +2508,10 @@ static void _handle_behaviour(monsters *mon)
     bool isSmart    = (mons_intel(mon->type) > I_ANIMAL);
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isMobile   = !mons_is_stationary(mon);
+    bool isPacified = mons_is_pacified(mon);
     bool travelling = mon->is_travelling();
     bool patrolling = mon->is_patrolling();
+    level_exit e;
 
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
@@ -2950,7 +2952,7 @@ static void _handle_behaviour(monsters *mon)
                             mon->travel_path = mp.calc_waypoints();
                             if (!mon->travel_path.empty())
                             {
-                                // Okay then, we found a path. Let's use it!
+                                // Okay then, we found a path.  Let's use it!
                                 mon->target_x = mon->travel_path[0].x;
                                 mon->target_y = mon->travel_path[0].y;
                                 mon->travel_target = MTRAV_PLAYER;
@@ -2963,7 +2965,7 @@ static void _handle_behaviour(monsters *mon)
 #endif
                                 mon->travel_target = MTRAV_UNREACHABLE;
                                 // Pass information on to nearby monsters.
-                                _mark_neighbours_player_unreachable(mon);
+                                _mark_neighbours_target_unreachable(mon);
                             }
                         }
                         else
@@ -2972,7 +2974,7 @@ static void _handle_behaviour(monsters *mon)
                             mpr("No path found!");
 #endif
                             mon->travel_target = MTRAV_UNREACHABLE;
-                            _mark_neighbours_player_unreachable(mon);
+                            _mark_neighbours_target_unreachable(mon);
                         }
                     }
                 }
@@ -3007,7 +3009,7 @@ static void _handle_behaviour(monsters *mon)
 
         case BEH_WANDER:
             // Monsters that have been pacified begin leaving the level.
-            if (mons_is_pacified(mon))
+            if (isPacified)
             {
                 // XXX: Uncomment this next block to actually enable
                 // leaving the level.
@@ -3292,7 +3294,6 @@ static void _handle_behaviour(monsters *mon)
             if (mon->travel_target == MTRAV_NONE
                 && !mons_is_truly_stationary(mon))
             {
-                level_exit e;
                 if (_mons_find_nearest_level_exit(mon, e))
                 {
                     mon->foe = MHITNOT;
@@ -3301,12 +3302,109 @@ static void _handle_behaviour(monsters *mon)
                     mon->travel_target = e.target_type;
                 }
             }
+            else
+            {
+                // Use pathfinding to find a (new) path to the level exit.
+                const int dist = grid_distance(mon->x, mon->y,
+                                               e.target.x, e.target.y);
+
+#ifdef DEBUG_PATHFIND
+                mprf("Need to calculate a path... (dist = %d)", dist);
+#endif
+                const bool native = mons_is_native_in_branch(mon);
+
+                int range = 0;
+                switch (mons_intel(mon->type))
+                {
+                case I_PLANT:
+                    range = 2;
+                    break;
+                case I_INSECT:
+                    range = 3;
+                    break;
+                case I_ANIMAL:
+                    range = 4;
+                    break;
+                case I_NORMAL:
+                    range = 8;
+                    break;
+                default:
+                    // Highly intelligent monsters can find their way
+                    // anywhere. (range == 0 means no restriction.)
+                    break;
+                }
+
+                if (range && native)
+                    range += 3;
+
+                if (range > 0 && dist > range)
+                {
+                    mon->travel_target = MTRAV_UNREACHABLE;
+#ifdef DEBUG_PATHFIND
+                    mprf("Distance too great, don't attempt pathfinding! (%s)",
+                         mon->name(DESC_PLAIN).c_str());
+#endif
+                }
+                else
+                {
+#ifdef DEBUG_PATHFIND
+                    mprf("Need a path for %s from (%d, %d) to (%d, %d), "
+                         "max. dist = %d",
+                         mon->name(DESC_PLAIN).c_str(), mon->x, mon->y,
+                         e.target.x, e.target.y, range);
+#endif
+                    monster_pathfind mp;
+                    if (range > 0)
+                        mp.set_range(range);
+
+                    if (mp.start_pathfind(mon, e.target))
+                    {
+                        mon->travel_path = mp.calc_waypoints();
+                        if (!mon->travel_path.empty())
+                        {
+                            // Okay then, we found a path.  Let's use it!
+                            mon->target_x = mon->travel_path[0].x;
+                            mon->target_y = mon->travel_path[0].y;
+                            break;
+                        }
+                        else
+                        {
+#ifdef DEBUG_PATHFIND
+                            mpr("No path found!");
+#endif
+                            mon->travel_target = MTRAV_UNREACHABLE;
+                            // Pass information on to nearby monsters.
+                            _mark_neighbours_target_unreachable(mon);
+                        }
+                    }
+                    else
+                    {
+#ifdef DEBUG_PATHFIND
+                        mpr("No path found!");
+#endif
+                        mon->travel_target = MTRAV_UNREACHABLE;
+                        _mark_neighbours_target_unreachable(mon);
+                    }
+                }
+            }
+
+            // If the monster can't leave the level, make it start
+            // fleeing instead.
+            if (mon->travel_target == MTRAV_UNREACHABLE)
+            {
+                mon->foe = MHITYOU;
+                mon->target_x = you.x_pos;
+                mon->target_y = you.y_pos;
+                mon->travel_target = MTRAV_NONE;
+                new_beh = BEH_FLEE;
+                break;
+            }
 
             // If the monster is leaving the level via a stair or
             // submersion, and has reached its goal, handle it here.
             if ((mon->travel_target == MTRAV_STAIR
                 || mon->travel_target == MTRAV_SUBMERSIBLE)
-                    && mon->x == mon->target_x && mon->y == mon->target_y)
+                    && mon->x == e.target.x && mon->y == e.target.y)
             {
                 make_mons_leave_level(mon);
                 return;
