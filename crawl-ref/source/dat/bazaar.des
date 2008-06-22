@@ -209,6 +209,7 @@ ENDMAP
 NAME:   bazaar_general_marketplace
 TAGS:   bazaar allow_dup no_rotate
 ORIENT: encompass
+CHANCE: 5
 KFEAT:  A = any shop
 : bazaar_message(_G)
 MAP
@@ -235,6 +236,7 @@ ENDMAP
 NAME:    bazaar_outfitter
 TAGS:    bazaar allow_dup
 ORIENT:  encompass
+CHANCE:  5
 KFEAT:   A = any shop
 SHUFFLE: ABC, de
 KFEAT:   A = weapon shop / armour shop
@@ -260,6 +262,7 @@ ENDMAP
 # 4 random shops
 NAME:    bazaar_oval
 TAGS:    bazaar allow_dup no_rotate
+CHANCE:  5
 ORIENT:  encompass
 SUBST:   A = TVBG
 KFEAT:   B = any shop
@@ -279,6 +282,7 @@ ENDMAP
 # 2 shops
 NAME:    bazaar_mystics
 TAGS:    bazaar allow_dup
+CHANCE:  5
 ORIENT:  encompass
 SUBST:   w : wlx
 SHUFFLE: AB, def
@@ -789,10 +793,10 @@ ENDMAP
 
 ##########################################
 # Bazaars in cross form (jpeg)
-# 2.25 shops
+# ~3 shops
 NAME:    bazaar_cross1
 TAGS:    bazaar allow_dup no_rotate
-CHANCE:  5
+CHANCE:  2
 ORIENT:  encompass
 SHUFFLE: ABCD
 SUBST:   A = <, B = >
@@ -823,7 +827,7 @@ ENDMAP
 
 NAME:    bazaar_cross2
 TAGS:    bazaar allow_dup no_rotate
-CHANCE:  5
+CHANCE:  3
 ORIENT:  encompass
 SHUFFLE: ABCD
 SUBST:   A = T E, B = >
@@ -1133,8 +1137,8 @@ xxxxxx........<........xxx.......xxxxxx
 xxxxx.................xxx....B....xxxxx
 xxxx...A.............xxx...........xxxx
 xxx.................xxx.............xxx
-xxx=xxxxxxxxxxxxxxx+xxxxxxxxxxxxxxx=xxx
-xxx=xxxxxxxxxxxxxxxx+xxxxxxxxxxxxxx=xxx
+xxx+xxxxxxxxxxxxxxx+xxxxxxxxxxxxxxx+xxx
+xxx+xxxxxxxxxxxxxxxx+xxxxxxxxxxxxxx+xxx
 xxx.............===.................xxx
 xxxx...........xxx.............C...xxxx
 xxxxx....D....xxx.................xxxxx
