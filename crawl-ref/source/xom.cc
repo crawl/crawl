@@ -696,7 +696,7 @@ static bool xom_is_good(int sever)
         if (you.hp <= random2(201) && player_in_a_dangerous_place())
             you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
 
-        mpr("The area is suffused with divine lightning!");
+        god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
 
         bolt beam;
         beam.beam_source  = NON_MONSTER;

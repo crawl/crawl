@@ -1615,7 +1615,7 @@ static bool _do_ability(const ability_def& abil)
 
         case 7:
             you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
-            mpr("Makhleb hurls a blast of lightning!");
+            simple_god_message(" hurls a blast of lightning!", GOD_MAKHLEB);
 
             // make a divine lightning bolt...
             beam.beam_source = NON_MONSTER;
