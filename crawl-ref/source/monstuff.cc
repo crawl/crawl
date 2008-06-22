@@ -2364,6 +2364,8 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
 static void _mons_find_level_exits(const monsters *mon,
                                    std::vector<level_exit> &e, int range = -1)
 {
+    e.clear();
+
     if (range == -1)
         range = LOS_RADIUS * 2;
 
