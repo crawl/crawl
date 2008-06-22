@@ -1664,7 +1664,7 @@ bool monster_blink(monsters *monster)
 }
 
 // allow_adjacent:  allow target to be adjacent to origin.
-// restrict_LOS:    restict target to be within PLAYER line of sight.
+// restrict_LOS:    restrict target to be within PLAYER line of sight.
 bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
                        bool restrict_LOS)
 {
@@ -1759,7 +1759,7 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
     }
 
     return (false);
-}                               // end random_near_space()
+}
 
 static bool _habitat_okay( const monsters *monster, dungeon_feature_type targ )
 {
@@ -2361,8 +2361,8 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
         }
 }
 
-static void _mons_find_level_exits(const monsters *mon,
-                                   std::vector<level_exit> &e)
+static void _mons_find_all_level_exits(const monsters *mon,
+                                       std::vector<level_exit> &e)
 {
     e.clear();
 
@@ -2376,49 +2376,54 @@ static void _mons_find_level_exits(const monsters *mon,
 
                 // All types of stairs.
                 if (is_stair(gridc))
-                    e.push_back(level_exit(coord_def(x, y), MTRAV_STAIR));
+                {
+                    e.push_back(level_exit(coord_def(x, y), MTRAV_STAIR,
+                                false));
+                }
 
                 // Shaft traps.
                 trap_type tt = trap_type_at_xy(x, y);
                 if (tt == TRAP_SHAFT && _is_trap_safe(mon, x, y))
-                    e.push_back(level_exit(coord_def(x, y), MTRAV_TRAP));
+                    e.push_back(level_exit(coord_def(x, y), MTRAV_TRAP, false));
 
                 // Any place the monster can submerge.
                 if (monster_can_submerge(mon, gridc))
-                    e.push_back(level_exit(coord_def(x, y), MTRAV_SUBMERSIBLE));
+                {
+                    e.push_back(level_exit(coord_def(x, y), MTRAV_SUBMERSIBLE,
+                                false));
+                }
             }
         }
     }
 }
 
-static bool _mons_find_nearest_level_exit(const monsters *mon, level_exit &e)
+static int _mons_find_nearest_level_exit(const monsters *mon,
+                                         std::vector<level_exit> &e)
 {
 
-    std::vector<level_exit> all_exits;
+    if (e.empty())
+        _mons_find_all_level_exits(mon, e);
 
-    _mons_find_level_exits(mon, all_exits);
-
-    e = level_exit();
-
+    int retval = -1;
     int old_dist = -1;
 
-    for (unsigned int i = 0; i < all_exits.size(); ++i)
+    for (unsigned int i = 0; i < e.size(); ++i)
     {
-        int dist = grid_distance(mon->x, mon->y, all_exits[i].target.x,
-                                 all_exits[i].target.y);
+        if (e[i].unreachable)
+            continue;
+
+        int dist = grid_distance(mon->x, mon->y, e[i].target.x,
+                                 e[i].target.y);
 
         if (old_dist == -1 || old_dist >= dist)
         {
-            if (old_dist == dist && coinflip())
-                continue;
-
             old_dist = dist;
 
-            e = all_exits[i];
+            retval = i;
         }
     }
 
-    return (old_dist != -1);
+    return (retval);
 }
 
 // If _mons_find_level_exits() is ever expanded to handle more grid
@@ -2517,8 +2522,8 @@ static void _handle_behaviour(monsters *mon)
     bool isPacified = mons_is_pacified(mon);
     bool travelling = mon->is_travelling();
     bool patrolling = mon->is_patrolling();
-    static level_exit e;
-
+    static std::vector<level_exit> e;
+    static int                     e_index;
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
     {
@@ -3299,12 +3304,16 @@ static void _handle_behaviour(monsters *mon)
             if (mon->travel_target == MTRAV_NONE
                 && !mons_is_truly_stationary(mon))
             {
-                if (_mons_find_nearest_level_exit(mon, e))
+                e_index = _mons_find_nearest_level_exit(mon, e);
+
+                if (!e[e_index].unreachable)
                 {
                     mon->foe = MHITNOT;
-                    mon->target_x = e.target.x;
-                    mon->target_y = e.target.y;
-                    mon->travel_target = e.target_type;
+                    mon->target_x = e[e_index].target.x;
+                    mon->target_y = e[e_index].target.y;
+                    mon->travel_target = e[e_index].target_type;
+                    if (travelling)
+                        mon->travel_path.clear();
                 }
             }
             else if (mon->travel_target != MTRAV_UNREACHABLE
@@ -3338,7 +3347,8 @@ static void _handle_behaviour(monsters *mon)
             {
                 // Use pathfinding to find a (new) path to the level exit.
                 const int dist = grid_distance(mon->x, mon->y,
-                                               e.target.x, e.target.y);
+                                               e[e_index].target.x,
+                                               e[e_index].target.y);
 
 #ifdef DEBUG_PATHFIND
                 mprf("Need to calculate a path... (dist = %d)", dist);
@@ -3383,13 +3393,13 @@ static void _handle_behaviour(monsters *mon)
                     mprf("Need a path for %s from (%d, %d) to (%d, %d), "
                          "max. dist = %d",
                          mon->name(DESC_PLAIN).c_str(), mon->x, mon->y,
-                         e.target.x, e.target.y, range);
+                         e[e_index].target.x, e[e_index].target.y, range);
 #endif
                     monster_pathfind mp;
                     if (range > 0)
                         mp.set_range(range);
 
-                    if (mp.start_pathfind(mon, e.target))
+                    if (mp.start_pathfind(mon, e[e_index].target))
                     {
                         mon->travel_path = mp.calc_waypoints();
                         if (!mon->travel_path.empty())
@@ -3420,11 +3430,19 @@ static void _handle_behaviour(monsters *mon)
                 }
             }
 
+            // If the level exit is unreachable, find a new one.
+            if (mon->travel_target == MTRAV_UNREACHABLE)
+            {
+                e[e_index].unreachable = true;
+                mon->travel_target = MTRAV_NONE;
+            }
+
             // If the monster is leaving the level via a stair or
             // submersion, and has reached its goal, handle it here.
             if ((mon->travel_target == MTRAV_STAIR
                 || mon->travel_target == MTRAV_SUBMERSIBLE)
-                    && mon->x == e.target.x && mon->y == e.target.y)
+                    && mon->x == e[e_index].target.x
+                    && mon->y == e[e_index].target.y)
             {
                 make_mons_leave_level(mon);
                 return;

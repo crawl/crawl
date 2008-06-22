@@ -38,12 +38,14 @@ struct level_exit
 {
     coord_def target;
     montravel_target_type target_type;
+    bool unreachable;
 
 public:
     level_exit(coord_def c = coord_def(-1, -1),
-               montravel_target_type m = MTRAV_NONE)
+               montravel_target_type m = MTRAV_NONE,
+               bool u = true)
 
-        : target(c), target_type(m)
+        : target(c), target_type(m), unreachable(u)
     {
     }
 };
