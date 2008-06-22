@@ -1151,6 +1151,7 @@ static bool _do_description(std::string key, std::string footer = "")
             symbol_suffix += symbol;
             symbol_suffix += "_suffix";
             desc += getLongDescription(symbol_suffix);
+            desc += getLongDescription(symbol_suffix + "_lookup");
         }
     }
     key = uppercase_first(key);

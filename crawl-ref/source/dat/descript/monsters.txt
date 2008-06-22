@@ -113,6 +113,11 @@ $
 
 You feel a lump in the pit of your stomach.
 %%%%
+__(_suffix_examine
+
+It has been enchanted to dance through the air and attack under its own
+power.
+%%%%
 Agnes
 
 A lanky warrior, she moves at a great pace and carries an exotic weapon.
@@ -610,9 +615,10 @@ cyclops
 
 A giant with one eye in the centre of its forehead.  Despite their lack of binocular vision, cyclopes throw boulders with fearsome accuracy.
 %%%%
+# Only used in lookup mode, not when examining an actual monster.
 dancing weapon
 
-A weapon dancing in the air.
+A weapon enchanted to dance through the air and attack under its own power.
 %%%%
 death cob
 

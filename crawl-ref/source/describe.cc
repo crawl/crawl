@@ -2216,6 +2216,10 @@ void describe_monsters(monsters& mons)
         description << getLongDescription("spectral thing");
         break;
 
+    case MONS_DANCING_WEAPON:
+        // Already handled.
+        break;
+
     case MONS_ROTTING_DEVIL:
         if (player_can_smell())
         {
@@ -2308,6 +2312,7 @@ void describe_monsters(monsters& mons)
     symbol_suffix += symbol;
     symbol_suffix += "_suffix";
     description << getLongDescription(symbol_suffix);
+    description << getLongDescription(symbol_suffix + "_examine");
 
 #if DEBUG_DIAGNOSTICS
 
