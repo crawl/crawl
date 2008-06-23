@@ -112,6 +112,8 @@ void get_playervisible_monsters(std::vector<monsters*>& mons,
 bool i_feel_safe(bool announce = false, bool want_move = false,
                  bool just_monsters = false, int range = -1);
 
+bool there_are_monsters_nearby();
+
 void setup_environment_effects();
 
 // Lava smokes, swamp water mists.
