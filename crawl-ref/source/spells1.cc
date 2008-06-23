@@ -620,13 +620,21 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     if (mons_intel(mon->type) <= I_PLANT) // no self-awareness
         return false;
 
+    const mon_holy_type holiness = mons_holiness(mon);
+
+    if (holiness != MH_HOLY
+        && holiness != MH_NATURAL
+        && holiness != MH_UNDEAD
+        && holiness != MH_DEMONIC)
+    {
+        return false;
+    }
+
     if (mons_is_stationary(mon)) // not able to leave the level
         return false;
 
     if (mons_is_sleeping(mon)) // not aware of what is happening
         return false;
-
-    const mon_holy_type holiness = mons_holiness(mon);
 
     const int factor = (mons_intel(mon->type) <= I_ANIMAL) ? 3 : // animals
                        (is_player_same_species(mon->type)) ? 2   // same species
@@ -640,8 +648,6 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
         divisor++;
     else if (holiness == MH_DEMONIC)
         divisor += 2;
-    else if (holiness != MH_NATURAL)
-        return false;
 
     const int random_factor = random2(you.skills[SK_INVOCATIONS] * healed /
                                       divisor);

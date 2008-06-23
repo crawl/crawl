@@ -61,7 +61,13 @@ static void _finish_delay(const delay_queue_item &delay);
 //  note that berserk monsters are also hasted.)
 static bool _recite_mons_useless(const monsters *mon)
 {
+    const mon_holy_type holiness = mons_holiness(mon);
+
     return (mons_intel(mon->type) < I_NORMAL
+            || holiness != MH_HOLY
+            || holiness != MH_NATURAL
+            || holiness != MH_UNDEAD
+            || holiness != MH_DEMONIC
             || mons_is_stationary(mon)
             || mons_is_fleeing(mon)
             || mons_is_sleeping(mon)
@@ -103,8 +109,6 @@ static int _recite_to_monsters(int x, int y, int pow, int unused)
             pow -= 2 + random2(3);
         else if (holiness == MH_DEMONIC)
             pow -= 3 + random2(5);
-        else if (holiness != MH_NATURAL)
-            return (0);
     }
 
     pow -= resist;
