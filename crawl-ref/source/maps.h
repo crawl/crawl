@@ -37,7 +37,7 @@ struct vault_placement
     }
 };
 
-int vault_main(map_type vgrid, 
+int vault_main(map_type vgrid,
                vault_placement &vp,
                int vault_force,
                bool check_place = false,
