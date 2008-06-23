@@ -49,7 +49,7 @@
 // Which spells?  First I copied all spells from your_spells(), and then
 // I filtered some out, especially conjurations.  Then I sorted them in
 // roughly ascending order of power.
-static const spell_type xom_spells[] =
+static const spell_type _xom_spells[] =
 {
     SPELL_BLINK, SPELL_CONFUSING_TOUCH, SPELL_MAGIC_MAPPING,
     SPELL_DETECT_ITEMS, SPELL_DETECT_CREATURES, SPELL_MASS_CONFUSION,
@@ -67,27 +67,7 @@ static const spell_type xom_spells[] =
     SPELL_NECROMUTATION
 };
 
-const char *describe_xom_favour()
-{
-    return (you.piety > 160) ? "A beloved toy of Xom." :
-           (you.piety > 145) ? "A favourite toy of Xom." :
-           (you.piety > 130) ? "A very special toy of Xom." :
-           (you.piety > 115) ? "A special toy of Xom." :
-           (you.piety > 100) ? "A toy of Xom." :
-           (you.piety >  85) ? "A plaything of Xom." :
-           (you.piety >  70) ? "A special plaything of Xom." :
-           (you.piety >  55) ? "A very special plaything of Xom." :
-           (you.piety >  40) ? "A favourite plaything of Xom." :
-                               "A beloved plaything of Xom.";
-}
-
-bool xom_is_nice()
-{
-    // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
-    return (you.gift_timeout > 0 && you.piety > (MAX_PIETY / 2)) || coinflip();
-}
-
-static const char* xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
+static const char* _xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
 {
     // XM_NORMAL
     {
@@ -110,6 +90,20 @@ static const char* xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
     }
 };
 
+const char *describe_xom_favour()
+{
+    return (you.piety > 160) ? "A beloved toy of Xom." :
+           (you.piety > 145) ? "A favourite toy of Xom." :
+           (you.piety > 130) ? "A very special toy of Xom." :
+           (you.piety > 115) ? "A special toy of Xom." :
+           (you.piety > 100) ? "A toy of Xom." :
+           (you.piety >  85) ? "A plaything of Xom." :
+           (you.piety >  70) ? "A special plaything of Xom." :
+           (you.piety >  55) ? "A very special plaything of Xom." :
+           (you.piety >  40) ? "A favourite plaything of Xom." :
+                               "A beloved plaything of Xom.";
+}
+
 static const char* _get_xom_speech(const std::string key)
 {
     std::string result = getSpeakString("Xom " + key);
@@ -122,6 +116,12 @@ static const char* _get_xom_speech(const std::string key)
 
 //    mprf(MSGCH_DIAGNOSTICS, "Xom speech result: %s", result.c_str());
     return (result.c_str());
+}
+
+bool xom_is_nice()
+{
+    // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
+    return (you.gift_timeout > 0 && you.piety > (MAX_PIETY / 2)) || coinflip();
 }
 
 static void _xom_is_stimulated(int maxinterestingness,
@@ -165,7 +165,7 @@ static void _xom_is_stimulated(int maxinterestingness,
 void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
                        bool force_message)
 {
-    _xom_is_stimulated(maxinterestingness, xom_message_arrays[message_type],
+    _xom_is_stimulated(maxinterestingness, _xom_message_arrays[message_type],
                        force_message);
 }
 
@@ -180,22 +180,22 @@ void xom_is_stimulated(int maxinterestingness, const std::string& message,
     _xom_is_stimulated(maxinterestingness, message_array, force_message);
 }
 
-void xom_makes_you_cast_random_spell(int sever)
+static void _xom_makes_you_cast_random_spell(int sever)
 {
     int spellenum = sever;
 
     god_acting gdact(GOD_XOM);
 
-    const int nxomspells = ARRAYSZ(xom_spells);
+    const int nxomspells = ARRAYSZ(_xom_spells);
     spellenum = std::min(nxomspells, spellenum);
 
-    const spell_type spell = xom_spells[random2(spellenum)];
+    const spell_type spell = _xom_spells[random2(spellenum)];
 
     god_speaks(GOD_XOM, _get_xom_speech("spell effect"));
 
 #if DEBUG_DIAGNOSTICS || DEBUG_RELIGION || DEBUG_XOM
     mprf(MSGCH_DIAGNOSTICS,
-         "xom_makes_you_cast_random_spell(); spell: %d, spellenum: %d",
+         "_xom_makes_you_cast_random_spell(); spell: %d, spellenum: %d",
          spell, spellenum);
 #endif
 
@@ -462,7 +462,7 @@ static bool _xom_is_good(int sever)
     }
     else if (random2(sever) <= 2)
     {
-        xom_makes_you_cast_random_spell(sever);
+        _xom_makes_you_cast_random_spell(sever);
 
         done = true;
     }
