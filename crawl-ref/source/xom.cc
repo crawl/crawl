@@ -832,15 +832,15 @@ static bool _xom_is_bad(int sever)
         {
             god_speaks(GOD_XOM, _get_xom_speech("hostile monster"));
 
+            bool success = false;
+
             // Nasty, but fun.
             if (one_chance_in(4))
-                cast_tukimas_dance(100, GOD_XOM, true, true);
+                success = cast_tukimas_dance(100, GOD_XOM, true, true);
             else
             {
                 const int numdemons =
                     std::min(random2(random2(random2(sever+1)+1)+1)+1, 14);
-
-                bool success = false;
 
                 for (int i = 0; i < numdemons; ++i)
                 {
@@ -852,12 +852,12 @@ static bool _xom_is_bad(int sever)
                         success = true;
                     }
                 }
+            }
 
-                if (!success)
-                {
-                    simple_god_message("'s servants are having fun elsewhere.",
-                                       GOD_XOM);
-                }
+            if (!success)
+            {
+                simple_god_message("'s servants are having fun elsewhere.",
+                                   GOD_XOM);
             }
 
             done = true;
