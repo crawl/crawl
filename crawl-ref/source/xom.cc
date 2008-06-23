@@ -494,40 +494,26 @@ static bool xom_is_good(int sever)
             if (!is_demonic)
                 numdifferent++;
 
+            // Mark factions hostile as appropriate.
+            beh_type beha = BEH_FRIENDLY;
+            unsigned short hitting = you.pet_target;
+
+            if (hostiletype == 3
+                || (is_demonic && hostiletype == 1)
+                || (!is_demonic && hostiletype == 2))
+            {
+                beha = BEH_HOSTILE;
+                hitting = MHITYOU;
+            }
+
             summons[i] =
                 create_monster(
-                    mgen_data(mon, BEH_FRIENDLY, 3,
-                              you.pos(), you.pet_target, MG_FORCE_BEH, GOD_XOM));
+                    mgen_data(mon, beha, 3,
+                              you.pos(), hitting, MG_FORCE_BEH, GOD_XOM));
 
             if (summons[i] != -1)
                 success = true;
         }
-
-        if (success && numdifferent != numdemons && numdifferent > 0
-            && hostiletype != 0)
-        {
-            for (int i = 0; i < numdemons; ++i)
-            {
-                if (summons[i] != -1)
-                {
-                    monsters *mon = &menv[i];
-                    const bool is_demonic = (mons_holiness(mon) == MH_DEMONIC);
-
-                    // Mark factions hostile as appropriate.
-                    if (hostiletype == 3
-                        || (is_demonic && hostiletype == 1)
-                        || (!is_demonic && hostiletype == 2))
-                    {
-                        mon->attitude = ATT_HOSTILE;
-                        behaviour_event(mon, ME_ALERT, MHITYOU);
-                    }
-
-                    player_angers_monster(mon);
-                }
-            }
-        }
-
-        delete[] summons;
 
         if (success)
         {
@@ -538,8 +524,16 @@ static bool xom_is_good(int sever)
             else
                 god_speaks(GOD_XOM, _get_xom_speech("multiple summons"));
 
+            for (int i = 0; i < numdemons; ++i)
+            {
+                if (summons[i] != -1)
+                    player_angers_monster(&menv[summons[i]]);
+            }
+
             done = true;
         }
+
+        delete[] summons;
     }
     else if (random2(sever) <= 4)
     {
