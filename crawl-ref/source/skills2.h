@@ -31,9 +31,9 @@ int str_to_skill(const std::string &skill);
  * called from: describe
  * *********************************************************************** */
 std::string skill_title(
-    unsigned char best_skill, unsigned char skill_lev, 
+    unsigned char best_skill, unsigned char skill_lev,
     // these used for ghosts and hiscores:
-    int species = -1, int str = -1, int dex = -1, int god = -1 );  
+    int species = -1, int str = -1, int dex = -1, int god = -1 );
 
 // last_updated Sept 20 -- bwr
 /* ***********************************************************************
@@ -92,7 +92,7 @@ void show_skills();
 /* ***********************************************************************
  * called from: item_use
  * *********************************************************************** */
-void wield_warning(bool newWeapon = true); 
+void wield_warning(bool newWeapon = true);
 
 
 #endif
