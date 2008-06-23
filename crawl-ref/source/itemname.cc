@@ -1015,11 +1015,14 @@ std::string item_def::name_aux( description_level_type desc,
     const bool know_ego = know_brand;
 
     const bool know_cosmetic = !__know_pluses && !terse & !basename
-        && !qualname && !dbname;
+        && !qualname && !dbname
+        && !(ignore_flags & ISFLAG_COSMETIC_MASK);
 
     // So that know_cosmetic won't be affected by ignore_flags.
     const bool know_pluses = __know_pluses
         && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES);
+
+    const bool know_racial = !(ignore_flags & ISFLAG_RACIAL_MASK);
 
     const bool need_plural = !basename && !dbname;
     int brand;
@@ -1088,7 +1091,7 @@ std::string item_def::name_aux( description_level_type desc,
             }
         }
 
-        if (!basename && !dbname)
+        if (!basename && !dbname && know_racial)
             // always give racial type (it does have game effects)
             buff << racial_description_string(*this, terse);
 
