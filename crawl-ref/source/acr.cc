@@ -2834,8 +2834,8 @@ static void _decrement_durations()
 
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
-            if ( you.religion == GOD_TROG && you.piety > random2(150)
-                 && !player_under_penance() )
+            if (you.religion == GOD_TROG && you.piety > random2(150)
+                && !player_under_penance())
             {
                 mpr("Trog's vigour flows through your veins.");
             }

@@ -281,7 +281,8 @@ cannot perform a number of actions such as, for example, (un)wield a
 weapon, quaff something, zap wands, or evoke items.
 Such a rage is usually followed by deep exhaustion, a time during
 which you are slowed down, and cannot berserk again. Unlike other 
-sources of rage, Trog prevents you from passing out.
+sources of rage, depending on your piety Trog may occasionally 
+prevent you from passing out.
 %%%%
 Trog's Hand
 

@@ -3063,7 +3063,10 @@ std::string get_skill_description(int skill, bool need_title)
             unarmed_attacks.push_back("kick your enemies");
         }
 
-        unarmed_attacks.push_back("punch monsters with your free hand");
+        if (you.equip[EQ_WEAPON] == -1)
+            unarmed_attacks.push_back("punch monsters");
+        else if (you.equip[EQ_SHIELD] == -1)
+            unarmed_attacks.push_back("punch monsters with your free hand");
 
         if (!unarmed_attacks.empty())
         {

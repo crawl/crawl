@@ -4825,14 +4825,6 @@ void tile_use_item(int idx, InvAction act)
 
     // Use it
     const int type = item.base_type;
-/*
-    if ((type == OBJ_ARMOUR || type == OBJ_JEWELLERY)
-        && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-    {
-        canned_msg(MSG_PRESENT_FORM);
-        return;
-    }
-*/
     switch (type)
     {
         case OBJ_WEAPONS:

@@ -50,7 +50,8 @@ static void _init_equipment_removal(std::set<equipment_type> &rem_stuff,
         break;
 
     case TRAN_BAT:
-        // Bats can't wear rings.
+        // Bats can't wear rings, either. This means that the only equipment
+        // the player may keep wearing upon transformation is an amulet.
         rem_stuff.insert(EQ_LEFT_RING);
         rem_stuff.insert(EQ_RIGHT_RING);
         break;
