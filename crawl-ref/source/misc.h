@@ -82,6 +82,7 @@ void generate_random_blood_spatter_on_level();
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
+bool check_annotation_exclusion_warning();
 void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
                entry_cause_type entry_cause = EC_UNKNOWN);
 

@@ -1438,7 +1438,7 @@ static int runes_in_pack()
     return num_runes;
 }
 
-static bool _check_annotation_exclusion_warning()
+bool check_annotation_exclusion_warning()
 {
     coord_def pos(you.x_pos, you.y_pos);
     level_id  next_level_id = level_id::get_next_level_id(pos);
@@ -1467,9 +1467,9 @@ static bool _check_annotation_exclusion_warning()
         canned_msg(MSG_OK);
         interrupt_activity( AI_FORCE_INTERRUPT );
         crawl_state.level_annotation_shown = false;
-        return false;
+        return (false);
     }
-    return true;
+    return (true);
 }
 
 void up_stairs(dungeon_feature_type force_stair,
@@ -1500,8 +1500,8 @@ void up_stairs(dungeon_feature_type force_stair,
     LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
 
     // Does the next level have a warning annotation?
-    if (!force_stair && !_check_annotation_exclusion_warning())
-        return;
+//    if (!force_stair && !check_annotation_exclusion_warning())
+//        return;
 
     // Since the overloaded message set turn_is_over, I'm assuming that
     // the overloaded character makes an attempt... so we're doing this
@@ -1814,6 +1814,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             mpr("You fall through a shaft!");
     }
 
+    // Does the next level have a warning annotation?
+//    if (!force_stair && !check_annotation_exclusion_warning())
+//        return;
+
     // All checks are done, the player is on the move now.
 
     // Fire level-leaving trigger.
@@ -1857,10 +1861,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             return;
         }
     }
-
-    // Does the next level have a warning annotation?
-    if (!force_stair && !_check_annotation_exclusion_warning())
-        return;
 
     // Interlevel travel data.
     bool collect_travel_data = can_travel_interlevel();

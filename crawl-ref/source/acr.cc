@@ -1667,7 +1667,7 @@ static void _go_upstairs()
 
     if (ygrd == DNGN_ENTER_SHOP)
     {
-        if ( you.duration[DUR_BERSERKER] )
+        if (you.duration[DUR_BERSERKER])
             canned_msg(MSG_TOO_BERSERK);
         else
             shop();
@@ -1678,9 +1678,13 @@ static void _go_upstairs()
         if (ygrd == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
         else
-            mpr( "You can't go up here!" );
+            mpr("You can't go up here!");
         return;
     }
+
+    // Does the next level have a warning annotation?
+    if (!check_annotation_exclusion_warning())
+        return;
 
     tag_followers();  // only those beside us right now can follow
     start_delay( DELAY_ASCENDING_STAIRS,
@@ -1717,6 +1721,10 @@ static void _go_downstairs()
         mpr("You're held in a net!");
         return;
     }
+
+    // Does the next level have a warning annotation?
+    if (!check_annotation_exclusion_warning())
+        return;
 
     if (shaft)
     {
