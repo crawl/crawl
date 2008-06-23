@@ -2109,13 +2109,13 @@ void exercise_spell( spell_type spell, bool spc, bool success )
 
     if (exer_norm)
         did_god_conduct( DID_SPELL_PRACTISE, exer_norm );
-}                               // end exercise_spell()
+}
 
 static bool _send_abyss(const char *cause)
 {
     if (you.level_type != LEVEL_ABYSS)
     {
-        you.banish(cause? cause : "");
+        you.banish(cause ? cause : "");
         return (true);
     }
     else
