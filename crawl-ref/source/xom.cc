@@ -583,7 +583,7 @@ static bool _xom_is_good(int sever)
                 mgen_data(mon, beha, 6,
                           you.pos(), hitting, 0, GOD_XOM)) == -1)
         {
-            god_speaks(GOD_XOM, "\"Wait, where is it?\"");
+            god_speaks(GOD_XOM, "\"Oops, wrong gate.\"");
         }
 
         done = true;
@@ -673,7 +673,7 @@ static bool _xom_is_good(int sever)
                           beha, 0,
                           you.pos(), hitting, 0, GOD_XOM)) == -1)
         {
-            god_speaks(GOD_XOM, "\"Oops, wrong gate.\"");
+            god_speaks(GOD_XOM, "\"No, forget it.\"");
         }
 
         done = true;
