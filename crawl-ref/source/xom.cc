@@ -854,7 +854,10 @@ static bool _xom_is_bad(int sever)
                 }
 
                 if (!success)
-                    god_speaks(GOD_XOM, "Xom's servants are having fun elsewhere.");
+                {
+                    simple_god_message("'s servants are having fun elsewhere.",
+                                       GOD_XOM);
+                }
             }
 
             done = true;
