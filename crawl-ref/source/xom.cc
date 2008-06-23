@@ -202,10 +202,10 @@ void xom_makes_you_cast_random_spell(int sever)
     your_spells(spell, sever, false);
 }
 
-static void xom_make_item(object_class_type base,
-                          int subtype,
-                          int power,
-                          const char *failmsg = "\"No, never mind.\"")
+static void _xom_make_item(object_class_type base,
+                           int subtype,
+                           int power,
+                           const char *failmsg = "\"No, never mind.\"")
 {
     int thing_created =
         items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE);
@@ -226,7 +226,7 @@ static void xom_make_item(object_class_type base,
     origin_acquired(mitm[thing_created], GOD_XOM);
 }
 
-static object_class_type get_unrelated_wield_class(object_class_type ref)
+static object_class_type _get_unrelated_wield_class(object_class_type ref)
 {
     object_class_type objtype = OBJ_WEAPONS;
     if (ref == OBJ_WEAPONS)
@@ -254,7 +254,7 @@ static object_class_type get_unrelated_wield_class(object_class_type ref)
     return (objtype);
 }
 
-static bool xom_annoyance_gift(int power)
+static bool _xom_annoyance_gift(int power)
 {
     god_acting gdact(GOD_XOM);
 
@@ -270,7 +270,7 @@ static bool xom_annoyance_gift(int power)
             god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
             if (coinflip())
                 // For added humour, give the same sub-type.
-                xom_make_item(weapon->base_type, weapon->sub_type, power * 3);
+                _xom_make_item(weapon->base_type, weapon->sub_type, power * 3);
             else
                 acquirement(weapon->base_type, GOD_XOM);
             return (true);
@@ -282,7 +282,7 @@ static bool xom_annoyance_gift(int power)
             // If you are wearing cursed gloves, then Xom will give you
             // a ring.  Ha ha!
             god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
-            xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
+            _xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
             return (true);
         };
 
@@ -292,7 +292,7 @@ static bool xom_annoyance_gift(int power)
             // If you are wearing a cursed amulet, then Xom will give
             // you an amulet.  Ha ha!
             god_speaks(GOD_XOM, _get_xom_speech("cursed gift"));
-            xom_make_item(OBJ_JEWELLERY, get_random_amulet_type(), power * 3);
+            _xom_make_item(OBJ_JEWELLERY, get_random_amulet_type(), power * 3);
             return (true);
         };
 
@@ -304,7 +304,7 @@ static bool xom_annoyance_gift(int power)
             // If you are wearing a cursed ring, then Xom will give you
             // a ring.  Ha ha!
             god_speaks(GOD_XOM, _get_xom_speech("ring gift"));
-            xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
+            _xom_make_item(OBJ_JEWELLERY, get_random_ring_type(), power * 3);
             return (true);
         }
 
@@ -315,12 +315,12 @@ static bool xom_annoyance_gift(int power)
             god_speaks(GOD_XOM, _get_xom_speech("weapon gift"));
 
             const object_class_type objtype =
-                get_unrelated_wield_class(weapon->base_type);
+                _get_unrelated_wield_class(weapon->base_type);
 
             if (power > random2(256))
                 acquirement(objtype, GOD_XOM);
             else
-                xom_make_item(objtype, OBJ_RANDOM, power * 3);
+                _xom_make_item(objtype, OBJ_RANDOM, power * 3);
             return (true);
         }
     }
@@ -330,7 +330,7 @@ static bool xom_annoyance_gift(int power)
 
 bool xom_gives_item(int power)
 {
-    if (xom_annoyance_gift(power))
+    if (_xom_annoyance_gift(power))
         return (true);
 
     const item_def *cloak = you.slot_item(EQ_CLOAK);
@@ -339,11 +339,11 @@ bool xom_gives_item(int power)
         // If you are wearing a cursed cloak, then Xom will give you a
         // cloak or body armour.  Ha ha!
         god_speaks(GOD_XOM, _get_xom_speech("armour gift"));
-        xom_make_item(OBJ_ARMOUR,
-                      random2(10)?
-                          get_random_body_armour_type(you.your_level * 2)
-                        : ARM_CLOAK,
-                      power * 3);
+        _xom_make_item(OBJ_ARMOUR,
+                       random2(10) ?
+                           get_random_body_armour_type(you.your_level * 2)
+                       : ARM_CLOAK,
+                       power * 3);
         return (true);
     }
 
@@ -374,24 +374,24 @@ bool xom_gives_item(int power)
     else
     {
         // Random-type random object.
-        xom_make_item(OBJ_RANDOM, OBJ_RANDOM, power * 3);
+        _xom_make_item(OBJ_RANDOM, OBJ_RANDOM, power * 3);
     }
     more();
 
     return (true);
 }
 
-static bool choose_mutatable_monster(const monsters* mon)
+static bool _choose_mutatable_monster(const monsters* mon)
 {
     return (mon->alive() && mon->can_safely_mutate()
             && !mons_is_submerged(mon));
 }
 
-static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
+static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
 {
     const int roll = random2(1000 - (27 - you.experience_level) * 10);
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "xom_random_demon(); sever = %d, roll: %d",
+    mprf(MSGCH_DIAGNOSTICS, "_xom_random_demon(); sever = %d, roll: %d",
          sever, roll);
 #endif
     const demon_class_type dct =
@@ -413,12 +413,12 @@ static monster_type xom_random_demon(int sever, bool use_greater_demons = true)
 
 // Returns a demon suitable for use in Xom's punishments, filtering out
 // the really nasty ones early on.
-static monster_type xom_random_punishment_demon(int sever)
+static monster_type _xom_random_punishment_demon(int sever)
 {
     monster_type demon = MONS_PROGRAM_BUG;
 
     do
-        demon = xom_random_demon(sever);
+        demon = _xom_random_demon(sever);
     while ((demon == MONS_HELLION
             && you.experience_level < 12
             && !one_chance_in(3 + (12 - you.experience_level) / 2)));
@@ -427,7 +427,7 @@ static monster_type xom_random_punishment_demon(int sever)
 }
 
 // The nicer stuff (note: these things are not necessarily nice).
-static bool xom_is_good(int sever)
+static bool _xom_is_good(int sever)
 {
     bool done = false;
 
@@ -478,7 +478,7 @@ static bool xom_is_good(int sever)
 
         for (int i = 0; i < numdemons; ++i)
         {
-            monster[i] = xom_random_demon(sever);
+            monster[i] = _xom_random_demon(sever);
             is_demonic[i] = (mons_class_holiness(monster[i]) == MH_DEMONIC);
 
             // If it's not a demon, Xom got it someplace else, so use
@@ -558,7 +558,7 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 6)
     {
-        monster_type mon = xom_random_demon(sever);
+        monster_type mon = _xom_random_demon(sever);
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
 
         // If we have a non-demon, Xom got it someplace else, so use
@@ -595,7 +595,7 @@ static bool xom_is_good(int sever)
             goto try_again;
 
         monsters *mon =
-            choose_random_nearby_monster(0, choose_mutatable_monster);
+            choose_random_nearby_monster(0, _choose_mutatable_monster);
 
         if (mon)
         {
@@ -647,7 +647,7 @@ static bool xom_is_good(int sever)
     }
     else if (random2(sever) <= 10)
     {
-        monster_type mon = xom_random_demon(sever);
+        monster_type mon = _xom_random_demon(sever);
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
 
         // If we have a non-demon, Xom got it someplace else, so use
@@ -670,7 +670,7 @@ static bool xom_is_good(int sever)
         }
 
         if (create_monster(
-                mgen_data(xom_random_demon(sever, one_chance_in(8)),
+                mgen_data(_xom_random_demon(sever, one_chance_in(8)),
                           beha, 0,
                           you.pos(), hitting, 0, GOD_XOM)) == -1)
         {
@@ -715,7 +715,7 @@ try_again:
     return (done);
 }
 
-static bool xom_is_bad(int sever)
+static bool _xom_is_bad(int sever)
 {
     bool done = false;
 
@@ -787,7 +787,7 @@ static bool xom_is_bad(int sever)
                 goto try_again;
 
             monsters *mon =
-                choose_random_nearby_monster(0, choose_mutatable_monster);
+                choose_random_nearby_monster(0, _choose_mutatable_monster);
 
             if (mon)
             {
@@ -847,7 +847,7 @@ static bool xom_is_bad(int sever)
                 {
                     if (create_monster(
                             mgen_data::hostile_at(
-                                xom_random_punishment_demon(sever),
+                                _xom_random_punishment_demon(sever),
                                 you.pos(), 4, 0, true, GOD_XOM)) != -1)
                     {
                         success = true;
@@ -918,13 +918,13 @@ void xom_acts(bool niceness, int sever)
     if (niceness && !one_chance_in(5))
     {
         // Good stuff.
-        while (!xom_is_good(sever))
+        while (!_xom_is_good(sever))
             ;
     }
     else
     {
         // Bad mojo.
-        while (!xom_is_bad(sever))
+        while (!_xom_is_bad(sever))
             ;
     }
 
@@ -943,7 +943,7 @@ void xom_acts(bool niceness, int sever)
         you.piety = MAX_PIETY - you.piety;
 }
 
-static void xom_check_less_runes(int runes_gones)
+static void _xom_check_less_runes(int runes_gone)
 {
     if (player_in_branch(BRANCH_HALL_OF_ZOT)
         || !(branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB))
@@ -955,7 +955,7 @@ static void xom_check_less_runes(int runes_gones)
         + you.attribute[ATTR_DEMONIC_RUNES]
         + you.attribute[ATTR_ABYSSAL_RUNES]
         - you.attribute[ATTR_RUNES_IN_ZOT];
-    int was_avail = runes_avail + runes_gones;
+    int was_avail = runes_avail + runes_gone;
 
     // No longer enough available runes to get into Zot.
     if (was_avail >= NUMBER_OF_RUNES_NEEDED
@@ -976,7 +976,7 @@ void xom_check_lost_item(const item_def& item)
         // If you'd dropped it, check if that means you'd dropped your
         // third rune, and now you don't have enough to get into Zot.
         if (item.flags & ISFLAG_BEEN_IN_INV)
-            xom_check_less_runes(item.quantity);
+            _xom_check_less_runes(item.quantity);
 
         if (is_unique_rune(item))
             xom_is_stimulated(255, "Xom snickers loudly.", true);
@@ -1018,7 +1018,7 @@ void xom_check_destroyed_item(const item_def& item, int cause)
         xom_is_stimulated(128, "Xom snickers.", true);
     else if (is_rune(item))
     {
-        xom_check_less_runes(item.quantity);
+        _xom_check_less_runes(item.quantity);
 
         if (is_unique_rune(item) || item.plus == RUNE_ABYSSAL)
             amusement = 255;
