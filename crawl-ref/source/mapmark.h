@@ -37,8 +37,8 @@ public:
     virtual void read(reader &);
     virtual std::string debug_describe() const = 0;
     virtual std::string feature_description() const;
-    virtual std::string property(const std::string &pname) const; 
-   
+    virtual std::string property(const std::string &pname) const;
+
     static map_marker *read_marker(reader &);
     static map_marker *parse_marker(const std::string &text,
                                     const std::string &ctx = "")
@@ -70,7 +70,7 @@ public:
     static map_marker *read(reader &, map_marker_type);
     static map_marker *parse(const std::string &s, const std::string &)
         throw (std::string);
-    
+
 public:
     dungeon_feature_type feat;
 };
@@ -109,9 +109,9 @@ public:
     std::string debug_describe() const;
     std::string feature_description() const;
     std::string property(const std::string &pname) const;
-    
+
     void notify_dgn_event(const dgn_event &e);
-    
+
     static map_marker *read(reader &, map_marker_type);
     static map_marker *parse(const std::string &s, const std::string &)
         throw (std::string);
@@ -134,13 +134,13 @@ public:
     void read(reader &);
     std::string debug_describe() const;
     std::string feature_description() const;
-    std::string property(const std::string &pname) const; 
-    std::string set_property(const std::string &key, const std::string &val); 
+    std::string property(const std::string &pname) const;
+    std::string set_property(const std::string &key, const std::string &val);
     map_marker *clone() const;
     static map_marker *read(reader &, map_marker_type);
     static map_marker *parse(const std::string &s, const std::string &)
         throw (std::string);
-    
+
 public:
     std::map<std::string, std::string> properties;
 };
