@@ -77,12 +77,13 @@ class colour_bar
           m_old_disp(-1),
           m_request_redraw_after(0)
     {
-        // m_old_disp < 0 means it's invalid and needs to be initialized
+        // m_old_disp < 0 means it's invalid and needs to be initialized.
     }
 
     bool wants_redraw() const
     {
-        return (m_request_redraw_after && you.num_turns >= m_request_redraw_after);
+        return (m_request_redraw_after
+                && you.num_turns >= m_request_redraw_after);
     }
 
     void draw(int ox, int oy, int val, int max_val)
@@ -93,16 +94,6 @@ class colour_bar
             m_old_disp = -1;
             return;
         }
-
-#ifdef USE_TILE
-        // Don't redraw colour bars while resting
-        // *unless* we'll stop doing so right after that
-        if (you.running >= 2 && is_resting() && val != max_val)
-        {
-            m_old_disp = -1;
-            return;
-        }
-#endif
 
         const int width = crawl_view.hudsz.x - (ox-1);
         const int disp  = width * val / max_val;
@@ -115,7 +106,7 @@ class colour_bar
         for (int cx = 0; cx < width; cx++)
         {
 #ifdef USE_TILE
-            // maybe this should use textbackground too?
+            // Maybe this should use textbackground too?
             textcolor(BLACK + m_empty * 16);
 
             if (cx < disp)
@@ -129,12 +120,12 @@ class colour_bar
                 textcolor(m_default);
                 putch('=');
             }
-            else if (/* old_disp <= cx && */ cx < disp)
+            else if (cx < disp)
             {
                 textcolor(m_change_pos);
                 putch('=');
             }
-            else if (/* disp <= cx && */ cx < old_disp)
+            else if (cx < old_disp)
             {
                 textcolor(m_change_neg);
                 putch('-');

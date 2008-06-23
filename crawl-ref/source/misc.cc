@@ -1499,10 +1499,6 @@ void up_stairs(dungeon_feature_type force_stair,
     level_id  old_level_id    = level_id::current();
     LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
 
-    // Does the next level have a warning annotation?
-//    if (!force_stair && !check_annotation_exclusion_warning())
-//        return;
-
     // Since the overloaded message set turn_is_over, I'm assuming that
     // the overloaded character makes an attempt... so we're doing this
     // check before that one. -- bwr
@@ -1814,10 +1810,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             mpr("You fall through a shaft!");
     }
 
-    // Does the next level have a warning annotation?
-//    if (!force_stair && !check_annotation_exclusion_warning())
-//        return;
-
     // All checks are done, the player is on the move now.
 
     // Fire level-leaving trigger.
@@ -1830,7 +1822,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         // reaching the Abyss.
         if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_ABYSS)
             mark_milestone("abyss.enter", "entered the Abyss!");
-        else if (grd[you.x_pos][you.y_pos] == DNGN_EXIT_ABYSS)
+        else if (grd[you.x_pos][you.y_pos] == DNGN_EXIT_ABYSS)Picture
             mark_milestone("abyss.exit", "escaped from the Abyss!");
     }
 #endif
