@@ -503,12 +503,19 @@ static bool xom_is_good(int sever)
                 success = true;
         }
 
-        for (int i = 0; i < numdemons; ++i)
+        if (success)
         {
-            if (summons[i] != -1)
+            if (numdifferent == numdemons)
+                god_speaks(GOD_XOM, _get_xom_speech("multiple holy summons"));
+            else if (numdifferent > 0)
+                god_speaks(GOD_XOM, _get_xom_speech("multiple mixed summons"));
+            else
+                god_speaks(GOD_XOM, _get_xom_speech("multiple summons"));
+
+            for (int i = 0; i < numdemons; ++i)
             {
-                if (numdifferent != numdemons && numdifferent > 0
-                    && hostiletype != 0)
+                if (summons[i] != -1 && hostiletype != 0
+                    && numdifferent != numdemons && numdifferent > 0)
                 {
                     monsters *mon = &menv[i];
                     const bool is_demonic = (mons_holiness(mon) == MH_DEMONIC);
@@ -525,21 +532,11 @@ static bool xom_is_good(int sever)
 
                 player_angers_monster(&menv[summons[i]]);
             }
-        }
-
-        delete[] summons;
-
-        if (success)
-        {
-            if (numdifferent == numdemons)
-                god_speaks(GOD_XOM, _get_xom_speech("multiple holy summons"));
-            else if (numdifferent > 0)
-                god_speaks(GOD_XOM, _get_xom_speech("multiple mixed summons"));
-            else
-                god_speaks(GOD_XOM, _get_xom_speech("multiple summons"));
 
             done = true;
         }
+
+        delete[] summons;
     }
     else if (random2(sever) <= 4)
     {
