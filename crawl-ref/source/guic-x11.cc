@@ -364,13 +364,13 @@ void MapRegionClass::draw_data(unsigned char *buf, bool show_mark,
     {
         for (int yy = 0; yy < dy * marker_length; yy++)
         {
-            XPutPixel(backbuf, old_mark_x*dx+dx/2 + x_margin, yy, 
+            XPutPixel(backbuf, old_mark_x*dx+dx/2 + x_margin, yy,
                       map_pix[MAP_WHITE]);
         }
 
         for (int xx = 0; xx < dx * marker_length; xx++)
         {
-            XPutPixel(backbuf, xx, old_mark_y*dy+dy/2 + y_margin, 
+            XPutPixel(backbuf, xx, old_mark_y*dy+dy/2 + y_margin,
                       map_pix[MAP_WHITE]);
         }
     }
