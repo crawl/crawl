@@ -204,15 +204,14 @@ static void _xom_makes_you_cast_random_spell(int sever)
 
 static void _xom_make_item(object_class_type base,
                            int subtype,
-                           int power,
-                           const char *failmsg = "\"No, never mind.\"")
+                           int power)
 {
     int thing_created =
         items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE);
 
     if (thing_created == NON_ITEM)
     {
-        god_speaks(GOD_XOM, failmsg);
+        god_speaks(GOD_XOM, "\"No, never mind.\"");
         return;
     }
 
@@ -534,7 +533,7 @@ static bool _xom_is_good(int sever)
         delete[] monster;
 
         if (!success)
-            canned_msg(MSG_NOTHING_HAPPENS);
+            god_speaks(GOD_XOM, "\"No, never mind.\"");
 
         done = true;
     }
@@ -584,7 +583,7 @@ static bool _xom_is_good(int sever)
                 mgen_data(mon, beha, 6,
                           you.pos(), hitting, 0, GOD_XOM)) == -1)
         {
-            canned_msg(MSG_NOTHING_HAPPENS);
+            god_speaks(GOD_XOM, "\"No, never mind.\"");
         }
 
         done = true;
@@ -674,7 +673,7 @@ static bool _xom_is_good(int sever)
                           beha, 0,
                           you.pos(), hitting, 0, GOD_XOM)) == -1)
         {
-            canned_msg(MSG_NOTHING_HAPPENS);
+            god_speaks(GOD_XOM, "\"No, never mind.\"");
         }
 
         done = true;
@@ -855,7 +854,7 @@ static bool _xom_is_bad(int sever)
                 }
 
                 if (!success)
-                    canned_msg(MSG_NOTHING_HAPPENS);
+                    god_speaks(GOD_XOM, "\"No, never mind.\"");
             }
 
             done = true;
