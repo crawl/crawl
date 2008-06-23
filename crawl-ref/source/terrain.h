@@ -21,7 +21,7 @@ struct coord_def;
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift, 
+bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
                        unsigned char terrain );
 
 
