@@ -497,7 +497,7 @@ static bool xom_is_good(int sever)
             summons[i] =
                 create_monster(
                     mgen_data(mon, BEH_FRIENDLY, 3,
-                              you.pos(), you.pet_target, 0, GOD_XOM));
+                              you.pos(), you.pet_target, MG_FORCE_BEH, GOD_XOM));
 
             if (summons[i] != -1)
                 success = true;
@@ -521,6 +521,8 @@ static bool xom_is_good(int sever)
                         mon->attitude = ATT_HOSTILE;
                         behaviour_event(mon, ME_ALERT, MHITYOU);
                     }
+
+                    player_angers_monster(mon);
                 }
             }
         }
@@ -584,14 +586,19 @@ static bool xom_is_good(int sever)
             hitting = MHITYOU;
         }
 
-        if (create_monster(
+        int summons =
+            create_monster(
                 mgen_data(mon, beha, 6,
-                          you.pos(), hitting, 0, GOD_XOM)) != -1)
+                          you.pos(), hitting, MG_FORCE_BEH, GOD_XOM));
+
+        if (summons != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single holy summon"));
             else
                 god_speaks(GOD_XOM, _get_xom_speech("single summon"));
+
+            player_angers_monster(&menv[summons]);
 
             done = true;
         }
@@ -679,15 +686,20 @@ static bool xom_is_good(int sever)
             hitting = MHITYOU;
         }
 
-        if (create_monster(
+        int summons =
+            create_monster(
                 mgen_data(xom_random_demon(sever, one_chance_in(8)),
                           beha, 0,
-                          you.pos(), hitting, 0, GOD_XOM)) != -1)
+                          you.pos(), hitting, MG_FORCE_BEH, GOD_XOM));
+
+        if (summons != -1)
         {
             if (different)
                 god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
             else
 	        god_speaks(GOD_XOM, _get_xom_speech("single demon summon"));
+
+            player_angers_monster(&menv[summons]);
 
             done = true;
         }
