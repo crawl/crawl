@@ -1284,7 +1284,8 @@ int get_next_fire_item(int current, int direction)
     {
         if (fire_order[i] == current)
         {
-            unsigned next = (i + fire_order.size() + direction) % fire_order.size();
+            unsigned next =
+                (i + fire_order.size() + direction) % fire_order.size();
             return fire_order[next];
         }
     }

@@ -239,13 +239,13 @@ bool curse_an_item( bool decay_potions, bool quiet )
         return (false);
 
     // Curse item.
-    if (decay_potions && !quiet) // just for mummies
+    if (decay_potions && !quiet) // Just for mummies.
         mpr("You feel nervous for a moment...", MSGCH_MONSTER_SPELL);
 
     if (you.inv[item].base_type == OBJ_POTIONS)
     {
         int amount;
-        // decay at least two of the stack
+        // Decay at least two of the stack.
         if (you.inv[item].quantity <= 2)
             amount = you.inv[item].quantity;
         else

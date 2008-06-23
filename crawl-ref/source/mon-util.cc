@@ -1546,7 +1546,7 @@ void define_monster(monsters &mons)
     case MONS_DEEP_ELF_KNIGHT:
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_ORC_WIZARD:
-        spells = static_cast<mon_spellbook_type>(MST_ORC_WIZARD_I+random2(3));
+        spells = static_cast<mon_spellbook_type>(MST_ORC_WIZARD_I + random2(3));
         break;
 
     case MONS_LICH:
@@ -2340,6 +2340,10 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
     switch (monspell)
     {
     case SPELL_TELEPORT_SELF:
+        // Don't cast again if already about to teleport.
+        if (mon->has_ench(ENCH_TP))
+            return (false);
+        // intentional fall-through
     case SPELL_TELEPORT_OTHER:
     case SPELL_LESSER_HEALING:
     case SPELL_GREATER_HEALING:
@@ -2371,11 +2375,15 @@ bool ms_quick_get_away( const monsters *mon /*unused*/, spell_type monspell )
 {
     switch (monspell)
     {
-      case SPELL_TELEPORT_SELF:
-      case SPELL_BLINK:
-        return true;
-      default:
-        return false;
+    case SPELL_TELEPORT_SELF:
+        // Don't cast again if already about to teleport.
+        if (mon->has_ench(ENCH_TP))
+            return (false);
+        // intentional fall-through
+    case SPELL_BLINK:
+        return (true);
+    default:
+        return (false);
     }
 }
 
@@ -2451,7 +2459,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
     case SPELL_TELEPORT_SELF:
         // Monsters aren't smart enough to know when to cancel teleport.
-        if (mon->has_ench( ENCH_TP ))
+        if (mon->has_ench(ENCH_TP))
             ret = true;
         break;
 
