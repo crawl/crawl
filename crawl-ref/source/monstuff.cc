@@ -3298,11 +3298,6 @@ static void _handle_behaviour(monsters *mon)
                 return;
             }
 
-            // If the monster can't move (or at least teleport, as a
-            // mimic can), get out.
-            if (mons_is_truly_stationary(mon))
-                break;
-
             // If the monster isn't travelling toward someplace from
             // which it can leave the level, and it can move (or at
             // least teleport, as a mimic can), make it start doing so.

@@ -480,8 +480,8 @@ bool mons_class_flag(int mc, int bf);
  * called from: beam - effects - fight - monstuff - mstuff2 - spells2 -
  *              spells3 - spells4
  * *********************************************************************** */
-mon_holy_type mons_class_holiness(int mclass);
-mon_holy_type mons_holiness(const monsters *);
+mon_holy_type mons_class_holiness(int mc);
+mon_holy_type mons_holiness(const monsters *mon);
 
 bool mons_is_mimic( int mc );
 bool mons_is_statue( int mc );
@@ -662,27 +662,26 @@ bool mons_is_lurking(const monsters *m);
 bool mons_is_batty(const monsters *m);
 bool mons_was_seen(const monsters *m);
 bool mons_is_known_mimic(const monsters *m);
-bool mons_is_holy( const monsters *mon );
-bool mons_is_evil( const monsters *mon );
-bool mons_is_unholy( const monsters *mon );
-bool mons_is_evil_or_unholy( const monsters *mon );
+bool mons_is_holy(const monsters *mon);
+bool mons_is_evil(const monsters *mon);
+bool mons_is_unholy(const monsters *mon);
+bool mons_is_evil_or_unholy(const monsters *mon);
 bool mons_is_icy(const monsters *mon);
 bool mons_is_icy(int mtype);
-bool mons_has_lifeforce( const monsters *mon );
-monster_type mons_genus( int mc );
-monster_type mons_species( int mc );
+bool mons_has_lifeforce(const monsters *mon);
+monster_type mons_genus(int mc);
+monster_type mons_species(int mc);
 
 bool mons_looks_stabbable(const monsters *m);
 
 bool mons_looks_distracted(const monsters *m);
 
-bool check_mons_resist_magic( const monsters *monster, int pow );
+bool check_mons_resist_magic(const monsters *monster, int pow);
 
 bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
 bool mons_class_is_stationary(int mc);
 bool mons_is_stationary(const monsters *mon);
-bool mons_is_truly_stationary(const monsters *mon);
 bool mons_is_wall_shielded(int mc);
 bool mons_is_insubstantial(int mc);
 bool mons_has_blood(int mc);

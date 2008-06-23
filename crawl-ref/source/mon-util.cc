@@ -374,8 +374,8 @@ static int _scan_mon_inv_randarts( const monsters *mon,
 // Twisted Resurrection.
 static bool _mons_your_abomination(const monsters *mon)
 {
-    if ( mon->type != MONS_ABOMINATION_SMALL
-         && mon->type != MONS_ABOMINATION_LARGE )
+    if (mon->type != MONS_ABOMINATION_SMALL
+        && mon->type != MONS_ABOMINATION_LARGE)
     {
         return (false);
     }
@@ -401,8 +401,8 @@ mon_holy_type mons_class_holiness(int mc)
 bool mons_class_is_confusable(int mc)
 {
     return (smc->resist_magic < MAG_IMMUNE
-            && mons_class_holiness(mc) != MH_PLANT
-            && mons_class_holiness(mc) != MH_NONLIVING);
+            && mons_class_holiness(mc) != MH_NONLIVING
+            && mons_class_holiness(mc) != MH_PLANT);
 }
 
 bool mons_class_is_slowable(int mc)
@@ -423,13 +423,6 @@ bool mons_class_is_stationary(int mc)
 bool mons_is_stationary(const monsters *mon)
 {
     return mons_class_is_stationary(mon->type);
-}
-
-// Mimics can teleport, so they're not truly stationary.
-// XXX: There should be a more generic way to check for this!
-bool mons_is_truly_stationary(const monsters *mon)
-{
-    return (mons_is_stationary(mon) && !mons_is_mimic(mon->type));
 }
 
 bool mons_is_insubstantial(int mc)
@@ -571,7 +564,7 @@ bool mons_is_demon(int mc)
 
     // Not every demonic monster is a demon (hell hog, hell hound, etc.)
     if (mons_class_holiness(mc) == MH_DEMONIC
-        && (isdigit( show_char ) || show_char == '&'))
+        && (isdigit(show_char) || show_char == '&'))
     {
         return (true);
     }
@@ -1005,9 +998,9 @@ int mons_res_elec( const monsters *mon )
     return (u);
 }
 
-bool mons_res_asphyx( const monsters *mon )
+bool mons_res_asphyx(const monsters *mon)
 {
-    const mon_holy_type holiness = mons_holiness( mon );
+    const mon_holy_type holiness = mons_holiness(mon);
 
     return (mons_is_unholy(mon)
             || holiness == MH_NONLIVING
@@ -1180,7 +1173,7 @@ int mons_res_miasma( const monsters *mon )
 int mons_res_negative_energy( const monsters *mon )
 {
     int mc = mon->type;
-    const mon_holy_type holiness = mons_holiness( mon );
+    const mon_holy_type holiness = mons_holiness(mon);
 
     if (mons_is_unholy(mon)
         || holiness == MH_NONLIVING
@@ -1223,31 +1216,31 @@ int mons_res_negative_energy( const monsters *mon )
     return (u);
 }                               // end mons_res_negative_energy()
 
-bool mons_is_holy( const monsters *mon )
+bool mons_is_holy(const monsters *mon)
 {
-    return (mons_holiness( mon ) == MH_HOLY);
+    return (mons_holiness(mon) == MH_HOLY);
 }
 
-bool mons_is_evil( const monsters *mon )
+bool mons_is_evil(const monsters *mon)
 {
-    return (mons_class_flag( mon->type, M_EVIL ));
+    return (mons_class_flag(mon->type, M_EVIL));
 }
 
-bool mons_is_unholy( const monsters *mon )
+bool mons_is_unholy(const monsters *mon)
 {
-    const mon_holy_type holiness = mons_holiness( mon );
+    const mon_holy_type holiness = mons_holiness(mon);
 
     return (holiness == MH_UNDEAD || holiness == MH_DEMONIC);
 }
 
-bool mons_is_evil_or_unholy( const monsters *mon )
+bool mons_is_evil_or_unholy(const monsters *mon)
 {
     return (mons_is_evil(mon) || mons_is_unholy(mon));
 }
 
-bool mons_has_lifeforce( const monsters *mon )
+bool mons_has_lifeforce(const monsters *mon)
 {
-    const mon_holy_type holiness = mons_holiness( mon );
+    const mon_holy_type holiness = mons_holiness(mon);
 
     return (holiness == MH_NATURAL || holiness == MH_PLANT);
 }

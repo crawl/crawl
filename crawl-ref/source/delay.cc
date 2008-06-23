@@ -57,11 +57,12 @@ static void _handle_macro_delay();
 static void _finish_delay(const delay_queue_item &delay);
 
 // Monsters cannot be affected in these states.
-// (All results of Recite, plus friendly + stupid;
+// (All results of Recite, plus stationary and friendly + stupid;
 //  note that berserk monsters are also hasted.)
 static bool _recite_mons_useless(const monsters *mon)
 {
     return (mons_intel(mon->type) < I_NORMAL
+            || mons_is_stationary(mon)
             || mons_is_fleeing(mon)
             || mons_is_sleeping(mon)
             || mons_wont_attack(mon)
@@ -91,31 +92,29 @@ static int _recite_to_monsters(int x, int y, int pow, int unused)
 
     int resist;
     const mon_holy_type holiness = mons_holiness(mons);
+
     if (holiness == MH_HOLY)
-    {
-        resist = 7 - random2(you.skills[SK_INVOCATIONS]);
-        if (resist < 0)
-            resist = 0;
-    }
+        resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
     else
     {
         resist = mons_resist_magic(mons);
 
-        // much lower chances at influencing undead/demons
         if (holiness == MH_UNDEAD)
             pow -= 2 + random2(3);
         else if (holiness == MH_DEMONIC)
             pow -= 3 + random2(5);
+        else if (holiness != MH_NATURAL)
+            return (0);
     }
 
     pow -= resist;
 
     if (pow > 0)
-        pow = random2avg(pow,2);
+        pow = random2avg(pow, 2);
 
     if (pow <= 0) // Uh oh...
     {
-        if (one_chance_in(resist+1))
+        if (one_chance_in(resist + 1))
             return (0);  // nothing happens, whew!
 
         if (!one_chance_in(4) &&
