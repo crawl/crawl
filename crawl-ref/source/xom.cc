@@ -217,7 +217,7 @@ static void _xom_make_item(object_class_type base,
 
     god_acting gdact(GOD_XOM);
 
-    move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
+    move_item_to_grid(&thing_created, you.x_pos, you.y_pos);
     mitm[thing_created].inscription = "god gift";
     canned_msg(MSG_SOMETHING_APPEARS);
     stop_running();
@@ -656,7 +656,7 @@ static bool _xom_is_good(int sever)
         if (different)
             god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
         else
-            god_speaks(GOD_XOM, _get_xom_speech("single demon summon"));
+            god_speaks(GOD_XOM, _get_xom_speech("single major demon summon"));
 
         beh_type beha = BEH_FRIENDLY;
         unsigned short hitting = you.pet_target;

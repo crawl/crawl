@@ -103,7 +103,7 @@ Xom lures something onto this plane.
 Xom opens a gate.
 %%%%
 # higher demonic being
-Xom single demon summon
+Xom single major demon summon
 
 Xom grants you a demonic assistant.
 
