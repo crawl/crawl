@@ -40,7 +40,7 @@ void hiscores_print_all(int display_count = -1, int format = SCORE_TERSE);
  * called from: ouch hiscores
  * *********************************************************************** */
 std::string hiscores_format_single( const scorefile_entry &se );
-std::string hiscores_format_single_long( const scorefile_entry &se, 
+std::string hiscores_format_single_long( const scorefile_entry &se,
                                          bool verbose = false );
 
 const char *level_area_type_name(int level_type);
@@ -85,7 +85,7 @@ private:
     mutable xl_map fieldmap;
 };
 
-struct scorefile_entry 
+struct scorefile_entry
 {
 public:
     std::string version;
@@ -114,13 +114,13 @@ public:
     int         intel;              // final int
     int         dex;                // final dex (useful for nickname)
     god_type    god;                // god
-    int         piety;              // piety 
+    int         piety;              // piety
     int         penance;            // penance
     char        wiz_mode;           // character used wiz mode
     time_t      birth_time;         // start time of character
     time_t      death_time;         // end time of character
     long        real_time;          // real playing time in seconds
-    long        num_turns;          // number of turns taken 
+    long        num_turns;          // number of turns taken
     int         num_diff_runes;     // number of rune types in inventory
     int         num_runes;          // total number of runes in inventory
 
@@ -133,7 +133,7 @@ public:
     scorefile_entry(const scorefile_entry &se);
 
     scorefile_entry &operator = (const scorefile_entry &other);
-    
+
     void init_death_cause(int damage, int death_source, int death_type,
                           const char *aux);
     void init();
@@ -149,7 +149,7 @@ public:
 
     std::string raw_string() const;
     bool parse(const std::string &line);
-    
+
     std::string hiscore_line(death_desc_verbosity verbosity) const;
 
     std::string character_description(death_desc_verbosity) const;
@@ -159,7 +159,7 @@ public:
     std::string game_time(death_desc_verbosity) const;
 
     void set_base_xlog_fields() const;
-                                                
+
 private:
     std::string single_cdesc() const;
     std::string strip_article_a(const std::string &s) const;
@@ -181,7 +181,7 @@ private:
     std::string short_kill_message() const;
     std::string long_kill_message() const;
     std::string make_oneline(const std::string &s) const;
-    
+
     void init_from(const scorefile_entry &other);
 };
 
