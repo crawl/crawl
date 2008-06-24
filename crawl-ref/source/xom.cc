@@ -546,15 +546,13 @@ static bool _xom_is_good(int sever)
     }
     else if (random2(sever) <= 4)
     {
-        const int radius = random2avg(sever / 2, 3) + 1;
-
         // This can fail with radius 1, or in open areas.
-        if (!vitrify_area(radius))
-            goto try_again;
+        if (vitrify_area(random2avg(sever / 2, 3) + 1))
+        {
+            god_speaks(GOD_XOM, _get_xom_speech("vitrification"));
 
-        god_speaks(GOD_XOM, _get_xom_speech("vitrification"));
-
-        done = true;
+            done = true;
+        }
     }
     else if (random2(sever) <= 5)
     {
