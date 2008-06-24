@@ -914,15 +914,13 @@ void xom_acts(bool niceness, int sever)
         if (crawl_state.is_god_retribution())
         {
             niceness = false;
-            mprf(MSGCH_GOD, which_god,
-                 "%s asks Xom for help in punishing you, and Xom happily "
-                 "agrees.", god_name(which_god).c_str());
+            simple_god_message(" asks Xom for help in punishing you, and "
+                       "Xom happily agrees.", which_god);
         }
         else
         {
             niceness = true;
-            mprf(MSGCH_GOD, which_god, "%s calls in a favour from Xom.",
-                 god_name(which_god).c_str());
+            simple_god_message(" calls in a favour from Xom.", which_god);
         }
     }
 
