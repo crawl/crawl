@@ -597,30 +597,28 @@ static bool _xom_is_good(int sever)
     }
     else if (random2(sever) <= 7)
     {
-        if (!there_are_monsters_nearby())
-            goto try_again;
-
-        monsters *mon =
-            choose_random_nearby_monster(0, _choose_mutatable_monster);
-
-        if (mon)
+        if (there_are_monsters_nearby())
         {
-            god_speaks(GOD_XOM, _get_xom_speech("good monster polymorph"));
+            monsters *mon =
+                choose_random_nearby_monster(0, _choose_mutatable_monster);
 
-            if (mons_wont_attack(mon))
-                monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
-            else
-                monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
-
-            if (one_chance_in(8)
-                && !mon->has_ench(ENCH_GLOWING_SHAPESHIFTER,
-                                  ENCH_SHAPESHIFTER))
+            if (mon)
             {
-                mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
-                                               : ENCH_SHAPESHIFTER);
-            }
+                god_speaks(GOD_XOM, _get_xom_speech("good monster polymorph"));
 
-            done = true;
+                monster_polymorph(mon, RANDOM_MONSTER,
+                    mons_wont_attack(mon) ? PPT_MORE : PPT_LESS);
+
+                if (one_chance_in(8)
+                    && !mon->has_ench(ENCH_GLOWING_SHAPESHIFTER,
+                                      ENCH_SHAPESHIFTER))
+                {
+                    mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
+                                                   : ENCH_SHAPESHIFTER);
+                }
+
+                done = true;
+            }
         }
     }
     else if (random2(sever) <= 8)
@@ -792,30 +790,28 @@ static bool _xom_is_bad(int sever)
         }
         else if (random2(sever) <= 7)
         {
-            if (!there_are_monsters_nearby())
-                goto try_again;
-
-            monsters *mon =
-                choose_random_nearby_monster(0, _choose_mutatable_monster);
-
-            if (mon)
+            if (there_are_monsters_nearby())
             {
-                god_speaks(GOD_XOM, _get_xom_speech("bad monster polymorph"));
+                monsters *mon =
+                    choose_random_nearby_monster(0, _choose_mutatable_monster);
 
-                if (mons_wont_attack(mon))
-                    monster_polymorph(mon, RANDOM_MONSTER, PPT_LESS);
-                else
-                    monster_polymorph(mon, RANDOM_MONSTER, PPT_MORE);
-
-                if (one_chance_in(8)
-                    && !mon->has_ench(ENCH_GLOWING_SHAPESHIFTER,
-                                      ENCH_SHAPESHIFTER))
+                if (mon)
                 {
-                    mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
-                                                   : ENCH_SHAPESHIFTER);
-                }
+                    god_speaks(GOD_XOM, _get_xom_speech("bad monster polymorph"));
 
-                done = true;
+                    monster_polymorph(mon, RANDOM_MONSTER,
+                        mons_wont_attack(mon) ? PPT_LESS : PPT_MORE);
+
+                    if (one_chance_in(8)
+                        && !mon->has_ench(ENCH_GLOWING_SHAPESHIFTER,
+                                          ENCH_SHAPESHIFTER))
+                    {
+                        mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
+                                                       : ENCH_SHAPESHIFTER);
+                    }
+
+                    done = true;
+                }
             }
         }
         else if (random2(sever) <= 8)
@@ -907,7 +903,6 @@ static bool _xom_is_bad(int sever)
         }
     }
 
-try_again:
     return (done);
 }
 
