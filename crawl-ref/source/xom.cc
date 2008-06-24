@@ -610,11 +610,11 @@ static bool _xom_is_good(int sever)
                     mons_wont_attack(mon) ? PPT_MORE : PPT_LESS);
 
                 if (one_chance_in(8)
-                    && !mon->has_ench(ENCH_GLOWING_SHAPESHIFTER,
-                                      ENCH_SHAPESHIFTER))
+                    && !mon->has_ench(
+                            ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
                 {
-                    mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
-                                                   : ENCH_SHAPESHIFTER);
+                    mon->add_ench(one_chance_in(3) ?
+                        ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
                 }
 
                 done = true;
@@ -803,11 +803,11 @@ static bool _xom_is_bad(int sever)
                         mons_wont_attack(mon) ? PPT_LESS : PPT_MORE);
 
                     if (one_chance_in(8)
-                        && !mon->has_ench(ENCH_GLOWING_SHAPESHIFTER,
-                                          ENCH_SHAPESHIFTER))
+                        && !mon->has_ench(
+                                ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
                     {
-                        mon->add_ench(one_chance_in(3) ? ENCH_GLOWING_SHAPESHIFTER
-                                                       : ENCH_SHAPESHIFTER);
+                        mon->add_ench(one_chance_in(3) ?
+                            ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
                     }
 
                     done = true;
