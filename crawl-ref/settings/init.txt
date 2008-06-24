@@ -338,6 +338,7 @@ note_messages = You pass through the gate
 note_messages = [bB]anish.*Abyss
 note_messages = Your scales start
 note_messages = protects you from harm
+note_messages = You fall through a shaft
 note_monsters = orb of fire, ancient lich, Sigmund
 
 ##### 6-  Miscellaneous #############################################
