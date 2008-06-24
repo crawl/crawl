@@ -450,7 +450,7 @@ static monster_type _pick_random_wraith()
         MONS_SPECTRAL_WARRIOR
     };
 
-    return wraiths[ random2(sizeof(wraiths) / sizeof(*wraiths)) ];
+    return wraiths[random2(sizeof(wraiths) / sizeof(*wraiths))];
 }
 
 static monster_type _pick_horrible_thing()
@@ -463,14 +463,15 @@ static monster_type _pick_undead_summon()
 {
     static monster_type undead[] =
     {
-        MONS_NECROPHAGE, MONS_GHOUL, MONS_ROTTING_HULK, MONS_PHANTOM,
-        MONS_HUNGRY_GHOST, MONS_FLAYED_GHOST, MONS_ZOMBIE_SMALL,
-        MONS_SKELETON_SMALL, MONS_SIMULACRUM_SMALL, MONS_SKELETAL_WARRIOR,
-        MONS_FLYING_SKULL, MONS_CURSE_SKULL, MONS_CURSE_TOE,
-        MONS_SKELETAL_DRAGON
+        MONS_NECROPHAGE, MONS_GHOUL, MONS_HUNGRY_GHOST, MONS_FLAYED_GHOST,
+        MONS_ZOMBIE_SMALL, MONS_SKELETON_SMALL, MONS_SIMULACRUM_SMALL,
+        MONS_FLYING_SKULL, MONS_MUMMY, MONS_VAMPIRE, MONS_WIGHT, MONS_WRAITH,
+        MONS_SHADOW_WRAITH, MONS_FREEZING_WRAITH, MONS_SPECTRAL_WARRIOR,
+        MONS_ZOMBIE_LARGE, MONS_SKELETON_LARGE, MONS_SIMULACRUM_LARGE,
+        MONS_SHADOW
     };
 
-    return undead[ random2(sizeof(undead) / sizeof(*undead)) ];
+    return undead[random2(sizeof(undead) / sizeof(*undead))];
 }
 
 static void _do_high_level_summon(monsters *monster, bool monsterNearby,
