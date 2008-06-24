@@ -626,29 +626,30 @@ static bool _xom_is_good(int sever)
     else if (random2(sever) <= 8)
     {
         _xom_gives_item(sever);
+
         done = true;
     }
     else if (random2(sever) <= 9)
     {
-        if (!you.can_safely_mutate()
-            || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+        if (you.can_safely_mutate()
+            && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
         {
-            goto try_again;
-        }
+            god_speaks(GOD_XOM, _get_xom_speech("good mutations"));
 
-        god_speaks(GOD_XOM, _get_xom_speech("good mutations"));
-        mpr("Your body is suffused with distortional energy.");
+            mpr("Your body is suffused with distortional energy.");
 
-        set_hp(1 + random2(you.hp), false);
-        deflate_hp(you.hp_max / 2, true);
+            set_hp(1 + random2(you.hp), false);
+            deflate_hp(you.hp_max / 2, true);
 
-        bool failMsg = true;
-        for (int i = random2(4); i >= 0; --i)
-        {
-            if (mutate(RANDOM_GOOD_MUTATION, failMsg, false, true))
-                done = true;
-            else
-                failMsg = false;
+            bool failMsg = true;
+
+            for (int i = random2(4); i >= 0; --i)
+            {
+                if (mutate(RANDOM_GOOD_MUTATION, failMsg, false, true))
+                    done = true;
+                else
+                    failMsg = false;
+            }
         }
     }
     else if (random2(sever) <= 10)
@@ -768,25 +769,25 @@ static bool _xom_is_bad(int sever)
         }
         else if (random2(sever) <= 6)
         {
-            if (!you.can_safely_mutate()
-                || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3)
+            if (you.can_safely_mutate()
+                && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
             {
-                goto try_again;
-            }
+                god_speaks(GOD_XOM, _get_xom_speech("random mutations"));
 
-            god_speaks(GOD_XOM, _get_xom_speech("random mutations"));
-            mpr("Your body is suffused with distortional energy.");
+                mpr("Your body is suffused with distortional energy.");
 
-            set_hp(1 + random2(you.hp), false);
-            deflate_hp(you.hp_max / 2, true);
+                set_hp(1 + random2(you.hp), false);
+                deflate_hp(you.hp_max / 2, true);
 
-            bool failMsg = true;
-            for (int i = random2(4); i >= 0; --i)
-            {
-                if (mutate(RANDOM_XOM_MUTATION, failMsg, false, true))
-                    done = true;
-                else
-                    failMsg = false;
+                bool failMsg = true;
+
+                for (int i = random2(4); i >= 0; --i)
+                {
+                    if (mutate(RANDOM_XOM_MUTATION, failMsg, false, true))
+                        done = true;
+                    else
+                        failMsg = false;
+                }
             }
         }
         else if (random2(sever) <= 7)
