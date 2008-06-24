@@ -570,13 +570,8 @@ static bool _xom_is_good(int sever)
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
 
         // If we have a non-demon, Xom got it someplace else, so use
-        // different messages.
+        // different messages below.
         bool different = !is_demonic;
-
-        if (different)
-            god_speaks(GOD_XOM, _get_xom_speech("single holy summon"));
-        else
-            god_speaks(GOD_XOM, _get_xom_speech("single summon"));
 
         beh_type beha = BEH_FRIENDLY;
         unsigned short hitting = you.pet_target;
@@ -588,14 +583,21 @@ static bool _xom_is_good(int sever)
             hitting = MHITYOU;
         }
 
-        if (create_monster(
-                mgen_data(mon, beha, 6,
-                          you.pos(), hitting, 0, GOD_XOM)) == -1)
-        {
-            god_speaks(GOD_XOM, "\"No, forget it.\"");
-        }
+        int summons = create_monster(
+                          mgen_data(mon, beha, 6,
+                              you.pos(), hitting, MG_FORCE_BEH, GOD_XOM));
 
-        done = true;
+        if (summons != -1)
+        {
+            if (different)
+                god_speaks(GOD_XOM, _get_xom_speech("single holy summon"));
+            else
+                god_speaks(GOD_XOM, _get_xom_speech("single summon"));
+
+            player_angers_monster(&menv[summons]);
+
+            done = true;
+        }
     }
     else if (random2(sever) <= 7)
     {
@@ -659,13 +661,8 @@ static bool _xom_is_good(int sever)
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
 
         // If we have a non-demon, Xom got it someplace else, so use
-        // different messages.
+        // different messages below.
         bool different = !is_demonic;
-
-        if (different)
-            god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
-        else
-            god_speaks(GOD_XOM, _get_xom_speech("single major demon summon"));
 
         beh_type beha = BEH_FRIENDLY;
         unsigned short hitting = you.pet_target;
@@ -677,15 +674,22 @@ static bool _xom_is_good(int sever)
             hitting = MHITYOU;
         }
 
-        if (create_monster(
-                mgen_data(_xom_random_demon(sever, one_chance_in(8)),
-                          beha, 0,
-                          you.pos(), hitting, 0, GOD_XOM)) == -1)
-        {
-            god_speaks(GOD_XOM, "\"No, forget it.\"");
-        }
+        int summons = create_monster(
+                          mgen_data(_xom_random_demon(sever, one_chance_in(8)),
+                              beha, 0,
+                              you.pos(), hitting, MG_FORCE_BEH, GOD_XOM));
 
-        done = true;
+        if (summons != -1)
+        {
+            if (different)
+                god_speaks(GOD_XOM, _get_xom_speech("single major holy summon"));
+            else
+                god_speaks(GOD_XOM, _get_xom_speech("single major demon summon"));
+
+            player_angers_monster(&menv[summons]);
+
+            done = true;
+        }
     }
     else if (random2(sever) <= 11)
     {
