@@ -325,7 +325,7 @@ static bool _xom_annoyance_gift(int power)
     return (false);
 }
 
-bool xom_gives_item(int power)
+static bool _xom_gives_item(int power)
 {
     if (_xom_annoyance_gift(power))
         return (true);
@@ -558,7 +558,7 @@ static bool _xom_is_good(int sever)
     }
     else if (random2(sever) <= 5)
     {
-        xom_gives_item(sever);
+        _xom_gives_item(sever);
 
         done = true;
     }
@@ -627,7 +627,7 @@ static bool _xom_is_good(int sever)
     }
     else if (random2(sever) <= 8)
     {
-        xom_gives_item(sever);
+        _xom_gives_item(sever);
         done = true;
     }
     else if (random2(sever) <= 9)
