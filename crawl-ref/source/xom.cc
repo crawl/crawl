@@ -481,8 +481,7 @@ static bool _xom_is_good(int sever)
             is_demonic[i] = (mons_class_holiness(monster[i]) == MH_DEMONIC);
 
             // If it's not a demon, Xom got it someplace else, so use
-            // different messages and give it a chance of being hostile
-            // below.
+            // different messages.
             if (!is_demonic[i])
                 numdifferent++;
         }
@@ -561,7 +560,7 @@ static bool _xom_is_good(int sever)
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
 
         // If we have a non-demon, Xom got it someplace else, so use
-        // different messages below.
+        // different messages.
         bool different = !is_demonic;
 
         if (different)
@@ -650,7 +649,7 @@ static bool _xom_is_good(int sever)
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
 
         // If we have a non-demon, Xom got it someplace else, so use
-        // different messages below.
+        // different messages.
         bool different = !is_demonic;
 
         if (different)
