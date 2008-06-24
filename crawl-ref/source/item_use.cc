@@ -1292,7 +1292,8 @@ class fire_target_behaviour : public targeting_behaviour
 {
 public:
     fire_target_behaviour()
-        : m_slot(-1), selected_from_inventory(false), need_prompt(false)
+        : m_slot(-1), selected_from_inventory(false), need_prompt(false),
+          chosen_ammo(false)
     {
         m_slot = you.m_quiver->get_fire_item(&m_noitem_reason);
     }
@@ -1300,6 +1301,7 @@ public:
     // targeting_behaviour API
     virtual command_type get_command(int key = -1);
     virtual bool should_redraw();
+    virtual void mark_ammo_nonchosen();
 
     void message_ammo_prompt(const std::string* pre_text = 0);
 
@@ -1308,6 +1310,7 @@ public:
     std::string m_noitem_reason;
     bool selected_from_inventory;
     bool need_prompt;
+    bool chosen_ammo;
 };
 
 void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
@@ -1381,6 +1384,11 @@ bool fire_target_behaviour::should_redraw()
     return (false);
 }
 
+void fire_target_behaviour::mark_ammo_nonchosen()
+{
+    chosen_ammo = false;
+}
+
 command_type fire_target_behaviour::get_command(int key)
 {
     if (key == -1)
@@ -1388,42 +1396,44 @@ command_type fire_target_behaviour::get_command(int key)
 
     switch (key)
     {
-      case '(':
-      case CONTROL('N'):
-      case ')':
-      case CONTROL('P'):
-      {
-          const int direction = (key == CONTROL('P') || key == ')') ? -1 : +1;
-          const int next = get_next_fire_item(m_slot, direction);
-          if (next != m_slot && next != -1)
-          {
-              m_slot = next;
-              selected_from_inventory = false;
-          }
-          // Do this stuff unconditionally to make the prompt redraw.
-          message_ammo_prompt();
-          need_prompt = true;
-          break;
-      }
-      case 'i':
-      {
-          std::string err;
-          const int selected = _fire_prompt_for_item(err);
-          if (selected >= 0 && _fire_validate_item(selected, err))
-          {
-              m_slot = selected;
-              selected_from_inventory = true;
-          }
-          message_ammo_prompt( err.length() ? &err : NULL );
-          need_prompt = true;
-          return (CMD_NO_CMD);
-      }
-      case '?':
-          show_targeting_help();
-          redraw_screen();
-          message_ammo_prompt();
-          need_prompt = true;
-          return (CMD_NO_CMD);
+    case '(':
+    case CONTROL('N'):
+    case ')':
+    case CONTROL('P'):
+    {
+        const int direction = (key == CONTROL('P') || key == ')') ? -1 : +1;
+        const int next = get_next_fire_item(m_slot, direction);
+        if (next != m_slot && next != -1)
+        {
+            m_slot = next;
+            selected_from_inventory = false;
+            chosen_ammo = true;
+        }
+        // Do this stuff unconditionally to make the prompt redraw.
+        message_ammo_prompt();
+        need_prompt = true;
+        break;
+    }
+    case 'i':
+    {
+        std::string err;
+        const int selected = _fire_prompt_for_item(err);
+        if (selected >= 0 && _fire_validate_item(selected, err))
+        {
+            m_slot = selected;
+            selected_from_inventory = true;
+            chosen_ammo = true;
+        }
+        message_ammo_prompt( err.length() ? &err : NULL );
+        need_prompt = true;
+        return (CMD_NO_CMD);
+    }
+    case '?':
+        show_targeting_help();
+        redraw_screen();
+        message_ammo_prompt();
+        need_prompt = true;
+        return (CMD_NO_CMD);
     }
 
     return targeting_behaviour::get_command(key);
@@ -1462,17 +1472,20 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         return (false);
     }
 
+    you.m_quiver->on_item_fired(you.inv[beh.m_slot], beh.chosen_ammo);
+/*
     // If ammo was chosen via 'fi', it's not supposed to get quivered.
     // Otherwise, if the user chose different ammo, quiver it.
     // Same for items selected in tile mode.
     if (was_chosen || !beh.selected_from_inventory)
     {
-        you.m_quiver->on_item_fired(you.inv[beh.m_slot]);
+        you.m_quiver->on_item_fired(you.inv[beh.m_slot], beh.chosen_ammo);
     }
     else
     {
         you.m_quiver->on_item_fired_fi(you.inv[beh.m_slot]);
     }
+*/
     you.redraw_quiver = true;
     slot = beh.m_slot;
 
@@ -1493,8 +1506,9 @@ static int _fire_prompt_for_item(std::string& err)
 
     int slot = prompt_invent_item( "Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
-                                   OBJ_MISSILES, true, true, true, 0, NULL,
+                                   OSEL_THROWABLE, true, true, true, 0, NULL,
                                    OPER_FIRE );
+
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
     {
         err = "Nothing selected.";

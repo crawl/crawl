@@ -470,7 +470,7 @@ void randart_desc_properties( const item_def &item,
         break;
 
     case RING_STRENGTH:
-        fake_rap = RAP_STRENGTH;
+        fake_rap  = RAP_STRENGTH;
         fake_plus = item.plus;
         break;
 
@@ -510,10 +510,10 @@ void randart_desc_properties( const item_def &item,
         break;
     }
 
-    if (fake_rap != RAP_NUM_PROPERTIES)
+    if (fake_rap != RAP_NUM_PROPERTIES && fake_plus != 0)
         proprt[fake_rap] += fake_plus;
 
-    if (fake_rap2 != RAP_NUM_PROPERTIES)
+    if (fake_rap2 != RAP_NUM_PROPERTIES && fake_plus2 != 0)
         proprt[fake_rap2] += fake_plus2;
 
     if (item_ident( item, ISFLAG_KNOW_PROPERTIES )

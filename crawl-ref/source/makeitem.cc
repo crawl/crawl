@@ -2596,17 +2596,17 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
                                           : get_random_ring_type());
     }
 
-    // everything begins as uncursed, unenchanted jewellery {dlb}:
+    // Everything begins as uncursed, unenchanted jewellery {dlb}:
     item.plus  = 0;
     item.plus2 = 0;
 
     item.plus = _determine_ring_plus(item.sub_type);
-    if ( item.plus < 0 )
+    if (item.plus < 0)
         do_curse_item(item);
 
     if (item.sub_type == RING_SLAYING ) // requires plus2 too
     {
-        if (item_cursed( item ) && !one_chance_in(20))
+        if (item_cursed(item) && !one_chance_in(20))
             item.plus2 = -1 - random2avg(6, 2);
         else
         {
@@ -2615,7 +2615,7 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
             if (random2(25) < 9)        // 36% of such rings {dlb}
             {
                 // make "ring of damage"
-                do_uncurse_item( item );
+                do_uncurse_item(item);
                 item.plus   = 0;
                 item.plus2 += 2;
             }

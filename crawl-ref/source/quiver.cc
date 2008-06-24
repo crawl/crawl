@@ -12,6 +12,7 @@
 #include "AppHdr.h"
 #include "quiver.h"
 
+#include "invent.h"
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
@@ -122,9 +123,60 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
     return slot;
 }
 
-// Notification that item was fired with 'f'.
-void player_quiver::on_item_fired(const item_def& item)
+void player_quiver::set_quiver(const item_def &item, ammo_t ammo_type)
 {
+    m_last_used_of_type[ammo_type] = item;
+    m_last_used_of_type[ammo_type].quantity = 1;
+    m_last_used_type = ammo_type;
+    you.redraw_quiver = true;
+}
+
+void choose_item_for_quiver()
+{
+    int slot = prompt_invent_item( "Quiver which item? (* to show all)",
+                                   MT_INVLIST,
+                                   OSEL_THROWABLE, true, true, true, 0, NULL,
+                                   OPER_FIRE );
+
+    if (slot == PROMPT_ABORT)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+    else if (slot == PROMPT_NOTHING)
+        return;
+
+    const item_def item = you.inv[slot];
+
+    if (!is_valid_item(item))
+        return;
+
+    ammo_t t = AMMO_THROW;
+
+    const item_def *weapon = you.weapon();
+    if (weapon && item.launched_by(*weapon))
+        t = _get_weapon_ammo_type(weapon);
+
+    you.m_quiver->set_quiver(you.inv[slot], t);
+    mprf("Quivering %s %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
+         t == AMMO_THROW    ? "as throwing weapon" :
+         t == AMMO_BLOWGUN  ? "for blowguns" :
+         t == AMMO_SLING    ? "for slings" :
+         t == AMMO_BOW      ? "for bows" :
+         t == AMMO_CROSSBOW ? "for crossbows"
+                            : "for hand crossbows");
+}
+
+// Notification that item was fired with 'f'.
+void player_quiver::on_item_fired(const item_def& item, bool explicitly_chosen)
+{
+    if (!explicitly_chosen)
+    {
+        // If the item was not actively chosen, i.e. just automatically
+        // passed into the quiver, don't change any of the quiver settings.
+        you.redraw_quiver = true;
+        return;
+    }
     // If item matches the launcher, put it in that launcher's last-used item.
     // Otherwise, it goes into last hand-thrown item.
 
@@ -376,9 +428,12 @@ void player_quiver::load(reader& inf)
 
 preserve_quiver_slots::preserve_quiver_slots()
 {
-    if (!you.m_quiver) return;
+    if (!you.m_quiver)
+        return;
+
     COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) ==
                   ARRAYSZ(you.m_quiver->m_last_used_of_type), a);
+
     for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
     {
         m_last_used_of_type[i] =
@@ -388,7 +443,9 @@ preserve_quiver_slots::preserve_quiver_slots()
 
 preserve_quiver_slots::~preserve_quiver_slots()
 {
-    if (! you.m_quiver) return;
+    if (!you.m_quiver)
+        return;
+
     for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
     {
         const int slot = m_last_used_of_type[i];
@@ -472,7 +529,6 @@ static int _get_pack_slot(const item_def& item)
 
     return -1;
 }
-
 
 // Returns the type of ammo used by the player's equipped weapon,
 // or AMMO_THROW if it's not a launcher.

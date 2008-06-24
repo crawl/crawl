@@ -357,6 +357,8 @@ static std::string _no_selectables_message(int item_selector)
         return("You aren't carrying any books or scrolls.");
     case OBJ_WANDS:
         return("You aren't carrying any wands.");
+    case OSEL_THROWABLE:
+        return("You aren't carrying any items that might be thrown or fired.");
     }
 
     return("You aren't carrying any such object.");
@@ -804,33 +806,55 @@ static bool _item_class_selected(const item_def &i, int selector)
     {
     case OSEL_UNIDENT:
         return !fully_identified(i);
+
     case OBJ_MISSILES:
         return (itype == OBJ_MISSILES || itype == OBJ_WEAPONS);
+
+    case OSEL_THROWABLE:
+    {
+        if (i.base_type != OBJ_WEAPONS && i.base_type != OBJ_MISSILES)
+            return (false);
+
+        const launch_retval projected = is_launched(&you, you.weapon(), i);
+
+        if (projected == LRET_FUMBLED)
+            return (false);
+
+        return (true);
+    }
     case OBJ_WEAPONS:
     case OSEL_WIELD:
         return (itype == OBJ_WEAPONS || itype == OBJ_STAVES
                 || itype == OBJ_MISCELLANY);
+
     case OSEL_MEMORISE:
         return (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL
                 && (i.sub_type != BOOK_DESTRUCTION || !item_type_known(i)));
+
     case OBJ_SCROLLS:
         return (itype == OBJ_SCROLLS || itype == OBJ_BOOKS);
+
     case OSEL_RECHARGE:
         return (item_is_rechargable(i, true));
+
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true));
+
     case OSEL_VAMP_EAT:
         return (itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY
                 && !food_is_rotten(i) && mons_has_blood(i.plus));
+
     case OSEL_DRAW_DECK:
         return (is_deck(i));
+
     case OSEL_EQUIP:
         for (int eq = 0; eq < NUM_EQUIP; eq++)
         {
              if (you.equip[eq] == i.link)
                  return (true);
         }
-        // fall through
+        return (false);
+
     default:
         return (false);
     }

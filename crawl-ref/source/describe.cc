@@ -1344,18 +1344,25 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
                 break;
 
             case RING_SLAYING:
-                if (item.plus != 0 || is_random_artefact( item ))
+                if (item.plus != 0)
                 {
                     description += "$It affects your accuracy (";
                     _append_value( description, item.plus, true );
                     description += ").";
                 }
 
-                if (item.plus2 != 0 || is_random_artefact( item ))
+                if (item.plus2 != 0)
                 {
                     description += "$It affects your damage-dealing abilities (";
                     _append_value( description, item.plus2, true );
                     description += ").";
+                }
+
+                if (item.plus == 0 && item.plus2 == 0)
+                {
+                    description += "This buggy ring affects neither your "
+                                   "accuracy nor your damage-dealing "
+                                   "abilities.";
                 }
                 break;
 
@@ -1365,7 +1372,7 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
         }
     }
 
-    // randart properties
+    // Randart properties.
     if (is_random_artefact( item ))
     {
         description += "$";

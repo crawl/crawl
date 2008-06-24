@@ -2080,7 +2080,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_QUIVER_ITEM:
-        mpr("Sorry, this command has not yet been implemented.");
+        choose_item_for_quiver();
         break;
 
     case CMD_WEAR_ARMOUR:

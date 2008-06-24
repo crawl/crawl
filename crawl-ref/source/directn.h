@@ -116,6 +116,7 @@ public:
     virtual int get_key();
     virtual command_type get_command(int key = -1);
     virtual bool should_redraw();
+    virtual void mark_ammo_nonchosen();
 
 public:
     bool just_looking;

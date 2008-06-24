@@ -507,6 +507,7 @@ static void _print_stats_qv(int y)
         const std::string prefix = menu_colour_item_prefix(quiver);
         const int prefcol =
             menu_colour(quiver.name(DESC_INVENTORY), prefix);
+
         if (prefcol != -1)
             textcolor(prefcol);
 
@@ -519,25 +520,6 @@ static void _print_stats_qv(int y)
     {
         textcolor(LIGHTGREY);
         cprintf("Nothing quivered");
-
-/*
-        const item_def* item;
-        you.m_quiver->get_desired_item(&item, &q);
-
-        if (item != NULL && is_valid_item(*item))
-        {
-            textcolor(item->colour);
-            cprintf("-) %s", item->name(DESC_PLAIN, true)
-                             .substr(0, crawl_view.hudsz.x - 15).c_str());
-            textcolor(RED);
-            cprintf(" (empty)");
-        }
-        else
-        {
-            textcolor(LIGHTGREY);
-            cprintf("Nothing quivered");
-        }
-*/
     }
 
     textcolor(LIGHTGREY);

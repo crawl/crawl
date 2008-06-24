@@ -134,18 +134,18 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
         }
 
         const int i = _targeting_cmd_to_compass(key_command);
-        if ( i != -1 )
+        if (i != -1)
         {
             moves.dx = Compass[i].x;
             moves.dy = Compass[i].y;
         }
-        else if ( key_command == CMD_TARGET_CANCEL )
+        else if (key_command == CMD_TARGET_CANCEL)
         {
             moves.isCancel = true;
             moves.isValid = false;
         }
     }
-    while ( !moves.isCancel && moves.dx == 0 && moves.dy == 0 );
+    while (!moves.isCancel && moves.dx == 0 && moves.dy == 0);
 }
 
 static int _targeting_cmd_to_compass( command_type command )
@@ -832,6 +832,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_CANCEL:
             loop_done = true;
             moves.isCancel = true;
+            beh->mark_ammo_nonchosen();
             break;
 
 #ifdef WIZARD
@@ -839,6 +840,7 @@ void direction(dist& moves, targeting_type restricts,
             // Maybe we can skip this check...but it can't hurt
             if (!you.wizard || !in_bounds(moves.tx, moves.ty))
                 break;
+
             mid = mgrd[moves.tx][moves.ty];
             if (mid == NON_MONSTER) // can put in terrain description here
                 break;
@@ -2574,4 +2576,9 @@ command_type targeting_behaviour::get_command(int key)
 bool targeting_behaviour::should_redraw()
 {
     return (false);
+}
+
+void targeting_behaviour::mark_ammo_nonchosen()
+{
+    // Nothing to be done.
 }

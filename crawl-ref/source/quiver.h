@@ -34,12 +34,13 @@ class player_quiver
 
     // Queries from engine -- don't affect state
     void get_desired_item(const item_def** item_out, int* slot_out) const;
-    int get_fire_item(std::string* no_item_reason=0) const;
+    int get_fire_item(std::string* no_item_reason = 0) const;
     void get_fire_order(std::vector<int>& v) const;
 
     // Callbacks from engine
-    void on_item_fired(const item_def&);
-    void on_item_fired_fi(const item_def&);
+    void set_quiver(const item_def &item, ammo_t ammo_type);
+    void on_item_fired(const item_def &item, bool explicitly_chosen = false);
+    void on_item_fired_fi(const item_def &item);
     void on_inv_quantity_changed(int slot, int amt);
     void on_weapon_changed();
 
@@ -76,5 +77,8 @@ class preserve_quiver_slots
  private:
     int m_last_used_of_type[NUM_AMMO];
 };
+
+
+void choose_item_for_quiver(void);
 
 #endif
