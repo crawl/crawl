@@ -1534,7 +1534,7 @@ bool cast_summon_elemental(int pow, god_type god,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
                       dur, coord_def(targ_x, targ_y),
                       friendly ? you.pet_target : MHITYOU,
-                      0, god)) != -1)
+                      0, god)) == -1)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
