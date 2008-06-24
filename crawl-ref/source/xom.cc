@@ -100,8 +100,8 @@ const char *describe_xom_favour()
            (you.piety >  85) ? "A plaything of Xom." :
            (you.piety >  70) ? "A special plaything of Xom." :
            (you.piety >  55) ? "A very special plaything of Xom." :
-           (you.piety >  40) ? "A favourite plaything of Xom." :
-                               "A beloved plaything of Xom.";
+           (you.piety >  40) ? "A favourite plaything of Xom."
+                             : "A beloved plaything of Xom.";
 }
 
 static const char* _get_xom_speech(const std::string key)
