@@ -156,7 +156,7 @@ bool summon_daeva(int pow, god_type god = GOD_NO_GOD, bool quiet = false);
  * called from: ability - religion - spell
  * *********************************************************************** */
 bool cast_tukimas_dance(int pow, god_type god = GOD_NO_GOD,
-                        bool force_hostile = false, bool quiet_failure = false);
+                        bool force_hostile = false);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

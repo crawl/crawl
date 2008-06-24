@@ -1760,7 +1760,7 @@ bool summon_daeva(int pow, god_type god, bool quiet)
 }
 
 bool cast_tukimas_dance(int pow, god_type god,
-                        bool force_hostile, bool quiet_failure)
+                        bool force_hostile)
 {
     bool success = true;
 
@@ -1806,17 +1806,14 @@ bool cast_tukimas_dance(int pow, god_type god,
     {
         destroy_item(i);
 
-        if (!quiet_failure)
+        if (wpn != -1)
         {
-            if (wpn != -1)
-            {
-                mprf("%s vibrates crazily for a second.",
-                     you.inv[wpn].name(DESC_CAP_YOUR).c_str());
-            }
-            else
-                msg::stream << "Your " << your_hand(true) << " twitch."
-                            << std::endl;
+            mprf("%s vibrates crazily for a second.",
+                 you.inv[wpn].name(DESC_CAP_YOUR).c_str());
         }
+        else
+            msg::stream << "Your " << your_hand(true) << " twitch."
+                        << std::endl;
 
         return (false);
     }

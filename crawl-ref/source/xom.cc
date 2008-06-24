@@ -852,7 +852,7 @@ static bool _xom_is_bad(int sever)
 
             // Nasty, but fun.
             if (one_chance_in(4))
-                success = cast_tukimas_dance(100, GOD_XOM, true, true);
+                success = cast_tukimas_dance(100, GOD_XOM, true);
             else
             {
                 const int numdemons =
@@ -868,12 +868,12 @@ static bool _xom_is_bad(int sever)
                         success = true;
                     }
                 }
-            }
 
-            if (!success)
-            {
-                simple_god_message("'s children are having fun elsewhere.",
-                                   GOD_XOM);
+                if (!success)
+                {
+                    simple_god_message("'s children are having fun elsewhere.",
+                                       GOD_XOM);
+                }
             }
 
             done = true;
