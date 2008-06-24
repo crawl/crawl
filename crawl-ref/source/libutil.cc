@@ -273,6 +273,9 @@ std::string article_a(const std::string &name, bool lowercase)
     {
         case 'a': case 'e': case 'i': case 'o': case 'u':
         case 'A': case 'E': case 'I': case 'O': case 'U':
+            // XXX: Hack
+            if (starts_with(name, "one-way"))
+                return a + name;
             return an + name;
         default:
             return a + name;
