@@ -347,6 +347,34 @@ void InvMenu::load_inv_items(int item_selector,
         case OSEL_UNIDENT:
             s = "You don't have any unidentified items.";
             break;
+        case OSEL_MEMORISE:
+            s = "You aren't carrying any spellbooks.";
+            break;
+        case OSEL_RECHARGE:
+            s = "You aren't carrying any rechargable items.";
+            break;
+        case OSEL_ENCH_ARM:
+        case OBJ_ARMOUR:
+            s = "You aren't carrying any armour which can be enchanted "
+                "further.";
+            break;
+        case OBJ_CORPSES:
+        case OSEL_VAMP_EAT:
+            s = "You aren't carrying any corpses which you can drain.";
+            break;
+        case OSEL_DRAW_DECK:
+            s = "You aren't carrying any decks from which to draw.";
+            break;
+        case OBJ_FOOD:
+            s = "You aren't carrying any food.";
+            break;
+        case OBJ_SCROLLS:
+        case OBJ_BOOKS:
+            s = "You aren't carrying any books or scrolls.";
+            break;
+        case OBJ_WANDS:
+            s = "You aren't carrying any wands.";
+            break;
         default:
             s = "You aren't carrying any such object.";
             break;
