@@ -865,7 +865,7 @@ static bool _xom_is_bad(int sever)
 
             if (!success)
             {
-                simple_god_message("'s servants are having fun elsewhere.",
+                simple_god_message("'s children are having fun elsewhere.",
                                    GOD_XOM);
             }
 
