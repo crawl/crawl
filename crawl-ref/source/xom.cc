@@ -435,28 +435,27 @@ static bool _xom_is_good(int sever)
 
     if (random2(sever) <= 1)
     {
-        potion_type pot;
+        potion_type pot =
+            static_cast<potion_type>(
+                random_choose(POT_HEALING, POT_HEAL_WOUNDS, POT_SPEED,
+                              POT_MIGHT, POT_INVISIBILITY, POT_BERSERK_RAGE,
+                              POT_EXPERIENCE, -1));
 
-        do
+        // Downplay this one a bit.
+        if (pot == POT_EXPERIENCE && !one_chance_in(6))
+            pot = POT_BERSERK_RAGE;
+
+        if (pot != POT_BERSERK_RAGE || you.can_go_berserk(false))
         {
-            pot = (potion_type)random_choose(
-                POT_HEALING, POT_HEAL_WOUNDS, POT_SPEED, POT_MIGHT,
-                POT_INVISIBILITY, POT_BERSERK_RAGE, POT_EXPERIENCE, -1);
+            god_speaks(GOD_XOM, _get_xom_speech("potion effect"));
 
-            // Downplay this one a bit.
-            if (pot == POT_EXPERIENCE && !one_chance_in(6))
-                pot = POT_BERSERK_RAGE;
+            if (pot == POT_BERSERK_RAGE)
+                you.berserk_penalty = NO_BERSERK_PENALTY;
+
+            potion_effect(pot, 150);
+
+            done = true;
         }
-        while (pot == POT_BERSERK_RAGE && !you.can_go_berserk(false));
-
-        if (pot == POT_BERSERK_RAGE)
-            you.berserk_penalty = NO_BERSERK_PENALTY;
-
-        god_speaks(GOD_XOM, _get_xom_speech("potion effect"));
-
-        potion_effect(pot, 150);
-
-        done = true;
     }
     else if (random2(sever) <= 2)
     {
