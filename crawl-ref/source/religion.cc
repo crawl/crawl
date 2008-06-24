@@ -5862,6 +5862,9 @@ int god_colour( god_type god ) //mv - added
     case GOD_SIF_MUNA:
         return(LIGHTBLUE);
 
+    case GOD_NO_GOD:
+    case NUM_GODS:
+    case GOD_RANDOM:
     default:
         break;
     }
