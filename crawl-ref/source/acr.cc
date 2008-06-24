@@ -1292,6 +1292,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_TOGGLE_AUTOPICKUP:
     case CMD_TOGGLE_FRIENDLY_PICKUP:
     case CMD_ADJUST_INVENTORY:
+    case CMD_QUIVER_ITEM:
     case CMD_REPLAY_MESSAGES:
     case CMD_REDRAW_SCREEN:
     case CMD_MACRO_ADD:
@@ -2076,6 +2077,10 @@ void process_command( command_type cmd )
 
     case CMD_FIRE:
         fire_thing();
+        break;
+
+    case CMD_QUIVER_ITEM:
+        mpr("Sorry, this command has not yet been implemented.");
         break;
 
     case CMD_WEAR_ARMOUR:
@@ -3452,13 +3457,13 @@ static command_type _keycode_to_command( keycode_type key )
     case 'C': return CMD_CLOSE_DOOR;
     case 'D': return CMD_NO_CMD;
     case 'E': return CMD_EXPERIENCE_CHECK;
-    case 'F': return CMD_FULL_VIEW;
+    case 'F': return CMD_NO_CMD;
     case 'G': return CMD_INTERLEVEL_TRAVEL;
     case 'I': return CMD_DISPLAY_SPELLS;
     case 'M': return CMD_MEMORISE_SPELL;
     case 'O': return CMD_OPEN_DOOR;
     case 'P': return CMD_WEAR_JEWELLERY;
-    case 'Q': return CMD_QUIT;
+    case 'Q': return CMD_QUIVER_ITEM;
     case 'R': return CMD_REMOVE_JEWELLERY;
     case 'S': return CMD_SAVE_GAME;
     case 'T': return CMD_REMOVE_ARMOUR;
@@ -3510,18 +3515,20 @@ static command_type _keycode_to_command( keycode_type key )
     case CONTROL('C'): return CMD_CLEAR_MAP;
     case CONTROL('E'): return CMD_FORGET_STASH;
     case CONTROL('F'): return CMD_SEARCH_STASHES;
+    case CONTROL('G'): return CMD_FULL_VIEW;
     case CONTROL('I'): return CMD_NO_CMD; // Tab on most systems
     case CONTROL('M'): return CMD_NO_CMD; // Enter on most systems
     case CONTROL('O'): return CMD_DISPLAY_OVERMAP;
     case CONTROL('P'): return CMD_REPLAY_MESSAGES;
-#ifdef USE_TILE
-    case CONTROL('Q'): return CMD_EDIT_PREFS;
-#else
-    case CONTROL('Q'): return CMD_NO_CMD;
-#endif
+    case CONTROL('Q'): return CMD_QUIT;
     case CONTROL('R'): return CMD_REDRAW_SCREEN;
     case CONTROL('S'): return CMD_MARK_STASH;
     case CONTROL('T'): return CMD_TOGGLE_FRIENDLY_PICKUP;
+#ifdef USE_TILE
+    case CONTROL('V'): return CMD_EDIT_PREFS;
+#else
+    case CONTROL('V'): return CMD_NO_CMD;
+#endif
     case CONTROL('W'): return CMD_FIX_WAYPOINT;
     case CONTROL('X'): return CMD_SAVE_GAME_NOW;
     case CONTROL('Z'): return CMD_SUSPEND_GAME;

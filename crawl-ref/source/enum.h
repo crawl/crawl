@@ -449,6 +449,7 @@ enum command_type
     CMD_WEAPON_SWAP,
     CMD_THROW,  // unused now
     CMD_FIRE,
+    CMD_QUIVER_ITEM,
     CMD_WEAR_ARMOUR,
     CMD_REMOVE_ARMOUR,
     CMD_WEAR_JEWELLERY,

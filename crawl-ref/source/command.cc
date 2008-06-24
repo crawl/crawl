@@ -1785,9 +1785,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(
             1,
             "<h>Game Saving and Quitting:\n"
-            "<w>S</w> : Save game and exit \n"
-            "<w>Q</w> : Quit without saving\n"
-            "<w>Ctrl-X</w> : save game without query\n",
+            "<w>S</w> : Save game and exit\n"
+            "<w>Ctrl-X</w> : Save game without query and exit\n"
+            "<w>Ctrl-Q</w> : Quit without saving\n",
             true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(

@@ -2213,7 +2213,7 @@ level map, interlevel travel) also have help menus via '?' on their own.
 Saving games:
     S                   Save game with query and exit.
     Ctrl-X              Save game without query and exit.
-    Q                   Quit without saving (you're asked before).
+    Ctrl-Q              Quit without saving (you're asked before).
 
 Movement:
     direction           Moves one square, direction is either one of 
@@ -2408,7 +2408,7 @@ Tiles:
                         current player's equipment and any species
                         defaults.  These options are saved into the
                         dolls.txt file.
-    Ctrl-Q              Modify screen size preferences.  These changes
+    Ctrl-V              Modify screen size preferences.  These changes
                         are saved into the wininit.txt file.
 
 Level map ('X')
