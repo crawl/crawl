@@ -139,6 +139,13 @@ void player_quiver::on_item_fired(const item_def& item)
     }
     else
     {
+        const launch_retval projected = is_launched(&you, you.weapon(),
+                                                    item);
+
+        // Don't do anything if this item is not really fit for throwing.
+        if (projected == LRET_FUMBLED)
+            return;
+
         m_last_used_of_type[AMMO_THROW] = item;
         m_last_used_of_type[AMMO_THROW].quantity = 1;
         m_last_used_type = AMMO_THROW;
@@ -182,24 +189,22 @@ void player_quiver::on_weapon_changed()
 
 void player_quiver::on_inv_quantity_changed(int slot, int amt)
 {
+    const launch_retval projected = is_launched(&you, you.weapon(),
+                                                you.inv[slot]);
+
+    // Don't do anything if this item is not throwable.
+    if (projected == LRET_FUMBLED)
+        return;
+
     if (m_last_used_of_type[m_last_used_type].base_type == OBJ_UNASSIGNED)
     {
         // Empty quiver.  Maybe we can fill it now?
         _maybe_fill_empty_slot();
         you.redraw_quiver = true;
     }
-    else if (m_last_used_of_type[m_last_used_type].base_type
-                != you.inv[slot].base_type)
-    {
-        // Not our current stack; don't bother
-    }
     else
     {
-        // Maybe matches current stack.  Redraw if so.
-//        const item_def* desired;
-//        int qv_slot;
-//        get_desired_item(&desired, &qv_slot);
-
+        // We might need to update the quiver...
         std::string error_reason;
         int qv_slot = get_fire_item(&error_reason);
         if (qv_slot == slot)
@@ -236,7 +241,9 @@ void player_quiver::_maybe_fill_empty_slot()
 #endif
 
     const launch_retval desired_ret =
-        (slot == AMMO_THROW ? LRET_THROWN : LRET_LAUNCHED);
+         (weapon && is_range_weapon(*weapon)) ? LRET_LAUNCHED : LRET_THROWN;
+//    const launch_retval desired_ret =
+//        (slot == AMMO_THROW ? LRET_THROWN : LRET_LAUNCHED);
 
     std::vector<int> order;
     _get_fire_order(order, false, weapon);

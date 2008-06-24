@@ -672,20 +672,24 @@ void list_weapons(void)
     // Now we print out the current default fire weapon.
     wstring = "Firing    : ";
 
-    const item_def* item;
-    int slot;
-    you.m_quiver->get_desired_item(&item, &slot);
+    std::string error_reason;
+    int slot = you.m_quiver->get_fire_item(&error_reason);
 
     colour = MSGCOL_BLACK;
-    if (slot == -1 && !is_valid_item(*item))
+    if (slot == -1)
     {
-        wstring += "    nothing";
-    }
-    else if (slot == -1)
-    {
-        wstring += "  - ";
-        wstring += item->name(DESC_NOCAP_A);
-        wstring += " (empty)";
+        const item_def* item;
+        you.m_quiver->get_desired_item(&item, &slot);
+        if (!is_valid_item(*item))
+        {
+            wstring += "    nothing";
+        }
+        else
+        {
+            wstring += "  - ";
+            wstring += item->name(DESC_NOCAP_A);
+            wstring += " (empty)";
+        }
     }
     else
     {
