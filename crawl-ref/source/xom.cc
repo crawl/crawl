@@ -511,16 +511,13 @@ static bool _xom_is_good(int sever)
             else
                 god_speaks(GOD_XOM, _get_xom_speech("multiple summons"));
 
-            if (numdifferent == numdemons)
-            {
-                // If we have only demons, they'll always be friendly.
-                if (numdifferent == 0)
-                    hostiletype = 0;
-                // If we have only non-demons, there's a chance that
-                // they may be hostile.
-                else if (one_chance_in(4))
-                    hostiletype = 2;
-            }
+            // If we have only non-demons, there's a chance that they
+            // may be hostile.
+            if (numdifferent == numdemons && one_chance_in(4))
+                hostiletype = 2;
+            // If we have only demons, they'll always be friendly.
+            else if (numdifferent == 0)
+                hostiletype = 0;
 
             for (int i = 0; i < numdemons; ++i)
             {
