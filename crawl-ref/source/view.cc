@@ -5028,8 +5028,9 @@ void viewwindow(bool draw_it, bool do_updates)
                     crawl_view.viewp.x + crawl_view.viewsz.x - 1,
                     crawl_view.viewp.y + crawl_view.viewsz.y - 1,
                     buffy);
-#endif
+
             update_monster_pane();
+#endif
         }
     }
 

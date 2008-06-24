@@ -1170,42 +1170,25 @@ std::string mpr_monster_list(bool past)
 }
 
 #ifndef USE_TILE
-
-// Monster info used by the pane; precomputes some data
-// to help with sorting and rendering.
-class monster_pane_info
+monster_pane_info::monster_pane_info(const monsters *m)
+    : m_mon(m)
 {
- public:
-    static bool less_than(const monster_pane_info& m1,
-                          const monster_pane_info& m2, bool zombified = true);
+    // XXX: this doesn't take into account ENCH_NEUTRAL, but that's probably
+    // a bug for mons_attitude, not this.
+    // XXX: also, mons_attitude_type should be sorted hostile/neutral/friendly;
+    // will break saves a little bit though.
+    m_attitude = mons_attitude(m);
 
-    monster_pane_info(const monsters* m)
-        : m_mon(m)
-    {
-        m_attitude = mons_attitude(m);
+    // Currently, difficulty is defined as "average hp".  Leaks too much info?
+    const monsterentry* me = get_monster_data(m->type);
+    m_difficulty = me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]>>1))
+        + me->hpdice[3];
 
-        // Currently, difficulty is defined as "average hp".  Leaks too
-        // much info?
-        const monsterentry* me = get_monster_data(m->type);
-        m_difficulty = me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]>>1))
-                       + me->hpdice[3];
-
-        m_brands = 0;
-        if (mons_looks_stabbable(m))   m_brands |= 1;
-        if (mons_looks_distracted(m))  m_brands |= 2;
-        if (m->has_ench(ENCH_BERSERK)) m_brands |= 4;
-
-        m_fullname = true;
-    }
-
-    void to_string(int count, std::string& desc, int& desc_color) const;
-
-    const monsters*   m_mon;
-    mon_attitude_type m_attitude;
-    int               m_difficulty;
-    int               m_brands;
-    bool              m_fullname;
-};
+    m_brands = 0;
+    if (mons_looks_stabbable(m))   m_brands |= 1;
+    if (mons_looks_distracted(m))  m_brands |= 2;
+    if (m->has_ench(ENCH_BERSERK)) m_brands |= 4;
+}
 
 // Sort monsters by:
 //   attitude
@@ -1344,9 +1327,9 @@ void monster_pane_info::to_string( int count, std::string& desc,
     desc = out.str();
 }
 
-static void _print_next_monster_desc(
-    const std::vector<monster_pane_info>& mons, int& start,
-    bool zombified = false)
+static void _print_next_monster_desc(const std::vector<monster_pane_info>& mons,
+                                     int& start, bool zombified = false,
+                                     int idx = -1)
 {
     // Skip forward to past the end of the range of identical monsters.
     unsigned int end;
@@ -1361,6 +1344,15 @@ static void _print_next_monster_desc(
     // Print info on the monsters we've found.
     {
         int printed = 0;
+
+        // for targeting
+        if (idx >= 0)
+        {
+            textcolor(WHITE);
+            cprintf( stringize_glyph('a' + idx).c_str() );
+            cprintf(" - ");
+            printed += 4;
+        }
 
         // One glyph for each monster.
         for (unsigned int i_mon = start; i_mon < end; i_mon++)
@@ -1442,6 +1434,21 @@ static void _print_next_monster_desc(
     textcolor(LIGHTGREY);
 }
 
+void get_monster_pane_info(std::vector<monster_pane_info>& mons)
+{
+    std::vector<monsters*> visible;
+    get_playervisible_monsters(visible);
+    for (unsigned int i = 0; i < visible.size(); i++)
+    {
+        if (Options.target_zero_exp
+            || !mons_class_flag( visible[i]->type, M_NO_EXP_GAIN ))
+        {
+            mons.push_back(monster_pane_info(visible[i]));
+        }
+    }
+    std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
+}
+
 #define BOTTOM_JUSTIFY_MONSTER_LIST 0
 void update_monster_pane()
 {
@@ -1452,19 +1459,7 @@ void update_monster_pane()
         return;
 
     std::vector<monster_pane_info> mons;
-    {
-        std::vector<monsters*> visible;
-        get_playervisible_monsters(visible);
-        for (unsigned int i = 0; i < visible.size(); i++)
-        {
-            if (Options.target_zero_exp
-                || !mons_class_flag( visible[i]->type, M_NO_EXP_GAIN ))
-            {
-                mons.push_back(monster_pane_info(visible[i]));
-            }
-        }
-    }
-
+    get_monster_pane_info(mons);
     std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
 
     // Count how many groups of monsters there are
@@ -1497,15 +1492,18 @@ void update_monster_pane()
 #endif
 
     // Print the monsters!
-
     std::string blank; blank.resize(crawl_view.mlistsz.x, ' ');
     int i_mons = 0;
     for (int i_print = 0; i_print < max_print; ++i_print)
     {
-        cgotoxy(1, 1+i_print, GOTO_MLIST);
+        cgotoxy(1, 1 + i_print, GOTO_MLIST);
         // i_mons is incremented by _print_next_monster_desc
-        if ((i_print >= skip_lines) && (i_mons < (int)mons.size()))
-            _print_next_monster_desc(mons, i_mons, zombified);
+        if (i_print >= skip_lines && i_mons < (int) mons.size())
+        {
+             _print_next_monster_desc(mons, i_mons, zombified,
+                        Options.mlist_targetting == MLIST_TARGET_ON ? i_print
+                                                                    : -1);
+        }
         else
             cprintf("%s", blank.c_str());
     }
@@ -1513,7 +1511,7 @@ void update_monster_pane()
     if (i_mons < (int) mons.size())
     {
         // Didn't get to all of them.
-        cgotoxy(crawl_view.mlistsz.x-4, crawl_view.mlistsz.y, GOTO_MLIST);
+        cgotoxy(crawl_view.mlistsz.x - 4, crawl_view.mlistsz.y, GOTO_MLIST);
         cprintf(" ... ");
     }
 }
@@ -1564,10 +1562,9 @@ const char *equip_slot_to_name(int equip)
 int equip_name_to_slot(const char *s)
 {
     for (int i = 0; i < NUM_EQUIP; ++i)
-    {
         if (!stricmp(s_equip_slot_names[i], s))
             return i;
-    }
+
     return -1;
 }
 
@@ -2122,9 +2119,14 @@ std::string _status_mut_abilities()
     if (you.duration[DUR_CONF])
         text += "confused, ";
 
-    // how exactly did you get to show the status?
+    // How exactly did you get to show the status?
+    // It's not so unreasonable anymore now that the new overview screen is
+    // dumped. When the player dies while paralysed it's important information.
     if (you.duration[DUR_PARALYSIS])
         text += "paralysed, ";
+
+    if (you.duration[DUR_PETRIFIED])
+        text += "petrified, ";
 
     if (you.duration[DUR_SLEEP])
         text += "sleeping, ";

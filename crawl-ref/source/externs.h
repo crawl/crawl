@@ -1614,6 +1614,7 @@ public:
     int         mlist_min_height;
     int         msg_max_height;
     bool        mlist_allow_alternate_layout;
+    int         mlist_targetting; // not actually a real option
     bool        classic_hud;
     bool        msg_condense_repeats;
 

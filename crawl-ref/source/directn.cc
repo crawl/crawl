@@ -58,6 +58,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "output.h"
 
 #include "macro.h"
 
@@ -90,6 +91,10 @@ static void _describe_cell(int mx, int my);
 static bool _find_object(  int x, int y, int mode, bool need_path, int range );
 static bool _find_monster( int x, int y, int mode, bool need_path, int range );
 static bool _find_feature( int x, int y, int mode, bool need_path, int range );
+
+#ifndef USE_TILE
+static bool _find_mlist( int x, int y, int mode, bool need_path, int range );
+#endif
 
 static char _find_square_wrapper( int tx, int ty,
                                   FixedVector<char, 2> &mfp, char direction,
@@ -433,7 +438,31 @@ static void direction_again(dist& moves, targeting_type restricts,
 //           tx,ty          target x,y
 //           dx,dy          direction delta for DIR_DIR
 //
-//---------------------------------------------------------------
+//--------------------------------------------------------------
+
+#ifndef USE_TILE
+// XXX: Hack - can't pass mlist entries into _find_mlist().
+std::vector<monster_pane_info> mlist;
+static void _fill_monster_list(void)
+{
+    std::vector<monster_pane_info> temp;
+    get_monster_pane_info(temp);
+
+    // Get the unique entries.
+    mlist.clear();
+    int start = 0, end = 1;
+    while (start < (int) temp.size())
+    {
+        mlist.push_back(temp[start]);
+        for (end = start + 1; end < (int) temp.size(); ++end)
+            if (monster_pane_info::less_than(temp[start], temp[end]))
+                  break;
+
+        start = end;
+    }
+}
+#endif
+
 void direction(dist& moves, targeting_type restricts,
                targ_mode_type mode, int range, bool just_looking,
                bool needs_path, const char *prompt,
@@ -444,6 +473,14 @@ void direction(dist& moves, targeting_type restricts,
         beh = &stock_behaviour;
 
     beh->just_looking = just_looking;
+
+#ifndef USE_TILE
+    if (!just_looking && Options.mlist_targetting == MLIST_TARGET_HIDDEN)
+    {
+        Options.mlist_targetting = MLIST_TARGET_ON;
+        _fill_monster_list();
+    }
+#endif
 
     if (crawl_state.is_replaying_keys() && restricts != DIR_DIR)
     {
@@ -502,6 +539,7 @@ void direction(dist& moves, targeting_type restricts,
     }
 
     bool show_prompt = true;
+
     while (true)
     {
         // Prompts might get scrolled off if you have too few lines available.
@@ -602,6 +640,23 @@ void direction(dist& moves, targeting_type restricts,
 
         int i, mid;
 
+#ifndef USE_TILE
+        if (key_command >= CMD_TARGET_CYCLE_MLIST
+            && key_command <= CMD_TARGET_CYCLE_MLIST_END)
+        {
+            const int idx = key_command - CMD_TARGET_CYCLE_MLIST;
+            if (_find_square_wrapper(moves.tx, moves.ty, monsfind_pos, 1,
+                                     _find_mlist, needs_path, idx, range,
+                                     Options.target_wrap))
+            {
+                moves.tx = monsfind_pos[0];
+                moves.ty = monsfind_pos[1];
+            }
+            else if (!skip_iter)
+                flush_input_buffer(FLUSH_ON_FAILURE);
+        }
+#endif
+
         switch (key_command)
         {
             // standard movement
@@ -663,6 +718,20 @@ void direction(dist& moves, targeting_type restricts,
             mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
                  target_mode_help_text(restricts));
             break;
+
+#ifndef USE_TILE
+        case CMD_TARGET_TOGGLE_MLIST:
+            if (Options.mlist_targetting == MLIST_TARGET_ON)
+                Options.mlist_targetting = MLIST_TARGET_OFF;
+            else
+                Options.mlist_targetting = MLIST_TARGET_ON;
+
+            update_monster_pane();
+
+            if (Options.mlist_targetting == MLIST_TARGET_ON)
+                _fill_monster_list();
+            break;
+#endif
 
 #ifdef WIZARD
         case CMD_TARGET_CYCLE_BEAM:
@@ -796,6 +865,11 @@ void direction(dist& moves, targeting_type restricts,
                 you.prev_targ = MHITYOU;
             else
                 you.prev_grd_targ = coord_def(moves.tx, moves.ty);
+
+#ifndef USE_TILE
+            if (Options.mlist_targetting == MLIST_TARGET_ON)
+                Options.mlist_targetting = MLIST_TARGET_HIDDEN;
+#endif
             break;
 
         case CMD_TARGET_OBJ_CYCLE_BACK:
@@ -833,6 +907,11 @@ void direction(dist& moves, targeting_type restricts,
             loop_done = true;
             moves.isCancel = true;
             beh->mark_ammo_nonchosen();
+
+#ifndef USE_TILE
+            if (Options.mlist_targetting == MLIST_TARGET_ON)
+                Options.mlist_targetting = MLIST_TARGET_HIDDEN;
+#endif
             break;
 
 #ifdef WIZARD
@@ -1022,7 +1101,7 @@ void direction(dist& moves, targeting_type restricts,
                                      true, ray, 0, true) )
         {
 #else
-        if ( need_beam_redraw )
+        if (need_beam_redraw)
         {
             viewwindow(true, false);
 #endif
@@ -1163,6 +1242,46 @@ bool in_los(int x, int y)
 {
     return (in_vlos(grid2view(coord_def(x, y))));
 }
+
+#ifndef USE_TILE
+static bool _find_mlist( int x, int y, int idx, bool need_path, int range = -1)
+{
+    if ((int) mlist.size() <= idx)
+        return (false);
+
+    if (!_is_target_in_range(x, y, range) || !in_los(x,y))
+        return (false);
+
+    const int targ_mon = mgrd[ x ][ y ];
+    if (targ_mon == NON_MONSTER)
+        return (false);
+
+    int real_idx = 0;
+    for (unsigned int i = 0; i < mlist.size()-1; i++)
+    {
+        if (real_idx == idx)
+        {
+            real_idx = i;
+            break;
+        }
+
+        // While the monsters are identical, don't increase real_idx.
+        if (mlist[i].m_mon->type == mlist[i+1].m_mon->type
+            && mlist[i].m_attitude == mlist[i+1].m_attitude)
+        {
+            continue;
+        }
+        real_idx++;
+    }
+
+    monsters *mon  = &menv[targ_mon];
+    const monsters *monl = mlist[real_idx].m_mon;
+    extern mon_attitude_type mons_attitude(const monsters *m);
+
+    return (mons_attitude(mon) == mlist[idx].m_attitude
+            && mon->type == monl->type);
+}
+#endif
 
 static bool _find_monster( int x, int y, int mode, bool need_path,
                            int range = -1)
@@ -1556,8 +1675,8 @@ static char _find_square_wrapper( int tx, int ty,
                                   FixedVector<char, 2> &mfp, char direction,
                                   bool (*find_targ)(int x, int y, int mode,
                                                     bool need_path, int range),
-                                  bool need_path, int mode, int range, bool wrap,
-                                  int los )
+                                  bool need_path, int mode, int range,
+                                  bool wrap, int los )
 {
     const char r =  _find_square(grid2viewX(tx), grid2viewY(ty), mfp,
                                  direction, find_targ, need_path, mode, range,
@@ -2500,7 +2619,13 @@ command_type targeting_behaviour::get_command(int key)
     if (key == -1)
         key = get_key();
 
-    switch ( key )
+#ifndef USE_TILE
+    // Overrides the movement keys while mlist_targetting is active.
+    if (Options.mlist_targetting == MLIST_TARGET_ON && islower(key))
+        return static_cast<command_type> (CMD_TARGET_CYCLE_MLIST + (key - 'a'));
+#endif
+
+    switch (key)
     {
     case ESCAPE:
     case 'x':  return CMD_TARGET_CANCEL;
@@ -2539,6 +2664,7 @@ command_type targeting_behaviour::get_command(int key)
     case '>':  return CMD_TARGET_FIND_DOWNSTAIR;
 
     case CONTROL('F'): return CMD_TARGET_CYCLE_TARGET_MODE;
+    case CONTROL('L'): return CMD_TARGET_TOGGLE_MLIST;
     case 'p':  return CMD_TARGET_PREV_TARGET;
     case 'f':  return CMD_TARGET_MAYBE_PREV_TARGET;
     case 't':  return CMD_TARGET_MAYBE_PREV_TARGET; // for the 0.3.4 keys

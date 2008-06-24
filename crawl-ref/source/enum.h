@@ -586,6 +586,9 @@ enum command_type
     CMD_TARGET_CYCLE_FORWARD,
     CMD_TARGET_CYCLE_BACK,
     CMD_TARGET_CYCLE_BEAM,
+    CMD_TARGET_CYCLE_MLIST = 2000, // for indices a-z in the monster list
+    CMD_TARGET_CYCLE_MLIST_END = 2025,
+    CMD_TARGET_TOGGLE_MLIST,
     CMD_TARGET_HIDE_BEAM,
     CMD_TARGET_CENTER,
     CMD_TARGET_CANCEL,
@@ -2795,6 +2798,15 @@ enum montravel_target_type
     MTRAV_TRAP,        // Travelling to reach a trap.
     MTRAV_SUBMERSIBLE  // Travelling to reach a submersible place.
 };
+
+#ifndef USE_TILE
+enum mlist_targetting_type
+{
+    MLIST_TARGET_OFF = 0,
+    MLIST_TARGET_HIDDEN,
+    MLIST_TARGET_ON
+};
+#endif
 
 #ifdef WIZARD
 

@@ -250,7 +250,8 @@ can be subtle, and a full list with explanations is given in Appendix 5.
 Monsters within your field of vision are listed on a special panel, the
 monster list. Single monsters also get indicators of their health status
 in the form of a coloured box, and also on effects they enjoy or suffer
-from.
+from. Within target mode you can directly target single monsters by use 
+of the monster list. Use Ctrl-L to toggle this on or off.
 
 Sometimes characters will be able to use special abilities, e.g. the
 Naga's ability to spit poison, or the magical power to turn invisible 
