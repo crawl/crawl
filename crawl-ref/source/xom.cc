@@ -870,10 +870,7 @@ static bool _xom_is_bad(int sever)
                 }
 
                 if (!success)
-                {
-                    simple_god_message("'s children are having fun elsewhere.",
-                                       GOD_XOM);
-                }
+                    god_speaks(GOD_XOM, "\"No, never mind.\"");
             }
 
             done = true;
