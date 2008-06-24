@@ -39,7 +39,7 @@ knowledge of the powers of death. Followers gain special powers over
 the undead, and especially favoured servants can call on mighty demons 
 to slay their foes. Kikubaaqudgha is evil, and requires the deaths of 
 living creatures as often as possible, but is not interested in the 
-offering of corpses except at an appropriate altar.
+offering of corpses.
 %%%%
 Yredelemnul
 
@@ -61,28 +61,28 @@ Vehumet
 Vehumet is a God of the destructive powers of magic. Followers gain 
 various useful powers to enhance their command of the hermetic arts, 
 and the most favoured stand to gain access to some of the fearsome 
-spells in Vehumet's library. One's devotion to Vehumet can be proved by 
+spells in Vehumet's library. One's devotion to Vehumet can be proven by 
 the causing of as much carnage and destruction as possible.
 %%%%
 Okawaru
 
 Okawaru is a dangerous and powerful God of battle. Followers can gain a 
 number of powers useful in combat as well as various rewards, but must 
-constantly prove themselves through battle and the sacrifice of corpses 
-and valuable items. Okawaru despises those who harm their allies.
+constantly prove themselves through battle and the sacrifice of corpses. 
+Okawaru despises those who harm their allies.
 %%%%
 Makhleb
 
 Makhleb the Destroyer is a fearsome God of chaos and violent death. 
 Followers, who must constantly appease Makhleb with blood, stand to 
 gain various powers of death and destruction. The Destroyer is evil, 
-and appreciates sacrifices of corpses and valuable items.
+and appreciates sacrifices of corpses.
 %%%%
 Sif Muna
 
-Sif Muna is a contemplative but powerful deity, served by those who 
-seek magical knowledge. Sif Muna appreciates sacrifices of valuable 
-items, and the training of spell casting skills.
+Sif Muna the Loreminder is a contemplative but powerful deity, served by 
+those who seek magical knowledge. The Loreminder appreciates the 
+training of spell casting skills.
 %%%%
 Trog
 
