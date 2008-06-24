@@ -501,6 +501,16 @@ static bool _xom_is_good(int sever)
             (hostile < 11) ? (coinflip() ? 1 : 2) //  2/3: one is hostile
                            : 3;                   // 1/12: both are hostile
 
+        // If we get only demons, they'll always be friendly.  If we get
+        // only non-demons, there's a chance that they may be hostile.
+        if (numdifferent == numdemons)
+        {
+            if (numdifferent == 0)
+                hostiletype = 0;
+            else if (one_chance_in(4))
+                hostiletype = 2;
+        }
+
         bool success = false;
 
         for (int i = 0; i < numdemons; ++i)
@@ -511,8 +521,7 @@ static bool _xom_is_good(int sever)
             {
                 success = true;
 
-                if (hostiletype != 0 && numdifferent != numdemons
-                    && numdifferent > 0)
+                if (hostiletype != 0)
                 {
                     monsters *mon = &menv[i];
 
