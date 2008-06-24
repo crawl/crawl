@@ -806,6 +806,7 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
     {
         item_def& wpn = you.inv[you.equip[EQ_WEAPON]];
         // changed from ISFLAG_KNOW_TYPE
+        set_ident_type( wpn, ID_KNOWN_TYPE );
         set_ident_flags( wpn, ISFLAG_IDENT_MASK);
         mprf("You are wielding %s.", wpn.name(DESC_NOCAP_A).c_str());
         more();

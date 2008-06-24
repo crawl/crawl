@@ -505,6 +505,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
         if (item.sub_type == STAFF_POWER)
         {
             calc_mp();
+            set_ident_type( item, ID_KNOWN_TYPE );
             set_ident_flags( item, ISFLAG_EQ_WEAPON_MASK );
             mpr("You feel your mana capacity increase.");
         }
