@@ -850,11 +850,17 @@ static bool _xom_is_bad(int sever)
         }
         else if (random2(sever) <= 9)
         {
-            god_speaks(GOD_XOM, _get_xom_speech("hostile monster"));
+            const char *speech = _get_xom_speech("hostile monster");
 
             // Nasty, but fun.
             if (one_chance_in(4))
+            {
+                god_speaks(GOD_XOM, speech);
+
                 cast_tukimas_dance(100, GOD_XOM, true);
+
+                done = true;
+            }
             else
             {
                 const int numdemons =
@@ -873,11 +879,13 @@ static bool _xom_is_bad(int sever)
                     }
                 }
 
-                if (!success)
-                    god_speaks(GOD_XOM, "\"No, never mind.\"");
-            }
+                if (success)
+                {
+                    god_speaks(GOD_XOM, speech);
 
-            done = true;
+                    done = true;
+                }
+            }
         }
         else if (random2(sever) <= 10)
         {
