@@ -495,14 +495,13 @@ static void _print_stats_qv(int y)
     textcolor(Options.status_caption_colour);
     cprintf("Qv: ");
 
-    const item_def* item;
-    int q;
-    you.m_quiver->get_desired_item(&item, &q);
+    std::string error_reason;
+    int q = you.m_quiver->get_fire_item(&error_reason);
 
     ASSERT(q >= -1 && q < ENDOFPACK);
     if (q != -1)
     {
-        const item_def& quiver = *item;
+        const item_def& quiver = you.inv[q];
         textcolor(quiver.colour);
 
         const std::string prefix = menu_colour_item_prefix(quiver);
@@ -516,18 +515,29 @@ static void _print_stats_qv(int y)
                 .substr(0, crawl_view.hudsz.x - 4)
                 .c_str());
     }
-    else if (item != NULL && is_valid_item(*item))
-    {
-        textcolor(item->colour);
-        cprintf("-) %s", item->name(DESC_PLAIN, true)
-                         .substr(0, crawl_view.hudsz.x - 15).c_str());
-        textcolor(RED);
-        cprintf(" (empty)");
-    }
     else
     {
         textcolor(LIGHTGREY);
         cprintf("Nothing quivered");
+
+/*
+        const item_def* item;
+        you.m_quiver->get_desired_item(&item, &q);
+
+        if (item != NULL && is_valid_item(*item))
+        {
+            textcolor(item->colour);
+            cprintf("-) %s", item->name(DESC_PLAIN, true)
+                             .substr(0, crawl_view.hudsz.x - 15).c_str());
+            textcolor(RED);
+            cprintf(" (empty)");
+        }
+        else
+        {
+            textcolor(LIGHTGREY);
+            cprintf("Nothing quivered");
+        }
+*/
     }
 
     textcolor(LIGHTGREY);
@@ -826,9 +836,11 @@ void print_stats(void)
     if (you.redraw_dexterity)    { you.redraw_dexterity = false;    _print_stats_dex(19, 7); }
 
     int yhack = 0;
+
     // If Options.show_gold_turns, line 8 is Gold and Turns
     if (Options.show_gold_turns)
     {
+        // Increase y-value for all following lines.
         yhack = 1;
         cgotoxy(1+6, 8, GOTO_STAT);
         textcolor(HUD_VALUE_COLOR);
@@ -837,7 +849,7 @@ void print_stats(void)
 
     if (you.redraw_experience)
     {
-        cgotoxy(1,8+yhack, GOTO_STAT);
+        cgotoxy(1,8 + yhack, GOTO_STAT);
         textcolor(Options.status_caption_colour);
         cprintf("Exp Pool: ");
         textcolor(HUD_VALUE_COLOR);
@@ -862,12 +874,12 @@ void print_stats(void)
         // Also, it's a little bogus to change simulation state in
         // render code.  We should find a better place for this.
         you.m_quiver->on_weapon_changed();
-        _print_stats_wp(9+yhack);
+        _print_stats_wp(9 + yhack);
     }
 
     if (you.redraw_quiver || you.wield_change)
     {
-        _print_stats_qv(10+yhack);
+        _print_stats_qv(10 + yhack);
         you.redraw_quiver = false;
     }
     you.wield_change  = false;
@@ -875,7 +887,7 @@ void print_stats(void)
     if (you.redraw_status_flags)
     {
         you.redraw_status_flags = 0;
-        _print_status_lights(11+yhack);
+        _print_status_lights(11 + yhack);
     }
     textcolor(LIGHTGREY);
 

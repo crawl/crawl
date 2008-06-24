@@ -1287,7 +1287,7 @@ bool check_warning_inscriptions( const item_def& item,
 //
 // It returns PROMPT_ABORT       if the player hits escape.
 // It returns PROMPT_GOT_SPECIAL if the player hits the "other_valid_char".
-// It retursn PROMPT_NOTHING     if there's no matching items
+// It returns PROMPT_NOTHING     if there are no matching items.
 //
 // Note: This function never checks if the item is appropriate.
 int prompt_invent_item( const char *prompt,
@@ -1307,7 +1307,7 @@ int prompt_invent_item( const char *prompt,
     }
 
     unsigned char  keyin = 0;
-    int            ret = PROMPT_ABORT; 
+    int            ret = PROMPT_ABORT;
 
     bool           need_redraw = false;
     bool           need_prompt = true;

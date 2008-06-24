@@ -1568,7 +1568,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     if (freeslot < 0 || freeslot >= ENDOFPACK
         || is_valid_item(you.inv[freeslot]))
     {
-        // Something is terribly wrong
+        // Something is terribly wrong.
         return (-1);
     }
 
@@ -1577,12 +1577,12 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         dgn_event(DET_ITEM_PICKUP, pos, 0, obj, -1), pos);
 
     item_def &item = you.inv[freeslot];
-    // copy item
+    // Copy item.
     item        = mitm[obj];
     item.x      = -1;
     item.y      = -1;
     item.link   = freeslot;
-    // remove "dropped by ally" flag
+    // Remove "dropped by ally" flag.
     item.flags &= ~(ISFLAG_DROPPED_BY_ALLY);
 
     if (!item.slot)
@@ -1598,7 +1598,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     {
         if (quant_got != mitm[obj].quantity)
         {
-            // remove oldest timers from original stack
+            // Remove oldest timers from original stack.
             for (int i = 0; i < quant_got; i++)
                 remove_oldest_blood_potion(mitm[obj]);
 

@@ -2,7 +2,7 @@
  *  File:       quiver.cc
  *  Summary:    Player quiver functionality
  *
- *  Last modified by $Author: $ on $Date: $
+ *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-06-23 23:30:08 +0200 (Mo, 23 Jun 2008) $
  *
  *  - Only change last_used when actually using
  *  - Not changing Qv; nobody knows about internals
@@ -188,17 +188,20 @@ void player_quiver::on_inv_quantity_changed(int slot, int amt)
         _maybe_fill_empty_slot();
         you.redraw_quiver = true;
     }
-    else if (m_last_used_of_type[m_last_used_type].base_type !=
-             you.inv[slot].base_type)
+    else if (m_last_used_of_type[m_last_used_type].base_type
+                != you.inv[slot].base_type)
     {
         // Not our current stack; don't bother
     }
     else
     {
         // Maybe matches current stack.  Redraw if so.
-        const item_def* desired;
-        int qv_slot;
-        get_desired_item(&desired, &qv_slot);
+//        const item_def* desired;
+//        int qv_slot;
+//        get_desired_item(&desired, &qv_slot);
+
+        std::string error_reason;
+        int qv_slot = get_fire_item(&error_reason);
         if (qv_slot == slot)
             you.redraw_quiver = true;
     }
@@ -209,13 +212,14 @@ void player_quiver::_maybe_fill_empty_slot()
 {
     const item_def* weapon = you.weapon();
     const ammo_t slot = _get_weapon_ammo_type(weapon);
+
 #ifdef DEBUG_QUIVER
     mprf(MSGCH_DIAGNOSTICS, "last quiver item: %s; link %d, wpn: %d",
          m_last_used_of_type[slot].name(DESC_PLAIN).c_str(),
          m_last_used_of_type[slot].link, you.equip[EQ_WEAPON]);
 #endif
-    bool unquiver_weapon = false;
 
+    bool unquiver_weapon = false;
     if (is_valid_item(m_last_used_of_type[slot]))
     {
         // If we're wielding an item previously quivered, the quiver may need
@@ -230,14 +234,17 @@ void player_quiver::_maybe_fill_empty_slot()
 #ifdef DEBUG_QUIVER
     mpr("recalculating fire order...", MSGCH_DIAGNOSTICS);
 #endif
-    // const launch_retval desired_ret =
-    //     (weapon && is_range_weapon(*weapon)) ? LRET_LAUNCHED : LRET_THROWN;
+
     const launch_retval desired_ret =
         (slot == AMMO_THROW ? LRET_THROWN : LRET_LAUNCHED);
-    std::vector<int> order;  _get_fire_order(order, false, weapon);
+
+    std::vector<int> order;
+    _get_fire_order(order, false, weapon);
+
     if (unquiver_weapon && order.empty())
     {
-//        m_last_used_of_type[slot] = you.inv[order[i]];
+        // Setting the quantity to zero will force the quiver to be empty,
+        // should nothing else be found.
         m_last_used_of_type[slot].quantity = 0;
     }
     else

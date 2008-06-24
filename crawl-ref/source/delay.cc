@@ -65,9 +65,9 @@ static bool _recite_mons_useless(const monsters *mon)
 
     return (mons_intel(mon->type) < I_NORMAL
             || holiness != MH_HOLY
-            || holiness != MH_NATURAL
-            || holiness != MH_UNDEAD
-            || holiness != MH_DEMONIC
+               && holiness != MH_NATURAL
+               && holiness != MH_UNDEAD
+               && holiness != MH_DEMONIC
             || mons_is_stationary(mon)
             || mons_is_fleeing(mon)
             || mons_is_sleeping(mon)
@@ -79,7 +79,7 @@ static bool _recite_mons_useless(const monsters *mon)
             || mon->has_ench(ENCH_HASTE));
 }
 
-// power is maximum 50
+// Power is maximum 50.
 static int _recite_to_monsters(int x, int y, int pow, int unused)
 {
     UNUSED(unused);
