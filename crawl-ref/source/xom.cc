@@ -819,23 +819,34 @@ static bool _xom_is_bad(int sever)
         }
         else if (random2(sever) <= 8)
         {
-            if (player_prot_life() == 3 && player_res_torment())
-                goto try_again;
-
-            god_speaks(GOD_XOM, _get_xom_speech("draining or torment"));
+            const char *speech = _get_xom_speech("draining or torment");
 
             if (one_chance_in(4))
             {
-                drain_exp();
-                if (random2(sever) > 3)
+                if (player_prot_life() < 3)
+                {
+                    god_speaks(GOD_XOM, speech);
+
                     drain_exp();
-                if (random2(sever) > 3)
-                    drain_exp();
+                    if (random2(sever) > 3)
+                        drain_exp();
+                    if (random2(sever) > 3)
+                        drain_exp();
+
+                    done = true;
+                }
             }
             else
-                torment_player(0, TORMENT_XOM);
+            {
+                if (!player_res_torment())
+                {
+                    god_speaks(GOD_XOM, speech);
 
-            done = true;
+                    torment_player(0, TORMENT_XOM);
+
+                    done = true;
+                }
+            }
         }
         else if (random2(sever) <= 9)
         {
