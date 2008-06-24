@@ -127,15 +127,23 @@ void player_quiver::set_quiver(const item_def &item, ammo_t ammo_type)
 {
     m_last_used_of_type[ammo_type] = item;
     m_last_used_of_type[ammo_type].quantity = 1;
-    m_last_used_type = ammo_type;
+    m_last_used_type  = ammo_type;
+    you.redraw_quiver = true;
+}
+
+void player_quiver::empty_quiver(ammo_t ammo_type)
+{
+    m_last_used_of_type[ammo_type] = item_def();
+    m_last_used_of_type[ammo_type].quantity = 0;
+    m_last_used_type  = ammo_type;
     you.redraw_quiver = true;
 }
 
 void choose_item_for_quiver()
 {
-    int slot = prompt_invent_item( "Quiver which item? (* to show all)",
+    int slot = prompt_invent_item( "Quiver which item? (- for none, * to show all)",
                                    MT_INVLIST,
-                                   OSEL_THROWABLE, true, true, true, 0, NULL,
+                                   OSEL_THROWABLE, true, true, true, '-', NULL,
                                    OPER_FIRE );
 
     if (slot == PROMPT_ABORT)
@@ -146,13 +154,25 @@ void choose_item_for_quiver()
     else if (slot == PROMPT_NOTHING)
         return;
 
-    const item_def item = you.inv[slot];
+    if (slot == PROMPT_GOT_SPECIAL)  // '-' or empty quiver
+    {
+        ammo_t t = _get_weapon_ammo_type(you.weapon());
+        you.m_quiver->empty_quiver(t);
 
-    if (!is_valid_item(item))
+        mprf("Emptying quiver for %s.",
+             t == AMMO_THROW    ? "throwing" :
+             t == AMMO_BLOWGUN  ? "blowguns" :
+             t == AMMO_SLING    ? "slings" :
+             t == AMMO_BOW      ? "bows" :
+             t == AMMO_CROSSBOW ? "crossbows"
+                                : "hand crossbows");
         return;
+    }
+
+    const item_def item = you.inv[slot];
+    ASSERT(is_valid_item(item));
 
     ammo_t t = AMMO_THROW;
-
     const item_def *weapon = you.weapon();
     if (weapon && item.launched_by(*weapon))
         t = _get_weapon_ammo_type(weapon);

@@ -1740,7 +1740,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "\n"
             "<h>Item types (and common commands)\n"
             "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-            "<brown>(</brown> : missiles (<w>f</w>ire, <w>(</w> to cycle ammo)\n"
+            "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>(</w> to cycle ammo)\n"
             "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
             "<brown>%</brown> : corpses and food (<w>c</w>hop up and <w>e</w>at)\n"
             "<w>?</w> : scrolls (<w>r</w>ead)\n"
@@ -1868,7 +1868,7 @@ static void _add_formatted_tutorial_help(column_composer &cols)
     text <<
         "<h>Item types (and common commands)\n"
         "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-        "<brown>(</brown> : missiles (<w>f</w>ire, <w>(</w> to cycle ammo)\n"
+        "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>(</w> to cycle ammo)\n"
         "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
         "<brown>%</brown> : corpses and food (<w>c</w>hop up and <w>e</w>at)\n"
         "<w>?</w> : scrolls (<w>r</w>ead)\n"

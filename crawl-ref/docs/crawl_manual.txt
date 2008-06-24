@@ -703,8 +703,8 @@ spears, daggers, or hand axes. If you manually select a piece of ammo
 this way, it is assumed to be a one-time use, and your quiver will not
 be changed.
 
-Use the '(' command if you want to change your quiver without
-firing. Note that this only applies if you 
+Use the '(' or 'Q' command if you want to change your quiver without
+firing.
 
 The interface for shooting or throwing things is also used for zapping
 wands and casting certain spells, and is described in detail in
@@ -2311,6 +2311,7 @@ Item interaction (inventory):
                         monster will be automatically target. Pressing
                         f again shoots.
     (                   Cycle quiver to next suitable missile.
+    Q                   Quiver item from a menu.
     q                   Quaff a potion.
     e                   Eat food (tries floor first, inventory next).
                         In the eating prompt, e is synonymous to y.
@@ -2361,6 +2362,8 @@ Other game-playing commands:
     Ctrl-T              Toggle your allies' pickup behaviour between three
                         settings: don't pick up anything, only pick up
                         items dropped by allies, pick up anything.
+                        This toggle only works for some kind of characters
+                        who can gain permanent, intelligent allies.
     `                   Re-do previous command
     0                   Repeat next command a given number of times
 

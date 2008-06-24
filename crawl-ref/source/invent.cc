@@ -178,9 +178,9 @@ std::string InvEntry::get_text() const
     std::ostringstream tstr;
 
     tstr << ' ' << static_cast<char>(hotkeys[0]) << ' ';
-    if ( !selected_qty )
+    if (!selected_qty)
         tstr << '-';
-    else if ( selected_qty < quantity )
+    else if (selected_qty < quantity)
         tstr << '#';
     else
         tstr << '+';
@@ -192,7 +192,7 @@ std::string InvEntry::get_text() const
             tstr << " (" << value << " gold)";
     }
 
-    if ( Options.show_inventory_weights )
+    if (Options.show_inventory_weights)
     {
         const int mass = item_mass(*item) * item->quantity;
         tstr << std::setw(get_number_of_cols() - tstr.str().length() - 1)
@@ -694,8 +694,10 @@ unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
     if (!isalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
-            && mkey != '*' && mkey != ESCAPE)
+        && mkey != '*' && mkey != ESCAPE)
+    {
         mkey = ' ';
+    }
     return (mkey);
 }
 
