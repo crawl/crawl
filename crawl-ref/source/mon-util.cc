@@ -1746,9 +1746,17 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
 
     if (mon.type == MONS_DANCING_WEAPON && mon.inv[MSLOT_WEAPON] != NON_ITEM)
     {
+        unsigned long ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
+        bool          use_inscrip  = true;
+
+        if (desc == DESC_BASENAME || desc == DESC_QUALNAME
+            || desc == DESC_DBNAME)
+        {
+            use_inscrip = false;
+        }
+
         item_def item = mitm[mon.inv[MSLOT_WEAPON]];
-        unset_ident_flags( item, ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES );
-        return item.name(desc);
+        return item.name(desc, false, false, use_inscrip, false, ignore_flags);
     }
 
     if (mon.type == MONS_PLAYER_GHOST)
