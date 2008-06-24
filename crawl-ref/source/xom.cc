@@ -469,29 +469,7 @@ static bool _xom_is_good(int sever)
     {
         const int numdemons =
             std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
-
         int numdifferent = 0;
-
-        monster_type *monster = new monster_type[numdemons];
-        bool *is_demonic = new bool[numdemons];
-
-        for (int i = 0; i < numdemons; ++i)
-        {
-            monster[i] = _xom_random_demon(sever);
-            is_demonic[i] = (mons_class_holiness(monster[i]) == MH_DEMONIC);
-
-            // If it's not a demon, Xom got it someplace else, so use
-            // different messages.
-            if (!is_demonic[i])
-                numdifferent++;
-        }
-
-        if (numdifferent == numdemons)
-            god_speaks(GOD_XOM, _get_xom_speech("multiple holy summons"));
-        else if (numdifferent > 0)
-            god_speaks(GOD_XOM, _get_xom_speech("multiple mixed summons"));
-        else
-            god_speaks(GOD_XOM, _get_xom_speech("multiple summons"));
 
         // If we have a mix of demons and non-demons, there's a chance
         // that one or both of the factions may be hostile.
@@ -501,31 +479,57 @@ static bool _xom_is_good(int sever)
             (hostile < 11) ? (coinflip() ? 1 : 2) //  2/3: one is hostile
                            : 3;                   // 1/12: both are hostile
 
-        if (numdifferent == numdemons)
-        {
-            // If we have only demons, they'll always be friendly.
-            if (numdifferent == 0)
-                hostiletype = 0;
-            // If we have only non-demons, there's a chance that they
-            // may be hostile.
-            else if (one_chance_in(4))
-                hostiletype = 2;
-        }
+        bool *is_demonic = new bool[numdemons];
+        int *summons = new int[numdemons];
 
         bool success = false;
 
         for (int i = 0; i < numdemons; ++i)
         {
-            if (create_monster(
-                    mgen_data(monster[i], BEH_FRIENDLY, 3,
-                              you.pos(), you.pet_target, 0, GOD_XOM)) != -1)
-            {
+            monster_type monster = _xom_random_demon(sever);
+
+            is_demonic[i] = (mons_class_holiness(monster) == MH_DEMONIC);
+
+            // If it's not a demon, Xom got it someplace else, so use
+            // different messages below.
+            if (!is_demonic[i])
+                numdifferent++;
+
+            summons[i] =
+                create_monster(
+                    mgen_data(monster, BEH_FRIENDLY, 3,
+                        you.pos(), you.pet_target, MG_FORCE_BEH, GOD_XOM));
+
+            if (summons[i] != -1)
                 success = true;
+        }
+
+        if (success)
+        {
+            if (numdifferent == numdemons)
+                god_speaks(GOD_XOM, _get_xom_speech("multiple holy summons"));
+            else if (numdifferent > 0)
+                god_speaks(GOD_XOM, _get_xom_speech("multiple mixed summons"));
+            else
+                god_speaks(GOD_XOM, _get_xom_speech("multiple summons"));
+
+            if (numdifferent == numdemons)
+            {
+                // If we have only demons, they'll always be friendly.
+                if (numdifferent == 0)
+                    hostiletype = 0;
+                // If we have only non-demons, there's a chance that
+                // they may be hostile.
+                else if (one_chance_in(4))
+                    hostiletype = 2;
+            }
+
+            for (int i = 0; i < numdemons; ++i)
+            {
+                monsters *mon = &menv[i];
 
                 if (hostiletype != 0)
                 {
-                    monsters *mon = &menv[i];
-
                     // Mark factions hostile as appropriate.
                     if (hostiletype == 3
                         || (is_demonic[i] && hostiletype == 1)
@@ -535,16 +539,15 @@ static bool _xom_is_good(int sever)
                         behaviour_event(mon, ME_ALERT, MHITYOU);
                     }
                 }
+
+                player_angers_monster(mon);
             }
+
+            done = true;
         }
 
         delete[] is_demonic;
-        delete[] monster;
-
-        if (!success)
-            god_speaks(GOD_XOM, "\"No, forget it.\"");
-
-        done = true;
+        delete[] summons;
     }
     else if (random2(sever) <= 4)
     {
