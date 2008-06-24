@@ -2710,6 +2710,7 @@ bool is_feature(int feature, int x, int y)
         switch (grid)
         {
         case DNGN_ENTER_HELL:
+        case DNGN_EXIT_HELL:
         case DNGN_ENTER_LABYRINTH:
         case DNGN_ENTER_PORTAL_VAULT:
         case DNGN_EXIT_PORTAL_VAULT:
@@ -2794,6 +2795,51 @@ bool is_feature(int feature, int x, int y)
     }
 }
 
+static bool _is_feature_fudged(int feature, int x, int y)
+{
+    if (!env.map[x][y].object)
+        return (false);
+
+    if (is_feature(feature, x, y))
+        return (true);
+
+    // 'grid' can fit in an unsigned char, but making this a short shuts up
+    // warnings about out-of-range case values.
+    short grid = grd[x][y];
+
+    if (feature == '<')
+    {
+        switch(grid)
+        {
+        case DNGN_EXIT_HELL:
+        case DNGN_EXIT_PORTAL_VAULT:
+        case DNGN_EXIT_ABYSS:
+        case DNGN_EXIT_PANDEMONIUM:
+        case DNGN_RETURN_FROM_ZOT:
+            return true;
+        default:
+            return (false);
+        }
+    }
+    else if (feature == '>')
+    {
+        switch (grid)
+        {
+        case DNGN_ENTER_DIS:
+        case DNGN_ENTER_GEHENNA:
+        case DNGN_ENTER_COCYTUS:
+        case DNGN_ENTER_TARTARUS:
+        case DNGN_TRANSIT_PANDEMONIUM:
+        case DNGN_ENTER_ZOT:
+            return (true);
+        default:
+            return (false);
+        }
+    }
+
+    return (false);
+}
+
 static int _find_feature(int feature, int curs_x, int curs_y,
                          int start_x, int start_y, int anchor_x, int anchor_y,
                          int ignore_count, int *move_x, int *move_y)
@@ -2825,7 +2871,7 @@ static int _find_feature(int feature, int curs_x, int curs_y,
                 int x = cx + dx, y = cy + dy;
                 if (!in_bounds(x, y))
                     continue;
-                if (is_feature(feature, x, y))
+                if (_is_feature_fudged(feature, x, y))
                 {
                     ++matchcount;
                     if (!ignore_count--)
@@ -2879,7 +2925,7 @@ static int _find_feature( const std::vector<coord_def>& features,
     {
         const coord_def& coord = features[feat];
 
-        if (is_feature(feature, coord.x, coord.y))
+        if (_is_feature_fudged(feature, coord.x, coord.y))
         {
             ++matchcount;
             if (forward? !ignore_count-- : --ignore_count == 1)
