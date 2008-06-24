@@ -1768,7 +1768,7 @@ bool cast_tukimas_dance(int pow, god_type god,
 
     const int wpn = you.equip[EQ_WEAPON];
 
-    // See if wielded item is appropriate.
+    // See if the wielded item is appropriate.
     if (wpn == -1
         || you.inv[wpn].base_type != OBJ_WEAPONS
         || is_range_weapon(you.inv[wpn])
@@ -1809,7 +1809,10 @@ bool cast_tukimas_dance(int pow, god_type god,
         if (!quiet_failure)
         {
             if (wpn != -1)
-                mpr("Your weapon vibrates crazily for a second.");
+            {
+                mprf("%s vibrates crazily for a second.",
+                     you.inv[wpn].name(DESC_CAP_YOUR).c_str());
+            }
             else
                 msg::stream << "Your " << your_hand(true) << " twitch."
                             << std::endl;
