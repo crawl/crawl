@@ -202,9 +202,7 @@ static void _xom_makes_you_cast_random_spell(int sever)
     your_spells(spell, sever, false);
 }
 
-static void _xom_make_item(object_class_type base,
-                           int subtype,
-                           int power)
+static void _xom_make_item(object_class_type base, int subtype, int power)
 {
     int thing_created =
         items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE);
@@ -848,15 +846,15 @@ static bool _xom_is_bad(int sever)
         {
             god_speaks(GOD_XOM, _get_xom_speech("hostile monster"));
 
-            bool success = false;
-
             // Nasty, but fun.
             if (one_chance_in(4))
-                success = cast_tukimas_dance(100, GOD_XOM, true);
+                cast_tukimas_dance(100, GOD_XOM, true);
             else
             {
                 const int numdemons =
                     std::min(random2(random2(random2(sever+1)+1)+1)+1, 14);
+
+                bool success = false;
 
                 for (int i = 0; i < numdemons; ++i)
                 {
