@@ -373,6 +373,7 @@ static bool _xom_gives_item(int power)
         // Random-type random object.
         _xom_make_item(OBJ_RANDOM, OBJ_RANDOM, power * 3);
     }
+
     more();
 
     return (true);
