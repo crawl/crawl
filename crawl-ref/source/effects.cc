@@ -1763,11 +1763,8 @@ bool recharge_wand(int item_slot)
                                         OSEL_RECHARGE, true, true, false );
     }
 
-    if (item_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
+    if (prompt_failed(item_slot))
         return (false);
-    }
 
     item_def &wand = you.inv[ item_slot ];
 

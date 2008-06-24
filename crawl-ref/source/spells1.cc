@@ -434,11 +434,8 @@ void identify(int power, int item_slot)
             item_slot = prompt_invent_item( "Identify which item?", MT_INVLIST,
                                             OSEL_UNIDENT, true, true, false );
         }
-        if (item_slot == PROMPT_ABORT)
-        {
-            canned_msg( MSG_OK );
+        if (prompt_failed(item_slot))
             return;
-        }
 
         item_def& item(you.inv[item_slot]);
 

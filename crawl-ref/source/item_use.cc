@@ -273,11 +273,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
             item_slot = PROMPT_GOT_SPECIAL;
     }
 
-    if (item_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
+    if (prompt_failed(item_slot))
         return (false);
-    }
     else if (item_slot == you.equip[EQ_WEAPON])
     {
         mpr("You are already wielding that!");
@@ -789,9 +786,7 @@ bool armour_prompt( const std::string & mesg, int *index, operation_types oper)
                                    true, true, true, 0, NULL,
                                    oper );
 
-        if (slot == PROMPT_ABORT)
-            canned_msg(MSG_OK);
-        else
+        if (!prompt_failed(slot))
         {
             *index = slot;
             succeeded = true;
@@ -1499,7 +1494,7 @@ static int _fire_prompt_for_item(std::string& err)
                                    MT_INVLIST,
                                    OBJ_MISSILES, true, true, true, 0, NULL,
                                    OPER_FIRE );
-    if (slot == PROMPT_ABORT)
+    if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
     {
         err = "Nothing selected.";
         return -1;
@@ -3109,11 +3104,8 @@ bool puton_ring(int slot, bool prompt_finger)
                         MT_INVLIST, OBJ_JEWELLERY, true, true, true, 0, NULL,
                         OPER_PUTON );
 
-    if (item_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
+    if (prompt_failed(item_slot))
         return (false);
-    }
 
     return puton_item(item_slot, prompt_finger);
 }                               // end puton_ring()
@@ -3259,11 +3251,8 @@ bool remove_ring(int slot, bool announce)
                                               0, NULL, OPER_REMOVE)
                         : slot;
 
-        if (equipn == PROMPT_ABORT)
-        {
-            canned_msg( MSG_OK );
+        if (prompt_failed(equipn))
             return (false);
-        }
 
         if (you.inv[equipn].base_type != OBJ_JEWELLERY)
         {
@@ -3370,11 +3359,8 @@ void zap_wand( int slot )
                                     OPER_ZAP );
     }
 
-    if (item_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
+    if (prompt_failed(item_slot))
         return;
-    }
 
     item_def& wand = you.inv[item_slot];
     if (wand.base_type != OBJ_WANDS)
@@ -3538,11 +3524,8 @@ void prompt_inscribe_item()
     }
     item_slot = prompt_invent_item("Inscribe which item? ",
                                    MT_INVLIST, OSEL_ANY );
-    if (item_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
+    if (prompt_failed(item_slot))
         return;
-    }
 
     inscribe_item(you.inv[item_slot], true);
 }
@@ -3595,11 +3578,8 @@ void drink( int slot )
                                         OPER_QUAFF );
     }
 
-    if (item_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
+    if (prompt_failed(item_slot))
         return;
-    }
 
     if (you.inv[item_slot].base_type != OBJ_POTIONS)
     {
@@ -4120,11 +4100,8 @@ static bool scroll_modify_item(const scroll_type scroll)
      int item_slot = prompt_invent_item( "Use on which item?", MT_INVLIST,
                                           OSEL_ANY, true, true, false );
 
-     if (item_slot == PROMPT_ABORT)
-     {
-         canned_msg( MSG_OK );
+     if (prompt_failed(item_slot))
          return (false);
-     }
 
      item_def &item = you.inv[item_slot];
 
@@ -4203,11 +4180,8 @@ void read_scroll( int slot )
                         true, true, true, 0, NULL,
                         OPER_READ );
 
-    if (item_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
+    if (prompt_failed(item_slot))
         return;
-    }
 
     item_def& scroll = you.inv[item_slot];
 
@@ -4581,11 +4555,8 @@ void examine_object(void)
                                         MT_INVLIST, -1,
                                         true, true, true, 0, NULL,
                                         OPER_EXAMINE );
-    if (item_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
+    if (prompt_failed(item_slot))
         return;
-    }
 
     describe_item( you.inv[item_slot], true );
     redraw_screen();

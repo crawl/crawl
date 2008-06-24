@@ -35,6 +35,7 @@ enum object_selector
 
 #define PROMPT_ABORT        -1
 #define PROMPT_GOT_SPECIAL  -2
+#define PROMPT_NOTHING      -3
 
 struct SelItem
 {
@@ -230,5 +231,7 @@ bool has_warning_inscription(const item_def& item, operation_types oper);
 
 void init_item_sort_comparators(item_sort_comparators &list,
                                 const std::string &set);
+
+bool prompt_failed(int retval, std::string msg = "");
 
 #endif

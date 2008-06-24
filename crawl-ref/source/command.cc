@@ -330,11 +330,8 @@ static void _adjust_item(void)
     }
 
     from_slot = prompt_invent_item( "Adjust which item?", MT_INVLIST, -1 );
-    if (from_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
+    if (prompt_failed(from_slot))
         return;
-    }
 
     mpr(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
 

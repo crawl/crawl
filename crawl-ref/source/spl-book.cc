@@ -976,11 +976,8 @@ static int _which_spellbook( void )
 
     book = prompt_invent_item("Memorise from which spellbook?", MT_INVLIST,
                               OSEL_MEMORISE );
-    if (book == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
+    if (prompt_failed(book))
         return (-1);
-    }
 
     if (you.inv[book].base_type != OBJ_BOOKS
         || you.inv[book].sub_type == BOOK_MANUAL)

@@ -712,11 +712,8 @@ static int _choose_inventory_deck( const char* prompt )
                                          true, true, true, 0, NULL,
                                          OPER_EVOKE );
 
-    if ( slot == PROMPT_ABORT )
-    {
-        canned_msg(MSG_OK);
+    if (prompt_failed(slot))
         return -1;
-    }
 
     if ( !is_deck(you.inv[slot]) )
     {

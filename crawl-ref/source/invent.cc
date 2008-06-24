@@ -45,6 +45,7 @@
 #include "menu.h"
 #include "mon-util.h"
 #include "randart.h"
+#include "state.h"
 
 #include "tiles.h"
 
@@ -325,6 +326,42 @@ void InvMenu::set_title(const std::string &s)
     set_title(new InvTitle(this, stitle, title_annotate));
 }
 
+static std::string _no_selectables_message(int item_selector)
+{
+    switch (item_selector)
+    {
+    case OSEL_ANY:
+        return("You aren't carrying anything.");
+    case OSEL_WIELD:
+    case OBJ_WEAPONS:
+        return("You aren't carrying any weapons.");
+    case OSEL_UNIDENT:
+        return("You don't have any unidentified items.");
+    case OSEL_MEMORISE:
+        return("You aren't carrying any spellbooks.");
+    case OSEL_RECHARGE:
+        return("You aren't carrying any rechargable items.");
+    case OSEL_ENCH_ARM:
+    case OBJ_ARMOUR:
+        return("You aren't carrying any armour which can be enchanted "
+               "further.");
+    case OBJ_CORPSES:
+    case OSEL_VAMP_EAT:
+        return("You aren't carrying any corpses which you can drain.");
+    case OSEL_DRAW_DECK:
+        return("You aren't carrying any decks from which to draw.");
+    case OBJ_FOOD:
+        return("You aren't carrying any food.");
+    case OBJ_SCROLLS:
+    case OBJ_BOOKS:
+        return("You aren't carrying any books or scrolls.");
+    case OBJ_WANDS:
+        return("You aren't carrying any wands.");
+    }
+
+    return("You aren't carrying any such object.");
+}
+
 void InvMenu::load_inv_items(int item_selector,
                              MenuEntry *(*procfn)(MenuEntry *me))
 {
@@ -334,52 +371,7 @@ void InvMenu::load_inv_items(int item_selector,
     load_items(tobeshown, procfn);
     if (!item_count())
     {
-        std::string s;
-        switch (item_selector)
-        {
-        case OSEL_ANY:
-            s = "You aren't carrying anything.";
-            break;
-        case OSEL_WIELD:
-        case OBJ_WEAPONS:
-            s = "You aren't carrying any weapons.";
-            break;
-        case OSEL_UNIDENT:
-            s = "You don't have any unidentified items.";
-            break;
-        case OSEL_MEMORISE:
-            s = "You aren't carrying any spellbooks.";
-            break;
-        case OSEL_RECHARGE:
-            s = "You aren't carrying any rechargable items.";
-            break;
-        case OSEL_ENCH_ARM:
-        case OBJ_ARMOUR:
-            s = "You aren't carrying any armour which can be enchanted "
-                "further.";
-            break;
-        case OBJ_CORPSES:
-        case OSEL_VAMP_EAT:
-            s = "You aren't carrying any corpses which you can drain.";
-            break;
-        case OSEL_DRAW_DECK:
-            s = "You aren't carrying any decks from which to draw.";
-            break;
-        case OBJ_FOOD:
-            s = "You aren't carrying any food.";
-            break;
-        case OBJ_SCROLLS:
-        case OBJ_BOOKS:
-            s = "You aren't carrying any books or scrolls.";
-            break;
-        case OBJ_WANDS:
-            s = "You aren't carrying any wands.";
-            break;
-        default:
-            s = "You aren't carrying any such object.";
-            break;
-        }
-        set_title(s);
+        set_title(_no_selectables_message(item_selector));
     }
     else
     {
@@ -873,6 +865,19 @@ static void _get_inv_items_to_show(std::vector<const item_def*> &v, int selector
     }
 }
 
+static bool _any_items_to_select(int selector)
+{
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        if (is_valid_item(you.inv[i])
+            && _is_item_selected(you.inv[i], selector))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 unsigned char invent_select(
                       const char *title,
                       menu_type type,
@@ -1282,6 +1287,7 @@ bool check_warning_inscriptions( const item_def& item,
 //
 // It returns PROMPT_ABORT       if the player hits escape.
 // It returns PROMPT_GOT_SPECIAL if the player hits the "other_valid_char".
+// It retursn PROMPT_NOTHING     if there's no matching items
 //
 // Note: This function never checks if the item is appropriate.
 int prompt_invent_item( const char *prompt,
@@ -1292,8 +1298,16 @@ int prompt_invent_item( const char *prompt,
                         int *const count,
                         operation_types oper )
 {
+    if (!_any_items_to_select(type_expect) && type_expect != OSEL_WIELD
+        && mtype == MT_INVLIST)
+    {
+        mprf(MSGCH_PROMPT, "%s",
+             _no_selectables_message(type_expect).c_str());
+        return (PROMPT_NOTHING);
+    }
+
     unsigned char  keyin = 0;
-    int            ret = PROMPT_ABORT;
+    int            ret = PROMPT_ABORT; 
 
     bool           need_redraw = false;
     bool           need_prompt = true;
@@ -1303,7 +1317,11 @@ int prompt_invent_item( const char *prompt,
     if (auto_list)
     {
         need_prompt = need_getch = false;
-        keyin       = '?';
+
+        if (_any_items_to_select(type_expect))
+            keyin = '?';
+        else
+            keyin = '*';
     }
 
     while (true)
@@ -1409,4 +1427,22 @@ int prompt_invent_item( const char *prompt,
     }
 
     return (ret);
+}
+
+bool prompt_failed(int retval, std::string msg)
+{
+    if (retval != PROMPT_ABORT && retval != PROMPT_NOTHING)
+        return false;
+
+    if (msg.empty())
+    {
+        if (retval == PROMPT_ABORT)
+            canned_msg(MSG_OK);
+    }
+    else
+        mprf(MSGCH_PROMPT, msg.c_str());
+
+    crawl_state.cancel_cmd_repeat();
+
+    return true;
 }

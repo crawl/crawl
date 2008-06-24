@@ -720,11 +720,8 @@ bool prompt_eat_from_inventory(int slot)
                                     OPER_EAT );
     }
 
-    if (which_inventory_slot == PROMPT_ABORT)
-    {
-        canned_msg( MSG_OK );
+    if (prompt_failed(which_inventory_slot))
         return (false);
-    }
 
     // This conditional can later be merged into food::can_ingest() when
     // expanded to handle more than just OBJ_FOOD 16mar200 {dlb}
