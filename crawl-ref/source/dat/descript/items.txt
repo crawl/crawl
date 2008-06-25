@@ -1036,7 +1036,8 @@ poison.
 %%%%
 potion of restore abilities
 
-A potion which restores the abilities of one who drinks it.
+A potion which restores the abilities of one who drinks it.  It also allows 
+to use a breath weapon again, cancelling the delay.
 %%%%
 potion of slowing
 
