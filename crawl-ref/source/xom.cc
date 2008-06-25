@@ -67,7 +67,7 @@ static const spell_type _xom_spells[] =
     SPELL_NECROMUTATION
 };
 
-static const char* _xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
+static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
 {
     // XM_NORMAL
     {
@@ -104,7 +104,7 @@ const char *describe_xom_favour()
                              : "A beloved plaything of Xom.";
 }
 
-static const char* _get_xom_speech(const std::string key)
+static const char *_get_xom_speech(const std::string key)
 {
     std::string result = getSpeakString("Xom " + key);
 
@@ -125,7 +125,7 @@ bool xom_is_nice()
 }
 
 static void _xom_is_stimulated(int maxinterestingness,
-                               const char* message_array[],
+                               const char *message_array[],
                                bool force_message)
 {
     if (you.religion != GOD_XOM || maxinterestingness <= 0)
@@ -172,7 +172,7 @@ void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
 void xom_is_stimulated(int maxinterestingness, const std::string& message,
                        bool force_message)
 {
-    const char* message_array[6];
+    const char *message_array[6];
 
     for (int i = 0; i < 6; ++i)
         message_array[i] = message.c_str();
