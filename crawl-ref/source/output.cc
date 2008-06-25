@@ -1005,7 +1005,7 @@ static bool _mons_hostile(const monsters *mon)
     return (!mons_friendly(mon) && !mons_neutral(mon));
 }
 
-static const char* _get_monster_name(const monsters *mon, bool list_a = false)
+static std::string _get_monster_name(const monsters *mon, bool list_a = false)
 {
     std::string desc = "";
 
@@ -1043,7 +1043,8 @@ static const char* _get_monster_name(const monsters *mon, bool list_a = false)
             desc += ")";
         }
     }
-    return desc.c_str();
+
+    return (desc);
 }
 
 // Returns true if the first monster is more aggressive (in terms of
@@ -1113,11 +1114,11 @@ static void _get_visible_monsters(std::vector<std::string>& describe)
         if (i > 0 && _compare_monsters_attitude(mons[i-1], mons[i]))
         {
             if (count == 1)
-                describe.push_back(_get_monster_name(mons[i-1], true));
+                describe.push_back(_get_monster_name(mons[i-1], true).c_str());
             else
             {
                 describe.push_back(number_in_words(count) + " "
-                                   + pluralise(_get_monster_name(mons[i-1])));
+                                   + pluralise(_get_monster_name(mons[i-1]).c_str()));
             }
             count = 0;
         }
@@ -1127,12 +1128,12 @@ static void _get_visible_monsters(std::vector<std::string>& describe)
     if (mons.size() == 1
         || _compare_monsters_attitude(mons[size-2], mons[size-1]))
     {
-        describe.push_back(_get_monster_name(mons[size-1], true));
+        describe.push_back(_get_monster_name(mons[size-1], true).c_str());
     }
     else
     {
         describe.push_back(number_in_words(count) + " "
-                           + pluralise(_get_monster_name(mons[size-1])));
+                           + pluralise(_get_monster_name(mons[size-1]).c_str()));
     }
 }
 
@@ -1621,7 +1622,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         {
             const int item_idx = you.equip[e_order[i]];
             const item_def& item = you.inv[item_idx];
-            const char* colname = colour_to_str(item.colour);
+            const char* colname = colour_to_str(item.colour).c_str();
             const char equip_char = index_to_letter(item_idx);
 
             char buf2[50];
@@ -1802,7 +1803,7 @@ static std::vector<formatted_string> _get_overview_stats()
         else
         {
             snprintf(god_colour_tag, sizeof god_colour_tag, "<%s>",
-                     colour_to_str(god_colour(you.religion)));
+                     colour_to_str(god_colour(you.religion)).c_str());
             // piety rankings
             int prank = piety_rank() - 1;
             if (prank < 0 || you.religion == GOD_XOM)

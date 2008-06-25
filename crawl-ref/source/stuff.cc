@@ -1057,7 +1057,7 @@ static std::string _list_alternative_yes(char yes1, char yes2,
     return help;
 }
 
-static const char* _list_allowed_keys(char yes1, char yes2,
+static std::string _list_allowed_keys(char yes1, char yes2,
                                       bool lowered = false,
                                       bool allow_all = false)
 {
@@ -1069,7 +1069,7 @@ static const char* _list_allowed_keys(char yes1, char yes2,
                 result += (lowered ? "/n/q" : "/N/Q");
                 result += "]";
 
-    return (result.c_str());
+    return (result);
 }
 
 // Like yesno(), but returns 0 for no, 1 for yes, and -1 for quit.
@@ -1083,7 +1083,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
 
     std::string prompt = make_stringf("%s%s ", str ? str : "Buggy prompt?",
                                       _list_allowed_keys(alt_yes, alt_yes2,
-                                                         safe, allow_all));
+                                                         safe, allow_all).c_str());
     while (true)
     {
         mpr(prompt.c_str(), MSGCH_PROMPT);

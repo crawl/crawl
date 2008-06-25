@@ -118,12 +118,12 @@ const std::string cols[16] =
     "lightred", "lightmagenta", "yellow", "white"
 };
 
-const char* colour_to_str(unsigned char colour)
+const std::string colour_to_str(unsigned char colour)
 {
     if ( colour >= 16 )
         return "lightgrey";
     else
-        return cols[colour].c_str();
+        return cols[colour];
 }
 
 // Returns -1 if unmatched else returns 0-15.

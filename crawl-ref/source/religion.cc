@@ -4532,12 +4532,12 @@ static bool _beogh_followers_abandon_you()
 }
 
 // currently only used when orcish idols have been destroyed
-static const char* _get_beogh_speech(const std::string key)
+static std::string _get_beogh_speech(const std::string key)
 {
     std::string result = getSpeakString("Beogh " + key);
 
     if (!result.empty())
-        return (result.c_str());
+        return (result);
 
     return ("Beogh is angry!");
 }
@@ -4555,11 +4555,11 @@ void beogh_idol_revenge()
         const char *revenge;
 
         if (you.religion == GOD_BEOGH)
-            revenge = _get_beogh_speech("idol follower");
+            revenge = _get_beogh_speech("idol follower").c_str();
         else if (you.species == SP_HILL_ORC)
-            revenge = _get_beogh_speech("idol hill orc");
+            revenge = _get_beogh_speech("idol hill orc").c_str();
         else
-            revenge = _get_beogh_speech("idol other");
+            revenge = _get_beogh_speech("idol other").c_str();
 
         god_smites_you(GOD_BEOGH, KILLED_BY_BEOGH_SMITING, revenge);
 

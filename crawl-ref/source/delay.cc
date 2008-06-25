@@ -211,13 +211,13 @@ static int _recite_to_monsters(int x, int y, int pow, int unused)
     return (1);
 }
 
-static const char* _get_recite_speech(const std::string key, int weight)
+static std::string _get_recite_speech(const std::string key, int weight)
 {
     seed_rng( weight + you.x_pos + you.y_pos);
     const std::string str = getSpeakString("zin_recite_speech_" + key);
 
     if (!str.empty())
-        return (str.c_str());
+        return (str);
 
     // in case nothing is found
     if (key == "start")
@@ -429,7 +429,7 @@ void stop_delay( bool stop_stair_travel )
 
     case DELAY_RECITE:
         mprf(MSGCH_PLAIN, "You stop %s.",
-             _get_recite_speech("other", you.num_turns + delay.duration));
+             _get_recite_speech("other", you.num_turns + delay.duration).c_str());
         _pop_delay();
         break;
 
@@ -683,7 +683,7 @@ void handle_delay( void )
             break;
         case DELAY_RECITE:
             mprf(MSGCH_PLAIN, "You %s",
-                 _get_recite_speech("start", you.num_turns + delay.duration));
+                 _get_recite_speech("start", you.num_turns + delay.duration).c_str());
 
             if (apply_area_visible(_recite_to_monsters, delay.parm1))
                 viewwindow(true, false);
@@ -890,7 +890,7 @@ void handle_delay( void )
             break;
         case DELAY_RECITE:
             mprf(MSGCH_MULTITURN_ACTION, "You continue %s.",
-                 _get_recite_speech("other", you.num_turns + delay.duration+1));
+                 _get_recite_speech("other", you.num_turns + delay.duration+1).c_str());
 
             if (apply_area_visible(_recite_to_monsters, delay.parm1))
                 viewwindow(true, false);
@@ -1034,7 +1034,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_RECITE:
         mprf(MSGCH_PLAIN, "You finish %s.",
-             _get_recite_speech("other", you.num_turns + delay.duration));
+             _get_recite_speech("other", you.num_turns + delay.duration).c_str());
         break;
 
     case DELAY_PASSWALL:

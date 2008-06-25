@@ -101,16 +101,16 @@ static bool is_userfunction(const keyseq &seq)
     return (userfunc_index(seq) != -1);
 }
 
-const char *get_userfunction(int key)
+std::string get_userfunction(int key)
 {
     int index = userfunc_index(key);
-    return (index == -1? NULL : userfunctions[index].c_str());
+    return (index == -1 ? NULL : userfunctions[index]);
 }
 
-static const char *get_userfunction(const keyseq &seq)
+static std::string get_userfunction(const keyseq &seq)
 {
     int index = userfunc_index(seq);
-    return (index == -1? NULL : userfunctions[index].c_str());
+    return (index == -1 ? NULL : userfunctions[index]);
 }
 
 static bool userfunc_referenced(int index, const macromap &mm)

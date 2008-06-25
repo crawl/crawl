@@ -74,7 +74,7 @@ void macro_buf_add(const keyseq &actions, bool reverse = false );
 bool is_userfunction(int key);
 bool is_synthetic_key(int key);
 
-const char *get_userfunction(int key);
+std::string get_userfunction(int key);
 
 void add_key_recorder(key_recorder* recorder);
 void remove_key_recorder(key_recorder* recorder);
