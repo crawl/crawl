@@ -129,7 +129,7 @@ namespace msg
     };
 
     void initialise_mpr_streams();
-    void deinitalise_mpr_streams();
+    void deinitialise_mpr_streams();
 }
 
 std::ostream& operator<<(std::ostream& os, const msg::setparam& sp);

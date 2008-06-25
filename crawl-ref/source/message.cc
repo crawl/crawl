@@ -80,7 +80,7 @@ namespace msg
         stream << std::nounitbuf;
     }
 
-    void deinitalise_mpr_streams()
+    void deinitialise_mpr_streams()
     {
         for (unsigned int i = 0; i < stream_ptrs.size(); ++i)
             delete stream_ptrs[i];

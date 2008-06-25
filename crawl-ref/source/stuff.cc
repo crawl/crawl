@@ -676,7 +676,7 @@ void cio_cleanup()
     deinit_libw32c();
 #endif
 
-    msg::deinitalise_mpr_streams();
+    msg::deinitialise_mpr_streams();
 
     crawl_state.io_inited = false;
 }
