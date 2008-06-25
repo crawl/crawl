@@ -825,20 +825,23 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     }
     else if (monster->type == MONS_DANCING_WEAPON)
     {
-        if (!silent)
+        if (!hard_reset)
         {
-            if (!hard_reset)
+            if (killer == KILL_RESET)
+                killer = KILL_DISMISSED;
+        }
+
+        if (!silent && !hard_reset)
+        {
+            int w_idx = monster->inv[MSLOT_WEAPON];
+            if (w_idx != NON_ITEM && !(mitm[w_idx].flags & ISFLAG_SUMMONED))
             {
                 simple_monster_message( monster, " falls from the air.",
                                         MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
                 silent = true;
             }
-        }
-
-        if (!hard_reset)
-        {
-            if (killer == KILL_RESET)
-                killer = KILL_DISMISSED;
+            else
+                killer = KILL_RESET;
         }
     }
 
