@@ -456,6 +456,7 @@ void game_options::reset_startup_options()
     weapon                 = WPN_UNKNOWN;
     book                   = SBT_NO_SELECTION;
     random_pick            = false;
+    good_random            = true;
     chaos_knight           = GOD_NO_GOD;
     death_knight           = DK_NO_SELECTION;
     priest                 = GOD_NO_GOD;
@@ -2091,6 +2092,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 
     BOOL_OPTION(random_pick);
+    else BOOL_OPTION(good_random);
     else BOOL_OPTION(remember_name);
 #ifndef SAVE_DIR_PATH
     else if (key == "save_dir")

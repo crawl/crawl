@@ -1679,6 +1679,8 @@ public:
     int         death_knight;    // choice of god/necromancy for Death Knights
     god_type    priest;          // choice of god for priests (Zin/Yred)
     bool        random_pick;     // randomly generate character
+    bool        good_random;     // when chosing randomly only choose
+                                 // unrestricted combinations
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
     char        race;            // preselected race
