@@ -66,7 +66,8 @@ The contents of this text are:
                 status_caption_colour, delay_message_clear,
                 message_colour, show_inventory_weights, show_gold_turns,
                 show_beam, item_stack_summary_minimum, list_rotten,
-                mlist_min_height, msg_max_height, classic_hud,
+                mlist_min_height, msg_max_height, 
+                mlist_allow_alternate_layout, mlist_targetting, classic_hud,
                 menu_colour, menu_colour_prefix_id, menu_colour_prefix_class,
                 message_colour, force_more_message,
                 msg_condense_repeats
@@ -302,7 +303,7 @@ sound = <regex>:<path to sound file>
 Lua files are scripts which can provide existing commands with a new
 meaning or create new commands (to be used in macros). To use Lua
 files, Crawl needs to be compiled with support for user Lua scripts.
-You can if your Crawl has Lua support by hitting V in-game. The list
+You can if your Crawl has Lua support by hitting ?V in-game. The list
 of features Crawl displays should include "Lua user scripts".
 
 Lua files are included using the lua_file option (one file per line):
@@ -1183,11 +1184,23 @@ mlist_min_height = 5
         If there is extra space available for the message area and
         monster list, the monster list will expand to this height
         before letting the message area get more.
+        (Note that the monster list is only available for ASCII.)
 
 msg_max_height = 10
         If there is extra space available after the monster list has
         expanded, the message area will expand up to this height.
         The monster list will get the rest.
+
+mlist_allow_alternate_layout = false
+        Display the monster list wherever Crawl may find space on 
+        your console display, usually to the left of the map, rather
+        than using the fixed position below the stat area.
+
+mlist_targetting = false
+        Using the monster list you can directly target monsters in
+        targetting mode. There's a toggle that allows you to turn this
+        feature on and off. This option controls the initial setting
+        at game start or reload.
 
 classic_hud = false
         Remove the Health and Magic bars and the monster list, for a
@@ -1231,7 +1244,9 @@ menu_colour = <match>:<colour>:<regex>
            useless_item    (This item is of no use to you.)
 
            evil_eating     (Eating this item is punished by the good gods.)
-           inedible        (You cannot eat this or get no nutrition from it.)
+           inedible        (You cannot eat this, or get no nutrition from it.)
+           preferred       (The food type your character prefers, for example
+                            for herbivores/carnivores.)
            poisonous       (Chunks/corpses that are poisonous)
            mutagenic       (Chunks/corpses that are mutagenic)
            contaminated    (Chunks/corpses that may cause sickness, but
@@ -1244,7 +1259,7 @@ menu_colour = <match>:<colour>:<regex>
         When looking for menu_colour matches, these prefixes are prepended to 
         the actual item name, e.g. in the form of
            identified, evil_item wand of draining (4)
-           unidentified, equipped, artefact sparkling ring
+           unidentified, equipped, artefact sparkling ring (left hand)
 
         The same prefixes can also be used for highlighting prompts pertaining
         to items matching the description, or to define autopickup_exceptions.
@@ -1270,7 +1285,7 @@ menu_colour = <match>:<colour>:<regex>
         To quickly check what potions were trashed by a mummy curse, use
           menu_colour = inventory:lightred:potions? of (degeneration|decay)
 
-        If you'd like to see rotten chunks and corpses at a glance, use
+        If you'd like to see rotting chunks and corpses at a glance, use
           menu_colour = inventory:red: rotting
 
         menu_colour can also be applied to colour the in-game notes (to 
@@ -1305,7 +1320,7 @@ force_more_message = <list of regexes>
         The syntax is identical to that of travel_stop_message (4-g).
 
 msg_condense_repeats = true
-        If the same message is repeated multiple times without repition,
+        If the same message is repeated multiple times without repetition,
         then the Show Previous Message command (Ctrl-P) will condense them
         into one line indicating how many times it was repeated.  For
         example:
@@ -1319,7 +1334,7 @@ fire_items_start = a
         Sets the first inventory item to consider when selecting
         missiles to fire. The default is a.
 
-fire_order  = inscribed, launcher, return
+fire_order  = launcher, return
 fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger
 fire_order += inscribed
         Controls the order of items autoselected for firing. Items 
@@ -1332,17 +1347,15 @@ fire_order += inscribed
         in your inventory that fits one of these will be picked for 
         firing.
 
-        'inscribed' refers to any item with the "+f" inscription.  See
-        the "Inscriptions" section of the crawl manual for more information
-        about inscriptions.
-
-        the "Inscriptions"
-
         'launcher' refers to firing the appropriate missile for the 
-        wielded weapon (ie crossbow, bow, sling, blowgun). You'll almost 
+        wielded weapon (i.e. crossbow, bow, sling, blowgun). You'll almost 
         certainly want it first, as it'll be ignored when you're not 
         wielding a ranged weapon. 'return' refers to (identified) 
         weapons of returning.
+
+        'inscribed' refers to any item with the "+f" inscription.  See
+        the "Inscriptions" section of Crawl's manual for more information
+        about inscriptions.
 
 (See also pickup_thrown in 4-a.)
 
@@ -1375,12 +1388,12 @@ CHANNEL_NAME can currently be one of these:
    friend_enchant  = as monster_enchant, but only for friendly monsters
    monster_damage  = messages telling how damaged a monster is
    rotten_meat     = messages about chunks/corpses becoming rotten
-   equipment       = messages inidcating worn/wielded equipment
+   equipment       = messages indicating worn/wielded equipment
    floor           = messages when looking at or walking over a floor 
                      item
    multiturn       = indicates long actions (wearing armour, dissecting 
                      etc.)
-   examine         = messages from examine your surroundings
+   examine         = messages from examining your surroundings
    examine_filter  = boring messages from examining your surroundings
    diagnostics     = debugging messages
    error           = error messages
@@ -1404,7 +1417,7 @@ to mute.
 Note that the template init.txt sets
      channel.multiturn = on
 in order to help new players. You may want to comment out this option, 
-if the messages are too verbose.
+if you feel the messages are too verbose.
 
 4-m     Inscriptions.
 ---------------------
@@ -1453,7 +1466,7 @@ In non-tile games the tile options are ignored.
 
 tile_show_items = <glyphs>
         This option controls the order and presence of items in the tiles
-        inventory.  By default, its value is !?/%=([)X}+\_.  The underscore
+        inventory.  By default, its value is !?/%=([)x}+\_.  The underscore
         represents empty slots, the dot items on the floor.
 
 title_screen = true
@@ -1481,7 +1494,7 @@ tile_excluded_col    = darkcyan
 tile_excl_centre_col = darkblue
 
 These options allow configuring the colours used for the minimap of
-the dungeon level. 
+the dungeon level.
    tile_player_col       - colour of player position, as well as of
                            map centre during level map mode ('X') 
    tile_monster_col      - colour of hostile monsters
@@ -1624,7 +1637,8 @@ rare_interesting = 9
         noted.  Increasing the number causes more common monsters to
         be noted, while decreasing it causes only the most rare of
         monsters to be noted; setting it to 0 will turn noting of rare
-        monsters off.
+        monsters off. Really wimpy monsters (such as rats or butterflies)
+        won't ever be noted.
 
 note_hp_percent = 5
         If your HP falls below a certain note_hp_percentage of your max 
@@ -1715,7 +1729,7 @@ colour.OLDCOLOUR = NEWCOLOUR
         especially when used with the background option on a terminal 
         with a non-black background.
         Format is colour.OLDCOLOUR = NEWCOLOUR, later rules take 
-        preference and the NEWCOLOUR is always literal (ie. it won't 
+        precedence and the NEWCOLOUR is always literal (ie. it won't 
         re-evaluate to a different colour).
         The colours are:
                 black, blue, green, cyan, red, magenta, brown, lightgrey, 

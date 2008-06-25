@@ -53,7 +53,7 @@ void print_stats_level(void);
 void draw_border(void);
 std::string mpr_monster_list(bool past = false);
 void redraw_skill(const std::string &your_name, const std::string &class_name);
-void update_monster_pane();
+bool update_monster_pane();
 
 const char *equip_slot_to_name(int equip);
 

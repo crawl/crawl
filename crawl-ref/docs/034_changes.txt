@@ -16,6 +16,8 @@ them:
    E         show experience  (was C)
    v         evoke            (was E)
    t         tell/yell        (was !)
+   Ctrl-V    Tiles settings   (was Ctrl-Q)
+   Ctrl-Q    quit             (was Q)
    There is a file called "keys.pdf" in the /docs directory. It should be
    printable and contains a reference sheet for all keys used in Crawl.
 

@@ -1450,13 +1450,13 @@ void get_monster_pane_info(std::vector<monster_pane_info>& mons)
 }
 
 #define BOTTOM_JUSTIFY_MONSTER_LIST 0
-void update_monster_pane()
+bool update_monster_pane()
 {
     const int max_print = crawl_view.mlistsz.y;
     textbackground(BLACK);
 
     if (max_print <= 0)
-        return;
+        return (false);
 
     std::vector<monster_pane_info> mons;
     get_monster_pane_info(mons);
@@ -1514,10 +1514,15 @@ void update_monster_pane()
         cgotoxy(crawl_view.mlistsz.x - 4, crawl_view.mlistsz.y, GOTO_MLIST);
         cprintf(" ... ");
     }
+
+    return zombified;
 }
 #else
 // FIXME: Implement this for Tiles!
-void update_monster_pane() {}
+bool update_monster_pane()
+{
+    return (false);
+}
 #endif
 
 const char* itosym1(int stat)

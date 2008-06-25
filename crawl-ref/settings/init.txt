@@ -224,6 +224,7 @@ include = travel_stoppers.txt
 # mlist_min_height             = 5
 # msg_max_height               = 10
 # mlist_allow_alternate_layout = true
+# mlist_targetting             = true
 # show_gold_turns              = true
 
 # delay_message_clear        = true

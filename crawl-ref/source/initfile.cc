@@ -2199,6 +2199,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(mlist_min_height, 0, INT_MAX);
     else INT_OPTION(msg_max_height, 6, INT_MAX);
     else BOOL_OPTION(mlist_allow_alternate_layout);
+#ifndef USE_TILE
+    else BOOL_OPTION(mlist_targetting);
+#endif
     else BOOL_OPTION(classic_hud);
     else BOOL_OPTION(msg_condense_repeats);
     else BOOL_OPTION(view_lock_x);

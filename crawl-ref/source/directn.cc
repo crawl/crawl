@@ -442,11 +442,13 @@ static void direction_again(dist& moves, targeting_type restricts,
 
 #ifndef USE_TILE
 // XXX: Hack - can't pass mlist entries into _find_mlist().
+bool mlist_full_info;
 std::vector<monster_pane_info> mlist;
-static void _fill_monster_list(void)
+static void _fill_monster_list(bool full_info)
 {
     std::vector<monster_pane_info> temp;
     get_monster_pane_info(temp);
+    mlist_full_info = full_info;
 
     // Get the unique entries.
     mlist.clear();
@@ -455,9 +457,13 @@ static void _fill_monster_list(void)
     {
         mlist.push_back(temp[start]);
         for (end = start + 1; end < (int) temp.size(); ++end)
-            if (monster_pane_info::less_than(temp[start], temp[end]))
+        {
+            if (monster_pane_info::less_than(temp[start], temp[end],
+                                             full_info))
+            {
                   break;
-
+            }
+        }
         start = end;
     }
 }
@@ -478,7 +484,8 @@ void direction(dist& moves, targeting_type restricts,
     if (!just_looking && Options.mlist_targetting == MLIST_TARGET_HIDDEN)
     {
         Options.mlist_targetting = MLIST_TARGET_ON;
-        _fill_monster_list();
+        bool full_info = update_monster_pane();
+        _fill_monster_list(full_info);
     }
 #endif
 
@@ -721,16 +728,18 @@ void direction(dist& moves, targeting_type restricts,
 
 #ifndef USE_TILE
         case CMD_TARGET_TOGGLE_MLIST:
+        {
             if (Options.mlist_targetting == MLIST_TARGET_ON)
                 Options.mlist_targetting = MLIST_TARGET_OFF;
             else
                 Options.mlist_targetting = MLIST_TARGET_ON;
 
-            update_monster_pane();
+            bool full_info = update_monster_pane();
 
             if (Options.mlist_targetting == MLIST_TARGET_ON)
-                _fill_monster_list();
+                _fill_monster_list(full_info);
             break;
+        }
 #endif
 
 #ifdef WIZARD
@@ -1243,6 +1252,30 @@ bool in_los(int x, int y)
     return (in_vlos(grid2view(coord_def(x, y))));
 }
 
+static bool _mons_is_valid_target(monsters *mon, int mode, int range)
+{
+    // Unknown mimics don't count as monsters, either.
+    if (mons_is_mimic(mon->type)
+        && !(mon->flags & MF_KNOWN_MIMIC))
+    {
+        return (false);
+    }
+
+    // Don't usually target unseen monsters...
+    if (!player_monster_visible(mon))
+    {
+        // ... unless it creates a "disturbance in the water".
+        // Since you can't see the monster, assume it's not a friend.
+        // Also don't target submerged monsters if there are other targets
+        // in sight. (This might be too restrictive.)
+        return (mode != TARG_FRIEND
+                && _mon_submerged_in_water(mon)
+                && i_feel_safe(false, false, true, range));
+    }
+
+    return (true);
+}
+
 #ifndef USE_TILE
 static bool _find_mlist( int x, int y, int idx, bool need_path, int range = -1)
 {
@@ -1266,20 +1299,40 @@ static bool _find_mlist( int x, int y, int idx, bool need_path, int range = -1)
         }
 
         // While the monsters are identical, don't increase real_idx.
-        if (mlist[i].m_mon->type == mlist[i+1].m_mon->type
-            && mlist[i].m_attitude == mlist[i+1].m_attitude)
-        {
+        if (!monster_pane_info::less_than(mlist[i], mlist[i+1], mlist_full_info))
             continue;
-        }
+
         real_idx++;
     }
 
     monsters *mon  = &menv[targ_mon];
+
+    if (!_mons_is_valid_target(mon, TARG_ANY, range))
+        return (false);
+
     const monsters *monl = mlist[real_idx].m_mon;
     extern mon_attitude_type mons_attitude(const monsters *m);
 
-    return (mons_attitude(mon) == mlist[idx].m_attitude
-            && mon->type == monl->type);
+    if (mons_attitude(mon) != mlist[idx].m_attitude)
+        return (false);
+
+    if (mon->type != monl->type)
+        return (mons_is_mimic(mon->type) && mons_is_mimic(monl->type));
+
+    if (mlist_full_info)
+    {
+        if (mons_is_zombified(mon)) // Both monsters are zombies.
+            return (mon->base_monster == monl->base_monster);
+
+        if (mon->has_hydra_multi_attack())
+            return (mon->number == monl->number);
+    }
+
+    if (mon->type == MONS_PLAYER_GHOST)
+        return (mon->name(DESC_PLAIN) == monl->name(DESC_PLAIN));
+
+    // Else the two monsters are identical.
+    return (true);
 }
 #endif
 
@@ -1309,24 +1362,8 @@ static bool _find_monster( int x, int y, int mode, bool need_path,
 
     monsters *mon = &menv[targ_mon];
 
-    // Unknown mimics don't count as monsters, either.
-    if (mons_is_mimic(mon->type)
-        && !(mon->flags & MF_KNOWN_MIMIC))
-    {
+    if (!_mons_is_valid_target(mon, mode, range))
         return (false);
-    }
-
-    // Don't usually target unseen monsters...
-    if (!player_monster_visible(mon))
-    {
-        // ... unless it creates a "disturbance in the water".
-        // Since you can't see the monster, assume it's not a friend.
-        // Also don't target submerged monsters if there are other targets
-        // in sight. (This might be too restrictive.)
-        return (mode != TARG_FRIEND
-                && _mon_submerged_in_water(mon)
-                && i_feel_safe(false, false, true, range));
-    }
 
     // Now compare target modes.
     if (mode == TARG_ANY)
