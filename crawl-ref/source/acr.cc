@@ -3394,7 +3394,7 @@ static command_type _get_next_cmd()
 
     if (is_userfunction(keyin))
     {
-        run_macro(get_userfunction(keyin));
+        run_macro(get_userfunction(keyin).c_str());
         return (CMD_NEXT_CMD);
     }
 

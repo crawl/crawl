@@ -1001,12 +1001,12 @@ static int dgn_rock_colour(lua_State *ls)
 
 static int dgn_get_floor_colour(lua_State *ls)
 {
-    PLUARET(string, colour_to_str(env.floor_colour));
+    PLUARET(string, colour_to_str(env.floor_colour).c_str());
 }
 
 static int dgn_get_rock_colour(lua_State *ls)
 {
-    PLUARET(string, colour_to_str(env.rock_colour));
+    PLUARET(string, colour_to_str(env.rock_colour).c_str());
 }
 
 static int dgn_change_floor_colour(lua_State *ls)
