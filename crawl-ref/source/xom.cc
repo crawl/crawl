@@ -579,9 +579,10 @@ static bool _xom_is_good(int sever)
             hitting = MHITYOU;
         }
 
-        int summons = create_monster(
-                          mgen_data(mon, beha, 6,
-                              you.pos(), hitting, MG_FORCE_BEH, GOD_XOM));
+        const int summons =
+            create_monster(
+                mgen_data(mon, beha, 6,
+                    you.pos(), hitting, MG_FORCE_BEH, GOD_XOM));
 
         if (summons != -1)
         {
@@ -669,10 +670,10 @@ static bool _xom_is_good(int sever)
             hitting = MHITYOU;
         }
 
-        int summons = create_monster(
-                          mgen_data(_xom_random_demon(sever, one_chance_in(8)),
-                              beha, 0,
-                              you.pos(), hitting, MG_FORCE_BEH, GOD_XOM));
+        const int summons =
+            create_monster(
+                mgen_data(_xom_random_demon(sever, one_chance_in(8)), beha, 0,
+                    you.pos(), hitting, MG_FORCE_BEH, GOD_XOM));
 
         if (summons != -1)
         {
@@ -869,7 +870,7 @@ static bool _xom_is_bad(int sever)
                     if (create_monster(
                             mgen_data::hostile_at(
                                 _xom_random_punishment_demon(sever),
-                                you.pos(), 4, 0, true, GOD_XOM)) != -1)
+                                    you.pos(), 4, 0, true, GOD_XOM)) != -1)
                     {
                         success = true;
                     }
