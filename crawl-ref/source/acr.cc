@@ -342,8 +342,10 @@ static void _god_greeting_message( bool game_start )
         break;
     case GOD_KIKUBAAQUDGHA:
     case GOD_YREDELEMNUL:
-    case GOD_NEMELEX_XOBEH:
         simple_god_message(" says: Welcome...");
+        break;
+    case GOD_NEMELEX_XOBEH:
+        simple_god_message(" says: It's all in the cards!");
         break;
     case GOD_XOM:
         if (game_start)
