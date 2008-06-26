@@ -1684,8 +1684,10 @@ blessing_done:
             whom = "a follower";
     }
 
-    simple_god_message(make_stringf(" blesses %s with %s.",
-                       whom.c_str(), result.c_str()).c_str(), god);
+    simple_god_message(
+        make_stringf(" blesses %s with %s.",
+                     whom.c_str(), result.c_str()).c_str(),
+        god);
 
 #ifndef USE_TILE
     if (see_follower)
@@ -2494,10 +2496,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case GOD_YREDELEMNUL:
         case GOD_MAKHLEB:
         case GOD_LUGONU:
-            snprintf( info, INFO_SIZE, " accepts your %skill.",
-                      (thing_done == DID_KILL_HOLY) ? "" : "collateral " );
-
-            simple_god_message( info );
+            simple_god_message(
+                make_stringf(" accepts your %skill.",
+                             thing_done == DID_KILL_HOLY ? "" : "collateral ").c_str());
 
             ret = true;
             if (random2(level + 18) > 2)
@@ -2900,17 +2901,20 @@ void gain_piety(int pgn)
             && old_piety < piety_breakpoint(i))
         {
             take_note(Note(NOTE_GOD_POWER, you.religion, i));
+
             const char* pmsg = god_gain_power_messages[you.religion][i];
             const char first = pmsg[0];
-            if ( first )
+
+            if (first)
             {
                 if (isupper(first))
                     god_speaks(you.religion, pmsg);
                 else
                 {
-                    snprintf(info, INFO_SIZE, "You can now %s.", pmsg);
-                    god_speaks(you.religion, info);
+                    god_speaks(you.religion,
+                               make_stringf("You can now %s.", pmsg).c_str());
                 }
+
                 learned_something_new(TUT_NEW_ABILITY);
             }
 
@@ -3246,21 +3250,22 @@ void lose_piety(int pgn)
             {
                 const char* pmsg = god_lose_power_messages[you.religion][i];
                 const char first = pmsg[0];
+
                 if (first)
                 {
                     if (isupper(first))
                         god_speaks(you.religion, pmsg);
                     else
                     {
-                        snprintf(info,INFO_SIZE,"You can no longer %s.",pmsg);
-                        god_speaks(you.religion, info);
+                        god_speaks(you.religion,
+                                   make_stringf("You can no longer %s.", pmsg).c_str());
                     }
                 }
 
                 if (_need_water_walking() && !beogh_water_walk())
                 {
-                    fall_into_a_pool( you.x_pos, you.y_pos, true,
-                                      grd[you.x_pos][you.y_pos] );
+                    fall_into_a_pool(you.x_pos, you.y_pos, true,
+                                     grd[you.x_pos][you.y_pos]);
                 }
             }
         }
@@ -3515,9 +3520,10 @@ static void _ely_dull_inventory_weapons()
         if (chance >= random2(100))
             dec_penance(GOD_ELYVILON, 1);
 
-        snprintf(info, INFO_SIZE, " dulls %syour weapons.",
-                 (num_dulled > 1) ? "" : "one of ");
-        simple_god_message(info, GOD_ELYVILON);
+        simple_god_message(
+            make_stringf(" dulls %syour weapons.",
+                         num_dulled > 1 ? "" : "one of ").c_str(),
+            GOD_ELYVILON);
     }
 }
 
@@ -4708,10 +4714,10 @@ void excommunication(god_type new_god)
 
     if (god_hates_your_god(old_god, new_god))
     {
-        snprintf(info, INFO_SIZE, " does not appreciate desertion%s!",
-            god_hates_your_god_reaction(old_god, new_god).c_str());
-
-        simple_god_message(info, old_god);
+        simple_god_message(
+            make_stringf(" does not appreciate desertion%s!",
+                         god_hates_your_god_reaction(old_god, new_god).c_str()).c_str(),
+            old_god);
     }
 
     switch (old_god)
@@ -5440,10 +5446,9 @@ void god_pitch(god_type which_god)
 #ifdef DGL_WHEREIS
     whereis_record();
 #endif
-    snprintf( info, INFO_SIZE, " welcomes you%s!",
-              (you.worshipped[which_god]) ? " back" : "" );
-
-    simple_god_message( info );
+    simple_god_message(
+        make_stringf(" welcomes you%s!",
+                     you.worshipped[which_god] ? " back" : "").c_str());
     more();
 
     // When you start worshipping a good god, you make all non-hostile
@@ -5625,9 +5630,9 @@ void god_smites_you(god_type god, kill_method_type death_type,
     if (you.religion != god && you.religion != GOD_XOM &&
         !player_under_penance() && you.piety > random2(MAX_PIETY * 2))
     {
-        snprintf(info, INFO_SIZE, "Mortal, I have averted the wrath "
-                 "of %s... this time.", god_name(god).c_str());
-        god_speaks(you.religion, info);
+        god_speaks(you.religion,
+                   make_stringf("Mortal, I have averted the wrath of %s... "
+                                "this time.", god_name(god).c_str()).c_str());
     }
     else
     {
