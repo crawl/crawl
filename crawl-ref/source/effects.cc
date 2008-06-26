@@ -2137,23 +2137,29 @@ bool vitrify_area(int radius)
 
 static void _hell_effects()
 {
+    if (is_sanctuary(you.x_pos, you.y_pos))
+    {
+        mpr("Your sanctuary protects you from Hell's scourges!");
+        return;
+    }
+
     int temp_rand = random2(17);
     spschool_flag_type which_miscast = SPTYP_RANDOM;
     bool summon_instead = false;
     monster_type which_beastie = MONS_PROGRAM_BUG;
 
-    mpr((temp_rand == 0)  ? "\"You will not leave this place.\"" :
-        (temp_rand == 1)  ? "\"Die, mortal!\"" :
-        (temp_rand == 2)  ? "\"We do not forgive those who trespass against us!\"" :
-        (temp_rand == 3)  ? "\"Trespassers are not welcome here!\"" :
-        (temp_rand == 4)  ? "\"You do not belong in this place!\"" :
-        (temp_rand == 5)  ? "\"Leave now, before it is too late!\"" :
-        (temp_rand == 6)  ? "\"We have you now!\"" :
+    mpr((temp_rand ==  0) ? "\"You will not leave this place.\"" :
+        (temp_rand ==  1) ? "\"Die, mortal!\"" :
+        (temp_rand ==  2) ? "\"We do not forgive those who trespass against us!\"" :
+        (temp_rand ==  3) ? "\"Trespassers are not welcome here!\"" :
+        (temp_rand ==  4) ? "\"You do not belong in this place!\"" :
+        (temp_rand ==  5) ? "\"Leave now, before it is too late!\"" :
+        (temp_rand ==  6) ? "\"We have you now!\"" :
         // plain messages
-        (temp_rand == 7)  ? (player_can_smell()) ? "You smell brimstone." :
-                            "Brimstone rains from above." :
-        (temp_rand == 8)  ? "You feel lost and a long, long way from home..." :
-        (temp_rand == 9)  ? "You shiver with fear." :
+        (temp_rand ==  7) ? (player_can_smell()) ? "You smell brimstone."
+                                                 : "Brimstone rains from above." :
+        (temp_rand ==  8) ? "You feel lost and a long, long way from home..." :
+        (temp_rand ==  9) ? "You shiver with fear." :
         // warning
         (temp_rand == 10) ? "You feel a terrible foreboding..." :
         (temp_rand == 11) ? "Something frightening happens." :
@@ -2163,11 +2169,11 @@ static void _hell_effects()
         // sounds
         (temp_rand == 15) ? "A gut-wrenching scream fills the air!" :
         (temp_rand == 16) ? "You hear words spoken in a strange and terrible language..."
-        : "You hear diabolical laughter!",
-        (temp_rand < 7  ? MSGCH_TALK :
+                          : "You hear diabolical laughter!",
+        (temp_rand <  7 ? MSGCH_TALK :
          temp_rand < 10 ? MSGCH_PLAIN :
          temp_rand < 15 ? MSGCH_WARN
-         : MSGCH_SOUND) );
+                        : MSGCH_SOUND));
 
     temp_rand = random2(27);
 
@@ -2184,8 +2190,8 @@ static void _hell_effects()
         else                // 1 in 8 odds {dlb}
             which_miscast = SPTYP_ENCHANTMENT;
 
-        miscast_effect( which_miscast, 4 + random2(6), random2avg(97, 3),
-                        100, "the effects of Hell" );
+        miscast_effect(which_miscast, 4 + random2(6), random2avg(97, 3),
+                       100, "the effects of Hell");
     }
     else if (temp_rand > 7) // 10 in 27 odds {dlb}
     {
@@ -2253,8 +2259,10 @@ static void _hell_effects()
         create_monster(mg);
 
         for (int i = 0; i < 4; ++i)
+        {
             if (one_chance_in(3))
                 create_monster(mg);
+        }
     }
 }
 
