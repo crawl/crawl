@@ -135,15 +135,15 @@ class WinClass
     void move();
 
     // place Regions inside it
-    void placeRegion(class RegionClass *r, int layer, 
-                     class RegionClass *neighbor,    
+    void placeRegion(class RegionClass *r, int layer,
+                     class RegionClass *neighbor,
                      int pflag,
-		     int margin_top = 0, int margin_left = 0,
+                     int margin_top = 0, int margin_left = 0,
                      int margin_bottom = 0, int margin_right = 0);
 
-    void placeRegion(class RegionClass *r, int layer, 
+    void placeRegion(class RegionClass *r, int layer,
                       int x, int y,
-		      int margin_top = 0, int margin_left = 0,
+                      int margin_top = 0, int margin_left = 0,
                       int margin_bottom = 0, int margin_right = 0);
 
     void removeRegion(class RegionClass *r);

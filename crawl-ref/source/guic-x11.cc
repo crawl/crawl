@@ -163,7 +163,7 @@ void MapRegionClass::resize_backbuf()
 }
 
 void TextRegionClass::draw_string(int x, int y, unsigned char *buf,
-	int len, int col)
+        int len, int col)
 {
     XFillRectangle(display, win->win, term_gc[col>>4],
                       x*dx+ox, y*dy+oy, dx * len, dy);
@@ -1040,9 +1040,9 @@ XImage *read_png (const char *fname)
             (info_ptr->sig_bit.red != info_ptr->sig_bit.green ||
              info_ptr->sig_bit.red != info_ptr->sig_bit.blue) )
         {
-	        pm_message ("different bit depths for color channels not "
+                pm_message ("different bit depths for color channels not "
                         "supported");
-	        pm_message ("writing file with %d bit resolution",
+                pm_message ("writing file with %d bit resolution",
                         info_ptr->bit_depth);
         }
         else if (info_ptr->color_type == PNG_COLOR_TYPE_PALETTE
@@ -1050,16 +1050,16 @@ XImage *read_png (const char *fname)
         {
             for (i = 0 ; i < info_ptr->num_palette ; i++)
             {
-	            info_ptr->palette[i].red   >>= (8 - info_ptr->sig_bit.red);
-	            info_ptr->palette[i].green >>= (8 - info_ptr->sig_bit.green);
-	            info_ptr->palette[i].blue  >>= (8 - info_ptr->sig_bit.blue);
-	        }
+                    info_ptr->palette[i].red   >>= (8 - info_ptr->sig_bit.red);
+                    info_ptr->palette[i].green >>= (8 - info_ptr->sig_bit.green);
+                    info_ptr->palette[i].blue  >>= (8 - info_ptr->sig_bit.blue);
+                }
         }
         else if ((info_ptr->color_type == PNG_COLOR_TYPE_GRAY
                     || info_ptr->color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
                  && info_ptr->sig_bit.gray < info_ptr->bit_depth)
         {
-	        png_set_shift (png_ptr, &(info_ptr->sig_bit));
+                png_set_shift (png_ptr, &(info_ptr->sig_bit));
         }
     }
 

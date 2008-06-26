@@ -250,9 +250,9 @@ int x11_keypress(XKeyEvent *xev)
 
     const unsigned int ck_table[9] =
     {
-	CK_END,  CK_DOWN,   CK_PGDN,
-	CK_LEFT, CK_INSERT, CK_RIGHT,
-	CK_HOME, CK_UP,     CK_PGUP
+        CK_END,  CK_DOWN,   CK_PGDN,
+        CK_LEFT, CK_INSERT, CK_RIGHT,
+        CK_HOME, CK_UP,     CK_PGUP
     };
 
     int dir, base;

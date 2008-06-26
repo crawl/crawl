@@ -56,13 +56,13 @@ class mouse_control
 public:
     mouse_control(int mode)
     {
-	oldmode = mouse_get_mode();
-	mouse_set_mode(mode);
+        oldmode = mouse_get_mode();
+        mouse_set_mode(mode);
     }
 
     ~mouse_control()
     {
-	mouse_set_mode(oldmode);
+        mouse_set_mode(oldmode);
     }
 private:
     int oldmode;
