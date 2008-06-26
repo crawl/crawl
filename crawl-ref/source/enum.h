@@ -1687,6 +1687,10 @@ enum monster_type                      // (int) menv[].type
     MONS_CEREBOV,
     MONS_GLOORX_VLOQ,                  //  254
     MONS_MOLLUSC_LORD, //  255 - deprecated, but still referenced in code {dlb}
+    // 256
+    // 257
+    // 258
+    // 259
 // BCR - End first batch of uniques.
     MONS_NAGA_MAGE = 260,              //  260
     MONS_NAGA_WARRIOR,

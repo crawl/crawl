@@ -2354,18 +2354,20 @@ static void _finalize_tile(unsigned int *tile, bool is_special,
     // Hack: Swap rock/stone in crypt and tomb, because there are
     //       only stone walls.
     if ((you.where_are_you == BRANCH_CRYPT || you.where_are_you == BRANCH_TOMB)
-            && orig == TILE_DNGN_STONE_WALL)
-            orig = TILE_DNGN_ROCK_WALL_OFS;
+        && orig == TILE_DNGN_STONE_WALL)
+    {
+        orig = TILE_DNGN_ROCK_WALL_OFS;
+    }
 
     // If there are special tiles for this level, then use them.
     // Otherwise, we'll fall through to the next case and replace
     // special tiles with normal floor.
-    if (orig == TILE_DNGN_FLOOR && is_special &&
-        get_num_floor_special_flavors() > 0)
+    if (orig == TILE_DNGN_FLOOR && is_special
+        && get_num_floor_special_flavors() > 0)
     {
         (*tile) = get_floor_special_tile_idx() + special_flv;
-        ASSERT(special_flv >= 0 &&
-            special_flv < get_num_floor_special_flavors());
+        ASSERT(special_flv >= 0
+               && special_flv < get_num_floor_special_flavors());
     }
     else if (orig == TILE_DNGN_FLOOR || orig == TILE_DNGN_FLOOR_SPECIAL)
     {
@@ -2375,10 +2377,10 @@ static void _finalize_tile(unsigned int *tile, bool is_special,
     {
         (*tile) = get_wall_tile_idx() + wall_flv;
     }
-    else if (orig == TILE_DNGN_SHALLOW_WATER ||
-        orig == TILE_DNGN_DEEP_WATER ||
-        orig == TILE_DNGN_LAVA ||
-        orig == TILE_DNGN_STONE_WALL)
+    else if (orig == TILE_DNGN_SHALLOW_WATER
+             || orig == TILE_DNGN_DEEP_WATER
+             || orig == TILE_DNGN_LAVA
+             || orig == TILE_DNGN_STONE_WALL)
     {
         // These types always have four flavors...
         (*tile) = orig + (floor_flv % 4);
@@ -2861,14 +2863,14 @@ void tilep_job_default(int job, int gender, int *parts)
 }
 
 /*
- * Patrs index to string
+ * Parts index to string
  */
 void tilep_part_to_str(int number, char *buf)
 {
     //special
     if (number == TILEP_SHOW_EQUIP)
     {
-        buf[0] = buf[1] = buf[2] ='*';
+        buf[0] = buf[1] = buf[2] = '*';
     }
     else
     {

@@ -1217,7 +1217,7 @@ static void tag_construct_lost_items(writer &th)
 
 static void tag_read_you(reader &th, char minorVersion)
 {
-    char buff[20];      // For birth date
+    char buff[20];      // For birth date.
     int i,j;
     char count_c;
     short count_s;
@@ -1248,7 +1248,7 @@ static void tag_read_you(reader &th, char minorVersion)
     you.hp              = unmarshallShort(th);
     you.hunger          = unmarshallShort(th);
 
-    // how many you.equip?
+    // How many you.equip?
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; ++i)
         you.equip[i] = unmarshallByte(th);

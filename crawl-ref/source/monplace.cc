@@ -220,17 +220,19 @@ static void _hell_spawn_random_monsters()
 
 void spawn_random_monsters()
 {
+    mpr("in spawn_random_monsters()", MSGCH_DIAGNOSTICS);
     if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
     {
         _hell_spawn_random_monsters();
         return;
     }
 
-    // place normal dungeon monsters,  but not in player LOS
+    // Place normal dungeon monsters,  but not in player LOS.
     if (you.level_type == LEVEL_DUNGEON
         && !player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
         && one_chance_in((you.char_direction == GDT_DESCENDING) ? 240 : 8))
     {
+        mpr("Create wandering monster...", MSGCH_DIAGNOSTICS);
         proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS
                                                  : PROX_AWAY_FROM_PLAYER);
 
@@ -242,16 +244,18 @@ void spawn_random_monsters()
         mg.proximity = prox;
         mons_place( mg );
         viewwindow(true, false);
+        return;
     }
 
-    // place Abyss monsters.
+    // Place Abyss monsters.
     if (you.level_type == LEVEL_ABYSS && one_chance_in(5))
     {
         mons_place(mgen_data(WANDERING_MONSTER));
         viewwindow(true, false);
+        return;
     }
 
-    // place Pandemonium monsters
+    // Place Pandemonium monsters.
     if (you.level_type == LEVEL_PANDEMONIUM && one_chance_in(50))
     {
         pandemonium_mons();
@@ -302,7 +306,7 @@ monster_type pick_random_monster(const level_id &place, int power,
     }
 
     // Abyss or Pandemonium. Almost never called from Pan; probably only
-    // if a random demon gets summon anything spell
+    // if a random demon gets summon anything spell.
     if (lev_mons == 51
         || place.level_type == LEVEL_PANDEMONIUM
         || place.level_type == LEVEL_ABYSS)
@@ -424,7 +428,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
     }
 
     // (2) Take care of non-draconian random monsters.
-    if (mon_type == RANDOM_MONSTER)
+    else if (mon_type == RANDOM_MONSTER)
     {
         level_id place = level_id::current();
 
@@ -534,6 +538,7 @@ static int _is_near_stairs(coord_def &p)
 
 int place_monster(mgen_data mg, bool force_pos)
 {
+    mpr("in place_monster()", MSGCH_DIAGNOSTICS);
     int band_size = 0;
     monster_type band_monsters[BIG_BAND];        // band monster types
 
@@ -543,7 +548,7 @@ int place_monster(mgen_data mg, bool force_pos)
 
     // (1) Early out (summoned to occupied grid).
     if (mg.use_position() && mgrd(mg.pos) != NON_MONSTER)
-        return (false);
+        return (-1);
 
     mg.cls = _resolve_monster_type(mg.cls, mg.proximity, mg.base_type,
                                    mg.pos, mg.map_mask,
@@ -558,8 +563,9 @@ int place_monster(mgen_data mg, bool force_pos)
 
     if (mg.permit_bands())
     {
+        mpr("Choose band members...", MSGCH_DIAGNOSTICS);
         const band_type band = _choose_band(mg.cls, mg.power, band_size);
-        band_size ++;
+        band_size++;
         for (int i = 1; i < band_size; i++)
             band_monsters[i] = _band_member( band, mg.power );
     }
@@ -603,7 +609,7 @@ int place_monster(mgen_data mg, bool force_pos)
         {
             // Dropped number of tries from 60.
             if (tries++ >= 45)
-                return (false);
+                return (-1);
 
             // Placement already decided for PROX_NEAR_STAIRS.
             // Else choose a random point on the map.
@@ -695,7 +701,7 @@ int place_monster(mgen_data mg, bool force_pos)
 
     // Bail out now if we failed.
     if (id == -1)
-        return (id);
+        return (-1);
 
     monsters *mon = &menv[id];
     if (mg.needs_patrol_point())
@@ -1187,6 +1193,7 @@ static void _define_zombie( int mid, monster_type ztype,
 
 static band_type _choose_band( int mon_type, int power, int &band_size )
 {
+    mpr("in choose_band()", MSGCH_DIAGNOSTICS);
     // init
     band_size = 0;
     band_type band = BAND_NO_BAND;
@@ -1427,7 +1434,7 @@ static band_type _choose_band( int mon_type, int power, int &band_size )
         band_size = 2 + random2(3);
         break;
     case MONS_CYCLOPS:
-        if ( one_chance_in(5) || player_in_branch(BRANCH_SHOALS) )
+        if (one_chance_in(5) || player_in_branch(BRANCH_SHOALS))
         {
             band = BAND_SHEEP;  // Odyssey reference
             band_size = 2 + random2(3);
@@ -1477,7 +1484,7 @@ static band_type _choose_band( int mon_type, int power, int &band_size )
         band = BAND_NO_BAND;
 
     if (band_size >= BIG_BAND)
-        band_size = BIG_BAND-1;
+        band_size = BIG_BAND - 1;
 
     return (band);
 }
@@ -1816,7 +1823,10 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
 static monster_type _pick_zot_exit_defender()
 {
     if (one_chance_in(11))
+    {
+        mpr("Create a pandemonium demon!", MSGCH_DIAGNOSTICS);
         return (MONS_PANDEMONIUM_DEMON);
+    }
 
     const int temp_rand = random2(276);
     const int mon_type =
@@ -1836,6 +1846,7 @@ int mons_place( mgen_data mg )
     //             int px, int py, int level_type, proximity_type proximity,
     //             int extra, int dur, bool permit_bands )
 {
+    mpr("in mons_place()", MSGCH_DIAGNOSTICS);
     int mon_count = 0;
     for (int il = 0; il < MAX_MONSTERS; il++)
         if (menv[il].type != -1)
@@ -1846,6 +1857,7 @@ int mons_place( mgen_data mg )
         if (mon_count > MAX_MONSTERS - 50)
             return (-1);
 
+        mpr("Set class RANDOM_MONSTER", MSGCH_DIAGNOSTICS);
         mg.cls = RANDOM_MONSTER;
     }
 
@@ -1858,11 +1870,11 @@ int mons_place( mgen_data mg )
     if (you.char_direction == GDT_ASCENDING && mg.cls == RANDOM_MONSTER
         && you.level_type == LEVEL_DUNGEON && !mg.summoned())
     {
+        mpr("Call _pick_zot_exit_defender()", MSGCH_DIAGNOSTICS);
         mg.cls    = _pick_zot_exit_defender();
         mg.flags |= MG_PERMIT_BANDS;
     }
-
-    if (mg.cls == RANDOM_MONSTER || mg.level_type == LEVEL_PANDEMONIUM)
+    else if (mg.cls == RANDOM_MONSTER || mg.level_type == LEVEL_PANDEMONIUM)
         mg.flags |= MG_PERMIT_BANDS;
 
     // Translate level_type.

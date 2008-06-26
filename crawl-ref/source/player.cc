@@ -189,6 +189,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                 if (!yes_or_no("Do you really want to step into the Zot trap"))
                 {
                     canned_msg(MSG_OK);
+                    stop_running();
                     you.turn_is_over = false;
                     return (false);
                 }
@@ -215,6 +216,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                 if (!yesno(prompt.c_str(), true, 'n'))
                 {
                     canned_msg(MSG_OK);
+                    stop_running();
                     you.turn_is_over = false;
                     return (false);
                 }

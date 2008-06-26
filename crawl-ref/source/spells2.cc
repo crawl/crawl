@@ -186,7 +186,7 @@ static bool _mark_detected_creature(int gridx, int gridy, const monsters *mon,
     tile_place_monster(gridx, gridy, idx, false, true);
 #endif
 
-    return found_good;
+    return (found_good);
 }
 
 int detect_creatures( int pow, bool telepathic )
@@ -1110,8 +1110,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
 
     if (wpn == -1)
     {
-        msg::stream << "Your " << your_hand(true) << " feel slithery!"
-                    << std::endl;
+        mprf("Your %s feel slithery!", your_hand(true).c_str());
         return (false);
     }
 
@@ -1139,8 +1138,8 @@ bool cast_sticks_to_snakes(int pow, god_type god)
 
     int count = 0;
 
-    if ((you.inv[wpn].base_type == OBJ_MISSILES
-         && (you.inv[wpn].sub_type == MI_ARROW)))
+    if (you.inv[wpn].base_type == OBJ_MISSILES
+        && you.inv[wpn].sub_type == MI_ARROW)
     {
         if (you.inv[wpn].quantity < how_many_max)
             how_many_max = you.inv[wpn].quantity;
@@ -1224,8 +1223,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
         return (true);
     }
 
-    msg::stream << "Your " << your_hand(true) << " feel slithery!"
-                << std::endl;
+    mprf("Your %s feel slithery!", your_hand(true).c_str());
     return (false);
 }
 
@@ -1550,8 +1548,6 @@ bool cast_summon_elemental(int pow, god_type god,
 
 bool cast_summon_ice_beast(int pow, god_type god)
 {
-    bool success = false;
-
     monster_type mon = MONS_ICE_BEAST;
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
@@ -1561,20 +1557,16 @@ bool cast_summon_ice_beast(int pow, god_type god)
                       you.pet_target,
                       0, god)) != -1)
     {
-        success = true;
-
         mpr("A chill wind blows around you.");
+        return (true);
     }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
 
-    return (success);
+    canned_msg(MSG_NOTHING_HAPPENS);
+    return (false);
 }
 
 bool cast_summon_ugly_thing(int pow, god_type god)
 {
-    bool success = false;
-
     const int chance = std::max(6 - (pow / 12), 1);
     monster_type mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
                                                : MONS_UGLY_THING;
@@ -1590,18 +1582,17 @@ bool cast_summon_ugly_thing(int pow, god_type god)
                       friendly ? you.pet_target : MHITYOU,
                       0, god)) != -1)
     {
-        success = true;
-
         mpr((mon == MONS_VERY_UGLY_THING) ? "A very ugly thing appears."
                                           : "An ugly thing appears.");
 
         if (!friendly)
             mpr("It doesn't look very happy.");
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
 
-    return (success);
+        return (true);
+    }
+
+    canned_msg(MSG_NOTHING_HAPPENS);
+    return (false);
 }
 
 bool cast_summon_dragon(int pow, god_type god)
@@ -1611,8 +1602,6 @@ bool cast_summon_dragon(int pow, god_type god)
     // especially since these aren't on the Abjuration plan... they'll
     // last until they die (maybe that should be changed, but this is
     // a very high level spell so it might be okay).  -- bwr
-    bool success = false;
-
     const bool friendly = (random2(pow) > 5);
 
     if (create_monster(
@@ -1622,24 +1611,21 @@ bool cast_summon_dragon(int pow, god_type god)
                       friendly ? you.pet_target : MHITYOU,
                       0, god)) != -1)
     {
-        success = true;
-
         mpr("A dragon appears.");
 
         if (!friendly)
             mpr("It doesn't look very happy.");
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
 
-    return (success);
+        return (true);
+    }
+
+    canned_msg(MSG_NOTHING_HAPPENS);
+    return (false);
 }
 
 // Trog sends a fighting buddy (or enemy) for a follower.
 bool summon_berserker(int pow, god_type god, bool force_hostile)
 {
-    bool success = false;
-
     monster_type mon = MONS_PROGRAM_BUG;
 
     int dur = std::min(2 + (random2(pow) / 4), 6);
@@ -1692,34 +1678,29 @@ bool summon_berserker(int pow, god_type god, bool force_hostile)
                       !force_hostile ? you.pet_target : MHITYOU,
                       0, god));
 
-    if (monster != -1)
-    {
-        success = true;
+    if (monster == -1)
+        return (false);
 
-        monsters *summon = &menv[monster];
+    monsters *summon = &menv[monster];
 
-        summon->go_berserk(false);
-        mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
-        mon_enchant abj = summon->get_ench(ENCH_ABJ);
+    summon->go_berserk(false);
+    mon_enchant berserk = summon->get_ench(ENCH_BERSERK);
+    mon_enchant abj = summon->get_ench(ENCH_ABJ);
 
-        // Let Trog's gifts berserk longer, and set the abjuration
-        // timeout to the berserk timeout.
-        berserk.duration = berserk.duration * 3 / 2;
-        berserk.maxduration = berserk.duration;
-        abj.duration = abj.maxduration = berserk.duration;
-        summon->update_ench(berserk);
-        summon->update_ench(abj);
-    }
+    // Let Trog's gifts berserk longer, and set the abjuration
+    // timeout to the berserk timeout.
+    berserk.duration = berserk.duration * 3 / 2;
+    berserk.maxduration = berserk.duration;
+    abj.duration = abj.maxduration = berserk.duration;
+    summon->update_ench(berserk);
+    summon->update_ench(abj);
 
-    return (success);
+    return (true);
 }
 
 static bool _summon_holy_being_wrapper(int pow, god_type god,
                                        monster_type mon, bool quiet)
-{
-    bool success = false;
-
-    const int dur = std::min(2 + (random2(pow) / 4), 6);
+{    const int dur = std::min(2 + (random2(pow) / 4), 6);
 
     const int monster =
         create_monster(
@@ -1727,24 +1708,21 @@ static bool _summon_holy_being_wrapper(int pow, god_type god,
                       you.pos(), you.pet_target,
                       MG_FORCE_BEH, god));
 
-    if (monster != -1)
+    if (monster == -1)
+        return (false);
+
+    monsters *summon = &menv[monster];
+    summon->flags |= MF_ATT_CHANGE_ATTEMPT;
+
+    if (!quiet)
     {
-        success = true;
-
-        monsters *summon = &menv[monster];
-        summon->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-        if (!quiet)
-        {
-            mprf("You are momentarily dazzled by a brilliant %s light.",
-                 (mon == MONS_DAEVA) ? "golden"
-                                     : "white");
-        }
-
-        player_angers_monster(&menv[monster]);
+        mprf("You are momentarily dazzled by a brilliant %s light.",
+             (mon == MONS_DAEVA) ? "golden"
+                                 : "white");
     }
+    player_angers_monster(&menv[monster]);
 
-    return (success);
+    return (true);
 }
 
 // Zin sends an angel for a follower.
@@ -1812,8 +1790,7 @@ bool cast_tukimas_dance(int pow, god_type god,
                  you.inv[wpn].name(DESC_CAP_YOUR).c_str());
         }
         else
-            msg::stream << "Your " << your_hand(true) << " twitch."
-                        << std::endl;
+            mprf("Your %s twitch.", your_hand(true).c_str());
 
         return (false);
     }
