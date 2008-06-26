@@ -1201,27 +1201,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             break;
     }
 
-    if (monster->type == MONS_MUMMY)
-    {
-        if (YOU_KILL(killer) && killer != KILL_YOU_CONF)
-            curse_an_item(true);
-    }
-    else if (monster->type == MONS_GUARDIAN_MUMMY
-             || monster->type == MONS_GREATER_MUMMY
-             || monster->type == MONS_MUMMY_PRIEST)
-    {
-        if (YOU_KILL(killer) && killer != KILL_YOU_CONF)
-        {
-            mpr("You feel extremely nervous for a moment...",
-                MSGCH_MONSTER_SPELL);
-
-            miscast_effect( SPTYP_NECROMANCY,
-                            3 + (monster->type == MONS_GREATER_MUMMY) * 8
-                              + (monster->type == MONS_MUMMY_PRIEST) * 5,
-                            random2avg(88, 3), 100, "a mummy death curse" );
-        }
-    }
-    else if (monster->type == MONS_BORIS && !in_transit)
+    if (monster->type == MONS_BORIS && !in_transit)
     {
         // XXX: Actual blood curse effect for Boris? -- bwr
 
@@ -1236,6 +1216,29 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         // Now that Boris is dead, he's a valid target for monster
         // creation again. -- bwr
         you.unique_creatures[ monster->type ] = false;
+    }
+    else if (!mons_is_summoned(monster))
+    {
+        if (monster->type == MONS_MUMMY)
+        {
+            if (YOU_KILL(killer) && killer != KILL_YOU_CONF)
+                curse_an_item(true);
+        }
+        else if (monster->type == MONS_GUARDIAN_MUMMY
+                 || monster->type == MONS_GREATER_MUMMY
+                 || monster->type == MONS_MUMMY_PRIEST)
+        {
+            if (YOU_KILL(killer) && killer != KILL_YOU_CONF)
+            {
+                mpr("You feel extremely nervous for a moment...",
+                    MSGCH_MONSTER_SPELL);
+
+                miscast_effect( SPTYP_NECROMANCY,
+                                3 + (monster->type == MONS_GREATER_MUMMY) * 8
+                                  + (monster->type == MONS_MUMMY_PRIEST) * 5,
+                                random2avg(88, 3), 100, "a mummy death curse" );
+            }
+        }
     }
 
     if (killer != KILL_RESET && killer != KILL_DISMISSED)

@@ -3411,18 +3411,16 @@ spec_query:
             cprintf(EOL);
 
         textcolor( BROWN );
-
+        cprintf(EOL EOL);
         if (you.char_class == JOB_UNKNOWN)
         {
-            cprintf(EOL
-                    "SPACE - Choose class first; * - Random species" EOL
+            cprintf("Space - Choose class first; * - Random species" EOL
                     "! - Random character; # - Good random character; X - Quit"
                     EOL);
         }
         else
         {
-            cprintf(EOL
-                    "* - Random; + - Good random; "
+            cprintf("* - Random; + - Good random; "
                     "Bksp - Back to class selection; X - Quit"
                     EOL);
         }
@@ -3436,7 +3434,7 @@ spec_query:
             }
             if (_prev_startup_options_set())
             {
-                cprintf("%sTAB - %s",
+                cprintf("%sTab - %s",
                         prevraceok? "; " : "",
                         _prev_startup_description().c_str());
             }
@@ -3661,7 +3659,7 @@ job_query:
         if (you.species == SP_UNKNOWN)
         {
             cprintf(EOL
-                    "SPACE - Choose species first; * - Random class; "
+                    "Space - Choose species first; * - Random class; "
                     "+ - Good random" EOL
                     "! - Random character; # - Good random character; X - Quit"
                     EOL);
@@ -3683,7 +3681,7 @@ job_query:
             }
             if (_prev_startup_options_set())
             {
-                cprintf("%sTAB - %s",
+                cprintf("%sTab - %s",
                         prevclassok? "; " : "",
                         _prev_startup_description().c_str());
             }
