@@ -6841,31 +6841,32 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
     const char *adj = "", *noun = "door";
 
     bool was_secret = false;
+    bool was_seen   = false;
 
-    if (grid == DNGN_SECRET_DOOR)
+    std::set<coord_def> all_door;
+    find_connected_range(pos, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR,
+                         all_door);
+    get_door_description(all_door.size(), &adj, &noun);
+
+    for (std::set<coord_def>::iterator i = all_door.begin();
+         i != all_door.end(); ++i)
     {
-        grid = grid_secret_door_appearance(pos.x, pos.y);
-        grd(pos) = DNGN_OPEN_DOOR; // Just a simple door, no gates etc.
-
-        was_secret = true;
-        if (!see_grid(pos))
-            set_terrain_changed(pos);
-    }
-    else // Maybe several connected doors -> gate.
-    {
-        std::set<coord_def> all_door;
-        find_connected_identical(pos, grd(pos), all_door);
-        get_door_description(all_door.size(), &adj, &noun);
-
-        for (std::set<coord_def>::iterator i = all_door.begin();
-             i != all_door.end(); ++i)
+        const coord_def& dc = *i;
+        if (grd(dc) == DNGN_SECRET_DOOR && see_grid(dc))
         {
-             const coord_def& dc = *i;
-             grd[dc.x][dc.y] = DNGN_OPEN_DOOR;
+            grid = grid_secret_door_appearance(dc.x, dc.y);
+            was_secret = true;
         }
+
+        if (see_grid(dc))
+            was_seen = true;
+        else
+            set_terrain_changed(dc);
+
+        grd[dc.x][dc.y] = DNGN_OPEN_DOOR;
     }
 
-    if (see_grid(pos))
+    if (was_seen)
     {
         viewwindow(true, false);
 
@@ -6877,10 +6878,22 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
             learned_something_new(TUT_SEEN_SECRET_DOOR, pos.x, pos.y);
         }
 
+        std::string open_str = "opens the ";
+        open_str += adj;
+        open_str += noun;
+        open_str += ".";
+
+        monster->seen_context = open_str;
+
         if (!you.can_see(monster))
         {
-            mprf("Something unseen opens the %s%s.", adj, noun);
+            mprf("Something unseen %s", open_str.c_str());
             interrupt_activity(AI_FORCE_INTERRUPT);
+        }
+        else if (!you_are_delayed())
+        {
+            mprf("%s %s", monster->name(DESC_CAP_A).c_str(),
+                 open_str.c_str());
         }
     }
 

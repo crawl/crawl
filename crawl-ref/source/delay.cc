@@ -1654,7 +1654,9 @@ inline static void _monster_warning(activity_interrupt_type ai,
             if (!(mon->mname).empty() && mon->type != MONS_PLAYER_GHOST)
                 text += " the " + mon->name(DESC_BASENAME);
 
-            if (at.context == "thin air")
+            if (starts_with(at.context, "open"))
+                text += " " + at.context;
+            else if (at.context == "thin air")
             {
                 if (mon->type == MONS_AIR_ELEMENTAL)
                     text += " forms itself from the air.";
