@@ -2139,7 +2139,7 @@ static void _hell_effects()
 {
     if (is_sanctuary(you.x_pos, you.y_pos))
     {
-        mpr("Your sanctuary protects you from Hell's scourges!");
+        mpr("The sanctuary protects you from Hell's scourges!");
         return;
     }
 
