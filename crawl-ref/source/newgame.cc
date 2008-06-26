@@ -1916,19 +1916,24 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
     // Fire
     switch (you.species)
     {
+    case SP_OGRE:
+        if (numbooks < 3)
+            book_restrictions[0] = CC_RESTRICTED;
+        // else fall-through
     case SP_HUMAN:
     case SP_HIGH_ELF:
     case SP_GREY_ELF:
     case SP_DEEP_ELF:
+    case SP_SLUDGE_ELF:
     case SP_MOUNTAIN_DWARF:
+    case SP_HILL_ORC:
+    case SP_HALFLING:
+    case SP_GNOME:
     case SP_KOBOLD:
-    case SP_MUMMY:
     case SP_NAGA:
     case SP_OGRE_MAGE:
-    case SP_RED_DRACONIAN:
-    case SP_DEMIGOD:
-    case SP_DEMONSPAWN:
     case SP_KENKU:
+    case SP_DEMONSPAWN:
         book_restrictions[0] = CC_UNRESTRICTED;
         break;
 
@@ -1939,19 +1944,24 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
     // Ice
     switch (you.species)
     {
+    case SP_OGRE_MAGE:
+        if (numbooks < 3)
+            book_restrictions[0] = CC_RESTRICTED;
+        // else fall-through
     case SP_HUMAN:
     case SP_HIGH_ELF:
     case SP_GREY_ELF:
     case SP_DEEP_ELF:
-    case SP_KOBOLD:
-    case SP_MUMMY:
-    case SP_NAGA:
-    case SP_OGRE_MAGE:
-    case SP_RED_DRACONIAN:
-    case SP_DEMIGOD:
-    case SP_DEMONSPAWN:
-    case SP_KENKU:
+    case SP_SLUDGE_ELF:
+    case SP_HILL_ORC:
     case SP_MERFOLK:
+    case SP_HALFLING:
+    case SP_GNOME:
+    case SP_KOBOLD:
+    case SP_NAGA:
+    case SP_OGRE:
+    case SP_GHOUL:
+    case SP_VAMPIRE:
         book_restrictions[1] = CC_UNRESTRICTED;
         break;
 
@@ -1962,19 +1972,26 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
     // Summoning
     switch (you.species)
     {
+    case SP_HUMAN:
     case SP_GREY_ELF:
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
+    case SP_MERFOLK:
+    case SP_GNOME:
     case SP_KOBOLD:
-    case SP_MUMMY:
     case SP_NAGA:
+    case SP_OGRE_MAGE:
     case SP_KENKU:
+    case SP_DEMONSPAWN:
     case SP_VAMPIRE:
         book_restrictions[2] = CC_UNRESTRICTED;
         break;
 
     default:
-        book_restrictions[2] = CC_RESTRICTED;
+        if (player_genus(GENPC_DRACONIAN))
+            book_restrictions[2] = CC_UNRESTRICTED;
+        else
+            book_restrictions[2] = CC_RESTRICTED;
     }
 
     // Using the fact that CONJ_I and MINOR_MAGIC_I are both
@@ -2083,38 +2100,63 @@ static bool _choose_weapon()
     // Short sword
     switch (you.species)
     {
+    case SP_HUMAN:
     case SP_HIGH_ELF:
     case SP_GREY_ELF:
     case SP_DEEP_ELF:
+    // Sludge elves have bad aptitudes with short swords (110) but are still
+    // better with them than any other starting weapon.
+    case SP_SLUDGE_ELF:
     case SP_HALFLING:
     case SP_KOBOLD:
     case SP_GNOME:
+    case SP_SPRIGGAN:
+    case SP_NAGA:
+    case SP_MINOTAUR:
+    case SP_KENKU:
+    case SP_VAMPIRE:
         startwep_restrictions[0] = CC_UNRESTRICTED;
         break;
 
     default:
-        startwep_restrictions[0] = CC_RESTRICTED;
+        if (player_genus(GENPC_DRACONIAN))
+            startwep_restrictions[0] = CC_UNRESTRICTED;
+        else
+            startwep_restrictions[0] = CC_RESTRICTED;
     }
 
-    // Mace and hand axe
+    // Mace and hand axe, usually the same aptitude.
     switch (you.species)
     {
+    case SP_TROLL:
+        startwep_restrictions[1] = CC_UNRESTRICTED;
+        startwep_restrictions[2] = CC_RESTRICTED;
+        break;
     case SP_HUMAN:
     case SP_MOUNTAIN_DWARF:
     case SP_HILL_ORC:
     case SP_MUMMY:
     case SP_CENTAUR:
-    case SP_DEMIGOD:
+    case SP_NAGA:
+    case SP_OGRE:
+    case SP_OGRE_MAGE:
     case SP_MINOTAUR:
-    case SP_DEMONSPAWN:
     case SP_KENKU:
         startwep_restrictions[1] = CC_UNRESTRICTED;
         startwep_restrictions[2] = CC_UNRESTRICTED;
         break;
 
     default:
-        startwep_restrictions[1] = CC_RESTRICTED;
-        startwep_restrictions[2] = CC_RESTRICTED;
+        if (player_genus(GENPC_DRACONIAN))
+        {
+            startwep_restrictions[1] = CC_UNRESTRICTED;
+            startwep_restrictions[2] = CC_UNRESTRICTED;
+        }
+        else
+        {
+            startwep_restrictions[1] = CC_RESTRICTED;
+            startwep_restrictions[2] = CC_RESTRICTED;
+        }
     }
 
     // Spear
@@ -2122,25 +2164,29 @@ static bool _choose_weapon()
     {
     case SP_HUMAN:
     case SP_HILL_ORC:
-    case SP_MUMMY:
-    case SP_CENTAUR:
-    case SP_DEMIGOD:
-    case SP_MINOTAUR:
-    case SP_DEMONSPAWN:
-    case SP_KENKU:
     case SP_MERFOLK:
+    case SP_MUMMY:
+    case SP_NAGA:
+    case SP_CENTAUR:
+    case SP_OGRE_MAGE:
+    case SP_MINOTAUR:
+    case SP_KENKU:
         startwep_restrictions[3] = CC_UNRESTRICTED;
         break;
 
     default:
-        startwep_restrictions[3] = CC_RESTRICTED;
+        if (player_genus(GENPC_DRACONIAN))
+            startwep_restrictions[3] = CC_UNRESTRICTED;
+        else
+            startwep_restrictions[3] = CC_RESTRICTED;
     }
 
     // Trident
     if (you.char_class == JOB_GLADIATOR && you.species != SP_KOBOLD
         || you.species == SP_MERFOLK)
     {
-        startwep_restrictions[4] = CC_UNRESTRICTED;
+        // Both are polearms, right?
+        startwep_restrictions[4] = startwep_restrictions[3];
     }
     else
         startwep_restrictions[4] = CC_BANNED;
@@ -4644,7 +4690,8 @@ bool _give_items_skills()
             {
             case SP_DEEP_ELF:
             case SP_SLUDGE_ELF:
-            case SP_DEMONSPAWN:
+            case SP_KENKU:
+            case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
                 textcolor(LIGHTGREY);
@@ -4662,16 +4709,15 @@ bool _give_items_skills()
             case SP_MOUNTAIN_DWARF:
             case SP_HALFLING:
             case SP_HILL_ORC:
+            case SP_MERFOLK:
             case SP_GNOME:
+            case SP_CENTAUR:
             case SP_OGRE:
             case SP_TROLL:
             case SP_RED_DRACONIAN:
-            case SP_CENTAUR:
             case SP_MINOTAUR:
             case SP_DEMONSPAWN:
             case SP_GHOUL:
-            case SP_MERFOLK:
-            case SP_VAMPIRE:
                 textcolor(LIGHTGREY);
                 break;
             default:
@@ -4689,9 +4735,9 @@ bool _give_items_skills()
             {
                 textcolor(BROWN);
                 cprintf(EOL "Enter - %s" EOL,
-                        Options.prev_dk == DK_NECROMANCY? "Necromancy" :
-                        Options.prev_dk == DK_YREDELEMNUL? "Yredelemnul" :
-                                                           "Random");
+                        Options.prev_dk == DK_NECROMANCY  ? "Necromancy" :
+                        Options.prev_dk == DK_YREDELEMNUL ? "Yredelemnul"
+                                                          : "Random");
             }
 
             do
@@ -4812,7 +4858,6 @@ bool _give_items_skills()
             case SP_HILL_ORC:
             case SP_OGRE:
             case SP_TROLL:
-            case SP_RED_DRACONIAN:
             case SP_CENTAUR:
             case SP_MINOTAUR:
             case SP_DEMONSPAWN:
@@ -4821,7 +4866,10 @@ bool _give_items_skills()
                 textcolor( LIGHTGREY );
                 break;
             default:
-                textcolor( DARKGREY );
+                if (player_genus(GENPC_DRACONIAN))
+                    textcolor( LIGHTGREY );
+                else
+                    textcolor( DARKGREY );
             }
             cprintf("a - Xom of Chaos" EOL);
 
@@ -4838,7 +4886,6 @@ bool _give_items_skills()
             case SP_GNOME:
             case SP_OGRE:
             case SP_TROLL:
-            case SP_RED_DRACONIAN:
             case SP_CENTAUR:
             case SP_MINOTAUR:
             case SP_DEMONSPAWN:
@@ -4848,7 +4895,10 @@ bool _give_items_skills()
                 textcolor( LIGHTGREY );
                 break;
             default:
-                textcolor( DARKGREY );
+                if (player_genus(GENPC_DRACONIAN))
+                    textcolor( LIGHTGREY );
+                else
+                    textcolor( DARKGREY );
             }
             cprintf("b - Makhleb the Destroyer" EOL);
 
