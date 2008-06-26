@@ -404,7 +404,7 @@ void in_a_cloud()
     {
         mpr("Your icy shield dissipates!", MSGCH_DURATION);
         you.duration[DUR_CONDENSATION_SHIELD] = 0;
-        you.redraw_armour_class = 1;
+        you.redraw_armour_class = true;
     }
 
     switch (env.cloud[cl].type)

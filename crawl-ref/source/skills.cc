@@ -98,7 +98,7 @@ void calc_total_skill_points( void )
     you.skill_cost_level = i - 1;
 
 #if DEBUG_DIAGNOSTICS
-    you.redraw_experience = 1;
+    you.redraw_experience = true;
 #endif
 }
 
@@ -446,7 +446,7 @@ static int _exercise2( int exsk )
             calc_mp();
 
         if (exsk == SK_DODGING || exsk == SK_ARMOUR)
-            you.redraw_evasion = 1;
+            you.redraw_evasion = true;
 
         if (exsk == SK_ARMOUR || exsk == SK_SHIELDS
             || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC

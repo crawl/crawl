@@ -2716,7 +2716,7 @@ void jewellery_wear_effects(item_def &item)
         break;
 
     case RING_EVASION:
-        you.redraw_evasion = 1;
+        you.redraw_evasion = true;
         if (item.plus != 0)
         {
             if (!artefact)
@@ -3160,11 +3160,11 @@ void jewellery_remove_effects(item_def &item)
         break;
 
     case RING_PROTECTION:
-        you.redraw_armour_class = 1;
+        you.redraw_armour_class = true;
         break;
 
     case RING_EVASION:
-        you.redraw_evasion = 1;
+        you.redraw_evasion = true;
         break;
 
     case RING_STRENGTH:
@@ -4065,7 +4065,7 @@ static bool _handle_enchant_armour( int item_slot )
     if (ac_change)
         you.redraw_armour_class = true;
 
-    return result;
+    return (result);
 }
 
 static void handle_read_book( int item_slot )

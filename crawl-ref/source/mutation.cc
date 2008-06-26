@@ -1927,13 +1927,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (you.mutation[mutat] >= mutation_defs[mutat].levels)
         return (false);
 
-    // FIXME: Find where these things are actually changed.
-    //        -- Do not globally force redraw! {dlb}
-    you.redraw_hit_points   = 1;
-    you.redraw_magic_points = 1;
-    you.redraw_armour_class = 1;
-    you.redraw_evasion      = 1;
-
     switch (mutat)
     {
     case MUT_STRONG:
@@ -1942,7 +1935,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             delete_mutation(MUT_WEAK);
             return (true);
         }
-        // Replaces earlier, redundant code. - 12mar2000 {dlb}
         modify_stat(STAT_STRENGTH, 1, false, "gaining a mutation");
         break;
 
@@ -1952,7 +1944,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             delete_mutation(MUT_DOPEY);
             return (true);
         }
-        // Replaces earlier, redundant code. - 12mar2000 {dlb}
         modify_stat(STAT_INTELLIGENCE, 1, false, "gaining a mutation");
         break;
 
@@ -1962,8 +1953,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             delete_mutation(MUT_CLUMSY);
             return (true);
         }
-        // Replaces earlier, redundant code - 12mar2000 {dlb}
         modify_stat(STAT_DEXTERITY, 1, false, "gaining a mutation");
+        you.redraw_evasion = true;
         break;
 
     case MUT_WEAK:
@@ -1993,6 +1984,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             return (true);
         }
         modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
+        you.redraw_evasion = true;
         mpr(gain_mutation[mutat][0], MSGCH_MUTATION);
         break;
 
@@ -2095,6 +2087,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         modify_stat(STAT_STRENGTH,   1, true, "gaining a mutation");
         modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
         mpr(gain_mutation[mutat][0], MSGCH_MUTATION);
+        you.redraw_armour_class = true;
+        you.redraw_evasion      = true;
         break;
 
     case MUT_FLEXIBLE_WEAK:
@@ -2106,6 +2100,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         modify_stat(STAT_STRENGTH, -1, true, "gaining a mutation");
         modify_stat(STAT_DEXTERITY, 1, true, "gaining a mutation");
         mpr(gain_mutation[mutat][0], MSGCH_MUTATION);
+        you.redraw_armour_class = true;
+        you.redraw_evasion      = true;
         break;
 
     case MUT_FRAIL:
@@ -2119,6 +2115,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         you.mutation[mutat]++;
         calc_hp();
         you.mutation[mutat]--;
+        you.redraw_hit_points = true;
         break;
 
     case MUT_ROBUST:
@@ -2132,6 +2129,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         you.mutation[mutat]++;
         calc_hp();
         you.mutation[mutat]--;
+        you.redraw_hit_points = true;
         break;
 
     case MUT_LOW_MAGIC:
@@ -2145,6 +2143,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         you.mutation[mutat]++;
         calc_mp();
         you.mutation[mutat]--;
+        you.redraw_magic_points = true;
         break;
 
     case MUT_HIGH_MAGIC:
@@ -2158,12 +2157,15 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         you.mutation[mutat]++;
         calc_mp();
         you.mutation[mutat]--;
+        you.redraw_magic_points = true;
         break;
 
     case MUT_BLACK_SCALES:
     case MUT_BONEY_PLATES:
         modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        you.redraw_armour_class = true;
+        you.redraw_evasion      = true;
         break;
 
     case MUT_GREY2_SCALES:
@@ -2171,6 +2173,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
 
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        you.redraw_armour_class = true;
+        you.redraw_evasion      = true;
         break;
 
     case MUT_METALLIC_SCALES:
@@ -2180,6 +2184,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
 
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        you.redraw_armour_class = true;
+        you.redraw_evasion      = true;
         break;
 
     case MUT_RED2_SCALES:
@@ -2188,10 +2194,14 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
 
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        you.redraw_armour_class = true;
+        you.redraw_evasion      = true;
         break;
 
     default:
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+        // For all those scale mutations.
+        you.redraw_armour_class = true;
         break;
     }
 
@@ -2302,6 +2312,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
     case MUT_AGILE:
         modify_stat(STAT_DEXTERITY, -1, true, "losing a mutation");
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
+        you.redraw_evasion = true;
         break;
 
     case MUT_WEAK:
@@ -2313,20 +2324,22 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         break;
 
     case MUT_CLUMSY:
-        // replaces earlier, redundant code - 12mar2000 {dlb}
         modify_stat(STAT_DEXTERITY, 1, false, "losing a mutation");
+        you.redraw_evasion = true;
         break;
 
     case MUT_STRONG_STIFF:
         modify_stat(STAT_STRENGTH, -1, true, "losing a mutation");
         modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
+        you.redraw_evasion = true;
         break;
 
     case MUT_FLEXIBLE_WEAK:
         modify_stat(STAT_STRENGTH, 1, true, "losing a mutation");
         modify_stat(STAT_DEXTERITY, -1, true, "losing a mutation");
         mpr(lose_mutation[mutat][0], MSGCH_MUTATION);
+        you.redraw_evasion = true;
         break;
 
     case MUT_FRAIL:
@@ -2336,6 +2349,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         you.mutation[mutat]--;
         calc_hp();
         you.mutation[mutat]++;
+        you.redraw_hit_points = true;
         break;
 
     case MUT_LOW_MAGIC:
@@ -2345,12 +2359,15 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         you.mutation[mutat]--;
         calc_mp();
         you.mutation[mutat]++;
+        you.redraw_magic_points = true;
         break;
 
     case MUT_BLACK_SCALES:
     case MUT_BONEY_PLATES:
         modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
+        you.redraw_armour_class = true;
+        you.redraw_evasion      = true;
         break;
 
     case MUT_CLAWS:
@@ -2363,6 +2380,8 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         if (you.mutation[mutat] != 2)
             modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
+        you.redraw_armour_class = true;
+        you.redraw_evasion      = true;
         break;
 
     case MUT_METALLIC_SCALES:
@@ -2371,6 +2390,8 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         else
             modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
+        you.redraw_armour_class = true;
+        you.redraw_evasion      = true;
         break;
 
     case MUT_RED2_SCALES:
@@ -2378,6 +2399,8 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         if (you.mutation[mutat] != 1)
             modify_stat(STAT_DEXTERITY, 1, true, "losing a mutation");
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
+        you.redraw_armour_class = true;
+        you.redraw_evasion      = true;
         break;
 
     case MUT_BREATHE_POISON:
@@ -2395,15 +2418,10 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
 
     default:
         mpr(lose_mutation[mutat][you.mutation[mutat] - 1], MSGCH_MUTATION);
+        // For all those various scale mutations.
+        you.redraw_armour_class = true;
         break;
     }
-
-    // FIXME: Find where these things are actually altered.
-    //        -- Do not globally force redraw! {dlb}
-    you.redraw_hit_points   = 1;
-    you.redraw_magic_points = 1;
-    you.redraw_armour_class = 1;
-    you.redraw_evasion      = 1;
 
     you.mutation[mutat]--;
 
@@ -2445,7 +2463,7 @@ static int body_covered()
     covered += you.mutation[MUT_IRIDESCENT_SCALES];
     covered += you.mutation[MUT_PATTERNED_SCALES];
 
-    return covered;
+    return (covered);
 }
 
 const char *mutation_name(mutation_type which_mutat, int level)
@@ -2817,7 +2835,7 @@ bool perma_mutate(mutation_type which_mut, int how_much)
     you.demon_pow[which_mut] = levels;
 
     return (levels > 0);
-}                               // end perma_mutate()
+}
 
 bool give_bad_mutation(bool failMsg, bool force_mutation)
 {
@@ -2845,4 +2863,4 @@ bool give_bad_mutation(bool failMsg, bool force_mutation)
         learned_something_new(TUT_YOU_MUTATED);
 
     return (result);
-}                               // end give_bad_mutation()
+}

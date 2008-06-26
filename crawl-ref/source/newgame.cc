@@ -3612,7 +3612,6 @@ job_query:
 
         int j = 0;
         job_type which_job;
-        bool good_choice;
         for (int i = 0; i < num_classes; i++)
         {
             which_job = _get_class(i);

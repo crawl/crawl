@@ -1264,7 +1264,7 @@ static void _armour_wear_effects(const int item_slot)
         if (you.duration[DUR_ICY_ARMOUR] != 0)
         {
             mpr( "Your icy armour melts away.", MSGCH_DURATION );
-            you.redraw_armour_class = 1;
+            you.redraw_armour_class = true;
             you.duration[DUR_ICY_ARMOUR] = 0;
         }
     }
@@ -1344,7 +1344,7 @@ static void _armour_wear_effects(const int item_slot)
         case SPARM_PONDEROUSNESS:
             mpr("You feel rather ponderous.");
             // you.speed += 2;
-            you.redraw_evasion = 1;
+            you.redraw_evasion = true;
             break;
 
         case SPARM_LEVITATION:
@@ -1408,12 +1408,13 @@ static void _armour_wear_effects(const int item_slot)
 
 static command_type _get_running_command()
 {
-    if ( kbhit() )
+    if (kbhit())
     {
         stop_running();
         return CMD_NO_CMD;
     }
-    if ( is_resting() )
+
+    if (is_resting())
     {
         you.running.rest();
         if (!is_resting() && you.running.hp == you.hp
@@ -1424,9 +1425,7 @@ static command_type _get_running_command()
         return CMD_MOVE_NOWHERE;
     }
     else if (Options.travel_delay > 0)
-    {
         delay(Options.travel_delay);
-    }
 
     return direction_to_command( you.running.x, you.running.y );
 }

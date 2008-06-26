@@ -532,7 +532,7 @@ static void _handle_wizard_command( void )
 
     case 's':
         you.exp_available = 20000;
-        you.redraw_experience = 1;
+        you.redraw_experience = true;
         break;
 
     case 'S':
@@ -545,7 +545,7 @@ static void _handle_wizard_command( void )
 
     case '$':
         you.gold += 1000;
-        you.redraw_gold = 1;
+        you.redraw_gold = true;
         if (!Options.show_gold_turns)
             mprf("You now have %d gold.", you.gold);
         break;
@@ -729,21 +729,22 @@ static void _handle_wizard_command( void )
         set_hunger( 10999, true );
         break;
 
-    case 'H':
+    case 'H': // super-heal
         you.rotting = 0;
         you.duration[DUR_CONF] = 0;
         you.duration[DUR_POISONING] = 0;
+        you.duration[DUR_LIQUID_FLAMES] = 0;
         if (you.duration[DUR_BEHELD])
         {
             you.duration[DUR_BEHELD] = 0;
             you.beheld_by.clear();
         }
-        you.duration[DUR_LIQUID_FLAMES] = 0;
+        you.magic_contamination = 0;
         you.disease = 0;
         inc_hp( 10, true );
         set_hp( you.hp_max, false );
         set_hunger( 10999, true );
-        you.redraw_hit_points = 1;
+        you.redraw_hit_points = true;
         break;
 
     case 'b':

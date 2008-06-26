@@ -101,7 +101,7 @@ int check_your_resists(int hurted, beam_type flavour)
         {
             mpr( "Your icy shield dissipates!", MSGCH_DURATION );
             you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            you.redraw_armour_class = 1;
+            you.redraw_armour_class = true;
         }
     }
 
@@ -426,7 +426,7 @@ void item_corrode( int itco )
         else
             item.plus  = how_rusty;
 
-        you.redraw_armour_class = 1;     // for armour, rings, etc. {dlb}
+        you.redraw_armour_class = true;     // for armour, rings, etc. {dlb}
 
         if (you.equip[EQ_WEAPON] == itco)
             you.wield_change = true;
@@ -665,9 +665,9 @@ void lose_level()
             you.hp, you.hp_max, you.magic_points, you.max_magic_points);
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
-    you.redraw_experience = 1;
+    you.redraw_experience = true;
     xom_is_stimulated(255);
-}                               // end lose_level()
+}
 
 void drain_exp(bool announce_full)
 {
@@ -733,19 +733,16 @@ void drain_exp(bool announce_full)
         mprf(MSGCH_DIAGNOSTICS, "You lose %ld experience points.",exp_drained);
 #endif
 
-        you.redraw_experience = 1;
+        you.redraw_experience = true;
 
         if (you.experience < exp_needed(you.experience_level + 1))
             lose_level();
     }
-}                               // end drain_exp()
+}
 
 static void xom_checks_damage(kill_method_type death_type,
                               int dam, int death_source)
 {
-    //if (you.hp <= dam)
-    //    xom_is_stimulated(32);
-
     if (death_type == KILLED_BY_TARGETTING)
     {
         // Xom thinks the player hurting him/herself is funny.
@@ -813,7 +810,7 @@ static void xom_checks_damage(kill_method_type death_type,
     xom_is_stimulated(amusementvalue);
 }
 
-// death_source should be set to zero for non-monsters {dlb}
+// death_source should be set to zero for non-monsters. {dlb}
 void ouch( int dam, int death_source, kill_method_type death_type,
            const char *aux, bool see_source )
 {

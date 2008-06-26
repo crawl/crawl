@@ -234,7 +234,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         // Invisibility cancels backlight.
         you.duration[DUR_BACKLIGHT] = 0;
 
-        // now multiple invisiblity casts aren't as good -- bwr
+        // Now multiple invisiblity casts aren't as good. -- bwr
         if (!you.duration[DUR_INVIS])
             you.duration[DUR_INVIS] = 15 + random2(pow);
         else
@@ -267,7 +267,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
             xom_is_stimulated(64 / factor);
         break;
 
-    // Don't generate randomly - should be rare and interesting
+    // Don't generate randomly - should be rare and interesting.
     case POT_DECAY:
         if (rot_player((10 + random2(10)) / factor))
             xom_is_stimulated(64 / factor);
@@ -424,11 +424,11 @@ bool unwield_item(bool showMsgs)
                 break;
             case SPWPN_SCYTHE_OF_CURSES:
             case SPWPN_STAFF_OF_OLGREB:
-                item.plus = 0;
+                item.plus  = 0;
                 item.plus2 = 0;
                 break;
             case SPWPN_STAFF_OF_WUCAD_MU:
-                item.plus = 0;
+                item.plus  = 0;
                 item.plus2 = 0;
                 miscast_effect( SPTYP_DIVINATION, 9, 90, 100,
                                 "the Staff of Wucad Mu" );
@@ -476,7 +476,7 @@ bool unwield_item(bool showMsgs)
             case SPWPN_PROTECTION:
                 if (showMsgs)
                     mpr("You feel less protected.");
-                you.redraw_armour_class = 1;
+                you.redraw_armour_class = true;
                 break;
 
             case SPWPN_VAMPIRICISM:
@@ -580,7 +580,6 @@ void unwear_armour(char unw)
         break;
 
     case SPARM_LEVITATION:
-        //you.duration[DUR_LEVITATION]++;
         if (you.duration[DUR_LEVITATION])
             you.duration[DUR_LEVITATION] = 1;
         break;
@@ -617,7 +616,7 @@ void unwear_armour(char unw)
         unuse_randart(unw);
 
     return;
-}                               // end unwear_armour()
+}
 
 void unuse_randart(unsigned char unw)
 {
@@ -662,7 +661,7 @@ void unuse_randart(const item_def &item)
         }
     }
 
-    // modify ability scores, always output messages
+    // Modify ability scores; always output messages.
     modify_stat( STAT_STRENGTH,     -proprt[RAP_STRENGTH],     false, item,
                  true);
     modify_stat( STAT_INTELLIGENCE, -proprt[RAP_INTELLIGENCE], false, item,
@@ -672,4 +671,4 @@ void unuse_randart(const item_def &item)
 
     if (proprt[RAP_NOISES] != 0)
         you.special_wield = SPWLD_NONE;
-}                               // end unuse_randart()
+}

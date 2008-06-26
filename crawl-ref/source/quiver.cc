@@ -168,6 +168,22 @@ void choose_item_for_quiver()
                                 : "hand crossbows");
         return;
     }
+    else if (slot == you.equip[EQ_WEAPON])
+    {
+        mpr("You can't quiver wielded items.");
+        return;
+    }
+    else
+    {
+        for (int i = 0; i < NUM_EQUIP; i++)
+        {
+            if (you.equip[i] == slot)
+            {
+                mpr("You can't quiver worn items.");
+                return;
+            }
+        }
+    }
 
     const item_def item = you.inv[slot];
     ASSERT(is_valid_item(item));

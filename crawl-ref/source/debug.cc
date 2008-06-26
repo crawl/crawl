@@ -2444,12 +2444,12 @@ void wizard_set_skill_level(void)
                 break;
 
             case SK_DODGING:
-                you.redraw_evasion = 1;
+                you.redraw_evasion = true;
                 break;
 
             case SK_ARMOUR:
-                you.redraw_armour_class = 1;
-                you.redraw_evasion = 1;
+                you.redraw_armour_class = true;
+                you.redraw_evasion = true;
                 break;
 
             default:
@@ -2509,8 +2509,8 @@ void wizard_set_all_skills(void)
         calc_hp();
         calc_mp();
 
-        you.redraw_armour_class = 1;
-        you.redraw_evasion = 1;
+        you.redraw_armour_class = true;
+        you.redraw_evasion = true;
     }
 }
 #endif

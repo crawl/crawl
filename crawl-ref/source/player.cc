@@ -3151,7 +3151,7 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 3))
                 {
                     mpr("Your skin feels tougher.", MSGCH_INTRINSIC_GAIN);
-                    you.redraw_armour_class = 1;
+                    you.redraw_armour_class = true;
                 }
                 break;
 
@@ -3287,7 +3287,7 @@ void level_change(bool skip_attribute_increase)
                 if (you.experience_level > 7 && !(you.experience_level % 4))
                 {
                     mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
-                    you.redraw_armour_class = 1;
+                    you.redraw_armour_class = true;
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 }
                 break;
@@ -3310,7 +3310,7 @@ void level_change(bool skip_attribute_increase)
                 if (you.experience_level > 7 && !(you.experience_level % 2))
                 {
                     mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
-                    you.redraw_armour_class = 1;
+                    you.redraw_armour_class = true;
                 }
 
                 if ((you.experience_level > 7 && !(you.experience_level % 3))
@@ -4640,10 +4640,8 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
     else
         you.hp -= hp_loss;
 
-    you.redraw_hit_points = 1;
-
-    return;
-}                               // end dec_hp()
+    you.redraw_hit_points = true;
+}
 
 void dec_mp(int mp_loss)
 {
@@ -4663,7 +4661,7 @@ void dec_mp(int mp_loss)
     }
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
-    you.redraw_magic_points = 1;
+    you.redraw_magic_points = true;
 }
 
 bool enough_hp(int minimum, bool suppress_msg)
@@ -4718,7 +4716,7 @@ void inc_mp(int mp_gain, bool max_too)
         interrupt_activity(AI_FULL_MP);
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
-    you.redraw_magic_points = 1;
+    you.redraw_magic_points = true;
 }
 
 // Note that "max_too" refers to the base potential, the actual
@@ -4742,7 +4740,7 @@ void inc_hp(int hp_gain, bool max_too)
     if (wasnt_max && you.hp == you.hp_max)
         interrupt_activity(AI_FULL_HP);
 
-    you.redraw_hit_points = 1;
+    you.redraw_hit_points = true;
 }
 
 void rot_hp( int hp_loss )
@@ -4750,7 +4748,7 @@ void rot_hp( int hp_loss )
     you.base_hp -= hp_loss;
     calc_hp();
 
-    you.redraw_hit_points = 1;
+    you.redraw_hit_points = true;
 }
 
 void unrot_hp( int hp_recovered )
@@ -4762,7 +4760,7 @@ void unrot_hp( int hp_recovered )
 
     calc_hp();
 
-    you.redraw_hit_points = 1;
+    you.redraw_hit_points = true;
 }
 
 int player_rotted( void )
@@ -4775,7 +4773,7 @@ void rot_mp( int mp_loss )
     you.base_magic_points -= mp_loss;
     calc_mp();
 
-    you.redraw_magic_points = 1;
+    you.redraw_magic_points = true;
 }
 
 void inc_max_hp( int hp_gain )
@@ -4784,7 +4782,7 @@ void inc_max_hp( int hp_gain )
     calc_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
-    you.redraw_hit_points = 1;
+    you.redraw_hit_points = true;
 }
 
 void dec_max_hp( int hp_loss )
@@ -4793,7 +4791,7 @@ void dec_max_hp( int hp_loss )
     calc_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
-    you.redraw_hit_points = 1;
+    you.redraw_hit_points = true;
 }
 
 void inc_max_mp( int mp_gain )
@@ -4802,7 +4800,7 @@ void inc_max_mp( int mp_gain )
     calc_mp();
 
     take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
-    you.redraw_magic_points = 1;
+    you.redraw_magic_points = true;
 }
 
 void dec_max_mp( int mp_loss )
@@ -4811,10 +4809,10 @@ void dec_max_mp( int mp_loss )
     calc_mp();
 
     take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
-    you.redraw_magic_points = 1;
+    you.redraw_magic_points = true;
 }
 
-// use of floor: false = hp max, true = hp min {dlb}
+// Use of floor: false = hp max, true = hp min. {dlb}
 void deflate_hp(int new_level, bool floor)
 {
     if (floor && you.hp < new_level)
@@ -4822,12 +4820,9 @@ void deflate_hp(int new_level, bool floor)
     else if (!floor && you.hp > new_level)
         you.hp = new_level;
 
-    //    take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max));
-    // must remain outside conditional, given code usage {dlb}
-    you.redraw_hit_points = 1;
-
-    return;
-}                               // end deflate_hp()
+    // Must remain outside conditional, given code usage. {dlb}
+    you.redraw_hit_points = true;
+}
 
 // Note that "max_too" refers to the base potential, the actual
 // resulting max value is subject to penalties, bonuses, and scalings.
@@ -4845,14 +4840,12 @@ void set_hp(int new_amount, bool max_too)
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
 
-    if ( max_too )
+    if (max_too)
         take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
 
-    // must remain outside conditional, given code usage {dlb}
-    you.redraw_hit_points = 1;
-
-    return;
-}                               // end set_hp()
+    // Must remain outside conditional, given code usage. {dlb}
+    you.redraw_hit_points = true;
+}
 
 // Note that "max_too" refers to the base potential, the actual
 // resulting max value is subject to penalties, bonuses, and scalings.
@@ -4863,7 +4856,7 @@ void set_mp(int new_amount, bool max_too)
 
     if (max_too && you.max_magic_points != new_amount)
     {
-        // note that this gets scaled down for values > 18
+        // Note that this gets scaled down for values > 18.
         you.base_magic_points2 = 5000 + new_amount;
         calc_mp();
     }
@@ -4872,13 +4865,12 @@ void set_mp(int new_amount, bool max_too)
         you.magic_points = you.max_magic_points;
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
-    if ( max_too )
-      take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
-    // must remain outside conditional, given code usage {dlb}
-    you.redraw_magic_points = 1;
+    if (max_too)
+        take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
 
-    return;
-}                               // end set_mp()
+    // Must remain outside conditional, given code usage. {dlb}
+    you.redraw_magic_points = true;
+}
 
 static int _get_contamination_level()
 {
