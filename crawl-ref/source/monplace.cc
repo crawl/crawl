@@ -217,10 +217,12 @@ static void _hell_spawn_random_monsters()
         viewwindow(true, false);
     }
 }
-
+//#define DEBUG_MON_CREATION
 void spawn_random_monsters()
 {
+#ifdef DEBUG_MON_CREATION
     mpr("in spawn_random_monsters()", MSGCH_DIAGNOSTICS);
+#endif
     if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
     {
         _hell_spawn_random_monsters();
@@ -232,7 +234,9 @@ void spawn_random_monsters()
         && !player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
         && one_chance_in((you.char_direction == GDT_DESCENDING) ? 240 : 8))
     {
+#ifdef DEBUG_MON_CREATION
         mpr("Create wandering monster...", MSGCH_DIAGNOSTICS);
+#endif
         proximity_type prox = (one_chance_in(10) ? PROX_NEAR_STAIRS
                                                  : PROX_AWAY_FROM_PLAYER);
 
@@ -538,7 +542,9 @@ static int _is_near_stairs(coord_def &p)
 
 int place_monster(mgen_data mg, bool force_pos)
 {
+#ifdef DEBUG_MON_CREATION
     mpr("in place_monster()", MSGCH_DIAGNOSTICS);
+#endif
     int band_size = 0;
     monster_type band_monsters[BIG_BAND];        // band monster types
 
@@ -563,7 +569,9 @@ int place_monster(mgen_data mg, bool force_pos)
 
     if (mg.permit_bands())
     {
+#ifdef DEBUG_MON_CREATION
         mpr("Choose band members...", MSGCH_DIAGNOSTICS);
+#endif
         const band_type band = _choose_band(mg.cls, mg.power, band_size);
         band_size++;
         for (int i = 1; i < band_size; i++)
@@ -1193,7 +1201,9 @@ static void _define_zombie( int mid, monster_type ztype,
 
 static band_type _choose_band( int mon_type, int power, int &band_size )
 {
+#ifdef DEBUG_MON_CREATION
     mpr("in choose_band()", MSGCH_DIAGNOSTICS);
+#endif
     // init
     band_size = 0;
     band_type band = BAND_NO_BAND;
@@ -1824,7 +1834,9 @@ static monster_type _pick_zot_exit_defender()
 {
     if (one_chance_in(11))
     {
+#ifdef DEBUG_MON_CREATION
         mpr("Create a pandemonium demon!", MSGCH_DIAGNOSTICS);
+#endif
         return (MONS_PANDEMONIUM_DEMON);
     }
 
@@ -1846,7 +1858,9 @@ int mons_place( mgen_data mg )
     //             int px, int py, int level_type, proximity_type proximity,
     //             int extra, int dur, bool permit_bands )
 {
+#ifdef DEBUG_MON_CREATION
     mpr("in mons_place()", MSGCH_DIAGNOSTICS);
+#endif
     int mon_count = 0;
     for (int il = 0; il < MAX_MONSTERS; il++)
         if (menv[il].type != -1)
@@ -1857,7 +1871,9 @@ int mons_place( mgen_data mg )
         if (mon_count > MAX_MONSTERS - 50)
             return (-1);
 
+#ifdef DEBUG_MON_CREATION
         mpr("Set class RANDOM_MONSTER", MSGCH_DIAGNOSTICS);
+#endif
         mg.cls = RANDOM_MONSTER;
     }
 
@@ -1870,7 +1886,9 @@ int mons_place( mgen_data mg )
     if (you.char_direction == GDT_ASCENDING && mg.cls == RANDOM_MONSTER
         && you.level_type == LEVEL_DUNGEON && !mg.summoned())
     {
+#ifdef DEBUG_MON_CREATION
         mpr("Call _pick_zot_exit_defender()", MSGCH_DIAGNOSTICS);
+#endif
         mg.cls    = _pick_zot_exit_defender();
         mg.flags |= MG_PERMIT_BANDS;
     }
