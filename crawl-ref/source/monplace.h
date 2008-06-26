@@ -21,7 +21,7 @@
 enum band_type
 {
     BAND_NO_BAND                = 0,
-    BAND_KOBOLDS                = 1,
+    BAND_KOBOLDS,
     BAND_ORCS,
     BAND_ORC_WARRIOR,
     BAND_ORC_KNIGHT,
@@ -35,6 +35,7 @@ enum band_type
     BAND_HELL_KNIGHTS,
     BAND_ORC_HIGH_PRIEST,
     BAND_GNOLLS,                // 14
+    // 15
     BAND_BUMBLEBEES             = 16,
     BAND_CENTAURS,
     BAND_YAKTAURS,
@@ -63,9 +64,9 @@ enum band_type
     BAND_GIANT_MOSQUITOES,
     BAND_BOGGARTS,
     BAND_BLINK_FROGS,
-    BAND_SKELETAL_WARRIORS,     // 44
+    BAND_SKELETAL_WARRIORS,
     BAND_DRACONIAN,             // 45
-    BAND_PANDEMONIUM_DEMON,
+    BAND_PANDEMONIUM_DEMON,     // 46
     NUM_BANDS                   // always last
 };
 
@@ -234,7 +235,7 @@ struct mgen_data
  * used for summons and other monsters that want to appear near a given
  * position like a summon.
  * *********************************************************************** */
-int create_monster( mgen_data mg );
+int create_monster( mgen_data mg, bool fail_msg = true );
 
 /* ***********************************************************************
  * Primary function to create monsters. See mgen_data for details on monster

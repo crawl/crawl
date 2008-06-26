@@ -563,26 +563,22 @@ bool cast_summon_greater_demon(int pow, god_type god)
 
 bool cast_shadow_creatures(god_type god)
 {
-    bool success = false;
-
     mpr("Wisps of shadow whirl around you...");
 
     const int monster =
         create_monster(
             mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, 2,
                       you.pos(), you.pet_target,
-                      MG_FORCE_BEH, god));
+                      MG_FORCE_BEH, god), false);
 
-    if (monster != -1)
+    if (monster == -1)
     {
-        success = true;
-
-        player_angers_monster(&menv[monster]);
+        mpr("The shadows disperse without effect.");
+        return (false);
     }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
 
-    return (success);
+    player_angers_monster(&menv[monster]);
+    return (true);
 }
 
 bool cast_summon_horrible_things(int pow, god_type god)
@@ -640,7 +636,7 @@ bool cast_summon_horrible_things(int pow, god_type god)
 
     if (count > 0)
     {
-        mprf("Some Thing%s answered your call!",
+        mprf("Some thing%s answered your call!",
              count > 1 ? "s" : "");
         return (true);
     }

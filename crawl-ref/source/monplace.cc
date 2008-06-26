@@ -261,12 +261,14 @@ void spawn_random_monsters()
     // No monsters in the Labyrinth, or the Ecumenical Temple, or in Bazaars.
 }
 
-monster_type pick_random_monster(const level_id &place,
-                                 int power,
+monster_type pick_random_monster(const level_id &place, int power,
                                  int &lev_mons)
 {
-    if (place.level_type == LEVEL_LABYRINTH)
+    if (place.level_type == LEVEL_LABYRINTH
+        || place.level_type == LEVEL_PORTAL_VAULT)
+    {
         return (MONS_PROGRAM_BUG);
+    }
 
     monster_type mon_type = MONS_PROGRAM_BUG;
 
@@ -425,11 +427,12 @@ static monster_type _resolve_monster_type(monster_type mon_type,
     if (mon_type == RANDOM_MONSTER)
     {
         level_id place = level_id::current();
-        // respect destination level for staircases
+
+        // Respect destination level for staircases.
         if (proximity == PROX_NEAR_STAIRS)
         {
             int tries = 0;
-            int pval = 0;
+            int pval  = 0;
             while (++tries <= 320)
             {
                 pos = random_in_bounds();
@@ -469,7 +472,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             }
             else
             {
-                if ( *stair_type == DCHAR_STAIRS_DOWN ) // deeper level
+                if (*stair_type == DCHAR_STAIRS_DOWN) // deeper level
                     ++*lev_mons;
                 else if (*stair_type == DCHAR_STAIRS_UP) // higher level
                 {
@@ -547,7 +550,7 @@ int place_monster(mgen_data mg, bool force_pos)
                                    &stair_type, &mg.power);
 
     if (mg.cls == MONS_PROGRAM_BUG)
-        return (false);
+        return (-1);
 
     // (3) Decide on banding (good lord!)
     band_size = 1;
@@ -1862,8 +1865,6 @@ int mons_place( mgen_data mg )
     if (mg.cls == RANDOM_MONSTER || mg.level_type == LEVEL_PANDEMONIUM)
         mg.flags |= MG_PERMIT_BANDS;
 
-    int mid = -1;
-
     // Translate level_type.
     switch (mg.level_type)
     {
@@ -1879,7 +1880,7 @@ int mons_place( mgen_data mg )
             break;
     }
 
-    mid = place_monster(mg);
+    int mid = place_monster(mg);
     if (mid == -1)
         return (-1);
 
@@ -2093,7 +2094,7 @@ bool player_angers_monster(monsters *mon)
     return (false);
 }
 
-int create_monster( mgen_data mg )
+int create_monster( mgen_data mg, bool fail_msg )
 {
     int summd = -1;
     int type = (mons_class_is_zombified(mg.cls) ? mg.base_type
@@ -2113,7 +2114,7 @@ int create_monster( mgen_data mg )
 
     // Determine whether creating a monster is successful (summd != -1) {dlb}:
     // then handle the outcome. {dlb}:
-    if (summd == -1 && see_grid( mg.pos ))
+    if (fail_msg && summd == -1 && see_grid( mg.pos ))
         mpr("You see a puff of smoke.");
 
     // The return value is either -1 (failure of some sort)

@@ -1917,6 +1917,9 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
     switch (you.species)
     {
     case SP_OGRE:
+        // Ogres are, of course, really bad at Fire and Ice, so it's usually
+        // restricted, but if the summoning book comes into play unrestrict
+        // those two because ogres are even *worse* at Summonings.
         if (numbooks < 3)
             book_restrictions[0] = CC_RESTRICTED;
         // else fall-through
