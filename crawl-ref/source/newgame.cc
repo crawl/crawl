@@ -3026,10 +3026,13 @@ static void _make_rod(item_def &item, stave_type rod_type)
     init_rod_mp(item);
 }
 
+// Creates an item of a given base and sub type.
+// replacement is used when handing out armour that is not be wearable for
+// some species; otherwise use -1.
 static void _newgame_make_item(int slot, equipment_type eqslot,
                                object_class_type base,
-                               int sub_type, int qty = 1,
-                               int plus = 0, int plus2 = 0)
+                               int sub_type, int replacement = -1,
+                               int qty = 1, int plus = 0, int plus2 = 0)
 {
     if (slot == -1)
     {
@@ -3051,6 +3054,19 @@ static void _newgame_make_item(int slot, equipment_type eqslot,
     item.plus      = plus;
     item.plus2     = plus2;
     item.special   = 0;
+
+    // If the character is restricted in wearing armour of equipment slot
+    // eqslot, hand out replacement instead.
+    if (item.base_type == OBJ_ARMOUR && replacement != -1
+        && !you_can_wear(eqslot))
+    {
+        // Don't replace shields with bucklers for draconians and ogres.
+        if (sub_type != ARM_SHIELD
+            || !player_genus(GENPC_OGRE) && !player_genus(GENPC_DRACONIAN))
+        {
+            item.sub_type = replacement;
+        }
+    }
 
     if (eqslot != EQ_NONE)
         you.equip[eqslot] = slot;
@@ -3178,9 +3194,8 @@ static void _create_wanderer( void )
         you.skills[SK_INVOCATIONS] = 0;
     }
 
-    // Ogres and draconians cannot wear armour.
-    if ((you.species == SP_OGRE_MAGE || player_genus(GENPC_DRACONIAN))
-        && you.skills[ SK_ARMOUR ])
+    // Some species cannot wear real armour.
+    if (you.skills[ SK_ARMOUR ] && !you_can_wear(EQ_BODY_ARMOUR))
     {
         do
         {
@@ -3253,9 +3268,8 @@ static void _create_wanderer( void )
         }
         else if (you.skills[SK_SHIELDS] && wpn_skill != SK_STAVES)
         {
-            _newgame_make_item(4, EQ_SHIELD, OBJ_ARMOUR,
-                (player_genus(GENPC_DRACONIAN) || you.species == SP_OGRE_MAGE) ?
-                    ARM_SHIELD : ARM_BUCKLER);
+            _newgame_make_item(4, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD,
+                               ARM_BUCKLER);
             you.inv[3].quantity = 0;            // remove potion
         }
         else
@@ -3600,7 +3614,7 @@ job_query:
 
         int j = 0;
         job_type which_job;
-        bool good_choice = false;
+        bool good_choice;
         for (int i = 0; i < num_classes; i++)
         {
             which_job = _get_class(i);
@@ -3614,14 +3628,13 @@ job_query:
                    && _class_allowed(you.species, which_job) == CC_UNRESTRICTED)
             {
                 textcolor(LIGHTGREY);
-                good_choice = true;
             }
             else
                 textcolor(DARKGREY);
 
             // Show banned classes but omit letter.
             char letter;
-            if (!good_choice)
+            if (_class_allowed(you.species, which_job) == CC_BANNED)
                 letter = ' ';
             else
                 letter = index_to_letter(i);
@@ -3826,15 +3839,7 @@ bool _give_items_skills()
             if (you.species == SP_OGRE)
                 _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_ANKUS);
             else if (you.species == SP_TROLL)
-                _newgame_clear_item(0);
-        }
-        else if (player_genus(GENPC_DRACONIAN))
-        {
-            if (!_choose_weapon())
-                return (false);
-
-            _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-            _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
+                _newgame_clear_item(0); // Trolls go unarmed.
         }
         else if (you.species == SP_HALFLING || you.species == SP_KOBOLD
                  || you.species == SP_GNOME || you.species == SP_VAMPIRE)
@@ -3845,19 +3850,23 @@ bool _give_items_skills()
             _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                                ARM_LEATHER_ARMOUR);
 
-            if (you.species != SP_VAMPIRE)
-            {
-                _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_DART,
-                                   10 + roll_dice( 2, 10 ));
-            }
         }
         else
         {
             if (!_choose_weapon())
                 return (false);
 
-            _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL);
-            _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
+            _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL,
+                                  ARM_ROBE);
+            _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD,
+                                  ARM_BUCKLER);
+        }
+
+        // For small species, hand out some darts.
+        if (player_size(PSIZE_BODY) < SIZE_MEDIUM)
+        {
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
+                               10 + roll_dice( 2, 10 ));
         }
 
         you.skills[SK_FIGHTING] = 3;
@@ -3910,9 +3919,9 @@ bool _give_items_skills()
 
     case JOB_WIZARD:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS,
-                           you.species == SP_OGRE_MAGE? WPN_QUARTERSTAFF :
-                           player_genus(GENPC_DWARVEN)? WPN_HAMMER :
-                           WPN_DAGGER);
+                           you.species == SP_OGRE_MAGE ? WPN_QUARTERSTAFF :
+                           player_genus(GENPC_DWARVEN) ? WPN_HAMMER
+                                                       : WPN_DAGGER);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
@@ -3961,7 +3970,10 @@ bool _give_items_skills()
         you.piety = 45;
 
         if (you.species == SP_KOBOLD || you.species == SP_HALFLING)
-            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE, 1, 1, 1);
+        {
+            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE, -1,
+                               1, 1, 1);
+        }
         else
         {
             _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS,
@@ -3972,7 +3984,7 @@ bool _give_items_skills()
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
         if (you.is_undead != US_UNDEAD)
-            _newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING, 2);
+            _newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
 
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_DODGING] = 1;
@@ -4121,7 +4133,7 @@ bool _give_items_skills()
         _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_DAGGER);
         _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART,
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
                            10 + roll_dice( 2, 10 ));
 
         you.skills[SK_FIGHTING] = 1;
@@ -4141,21 +4153,16 @@ bool _give_items_skills()
         if (!_choose_weapon())
             return (false);
 
-        if (player_genus(GENPC_DRACONIAN) || you.species == SP_OGRE)
-        {
-            _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);
-            _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
-        }
-        else
-        {
-            _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
-                               ARM_LEATHER_ARMOUR);
-            _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER);
-        }
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
+                              ARM_LEATHER_ARMOUR, ARM_ANIMAL_SKIN);
+
+        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD,
+                              ARM_BUCKLER);
 
         if (you.species != SP_KOBOLD)
         {
-            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, 4);
+            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
+                               4);
             you.skills[SK_THROWING] = 1;
         }
         else
@@ -4189,7 +4196,7 @@ bool _give_items_skills()
 
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_FALCHION);
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD);
+        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
         _newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEALING);
 
         you.skills[SK_FIGHTING] = 2;
@@ -4202,8 +4209,8 @@ bool _give_items_skills()
         break;
 
     case JOB_ASSASSIN:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, 1,
-                           1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1,
+                           1, 1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
         _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BLOWGUN);
         _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
@@ -4214,16 +4221,16 @@ bool _give_items_skills()
         if (you.species == SP_DEEP_ELF)
         {
             you.inv[1].sub_type = WPN_HAND_CROSSBOW;
-            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART,
+            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
                                10 + roll_dice( 2, 10 ));
             set_item_ego_type( you.inv[4], OBJ_MISSILES, SPMSL_POISONED );
         }
         else
         {
-            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE,
+            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
                                5 + roll_dice(2, 5));
             set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
-            _newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE,
+            _newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
                                1 + random2(4));
             set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
         }
@@ -4251,7 +4258,7 @@ bool _give_items_skills()
         if (you.species == SP_OGRE)
             _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_ANKUS);
         else if (you.species == SP_TROLL)
-            you.equip[EQ_WEAPON] = -1;
+            you.equip[EQ_WEAPON] = -1; // Trolls fight unarmed.
         else
         {
             _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_HAND_AXE);
@@ -4260,9 +4267,8 @@ bool _give_items_skills()
         }
 
         // ARMOUR
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-        if (!can_wear_armour(you.inv[1], false, true))
-            you.inv[1].sub_type = ARM_ANIMAL_SKIN;
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                              ARM_ANIMAL_SKIN);
 
         // SKILLS
         you.skills[SK_FIGHTING] = 2;
@@ -4271,7 +4277,7 @@ bool _give_items_skills()
         {
             // no wep - give them unarmed.
             you.skills[SK_FIGHTING] += 3;
-            you.skills[SK_DODGING] = 2;
+            you.skills[SK_DODGING]   = 2;
             you.skills[SK_UNARMED_COMBAT] = 2;
         }
         else if (you.species == SP_OGRE)
@@ -4281,21 +4287,18 @@ bool _give_items_skills()
         }
         else
         {
-            you.skills[SK_AXES] = 3;
-            you.skills[SK_ARMOUR] = 2;
-            you.skills[SK_DODGING] = 2;
+            you.skills[SK_AXES]     = 3;
+            you.skills[SK_ARMOUR]   = 2;
+            you.skills[SK_DODGING]  = 2;
             you.skills[SK_THROWING] = 2;
         }
         break;
 
     case JOB_HUNTER:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
-        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-        if (!can_wear_armour(you.inv[2], false, true))
-        {
-            you.inv[2].sub_type =
-                player_genus(GENPC_DRACONIAN)? ARM_ROBE : ARM_ANIMAL_SKIN;
-        }
+        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                           (player_genus(GENPC_DRACONIAN) ? ARM_ROBE
+                                                          : ARM_ANIMAL_SKIN));
 
         if (you.species == SP_MERFOLK)
         {
@@ -4409,7 +4412,7 @@ bool _give_items_skills()
             _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CALLINGS);
             you.skills[SK_SUMMONINGS] = 4;
             // Gets some darts - this class is difficult to start off with.
-            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART,
+            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
                                8 + roll_dice( 2, 8 ));
             break;
 
@@ -4423,7 +4426,7 @@ bool _give_items_skills()
             you.skills[SK_ENCHANTMENTS] = 4;
 
             // Gets some darts - this class is difficult to start off with.
-            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART,
+            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
                                8 + roll_dice( 2, 8 ), 1);
 
             if (you.species == SP_SPRIGGAN)
@@ -4452,7 +4455,7 @@ bool _give_items_skills()
 
         case JOB_EARTH_ELEMENTALIST:
             _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
-            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, 20);
+            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
 
             if (you.species == SP_GNOME)
             {
@@ -4522,14 +4525,14 @@ bool _give_items_skills()
 
     case JOB_TRANSMUTER:
         // Some sticks for sticks to snakes.
-        _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_ARROW,
+        _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
                            6 + roll_dice( 3, 4 ));
         _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
 
         // A little bit of starting ammo for evaporate... don't need too
         // much now that the character can make their own. -- bwr
-        _newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, 2);
+        _newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
         _newgame_make_item(5, EQ_NONE, OBJ_POTIONS, POT_POISON);
 
         you.equip[EQ_WEAPON] = -1;
@@ -4562,6 +4565,7 @@ bool _give_items_skills()
         else
         {
             _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+
             if (you.species == SP_OGRE_MAGE)
                 you.inv[0].sub_type = WPN_QUARTERSTAFF;
 
@@ -4569,18 +4573,14 @@ bool _give_items_skills()
             you.skills[SK_FIGHTING] = 1;
         }
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR);
-        if (you.species == SP_SPRIGGAN || you.species == SP_OGRE_MAGE
-            || player_genus(GENPC_DRACONIAN))
-        {
-            you.inv[1].sub_type = ARM_ROBE;
-        }
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                           ARM_ROBE);
 
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
 
         // One free escape.
         _newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART,
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
                            10 + roll_dice( 2, 10 ));
 
         you.skills[SK_THROWING] = 1;
@@ -4767,8 +4767,8 @@ bool _give_items_skills()
         break;
 
     case JOB_CHAOS_KNIGHT:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, 1,
-                           random2(3), random2(3));
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1,
+                           1, random2(3), random2(3));
 
         if (one_chance_in(5))
             set_equip_desc( you.inv[0], ISFLAG_RUNED );
@@ -4780,8 +4780,8 @@ bool _give_items_skills()
             return (false);
 
         weap_skill = 2;
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, 1,
-                           random2(3));
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1,
+                           1, random2(3));
 
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
@@ -4958,6 +4958,7 @@ bool _give_items_skills()
         weap_skill = 3;
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+
         if (!_choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 ))
             return (false);
 
@@ -4971,8 +4972,8 @@ bool _give_items_skills()
 
     case JOB_STALKER:
         to_hit_bonus = random2(3);
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, 1,
-                           1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1,
+                           1, 1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
         _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
@@ -4989,8 +4990,9 @@ bool _give_items_skills()
         break;
 
     case JOB_MONK:
+        you.equip[EQ_WEAPON] = -1; // Monks fight unarmed.
+
         _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        you.equip[EQ_WEAPON] = -1;
 
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_UNARMED_COMBAT] = 4;

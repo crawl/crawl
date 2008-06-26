@@ -981,8 +981,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     // Giant races
-    if (you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE
-        || player_genus(GENPC_DRACONIAN))
+    if (player_genus(GENPC_OGRE) || player_genus(GENPC_DRACONIAN))
     {
         if (sub_type >= ARM_LEATHER_ARMOUR
                && sub_type <= ARM_PLATE_MAIL

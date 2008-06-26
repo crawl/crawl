@@ -841,7 +841,7 @@ void set_equip_desc( item_def &item, unsigned long flags )
 }
 
 //
-// These functions handle the description and subtypes for helmets/caps
+// These functions handle the description and subtypes for helmets/caps.
 //
 short get_helmet_desc( const item_def &item )
 {
@@ -941,7 +941,7 @@ int get_ammo_brand( const item_def &item )
 
 special_armour_type get_armour_ego_type( const item_def &item )
 {
-    // artefact armours have no ego type, must look up powers separately
+    // Artefact armours have no ego type, must look up powers separately.
     if (item.base_type != OBJ_ARMOUR
         || (is_random_artefact( item ) && !is_unrandom_artefact( item )))
     {
@@ -952,7 +952,7 @@ special_armour_type get_armour_ego_type( const item_def &item )
 }
 
 //
-// Armour information and checking functions
+// Armour information and checking functions.
 //
 bool hide2armour( item_def &item )
 {
@@ -998,7 +998,7 @@ bool hide2armour( item_def &item )
     }
 
     return (true);
-}                               // end hide2armour()
+}
 
 // Return the enchantment limit of a piece of armour.
 int armour_max_enchant( const item_def &item )
