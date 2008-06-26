@@ -696,7 +696,7 @@ std::vector<map_marker*> map_markers::get_all(const std::string &key,
         map_marker*       marker = i->second;
         const std::string prop   = marker->property(key);
 
-        if ((val == "" && !prop.empty()) || (val != "" && val == prop))
+        if (val.empty() && !prop.empty() || !val.empty() && val == prop)
             rmarkers.push_back(marker);
     }
 

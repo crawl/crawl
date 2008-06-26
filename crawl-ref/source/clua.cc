@@ -2546,7 +2546,7 @@ std::string lua_text_pattern::new_fn_name()
 bool lua_text_pattern::translate() const
 {
     if (translated || !isvalid)
-        return false;
+        return (false);
 
     if (pattern.find("]]") != std::string::npos
         || pattern.find("[[") != std::string::npos)

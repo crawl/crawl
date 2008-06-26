@@ -520,7 +520,7 @@ static bool _ely_heals_monster(monsters *monster, killer_type killer, int i)
     god_type god = GOD_ELYVILON;
 
     if (!you.penance[god] || !is_evil_god(you.religion))
-        return false;
+        return (false);
 
     const int ely_penance = you.penance[god];
 
@@ -3575,7 +3575,7 @@ void _set_nearest_monster_foe(monsters *mon)
 // The default suitable() function for choose_random_nearby_monster().
 bool choose_any_monster(const monsters* mon)
 {
-    return true;
+    return (true);
 }
 
 // Find a nearby monster and return its index, including you as a
@@ -4830,7 +4830,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
          // Monsters can be very trigger happy with wands, reduce this
          // for polymorph.
          if (!one_chance_in(5))
-             return false;
+             return (false);
          break;
 
     // These are wands that monsters will aim at themselves {dlb}:
@@ -6604,31 +6604,31 @@ static bool _do_move_monster(monsters *monster, int xi, int yi)
               fy = monster->y + yi;
 
     if (!in_bounds(fx, fy))
-        return false;
+        return (false);
 
     if (fx == you.x_pos && fy == you.y_pos)
     {
         monster_attack( monster_index(monster) );
-        return true;
+        return (true);
     }
 
     if (!xi && !yi)
     {
         const int mx = monster_index(monster);
         monsters_fight( mx, mx );
-        return true;
+        return (true);
     }
 
     if (mgrd[fx][fy] != NON_MONSTER)
     {
         monsters_fight( monster_index(monster), mgrd[fx][fy] );
-        return true;
+        return (true);
     }
 
     if (!xi && !yi)
-        return false;
+        return (false);
 
-    // this appears to be the real one, ie where the movement occurs:
+    // This appears to be the real one, ie where the movement occurs:
     _swim_or_move_energy(monster);
 
     mgrd[monster->x][monster->y] = NON_MONSTER;
@@ -6641,7 +6641,7 @@ static bool _do_move_monster(monsters *monster, int xi, int yi)
     monster->check_redraw(monster->pos() - coord_def(xi, yi));
     monster->apply_location_effects();
 
-    return true;
+    return (true);
 }
 
 void mons_check_pool(monsters *mons, killer_type killer, int killnum)

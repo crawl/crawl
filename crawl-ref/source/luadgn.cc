@@ -1432,11 +1432,9 @@ static int dgn_floor_halo(lua_State *ls)
         error += "'.";
     }
     else if (colour == BLACK)
-    {
         error += "Can't set floor colour to black.";
-    }
 
-    if (error != "")
+    if (!error.empty())
     {
         luaL_argerror(ls, 2, error.c_str());
         return(0);
@@ -1553,7 +1551,7 @@ static cloud_type dgn_cloud_name_to_type(std::string name)
 
 static kill_category dgn_kill_name_to_category(std::string name)
 {
-    if (name == "")
+    if (name.empty())
         return KC_OTHER;
 
     lowercase(name);
@@ -1993,7 +1991,7 @@ static int dgn_count_feature_in_box(lua_State *ls)
         return 1;
     }
 
-    lua_pushnumber(ls, count_feature_in_box(x1, y1, x2, y2, feat)); 
+    lua_pushnumber(ls, count_feature_in_box(x1, y1, x2, y2, feat));
     return 1;
 }
 
@@ -2011,7 +2009,7 @@ static int dgn_count_antifeature_in_box(lua_State *ls)
         return 1;
     }
 
-    lua_pushnumber(ls, count_antifeature_in_box(x1, y1, x2, y2, feat)); 
+    lua_pushnumber(ls, count_antifeature_in_box(x1, y1, x2, y2, feat));
     return 1;
 }
 
@@ -2027,7 +2025,7 @@ static int dgn_count_neighbours(lua_State *ls)
         return 1;
     }
 
-    lua_pushnumber(ls, count_neighbours(x, y, feat)); 
+    lua_pushnumber(ls, count_neighbours(x, y, feat));
     return 1;
 }
 

@@ -204,14 +204,15 @@ void radius_iterator::step_back()
 bool radius_iterator::on_valid_square() const
 {
     if (!in_bounds(location))
-        return false;
+        return (false);
     if (!roguelike_metric && (location - center).abs() > radius*radius)
-        return false;
+        return (false);
     if (require_los && !see_grid(location))
-        return false;
+        return (false);
     if (exclude_center && location == center)
-        return false;
-    return true;
+        return (false);
+
+    return (true);
 }
 
 const radius_iterator& radius_iterator::operator++()
@@ -220,9 +221,9 @@ const radius_iterator& radius_iterator::operator++()
     {
         this->step();
     }
-    while ( !this->done() && !this->on_valid_square() );
+    while (!this->done() && !this->on_valid_square());
 
-    return *this;
+    return (*this);
 }
 
 const radius_iterator& radius_iterator::operator--()
@@ -231,23 +232,23 @@ const radius_iterator& radius_iterator::operator--()
     {
         this->step_back();
     }
-    while ( !this->done() && !this->on_valid_square() );
+    while (!this->done() && !this->on_valid_square());
 
-    return *this;
+    return (*this);
 }
 
 radius_iterator radius_iterator::operator++(int dummy)
 {
     const radius_iterator copy = *this;
     ++(*this);
-    return copy;
+    return (copy);
 }
 
 radius_iterator radius_iterator::operator--(int dummy)
 {
     const radius_iterator copy = *this;
     --(*this);
-    return copy;
+    return (copy);
 }
 
 // Crude, but functional.
@@ -967,10 +968,11 @@ bool yes_or_no( const char* fmt, ... )
     mprf(MSGCH_PROMPT, "%s? (Confirm with \"yes\".) ", buf);
 
     if (cancelable_get_line(buf, sizeof buf))
-        return false;
+        return (false);
     if (strcasecmp(buf, "yes") != 0)
-        return false;
-    return true;
+        return (false);
+
+    return (true);
 }
 
 // jmf: general helper (should be used all over in code)
@@ -1011,9 +1013,9 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
             mesclr();
 
         if (tmp == 'N')
-            return false;
+            return (false);
         else if (tmp == 'Y')
-            return true;
+            return (true);
         else if (!noprompt)
             mpr("[Y]es or [N]o only, please.");
     }
@@ -1156,7 +1158,7 @@ bool silenced(int x, int y)
     if (you.duration[DUR_SILENCE] > 0
         && distance(x, y, you.x_pos, you.y_pos) <= 36)  // (6 * 6)
     {
-        return true;
+        return (true);
     }
     else
     {
@@ -1164,16 +1166,16 @@ bool silenced(int x, int y)
         //  for (int i = 0; i < MAX_SILENCES; i++)
         //  {
         //      if (distance(x, y, silencer[i].x, silencer[i].y) <= 36)
-        //         return true;
+        //         return (true);
         //  }
-        return false;
+        return (false);
     }
-}                               // end silenced()
+}
 
 bool player_can_hear(int x, int y)
 {
     return (!silenced(x, y) && !silenced(you.x_pos, you.y_pos));
-}                               // end player_can_hear()
+}
 
 // Returns true if inside the area the player can move and dig (ie exclusive).
 bool in_bounds( int x, int y )
@@ -1539,7 +1541,7 @@ int near_stairs(const coord_def &p, int max_dist,
         }
     }
 
-    return false;
+    return (false);
 }
 
 bool is_trap_square(dungeon_feature_type grid)
@@ -1555,7 +1557,6 @@ void zap_los_monsters()
     losight(env.show, grd, you.x_pos, you.y_pos);
 
     for (int y = crawl_view.vlos1.y; y <= crawl_view.vlos2.y; ++y)
-    {
         for (int x = crawl_view.vlos1.x; x <= crawl_view.vlos2.x; ++x)
         {
             if (!in_vlos(x, y))
@@ -1599,7 +1600,6 @@ void zap_los_monsters()
             mon->mark_summoned(1, true);
             monster_die(mon, KILL_DISMISSED, 0);
         }
-    }
 }
 
 //////////////////////////////////////////////////////////////////////////

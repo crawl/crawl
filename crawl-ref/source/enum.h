@@ -2799,14 +2799,6 @@ enum montravel_target_type
     MTRAV_SUBMERSIBLE  // Travelling to reach a submersible place.
 };
 
-enum char_choice_restriction
-{
-    CC_BANNED = 0,
-    CC_RESTRICTED,
-    CC_UNRESTRICTED
-};
-
-
 #ifndef USE_TILE
 enum mlist_targetting_type
 {

@@ -1061,13 +1061,13 @@ struct DIR
 
     bool init(const char* szFind)
     {
-        // Check that it's a directory, first
+        // Check that it's a directory, first.
         {
             const DWORD dwAttr = GetFileAttributes(szFind);
             if (dwAttr == INVALID_FILE_ATTRIBUTES)
-                return false;
+                return (false);
             if ((dwAttr & FILE_ATTRIBUTE_DIRECTORY) == 0)
-                return false;
+                return (false);
         }
 
         find = szFind;
@@ -1075,17 +1075,18 @@ struct DIR
 
         hFind = FindFirstFileA(find.c_str(), &wfd);
         wfd_valid = (hFind != INVALID_HANDLE_VALUE);
-        return true;
+        return (true);
     }
 
     dirent* readdir()
     {
-        if (! wfd_valid) return 0;
+        if (!wfd_valid)
+            return 0;
 
         _convert_wfd_to_dirent();
         wfd_valid = (bool) FindNextFileA(hFind, &wfd);
 
-        return &entry;
+        return (&entry);
     }
 
  private:

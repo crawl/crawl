@@ -491,7 +491,7 @@ static bool _item_matches(const item_def &item, fire_type types,
 
     if (types & FIRE_INSCRIBED)
         if (item.inscription.find("+f", 0) != std::string::npos)
-            return true;
+            return (true);
 
     if (item.base_type == OBJ_MISSILES)
     {

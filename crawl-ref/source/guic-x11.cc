@@ -825,7 +825,7 @@ bool GuicInit(Display **d, int *s)
     if (!display)
     {
         fprintf(stderr,"Cannot open display\n");
-        return false;
+        return (false);
     }
     screen=DefaultScreen(display);
 
@@ -854,7 +854,7 @@ bool GuicInit(Display **d, int *s)
     pix_hilite   = term_pix[PIX_LIGHTMAGENTA] ;
     pix_rimcolor = create_pixel(1,1,1);
 
-    return true;
+    return (true);
 }
 
 void GuicDeinit()

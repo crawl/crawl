@@ -255,7 +255,7 @@ static void draw_ray_glyph(const coord_def &pos, int colour,
 static bool _mon_submerged_in_water(const monsters *mon)
 {
     if (!mon)
-        return false;
+        return (false);
 
     return (grd[mon->x][mon->y] == DNGN_SHALLOW_WATER
             && see_grid(mon->x, mon->y)
@@ -265,9 +265,9 @@ static bool _mon_submerged_in_water(const monsters *mon)
 
 static bool _is_target_in_range(int x, int y, int range)
 {
-    // range doesn't matter
+    // Range doesn't matter.
     if (range == -1)
-        return true;
+        return (true);
 
     return (grid_distance(you.x_pos, you.y_pos, x, y) <= range);
 }
@@ -1367,14 +1367,14 @@ static bool _find_monster( int x, int y, int mode, bool need_path,
 
     // Now compare target modes.
     if (mode == TARG_ANY)
-        return true;
+        return (true);
 
     if (mode == TARG_FRIEND)
         return (mons_friendly(&menv[targ_mon] ));
 
     ASSERT(mode == TARG_ENEMY);
     if (mons_friendly(&menv[targ_mon]))
-        return false;
+        return (false);
 
     // Don't target zero xp monsters, unless target_zero_exp is set.
     return (Options.target_zero_exp
@@ -1407,7 +1407,7 @@ static bool _find_object(int x, int y, int mode,
 
     const int item = igrd[x][y];
     if (item == NON_ITEM && !is_mimic)
-        return false;
+        return (false);
 
     return (in_los(x, y) || Options.target_oos && is_terrain_seen(x, y)
                             && (is_stash(x, y) || is_mimic));

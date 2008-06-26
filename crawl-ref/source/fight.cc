@@ -2356,7 +2356,8 @@ bool melee_attack::apply_damage_brand()
     }
     }
 
-    obvious_effect = obvious_effect || (special_damage_message != "");
+    if (!obvious_effect)
+        obvious_effect = !special_damage_message.empty();
 
     if (obvious_effect && attacker_visible && weapon != NULL
         && !is_artefact(*weapon))

@@ -1252,9 +1252,9 @@ monster_pane_info::less_than(const monster_pane_info& m1,
 #if 0 // for now, sort brands together.
     // By descending brands, so no brands sorts to the end
     if (m1.m_brands > m2.m_brands)
-        return true;
+        return (true);
     else if (m1.m_brands < m2.m_brands)
-        return false;
+        return (false);
 #endif
 
     return (false);

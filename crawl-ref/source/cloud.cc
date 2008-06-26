@@ -298,17 +298,19 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
 
 bool is_opaque_cloud(unsigned char cloud_idx)
 {
-    if ( cloud_idx == EMPTY_CLOUD )
-        return false;
+    if (cloud_idx == EMPTY_CLOUD)
+        return (false);
+
     const int ctype = env.cloud[cloud_idx].type;
-    return ( ctype == CLOUD_BLACK_SMOKE ||
-             (ctype >= CLOUD_GREY_SMOKE && ctype <= CLOUD_STEAM) );
+    return (ctype == CLOUD_BLACK_SMOKE
+            || ctype >= CLOUD_GREY_SMOKE && ctype <= CLOUD_STEAM);
 }
 
 cloud_type cloud_type_at(const coord_def &c)
 {
     const int cloudno = env.cgrid(c);
-    return (cloudno == EMPTY_CLOUD? CLOUD_NONE : env.cloud[cloudno].type);
+    return (cloudno == EMPTY_CLOUD ? CLOUD_NONE
+                                   : env.cloud[cloudno].type);
 }
 
 cloud_type random_smoke_type()
@@ -675,16 +677,16 @@ void place_fog_machine(fog_machine_data data, int x, int y)
 bool valid_fog_machine_data(fog_machine_data data)
 {
     if (data.fm_type < FM_GEYSER ||  data.fm_type >= NUM_FOG_MACHINE_TYPES)
-        return false;
+        return (false);
 
     if (data.cl_type <= CLOUD_NONE || (data.cl_type >= CLOUD_RANDOM
                                        && data.cl_type != CLOUD_DEBUGGING))
-        return false;
+        return (false);
 
     if (data.size < 1 || data.power < 1)
-        return false;
+        return (false);
 
-    return true;
+    return (true);
 }
 
 int num_fogs_for_place(int level_number, const level_id &place)

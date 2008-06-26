@@ -115,7 +115,7 @@ std::string apply_description(description_level_type desc,
 bool shell_safe(const char *file)
 {
     int match = strcspn(file, "\\`$*?|><&\n!;");
-    return !(match >= 0 && file[match]);
+    return (match < 0 || !file[match]);
 }
 
 void play_sound( const char *file )
@@ -662,7 +662,9 @@ static bool glob_match( const char *pattern, const char *text, bool icase )
         t = pm_lower(*text++, icase);
         special = true;
 
-        if (!p) return t == 0;
+        if (!p)
+            return (t == 0);
+
         if (p == '\\' && *pattern)
         {
             p       = pm_lower(*pattern++, icase);
@@ -673,14 +675,14 @@ static bool glob_match( const char *pattern, const char *text, bool icase )
         {
             // Try to match exactly at the current text position...
             if (!*pattern || glob_match(pattern, text - 1, icase))
-                return true;
+                return (true);
 
             // Or skip one character in the text and try the wildcard match
             // again. If this is the end of the text, the match has failed.
             return (t ? glob_match(pattern - 1, text, icase) : false);
         }
         else if (!t || p != t && (p != '?' || !special))
-            return false;
+            return (false);
     }
 }
 

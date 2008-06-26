@@ -1603,7 +1603,7 @@ static bool _should_stop_activity(const delay_queue_item &item,
     if (ai == AI_SEE_MONSTER && (curr == DELAY_ASCENDING_STAIRS
                                  || curr == DELAY_DESCENDING_STAIRS))
     {
-        return false;
+        return (false);
     }
 
     if (ai == AI_FULL_HP || ai == AI_FULL_MP)
@@ -1620,7 +1620,7 @@ static bool _should_stop_activity(const delay_queue_item &item,
             && (you.magic_points < you.max_magic_points
                 || you.hp < you.hp_max))
         {
-            return false;
+            return (false);
         }
     }
 
@@ -1738,7 +1738,7 @@ bool interrupt_activity( activity_interrupt_type ai,
                          const activity_interrupt_data &at )
 {
     if (_interrupts_blocked > 0)
-        return false;
+        return (false);
 
     _paranoid_option_disable(ai, at);
 

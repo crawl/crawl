@@ -887,7 +887,7 @@ int spell_type2skill(unsigned int spelltype)
  **************************************************
  */
 
-//jmf: simplified; moved init code to top function, init_spell_descs()
+//jmf: Simplified; moved init code to top function, init_spell_descs().
 static spell_desc *_seekspell(spell_type spell)
 {
     const int index = spell_list[spell];
@@ -908,13 +908,13 @@ static bool _cloud_helper(int (*func)(int, int, int, int, cloud_type,
     if (!grid_is_solid(grd[x][y]) && env.cgrid[x][y] == EMPTY_CLOUD)
     {
         func(x, y, pow, spread_rate, ctype, whose);
-        return true;
+        return (true);
     }
 
-    return false;
+    return (false);
 }
 
 int spell_power_cap(spell_type spell)
 {
-    return _seekspell(spell)->power_cap;
+    return (_seekspell(spell)->power_cap);
 }

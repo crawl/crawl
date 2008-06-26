@@ -12,7 +12,6 @@
  *   <1>    -/--/--      LRH    Created
  */
 
-
 #include "AppHdr.h"
 #include "misc.h"
 #include "notes.h"
@@ -484,7 +483,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     }
 
     if (!rot_count && !coag_count)
-        return false; // nothing to be done
+        return (false); // Nothing to be done.
 
 #ifdef DEBUG_BLOOD_POTIONS
     mprf(MSGCH_DIAGNOSTICS, "in maybe_coagulate_blood_potions_INV "
@@ -512,7 +511,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         else
             ASSERT(blood.quantity == timer.size());
 
-        return true;
+        return (true);
     }
 
     // Coagulated blood cannot coagulate any further...
@@ -687,7 +686,8 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             ASSERT(timer.size() == blood.quantity);
             if (!knew_blood)
                 mpr(blood.name(DESC_INVENTORY).c_str());
-            return true;
+
+            return (true);
         }
         o = mitm[o].link;
     }
@@ -696,7 +696,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     // Create a new stack of potions.
     o = get_item_slot( 100 + random2(200) );
     if (o == NON_ITEM)
-        return false;
+        return (false);
 
     // These values are common to all: {dlb}
     mitm[o].base_type = OBJ_POTIONS;
@@ -739,7 +739,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         if (!knew_blood)
             mpr(blood.name(DESC_INVENTORY).c_str());
     }
-    return true;
+    return (true);
 }
 
 // Mostly used for (q)uaff, (f)ire, and Evaporate.
@@ -2304,8 +2304,8 @@ bool go_berserk(bool intentional)
     if (you.berserk_penalty != NO_BERSERK_PENALTY)
         you.berserk_penalty = 0;
 
-    return true;
-}                               // end go_berserk()
+    return (true);
+}
 
 bool mons_is_safe(const struct monsters *mon, bool want_move)
 {
@@ -2339,7 +2339,7 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
     }
 #endif
 
-    return is_safe;
+    return (is_safe);
 }
 
 // Return all monsters in range (default: LOS) that the player is able to see
@@ -2414,7 +2414,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
 
     // No monsters found.
     if (visible.empty())
-        return true;
+        return (true);
 
     // Announce the presence of monsters (Eidolos).
     if (visible.size() == 1)

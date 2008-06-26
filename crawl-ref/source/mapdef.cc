@@ -2854,7 +2854,7 @@ map_flags map_flags::parse(const std::string flag_list[],
     const std::vector<std::string> segs = split_string("/", s);
 
     flag_map flag_vals;
-    for (int i = 0; flag_list[i] != ""; i++)
+    for (int i = 0; !flag_list[i].empty(); i++)
         flag_vals[flag_list[i]] = 1 << i;
 
     for (int i = 0, size = segs.size(); i < size; i++)

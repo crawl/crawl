@@ -630,12 +630,12 @@ bool you_can_wear(int eq, bool special_armour)
 bool player_has_feet()
 {
    if (you.species == SP_NAGA || player_genus(GENPC_DRACONIAN))
-       return false;
+       return (false);
 
    if (player_mutation_level(MUT_HOOVES) || player_mutation_level(MUT_TALONS))
-       return false;
+       return (false);
 
-   return true;
+   return (true);
 }
 
 bool you_tran_can_wear(int eq, bool check_mutation)
@@ -1158,9 +1158,9 @@ bool player_knows_spell(int spell)
 {
     for (int i = 0; i < 25; i++)
         if (you.spells[i] == spell)
-            return true;
+            return (true);
 
-    return false;
+    return (false);
 }
 
 int player_res_magic(void)
@@ -2612,11 +2612,11 @@ bool player_monster_visible( const monsters *mon )
 bool player_beheld_by( const monsters *mon )
 {
     if (!you.duration[DUR_BEHELD])
-        return false;
+        return (false);
 
     // Can this monster even behold you?
     if (mon->type != MONS_MERMAID)
-        return false;
+        return (false);
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "beheld_by.size: %d, DUR_BEHELD: %d, current mon: %d",
@@ -2627,17 +2627,17 @@ bool player_beheld_by( const monsters *mon )
     if (you.beheld_by.empty()) // shouldn't happen
     {
         you.duration[DUR_BEHELD] = 0;
-        return false;
+        return (false);
     }
 
     for (unsigned int i = 0; i < you.beheld_by.size(); i++)
     {
          unsigned int which_mon = you.beheld_by[i];
          if (monster_index(mon) == which_mon)
-             return true;
+             return (true);
     }
 
-    return false;
+    return (false);
 }
 
 // Removes a monster from the list of beholders if force == true
@@ -2833,34 +2833,32 @@ bool you_resist_magic(int power)
 #endif
 
     if (mrch2 < mrchance)
-        return true;            // ie saved successfully
+        return (true);            // ie saved successfully
 
-    return false;
-/* if (random2(power) / 3 + random2(power) / 3 + random2(power) / 3 >= player_res_magic()) return 0;
-   return 1; */
+    return (false);
 }
 
-// force is true for forget_map command on level map
+// force is true for forget_map command on level map.
 void forget_map(unsigned char chance_forgotten, bool force)
 {
-    if ( force && !yesno("Really forget level map?", true, 'n') )
-         return;
+    if (force && !yesno("Really forget level map?", true, 'n'))
+        return;
 
     for (unsigned char xcount = 0; xcount < GXM; xcount++)
         for (unsigned char ycount = 0; ycount < GYM; ycount++)
         {
-             if (!see_grid(xcount, ycount) &&
-                 (force || random2(100) < chance_forgotten))
-             {
-                 env.map[xcount][ycount].clear();
-             }
+            if (!see_grid(xcount, ycount)
+                && (force || random2(100) < chance_forgotten))
+            {
+                env.map[xcount][ycount].clear();
+            }
         }
 
 #ifdef USE_TILE
     GmapInit(false);
     tile_clear_buf();
 #endif
-} // end forget_map()
+}
 
 void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
                unsigned int* actual_avail_gain)
@@ -4666,13 +4664,11 @@ void dec_mp(int mp_loss)
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
     you.redraw_magic_points = 1;
-
-    return;
-}                               // end dec_mp()
+}
 
 bool enough_hp(int minimum, bool suppress_msg)
 {
-    // We want to at least keep 1 HP -- bwr
+    // We want to at least keep 1 HP. -- bwr
     if (you.hp < minimum + 1)
     {
         if (!suppress_msg)
@@ -4680,11 +4676,11 @@ bool enough_hp(int minimum, bool suppress_msg)
 
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
-        return false;
+        return (false);
     }
 
-    return true;
-}                               // end enough_hp()
+    return (true);
+}
 
 bool enough_mp(int minimum, bool suppress_msg)
 {
@@ -4695,11 +4691,11 @@ bool enough_mp(int minimum, bool suppress_msg)
 
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
-        return false;
+        return (false);
     }
 
-    return true;
-}                               // end enough_mp()
+    return (true);
+}
 
 // Note that "max_too" refers to the base potential, the actual
 // resulting max value is subject to penalties, bonuses, and scalings.
@@ -4723,12 +4719,11 @@ void inc_mp(int mp_gain, bool max_too)
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
     you.redraw_magic_points = 1;
-
-    return;
-}                               // end inc_mp()
+}
 
 // Note that "max_too" refers to the base potential, the actual
 // resulting max value is subject to penalties, bonuses, and scalings.
+// To avoid message spam, don't take notes when HP increases.
 void inc_hp(int hp_gain, bool max_too)
 {
     if (hp_gain < 1)
@@ -4747,11 +4742,8 @@ void inc_hp(int hp_gain, bool max_too)
     if (wasnt_max && you.hp == you.hp_max)
         interrupt_activity(AI_FULL_HP);
 
-    // to avoid message spam, no information when HP increases
-    // take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max));
-
     you.redraw_hit_points = 1;
-}                               // end inc_hp()
+}
 
 void rot_hp( int hp_loss )
 {
@@ -4984,8 +4976,8 @@ void contaminate_player(int change, bool controlled, bool status_only)
 
 bool poison_player( int amount, bool force )
 {
-    if ((!force && player_res_poison()) || amount <= 0)
-        return false;
+    if (!force && player_res_poison() || amount <= 0)
+        return (false);
 
     const int old_value = you.duration[DUR_POISONING];
     you.duration[DUR_POISONING] += amount;
@@ -4999,7 +4991,7 @@ bool poison_player( int amount, bool force )
              (old_value > 0) ? "more " : "" );
         learned_something_new(TUT_YOU_POISON);
     }
-    return true;
+    return (true);
 }
 
 void reduce_poison_player( int amount )
@@ -5015,20 +5007,18 @@ void reduce_poison_player( int amount )
         mpr( "You feel better.", MSGCH_RECOVERY );
     }
     else
-    {
         mpr( "You feel a little better.", MSGCH_RECOVERY );
-    }
 }
 
 bool confuse_player( int amount, bool resistable )
 {
     if (amount <= 0)
-        return false;
+        return (false);
 
     if (resistable && wearing_amulet(AMU_CLARITY))
     {
         mpr( "You feel momentarily confused." );
-        return false;
+        return (false);
     }
 
     const int old_value = you.duration[DUR_CONF];
@@ -5046,7 +5036,7 @@ bool confuse_player( int amount, bool resistable )
 
         xom_is_stimulated(you.duration[DUR_CONF] - old_value);
     }
-    return true;
+    return (true);
 }
 
 void reduce_confuse_player( int amount )
@@ -5066,12 +5056,12 @@ void reduce_confuse_player( int amount )
 bool slow_player( int amount )
 {
     if (amount <= 0)
-        return false;
+        return (false);
 
     if (wearing_amulet( AMU_RESIST_SLOW ))
     {
         mpr("You feel momentarily lethargic.");
-        return false;
+        return (false);
     }
     else if (you.duration[DUR_SLOW] >= 100)
         mpr( "You already are as slow as you could be." );
@@ -5088,7 +5078,7 @@ bool slow_player( int amount )
             you.duration[DUR_SLOW] = 100;
         learned_something_new(TUT_YOU_ENCHANTED);
     }
-    return true;
+    return (true);
 }
 
 void dec_slow_player( void )
@@ -5195,13 +5185,13 @@ void dec_disease_player( void )
 bool rot_player( int amount )
 {
     if (amount <= 0)
-        return false;
+        return (false);
 
     if (you.is_undead
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state < HS_SATIATED))
     {
         mpr( "You feel terrible." );
-        return false;
+        return (false);
     }
 
     if (you.rotting < 40)
@@ -5215,20 +5205,22 @@ bool rot_player( int amount )
 
         learned_something_new(TUT_YOU_ROTTING);
     }
-    return true;
+    return (true);
 }
 
 int count_worn_ego( int which_ego )
 {
     int result = 0;
-    for ( int slot = EQ_CLOAK; slot <= EQ_BODY_ARMOUR; ++slot )
+    for (int slot = EQ_CLOAK; slot <= EQ_BODY_ARMOUR; ++slot)
+    {
         if (you.equip[slot] != -1
             && get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
         {
             result++;
         }
+    }
 
-    return result;
+    return (result);
 }
 
 static int _strength_modifier()
@@ -5266,7 +5258,8 @@ static int _strength_modifier()
     case TRAN_BAT:             result -=  5; break;
     default:                                 break;
     }
-    return result;
+
+    return (result);
 }
 
 static int _int_modifier()
@@ -5289,7 +5282,7 @@ static int _int_modifier()
     result += player_mutation_level(MUT_CLEVER)
               - player_mutation_level(MUT_DOPEY);
 
-    return result;
+    return (result);
 }
 
 static int _dex_modifier()
@@ -5335,12 +5328,13 @@ static int _dex_modifier()
     case TRAN_BAT:    result +=  5; break;
     default:                        break;
     }
-    return result;
+
+    return (result);
 }
 
 int stat_modifier( stat_type stat )
 {
-    switch ( stat )
+    switch (stat)
     {
     case STAT_STRENGTH:     return _strength_modifier();
     case STAT_INTELLIGENCE: return _int_modifier();
@@ -6561,13 +6555,13 @@ bool player::haloed() const
 
 bool player::can_mutate() const
 {
-    return true;
+    return (true);
 }
 
 bool player::can_safely_mutate() const
 {
     if (!can_mutate())
-        return false;
+        return (false);
 
     return (!you.is_undead
             || you.is_undead == US_SEMI_UNDEAD
@@ -6577,14 +6571,14 @@ bool player::can_safely_mutate() const
 bool player::mutate()
 {
     if (!can_mutate())
-        return false;
+        return (false);
 
     if (one_chance_in(5))
     {
         if (::mutate(RANDOM_MUTATION))
         {
             learned_something_new(TUT_YOU_MUTATED);
-            return true;
+            return (true);
         }
     }
 

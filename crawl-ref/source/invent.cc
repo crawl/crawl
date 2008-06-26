@@ -417,14 +417,14 @@ bool InvMenu::is_selectable(int index) const
     {
         InvEntry *item = dynamic_cast<InvEntry*>(items[index]);
         if (item->is_item_cursed() && item->is_item_equipped())
-            return false;
+            return (false);
 
         std::string text = item->get_text();
 
         if (text.find("!*") != std::string::npos
             || text.find("!d") != std::string::npos)
         {
-            return false;
+            return (false);
         }
     }
 
@@ -685,7 +685,7 @@ bool InvMenu::process_key( int key )
         deselect_all();
         sel.clear();
         draw_select_count(0, true);
-        return true;
+        return (true);
     }
     return Menu::process_key( key );
 }
@@ -898,22 +898,21 @@ static bool _any_items_to_select(int selector)
         if (is_valid_item(you.inv[i])
             && _is_item_selected(you.inv[i], selector))
         {
-            return true;
+            return (true);
         }
     }
-    return false;
+    return (false);
 }
 
-unsigned char invent_select(
-                      const char *title,
-                      menu_type type,
-                      int item_selector,
-                      int flags,
-                      invtitle_annotator titlefn,
-                      std::vector<SelItem> *items,
-                      std::vector<text_pattern> *filter,
-                      Menu::selitem_tfn selitemfn,
-                      const std::vector<SelItem> *pre_select )
+unsigned char invent_select( const char *title,
+                             menu_type type,
+                             int item_selector,
+                             int flags,
+                             invtitle_annotator titlefn,
+                             std::vector<SelItem> *items,
+                             std::vector<text_pattern> *filter,
+                             Menu::selitem_tfn selitemfn,
+                             const std::vector<SelItem> *pre_select )
 {
     InvMenu menu(flags);
 
@@ -1252,7 +1251,7 @@ static std::string _operation_verb(operation_types oper)
     }
 }
 
-// Return true if user OK'd it (or no warning), false otherwise.
+// Returns true if user OK'd it (or no warning), false otherwise.
 bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
 {
@@ -1458,7 +1457,7 @@ int prompt_invent_item( const char *prompt,
 bool prompt_failed(int retval, std::string msg)
 {
     if (retval != PROMPT_ABORT && retval != PROMPT_NOTHING)
-        return false;
+        return (false);
 
     if (msg.empty())
     {
@@ -1470,5 +1469,5 @@ bool prompt_failed(int retval, std::string msg)
 
     crawl_state.cancel_cmd_repeat();
 
-    return true;
+    return (true);
 }

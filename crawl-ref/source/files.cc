@@ -768,7 +768,7 @@ bool travel_load_map( branch_type branch, int absdepth )
     FILE *levelFile = fopen(make_filename(you.your_name, absdepth, branch,
                                           LEVEL_DUNGEON, false).c_str(), "rb");
     if (!levelFile)
-        return false;
+        return (false);
 
     char majorVersion;
     char minorVersion;
@@ -776,14 +776,14 @@ bool travel_load_map( branch_type branch, int absdepth )
     if (!_get_and_validate_version( levelFile, majorVersion, minorVersion ))
     {
         fclose(levelFile);
-        return false;
+        return (false);
     }
 
     tag_read(levelFile, minorVersion);
 
     fclose( levelFile );
 
-    return true;
+    return (true);
 }
 
 static void _sanity_test_monster_inventory()
@@ -1729,7 +1729,7 @@ static bool _determine_ghost_version( FILE *ghostFile,
     // Read first two bytes.
     char buf[2];
     if (read2(ghostFile, buf, 2) != 2)
-        return false;               // empty file?
+        return (false);               // empty file?
 
     // Otherwise, read version and validate.
     majorVersion = buf[0];

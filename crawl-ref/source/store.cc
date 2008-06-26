@@ -1147,7 +1147,7 @@ void CrawlHashTable::assert_validity() const
         const std::string    &key = i->first;
         const CrawlStoreValue &val = i->second;
 
-        ASSERT(key != "");
+        ASSERT(!key.empty());
         std::string trimmed = trimmed_string(key);
         ASSERT(key == trimmed);
 

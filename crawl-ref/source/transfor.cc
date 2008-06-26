@@ -563,7 +563,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
     case TRAN_AIR:
         if (check_for_cursed_equipment( rem_stuff ))
-            return false;
+            return (false);
 
         // Check in case we'll auto-remove stat boosting equipment.
         if (check_transformation_stat_loss(rem_stuff, quiet))
@@ -600,7 +600,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
     case TRAN_SERPENT_OF_HELL:
         if (check_for_cursed_equipment(rem_stuff, quiet))
-            return false;
+            return (false);
 
         // Check in case we'll auto-remove stat boosting equipment.
         if (check_transformation_stat_loss(rem_stuff, quiet))

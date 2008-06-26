@@ -104,9 +104,9 @@ bool is_stash(int x, int y)
     if (ls)
     {
         Stash *s = ls->find_stash(x, y);
-        return s && s->enabled;
+        return (s && s->enabled);
     }
-    return false;
+    return (false);
 }
 
 void describe_stash(int x, int y)
@@ -212,12 +212,14 @@ bool Stash::is_filtered(const item_def &item)
     for (int i = 0, count = filters.size(); i < count; ++i)
     {
         const item_def &filter = filters[i];
-        if (item.base_type == filter.base_type &&
-                (filter.sub_type == 255 ||
-                 item.sub_type == filter.sub_type))
-            return true;
+        if (item.base_type == filter.base_type
+            && (filter.sub_type == 255
+                || item.sub_type == filter.sub_type))
+        {
+            return (true);
+        }
     }
-    return false;
+    return (false);
 }
 
 bool Stash::unverified() const
@@ -230,6 +232,7 @@ bool Stash::pickup_eligible() const
     for (int i = 0, size = items.size(); i < size; ++i)
         if (item_needs_autopickup(items[i]))
             return (true);
+
     return (false);
 }
 
@@ -457,7 +460,7 @@ bool StashMenu::process_key(int key)
     {
         // Travel activates.
         lastch = 1;
-        return false;
+        return (false);
     }
     return Menu::process_key(key);
 }
@@ -494,16 +497,15 @@ bool Stash::show_menu(const std::string &prefix, bool can_travel) const
     {
         sel = menu.show();
         if (menu.getkey() == 1)
-            return true;
+            return (true);
 
         if (sel.size() != 1)
             break;
 
-        item_def *item =
-                static_cast<item_def *>( sel[0]->data );
+        item_def *item = static_cast<item_def *>( sel[0]->data );
         describe_item(*item);
     }
-    return false;
+    return (false);
 }
 
 std::string Stash::description() const
@@ -539,7 +541,7 @@ bool Stash::matches_search(const std::string &prefix,
                            stash_search_result &res) const
 {
     if (!enabled || items.empty() && feat == DNGN_FLOOR)
-        return false;
+        return (false);
 
     for (unsigned i = 0; i < items.size(); ++i)
     {
@@ -882,16 +884,15 @@ bool ShopInfo::show_menu(const std::string &place,
     {
         sel = menu.show();
         if (menu.getkey() == 1)
-            return true;
+            return (true);
 
         if (sel.size() != 1)
             break;
 
-        const shop_item *item =
-                static_cast<const shop_item *>( sel[0]->data );
+        const shop_item *item = static_cast<const shop_item *>( sel[0]->data );
         describe_shop_item(*item);
     }
-    return false;
+    return (false);
 }
 
 std::string ShopInfo::description() const
@@ -904,7 +905,7 @@ bool ShopInfo::matches_search(const std::string &prefix,
                               stash_search_result &res) const
 {
     if (items.empty() && visited)
-        return false;
+        return (false);
 
     bool note_status = notes_are_active();
     activate_notes(false);
@@ -1112,9 +1113,9 @@ bool LevelStashes::update_stash(int x, int y)
         s->update();
         if (s->empty())
             kill_stash(*s);
-        return true;
+        return (true);
     }
-    return false;
+    return (false);
 }
 
 // Removes a Stash from the level.
@@ -1335,9 +1336,9 @@ bool StashTracker::update_stash(int x, int y)
         bool res = lev->update_stash(x, y);
         if (!lev->stash_count())
             remove_level();
-        return res;
+        return (res);
     }
-    return false;
+    return (false);
 }
 
 void StashTracker::remove_level(const level_id &place)
@@ -1538,7 +1539,7 @@ struct compare_by_distance
             return (lhs.matches > rhs.matches);
         }
         else
-            return false;
+            return (false);
     }
 };
 
@@ -1564,7 +1565,7 @@ struct compare_by_name
             return (lhs.matches > rhs.matches);
         }
         else
-            return false;
+            return (false);
     }
 };
 
@@ -1751,12 +1752,12 @@ bool StashSearchMenu::process_key(int key)
         sel.clear();
         menu_action = (action)((menu_action+1) % ACT_NUM);
         update_title();
-        return true;
+        return (true);
     }
     else if (key == '/')
     {
         request_toggle_sort_method = true;
-        return false;
+        return (false);
     }
 
     return Menu::process_key(key);
@@ -1768,7 +1769,7 @@ bool StashTracker::display_search_results(
     const char* sort_style)
 {
     if (results.empty())
-        return false;
+        return (false);
 
     bool travelable = can_travel_interlevel();
 
@@ -1793,13 +1794,16 @@ bool StashTracker::display_search_results(
         std::ostringstream matchtitle;
         matchtitle << "[" << short_place_name(res.pos.id) << "] "
                    << res.match;
+
         if (res.matches > 1 && res.count > 1)
             matchtitle << " (" << res.matches << ")";
 
         MenuEntry *me = new MenuEntry(matchtitle.str(), MEL_ITEM, 1, hotkey);
         me->data = &res;
+
         if (res.shop && !res.shop->is_visited())
             me->colour = CYAN;
+
         stashmenu.add_entry(me);
     }
 
@@ -1812,7 +1816,7 @@ bool StashTracker::display_search_results(
 
         if (stashmenu.request_toggle_sort_method)
         {
-            return true;
+            return (true);
         }
 
         if (sel.size() == 1 && stashmenu.menu_action == StashSearchMenu::ACT_EXAMINE)
@@ -1837,7 +1841,7 @@ bool StashTracker::display_search_results(
                 redraw_screen();
                 const travel_target lp = res->pos;
                 start_translevel_travel(lp);
-                return false;
+                return (false);
             }
             continue;
         }
@@ -1851,9 +1855,8 @@ bool StashTracker::display_search_results(
                 static_cast<stash_search_result *>(sel[0]->data);
         const level_pos lp = res->pos;
         start_translevel_travel(lp);
-        return false;
     }
-    return false;
+    return (false);
 }
 
 void StashTracker::update_corpses()

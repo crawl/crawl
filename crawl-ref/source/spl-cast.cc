@@ -113,11 +113,11 @@ static bool _surge_identify_boosters(spell_type spell)
                         }
                     }
 
-                return true;
+                return (true);
             }
         }
     }
-    return false;
+    return (false);
 }
 
 static void _surge_power(spell_type spell)
@@ -125,8 +125,6 @@ static void _surge_power(spell_type spell)
     int enhanced = 0;
 
     _surge_identify_boosters(spell);
-
-    //jmf: simplified
     enhanced += spell_enhancement(get_spell_disciplines(spell));
 
     if (enhanced)               // one way or the other {dlb}
@@ -853,10 +851,10 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
 static bool _vampire_cannot_cast(spell_type spell)
 {
     if (you.species != SP_VAMPIRE)
-        return false;
+        return (false);
 
     if (you.hunger_state > HS_SATIATED)
-        return false;
+        return (false);
 
     // Satiated or less
     switch (spell)
@@ -872,9 +870,9 @@ static bool _vampire_cannot_cast(spell_type spell)
     case SPELL_SPIDER_FORM:
     case SPELL_STATUE_FORM:
     case SPELL_TAME_BEASTS:
-        return true;
+        return (true);
     default:
-        return false;
+        return (false);
     }
 }
 

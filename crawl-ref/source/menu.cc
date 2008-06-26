@@ -241,7 +241,7 @@ bool Menu::process_key( int keyin )
     if (items.size() == 0)
     {
         lastch = keyin;
-        return false;
+        return (false);
     }
 
     bool nav = false, repaint = false;
@@ -254,14 +254,14 @@ bool Menu::process_key( int keyin )
     switch (keyin)
     {
     case 0:
-        return true;
+        return (true);
     case CK_ENTER:
-        return false;
+        return (false);
     case CK_ESCAPE:
     case CK_MOUSE_B2:
         sel.clear();
         lastch = keyin;
-        return false;
+        return (false);
     case ' ': case CK_PGDN: case '>': case '\'':
     case CK_MOUSE_B1:
         nav = true;
@@ -293,7 +293,7 @@ bool Menu::process_key( int keyin )
     {
         nav = true;
         const int breakpoint = (items.size() + 1) - pagesize;
-        if ( first_entry < breakpoint )
+        if (first_entry < breakpoint)
         {
             first_entry = breakpoint;
             repaint = true;
@@ -302,7 +302,7 @@ bool Menu::process_key( int keyin )
     }
     case CONTROL('F'):
     {
-        if ( !( flags & MF_ALLOW_FILTER ) )
+        if (!(flags & MF_ALLOW_FILTER))
             break;
         char linebuf[80];
         cgotoxy(1,1);
@@ -311,20 +311,20 @@ bool Menu::process_key( int keyin )
         cprintf("Select what? (regex) ");
         textcolor(LIGHTGREY);
         bool validline = !cancelable_get_line(linebuf, sizeof linebuf, 80);
-        if ( validline && linebuf[0] )
+        if (validline && linebuf[0])
         {
             text_pattern tpat(linebuf, true);
-            for ( unsigned int i = 0; i < items.size(); ++i )
+            for (unsigned int i = 0; i < items.size(); ++i)
             {
-                if ( items[i]->level == MEL_ITEM &&
-                     tpat.matches(items[i]->get_text()) )
+                if (items[i]->level == MEL_ITEM
+                    && tpat.matches(items[i]->get_text()))
                 {
                     select_index(i);
-                    if ( flags & MF_SINGLESELECT )
+                    if (flags & MF_SINGLESELECT)
                     {
                         // Return the first item found.
                         get_selected(&sel);
-                        return false;
+                        return (false);
                     }
                 }
             }
@@ -356,7 +356,7 @@ bool Menu::process_key( int keyin )
 
         // If no selection at all is allowed, exit now.
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
-            return false;
+            return (false);
 
         if (!is_set(MF_NO_SELECT_QTY) && isdigit( keyin ))
         {
@@ -369,22 +369,23 @@ bool Menu::process_key( int keyin )
         select_items( keyin, num );
         get_selected( &sel );
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
-            return false;
+            return (false);
+
         draw_select_count( sel.size() );
 
         if (flags & MF_ANYPRINTABLE
             && (!isdigit(keyin) || is_set(MF_NO_SELECT_QTY)))
         {
-            return false;
+            return (false);
         }
 
         break;
     }
 
-    if (last_selected != -1 &&
-        (items.size() == ((unsigned int) last_selected + 1)
-         || items[last_selected + 1] == NULL
-         || items[last_selected + 1]->level != MEL_ITEM))
+    if (last_selected != -1
+        && (items.size() == ((unsigned int) last_selected + 1)
+            || items[last_selected + 1] == NULL
+            || items[last_selected + 1]->level != MEL_ITEM))
     {
         last_selected = -1;
     }
@@ -400,10 +401,10 @@ bool Menu::process_key( int keyin )
         else if (sel.empty() && is_set(MF_EASY_EXIT))
         {
             sel.clear();
-            return false;
+            return (false);
         }
     }
-    return true;
+    return (true);
 }
 
 bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
@@ -417,7 +418,7 @@ bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
     if (x > get_number_of_cols() || x < 1)
     {
         cgotoxy(oldx, oldy);
-        return false;
+        return (false);
     }
 
     // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
@@ -429,7 +430,7 @@ bool Menu::draw_title_suffix( const std::string &s, bool titlefirst )
     cprintf("%s", towrite.c_str());
 
     cgotoxy( oldx, oldy );
-    return true;
+    return (true);
 }
 
 bool Menu::draw_title_suffix( const formatted_string &fs, bool titlefirst )
@@ -443,7 +444,7 @@ bool Menu::draw_title_suffix( const formatted_string &fs, bool titlefirst )
     if (x > get_number_of_cols() || x < 1)
     {
         cgotoxy(oldx, oldy);
-        return false;
+        return (false);
     }
 
     // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
@@ -466,7 +467,7 @@ bool Menu::draw_title_suffix( const formatted_string &fs, bool titlefirst )
     }
 
     cgotoxy( oldx, oldy );
-    return true;
+    return (true);
 }
 
 void Menu::draw_select_count( int count, bool force )
@@ -590,15 +591,16 @@ void Menu::select_items( int key, int qty )
 
 bool Menu::is_selectable(int item) const
 {
-    if (select_filter.empty()) return true;
+    if (select_filter.empty())
+        return (true);
 
     std::string text = items[item]->get_text();
     for (int i = 0, count = select_filter.size(); i < count; ++i)
     {
         if (select_filter[i].matches(text))
-            return true;
+            return (true);
     }
-    return false;
+    return (false);
 }
 
 void Menu::select_index( int index, int qty )
@@ -612,8 +614,10 @@ void Menu::select_index( int index, int qty )
             for (int i = 0, count = items.size(); i < count; ++i)
             {
                 if (items[i]->level != MEL_ITEM
-                        || items[i]->hotkeys.empty())
+                    || items[i]->hotkeys.empty())
+                {
                     continue;
+                }
                 if (is_hotkey(i, items[i]->hotkeys[0]) && is_selectable(i))
                 {
                     last_selected = i;
@@ -628,8 +632,10 @@ void Menu::select_index( int index, int qty )
         for (int i = si + 1, count = items.size(); i < count; ++i)
         {
             if (items[i]->level != MEL_ITEM
-                    || items[i]->hotkeys.empty())
+                || items[i]->hotkeys.empty())
+            {
                 continue;
+            }
             if (is_hotkey(i, items[i]->hotkeys[0]))
             {
                 last_selected = i;
@@ -638,8 +644,8 @@ void Menu::select_index( int index, int qty )
             }
         }
     }
-    else if (items[si]->level == MEL_ITEM &&
-            (flags & (MF_SINGLESELECT | MF_MULTISELECT)))
+    else if (items[si]->level == MEL_ITEM
+             && (flags & (MF_SINGLESELECT | MF_MULTISELECT)))
     {
         last_selected = si;
         items[si]->select( qty );
@@ -653,7 +659,8 @@ int Menu::get_entry_index( const MenuEntry *e ) const
     for (unsigned int i = first_entry; i < items.size(); i++)
     {
         if (items[i] == e)
-            return index;
+            return (index);
+
         if (items[i]->quantity != 0)
             index++;
     }
@@ -673,9 +680,8 @@ void Menu::draw_menu()
     if (end > (int) items.size()) end = items.size();
 
     for (int i = first_entry; i < end; ++i)
-    {
         draw_item( i );
-    }
+
     if (end < (int) items.size() || is_set(MF_ALWAYS_SHOW_MORE))
     {
         cgotoxy( 1, y_offset + pagesize - count_linebreaks(more) );
@@ -781,9 +787,9 @@ bool Menu::page_down()
         //    first_entry = items.size() - pagesize;
 
         if (old_first != first_entry)
-            return true;
+            return (true);
     }
-    return false;
+    return (false);
 }
 
 bool Menu::page_up()
@@ -794,10 +800,11 @@ bool Menu::page_up()
     {
         if ((first_entry -= pagesize) < 0)
             first_entry = 0;
+
         if (old_first != first_entry)
-            return true;
+            return (true);
     }
-    return false;
+    return (false);
 }
 
 bool Menu::line_down()
@@ -805,9 +812,9 @@ bool Menu::line_down()
     if (first_entry + pagesize < (int) items.size())
     {
         ++first_entry;
-        return true;
+        return (true);
     }
-    return false;
+    return (false);
 }
 
 bool Menu::line_up()
@@ -815,9 +822,9 @@ bool Menu::line_up()
     if (first_entry > 0)
     {
         --first_entry;
-        return true;
+        return (true);
     }
-    return false;
+    return (false);
 }
 
 /////////////////////////////////////////////////////////////////
@@ -1507,13 +1514,15 @@ void print_formatted_paragraph(std::string &s, int maxcol,
 
 bool formatted_scroller::jump_to( int i )
 {
-    if ( i == first_entry + 1 )
-        return false;
-    if ( i == 0 )
+    if (i == first_entry + 1)
+        return (false);
+
+    if (i == 0)
         first_entry = 0;
     else
         first_entry = i - 1;
-    return true;
+
+    return (true);
 }
 
 // Don't scroll past MEL_TITLE entries
@@ -1521,8 +1530,8 @@ bool formatted_scroller::page_down()
 {
     const int old_first = first_entry;
 
-    if ( (int)items.size() <= first_entry + pagesize )
-        return false;
+    if ((int) items.size() <= first_entry + pagesize)
+        return (false);
 
     // If, when scrolling forward, we encounter a MEL_TITLE
     // somewhere in the newly displayed page, stop scrolling
@@ -1546,13 +1555,14 @@ bool formatted_scroller::page_up()
     // somewhere in the newly displayed page, stop scrolling
     // just before it becomes visible
 
-    if ( items[first_entry]->level == MEL_TITLE )
-        return false;
+    if (items[first_entry]->level == MEL_TITLE)
+        return (false);
 
     for ( int i = 0; i < pagesize; ++i )
     {
         if (first_entry == 0 || items[first_entry-1]->level == MEL_TITLE)
             break;
+
         --first_entry;
     }
 
@@ -1565,9 +1575,9 @@ bool formatted_scroller::line_down()
         items[first_entry + pagesize]->level != MEL_TITLE )
     {
         ++first_entry;
-        return true;
+        return (true);
     }
-    return false;
+    return (false);
 }
 
 bool formatted_scroller::line_up()
@@ -1576,17 +1586,18 @@ bool formatted_scroller::line_up()
         items[first_entry]->level != MEL_TITLE)
     {
         --first_entry;
-        return true;
+        return (true);
     }
-    return false;
+    return (false);
 }
 
 bool formatted_scroller::jump_to_hotkey( int keyin )
 {
-    for ( unsigned int i = 0; i < items.size(); ++i )
-        if ( items[i]->is_hotkey(keyin) )
+    for (unsigned int i = 0; i < items.size(); ++i)
+        if (items[i]->is_hotkey(keyin))
             return jump_to(i);
-    return false;
+
+    return (false);
 }
 
 
@@ -1599,13 +1610,13 @@ bool formatted_scroller::process_key( int keyin )
     bool repaint = false;
     // Any key is assumed to be a movement key for now...
     bool moved = true;
-    switch ( keyin )
+    switch (keyin)
     {
     case 0:
-        return true;
+        return (true);
     case -1:
     case CK_ESCAPE:
-        return false;
+        return (false);
     case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':
 #ifdef USE_TILE
     case CK_MOUSE_B5:
@@ -1641,12 +1652,11 @@ bool formatted_scroller::process_key( int keyin )
             select_items( keyin, -1 );
             get_selected( &sel );
             if (sel.size() >= 1)
-                return false;
+                return (false);
         }
         else
-        {
             repaint = jump_to_hotkey(keyin);
-        }
+
         break;
     }
 
@@ -1655,7 +1665,7 @@ bool formatted_scroller::process_key( int keyin )
     else if (moved && is_set(MF_EASY_EXIT))
         return (false);
 
-    return true;
+    return (true);
 }
 
 int ToggleableMenu::pre_process(int key)

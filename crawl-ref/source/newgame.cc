@@ -106,6 +106,13 @@ extern std::string init_file_error;
 
 #define MIN_START_STAT       1
 
+enum char_choice_restriction
+{
+    CC_BANNED = 0,
+    CC_RESTRICTED,
+    CC_UNRESTRICTED
+};
+
 static char_choice_restriction _class_allowed(species_type speci,
                                               job_type char_class);
 static bool _is_good_combination( species_type spc, job_type cls,

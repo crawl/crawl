@@ -868,17 +868,17 @@ bool activate_ability()
             mpr("Sorry, you're not good enough to have a special ability.");
 
         crawl_state.zero_turns_taken();
-        return false;
+        return (false);
     }
 
     if (you.duration[DUR_CONF])
     {
         talents = your_talents(true);
-        if ( talents.empty() )
+        if (talents.empty())
         {
             mpr("You're too confused!");
             crawl_state.zero_turns_taken();
-            return false;
+            return (false);
         }
     }
 
@@ -1895,9 +1895,9 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_RENOUNCE_RELIGION:
         if (yesno("Really renounce your faith, foregoing its fabulous benefits?",
-                   false, 'n')
+                  false, 'n')
             && yesno("Are you sure you won't change your mind later?",
-                      false, 'n' ))
+                     false, 'n' ))
         {
             excommunication();
         }
@@ -1911,7 +1911,7 @@ static bool _do_ability(const ability_def& abil)
         mpr("Sorry, you can't do that.");
         break;
     }
-    return true;
+    return (true);
 }
 
 static void _pay_ability_costs(const ability_def& abil)

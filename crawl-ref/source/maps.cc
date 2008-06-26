@@ -318,6 +318,7 @@ static bool map_has_no_tags(const map_def &map, I begin, I end)
     for ( ; begin != end; ++begin)
         if (map.has_tag(*begin))
             return (false);
+
     return (true);
 }
 
@@ -331,7 +332,7 @@ static bool vault_unforbidden(const map_def &map)
 static bool map_matches_layout_type(const map_def &map)
 {
     if (dgn_Layout_Type.empty() || !map.has_tag_prefix("layout_"))
-        return true;
+        return (true);
 
     return map.has_tag("layout_" + dgn_Layout_Type);
 }
@@ -341,6 +342,7 @@ int find_map_by_name(const std::string &name)
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
         if (vdefs[i].name == name)
             return (i);
+
     return (-1);
 }
 

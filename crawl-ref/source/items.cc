@@ -95,7 +95,7 @@ static bool will_autoinscribe = false;
 // sure item coordinates are correct to the stack they're in. -- bwr
 void fix_item_coordinates(void)
 {
-    // nails all items to the ground (i.e. sets x,y)
+    // Nails all items to the ground (i.e. sets x,y).
     for (int x = 0; x < GXM; x++)
         for (int y = 0; y < GYM; y++)
         {
@@ -113,17 +113,17 @@ void fix_item_coordinates(void)
 // This function uses the items coordinates to relink all the igrd lists.
 void link_items(void)
 {
-    // first, initialise igrd array
+    // First, initialise igrd array.
     igrd.init(NON_ITEM);
 
-    // link all items on the grid, plus shop inventory,
-    // DON'T link the huge pile of monster items at (0,0)
+    // Link all items on the grid, plus shop inventory,
+    // but DON'T link the huge pile of monster items at (0,0).
 
     for (int i = 0; i < MAX_ITEMS; i++)
     {
         if (!is_valid_item(mitm[i]) || (mitm[i].x == 0 && mitm[i].y == 0))
         {
-            // item is not assigned, or is monster item.  ignore.
+            // Item is not assigned, or is monster item.  Ignore.
             mitm[i].link = NON_ITEM;
             continue;
         }
@@ -132,25 +132,25 @@ void link_items(void)
         mitm[i].link = igrd[ mitm[i].x ][ mitm[i].y ];
         igrd[ mitm[i].x ][ mitm[i].y ] = i;
     }
-}                               // end link_items()
+}
 
 static bool _item_ok_to_clean(int item)
 {
-    // never clean food or Orbs
+    // Never clean food or Orbs.
     if (mitm[item].base_type == OBJ_FOOD || mitm[item].base_type == OBJ_ORBS)
-        return false;
+        return (false);
 
-    // never clean runes
+    // Never clean runes.
     if (mitm[item].base_type == OBJ_MISCELLANY
         && mitm[item].sub_type == MISC_RUNE_OF_ZOT)
     {
-        return false;
+        return (false);
     }
 
-    return true;
+    return (true);
 }
 
-// returns index number of first available space, or NON_ITEM for
+// Returns index number of first available space, or NON_ITEM for
 // unsuccessful cleanup (should be exceedingly rare!)
 static int _cull_items(void)
 {
@@ -160,23 +160,21 @@ static int _cull_items(void)
     // deserves to know whenever this kicks in. -- bwr
     mpr( "Too many items on level, removing some.", MSGCH_WARN );
 
-    /* rules:
-       1. Don't cleanup anything nearby the player
-       2. Don't cleanup shops
-       3. Don't cleanup monster inventory
-       4. Clean 15% of items
-       5. never remove food, orbs, runes
-       7. uniques weapons are moved to the abyss
-       8. randarts are simply lost
-       9. unrandarts are 'destroyed', but may be generated again
-    */
+    // Rules:
+    //  1. Don't cleanup anything nearby the player
+    //  2. Don't cleanup shops
+    //  3. Don't cleanup monster inventory
+    //  4. Clean 15% of items
+    //  5. never remove food, orbs, runes
+    //  7. uniques weapons are moved to the abyss
+    //  8. randarts are simply lost
+    //  9. unrandarts are 'destroyed', but may be generated again
 
     int first_cleaned = NON_ITEM;
 
     // 2. avoid shops by avoiding (0,5..9)
     // 3. avoid monster inventory by iterating over the dungeon grid
     for (int x = 5; x < GXM; x++)
-    {
         for (int y = 5; y < GYM; y++)
         {
             // 1. not near player!
@@ -217,8 +215,7 @@ static int _cull_items(void)
                 }
             } // end for item
 
-        } // end y
-    } // end x
+        }
 
     return (first_cleaned);
 }
@@ -1332,9 +1329,9 @@ bool items_stack( const item_def &item1, const item_def &item2,
         }
     }
 
-    // Check the ID flags
+    // Check the ID flags.
     if (ident_flags(item1) != ident_flags(item2))
-        return false;
+        return (false);
 
     // Check the non-ID flags, but ignore dropped, thrown, cosmetic,
     // and note flags. Also, whether item was in inventory before.
@@ -1344,9 +1341,7 @@ bool items_stack( const item_def &item1, const item_def &item2,
                           ISFLAG_BEEN_IN_INV)
 
     if ((item1.flags & NON_IDENT_FLAGS) != (item2.flags & NON_IDENT_FLAGS))
-    {
-        return false;
-    }
+        return (false);
 
     if (item1.base_type == OBJ_POTIONS)
     {
@@ -1356,16 +1351,16 @@ bool items_stack( const item_def &item1, const item_def &item2,
         if (item1.plus != item2.plus
             && (!item_type_known(item1) || !item_type_known(item2)))
         {
-            return false;
+            return (false);
         }
     }
 
     // The inscriptions can differ if one of them is blank, but if they
     // are differing non-blank inscriptions then don't stack.
     if (item1.inscription != item2.inscription
-        && item1.inscription != "" && item2.inscription != "")
+        && !item1.inscription.empty() && !item2.inscription.empty())
     {
-        return false;
+        return (false);
     }
 
     return (true);
@@ -1377,6 +1372,7 @@ static int _userdef_find_free_slot(const item_def &i)
     int slot = -1;
     if (!clua.callfn("c_assign_invletter", "u>d", &i, &slot))
         return (-1);
+
     return (slot);
 #else
     return -1;
@@ -1532,8 +1528,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                 // If the object on the ground is inscribed, but not
                 // the one in inventory, then the inventory object
                 // picks up the other's inscription.
-                if (mitm[obj].inscription != ""
-                    && you.inv[m].inscription == "")
+                if (!(mitm[obj].inscription).empty()
+                    && you.inv[m].inscription.empty())
                 {
                     you.inv[m].inscription = mitm[obj].inscription;
                 }
@@ -2080,38 +2076,38 @@ void drop(void)
 
     // If the user answers "no" to an item an with a warning inscription,
     // then remove it from the list of items to drop by not copying it
-    // over to items_for_multidrop
+    // over to items_for_multidrop.
     items_for_multidrop.clear();
-    for ( unsigned int i = 0; i < tmp_items.size(); ++i )
+    for (unsigned int i = 0; i < tmp_items.size(); ++i)
     {
         SelItem& si(tmp_items[i]);
 
         const int item_quant = si.item->quantity;
 
-        // EVIL HACK: fix item quantity to match the quantity we will drop,
+        // EVIL HACK: Fix item quantity to match the quantity we will drop,
         // in order to prevent misleading messages when dropping
         // 15 of 25 arrows inscribed with {!d}.
         if ( si.quantity && si.quantity != item_quant )
             const_cast<item_def*>(si.item)->quantity = si.quantity;
 
-        // Check if we can add it to the multidrop list
+        // Check if we can add it to the multidrop list.
         bool warning_ok = check_warning_inscriptions(*(si.item), OPER_DROP);
 
-        // Restore the item quantity if we mangled it
+        // Restore the item quantity if we mangled it.
         if ( item_quant != si.item->quantity )
             const_cast<item_def*>(si.item)->quantity = item_quant;
 
-        if ( warning_ok )
+        if (warning_ok)
             items_for_multidrop.push_back(si);
     }
 
-    if ( items_for_multidrop.empty() ) // only one item
+    if (items_for_multidrop.empty()) // no items.
     {
         canned_msg( MSG_OK );
         return;
     }
 
-    if ( items_for_multidrop.size() == 1 ) // only one item
+    if (items_for_multidrop.size() == 1) // only one item
     {
         drop_item( items_for_multidrop[0].slot,
                    items_for_multidrop[0].quantity,

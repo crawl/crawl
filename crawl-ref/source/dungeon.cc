@@ -6164,7 +6164,7 @@ bool octa_room(spec_room &sr, int oblique_max,
     {
         for (y = sr.y1 + oblique; y < sr.y2 - oblique; y++)
             if (grd[x][y] == DNGN_BUILDER_SPECIAL_WALL)
-                return false;
+                return (false);
 
         if (oblique > 0)
             oblique--;
@@ -6197,7 +6197,7 @@ bool octa_room(spec_room &sr, int oblique_max,
             oblique += 2;
     }
 
-    return true;
+    return (true);
 }
 
 static void _find_maze_neighbours(const coord_def &c,
@@ -6756,10 +6756,10 @@ static bool _treasure_area(int level_number, unsigned char ta1_x,
     ta2_y++;
 
     if (ta2_x <= ta1_x || ta2_y <= ta1_y)
-        return false;
+        return (false);
 
     if ((ta2_x - ta1_x) * (ta2_y - ta1_y) >= 40)
-        return false;
+        return (false);
 
     for (x_count = ta1_x; x_count < ta2_x; x_count++)
         for (y_count = ta1_y; y_count < ta2_y; y_count++)
@@ -6777,7 +6777,7 @@ static bool _treasure_area(int level_number, unsigned char ta1_x,
             }
         }
 
-    return true;
+    return (true);
 }
 
 static void _diamond_rooms(int level_number)
@@ -7606,8 +7606,8 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
 void dgn_set_lt_callback(std::string level_type_name,
                          std::string callback_name)
 {
-    ASSERT(level_type_name != "");
-    ASSERT(callback_name   != "");
+    ASSERT(!level_type_name.empty());
+    ASSERT(!callback_name.empty());
 
     level_type_post_callbacks[level_type_name] = callback_name;
 }

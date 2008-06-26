@@ -1335,7 +1335,7 @@ formatted_string describe_mutations()
 
             std::string name = mutation_name(mut_type);
 
-            if (name == "")
+            if (name.empty())
             {
                 int level;
                 if (!fully_active)
@@ -1397,7 +1397,7 @@ formatted_string describe_mutations()
 
             std::string name = mutation_name(mut_type);
 
-            if (name == "")
+            if (name.empty())
             {
                 int level;
                 if (!mutation_is_fully_active(mut_type))
@@ -1714,14 +1714,14 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         {
             if (failMsg)
                 mpr("You feel odd for a moment.", MSGCH_MUTATION);
-            return false;
+            return (false);
         }
 
         // Zin's protection.
         if (you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY))
         {
             simple_god_message(" protects your body from chaos!");
-            return false;
+            return (false);
         }
     }
 
@@ -1775,7 +1775,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         }
 
         xom_is_stimulated(64);
-        return true;
+        return (true);
     }
 
     if (which_mutation == RANDOM_MUTATION
@@ -1786,7 +1786,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             // God gifts override mutation loss due to being heavily
             // mutated.
             if (!one_chance_in(3) && !god_gift && !force_mutation)
-                return false;
+                return (false);
             else
                 return (delete_mutation(RANDOM_MUTATION));
         }
@@ -1798,43 +1798,45 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         {
             mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
             if (one_chance_in(1000))
-                return false;
+                return (false);
         }
         while (!accept_mutation(mutat));
     }
     else if (which_mutation == RANDOM_XOM_MUTATION)
     {
         if ((mutat = get_random_xom_mutation()) == NUM_MUTATIONS)
-            return false;
+            return (false);
     }
     else if (which_mutation == RANDOM_GOOD_MUTATION)
     {
         if ((mutat = get_random_mutation(true, 500)) == NUM_MUTATIONS)
-            return false;
+            return (false);
     }
     else if (which_mutation == RANDOM_BAD_MUTATION)
     {
         if ((mutat = get_random_mutation(false, 500)) == NUM_MUTATIONS)
-            return false;
+            return (false);
     }
     else if (you.mutation[mutat] >= 3
              && mutat != MUT_STRONG && mutat != MUT_CLEVER
              && mutat != MUT_AGILE && mutat != MUT_WEAK
              && mutat != MUT_DOPEY && mutat != MUT_CLUMSY)
     {
-        return false;
+        // Mutation level greater than allowed.
+        return (false);
     }
 
+    // Mutation level greater than allowed for stat mutations.
     if (you.mutation[mutat] > 13 && !force_mutation)
-        return false;
+        return (false);
 
     // Saprovorous can't be randomly acquired.
     if (mutat == MUT_SAPROVOROUS && !force_mutation)
-        return false;
+        return (false);
 
     // Mutation resistance can't be acquired from god gifts.
     if (mutat == MUT_MUTATION_RESISTANCE && god_gift && !force_mutation)
-        return false;
+        return (false);
 
     // These can be forced by demonspawn or god gifts.
     if ((mutat == MUT_TOUGH_SKIN || mutat == MUT_SHAGGY_FUR
@@ -1842,16 +1844,16 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             || mutat >= MUT_RED_SCALES && mutat <= MUT_PATTERNED_SCALES)
         && body_covered() >= 3 && !god_gift && !force_mutation)
     {
-        return false;
+        return (false);
     }
 
     if (you.species == SP_NAGA)
     {
-        // gdl: spit poison 'upgrades' to breathe poison.  Why not..
+        // gdl: Spit poison 'upgrades' to breathe poison.  Why not...
         if (mutat == MUT_SPIT_POISON)
         {
             if (coinflip())
-                return false;
+                return (false);
             {
                 mutat = MUT_BREATHE_POISON;
 
@@ -1868,69 +1870,69 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         && you.mutation[MUT_SLOW_METABOLISM] > 0 && !god_gift
         && !force_mutation)
     {
-        return false;           // if you have a slow metabolism, no regen
+        // If you have a slow metabolism, no regeneration.
+        return (false);
     }
 
+    // If you have regen, no slow metabolism.
     if (mutat == MUT_SLOW_METABOLISM && you.mutation[MUT_REGENERATION] > 0)
-        return false;           // if you have regen, no slow metabolism
+        return (false);
 
     // This one can be forced by demonspawn or god gifts.
     if (mutat == MUT_ACUTE_VISION
         && you.mutation[MUT_BLURRY_VISION] > 0 && !god_gift
         && !force_mutation)
     {
-        return false;
+        return (false);
     }
 
+    // blurred vision/see invis
     if (mutat == MUT_BLURRY_VISION && you.mutation[MUT_ACUTE_VISION] > 0)
-        return false;           // blurred vision/see invis
+        return (false);
 
-    // only Nagas and Draconians can get this one
+    // Only Nagas and Draconians can get this one.
     if (mutat == MUT_STINGER
         && !(you.species == SP_NAGA || player_genus(GENPC_DRACONIAN)))
     {
-        return false;
+        return (false);
     }
 
-    // putting boots on after they are forced off. -- bwr
+    // Putting boots on after they are forced off. -- bwr
     if ((mutat == MUT_HOOVES || mutat == MUT_TALONS)
          && !player_has_feet())
     {
-        return false;
+        return (false);
     }
 
-    // no fangs sprouting from Kenkus' beaks
+    // No fangs sprouting from Kenkus' beaks.
     if (mutat == MUT_FANGS && you.species == SP_KENKU)
-        return false;
+        return (false);
 
-    // already innate
+    // Already innate.
     if (mutat == MUT_BREATHE_POISON && you.species != SP_NAGA)
-        return false;
+        return (false);
 
-    // only Draconians can get wings
+    // Only Draconians can get wings.
     if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
-        return false;
+        return (false);
 
     // Vampires' thirst rate depends on their blood level.
     if (you.species == SP_VAMPIRE
         && (mutat == MUT_SLOW_METABOLISM || mutat == MUT_FAST_METABOLISM
             || mutat == MUT_CARNIVOROUS || mutat == MUT_HERBIVOROUS))
     {
-        return false;
+        return (false);
     }
 
     if (you.mutation[mutat] >= mutation_defs[mutat].levels)
-        return false;
+        return (false);
 
-    // find where these things are actually changed
-    // -- do not globally force redraw {dlb}
+    // FIXME: Find where these things are actually changed.
+    //        -- Do not globally force redraw! {dlb}
     you.redraw_hit_points   = 1;
     you.redraw_magic_points = 1;
     you.redraw_armour_class = 1;
     you.redraw_evasion      = 1;
-//    you.redraw_experience   = 1;
-//    you.redraw_gold         = 1;
-//    you.redraw_hunger       = 1;
 
     switch (mutat)
     {
@@ -1938,9 +1940,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_WEAK] > 0)
         {
             delete_mutation(MUT_WEAK);
-            return true;
+            return (true);
         }
-        // replaces earlier, redundant code - 12mar2000 {dlb}
+        // Replaces earlier, redundant code. - 12mar2000 {dlb}
         modify_stat(STAT_STRENGTH, 1, false, "gaining a mutation");
         break;
 
@@ -1948,9 +1950,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_DOPEY] > 0)
         {
             delete_mutation(MUT_DOPEY);
-            return true;
+            return (true);
         }
-        // replaces earlier, redundant code - 12mar2000 {dlb}
+        // Replaces earlier, redundant code. - 12mar2000 {dlb}
         modify_stat(STAT_INTELLIGENCE, 1, false, "gaining a mutation");
         break;
 
@@ -1958,9 +1960,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_CLUMSY] > 0)
         {
             delete_mutation(MUT_CLUMSY);
-            return true;
+            return (true);
         }
-        // replaces earlier, redundant code - 12mar2000 {dlb}
+        // Replaces earlier, redundant code - 12mar2000 {dlb}
         modify_stat(STAT_DEXTERITY, 1, false, "gaining a mutation");
         break;
 
@@ -1968,7 +1970,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_STRONG] > 0)
         {
             delete_mutation(MUT_STRONG);
-            return true;
+            return (true);
         }
         modify_stat(STAT_STRENGTH, -1, true, "gaining a mutation");
         mpr(gain_mutation[mutat][0], MSGCH_MUTATION);
@@ -1978,7 +1980,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_CLEVER] > 0)
         {
             delete_mutation(MUT_CLEVER);
-            return true;
+            return (true);
         }
         modify_stat(STAT_INTELLIGENCE, -1, true, "gaining a mutation");
         mpr(gain_mutation[mutat][0], MSGCH_MUTATION);
@@ -1988,7 +1990,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_AGILE] > 0)
         {
             delete_mutation(MUT_AGILE);
-            return true;
+            return (true);
         }
         modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
         mpr(gain_mutation[mutat][0], MSGCH_MUTATION);
@@ -2020,7 +2022,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_HERBIVOROUS] > 0)
         {
             delete_mutation(MUT_HERBIVOROUS);
-            return true;
+            return (true);
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
@@ -2029,7 +2031,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_CARNIVOROUS] > 0)
         {
             delete_mutation(MUT_CARNIVOROUS);
-            return true;
+            return (true);
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
@@ -2038,7 +2040,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_SLOW_METABOLISM] > 0)
         {
             delete_mutation(MUT_SLOW_METABOLISM);
-            return true;
+            return (true);
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
@@ -2047,7 +2049,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_FAST_METABOLISM] > 0)
         {
             delete_mutation(MUT_FAST_METABOLISM);
-            return true;
+            return (true);
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
@@ -2088,7 +2090,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_FLEXIBLE_WEAK] > 0)
         {
             delete_mutation(MUT_FLEXIBLE_WEAK);
-            return true;
+            return (true);
         }
         modify_stat(STAT_STRENGTH,   1, true, "gaining a mutation");
         modify_stat(STAT_DEXTERITY, -1, true, "gaining a mutation");
@@ -2099,7 +2101,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_STRONG_STIFF] > 0)
         {
             delete_mutation(MUT_STRONG_STIFF);
-            return true;
+            return (true);
         }
         modify_stat(STAT_STRENGTH, -1, true, "gaining a mutation");
         modify_stat(STAT_DEXTERITY, 1, true, "gaining a mutation");
@@ -2110,7 +2112,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_ROBUST] > 0)
         {
             delete_mutation(MUT_ROBUST);
-            return true;
+            return (true);
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         // special-case check
@@ -2123,7 +2125,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_FRAIL] > 0)
         {
             delete_mutation(MUT_FRAIL);
-            return true;
+            return (true);
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         // special-case check
@@ -2136,7 +2138,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_HIGH_MAGIC] > 0)
         {
             delete_mutation(MUT_HIGH_MAGIC);
-            return true;
+            return (true);
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         // special-case check
@@ -2149,7 +2151,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (you.mutation[MUT_LOW_MAGIC] > 0)
         {
             delete_mutation(MUT_LOW_MAGIC);
-            return true;
+            return (true);
         }
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         // special-case check
@@ -2195,12 +2197,12 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     you.mutation[mutat]++;
 
-    // amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor
-    int amusementvalue = calc_mutation_amusement_value(mutat);
-    xom_is_stimulated(amusementvalue);
+    // Amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor.
+    int amusement_value = calc_mutation_amusement_value(mutat);
+    xom_is_stimulated(amusement_value);
 
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
-    return true;
+    return (true);
 }
 
 int how_mutated(bool all, bool levels)
@@ -2251,7 +2253,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         {
             if (failMsg)
                 mpr("You feel rather odd for a moment.", MSGCH_MUTATION);
-            return false;
+            return (false);
         }
     }
 
@@ -2264,7 +2266,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         {
             mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
             if (one_chance_in(1000))
-                return false;
+                return (false);
         }
         while ((you.mutation[mutat] == 0
                 && (mutat != MUT_STRONG && mutat != MUT_CLEVER
@@ -2280,10 +2282,10 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
     }
 
     if (you.mutation[mutat] == 0)
-        return false;
+        return (false);
 
     if (you.demon_pow[mutat] >= you.mutation[mutat])
-        return false;
+        return (false);
 
     switch (mutat)
     {
@@ -2396,20 +2398,17 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         break;
     }
 
-    // find where these things are actually altered
-    // -- do not globally force redraw {dlb}
+    // FIXME: Find where these things are actually altered.
+    //        -- Do not globally force redraw! {dlb}
     you.redraw_hit_points   = 1;
     you.redraw_magic_points = 1;
     you.redraw_armour_class = 1;
     you.redraw_evasion      = 1;
-//    you.redraw_experience   = 1;
-//    you.redraw_gold         = 1;
-//    you.redraw_hunger       = 1;
 
     you.mutation[mutat]--;
 
     take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
-    return true;
+    return (true);
 }                               // end delete_mutation()
 
 static int body_covered()

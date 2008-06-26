@@ -1592,7 +1592,7 @@ std::string get_item_description( const item_def &item, bool verbose,
             std::string db_desc =
                 getLongDescription(db_name, is_artefact(item));
 
-            if (db_desc == "")
+            if (db_desc.empty())
             {
                 if (item_type_known(item))
                 {
@@ -2460,7 +2460,7 @@ static bool _print_god_abil_desc( int god, int numpower )
 
     std::ostringstream buf;
 
-    if ( isupper(pmsg[0]) )
+    if (isupper(pmsg[0]))
         buf << pmsg;            // Complete sentence given.
     else
         buf << "You can " << pmsg << ".";
@@ -2476,7 +2476,7 @@ static bool _print_god_abil_desc( int god, int numpower )
     }
 
     cprintf( "%s\n", buf.str().c_str() );
-    return true;
+    return (true);
 }
 
 static std::string _describe_favour_generic(god_type which_god)
@@ -2544,8 +2544,9 @@ static std::string _religion_help( god_type god )
         if (!player_under_penance() && you.piety > 160
             && !you.num_gifts[god])
         {
-            if (result != "")
+            if (!result.empty())
                 result += " ";
+
             result += "You can pray at an altar to have your weapon "
                       "blessed, especially a long sword.";
         }
@@ -2580,8 +2581,9 @@ static std::string _religion_help( god_type god )
 
     if (god_likes_butchery(god))
     {
-        if (result != "")
+        if (!result.empty())
             result += " ";
+
         result += "You can sacrifice corpses by dissecting"
                   " them during prayer.";
     }

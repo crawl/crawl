@@ -291,9 +291,9 @@ bool mons_abyss(int mcls)
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_SHIFTER:
-        return true;
+        return (true);
     default:
-        return false;
+        return (false);
     }
 }                               // end mons_abyss()
 
@@ -539,9 +539,9 @@ bool mons_pan(int mcls)
     case MONS_UFETUBUS:
     case MONS_WHITE_IMP:
     case MONS_YNOXINUL:
-        return true;
+        return (true);
     default:
-        return false;
+        return (false);
     }
 }                               // end mons_pan()
 

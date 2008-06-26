@@ -42,10 +42,10 @@ bool GuicInit(HINSTANCE h, int nCmd)
 
     for (i = 0; i < MAX_TERM_COL; i++)
     {
-    int *c = (int *)&term_colors[i];
+        int *c = (int *)&term_colors[i];
         term_pix[i] = PALETTERGB( c[0], c[1], c[2] );
     }
-    return true;
+    return (true);
 }
 
 void GuicDeinit()
@@ -518,11 +518,11 @@ BOOL WinClass::create(const char *name)
                               HWND_DESKTOP, NULL, hInst, NULL);
        ShowWindow( hWnd, nCmdShow );
     }
-    if ( !hWnd )
-       return FALSE;
+    if (!hWnd)
+       return (FALSE);
 
    clear();
-   return TRUE;
+   return (TRUE);
 }
 
 void WinClass::move()
@@ -653,23 +653,23 @@ void MapRegionClass::draw_data(unsigned char *buf, bool show_mark,
     force_redraw = false;
 }
 
-/* XXXXX
- * img_type related
- */
+//
+// img_type related
+//
 
 LPBYTE dib_ref_pixel(dib_pack* dib, int x, int y)
 {
     int w = ((3 + dib->Width)/4)*4;
     LPBYTE ref = dib->pDibBits + x + (dib->Height -1 -y) * w;
-    return ref;
+    return (ref);
 }
 
 bool ImgIsTransparentAt(img_type img, int x, int y)
 {
     if (pix_transparent == *( dib_ref_pixel(img, x, y) ))
-        return true;
+        return (true);
 
-    return false;
+    return (false);
 }
 void ImgSetTransparentPix(img_type img)
 {
@@ -692,7 +692,7 @@ img_type ImgCreateSimple(int wx, int wy)
     ptr->hDib = NULL;
     ptr->hDC  = NULL;
 
-    return ptr;
+    return (ptr);
 }
 
 void ImgDestroy(img_type img)
@@ -700,9 +700,14 @@ void ImgDestroy(img_type img)
     if (!img)
         return;
 
-    if (img->pDib) GlobalFree(img->pDib);
-    if (img->hDC)  DeleteDC  (img->hDC);
-    if (img->hDib) DeleteObject(img->hDib);
+    if (img->pDib)
+        GlobalFree(img->pDib);
+
+    if (img->hDC)
+        DeleteDC(img->hDC);
+
+    if (img->hDib)
+        DeleteObject(img->hDib);
 
     GlobalFree(img);
 }
@@ -724,7 +729,7 @@ img_type ImgLoadFile(const char *name)
     if (fh == INVALID_HANDLE_VALUE)
         return NULL;
 
-    SetFilePointer(fh,0,NULL,FILE_BEGIN);
+    SetFilePointer(fh, 0, NULL, FILE_BEGIN);
 
     if (!ReadFile(fh,&bmHead, sizeof(BITMAPFILEHEADER), &dummy, NULL))
         return NULL;

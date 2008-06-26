@@ -1286,7 +1286,7 @@ static bool _pick_db_name( const item_def &item )
     case OBJ_JEWELLERY:
         return one_chance_in(5);
     default:
-        return false;
+        return (false);
     }
 }
 
@@ -1634,7 +1634,7 @@ static bool _randart_is_redundant( const item_def &item,
                                    randart_properties_t &proprt )
 {
     if (item.base_type != OBJ_JEWELLERY)
-        return false;
+        return (false);
 
     randart_prop_type provides  = RAP_NUM_PROPERTIES;
     randart_prop_type provides2 = RAP_NUM_PROPERTIES;
@@ -1723,25 +1723,25 @@ static bool _randart_is_redundant( const item_def &item,
     }
 
     if (provides == RAP_NUM_PROPERTIES)
-        return false;
+        return (false);
 
     if (proprt[provides] != 0)
-        return true;
+        return (true);
 
     if (provides2 == RAP_NUM_PROPERTIES)
-        return false;
+        return (false);
 
     if (proprt[provides2] != 0)
-        return true;
+        return (true);
 
-    return false;
+    return (false);
 }
 
 static bool _randart_is_conflicting( const item_def &item,
                                      randart_properties_t &proprt )
 {
     if (item.base_type != OBJ_JEWELLERY)
-        return false;
+        return (false);
 
     randart_prop_type conflicts = RAP_NUM_PROPERTIES;
 
@@ -1773,21 +1773,21 @@ static bool _randart_is_conflicting( const item_def &item,
     }
 
     if (conflicts == RAP_NUM_PROPERTIES)
-        return false;
+        return (false);
 
     if (proprt[conflicts] != 0)
-        return true;
+        return (true);
 
-    return false;
+    return (false);
 }
 
 bool randart_is_bad( const item_def &item, randart_properties_t &proprt )
 {
     if (randart_wpn_num_props( proprt ) == 0)
-        return true;
+        return (true);
 
-    return ( _randart_is_redundant( item, proprt )
-             || _randart_is_conflicting( item, proprt ) );
+    return (_randart_is_redundant( item, proprt )
+            || _randart_is_conflicting( item, proprt ));
 }
 
 bool randart_is_bad( const item_def &item )

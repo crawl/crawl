@@ -1689,7 +1689,7 @@ bool item_type_known( const item_def& item )
     // Artefacts have different descriptions from other items,
     // so we can't use general item knowledge for them.
     if (is_artefact(item))
-        return false;
+        return (false);
 
     // Poisoned missiles are always identified.
     if (item.base_type == OBJ_MISSILES)
@@ -1701,32 +1701,19 @@ bool item_type_known( const item_def& item )
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
     if ( idt != NUM_IDTYPE && item.sub_type < 50  )
-        return ( type_ids[idt][item.sub_type] == ID_KNOWN_TYPE );
+        return (type_ids[idt][item.sub_type] == ID_KNOWN_TYPE);
     else
-        return false;
+        return (false);
 }
 
 bool item_type_known(const object_class_type base_type, const int sub_type)
 {
     const item_type_id_type idt = objtype_to_idtype(base_type);
     if ( idt != NUM_IDTYPE && sub_type < 50  )
-        return ( type_ids[idt][sub_type] == ID_KNOWN_TYPE );
+        return (type_ids[idt][sub_type] == ID_KNOWN_TYPE);
     else
-        return false;
+        return (false);
 }
-
-// [ds] Will the owner of this unused function step up and end its
-// suffering? :P
-#if 0
-static bool _randart_has_known_property(const item_def &item)
-{
-    for (int rap = 0; rap < RAP_NUM_PROPERTIES; rap++)
-        if (randart_wpn_known_prop( item, static_cast<randart_prop_type>(rap) ))
-            return true;
-
-    return false;
-}
-#endif
 
 bool item_type_tried( const item_def& item )
 {
@@ -2470,7 +2457,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return (false);
 
         if (is_artefact(item))
-            return false;
+            return (false);
 
         if (is_bad_item(item, temp))
             return (true);

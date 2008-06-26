@@ -836,11 +836,11 @@ static void _handle_wizard_command( void )
         dst = trim_string(dst);
         dst = replace_all(dst, " ", "_");
 
-        if (dst == "")
+        if (dst.empty())
             dst = "bazaar";
 
-        if (find_map_by_name(dst) == -1 &&
-            random_map_for_tag(dst, false) == -1)
+        if (find_map_by_name(dst) == -1
+            && random_map_for_tag(dst, false) == -1)
         {
             mprf("No map named '%s' or tagged '%s'.",
                  dst.c_str(), dst.c_str());
@@ -1646,10 +1646,10 @@ static bool _stairs_check_beheld()
     {
         mprf("You cannot move away from %s!",
              menv[you.beheld_by[0]].name(DESC_NOCAP_THE, true).c_str());
-        return true;
+        return (true);
     }
 
-    return false;
+    return (false);
 }
 
 static void _go_downstairs();

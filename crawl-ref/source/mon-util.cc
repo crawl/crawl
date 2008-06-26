@@ -493,10 +493,10 @@ bool mons_is_native_in_branch(const monsters *monster,
 bool mons_is_chaotic(const monsters *mon)
 {
     if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
-        return true;
+        return (true);
 
     if (mon->has_spell(SPELL_POLYMORPH_OTHER))
-        return true;
+        return (true);
 
     const int attk_flavour = mons_attack_spec(mon, 0).flavour;
     return (attk_flavour == AF_MUTATE || attk_flavour == AF_ROT);
@@ -505,7 +505,7 @@ bool mons_is_chaotic(const monsters *mon)
 bool mons_is_poisoner(const monsters *mon)
 {
     if (mons_corpse_effect(mon->type) == CE_POISONOUS)
-        return true;
+        return (true);
 
     const int attk_flavour = mons_attack_spec(mon, 0).flavour;
     return (attk_flavour == AF_POISON
@@ -1953,7 +1953,7 @@ bool give_monster_proper_name(monsters *mon, bool orcs_only)
         if (mons_species(mon->type) != MONS_ORC
             || mon->type == MONS_ORC && !one_chance_in(8))
         {
-            return false;
+            return (false);
         }
     }
 
@@ -3434,8 +3434,8 @@ void monsters::unequip_armour(item_def &item, int near)
 
 bool monsters::unequip(item_def &item, int slot, int near, bool force)
 {
-    if (item.cursed() && !force)
-        return false;
+    if (!force && item.cursed())
+        return (false);
 
     if (!force && mons_near(this) && player_monster_visible(this))
         set_ident_flags(item, ISFLAG_KNOW_CURSE);
@@ -3457,7 +3457,7 @@ bool monsters::unequip(item_def &item, int slot, int near, bool force)
         break;
     }
 
-    return true;
+    return (true);
 }
 
 void monsters::lose_pickup_energy()
@@ -3490,7 +3490,7 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
         && hands_reqd(item, body_size(PSIZE_BODY)) == HANDS_TWO)
     {
         if (!drop_item(MSLOT_SHIELD, near))
-            return false;
+            return (false);
     }
 
     if (inv[slot] != NON_ITEM)
@@ -3593,11 +3593,12 @@ bool monsters::pickup_launcher(item_def &launch, int near)
 static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
 {
     if (weapon.base_type != OBJ_WEAPONS)
-        return false;
+        return (false);
 
     if (monster->type == MONS_DAEVA)
         return (weapon.sub_type == WPN_BLESSED_EUDEMON_BLADE);
 
+    // We might allow Sigmund to pick up a better scythe if he finds one...
     if (monster->type == MONS_SIGMUND)
         return (weapon.sub_type == WPN_SCYTHE);
 
@@ -3613,7 +3614,7 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
             return (monster->type == MONS_CEREBOV);
         }
     }
-    return false;
+    return (false);
 }
 
 bool monsters::pickup_melee_weapon(item_def &item, int near)
@@ -3664,11 +3665,11 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
 
     // No slot found to place this item.
     if (eslot == -1)
-        return false;
+        return (false);
 
     // Current item cannot be dropped.
     if (inv[eslot] != NON_ITEM && !drop_item(eslot, near))
-        return false;
+        return (false);
 
     return (pickup(item, eslot, near));
 }
@@ -3998,7 +3999,7 @@ bool monsters::pickup_scroll(item_def &item, int near)
         && item.sub_type != SCR_BLINKING
         && item.sub_type != SCR_SUMMONING)
     {
-        return false;
+        return (false);
     }
     return pickup(item, MSLOT_SCROLL, near);
 }
@@ -4006,7 +4007,7 @@ bool monsters::pickup_scroll(item_def &item, int near)
 bool monsters::pickup_potion(item_def &item, int near)
 {
     // Only allow monsters to pick up potions if they can actually use them.
-    switch(item.sub_type)
+    switch (item.sub_type)
     {
     case POT_HEALING:
     case POT_HEAL_WOUNDS:
@@ -4014,19 +4015,21 @@ bool monsters::pickup_potion(item_def &item, int near)
             || mons_holiness(this) == MH_NONLIVING
             || mons_holiness(this) == MH_PLANT)
         {
-            return false;
+            return (false);
         }
         break;
     case POT_BLOOD:
     case POT_BLOOD_COAGULATED:
         if (::mons_species(this->type) != MONS_VAMPIRE)
-            return false;
+            return (false);
         break;
     case POT_SPEED:
     case POT_INVISIBILITY:
+        // If there are any item using monsters that are permanently invisible
+        // this might have to be restricted.
         break;
     default:
-        return false;
+        return (false);
     }
 
     return pickup(item, MSLOT_POTION, near);
@@ -5130,7 +5133,7 @@ bool monsters::del_ench(enchant_type ench, bool quiet, bool effect)
     const enchant_type et = i->first;
 
     if (!_prepare_del_ench(this, me))
-        return false;
+        return (false);
 
     enchantments.erase(et);
     if (effect)
@@ -5312,7 +5315,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 && is_run_delay(current_delay_action()))
             {
                 // Already set somewhere else.
-                if (seen_context != "")
+                if (!seen_context.empty())
                     return;
 
                 if (type == MONS_AIR_ELEMENTAL)
@@ -6100,7 +6103,7 @@ bool monsters::can_see(const actor *target) const
         return visible_to(target);
 
     if (!target->visible_to(this))
-        return false;
+        return (false);
 
     if (target->atype() == ACT_PLAYER)
         return mons_near(this);
@@ -6123,7 +6126,7 @@ bool monsters::can_safely_mutate() const
 bool monsters::mutate()
 {
     if (!can_mutate())
-        return false;
+        return (false);
 
     return (monster_polymorph(this, RANDOM_MONSTER));
 }

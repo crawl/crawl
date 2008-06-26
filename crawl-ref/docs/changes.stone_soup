@@ -10,6 +10,7 @@ Highlights
 ----------
 * Many interface improvements.
 * Greatly improved Tiles.
+* Allow all sensible species/class combinations.
 * Added Vampire species.
 * Overhaul of the good gods.
 * Smarter monsters.
@@ -58,6 +59,7 @@ Gods
 Characters
 ----------
 * Added Vampire species.
+* Enable all sensible species/class combinations.
 * Removed Glamour.
 * Red/White Draconians gain heat/cold resistance at xl 14 (rather than 18).
 * Mutations: Removed forgetfulness; introduced fur, shouting, +mp/-mp.

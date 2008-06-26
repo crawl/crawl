@@ -220,12 +220,12 @@ static bool _find_butchering_implement( bool fallback )
         {
             mpr("Switching to a butchering implement.");
             wield_weapon( true, i, false );
-            return true;
+            return (true);
         }
     }
 
     if (!fallback)
-        return false;
+        return (false);
 
     // If we didn't swap above, then we still can't cut...let's call
     // wield_weapon() in the "prompt the user" way...
@@ -327,7 +327,7 @@ static bool _butcher_corpse(int corpse_id, bool force_butcher = false)
     }
 
     you.turn_is_over = true;
-    return true;
+    return (true);
 }
 
 static void _terminate_butchery(bool wpn_switch, bool removed_gloves,
@@ -685,9 +685,10 @@ static bool _userdef_eat_food()
     bool ret = clua.callfn("c_eat", 2, 0);
     if (!ret && clua.error.length())
         mpr(clua.error.c_str());
-    return ret;
+
+    return (ret);
 #else
-    return false;
+    return (false);
 #endif
 }
 
@@ -2024,7 +2025,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
         {
             if (!suppress_msg)
                 mpr("Blech - you need blood!");
-             return false;
+             return (false);
         }
 
         int vorous = _player_likes_food_type(kindof_thing);
@@ -2105,37 +2106,37 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
                 {
                     if (!suppress_msg)
                         mpr("Urks, you're a herbivore!");
-                    return false;
+                    return (false);
                 }
-                return true;
+                return (true);
             case POT_WATER:
                 if (you.species == SP_VAMPIRE)
                 {
                     if (!suppress_msg)
                         mpr("Blech - you need blood!");
-                    return false;
+                    return (false);
                 }
-                return true;
+                return (true);
              case POT_PORRIDGE:
                 if (you.species == SP_VAMPIRE)
                 {
                     if (!suppress_msg)
                         mpr("Blech - you need blood!");
-                    return false;
+                    return (false);
                 }
                 else if (ur_carnivorous)
                 {
                     if (!suppress_msg)
                         mpr("Sorry, you're a carnivore.");
-                    return false;
+                    return (false);
                 }
              default:
-                return true;
+                return (true);
         }
 
-    // other object types are set to return false for now until
+    // Other object types are set to return false for now until
     // someone wants to recode the eating code to permit consumption
-    // of things other than just food
+    // of things other than just food.
     default:
         return (false);
     }
@@ -2263,13 +2264,13 @@ static bool _vampire_consume_corpse(const int slot, bool invent)
     if (!mons_has_blood(corpse.plus))
     {
         mpr( "There is no blood in this body!" );
-        return false;
+        return (false);
     }
 
     if (food_is_rotten(corpse))
     {
         mpr("It's not fresh enough.");
-        return false;
+        return (false);
     }
 
     // The delay for eating a chunk (mass 1000) is 2
@@ -2282,7 +2283,7 @@ static bool _vampire_consume_corpse(const int slot, bool invent)
     start_delay( DELAY_FEED_VAMPIRE, 1 + chunk_amount/2,
                  (int) invent, slot );
 
-    return true;
+    return (true);
 }
 
 static void _heal_from_food(int hp_amt, int mp_amt, bool unrot,

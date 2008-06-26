@@ -96,7 +96,7 @@ void game_state::cancel_cmd_repeat(std::string reason)
 
     reset_cmd_repeat();
 
-    if (reason != "")
+    if (!reason.empty())
         mpr(reason.c_str());
 }
 
@@ -112,13 +112,13 @@ void game_state::cancel_cmd_again(std::string reason)
 
     reset_cmd_again();
 
-    if (reason != "")
+    if (!reason.empty())
         mpr(reason.c_str());
 }
 
 void game_state::cant_cmd_repeat(std::string reason)
 {
-    if (reason == "")
+    if (reason.empty())
         reason = "Can't repeat that command.";
 
     cancel_cmd_repeat(reason);
@@ -126,7 +126,7 @@ void game_state::cant_cmd_repeat(std::string reason)
 
 void game_state::cant_cmd_again(std::string reason)
 {
-    if (reason == "")
+    if (reason.empty())
         reason = "Can't redo that command.";
 
     cancel_cmd_again(reason);
@@ -147,10 +147,10 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
                            const activity_interrupt_data &at )
 {
     if (crawl_state.cmd_repeat_start)
-        return false;
+        return (false);
 
     if (crawl_state.repeat_cmd == CMD_WIZARD)
-        return false;
+        return (false);
 
     switch (ai)
     {
@@ -161,7 +161,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
     case AI_HP_LOSS:
     case AI_MONSTER_ATTACKS:
         crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
-        return true;
+        return (true);
 
     default:
         break;
@@ -171,12 +171,12 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
         if (!mon->visible())
-            return false;
+            return (false);
 
         if (crawl_state.cmd_repeat_started_unsafe
             && at.context != "newly seen")
         {
-            return false;
+            return (false);
         }
 
         crawl_state.cancel_cmd_repeat();
@@ -196,12 +196,12 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         fs.cprintf("%s (", mon->name(DESC_PLAIN, true).c_str());
         fs.add_glyph( mon );
         fs.cprintf(") in view: (%d,%d), see_grid: %s",
-             mon->x, mon->y,
-             see_grid(mon->x, mon->y)? "yes" : "no");
+                   mon->x, mon->y,
+                   see_grid(mon->x, mon->y)? "yes" : "no");
         formatted_mpr(fs, MSGCH_WARN);
 #endif
 
-        return true;
+        return (true);
     }
 
     // If command repitition is being used to immitate the rest command,
@@ -215,11 +215,12 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
             crawl_state.cancel_cmd_repeat("HP restored.");
         else
             crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
-        return true;
+
+        return (true);
     }
 
     if (crawl_state.cmd_repeat_started_unsafe)
-        return false;
+        return (false);
 
     if (ai == AI_HIT_MONSTER)
     {
@@ -231,14 +232,14 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && player_monster_visible(mon))
         {
-            return false;
+            return (false);
         }
 
         crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
-        return true;
+        return (true);
     }
 
-    return false;
+    return (false);
 }
 
 void game_state::reset_cmd_repeat()

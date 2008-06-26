@@ -1117,7 +1117,7 @@ static bool _blessing_wpn(monsters* mon)
     const int alt_weapon = mon->inv[MSLOT_ALT_WEAPON];
 
     if (weapon == NON_ITEM && alt_weapon == NON_ITEM)
-        return false;
+        return (false);
 
     int slot;
 
@@ -1133,12 +1133,11 @@ static bool _blessing_wpn(monsters* mon)
     if (!enchant_weapon((coinflip()) ? ENCHANT_TO_HIT
                                      : ENCHANT_TO_DAM, true, wpn))
     {
-        return false;
+        return (false);
     }
 
     item_set_appearance(wpn);
-
-    return true;
+    return (true);
 }
 
 static bool _blessing_AC(monsters* mon)
@@ -1148,7 +1147,7 @@ static bool _blessing_AC(monsters* mon)
     const int shield = mon->inv[MSLOT_SHIELD];
 
     if (armour == NON_ITEM && shield == NON_ITEM)
-        return false;
+        return (false);
 
     int slot;
 
@@ -1164,11 +1163,10 @@ static bool _blessing_AC(monsters* mon)
 
     // And enchant or uncurse it.
     if (!enchant_armour(ac_change, true, arm))
-        return false;
+        return (false);
 
     item_set_appearance(arm);
-
-    return true;
+    return (true);
 }
 
 static bool _blessing_balms(monsters *mon)
@@ -1207,9 +1205,9 @@ static bool _blessing_healing(monsters* mon, bool extra)
         // A high-HP monster might get a unique name.
         if (random2(100) <= mon->max_hit_points)
             give_monster_proper_name(mon);
-        return true;
+        return (true);
     }
-    return false;
+    return (false);
 }
 
 static bool _tso_blessing_holy_wpn(monsters* mon)
@@ -1219,7 +1217,7 @@ static bool _tso_blessing_holy_wpn(monsters* mon)
     const int alt_weapon = mon->inv[MSLOT_ALT_WEAPON];
 
     if (weapon == NON_ITEM && alt_weapon == NON_ITEM)
-        return false;
+        return (false);
 
     int slot;
 
@@ -1239,7 +1237,7 @@ static bool _tso_blessing_holy_wpn(monsters* mon)
             && wpn_brand != SPWPN_PAIN && wpn_brand != SPWPN_VAMPIRICISM
             && wpn_brand != SPWPN_VENOM))
     {
-        return false;
+        return (false);
     }
 
     // Convert a demonic weapon into a non-demonic weapon.
@@ -1251,21 +1249,21 @@ static bool _tso_blessing_holy_wpn(monsters* mon)
     set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
     wpn.colour = YELLOW;
 
-    return true;
+    return (true);
 }
 
 static bool _tso_blessing_holy_arm(monsters* mon)
 {
     // If a monster has full negative energy resistance, get out.
     if (mons_res_negative_energy(mon) == 3)
-        return false;
+        return (false);
 
     // Pick either a monster's armour or its shield.
     const int armour = mon->inv[MSLOT_ARMOUR];
     const int shield = mon->inv[MSLOT_SHIELD];
 
     if (armour == NON_ITEM && shield == NON_ITEM)
-        return false;
+        return (false);
 
     int slot;
 
@@ -1281,14 +1279,14 @@ static bool _tso_blessing_holy_arm(monsters* mon)
 
     // Override certain brands.
     if (is_artefact(arm) || arm_brand != SPARM_NORMAL)
-        return false;
+        return (false);
 
     // And make it resistant to negative energy.
     set_equip_desc(arm, ISFLAG_GLOWING);
     set_item_ego_type(arm, OBJ_ARMOUR, SPARM_POSITIVE_ENERGY);
     arm.colour = WHITE;
 
-    return true;
+    return (true);
 }
 
 static int _tso_blessing_extend_stay(monsters* mon)
@@ -1322,7 +1320,7 @@ static int _tso_blessing_extend_stay(monsters* mon)
 static bool _tso_blessing_friendliness(monsters* mon)
 {
     if (!mon->has_ench(ENCH_CHARM))
-        return false;
+        return (false);
 
     mon->attitude = ATT_FRIENDLY;
 
@@ -1338,7 +1336,7 @@ static bool _tso_blessing_friendliness(monsters* mon)
     // hostile.
     mon->del_ench(ENCH_CHARM, true, false);
 
-    return true;
+    return (true);
 }
 
 // If you don't currently have any followers, send a small band to help
@@ -1390,7 +1388,7 @@ static bool _beogh_blessing_reinforcement()
         }
     }
 
-    return success;
+    return (success);
 }
 
 static bool _beogh_blessing_priesthood(monsters* mon)
@@ -1409,10 +1407,10 @@ static bool _beogh_blessing_priesthood(monsters* mon)
         mon->upgrade_type(priest_type, true, true);
         give_monster_proper_name(mon);
 
-        return true;
+        return (true);
     }
 
-    return false;
+    return (false);
 }
 
 // Bless the follower indicated in follower, if any.  If there isn't
@@ -1431,11 +1429,12 @@ bool bless_follower(monsters *follower,
     // Otherwise, pick a random follower.
     if (!follower || (!force && !suitable(follower)))
     {
+        // Only Beogh blesses random followers.
         if (god != GOD_BEOGH)
-            return false;
+            return (false);
 
         if (chance > 2)
-            return false;
+            return (false);
 
         // Choose a random follower in LOS, preferably a named one (10% chance).
         follower = choose_random_nearby_monster(0, suitable, true, true);
@@ -1443,7 +1442,7 @@ bool bless_follower(monsters *follower,
         if (!follower)
         {
             if (coinflip())
-                return false;
+                return (false);
 
             // Try again, without the LOS restriction (5% chance).
             follower = choose_random_nearby_monster(0, suitable, false, true);
@@ -1451,7 +1450,7 @@ bool bless_follower(monsters *follower,
             if (!follower)
             {
                 if (coinflip())
-                    return false;
+                    return (false);
 
                 // Try *again*, on the entire level (2.5% chance).
                 follower = choose_random_monster_on_level(0, suitable,
@@ -1471,7 +1470,7 @@ bool bless_follower(monsters *follower,
                     }
 
                     if (!reinforced)
-                        return false;
+                        return (false);
 
                     result = "reinforcement";
                     goto blessing_done;
@@ -1654,7 +1653,7 @@ bool bless_follower(monsters *follower,
             if (force)
                 mpr("Couldn't heal monster.");
 
-            return false;
+            return (false);
         }
 
         default:
@@ -1707,7 +1706,7 @@ blessing_done:
     }
 #endif
 
-    return true;
+    return (true);
 }
 
 static void _do_god_gift(bool prayed_for)
@@ -1930,7 +1929,7 @@ static bool _confirm_pray_sacrifice()
         && is_stash(you.x_pos, you.y_pos))
     {
         mpr("You can't sacrifice explicitly marked stashes.");
-        return false;
+        return (false);
     }
 
     for ( int i = igrd[you.x_pos][you.y_pos]; i != NON_ITEM;
@@ -1944,10 +1943,10 @@ static bool _confirm_pray_sacrifice()
             prompt += item.name(DESC_NOCAP_A);
             prompt += " in it?";
             if ( !yesno(prompt.c_str(), false, 'n') )
-                return false;
+                return (false);
         }
     }
-    return true;
+    return (true);
 }
 
 std::string god_prayer_reaction()
@@ -1981,13 +1980,13 @@ static bool _god_accepts_prayer(god_type type)
     case GOD_SIF_MUNA:
     case GOD_KIKUBAAQUDGHA:
     case GOD_NO_GOD:
-        return false;
+        return (false);
 
     default:
         break;
     }
 
-    return true;
+    return (true);
 }
 
 void pray()
@@ -2047,7 +2046,7 @@ void pray()
     }
 
     // Nemelexites can abort out now instead of offering something
-    // they don't want to lose
+    // they don't want to lose.
     if ( you.religion == GOD_NEMELEX_XOBEH && altar_god == GOD_NO_GOD
          && !_confirm_pray_sacrifice() )
     {
@@ -2060,7 +2059,7 @@ void pray()
          god_name(you.religion).c_str());
 
     // ...otherwise, they offer what they're standing on
-    if ( you.religion == GOD_NEMELEX_XOBEH && altar_god == GOD_NO_GOD )
+    if (you.religion == GOD_NEMELEX_XOBEH && altar_god == GOD_NO_GOD)
         offer_items();
 
     you.duration[DUR_PRAYER] = 9 + (random2(you.piety) / 20)
@@ -3028,41 +3027,41 @@ static bool _destroyed_valuable_weapon(int value, int type)
 {
     // Artefacts (incl. most randarts).
     if (random2(value) >= random2(250))
-        return true;
+        return (true);
 
     // Medium valuable items are more likely to net piety at low piety.
     // This includes missiles in sufficiently large quantities.
     if (random2(value) >= random2(100)
         && one_chance_in(1 + you.piety/50))
     {
-        return true;
+        return (true);
     }
 
     // If not for the above, missiles shouldn't yield piety.
     if (type == OBJ_MISSILES)
-        return false;
+        return (false);
 
     // Weapons, on the other hand, are always acceptable to boost low piety.
     if (you.piety < 30 || player_under_penance())
-        return true;
+        return (true);
 
-    return false;
+    return (false);
 }
 
 bool ely_destroy_weapons()
 {
     if (you.religion != GOD_ELYVILON)
-        return false;
+        return (false);
 
     god_acting gdact;
 
     bool success = false;
-    for ( stack_iterator si(you.pos()); si; ++si )
+    for (stack_iterator si(you.pos()); si; ++si)
     {
         item_def& item(*si);
-        if ( (item.base_type != OBJ_WEAPONS
-              && item.base_type != OBJ_MISSILES)
-             || item_is_stationary(item)) // Held in a net?
+        if (item.base_type != OBJ_WEAPONS
+                && item.base_type != OBJ_MISSILES
+            || item_is_stationary(item)) // Held in a net?
         {
             continue;
         }
@@ -3103,7 +3102,7 @@ bool ely_destroy_weapons()
     if (!success)
         mpr("There are no weapons here to destroy!");
 
-    return success;
+    return (success);
 }
 
 // Returns false if the invocation fails (no books in sight etc.).
@@ -3339,19 +3338,19 @@ static bool _tso_retribution()
     }
     case 5:
     case 6: // either noisiness or silence (2/7)
-       if (coinflip())
-       {
-           simple_god_message(" booms out: \"Take the path of righteousness! REPENT!\"", god);
-           noisy(25, you.x_pos, you.y_pos); // same as scroll of noise
-       }
-       else
-       {
-           god_speaks(god, "You feel the Shining One's silent rage upon you!");
-           cast_silence( 25 );
-       }
-       break;
+        if (coinflip())
+        {
+            simple_god_message(" booms out: \"Take the path of righteousness! REPENT!\"", god);
+            noisy(25, you.x_pos, you.y_pos); // same as scroll of noise
+        }
+        else
+        {
+            god_speaks(god, "You feel the Shining One's silent rage upon you!");
+            cast_silence( 25 );
+        }
+        break;
     }
-    return false;
+    return (false);
 }
 
 static bool _zin_retribution()
@@ -3450,7 +3449,7 @@ static bool _zin_retribution()
         noisy(25, you.x_pos, you.y_pos); // same as scroll of noise
         break;
     }
-    return false;
+    return (false);
 }
 
 static void _ely_dull_inventory_weapons()
@@ -3547,12 +3546,12 @@ static bool _elyvilon_retribution()
         break;
 
     case 3:
-    case 4: // dull weapons in your inventory
+    case 4: // Dull weapons in your inventory.
         _ely_dull_inventory_weapons();
         break;
     }
 
-    return true;
+    return (true);
 }
 
 static bool _makhleb_retribution()
@@ -3581,10 +3580,10 @@ static bool _makhleb_retribution()
         for (int i = 0; i < how_many; ++i)
         {
             if (create_monster(
-                   mgen_data::hostile_at(
-                       static_cast<monster_type>(
-                           MONS_NEQOXEC + random2(5)),
-                       you.pos(), 0, 0, true, GOD_MAKHLEB)) != -1)
+                    mgen_data::hostile_at(
+                        static_cast<monster_type>(
+                            MONS_NEQOXEC + random2(5)),
+                        you.pos(), 0, 0, true, GOD_MAKHLEB)) != -1)
             {
                 count++;
             }
@@ -3595,7 +3594,7 @@ static bool _makhleb_retribution()
                                        "'s minions fail to arrive.", god);
     }
 
-    return true;
+    return (true);
 }
 
 static bool _kikubaaqudgha_retribution()
@@ -3632,7 +3631,7 @@ static bool _kikubaaqudgha_retribution()
                        random2avg(88, 3), 100, "the malice of Kikubaaqudgha");
     }
 
-    return true;
+    return (true);
 }
 
 static bool _yredelemnul_retribution()
@@ -3668,7 +3667,7 @@ static bool _yredelemnul_retribution()
                         random2avg(88, 3), 100, "the anger of Yredelemnul" );
     }
 
-    return true;
+    return (true);
 }
 
 static bool _trog_retribution()
@@ -3762,7 +3761,7 @@ static bool _trog_retribution()
                         random2avg(98, 3), 100, "the fiery rage of Trog" );
     }
 
-    return true;
+    return (true);
 }
 
 static bool _beogh_retribution()
@@ -3884,7 +3883,7 @@ static bool _beogh_retribution()
     }
     }
 
-    return true;
+    return (true);
 }
 
 static bool _okawaru_retribution()
@@ -3912,7 +3911,7 @@ static bool _okawaru_retribution()
                        "'s forces are busy with other wars.",
                        god);
 
-    return true;
+    return (true);
 }
 
 static bool _sif_muna_retribution()
@@ -3960,7 +3959,7 @@ static bool _sif_muna_retribution()
         break;
     }
 
-    return true;
+    return (true);
 }
 
 static bool _lugonu_retribution()
@@ -4024,7 +4023,7 @@ static bool _lugonu_retribution()
                            god);
     }
 
-    return false;
+    return (false);
 }
 
 static bool _vehumet_retribution()
@@ -4036,7 +4035,7 @@ static bool _vehumet_retribution()
     miscast_effect( coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
                     8 + you.experience_level, random2avg(98, 3), 100,
                     "the wrath of Vehumet" );
-    return true;
+    return (true);
 }
 
 static bool _nemelex_retribution()
@@ -4047,7 +4046,7 @@ static bool _nemelex_retribution()
     // like Xom, this might actually help the player -- bwr
     simple_god_message(" makes you draw from the Deck of Punishment.", god);
     draw_from_deck_of_punishment();
-    return true;
+    return (true);
 }
 
 void divine_retribution( god_type god )
@@ -4530,11 +4529,10 @@ static bool _beogh_followers_abandon_you()
         }
 
         chan << std::endl;
-
-        return true;
+        return (true);
     }
 
-    return false;
+    return (false);
 }
 
 // currently only used when orcish idols have been destroyed

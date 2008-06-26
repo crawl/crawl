@@ -443,8 +443,10 @@ static void _push_top_card(item_def& deck, card_type card,
 
 static bool _wielding_deck()
 {
-    if ( you.equip[EQ_WEAPON] == -1 )
-        return false;
+    // Nothing wielded?
+    if (you.equip[EQ_WEAPON] == -1)
+        return (false);
+
     return is_deck(you.inv[you.equip[EQ_WEAPON]]);
 }
 
@@ -456,7 +458,7 @@ static void _remember_drawn_card(item_def& deck, card_type card)
     drawn.push_back( static_cast<char>(card) );
 
     // Once you've drawn two cards, you know the deck.
-    if ( drawn.size() >= 2 )
+    if (drawn.size() >= 2)
         _deck_ident(deck);
 }
 
@@ -483,7 +485,7 @@ static bool _check_buggy_deck(item_def& deck)
     {
         crawl_state.zero_turns_taken();
         strm << "This isn't a deck at all!" << std::endl;
-        return true;
+        return (true);
     }
 
     CrawlHashTable &props = deck.props;
@@ -532,7 +534,7 @@ static bool _check_buggy_deck(item_def& deck)
         dec_inv_item_quantity( deck.link, 1 );
         did_god_conduct(DID_CARDS, 1);
 
-        return true;
+        return (true);
     }
 
     bool problems = false;
@@ -592,7 +594,7 @@ static bool _check_buggy_deck(item_def& deck)
         dec_inv_item_quantity( deck.link, 1 );
         did_god_conduct(DID_CARDS, 1);
 
-        return true;
+        return (true);
     }
 
     if (static_cast<long>(num_cards) > deck.plus)
@@ -602,8 +604,10 @@ static bool _check_buggy_deck(item_def& deck)
         else if (deck.plus < 0)
             strm << "Deck was created with *negative* cards?!" << std::endl;
         else
+        {
             strm << "Deck has more cards than it was created with?"
                  << std::endl;
+        }
 
         deck.plus = num_cards;
         problems  = true;
@@ -691,7 +695,7 @@ static bool _check_buggy_deck(item_def& deck)
     }
 
     if (!problems)
-        return false;
+        return (false);
 
     you.wield_change = true;
 
@@ -699,9 +703,9 @@ static bool _check_buggy_deck(item_def& deck)
                "still use deck?", true, 'n'))
     {
         crawl_state.zero_turns_taken();
-        return true;
+        return (true);
     }
-    return false;
+    return (false);
 }
 
 // Choose a deck from inventory and return its slot (or -1).
@@ -729,14 +733,14 @@ bool choose_deck_and_draw()
 {
     const int slot = _choose_inventory_deck( "Draw from which deck?" );
 
-    if ( slot == -1 )
+    if (slot == -1)
     {
         crawl_state.zero_turns_taken();
-        return false;
+        return (false);
     }
 
     evoke_deck(you.inv[slot]);
-    return true;
+    return (true);
 }
 
 static void _deck_ident(item_def& deck)
@@ -773,17 +777,17 @@ static void _deck_lose_card(item_def& deck)
 bool deck_peek()
 {
     const int slot = _choose_inventory_deck( "Peek at which deck?" );
-    if ( slot == -1 )
+    if (slot == -1)
     {
         crawl_state.zero_turns_taken();
-        return false;
+        return (false);
     }
     item_def& deck(you.inv[slot]);
 
     if (_check_buggy_deck(deck))
-        return false;
+        return (false);
 
-    if ( cards_in_deck(deck) > 2 )
+    if (cards_in_deck(deck) > 2)
     {
         _deck_lose_card(deck);
         mpr("A card falls out of the deck.");
@@ -806,7 +810,7 @@ bool deck_peek()
         deck.plus2 = -1;
         you.wield_change = true;
 
-        return true;
+        return (true);
     }
 
     card2 = get_card_and_flags(deck, 1, flags2);
@@ -834,7 +838,7 @@ bool deck_peek()
     _deck_ident(deck);
 
     you.wield_change = true;
-    return true;
+    return (true);
 }
 
 // Mark a deck: look at the next four cards, mark them, and shuffle
@@ -845,32 +849,33 @@ bool deck_peek()
 bool deck_mark()
 {
     const int slot = _choose_inventory_deck( "Mark which deck?" );
-    if ( slot == -1 )
+    if (slot == -1)
     {
         crawl_state.zero_turns_taken();
-        return false;
+        return (false);
     }
     item_def& deck(you.inv[slot]);
     if (_check_buggy_deck(deck))
-        return false;
+        return (false);
 
     CrawlHashTable &props = deck.props;
     if (props["num_marked"].get_byte() > 0)
     {
         mpr("The deck is already marked.");
         crawl_state.zero_turns_taken();
-        return false;
+        return (false);
     }
 
     // Lose some cards, but keep at least two.
-    if ( cards_in_deck(deck) > 2 )
+    if (cards_in_deck(deck) > 2)
     {
         const int num_lost = std::min(cards_in_deck(deck)-2, random2(3) + 1);
-        for ( int i = 0; i < num_lost; ++i )
+        for (int i = 0; i < num_lost; ++i)
             _deck_lose_card(deck);
-        if ( num_lost == 1 )
+
+        if (num_lost == 1)
             mpr("A card falls out of the deck.");
-        else if ( num_lost > 1 )
+        else if (num_lost > 1)
             mpr("Some cards fall out of the deck.");
     }
 
@@ -883,7 +888,7 @@ bool deck_mark()
         mprf("The deck only has %d cards.", num_cards);
 
     std::vector<std::string> names;
-    for ( int i = 0; i < num_to_mark; ++i )
+    for (int i = 0; i < num_to_mark; ++i)
     {
         unsigned char flags;
         card_type     card = get_card_and_flags(deck, i, flags);
@@ -910,7 +915,7 @@ bool deck_mark()
     _deck_ident(deck);
     you.wield_change = true;
 
-    return true;
+    return (true);
 }
 
 static void _redraw_stacked_cards(const std::vector<card_type>& draws,
@@ -918,7 +923,7 @@ static void _redraw_stacked_cards(const std::vector<card_type>& draws,
 {
     for (unsigned int i = 0; i < draws.size(); ++i)
     {
-        cgotoxy(1,i+2);
+        cgotoxy(1, i+2);
         textcolor(selected == i ? WHITE : LIGHTGREY);
         cprintf("%u - %s", i+1, card_name(draws[i]) );
         clear_to_end_of_line();
@@ -932,22 +937,22 @@ static void _redraw_stacked_cards(const std::vector<card_type>& draws,
 bool deck_stack()
 {
     cursor_control con(false);
-    if ( !_wielding_deck() )
+    if (!_wielding_deck())
     {
         mpr("You aren't wielding a deck!");
         crawl_state.zero_turns_taken();
-        return false;
+        return (false);
     }
     item_def& deck(you.inv[you.equip[EQ_WEAPON]]);
     if (_check_buggy_deck(deck))
-        return false;
+        return (false);
 
     CrawlHashTable &props = deck.props;
     if (props["num_marked"].get_byte() > 0)
     {
         mpr("You can't stack a marked deck.");
         crawl_state.zero_turns_taken();
-        return false;
+        return (false);
     }
 
     const int num_cards    = cards_in_deck(deck);
@@ -955,7 +960,7 @@ bool deck_stack()
 
     std::vector<card_type>     draws;
     std::vector<unsigned char> flags;
-    for ( int i = 0; i < num_cards; ++i )
+    for (int i = 0; i < num_cards; ++i)
     {
         unsigned char _flags;
         card_type     card = _draw_top_card(deck, false, _flags);
@@ -965,22 +970,23 @@ bool deck_stack()
             draws.push_back(card);
             flags.push_back(_flags | CFLAG_SEEN | CFLAG_MARKED);
         }
-        else
-            ; // Rest of deck is discarded.
+        // Rest of deck is discarded.
     }
 
-    if ( num_cards == 1 )
+    if (num_cards == 1)
         mpr("There's only one card left!");
     else if (num_cards < 5)
         mprf("The deck only has %d cards.", num_to_stack);
     else if (num_cards == 5)
         mpr("The deck has exactly five cards.");
     else
+    {
         mprf("You draw the first five cards out of %d and discard the rest.",
              num_cards);
+    }
     more();
 
-    if ( draws.size() > 1 )
+    if (draws.size() > 1)
     {
         unsigned int selected = draws.size();
         clrscr();
@@ -1002,7 +1008,7 @@ bool deck_stack()
                 cgotoxy(1,11);
                 textcolor(LIGHTGREY);
                 cprintf("Are you sure? (press y or Y to confirm)");
-                if ( toupper(getch()) == 'Y' )
+                if (toupper(getch()) == 'Y')
                     break;
                 cgotoxy(1,11);
                 clear_to_end_of_line();
@@ -1028,7 +1034,7 @@ bool deck_stack()
     }
 
     deck.plus2 = -num_to_stack;
-    for ( unsigned int i = 0; i < draws.size(); ++i )
+    for (unsigned int i = 0; i < draws.size(); ++i)
     {
         _push_top_card(deck, draws[draws.size() - 1 - i],
                        flags[flags.size() - 1 - i]);
@@ -1039,38 +1045,38 @@ bool deck_stack()
 
     _check_buggy_deck(deck);
 
-    return true;
+    return (true);
 }
 
 // Draw the next three cards, discard two and pick one.
 bool deck_triple_draw()
 {
     const int slot = _choose_inventory_deck("Triple draw from which deck?");
-    if ( slot == -1 )
+    if (slot == -1)
     {
         crawl_state.zero_turns_taken();
-        return false;
+        return (false);
     }
 
     item_def& deck(you.inv[slot]);
 
     if (_check_buggy_deck(deck))
-        return false;
+        return (false);
 
     const int num_cards = cards_in_deck(deck);
 
     if (num_cards == 1)
     {
-        // only one card to draw, so just draw it
+        // Only one card to draw, so just draw it.
         evoke_deck(deck);
-        return true;
+        return (true);
     }
 
     const int num_to_draw = (num_cards < 3 ? num_cards : 3);
     std::vector<card_type>     draws;
     std::vector<unsigned char> flags;
 
-    for ( int i = 0; i < num_to_draw; ++i )
+    for (int i = 0; i < num_to_draw; ++i)
     {
         unsigned char _flags;
         card_type     card = _draw_top_card(deck, false, _flags);
@@ -1080,13 +1086,13 @@ bool deck_triple_draw()
     }
 
     mpr("You draw... (choose one card)");
-    for ( int i = 0; i < num_to_draw; ++i )
+    for (int i = 0; i < num_to_draw; ++i)
     {
         msg::streams(MSGCH_PROMPT) << (static_cast<char>(i + 'a')) << " - "
                                    << card_name(draws[i]) << std::endl;
     }
     int selected = -1;
-    while ( true )
+    while (true)
     {
         const int keyin = tolower(get_ch());
         if (keyin >= 'a' && keyin < 'a' + num_to_draw)
@@ -1100,7 +1106,7 @@ bool deck_triple_draw()
 
     // Note how many cards were removed from the deck.
     deck.plus2 += num_to_draw;
-    for ( int i = 0; i < num_to_draw; ++i )
+    for (int i = 0; i < num_to_draw; ++i)
         _remember_drawn_card(deck, draws[i]);
     you.wield_change = true;
 
@@ -1110,7 +1116,7 @@ bool deck_triple_draw()
     if (cards_in_deck(deck) == 0)
     {
         mpr("The deck of cards disappears in a puff of smoke.");
-        if ( slot == you.equip[EQ_WEAPON] )
+        if (slot == you.equip[EQ_WEAPON])
             unwield_item();
 
         dec_inv_item_quantity( slot, 1 );
@@ -1119,7 +1125,7 @@ bool deck_triple_draw()
     // Note that card_effect() might cause you to unwield the deck.
     card_effect(draws[selected], rarity, flags[selected], false);
 
-    return true;
+    return (true);
 }
 
 // This is Nemelex retribution.
@@ -2304,7 +2310,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
     if (is_critical_feature(grd[you.x_pos][you.y_pos]))
     {
         mpr("The dungeon trembles momentarily.");
-        return false;
+        return (false);
     }
 
     const int power_level = get_power_level(power, rarity);
@@ -2327,7 +2333,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
         }
         done_stuff = true;
     }
-    else if ( power_level == 1 )
+    else if (power_level == 1)
     {
         if (coinflip())
         {
@@ -2881,7 +2887,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
 bool top_card_is_known(const item_def &deck)
 {
     if (!is_deck(deck))
-        return false;
+        return (false);
 
     unsigned char flags;
     get_card_and_flags(deck, -1, flags);
@@ -2892,27 +2898,27 @@ bool top_card_is_known(const item_def &deck)
 card_type top_card(const item_def &deck)
 {
     if (!is_deck(deck))
-        return NUM_CARDS;
+        return (NUM_CARDS);
 
     unsigned char flags;
     card_type card = get_card_and_flags(deck, -1, flags);
 
     UNUSED(flags);
 
-    return card;
+    return (card);
 }
 
 bool is_deck(const item_def &item)
 {
-    return item.base_type == OBJ_MISCELLANY
-        && (item.sub_type >= MISC_DECK_OF_ESCAPE &&
-            item.sub_type <= MISC_DECK_OF_DEFENCE);
+    return (item.base_type == OBJ_MISCELLANY
+            && item.sub_type >= MISC_DECK_OF_ESCAPE
+            && item.sub_type <= MISC_DECK_OF_DEFENCE);
 }
 
 bool bad_deck(const item_def &item)
 {
     if (!is_deck(item))
-        return false;
+        return (false);
 
     return (!item.props.exists("cards")
             || item.props["cards"].get_type() != SV_VEC

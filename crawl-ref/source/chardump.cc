@@ -363,12 +363,12 @@ static void _sdump_misc(dump_params &par)
 #define TO_PERCENT(x, y) (100.0f * ((float) (x)) / ((float) (y)))
 
 static std::string _sdump_turns_place_info(PlaceInfo place_info,
-                                          std::string name = "")
+                                           std::string name = "")
 {
     PlaceInfo   gi = you.global_info;
     std::string out;
 
-    if (name == "")
+    if (name.empty())
         name = place_info.short_name();
 
     float a, b, c, d, e, f;
@@ -988,7 +988,7 @@ static std::string _sdump_kills_place_info(PlaceInfo place_info,
     PlaceInfo   gi = you.global_info;
     std::string out;
 
-    if (name == "")
+    if (name.empty())
         name = place_info.short_name();
 
     unsigned int global_total_kills = 0;

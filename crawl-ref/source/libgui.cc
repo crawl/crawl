@@ -1225,7 +1225,7 @@ static bool _can_use_item(item_def item, bool equipped)
     {
         // Misc. items/rods can always be evoked, cursed or not.
         if (item.base_type == OBJ_MISCELLANY || item_is_rod(item))
-            return true;
+            return (true);
 
         // You can't unwield/fire a wielded cursed weapon/staff
         // but cursed armour and rings can be unwielded without problems.
@@ -1237,7 +1237,7 @@ static bool _can_use_item(item_def item, bool equipped)
         return (item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD);
 
     // In all other cases you can use the item in some way.
-    return true;
+    return (true);
 }
 
 static int _handle_mouse_motion(int mouse_x, int mouse_y, bool init)
@@ -2349,15 +2349,21 @@ bool is_smart_cursor_enabled()
 
 void set_cursor_enabled(bool enabled)
 {
-    if (gui_smart_cursor) return;
-    if (enabled) TextRegionClass::_setcursortype(1);
-    else TextRegionClass::_setcursortype(0);
+    if (gui_smart_cursor)
+        return;
+
+    if (enabled)
+        TextRegionClass::_setcursortype(1);
+    else
+        TextRegionClass::_setcursortype(0);
 }
 
 bool is_cursor_enabled()
 {
-    if (TextRegionClass::cursor_flag) return true;
-    return false;
+    if (TextRegionClass::cursor_flag)
+        return (true);
+
+    return (false);
 }
 
 int wherex()

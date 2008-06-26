@@ -739,11 +739,9 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
         out.cprintf(" ");
 
-        bool knowsSpell = false;
-        for (i = 0; i < 25 && !knowsSpell; i++)
-        {
-            knowsSpell = (you.spells[i] == stype);
-        }
+        bool knows_spell = false;
+        for (i = 0; i < 25 && !knows_spell; i++)
+            knows_spell = (you.spells[i] == stype);
 
         const int level_diff = spell_difficulty( stype );
         const int levels_req = spell_levels_required( stype );
@@ -751,9 +749,9 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         int colour = DARKGREY;
         if (action == RBOOK_USE_STAFF)
         {
-            if (book.base_type == OBJ_BOOKS?
+            if (book.base_type == OBJ_BOOKS ?
                 you.experience_level >= level_diff
-                && you.magic_points >= level_diff
+                    && you.magic_points >= level_diff
                 : book.plus >= level_diff * ROD_CHARGE_MULT)
             {
                 colour = LIGHTGREY;
@@ -761,11 +759,11 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         }
         else
         {
-            if (knowsSpell)
+            if (knows_spell)
                 colour = LIGHTGREY;
             else if (you.experience_level >= level_diff
-                        && spell_levels >= levels_req
-                        && spell_skills)
+                     && spell_levels >= levels_req
+                     && spell_skills)
             {
                 colour = LIGHTBLUE;
             }
@@ -773,12 +771,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
         out.textcolor( colour );
 
-        // Old:
-        // textcolor(knowsSpell ? DARKGREY : LIGHTGREY);
-        //              was: ? LIGHTGREY : LIGHTBLUE
-
         char strng[2];
-
         strng[0] = index_to_letter(spelcount);
         strng[1] = 0;
 
@@ -1051,7 +1044,7 @@ int read_book( item_def &book, read_book_action_type action )
         return (0);
     }
 
-    // remember that this function is called from staff spells as well:
+    // Remember that this function is called from staff spells as well.
     const int keyin = spellbook_contents( book, action );
 
     if (book.base_type == OBJ_BOOKS)
@@ -1059,21 +1052,21 @@ int read_book( item_def &book, read_book_action_type action )
 
     redraw_screen();
 
-    /* Put special book effects in another function which can be called from
-       memorise as well */
+    // Put special book effects in another function which can be called
+    // from memorise as well.
 
     set_ident_flags( book, ISFLAG_KNOW_TYPE );
 
     return (keyin);
-}                               // end read_book()
+}
 
-// recoded to answer whether an UNDEAD_STATE is
+// Recoded to answer whether an UNDEAD_STATE is
 // barred from a particular spell passed to the
-// function - note that the function can be expanded
+// function. Note that the function can be expanded
 // to prevent memorisation of certain spells by
 // the living by setting up an US_ALIVE case returning
 // a value of false for a set of spells ... might be
-// an idea worth further consideration - 12mar2000 {dlb}
+// an idea worth further consideration. - 12mar2000 {dlb}
 bool undead_cannot_memorise(spell_type spell, char being)
 {
     switch (being)
@@ -1096,9 +1089,9 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_STATUE_FORM:
         case SPELL_SYMBOL_OF_TORMENT:
         case SPELL_TAME_BEASTS:
-            return true;
+            return (true);
         default:
-            return false;
+            return (false);
         }
         break;
 
@@ -1108,11 +1101,11 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_BORGNJORS_REVIVIFICATION:
         case SPELL_DEATHS_DOOR:
         case SPELL_NECROMUTATION:
-            return true;
+            return (true);
         default:
-            // also, the above US_HUNGRY_DEAD spells are not castable
-            // when satiated or worse
-            return false;
+            // In addition, the above US_HUNGRY_DEAD spells are not castable
+            // when satiated or worse.
+            return (false);
         }
         break;
 
@@ -1138,51 +1131,50 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_SUMMON_HORRIBLE_THINGS:
         case SPELL_SYMBOL_OF_TORMENT:
         case SPELL_TAME_BEASTS:
-            return true;
+            return (true);
         default:
-            return false;
+            return (false);
         }
         break;
     }
 
-    return false;
-}                               // end undead_cannot_memorise()
+    return (false);
+}
 
 bool player_can_memorise(const item_def &book)
 {
-    if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL)
-        return false;
+    if (book.base_type != OBJ_BOOKS || book.sub_type == BOOK_MANUAL
+        || book.sub_type == BOOK_DESTRUCTION)
+    {
+        return (false);
+    }
 
     if (!player_spell_levels())
-        return false;
+        return (false);
 
     for (int j = 0; j < SPELLBOOK_SIZE; j++)
     {
-         const spell_type stype = which_spell_in_book(book.book_number(), j);
+        const spell_type stype = which_spell_in_book(book.book_number(), j);
 
-         if (stype == SPELL_NO_SPELL)
-             continue;
+        if (stype == SPELL_NO_SPELL)
+            continue;
 
-         // easiest spell already too difficult
-         if (spell_difficulty(stype) > you.experience_level
-             || player_spell_levels() < spell_levels_required(stype))
-         {
-             return false;
-         }
+        // Easiest spell already too difficult?
+        if (spell_difficulty(stype) > you.experience_level
+            || player_spell_levels() < spell_levels_required(stype))
+        {
+            return (false);
+        }
 
-         bool knowsSpell = false;
-         for (int i = 0; i < 25 && !knowsSpell; i++)
-         {
-              knowsSpell = (you.spells[i] == stype);
-         }
+        bool knows_spell = false;
+        for (int i = 0; i < 25 && !knows_spell; i++)
+            knows_spell = (you.spells[i] == stype);
 
-         // don't already know this spell
-         if (!knowsSpell)
-         {
-             return true;
-         }
+        // You don't already know this spell.
+        if (!knows_spell)
+            return (true);
     }
-    return false;
+    return (false);
 }
 
 bool learn_spell(int book)
@@ -1195,10 +1187,8 @@ bool learn_spell(int book)
     int j = 0;
 
     for (i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
-    {
         if (you.skills[i])
             j++;
-    }
 
     if (j == 0)
     {
@@ -1238,8 +1228,8 @@ bool learn_spell(int book)
 
     index = letter_to_index( spell );
 
-    if (index >= SPELLBOOK_SIZE ||
-        !is_valid_spell_in_book( you.inv[book].sub_type, index ))
+    if (index >= SPELLBOOK_SIZE
+        || !is_valid_spell_in_book( you.inv[book].sub_type, index ))
     {
         canned_msg( MSG_HUH );
         return (false);

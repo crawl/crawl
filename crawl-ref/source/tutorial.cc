@@ -173,7 +173,7 @@ bool pick_tutorial()
 
             Options.random_pick = true; // random choice of starting spellbook
             Options.weapon = WPN_HAND_AXE; // easiest choice for fighters
-            return true;
+            return (true);
         }
 
         if (keyn == CK_BKSP || keyn == ' ')
@@ -189,17 +189,17 @@ bool pick_tutorial()
         {
         case CK_BKSP:
             choose_race();
-            return false;
+            return (false);
         case ' ':
             choose_class();
-            return false;
+            return (false);
         case 'X':
             cprintf(EOL "Goodbye!");
             end(0);
-            return false;
+            return (false);
         }
     }
-    return false;
+    return (false);
 }
 
 void print_tutorial_menu(unsigned int type)
@@ -207,7 +207,7 @@ void print_tutorial_menu(unsigned int type)
     char letter = 'a' + type;
     char desc[100];
 
-    switch(type)
+    switch (type)
     {
       case TUT_BERSERK_CHAR:
           strcpy(desc, "(Melee oriented character with divine support)");
@@ -3768,12 +3768,12 @@ bool tutorial_monster_interesting(const monsters *mons)
         return (true);
 
     // The monster is (seriously) out of depth.
-    if (you.level_type == LEVEL_DUNGEON &&
-        mons_level(mons->type) >= you.your_level + 8)
+    if (you.level_type == LEVEL_DUNGEON
+        && mons_level(mons->type) >= you.your_level + 8)
     {
         return (true);
     }
-    return false;
+    return (false);
 }
 
 void tutorial_describe_monster(const monsters *mons)

@@ -835,7 +835,7 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
     monster_type *b = static_cast<monster_type*>( entry_b->data );
 
     if (*a == *b)
-        return false;
+        return (false);
 
     std::string a_name = mons_type_name(*a, DESC_PLAIN);
     std::string b_name = mons_type_name(*b, DESC_PLAIN);
@@ -850,7 +850,7 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
     monster_type *b = static_cast<monster_type*>( entry_b->data );
 
     if (*a == *b)
-        return false;
+        return (false);
 
     int a_toughness = mons_global_level(*a);
     int b_toughness = mons_global_level(*b);
@@ -981,7 +981,7 @@ static std::vector<std::string> _get_monster_keys(unsigned char showchar)
         if (me->mc != i)
             continue;
 
-        if (getLongDescription(me->name) == "")
+        if (getLongDescription(me->name).empty())
             continue;
 
         if (me->showchar == showchar)
@@ -1164,7 +1164,7 @@ static bool _do_description(std::string key, std::string footer = "")
     clrscr();
     print_description(key + desc);
 
-    if (footer != "")
+    if (!footer.empty())
     {
         int num_lines = linebreak_string2(footer, width);
         num_lines++;
@@ -1277,7 +1277,7 @@ static bool _find_description(bool &again, std::string& error_inout)
         else
             regex = trimmed_string(buf);
 
-        if (regex == "")
+        if (regex.empty())
         {
             error_inout = "Description must contain at least "
                           "one non-space.";
@@ -1297,7 +1297,7 @@ static bool _find_description(bool &again, std::string& error_inout)
         // Try to get an exact match first.
         std::string desc = getLongDescription(regex);
 
-        if (desc != "")
+        if (!desc.empty())
             exact_match = true;
     }
 

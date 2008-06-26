@@ -192,19 +192,19 @@ void monsters::init_experience()
 bool monsters::gain_exp(int exp)
 {
     if (!alive())
-        return false;
+        return (false);
 
     init_experience();
     if (hit_dice >= MAX_MONS_HD)
-        return false;
+        return (false);
 
     // Only natural monsters can level-up.
     if (holiness() != MH_NATURAL)
-        return false;
+        return (false);
 
     // Avoid wrap-around.
     if (experience + exp < experience)
-        return false;
+        return (false);
 
     experience += exp;
 

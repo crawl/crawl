@@ -576,7 +576,7 @@ void seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
 void set_level_annotation(std::string str,
                           level_id li)
 {
-    if (str == "")
+    if (str.empty())
     {
         clear_level_annotation(li);
         return;

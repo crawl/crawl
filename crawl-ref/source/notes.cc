@@ -51,21 +51,21 @@ static bool _is_noteworthy_skill_level( int level )
 {
     for (unsigned int i = 0; i < Options.note_skill_levels.size(); ++i)
         if (level == Options.note_skill_levels[i])
-            return true;
+            return (true);
 
-    return false;
+    return (false);
 }
 
 static bool _is_highest_skill( int skill )
 {
-    for ( int i = 0; i < NUM_SKILLS; ++i )
+    for (int i = 0; i < NUM_SKILLS; ++i)
     {
-        if ( i == skill )
+        if (i == skill)
             continue;
-        if ( you.skills[i] >= you.skills[skill] )
-            return false;
+        if (you.skills[i] >= you.skills[skill])
+            return (false);
     }
-    return true;
+    return (true);
 }
 
 static bool _is_noteworthy_hp( int hp, int maxhp )

@@ -89,7 +89,7 @@ std::string score_file_name()
 {
     if (!SysEnv.scorefile.empty())
         return (SysEnv.scorefile);
-    
+
     return (Options.save_dir + "scores");
 }
 
@@ -101,13 +101,13 @@ std::string log_file_name()
 void hiscores_new_entry( const scorefile_entry &ne )
 {
     unwind_bool score_update(crawl_state.updating_scores, true);
-    
+
     FILE *scores;
     int i, total_entries;
     bool inserted = false;
 
     // open highscore file (reading) -- NULL is fatal!
-    // 
+    //
     // Opening as a+ instead of r+ to force an exclusive lock (see
     // hs_open) and to create the file if it's not there already.
     scores = _hs_open("a+", score_file_name());
@@ -116,7 +116,7 @@ void hiscores_new_entry( const scorefile_entry &ne )
 
     // we're at the end of the file, seek back to beginning.
     fseek(scores, 0, SEEK_SET);
-    
+
     // read highscore file, inserting new entry at appropriate point,
     for (i = 0; i < SCORE_FILE_ENTRIES; i++)
     {
@@ -167,7 +167,7 @@ void hiscores_new_entry( const scorefile_entry &ne )
     // closing it.
     if (ftruncate(fileno(scores), 0))
         end(1, true, "unable to truncate scorefile");
-    
+
     rewind(scores);
 
     // write scorefile entries.
@@ -184,7 +184,7 @@ void hiscores_new_entry( const scorefile_entry &ne )
 void logfile_new_entry( const scorefile_entry &ne )
 {
     unwind_bool logfile_update(crawl_state.updating_scores, true);
-    
+
     FILE *logfile;
     scorefile_entry le = ne;
 
@@ -227,7 +227,7 @@ static void _hiscores_print_entry(const scorefile_entry &se,
 void hiscores_print_all(int display_count, int format)
 {
     unwind_bool scorefile_display(crawl_state.updating_scores, true);
-    
+
     FILE *scores = _hs_open("r", score_file_name());
     if (scores == NULL)
     {
@@ -256,7 +256,7 @@ void hiscores_print_all(int display_count, int format)
 void hiscores_print_list( int display_count, int format )
 {
     unwind_bool scorefile_display(crawl_state.updating_scores, true);
-    
+
     FILE *scores;
     int i, total_entries;
 
@@ -344,7 +344,7 @@ static void _hiscore_date_string( time_t time, char buff[INFO_SIZE] )
     const char *mons[12] = { "Jan", "Feb", "Mar", "Apr", "May", "June",
                              "July", "Aug", "Sept", "Oct", "Nov", "Dec" };
 
-    snprintf( buff, INFO_SIZE, "%s %d, %d", mons[date->tm_mon], 
+    snprintf( buff, INFO_SIZE, "%s %d, %d", mons[date->tm_mon],
               date->tm_mday, date->tm_year + 1900 );
 }
 
@@ -353,7 +353,7 @@ static std::string _hiscore_newline_string()
     return (EOL "             ");
 }
 
-std::string hiscores_format_single_long( const scorefile_entry &se, 
+std::string hiscores_format_single_long( const scorefile_entry &se,
                                          bool verbose )
 {
     return se.hiscore_line( verbose ? scorefile_entry::DDV_VERBOSE
@@ -449,7 +449,7 @@ kill_method_type str_to_kill_method(const std::string &s)
 {
     ASSERT(NUM_KILLBY ==
            (int) sizeof(kill_method_names) / sizeof(*kill_method_names));
-    
+
     for (int i = 0; i < NUM_KILLBY; ++i)
     {
         if (s == kill_method_names[i])
@@ -557,7 +557,7 @@ bool scorefile_entry::parse(const std::string &line)
 std::string scorefile_entry::raw_string() const
 {
     set_score_fields();
-    
+
     if (!fields.get())
         return ("");
 
@@ -568,7 +568,7 @@ bool scorefile_entry::parse_scoreline(const std::string &line)
 {
     fields.reset(new xlog_fields(line));
     init_with_fields();
-    
+
     return (true);
 }
 
@@ -596,7 +596,7 @@ static level_area_type _str_to_level_area_type(const std::string &s)
     for (int i = 0; i < NUM_LEVEL_AREA_TYPES; ++i)
         if (s == level_type_names[i])
             return (static_cast<level_area_type>(i));
-            
+
     return (LEVEL_DUNGEON);
 }
 
@@ -625,7 +625,7 @@ void scorefile_entry::init_with_fields()
     final_hp         = fields->int_field("hp");
     final_max_hp     = fields->int_field("mhp");
     final_max_max_hp = fields->int_field("mmhp");
-    
+
     damage = fields->int_field("dam");
     str    = fields->int_field("str");
     intel  = fields->int_field("int");
@@ -635,12 +635,12 @@ void scorefile_entry::init_with_fields()
     piety    = fields->int_field("piety");
     penance  = fields->int_field("pen");
     wiz_mode = fields->int_field("wiz");
-    
+
     birth_time = _parse_time(fields->str_field("start"));
     death_time = _parse_time(fields->str_field("end"));
     real_time  = fields->long_field("dur");
     num_turns  = fields->long_field("turn");
-    
+
     num_diff_runes = fields->int_field("urune");
     num_runes      = fields->int_field("nrune");
 }
@@ -688,7 +688,7 @@ void scorefile_entry::set_base_xlog_fields() const
 
     if (wiz_mode)
         fields->add_field("wiz", "%d", wiz_mode);
-    
+
     fields->add_field("start", "%s", make_date_string(birth_time).c_str());
     fields->add_field("dur",   "%ld", real_time);
     fields->add_field("turn",  "%ld", num_turns);
@@ -697,7 +697,7 @@ void scorefile_entry::set_base_xlog_fields() const
         fields->add_field("urune", "%d", num_diff_runes);
 
     if (num_runes)
-        fields->add_field("nrune", "%d", num_runes);    
+        fields->add_field("nrune", "%d", num_runes);
 }
 
 void scorefile_entry::set_score_fields() const
@@ -708,7 +708,7 @@ void scorefile_entry::set_score_fields() const
         return;
 
     set_base_xlog_fields();
-    
+
     fields->add_field("sc", "%ld", points);
     fields->add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
     fields->add_field("killer", death_source_desc().c_str());
@@ -720,7 +720,7 @@ void scorefile_entry::set_score_fields() const
         fields->add_field("piety", "%d", piety);
     if (penance > 0)
         fields->add_field("pen", "%d", penance);
-    
+
     fields->add_field("end", "%s", make_date_string(death_time).c_str());
 
 #ifdef DGL_EXTENDED_LOGFILES
@@ -765,14 +765,14 @@ std::string scorefile_entry::short_kill_message() const
     return (msg);
 }
 
-void scorefile_entry::init_death_cause(int dam, int dsrc, 
+void scorefile_entry::init_death_cause(int dam, int dsrc,
                                        int dtype, const char *aux)
 {
     death_source = dsrc;
     death_type   = dtype;
     damage       = dam;
 
-    // Set the default aux data value... 
+    // Set the default aux data value...
     // If aux is passed in (ie for a trap), we'll default to that.
     if (aux == NULL)
         auxkilldata.clear();
@@ -785,7 +785,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     {
         const monsters *monster = &menv[death_source];
 
-        if (monster->type >= 0 && monster->type < NUM_MONSTERS) 
+        if (monster->type >= 0 && monster->type < NUM_MONSTERS)
         {
             death_source = monster->type;
             mon_num = monster->base_monster;
@@ -794,7 +794,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             // but now we pass it in as a string through the scorefile
             // entry to be appended in hiscores_format_single in long or
             // medium scorefile formats.
-            if (death_type == KILLED_BY_MONSTER 
+            if (death_type == KILLED_BY_MONSTER
                 && monster->inv[MSLOT_WEAPON] != NON_ITEM)
             {
                 // [ds] The highscore entry may be constructed while the player
@@ -810,7 +810,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
                     unset_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
                                        ISFLAG_IDENT_MASK );
 
-                    set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]], 
+                    set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
                                      ISFLAG_KNOW_TYPE );
 
                     // clear "runed" description text to make shorter yet
@@ -820,7 +820,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 
                 // Setting this is redundant for dancing weapons, however
                 // we do care about the above indentification. -- bwr
-                if (monster->type != MONS_DANCING_WEAPON) 
+                if (monster->type != MONS_DANCING_WEAPON)
                     auxkilldata = mitm[monster->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
             }
 
@@ -846,7 +846,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         || death_type == KILLED_BY_STUPIDITY
         || death_type == KILLED_BY_CLUMSINESS)
     {
-        if (auxkilldata == "")
+        if (auxkilldata.empty())
             auxkilldata = "unknown source";
     }
 }
@@ -895,22 +895,22 @@ static int _award_modified_experience()
 {
     int xp = you.experience;
     int result = 0;
-    
+
     if (xp <= 250000)
         return ((xp * 7) / 10);
-        
+
     result += (250000 * 7) / 10;
     xp -= 250000;
-    
+
     if (xp <= 750000)
     {
         result += (xp * 4) / 10;
         return (result);
     }
-    
+
     result += (750000 * 4) / 10;
     xp -= 750000;
-        
+
     if (xp <= 2000000)
     {
         result += (xp * 2) / 10;
@@ -919,9 +919,9 @@ static int _award_modified_experience()
 
     result += (2000000 * 2) / 10;
     xp -= 2000000;
-    
+
     result += (xp / 10);
-    
+
     return (result);
 }
 
@@ -963,7 +963,7 @@ void scorefile_entry::init()
      *    + (250,000 * distinct Runes) * (25,000/(turns/rune)), for winners only
      *
      */
-     
+
     // do points first.
     points = you.gold;
     points += _award_modified_experience();
@@ -977,7 +977,7 @@ void scorefile_entry::init()
 
     // inventory value is only calculated for winners
     const bool calc_item_values = (death_type == KILLED_BY_WINNING);
-    
+
     // Calculate value of pack and runes when character leaves dungeon
     for (int d = 0; d < ENDOFPACK; d++)
     {
@@ -1010,10 +1010,10 @@ void scorefile_entry::init()
         }
     }
 
-    // Bonus for exploring different areas, not for collecting a 
-    // huge stack of demonic runes in Pandemonium (gold value 
+    // Bonus for exploring different areas, not for collecting a
+    // huge stack of demonic runes in Pandemonium (gold value
     // is enough for those). -- bwr
-    
+
     if (calc_item_values && num_diff_runes >= 3)
         points += ((num_diff_runes + 2) * (num_diff_runes + 2) * 1000);
 
@@ -1039,7 +1039,7 @@ void scorefile_entry::init()
     final_hp         = you.hp;
     final_max_hp     = you.hp_max;
     final_max_max_hp = you.hp_max + player_rotted();
-    
+
     str   = std::max(you.strength - stat_modifier(STAT_STRENGTH), 1);
     intel = std::max(you.intel - stat_modifier(STAT_INTELLIGENCE), 1);
     dex   = std::max(you.dex - stat_modifier(STAT_DEXTERITY), 1);
@@ -1061,7 +1061,7 @@ void scorefile_entry::init()
 
     if (you.real_time != -1)
         real_time = you.real_time + long(death_time - you.start_time);
-    else 
+    else
         real_time = -1;
 
     num_turns = you.num_turns;
@@ -1134,14 +1134,14 @@ std::string scorefile_entry::death_source_desc() const
         return ("");
 
     // XXX no longer handles mons_num correctly! FIXME
-    return (!death_source_name.empty()? 
+    return (!death_source_name.empty()?
             death_source_name : mons_type_name(death_source, DESC_NOCAP_A));
 }
 
 std::string scorefile_entry::damage_string(bool terse) const
 {
     char scratch[50];
-    snprintf( scratch, sizeof scratch, "(%d%s)", damage, 
+    snprintf( scratch, sizeof scratch, "(%d%s)", damage,
                        terse? "" : " damage" );
     return (scratch);
 }
@@ -1163,7 +1163,7 @@ std::string scorefile_entry::terse_missile_name() const
     };
     const std::string &aux = auxkilldata;
     std::string missile;
-    
+
     for (unsigned i = 0; i < sizeof(pre_post) / sizeof(*pre_post); ++i)
     {
         if (aux.find(pre_post[i][0]) != 0)
@@ -1268,15 +1268,15 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     {
         snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s (level %d",
                   points, name.c_str(),
-                  skill_title( best_skill, best_skill_lvl, 
+                  skill_title( best_skill, best_skill_lvl,
                                race, str, dex, god ).c_str(), lvl );
         desc = buf;
     }
-    else 
+    else
     {
         snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s %s (level %d",
                   points, name.c_str(),
-                  species_name(static_cast<species_type>(race), lvl).c_str(), 
+                  species_name(static_cast<species_type>(race), lvl).c_str(),
                   get_class_name(cls), lvl );
         desc = buf;
     }
@@ -1339,7 +1339,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                              (piety >=  50) ? "a Believer" :
                              (piety >=  30) ? "a Follower"
                                             : "an Initiate",
-                          god_name(god).c_str(), 
+                          god_name(god).c_str(),
                              (penance > 0) ? " (penitent)." : "." );
 
                 desc += scratch;
@@ -1384,7 +1384,7 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
 
     place += placename;
 
-    if (verbose && death_time 
+    if (verbose && death_time
         && !_hiscore_same_day( birth_time, death_time ))
     {
         place += " on ";
@@ -1418,7 +1418,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
     char scratch[INFO_SIZE];
 
     std::string desc;
-    
+
     if (oneline)
         desc = " ";
 
@@ -1462,7 +1462,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         if (oneline || semiverbose)
         {
             // keeping this short to leave room for the deep elf spellcasters:
-            snprintf( scratch, sizeof(scratch), "%s by ", 
+            snprintf( scratch, sizeof(scratch), "%s by ",
                       _range_type_verb( auxkilldata.c_str() ) );
             desc += scratch;
             desc += death_source_desc();
@@ -1560,7 +1560,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         else
         {
             snprintf( scratch, sizeof(scratch),
-                      "Killed by triggering a%s trap", 
+                      "Killed by triggering a%s trap",
                       auxkilldata.c_str() );
             desc += scratch;
         }
@@ -1619,7 +1619,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             else
             {
                 // A lot of sources for this case... some have "by" already.
-                snprintf( scratch, sizeof(scratch), "Killed %s%s", 
+                snprintf( scratch, sizeof(scratch), "Killed %s%s",
                           (auxkilldata.find("by ") != 0) ? "by " : "",
                           auxkilldata.c_str() );
                 desc += scratch;
@@ -1686,7 +1686,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         desc += terse? "acid" : "Splashed by acid";
         needs_damage = true;
         break;
-    
+
     case KILLED_BY_CURARE:
         desc += terse? "asphyx" : "Asphyxiated";
         break;
@@ -1814,7 +1814,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             {
                 if (!semiverbose)
                 {
-                    desc += (is_vowel( auxkilldata[0] )) ? "... with an " 
+                    desc += (is_vowel( auxkilldata[0] )) ? "... with an "
                         : "... with a ";
                     desc += auxkilldata;
                     needs_damage = true;
@@ -1830,7 +1830,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
             if (!semiverbose)
             {
-                if (needs_damage && !done_damage && damage > 0) 
+                if (needs_damage && !done_damage && damage > 0)
                     desc += " " + damage_string();
 
                 if (needs_damage)
@@ -1991,7 +1991,7 @@ std::string xlog_fields::xlog_line() const
         // Don't write empty fields.
         if (f.second.empty())
             continue;
-        
+
         if (!line.empty())
             line += ":";
 

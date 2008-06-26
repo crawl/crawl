@@ -130,7 +130,7 @@ void update_tip_text(const char *tip)
 
 bool libgui_init_sys( )
 {
-    return true;
+    return (true);
 }
 
 void libgui_shutdown_sys()
@@ -141,7 +141,7 @@ void libgui_shutdown_sys()
 }
 
 void GetNextEvent(int *etype, int *key, bool *sh, bool *ct,
-        int *x1, int *y1, int *x2, int *y2)
+                  int *x1, int *y1, int *x2, int *y2)
 {
     MSG msg;
 
@@ -520,9 +520,9 @@ bool windows_change_font(char *font_name, int *font_size, bool dos)
     {
         *font_size = (cf.iPointSize / 10);
         strcpy(font_name, lf.lfFaceName);
-        return true;
+        return (true);
     }
-    return false;
+    return (false);
 }
 
 void windows_get_winpos(int *x, int *y)
@@ -532,7 +532,7 @@ void windows_get_winpos(int *x, int *y)
     // set length
     wndpl.length = sizeof( WINDOWPLACEMENT );
 
-    if ( GetWindowPlacement( win_main->hWnd, &wndpl ) != 0 )
+    if (GetWindowPlacement( win_main->hWnd, &wndpl ) != 0)
     {
         *x = wndpl.rcNormalPosition.top;
         *y = wndpl.rcNormalPosition.left;

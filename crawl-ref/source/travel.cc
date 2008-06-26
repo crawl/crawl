@@ -654,9 +654,9 @@ bool is_travelable_stair(dungeon_feature_type gridc)
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
-        return true;
+        return (true);
     default:
-        return false;
+        return (false);
     }
 }
 
@@ -673,9 +673,9 @@ bool is_gate(dungeon_feature_type gridc)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
-        return true;
+        return (true);
     default:
-        return false;
+        return (false);
     }
 }
 
@@ -1975,11 +1975,11 @@ static bool _is_known_branch_id(int branch)
 {
     // The main dungeon is always known.
     if (branch == BRANCH_MAIN_DUNGEON)
-        return true;
+        return (true);
 
     // If we're in the branch, it darn well is known.
     if (you.where_are_you == branch)
-        return true;
+        return (true);
 
     // The Vestibule is special: there are no stairs to it, just a
     // portal
@@ -3331,9 +3331,9 @@ bool LevelInfo::is_known_branch(unsigned char branch) const
 {
     for (int i = 0, count = stairs.size(); i < count; ++i)
         if (stairs[i].destination.id.branch == branch)
-            return true;
+            return (true);
 
-    return false;
+    return (false);
 }
 
 void LevelInfo::save(writer& outf) const
@@ -3600,9 +3600,9 @@ bool TravelCache::is_known_branch(unsigned char branch) const
     std::map<level_id, LevelInfo>::const_iterator i = levels.begin();
     for ( ; i != levels.end(); ++i)
         if (i->second.is_known_branch(branch))
-            return true;
+            return (true);
 
-    return false;
+    return (false);
 }
 
 void TravelCache::save(writer& outf) const

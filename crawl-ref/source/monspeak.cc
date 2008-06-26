@@ -215,7 +215,7 @@ bool mons_speaks(const monsters *monster)
     if (monster->invisible() && !(player_monster_visible(monster)
                                   && monster->has_ench(ENCH_CONFUSION)))
     {
-        return false;
+        return (false);
     }
 
     // Silenced monsters only "speak" 1/3 as often as non-silenced,
@@ -226,27 +226,27 @@ bool mons_speaks(const monsters *monster)
         && get_monster_data(monster->type)->shouts != S_SILENT)
     {
         if (!one_chance_in(3))
-            return false;
+            return (false);
     }
 
     // Berserk monsters just want your hide.
     if (monster->has_ench(ENCH_BERSERK))
-        return false;
+        return (false);
 
     // Monsters in a battle frenzy are likewise occupied.
     if (monster->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))
-        return false;
+        return (false);
 
     // Charmed monsters aren't too expressive.
     if (monster->has_ench(ENCH_CHARM) && !one_chance_in(3))
-        return false;
+        return (false);
 
 
     std::vector<std::string> prefixes;
     if (mons_neutral(monster))
     {
         if (coinflip()) // Neutrals speak half as often.
-            return false;
+            return (false);
 
         prefixes.push_back("neutral");
     }
@@ -341,7 +341,7 @@ bool mons_speaks(const monsters *monster)
 #ifdef DEBUG_MONSPEAK
         mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-        return false;
+        return (false);
     }
 
     // Now that we're not dealing with a specific monster name, include
@@ -369,7 +369,7 @@ bool mons_speaks(const monsters *monster)
 #ifdef DEBUG_MONSPEAK
         mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-        return false;
+        return (false);
     }
 
     // Monster symbol didn't work, try monster shape.  Since we're
@@ -421,7 +421,7 @@ bool mons_speaks(const monsters *monster)
 #ifdef DEBUG_MONSPEAK
         mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-        return false;
+        return (false);
     }
 
     // If we failed to get a message with a winged or tailed humanoid,
@@ -453,7 +453,7 @@ bool mons_speaks(const monsters *monster)
 #ifdef DEBUG_MONSPEAK
                     mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-                    return false;
+                    return (false);
                 }
 
                 if (msg2 == "__NONE")
@@ -476,7 +476,7 @@ bool mons_speaks(const monsters *monster)
         mprf(MSGCH_DIAGNOSTICS, "final result: %s!",
              (msg.empty() ? "empty" : "\"__NONE\""));
 #endif
-        return false;
+        return (false);
     }
 
     if (msg == "__NEXT")
@@ -484,7 +484,7 @@ bool mons_speaks(const monsters *monster)
         msg::streams(MSGCH_DIAGNOSTICS)
             << "__NEXT used by shape-based speech string for monster '"
             << monster->name(DESC_PLAIN) << "'" << std::endl;
-        return false;
+        return (false);
     }
 
     // We have a speech string, now parse and act on it.
@@ -562,5 +562,5 @@ bool mons_speaks(const monsters *monster)
         mpr(line.c_str(), msg_type);
     }
 
-    return true;
+    return (true);
 }                               // end mons_speaks = end of routine

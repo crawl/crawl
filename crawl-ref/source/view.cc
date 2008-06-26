@@ -866,7 +866,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
 static void _handle_seen_interrupt(monsters* monster)
 {
     activity_interrupt_data aid(monster);
-    if (monster->seen_context != "")
+    if (!monster->seen_context.empty())
         aid.context = monster->seen_context;
     else if (testbits(monster->flags, MF_WAS_IN_VIEW))
         aid.context = "already seen";
@@ -995,7 +995,7 @@ void handle_monster_shouts(monsters* monster, bool force)
 
     if (msg == "__DEFAULT" || msg == "__NEXT")
         msg = getShoutString(default_msg_key, suffix);
-    else if (msg == "")
+    else if (msg.empty())
     {
         // See if there's a shout for all monsters using the
         // same glyph/symbol
@@ -1009,7 +1009,7 @@ void handle_monster_shouts(monsters* monster, bool force)
         glyph_key += "'";
         msg = getShoutString(glyph_key, suffix);
 
-        if (msg == "" || msg == "__DEFAULT")
+        if (msg.empty() || msg == "__DEFAULT")
             msg = getShoutString(default_msg_key, suffix);
     }
 
@@ -1018,11 +1018,11 @@ void handle_monster_shouts(monsters* monster, bool force)
         msg::streams(MSGCH_SOUND) << "You hear something buggy!"
                                   << std::endl;
     }
-    else if (s_type == S_SILENT && (msg == "" || msg == "__NONE"))
+    else if (s_type == S_SILENT && (msg.empty() || msg == "__NONE"))
     {
         ; // No "visual shout" defined for silent monster, do nothing.
     }
-    else if (msg == "") // Still nothing found?
+    else if (msg.empty()) // Still nothing found?
     {
         msg::streams(MSGCH_DIAGNOSTICS)
             << "No shout entry for default shout type '"
@@ -1930,36 +1930,36 @@ static int _shoot_ray( double accx, double accy, const double slope,
 {
     int curx, cury;
     int cellnum;
-    for ( cellnum = 0; true; ++cellnum )
+    for (cellnum = 0; true; ++cellnum)
     {
         _find_next_intercept( &accx, &accy, slope );
         curx = static_cast<int>(accx);
         cury = static_cast<int>(accy);
-        if ( curx > maxrange || cury > maxrange )
+        if (curx > maxrange || cury > maxrange)
             break;
 
-        // work with the new square
+        // Work with the new square.
         xpos[cellnum] = curx;
         ypos[cellnum] = cury;
     }
     return cellnum;
 }
 
-// check if the passed ray has already been created
+// Check if the passed ray has already been created.
 static bool _is_duplicate_ray( int len, int xpos[], int ypos[] )
 {
     int cur_offset = 0;
-    for ( unsigned int i = 0; i < raylengths.size(); ++i )
+    for (unsigned int i = 0; i < raylengths.size(); ++i)
     {
-        // only compare equal-length rays
-        if ( raylengths[i] != len )
+        // Only compare equal-length rays.
+        if (raylengths[i] != len)
         {
             cur_offset += raylengths[i];
             continue;
         }
 
         int j;
-        for ( j = 0; j < len; ++j )
+        for (j = 0; j < len; ++j)
         {
             if (ray_coord_x[j + cur_offset] != xpos[j]
                 || ray_coord_y[j + cur_offset] != ypos[j])
@@ -1968,41 +1968,46 @@ static bool _is_duplicate_ray( int len, int xpos[], int ypos[] )
             }
         }
 
-        // exact duplicate?
-        if ( j == len )
-            return true;
+        // Exact duplicate?
+        if (j == len)
+            return (true);
 
-        // move to beginning of next ray
+        // Move to beginning of next ray.
         cur_offset += raylengths[i];
     }
-    return false;
+    return (false);
 }
 
-// is starta...lengtha a subset of startb...lengthb?
+// Is starta...lengtha a subset of startb...lengthb?
 static bool _is_subset( int starta, int startb, int lengtha, int lengthb )
 {
     int cura = starta, curb = startb;
     int enda = starta + lengtha, endb = startb + lengthb;
-    while ( cura < enda && curb < endb )
+
+    while (cura < enda && curb < endb)
     {
-        if ( ray_coord_x[curb] > ray_coord_x[cura] )
-            return false;
-        if ( ray_coord_y[curb] > ray_coord_y[cura] )
-            return false;
-        if ( ray_coord_x[cura] == ray_coord_x[curb] &&
-             ray_coord_y[cura] == ray_coord_y[curb] )
+        if (ray_coord_x[curb] > ray_coord_x[cura])
+            return (false);
+        if (ray_coord_y[curb] > ray_coord_y[cura])
+            return (false);
+
+        if (ray_coord_x[cura] == ray_coord_x[curb]
+            && ray_coord_y[cura] == ray_coord_y[curb])
+        {
             ++cura;
+        }
 
         ++curb;
     }
-    return ( cura == enda );
+
+    return (cura == enda);
 }
 
-// return a vector which lists all the nonduped cellrays (by index)
+// Returns a vector which lists all the nonduped cellrays (by index).
 static std::vector<int> _find_nonduped_cellrays()
 {
-    // a cellray c in a fullray f is duped if there is a fullray g
-    // such that g contains c and g[:c] is a subset of f[:c]
+    // A cellray c in a fullray f is duped if there is a fullray g
+    // such that g contains c and g[:c] is a subset of f[:c].
     int raynum, cellnum, curidx, testidx, testray, testcell;
     bool is_duplicate;
 
@@ -2013,9 +2018,9 @@ static std::vector<int> _find_nonduped_cellrays()
     {
         for (cellnum = 0; cellnum < raylengths[raynum]; ++cellnum)
         {
-            // is the cellray raynum[cellnum] duplicated?
+            // Is the cellray raynum[cellnum] duplicated?
             is_duplicate = false;
-            // XXX We should really check everything up to now
+            // XXX: We should really check everything up to now
             // completely, and all further rays to see if they're
             // proper subsets.
             const int curx = ray_coord_x[curidx + cellnum];
@@ -2023,26 +2028,27 @@ static std::vector<int> _find_nonduped_cellrays()
             for (testidx = 0, testray = 0; testray < raynum;
                  testidx += raylengths[testray++])
             {
-                // scan ahead to see if there's an intersect
-                for ( testcell = 0; testcell < raylengths[raynum]; ++testcell )
+                // Scan ahead to see if there's an intersect.
+                for (testcell = 0; testcell < raylengths[raynum]; ++testcell)
                 {
                     const int testx = ray_coord_x[testidx + testcell];
                     const int testy = ray_coord_y[testidx + testcell];
-                    // we can short-circuit sometimes
-                    if ( testx > curx || testy > cury )
+                    // We can short-circuit sometimes.
+                    if (testx > curx || testy > cury)
                         break;
-                    // bingo!
-                    if ( testx == curx && testy == cury )
+
+                    // Bingo!
+                    if (testx == curx && testy == cury)
                     {
                         is_duplicate = _is_subset(testidx, curidx,
                                                   testcell, cellnum);
                         break;
                     }
                 }
-                if ( is_duplicate )
-                    break;      // no point in checking further rays
+                if (is_duplicate)
+                    break;      // No point in checking further rays.
             }
-            if ( !is_duplicate )
+            if (!is_duplicate)
                 result.push_back(curidx + cellnum);
         }
     }
@@ -2056,19 +2062,19 @@ static bool _register_ray( double accx, double accy, double slope )
     int xpos[LOS_MAX_RANGE * 2 + 1], ypos[LOS_MAX_RANGE * 2 + 1];
     int raylen = _shoot_ray( accx, accy, slope, LOS_MAX_RANGE, xpos, ypos );
 
-    // early out if ray already exists
-    if ( _is_duplicate_ray(raylen, xpos, ypos) )
-        return false;
+    // Early out if ray already exists.
+    if (_is_duplicate_ray(raylen, xpos, ypos))
+        return (false);
 
-    // not duplicate, register
-    for ( int i = 0; i < raylen; ++i )
+    // Not duplicate, register.
+    for (int i = 0; i < raylen; ++i)
     {
-        // create the cellrays
+        // Create the cellrays.
         ray_coord_x.push_back(xpos[i]);
         ray_coord_y.push_back(ypos[i]);
     }
 
-    // register the fullray
+    // Register the fullray.
     raylengths.push_back(raylen);
     ray_def ray;
     ray.accx = accx;
@@ -2077,7 +2083,7 @@ static bool _register_ray( double accx, double accy, double slope )
     ray.quadrant = 0;
     fullrays.push_back(ray);
 
-    return true;
+    return (true);
 }
 
 static void _create_blockrays()
@@ -2816,7 +2822,7 @@ static bool _is_feature_fudged(int feature, int x, int y)
         case DNGN_EXIT_ABYSS:
         case DNGN_EXIT_PANDEMONIUM:
         case DNGN_RETURN_FROM_ZOT:
-            return true;
+            return (true);
         default:
             return (false);
         }
@@ -3664,7 +3670,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     tile_clear_buf();
 #endif
 
-    return true;
+    return (true);
 }                               // end magic_mapping()
 
 // Realize that this is simply a repackaged version of
@@ -5136,30 +5142,38 @@ class _inline_layout : public _layout
  public:
     _inline_layout(coord_def termsz_, coord_def hudsz_) :
         _layout(termsz_, hudsz_)
-    { valid = _init(); }
+    {
+        valid = _init();
+    }
+
     bool _init()
     {
         // x: View gets leftover; then mlist; then hud gutter
         if (leftover_x() < 0)
-            return false;
+            return (false);
 
         _increment(viewsz.x,   leftover_x(), Options.view_max_width);
-        if ((viewsz.x % 2) != 1) --viewsz.x;
+
+        if ((viewsz.x % 2) != 1)
+            --viewsz.x;
+
         mlistsz.x = hudsz.x;
         _increment(mlistsz.x,  leftover_x(), MLIST_MAX_WIDTH);
         _increment(hud_gutter, leftover_x(), HUD_MAX_GUTTER);
         _increment(mlistsz.x,  leftover_x(), INT_MAX);
-        msgsz.x = termsz.x-1; // Can't use last character
+        msgsz.x = termsz.x-1; // Can't use last character.
 
-        // y: View gets as much as it wants
-        // mlist tries to get at least its minimum
-        // msg expands as much as it wants
-        // mlist gets any leftovers
+        // y: View gets as much as it wants.
+        // mlist tries to get at least its minimum.
+        // msg expands as much as it wants.
+        // mlist gets any leftovers.
         if (leftover_y() < 0)
-            return false;
+            return (false);
 
         _increment(viewsz.y, leftover_leftcol_y(), Options.view_max_height);
-        if ((viewsz.y % 2) != 1) --viewsz.y;
+        if ((viewsz.y % 2) != 1)
+            --viewsz.y;
+
         if (Options.classic_hud)
         {
             mlistsz.y = 0;
@@ -5173,14 +5187,14 @@ class _inline_layout : public _layout
             _increment(mlistsz.y, leftover_rightcol_y(), INT_MAX);
         }
 
-        // Finish off by doing the positions
+        // Finish off by doing the positions.
         viewp  = termp;
         msgp   = termp + coord_def(0, std::max(viewsz.y, hudsz.y+mlistsz.y));
         hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
         mlistp = hudp  + coord_def(0, hudsz.y);
 
         _assert_validity();
-        return true;
+        return (true);
     }
 
     int leftover_x() const
@@ -5212,31 +5226,40 @@ class _mlist_col_layout : public _layout
         // take some for the view.  If it makes the layout fail, that's fine.
         _increment(viewsz.x, MLIST_MIN_WIDTH/2, Options.view_max_width);
 
-        // x: View and mlist share leftover; then hud gutter
-        if (leftover_x() < 0) return false;
+        // x: View and mlist share leftover; then hud gutter.
+        if (leftover_x() < 0)
+            return (false);
 
         _increment(mlistsz.x,  leftover_x()/2, MLIST_MAX_WIDTH);
         _increment(viewsz.x,   leftover_x(),   Options.view_max_width);
-        if ((viewsz.x % 2) != 1) --viewsz.x;
+
+        if ((viewsz.x % 2) != 1)
+            --viewsz.x;
+
         _increment(mlistsz.x,  leftover_x(),   MLIST_MAX_WIDTH);
         _increment(hud_gutter, leftover_x(),   HUD_MAX_GUTTER);
-        msgsz.x = termsz.x-1; // Can't use last character
+        msgsz.x = termsz.x-1; // Can't use last character.
 
-        // y: View gets leftover; then message
-        if (leftover_y() < 0) return false;
+        // y: View gets leftover; then message.
+        if (leftover_y() < 0)
+            return (false);
+
         _increment(viewsz.y, leftover_y(), Options.view_max_height);
-        if ((viewsz.y % 2) != 1) --viewsz.y;
+
+        if ((viewsz.y % 2) != 1)
+            --viewsz.y;
+
         _increment(msgsz.y,  leftover_y(), INT_MAX);
         mlistsz.y = viewsz.y;
 
-        // Finish off by doing the positions
+        // Finish off by doing the positions.
         mlistp = termp;
         viewp  = mlistp+ coord_def(mlistsz.x+MLIST_GUTTER, 0);
         msgp   = termp + coord_def(0, viewsz.y);
         hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
 
         _assert_validity();
-        return true;
+        return (true);
     }
  private:
     int leftover_x() const

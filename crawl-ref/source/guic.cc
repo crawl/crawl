@@ -348,15 +348,20 @@ void MapRegionClass::resize(int mx0, int my0, int dx0, int dy0)
 
 bool RegionClass::is_active()
 {
-    if (!flag) return false;
+    if (!flag)
+        return (false);
+
     if (win->active_layer == layer)
-        return true;
-    else return false;
+        return (true);
+    else
+        return (false);
 }
 
 void RegionClass::make_active()
 {
-    if (!flag) return;
+    if (!flag)
+        return;
+
     win->active_layer = layer;
 }
 
@@ -398,8 +403,8 @@ bool RegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
     int cx2 = x2-ox;
     int cy2 = y2-oy;
 
-    if ( (cx2 < 0) || (cy2 < 0) || (cx1 >= dx*mx) || (cy1 >=dy*my))
-        return false;
+    if (cx2 < 0 || cy2 < 0 || cx1 >= dx * mx || cy1 >= dy * my)
+        return (false);
 
     cx1 /= dx;
     cy1 /= dy;
@@ -420,7 +425,7 @@ bool RegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
     *rx2 = cx2;
     *ry2 = cy2;
 
-    return true;
+    return (true);
 }
 
 bool TileRegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
@@ -436,7 +441,7 @@ bool TileRegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
     int wwy = dy*my;
 
     if (cx2 < 0 || cy2 < 0 || cx1 >= wwx || cy1 >=wwy)
-        return false;
+        return (false);
 
     if (cx2 >= wwx - 1)
         cx2 = wwx - 1;
@@ -452,57 +457,76 @@ bool TileRegionClass::convert_redraw_rect(int x1, int y1, int x2, int y2,
     *rx2 = cx2;
     *ry2 = cy2;
 
-    return true;
+    return (true);
 }
 
 bool RegionClass::mouse_pos(int mouse_x, int mouse_y, int *cx, int *cy)
 {
     int x = mouse_x - ox;
     int y = mouse_y - oy;
-    if (!is_active()) return false;
-    if ( x < 0 || y < 0 ) return false;
+
+    if (!is_active())
+        return (false);
+    if ( x < 0 || y < 0 )
+        return (false);
+
     x /= dx;
     y /= dy;
-    if (x >= mx || y >= my) return false;
+
+    if (x >= mx || y >= my)
+        return (false);
+
     *cx = x;
     *cy = y;
-    return true;
+
+    return (true);
 }
 
 bool MapRegionClass::mouse_pos(int mouse_x, int mouse_y, int *cx, int *cy)
 {
     int x = mouse_x - ox - x_margin;
     int y = mouse_y - oy - y_margin;
-    if ( x < 0 || y < 0 ) return false;
+
+    if (x < 0 || y < 0)
+        return (false);
+
     x /= dx;
     y /= dy;
-    if (x >= mx || y >= my) return false;
-    if (!is_active()) return false;
+
+    if (x >= mx || y >= my)
+        return (false);
+    if (!is_active())
+        return (false);
 
     *cx = x;
     *cy = y;
-    return true;
+
+    return (true);
 }
 
 bool TileRegionClass::mouse_pos(int mouse_x, int mouse_y, int *cx, int *cy)
 {
     int x = mouse_x - ox;
     int y = mouse_y - oy;
-    if (!is_active()) return false;
-    if ( x < 0 || y < 0 ) return false;
-    if ( x >= dx*mx || y >= dy*my ) return false;
+
+    if (!is_active())
+        return (false);
+    if (x < 0 || y < 0)
+        return (false);
+    if (x >= dx * mx || y >= dy * my)
+        return (false);
 
     x /= dx;
     y /= dy;
     *cx = x;
     *cy = y;
 
-    return true;
+    return (true);
 }
 
-/*
- * Text related
- */
+//
+// Text related
+//
 
 void TextRegionClass::scroll()
 {

@@ -907,7 +907,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
             if (idx != -1)
             {
                 make_item_unrandart( item, idx );
-                return true;
+                return (true);
             }
         }
 
@@ -939,7 +939,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         {
             do_curse_item( item );
         }
-        return true;
+        return (true);
     }
 
     // If it isn't an artefact yet, try to make a fixed artefact.
@@ -951,10 +951,10 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
         mprf(MSGCH_DIAGNOSTICS, "Making fixed artefact.");
 #endif
         if (make_item_fixed_artefact( item, (item_level == 51) ))
-            return true;
+            return (true);
     }
 
-    return false;
+    return (false);
 }
 
 static item_status_flag_type _determine_weapon_race(const item_def& item,
@@ -1832,7 +1832,7 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
             if (idx != -1)
             {
                 make_item_unrandart( item, idx );
-                return true;
+                return (true);
             }
         }
 
@@ -1865,9 +1865,10 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
             if (item.plus < 0 && !one_chance_in(3))
                 do_curse_item( item );
         }
-        return true;
+        return (true);
     }
-    return false;
+
+    return (false);
 }
 
 static item_status_flag_type _determine_armour_race(const item_def& item,
@@ -2879,24 +2880,24 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (item.sub_type == WPN_CLUB || item.sub_type == WPN_GIANT_CLUB
         || item.sub_type == WPN_GIANT_SPIKED_CLUB)
     {
-        return false;
+        return (false);
     }
 
     if (get_equip_desc(item) != ISFLAG_NO_DESC)
-        return false;
+        return (false);
 
 
     if (visibly_branded || is_random_artefact(item))
-        return true;
+        return (true);
 
     if ((item.plus || item.plus2)
         && (one_chance_in(3)
             || get_equip_race(item) && one_chance_in(7)))
     {
-        return true;
+        return (true);
     }
 
-    return false;
+    return (false);
 }
 
 static void _give_monster_item(monsters *mon, int thing,

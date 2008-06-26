@@ -99,7 +99,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if (!ignore_temporary_disability && you.duration[DUR_BERSERKER])
     {
         SAY(canned_msg(MSG_TOO_BERSERK));
-        return false;
+        return (false);
     }
 
     if (!can_equip( EQ_WEAPON, ignore_temporary_disability ))
@@ -139,36 +139,37 @@ bool can_wield(const item_def *weapon, bool say_reason,
             && item_mass( *weapon ) >= 300)
     {
         SAY(mpr("That's too large and heavy for you to wield."));
-        return false;
+        return (false);
     }
 
+    // FIXME: We should use a size check here instead.
     if ((you.species == SP_HALFLING || you.species == SP_GNOME
             || you.species == SP_KOBOLD || you.species == SP_SPRIGGAN)
-            && (weapon->sub_type == WPN_GREAT_SWORD
-                || weapon->sub_type == WPN_TRIPLE_SWORD
-                || weapon->sub_type == WPN_GREAT_MACE
-                || weapon->sub_type == WPN_DIRE_FLAIL
-                || weapon->sub_type == WPN_BATTLEAXE
-                || weapon->sub_type == WPN_EXECUTIONERS_AXE
-                || weapon->sub_type == WPN_BARDICHE
-                || weapon->sub_type == WPN_HALBERD
-                || weapon->sub_type == WPN_GLAIVE
-                || weapon->sub_type == WPN_GIANT_CLUB
-                || weapon->sub_type == WPN_GIANT_SPIKED_CLUB
-                || weapon->sub_type == WPN_LONGBOW
-                || weapon->sub_type == WPN_SCYTHE))
+        && (weapon->sub_type == WPN_GREAT_SWORD
+            || weapon->sub_type == WPN_TRIPLE_SWORD
+            || weapon->sub_type == WPN_GREAT_MACE
+            || weapon->sub_type == WPN_DIRE_FLAIL
+            || weapon->sub_type == WPN_BATTLEAXE
+            || weapon->sub_type == WPN_EXECUTIONERS_AXE
+            || weapon->sub_type == WPN_BARDICHE
+            || weapon->sub_type == WPN_HALBERD
+            || weapon->sub_type == WPN_GLAIVE
+            || weapon->sub_type == WPN_GIANT_CLUB
+            || weapon->sub_type == WPN_GIANT_SPIKED_CLUB
+            || weapon->sub_type == WPN_LONGBOW
+            || weapon->sub_type == WPN_SCYTHE))
     {
         SAY(mpr("That's too large for you to wield."));
-        return false;
+        return (false);
     }
 
     int weap_brand = get_weapon_brand( *weapon );
     if ((you.is_undead || you.species == SP_DEMONSPAWN)
-            && (weap_brand == SPWPN_HOLY_WRATH
-                || is_blessed_blade(*weapon)))
+        && (weap_brand == SPWPN_HOLY_WRATH
+            || is_blessed_blade(*weapon)))
     {
         SAY(mpr("This weapon will not allow you to wield it."));
-        return false;
+        return (false);
     }
 
     if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
@@ -178,7 +179,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
     }
 
     // We can wield this weapon. Phew!
-    return true;
+    return (true);
 
 #undef SAY
 }
@@ -1150,13 +1151,13 @@ bool takeoff_armour(int item)
     if (you.inv[item].base_type != OBJ_ARMOUR)
     {
         mpr("You aren't wearing that!");
-        return false;
+        return (false);
     }
 
     if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
-        return false;
+        return (false);
     }
 
     if (item_cursed( you.inv[item] ))
@@ -1167,7 +1168,7 @@ bool takeoff_armour(int item)
             {
                 mprf("%s is stuck to your body!",
                      you.inv[item].name(DESC_CAP_YOUR).c_str());
-                return false;
+                return (false);
             }
         }
     }
@@ -1194,17 +1195,15 @@ bool takeoff_armour(int item)
             else
             {
                 mpr("Your cloak prevents you from removing the armour.");
-                return false;
+                return (false);
             }
         }
 
         if (item != you.equip[EQ_BODY_ARMOUR])
         {
             mpr("You aren't wearing that!");
-            return false;
+            return (false);
         }
-
-        // you.equip[EQ_BODY_ARMOUR] = -1;
     }
     else
     {
@@ -1214,7 +1213,7 @@ bool takeoff_armour(int item)
             if (item != you.equip[EQ_SHIELD])
             {
                 mpr("You aren't wearing that!");
-                return false;
+                return (false);
             }
             break;
 
@@ -1222,7 +1221,7 @@ bool takeoff_armour(int item)
             if (item != you.equip[EQ_CLOAK])
             {
                 mpr("You aren't wearing that!");
-                return false;
+                return (false);
             }
             break;
 
@@ -1230,7 +1229,7 @@ bool takeoff_armour(int item)
             if (item != you.equip[EQ_HELMET])
             {
                 mpr("You aren't wearing that!");
-                return false;
+                return (false);
             }
             break;
 
@@ -1238,7 +1237,7 @@ bool takeoff_armour(int item)
             if (item != you.equip[EQ_GLOVES])
             {
                 mpr("You aren't wearing that!");
-                return false;
+                return (false);
             }
             break;
 
@@ -1246,7 +1245,7 @@ bool takeoff_armour(int item)
             if (item != you.equip[EQ_BOOTS])
             {
                 mpr("You aren't wearing that!");
-                return false;
+                return (false);
             }
             break;
 
@@ -1263,7 +1262,7 @@ bool takeoff_armour(int item)
     if (removedCloak)
         start_delay( DELAY_ARMOUR_ON, 1, cloak );
 
-    return true;
+    return (true);
 }                               // end takeoff_armour()
 
 int get_next_fire_item(int current, int direction)
@@ -1451,19 +1450,21 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         if (!_fire_validate_item(slot, warn))
         {
             mpr(warn.c_str());
-            return false;
+            return (false);
         }
-        beh.m_slot = slot; // Force item to be the prechosen one.
+        // Force item to be the prechosen one.
+        beh.m_slot = slot;
     }
 
     beh.message_ammo_prompt();
-    message_current_target();  // XXX: This stuff should be done by direction()!
+    // XXX: This stuff should be done by direction()!
+    message_current_target();
     direction( target, DIR_NONE, TARG_ENEMY, -1, false, !teleport, NULL, &beh );
 
     if (beh.m_slot == -1)
     {
         canned_msg(MSG_OK);
-        return false;
+        return (false);
     }
     if (!target.isValid)
     {
@@ -1472,6 +1473,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         return (false);
     }
 
+    // Currently no difference between f() and fi.
     you.m_quiver->on_item_fired(you.inv[beh.m_slot], beh.chosen_ammo);
 /*
     // If ammo was chosen via 'fi', it's not supposed to get quivered.
@@ -1517,31 +1519,31 @@ static int _fire_prompt_for_item(std::string& err)
     return slot;
 }
 
-// Return false and err text if this item can't be fired.
-static bool _fire_validate_item(int slot, std::string& err)
+// Returns false and err text if this item can't be fired.
+static bool _fire_validate_item(int slot, std::string &err)
 {
     if (slot == you.equip[EQ_WEAPON]
         && you.inv[slot].base_type == OBJ_WEAPONS
         && item_cursed(you.inv[slot]))
     {
         err = "That weapon is stuck to your hand!";
-        return false;
+        return (false);
     }
-    else if ( wearing_slot(slot) )
+    else if (wearing_slot(slot))
     {
         err = "You are wearing that object!";
-        return false;
+        return (false);
     }
-    return true;
+    return (true);
 }
 
-// Return true if warning is given
+// Returns true if warning is given.
 static bool _fire_warn_if_impossible()
 {
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
     {
         canned_msg(MSG_PRESENT_FORM);
-        return true;
+        return (true);
     }
 
     if (you.attribute[ATTR_HELD])
@@ -1550,22 +1552,22 @@ static bool _fire_warn_if_impossible()
         if (!weapon || !is_range_weapon(*weapon))
         {
             mpr("You cannot throw anything while held in a net!");
-            return true;
+            return (true);
         }
         else if (weapon->sub_type != WPN_BLOWGUN)
         {
             mprf("You cannot shoot with your %s while held in a net!",
                  weapon->name(DESC_BASENAME).c_str());
-            return true;
+            return (true);
         }
-        // else shooting is possible
+        // Else shooting is possible.
     }
     if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
-        return true;
+        return (true);
     }
-    return false;
+    return (false);
 }
 
 int get_ammo_to_shoot(int item, dist &target, bool teleport)
@@ -1715,13 +1717,13 @@ bool elemental_missile_beam(int launcher_brand, int ammo_brand)
 static bool determines_ammo_brand(int bow_brand, int ammo_brand)
 {
     if (bow_brand == SPWPN_FLAME && ammo_brand == SPMSL_FLAME)
-        return false;
+        return (false);
     if (bow_brand == SPWPN_FROST && ammo_brand == SPMSL_ICE)
-        return false;
+        return (false);
     if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_POISONED)
-        return false;
+        return (false);
 
-    return true;
+    return (true);
 }
 
 static int stat_adjust(int value, int stat, int statbase,
@@ -3030,7 +3032,7 @@ bool puton_item(int item_slot, bool prompt_finger)
                                         OPER_REMOVE)
             || !remove_ring( you.equip[EQ_AMULET], true ))
         {
-            return false;
+            return (false);
         }
 
         // Put on the new amulet.
@@ -3658,33 +3660,33 @@ bool _drink_fountain()
 {
     const dungeon_feature_type feat = grd[you.x_pos][you.y_pos];
 
-    if ( feat < DNGN_FOUNTAIN_BLUE || feat > DNGN_FOUNTAIN_BLOOD )
-        return false;
+    if (feat < DNGN_FOUNTAIN_BLUE || feat > DNGN_FOUNTAIN_BLOOD)
+        return (false);
 
     if (you.flight_mode() == FL_LEVITATE)
     {
         mpr("You're floating high above the fountain.");
-        return false;
+        return (false);
     }
 
     if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
-        return true;
+        return (true);
     }
 
     potion_type fountain_effect = POT_WATER;
-    if ( feat == DNGN_FOUNTAIN_BLUE )
+    if (feat == DNGN_FOUNTAIN_BLUE)
     {
         if (!yesno("Drink from the fountain?"))
-            return false;
+            return (false);
 
         mpr("You drink the pure, clear water.");
     }
-    else if ( feat == DNGN_FOUNTAIN_BLOOD )
+    else if (feat == DNGN_FOUNTAIN_BLOOD)
     {
         if (!yesno("Drink from the fountain of blood?"))
-            return false;
+            return (false);
 
         mpr("You drink the blood.");
         fountain_effect = POT_BLOOD;
@@ -3692,7 +3694,7 @@ bool _drink_fountain()
     else                        // sparkling fountain
     {
         if (!yesno("Drink from the sparkling fountain?"))
-            return false;
+            return (false);
 
         mpr("You drink the sparkling water.");
 
@@ -3724,26 +3726,29 @@ bool _drink_fountain()
     if (fountain_effect != POT_WATER && fountain_effect != POT_BLOOD)
         xom_is_stimulated(64);
 
-    // good gods do not punish for bad random effects
+    // Good gods do not punish for bad random effects. However, they do
+    // punish drinking from a fountain of blood.
     potion_effect(fountain_effect, 100, feat != DNGN_FOUNTAIN_SPARKLING);
 
     bool gone_dry = false;
-    if ( feat == DNGN_FOUNTAIN_BLUE )
+    if (feat == DNGN_FOUNTAIN_BLUE)
     {
-        if ( one_chance_in(20) )
+        if (one_chance_in(20))
             gone_dry = true;
     }
-    else if ( feat == DNGN_FOUNTAIN_BLOOD )
+    else if (feat == DNGN_FOUNTAIN_BLOOD)
     {
-        if ( one_chance_in(3) )
+        // High chance of drying up, to prevent abuse.
+        if (one_chance_in(3))
             gone_dry = true;
     }
-    else                        // sparkling fountain
+    else   // sparkling fountain
     {
         if (one_chance_in(10))
             gone_dry = true;
-        else if ( random2(50) > 40 ) // no message!
+        else if (random2(50) > 40)
         {
+            // Turn fountain into a normal fountain - without any message.
             grd[you.x_pos][you.y_pos] = DNGN_FOUNTAIN_BLUE;
             set_terrain_changed(you.x_pos, you.y_pos);
         }
@@ -3762,8 +3767,8 @@ bool _drink_fountain()
     }
 
     you.turn_is_over = true;
-    return true;
-}                               // end _drink_fountain()
+    return (true);
+}
 
 static bool affix_weapon_enchantment()
 {
@@ -3789,17 +3794,17 @@ static bool affix_weapon_enchantment()
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
 
-        beam.type = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage = dice_def( 3, 10 );
-        beam.flavour = BEAM_FIRE;
-        beam.target_x = you.x_pos;
-        beam.target_y = you.y_pos;
-        beam.name = "fiery explosion";
-        beam.colour = RED;
-        beam.thrower = KILL_YOU;
+        beam.name       = "fiery explosion";
         beam.aux_source = "a fiery explosion";
-        beam.ex_size = 2;
-        beam.is_tracer = false;
+        beam.type       = dchar_glyph(DCHAR_FIRED_BURST);
+        beam.damage     = dice_def( 3, 10 );
+        beam.flavour    = BEAM_FIRE;
+        beam.target_x   = you.x_pos;
+        beam.target_y   = you.y_pos;
+        beam.colour     = RED;
+        beam.thrower    = KILL_YOU;
+        beam.ex_size    = 2;
+        beam.is_tracer  = false;
         beam.is_explosion = true;
 
         explosion(beam);
@@ -4698,14 +4703,14 @@ void use_randart(item_def &item)
 bool wearing_slot(int inv_slot)
 {
     for (int i = EQ_CLOAK; i <= EQ_AMULET; ++i)
-        if ( inv_slot == you.equip[i] )
-            return true;
+        if (inv_slot == you.equip[i])
+            return (true);
 
-    return false;
+    return (false);
 }
 
 #ifdef USE_TILE
-// Interactive menu for item drop/use
+// Interactive menu for item drop/use.
 void tile_use_item(int idx, InvAction act)
 {
     if (act == INV_PICKUP)

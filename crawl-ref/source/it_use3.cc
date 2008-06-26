@@ -85,7 +85,7 @@ void special_wielded()
             if (you.special_wield == SPWLD_SING)
             {
                 msg = getSpeakString("Singing Sword");
-                if (msg != "")
+                if (!msg.empty())
                 {
                     // "Your Singing Sword" sounds disrespectful
                     // (as if there could be more than one!)
@@ -96,21 +96,21 @@ void special_wielded()
             else // SPWLD_NOISE
             {
                 msg = getSpeakString("noisy weapon");
-                if (msg != "")
+                if (!msg.empty())
                 {
                     msg = replace_all(msg, "@Your_weapon@", "Your @weapon@");
                     msg = replace_all(msg, "@your_weapon@", "your @weapon@");
                 }
             }
 
-            // set appropriate channel (will usually be TALK)
+            // Set appropriate channel (will usually be TALK).
             msg_channel_type channel = MSGCH_TALK;
 
-            // disallow anything with VISUAL in it;
-            if (msg != "" && msg.find("VISUAL") != std::string::npos)
+            // Disallow anything with VISUAL in it.
+            if (!msg.empty() && msg.find("VISUAL") != std::string::npos)
                 msg = "";
 
-            if (msg != "")
+            if (!msg.empty())
             {
                 std::string param = "";
                 std::string::size_type pos = msg.find(":");
@@ -135,12 +135,12 @@ void special_wielded()
                     else if (param != "TALK")
                         match = false;
 
-                    if (match && msg != "")
+                    if (match && !msg.empty())
                         msg = msg.substr(pos + 1);
                 }
             }
 
-            if (msg == "") // give default noises
+            if (msg.empty()) // give default noises
             {
                 if (you.special_wield == SPWLD_SING)
                     msg = "@The_weapon@ sings.";
@@ -261,12 +261,12 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     direction(beam, DIR_TARGET, TARG_ENEMY, 2);
 
     if (!beam.isValid)
-        return false;
+        return (false);
 
     if (beam.isMe)
     {
         canned_msg(MSG_UNTHINKING_ACT);
-        return false;
+        return (false);
     }
 
     const int x_distance = abs(beam.tx - you.x_pos);
@@ -275,7 +275,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (x_distance > 2 || y_distance > 2)
     {
         mpr("Your weapon cannot reach that far!");
-        return false;
+        return (false);
     }
     else if (!see_grid_no_trans(beam.tx, beam.ty))
     {
@@ -424,7 +424,7 @@ static bool evoke_sceptre_of_asmodeus()
                                     0 ));
         your_spells( spl, you.skills[SK_EVOCATIONS] * 8, false );
     }
-    return true;
+    return (true);
 }
 
 // returns true if item successfully evoked.

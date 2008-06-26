@@ -776,13 +776,13 @@ static bool _sort_monster_list(int a, int b)
     if (m1->type == m2->type)
     {
         if (!m1->alive() || !m2->alive())
-            return false;
+            return (false);
 
         return ( m1->name(DESC_PLAIN, true) < m2->name(DESC_PLAIN, true) );
     }
 
     if (mons_char(m1->type) < mons_char(m2->type))
-        return true;
+        return (true);
 
     return (m1->type < m2->type);
 }
@@ -957,14 +957,14 @@ static void _deck_from_specs(const char* _specs, item_def &item)
     item.special  = DECK_RARITY_COMMON;
     item.sub_type = NUM_MISCELLANY;
 
-    if (type_str != "")
+    if (!type_str.empty())
     {
         for (int i = 0; types[i] != NUM_MISCELLANY; i++)
         {
             item.sub_type = types[i];
             item.plus     = 1;
             init_deck(item);
-            // Remove "plain " from front
+            // Remove "plain " from front.
             std::string name = item.name(DESC_PLAIN).substr(6);
             item.props.clear();
 
@@ -1083,17 +1083,17 @@ static bool _book_from_spell(const char* specs, item_def &item)
     spell_type type = spell_by_name(specs, true);
 
     if (type == SPELL_NO_SPELL)
-        return false;
+        return (false);
 
     for (int i = 0; i < NUM_BOOKS; i++)
         for (int j = 0; j < 8; j++)
             if (which_spell_in_book(i, j) == type)
             {
                 item.sub_type = i;
-                return true;
+                return (true);
             }
 
-    return false;
+    return (false);
 }
 
 //---------------------------------------------------------------

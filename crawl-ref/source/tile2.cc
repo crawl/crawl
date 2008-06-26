@@ -1407,16 +1407,16 @@ static bool _draw_doll(img_type img, dolls_data *doll, bool force_redraw = false
 
 
     if (!changed && !force_redraw)
-        return false;
+        return (false);
 
     tilep_calc_flags(parts2, flags);
     ImgClear(img);
 
-    // Hack: change overlay order of boots/skirts
+    // Hack: change overlay order of boots/skirts.
     for (i = 0; i < TILEP_PARTS_TOTAL; i++)
          p_order2[i] = p_order[i];
 
-    // swap boot and leg-armor
+    // Swap boot and leg-armour.
     if (parts2[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
         p_order2[6] = TILEP_PART_LEG;
@@ -1450,16 +1450,16 @@ static bool _draw_doll(img_type img, dolls_data *doll, bool force_redraw = false
         else if (parts2[p] && flags[p])
             _tcache_overlay_player(img, 0, 0, p, parts2[p], ymax, &c);
     }
-    return true;
+    return (true);
 }
 
 static void _load_doll_data(const char *fn, dolls_data *dolls, int max,
                             int *mode, int *cur)
 {
     char fbuf[1024];
-    int cur0 = 0;
+    int cur0  = 0;
     int mode0 = TILEP_M_DEFAULT;
-    FILE *fp = NULL;
+    FILE *fp  = NULL;
 
     std::string dollsTxtString = datafile_path(fn, false, true);
     const char *dollsTxt = (dollsTxtString.c_str()[0] == 0) ?

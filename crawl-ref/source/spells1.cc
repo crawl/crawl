@@ -489,13 +489,13 @@ bool conjure_flame(int pow)
         if (!spelld.isValid)
         {
             canned_msg(MSG_OK);
-            return false;
+            return (false);
         }
 
         if (trans_wall_blocking(spelld.tx, spelld.ty))
         {
             mpr("A translucent wall is in the way.");
-            return false;
+            return (false);
         }
         else if (!see_grid(spelld.tx, spelld.ty))
         {
@@ -518,14 +518,14 @@ bool conjure_flame(int pow)
             mpr( "There's already something there!" );
             continue;
         }
-        else if ( cloud != EMPTY_CLOUD )
+        else if (cloud != EMPTY_CLOUD)
         {
-            // reinforce the cloud - but not too much
+            // Reinforce the cloud - but not too much.
             mpr( "The fire roars with new energy!" );
             const int extra_dur = 2 + std::min(random2(pow) / 2, 20);
             env.cloud[cloud].decay += extra_dur * 5;
             env.cloud[cloud].whose = KC_YOU;
-            return true;
+            return (true);
         }
 
         break;
@@ -537,7 +537,7 @@ bool conjure_flame(int pow)
         durat = 23;
 
     place_cloud( CLOUD_FIRE, spelld.tx, spelld.ty, durat, KC_YOU );
-    return true;
+    return (true);
 }
 
 bool stinking_cloud( int pow, bolt &beem )
@@ -609,13 +609,15 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     ASSERT(you.religion == GOD_ELYVILON);
 
     if (healed < 1)
-        return false;
+        return (false);
 
     if (!_mons_hostile(mon))
-        return false;
+        return (false);
 
+    // I was thinking of jellies when I wrote this, but maybe we shouldn't
+    // exclude zombies and such... (jpeg)
     if (mons_intel(mon->type) <= I_PLANT) // no self-awareness
-        return false;
+        return (false);
 
     const mon_holy_type holiness = mons_holiness(mon);
 
@@ -624,14 +626,14 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
         && holiness != MH_UNDEAD
         && holiness != MH_DEMONIC)
     {
-        return false;
+        return (false);
     }
 
     if (mons_is_stationary(mon)) // not able to leave the level
-        return false;
+        return (false);
 
     if (mons_is_sleeping(mon)) // not aware of what is happening
-        return false;
+        return (false);
 
     const int factor = (mons_intel(mon->type) <= I_ANIMAL) ? 3 : // animals
                        (is_player_same_species(mon->type)) ? 2   // same species
@@ -657,9 +659,9 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
 #endif
 
     if (mon->max_hit_points < factor * random_factor)
-        return true;
+        return (true);
 
-    return false;
+    return (false);
 }
 
 static int _healing_spell( int healed, int target_x = -1, int target_y = -1)

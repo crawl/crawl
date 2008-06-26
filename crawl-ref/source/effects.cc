@@ -414,7 +414,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
     if (!crawl_state.is_god_acting())
         you.entry_cause_god = GOD_NO_GOD;
 
-    if (cast_into != "" && you.entry_cause != EC_SELF_EXPLICIT)
+    if (!cast_into.empty() && you.entry_cause != EC_SELF_EXPLICIT)
     {
         const std::string what = "Cast into " + cast_into + _who_banished(who);
         take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
@@ -2253,38 +2253,36 @@ static void _hell_effects()
         create_monster(mg);
 
         for (int i = 0; i < 4; ++i)
-        {
             if (one_chance_in(3))
                 create_monster(mg);
-        }
     }
 }
 
 static bool _food_item_needs_time_check(item_def &item)
 {
     if (!is_valid_item(item))
-        return false;
+        return (false);
 
     if (item.base_type != OBJ_CORPSES
         && item.base_type != OBJ_FOOD
         && item.base_type != OBJ_POTIONS)
     {
-        return false;
+        return (false);
     }
 
     if (item.base_type == OBJ_CORPSES
         && item.sub_type > CORPSE_SKELETON)
     {
-        return false;
+        return (false);
     }
 
     if (item.base_type == OBJ_FOOD && item.sub_type != FOOD_CHUNK)
-        return false;
+        return (false);
 
     if (item.base_type == OBJ_POTIONS && !is_blood_potion(item))
-        return false;
+        return (false);
 
-    return true;
+    return (true);
 }
 
 static void _rot_inventory_food(long time_delta)

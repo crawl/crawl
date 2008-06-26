@@ -1557,7 +1557,7 @@ static int _inside_circle(int posx, int posy, int radius)
     if (dist > radius*radius)
         return -1;
 
-    return dist;
+    return (dist);
 }
 
 bool remove_sanctuary(bool did_attack)
@@ -1566,7 +1566,7 @@ bool remove_sanctuary(bool did_attack)
         env.sanctuary_time = 0;
 
     if (!inside_level_bounds(env.sanctuary_pos))
-        return false;
+        return (false);
 
     const int radius = 5;
     bool seen_change = false;
@@ -1601,15 +1601,15 @@ bool remove_sanctuary(bool did_attack)
     if (is_resting())
         stop_running();
 
-    return true;
+    return (true);
 }
 
-// For the last (radius) counter turns the sanctuary will slowly shrink
+// For the last (radius) counter turns the sanctuary will slowly shrink.
 void decrease_sanctuary_radius()
 {
     int radius = 5;
 
-    // for the last (radius-1) turns 33% chance of not decreasing
+    // For the last (radius-1) turns 33% chance of not decreasing.
     if (env.sanctuary_time < radius && one_chance_in(3))
         return;
 
@@ -1625,23 +1625,23 @@ void decrease_sanctuary_radius()
 
     radius = size+1;
     for (int x = -radius; x <= radius; x++)
-         for (int y = -radius; y <= radius; y++)
-         {
-              int posx = env.sanctuary_pos.x + x;
-              int posy = env.sanctuary_pos.y + y;
+        for (int y = -radius; y <= radius; y++)
+        {
+            int posx = env.sanctuary_pos.x + x;
+            int posy = env.sanctuary_pos.y + y;
 
-              if (!inside_level_bounds(posx,posy))
-                  continue;
+            if (!inside_level_bounds(posx,posy))
+                continue;
 
-              int dist = distance(posx, posy, env.sanctuary_pos.x,
-                                  env.sanctuary_pos.y);
+            int dist = distance(posx, posy, env.sanctuary_pos.x,
+                                env.sanctuary_pos.y);
 
-              // if necessary overwrite sanctuary property
-              if (dist > size*size)
-                  env.map[posx][posy].property = FPROP_NONE;
-         }
+            // If necessary overwrite sanctuary property.
+            if (dist > size*size)
+                env.map[posx][posy].property = FPROP_NONE;
+        }
 
-    // special case for time-out of sanctuary
+    // Special case for time-out of sanctuary.
     if (!size)
     {
         env.map[env.sanctuary_pos.x][env.sanctuary_pos.y].property = FPROP_NONE;
@@ -1650,10 +1650,15 @@ void decrease_sanctuary_radius()
     }
 }
 
-// maybe disallow recasting while previous sanctuary in effect...
 bool cast_sanctuary(const int power)
 {
-    if (!silenced(you.x_pos, you.y_pos)) // how did you manage that?
+    // Casting is disallowed while previous sanctuary in effect.
+    // (Checked in abl-show.cc.)
+    if (env.sanctuary_time)
+        return (false);
+
+    // Yes, shamelessly stolen from NetHack...
+    if (!silenced(you.x_pos, you.y_pos)) // How did you manage that?
         mpr("You hear a choir sing!", MSGCH_SOUND);
     else
         mpr("You are suddenly bathed in radiance!");
@@ -1670,7 +1675,7 @@ bool cast_sanctuary(const int power)
     env.sanctuary_time = 7 + you.skills[SK_INVOCATIONS]/2;
 
     // radius could also be influenced by Inv
-    // and would then have to be stored globally
+    // and would then have to be stored globally.
     const int radius = 5;
     const int pattern = random2(4);
     int count = 0;
@@ -1742,7 +1747,7 @@ int halo_radius()
 bool inside_halo(int posx, int posy)
 {
     if (!halo_radius())
-        return false;
+        return (false);
 
     return (_inside_circle(posx, posy, halo_radius()) != -1);
 }
@@ -1775,11 +1780,9 @@ void cast_poison_ammo(void)
                 you.wield_change = true;
         }
         else
-        {
             canned_msg(MSG_NOTHING_HAPPENS);
-        }
     }
-}                               // end cast_poison_ammo()
+}
 
 bool project_noise(void)
 {
@@ -1808,15 +1811,17 @@ bool project_noise(void)
         if (!silenced( you.x_pos, you.y_pos ))
         {
             if (success)
+            {
                 mprf(MSGCH_SOUND, "You hear a %svoice call your name.",
                      (!see_grid( pos.x, pos.y ) ? "distant " : "") );
+            }
             else
                 mprf(MSGCH_SOUND, "You hear a dull thud.");
         }
     }
 
     return (success);
-}                               // end project_noise()
+}
 
 // Type recalled:
 // 0 = anything

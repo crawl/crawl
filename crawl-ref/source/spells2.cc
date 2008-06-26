@@ -311,27 +311,27 @@ int corpse_rot(int power)
 bool brand_weapon(brand_type which_brand, int power)
 {
     int temp_rand;              // probability determination {dlb}
-    int duration_affected = 0;  //jmf: NB: now HOW LONG, not WHICH BRAND.
+    int duration_affected = 0;
 
     const int wpn = you.equip[EQ_WEAPON];
 
     if (you.duration[DUR_WEAPON_BRAND])
-        return false;
+        return (false);
 
     if (wpn == -1)
-        return false;
+        return (false);
 
     if (you.inv[wpn].base_type != OBJ_WEAPONS
         || is_range_weapon(you.inv[wpn]))
     {
-        return false;
+        return (false);
     }
 
     if (is_fixed_artefact( you.inv[wpn] )
         || is_random_artefact( you.inv[wpn] )
         || get_weapon_brand( you.inv[wpn] ) != SPWPN_NORMAL )
     {
-        return false;
+        return (false);
     }
 
     std::string msg = you.inv[wpn].name(DESC_CAP_YOUR);
@@ -352,7 +352,7 @@ bool brand_weapon(brand_type which_brand, int power)
 
     case SPWPN_VENOM:
         if (wpn_type == DVORP_CRUSHING)
-            return false;
+            return (false);
 
         msg += " starts dripping with poison.";
         duration_affected = 15;
@@ -365,13 +365,13 @@ bool brand_weapon(brand_type which_brand, int power)
 
     case SPWPN_VORPAL:
         if (wpn_type != DVORP_SLICING)
-            return false;
+            return (false);
 
         msg += " glows silver and looks extremely sharp.";
         duration_affected = 10;
         break;
 
-    case SPWPN_DISTORTION:      //jmf: added for Warp Weapon
+    case SPWPN_DISTORTION:      //jmf: Added for Warp Weapon.
         msg += " seems to ";
 
         temp_rand = random2(6);
@@ -398,16 +398,16 @@ bool brand_weapon(brand_type which_brand, int power)
         break;
 
     case SPWPN_PAIN:
-        // well, in theory, we could be silenced, but then how are
+        // Well, in theory, we could be silenced, but then how are
         // we casting the brand spell?
         msg += " shrieks in agony.";
         noisy(15, you.x_pos, you.y_pos);
         duration_affected = 8;
         break;
 
-    case SPWPN_DUMMY_CRUSHING:  //jmf: added for Maxwell's Silver Hammer
+    case SPWPN_DUMMY_CRUSHING:  //jmf: Added for Maxwell's Silver Hammer.
         if (wpn_type != DVORP_CRUSHING)
-            return false;
+            return (false);
 
         which_brand = SPWPN_VORPAL;
         msg += " glows silver and feels heavier.";
@@ -429,7 +429,7 @@ bool brand_weapon(brand_type which_brand, int power)
     if (you.duration[DUR_WEAPON_BRAND] > 50)
         you.duration[DUR_WEAPON_BRAND] = 50;
 
-    return true;
+    return (true);
 }                               // end brand_weapon()
 
 // Restore the stat in which_stat by the amount in stat_gain, displaying
@@ -441,8 +441,8 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
 {
     bool stat_restored = false;
 
-    // a bit hackish, but cut me some slack, man! --
-    // besides, a little recursion never hurt anyone {dlb}:
+    // A bit hackish, but cut me some slack, man! --
+    // Besides, a little recursion never hurt anyone {dlb}:
     if (which_stat == STAT_ALL)
     {
         for (unsigned char loopy = STAT_STRENGTH; loopy < NUM_STATS; ++loopy)
@@ -450,10 +450,10 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
             if (restore_stat(loopy, stat_gain, suppress_msg))
                 stat_restored = true;
         }
-        return stat_restored;                // early return {dlb}
+        return (stat_restored);                // early return {dlb}
     }
 
-    // the real function begins here {dlb}:
+    // The real function begins here. {dlb}
     char *ptr_stat = NULL;
     char *ptr_stat_max = NULL;
     bool *ptr_redraw = NULL;
@@ -493,7 +493,7 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
     if (*ptr_stat < *ptr_stat_max)
     {
         msg += " returning.";
-        if ( !suppress_msg )
+        if (!suppress_msg)
             mpr(msg.c_str(), (recovery) ? MSGCH_RECOVERY : MSGCH_PLAIN);
 
         if (stat_gain == 0 || *ptr_stat + stat_gain > *ptr_stat_max)
@@ -510,8 +510,8 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
         }
     }
 
-    return stat_restored;
-}                               // end restore_stat()
+    return (stat_restored);
+}
 
 void turn_undead(int pow)
 {
@@ -526,8 +526,8 @@ void turn_undead(int pow)
         if (monster->type == -1 || !mons_near(monster))
             continue;
 
-        // used to inflict random2(5) + (random2(pow) / 20) damage,
-        // in addition {dlb}
+        // Used to inflict random2(5) + (random2(pow) / 20) damage,
+        // in addition. {dlb}
         if (mons_holiness(monster) == MH_UNDEAD)
         {
             if (check_mons_resist_magic( monster, pow ))
@@ -542,17 +542,17 @@ void turn_undead(int pow)
 
             simple_monster_message( monster, " is repelled!" );
 
-            //mv: must be here to work
+            //mv: Must be here to work.
             behaviour_event( monster, ME_SCARE, MHITYOU );
 
-            // reduce power based on monster turned
+            // Reduce power based on monster turned.
             pow -= monster->hit_dice * 3;
             if (pow <= 0)
                 break;
 
-        }                       // end "if mons_holiness"
-    }                           // end "for tu"
-}                               // end turn_undead()
+        }
+    }
+}
 
 typedef std::pair<const monsters*,int> counted_monster;
 typedef std::vector<counted_monster> counted_monster_list;

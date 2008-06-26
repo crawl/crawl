@@ -157,9 +157,9 @@ bool TextDB::_needs_update() const
     {
         std::string full_input_path = datafile_path(_input_files[i], true);
         if (is_newer(full_input_path, full_db_path))
-            return true;
+            return (true);
     }
-    return false;
+    return (false);
 }
 
 void TextDB::_regenerate_db()
@@ -407,7 +407,7 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
     {
         // Skip over multiple blank lines, and leading and trailing
         // blank lines.
-        while (i < size && lines[i] == "")
+        while (i < size && lines[i].empty())
             i++;
 
         if (i == size)
@@ -427,7 +427,7 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
 
         total_weight += weight;
 
-        while (i < size && lines[i] != "")
+        while (i < size && !lines[i].empty())
         {
             part += lines[i++];
             part += "\n";
@@ -561,9 +561,11 @@ static void _call_recursive_replacement(std::string &str, DBM *database,
             _getRandomisedStr(database, marker, suffix, num_replacements,
                               recursion_depth);
 
-        if (replacement == "")
+        if (replacement.empty())
+        {
             // Nothing in database, leave it alone and go onto next @foo@
             pos = str.find("@", end + 1);
+        }
         else
         {
             str.replace(pos, marker_full.length(), replacement);

@@ -331,7 +331,8 @@ void line_reader::cursorto(int ncx)
 
 int line_reader::read_line(bool clear_previous)
 {
-    if (bufsz <= 0) return false;
+    if (bufsz <= 0)
+        return (false);
 
     cursor_control coff(true);
 

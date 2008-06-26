@@ -1706,7 +1706,7 @@ static bool _affect_mon_in_wall(bolt &pbolt, item_def *item, int tx, int ty)
     int mid = mgrd[tx][ty];
 
     if (mid == NON_MONSTER)
-        return false;
+        return (false);
 
     if (pbolt.is_enchant
         || (!pbolt.is_explosion && !pbolt.is_big_cloud
@@ -1715,10 +1715,10 @@ static bool _affect_mon_in_wall(bolt &pbolt, item_def *item, int tx, int ty)
     {
         monsters *mon = &menv[mid];
         if (!mons_is_wall_shielded(mon->type))
-            return true;
+            return (true);
     }
 
-    return false;
+    return (false);
 }
 
 /*
@@ -2884,15 +2884,15 @@ void mimic_alert(monsters *mimic)
 static bool _isBouncy(bolt &beam, unsigned char gridtype)
 {
     if (beam.name[0] == '0')
-        return false;
+        return (false);
 
     if (beam.flavour == BEAM_ELECTRICITY && gridtype != DNGN_METAL_WALL)
-        return true;
+        return (true);
 
-    if ( (beam.flavour == BEAM_FIRE || beam.flavour == BEAM_COLD)
+    if ((beam.flavour == BEAM_FIRE || beam.flavour == BEAM_COLD)
          && gridtype == DNGN_GREEN_CRYSTAL_WALL )
     {
-        return true;
+        return (true);
     }
     return (false);
 }
