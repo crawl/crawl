@@ -509,7 +509,7 @@ std::string getWeightedSpeechString(const std::string &key,
     return (result);
 }
 
-static std::string _getRandomizedStr(DBM *database, const std::string &key,
+static std::string _getRandomisedStr(DBM *database, const std::string &key,
                                      const std::string &suffix,
                                      int &num_replacements,
                                      int recursion_depth = 0)
@@ -558,7 +558,7 @@ static void _call_recursive_replacement(std::string &str, DBM *database,
         std::string marker      = str.substr(pos + 1, end - pos - 1);
 
         std::string replacement =
-            _getRandomizedStr(database, marker, suffix, num_replacements,
+            _getRandomisedStr(database, marker, suffix, num_replacements,
                               recursion_depth);
 
         if (replacement == "")
@@ -648,7 +648,7 @@ std::string getShoutString(const std::string &monst,
 {
     int num_replacements = 0;
 
-    return _getRandomizedStr(ShoutDB.get(), monst, suffix,
+    return _getRandomisedStr(ShoutDB.get(), monst, suffix,
                              num_replacements);
 }
 
@@ -664,7 +664,7 @@ std::string getSpeakString(const std::string &key)
 #ifdef DEBUG_MONSPEAK
     mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s", key.c_str());
 #endif
-    return _getRandomizedStr(SpeakDB, key, "", num_replacements);
+    return _getRandomisedStr(SpeakDB, key, "", num_replacements);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -677,7 +677,7 @@ std::string getRandNameString(const std::string &itemtype,
 
     int num_replacements = 0;
 
-    return _getRandomizedStr(RandartDB, itemtype, suffix,
+    return _getRandomisedStr(RandartDB, itemtype, suffix,
                              num_replacements);
 }
 
@@ -701,5 +701,5 @@ std::string getMiscString(const std::string &misc,
 
     int num_replacements = 0;
 
-    return _getRandomizedStr(MiscDB, misc, suffix, num_replacements);
+    return _getRandomisedStr(MiscDB, misc, suffix, num_replacements);
 }
