@@ -775,7 +775,6 @@ void untransform(void)
 // cases to handle a large number of things (see wear_armour()) -- bwr
 bool can_equip( equipment_type use_which, bool ignore_temporary )
 {
-
     // if more cases are added to this if must also change in
     // item_use for naga barding
     if (ignore_temporary || !player_is_shapechanged())
