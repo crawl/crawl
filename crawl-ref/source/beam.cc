@@ -3613,9 +3613,13 @@ static int _affect_player( bolt &beam, item_def *item )
     if (beam.is_tracer)
     {
         // Check whether thrower can see player, unless thrower == player.
-        if (beam.thrower != KILL_YOU_MISSILE && beam.thrower != KILL_YOU
-            && (beam.can_see_invis || !you.invisible()
-                || _fuzz_invis_tracer(beam)))
+        if (YOU_KILL(beam.thrower))
+        {
+            beam.fr_count += 1;
+            beam.fr_power += you.experience_level;
+        }
+        else if (beam.can_see_invis || !you.invisible()
+                 || _fuzz_invis_tracer(beam))
         {
             if (mons_att_wont_attack(beam.attitude))
             {
@@ -3624,11 +3628,8 @@ static int _affect_player( bolt &beam, item_def *item )
             }
             else
             {
-                if (beam.thrower != KILL_YOU_MISSILE)
-                {
-                    beam.foe_count++;
-                    beam.foe_power += you.experience_level;
-                }
+                beam.foe_count++;
+                beam.foe_power += you.experience_level;
             }
         }
         return (_range_used_on_hit(beam));
@@ -4291,9 +4292,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             return 0;
         }
 
-        if (thrower == KILL_YOU_MISSILE)
-            ;
-        else if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
+        if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
         {
             beam.foe_count += 1;
             beam.foe_power += mons_power(mons_type);
@@ -4349,8 +4348,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                     }
                 }
             }
+
             // Enchant case -- enchantments always hit, so update target immed.
-            else if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
+            if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
             {
                 beam.foe_count += 1;
                 beam.foe_power += mons_power(mons_type);
@@ -4516,8 +4516,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 }
             }
         }
+
         // Check only if actual damage.
-        else if (hurt_final > 0)
+        if (hurt_final > 0)
         {
             // Monster could be hurt somewhat, but only apply the
             // monster's power based on how badly it is affected.
