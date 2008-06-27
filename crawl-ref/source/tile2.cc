@@ -417,11 +417,11 @@ static int _tcache_find_id_normal(int *fg, int *bg, int *is_new)
     }
     _lift_tcache(tc0->idx);
 
-    return tc0->idx;
+    return (tc0->idx);
 }
 
 
-/*** overlay a tile onto an exsisting image with transpalency operation */
+// Overlay a tile onto an existing image with transparency operation.
 static void _tcache_overlay(img_type img, int idx, int tile,
                             int *copy, char *mask, unsigned int shift_left = 0)
 {
@@ -438,32 +438,32 @@ static void _tcache_overlay(img_type img, int idx, int tile,
 
     tile &= TILE_FLAG_MASK;
 
-    x0 = (tile % TILE_PER_ROW)*TILE_X;
-    y0 = (tile / TILE_PER_ROW)*TILE_Y;
+    x0 = (tile % TILE_PER_ROW) * TILE_X;
+    y0 = (tile / TILE_PER_ROW) * TILE_Y;
 
     if (mask != NULL)
     {
-        if (*copy ==2)
+        if (*copy == 2)
         {
             ImgCopyMaskedH(src, x0 + sx, y0 + sy, wx, wy,
-                img, ox, oy + idx*uy, mask);
+                           img, ox, oy + idx*uy, mask);
         }
         else
         {
             ImgCopyMasked(src, x0 + sx, y0 + sy, wx, wy,
-                img, ox, oy + idx*uy, mask);
+                          img, ox, oy + idx*uy, mask);
         }
     }
     // Hack: hilite rim color
-    else if (*copy ==2)
+    else if (*copy == 2)
     {
         ImgCopyH(src, x0 + sx, y0 + sy, wx, wy,
-            img, ox, oy + idx*uy, *copy);
+                 img, ox, oy + idx*uy, *copy);
     }
     else
     {
         ImgCopy(src, x0 + sx, y0 + sy, wx, wy,
-            img, ox, oy + idx*uy, *copy);
+                img, ox, oy + idx*uy, *copy);
     }
     *copy = 0;
 }
@@ -657,7 +657,7 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
         _tcache_overlay(tcache_image, ix, bbg, &c, NULL);
 
     if (bg0 & TILE_FLAG_BLOOD)
-        _tcache_overlay(tcache_image, ix, TILE_BLOOD0, &c, NULL);
+        _tcache_overlay(tcache_image, ix, TILE_BLOOD0 + ix % 5, &c, NULL);
 
     if (new_bg)
         _tcache_overlay(tcache_image, ix, new_bg, &c, NULL);
@@ -670,8 +670,10 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
 
     // Apply the travel exclusion under the foreground if the cell is
     // visible.  It will be applied later if the cell is unseen.
-    if ((bg0 & TILE_FLAG_TRAVEL_EX) && !(bg0 & TILE_FLAG_UNSEEN))
+    if ((bg0 & TILE_FLAG_TRAV_EXCL) && !(bg0 & TILE_FLAG_UNSEEN))
         _tcache_overlay(tcache_image, ix, TILE_TRAVEL_EXCLUSION, &c, NULL);
+    else if ((bg0 & TILE_FLAG_EXCL_CTR) && !(bg0 & TILE_FLAG_UNSEEN))
+        _tcache_overlay(tcache_image, ix, TILE_TRAVEL_EXCL_CENTRE, &c, NULL);
 
     if (bg0 & TILE_FLAG_RAY)
         _tcache_overlay(tcache_image, ix, TILE_RAY_MESH, &c, NULL);
@@ -747,9 +749,14 @@ void _tcache_compose_normal(int ix, int *fg, int *bg)
     if (bg0 & TILE_FLAG_NEW_STAIR && status_shift == 0)
         _tcache_overlay(tcache_image, ix, TILE_NEW_STAIR, &c, NULL);
 
-    if ((bg0 & TILE_FLAG_TRAVEL_EX) && (bg0 & TILE_FLAG_UNSEEN))
+    if ((bg0 & TILE_FLAG_TRAV_EXCL) && (bg0 & TILE_FLAG_UNSEEN))
     {
         _tcache_overlay(tcache_image, ix, TILE_TRAVEL_EXCLUSION, &c,
+                        NULL);
+    }
+    else if ((bg0 & TILE_FLAG_EXCL_CTR) && (bg0 & TILE_FLAG_UNSEEN))
+    {
+        _tcache_overlay(tcache_image, ix, TILE_TRAVEL_EXCL_CENTRE, &c,
                         NULL);
     }
 

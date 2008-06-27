@@ -3663,7 +3663,6 @@ void tile_init_flavor()
     const unsigned short baz_col = get_bazaar_special_colour();
 
     for (int x = 0; x < GXM; x++)
-    {
         for (int y = 0; y < GYM; y++)
         {
             int max_wall_flavor  = get_num_wall_flavors() - 1;
@@ -3678,7 +3677,7 @@ void tile_init_flavor()
             {
                 // Check for horizontal gates.
 
-                bool door_left = (x > 0 && grd[x-1][y] == grd[x][y]);
+                bool door_left  = (x > 0 && grd[x-1][y] == grd[x][y]);
                 bool door_right = (x < GXM - 1 && grd[x+1][y] == grd[x][y]);
 
                 if (door_left || door_right)
@@ -3691,7 +3690,7 @@ void tile_init_flavor()
                     else
                         target = TILE_DNGN_GATE_CLOSED_LEFT;
 
-                    // NOTE: this requires that closed gates and open gates
+                    // NOTE: This requires that closed gates and open gates
                     // are positioned in the tile set relative to their
                     // door counterpart.
                     env.tile_flavor[x][y].special =
@@ -3705,10 +3704,10 @@ void tile_init_flavor()
             else if (bazaar && env.grid_colours[x][y] == baz_col
                      && grd[x][y] == DNGN_FLOOR)
             {
-                int left_grd = (x > 0) ? grd[x-1][y] : DNGN_ROCK_WALL;
+                int left_grd  = (x > 0) ? grd[x-1][y] : DNGN_ROCK_WALL;
                 int right_grd = (x < GXM - 1) ? grd[x+1][y] : DNGN_ROCK_WALL;
-                int up_grd = (y > 0) ? grd[x][y-1] : DNGN_ROCK_WALL;
-                int down_grd = (y < GYM - 1) ? grd[x][y+1] : DNGN_ROCK_WALL;
+                int up_grd    = (y > 0) ? grd[x][y-1] : DNGN_ROCK_WALL;
+                int down_grd  = (y < GYM - 1) ? grd[x][y+1] : DNGN_ROCK_WALL;
                 unsigned short left_col = (x > 0) ?
                     env.grid_colours[x-1][y] : BLACK;
                 unsigned short right_col = (x < GXM - 1) ?
@@ -3789,11 +3788,15 @@ void tile_init_flavor()
                     else if (l_spc && d_spc)
                         env.tile_flavor[x][y].special = SPECIAL_NE;
                     else if (r_spc)
+                    {
                         env.tile_flavor[x][y].special = coinflip() ?
                             SPECIAL_N : SPECIAL_NW;
+                    }
                     else if (l_spc)
+                    {
                         env.tile_flavor[x][y].special = coinflip() ?
                             SPECIAL_N : SPECIAL_NE;
+                    }
                     else
                         env.tile_flavor[x][y].special = jitter(SPECIAL_N);
                 }
@@ -3806,11 +3809,15 @@ void tile_init_flavor()
                     else if (l_spc && u_spc)
                         env.tile_flavor[x][y].special = SPECIAL_SE;
                     else if (r_spc)
+                    {
                         env.tile_flavor[x][y].special = coinflip() ?
                             SPECIAL_S : SPECIAL_SW;
+                    }
                     else if (l_spc)
+                    {
                         env.tile_flavor[x][y].special = coinflip() ?
                             SPECIAL_S : SPECIAL_SE;
+                    }
                     else
                         env.tile_flavor[x][y].special = jitter(SPECIAL_S);
                 }
@@ -3864,7 +3871,6 @@ void tile_init_flavor()
                 env.tile_flavor[x][y].special = 0;
             }
         }
-    }
 
     if (!bazaar)
         return;
@@ -3893,18 +3899,18 @@ void tile_init_flavor()
             if (grd[x][y] != DNGN_FLOOR || env.grid_colours[x][y] != baz_col)
                 continue;
 
-            if (env.tile_flavor[x][y].special != SPECIAL_N &&
-                env.tile_flavor[x][y].special != SPECIAL_S &&
-                env.tile_flavor[x][y].special != SPECIAL_E &&
-                env.tile_flavor[x][y].special != SPECIAL_W)
+            if (env.tile_flavor[x][y].special != SPECIAL_N
+                && env.tile_flavor[x][y].special != SPECIAL_S
+                && env.tile_flavor[x][y].special != SPECIAL_E
+                && env.tile_flavor[x][y].special != SPECIAL_W)
             {
                 continue;
             }
 
-            int right_flavor = x < GXM - 1 ? env.tile_flavor[x+1][y].special :
-                SPECIAL_FULL;
-            int down_flavor = y < GYM - 1 ? env.tile_flavor[x][y+1].special :
-                SPECIAL_FULL;
+            int right_flavor = x < GXM - 1 ? env.tile_flavor[x+1][y].special
+                                           : SPECIAL_FULL;
+            int down_flavor  = y < GYM - 1 ? env.tile_flavor[x][y+1].special
+                                           : SPECIAL_FULL;
             int this_flavor = env.tile_flavor[x][y].special;
 
             if (this_flavor == SPECIAL_N && right_flavor == SPECIAL_S)
@@ -4236,9 +4242,13 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                            wall_flv, floor_flv, special_flv);
 
             const coord_def gc(gx, gy);
+
             if (is_excluded(gc))
             {
-                tileb[count+1] |= TILE_FLAG_TRAVEL_EX;
+                if (is_exclude_root(gc))
+                    tileb[count+1] |= TILE_FLAG_EXCL_CTR;
+                else
+                    tileb[count+1] |= TILE_FLAG_TRAV_EXCL;
             }
 
             if (in_bounds)

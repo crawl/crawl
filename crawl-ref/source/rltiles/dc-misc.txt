@@ -42,6 +42,10 @@ unseen_item UNSEEN_ITEM
 unseen_monster UNSEEN_CORPSE
 %corpse 0
 dc-misc/blood_red BLOOD0
+dc-misc/blood_red1 BLOOD1
+dc-misc/blood_red2 BLOOD2
+dc-misc/blood_red3 BLOOD3
+dc-misc/blood_red4 BLOOD4
 %back none
 dc-dngn/dngn_altar UNSEEN_ALTAR
 dc-dngn/dngn_entrance UNSEEN_ENTRANCE
@@ -75,6 +79,7 @@ txt4 TEXT_DOLLS_E
 something_under SOMETHING_UNDER
 error ERROR
 travel_exclusion TRAVEL_EXCLUSION
+travel_exclusion_centre TRAVEL_EXCL_CENTRE
 %rim 1
 todo TODO
 new_stair NEW_STAIR
