@@ -20,7 +20,7 @@ int tileidx_unseen(int ch, const coord_def& gc);
 int tileidx_item(const item_def &item);
 int tileidx_item_throw(const item_def &item, int dx, int dy);
 int tileidx_bolt(const bolt &bolt);
-int tileidx_zap(int color);
+int tileidx_zap(int colour);
 int tile_idx_unseen_terrain(int x, int y, int what);
 int tile_unseen_flag(const coord_def& gc);
 

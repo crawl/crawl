@@ -1828,6 +1828,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>]</w> : show inventory of equipped items\n"
             "<w>{</w> : inscribe item\n"
             "<w>f</w> : Fire or throw an item\n"
+            "<w>F</w> : Fire or throw an item without quivering it\n"
             "<w>(</w> : cycle current ammunition\n"
             "<w>e</w> : Eat food (but tries floor first)\n"
             "<w>q</w> : Quaff a potion\n"

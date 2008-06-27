@@ -107,6 +107,7 @@ bool remove_ring(int slot = -1, bool announce = false);
 int get_next_fire_item(int current, int offset);
 int get_ammo_to_shoot(int item, dist &target, bool teleport = false);
 void fire_thing(int item = -1);
+void throw_item_no_quiver(void);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -162,8 +163,8 @@ bool puton_item(int slot, bool prompt_finger = true);
 bool enchant_weapon( enchant_stat_type which_stat, bool quiet, item_def &wpn );
 bool enchant_armour( int &ac_change, bool quiet, item_def &arm );
 
-bool throw_it(bolt &pbolt, int throw_2, bool teleport=false, int acc_bonus=0,
-              dist *target = NULL);
+bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
+              int acc_bonus = 0, dist *target = NULL);
 
 bool thrown_object_destroyed( item_def *item, int x, int y, bool returning );
 

@@ -2086,6 +2086,10 @@ void process_command( command_type cmd )
         choose_item_for_quiver();
         break;
 
+    case CMD_THROW_ITEM_NO_QUIVER:
+        throw_item_no_quiver();
+        break;
+
     case CMD_WEAR_ARMOUR:
         wear_armour();
         break;
@@ -3460,7 +3464,7 @@ static command_type _keycode_to_command( keycode_type key )
     case 'C': return CMD_CLOSE_DOOR;
     case 'D': return CMD_NO_CMD;
     case 'E': return CMD_EXPERIENCE_CHECK;
-    case 'F': return CMD_NO_CMD;
+    case 'F': return CMD_THROW_ITEM_NO_QUIVER;
     case 'G': return CMD_INTERLEVEL_TRAVEL;
     case 'I': return CMD_DISPLAY_SPELLS;
     case 'M': return CMD_MEMORISE_SPELL;

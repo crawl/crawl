@@ -1902,6 +1902,101 @@ static bool _is_good_combination( species_type spc, job_type cls, bool good)
     return (restrict != CC_BANNED);
 }
 
+// book 0 = fire (CONJ_I, MINOR_MAGIC_I), 1 = ice (CONJ_II, MINOR_MAGIC_II),
+//      2 = summoning (MINOR_MAGIC_III)
+static char_choice_restriction _book_restriction(int booktype,
+                                                 bool summon_too = false)
+{
+    switch (booktype)
+    {
+    case 0:    // Fire
+        switch (you.species)
+        {
+        case SP_OGRE:
+            // Ogres are, of course, really bad at Fire and Ice, so it's usually
+            // restricted, but if the summoning book comes into play unrestrict
+            // those two because ogres are even *worse* at Summonings.
+            if (!summon_too)
+                return (CC_RESTRICTED);
+            // else fall-through
+        case SP_HUMAN:
+        case SP_HIGH_ELF:
+        case SP_GREY_ELF:
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_HILL_ORC:
+        case SP_HALFLING:
+        case SP_GNOME:
+        case SP_KOBOLD:
+        case SP_NAGA:
+        case SP_OGRE_MAGE:
+        case SP_KENKU:
+        case SP_DEMONSPAWN:
+            return (CC_UNRESTRICTED);
+
+        default:
+            return (CC_RESTRICTED);
+        }
+        break;
+
+    case 1:    // Ice
+        switch (you.species)
+        {
+        case SP_OGRE_MAGE:
+            if (!summon_too)
+                return (CC_RESTRICTED);
+            // else fall-through
+        case SP_HUMAN:
+        case SP_HIGH_ELF:
+        case SP_GREY_ELF:
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+        case SP_HALFLING:
+        case SP_GNOME:
+        case SP_KOBOLD:
+        case SP_NAGA:
+        case SP_OGRE:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+            return (CC_UNRESTRICTED);
+
+        default:
+            return (CC_RESTRICTED);
+        }
+        break;
+
+    case 2:    // Summoning
+        switch (you.species)
+        {
+        case SP_HUMAN:
+        case SP_GREY_ELF:
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_MERFOLK:
+        case SP_GNOME:
+        case SP_KOBOLD:
+        case SP_NAGA:
+        case SP_OGRE_MAGE:
+        case SP_KENKU:
+        case SP_DEMONSPAWN:
+        case SP_VAMPIRE:
+            return (CC_UNRESTRICTED);
+            break;
+
+        default:
+            if (player_genus(GENPC_DRACONIAN))
+                return (CC_UNRESTRICTED);
+            else
+                return (CC_RESTRICTED);
+        }
+    }
+    return (CC_RESTRICTED);
+}
+
+
 static bool _choose_book( item_def& book, int firstbook, int numbooks )
 {
     int keyin = 0;
@@ -1911,91 +2006,10 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
     book.plus      = 0;
     book.special   = 1;
 
+    const bool summons_too = (numbooks == 3);
     char_choice_restriction book_restrictions[3];
-
-    // Fire
-    switch (you.species)
-    {
-    case SP_OGRE:
-        // Ogres are, of course, really bad at Fire and Ice, so it's usually
-        // restricted, but if the summoning book comes into play unrestrict
-        // those two because ogres are even *worse* at Summonings.
-        if (numbooks < 3)
-            book_restrictions[0] = CC_RESTRICTED;
-        // else fall-through
-    case SP_HUMAN:
-    case SP_HIGH_ELF:
-    case SP_GREY_ELF:
-    case SP_DEEP_ELF:
-    case SP_SLUDGE_ELF:
-    case SP_MOUNTAIN_DWARF:
-    case SP_HILL_ORC:
-    case SP_HALFLING:
-    case SP_GNOME:
-    case SP_KOBOLD:
-    case SP_NAGA:
-    case SP_OGRE_MAGE:
-    case SP_KENKU:
-    case SP_DEMONSPAWN:
-        book_restrictions[0] = CC_UNRESTRICTED;
-        break;
-
-    default:
-        book_restrictions[0] = CC_RESTRICTED;
-    }
-
-    // Ice
-    switch (you.species)
-    {
-    case SP_OGRE_MAGE:
-        if (numbooks < 3)
-            book_restrictions[0] = CC_RESTRICTED;
-        // else fall-through
-    case SP_HUMAN:
-    case SP_HIGH_ELF:
-    case SP_GREY_ELF:
-    case SP_DEEP_ELF:
-    case SP_SLUDGE_ELF:
-    case SP_HILL_ORC:
-    case SP_MERFOLK:
-    case SP_HALFLING:
-    case SP_GNOME:
-    case SP_KOBOLD:
-    case SP_NAGA:
-    case SP_OGRE:
-    case SP_GHOUL:
-    case SP_VAMPIRE:
-        book_restrictions[1] = CC_UNRESTRICTED;
-        break;
-
-    default:
-        book_restrictions[1] = CC_RESTRICTED;
-    }
-
-    // Summoning
-    switch (you.species)
-    {
-    case SP_HUMAN:
-    case SP_GREY_ELF:
-    case SP_DEEP_ELF:
-    case SP_SLUDGE_ELF:
-    case SP_MERFOLK:
-    case SP_GNOME:
-    case SP_KOBOLD:
-    case SP_NAGA:
-    case SP_OGRE_MAGE:
-    case SP_KENKU:
-    case SP_DEMONSPAWN:
-    case SP_VAMPIRE:
-        book_restrictions[2] = CC_UNRESTRICTED;
-        break;
-
-    default:
-        if (player_genus(GENPC_DRACONIAN))
-            book_restrictions[2] = CC_UNRESTRICTED;
-        else
-            book_restrictions[2] = CC_RESTRICTED;
-    }
+    for (int i = 0; i < numbooks; i++)
+        book_restrictions[i] = _book_restriction(i, summons_too);
 
     // Using the fact that CONJ_I and MINOR_MAGIC_I are both
     // fire books, CONJ_II and MINOR_MAGIC_II are both ice books.
@@ -2083,7 +2097,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
     else
         ng_book = keyin - 'a' + 1;
 
-    if ( Options.random_pick || keyin == '*' )
+    if (Options.random_pick || keyin == '*')
         keyin = random2(numbooks) + 'a';
 
     book.sub_type = firstbook + keyin - 'a';

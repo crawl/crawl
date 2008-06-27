@@ -159,13 +159,13 @@ void choose_item_for_quiver()
         ammo_t t = _get_weapon_ammo_type(you.weapon());
         you.m_quiver->empty_quiver(t);
 
-        mprf("Emptying quiver for %s.",
+        mprf("Reset %s quiver to default.",
              t == AMMO_THROW    ? "throwing" :
-             t == AMMO_BLOWGUN  ? "blowguns" :
-             t == AMMO_SLING    ? "slings" :
-             t == AMMO_BOW      ? "bows" :
-             t == AMMO_CROSSBOW ? "crossbows"
-                                : "hand crossbows");
+             t == AMMO_BLOWGUN  ? "blowgun" :
+             t == AMMO_SLING    ? "sling" :
+             t == AMMO_BOW      ? "bow" :
+             t == AMMO_CROSSBOW ? "crossbow"
+                                : "hand crossbow");
         return;
     }
     else if (slot == you.equip[EQ_WEAPON])
@@ -194,13 +194,13 @@ void choose_item_for_quiver()
         t = _get_weapon_ammo_type(weapon);
 
     you.m_quiver->set_quiver(you.inv[slot], t);
-    mprf("Quivering %s %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
-         t == AMMO_THROW    ? "as throwing weapon" :
-         t == AMMO_BLOWGUN  ? "for blowguns" :
-         t == AMMO_SLING    ? "for slings" :
-         t == AMMO_BOW      ? "for bows" :
-         t == AMMO_CROSSBOW ? "for crossbows"
-                            : "for hand crossbows");
+    mprf("Quivering %s for %s.", you.inv[slot].name(DESC_INVENTORY).c_str(),
+         t == AMMO_THROW    ? "throwing" :
+         t == AMMO_BLOWGUN  ? "blowguns" :
+         t == AMMO_SLING    ? "slings" :
+         t == AMMO_BOW      ? "bows" :
+         t == AMMO_CROSSBOW ? "crossbows"
+                            : "hand crossbows");
 }
 
 // Notification that item was fired with 'f'.

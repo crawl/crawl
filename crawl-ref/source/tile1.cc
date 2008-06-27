@@ -1925,8 +1925,18 @@ int tileidx_item_throw(const item_def &item, int dx, int dy)
         int ch = -1;
         int dir = _tile_bolt_dir(dx, dy);
 
+        switch (get_ammo_brand(item))
+        {
+        case SPMSL_FLAME:
+            return (tileidx_zap(RED));
+        case SPMSL_ICE:
+            return (tileidx_zap(WHITE));
+        default:
+            break;
+        }
+
         // Thrown items with multiple directions
-        switch(item.sub_type)
+        switch (item.sub_type)
         {
             case MI_ARROW:
                 ch = TILE_MI_ARROW0;
@@ -1952,7 +1962,7 @@ int tileidx_item_throw(const item_def &item, int dx, int dy)
             return ch + dir;
 
         // Thrown items with a single direction
-        switch(item.sub_type)
+        switch (item.sub_type)
         {
             case MI_STONE:
                 ch = TILE_MI_STONE0;
@@ -2333,12 +2343,14 @@ int tileidx_bolt(const bolt &bolt)
     return tileidx_zap(col);
 }
 
-int tileidx_zap(int color)
+int tileidx_zap(int colour)
 {
-    int col = color;
-    if (col > 8) col -= 8;
-    if (col < 1) col = 7;
-    return TILE_SYM_BOLT_OFS -1 + col;
+    int col = colour;
+    if (col > 8)
+        col -= 8;
+    if (col < 1)
+        col = 7;
+    return (TILE_SYM_BOLT_OFS - 1 + col);
 }
 
 // Convert normal tile to 3D tile if it exists
@@ -4472,9 +4484,9 @@ static void _finish_inven_data(int n, int *tiles, int *num, int *idx,
         if (q == 1)
             q = -1;
 
-        if ( type == OBJ_WANDS
-             && ((itm->flags & ISFLAG_KNOW_PLUSES )
-                 || itm->plus2 == ZAPCOUNT_EMPTY) )
+        if (type == OBJ_WANDS
+            && ((itm->flags & ISFLAG_KNOW_PLUSES)
+                || itm->plus2 == ZAPCOUNT_EMPTY))
         {
             q = itm->plus;
         }

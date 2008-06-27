@@ -1472,21 +1472,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         return (false);
     }
 
-    // Currently no difference between f() and fi.
     you.m_quiver->on_item_fired(you.inv[beh.m_slot], beh.chosen_ammo);
-/*
-    // If ammo was chosen via 'fi', it's not supposed to get quivered.
-    // Otherwise, if the user chose different ammo, quiver it.
-    // Same for items selected in tile mode.
-    if (was_chosen || !beh.selected_from_inventory)
-    {
-        you.m_quiver->on_item_fired(you.inv[beh.m_slot], beh.chosen_ammo);
-    }
-    else
-    {
-        you.m_quiver->on_item_fired_fi(you.inv[beh.m_slot]);
-    }
-*/
     you.redraw_quiver = true;
     slot = beh.m_slot;
 
@@ -1589,7 +1575,6 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
     return (item);
 }
 
-
 // If item == -1, prompt the user.
 // If item passed, it will be put into the quiver.
 void fire_thing(int item)
@@ -1599,14 +1584,47 @@ void fire_thing(int item)
     if (item == -1)
         return;
 
-    if (Options.tutorial_left)
-        Options.tut_throw_counter++;
-
     if (check_warning_inscriptions(you.inv[item], OPER_FIRE))
     {
         bolt beam;
         throw_it( beam, item, false, 0, &target );
     }
+}
+
+// Basically does what throwing used to do: throw an item without changing
+// the quiver.
+void throw_item_no_quiver()
+{
+    if (_fire_warn_if_impossible())
+    {
+        flush_input_buffer( FLUSH_ON_FAILURE );
+        return;
+    }
+
+    if (inv_count() < 1)
+    {
+        canned_msg(MSG_NOTHING_CARRIED);
+        return;
+    }
+
+    std::string warn;
+    int slot = _fire_prompt_for_item(warn);
+
+    if (slot == -1)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    if (!_fire_validate_item(slot, warn))
+    {
+        mpr(warn.c_str());
+        return;
+    }
+
+    // Okay, item is valid.
+    bolt beam;
+    throw_it( beam, slot );
 }
 
 // Returns delay multiplier numerator (denominator should be 100) for the
@@ -2216,42 +2234,66 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
 
         // Note that bow_brand is known since the bow is equipped.
-        if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
-            && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
+        if (bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
         {
-            // [dshaligram] Branded arrows are much stronger.
-            dice_mult = (dice_mult * 150) / 100;
+            if (ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
+            {
+#ifdef USE_TILE
+                // Mark brand for tile output.
+                if (ammo_brand != SPMSL_FLAME)
+                    set_item_ego_type( item, OBJ_MISSILES, SPMSL_FLAME );
+#endif
 
-            pbolt.flavour = BEAM_FIRE;
-            pbolt.name = "bolt of ";
+                // [dshaligram] Branded arrows are much stronger.
+                dice_mult = (dice_mult * 150) / 100;
 
-            if (poisoned)
-                pbolt.name += "poison ";
+                pbolt.flavour = BEAM_FIRE;
+                pbolt.name    = "bolt of ";
 
-            pbolt.name += "flame";
-            pbolt.colour  = RED;
-            pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
-            pbolt.thrower = KILL_YOU_MISSILE;
-            pbolt.aux_source.clear();
+                if (poisoned)
+                    pbolt.name += "poison ";
+
+                pbolt.name += "flame";
+                pbolt.colour  = RED;
+                pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
+                pbolt.thrower = KILL_YOU_MISSILE;
+                pbolt.aux_source.clear();
+            }
+#ifdef USE_TILE
+            else
+                set_item_ego_type( item, OBJ_MISSILES, SPMSL_NORMAL );
+#endif
         }
 
-        if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
-            && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
+        if (bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
         {
-            // [dshaligram] Branded arrows are much stronger.
-            dice_mult = (dice_mult * 150) / 100;
+            if (ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
+            {
+#ifdef USE_TILE
+                // Mark brand for tile output.
+                if (ammo_brand != SPMSL_ICE)
+                    set_item_ego_type( item, OBJ_MISSILES, SPMSL_ICE );
+#endif
 
-            pbolt.flavour = BEAM_COLD;
-            pbolt.name    = "bolt of ";
+                // [dshaligram] Branded arrows are much stronger.
+                dice_mult = (dice_mult * 150) / 100;
 
-            if (poisoned)
-                pbolt.name += "poison ";
+                pbolt.flavour = BEAM_COLD;
+                pbolt.name    = "bolt of ";
 
-            pbolt.name   += "frost";
-            pbolt.colour  = WHITE;
-            pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
-            pbolt.thrower = KILL_YOU_MISSILE;
-            pbolt.aux_source.clear();
+                if (poisoned)
+                    pbolt.name += "poison ";
+
+                pbolt.name   += "frost";
+                pbolt.colour  = WHITE;
+                pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
+                pbolt.thrower = KILL_YOU_MISSILE;
+                pbolt.aux_source.clear();
+            }
+#ifdef USE_TILE
+            else
+                set_item_ego_type( item, OBJ_MISSILES, SPMSL_NORMAL );
+#endif
         }
 
         // The chief advantage here is the extra damage this does
@@ -2549,6 +2591,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     else
     {
+        if (Options.tutorial_left)
+            Options.tut_throw_counter++;
+
         // Dropping item copy, since the launched item might be different.
         fire_beam(pbolt, &item, !did_return);
 

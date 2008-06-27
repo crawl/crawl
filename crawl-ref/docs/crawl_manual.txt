@@ -513,10 +513,10 @@ you will find that discretion is often the better part of valour.
 
 There are several other less dangerous methods you can use to kill
 monsters. Hunters and similarly oriented characters will prefer ranged 
-combat to mindless bashing. When wielding some launcher, the 'f' command
-will fire appropriate missiles. See the section on Targeting in the 
-Items Chapter for more on this. Likewise, many magicians will prefer to 
-use spells from a safe distance. They can use the 'Z' command to cast 
+combat to mindless bashing. When wielding some launcher, the 'f' and 'F'
+commands will fire appropriate missiles. See the section on Targeting in 
+the Items Chapter for more on this. Likewise, many magicians will prefer 
+to use spells from a safe distance. They can use the 'z' command to cast 
 spells previously memorised. Again, see the Targeting section.
 
 Some monsters can be friendly; friendly monsters will follow you around 
@@ -677,9 +677,6 @@ using 'f' to fire).
 ( Missiles
 ----------
 
-(The following section assumes the option setting 
-fire_quiver_best = false, which is the default.)
-
 If you would rather pick off monsters from a safe distance, you will
 need missiles for your sling, bow, or other appropriate launcher.
 Several kinds of missiles, such as javelins, are effective when simply
@@ -689,9 +686,12 @@ affects both accuracy and damage.
 
 The 'f' command fires or throws a missile, typically chosen from lots
 suitable for your weapon. The default lot (your "quiver") is displayed
-on the main screen beneath your wielded weapon. It is either the
-previous item you fired, or the "best" available lot, depending on an
-option setting.
+on the main screen beneath your wielded weapon. The quivered item
+will always be what Crawl thinks is most likely to be what you want.
+Thus it will either be an item you previously chose and fired (with 
+'f') or directly quivered (with 'Q'), or the item in your inventory
+that ranks highest in fire_order - if there are several of similar
+order the one with the lowest inventory slot is chosen.
 
 See Appendix 6 (Inscriptions) for inscriptions which let you fine-tune
 the list of items to choose from. See also the "Missiles" section of
@@ -700,12 +700,12 @@ crawl_options.txt.
 The firing interface also allows you to manually select an item to
 throw with 'i'; but it may not be very effective if you lack the
 correct launcher. At times it is sensible to throw weapons like
-spears, daggers, or hand axes. If you manually select a piece of ammo
-this way, it is assumed to be a one-time use, and your quiver will not
-be changed.
+spears, daggers, or hand axes.
 
 Use the '(' or 'Q' command if you want to change your quiver without
 firing.
+If you'd like to throw something without inserting it into the quiver
+use 'F' instead. Note that non-weapon items will never be quivered.
 
 The interface for shooting or throwing things is also used for zapping
 wands and casting certain spells, and is described in detail in
@@ -2309,8 +2309,10 @@ Item interaction (inventory):
                         by pressing their slot key in the inventory.
     f                   Fire quivered missile. If some monster is in
                         sight, either the last target or the nearest
-                        monster will be automatically target. Pressing
-                        f again shoots.
+                        monster will be automatically targeted. 
+                        Pressing f again shoots.
+    F                   Directly choose an item and fire. Contrary to
+                        fi this does not change the quiver.
     (                   Cycle quiver to next suitable missile.
     Q                   Quiver item from a menu.
     q                   Quaff a potion.
@@ -2319,7 +2321,7 @@ Item interaction (inventory):
     Z                   Zap a wand.
     r                   Read a scroll or book.
     M                   Memorise a spell from a book.
-    w                   Wield an item ( - for none).      
+    w                   Wield an item ( - for none).
     '                   Wield item a, or switch to b.
     v                   Evoke power of wielded item.
     W                   Wear armour. Also allows to take off armour.

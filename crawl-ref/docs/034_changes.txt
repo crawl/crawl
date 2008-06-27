@@ -15,6 +15,7 @@ them:
    c         chop up          (was D, dissect)
    E         show experience  (was C)
    v         evoke            (was E)
+   F         fire/throw       (was t)
    t         tell/yell        (was !)
    Ctrl-V    Tiles settings   (was Ctrl-Q)
    Ctrl-Q    quit             (was Q)
