@@ -608,7 +608,7 @@ static bool _xom_is_good(int sever)
                 god_speaks(GOD_XOM, _get_xom_speech("good monster polymorph").c_str());
 
                 monster_polymorph(mon, RANDOM_MONSTER,
-                    mons_wont_attack(mon) ? PPT_MORE : PPT_LESS);
+                    mons_wont_attack(mon) ? PPT_MORE : PPT_LESS, true);
 
                 if (one_chance_in(8)
                     && !mon->has_ench(
@@ -616,9 +616,9 @@ static bool _xom_is_good(int sever)
                 {
                     mon->add_ench(one_chance_in(3) ?
                         ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
-
-                    player_angers_monster(mon);
                 }
+
+                player_angers_monster(mon);
 
                 done = true;
             }
@@ -802,7 +802,7 @@ static bool _xom_is_bad(int sever)
                     god_speaks(GOD_XOM, _get_xom_speech("bad monster polymorph").c_str());
 
                     monster_polymorph(mon, RANDOM_MONSTER,
-                        mons_wont_attack(mon) ? PPT_LESS : PPT_MORE);
+                        mons_wont_attack(mon) ? PPT_LESS : PPT_MORE, true);
 
                     if (one_chance_in(8)
                         && !mon->has_ench(
@@ -810,9 +810,9 @@ static bool _xom_is_bad(int sever)
                     {
                         mon->add_ench(one_chance_in(3) ?
                             ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
-
-                        player_angers_monster(mon);
                     }
+
+                    player_angers_monster(mon);
 
                     done = true;
                 }

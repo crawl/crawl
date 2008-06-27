@@ -1491,7 +1491,8 @@ static bool _is_poly_power_unsuitable(
 // Relaxation still takes effect when needed, no matter what relpower
 // says.
 bool monster_polymorph(monsters *monster, monster_type targetc,
-                       poly_power_type power)
+                       poly_power_type power,
+                       bool force_beh)
 {
     std::string str_polymon;
     int source_power, target_power, relax;
@@ -1630,7 +1631,8 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     if (old_mon_caught)
         check_net_will_hold_monster(monster);
 
-    player_angers_monster(monster);
+    if (!force_beh)
+        player_angers_monster(monster);
 
     return (player_messaged);
 }

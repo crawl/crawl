@@ -82,7 +82,8 @@ enum poly_power_type {
 };
 
 bool monster_polymorph(monsters *monster, monster_type targetc,
-                       poly_power_type power = PPT_SAME);
+                       poly_power_type power = PPT_SAME,
+                       bool force_beh = false);
 
 // last updated: 08jun2000 {dlb}
 /* ***********************************************************************
