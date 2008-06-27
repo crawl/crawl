@@ -5055,6 +5055,12 @@ bool slow_player( int amount )
     if (wearing_amulet( AMU_RESIST_SLOW ))
     {
         mpr("You feel momentarily lethargic.");
+
+        // Identify amulet.
+        item_def amu = you.inv[you.equip[EQ_AMULET]];
+        if (!item_type_known(amu))
+            set_ident_type( amu, ID_KNOWN_TYPE );
+
         return (false);
     }
     else if (you.duration[DUR_SLOW] >= 100)

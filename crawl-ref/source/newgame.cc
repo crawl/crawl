@@ -2041,7 +2041,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
         }
 
         textcolor(BROWN);
-        cprintf(EOL "* - Random choice; "
+        cprintf(EOL "* - Random choice; + - Good random choice; "
                     "Bksp - Back to species and class selection; "
                     "X - Quit" EOL);
 
@@ -2087,16 +2087,36 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
                 break;
             }
         }
-        while (keyin != '*' && (keyin < 'a' || keyin >= ('a' + numbooks)));
+        while (keyin != '*' && keyin != '+'
+               && (keyin < 'a' || keyin >= ('a' + numbooks)));
     }
 
-    if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '*')
+    if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '*'
+        || keyin == '+')
+    {
         ng_book = SBT_RANDOM;
+    }
     else
         ng_book = keyin - 'a' + 1;
 
-    if (Options.random_pick || keyin == '*')
-        keyin = random2(numbooks) + 'a';
+    if (Options.random_pick || keyin == '*' || keyin == '+')
+    {
+        int good_choices = 0;
+        if (keyin == '+' || Options.random_pick && Options.good_random)
+        {
+            for (int i = 0; i < numbooks; i++)
+            {
+                if (_book_restriction(i, summons_too) == CC_UNRESTRICTED
+                    && one_chance_in(++good_choices))
+                {
+                    keyin = i;
+                }
+            }
+        }
+
+        if (!good_choices)
+            keyin = random2(numbooks) + 'a';
+    }
 
     book.sub_type = firstbook + keyin - 'a';
     return (true);
@@ -2128,10 +2148,8 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
             return (CC_UNRESTRICTED);
 
         default:
-            if (player_genus(GENPC_DRACONIAN))
-                return (CC_UNRESTRICTED);
-            else
-                return (CC_RESTRICTED);
+            return (player_genus(GENPC_DRACONIAN) ? CC_UNRESTRICTED
+                                                  : CC_RESTRICTED);
         }
 
     // Mace and hand axe, usually the same aptitude.
@@ -2155,10 +2173,8 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
             return (CC_UNRESTRICTED);
 
         default:
-            if (player_genus(GENPC_DRACONIAN))
-                return (CC_UNRESTRICTED);
-            else
-                return (CC_RESTRICTED);
+            return (player_genus(GENPC_DRACONIAN) ? CC_UNRESTRICTED
+                                                  : CC_RESTRICTED);
         }
 
     case WPN_SPEAR:
@@ -2174,13 +2190,10 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
         case SP_MINOTAUR:
         case SP_KENKU:
             return (CC_UNRESTRICTED);
-            break;
 
         default:
-            if (player_genus(GENPC_DRACONIAN))
-                return (CC_UNRESTRICTED);
-            else
-                return (CC_RESTRICTED);
+            return (player_genus(GENPC_DRACONIAN) ? CC_UNRESTRICTED
+                                                  : CC_RESTRICTED);
         }
 
     case WPN_TRIDENT:
@@ -2252,7 +2265,7 @@ static bool _choose_weapon()
             Options.prev_weapon = WPN_UNKNOWN;
 
         textcolor(BROWN);
-        cprintf(EOL "* - Random choice; "
+        cprintf(EOL "* - Random choice; + - Good random choice; "
                     "Bksp - Back to species and class selection; "
                     "X - Quit" EOL);
 
@@ -2297,30 +2310,50 @@ static bool _choose_weapon()
                 }
            }
         }
-        while (keyin != '*' && (keyin < 'a' || keyin > ('a' + num_choices))
+        while (keyin != '*' && keyin != '+'
+                  && (keyin < 'a' || keyin > ('a' + num_choices))
                || startwep_restrictions[keyin - 'a'] == CC_BANNED);
 
 
-        if (keyin != '*' && effective_stat_bonus(startwep[keyin - 'a']) > -4)
+        if (keyin != '*' && keyin != '+'
+            && effective_stat_bonus(startwep[keyin - 'a']) > -4)
         {
             cprintf(EOL "A fine choice. " EOL);
             delay(1000);
         }
     }
 
-    if (Options.random_pick || Options.weapon == WPN_RANDOM || keyin == '*')
+    if (Options.random_pick || Options.weapon == WPN_RANDOM || keyin == '*'
+        || keyin == '+')
     {
         Options.weapon = WPN_RANDOM;
-        // Try to choose a decent weapon.
-        for (int times = 0; times < 50; times++)
-        {
-            keyin = random2(num_choices);
-            int x = effective_stat_bonus(startwep[keyin]);
-            if (x > -2)
-                break;
-        }
-        keyin += 'a';
         ng_weapon = WPN_RANDOM;
+
+        int good_choices = 0;
+        if (keyin == '+' || Options.good_random && keyin != '*')
+        {
+            for (int i = 0; i < num_choices; i++)
+            {
+                if (_weapon_restriction(startwep[keyin]) == CC_UNRESTRICTED
+                    && one_chance_in(++good_choices))
+                {
+                    keyin = i;
+                }
+            }
+        }
+
+        if (!good_choices)
+        {
+            // Still try to choose a decent weapon.
+            for (int times = 0; times < 50; times++)
+            {
+                keyin = random2(num_choices);
+                int x = effective_stat_bonus(startwep[keyin]);
+                if (x > -2)
+                    break;
+            }
+            keyin += 'a';
+        }
     }
     else
         ng_weapon = startwep[keyin - 'a'];
@@ -2352,6 +2385,28 @@ static bool _is_valid_religion(god_type god)
     default:
         // All gods are allowed.
         return (true);
+    }
+}
+
+static bool _has_good_necromancy_apts()
+{
+    switch (you.species)
+    {
+    case SP_HUMAN:
+    case SP_DEEP_ELF:
+    case SP_SLUDGE_ELF:
+    case SP_KOBOLD:
+    case SP_NAGA:
+    case SP_OGRE_MAGE:
+    case SP_KENKU:
+    case SP_DEMONSPAWN:
+    case SP_MUMMY:
+    case SP_GHOUL:
+    case SP_VAMPIRE:
+        return (true);
+
+    default:
+        return (player_genus(GENPC_DRACONIAN));
     }
 }
 
@@ -4705,8 +4760,12 @@ bool _give_items_skills()
         }
         else if (Options.random_pick || Options.death_knight == DK_RANDOM)
         {
-            choice = (coinflip() ? DK_NECROMANCY : DK_YREDELEMNUL);
-            ng_dk  = DK_RANDOM;
+            ng_dk = DK_RANDOM;
+
+            if (Options.good_random && !_has_good_necromancy_apts())
+                choice = DK_YREDELEMNUL;
+            else
+                choice = (coinflip() ? DK_NECROMANCY : DK_YREDELEMNUL);
         }
         else
         {
@@ -4715,24 +4774,11 @@ bool _give_items_skills()
             textcolor( CYAN );
             cprintf(EOL "From where do you draw your power?" EOL);
 
-            switch (you.species)
-            {
-            case SP_HUMAN:
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_KOBOLD:
-            case SP_NAGA:
-            case SP_OGRE_MAGE:
-            case SP_KENKU:
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
+            if (_has_good_necromancy_apts())
                 textcolor(LIGHTGREY);
-                break;
-            default:
-                textcolor(player_genus(GENPC_DRACONIAN) ? LIGHTGREY : DARKGREY);
-            }
+            else
+                textcolor(DARKGREY);
+
             cprintf("a - Necromantic magic" EOL);
 
             // Yredelemnul is an okay choice for everyone.
@@ -4778,6 +4824,10 @@ bool _give_items_skills()
                         break;
                     }
                     keyn = '*'; // for ng_dk setting
+                    // fall-through for random
+                case '+':
+                    if (keyn == '+' && !_has_good_necromancy_apts())
+                        choice = DK_YREDELEMNUL;
                     // fall-through for random
                 case '*':
                     choice = coinflip()? DK_NECROMANCY : DK_YREDELEMNUL;
