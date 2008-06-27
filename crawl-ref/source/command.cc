@@ -1733,6 +1733,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>G</w> : interlevel travel\n"
             "<w>Ctrl-F</w> : Find items\n"
             "<w>Ctrl-W</w> : set Waypoint\n"
+            "<w>Ctrl-E</w> : Exclude square from searches\n"
             "<w>/ Dir.</w>, <w>Shift-Dir.</w>: long walk\n"
             "<w>* Dir.</w>, <w>Ctrl-Dir.</w> : open/close door, \n"
             "         untrap, attack without move\n",
@@ -1740,7 +1741,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     cols.add_formatted(
             0,
-            "\n"
             "<h>Item types (and common commands)\n"
             "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
             "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>(</w> cycle)\n"
