@@ -4576,8 +4576,11 @@ bool dgn_place_monster(mons_spec &mspec,
                                                           : mid;
 
             const habitat_type habitat = mons_habitat_by_type(type);
-            if (habitat != HT_LAND)
+            if (habitat != HT_LAND
+                && (habitat != HT_WATER || !mons_class_amphibious(mid)))
+            {
                 grd[vx][vy] = habitat2grid(habitat);
+            }
         }
 
         mgen_data mg(static_cast<monster_type>(mid));

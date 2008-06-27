@@ -217,6 +217,7 @@ static void _hell_spawn_random_monsters()
         viewwindow(true, false);
     }
 }
+
 //#define DEBUG_MON_CREATION
 void spawn_random_monsters()
 {
