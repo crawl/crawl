@@ -6447,8 +6447,7 @@ void player::petrify(int str)
     if (str > petrif && (petrif < 3 || one_chance_in(petrif)))
         petrif = str;
 
-    if (petrif > 13)
-        petrif = 13;
+    petrif = std::min(13, petrif);
 }
 
 void player::slow_down(int str)
