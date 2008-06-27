@@ -91,6 +91,7 @@
 #include "place.h"
 #include "player.h"
 #include "randart.h"
+#include "religion.h"
 #include "skills.h"
 #include "skills2.h"
 #include "spl-book.h"
@@ -1987,15 +1988,12 @@ static char_choice_restriction _book_restriction(int booktype,
             break;
 
         default:
-            if (player_genus(GENPC_DRACONIAN))
-                return (CC_UNRESTRICTED);
-            else
-                return (CC_RESTRICTED);
+            return (player_genus(GENPC_DRACONIAN) ? CC_UNRESTRICTED
+                                                  : CC_RESTRICTED);
         }
     }
     return (CC_RESTRICTED);
 }
-
 
 static bool _choose_book( item_def& book, int firstbook, int numbooks )
 {
@@ -2104,6 +2102,103 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
     return (true);
 }
 
+static char_choice_restriction _weapon_restriction(weapon_type wpn)
+{
+    // Short sword
+    switch (wpn)
+    {
+    case WPN_SHORT_SWORD:
+        switch (you.species)
+        {
+        case SP_HUMAN:
+        case SP_HIGH_ELF:
+        case SP_GREY_ELF:
+        case SP_DEEP_ELF:
+        // Sludge elves have bad aptitudes with short swords (110) but are
+        // still better with them than any other starting weapon.
+        case SP_SLUDGE_ELF:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_GNOME:
+        case SP_SPRIGGAN:
+        case SP_NAGA:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_VAMPIRE:
+            return (CC_UNRESTRICTED);
+
+        default:
+            if (player_genus(GENPC_DRACONIAN))
+                return (CC_UNRESTRICTED);
+            else
+                return (CC_RESTRICTED);
+        }
+
+    // Mace and hand axe, usually the same aptitude.
+    case WPN_MACE:
+        if (you.species == SP_TROLL)
+            return (CC_UNRESTRICTED);
+        // else fall-through
+    case WPN_HAND_AXE:
+        switch (you.species)
+        {
+        case SP_HUMAN:
+        case SP_MOUNTAIN_DWARF:
+        case SP_HILL_ORC:
+        case SP_MUMMY:
+        case SP_CENTAUR:
+        case SP_NAGA:
+        case SP_OGRE:
+        case SP_OGRE_MAGE:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+            return (CC_UNRESTRICTED);
+
+        default:
+            if (player_genus(GENPC_DRACONIAN))
+                return (CC_UNRESTRICTED);
+            else
+                return (CC_RESTRICTED);
+        }
+
+    case WPN_SPEAR:
+        switch (you.species)
+        {
+        case SP_HUMAN:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+        case SP_MUMMY:
+        case SP_NAGA:
+        case SP_CENTAUR:
+        case SP_OGRE_MAGE:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+            return (CC_UNRESTRICTED);
+            break;
+
+        default:
+            if (player_genus(GENPC_DRACONIAN))
+                return (CC_UNRESTRICTED);
+            else
+                return (CC_RESTRICTED);
+        }
+
+    case WPN_TRIDENT:
+        if (you.species != SP_MERFOLK
+            && (you.char_class != JOB_GLADIATOR
+                || player_size(PSIZE_BODY) < SIZE_MEDIUM))
+        {
+            return (CC_BANNED);
+        }
+
+        // Both are polearms, right?
+        return (_weapon_restriction(WPN_SPEAR));
+
+    default:
+        return (CC_BANNED);
+    }
+}
+
 static bool _choose_weapon()
 {
     const weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
@@ -2112,101 +2207,11 @@ static bool _choose_weapon()
     char_choice_restriction startwep_restrictions[5];
 
     int keyin = 0;
-    int num_choices = 5;
+    const int num_choices = (you.char_class == JOB_GLADIATOR
+                             || you.species == SP_MERFOLK ? 5 : 4);
 
-    // Short sword
-    switch (you.species)
-    {
-    case SP_HUMAN:
-    case SP_HIGH_ELF:
-    case SP_GREY_ELF:
-    case SP_DEEP_ELF:
-    // Sludge elves have bad aptitudes with short swords (110) but are still
-    // better with them than any other starting weapon.
-    case SP_SLUDGE_ELF:
-    case SP_HALFLING:
-    case SP_KOBOLD:
-    case SP_GNOME:
-    case SP_SPRIGGAN:
-    case SP_NAGA:
-    case SP_MINOTAUR:
-    case SP_KENKU:
-    case SP_VAMPIRE:
-        startwep_restrictions[0] = CC_UNRESTRICTED;
-        break;
-
-    default:
-        if (player_genus(GENPC_DRACONIAN))
-            startwep_restrictions[0] = CC_UNRESTRICTED;
-        else
-            startwep_restrictions[0] = CC_RESTRICTED;
-    }
-
-    // Mace and hand axe, usually the same aptitude.
-    switch (you.species)
-    {
-    case SP_TROLL:
-        startwep_restrictions[1] = CC_UNRESTRICTED;
-        startwep_restrictions[2] = CC_RESTRICTED;
-        break;
-    case SP_HUMAN:
-    case SP_MOUNTAIN_DWARF:
-    case SP_HILL_ORC:
-    case SP_MUMMY:
-    case SP_CENTAUR:
-    case SP_NAGA:
-    case SP_OGRE:
-    case SP_OGRE_MAGE:
-    case SP_MINOTAUR:
-    case SP_KENKU:
-        startwep_restrictions[1] = CC_UNRESTRICTED;
-        startwep_restrictions[2] = CC_UNRESTRICTED;
-        break;
-
-    default:
-        if (player_genus(GENPC_DRACONIAN))
-        {
-            startwep_restrictions[1] = CC_UNRESTRICTED;
-            startwep_restrictions[2] = CC_UNRESTRICTED;
-        }
-        else
-        {
-            startwep_restrictions[1] = CC_RESTRICTED;
-            startwep_restrictions[2] = CC_RESTRICTED;
-        }
-    }
-
-    // Spear
-    switch (you.species)
-    {
-    case SP_HUMAN:
-    case SP_HILL_ORC:
-    case SP_MERFOLK:
-    case SP_MUMMY:
-    case SP_NAGA:
-    case SP_CENTAUR:
-    case SP_OGRE_MAGE:
-    case SP_MINOTAUR:
-    case SP_KENKU:
-        startwep_restrictions[3] = CC_UNRESTRICTED;
-        break;
-
-    default:
-        if (player_genus(GENPC_DRACONIAN))
-            startwep_restrictions[3] = CC_UNRESTRICTED;
-        else
-            startwep_restrictions[3] = CC_RESTRICTED;
-    }
-
-    // Trident
-    if (you.char_class == JOB_GLADIATOR && you.species != SP_KOBOLD
-        || you.species == SP_MERFOLK)
-    {
-        // Both are polearms, right?
-        startwep_restrictions[4] = startwep_restrictions[3];
-    }
-    else
-        startwep_restrictions[4] = CC_BANNED;
+    for (int i = 0; i < num_choices; i++)
+        startwep_restrictions[i] = _weapon_restriction(startwep[i]);
 
     if (Options.weapon != WPN_UNKNOWN && Options.weapon != WPN_RANDOM
         && (Options.weapon != WPN_TRIDENT || num_choices == 5))
@@ -2293,10 +2298,10 @@ static bool _choose_weapon()
            }
         }
         while (keyin != '*' && (keyin < 'a' || keyin > ('a' + num_choices))
-               || startwep_restrictions[keyin-'a'] == CC_BANNED);
+               || startwep_restrictions[keyin - 'a'] == CC_BANNED);
 
 
-        if (keyin != '*' && effective_stat_bonus(startwep[keyin-'a']) > -4)
+        if (keyin != '*' && effective_stat_bonus(startwep[keyin - 'a']) > -4)
         {
             cprintf(EOL "A fine choice. " EOL);
             delay(1000);
@@ -2323,6 +2328,31 @@ static bool _choose_weapon()
     you.inv[0].sub_type = startwep[keyin - 'a'];
 
     return (true);
+}
+
+// Gods are not restricted but there are some choices that are banned (false).
+// Everything else will be unrestricted.
+static bool _is_valid_religion(god_type god)
+{
+    // Sanity check.
+    if (you.species == SP_DEMIGOD)
+        return (false);
+
+    if (god == GOD_BEOGH)
+        return (you.species == SP_HILL_ORC);
+
+    switch (you.species)
+    {
+    case SP_DEMONSPAWN:
+    case SP_MUMMY:
+    case SP_GHOUL:
+    case SP_VAMPIRE:
+        return (!is_good_god(god));
+
+    default:
+        // All gods are allowed.
+        return (true);
+    }
 }
 
 static void _init_player(void)
@@ -4060,7 +4090,7 @@ bool _give_items_skills()
         else
         {
             // Disallow invalid choices.
-            if (you.species != SP_HILL_ORC && Options.priest == GOD_BEOGH)
+            if (!_is_valid_religion(Options.priest))
                 Options.priest = GOD_NO_GOD;
 
             if (Options.priest != GOD_NO_GOD && Options.priest != GOD_RANDOM)
@@ -4082,41 +4112,23 @@ bool _give_items_skills()
                 textcolor( CYAN );
                 cprintf(EOL "Which god do you wish to serve?" EOL);
 
-                switch (you.species)
-                {
-                case SP_MOUNTAIN_DWARF:
-                    textcolor( LIGHTGREY );
-                    break;
-                default:
-                    textcolor( DARKGREY );
-                }
+                // Zin and Yredelemnul are valid for everyone.
+                // (The undead have been handled above.)
+                textcolor(LIGHTGREY);
                 cprintf("a - Zin (for traditional priests)" EOL);
-
-                switch (you.species)
-                {
-                case SP_HUMAN:
-                case SP_MOUNTAIN_DWARF:
-                case SP_MUMMY:
-                case SP_DEMONSPAWN:
-                    textcolor( LIGHTGREY );
-                    break;
-                default:
-                    textcolor( DARKGREY );
-                }
                 cprintf("b - Yredelemnul (for priests of death)" EOL);
 
-                if (you.species == SP_HILL_ORC)
-                {
-                    textcolor( LIGHTGREY );
-                    cprintf("c - Beogh (priest of Orcs)" EOL);
-                }
+                const bool valid = _is_valid_religion(GOD_BEOGH);
+                textcolor( valid ? LIGHTGREY : DARKGREY );
+                cprintf("%s - Beogh (priest of Orcs)" EOL,
+                        valid ? "c" : " ");
 
                 textcolor( BROWN );
                 cprintf(EOL "* - Random choice; "
                             "Bksp - Back to species and class selection; "
                             "X - Quit" EOL);
 
-                if (Options.prev_pr == GOD_BEOGH && you.species != SP_HILL_ORC)
+                if (!_is_valid_religion(Options.prev_pr))
                     Options.prev_pr = GOD_NO_GOD;
 
                 if (Options.prev_pr != GOD_NO_GOD)
@@ -4183,7 +4195,7 @@ bool _give_items_skills()
                 }
                 while (you.religion == GOD_NO_GOD);
 
-                ng_pr = (keyn == '*'? GOD_RANDOM : you.religion);
+                ng_pr = (keyn == '*' ? GOD_RANDOM : you.religion);
             }
         }
         break;
@@ -4705,42 +4717,26 @@ bool _give_items_skills()
 
             switch (you.species)
             {
+            case SP_HUMAN:
             case SP_DEEP_ELF:
             case SP_SLUDGE_ELF:
+            case SP_KOBOLD:
+            case SP_NAGA:
+            case SP_OGRE_MAGE:
             case SP_KENKU:
+            case SP_DEMONSPAWN:
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
                 textcolor(LIGHTGREY);
                 break;
             default:
-                textcolor(DARKGREY);
+                textcolor(player_genus(GENPC_DRACONIAN) ? LIGHTGREY : DARKGREY);
             }
             cprintf("a - Necromantic magic" EOL);
 
-            switch (you.species)
-            {
-            case SP_HUMAN:
-            case SP_HIGH_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_HALFLING:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_GNOME:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_RED_DRACONIAN:
-            case SP_MINOTAUR:
-            case SP_DEMONSPAWN:
-            case SP_GHOUL:
-                textcolor(LIGHTGREY);
-                break;
-            default:
-                textcolor(DARKGREY);
-            }
-
+            // Yredelemnul is an okay choice for everyone.
+            textcolor(LIGHTGREY);
             cprintf("b - the god Yredelemnul" EOL);
 
             textcolor( BROWN );
@@ -4867,56 +4863,9 @@ bool _give_items_skills()
             textcolor( CYAN );
             cprintf(EOL "Which god of chaos do you wish to serve?" EOL);
 
-            switch (you.species)
-            {
-            case SP_HUMAN:
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_HILL_ORC:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_CENTAUR:
-            case SP_MINOTAUR:
-            case SP_DEMONSPAWN:
-            case SP_MERFOLK:
-            case SP_VAMPIRE:
-                textcolor( LIGHTGREY );
-                break;
-            default:
-                if (player_genus(GENPC_DRACONIAN))
-                    textcolor( LIGHTGREY );
-                else
-                    textcolor( DARKGREY );
-            }
+            // Both Xom and Makhleb are okay choices for everyone.
+            textcolor( LIGHTGREY );
             cprintf("a - Xom of Chaos" EOL);
-
-            switch (you.species)
-            {
-            case SP_HUMAN:
-            case SP_HIGH_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_HALFLING:
-            case SP_HILL_ORC:
-            case SP_KOBOLD:
-            case SP_MUMMY:
-            case SP_GNOME:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_CENTAUR:
-            case SP_MINOTAUR:
-            case SP_DEMONSPAWN:
-            case SP_GHOUL:
-            case SP_MERFOLK:
-            case SP_VAMPIRE:
-                textcolor( LIGHTGREY );
-                break;
-            default:
-                if (player_genus(GENPC_DRACONIAN))
-                    textcolor( LIGHTGREY );
-                else
-                    textcolor( DARKGREY );
-            }
             cprintf("b - Makhleb the Destroyer" EOL);
 
             textcolor( BROWN );
@@ -4928,9 +4877,9 @@ bool _give_items_skills()
             {
                 textcolor(BROWN);
                 cprintf(EOL "Enter - %s" EOL,
-                        Options.prev_ck == GOD_XOM?     "Xom" :
-                        Options.prev_ck == GOD_MAKHLEB? "Makhleb"
-                                                      : "Random");
+                        Options.prev_ck == GOD_XOM     ? "Xom" :
+                        Options.prev_ck == GOD_MAKHLEB ? "Makhleb"
+                                                       : "Random");
                 textcolor(LIGHTGREY);
             }
 
@@ -5007,10 +4956,10 @@ bool _give_items_skills()
         _newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING);
         _newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
 
-        you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_DODGING]  = 1;
-        you.skills[SK_THROWING] = 2;
-        you.skills[SK_STAVES]   = 3;
+        you.skills[SK_FIGHTING]    = 2;
+        you.skills[SK_DODGING]     = 1;
+        you.skills[SK_THROWING]    = 2;
+        you.skills[SK_STAVES]      = 3;
         you.skills[SK_INVOCATIONS] = 3;
         break;
 
