@@ -3402,7 +3402,8 @@ void zap_wand( int slot )
 
     const bool alreadyknown = item_type_known(wand);
     const bool alreadytried = item_type_tried(wand);
-    const bool dangerous    = player_in_a_dangerous_place();
+          bool invis_enemy  = false;
+    const bool dangerous    = player_in_a_dangerous_place(&invis_enemy);
 
     if (!alreadyknown)
         beam.effect_known = false;
@@ -3476,7 +3477,13 @@ void zap_wand( int slot )
         return;
     }
 
-    if (dangerous && alreadyknown && wand.sub_type == WAND_RANDOM_EFFECTS)
+    // Zapping the wand isn't risky if you aim it away from all monsters
+    // and yourself, unless there's a nearby invisible enemy and you're
+    // trying to hit it at random.
+    const bool risky = dangerous && (beam.fr_count || beam.foe_count
+                                     || invis_enemy || beam.aimed_at_feet);
+
+    if (risky && alreadyknown && wand.sub_type == WAND_RANDOM_EFFECTS)
     {
         // Xom loves it when you use a Wand of Random Effects and
         // there is a dangerous monster nearby...
@@ -3520,7 +3527,7 @@ void zap_wand( int slot )
     exercise( SK_EVOCATIONS, 1 );
     alert_nearby_monsters();
 
-    if (!alreadyknown && !alreadytried && dangerous)
+    if (!alreadyknown && !alreadytried && risky)
     {
         // Xom loves it when you use an unknown wand and there is a
         // dangerous monster nearby...
