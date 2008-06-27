@@ -3030,12 +3030,8 @@ static void _handle_behaviour(monsters *mon)
             // Monsters that have been pacified begin leaving the level.
             if (isPacified)
             {
-                // XXX: Uncomment this next block to actually enable
-                // leaving the level.
-                /*
                 new_beh = BEH_LEAVE;
                 break;
-                */
             }
 
             // Is our foe in LOS?
