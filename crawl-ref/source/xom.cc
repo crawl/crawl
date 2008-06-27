@@ -616,6 +616,8 @@ static bool _xom_is_good(int sever)
                 {
                     mon->add_ench(one_chance_in(3) ?
                         ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
+
+                    player_angers_monster(mon);
                 }
 
                 done = true;
@@ -808,6 +810,8 @@ static bool _xom_is_bad(int sever)
                     {
                         mon->add_ench(one_chance_in(3) ?
                             ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
+
+                        player_angers_monster(mon);
                     }
 
                     done = true;
