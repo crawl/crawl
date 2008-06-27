@@ -2663,7 +2663,7 @@ Inscriptions containing the following strings affect the behaviour of
 some commands:
   !*   prompt before any action using this item
   !w   prompt before wielding and unwielding
-  !z   prompt before zapping
+  !Z   prompt before zapping
   !e   prompt before eating
   !q   prompt before quaffing
   !r   prompt before reading
@@ -2672,7 +2672,8 @@ some commands:
   !T   prompt before taking off armour
   !P   prompt before putting on jewelry
   !R   prompt before removing jewelry
-  !E   prompt before evoking an item
+  !v   prompt before evoking an item
+  !Q   prompt before explicitly quivering an item
   !p   prompt Nemelex Xobeh worshippers before sacrificing a stack
        containing an item with this inscription; if the answer is "No",
        the whole stack will be skipped, and no item is sacrificed
@@ -2685,8 +2686,8 @@ some commands:
        this inscription)
   =s   If stash tracking is explicit, then dropping this item will
        cause a stash to automatically be marked.
-  =f   item is excluded when cycling ammunition
-  +f   item is included when cycling ammunition
+  =f   item is excluded when cycling ammunition and from automatic quivering
+  +f   item is included when cycling ammunition and in automatic quivering
   !D   prompt before performing an action that might destroy this item
        If you're attempting to destroy an item thus inscribed by
        sacrificing it, destroying a weapon, or burning a book in the 

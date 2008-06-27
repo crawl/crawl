@@ -2192,11 +2192,12 @@ enum operation_types
     OPER_READ     = 'r',
     OPER_MEMORISE = 'M',
     OPER_ZAP      = 'Z',
-    OPER_EXAMINE  = 'v',
+    OPER_EXAMINE  = 'x',
     OPER_FIRE     = 'f',
     OPER_PRAY     = 'p',
-    OPER_EVOKE    = 'E',
+    OPER_EVOKE    = 'v',
     OPER_DESTROY  = 'D',
+    OPER_QUIVER   = 'Q',
     OPER_ANY      = 0
 };
 

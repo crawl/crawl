@@ -1245,6 +1245,7 @@ static std::string _operation_verb(operation_types oper)
     case OPER_PRAY:           return "sacrifice";
     case OPER_EVOKE:          return "evoke";
     case OPER_DESTROY:        return "destroy";
+    case OPER_QUIVER:         return "quiver";
     case OPER_ANY:
     default:
         return "choose";
