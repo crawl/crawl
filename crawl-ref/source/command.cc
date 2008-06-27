@@ -1743,7 +1743,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "\n"
             "<h>Item types (and common commands)\n"
             "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-            "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>(</w> to cycle ammo)\n"
+            "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>(</w> cycle)\n"
             "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
             "<brown>%</brown> : corpses and food (<w>c</w>hop up and <w>e</w>at)\n"
             "<w>?</w> : scrolls (<w>r</w>ead)\n"
@@ -1789,7 +1789,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             1,
             "<h>Game Saving and Quitting:\n"
             "<w>S</w> : Save game and exit\n"
-            "<w>Ctrl-X</w> : Save game without query and exit\n"
+            "<w>Ctrl-X</w> : save and eXit without query\n"
             "<w>Ctrl-Q</w> : Quit without saving\n",
             true, true, _cmdhelp_textfilter);
 
@@ -1827,8 +1827,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>i</w> : show Inventory list\n"
             "<w>]</w> : show inventory of equipped items\n"
             "<w>{</w> : inscribe item\n"
-            "<w>f</w> : Fire or throw an item\n"
-            "<w>F</w> : Fire or throw an item without quivering it\n"
+            "<w>f</w> : Fire next appropriate item\n"
+            "<w>F</w> : select an item and Fire it\n"
             "<w>(</w> : cycle current ammunition\n"
             "<w>e</w> : Eat food (but tries floor first)\n"
             "<w>q</w> : Quaff a potion\n"
