@@ -2520,6 +2520,12 @@ static bool _make_monster_angry(const monsters *mon, monsters *targ)
 
 bool moth_incite_monsters(const monsters *mon)
 {
+    if (is_sanctuary(you.x_pos, you.y_pos)
+        || is_sanctuary(mon->x, mon->y))
+    {
+        return 0;
+    }
+
     int goaded = 0;
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
@@ -2528,6 +2534,9 @@ bool moth_incite_monsters(const monsters *mon)
             continue;
 
         if (mon->pos().distance_from(targ->pos()) > 3)
+            continue;
+
+        if (is_sanctuary(targ->x, targ->y))
             continue;
 
         // Cannot goad other moths of wrath!

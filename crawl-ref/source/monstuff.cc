@@ -3842,6 +3842,12 @@ static void _make_mons_stop_fleeing(monsters *mon)
         behaviour_event(mon, ME_CORNERED);
 }
 
+static bool _is_player_or_mon_sanct(const monsters* monster)
+{
+    return (is_sanctuary(you.x_pos, you.y_pos)
+            || is_sanctuary(monster->x, monster->y));
+}
+
 //---------------------------------------------------------------
 //
 // handle_nearby_ability
@@ -3927,7 +3933,8 @@ static void _handle_nearby_ability(monsters *monster)
         if (coinflip() && !mons_friendly(monster)
             && !mons_is_wandering(monster)
             && !mons_is_fleeing(monster)
-            && !mons_is_leaving(monster))
+            && !mons_is_leaving(monster)
+            && !_is_player_or_mon_sanct(monster))
         {
             simple_monster_message(monster, " stares at you.");
 
@@ -3941,7 +3948,8 @@ static void _handle_nearby_ability(monsters *monster)
         if (coinflip() && !mons_friendly(monster)
             && !mons_is_wandering(monster)
             && !mons_is_fleeing(monster)
-            && !mons_is_leaving(monster))
+            && !mons_is_leaving(monster)
+            && !_is_player_or_mon_sanct(monster))
         {
             simple_monster_message(monster, " stares at you.");
 
@@ -4001,8 +4009,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         break;
 
     case MONS_ORANGE_STATUE:
-        if (is_sanctuary(you.x_pos, you.y_pos)
-            || is_sanctuary(monster->x, monster->y))
+        if (_is_player_or_mon_sanct(monster))
         {
             break;
         }
@@ -4010,8 +4017,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         break;
 
     case MONS_SILVER_STATUE:
-        if (is_sanctuary(you.x_pos, you.y_pos)
-            || is_sanctuary(monster->x, monster->y))
+        if (_is_player_or_mon_sanct(monster))
         {
             break;
         }
@@ -4142,11 +4148,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (is_sanctuary(you.x_pos, you.y_pos)
-            || is_sanctuary(monster->x, monster->y))
-        {
+        if (_is_player_or_mon_sanct(monster))
             break;
-        }
 
         if (one_chance_in(3))
             used = _plant_spit(monster, beem);
@@ -4185,11 +4188,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
-        if (is_sanctuary(you.x_pos, you.y_pos)
-            || is_sanctuary(monster->x, monster->y))
-        {
+        if (_is_player_or_mon_sanct(monster))
             break;
-        }
 
         // Friendly fiends won't use torment, preferring hellfire
         // (right now there is no way a monster can predict how
@@ -5331,8 +5331,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
                                                    : hspell_pass[5]);
                 }
-                else if (is_sanctuary(you.x_pos, you.y_pos)
-                         || is_sanctuary(monster->x, monster->y))
+                else if (_is_player_or_mon_sanct(monster))
                 {
                     return (false);
                 }
@@ -5361,11 +5360,8 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                     // All direct-effect/summoning/self-enchantments/etc.
                     spellOK = true;
 
-                    if (is_sanctuary(you.x_pos, you.y_pos)
-                        || is_sanctuary(monster->x, monster->y))
-                    {
+                    if (_is_player_or_mon_sanct(monster))
                         spellOK = false;
-                    }
                     else if (ms_direct_nasty(spell_cast)
                              && mons_aligned(monster_index(monster),
                                              monster->foe))
@@ -5409,11 +5405,8 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 // If not okay, then maybe we'll cast a defensive spell.
                 if (!spellOK)
                 {
-                    if (is_sanctuary(you.x_pos, you.y_pos)
-                        || is_sanctuary(monster->x, monster->y))
-                    {
+                    if (_is_player_or_mon_sanct(monster))
                         spell_cast = SPELL_NO_SPELL;
-                    }
                     else
                     {
                         spell_cast = (coinflip() ? hspell_pass[2]
@@ -5432,8 +5425,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             && (spell_cast == SPELL_NO_SPELL
                  || !_is_emergency_spell(hspell_pass, spell_cast)
                     && one_chance_in(4))
-            && !is_sanctuary(you.x_pos, you.y_pos)
-            && !is_sanctuary(monster->x, monster->y))
+            && !_is_player_or_mon_sanct(monster))
         {
             spell_cast = draco_breath;
             finalAnswer = true;
@@ -5607,11 +5599,8 @@ static bool _handle_throw(monsters *monster, bolt & beem)
     if (mon_item == NON_ITEM || !is_valid_item(mitm[mon_item]))
         return (false);
 
-    if (is_sanctuary(monster->x, monster->y)
-        || is_sanctuary(beem.target_x, beem.target_y))
-    {
+    if (_is_player_or_mon_sanct(monster))
         return (false);
-    }
 
     // Throwing a net at a target that is already caught would be
     // completely useless, so bail out.
