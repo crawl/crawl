@@ -1615,16 +1615,14 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     if (get_equip_race(item) == ISFLAG_ORCISH
         && !(item_race == MAKE_ITEM_ORCISH && forced_ego))
     {
-        // No holy wrath or slay orc and 1/2 the time no-ego.
-        const int brand = get_weapon_brand( item );
-        if (brand == SPWPN_HOLY_WRATH
-            || brand == SPWPN_ORC_SLAYING
+        // No orc slaying, and no ego at all half the time.
+        const int brand = get_weapon_brand(item);
+        if (brand == SPWPN_ORC_SLAYING
             || (brand != SPWPN_NORMAL && !forced_ego && coinflip()))
         {
-            set_item_ego_type( item, OBJ_WEAPONS, SPWPN_NORMAL );
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
         }
     }
-    // All done!
 }
 
 static item_status_flag_type _determine_missile_race(const item_def& item,
