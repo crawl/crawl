@@ -5688,11 +5688,12 @@ bool player::can_pass_through_feat(dungeon_feature_type grid) const
 
 size_type player::body_size(int psize, bool base) const
 {
-    size_type ret = (base) ? SIZE_CHARACTER : transform_size( psize );
+    size_type ret = (base) ? SIZE_CHARACTER
+                           : transform_size( psize );
 
     if (ret == SIZE_CHARACTER)
     {
-        // transformation has size of character's species:
+        // Transformation has size of character's species.
         switch (species)
         {
         case SP_OGRE:

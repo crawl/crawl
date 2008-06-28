@@ -2448,11 +2448,11 @@ bool monster_pathfind::calc_path_to_neighbours()
     // same total travel cost, the orthogonal will be picked first, and thus
     // zigzagging can be significantly reduced.
     //
-    //      1  0  2       This means directions are looked at, in order,
+    //      1  0  3       This means directions are looked at, in order,
     //       \ | /        1, 3, 5, 7 (diagonals) followed by 0, 2, 4, 6
-    //      7--.--3       (orthogonals). This is achieved by the assignment
+    //      6--.--2       (orthogonals). This is achieved by the assignment
     //       / | \        of (dir = 0) once dir has passed 7.
-    //      6  5  4
+    //      7  4  5
     //
     for (int dir = 1; dir < 8; (dir += 2) == 9 && (dir = 0))
     {
@@ -2593,17 +2593,16 @@ std::vector<coord_def> monster_pathfind::backtrack()
     while (pos != start);
     ASSERT(pos == start);
 
-    return path;
+    return (path);
 }
 
 // Reduces the path coordinates to only a couple of key waypoints needed
 // to reach the target. Waypoints are chosen such that from one waypoint you
 // can see (and, more importantly, reach) the next one. Note that
 // grid_see_grid() is probably rather too conservative in these estimates.
-// This is done because Crawl's pathfinding once a target is in sight and easy
-// reach is both very robust and natural, especially if we want to flexibly
+// This is done because Crawl's pathfinding - once a target is in sight and easy
+// reach - is both very robust and natural, especially if we want to flexibly
 // avoid plants and other monsters in the way.
-
 std::vector<coord_def> monster_pathfind::calc_waypoints()
 {
     std::vector<coord_def> path = backtrack();
@@ -2644,7 +2643,7 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
     if (pos != path[path.size() - 1])
         waypoints.push_back(pos);
 
-    return waypoints;
+    return (waypoints);
 }
 
 // Checks whether a given monster can pass over a certain position, respecting
@@ -2657,7 +2656,7 @@ bool monster_pathfind::traversable(coord_def p)
     if (!monster_habitable_grid(montype, grd(p)))
         return (false);
 
-    // Monsters that can't open doors, won't be able to pass them.
+    // Monsters that can't open doors won't be able to pass them.
     if ((grd(p) == DNGN_CLOSED_DOOR || grd(p) == DNGN_SECRET_DOOR)
         && mons_itemuse(montype) < MONUSE_OPEN_DOORS)
     {

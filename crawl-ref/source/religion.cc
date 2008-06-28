@@ -512,9 +512,8 @@ std::string print_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_SHINING_ONE:   case GOD_KIKUBAAQUDGHA: case GOD_OKAWARU:
-    case GOD_MAKHLEB:       case GOD_SIF_MUNA:      case GOD_TROG:
-        snprintf(info, INFO_SIZE, "sacrifice items%s",
+    case GOD_SHINING_ONE:
+        snprintf(info, INFO_SIZE, "sacrifice evil items%s",
                  verbose ? " (by dropping them on an altar and praying)" : "");
 
         likes.push_back(info);
@@ -2497,7 +2496,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case GOD_LUGONU:
             simple_god_message(
                 make_stringf(" accepts your %skill.",
-                             thing_done == DID_KILL_HOLY ? "" : "collateral ").c_str());
+                             thing_done == DID_KILL_HOLY ? "" : "collateral ")
+                            .c_str());
 
             ret = true;
             if (random2(level + 18) > 2)
@@ -3237,12 +3237,14 @@ void lose_piety(int pgn)
     // are withheld.
     if (!player_under_penance() && you.piety != old_piety)
     {
-        if (you.piety <= 160 && old_piety > 160 &&
-            (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
-             && you.num_gifts[you.religion] == 0)
+        if (you.piety <= 160 && old_piety > 160
+            && (you.religion == GOD_SHINING_ONE || you.religion == GOD_LUGONU)
+            && you.num_gifts[you.religion] == 0)
+        {
             simple_god_message(" is no longer ready to bless your weapon.");
+        }
 
-        for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
+        for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
         {
             if (you.piety < piety_breakpoint(i)
                 && old_piety >= piety_breakpoint(i))
