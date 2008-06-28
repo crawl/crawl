@@ -4470,7 +4470,7 @@ int scan_randarts(randart_prop_type which_property, bool calc_unid)
         if (eq == -1)
             continue;
 
-        // only weapons give their effects when in our hands
+        // Only weapons give their effects when in our hands.
         if (i == EQ_WEAPON && you.inv[ eq ].base_type != OBJ_WEAPONS)
             continue;
 
@@ -4478,15 +4478,17 @@ int scan_randarts(randart_prop_type which_property, bool calc_unid)
             continue;
 
         // Ignore unidentified items [TileCrawl dump enhancements].
-        if (!item_ident(you.inv[ eq ], ISFLAG_KNOW_PROPERTIES) &&
-                !calc_unid)
+        if (!item_ident(you.inv[ eq ], ISFLAG_KNOW_PROPERTIES)
+            && !calc_unid)
+        {
             continue;
+        }
 
         retval += randart_wpn_property( you.inv[ eq ], which_property );
     }
 
     return (retval);
-}                               // end scan_randarts()
+}
 
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
                  const char *cause, bool see_source)

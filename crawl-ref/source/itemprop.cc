@@ -568,8 +568,8 @@ bool item_is_critical(const item_def &item)
 
     return (item.base_type == OBJ_MISCELLANY
             && item.sub_type == MISC_RUNE_OF_ZOT
-            && (item.plus != RUNE_DEMONIC
-                && item.plus != RUNE_ABYSSAL));
+            && item.plus != RUNE_DEMONIC
+            && item.plus != RUNE_ABYSSAL);
 }
 
 void set_ident_flags( item_def &item, unsigned long flags )
@@ -630,7 +630,7 @@ unsigned long full_ident_mask( const item_def& item )
         break;
     case OBJ_JEWELLERY:
         flagset = (ISFLAG_KNOW_CURSE | ISFLAG_KNOW_TYPE);
-        if ( ring_has_pluses(item) )
+        if (ring_has_pluses(item))
             flagset |= ISFLAG_KNOW_PLUSES;
         break;
     case OBJ_MISSILES:

@@ -2009,7 +2009,7 @@ void behaviour_event(monsters *mon, int event, int src,
             || ((wontAttack != sourceWontAttack || isSmart)
                 && !mons_is_fleeing(mon) && !mons_is_panicking(mon)))
         {
-            // (Plain) plants and fungi cannot flee or fight back.
+            // (Plain) plants and fungi cannot fight back.
             if (mon->type == MONS_FUNGUS || mon->type == MONS_PLANT)
                 return;
 
@@ -3008,8 +3008,13 @@ static void _handle_behaviour(monsters *mon)
                 mon->target_y = menv[mon->foe].y;
             }
 
-            if (isHurt && !isSmart && isMobile)
+            // Stupid monsters, plants or nonliving monsters cannot flee.
+            if (isHurt && !isSmart && isMobile
+                && mons_class_holiness(mon->type) != MH_PLANT
+                && mons_class_holiness(mon->type) != MH_NONLIVING)
+            {
                 new_beh = BEH_FLEE;
+            }
             break;
 
         case BEH_WANDER:
@@ -3366,6 +3371,13 @@ static void _handle_behaviour(monsters *mon)
             break;
 
         case BEH_CORNERED:
+            // Plants or nonliving monsters cannot fight back.
+            if (mons_class_holiness(mon->type) == MH_PLANT
+                || mons_class_holiness(mon->type) == MH_NONLIVING)
+            {
+                break;
+            }
+
             if (isHealthy)
                 new_beh = BEH_SEEK;
 

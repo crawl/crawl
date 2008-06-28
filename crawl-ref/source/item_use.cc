@@ -4181,10 +4181,9 @@ static bool scroll_modify_item(const scroll_type scroll)
      case SCR_IDENTIFY:
         // This can cause a stupid situation where you try to identify the
         // very scroll you just read, causing you to waste the scroll.
-        if ( !fully_identified(item) )
+        if (!fully_identified(item))
         {
             mpr("This is a scroll of identify!");
-            set_ident_type( item, ID_KNOWN_TYPE );
             identify(-1, item_slot);
             return (true);
         }
@@ -4597,7 +4596,7 @@ void read_scroll( int slot )
     default:
         mpr("Read a buggy scroll, please report this.");
         break;
-    }                           // end switch
+    }
 
     set_ident_type( scroll,
                     (id_the_scroll) ? ID_KNOWN_TYPE : ID_TRIED_TYPE );

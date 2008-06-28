@@ -2736,7 +2736,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     }
     else if (ranged_attack)
     {
-        // if we're doing short time movement and the monster has a
+        // If we're doing short time movement and the monster has a
         // ranged attack (missile or spell), then the monster will
         // flee to gain distance if its "too close", else it will
         // just shift its position rather than charge the player. -- bwr
@@ -2744,18 +2744,18 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         {
             mon->behaviour = BEH_FLEE;
 
-            // if the monster is on the target square, fleeing won't work
+            // If the monster is on the target square, fleeing won't work.
             if (mon->x == mon->target_x && mon->y == mon->target_y)
             {
                 if (you.x_pos != mon->x || you.y_pos != mon->y)
                 {
-                    // flee from player's position if different
+                    // Flee from player's position if different.
                     mon->target_x = you.x_pos;
                     mon->target_y = you.y_pos;
                 }
                 else
                 {
-                    // randomize the target so we have a direction to flee
+                    // Randomize the target so we have a direction to flee.
                     mon->target_x += (random2(3) - 1);
                     mon->target_y += (random2(3) - 1);
                 }
