@@ -657,7 +657,6 @@ bool mons_is_seeking(const monsters *m);
 bool mons_is_fleeing(const monsters *m);
 bool mons_is_panicking(const monsters *m);
 bool mons_is_cornered(const monsters *m);
-bool mons_is_leaving(const monsters *m);
 bool mons_is_lurking(const monsters *m);
 bool mons_is_batty(const monsters *m);
 bool mons_was_seen(const monsters *m);

@@ -2854,8 +2854,8 @@ void update_level(double elapsedTime)
         mons_total++;
 #endif
 
-        // Monsters that are leaving the level often do so now.
-        if (mons_is_leaving(mon) && turns > random2(40) + 21)
+        // Pacified monsters often leave the level now.
+        if (mons_is_pacified(mon) && turns > random2(40) + 21)
         {
             make_mons_leave_level(mon);
             continue;

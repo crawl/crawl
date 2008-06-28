@@ -1188,7 +1188,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             in_transit = true;
             monster->destroy_inventory();
             // Make monster stop patrolling and/or travelling.
-            monster->patrol_point = coord_def(0,0);
+            monster->patrol_point = coord_def(0, 0);
             monster->travel_path.clear();
             monster->travel_target = MTRAV_NONE;
             break;
@@ -2032,8 +2032,11 @@ void behaviour_event(monsters *mon, int event, int src,
         break;
 
     case ME_ALERT:
-        if (mons_friendly(mon) && mon->is_patrolling())
+        if ((mons_friendly(mon) || mons_is_pacified(mon))
+            && mon->is_patrolling())
+        {
             break;
+        }
 
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
@@ -2113,14 +2116,13 @@ void behaviour_event(monsters *mon, int event, int src,
 
     const bool wasLurking =
         (old_behaviour == BEH_LURK && !mons_is_lurking(mon));
-    const bool wasLeaving =
-        (old_behaviour == BEH_LEAVE && !mons_is_leaving(mon));
+    const bool isPacified = mons_is_pacified(mon);
 
-    if ((wasLurking || wasLeaving)
+    if ((wasLurking || isPacified)
         && (event == ME_DISTURB || event == ME_ALERT || event == ME_EVAL))
     {
-        // Lurking monsters or monsters leaving the level won't stop
-        // doing so just because they noticed something.
+        // Lurking monsters or pacified monsters leaving the level won't
+        // stop doing so just because they noticed something.
         mon->behaviour = old_behaviour;
     }
     else if (wasLurking && mon->has_ench(ENCH_SUBMERGED)
@@ -2384,22 +2386,18 @@ static void _mons_find_all_level_exits(const monsters *mon,
 
                 // All types of stairs.
                 if (is_stair(gridc))
-                {
-                    e.push_back(level_exit(coord_def(x, y), MTRAV_STAIR,
-                                false));
-                }
+                    e.push_back(level_exit(coord_def(x, y), false));
 
                 // Shaft traps.
-                trap_type tt = trap_type_at_xy(x, y);
-                if (tt == TRAP_SHAFT && _is_trap_safe(mon, x, y))
-                    e.push_back(level_exit(coord_def(x, y), MTRAV_TRAP, false));
+                if (trap_type_at_xy(x, y) == TRAP_SHAFT
+                    && _is_trap_safe(mon, x, y))
+                {
+                    e.push_back(level_exit(coord_def(x, y), false));
+                }
 
                 // Any place the monster can submerge.
                 if (monster_can_submerge(mon, gridc))
-                {
-                    e.push_back(level_exit(coord_def(x, y), MTRAV_SUBMERSIBLE,
-                                false));
-                }
+                    e.push_back(level_exit(coord_def(x, y), false));
             }
         }
     }
@@ -2437,56 +2435,44 @@ static int _mons_find_nearest_level_exit(const monsters *mon,
 // types, this should be expanded along with it.
 static void _mons_indicate_level_exit(const monsters *mon, int x, int y)
 {
-    switch (mon->travel_target)
+    // All types of stairs.
+    if (is_travelable_stair(grd[x][y]))
     {
-    case MTRAV_STAIR:
-    {
-        if (is_travelable_stair(grd[x][y]))
-        {
-            command_type dir = grid_stair_direction(grd[x][y]);
-            simple_monster_message(mon,
-                make_stringf(" %s the stairs.",
-                    dir == CMD_GO_UPSTAIRS   ? "goes up" :
-                    dir == CMD_GO_DOWNSTAIRS ? "goes down"
-                                             : "takes").c_str());
-        }
-        else if (is_gate(grd[x][y]))
-            simple_monster_message(mon, " passes through the gate.");
-        break;
+        command_type dir = grid_stair_direction(grd[x][y]);
+        simple_monster_message(mon,
+            make_stringf(" %s the stairs.",
+                dir == CMD_GO_UPSTAIRS   ? "goes up" :
+                dir == CMD_GO_DOWNSTAIRS ? "goes down"
+                                         : "takes").c_str());
     }
-
-    case MTRAV_TRAP:
+    else if (is_gate(grd[x][y]))
+        simple_monster_message(mon, " passes through the gate.");
+    // Shaft traps.
+    else if (trap_type_at_xy(x, y) == TRAP_SHAFT)
     {
-        trap_type tt = trap_type_at_xy(x, y);
-        if (tt == TRAP_SHAFT)
-        {
-            simple_monster_message(mon, " falls through a shaft!");
-            grd[x][y] = trap_category(tt);
-        }
-        break;
+        simple_monster_message(mon, " falls through a shaft!");
+        grd[x][y] = trap_category(trap_type_at_xy(x, y));
     }
-
-    case MTRAV_SUBMERSIBLE:
+    // Any place the monster can submerge.
+    else if (monster_can_submerge(mon, grd[x][y]))
+    {
         simple_monster_message(mon,
             make_stringf(" disappears into %s!",
                 mons_habitat(mon) == HT_LAVA  ? "the lava" :
                 mons_habitat(mon) == HT_WATER ? "the water"
                                               : "thin air").c_str());
-        break;
-
-    default:
-        break;
     }
 }
 
 void make_mons_leave_level(monsters *mon)
 {
-    if (mons_is_leaving(mon))
+    if (mons_is_pacified(mon))
     {
         if (mons_near(mon) && player_monster_visible(mon))
             _mons_indicate_level_exit(mon, mon->target_x, mon->target_y);
 
-        // Monsters leaving the level take their stuff with them.
+        // Pacified monsters leaving the level take their stuff with
+        // them.
         mon->flags |= MF_HARD_RESET;
         monster_die(mon, KILL_DISMISSED, 0);
     }
@@ -3027,11 +3013,46 @@ static void _handle_behaviour(monsters *mon)
             break;
 
         case BEH_WANDER:
-            // Monsters that have been pacified begin leaving the level.
             if (isPacified)
             {
-                new_beh = BEH_LEAVE;
-                break;
+                // If a pacified monster is far enough away from the
+                // player, make it leave the level.
+                if (grid_distance(mon->x, mon->y, you.x_pos, you.y_pos)
+                        >= LOS_RADIUS * LOS_RADIUS * 4)
+                {
+                    make_mons_leave_level(mon);
+                    return;
+                }
+
+                // If a pacified monster isn't travelling toward
+                // someplace from which it can leave the level, make it
+                // start doing so.
+                if (mon->travel_target != MTRAV_PATROL
+                    && mon->travel_target != MTRAV_UNREACHABLE)
+                {
+                    e_index = _mons_find_nearest_level_exit(mon, e);
+
+                    if (e_index != -1)
+                    {
+                        mon->foe = MHITNOT;
+
+                        patrolling = true;
+                        mon->patrol_point = e[e_index].target;
+
+                        mon->target_x = e[e_index].target.x;
+                        mon->target_y = e[e_index].target.y;
+
+                        mon->travel_target = MTRAV_PATROL;
+                        mon->travel_path.clear();
+                    }
+                }
+
+                // If the level exit is unreachable, find a new one.
+                if (mon->travel_target == MTRAV_UNREACHABLE)
+                {
+                    e[e_index].unreachable = true;
+                    mon->travel_target = MTRAV_NONE;
+                }
             }
 
             // Is our foe in LOS?
@@ -3064,6 +3085,7 @@ static void _handle_behaviour(monsters *mon)
                          mon->name(DESC_PLAIN).c_str(),
                          mon->target_x, mon->target_y);
 #endif
+
                     need_target = false;
                     if (mon->x == mon->travel_path[0].x
                         && mon->y == mon->travel_path[0].y)
@@ -3079,6 +3101,18 @@ static void _handle_behaviour(monsters *mon)
                             mpr("We reached the end of our path: stop "
                                 "travelling.");
 #endif
+
+                            // If a pacified monster is leaving the
+                            // level via something other than a trap,
+                            // and has reached its goal, handle it here.
+                            if (isPacified
+                                && mon->x == e[e_index].target.x
+                                && mon->y == e[e_index].target.y)
+                            {
+                                make_mons_leave_level(mon);
+                                return;
+                            }
+
                             mon->travel_target = MTRAV_NONE;
                             need_target = true;
                         }
@@ -3293,164 +3327,6 @@ static void _handle_behaviour(monsters *mon)
             break;
 
         case BEH_LEAVE:
-            // If the monster is far enough away from the player, make
-            // it leave the level.
-            if (grid_distance(mon->x, mon->y, you.x_pos, you.y_pos)
-                    >= LOS_RADIUS * LOS_RADIUS * 4)
-            {
-                make_mons_leave_level(mon);
-                return;
-            }
-
-            // If the monster isn't travelling toward someplace from
-            // which it can leave the level, and it can move (or at
-            // least teleport, as a mimic can), make it start doing so.
-            if (mon->travel_target == MTRAV_NONE)
-            {
-                e_index = _mons_find_nearest_level_exit(mon, e);
-
-                if (e_index != -1)
-                {
-                    mon->foe = MHITNOT;
-                    mon->target_x = e[e_index].target.x;
-                    mon->target_y = e[e_index].target.y;
-                    mon->travel_target = e[e_index].target_type;
-                    if (travelling)
-                        mon->travel_path.clear();
-                }
-            }
-            else if (mon->travel_target != MTRAV_UNREACHABLE
-                        || one_chance_in(12))
-            {
-#ifdef DEBUG_PATHFIND
-                mprf("%s: Level exit out of reach! What now?",
-                     mon->name(DESC_PLAIN).c_str());
-#endif
-                // If we're already on our way, do nothing.
-                if (travelling)
-                {
-                    // Current target still valid?
-                    if (mon->x == mon->travel_path[0].x
-                        && mon->y == mon->travel_path[0].y)
-                    {
-                        // Get next waypoint.
-                        mon->travel_path.erase(
-                            mon->travel_path.begin() );
-
-                        if (!mon->travel_path.empty())
-                        {
-                            mon->target_x = mon->travel_path[0].x;
-                            mon->target_y = mon->travel_path[0].y;
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // Use pathfinding to find a (new) path to the level exit.
-                const int dist = grid_distance(mon->x, mon->y,
-                                               e[e_index].target.x,
-                                               e[e_index].target.y);
-
-#ifdef DEBUG_PATHFIND
-                mprf("Need to calculate a path... (dist = %d)", dist);
-#endif
-                const bool native = mons_is_native_in_branch(mon);
-
-                int range = 0;
-                switch (mons_intel(mon->type))
-                {
-                case I_PLANT:
-                    range = 2;
-                    break;
-                case I_INSECT:
-                    range = 3;
-                    break;
-                case I_ANIMAL:
-                    range = 4;
-                    break;
-                case I_NORMAL:
-                    range = 8;
-                    break;
-                default:
-                    // Highly intelligent monsters can find their way
-                    // anywhere. (range == 0 means no restriction.)
-                    break;
-                }
-
-                if (range && native)
-                    range += 3;
-
-                if (range > 0 && dist > range)
-                {
-                    mon->travel_target = MTRAV_UNREACHABLE;
-#ifdef DEBUG_PATHFIND
-                    mprf("Distance too great, don't attempt pathfinding! (%s)",
-                         mon->name(DESC_PLAIN).c_str());
-#endif
-                }
-                else
-                {
-#ifdef DEBUG_PATHFIND
-                    mprf("Need a path for %s from (%d, %d) to (%d, %d), "
-                         "max. dist = %d",
-                         mon->name(DESC_PLAIN).c_str(), mon->x, mon->y,
-                         e[e_index].target.x, e[e_index].target.y, range);
-#endif
-                    monster_pathfind mp;
-                    if (range > 0)
-                        mp.set_range(range);
-
-                    if (mp.start_pathfind(mon, e[e_index].target))
-                    {
-                        mon->travel_path = mp.calc_waypoints();
-                        if (!mon->travel_path.empty())
-                        {
-                            // Okay then, we found a path.  Let's use it!
-                            mon->target_x = mon->travel_path[0].x;
-                            mon->target_y = mon->travel_path[0].y;
-                            break;
-                        }
-                        else
-                        {
-#ifdef DEBUG_PATHFIND
-                            mpr("No path found!");
-#endif
-                            mon->travel_target = MTRAV_UNREACHABLE;
-                            // Pass information on to nearby monsters.
-                            _mark_neighbours_target_unreachable(mon);
-                        }
-                    }
-                    else
-                    {
-#ifdef DEBUG_PATHFIND
-                        mpr("No path found!");
-#endif
-                        mon->travel_target = MTRAV_UNREACHABLE;
-                        // Pass information on to nearby monsters.
-                        _mark_neighbours_target_unreachable(mon);
-                    }
-                }
-            }
-
-            // If the level exit is unreachable, find a new one.
-            if (mon->travel_target == MTRAV_UNREACHABLE)
-            {
-                e[e_index].unreachable = true;
-                mon->travel_target = MTRAV_NONE;
-            }
-
-            // If the monster is leaving the level via a stair or
-            // submersion, and has reached its goal, handle it here.
-            if ((mon->travel_target == MTRAV_STAIR
-                || mon->travel_target == MTRAV_SUBMERSIBLE)
-                    && mon->x == e[e_index].target.x
-                    && mon->y == e[e_index].target.y)
-            {
-                make_mons_leave_level(mon);
-                return;
-            }
             break;
 
         case BEH_FLEE:
@@ -3933,7 +3809,7 @@ static void _handle_nearby_ability(monsters *monster)
         if (coinflip() && !mons_friendly(monster)
             && !mons_is_wandering(monster)
             && !mons_is_fleeing(monster)
-            && !mons_is_leaving(monster)
+            && !mons_is_pacified(monster)
             && !_is_player_or_mon_sanct(monster))
         {
             simple_monster_message(monster, " stares at you.");
@@ -3948,7 +3824,7 @@ static void _handle_nearby_ability(monsters *monster)
         if (coinflip() && !mons_friendly(monster)
             && !mons_is_wandering(monster)
             && !mons_is_fleeing(monster)
-            && !mons_is_leaving(monster)
+            && !mons_is_pacified(monster)
             && !_is_player_or_mon_sanct(monster))
         {
             simple_monster_message(monster, " stares at you.");
@@ -4369,7 +4245,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         // confused, fleeing, or leaving the level.
         if (monster->has_ench(ENCH_CONFUSION)
             || mons_is_fleeing(monster)
-            || mons_is_leaving(monster)
+            || mons_is_pacified(monster)
             || mons_friendly(monster)
             || silenced(monster->x, monster->y)
             || silenced(you.x_pos, you.y_pos))
@@ -4674,7 +4550,7 @@ static bool _handle_scroll(monsters *monster)
         if (!monster->has_ench(ENCH_TP))
         {
             if (mons_is_caught(monster) || mons_is_fleeing(monster)
-                || mons_is_leaving(monster))
+                || mons_is_pacified(monster))
             {
                 simple_monster_message(monster, " reads a scroll.");
                 monster_teleport(monster, false);
@@ -4686,7 +4562,7 @@ static bool _handle_scroll(monsters *monster)
 
     case SCR_BLINKING:
         if (mons_is_caught(monster) || mons_is_fleeing(monster)
-            || mons_is_leaving(monster))
+            || mons_is_pacified(monster))
         {
             if (mons_near(monster))
             {
@@ -5218,7 +5094,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                              SPELL_GREATER_HEALING : SPELL_LESSER_HEALING;
                 finalAnswer = true;
             }
-            else if (mons_is_fleeing(monster) || mons_is_leaving(monster))
+            else if (mons_is_fleeing(monster) || mons_is_pacified(monster))
             {
                 // Since the player isn't around, we'll extend the monster's
                 // normal choices to include the self-enchant slot.
@@ -5262,7 +5138,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             // get here... even if the monster is on its last HP.  That
             // way we don't have to worry about monsters infinitely casting
             // Healing on themselves (e.g. orc high priests).
-            if ((mons_is_fleeing(monster) || mons_is_leaving(monster))
+            if ((mons_is_fleeing(monster) || mons_is_pacified(monster))
                 && ms_low_hitpoint_cast(monster, hspell_pass[5]))
             {
                 spell_cast = hspell_pass[5];
@@ -5326,7 +5202,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 // Setup spell - monsters that are fleeing or leaving
                 // the level will always try to choose their emergency
                 // spell.
-                if (mons_is_fleeing(monster) || mons_is_leaving(monster))
+                if (mons_is_fleeing(monster) || mons_is_pacified(monster))
                 {
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
                                                    : hspell_pass[5]);
@@ -5584,9 +5460,9 @@ static bool _handle_throw(monsters *monster, bolt & beem)
         return (false);
     }
 
-    // Greatly lowered chances if the monster is fleeing or leaving the
-    // level.
-    if ((mons_is_fleeing(monster) || mons_is_leaving(monster))
+    // Greatly lowered chances if the monster is fleeing or pacified and
+    // leaving the level.
+    if ((mons_is_fleeing(monster) || mons_is_pacified(monster))
         && !one_chance_in(8))
     {
         return (false);
@@ -6120,10 +5996,9 @@ static void _handle_monster_move(int i, monsters *monster)
 
         if (!mons_is_caught(monster))
         {
-            // If the monster is leaving the level via a trap, and is
-            // about to reach its goal, handle it here.
-            if (mons_is_leaving(monster)
-                && monster->travel_target == MTRAV_TRAP
+            // If a pacified monster is leaving the level via a trap,
+            // and is about to reach its goal, handle it here.
+            if (mons_is_pacified(monster)
                 && monster->x + mmov_x == monster->target_x
                 && monster->y + mmov_y == monster->target_y)
             {
@@ -6715,7 +6590,7 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
 
     if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
     {
-        if ((mons_is_fleeing(monster) || mons_is_leaving(monster))
+        if ((mons_is_fleeing(monster) || mons_is_pacified(monster))
             && intel >= I_NORMAL)
         {
             return (true);

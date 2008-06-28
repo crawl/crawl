@@ -37,15 +37,13 @@ enum mon_desc_type   // things that cross categorical lines {dlb}
 struct level_exit
 {
     coord_def target;
-    montravel_target_type target_type;
     bool unreachable;
 
 public:
     level_exit(coord_def c = coord_def(-1, -1),
-               montravel_target_type m = MTRAV_NONE,
                bool u = true)
 
-        : target(c), target_type(m), unreachable(u)
+        : target(c), unreachable(u)
     {
     }
 };

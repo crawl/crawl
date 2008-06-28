@@ -329,7 +329,7 @@ static bool tag_follower_at(const coord_def &pos)
     fmenv->flags |= MF_TAKING_STAIRS;
 
     // Clear patrolling/travel markers.
-    fmenv->patrol_point = coord_def(0,0);
+    fmenv->patrol_point = coord_def(0, 0);
     fmenv->travel_path.clear();
     fmenv->travel_target = MTRAV_NONE;
 

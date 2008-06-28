@@ -2798,10 +2798,7 @@ enum montravel_target_type
     MTRAV_NONE = 0,
     MTRAV_PLAYER,      // Travelling to reach the player.
     MTRAV_PATROL,      // Travelling to reach the patrol point.
-    MTRAV_UNREACHABLE, // Not travelling because target is unreachable.
-    MTRAV_STAIR,       // Travelling to reach a stair.
-    MTRAV_TRAP,        // Travelling to reach a trap.
-    MTRAV_SUBMERSIBLE  // Travelling to reach a submersible place.
+    MTRAV_UNREACHABLE  // Not travelling because target is unreachable.
 };
 
 #ifndef USE_TILE

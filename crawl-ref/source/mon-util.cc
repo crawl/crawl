@@ -2206,11 +2206,6 @@ bool mons_is_cornered(const monsters *m)
     return (m->behaviour == BEH_CORNERED);
 }
 
-bool mons_is_leaving(const monsters *m)
-{
-    return (m->behaviour == BEH_LEAVE);
-}
-
 bool mons_is_lurking(const monsters *m)
 {
     return (m->behaviour == BEH_LURK);
@@ -2264,7 +2259,7 @@ void mons_pacify(monsters *mon)
         mon->flags |= MF_GOT_HALF_XP;
     }
 
-    // Make the monster leave the level.
+    // Make the monster begin leaving the level.
     behaviour_event(mon, ME_EVAL);
 }
 
