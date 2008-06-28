@@ -3972,6 +3972,12 @@ void tile_draw_floor()
                 }
                 bg = tile_dngn[gc.x][gc.y];
             }
+            else if (map_bounds(gc) && object != 0)
+            {
+                // outside border
+                tile_dngn[gc.x][gc.y] = tileidx_feature(object, gc.x, gc.y);
+                bg = tile_dngn[gc.x][gc.y];
+            }
             // init tiles
             env.tile_bg[ep.x-1][ep.y-1] = bg;
             env.tile_fg[ep.x-1][ep.y-1] = 0;
