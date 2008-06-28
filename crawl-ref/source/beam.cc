@@ -703,7 +703,7 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
 
     // Should only happen if the player answered 'n' to one of those
     // "Fire through friendly?" prompts.
-    if (pbolt.fr_count > 0)
+    if (pbolt.fr_count < 0)
     {
         canned_msg(MSG_OK);
         you.turn_is_over = false;
@@ -4335,7 +4335,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         {
             if (beam.thrower == KILL_YOU_MISSILE || beam.thrower == KILL_YOU)
             {
-                if (!beam.fr_count && !_beam_is_harmless(beam, mon))
+                if (beam.fr_count == 1 && !_beam_is_harmless(beam, mon))
                 {
                     const bool target = (beam.target_x == mon->x
                                          && beam.target_y == mon->y);
@@ -4343,7 +4343,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                     if (stop_attack_prompt(mon, true, target))
                     {
                         mpr("Test2");
-                        beam.fr_count = 1;
+                        beam.fr_count = INT_MIN;
                         return (BEAM_STOP);
                     }
                 }
@@ -4504,14 +4504,14 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         if (beam.thrower == KILL_YOU_MISSILE || beam.thrower == KILL_YOU)
         {
-            if (!beam.fr_count && !_beam_is_harmless(beam, mon))
+            if (beam.fr_count == 1 && !_beam_is_harmless(beam, mon))
             {
                 const bool target = (beam.target_x == mon->x
                                      && beam.target_y == mon->y);
 
                 if (stop_attack_prompt(mon, true, target))
                 {
-                    beam.fr_count = 1;
+                    beam.fr_count = INT_MIN;
                     return (BEAM_STOP);
                 }
             }
