@@ -1968,11 +1968,12 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
             // bounds check
             if (in_los_bounds(drawx, drawy))
             {
+#ifndef USE_TILE
                 cgotoxy(drawx, drawy);
                 put_colour_ch(
                     pbolt.colour == BLACK ? random_colour() : pbolt.colour,
                     pbolt.type );
-
+#endif
                 // Get curses to update the screen so we can see the beam.
                 update_screen();
 
