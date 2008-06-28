@@ -4069,12 +4069,6 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (!mons_player_visible( monster ))
             break;
 
-        if (is_sanctuary(you.x_pos, you.y_pos)
-            || is_sanctuary(monster->x, monster->y))
-        {
-            break;
-        }
-
         if (coinflip())
             break;
 
@@ -4110,12 +4104,6 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 
         if (!mons_player_visible( monster ))
             break;
-
-        if (is_sanctuary(you.x_pos, you.y_pos)
-            || is_sanctuary(monster->x, monster->y))
-        {
-            break;
-        }
 
         if (coinflip())
             break;
@@ -4273,12 +4261,6 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (!mons_player_visible( monster ))
             break;
 
-        if (is_sanctuary(you.x_pos, you.y_pos)
-            || is_sanctuary(monster->x, monster->y))
-        {
-            break;
-        }
-
         // The fewer spikes the manticore has left, the less
         // likely it will use them.
         if (random2(16) >= static_cast<int>(monster->number))
@@ -4344,12 +4326,6 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 
         if (!mons_player_visible( monster ))
             break;
-
-        if (is_sanctuary(you.x_pos, you.y_pos)
-            || is_sanctuary(monster->x, monster->y))
-        {
-            break;
-        }
 
         if (monster->type != MONS_HELL_HOUND && random2(13) < 3
             || one_chance_in(10))
@@ -4900,6 +4876,9 @@ static bool _handle_wand(monsters *monster, bolt &beem)
 
     if (niceWand || zap)
     {
+        if (!niceWand)
+            _make_mons_stop_fleeing(monster);
+
         if (!simple_monster_message(monster, " zaps a wand."))
         {
             if (!silenced(you.x_pos, you.y_pos))

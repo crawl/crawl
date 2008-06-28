@@ -2286,6 +2286,12 @@ bool mons_should_fire(struct bolt &beam)
     if (beam.foe_count == 0)
         return (false);
 
+    if (is_sanctuary(you.x_pos, you.y_pos)
+        || is_sanctuary(beam.source_x, beam.source_y))
+    {
+        return (false);
+    }
+
     // If we either hit no friends, or monster too dumb to care.
     if (beam.fr_count == 0 || !beam.smart_monster)
         return (true);
