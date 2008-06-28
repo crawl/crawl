@@ -1774,7 +1774,6 @@ void debug_stethoscope(int mon)
           mons_is_fleeing(menv[i])         ? "flee" :
           mons_is_cornered(menv[i])        ? "cornered" :
           mons_is_panicking(menv[i])       ? "panic" :
-          (menv[i].behaviour == BEH_LEAVE) ? "leave" :
           mons_is_lurking(menv[i])         ? "lurk"
                                            : "unknown"),
          menv[i].behaviour,

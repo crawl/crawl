@@ -3035,7 +3035,7 @@ static void _handle_behaviour(monsters *mon)
                 if (mon->travel_target != MTRAV_PATROL
                     && mon->travel_target != MTRAV_UNREACHABLE)
                 {
-                    mon->foe = MHITNOT;
+                    new_foe = MHITNOT;
                     patrolling = true;
                     mon->travel_path.clear();
 
@@ -3334,9 +3334,6 @@ static void _handle_behaviour(monsters *mon)
                     mon->travel_target = MTRAV_NONE;
                 }
             }
-            break;
-
-        case BEH_LEAVE:
             break;
 
         case BEH_FLEE:

@@ -1880,7 +1880,6 @@ enum beh_type
     BEH_FLEE,
     BEH_CORNERED,
     BEH_PANIC,                         //  like flee but without running away
-    BEH_LEAVE,                         //  leave the level
     BEH_LURK,                          //  stay still until discovered or
                                        //  enemy close by
     NUM_BEHAVIOURS,                    //  max # of legal states
