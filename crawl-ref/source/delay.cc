@@ -663,6 +663,8 @@ void handle_delay( void )
             break;
         case DELAY_BUTCHER:
         case DELAY_BOTTLE_BLOOD:
+            if (!is_valid_item(mitm[delay.parm1]))
+                break;
             mprf(MSGCH_MULTITURN_ACTION, "You start %s the %s.",
                  (delay.type == DELAY_BOTTLE_BLOOD ? "bottling blood from"
                                                    : "butchering"),
