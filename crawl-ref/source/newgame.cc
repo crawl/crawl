@@ -4048,7 +4048,7 @@ bool _give_items_skills()
             // Elven armour is light, we need to know this up front.
             _racialise_starting_equipment();
 
-            you.skills[(player_light_armour()? SK_DODGING : SK_ARMOUR)] = 2;
+            you.skills[(player_light_armour() ? SK_DODGING : SK_ARMOUR)] = 2;
 
             you.skills[SK_THROWING] = 2;
 
