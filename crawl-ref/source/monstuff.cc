@@ -4372,8 +4372,7 @@ static bool _handle_potion(monsters *monster, bolt & beem)
 
     bool                    imbibed     = false;
     item_type_id_state_type ident       = ID_UNKNOWN_TYPE;
-    bool                    was_visible =
-        mons_near(monster) && player_monster_visible(monster);
+    bool was_visible = (mons_near(monster) && player_monster_visible(monster));
 
     const int potion_type = mitm[monster->inv[MSLOT_POTION]].sub_type;
     switch (potion_type)
@@ -4642,8 +4641,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
 
     bool niceWand    = false;
     bool zap         = false;
-    bool was_visible
-             = mons_near(monster) && player_monster_visible(monster);
+    bool was_visible = (mons_near(monster) && player_monster_visible(monster));
 
     item_def &wand(mitm[monster->inv[MSLOT_WAND]]);
 

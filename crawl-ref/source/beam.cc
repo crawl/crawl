@@ -4386,7 +4386,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                     remove_sanctuary(true);
                 }
 
-                set_attack_conducts(conducts, mon);
+                set_attack_conducts(conducts, mon, player_monster_visible(mon));
 
                 if (you.religion == GOD_BEOGH
                     && mons_species(mon->type) == MONS_ORC
@@ -4562,9 +4562,12 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         if (YOU_KILL(beam.thrower) && hurt_final > 0)
         {
+            // It's not the player's fault if he didn't see the monster or
+            // the monster was caught in an unexpected blast of ?immolation.
             const bool okay =
-                (beam.aux_source == "reading a scroll of immolation"
-                 && !beam.effect_known);
+                (!player_monster_visible(mon)
+                 || beam.aux_source == "reading a scroll of immolation"
+                    && !beam.effect_known);
 
             if (is_sanctuary(mon->x, mon->y)
                 || is_sanctuary(you.x_pos, you.y_pos))
