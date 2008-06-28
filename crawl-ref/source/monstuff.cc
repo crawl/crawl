@@ -3030,20 +3030,25 @@ static void _handle_behaviour(monsters *mon)
                 if (mon->travel_target != MTRAV_PATROL
                     && mon->travel_target != MTRAV_UNREACHABLE)
                 {
+                    mon->foe = MHITNOT;
+                    patrolling = true;
+                    mon->travel_path.clear();
+
                     e_index = _mons_find_nearest_level_exit(mon, e);
 
                     if (e_index != -1)
                     {
-                        mon->foe = MHITNOT;
-
-                        patrolling = true;
                         mon->patrol_point = e[e_index].target;
-
                         mon->target_x = e[e_index].target.x;
                         mon->target_y = e[e_index].target.y;
-
                         mon->travel_target = MTRAV_PATROL;
-                        mon->travel_path.clear();
+                    }
+                    else
+                    {
+                        mon->patrol_point = coord_def(0, 0);
+                        mon->target_x = mon->x;
+                        mon->target_y = mon->y;
+                        mon->travel_target = MTRAV_NONE;
                     }
                 }
 
