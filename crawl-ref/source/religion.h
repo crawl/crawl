@@ -108,7 +108,7 @@ bool is_evil_item(const item_def& item);
 bool god_dislikes_item_handling(const item_def &item);
 bool ely_destroy_weapons();
 bool trog_burn_books();
-bool tso_unchivalric_attack_safe_monster(const actor *act);
+bool tso_unchivalric_attack_safe_monster(const monsters *mon);
 
 void mons_make_god_gift(monsters *mon, god_type god = you.religion);
 bool mons_is_god_gift(const monsters *mon, god_type god = you.religion);

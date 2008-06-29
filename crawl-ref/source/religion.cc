@@ -5902,8 +5902,8 @@ int piety_breakpoint(int i)
 
 // Returns true if the Shining One doesn't mind your using unchivalric
 // attacks on this creature.
-bool tso_unchivalric_attack_safe_monster(const actor *act)
+bool tso_unchivalric_attack_safe_monster(const monsters *mon)
 {
-    const mon_holy_type holiness = act->holiness();
+    const mon_holy_type holiness = mon->holiness();
     return (holiness != MH_NATURAL && holiness != MH_HOLY);
 }
