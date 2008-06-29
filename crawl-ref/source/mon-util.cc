@@ -6246,7 +6246,10 @@ bool monsters::do_shaft()
     if (lev == level_id::current())
         return (false);
 
-    set_transit(lev);
+    // If a pacified monster is leaving the level via a shaft trap, and
+    // has reached its goal, handle it here.
+    if (!mons_is_pacified(this))
+        set_transit(lev);
 
     const bool reveal =
         simple_monster_message(this, " falls through a shaft!");

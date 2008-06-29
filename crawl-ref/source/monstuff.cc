@@ -2444,12 +2444,6 @@ static void _mons_indicate_level_exit(const monsters *mon, int x, int y)
     }
     else if (is_gate(grd[x][y]))
         simple_monster_message(mon, " passes through the gate.");
-    // Shaft traps.
-    else if (trap_type_at_xy(x, y) == TRAP_SHAFT)
-    {
-        simple_monster_message(mon, " falls through a shaft!");
-        grd[x][y] = trap_category(trap_type_at_xy(x, y));
-    }
     // Any place the monster can submerge.
     else if (monster_can_submerge(mon, grd[x][y]))
     {
@@ -3052,9 +3046,8 @@ static void _handle_behaviour(monsters *mon)
                     mon->travel_target = MTRAV_NONE;
                 }
 
-                // If a pacified monster is leaving the level via
-                // something other than a trap, and has reached its
-                // goal, handle it here.
+                // If a pacified monster is leaving the level, and has
+                // reached its goal, handle it here.
                 if (isPacified && e_index != -1
                     && mon->x == e[e_index].target.x
                     && mon->y == e[e_index].target.y)
