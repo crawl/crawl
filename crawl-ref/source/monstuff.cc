@@ -2430,22 +2430,24 @@ static int _mons_find_nearest_level_exit(const monsters *mon,
 
 // If _mons_find_level_exits() is ever expanded to handle more grid
 // types, this should be expanded along with it.
-static void _mons_indicate_level_exit(const monsters *mon, int x, int y)
+static void _mons_indicate_level_exit(const monsters *mon)
 {
+    const dungeon_feature_type dft = grd(mon->pos());
+
     // All types of stairs.
-    if (is_travelable_stair(grd[x][y]))
+    if (is_travelable_stair(dft))
     {
-        command_type dir = grid_stair_direction(grd[x][y]);
+        command_type dir = grid_stair_direction(dft);
         simple_monster_message(mon,
             make_stringf(" %s the stairs.",
                 dir == CMD_GO_UPSTAIRS   ? "goes up" :
                 dir == CMD_GO_DOWNSTAIRS ? "goes down"
                                          : "takes").c_str());
     }
-    else if (is_gate(grd[x][y]))
+    else if (is_gate(dft))
         simple_monster_message(mon, " passes through the gate.");
     // Any place the monster can submerge.
-    else if (monster_can_submerge(mon, grd[x][y]))
+    else if (monster_can_submerge(mon, dft))
     {
         simple_monster_message(mon,
             make_stringf(" disappears into %s!",
@@ -2460,7 +2462,7 @@ void make_mons_leave_level(monsters *mon)
     if (mons_is_pacified(mon))
     {
         if (mons_near(mon) && player_monster_visible(mon))
-            _mons_indicate_level_exit(mon, mon->target_x, mon->target_y);
+            _mons_indicate_level_exit(mon);
 
         // Pacified monsters leaving the level take their stuff with
         // them.
