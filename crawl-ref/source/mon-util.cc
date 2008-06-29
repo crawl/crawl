@@ -2333,34 +2333,46 @@ bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell )
 
 bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
 {
-    bool ret = false;
-    bool targ_adj = false;
+    bool ret        = false;
+    bool targ_adj   = false;
+    bool targ_sanct = false;
 
     if (mon->foe == MHITYOU || mon->foe == MHITNOT)
     {
         if (adjacent(you.x_pos, you.y_pos, mon->x, mon->y))
             targ_adj = true;
+        if (is_sanctuary(you.x_pos, you.y_pos))
+            targ_sanct = true;
     }
-    else if (adjacent( menv[mon->foe].x, menv[mon->foe].y, mon->x, mon->y ))
+    else
     {
-        targ_adj = true;
+       if (adjacent( menv[mon->foe].x, menv[mon->foe].y, mon->x, mon->y ))
+          targ_adj = true;
+       if (is_sanctuary( menv[mon->foe].x, menv[mon->foe].y ))
+            targ_sanct = true;
     }
 
     switch (monspell)
     {
+    case SPELL_TELEPORT_OTHER:
+        ret = !targ_sanct;
+        break;
+
     case SPELL_TELEPORT_SELF:
         // Don't cast again if already about to teleport.
         if (mon->has_ench(ENCH_TP))
             return (false);
         // intentional fall-through
-    case SPELL_TELEPORT_OTHER:
     case SPELL_LESSER_HEALING:
     case SPELL_GREATER_HEALING:
         ret = true;
         break;
 
-    case SPELL_BLINK:
     case SPELL_BLINK_OTHER:
+        if (targ_sanct)
+            return (false);
+        // intentional fall-through
+    case SPELL_BLINK:
         if (targ_adj)
             ret = true;
         break;
@@ -2410,6 +2422,18 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         && spell_typematch(monspell, SPTYP_SUMMONING))
     {
         return (true);
+    }
+
+    if (!mons_friendly(mon) && !mons_good_neutral(mon))
+    {
+        if (spell_harms_area(monspell) && env.sanctuary_time > 0)
+            return (true);
+
+        if (spell_harms_target(monspell)
+            && is_sanctuary(mon->target_x, mon->target_y))
+        {
+            return (true);
+        }
     }
 
     // Eventually, we'll probably want to be able to have monsters

@@ -143,18 +143,18 @@
 {
     SPELL_TELEPORT_SELF, "Teleport Self",
      SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
+     SPFLAG_ESCAPE,
      5,
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_CAUSE_FEAR, "Cause Fear",
      SPTYP_ENCHANTMENT,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      5,
      200,
      NULL,
@@ -235,7 +235,8 @@
      1,
      25,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -245,7 +246,8 @@
      3,
      100,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -256,7 +258,7 @@
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -266,7 +268,8 @@
      1,
      25,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -298,7 +301,8 @@
      6,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -308,7 +312,8 @@
      6,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -318,7 +323,8 @@
      5,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -328,7 +334,8 @@
      5,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -338,7 +345,8 @@
      5,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -348,7 +356,8 @@
      3,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -371,7 +380,8 @@
      4,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -381,7 +391,8 @@
      4,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -391,7 +402,8 @@
      3,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -412,7 +424,8 @@
      2,
      50,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -422,44 +435,47 @@
      2,
      50,
      NULL,
-     true
+     true,
+     false
 },
 
 {
     SPELL_CONTROLLED_BLINK, "Controlled Blink",
      SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
+     SPFLAG_ESCAPE,
      7,
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_FREEZING_CLOUD, "Freezing Cloud",
      SPTYP_CONJURATION | SPTYP_ICE | SPTYP_AIR,
-     SPFLAG_GRID,
+     SPFLAG_GRID | SPFLAG_AREA,
      7,
      200,
      "Where do you want to put it?",
-     true
+     true,
+     false
 },
 
 {
     SPELL_MEPHITIC_CLOUD, "Mephitic Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
      3,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
     SPELL_RING_OF_FLAMES, "Ring of Flames",
      SPTYP_ENCHANTMENT | SPTYP_FIRE,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      8,
      200,
      NULL,
@@ -470,34 +486,34 @@
 {
     SPELL_RESTORE_STRENGTH, "Restore Strength",
      SPTYP_HOLY,
-     SPFLAG_NONE,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      2,
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_RESTORE_INTELLIGENCE, "Restore Intelligence",
      SPTYP_HOLY,
-     SPFLAG_NONE,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      2,
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_RESTORE_DEXTERITY, "Restore Dexterity",
      SPTYP_HOLY,
-     SPFLAG_NONE,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      2,
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -507,33 +523,36 @@
      5,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
     SPELL_OLGREBS_TOXIC_RADIANCE, "Olgreb's Toxic Radiance",
      SPTYP_POISON,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      4,
      0,
      NULL,
-     true
+     true,
+     false
 },
 
 {
     SPELL_TELEPORT_OTHER, "Teleport Other",
      SPTYP_TRANSLOCATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_ESCAPE,
      4,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
     SPELL_LESSER_HEALING, "Lesser Healing",
      SPTYP_HOLY,
-     SPFLAG_NONE,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      2,
      0,
      NULL,
@@ -544,34 +563,34 @@
 {
     SPELL_GREATER_HEALING, "Greater Healing",
      SPTYP_HOLY,
-     SPFLAG_NONE,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      6,
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_CURE_POISON_I, "Cure Poison",
      SPTYP_HOLY,
-     SPFLAG_NONE,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      3,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_PURIFICATION, "Purification",
      SPTYP_HOLY,
-     SPFLAG_NONE,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      5,
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -593,13 +612,13 @@
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_MASS_CONFUSION, "Mass Confusion",
      SPTYP_ENCHANTMENT,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      6,
      200,
      NULL,
@@ -621,7 +640,7 @@
 {
     SPELL_REPEL_UNDEAD, "Repel Undead",
      SPTYP_HOLY,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      3,
      0,
      NULL,
@@ -632,7 +651,7 @@
 {
     SPELL_HOLY_WORD, "Holy Word",
      SPTYP_HOLY,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      7,
      0,
      NULL,
@@ -648,7 +667,7 @@
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -665,7 +684,7 @@
 {
     SPELL_ABJURATION_I, "Abjuration",
      SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_AREA | SPFLAG_NEUTRAL,
      3,
      200,
      NULL,
@@ -692,7 +711,7 @@
      150,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -702,7 +721,8 @@
      6,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -712,7 +732,8 @@
      8,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -722,27 +743,30 @@
      3,
      1000,
      NULL,
-     true
+     true,
+     false
 },
 
 {
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
-     SPFLAG_GRID,
+     SPFLAG_GRID | SPFLAG_AREA,
      6,
      200,
      "Where do you want to put it?",
-     true
+     true,
+     false
 },
 
 {
     SPELL_FIRE_STORM, "Fire Storm",
      SPTYP_CONJURATION | SPTYP_FIRE,
-     SPFLAG_GRID,
+     SPFLAG_GRID | SPFLAG_AREA,
      9,
      200,
      "Where?",
-     true
+     true,
+     false
 },
 
 {
@@ -753,13 +777,13 @@
      50,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_BLINK, "Blink",
      SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
+     SPFLAG_ESCAPE,
      2,
      0,
      NULL,
@@ -776,7 +800,8 @@
      4,
      100,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -808,7 +833,8 @@
      4,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -819,7 +845,7 @@
      45,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -830,13 +856,13 @@
      100,
      NULL,
      true,
-     false
+     true
 },
 
 {
    SPELL_ANIMATE_DEAD, "Animate Dead",
      SPTYP_NECROMANCY,
-     SPFLAG_NONE,
+     SPFLAG_AREA | SPFLAG_NEUTRAL,
      4,
      0,
      NULL,
@@ -851,7 +877,8 @@
      1,
      25,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -862,7 +889,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -883,7 +910,7 @@
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -916,7 +943,7 @@
      50,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -927,13 +954,13 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_BURN, "Burn", // used by wanderers
      SPTYP_FIRE,
-     SPFLAG_NONE,
+     SPFLAG_DIR,
      1,
      25,
      NULL,
@@ -944,7 +971,7 @@
 {
     SPELL_FREEZE, "Freeze",
      SPTYP_ICE,
-     SPFLAG_NONE,
+     SPFLAG_DIR,
      1,
      25,
      NULL,
@@ -966,11 +993,12 @@
 {
     SPELL_OZOCUBUS_REFRIGERATION, "Ozocubu's Refrigeration",
      SPTYP_ICE,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      5,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -980,7 +1008,8 @@
      4,
      100,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1045,7 +1074,8 @@
      4,
      100,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1077,7 +1107,8 @@
      6,         // why is this the only holy spell with a secondary? {dlb}
      200,
      NULL,
-     true
+     true,
+     false
 }
 ,
 
@@ -1088,7 +1119,8 @@
      8,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1116,7 +1148,7 @@
 {
     SPELL_ABJURATION_II, "Abjuration",
      SPTYP_HOLY,
-     SPFLAG_NONE,
+     SPFLAG_AREA | SPFLAG_NEUTRAL,
      4,
      200,
      NULL,
@@ -1132,7 +1164,7 @@
      50,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1142,7 +1174,8 @@
      6,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1153,7 +1186,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1164,7 +1197,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1174,7 +1207,8 @@
      3,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1184,7 +1218,8 @@
      4,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1205,7 +1240,8 @@
      1,
      25,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1216,7 +1252,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1237,7 +1273,8 @@
      9,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1276,7 +1313,7 @@
 {
     SPELL_CORPSE_ROT, "Corpse Rot",
      SPTYP_NECROMANCY,
-     SPFLAG_NONE,
+     SPFLAG_AREA | SPFLAG_NEUTRAL,
      2,
      0,
      NULL,
@@ -1292,7 +1329,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1303,7 +1340,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1314,7 +1351,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1325,7 +1362,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1346,7 +1383,8 @@
      6,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1356,7 +1394,8 @@
      3,
      50,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1379,7 +1418,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1389,7 +1428,8 @@
      1,
      25,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1400,7 +1440,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1411,7 +1451,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1422,7 +1462,7 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1432,7 +1472,8 @@
      7,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1449,56 +1490,56 @@
 {
     SPELL_CURE_POISON_II, "Cure Poison",
      SPTYP_POISON,
-     SPFLAG_NONE,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      2,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_CONTROL_TELEPORT, "Control Teleport",
      SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      4,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_POISON_AMMUNITION, "Poison Ammunition",
      SPTYP_ENCHANTMENT | SPTYP_POISON,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      4,
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_POISON_WEAPON, "Poison Weapon",
      SPTYP_ENCHANTMENT | SPTYP_POISON,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      4,
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_RESIST_POISON, "Resist Poison",
      SPTYP_ENCHANTMENT | SPTYP_POISON,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      4,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1542,18 +1583,18 @@
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_PORTAL, "Portal",
      SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
+     SPFLAG_ESCAPE,
      7,
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1570,12 +1611,12 @@
 {
     SPELL_SPIDER_FORM, "Spider Form",
      SPTYP_TRANSMIGRATION | SPTYP_POISON,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      3,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1596,79 +1637,80 @@
      6,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
     SPELL_BLADE_HANDS, "Blade Hands",
      SPTYP_TRANSMIGRATION,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      5,  // only removes weapon, so I raised this from 4 -- bwr
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_STATUE_FORM, "Statue Form",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      6,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_ICE_FORM, "Ice Form",
      SPTYP_ICE | SPTYP_TRANSMIGRATION,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      4, // doesn't allow for equipment, so I lowered this from 5 -- bwr
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_DRAGON_FORM, "Dragon Form",
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      8,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_NECROMUTATION, "Necromutation",
      SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      8,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_DEATH_CHANNEL, "Death Channel",
      SPTYP_NECROMANCY,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      9,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_SYMBOL_OF_TORMENT, "Symbol of Torment",
      SPTYP_NECROMANCY,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      6,
      0,
      NULL,
@@ -1679,12 +1721,12 @@
 {
     SPELL_DEFLECT_MISSILES, "Deflect Missiles",
      SPTYP_ENCHANTMENT | SPTYP_AIR,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      6,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1710,17 +1752,18 @@
 {
     SPELL_ICE_STORM, "Ice Storm",
      SPTYP_CONJURATION | SPTYP_ICE,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
      9,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
     SPELL_ARC, "Arc",
      SPTYP_AIR,
-     SPFLAG_NONE,
+     SPFLAG_DIR,
      1,
      25,
      NULL,
@@ -1746,6 +1789,7 @@
      5,
      0,
      NULL,
+     false,
      false
 },
 
@@ -1763,12 +1807,12 @@
 {
     SPELL_SURE_BLADE, "Sure Blade",
      SPTYP_ENCHANTMENT,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      2,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1785,18 +1829,18 @@
 {
     SPELL_PASSWALL, "Passwall",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
-     SPFLAG_NONE,
+     SPFLAG_ESCAPE,
      3,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_IGNITE_POISON, "Ignite Poison",
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      6,
      200,
      NULL,
@@ -1840,7 +1884,7 @@
 {
     SPELL_TAME_BEASTS, "Tame Beasts",
      SPTYP_ENCHANTMENT,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      5,
      200,
      NULL,
@@ -1855,13 +1899,14 @@
      2,
      56,
      NULL,
-     true
+     true,
+     false
 },
 
 {
     SPELL_MASS_SLEEP, "Metabolic Englaciation",
      SPTYP_ENCHANTMENT | SPTYP_ICE,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      7,
      200,
      NULL,
@@ -1877,7 +1922,7 @@
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1888,29 +1933,29 @@
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_SEE_INVISIBLE, "See Invisible",
      SPTYP_ENCHANTMENT | SPTYP_DIVINATION,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      4,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_FORESCRY, "Forescry",
      SPTYP_DIVINATION,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      5,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -1927,18 +1972,18 @@
 {
     SPELL_WARP_BRAND, "Warp Weapon",
      SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      7,     // this is high for a reason - Warp brands are very powerful.
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_SILENCE, "Silence",
      SPTYP_ENCHANTMENT | SPTYP_AIR,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      5,
      200,
      NULL,
@@ -1949,7 +1994,7 @@
 {
     SPELL_SHATTER, "Shatter",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      9,
      200,
      NULL,
@@ -1960,7 +2005,7 @@
 {
     SPELL_DISPERSAL, "Dispersal",
      SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
+     SPFLAG_AREA | SPFLAG_ESCAPE,
      7,
      200,
      NULL,
@@ -1971,7 +2016,7 @@
 {
     SPELL_DISCHARGE, "Static Discharge",
      SPTYP_CONJURATION | SPTYP_AIR,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      4,
      200,
      NULL,
@@ -1982,7 +2027,7 @@
 {
     SPELL_BEND, "Bend",
      SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
+     SPFLAG_DIR,
      1,
      100,
      NULL,
@@ -1997,7 +2042,8 @@
      1,
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -2018,7 +2064,8 @@
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
      200,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -2035,7 +2082,7 @@
 {
     SPELL_FRAGMENTATION, "Lee's Rapid Deconstruction",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
-     SPFLAG_NONE,
+     SPFLAG_GRID,
      5,
      200,
      NULL,
@@ -2046,12 +2093,12 @@
 {
     SPELL_AIR_WALK, "Air Walk",
      SPTYP_TRANSMIGRATION | SPTYP_AIR,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      9,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -2061,13 +2108,14 @@
      1,
      50,
      NULL,
-     true
+     true,
+     false
 },
 
 {
     SPELL_ROTTING, "Rotting",
      SPTYP_TRANSMIGRATION | SPTYP_NECROMANCY,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      5,
      200,
      NULL,
@@ -2078,45 +2126,45 @@
 {
     SPELL_MAXWELLS_SILVER_HAMMER, "Maxwell's Silver Hammer",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      2,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_CONDENSATION_SHIELD, "Condensation Shield",
      SPTYP_ICE | SPTYP_TRANSMIGRATION,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      4,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_SEMI_CONTROLLED_BLINK, "Semi-Controlled Blink",
      SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
+     SPFLAG_ESCAPE,
      3,
      100,
      NULL,
      false,
-     false
+     true
 },
 
 {
     SPELL_STONESKIN, "Stoneskin",
      SPTYP_EARTH | SPTYP_TRANSMIGRATION, // was ench -- bwr
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      2,
      200,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -2144,7 +2192,7 @@
 {
     SPELL_CHAIN_LIGHTNING, "Chain Lightning",
      SPTYP_AIR | SPTYP_CONJURATION,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      8,
      200,
      NULL,
@@ -2155,7 +2203,7 @@
 {
     SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL,
      5,     // fairly high level - potentially one of the best brands
      200,
      NULL,
@@ -2210,7 +2258,7 @@
 {
     SPELL_BRAIN_FEED, "Brain Feed",
      SPTYP_NECROMANCY,
-     SPFLAG_UNHOLY,
+     SPFLAG_UNHOLY | SPFLAG_TARGET,
      3,
      0,
      NULL,
@@ -2225,6 +2273,7 @@
      3,
      0,
      NULL,
+     false,
      false
 },
 
@@ -2235,7 +2284,8 @@
      4,
      0,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -2256,6 +2306,7 @@
      4,
      0,
      NULL,
+     false,
      false
 },
 
@@ -2266,7 +2317,8 @@
      4,
      0,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -2276,7 +2328,8 @@
      2,
      0,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -2308,7 +2361,8 @@
      5,
      0,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -2318,7 +2372,8 @@
      5,
      0,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -2328,7 +2383,8 @@
      6,
      0,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -2345,11 +2401,12 @@
 {
     SPELL_BLINK_OTHER, "Blink Other",
      SPTYP_TRANSLOCATION,
-     SPFLAG_NONE,
+     SPFLAG_ESCAPE | SPFLAG_DIR_OR_TARGET,
      2,
      0,
      NULL,
-     true
+     true,
+     false
 },
 
 {

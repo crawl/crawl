@@ -28,7 +28,10 @@ enum spflag_type
     SPFLAG_NEUTRAL              = 0x0020,       // TARG_ANY used
     SPFLAG_NOT_SELF             = 0x0040,       // aborts on isMe
     SPFLAG_UNHOLY               = 0x0080,       // counts at "unholy"
-    SPFLAG_MAPPING              = 0x0100        // a mapping spell of some kind
+    SPFLAG_MAPPING              = 0x0100,       // a mapping spell of some kind
+    SPFLAG_ESCAPE               = 0x0200,       // useful for running away
+    SPFLAG_RECOVERY             = 0x0400,       // healing or recovery spell
+    SPFLAG_AREA                 = 0x0800        // area affect
 };
 
 enum spret_type

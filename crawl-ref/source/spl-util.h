@@ -90,6 +90,9 @@ const char *get_spell_target_prompt( spell_type which_spell );
 
 bool spell_needs_tracer(spell_type spell);
 bool spell_needs_foe(spell_type spell);
+bool spell_harms_target(spell_type spell);
+bool spell_harms_area(spell_type spell);
+bool spell_sanctuary_castable(spell_type spell);
 int spell_levels_required(spell_type which_spell);
 
 unsigned int get_spell_flags( spell_type which_spell );

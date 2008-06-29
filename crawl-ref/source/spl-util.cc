@@ -240,6 +240,37 @@ bool spell_needs_foe(spell_type spell)
     return (!_seekspell(spell)->ms_utility);
 }
 
+bool spell_harms_target(spell_type spell)
+{
+    const unsigned int flags = _seekspell(spell)->flags;
+
+    if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL))
+        return false;
+
+    if (flags & SPFLAG_TARGETING_MASK)
+        return true;
+
+    return false;
+}
+
+bool spell_harms_area(spell_type spell)
+{
+    const unsigned int flags = _seekspell(spell)->flags;
+
+    if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL))
+        return false;
+
+    if (flags & SPFLAG_AREA)
+        return true;
+
+    return false;
+}
+
+bool spell_sanctuary_castable(spell_type spell)
+{
+    return false;
+}
+
 // applied to spell misfires (more power = worse) and triggers
 // for Xom acting (more power = more likely to grab his attention) {dlb}
 int spell_mana(spell_type which_spell)

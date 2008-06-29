@@ -5045,6 +5045,15 @@ static bool _handle_spell(monsters *monster, bolt &beem)
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
     const spell_type draco_breath = _get_draconian_breath_spell(monster);
 
+    if (is_sanctuary(monster->x, monster->y))
+    {
+        if (!mons_friendly(monster)
+            && !mons_good_neutral(monster))
+        {
+            return (false);
+         }
+    }
+
     // Yes, there is a logic to this ordering {dlb}:
     if (mons_is_sleeping(monster)
         || monster->has_ench(ENCH_SUBMERGED)
@@ -5206,6 +5215,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             {
                 bool spellOK = false;
 
+
                 // Setup spell - monsters that are fleeing or leaving
                 // the level will always try to choose their emergency
                 // spell.
@@ -5213,10 +5223,6 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 {
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
                                                    : hspell_pass[5]);
-                }
-                else if (_is_player_or_mon_sanct(monster))
-                {
-                    return (false);
                 }
                 else
                 {
@@ -5243,9 +5249,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                     // All direct-effect/summoning/self-enchantments/etc.
                     spellOK = true;
 
-                    if (_is_player_or_mon_sanct(monster))
-                        spellOK = false;
-                    else if (ms_direct_nasty(spell_cast)
+                    if (ms_direct_nasty(spell_cast)
                              && mons_aligned(monster_index(monster),
                                              monster->foe))
                     {
@@ -5288,13 +5292,8 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 // If not okay, then maybe we'll cast a defensive spell.
                 if (!spellOK)
                 {
-                    if (_is_player_or_mon_sanct(monster))
-                        spell_cast = SPELL_NO_SPELL;
-                    else
-                    {
-                        spell_cast = (coinflip() ? hspell_pass[2]
-                                                 : SPELL_NO_SPELL);
-                    }
+                    spell_cast = (coinflip() ? hspell_pass[2]
+                                             : SPELL_NO_SPELL);
                 }
 
                 if (spell_cast != SPELL_NO_SPELL)
