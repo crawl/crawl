@@ -1768,14 +1768,14 @@ void debug_stethoscope(int mon)
           (hab == HT_ROCK)                       ? "rock" :
           (hab == HT_LAND)                       ? "floor"
                                                  : "unknown"),
-         (mons_is_sleeping(menv[i])        ? "sleep" :
-          mons_is_wandering(menv[i])       ? "wander" :
-          mons_is_seeking(menv[i])         ? "seek" :
-          mons_is_fleeing(menv[i])         ? "flee" :
-          mons_is_cornered(menv[i])        ? "cornered" :
-          mons_is_panicking(menv[i])       ? "panic" :
-          mons_is_lurking(menv[i])         ? "lurk"
-                                           : "unknown"),
+         (mons_is_sleeping(&menv[i])        ? "sleep" :
+          mons_is_wandering(&menv[i])       ? "wander" :
+          mons_is_seeking(&menv[i])         ? "seek" :
+          mons_is_fleeing(&menv[i])         ? "flee" :
+          mons_is_cornered(&menv[i])        ? "cornered" :
+          mons_is_panicking(&menv[i])       ? "panic" :
+          mons_is_lurking(&menv[i])         ? "lurk"
+                                            : "unknown"),
          menv[i].behaviour,
          ((menv[i].foe == MHITYOU)            ? "you" :
           (menv[i].foe == MHITNOT)            ? "none" :
