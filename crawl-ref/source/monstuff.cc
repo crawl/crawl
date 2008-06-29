@@ -2379,7 +2379,7 @@ static void _mons_find_all_level_exits(const monsters *mon,
         {
             if (in_bounds(x, y))
             {
-                dungeon_feature_type gridc = grd[x][y];
+                const dungeon_feature_type gridc = grd[x][y];
 
                 // All types of stairs.
                 if (is_stair(gridc))
@@ -2432,22 +2432,22 @@ static int _mons_find_nearest_level_exit(const monsters *mon,
 // types, this should be expanded along with it.
 static void _mons_indicate_level_exit(const monsters *mon)
 {
-    const dungeon_feature_type dft = grd(mon->pos());
+    const dungeon_feature_type gridc = grd(mon->pos());
 
     // All types of stairs.
-    if (is_travelable_stair(dft))
+    if (is_travelable_stair(gridc))
     {
-        command_type dir = grid_stair_direction(dft);
+        command_type dir = grid_stair_direction(gridc);
         simple_monster_message(mon,
             make_stringf(" %s the stairs.",
                 dir == CMD_GO_UPSTAIRS   ? "goes up" :
                 dir == CMD_GO_DOWNSTAIRS ? "goes down"
                                          : "takes").c_str());
     }
-    else if (is_gate(dft))
+    else if (is_gate(gridc))
         simple_monster_message(mon, " passes through the gate.");
     // Any place the monster can submerge.
-    else if (monster_can_submerge(mon, dft))
+    else if (monster_can_submerge(mon, gridc))
     {
         simple_monster_message(mon,
             make_stringf(" disappears into %s!",
