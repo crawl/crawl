@@ -25,7 +25,8 @@ static int _get_pack_slot(const item_def&);
 static ammo_t _get_weapon_ammo_type(const item_def*);
 static bool _item_matches(const item_def &item, fire_type types,
                           const item_def* launcher);
-static bool _items_similar(const item_def& a, const item_def& b);
+static bool _items_similar(const item_def& a, const item_def& b,
+                           bool force = true);
 
 // ----------------------------------------------------------------------
 // player_quiver
@@ -270,6 +271,7 @@ void player_quiver::on_weapon_changed()
     {
         if (!_items_similar(*weapon, m_last_weapon))
         {
+            // Weapon type changed.
             m_last_weapon = *weapon;
             m_last_used_type = _get_weapon_ammo_type(weapon);
         }
@@ -328,7 +330,7 @@ void player_quiver::_maybe_fill_empty_slot()
     }
 
 #ifdef DEBUG_QUIVER
-    mpr("recalculating fire order...", MSGCH_DIAGNOSTICS);
+    mpr("Recalculating fire order...", MSGCH_DIAGNOSTICS);
 #endif
 
     const launch_retval desired_ret =
@@ -559,10 +561,19 @@ static int _get_pack_slot(const item_def& item)
     if (! is_valid_item(item))
         return -1;
 
+    // First try to find the exact same item.
     for (int i = 0; i < ENDOFPACK; i++)
     {
         const item_def& inv_item = you.inv[i];
-        if (inv_item.quantity && _items_similar(item, you.inv[i]))
+        if (inv_item.quantity && _items_similar(item, you.inv[i], false))
+            return i;
+    }
+
+    // If that fails, try to find an item sufficiently similar.
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        const item_def& inv_item = you.inv[i];
+        if (inv_item.quantity && _items_similar(item, you.inv[i], true))
             return i;
     }
 
@@ -596,8 +607,11 @@ static ammo_t _get_weapon_ammo_type(const item_def* weapon)
     }
 }
 
-static bool _items_similar(const item_def& a, const item_def& b)
+static bool _items_similar(const item_def& a, const item_def& b, bool force)
 {
+    if (!force)
+        return (items_similar(a, b) && a.slot == b.slot);
+
     // This is a reasonable implementation for now.
-    return items_stack(a, b, true);
+    return items_stack(a, b, force);
 }

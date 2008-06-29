@@ -42,8 +42,9 @@ void move_item_stack_to_grid( int x, int y, int targ_x, int targ_y );
 int  move_item_to_player( int obj, int quant_got, bool quiet = false );
 void mark_items_non_pickup_at(const coord_def &pos);
 bool is_stackable_item( const item_def &item );
+bool items_similar( const item_def &item1, const item_def &item2 );
 bool items_stack( const item_def &item1, const item_def &item2,
-                  bool force = false );
+                  bool force_merge = false );
 
 item_def find_item_type(object_class_type base_type, std::string name);
 item_def *find_floor_item(object_class_type cls, int sub_type);

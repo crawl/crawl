@@ -1297,33 +1297,23 @@ unsigned long ident_flags(const item_def &item)
     return (flags);
 }
 
-bool items_stack( const item_def &item1, const item_def &item2,
-                  bool force_merge )
+bool items_similar(const item_def &item1, const item_def &item2)
 {
-    // both items must be stackable
-    if (!force_merge
-        && (!is_stackable_item( item1 ) || !is_stackable_item( item2 )))
-    {
-        return (false);
-    }
-
-    // base and sub-types must always be the same to stack
+    // Base and sub-types must always be the same to stack.
     if (item1.base_type != item2.base_type || item1.sub_type != item2.sub_type)
         return (false);
-
-    ASSERT(force_merge || item1.base_type != OBJ_WEAPONS);
 
     if (item1.base_type == OBJ_GOLD)
         return (true);
 
-    // These classes also require pluses and special
+    // These classes also require pluses and special.
     if (item1.base_type == OBJ_WEAPONS         // only throwing weapons
         || item1.base_type == OBJ_MISSILES
         || item1.base_type == OBJ_MISCELLANY)  // only runes
     {
         if (item1.plus != item2.plus
-             || item1.plus2 != item2.plus2
-             || item1.special != item2.special)
+            || item1.plus2 != item2.plus2
+            || item1.special != item2.special)
         {
             return (false);
         }
@@ -1364,6 +1354,19 @@ bool items_stack( const item_def &item1, const item_def &item2,
     }
 
     return (true);
+}
+
+bool items_stack( const item_def &item1, const item_def &item2,
+                  bool force_merge )
+{
+    // Both items must be stackable.
+    if (!force_merge
+        && (!is_stackable_item( item1 ) || !is_stackable_item( item2 )))
+    {
+        return (false);
+    }
+
+    return items_similar(item1, item2);
 }
 
 static int _userdef_find_free_slot(const item_def &i)
