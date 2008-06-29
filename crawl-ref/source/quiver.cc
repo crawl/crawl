@@ -233,7 +233,10 @@ void player_quiver::on_item_fired(const item_def& item, bool explicitly_chosen)
         // Don't do anything if this item is not really fit for throwing.
         if (projected == LRET_FUMBLED)
             return;
-
+#ifdef DEBUG_QUIVER
+        mprf(MSGCH_DIAGNOSTICS, "item %s is for throwing",
+             item.name(DESC_PLAIN).c_str());
+#endif
         m_last_used_of_type[AMMO_THROW] = item;
         m_last_used_of_type[AMMO_THROW].quantity = 1;
         m_last_used_type = AMMO_THROW;

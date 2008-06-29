@@ -2415,10 +2415,14 @@ void process_command( command_type cmd )
         int cur;
         you.m_quiver->get_desired_item(NULL, &cur);
         const int next = get_next_fire_item(cur, +1);
+#ifdef DEBUG_QUIVER
+        mprf(MSGCH_DIAGNOSTICS, "next slot: %d, item: %s", next,
+             next == -1 ? "none" : you.inv[next].name(DESC_PLAIN).c_str());
+#endif
         if (next != -1)
         {
-            // kind of a hacky way to get quiver to change
-            you.m_quiver->on_item_fired(you.inv[next]);
+            // Kind of a hacky way to get quiver to change.
+            you.m_quiver->on_item_fired(you.inv[next], true);
         }
         break;
     }

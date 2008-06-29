@@ -1276,10 +1276,17 @@ int get_next_fire_item(int current, int direction)
 
     for (unsigned i = 0; i < fire_order.size(); i++)
     {
+#ifdef DEBUG_QUIVER
+        mprf(MSGCH_DIAGNOSTICS, "i: %d, slot: %d", i, fire_order[i]);
+#endif
         if (fire_order[i] == current)
         {
             unsigned next =
-                (i + fire_order.size() + direction) % fire_order.size();
+                (i + direction + fire_order.size()) % fire_order.size();
+#ifdef DEBUG_QUIVER
+            mprf(MSGCH_DIAGNOSTICS, "i: %d (%d), next: %d (%d), size: %d",
+                 i, current, next, fire_order[next], fire_order.size());
+#endif
             return fire_order[next];
         }
     }

@@ -2054,7 +2054,7 @@ void behaviour_event(monsters *mon, int event, int src,
 
     case ME_SCARE:
     {
-        const bool flee_sanct = !mons_wont_attack(mon) 
+        const bool flee_sanct = !mons_wont_attack(mon)
                                 && is_sanctuary(mon->x, mon->y);
 
         // Berserking monsters don't flee, unless it's from sanctuary.
@@ -3233,6 +3233,7 @@ static void _handle_behaviour(monsters *mon)
                 if (need_target && patrolling)
                 {
                     need_target = false;
+
                     if (!_choose_random_patrol_target_grid(mon))
                     {
                         // If we couldn't find a target that is within easy

@@ -2115,10 +2115,10 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
         }
 
         if (!good_choices)
-            keyin = random2(numbooks) + 'a';
+            keyin = random2(numbooks);
     }
 
-    book.sub_type = firstbook + keyin - 'a';
+    book.sub_type = firstbook + keyin;
     return (true);
 }
 
@@ -2311,8 +2311,8 @@ static bool _choose_weapon()
            }
         }
         while (keyin != '*' && keyin != '+'
-                  && (keyin < 'a' || keyin > ('a' + num_choices))
-               || startwep_restrictions[keyin - 'a'] == CC_BANNED);
+               && (keyin < 'a' || keyin > ('a' + num_choices)
+                   || startwep_restrictions[keyin - 'a'] == CC_BANNED));
 
 
         if (keyin != '*' && keyin != '+'
@@ -2323,8 +2323,8 @@ static bool _choose_weapon()
         }
     }
 
-    if (Options.random_pick || Options.weapon == WPN_RANDOM || keyin == '*'
-        || keyin == '+')
+    if (Options.random_pick || Options.weapon == WPN_RANDOM
+        || keyin == '*' || keyin == '+')
     {
         Options.weapon = WPN_RANDOM;
         ng_weapon = WPN_RANDOM;
@@ -2334,7 +2334,7 @@ static bool _choose_weapon()
         {
             for (int i = 0; i < num_choices; i++)
             {
-                if (_weapon_restriction(startwep[keyin]) == CC_UNRESTRICTED
+                if (_weapon_restriction(startwep[i]) == CC_UNRESTRICTED
                     && one_chance_in(++good_choices))
                 {
                     keyin = i;
@@ -2352,8 +2352,8 @@ static bool _choose_weapon()
                 if (x > -2)
                     break;
             }
-            keyin += 'a';
         }
+        keyin += 'a';
     }
     else
         ng_weapon = startwep[keyin - 'a'];
@@ -4827,7 +4827,10 @@ bool _give_items_skills()
                     // fall-through for random
                 case '+':
                     if (keyn == '+' && !_has_good_necromancy_apts())
+                    {
                         choice = DK_YREDELEMNUL;
+                        break;
+                    }
                     // fall-through for random
                 case '*':
                     choice = coinflip()? DK_NECROMANCY : DK_YREDELEMNUL;
