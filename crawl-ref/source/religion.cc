@@ -676,6 +676,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     case GOD_ZIN:
         dislikes.push_back("cause yourself to mutate in a way that could "
                            "have been avoided");
+        dislikes.push_back("polymorph monsters");
         dislikes.push_back("eat the flesh of sentient beings");
         break;
 
@@ -3024,6 +3025,15 @@ bool god_dislikes_item_handling(const item_def &item)
         return (item.base_type == OBJ_BOOKS
                 && item.sub_type != BOOK_MANUAL
                 && item.sub_type != BOOK_DESTRUCTION);
+    }
+
+    if (you.religion == GOD_ZIN)
+    {
+        if (item.base_type == OBJ_WANDS
+            && item.sub_type == WAND_POLYMORPH_OTHER)
+        {
+            return (true);
+        }
     }
 
     return (is_good_god(you.religion) && is_evil_item(item)
