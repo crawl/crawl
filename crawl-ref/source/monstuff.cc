@@ -2385,9 +2385,11 @@ static void _mons_find_all_level_exits(const monsters *mon,
                 if (is_stair(gridc))
                     e.push_back(level_exit(coord_def(x, y), false));
 
-                // Shaft traps.
-                if (trap_type_at_xy(x, y) == TRAP_SHAFT
-                    && _is_trap_safe(mon, x, y))
+                // Teleportation and shaft traps.
+                const trap_type tt = trap_type_at_xy(x, y);
+                if ((tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
+                        && (mons_is_native_in_branch(mon)
+                            || gridc != DNGN_UNDISCOVERED_TRAP))
                 {
                     e.push_back(level_exit(coord_def(x, y), false));
                 }
@@ -6568,7 +6570,7 @@ static int _estimated_trap_damage(trap_type trap)
 }
 
 // Check whether a given trap (described by trap position) can be
-// regarded as safe. Takes in account monster intelligence and
+// regarded as safe.  Takes into account monster intelligence and
 // allegiance.  (just_check is used for intelligent monsters trying to
 // avoid traps.)
 static bool _is_trap_safe(const monsters *monster, const int trap_x,
