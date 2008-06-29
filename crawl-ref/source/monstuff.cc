@@ -927,8 +927,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 }
             }
 
-            // Divine health and mp restoration doesn't happen when killing
-            // born-friendly monsters. The mutation still applies, however.
+            // Divine health and mana restoration doesn't happen when
+            // killing born-friendly monsters.  The mutation still
+            // applies, however.
             if (player_mutation_level(MUT_DEATH_STRENGTH)
                 || (!created_friendly && gives_xp
                     && (you.religion == GOD_MAKHLEB
