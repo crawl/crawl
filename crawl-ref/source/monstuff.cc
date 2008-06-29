@@ -4289,7 +4289,17 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (one_chance_in(5)
             || monster->foe == MHITYOU && !already_beheld && coinflip())
         {
-            if (player_monster_visible(monster))
+            int walls = num_feats_between(you.x_pos, you.y_pos,
+                                          monster->x, monster->y, DNGN_UNSEEN,
+                                          DNGN_MAXWALL);
+
+            if (walls > 0)
+            {
+                simple_monster_message(monster, " appears to sing, but you "
+                                       "can't hear her.");
+                break;
+            }
+            else if (player_monster_visible(monster))
             {
                 simple_monster_message(monster,
                     make_stringf(" chants %s song.",
