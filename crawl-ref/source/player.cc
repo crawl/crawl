@@ -158,6 +158,12 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 
             if (random2( skill ) > 6)
             {
+                id = trap_at_xy( x, y );
+                if (id != -1)
+                    grd[x][y] = trap_category( env.trap[id].type );
+
+                viewwindow(true, false);
+
                 mprf( MSGCH_WARN,
                       "Wait a moment, %s!  Do you really want to step there?",
                       you.your_name );
@@ -168,10 +174,6 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                 exercise( SK_TRAPS_DOORS, 3 );
 
                 you.turn_is_over = false;
-
-                id = trap_at_xy( x, y );
-                if (id != -1)
-                    grd[x][y] = trap_category( env.trap[id].type );
 
                 return (false);
             }
