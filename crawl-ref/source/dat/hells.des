@@ -114,11 +114,27 @@ ENDMAP
 ##############################################################################
 
 ##############################################################################
+# Fire storm
+
+NAME:   gehenna_fire_generator
+DEPTH:  Geh:*
+PLACE:  Geh:1
+ORIENT: float
+MARKER: . = lua:fog_machine { \
+            pow_max = 15, delay_min = 100, delay_max = 150, size = 1,  \
+            size_buildup_amnt = 29, size_buildup_time = 1000, \
+            cloud_type = "flame" \
+        }
+MAP
+.
+ENDMAP
+
+##############################################################################
 # lemuel_hellion_isle
  
-NAME: lemuel_hellion_isle
+NAME:  lemuel_hellion_isle
 DEPTH: Geh:*
-MONS: hellion, Fiend
+MONS:  hellion, Fiend
 SUBST: L = l.
 SUBST: 1 = .:2 l:2 1
 MAP

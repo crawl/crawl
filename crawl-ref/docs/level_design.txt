@@ -778,6 +778,16 @@ MARKER:   A = feat:<feature_name> or timer:
           This sets a timer for exactly 500 turns, and changes the
           feature to deep water at the end of it.
 
+          Another type of MARKER sets generators of various clouds, e.g.:
+
+          MARKER:  A = lua:fog_machine { \
+                       pow_max = 15, delay_min = 100, delay_max = 150, \
+                       size = 1, size_buildup_amnt = 29, \
+                       size_buildup_time = 1000 }
+
+          For a full explanation of the various paramenters, read the
+          header of dat/clua/lm_fog.lua.
+
           Feature names used in markers must be names matching the
           names in the source code. There's a full list of feature
           names in section I (Feature names) at the end of this
