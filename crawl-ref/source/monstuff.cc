@@ -2032,11 +2032,8 @@ void behaviour_event(monsters *mon, int event, int src,
         break;
 
     case ME_ALERT:
-        if ((mons_friendly(mon) || mons_is_pacified(mon))
-            && mon->is_patrolling())
-        {
+        if (mons_friendly(mon) && mon->is_patrolling())
             break;
-        }
 
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
