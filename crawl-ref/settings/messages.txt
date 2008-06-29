@@ -23,7 +23,7 @@ msc = lightred:goes berserk!
 # Less urgent, but still significant messages
 #
 msc = yellow:ticking.*clock
-msc = yellow:snort
+msc = yellow:distant snort
 msc = yellow:coins.*counted
 msc = yellow:tolling.*bell
 msc = lightcyan:LOW MAGIC WARNING
