@@ -271,7 +271,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Elyvilon for purification",
       "call upon Elyvilon for moderate healing",
       "call upon Elyvilon to restore your abilities",
-      "call upon Elyvilon for incredible healing" },
+      "call upon Elyvilon for greater healing" },
     // Lugonu
     { "depart the Abyss",
       "bend space around yourself",
@@ -357,7 +357,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "call upon Elyvilon for purification",
       "call upon Elyvilon for moderate healing",
       "call upon Elyvilon to restore your abilities",
-      "call upon Elyvilon for incredible healing" },
+      "call upon Elyvilon for greater healing" },
     // Lugonu
     { "depart the Abyss at will",
       "bend space around yourself",
