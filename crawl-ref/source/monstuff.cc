@@ -5998,16 +5998,6 @@ static void _handle_monster_move(int i, monsters *monster)
 
         if (!mons_is_caught(monster))
         {
-            // If a pacified monster is leaving the level via a trap,
-            // and is about to reach its goal, handle it here.
-            if (mons_is_pacified(monster)
-                && monster->x + mmov_x == monster->target_x
-                && monster->y + mmov_y == monster->target_y)
-            {
-                make_mons_leave_level(monster);
-                break;
-            }
-
             // See if we move into (and fight) an unfriendly monster.
             int targmon = mgrd[monster->x + mmov_x][monster->y + mmov_y];
             if (targmon != NON_MONSTER
