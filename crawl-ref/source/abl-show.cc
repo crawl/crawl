@@ -1063,9 +1063,9 @@ static bool _activate_talent(const talent& tal)
 static bool _do_ability(const ability_def& abil)
 {
     int power;
-    struct dist abild;
-    struct bolt beam;
-    struct dist spd;
+    dist abild;
+    bolt beam;
+    dist spd;
 
     // Note: the costs will not be applied until after this switch
     // statement... it's assumed that only failures have returned! -- bwr
