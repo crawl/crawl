@@ -62,8 +62,9 @@ int piety_breakpoint(int i);
 std::string god_name(god_type which_god, bool long_name = false);
 god_type string_to_god(const char *name);
 
-std::string print_god_likes(god_type which_god, bool verbose = false);
-std::string print_god_dislikes(god_type which_god, bool verbose = false);
+std::string get_god_powers(god_type which_god);
+std::string get_god_likes(god_type which_god, bool verbose = false);
+std::string get_god_dislikes(god_type which_god, bool verbose = false);
 
 void dec_penance(int val);
 void dec_penance(god_type god, int val);

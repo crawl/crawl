@@ -1384,15 +1384,8 @@ static void _new_god_conduct()
                               _get_tutorial_cols());
     text.str("");
 
-    formatted_message_history(print_god_likes(you.religion, true).c_str(),
-                              MSGCH_TUTORIAL, 0, _get_tutorial_cols());
-    formatted_message_history(print_god_dislikes(you.religion, true).c_str(),
-                              MSGCH_TUTORIAL, 0, _get_tutorial_cols());
-
-    text.str("");
     text << "\nYou can check your god's likes and dislikes, as well as your "
-            "current standing and divine abilites, at any time by typing "
-            "<w>^</w> "
+            "current standing and divine abilites, by typing <w>^</w> "
 #ifdef USE_TILE
             "(alternatively press <w>Shift</w> while "
             "<w>right-clicking</w> on your avatar)"

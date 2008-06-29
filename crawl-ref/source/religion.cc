@@ -455,23 +455,33 @@ bool is_priest_god(god_type god)
 
 bool god_gives_permanent_followers(god_type god)
 {
-    // Only TSO, Yredelemnul, and Beogh do this, but if you switch from
-    // TSO to another good god, you keep your (non-daeva) permanent
+    // Only TSO, Yredelemnul, Kikubaaqudgha and Beogh do this, but if you
+    // switch from TSO to another good god, you keep your (non-daeva) permanent
     // followers, so count the other good gods here as well.
     return (god == GOD_SHINING_ONE
-            || you.worshipped[GOD_SHINING_ONE] && is_good_god(god)
+            || god == GOD_BEOGH
             || god == GOD_YREDELEMNUL
-            || god == GOD_BEOGH);
+            || god == GOD_KIKUBAAQUDGHA
+            || you.worshipped[GOD_SHINING_ONE] && is_good_god(god));
 }
 
-
-std::string print_god_likes(god_type which_god, bool verbose)
+std::string get_god_powers(god_type which_god)
 {
     // Return early for the special cases.
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
         return "";
 
-    std::string text  = god_name(which_god);
+    std::string result = getLongDescription(god_name(which_god) + " powers");
+    return (result);
+}
+
+std::string get_god_likes(god_type which_god, bool verbose)
+{
+    // Return early for the special cases.
+    if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
+        return "";
+
+    std::string text = god_name(which_god);
     std::vector<std::string> likes;
 
     // Unique/unusual piety gain methods first.
@@ -615,8 +625,7 @@ std::string print_god_likes(god_type which_god, bool verbose)
     return (text);
 }
 
-// verbose currently unused
-std::string print_god_dislikes(god_type which_god, bool /*verbose*/)
+std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 {
     // Return early for the special cases.
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)

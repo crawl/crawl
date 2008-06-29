@@ -1099,10 +1099,16 @@ static bool _do_description(std::string key, std::string footer = "")
     god_type which_god = string_to_god(key.c_str());
     if (which_god != GOD_NO_GOD)
     {
-        desc += EOL EOL;
-        desc += print_god_likes(which_god);
+        std::string help = get_god_powers(which_god);
+        if (!help.empty())
+        {
+            desc += EOL;
+            desc += help;
+        }
+        desc += EOL;
+        desc += get_god_likes(which_god);
 
-        std::string help = print_god_dislikes(which_god);
+        help = get_god_dislikes(which_god);
         if (!help.empty())
         {
             desc += EOL EOL;

@@ -2698,11 +2698,19 @@ static void _detailed_god_description(god_type which_god)
     }
     else
     {
-        std::string broken = print_god_likes(which_god, true);
+        std::string broken = get_god_powers(which_god);
+        if (!broken.empty())
+        {
+            linebreak_string2(broken, width);
+            formatted_string::parse_block(broken, false).display();
+            cprintf(EOL);
+            cprintf(EOL);
+        }
+        broken = get_god_likes(which_god, true);
         linebreak_string2(broken, width);
         formatted_string::parse_block(broken, false).display();
 
-        broken = print_god_dislikes(which_god, true);
+        broken = get_god_dislikes(which_god, true);
         if (!broken.empty())
         {
             cprintf(EOL);
@@ -2721,24 +2729,22 @@ static void _detailed_god_description(god_type which_god)
             break;
 
         case GOD_ELYVILON:
-            broken = "Under prayer, there is a chance, depending on your "
-                     "piety, that Elyvilon will protect you from deadly "
-                     "damage. On the other hand, Elyvilon will put you "
-                     "under penance should you be praying and attack a "
-                     "being which is neither evil nor undead. "
+            broken = "Under prayer, with a chance depending on piety, Elyvilon "
+                     "may protect you from deadly damage. "
+                     "On the other hand,  should you be praying and attack a "
+                     "being which is neither evil nor undead, you'll be put "
+                     "under penance."
                      EOL EOL
-                     "You can use your divine healing abilities on "
-                     "monsters. This may turn hostile ones neutral, "
-                     "temporarily or permanently. Neutralising works "
-                     "better on natural beasts and worse on demons and "
-                     "undead. If the neutralisation does not succeed, the "
-                     "Magic will be spent, but the monster will not be "
-                     "healed. If you manage to neutralise the monster, you "
-                     "gain piety and the monster is healed. Should a "
-                     "monster become permanently neutral, then you gain "
-                     "half of its experience value and the monster tries "
-                     "to leave the level as quickly as possible (and "
-                     "vanishes thereafter).";
+                     "If you use your healing abilities on monsters, this may "
+                     "turn hostile ones neutral, temporarily or permanently. "
+                     "Neutralising works better on natural beasts and worse on "
+                     "demons and undead. If the neutralisation does not "
+                     "succeed, the Magic will be spent, but the monster will "
+                     "not be healed. If you manage to neutralise the monster, "
+                     "you gain piety and the monster is healed. Should a "
+                     "monster become permanently neutral, you'll gain "
+                     "half of its experience value and the monster will "
+                     "leave the level as quickly as possible.";
             break;
 
         case GOD_NEMELEX_XOBEH:
