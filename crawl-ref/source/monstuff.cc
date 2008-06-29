@@ -1647,7 +1647,9 @@ bool monster_blink(monsters *monster)
         losight(env.show, grd, monster->x, monster->y, true);
 
         if (!random_near_space(monster->x, monster->y, nx, ny,
-                               false, true))
+                               false, true,
+                               !mons_friendly(monster)
+                               && !mons_good_neutral(monster)))
         {
             return (false);
         }
@@ -1675,7 +1677,7 @@ bool monster_blink(monsters *monster)
 // allow_adjacent:  allow target to be adjacent to origin.
 // restrict_LOS:    restrict target to be within PLAYER line of sight.
 bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
-                       bool restrict_LOS)
+                       bool restrict_LOS, bool forbid_sanctuary)
 {
     // This might involve ray tracing (via num_feats_between()), so
     // cache results to avoid duplicating ray traces.
@@ -1718,7 +1720,8 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
             || grd[tx][ty] < DNGN_SHALLOW_WATER
             || mgrd[tx][ty] != NON_MONSTER
             || tx == you.x_pos && ty == you.y_pos
-            || !allow_adjacent && distance(ox, oy, tx, ty) <= 2)
+            || !allow_adjacent && distance(ox, oy, tx, ty) <= 2
+            || forbid_sanctuary && is_sanctuary(tx, ty))
         {
             continue;
         }

@@ -267,7 +267,7 @@ int corpse_rot(int power)
     for (adx = minx; adx != maxx; adx += xinc)
         for (ady = miny; ady != maxy; ady += yinc)
         {
-            if (see_grid_no_trans(adx, ady))
+            if (see_grid_no_trans(adx, ady) && !is_sanctuary(adx, ady))
             {
                 if (igrd[adx][ady] == NON_ITEM
                     || env.cgrid[adx][ady] != EMPTY_CLOUD)

@@ -807,6 +807,7 @@ static int _place_monster_aux( const mgen_data &mg,
     // Setup habitat and placement.
     // If the space is occupied, try some neighbouring square instead.
     if (first_band_member && in_bounds(mg.pos)
+        && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos.x, mg.pos.y))
         && (force_pos || mgrd(mg.pos) == NON_MONSTER && mg.pos != you.pos()
                          && monster_habitable_grid(htype, grd(mg.pos))))
     {
@@ -831,6 +832,9 @@ static int _place_monster_aux( const mgen_data &mg,
                 continue;
 
             if (!grid_compatible(grid_wanted, grd(fpos), true))
+                continue;
+
+            if (mg.behaviour != BEH_FRIENDLY && is_sanctuary(fpos.x, fpos.y))
                 continue;
 
             // Don't generate monsters on top of teleport traps.

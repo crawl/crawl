@@ -786,6 +786,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     case SPELL_CANTRIP:
     {
         const bool friendly      = mons_friendly(monster);
+        const bool buff_only     = !friendly && is_sanctuary(you.x_pos,
+                                                             you.y_pos);
         bool need_friendly_stub  = false;
         const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
                                                     : MSGCH_MONSTER_ENCHANT;
@@ -795,35 +797,35 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         // spells (ie orc priest) can be toned down a bit. -- bwr
         //
         // XXX: Needs expansion, and perhaps different priest/mage flavours.
-        switch (random2(7))
+        switch (random2(buff_only ? 4 : 7))
         {
         case 0:
             simple_monster_message(monster, " glows brightly for a moment.",
                                    channel);
             break;
         case 1:
+            simple_monster_message(monster, " looks stronger.",
+                                   channel);
+            break;
+        case 2:
+            simple_monster_message(monster, " becomes somewhat translucent.",
+                                   channel);
+            break;
+        case 3:
+            simple_monster_message(monster, "'s eyes start to glow.",
+                                   channel);
+            break;
+        case 4:
             if (friendly)
                 need_friendly_stub = true;
             else
                 mpr("You feel troubled.");
             break;
-        case 2:
+        case 5:
             if (friendly)
                 need_friendly_stub = true;
             else
                 mpr("You feel a wave of unholy energy pass over you.");
-            break;
-        case 3:
-            simple_monster_message(monster, " looks stronger.",
-                                   channel);
-            break;
-        case 4:
-            simple_monster_message(monster, " becomes somewhat translucent.",
-                                   channel);
-            break;
-        case 5:
-            simple_monster_message(monster, "'s eyes start to glow.",
-                                   channel);
             break;
         case 6:
         default:
@@ -1011,6 +1013,12 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
         {
             continue;
         }
+
+        if (is_sanctuary(newx, newy) && !mons_friendly(monster)
+            && !mons_good_neutral(monster))
+        {
+            continue;
+        } 
 
         if (monster_habitable_grid(monster, grd[newx][newy]))
             break;

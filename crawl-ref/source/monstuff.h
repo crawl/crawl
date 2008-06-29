@@ -125,7 +125,8 @@ bool monster_blink(monsters *monster);
  * false, false
  * *********************************************************************** */
 bool random_near_space( int ox, int oy, int &tx, int &ty,
-    bool allow_adjacent = false, bool restrict_LOS = true);
+    bool allow_adjacent = false, bool restrict_LOS = true,
+    bool forbid_sanctuary = false);
 
 
 /* ***********************************************************************

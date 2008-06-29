@@ -871,6 +871,9 @@ bool animate_a_corpse(const coord_def &a, corpse_type class_allowed,
                       god_type god, bool actual,
                       bool quiet)
 {
+    if (is_sanctuary(a.x, a.y))
+        return (false);
+
     bool success = false;
 
     // Search all the items on the ground for a corpse.
