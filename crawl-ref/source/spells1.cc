@@ -687,7 +687,10 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
     dist spd;
 
     if (target_x == -1 || target_y == -1)
-        spd.isValid = spell_direction(spd, beam);
+    {
+        spd.isValid = spell_direction(spd, beam, DIR_TARGET,
+                                      TARG_FRIEND, true, "Heal whom?");
+    }
     else
     {
         spd.tx = target_x;
