@@ -683,33 +683,32 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
 {
     ASSERT(healed >= 1);
 
-    dist bmove;
+    bolt beam;
+    dist spd;
+
     if (target_x == -1 || target_y == -1)
-    {
-        mpr("Heal whom?", MSGCH_PROMPT);
-        direction( bmove, DIR_TARGET, TARG_FRIEND );
-    }
+        spd.isValid = spell_direction(spd, beam);
     else
     {
-        bmove.tx = target_x;
-        bmove.ty = target_y;
-        bmove.isValid = true;
+        spd.tx = target_x;
+        spd.ty = target_y;
+        spd.isValid = in_bounds(spd.tx, spd.ty);
     }
 
-    if (!bmove.isValid || !in_bounds(bmove.tx, bmove.ty))
+    if (!spd.isValid)
     {
         canned_msg( MSG_OK );
         return 0;
     }
 
-    if (bmove.tx == you.x_pos && bmove.ty == you.y_pos)
+    if (spd.tx == you.x_pos && spd.ty == you.y_pos)
     {
         mpr("You are healed.");
         inc_hp(healed, false);
         return 1;
     }
 
-    const int mgr = mgrd[bmove.tx][bmove.ty];
+    const int mgr = mgrd[spd.tx][spd.ty];
 
     if (mgr == NON_MONSTER)
     {
@@ -768,7 +767,7 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return 1;
-}                               // end _healing_spell()
+}
 
 #if 0
 char cast_lesser_healing( int pow )
