@@ -613,7 +613,6 @@ bool is_travelable_stair(dungeon_feature_type gridc)
 {
     switch (gridc)
     {
-    case DNGN_ENTER_HELL:
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
@@ -622,6 +621,8 @@ bool is_travelable_stair(dungeon_feature_type gridc)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_ENTER_HELL:
+    case DNGN_EXIT_HELL:
     case DNGN_ENTER_DIS:
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
