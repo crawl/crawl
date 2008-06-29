@@ -5045,13 +5045,10 @@ static bool _handle_spell(monsters *monster, bolt &beem)
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
     const spell_type draco_breath = _get_draconian_breath_spell(monster);
 
-    if (is_sanctuary(monster->x, monster->y))
+    if (is_sanctuary(monster->x, monster->y)
+        && !mons_wont_attack(monster))
     {
-        if (!mons_friendly(monster)
-            && !mons_good_neutral(monster))
-        {
-            return (false);
-         }
+        return (false);
     }
 
     // Yes, there is a logic to this ordering {dlb}:
