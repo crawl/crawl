@@ -1688,6 +1688,23 @@ bool cast_sanctuary(const int power)
             int posy = you.y_pos + y;
             int dist = _inside_circle(posx, posy, radius);
 
+            // forming patterns
+            if (pattern == 0    // outward rays
+                  && (x == 0 || y == 0 || x == y || x == -y)
+                || pattern == 1 // circles
+                  && (dist >= (radius-1)*(radius-1) && dist <= radius*radius
+                      || dist >= (radius/2-1)*(radius/2-1)
+                         && dist <= radius*radius/4)
+               || pattern == 2 // latticed
+                  && (x%2 == 0 || y%2 == 0)
+                || pattern == 3 // cross-like
+                  && (abs(x)+abs(y) < 5 && x != y && x != -y))
+            {
+                env.map[posx][posy].property = FPROP_SANCTUARY_1; // yellow
+            }
+            else
+                env.map[posx][posy].property = FPROP_SANCTUARY_2; // white
+
             // scare all attacking monsters inside sanctuary
             if (dist != -1)
             {
@@ -1697,32 +1714,28 @@ bool cast_sanctuary(const int power)
                 {
                     mon = &menv[monster];
 
-                    if (!mons_wont_attack(mon)
-                        && mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
+                    if (!mons_wont_attack(mon))
                     {
-                        behaviour_event(mon, ME_SCARE, MHITYOU);
-                        count++;
-                    }
-                }
-            }
+                        if (mons_is_mimic(mon->type))
+                        {
+                            mimic_alert(mon);
+                            if(you.can_see(mon))
+                                count++;
+                        }
+                        else if (mon->add_ench(mon_enchant(ENCH_FEAR, 0,
+                                 KC_YOU)))
+                        {
+                            behaviour_event(mon, ME_SCARE, MHITYOU);
 
-            // forming patterns
-            if (pattern == 0    // outward rays
-                  && (x == 0 || y == 0 || x == y || x == -y)
-                || pattern == 1 // circles
-                  && (dist >= (radius-1)*(radius-1) && dist <= radius*radius
-                      || dist >= (radius/2-1)*(radius/2-1)
-                         && dist <= radius*radius/4)
-                || pattern == 2 // latticed
-                  && (x%2 == 0 || y%2 == 0)
-                || pattern == 3 // cross-like
-                  && (abs(x)+abs(y) < 5 && x != y && x != -y))
-            {
-                env.map[posx][posy].property = FPROP_SANCTUARY_1; // yellow
-            }
-            else
-                env.map[posx][posy].property = FPROP_SANCTUARY_2; // white
-        }
+                            // Check to see that monster is actually fleeing,
+                            // since plants can't flee.
+                            if (mons_is_fleeing(mon) && you.can_see(mon))
+                                count++;
+                        }
+                    }
+                } // if (monster != NON_MONSTER)
+            } // if (dist != -1)
+        } // radius loop
 
     if (count == 1)
         simple_monster_message(mon, " turns to flee the light!");
