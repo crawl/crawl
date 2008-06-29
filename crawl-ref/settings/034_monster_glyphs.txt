@@ -45,9 +45,6 @@ feature = orcish idol { , , darkgrey}
 ###########################
 
 # orcs
-#mon_glyph = orc : lightred
-#mon_glyph = Urug : red
-#mon_glyph = orc warrior : yellow
 mon_glyph = orc priest : lightgreen
 mon_glyph = orc knight : lightcyan
 mon_glyph = orc high priest : green
@@ -166,14 +163,11 @@ mon_glyph = Frederick : darkgrey
 # feature                 old colour     new colour
 # -------                 ----------     ----------
 # granite statue          lightgrey      darkgrey
-# orcish idol             darkgrey       red
+# orcish idol             darkgrey       lightred
 #
 # monster                 old colour     new colour
 # -------                 ----------     ----------
 # orcs
-# orc                     lightred       red
-# Urug                    red            yellow
-# orc warrior             yellow         lightred
 # orc priest              lightgreen     green
 # orc knight              lightcyan      cyan
 # orc high priest         green          lightgreen
