@@ -3017,15 +3017,6 @@ static void _handle_behaviour(monsters *mon)
         case BEH_WANDER:
             if (isPacified)
             {
-                // If a pacified monster is far enough away from the
-                // player, make it leave the level.
-                if (grid_distance(mon->x, mon->y, you.x_pos, you.y_pos)
-                        >= LOS_RADIUS * LOS_RADIUS * 4)
-                {
-                    make_mons_leave_level(mon);
-                    return;
-                }
-
                 // If a pacified monster isn't travelling toward
                 // someplace from which it can leave the level, make it
                 // start doing so.
@@ -3059,6 +3050,26 @@ static void _handle_behaviour(monsters *mon)
                 {
                     e[e_index].unreachable = true;
                     mon->travel_target = MTRAV_NONE;
+                }
+
+                // If a pacified monster is leaving the level via
+                // something other than a trap, and has reached its
+                // goal, handle it here.
+                if (isPacified && e_index != -1
+                    && mon->x == e[e_index].target.x
+                    && mon->y == e[e_index].target.y)
+                {
+                    make_mons_leave_level(mon);
+                    return;
+                }
+
+                // If a pacified monster is far enough away from the
+                // player, make it leave the level.
+                if (grid_distance(mon->x, mon->y, you.x_pos, you.y_pos)
+                        >= LOS_RADIUS * LOS_RADIUS * 4)
+                {
+                    make_mons_leave_level(mon);
+                    return;
                 }
             }
 
@@ -3108,17 +3119,6 @@ static void _handle_behaviour(monsters *mon)
                             mpr("We reached the end of our path: stop "
                                 "travelling.");
 #endif
-
-                            // If a pacified monster is leaving the
-                            // level via something other than a trap,
-                            // and has reached its goal, handle it here.
-                            if (isPacified
-                                && mon->x == e[e_index].target.x
-                                && mon->y == e[e_index].target.y)
-                            {
-                                make_mons_leave_level(mon);
-                                return;
-                            }
 
                             mon->travel_target = MTRAV_NONE;
                             need_target = true;
