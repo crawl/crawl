@@ -2053,14 +2053,20 @@ void behaviour_event(monsters *mon, int event, int src,
         break;
 
     case ME_SCARE:
-        // Berserking monsters don't flee.
-        if (mon->has_ench(ENCH_BERSERK))
+    {
+        const bool flee_sanct = !mons_wont_attack(mon) 
+                                && is_sanctuary(mon->x, mon->y);
+
+        // Berserking monsters don't flee, unless it's from sanctuary.
+        if (mon->has_ench(ENCH_BERSERK) && !flee_sanct)
             break;
 
-        // Neither do plants or nonliving beings.
+        // Neither do plants or nonliving beings, and sanctuary doesn't
+        // affect plants.
         if (mons_class_holiness(mon->type) == MH_PLANT
-            || mons_class_holiness(mon->type) == MH_NONLIVING)
+            || (mons_class_holiness(mon->type) == MH_NONLIVING && !flee_sanct))
         {
+            mon->del_ench(ENCH_FEAR, true, true);
             break;
         }
 
@@ -2072,6 +2078,7 @@ void behaviour_event(monsters *mon, int event, int src,
         if (see_grid(mon->x, mon->y))
             learned_something_new(TUT_FLEEING_MONSTER);
         break;
+    }
 
     case ME_CORNERED:
         // Plants or nonliving monsters cannot flee.
