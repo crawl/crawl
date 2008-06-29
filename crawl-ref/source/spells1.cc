@@ -626,9 +626,6 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     if (healed < 1)
         return (false);
 
-    if (!_mons_hostile(mon))
-        return (false);
-
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mons_intel(mon->type) <= I_PLANT) // no self-awareness
@@ -789,12 +786,11 @@ char cast_greatest_healing( int pow )
 }
 #endif
 
-int cast_healing( int pow, int target_x, int target_y )
+int cast_healing(int pow, int target_x, int target_y)
 {
-    if (pow > 50)
-        pow = 50;
+    pow = std::min(50, pow);
 
-    return (_healing_spell( pow + roll_dice( 2, pow ) - 2, target_x, target_y ));
+    return (_healing_spell(pow + roll_dice(2, pow) - 2, target_x, target_y));
 }
 
 void vitalisation_chain(int amount)
