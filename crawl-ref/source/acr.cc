@@ -4029,10 +4029,11 @@ static bool _initialise(void)
         you.level_type  = LEVEL_ABYSS;
         you.entry_cause = EC_UNKNOWN;
     }
-    load( you.entering_level? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
-          you.entering_level? LOAD_ENTER_LEVEL :
-          newc              ? LOAD_START_GAME : LOAD_RESTART_GAME,
-          NUM_LEVEL_AREA_TYPES, -1, you.where_are_you );
+
+    load(you.entering_level ? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
+         you.entering_level ? LOAD_ENTER_LEVEL :
+         newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
+         NUM_LEVEL_AREA_TYPES, -1, you.where_are_you);
 
 #if DEBUG_DIAGNOSTICS
     // Debug compiles display a lot of "hidden" information, so we auto-wiz.

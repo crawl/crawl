@@ -1288,7 +1288,6 @@ void dgn_set_colours_from_monsters()
     else
         env.floor_colour = _fix_black_colour((char)mcolour[env.mons_alloc[9]]);
 
-
     if (env.mons_alloc[8] < 0 || env.mons_alloc[8] == MONS_PROGRAM_BUG
         || env.mons_alloc[8] >= NUM_MONSTERS)
     {
