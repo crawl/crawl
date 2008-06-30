@@ -1862,11 +1862,13 @@ traditional weapon, a priestly robe, and a few healing potions.
 Chaos Knights:
 --------------
 The Chaos Knight is a fighter who chooses to serve one of the Gods of 
-Chaos. There are two choices: Xom or Makhleb. Xom is a very 
+Chaos. There are three choices: Xom, Makhleb, or Lugonu. Xom is a very 
 unpredictable (and possibly psychotic) entity who rewards or punishes 
 according to whim. Makhleb the Destroyer is a more purposeful God, who 
 appreciates destruction and offers a variety of very violent powers to 
-the faithful.
+the faithful. Lugonu the Unformed rules over the Abyss, and grants 
+followers some control over that unpleasant place in return for 
+spreading death and disorder.
 
 Death Knights:
 --------------
