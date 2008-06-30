@@ -5509,7 +5509,7 @@ void god_pitch(god_type which_god)
         mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
     if (you.religion == GOD_ZIN && _chaotic_beings_attitude_change())
         mpr("Your chaotic allies forsake you.", MSGCH_MONSTER_ENCHANT);
-    if (you.religion == GOD_TROG && _magic_users_attitude_change())
+    else if (you.religion == GOD_TROG && _magic_users_attitude_change())
         mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
 
     if (you.religion == GOD_ELYVILON)
