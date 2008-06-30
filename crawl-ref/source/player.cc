@@ -3497,8 +3497,7 @@ void level_change(bool skip_attribute_increase)
 
         deflate_hp( you.hp_max, false );
 
-        if (you.magic_points < 0)
-            you.magic_points = 0;
+        you.magic_points = std::max(0, you.magic_points);
 
         {
             unwind_var<int> hpmax(you.hp_max);
@@ -3530,8 +3529,7 @@ void level_change(bool skip_attribute_increase)
     }
 
     redraw_skill( you.your_name, player_title() );
-
-}                               // end level_change()
+}
 
 // Here's a question for you: does the ordering of mods make a difference?
 // (yes) -- are these things in the right order of application to stealth?

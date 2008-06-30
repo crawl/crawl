@@ -68,6 +68,7 @@
 #include "mon-util.h"
 #include "monstuff.h"
 #include "notes.h"
+#include "output.h"
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
@@ -726,8 +727,7 @@ void drain_exp(bool announce_full)
         you.experience -= exp_drained;
         you.exp_available -= exp_drained;
 
-        if (you.exp_available < 0)
-            you.exp_available = 0;
+        you.exp_available = std::max(0, you.exp_available);
 
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "You lose %ld experience points.",exp_drained);
@@ -736,12 +736,15 @@ void drain_exp(bool announce_full)
         you.redraw_experience = true;
 
         if (you.experience < exp_needed(you.experience_level + 1))
+        {
             lose_level();
+            redraw_skill(you.your_name, player_title());
+        }
     }
 }
 
-static void xom_checks_damage(kill_method_type death_type,
-                              int dam, int death_source)
+static void _xom_checks_damage(kill_method_type death_type,
+                               int dam, int death_source)
 {
     if (death_type == KILLED_BY_TARGETTING)
     {
@@ -849,7 +852,7 @@ void ouch( int dam, int death_source, kill_method_type death_type,
                 mpr( "* * * LOW HITPOINT WARNING * * *", MSGCH_DANGER );
             }
 
-            xom_checks_damage(death_type, dam, death_source);
+            _xom_checks_damage(death_type, dam, death_source);
 
             // for note taking
             std::string damage_desc = "";
