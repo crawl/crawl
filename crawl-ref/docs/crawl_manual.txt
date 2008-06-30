@@ -1854,25 +1854,25 @@ with a sword, a shield, a robe, and a healing potion.
 
 Priests:
 --------
-Priests serve either Zin, the ancient and revered God of Law, or the 
-rather less pleasant Death-God Yredelemnul. Hill Orcs may choose to 
-follow the Orc god Beogh instead. Priests enter the dungeon with a 
+Priests serve either Zin, the ancient and revered God of Law, or 
+Yredelemnul, the rather less pleasant God of Death. Hill Orcs may choose 
+to follow the Orc god Beogh instead. Priests enter the dungeon with a 
 traditional weapon, a priestly robe, and a few healing potions.
 
 Chaos Knights:
 --------------
 The Chaos Knight is a fighter who chooses to serve one of the Gods of 
 Chaos. There are two choices: Xom or Makhleb. Xom is a very 
-unpredictable (and possibly psychotic) entity who rewards or punishes
-according to whim. Makhleb the Destroyer is a more purposeful God, who
-appreciates destruction and offers a variety of very violent powers to
+unpredictable (and possibly psychotic) entity who rewards or punishes 
+according to whim. Makhleb the Destroyer is a more purposeful God, who 
+appreciates destruction and offers a variety of very violent powers to 
 the faithful.
 
 Death Knights:
 --------------
-The Death Knight is a fighter who aligns him or herself with the powers
+The Death Knight is a fighter who aligns him or herself with the powers 
 of death. There are two types of Death Knights: those who worship and 
-draw their abilities from the Demon-God Yredelemnul, and those who study
+draw their abilities from the Death-God Yredelemnul, and those who study 
 the fearsome arts of necromancy.
 
 Healers:
