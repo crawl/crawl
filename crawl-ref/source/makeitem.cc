@@ -2677,7 +2677,7 @@ static void _generate_misc_item(item_def& item, int force_type, int item_race)
         item.plus = item_race;
 }
 
-// Returns item slot or NON_ITEM if it fails
+// Returns item slot or NON_ITEM if it fails.
 int items( int allow_uniques,       // not just true-false,
                                     //     because of BCR acquirement hack
            object_class_type force_class, // desired OBJECTS class {dlb}
@@ -2699,7 +2699,7 @@ int items( int allow_uniques,       // not just true-false,
                    || force_class == OBJ_MISSILES)
                && force_type != OBJ_RANDOM);
 
-    // find an empty slot for the item (with culling if required)
+    // Find an empty slot for the item (with culling if required).
     int p = get_item_slot(10);
     if (p == NON_ITEM)
         return (NON_ITEM);

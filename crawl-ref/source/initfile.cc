@@ -1220,16 +1220,17 @@ static void write_newgame_options(FILE *f)
     if (Options.prev_ck != GOD_NO_GOD)
     {
         fprintf(f, "chaos_knight = %s\n",
-                Options.prev_ck == GOD_XOM? "xom" :
-                Options.prev_ck == GOD_MAKHLEB? "makhleb" :
-                                            "random");
+                Options.prev_ck == GOD_XOM     ? "xom" :
+                Options.prev_ck == GOD_MAKHLEB ? "makhleb" :
+                Options.prev_ck == GOD_LUGONU  ? "lugonu"
+                                               : "random");
     }
     if (Options.prev_dk != DK_NO_SELECTION)
     {
         fprintf(f, "death_knight = %s\n",
-                Options.prev_dk == DK_NECROMANCY? "necromancy" :
-                Options.prev_dk == DK_YREDELEMNUL? "yredelemnul" :
-                                            "random");
+                Options.prev_dk == DK_NECROMANCY  ? "necromancy" :
+                Options.prev_dk == DK_YREDELEMNUL ? "yredelemnul"
+                                                  : "random");
     }
     if (is_priest_god(Options.prev_pr) || Options.prev_pr == GOD_RANDOM)
     {
@@ -2035,21 +2036,23 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else COLOUR_OPTION(status_caption_colour);
     else if (key == "weapon")
     {
-        // choose this weapon for classes that get choice
+        // Choose this weapon for classes that get choice.
         weapon = _str_to_weapon( field );
     }
     else if (key == "book")
     {
-        // choose this book for classes that get choice
+        // Choose this book for classes that get choice.
         book = _str_to_book( field );
     }
     else if (key == "chaos_knight")
     {
-        // choose god for Chaos Knights
+        // Choose god for Chaos Knights.
         if (field == "xom")
             chaos_knight = GOD_XOM;
         else if (field == "makhleb")
             chaos_knight = GOD_MAKHLEB;
+        else if (field == "lugonu")
+            chaos_knight = GOD_LUGONU;
         else if (field == "random")
             chaos_knight = GOD_RANDOM;
     }

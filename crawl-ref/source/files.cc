@@ -1036,6 +1036,11 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         you.transit_stair, stair_taken, DNGN_UNSEEN);
     unwind_bool ylev(you.entering_level, true, false);
 
+#ifdef DEBUG_LEVEL_LOAD
+    mprf(MSGCH_DIAGNOSTICS, "Loading... level type: %d, branch: %d, level: %d",
+                            you.level_type, you.where_are_you, you.your_level);
+#endif
+
     // Going up/down stairs, going through a portal, or being banished
     // means the previous x/y movement direction is no longer valid.
     you.reset_prev_move();
@@ -1087,14 +1092,31 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         _do_lost_items(old_level_type);
 
     // Try to open level savefile.
+#ifdef DEBUG_LEVEL_LOAD
+    mprf(MSGCH_DIAGNOSTICS, "Try to open file %s", cha_fil.c_str());
+#endif
     FILE *levelFile = fopen(cha_fil.c_str(), "rb");
 
     // GENERATE new level when the file can't be opened:
     if (levelFile == NULL)
     {
+#ifdef DEBUG_LEVEL_LOAD
+        mpr("Generating new file...", MSGCH_DIAGNOSTICS);
+#endif
         ASSERT( load_mode != LOAD_VISITOR );
         env.turns_on_level = -1;
-        builder( you.your_level, you.level_type );
+
+        if (you.char_direction == GDT_GAME_START
+            && you.level_type == LEVEL_DUNGEON)
+        {
+            // If we're leaving the Abyss for the first time as a Chaos Knight
+            // of Lugonu (who start out there), force a return into the first
+            // dungeon level and enable normal monster generation.
+            you.your_level = 0;
+            you.char_direction = GDT_DESCENDING;
+        }
+
+        builder(you.your_level, you.level_type);
         just_created_level = true;
 
         if ((you.your_level > 1 || you.level_type != LEVEL_DUNGEON)
@@ -1109,6 +1131,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
     else
     {
+#ifdef DEBUG_LEVEL_LOAD
+        mpr("Loading old file...", MSGCH_DIAGNOSTICS);
+#endif
         // BEGIN -- must load the old level : pre-load tasks
 
         // LOAD various tags
@@ -1245,7 +1270,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode != LOAD_VISITOR)
         crawl_state.level_annotation_shown = false;
 
-    if ( make_changes )
+    if (make_changes)
     {
         // Update PlaceInfo entries
         PlaceInfo& curr_PlaceInfo = you.get_place_info();
@@ -1263,9 +1288,19 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
             delta.levels_seen++;
 
         you.global_info += delta;
+#ifdef DEBUG_LEVEL_LOAD
+        mprf(MSGCH_DIAGNOSTICS,
+             "global_info:: num_visits: %d, levels_seen: %d",
+             you.global_info.num_visits, you.global_info.levels_seen);
+#endif
         you.global_info.assert_validity();
 
         curr_PlaceInfo += delta;
+#ifdef DEBUG_LEVEL_LOAD
+        mprf(MSGCH_DIAGNOSTICS,
+             "curr_PlaceInfo:: num_visits: %d, levels_seen: %d",
+             curr_PlaceInfo.num_visits, curr_PlaceInfo.levels_seen);
+#endif
         curr_PlaceInfo.assert_validity();
     }
 

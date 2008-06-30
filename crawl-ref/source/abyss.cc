@@ -90,11 +90,24 @@ void generate_abyss()
                                            : DNGN_CLOSED_DOOR); // 1 in 4000
         }
 
-    grd[45][35] = DNGN_FLOOR;
-    if (one_chance_in(5))
+    // If we're starting out in the Abyss, make sure the starting grid is
+    // an altar to Lugonu and there's an exit near-by.
+    // Otherwise, we start out on floor and there's a chance there's an
+    // altar near-by.
+    if (you.char_direction == GDT_GAME_START)
     {
+        grd[45][35] = DNGN_ALTAR_LUGONU;
         _place_feature_near( coord_def(45, 35), LOS_RADIUS,
-                             DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
+                             DNGN_FLOOR, DNGN_EXIT_ABYSS, 50 );
+    }
+    else
+    {
+        grd[45][35] = DNGN_FLOOR;
+        if (one_chance_in(5))
+        {
+            _place_feature_near( coord_def(45, 35), LOS_RADIUS,
+                                 DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
+        }
     }
 }
 
@@ -209,6 +222,7 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
                 if (items_placed < 150 && one_chance_in(200))
                 {
                     if (!placed_abyssal_rune && abyssal_rune_roll != -1
+                        && you.char_direction != GDT_GAME_START
                         && one_chance_in(abyssal_rune_roll))
                     {
                         thing_created = items(1, OBJ_MISCELLANY,
@@ -220,8 +234,19 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
                     }
                     else
                     {
-                        thing_created = items(1, OBJ_RANDOM,
-                                              OBJ_RANDOM, true, 51, 250);
+                        if (you.char_direction == GDT_GAME_START)
+                        {
+                            // Number and level of items as that on level 1.
+                            const int num_items   = 3 + roll_dice( 3, 11 );
+                            const int items_level = 0;
+                            thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
+                                                  true, items_level, num_items);
+                        }
+                        else
+                        {
+                            thing_created = items(1, OBJ_RANDOM,
+                                                  OBJ_RANDOM, true, 51, 250);
+                        }
                     }
 
                     move_item_to_grid( &thing_created, i, j );
@@ -254,29 +279,34 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
 #endif
             }
 
-            if (one_chance_in(10000)) // Place an altar.
-                altars_wanted++;
-
-            // Don't place altars under items.
-            if (altars_wanted > 0 && igrd[i][j] == NON_ITEM)
+            // Except for the altar on the starting position, don't place
+            // any altars.
+            if (you.char_direction != GDT_GAME_START)
             {
-                do
+                if (one_chance_in(10000)) // Place an altar.
+                    altars_wanted++;
+
+                // Don't place altars under items.
+                if (altars_wanted > 0 && igrd[i][j] == NON_ITEM)
                 {
-                    grd[i][j] = static_cast<dungeon_feature_type>(
-                                    DNGN_ALTAR_ZIN + random2(NUM_GODS-1) );
-                }
-                while (grd[i][j] == DNGN_ALTAR_ZIN
-                       || grd[i][j] == DNGN_ALTAR_SHINING_ONE
-                       || grd[i][j] == DNGN_ALTAR_ELYVILON);
+                    do
+                    {
+                        grd[i][j] = static_cast<dungeon_feature_type>(
+                                        DNGN_ALTAR_ZIN + random2(NUM_GODS-1) );
+                    }
+                    while (grd[i][j] == DNGN_ALTAR_ZIN
+                           || grd[i][j] == DNGN_ALTAR_SHINING_ONE
+                           || grd[i][j] == DNGN_ALTAR_ELYVILON);
 
-                // Lugonu has a flat 50% chance of corrupting the altar.
-                if (coinflip())
-                    grd[i][j] = DNGN_ALTAR_LUGONU;
+                    // Lugonu has a flat 50% chance of corrupting the altar.
+                    if (coinflip())
+                        grd[i][j] = DNGN_ALTAR_LUGONU;
 
-                altars_wanted--;
+                    altars_wanted--;
 #if DEBUG_ABYSS
-                mpr("Placing altar.", MSGCH_DIAGNOSTICS);
+                    mpr("Placing altar.", MSGCH_DIAGNOSTICS);
 #endif
+                }
             }
         }
 

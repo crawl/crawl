@@ -4023,6 +4023,12 @@ static bool _initialise(void)
 
     run_map_preludes();
 
+    if (newc && you.char_direction == GDT_GAME_START)
+    {
+        // Chaos Knights of Lugonu start out in the Abyss.
+        you.level_type  = LEVEL_ABYSS;
+        you.entry_cause = EC_UNKNOWN;
+    }
     load( you.entering_level? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
           you.entering_level? LOAD_ENTER_LEVEL :
           newc              ? LOAD_START_GAME : LOAD_RESTART_GAME,
@@ -4321,8 +4327,8 @@ static void _move_player(int move_x, int move_y)
         you.running = RMODE_CONTINUE;
 
     if (you.level_type == LEVEL_ABYSS
-            && (you.x_pos <= 15 || you.x_pos >= (GXM - 16)
-                    || you.y_pos <= 15 || you.y_pos >= (GYM - 16)))
+        && (you.x_pos <= 15 || you.x_pos >= (GXM - 16)
+            || you.y_pos <= 15 || you.y_pos >= (GYM - 16)))
     {
         area_shift();
         if (you.pet_target != MHITYOU)

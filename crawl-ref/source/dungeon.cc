@@ -278,7 +278,7 @@ static callback_map level_type_post_callbacks;
  *********************************************************************/
 bool builder(int level_number, int level_type)
 {
-    const std::set<std::string> uniq_tags = you.uniq_map_tags;
+    const std::set<std::string> uniq_tags  = you.uniq_map_tags;
     const std::set<std::string> uniq_names = you.uniq_map_names;
 
     // N tries to build the level, after which we bail with a capital B.
@@ -3052,9 +3052,9 @@ static void _builder_items(int level_number, char level_type, int items_wanted)
             // Guarantee that the knife is uncursed and non-special.
             if (item_no != NON_ITEM)
             {
-                mitm[item_no].plus = 0;
-                mitm[item_no].plus2 = 0;
-                mitm[item_no].flags = 0;   // no id, no race/desc, no curse
+                mitm[item_no].plus    = 0;
+                mitm[item_no].plus2   = 0;
+                mitm[item_no].flags   = 0;   // no id, no race/desc, no curse
                 mitm[item_no].special = 0; // no ego type
             }
         }

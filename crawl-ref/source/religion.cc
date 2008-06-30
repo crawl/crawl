@@ -438,7 +438,8 @@ bool is_good_god(god_type god)
 bool is_chaotic_god(god_type god)
 {
     return (god == GOD_XOM
-            || god == GOD_MAKHLEB);
+            || god == GOD_MAKHLEB
+            || god == GOD_LUGONU);
 }
 
 bool is_priest_god(god_type god)

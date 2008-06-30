@@ -1475,8 +1475,8 @@ bool check_annotation_exclusion_warning()
 void up_stairs(dungeon_feature_type force_stair,
                entry_cause_type entry_cause)
 {
-    dungeon_feature_type stair_find =
-        force_stair? force_stair : grd[you.x_pos][you.y_pos];
+    dungeon_feature_type stair_find = (force_stair ? force_stair
+                                                   : grd[you.x_pos][you.y_pos]);
     const branch_type     old_where      = you.where_are_you;
     const level_area_type old_level_type = you.level_type;
 
@@ -1822,7 +1822,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         // reaching the Abyss.
         if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_ABYSS)
             mark_milestone("abyss.enter", "entered the Abyss!");
-        else if (grd[you.x_pos][you.y_pos] == DNGN_EXIT_ABYSS)Picture
+        else if (grd[you.x_pos][you.y_pos] == DNGN_EXIT_ABYSS)
             mark_milestone("abyss.exit", "escaped from the Abyss!");
     }
 #endif
@@ -2024,7 +2024,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     if (entered_branch)
     {
-        if ( branches[you.where_are_you].entry_message )
+        if (branches[you.where_are_you].entry_message)
             mpr(branches[you.where_are_you].entry_message);
         else
             mprf("Welcome to %s!", branches[you.where_are_you].longname);
@@ -2052,7 +2052,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         if (god_gives_permanent_followers(you.religion))
             you.friendly_pickup = Options.default_friendly_pickup;
 
-        switch(you.level_type)
+        switch (you.level_type)
         {
         case LEVEL_DUNGEON:
             xom_is_stimulated(49);
@@ -2137,7 +2137,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         if (player_in_hell())
         {
             you.where_are_you = BRANCH_MAIN_DUNGEON;
-            you.your_level = you.hell_exit - 1;
+            you.your_level    = you.hell_exit - 1;
         }
         break;
 
@@ -2158,7 +2158,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             if (player_in_hell())
             {
                 you.where_are_you = BRANCH_MAIN_DUNGEON;
-                you.hell_exit = 26;
+                you.hell_exit  = 26;
                 you.your_level = 26;
             }
         }

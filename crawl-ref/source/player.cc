@@ -6719,7 +6719,7 @@ void PlaceInfo::assert_validity() const
               && branch == -1);
 
     // Can't have visited a place without seeing any of its levels, and
-    // visa versa
+    // visa versa.
     ASSERT(num_visits == 0 && levels_seen == 0
            || num_visits > 0 && levels_seen > 0);
 

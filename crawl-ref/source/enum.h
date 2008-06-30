@@ -765,7 +765,7 @@ enum description_level_type
 
 enum game_direction_type
 {
-    GDT_NONE,
+    GDT_GAME_START = 0,
     GDT_DESCENDING,
     GDT_ASCENDING
 };

@@ -1937,6 +1937,8 @@ static char_choice_restriction _book_restriction(int booktype,
             return (CC_UNRESTRICTED);
 
         default:
+            if (!summon_too && player_genus(GENPC_DRACONIAN))
+                return (CC_UNRESTRICTED);
             return (CC_RESTRICTED);
         }
         break;
@@ -1965,6 +1967,8 @@ static char_choice_restriction _book_restriction(int booktype,
             return (CC_UNRESTRICTED);
 
         default:
+            if (!summon_too && player_genus(GENPC_DRACONIAN))
+                return (CC_UNRESTRICTED);
             return (CC_RESTRICTED);
         }
         break;
@@ -1988,8 +1992,9 @@ static char_choice_restriction _book_restriction(int booktype,
             break;
 
         default:
-            return (player_genus(GENPC_DRACONIAN) ? CC_UNRESTRICTED
-                                                  : CC_RESTRICTED);
+            if (player_genus(GENPC_DRACONIAN))
+                return (CC_UNRESTRICTED);
+            return (CC_RESTRICTED);
         }
     }
     return (CC_RESTRICTED);
@@ -2076,9 +2081,9 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
                 return (false);
             case '\r':
             case '\n':
-                if ( Options.prev_book != SBT_NO_SELECTION )
+                if (Options.prev_book != SBT_NO_SELECTION)
                 {
-                    if ( Options.prev_book == SBT_RANDOM )
+                    if (Options.prev_book == SBT_RANDOM)
                         keyin = '*';
                     else
                         keyin = ('a' +  Options.prev_book - 1);
@@ -4228,6 +4233,7 @@ bool _give_items_skills()
                         keyn = '*'; // for ng_pr setting
                         // fall-through for random
                     case '*':
+                    case '+':
                         you.religion = coinflip() ? GOD_ZIN : GOD_YREDELEMNUL;
                         if (you.species == SP_HILL_ORC && coinflip())
                             you.religion = GOD_BEOGH;
@@ -4906,7 +4912,9 @@ bool _give_items_skills()
         }
         else if (Options.random_pick || Options.chaos_knight == GOD_RANDOM)
         {
-            you.religion = coinflip() ? GOD_XOM : GOD_MAKHLEB;
+            you.religion = (one_chance_in(3) ? GOD_XOM :
+                            coinflip()       ? GOD_MAKHLEB
+                                             : GOD_LUGONU);
             ng_ck = GOD_RANDOM;
         }
         else
@@ -4920,6 +4928,7 @@ bool _give_items_skills()
             textcolor( LIGHTGREY );
             cprintf("a - Xom of Chaos" EOL);
             cprintf("b - Makhleb the Destroyer" EOL);
+            cprintf("c - Lugonu the Unformed" EOL);
 
             textcolor( BROWN );
             cprintf(EOL "* - Random choice; "
@@ -4931,7 +4940,8 @@ bool _give_items_skills()
                 textcolor(BROWN);
                 cprintf(EOL "Enter - %s" EOL,
                         Options.prev_ck == GOD_XOM     ? "Xom" :
-                        Options.prev_ck == GOD_MAKHLEB ? "Makhleb"
+                        Options.prev_ck == GOD_MAKHLEB ? "Makhleb" :
+                        Options.prev_ck == GOD_LUGONU  ? "Lugonu"
                                                        : "Random");
                 textcolor(LIGHTGREY);
             }
@@ -4963,14 +4973,20 @@ bool _give_items_skills()
                     keyn = '*'; // for ng_ck setting
                     // fall-through for random
                 case '*':
-                    you.religion = (coinflip()? GOD_XOM : GOD_MAKHLEB);
+                case '+':
+                    you.religion = (one_chance_in(3) ? GOD_XOM :
+                                    coinflip()       ? GOD_MAKHLEB
+                                                     : GOD_LUGONU);
                     break;
                 case 'a':
                     you.religion = GOD_XOM;
                     break;
                 case 'b':
                     you.religion = GOD_MAKHLEB;
-                    // fall through
+                    break;
+                case 'c':
+                    you.religion = GOD_LUGONU;
+                    break;
                 default:
                     break;
                 }
@@ -4992,12 +5008,21 @@ bool _give_items_skills()
             // (Namely, a countdown to becoming bored.)
             you.gift_timeout = random2(40) + random2(40);
         }
-        else // Makhleb
+        else // Makhleb or Lugonu
         {
-            you.piety = 25;
             you.skills[SK_INVOCATIONS] = 2;
-        }
 
+            if (you.religion == GOD_LUGONU)
+            {
+                // Chaos Knights of Lugonu start in the Abyss. We need to mark
+                // this unusual occurence, so the player doesn't get early
+                // access to OOD items etc.
+                you.char_direction = GDT_GAME_START;
+                you.piety = 35;
+            }
+            else
+                you.piety = 25;
+        }
         break;
 
     case JOB_HEALER:
