@@ -5031,9 +5031,9 @@ bool _give_items_skills()
 
             if (you.religion == GOD_LUGONU)
             {
-                // Chaos Knights of Lugonu start in the Abyss. We need to mark
-                // this unusual occurence, so the player doesn't get early
-                // access to OOD items etc.
+                // Chaos Knights of Lugonu start in the Abyss.  We need
+                // to mark this unusual occurrence, so the player
+                // doesn't get early access to OOD items, etc.
                 you.char_direction = GDT_GAME_START;
                 you.piety = 35;
             }

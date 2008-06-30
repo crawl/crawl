@@ -10,7 +10,7 @@
  *   <7>   19 June 2000  GDL    Change handle to FILE *
  *   <6>   11/14/99      cdl    Don't let player ghosts follow you up/down
  *   <5>    7/13/99      BWR    Monsters now regenerate hps off level &
- ghosts teleport
+ *                              ghosts teleport
  *   <4>    6/13/99      BWR    Added tmp file pairs to save file.
  *   <3>    6/11/99      DML    Replaced temp file deletion code.
  *
