@@ -48,7 +48,7 @@
 #pragma warning(error : 4130)   // The operator was used with the address of a string literal.
 #pragma warning(error : 4131)   // The specified function declaration is not in prototype form.
 #pragma warning(error : 4132)   // The constant was not initialized.
-#pragma warning(error : 4152)   // A pointer to a function was converted to a pointer to data, or visa versa.
+#pragma warning(error : 4152)   // A pointer to a function was converted to a pointer to data, or vice versa.
 #pragma warning(error : 4208)   // nonstandard extension used : delete [exp] - exp evaluated but ignored
 #pragma warning(error : 4211)   // nonstandard extension used : redefined extern to static
 #pragma warning(error : 4212)   // nonstandard extension used : function declaration used ellipsis

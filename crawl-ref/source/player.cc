@@ -6711,7 +6711,7 @@ void PlaceInfo::make_global()
 
 void PlaceInfo::assert_validity() const
 {
-    // Check that level_type and branch match up
+    // Check that level_type and branch match up.
     ASSERT(is_global()
            || level_type == LEVEL_DUNGEON && branch >= BRANCH_MAIN_DUNGEON
               && branch < NUM_BRANCHES
@@ -6719,7 +6719,7 @@ void PlaceInfo::assert_validity() const
               && branch == -1);
 
     // Can't have visited a place without seeing any of its levels, and
-    // visa versa.
+    // vice versa.
     ASSERT(num_visits == 0 && levels_seen == 0
            || num_visits > 0 && levels_seen > 0);
 
