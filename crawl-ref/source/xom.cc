@@ -820,13 +820,13 @@ static bool _xom_is_bad(int sever)
         }
         else if (random2(sever) <= 8)
         {
-            const char *speech = _get_xom_speech("draining or torment").c_str();
+            std::string speech = _get_xom_speech("draining or torment");
 
             if (one_chance_in(4))
             {
                 if (player_prot_life() < 3)
                 {
-                    god_speaks(GOD_XOM, speech);
+                    god_speaks(GOD_XOM, speech.c_str());
 
                     drain_exp();
                     if (random2(sever) > 3)
@@ -841,7 +841,7 @@ static bool _xom_is_bad(int sever)
             {
                 if (!player_res_torment())
                 {
-                    god_speaks(GOD_XOM, speech);
+                    god_speaks(GOD_XOM, speech.c_str());
 
                     torment_player(0, TORMENT_XOM);
 
@@ -851,12 +851,12 @@ static bool _xom_is_bad(int sever)
         }
         else if (random2(sever) <= 9)
         {
-            const char *speech = _get_xom_speech("hostile monster").c_str();
+            std::string speech = _get_xom_speech("hostile monster");
 
             // Nasty, but fun.
             if (one_chance_in(4))
             {
-                god_speaks(GOD_XOM, speech);
+                god_speaks(GOD_XOM, speech.c_str());
 
                 cast_tukimas_dance(100, GOD_XOM, true);
 
@@ -882,7 +882,7 @@ static bool _xom_is_bad(int sever)
 
                 if (success)
                 {
-                    god_speaks(GOD_XOM, speech);
+                    god_speaks(GOD_XOM, speech.c_str());
 
                     done = true;
                 }
