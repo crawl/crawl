@@ -2121,9 +2121,11 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
 
         if (!good_choices)
             keyin = random2(numbooks);
+
+        keyin += 'a';
     }
 
-    book.sub_type = firstbook + keyin;
+    book.sub_type = firstbook + keyin - 'a';
     return (true);
 }
 

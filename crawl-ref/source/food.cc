@@ -1846,7 +1846,7 @@ bool is_poisonous(const item_def &food)
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
         return (false);
 
-    if (player_res_poison())
+    if (player_res_poison(false))
         return (false);
 
     return (mons_corpse_effect(food.plus) == CE_POISONOUS);
