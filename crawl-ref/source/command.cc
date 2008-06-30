@@ -1745,24 +1745,34 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "         untrap, attack without move\n",
             true, true, _cmdhelp_textfilter);
 
+    unsigned ch;
+    unsigned short colour;
+    std::string item_types =
+        "<h>Item types (and common commands)\n"
+        "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
+        "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>(</w> cycle)\n"
+        "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
+        "<brown>%</brown> : corpses and food (<w>c</w>hop up and <w>e</w>at)\n"
+        "<w>?</w> : scrolls (<w>r</w>ead)\n"
+        "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
+        "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
+        "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
+        "<lightgrey>/</lightgrey> : wands (<w>Z</w>ap)\n"
+        "<lightcyan>";
+
+    get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
+    item_types += static_cast<char>(ch); 
+    item_types += 
+        "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and <w>z</w>ap)\n"
+        "<brown>\\</brown> : staves and rods (<w>w</w>ield and e<w>v</w>oke)\n"
+        "<lightgreen>}</lightgreen> : miscellaneous items (e<w>v</w>oke)\n"
+        "<lightmagenta>0</lightmagenta> : the Orb of Zot (Carry the Orb \n"
+        "    to the surface and win!)\n"
+        "<yellow>$</yellow> : gold\n",
+
+
     cols.add_formatted(
-            0,
-            "<h>Item types (and common commands)\n"
-            "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
-            "<brown>(</brown> : missiles (<w>Q</w>uiver, <w>f</w>ire, <w>(</w> cycle)\n"
-            "<cyan>[</cyan> : armour (<w>W</w>ear and <w>T</w>ake off)\n"
-            "<brown>%</brown> : corpses and food (<w>c</w>hop up and <w>e</w>at)\n"
-            "<w>?</w> : scrolls (<w>r</w>ead)\n"
-            "<magenta>!</magenta> : potions (<w>q</w>uaff)\n"
-            "<blue>=</blue> : rings (<w>P</w>ut on and <w>R</w>emove)\n"
-            "<red>\"</red> : amulets (<w>P</w>ut on and <w>R</w>emove)\n"
-            "<lightgrey>/</lightgrey> : wands (<w>Z</w>ap)\n"
-            "<lightcyan>+</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and <w>z</w>ap)\n"
-            "<brown>\\</brown> : staves and rods (<w>w</w>ield and e<w>v</w>oke)\n"
-            "<lightgreen>}</lightgreen> : miscellaneous items (e<w>v</w>oke)\n"
-            "<lightmagenta>0</lightmagenta> : the Orb of Zot (Carry the Orb \n"
-            "    to the surface and win!)\n"
-            "<yellow>$</yellow> : gold\n",
+            0, item_types,
             true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
