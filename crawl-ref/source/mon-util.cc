@@ -2424,7 +2424,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         return (true);
     }
 
-    if (!mons_friendly(mon) && !mons_good_neutral(mon))
+    if (!mons_wont_attack(mon))
     {
         if (spell_harms_area(monspell) && env.sanctuary_time > 0)
             return (true);
