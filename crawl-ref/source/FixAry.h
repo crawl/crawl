@@ -5,9 +5,9 @@
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
  *
- *  Change History (most recent first):    
+ *  Change History (most recent first):
  *
- *         <1>     6/16/00    JDJ        Created 
+ *         <1>     6/16/00    JDJ        Created
  */
 
 #ifndef FIXARY_H
@@ -37,7 +37,7 @@ public:
     // operator[] should return one of these to avoid breaking
     // client code (if inlining is on there won't be a speed hit)
     typedef FixedVector<TYPE, HEIGHT> Column;
-    
+
 //-----------------------------------
 //    API
 //
@@ -61,7 +61,7 @@ public:
     template<class Indexer> const TYPE& operator () (const Indexer &i) const {
         return mData[i.x][i.y];
     }
-    
+
     void init(const TYPE& def) {
         for ( int i = 0; i < WIDTH; ++i )
             mData[i].init(def);
@@ -87,7 +87,7 @@ public:
     {
         return data[x + y * width];
     }
-    
+
 private:
     Z *data;
     int width, height, size;
@@ -118,7 +118,7 @@ template <typename Z>
 void Matrix<Z>::init(const Z &initial)
 {
     for (int i = 0; i < size; ++i)
-        data[i] = initial;    
+        data[i] = initial;
 }
 
 #endif    // FIXARY_H
