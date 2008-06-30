@@ -2727,7 +2727,6 @@ rF+       one level of fire resistance
 rF++      two levels of fire resistance
 rF-       one level of fire susceptibility
 rN+       one level of negative resistance (life protection)
-rN++      two levels of negative resistance (life protection)
 rPois     poison resistance
 rElec     electricity resistance (insulation)
 
