@@ -1014,11 +1014,8 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
             continue;
         }
 
-        if (is_sanctuary(newx, newy) && !mons_friendly(monster)
-            && !mons_good_neutral(monster))
-        {
+        if (is_sanctuary(newx, newy) && !mons_wont_attack(monster))
             continue;
-        } 
 
         if (monster_habitable_grid(monster, grd[newx][newy]))
             break;
