@@ -676,7 +676,7 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     return (false);
 }
 
-static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
+static int _healing_spell(int healed, int target_x = -1, int target_y = -1)
 {
     ASSERT(healed >= 1);
 
@@ -698,14 +698,14 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
     if (!spd.isValid)
     {
         canned_msg( MSG_OK );
-        return 0;
+        return (0);
     }
 
     if (spd.tx == you.x_pos && spd.ty == you.y_pos)
     {
         mpr("You are healed.");
         inc_hp(healed, false);
-        return 1;
+        return (1);
     }
 
     const int mgr = mgrd[spd.tx][spd.ty];
@@ -713,16 +713,16 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
     if (mgr == NON_MONSTER)
     {
         mpr("There isn't anything there!");
-        return -1;
+        return (-1);
     }
 
     monsters *monster = &menv[mgr];
 
-    // don't heal monster you can't pacify
+    // Don't heal a monster you can't pacify.
     if (you.religion == GOD_ELYVILON && !_can_pacify_monster(monster, healed))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return -1;
+        return (-1);
     }
 
     bool nothing_happens = true;
@@ -743,8 +743,9 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
             simple_god_message(" appreciates the healing of a fellow creature.");
             if (one_chance_in(8))
                 gain_piety(1);
-            return 1;
+            return (1);
         }
+
         nothing_happens = false;
     }
 
@@ -756,17 +757,17 @@ static int _healing_spell( int healed, int target_x = -1, int target_y = -1)
             good_god_holy_attitude_change(monster);
         else
         {
-            simple_monster_message( monster, " turns neutral." );
+            simple_monster_message(monster, " turns neutral.");
             mons_pacify(monster);
 
-            // give a small piety return
+            // Give a small piety return.
             gain_piety(1 + random2(healed/15));
         }
     }
     else if (nothing_happens)
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return 1;
+    return (1);
 }
 
 #if 0
