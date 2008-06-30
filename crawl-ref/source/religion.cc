@@ -4910,11 +4910,14 @@ void excommunication(god_type new_god)
 
     // When you leave one of the good gods for a non-good god, or no
     // god, you make all non-hostile holy beings hostile.
-    if (!is_good_god(new_god) && _holy_beings_attitude_change())
+    if (is_good_god(old_god) && !is_good_god(new_god)
+        && _holy_beings_attitude_change())
+    {
         mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
+    }
 
     learned_something_new(TUT_EXCOMMUNICATE, (int)new_god, old_piety);
-}                               // end excommunication()
+}
 
 static bool _bless_weapon( god_type god, int brand, int colour )
 {
