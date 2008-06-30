@@ -3033,7 +3033,7 @@ bool god_dislikes_item_handling(const item_def &item)
                 && item.sub_type == POT_MUTATION)
             || (item.base_type == OBJ_WANDS
                 && item.sub_type == WAND_POLYMORPH_OTHER))
-            && item_type_known(item));
+            && item_type_known(item))
         {
             return (true);
         }
