@@ -441,11 +441,6 @@ bool is_chaotic_god(god_type god)
             || god == GOD_MAKHLEB);
 }
 
-bool is_lawful_god(god_type god)
-{
-    return (god == GOD_ZIN);
-}
-
 bool is_priest_god(god_type god)
 {
     return (god == GOD_ZIN
@@ -4273,7 +4268,7 @@ static bool _chaotic_beings_on_level_attitude_change()
 
             // If you worship Zin, you make all friendly and good neutral
             // chaotic beings hostile.
-            if (is_lawful_god(you.religion) && mons_wont_attack(monster))
+            if (you.religion == GOD_ZIN && mons_wont_attack(monster))
             {
                 monster->attitude = ATT_HOSTILE;
                 monster->del_ench(ENCH_CHARM, true);
@@ -5508,7 +5503,7 @@ void god_pitch(god_type which_god)
     // hostile.
     if (is_good_god(you.religion) && _evil_beings_attitude_change())
         mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
-    if (is_lawful_god(you.religion) && _chaotic_beings_attitude_change())
+    if (you.religion == GOD_ZIN && _chaotic_beings_attitude_change())
         mpr("Your chaotic allies forsake you.", MSGCH_MONSTER_ENCHANT);
     if (you.religion == GOD_TROG && _magic_users_attitude_change())
         mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
@@ -5570,7 +5565,7 @@ bool god_hates_your_god(god_type god,
         return (true);
 
     // Zin hates Xom and Makhleb.
-    if (is_lawful_god(god) && is_chaotic_god(your_god))
+    if (god == GOD_ZIN && is_chaotic_god(your_god))
         return (true);
 
     return (is_evil_god(your_god));
@@ -5586,7 +5581,7 @@ std::string god_hates_your_god_reaction(god_type god,
             return "";
 
         // Zin hates Xom and Makhleb.
-        if (is_lawful_god(god) && is_chaotic_god(your_god))
+        if (god == GOD_ZIN && is_chaotic_god(your_god))
             return " for chaos";
 
         if (is_evil_god(your_god))

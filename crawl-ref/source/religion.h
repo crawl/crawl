@@ -54,7 +54,6 @@ struct god_conduct_trigger
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
 bool is_chaotic_god(god_type god);
-bool is_lawful_god(god_type god);
 bool is_priest_god(god_type god);
 bool god_gives_permanent_followers(god_type god);
 void simple_god_message(const char *event, god_type which_deity = you.religion);
