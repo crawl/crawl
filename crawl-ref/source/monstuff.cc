@@ -5232,14 +5232,22 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             {
                 bool spellOK = false;
 
-
-                // Setup spell - monsters that are fleeing or leaving
-                // the level will always try to choose their emergency
-                // spell.
+                // Setup spell - monsters that are fleeing or pacified
+                // and leaving the level will always try to choose their
+                // emergency spell.
                 if (mons_is_fleeing(monster) || mons_is_pacified(monster))
                 {
                     spell_cast = (one_chance_in(5) ? SPELL_NO_SPELL
                                                    : hspell_pass[5]);
+
+                    // Pacified monsters leaving the level won't choose
+                    // emergency spells harmful to the area.
+                    if (spell_cast != SPELL_NO_SPELL
+                        && mons_is_pacified(monster)
+                            && spell_harms_area(spell_cast))
+                    {
+                        spell_cast = SPELL_NO_SPELL;
+                    }
                 }
                 else
                 {
