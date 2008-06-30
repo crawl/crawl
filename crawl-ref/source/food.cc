@@ -1945,8 +1945,11 @@ bool is_preferred_food(const item_def &food)
     if (you.species == SP_VAMPIRE)
         return (is_blood_potion(food));
 
-    if (food.base_type == OBJ_POTIONS && food.sub_type == POT_PORRIDGE)
+    if (food.base_type == OBJ_POTIONS && food.sub_type == POT_PORRIDGE
+        && item_type_known(food))
+    {
         return (!player_mutation_level(MUT_CARNIVOROUS));
+    }
 
     if (food.base_type != OBJ_FOOD)
         return (false);
