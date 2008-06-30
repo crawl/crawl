@@ -2272,6 +2272,11 @@ static int _monster_abjure_square(const coord_def &pos,
         if (pow < abj.duration)
             simple_god_message(" shields your ally from puny magic!");
     }
+    else if (is_sanctuary(target->x, target->y))
+    {
+        simple_god_message(" protects your fellow warrior from evil magic!");
+        return (0);
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Abj: dur: %d, pow: %d, ndur: %d",
