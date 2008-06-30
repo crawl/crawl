@@ -25,11 +25,10 @@
 void init_pandemonium(void)
 {
     int pc = 0;
-    struct monsters *monster = 0;       // NULL
 
-    for (pc = 0; pc < MAX_MONSTERS; pc++)
+    for (pc = 0; pc < MAX_MONSTERS; ++pc)
     {
-        monster = &menv[pc];
+        monsters *monster = &menv[pc];
 
         // Looks for unique demons and sets appropriate lists of demons.
         // NB - also sets the level colours.
@@ -94,10 +93,10 @@ void init_pandemonium(void)
         }
     }
 
-// colour of monster 9 is colour of floor, 8 is colour of rock
-// IIRC, BLACK is set to LIGHTGRAY
+    // colour of monster 9 is colour of floor, 8 is colour of rock
+    // IIRC, BLACK is set to LIGHTGRAY
 
-    for (pc = 0; pc < 10; pc++)
+    for (pc = 0; pc < 10; ++pc)
     {
         switch (random2(17))
         {
@@ -116,8 +115,10 @@ void init_pandemonium(void)
         }
 
         if (one_chance_in(10))
+        {
             env.mons_alloc[pc] =
                 static_cast<monster_type>(MONS_HELLION + random2(10));
+        }
 
         if (one_chance_in(30))
             env.mons_alloc[pc] = MONS_RED_DEVIL;
@@ -126,21 +127,29 @@ void init_pandemonium(void)
             env.mons_alloc[pc] = MONS_IMP;
 
         if (one_chance_in(20))
+        {
             env.mons_alloc[pc] =
                 static_cast<monster_type>(MONS_DEMONIC_CRAWLER + random2(5));
+        }
     }
 
     if (one_chance_in(8))
+    {
         env.mons_alloc[7] =
             static_cast<monster_type>(MONS_EXECUTIONER + random2(5));
+    }
 
     if (one_chance_in(5))
+    {
         env.mons_alloc[8] =
             static_cast<monster_type>(MONS_EXECUTIONER + random2(5));
+    }
 
     if (one_chance_in(3))
+    {
         env.mons_alloc[9] =
             static_cast<monster_type>(MONS_EXECUTIONER + random2(5));
+    }
 
     if (one_chance_in(10))
         env.mons_alloc[7 + random2(3)] = MONS_FIEND;
@@ -170,9 +179,7 @@ void pandemonium_mons(void)
     if (one_chance_in(40))
     {
         do
-        {
             pan_mons = random2(NUM_MONSTERS);   // was random2(400) {dlb}
-        }
         while (!mons_pan(pan_mons));
     }
     mgen_data mg(static_cast<monster_type>(pan_mons));

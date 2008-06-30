@@ -1109,9 +1109,10 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (you.char_direction == GDT_GAME_START
             && you.level_type == LEVEL_DUNGEON)
         {
-            // If we're leaving the Abyss for the first time as a Chaos Knight
-            // of Lugonu (who start out there), force a return into the first
-            // dungeon level and enable normal monster generation.
+            // If we're leaving the Abyss for the first time as a Chaos
+            // Knight of Lugonu (who start out there), force a return
+            // into the first dungeon level and enable normal monster
+            // generation.
             you.your_level = 0;
             you.char_direction = GDT_DESCENDING;
         }
