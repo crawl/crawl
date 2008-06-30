@@ -2724,10 +2724,10 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
         prompt = true;
     }
     else if (inSanctuary || wontAttack
-             || is_good_god(you.religion) && (isNeutral || isHoly)
-             || you.religion == GOD_SHINING_ONE
-                 && !tso_unchivalric_attack_safe_monster(mon)
-                 && isUnchivalric)
+             || (isNeutral || isHoly) && is_good_god(you.religion)
+             || isUnchivalric
+                 && you.religion == GOD_SHINING_ONE
+                 && !tso_unchivalric_attack_safe_monster(mon))
     {
         // "Really fire through the helpless neutral holy Daeva?"
         // was: "Really fire through this helpless neutral holy creature?"
