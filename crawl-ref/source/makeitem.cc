@@ -858,8 +858,8 @@ static weapon_type _determine_weapon_subtype(int item_level)
     };
 
     const weapon_type rare_subtypes[] = {
-        WPN_LAJATANG, WPN_DEMON_BLADE, WPN_DEMON_TRIDENT,
-        WPN_DEMON_WHIP, WPN_DOUBLE_SWORD, WPN_EVENINGSTAR,
+        WPN_LAJATANG, WPN_DEMON_WHIP, WPN_DEMON_BLADE,
+        WPN_DEMON_TRIDENT, WPN_DOUBLE_SWORD, WPN_EVENINGSTAR,
         WPN_EXECUTIONERS_AXE, WPN_KATANA, WPN_QUICK_BLADE,
         WPN_TRIPLE_SWORD
     };
