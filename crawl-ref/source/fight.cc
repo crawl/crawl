@@ -290,8 +290,9 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     unchivalric_attack_type unchivalric = UCAT_NO_ATTACK;
 
     // No unchivalric attacks on monsters that cannot fight (e.g.
-    // plants) or invisible monsters.
-    if (!defender->cannot_fight() && defender->visible_to(attacker))
+    // plants) or monsters the attacker can't see (either due to
+    // invisibility or being behind opaque clouds).
+    if (!defender->cannot_fight() && attacker->can_see(defender))
     {
         // Distracted (but not batty); this only applies to players.
         if (attacker->atype() == ACT_PLAYER && def->foe != MHITYOU
@@ -2643,11 +2644,6 @@ bool melee_attack::player_check_monster_died()
 
         player_monattk_hit_effects(true);
 
-        if (def->type == MONS_GIANT_SPORE || def->type == MONS_BALL_LIGHTNING)
-        {
-            msg::stream << "You " << attack_verb << ' '
-                        << def->name(DESC_NOCAP_THE) << '.' << std::endl;
-        }
         monster_die(def, KILL_YOU, 0);
 
         return (true);
