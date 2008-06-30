@@ -956,6 +956,7 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
         cgotoxy(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
         cprintf(" *WIZARD*");
     }
+    clear_to_end_of_line();
 
     // Line 2:
     // Level N Minotaur [of God]
@@ -966,6 +967,7 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
             species_name( you.species, you.experience_level ).c_str());
     if (you.religion != GOD_NO_GOD)
         cprintf(" of %s", god_name(you.religion).c_str());
+    clear_to_end_of_line();
 
     textcolor( LIGHTGREY );
 }
