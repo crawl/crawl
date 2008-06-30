@@ -708,7 +708,7 @@ bool prompt_eat_from_inventory(int slot)
                 prompt_invent_item( "Eat which item?",
                                     MT_INVLIST,
                                     OBJ_FOOD,
-                                    true, true, true, 0, NULL,
+                                    true, true, true, 0, -1, NULL,
                                     OPER_EAT );
     }
     else
@@ -717,7 +717,7 @@ bool prompt_eat_from_inventory(int slot)
                 prompt_invent_item( "Drain what?",
                                     MT_INVLIST,
                                     OSEL_VAMP_EAT,
-                                    true, true, true, 0, NULL,
+                                    true, true, true, 0, -1, NULL,
                                     OPER_EAT );
     }
 

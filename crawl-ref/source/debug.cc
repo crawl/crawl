@@ -2136,8 +2136,8 @@ static void _debug_acquirement_stats(FILE *ostat)
 
 static void _debug_rap_stats(FILE *ostat)
 {
-    int i = prompt_invent_item(
-                "Generate ranandart stats on which item?", MT_INVLIST, -1 );
+    int i = prompt_invent_item( "Generate randart stats on which item?",
+                                MT_INVLIST, -1 );
 
     if (i == PROMPT_ABORT)
     {

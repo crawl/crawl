@@ -52,8 +52,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Inventory menu shenanigans
 
-static void _get_inv_items_to_show(
-        std::vector<const item_def*> &v, int selector);
+static void _get_inv_items_to_show( std::vector<const item_def*> &v,
+                                    int selector, int excluded_slot = -1);
 
 InvTitle::InvTitle( Menu *mn, const std::string &title,
           invtitle_annotator tfn )
@@ -364,21 +364,18 @@ static std::string _no_selectables_message(int item_selector)
     return("You aren't carrying any such object.");
 }
 
-void InvMenu::load_inv_items(int item_selector,
+void InvMenu::load_inv_items(int item_selector, int excluded_slot,
                              MenuEntry *(*procfn)(MenuEntry *me))
 {
     std::vector<const item_def *> tobeshown;
-    _get_inv_items_to_show(tobeshown, item_selector);
+    _get_inv_items_to_show(tobeshown, item_selector, excluded_slot);
 
     load_items(tobeshown, procfn);
+
     if (!item_count())
-    {
         set_title(_no_selectables_message(item_selector));
-    }
     else
-    {
         set_title("");
-    }
 }
 
 void InvMenu::draw_stock_item(int index, const MenuEntry *me) const
@@ -714,15 +711,17 @@ unsigned char get_invent( int invent_type )
 
     while (true)
     {
-        select = invent_select(NULL, MT_INVLIST, invent_type,
-                                         MF_SINGLESELECT);
-        if ( isalpha(select) )
+        select = invent_select(NULL, MT_INVLIST, invent_type, -1,
+                               MF_SINGLESELECT);
+
+        if (isalpha(select))
         {
             const int invidx = letter_to_index(select);
             if ( is_valid_item(you.inv[invidx]) )
                describe_item( you.inv[invidx], true );
         }
-        else break;
+        else
+            break;
     }
     redraw_screen();
     return select;
@@ -879,11 +878,13 @@ static bool _is_item_selected(const item_def &i, int selector)
             || _userdef_item_selected(i, selector));
 }
 
-static void _get_inv_items_to_show(std::vector<const item_def*> &v, int selector)
+static void _get_inv_items_to_show(std::vector<const item_def*> &v,
+                                   int selector, int excluded_slot)
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (is_valid_item(you.inv[i])
+            && you.inv[i].slot != excluded_slot
             && _is_item_selected(you.inv[i], selector))
         {
             v.push_back( &you.inv[i] );
@@ -907,6 +908,7 @@ static bool _any_items_to_select(int selector)
 unsigned char invent_select( const char *title,
                              menu_type type,
                              int item_selector,
+                             int excluded_slot,
                              int flags,
                              invtitle_annotator titlefn,
                              std::vector<SelItem> *items,
@@ -921,7 +923,7 @@ unsigned char invent_select( const char *title,
     menu.f_selitem = selitemfn;
     if (filter)
         menu.set_select_filter( *filter );
-    menu.load_inv_items(item_selector);
+    menu.load_inv_items(item_selector, excluded_slot);
     menu.set_type(type);
 
     // Don't override title if there are no items.
@@ -940,7 +942,7 @@ unsigned char invent( int item_class_inv, bool show_price )
 {
     InvShowPrices show_item_prices(show_price);
     return (invent_select(NULL, MT_INVLIST, item_class_inv));
-}                               // end invent()
+}
 
 // Reads in digits for a count and apprends then to val, the
 // return value is the character that stopped the reading.
@@ -1040,13 +1042,13 @@ std::vector<SelItem> prompt_invent_items(
                         MF_MULTISELECT | MF_ALLOW_FILTER;
 
             // The "view inventory listing" mode.
-            int ch = invent_select(
-                        prompt,
-                        mtype,
-                        keyin == '*'? OSEL_ANY : type_expect,
-                        selmode,
-                        titlefn, &items, select_filter, fn,
-                        pre_select );
+            int ch = invent_select( prompt,
+                                    mtype,
+                                    keyin == '*' ? OSEL_ANY : type_expect,
+                                    -1,
+                                    selmode,
+                                    titlefn, &items, select_filter, fn,
+                                    pre_select );
 
             if ((selmode & MF_SINGLESELECT) || ch == ESCAPE)
             {
@@ -1321,6 +1323,7 @@ int prompt_invent_item( const char *prompt,
                         bool must_exist, bool allow_auto_list,
                         bool allow_easy_quit,
                         const char other_valid_char,
+                        int excluded_slot,
                         int *const count,
                         operation_types oper )
 {
@@ -1382,7 +1385,8 @@ int prompt_invent_item( const char *prompt,
             keyin = invent_select(
                         prompt,
                         mtype,
-                        keyin == '*'? OSEL_ANY : type_expect,
+                        keyin == '*' ? OSEL_ANY : type_expect,
+                        excluded_slot,
                         MF_SINGLESELECT | MF_ANYPRINTABLE | MF_NO_SELECT_QTY
                             | MF_EASY_EXIT,
                         NULL,

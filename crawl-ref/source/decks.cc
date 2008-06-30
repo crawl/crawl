@@ -713,7 +713,7 @@ static int _choose_inventory_deck( const char* prompt )
 {
     const int slot = prompt_invent_item( prompt,
                                          MT_INVLIST, OSEL_DRAW_DECK,
-                                         true, true, true, 0, NULL,
+                                         true, true, true, 0, -1, NULL,
                                          OPER_EVOKE );
 
     if (prompt_failed(slot))

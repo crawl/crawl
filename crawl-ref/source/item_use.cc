@@ -268,7 +268,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
             item_slot = prompt_invent_item(
                             "Wield which item (- for none, * to show all)?",
                             MT_INVLIST, OSEL_WIELD,
-                            true, true, true, '-', NULL, OPER_WIELD);
+                            true, true, true, '-', -1, NULL, OPER_WIELD);
         }
         else
             item_slot = PROMPT_GOT_SPECIAL;
@@ -785,7 +785,7 @@ bool armour_prompt( const std::string & mesg, int *index, operation_types oper)
     else
     {
         slot = prompt_invent_item( mesg.c_str(), MT_INVLIST, OBJ_ARMOUR,
-                                   true, true, true, 0, NULL,
+                                   true, true, true, 0, -1, NULL,
                                    oper );
 
         if (!prompt_failed(slot))
@@ -1493,8 +1493,8 @@ static int _fire_prompt_for_item(std::string& err)
 
     int slot = prompt_invent_item( "Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
-                                   OSEL_THROWABLE, true, true, true, 0, NULL,
-                                   OPER_FIRE );
+                                   OSEL_THROWABLE, true, true, true, 0, -1,
+                                   NULL, OPER_FIRE );
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
     {
@@ -3161,9 +3161,11 @@ bool puton_ring(int slot, bool prompt_finger)
     if (slot != -1)
         item_slot = slot;
     else
+    {
         item_slot = prompt_invent_item( "Put on which piece of jewellery?",
-                        MT_INVLIST, OBJ_JEWELLERY, true, true, true, 0, NULL,
-                        OPER_PUTON );
+                        MT_INVLIST, OBJ_JEWELLERY, true, true, true, 0, -1,
+                        NULL, OPER_PUTON );
+    }
 
     if (prompt_failed(item_slot))
         return (false);
@@ -3309,7 +3311,7 @@ bool remove_ring(int slot, bool announce)
             (slot == -1)? prompt_invent_item( "Remove which piece of jewellery?",
                                               MT_INVLIST,
                                               OBJ_JEWELLERY, true, true, true,
-                                              0, NULL, OPER_REMOVE)
+                                              0, -1, NULL, OPER_REMOVE)
                         : slot;
 
         if (prompt_failed(equipn))
@@ -3414,10 +3416,10 @@ void zap_wand( int slot )
     else
     {
         item_slot = prompt_invent_item( "Zap which item?",
-                                    MT_INVLIST,
-                                    OBJ_WANDS,
-                                    true, true, true, 0, NULL,
-                                    OPER_ZAP );
+                                        MT_INVLIST,
+                                        OBJ_WANDS,
+                                        true, true, true, 0, -1, NULL,
+                                        OPER_ZAP );
     }
 
     if (prompt_failed(item_slot))
@@ -3642,7 +3644,7 @@ void drink( int slot )
     {
         item_slot = prompt_invent_item( "Drink which item?",
                                         MT_INVLIST, OBJ_POTIONS,
-                                        true, true, true, 0, NULL,
+                                        true, true, true, 0, -1, NULL,
                                         OPER_QUAFF );
     }
 
@@ -4166,21 +4168,27 @@ static void handle_read_book( int item_slot )
 // something that is affected by the scroll. Once they're identified, you'll
 // get the limited inventory listing.
 // Returns true if the scroll had an obvious effect and should be identified.
-static bool scroll_modify_item(const scroll_type scroll)
+static bool _scroll_modify_item(item_def scroll)
 {
-     int item_slot = prompt_invent_item( "Use on which item?", MT_INVLIST,
-                                          OSEL_ANY, true, true, false );
+    ASSERT(scroll.base_type == OBJ_SCROLLS);
 
-     if (prompt_failed(item_slot))
-         return (false);
+    // Get the slot of the scroll just read.
+    int item_slot = scroll.slot;
 
-     item_def &item = you.inv[item_slot];
+    // Get the slot of the item the scroll is to be used on.
+    // Ban the scroll's own slot from the prompt to avoid the stupid situation
+    // where you use identify on itself.
+    item_slot = prompt_invent_item("Use on which item?", MT_INVLIST,
+                                   OSEL_ANY, true, true, false, 0, item_slot);
 
-     switch (scroll)
-     {
-     case SCR_IDENTIFY:
-        // This can cause a stupid situation where you try to identify the
-        // very scroll you just read, causing you to waste the scroll.
+    if (prompt_failed(item_slot))
+        return (false);
+
+    item_def &item = you.inv[item_slot];
+
+    switch (scroll.sub_type)
+    {
+    case SCR_IDENTIFY:
         if (!fully_identified(item))
         {
             mpr("This is a scroll of identify!");
@@ -4188,7 +4196,7 @@ static bool scroll_modify_item(const scroll_type scroll)
             return (true);
         }
         break;
-     case SCR_RECHARGING:
+    case SCR_RECHARGING:
         if (item_is_rechargable(item))
         {
             // Might still fail on highly enchanted weapons of electrocution.
@@ -4198,7 +4206,7 @@ static bool scroll_modify_item(const scroll_type scroll)
             return (false);
         }
         break;
-     case SCR_ENCHANT_ARMOUR:
+    case SCR_ENCHANT_ARMOUR:
         if (is_enchantable_armour(item, true))
         {
             // Might still fail because of already high enchantment.
@@ -4208,14 +4216,14 @@ static bool scroll_modify_item(const scroll_type scroll)
             return (false);
         }
         break;
-     default:
+    default:
         mpr("Buggy scroll can't modify item!");
         break;
-     }
+    }
 
-     // Oops, wrong item...
-     canned_msg(MSG_NOTHING_HAPPENS);
-     return (false);
+    // Oops, wrong item...
+    canned_msg(MSG_NOTHING_HAPPENS);
+    return (false);
 }
 
 void read_scroll( int slot )
@@ -4241,14 +4249,12 @@ void read_scroll( int slot )
         return;
     }
 
-    int item_slot = (slot != -1) ?
-        slot :
-        prompt_invent_item(
-                        "Read which item?",
-                        MT_INVLIST,
-                        OBJ_SCROLLS,
-                        true, true, true, 0, NULL,
-                        OPER_READ );
+    int item_slot = (slot != -1) ? slot
+                                 : prompt_invent_item( "Read which item?",
+                                                       MT_INVLIST,
+                                                       OBJ_SCROLLS,
+                                                       true, true, true, 0, -1,
+                                                       NULL, OPER_READ );
 
     if (prompt_failed(item_slot))
         return;
@@ -4520,22 +4526,22 @@ void read_scroll( int slot )
         break;
 
     case SCR_IDENTIFY:
-        if ( !item_type_known(scroll) )
-             id_the_scroll = scroll_modify_item(which_scroll);
+        if (!item_type_known(scroll))
+            id_the_scroll = _scroll_modify_item(scroll);
         else
-             identify(-1);
+            identify(-1);
         break;
 
     case SCR_RECHARGING:
-        if ( !item_type_known(scroll) )
-             id_the_scroll = scroll_modify_item(which_scroll);
+        if (!item_type_known(scroll))
+            id_the_scroll = _scroll_modify_item(scroll);
         else
-             recharge_wand(-1);
+            recharge_wand(-1);
         break;
 
     case SCR_ENCHANT_ARMOUR:
         if (!item_type_known(scroll))
-            id_the_scroll = scroll_modify_item(which_scroll);
+            id_the_scroll = _scroll_modify_item(scroll);
         else
             _handle_enchant_armour(-1);
         break;
@@ -4623,7 +4629,7 @@ void examine_object(void)
 {
     int item_slot = prompt_invent_item( "Examine which item?",
                                         MT_INVLIST, -1,
-                                        true, true, true, 0, NULL,
+                                        true, true, true, 0, -1, NULL,
                                         OPER_EXAMINE );
     if (prompt_failed(item_slot))
         return;

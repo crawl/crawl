@@ -143,7 +143,7 @@ public:
     // Loads items from the player's inventory into the menu, and sets the
     // title to the stock title. If "procfn" is provided, it'll be called for
     // each MenuEntry added, *excluding the title*.
-    void load_inv_items(int item_selector = OSEL_ANY,
+    void load_inv_items(int item_selector = OSEL_ANY, int excluded_slot = -1,
                         MenuEntry *(*procfn)(MenuEntry *me) = NULL);
 
     std::vector<SelItem> get_selitems() const;
@@ -177,6 +177,7 @@ int prompt_invent_item( const char *prompt,
                         bool allow_auto_list = true,
                         bool allow_easy_quit = true,
                         const char other_valid_char = '\0',
+                        int excluded_slot = -1,
                         int *const count = NULL,
                         operation_types oper = OPER_ANY );
 
@@ -210,6 +211,7 @@ unsigned char invent_select(
                    // MT_DROP allows the multidrop toggle
                    menu_type type = MT_INVLIST,
                    int item_selector = OSEL_ANY,
+                   int excluded_slot = -1,
                    int menu_select_flags = MF_NOSELECT,
                    invtitle_annotator titlefn = NULL,
                    std::vector<SelItem> *sels = NULL,

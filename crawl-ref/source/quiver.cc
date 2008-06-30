@@ -144,8 +144,8 @@ void choose_item_for_quiver()
 {
     int slot = prompt_invent_item( "Quiver which item? (- for none, * to show all)",
                                    MT_INVLIST,
-                                   OSEL_THROWABLE, true, true, true, '-', NULL,
-                                   OPER_QUIVER );
+                                   OSEL_THROWABLE, true, true, true, '-', -1,
+                                   NULL, OPER_QUIVER );
 
     if (slot == PROMPT_ABORT)
     {
