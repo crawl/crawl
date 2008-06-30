@@ -1444,13 +1444,8 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         }
 
         // Demonspawn get a damage bonus for demonic weapons.
-        if (you.species == SP_DEMONSPAWN
-            && (weapon->sub_type == WPN_DEMON_BLADE
-                || weapon->sub_type == WPN_DEMON_WHIP
-                || weapon->sub_type == WPN_DEMON_TRIDENT))
-        {
+        if (you.species == SP_DEMONSPAWN && is_demonic(*weapon))
             damage += random2(3);
-        }
     }
 
     return (damage);

@@ -667,14 +667,14 @@ bool is_double_ended( const item_def &item );
 
 int double_wpn_awkward_speed( const item_def &item );
 
-bool  is_demonic( const item_def &item );
-bool  is_blessed_blade( const item_def &item );
-bool  is_convertible( const item_def &item );
-bool  convert2good( item_def &item, bool allow_blessed = true );
+bool is_demonic(const item_def &item);
+bool is_blessed_blade(const item_def &item);
+bool is_convertible(const item_def &item);
+bool convert2good(item_def &item, bool allow_blessed = true);
 
-int   get_vorpal_type( const item_def &item );
-int   get_damage_type( const item_def &item );
-bool  does_damage_type( const item_def &item, int dam_type );
+int get_vorpal_type( const item_def &item );
+int get_damage_type( const item_def &item );
+bool does_damage_type( const item_def &item, int dam_type );
 
 int weapon_str_weight( const item_def &wpn );
 int weapon_dex_weight( const item_def &wpn );

@@ -689,9 +689,7 @@ void set_equip_race( item_def &item, unsigned long flags )
             || item.sub_type == WPN_KNIFE
             || item.sub_type == WPN_QUARTERSTAFF
             || item.sub_type == WPN_SCYTHE
-            || item.sub_type == WPN_DEMON_BLADE
-            || item.sub_type == WPN_DEMON_WHIP
-            || item.sub_type == WPN_DEMON_TRIDENT
+            || is_demonic(item)
             || is_blessed_blade(item))
         {
             return;
@@ -1452,9 +1450,9 @@ int weapon_rarity( int w_type )
     case WPN_KNIFE:
     case WPN_QUICK_BLADE:
     case WPN_TRIPLE_SWORD:
-    case WPN_DEMON_TRIDENT:
     case WPN_DEMON_WHIP:
     case WPN_DEMON_BLADE:
+    case WPN_DEMON_TRIDENT:
     case WPN_BLESSED_FALCHION:
     case WPN_BLESSED_LONG_SWORD:
     case WPN_BLESSED_SCIMITAR:
@@ -1614,7 +1612,7 @@ int double_wpn_awkward_speed( const item_def &item )
     return ((base * 30 + 10) / 20 + 2);
 }
 
-bool is_demonic( const item_def &item )
+bool is_demonic(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS)
     {
@@ -1631,9 +1629,9 @@ bool is_demonic( const item_def &item )
     }
 
     return (false);
-}                               // end is_demonic()
+}
 
-bool is_blessed_blade( const item_def &item )
+bool is_blessed_blade(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS)
     {
@@ -1657,7 +1655,7 @@ bool is_blessed_blade( const item_def &item )
     return (false);
 }                               // end is_blessed_blade()
 
-bool is_convertible( const item_def &item )
+bool is_convertible(const item_def &item)
 {
     return (!is_artefact(item)
         && (item.base_type == OBJ_WEAPONS
@@ -1665,7 +1663,7 @@ bool is_convertible( const item_def &item )
                 || weapon_skill(item) == SK_LONG_BLADES)));
 }                               // end is_convertible()
 
-bool convert2good( item_def &item, bool allow_blessed )
+bool convert2good(item_def &item, bool allow_blessed)
 {
     if (item.base_type != OBJ_WEAPONS)
         return (false);
@@ -1737,7 +1735,7 @@ bool convert2good( item_def &item, bool allow_blessed )
         item.flags &= ~ISFLAG_RACIAL_MASK;
 
     return (true);
-}                               // end convert2good()
+}
 
 int weapon_str_weight( const item_def &wpn )
 {

@@ -1463,9 +1463,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_VENOM;
             break;
 
-        case WPN_DEMON_TRIDENT:
         case WPN_DEMON_WHIP:
         case WPN_DEMON_BLADE:
+        case WPN_DEMON_TRIDENT:
             if (one_chance_in(10))
                 rc = SPWPN_PAIN;
 
@@ -3497,11 +3497,11 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         if (one_chance_in(7))
             item.sub_type = WPN_BROAD_AXE;
         if (one_chance_in(7))
-            item.sub_type = WPN_DEMON_TRIDENT;
+            item.sub_type = WPN_DEMON_WHIP;
         if (one_chance_in(7))
             item.sub_type = WPN_DEMON_BLADE;
         if (one_chance_in(7))
-            item.sub_type = WPN_DEMON_WHIP;
+            item.sub_type = WPN_DEMON_TRIDENT;
 
         if (one_chance_in(3))
             set_item_ego_type( item, OBJ_WEAPONS, SPWPN_FLAMING );
