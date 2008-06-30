@@ -3056,7 +3056,7 @@ bool god_dislikes_item_handling(const item_def &item)
         }
         else if (item.base_type == OBJ_MISSILES)
         {
-            const int item_brand = get_weapon_brand(item);
+            const int item_brand = get_ammo_brand(item);
 
             if (item_brand == SPMSL_POISONED
                 || item_brand == SPMSL_POISONED_II
