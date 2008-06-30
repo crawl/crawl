@@ -2271,7 +2271,7 @@ static int _monster_abjure_square(const coord_def &pos,
     }
     else if (is_sanctuary(target->x, target->y))
     {
-        simple_god_message(" protects your fellow warrior from evil magic!");
+        mpr("The sanctuary protects your fellow warrior from evil magic!");
         return (0);
     }
 
