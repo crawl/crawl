@@ -5565,7 +5565,7 @@ bool god_hates_your_god(god_type god,
     if (!is_good_god(god))
         return (true);
 
-    // Zin hates Xom and Makhleb.
+    // Zin hates chaotic gods.
     if (god == GOD_ZIN && is_chaotic_god(your_god))
         return (true);
 
@@ -5581,7 +5581,7 @@ std::string god_hates_your_god_reaction(god_type god,
         if (!is_good_god(god))
             return "";
 
-        // Zin hates Xom and Makhleb.
+        // Zin hates chaotic gods.
         if (god == GOD_ZIN && is_chaotic_god(your_god))
             return " for chaos";
 

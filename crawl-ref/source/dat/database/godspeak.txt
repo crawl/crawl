@@ -507,6 +507,8 @@ chaotic_god
 Xom
 
 Makhleb
+
+Lugonu
 %%%%
 evil_god
 
