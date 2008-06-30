@@ -273,6 +273,8 @@ bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
         // XXX: Needs to check silenced at other location, too. {dlb}
         noisy(25, you.x_pos, you.y_pos, "You hear a mighty clap of thunder!");
     }
+    else if (ztype == ZAP_DIGGING)
+        pbolt.aimed_at_spot = false;
 
     fire_beam(pbolt);
 

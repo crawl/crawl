@@ -3476,7 +3476,7 @@ void zap_wand( int slot )
     }
 
     message_current_target();
-    direction( zap_wand, DIR_NONE, targ_mode );
+    direction(zap_wand, DIR_NONE, targ_mode);
 
     if (!zap_wand.isValid)
     {
@@ -3516,10 +3516,10 @@ void zap_wand( int slot )
     // and unknown wands (highest possible range, and unresistable beam
     // flavour). Don't use the tracer if firing at self.
     if (!beam.aimed_at_feet
-        && !player_tracer(!beam.effect_known ? ZAP_DEBUGGING_RAY
-                                             : type_zapped,
+        && !player_tracer(beam.effect_known ? type_zapped
+                                            : ZAP_DEBUGGING_RAY,
                           2 * (you.skills[SK_EVOCATIONS] - 1),
-                          beam, !beam.effect_known ? 17 : 0))
+                          beam, beam.effect_known ? 0 : 17))
     {
         return;
     }

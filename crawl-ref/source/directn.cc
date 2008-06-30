@@ -276,11 +276,11 @@ static bool _is_target_in_range(int x, int y, int range)
 // previous command differently (i.e., not just letting the keys
 // stuffed into the macro buffer replay as-is) because if the player
 // targeted a monster using the movement keys and the monster then
-// moved between repititions, then simply replaying the keys in the
+// moved between repetitions, then simply replaying the keys in the
 // buffer will target an empty square.
-static void direction_again(dist& moves, targeting_type restricts,
-                            targ_mode_type mode, int range, bool just_looking,
-                            const char *prompt, targeting_behaviour *beh)
+static void _direction_again(dist& moves, targeting_type restricts,
+                             targ_mode_type mode, int range, bool just_looking,
+                             const char *prompt, targeting_behaviour *beh)
 {
     moves.isValid       = false;
     moves.isTarget      = false;
@@ -471,8 +471,7 @@ static void _fill_monster_list(bool full_info)
 
 void direction(dist& moves, targeting_type restricts,
                targ_mode_type mode, int range, bool just_looking,
-               bool needs_path, const char *prompt,
-               targeting_behaviour *beh)
+               bool needs_path, const char *prompt, targeting_behaviour *beh)
 {
     static targeting_behaviour stock_behaviour;
     if (!beh)
@@ -491,8 +490,8 @@ void direction(dist& moves, targeting_type restricts,
 
     if (crawl_state.is_replaying_keys() && restricts != DIR_DIR)
     {
-        direction_again(moves, restricts, mode, range, just_looking,
-                        prompt, beh);
+        _direction_again(moves, restricts, mode, range, just_looking,
+                         prompt, beh);
         return;
     }
 

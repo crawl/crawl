@@ -2211,6 +2211,21 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
             return (CC_BANNED);
         }
 
+        // Tridents are strictly better than spears, so unrestrict them
+        // for some species whose Polearm aptitudes are not too bad.
+        switch (you.species)
+        {
+        case SP_MOUNTAIN_DWARF:
+        case SP_OGRE:
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+            return (CC_UNRESTRICTED);
+        default:
+            break;
+        }
+
         // Both are polearms, right?
         return (_weapon_restriction(WPN_SPEAR));
 
