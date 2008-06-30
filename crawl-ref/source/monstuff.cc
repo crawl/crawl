@@ -1648,8 +1648,7 @@ bool monster_blink(monsters *monster)
 
         if (!random_near_space(monster->x, monster->y, nx, ny,
                                false, true,
-                               !mons_friendly(monster)
-                               && !mons_good_neutral(monster)))
+                               !mons_wont_attack(monster)))
         {
             return (false);
         }
