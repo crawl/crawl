@@ -3037,6 +3037,12 @@ bool god_dislikes_item_handling(const item_def &item)
         {
             return (true);
         }
+
+        if (is_random_artefact(item)
+            && randart_known_wpn_property(item, RAP_MUTAGENIC))
+        {
+            return (true);
+        }
     }
 
     if (you.religion == GOD_SHINING_ONE)
