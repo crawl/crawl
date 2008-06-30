@@ -1633,7 +1633,6 @@ bool is_existing_level(const level_id &level)
 //
 // If the target level has not already been visited by the player, this
 // function will assert.
-//
 bool apply_to_level(const level_id &level, bool preserve_current,
                     bool (*applicator)())
 {
@@ -1650,9 +1649,9 @@ bool apply_to_level(const level_id &level, bool preserve_current,
         you.level_type = level.level_type;
 
         // Load the dungeon level...
-        load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
-              LEVEL_DUNGEON, original.absdepth(),
-              original.branch );
+        load(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
+             LEVEL_DUNGEON, original.absdepth(),
+             original.branch);
     }
 
     // Apply the change.
@@ -1678,8 +1677,8 @@ bool apply_to_all_dungeons(bool (*applicator)())
     bool success = applicator();
     _save_level(original.absdepth(), original.level_type, original.branch);
 
-    for ( int i = 0; i < MAX_LEVELS; ++i )
-        for ( int j = 0; j < NUM_BRANCHES; ++j )
+    for (int i = 0; i < MAX_LEVELS; ++i)
+        for (int j = 0; j < NUM_BRANCHES; ++j)
         {
             const branch_type br = static_cast<branch_type>(j);
             const level_id thislevel(br, subdungeon_depth(br, i));

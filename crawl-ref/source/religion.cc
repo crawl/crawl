@@ -5554,7 +5554,7 @@ void god_pitch(god_type which_god)
     redraw_skill(you.your_name, player_title());
 
     learned_something_new(TUT_CONVERT);
-}                               // end god_pitch()
+}
 
 bool god_hates_your_god(god_type god,
                         god_type your_god)
