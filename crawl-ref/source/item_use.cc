@@ -3551,6 +3551,9 @@ void zap_wand( int slot )
     if (!alreadyknown && (beam.obvious_effect || type_zapped == ZAP_FIREBALL))
     {
         set_ident_type( wand, ID_KNOWN_TYPE );
+        if (wand.sub_type == WAND_RANDOM_EFFECTS)
+            mpr("You feel that this wand is rather unreliable.");
+
         mpr(wand.name(DESC_INVENTORY_EQUIP).c_str());
     }
     else

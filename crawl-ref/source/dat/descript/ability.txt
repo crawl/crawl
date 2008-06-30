@@ -5,7 +5,7 @@ If you get this description, it is a bug.
 %%%%
 Spit Poison
 
-There's currently no description for this ability...
+Spit poison at a targeted monster.
 %%%%
 Sense Surroundings
 
@@ -13,39 +13,41 @@ You can map your vicinity.
 %%%%
 Teleportation
 
-There's currently no description for this ability...
+Teleport yourself to a random location on the level.
 %%%%
 Blink ability
 
-There's currently no description for this ability...
+Blink to another grid within your line of sight.
 %%%%
 Breathe Fire
 
-There's currently no description for this ability...
+Breathe a blast of fire at a targeted monster.
 %%%%
 Breathe Frost
 
-There's currently no description for this ability...
+Breathe a blast of frost at a targeted monster.
 %%%%
 Breathe Poison Gas
 
-There's currently no description for this ability...
+Breathe a blast of poison gas at a targeted monster.
 %%%%
 Breathe Lightning
 
-There's currently no description for this ability...
+Breathe a blast of lightning at a targeted monster.
 %%%%
 Breathe Power
 
-There's currently no description for this ability...
+Breathe a blast of power at a targeted monster.
 %%%%
 Breathe Sticky Flame
 
-There's currently no description for this ability...
+Breathe a blast of sticky flame at a targeted monster. As the name
+suggests, sticky flame will stick around, so the monster may be
+covered in flames for several rounds until they eventually go out.
 %%%%
 Breathe Steam
 
-There's currently no description for this ability...
+Breathe a jet of steam at a targeted monster.
 %%%%
 Bat Form
 
@@ -90,7 +92,8 @@ There's currently no description for this ability...
 %%%%
 Gate Yourself to Pandemonium
 
-There's currently no description for this ability...
+Enter the chaotic realm of Pandemonium. Getting back might be
+difficult.
 %%%%
 Channeling
 
@@ -98,11 +101,11 @@ There's currently no description for this ability...
 %%%%
 Throw Flame ability
 
-There's currently no description for this ability...
+Throw a blast of flame at a targeted monster.
 %%%%
 Throw Frost ability
 
-There's currently no description for this ability...
+Throw a blast of frost at a targeted monster.
 %%%%
 Bolt of Draining ability
 
@@ -110,7 +113,8 @@ There's currently no description for this ability...
 %%%%
 Release Delayed Fireball
 
-There's currently no description for this ability...
+Release a previously memorised (delayed) fireball without 
+additional cost in terms of magic or hunger.
 %%%%
 Self-Restoration
 
@@ -122,11 +126,11 @@ You can map your vicinity.
 %%%%
 Evoke Teleportation
 
-There's currently no description for this ability...
+Teleport yourself to a random location on the level.
 %%%%
 Evoke Blink
 
-There's currently no description for this ability...
+Blink to another grid within your line of sight.
 %%%%
 Evoke Berserk Rage
 
@@ -141,7 +145,9 @@ even pass out.
 %%%%
 Evoke Invisibility
 
-There's currently no description for this ability...
+Turn yourself invisible for a limited amount of time. Turning
+invisible increases your magical contamination and may eventually 
+cause glowing.
 %%%%
 Turn Visible
 
@@ -237,7 +243,8 @@ Temporarily increases your Strength and damage output.
 %%%%
 Haste
 
-There's currently no description for this ability...
+Greatly increases your movement speed. Hasting yourself increases
+your magical contamination and may eventually cause glowing.
 %%%%
 # Makhleb
 Minor Destruction
@@ -263,7 +270,8 @@ There's currently no description for this ability...
 %%%%
 Forget Spell
 
-There's currently no description for this ability...
+Forget any spell out of the ones you've currently memorised, so as to
+free memory to learn others.
 %%%%
 # Trog
 Burn Books
@@ -286,7 +294,7 @@ prevent you from passing out.
 %%%%
 Trog's Hand
 
-A powerful regeneration ability, stacks with all other sources.
+A powerful regeneration ability which stacks with all other sources.
 %%%%
 Brothers in Arms
 
@@ -321,7 +329,8 @@ There's currently no description for this ability...
 # Lugonu
 Depart the Abyss
 
-There's currently no description for this ability...
+Leave the Abyss to return into the branch and level you last were in
+when you left the dungeon.
 %%%%
 Bend Space
 
@@ -329,7 +338,8 @@ There's currently no description for this ability...
 %%%%
 Banish
 
-There's currently no description for this ability...
+Depending on the targeted monster's magic resistance, it may be 
+banished into the Abyss.
 %%%%
 Corrupt
 
@@ -342,15 +352,18 @@ You can transfer yourself to Lugonu's realm instantly... but at a cost.
 # Nemelex Xobeh
 Draw One
 
-There's currently no description for this ability...
+Choose any deck in your inventory and draw a card from it.
 %%%%
 Peek at Two
 
-There's currently no description for this ability...
+Draw two cards from your wielded deck, look at them and shuffle them
+back into the deck. The deck will be inscribed as containing those
+two cards, and if they are different this will identify the deck.
 %%%%
 Triple Draw
 
-There's currently no description for this ability...
+Draw three cards from your wielded deck, have a look at them and decide
+which one to keep. Discard the other two.
 %%%%
 Mark Four
 
@@ -358,7 +371,9 @@ There's currently no description for this ability...
 %%%%
 Stack Five
 
-There's currently no description for this ability...
+Draw five cards from your wielded deck, losing the rest of the deck.
+Look at the cards and sort them into any order you'd like. Subsequently
+you'll draw these cards in the order you chose.
 %%%%
 # Beogh
 Smiting
