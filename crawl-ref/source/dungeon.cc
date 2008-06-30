@@ -1304,9 +1304,7 @@ static void _dgn_set_floor_colours()
     unsigned char old_rock_colour  = env.rock_colour;
 
     if (you.level_type == LEVEL_PANDEMONIUM || you.level_type == LEVEL_ABYSS)
-    {
         dgn_set_colours_from_monsters();
-    }
     else if (you.level_type == LEVEL_DUNGEON)
     {
         // level_type == LEVEL_DUNGEON

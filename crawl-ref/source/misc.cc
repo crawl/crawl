@@ -2145,6 +2145,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         if (old_level_type == LEVEL_PANDEMONIUM)
         {
             init_pandemonium();
+
             for (pc = 0; pc < pt; pc++)
                 pandemonium_mons();
         }

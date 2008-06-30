@@ -591,17 +591,17 @@ void abyss_teleport( bool new_area )
 
     // Teleport to a new area of the abyss.
 
-    init_pandemonium();              // Get new monsters
-    dgn_set_colours_from_monsters(); // ...and new colours.
+    // Get new monsters and colours.
+    init_pandemonium();
 
-    for (i = 0; i < MAX_MONSTERS; i++)
+    for (i = 0; i < MAX_MONSTERS; ++i)
     {
         if (menv[i].alive())
             _abyss_lose_monster(menv[i]);
     }
 
     // Orbs and fixed artefacts are marked as "lost in the abyss".
-    for (k = 0; k < MAX_ITEMS; k++)
+    for (k = 0; k < MAX_ITEMS; ++k)
     {
         if (is_valid_item( mitm[k] ))
         {
