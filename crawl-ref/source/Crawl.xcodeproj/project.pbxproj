@@ -617,7 +617,7 @@
 		D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = Crawl.icns; path = mac/Crawl.icns; sourceTree = "<group>"; };
 		D2AE25EE0DA2624E00E15489 /* crawl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = crawl; path = mac/crawl; sourceTree = "<group>"; };
 		D2F271F60DA1C58C00445FE9 /* Crawl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Crawl.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Crawl-Info.plist"; sourceTree = "<group>"; };
+		D2F271F80DA1C58C00445FE9 /* Crawl-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Crawl-Info.plist"; sourceTree = "<group>"; };
 		D2F271FE0DA1C5AD00445FE9 /* dat */ = {isa = PBXFileReference; lastKnownFileType = folder; path = dat; sourceTree = "<group>"; };
 		D2F2723F0DA1C61600445FE9 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = docs; path = ../docs; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -653,8 +653,6 @@
 		08FB7794FE84155DC02AAC07 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
-				6232EBE00DACA55C004F7E9C /* quiver.cc */,
-				6232EBE10DACA55C004F7E9C /* quiver.h */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				7B352F1B0B0022C900CABB32 /* Resources */,
 				7B3B07610BD13B1700F2980E /* Libraries */,
@@ -885,6 +883,8 @@
 				7B6164260C9CA8E80054B3D9 /* place.h */,
 				7B237E0B0A8EC9D000580F30 /* player.cc */,
 				7B237E0A0A8EC9D000580F30 /* player.h */,
+				6232EBE00DACA55C004F7E9C /* quiver.cc */,
+				6232EBE10DACA55C004F7E9C /* quiver.h */,
 				7B237E090A8EC9D000580F30 /* randart.cc */,
 				7B237E080A8EC9D000580F30 /* randart.h */,
 				7B6164270C9CA8E80054B3D9 /* ray.h */,
@@ -1300,7 +1300,7 @@
 					DB_NDBM,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
 				PRODUCT_NAME = crawl;
@@ -1324,7 +1324,7 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
-				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
@@ -1439,7 +1439,7 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
-				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
@@ -1497,7 +1497,7 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
-				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
@@ -1555,7 +1555,7 @@
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
 				GCC_WARN_PEDANTIC = YES;
 				GCC_WARN_SHADOW = YES;
-				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
