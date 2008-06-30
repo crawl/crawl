@@ -4035,6 +4035,12 @@ static bool _initialise(void)
          newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
          NUM_LEVEL_AREA_TYPES, -1, you.where_are_you);
 
+    if (newc && you.char_direction == GDT_GAME_START)
+    {
+        // Randomise colours properly for the Abyss.
+        init_pandemonium();
+    }
+
 #if DEBUG_DIAGNOSTICS
     // Debug compiles display a lot of "hidden" information, so we auto-wiz.
     you.wizard = true;
