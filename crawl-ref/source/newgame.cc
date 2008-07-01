@@ -4456,11 +4456,11 @@ bool _give_items_skills()
             // possibly allow choice between javelin and net.
             you.inv[1] = you.inv[2];
             you.equip[EQ_BODY_ARMOUR] = 1;
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, 6);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
         }
         else
         {
-            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_ARROW,
+            _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
                                15 + random2avg(21, 5));
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
         }
