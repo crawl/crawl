@@ -3104,7 +3104,7 @@ static void _handle_behaviour(monsters *mon)
             // wandering monsters at least appear to have some sort of
             // attention span.  -- bwr
             if (mon->x == mon->target_x && mon->y == mon->target_y
-                || mons_is_batty(mon) || one_chance_in(20))
+                || mons_is_batty(mon) || (!isPacified && one_chance_in(20)))
             {
                 bool need_target = true;
                 if (travelling)
