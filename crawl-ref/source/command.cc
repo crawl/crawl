@@ -1092,6 +1092,9 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
 static bool _do_description(std::string key, std::string footer = "")
 {
     std::string desc = getLongDescription(key);
+
+    std::string prefix, suffix;
+
     int width = get_number_of_cols();
     if (width > 80)
         width = 80;
@@ -1155,33 +1158,19 @@ static bool _do_description(std::string key, std::string footer = "")
             std::string symbol_prefix = "__";
             symbol_prefix += symbol;
             symbol_prefix += "_prefix";
-            desc = getLongDescription(symbol_prefix) + desc;
+            prefix = getLongDescription(symbol_prefix);
 
             std::string symbol_suffix = "__";
             symbol_suffix += symbol;
             symbol_suffix += "_suffix";
-            desc += getLongDescription(symbol_suffix);
-            desc += getLongDescription(symbol_suffix + "_lookup");
+            suffix += getLongDescription(symbol_suffix);
+            suffix += getLongDescription(symbol_suffix + "_lookup");
         }
     }
+
     key = uppercase_first(key);
-    key += "$$";
-
-    clrscr();
-    print_description(key + desc);
-
-    if (!footer.empty())
-    {
-        int num_lines = linebreak_string2(footer, width);
-        num_lines++;
-
-        // So the footer doesn't get lonely on large displays. :)
-        const int bottom_line = std::min(30, get_number_of_lines());
-
-        cgotoxy(1, bottom_line - num_lines);
-
-        cprintf(footer.c_str());
-    }
+    linebreak_string2(footer, width - 1);
+    print_description(desc, key, suffix, prefix, footer);
 
     return (true);
 }

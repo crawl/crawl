@@ -85,7 +85,10 @@ std::string get_skill_description(int skill, bool need_title = false);
 
 void describe_skill(int skill);
 
-void print_description( const std::string &d );
+void print_description(const std::string &d, const std::string title = "",
+                       const std::string suffix = "",
+                       const std::string prefix = "",
+                       const std::string footer = "");
 
 const char *trap_name(trap_type trap);
 int str_to_trap(const std::string &s);

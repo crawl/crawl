@@ -86,6 +86,22 @@ static void _append_value( std::string & description, int valu, bool plussed )
     description += value_str;
 }
 
+static int _count_desc_lines(const std::string _desc, const int width)
+{
+   std::string desc = get_linebreak_string(_desc, width);
+
+   int count = 0;
+   for (int i = 0, size = desc.size(); i < size; i++)
+   {
+       const char ch = desc[i];
+
+       if (ch == '\n' || ch == '$')
+           count++;
+   }
+
+  return count;
+}
+
 //---------------------------------------------------------------
 //
 // print_description
@@ -95,54 +111,104 @@ static void _append_value( std::string & description, int valu, bool plussed )
 // word and such. The character $ is interpreted as a CR.
 //
 //---------------------------------------------------------------
-void print_description( const std::string &d )
+void print_description(const std::string &d, const std::string title,
+                       const std::string suffix, const std::string prefix,
+                       const std::string footer)
 {
+    const unsigned int lineWidth = get_number_of_cols()  - 1;
+    const          int height    = get_number_of_lines();
+
+    std::string desc;
+
+    if (title.empty())
+       desc = d;
+    else
+    {
+        desc = title + "$$";
+        desc += d;
+    }
+
+    int num_lines = _count_desc_lines(desc, lineWidth) + 1;
+
+    const int suffix_lines = _count_desc_lines(suffix, lineWidth);
+    const int prefix_lines = _count_desc_lines(prefix, lineWidth);
+    const int footer_lines = _count_desc_lines(footer, lineWidth)
+                             + (footer.empty() ? 0 : 1);
+
+    // Prefer the footer over the suffix
+    if (num_lines + suffix_lines + footer_lines <= height)
+    {
+        desc = desc + suffix;
+        num_lines += suffix_lines;
+    }
+
+    // Prefer the footer over the prefix
+    if (num_lines + prefix_lines + footer_lines <= height)
+    {
+        desc = prefix + desc;
+        num_lines += prefix_lines;
+    }
+
+    if (!footer.empty() && num_lines + footer_lines <= height)
+    {
+        const int bottom_line = std::min(std::max(24, num_lines + 2),
+                                         height - footer_lines + 1);
+        const int newlines = bottom_line - num_lines;
+
+        if (newlines >= 0)
+        {
+            desc.append(newlines, '\n');
+            desc = desc + footer;
+        }
+    }
+
     std::string::size_type nextLine = std::string::npos;
     unsigned int  currentPos = 0;
 
-    const unsigned int lineWidth = get_number_of_cols() - 1;
-
+    clrscr();
     textcolor(LIGHTGREY);
 
-    while (currentPos < d.length())
+    while (currentPos < desc.length())
     {
         if (currentPos != 0)
             cgotoxy(1, wherey() + 1);
 
         // see if $ sign is within one lineWidth
-        nextLine = d.find('$', currentPos);
+        nextLine = desc.find('$', currentPos);
 
         if (nextLine >= currentPos && nextLine < currentPos + lineWidth)
         {
-            cprintf("%s", (d.substr(currentPos, nextLine-currentPos)).c_str());
+            cprintf("%s",
+                    (desc.substr(currentPos, nextLine-currentPos)).c_str());
             currentPos = nextLine + 1;
             continue;
         }
 
         // Handle real line breaks.  No substitutions necessary, just update
         // the counts.
-        nextLine = d.find('\n', currentPos);
+        nextLine = desc.find('\n', currentPos);
         if (nextLine >= currentPos && nextLine < currentPos + lineWidth)
         {
-            cprintf("%s", (d.substr(currentPos, nextLine-currentPos)).c_str());
+            cprintf("%s",
+                    (desc.substr(currentPos, nextLine-currentPos)).c_str());
             currentPos = nextLine + 1;
             continue;
         }
 
         // no newline -- see if rest of string will fit.
-        if (currentPos + lineWidth >= d.length())
+        if (currentPos + lineWidth >= desc.length())
         {
-            cprintf((d.substr(currentPos)).c_str());
+            cprintf((desc.substr(currentPos)).c_str());
             return;
         }
 
 
         // ok.. try to truncate at space.
-        nextLine = d.rfind(' ', currentPos + lineWidth);
+        nextLine = desc.rfind(' ', currentPos + lineWidth);
 
         if (nextLine > 0)
         {
-            cprintf((d.substr(currentPos, nextLine - currentPos)).c_str());
+            cprintf((desc.substr(currentPos, nextLine - currentPos)).c_str());
             currentPos = nextLine + 1;
             continue;
         }
@@ -152,7 +218,7 @@ void print_description( const std::string &d )
 
         nextLine = std::min(d.length(), nextLine);
 
-        cprintf((d.substr(currentPos, nextLine - currentPos)).c_str());
+        cprintf((desc.substr(currentPos, nextLine - currentPos)).c_str());
         currentPos = nextLine;
     }
 }
@@ -1831,7 +1897,6 @@ void describe_feature_wide(int x, int y)
     // For things which require logic
     desc += _get_feature_description_wide(grd[x][y]);
 
-    clrscr();
     print_description(desc);
 
 #ifdef USE_TILE
@@ -1848,8 +1913,6 @@ void describe_feature_wide(int x, int y)
 // Returns true if spells can be shown to player.
 static bool _show_item_description(const item_def &item)
 {
-    clrscr();
-
     const std::string description = get_item_description( item, 1 );
     print_description(description);
     if (Options.tutorial_left)
@@ -2059,7 +2122,6 @@ void describe_spell(spell_type spelled)
 #endif
     }
 
-    clrscr();
     print_description(description);
 
 #ifdef USE_TILE
@@ -2362,7 +2424,6 @@ void describe_monsters(monsters& mons)
     }
 #endif
 
-    clrscr();
     print_description(description.str());
 
 #ifdef USE_TILE
@@ -3141,7 +3202,6 @@ void describe_skill(int skill)
 
     data << get_skill_description(skill, true);
 
-    clrscr();
     print_description(data.str());
     if (getch() == 0)
         getch();
