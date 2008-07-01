@@ -1940,13 +1940,13 @@ degree of risk or harm to the caster.
 
 Warpers:
 --------
-Warpers specialise in translocations, and are experts in travelling long
-distances and positioning themselves precisely.
+Warpers specialise in translocation magic, and are experts in travelling 
+long distances and positioning themselves precisely.
 
 Transmuters:
 ------------
-Transmuters specialise in transmigrations, and can cause strange changes
-in themselves and others.
+Transmuters specialise in transmigration magic, and can cause strange 
+changes in themselves and others.
 
 Elementalists:
 --------------
