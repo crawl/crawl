@@ -148,6 +148,11 @@ struct bolt
     mon_attitude_type attitude;  // attitude of whoever fired tracer
     int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
     bool        chose_ray;       // do we want a specific ray?
+    bool        beam_stopped;    // stop_attack_prompt() returned true
+    bool        dont_stop_foe;   // stop_attack_prompt() returned false for foe
+    bool        dont_stop_fr;    // stop_attack_prompt() returned false for
+                                 // friend
+
     ray_def     ray;             // shoot on this specific ray
 
 public:
@@ -183,11 +188,11 @@ void fire_beam(bolt &pbolt, item_def *item = NULL, bool drop_item = false);
  * called from: ability - it_use3 - item_use - mstuff2 - religion -
  *              spells - spells4
  * *********************************************************************** */
-void explosion( bolt &pbolt, bool hole_in_the_middle = false,
-                bool explode_in_wall = false,
-                bool stop_at_statues = true,
-                bool stop_at_walls   = true,
-                bool show_more       = true);
+int explosion( bolt &pbolt, bool hole_in_the_middle = false,
+               bool explode_in_wall = false,
+               bool stop_at_statues = true,
+               bool stop_at_walls   = true,
+               bool show_more       = true);
 
 // last updated 22jan2001 {gdl}
 /* ***********************************************************************

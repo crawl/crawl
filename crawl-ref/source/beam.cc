@@ -700,12 +700,14 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.fr_helped     = pbolt.fr_hurt  = 0;
     pbolt.foe_helped    = pbolt.foe_hurt = 0;
     pbolt.foe_ratio     = 100;
+    pbolt.beam_stopped  = false;
+    pbolt.dont_stop_foe = pbolt.dont_stop_fr = false;
 
     fire_beam(pbolt);
 
     // Should only happen if the player answered 'n' to one of those
     // "Fire through friendly?" prompts.
-    if (pbolt.fr_count < 0)
+    if (pbolt.beam_stopped)
     {
         canned_msg(MSG_OK);
         you.turn_is_over = false;
@@ -4338,7 +4340,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         {
             if (beam.thrower == KILL_YOU_MISSILE || beam.thrower == KILL_YOU)
             {
-                if (beam.fr_count == 1 && !_beam_is_harmless(beam, mon))
+                if (!_beam_is_harmless(beam, mon)
+                    && (beam.fr_count == 1 && !beam.dont_stop_fr
+                        || beam.foe_count == 1 && !beam.dont_stop_foe))
                 {
                     const bool target = (beam.target_x == mon->x
                                          && beam.target_y == mon->y);
@@ -4346,9 +4350,13 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                     if (stop_attack_prompt(mon, true, target))
                     {
                         mpr("Test2");
-                        beam.fr_count = INT_MIN;
+                        beam.beam_stopped = true;
                         return (BEAM_STOP);
                     }
+                   if (beam.fr_count == 1 && !beam.dont_stop_fr)
+                       beam.dont_stop_fr = true;
+                   else
+                       beam.dont_stop_foe = true; 
                 }
             }
 
@@ -4495,16 +4503,22 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         if (beam.thrower == KILL_YOU_MISSILE || beam.thrower == KILL_YOU)
         {
-            if (beam.fr_count == 1 && !_beam_is_harmless(beam, mon))
+            if (!_beam_is_harmless(beam, mon)
+                && (beam.fr_count == 1 && !beam.dont_stop_fr
+                    || beam.foe_count == 1 && !beam.dont_stop_foe))
             {
                 const bool target = (beam.target_x == mon->x
                                      && beam.target_y == mon->y);
 
                 if (stop_attack_prompt(mon, true, target))
                 {
-                    beam.fr_count = INT_MIN;
+                    beam.beam_stopped = true;
                     return (BEAM_STOP);
                 }
+                if (beam.fr_count == 1 && !beam.dont_stop_fr)
+                    beam.dont_stop_fr = true;
+                else
+                    beam.dont_stop_foe = true; 
             }
         }
 
@@ -5222,9 +5236,9 @@ static void _explosion1(bolt &pbolt)
 // boundaries like walls, but go through/around statues/idols/etc.
 //
 // For each cell affected by the explosion, affect() is called.
-void explosion( bolt &beam, bool hole_in_the_middle,
-                bool explode_in_wall, bool stop_at_statues,
-                bool stop_at_walls, bool show_more)
+int explosion( bolt &beam, bool hole_in_the_middle,
+               bool explode_in_wall, bool stop_at_statues,
+               bool stop_at_walls, bool show_more)
 {
     if (in_bounds(beam.source_x, beam.source_y)
         && !(beam.source_x == beam.target_x
@@ -5399,13 +5413,13 @@ void explosion( bolt &beam, bool hole_in_the_middle,
         drawing = false;
     }
 
-    bool seen_anything = false;
+    int cells_seen = 0;
     for ( int i = -9; i <= 9; ++i )
         for ( int j = -9; j <= 9; ++j )
             if ( explode_map[i+9][j+9]
                  && see_grid(beam.target_x + i, beam.target_y + j) )
             {
-                seen_anything = true;
+                cells_seen++;
             }
 
     // ---------------- end boom --------------------------
@@ -5417,8 +5431,10 @@ void explosion( bolt &beam, bool hole_in_the_middle,
 
     // Duplicate old behaviour - pause after entire explosion
     // has been drawn.
-    if (!beam.is_tracer && seen_anything && show_more)
+    if (!beam.is_tracer && cells_seen > 0 && show_more)
         more();
+
+    return (cells_seen);
 }
 
 static void _explosion_cell(bolt &beam, int x, int y, bool drawOnly)
@@ -5603,7 +5619,8 @@ bolt::bolt() : range(0), rangeMax(0), type('*'),
                foe_helped(0), is_tracer(false), aimed_at_feet(false),
                msg_generated(false), in_explosion_phase(false),
                smart_monster(false), can_see_invis(false),
-               attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false)
+               attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false),
+               beam_stopped(false), dont_stop_foe(false), dont_stop_fr(false)
 {
 }
 
