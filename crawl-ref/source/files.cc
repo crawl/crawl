@@ -1060,7 +1060,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         if (tmp_file_pairs[you.your_level][you.where_are_you] == false)
         {
-            // Make sure old file is gone.
+            // Make sure the old file is gone.
             unlink(cha_fil.c_str());
 
             // Save the information for later deletion -- DML 6/11/99
