@@ -1827,10 +1827,10 @@ They have a good general grounding in the arts of fighting.
 Gladiators:
 -----------
 The Gladiator has been trained to fight in the ring, and so is versed 
-in the art of fighting but is not so good at anything else. In fact,
+in the art of fighting but is not so good at anything else. In fact, 
 Gladiators have never learned anything except bashing monsters with 
-heavy things. They start with a nasty weapon, a small shield, leather 
-armour, and some nets.
+heavy things. They start with a nasty weapon, a small shield, light 
+armour, and a few throwing weapons.
 
 Monks:
 ------
@@ -1902,19 +1902,19 @@ Elementalists, Venom Mages, Transmuters and Warpers. Magicians are
 the best at using magic. They start with a knife, a robe, and a book 
 of spells which should see them through the first several levels.
 
-Wizard:
+Wizards:
 -------
 A Wizard is a magician who does not specialise in any area of magic.
 Wizards start with a variety of magical skills and the magic dart spell
 in memory.
 
-Conjurer:
+Conjurers:
 ---------
 The Conjurer specialises in the violent and destructive magic of
 conjuration spells. Like the Wizard, the Conjurer starts with the
 magic dart spell.
 
-Enchanter:
+Enchanters:
 ----------
 The Enchanter specialises in the more subtle area of enchantment magic.
 Although not as directly powerful as conjurations, high-level 
@@ -1925,14 +1925,14 @@ they begin with the "Corona" spell and some enchanted darts, which
 should help them out until they can use the higher level enchantment 
 spells.
 
-Summoner:
+Summoners:
 ---------
 The Summoner specialises in calling creatures from this and other worlds
 to give assistance. Although they can at first summon only very wimpy
 creatures, the more advanced summoning spells allow summoners to call on
 such powers as elementals and demons.
 
-Necromancer:
+Necromancers:
 ------------
 The Necromancer is a magician who specialises in the less pleasant side
 of magic. Necromantic spells are a varied bunch, but many involve some 
@@ -1979,10 +1979,10 @@ Thieves:
 --------
 The Thief is one of the trickiest classes to play. Thieves start out 
 with a large variety of useful skills, and need to use all of them to 
-survive. Thieves start with a short sword, some throwing darts, and 
-light armour.
+survive. Thieves start with a short sword, a hand crossbow, some darts, 
+and light armour.
 
-Assassin:
+Assassins:
 ---------
 An Assassin is a Thief who is especially good at killing. Assassins are
 like Thieves in most respects, but are more dangerous in combat.
@@ -1990,14 +1990,14 @@ like Thieves in most respects, but are more dangerous in combat.
 Hunters:
 --------
 The Hunter is a type of fighter who specialises in missile weapons. A 
-Hunter starts with a ranged weapon and some ammunition, as well as a
+Hunter starts with a ranged weapon and some ammunition, as well as an 
 edged weapon and a set of leathers.
 
 Wanderers:
 ----------
 Wanderers are people who have not learned a specific trade. Instead,
-they've travelled around becoming "jacks-of-all-trades, masters of
-none". They start the game with a large assortment of skills and maybe
+they've travelled around becoming "jacks-of-all-trades, masters of 
+none". They start the game with a large assortment of skills and maybe 
 some small items they picked up along the way, but, other than that, 
 they're pretty much on their own. Non-human wanderers might not even 
 know which skills they have (since they haven't quite learned enough 
@@ -2119,8 +2119,8 @@ Miscellaneous skills:
 
 Armour:
 -------
-Body armours come in two types: heavy and light. Heavy armours give
-some reliable protection from damage (in contrast to light armours) 
+Body armours come in two types: heavy and light. Heavy armours give 
+some reliable protection from damage (in contrast to light armours), 
 but have several disadvantages. 
 
 Having a high Armour skill means that you are used to wearing heavy 
