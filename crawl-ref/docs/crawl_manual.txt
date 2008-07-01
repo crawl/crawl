@@ -1841,9 +1841,9 @@ weighty weapons and spellbooks needed by other classes.
 
 Berserkers:
 -----------
-Berserkers are hardy warriors who worship Trog the Wrathful, from whom
-they get the power to go berserk (as well as a number of other powers 
-should they prove worthy) but who forbids the use of spell magic. They
+Berserkers are hardy warriors who worship Trog the Wrathful, from whom 
+they get the power to go berserk (as well as a number of other powers, 
+should they prove worthy), but who forbids the use of spell magic. They 
 enter the dungeon with an axe, some spears, and a set of leather armour.
 
 Paladins:
