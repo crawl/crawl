@@ -125,7 +125,7 @@ void print_description( const std::string &d )
         if (nextLine >= currentPos && nextLine < currentPos + lineWidth)
         {
             cprintf("%s", (d.substr(currentPos, nextLine-currentPos)).c_str());
-            currentPos = nextLine +1;
+            currentPos = nextLine + 1;
             continue;
         }
 
@@ -150,8 +150,7 @@ void print_description( const std::string &d )
         // oops.  just truncate.
         nextLine = currentPos + lineWidth;
 
-        if (nextLine > d.length())
-            nextLine = d.length();
+        nextLine = std::min(d.length(), nextLine);
 
         cprintf((d.substr(currentPos, nextLine - currentPos)).c_str());
         currentPos = nextLine;
