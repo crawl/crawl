@@ -4092,53 +4092,97 @@ bool _give_items_skills()
 
         break;
 
-    case JOB_WIZARD:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS,
-                           you.species == SP_OGRE_MAGE ? WPN_QUARTERSTAFF :
-                           player_genus(GENPC_DWARVEN) ? WPN_HAMMER
-                                                       : WPN_DAGGER);
+    case JOB_GLADIATOR:
+        // Equipment.
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-
-        switch (random2(7))
-        {
-        case 0:
-        case 1:
-        default:
-            set_equip_desc( you.inv[1], ISFLAG_EMBROIDERED_SHINY );
-            break;
-        case 2:
-        case 3:
-            set_equip_desc( you.inv[1], ISFLAG_GLOWING );
-            break;
-        case 4:
-        case 5:
-            set_equip_desc( you.inv[1], ISFLAG_RUNED );
-            break;
-        case 6:
-            set_equip_race( you.inv[1], ISFLAG_ELVEN );
-            break;
-        }
-
-        // Extra items being tested:
-        if (!_choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 ))
+        if (!_choose_weapon())
             return (false);
 
-        you.skills[SK_DODGING] = 1;
-        you.skills[SK_STEALTH] = 1;
-        you.skills[(coinflip() ? SK_DODGING : SK_STEALTH)]++;
-        you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_CONJURATIONS] = 1;
-        you.skills[SK_ENCHANTMENTS] = 1;
-        you.skills[SK_SPELLCASTING + random2(3)]++;
-        you.skills[SK_SUMMONINGS + random2(5)]++;
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
+                              ARM_LEATHER_ARMOUR, ARM_ANIMAL_SKIN);
 
-        if (player_genus(GENPC_DWARVEN))
-            you.skills[SK_MACES_FLAILS] = 1;
+        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD,
+                              ARM_BUCKLER);
+
+        _newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_CAP);
+
+        // Small races get stones, the others nets.
+        if (player_size(PSIZE_BODY) < SIZE_MEDIUM)
+        {
+            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_STONE, -1,
+                               10 + roll_dice( 2, 10 ));
+        }
         else
-            you.skills[SK_SHORT_BLADES] = 1;
+        {
+            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
+                               4);
+        }
 
-        you.skills[SK_STAVES] = 1;
+        // Skills.
+        you.skills[SK_FIGHTING] = 2;
+        you.skills[SK_THROWING] = 2;
+        you.skills[SK_DODGING]  = 2;
+        you.skills[SK_SHIELDS]  = 2;
+        you.skills[SK_UNARMED_COMBAT] = 2;
+        weap_skill = 3;
+        break;
+
+    case JOB_MONK:
+        you.equip[EQ_WEAPON] = -1; // Monks fight unarmed.
+
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+
+        you.skills[SK_FIGHTING] = 3;
+        you.skills[SK_UNARMED_COMBAT] = 4;
+        you.skills[SK_DODGING] = 3;
+        you.skills[SK_STEALTH] = 2;
+        break;
+
+    case JOB_BERSERKER:
+        you.religion = GOD_TROG;
+        you.piety = 35;
+
+        // WEAPONS
+        if (you.has_claws())
+            you.equip[EQ_WEAPON] = -1; // Trolls/Ghouls fight unarmed.
+        else
+            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_HAND_AXE);
+
+        // ARMOUR
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);
+
+        // SKILLS
+        you.skills[SK_FIGHTING] = 3;
+        you.skills[SK_DODGING]  = 2;
+        weap_skill = 3;
+
+        if (you_can_wear(EQ_BODY_ARMOUR))
+            you.skills[SK_ARMOUR] = 2;
+        else
+        {
+            you.skills[SK_DODGING]++;
+            you.skills[SK_ARMOUR] = 1; // for the eventual dragon scale mail :)
+        }
+        break;
+
+    case JOB_PALADIN:
+        you.religion = GOD_SHINING_ONE;
+        you.piety = 28;
+
+        // Equipment.
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_FALCHION);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_RING_MAIL,
+                              ARM_ROBE);
+        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
+        _newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEALING);
+
+        // Skills.
+        you.skills[(player_light_armour() ? SK_DODGING : SK_ARMOUR)] = 2;
+        you.skills[SK_FIGHTING] = 2;
+        you.skills[SK_SHIELDS]  = 2;
+        you.skills[SK_LONG_BLADES] = 3;
+        you.skills[SK_INVOCATIONS] = 2;
         break;
 
     case JOB_PRIEST:
@@ -4279,67 +4323,313 @@ bool _give_items_skills()
         weap_skill = 3;
         break;
 
-    case JOB_THIEF:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HAND_CROSSBOW);
+    case JOB_CHAOS_KNIGHT:
+    {
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1,
+                           1, random2(3), random2(3));
 
-        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
-                           10 + roll_dice( 2, 10 ));
+        if (!_choose_weapon())
+            return (false);
 
-        if (you.species == SP_SPRIGGAN)
+        if (Options.chaos_knight != GOD_NO_GOD
+            && Options.chaos_knight != GOD_RANDOM)
         {
-            _make_rod(you.inv[0], STAFF_STRIKING);
-            you.skills[SK_EVOCATIONS] = 1;
+            ng_ck = you.religion =
+                static_cast<god_type>( Options.chaos_knight );
+        }
+        else if (Options.random_pick || Options.chaos_knight == GOD_RANDOM)
+        {
+            you.religion = (one_chance_in(3) ? GOD_XOM :
+                            coinflip()       ? GOD_MAKHLEB
+                                             : GOD_LUGONU);
+            ng_ck = GOD_RANDOM;
+        }
+        else
+        {
+            _print_character_info();
+
+            textcolor( CYAN );
+            cprintf(EOL "Which god of chaos do you wish to serve?" EOL);
+
+            // Both Xom and Makhleb are okay choices for everyone.
+            textcolor( LIGHTGREY );
+            cprintf("a - Xom of Chaos" EOL);
+            cprintf("b - Makhleb the Destroyer" EOL);
+            cprintf("c - Lugonu the Unformed" EOL);
+
+            textcolor( BROWN );
+            cprintf(EOL "* - Random choice; "
+                        "Bksp - Back to species and class selection; "
+                        "X - Quit" EOL);
+
+            if (Options.prev_ck != GOD_NO_GOD)
+            {
+                textcolor(BROWN);
+                cprintf(EOL "Enter - %s" EOL,
+                        Options.prev_ck == GOD_XOM     ? "Xom" :
+                        Options.prev_ck == GOD_MAKHLEB ? "Makhleb" :
+                        Options.prev_ck == GOD_LUGONU  ? "Lugonu"
+                                                       : "Random");
+                textcolor(LIGHTGREY);
+            }
+
+            do
+            {
+                keyn = c_getch();
+
+                switch (keyn)
+                {
+                case 'X':
+                    cprintf(EOL "Goodbye!");
+                    end(0);
+                    break;
+                case CK_BKSP:
+                case CK_ESCAPE:
+                case ' ':
+                    return (false);
+                case '\r':
+                case '\n':
+                    if (Options.prev_ck == GOD_NO_GOD)
+                        break;
+
+                    if (Options.prev_ck != GOD_RANDOM)
+                    {
+                        you.religion = static_cast<god_type>(Options.prev_ck);
+                        break;
+                    }
+                    keyn = '*'; // for ng_ck setting
+                    // fall-through for random
+                case '*':
+                case '+':
+                    you.religion = (one_chance_in(3) ? GOD_XOM :
+                                    coinflip()       ? GOD_MAKHLEB
+                                                     : GOD_LUGONU);
+                    break;
+                case 'a':
+                    you.religion = GOD_XOM;
+                    break;
+                case 'b':
+                    you.religion = GOD_MAKHLEB;
+                    break;
+                case 'c':
+                    you.religion = GOD_LUGONU;
+                    break;
+                default:
+                    break;
+                }
+            }
+            while (you.religion == GOD_NO_GOD);
+
+            ng_ck = (keyn == '*') ? GOD_RANDOM
+                                  : you.religion;
         }
 
-        you.skills[SK_SHORT_BLADES] = 2;
-        you.skills[SK_FIGHTING] = 1;
-        you.skills[SK_THROWING] = 1;
-        you.skills[SK_DARTS]    = 1;
-        you.skills[SK_DODGING]  = 2;
-        you.skills[SK_STEALTH]  = 2;
-        you.skills[SK_STABBING] = 1;
-        // Increase one of Dodging/Stealth/Stabbing by 1.
-        you.skills[SK_DODGING + random2(3)]++;
-        you.skills[SK_TRAPS_DOORS] = 2;
-        break;
+        int plusses = 4 - you.inv[0].plus - you.inv[0].plus2;
+        ASSERT(plusses >= 0);
 
-    case JOB_GLADIATOR:
-        // Equipment.
+        if (one_chance_in(5))
+            set_equip_desc( you.inv[0], ISFLAG_RUNED );
+
+        if (one_chance_in(5))
+            set_equip_desc( you.inv[0], ISFLAG_GLOWING );
+
+        weap_skill = 2;
+
+        if (you.religion != GOD_XOM)
+        {
+            // For Lugonu and Makhleb don't hand out enchanted armour.
+            // Distribute remaining enchantment points on the weapon.
+            const int help = random2(plusses + 1);
+            you.inv[0].plus  += help;
+            you.inv[0].plus2 += plusses - help;
+            plusses = 0;
+        }
+
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1,
+                           1, plusses);
+
+        you.skills[SK_FIGHTING] = 3;
+        you.skills[SK_ARMOUR]   = 1;
+        you.skills[SK_DODGING]  = 1;
+        you.skills[(coinflip()? SK_ARMOUR : SK_DODGING)]++;
+
+        if (you.religion == GOD_XOM)
+        {
+            you.skills[SK_FIGHTING]++;
+            // The new (piety-aware) Xom uses piety in his own special way...
+            // (Namely, 100 is neutral.)
+            you.piety = 100;
+
+            // The new Xom also uses gift_timeout in his own special way...
+            // (Namely, a countdown to becoming bored.)
+            you.gift_timeout = random2(40) + random2(40);
+        }
+        else // Makhleb or Lugonu
+        {
+            you.skills[SK_INVOCATIONS] = 2;
+
+            if (you.religion == GOD_LUGONU)
+            {
+                // Chaos Knights of Lugonu start in the Abyss.  We need
+                // to mark this unusual occurrence, so the player
+                // doesn't get early access to OOD items, etc.
+                you.char_direction = GDT_GAME_START;
+                you.piety = 38;
+            }
+            else
+                you.piety = 25;
+        }
+        break;
+    }
+    case JOB_DEATH_KNIGHT:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
 
         if (!_choose_weapon())
             return (false);
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
-                              ARM_LEATHER_ARMOUR, ARM_ANIMAL_SKIN);
+        weap_skill = 2;
 
-        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD,
-                              ARM_BUCKLER);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
 
-        _newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_CAP);
+        choice = DK_NO_SELECTION;
 
-        // Small races get stones, the others nets.
-        if (player_size(PSIZE_BODY) < SIZE_MEDIUM)
+        // Order is important here. -- bwr
+        if (you.species == SP_DEMIGOD)
+            choice = DK_NECROMANCY;
+        else if (Options.death_knight != DK_NO_SELECTION
+                 && Options.death_knight != DK_RANDOM)
         {
-            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_STONE, -1,
-                               10 + roll_dice( 2, 10 ));
+            ng_dk = choice = Options.death_knight;
+        }
+        else if (Options.random_pick || Options.death_knight == DK_RANDOM)
+        {
+            ng_dk = DK_RANDOM;
+
+            if (Options.good_random && !_has_good_necromancy_apts())
+                choice = DK_YREDELEMNUL;
+            else
+                choice = (coinflip() ? DK_NECROMANCY : DK_YREDELEMNUL);
         }
         else
         {
-            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                               4);
+            _print_character_info();
+
+            textcolor( CYAN );
+            cprintf(EOL "From where do you draw your power?" EOL);
+
+            if (_has_good_necromancy_apts())
+                textcolor(LIGHTGREY);
+            else
+                textcolor(DARKGREY);
+
+            cprintf("a - Necromantic magic" EOL);
+
+            // Yredelemnul is an okay choice for everyone.
+            textcolor(LIGHTGREY);
+            cprintf("b - the god Yredelemnul" EOL);
+
+            textcolor( BROWN );
+            cprintf(EOL "* - Random choice; "
+                        "Bksp - Back to species and class selection; "
+                        "X - Quit" EOL);
+
+            if (Options.prev_dk != DK_NO_SELECTION)
+            {
+                textcolor(BROWN);
+                cprintf(EOL "Enter - %s" EOL,
+                        Options.prev_dk == DK_NECROMANCY  ? "Necromancy" :
+                        Options.prev_dk == DK_YREDELEMNUL ? "Yredelemnul"
+                                                          : "Random");
+            }
+
+            do
+            {
+                keyn = c_getch();
+
+                switch (keyn)
+                {
+                case 'X':
+                    cprintf(EOL "Goodbye!");
+                    end(0);
+                    break;
+                case CK_BKSP:
+                case ESCAPE:
+                case ' ':
+                    return (false);
+                case '\r':
+                case '\n':
+                    if (Options.prev_dk == DK_NO_SELECTION)
+                        break;
+
+                    if (Options.prev_dk != DK_RANDOM)
+                    {
+                        choice = Options.prev_dk;
+                        break;
+                    }
+                    keyn = '*'; // for ng_dk setting
+                    // fall-through for random
+                case '+':
+                    if (keyn == '+' && !_has_good_necromancy_apts())
+                    {
+                        choice = DK_YREDELEMNUL;
+                        break;
+                    }
+                    // fall-through for random
+                case '*':
+                    choice = coinflip()? DK_NECROMANCY : DK_YREDELEMNUL;
+                    break;
+                case 'a':
+                    cprintf(EOL "Very well.");
+                    choice = DK_NECROMANCY;
+                    break;
+                case 'b':
+                    choice = DK_YREDELEMNUL;
+                default:
+                    break;
+                }
+            }
+            while (choice == DK_NO_SELECTION);
+
+            ng_dk = (keyn == '*'? DK_RANDOM : choice);
         }
 
-        // Skills.
+        switch (choice)
+        {
+        default:  // this shouldn't happen anyways -- bwr
+        case DK_NECROMANCY:
+            you.skills[SK_SPELLCASTING] = 1;
+            you.skills[SK_NECROMANCY]   = 2;
+            break;
+        case DK_YREDELEMNUL:
+            you.religion = GOD_YREDELEMNUL;
+            you.piety = 28;
+            you.inv[0].plus  = 1;
+            you.inv[0].plus2 = 1;
+            you.inv[2].quantity = 0;
+            you.skills[SK_INVOCATIONS] = 3;
+            break;
+        }
+
         you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_THROWING] = 2;
-        you.skills[SK_DODGING]  = 2;
-        you.skills[SK_SHIELDS]  = 2;
-        you.skills[SK_UNARMED_COMBAT] = 2;
-        weap_skill = 3;
+        you.skills[SK_ARMOUR]   = 1;
+        you.skills[SK_DODGING]  = 1;
+        you.skills[SK_STEALTH]  = 1;
+        break;
+
+    case JOB_HEALER:
+        you.religion = GOD_ELYVILON;
+        you.piety = 55;
+
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING);
+        _newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
+
+        you.skills[SK_FIGHTING]    = 2;
+        you.skills[SK_STAVES]      = 3;
+        you.skills[SK_DODGING]     = 1;
+        you.skills[SK_INVOCATIONS] = 4;
         break;
 
     case JOB_NECROMANCER:
@@ -4355,143 +4645,53 @@ bool _give_items_skills()
         you.skills[SK_STAVES] = 1;
         break;
 
-    case JOB_PALADIN:
-        you.religion = GOD_SHINING_ONE;
-        you.piety = 28;
+    case JOB_WIZARD:
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS,
+                           you.species == SP_OGRE_MAGE ? WPN_QUARTERSTAFF :
+                           player_genus(GENPC_DWARVEN) ? WPN_HAMMER
+                                                       : WPN_DAGGER);
 
-        // Equipment.
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_FALCHION);
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_RING_MAIL,
-                              ARM_ROBE);
-        _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
-        _newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEALING);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        // Skills.
-        you.skills[(player_light_armour() ? SK_DODGING : SK_ARMOUR)] = 2;
-        you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_SHIELDS]  = 2;
-        you.skills[SK_LONG_BLADES] = 3;
-        you.skills[SK_INVOCATIONS] = 2;
-        break;
-
-    case JOB_ASSASSIN:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1,
-                           1, 1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
-        _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BLOWGUN);
-        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
-                              5 + roll_dice(2, 5));
-        set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
-        _newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
-                              1 + random2(4));
-        set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
-
-        you.skills[SK_SHORT_BLADES] = 2;
-        you.skills[SK_FIGHTING]     = 2;
-        you.skills[SK_DODGING]      = 1;
-        you.skills[SK_STEALTH]      = 3;
-        you.skills[SK_STABBING]     = 2;
-        you.skills[SK_DARTS]        = 2;
-        break;
-
-    case JOB_BERSERKER:
-        you.religion = GOD_TROG;
-        you.piety = 35;
-
-        // WEAPONS
-        if (you.has_claws())
-            you.equip[EQ_WEAPON] = -1; // Trolls/Ghouls fight unarmed.
-        else
-            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_HAND_AXE);
-
-        // ARMOUR
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);
-
-        // SKILLS
-        you.skills[SK_FIGHTING] = 3;
-        you.skills[SK_DODGING]  = 2;
-        weap_skill = 3;
-
-        if (you_can_wear(EQ_BODY_ARMOUR))
-            you.skills[SK_ARMOUR] = 2;
-        else
+        switch (random2(7))
         {
-            you.skills[SK_DODGING]++;
-            you.skills[SK_ARMOUR] = 1; // for the eventual dragon scale mail :)
-        }
-        break;
-
-    case JOB_HUNTER:
-        // Equipment.
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
-
-        switch (you.species)
-        {        case SP_MOUNTAIN_DWARF:
-        case SP_HILL_ORC:
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_OGRE_MAGE:
-            you.inv[0].sub_type = WPN_HAND_AXE;
-            break;
-        case SP_GHOUL:
-        case SP_TROLL:
-            _newgame_clear_item(0);
-            break;
+        case 0:
+        case 1:
         default:
+            set_equip_desc( you.inv[1], ISFLAG_EMBROIDERED_SHINY );
+            break;
+        case 2:
+        case 3:
+            set_equip_desc( you.inv[1], ISFLAG_GLOWING );
+            break;
+        case 4:
+        case 5:
+            set_equip_desc( you.inv[1], ISFLAG_RUNED );
+            break;
+        case 6:
+            set_equip_race( you.inv[1], ISFLAG_ELVEN );
             break;
         }
 
-        switch (you.species)
-        {
-        case SP_SLUDGE_ELF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                                  2);
-            break;
-        case SP_TROLL:
-        case SP_OGRE:
-            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                                  3);
-            break;
+        // Extra items being tested:
+        if (!_choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 ))
+            return (false);
 
-        case SP_HALFLING:
-        case SP_GNOME:
-        case SP_KOBOLD:
-            _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
-                               15 + random2avg(21, 5) + random2avg(15, 2));
-            break;
+        you.skills[SK_DODGING] = 1;
+        you.skills[SK_STEALTH] = 1;
+        you.skills[(coinflip() ? SK_DODGING : SK_STEALTH)]++;
+        you.skills[SK_SPELLCASTING] = 2;
+        you.skills[SK_CONJURATIONS] = 1;
+        you.skills[SK_ENCHANTMENTS] = 1;
+        you.skills[SK_SPELLCASTING + random2(3)]++;
+        you.skills[SK_SUMMONINGS + random2(5)]++;
 
-        case SP_MOUNTAIN_DWARF:
-            _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1,
-                               15 + random2avg(21, 5));
-            break;
-
-        default:
-            _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
-                               15 + random2avg(21, 5));
-            break;
-        }
-
-        _newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                              ARM_ANIMAL_SKIN);
-
-        // Skills.
-        you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_DODGING]  = 2;
-        you.skills[SK_STEALTH]  = 1;
-        weap_skill = 1;
-
-        if (is_range_weapon(you.inv[1]))
-            you.skills[range_skill(you.inv[1])] = 4;
+        if (player_genus(GENPC_DWARVEN))
+            you.skills[SK_MACES_FLAILS] = 1;
         else
-            you.skills[SK_THROWING] = 4;
+            you.skills[SK_SHORT_BLADES] = 1;
+
+        you.skills[SK_STAVES] = 1;
         break;
 
     case JOB_CONJURER:
@@ -4721,316 +4921,6 @@ bool _give_items_skills()
         you.skills[SK_ENCHANTMENTS] = 2;
         break;
 
-
-    case JOB_DEATH_KNIGHT:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-
-        if (!_choose_weapon())
-            return (false);
-
-        weap_skill = 2;
-
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
-
-        choice = DK_NO_SELECTION;
-
-        // Order is important here. -- bwr
-        if (you.species == SP_DEMIGOD)
-            choice = DK_NECROMANCY;
-        else if (Options.death_knight != DK_NO_SELECTION
-                 && Options.death_knight != DK_RANDOM)
-        {
-            ng_dk = choice = Options.death_knight;
-        }
-        else if (Options.random_pick || Options.death_knight == DK_RANDOM)
-        {
-            ng_dk = DK_RANDOM;
-
-            if (Options.good_random && !_has_good_necromancy_apts())
-                choice = DK_YREDELEMNUL;
-            else
-                choice = (coinflip() ? DK_NECROMANCY : DK_YREDELEMNUL);
-        }
-        else
-        {
-            _print_character_info();
-
-            textcolor( CYAN );
-            cprintf(EOL "From where do you draw your power?" EOL);
-
-            if (_has_good_necromancy_apts())
-                textcolor(LIGHTGREY);
-            else
-                textcolor(DARKGREY);
-
-            cprintf("a - Necromantic magic" EOL);
-
-            // Yredelemnul is an okay choice for everyone.
-            textcolor(LIGHTGREY);
-            cprintf("b - the god Yredelemnul" EOL);
-
-            textcolor( BROWN );
-            cprintf(EOL "* - Random choice; "
-                        "Bksp - Back to species and class selection; "
-                        "X - Quit" EOL);
-
-            if (Options.prev_dk != DK_NO_SELECTION)
-            {
-                textcolor(BROWN);
-                cprintf(EOL "Enter - %s" EOL,
-                        Options.prev_dk == DK_NECROMANCY  ? "Necromancy" :
-                        Options.prev_dk == DK_YREDELEMNUL ? "Yredelemnul"
-                                                          : "Random");
-            }
-
-            do
-            {
-                keyn = c_getch();
-
-                switch (keyn)
-                {
-                case 'X':
-                    cprintf(EOL "Goodbye!");
-                    end(0);
-                    break;
-                case CK_BKSP:
-                case ESCAPE:
-                case ' ':
-                    return (false);
-                case '\r':
-                case '\n':
-                    if (Options.prev_dk == DK_NO_SELECTION)
-                        break;
-
-                    if (Options.prev_dk != DK_RANDOM)
-                    {
-                        choice = Options.prev_dk;
-                        break;
-                    }
-                    keyn = '*'; // for ng_dk setting
-                    // fall-through for random
-                case '+':
-                    if (keyn == '+' && !_has_good_necromancy_apts())
-                    {
-                        choice = DK_YREDELEMNUL;
-                        break;
-                    }
-                    // fall-through for random
-                case '*':
-                    choice = coinflip()? DK_NECROMANCY : DK_YREDELEMNUL;
-                    break;
-                case 'a':
-                    cprintf(EOL "Very well.");
-                    choice = DK_NECROMANCY;
-                    break;
-                case 'b':
-                    choice = DK_YREDELEMNUL;
-                default:
-                    break;
-                }
-            }
-            while (choice == DK_NO_SELECTION);
-
-            ng_dk = (keyn == '*'? DK_RANDOM : choice);
-        }
-
-        switch (choice)
-        {
-        default:  // this shouldn't happen anyways -- bwr
-        case DK_NECROMANCY:
-            you.skills[SK_SPELLCASTING] = 1;
-            you.skills[SK_NECROMANCY]   = 2;
-            break;
-        case DK_YREDELEMNUL:
-            you.religion = GOD_YREDELEMNUL;
-            you.piety = 28;
-            you.inv[0].plus  = 1;
-            you.inv[0].plus2 = 1;
-            you.inv[2].quantity = 0;
-            you.skills[SK_INVOCATIONS] = 3;
-            break;
-        }
-
-        you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_ARMOUR]   = 1;
-        you.skills[SK_DODGING]  = 1;
-        you.skills[SK_STEALTH]  = 1;
-        break;
-
-    case JOB_CHAOS_KNIGHT:
-    {
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1,
-                           1, random2(3), random2(3));
-
-        if (!_choose_weapon())
-            return (false);
-
-        if (Options.chaos_knight != GOD_NO_GOD
-            && Options.chaos_knight != GOD_RANDOM)
-        {
-            ng_ck = you.religion =
-                static_cast<god_type>( Options.chaos_knight );
-        }
-        else if (Options.random_pick || Options.chaos_knight == GOD_RANDOM)
-        {
-            you.religion = (one_chance_in(3) ? GOD_XOM :
-                            coinflip()       ? GOD_MAKHLEB
-                                             : GOD_LUGONU);
-            ng_ck = GOD_RANDOM;
-        }
-        else
-        {
-            _print_character_info();
-
-            textcolor( CYAN );
-            cprintf(EOL "Which god of chaos do you wish to serve?" EOL);
-
-            // Both Xom and Makhleb are okay choices for everyone.
-            textcolor( LIGHTGREY );
-            cprintf("a - Xom of Chaos" EOL);
-            cprintf("b - Makhleb the Destroyer" EOL);
-            cprintf("c - Lugonu the Unformed" EOL);
-
-            textcolor( BROWN );
-            cprintf(EOL "* - Random choice; "
-                        "Bksp - Back to species and class selection; "
-                        "X - Quit" EOL);
-
-            if (Options.prev_ck != GOD_NO_GOD)
-            {
-                textcolor(BROWN);
-                cprintf(EOL "Enter - %s" EOL,
-                        Options.prev_ck == GOD_XOM     ? "Xom" :
-                        Options.prev_ck == GOD_MAKHLEB ? "Makhleb" :
-                        Options.prev_ck == GOD_LUGONU  ? "Lugonu"
-                                                       : "Random");
-                textcolor(LIGHTGREY);
-            }
-
-            do
-            {
-                keyn = c_getch();
-
-                switch (keyn)
-                {
-                case 'X':
-                    cprintf(EOL "Goodbye!");
-                    end(0);
-                    break;
-                case CK_BKSP:
-                case CK_ESCAPE:
-                case ' ':
-                    return (false);
-                case '\r':
-                case '\n':
-                    if (Options.prev_ck == GOD_NO_GOD)
-                        break;
-
-                    if (Options.prev_ck != GOD_RANDOM)
-                    {
-                        you.religion = static_cast<god_type>(Options.prev_ck);
-                        break;
-                    }
-                    keyn = '*'; // for ng_ck setting
-                    // fall-through for random
-                case '*':
-                case '+':
-                    you.religion = (one_chance_in(3) ? GOD_XOM :
-                                    coinflip()       ? GOD_MAKHLEB
-                                                     : GOD_LUGONU);
-                    break;
-                case 'a':
-                    you.religion = GOD_XOM;
-                    break;
-                case 'b':
-                    you.religion = GOD_MAKHLEB;
-                    break;
-                case 'c':
-                    you.religion = GOD_LUGONU;
-                    break;
-                default:
-                    break;
-                }
-            }
-            while (you.religion == GOD_NO_GOD);
-
-            ng_ck = (keyn == '*') ? GOD_RANDOM
-                                  : you.religion;
-        }
-
-        int plusses = 4 - you.inv[0].plus - you.inv[0].plus2;
-        ASSERT(plusses >= 0);
-
-        if (one_chance_in(5))
-            set_equip_desc( you.inv[0], ISFLAG_RUNED );
-
-        if (one_chance_in(5))
-            set_equip_desc( you.inv[0], ISFLAG_GLOWING );
-
-        weap_skill = 2;
-
-        if (you.religion != GOD_XOM)
-        {
-            // For Lugonu and Makhleb don't hand out enchanted armour.
-            // Distribute remaining enchantment points on the weapon.
-            const int help = random2(plusses + 1);
-            you.inv[0].plus  += help;
-            you.inv[0].plus2 += plusses - help;
-            plusses = 0;
-        }
-
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1,
-                           1, plusses);
-
-        you.skills[SK_FIGHTING] = 3;
-        you.skills[SK_ARMOUR]   = 1;
-        you.skills[SK_DODGING]  = 1;
-        you.skills[(coinflip()? SK_ARMOUR : SK_DODGING)]++;
-
-        if (you.religion == GOD_XOM)
-        {
-            you.skills[SK_FIGHTING]++;
-            // The new (piety-aware) Xom uses piety in his own special way...
-            // (Namely, 100 is neutral.)
-            you.piety = 100;
-
-            // The new Xom also uses gift_timeout in his own special way...
-            // (Namely, a countdown to becoming bored.)
-            you.gift_timeout = random2(40) + random2(40);
-        }
-        else // Makhleb or Lugonu
-        {
-            you.skills[SK_INVOCATIONS] = 2;
-
-            if (you.religion == GOD_LUGONU)
-            {
-                // Chaos Knights of Lugonu start in the Abyss.  We need
-                // to mark this unusual occurrence, so the player
-                // doesn't get early access to OOD items, etc.
-                you.char_direction = GDT_GAME_START;
-                you.piety = 38;
-            }
-            else
-                you.piety = 25;
-        }
-        break;
-    }
-    case JOB_HEALER:
-        you.religion = GOD_ELYVILON;
-        you.piety = 55;
-
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF);
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING);
-        _newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
-
-        you.skills[SK_FIGHTING]    = 2;
-        you.skills[SK_STAVES]      = 3;
-        you.skills[SK_DODGING]     = 1;
-        you.skills[SK_INVOCATIONS] = 4;
-        break;
-
     case JOB_REAVER:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         if (!_choose_weapon())
@@ -5070,15 +4960,124 @@ bool _give_items_skills()
         you.skills[SK_ENCHANTMENTS] = 1;
         break;
 
-    case JOB_MONK:
-        you.equip[EQ_WEAPON] = -1; // Monks fight unarmed.
+    case JOB_THIEF:
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_HAND_CROSSBOW);
 
-        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
+                           10 + roll_dice( 2, 10 ));
 
-        you.skills[SK_FIGHTING] = 3;
-        you.skills[SK_UNARMED_COMBAT] = 4;
-        you.skills[SK_DODGING] = 3;
-        you.skills[SK_STEALTH] = 2;
+        if (you.species == SP_SPRIGGAN)
+        {
+            _make_rod(you.inv[0], STAFF_STRIKING);
+            you.skills[SK_EVOCATIONS] = 1;
+        }
+
+        you.skills[SK_SHORT_BLADES] = 2;
+        you.skills[SK_FIGHTING] = 1;
+        you.skills[SK_THROWING] = 1;
+        you.skills[SK_DARTS]    = 1;
+        you.skills[SK_DODGING]  = 2;
+        you.skills[SK_STEALTH]  = 2;
+        you.skills[SK_STABBING] = 1;
+        // Increase one of Dodging/Stealth/Stabbing by 1.
+        you.skills[SK_DODGING + random2(3)]++;
+        you.skills[SK_TRAPS_DOORS] = 2;
+        break;
+
+    case JOB_ASSASSIN:
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1,
+                           1, 1 + to_hit_bonus, 1 + (2 - to_hit_bonus));
+        _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BLOWGUN);
+        _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
+                              5 + roll_dice(2, 5));
+        set_item_ego_type(you.inv[4], OBJ_MISSILES, SPMSL_POISONED);
+        _newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_NEEDLE, -1,
+                              1 + random2(4));
+        set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_CURARE);
+
+        you.skills[SK_SHORT_BLADES] = 2;
+        you.skills[SK_FIGHTING]     = 2;
+        you.skills[SK_DODGING]      = 1;
+        you.skills[SK_STEALTH]      = 3;
+        you.skills[SK_STABBING]     = 2;
+        you.skills[SK_DARTS]        = 2;
+        break;
+
+    case JOB_HUNTER:
+        // Equipment.
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
+
+        switch (you.species)
+        {        case SP_MOUNTAIN_DWARF:
+        case SP_HILL_ORC:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_OGRE_MAGE:
+            you.inv[0].sub_type = WPN_HAND_AXE;
+            break;
+        case SP_GHOUL:
+        case SP_TROLL:
+            _newgame_clear_item(0);
+            break;
+        default:
+            break;
+        }
+
+        switch (you.species)
+        {
+        case SP_SLUDGE_ELF:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
+                                  2);
+            break;
+        case SP_TROLL:
+        case SP_OGRE:
+            _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
+                                  3);
+            break;
+
+        case SP_HALFLING:
+        case SP_GNOME:
+        case SP_KOBOLD:
+            _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
+                               15 + random2avg(21, 5) + random2avg(15, 2));
+            break;
+
+        case SP_MOUNTAIN_DWARF:
+            _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1,
+                               15 + random2avg(21, 5));
+            break;
+
+        default:
+            _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
+            _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
+                               15 + random2avg(21, 5));
+            break;
+        }
+
+        _newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                              ARM_ANIMAL_SKIN);
+
+        // Skills.
+        you.skills[SK_FIGHTING] = 2;
+        you.skills[SK_DODGING]  = 2;
+        you.skills[SK_STEALTH]  = 1;
+        weap_skill = 1;
+
+        if (is_range_weapon(you.inv[1]))
+            you.skills[range_skill(you.inv[1])] = 4;
+        else
+            you.skills[SK_THROWING] = 4;
         break;
 
     case JOB_WANDERER:
