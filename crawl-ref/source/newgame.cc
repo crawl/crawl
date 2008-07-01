@@ -1228,7 +1228,10 @@ game_start:
     _assign_remaining_stats((you.species == SP_DEMIGOD ||
                              you.species == SP_DEMONSPAWN) ? 15 : 8);
 
-    // This function depends on stats being finalized.
+    // Needs to be done before handing out food.
+    give_basic_mutations(you.species);
+
+    // This function depends on stats and mutations being finalized.
     // Returns false if Backspace on god/weapon/... selection.
     if (!_give_items_skills())
     {
@@ -1261,9 +1264,6 @@ game_start:
     you.max_dex      = you.dex;
     you.max_strength = you.strength;
     you.max_intel    = you.intel;
-
-    // Needs to be done before handing out food.
-    give_basic_mutations(you.species);
 
     _give_starting_food();
     _mark_starting_books();
