@@ -4349,7 +4349,7 @@ bool _give_items_skills()
             textcolor( CYAN );
             cprintf(EOL "Which god of chaos do you wish to serve?" EOL);
 
-            // Both Xom and Makhleb are okay choices for everyone.
+            // Xom, Makhleb, and Lugonu are okay choices for everyone.
             textcolor( LIGHTGREY );
             cprintf("a - Xom of Chaos" EOL);
             cprintf("b - Makhleb the Destroyer" EOL);
@@ -4433,7 +4433,7 @@ bool _give_items_skills()
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
         you.skills[SK_DODGING]  = 1;
-        you.skills[(coinflip()? SK_ARMOUR : SK_DODGING)]++;
+        you.skills[(coinflip() ? SK_ARMOUR : SK_DODGING)]++;
         weap_skill = 2;
 
         if (you.religion == GOD_XOM)
