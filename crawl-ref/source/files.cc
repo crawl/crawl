@@ -1115,6 +1115,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
             // generation.
             you.your_level = 0;
             you.char_direction = GDT_DESCENDING;
+            tmp_file_pairs[you.your_level][you.where_are_you] = true;
         }
 
         builder(you.your_level, you.level_type);
