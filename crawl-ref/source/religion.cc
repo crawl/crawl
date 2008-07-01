@@ -464,7 +464,7 @@ bool god_gives_permanent_followers(god_type god)
 std::string get_god_powers(god_type which_god)
 {
     // Return early for the special cases.
-    if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
+    if (which_god == GOD_NO_GOD)
         return "";
 
     std::string result = getLongDescription(god_name(which_god) + " powers");

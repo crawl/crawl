@@ -2742,28 +2742,17 @@ static void _detailed_god_description(god_type which_god)
     textcolor(LIGHTGREY);
     cprintf(EOL);
 
-    if (which_god == GOD_XOM)
+    std::string broken = get_god_powers(which_god);
+    if (!broken.empty())
     {
-        cprintf("To worship Xom is to live riskily. In a good mood Xom may "
-                "shower you " EOL
-                "with gifts, while at other times this capricious god could "
-                "decide to " EOL
-                "\"spice things up a little\" and send you to your doom. If "
-                "you prove " EOL
-                "yourself the stronger, so much the better; if not, well, "
-                "there'll be " EOL
-                "other playthings..." EOL);
+        linebreak_string2(broken, width);
+        formatted_string::parse_block(broken, false).display();
+        cprintf(EOL);
+        cprintf(EOL);
     }
-    else
+
+    if (which_god != GOD_XOM)
     {
-        std::string broken = get_god_powers(which_god);
-        if (!broken.empty())
-        {
-            linebreak_string2(broken, width);
-            formatted_string::parse_block(broken, false).display();
-            cprintf(EOL);
-            cprintf(EOL);
-        }
         broken = get_god_likes(which_god, true);
         linebreak_string2(broken, width);
         formatted_string::parse_block(broken, false).display();
