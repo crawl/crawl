@@ -240,10 +240,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
 
     // Long blades
     { WPN_FALCHION,              "falchion",               8,  2, 13, 170,  4,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL, MI_NONE, false,
         DAMV_SLICING, 10 },      // or perhaps DAMV_CHOPPING is more apt?
     { WPN_BLESSED_FALCHION,      "blessed falchion",      10,  2, 11, 170,  4,
-        SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
+        SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL, MI_NONE, false,
         DAMV_SLICING, 10 },      // or perhaps DAMV_CHOPPING is more apt?
     { WPN_LONG_SWORD,            "long sword",            10,  1, 14, 160,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
@@ -2058,7 +2058,7 @@ bool is_range_weapon_type( weapon_type wtype )
 
 const char *ammo_name(missile_type ammo)
 {
-    return (ammo < 0 || ammo >= NUM_MISSILES? "eggplant"
+    return (ammo < 0 || ammo >= NUM_MISSILES ? "eggplant"
             : Missile_prop[ Missile_index[ammo] ].name);
 }
 
