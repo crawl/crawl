@@ -2510,7 +2510,14 @@ void handle_time(long time_delta)
         // the original roll of 150 for 4.1.2, but I think players are
         // sufficiently used to beta 26's unkindness that we can use a lower
         // roll.)
-        if (you.magic_contamination >= 5
+        if (is_sanctuary(you.x_pos, you.y_pos)
+            && you.magic_contamination >= 5
+            && random2(25) <= you.magic_contamination)
+        {
+            mpr("Your body momentarily shudders from a surge of wild "
+                "energies until Zin's power calms it.", MSGCH_GOD);
+        }
+        else if (you.magic_contamination >= 5
             && random2(25) <= you.magic_contamination)
         {
             mpr("Your body shudders with the violent release "
