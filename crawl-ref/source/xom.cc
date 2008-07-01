@@ -423,7 +423,7 @@ static monster_type _xom_random_punishment_demon(int sever)
     return (demon);
 }
 
-// The nicer stuff (note: these things are not necessarily nice).
+// The nicer stuff.  Note: these things are not necessarily nice.
 static bool _xom_is_good(int sever)
 {
     bool done = false;
