@@ -1758,10 +1758,10 @@ bool cast_sanctuary(const int power)
 
     if (cloud_count == 1)
         mprf(MSGCH_GOD, "By Zin's power, the foul cloud within the "
-                        " Sanctuary is swept away.");
+                        " sanctuary is swept away.");
     else if (cloud_count > 1)
         mprf(MSGCH_GOD, "By Zin's power, all foul fumes within the "
-                        " Sanctuary are swept away.");
+                        " sanctuary are swept away.");
 
     return (true);
 }
