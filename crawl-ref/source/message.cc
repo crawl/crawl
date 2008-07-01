@@ -412,6 +412,9 @@ void mpr(const char *inf, msg_channel_type channel, int param)
         return;
     }
 
+    if (channel == MSGCH_GOD && param == 0)
+        param = you.religion;
+
     std::string help = inf;
     if (help.find("</") != std::string::npos)
     {
