@@ -1342,7 +1342,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
                 best_spell = best_skill( SK_SPELLCASTING, (NUM_SKILLS-1), 99 );
 
-                // If we're going to give out an enhancer stave,
+                // If we're going to give out an enhancer staff,
                 // we should at least bias things towards the
                 // best spell skill. -- bwr
                 switch (best_spell)
