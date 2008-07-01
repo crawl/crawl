@@ -125,4 +125,6 @@ bool bless_follower(monsters *follower = NULL,
 bool god_hates_attacking_friend(god_type god, const actor *fr);
 bool god_likes_items(god_type god);
 
+void religion_turn_start();
+
 #endif

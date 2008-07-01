@@ -2758,19 +2758,44 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     return (ret);
 }
 
+// These two arrays deal with the situation where a beam hits a non-fleeing
+// monster, the monster starts to flee because of the damage, and then the
+// beam bounces and hits the monster again.  If the monster wasn't fleeing
+// when the beam started then hits from bounces shouldn't count as
+// unchivalric attacks, but if the first hit from the beam *was* unchivalrous
+// then all the bounces should count as unchivalrous as well.
+static FixedVector<bool, NUM_MONSTERS> _first_attack_conduct;
+static FixedVector<bool, NUM_MONSTERS> _first_attack_was_unchivalric;
+
+void religion_turn_start()
+{
+    _first_attack_conduct.init(true);
+    _first_attack_was_unchivalric.init(false);
+    crawl_state.clear_god_acting();
+}
+
 void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
                          bool known)
 {
+    const unsigned int midx = monster_index(mon);
+
     if (mons_friendly(mon))
         conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
     else if (mons_neutral(mon))
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
 
-    if (is_unchivalric_attack(&you, mon, mon))
+    if (is_unchivalric_attack(&you, mon, mon)
+        && (_first_attack_conduct[midx]
+            || _first_attack_was_unchivalric[midx]))
+    {
         conduct[1].set(DID_UNCHIVALRIC_ATTACK, 4, known, mon);
+        _first_attack_was_unchivalric[midx] = true;
+    }
 
     if (mons_is_holy(mon))
         conduct[2].set(DID_ATTACK_HOLY, mon->hit_dice, known, mon);
+
+    _first_attack_conduct[midx] = false;
 }
 
 void enable_attack_conducts(god_conduct_trigger conduct[3])

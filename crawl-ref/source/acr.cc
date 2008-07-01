@@ -1389,7 +1389,7 @@ bool apply_berserk_penalty = false;
 //
 static void _input()
 {
-    crawl_state.clear_god_acting();
+    religion_turn_start();
     check_beholders();
 
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
