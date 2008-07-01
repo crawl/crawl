@@ -27,6 +27,7 @@
 #include "player.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "view.h"
 
 // Returns true if this cloud spreads out as it dissipates.
 static unsigned char _actual_spread_rate(cloud_type type, int spread_rate)
@@ -96,7 +97,8 @@ static int _spread_cloud(const cloud_struct &cloud)
 
             if (!in_bounds(x, y)
                     || env.cgrid[x][y] != EMPTY_CLOUD
-                    || grid_is_solid(grd[x][y]))
+                    || grid_is_solid(grd[x][y])
+                    || is_sanctuary(x, y) && !is_harmless_cloud(cloud.type))
                 continue;
 
             int newdecay = cloud.decay / 2 + 1;
@@ -225,6 +227,9 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
                  int ctarget_y, int cl_range,
                  kill_category whose, int _spread_rate)
 {
+    if (is_sanctuary(ctarget_x, ctarget_y) && !is_harmless_cloud(cl_type))
+        return;
+
     int cl_new = -1;
 
     // more compact {dlb}
@@ -582,6 +587,23 @@ bool is_damaging_cloud(cloud_type type, bool temp)
 
     default:
         // Smoke, never harmful.
+        return (false);
+    }
+}
+
+bool is_harmless_cloud(cloud_type type)
+{
+    switch (type)
+    {
+    case CLOUD_NONE:
+    case CLOUD_BLACK_SMOKE:
+    case CLOUD_GREY_SMOKE:
+    case CLOUD_BLUE_SMOKE:
+    case CLOUD_PURP_SMOKE:
+    case CLOUD_MIST:
+    case CLOUD_DEBUGGING:
+        return (true);
+    default:
         return (false);
     }
 }

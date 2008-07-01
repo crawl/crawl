@@ -1675,11 +1675,11 @@ bool cast_sanctuary(const int power)
 
     // radius could also be influenced by Inv
     // and would then have to be stored globally.
-    const int radius = 5;
-    const int pattern = random2(4);
-    int count = 0;
-    int monster = NON_MONSTER;
-    monsters *mon = NULL;
+    const int radius      = 5;
+    const int pattern     = random2(4);
+    int       scare_count = 0;
+    int       cloud_count = 0;
+    monsters *seen_mon    = NULL;
 
     for (int x = -radius; x <= radius; x++)
         for (int y = -radius; y <= radius; y++)
@@ -1687,6 +1687,11 @@ bool cast_sanctuary(const int power)
             int posx = you.x_pos + x;
             int posy = you.y_pos + y;
             int dist = _inside_circle(posx, posy, radius);
+
+            if (dist == -1)
+                continue;
+
+            coord_def pos(posx, posy);
 
             // forming patterns
             if (pattern == 0    // outward rays
@@ -1706,41 +1711,57 @@ bool cast_sanctuary(const int power)
                 env.map[posx][posy].property = FPROP_SANCTUARY_2; // white
 
             // scare all attacking monsters inside sanctuary
-            if (dist != -1)
+            int monster = mgrd[posx][posy];
+            if (monster != NON_MONSTER)
             {
-                monster = mgrd[posx][posy];
+                monsters* mon = &menv[monster];
 
-                if (monster != NON_MONSTER)
+                if (!mons_wont_attack(mon))
                 {
-                    mon = &menv[monster];
-
-                    if (!mons_wont_attack(mon))
+                    if (mons_is_mimic(mon->type))
                     {
-                        if (mons_is_mimic(mon->type))
+                        mimic_alert(mon);
+                        if(you.can_see(mon))
                         {
-                            mimic_alert(mon);
-                            if(you.can_see(mon))
-                                count++;
-                        }
-                        else if (mon->add_ench(mon_enchant(ENCH_FEAR, 0,
-                                 KC_YOU)))
-                        {
-                            behaviour_event(mon, ME_SCARE, MHITYOU);
-
-                            // Check to see that monster is actually fleeing,
-                            // since plants can't flee.
-                            if (mons_is_fleeing(mon) && you.can_see(mon))
-                                count++;
+                            scare_count++;
+                            seen_mon = mon;
                         }
                     }
-                } // if (monster != NON_MONSTER)
-            } // if (dist != -1)
+                    else if (mon->add_ench(mon_enchant(ENCH_FEAR, 0,
+                             KC_YOU)))
+                    {
+                        behaviour_event(mon, ME_SCARE, MHITYOU);
+
+                        // Check to see that monster is actually fleeing,
+                        // since plants can't flee.
+                        if (mons_is_fleeing(mon) && you.can_see(mon))
+                        {
+                            scare_count++;
+                            seen_mon = mon;
+                        }
+                    }
+                }
+            } // if (monster != NON_MONSTER)
+
+            if (!is_harmless_cloud(cloud_type_at(pos)))
+            {
+                delete_cloud(env.cgrid[posx][posy]);
+                if (see_grid(pos))
+                    cloud_count++;
+            }
         } // radius loop
 
-    if (count == 1)
-        simple_monster_message(mon, " turns to flee the light!");
-    else if (count > 0)
+    if (scare_count == 1 && seen_mon != NULL)
+        simple_monster_message(seen_mon, " turns to flee the light!");
+    else if (scare_count > 0)
         mpr("The monsters scatter in all directions!");
+
+    if (cloud_count == 1)
+        mprf(MSGCH_GOD, "By Zin's power, the foul cloud within the "
+                        " Sanctuary is swept away.");
+    else if (cloud_count > 1)
+        mprf(MSGCH_GOD, "By Zin's power, all foul fumes within the "
+                        " Sanctuary are swept away.");
 
     return (true);
 }

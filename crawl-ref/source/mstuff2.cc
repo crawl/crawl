@@ -1596,8 +1596,8 @@ void spore_goes_pop(monsters *monster)
     beam.thrower      = KILL_MON;    // someone else's explosion
     beam.aux_source.clear();
 
-    const char* msg = NULL;
-
+    const char* msg       = NULL;
+    const char* sanct_msg = NULL;
     if (type == MONS_GIANT_SPORE)
     {
         beam.flavour = BEAM_SPORE;
@@ -1606,6 +1606,7 @@ void spore_goes_pop(monsters *monster)
         beam.damage  = dice_def( 3, 15 );
         beam.ex_size = 2;
         msg = "The giant spore explodes!";
+        sanct_msg = "By Zin's power, the giant spore's explosion is contained.";
     }
     else if (type == MONS_BALL_LIGHTNING)
     {
@@ -1615,6 +1616,8 @@ void spore_goes_pop(monsters *monster)
         beam.damage  = dice_def( 3, 20 );
         beam.ex_size = coinflip() ? 3 : 2;
         msg = "The ball lightning explodes!";
+        sanct_msg = "By Zin's power, the ball lightning's explosion "
+                    "is contained.";
     }
     else
     {
@@ -1624,15 +1627,19 @@ void spore_goes_pop(monsters *monster)
         return;
     }
 
-    bool nearby = mons_near(monster);
-
-    if (nearby)
+    if (you.can_see(monster))
     {
         viewwindow(true, false);
-        mpr(msg);
+        if (is_sanctuary(monster->x, monster->y))
+            mpr(sanct_msg, MSGCH_GOD);
+        else
+            mpr(msg);
     }
 
-    explosion(beam, false, false, true, true, nearby);
+    if (is_sanctuary(monster->x, monster->y))
+        return;
+
+    explosion(beam, false, false, true, true, mons_near(monster));
 }
 
 bolt mons_spells( int spell_cast, int power )

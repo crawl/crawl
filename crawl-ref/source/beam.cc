@@ -5482,6 +5482,10 @@ static void _explosion_map( bolt &beam, int x, int y,
     if (count > 10*r)
         return;
 
+    // 3. check sanctuary
+    if (is_sanctuary(beam.target_x + x, beam.target_y + y))
+        return;
+
     // 3. check to see if we're blocked by something
     //    specifically, we're blocked by WALLS.  Not
     //    statues, idols, etc.
