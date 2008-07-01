@@ -163,8 +163,8 @@ void init_pandemonium(void)
     if (one_chance_in(10))
         env.mons_alloc[7 + random2(3)] = MONS_PIT_FIEND;
 
-    // set at least some specific monsters for the special levels - this
-    // can also be used to set some colours
+    // Set at least some specific monsters for the special levels - this
+    // can also be used to set some colours.
 
     env.floor_colour = BLACK;
     env.rock_colour  = BLACK;

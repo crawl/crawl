@@ -4086,8 +4086,8 @@ static bool _initialise(void)
     // recalculated for the next monster that tries to reach us.
     you.lava_in_sight = you.water_in_sight = -1;
 
-    // set vision radius to player's current vision
-    setLOSRadius( you.current_vision );
+    // Set vision radius to player's current vision.
+    setLOSRadius(you.current_vision);
 
     if (newc) // start a new game
     {

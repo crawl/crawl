@@ -990,7 +990,31 @@ void WallIdx(int &wall, int &floor, int &special)
     }
     else if (you.level_type == LEVEL_ABYSS)
     {
-        wall  = IDX_WALL_UNDEAD;
+        switch (env.rock_colour)
+        {
+        case YELLOW:
+        case BROWN:
+            wall = IDX_WALL_HIVE;
+            break;
+        case RED:
+        case LIGHTRED:
+            wall = IDX_WALL_PEBBLE_RED;
+            break;
+        case GREEN:
+        case LIGHTGREEN:
+            wall = IDX_WALL_SLIME;
+            break;
+        case BLUE:
+            wall = IDX_WALL_ICE;
+            break;
+        case LIGHTGRAY:
+        case WHITE:
+            wall = IDX_WALL_HALL;
+            break;
+        default:
+            wall = IDX_WALL_UNDEAD;
+            break;
+        }
         floor = IDX_FLOOR_NERVES;
         return;
     }
@@ -2046,7 +2070,8 @@ void TilePlayerInit()
     int gender = 0;
 
     for (i = 0; i < TILEP_PARTS_TOTAL; i++)
-         doll.parts[i] = 0;
+        doll.parts[i] = 0;
+
     tilep_race_default(you.species, gender, you.experience_level, doll.parts);
     tilep_job_default(you.char_class, gender, doll.parts);
 

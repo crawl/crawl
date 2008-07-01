@@ -2563,27 +2563,13 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_FLEEING_MONSTER:
-        if (Options.tutorial_type != TUT_BERSERK_CHAR)
-            return;
-
-        text << "While unsporting, it is sometimes useful to attack a "
-                "fleeing monster by throwing something after it. To do this, "
-#ifdef USE_TILE
-                "you can choose your firing ammunition by <w>left-clicking</w> "
-                "on it with your mouse. "
-                "In the case of weapons (rather than missiles) you need to "
-                "be pressing <w>Ctrl</w> at the same time, to distinguish "
-                "the action from wielding. Then target the monster by "
-                "clicking on it."
-#else
-                "press <w>f</w>, choose a throwing weapon, e.g. one of your "
-                "spears, use <w>+</w> to select a monster and press "
-                "<w>.</w>, <w>f</w> or <w>Enter</w>. The closest monster "
-                "will be autoselected. If you've got the fire_order option "
-                "set you can directly use <w>ff</w> or <w>f+.</w> instead; "
-                "the game will pick the first weapon that fits the option."
-#endif
-                "\nIf you miss, you can fire at it again with <w>ff</w>.";
+        text << "Now that monster is scared of you! Note that you do not "
+                "absolutely have to follow it. Rather, you can let it run "
+                "away. Sometimes, though, it can be useful to attack a "
+                "fleeing creature by throwing something after it. If you "
+                "have any daggers or hand axes in your <w>i</w>nventory you "
+                "can look at one of them to read an explanation of how to do "
+                "this.";
         break;
 
     case TUT_MONSTER_BRAND:

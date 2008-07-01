@@ -1198,7 +1198,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         && load_mode == LOAD_ENTER_LEVEL)
     {
         place_followers();
-    }                       // end of moving followers
+    }
 
     // Load monsters in transit.
     if (load_mode == LOAD_ENTER_LEVEL)
@@ -1697,7 +1697,7 @@ bool apply_to_all_dungeons(bool (*applicator)())
 
     _restore_level(original);
 
-    return success;
+    return (success);
 }
 
 static bool _get_and_validate_version(FILE *restoreFile, char &major, char &minor,

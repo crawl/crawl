@@ -38,11 +38,13 @@
 #include "view.h"
 #include "xom.h"
 
+// If not_seen is true, don't place the feature where it can be seen from
+// the centre.
 static bool _place_feature_near( const coord_def &centre,
                                  int radius,
                                  dungeon_feature_type candidate,
                                  dungeon_feature_type replacement,
-                                 int tries )
+                                 int tries, bool not_seen = false )
 {
     const int radius2 = radius * radius + 1;
     for (int i = 0; i < tries; ++i)
@@ -50,7 +52,11 @@ static bool _place_feature_near( const coord_def &centre,
         const coord_def &cp =
             centre + coord_def(random_range(-radius, radius),
                                random_range(-radius, radius));
+
         if (cp == centre || (cp - centre).abs() > radius2 || !in_bounds(cp))
+            continue;
+
+        if (not_seen && grid_see_grid(cp.x, cp.y, centre.x, centre.y))
             continue;
 
         if (grd(cp) == candidate)
@@ -97,8 +103,8 @@ void generate_abyss()
     if (you.char_direction == GDT_GAME_START)
     {
         grd[45][35] = DNGN_ALTAR_LUGONU;
-        _place_feature_near( coord_def(45, 35), LOS_RADIUS,
-                             DNGN_FLOOR, DNGN_EXIT_ABYSS, 50 );
+        _place_feature_near( coord_def(45, 35), LOS_RADIUS + 2,
+                             DNGN_FLOOR, DNGN_EXIT_ABYSS, 50, true );
     }
     else
     {
@@ -228,7 +234,7 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
                         thing_created = items(1, OBJ_MISCELLANY,
                                               MISC_RUNE_OF_ZOT, true, 51, 51);
                         placed_abyssal_rune = true;
-#if DEBUG_ABYSS
+#ifdef DEBUG_ABYSS
                         mpr("Placing an Abyssal rune.", MSGCH_DIAGNOSTICS);
 #endif
                     }
@@ -274,7 +280,7 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
             {
                 grd[i][j] = DNGN_EXIT_ABYSS;
                 exits_wanted--;
-#if DEBUG_ABYSS
+#ifdef DEBUG_ABYSS
                 mpr("Placing Abyss exit.", MSGCH_DIAGNOSTICS);
 #endif
             }
@@ -303,7 +309,7 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
                         grd[i][j] = DNGN_ALTAR_LUGONU;
 
                     altars_wanted--;
-#if DEBUG_ABYSS
+#ifdef DEBUG_ABYSS
                     mpr("Placing altar.", MSGCH_DIAGNOSTICS);
 #endif
                 }
@@ -423,7 +429,7 @@ static void _abyss_lose_monster(monsters &mons)
 void area_shift(void)
 /*******************/
 {
-#if DEBUG_ABYSS
+#ifdef DEBUG_ABYSS
     mpr("area_shift().", MSGCH_DIAGNOSTICS);
 #endif
 
@@ -576,7 +582,7 @@ void abyss_teleport( bool new_area )
 
         if (i < 100)
         {
-#if DEBUG_ABYSS
+#ifdef DEBUG_ABYSS
             mpr("Non-new area Abyss teleport.", MSGCH_DIAGNOSTICS);
 #endif
             you.moveto(x, y);
@@ -585,7 +591,7 @@ void abyss_teleport( bool new_area )
         }
     }
 
-#if DEBUG_ABYSS
+#ifdef DEBUG_ABYSS
     mpr("New area Abyss teleport.", MSGCH_DIAGNOSTICS);
 #endif
 
@@ -593,12 +599,13 @@ void abyss_teleport( bool new_area )
 
     // Get new monsters and colours.
     init_pandemonium();
+#ifdef USE_TILE
+    tile_init_flavor();
+#endif
 
     for (i = 0; i < MAX_MONSTERS; ++i)
-    {
         if (menv[i].alive())
             _abyss_lose_monster(menv[i]);
-    }
 
     // Orbs and fixed artefacts are marked as "lost in the abyss".
     for (k = 0; k < MAX_ITEMS; ++k)
@@ -628,6 +635,11 @@ void abyss_teleport( bool new_area )
 
     _generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
                    GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, true);
+
+#ifdef USE_TILE
+    // Update the wall colours.
+    TileLoadWall(true);
+#endif
 
     _xom_check_nearness();
 
