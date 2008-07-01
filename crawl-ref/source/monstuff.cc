@@ -2056,6 +2056,10 @@ void behaviour_event(monsters *mon, int event, int src,
         const bool flee_sanct = !mons_wont_attack(mon)
                                 && is_sanctuary(mon->x, mon->y);
 
+        // Stationary monsters can't flee, even from sanctuary.
+        if (mons_is_stationary(mon))
+            break;
+
         // Berserking monsters don't flee, unless it's from sanctuary.
         if (mon->has_ench(ENCH_BERSERK) && !flee_sanct)
             break;
