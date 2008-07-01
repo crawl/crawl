@@ -1055,9 +1055,10 @@ static bool _activate_talent(const talent& tal)
     }
 
     const bool success = _do_ability(abil);
-    if ( success )
+    if (success)
         _pay_ability_costs(abil);
-    return success;
+
+    return (success);
 }
 
 static bool _do_ability(const ability_def& abil)
@@ -1720,7 +1721,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:
-        if ( you.level_type != LEVEL_ABYSS )
+        if (you.level_type != LEVEL_ABYSS)
         {
             mpr("You aren't in the Abyss!");
             return (false);       // Don't incur costs.
@@ -2162,12 +2163,12 @@ std::vector<talent> your_talents( bool check_confused )
     if (!player_under_penance() && (!silenced(you.x_pos, you.y_pos)
                                     || you.religion == GOD_NEMELEX_XOBEH))
     {
-        for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
+        for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
         {
-            if ( you.piety >= piety_breakpoint(i) )
+            if (you.piety >= piety_breakpoint(i))
             {
                 const ability_type abil = god_abilities[you.religion][i];
-                if ( abil != ABIL_NON_ABILITY )
+                if (abil != ABIL_NON_ABILITY)
                     _add_talent(talents, abil, check_confused);
             }
         }

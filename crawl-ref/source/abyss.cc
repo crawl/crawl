@@ -244,8 +244,8 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
                         }
                         else
                         {
-                            thing_created = items(1, OBJ_RANDOM,
-                                                  OBJ_RANDOM, true, 51, 250);
+                            thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
+                                                  true, 51, 250);
                         }
                     }
 
