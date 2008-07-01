@@ -4352,18 +4352,6 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 }
             }
 
-            // Enchant case -- enchantments always hit, so update target immed.
-            if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
-            {
-                beam.foe_count += 1;
-                beam.foe_power += mons_power(mons_type);
-            }
-            else
-            {
-                beam.fr_count += 1;
-                beam.fr_power += mons_power(mons_type);
-            }
-
             return (_range_used_on_hit(beam));
         }
 
@@ -4532,13 +4520,11 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
             {
                 // Counting foes is only important for monster tracers.
-                beam.foe_count += 1;
                 beam.foe_power += 2 * hurt_final * mons_power(mons_type)
                                                     / hurt;
             }
             else
             {
-                beam.fr_count += 1;
                 beam.fr_power += 2 * hurt_final * mons_power(mons_type)
                                                    / hurt;
             }
