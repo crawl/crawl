@@ -1884,8 +1884,8 @@ powers, but can gain far greater abilities in the long run.
 
 Crusaders:
 ----------
-The Crusader is a decent fighter who can use the magical art of
-enchantment to become more dangerous in battle. Crusaders start out
+The Crusader is a decent fighter who can use the magical arts of 
+enchantment to become more dangerous in battle. Crusaders start out 
 lightly armed and armoured, but equipped with a book of martial spells.
 
 Reavers:
