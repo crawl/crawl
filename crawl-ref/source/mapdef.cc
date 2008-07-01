@@ -3027,6 +3027,14 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
         return (err);
     }
 
+    // If not also a KFEAT...
+    if (feat.feats.size() == 0)
+    {
+        feature_spec fsp(-1, 10);
+        fsp.glyph = key_glyph;
+        feat.feats.push_back(fsp);
+    }
+
     return (err);
 }
 
