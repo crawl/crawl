@@ -1504,6 +1504,7 @@ void up_stairs(dungeon_feature_type force_stair,
     // check before that one. -- bwr
     if (!player_is_airborne()
         && you.duration[DUR_CONF]
+        && old_level_type == LEVEL_DUNGEON
         && stair_find >= DNGN_STONE_STAIRS_UP_I
         && stair_find <= DNGN_STONE_STAIRS_UP_III
         && random2(100) > you.dex)
