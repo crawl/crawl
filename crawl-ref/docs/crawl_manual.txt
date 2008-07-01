@@ -1821,7 +1821,7 @@ some characters start with a different inventory.
 
 Fighters:
 ---------
-Fighters start with a decent weapon, a suit of armour, and a shield.
+Fighters start with a decent weapon, a suit of heavy armour, and a shield.
 They have a good general grounding in the arts of fighting.
 
 Gladiators:
@@ -1844,13 +1844,13 @@ Berserkers:
 Berserkers are hardy warriors who worship Trog the Wrathful, from whom 
 they get the power to go berserk (as well as a number of other powers, 
 should they prove worthy), but who forbids the use of spell magic. They 
-enter the dungeon with an axe, some spears, and a set of leather armour.
+enter the dungeon with an axe and a set of leather armour.
 
 Paladins:
 ---------
 The Paladin is a servant of the Shining One, and has many of the
 abilities of the Fighter and the Priest. He or she enters the dungeon
-with a sword, a shield, a robe, and a healing potion.
+with a long sword, a shield, a robe, and a healing potion.
 
 Priests:
 --------
@@ -1880,7 +1880,9 @@ the fearsome arts of necromancy.
 Healers:
 --------
 The Healer is a priest of Elyvilon. Healers begin with minor healing
-powers, but can gain far greater abilities in the long run.
+powers, but can gain far greater abilities in the long run. They are
+able to persuade monsters into abstaining from the bloodshed, gaining
+both piety and experience that way.
 
 Crusaders:
 ----------
@@ -1897,7 +1899,7 @@ complement their deadliness in hand combat.
 Magicians: These are not a class, but a type of class, including 
 Wizards, Conjurers, Enchanters, Summoners, Necromancers, various
 Elementalists, Venom Mages, Transmuters and Warpers. Magicians are 
-the best at using magic. They start with a dagger, a robe, and a book 
+the best at using magic. They start with a knife, a robe, and a book 
 of spells which should see them through the first several levels.
 
 Wizard:
@@ -1989,7 +1991,7 @@ Hunters:
 --------
 The Hunter is a type of fighter who specialises in missile weapons. A 
 Hunter starts with a ranged weapon and some ammunition, as well as a
-hunting knife and a set of leathers.
+edged weapon and a set of leathers.
 
 Wanderers:
 ----------
