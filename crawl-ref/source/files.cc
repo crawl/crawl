@@ -833,7 +833,7 @@ static void _place_player_on_stair(branch_type old_branch,
     else if (stair_taken == DNGN_ENTER_HELL)
     {
         // The vestibule and labyrinth always start from this stair.
-        stair_taken = DNGN_STONE_STAIRS_UP_I;
+        stair_taken = DNGN_EXIT_HELL;
     }
     else if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
              && stair_taken <= DNGN_ESCAPE_HATCH_DOWN)
