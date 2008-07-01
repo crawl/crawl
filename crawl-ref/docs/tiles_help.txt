@@ -110,3 +110,37 @@ right mouseclick           Escape (quit menu).
 At inscription prompt:
 left mouseclick            Autoinscribe artefact (where applicable).
 right mouseclick           Escape (quit menu).
+
+
+                     wininit.txt description
+
+After Crawl has been run in tiles mode, it will create a wininit.txt file,
+which stores several configurable parameters.  This is separate from the
+standard init.txt file, as it can be modified at run-time via the Ctrl+V
+command.
+
+The contents of this file look like this:
+
+-- SNIP --
+Tile:DngnX=19
+Tile:DngnY=17
+Tile:MapPx=4
+Tile:MsgX=77
+Tile:MsgY=10
+Tile:WindowTop=145
+Tile:WindowLeft=22
+Tile:FontName=8x13
+Tile:FontSize=12
+-- SNIP --
+
+The above values are typical Unix settings.  On Windows, the font name will be
+something like "Courier".  If you wish to modify this file manually, here are
+what these parameters refer to:
+
+DngnX, DngnY               Size (in tiles) of the dungeon region.
+MapPx                      Width (in pixels) per square of the minimap.
+MsgX, MsgY                 Size (in characters) of the message region.
+WindowTop, WindowLeft      Location (in pixels) of the Crawl window.
+FontName                   Name of the font. 
+FontSize                   Size (in pixels) of the font.
+

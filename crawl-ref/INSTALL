@@ -275,6 +275,25 @@ Building for DOS (djgpp)
 
 * When the build is done, crawl.exe should be in the source directory.
 
+Building Tiles versions
+-----------------------
+
+* For Windows builds, run
+         make MAKEFILE=makefile_tiles.mgw
+
+* For Linux builds, run
+         make MAKEFILE=makefile.x11
+
+* For Mac OS X builds, run
+         make MAKEFILE=makefile.x11 OSX=y
+
+* All platforms require the same prerequisites listed in the other 
+  sections above for building each of these platforms.
+
+* The Linux and Mac OS X builds additionally require libpng.  The Mac OS X
+  version expects it to be installed via fink in /sw.  If this is not the
+  case, then you should edit PNG_INCLUDE and PNG_LIB in makefile.x11.
+
 *****************************************************************************
 Data files
 ----------
