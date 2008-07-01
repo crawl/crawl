@@ -1618,7 +1618,7 @@ void decrease_sanctuary_radius()
 
     if (you.running && is_sanctuary(you.x_pos, you.y_pos))
     {
-        mpr("The sanctuary starts shrinking.");
+        mpr("The sanctuary starts shrinking.", MSGCH_DURATION);
         stop_running();
     }
 
@@ -1645,7 +1645,7 @@ void decrease_sanctuary_radius()
     {
         env.map[env.sanctuary_pos.x][env.sanctuary_pos.y].property = FPROP_NONE;
         if (see_grid(coord_def(env.sanctuary_pos.x,env.sanctuary_pos.y)))
-            mpr("The sanctuary disappears.");
+            mpr("The sanctuary disappears.", MSGCH_DURATION);
     }
 }
 
@@ -1757,11 +1757,15 @@ bool cast_sanctuary(const int power)
         mpr("The monsters scatter in all directions!");
 
     if (cloud_count == 1)
-        mprf(MSGCH_GOD, "By Zin's power, the foul cloud within the "
-                        " sanctuary is swept away.");
+    {
+        mpr("By Zin's power, the foul cloud within the sanctuary is "
+            "swept away.", MSGCH_GOD);
+    }
     else if (cloud_count > 1)
-        mprf(MSGCH_GOD, "By Zin's power, all foul fumes within the "
-                        " sanctuary are swept away.");
+    {
+        mpr("By Zin's power, all foul fumes within the sanctuary are "
+            "swept away.", MSGCH_GOD);
+    }
 
     return (true);
 }
