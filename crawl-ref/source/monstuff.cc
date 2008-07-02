@@ -1980,7 +1980,7 @@ void behaviour_event(monsters *mon, int event, int src,
     else if (src != MHITNOT)
         sourceWontAttack = mons_wont_attack( &menv[src] );
 
-    switch(event)
+    switch (event)
     {
     case ME_DISTURB:
         // Assumes disturbed by noise...
@@ -2078,8 +2078,8 @@ void behaviour_event(monsters *mon, int event, int src,
 
         mon->foe = src;
         mon->behaviour = BEH_FLEE;
-        // Assume monsters know where to run from, even
-        // if player is invisible.
+        // Assume monsters know where to run from, even if player is
+        // invisible.
         setTarget = true;
         if (see_grid(mon->x, mon->y))
             learned_something_new(TUT_FLEEING_MONSTER);
@@ -2091,7 +2091,7 @@ void behaviour_event(monsters *mon, int event, int src,
         if (mon->behaviour != BEH_FLEE && !mon->has_ench(ENCH_FEAR))
             break;
 
-        // Don't stop fleeing from sanctuary
+        // Don't stop fleeing from sanctuary.
         if (!mons_wont_attack(mon) && is_sanctuary(mon->x, mon->y))
             break;
 
