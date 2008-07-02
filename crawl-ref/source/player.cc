@@ -5189,8 +5189,7 @@ bool rot_player( int amount )
     if (amount <= 0)
         return (false);
 
-    if (you.is_undead
-        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state < HS_SATIATED))
+    if (you.res_rotting() > 0)
     {
         mpr( "You feel terrible." );
         return (false);
@@ -6279,6 +6278,16 @@ int player::res_negative_energy() const
     return (player_prot_life());
 }
 
+int player::res_rotting() const
+{
+    if (you.is_undead
+        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state < HS_SATIATED))
+    {
+        return 1;
+    }
+    return 0;
+}
+
 bool player::confusable() const
 {
     return (player_mental_clarity() == 0);
@@ -6411,11 +6420,8 @@ void player::drain_stat(int stat, int amount, actor* attacker)
 
 void player::rot(actor *who, int rotlevel, int immed_rot)
 {
-    if (you.is_undead
-        && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state < HS_SATIATED))
-    {
+    if (res_rotting() > 0)
         return;
-    }
 
     if (rotlevel)
         rot_player(rotlevel);

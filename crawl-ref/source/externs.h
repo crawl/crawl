@@ -194,6 +194,7 @@ public:
     virtual int res_elec() const = 0;
     virtual int res_poison() const = 0;
     virtual int res_negative_energy() const = 0;
+    virtual int res_rotting() const = 0;
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
@@ -876,6 +877,7 @@ public:
     int res_elec() const;
     int res_poison() const;
     int res_negative_energy() const;
+    int res_rotting() const;
     bool confusable() const;
     bool slowable() const;
 
@@ -1212,6 +1214,7 @@ public:
     int res_elec() const;
     int res_poison() const;
     int res_negative_energy() const;
+    int res_rotting() const;
 
     flight_type flight_mode() const;
     bool is_levitating() const;

@@ -4548,6 +4548,11 @@ int monsters::res_negative_energy() const
     return (mons_res_negative_energy(this));
 }
 
+int monsters::res_rotting() const
+{
+    return (mons_holiness(this) == MH_NATURAL ? 0 : 1);
+}
+
 flight_type monsters::flight_mode() const
 {
     return (mons_flies(this));
@@ -4634,7 +4639,7 @@ int monsters::hurt(const actor *agent, int amount)
 
 void monsters::rot(actor *agent, int rotlevel, int immed_rot)
 {
-    if (mons_holiness(this) != MH_NATURAL)
+    if (res_rotting() > 0)
         return;
 
     // Apply immediate damage because we can't handle rotting for monsters yet.
