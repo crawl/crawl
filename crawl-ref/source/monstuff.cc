@@ -5664,6 +5664,65 @@ static void _monster_regenerate(monsters *monster)
     }
 }
 
+static bool _swap_monsters(const int mover_idx, const int moved_idx)
+{
+    monsters* mover = &menv[mover_idx];
+    monsters* moved = &menv[moved_idx];
+
+    // Can't swap with a stationary monster.
+    if (mons_is_stationary(moved))
+        return false;
+
+    // Swapping is a purposful action
+    if (mover->confused())
+        return false;
+
+    // Right now just happens in sanctuary
+    if (!is_sanctuary(mover->x, mover->y) || !is_sanctuary(moved->x, moved->y))
+        return false;
+
+    // A friendly or good-neutral monster moving past a fleeing hostile
+    // or neutral monster, or visa-versa
+    if (mons_wont_attack(mover) == mons_wont_attack(moved)
+        || mons_is_fleeing(mover) == mons_is_fleeing(moved))
+    {
+        return false;
+    }
+
+    if (!mover->can_pass_through(moved->x, moved->y)
+        || !moved->can_pass_through(mover->x, mover->y))
+    {
+        return false;
+    }
+
+    if (!monster_habitable_grid(mover, grd[moved->x][moved->y])
+        || !monster_habitable_grid(moved, grd[mover->x][mover->y]))
+    {
+        return false;
+    }
+
+    // Okay, we can do the swap.
+    const coord_def mover_pos = mover->pos();
+    const coord_def moved_pos = moved->pos();
+
+    mover->x = moved_pos.x;
+    mover->y = moved_pos.y;
+  
+    moved->x = mover_pos.x;
+    moved->y = mover_pos.y;
+
+    mgrd(mover->pos()) = mover_idx;
+    mgrd(moved->pos()) = moved_idx;
+
+    if (you.can_see(mover) && you.can_see(moved))
+    {
+        mprf("%s and %s swap places.", mover->name(DESC_CAP_THE).c_str(),
+             moved->name(DESC_NOCAP_THE).c_str());
+    }
+
+    return true;
+} // bool _swap_monsters()
+
 static void _swim_or_move_energy(monsters *mon)
 {
     const dungeon_feature_type feat = grd[mon->x][mon->y];
@@ -6047,8 +6106,14 @@ static void _handle_monster_move(int i, monsters *monster)
                 && targmon != i
                 && !mons_aligned(i, targmon))
             {
+                // Maybe they can swap places?
+                if (_swap_monsters(i, targmon))
+                {
+                    _swim_or_move_energy(monster);
+                    continue;
+                }
                 // Figure out if they fight.
-                if (monsters_fight(i, targmon))
+                else if (monsters_fight(i, targmon))
                 {
                     if (mons_is_batty(monster))
                     {
