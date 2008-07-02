@@ -32,6 +32,7 @@
 #include "lev-pand.h"
 #include "randart.h"
 #include "stuff.h"
+#include "spells3.h"
 #include "terrain.h"
 #include "tiles.h"
 #include "traps.h"
@@ -436,12 +437,37 @@ void area_shift(void)
     // Preserve floor props around the player, primarily so that
     // blood-splatter doesn't appear out of nowhere when doing an
     // area shift.
+    //
+    // Also shift sanctuary center if it's close.
+    coord_def sanct_pos(0, 0);
     FixedArray<unsigned short, LOS_DIAMETER, LOS_DIAMETER> fprops;
     const coord_def los_delta(LOS_RADIUS, LOS_RADIUS);
     radius_iterator ri(you.pos(), LOS_RADIUS);
 
     for ( ; ri; ++ri )
+    {
         fprops(you.pos() - *ri + los_delta) = env.map(*ri).property;
+        if (env.sanctuary_pos == *ri && env.sanctuary_time > 0)
+            sanct_pos = *ri;
+    }
+
+    // If sanctuary center is outside of preserved area then just get
+    // rid of it.
+    if (env.sanctuary_time > 0 && sanct_pos == coord_def(0, 0))
+    {
+        remove_sanctuary(false);
+
+        coord_def pos;
+        for (pos.x = 0; pos.x < LOS_DIAMETER; pos.x++)
+            for (pos.y = 0; pos.y < LOS_DIAMETER; pos.y++)
+            {
+                if (fprops(pos) == FPROP_SANCTUARY_1
+                    || fprops(pos) == FPROP_SANCTUARY_2)
+                {
+                    fprops(pos) = FPROP_NONE;
+                }
+            }
+    } 
 
     _xom_check_nearness_setup();
 
@@ -534,6 +560,11 @@ void area_shift(void)
     for ( ; ri2; ++ri2 )
         env.map(*ri2).property = fprops(you.pos() - *ri2 + los_delta);
 
+    if (sanct_pos != coord_def(0, 0))
+    {
+        env.sanctuary_pos = sanct_pos;
+    }
+
     mgen_data mons;
     mons.level_type = LEVEL_ABYSS;
     mons.proximity  = PROX_AWAY_FROM_PLAYER;
@@ -590,6 +621,8 @@ void abyss_teleport( bool new_area )
             return;
         }
     }
+
+    remove_sanctuary(false);
 
 #ifdef DEBUG_ABYSS
     mpr("New area Abyss teleport.", MSGCH_DIAGNOSTICS);
