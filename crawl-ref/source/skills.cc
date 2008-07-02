@@ -182,8 +182,6 @@ static int _exercise2(int exsk)
     int bonus = 0;
     char old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
 
-    int skill_change = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
-
     // Being good at some weapons makes others easier to learn.
     if (exsk < SK_ARMOUR)
     {
