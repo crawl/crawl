@@ -326,14 +326,11 @@ static int _exercise2( int exsk )
 
     skill_change -= random2(5);
 
-    if (skill_change < 1)
+    if (skill_change <= 0)
     {
         // No free lunch, this is a problem now that we don't
         // have overspending.
-        if (deg > 0 || fraction > 0 || bonus > 0)
-            skill_change = 1;
-        else
-            skill_change = 0;
+        skill_change = (fraction > 0 || deg > 0 || bonus > 0) ? 1 : 0;
     }
 
     // Can safely return at any stage before this
@@ -345,20 +342,20 @@ static int _exercise2( int exsk )
         if ((exsk >= SK_FIGHTING && exsk <= SK_STAVES) || exsk == SK_ARMOUR)
         {
             // These skills are easier for the strong
-            skill_inc *= ((you.strength < 5) ? 5 : you.strength);
+            skill_inc *= MAX(5, you.strength);
             skill_inc /= 10;
         }
         else if (exsk >= SK_SLINGS && exsk <= SK_UNARMED_COMBAT)
         {
             // These skills are easier for the dexterous
             // Note: Armour is handled above.
-            skill_inc *= ((you.dex < 5) ? 5 : you.dex);
+            skill_inc *= MAX(5, you.dex);
             skill_inc /= 10;
         }
         else if (exsk >= SK_SPELLCASTING && exsk <= SK_POISON_MAGIC)
         {
             // These skills are easier for the smart
-            skill_inc *= ((you.intel < 5) ? 5 : you.intel);
+            skill_inc *= MAX(5, you.intel);
             skill_inc /= 10;
         }
     }
@@ -377,8 +374,7 @@ static int _exercise2( int exsk )
         you.skill_cost_level++;
     }
 
-    if (you.exp_available < 0)
-        you.exp_available = 0;
+    you.exp_available = std::max(0, you.exp_available);
 
     you.redraw_experience = true;
 
