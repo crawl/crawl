@@ -527,7 +527,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_NEMELEX_XOBEH:
         snprintf(info, INFO_SIZE, "sacrifice items%s",
-                 verbose ? " (by standing over them and praying)" : "");
+                 verbose ? " (by standing over them and <w>p</w>raying)" : "");
         likes.push_back(info);
         break;
 

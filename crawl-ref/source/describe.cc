@@ -2814,7 +2814,7 @@ static void _detailed_god_description(god_type which_god)
                          "  decks of Dungeons    -- jewellery, books, "
                                                     "miscellaneous items" EOL
                          "  decks of Summoning   -- corpses" EOL
-                         "  decks of Wonders     -- consumables: potions, "
+                         "  decks of Wonders     -- consumables: food, potions, "
                                                     "scrolls, wands" EOL;
             }
         default:
