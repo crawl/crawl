@@ -5689,6 +5689,14 @@ static bool _swap_monsters(const int mover_idx, const int moved_idx)
         return false;
     }
 
+    // Don't swap places if the player explicitly ordered their pet
+    // to attack monsters.
+    if ((mons_friendly(mover) || mons_friendly(moved))
+        && you.pet_target != MHITYOU && you.pet_target != MHITNOT)
+    {
+        return false;
+    }
+
     if (!mover->can_pass_through(moved->x, moved->y)
         || !moved->can_pass_through(mover->x, mover->y))
     {
