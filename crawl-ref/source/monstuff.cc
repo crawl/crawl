@@ -3035,37 +3035,31 @@ static void _handle_behaviour(monsters *mon)
             {
                 // If a pacified monster isn't travelling toward
                 // someplace from which it can leave the level, make it
-                // start doing so.
-                if (mon->travel_target != MTRAV_PATROL
-                    && mon->travel_target != MTRAV_UNREACHABLE)
+                // start doing so.  If there's no such place, travel
+                // randomly.
+                if (mon->travel_target != MTRAV_PATROL)
                 {
                     new_foe = MHITNOT;
-                    patrolling = true;
                     mon->travel_path.clear();
 
                     e_index = _mons_find_nearest_level_exit(mon, e);
 
                     if (e_index != -1)
                     {
+                        mon->travel_target = MTRAV_PATROL;
+                        patrolling = true;
                         mon->patrol_point = e[e_index].target;
                         mon->target_x = e[e_index].target.x;
                         mon->target_y = e[e_index].target.y;
-                        mon->travel_target = MTRAV_PATROL;
                     }
                     else
                     {
-                        mon->patrol_point = coord_def(0, 0);
-                        mon->target_x = mon->x;
-                        mon->target_y = mon->y;
                         mon->travel_target = MTRAV_NONE;
+                        patrolling = false;
+                        mon->patrol_point = coord_def(0, 0);
+                        mon->target_x = 10 + random2(GXM - 10);
+                        mon->target_y = 10 + random2(GYM - 10);
                     }
-                }
-
-                // If the level exit is unreachable, find a new one.
-                if (mon->travel_target == MTRAV_UNREACHABLE)
-                {
-                    e[e_index].unreachable = true;
-                    mon->travel_target = MTRAV_NONE;
                 }
 
                 // If a pacified monster is leaving the level, and has
@@ -3108,7 +3102,7 @@ static void _handle_behaviour(monsters *mon)
             // wandering monsters at least appear to have some sort of
             // attention span.  -- bwr
             if (mon->x == mon->target_x && mon->y == mon->target_y
-                || mons_is_batty(mon) || one_chance_in(isPacified ? 40 : 20))
+                || mons_is_batty(mon) || (!isPacified && one_chance_in(20)))
             {
                 bool need_target = true;
                 if (travelling)
@@ -3325,9 +3319,16 @@ static void _handle_behaviour(monsters *mon)
 
                 if (need_target)
                 {
-                    // The monster is travelling randomly.
-                    mon->target_x = 10 + random2(GXM - 10);
-                    mon->target_y = 10 + random2(GYM - 10);
+                    // If a monster that's been pacified and is leaving
+                    // the level can't reach its target, mark its target
+                    // as unreachable.
+                    if (isPacified)
+                        e[e_index].unreachable = true;
+                    else
+                    {
+                        mon->target_x = 10 + random2(GXM - 10);
+                        mon->target_y = 10 + random2(GYM - 10);
+                    }
                 }
             }
 
