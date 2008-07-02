@@ -731,7 +731,6 @@ static void mpr_formatted_output(formatted_string fs, int colour)
             break;
         }
     }
-    message_out(Message_Line, colour, "", Options.delay_message_clear? 2 : 1);
 }
 
 // Line wrapping is not available here!
