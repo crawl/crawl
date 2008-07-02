@@ -1700,7 +1700,7 @@ bool item_type_known( const item_def& item )
     }
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
-    if ( idt != NUM_IDTYPE && item.sub_type < 50  )
+    if (idt != NUM_IDTYPE && item.sub_type < 50 )
         return (type_ids[idt][item.sub_type] == ID_KNOWN_TYPE);
     else
         return (false);

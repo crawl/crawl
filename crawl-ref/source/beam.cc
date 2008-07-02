@@ -214,6 +214,7 @@ static void _ench_animation( int flavour, const monsters *mon, bool force )
                         || flavour == BEAM_BANISH
                         || flavour == BEAM_BLINK)    ? EC_WARP
                                                      : EC_ENCHANT;
+
     zap_animation( element_colour( elem ), mon, force );
 }
 
@@ -1761,7 +1762,7 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
 #ifdef USE_TILE
     int tile_beam = -1;
 
-    if (item && !pbolt.is_tracer)
+    if (item && !pbolt.is_tracer && pbolt.flavour == BEAM_MISSILE)
     {
         tile_beam = tileidx_item_throw(*item,
                                        pbolt.target_x - pbolt.source_x,
@@ -4358,7 +4359,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                    if (beam.fr_count == 1 && !beam.dont_stop_fr)
                        beam.dont_stop_fr = true;
                    else
-                       beam.dont_stop_foe = true; 
+                       beam.dont_stop_foe = true;
                 }
             }
 
@@ -4520,7 +4521,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 if (beam.fr_count == 1 && !beam.dont_stop_fr)
                     beam.dont_stop_fr = true;
                 else
-                    beam.dont_stop_foe = true; 
+                    beam.dont_stop_foe = true;
             }
         }
 

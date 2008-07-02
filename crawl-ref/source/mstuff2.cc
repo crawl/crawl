@@ -1192,10 +1192,10 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     int diceMult = 100;
 
     // Some initial convenience & initializations.
-    int wepClass = mitm[hand_used].base_type;
-    int wepType  = mitm[hand_used].sub_type;
+    int wepClass  = mitm[hand_used].base_type;
+    int wepType   = mitm[hand_used].sub_type;
 
-    int weapon = monster->inv[MSLOT_WEAPON];
+    int weapon    = monster->inv[MSLOT_WEAPON];
     int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type  :  0;
 
     const bool skilled = mons_class_flag(monster->type, M_FIGHTER);
@@ -1450,8 +1450,17 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         pbolt.name = item.name(DESC_PLAIN, false, false, false);
     }
     msg += ".";
+
     if (monster->visible())
+    {
         mpr(msg.c_str());
+
+        if (projected == LRET_LAUNCHED
+            && item_type_known(mitm[monster->inv[MSLOT_WEAPON]]))
+        {
+            set_ident_flags(mitm[hand_used], ISFLAG_KNOW_TYPE);
+        }
+    }
 
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.

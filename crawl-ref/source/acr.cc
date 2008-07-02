@@ -1964,6 +1964,7 @@ void process_command( command_type cmd )
 
     case CMD_TOGGLE_FRIENDLY_PICKUP:
     {
+#ifndef WIZARD
         if (!god_gives_permanent_followers(you.religion))
         {
             mpr("I'm sorry, your allies won't ever be able to pick up items.");
@@ -1977,7 +1978,7 @@ void process_command( command_type cmd )
             }
             break;
         }
-
+#endif
         // Toggle pickup mode for friendlies.
         _print_friendly_pickup_setting(false);
         mpr("Change to (d)efault, (n)othing, (f)riend-dropped, or (a)ll? ",

@@ -3319,7 +3319,7 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
             mpr("You sense an unholy aura.");
             break;
         case SPWPN_FLAME:
-            mpr("It glows red for a moment.");
+            mpr("It bursts into flame!");
             break;
         case SPWPN_FROST:
             mpr("It is covered in frost.");

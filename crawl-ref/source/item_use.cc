@@ -364,10 +364,10 @@ static const char *shield_base_name(const item_def *shield)
 
 static const char *shield_impact_degree(int impact)
 {
-    return (impact > 160? "severely "       :
-            impact > 130? "significantly "  :
-            impact > 110? ""                :
-                          NULL);
+    return (impact > 160 ? "severely "      :
+            impact > 130 ? "significantly " :
+            impact > 110 ? ""
+                         : NULL);
 }
 
 static void warn_rod_shield_interference(const item_def &)
@@ -605,7 +605,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_FLAME:
-                    mpr("It glows red for a moment.");
+                    mpr("It bursts into flame!");
                     break;
 
                 case SPWPN_FROST:
@@ -1719,12 +1719,14 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
 
 // Determines if the end result of the combined launcher + ammo brands a
 // fire/frost beam.
+// positive: frost, negative: flame, zero: neither
 bool elemental_missile_beam(int launcher_brand, int ammo_brand)
 {
-    int element = (launcher_brand == SPWPN_FROST)
-                + (ammo_brand == SPMSL_ICE)
-                - (launcher_brand == SPWPN_FLAME)
-                - (ammo_brand == SPMSL_FLAME);
+    int element = (launcher_brand == SPWPN_FROST
+                   + ammo_brand == SPMSL_ICE
+                   - launcher_brand == SPWPN_FLAME
+                   - ammo_brand == SPMSL_FLAME);
+
     return (element);
 }
 
@@ -2008,7 +2010,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (projected == LRET_LAUNCHED)
     {
         const item_def &launcher = you.inv[you.equip[EQ_WEAPON]];
-        const int bow_brand = get_weapon_brand( launcher );
+        const int bow_brand  = get_weapon_brand( launcher );
         const int ammo_brand = get_ammo_brand( item );
         bool poisoned = (ammo_brand == SPMSL_POISONED);
 
@@ -2234,66 +2236,42 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
 
         // Note that bow_brand is known since the bow is equipped.
-        if (bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
+        if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
+            && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
         {
-            if (ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
-            {
-#ifdef USE_TILE
-                // Mark brand for tile output.
-                if (ammo_brand != SPMSL_FLAME)
-                    set_item_ego_type( item, OBJ_MISSILES, SPMSL_FLAME );
-#endif
+            // [dshaligram] Branded arrows are much stronger.
+            dice_mult = (dice_mult * 150) / 100;
 
-                // [dshaligram] Branded arrows are much stronger.
-                dice_mult = (dice_mult * 150) / 100;
+            pbolt.flavour = BEAM_FIRE;
+            pbolt.name    = "bolt of ";
 
-                pbolt.flavour = BEAM_FIRE;
-                pbolt.name    = "bolt of ";
+            if (poisoned)
+                pbolt.name += "poison ";
 
-                if (poisoned)
-                    pbolt.name += "poison ";
-
-                pbolt.name += "flame";
-                pbolt.colour  = RED;
-                pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
-                pbolt.thrower = KILL_YOU_MISSILE;
-                pbolt.aux_source.clear();
-            }
-#ifdef USE_TILE
-            else
-                set_item_ego_type( item, OBJ_MISSILES, SPMSL_NORMAL );
-#endif
+            pbolt.name += "flame";
+            pbolt.colour  = RED;
+            pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
+            pbolt.thrower = KILL_YOU_MISSILE;
+            pbolt.aux_source.clear();
         }
 
-        if (bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
+        if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
+            && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
         {
-            if (ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
-            {
-#ifdef USE_TILE
-                // Mark brand for tile output.
-                if (ammo_brand != SPMSL_ICE)
-                    set_item_ego_type( item, OBJ_MISSILES, SPMSL_ICE );
-#endif
+            // [dshaligram] Branded arrows are much stronger.
+            dice_mult = (dice_mult * 150) / 100;
 
-                // [dshaligram] Branded arrows are much stronger.
-                dice_mult = (dice_mult * 150) / 100;
+            pbolt.flavour = BEAM_COLD;
+            pbolt.name    = "bolt of ";
 
-                pbolt.flavour = BEAM_COLD;
-                pbolt.name    = "bolt of ";
+            if (poisoned)
+                pbolt.name += "poison ";
 
-                if (poisoned)
-                    pbolt.name += "poison ";
-
-                pbolt.name   += "frost";
-                pbolt.colour  = WHITE;
-                pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
-                pbolt.thrower = KILL_YOU_MISSILE;
-                pbolt.aux_source.clear();
-            }
-#ifdef USE_TILE
-            else
-                set_item_ego_type( item, OBJ_MISSILES, SPMSL_NORMAL );
-#endif
+            pbolt.name   += "frost";
+            pbolt.colour  = WHITE;
+            pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
+            pbolt.thrower = KILL_YOU_MISSILE;
+            pbolt.aux_source.clear();
         }
 
         // The chief advantage here is the extra damage this does
@@ -2565,12 +2543,30 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
               pbolt.hit, pbolt.damage.num, pbolt.damage.size );
 #endif
 
+    // Print type of item as influenced by launcher.
+    item_def ammo = item;
+    if (pbolt.flavour == BEAM_FIRE)
+    {
+        if (ammo.special != SPMSL_FLAME)
+            ammo.special = SPMSL_FLAME;
+    }
+    else if (pbolt.flavour == BEAM_COLD)
+    {
+        if (ammo.special != SPMSL_ICE)
+            ammo.special = SPMSL_ICE;
+    }
+    else
+    {
+        if (ammo.special != SPMSL_NORMAL && ammo.special != SPMSL_POISONED)
+            ammo.special = SPMSL_NORMAL;
+    }
+
     // Create message.
     mprf( "%s %s%s %s.",
           teleport  ? "Magically, you" : "You",
           projected ? "" : "awkwardly ",
           projected == LRET_LAUNCHED ? "shoot" : "throw",
-          item.name(DESC_NOCAP_A).c_str() );
+          ammo.name(DESC_NOCAP_A).c_str() );
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.is_beam   = false;

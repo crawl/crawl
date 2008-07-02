@@ -1892,17 +1892,14 @@ int tileidx_item(const item_def &item)
     }
 }
 
-/*
-  Determine Octant of missile direction
-  ---> X+
- |
- |  701
- Y  6O2
- +  543
-
-  the octant boundary slope tan(pi/8)=sqrt(2)-1 = 0.414 is approximated by 2/5
-
-*/
+//  Determine Octant of missile direction
+//   .---> X+
+//   |
+//   |  701
+//   Y  6O2
+//   +  543
+//
+// The octant boundary slope tan(pi/8)=sqrt(2)-1 = 0.414 is approximated by 2/5.
 static int _tile_bolt_dir(int dx, int dy)
 {
     int ax = abs(dx);
@@ -1924,16 +1921,6 @@ int tileidx_item_throw(const item_def &item, int dx, int dy)
     {
         int ch = -1;
         int dir = _tile_bolt_dir(dx, dy);
-
-        switch (get_ammo_brand(item))
-        {
-        case SPMSL_FLAME:
-            return (tileidx_zap(RED));
-        case SPMSL_ICE:
-            return (tileidx_zap(WHITE));
-        default:
-            break;
-        }
 
         // Thrown items with multiple directions
         switch (item.sub_type)

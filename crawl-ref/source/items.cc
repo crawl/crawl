@@ -1195,8 +1195,8 @@ void pickup()
     }
     else if (mitm[o].link == NON_ITEM)      // just one item?
     {
-        // deliberately allowing the player to pick up
-        // a killed item here
+        // Deliberately allowing the player to pick up
+        // a killed item here.
         pickup_single_item(o, mitm[o].quantity);
     }
     else if (Options.pickup_mode != -1
@@ -1213,7 +1213,7 @@ void pickup()
             // Must save this because pickup can destroy the item.
             next = mitm[o].link;
 
-            if ( num_nonsquelched && _invisible_to_player(mitm[o]) )
+            if (num_nonsquelched && _invisible_to_player(mitm[o]))
             {
                 o = next;
                 continue;
