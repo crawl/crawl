@@ -5202,6 +5202,13 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
+    case ENCH_NEUTRAL:
+        if (!quiet)
+            simple_monster_message(this, " is no longer neutral.");
+
+        behaviour_event(this, ME_EVAL);
+        break;
+
     case ENCH_PETRIFIED:
         if (!quiet)
             simple_monster_message(this, " is no longer petrified.");
@@ -5216,6 +5223,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         if (!quiet)
             simple_monster_message(this, " stops moving altogether!");
+
         behaviour_event(this, ME_EVAL);
         break;
 
@@ -5597,6 +5605,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_HASTE:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
+    case ENCH_NEUTRAL:
     case ENCH_PETRIFYING:
     case ENCH_PETRIFIED:
     case ENCH_SICK:

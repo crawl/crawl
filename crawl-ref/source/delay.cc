@@ -155,7 +155,7 @@ static int _recite_to_monsters(int x, int y, int pow, int unused)
                 || !mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
                                                (16 + random2avg(13, 2)) * 10)))
             {
-              return (0);
+                return (0);
             }
             simple_monster_message(mons, " looks confused.");
             break;
@@ -170,8 +170,11 @@ static int _recite_to_monsters(int x, int y, int pow, int unused)
         case 10:
         case 11:
         case 12:
-            if (!mons->add_ench(ENCH_NEUTRAL))
+            if (!mons->add_ench(mon_enchant(ENCH_NEUTRAL, 0, KC_YOU,
+                                (16 + random2avg(13, 2)) * 10)))
+            {
                 return (0);
+            }
             simple_monster_message(mons, " seems impressed!");
             break;
         case 13:
@@ -185,7 +188,9 @@ static int _recite_to_monsters(int x, int y, int pow, int unused)
         case 17:
             if (!mons->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
                                 (16 + random2avg(13, 2)) * 10)))
+            {
                 return (0);
+            }
             simple_monster_message(mons, " freezes in fright!");
             break;
         default:
@@ -195,8 +200,11 @@ static int _recite_to_monsters(int x, int y, int pow, int unused)
             {
                 if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
                 {
-                    if (!mons->add_ench(ENCH_NEUTRAL))
+                    if (!mons->add_ench(mon_enchant(ENCH_NEUTRAL, 0, KC_YOU,
+                                        (16 + random2avg(13, 2)) * 10)))
+                    {
                         return (0);
+                    }
                     simple_monster_message(mons, " seems impressed!");
                 }
                 else
