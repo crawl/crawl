@@ -2162,6 +2162,16 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         if (!forced_ego)
             set_item_ego_type( item, OBJ_ARMOUR, SPARM_NORMAL );
     }
+
+    // Don't overenchant items. FIXME: should use some kind of
+    // max_enchantment() function here.
+    if ( (item.sub_type >= ARM_CLOAK && item.sub_type <= ARM_BOOTS)
+         || is_shield(item) )
+    {
+        if ( item.plus > 2 )
+            item.plus = 2;
+    }   
+
 }
 
 static monster_type _choose_random_monster_corpse()
