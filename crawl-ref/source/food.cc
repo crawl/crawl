@@ -415,7 +415,7 @@ static bool _have_corpses_in_pack(bool remind)
 
 bool butchery(int which_corpse)
 {
-    if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
+    if (igrd(you.pos()) == NON_ITEM)
     {
         if (!_have_corpses_in_pack(false))
             mpr("There isn't anything here!");
@@ -465,12 +465,11 @@ bool butchery(int which_corpse)
     int num_corpses = 0;
     int corpse_id   = -1;
     bool prechosen  = (which_corpse != -1);
-    for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
+    for (stack_iterator si(you.pos()); si; ++si)
     {
-        if (mitm[o].base_type == OBJ_CORPSES
-            && mitm[o].sub_type == CORPSE_BODY)
+        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
-            corpse_id = o;
+            corpse_id = si->index();
             num_corpses++;
 
             // Return pre-chosen corpse if it exists.
@@ -535,24 +534,21 @@ bool butchery(int which_corpse)
     // if there are several corpses on the square.
     bool butcher_all = false;
     bool bottle_all  = false; // for Vampires
-    for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
+    for (stack_iterator si(you.pos()); si; ++si)
     {
-        if (mitm[o].base_type != OBJ_CORPSES
-            || mitm[o].sub_type != CORPSE_BODY)
-        {
+        if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
             continue;
-        }
 
-        if (bottle_all && !can_bottle_blood_from_corpse(mitm[o].plus))
+        if (bottle_all && !can_bottle_blood_from_corpse(si->plus))
             continue;
 
         if (butcher_all || bottle_all)
-            corpse_id = o;
+            corpse_id = si->index();
         else
         {
             corpse_id = -1;
 
-            std::string corpse_name = mitm[o].name(DESC_NOCAP_A);
+            std::string corpse_name = si->name(DESC_NOCAP_A);
 
             const bool sacrifice = (you.duration[DUR_PRAYER]
                                     && god_likes_butchery(you.religion));
@@ -564,14 +560,14 @@ bool butchery(int which_corpse)
             // Also, don't bother colouring if it's only for sacrificing.
             if (!sacrifice && !you.is_undead)
             {
-                corpse_name = get_message_colour_tags(mitm[o], DESC_NOCAP_A,
+                corpse_name = get_message_colour_tags(*si, DESC_NOCAP_A,
                                                       MSGCH_PROMPT);
             }
 
             // Shall we butcher this corpse?
             snprintf(info, INFO_SIZE, "%s %s?",
                      (sacrifice
-                      || !can_bottle_blood_from_corpse(mitm[o].plus)) ?
+                      || !can_bottle_blood_from_corpse(si->plus)) ?
                             "Butcher" : "Bottle",
                      corpse_name.c_str());
 
@@ -596,11 +592,11 @@ bool butchery(int which_corpse)
                 {
                     return (false);
                 }
-                corpse_id = o;
+                corpse_id = si->index();
 
                 if (result == 2) // (a)ll
                 {
-                    if (can_bottle_blood_from_corpse(mitm[o].plus)
+                    if (can_bottle_blood_from_corpse(si->plus)
                         && (!you.duration[DUR_PRAYER]
                             || !god_likes_butchery(you.religion)))
                     {
@@ -658,7 +654,7 @@ void lua_push_items(lua_State *ls, int link)
 
 void lua_push_floor_items(lua_State *ls)
 {
-    lua_push_items(ls, igrd[you.x_pos][you.y_pos]);
+    lua_push_items(ls, igrd(you.pos()));
 }
 
 void lua_push_inv_items(lua_State *ls = NULL)
@@ -781,7 +777,7 @@ bool eat_food(bool run_hook, int slot)
     if (run_hook && _userdef_eat_food())
         return (false);
 
-    if (igrd[you.x_pos][you.y_pos] != NON_ITEM && slot == -1)
+    if (igrd(you.pos()) != NON_ITEM && slot == -1)
     {
         const int res = eat_from_floor();
         if (res == 1)
@@ -1118,34 +1114,32 @@ int eat_from_floor()
     int inedible_food = 0;
     item_def wonteat;
     bool found_valid = false;
-    for (int o = igrd[you.x_pos][you.y_pos]; o != NON_ITEM; o = mitm[o].link)
+    for (stack_iterator si(you.pos()); si; ++si )
     {
-        item_def& item = mitm[o];
-
-        if (you.species != SP_VAMPIRE && item.base_type != OBJ_FOOD)
+        if (you.species != SP_VAMPIRE && si->base_type != OBJ_FOOD)
             continue;
 
         if (you.species == SP_VAMPIRE)
         {
-            if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
+            if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
                 continue;
 
-            if (!mons_has_blood(item.plus))
+            if (!mons_has_blood(si->plus))
             {
                 unusable_corpse++;
                 continue;
             }
         }
-        else if (food_is_rotten(item) && !_player_can_eat_rotten_meat())
+        else if (food_is_rotten(*si) && !_player_can_eat_rotten_meat())
         {
             unusable_corpse++;
             continue;
         }
-        else if (!can_ingest(item.base_type, item.sub_type, true))
+        else if (!can_ingest(si->base_type, si->sub_type, true))
         {
             if (!inedible_food)
             {
-                wonteat = item;
+                wonteat = *si;
                 inedible_food++;
             }
             else
@@ -1154,7 +1148,7 @@ int eat_from_floor()
                 // FIXME: Use a common check for herbivorous/carnivorous
                 //        dislikes, for e.g. "Blech! You need blood!"
                 ASSERT(is_valid_item(wonteat));
-                if (wonteat.sub_type != item.sub_type)
+                if (wonteat.sub_type != si->sub_type)
                     inedible_food++;
             }
 
@@ -1164,8 +1158,8 @@ int eat_from_floor()
         found_valid = true;
         std::ostringstream prompt;
         prompt << (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat")
-               << ' ' << ((item.quantity > 1) ? "one of " : "")
-               << item.name(DESC_NOCAP_A) << '?';
+               << ' ' << ((si->quantity > 1) ? "one of " : "")
+               << si->name(DESC_NOCAP_A) << '?';
 
         const int ans = yesnoquit( prompt.str().c_str(), true, 0, false, false,
                                    'E' );
@@ -1174,9 +1168,9 @@ int eat_from_floor()
             return -1;
         else if (ans == 1)    // yes
         {
-            if (can_ingest(item.base_type, item.sub_type, false))
+            if (can_ingest(si->base_type, si->sub_type, false))
             {
-                eat_floor_item(o);
+                eat_floor_item(si->index());
                 return 1;
             }
             need_more = true;

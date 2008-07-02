@@ -1777,20 +1777,12 @@ static int dex_adjust_thrown_tohit(int hit)
 static void identify_floor_missiles_matching(item_def mitem, int idflags)
 {
     mitem.flags &= ~idflags;
-    int item = NON_ITEM;
+
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
-        {
-            item = igrd[x][y];
-            while (item != NON_ITEM)
-            {
-                item_def &i(mitm[item]);
-                item = i.link;
-
-                if ((i.flags & ISFLAG_THROWN) && items_stack(i, mitem))
-                    i.flags |= idflags;
-            }
-        }
+            for ( stack_iterator si(coord_def(x,y)); si; ++si )
+                if ((si->flags & ISFLAG_THROWN) && items_stack(*si, mitem))
+                    si->flags |= idflags;
 }
 
 // throw_it - currently handles player throwing only.  Monster

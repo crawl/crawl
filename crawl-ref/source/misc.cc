@@ -87,7 +87,7 @@
 
 static void create_monster_hide(int mons_class)
 {
-    int o = get_item_slot( 100 + random2(200) );
+    int o = get_item_slot();
     if (o == NON_ITEM)
         return;
 
@@ -410,17 +410,15 @@ static void _potion_stack_changed_message(item_def &potion, int num_changed,
     std::string msg;
     if (potion.quantity == num_changed)
         msg = "Your ";
+    else if (num_changed == 1)
+        msg = "One of your ";
+    else if (num_changed == 2)
+        msg = "Two of your ";
+    else if (num_changed >= (potion.quantity * 3) / 4)
+        msg = "Most of your ";
     else
-    {
-        if (num_changed == 1)
-            msg = "One of your ";
-        else if (num_changed == 2)
-            msg = "Two of your ";
-        else if (num_changed >= (potion.quantity * 3) / 4)
-            msg = "Most of your ";
-        else
-            msg = "Some of your ";
-    }
+        msg = "Some of your ";
+
     msg += potion.name(DESC_PLAIN, false);
 
     if (coagulate)
@@ -694,7 +692,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     // If we got here nothing was found!
 
     // Create a new stack of potions.
-    o = get_item_slot( 100 + random2(200) );
+    o = get_item_slot();
     if (o == NON_ITEM)
         return (false);
 

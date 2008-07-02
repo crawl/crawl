@@ -1128,6 +1128,11 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
     }
 }
 
+int grid_distance( const coord_def& p1, const coord_def& p2 )
+{
+    return grid_distance(p1.x, p1.y, p2.x, p2.y);
+}
+
 // More accurate than distance() given the actual movement geometry -- bwr
 int grid_distance( int x, int y, int x2, int y2 )
 {

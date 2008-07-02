@@ -138,6 +138,7 @@ void get_item_glyph(const item_def *item, unsigned *glych,
 void get_mons_glyph(const monsters *mons, unsigned *glych,
                     unsigned short *glycol);
 unsigned get_screen_glyph( int x, int y );
+unsigned get_screen_glyph( const coord_def &p );
 std::string stringize_glyph(unsigned glyph);
 int multibyte_strlen(const std::string &s);
 

@@ -551,21 +551,17 @@ void expose_items_to_element(beam_type flavour, int x, int y)
     if (target_class == OBJ_UNASSIGNED)
         return;
 
-    for (int i = igrd[x][y]; i != NON_ITEM; i = mitm[i].link)
+    for (stack_iterator si(coord_def(x,y)); si; ++si)
     {
-        if (!is_valid_item(mitm[i]))
+        if (!is_valid_item(*si))
             continue;
 
-        if (is_valid_item(mitm[i])
-            && (mitm[i].base_type == target_class
-                || (target_class == OBJ_FOOD
-                    && mitm[i].base_type == OBJ_CORPSES)))
+        if ( si->base_type == target_class
+             || (target_class == OBJ_FOOD && si->base_type == OBJ_CORPSES))
         {
-            num_dest += mitm[i].quantity;
-
-            item_was_destroyed(mitm[i]);
-
-            destroy_item(i);
+            num_dest += si->quantity;
+            item_was_destroyed(*si);
+            destroy_item(si->index());
         }
     }
 
@@ -674,7 +670,7 @@ void lose_level()
 
 void drain_exp(bool announce_full)
 {
-    int protection = player_prot_life();
+    const int protection = player_prot_life();
 
     if (protection == 3)
     {
@@ -698,9 +694,7 @@ void drain_exp(bool announce_full)
 
     unsigned long total_exp = exp_needed( you.experience_level + 2 )
                                     - exp_needed( you.experience_level + 1 );
-    unsigned long exp_drained = total_exp * (10 + random2(11));
-
-    exp_drained /= 100;
+    unsigned long exp_drained = (total_exp * (10 + random2(11))) / 100;
 
     // TSO's protection.
     if (you.religion == GOD_SHINING_ONE && you.piety > protection * 50)

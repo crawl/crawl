@@ -4471,6 +4471,11 @@ void init_feature_table( void )
     }
 }
 
+unsigned get_screen_glyph( const coord_def &p)
+{
+    return get_screen_glyph(p.x, p.y);
+}
+
 unsigned get_screen_glyph( int x, int y )
 {
     const coord_def ep = view2show(grid2view(coord_def(x,y)));

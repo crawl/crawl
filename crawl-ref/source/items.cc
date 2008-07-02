@@ -587,41 +587,25 @@ void item_was_destroyed(const item_def &item, int cause)
 
 void lose_item_stack( int x, int y )
 {
-    int o = igrd[x][y];
-
-    igrd[x][y] = NON_ITEM;
-
-    while (o != NON_ITEM)
+    for ( stack_iterator si(coord_def(x,y)); si; ++si )
     {
-        int next = mitm[o].link;
-
-        if (is_valid_item( mitm[o] ))
+        if (is_valid_item( *si )) // FIXME is this check necessary?
         {
-            item_was_lost(mitm[o]);
-            mitm[o].clear();
+            item_was_lost(*si);
+            si->clear();
         }
-
-        o = next;
     }
 }
 
 void destroy_item_stack( int x, int y, int cause )
 {
-    int o = igrd[x][y];
-
-    igrd[x][y] = NON_ITEM;
-
-    while (o != NON_ITEM)
+    for ( stack_iterator si(coord_def(x,y)); si; ++si )
     {
-        int next = mitm[o].link;
-
-        if (is_valid_item( mitm[o] ))
+        if (is_valid_item( *si )) // FIXME is this check necessary?
         {
-            item_was_destroyed(mitm[o], cause);
-            mitm[o].clear();
+            item_was_destroyed( *si, cause);
+            si->clear();
         }
-
-        o = next;
     }
 }
 
@@ -633,12 +617,11 @@ static bool _invisible_to_player( const item_def& item )
 static int _count_nonsquelched_items( int obj )
 {
     int result = 0;
-    while (obj != NON_ITEM)
-    {
-        if (!_invisible_to_player(mitm[obj]))
+
+    for ( stack_iterator si(obj); si; ++si )
+        if (!_invisible_to_player(*si))
             ++result;
-        obj = mitm[obj].link;
-    }
+
     return result;
 }
 
@@ -654,13 +637,11 @@ static void _item_list_on_square( std::vector<const item_def*>& items,
                                     || _count_nonsquelched_items(obj));
 
     // Loop through the items.
-    while ( obj != NON_ITEM )
+    for ( stack_iterator si(obj); si; ++si )
     {
         // Add them to the items list if they qualify.
-        if ( !have_nonsquelched || !_invisible_to_player(mitm[obj]) )
-            items.push_back( &mitm[obj] );
-
-        obj = mitm[obj].link;
+        if ( !have_nonsquelched || !_invisible_to_player(*si) )
+            items.push_back( & (*si) );
     }
 }
 
@@ -747,9 +728,9 @@ void item_check(bool verbose)
 
     std::vector<const item_def*> items;
 
-    _item_list_on_square( items, igrd[you.x_pos][you.y_pos], true );
+    _item_list_on_square( items, igrd(you.pos()), true );
 
-    if (items.size() == 0)
+    if (items.empty())
     {
         if (verbose)
             strm << "There are no items here." << std::endl;
@@ -967,8 +948,7 @@ static void _check_note_item(item_def &item)
     if (item.flags & (ISFLAG_NOTED_GET | ISFLAG_NOTED_ID))
         return;
 
-    if (is_rune(item) || item.base_type == OBJ_ORBS
-        || is_artefact(item))
+    if (is_rune(item) || item.base_type == OBJ_ORBS || is_artefact(item))
     {
         take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
                        origin_desc(item).c_str()));
@@ -985,18 +965,17 @@ void origin_set(int x, int y)
 {
     int monnum = _first_corpse_monnum(x, y);
     unsigned short pplace = get_packed_place();
-    for (int link = igrd[x][y]; link != NON_ITEM; link = mitm[link].link)
+    for (stack_iterator si(coord_def(x,y)); si; ++si)
     {
-        item_def &item = mitm[link];
-        if (origin_known(item))
+        if (origin_known( *si ))
             continue;
 
-        if (!item.orig_monnum)
-            item.orig_monnum = static_cast<short>( monnum );
-        item.orig_place  = pplace;
+        if (!si->orig_monnum)
+            si->orig_monnum = static_cast<short>( monnum );
+        si->orig_place  = pplace;
 
 #ifdef DGL_MILESTONES
-        _milestone_check(item);
+        _milestone_check(*si);
 #endif
     }
 }
@@ -1186,7 +1165,7 @@ void pickup()
         return;
     }
 
-    int o = igrd[you.x_pos][you.y_pos];
+    int o = igrd(you.pos());
     const int num_nonsquelched = _count_nonsquelched_items(o);
 
     if (o == NON_ITEM)
@@ -2155,15 +2134,8 @@ static void _autoinscribe_item( item_def& item )
 
 static void _autoinscribe_floor_items()
 {
-    int o, next;
-    o = igrd[you.x_pos][you.y_pos];
-
-    while (o != NON_ITEM)
-    {
-        next = mitm[o].link;
-        _autoinscribe_item( mitm[o] );
-        o = next;
-    }
+    for ( stack_iterator si(you.pos()); si; ++si )
+        _autoinscribe_item( *si );
 }
 
 static void _autoinscribe_inventory()
@@ -2294,7 +2266,7 @@ static void _do_autopickup()
         return;
     }
 
-    int o = igrd[you.x_pos][you.y_pos];
+    int o = igrd(you.pos());
 
     std::string pickup_warning;
     while (o != NON_ITEM)
@@ -2379,22 +2351,15 @@ int inv_count(void)
 
 item_def *find_floor_item(object_class_type cls, int sub_type)
 {
-    int item = NON_ITEM;
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
-        {
-            item = igrd[x][y];
-            while (item != NON_ITEM)
-            {
-                item_def &i(mitm[item]);
+            for ( stack_iterator si(coord_def(x,y)); si; ++si )
+                if (is_valid_item( *si)
+                    && si->base_type == cls && si->sub_type == sub_type)
+                {
+                    return (& (*si));
+                }
 
-                if (is_valid_item(i) && i.base_type == cls
-                    && i.sub_type == sub_type)
-                    return (&i);
-
-                item = i.link;
-            }
-        }
     return (NULL);
 }
 
@@ -2471,10 +2436,9 @@ item_def find_item_type(object_class_type base_type, std::string name)
 
     if (base_type == OBJ_UNASSIGNED)
     {
-        for (unsigned i = 0; i < sizeof(max_subtype) / sizeof(*max_subtype);
-             ++i)
+        for (unsigned i = 0; i < ARRAYSZ(max_subtype); ++i)
         {
-            if (!max_subtype[i])
+            if (max_subtype[i] == 0)
                 continue;
 
             if (_find_subtype_by_name(item, static_cast<object_class_type>(i),

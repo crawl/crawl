@@ -326,20 +326,11 @@ static int _abyss_exit_nearness()
 {
     int nearness = INFINITE_DISTANCE;
 
-    for (int x = you.x_pos - LOS_RADIUS; x < you.x_pos + LOS_RADIUS; x++)
-        for (int y = you.y_pos - LOS_RADIUS; y < you.y_pos + LOS_RADIUS; y++)
-        {
-            if (!in_bounds(x, y))
-                continue;
-
-            // HACK: Why doesn't is_terrain_known() work here?
-            if (grd[x][y] == DNGN_EXIT_ABYSS
-                && get_screen_glyph(x, y) != ' ')
-            {
-                nearness = MIN(nearness,
-                               grid_distance(you.x_pos, you.y_pos, x, y));
-            }
-        }
+    // is_terrain_known() doesn't work on unmappable levels because
+    // mapping flags are not set on such levels.
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+        if (grd(*ri) == DNGN_EXIT_ABYSS && get_screen_glyph(*ri) != ' ')
+            nearness = std::min(nearness, grid_distance(you.pos(), *ri));
 
     return (nearness);
 }
@@ -348,31 +339,12 @@ static int _abyss_rune_nearness()
 {
     int nearness = INFINITE_DISTANCE;
 
-    for (int x = you.x_pos - LOS_RADIUS; x < you.x_pos + LOS_RADIUS; x++)
-        for (int y = you.y_pos - LOS_RADIUS; y < you.y_pos + LOS_RADIUS; y++)
-        {
-            if (!in_bounds(x, y))
-                continue;
-
-            // is_terrain_known() doesn't work on unmappable levels because
-            // mapping flags are not set on such levels.
-            if (get_screen_glyph(x, y) != ' ')
-            {
-                int i = igrd[x][y];
-
-                while (i != NON_ITEM)
-                {
-                    item_def& item(mitm[i]);
-                    if (is_rune(item) && item.plus == RUNE_ABYSSAL)
-                    {
-                        nearness = MIN(nearness,
-                                       grid_distance(you.x_pos, you.y_pos,
-                                                     x, y));
-                    }
-                    i = item.link;
-                }
-            }
-        }
+    // See above comment about is_terrain_known().
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+        if (get_screen_glyph(ri->x, ri->y) != ' ')
+            for ( stack_iterator si(*ri); si; ++si )
+                if (is_rune(*si) && si->plus == RUNE_ABYSSAL)
+                    nearness = std::min(nearness, grid_distance(you.pos(),*ri));
 
     return (nearness);
 }
@@ -386,7 +358,7 @@ static void _xom_check_nearness_setup()
     rune_was_near = _abyss_rune_nearness();
 }
 
-// If the player was almost to the exit when it disppeared, Xom is
+// If the player was almost to the exit when it disappeared, Xom is
 // extremely amused.  He's also extremely amused if the player winds
 // up right next to an exit when there wasn't one there before.  The
 // same applies to Abyssal runes.
@@ -442,9 +414,8 @@ void area_shift(void)
     coord_def sanct_pos(0, 0);
     FixedArray<unsigned short, LOS_DIAMETER, LOS_DIAMETER> fprops;
     const coord_def los_delta(LOS_RADIUS, LOS_RADIUS);
-    radius_iterator ri(you.pos(), LOS_RADIUS);
 
-    for ( ; ri; ++ri )
+    for ( radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri )
     {
         fprops(you.pos() - *ri + los_delta) = env.map(*ri).property;
         if (env.sanctuary_pos == *ri && env.sanctuary_time > 0)
@@ -479,7 +450,7 @@ void area_shift(void)
             continue;
 
         // Remove non-nearby monsters.
-        if (grid_distance(m.x, m.y, you.x_pos, you.y_pos) > 10)
+        if (grid_distance(m.pos(), you.pos()) > 10)
             _abyss_lose_monster(m);
     }
 

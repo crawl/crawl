@@ -443,7 +443,7 @@ void mpr(const char *inf, msg_channel_type channel, int param)
         // Did the message break?
         if (i + stepsize < msglen)
         {
-            // Aes, find a nicer place to break it.
+            // Yes, find a nicer place to break it.
             int lookback, where = 0;
             for (lookback = 0; lookback < lookback_size; ++lookback)
             {

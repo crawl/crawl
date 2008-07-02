@@ -1487,15 +1487,14 @@ bool acquirement(object_class_type class_wanted, int agent,
         }
     }
 
-    if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
+    if (grid_destroys_items(grd(you.pos())))
     {
         // How sad (and stupid).
         if (!silenced(you.pos()) && !quiet)
         {
-            mprf(MSGCH_SOUND,
-                 grid_item_destruction_message(grd[you.x_pos][you.y_pos]));
+            mprf(MSGCH_SOUND, grid_item_destruction_message(grd(you.pos())));
         }
-        item_was_destroyed(mitm[igrd[you.x_pos][you.y_pos]], NON_MONSTER);
+        item_was_destroyed(mitm[igrd(you.pos())], NON_MONSTER);
         *item_index = NON_ITEM;
     }
     else
