@@ -88,7 +88,7 @@ shoulders as he slept, and they purged his ears with their tongues. He
 started up in a great fright, but understood the voices of the birds flying
 overhead, and from what he learned from them he foretold to men what should
 come to pass."
-    -Apollodurus (apocryphal), Library and Epitome, 1.9.11. circa 150 BC.
+    -Apollodorus (apocryphal), Library and Epitome, 1.9.11. circa 150 BC.
     Sir James George Frazer, translator
 
 "A snake, with mottles rare,
@@ -528,7 +528,7 @@ to have a great aversion to children. As there is no point on which a parent
 feels more acutely than that of the maltreatment of his offspring, the feelings
 of the father and more particularly of his good dame, were daily, ay, and
 nightly, harrowed up by the malice of this malignant and invisible boggart."
-    -C.J.T., _Folk-lore and Legends: English.  1890.
+    -C.J.T., _Folk-lore and Legends: English_  1890.
 %%%%
 boring beetle
 
@@ -1091,7 +1091,7 @@ A large, fat and very ugly pig.
 %%%%
 hound
 
-A fearsome hunting dog, lithe and alert.  Its master must be long gone, for it looks dissheveled, and has a lean and hungry look.
+A fearsome hunting dog, lithe and alert.  Its master must be long gone, for it looks dishevelled, and has a lean and hungry look.
 
 "A traveller, by the faithful hound,
 Half-buried in the snow was found,
@@ -1555,7 +1555,7 @@ A giant black scorpion, its body covered in thick armour plating, and its tail t
 %%%%
 shadow
 
-An wisp of unliving shadow, drifting on the edge of vision.
+A wisp of unliving shadow, drifting on the edge of vision.
 
 "Between the idea
  And the reality
@@ -1831,7 +1831,7 @@ You find yourself surprised that a worm should have teeth at all.
    Uprising, unveiling, affirm
  That the play is the tragedy, "Man,"
    And its hero, the Conqueror Worm."
-    -Edgar Allen Poe
+    -Edgar Allan Poe
 %%%%
 wraith
 

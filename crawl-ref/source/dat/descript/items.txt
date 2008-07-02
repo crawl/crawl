@@ -68,7 +68,7 @@ ankus
 
 What mahouts steer their elephants with. It basically resembles a 
 fireplace poker with a short, stout handle, and a bluntish spike and 
-hook for communicating one's desires through the pachyderm's  thick 
+hook for communicating one's desires through the pachyderm's thick 
 skin. Curiously enough, Ogres are famous for driving larger elephants.
 %%%%
 animal skin
@@ -909,7 +909,7 @@ Pound the orange rind well in a marble mortar, mix the sugar by degrees
 with them and beat all well together.  Put it into gallipots and tie
 it down so as properly to prevent the air getting to it."
     -Francis Collingwood, John Woollams, _The Universal
-    Cook: And City and Country Housekeeper. 1792.
+    Cook: And City and Country Housekeeper._ 1792.
 %%%%
 orb of zot
 
@@ -1173,8 +1173,8 @@ magic.
 %%%%
 ring of slaying
 
-This ring increases the hand-to-hand and missile combat skills of its
-wearer.
+This ring increases or decreases the hand-to-hand and missile combat 
+skills of its wearer.
 %%%%
 ring of strength
 
@@ -1248,8 +1248,9 @@ This rod contains spells designed to repel one's enemies.
 %%%%
 royal jelly
 
-A lump of the magical substance produced by giant bees to be fed to
-their queens.
+A particularly rich and golden gelatinous thing.
+% A lump of the magical substance produced by giant bees to be fed to
+% their queens.
 %%%%
 rune of zot
 
@@ -1564,7 +1565,7 @@ A humble raisin.
 for Bentham. It was a sort of orchard of vines and other trees, without
 order or apparent arrangement. From that garden Bentham sent specimens
 of the Sultana raisin to England which he believed to have been the first
-of that species which had ever reachedahis country."
+of that species which had ever reached his country."
     -John Bowring, _The Works of Jeremy Bentham_.  1839.  
 %%%%
 swamp dragon armour

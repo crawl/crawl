@@ -47,8 +47,19 @@ A gate leading out of Pandemonium
 A gate leading to another region of Pandemonium
 %%%%
 A gate leading to the halls of Pandemonium
+
+Tales about successful loots of these netherworlds are rare. Even the strongest
+and most experienced characters can die there. On the other hand, these halls
+contain several runes and lots of valuable items. It is much easier to get in 
+than to get out.
 %%%%
 A gate to the Realm of Zot
+
+Zot is the final stage as its deepest level houses the infamous Orb of Zot.
+Both the Orb and this Realm have a fearsome and questionable reputation but
+one piece of information seems to be for certain: the monsters inhabiting 
+this area and protecting the orb are strong and strange -- some of them nowhere
+encountered but here.
 %%%%
 A gateway to a bazaar
 
@@ -57,7 +68,7 @@ dungeon, there are others trying to make a living by traveling from place
 to place. Bazaars feature a number of different shops and often have better 
 stock than the sedentary ones, sometimes even at a bargain. 
 Once you hear the clinking of coins, be sure to hurry up and find the 
-impromptu marketplace before the carawan moves on!
+impromptu marketplace before the caravan moves on!
 
 Also be warned that their nomadic lifestyle has taught these sellers to 
 appropriate any items an adventurer might leave behind, and then leave 
@@ -69,6 +80,9 @@ A gateway out of this accursed place, shimmering and shifting in the
 impermanent landscape.
 %%%%
 A gateway to Gehenna
+
+You can feel the heat. Gehenna seems to be made out of nothing but flames, 
+lava and hellfire.
 %%%%
 A gateway to Hell
 
@@ -76,10 +90,16 @@ A gateway to Hell
    -Dante Alighieri, _Divina Commedia_, "L'Inferno", Canto III.  Circa 1315.
 %%%%
 A gateway to the Iron City of Dis
+
+Can you pass the test of iron?
 %%%%
 A gateway to the decaying netherworld of Tartarus
+
+This place seems to radiate negative energy.
 %%%%
 A gateway to the freezing wastes of Cocytus
+
+From the frost-bitten lands, a cold chill touches your soul.
 %%%%
 A glowing golden altar of the Shining One
 %%%%
@@ -242,15 +262,15 @@ A stone staircase leading up
 %%%%
 A stone wall
 
-A harder obstacle than rock walls.  Only the mightiest magic can shatter stone walls.
+A harder obstacle than rock walls. Only the mightiest magic can shatter stone walls.
 %%%%
 A translucent rock wall
 
-An unnaturally hard translucent rock wall
+An unnaturally hard translucent rock wall.
 %%%%
 A translucent stone wall
 
-A harder obstacle than rock walls.  Only the mightiest magic can shatter stone walls.  It has been imbued with arcane magics which render it translucent.
+A harder obstacle than rock walls. Only the mightiest magic can shatter stone walls. It has been imbued with arcane magics which render it translucent.
 %%%%
 A trap
 %%%%
@@ -289,13 +309,20 @@ A wooden door. You can close it by standing next to it and pressing 'C'.
 %%%%
 An orcish idol
 
-An idol of the orc god Beogh
+An idol of the orc god Beogh.
 %%%%
 An unnaturally hard rock wall
+
+You cannot affect this wall by any means.
 %%%%
 Floor
 %%%%
 Some deep water
+
+This water is as deep as it is dangerous. No sane traveller would try to set 
+foot into it, apart from those who fly or swim. Let it be a warning for you:
+many confused adventurers found their death at the depths, and an untimely
+end of levitation drowned even more hopeful trespassers.
 %%%%
 Some lava
 

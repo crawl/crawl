@@ -361,7 +361,7 @@ This spell throws a crackling sphere of destructive energy.
 %%%%
 Lee's Rapid Deconstruction
 
-This spells fragments a wall into an explosion of deadly shrapnel.  It can also be used directly on monsters made of wall-like substances.
+This spell fragments a wall into an explosion of deadly shrapnel.  It can also be used directly on monsters made of wall-like substances.
 %%%%
 Lehudib's Crystal Spear
 
@@ -631,7 +631,7 @@ This spell calls forth one of the greater demons of Pandemonium to serve the cas
 %%%%
 Summon Horrible Things
 
-This spell opens a gate to the Abyss and calls through one or more hideous abominations from that dreadful place.The powers who answer this invocation require of casters a portion of their intellect in exchange for this service.
+This spell opens a gate to the Abyss and calls through one or more hideous abominations from that dreadful place. The powers who answer this invocation require of casters a portion of their intellect in exchange for this service.
 %%%%
 Summon Ice Beast
 

@@ -146,7 +146,7 @@ Spellcasting
 
 Now that you have the basic Spellcasting skill, you can learn and cast 
 spells, if you wish to. In addition, gaining another level in 
-Spellcasting will occasionally grant your more magic and "spell slots" 
+Spellcasting will occasionally grant you more magic and "spell slots" 
 to spend on new spells. Spellcasting skill and your intelligence are
 the only factors countering spell hunger.
 %%%%
@@ -252,7 +252,7 @@ spells of this school. Many spells belong to a combination of several
 schools, in which case the average skill in these schools will decide 
 on spellcasting success and power.
 
-Being skilled in Earth Magic makes Ice Magic harder to learn, and vice
+Being skilled in Earth Magic makes Air Magic harder to learn, and vice
 versa.
 %%%%
 Poison Magic
