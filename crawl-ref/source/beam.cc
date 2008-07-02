@@ -5333,6 +5333,15 @@ int explosion( bolt &beam, bool hole_in_the_middle,
     // beam is now an explosion;  set in_explosion_phase
     beam.in_explosion_phase = true;
 
+    if (is_sanctuary(beam.target_x, beam.target_y))
+    {
+        if (!beam.is_tracer && see_grid(beam.target()) && !beam.name.empty() )
+            mprf(MSGCH_GOD, "By Zin's power, the %s is contained.",
+                 beam.name.c_str());
+
+        return (-1);
+    }
+
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "explosion at (%d, %d) : t=%d c=%d f=%d hit=%d dam=%dd%d",
