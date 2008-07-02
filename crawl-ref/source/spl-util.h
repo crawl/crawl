@@ -131,7 +131,7 @@ int apply_area_within_radius(int (*func) (int, int, int, int),
 bool spell_direction( dist &spelld, bolt &pbolt,
                       targeting_type restrict = DIR_NONE,
                       targ_mode_type mode = TARG_ENEMY,
-                      bool needs_path = true,
+                      bool needs_path = true, bool may_target_monster = true,
                       const char *prompt = NULL );
 
 void apply_area_cloud(int (*func) (int, int, int, int, cloud_type,

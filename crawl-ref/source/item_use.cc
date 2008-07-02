@@ -1456,9 +1456,11 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
     }
 
     beh.message_ammo_prompt();
+
     // XXX: This stuff should be done by direction()!
     message_current_target();
-    direction( target, DIR_NONE, TARG_ENEMY, -1, false, !teleport, NULL, &beh );
+    direction( target, DIR_NONE, TARG_ENEMY, -1, false, !teleport, true,
+               NULL, &beh );
 
     if (beh.m_slot == -1)
     {

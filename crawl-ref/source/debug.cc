@@ -708,9 +708,11 @@ void wizard_level_travel( bool down )
     // This lets us, for example, use &U to exit from Pandemonium and
     // &D to go to the next level.
     command_type real_dir = grid_stair_direction(stairs);
-    if ((down && real_dir == CMD_GO_UPSTAIRS)
-        || (!down && real_dir == CMD_GO_DOWNSTAIRS))
+    if (down && real_dir == CMD_GO_UPSTAIRS
+        || !down && real_dir == CMD_GO_DOWNSTAIRS)
+    {
         down = !down;
+    }
 
     if (down)
         down_stairs(you.your_level, stairs);
@@ -4103,7 +4105,7 @@ static void _move_player(int x, int y)
 static void _move_monster(int x, int y, int mid1)
 {
     dist moves;
-    direction(moves, DIR_NONE, TARG_ANY, -1, true, false,
+    direction(moves, DIR_NONE, TARG_ANY, -1, true, false, true,
               "Move monster to where?");
 
     if (!moves.isValid || !in_bounds(moves.tx, moves.ty))

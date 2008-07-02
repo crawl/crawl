@@ -1146,7 +1146,7 @@ int num_traps_for_place(int level_number, const level_id &place)
         }
     }
 
-    switch(place.level_type)
+    switch (place.level_type)
     {
     case LEVEL_DUNGEON:
         if (branches[place.branch].num_traps_function != NULL)

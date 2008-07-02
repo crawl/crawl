@@ -471,7 +471,8 @@ static void _fill_monster_list(bool full_info)
 
 void direction(dist& moves, targeting_type restricts,
                targ_mode_type mode, int range, bool just_looking,
-               bool needs_path, const char *prompt, targeting_behaviour *beh)
+               bool needs_path, bool may_target_monster, const char *prompt,
+               targeting_behaviour *beh)
 {
     static targeting_behaviour stock_behaviour;
     if (!beh)
@@ -480,7 +481,8 @@ void direction(dist& moves, targeting_type restricts,
     beh->just_looking = just_looking;
 
 #ifndef USE_TILE
-    if (!just_looking && Options.mlist_targetting == MLIST_TARGET_HIDDEN)
+    if (!just_looking && may_target_monster && restricts != DIR_DIR
+        && Options.mlist_targetting == MLIST_TARGET_HIDDEN)
     {
         Options.mlist_targetting = MLIST_TARGET_ON;
         bool full_info = update_monster_pane();

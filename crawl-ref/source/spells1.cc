@@ -103,7 +103,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         // query for location {dlb}:
         while (true)
         {
-            direction(beam, DIR_TARGET, TARG_ANY, -1, false, false,
+            direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false,
                       "Blink to where?");
 
             if (!beam.isValid || coord_def(beam.tx, beam.ty) == you.pos())
@@ -499,7 +499,7 @@ bool conjure_flame(int pow)
             done_first_message = true;
         }
 
-        direction( spelld, DIR_TARGET, TARG_ENEMY, -1, false, false );
+        direction( spelld, DIR_TARGET, TARG_ENEMY, -1, false, false, false );
 
         if (!spelld.isValid)
         {
@@ -686,7 +686,7 @@ static int _healing_spell(int healed, int target_x = -1, int target_y = -1)
     if (target_x == -1 || target_y == -1)
     {
         spd.isValid = spell_direction(spd, beam, DIR_TARGET, TARG_ANY, true,
-                                      "Heal whom?");
+                                      true, "Heal whom?");
     }
     else
     {

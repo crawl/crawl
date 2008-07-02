@@ -3813,7 +3813,7 @@ static void _close_door(int door_x, int door_y)
     door_move.dx = door_x;
     door_move.dy = door_y;
 
-    if (!(door_x || door_y))
+    if (!door_x && !door_y)
     {
         mpr("Which direction?", MSGCH_PROMPT);
         direction( door_move, DIR_DIR );

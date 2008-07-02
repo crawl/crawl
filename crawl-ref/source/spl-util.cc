@@ -551,7 +551,7 @@ int apply_random_around_square( int (*func) (int, int, int, int),
     return (rv);
 }                               // end apply_random_around_square()
 
-// apply func to one square of player's choice beside the player
+// Apply func to one square of player's choice beside the player.
 int apply_one_neighbouring_square(int (*func) (int, int, int, int), int power)
 {
     struct dist bmove;
@@ -571,7 +571,7 @@ int apply_one_neighbouring_square(int (*func) (int, int, int, int), int power)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (rv);
-}                               // end apply_one_neighbouring_square()
+}
 
 int apply_area_within_radius( int (*func) (int, int, int, int),
                               int x, int y, int pow, int radius, int ctype )
@@ -792,12 +792,14 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
 // Return false if the user canceled, true otherwise.
 bool spell_direction( dist &spelld, bolt &pbolt,
                       targeting_type restrict, targ_mode_type mode,
-                      bool needs_path, const char *prompt )
+                      bool needs_path, bool may_target_monster,
+                      const char *prompt )
 {
     if (restrict != DIR_DIR)
         message_current_target();
 
-    direction( spelld, restrict, mode, -1, false, needs_path, prompt );
+    direction( spelld, restrict, mode, -1, false, needs_path,
+               may_target_monster, prompt );
 
     if (!spelld.isValid)
     {
