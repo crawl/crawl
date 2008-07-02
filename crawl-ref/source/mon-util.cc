@@ -4984,7 +4984,7 @@ bool monsters::add_ench(const mon_enchant &ench)
     // If the duration is not set, we must calculate it (depending on the
     // enchantment).
     if (!ench.duration)
-        added->set_duration(this, new_enchantment? NULL : &ench);
+        added->set_duration(this, new_enchantment ? NULL : &ench);
 
     if (new_enchantment)
         add_enchantment_effect(ench);

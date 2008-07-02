@@ -2405,15 +2405,7 @@ static void _mons_find_all_level_exits(const monsters *mon,
 
                 // Teleportation and shaft traps.
                 const trap_type tt = trap_type_at_xy(x, y);
-                if ((tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
-                        && (mons_is_native_in_branch(mon)
-                            || gridc != DNGN_UNDISCOVERED_TRAP))
-                {
-                    e.push_back(level_exit(coord_def(x, y), false));
-                }
-
-                // Any place the monster can submerge.
-                if (monster_can_submerge(mon, gridc))
+                if (tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
                     e.push_back(level_exit(coord_def(x, y), false));
             }
         }
@@ -2421,7 +2413,8 @@ static void _mons_find_all_level_exits(const monsters *mon,
 }
 
 static int _mons_find_nearest_level_exit(const monsters *mon,
-                                         std::vector<level_exit> &e)
+                                         std::vector<level_exit> &e,
+                                         bool restart)
 {
 
     if (e.empty())
@@ -2433,13 +2426,26 @@ static int _mons_find_nearest_level_exit(const monsters *mon,
     for (unsigned int i = 0; i < e.size(); ++i)
     {
         if (e[i].unreachable)
-            continue;
+        {
+            if (restart)
+                e[i].unreachable = false;
+            else
+                continue;
+        }
 
         int dist = grid_distance(mon->x, mon->y, e[i].target.x,
                                  e[i].target.y);
 
         if (old_dist == -1 || old_dist >= dist)
         {
+            // Ignore teleportation and shaft traps that the monster
+            // shouldn't know about.
+            if (!mons_is_native_in_branch(mon)
+                && grd(e[i].target) == DNGN_UNDISCOVERED_TRAP)
+            {
+                continue;
+            }
+
             retval = i;
             old_dist = dist;
         }
@@ -2466,15 +2472,6 @@ static void _mons_indicate_level_exit(const monsters *mon)
     }
     else if (is_gate(gridc))
         simple_monster_message(mon, " passes through the gate.");
-    // Any place the monster can submerge.
-    else if (monster_can_submerge(mon, gridc))
-    {
-        simple_monster_message(mon,
-            make_stringf(" disappears into %s!",
-                mons_habitat(mon) == HT_LAVA  ? "the lava" :
-                mons_habitat(mon) == HT_WATER ? "the water"
-                                              : "thin air").c_str());
-    }
 }
 
 void make_mons_leave_level(monsters *mon)
@@ -3043,7 +3040,10 @@ static void _handle_behaviour(monsters *mon)
                     new_foe = MHITNOT;
                     mon->travel_path.clear();
 
-                    e_index = _mons_find_nearest_level_exit(mon, e);
+                    e_index = _mons_find_nearest_level_exit(mon, e, false);
+
+                    if (e_index == -1 && one_chance_in(20))
+                        e_index = _mons_find_nearest_level_exit(mon, e, true);
 
                     if (e_index != -1)
                     {
