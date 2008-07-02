@@ -3098,7 +3098,7 @@ static void _handle_behaviour(monsters *mon)
             // wandering monsters at least appear to have some sort of
             // attention span.  -- bwr
             if (mon->x == mon->target_x && mon->y == mon->target_y
-                || mons_is_batty(mon) || (!isPacified && one_chance_in(20)))
+                || mons_is_batty(mon) || one_chance_in(20))
             {
                 bool need_target = true;
                 if (travelling)
@@ -3158,7 +3158,7 @@ static void _handle_behaviour(monsters *mon)
 
                         int erase = -1;  // Erase how many waypoints?
                         for (unsigned int i = mon->travel_path.size() - 1;
-                             i >= 0; i--)
+                             i >= 0; --i)
                         {
                             if (grid_see_grid(mon->x, mon->y,
                                               mon->travel_path[i].x,
@@ -3319,7 +3319,10 @@ static void _handle_behaviour(monsters *mon)
                     // the level can't reach its target, mark its target
                     // as unreachable.
                     if (isPacified)
+                    {
                         e[e_index].unreachable = true;
+                        mon->travel_target = MTRAV_NONE;
+                    }
                     else
                     {
                         mon->target_x = 10 + random2(GXM - 10);
