@@ -176,7 +176,7 @@ int exercise(int exsk, int deg)
     return (ret);
 }                               // end exercise()
 
-static int _exercise2( int exsk )
+static int _exercise2(int exsk)
 {
     int deg = 1;
     int bonus = 0;
@@ -184,10 +184,10 @@ static int _exercise2( int exsk )
 
     int skill_change = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
 
-    // being good at some weapons makes others easier to learn:
+    // Being good at some weapons makes others easier to learn.
     if (exsk < SK_ARMOUR)
     {
-        // Blades to Blades.
+        // Short Blades and Long Blades.
         if ((exsk == SK_SHORT_BLADES || exsk == SK_LONG_BLADES)
             && (you.skills[SK_SHORT_BLADES] > you.skills[exsk]
                 || you.skills[SK_LONG_BLADES] > you.skills[exsk]))
@@ -228,12 +228,16 @@ static int _exercise2( int exsk )
         }
     }
 
-    // Quick fix for the fact that stealth can't be gained fast enough to
-    // keep up with the monster levels, this should speed its advancement
+    // Quick fix for the fact that stealth can't be gained fast enough
+    // to keep up with the monster levels.  This should speed its
+    // advancement.
     if (exsk == SK_STEALTH)
-        bonus += random2(3);
+        bonus += random2(30);
 
-    // Spellcasting is cheaper early on, and elementals hinder each other.
+    int skill_change = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
+
+    // Spellcasting is cheaper early on, and elementals hinder each
+    // other.
     if (exsk >= SK_SPELLCASTING)
     {
         if (you.skill_cost_level < 5)
@@ -244,7 +248,8 @@ static int _exercise2( int exsk )
             skill_change /= 20;
         }
 
-        // Being good at elemental magic makes other elements harder to learn.
+        // Being good at elemental magic makes other elements harder to
+        // learn.
         if (exsk >= SK_FIRE_MAGIC && exsk <= SK_EARTH_MAGIC
             && (you.skills[SK_FIRE_MAGIC] > you.skills[exsk]
                 || you.skills[SK_ICE_MAGIC] > you.skills[exsk]
@@ -294,11 +299,11 @@ static int _exercise2( int exsk )
     // Handle fractional learning.
     if (skill_change > spending_limit)
     {
-        // This system is a bit hard on missile weapons in the late game
-        // since they require expendable ammo in order to practise.
-        // Increasing the "deg"ree of exercise would make missile
-        // weapons too easy earlier on, so instead we're giving them
-        // a special case here.
+        // This system is a bit hard on missile weapons in the late
+        // game, since they require expendable ammo in order to
+        // practise.  Increasing the "deg"ree of exercise would make
+        // missile weapons too easy earlier on, so, instead, we're
+        // giving them a special case here.
         if (exsk != SK_DARTS && exsk != SK_BOWS && exsk != SK_CROSSBOWS
             || skill_change > you.exp_available)
         {
@@ -328,33 +333,34 @@ static int _exercise2( int exsk )
 
     if (skill_change <= 0)
     {
-        // No free lunch, this is a problem now that we don't
-        // have overspending.
+        // No free lunch.  This is a problem now that we don't have
+        // overspending.
         skill_change = (fraction > 0 || deg > 0 || bonus > 0) ? 1 : 0;
     }
 
-    // Can safely return at any stage before this
+    // We can safely return at any stage before this.
     int skill_inc = (deg + bonus) * 10 + fraction;
 
-    // Starting to learn skills is easier if the appropriate stat is high
+    // Starting to learn skills is easier if the appropriate stat is
+    // high.
     if (you.skills[exsk] == 0)
     {
         if ((exsk >= SK_FIGHTING && exsk <= SK_STAVES) || exsk == SK_ARMOUR)
         {
-            // These skills are easier for the strong
+            // These skills are easier for the strong.
             skill_inc *= MAX(5, you.strength);
             skill_inc /= 10;
         }
         else if (exsk >= SK_SLINGS && exsk <= SK_UNARMED_COMBAT)
         {
-            // These skills are easier for the dexterous
+            // These skills are easier for the dexterous.
             // Note: Armour is handled above.
             skill_inc *= MAX(5, you.dex);
             skill_inc /= 10;
         }
         else if (exsk >= SK_SPELLCASTING && exsk <= SK_POISON_MAGIC)
         {
-            // These skills are easier for the smart
+            // These skills are easier for the smart.
             skill_inc *= MAX(5, you.intel);
             skill_inc /= 10;
         }
