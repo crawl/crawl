@@ -3060,7 +3060,7 @@ static void _handle_behaviour(monsters *mon)
 
                 // If a pacified monster is leaving the level, and has
                 // reached its goal, handle it here.
-                if (isPacified && e_index != -1
+                if (e_index != -1
                     && mon->x == e[e_index].target.x
                     && mon->y == e[e_index].target.y)
                 {
