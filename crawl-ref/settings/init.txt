@@ -204,6 +204,7 @@ include = travel_stoppers.txt
 # easy_open    = false
 # easy_unequip = false
 # easy_confirm = (none | safe)
+# allow_self_target = (yes | no | prompt)
 # easy_butcher = false
 # always_confirm_butcher = true
 # swap_when_safe         = false

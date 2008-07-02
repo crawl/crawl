@@ -1731,7 +1731,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     int i;
     const level_area_type  old_level_type = you.level_type;
     const dungeon_feature_type stair_find =
-        force_stair? force_stair : grd[you.x_pos][you.y_pos];
+        force_stair? force_stair : grd(you.pos());
 
     branch_type old_where = you.where_are_you;
 
@@ -1774,8 +1774,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     if (shaft)
     {
-        bool known_trap = (grd[you.x_pos][you.y_pos] != DNGN_UNDISCOVERED_TRAP
-                           && !force_stair);
+        const bool known_trap = (grd(you.pos()) != DNGN_UNDISCOVERED_TRAP
+                                 && !force_stair);
 
         if (!known_trap && !force_stair)
         {

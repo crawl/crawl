@@ -301,7 +301,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
     }
 #endif
 
-    std::string cast_into = "";
+    std::string cast_into;
 
     switch (gate_type)
     {

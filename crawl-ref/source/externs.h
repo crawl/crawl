@@ -1665,8 +1665,10 @@ public:
     int         note_hp_percent; // percentage hp for notetaking
     int         ood_interesting; // how many levels OOD is noteworthy?
     int         rare_interesting; // what monster rarity is noteworthy?
-    int         easy_confirm;    // make yesno() confirming easier
-    int         easy_quit_item_prompts; // make item prompts quitable on space
+    confirm_level_type easy_confirm;    // make yesno() confirming easier
+    bool        easy_quit_item_prompts; // make item prompts quitable on space
+    confirm_prompt_type allow_self_target;      // yes, no, prompt
+
     int         colour[16];      // macro fg colours to other colours
     int         background;      // select default background colour
     int         channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring

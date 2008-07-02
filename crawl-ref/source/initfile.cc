@@ -676,6 +676,7 @@ void game_options::reset_options()
     list_rotten            = true;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
+    allow_self_target      = CONFIRM_PROMPT;
     hp_warning             = 10;
     magic_point_warning    = 0;
     default_target         = true;
@@ -1942,6 +1943,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             easy_confirm = CONFIRM_SAFE_EASY;
     }
     else BOOL_OPTION(easy_quit_item_prompts);
+    else if (key == "allow_self_target")
+    {
+        if (field == "yes")
+            allow_self_target = CONFIRM_NONE;
+        else if (field == "no")
+            allow_self_target = CONFIRM_CANCEL;
+        else if (field == "prompt")
+            allow_self_target = CONFIRM_PROMPT;
+    }
     else BOOL_OPTION_NAMED("easy_quit_item_lists", easy_quit_item_prompts);
     else BOOL_OPTION(easy_open);
     else BOOL_OPTION(easy_unequip);

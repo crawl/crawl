@@ -2202,7 +2202,6 @@ bool empty_surrounds(int emx, int emy, dungeon_feature_type spc_wanted,
 
             if (success && one_chance_in(++good_count))
             {
-                // Add point to list of good points.
                 empty[0] = tx;
                 empty[1] = ty;
             }

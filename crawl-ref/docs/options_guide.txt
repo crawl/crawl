@@ -58,7 +58,7 @@ The contents of this text are:
                 stash_remove_decay
 4-i     Command Enhancements.
                 auto_list, easy_open, easy_unequip, easy_confirm, 
-                easy_butcher, always_confirm_butcher, 
+                allow_self_target, easy_butcher, always_confirm_butcher, 
                 swap_when_safe, easy_quit_item_prompts, easy_exit_menu, 
                 sort_menus
 4-j     Message and Display Improvements.
@@ -975,6 +975,14 @@ easy_confirm = (none | safe)
         WARNING TO KEYPAD USERS: The number 7 is mapped to the letter 
         'y', which can result in accidentally answering yes to 
         questions.
+
+allow_self_target = (yes | no | prompt)
+        Allow targeting yourself with risky magic (e.g., the spell
+        Bolt of Fire or a wand of slowing.)
+        When set to 'yes', you are a valid target. When set to 'no',
+        you cannot target yourself with such spells. When set to
+        'prompt' (the default), you will be required to confirm
+        self-targeting.
 
 easy_butcher = true
         If true, auto-switch to an appropriate uncursed weapon for 

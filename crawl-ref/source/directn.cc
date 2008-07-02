@@ -1044,14 +1044,17 @@ void direction(dist& moves, targeting_type restricts,
             // A bunch of confirmation tests; if we survive them all,
             // then break out.
 
-            // Confirm self-targeting on TARG_ENEMY.
+            // Confirm self-targeting on TARG_ENEMY (option-controlled.)
             // Conceivably we might want to confirm on TARG_ANY too.
             if (moves.isTarget
                 && moves.tx == you.x_pos && moves.ty == you.y_pos
                 && mode == TARG_ENEMY
-                && !yesno("Really target yourself?", false, 'n'))
+                && (Options.allow_self_target == CONFIRM_CANCEL
+                    || (Options.allow_self_target == CONFIRM_PROMPT
+                        && !yesno("Really target yourself?", false, 'n'))))
             {
-                mesclr();
+                if (Options.allow_self_target == CONFIRM_CANCEL )
+                    mpr("That would be overly suicidal.", MSGCH_EXAMINE_FILTER);
                 show_prompt = true;
             }
             else if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
