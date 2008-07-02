@@ -1464,24 +1464,17 @@ void cast_fulsome_distillation( int powc )
 
     int corpse = -1;
 
-    // Search items at the players location for corpses.
-    // XXX: Turn this into a separate function and merge with
-    // the messes over in butchery, animating, and maybe even
-    // item pickup from stacks (which would make it easier to
-    // create a floor stack menu system later) -- bwr
-    for (int curr_item = igrd[you.x_pos][you.y_pos];
-             curr_item != NON_ITEM;
-             curr_item = mitm[curr_item].link)
+    // Search items at the player's location for corpses.
+    for (stack_iterator si(you.pos()); si; ++si)
     {
-        const item_def& item = mitm[curr_item];
-        if (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY)
+        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
             snprintf( info, INFO_SIZE, "Distill a potion from %s?",
-                      item.name(DESC_NOCAP_THE).c_str() );
+                      si->name(DESC_NOCAP_THE).c_str() );
 
             if (yesno( info, true, 0, false ))
             {
-                corpse = curr_item;
+                corpse = si->index();
                 break;
             }
         }

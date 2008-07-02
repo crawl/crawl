@@ -1937,15 +1937,13 @@ static bool _confirm_pray_sacrifice()
         return (false);
     }
 
-    for ( int i = igrd[you.x_pos][you.y_pos]; i != NON_ITEM;
-          i = mitm[i].link )
+    for ( stack_iterator si(you.pos()); si; ++si )
     {
-        const item_def& item = mitm[i];
-        if ( _is_risky_sacrifice(item)
-             || has_warning_inscription(item, OPER_PRAY) )
+        if ( _is_risky_sacrifice(*si)
+             || has_warning_inscription(*si, OPER_PRAY) )
         {
             std::string prompt = "Really sacrifice stack with ";
-            prompt += item.name(DESC_NOCAP_A);
+            prompt += si->name(DESC_NOCAP_A);
             prompt += " in it?";
             if ( !yesno(prompt.c_str(), false, 'n') )
                 return (false);

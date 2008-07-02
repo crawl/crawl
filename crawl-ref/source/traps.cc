@@ -49,17 +49,13 @@ static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison);
 // otherwise the first net found is returned.
 int get_trapping_net(int x, int y, bool trapped)
 {
-    int net, next;
-
-    for (net = igrd[x][y]; net != NON_ITEM; net = next)
+    for (stack_iterator si(coord_def(x,y)); si; ++si)
     {
-         next = mitm[net].link;
-
-         if (mitm[net].base_type == OBJ_MISSILES
-             && mitm[net].sub_type == MI_THROWING_NET
-             && (!trapped || item_is_stationary(mitm[net])))
+         if (si->base_type == OBJ_MISSILES
+             && si->sub_type == MI_THROWING_NET
+             && (!trapped || item_is_stationary(*si)))
          {
-             return (net);
+             return (si->index());
          }
     }
     return (NON_ITEM);
