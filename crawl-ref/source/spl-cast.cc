@@ -2961,7 +2961,10 @@ static void _miscast_necromancy(int severity, const char* cause)
             break;
         case 2:
             // josh declares mummies cannot smell {dlb}
-            if (player_can_smell())
+            if (player_can_smell()
+                && !(you.is_undead
+                     && (you.is_undead != US_SEMI_UNDEAD
+                         || you.hunger_state < HS_SATIATED) ))
             {
                 mpr("You smell decay."); // identical to a harmless message
                 you.rotting++;
