@@ -178,7 +178,7 @@ int exercise(int exsk, int deg)
 
 static int _exercise2(int exsk)
 {
-    int deg = 1;
+    int deg = 10;
     int bonus = 0;
     char old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
 
@@ -190,7 +190,7 @@ static int _exercise2(int exsk)
             && (you.skills[SK_SHORT_BLADES] > you.skills[exsk]
                 || you.skills[SK_LONG_BLADES] > you.skills[exsk]))
         {
-            bonus += random2(3);
+            bonus += random2(30);
         }
 
         // Axes and Polearms.
@@ -198,7 +198,7 @@ static int _exercise2(int exsk)
             && (you.skills[SK_AXES] > you.skills[exsk]
                 || you.skills[SK_POLEARMS] > you.skills[exsk]))
         {
-            bonus += random2(3);
+            bonus += random2(30);
         }
 
         // Polearms and Staves.
@@ -206,7 +206,7 @@ static int _exercise2(int exsk)
             && (you.skills[SK_POLEARMS] > you.skills[exsk]
                 || you.skills[SK_STAVES] > you.skills[exsk]))
         {
-            bonus += random2(3);
+            bonus += random2(30);
         }
 
         // Axes and Maces.
@@ -214,7 +214,7 @@ static int _exercise2(int exsk)
             && (you.skills[SK_AXES] > you.skills[exsk]
                 || you.skills[SK_MACES_FLAILS] > you.skills[exsk]))
         {
-            bonus += random2(3);
+            bonus += random2(30);
         }
 
         // Slings and Throwing.
@@ -222,7 +222,7 @@ static int _exercise2(int exsk)
             && (you.skills[SK_SLINGS] > you.skills[exsk]
                 || you.skills[SK_THROWING] > you.skills[exsk]))
         {
-            bonus += random2(3);
+            bonus += random2(30);
         }
     }
 
@@ -291,7 +291,6 @@ static int _exercise2(int exsk)
             return (0);
     }
 
-    int fraction = 0;
     int spending_limit = MIN(MAX_SPENDING_LIMIT, you.exp_available);
 
     // Handle fractional learning.
@@ -305,26 +304,17 @@ static int _exercise2(int exsk)
         if (exsk != SK_DARTS && exsk != SK_BOWS && exsk != SK_CROSSBOWS
             || skill_change > you.exp_available)
         {
-            fraction = (spending_limit * 10) / skill_change;
-            skill_change = (skill_change * fraction) / 10;
+            int fraction = (spending_limit * 10) / skill_change;
 
-            deg = (deg * fraction) / 10;
+            deg *= fraction;
 
             if (deg == 0)
-                bonus = (bonus * fraction) / 10;
+                bonus *= fraction;
         }
         else
-        {
-            if ((skill_change / 2) > MAX_SPENDING_LIMIT)
-            {
-                deg = 0;
-                fraction = 5;
-            }
-            else
-                deg = 1;
+            deg = ((skill_change / 2) > MAX_SPENDING_LIMIT) ? 5 : 10;
 
-            skill_change = spending_limit;
-        }
+        skill_change = spending_limit;
     }
 
     skill_change -= random2(5);
@@ -333,11 +323,11 @@ static int _exercise2(int exsk)
     {
         // No free lunch.  This is a problem now that we don't have
         // overspending.
-        skill_change = (fraction > 0 || deg > 0 || bonus > 0) ? 1 : 0;
+        skill_change = (deg > 0 || bonus > 0) ? 1 : 0;
     }
 
     // We can safely return at any stage before this.
-    int skill_inc = (deg + bonus) * 10 + fraction;
+    int skill_inc = deg + bonus;
 
     // Starting to learn skills is easier if the appropriate stat is
     // high.
