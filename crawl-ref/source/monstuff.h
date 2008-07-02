@@ -40,10 +40,10 @@ struct level_exit
     bool unreachable;
 
 public:
-    level_exit(coord_def c = coord_def(-1, -1),
+    level_exit(coord_def t = coord_def(-1, -1),
                bool u = true)
 
-        : target(c), unreachable(u)
+        : target(t), unreachable(u)
     {
     }
 };
