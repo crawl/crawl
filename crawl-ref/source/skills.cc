@@ -183,7 +183,6 @@ static int _exercise2( int exsk )
     char old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
 
     int skill_change = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
-    int i;
 
     // being good at some weapons makes others easier to learn:
     if (exsk < SK_ARMOUR)
@@ -238,9 +237,7 @@ static int _exercise2( int exsk )
     if (exsk >= SK_SPELLCASTING)
     {
         if (you.skill_cost_level < 5)
-        {
             skill_change /= 2;
-        }
         else if (you.skill_cost_level < 15)
         {
             skill_change *= (10 + (you.skill_cost_level - 5));
@@ -279,9 +276,11 @@ static int _exercise2( int exsk )
         // Experimental restriction (too many spell schools). -- bwr
         int skill_rank = 1;
 
-        for (i  = SK_CONJURATIONS; i <= SK_DIVINATIONS; i++)
+        for (int i = SK_CONJURATIONS; i <= SK_DIVINATIONS; ++i)
+        {
             if (you.skills[exsk] < you.skills[i])
                 skill_rank++;
+        }
 
         // Things get progressively harder, but not harder than
         // the Fire-Air or Ice-Earth level.
@@ -290,8 +289,7 @@ static int _exercise2( int exsk )
     }
 
     int fraction = 0;
-    int spending_limit = (you.exp_available < MAX_SPENDING_LIMIT)
-                                    ? you.exp_available : MAX_SPENDING_LIMIT;
+    int spending_limit = MIN(MAX_SPENDING_LIMIT, you.exp_available);
 
     // Handle fractional learning.
     if (skill_change > spending_limit)
@@ -320,9 +318,7 @@ static int _exercise2( int exsk )
                 fraction = 5;
             }
             else
-            {
                 deg = 1;
-            }
 
             skill_change = spending_limit;
         }
@@ -430,7 +426,8 @@ static int _exercise2( int exsk )
         // at its new level.   See skills2.cc::init_skill_order()
         // for more details.  -- bwr
         you.skill_order[exsk] = 0;
-        for (i = SK_FIGHTING; i < NUM_SKILLS; i++)
+
+        for (int i = SK_FIGHTING; i < NUM_SKILLS; ++i)
         {
             if (i == exsk)
                 continue;
@@ -476,5 +473,6 @@ static int _exercise2( int exsk )
             maybe_identify_staff(you.inv[you.equip[EQ_WEAPON]]);
         }
     }
+
     return (skill_inc);
-}                               // end exercise2()
+}
