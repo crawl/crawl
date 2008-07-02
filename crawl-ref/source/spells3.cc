@@ -1677,6 +1677,8 @@ bool cast_sanctuary(const int power)
     // and would then have to be stored globally.
     const int radius      = 5;
     const int pattern     = random2(4);
+    int       blood_count = 0;
+    int       trap_count  = 0;
     int       scare_count = 0;
     int       cloud_count = 0;
     monsters *seen_mon    = NULL;
@@ -1692,6 +1694,22 @@ bool cast_sanctuary(const int power)
                 continue;
 
             coord_def pos(posx, posy);
+            if (env.map(pos).property == FPROP_BLOODY
+                && see_grid(pos))
+            {
+                blood_count++;
+            }
+
+            if (trap_type_at_xy(posx, posy) != NUM_TRAPS
+                && grd(pos) == DNGN_UNDISCOVERED_TRAP
+                && see_grid(pos))
+            {
+                const dungeon_feature_type type =
+                    trap_category( trap_type_at_xy(posx, posy) );
+                grd(pos) = type;
+                set_envmap_obj(posx, posy, type);
+                trap_count++;
+            }
 
             // forming patterns
             if (pattern == 0    // outward rays
@@ -1761,21 +1779,29 @@ bool cast_sanctuary(const int power)
             }
         } // radius loop
 
-    if (scare_count == 1 && seen_mon != NULL)
-        simple_monster_message(seen_mon, " turns to flee the light!");
-    else if (scare_count > 0)
-        mpr("The monsters scatter in all directions!");
+    if (trap_count > 0)
+        mpr("The flash of divine light reveals hidden traps!",
+            MSGCH_GOD);
 
     if (cloud_count == 1)
     {
-        mpr("By Zin's power, the foul cloud within the sanctuary is "
+        mpr("By Zin's power the foul cloud within the sanctuary is "
             "swept away.", MSGCH_GOD);
     }
     else if (cloud_count > 1)
     {
-        mpr("By Zin's power, all foul fumes within the sanctuary are "
+        mpr("By Zin's power all foul fumes within the sanctuary are "
             "swept away.", MSGCH_GOD);
     }
+
+    if (blood_count > 0)
+        mpr("By Zin's power all blood is cleared from the sanctuary.",
+            MSGCH_GOD);
+
+    if (scare_count == 1 && seen_mon != NULL)
+        simple_monster_message(seen_mon, " turns to flee the light!");
+    else if (scare_count > 0)
+        mpr("The monsters scatter in all directions!");
 
     // Pets stop attacking and converge on you.
     you.pet_target = MHITYOU;
