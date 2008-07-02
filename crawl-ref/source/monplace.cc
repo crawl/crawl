@@ -1939,14 +1939,14 @@ int mons_place( mgen_data mg )
             creation->add_ench(ENCH_CHARM);
         }
 
+        if (creation->type == MONS_RAKSHASA_FAKE && !one_chance_in(3))
+            creation->add_ench(ENCH_INVIS);
+
         if (!(mg.flags & MG_FORCE_BEH))
             player_angers_monster(creation);
 
         // Make summoned being aware of player's presence.
         behaviour_event(creation, ME_ALERT, MHITYOU);
-
-        if (creation->type == MONS_RAKSHASA_FAKE && !one_chance_in(3))
-            creation->add_ench(ENCH_INVIS);
     }
 
     return (mid);
