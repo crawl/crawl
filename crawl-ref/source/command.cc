@@ -41,6 +41,7 @@
 #include "mon-pick.h"
 #include "mon-util.h"
 #include "ouch.h"
+#include "place.h"
 #include "player.h"
 #include "quiver.h"
 #include "religion.h"
@@ -1020,8 +1021,16 @@ static std::vector<std::string> _get_branch_keys()
 
         names.push_back(branch.shortname);
     }
-
-    return names;
+/*
+    // Maybe include other level areas, as well.
+    for (int i = LEVEL_LABYRINTH; i < NUM_LEVEL_AREA_TYPES; i++)
+    {
+        names.push_back(place_name(
+                            get_packed_place(BRANCH_MAIN_DUNGEON, 1,
+                                static_cast<level_area_type>(i)), true));
+    }
+*/
+    return (names);
 }
 
 static bool _monster_filter(std::string key, std::string body)
@@ -1750,8 +1759,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
         "<lightcyan>";
 
     get_item_symbol(DNGN_ITEM_BOOK, &ch, &colour);
-    item_types += static_cast<char>(ch); 
-    item_types += 
+    item_types += static_cast<char>(ch);
+    item_types +=
         "</lightcyan> : books (<w>r</w>ead, <w>M</w>emorise and <w>z</w>ap)\n"
         "<brown>\\</brown> : staves and rods (<w>w</w>ield and e<w>v</w>oke)\n"
         "<lightgreen>}</lightgreen> : miscellaneous items (e<w>v</w>oke)\n"

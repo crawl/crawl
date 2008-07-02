@@ -2016,7 +2016,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
     case DNGN_ENTER_SHOALS:
         return ("staircase to the Shoals");
     case DNGN_ENTER_PORTAL_VAULT:
-        return ("gate leading to a distant place");
+//        return ("gate leading to a distant place");
+        return ("gateway to a bazaar");
     case DNGN_EXIT_PORTAL_VAULT:
         return ("gate leading back to the Dungeon");
     case DNGN_RETURN_FROM_ORCISH_MINES:

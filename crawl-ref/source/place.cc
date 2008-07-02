@@ -65,9 +65,8 @@ unsigned short get_packed_place()
 
 bool single_level_branch( branch_type branch )
 {
-    return
-        branch >= 0 && branch < NUM_BRANCHES
-        && branches[branch].depth == 1;
+    return (branch >= 0 && branch < NUM_BRANCHES
+            && branches[branch].depth == 1);
 }
 
 std::string place_name( unsigned short place, bool long_name,
@@ -103,10 +102,10 @@ std::string place_name( unsigned short place, bool long_name,
     result = (long_name ?
               branches[branch].longname : branches[branch].abbrevname);
 
-    if ( include_number && branches[branch].depth != 1 )
+    if (include_number && branches[branch].depth != 1)
     {
         char buf[200];
-        if ( long_name )
+        if (long_name)
         {
             // decapitalize 'the'
             if ( result.find("The") == 0 )
