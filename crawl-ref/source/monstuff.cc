@@ -2386,8 +2386,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
         }
 }
 
-static void _mons_find_all_level_exits(const monsters *mon,
-                                       std::vector<level_exit> &e)
+static void _find_all_level_exits(std::vector<level_exit> &e)
 {
     e.clear();
 
@@ -2414,11 +2413,11 @@ static void _mons_find_all_level_exits(const monsters *mon,
 
 static int _mons_find_nearest_level_exit(const monsters *mon,
                                          std::vector<level_exit> &e,
-                                         bool restart)
+                                         bool reset = false)
 {
 
-    if (e.empty())
-        _mons_find_all_level_exits(mon, e);
+    if (e.empty() || reset)
+        _find_all_level_exits(e);
 
     int retval = -1;
     int old_dist = -1;
@@ -2426,12 +2425,7 @@ static int _mons_find_nearest_level_exit(const monsters *mon,
     for (unsigned int i = 0; i < e.size(); ++i)
     {
         if (e[i].unreachable)
-        {
-            if (restart)
-                e[i].unreachable = false;
-            else
-                continue;
-        }
+            continue;
 
         int dist = grid_distance(mon->x, mon->y, e[i].target.x,
                                  e[i].target.y);
@@ -3033,14 +3027,15 @@ static void _handle_behaviour(monsters *mon)
             {
                 // If a pacified monster isn't travelling toward
                 // someplace from which it can leave the level, make it
-                // start doing so.  If there's no such place, travel
+                // start doing so.  If there's no such place, either
+                // search the level for such a place again, or travel
                 // randomly.
                 if (mon->travel_target != MTRAV_PATROL)
                 {
                     new_foe = MHITNOT;
                     mon->travel_path.clear();
 
-                    e_index = _mons_find_nearest_level_exit(mon, e, false);
+                    e_index = _mons_find_nearest_level_exit(mon, e);
 
                     if (e_index == -1 && one_chance_in(20))
                         e_index = _mons_find_nearest_level_exit(mon, e, true);
