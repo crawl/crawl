@@ -2598,7 +2598,8 @@ static void _handle_behaviour(monsters *mon)
             _set_nearest_monster_foe(mon);
     }
 
-    if (isNeutral && mon->foe == MHITNOT)
+    // Pacified monsters leaving the level prefer not to attack.
+    if (isNeutral && !isPacified && mon->foe == MHITNOT)
         _set_nearest_monster_foe(mon);
 
     // Monsters do not attack themselves. {dlb}
