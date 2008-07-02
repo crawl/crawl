@@ -2332,13 +2332,7 @@ static bool _choose_weapon()
             if (startwep[i] == WPN_UNARMED)
                 cprintf("%c - claws" EOL, letter);
             else
-            {
-                int x = effective_stat_bonus(startwep[i]);
-
-                cprintf("%c - %s%s" EOL, letter,
-                        weapon_base_name(startwep[i]),
-                        (x <= -4) ? " (not ideal)" : "" );
-            }
+                cprintf("%c - %s" EOL, letter, weapon_base_name(startwep[i]));
 
             if (Options.prev_weapon == startwep[i])
                 prevmatch = true;
@@ -2397,15 +2391,6 @@ static bool _choose_weapon()
         while (keyin != '*' && keyin != '+'
                && (keyin < 'a' || keyin > ('a' + num_choices)
                    || startwep_restrictions[keyin - 'a'] == CC_BANNED));
-
-
-        if (keyin != '*' && keyin != '+'
-            && (claws_allowed && startwep[keyin - 'a'] == WPN_UNARMED
-                || effective_stat_bonus(startwep[keyin - 'a']) > -4))
-        {
-            cprintf(EOL "A fine choice. " EOL);
-            delay(1000);
-        }
     }
 
     if (Options.random_pick || Options.weapon == WPN_RANDOM
@@ -2428,19 +2413,8 @@ static bool _choose_weapon()
         }
 
         if (!good_choices)
-        {
-            // Still try to choose a decent weapon.
-            for (int times = 0; times < 50; times++)
-            {
-                keyin = random2(num_choices);
-                if (claws_allowed && startwep[keyin] == WPN_UNARMED)
-                    break;
+            keyin = random2(num_choices);
 
-                int x = effective_stat_bonus(startwep[keyin]);
-                if (x > -2)
-                    break;
-            }
-        }
         keyin += 'a';
     }
     else
@@ -3299,9 +3273,10 @@ static void _newgame_make_item(int slot, equipment_type eqslot,
     if (item.base_type == OBJ_ARMOUR && replacement != -1
         && !you_can_wear(eqslot))
     {
-        // Don't replace shields with bucklers for draconians and ogres.
+        // Don't replace shields with bucklers for large races or draconians
         if (sub_type != ARM_SHIELD
-            || !player_genus(GENPC_OGRE) && !player_genus(GENPC_DRACONIAN))
+            || player_size(PSIZE_TORSO) < SIZE_LARGE
+               && !player_genus(GENPC_DRACONIAN))
         {
             item.sub_type = replacement;
         }

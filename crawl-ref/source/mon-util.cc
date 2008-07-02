@@ -3295,7 +3295,7 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
     if (brand == SPWPN_PROTECTION)
         ac += 5;
 
-    if (msg && brand != SPWPN_NORMAL)
+    if (msg)
     {
         bool message_given = true;
         switch (brand)
@@ -3331,8 +3331,11 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
             mpr("Its appearance distorts for a moment.");
             break;
         default:
-            message_given = false;
+            // A ranged weapon without special message is known to be unbranded.
+            if (!is_range_weapon(item))
+                message_given = false;
         }
+
         if (message_given)
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
     }
