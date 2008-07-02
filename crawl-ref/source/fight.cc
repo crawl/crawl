@@ -3125,8 +3125,8 @@ bool melee_attack::mons_attack_mons()
          || is_sanctuary(def_pos.x, def_pos.y))
         && atk != def)
     {
-        // Friendly monsters should only violate sanctuary if
-        // explictly ordered to do so by the player.
+        // Friendly monsters should only violate sanctuary if explicitly
+        // ordered to do so by the player.
         if (mons_friendly(atk))
         {
             if (you.pet_target == MHITYOU || you.pet_target == MHITNOT)
@@ -3159,9 +3159,9 @@ bool melee_attack::mons_attack_mons()
         behaviour_event(def, ME_WHACK, monster_index(atk));
     }
 
-    // If an enemy attacked a friend, set the pet target if it isn't
-    // set already, but not if Sanctuary is in effect (pet target must
-    // be set explicitly by the player during Sanctuary)
+    // If an enemy attacked a friend, set the pet target if it isn't set
+    // already, but not if sanctuary is in effect (pet target must be
+    // set explicitly by the player during sanctuary).
     if (perceived_attack && atk->alive() && mons_friendly(def)
         && !mons_wont_attack(atk) && you.pet_target == MHITNOT
         && env.sanctuary_time <= 0)
@@ -4005,9 +4005,9 @@ void melee_attack::mons_check_attack_perceived()
     {
         interrupt_activity(AI_MONSTER_ATTACKS, atk);
 
-        // If a friend wants to help, they can attack the attacking monster,
-        // unless Sanctuary is in effect since pet target can only be
-        // changed explicitly by the player during sanctuary.
+        // If a friend wants to help, they can attack the attacking
+        // monster, unless sanctuary is in effect since pet_target can
+        // only be changed explicitly by the player during sanctuary.
         if (you.pet_target == MHITNOT && env.sanctuary_time <= 0)
             you.pet_target = monster_index(atk);
     }

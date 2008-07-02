@@ -2021,7 +2021,7 @@ void yell(bool force)
         if (env.sanctuary_time > 0)
         {
             if (!yesno("An ally attacking under your orders might violate "
-                       "sanctuary; order anyways?", false, 'n'))
+                       "sanctuary; order anyway?", false, 'n'))
             {
                 canned_msg(MSG_OK);
                 return;
