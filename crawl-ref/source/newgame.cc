@@ -2464,8 +2464,6 @@ static bool _is_valid_religion(god_type god)
 
     if (god == GOD_BEOGH)
         return (you.species == SP_HILL_ORC);
-    else if (you.char_class == GOD_PRIEST && you.species == SP_HILL_ORC)
-        return (CC_RESTRICTED);
 
     switch (you.species)
     {
