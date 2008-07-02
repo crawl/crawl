@@ -3132,11 +3132,15 @@ bool melee_attack::mons_attack_mons()
             if (you.pet_target == MHITYOU || you.pet_target == MHITNOT)
             {
                 if (atk->confused() && you.can_see(atk))
+                {
                     mpr("Zin prevents your ally from violating sanctuary "
                         "in its confusion.", MSGCH_GOD);
+                }
                 else if (atk->has_ench(ENCH_BERSERK) && you.can_see(atk))
+                {
                     mpr("Zin prevents your ally from violating sanctuary "
                         "in its berserker rage.", MSGCH_GOD);
+                }
 
                 cancel_attack = true;
                 return (false);
@@ -3145,7 +3149,10 @@ bool melee_attack::mons_attack_mons()
         // Non-friendly monsters should never violate sanctuary.
         else
         {
-            mpr("!!!! Preventing hostile violation of sanctuary");
+#ifdef DEBUG_DIAGNOSTICS
+            mpr("Preventing hostile violation of sanctuary.",
+                MSGCH_DIAGNOSTICS);
+#endif
             cancel_attack = true;
             return (false);
         }
