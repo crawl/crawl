@@ -411,6 +411,7 @@ void area_shift(void)
     // area shift.
     //
     // Also shift sanctuary center if it's close.
+    bool      sanct_shifted = false;
     coord_def sanct_pos(0, 0);
     FixedArray<unsigned short, LOS_DIAMETER, LOS_DIAMETER> fprops;
     const coord_def los_delta(LOS_RADIUS, LOS_RADIUS);
@@ -419,12 +420,15 @@ void area_shift(void)
     {
         fprops(you.pos() - *ri + los_delta) = env.map(*ri).property;
         if (env.sanctuary_pos == *ri && env.sanctuary_time > 0)
-            sanct_pos = *ri;
+        {
+            sanct_pos     = *ri - you.pos();
+            sanct_shifted = true;
+        }
     }
 
     // If sanctuary center is outside of preserved area then just get
     // rid of it.
-    if (env.sanctuary_time > 0 && sanct_pos == coord_def(0, 0))
+    if (env.sanctuary_time > 0 && !sanct_shifted)
     {
         remove_sanctuary(false);
 
@@ -531,9 +535,9 @@ void area_shift(void)
     for ( ; ri2; ++ri2 )
         env.map(*ri2).property = fprops(you.pos() - *ri2 + los_delta);
 
-    if (sanct_pos != coord_def(0, 0))
+    if (sanct_shifted)
     {
-        env.sanctuary_pos = sanct_pos;
+        env.sanctuary_pos = sanct_pos + you.pos();
     }
 
     mgen_data mons;
