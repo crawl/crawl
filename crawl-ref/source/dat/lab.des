@@ -180,7 +180,7 @@ ENDMAP
 #############################################################################
 # Another trapped exit - most evil again! 
 NAME:    labyrinth_trapped_2
-TAGS:    lab allow_dup generate_loot
+TAGS:    minotaur allow_dup generate_loot
 ITEM:    potion of porridge
 SHUFFLE: XYZ
 SHUFFLE: GH, LM, fghijklmn, FHIJKLN
