@@ -41,6 +41,7 @@
 #include "misc.h"
 #include "monplace.h"
 #include "monstuff.h"
+#include "mstuff2.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
@@ -908,6 +909,67 @@ static bool _spell_is_uncastable(spell_type spell)
 
     return (false);
 }
+
+#ifdef WIZARD
+static void _try_monster_cast(spell_type spell, int powc,
+                              dist &spd, bolt &beam)
+{
+    if (mgrd(you.pos()) != NON_MONSTER)
+    {
+        mpr("Couldn't try casting monster spell because you're "
+            "on top of a monster.");
+        return;
+    }
+
+    int midx;
+
+    for (midx = 0; midx < MAX_MONSTERS; midx++)
+        if (menv[midx].type == -1)
+            break;
+
+    if (midx == MAX_MONSTERS)
+    {
+        mpr("Couldn't try casting monster spell because there is "
+            "no empty monster slot.");
+        return;
+    }
+
+    mpr("Invalid player spell, attemtping to cast it as monster spell.");
+
+    monsters* mon = &menv[midx];
+
+    mon->mname      = "Dummy Monster";
+    mon->type       = MONS_HUMAN;
+    mon->behaviour  = BEH_SEEK;
+    mon->attitude   = ATT_FRIENDLY;
+    mon->flags      = (MF_CREATED_FRIENDLY | MF_JUST_SUMMONED | MF_SEEN
+                       | MF_WAS_IN_VIEW | MF_HARD_RESET);
+    mon->hit_points = you.hp;
+    mon->hit_dice   = you.experience_level;
+    mon->x          = you.x_pos;
+    mon->y          = you.y_pos;
+    mon->target_x   = spd.tx;
+    mon->target_y   = spd.ty;
+
+    if (!spd.isTarget)
+        mon->foe = MHITNOT;
+    else if (mgrd[spd.tx][spd.ty] == NON_MONSTER)
+    {
+        if (spd.isMe)
+            mon->foe = MHITYOU;
+        else
+            mon->foe = MHITNOT;
+    }
+    else
+        mon->foe = mgrd[spd.tx][spd.ty];
+
+    mgrd(you.pos()) = midx;
+
+    mons_cast(mon, beam, spell);
+
+    mon->reset();
+}
+#endif // WIZARD
 
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
@@ -2032,7 +2094,20 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     default:
-        mpr("Invalid spell!");
+#ifdef WIZARD
+        if (you.wizard && !allow_fail && is_valid_spell(spell))
+        {
+            _try_monster_cast(spell, powc, spd, beam);
+            return (SPRET_SUCCESS);
+        }
+#endif
+
+        if (is_valid_spell(spell))
+            mprf(MSGCH_ERROR, "Spell '%s' is not a player castable spell.",
+                 spell_title(spell));
+        else
+            mpr("Invalid spell!", MSGCH_ERROR);
+
         break;
     }                           // end switch
 
