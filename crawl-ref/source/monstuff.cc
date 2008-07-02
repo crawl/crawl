@@ -5673,24 +5673,24 @@ static bool _swap_monsters(const int mover_idx, const int moved_idx)
     if (mons_is_stationary(moved))
         return false;
 
-    // Swapping is a purposful action
+    // Swapping is a purposeful action.
     if (mover->confused())
         return false;
 
-    // Right now just happens in sanctuary
+    // Right now just happens in sanctuary.
     if (!is_sanctuary(mover->x, mover->y) || !is_sanctuary(moved->x, moved->y))
         return false;
 
     // A friendly or good-neutral monster moving past a fleeing hostile
-    // or neutral monster, or visa-versa
+    // or neutral monster, or vice versa.
     if (mons_wont_attack(mover) == mons_wont_attack(moved)
         || mons_is_fleeing(mover) == mons_is_fleeing(moved))
     {
         return false;
     }
 
-    // Don't swap places if the player explicitly ordered their pet
-    // to attack monsters.
+    // Don't swap places if the player explicitly ordered their pet to
+    // attack monsters.
     if ((mons_friendly(mover) || mons_friendly(moved))
         && you.pet_target != MHITYOU && you.pet_target != MHITNOT)
     {
@@ -5715,7 +5715,7 @@ static bool _swap_monsters(const int mover_idx, const int moved_idx)
 
     mover->x = moved_pos.x;
     mover->y = moved_pos.y;
-  
+
     moved->x = mover_pos.x;
     moved->y = mover_pos.y;
 
