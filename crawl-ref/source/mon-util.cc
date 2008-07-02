@@ -5219,8 +5219,8 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_FEAR:
         if (holiness() == MH_NONLIVING || has_ench(ENCH_BERSERK))
         {
-            // This should only happen because of fleeing Sanctuary
-            strcpy( info, " stops retreating.");
+            // This should only happen because of fleeing sanctuary
+            snprintf( info, INFO_SIZE, " stops retreating.");
         }
         else
         {
