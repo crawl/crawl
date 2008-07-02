@@ -5217,9 +5217,17 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_FEAR:
-        snprintf( info, INFO_SIZE, " seems to regain %s courage.",
-                  mons_pronoun(static_cast<monster_type>(this->type),
-                               PRONOUN_NOCAP_POSSESSIVE));
+        if (holiness() == MH_NONLIVING || has_ench(ENCH_BERSERK))
+        {
+            // This should only happen because of fleeing Sanctuary
+            strcpy( info, " stops retreating.");
+        }
+        else
+        {
+            snprintf( info, INFO_SIZE, " seems to regain %s courage.",
+                      mons_pronoun(static_cast<monster_type>(this->type),
+                                   PRONOUN_NOCAP_POSSESSIVE));
+        }
 
         if (!quiet)
             simple_monster_message(this, info);

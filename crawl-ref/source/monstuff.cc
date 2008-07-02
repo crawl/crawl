@@ -3418,13 +3418,6 @@ static void _handle_behaviour(monsters *mon)
 
         mon->foe = new_foe;
     }
-
-    if (is_sanctuary(mon->target_x, mon->target_y) && mon->foe != MHITNOT
-        && !isFriendly && !mons_is_pacified(mon) && mon->behaviour != BEH_FLEE
-        && mon->target_pos() != mon->pos())
-    {
-        mon->foe = MHITNOT;
-    }
 }
 
 static bool _mons_check_set_foe(monsters *mon, int x, int y,
@@ -3667,12 +3660,17 @@ static void _handle_movement(monsters *monster)
     }
     else if (mons_is_fleeing(monster) && inside_level_bounds(env.sanctuary_pos)
              && !is_sanctuary(monster->x, monster->y)
-             && monster->target_x == env.sanctuary_pos.x
-             && monster->target_y == env.sanctuary_pos.y)
+             && monster->target_pos() == env.sanctuary_pos)
     {
         // Once outside there's a chance they'll regain their courage.
-        if (random2(5) > 2)
+        // Nonliving and berserking monsters always stop imediately,
+        // since they're only being forced out rather than actually scared.
+        if (monster->holiness() == MH_NONLIVING
+            || monster->has_ench(ENCH_BERSERK)
+            || random2(5) > 2)
+        {
             monster->del_ench(ENCH_FEAR);
+        }
     }
 
     // some calculations
