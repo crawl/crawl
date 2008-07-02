@@ -530,15 +530,11 @@ void area_shift(void)
 
     _xom_check_nearness();
 
-    // Can't re-use ri since you.pos() has changed.
-    radius_iterator ri2(you.pos(), LOS_RADIUS);
-    for ( ; ri2; ++ri2 )
-        env.map(*ri2).property = fprops(you.pos() - *ri2 + los_delta);
+    for ( radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri )
+        env.map(*ri).property = fprops(you.pos() - *ri + los_delta);
 
     if (sanct_shifted)
-    {
         env.sanctuary_pos = sanct_pos + you.pos();
-    }
 
     mgen_data mons;
     mons.level_type = LEVEL_ABYSS;

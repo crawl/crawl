@@ -595,6 +595,7 @@ void lose_item_stack( int x, int y )
             si->clear();
         }
     }
+    igrd[x][y] = NON_ITEM;
 }
 
 void destroy_item_stack( int x, int y, int cause )
@@ -607,6 +608,7 @@ void destroy_item_stack( int x, int y, int cause )
             si->clear();
         }
     }
+    igrd[x][y] = NON_ITEM;
 }
 
 static bool _invisible_to_player( const item_def& item )
