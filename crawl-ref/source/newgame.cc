@@ -4915,8 +4915,6 @@ bool _give_items_skills()
 
         _newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(3, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
-                           10 + roll_dice( 2, 10 ));
 
         if (you.species == SP_SPRIGGAN)
         {
@@ -4924,7 +4922,11 @@ bool _give_items_skills()
             you.skills[SK_EVOCATIONS] = 1;
         }
         else
+        {
             you.skills[SK_CROSSBOWS] = 1;
+            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
+                               10 + roll_dice( 2, 10 ));
+        }
 
         you.skills[SK_SHORT_BLADES] = 2;
         you.skills[SK_FIGHTING] = 1;
