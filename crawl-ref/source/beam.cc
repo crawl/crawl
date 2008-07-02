@@ -2038,10 +2038,12 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
         else if (pbolt.foe_helped > 0 && pbolt.fr_helped == 0)
             xom_is_stimulated(128);
 
-        // Allow friendlies to react to projectiles.
+        // Allow friendlies to react to projectiles, except when in
+        // Sanctuary when pet_target can only be explictly changed
+        // by the player.
         const monsters *mon = &menv[pbolt.beam_source];
         if (pbolt.foe_hurt > 0 && !mons_wont_attack(mon)
-            && you.pet_target == MHITNOT)
+            && you.pet_target == MHITNOT && env.sanctuary_time <= 0)
         {
             you.pet_target = pbolt.beam_source;
         }

@@ -2058,7 +2058,10 @@ void behaviour_event(monsters *mon, int event, int src,
 
         // Stationary monsters can't flee, even from sanctuary.
         if (mons_is_stationary(mon))
+        {
+            mon->del_ench(ENCH_FEAR, true, true);
             break;
+        }
 
         // Berserking monsters don't flee, unless it's from sanctuary.
         if (mon->has_ench(ENCH_BERSERK) && !flee_sanct)
@@ -2084,12 +2087,13 @@ void behaviour_event(monsters *mon, int event, int src,
     }
 
     case ME_CORNERED:
-        // Plants or nonliving monsters cannot flee.
-        if (mons_class_holiness(mon->type) == MH_PLANT
-            || mons_class_holiness(mon->type) == MH_NONLIVING)
-        {
+        // Some monsters can't flee.
+        if (mon->behaviour != BEH_FLEE && !mon->has_ench(ENCH_FEAR))
             break;
-        }
+
+        // Don't stop fleeing from sanctuary
+        if (!mons_wont_attack(mon) && is_sanctuary(mon->x, mon->y))
+            break;
 
         // Just set behaviour... foe doesn't change.
         if (!mons_is_cornered(mon))
@@ -3414,6 +3418,13 @@ static void _handle_behaviour(monsters *mon)
 
         mon->foe = new_foe;
     }
+
+    if (is_sanctuary(mon->target_x, mon->target_y) && mon->foe != MHITNOT
+        && !isFriendly && !mons_is_pacified(mon) && mon->behaviour != BEH_FLEE
+        && mon->target_pos() != mon->pos())
+    {
+        mon->foe = MHITNOT;
+    }
 }
 
 static bool _mons_check_set_foe(monsters *mon, int x, int y,
@@ -3423,7 +3434,7 @@ static bool _mons_check_set_foe(monsters *mon, int x, int y,
         return (false);
 
     if (!friendly && !neutral && x == you.x_pos && y == you.y_pos
-        && mons_player_visible(mon))
+        && mons_player_visible(mon) && !is_sanctuary(x, y))
     {
         mon->foe = MHITYOU;
         return (true);
@@ -3435,6 +3446,7 @@ static bool _mons_check_set_foe(monsters *mon, int x, int y,
 
         if (foe != mon
             && mon_can_see_monster(mon, foe)
+            && (friendly || !is_sanctuary(x, y))
             && (mons_friendly(foe) != friendly
                 || (neutral && !mons_neutral(foe))))
         {

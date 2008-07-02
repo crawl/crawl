@@ -1710,13 +1710,23 @@ bool cast_sanctuary(const int power)
             else
                 env.map[posx][posy].property = FPROP_SANCTUARY_2; // white
 
-            // scare all attacking monsters inside sanctuary
+            // scare all attacking monsters inside sanctuary, and make
+            // all friendly monsters inside sanctuary stop attacking and
+            // move towards the player.
             int monster = mgrd[posx][posy];
             if (monster != NON_MONSTER)
             {
                 monsters* mon = &menv[monster];
 
-                if (!mons_wont_attack(mon))
+                if (mons_friendly(mon))
+                {
+                   mon->foe       = MHITYOU;
+                   mon->target_x  = you.x_pos;
+                   mon->target_y  = you.y_pos;
+                   mon->behaviour = BEH_SEEK;
+                   behaviour_event(mon, ME_EVAL, MHITYOU);
+                }
+                else if (!mons_wont_attack(mon))
                 {
                     if (mons_is_mimic(mon->type))
                     {
@@ -1766,6 +1776,9 @@ bool cast_sanctuary(const int power)
         mpr("By Zin's power, all foul fumes within the sanctuary are "
             "swept away.", MSGCH_GOD);
     }
+
+    // Pets stop attacking and converge on you.
+    you.pet_target = MHITYOU;
 
     return (true);
 }

@@ -2018,6 +2018,16 @@ void yell(bool force)
             return;
         }
 
+        if (env.sanctuary_time > 0)
+        {
+            if (!yesno("An ally attacking under your orders might violate "
+                       "sanctuary; order anyways?", false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return;
+            }
+        }
+
         mpr("Gang up on whom?", MSGCH_PROMPT);
         direction( targ, DIR_TARGET, TARG_ENEMY, -1, false, false );
 

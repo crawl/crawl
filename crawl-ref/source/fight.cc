@@ -524,6 +524,28 @@ bool melee_attack::attack()
     identify_mimic(atk);
     identify_mimic(def);
 
+    if (attacker->atype() == ACT_PLAYER && attacker != defender)
+    {
+        if (stop_attack_prompt(def, false, false))
+        {
+            cancel_attack = true;
+            return (false);
+        }
+    }
+
+    if (attacker != defender)
+    {
+        // Allow setting of your allies' target, etc.
+        attacker->attacking(defender);
+
+        check_autoberserk();
+    }
+
+    // The attacker loses nutrition.
+    attacker->make_hungry(3, true);
+
+    check_special_wield_effects();
+
     // Xom thinks fumbles are funny...
     if (attacker->fumbles_attack())
     {
@@ -537,6 +559,7 @@ bool melee_attack::attack()
             xom_is_stimulated(255);
         else
             xom_is_stimulated(14);
+
         return (false);
     }
     // Non-fumbled self-attacks due to confusion are still pretty
@@ -597,37 +620,33 @@ bool melee_attack::attack()
         return (true);
     }
 
-    // A lot of attack parameters get set in here. 'Ware.
     to_hit = calc_to_hit();
-
-    // Allow setting of your allies' target, etc.
-    attacker->attacking(defender);
-
-    // The attacker loses nutrition.
-    attacker->make_hungry(3, true);
-
-    check_autoberserk();
-    check_special_wield_effects();
 
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    if (attacker->atype() == ACT_PLAYER)
-    {
-        if (stop_attack_prompt(def, false, false))
-        {
-            cancel_attack = true;
-            return (false);
-        }
-        else
-            set_attack_conducts(conducts, def);
-    }
+    if (attacker->atype() == ACT_PLAYER && attacker != defender)
+        set_attack_conducts(conducts, def);
 
     // Trying to stay general beyond this point is a recipe for insanity.
     // Maybe when Stone Soup hits 1.0... :-)
     bool retval = ((attacker->atype() == ACT_PLAYER) ? player_attack() :
                    (defender->atype() == ACT_PLAYER) ? mons_attack_you()
                                                      : mons_attack_mons());
+
+    if (env.sanctuary_time > 0 && retval && !cancel_attack
+        && attacker != defender && !attacker->confused())
+    {
+        const coord_def atk_pos = attacker->pos();
+        const coord_def def_pos = defender->pos();
+
+        if (is_sanctuary(atk_pos.x, atk_pos.y)
+            || is_sanctuary(def_pos.x, def_pos.y))
+        {
+            if (attacker->atype() == ACT_PLAYER || mons_friendly(atk))
+                remove_sanctuary(true);
+        }
+    }
 
     enable_attack_conducts(conducts);
 
@@ -3098,6 +3117,40 @@ int melee_attack::player_calc_base_weapon_damage()
 
 bool melee_attack::mons_attack_mons()
 {
+    const coord_def atk_pos = atk->pos();
+    const coord_def def_pos = def->pos();
+
+    // Self-attacks never violate sanctuary.
+    if ((is_sanctuary(atk_pos.x, atk_pos.y)
+         || is_sanctuary(def_pos.x, def_pos.y))
+        && atk != def)
+    {
+        // Friendly monsters should only violate sanctuary if
+        // explictly ordered to do so by the player.
+        if (mons_friendly(atk))
+        {
+            if (you.pet_target == MHITYOU || you.pet_target == MHITNOT)
+            {
+                if (atk->confused() && you.can_see(atk))
+                    mpr("Zin prevents your ally from violating sanctuary "
+                        "in its confusion.", MSGCH_GOD);
+                else if (atk->has_ench(ENCH_BERSERK) && you.can_see(atk))
+                    mpr("Zin prevents your ally from violating sanctuary "
+                        "in its berserker rage.", MSGCH_GOD);
+
+                cancel_attack = true;
+                return (false);
+            }
+        }
+        // Non-friendly monsters should never violate sanctuary.
+        else
+        {
+            mpr("!!!! Preventing hostile violation of sanctuary");
+            cancel_attack = true;
+            return (false);
+        }
+    }
+
     mons_perform_attack();
 
     if (perceived_attack && (def->foe == MHITNOT || one_chance_in(3))
@@ -3107,9 +3160,11 @@ bool melee_attack::mons_attack_mons()
     }
 
     // If an enemy attacked a friend, set the pet target if it isn't
-    // set already.
+    // set already, but not if Sanctuary is in effect (pet target must
+    // be set explicitly by the player during Sanctuary)
     if (perceived_attack && atk->alive() && mons_friendly(def)
-        && !mons_wont_attack(atk) && you.pet_target == MHITNOT)
+        && !mons_wont_attack(atk) && you.pet_target == MHITNOT
+        && env.sanctuary_time <= 0)
     {
         you.pet_target = monster_index(atk);
     }
@@ -3950,8 +4005,10 @@ void melee_attack::mons_check_attack_perceived()
     {
         interrupt_activity(AI_MONSTER_ATTACKS, atk);
 
-        // If a friend wants to help, they can attack the attacking monster.
-        if (you.pet_target == MHITNOT)
+        // If a friend wants to help, they can attack the attacking monster,
+        // unless Sanctuary is in effect since pet target can only be
+        // changed explicitly by the player during sanctuary.
+        if (you.pet_target == MHITNOT && env.sanctuary_time <= 0)
             you.pet_target = monster_index(atk);
     }
 }
@@ -4061,11 +4118,6 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
         return (false);
     }
 
-    if (is_sanctuary(you.x_pos, you.y_pos)
-        || is_sanctuary(defender->x, defender->y))
-    {
-        remove_sanctuary(true);
-    }
     return (true);
 }
 
