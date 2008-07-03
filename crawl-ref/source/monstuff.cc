@@ -3315,36 +3315,32 @@ static void _handle_behaviour(monsters *mon)
 
                 if (need_target)
                 {
-                    // If a monster that's been pacified and is leaving
-                    // the level can't reach its target, mark its target
-                    // as unreachable.
-                    if (isPacified)
-                    {
-                        e[e_index].unreachable = true;
-                        mon->travel_target = MTRAV_NONE;
-                    }
-                    else
-                    {
-                        mon->target_x = 10 + random2(GXM - 10);
-                        mon->target_y = 10 + random2(GYM - 10);
-                    }
+                    mon->target_x = 10 + random2(GXM - 10);
+                    mon->target_y = 10 + random2(GYM - 10);
                 }
             }
 
-            // During their wanderings, monsters will eventually relax their
-            // guard (stupid ones will do so faster, smart monsters have
-            // longer memories.
+            // During their wanderings, monsters will eventually relax
+            // their guard (stupid ones will do so faster, smart
+            // monsters have longer memories).  Pacified monsters will
+            // also eventually switch the place from which they want to
+            // leave the level, in case their current choice is blocked.
             if (!proxFoe && mon->foe != MHITNOT
-                && one_chance_in( isSmart ? 60 : 20 ))
+                && one_chance_in(isSmart ? 60 : 20)
+                    || isPacified && one_chance_in(isSmart ? 40 : 120))
             {
                 new_foe = MHITNOT;
-                if (travelling && mon->travel_target != MTRAV_PATROL)
+                if (travelling && mon->travel_target != MTRAV_PATROL
+                    || isPacified)
                 {
 #ifdef DEBUG_PATHFIND
                     mpr("It's been too long! Stop travelling.");
 #endif
                     mon->travel_path.clear();
                     mon->travel_target = MTRAV_NONE;
+
+                    if (isPacified && e_index != -1)
+                        e[e_index].unreachable = true;
                 }
             }
             break;
