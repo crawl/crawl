@@ -1026,14 +1026,14 @@ static void _finish_delay(const delay_queue_item &delay)
                                         : mitm[delay.parm2]);
         vampire_nutrition_per_turn(corpse, 1);
 
-        if (!mons_skeleton( corpse.plus ))
+        if (!mons_skeleton( corpse.plus ) || one_chance_in(4))
         {
             if (delay.parm1)
                 dec_inv_item_quantity( delay.parm2, 1 );
             else
                 dec_mitm_item_quantity( delay.parm2, 1 );
         }
-        else if (!one_chance_in(4))
+        else
             turn_corpse_into_skeleton(corpse, 90);
         break;
     }

@@ -725,24 +725,24 @@ void redraw_screen(void)
 {
     if (!crawl_state.need_save)
     {
-        // if the game hasn't started, don't do much
+        // If the game hasn't started, don't do much.
         clrscr();
         return;
     }
 
     draw_border();
 
-    you.redraw_hit_points = true;
+    you.redraw_hit_points   = true;
     you.redraw_magic_points = true;
-    you.redraw_strength = true;
+    you.redraw_strength     = true;
     you.redraw_intelligence = true;
-    you.redraw_dexterity = true;
+    you.redraw_dexterity    = true;
     you.redraw_armour_class = true;
-    you.redraw_evasion = true;
-    you.redraw_gold = true;
-    you.redraw_experience = true;
-    you.wield_change = true;
-    you.redraw_quiver = true;
+    you.redraw_evasion      = true;
+    you.redraw_gold         = true;
+    you.redraw_experience   = true;
+    you.wield_change        = true;
+    you.redraw_quiver       = true;
 
     set_redraw_status(
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK );

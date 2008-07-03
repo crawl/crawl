@@ -30,6 +30,7 @@
 
 #include "cio.h"
 #include "clua.h"
+#include "command.h"
 #include "debug.h"
 #include "delay.h"
 #include "initfile.h"
@@ -532,8 +533,11 @@ bool butchery(int which_corpse)
 
     // Now pick what you want to butcher. This is only a problem
     // if there are several corpses on the square.
-    bool butcher_all = false;
-    bool bottle_all  = false; // for Vampires
+    bool butcher_all   = false;
+    bool bottle_all    = false; // for Vampires
+    bool force_butcher = false;
+    bool repeat_prompt = false;
+    int keyin;
     for (stack_iterator si(you.pos()); si; ++si)
     {
         if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
@@ -565,52 +569,69 @@ bool butchery(int which_corpse)
             }
 
             // Shall we butcher this corpse?
-            snprintf(info, INFO_SIZE, "%s %s?",
-                     (sacrifice
-                      || !can_bottle_blood_from_corpse(si->plus)) ?
-                            "Butcher" : "Bottle",
+            do
+            {
+                mprf(MSGCH_PROMPT, "%s %s? [yc/n/a/q/?]",
+                     (sacrifice || !can_bottle_blood_from_corpse(si->plus)) ?
+                        "Butcher" : "Bottle",
                      corpse_name.c_str());
+                repeat_prompt = false;
 
-            const int result = yesnoquit(info, true, 'N', true, false,
-                                         'C', 'D');
-
-            if (result == -1) // (q)uit
-            {
-                canned_msg(MSG_OK);
-                _terminate_butchery(wpn_switch, removed_gloves, new_cursed,
-                                    old_weapon, old_gloves);
-                return (false);
-            }
-            else if (result == 0) // (n)o
-            {
-                continue;
-            }
-            else if (result == 1 || result == 2) // (y)es, (a)ll
-            {
-                if (!_prepare_butchery(can_butcher, barehand_butcher,
-                                       wpn_switch, removed_gloves, new_cursed))
+                keyin = tolower(c_getch());
+                switch (keyin)
                 {
-                    return (false);
-                }
-                corpse_id = si->index();
-
-                if (result == 2) // (a)ll
-                {
-                    if (can_bottle_blood_from_corpse(si->plus)
-                        && (!you.duration[DUR_PRAYER]
-                            || !god_likes_butchery(you.religion)))
+                case 'b':
+                    force_butcher = true;
+                    // intentional fall-through
+                case 'y':
+                case 'c':
+                case 'd':
+                case 'a':
+                    if (!_prepare_butchery(can_butcher, barehand_butcher,
+                                           wpn_switch, removed_gloves,
+                                           new_cursed))
                     {
-                        bottle_all = true;
+                        return (false);
                     }
-                    else
-                        butcher_all = true;
+                    corpse_id = si->index();
+
+                    if (keyin == 'a')
+                    {
+                        if (!force_butcher
+                            && can_bottle_blood_from_corpse(si->plus)
+                            && (!you.duration[DUR_PRAYER]
+                                || !god_likes_butchery(you.religion)))
+                        {
+                            bottle_all = true;
+                        }
+                        else
+                            butcher_all = true;
+                    }
+                    break;
+
+                case 'q':
+                    canned_msg(MSG_OK);
+                    _terminate_butchery(wpn_switch, removed_gloves, new_cursed,
+                                        old_weapon, old_gloves);
+                    return (false);
+
+                case '?':
+                    show_butchering_help();
+                    mesclr();
+                    redraw_screen();
+                    repeat_prompt = true;
+                    break;
+
+                default:
+                    break;
                 }
             }
+            while (repeat_prompt);
         }
 
         if (corpse_id != -1)
         {
-            if (_butcher_corpse(corpse_id, butcher_all))
+            if (_butcher_corpse(corpse_id, force_butcher || butcher_all))
                 success = true;
 
             if (!butcher_all && !bottle_all)

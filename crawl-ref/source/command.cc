@@ -1688,7 +1688,6 @@ void show_targeting_help()
     cols.add_formatted(1, targeting_help_2, true, true);
     _show_keyhelp_menu(cols.formatted_lines(), false, true);
 }
-
 void show_interlevel_travel_branch_help()
 {
     show_specific_help( getHelpString("interlevel-travel.branch.prompt") );
@@ -1703,6 +1702,12 @@ void show_stash_search_help()
 {
     show_specific_help( getHelpString("stash-search.prompt") );
 }
+
+void show_butchering_help()
+{
+    show_specific_help( getHelpString("butchering") );
+}
+
 
 static void _add_formatted_keyhelp(column_composer &cols)
 {
