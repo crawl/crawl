@@ -2520,7 +2520,7 @@ static void _handle_behaviour(monsters *mon)
     bool travelling = mon->is_travelling();
     bool patrolling = mon->is_patrolling();
     static std::vector<level_exit> e;
-    static int                     e_index;
+    static int                     e_index = -1;
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
     {
