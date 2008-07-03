@@ -1343,7 +1343,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         }
 
         description += "$It fits ";
-        description += (race == ISFLAG_DWARVEN) ? "dwarves" :
+        description += (race == ISFLAG_DWARVEN) ? "dwarfs" :
                        (race == ISFLAG_ELVEN)   ? "elves"
                                                 : "orcs";
         description += " well.";
