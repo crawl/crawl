@@ -3,26 +3,24 @@ stash-search.prompt
 
 <h>Searching the stash-tracker</h>
 
-You can search for items and dungeon features by name (or a substring of the
-name). In the list of search results, you can select a search result by its
+You can search for items and dungeon features by name (or a substring of the 
+name). In the list of search results, you can select a search result by its 
 hotkey to travel to its location.
 
-You can also examine shops and items in the search results by pressing <w>?</w>
-and then hitting the hotkey for the search result. This will show you a
-description of the item or the contents of the shop.
+You can also examine shops and items in the search results by pressing <w>?</w> and 
+then hitting the hotkey for the search result. This will give a description 
+of the item or the contents of the shop.
 
 Some examples of search strings:
-<w>cure mutation</w> find all potions of cure mutation, including potions
-              in shops.
+<w>cure mutation</w> find all potions of cure mutation, including potions in shops.
 <w>cloak</w>         find all cloaks in the dungeon.
 <w>Lair:2</w>        find everything known to be on Lair:2.
-<w>Lair:[2-4]</w>    finds everything on Lair:2-4. Regexes are allowed! Note
-              that Lair:[3-10] will not work as intended, since [x-y] is
-              a regex character range.
+<w>Lair:[2-4]</w>    finds everything on Lair:2-4. Regexes are allowed! Note that
+              Lair:[3-10] will not work as intended, since [x-y] is a regex 
+              character range.
 <w>.</w>             is a shortcut to find everything on your current level.
-<w>Lair.*axe</w> 
-or
-<w>axe && Lair</w>   both show all axes in the Lair.
+<w>..</w>            is a shortcut for listing all items you know.
+<w>Lair.*axe</w> and <w>axe && Lair</w> both show all axes in the Lair.
 
 The stash search string is case-insensitive.
 
@@ -35,15 +33,13 @@ or rods that contain the spell.
 You can search for artefact item properties (such as <w>prevents.*teleport</w>)
 to find artefacts that have the property.
 
-If you're using stash.lua, you can also search by some additional item 
-properties:
-<w>artefact</w> will find identified artefacts.
-Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all
-weapons that train that skill.
+If you're using stash.lua (which is the default), you can also search by 
+some additional item properties: <w>artefact</w> will find identified artefacts.
+Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will find all weapons that
+train that skill.
 
 If you're using stash.lua and have set annotate_item_class = true in your
-init.txt, you can also search by item types such as <w>book</w> or
-<w>jewellery</w>.
+initfile, you can also search by item types such as <w>book</w> or <w>jewellery</w>.
 
 
 <h>Finding Dungeon Features:</h>
