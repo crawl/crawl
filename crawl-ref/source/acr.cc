@@ -3191,7 +3191,7 @@ static void _world_reacts()
     _check_banished();
 
     ASSERT(you.time_taken >= 0);
-    // make sure we don't overflow
+    // Make sure we don't overflow.
     ASSERT(DBL_MAX - you.elapsed_time > you.time_taken);
 
     you.elapsed_time += you.time_taken;

@@ -2039,7 +2039,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
     if (Options.prev_book > numbooks && Options.prev_book != SBT_RANDOM)
         Options.prev_book = SBT_NO_SELECTION;
 
-    if (!Options.random_pick)
+    if (!Options.random_pick && Options.book != SBT_RANDOM)
     {
         _print_character_info();
 
@@ -2113,14 +2113,11 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
         || keyin == '+')
     {
         ng_book = SBT_RANDOM;
-    }
-    else
-        ng_book = keyin - 'a' + 1;
 
-    if (Options.random_pick || keyin == '*' || keyin == '+')
-    {
         int good_choices = 0;
-        if (keyin == '+' || Options.random_pick && Options.good_random)
+        if (keyin == '+'
+            || Options.good_random
+               && (Options.random_pick || Options.book == SBT_RANDOM))
         {
             for (int i = 0; i < numbooks; i++)
             {
@@ -2137,6 +2134,8 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
 
         keyin += 'a';
     }
+    else
+        ng_book = keyin - 'a' + 1;
 
     book.sub_type = firstbook + keyin - 'a';
     return (true);

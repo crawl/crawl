@@ -2527,7 +2527,7 @@ void handle_time(long time_delta)
                 "energies until Zin's power calms it.", MSGCH_GOD);
         }
         else if (you.magic_contamination >= 5
-            && random2(25) <= you.magic_contamination)
+                 && random2(25) <= you.magic_contamination)
         {
             mpr("Your body shudders with the violent release "
                 "of wild energies!", MSGCH_WARN);
@@ -2544,10 +2544,8 @@ void handle_time(long time_delta)
                 // Undead enjoy extra contamination explosion damage because
                 // the magical contamination has a harder time dissipating
                 // through non-living flesh. :-)
-                boom.damage =
-                    dice_def(3,
-                             you.magic_contamination
-                             * (you.is_undead ? 4 : 2) / 4);
+                boom.damage = dice_def(3, you.magic_contamination
+                                           * (you.is_undead ? 4 : 2) / 4);
                 boom.thrower      = KILL_MISC;
                 boom.aux_source   = "a magical explosion";
                 boom.beam_source  = NON_MONSTER;
@@ -2661,7 +2659,7 @@ void handle_time(long time_delta)
 
     _rot_inventory_food(time_delta);
 
-    // exercise armour *xor* stealth skill: {dlb}
+    // Exercise armour *xor* stealth skill: {dlb}
     if (!player_light_armour(true))
     {
         // lowered random roll from 7 to 6 -- bwross
@@ -2671,11 +2669,11 @@ void handle_time(long time_delta)
             exercise(SK_ARMOUR, 1);
         }
     }
-    // exercise stealth skill:
+    // Exercise stealth skill:
     else if (you.burden_state == BS_UNENCUMBERED
         && !you.duration[DUR_BERSERKER] && you.special_wield != SPWLD_SHADOW)
     {
-        // diminishing returns for stealth training by waiting
+        // Diminishing returns for stealth training by waiting.
         if ((you.equip[EQ_BODY_ARMOUR] == -1
             || you.equip[EQ_BODY_ARMOUR] != -1
                 && random2(item_mass(you.inv[you.equip[EQ_BODY_ARMOUR]])) < 100)

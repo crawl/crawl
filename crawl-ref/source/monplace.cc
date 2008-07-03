@@ -205,7 +205,7 @@ static void _hell_spawn_random_monsters()
     if (env.turns_on_level > taper_off_turn)
     {
         genodds += (env.turns_on_level - taper_off_turn);
-        genodds = (genodds < 0? 20000 : std::min(genodds, 20000));
+        genodds = (genodds < 0 ? 20000 : std::min(genodds, 20000));
     }
 
     if (one_chance_in(genodds))
@@ -517,7 +517,6 @@ static int _is_near_stairs(coord_def &p)
     int result = 0;
 
     for (int i = -1; i <= 1; ++i)
-    {
         for (int j = -1; j <= 1; ++j)
         {
             if (!in_bounds(p))
@@ -536,9 +535,8 @@ static int _is_near_stairs(coord_def &p)
                     result = (p == you.pos()) ? 2 : 1;
             }
         }
-    }
 
-    return result;
+    return (result);
 }
 
 int place_monster(mgen_data mg, bool force_pos)
