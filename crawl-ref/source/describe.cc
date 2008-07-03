@@ -1136,19 +1136,33 @@ static std::string _describe_ammo( const item_def &item )
         }
     }
 
+    bool can_launch    = has_launcher(item);
+    bool can_throw     = is_throwable(item);
     bool need_new_line = true;
+
     if (item.special && item_type_known(item))
     {
         description += "$$";
+
         switch (item.special)
         {
         case SPMSL_FLAME:
-            description += "When fired from an appropriate launcher, "
-                "it turns into a bolt of flame.";
-            break;
         case SPMSL_ICE:
-            description += "When fired from an appropriate launcher, "
-                "it turns into a bolt of ice.";
+            description += "When ";
+
+            if (can_throw)
+            {
+                description += "thrown, ";
+                if (can_launch)
+                    description += "or ";
+            }
+
+            if (can_launch)
+                description += "fired from an appropriate launcher, ";
+
+            description += "it turns into a bolt of ";
+            description += (item.special == SPMSL_FLAME) ? "flame" : "ice";
+            description += ".";
             break;
         case SPMSL_POISONED:
         case SPMSL_POISONED_II:
@@ -1159,54 +1173,43 @@ static std::string _describe_ammo( const item_def &item )
             break;
         case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way "
-                "that it will return to its owner.";
+                           "that it will return to its owner.";
             break;
         }
+
         need_new_line = false;
     }
 
     if (get_equip_race(item) != ISFLAG_NO_RACE)
     {
-        bool can_launch = has_launcher(item);
-        bool can_throw  = is_throwable(item);
-
         description += "$";
+
         if (need_new_line)
             description += "$";
 
         if (can_throw)
         {
-            switch ( get_equip_race(item) )
-            {
-            case ISFLAG_DWARVEN:
-                description +=
-                    "It is more deadly when thrown by dwarves";
-                break;
-            case ISFLAG_ELVEN:
-                description +=
-                    "It is more deadly when thrown by elves";
-                break;
-            case ISFLAG_ORCISH:
-                description +=
-                    "It is more deadly when thrown by orcs";
-                break;
-            }
-        }
+            unsigned long race = get_equip_race(item);
 
-        if (can_throw && !can_launch)
-            description += ".";
-        else if (!can_throw && can_launch)
-            description += "It ";
-        else if (can_throw && can_launch)
-            description += ", and it ";
+            description += "It is more deadly when thrown by ";
+            description += (race == ISFLAG_DWARVEN) ? "dwarfs" :
+                           (race == ISFLAG_ELVEN)   ? "elves"
+                                                    : "orcs";
+            description += (can_launch) ? ", and it" : ".";
+            description += " ";
+        }
 
         if (can_launch)
         {
+            if (!can_throw)
+                description += "It ";
+
             description += "is more effective in conjunction with ";
             description += racial_description_string(item);
             description += "launchers.";
         }
     }
+
     return (description);
 }
 
