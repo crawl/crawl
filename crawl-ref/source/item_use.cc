@@ -1989,24 +1989,26 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (wepClass == OBJ_WEAPONS)
         baseDam = std::max(0, property(item, PWPN_DAMAGE) - 4);
 
-    // Extract launcher bonuses due to magic.
-    if (projected == LRET_LAUNCHED)
-    {
-        lnchHitBonus = you.inv[you.equip[EQ_WEAPON]].plus;
-        lnchDamBonus = you.inv[you.equip[EQ_WEAPON]].plus2;
-    }
-
     // Extract weapon/ammo bonuses due to magic.
     ammoHitBonus = item.plus;
     ammoDamBonus = item.plus2;
+
+    int bow_brand = SPWPN_NORMAL;
+
+    if (projected == LRET_LAUNCHED)
+        bow_brand = get_weapon_brand(you.inv[you.equip[EQ_WEAPON]]);
+
+    const int ammo_brand = get_ammo_brand( item );
+    bool poisoned = (ammo_brand == SPMSL_POISONED);
 
     // CALCULATIONS FOR LAUNCHED WEAPONS
     if (projected == LRET_LAUNCHED)
     {
         const item_def &launcher = you.inv[you.equip[EQ_WEAPON]];
-        const int bow_brand  = get_weapon_brand( launcher );
-        const int ammo_brand = get_ammo_brand( item );
-        bool poisoned = (ammo_brand == SPMSL_POISONED);
+
+        // Extract launcher bonuses due to magic.
+        lnchHitBonus = launcher.plus;
+        lnchDamBonus = launcher.plus2;
 
         const int item_base_dam = property( item, PWPN_DAMAGE );
         const int lnch_base_dam = property( launcher, PWPN_DAMAGE );
@@ -2229,52 +2231,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             pbolt.name = item.name(DESC_PLAIN);
         }
 
-        // Note that bow_brand is known since the bow is equipped.
-        if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
-            && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
-        {
-            // [dshaligram] Branded arrows are much stronger.
-            dice_mult = (dice_mult * 150) / 100;
-
-            pbolt.flavour = BEAM_FIRE;
-            pbolt.name    = "bolt of ";
-
-            if (poisoned)
-                pbolt.name += "poison ";
-
-            pbolt.name += "flame";
-            pbolt.colour  = RED;
-            pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
-            pbolt.thrower = KILL_YOU_MISSILE;
-            pbolt.aux_source.clear();
-        }
-
-        if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
-            && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
-        {
-            // [dshaligram] Branded arrows are much stronger.
-            dice_mult = (dice_mult * 150) / 100;
-
-            pbolt.flavour = BEAM_COLD;
-            pbolt.name    = "bolt of ";
-
-            if (poisoned)
-                pbolt.name += "poison ";
-
-            pbolt.name   += "frost";
-            pbolt.colour  = WHITE;
-            pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
-            pbolt.thrower = KILL_YOU_MISSILE;
-            pbolt.aux_source.clear();
-        }
-
-        // The chief advantage here is the extra damage this does
-        // against susceptible creatures.
-
-        // Note: weapons & ammo of eg fire are not cumulative
-        // ammo of fire and weapons of frost don't work together,
-        // and vice versa.
-
         // ID check. Can't ID off teleported projectiles, uh, because
         // it's too weird. Also it messes up the messages.
         if (item_ident(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES))
@@ -2461,6 +2417,55 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             mprf("You are throwing %s.",
                  you.inv[throw_2].name(DESC_NOCAP_A).c_str());
         }
+    }
+
+    mprf(MSGCH_DIAGNOSTICS, "bow_brand: %d, ammo_brand: %d",
+        bow_brand, ammo_brand);
+
+    // The chief advantage here is the extra damage this does
+    // against susceptible creatures.
+
+    // Note: weapons & ammo of eg fire are not cumulative
+    // ammo of fire and weapons of frost don't work together,
+    // and vice versa.
+
+    // Note that bow_brand is known since the bow is equipped.
+    if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
+        && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
+    {
+        // [dshaligram] Branded arrows are much stronger.
+        dice_mult = (dice_mult * 150) / 100;
+
+        pbolt.flavour = BEAM_FIRE;
+        pbolt.name    = "bolt of ";
+
+        if (poisoned)
+            pbolt.name += "poison ";
+
+        pbolt.name += "flame";
+        pbolt.colour  = RED;
+        pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
+        pbolt.thrower = KILL_YOU_MISSILE;
+        pbolt.aux_source.clear();
+    }
+
+    if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
+        && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
+    {
+        // [dshaligram] Branded arrows are much stronger.
+        dice_mult = (dice_mult * 150) / 100;
+
+        pbolt.flavour = BEAM_COLD;
+        pbolt.name    = "bolt of ";
+
+        if (poisoned)
+            pbolt.name += "poison ";
+
+        pbolt.name   += "frost";
+        pbolt.colour  = WHITE;
+        pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
+        pbolt.thrower = KILL_YOU_MISSILE;
+        pbolt.aux_source.clear();
     }
 
     // Dexterity bonus, and possible skill increase for silly throwing.

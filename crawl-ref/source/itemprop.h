@@ -91,8 +91,8 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_DRAINING,
     SPWPN_SPEED,                       //   10
     SPWPN_VORPAL,
-    SPWPN_FLAME,
-    SPWPN_FROST,
+    SPWPN_FLAME,   // ranged, only
+    SPWPN_FROST,   // ranged, only
     SPWPN_VAMPIRICISM,
     SPWPN_PAIN,                        //   15
     SPWPN_DISTORTION,

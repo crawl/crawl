@@ -1693,12 +1693,6 @@ static special_missile_type _determine_missile_brand(const item_def& item,
 
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
     special_missile_type rc = SPMSL_NORMAL;
-    // note that needles can only be poisoned
-    //
-    // Actually, it'd be really nice if there where
-    // some paralysis or slowing poison needles, just
-    // so that blowguns have some added utility over
-    // the other launchers/throwing weapons. -- bwr
 
     // All needles are either poison or curare.
     if (item.sub_type == MI_NEEDLE)
@@ -1722,17 +1716,16 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     if (item.sub_type == MI_JAVELIN && one_chance_in(25))
         rc = SPMSL_RETURNING;
 
-    // orcish ammo gets poisoned a lot more often -- in the original
-    // code it was poisoned every time!?
+    // Orcish ammo gets poisoned a lot more often.
     if (get_equip_race(item) == ISFLAG_ORCISH && one_chance_in(3))
         rc = SPMSL_POISONED;
 
     // Un-poison sling bullets; un-flame and un-ice javelins; unbrand
     // throwing nets.
-    if ((item.sub_type == MI_SLING_BULLET && rc == SPMSL_POISONED)
-         || item.sub_type == MI_JAVELIN
-            && (rc == SPMSL_FLAME || rc == SPMSL_ICE)
-         || item.sub_type == MI_THROWING_NET)
+    if (item.sub_type == MI_SLING_BULLET && rc == SPMSL_POISONED
+        || item.sub_type == MI_JAVELIN
+           && (rc == SPMSL_FLAME || rc == SPMSL_ICE)
+        || item.sub_type == MI_THROWING_NET)
     {
         rc = SPMSL_NORMAL;
     }
@@ -2170,7 +2163,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     {
         if ( item.plus > 2 )
             item.plus = 2;
-    }   
+    }
 
 }
 

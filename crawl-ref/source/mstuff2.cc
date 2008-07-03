@@ -1279,8 +1279,17 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         exDamBonus = (damMult * monster->hit_dice) / 10 + 1;
     }
 
+    // Monsters no longer gain unfair advantages with weapons of fire/ice
+    // and incorrect ammo.  They now have same restriction as players.
+
+    int bow_brand = SPWPN_NORMAL;
+    const int ammo_brand = get_ammo_brand( item );
+    const bool poison = (ammo_brand == SPMSL_POISONED);
+
     if (projected == LRET_LAUNCHED)
     {
+        bow_brand = get_weapon_brand(mitm[monster->inv[MSLOT_WEAPON]]);
+
         switch (lnchType)
         {
         case WPN_BLOWGUN:
@@ -1329,13 +1338,6 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         exHitBonus = (hitMult * monster->hit_dice) / 10 + 1;
         exDamBonus = (damMult * monster->hit_dice) / 10 + 1;
 
-        // monsters no longer gain unfair advantages with weapons of fire/ice
-        // and incorrect ammo.  They now have same restriction as players.
-
-        const int bow_brand =
-                get_weapon_brand(mitm[monster->inv[MSLOT_WEAPON]]);
-        const int ammo_brand = get_ammo_brand( item );
-
         if (!baseDam && elemental_missile_beam(bow_brand, ammo_brand))
             baseDam = 4;
 
@@ -1355,8 +1357,6 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
                 pbolt.hit++;
         }
 
-        const bool poison = (ammo_brand == SPMSL_POISONED);
-
         // POISON brand launchers poison ammo
         if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_NORMAL)
             set_item_ego_type( item, OBJ_MISSILES, SPMSL_POISONED );
@@ -1364,41 +1364,6 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         // Vorpal brand increases damage dice size.
         if (bow_brand == SPWPN_VORPAL)
             diceMult = diceMult * 130 / 100;
-
-        // WEAPON or AMMO of FIRE
-        if (bow_brand == SPWPN_FLAME && ammo_brand != SPMSL_ICE
-            || ammo_brand == SPMSL_FLAME && bow_brand != SPWPN_FROST)
-        {
-            baseHit += 2;
-            exDamBonus += 6;
-
-            pbolt.flavour  = BEAM_FIRE;
-            pbolt.name     = "bolt of ";
-
-            if (poison)
-                pbolt.name += "poison ";
-
-            pbolt.name     += "flame";
-            pbolt.colour    = RED;
-            pbolt.type      = dchar_glyph(DCHAR_FIRED_ZAP);
-        }
-        // WEAPON or AMMO of FROST
-        else if (bow_brand == SPWPN_FROST && ammo_brand != SPMSL_FLAME
-                 || ammo_brand == SPMSL_ICE && bow_brand != SPWPN_FLAME)
-        {
-            baseHit += 2;
-            exDamBonus += 6;
-
-            pbolt.flavour   = BEAM_COLD;
-            pbolt.name      = "bolt of ";
-
-            if (poison)
-                pbolt.name += "poison ";
-
-            pbolt.name     += "frost";
-            pbolt.colour    = WHITE;
-            pbolt.type      = dchar_glyph(DCHAR_FIRED_ZAP);
-        }
 
         // Note: we already have throw_energy taken off.  -- bwr
         int speed_delta = 0;
@@ -1427,16 +1392,51 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         monster->speed_increment += speed_delta;
     }
 
+    // WEAPON or AMMO of FIRE
+    if (bow_brand == SPWPN_FLAME && ammo_brand != SPMSL_ICE
+        || ammo_brand == SPMSL_FLAME && bow_brand != SPWPN_FROST)
+    {
+        baseHit += 2;
+        exDamBonus += 6;
+
+        pbolt.flavour  = BEAM_FIRE;
+        pbolt.name     = "bolt of ";
+
+        if (poison)
+            pbolt.name += "poison ";
+
+        pbolt.name     += "flame";
+        pbolt.colour    = RED;
+        pbolt.type      = dchar_glyph(DCHAR_FIRED_ZAP);
+    }
+    // WEAPON or AMMO of FROST
+    else if (bow_brand == SPWPN_FROST && ammo_brand != SPMSL_FLAME
+             || ammo_brand == SPMSL_ICE && bow_brand != SPWPN_FLAME)
+    {
+        baseHit += 2;
+        exDamBonus += 6;
+
+        pbolt.flavour   = BEAM_COLD;
+        pbolt.name      = "bolt of ";
+
+        if (poison)
+            pbolt.name += "poison ";
+
+        pbolt.name     += "frost";
+        pbolt.colour    = WHITE;
+        pbolt.type      = dchar_glyph(DCHAR_FIRED_ZAP);
+    }
+
     // monster intelligence bonus
     if (mons_intel(monster->type) == I_HIGH)
         exHitBonus += 10;
 
-    // now, if a monster is, for some reason, throwing something really
+    // Now, if a monster is, for some reason, throwing something really
     // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
     std::string msg = monster->name(DESC_CAP_THE);
     msg += ((projected == LRET_LAUNCHED) ? " shoots " : " throws ");
 
-    if (!pbolt.name.empty())
+    if (!pbolt.name.empty() && projected == LRET_LAUNCHED)
     {
         msg += "a ";
         msg += pbolt.name;
@@ -1456,7 +1456,9 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         mpr(msg.c_str());
 
         if (projected == LRET_LAUNCHED
-            && item_type_known(mitm[monster->inv[MSLOT_WEAPON]]))
+               && item_type_known(mitm[monster->inv[MSLOT_WEAPON]])
+            || projected == LRET_THROWN
+               && mitm[hand_used].base_type == OBJ_MISSILES)
         {
             set_ident_flags(mitm[hand_used], ISFLAG_KNOW_TYPE);
         }

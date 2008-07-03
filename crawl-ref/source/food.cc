@@ -571,7 +571,7 @@ bool butchery(int which_corpse)
             // Shall we butcher this corpse?
             do
             {
-                mprf(MSGCH_PROMPT, "%s %s? [yc/n/a/q/?]",
+                mprf(MSGCH_PROMPT, "%s %s? (yc/n/a/q/?)",
                      (sacrifice || !can_bottle_blood_from_corpse(si->plus)) ?
                         "Butcher" : "Bottle",
                      corpse_name.c_str());

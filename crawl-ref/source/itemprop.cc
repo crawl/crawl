@@ -930,7 +930,7 @@ int get_weapon_brand( const item_def &item )
 
 int get_ammo_brand( const item_def &item )
 {
-    // no artefact arrows yet -- bwr
+    // No artefact arrows yet. -- bwr
     if (item.base_type != OBJ_MISSILES || is_random_artefact( item ))
         return (SPMSL_NORMAL);
 
@@ -2042,8 +2042,8 @@ launch_retval is_launched(actor *actor, const item_def *launcher,
         return (LRET_LAUNCHED);
     }
 
-    return (is_throwable(missile, actor->body_size())?
-            LRET_THROWN : LRET_FUMBLED);
+    return (is_throwable(missile, actor->body_size()) ? LRET_THROWN
+                                                      : LRET_FUMBLED);
 }
 
 bool is_range_weapon_type( weapon_type wtype )
