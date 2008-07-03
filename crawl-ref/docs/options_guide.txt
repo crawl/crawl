@@ -54,8 +54,7 @@ The contents of this text are:
                 trap_prompt, rest_wait_both
 4-h     Stashes.
                 stash_tracking, stash_filter, annotate_item_class,
-                annoate_item_dropped, stash_track_decay,
-                stash_remove_decay
+                annoate_item_dropped
 4-i     Command Enhancements.
                 auto_list, easy_open, easy_unequip, easy_confirm, 
                 allow_self_target, easy_butcher, always_confirm_butcher, 
@@ -937,17 +936,6 @@ annotate_item_dropped = false
         This only works if stash.lua has already been sourced in 
         init.txt. Annotates dropped items with {dropped} for stash
         searching.
-
-stash_track_decay = false
-        If set to true then the stash tracker will remember how long its
-        been since you've seen chunks of meat or a corpse or skeleton and
-        tell you what state its in by adding "rotten by now",
-        "skeletalised by now" or "gone by now" to its name.
-
-stash_remove_decay = false
-        If both this and stash_track_decay are set to true, anything that
-        would have been reported as "gone by now" will instead be
-        removed from the stash tracker's memory.
 
 4-i     Command Enhancements.
 -----------------------------

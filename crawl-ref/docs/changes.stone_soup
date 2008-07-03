@@ -45,6 +45,8 @@ Interface
 * Evaporate can now be cancelled during potion/direction choice.
 * Portaled Projectile now allows choice of ammunition.
 * greedy_explore now defaults to true.
+* Stash tracker now tracks how decayed corpses and flesh chunks become,
+  and removes them from the tracker once they rot away completely.
 
 Gods
 ----

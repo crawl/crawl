@@ -743,9 +743,6 @@ void game_options::reset_options()
 
     stash_tracking         = STM_ALL;
 
-    stash_track_decay      = false;
-    stash_remove_decay     = false;
-
     explore_stop           = ES_ITEM | ES_STAIR | ES_PORTAL | ES_SHOP | ES_ALTAR
                                      | ES_GREEDY_PICKUP;
 
@@ -2595,8 +2592,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
              field == "all"     ? STM_ALL      :
                                   STM_EXPLICIT;
     }
-    else BOOL_OPTION(stash_track_decay);
-    else BOOL_OPTION(stash_remove_decay);
     else if (key == "stash_filter")
     {
         std::vector<std::string> seg = split_string(",", field);

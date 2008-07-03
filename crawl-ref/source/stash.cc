@@ -390,7 +390,7 @@ std::string Stash::stash_item_name(const item_def &item)
 {
     std::string name = item.name(DESC_NOCAP_A);
 
-    if (!Options.stash_track_decay || !_is_rottable(item))
+    if (!_is_rottable(item))
         return name;
 
     if (item.plus2 <= _min_rot(item))
@@ -604,12 +604,8 @@ void Stash::_update_corpses(long rot_time)
 
         if (new_rot <= _min_rot(item))
         {
-            if (Options.stash_remove_decay)
-            {
-                items.erase(items.begin() + i);
-                continue;
-            }
-            new_rot = _min_rot(item);
+            items.erase(items.begin() + i);
+            continue;
         }
         item.plus2 = static_cast<short>(new_rot);
     }
@@ -1861,9 +1857,6 @@ bool StashTracker::display_search_results(
 
 void StashTracker::update_corpses()
 {
-    if (!Options.stash_track_decay)
-        return;
-
     if (you.elapsed_time - last_corpse_update < 20.0)
         return;
 
