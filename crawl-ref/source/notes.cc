@@ -76,7 +76,7 @@ static bool _is_noteworthy_hp( int hp, int maxhp )
 
 static int _dungeon_branch_depth( unsigned char branch )
 {
-    if ( branch >= NUM_BRANCHES )
+    if (branch >= NUM_BRANCHES)
         return -1;
     return branches[branch].depth;
 }

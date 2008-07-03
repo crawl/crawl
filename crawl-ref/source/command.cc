@@ -866,7 +866,7 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
     {
         std::string a_name = mons_type_name(*a, DESC_PLAIN);
         std::string b_name = mons_type_name(*b, DESC_PLAIN);
-        return ( lowercase(a_name) < lowercase(b_name));
+        return (lowercase(a_name) < lowercase(b_name));
     }
 
     return (a_toughness < b_toughness);
@@ -1111,6 +1111,11 @@ static bool _do_description(std::string key, std::string footer = "")
     god_type which_god = string_to_god(key.c_str());
     if (which_god != GOD_NO_GOD)
     {
+        if (is_good_god(which_god))
+        {
+            suffix = "$$" + god_name(which_god) + " won't accept worship from "
+                     "undead or evil beings.";
+        }
         std::string help = get_god_powers(which_god);
         if (!help.empty())
         {

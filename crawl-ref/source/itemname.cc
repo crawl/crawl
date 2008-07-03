@@ -2385,6 +2385,19 @@ bool is_useless_item(const item_def &item, bool temp)
 {
     switch (item.base_type)
     {
+    case OBJ_WEAPONS:
+        if (!item_type_known(item))
+            return (false);
+
+        switch (get_weapon_brand(item))
+        {
+        case SPWPN_HOLY_WRATH:
+            return (you.is_undead);
+        case SPWPN_PAIN:
+            return (temp && !you.skills[SK_NECROMANCY] && !is_artefact(item));
+        }
+        return (false);
+
     case OBJ_ARMOUR:
         return (!can_wear_armour(item, false, true));
 
@@ -2497,6 +2510,7 @@ bool is_useless_item(const item_def &item, bool temp)
         default:
             return (false);
         }
+
     case OBJ_STAVES:
         if (you.religion == GOD_TROG && !item_is_rod(item))
             return (true);
