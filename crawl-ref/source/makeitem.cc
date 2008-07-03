@@ -1644,7 +1644,7 @@ static item_status_flag_type _determine_missile_race(const item_def& item,
         break;
 
     case MAKE_ITEM_RANDOM_RACE:
-        // Elves don't make bolts, sling bullets, or throwing nets
+        // Elves don't make bolts, sling bullets, or throwing nets.
         if ((item.sub_type == MI_ARROW
                 || item.sub_type == MI_DART
                 || item.sub_type == MI_JAVELIN)
@@ -1653,7 +1653,7 @@ static item_status_flag_type _determine_missile_race(const item_def& item,
             rc = ISFLAG_ELVEN;
         }
 
-        // Orcs don't make sling bullets or throwing nets
+        // Orcs don't make sling bullets or throwing nets.
         if ((item.sub_type == MI_ARROW
                 || item.sub_type == MI_BOLT
                 || item.sub_type == MI_DART
@@ -1664,14 +1664,14 @@ static item_status_flag_type _determine_missile_race(const item_def& item,
         }
 
         // Dwarves don't make arrows, sling bullets, javelins, or
-        // throwing nets
+        // throwing nets.
         if ((item.sub_type == MI_DART || item.sub_type == MI_BOLT)
             && one_chance_in(6))
         {
             rc = ISFLAG_DWARVEN;
         }
 
-        // Dwarves don't make needles
+        // Dwarves don't make needles.
         if (item.sub_type == MI_NEEDLE)
         {
             if (one_chance_in(10))
@@ -1720,11 +1720,8 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     if (get_equip_race(item) == ISFLAG_ORCISH && one_chance_in(3))
         rc = SPMSL_POISONED;
 
-    // Un-poison sling bullets; un-flame and un-ice javelins; unbrand
-    // throwing nets.
+    // Un-poison sling bullets, and unbrand throwing nets.
     if (item.sub_type == MI_SLING_BULLET && rc == SPMSL_POISONED
-        || item.sub_type == MI_JAVELIN
-           && (rc == SPMSL_FLAME || rc == SPMSL_ICE)
         || item.sub_type == MI_THROWING_NET)
     {
         rc = SPMSL_NORMAL;
