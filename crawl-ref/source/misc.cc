@@ -1637,7 +1637,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
     new_level();
 
-    viewwindow(1, true);
+    viewwindow(true, true);
 
     // Left Zot without enough runes to get back in (probably because
     // of dropping some runes within Zot), but need to get back in Zot
@@ -2190,7 +2190,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     TileNewLevel(newlevel);
 #endif // USE_TILE
 
-    viewwindow(1, true);
+    viewwindow(true, true);
 
     if (collect_travel_data)
     {

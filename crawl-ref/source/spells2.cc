@@ -617,7 +617,7 @@ void cast_toxic_radiance(void)
     mpr("You radiate a sickly green light!");
 
     show_green = GREEN;
-    viewwindow(1, false);
+    viewwindow(true, false);
     more();
     mesclr();
 
@@ -693,7 +693,7 @@ void cast_refrigeration(int pow)
     mpr("The heat is drained from your surroundings.");
 
     show_green = LIGHTCYAN;
-    viewwindow(1, false);
+    viewwindow(true, false);
     more();
     mesclr();
 
@@ -762,7 +762,7 @@ void drain_life(int pow)
     ASSERT( pow <= 27 );
 
     show_green = DARKGREY;
-    viewwindow(1, false);
+    viewwindow(true, false);
     more();
     mesclr();
 

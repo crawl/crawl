@@ -750,7 +750,7 @@ static void _wizard_go_to_level(const level_pos &pos)
 #endif
     save_game_state();
     new_level();
-    viewwindow(1, true);
+    viewwindow(true, true);
 
     // Tell stash-tracker and travel that we've changed levels.
     trackers_init_new_level(true);

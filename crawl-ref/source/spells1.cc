@@ -264,7 +264,7 @@ void cast_fire_storm(int pow, bolt &beam)
     if (explosion(beam, false, false, true, true, false) > 0)
         mpr("A raging storm of fire appears!");
 
-    viewwindow(1, false);
+    viewwindow(true, false);
 }
 
 void cast_chain_lightning(int pow)

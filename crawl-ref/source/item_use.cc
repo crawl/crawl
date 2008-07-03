@@ -2419,9 +2419,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
     }
 
-    mprf(MSGCH_DIAGNOSTICS, "bow_brand: %d, ammo_brand: %d",
-        bow_brand, ammo_brand);
-
     // The chief advantage here is the extra damage this does
     // against susceptible creatures.
 

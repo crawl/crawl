@@ -4110,7 +4110,9 @@ static bool _initialise(void)
 #endif
 
     set_cursor_enabled(false);
-    viewwindow(1, false);   // This just puts the view up for the first turn.
+
+    // This just puts the view up for the first turn.
+    viewwindow(true, false);
 
     activate_notes(true);
 

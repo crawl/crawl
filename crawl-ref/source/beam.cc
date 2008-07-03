@@ -1987,7 +1987,7 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
 #ifdef MISSILE_TRAILS_OFF
                 // mv: It's not optimal but is usually enough.
                 if (!pbolt.is_beam || pbolt.name[0] == '0')
-                    viewwindow(1,false);
+                    viewwindow(true, false);
 #endif
             }
 
@@ -2424,7 +2424,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
     if (m_attempted)
         *m_attempted = 0;
 
-    viewwindow(0, false);
+    viewwindow(false, false);
 
     if (pow > 200)
         pow = 200;

@@ -761,8 +761,8 @@ void redraw_screen(void)
     update_turn_count();
     activate_notes(note_status);
 
-    viewwindow(1, false);
-}                               // end redraw_screen()
+    viewwindow(true, false);
+}
 
 // STEPDOWN FUNCTION to replace conditional chains in spells2.cc 12jan2000 {dlb}
 // it is a bit more extensible and optimizes the logical structure, as well
