@@ -1701,8 +1701,7 @@ bool cast_sanctuary(const int power)
             }
 
             if (trap_type_at_xy(posx, posy) != NUM_TRAPS
-                && grd(pos) == DNGN_UNDISCOVERED_TRAP
-                && see_grid(pos))
+                && grd(pos) == DNGN_UNDISCOVERED_TRAP)
             {
                 const dungeon_feature_type type =
                     trap_category( trap_type_at_xy(posx, posy) );
@@ -1780,7 +1779,7 @@ bool cast_sanctuary(const int power)
         } // radius loop
 
     if (trap_count > 0)
-        mpr("The flash of divine light reveals hidden traps!",
+        mpr("By Zin's power hidden traps are revealed to you.",
             MSGCH_GOD);
 
     if (cloud_count == 1)
