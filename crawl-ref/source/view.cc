@@ -3015,7 +3015,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
     cursor_control cs(false);
 
     int top = 1 + Options.level_map_title;
-    if ( Options.level_map_title )
+    if (Options.level_map_title)
     {
         const formatted_string help =
             formatted_string::parse_string("(Press <w>?</w> for help)");
@@ -4956,8 +4956,7 @@ void viewwindow(bool draw_it, bool do_updates)
                         // have a monster or cloud on it, and is equal
                         // to the grid before monsters and clouds were
                         // added otherwise.
-                        if (Options.clean_map
-                            && Show_Backup(ep)
+                        if (Options.clean_map && Show_Backup(ep)
                             && is_terrain_seen( gc.x, gc.y ))
                         {
                             _get_symbol( gc.x, gc.y,

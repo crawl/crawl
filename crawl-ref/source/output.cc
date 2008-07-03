@@ -768,8 +768,9 @@ static void _print_status_lights(int y)
     size_t i_light = 0;
     while (true)
     {
-        const int end_x = (wherex() - crawl_view.hudp.x) +
-            (i_light < lights.size() ? strlen(lights[i_light].text) : 10000);
+        const int end_x = (wherex() - crawl_view.hudp.x)
+                + (i_light < lights.size() ? strlen(lights[i_light].text)
+                                           : 10000);
 
         if (end_x <= crawl_view.hudsz.x)
         {
@@ -777,12 +778,12 @@ static void _print_status_lights(int y)
             cprintf("%s", lights[i_light].text);
             if (end_x < crawl_view.hudsz.x)
                 cprintf(" ");
-            ++ i_light;
+            ++i_light;
         }
         else
         {
             clear_to_end_of_line();
-            ++ line_cur;
+            ++line_cur;
             // Careful not to trip the )#(*$ cgotoxy ASSERT
             if (line_cur == line_end)
                 break;
@@ -804,14 +805,15 @@ void print_stats(void)
     if (you.redraw_dexterity)
         you.redraw_evasion = true;
 
-    if (HP_Bar.wants_redraw()) you.redraw_hit_points = true;
-    if (MP_Bar.wants_redraw()) you.redraw_magic_points = true;
+    if (HP_Bar.wants_redraw())
+        you.redraw_hit_points = true;
+    if (MP_Bar.wants_redraw())
+        you.redraw_magic_points = true;
 
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp ( 1, 3); }
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp ( 1, 4); }
     if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac ( 1, 5); }
     if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev ( 1, 6); }
-    // (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_sh ( 1, 7); }
 
     if (you.redraw_strength)     { you.redraw_strength = false;     _print_stats_str(19, 5); }
     if (you.redraw_intelligence) { you.redraw_intelligence = false; _print_stats_int(19, 6); }

@@ -74,6 +74,7 @@ Items
 -----
 * Removed weapons of disruption, improved holy wrath.
 * New weapon brand: dragon slaying, limited to Polearms.
+* Fixed darts of flame/ice to actually work, add similarly branded javelins.
 * Forbid (un)equipping of items with known potentially fatal stat drain.
 * Make distortion only take effect on unwielding.
 * Improved autotargeting for weapons of reaching.

@@ -474,9 +474,9 @@ static std::string _randart_descrip( const item_def &item )
         { RAP_CURSED, "It may recurse itself.", false}
     };
 
-    for ( unsigned i = 0; i < ARRAYSZ(propdescs); ++i )
+    for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)
     {
-        if ( known_proprt(propdescs[i].property))
+        if (known_proprt(propdescs[i].property))
         {
             // Only randarts with RAP_CURSED > 0 may recurse themselves.
             if (propdescs[i].property == RAP_CURSED
@@ -492,13 +492,14 @@ static std::string _randart_descrip( const item_def &item )
             snprintf(buf, sizeof buf, "%+d", proprt[propdescs[i].property]);
             sdesc = replace_all(sdesc, "%d", buf);
 
-            if ( propdescs[i].is_graded_resist )
+            if (propdescs[i].is_graded_resist)
             {
                 int idx = proprt[propdescs[i].property] + 3;
-                if ( idx < 0 )
+                if (idx < 0)
                     idx = 0;
-                if ( idx > 6 )
+                if (idx > 6)
                     idx = 6;
+
                 const char* prefixes[] = {
                     "It makes you extremely vulnerable to ",
                     "It makes you very vulnerable to ",
@@ -1002,9 +1003,14 @@ static std::string _describe_weapon( const item_def &item, bool verbose)
 
         if (is_random_artefact( item ))
         {
-            description += "$$";
-            description += _randart_descrip( item );
+            std::string rand_desc = _randart_descrip( item );
+            if (!rand_desc.empty())
+            {
+                description += "$$";
+                description += rand_desc;
+            }
 
+            // Can't happen, right? (XXX)
             if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
                 && item_type_known(item))
             {
@@ -1287,7 +1293,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
                 "of both cold and heat.";
             break;
 
-        // these two are robes only:
+        // These two are only for robes.
         case SPARM_POSITIVE_ENERGY:
             description += "It protects its wearer from "
                 "the effects of negative energy.";
@@ -1307,13 +1313,20 @@ static std::string _describe_armour( const item_def &item, bool verbose )
 
     if (is_random_artefact( item ))
     {
-        description += "$$";
-        description += _randart_descrip( item );
+        std::string rand_desc = _randart_descrip( item );
+        if (!rand_desc.empty())
+        {
+            description += "$$";
+            description += rand_desc;
+        }
+
+        // Can't happen, right? (XXX)
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
             description += "$This armour may have some hidden properties.";
     }
     else if (get_equip_race( item ) != ISFLAG_NO_RACE)
     {
+        // Randart armour can't be racial.
         description += "$";
         switch (get_equip_race( item ))
         {
@@ -1344,12 +1357,16 @@ static std::string _describe_armour( const item_def &item, bool verbose )
     if (verbose && get_armour_slot(item) == EQ_BODY_ARMOUR)
     {
         description += "$$";
-        if ( is_light_armour(item) )
+        if (is_light_armour(item))
+        {
             description += "This is a light armour. Wearing it will "
                 "exercise Dodging and Stealth.";
+        }
         else
+        {
             description += "This is a heavy armour. Wearing it will "
                 "exercise Armour.";
+        }
     }
 
     return description;
@@ -1373,7 +1390,7 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
         // Note that for randarts we'll print out the pluses even
         // in the case that its zero, just to avoid confusion. -- bwr
         if (item.plus != 0
-            || (item.sub_type == RING_SLAYING && item.plus2 != 0)
+            || item.sub_type == RING_SLAYING && item.plus2 != 0
             || is_random_artefact( item ))
         {
             switch (item.sub_type)
@@ -1440,8 +1457,12 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
     // Randart properties.
     if (is_random_artefact( item ))
     {
-        description += "$";
-        description += _randart_descrip(item);
+        std::string rand_desc = _randart_descrip( item );
+        if (!rand_desc.empty())
+        {
+            description += "$";
+            description += rand_desc;
+        }
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES))
         {
             description += "$This ";
@@ -1688,18 +1709,37 @@ std::string get_item_description( const item_def &item, bool verbose,
         }
     }
 
+    bool need_extra_line = true;
+    std::string desc;
     switch (item.base_type)
     {
+    // Weapons, armour, jewellery might be artefacts.
     case OBJ_WEAPONS:
-        description << _describe_weapon( item, verbose );
+        desc = _describe_weapon( item, verbose );
+        if (desc.empty())
+            need_extra_line = false;
+        else
+            description << desc;
+        break;
+
+    case OBJ_ARMOUR:
+        desc = _describe_armour( item, verbose );
+        if (desc.empty())
+            need_extra_line = false;
+        else
+            description << desc;
+        break;
+
+    case OBJ_JEWELLERY:
+        desc = _describe_jewellery( item, verbose );
+        if (desc.empty())
+            need_extra_line = false;
+        else
+            description << desc;
         break;
 
     case OBJ_MISSILES:
         description << _describe_ammo( item );
-        break;
-
-    case OBJ_ARMOUR:
-        description << _describe_armour( item, verbose );
         break;
 
     case OBJ_WANDS:
@@ -1770,12 +1810,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                                "of eating such meat.";
             }
             description << "$";
-
         }
-        break;
-
-    case OBJ_JEWELLERY:
-        description << _describe_jewellery( item, verbose );
         break;
 
     case OBJ_STAVES:
@@ -1805,13 +1840,16 @@ std::string get_item_description( const item_def &item, bool verbose,
         break;
 
     case OBJ_BOOKS:
-        if (! player_can_read_spellbook( item ))
-            description << "$This book is beyond your current level of understanding.";
+        if (!player_can_read_spellbook( item ))
+        {
+            description << "$This book is beyond your current level of "
+                           "understanding.";
+        }
         break;
 
     case OBJ_POTIONS:
 #ifdef DEBUG_BLOOD_POTIONS
-        // list content of timer vector for blood potions
+        // List content of timer vector for blood potions.
         if (is_blood_potion(item))
         {
             item_def stack = static_cast<item_def>(item);
@@ -1846,7 +1884,9 @@ std::string get_item_description( const item_def &item, bool verbose,
     {
         if (verbose)
         {
-            description << "$$It";
+            if (need_extra_line)
+                description << "$";
+            description << "$It";
             if (item_known_cursed( item ))
                 description << " has a curse placed upon it, and it";
 

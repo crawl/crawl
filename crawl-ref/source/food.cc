@@ -93,12 +93,12 @@ void make_hungry( int hunger_amount, bool suppress_msg, bool allow_reducing )
     if (you.hunger < 0)
         you.hunger = 0;
 
-    // so we don't get two messages, ever.
+    // So we don't get two messages, ever.
     bool state_message = _food_change(false);
 
     if (!suppress_msg && !state_message)
         _describe_food_change( -hunger_amount );
-}                               // end make_hungry()
+}
 
 void lessen_hunger( int satiated_amount, bool suppress_msg )
 {
@@ -110,12 +110,12 @@ void lessen_hunger( int satiated_amount, bool suppress_msg )
     if (you.hunger > 12000)
         you.hunger = 12000;
 
-    // so we don't get two messages, ever
+    // So we don't get two messages, ever.
     bool state_message = _food_change(false);
 
     if (!suppress_msg && !state_message)
         _describe_food_change(satiated_amount);
-}                               // end lessen_hunger()
+}
 
 void set_hunger( int new_hunger_level, bool suppress_msg )
 {
@@ -918,6 +918,7 @@ static bool _food_change(bool suppress_message)
         state_changed = true;
         if (newstate > you.hunger_state)
             less_hungry = true;
+
         you.hunger_state = newstate;
         set_redraw_status( REDRAW_HUNGER );
 
@@ -946,18 +947,19 @@ static bool _food_change(bool suppress_message)
             else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
                      && you.duration[DUR_TRANSFORMATION] > 5)
             {
+                print_stats();
                 mpr("Your blood-filled body can't sustain your transformation "
                     "much longer.", MSGCH_WARN);
-                // give more time because suddenly stopping flying can be lethal
+
+                // Give more time because suddenly stopping flying can be fatal.
                 you.duration[DUR_TRANSFORMATION] = 5;
-                if (is_vampire_feeding())
-                    stop_delay();
             }
-            if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
+            else if (newstate == HS_ENGORGED && is_vampire_feeding()) // Alive
             {
+                print_stats();
                 mpr("You can't stomach any more blood right now.");
-                stop_delay();
             }
+
         }
 
         if (!suppress_message)
@@ -970,6 +972,7 @@ static bool _food_change(bool suppress_message)
                     msg += "feel devoid of blood!";
                 else
                     msg += "are starving!";
+
                 mpr(msg.c_str(), MSGCH_FOOD, less_hungry);
 
                 // Xom thinks this is funny if you're in a labyrinth
@@ -989,15 +992,8 @@ static bool _food_change(bool suppress_message)
                     msg += "feel almost devoid of blood!";
                 else
                     msg += "are near starving!";
-                mpr(msg.c_str(), MSGCH_FOOD, less_hungry);
 
-                // Xom thinks this is funny if you're in a labyrinth
-                // and are low on food.
-                if (you.level_type == LEVEL_LABYRINTH
-                    && !_player_has_enough_food())
-                {
-                    xom_is_stimulated(32);
-                }
+                mpr(msg.c_str(), MSGCH_FOOD, less_hungry);
 
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
@@ -1031,7 +1027,7 @@ static void _describe_food_change(int food_increment)
     if (magnitude == 0)
         return;
 
-    if ( magnitude <= 100 )
+    if (magnitude <= 100)
         msg = "You feel slightly ";
     else if (magnitude <= 350)
         msg = "You feel somewhat ";
@@ -1048,7 +1044,7 @@ static void _describe_food_change(int food_increment)
     msg += _how_hungry().c_str();
     msg += ".";
     mpr(msg.c_str());
-}                               // end describe_food_change()
+}
 
 static bool _player_can_eat_rotten_meat(bool need_msg = false)
 {
@@ -1728,7 +1724,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
     const int chunk_type = _determine_chunk_effect(
                                 mons_corpse_effect(mons_type), false);
 
-    // This is the exact formula of corpse nutrition for chunk lovers
+    // This is the exact formula of corpse nutrition for chunk lovers.
     const int max_chunks = mons_weight(mons_type)/150;
     int chunk_amount     = 1 + max_chunks/2;
         chunk_amount     = stepdown_value( chunk_amount, 4, 4, 12, 12 );

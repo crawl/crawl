@@ -41,6 +41,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
+#include "transfor.h"
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
@@ -138,7 +139,7 @@ static int _recite_to_monsters(int x, int y, int pow, int unused)
         else
             return (0); // nothing happens
 
-        // bad effects stop the recital
+        // Bad effects stop the recital.
         stop_delay();
         return (1);
     }
@@ -496,19 +497,20 @@ void stop_delay( bool stop_stair_travel )
         did_god_conduct(DID_DRINK_BLOOD, 8);
         delay.duration = 0;
         _pop_delay();
-        break;
+        handle_delay();
+        return;
     }
     case DELAY_ARMOUR_ON:
     case DELAY_ARMOUR_OFF:
         // These two have the default action of not being interruptible,
-        // although they will often be chained (remove cloak, remove
-        // armour, wear new armour, replace cloak), all of which can
-        // be stopped when complete.  This is a fairly reasonable
-        // behaviour, although perhaps the character should have
-        // option of reversing the current action if it would take
-        // less time to get out of the plate mail that's half on
-        // than it would take to continue.  Probably too much trouble,
-        // and would have to have a prompt... this works just fine. -- bwr
+        // although they will often consist of chained intermediary steps
+        // (remove cloak, remove armour, wear new armour, replace cloak),
+        // all of which can be stopped when complete.  This is a fairly
+        // reasonable behaviour, although perhaps the character should have
+        // the option of reversing the current action if it would take less
+        // time to get out of the plate mail that's half on than it would
+        // take to continue.  Probably too much trouble, and we'd have to
+        // have a prompt... this works just fine. -- bwr
         break;
 
     case DELAY_ASCENDING_STAIRS:  // short... and probably what people want
@@ -678,7 +680,7 @@ void handle_delay( void )
                                                    : "butchering"),
                  mitm[delay.parm1].name(DESC_PLAIN).c_str());
 
-            // also for bottling blood
+            // Also for bottling blood - just in case.
             if (you.duration[DUR_PRAYER]
                 && god_hates_butchery(you.religion))
             {
@@ -728,8 +730,19 @@ void handle_delay( void )
 
     // First check cases where delay may no longer be valid:
     // XXX: need to handle passwall when monster digs -- bwr
-    if (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD
-        || delay.type == DELAY_OFFER_CORPSE)
+    if (delay.type == DELAY_FEED_VAMPIRE)
+    {
+        if (you.hunger_state == HS_ENGORGED
+            || you.hunger_state > HS_SATIATED
+               && you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+        {
+            // Messages handled in _food_change() in food.cc.
+            stop_delay();
+            return;
+        }
+    }
+    else if (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD
+             || delay.type == DELAY_OFFER_CORPSE)
     {
         if (delay.type == DELAY_BOTTLE_BLOOD && you.experience_level < 6)
         {
@@ -801,7 +814,9 @@ void handle_delay( void )
                     {
                         mpr("You stop bottling this corpse's foul-smelling "
                             "blood!");
-                        delay.duration = 0;
+                        _pop_delay();
+                        handle_delay();
+                        return;
                     }
                 }
 
@@ -850,10 +865,10 @@ void handle_delay( void )
     }
     else if (delay.type == DELAY_RECITE)
     {
-        if (check_recital_audience() < 1 // maybe you've lost your audience
+        if (check_recital_audience() < 1 // Maybe you've lost your audience...
             || Options.hp_warning && you.hp*Options.hp_warning <= you.hp_max
                && delay.parm2*Options.hp_warning > you.hp_max
-            || you.hp*2 < delay.parm2) // or significant health drop
+            || you.hp*2 < delay.parm2) // ... or significant health drop.
         {
             stop_delay();
             return;
@@ -1170,6 +1185,8 @@ static void _finish_delay(const delay_queue_item &delay)
             mprf("You stop %s.",
                  delay.type == DELAY_BUTCHER ? "butchering the corpse"
                                              : "bottling this corpse's blood");
+            _pop_delay();
+            handle_delay();
         }
         StashTrack.update_stash(); // Stash-track the generated item(s).
         break;
