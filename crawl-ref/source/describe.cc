@@ -1067,23 +1067,20 @@ static std::string _describe_weapon( const item_def &item, bool verbose)
 
     if (verbose)
     {
-        if ( is_demonic(item) && !launcher )
+        if (is_demonic(item) && !launcher)
             description += "$Demonspawn are more deadly with it.";
         else if (get_equip_race(item) != ISFLAG_NO_RACE)
         {
-            switch (get_equip_race( item ))
-            {
-            case ISFLAG_DWARVEN:
+            unsigned long race = get_equip_race(item);
+
+            if (race == ISFLAG_DWARVEN)
                 description += "$It is well-crafted and very durable.";
-                description += "$Dwarves are more deadly with it";
-                break;
-            case ISFLAG_ELVEN:
-                description += "$Elves are more accurate with it";
-                break;
-            case ISFLAG_ORCISH:
-                description += "$Orcs are more deadly with it";
-                break;
-            }
+
+            description += "$";
+            description += (race == ISFLAG_DWARVEN) ? "Dwarfs" :
+                           (race == ISFLAG_ELVEN)   ? "Elves"
+                                                    : "Orcs";
+            description += " are more deadly with it";
 
             if (launcher)
             {
@@ -1091,6 +1088,7 @@ static std::string _describe_weapon( const item_def &item, bool verbose)
                 description += racial_description_string(item);
                 description += "ammunition";
             }
+
             description += ".";
         }
     }
@@ -1173,7 +1171,7 @@ static std::string _describe_ammo( const item_def &item )
             break;
         case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way "
-                           "that it will return to its owner.";
+                "that it will return to its owner.";
             break;
         }
 
@@ -1331,30 +1329,24 @@ static std::string _describe_armour( const item_def &item, bool verbose )
     {
         // Randart armour can't be racial.
         description += "$";
-        switch (get_equip_race( item ))
-        {
-        case ISFLAG_ELVEN:
-            description += "$It is well-crafted and unobstructive";
 
+        unsigned long race = get_equip_race(item);
+
+        if (race == ISFLAG_DWARVEN)
+            description += "$It is well-crafted and very durable.";
+        else if (race == ISFLAG_ELVEN)
+        {
+            description += "$It is well-crafted and unobstructive";
             if (item.sub_type == ARM_CLOAK || item.sub_type == ARM_BOOTS)
                 description += ", and helps its wearer avoid being noticed";
-
             description += ".";
-            description += "$It fits elves well.";
-            break;
-
-        case ISFLAG_DWARVEN:
-            description += "$It is well-crafted and very durable.";
-            description += "$It fits dwarves well.";
-            break;
-
-        case ISFLAG_ORCISH:
-            description += "$It fits orcs well.";
-            break;
-
-        default:
-            break;
         }
+
+        description += "$It fits ";
+        description += (race == ISFLAG_DWARVEN) ? "dwarves" :
+                       (race == ISFLAG_ELVEN)   ? "elves"
+                                                : "orcs";
+        description += " well.";
     }
 
     if (verbose && get_armour_slot(item) == EQ_BODY_ARMOUR)
