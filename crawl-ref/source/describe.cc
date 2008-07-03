@@ -2777,15 +2777,13 @@ static void _detailed_god_description(god_type which_god)
 
         case GOD_ELYVILON:
             broken = "Using your healing abilities on monsters may turn hostile "
-                     "ones neutral, either temporarily or permanently. "
-                     "Neutralising works better on natural beasts and worse on "
-                     "demons and undead. If the neutralisation does not succeed, "
-                     "then piety, food and Magic are still spent, but the "
-                     "monster will not be healed. Only if you manage to neutralise "
-                     "the monster, it is healed; you will also get piety for this. "
-                     "Should a monster become permanently neutral, you'll gain "
-                     "half of its experience value and the monster will "
-                     "leave the level as quickly as possible.";
+                     "ones neutral. Pacification works better on natural beasts "
+                     "and worse on demons and undead. If the neutralisation does "
+                     "not succeed, then piety, food and Magic are still spent, "
+                     "but the monster will not be healed. If you successfully "
+                     "pacify a monster, it is healed and you will gain half of "
+                     "its experience value and some piety. Pacified monsters try "
+                     "to leave the level as quickly as possible.";
             break;
 
         case GOD_NEMELEX_XOBEH:
