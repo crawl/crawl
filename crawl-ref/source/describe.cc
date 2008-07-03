@@ -2775,6 +2775,10 @@ static void _detailed_god_description(god_type which_god)
                      "piety.";
             break;
 
+        case GOD_ZIN:
+            broken = "Zin will feed starving followers upon <w>p</w>rayer.";
+            break;
+
         case GOD_ELYVILON:
             broken = "Using your healing abilities on monsters may turn hostile "
                      "ones neutral. Pacification works better on natural beasts "
