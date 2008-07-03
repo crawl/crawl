@@ -3071,7 +3071,7 @@ static void _handle_behaviour(monsters *mon)
                 // If a pacified monster is far enough away from the
                 // player, make it leave the level.
                 if (grid_distance(mon->x, mon->y, you.x_pos, you.y_pos)
-                        >= LOS_RADIUS * LOS_RADIUS * 2)
+                        >= LOS_RADIUS * 4)
                 {
                     make_mons_leave_level(mon);
                     return;
