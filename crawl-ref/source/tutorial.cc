@@ -282,9 +282,10 @@ static formatted_string _tut_starting_info(unsigned int width)
         "  <white>x</white>  - examines something in your vicinity" EOL EOL
         "This tutorial will help you play Crawl without reading any "
         "documentation. If you feel intrigued, there is more information "
-        "available in these files (all of which can also be read in-game):"
+        "available in the following files from the docs/ folder (all of "
+        "which can also be read in-game):"
         EOL
-        "  <lightblue>readme.txt</lightblue>         - "
+        "  <lightblue>quickstart.txt</lightblue>     - "
         "A very short guide to Crawl." EOL
         "  <lightblue>crawl_manual.txt</lightblue>   - "
         "This contains all details on races, magic, skills, etc." EOL
@@ -524,26 +525,26 @@ static formatted_string _tutorial_stats_intro()
     istr << "<"
          << colour_to_str(channel_to_colour(MSGCH_TUTORIAL))
          << ">"
-         << "To the right, important properties of \n"
-            "the character are displayed. The most \n"
-            "basic one is your health, measured as \n"
-            "<w>HP: " << you.hp << "/" << you.hp_max << "</w>. ";
+         << "To the right, important properties \n"
+            "of the character are displayed. The \n"
+            "most basic one is Health, shown as \n"
+            "<w>Health: " << you.hp << "/" << you.hp_max << "</w> ";
 
-    if (Options.tutorial_type == TUT_MAGIC_CHAR)
-        istr << "  ";
+    //    if (Options.tutorial_type == TUT_MAGIC_CHAR)
+    //    istr << "  ";
 
     istr <<
-            "These are your current out \n"
-            "of maximum health points. When health \n"
-            "drops to zero, you die.               \n"
+            "and meaning current \n"
+            "out of maximum health points. When \n"
+            "Health drops to zero, you die. \n"
             "<w>Magic: " << you.magic_points << "/" << you.max_magic_points
-         << "</w> is your energy for casting \n"
-            "spells, although more mundane actions \n"
-            "often draw from Magic, too.           \n"
-            "Further down, <w>Str</w>ength, <w>Dex</w>terity and \n"
-            "<w>Int</w>elligence are shown and provide an \n"
-            "all-around account of the character's \n"
-            "attributes.                           \n"
+         << "</w> represents your energy \n"
+            "for casting spells, although other \n"
+            "actions often draw from Magic, too. \n"
+            "<w>Str</w>ength, <w>Int</w>elligence, <w>Dex</w>terity \n" 
+            "below provide an all-around account \n"
+            "of the character's attributes. \n"
+            "Don't worry about the rest for now. \n"
          << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">"
             "                                      \n"
             " --more--                               Press <w>Escape</w> to skip the basics\n"
@@ -1729,7 +1730,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 ". Unlike all other objects in Crawl it doesn't show up in "
                 "your inventory, takes up no space in your inventory, weighs "
                 "nothing and can't be dropped. Gold can be used to buy "
-                "items from shops, and can also be sacrificed to some gods.";
+                "items from shops, and can also be sacrificed to some gods. ";
 
         if (!Options.show_gold_turns)
         {
