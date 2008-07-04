@@ -119,8 +119,7 @@ const char *mutation_descrip[][3] = {
      "You are surrounded by a moderate repulsion field (ev + 3).",
      "You are surrounded by a strong repulsion field (ev + 5; repel missiles)."},
 
-    {"Your system is immune to poisons.", "Your system is immune to poisons.",
-     "Your system is immune to poisons."},
+    {"Your system is immune to poisons.", "", ""},
 
 // 10
     {"Your digestive system is specialised to digest meat.",
@@ -136,8 +135,7 @@ const char *mutation_descrip[][3] = {
     {"Your flesh is cold resistant.", "Your flesh is very cold resistant.",
      "Your flesh is almost immune to the effects of cold."},
 
-    {"You are immune to electric shocks.", "You are immune to electric shocks.",
-     "You are immune to electric shocks."},
+    {"You are immune to electric shocks.", "", ""},
 
     {"Your natural rate of healing is unusually fast.",
      "You heal very quickly.",
@@ -416,7 +414,7 @@ const char *gain_mutation[][3] = {
      "Your repulsive radiation grows stronger.",
      "Your repulsive radiation grows stronger."},
 
-    {"You feel healthy.", "You feel healthy.",  "You feel healthy."},
+    {"You feel healthy.", "",  ""},
 
 // 10
     {"You hunger for flesh.", "You hunger for flesh.",
@@ -431,7 +429,7 @@ const char *gain_mutation[][3] = {
     {"You feel hot for a moment.", "You feel hot for a moment.",
      "You feel hot for a moment."},
 
-    {"You feel insulated.", "You feel insulated.", "You feel insulated."},
+    {"You feel insulated.", "", ""},
 
     {"You begin to heal more quickly.",
      "You begin to heal more quickly.",
@@ -662,8 +660,7 @@ const char *lose_mutation[][3] = {
 
     {"You feel attractive.", "You feel attractive.", "You feel attractive."},
 
-    {"You feel a little less healthy.", "You feel a little less healthy.",
-     "You feel a little less healthy."},
+    {"You feel a little less healthy.", "", ""},
 
     {"You feel able to eat a more balanced diet.",
      "You feel able to eat a more balanced diet.",
@@ -679,7 +676,7 @@ const char *lose_mutation[][3] = {
     {"You feel a sudden chill.", "You feel a sudden chill.",
      "You feel a sudden chill."},
 
-    {"You feel conductive.", "You feel conductive.", "You feel conductive."},
+    {"You feel conductive.", "", ""},
 
     {"Your rate of healing slows.", "Your rate of healing slows.",
      "Your rate of healing slows."},
@@ -785,7 +782,7 @@ const char *lose_mutation[][3] = {
 
     // 60
     {"Your hooves expand and flesh out into feet!", "", ""},
-    {"Your talons dull and shrink into feet.", "", ""},
+    {"Your talons dull and shrink into feet!", "", ""},
 
     {"", "", ""},
     {"", "", ""},
@@ -2577,7 +2574,7 @@ void demonspawn()
             if (one_chance_in(12))
             {
                 whichm = MUT_SHOCK_RESISTANCE;
-                howm = 3;
+                howm = 1;
             }
 
             if (!you.mutation[MUT_CALL_TORMENT] && one_chance_in(15))
@@ -2679,7 +2676,7 @@ void demonspawn()
             if (one_chance_in(4))
             {
                 whichm = MUT_POISON_RESISTANCE;
-                howm = 3;
+                howm = 1;
             }
 
             if (one_chance_in(4))
