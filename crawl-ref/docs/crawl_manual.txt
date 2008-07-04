@@ -1821,8 +1821,8 @@ some characters start with a different inventory.
 
 Fighters:
 ---------
-Fighters start with a decent weapon, a suit of heavy armour, and a shield.
-They have a good general grounding in the arts of fighting.
+Fighters usually start with a decent weapon, a suit of heavy armour, and
+a shield. They have a good general grounding in the arts of fighting.
 
 Gladiators:
 -----------
@@ -1830,7 +1830,7 @@ The Gladiator has been trained to fight in the ring, and so is versed
 in the art of fighting but is not so good at anything else. In fact, 
 Gladiators have never learned anything except bashing monsters with 
 heavy things. They start with a nasty weapon, a small shield, light 
-armour, and some nets or stones.
+armour, a helmet or cap, and some nets or stones.
 
 Monks:
 ------
@@ -1844,20 +1844,22 @@ Berserkers:
 Berserkers are hardy warriors who worship Trog the Wrathful, from whom 
 they get the power to go berserk (as well as a number of other powers, 
 should they prove worthy), but who forbids the use of spell magic. They 
-enter the dungeon with an axe and a set of leather armour.
+usually enter the dungeon with an axe and a set of leather armour or 
+robes.
 
 Paladins:
 ---------
 The Paladin is a servant of the Shining One, and has many of the
 abilities of the Fighter and the Priest. He or she enters the dungeon
-with a long sword, a shield, a robe, and a healing potion.
+with a long sword, a shield, a ring mail or robe, and a healing potion.
 
 Priests:
 --------
 Priests serve either Zin, the ancient and revered God of Law, or 
-Yredelemnul, the rather less pleasant God of Death. Hill Orcs may choose 
-to follow the Orc god Beogh instead. Priests enter the dungeon with a 
-traditional weapon, a priestly robe, and a few healing potions.
+Yredelemnul, the rather less pleasant God of Death. In addition, Hill 
+Orcs may choose to follow the Orc god Beogh instead. Priests enter the 
+dungeon with a traditional weapon, a priestly robe, and a few healing 
+potions.
 
 Chaos Knights:
 --------------
