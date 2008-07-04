@@ -1289,8 +1289,10 @@ formatted_string describe_mutations()
             {
                 continue;
             }
+
             if (you.species == SP_TROLL && i == MUT_CLAWS)
                 continue;
+
             if (you.species == SP_CENTAUR && i == MUT_DEFORMED)
                 continue;
 
@@ -1374,6 +1376,7 @@ formatted_string describe_mutations()
             {
                 continue;
             }
+
             if (you.species == SP_TROLL && i == MUT_CLAWS)
                 continue;
 
@@ -2052,7 +2055,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     case MUT_CLAWS:
         mpr((you.species == SP_TROLL ? troll_claw_gain
-             : gain_mutation[mutat])[you.mutation[mutat]],
+                                     : gain_mutation[mutat])[you.mutation[mutat]],
              MSGCH_MUTATION);
 
         // Gloves aren't prevented until level 3.  We don't have the
@@ -2486,11 +2489,8 @@ const char *mutation_name(mutation_type which_mutat, int level)
         return (mut_string);
     }
 
-    if (which_mutat == MUT_CLAWS
-        && (you.species == SP_TROLL || you.species == SP_GHOUL))
-    {
+    if (which_mutat == MUT_CLAWS && you.species == SP_TROLL)
         return (troll_claw_descrip[level]);
-    }
 
     if (which_mutat == MUT_FAST && you.species == SP_NAGA)
         return (naga_speed_descrip[level]);
