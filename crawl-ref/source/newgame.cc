@@ -4643,8 +4643,9 @@ bool _give_items_skills()
             _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_WIZARD_HAT);
 
-        if (!_choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 ))
+        if (!_choose_book( you.inv[3], BOOK_MINOR_MAGIC_I, 3 ))
             return (false);
 
         you.skills[SK_DODGING] = 2;

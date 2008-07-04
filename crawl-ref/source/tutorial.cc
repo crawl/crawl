@@ -532,11 +532,11 @@ static formatted_string _tutorial_stats_intro()
             "and meaning current \n"
             "out of maximum health points. When \n"
             "Health drops to zero, you die. \n"
-            "<w>Magic: " << you.magic_points << "/" << you.max_magic_points 
+            "<w>Magic: " << you.magic_points << "/" << you.max_magic_points
          << "</w> represents your energy \n"
             "for casting spells, although other \n"
             "actions often draw from Magic, too. \n"
-            "<w>Str</w>ength, <w>Int</w>elligence, <w>Dex</w>terity \n" 
+            "<w>Str</w>ength, <w>Int</w>elligence, <w>Dex</w>terity \n"
             "below provide an all-around account \n"
             "of the character's attributes. \n"
             "Don't worry about the rest for now. \n"
@@ -2559,6 +2559,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_FLEEING_MONSTER:
+        if (Options.tutorial_type != TUT_BERSERK_CHAR)
+            break;
+
         text << "Now that monster is scared of you! Note that you do not "
                 "absolutely have to follow it. Rather, you can let it run "
                 "away. Sometimes, though, it can be useful to attack a "
