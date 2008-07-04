@@ -546,21 +546,11 @@ static bool _xom_is_good(int sever)
     }
     else if (random2(sever) <= 4)
     {
-        // This can fail with radius 1, or in open areas.
-        if (vitrify_area(random2avg(sever / 2, 3) + 1))
-        {
-            god_speaks(GOD_XOM, _get_xom_speech("vitrification").c_str());
-
-            done = true;
-        }
-    }
-    else if (random2(sever) <= 5)
-    {
         _xom_gives_item(sever);
 
         done = true;
     }
-    else if (random2(sever) <= 6)
+    else if (random2(sever) <= 5)
     {
         monster_type mon = _xom_random_demon(sever);
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
@@ -596,7 +586,7 @@ static bool _xom_is_good(int sever)
             done = true;
         }
     }
-    else if (random2(sever) <= 7)
+    else if (random2(sever) <= 6)
     {
         if (there_are_monsters_nearby())
         {
@@ -624,11 +614,21 @@ static bool _xom_is_good(int sever)
             }
         }
     }
-    else if (random2(sever) <= 8)
+    else if (random2(sever) <= 7)
     {
         _xom_gives_item(sever);
 
         done = true;
+    }
+    else if (random2(sever) <= 8)
+    {
+        // This can fail with radius 1, or in open areas.
+        if (vitrify_area(random2avg(sever / 2, 3) + 1))
+        {
+            god_speaks(GOD_XOM, _get_xom_speech("vitrification").c_str());
+
+            done = true;
+        }
     }
     else if (random2(sever) <= 9)
     {
