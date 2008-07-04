@@ -218,7 +218,7 @@ static void _hell_spawn_random_monsters()
     }
 }
 
-#define DEBUG_MON_CREATION
+//#define DEBUG_MON_CREATION
 void spawn_random_monsters()
 {
 #ifdef DEBUG_MON_CREATION

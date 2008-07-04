@@ -1382,6 +1382,7 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_OGRE:
         case SP_OGRE_MAGE:
         case SP_KENKU:
+        case SP_RED_DRACONIAN:
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
         case SP_MUMMY:
@@ -1746,7 +1747,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
-        case SP_RED_DRACONIAN:
         case SP_GHOUL:
         case SP_VAMPIRE:
             return CC_RESTRICTED;
@@ -1766,7 +1766,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
-        case SP_RED_DRACONIAN:
         case SP_GHOUL:
         case SP_VAMPIRE:
             return CC_RESTRICTED;
@@ -4064,6 +4063,7 @@ bool _give_items_skills()
         break;
 
     case JOB_GLADIATOR:
+    {
         // Equipment.
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
 
@@ -4077,17 +4077,22 @@ bool _give_items_skills()
         _newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD,
                               ARM_BUCKLER);
 
-        _newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_CAP);
+        int curr = 3;
+        if (you_can_wear(EQ_HELMET))
+        {
+            _newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET);
+            curr++;
+        }
 
         // Small races get stones, the others nets.
         if (player_size(PSIZE_BODY) < SIZE_MEDIUM)
         {
-            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_STONE, -1,
+            _newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_STONE, -1,
                                10 + roll_dice( 2, 10 ));
         }
         else
         {
-            _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
+            _newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
                                4);
         }
 
@@ -4099,7 +4104,7 @@ bool _give_items_skills()
         you.skills[SK_UNARMED_COMBAT] = 2;
         weap_skill = 3;
         break;
-
+    }
     case JOB_MONK:
         you.equip[EQ_WEAPON] = -1; // Monks fight unarmed.
 
