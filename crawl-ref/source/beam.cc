@@ -4352,14 +4352,13 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 
                     if (stop_attack_prompt(mon, true, target))
                     {
-                        mpr("Test2");
                         beam.beam_stopped = true;
                         return (BEAM_STOP);
                     }
-                   if (beam.fr_count == 1 && !beam.dont_stop_fr)
-                       beam.dont_stop_fr = true;
-                   else
-                       beam.dont_stop_foe = true;
+                    if (beam.fr_count == 1 && !beam.dont_stop_fr)
+                        beam.dont_stop_fr = true;
+                    else
+                        beam.dont_stop_foe = true;
                 }
             }
 
