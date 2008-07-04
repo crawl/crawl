@@ -816,7 +816,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
     for (int acqc = 0; acqc < ENDOFPACK; acqc++)
     {
         if (is_valid_item( you.inv[acqc] )
-                && you.inv[acqc].base_type == class_wanted)
+            && you.inv[acqc].base_type == class_wanted)
         {
             ASSERT( you.inv[acqc].sub_type < max_has_value );
             already_has[you.inv[acqc].sub_type] += you.inv[acqc].quantity;
@@ -1127,7 +1127,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
                 break;
 
             case OBJ_BOOKS:
-                // remember, put rarer books higher in the list
+                // Remember, put rarer books higher in the list.
                 iteration = 1;
                 type_wanted = NUM_BOOKS;
 
@@ -1290,14 +1290,14 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 */
                 if (type_wanted == NUM_BOOKS && iteration == 1)
                 {
-                    best_spell = best_skill( SK_SPELLCASTING, (NUM_SKILLS - 1),
+                    best_spell = best_skill( SK_SPELLCASTING, NUM_SKILLS - 1,
                                              best_skill(SK_SPELLCASTING,
-                                                        (NUM_SKILLS - 1), 99) );
+                                                        NUM_SKILLS - 1, 99) );
                     iteration++;
                     goto which_book;
                 }
 
-                // if we don't have a book, try and get a new one.
+                // If we don't have a book, try and get a new one.
                 if (type_wanted == NUM_BOOKS)
                 {
                     do
@@ -1473,7 +1473,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
 
         const int keyin = tolower( get_ch() );
-        switch ( keyin )
+        switch (keyin)
         {
         case 'a': class_wanted = OBJ_WEAPONS;    break;
         case 'b': class_wanted = OBJ_ARMOUR;     break;
@@ -1585,7 +1585,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         item_def& thing(mitm[thing_created]);
 
         // Give some more gold.
-        if ( class_wanted == OBJ_GOLD )
+        if (class_wanted == OBJ_GOLD)
             thing.quantity += 150;
         else if (quant > 1)
             thing.quantity = quant;
@@ -1616,7 +1616,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             case RING_INTELLIGENCE:
             case RING_DEXTERITY:
             case RING_EVASION:
-                // make sure plus is >= 1
+                // Make sure plus is >= 1.
                 thing.plus = abs( thing.plus );
                 if (thing.plus == 0)
                     thing.plus = 1;
@@ -1624,7 +1624,7 @@ bool acquirement(object_class_type class_wanted, int agent,
 
             case RING_HUNGER:
             case AMU_INACCURACY:
-                // these are the only truly bad pieces of jewellery
+                // These are the only truly bad pieces of jewellery.
                 if (!one_chance_in(9))
                     make_item_randart( thing );
                 break;
@@ -1637,7 +1637,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                  && !is_fixed_artefact( thing )
                  && !is_unrandom_artefact( thing ))
         {
-            // HACK: make unwieldable weapons wieldable
+            // HACK: Make unwieldable weapons wieldable.
             // Note: messing with fixed artefacts is probably very bad.
             switch (you.species)
             {
@@ -1656,7 +1656,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                         }
                         else
                         {
-                            // keep resetting seed until it's good:
+                            // Keep resetting seed until it's good.
                             for (; brand == SPWPN_HOLY_WRATH;
                                   brand = get_weapon_brand(thing))
                             {
@@ -1920,13 +1920,18 @@ void yell(bool force)
         if (force)
         {
             if (shout_verb == "__NONE" || you.paralysed())
+            {
                 mprf("You feel a strong urge to %s, but "
                      "you are unable to make a sound!",
-                     shout_verb == "__NONE" ? "scream" : shout_verb.c_str());
+                     shout_verb == "__NONE" ? "scream"
+                                            : shout_verb.c_str());
+            }
             else
+            {
                 mprf("You feel a %s rip itself from your throat, "
                      "but you make no sound!",
                      shout_verb.c_str());
+            }
         }
         else
             mpr("You are unable to make a sound!");
@@ -2215,25 +2220,30 @@ static void _hell_effects()
             else
                 which_miscast = SPTYP_EARTH;
             break;
+
         case BRANCH_GEHENNA:
             if (summon_instead)
                 which_beastie = MONS_FIEND;
             else
                 which_miscast = SPTYP_FIRE;
             break;
+
         case BRANCH_COCYTUS:
             if (summon_instead)
                 which_beastie = MONS_ICE_FIEND;
             else
                 which_miscast = SPTYP_ICE;
             break;
+
         case BRANCH_TARTARUS:
             if (summon_instead)
                 which_beastie = MONS_SHADOW_FIEND;
             else
                 which_miscast = SPTYP_NECROMANCY;
             break;
-        default:        // this is to silence gcc compiler warnings {dlb}
+
+        default:
+            // This is to silence gcc compiler warnings. {dlb}
             if (summon_instead)
                 which_beastie = MONS_FIEND;
             else
@@ -2254,12 +2264,12 @@ static void _hell_effects()
         }
     }
 
-    // NB: no "else" - 8 in 27 odds that nothing happens through
-    // first chain {dlb}
-    // also note that the following is distinct from and in
-    // addition to the above chain:
+    // NB: No "else" - 8 in 27 odds that nothing happens through
+    //                 first chain. {dlb}
+    // Also note that the following is distinct from and in
+    // addition to the above chain.
 
-    // try to summon at least one and up to five random monsters {dlb}
+    // Try to summon at least one and up to five random monsters. {dlb}
     if (one_chance_in(3))
     {
         mgen_data mg;
@@ -2268,10 +2278,8 @@ static void _hell_effects()
         create_monster(mg);
 
         for (int i = 0; i < 4; ++i)
-        {
             if (one_chance_in(3))
                 create_monster(mg);
-        }
     }
 }
 
@@ -2305,7 +2313,7 @@ static bool _food_item_needs_time_check(item_def &item)
 static void _rot_inventory_food(long time_delta)
 {
     // Update all of the corpses and food chunks in the player's
-    // inventory {should be moved elsewhere - dlb}
+    // inventory. {should be moved elsewhere - dlb}
     bool burden_changed_by_rot = false;
     std::vector<char> rotten_items;
     for (int i = 0; i < ENDOFPACK; i++)
@@ -2876,7 +2884,7 @@ void update_level(double elapsedTime)
             continue;
         }
 
-        // following monsters don't get movement
+        // Following monsters don't get movement.
         if (mon->flags & MF_JUST_SUMMONED)
             continue;
 
@@ -2927,18 +2935,18 @@ static void _maybe_restart_fountain_flow(const int x, const int y,
           if (!one_chance_in(100))
               continue;
 
-          // make it start flowing again
+          // Make it start flowing again.
           grd[x][y] = static_cast<dungeon_feature_type> (grid
                         - (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE));
 
-          if ( is_terrain_seen(coord_def(x,y)) )
+          if (is_terrain_seen(coord_def(x,y)))
               set_envmap_obj(x, y, grd[x][y]);
 
-          // clean bloody floor
+          // Clean bloody floor.
           if (is_bloodcovered(x,y))
               env.map[x][y].property = FPROP_NONE;
 
-          // chance of cleaning adjacent squares
+          // Chance of cleaning adjacent squares.
           for (int i = -1; i <= 1; i++)
                for (int j = -1; j <= 1; j++)
                {

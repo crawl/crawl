@@ -1704,7 +1704,8 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major, char &mino
                                       std::string* reason)
 {
     std::string dummy;
-    if (reason == 0) reason = &dummy;
+    if (reason == 0)
+        reason = &dummy;
 
     // Read first two bytes.
     char buf[2];

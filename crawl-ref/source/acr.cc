@@ -443,7 +443,7 @@ static bool _item_type_can_be_artefact( int type)
 
 static void _handle_wizard_command( void )
 {
-    int   wiz_command, i, j, tmp;
+    int   wiz_command, tmp;
     char  specs[256];
 
     // WIZ_NEVER gives protection for those who have wiz compiles,
@@ -557,22 +557,23 @@ static void _handle_wizard_command( void )
         break;
 
     case 'v':
+    {
         // This command isn't very exciting... feel free to replace.
-        i = prompt_invent_item( "Value of which item?", MT_INVLIST, -1 );
+        int i = prompt_invent_item( "Value of which item?", MT_INVLIST, -1 );
         if (i == PROMPT_ABORT || !is_random_artefact( you.inv[i] ))
         {
             canned_msg( MSG_OK );
             break;
         }
         else
-        {
             mprf("randart val: %d", randart_value(you.inv[i]));
-        }
-        break;
 
+        break;
+    }
     case '+':
-        i = prompt_invent_item( "Make an artefact out of which item?",
-                                MT_INVLIST, -1 );
+    {
+        int i = prompt_invent_item( "Make an artefact out of which item?",
+                                    MT_INVLIST, -1 );
         if (i == PROMPT_ABORT)
         {
             canned_msg( MSG_OK );
@@ -585,6 +586,7 @@ static void _handle_wizard_command( void )
             break;
         }
 
+        int j;
         // Set j == equipment slot of chosen item, remove old randart benefits.
         for (j = 0; j < NUM_EQUIP; j++)
         {
@@ -608,7 +610,7 @@ static void _handle_wizard_command( void )
 
         mpr( you.inv[i].name(DESC_INVENTORY_EQUIP).c_str() );
         break;
-
+    }
     case '|':
         // Create all unrandarts.
         for (tmp = 1; tmp < NO_UNRANDARTS; tmp++)
@@ -676,8 +678,8 @@ static void _handle_wizard_command( void )
 
     case 'C':
     {
-        // this command isn't very exciting... feel free to replace
-        i = prompt_invent_item( "(Un)curse which item?", MT_INVLIST, -1 );
+        // This command isn't very exciting but it's useful for debugging.
+        int i = prompt_invent_item( "(Un)curse which item?", MT_INVLIST, -1 );
         if (i == PROMPT_ABORT)
         {
             canned_msg( MSG_OK );
@@ -722,29 +724,22 @@ static void _handle_wizard_command( void )
         wizard_draw_card();
         break;
 
-    case 'h':
-        you.rotting = 0;
-        you.duration[DUR_CONF] = 0;
-        you.duration[DUR_POISONING] = 0;
-        you.disease = 0;
-        set_hp( abs(you.hp_max), false );
-        set_hunger( 10999, true );
-        break;
-
     case 'H': // super-heal
-        you.rotting = 0;
-        you.duration[DUR_CONF] = 0;
-        you.duration[DUR_POISONING] = 0;
+        you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
         if (you.duration[DUR_BEHELD])
         {
             you.duration[DUR_BEHELD] = 0;
             you.beheld_by.clear();
         }
-        you.magic_contamination = 0;
-        you.disease = 0;
         inc_hp( 10, true );
-        set_hp( you.hp_max, false );
+       // intentional fall-through
+    case 'h':
+        you.rotting = 0;
+        you.disease = 0;
+        you.duration[DUR_CONF] = 0;
+        you.duration[DUR_POISONING] = 0;
+        set_hp( abs(you.hp_max), false );
         set_hunger( 10999, true );
         you.redraw_hit_points = true;
         break;
@@ -851,8 +846,7 @@ static void _handle_wizard_command( void )
         }
 
         grd[you.x_pos][you.y_pos] = DNGN_ENTER_PORTAL_VAULT;
-        map_wiz_props_marker
-            *marker = new map_wiz_props_marker(you.pos());
+        map_wiz_props_marker *marker = new map_wiz_props_marker(you.pos());
         marker->set_property("dst", dst);
         marker->set_property("desc", "wizard portal, dest = " + dst);
         env.markers.add(marker);
@@ -868,47 +862,42 @@ static void _handle_wizard_command( void )
         break;
 
     case 'i':
-    {
         mpr( "You feel a rush of knowledge." );
-        for (i = 0; i < ENDOFPACK; i++)
+        for (int i = 0; i < ENDOFPACK; i++)
         {
             if (is_valid_item( you.inv[i] ))
             {
                 set_ident_type( you.inv[i], ID_KNOWN_TYPE );
-
                 set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
             }
         }
-        you.wield_change = true;
+        you.wield_change  = true;
         you.redraw_quiver = true;
         break;
-    }
 
     case 'I':
-    {
         mpr( "You feel a rush of antiknowledge." );
-        for (i = 0; i < ENDOFPACK; i++)
+        for (int i = 0; i < ENDOFPACK; i++)
         {
             if (is_valid_item( you.inv[i] ))
             {
                 set_ident_type( you.inv[i], ID_UNKNOWN_TYPE );
-
                 unset_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
             }
         }
-        you.wield_change = true;
+        you.wield_change  = true;
         you.redraw_quiver = true;
 
-        // Forget things that nearby monsters are carrying, as well
-        // (for use with the "give monster an item" wizard targetting
-        // command).
-        for (i = 0; i < MAX_MONSTERS; i++)
+        // Forget things that nearby monsters are carrying, as well.
+        // (For use with the "give monster an item" wizard targetting
+        // command.)
+        for (int i = 0; i < MAX_MONSTERS; i++)
         {
             monsters* mon = &menv[i];
 
             if (!invalid_monster(mon) && mons_near(mon))
             {
-                for (j = 0; j < NUM_MONSTER_SLOTS; j++)
+                for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
                 {
                     if (mon->inv[j] == NON_ITEM)
                         continue;
@@ -919,13 +908,11 @@ static void _handle_wizard_command( void )
                         continue;
 
                     set_ident_type( item, ID_UNKNOWN_TYPE );
-
                     unset_ident_flags( item, ISFLAG_IDENT_MASK );
                 }
             }
         }
         break;
-    }
 
     case CONTROL('I'):
         debug_item_statistics();
@@ -1013,8 +1000,7 @@ static void _handle_wizard_command( void )
         break;
 
     case ':':
-        j = 0;
-        for (i = 0; i < NUM_BRANCHES; i++)
+        for (int i = 0; i < NUM_BRANCHES; i++)
         {
             if (branches[i].startdepth != - 1)
             {
@@ -1072,9 +1058,10 @@ static void _handle_wizard_command( void )
                      old_piety, old_piety == MAX_PIETY ? "at" : "above");
             }
 
-            // even at maximum, you can still gain gifts
-            // try at least once f. maximum, or repeat until something happens
-            // Rarely, this might result in several gifts during the same round!
+            // Even at maximum, you can still gain gifts.
+            // Try at least once for maximum, or repeat until something
+            // happens. Rarely, this might result in several gifts during the
+            // same round!
             do
             {
                gain_piety(50);
@@ -1109,7 +1096,7 @@ static void _handle_wizard_command( void )
     {
         bool has_shops = false;
 
-        for (i = 0; i < MAX_SHOPS; i++)
+        for (int i = 0; i < MAX_SHOPS; i++)
             if (env.shop[i].type != SHOP_UNASSIGNED)
             {
                 has_shops = true;
@@ -1120,7 +1107,7 @@ static void _handle_wizard_command( void )
         {
             mpr("Shop items:");
 
-            for (i = 0; i < MAX_SHOPS; i++)
+            for (int i = 0; i < MAX_SHOPS; i++)
                 if (env.shop[i].type != SHOP_UNASSIGNED)
                 {
                     int objl = igrd[0][i + 5];
@@ -1134,11 +1121,12 @@ static void _handle_wizard_command( void )
                         objl = item.link;
                     }
                 }
-            mpr("");
-        } // if (has_shops)
+
+            mpr(EOL);
+        }
 
         mpr("Item stacks (by location and top item):");
-        for (i = 0; i < MAX_ITEMS; i++)
+        for (int i = 0; i < MAX_ITEMS; i++)
         {
             item_def &item(mitm[i]);
             if (!is_valid_item(item) || item.x == 0 || item.y == 0)
@@ -1149,11 +1137,11 @@ static void _handle_wizard_command( void )
                  item.name(DESC_PLAIN, false, false, false).c_str() );
         }
 
-        mpr("");
+        mpr(EOL);
         mpr("Floor items (stacks only show top item):");
 
-        for (i = 1; i < GXM; i++)
-            for (j = 1; j < GYM; j++)
+        for (int i = 1; i < GXM; i++)
+            for (int j = 1; j < GYM; j++)
             {
                 int item = igrd[i][j];
                 if (item != NON_ITEM)
@@ -1164,6 +1152,7 @@ static void _handle_wizard_command( void )
                                          false).c_str() );
                 }
             }
+
         break;
     }
 
@@ -1396,7 +1385,7 @@ static void _input()
         && kbhit())
     {
         // User pressed a key, so stop repeating commands and discard
-        // the keypress
+        // the keypress.
         crawl_state.cancel_cmd_repeat();
         getchm();
         return;
@@ -1414,13 +1403,12 @@ static void _input()
         Options.tut_just_triggered = false;
 
         if (you.attribute[ATTR_HELD])
-        {
             learned_something_new(TUT_CAUGHT_IN_NET);
-        }
-        // We don't want those "Whew, it's safe to rest now" messages when
-        // you were just cast into the Abyss. Right?
         else if (player_feels_safe && you.level_type != LEVEL_ABYSS)
         {
+            // We don't want those "Whew, it's safe to rest now" messages
+            // when you were just cast into the Abyss. Right?
+
             if (2 * you.hp < you.hp_max
                 || 2 * you.magic_points < you.max_magic_points)
             {
@@ -1690,7 +1678,7 @@ static void _go_upstairs()
     if (!check_annotation_exclusion_warning())
         return;
 
-    tag_followers();  // only those beside us right now can follow
+    tag_followers();  // Only those beside us right now can follow.
     start_delay( DELAY_ASCENDING_STAIRS,
                  1 + (you.burden_state > BS_UNENCUMBERED) );
 }
@@ -1917,9 +1905,9 @@ void process_command( command_type cmd )
         ASSERT(crawl_state.is_repeating_cmd());
 
         if (crawl_state.prev_repetition_turn == you.num_turns
-            && !(crawl_state.repeat_cmd == CMD_WIZARD
-                 || (crawl_state.repeat_cmd == CMD_PREV_CMD_AGAIN
-                     && crawl_state.prev_cmd == CMD_WIZARD)))
+            && crawl_state.repeat_cmd != CMD_WIZARD
+            && (crawl_state.repeat_cmd != CMD_PREV_CMD_AGAIN
+                || crawl_state.prev_cmd != CMD_WIZARD))
         {
             // This is a catch-all that shouldn't really happen.
             // If the command always takes zero turns, then it
@@ -2193,7 +2181,7 @@ void process_command( command_type cmd )
             "(v - describe square, ? - help)",
             MSGCH_PROMPT);
 
-        struct dist lmove;      // will be initialized by direction()
+        struct dist lmove;   // Will be initialized by direction().
         direction(lmove, DIR_TARGET, TARG_ANY, -1, true);
         if (lmove.isValid && lmove.isTarget && !lmove.isCancel)
             start_travel( lmove.tx, lmove.ty );
@@ -2206,7 +2194,8 @@ void process_command( command_type cmd )
            canned_msg(MSG_PRESENT_FORM);
            break;
         }
-        /* randart wpns */
+
+        // Randart weapons.
         if (scan_randarts(RAP_PREVENT_SPELLCASTING))
         {
             mpr("Something interferes with your magic!");
@@ -2516,6 +2505,7 @@ static bool _decrement_a_duration(duration_type dur, const char* endmsg = NULL,
         {
             if (midmsg)
                 mpr(midmsg, chan);
+
             you.duration[dur] -= midloss;
         }
     }
@@ -2545,17 +2535,17 @@ static void _decrement_durations()
     else
         you.duration[DUR_GOURMAND] = 0;
 
-    // must come before might/haste/berserk
+    // Must come before might/haste/berserk.
     if (_decrement_a_duration(DUR_BUILDING_RAGE))
         go_berserk(false);
 
     if (_decrement_a_duration(DUR_SLEEP))
         you.awake();
 
-    // paradox: it both lasts longer & does more damage overall if you're
+    // Paradox: It both lasts longer & does more damage overall if you're
     //          moving slower.
-    // rationalisation: I guess it gets rubbed off/falls off/etc if you
-    //          move around more.
+    // Rationalisation: I guess it gets rubbed off/falls off/etc if you
+    //                  move around more.
     if (you.duration[DUR_LIQUID_FLAMES] > 0)
         you.duration[DUR_LIQUID_FLAMES]--;
 
@@ -3424,7 +3414,7 @@ static command_type _keycode_to_command( keycode_type key )
     case CK_MOUSE_DONE:   return CMD_NEXT_CMD;
     case CK_MOUSE_B1ITEM: return CMD_USE_ITEM;
     case CK_MOUSE_B2ITEM: return CMD_VIEW_ITEM;
-#endif // USE_TILE
+#endif
 
     case KEY_MACRO_DISABLE_MORE: return CMD_DISABLE_MORE;
     case KEY_MACRO_ENABLE_MORE:  return CMD_ENABLE_MORE;
@@ -3603,7 +3593,7 @@ static int _check_adjacent(dungeon_feature_type feat, int &dx, int &dy)
 
 // Opens doors and handles some aspects of untrapping. If either move_x or
 // move_y are non-zero, the pair carries a specific direction for the door
-// to be opened (eg if you type ctrl - dir).
+// to be opened (eg if you type ctrl + dir).
 static void _open_door(int move_x, int move_y, bool check_confused)
 {
     struct dist door_move;
@@ -3723,7 +3713,7 @@ static void _open_door(int move_x, int move_y, bool check_confused)
 
         if (you.duration[DUR_BERSERKER])
         {
-            // XXX: better flavour for larger doors?
+            // XXX: Better flavour for larger doors?
             if (silenced(you.x_pos, you.y_pos))
                 mprf("The %s%s flies open!", adj, noun);
             else
@@ -3849,7 +3839,7 @@ static void _close_door(int door_x, int door_y)
             if (mgrd[dc.x][dc.y] != NON_MONSTER)
             {
                 // Need to make sure that turn_is_over is set if creature is
-                // invisible
+                // invisible.
                 if (!player_monster_visible(&menv[mgrd[dc.x][dc.y]]))
                 {
                     mprf("Something is blocking the %sway!", noun);
@@ -3955,7 +3945,7 @@ static bool _initialise(void)
     init_feature_table();
     init_monster_symbols();
     init_properties();
-    init_spell_descs();        // this needs to be way up top {dlb}
+    init_spell_descs();        // This needs to be way up top. {dlb}
     init_mon_name_cache();
 
     msg::initialise_mpr_streams();
@@ -4061,7 +4051,8 @@ static bool _initialise(void)
     you.redraw_quiver       = true;
     you.wield_change        = true;
 
-    you.start_time = time( NULL );      // start timer on session
+    // Start timer on session.
+    you.start_time = time( NULL );
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);
@@ -4221,8 +4212,8 @@ static void _move_player(int move_x, int move_y)
     const unsigned short targ_monst = mgrd[ targ_x ][ targ_y ];
     const bool           targ_pass  = you.can_pass_through(targ_x, targ_y);
 
-    // you can swap places with a friendly or good neutral monster if
-    // you're not confused, or if both of you are inside a sanctuary
+    // You can swap places with a friendly or good neutral monster if
+    // you're not confused, or if both of you are inside a sanctuary.
     const bool can_swap_places = targ_monst != NON_MONSTER
                                  && !mons_is_stationary(&menv[targ_monst])
                                  && (mons_wont_attack(&menv[targ_monst])
@@ -4230,7 +4221,8 @@ static void _move_player(int move_x, int move_y)
                                      || is_sanctuary(you.x_pos, you.y_pos)
                                         && is_sanctuary(targ_x, targ_y));
 
-    // cannot move away from mermaid but you CAN fight neighbouring squares
+    // You cannot move away from a mermaid but you CAN fight monsters on
+    // neighbouring squares.
     if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF])
     {
         for (unsigned int i = 0; i < you.beheld_by.size(); i++)
@@ -4480,7 +4472,7 @@ static void _setup_cmd_repeat()
     {
         // If a "do previous command again" caused a command
         // repetition to be redone, the keys to be repeated are
-        // already in the key rercording buffer, so we just need to
+        // already in the key recording buffer, so we just need to
         // discard all the keys saying how many times the command
         // should be repeated.
         do

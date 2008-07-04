@@ -1259,7 +1259,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         break;
 
     case ZAP_NEGATIVE_ENERGY:                           // cap 150
-        // these always auto-identify, so no generic name
+        // These always auto-identify, so no generic name.
         pbolt.name           = "bolt of negative energy";
         pbolt.colour         = DARKGREY;
         pbolt.range          = 7 + random2(10);
@@ -2063,7 +2063,7 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
 int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                           bool doFlavouredEffects)
 {
-    // If we're not doing flavored effects, must be preliminary
+    // If we're not doing flavoured effects, must be preliminary
     // damage check only.
     // Do not print messages or apply any side effects!
     int resist = 0;
@@ -2985,7 +2985,7 @@ static void _beam_explodes(bolt &beam, int x, int y)
     // cloud producer -- FOUL VAPOR (SWAMP DRAKE?)
     if (beam.name == "foul vapour")
     {
-        cl_type = beam.flavour == BEAM_MIASMA ? CLOUD_MIASMA : CLOUD_STINK;
+        cl_type = (beam.flavour == BEAM_MIASMA) ? CLOUD_MIASMA : CLOUD_STINK;
         big_cloud( cl_type, _whose_kill(beam), x, y, 0, 9 );
         return;
     }
@@ -4054,7 +4054,7 @@ static int _affect_player( bolt &beam, item_def *item )
         hurted = 0;
 
     // If the beam is an actual missile or of the MMISSILE type (Earth magic)
-    // might bleed on the floor.
+    // we might bleed on the floor.
     if (!engulfs
         && (beam.flavour == BEAM_MISSILE || beam.flavour == BEAM_MMISSILE))
     {
@@ -4152,10 +4152,10 @@ static int _affect_player( bolt &beam, item_def *item )
             beam.fr_hurt++;
 
             // Beam from player rebounded and hit player.
-            if (beam.beam_source == NON_MONSTER)
-                xom_is_stimulated(255);
             // Xom's amusement at the player's being damaged is handled
             // elsewhere.
+            if (beam.beam_source == NON_MONSTER)
+                xom_is_stimulated(255);
             else if (was_affected)
                 xom_is_stimulated(128);
         }
@@ -4671,7 +4671,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     hurt_final = mons_adjust_flavoured(mon, beam, raw_damage);
 
     // If the beam is an actual missile or of the MMISSILE type (Earth magic)
-    // might bleed on the floor.
+    // we might bleed on the floor.
     if (!engulfs
         && (beam.flavour == BEAM_MISSILE || beam.flavour == BEAM_MMISSILE)
         && !mons_is_summoned(mon) && !mons_is_submerged(mon))
@@ -5330,15 +5330,16 @@ int explosion( bolt &beam, bool hole_in_the_middle,
 
     int r = beam.ex_size;
 
-    // beam is now an explosion;  set in_explosion_phase
+    // Beam is now an explosion.
     beam.in_explosion_phase = true;
 
     if (is_sanctuary(beam.target_x, beam.target_y))
     {
-        if (!beam.is_tracer && see_grid(beam.target()) && !beam.name.empty() )
+        if (!beam.is_tracer && see_grid(beam.target()) && !beam.name.empty())
+        {
             mprf(MSGCH_GOD, "By Zin's power, the %s is contained.",
                  beam.name.c_str());
-
+        }
         return (-1);
     }
 
@@ -5350,7 +5351,7 @@ int explosion( bolt &beam, bool hole_in_the_middle,
          beam.hit, beam.damage.num, beam.damage.size );
 #endif
 
-    // for now, we don't support explosions greater than 9 radius
+    // For now, we don't support explosions greater than 9 radius.
     if (r > MAX_EXPLOSION_RADIUS)
         r = MAX_EXPLOSION_RADIUS;
 
@@ -5501,24 +5502,24 @@ static void _explosion_cell(bolt &beam, int x, int y, bool drawOnly)
 static void _explosion_map( bolt &beam, int x, int y,
                            int count, int dir, int r )
 {
-    // 1. check to see out of range
+    // 1. Check to see out of range.
     if (x*x + y*y > r*r + r)
         return;
 
-    // 2. check count
+    // 2. Check count.
     if (count > 10*r)
         return;
 
-    // 3. check sanctuary
+    // 3. Check sanctuary.
     if (is_sanctuary(beam.target_x + x, beam.target_y + y))
         return;
 
-    // 3. check to see if we're blocked by something
+    // 4. Check to see if we're blocked by something
     //    specifically, we're blocked by WALLS.  Not
     //    statues, idols, etc.
     const int dngn_feat = grd[beam.target_x + x][beam.target_y + y];
 
-    // special case: explosion originates from rock/statue
+    // Special case: Explosion originates from rock/statue
     // (e.g. Lee's rapid deconstruction) - in this case, ignore
     // solid cells at the center of the explosion.
     if (dngn_feat <= DNGN_MAXWALL
@@ -5527,10 +5528,10 @@ static void _explosion_map( bolt &beam, int x, int y,
         return;
     }
 
-    // hmm, I think we're ok
+    // Hmm, I think we're ok.
     explode_map[x+9][y+9] = true;
 
-    // now recurse in every direction except the one we came from
+    // Now recurse in every direction except the one we came from.
     for (int i = 0; i < 4; i++)
     {
         if (i+1 != dir)

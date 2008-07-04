@@ -1662,11 +1662,11 @@ public:
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
 
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)
-    bool        note_skill_max;  // take note when skills reach new max
-    bool        note_all_spells; // take note when learning any spell
-    std::string user_note_prefix;// Prefix for user notes
-    int         note_hp_percent; // percentage hp for notetaking
-    int         ood_interesting; // how many levels OOD is noteworthy?
+    bool        note_skill_max;   // take note when skills reach new max
+    bool        note_all_spells;  // take note when learning any spell
+    std::string user_note_prefix; // Prefix for user notes
+    int         note_hp_percent;  // percentage hp for notetaking
+    int         ood_interesting;  // how many levels OOD is noteworthy?
     int         rare_interesting; // what monster rarity is noteworthy?
     confirm_level_type easy_confirm;    // make yesno() confirming easier
     bool        easy_quit_item_prompts; // make item prompts quitable on space
@@ -1691,13 +1691,13 @@ public:
     char        race;            // preselected race
     char        cls;             // preselected class
     bool        delay_message_clear;    // avoid clearing messages each turn
-    unsigned    friend_brand;    // Attribute for branding friendly monsters
-    unsigned    neutral_brand;   // Attribute for branding neutral monsters
-    bool        no_dark_brand;   // Attribute for branding friendly monsters
-    bool        macro_meta_entry;// Allow user to use numeric sequences when
-                                 // creating macros
+    unsigned    friend_brand;     // Attribute for branding friendly monsters
+    unsigned    neutral_brand;    // Attribute for branding neutral monsters
+    bool        no_dark_brand;    // Attribute for branding friendly monsters
+    bool        macro_meta_entry; // Allow user to use numeric sequences when
+                                  // creating macros
 
-    int         fire_items_start;// index of first item for fire command
+    int         fire_items_start; // index of first item for fire command
     std::vector<unsigned> fire_order;   // missile search order for 'f' command
 
     bool        auto_list;       // automatically jump to appropriate item lists

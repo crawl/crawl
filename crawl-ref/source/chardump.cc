@@ -191,18 +191,6 @@ static void _sdump_header(dump_params &par)
 
 static void _sdump_stats(dump_params &par)
 {
-/*
-    // This is the old dump screen and can be removed if no one wants to
-    // go back.
-    std::vector<formatted_string> vfs =
-        get_full_detail(par.full_id, par.se? par.se->points : -1);
-
-    for (unsigned int i = 0; i < vfs.size(); i++)
-    {
-        par.text += vfs[i];
-        par.text += '\n';
-    }
-*/
     par.text += dump_overview_screen(par.full_id);
     par.text += "\n\n";
 }

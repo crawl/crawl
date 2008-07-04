@@ -1620,11 +1620,11 @@ static int food_eat(lua_State *ls)
 static int food_rotting(lua_State *ls)
 {
     LUA_ITEM(item, 1);
+
     bool rotting = false;
     if (item && item->base_type == OBJ_FOOD && item->sub_type == FOOD_CHUNK)
-    {
         rotting = food_is_rotten(*item);
-    }
+
     lua_pushboolean(ls, rotting);
     return (1);
 }

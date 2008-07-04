@@ -158,10 +158,10 @@ int effective_stat_bonus( int wepType )
 #endif
 }
 
-// Returns random2(x) is random_factor is true, otherwise the mean.
+// Returns random2(x) if random_factor is true, otherwise the mean.
 static int maybe_random2( int x, bool random_factor )
 {
-    if ( random_factor )
+    if (random_factor)
         return random2(x);
     else
         return x / 2;
@@ -262,7 +262,7 @@ int calc_heavy_armour_penalty( bool random_factor )
     // My guess is that its supposed to encourage monk-style play -- bwr
     if (!ur_armed)
     {
-        if ( random_factor )
+        if (random_factor)
         {
             heavy_armour *= (coinflip() ? 3 : 2);
         }
@@ -972,8 +972,8 @@ bool melee_attack::player_aux_unarmed()
         case 1:
             if (uattack != UNAT_HEADBUTT)
             {
-                if ((!player_mutation_level(MUT_HORNS)
-                        && you.species != SP_KENKU)
+                if (!player_mutation_level(MUT_HORNS)
+                       && you.species != SP_KENKU
                     || !one_chance_in(3))
                 {
                     continue;
@@ -1001,18 +1001,18 @@ bool melee_attack::player_aux_unarmed()
                 // +6 because of the horns.
                 unarmed_attack = "headbutt";
                 aux_damage = 5 + player_mutation_level(MUT_HORNS) * 3;
-            }
 
-            if (you.equip[EQ_HELMET] != -1)
-            {
-                const item_def& helmet = you.inv[you.equip[EQ_HELMET]];
-                if ( is_hard_helmet(helmet) )
+                if (you.equip[EQ_HELMET] != -1)
                 {
-                    aux_damage += 2;
-                    if (get_helmet_desc(helmet) == THELM_DESC_SPIKED
-                        || get_helmet_desc(helmet) == THELM_DESC_HORNED)
+                    const item_def& helmet = you.inv[you.equip[EQ_HELMET]];
+                    if (is_hard_helmet(helmet))
                     {
-                        aux_damage += 3;
+                        aux_damage += 2;
+                        if (get_helmet_desc(helmet) == THELM_DESC_SPIKED
+                            || get_helmet_desc(helmet) == THELM_DESC_HORNED)
+                        {
+                            aux_damage += 3;
+                        }
                     }
                 }
             }
@@ -1048,8 +1048,8 @@ bool melee_attack::player_aux_unarmed()
                 damage_brand  = SPWPN_VENOM;
             }
 
-            // grey dracs have spiny tails, or something
-            // maybe add this to player messaging {dlb}
+            // Grey dracs have spiny tails, or something.
+            // Maybe add this to player messaging. {dlb}
             //
             // STINGER mutation doesn't give extra damage here... that
             // would probably be a bit much, we'll still get the
@@ -1240,8 +1240,7 @@ bool melee_attack::player_apply_aux_unarmed()
         mprf("You %s %s%s.",
              unarmed_attack.c_str(),
              defender->name(DESC_NOCAP_THE).c_str(),
-             player_monster_visible(def) ?
-             ", but do no damage" : "");
+             player_monster_visible(def) ? ", but do no damage" : "");
     }
 
     if (def->hit_points < 1)
@@ -2355,8 +2354,8 @@ bool melee_attack::apply_damage_brand()
                 attacker->atype() == ACT_PLAYER? KILL_YOU : KILL_MON;
             beam_temp.flavour = BEAM_CONFUSION;
             beam_temp.beam_source =
-                attacker->atype() == ACT_PLAYER ? MHITYOU
-                                                : monster_index(atk);
+                (attacker->atype() == ACT_PLAYER) ? MHITYOU
+                                                  : monster_index(atk);
             mons_ench_f2( def, beam_temp );
         }
 
@@ -2816,9 +2815,9 @@ int melee_attack::player_to_hit(bool random_factor)
     // other stuff
     if (!weapon)
     {
-        if ( you.duration[DUR_CONFUSING_TOUCH] )
+        if (you.duration[DUR_CONFUSING_TOUCH])
         {
-            // just trying to touch is easier that trying to damage
+            // Just trying to touch is easier that trying to damage.
             your_to_hit += maybe_random2(you.dex, random_factor);
         }
 
@@ -2882,41 +2881,41 @@ void melee_attack::player_stab_check()
     default:
     case UCAT_NO_ATTACK:
         stab_attempt = false;
-        stab_bonus = 0;
+        stab_bonus   = 0;
         break;
 
     case UCAT_DISTRACTED:
         stab_attempt = true;
-        stab_bonus = 3;
+        stab_bonus   = 3;
         break;
 
     case UCAT_CONFUSED:
     case UCAT_FLEEING:
         stab_attempt = true;
-        stab_bonus = 2;
+        stab_bonus   = 2;
         break;
 
     case UCAT_INVISIBLE:
         stab_attempt = true;
+        stab_bonus   = 2;
         if (!mons_sense_invis(def))
             roll -= 15;
-        stab_bonus = 2;
         break;
 
     case UCAT_HELD_IN_NET:
     case UCAT_PARALYSED:
         stab_attempt = true;
-        stab_bonus = 1;
+        stab_bonus   = 1;
         break;
 
     case UCAT_SLEEPING:
         stab_attempt = true;
         roll_needed = false;
-        stab_bonus = 1;
+        stab_bonus  = 1;
         break;
     }
 
-    // see if we need to roll against dexterity / stabbing
+    // See if we need to roll against dexterity / stabbing.
     if (stab_attempt && roll_needed)
         stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
 }
@@ -3692,7 +3691,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_VAMPIRIC:
-        // only may bite non-vampiric monsters (players) capable of bleeding
+        // Only may bite non-vampiric monsters (or player) capable of bleeding.
         if (defender->atype() == ACT_PLAYER
                && (you.species == SP_VAMPIRE || !victim_can_bleed(-1))
             || defender->atype() == ACT_MONSTER
@@ -3700,6 +3699,11 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         {
             break;
         }
+
+        // Disallow draining of summoned monsters since they can't bleed.
+        // XXX: Is this too harsh?
+        if (mons_is_summoned(def))
+            break;
 
         if (defender->res_negative_energy() > random2(3))
             break;
@@ -4336,7 +4340,7 @@ static void stab_message( monsters *defender, int stab_bonus )
         }
         break;
     case 2:     // confused/fleeing
-        if ( !one_chance_in(3) )
+        if (!one_chance_in(3))
         {
             mprf( "You catch %s completely off-guard!",
                   defender->name(DESC_NOCAP_THE).c_str() );

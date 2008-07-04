@@ -104,7 +104,7 @@ std::string item_def::name(description_level_type descrip,
         if (in_inventory(*this)) // actually in inventory
         {
             buff << index_to_letter(this->link);
-            if ( terse)
+            if (terse)
                 buff << ") ";
             else
                 buff << " - ";
@@ -117,12 +117,12 @@ std::string item_def::name(description_level_type descrip,
         descrip = DESC_PLAIN;
 
     if (this->base_type == OBJ_ORBS
-        || ( (ident || item_type_known( *this ))
-             && ((this->base_type == OBJ_MISCELLANY
-                  && this->sub_type == MISC_HORN_OF_GERYON)
-                 || is_artefact)))
+        || (ident || item_type_known( *this ))
+            && (this->base_type == OBJ_MISCELLANY
+                   && this->sub_type == MISC_HORN_OF_GERYON
+                || is_artefact))
     {
-        // artefacts always get "the" unless we just want the plain name
+        // Artefacts always get "the" unless we just want the plain name.
         switch (descrip)
         {
         case DESC_CAP_A:
@@ -247,8 +247,8 @@ std::string item_def::name(description_level_type descrip,
 
         if (tried)
         {
-            item_type_id_state_type id_type =
-                get_ident_type(*this);
+            item_type_id_state_type id_type = get_ident_type(*this);
+
             if (id_type == ID_MON_TRIED_TYPE)
                 tried_str = "tried by monster";
             else
@@ -258,11 +258,11 @@ std::string item_def::name(description_level_type descrip,
         if ( with_inscription && !(this->inscription.empty()) )
         {
             buff << " {";
-            if ( tried )
+            if (tried)
                 buff << tried_str << ", ";
             buff << this->inscription << "}";
         }
-        else if ( tried )
+        else if (tried)
             buff << " {" << tried_str << "}";
     }
 
@@ -976,7 +976,7 @@ const char* racial_description_string(const item_def& item, bool terse)
 // 0, even with showpos set, you get 0, not +0. This is a workaround.
 static void output_with_sign(std::ostream& os, int val)
 {
-    if ( val >= 0 )
+    if (val >= 0)
         os << '+';
     os << val;
 }
@@ -1050,7 +1050,7 @@ std::string item_def::name_aux( description_level_type desc,
 
         if (know_pluses)
         {
-            if ( terse && (it_plus == item_plus2) )
+            if (terse && it_plus == item_plus2)
                 output_with_sign(buff, it_plus);
             else
             {
@@ -1398,7 +1398,7 @@ std::string item_def::name_aux( description_level_type desc,
     {
         if (basename)
         {
-            if ( jewellery_is_amulet(*this) )
+            if (jewellery_is_amulet(*this))
                 buff << "amulet";
             else
                 buff << "ring";
@@ -1435,7 +1435,7 @@ std::string item_def::name_aux( description_level_type desc,
             {
                 output_with_sign(buff, it_plus);
 
-                if ( ring_has_pluses(*this) == 2 )
+                if (ring_has_pluses(*this) == 2)
                 {
                     buff << ',';
                     output_with_sign(buff, item_plus2);
@@ -1447,7 +1447,7 @@ std::string item_def::name_aux( description_level_type desc,
         }
         else
         {
-            if ( jewellery_is_amulet(*this) )
+            if (jewellery_is_amulet(*this))
             {
                 buff << amulet_secondary_string(this->special / 13)
                      << amulet_primary_string(this->special % 13)
@@ -1463,7 +1463,7 @@ std::string item_def::name_aux( description_level_type desc,
         break;
     }
     case OBJ_MISCELLANY:
-        if ( item_typ == MISC_RUNE_OF_ZOT )
+        if (item_typ == MISC_RUNE_OF_ZOT)
         {
             if (!dbname)
                 buff << rune_type_name(it_plus) << " ";
@@ -1471,7 +1471,7 @@ std::string item_def::name_aux( description_level_type desc,
         }
         else
         {
-            if ( is_deck(*this) )
+            if (is_deck(*this))
             {
                 if (basename)
                 {
@@ -1487,8 +1487,8 @@ std::string item_def::name_aux( description_level_type desc,
                     buff << deck_rarity_name(deck_rarity(*this)) << ' ';
             }
             buff << misc_type_name(item_typ, know_type);
-            if ( is_deck(*this) && !dbname
-                 && (top_card_is_known(*this) || this->plus2 != 0))
+            if (is_deck(*this) && !dbname
+                && (top_card_is_known(*this) || this->plus2 != 0))
             {
                 buff << " {";
                 // A marked deck!
@@ -1709,7 +1709,7 @@ bool item_type_known( const item_def& item )
 bool item_type_known(const object_class_type base_type, const int sub_type)
 {
     const item_type_id_type idt = objtype_to_idtype(base_type);
-    if ( idt != NUM_IDTYPE && sub_type < 50  )
+    if (idt != NUM_IDTYPE && sub_type < 50 )
         return (type_ids[idt][sub_type] == ID_KNOWN_TYPE);
     else
         return (false);
@@ -1783,7 +1783,7 @@ void set_ident_type( object_class_type basetype, int subtype,
 
     const item_type_id_type idt = objtype_to_idtype(basetype);
 
-    if ( idt != NUM_IDTYPE )
+    if (idt != NUM_IDTYPE)
     {
         if (type_ids[idt][subtype] != setting)
         {
@@ -1804,7 +1804,7 @@ item_type_id_state_type get_ident_type(const item_def &item)
 item_type_id_state_type get_ident_type(object_class_type basetype, int subtype)
 {
     const item_type_id_type idt = objtype_to_idtype(basetype);
-    if ( idt != NUM_IDTYPE && subtype < type_ids.height() )
+    if (idt != NUM_IDTYPE && subtype < type_ids.height())
         return type_ids[idt][subtype];
     else
         return ID_UNKNOWN_TYPE;
@@ -1845,7 +1845,7 @@ void check_item_knowledge()
             if (type_ids[i][j] == ID_KNOWN_TYPE)
             {
                 item_def* ptmp = new item_def;
-                if ( ptmp != 0 )
+                if (ptmp != 0)
                 {
                     ptmp->base_type = idx_to_objtype[i];
                     ptmp->sub_type  = j;

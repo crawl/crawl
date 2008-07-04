@@ -431,7 +431,7 @@ static void _trim_randart_inscrip( item_def& item )
 struct property_descriptor
 {
     randart_prop_type property;
-    const char* desc;           // If it contains %d, will be replaced by value
+    const char* desc;           // If it contains %d, will be replaced by value.
     bool is_graded_resist;
 };
 
@@ -736,18 +736,18 @@ static std::string _describe_demon(const monsters &mons)
         break;
 
     case FL_NONE:  // does not fly
-        if ( !one_chance_in(4) )
+        if (!one_chance_in(4))
             description << RANDOM_ELEMENT(nonfly_names);
         break;
     }
 
     description << ".";
 
-    if ( random2(40) < 3 )
+    if (random2(40) < 3)
     {
-        if ( player_can_smell() )
+        if (player_can_smell())
         {
-            switch ( random2(3) )
+            switch (random2(3))
             {
             case 0:
                 description << " It stinks of brimstone.";
@@ -1488,12 +1488,12 @@ static std::string _describe_deck( const item_def &item )
     description += "$";
 
     const std::vector<card_type> drawn_cards = get_drawn_cards(item);
-    if ( !drawn_cards.empty() )
+    if (!drawn_cards.empty())
     {
         description += "Drawn card(s): ";
-        for ( unsigned int i = 0; i < drawn_cards.size(); ++i )
+        for (unsigned int i = 0; i < drawn_cards.size(); ++i)
         {
-            if ( i != 0 )
+            if (i != 0)
                 description += ", ";
             description += card_name(drawn_cards[i]);
         }
@@ -1502,16 +1502,16 @@ static std::string _describe_deck( const item_def &item )
 
     const int num_cards = cards_in_deck(item);
     int last_known_card = -1;
-    if ( top_card_is_known(item) )
+    if (top_card_is_known(item))
     {
         description += "Next card(s): ";
-        for ( int i = 0; i < num_cards; ++i )
+        for (int i = 0; i < num_cards; ++i)
         {
             unsigned char flags;
             const card_type card = get_card_and_flags(item, -i-1, flags);
-            if ( flags & CFLAG_MARKED )
+            if (flags & CFLAG_MARKED)
             {
-                if ( i != 0 )
+                if (i != 0)
                     description += ", ";
                 description += card_name(card);
                 last_known_card = i;
@@ -1524,21 +1524,22 @@ static std::string _describe_deck( const item_def &item )
 
     // Marked cards which we don't know straight off.
     std::vector<card_type> marked_cards;
-    for ( int i = last_known_card + 1; i < num_cards; ++i )
+    for (int i = last_known_card + 1; i < num_cards; ++i)
     {
         unsigned char flags;
         const card_type card = get_card_and_flags(item, -i-1, flags);
-        if ( flags & CFLAG_MARKED )
+        if (flags & CFLAG_MARKED)
             marked_cards.push_back(card);
     }
-    if ( !marked_cards.empty() )
+    if (!marked_cards.empty())
     {
         std::sort(marked_cards.begin(), marked_cards.end(),
                   _compare_card_names);
+
         description += "Marked card(s): ";
-        for ( unsigned int i = 0; i < marked_cards.size(); ++i )
+        for (unsigned int i = 0; i < marked_cards.size(); ++i)
         {
-            if ( i != 0 )
+            if (i != 0)
                 description += ", ";
             description += card_name(marked_cards[i]);
         }
@@ -1547,22 +1548,24 @@ static std::string _describe_deck( const item_def &item )
 
     // Seen cards in the deck.
     std::vector<card_type> seen_cards;
-    for ( int i = 0; i < num_cards; ++i )
+    for (int i = 0; i < num_cards; ++i)
     {
         unsigned char flags;
         const card_type card = get_card_and_flags(item, -i-1, flags);
+
         // This *might* leak a bit of information...oh well.
-        if ( (flags & CFLAG_SEEN) && !(flags & CFLAG_MARKED) )
+        if ((flags & CFLAG_SEEN) && !(flags & CFLAG_MARKED))
             seen_cards.push_back(card);
     }
-    if ( !seen_cards.empty() )
+    if (!seen_cards.empty())
     {
         std::sort(seen_cards.begin(), seen_cards.end(),
                   _compare_card_names);
+
         description += "Seen card(s): ";
-        for ( unsigned int i = 0; i < seen_cards.size(); ++i )
+        for (unsigned int i = 0; i < seen_cards.size(); ++i)
         {
-            if ( i != 0 )
+            if (i != 0)
                 description += ", ";
             description += card_name(seen_cards[i]);
         }
@@ -1584,14 +1587,14 @@ bool is_dumpable_artefact( const item_def &item, bool verbose)
     {
         ret = item_ident( item, ISFLAG_KNOW_PROPERTIES );
     }
-    else if (item.base_type == OBJ_ARMOUR
-        && (verbose && item_type_known(item)))
+    else if (verbose && item.base_type == OBJ_ARMOUR
+             && item_type_known(item))
     {
         const int spec_ench = get_armour_ego_type( item );
         ret = (spec_ench >= SPARM_RUNNING && spec_ench <= SPARM_PRESERVATION);
     }
-    else if (item.base_type == OBJ_JEWELLERY
-        && (verbose && item_type_known(item)))
+    else if (verbose && item.base_type == OBJ_JEWELLERY
+             && item_type_known(item))
     {
         ret = true;
     }
@@ -1890,7 +1893,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                         << "." << (mass % 10)
                         << " aum. "; // arbitrary unit of mass
 
-            if ( is_dumpable_artefact(item, false) )
+            if (is_dumpable_artefact(item, false))
             {
                 if (item.base_type == OBJ_ARMOUR
                     || item.base_type == OBJ_WEAPONS)
@@ -2531,14 +2534,18 @@ std::string get_ghost_description(const monsters &mons, bool concise)
              (ghost.xl < 27) ? "n awesomely powerful"
                              : " legendary")
          << " ";
-    if ( concise )
+    if (concise)
+    {
         gstr << get_species_abbrev(gspecies)
              << get_class_abbrev(ghost.job);
+    }
     else
+    {
         gstr << species_name(gspecies,
                              ghost.xl)
              << " "
              << get_class_name(ghost.job);
+    }
 
     return gstr.str();
 }
@@ -2908,7 +2915,7 @@ void describe_god( god_type which_god, bool give_title )
     // Print long god's name.
     textcolor(colour);
     cprintf( "%s", god_name(which_god, true).c_str());
-    cprintf (EOL EOL);
+    cprintf(EOL EOL);
 
     // Print god's description.
     textcolor(LIGHTGREY);
@@ -3123,7 +3130,7 @@ std::string get_skill_description(int skill, bool need_title)
 
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
             || player_genus(GENPC_DRACONIAN)
-            || (you.species == SP_MERFOLK && player_is_swimming())
+            || you.species == SP_MERFOLK && player_is_swimming()
             || player_mutation_level( MUT_STINGER ))
         {
             unarmed_attacks.push_back("slap monsters with your tail");

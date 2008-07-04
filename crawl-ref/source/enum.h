@@ -38,35 +38,36 @@ enum ability_type
     ABIL_SPIT_POISON = 1,              //    1
     ABIL_MAPPING,
     ABIL_TELEPORTATION,
-    ABIL_BREATHE_FIRE,                 //    5
-    ABIL_BLINK,
+    ABIL_BREATHE_FIRE,
+    ABIL_BLINK,                        //    5
     ABIL_BREATHE_FROST,
     ABIL_BREATHE_POISON,
     ABIL_BREATHE_LIGHTNING,
-    ABIL_SPIT_ACID,                    //   10
-    ABIL_BREATHE_POWER,
+    ABIL_SPIT_ACID,
+    ABIL_BREATHE_POWER,                //   10
     ABIL_EVOKE_BERSERK,
     ABIL_BREATHE_STICKY_FLAME,
     ABIL_BREATHE_STEAM,
-    ABIL_FLY,                          //   15
-    ABIL_SUMMON_MINOR_DEMON,
+    ABIL_FLY,
+    ABIL_SUMMON_MINOR_DEMON,           //   15
     ABIL_SUMMON_DEMON,
     ABIL_HELLFIRE,
     ABIL_TORMENT,
-    ABIL_RAISE_DEAD,                   //   20
-    ABIL_CONTROL_DEMON,
+    ABIL_RAISE_DEAD,
+    ABIL_CONTROL_DEMON,                //   20
     ABIL_TO_PANDEMONIUM,
     ABIL_CHANNELING,
     ABIL_THROW_FLAME,
-    ABIL_THROW_FROST,                  //   25
-    ABIL_BOLT_OF_DRAINING,
+    ABIL_THROW_FROST,
+    ABIL_BOLT_OF_DRAINING,             //   25
     ABIL_BREATHE_HELLFIRE,
     ABIL_FLY_II,
     ABIL_DELAYED_FIREBALL,
-    ABIL_MUMMY_RESTORATION,            //   30
-    ABIL_EVOKE_MAPPING,
+    ABIL_MUMMY_RESTORATION,
+    ABIL_EVOKE_MAPPING,                //   30
     ABIL_EVOKE_TELEPORTATION,
-    ABIL_EVOKE_BLINK,                  //   33
+    ABIL_EVOKE_BLINK,                  //   32
+    // 33 - 50 unused
     ABIL_EVOKE_TURN_INVISIBLE = 51,    //   51
     ABIL_EVOKE_TURN_VISIBLE,
     ABIL_EVOKE_LEVITATE,
@@ -108,20 +109,20 @@ enum ability_type
     ABIL_ELYVILON_HEALING,
     ABIL_ELYVILON_RESTORATION,
     ABIL_ELYVILON_GREATER_HEALING,          //  224
-    ABIL_LUGONU_ABYSS_EXIT,
+    ABIL_LUGONU_ABYSS_EXIT,                 //  225
     ABIL_LUGONU_BEND_SPACE,
     ABIL_LUGONU_BANISH,
     ABIL_LUGONU_CORRUPT,
-    ABIL_LUGONU_ABYSS_ENTER,                //  229
-    ABIL_NEMELEX_DRAW_ONE,
+    ABIL_LUGONU_ABYSS_ENTER,
+    ABIL_NEMELEX_DRAW_ONE,                  //  230
     ABIL_NEMELEX_PEEK_TWO,
     ABIL_NEMELEX_TRIPLE_DRAW,
     ABIL_NEMELEX_MARK_FOUR,
-    ABIL_NEMELEX_STACK_FIVE,                // 234
-    ABIL_BEOGH_SMITING,
-    ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,     // 236
+    ABIL_NEMELEX_STACK_FIVE,
+    ABIL_BEOGH_SMITING,                     //  235
+    ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,
 
-    ABIL_CHARM_SNAKE,
+    ABIL_CHARM_SNAKE,                  //  237
     ABIL_TRAN_SERPENT_OF_HELL,
     ABIL_ROTTING,
     ABIL_TORMENT_II,
@@ -1264,11 +1265,11 @@ enum god_type
 
 enum holy_word_source_type
 {
-    HOLY_WORD_GENERIC = -1,
-    HOLY_WORD_SCROLL = -2,
-    HOLY_WORD_SPELL = -3,       // SPELL_HOLY_WORD
-    HOLY_WORD_ZIN = -4,         // Zin effect
-    HOLY_WORD_SHINING_ONE = -5  // TSO effect
+    HOLY_WORD_GENERIC     = -1,
+    HOLY_WORD_SCROLL      = -2,
+    HOLY_WORD_SPELL       = -3,  // SPELL_HOLY_WORD
+    HOLY_WORD_ZIN         = -4,  // Zin effect
+    HOLY_WORD_SHINING_ONE = -5   // TSO effect
 };
 
 enum hunger_state                  // you.hunger_state
@@ -1404,16 +1405,16 @@ enum level_area_type                   // you.level_type
     NUM_LEVEL_AREA_TYPES
 };
 
-// reasons for entering the Abyss
+// Reasons for entering the Abyss.
 enum entry_cause_type
 {
     EC_UNKNOWN,
     EC_SELF_EXPLICIT,
-    EC_SELF_RISKY,    // i.e., wielding an id'd distorion weapon
-    EC_SELF_ACCIDENT, // i.e., wielding an un-id'd distortion weapon
+    EC_SELF_RISKY,     // i.e., wielding an id'd distorion weapon
+    EC_SELF_ACCIDENT,  // i.e., wielding an un-id'd distortion weapon
     EC_MISCAST,
     EC_GOD_RETRIBUTION,
-    EC_GOD_ACT, // Xom sending the player somewhere for amusement
+    EC_GOD_ACT,        // Xom sending the player somewhere for amusement.
     EC_MONSTER,
     NUM_ENTRY_CAUSE_TYPES
 };
@@ -2332,11 +2333,11 @@ enum skill_type
     SK_SHIELDS,
     SK_TRAPS_DOORS,
     SK_UNARMED_COMBAT,                 //   19
-    SK_UNUSED_2,
-    SK_UNUSED_3,
-    SK_UNUSED_4,
-    SK_UNUSED_5,
-    SK_UNUSED_6,
+    // 20
+    // 21
+    // 22
+    // 23
+    // 24
     SK_SPELLCASTING = 25,              //   25
     SK_CONJURATIONS,
     SK_ENCHANTMENTS,

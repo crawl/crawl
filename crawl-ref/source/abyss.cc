@@ -341,11 +341,14 @@ static int _abyss_rune_nearness()
 
     // See above comment about is_terrain_known().
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    {
         if (get_screen_glyph(ri->x, ri->y) != ' ')
-            for ( stack_iterator si(*ri); si; ++si )
+        {
+            for (stack_iterator si(*ri); si; ++si)
                 if (is_rune(*si) && si->plus == RUNE_ABYSSAL)
                     nearness = std::min(nearness, grid_distance(you.pos(),*ri));
-
+        }
+    }
     return (nearness);
 }
 
@@ -400,7 +403,6 @@ static void _abyss_lose_monster(monsters &mons)
 #define LOS_DIAMETER (LOS_RADIUS * 2 + 1)
 
 void area_shift(void)
-/*******************/
 {
 #ifdef DEBUG_ABYSS
     mpr("area_shift().", MSGCH_DIAGNOSTICS);
@@ -416,7 +418,7 @@ void area_shift(void)
     FixedArray<unsigned short, LOS_DIAMETER, LOS_DIAMETER> fprops;
     const coord_def los_delta(LOS_RADIUS, LOS_RADIUS);
 
-    for ( radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri )
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
         fprops(you.pos() - *ri + los_delta) = env.map(*ri).property;
         if (env.sanctuary_pos == *ri && env.sanctuary_time > 0)
@@ -426,7 +428,7 @@ void area_shift(void)
         }
     }
 
-    // If sanctuary center is outside of preserved area then just get
+    // If sanctuary centre is outside of preserved area then just get
     // rid of it.
     if (env.sanctuary_time > 0 && !sanct_shifted)
     {
@@ -442,7 +444,7 @@ void area_shift(void)
                     fprops(pos) = FPROP_NONE;
                 }
             }
-    } 
+    }
 
     _xom_check_nearness_setup();
 
@@ -530,7 +532,7 @@ void area_shift(void)
 
     _xom_check_nearness();
 
-    for ( radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri )
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         env.map(*ri).property = fprops(you.pos() - *ri + los_delta);
 
     if (sanct_shifted)

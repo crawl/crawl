@@ -66,12 +66,8 @@ static void _heal_from_food(int hp_amt, int mp_amt, bool unrot,
                             bool restore_str);
 
 /*
- **************************************************
- *                                                *
- *             BEGIN PUBLIC FUNCTIONS             *
- *                                                *
- **************************************************
-*/
+ *  BEGIN PUBLIC FUNCTIONS
+ */
 
 void make_hungry( int hunger_amount, bool suppress_msg, bool allow_reducing )
 {
@@ -811,12 +807,8 @@ bool eat_food(bool run_hook, int slot)
 }
 
 /*
- **************************************************
- *                                                *
- *              END PUBLIC FUNCTIONS              *
- *                                                *
- **************************************************
-*/
+ *     END PUBLIC FUNCTIONS
+ */
 
 static bool _player_has_enough_food()
 {
@@ -1057,7 +1049,7 @@ static bool _player_can_eat_rotten_meat(bool need_msg = false)
     return (false);
 }
 
-// should really be merged into function below -- FIXME
+// Should really be merged into function below. -- FIXME
 void eat_from_inventory(int which_inventory_slot)
 {
     item_def& food(you.inv[which_inventory_slot]);
@@ -1309,8 +1301,8 @@ static void _say_chunk_flavour(bool likes_chunks)
     mprf("This raw flesh %s", _chunk_flavour_phrase(likes_chunks));
 }
 
-// never called directly - chunk_effect values must pass
-// through food::_determine_chunk_effect() first {dlb}:
+// Never called directly - chunk_effect values must pass
+// through food::_determine_chunk_effect() first. {dlb}:
 static void _eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
 {
 
@@ -1851,7 +1843,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 }
 
 // Returns true if a food item (also corpses) is poisonous AND the player
-// is not poison resistant.
+// is not (known to be) poison resistant.
 bool is_poisonous(const item_def &food)
 {
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
@@ -2158,14 +2150,14 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     return (survey_says);
 }                               // end can_ingest()
 
-// See if you can follow along here -- except for the Amulet of the Gourmand
+// See if you can follow along here -- except for the amulet of the gourmand
 // addition (long missing and requested), what follows is an expansion of how
 // chunks were handled in the codebase up to this date ... {dlb}
 static int _determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
 {
     int this_chunk_effect = which_chunk_type;
 
-    // determine the initial effect of eating a particular chunk {dlb}:
+    // Determine the initial effect of eating a particular chunk. {dlb}
     switch (this_chunk_effect)
     {
     case CE_HCL:
@@ -2220,7 +2212,7 @@ static int _determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
         }
     }
 
-    // one last chance for some species to safely eat rotten food {dlb}:
+    // One last chance for some species to safely eat rotten food. {dlb}
     if (this_chunk_effect == CE_ROTTEN)
     {
         switch (player_mutation_level(MUT_SAPROVOROUS))
@@ -2324,11 +2316,11 @@ static void _heal_from_food(int hp_amt, int mp_amt, bool unrot,
 
 int you_max_hunger()
 {
-    // this case shouldn't actually happen:
+    // This case shouldn't actually happen.
     if (you.is_undead == US_UNDEAD)
         return 6000;
 
-    // take care of ghouls - they can never be 'full'
+    // Take care of ghouls - they can never be 'full'.
     if (you.species == SP_GHOUL)
         return 6999;
 
@@ -2337,7 +2329,7 @@ int you_max_hunger()
 
 int you_min_hunger()
 {
-    // this case shouldn't actually happen:
+    // This case shouldn't actually happen.
     if (you.is_undead == US_UNDEAD)
         return 6000;
 

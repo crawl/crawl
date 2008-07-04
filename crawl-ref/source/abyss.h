@@ -1,6 +1,6 @@
 /*
  *  File:       abyss.h
- *  Summary:    Misc functions (most of which don't appear to be related to priests).
+ *  Summary:    Misc abyss specific functions.
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$

@@ -228,7 +228,7 @@ static std::string _get_recite_speech(const std::string key, int weight)
     if (!str.empty())
         return (str);
 
-    // in case nothing is found
+    // In case nothing is found.
     if (key == "start")
         return ("begin reciting the Axioms of Law.");
 
@@ -295,7 +295,6 @@ static void _clear_pending_delays()
 }
 
 void start_delay( delay_type type, int turns, int parm1, int parm2 )
-/***********************************************************/
 {
     ASSERT(!crawl_state.is_repeating_cmd() || type == DELAY_MACRO);
 
@@ -322,7 +321,6 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
 }
 
 void stop_delay( bool stop_stair_travel )
-/*********************/
 {
     _interrupts_blocked = 0; // Just to be safe
 
@@ -461,7 +459,7 @@ void stop_delay( bool stop_stair_travel )
         break;
 
     case DELAY_INTERRUPTIBLE:
-        // always stoppable by definition...
+        // Always stoppable by definition...
         // try using a more specific type anyways. -- bwr
         _pop_delay();
         break;
@@ -596,10 +594,10 @@ bool is_vampire_feeding()
     return (delay.type == DELAY_FEED_VAMPIRE);
 }
 
-// Check whether there are monsters who might be influenced by Recite
-// returns 0, if no monsters found
-// returns 1, if eligible audience found
-// returns -1, if entire audience already affected or too dumb to understand.
+// Check whether there are monsters who might be influenced by Recite.
+// Returns 0, if no monsters found
+// Returns 1, if eligible audience found
+// Returns -1, if entire audience already affected or too dumb to understand.
 int check_recital_audience()
 {
     int mid;
@@ -654,7 +652,6 @@ static void _xom_check_corpse_waste()
 }
 
 void handle_delay( void )
-/***********************/
 {
     if (!you_are_delayed())
         return;

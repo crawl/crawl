@@ -142,9 +142,8 @@ bool can_wield(const item_def *weapon, bool say_reason,
         return (false);
     }
 
-    // FIXME: We should use a size check here instead.
-    if ((you.species == SP_HALFLING || you.species == SP_GNOME
-            || you.species == SP_KOBOLD || you.species == SP_SPRIGGAN)
+    // Small species wielding large weapons...
+    if (player_size(PSIZE_BODY) < SIZE_MEDIUM
         && (weapon->sub_type == WPN_GREAT_SWORD
             || weapon->sub_type == WPN_TRIPLE_SWORD
             || weapon->sub_type == WPN_GREAT_MACE
@@ -671,8 +670,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 case SPWPN_VAMPIRES_TOOTH:
                     if (you.is_undead != US_UNDEAD)
                     {
-                        mpr("You feel a strange hunger, and smell blood on the "
-                            "air...");
+                        mpr("You feel a strange hunger, and smell blood in "
+                            "the air...");
                     }
                     else
                         mpr("You feel strangely empty.");
@@ -1693,14 +1692,15 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
         speed_min =  speed_min  * speed_adjust / 100;
     }
 
-    // do the same when trying to shoot while held in a net
-    if (you.attribute[ATTR_HELD]) // only for blowguns
+    // Do the same when trying to shoot while held in a net
+    // (only possible with blowguns).
+    if (you.attribute[ATTR_HELD])
     {
-        int speed_adjust = 105; // analogous to buckler and one-handed weapon
+        int speed_adjust = 105; // Analogous to buckler and one-handed weapon.
         speed_adjust -= ((speed_adjust - 100) * 5 / 10)
                             * you.skills[SK_THROWING] / 27;
 
-        // also reduce the speed cap.
+        // Also reduce the speed cap.
         speed_base = speed_base * speed_adjust / 100;
         speed_min =  speed_min  * speed_adjust / 100;
     }
@@ -1780,9 +1780,11 @@ static void identify_floor_missiles_matching(item_def mitem, int idflags)
 
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
-            for ( stack_iterator si(coord_def(x,y)); si; ++si )
+            for (stack_iterator si(coord_def(x,y)); si; ++si)
+            {
                 if ((si->flags & ISFLAG_THROWN) && items_stack(*si, mitem))
                     si->flags |= idflags;
+            }
 }
 
 // throw_it - currently handles player throwing only.  Monster
@@ -2063,7 +2065,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
         }
 
-        // Lower accuracy if held in a net (needs testing).
+        // Lower accuracy if held in a net.
         if (you.attribute[ATTR_HELD])
             baseHit--;
 
@@ -3694,7 +3696,7 @@ void drink( int slot )
 
     if (is_blood_potion(you.inv[item_slot]))
     {
-        // always drink oldest potion
+        // Always drink oldest potion.
         remove_oldest_blood_potion(you.inv[item_slot]);
     }
     dec_inv_item_quantity( item_slot, 1 );
@@ -3739,7 +3741,7 @@ bool _drink_fountain()
         mpr("You drink the blood.");
         fountain_effect = POT_BLOOD;
     }
-    else                        // sparkling fountain
+    else
     {
         if (!yesno("Drink from the sparkling fountain?"))
             return (false);
@@ -3796,7 +3798,8 @@ bool _drink_fountain()
             gone_dry = true;
         else if (random2(50) > 40)
         {
-            // Turn fountain into a normal fountain - without any message.
+            // Turn fountain into a normal fountain without any message
+            // but the glyph colour gives it away (lightblue vs. blue).
             grd[you.x_pos][you.y_pos] = DNGN_FOUNTAIN_BLUE;
             set_terrain_changed(you.x_pos, you.y_pos);
         }
@@ -3952,7 +3955,7 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet, item_def &wpn )
         }
     }
 
-    // get item name now before changing enchantment
+    // Get item name now before changing enchantment.
     std::string iname = wpn.name(DESC_CAP_YOUR);
 
     if (wpn.base_type == OBJ_WEAPONS)
@@ -4075,7 +4078,7 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
         }
     }
 
-    // output message before changing enchantment and curse status
+    // Output message before changing enchantment and curse status.
     if (!quiet)
     {
         mprf("%s glows green for a moment.",
@@ -4316,14 +4319,14 @@ void read_scroll( int slot )
             exercise(SK_SPELLCASTING, (coinflip()? 2 : 1));
     }
 
+    // It is the exception, not the rule, that the scroll will not
+    // be identified. {dlb}
     bool id_the_scroll = true;  // to prevent unnecessary repetition
 
-    // it is the exception, not the rule, that
-    // the scroll will not be identified {dlb}:
     switch (which_scroll)
     {
     case SCR_PAPER:
-        // remember paper scrolls handled as special case above, too:
+        // Remember, paper scrolls handled as special case above, too.
         mpr("This scroll appears to be blank.");
         if (player_mutation_level(MUT_BLURRY_VISION) == 3)
             id_the_scroll = false;
@@ -4686,8 +4689,8 @@ void use_randart(item_def &item)
         }
     }
 
-    // modify ability scores
-    // output result even when identified (because of potential fatality)
+    // Modify ability scores.
+    // Output result even when identified (because of potential fatality).
     modify_stat( STAT_STRENGTH,     proprt[RAP_STRENGTH],     false, item );
     modify_stat( STAT_INTELLIGENCE, proprt[RAP_INTELLIGENCE], false, item );
     modify_stat( STAT_DEXTERITY,    proprt[RAP_DEXTERITY],    false, item );

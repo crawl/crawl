@@ -804,11 +804,11 @@ void set_equip_race( item_def &item, unsigned long flags )
         switch (item.base_type)
         {
         case OBJ_WEAPONS:
-            if ((weapon_skill(item) == SK_LONG_BLADES
-                    && item.sub_type != WPN_FALCHION
-                    && item.sub_type != WPN_LONG_SWORD
-                    && item.sub_type != WPN_SCIMITAR
-                    && item.sub_type != WPN_GREAT_SWORD)
+            if (weapon_skill(item) == SK_LONG_BLADES
+                   && item.sub_type != WPN_FALCHION
+                   && item.sub_type != WPN_LONG_SWORD
+                   && item.sub_type != WPN_SCIMITAR
+                   && item.sub_type != WPN_GREAT_SWORD
                 || item.sub_type == WPN_QUICK_BLADE
                 || item.sub_type == WPN_LONGBOW
                 || item.sub_type == WPN_HAND_CROSSBOW)
@@ -2337,7 +2337,7 @@ bool gives_ability( const item_def &item )
     return (false);
 }
 
-// Returns true if the item confers an intrinsic that is shown on the % screen.#
+// Returns true if the item confers an intrinsic that is shown on the % screen.
 bool gives_resistance( const item_def &item )
 {
     if (!item_type_known(item))

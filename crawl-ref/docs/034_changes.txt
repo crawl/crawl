@@ -26,6 +26,7 @@ them:
    !         annotate dungeon level
              (If your annotation contains '!' you'll be prompted whenever 
              you attempt to enter the level.)
+   (         cycle the quiver to the next appropriate item
    Ctrl-D    define macros (synonym to '~')
    Ctrl-G    verbose list of monsters in sight
    Ctrl-T    change your allies' pickup behaviour
