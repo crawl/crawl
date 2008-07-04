@@ -1782,8 +1782,10 @@ bool cast_sanctuary(const int power)
         } // radius loop
 
     if (trap_count > 0)
+    {
         mpr("By Zin's power hidden traps are revealed to you.",
             MSGCH_GOD);
+    }
 
     if (cloud_count == 1)
     {
@@ -1797,8 +1799,10 @@ bool cast_sanctuary(const int power)
     }
 
     if (blood_count > 0)
+    {
         mpr("By Zin's power all blood is cleared from the sanctuary.",
             MSGCH_GOD);
+    }
 
     if (scare_count == 1 && seen_mon != NULL)
         simple_monster_message(seen_mon, " turns to flee the light!");
