@@ -528,16 +528,11 @@ static formatted_string _tutorial_stats_intro()
          << "To the right, important properties \n"
             "of the character are displayed. The \n"
             "most basic one is Health, shown as \n"
-            "<w>Health: " << you.hp << "/" << you.hp_max << "</w> ";
-
-    //    if (Options.tutorial_type == TUT_MAGIC_CHAR)
-    //    istr << "  ";
-
-    istr <<
+            "<w>Health: " << you.hp << "/" << you.hp_max << "</w> "
             "and meaning current \n"
             "out of maximum health points. When \n"
             "Health drops to zero, you die. \n"
-            "<w>Magic: " << you.magic_points << "/" << you.max_magic_points
+            "<w>Magic: " << you.magic_points << "/" << you.max_magic_points 
          << "</w> represents your energy \n"
             "for casting spells, although other \n"
             "actions often draw from Magic, too. \n"
