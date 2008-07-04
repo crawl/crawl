@@ -36,9 +36,8 @@ MCHMOD := 2755
 MCHMOD_SAVEDIR := 775
 
 # The user:group to install the game as.
-INSTALL_UGRP := games:games
-
-INSTALLDIR   := /usr/games/crawl
+INSTALL_UGRP ?= games:games
+INSTALLDIR   ?= /usr/games/crawl
 
 # If you're installing Crawl for multiple users, you *must* set this to a
 # valid path before building Crawl. This is not necessary if you are building
