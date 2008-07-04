@@ -94,7 +94,7 @@ void init_pandemonium(void)
     }
 
     // colour of monster 9 is colour of floor, 8 is colour of rock
-    // IIRC, BLACK is set to LIGHTGRAY
+    // IIRC, BLACK is set to LIGHTGREY
 
     for (pc = 0; pc < 10; ++pc)
     {

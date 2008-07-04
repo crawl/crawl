@@ -1025,7 +1025,7 @@ XImage *read_png (const char *fname)
         png_set_packing (png_ptr);
 
   /* sBIT handling is very tricky. If we are extracting only the image, we
-     can use the sBIT info for grayscale and color images, if the three
+     can use the sBIT info for greyscale and color images, if the three
      values agree. If we extract the transparency/alpha mask, sBIT is
      irrelevant for trans and valid for alpha. If we mix both, the
      multiplication may result in values that require the normal bit depth,

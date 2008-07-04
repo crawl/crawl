@@ -2911,7 +2911,7 @@ void describe_god( god_type which_god, bool give_title )
     cprintf (EOL EOL);
 
     // Print god's description.
-    textcolor(LIGHTGRAY);
+    textcolor(LIGHTGREY);
 
     std::string god_desc = getLongDescription(god_name(which_god, false));
     const int numcols = get_number_of_cols();
@@ -2934,7 +2934,7 @@ void describe_god( god_type which_god, bool give_title )
     // I know these messages aren't perfect so if you can think up
     // something better, do it.
 
-    textcolor(LIGHTGRAY);
+    textcolor(LIGHTGREY);
     cprintf(EOL EOL "Favour - ");
     textcolor(colour);
 
@@ -2969,7 +2969,7 @@ void describe_god( god_type which_god, bool give_title )
 
         //mv: The following code shows abilities given by your god (if any).
 
-        textcolor(LIGHTGRAY);
+        textcolor(LIGHTGREY);
         cprintf(EOL EOL "Granted powers:                                                          (Cost)" EOL);
         textcolor(colour);
 
@@ -3081,13 +3081,13 @@ void describe_god( god_type which_god, bool give_title )
         else
             cgotoxy(1, bottom_line - 2, GOTO_CRT);
 
-        textcolor(LIGHTGRAY);
+        textcolor(LIGHTGREY);
         cprintf(get_linebreak_string(_religion_help(which_god),
                                      numcols).c_str());
     }
 
-    cgotoxy(1, bottom_line-1);
-    textcolor(LIGHTGRAY);
+    cgotoxy(1, bottom_line - 1);
+    textcolor(LIGHTGREY);
     formatted_string::parse_string(
         "Press '<w>!</w>' to toggle between the overview and the more detailed "
         "description.").display();

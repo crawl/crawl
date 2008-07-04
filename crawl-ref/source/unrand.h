@@ -470,7 +470,7 @@
 /* 18 */
 {
     "scythe \"Finisher\"", "blackened scythe",
-        OBJ_WEAPONS, WPN_SCYTHE, +3, +5, DARKGRAY,
+        OBJ_WEAPONS, WPN_SCYTHE, +3, +5, DARKGREY,
     {
         SPWPN_SPEED, 0, 0, 3, 0, 0,       // str
         0, 0, 0, 0, 0, 0,
@@ -743,7 +743,7 @@
 /* 33 */
 {
     "robe of Folly", "dull robe",
-        OBJ_ARMOUR, ARM_ROBE, -1, 0, LIGHTGRAY,
+        OBJ_ARMOUR, ARM_ROBE, -1, 0, LIGHTGREY,
     {
         0, 0, 0, 0, -5, 0,      // int
         0, 0, 0, 0, 0, 0,
@@ -754,7 +754,7 @@
     }
     ,
         "",
-        "A dull gray robe.",
+        "A dull grey robe.",
         ""
 }
 ,
@@ -815,7 +815,7 @@
 /* 37 */
 {
     "ring of Robustness", "steel ring",
-        OBJ_JEWELLERY, RING_PROTECTION, +8, 0, LIGHTGRAY,
+        OBJ_JEWELLERY, RING_PROTECTION, +8, 0, LIGHTGREY,
     {
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0,
@@ -851,7 +851,7 @@
 /* 39 */
 {
     "spear of Voo-Doo", "ebony spear",
-        OBJ_WEAPONS, WPN_SPEAR, +2, +10, DARKGRAY,
+        OBJ_WEAPONS, WPN_SPEAR, +2, +10, DARKGREY,
     {
         SPWPN_VAMPIRICISM, 0, 0, 0, 0, 0,
         0, 0, 0, 1, 1, 0,       // res poison, prot life
@@ -925,7 +925,7 @@
 /* 43 */
 {
     "Elemental Staff", "black staff",
-        OBJ_WEAPONS, WPN_QUARTERSTAFF, +3, +1, DARKGRAY,
+        OBJ_WEAPONS, WPN_QUARTERSTAFF, +3, +1, DARKGREY,
     {
         SPWPN_PROTECTION, 0, 0, 0, 0, 0,
         2, 2, 0, 0, 0, 60,      // res fire, cold, magic
@@ -944,7 +944,7 @@
 /* 44 */
 {
     "hand crossbow \"Sniper\"", "black crossbow",
-        OBJ_WEAPONS, WPN_HAND_CROSSBOW, +10, +0, DARKGRAY,
+        OBJ_WEAPONS, WPN_HAND_CROSSBOW, +10, +0, DARKGREY,
     {
         SPWPN_VENOM, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0,
@@ -980,7 +980,7 @@
 /* 46 */
 {
     "robe of Night", "black robe",
-        OBJ_ARMOUR, ARM_ROBE, +4, 0, DARKGRAY,
+        OBJ_ARMOUR, ARM_ROBE, +4, 0, DARKGREY,
     {
         0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 30,      // res magic
@@ -1017,7 +1017,7 @@
 /* 48 */
 {
     "great mace \"Undeadhunter\"", "great steel mace",
-        OBJ_WEAPONS, WPN_GREAT_MACE, +7, +7, LIGHTGRAY,
+        OBJ_WEAPONS, WPN_GREAT_MACE, +7, +7, LIGHTGREY,
     {
         SPWPN_HOLY_WRATH, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 1, 0,       // life prot

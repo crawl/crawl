@@ -2479,7 +2479,7 @@ void process_command( command_type cmd )
         if (Options.tutorial_left)
         {
            std::string msg = "Unknown command. (For a list of commands type "
-                             "<w>?\?<lightgray>.)";
+                             "<w>?\?<lightgrey>.)";
            print_formatted_paragraph(msg, get_number_of_cols());
         }
         else // well, not examine, but...

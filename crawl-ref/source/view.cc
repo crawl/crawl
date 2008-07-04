@@ -432,7 +432,7 @@ static void _get_symbol( int x, int y,
                     else if (!one_chance_in(3))
                         *colour = LIGHTCYAN | colmask; // 1/6
                     else
-                        *colour = LIGHTGRAY | colmask; // 1/12
+                        *colour = LIGHTGREY | colmask; // 1/12
                 }
             }
             else if (object < NUM_REAL_FEATURES && _show_bloodcovered(x,y))

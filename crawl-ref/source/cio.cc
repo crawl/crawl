@@ -169,7 +169,7 @@ int c_getch()
 }
 
 // Wrapper around cgotoxy that can draw a fake cursor for Unix terms where
-// cursoring over darkgray or black causes problems.
+// cursoring over darkgrey or black causes problems.
 void cursorxy(int x, int y)
 {
 #if defined(USE_TILE)

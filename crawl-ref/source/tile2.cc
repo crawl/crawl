@@ -1007,7 +1007,7 @@ void WallIdx(int &wall, int &floor, int &special)
         case BLUE:
             wall = IDX_WALL_ICE;
             break;
-        case LIGHTGRAY:
+        case LIGHTGREY:
         case WHITE:
             wall = IDX_WALL_HALL;
             break;

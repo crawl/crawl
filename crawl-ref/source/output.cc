@@ -158,12 +158,12 @@ class colour_bar
     int m_request_redraw_after; // force a redraw at this turn count
 };
 
-colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGRAY);
+colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
 
 #ifdef USE_TILE
-colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGRAY);
+colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
 #else
-colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGRAY);
+colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 #endif
 
 // ----------------------------------------------------------------------
@@ -1658,25 +1658,25 @@ static void _print_overview_screen_equip(column_composer& cols,
         else if (!you_can_wear(e_order[i], true))
         {
             snprintf(buf, sizeof buf,
-                     "%s<darkgray>(%s unavailable)</darkgray>",
+                     "%s<darkgrey>(%s unavailable)</darkgrey>",
                      slot, slot_name_lwr);
         }
         else if (!you_tran_can_wear(e_order[i], true))
         {
             snprintf(buf, sizeof buf,
-                     "%s<darkgray>(%s currently unavailable)</darkgray>",
+                     "%s<darkgrey>(%s currently unavailable)</darkgrey>",
                      slot, slot_name_lwr);
         }
         else if (!you_can_wear(e_order[i]))
         {
             snprintf(buf, sizeof buf,
-                     "%s<lightgray>(%s restricted)</lightgray>",
+                     "%s<lightgrey>(%s restricted)</lightgrey>",
                      slot, slot_name_lwr);
         }
         else
         {
             snprintf(buf, sizeof buf,
-                     "<darkgray>(no %s)</darkgray>", slot_name_lwr);
+                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr);
         }
         cols.add_formatted(2, buf, false);
     }

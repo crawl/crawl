@@ -28,7 +28,7 @@
    The colour exchange system is perhaps a little overkill, but I wanted
    it to be general to support future changes.. The only thing not
    supported properly is black on black (used by curses for "normal" mode)
-   and white on white (used by me for "bright black" (darkgray) on black
+   and white on white (used by me for "bright black" (darkgrey) on black
 
    Jan 1998 Svante Gerhard <svante@algonet.se>                          */
 

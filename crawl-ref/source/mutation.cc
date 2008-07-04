@@ -1307,7 +1307,7 @@ formatted_string describe_mutations()
             if ( you.species == SP_DEMONSPAWN )
             {
                 if (fully_inactive)
-                    colourname = "darkgray";
+                    colourname = "darkgrey";
                 else if (!fully_active)
                     colourname = "yellow";
                 else if ( you.demon_pow[i] < you.mutation[i] )
@@ -1318,7 +1318,7 @@ formatted_string describe_mutations()
             else            // innate ability
             {
                 if (fully_inactive)
-                    colourname = "darkgray";
+                    colourname = "darkgrey";
                 else if (!fully_active)
                     colourname = "blue";
                 else if ( you.demon_pow[i] < you.mutation[i] )
