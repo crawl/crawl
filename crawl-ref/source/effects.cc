@@ -2671,7 +2671,8 @@ void handle_time(long time_delta)
     }
     // Exercise stealth skill:
     else if (you.burden_state == BS_UNENCUMBERED
-        && !you.duration[DUR_BERSERKER] && you.special_wield != SPWLD_SHADOW)
+             && !you.duration[DUR_BERSERKER]
+             && you.special_wield != SPWLD_SHADOW)
     {
         // Diminishing returns for stealth training by waiting.
         if ((you.equip[EQ_BODY_ARMOUR] == -1

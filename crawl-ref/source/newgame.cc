@@ -1959,7 +1959,7 @@ static char_choice_restriction _book_restriction(int booktype,
     case 1:    // Ice
         switch (you.species)
         {
-        case SP_OGRE_MAGE:
+        case SP_OGRE:
             if (!summon_too)
                 return (CC_RESTRICTED);
             // else fall-through
@@ -1974,7 +1974,7 @@ static char_choice_restriction _book_restriction(int booktype,
         case SP_GNOME:
         case SP_KOBOLD:
         case SP_NAGA:
-        case SP_OGRE:
+        case SP_OGRE_MAGE:
         case SP_GHOUL:
         case SP_VAMPIRE:
             return (CC_UNRESTRICTED);
@@ -2143,7 +2143,6 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
 
 static char_choice_restriction _weapon_restriction(weapon_type wpn)
 {
-    // Short sword
     switch (wpn)
     {
     case WPN_UNARMED:
@@ -2162,8 +2161,8 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
         // still better with them than any other starting weapon.
         case SP_SLUDGE_ELF:
         case SP_HALFLING:
-        case SP_KOBOLD:
         case SP_GNOME:
+        case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_MINOTAUR:
@@ -2207,12 +2206,12 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
         case SP_HUMAN:
         case SP_HILL_ORC:
         case SP_MERFOLK:
-        case SP_MUMMY:
         case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE_MAGE:
         case SP_MINOTAUR:
         case SP_KENKU:
+        case SP_MUMMY:
             return (CC_UNRESTRICTED);
 
         default:

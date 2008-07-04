@@ -1561,7 +1561,7 @@ static void _input()
 
     if (you.turn_is_over)
     {
-        if ( apply_berserk_penalty )
+        if (apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
 
         _world_reacts();

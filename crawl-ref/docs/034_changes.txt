@@ -15,10 +15,23 @@ them:
    c         chop up          (was D, dissect)
    E         show experience  (was C)
    v         evoke            (was E)
-   F         fire/throw       (was t)
+   f, F      fire/throw       (was t)
    t         tell/yell        (was !)
    Ctrl-V    Tiles settings   (was Ctrl-Q)
    Ctrl-Q    quit             (was Q)
+
+* Added some new commands:
+   `         repeat previous command
+   0         repeat next command # of times
+   !         annotate dungeon level
+             (If your annotation contains '!' you'll be prompted whenever 
+             you attempt to enter the level.)
+   Ctrl-D    define macros (synonym to '~')
+   Ctrl-G    verbose list of monsters in sight
+   Ctrl-T    change your allies' pickup behaviour
+             (only available to some characters)
+   Q         quiver an item for firing
+
    There is a file called "keys.pdf" in the /docs directory. It should be
    printable and contains a reference sheet for all keys used in Crawl.
 

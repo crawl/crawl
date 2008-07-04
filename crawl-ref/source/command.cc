@@ -111,7 +111,7 @@ static std::string _get_version_information(void)
 
 static std::string _get_version_features(void)
 {
-    std::string result  = "<w>FEATURES</w>" EOL;
+    std::string result  = "<w>Features</w>" EOL;
                 result += "--------" EOL;
 
     for (unsigned int i = 0; i < ARRAYSZ(features); i++)
@@ -153,7 +153,7 @@ static std::string _get_version_changes(void)
         }
         help = buf;
         // Give up if you encountered the second set of underliners
-        // and still haven't found Highlights.
+        // and still haven't encountered the keyword "Highlights".
         if (help.find("---") != std::string::npos)
         {
             if (skip_lines)
@@ -197,8 +197,8 @@ static std::string _get_version_changes(void)
     {
         result += EOL;
         result += "For a more complete list of changes, see changes.stone_soup "
-                  "in the /docs " EOL
-                  "folder.";
+                  "in the " EOL
+                  "/docs folder.";
     }
     else
     {
@@ -1829,7 +1829,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>[</w> : display worn armour\n"
             "<w>)</w> : display current weapons\n"
             "<w>\"</w> : display worn jewellery\n"
-            "<w>E</w> : display experience info\n",
+            "<w>E</w> : display experience info\n"
+            "<w>Ctrl-G</w> : list monsters in sight\n",
             true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(

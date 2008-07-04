@@ -218,7 +218,7 @@ static void _hell_spawn_random_monsters()
     }
 }
 
-//#define DEBUG_MON_CREATION
+#define DEBUG_MON_CREATION
 void spawn_random_monsters()
 {
 #ifdef DEBUG_MON_CREATION
@@ -229,6 +229,11 @@ void spawn_random_monsters()
         _hell_spawn_random_monsters();
         return;
     }
+
+    mprf(MSGCH_DIAGNOSTICS, "dungeon? %s, temple? %s, descending? %s",
+         you.level_type == LEVEL_DUNGEON ? "true" : "false",
+         player_in_branch(BRANCH_ECUMENICAL_TEMPLE) ? "true" : "false",
+         you.char_direction == GDT_DESCENDING ? "true" : "false");
 
     // Place normal dungeon monsters,  but not in player LOS.
     if (you.level_type == LEVEL_DUNGEON
