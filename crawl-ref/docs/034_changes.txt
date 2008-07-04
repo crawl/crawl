@@ -33,9 +33,9 @@ them:
    can be sacrificed with 'pca'.
 
 * The colours of many monsters have been changed. Most notably, there are
-   no darkgray monsters anymore. In case darkgray is actually better
+   no darkgrey monsters anymore. In case darkgrey is actually better
    visible than blue on your system, you can swap these colours using
-     colour: darkblue = darkgray
+     colour: darkblue = darkgrey
    in init.txt.
    Apart from that, more dangerous monsters are now generally displayed in
    lighter colours.

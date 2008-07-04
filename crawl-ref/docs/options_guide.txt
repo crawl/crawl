@@ -1737,7 +1737,7 @@ colour.OLDCOLOUR = NEWCOLOUR
                 darkgrey, lightblue, lightgreen, lightcyan, lightred, 
                 lightmagenta, yellow, white
         with lightgray = lightgrey, darkgray = darkgrey. Some examples:
-          colour.lightgray = black
+          colour.lightgrey = black
           colour.lightcyan = cyan
           colour.yellow    = brown
 
