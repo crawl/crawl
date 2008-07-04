@@ -526,7 +526,41 @@ static bool _dgn_fill_zone(
 
 static bool _is_exit_stair(const coord_def &c)
 {
-    return is_travelable_stair(grd(c));
+    // Branch entries, portals, and abyss entries are not considered exit
+    // stairs here, as they do not provide an exit (in a transitive sense) from
+    // the current level.
+    switch (grd(c))
+    {
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+    case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_STONE_STAIRS_UP_I:
+    case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III:
+    case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_EXIT_HELL:
+    case DNGN_RETURN_FROM_ORCISH_MINES:
+    case DNGN_RETURN_FROM_HIVE:
+    case DNGN_RETURN_FROM_LAIR:
+    case DNGN_RETURN_FROM_SLIME_PITS:
+    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_RETURN_FROM_CRYPT:
+    case DNGN_RETURN_FROM_HALL_OF_BLADES:
+    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_RETURN_FROM_SNAKE_PIT:
+    case DNGN_RETURN_FROM_ELVEN_HALLS:
+    case DNGN_RETURN_FROM_TOMB:
+    case DNGN_RETURN_FROM_SWAMP:
+    case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_EXIT_PANDEMONIUM:
+    case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_EXIT_ABYSS:
+        return (true);
+    default:
+        return (false);
+    }
 }
 
 // Counts the number of mutually unreachable areas in the map,
@@ -1151,6 +1185,9 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     }
 
     // Also check for isolated regions that have no stairs.
+    // [enne] - this is not a perfect check.  It's possible that a region
+    // could have a single staircase that leads to another a region on
+    // another level with a single return staircase.
     if (you.level_type == LEVEL_DUNGEON
         && !(branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
         && _dgn_count_disconnected_zones(true) > 0)
