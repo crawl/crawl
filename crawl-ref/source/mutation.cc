@@ -1090,7 +1090,7 @@ formatted_string describe_mutations()
         if (you.mutation[MUT_FAST])
             result += "</lightblue><cyan>";
         result += naga_speed_descrip[you.mutation[MUT_FAST]];
-        if ( you.mutation[MUT_FAST] )
+        if (you.mutation[MUT_FAST])
             result += "</cyan>";
         result += EOL;
         have_any = true;
@@ -2372,7 +2372,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
 
     case MUT_CLAWS:
         mpr((you.species == SP_TROLL ? troll_claw_lose
-             : lose_mutation[mutat])[you.mutation[mutat] - 1],
+                                     : lose_mutation[mutat])[you.mutation[mutat] - 1],
              MSGCH_MUTATION);
         break;
 
@@ -2476,21 +2476,37 @@ const char *mutation_name(mutation_type which_mutat, int level)
         if (!_mutation_is_fully_inactive(which_mutat))
             level = player_mutation_level(which_mutat);
         else // give description of fully active mutation
-            level = you.mutation[ which_mutat ];
+            level = you.mutation[which_mutat];
     }
 
     if (which_mutat == MUT_STRONG || which_mutat == MUT_CLEVER
         || which_mutat == MUT_AGILE || which_mutat == MUT_WEAK
         || which_mutat == MUT_DOPEY || which_mutat == MUT_CLUMSY)
     {
-        snprintf( mut_string, sizeof( mut_string ), "%s%d).",
-                  mutation_descrip[ which_mutat ][0], level );
+        snprintf(mut_string, sizeof(mut_string), "%s%d).",
+                 mutation_descrip[which_mutat][0], level);
 
         return (mut_string);
     }
 
-    return (mutation_descrip[ which_mutat ][ level - 1 ]);
-}                               // end mutation_name()
+    if (which_mutat == MUT_CLAWS
+        && (you.species == SP_TROLL || you.species == SP_GHOUL))
+    {
+        return (troll_claw_descrip[level]);
+    }
+
+    if (which_mutat == MUT_FAST && you.species == SP_NAGA)
+        return (naga_speed_descrip[level]);
+
+    if (which_mutat == MUT_DEFORMED
+        && (you.species == SP_NAGA || you.species == SP_CENTAUR))
+    {
+        return ((you.species == SP_NAGA ? naga_deformed_descrip
+                                        : centaur_deformed_descrip)[level - 1]);
+    }
+
+    return (mutation_descrip[which_mutat][level - 1]);
+}
 
 // Use an attribute counter for how many demonic mutations a demonspawn
 // has.
