@@ -706,13 +706,21 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param)
 
 static void mpr_formatted_output(formatted_string fs, int colour)
 {
-    int curcol = 1;
+    int curcol = Options.delay_message_clear ? 2 : 1;
 
     if (need_prefix)
     {
         message_out( Message_Line, colour, "-", 1, false );
         ++curcol;
         need_prefix = false;
+    }
+
+    // Find last text op so that we can scroll the output.
+    unsigned last_text = fs.ops.size();
+    for (unsigned i = 0; i < fs.ops.size(); ++i)
+    {
+        if (fs.ops[i].type == FSOP_TEXT)
+            last_text = i;
     }
 
     for (unsigned i = 0; i < fs.ops.size(); ++i)
@@ -724,7 +732,7 @@ static void mpr_formatted_output(formatted_string fs, int colour)
             break;
         case FSOP_TEXT:
             message_out(Message_Line, colour, fs.ops[i].text.c_str(), curcol,
-                        false);
+                        (i == last_text));
             curcol += multibyte_strlen(fs.ops[i].text);
             break;
         case FSOP_CURSOR:

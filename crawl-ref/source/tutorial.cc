@@ -2225,7 +2225,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     case TUT_SHIFT_RUN:
         text << "Walking around takes fewer keystrokes if you press "
-                "<w>Shift-direction</w> or <w>/ <w>direction</w>. "
+                "<w>Shift-direction</w> or <w>/ direction</w>. "
                 "That will let you run until a monster comes into sight or "
                 "your character sees something interesting.";
         break;
