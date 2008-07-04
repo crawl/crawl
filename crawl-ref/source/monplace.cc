@@ -544,6 +544,45 @@ static int _is_near_stairs(coord_def &p)
     return (result);
 }
 
+static bool _valid_monster_location(const mgen_data &mg, 
+                                    const coord_def &mg_pos)
+{
+    const int htype = (mons_class_is_zombified(mg.cls) ? mg.base_type
+                                                       : mg.cls);
+    dungeon_feature_type grid_wanted =
+        habitat2grid(mons_habitat_by_type(htype));
+
+    if (!in_bounds(mg_pos))
+        return (false);
+
+    // Occupied?
+    if (mgrd(mg_pos) != NON_MONSTER || mg_pos == you.pos())
+        return (false);
+
+    // Is the monster happy where we want to put it?
+    if (!grid_compatible(grid_wanted, grd(mg_pos), true))
+        return (false);
+
+    if (mg.behaviour != BEH_FRIENDLY && is_sanctuary(mg_pos.x, mg_pos.y))
+        return (false);
+
+    // Don't generate monsters on top of teleport traps.
+    // (How did they get there?)
+    int trap = trap_at_xy(mg_pos.x, mg_pos.y);
+    if (trap >= 0)
+    {
+        if (!_can_place_on_trap(mg.cls, env.trap[trap].type))
+            return (false);
+    }
+
+    return (true);
+}
+
+static bool _valid_monster_location(mgen_data &mg)
+{
+    return _valid_monster_location(mg, mg.pos);
+}
+
 int place_monster(mgen_data mg, bool force_pos)
 {
 #ifdef DEBUG_MON_CREATION
@@ -612,11 +651,6 @@ int place_monster(mgen_data mg, bool force_pos)
         // b) compatible
         // c) in the 'correct' proximity to the player
 
-        const int htype = (mons_class_is_zombified(mg.cls) ? mg.base_type
-                                                           : mg.cls);
-        dungeon_feature_type grid_wanted =
-            habitat2grid( mons_habitat_by_type(htype) );
-
         while (true)
         {
             // Dropped number of tries from 60.
@@ -628,28 +662,14 @@ int place_monster(mgen_data mg, bool force_pos)
             if (mg.proximity != PROX_NEAR_STAIRS)
                 mg.pos = random_in_bounds();
 
-            // Let's recheck these even for PROX_NEAR_STAIRS, just in case.
-            // Occupied?
-            if (mgrd(mg.pos) != NON_MONSTER || mg.pos == you.pos())
-                continue;
-
-            // Is the monster happy where we want to put it?
-            if (!grid_compatible(grid_wanted, grd(mg.pos), true))
+            if (!_valid_monster_location(mg))
                 continue;
 
             // Is the grid verboten?
-            if (!unforbidden( mg.pos, mg.map_mask ))
+            if (!unforbidden(mg.pos, mg.map_mask))
                 continue;
 
-            // Don't generate monsters on top of teleport traps.
-            // (How did they get there?)
-            int trap = trap_at_xy(mg.pos.x, mg.pos.y);
-            if (trap >= 0)
-            {
-                if (!_can_place_on_trap(mg.cls, env.trap[trap].type))
-                    continue;
-            }
-
+            // Let's recheck these even for PROX_NEAR_STAIRS, just in case.
             // Check proximity to player.
             proxOK = true;
 
@@ -707,6 +727,11 @@ int place_monster(mgen_data mg, bool force_pos)
             // Cool.. passes all tests.
             break;
         } // end while... place first monster
+    }
+    else if (!_valid_monster_location(mg))
+    {
+        // Sanity check that the specified position is valid.
+        return (-1);
     }
 
     id = _place_monster_aux(mg, true, force_pos);
@@ -790,7 +815,6 @@ static int _place_monster_aux( const mgen_data &mg,
                                bool first_band_member, bool force_pos )
 {
     int id = -1;
-    dungeon_feature_type grid_wanted = DNGN_UNSEEN;
     coord_def fpos;
 
     // Gotta be able to pick an ID.
@@ -818,8 +842,6 @@ static int _place_monster_aux( const mgen_data &mg,
     }
     else
     {
-        grid_wanted = habitat2grid( mons_habitat_by_type(htype) );
-
         int i = 0;
         // We'll try 1000 times for a good spot.
         for ( ; i < 1000; i++)
@@ -827,27 +849,8 @@ static int _place_monster_aux( const mgen_data &mg,
             fpos = mg.pos + coord_def( random_range(-3, 3),
                                        random_range(-3, 3) );
 
-            if (!in_bounds(fpos))
-                continue;
-
-            // Occupied?
-            if (mgrd(fpos) != NON_MONSTER || fpos == you.pos())
-                continue;
-
-            if (!grid_compatible(grid_wanted, grd(fpos), true))
-                continue;
-
-            if (mg.behaviour != BEH_FRIENDLY && is_sanctuary(fpos.x, fpos.y))
-                continue;
-
-            // Don't generate monsters on top of teleport traps.
-            // (How do they get there?)
-            int trap = trap_at_xy(fpos.x, fpos.y);
-            if (trap >= 0 && !_can_place_on_trap(mg.cls, env.trap[trap].type))
-                continue;
-
-            // Cool.. passes all tests.
-            break;
+            if (_valid_monster_location(mg, fpos))
+                break;
         }
 
         // Did we really try 1000 times?
