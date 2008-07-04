@@ -1673,6 +1673,9 @@ bool cast_sanctuary(const int power)
     env.sanctuary_pos.y = you.y_pos;
     env.sanctuary_time = 7 + you.skills[SK_INVOCATIONS]/2;
 
+    // Pets stop attacking and converge on you.
+    you.pet_target = MHITYOU;
+
     // radius could also be influenced by Inv
     // and would then have to be stored globally.
     const int radius      = 5;
@@ -1801,9 +1804,6 @@ bool cast_sanctuary(const int power)
         simple_monster_message(seen_mon, " turns to flee the light!");
     else if (scare_count > 0)
         mpr("The monsters scatter in all directions!");
-
-    // Pets stop attacking and converge on you.
-    you.pet_target = MHITYOU;
 
     return (true);
 }
