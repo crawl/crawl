@@ -126,7 +126,7 @@ Zin powers
 Zin grants followers the ability to preach to the unenlightened masses with 
 various results. Later, followers will gain the power to help them purify and
 strengthen their body, and eventually they can find temporary safety in a 
-divine refuge. Apart from that, Zin may  occasionally directly intervene to 
+divine refuge. Apart from that, Zin may occasionally directly intervene to 
 save a follower's life.
 %%%%
 The Shining One powers
@@ -189,7 +189,8 @@ followers with weapons focused on damage.
 %%%%
 Nemelex Xobeh powers
 
-The Trickster's followers gain various ways to influence fate when playing cards.
+The Trickster's followers gain various ways to influence fate when playing 
+cards.
 %%%%
 Elyvilon powers
 
