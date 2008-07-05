@@ -148,7 +148,7 @@ struct bolt
     mon_attitude_type attitude;  // attitude of whoever fired tracer
     int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
     bool        chose_ray;       // do we want a specific ray?
-    bool        beam_stopped;    // stop_attack_prompt() returned true
+    bool        beam_cancelled;  // stop_attack_prompt() returned true
     bool        dont_stop_foe;   // stop_attack_prompt() returned false for foe
     bool        dont_stop_fr;    // stop_attack_prompt() returned false for
                                  // friend

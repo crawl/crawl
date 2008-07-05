@@ -701,15 +701,18 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.fr_helped     = pbolt.fr_hurt  = 0;
     pbolt.foe_helped    = pbolt.foe_hurt = 0;
     pbolt.foe_ratio     = 100;
-    pbolt.beam_stopped  = false;
+    pbolt.beam_cancelled= false;
     pbolt.dont_stop_foe = pbolt.dont_stop_fr = false;
 
     fire_beam(pbolt);
 
     // Should only happen if the player answered 'n' to one of those
     // "Fire through friendly?" prompts.
-    if (pbolt.beam_stopped)
+    if (pbolt.beam_cancelled)
     {
+#if DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "%s", "Beam stopped.");
+#endif
         canned_msg(MSG_OK);
         you.turn_is_over = false;
         return (false);
@@ -1933,6 +1936,9 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
                 pbolt.effect_known = false;
             }
         }
+
+        if (pbolt.beam_cancelled)
+            return;
 
         // Always decrease range by 1.
         rangeRemaining--;
@@ -4352,7 +4358,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 
                     if (stop_attack_prompt(mon, true, target))
                     {
-                        beam.beam_stopped = true;
+                        beam.beam_cancelled = true;
                         return (BEAM_STOP);
                     }
                     if (beam.fr_count == 1 && !beam.dont_stop_fr)
@@ -4514,7 +4520,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 
                 if (stop_attack_prompt(mon, true, target))
                 {
-                    beam.beam_stopped = true;
+                    beam.beam_cancelled = true;
                     return (BEAM_STOP);
                 }
                 if (beam.fr_count == 1 && !beam.dont_stop_fr)
@@ -5632,7 +5638,7 @@ bolt::bolt() : range(0), rangeMax(0), type('*'),
                msg_generated(false), in_explosion_phase(false),
                smart_monster(false), can_see_invis(false),
                attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false),
-               beam_stopped(false), dont_stop_foe(false), dont_stop_fr(false)
+               beam_cancelled(false), dont_stop_foe(false), dont_stop_fr(false)
 {
 }
 
