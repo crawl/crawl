@@ -829,8 +829,8 @@ static int _place_monster_aux( const mgen_data &mg,
     // If the space is occupied, try some neighbouring square instead.
     if (first_band_member && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos.x, mg.pos.y))
-        && (force_pos || mgrd(mg.pos) == NON_MONSTER && mg.pos != you.pos()
-                         && monster_habitable_grid(htype, grd(mg.pos))))
+        && mgrd(mg.pos) == NON_MONSTER && mg.pos != you.pos()
+        && (force_pos || monster_habitable_grid(htype, grd(mg.pos))))
     {
         fpos = mg.pos;
     }
