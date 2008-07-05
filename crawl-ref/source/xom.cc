@@ -900,13 +900,16 @@ static bool _xom_is_bad(int sever)
 
             done = true;
         }
-        else if (one_chance_in(sever) && (you.level_type != LEVEL_ABYSS))
+        else if (one_chance_in(sever))
         {
-            god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
+            if (you.level_type != LEVEL_ABYSS)
+            {
+                god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
 
-            banished(DNGN_ENTER_ABYSS, "Xom");
+                banished(DNGN_ENTER_ABYSS, "Xom");
 
-            done = true;
+                done = true;
+            }
         }
     }
 
