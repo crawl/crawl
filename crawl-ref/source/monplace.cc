@@ -290,7 +290,7 @@ monster_type pick_random_monster(const level_id &place, int power,
     }
 
     if (place == BRANCH_MAIN_DUNGEON
-        && lev_mons < 28)
+        && lev_mons <= 27)
     {
         // If on D:1, allow moderately out-of-depth monsters only after
         // a certain elapsed turn count on the level (currently 700 turns).
@@ -306,8 +306,7 @@ monster_type pick_random_monster(const level_id &place, int power,
         //if (need_moderate_ood(lev_mons))
         //    lev_mons += random2(5);
 
-        if (lev_mons > 27)
-            lev_mons = 27;
+        lev_mons = std::min(27, lev_mons);
     }
 
     // Abyss or Pandemonium. Almost never called from Pan; probably only
@@ -338,11 +337,10 @@ monster_type pick_random_monster(const level_id &place, int power,
     {
         int level, diff, chance;
 
-        if (lev_mons > 30)
-            lev_mons = 30;
+        lev_mons = std::min(30, lev_mons);
 
         int i;
-        for (i = 0; i < 10000; i++)
+        for (i = 0; i < 10000; ++i)
         {
             int count = 0;
 
@@ -356,9 +354,9 @@ monster_type pick_random_monster(const level_id &place, int power,
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
 
-            level  = mons_level( mon_type, place );
+            level  = mons_level(mon_type, place);
             diff   = level - lev_mons;
-            chance = mons_rarity( mon_type, place ) - (diff * diff);
+            chance = mons_rarity(mon_type, place) - (diff * diff);
 
             if ((lev_mons >= level - 5 && lev_mons <= level + 5)
                 && random2avg(100, 2) <= chance)
@@ -370,6 +368,7 @@ monster_type pick_random_monster(const level_id &place, int power,
         if (i == 10000)
             return (MONS_PROGRAM_BUG);
     }
+
     return (mon_type);
 }
 
