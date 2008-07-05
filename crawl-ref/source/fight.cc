@@ -20,7 +20,7 @@
  *   <5>    8/08/99      BWR    Reduced power of EV/shields
  *   <4>    6/22/99      BWR    Changes to stabbing code, made
  *                              most gods not care about the
- *                              deathes of summoned monsters
+ *                              deaths of summoned monsters
  *   <3>    5/21/99      BWR    Upped learning of armour skill
  *                                    in combat slightly.
  *   <2>    5/12/99      BWR    Fixed a bug where burdened

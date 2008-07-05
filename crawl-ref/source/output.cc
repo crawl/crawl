@@ -1272,7 +1272,11 @@ void monster_pane_info::to_string( int count, std::string& desc,
     if (count == 1)
     {
         if (!mons_is_mimic(m_mon->type))
+        {
             out << m_mon->name(DESC_PLAIN);
+            if (!(m_mon->mname).empty())
+                out << " the " << mons_type_name(m_mon->type, DESC_PLAIN);
+        }
         else
             out << mons_type_name(m_mon->type, DESC_PLAIN);
     }
@@ -1282,7 +1286,8 @@ void monster_pane_info::to_string( int count, std::string& desc,
         // of different types.
         if (m_fullname
             && m_mon->type != MONS_DANCING_WEAPON
-            && !mons_is_mimic(m_mon->type))
+            && !mons_is_mimic(m_mon->type)
+            && m_mon->mname.empty())
         {
             out << count << " "
                 << pluralise(m_mon->name(DESC_PLAIN));

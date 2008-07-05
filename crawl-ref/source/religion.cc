@@ -765,11 +765,11 @@ static void _inc_penance(god_type god, int val)
 
         take_note(Note(NOTE_PENANCE, god));
 
-        // orcish bonuses don't apply under penance
+        // Orcish bonuses don't apply under penance.
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
-        // neither does Zin's vitalisation chaining, divine robustness,
-        // or divine stamina
+        // Neither does Zin's vitalisation chaining, divine robustness,
+        // or divine stamina.
         else if (god == GOD_ZIN)
         {
             if (you.duration[DUR_VITALISATION_CHAIN])
@@ -3297,7 +3297,7 @@ void lose_piety(int pgn)
 
     const int old_piety = you.piety;
 
-    // Apply hysteresis
+    // Apply hysteresis.
     {
         const int old_hysteresis = you.piety_hysteresis;
         you.piety_hysteresis = (unsigned char)std::min<int>(
@@ -3358,9 +3358,9 @@ void lose_piety(int pgn)
     if (you.piety > 0 && you.piety <= 5)
         learned_something_new(TUT_GOD_DISPLEASED);
 
-    if ( you.religion == GOD_BEOGH )
+    if (you.religion == GOD_BEOGH)
     {
-        // every piety level change also affects AC from orcish gear
+        // Every piety level change also affects AC from orcish gear.
         you.redraw_armour_class = true;
     }
 }
@@ -4620,7 +4620,7 @@ static bool _beogh_followers_abandon_you()
     return (false);
 }
 
-// currently only used when orcish idols have been destroyed
+// Currently only used when orcish idols have been destroyed.
 static std::string _get_beogh_speech(const std::string key)
 {
     std::string result = getSpeakString("Beogh " + key);

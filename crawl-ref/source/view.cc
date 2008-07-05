@@ -833,6 +833,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
     if (you.religion == GOD_BEOGH
         && monster->foe == MHITYOU
         && mons_species(monster->type) == MONS_ORC
+        && !mons_is_summoned(monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)

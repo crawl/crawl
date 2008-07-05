@@ -586,7 +586,7 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
     if (you.religion == GOD_BEOGH
         && mons_species(monster->type) == MONS_ORC
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
-        && mons_near(monster))
+        && mons_near(monster) && !mons_is_summoned(monster))
     {
         if (YOU_KILL(killer))
             convert = true;
@@ -2282,7 +2282,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
     return (count_grids);
 }
 
-//#define DEBUG_PATHFIND
+#define DEBUG_PATHFIND
 
 // Check all grids in LoS and mark lava and/or water as seen if the
 // appropriate grids are encountered, so we later only need to do the
@@ -2701,18 +2701,19 @@ static void _handle_behaviour(monsters *mon)
                     break;
                 }
 
-                if (patrolling)
-                {
-                    new_foe = MHITNOT;
-                    new_beh = BEH_WANDER;
-                    break;
-                }
-
                 if (isFriendly)
                 {
-                    new_foe = MHITYOU;
-                    mon->target_x = foe_x;
-                    mon->target_y = foe_y;
+                    if (patrolling)
+                    {
+                        new_foe = MHITNOT;
+                        new_beh = BEH_WANDER;
+                    }
+                    else
+                    {
+                        new_foe = MHITYOU;
+                        mon->target_x = foe_x;
+                        mon->target_y = foe_y;
+                    }
                     break;
                 }
 
@@ -3098,7 +3099,7 @@ static void _handle_behaviour(monsters *mon)
             // wandering monsters at least appear to have some sort of
             // attention span.  -- bwr
             if (mon->x == mon->target_x && mon->y == mon->target_y
-                || mons_is_batty(mon) || (!isPacified && one_chance_in(20)))
+                || mons_is_batty(mon) || !isPacified && one_chance_in(20))
             {
                 bool need_target = true;
                 if (travelling)
@@ -3326,8 +3327,8 @@ static void _handle_behaviour(monsters *mon)
             // also eventually switch the place from which they want to
             // leave the level, in case their current choice is blocked.
             if (!proxFoe && mon->foe != MHITNOT
-                && one_chance_in(isSmart ? 60 : 20)
-                    || isPacified && one_chance_in(isSmart ? 40 : 120))
+                   && one_chance_in(isSmart ? 60 : 20)
+                || isPacified && one_chance_in(isSmart ? 40 : 120))
             {
                 new_foe = MHITNOT;
                 if (travelling && mon->travel_target != MTRAV_PATROL
