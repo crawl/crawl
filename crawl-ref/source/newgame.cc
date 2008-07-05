@@ -1925,13 +1925,6 @@ static char_choice_restriction _book_restriction(int booktype,
     case 0:    // Fire
         switch (you.species)
         {
-        case SP_OGRE:
-            // Ogres are, of course, really bad at Fire and Ice, so it's usually
-            // restricted, but if the summoning book comes into play unrestrict
-            // those two because ogres are even *worse* at Summonings.
-            if (!summon_too)
-                return (CC_RESTRICTED);
-            // else fall-through
         case SP_HUMAN:
         case SP_HIGH_ELF:
         case SP_GREY_ELF:
@@ -1939,17 +1932,18 @@ static char_choice_restriction _book_restriction(int booktype,
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
         case SP_HILL_ORC:
-        case SP_HALFLING:
         case SP_GNOME:
         case SP_KOBOLD:
         case SP_NAGA:
         case SP_OGRE_MAGE:
         case SP_KENKU:
+        case SP_DEMIGOD:
         case SP_DEMONSPAWN:
+        case SP_MUMMY:
             return (CC_UNRESTRICTED);
 
         default:
-            if (!summon_too && player_genus(GENPC_DRACONIAN))
+            if (player_genus(GENPC_DRACONIAN))
                 return (CC_UNRESTRICTED);
             return (CC_RESTRICTED);
         }
@@ -1958,10 +1952,6 @@ static char_choice_restriction _book_restriction(int booktype,
     case 1:    // Ice
         switch (you.species)
         {
-        case SP_OGRE:
-            if (!summon_too)
-                return (CC_RESTRICTED);
-            // else fall-through
         case SP_HUMAN:
         case SP_HIGH_ELF:
         case SP_GREY_ELF:
@@ -1969,17 +1959,18 @@ static char_choice_restriction _book_restriction(int booktype,
         case SP_SLUDGE_ELF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
-        case SP_HALFLING:
         case SP_GNOME:
         case SP_KOBOLD:
         case SP_NAGA:
         case SP_OGRE_MAGE:
-        case SP_GHOUL:
-        case SP_VAMPIRE:
+        case SP_KENKU:
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_MUMMY:
             return (CC_UNRESTRICTED);
 
         default:
-            if (!summon_too && player_genus(GENPC_DRACONIAN))
+            if (player_genus(GENPC_DRACONIAN))
                 return (CC_UNRESTRICTED);
             return (CC_RESTRICTED);
         }
@@ -1988,24 +1979,18 @@ static char_choice_restriction _book_restriction(int booktype,
     case 2:    // Summoning
         switch (you.species)
         {
-        case SP_HUMAN:
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
-        case SP_MERFOLK:
-        case SP_GNOME:
         case SP_KOBOLD:
         case SP_NAGA:
-        case SP_OGRE_MAGE:
         case SP_KENKU:
-        case SP_DEMONSPAWN:
+        case SP_MUMMY:
         case SP_VAMPIRE:
             return (CC_UNRESTRICTED);
             break;
 
         default:
-            if (player_genus(GENPC_DRACONIAN))
-                return (CC_UNRESTRICTED);
             return (CC_RESTRICTED);
         }
     }
@@ -2152,7 +2137,12 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
     case WPN_SHORT_SWORD:
         switch (you.species)
         {
-        case SP_HUMAN:
+        case SP_NAGA:
+        case SP_VAMPIRE:
+            // The fighter's heavy armour hinders stabbing.
+            if (you.char_class == JOB_FIGHTER)
+                return (CC_RESTRICTED);
+            // else fall through
         case SP_HIGH_ELF:
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
@@ -2163,21 +2153,18 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
         case SP_GNOME:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
-        case SP_NAGA:
-        case SP_MINOTAUR:
-        case SP_KENKU:
-        case SP_VAMPIRE:
             return (CC_UNRESTRICTED);
 
         default:
-            return (player_genus(GENPC_DRACONIAN) ? CC_UNRESTRICTED
-                                                  : CC_RESTRICTED);
+            return (CC_RESTRICTED);
         }
 
-    // Mace and hand axe, usually the same aptitude.
+    // Maces and hand axes usually share the same restrictions.
     case WPN_MACE:
         if (you.species == SP_TROLL)
             return (CC_UNRESTRICTED);
+        if (you.species == SP_VAMPIRE)
+            return (CC_RESTRICTED);
         // else fall-through
     case WPN_HAND_AXE:
         switch (you.species)
@@ -2192,6 +2179,9 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
         case SP_OGRE_MAGE:
         case SP_MINOTAUR:
         case SP_KENKU:
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_VAMPIRE:
             return (CC_UNRESTRICTED);
 
         default:
@@ -2210,6 +2200,8 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
         case SP_OGRE_MAGE:
         case SP_MINOTAUR:
         case SP_KENKU:
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
         case SP_MUMMY:
             return (CC_UNRESTRICTED);
 
@@ -2232,8 +2224,6 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
         {
         case SP_MOUNTAIN_DWARF:
         case SP_OGRE:
-        case SP_DEMIGOD:
-        case SP_DEMONSPAWN:
         case SP_GHOUL:
         case SP_VAMPIRE:
             return (CC_UNRESTRICTED);
@@ -2450,17 +2440,13 @@ static bool _is_valid_religion(god_type god)
     }
 }
 
-static bool _has_good_necromancy_apts()
+static bool _necromancy_okay()
 {
     switch (you.species)
     {
-    case SP_HUMAN:
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
-    case SP_KOBOLD:
-    case SP_NAGA:
     case SP_OGRE_MAGE:
-    case SP_KENKU:
     case SP_DEMONSPAWN:
     case SP_MUMMY:
     case SP_GHOUL:
@@ -4463,7 +4449,7 @@ bool _give_items_skills()
         {
             ng_dk = DK_RANDOM;
 
-            if (Options.good_random && !_has_good_necromancy_apts())
+            if (Options.good_random && !_necromancy_okay())
                 choice = DK_YREDELEMNUL;
             else
                 choice = (coinflip() ? DK_NECROMANCY : DK_YREDELEMNUL);
@@ -4475,7 +4461,7 @@ bool _give_items_skills()
             textcolor( CYAN );
             cprintf(EOL "From where do you draw your power?" EOL);
 
-            if (_has_good_necromancy_apts())
+            if (_necromancy_okay())
                 textcolor(LIGHTGREY);
             else
                 textcolor(DARKGREY);
@@ -4527,7 +4513,7 @@ bool _give_items_skills()
                     keyn = '*'; // for ng_dk setting
                     // fall-through for random
                 case '+':
-                    if (keyn == '+' && !_has_good_necromancy_apts())
+                    if (keyn == '+' && !_necromancy_okay())
                     {
                         choice = DK_YREDELEMNUL;
                         break;
