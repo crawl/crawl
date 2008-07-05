@@ -2282,18 +2282,22 @@ void describe_monsters(monsters& mons)
         return;
     }
 
-    std::ostringstream description;
+    std::ostringstream body;
+    std::string title, prefix, suffix;
+
     std::string capname = mons.name(DESC_CAP_A);
-    description << capname;
+    title = capname;
     if (mons.has_base_name())
-        description << ", " << mons.base_name(DESC_NOCAP_THE, false);
-    description << "$$";
+    {
+        title += ", ";
+        title += mons.base_name(DESC_NOCAP_THE, false);
+    }
 
     if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
-        description << getLongDescription("mimic");
+        body <<  getLongDescription("mimic");
     else
-        description << getLongDescription(mons.base_name(DESC_DBNAME, false),
-                                          mons.type == MONS_DANCING_WEAPON);
+        body <<  getLongDescription(mons.base_name(DESC_DBNAME, false),
+                                    mons.type == MONS_DANCING_WEAPON);
 
     std::string symbol = "";
     symbol += get_monster_data(mons.type)->showchar;
@@ -2303,43 +2307,23 @@ void describe_monsters(monsters& mons)
     std::string symbol_prefix = "__";
     symbol_prefix += symbol;
     symbol_prefix += "_prefix";
-    description << getLongDescription(symbol_prefix);
+    prefix = getLongDescription(symbol_prefix);
 
     switch (mons.type)
     {
-    case MONS_ZOMBIE_SMALL: case MONS_ZOMBIE_LARGE:
-        description << getLongDescription("zombie");
-        break;
-
-    case MONS_SKELETON_SMALL: case MONS_SKELETON_LARGE:
-        description << getLongDescription("skeleton");
-        break;
-
-    case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-        description << getLongDescription("large simulacrum");
-        break;
-
-    case MONS_SPECTRAL_THING:
-        description << getLongDescription("spectral thing");
-        break;
-
-    case MONS_DANCING_WEAPON:
-        // Already handled.
-        break;
-
     case MONS_ROTTING_DEVIL:
         if (player_can_smell())
         {
             if (player_mutation_level(MUT_SAPROVOROUS) == 3)
-                description << "It smells great!";
+                body << "It smells great!";
             else
-                description << "It stinks.";
+                body << "It stinks.";
         }
         break;
 
     case MONS_SWAMP_DRAKE:
         if (player_can_smell())
-            description << "It smells horrible.";
+            body << "It smells horrible.";
         break;
 
     case MONS_NAGA:
@@ -2348,26 +2332,26 @@ void describe_monsters(monsters& mons)
     case MONS_GUARDIAN_NAGA:
     case MONS_GREATER_NAGA:
         if (you.species == SP_NAGA)
-            description << "It is particularly attractive.";
+            body << "It is particularly attractive.";
         else
-            description << "It is strange and repulsive.";
+            body << "It is strange and repulsive.";
         break;
 
     case MONS_VAMPIRE:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
         if (you.is_undead == US_ALIVE)
-            description << " It wants to drink your blood! ";
+            body << "It wants to drink your blood! ";
         break;
 
     case MONS_REAPER:
         if (you.is_undead == US_ALIVE)
-            description << "It has come for your soul!";
+            body <<  "It has come for your soul!";
         break;
 
     case MONS_ELF:
         // These are only possible from polymorphing or shapeshifting.
-        description << "This one is remarkably plain looking.";
+        body << "This one is remarkably plain looking.";
         break;
 
     case MONS_DRACONIAN:
@@ -2387,25 +2371,25 @@ void describe_monsters(monsters& mons)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
-        description << _describe_draconian( &mons );
+        body << _describe_draconian( &mons );
         break;
     }
     case MONS_PLAYER_GHOST:
-        description << "The apparition of " << get_ghost_description(mons)
-                    << ".$";
+       body << "The apparition of " << get_ghost_description(mons)
+            << ".$";
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        description << _describe_demon(mons);
+        body << _describe_demon(mons);
         break;
 
     case MONS_URUG:
         if (player_can_smell())
-            description << "He smells terrible.";
+            body << "He smells terrible.";
         break;
 
     case MONS_PROGRAM_BUG:
-        description << "If this monster is a \"program bug\", then it's "
+        body << "If this monster is a \"program bug\", then it's "
             "recommended that you save your game and reload.  Please report "
             "monsters who masquerade as program bugs or run around the "
             "dungeon without a proper description to the authorities.";
@@ -2414,15 +2398,13 @@ void describe_monsters(monsters& mons)
         break;
     }
 
-    description << "\n";
     std::string symbol_suffix = "__";
     symbol_suffix += symbol;
     symbol_suffix += "_suffix";
-    description << getLongDescription(symbol_suffix);
-    description << getLongDescription(symbol_suffix + "_examine");
+    suffix += getLongDescription(symbol_suffix);
+    suffix += getLongDescription(symbol_suffix + "_examine");
 
 #if DEBUG_DIAGNOSTICS
-
     if (mons_class_flag( mons.type, M_SPELLCASTER ))
     {
         const monster_spells &hspell_pass = mons.spells;
@@ -2434,14 +2416,14 @@ void describe_monsters(monsters& mons)
             {
                 if (!found_spell)
                 {
-                    description << "$$Monster Spells:$";
+                    body << "$$Monster Spells:$";
                     found_spell = true;
                 }
 
-                description << "    " << i << ": "
-                            << spell_title(hspell_pass[i])
-                            << " (" << static_cast<int>(hspell_pass[i])
-                            << ")$";
+                body << "    " << i << ": "
+                     << spell_title(hspell_pass[i])
+                     << " (" << static_cast<int>(hspell_pass[i])
+                     << ")$";
             }
         }
     }
@@ -2453,16 +2435,16 @@ void describe_monsters(monsters& mons)
         {
             if (!has_item)
             {
-                description << "$Monster Inventory:$";
+                body << "$Monster Inventory:$";
                 has_item = true;
             }
-            description << "    " << i << ") "
-                        << mitm[mons.inv[i]].name(DESC_NOCAP_A, false, true);
+            body << "    " << i << ") "
+                 << mitm[mons.inv[i]].name(DESC_NOCAP_A, false, true);
         }
     }
 #endif
 
-    print_description(description.str());
+    print_description(body.str(), title, suffix, prefix);
 
 #ifdef USE_TILE
     mouse_control mc(MOUSE_MODE_MORE);

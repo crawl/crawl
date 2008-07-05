@@ -1759,6 +1759,9 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         return item.name(desc, false, false, use_inscrip, false, ignore_flags);
     }
 
+    if (desc == DESC_DBNAME)
+        return get_monster_data(mon.type)->name;
+
     if (mon.type == MONS_PLAYER_GHOST)
         return apostrophise(mon.mname) + " ghost";
 
