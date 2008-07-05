@@ -4551,10 +4551,14 @@ bool _give_items_skills()
             ng_dk = (keyn == '*'? DK_RANDOM : choice);
         }
 
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+
         switch (choice)
         {
-        default:  // this shouldn't happen anyways -- bwr
+        default:  // This shouldn't happen anyways. -- bwr
         case DK_NECROMANCY:
+            _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
+
             you.skills[SK_SPELLCASTING] = 1;
             you.skills[SK_NECROMANCY]   = 2;
             break;
@@ -4570,9 +4574,6 @@ bool _give_items_skills()
 
         if (you.inv[0].quantity < 1)
             _newgame_clear_item(0);
-
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
 
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_ARMOUR]   = 1;
