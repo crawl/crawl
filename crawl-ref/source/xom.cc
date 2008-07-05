@@ -691,34 +691,37 @@ static bool _xom_is_good(int sever)
     }
     else if (random2(sever) <= 11)
     {
-        if (you.hp <= random2(201) && player_in_a_dangerous_place())
-            you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
-
-        god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
-
-        bolt beam;
-        beam.beam_source  = NON_MONSTER;
-        beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = dice_def(3, 30);
-        beam.flavour      = BEAM_ELECTRICITY;
-        beam.target_x     = you.x_pos;
-        beam.target_y     = you.y_pos;
-        beam.name         = "blast of lightning";
-        beam.colour       = LIGHTCYAN;
-        beam.thrower      = KILL_MISC;
-        beam.aux_source   = "Xom's lightning strike";
-        beam.ex_size      = 2;
-        beam.is_tracer    = false;
-        beam.is_explosion = true;
-        explosion(beam);
-
-        if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
+        if (player_in_a_dangerous_place())
         {
-            mpr("Your divine protection wanes.");
-            you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
-        }
+            if (you.hp <= random2(201))
+                you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
 
-        done = true;
+            god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
+
+            bolt beam;
+            beam.beam_source  = NON_MONSTER;
+            beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage       = dice_def(3, 30);
+            beam.flavour      = BEAM_ELECTRICITY;
+            beam.target_x     = you.x_pos;
+            beam.target_y     = you.y_pos;
+            beam.name         = "blast of lightning";
+            beam.colour       = LIGHTCYAN;
+            beam.thrower      = KILL_MISC;
+            beam.aux_source   = "Xom's lightning strike";
+            beam.ex_size      = 2;
+            beam.is_tracer    = false;
+            beam.is_explosion = true;
+            explosion(beam);
+
+            if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
+            {
+                mpr("Your divine protection wanes.");
+                you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
+            }
+
+            done = true;
+        }
     }
 
     return (done);
