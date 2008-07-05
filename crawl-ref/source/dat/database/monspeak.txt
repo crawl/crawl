@@ -1425,7 +1425,7 @@ VISUAL:@The_monster@ smiles happily.
 
 @The_monster@ screams, "I'm a hero!"
 
-@The_monster@ screams, "Blood an destruction!"
+@The_monster@ screams, "Blood and destruction!"
 
 @The_monster@ screams, "Pray, because you'll die soon!"
 
