@@ -532,7 +532,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_ZIN:
-        snprintf(info, INFO_SIZE, "sacrifice gold%s",
+        snprintf(info, INFO_SIZE, "donate money%s",
                  verbose ? " (by praying at an altar)" : "");
 
         likes.push_back(info);

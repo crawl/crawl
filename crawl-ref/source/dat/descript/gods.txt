@@ -72,7 +72,7 @@ Beogh is the deity worshipped by the cave orcs native to parts of the dungeon.  
 %%%%
 Zin powers
 
-Zin grants followers the ability to preach to the unenlightened masses with various results. Later, followers will gain the power to help them purify and strengthen their body, and eventually they can find temporary safety in a divine refuge. Apart from that, Zin may occasionally directly intervene to save a follower's life.
+Zin grants followers the ability to preach to the unenlightened masses. Later, followers will gain the power to help them purify and strengthen their body, and eventually they can find temporary safety in a divine refuge. Apart from that, Zin may occasionally directly intervene to save a follower's life.
 %%%%
 The Shining One powers
 
@@ -122,5 +122,5 @@ Followers of Lugonu gain powers to depart the Abyss at will, to banish monsters 
 %%%%
 Beogh powers
 
-Beogh encourages followers to make use of orcish gear found in the dungeon.  Followers can smite their foes, and may even gain orcish followers of their own, who may be blessed by Beogh in battle, and can be recalled within a level as needed. Eventually, they'll gain the power to walk on water. Beogh will sometimes directly intervene to save a follower's life.
+Beogh encourages followers to make use of orcish gear found in the dungeon.  Followers can smite their foes, and will even gain orcish followers of their own, who may be blessed by Beogh in battle and can be recalled within a level as needed. Eventually, they'll gain the power to walk on water. Beogh will sometimes directly intervene to save a follower's life.
 %%%%

@@ -103,7 +103,8 @@ faster, and vice versa.
 %%%%
 Armour
 
-Armour skill helps lessen the hinderance of heavy armour on moving, 
+Armour skill increases the AC gained by wearing heavy armour, and it
+also helps lessen the hinderance of heavy armour on moving, 
 spellcasting and other actions.
 %%%%
 Dodging
