@@ -2762,13 +2762,20 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 // when the beam started then hits from bounces shouldn't count as
 // unchivalric attacks, but if the first hit from the beam *was* unchivalrous
 // then all the bounces should count as unchivalrous as well.
+//
+// Also do the same sort of check for harming a friendly monster,
+// since a Beogh worshipper zapping an orc with lightning might cause it to
+// become a follower on the first hit, and the second hit would be
+// against a friendly orc.
 static FixedVector<bool, NUM_MONSTERS> _first_attack_conduct;
 static FixedVector<bool, NUM_MONSTERS> _first_attack_was_unchivalric;
+static FixedVector<bool, NUM_MONSTERS> _first_attack_was_friendly;
 
 void religion_turn_start()
 {
     _first_attack_conduct.init(true);
     _first_attack_was_unchivalric.init(false);
+    _first_attack_was_friendly.init(false);
     crawl_state.clear_god_acting();
 }
 
@@ -2778,7 +2785,14 @@ void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
     const unsigned int midx = monster_index(mon);
 
     if (mons_friendly(mon))
-        conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
+    {
+        if(_first_attack_conduct[midx]
+           || _first_attack_was_friendly[midx])
+        {
+            conduct[0].set(DID_ATTACK_FRIEND, 5, known, mon);
+            _first_attack_was_friendly[midx] = true;
+        }
+    }
     else if (mons_neutral(mon))
         conduct[0].set(DID_ATTACK_NEUTRAL, 5, known, mon);
 
