@@ -138,11 +138,11 @@ clean-sql:
 		cd $(WORKDIR)
 
 distclean: clean-lua clean-sql
-		$(DELETE) *.o 
+		$(DELETE) *.o
 		$(DELETE) bones.*
 		$(DELETE) morgue.txt
-		$(DELETE) scores 
-		$(DELETE) $(APPNAME) 
+		$(DELETE) scores
+		$(DELETE) $(APPNAME)
 		$(DELETE) *.sav
 		$(DELETE) core
 		$(DELETE) *.0*

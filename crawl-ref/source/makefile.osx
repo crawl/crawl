@@ -13,7 +13,7 @@ all: $(GAME)
 install:
 	xcodebuild -project $(PROJECT) -target $(GAME) -configuration Release install
 
-clean:          
+clean:
 	xcodebuild -project $(PROJECT) -target $(GAME) -configuration Release clean
 	xcodebuild -project $(PROJECT) -target $(GAME) -configuration Debug clean
 	xcodebuild -project $(PROJECT) -target $(GAME) -configuration Wizard clean
@@ -31,7 +31,7 @@ distclean: clean
 $(GAME):
 	xcodebuild -project $(PROJECT) -target $(GAME) -configuration Release build
 
-debug: 
+debug:
 	xcodebuild -project $(PROJECT) -target $(GAME) -configuration Debug build
 
 wizard:
