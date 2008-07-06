@@ -888,39 +888,30 @@ char burn_freeze(int pow, beam_type flavour)
 
     pow = std::min(25, pow);
 
-    while (mgr == NON_MONSTER)
+    mpr("Which direction?", MSGCH_PROMPT);
+    direction(spd, DIR_DIR, TARG_ENEMY);
+
+    if (!spd.isValid)
     {
-        mpr("Which direction?", MSGCH_PROMPT);
-        direction(spd, DIR_DIR, TARG_ENEMY);
+        canned_msg(MSG_OK);
+        return (-1);
+    }
 
-        if (!spd.isValid)
-        {
-            canned_msg(MSG_OK);
-            return (-1);
-        }
+    if (spd.isMe)
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return (-1);
+    }
 
-        if (spd.isMe)
-        {
-            canned_msg(MSG_UNTHINKING_ACT);
-            return (-1);
-        }
+    mgr = mgrd[you.x_pos + spd.dx][you.y_pos + spd.dy];
 
-        mgr = mgrd[you.x_pos + spd.dx][you.y_pos + spd.dy];
-
-        // Yes, this is strange, but it does maintain the original
-        // behaviour.  Possibly to avoid giving information about
-        // invisible monsters?
-        if (mgr == NON_MONSTER)
-        {
-            mpr("There isn't anything close enough!");
-            return (0);
-        }
-
-        if (trans_wall_blocking(spd.tx, spd.ty))
-        {
-            mpr("A translucent wall is in the way.");
-            return (0);
-        }
+    // Yes, this is strange, but it does maintain the original
+    // behaviour.  Possibly to avoid giving information about invisible
+    // monsters?
+    if (mgr == NON_MONSTER)
+    {
+        mpr("There isn't anything close enough!");
+        return (0);
     }
 
     monsters *monster = &menv[mgr];
