@@ -4876,6 +4876,55 @@ void set_mp(int new_amount, bool max_too)
     you.redraw_magic_points = true;
 }
 
+// If trans is true, being berserk and/or transformed is taken into account
+// here. Else, the base hp is calculated. If rotted is true, calculate the
+// real max hp you'd have if the rotting was cured.
+int get_real_hp(bool trans, bool rotted)
+{
+    int hitp;
+
+    hitp  = (you.base_hp - 5000) + (you.base_hp2 - 5000);
+    hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 5;
+
+    // Being berserk makes you resistant to damage. I don't know why.
+    if (trans && you.duration[DUR_BERSERKER])
+    {
+        hitp *= 15;
+        hitp /= 10;
+    }
+
+    if (trans)
+    {
+        // Some transformations give you extra hp.
+        switch (you.attribute[ATTR_TRANSFORMATION])
+        {
+        case TRAN_STATUE:
+            hitp *= 15;
+            hitp /= 10;
+            break;
+        case TRAN_ICE_BEAST:
+            hitp *= 12;
+            hitp /= 10;
+            break;
+        case TRAN_DRAGON:
+            hitp *= 16;
+            hitp /= 10;
+            break;
+        }
+    }
+
+    if (rotted)
+        hitp += player_rotted();
+
+    // Frail and robust mutations, and divine robustness.
+    hitp *= (10 + player_mutation_level(MUT_ROBUST)
+                + you.attribute[ATTR_DIVINE_ROBUSTNESS]
+                - player_mutation_level(MUT_FRAIL));
+    hitp /= 10;
+
+    return (hitp);
+}
+
 static int _get_contamination_level()
 {
     const int glow = you.magic_contamination;

@@ -744,15 +744,15 @@ bool is_cursor_enabled()
 
 inline unsigned get_brand(int col)
 {
-    return (col & COLFLAG_FRIENDLY_MONSTER)? Options.friend_brand :
-           (col & COLFLAG_NEUTRAL_MONSTER)?  Options.neutral_brand :
-           (col & COLFLAG_ITEM_HEAP)?        Options.heap_brand :
-           (col & COLFLAG_WILLSTAB)?         Options.stab_brand :
-           (col & COLFLAG_MAYSTAB)?          Options.may_stab_brand :
-           (col & COLFLAG_STAIR_ITEM)?       Options.feature_item_brand :
-           (col & COLFLAG_TRAP_ITEM)?        Options.trap_item_brand :
-           (col & COLFLAG_REVERSE)?          CHATTR_REVERSE :
-                                             CHATTR_NORMAL;
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+           (col & COLFLAG_REVERSE)          ? CHATTR_REVERSE
+                                            : CHATTR_NORMAL;
 }
 
 void textattr(int col)

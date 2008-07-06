@@ -307,7 +307,7 @@ static void _print_stats_mp(int x, int y)
 
 static void _print_stats_hp(int x, int y)
 {
-    const int max_max_hp = you.hp_max + player_rotted();
+    const int max_max_hp = get_real_hp(true, true);
 
     // Calculate colour
     short hp_colour = HUD_VALUE_COLOR;
@@ -315,8 +315,8 @@ static void _print_stats_hp(int x, int y)
         const int hp_percent =
             (you.hp * 100) / (max_max_hp ? max_max_hp : you.hp);
 
-        for ( unsigned int i = 0; i < Options.hp_colour.size(); ++i )
-            if ( hp_percent <= Options.hp_colour[i].first )
+        for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
+            if (hp_percent <= Options.hp_colour[i].first)
                 hp_colour = Options.hp_colour[i].second;
     }
 
@@ -1751,11 +1751,11 @@ static std::vector<formatted_string> _get_overview_stats()
     column_composer cols1(4, 18, 28, 40);
 
     if (!player_rotted())
-        snprintf(buf, sizeof buf, "HP %3d/%d",you.hp,you.hp_max);
+        snprintf(buf, sizeof buf, "HP %3d/%d", you.hp, you.hp_max);
     else
     {
         snprintf(buf, sizeof buf, "HP %3d/%d (%d)",
-                 you.hp, you.hp_max, you.hp_max + player_rotted() );
+                 you.hp, you.hp_max, get_real_hp(true, true) );
     }
     cols1.add_formatted(0, buf, false);
 

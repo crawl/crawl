@@ -398,6 +398,7 @@ void deflate_hp(int new_level, bool floor);
  * *********************************************************************** */
 void set_hp(int new_amount, bool max_too);
 
+int get_real_hp(bool trans, bool rotted = false);
 
 /* ***********************************************************************
  * called from: it_use3 - newgame

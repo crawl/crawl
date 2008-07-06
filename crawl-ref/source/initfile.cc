@@ -420,14 +420,18 @@ static unsigned curses_attribute(const std::string &field)
         int col = field.find(":");
         int colour = str_to_colour(field.substr(col + 1));
         if (colour == -1)
+        {
             crawl_state.add_startup_error(
                 make_stringf("Bad highlight string -- %s\n", field.c_str()));
+        }
         else
             return CHATTR_HILITE | (colour << 8);
     }
     else if (field != "none")
+    {
         crawl_state.add_startup_error(
             make_stringf( "Bad colour -- %s\n", field.c_str() ) );
+    }
     return CHATTR_NORMAL;
 }
 
@@ -2034,7 +2038,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else CURSES_OPTION(neutral_brand);
     else CURSES_OPTION(stab_brand);
     else CURSES_OPTION(may_stab_brand);
-    else CURSES_OPTION_NAMED("stair_item_brand", feature_item_brand);
+    else CURSES_OPTION(feature_item_brand);
     else CURSES_OPTION(trap_item_brand);
     // This is useful for terms where dark grey does
     // not have standout modes (since it's black on black).

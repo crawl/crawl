@@ -8,7 +8,7 @@
  *                      because there are in numerical order.  But I'm too lazy to
  *                      do it myself.
  *
- *  Copyright © 1999 Brian Robinson.  // Me?  How come?
+ *  Copyright ï¿½ 1999 Brian Robinson.  // Me?  How come?
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
  *
@@ -262,7 +262,7 @@ const int LABYRINTH_BORDER = 4;
     #define COLFLAG_WILLSTAB                 0x0400
     #define COLFLAG_MAYSTAB                  0x0800
     #define COLFLAG_ITEM_HEAP                0x1000
-    #define COLFLAG_STAIR_ITEM               0x2000
+    #define COLFLAG_FEATURE_ITEM             0x2000
     #define COLFLAG_TRAP_ITEM                0x4000
     #define COLFLAG_REVERSE                  0x8000
     #define COLFLAG_MASK                     0xFF00

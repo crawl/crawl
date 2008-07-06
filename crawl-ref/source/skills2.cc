@@ -2188,43 +2188,7 @@ void init_skill_order( void )
 
 int calc_hp(bool real_hp)
 {
-    int hitp;
-
-    hitp = (you.base_hp - 5000) + (you.base_hp2 - 5000);
-    hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 5;
-
-    // being berserk makes you resistant to damage. I don't know why.
-    if (you.duration[DUR_BERSERKER] && !real_hp)
-    {
-        hitp *= 15;
-        hitp /= 10;
-    }
-
-    if (!real_hp)
-    {
-        // some transformations give you extra hp
-        switch (you.attribute[ATTR_TRANSFORMATION])
-        {
-        case TRAN_STATUE:
-            hitp *= 15;
-            hitp /= 10;
-            break;
-        case TRAN_ICE_BEAST:
-            hitp *= 12;
-            hitp /= 10;
-            break;
-        case TRAN_DRAGON:
-            hitp *= 16;
-            hitp /= 10;
-            break;
-        }
-    }
-
-    // frail and robust mutations, and divine robustness
-    hitp *= (10 + player_mutation_level(MUT_ROBUST)
-                + you.attribute[ATTR_DIVINE_ROBUSTNESS]
-                - player_mutation_level(MUT_FRAIL));
-    hitp /= 10;
+    int hitp = get_real_hp(!real_hp, false);
 
     you.hp_max = hitp;
 

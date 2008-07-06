@@ -319,7 +319,7 @@ static unsigned _colflag2brand(int colflag)
         return (Options.stab_brand);
     case COLFLAG_MAYSTAB:
         return (Options.may_stab_brand);
-    case COLFLAG_STAIR_ITEM:
+    case COLFLAG_FEATURE_ITEM:
         return (Options.feature_item_brand);
     case COLFLAG_TRAP_ITEM:
         return (Options.trap_item_brand);
@@ -398,7 +398,7 @@ static bool _show_bloodcovered(int x, int y)
 
     dungeon_feature_type grid = grd[x][y];
 
-    // altars, stairs (of any kind) and traps should not be coloured red
+    // Altars, stairs (of any kind) and traps should not be coloured red.
     return (!is_critical_feature(grid) && !grid_is_trap(grid));
 }
 
@@ -653,11 +653,10 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
         tc = feature_colour;
 
     if (Options.feature_item_brand
-        && (is_stair(grid_value) || grid_altar_god(grid_value) != GOD_NO_GOD
-            || grid_value == DNGN_ENTER_SHOP || grid_is_portal(grid_value))
+        && is_critical_feature(grid_value)
         && igrd[x][y] != NON_ITEM)
     {
-        tc |= COLFLAG_STAIR_ITEM;
+        tc |= COLFLAG_FEATURE_ITEM;
     }
     else if (Options.trap_item_brand
              && grid_is_trap(grid_value) && igrd[x][y] != NON_ITEM)
@@ -758,9 +757,10 @@ int get_mons_colour(const monsters *mons)
     else if (mons_is_stationary(mons))
     {
         if (Options.feature_item_brand != CHATTR_NORMAL
+            && is_critical_feature(grd(mons->pos()))
             && grid_stair_direction(grd(mons->pos())) != CMD_NO_CMD)
         {
-            col |= COLFLAG_STAIR_ITEM;
+            col |= COLFLAG_FEATURE_ITEM;
         }
         else if (Options.heap_brand != CHATTR_NORMAL
                  && igrd(mons->pos()) != NON_ITEM)
@@ -1343,13 +1343,13 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
     unsigned short &ecol = env.show_col(ep);
 
     const dungeon_feature_type grid = grd(gp);
-    if (Options.feature_item_brand && is_stair(grid))
-        ecol |= COLFLAG_STAIR_ITEM;
+    if (Options.feature_item_brand && is_critical_feature(grid))
+        ecol |= COLFLAG_FEATURE_ITEM;
     else if (Options.trap_item_brand && grid_is_trap(grid))
         ecol |= COLFLAG_TRAP_ITEM;
     else
     {
-        ecol = (grid == DNGN_SHALLOW_WATER)? CYAN : eitem.colour;
+        ecol = (grid == DNGN_SHALLOW_WATER) ? CYAN : eitem.colour;
         if (eitem.link != NON_ITEM)
             ecol |= COLFLAG_ITEM_HEAP;
         env.show(ep) = _get_item_dngn_code( eitem );
