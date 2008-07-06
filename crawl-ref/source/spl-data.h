@@ -960,7 +960,7 @@
 {
     SPELL_BURN, "Burn", // used by wanderers
      SPTYP_FIRE,
-     SPFLAG_DIR,
+     SPFLAG_DIR | SPFLAG_NOT_SELF,
      1,
      25,
      NULL,
@@ -971,7 +971,7 @@
 {
     SPELL_FREEZE, "Freeze",
      SPTYP_ICE,
-     SPFLAG_DIR,
+     SPFLAG_DIR | SPFLAG_NOT_SELF,
      1,
      25,
      NULL,
@@ -1763,7 +1763,7 @@
 {
     SPELL_ARC, "Arc",
      SPTYP_AIR,
-     SPFLAG_DIR,
+     SPFLAG_DIR | SPFLAG_NOT_SELF,
      1,
      25,
      NULL,
