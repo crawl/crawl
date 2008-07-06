@@ -733,7 +733,7 @@ static int _healing_spell(int healed, int target_x = -1, int target_y = -1)
         mprf("You heal %s.", monster->name(DESC_NOCAP_THE).c_str());
 
         if (monster->hit_points == monster->max_hit_points)
-            simple_monster_message( monster, " is completely healed." );
+            simple_monster_message(monster, " is completely healed.");
         else
         {
             const monsters *mons = static_cast<const monsters*>(monster);

@@ -883,7 +883,6 @@ bool vampiric_drain(int pow, const dist &vmove)
 
 char burn_freeze(int pow, beam_type flavour)
 {
-    int mgr = NON_MONSTER;
     dist spd;
 
     pow = std::min(25, pow);
@@ -903,7 +902,7 @@ char burn_freeze(int pow, beam_type flavour)
         return (-1);
     }
 
-    mgr = mgrd[you.x_pos + spd.dx][you.y_pos + spd.dy];
+    const int mgr = mgrd[you.x_pos + spd.dx][you.y_pos + spd.dy];
 
     // Yes, this is strange, but it does maintain the original
     // behaviour.  Possibly to avoid giving information about invisible
