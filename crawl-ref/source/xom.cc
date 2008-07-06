@@ -867,6 +867,7 @@ static bool _xom_is_bad(int sever)
             }
             else
             {
+                // XXX: Can we clean up this ugliness, please?
                 const int numdemons =
                     std::min(random2(random2(random2(sever+1)+1)+1)+1, 14);
 
