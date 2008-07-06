@@ -3193,7 +3193,19 @@ static void _world_reacts()
         _check_banished();
     }
     else
+    {
+        const long old_synch_time = you.synch_time;
         you.synch_time -= you.time_taken;
+
+        // Call spawn_random_monsters() more often than the rest of
+        // handle_time() so the spawning rates work out correctly.
+        if (old_synch_time >= 150 && you.synch_time < 150
+            || old_synch_time >= 100 && you.synch_time < 100
+            || old_synch_time >= 50 && you.synch_time < 50)
+        {
+            spawn_random_monsters();
+        }
+    }
 
     manage_clouds();
 

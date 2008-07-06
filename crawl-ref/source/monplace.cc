@@ -202,13 +202,14 @@ static void _hell_spawn_random_monsters()
     // Monster generation in the Vestibule drops off quickly.
     const int taper_off_turn = 500;
     int genodds = 240;
+    // genodds increases once you've spent more than 500 turns in Hell.
     if (env.turns_on_level > taper_off_turn)
     {
         genodds += (env.turns_on_level - taper_off_turn);
         genodds  = (genodds < 0 ? 20000 : std::min(genodds, 20000));
     }
 
-    if (one_chance_in(genodds))
+    if (x_chance_in_y(5, genodds))
     {
         mgen_data mg(WANDERING_MONSTER);
         mg.proximity = (one_chance_in(10) ? PROX_NEAR_STAIRS
@@ -219,6 +220,11 @@ static void _hell_spawn_random_monsters()
 }
 
 //#define DEBUG_MON_CREATION
+
+// This function is now only called about once every 5 turns. (Used to be
+// every turn independent of how much time an action took, which was not ideal.)
+// To arrive at spawning rates close to how they used to be, replace the
+// one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
 void spawn_random_monsters()
 {
 #ifdef DEBUG_MON_CREATION
@@ -233,7 +239,7 @@ void spawn_random_monsters()
     // Place normal dungeon monsters,  but not in player LOS.
     if (you.level_type == LEVEL_DUNGEON
         && !player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
-        && one_chance_in((you.char_direction == GDT_DESCENDING) ? 240 : 8))
+        && x_chance_in_y(5, (you.char_direction == GDT_DESCENDING) ? 240 : 8))
     {
 #ifdef DEBUG_MON_CREATION
         mpr("Create wandering monster...", MSGCH_DIAGNOSTICS);
@@ -252,8 +258,10 @@ void spawn_random_monsters()
         return;
     }
 
-    // Place Abyss monsters.
-    if (you.level_type == LEVEL_ABYSS && one_chance_in(5))
+    // Place Abyss monsters. (Now happens regularly every 5 turns which might
+    // look a bit strange for a place as chaotic as the Abyss. Then again,
+    // the player is unlikely to meet all of them and notice this.)
+    if (you.level_type == LEVEL_ABYSS)
     {
         mons_place(mgen_data(WANDERING_MONSTER));
         viewwindow(true, false);
@@ -261,7 +269,7 @@ void spawn_random_monsters()
     }
 
     // Place Pandemonium monsters.
-    if (you.level_type == LEVEL_PANDEMONIUM && one_chance_in(50))
+    if (you.level_type == LEVEL_PANDEMONIUM && one_chance_in(10))
     {
         pandemonium_mons();
         viewwindow(true, false);
