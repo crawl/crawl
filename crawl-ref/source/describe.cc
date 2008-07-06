@@ -2737,7 +2737,7 @@ const char *divine_title[NUM_GODS][8] =
      "Agent of Entropy",   "Schismatic",            "Envoy of Void",            "Corrupter of Planes"},
 
     //  Beogh -- messiah theme
-    {"Apostate",           "Messenger",             "Proselytizer",             "Priest",
+    {"Apostate",           "Messenger",             "Proselytiser",             "Priest",
      "Missionary",         "Evangelist",            "Apostle",                  "Messiah"}
 };
 

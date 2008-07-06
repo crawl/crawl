@@ -67,7 +67,7 @@ const char *skills[50][6] =
     {"Axes",           "Chopper",       "Cleaver",         "Hacker",          "Severer",        "Executioner"},
     {"Maces & Flails", "Cudgeler",      "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher"},       //  5
     {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Genus@ Porcupine"},
-    {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulverizer",     "Chief of Staff"},
+    {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff"},
     {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Genus@ Catapult"},
     {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry %s"},
     {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Genus@ Arbalest"},   // 10
