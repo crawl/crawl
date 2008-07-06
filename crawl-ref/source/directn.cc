@@ -554,7 +554,7 @@ void direction(dist& moves, targeting_type restricts,
         // We'll live with that.
         if ( !just_looking && (show_prompt || beh->should_redraw()) )
         {
-            mprf(MSGCH_PROMPT, "%s (%s)", prompt? prompt : "Aim",
+            mprf(MSGCH_PROMPT, "%s (%s)", prompt ? prompt : "Aim",
                  target_mode_help_text(restricts));
 
             if ((mode == TARG_ANY || mode == TARG_FRIEND)

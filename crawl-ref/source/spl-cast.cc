@@ -1013,20 +1013,20 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         const char *prompt = get_spell_target_prompt(spell);
         if (spell == SPELL_EVAPORATE)
         {
-            potion = prompt_invent_item( "Throw which potion?",
-                                         MT_INVLIST, OBJ_POTIONS );
+            potion = prompt_invent_item("Throw which potion?",
+                                        MT_INVLIST, OBJ_POTIONS);
             if (potion == -1)
                 return (SPRET_ABORT);
             else if (you.inv[potion].base_type != OBJ_POTIONS)
             {
-                mpr( "This spell works only on potions!" );
+                mpr("This spell works only on potions!");
                 return (SPRET_ABORT);
             }
             mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
                                you.inv[potion].name(DESC_NOCAP_YOUR).c_str());
         }
         else if (dir == DIR_DIR)
-            mpr(prompt? prompt : "Which direction? ", MSGCH_PROMPT);
+            mpr(prompt ? prompt : "Which direction? ", MSGCH_PROMPT);
 
         const bool needs_path = (!testbits(flags, SPFLAG_GRID)
                                  && !testbits(flags, SPFLAG_TARGET));
@@ -1034,7 +1034,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         if (!spell_direction(spd, beam, dir, targ, needs_path, true, prompt))
             return (SPRET_ABORT);
 
-        if (testbits( flags, SPFLAG_NOT_SELF ) && spd.isMe)
+        if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe)
         {
             if (spell == SPELL_TELEPORT_OTHER || spell == SPELL_HEAL_OTHER
                 || spell == SPELL_POLYMORPH_OTHER || spell == SPELL_BANISHMENT)
@@ -1132,7 +1132,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     }
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Spell #%d, power=%d", spell, powc );
+    mprf(MSGCH_DIAGNOSTICS, "Spell #%d, power=%d", spell, powc);
 #endif
 
     const god_type god =
