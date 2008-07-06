@@ -1935,11 +1935,11 @@ void debug_item_scan( void )
             _dump_item( name, i, mitm[i] );
         }
         else if ((mitm[i].base_type == OBJ_WEAPONS
-                 && (abs(mitm[i].plus) > 30
-                    || abs(mitm[i].plus2) > 30
-                    || !is_random_artefact( mitm[i] )
-                       && mitm[i].special >= 30
-                       && mitm[i].special < 181))
+                    && (abs(mitm[i].plus) > 30
+                        || abs(mitm[i].plus2) > 30
+                        || !is_random_artefact( mitm[i] )
+                           && mitm[i].special >= 30
+                           && mitm[i].special < 181))
 
                  || (mitm[i].base_type == OBJ_MISSILES
                      && (abs(mitm[i].plus) > 25

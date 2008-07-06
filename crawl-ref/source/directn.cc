@@ -1066,8 +1066,6 @@ void direction(dist& moves, targeting_type restricts,
             else if (moves.isValid || moves.isCancel
                      || yesno("Are you sure you want to fizzle?", false, 'n'))
             {
-                mpr("We're done.", MSGCH_DIAGNOSTICS);
-
                 // Finalize whatever is inside the loop
                 // (moves-internal finalizations can be done later).
                 moves.choseRay = show_beam;

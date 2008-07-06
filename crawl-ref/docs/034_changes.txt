@@ -33,8 +33,8 @@ them:
              (only available to some characters)
    Q         quiver an item for firing
 
-   There is a file called "keys.pdf" in the /docs directory. It should be
-   printable and contains a reference sheet for all keys used in Crawl.
+   There is a file called "key_changes.pdf" in the /docs directory that
+   lists all of these command changes on a printable reference sheet.
 
 * Removed the v command (view item in inventory). Its functionality is
    provided by pressing i (showing the inventory) and the letter for the

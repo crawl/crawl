@@ -2660,7 +2660,7 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
 
 std::string item_base_name(const item_def &item)
 {
-    switch ( item.base_type )
+    switch (item.base_type)
     {
     case OBJ_WEAPONS:
         return Weapon_prop[Weapon_index[item.sub_type]].name;

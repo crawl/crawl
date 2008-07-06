@@ -1309,11 +1309,13 @@ std::string randart_name(const item_def &item, bool appearance)
     std::string lookup;
     std::string result;
 
-    // use prefix of gifting god, if applicable
+    // Use prefix of gifting god, if applicable.
     bool god_gift = false;
     int item_orig = 0;
-    if (!appearance) // god prefix not necessary for appearance
+    if (!appearance)
     {
+        // Divine gifts don't look special, so this is only necessary
+        // for actually naming an item.
         item_orig = item.orig_monnum;
         if (item_orig < 0)
             item_orig = -item_orig - 2;
@@ -1351,7 +1353,7 @@ std::string randart_name(const item_def &item, bool appearance)
         result += appear;
         result += " ";
         result += item_base_name(item);
-        return result;
+        return (result);
     }
 
     if (_pick_db_name(item))
