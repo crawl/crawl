@@ -2282,7 +2282,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
     return (count_grids);
 }
 
-#define DEBUG_PATHFIND
+//#define DEBUG_PATHFIND
 
 // Check all grids in LoS and mark lava and/or water as seen if the
 // appropriate grids are encountered, so we later only need to do the

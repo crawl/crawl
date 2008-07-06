@@ -152,6 +152,7 @@ struct bolt
     bool        dont_stop_foe;   // stop_attack_prompt() returned false for foe
     bool        dont_stop_fr;    // stop_attack_prompt() returned false for
                                  // friend
+    bool        dont_stop_player; // player answered self target prompt with 'y'
 
     ray_def     ray;             // shoot on this specific ray
 

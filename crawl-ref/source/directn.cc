@@ -1057,15 +1057,17 @@ void direction(dist& moves, targeting_type restricts,
                     mpr("That would be overly suicidal.", MSGCH_EXAMINE_FILTER);
                 show_prompt = true;
             }
-            else if ( moves.isTarget && !see_grid(moves.tx, moves.ty) )
+            else if (moves.isTarget && !see_grid(moves.tx, moves.ty))
             {
                 mpr("Sorry, you can't target what you can't see.",
                     MSGCH_EXAMINE_FILTER);
             }
             // Ask for confirmation if we're quitting for some odd reason.
-            else if ( moves.isValid || moves.isCancel
-                      || yesno("Are you sure you want to fizzle?", false, 'n') )
+            else if (moves.isValid || moves.isCancel
+                     || yesno("Are you sure you want to fizzle?", false, 'n'))
             {
+                mpr("We're done.", MSGCH_DIAGNOSTICS);
+
                 // Finalize whatever is inside the loop
                 // (moves-internal finalizations can be done later).
                 moves.choseRay = show_beam;
@@ -1098,11 +1100,11 @@ void direction(dist& moves, targeting_type restricts,
         if (have_moved)
         {
             // If the target x,y has changed, the beam must have changed.
-            if ( show_beam )
+            if (show_beam)
                 need_beam_redraw = true;
 
-            if ( !skip_iter )   // don't clear before we get a chance to see
-                mesclr(true);   // maybe not completely necessary
+            if (!skip_iter)     // Don't clear before we get a chance to see.
+                mesclr(true);   // Maybe not completely necessary.
 
             terse_describe_square(moves.target());
         }
@@ -1125,13 +1127,14 @@ void direction(dist& moves, targeting_type restricts,
                 // Draw the new ray with magenta '*'s, not including
                 // your square or the target square.
                 ray_def raycopy = ray; // temporary copy to work with
-                while ( raycopy.pos() != moves.target() )
+                while (raycopy.pos() != moves.target())
                 {
-                    if ( raycopy.pos() != you.pos() )
+                    if (raycopy.pos() != you.pos())
                     {
                         // Sanity: don't loop forever if the ray is problematic
-                        if ( !in_los(raycopy.x(), raycopy.y()) )
+                        if (!in_los(raycopy.x(), raycopy.y()))
                             break;
+
                         draw_ray_glyph(raycopy.pos(), MAGENTA, '*',
                                        MAGENTA | COLFLAG_REVERSE);
                     }

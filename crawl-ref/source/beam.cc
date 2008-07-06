@@ -3629,8 +3629,15 @@ static int _affect_player( bolt &beam, item_def *item )
         // Check whether thrower can see player, unless thrower == player.
         if (YOU_KILL(beam.thrower))
         {
-            beam.fr_count += 1;
-            beam.fr_power += you.experience_level;
+            // Don't ask if we're aiming at ourselves.
+            if (!beam.aimed_at_feet && !beam.dont_stop_player
+                && !yesno("That beam is likely to hit yourself. Continue "
+                          "anyway?", false, 'n'))
+            {
+                beam.fr_count += 1;
+                beam.fr_power += you.experience_level;
+                beam.dont_stop_player = true;
+            }
         }
         else if (beam.can_see_invis || !you.invisible()
                  || _fuzz_invis_tracer(beam))
@@ -5638,7 +5645,8 @@ bolt::bolt() : range(0), rangeMax(0), type('*'),
                msg_generated(false), in_explosion_phase(false),
                smart_monster(false), can_see_invis(false),
                attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false),
-               beam_cancelled(false), dont_stop_foe(false), dont_stop_fr(false)
+               beam_cancelled(false), dont_stop_foe(false),
+               dont_stop_fr(false), dont_stop_player(false)
 {
 }
 

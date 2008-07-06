@@ -792,6 +792,7 @@ bool spell_direction( dist &spelld, bolt &pbolt,
 
     if (!spelld.isValid)
     {
+        mpr("Not valid after all?", MSGCH_DIAGNOSTICS);
         // Check for user cancel.
         canned_msg(MSG_OK);
         return (false);

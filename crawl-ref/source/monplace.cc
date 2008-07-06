@@ -261,7 +261,8 @@ void spawn_random_monsters()
     // Place Abyss monsters. (Now happens regularly every 5 turns which might
     // look a bit strange for a place as chaotic as the Abyss. Then again,
     // the player is unlikely to meet all of them and notice this.)
-    if (you.level_type == LEVEL_ABYSS)
+    if (you.level_type == LEVEL_ABYSS
+        && (you.char_direction != GDT_GAME_START || one_chance_in(10)))
     {
         mons_place(mgen_data(WANDERING_MONSTER));
         viewwindow(true, false);

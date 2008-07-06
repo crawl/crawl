@@ -219,6 +219,15 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
         }
     }
 
+    // During game start, number and level of items mustn't be higher than
+    // that on level 1.
+    int num_items = 150, items_level = 51;
+    if (you.char_direction == GDT_GAME_START)
+    {
+        num_items   = 3 + roll_dice( 3, 11 );
+        items_level = 0;
+    }
+
     for (int i = gx1; i <= gx2; i++)
         for (int j = gy1; j <= gy2; j++)
         {
@@ -226,7 +235,7 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
             {
                 grd[i][j] = DNGN_FLOOR;
 
-                if (items_placed < 150 && one_chance_in(200))
+                if (items_placed < num_items && one_chance_in(200))
                 {
                     if (!placed_abyssal_rune && abyssal_rune_roll != -1
                         && you.char_direction != GDT_GAME_START
@@ -241,19 +250,8 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
                     }
                     else
                     {
-                        if (you.char_direction == GDT_GAME_START)
-                        {
-                            // Number and level of items as that on level 1.
-                            const int num_items   = 3 + roll_dice( 3, 11 );
-                            const int items_level = 0;
-                            thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
-                                                  true, items_level, num_items);
-                        }
-                        else
-                        {
-                            thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
-                                                  true, 51, 250);
-                        }
+                        thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
+                                              true, items_level, 250);
                     }
 
                     move_item_to_grid( &thing_created, i, j );

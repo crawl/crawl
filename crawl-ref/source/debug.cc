@@ -1851,11 +1851,11 @@ void debug_item_scan( void )
             if (x == 0 && y == 0)
                 continue;
 
-            // Looking for infinite stacks (ie more links than tems allowed)
+            // Looking for infinite stacks (ie more links than items allowed)
             // and for items which have bad coordinates (can't find their stack)
             for (int obj = igrd[x][y]; obj != NON_ITEM; obj = mitm[obj].link)
             {
-                // Check for invalid (zero quantity) items that are linked in
+                // Check for invalid (zero quantity) items that are linked in.
                 if (!is_valid_item( mitm[obj] ))
                 {
                     mprf(MSGCH_ERROR, "Linked invalid item at (%d,%d)!", x, y);
@@ -1903,7 +1903,6 @@ void debug_item_scan( void )
 
             // Let's check to see if it's an errant monster object:
             for (int j = 0; j < MAX_MONSTERS; j++)
-            {
                 for (int k = 0; k < NUM_MONSTER_SLOTS; k++)
                 {
                     if (menv[j].inv[k] == i)
@@ -1913,7 +1912,6 @@ void debug_item_scan( void )
                              menv[j].x, menv[j].y );
                     }
                 }
-            }
         }
 
         // Current bad items of interest:
@@ -1937,21 +1935,21 @@ void debug_item_scan( void )
             _dump_item( name, i, mitm[i] );
         }
         else if ((mitm[i].base_type == OBJ_WEAPONS
-                && (abs(mitm[i].plus) > 30
+                 && (abs(mitm[i].plus) > 30
                     || abs(mitm[i].plus2) > 30
-                    || (!is_random_artefact( mitm[i] )
-                        && (mitm[i].special >= 30
-                            && mitm[i].special < 181))))
+                    || !is_random_artefact( mitm[i] )
+                       && mitm[i].special >= 30
+                       && mitm[i].special < 181))
 
-            || (mitm[i].base_type == OBJ_MISSILES
-                && (abs(mitm[i].plus) > 25
-                    || (!is_random_artefact( mitm[i] )
-                        && mitm[i].special >= 30)))
+                 || (mitm[i].base_type == OBJ_MISSILES
+                     && (abs(mitm[i].plus) > 25
+                         || !is_random_artefact( mitm[i] )
+                            && mitm[i].special >= 30))
 
-            || (mitm[i].base_type == OBJ_ARMOUR
-                && (abs(mitm[i].plus) > 25
-                    || (!is_random_artefact( mitm[i] )
-                        && mitm[i].special >= 30))))
+                 || (mitm[i].base_type == OBJ_ARMOUR
+                     && (abs(mitm[i].plus) > 25
+                         || !is_random_artefact( mitm[i] )
+                            && mitm[i].special >= 30)))
         {
             mpr( "Bad plus or special value:", MSGCH_ERROR );
             _dump_item( name, i, mitm[i] );
