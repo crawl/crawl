@@ -159,7 +159,7 @@ static bool _mark_detected_creature(int gridx, int gridy, const monsters *mon,
 
     bool found_good = false;
 
-    if (fuzz_radius && fuzz_chance > random2(100))
+    if (fuzz_radius && x_chance_in_y(fuzz_chance, 100))
     {
         const int fuzz_diam = 2 * fuzz_radius + 1;
 
@@ -1154,7 +1154,8 @@ bool cast_sticks_to_snakes(int pow, god_type god)
             if (one_chance_in(5 - std::min(4, div_rand_round(pow * 2, 25)))
                 || get_ammo_brand(you.inv[wpn]) == SPMSL_POISONED)
             {
-                mon = random2(100) < pow / 3 ? MONS_BROWN_SNAKE : MONS_SNAKE;
+                mon = x_chance_in_y(pow / 3, 100) ? MONS_BROWN_SNAKE
+                                                  : MONS_SNAKE;
             }
             else
                 mon = MONS_SMALL_SNAKE;
@@ -1518,17 +1519,18 @@ bool cast_summon_elemental(int pow, god_type god,
     // - Earth elementals are more static and easy to tame (as before).
     // - Fire elementals fall in between the two (10 is still fairly easy).
     const bool friendly = ((mon != MONS_FIRE_ELEMENTAL
-                            || random2(10) < you.skills[SK_FIRE_MAGIC])
+                            || x_chance_in_y(you.skills[SK_FIRE_MAGIC], 10))
 
                         && (mon != MONS_WATER_ELEMENTAL
-                            || random2((you.species == SP_MERFOLK) ? 5 : 15)
-                                  < you.skills[SK_ICE_MAGIC])
+                            || x_chance_in_y(you.skills[SK_ICE_MAGIC],
+                                             (you.species == SP_MERFOLK) ? 5
+                                                                         : 15))
 
                         && (mon != MONS_AIR_ELEMENTAL
-                            || random2(15) < you.skills[SK_AIR_MAGIC])
+                            || x_chance_in_y(you.skills[SK_AIR_MAGIC], 15))
 
                         && (mon != MONS_EARTH_ELEMENTAL
-                            || random2(5)  < you.skills[SK_EARTH_MAGIC])
+                            || x_chance_in_y(you.skills[SK_EARTH_MAGIC], 5))
 
                         && random2(100) >= unfriendly);
 

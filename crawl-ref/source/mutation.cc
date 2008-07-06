@@ -1633,8 +1633,9 @@ static bool accept_mutation(mutation_type mutat, bool ignore_rarity = false)
         return (true);
 
     const int rarity = mutation_defs[mutat].rarity + you.demon_pow[mutat];
+
     // Low rarity means unlikely to choose it.
-    return (rarity > random2(10));
+    return (x_chance_in_y(rarity, 10));
 }
 
 static mutation_type get_random_xom_mutation()
@@ -1687,7 +1688,7 @@ static mutation_type get_random_mutation(bool prefer_good,
 
         cweight += weight;
 
-        if (random2(cweight) < weight)
+        if (x_chance_in_y(weight, cweight))
             chosen = curr;
     }
     return (chosen);
@@ -1718,7 +1719,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         }
 
         // Zin's protection.
-        if (you.religion == GOD_ZIN && you.piety > random2(MAX_PIETY))
+        if (you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY))
         {
             simple_god_message(" protects your body from chaos!");
             return (false);
@@ -1781,7 +1782,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (which_mutation == RANDOM_MUTATION
         || which_mutation == RANDOM_XOM_MUTATION)
     {
-        if (random2(15) < how_mutated(false, true))
+        // If already heavily mutated, remove a mutation instead.
+        if (x_chance_in_y(how_mutated(false, true), 15))
         {
             // God gifts override mutation loss due to being heavily
             // mutated.

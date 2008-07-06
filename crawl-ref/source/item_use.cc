@@ -135,8 +135,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if (weapon->base_type != OBJ_WEAPONS)
         return (true);
 
-    if ((you.species < SP_OGRE || you.species > SP_OGRE_MAGE)
-            && item_mass( *weapon ) >= 300)
+    if (player_size(PSIZE_TORSO) < SIZE_LARGE && item_mass( *weapon ) >= 300)
     {
         SAY(mpr("That's too large and heavy for you to wield."));
         return (false);
@@ -164,8 +163,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
 
     int weap_brand = get_weapon_brand( *weapon );
     if ((you.is_undead || you.species == SP_DEMONSPAWN)
-        && (weap_brand == SPWPN_HOLY_WRATH
-            || is_blessed_blade(*weapon)))
+        && (weap_brand == SPWPN_HOLY_WRATH || is_blessed_blade(*weapon)))
     {
         SAY(mpr("This weapon will not allow you to wield it."));
         return (false);
@@ -376,10 +374,12 @@ static void warn_rod_shield_interference(const item_def &)
 
     // Any way to avoid the double entendre? :-)
     if (leak_degree)
+    {
         mprf(MSGCH_WARN,
                 "Your %s %sreduces the effectiveness of your rod.",
                 shield_base_name(player_shield()),
                 leak_degree);
+    }
 }
 
 static void warn_launcher_shield_slowdown(const item_def &launcher)
@@ -394,11 +394,14 @@ static void warn_launcher_shield_slowdown(const item_def &launcher)
     {
         const char *slow_degree =
             shield_impact_degree(slowspeed * 100 / normspeed);
+
         if (slow_degree)
+        {
             mprf(MSGCH_WARN,
                     "Your %s %sslows your rate of fire.",
                     shield_base_name(player_shield()),
                     slow_degree);
+        }
     }
 }
 
@@ -4285,7 +4288,7 @@ void read_scroll( int slot )
 
     // Imperfect vision prevents players from reading actual content {dlb}:
     if (player_mutation_level(MUT_BLURRY_VISION)
-        && random2(5) < player_mutation_level(MUT_BLURRY_VISION))
+        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 5))
     {
         mpr((player_mutation_level(MUT_BLURRY_VISION) == 3 && one_chance_in(3))
                         ? "This scroll appears to be blank."

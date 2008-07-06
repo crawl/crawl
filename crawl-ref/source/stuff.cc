@@ -866,30 +866,41 @@ bool one_chance_in(int a_million)
     return (random2(a_million) == 0);
 }
 
-// simple little function to quickly modify all three stats
+bool x_chance_in_y(int x, int y)
+{
+    if (x <= 0 || y <= 0)
+        return (false);
+
+    if (x >= y)
+        return (true);
+
+    return (random2(y) < x);
+}
+
+// Simple little function to quickly modify all three stats
 // at once - does check for '0' modifiers to prevent needless
 // adding .. could use checking for sums less than zero, I guess.
-// used in conjunction with newgame::species_stat_init() and
-// newgame::job_stat_init() routines 24jan2000 {dlb}
+// Used in conjunction with newgame::species_stat_init() and
+// newgame::job_stat_init() routines 24jan2000. {dlb}
 void modify_all_stats(int STmod, int IQmod, int DXmod)
 {
     if (STmod)
     {
-        you.strength += STmod;
+        you.strength     += STmod;
         you.max_strength += STmod;
         you.redraw_strength = true;
     }
 
     if (IQmod)
     {
-        you.intel += IQmod;
+        you.intel     += IQmod;
         you.max_intel += IQmod;
         you.redraw_intelligence = true;
     }
 
     if (DXmod)
     {
-        you.dex += DXmod;
+        you.dex     += DXmod;
         you.max_dex += DXmod;
         you.redraw_dexterity = true;
     }

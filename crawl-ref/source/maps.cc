@@ -376,7 +376,7 @@ int random_map_for_place(const level_id &place, bool want_minivault)
         {
             rollsize += vdefs[i].chance;
 
-            if (rollsize && random2(rollsize) < vdefs[i].chance)
+            if (rollsize && x_chance_in_y(vdefs[i].chance, rollsize))
                 mapindex = i;
         }
     }
@@ -417,7 +417,7 @@ int random_map_in_depth(const level_id &place, bool want_minivault)
         {
             rollsize += vdefs[i].chance;
 
-            if (rollsize && random2(rollsize) < vdefs[i].chance)
+            if (rollsize && x_chance_in_y(vdefs[i].chance, rollsize))
                 mapindex = i;
         }
 
@@ -444,7 +444,7 @@ int random_map_for_tag(const std::string &tag,
         {
             rollsize += vdefs[i].chance;
 
-            if (rollsize && random2(rollsize) < vdefs[i].chance)
+            if (rollsize && x_chance_in_y(vdefs[i].chance, rollsize))
                 mapindex = i;
         }
     }

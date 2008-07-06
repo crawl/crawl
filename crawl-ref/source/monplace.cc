@@ -205,7 +205,7 @@ static void _hell_spawn_random_monsters()
     if (env.turns_on_level > taper_off_turn)
     {
         genodds += (env.turns_on_level - taper_off_turn);
-        genodds = (genodds < 0 ? 20000 : std::min(genodds, 20000));
+        genodds  = (genodds < 0 ? 20000 : std::min(genodds, 20000));
     }
 
     if (one_chance_in(genodds))
@@ -538,7 +538,7 @@ static int _is_near_stairs(coord_def &p)
     return (result);
 }
 
-static bool _valid_monster_location(const mgen_data &mg, 
+static bool _valid_monster_location(const mgen_data &mg,
                                     const coord_def &mg_pos)
 {
     const int htype = (mons_class_is_zombified(mg.cls) ? mg.base_type

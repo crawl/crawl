@@ -1530,8 +1530,8 @@ static void _place_base_islands(int margin, int num_islands, int estradius,
         {
             centre_ok = true;
 
-            centres[i].x = a + random2(GXM-2*a-1);
-            centres[i].y = b + random2(GYM-2*b-1);
+            centres[i].x = a + random2(GXM - 2*a - 1);
+            centres[i].y = b + random2(GYM - 2*b - 1);
 
             for (int j = 0; j < i; ++j)
             {
@@ -1544,7 +1544,7 @@ static void _place_base_islands(int margin, int num_islands, int estradius,
                     break;
                 }
             }
-            if (random2(num_islands) && island_distance)
+            if (island_distance && !one_chance_in(num_islands))
                 --island_distance;
         }
         while (!centre_ok);
@@ -1589,27 +1589,27 @@ static void _prepare_shoals(int level_number)
 
     // Adding shallow water at deep water adjacent to floor.
     // Randomisation: place shallow water if at least 1d(1d3) floor neighbours
-    for ( int i = margin; i < GXM - margin; ++i)
-        for ( int j = margin; j < GYM - margin; ++j)
+    for (int i = margin; i < GXM - margin; ++i)
+        for (int j = margin; j < GYM - margin; ++j)
             if (grd[i][j] == DNGN_DEEP_WATER
                 && count_neighbours(i, j, DNGN_FLOOR) > random2(random2(3)+1))
             {
                 grd[i][j] = DNGN_SHALLOW_WATER;
             }
 
-    // Placing sandbanks
+    // Placing sandbanks.
     for (int banks = 0; banks < 8; ++banks)
     {
-        int xsize = 3+random2(3);  // random rectangle
-        int ysize = 3+random2(3);
+        int xsize = 3 + random2(3);  // random rectangle
+        int ysize = 3 + random2(3);
         int xb = random2(GXM - 2 * margin - 10) + margin + 2;
         int yb = random2(GYM - 2 * margin - 10) + margin + 2;
 
         bool ok_place = true;
-        for ( int i = xb; i < xb + xsize; ++i )
-            for ( int j = yb; j < yb + ysize; ++j )
+        for (int i = xb; i < xb + xsize; ++i)
+            for (int j = yb; j < yb + ysize; ++j)
             {
-                if ( grd[i][j] != DNGN_DEEP_WATER )
+                if (grd[i][j] != DNGN_DEEP_WATER)
                     ok_place = false;
             }
 
@@ -1639,7 +1639,7 @@ static void _prepare_shoals(int level_number)
                 if ( grd[x][y] == DNGN_DEEP_WATER )
                 {
                     int badness = count_neighbours(x, y, DNGN_WATER_STUCK);
-                    if ( random2(badness) >= 2 && coinflip() )
+                    if (random2(badness) >= 2 && coinflip())
                         grd[x][y] = DNGN_LAVA;
                 }
 
@@ -1770,7 +1770,8 @@ static void _prepare_water( int level_number )
                                 grd[i][j] = DNGN_SHALLOW_WATER;
                             }
                             else if (which_grid >= DNGN_FLOOR
-                                     && random2(100) < 80 - level_number * 4)
+                                     && x_chance_in_y(80 - level_number * 4,
+                                                      100))
                             {
                                 grd[i][j] = DNGN_SHALLOW_WATER;
                             }
@@ -2085,7 +2086,7 @@ static void _place_minivaults(const std::string &tag, int lo, int hi, bool force
     }
 
     int chance = you.your_level == 0? 50 : 100;
-    while (chance && random2(100) < chance || nvaults-- > 0)
+    while (chance && x_chance_in_y(chance, 100) || nvaults-- > 0)
     {
         const int vault = _dgn_random_map_for_place(true);
         if (vault == -1)
@@ -2223,7 +2224,8 @@ static builder_rc_type _builder_basic(int level_number)
     int doorlevel  = random2(11);
     int corrlength = 2 + random2(14);
     int roomsize   = 4 + random2(5) + random2(6);
-    int no_corr = (one_chance_in(100) ? 500 + random2(500) : 30 + random2(200));
+    int no_corr = (one_chance_in(100) ? 500 + random2(500)
+                                      : 30 + random2(200));
     int intersect_chance = (one_chance_in(20) ? 400 : random2(20));
 
     _make_trail( 35, 30, 35, 20, corrlength, intersect_chance, no_corr,
@@ -2287,7 +2289,7 @@ static builder_rc_type _builder_basic(int level_number)
         }
     }
 
-    // make some more rooms:
+    // Make some more rooms.
     no_rooms = 1 + random2(3);
     max_doors = 1;
 
@@ -2798,7 +2800,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
             && grid_is_solid(grd[sx-1][ry-1])
             && grid_is_solid(grd[sx-1][ry+1]))
         {
-            if (random2(10) < doorlevel)
+            if (x_chance_in_y(doorlevel, 10))
                 grd[sx-1][ry] = DNGN_CLOSED_DOOR;
         }
 
@@ -2807,7 +2809,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
             && grid_is_solid(grd[ex+1][ry-1])
             && grid_is_solid(grd[ex+1][ry+1]))
         {
-            if (random2(10) < doorlevel)
+            if (x_chance_in_y(doorlevel, 10))
                 grd[ex+1][ry] = DNGN_CLOSED_DOOR;
         }
     }
@@ -2820,7 +2822,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
             && grid_is_solid(grd[rx-1][sy-1])
             && grid_is_solid(grd[rx+1][sy-1]))
         {
-            if (random2(10) < doorlevel)
+            if (x_chance_in_y(doorlevel, 10))
                 grd[rx][sy-1] = DNGN_CLOSED_DOOR;
         }
 
@@ -2829,7 +2831,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
             && grid_is_solid(grd[rx-1][ey+1])
             && grid_is_solid(grd[rx+1][ey+1]))
         {
-            if (random2(10) < doorlevel)
+            if (x_chance_in_y(doorlevel, 10))
                 grd[rx][ey+1] = DNGN_CLOSED_DOOR;
         }
     }
@@ -5212,7 +5214,7 @@ static void _place_pool(dungeon_feature_type pool_type, unsigned char pool_x1,
     if (pool_x1 >= pool_x2 - 4 || pool_y1 >= pool_y2 - 4)
         return;
 
-    left_edge = pool_x1 + 2 + random2(pool_x2 - pool_x1);
+    left_edge  = pool_x1 + 2 + random2(pool_x2 - pool_x1);
     right_edge = pool_x2 - 2 - random2(pool_x2 - pool_x1);
 
     for (j = pool_y1 + 1; j < pool_y2 - 1; j++)
@@ -5980,7 +5982,7 @@ static char _plan_3()
             const int prev_ry2 = romy2[which_room - 1];
 
             join_the_dots( coord_def(rx1 + random2( rx2 - rx1 ),
-                                      ry1 + random2( ry2 - ry1 )),
+                                     ry1 + random2( ry2 - ry1 )),
                             coord_def(prev_rx1 + random2(prev_rx2 - prev_rx1),
                                       prev_ry1 + random2(prev_ry2 - prev_ry1)),
                             MMT_VAULT );
@@ -6010,7 +6012,7 @@ static char _plan_3()
                 const int prev_ry2 = romy2[i - 1];
 
                 join_the_dots( coord_def( rx1 + random2( rx2 - rx1 ),
-                                           ry1 + random2( ry2 - ry1 ) ),
+                                          ry1 + random2( ry2 - ry1 ) ),
                                 coord_def(
                                     prev_rx1 + random2( prev_rx2 - prev_rx1 ),
                                     prev_ry1 + random2( prev_ry2 - prev_ry1 ) ),
@@ -6904,8 +6906,8 @@ static void _big_room(int level_number)
 
         if (level_number > 7)
         {
-            type_floor = ((random2(level_number) < 14) ? DNGN_DEEP_WATER
-                                                       : DNGN_LAVA);
+            type_floor = (x_chance_in_y(14, level_number) ? DNGN_DEEP_WATER
+                                                          : DNGN_LAVA);
         }
 
         octa_room(sr, oblique, type_floor);
@@ -6923,8 +6925,8 @@ static void _big_room(int level_number)
 
     if (level_number > 7 && one_chance_in(4))
     {
-        type_floor = ((random2(level_number) < 14) ? DNGN_DEEP_WATER
-                                                   : DNGN_LAVA);
+        type_floor = (x_chance_in_y(14, level_number) ? DNGN_DEEP_WATER
+                                                      : DNGN_LAVA);
     }
 
     // Make the big room.
@@ -7032,15 +7034,15 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         _replace_area( rox1[i], roy1[i], rox2[i], roy2[i],
                        DNGN_ROCK_WALL, DNGN_FLOOR );
 
-        // inner room?
+        // Inner room?
         if (rox2[i] - rox1[i] > 5 && roy2[i] - roy1[i] > 5
-            && random2(100 - level_number) < 3)
+            && x_chance_in_y(3, 100 - level_number))
         {
             if (!one_chance_in(4))
             {
                 _box_room( rox1[i] + 2, rox2[i] - 2, roy1[i] + 2,
                            roy2[i] - 2, (coinflip() ? DNGN_STONE_WALL
-                                                       : DNGN_ROCK_WALL) );
+                                                    : DNGN_ROCK_WALL) );
             }
             else
             {
@@ -7078,17 +7080,17 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
             {
             case 0:
                 last_room = i - 1;
-                pos[0] = rox1[i];      // - 1;
-                pos[1] = roy1[i] + random2(roy2[i] - roy1[i]);
+                pos[0]  = rox1[i];      // - 1;
+                pos[1]  = roy1[i] + random2(roy2[i] - roy1[i]);
                 jpos[0] = rox2[last_room];      // + 1;
                 jpos[1] = roy1[last_room]
-                                + random2(roy2[last_room] - roy1[last_room]);
+                            + random2(roy2[last_room] - roy1[last_room]);
                 break;
 
             case 1:
                 last_room = i - 5;
-                pos[1] = roy1[i];      // - 1;
-                pos[0] = rox1[i] + random2(rox2[i] - rox1[i]);
+                pos[1]  = roy1[i];      // - 1;
+                pos[0]  = rox1[i] + random2(rox2[i] - rox1[i]);
                 jpos[1] = roy2[last_room];      // + 1;
                 jpos[0] = rox1[last_room]
                                 + random2(rox2[last_room] - rox1[last_room]);
@@ -7697,10 +7699,10 @@ bool dgn_region::overlaps(const map_mask &mask) const
 coord_def dgn_region::random_edge_point() const
 {
     return random2(size.x + size.y) < size.x ?
-              coord_def( pos.x + random2(size.x),
-                         coinflip()? pos.y : pos.y + size.y - 1 )
-            : coord_def( coinflip()? pos.x : pos.x + size.x - 1,
-                         pos.y + random2(size.y) );
+                  coord_def( pos.x + random2(size.x),
+                             coinflip()? pos.y : pos.y + size.y - 1 )
+                : coord_def( coinflip()? pos.x : pos.x + size.x - 1,
+                             pos.y + random2(size.y) );
 }
 
 coord_def dgn_region::random_point() const

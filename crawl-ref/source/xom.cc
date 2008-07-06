@@ -227,17 +227,17 @@ static object_class_type _get_unrelated_wield_class(object_class_type ref)
     object_class_type objtype = OBJ_WEAPONS;
     if (ref == OBJ_WEAPONS)
     {
-        if (random2(10))
-            objtype = OBJ_STAVES;
-        else
+        if (one_chance_in(10))
             objtype = OBJ_MISCELLANY;
+        else
+            objtype = OBJ_STAVES;
     }
     else if (ref == OBJ_STAVES)
     {
-        if (random2(10))
-            objtype = OBJ_WEAPONS;
-        else
+        if (one_chance_in(10))
             objtype = OBJ_MISCELLANY;
+        else
+            objtype = OBJ_WEAPONS;
     }
     else
     {
@@ -313,7 +313,7 @@ static bool _xom_annoyance_gift(int power)
             const object_class_type objtype =
                 _get_unrelated_wield_class(weapon->base_type);
 
-            if (power > random2(256))
+            if (x_chance_in_y(power, 256))
                 acquirement(objtype, GOD_XOM);
             else
                 _xom_make_item(objtype, OBJ_RANDOM, power * 3);
@@ -336,9 +336,8 @@ static bool _xom_gives_item(int power)
         // cloak or body armour.  Ha ha!
         god_speaks(GOD_XOM, _get_xom_speech("armour gift").c_str());
         _xom_make_item(OBJ_ARMOUR,
-                       random2(10) ?
-                           get_random_body_armour_type(you.your_level * 2)
-                       : ARM_CLOAK,
+                       one_chance_in(10) ? ARM_CLOAK :
+                                get_random_body_armour_type(you.your_level * 2),
                        power * 3);
         return (true);
     }
@@ -350,7 +349,7 @@ static bool _xom_gives_item(int power)
     // better than random object), and it is sometimes tuned to the
     // player's skills and nature.  Being tuned to the player's skills
     // and nature is not very Xomlike...
-    if (power > random2(256))
+    if (x_chance_in_y(power, 256))
     {
         // Random-type acquirement.
         const int r = random2(7);
@@ -465,6 +464,7 @@ static bool _xom_is_good(int sever)
     }
     else if (random2(sever) <= 3)
     {
+        // XXX: Can we clean up this ugliness, please?
         const int numdemons =
             std::min(random2(random2(random2(sever+1)+1)+1)+2, 16);
         int numdifferent = 0;

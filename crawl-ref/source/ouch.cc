@@ -233,7 +233,7 @@ int check_your_resists(int hurted, beam_type flavour)
         break;
 
     case BEAM_MIASMA:
-        if (player_prot_life() > random2(3))
+        if (x_chance_in_y(player_prot_life(), 3))
         {
             canned_msg(MSG_YOU_RESIST);
             hurted = 0;
@@ -398,8 +398,8 @@ void item_corrode( int itco )
         // {dlb}
         if (chance_corr >= 0 && chance_corr <= 4)
         {
-            it_resists = (random2(100) <
-                            2 + (4 << chance_corr) + (chance_corr * 8));
+            it_resists
+               = x_chance_in_y(2 + (4 << chance_corr) + chance_corr * 8, 100);
         }
         else
             it_resists = true;  // no idea how often this occurs {dlb}
@@ -497,7 +497,7 @@ static void _expose_invent_to_element(beam_type flavour, int strength)
 
             for (int j = 0; j < you.inv[i].quantity; ++j)
             {
-                if (random2(100) < strength)
+                if (x_chance_in_y(strength, 100))
                 {
                     num_dest++;
 

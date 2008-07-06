@@ -5954,10 +5954,10 @@ bool player::alive() const
 
 bool player::fumbles_attack(bool verbose)
 {
-    // fumbling in shallow water <early return>:
+    // Fumbling in shallow water.
     if (floundering())
     {
-        if (random2(dex) < 4 || one_chance_in(5))
+        if (x_chance_in_y(4, dex) || one_chance_in(5))
         {
             if (verbose)
                 mpr("Unstable footing causes you to fumble your attack.");
@@ -6008,9 +6008,9 @@ void player::attacking(actor *other)
             pet_target = monster_index(mon);
     }
 
-    if (mutation[MUT_BERSERK]
-        && (random2(100) < (mutation[MUT_BERSERK] * 10) - 5)
-            || _equipment_make_berserk())
+    if (player_mutation_level(MUT_BERSERK)
+            && x_chance_in_y(player_mutation_level(MUT_BERSERK) * 10 - 5, 100)
+        || _equipment_make_berserk())
     {
         go_berserk(false);
     }

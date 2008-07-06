@@ -330,10 +330,8 @@ int count_bits(unsigned int bits)
     int c = 0;
 
     for (n = 1; n < INT_MAX; n <<= 1)
-    {
         if (n & bits)
             c++;
-    }
 
     return (c);
 }
@@ -370,7 +368,7 @@ int apply_area_visible( int (*func) (int, int, int, int), int power,
     }
 
     return (rv);
-}                               // end apply_area_visible()
+}
 
 // Applies the effect to all nine squares around/including the target.
 // Returns summation of return values from passed in function.
@@ -381,15 +379,11 @@ int apply_area_square( int (*func) (int, int, int, int), int cx, int cy,
     int rv = 0;
 
     for (x = cx - 1; x <= cx + 1; x++)
-    {
         for (y = cy - 1; y <= cy + 1; y++)
-        {
             rv += func(x, y, power, 0);
-        }
-    }
 
     return (rv);
-}                               // end apply_area_square()
+}
 
 
 // Applies the effect to the eight squares beside the target.
@@ -401,7 +395,6 @@ int apply_area_around_square( int (*func) (int, int, int, int),
     int rv = 0;
 
     for (x = targ_x - 1; x <= targ_x + 1; x++)
-    {
         for (y = targ_y - 1; y <= targ_y + 1; y++)
         {
             if (x == targ_x && y == targ_y)
@@ -409,9 +402,9 @@ int apply_area_around_square( int (*func) (int, int, int, int),
             else
                 rv += func(x, y, power, 0);
         }
-    }
+
     return (rv);
-}                               // end apply_area_around_square()
+}
 
 // Effect up to max_targs monsters around a point, chosen randomly
 // Return varies with the function called;  return values will be added up.
@@ -425,14 +418,10 @@ int apply_random_around_square( int (*func) (int, int, int, int),
         return 0;
 
     if (max_targs >= 9 && !hole_in_middle)
-    {
         return (apply_area_square( func, targ_x, targ_y, power ));
-    }
 
     if (max_targs >= 8 && hole_in_middle)
-    {
         return (apply_area_around_square( func, targ_x, targ_y, power ));
-    }
 
     FixedVector< coord_def, 8 > targs;
     int count = 0;
@@ -525,7 +514,7 @@ int apply_random_around_square( int (*func) (int, int, int, int),
                 targs[ count - 1 ].x = x;
                 targs[ count - 1 ].y = y;
             }
-            else if (random2( count ) < max_targs)
+            else if (x_chance_in_y(max_targs, count))
             {
                 const int pick = random2( max_targs );
                 targs[ pick ].x = x;

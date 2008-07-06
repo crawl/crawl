@@ -1181,10 +1181,8 @@ bool cast_revivification(int pow)
 
         loss = 2;
         for (loopy = 0; loopy < 9; loopy++)
-        {
-            if (random2(pow) < 8)
+            if (x_chance_in_y(8, pow))
                 loss++;
-        }
 
         dec_max_hp(loss);
         set_hp(you.hp_max, false);
@@ -1242,7 +1240,8 @@ void cast_deaths_door(int pow)
         set_hp( allowed_deaths_door_hp(), false );
         deflate_hp( you.hp_max, false );
 
-        you.duration[DUR_DEATHS_DOOR] = 10 + random2avg(13, 3) + (random2(pow) / 10);
+        you.duration[DUR_DEATHS_DOOR] = 10 + random2avg(13, 3)
+                                           + (random2(pow) / 10);
 
         if (you.duration[DUR_DEATHS_DOOR] > 25)
             you.duration[DUR_DEATHS_DOOR] = 23 + random2(5);
@@ -1334,7 +1333,7 @@ void antimagic()
         if ( you.duration[dur_list[i]] > 1 )
             you.duration[dur_list[i]] = 1;
 
-    contaminate_player( -1 * (1+random2(5)));
+    contaminate_player( -1 * (1 + random2(5)));
 }                               // end antimagic()
 
 void extension(int pow)
@@ -1691,7 +1690,7 @@ bool cast_sure_blade(int power)
     }
 
     return (success);
-}                               // end cast_sure_blade()
+}
 
 void manage_fire_shield(void)
 {
@@ -1703,7 +1702,6 @@ void manage_fire_shield(void)
     char stx = 0, sty = 0;
 
     for (stx = -1; stx < 2; stx++)
-    {
         for (sty = -1; sty < 2; sty++)
         {
             if (sty == 0 && stx == 0)
@@ -1718,5 +1716,4 @@ void manage_fire_shield(void)
                              1 + random2(6), KC_YOU );
             }
         }
-    }
-}                               // end manage_fire_shield()
+}

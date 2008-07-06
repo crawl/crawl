@@ -291,7 +291,7 @@ static int _shatter_walls(int x, int y, int pow, int garbage)
         break;
     }
 
-    if (random2(100) < chance)
+    if (x_chance_in_y(chance, 100))
     {
         noisy(30, x, y);
 
@@ -1699,7 +1699,7 @@ void do_monster_rot(int mon)
 {
     int damage = 1 + random2(3);
 
-    if (mons_holiness(&menv[mon]) == MH_UNDEAD && random2(5))
+    if (mons_holiness(&menv[mon]) == MH_UNDEAD && !one_chance_in(5))
     {
         apply_area_cloud(make_a_normal_cloud, menv[mon].x, menv[mon].y,
                          10, 1, CLOUD_MIASMA, KC_YOU);
@@ -1815,7 +1815,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
             blast.colour = LIGHTGREY;
 
-            if (random2(50) < (pow / 5))        // potential insta-kill
+            if (x_chance_in_y(pow / 5, 50))        // potential insta-kill
             {
                 monster_die(&menv[mon], KILL_YOU, 0);
                 blast.damage.num = 4;

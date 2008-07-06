@@ -112,7 +112,7 @@ bool test_melee_hit(int to_hit, int ev)
 
     if (to_hit >= AUTOMATIC_HIT)
         return (true);
-    else if (random2(100) < MIN_HIT_MISS_PERCENTAGE)
+    else if (x_chance_in_y(MIN_HIT_MISS_PERCENTAGE, 100))
         margin = (coinflip() ? 1 : -1) * AUTOMATIC_HIT;
     else
     {
@@ -247,15 +247,17 @@ int calc_heavy_armour_penalty( bool random_factor )
         }
     }
 
-    // heavy armour modifiers for PARM_EVASION
+    // Heavy armour modifiers for PARM_EVASION.
     if (you.equip[EQ_BODY_ARMOUR] != -1)
     {
         const int ev_pen = property( you.inv[you.equip[EQ_BODY_ARMOUR]],
                                      PARM_EVASION );
 
-        if (ev_pen < 0 &&
-            maybe_random2(you.skills[SK_ARMOUR], random_factor) < abs(ev_pen))
+        if (ev_pen < 0 && maybe_random2(you.skills[SK_ARMOUR],
+                                        random_factor) < abs(ev_pen))
+        {
             heavy_armour += maybe_random2( abs(ev_pen), random_factor );
+        }
     }
 
     // ??? what is the reasoning behind this ??? {dlb}
@@ -273,14 +275,14 @@ int calc_heavy_armour_penalty( bool random_factor )
             heavy_armour /= 2;
         }
     }
-    return heavy_armour;
+    return (heavy_armour);
 }
 
 static bool player_fights_well_unarmed(int heavy_armour_penalty)
 {
     return (you.burden_state == BS_UNENCUMBERED
-            && random2(20) < you.skills[SK_UNARMED_COMBAT]
-            && random2(1 + heavy_armour_penalty) < 2);
+            && x_chance_in_y(you.skills[SK_UNARMED_COMBAT], 20)
+            && x_chance_in_y(2, 1 + heavy_armour_penalty));
 }
 
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,

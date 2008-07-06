@@ -89,7 +89,7 @@ static const monster_level_up *_monster_level_up_target( monster_type type,
         {
             const monsterentry *me = get_monster_data(mlup.after);
             if (static_cast<int>(me->hpdice[0]) == hit_dice
-                && random2(1000) < mlup.chance)
+                && x_chance_in_y(mlup.chance, 1000))
             {
                 return (&mlup);
             }

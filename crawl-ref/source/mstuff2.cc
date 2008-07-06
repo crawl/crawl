@@ -187,7 +187,8 @@ void mons_trap(monsters *monster)
         }
 
         if (random2(monster->ev) > 8
-            || trapKnown && intelligent_ally(monster) && random2(monster->ev) > 8)
+            || trapKnown && intelligent_ally(monster)
+               && random2(monster->ev) > 8)
         {
             if (monsterNearby && !simple_monster_message(monster,
                                            " avoids a huge, swinging blade."))
@@ -241,7 +242,8 @@ void mons_trap(monsters *monster)
         }
 
         if (random2(monster->ev) > 8
-            || trapKnown && intelligent_ally(monster) && random2(monster->ev) > 8)
+            || trapKnown && intelligent_ally(monster)
+               && random2(monster->ev) > 8)
         {
             if (monsterNearby && !simple_monster_message(monster,
                                  " nimbly jumps out of the way of a falling net."))
@@ -287,6 +289,7 @@ void mons_trap(monsters *monster)
                 mpr("The power of Zot is invoked against you!");
                 miscast_effect( SPTYP_RANDOM, 10 + random2(30),
                                 75 + random2(100), 0, "the power of Zot" );
+
                 return;         // early return {dlb}
             }
         }
@@ -301,8 +304,8 @@ void mons_trap(monsters *monster)
                 mpr("You hear a distant \"Zot\"!", MSGCH_SOUND);
         }
 
-        // determine trap effects upon monster, based upon
-        // whether it is naughty or nice to the player: {dlb}
+        // Determine trap effects upon monster, based upon
+        // whether it is naughty or nice to the player. {dlb}
 
         // NB: beem[].colour values are mislabeled as colours (?) -
         //     cf. mons_ench_f2() [which are also mislabeled] {dlb}
@@ -378,7 +381,7 @@ void mons_trap(monsters *monster)
 
             if (beem.colour == OBJ_MISSILES
                 && beem.type == MI_NEEDLE
-                && random2(100) < 50 - (3*monster->ac/2))
+                && x_chance_in_y(50 - (3 * monster->ac)/ 2, 100))
             {
                 apply_poison = true;
             }
@@ -400,8 +403,8 @@ void mons_trap(monsters *monster)
         if (apply_poison)
             poison_monster( monster, KC_OTHER );
 
-        // generate "fallen" projectile, where appropriate: {dlb}
-        if (random2(10) < 7)
+        // Generate "fallen" projectile, where appropriate. {dlb}
+        if (x_chance_in_y(7, 10))
         {
             beem.target_x = monster->x;
             beem.target_y = monster->y;

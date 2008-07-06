@@ -170,10 +170,10 @@ void special_wielded()
     case SPWLD_VARIABLE:
         do_uncurse_item( you.inv[wpn] );
 
-        if (random2(5) < 2)     // 40% chance {dlb}
+        if (x_chance_in_y(2, 5))     // 40% chance {dlb}
             you.inv[wpn].plus  += (coinflip() ? +1 : -1);
 
-        if (random2(5) < 2)     // 40% chance {dlb}
+        if (x_chance_in_y(2, 5))     // 40% chance {dlb}
             you.inv[wpn].plus2 += (coinflip() ? +1 : -1);
 
         if (you.inv[wpn].plus < -4)
@@ -206,14 +206,14 @@ void special_wielded()
         break;
 
     case SPWLD_POWER:
-        you.inv[wpn].plus = stepdown_value( -4 + (you.hp / 5), 4, 4, 4, 20 );
+        you.inv[wpn].plus  = stepdown_value( -4 + (you.hp / 5), 4, 4, 4, 20 );
         you.inv[wpn].plus2 = you.inv[wpn].plus;
         break;
 
     case SPWLD_OLGREB:
         // Giving Olgreb's staff a little lift since staves of poison have
         // been made better. -- bwr
-        you.inv[wpn].plus = you.skills[SK_POISON_MAGIC] / 3;
+        you.inv[wpn].plus  = you.skills[SK_POISON_MAGIC] / 3;
         you.inv[wpn].plus2 = you.inv[wpn].plus;
         break;
 
@@ -248,8 +248,6 @@ void special_wielded()
     {
         you.wield_change = true;
     }
-
-    return;
 }                               // end special_wielded()
 
 static bool _reaching_weapon_attack(const item_def& wpn)
@@ -310,7 +308,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         {
             const int skill = weapon_skill( wpn.base_type, wpn.sub_type );
 
-            if ((5 + (3 * skill)) > random2(40))
+            if (x_chance_in_y(5 + (3 * skill), 40))
             {
                 mpr("You reach to attack!");
                 success = you_attack(mgrd[beam.tx][beam.ty], false);
@@ -326,6 +324,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             mpr("You reach to attack!");
             success = you_attack(mgrd[beam.tx][beam.ty], false);
         }
+
         if (success)
         {
             int mid = mgrd[beam.tx][beam.ty];
@@ -353,7 +352,6 @@ static bool evoke_horn_of_geryon()
         mpr("You produce a weird and mournful sound.");
 
         for (int count_x = 0; count_x < GXM; count_x++)
-        {
             for (int count_y = 0; count_y < GYM; count_y++)
             {
                 if (grd[count_x][count_y] == DNGN_STONE_ARCH)
@@ -373,7 +371,6 @@ static bool evoke_horn_of_geryon()
                     }
                 }
             }
-        }
 
         if (rc)
             mpr("Your way has been unbarred.");
@@ -385,17 +382,17 @@ static bool evoke_horn_of_geryon()
             mgen_data(MONS_BEAST, BEH_HOSTILE,
                       4, you.pos(), MHITYOU));
     }
-    return rc;
+    return (rc);
 }
 
 static bool evoke_sceptre_of_asmodeus()
 {
     bool rc = true;
-    if ( one_chance_in(21) )
+    if (one_chance_in(21))
         rc = false;
-    else if (one_chance_in(2))
+    else if (coinflip())
     {
-        // summon devils, maybe a Fiend
+        // Summon devils, maybe a Fiend.
         const monster_type mtype = (one_chance_in(4) ? MONS_FIEND :
                                     summon_any_demon(DEMON_COMMON));
         const bool good_summon =
@@ -427,13 +424,13 @@ static bool evoke_sceptre_of_asmodeus()
     return (true);
 }
 
-// returns true if item successfully evoked.
+// Returns true if item successfully evoked.
 bool evoke_wielded()
 {
     int power = 0;
 
-    int pract = 0;
-    bool did_work = false;  // used for default "nothing happens" message
+    int pract = 0; // By how much Evocations is practised.
+    bool did_work = false;  // Used for default "nothing happens" message.
 
     const int wield = you.equip[EQ_WEAPON];
 
@@ -493,7 +490,7 @@ bool evoke_wielded()
                 break;
 
             case SPWPN_SCEPTRE_OF_ASMODEUS:
-                if ( evoke_sceptre_of_asmodeus() )
+                if (evoke_sceptre_of_asmodeus())
                 {
                     make_hungry(200, false, true);
                     did_work = true;
@@ -597,7 +594,7 @@ bool evoke_wielded()
     case OBJ_MISCELLANY:
         did_work = true; // easier to do it this way for misc items
 
-        if ( is_deck(wpn) )
+        if (is_deck(wpn))
         {
             evoke_deck(wpn);
             pract = 1;
@@ -647,7 +644,7 @@ bool evoke_wielded()
             break;
 
         case MISC_HORN_OF_GERYON:
-            if ( evoke_horn_of_geryon() )
+            if (evoke_horn_of_geryon())
                 pract = 1;
             break;
 
@@ -735,8 +732,8 @@ static bool ball_of_seeing(void)
 
     mpr("You gaze into the crystal ball.");
 
-    use = ((!you.duration[DUR_CONF]) ?
-           random2(you.skills[SK_EVOCATIONS] * 6) : random2(5));
+    use = (!you.duration[DUR_CONF] ? random2(you.skills[SK_EVOCATIONS] * 6)
+                                   : random2(5));
 
     if (use < 2)
     {
@@ -778,11 +775,11 @@ static bool disc_of_storms(void)
     const int fail_rate = (30 - you.skills[SK_EVOCATIONS]);
     bool ret = false;
 
-    if (player_res_electricity() || (random2(100) < fail_rate))
+    if (player_res_electricity() || x_chance_in_y(fail_rate, 100))
         canned_msg(MSG_NOTHING_HAPPENS);
-    else if (random2(100) < fail_rate)
+    else if (x_chance_in_y(fail_rate, 100))
         mpr("The disc glows for a moment, then fades.");
-    else if (random2(100) < fail_rate)
+    else if (x_chance_in_y(fail_rate, 100))
         mpr("Little bolts of electricity crackle over the disc.");
     else
     {
@@ -805,7 +802,7 @@ static bool disc_of_storms(void)
             beam.target_x = you.x_pos + random2(13) - 6;
             beam.target_y = you.y_pos + random2(13) - 6;
 
-            // non-controlleable
+            // Non-controlleable, so no player tracer.
             zapping( which_zap, 30 + you.skills[SK_EVOCATIONS] * 2, beam );
 
             disc_count--;
@@ -815,7 +812,7 @@ static bool disc_of_storms(void)
     }
 
     return (ret);
-}                               // end disc_of_storms()
+}
 
 void tome_of_power(int slot)
 {
@@ -833,7 +830,7 @@ void tome_of_power(int slot)
     set_ident_flags( you.inv[slot], ISFLAG_KNOW_TYPE );
 
     if (player_mutation_level(MUT_BLURRY_VISION) > 0
-        && random2(4) < player_mutation_level(MUT_BLURRY_VISION))
+        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 4))
     {
         mpr("The page is too blurry for you to read.");
         return;
@@ -842,27 +839,27 @@ void tome_of_power(int slot)
     mpr("You find yourself reciting the magical words!");
     exercise( SK_EVOCATIONS, 1 );
 
-    if ( random2(50) < 7 )
+    if (x_chance_in_y(7, 50))
     {
         mpr("A cloud of weird smoke pours from the book's pages!");
         big_cloud( random_smoke_type(), KC_YOU,
                    you.x_pos, you.y_pos, 20, 10 + random2(8) );
         xom_is_stimulated(16);
     }
-    else if ( random2(43) < 2 )
+    else if (x_chance_in_y(2, 43))
     {
         mpr("A cloud of choking fumes pours from the book's pages!");
         big_cloud(CLOUD_POISON, KC_YOU,
                   you.x_pos, you.y_pos, 20, 7 + random2(5));
         xom_is_stimulated(64);
     }
-    else if ( random2(41) < 2 )
+    else if (x_chance_in_y(2, 41))
     {
         mpr("A cloud of freezing gas pours from the book's pages!");
         big_cloud(CLOUD_COLD, KC_YOU, you.x_pos, you.y_pos, 20, 8 + random2(5));
         xom_is_stimulated(64);
     }
-    else if ( random2(39) < 3 )
+    else if (x_chance_in_y(3, 39))
     {
         if (one_chance_in(5))
         {
@@ -1035,7 +1032,7 @@ static bool ball_of_energy(void)
     {
         lose_stat(STAT_INTELLIGENCE, 1, false, "using a ball of energy");
     }
-    else if ((use < 4 && enough_mp(1, true))
+    else if (use < 4 && enough_mp(1, true)
              || you.magic_points == you.max_magic_points)
     {
         mpr( "You feel your power drain away!" );

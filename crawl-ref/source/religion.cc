@@ -2652,7 +2652,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             // use up the deck, and 80% on a card which does use up the
             // deck.
             int chance = 0;
-            switch(level)
+            switch (level)
             {
             case 0: chance = 0;   break;
             case 1: chance = 40;  break;
@@ -2661,7 +2661,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case 3: chance = 100; break;
             }
 
-            if (random2(100) < chance && you.attribute[ATTR_CARD_COUNTDOWN])
+            if (x_chance_in_y(chance, 100)
+                && you.attribute[ATTR_CARD_COUNTDOWN])
             {
                 you.attribute[ATTR_CARD_COUNTDOWN]--;
 #if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_GIFTS
@@ -3446,10 +3447,11 @@ static bool _zin_retribution()
     int punishment = random2(10);
 
     // if little mutated or can't unmutate, do something else instead
-    if (punishment < 2 && (how_mutated() <= random2(3)
-        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3))
+    if (punishment < 2
+        && (how_mutated() <= random2(3)
+            || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3))
     {
-        punishment = random2(8)+2;
+        punishment = random2(8) + 2;
     }
 
     switch (punishment)
@@ -3460,16 +3462,13 @@ static bool _zin_retribution()
         simple_god_message(" draws some chaos from your body!", god);
         bool success = false;
         for (int i = 0; i < 7; ++i)
-            if (random2(10) > i
-                && delete_mutation(RANDOM_GOOD_MUTATION))
-            {
+            if (x_chance_in_y(i, 10) && delete_mutation(RANDOM_GOOD_MUTATION))
                 success = true;
-            }
 
         if (success && !how_mutated())
         {
             simple_god_message(" rids your body of chaos!", god);
-            // lower penance a bit more for being particularly successful
+            // Lower penance a bit more for being particularly successful.
             dec_penance(god, 1);
         }
         break;

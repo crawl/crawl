@@ -2010,7 +2010,7 @@ static int crawl_random_element(lua_State *ls)
         if (rollsize > 0)
         {
             rollsize += this_weight;
-            if (random2(rollsize) < this_weight)
+            if (x_chance_in_y(this_weight, rollsize))
             {
                 lua_pushvalue(ls, key_idx);
                 lua_replace(ls, value_idx);

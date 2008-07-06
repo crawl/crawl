@@ -81,7 +81,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         mpr("You feel much better.");
 
         // only fix rot when healed to full
-        if ( you.hp == you.hp_max)
+        if (you.hp == you.hp_max)
         {
             unrot_hp( (2 + random2avg(5, 2)) / factor );
             set_hp(you.hp_max, false);
@@ -148,7 +148,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_mighty ? "mightier" : "very mighty");
 
-        if ( were_mighty )
+        if (were_mighty)
             contaminate_player(1, was_known);
         else
             modify_stat(STAT_STRENGTH, 5, true, "");
@@ -180,8 +180,8 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         break;
 
     case POT_LEVITATION:
-        mprf("You feel %s buoyant.",
-             (!player_is_airborne()) ? "very" : "more");
+        mprf("You feel %s buoyant.", !player_is_airborne() ? "very"
+                                                           : "more");
 
         if (!player_is_airborne())
             mpr("You gently float upwards from the floor.");
@@ -228,8 +228,8 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         break;
 
     case POT_INVISIBILITY:
-        mpr( (!you.duration[DUR_INVIS]) ? "You fade into invisibility!"
-             : "You fade further into invisibility." );
+        mpr(!you.duration[DUR_INVIS] ? "You fade into invisibility!"
+                                     : "You fade further into invisibility.");
 
         // Invisibility cancels backlight.
         you.duration[DUR_BACKLIGHT] = 0;
@@ -260,11 +260,14 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         break;
 
     case POT_DEGENERATION:
-        if ( pow == 40 )
+        if (pow == 40)
             mpr("There was something very wrong with that liquid!");
+
         if (lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)) / factor, false,
                       "drinking a potion of degeneration"))
+        {
             xom_is_stimulated(64 / factor);
+        }
         break;
 
     // Don't generate randomly - should be rare and interesting.
@@ -320,7 +323,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
             nothing_happens = false;
         }
 
-        // give a message if no message otherwise
+        // Give a message if no message otherwise.
         if (!restore_stat(STAT_ALL, 0, false) && nothing_happens)
             mpr( "You feel refreshed." );
         break;
@@ -331,7 +334,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
             mpr("You feel slightly irritated.");
             make_hungry(100, false);
         }
-        else if ( you.duration[DUR_BUILDING_RAGE] )
+        else if (you.duration[DUR_BUILDING_RAGE])
         {
             you.duration[DUR_BUILDING_RAGE] = 0;
             mpr("Your blood cools.");
@@ -346,7 +349,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
     case POT_CURE_MUTATION:
         mpr("It has a very clean taste.");
         for (int i = 0; i < 7; i++)
-            if (random2(10) > i)
+            if (x_chance_in_y(i, 10))
                 delete_mutation(RANDOM_MUTATION, false);
         break;
 
@@ -614,8 +617,6 @@ void unwear_armour(char unw)
 
     if (is_random_artefact( you.inv[unw] ))
         unuse_randart(unw);
-
-    return;
 }
 
 void unuse_randart(unsigned char unw)

@@ -888,7 +888,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
             const int weight = you.skills[i] + 1;
             count += weight;
 
-            if (random2(count) < weight)
+            if (x_chance_in_y(weight, count))
                 skill = i;
         }
 
@@ -909,7 +909,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
             if (wskill == SK_THROWING)
                 wskill = weapon_skill(OBJ_WEAPONS, i);
 
-            if (wskill == skill && random2(count += acqweight) < acqweight)
+            if (wskill == skill && x_chance_in_y(acqweight, count += acqweight))
                 type_wanted = i;
         }
     }
@@ -923,7 +923,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
             if (you.skills[i])
             {
                 count += you.skills[i];
-                if (random2(count) < you.skills[i])
+                if (x_chance_in_y(you.skills[i], count))
                     skill = i;
             }
         }
@@ -1309,10 +1309,10 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
                     while (you.had_book[type_wanted]);
                 }
 
-                // if the book is invalid find any valid one.
+                // If the book is invalid find any valid one.
                 while (book_rarity(type_wanted) == 100
-                                       || type_wanted == BOOK_DESTRUCTION
-                                       || type_wanted == BOOK_MANUAL)
+                       || type_wanted == BOOK_DESTRUCTION
+                       || type_wanted == BOOK_MANUAL)
                 {
                     type_wanted = random2(NUM_BOOKS);
                 }
@@ -1436,11 +1436,13 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
             case OBJ_MISCELLANY:
                 do
+                {
                     type_wanted = random2(NUM_MISCELLANY);
+                }
                 while (type_wanted == MISC_HORN_OF_GERYON
-                    || type_wanted == MISC_RUNE_OF_ZOT
-                    || type_wanted == MISC_CRYSTAL_BALL_OF_FIXATION
-                    || type_wanted == MISC_EMPTY_EBONY_CASKET);
+                       || type_wanted == MISC_RUNE_OF_ZOT
+                       || type_wanted == MISC_CRYSTAL_BALL_OF_FIXATION
+                       || type_wanted == MISC_EMPTY_EBONY_CASKET);
                 break;
             default:
                 break;
@@ -2210,7 +2212,7 @@ static void _hell_effects()
     else if (temp_rand > 7) // 10 in 27 odds {dlb}
     {
         // 60:40 miscast:summon split {dlb}
-        summon_instead = (random2(5) > 2);
+        summon_instead = x_chance_in_y(2, 5);
 
         switch (you.where_are_you)
         {
@@ -2486,11 +2488,11 @@ void handle_time(long time_delta)
     // about 1.5 points on average, so they can corrupt the player
     // quite quickly.  Wielding one for a short battle is OK, which is
     // as things should be.   -- GDL
-    if (you.duration[DUR_INVIS] && random2(10) < 6)
+    if (you.duration[DUR_INVIS] && x_chance_in_y(6, 10))
         added_contamination++;
 
     if (you.duration[DUR_HASTE] && !you.duration[DUR_BERSERKER]
-        && random2(10) < 6)
+        && x_chance_in_y(6, 10))
     {
         added_contamination++;
     }
@@ -2637,7 +2639,7 @@ void handle_time(long time_delta)
             break;
         }
 
-        if (random2(100) < total_skill)
+        if (x_chance_in_y(total_skill, 100))
         {
             item_def& item = you.inv[you.equip[EQ_WEAPON]];
 
@@ -3016,7 +3018,7 @@ void update_corpses(double elapsedTime)
     }
 
     int fountain_checks = static_cast<int>(elapsedTime / 1000.0);
-    if (random2(1000) < static_cast<int>(elapsedTime) % 1000)
+    if (x_chance_in_y(static_cast<int>(elapsedTime) % 1000, 1000))
         fountain_checks += 1;
 
     // dry fountains may start flowing again

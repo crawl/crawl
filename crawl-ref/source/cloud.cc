@@ -120,7 +120,7 @@ static void _dissipate_cloud(int cc, cloud_struct &cloud, int dissipate)
     // Apply calculated rate to the actual cloud.
     cloud.decay -= dissipate;
 
-    if (random2(100) < cloud.spread_rate)
+    if (x_chance_in_y(cloud.spread_rate, 100))
     {
         cloud.spread_rate -= div_rand_round(cloud.spread_rate, 10);
         cloud.decay       -= _spread_cloud(cloud);

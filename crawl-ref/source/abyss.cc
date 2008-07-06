@@ -735,7 +735,7 @@ static void _apply_corruption_effect( map_marker *marker, int duration)
 
     for (int i = 0; i < neffects; ++i)
     {
-        if (random2(4000) < cmark->duration
+        if (x_chance_in_y(cmark->duration, 4000)
             && !_spawn_corrupted_servant_near(cmark->pos))
         {
             break;

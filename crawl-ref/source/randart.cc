@@ -194,7 +194,7 @@ static std::string _replace_name_parts(const std::string name_in,
         std::string place;
         if (one_chance_in(5))
         {
-            switch(random2(8))
+            switch (random2(8))
             {
             case 0:
             case 1:
@@ -804,7 +804,7 @@ void static _get_randart_properties(const item_def &item,
     if (random2(15) >= power_level && aclass != OBJ_WEAPONS
         && (aclass != OBJ_JEWELLERY || atype != RING_SLAYING))
     {
-        // Weapons and rings of slaying can't get these
+        // Weapons and rings of slaying can't get these.
         if (one_chance_in(4 + power_level))  // to-hit
         {
             proprt[RAP_ACCURACY] = 1 + random2(3) + random2(2);
@@ -867,7 +867,7 @@ void static _get_randart_properties(const item_def &item,
         power_level++;
     }
 
-    if (random2(12) < power_level || power_level > 7)
+    if (x_chance_in_y(power_level, 12) || power_level > 7)
         done_powers = true;
 
     // res_elec
@@ -923,7 +923,7 @@ void static _get_randart_properties(const item_def &item,
         power_level++;
     }
 
-    if (random2(12) < power_level || power_level > 10)
+    if (x_chance_in_y(power_level, 12) || power_level > 10)
         done_powers = true;
 
     // turn invis
@@ -981,7 +981,7 @@ void static _get_randart_properties(const item_def &item,
     if (aclass == OBJ_ARMOUR)
         power_level -= 4;
 
-    if (power_level >= 2 && random2(17) < power_level)
+    if (power_level >= 2 && x_chance_in_y(power_level, 17))
     {
         switch (random2(9))
         {
@@ -1488,8 +1488,8 @@ bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
 
     if (!force)
     {
-        which = SPWPN_START_FIXEDARTS +
-            random2(SPWPN_START_NOGEN_FIXEDARTS - SPWPN_START_FIXEDARTS);
+        which = SPWPN_START_FIXEDARTS
+                + random2(SPWPN_START_NOGEN_FIXEDARTS - SPWPN_START_FIXEDARTS);
     }
 
     const unique_item_status_type status =

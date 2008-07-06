@@ -97,10 +97,9 @@ bool cast_selective_amnesia(bool force)
             mpr( "You don't know that spell." );
         else
         {
-            if (!force
-                 && (you.religion != GOD_SIF_MUNA
-                     && random2(you.skills[SK_SPELLCASTING])
-                         < random2(spell_difficulty( spell ))))
+            if (!force && you.religion != GOD_SIF_MUNA
+                && random2(you.skills[SK_SPELLCASTING])
+                    < random2(spell_difficulty( spell )))
             {
                 mpr("Oops! This spell sure is a blunt instrument.");
                 forget_map(20 + random2(50));
@@ -397,12 +396,10 @@ bool cast_sublimation_of_blood(int pow)
                     food += 15;
 
                 for (int loopy = 0; loopy < (you.hp > 1 ? 3 : 0); ++loopy)
-                {
-                    if (random2(pow) < 6)
+                    if (x_chance_in_y(6, pow))
                         dec_hp(1, false);
-                }
 
-                if (random2(pow) < 6)
+                if (x_chance_in_y(6, pow))
                     break;
             }
 
@@ -1196,9 +1193,9 @@ bool cast_summon_wraiths(int pow, god_type god)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     //jmf: Kiku sometimes deflects this
-    if (!(you.religion == GOD_KIKUBAAQUDGHA
-           && (!player_under_penance() && you.piety >= piety_breakpoint(3)
-           && you.piety > random2(MAX_PIETY))))
+    if (you.religion != GOD_KIKUBAAQUDGHA
+        || player_under_penance() || you.piety < piety_breakpoint(3)
+        || !x_chance_in_y(you.piety, MAX_PIETY))
     {
         disease_player(25 + random2(50));
     }

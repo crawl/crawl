@@ -374,7 +374,7 @@ static card_type _choose_from_archetype(const deck_archetype* pdeck,
     {
         const card_with_weights& cww = pdeck[i];
         totalweight += cww.weight[rarity];
-        if (random2(totalweight) < cww.weight[rarity])
+        if (x_chance_in_y(cww.weight[rarity], totalweight))
             result = cww.card;
     }
     return result;
@@ -820,7 +820,7 @@ bool deck_peek()
         already_seen++;
 
     // Always increase if seen 2, 50% increase if seen 1.
-    if (already_seen && random2(2) < already_seen)
+    if (already_seen && x_chance_in_y(already_seen, 2))
         deck.props["non_brownie_draws"]++;
 
     mprf("You draw two cards from the deck. They are: %s and %s.",
@@ -1197,12 +1197,13 @@ void evoke_deck( item_def& deck )
     if (you.penance[GOD_NEMELEX_XOBEH])
     {
         int c = 1;
-        if ( (flags & (CFLAG_MARKED | CFLAG_SEEN))
-             || props["num_marked"].get_byte() > 0 )
+        if ((flags & (CFLAG_MARKED | CFLAG_SEEN))
+            || props["num_marked"].get_byte() > 0)
         {
             c = 3;
         }
-        if (random2(3000) < c * you.penance[GOD_NEMELEX_XOBEH])
+
+        if (x_chance_in_y(c * you.penance[GOD_NEMELEX_XOBEH], 3000))
         {
             card_type old_card = card;
             card = _choose_from_archetype(deck_of_punishment, rarity);
@@ -1268,7 +1269,7 @@ void evoke_deck( item_def& deck )
     }
 
     if (!deck_gone && allow_id
-        && (you.skills[SK_EVOCATIONS] > 5 + random2(35)))
+        && you.skills[SK_EVOCATIONS] > 5 + random2(35))
     {
         mpr("Your skill with magical items lets you identify the deck.");
         set_ident_flags( deck, ISFLAG_KNOW_TYPE );
@@ -1292,11 +1293,11 @@ int get_power_level(int power, deck_rarity_type rarity)
     case DECK_RARITY_COMMON:
         break;
     case DECK_RARITY_LEGENDARY:
-        if (random2(500) < power)
+        if (x_chance_in_y(power, 500))
             ++power_level;
         // deliberate fall-through
     case DECK_RARITY_RARE:
-        if (random2(700) < power)
+        if (x_chance_in_y(power, 700))
             ++power_level;
         break;
     }
@@ -1434,8 +1435,8 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     if (you.religion == GOD_NEMELEX_XOBEH && !player_under_penance())
         nemelex_bonus = you.piety / 20;
 
-    int extra_targets = power_level + random2(you.skills[SK_EVOCATIONS] +
-                                              nemelex_bonus) / 12;
+    int extra_targets = power_level + random2(you.skills[SK_EVOCATIONS]
+                                              + nemelex_bonus) / 12;
 
     for (int i = 0; i < 1 + extra_targets; ++i)
     {
@@ -1588,7 +1589,7 @@ static int _drain_monsters(int x, int y, int pow, int garbage)
         {
             simple_monster_message(&mon, " is drained.");
 
-            if (random2(20) < pow/60)
+            if (x_chance_in_y(pow / 60, 20))
             {
                 mon.hit_dice--;
                 mon.experience = 0;
@@ -1805,7 +1806,7 @@ static void _helm_card(int power, deck_rarity_type rarity)
         {
             // If there are n left, of which we need to choose
             // k, we have chance k/n of selecting the next item.
-            if ( random2(4-i) < num_resists )
+            if (x_chance_in_y(num_resists, 4-i))
             {
                 // Add a temporary resistance.
                 you.duration[possible_resists[i]] += random2(power/7) + 1;
@@ -2171,9 +2172,10 @@ static void _sage_card(int power, deck_rarity_type rarity)
 
         if (you.skills[i] < MAX_SKILL_LEVEL)
         {
-            const int curweight = 1 + you.skills[i] * (40-you.skills[i]) * c;
+            // Choosing a skill is likelier if you are little skilled in it.
+            const int curweight = 1 + you.skills[i] * (40 - you.skills[i]) * c;
             totalweight += curweight;
-            if (random2(totalweight) < curweight)
+            if (x_chance_in_y(curweight, totalweight))
                 result = i;
         }
     }
@@ -2183,8 +2185,8 @@ static void _sage_card(int power, deck_rarity_type rarity)
     else
     {
         you.duration[DUR_SAGE] = random2(1800) + 200;
-        you.sage_bonus_skill = static_cast<skill_type>(result);
-        you.sage_bonus_degree = power / 25;
+        you.sage_bonus_skill   = static_cast<skill_type>(result);
+        you.sage_bonus_degree  = power / 25;
         mprf(MSGCH_PLAIN, "You feel studious about %s.", skill_name(result));
     }
 }
@@ -2275,7 +2277,8 @@ static void _water_card(int power, deck_rarity_type rarity)
 static void _glass_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
-    const int radius = (power_level == 2) ? 1000 : random2(power/40) + 2;
+    const int radius = (power_level == 2) ? 1000
+                                          : random2(power/40) + 2;
     vitrify_area(radius);
 }
 
@@ -2825,7 +2828,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         if (coinflip())
         {
             mprf("You have drawn %s.", card_name(which_card));
-            your_spells(SPELL_OLGREBS_TOXIC_RADIANCE,random2(power/4), false);
+            your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, random2(power/4), false);
         }
         else
             rc = _damaging_card(which_card, power, rarity);

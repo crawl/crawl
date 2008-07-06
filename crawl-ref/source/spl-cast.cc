@@ -795,7 +795,7 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
         if (you.skills[SK_SPELLCASTING] > relevant_skill)
             relevant_skill = you.skills[SK_SPELLCASTING];
 
-        if (random2(100) < relevant_skill)
+        if (x_chance_in_y(relevant_skill, 100))
             id_staff = true;
     }
     else if (relevant_skill >= 4)
