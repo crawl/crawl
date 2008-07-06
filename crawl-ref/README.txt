@@ -103,7 +103,7 @@ on Linux, Windows, OS/X  and, to a lesser extent, on DOS. The source should
 compile and run on any reasonably modern Unix.
 Stone Soup features both ASCII and graphical (Tiles) display.
 
-Crawl gladly and gratiously uses the following open-source packages:
+Crawl gladly and gratuitously uses the following open-source packages:
 * The Lua script language, see docs/lualicense.txt.
 * The PCRE library for regular expressions, see docs/pcre_license.txt.
 * The Mersenne Twister for random number generation, docs/mt19937.txt.
@@ -143,7 +143,7 @@ have added something, send the files to the list.
 You can look up the current monster descriptions in-game with '?/' or just read
 them in dat/descript/monsters.txt. The following conventions should be more or
 less obeyed: descriptions ought to contain flavour text, ideally pointing out
-major weaknesses/strenghts. No numbers, please. Citations are okay, but try to
+major weaknesses/strengths. No numbers, please. Citations are okay, but try to
 stay away from the most generic ones.
 If you like, you can similarly modify the descriptions for features, items or
 branches.
