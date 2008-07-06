@@ -3446,7 +3446,7 @@ static bool _zin_retribution()
     // angels/creeping doom theme
     int punishment = random2(10);
 
-    // if little mutated or can't unmutate, do something else instead
+    // If little mutated or can't unmutate, do something else instead.
     if (punishment < 2
         && (how_mutated() <= random2(3)
             || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3))
@@ -3457,12 +3457,12 @@ static bool _zin_retribution()
     switch (punishment)
     {
     case 0:
-    case 1: // remove good mutations (20%)
+    case 1: // Remove good mutations. (20%)
     {
         simple_god_message(" draws some chaos from your body!", god);
         bool success = false;
         for (int i = 0; i < 7; ++i)
-            if (x_chance_in_y(i, 10) && delete_mutation(RANDOM_GOOD_MUTATION))
+            if (random2(10) > i && delete_mutation(RANDOM_GOOD_MUTATION))
                 success = true;
 
         if (success && !how_mutated())
@@ -3475,7 +3475,7 @@ static bool _zin_retribution()
     }
     case 2:
     case 3:
-    case 4: // summon angels or bugs (pestilence) (30%)
+    case 4: // Summon angels or bugs (pestilence). (30%)
         if (random2(you.experience_level) > 7 && !one_chance_in(5))
         {
             const int how_many = 1 + (you.experience_level / 10) + random2(3);
