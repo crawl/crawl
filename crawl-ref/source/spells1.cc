@@ -685,8 +685,10 @@ static int _healing_spell(int healed, int target_x = -1, int target_y = -1)
 
     if (target_x == -1 || target_y == -1)
     {
-        spd.isValid = spell_direction(spd, beam, DIR_TARGET, TARG_ANY, true,
-                                      true, "Heal whom?");
+        spd.isValid = spell_direction(spd, beam, DIR_TARGET,
+                                      you.religion == GOD_ELYVILON ?
+                                          TARG_ANY : TARG_FRIEND,
+                                      true, true, "Heal whom?");
     }
     else
     {
@@ -697,7 +699,7 @@ static int _healing_spell(int healed, int target_x = -1, int target_y = -1)
 
     if (!spd.isValid)
     {
-        canned_msg( MSG_OK );
+        canned_msg(MSG_OK);
         return (0);
     }
 
