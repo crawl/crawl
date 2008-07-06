@@ -1,0 +1,111 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{palatino}
+\usepackage{mathpazo}           % optional [sc] fuer real small caps
+\usepackage[left=3cm,top=3cm,right=3cm,bottom=2cm,nohead,nofoot]{geometry}
+
+\usepackage{graphicx}
+
+\newcommand{\key}[1]{{{\texttt{\textbf{#1}}}}} % this does nasty things to underscores
+\newcommand{\sex}[1]{{{\textbf{#1}}}} % \sec already defined
+
+\newcommand{\crawl}{\textsc{Crawl}}
+\newcommand{\dungeon}{\textsc{Dungeon}}
+
+\newcommand{\spacecolumn}{\begin{minipage}[t]{2cm}\phantom{xxxx}\end{minipage}}
+\newcommand{\para}{\vspace{1.5ex}}
+\setlength{\parindent}{0em}
+
+\newcommand{\mc}[1]{\multicolumn{2}{l}{#1}}
+
+\newcounter{abccounter}
+\newenvironment{abcliste}{\begin{list}{(\alph{abccounter})}
+                      {\usecounter{abccounter}
+                       \setlength{\topsep}{0ex}
+                       \setlength{\partopsep}{0ex}
+                       \setlength{\listparindent}{0ex}
+                       \setlength{\itemsep}{0ex}
+                       \setlength{\parsep}{0ex}
+                       \setlength{\leftmargin}{2em}
+                       \setlength{\labelwidth}{2em}
+                       \setlength{\parskip}{0ex}
+                      }
+                      }{\end{list}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}\textbf{\LARGE
+\dungeon\ \crawl: Important changes in 0.4
+}\end{center}
+
+In DCSS 0.4, for better ergonomics, many key bindings were changed. Also,
+a small number of new commands were introduced. The tables below list all 
+of these. If you have been playing an older version and want to restore 
+the old key set, do so by adding this line to the 
+\texttt{init.txt} file: \\
+\texttt{additional\_macro\_file = 034\_command\_keys.txt} 
+
+\para
+
+The command for examining items (was \key{v}) is gone. Bring up the
+inventory and press the key matching an item's slot in order to examine it.
+
+When chopping up a single corpse on the ground, there is no longer any
+prompt. You will only be prompted if there are two or more corpses. When
+answering this prompt, you can use the following shortcuts: \key{c} means 
+yes, so you can press \key{cccc}\dots to chop up all corpses in one place,
+or you can just hit \key{a} to butcher of corpses on a square.
+
+The \key{* Direction} and \key{Ctrl-Direction} keys now both open and close
+doors.
+
+\para\para
+
+\begin{center}
+\begin{tabular}{lll}
+key          & new command \\ \hline
+\key{\_}     & \mc{read message (only used for online play)} \\
+\key{!}      & \mc{annotate level (read annotations with \key{Ctrl-O};} \\
+             & \mc{annotations with an ! prompt when entering the level)} \\
+\key{(}      & \mc{cycle ammunition} \\
+\key{Q}      & \mc{quiver item}      \\
+\key{`}      & \mc{redo previous command} \\
+\key{0}      & \mc{repeat next command} \\
+\key{Ctrl-T} & \mc{toggle ally pickup mode (only for permanent allies)} \\
+\key{Ctrl-D} & \mc{add macro (a new synonym for \key{$\sim$})} \\
+\\
+\\
+new key      & command          & old key \\ \hline
+\key{G}      & auto-travel      & was \key{Ctrl-G} \\
+\key{z}      & cast spell       & was \key{Z}      \\
+\key{Z}      & zap wand         & was \key{z}      \\
+\key{o}      & auto-explore     & was \key{Ctrl-O} \\
+\key{Ctrl-O} & dungeon overview\phantom{xxx} & was \key{O}      \\
+\key{O}      & open door        & was \key{o}      \\
+\key{C}      & close door       & was \key{c}      \\
+\key{c}      & chop up          & was \key{D}, dissect \\
+\key{E}      & show experience  & was \key{C}      \\
+\key{v}      & evoke            & was \key{E}      \\
+\key{F}      &  manually throw  & was \key{t}      \\
+\key{t}      & tell/yell        & was \key{!}      \\
+\key{Ctrl-V} & Tiles settings   & was \key{Ctrl-Q} \\
+\key{Ctrl-Q} & quit             & was \key{Q}
+\end{tabular}
+\end{center}
+
+There are additional changes to the targeting interface: \\
+The functions of \key{!} and \key{.} have been swapped. So firing with
+\key{.} will now stop at the target, whereas \key{!} will shoot further
+if the target was missed (and \key{Enter}, \key{Del}, \key{Space} still
+behave as in 0.3.4). \\
+You can now target using the monster list as well; \key{Ctrl-L} toggles
+this option.\\
+You may quiver an item, meaning that you will preferably fire this
+ammunition (and keep doing so even if you run out of it temporarily). 
+Quivering is done via \key{Q} (quiver the currently fired item) or 
+\key{fi} (choose an item and quiver it) or also by using \key{(} (cycling 
+appropriate ammunition) and then firing. \key{F} also lets you select an 
+item to be thrown, but this command does not affect the quiver.
+\end{document}

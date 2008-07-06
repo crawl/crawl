@@ -1,0 +1,146 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{palatino}
+\usepackage{mathpazo}           % optional [sc] fuer real small caps
+\usepackage[left=3cm,top=3cm,right=3cm,bottom=2cm,nohead,nofoot]{geometry}
+
+\usepackage{graphicx}
+
+\newcommand{\key}[1]{{{\texttt{\textbf{#1}}}}} % this does nasty things to underscores
+\newcommand{\sex}[1]{{{\textbf{#1}}}} % \sec already defined
+
+\newcommand{\crawl}{\textsc{Crawl}}
+\newcommand{\dungeon}{\textsc{Dungeon}}
+
+\newcommand{\spacecolumn}{\begin{minipage}[t]{2cm}\phantom{xxxx}\end{minipage}}
+\newcommand{\para}{\vspace{1.5ex}}
+\setlength{\parindent}{0em}
+
+\newcommand{\mc}[1]{\multicolumn{2}{l}{#1}}
+
+\newcounter{abccounter}
+\newenvironment{abcliste}{\begin{list}{(\alph{abccounter})}
+                      {\usecounter{abccounter}
+                       \setlength{\topsep}{0ex}
+                       \setlength{\partopsep}{0ex}
+                       \setlength{\listparindent}{0ex}
+                       \setlength{\itemsep}{0ex}
+                       \setlength{\parsep}{0ex}
+                       \setlength{\leftmargin}{2em}
+                       \setlength{\labelwidth}{2em}
+                       \setlength{\parskip}{0ex}
+                      }
+                      }{\end{list}}
+
+\pagestyle{empty}
+
+\begin{document}
+
+
+\begin{center}\textbf{\LARGE
+\dungeon\ \crawl: Files and Contact
+}\end{center}
+
+This is the reference sheet for the roguelike game \dungeon\ \crawl,
+specifically for the current version of the \textsc{Stone Soup} branch. 
+\crawl\ is a game of dungeon exploration, fighting and magic that is
+renowned for its intricate skills and religion systems. Success requires
+tactics, strategy, and perseverance. Though \crawl's reputation is 
+close to devilish, victories were reported\dots
+
+\para
+
+This page explains the various important files. The next page lists a 
+number of important changes introduced in version 0.4. The last two 
+pages give a very brief introduction to the game, which should be 
+enough to get you started. If you are completely new to this type of 
+game and still want to plunge right in, start up a new game and select 
+a tutorial (press \key{T} when asked for a species).
+
+\para\para
+
+\sex{The most important files}
+
+\para
+
+\begin{minipage}[t]{7cm}
+The file \key{crawl.exe} in \crawl's main folder starts the game.
+\\ \\
+The \sex{settings/} directory contains \key{init.txt}, the options file for
+\crawl\ (on linux systems there may also be a \key{.crawlrc} in your home
+directory). Since the defaults are well suited for playing, you can ignore
+these at first.
+\\
+This folder also contains \key{macro.txt}, a list of redefined key 
+bindings and macros. These make playing \crawl\ even more convenient. 
+You will probably not need to redefine key mappings until after you have
+spent some time playing the game.
+\end{minipage}
+%
+\spacecolumn
+%
+\begin{minipage}[t]{7cm}
+The following files in the \sex{docs/} directory may be helpful:
+\\
+\key{crawl\_manual.txt} is the full manual. It explains all races, classes, 
+item types etc. If you do not delight in manuals, you can put off the 
+reading this file until later. You can browse the manual while playing 
+(press \key{?}).
+\\
+\key{options\_guide.txt} describes all the options in minute detail. While
+tweaking these can improve your \crawl\ experience, you will probably prefer
+to skip this at first.
+\\
+\key{crawl\_macros.txt} explains macros and key bindings. You should probably
+ignore this at first, too.
+ % (Unless you experience serious problems with some keys, in which case should
+ % look at the keymaps section.)
+\end{minipage}
+
+\para\para
+
+\sex{Contact}
+
+\para
+	    
+If you have questions concerning the game, or think you have found a bug, 
+there are several places to contact the developers. First, there is the 
+newsgroup \key{rec.games.roguelike.misc}. Since other games are 
+discussed there as well, it is polite to flag your post with \key{-crawl-}.
+If you are not familiar with Usenet netiquette, you might want to check 
+that first, too.
+Also try to maintain netiquette to the benefit of your addresses.
+\\
+Next, you are encouraged to file bug reports and feature requests on the 
+\crawl\ homepage at \key{http://crawl-ref.sourceforge.net}. From there, you 
+can also download the most recent version (both binaries or source, for 
+Unix, Windows, OS X, and DOS).
+\\
+Finally, you can use the mailing list 
+\key{crawl-ref-discuss@lists.sourceforge.net}
+to discuss specific details of the game's design and implementation.
+
+\para \para
+
+\sex{Internet play}
+
+\para
+
+You can play \crawl\ online, both competing with other players and watching 
+them. Check the homepage \key{crawl.akrasiac.org} for details, including 
+information about additional servers. You just need a \texttt{ssh} or 
+\texttt{telnet} console; on Windows, the \texttt{PuTTY} program works very 
+well. Read \key{ssh\_guide.txt} in the \key{docs} folder for a step by step 
+guide on how to set this up.
+
+\para \para
+
+\sex{Tiles}
+
+\para
+
+\crawl\ features an alternative to the classical ASCII display; Tile-based
+Crawl is often easier accessible by new players. Tiles are available for 
+Linux, Windows and OS X.
+Unfortunately, it is not yet possible to combine tiles and internet play.
+\end{document}
