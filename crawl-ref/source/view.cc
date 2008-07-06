@@ -668,7 +668,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     return real_colour(tc);
 }
 
-int count_detected_plants()
+int count_detected_mons()
 {
     int count = 0;
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
@@ -681,11 +681,7 @@ int count_detected_plants()
             if (is_terrain_changed(x, y))
                 continue;
 
-            unsigned envc = get_envmap_char(x, y);
-            if (!envc)
-                continue;
-
-            if (envc == 'P' || envc == 'f')
+            if (is_envmap_detected_mons(x, y))
                 count++;
         }
 
@@ -701,8 +697,11 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             // Note: assumptions are being made here about how
             // terrain can change (eg it used to be solid, and
             // thus monster/item free).
-            if (is_terrain_changed(x, y))
-                continue;
+
+            // This reasoning doesn't make sense when it comes to *clearing*
+            // the map! (jpeg)
+//            if (is_terrain_changed(x, y))
+//                continue;
 
             unsigned envc = get_envmap_char(x, y);
             if (!envc)

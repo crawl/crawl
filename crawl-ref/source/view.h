@@ -127,7 +127,7 @@ void setLOSRadius(int newLR);
  * *********************************************************************** */
 bool check_awaken(monsters* monster);
 
-int count_detected_plants(void);
+int count_detected_mons(void);
 
 void clear_map(bool clear_items = true, bool clear_mons = true);
 

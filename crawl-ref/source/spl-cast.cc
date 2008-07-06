@@ -2006,13 +2006,20 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     case SPELL_DETECT_CREATURES:
     {
-        int known_plants  = count_detected_plants();
-        int num_creatures = detect_creatures(powc);
+        const int prev_detected = count_detected_mons();
+        const int num_creatures = detect_creatures(powc);
 
         if (!num_creatures)
             mpr("You detect nothing.");
-        else if (num_creatures == known_plants)
+        else if (num_creatures == prev_detected)
+        {
+            // This is not strictly true. You could have cast
+            // Detect Creatures with a big enough fuzz that the detected
+            // glyph is still on the map when the original one has been
+            // killed. Then another one is spawned, so the number is
+            // the same as before. There's no way we can check this however.
             mpr("You detect no further creatures.");
+        }
         else
             mpr("You detect creatures!");
         break;

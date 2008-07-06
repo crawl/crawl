@@ -5668,22 +5668,22 @@ static bool _swap_monsters(const int mover_idx, const int moved_idx)
 
     // Can't swap with a stationary monster.
     if (mons_is_stationary(moved))
-        return false;
+        return (false);
 
     // Swapping is a purposeful action.
     if (mover->confused())
-        return false;
+        return (false);
 
     // Right now just happens in sanctuary.
     if (!is_sanctuary(mover->x, mover->y) || !is_sanctuary(moved->x, moved->y))
-        return false;
+        return (false);
 
     // A friendly or good-neutral monster moving past a fleeing hostile
     // or neutral monster, or vice versa.
     if (mons_wont_attack(mover) == mons_wont_attack(moved)
         || mons_is_fleeing(mover) == mons_is_fleeing(moved))
     {
-        return false;
+        return (false);
     }
 
     // Don't swap places if the player explicitly ordered their pet to
@@ -5691,19 +5691,19 @@ static bool _swap_monsters(const int mover_idx, const int moved_idx)
     if ((mons_friendly(mover) || mons_friendly(moved))
         && you.pet_target != MHITYOU && you.pet_target != MHITNOT)
     {
-        return false;
+        return (false);
     }
 
     if (!mover->can_pass_through(moved->x, moved->y)
         || !moved->can_pass_through(mover->x, mover->y))
     {
-        return false;
+        return (false);
     }
 
     if (!monster_habitable_grid(mover, grd[moved->x][moved->y])
         || !monster_habitable_grid(moved, grd[mover->x][mover->y]))
     {
-        return false;
+        return (false);
     }
 
     // Okay, we can do the swap.
@@ -5725,8 +5725,8 @@ static bool _swap_monsters(const int mover_idx, const int moved_idx)
              moved->name(DESC_NOCAP_THE).c_str());
     }
 
-    return true;
-} // bool _swap_monsters()
+    return (true);
+}
 
 static void _swim_or_move_energy(monsters *mon)
 {
@@ -5826,7 +5826,8 @@ static void _handle_monster_move(int i, monsters *monster)
                                    entry->energy_usage.swim);
 
     while (monster->has_action_energy())
-    {   // The continues & breaks are WRT this.
+    {
+        // The continues & breaks are WRT this.
         if (!monster->alive())
             break;
 

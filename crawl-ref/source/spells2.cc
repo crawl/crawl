@@ -98,13 +98,19 @@ unsigned char detect_items( int pow )
         pow = 50;
 
     unsigned char items_found = 0;
-    const int     map_radius = 8 + random2(8) + pow;
+    const int     map_radius  = 8 + random2(8) + pow;
 
     for (int i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
-    {
         for (int j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
         {
             if (!in_bounds(i, j))
+                continue;
+
+            // Don't expose new dug out areas:
+            // Note: assumptions are being made here about how
+            // terrain can change (eg it used to be solid, and
+            // thus item free).
+            if (is_terrain_changed(i, j))
                 continue;
 
             if (igrd[i][j] != NON_ITEM
@@ -121,7 +127,6 @@ unsigned char detect_items( int pow )
 #endif
             }
         }
-    }
 
     return (items_found);
 }
@@ -159,12 +164,25 @@ static bool _mark_detected_creature(int gridx, int gridy, const monsters *mon,
         const int fuzz_diam = 2 * fuzz_radius + 1;
 
         int gx, gy;
+        // Try five times to find a valid placement, else we attempt to place
+        // the monster where it really is (and may fail).
         for (int itry = 0; itry < 5; ++itry)
         {
             gx = gridx + random2(fuzz_diam) - fuzz_radius;
             gy = gridy + random2(fuzz_diam) - fuzz_radius;
 
-            if (map_bounds(gx, gy)
+            // If the player would be able to see a monster at this location
+            // don't place it there.
+            if (see_grid(gx, gy))
+                continue;
+
+            // Try not to overwrite another detected monster.
+            if (is_envmap_detected_mons(gx, gy))
+                continue;
+
+            // Don't print monsters on terrain they cannot pass through,
+            // not even if said terrain has since changed.
+            if (map_bounds(gx, gy) && !is_terrain_changed(gx, gy)
                 && mon->can_pass_through_feat(grd[gx][gy]))
             {
                 found_good = true;
@@ -217,9 +235,6 @@ int detect_creatures( int pow, bool telepathic )
                 monsters *mon = &menv[ mgrd[i][j] ];
                 creatures_found++;
 
-                // This only returns whether a valid "fuzzy" place has been
-                // found for the monster. In any case, the monster gets
-                // printed on the screen.
                 _mark_detected_creature(i, j, mon, fuzz_chance, fuzz_radius);
 
                 // Assuming that highly intelligent spellcasters can
