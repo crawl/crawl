@@ -884,42 +884,42 @@ bool vampiric_drain(int pow, const dist &vmove)
 char burn_freeze(int pow, beam_type flavour)
 {
     int mgr = NON_MONSTER;
-    struct dist bmove;
+    dist spd;
 
-    if (pow > 25)
-        pow = 25;
+    pow = std::min(25, pow);
 
     while (mgr == NON_MONSTER)
     {
         mpr("Which direction?", MSGCH_PROMPT);
-        direction( bmove, DIR_DIR, TARG_ENEMY );
+        direction(spd, DIR_DIR, TARG_ENEMY);
 
-        if (!bmove.isValid)
+        if (!spd.isValid)
         {
             canned_msg(MSG_OK);
-            return -1;
+            return (-1);
         }
 
-        if (bmove.isMe)
+        if (spd.isMe)
         {
             canned_msg(MSG_UNTHINKING_ACT);
-            return -1;
+            return (-1);
         }
 
-        mgr = mgrd[you.x_pos + bmove.dx][you.y_pos + bmove.dy];
+        mgr = mgrd[you.x_pos + spd.dx][you.y_pos + spd.dy];
 
-        // Yes, this is strange, but it does maintain the original behaviour.
-        // Possibly to avoid giving information about invisible monsters?
+        // Yes, this is strange, but it does maintain the original
+        // behaviour.  Possibly to avoid giving information about
+        // invisible monsters?
         if (mgr == NON_MONSTER)
         {
             mpr("There isn't anything close enough!");
-            return 0;
+            return (0);
         }
 
-        if (trans_wall_blocking( bmove.tx, bmove.ty ))
+        if (trans_wall_blocking(spd.tx, spd.ty))
         {
             mpr("A translucent wall is in the way.");
-            return 0;
+            return (0);
         }
     }
 
@@ -983,7 +983,7 @@ char burn_freeze(int pow, beam_type flavour)
         }
     }
 
-    return 1;
+    return (1);
 }
 
 bool summon_animals(int pow)
