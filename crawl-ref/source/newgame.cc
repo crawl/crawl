@@ -2449,7 +2449,6 @@ static bool _necromancy_okay()
     case SP_OGRE_MAGE:
     case SP_DEMONSPAWN:
     case SP_MUMMY:
-    case SP_GHOUL:
     case SP_VAMPIRE:
         return (true);
 
