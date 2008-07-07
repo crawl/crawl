@@ -1000,7 +1000,7 @@ static void _give_nemelex_gift()
     // Nemelex will give at least one gift early.
     if (you.num_gifts[GOD_NEMELEX_XOBEH] == 0
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
-        || x_chance_in_y(you.piety + 1, MAX_PIETY) && one_chance_in(3)
+        || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY)
            && !you.attribute[ATTR_CARD_COUNTDOWN])
     {
         misc_item_type gift_type;

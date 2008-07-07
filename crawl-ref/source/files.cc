@@ -931,16 +931,20 @@ static bool _grab_follower_at(const coord_def &pos)
     if (!fmenv || !fmenv->alive())
         return (false);
 
-    // monster has to be already tagged in order to follow:
+    // Monster has to be already tagged in order to follow.
     if (!testbits( fmenv->flags, MF_TAKING_STAIRS ))
         return (false);
+
+    level_id dest = level_id::current();
+    if (you.char_direction == GDT_GAME_START)
+        dest.depth = 1;
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "%s is following to %s.",
          fmenv->name(DESC_CAP_THE, true).c_str(),
-         level_id::current().describe().c_str());
+         dest.describe().c_str());
 #endif
-    fmenv->set_transit(level_id::current());
+    fmenv->set_transit(dest);
     fmenv->destroy_inventory();
     monster_cleanup(fmenv);
     return (true);
@@ -1727,7 +1731,7 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major, char &mino
         return (false);
     }
 
-    if (minor >  TAG_MINOR_VERSION)
+    if (minor > TAG_MINOR_VERSION)
     {
         *reason = make_stringf("Minor version mismatch: %d (want <= %d).",
                                minor, TAG_MINOR_VERSION);

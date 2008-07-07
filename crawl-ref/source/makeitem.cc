@@ -893,7 +893,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
                                       int item_level)
 {
     if (item.sub_type != WPN_CLUB && item_level > 2
-        && x_chance_in_y(101 + (item_level * 3), 4000))
+        && x_chance_in_y(101 + item_level * 3, 4000))
     {
         // Make a randart or unrandart.
 
@@ -945,7 +945,7 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
     // If it isn't an artefact yet, try to make a fixed artefact.
     if (item_level > 6
         && one_chance_in(12)
-        && x_chance_in_y(31 + (item_level * 3), 3000))
+        && x_chance_in_y(31 + item_level * 3, 3000))
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Making fixed artefact.");

@@ -239,8 +239,8 @@ static job_type new_jobs_order[] = {
     JOB_MONK,               JOB_BERSERKER,
     // religious professions (incl. Berserker above)
     JOB_PALADIN,            JOB_PRIEST,
-    JOB_CHAOS_KNIGHT,       JOB_DEATH_KNIGHT,
-    JOB_HEALER,             JOB_CRUSADER,
+    JOB_HEALER,             JOB_CHAOS_KNIGHT,
+    JOB_DEATH_KNIGHT,       JOB_CRUSADER,
     // general and niche spellcasters (incl. Crusader above)
     JOB_REAVER,             JOB_WIZARD,
     JOB_CONJURER,           JOB_ENCHANTER,
@@ -4564,7 +4564,6 @@ bool _give_items_skills()
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_ARMOUR]   = 1;
         you.skills[SK_DODGING]  = 1;
-        you.skills[SK_STEALTH]  = 1;
         weap_skill = 2;
         break;
 
@@ -4642,7 +4641,7 @@ bool _give_items_skills()
         you.skills[SK_TRANSLOCATIONS] = 1;
 
         // The other two schools depend on the chosen book.
-        switch (you.inv[2].sub_type)
+        switch (you.inv[3].sub_type)
         {
         case BOOK_MINOR_MAGIC_I:
             you.skills[SK_CONJURATIONS] = 1;
@@ -4694,7 +4693,7 @@ bool _give_items_skills()
             you.skills[SK_EVOCATIONS] = 1;
         }
         else
-            you.skills[SK_THROWING] = 1;
+            you.skills[SK_DARTS] = 1;
 
         you.skills[SK_ENCHANTMENTS] = 4;
         you.skills[SK_SPELLCASTING] = 1;
@@ -4749,6 +4748,7 @@ bool _give_items_skills()
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_SPELLCASTING]   = 2;
         you.skills[SK_TRANSLOCATIONS] = 3;
+        you.skills[SK_DARTS]          = 1;
         weap_skill = 3;
         break;
 
@@ -4835,6 +4835,7 @@ bool _give_items_skills()
         {
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
             _newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+            you.skills[SK_SLINGS] = 1;
         }
 
         you.skills[SK_TRANSMIGRATION] = 1;
@@ -4884,7 +4885,7 @@ bool _give_items_skills()
 
         if (you.species == SP_SPRIGGAN)
         {
-            _make_rod(you.inv[0], STAFF_STRIKING);
+            _make_rod(you.inv[1], STAFF_STRIKING);
             you.skills[SK_EVOCATIONS] = 1;
         }
         else
