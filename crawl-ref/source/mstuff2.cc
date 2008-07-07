@@ -2394,8 +2394,8 @@ bool orange_statue_effects(monsters *mons)
     {
         mpr("A hostile presence attacks your mind!", MSGCH_WARN);
 
-        miscast_effect( SPTYP_DIVINATION, random2(15), random2(150), 100,
-                        "an orange crystal statue" );
+        miscast_effect(SPTYP_DIVINATION, random2(15), random2(150), 100,
+                       "an orange crystal statue");
         return (true);
     }
 

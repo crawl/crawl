@@ -1378,8 +1378,7 @@ A disgusting glob of grey sludge.
 %%%%
 orange crystal statue
 
-An intricately carved statue of glittering orange crystal. Its eyes
-fix on yours with a piercing gaze.
+An intricately carved statue of glittering orange crystal. Its eyes fix on yours with a piercing gaze.
 
 It looks brittle.
 %%%%

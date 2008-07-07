@@ -3916,9 +3916,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 
     case MONS_ORANGE_STATUE:
         if (_is_player_or_mon_sanct(monster))
-        {
             break;
-        }
+
         used = orange_statue_effects(monster);
         break;
 
