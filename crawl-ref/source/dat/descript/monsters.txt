@@ -1141,8 +1141,7 @@ One of the most terrible denizens of the many Hells, the Ice Fiend is a huge icy
 %%%%
 ice statue
 
-An imposing statue carved in glistening ice. Freezing vapours swirl
-about it.
+An imposing statue carved in glistening ice. Freezing vapours swirl about it.
 %%%%
 imp
 
@@ -1601,8 +1600,7 @@ A huge and strangely deformed eyeball, pulsating with light.  Beauty is certainl
 %%%%
 silver statue
 
-A beautiful statue of silvery hue. Its eyes glow with an otherworldly
-radiance.
+A beautiful statue of silvery hue. Its eyes glow with an otherworldly radiance.
 
 It looks brittle.
 %%%%
