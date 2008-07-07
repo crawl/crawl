@@ -3960,7 +3960,7 @@ void display_char_status()
     if (you.rotting || you.species == SP_GHOUL)
         mprf("Your flesh is rotting%s.", _get_rotting_how());
 
-    // prints a contamination message
+    // Prints a contamination message.
     contaminate_player( 0, false, true );
 
     if (you.duration[DUR_CONFUSING_TOUCH])

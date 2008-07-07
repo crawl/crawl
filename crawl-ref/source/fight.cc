@@ -4076,9 +4076,9 @@ static bool wielded_weapon_check(const item_def *weapon)
 {
     bool result = true;
     if (!you.received_weapon_warning
-           && weapon && weapon->base_type != OBJ_STAVES
-           && (weapon->base_type != OBJ_WEAPONS || is_range_weapon(*weapon))
-        || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
+        && (weapon && weapon->base_type != OBJ_STAVES
+               && (weapon->base_type != OBJ_WEAPONS || is_range_weapon(*weapon))
+            || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]))
     {
         if (item_cursed(*weapon))
         {
@@ -4097,10 +4097,7 @@ static bool wielded_weapon_check(const item_def *weapon)
 
         // Don't warn again if you decide to continue your attack.
         if (result)
-        {
             you.received_weapon_warning = true;
-            you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-        }
     }
     return (result);
 }

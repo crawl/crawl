@@ -399,7 +399,7 @@ void stop_delay( bool stop_stair_travel )
                 // (Necessary because attributes are unsigned chars.)
                 you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
                     = (butcher_swap_weapon == -1 ? ENDOFPACK
-                                                 : butcher_swap_weapon);
+                                                 : butcher_swap_weapon) + 1;
             }
         }
         else

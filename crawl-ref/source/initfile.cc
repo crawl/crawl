@@ -242,14 +242,15 @@ std::string channel_to_str( int channel )
 
 static int _str_to_book( const std::string& str )
 {
-    if ( str == "fire" || str == "flame" )
+    if (str == "fire" || str == "flame")
         return SBT_FIRE;
-    if ( str == "cold" || str == "ice" )
+    if (str == "cold" || str == "ice")
         return SBT_COLD;
-    if ( str == "summ" || str == "summoning" )
+    if (str == "summ" || str == "summoning")
         return SBT_SUMM;
-    if ( str == "random" )
+    if (str == "random")
         return SBT_RANDOM;
+
     return SBT_NO_SELECTION;
 }
 
@@ -286,7 +287,6 @@ std::string weapon_to_str( int weapon )
     case WPN_HAND_AXE:
         return "hand axe";
     case WPN_RANDOM:
-        return "random";
     default:
         return "random";
     }
