@@ -254,7 +254,7 @@ static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison)
             msg += "hits you!";
             mpr(msg.c_str());
 
-            if (poison && random2(100) < 50 - (3 * player_AC()) / 2
+            if (poison && x_chance_in_y(50 - (3 * player_AC()) / 2, 100)
                 && !player_res_poison())
             {
                 poison_player( 1 + random2(3) );
@@ -721,27 +721,27 @@ static int damage_or_escape_net(int hold)
             damage += level - 1;
     }
 
-    // Berserkers get a fighting bonus
+    // Berserkers get a fighting bonus.
     if (you.duration[DUR_BERSERKER])
         damage += 2;
 
-    // check stats
-    if (you.strength > random2(18))
+    // Check stats.
+    if (x_chance_in_y(you.strength, 18))
         damage++;
-    if (you.dex > random2(12))
+    if (x_chance_in_y(you.dex, 12))
         escape++;
-    if (player_evasion() > random2(20))
+    if (x_chance_in_y(player_evasion(), 20))
         escape++;
 
-    // monsters around you add urgency
+    // Monsters around you add urgency.
     if (!i_feel_safe())
     {
         damage++;
         escape++;
     }
 
-    // confusion makes the whole thing somewhat harder
-    // (less so for trying to escape)
+    // Confusion makes the whole thing somewhat harder
+    // (less so for trying to escape).
     if (you.duration[DUR_CONF])
     {
         if (escape > 1)
@@ -750,26 +750,26 @@ static int damage_or_escape_net(int hold)
             damage -= 2;
     }
 
-    // damaged nets are easier to destroy
+    // Damaged nets are easier to destroy.
     if (hold < 0)
     {
         damage += random2(-hold/3 + 1);
 
-        // ... and easier to slip out of (but only if escape looks feasible)
+        // ... and easier to slip out of (but only if escape looks feasible).
         if (you.attribute[ATTR_HELD] < 5 || escape >= damage)
             escape += random2(-hold/2) + 1;
     }
 
-    // if undecided, choose damaging approach (it's quicker)
+    // If undecided, choose damaging approach (it's quicker).
     if (damage >= escape)
         return (-damage); // negate value
 
     return (escape);
 }
 
-// calls the above function to decide on how to get free
-// note that usually the net will be damaged until trying to slip out
-// becomes feasible (for size etc.), so it may take even longer
+// Calls the above function to decide on how to get free.
+// Note that usually the net will be damaged until trying to slip out
+// becomes feasible (for size etc.), so it may take even longer.
 void free_self_from_net()
 {
     int net = get_trapping_net(you.x_pos, you.y_pos);
@@ -787,9 +787,10 @@ void free_self_from_net()
          hold, you.attribute[ATTR_HELD], do_what);
 #endif
 
-    if (do_what <= 0) // you try to destroy the net
-    {                 // for previously undamaged nets this takes at least 2
-                      // and at most 8 turns
+    if (do_what <= 0) // You try to destroy the net
+    {
+        // For previously undamaged nets this takes at least 2 and at most
+        // 8 turns.
         bool can_slice = you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
                          || you.equip[EQ_WEAPON] != -1
                             && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
@@ -802,7 +803,8 @@ void free_self_from_net()
         if (you.duration[DUR_BERSERKER])
             damage *= 2;
 
-        // medium sized characters are at disadvantage and sometimes get a bonus
+        // Medium sized characters are at disadvantage and sometimes
+        // get a bonus.
         if (you.body_size(PSIZE_BODY) == SIZE_MEDIUM)
             damage += coinflip();
 
@@ -832,8 +834,8 @@ void free_self_from_net()
         else
             mpr("You struggle against the net.");
 
-        // occasionally decrease duration a bit
-        // (this is so switching from damage to escape does not hurt as much)
+        // Occasionally decrease duration a bit
+        // (this is so switching from damage to escape does not hurt as much).
         if (you.attribute[ATTR_HELD] > 1 && coinflip())
         {
             you.attribute[ATTR_HELD]--;
@@ -842,14 +844,16 @@ void free_self_from_net()
                 you.attribute[ATTR_HELD]--;
         }
    }
-   else // you try to escape (takes at least 3 turns, and at most 10)
+   else
    {
+        // You try to escape (takes at least 3 turns, and at most 10).
         int escape = do_what;
 
         if (you.duration[DUR_HASTE]) // extra bonus, also Berserk
             escape++;
 
-        // medium sized characters are at disadvantage and sometimes get a bonus
+        // Medium sized characters are at disadvantage and sometimes
+        // get a bonus.
         if (you.body_size(PSIZE_BODY) == SIZE_MEDIUM)
             escape += coinflip();
 

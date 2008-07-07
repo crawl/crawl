@@ -2242,7 +2242,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
             if (!teleport
                 && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
-                && random2(100) < shoot_skill)
+                && x_chance_in_y(shoot_skill, 100))
             {
                 set_ident_flags( item, ISFLAG_KNOW_PLUSES );
                 set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
@@ -2251,7 +2251,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                      you.inv[throw_2].name(DESC_NOCAP_A).c_str());
             }
         }
-        else if (!teleport && random2(100) < shoot_skill)
+        else if (!teleport && x_chance_in_y(shoot_skill, 100))
         {
             item_def& weapon = you.inv[you.equip[EQ_WEAPON]];
             set_ident_flags(weapon, ISFLAG_KNOW_PLUSES);
@@ -2414,7 +2414,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // ID check
         if (!teleport
             && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
-            && random2(100) < you.skills[SK_THROWING])
+            && x_chance_in_y(you.skills[SK_THROWING], 100))
         {
             set_ident_flags( item, ISFLAG_KNOW_PLUSES );
             set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
@@ -3936,7 +3936,7 @@ bool enchant_weapon( enchant_stat_type which_stat, bool quiet, item_def &wpn )
 
     // Even if not affected, it may be uncursed.
     if (!is_enchantable_weapon(wpn, false)
-        || enchant_level >= 4 && random2(9) < enchant_level)
+        || enchant_level >= 4 && x_chance_in_y(enchant_level, 9))
     {
         if (is_cursed)
         {
@@ -4060,7 +4060,7 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
 
     // Even if not affected, it may be uncursed.
     if (!is_enchantable_armour(arm, false)
-        || arm.plus >= 3 && random2(8) < arm.plus)
+        || arm.plus >= 3 && x_chance_in_y(arm.plus, 8))
     {
         if (is_cursed)
         {

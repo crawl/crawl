@@ -2852,7 +2852,7 @@ void forget_map(unsigned char chance_forgotten, bool force)
         for (unsigned char ycount = 0; ycount < GYM; ycount++)
         {
             if (!see_grid(xcount, ycount)
-                && (force || random2(100) < chance_forgotten))
+                && (force || x_chance_in_y(chance_forgotten, 100)))
             {
                 env.map[xcount][ycount].clear();
             }
@@ -6733,7 +6733,7 @@ void player::awake()
 
 void player::check_awaken(int disturbance)
 {
-    if (asleep() && random2(50) <= disturbance)
+    if (asleep() && x_chance_in_y(disturbance + 1, 50))
         awake();
 }
 

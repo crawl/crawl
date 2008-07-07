@@ -1311,7 +1311,7 @@ bool learn_spell(int book)
     }
 
     if (player_mutation_level(MUT_BLURRY_VISION) > 0
-        && random2(4) < player_mutation_level(MUT_BLURRY_VISION))
+        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 4))
     {
         mpr("The writing blurs into unreadable gibberish.");
         you.turn_is_over = true;

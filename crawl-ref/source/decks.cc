@@ -2225,7 +2225,7 @@ static void _deepen_water(const coord_def& center, int radius)
         const coord_def p = *ri;
         if (grd(p) == DNGN_SHALLOW_WATER
             && p != you.pos()
-            && random2(8) < 1 + count_neighbours(p.x, p.y, DNGN_DEEP_WATER))
+            && x_chance_in_y(1+count_neighbours(p.x, p.y, DNGN_DEEP_WATER), 8))
         {
             dungeon_terrain_changed(p, DNGN_DEEP_WATER);
         }

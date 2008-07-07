@@ -804,7 +804,7 @@ static void _good_god_follower_attitude_change(monsters *monster)
     {
         monster->flags |= MF_ATT_CHANGE_ATTEMPT;
 
-        if (you.piety > random2(MAX_PIETY) && !you.penance[you.religion])
+        if (x_chance_in_y(you.piety, MAX_PIETY) && !you.penance[you.religion])
         {
             int wpn = you.equip[EQ_WEAPON];
             if (wpn != -1
@@ -887,8 +887,11 @@ static void _handle_seen_interrupt(monsters* monster)
 
 void handle_monster_shouts(monsters* monster, bool force)
 {
-    if (!force && (!you.turn_is_over || random2(30) < you.skills[SK_STEALTH]))
+    if (!force && (!you.turn_is_over
+                   || x_chance_in_y(you.skills[SK_STEALTH], 30)))
+    {
         return;
+    }
 
     // Friendly or neutral monsters don't shout.
     if (!force && (mons_friendly(monster) || mons_neutral(monster)))
@@ -1274,7 +1277,7 @@ bool check_awaken(monsters* monster)
     if (mons_perc < 0)
         mons_perc = 0;
 
-    if (random2(stealth) <= mons_perc)
+    if (x_chance_in_y(mons_perc + 1, stealth))
         return (true); // Oops, the monster wakes up!
 
     // You didn't wake the monster!

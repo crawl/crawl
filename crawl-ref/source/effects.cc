@@ -2474,9 +2474,9 @@ void handle_time(long time_delta)
         }
     }
 
-    // Adjust the player's stats if s/he has the deterioration mutation
+    // Adjust the player's stats if s/he has the deterioration mutation.
     if (player_mutation_level(MUT_DETERIORATION)
-        && random2(200) <= player_mutation_level(MUT_DETERIORATION) * 5 - 2)
+        && x_chance_in_y(player_mutation_level(MUT_DETERIORATION) * 5 - 1, 200))
     {
         lose_stat(STAT_RANDOM, 1, false, "deterioration mutation");
     }
@@ -2531,13 +2531,13 @@ void handle_time(long time_delta)
         // roll.)
         if (is_sanctuary(you.x_pos, you.y_pos)
             && you.magic_contamination >= 5
-            && random2(25) <= you.magic_contamination)
+            && x_chance_in_y(you.magic_contamination + 1, 25))
         {
             mpr("Your body momentarily shudders from a surge of wild "
                 "energies until Zin's power calms it.", MSGCH_GOD);
         }
         else if (you.magic_contamination >= 5
-                 && random2(25) <= you.magic_contamination)
+                 && x_chance_in_y(you.magic_contamination + 1, 25))
         {
             mpr("Your body shudders with the violent release "
                 "of wild energies!", MSGCH_WARN);
@@ -2654,11 +2654,10 @@ void handle_time(long time_delta)
     }
 
     // Check to see if an upset god wants to do something to the player.
-    // jmf: moved huge thing to religion.cc
     handle_god_time();
 
     if (player_mutation_level(MUT_SCREAM)
-        && (random2(100) <= 2 + player_mutation_level(MUT_SCREAM) * 3))
+        && x_chance_in_y(3 + player_mutation_level(MUT_SCREAM) * 3, 100))
     {
         yell(true);
     }

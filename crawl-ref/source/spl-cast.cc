@@ -1100,10 +1100,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
             if (you.religion == GOD_SIF_MUNA
                 && !player_under_penance()
-                && you.piety >= 100 && random2(150) <= you.piety)
+                && you.piety >= 100 && x_chance_in_y(you.piety + 1, 150))
             {
                 canned_msg(MSG_NOTHING_HAPPENS);
-                return SPRET_FAIL;
+                return (SPRET_FAIL);
             }
 
             unsigned int sptype = 0;
@@ -2896,8 +2896,8 @@ static void _miscast_divination(int severity, const char* cause)
 static void _miscast_necromancy(int severity, const char* cause)
 {
     if (you.religion == GOD_KIKUBAAQUDGHA
-        && (!player_under_penance() && you.piety >= piety_breakpoint(1)
-            && you.piety > random2(150)))
+        && !player_under_penance() && you.piety >= piety_breakpoint(1)
+        && x_chance_in_y(you.piety, 150))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return;

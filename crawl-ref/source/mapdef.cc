@@ -1835,7 +1835,7 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
          i != slot.mlist.end(); ++i)
     {
         const int weight = i->genweight;
-        if (random2(totweight += weight) < weight)
+        if (x_chance_in_y(weight, totweight += weight))
         {
             pick = *i;
 
@@ -2266,7 +2266,7 @@ item_spec item_list::pick_item(item_spec_slot &slot)
          i != slot.ilist.end(); ++i)
     {
         const int weight = i->genweight;
-        if (random2(cumulative += weight) < weight)
+        if (x_chance_in_y(weight, cumulative += weight))
             spec = *i;
     }
 
@@ -2673,10 +2673,8 @@ int subst_spec::value()
     int cumulative = 0;
     int chosen = 0;
     for (int i = 0, size = repl.size(); i < size; ++i)
-    {
-        if (random2(cumulative += repl[i].second) < repl[i].second)
+        if (x_chance_in_y(repl[i].second, cumulative += repl[i].second))
             chosen = repl[i].first;
-    }
 
     if (fix)
         frozen_value = chosen;
@@ -2767,7 +2765,7 @@ int colour_spec::get_colour()
     int chosen = BLACK;
     int cweight = 0;
     for (int i = 0, size = colours.size(); i < size; ++i)
-        if (random2(cweight += colours[i].second) < colours[i].second)
+        if (x_chance_in_y(colours[i].second, cweight += colours[i].second))
             chosen = colours[i].first;
     if (fix)
         fixed_colour = chosen;
@@ -3079,7 +3077,7 @@ feature_spec feature_slot::get_feat(int def_glyph)
     for (int i = 0, size = feats.size(); i < size; ++i)
     {
         const feature_spec &feat = feats[i];
-        if (random2(tweight += feat.genweight) < feat.genweight)
+        if (x_chance_in_y(feat.genweight, tweight += feat.genweight))
             chosen_feat = feat;
     }
 

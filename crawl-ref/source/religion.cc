@@ -999,8 +999,8 @@ static void _give_nemelex_gift()
 
     // Nemelex will give at least one gift early.
     if (you.num_gifts[GOD_NEMELEX_XOBEH] == 0
-           && random2(piety_breakpoint(1)) <= you.piety
-        || random2(MAX_PIETY) <= you.piety && one_chance_in(3)
+           && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
+        || x_chance_in_y(you.piety + 1, MAX_PIETY) && one_chance_in(3)
            && !you.attribute[ATTR_CARD_COUNTDOWN])
     {
         misc_item_type gift_type;
@@ -1208,7 +1208,7 @@ static bool _blessing_healing(monsters* mon, bool extra)
     if (heal_monster(mon, mon->max_hit_points, extra))
     {
         // A high-HP monster might get a unique name.
-        if (random2(100) <= mon->max_hit_points)
+        if (x_chance_in_y(mon->max_hit_points + 1, 100))
             give_monster_proper_name(mon);
         return (true);
     }
@@ -3600,7 +3600,7 @@ static void _ely_dull_inventory_weapons()
 
     if (num_dulled > 0)
     {
-        if (chance >= random2(100))
+        if (x_chance_in_y(chance + 1, 100))
             dec_penance(GOD_ELYVILON, 1);
 
         simple_god_message(
@@ -5200,7 +5200,7 @@ static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
     switch (you.religion)
     {
     case GOD_NEMELEX_XOBEH:
-        if (you.attribute[ATTR_CARD_COUNTDOWN] && random2(800) < value)
+        if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
         {
             you.attribute[ATTR_CARD_COUNTDOWN]--;
 #if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_SACRIFICE
@@ -5211,7 +5211,7 @@ static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
         if (item.base_type == OBJ_CORPSES && one_chance_in(2+you.piety/50)
             // Nemelex piety gain is fairly fast...at least
             // when you have low piety.
-            || value/2 >= random2(30 + you.piety/2))
+            || x_chance_in_y(value/2 + 1, 30 + you.piety/2))
         {
             if ( is_artefact(item) )
             {
@@ -5241,27 +5241,6 @@ static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
             you.sacrifice_value[item.base_type] += value;
         break;
 
-    case GOD_OKAWARU:
-    case GOD_MAKHLEB:
-        if (item.base_type == OBJ_CORPSES
-            || value >= random2(200)
-            || (player_under_penance() && value >= random2(5)))
-        {
-            gain_piety(1);
-            relative_piety_gain = PIETY_SOME;
-        }
-        break;
-
-    case GOD_SIF_MUNA:
-        if (value >= 150)       // no point in saccing stacks to Sif
-        {
-            gain_piety(1 + random2(3));
-            relative_piety_gain = PIETY_SOME;
-        }
-        break;
-
-    case GOD_KIKUBAAQUDGHA:
-    case GOD_TROG:
     case GOD_SHINING_ONE:
         gain_piety(1);
         relative_piety_gain = PIETY_SOME;
@@ -5270,7 +5249,7 @@ static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
     default:
         break;
     }
-    return relative_piety_gain;
+    return (relative_piety_gain);
 }
 
 void offer_items()
@@ -5670,7 +5649,7 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     const int min_piety = piety_breakpoint(0);
     bool praying = (you.duration[DUR_PRAYER]
                     && random2(you.piety) >= min_piety);
-    bool anytime = (one_chance_in(10) || you.piety > random2(1000));
+    bool anytime = (one_chance_in(10) || x_chance_in_y(you.piety, 1000));
     bool penance = you.penance[god];
 
     // If actual is true, return HPT_NONE if the given god can protect
@@ -5712,8 +5691,8 @@ void god_smites_you(god_type god, kill_method_type death_type,
 {
     // Your god won't protect you from his own smiting, and Xom is too
     // capricious to protect you from any god's smiting.
-    if (you.religion != god && you.religion != GOD_XOM &&
-        !player_under_penance() && you.piety > random2(MAX_PIETY * 2))
+    if (you.religion != god && you.religion != GOD_XOM
+        && !player_under_penance() && x_chance_in_y(you.piety, MAX_PIETY * 2))
     {
         god_speaks(you.religion,
                    make_stringf("Mortal, I have averted the wrath of %s... "
@@ -5820,7 +5799,7 @@ void handle_god_time()
             const char *origfavour = describe_xom_favour();
             const bool good = you.piety > (MAX_PIETY / 2);
             int size = abs(you.piety - 100);
-            delta = (random2(1000) < 511) ? 1 : -1;
+            delta = (x_chance_in_y(511, 1000) ? 1 : -1);
             size += delta;
             you.piety = (MAX_PIETY / 2) + (good ? size : -size);
             const char *newfavour = describe_xom_favour();

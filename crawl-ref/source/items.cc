@@ -172,12 +172,12 @@ static int _cull_items(void)
 
     int first_cleaned = NON_ITEM;
 
-    // 2. avoid shops by avoiding (0,5..9)
-    // 3. avoid monster inventory by iterating over the dungeon grid
+    // 2. Avoid shops by avoiding (0,5..9).
+    // 3. Avoid monster inventory by iterating over the dungeon grid.
     for (int x = 5; x < GXM; x++)
         for (int y = 5; y < GYM; y++)
         {
-            // 1. not near player!
+            // 1. Not near player!
             if (x > you.x_pos - 9 && x < you.x_pos + 9
                 && y > you.y_pos - 9 && y < you.y_pos + 9)
             {
@@ -186,23 +186,23 @@ static int _cull_items(void)
 
             int next;
 
-            // iterate through the grids list of items:
+            // Iterate through the grids list of items.
             for (int item = igrd[x][y]; item != NON_ITEM; item = next)
             {
                 next = mitm[item].link; // in case we can't get it later.
 
-                if (_item_ok_to_clean(item) && random2(100) < 15)
+                if (_item_ok_to_clean(item) && x_chance_in_y(15, 100))
                 {
                     const item_def& obj(mitm[item]);
                     if (is_fixed_artefact(obj))
                     {
-                        // 7. move uniques to abyss
+                        // 7. Move uniques to abyss.
                         set_unique_item_status( OBJ_WEAPONS, obj.special,
                                                 UNIQ_LOST_IN_ABYSS );
                     }
                     else if (is_unrandom_artefact(obj))
                     {
-                        // 9. unmark unrandart
+                        // 9. Unmark unrandart.
                         const int z = find_unrandart_index(obj);
                         if (z != -1)
                             set_unrandart_exist(z, false);
@@ -213,7 +213,7 @@ static int _cull_items(void)
                     if (first_cleaned == NON_ITEM)
                         first_cleaned = item;
                 }
-            } // end for item
+            }
 
         }
 

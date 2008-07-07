@@ -25,9 +25,9 @@ If you'd like to dive in immediately, your best bets are to
 * read quickstart.txt (in the /docs directory), or
 * for studious readers, browse the manual (see below for all doc files).
 
-Additionally, you may want to print out the file keys.pdf from the /docs
-folder. Besides a full list of command keys (don't bother with it), it contains 
-two pages of help for new players.
+If you're used to playing an older version, you might want to print out the 
+file key_changes.pdf from the /docs for an easy reference of new commands
+and changed key settings.
 Note that you can read quickstart.txt and the manual when playing; pressing '?' 
 brings up a menu for that.
 
@@ -53,10 +53,12 @@ read in-game by bringing up the help menu with '?'):
 * aptitudes.txt      Some numbers defining certain aspects of the races.
                      Helpful, but not needed for winning.
 * quickstart.txt     A short introduction for new players.
+* quickstart.pdf     The same file, in pdf format.
 * ssh_guide.txt      An elaborate introduction on how to get internet play
                      to work. For Windows only.
-* keys.pdf           A printable document, listing all commands and it also
-                     contains a very short guide for new players.
+* tiles_help.txt     An explanation of the Tiles interface.
+* key_changes.pdf    A printable document, listing all new commands and 
+                     changed key settings.
 
 The settings/ folder contains, among others, the following files:
 

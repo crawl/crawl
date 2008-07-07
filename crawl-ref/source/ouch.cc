@@ -277,7 +277,7 @@ void splash_with_acid( char acid_strength )
             continue;
         }
 
-        if (random2(20) <= acid_strength)
+        if (x_chance_in_y(acid_strength + 1, 20))
             item_corrode( you.equip[splc] );
     }
 
@@ -309,11 +309,10 @@ void weapon_acid( char acid_strength )
         msg::stream << "Your " << your_hand(true) << " burn!" << std::endl;
         ouch( roll_dice( 1, acid_strength ), 0, KILLED_BY_ACID );
     }
-    else if (random2(20) <= acid_strength)
-    {
+
+    if (x_chance_in_y(acid_strength + 1, 20))
         item_corrode( hand_thing );
-    }
-}                               // end weapon_acid()
+}
 
 void item_corrode( int itco )
 {

@@ -829,7 +829,11 @@ void static _get_randart_properties(const item_def &item,
         }
     }
 
-    bool done_powers = (random2(12 < power_level));
+    // This can't be right. random2(boolean) == 0, always. (jpeg)
+//    bool done_powers = (random2(12 < power_level));
+
+   // Try to improve items that still have a low power level.
+   bool done_powers = x_chance_in_y(power_level, 12);
 
     // res_fire
     if (!done_powers

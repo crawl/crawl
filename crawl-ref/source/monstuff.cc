@@ -2266,7 +2266,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
             {
                 // Slightly greater chance to simply head for the centre.
                 count_grids += 3;
-                if (random2(count_grids) < 3)
+                if (x_chance_in_y(3, count_grids))
                     set_target = true;
             }
             else if (one_chance_in(++count_grids))
@@ -3538,7 +3538,7 @@ monsters *choose_random_monster_on_level(int weight,
                     {
                         mons_count += 2;
                         // Named monsters have doubled chances.
-                        if (random2(mons_count) < 2)
+                        if (x_chance_in_y(2, mons_count))
                             chosen = mon;
                     }
                     else if (one_chance_in(++mons_count))
@@ -4233,7 +4233,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (!mons_player_visible( monster ))
             break;
 
-        if (monster->type != MONS_HELL_HOUND && random2(13) < 3
+        if (monster->type != MONS_HELL_HOUND && x_chance_in_y(3, 13)
             || one_chance_in(10))
         {
             setup_dragon(monster, beem);
@@ -5624,7 +5624,7 @@ int mons_natural_regen_rate(monsters *monster)
 static inline bool _mons_natural_regen_roll(monsters *monster)
 {
     const int regen_rate = mons_natural_regen_rate(monster);
-    return (random2(25) < regen_rate);
+    return (x_chance_in_y(regen_rate, 25));
 }
 
 // Do natural regeneration for monster.
@@ -5996,7 +5996,7 @@ static void _handle_monster_move(int i, monsters *monster)
                         }
                     }
 
-                if (random2(2 + pfound) < 2)
+                if (x_chance_in_y(2, 2 + pfound))
                     mmov_x = mmov_y = 0;
 
                 // Bounds check: don't let confused monsters try to run
@@ -7030,7 +7030,7 @@ static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         case CLOUD_STINK:
             if (mons_res_poison(monster) > 0)
                 return (true);
-            if (1 + random2(5) < monster->hit_dice)
+            if (x_chance_in_y(monster->hit_dice - 1, 5))
                 return (true);
             if (monster->hit_points >= random2avg(19, 2))
                 return (true);

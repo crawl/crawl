@@ -35,5 +35,5 @@ msc = darkgrey:You start (resting|searching)
 msc = darkgrey:Unknown command
 msc = darkgrey:disappears in a puff of smoke
 #
-msc = darkgrey:miss(es)? (the|you|it)
+msc = darkgrey:plain:miss(es)? (the|you|it)
 msc = darkgrey:but (do no|doesn't do any) damage

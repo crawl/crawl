@@ -432,7 +432,7 @@ static bool _xom_is_good(int sever)
     // This series of random calls produces a poisson-looking
     // distribution: initial hump, plus a long-ish tail.
 
-    if (random2(sever) <= 1)
+    if (x_chance_in_y(2, sever))
     {
         potion_type pot =
             static_cast<potion_type>(
@@ -456,13 +456,13 @@ static bool _xom_is_good(int sever)
             done = true;
         }
     }
-    else if (random2(sever) <= 2)
+    else if (x_chance_in_y(3, sever))
     {
         _xom_makes_you_cast_random_spell(sever);
 
         done = true;
     }
-    else if (random2(sever) <= 3)
+    else if (x_chance_in_y(4, sever))
     {
         // XXX: Can we clean up this ugliness, please?
         const int numdemons =
@@ -544,13 +544,13 @@ static bool _xom_is_good(int sever)
         delete[] is_demonic;
         delete[] summons;
     }
-    else if (random2(sever) <= 4)
+    else if (x_chance_in_y(5, sever))
     {
         _xom_gives_item(sever);
 
         done = true;
     }
-    else if (random2(sever) <= 5)
+    else if (x_chance_in_y(6, sever))
     {
         monster_type mon = _xom_random_demon(sever);
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
@@ -586,7 +586,7 @@ static bool _xom_is_good(int sever)
             done = true;
         }
     }
-    else if (random2(sever) <= 6)
+    else if (x_chance_in_y(7, sever))
     {
         if (there_are_monsters_nearby())
         {
@@ -614,13 +614,13 @@ static bool _xom_is_good(int sever)
             }
         }
     }
-    else if (random2(sever) <= 7)
+    else if (x_chance_in_y(8, sever))
     {
         _xom_gives_item(sever);
 
         done = true;
     }
-    else if (random2(sever) <= 8)
+    else if (x_chance_in_y(9, sever))
     {
         // This can fail with radius 1, or in open areas.
         if (vitrify_area(random2avg(sever / 2, 3) + 1))
@@ -630,7 +630,7 @@ static bool _xom_is_good(int sever)
             done = true;
         }
     }
-    else if (random2(sever) <= 9)
+    else if (x_chance_in_y(10, sever))
     {
         if (you.can_safely_mutate()
             && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
@@ -653,7 +653,7 @@ static bool _xom_is_good(int sever)
             }
         }
     }
-    else if (random2(sever) <= 10)
+    else if (x_chance_in_y(11, sever))
     {
         monster_type mon = _xom_random_demon(sever);
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
@@ -689,7 +689,7 @@ static bool _xom_is_good(int sever)
             done = true;
         }
     }
-    else if (random2(sever) <= 11)
+    else if (x_chance_in_y(12, sever))
     {
         if (player_in_a_dangerous_place())
         {
@@ -735,7 +735,7 @@ static bool _xom_is_bad(int sever)
 
     while (!done)
     {
-        if (random2(sever) <= 2)
+        if (x_chance_in_y(3, sever))
         {
             god_speaks(GOD_XOM, _get_xom_speech("zero miscast effect").c_str());
 
@@ -743,7 +743,7 @@ static bool _xom_is_bad(int sever)
 
             done = true;
         }
-        else if (random2(sever) <= 3)
+        else if (x_chance_in_y(4, sever))
         {
             god_speaks(GOD_XOM, _get_xom_speech("minor miscast effect").c_str());
 
@@ -752,7 +752,7 @@ static bool _xom_is_bad(int sever)
 
             done = true;
         }
-        else if (random2(sever) <= 4)
+        else if (x_chance_in_y(5, sever))
         {
             god_speaks(GOD_XOM, _get_xom_speech("lose stats").c_str());
 
@@ -761,7 +761,7 @@ static bool _xom_is_bad(int sever)
 
             done = true;
         }
-        else if (random2(sever) <= 5)
+        else if (x_chance_in_y(6, sever))
         {
             god_speaks(GOD_XOM, _get_xom_speech("medium miscast effect").c_str());
 
@@ -770,7 +770,7 @@ static bool _xom_is_bad(int sever)
 
             done = true;
         }
-        else if (random2(sever) <= 6)
+        else if (x_chance_in_y(7, sever))
         {
             if (you.can_safely_mutate()
                 && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
@@ -793,7 +793,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (random2(sever) <= 7)
+        else if (x_chance_in_y(8, sever))
         {
             if (there_are_monsters_nearby())
             {
@@ -821,7 +821,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (random2(sever) <= 8)
+        else if (x_chance_in_y(9, sever))
         {
             std::string speech = _get_xom_speech("draining or torment");
 
@@ -852,7 +852,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (random2(sever) <= 9)
+        else if (x_chance_in_y(10, sever))
         {
             std::string speech = _get_xom_speech("hostile monster");
 
@@ -892,7 +892,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (random2(sever) <= 10)
+        else if (x_chance_in_y(11, sever))
         {
             god_speaks(GOD_XOM, _get_xom_speech("major miscast effect").c_str());
 

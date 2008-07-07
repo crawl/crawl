@@ -2851,7 +2851,7 @@ static void _decrement_durations()
 
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
-            if (you.religion == GOD_TROG && you.piety > random2(150)
+            if (you.religion == GOD_TROG && x_chance_in_y(you.piety, 150)
                 && !player_under_penance())
             {
                 mpr("Trog's vigour flows through your veins.");
@@ -2949,7 +2949,7 @@ static void _decrement_durations()
         // to even start rotting right now, but that could be changed. -- bwr
         if (you.species == SP_MUMMY)
             you.rotting = 0;
-        else if (random2(20) <= (you.rotting - 1))
+        else if (x_chance_in_y(you.rotting, 20))
         {
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
             ouch(1, 0, KILLED_BY_ROTTING);
@@ -2980,7 +2980,7 @@ static void _decrement_durations()
 
     if (you.duration[DUR_POISONING] > 0)
     {
-        if (random2(5) <= (you.duration[DUR_POISONING] - 1))
+        if (x_chance_in_y(you.duration[DUR_POISONING], 5))
         {
             if (you.duration[DUR_POISONING] > 10 && random2(you.duration[DUR_POISONING]) >= 8)
             {
@@ -3096,15 +3096,15 @@ static void _world_reacts()
 
     run_environment_effects();
 
-    if ( !you.cannot_act() && !player_mutation_level(MUT_BLURRY_VISION)
-         && random2(50) < you.skills[SK_TRAPS_DOORS] )
+    if (!you.cannot_act() && !player_mutation_level(MUT_BLURRY_VISION)
+        && x_chance_in_y(you.skills[SK_TRAPS_DOORS], 50))
     {
-        search_around(false); // check nonadjacent squares too
+        search_around(false); // Check nonadjacent squares too.
     }
 
     stealth = check_stealth();
 
-#if 0
+#ifdef DEBUG_STEALTH
     // Too annoying for regular diagnostics.
     mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth );
 #endif

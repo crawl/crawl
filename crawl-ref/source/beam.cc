@@ -742,7 +742,7 @@ dice_def calc_dice( int num_dice, int max_damage )
         // Divide the damage among the dice, and add one
         // occasionally to make up for the fractions. -- bwr
         ret.size  = max_damage / num_dice;
-        ret.size += (random2( num_dice ) < max_damage % num_dice);
+        ret.size += x_chance_in_y(max_damage % num_dice, num_dice);
     }
 
     return (ret);
@@ -4054,7 +4054,8 @@ static int _affect_player( bolt &beam, item_def *item )
     if (you.equip[EQ_BODY_ARMOUR] != -1)
     {
         if (!player_light_armour(false) && one_chance_in(4)
-            && random2(1000) <= item_mass( you.inv[you.equip[EQ_BODY_ARMOUR]] ))
+            && x_chance_in_y(item_mass(you.inv[you.equip[EQ_BODY_ARMOUR]]) + 1,
+                             1000))
         {
             exercise( SK_ARMOUR, 1 );
         }
@@ -4106,8 +4107,8 @@ static int _affect_player( bolt &beam, item_def *item )
         else if (item->special == SPMSL_POISONED)
         {
             if (!player_res_poison()
-                && (hurted || (beam.ench_power == AUTOMATIC_HIT
-                               && random2(100) < 90 - (3 * player_AC()))))
+                && (hurted || beam.ench_power == AUTOMATIC_HIT
+                              && x_chance_in_y(90 - 3 * player_AC(), 100)))
             {
                 poison_player( 1 + random2(3) );
                 was_affected = true;
@@ -4115,7 +4116,7 @@ static int _affect_player( bolt &beam, item_def *item )
         }
         else if (item->special == SPMSL_CURARE)
         {
-            if (random2(100) < 90 - (3 * player_AC()))
+            if (x_chance_in_y(90 - 3 * player_AC(), 100))
             {
                 curare_hits_player( _beam_ouch_agent(beam), 1 + random2(3) );
                 was_affected = true;
@@ -4736,22 +4737,20 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 int num_levels = 0;
                 // ench_power == AUTOMATIC_HIT if this is a poisoned needle.
                 if (beam.ench_power == AUTOMATIC_HIT
-                    && random2(100) < 90 - (3 * mon->ac))
+                    && x_chance_in_y(90 - 3 * mon->ac, 100))
                 {
                     num_levels = 2;
                 }
                 else if (random2(hurt_final) - random2(mon->ac) > 0)
-                {
                     num_levels = 1;
-                }
 
                 int num_success = 0;
                 if (YOU_KILL(beam.thrower))
                 {
                     const int skill_level = _name_to_skill_level(beam.name);
-                    if ( skill_level + 25 > random2(50) )
+                    if (x_chance_in_y(skill_level + 25, 50))
                         num_success++;
-                    if ( skill_level > random2(50) )
+                    if (x_chance_in_y(skill_level, 50))
                         num_success++;
                 }
                 else

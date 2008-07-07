@@ -1976,7 +1976,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         blast.name       = "blast of metal fragments";
         blast.damage.num = 4;
 
-        if (okay_to_dest && pow >= 80 && random2(500) < pow / 5)
+        if (okay_to_dest && pow >= 80 && x_chance_in_y(pow / 5, 500))
         {
             blast.damage.num += 2;
             grd[beam.tx][beam.ty] = DNGN_FLOOR;

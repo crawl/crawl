@@ -541,7 +541,7 @@ void in_a_cloud()
     case CLOUD_MIASMA:
         mpr("You are engulfed in a dark miasma.");
 
-        if (player_prot_life() > random2(3))
+        if (x_chance_in_y(player_prot_life(), 3))
             return;
 
         poison_player(1);

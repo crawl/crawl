@@ -5689,7 +5689,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             int damage = 0;
 
             // tiny: 1/6, little: 2/5, small: 3/4, medium and above: always
-            if (random2(SIZE_GIANT - mon_size) <= mon_size)
+            if (x_chance_in_y(mon_size + 1, SIZE_GIANT - mon_size))
                 damage++;
 
             // Handled specially to make up for its small size.
@@ -5895,7 +5895,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SHAPESHIFTER:     // This ench never runs out!
         if (type == MONS_SHAPESHIFTER
-            || random2(1000) < ( 1000 / ((15 * hit_dice) / 5)))
+            || x_chance_in_y(1000 / (15 * hit_dice / 5), 1000))
         {
             monster_polymorph(this, RANDOM_MONSTER, PPT_SAME);
         }
@@ -6381,7 +6381,7 @@ void monsters::react_to_damage(int damage)
 {
     // The royal jelly objects to taking damage and will SULK. :-)
     if (type == MONS_ROYAL_JELLY && alive()
-        && damage > 8 && random2(50) < damage)
+        && damage > 8 && x_chance_in_y(damage, 50))
     {
         const int tospawn =
             1 + random2avg(1 + std::min((damage - 8) / 8, 5), 2);

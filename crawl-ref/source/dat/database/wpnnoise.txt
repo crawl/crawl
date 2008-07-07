@@ -68,9 +68,11 @@ weapon_sings
 
 @The_weapon@ makes a painfully high-pitched squeak.
 
+@The_weapon@ sings an ear-splitting high note.
+
 @The_weapon@ sings a sudden staccato note.
 
-@The_weapon@ sings a catchy @tune_or_melody@.
+@The_weapon@ @sings_or_hums@ a catchy @tune_or_melody@.
 
 @The_weapon@ hums a slow waltz.
 
@@ -89,7 +91,7 @@ weapon_sings
 
 @The_weapon@ hums an eerie @tune_or_melody@.
 
-@The_weapon@ hums a slow and mournful tune.
+@The_weapon@ @sings_or_hums@ a slow and mournful tune.
 
 @The_weapon@ launches into yet another solo.
 
@@ -104,6 +106,8 @@ weapon_sings
 @The_weapon@ sings a quivering drawn-out note.
 
 @The_weapon@ sings a little jingle.
+
+@The_weapon@ raucously launches into song.
 
 @The_weapon@ strikes up a funeral march.
 
@@ -126,6 +130,12 @@ In a hysterical voice, @the_weapon@ strikes up a march.
 @The_weapon@ intones @an_aria_or_fugue@.
 
 @The_weapon@ @nearly_or_clearly@ @hits_or_misses@ the concert pitch.
+
+@The_weapon@ sings a song about @song_theme@.
+
+@The_weapon@ composes a hymn about @song_theme@.
+
+@The_weapon@ composes a ballad about your adventures.
 
 #imitates instruments
 @The_weapon@ makes a twanging sound.
@@ -179,6 +189,8 @@ In a hysterical voice, @the_weapon@ strikes up a march.
 
 @The_weapon@ tries to improvise rhymes, and fails miserably.
 
+@The_weapon@ asks you for a rhyme on '@rhyme_word@'.
+
 @The_weapon@ complains about @double_or_triple@ swords.
 
 @The_weapon@ derides short swords.
@@ -186,6 +198,12 @@ In a hysterical voice, @the_weapon@ strikes up a march.
 @The_weapon@ yells, "Ploughshares to swords!" and giggles.
 
 @The_weapon@ chants, "Rather stab than club, rather slice than rub!"
+
+@The_weapon@ says, "Whips just don't cut it for me, don't you agree?"
+
+@The_weapon@ muses on the connection between 'duet' and 'duel'.
+
+@Your_weapon@ wails, "I am too young to rust!"
 
 # end Singing Sword
 %%%%
@@ -210,9 +228,9 @@ weapon_talks
 
 @Your_weapon@ cheers you on.
 
-@Your_weapon@ calls out a warning!
+@Your_weapon@ intones a prayer.
 
-@Your_weapon@ hurls insults at you.
+@Your_weapon@ calls out a warning!
 
 @Your_weapon@ chatters happily.
 
@@ -241,11 +259,9 @@ weapon_talks
 
 @Your_weapon@ amuses itself with detailed descriptions of past executions.
 
-@Your_weapon@ wails, "I am too young to rust!"
-
 @Your_weapon@ wishes everyone in the dungeon @unpleasant_or_sudden@ @demise_or_death@.
 
-@Your_weapon@ fumes, "Being battered, bent and broken sure is better than this boredom!"
+@Your_weapon@ fumes, "Being battered, bent, and broken sure is better than this boredom!"
 
 @Your_weapon@ yells, "No battle, no fun!"
 
@@ -263,11 +279,35 @@ weapon_talks
 
 @Your_weapon@ shouts, "Left! No, no, right!".
 
-@Your_weapon@ says, "How I wish you were a better fighter."
+@Your_weapon@ sighs, "How I wish you were a better fighter."
 
 @Your_weapon@ grouses, "Could you please kill something?  I'm itching all over."
 
 @Your_weapon@ shouts, "Make war, not love!"
+
+@Your_weapon@ cries out, "You certainly can't call me dull!"
+
+@Your_weapon@ tells you the story of its previous owner's @demise_or_death@.
+
+@Your_weapon@ brightly announces, "I've got so much to tell you!"
+
+@Your_weapon@ comments on your fighting techniques.
+
+@Your_weapon@ says, "You could say something too, you know."
+
+@Your_weapon@ complains, "Are you always this @silent@?"
+
+@Your_weapon@ says, "Why don't you say something for a change?"
+
+@Your_weapon@ asks, "Did you take a vow of silence?"
+
+@Your_weapon@ shouts a battle cry!
+
+@Your_weapon@ shouts, "Onwards!  It's kill or die!"
+
+@Your_weapon@ says, "You can tell me everything!  I can keep a secret!"
+
+@Your_weapon@ grouses, "Silence can be so depressing."
 
 #makes noises
 @Your_weapon@ growls menacingly.
@@ -310,8 +350,6 @@ weapon_talks
 
 @Your_weapon@ yawns loudly.
 
-@Your_weapon@ intones a prayer.
-
 @Your_weapon@ cries out!
 
 @Your_weapon@ swears loudly.
@@ -345,6 +383,8 @@ weapon_talks
 @Your_weapon@ makes a popping sound.
 
 @Your_weapon@ yelps loudly!
+
+@Your_weapon@ cheers!
 
 @Your_weapon@ lets out a series of bird calls.
 
@@ -474,6 +514,12 @@ waltz
 
 menuet
 %%%%
+sings_or_hums
+
+sings
+
+hums
+%%%%
 an_aria_or_fugue
 
 an aria
@@ -521,4 +567,32 @@ double_or_triple
 double
 
 triple
+%%%%
+rhyme_word
+
+fountain of blood
+
+killing spree
+
+battlefield
+%%%%
+song_theme
+
+battle and fame
+
+death and destruction
+
+the glory of death
+%%%%
+silent
+
+uncommunicative
+
+taciturn
+
+quiet
+
+silent
+
+boring
 %%%%

@@ -1773,7 +1773,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                 // Human blood gives extra healing during feeding.
                 if (hp_amt >= duration)
                     hp_amt /= duration;
-                else if (random2(duration) < hp_amt)
+                else if (x_chance_in_y(hp_amt, duration))
                     hp_amt = 1;
 
                 _heal_from_food(hp_amt, 0, one_chance_in(duration/2),
@@ -2259,7 +2259,7 @@ static int _determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     // saprovores get rotting meat effect from clean chunks, since they
     // love rotting meat.
     if (wearing_amulet(AMU_THE_GOURMAND)
-        && random2(GOURMAND_MAX) < you.duration[DUR_GOURMAND])
+        && x_chance_in_y(you.duration[DUR_GOURMAND], GOURMAND_MAX))
     {
         if (player_mutation_level(MUT_SAPROVOROUS) == 3)
         {

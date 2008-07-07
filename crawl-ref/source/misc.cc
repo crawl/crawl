@@ -1125,7 +1125,7 @@ static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false
     if (!spatter && !allow_bleeding_on_square(x,y))
         return;
 
-    if (amount > random2(20))
+    if (x_chance_in_y(amount, 20))
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
@@ -1269,14 +1269,14 @@ void search_around( bool only_adjacent )
                 int effective = you.skills[SK_TRAPS_DOORS] / (2*dist - 1);
 
                 if (grd[srx][sry] == DNGN_SECRET_DOOR
-                    && random2(17) <= effective)
+                    && x_chance_in_y(effective + 1, 17))
                 {
                     mpr("You found a secret door!");
                     reveal_secret_door(srx, sry);
                     exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
                 }
                 else if (grd[srx][sry] == DNGN_UNDISCOVERED_TRAP
-                         && random2(17) <= effective)
+                         && x_chance_in_y(effective + 1, 17))
                 {
                     i = trap_at_xy(srx, sry);
 

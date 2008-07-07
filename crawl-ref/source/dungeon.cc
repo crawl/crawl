@@ -7698,7 +7698,7 @@ bool dgn_region::overlaps(const map_mask &mask) const
 
 coord_def dgn_region::random_edge_point() const
 {
-    return random2(size.x + size.y) < size.x ?
+    return x_chance_in_y(size.x, size.x + size.y) ?
                   coord_def( pos.x + random2(size.x),
                              coinflip()? pos.y : pos.y + size.y - 1 )
                 : coord_def( coinflip()? pos.x : pos.x + size.x - 1,

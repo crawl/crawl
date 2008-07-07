@@ -231,7 +231,7 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
     for (int i = gx1; i <= gx2; i++)
         for (int j = gy1; j <= gy2; j++)
         {
-            if (grd[i][j] == DNGN_UNSEEN && random2(100) <= thickness)
+            if (grd[i][j] == DNGN_UNSEEN && x_chance_in_y(thickness + 1, 100))
             {
                 grd[i][j] = DNGN_FLOOR;
 

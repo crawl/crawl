@@ -743,7 +743,7 @@ static std::string _describe_demon(const monsters &mons)
 
     description << ".";
 
-    if (random2(40) < 3)
+    if (x_chance_in_y(3, 40))
     {
         if (player_can_smell())
         {

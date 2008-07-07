@@ -223,7 +223,7 @@ void special_wielded()
         break;
 
     case SPWLD_SHADOW:
-        if (random2(8) <= player_spec_death())
+        if (x_chance_in_y(player_spec_death() + 1, 8))
         {
             create_monster(
                 mgen_data(MONS_SHADOW, BEH_FRIENDLY,
@@ -514,7 +514,7 @@ bool evoke_wielded()
 
                 your_spells( SPELL_OLGREBS_TOXIC_RADIANCE, power, false );
 
-                if (you.skills[SK_EVOCATIONS] >= random2(10))
+                if (x_chance_in_y(you.skills[SK_EVOCATIONS] + 1, 10))
                     your_spells( SPELL_VENOM_BOLT, power, false );
                 break;
 
@@ -563,7 +563,7 @@ bool evoke_wielded()
         else if (wpn.sub_type == STAFF_CHANNELING)
         {
             if (you.magic_points < you.max_magic_points
-                && you.skills[SK_EVOCATIONS] + 10 >= random2(40))
+                && x_chance_in_y(you.skills[SK_EVOCATIONS] + 11, 40))
             {
                 mpr("You channel some magical energy.");
                 inc_mp( 1 + random2(3), false );
@@ -695,7 +695,7 @@ bool evoke_wielded()
 
 static bool efreet_flask(void)
 {
-    bool friendly = (you.skills[SK_EVOCATIONS] / 3 + 10 > random2(20));
+    bool friendly = x_chance_in_y(10 + you.skills[SK_EVOCATIONS] / 3, 20);
 
     mpr("You open the flask...");
 
@@ -960,7 +960,7 @@ static bool box_of_beasts()
 
     mpr("You open the lid...");
 
-    if (random2(100) < 60 + you.skills[SK_EVOCATIONS])
+    if (x_chance_in_y(60 + you.skills[SK_EVOCATIONS], 100))
     {
         monster_type beasty = MONS_PROGRAM_BUG;
 

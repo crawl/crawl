@@ -533,6 +533,7 @@ void ghost_demon::find_extra_ghosts( std::vector<ghost_demon> &gs, int n )
     find_transiting_ghosts(gs, n);
 }
 
+// Returns the number of extra ghosts allowed on the level.
 int ghost_demon::n_extra_ghosts()
 {
     const int lev = you.your_level + 1;
@@ -554,15 +555,19 @@ int ghost_demon::n_extra_ghosts()
         return (0);
 
     // No multiple ghosts until level 9 of the main dungeon.
-    if ((lev < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON)
-        || (subdepth < 2 && you.where_are_you == BRANCH_LAIR)
-        || (subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES))
+    if (lev < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON
+        || subdepth < 2 && you.where_are_you == BRANCH_LAIR
+        || subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES)
+    {
         return (0);
+    }
 
     if (you.where_are_you == BRANCH_LAIR
         || you.where_are_you == BRANCH_ORCISH_MINES
-        || (you.where_are_you == BRANCH_MAIN_DUNGEON && lev < 15))
+        || you.where_are_you == BRANCH_MAIN_DUNGEON && lev < 15)
+    {
         return (1);
+    }
 
-    return 1 + (random2(20) < lev) + (random2(40) < lev);
+    return (1 + x_chance_in_y(lev, 20) + x_chance_in_y(lev, 40));
 }

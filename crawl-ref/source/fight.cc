@@ -1477,7 +1477,7 @@ void melee_attack::player_weapon_auto_id()
         && weapon->base_type == OBJ_WEAPONS
         && !is_range_weapon( *weapon )
         && !item_ident( *weapon, ISFLAG_KNOW_PLUSES )
-        && random2(100) < you.skills[ wpn_skill ])
+        && x_chance_in_y(you.skills[ wpn_skill ], 100))
     {
         set_ident_flags( *weapon, ISFLAG_KNOW_PLUSES );
         mprf("You are wielding %s.", weapon->name(DESC_NOCAP_A).c_str());
@@ -1542,7 +1542,7 @@ int melee_attack::player_stab(int damage)
         if (mons_is_sleeping(def))
         {
             // Sleeping moster wakes up when stabbed but may be groggy.
-            if (random2(200) <= you.skills[SK_STABBING] + you.dex)
+            if (x_chance_in_y(you.skills[SK_STABBING] + you.dex + 1, 200))
             {
                 int stun = random2( you.dex + 1 );
 
@@ -2319,8 +2319,8 @@ bool melee_attack::apply_damage_brand()
         break;
     }
     case SPWPN_PAIN:
-        if (defender->res_negative_energy()
-            && random2(8) <= attacker->skill(SK_NECROMANCY))
+        if (!defender->res_negative_energy()
+            && x_chance_in_y(attacker->skill(SK_NECROMANCY) + 1, 8))
         {
             if (defender_visible)
             {
@@ -2350,7 +2350,7 @@ bool melee_attack::apply_damage_brand()
         if (mons_class_is_confusable(def->type)
             && hdcheck >= defender->get_experience_level())
         {
-            // declaring these just to pass to the enchant function
+            // Declaring these just to pass to the enchant function.
             bolt beam_temp;
             beam_temp.thrower =
                 attacker->atype() == ACT_PLAYER? KILL_YOU : KILL_MON;
@@ -2586,13 +2586,13 @@ void melee_attack::player_apply_staff_damage()
 
     case STAFF_POISON:
     {
-        // cap chance at 30% -- let staff of Olgreb shine
+        // Cap chance at 30% -- let staff of Olgreb shine.
         int temp_rand = damage_done + you.skills[SK_POISON_MAGIC];
 
         if (temp_rand > 30)
             temp_rand = 30;
 
-        if (random2(100) < temp_rand)
+        if (x_chance_in_y(temp_rand, 100))
         {
             // Poison monster message needs to arrive after hit message.
             emit_nodmg_hit_message();
@@ -2605,7 +2605,7 @@ void melee_attack::player_apply_staff_damage()
         if (mons_res_negative_energy(def))
             break;
 
-        if (random2(8) <= you.skills[SK_NECROMANCY])
+        if (x_chance_in_y(you.skills[SK_NECROMANCY] + 1, 8))
         {
             special_damage = player_staff_damage(SK_NECROMANCY);
 
@@ -2876,8 +2876,8 @@ void melee_attack::player_stab_check()
 
     bool roll_needed = true;
     int roll = 155;
-    // This ordering is important!
 
+    // This ordering is important!
     switch (unchivalric)
     {
     default:
@@ -2919,7 +2919,10 @@ void melee_attack::player_stab_check()
 
     // See if we need to roll against dexterity / stabbing.
     if (stab_attempt && roll_needed)
-        stab_attempt = (random2(roll) <= you.skills[SK_STABBING] + you.dex);
+    {
+        stab_attempt = x_chance_in_y(you.skills[SK_STABBING] + you.dex + 1,
+                                     roll);
+    }
 }
 
 void melee_attack::player_apply_attack_delay()
@@ -3500,7 +3503,7 @@ void melee_attack::check_defender_train_armour()
         return;
 
     const item_def *arm = defender->slot_item(EQ_BODY_ARMOUR);
-    if (arm && coinflip() && random2(1000) <= item_mass(*arm))
+    if (arm && coinflip() && x_chance_in_y(item_mass(*arm) + 1, 1000))
         defender->exercise(SK_ARMOUR, coinflip()? 2 : 1);
 }
 
@@ -3707,7 +3710,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         if (mons_is_summoned(def))
             break;
 
-        if (defender->res_negative_energy() > random2(3))
+        if (x_chance_in_y(defender->res_negative_energy(), 3))
             break;
 
         if (defender->stat_hp() < defender->stat_maxhp())
