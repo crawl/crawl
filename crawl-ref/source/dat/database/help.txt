@@ -64,7 +64,7 @@ level-map
 <w>Esc</w>    : Leave level map (also <w>Space</w> or any unused key).
 <w>Dir.</w>   : Move the cursor.
 <w>/ Dir.</w> : Move the cursor in larger steps (also <w>Shift-Dir.</w>).
-<w>-</w>/<w>+</w>    : Scroll level map up/down
+<w>-</w>/<w>+</w>    : Scroll level map 20 grids up/down.
 <w>.</w>      : Start travel (also <w>Enter</w> and <w>,</w> and <w>;</w>).
                 (Moves cursor to the last travel destination if still on @.)
 <w><<</w>/<w>></w>    : Cycle through up/down stairs.

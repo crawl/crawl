@@ -1370,8 +1370,12 @@ void wizard_create_spec_object()
             {
                 special_wanted =
                         _debug_prompt_for_skill( "A manual for which skill? " );
+
                 if (special_wanted != -1)
-                    mitm[thing_created].plus = special_wanted;
+                {
+                    mitm[thing_created].plus  = special_wanted;
+                    mitm[thing_created].plus2 = 3 + random2(15);
+                }
                 else
                     mpr( "Sorry, no books on that skill today." );
             }

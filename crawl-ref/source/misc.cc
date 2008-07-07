@@ -969,8 +969,8 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     if (need_msg && get_ident_type(OBJ_POTIONS, POT_DECAY) == ID_KNOWN_TYPE)
         _potion_stack_changed_message(potion, amount, false);
 
-    // just in case
-    you.wield_change  = true;
+    if (you.equip[EQ_WEAPON] == obj)
+        you.wield_change = true;
     you.redraw_quiver = true;
 
     if (is_blood_potion(potion))
@@ -996,7 +996,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
             else
                 you.inv[obj].quantity -= amount;
 
-            you.inv[m].quantity   += amount;
+            you.inv[m].quantity += amount;
 
             return;
         }
@@ -1015,20 +1015,21 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     if (freeslot >= 0 && freeslot < ENDOFPACK
         && !is_valid_item(you.inv[freeslot]))
     {
-        item_def &item = you.inv[freeslot];
-        item.link      = freeslot;
-        item.slot      = index_to_letter(item.link);
-        item.base_type = OBJ_POTIONS;
-        item.sub_type  = POT_DECAY;
-        item.quantity  = amount;
-        item.x         = -1;
-        item.y         = -1;
+        item_def &item   = you.inv[freeslot];
+        item.link        = freeslot;
+        item.slot        = index_to_letter(item.link);
+        item.base_type   = OBJ_POTIONS;
+        item.sub_type    = POT_DECAY;
+        item.quantity    = amount;
+        item.x           = -1;
+        item.y           = -1;
         // Keep description as it was.
-        item.plus      = potion.plus;
-        item.plus2     = 0;
-        item.special   = 0;
-        item.flags     = 0;
-        item.colour    = potion.colour;
+        item.plus        = potion.plus;
+        item.plus2       = 0;
+        item.special     = 0;
+        item.flags       = 0;
+        item.colour      = potion.colour;
+        item.inscription = "";
 
         you.inv[obj].quantity -= amount;
         return;

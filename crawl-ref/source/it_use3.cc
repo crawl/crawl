@@ -942,15 +942,14 @@ void skill_manual(int slot)
 
     exercise(skill, 500);
 
-    if (one_chance_in(10))
+    if (--manual.plus2 <= 0)
     {
         mpr("The manual crumbles into dust.");
         dec_inv_item_quantity( slot, 1 );
     }
     else
-    {
         mpr("The manual looks somewhat more worn.");
-    }
+
     xom_is_stimulated(14);
 }
 

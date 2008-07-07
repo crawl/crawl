@@ -3159,7 +3159,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
 
     int screen_y = you.y_pos;
 
-    // if close to top of known map, put min_y on top
+    // If close to top of known map, put min_y on top
     // else if close to bottom of known map, put max_y on bottom.
     //
     // The num_lines comparisons are done to keep things neat, by

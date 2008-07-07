@@ -2059,8 +2059,9 @@ void inscribe_item(item_def &item, bool proper_prompt)
         }
     }
 
-    std::string prompt = (is_inscribed ? "Add what to inscription? "
-                                       : "Inscribe with what? ");
+    std::string prompt = (is_inscribed ? "Add to inscription? "
+                                       : "Inscribe item? ");
+
     if (need_autoinscribe || is_inscribed)
     {
         prompt += "(You may also ";
@@ -2068,7 +2069,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
         {
             prompt += "(a)utoinscribe";
             if (is_inscribed)
-                prompt += " or ";
+                prompt += ", or ";
         }
         if (is_inscribed)
             prompt += "(c)lear it";
@@ -2082,54 +2083,77 @@ void inscribe_item(item_def &item, bool proper_prompt)
         prompt = "<cyan>" + prompt + "</cyan>";
         formatted_string::parse_string(prompt).display();
 
-        if (Options.tutorial_left  && wherey() <= get_number_of_lines() - 5)
+        if (Options.tutorial_left && wherey() <= get_number_of_lines() - 5)
             tutorial_inscription_info(need_autoinscribe, prompt);
     }
 
-    char buf[79];
-    if (!cancelable_get_line(buf, sizeof buf))
+    int keyin = tolower(c_getch());
+    switch (keyin)
     {
-        // Strip spaces from the end.
-        for (int i = strlen(buf) - 1; i >= 0; i--)
-        {
-            if (isspace( buf[i] ))
-                buf[i] = 0;
-            else
-                break;
-        }
+    case 'a':
+        // Remove previous randart inscription
+        _trim_randart_inscrip(item);
 
-        if (need_autoinscribe && buf[1] == 0
-            && (buf[0] == 'a' || buf[0] == 'A'))
-        {
-            // Remove previous randart inscription
-            _trim_randart_inscrip(item);
+        if (!item.inscription.empty())
+            item.inscription += ", ";
 
-            if (!item.inscription.empty())
-                item.inscription += ", ";
-
-            item.inscription += ainscrip;
-        }
-        else if (is_inscribed && buf[1] == 0
-                 && (buf[0] == 'c' || buf[0] == 'C'))
-        {
-            item.inscription.clear();
-        }
-        else if (strlen(buf) > 0)
-        {
-            if (is_inscribed)
-                item.inscription += ", ";
-
-            item.inscription += std::string(buf);
-        }
+        item.inscription += ainscrip;
+        break;
+    case 'c':
+        item.inscription.clear();
+        break;
+    case 'y':
+    {
+        prompt = (is_inscribed ? "Add what to inscription? "
+                               : "Inscribe with what? ");
 
         if (proper_prompt)
+            mpr(prompt.c_str(), MSGCH_PROMPT);
+        else
         {
-            mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
-            you.wield_change  = true;
+            prompt = EOL "<cyan>" + prompt + "</cyan>";
+            formatted_string::parse_string(prompt).display();
         }
+
+        char buf[79];
+        if (!cancelable_get_line(buf, sizeof buf))
+        {
+            // Strip spaces from the end.
+            for (int i = strlen(buf) - 1; i >= 0; i--)
+            {
+                if (isspace( buf[i] ))
+                    buf[i] = 0;
+                else
+                    break;
+            }
+
+            if (strlen(buf) > 0)
+            {
+                if (is_inscribed)
+                    item.inscription += ", ";
+
+                item.inscription += std::string(buf);
+            }
+        }
+        else if (proper_prompt)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        break;
     }
-    else if (proper_prompt)
-        canned_msg(MSG_OK);
+    default:
+        if (proper_prompt)
+            canned_msg(MSG_OK);
+        return;
+    }
+
+    if (proper_prompt)
+    {
+        mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
+        you.wield_change  = true;
+    }
+
 }
 //---------------------------------------------------------------
 //

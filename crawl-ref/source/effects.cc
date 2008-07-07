@@ -1493,9 +1493,8 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         // How sad (and stupid).
         if (!silenced(you.pos()) && !quiet)
-        {
             mprf(MSGCH_SOUND, grid_item_destruction_message(grd(you.pos())));
-        }
+
         item_was_destroyed(mitm[igrd(you.pos())], NON_MONSTER);
         *item_index = NON_ITEM;
     }
@@ -1505,6 +1504,8 @@ bool acquirement(object_class_type class_wanted, int agent,
         for (int item_tries = 0; item_tries < 40; item_tries++)
         {
             int type_wanted = _find_acquirement_subtype(class_wanted, quant);
+            if (class_wanted == OBJ_BOOKS)
+                type_wanted = BOOK_MANUAL;
 
             // Clobber class_wanted for vampires.
             if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)

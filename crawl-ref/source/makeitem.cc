@@ -2453,7 +2453,7 @@ static void _generate_book_item(item_def& item, int force_type,
     if (one_chance_in(10))
         item.special += random2(8) * 10;
 
-    if ( force_type != OBJ_RANDOM )
+    if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
     {
@@ -2500,6 +2500,8 @@ static void _generate_book_item(item_def& item, int force_type,
             if (item.plus == SK_UNUSED_1)
                 item.plus = SK_UNARMED_COMBAT;
         }
+        // Set number of reads possible before it "crumbles to dust".
+        item.plus2 = 3 + random2(15);
     }
 }
 
@@ -2895,8 +2897,7 @@ static bool _weapon_is_visibly_special(const item_def &item)
         return (true);
 
     if ((item.plus || item.plus2)
-        && (one_chance_in(3)
-            || get_equip_race(item) && one_chance_in(7)))
+        && (one_chance_in(3) || get_equip_race(item) && one_chance_in(7)))
     {
         return (true);
     }
@@ -3458,9 +3459,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             set_item_ego_type( item, OBJ_WEAPONS, SPWPN_HOLY_WRATH );
         }
         else
-        {
             item.sub_type = WPN_LONG_SWORD;
-        }
 
         item.plus  = 1 + random2(3);
         item.plus2 = 1 + random2(3);
