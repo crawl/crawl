@@ -395,8 +395,9 @@ void stop_delay( bool stop_stair_travel )
 
             if (Options.swap_when_safe)
             {
-                // XXX: This is a hack!
-                // (Necessary because attributes are unsigned chars.)
+                // Use weapon slot + 1, so weapon slot 'a' (== 0) doesn't
+                // return false when checking if
+                // you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED].
                 you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
                     = (butcher_swap_weapon == -1 ? ENDOFPACK
                                                  : butcher_swap_weapon) + 1;
