@@ -3987,7 +3987,8 @@ static int _affect_player( bolt &beam, item_def *item )
                 if (beam.beam_source == NON_MONSTER)
                 {
                     // Beam from player rebounded and hit player.
-                    xom_is_stimulated(255);
+                    if (!beam.aimed_at_feet)
+                        xom_is_stimulated(255);
                 }
                 else
                 {
@@ -4169,7 +4170,10 @@ static int _affect_player( bolt &beam, item_def *item )
             // Xom's amusement at the player's being damaged is handled
             // elsewhere.
             if (beam.beam_source == NON_MONSTER)
-                xom_is_stimulated(255);
+            {
+                if (!beam.aimed_at_feet)
+                    xom_is_stimulated(255);
+            }
             else if (was_affected)
                 xom_is_stimulated(128);
         }

@@ -73,7 +73,7 @@ void save_tutorial(writer& outf)
     marshallLong( outf, TUTORIAL_VERSION);
     marshallShort( outf, Options.tutorial_type);
     for (long i = 0; i < TUT_EVENTS_NUM; ++i)
-        marshallShort( outf, Options.tutorial_events[i] );
+        marshallBoolean( outf, Options.tutorial_events[i] );
 }
 
 void load_tutorial(reader& inf)
@@ -87,7 +87,7 @@ void load_tutorial(reader& inf)
     Options.tutorial_type = unmarshallShort(inf);
     for (long i = 0; i < TUT_EVENTS_NUM; ++i)
     {
-        Options.tutorial_events[i] = unmarshallShort(inf);
+        Options.tutorial_events[i] = unmarshallBoolean(inf);
         Options.tutorial_left += Options.tutorial_events[i];
     }
 }
@@ -150,6 +150,8 @@ bool pick_tutorial()
             you.char_class = _get_tutorial_job(Options.tutorial_type);
 
             // Activate all triggers.
+            // This is rather backwards: If (true) an event still needs to be
+            // triggered, if (false) the relevant message was already printed.
             Options.tutorial_events.init(true);
             Options.tutorial_left = TUT_EVENTS_NUM;
 
@@ -465,8 +467,10 @@ static formatted_string _tutorial_debug()
     result += "<lightblue>";
     for (i = 0; i < TUT_EVENTS_NUM; i++)
     {
-        snprintf(info, INFO_SIZE, "%d: %d (%s)",
-                 i, Options.tutorial_events[i], _tut_debug_list(i).c_str());
+        snprintf(info, INFO_SIZE, "%d: %s (%s)",
+                 i, _tut_debug_list(i).c_str(),
+                 Options.tutorial_events[i] ? "true" : "false");
+
         result += info;
 
         // Break text into 2 columns where possible.
@@ -1188,7 +1192,7 @@ void tutorial_first_monster(const monsters &mon)
 
     stop_running();
 
-    Options.tutorial_events[TUT_SEEN_MONSTER] = 0;
+    Options.tutorial_events[TUT_SEEN_MONSTER] = false;
     Options.tutorial_left--;
     Options.tut_just_triggered = true;
 
@@ -1308,7 +1312,7 @@ void tutorial_first_item(const item_def &item)
 
     stop_running();
 
-    Options.tutorial_events[TUT_SEEN_FIRST_OBJECT] = 0;
+    Options.tutorial_events[TUT_SEEN_FIRST_OBJECT] = false;
     Options.tutorial_left--;
     Options.tut_just_triggered = true;
 
@@ -1415,7 +1419,7 @@ static void _new_god_conduct()
 
 #define DELAY_EVENT \
 { \
-    Options.tutorial_events[seen_what] = 1; \
+    Options.tutorial_events[seen_what] = true; \
     Options.tutorial_left++; \
     return; \
 }
@@ -1444,7 +1448,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
 
     Options.tut_just_triggered = true;
-    Options.tutorial_events[seen_what] = 0;
+    Options.tutorial_events[seen_what] = false;
     Options.tutorial_left--;
 
     switch (seen_what)
@@ -2571,14 +2575,33 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     }
 
     case TUT_WIELD_WEAPON:
-        if (Options.tutorial_type == TUT_RANGER_CHAR
-            && you.inv[ you.equip[EQ_WEAPON] ].sub_type == WPN_BOW)
+    {
+        int wpn = you.equip[EQ_WEAPON];
+        if (wpn != -1
+            && you.inv[wpn].base_type == OBJ_WEAPONS
+            && item_cursed(you.inv[wpn]))
+        {
+            // Don't trigger if the wielded weapon is cursed.
+            Options.tutorial_events[seen_what] = true;
+            Options.tutorial_left++;
+            return;
+        }
+
+        if (Options.tutorial_type == TUT_RANGER_CHAR && wpn != -1
+            && you.inv[wpn].base_type == OBJ_WEAPONS
+            && you.inv[wpn].sub_type == WPN_BOW)
         {
             text << "You can easily switch between weapons in slots a and "
                     "b by pressing <w>'</w>.";
         }
+        else
+        {
+            text << "You can easily switch back to your weapon in slot a by "
+                    "pressing <w>'</w>. To change the slot of an item, type "
+                    "<w>=i</w> and choose the appropriate slots.";
+        }
         break;
-
+    }
     case TUT_FLEEING_MONSTER:
         if (Options.tutorial_type != TUT_BERSERK_CHAR)
             break;
@@ -2972,7 +2995,7 @@ void tutorial_describe_item(const item_def &item)
                      << "The rarer the description, the greater the potential "
                      << "value of an item.";
 
-                Options.tutorial_events[TUT_SEEN_RANDART] = 0;
+                Options.tutorial_events[TUT_SEEN_RANDART] = false;
             }
             if (item_known_cursed( item ) && !long_text)
             {
@@ -2984,9 +3007,9 @@ void tutorial_describe_item(const item_def &item)
                 if (!wielded && is_throwable(item, you.body_size()))
                     ostr << " (Throwing it is safe, though.)";
 
-                Options.tutorial_events[TUT_YOU_CURSED] = 0;
+                Options.tutorial_events[TUT_YOU_CURSED] = false;
             }
-            Options.tutorial_events[TUT_SEEN_WEAPON] = 0;
+            Options.tutorial_events[TUT_SEEN_WEAPON] = false;
             break;
        }
        case OBJ_MISSILES:
@@ -3015,7 +3038,7 @@ void tutorial_describe_item(const item_def &item)
                      << ", first you need to <w>w</w>ield an appropriate "
                         "launcher.";
             }
-            Options.tutorial_events[TUT_SEEN_MISSILES] = 0;
+            Options.tutorial_events[TUT_SEEN_MISSILES] = false;
             break;
 
        case OBJ_ARMOUR:
@@ -3072,7 +3095,7 @@ void tutorial_describe_item(const item_def &item)
                      << "The rarer the description, the greater the potential "
                      << "value of an item.";
 
-                Options.tutorial_events[TUT_SEEN_RANDART] = 0;
+                Options.tutorial_events[TUT_SEEN_RANDART] = false;
             }
             if (wearable)
             {
@@ -3101,7 +3124,7 @@ void tutorial_describe_item(const item_def &item)
                     ostr << _tut_abilities();
                 }
             }
-            Options.tutorial_events[TUT_SEEN_ARMOUR] = 0;
+            Options.tutorial_events[TUT_SEEN_ARMOUR] = false;
             break;
        }
        case OBJ_WANDS:
@@ -3109,7 +3132,7 @@ void tutorial_describe_item(const item_def &item)
 #ifdef USE_TILE
             ostr << " Alternatively, simply click on its tile.";
 #endif
-            Options.tutorial_events[TUT_SEEN_WAND] = 0;
+            Options.tutorial_events[TUT_SEEN_WAND] = false;
             break;
 
        case OBJ_FOOD:
@@ -3129,7 +3152,7 @@ void tutorial_describe_item(const item_def &item)
                             "you're probably not part of that group.";
                 }
             }
-            Options.tutorial_events[TUT_SEEN_FOOD] = 0;
+            Options.tutorial_events[TUT_SEEN_FOOD] = false;
             break;
 
        case OBJ_SCROLLS:
@@ -3139,7 +3162,7 @@ void tutorial_describe_item(const item_def &item)
 #endif
                     ".";
 
-            Options.tutorial_events[TUT_SEEN_SCROLL] = 0;
+            Options.tutorial_events[TUT_SEEN_SCROLL] = false;
             break;
 
        case OBJ_JEWELLERY:
@@ -3178,7 +3201,7 @@ void tutorial_describe_item(const item_def &item)
                         "one) offer certain abilities you can activate. ";
                 ostr << _tut_abilities();
             }
-            Options.tutorial_events[TUT_SEEN_JEWELLERY] = 0;
+            Options.tutorial_events[TUT_SEEN_JEWELLERY] = false;
             break;
        }
        case OBJ_POTIONS:
@@ -3187,7 +3210,7 @@ void tutorial_describe_item(const item_def &item)
                     "or simply click on it with your <w>left mouse button</w>"
 #endif
                     ".";
-            Options.tutorial_events[TUT_SEEN_POTION] = 0;
+            Options.tutorial_events[TUT_SEEN_POTION] = false;
             break;
 
        case OBJ_BOOKS:
@@ -3269,7 +3292,7 @@ void tutorial_describe_item(const item_def &item)
                 }
             }
             ostr << "\n";
-            Options.tutorial_events[TUT_SEEN_SPBOOK] = 0;
+            Options.tutorial_events[TUT_SEEN_SPBOOK] = false;
             break;
 
        case OBJ_CORPSES:
@@ -3312,7 +3335,7 @@ void tutorial_describe_item(const item_def &item)
                         "valid synonym for <w>y</w>es or you can directly chop "
                         "<w>a</w>ll corpses.";
             }
-            Options.tutorial_events[TUT_SEEN_CARRION] = 0;
+            Options.tutorial_events[TUT_SEEN_CARRION] = false;
             break;
 
        case OBJ_STAVES:
@@ -3374,7 +3397,7 @@ void tutorial_describe_item(const item_def &item)
                             "<w>d</w>rop it now.";
                 }
             }
-            Options.tutorial_events[TUT_SEEN_STAFF] = 0;
+            Options.tutorial_events[TUT_SEEN_STAFF] = false;
             break;
 
        case OBJ_MISCELLANY:
@@ -3385,7 +3408,7 @@ void tutorial_describe_item(const item_def &item)
 #endif
                     ".";
 
-            Options.tutorial_events[TUT_SEEN_MISC] = 0;
+            Options.tutorial_events[TUT_SEEN_MISC] = false;
             break;
 
        default:
@@ -3520,7 +3543,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                         "mechanical traps you can't avoid tripping them "
                         "by levitating or flying over them.";
             }
-            Options.tutorial_events[TUT_SEEN_TRAP] = 0;
+            Options.tutorial_events[TUT_SEEN_TRAP] = false;
             break;
 
        case DNGN_TRAP_NATURAL: // only shafts for now
@@ -3528,7 +3551,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                     "as shafts, which lead one to three levels down. They "
                     "can't be disarmed, but you can safely pass over them "
                     "if you're levitating or flying.";
-            Options.tutorial_events[TUT_SEEN_TRAP] = 0;
+            Options.tutorial_events[TUT_SEEN_TRAP] = false;
             break;
 
        case DNGN_STONE_STAIRS_DOWN_I:
@@ -3542,7 +3565,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                     "by clicking the <w>left mouse button</w> while pressing "
                     "<w>Shift</w>. ";
 #endif
-            Options.tutorial_events[TUT_SEEN_STAIRS] = 0;
+            Options.tutorial_events[TUT_SEEN_STAIRS] = false;
             break;
 
        case DNGN_STONE_STAIRS_UP_I:
@@ -3570,7 +3593,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                         "<w>Shift</w> instead. ";
 #endif
             }
-            Options.tutorial_events[TUT_SEEN_STAIRS] = 0;
+            Options.tutorial_events[TUT_SEEN_STAIRS] = false;
             break;
 
        case DNGN_ESCAPE_HATCH_DOWN:
@@ -3579,7 +3602,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                     "<w><<</w> and <w>></w>, respectively. Note that you will "
                     "usually be unable to return right away.";
 
-            Options.tutorial_events[TUT_SEEN_ESCAPE_HATCH] = 0;
+            Options.tutorial_events[TUT_SEEN_ESCAPE_HATCH] = false;
             break;
 
        default:
@@ -3636,7 +3659,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
 #endif
                             ".";
                 }
-                Options.tutorial_events[TUT_SEEN_ALTAR] = 0;
+                Options.tutorial_events[TUT_SEEN_ALTAR] = false;
                 break;
             }
             else if (feat >= DNGN_ENTER_FIRST_BRANCH

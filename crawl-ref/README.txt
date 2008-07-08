@@ -8,7 +8,7 @@ prevail against overwhelming odds.
 
 Players of versions 0.3.4 and older beware: please read the file
    034_changes.txt
-in the /docs directory for a list of the interface changes, and how 
+in the docs/ directory for a list of the interface changes, and how 
 you could possibly retrieve the 0.3.4 standards.
 
 Contents:
@@ -25,22 +25,26 @@ If you'd like to dive in immediately, your best bets are to
 * read quickstart.txt (in the /docs directory), or
 * for studious readers, browse the manual (see below for all doc files).
 
-If you're used to playing an older version, you might want to print out the 
-file key_changes.pdf from the /docs for an easy reference of new commands
-and changed key settings.
-Note that you can read quickstart.txt and the manual when playing; pressing '?' 
-brings up a menu for that.
+Internet play:
+You can play Crawl online, both competing with other players and watching 
+them. Check the homepage at crawl.akrasiac.org for details, including 
+information about additional servers. You just need a ssh or telnet console; 
+on Windows, the \key{PuTTY} program works very well. Read docs/ssh_guide.txt
+for a step by step guide on how to set this up.
+
+Tiles:
+Crawl features an alternative to the classical ASCII display; Tile-based
+Crawl is often a lot more accessible by new players. Tiles are available for 
+Linux, Windows and OS X.
+Unfortunately, it is not yet possible to combine tiles and internet play.
 
 
 2. File system
 --------------
 The following files in the Crawl's main folder are essential:
 
-* crawl           These start the game. (The actual name depends on your
-* crawl.exe       operating system.)
-
-* macro.txt       Playing Crawl can be made even more convenient by
-                  redefining keys and assigning macros. Ignore early on.
+* crawl              These start the game. (The actual name depends on your
+* crawl.exe          operating system.)
 
 The docs/ folder contains the following helpful texts (all of which can be 
 read in-game by bringing up the help menu with '?'):
@@ -50,26 +54,20 @@ read in-game by bringing up the help menu with '?'):
 * options_guide.txt  Describes all options in detail. The structure of
                      init.txt follows this text.
 * macros_guide.txt   A how-to on using macros and keymappings, with examples.
-* aptitudes.txt      Some numbers defining certain aspects of the races.
-                     Helpful, but not needed for winning.
-* quickstart.txt     A short introduction for new players.
-* quickstart.pdf     The same file, in pdf format.
-* ssh_guide.txt      An elaborate introduction on how to get internet play
-                     to work. For Windows only.
 * tiles_help.txt     An explanation of the Tiles interface.
-* key_changes.pdf    A printable document, listing all new commands and 
-                     changed key settings.
 
 The settings/ folder contains, among others, the following files:
 
-* init.txt        These contain the options for the game. The defaults
-* .crawlrc        play well, so don't bother with this in the beginning.
-                  Permanent death is not an option, but a feature!
+* init.txt           These contain the options for the game. The defaults
+* .crawlrc           play well, so don't bother with this in the beginning.
+                     Permanent death is not an option, but a feature!
+* macro.txt          Playing Crawl can be made even more convenient by
+                     redefining keys and assigning macros. Ignore early on.
 
 
 3. Contact and reporting bugs
 -----------------------------
-The official webpage is
+The official webpage is at
       http://crawl-ref.sourceforge.net/
 and there you can find both trackers to add bug reports, feature requests, or 
 upload patches, as well as sources and binaries. This is the best way to report 
@@ -81,12 +79,6 @@ It is polite to flag your post with -crawl- as other games are discussed over
 there as well. This is a good place to ask general questions, both from new 
 players as well as for spoilers, or to announce spectacular wins.
 
-You can play Crawl online, together with many others. The main server has its 
-homepage at
-      http://crawl.akrasiac.org/
-where you can also read how to connect. That page also has links to spoiler 
-sites etc.
-
 If you want to chime in with development, you can read the mailing list
       crawl-ref-discuss@lists.sourceforge.net
 which can get pretty busy on the occasion.
@@ -97,7 +89,7 @@ which can get pretty busy on the occasion.
 What you have downloaded is a descendant of Linley's Dungeon Crawl. Development
 of the main branch stalled at version 4.0.0b26, with a final alpha of 4.1 being
 released by Brent Ross in 2005. Since 2006, the Dungeon Crawl Stone Soup team 
-has been continuing the development. See the CREDITS in the mail folder for a
+has been continuing the development. See the CREDITS in the main folder for a
 myriad of contributors, past and present; license.txt contains the legal blurb.
 
 Dungeon Crawl Stone Soup is an open source, freeware roguelike. It is supported 

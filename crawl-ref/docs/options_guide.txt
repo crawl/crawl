@@ -659,7 +659,7 @@ trap_item_brand = none
 
 level_map_cursor_step = 7
         How many squares the cursor moves on the level map when using 
-        Shift-direction or * direction.
+        Shift-direction.
 
 level_map_title = true
         Whether to show the level name at the top of the level map 
