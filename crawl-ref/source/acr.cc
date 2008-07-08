@@ -1168,7 +1168,8 @@ static void _handle_wizard_command( void )
 static void _start_running( int dir, int mode )
 {
     if (Options.tutorial_events[TUT_SHIFT_RUN] && mode == RMODE_START)
-        Options.tutorial_events[TUT_SHIFT_RUN] = 0;
+        Options.tutorial_events[TUT_SHIFT_RUN] = false;
+
     if (i_feel_safe(true))
         you.running.initialise(dir, mode);
 }
@@ -2266,7 +2267,8 @@ void process_command( command_type cmd )
 
     case CMD_DISPLAY_MAP:
         if (Options.tutorial_events[TUT_MAP_VIEW])
-            Options.tutorial_events[TUT_MAP_VIEW] = 0;
+            Options.tutorial_events[TUT_MAP_VIEW] = false;
+
 #if (!DEBUG_DIAGNOSTICS)
         if (!player_in_mappable_area())
         {
@@ -2909,7 +2911,7 @@ static void _decrement_durations()
     // For now, though, keep information about what happened hidden.
     if (you.duration[DUR_PIETY_POOL] && one_chance_in(5))
     {
-        you.duration[DUR_PIETY_POOL]--; // decrease even if piety at maximum
+        you.duration[DUR_PIETY_POOL]--; // Decrease even if piety at maximum.
         gain_piety(1);
 
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY

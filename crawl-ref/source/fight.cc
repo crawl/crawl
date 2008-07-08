@@ -4082,18 +4082,13 @@ static bool wielded_weapon_check(const item_def *weapon)
                && (weapon->base_type != OBJ_WEAPONS || is_range_weapon(*weapon))
             || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]))
     {
-        if (item_cursed(*weapon))
-        {
-            mpr("You might want to wield a more suitable implement when "
-                "attacking monsters.", MSGCH_WARN);
-        }
+        std::string prompt  = "Really attack while ";
+        if (!weapon)
+            prompt += "being unarmed?";
         else
-        {
-            std::string prompt  = "Really attack while wielding "
-                                  + weapon->name(DESC_NOCAP_YOUR) + "? ";
+            prompt += "wielding " + weapon->name(DESC_NOCAP_YOUR) + "? ";
 
-            result = yesno(prompt.c_str(), true, 'n');
-        }
+        result = yesno(prompt.c_str(), true, 'n');
 
         learned_something_new(TUT_WIELD_WEAPON); // for tutorial Rangers
 

@@ -9,8 +9,10 @@
 \newcommand{\key}[1]{{{\texttt{\textbf{#1}}}}} % this does nasty things to underscores
 \newcommand{\sex}[1]{{{\textbf{#1}}}} % \sec already defined
 
+
 \newcommand{\crawl}{\textsc{Crawl}}
 \newcommand{\dungeon}{\textsc{Dungeon}}
+\newcommand{\soup}{\textsc{Stone Soup}}
 
 \newcommand{\spacecolumn}{\begin{minipage}[t]{2cm}\phantom{xxxx}\end{minipage}}
 \newcommand{\para}{\vspace{1.5ex}}
@@ -38,33 +40,57 @@
 
 
 \begin{center}\textbf{\LARGE
-\dungeon\ \crawl: Files and Contact
+\dungeon\ \crawl: Introduction, Files  and Contact
 }\end{center}
 
 This is the reference sheet for the roguelike game \dungeon\ \crawl,
-specifically for the current version of the \textsc{Stone Soup} branch. 
-\crawl\ is a game of dungeon exploration, fighting and magic that is
-renowned for its intricate skills and religion systems. Success requires
-tactics, strategy, and perseverance. Though \crawl's reputation is 
-close to devilish, victories were reported\dots
+specifically for the current version of the \soup\ branch. 
+\crawl\ is a game of dungeon exploration, combat and magic, involving
+characters of diverse skills, worshipping deities of great power and
+caprice. To win, you'll need to be a master of tactics and strategy,
+and prevail against overwhelming odds.
 
 \para
 
-This page explains the various important files. The next page lists a 
-number of important changes introduced in version 0.4. The last two 
-pages give a very brief introduction to the game, which should be 
-enough to get you started. If you are completely new to this type of 
-game and still want to plunge right in, start up a new game and select 
-a tutorial (press \key{T} when asked for a species).
+Players of versions 0.3.4 and older beware: please read the file 
+\key{034\_changes.pdf} in the \key{docs} directory for a list of
+interface changes, and how you could possibly retrieve the 0.3.4
+standards.
 
-\para\para
+\subsection*{How to get started? (Information for new players)}
 
-\sex{The most important files}
+If you'd like to dive in immediately, your best bets are to either
+start up a game and choose one of the tutorials (press \key{T} when 
+asked for race), or print \key{quickstart.pdf} (in the \key{docs} 
+directory). Studious readers might want to browse the manual  (see 
+below). Note that you can read both the quickstart text and the
+manual in-game; pressing \key{?} brings up a menu for that.
 
 \para
+
+\sex{Internet play}
+
+You can play \crawl\ online, both competing with other players and watching 
+them. Check the homepage \key{crawl.akrasiac.org} for details, including 
+information about additional servers. You just need a \texttt{ssh} or 
+\texttt{telnet} console; on Windows, the \key{PuTTY} program works very 
+well. Read \key{ssh\_guide.txt} in the \key{docs} folder for a step by step 
+guide on how to set this up.
+
+\para 
+
+\sex{Tiles}
+
+\crawl\ features an alternative to the classical ASCII display; Tile-based
+Crawl is often a lot more accessible by new players. Tiles are available for 
+Linux, Windows and OS X.
+Unfortunately, it is not yet possible to combine tiles and internet play.
+
+\subsection*{The most important files}
 
 \begin{minipage}[t]{7cm}
-The file \key{crawl.exe} in \crawl's main folder starts the game.
+The file \key{crawl.exe} (just \key{crawl} if on Unix) in \crawl's main 
+folder starts the game.
 \\ \\
 The \sex{settings/} directory contains \key{init.txt}, the options file for
 \crawl\ (on linux systems there may also be a \key{.crawlrc} in your home
@@ -80,12 +106,12 @@ spent some time playing the game.
 \spacecolumn
 %
 \begin{minipage}[t]{7cm}
-The following files in the \sex{docs/} directory may be helpful:
+The following files in the \sex{docs/} directory may be helpful, all of
+which can be read in-game (press \key{?}):
 \\
 \key{crawl\_manual.txt} is the full manual. It explains all races, classes, 
 item types etc. If you do not delight in manuals, you can put off the 
-reading this file until later. You can browse the manual while playing 
-(press \key{?}).
+reading this file until later.
 \\
 \key{options\_guide.txt} describes all the options in minute detail. While
 tweaking these can improve your \crawl\ experience, you will probably prefer
@@ -97,50 +123,109 @@ ignore this at first, too.
  % look at the keymaps section.)
 \end{minipage}
 
-\para\para
-
-\sex{Contact}
-
-\para
+\subsection*{Contact}
 	    
 If you have questions concerning the game, or think you have found a bug, 
-there are several places to contact the developers. First, there is the 
-newsgroup \key{rec.games.roguelike.misc}. Since other games are 
-discussed there as well, it is polite to flag your post with \key{-crawl-}.
-If you are not familiar with Usenet netiquette, you might want to check 
-that first, too.
-Also try to maintain netiquette to the benefit of your addresses.
-\\
-Next, you are encouraged to file bug reports and feature requests on the 
+there are several places to contact the developers. 
+
+First, you are encouraged to file bug reports and feature requests on the 
 \crawl\ homepage at \key{http://crawl-ref.sourceforge.net}. From there, you 
 can also download the most recent version (both binaries or source, for 
 Unix, Windows, OS X, and DOS).
+\\
+Next, there is the newsgroup \key{rec.games.roguelike.misc}. Since other 
+games are discussed there as well, it is polite to flag your post with 
+\key{-crawl-}. If you are not familiar with Usenet netiquette, you might 
+want to check that first, too. Also try to maintain netiquette to the 
+benefit of your addresses.
 \\
 Finally, you can use the mailing list 
 \key{crawl-ref-discuss@lists.sourceforge.net}
 to discuss specific details of the game's design and implementation.
 
-\para \para
+\subsection*{License and history information}
 
-\sex{Internet play}
+What you have downloaded is a descendant of Linley's \dungeon\ \crawl. 
+Development of the main branch stalled at version 4.0.0b26, with a final 
+alpha of 4.1 being released by Brent Ross in 2005. Since 2006, the 
+\dungeon \crawl\ \soup\ team has been continuing the 
+development. See the \key{CREDITS} in the main folder for a myriad of 
+contributors, past and present; \key{license.txt} contains the legal blurb.
+
+\dungeon\ \crawl\ \soup\ is an open source, freeware roguelike. It is 
+supported on Linux, Windows, OS/X  and, to a lesser extent, on DOS. The 
+source should compile and run on any reasonably modern Unix. \soup\ 
+features both ASCII and graphical (Tiles) display.
+
+\crawl\ gladly and gratuitously uses the following open-source packages: \\
+The \textbf{Lua} script language, see \key{docs/lualicense.txt}.\\
+The \textbf{PCRE} library for regular expressions, see 
+    \key{docs/pcre\_license.txt}.\\
+The \textbf{Mersenne Twister} for random number generation, 
+    \key{docs/mt19937.txt}.\\
+The \textbf{SQLite} library as database engine; it is properly public domain.\\
+The \textbf{ReST} light markup language for the documentation.
+
+\subsection*{How you can help}
+
+If you like the game and you want to help making it better, there are a number 
+of ways to do so:
 
 \para
 
-You can play \crawl\ online, both competing with other players and watching 
-them. Check the homepage \key{crawl.akrasiac.org} for details, including 
-information about additional servers. You just need a \texttt{ssh} or 
-\texttt{telnet} console; on Windows, the \texttt{PuTTY} program works very 
-well. Read \key{ssh\_guide.txt} in the \key{docs} folder for a step by step 
-guide on how to set this up.
-
-\para \para
-
-\sex{Tiles}
+\textbf{Playtesting:}
+At any time, there will be bugs --- playing and reporting these is a great 
+help. There is a beta server around hosting the most recent version of the 
+current code; the akrasiac page links to it. Besides finding bugs, ideas on 
+how to improve interface or gameplay are welcome as well.
 
 \para
 
-\crawl\ features an alternative to the classical ASCII display; Tile-based
-Crawl is often a lot more accessible by new players. Tiles are available for 
-Linux, Windows and OS X.
-Unfortunately, it is not yet possible to combine tiles and internet play.
+\textbf{Vault making:}
+Crawl uses many hand-drawn (but often randomised) maps. Making them is fun 
+and easy. It's best to start with simple entry vaults (glance through 
+\key{dat/entry.des} for a first impression). Later, you may want to read 
+\key{docs/level\_design.txt} for the full power. If you're ambitious, new 
+maps for branch ends are possible, as well.
+If you've made some maps, you can test them on your system (no compiling 
+needed) and then just mail them to the mailing list.
+
+\para
+
+\textbf{Speech:}
+Monster talking provides a lot of flavour. Just like vaults, speech depends 
+upon a large set of entries. Since most of the speech has been outsourced, 
+you can add new prose. The syntax is effective, but slightly strange, so you 
+may want to read \key{docs/monster\_speech.txt}.
+Again, changing or adding speech is possible on your local game. If you 
+have added something, send the files to the list.
+
+\para
+
+\textbf{Monster descriptions:}
+You can look up the current monster descriptions in-game with \key{?/} or 
+just read them in \key{dat/descript/monsters.txt}. The following conventions 
+should be more or less obeyed: descriptions ought to contain flavour text, 
+ideally pointing out major weaknesses/strengths. No numbers, please. 
+Citations are okay, but try to stay away from the most generic ones.
+If you like, you can similarly modify the descriptions for features, items or
+branches.
+
+\para
+
+\textbf{Tiles:}
+Since version 0.4, tiles are integrated within \crawl. Having variants of 
+often-used glyphs is always good. If you want to give this a shot, please 
+contact us via the mailing list.
+
+\para
+
+\textbf{Patches:}
+If you like to, you can download the source code and apply patches. Both 
+patches for bug fixes as well as implementation of new features are very 
+much welcome. Please be sure to read \key{docs/coding\_conventions.txt} first.
+
+\para\para\para
+
+Thank you, and have fun crawling!
 \end{document}
