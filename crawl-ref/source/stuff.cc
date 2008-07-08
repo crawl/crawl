@@ -868,7 +868,7 @@ bool one_chance_in(int a_million)
 
 bool x_chance_in_y(int x, int y)
 {
-    if (x <= 0 || y <= 0)
+    if (x <= 0)
         return (false);
 
     if (x >= y)

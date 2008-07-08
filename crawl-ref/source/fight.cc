@@ -3707,7 +3707,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
         // Disallow draining of summoned monsters since they can't bleed.
         // XXX: Is this too harsh?
-        if (mons_is_summoned(def))
+        if (defender->atype() == ACT_MONSTER && mons_is_summoned(def))
             break;
 
         if (x_chance_in_y(defender->res_negative_energy(), 3))

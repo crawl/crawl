@@ -1187,26 +1187,33 @@ int eat_from_floor()
         }
 
         found_valid = true;
-        std::ostringstream prompt;
-        prompt << (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat")
-               << ' ' << ((si->quantity > 1) ? "one of " : "")
-               << si->name(DESC_NOCAP_A) << '?';
+        mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
+             (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
+             ((si->quantity > 1) ? "one of " : ""),
+             si->name(DESC_NOCAP_A).c_str());
 
-        const int ans = yesnoquit( prompt.str().c_str(), true, 0, false, false,
-                                   'E' );
-
-        if (ans == -1)        // quit
-            return -1;
-        else if (ans == 1)    // yes
+        int keyin = tolower(c_getch());
+        switch (keyin)
         {
+        case 'q':
+            canned_msg(MSG_OK);
+            return -1;
+        case 'e':
+        case 'y':
             if (can_ingest(si->base_type, si->sub_type, false))
             {
                 eat_floor_item(si->index());
                 return 1;
             }
             need_more = true;
+        case 'i':
+        case '?':
+            // Directly skip ahead to inventory.
+            return (0);
+        default:
+            // Else no: try next one.
+            break;
         }
-        // else no: try next one
     }
 
     if (!found_valid)
@@ -1245,7 +1252,7 @@ int eat_from_floor()
     if (need_more && Options.auto_list)
         more();
 
-    return (false);
+    return (0);
 }
 
 static const char *_chunk_flavour_phrase(bool likes_chunks)
