@@ -235,6 +235,19 @@ void find_connected_identical(coord_def d, dungeon_feature_type ft,
                               std::set<coord_def>& out)
 {
     if (grd[d.x][d.y] != ft) return;
+
+    std::string prop = env.markers.property_at(d, MAT_ANY,
+                                               "connected_exclude");
+
+    if (!prop.empty())
+    {
+        // Even if this square is excluded from being a part of connected
+        // cells, add it if it's the starting square.
+        if (out.size() == 0)
+            out.insert(d);
+        return;
+    }
+
     if (out.insert(d).second)
     {
         find_connected_identical(coord_def(d.x+1, d.y), ft, out);
@@ -250,6 +263,19 @@ void find_connected_range(coord_def d, dungeon_feature_type ft_min,
                           std::set<coord_def>& out)
 {
     if (grd[d.x][d.y] < ft_min || grd[d.x][d.y] > ft_max) return;
+
+    std::string prop = env.markers.property_at(d, MAT_ANY,
+                                               "connected_exclude");
+
+    if (!prop.empty())
+    {
+        // Even if this square is excluded from being a part of connected
+        // cells, add it if it's the starting square.
+        if (out.size() == 0)
+            out.insert(d);
+        return;
+    }
+
     if (out.insert(d).second)
     {
         find_connected_range(coord_def(d.x+1, d.y), ft_min, ft_max, out);

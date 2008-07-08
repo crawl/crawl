@@ -676,24 +676,25 @@ ENDMAP
 ###################################
 # Evil zoo
 #
-# FIXME This vault is somewhat problematic as the doors are treated as
-#       gateways. The ideal fix would be make sure that (formerly)
-#       secret doors are never part of gateways.
-#
+# The marker affects find_connected_range() so that each door opens and
+# closes separately rather than all of them joining together into a huge
+# gate that opens all at once.
 NAME: minivault_9
 TAGS: allow_dup
 DEPTH: D:15-27, Elf, Vault, Crypt, Dis, Geh, Tar, Coc
+MARKER: X = lua: props_marker { connected_exclude="true" }
+SUBST: X = =
 MAP
-==========
-=x========
-==========
-===8888===
-===8998===
-===8998===
-===8888===
-==========
-==========
-==========
+XXXXXXXXXX
+XxXXXXXXXX
+XXXXXXXXXX
+XXX8888XXX
+XXX8998XXX
+XXX8998XXX
+XXX8888XXX
+XXXXXXXXXX
+XXXXXXXXXX
+XXXXXXXXXX
 ENDMAP
 
 ###################################
