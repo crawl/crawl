@@ -139,7 +139,7 @@ bool pick_tutorial()
     {
         char keyn = c_getch();
 
-        if (keyn == '*')
+        if (keyn == '*' || keyn == '+')
             keyn = 'a' + random2(TUT_TYPES_NUM);
 
         // Choose character for tutorial game and set starting values.
@@ -225,12 +225,12 @@ void print_tutorial_menu(unsigned int type)
 
     cprintf("%c - %s %s %s" EOL,
             letter, species_name(_get_tutorial_species(type), 1).c_str(),
-                  get_class_name(_get_tutorial_job(type)), desc);
+                    get_class_name(_get_tutorial_job(type)), desc);
 }
 
 static species_type _get_tutorial_species(unsigned int type)
 {
-    switch(type)
+    switch (type)
     {
       case TUT_BERSERK_CHAR:
           return SP_MINOTAUR;
@@ -511,7 +511,8 @@ static formatted_string _tutorial_map_intro()
     result += "</";
     result += colour_to_str(channel_to_colour(MSGCH_TUTORIAL));
     result += ">" EOL;
-    result += " --more--                               Press <white>Escape</white> to skip the basics.";
+    result += "<lightgrey> --more--                               "
+              "Press <white>Escape</white> to skip the basics.</lightgrey>";
 
     linebreak_string2(result, _get_tutorial_cols());
     return formatted_string::parse_block(result, false);
@@ -542,7 +543,8 @@ static formatted_string _tutorial_stats_intro()
             "Don't worry about the rest for now. \n"
          << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">"
             "                                      \n"
-            " --more--                               Press <w>Escape</w> to skip the basics\n"
+            "<lightgrey> --more--                               "
+            "Press <white>Escape</white> to skip the basics.</lightgrey>\n"
             "                                      \n"
             "                                      \n";
 
@@ -562,7 +564,8 @@ static void _tutorial_message_intro()
               " or by <w>clicking into the message area</w>"
 #endif
               "." EOL;
-    result += " --more--                               Press <w>Escape</w> to skip the basics";
+    result += "<lightgrey> --more--                               "
+              "Press <white>Escape</white> to skip the basics.</lightgrey>";
 
     mesclr();
     formatted_message_history(result, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
@@ -820,7 +823,7 @@ void tutorial_finished()
               text = "The game keeps an automated logbook for your characters. "
                      "Use <w>?:</w> to read it. You can enter notes manually "
                      "with the <w>:</w> command. Once your character perishes, "
-                     "two morgue files are left in the <w>/morgue</w> "
+                     "two morgue files are left in the <w>morgue/</w> "
                      "directory. The one ending in .txt contains a copy of "
                      "your logbook. During play, you can create a dump file "
                      "with <w>#</w>.";
@@ -1033,9 +1036,12 @@ void tut_gained_new_skill(int skill)
     case SK_SHIELDS:
     case SK_THROWING:
     case SK_SPELLCASTING:
-        mpr(get_skill_description(skill).c_str(), MSGCH_TUTORIAL);
+    {
+        formatted_message_history(get_skill_description(skill), MSGCH_TUTORIAL,
+                                  0, _get_tutorial_cols());
+        stop_running();
         break;
-
+    }
     // Only one message for all magic skills (except Spellcasting).
     case SK_CONJURATIONS:
     case SK_ENCHANTMENTS:
@@ -1381,9 +1387,9 @@ static void _new_god_conduct()
     text.str("");
 
     text << "\nYou can check your god's likes and dislikes, as well as your "
-            "current standing and divine abilites, by typing <w>^</w> "
+            "current standing and divine abilites, by typing <w>^</w>"
 #ifdef USE_TILE
-            "(alternatively press <w>Shift</w> while "
+            " (alternatively press <w>Shift</w> while "
             "<w>right-clicking</w> on your avatar)"
 #endif
             ".";
@@ -1426,7 +1432,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     Options.tutorial_events[seen_what] = 0;
     Options.tutorial_left--;
 
-    switch(seen_what)
+    switch (seen_what)
     {
     case TUT_SEEN_POTION:
         text << "You have picked up your first potion"
@@ -1503,7 +1509,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     case TUT_SEEN_WEAPON:
         text << "This is the first weapon "
 #ifndef USE_TILE
-                "('<w>(</w>') "
+                "('<w>)</w>') "
 #endif
                 "you've picked up. Use <w>w</w> "
 #ifdef USE_TILE
@@ -1527,7 +1533,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     case TUT_SEEN_MISSILES:
         text << "This is the first stack of missiles "
 #ifndef USE_TILE
-                "('<w>)</w>') "
+                "('<w>(</w>') "
 #endif
                 "you've picked up. Darts can be thrown by hand, but other "
                 "missile types like arrows and needles require a launcher "
@@ -1577,7 +1583,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         {
             text << "\nNote that as a " << species_name(you.species, 1)
                  << " you will be unable to wear "
-                 << (you.species == SP_CENTAUR ? "boots" : "helmets");
+                 << (you.species == SP_CENTAUR ? "boots" : "helmets")
+                 << ".";
         }
         break;
 
@@ -2035,15 +2042,14 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     case TUT_CHOOSE_STAT:
         text << "Every third level you may choose what stat to invest in, "
-                "Strength, Dexterity, or Intelligence.\n"
-                "<w>Strength</w> influences the amount you can carry, and "
-                "increases the damage you deal in melee.\n"
-                "<w>Dexterity</w> increases your evasion and thus influences "
-                "your chance of dodging attacks or traps.\n"
+                "Strength, Dexterity, or Intelligence. <w>Strength</w> "
+                "influences the amount you can carry, and increases the damage "
+                "you deal in melee. <w>Dexterity</w> increases your evasion "
+                "and thus influences your chance of dodging attacks or traps. "
                 "<w>Intelligence</w> increases your success in casting spells "
-                "and decreases the amount by which you hunger when you do so."
-                "\nNote that it is generally recommended to raise all your "
-                "stats to a minimum of 7, so as to prevent death by stat loss.";
+                "and decreases the amount by which you hunger when you do so.\n"
+                "Note that it is generally recommended to raise all your "
+                "stats to a minimum of 8, so as to prevent death by stat loss.";
         break;
 
     case TUT_YOU_ENCHANTED:
@@ -2714,7 +2720,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
         text << "\nAlternatively, you can dump all information pertaining to "
                 "your character into a text file with the <w>#</w> command. "
-                "You can then find said file in the <w>/morgue</w> folder (<w>"
+                "You can then find said file in the <w>morgue/</w> folder (<w>"
              << you.your_name << ".txt</w>) and read it at your leasure. Also, "
                 "such a file will automatically be created upon death (the "
                 "filename will then also contain the date) but that won't be "
@@ -2727,12 +2733,10 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     if (!text.str().empty())
     {
-        std::string s = text.str();
-        formatted_message_history(s, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
-    }
-
-    if (is_resting())
+        formatted_message_history(text.str(), MSGCH_TUTORIAL, 0,
+                                  _get_tutorial_cols());
         stop_running();
+    }
 }
 
 formatted_string tut_abilities_info()
@@ -2857,7 +2861,7 @@ void tutorial_describe_item(const item_def &item)
                 {
                     // You can activate it.
                     ostr << "When wielded, some weapons (such as this one) "
-                            "offer abilities that can be e<w>v</w>oked. ";
+                            "offer certain abilities you can activate. ";
                     ostr << _tut_abilities();
                     break;
                 }
@@ -3078,7 +3082,7 @@ void tutorial_describe_item(const item_def &item)
                 if (is_artefact(item) && gives_ability(item))
                 {
                     ostr << "\nWhen worn, some types of armour (such as this "
-                            "one) offer abilities that can be e<w>v</w>oked. ";
+                            "one) offer certain abilities you can activate. ";
                     ostr << _tut_abilities();
                 }
             }
@@ -3156,7 +3160,7 @@ void tutorial_describe_item(const item_def &item)
             if (gives_ability(item))
             {
                 ostr << "\n\nWhen worn, some types of jewellery (such as this "
-                        "one) offer abilities that can be e<w>v</w>oked. ";
+                        "one) offer certain abilities you can activate. ";
                 ostr << _tut_abilities();
             }
             Options.tutorial_events[TUT_SEEN_JEWELLERY] = 0;

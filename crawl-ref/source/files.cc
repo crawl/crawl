@@ -527,19 +527,19 @@ std::string datafile_path(std::string basename,
 #endif
 
     for (unsigned b = 0, size = bases.size(); b < size; ++b)
-    {
         for (unsigned p = 0; p < sizeof(prefixes) / sizeof(*prefixes); ++p)
         {
             std::string name = bases[b] + prefixes[p] + basename;
             if (file_exists(name))
                 return (name);
         }
-    }
 
     // Die horribly.
     if (croak_on_fail)
+    {
         end(1, false, "Cannot find data file '%s' anywhere, aborting\n",
             basename.c_str());
+    }
 
     return ("");
 }

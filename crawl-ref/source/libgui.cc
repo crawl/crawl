@@ -28,6 +28,7 @@
 #include "it_use2.h"
 #include "externs.h"
 #include "guic.h"
+#include "initfile.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -804,8 +805,23 @@ static void _libgui_save_prefs()
             strncpy(dummy_str[pref_mode][idx], (char *)p->ptr, MAX_PREF_CHAR);
     }
 
+    // Use the same directory as for macros.
+    // (Yes, this is an arbitrary decision.)
+    std::string dir = !Options.macro_dir.empty() ? Options.macro_dir :
+                      !SysEnv.crawl_dir.empty()  ? SysEnv.crawl_dir : "";
+
+    if (!dir.empty())
+    {
+#ifndef DGL_MACRO_ABSOLUTE_PATH
+        if (dir[dir.length() - 1] != FILE_SEPARATOR)
+            dir += FILE_SEPARATOR;
+#endif
+    }
+
     const char *baseTxt = "wininit.txt";
-    std::string winTxtString = datafile_path(baseTxt, false, true);
+    std::string winTxtString = dir + baseTxt;
+    if ( (fp = fopen(winTxtString.c_str(), "w")) == NULL )
+        winTxtString = datafile_path(baseTxt, false, true);
     const char *winTxt = winTxtString.c_str()[0] == 0 ? baseTxt
                                                       : winTxtString.c_str();
 
