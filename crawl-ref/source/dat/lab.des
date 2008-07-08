@@ -103,8 +103,8 @@ ENDMAP
 # Hidden exit, and trapped loot
 NAME:   labyrinth_hidden_loot
 TAGS:   minotaur generate_loot allow_dup
-MONS:   patrolling minotaur
-NSUBST: d = 1 / %
+MONS:   patrolling minotaur, minotaur zombie
+SUBST:  d = 2%
 SUBST:  c : cvv
 MAP
 ............
