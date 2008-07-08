@@ -1437,7 +1437,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
-        case SP_CENTAUR:
         case SP_OGRE:
         case SP_OGRE_MAGE:
         case SP_TROLL:
@@ -4015,6 +4014,24 @@ job_query:
     return (you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN);
 }
 
+bool _needs_butchering_tool()
+{
+    // Mummies/Vampires don't eat.
+    // Ghouls have claws (see below).
+    if (you.is_undead)
+        return (false);
+
+    // Trolls have claws.
+    if (you.has_claws())
+        return (false);
+
+    // Spriggans don't eat meat.
+    if (you.mutation[MUT_HERBIVOROUS] == 3)
+        return (false);
+
+    return (true);
+}
+
 bool _give_items_skills()
 {
     char keyn;
@@ -4626,8 +4643,9 @@ bool _give_items_skills()
         break;
 
     case JOB_WIZARD:
-        if (!you.is_undead && !you.has_claws())
-            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+        // The knife is a tool, not a weapon, so don't start wielding it.
+        if (_needs_butchering_tool())
+            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_WIZARD_HAT);
@@ -4660,8 +4678,9 @@ bool _give_items_skills()
         break;
 
     case JOB_CONJURER:
-        if (!you.is_undead && !you.has_claws())
-            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+        // The knife is a tool, not a weapon, so don't start wielding it.
+        if (_needs_butchering_tool())
+            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
@@ -4703,8 +4722,9 @@ bool _give_items_skills()
         break;
 
     case JOB_SUMMONER:
-        if (!you.is_undead && !you.has_claws())
-            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+        // The knife is a tool, not a weapon, so don't start wielding it.
+        if (_needs_butchering_tool())
+            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CALLINGS);
@@ -4716,8 +4736,9 @@ bool _give_items_skills()
         break;
 
     case JOB_NECROMANCER:
-        if (!you.is_undead && !you.has_claws())
-            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+        // The knife is a tool, not a weapon, so don't start wielding it.
+        if (_needs_butchering_tool())
+            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
@@ -4785,8 +4806,9 @@ bool _give_items_skills()
         break;
 
     case JOB_FIRE_ELEMENTALIST:
-        if (!you.is_undead && !you.has_claws())
-            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+        // The knife is a tool, not a weapon, so don't start wielding it.
+        if (_needs_butchering_tool())
+            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_FLAMES);
@@ -4799,8 +4821,9 @@ bool _give_items_skills()
         break;
 
     case JOB_ICE_ELEMENTALIST:
-        if (!you.is_undead && !you.has_claws())
-            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+        // The knife is a tool, not a weapon, so don't start wielding it.
+        if (_needs_butchering_tool())
+            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_FROST);
@@ -4813,7 +4836,10 @@ bool _give_items_skills()
         break;
 
     case JOB_AIR_ELEMENTALIST:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+        // The knife is a tool, not a weapon, so don't start wielding it.
+        if (_needs_butchering_tool())
+            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
+
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_AIR);
 
@@ -4825,8 +4851,9 @@ bool _give_items_skills()
         break;
 
     case JOB_EARTH_ELEMENTALIST:
-        if (!you.is_undead && !you.has_claws())
-            _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+        // The knife is a tool, not a weapon, so don't start wielding it.
+        if (_needs_butchering_tool())
+            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
@@ -4932,7 +4959,8 @@ bool _give_items_skills()
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
 
         switch (you.species)
-        {        case SP_MOUNTAIN_DWARF:
+        {
+        case SP_MOUNTAIN_DWARF:
         case SP_HILL_ORC:
         case SP_CENTAUR:
         case SP_OGRE:
@@ -4969,18 +4997,27 @@ bool _give_items_skills()
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
             _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
                                15 + random2avg(21, 5) + random2avg(15, 2));
+
+            // Wield the sling instead.
+            you.equip[EQ_WEAPON] = 1;
             break;
 
         case SP_MOUNTAIN_DWARF:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
             _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1,
                                15 + random2avg(21, 5));
+
+            // Wield the crossbow instead.
+            you.equip[EQ_WEAPON] = 1;
             break;
 
         default:
             _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
             _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1,
                                15 + random2avg(21, 5));
+
+            // Wield the bow instead.
+            you.equip[EQ_WEAPON] = 1;
             break;
         }
 

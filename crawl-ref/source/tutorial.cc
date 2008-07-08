@@ -1239,13 +1239,28 @@ void tutorial_first_monster(const monsters &mon)
         text =  "However, as a hunter you will want to deal with it using your "
                 "bow. If you have a look at your bow from your "
                 "<w>i</w>nventory, you'll find an explanation of how to do "
-                "this. First <w>w</w>ield it, then follow the instructions.";
+                "this. ";
+
+        if (you.equip[EQ_WEAPON] == -1
+            || you.inv[you.equip[EQ_WEAPON]].base_type != OBJ_WEAPONS
+            || you.inv[you.equip[EQ_WEAPON]].sub_type != WPN_BOW)
+        {
+            text += "First <w>w</w>ield it, then follow the instructions.";
 
 #ifdef USE_TILE
         text += EOL "As a short-cut you can also <w>right-click</w> on your "
                 "bow to read its description, and <w>left-click</w> to wield "
                 "it.";
 #endif
+        }
+#ifdef USE_TILE
+        else
+        {
+            text += "Clicking with your <w>right mouse button</w> on your bow "
+                    "will also let you read its description.";
+        }
+#endif
+
 
         formatted_message_history(text, MSGCH_TUTORIAL, 0,
                                   _get_tutorial_cols());

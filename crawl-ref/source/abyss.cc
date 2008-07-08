@@ -74,13 +74,15 @@ static bool _place_feature_near( const coord_def &centre,
     return (false);
 }
 
+//#define DEBUG_ABYSS
+
 // Public for abyss generation.
 void generate_abyss()
 {
     int i, j;                   // loop variables
     int temp_rand;              // probability determination {dlb}
 
-#if DEBUG_ABYSS
+#ifdef DEBUG_ABYSS
     mprf(MSGCH_DIAGNOSTICS,
          "generate_abyss(); turn_on_level: %d", env.turns_on_level);
 #endif
@@ -157,7 +159,7 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
     bool placed_abyssal_rune =
         find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
 
-#if DEBUG_ABYSS
+#ifdef DEBUG_ABYSS
     mprf(MSGCH_DIAGNOSTICS,
          "_generate_area(). turns_on_level: %d, rune_on_floor: %s",
          env.turns_on_level, placed_abyssal_rune? "yes" : "no");
@@ -403,7 +405,8 @@ static void _abyss_lose_monster(monsters &mons)
 void area_shift(void)
 {
 #ifdef DEBUG_ABYSS
-    mpr("area_shift().", MSGCH_DIAGNOSTICS);
+    mprf(MSGCH_DIAGNOSTICS, "area_shift() - player at pos (%d, %d)",
+         you.x_pos, you.y_pos);
 #endif
 
     // Preserve floor props around the player, primarily so that
@@ -469,6 +472,10 @@ void area_shift(void)
             grd[i][j] = DNGN_UNSEEN;
 
             // Nuke items.
+#ifdef DEBUG_ABYSS
+            if (igrd[i][j] != NON_ITEM)
+                mprf(MSGCH_DIAGNOSTICS, "Nuke item stack at (%d, %d)", i, j);
+#endif
             lose_item_stack( i, j );
 
             if (mgrd[i][j] != NON_MONSTER)
@@ -476,12 +483,12 @@ void area_shift(void)
         }
 
     // Shift all monsters & items to new area.
-    for (int i = you.x_pos - 10; i < you.x_pos + 11; i++)
+    for (int i = you.x_pos - 10; i <= you.x_pos + 10; i++)
     {
         if (i < 0 || i >= GXM)
             continue;
 
-        for (int j = you.y_pos - 10; j < you.y_pos + 11; j++)
+        for (int j = you.y_pos - 10; j <= you.y_pos + 10; j++)
         {
             if (j < 0 || j >= GYM)
                 continue;
@@ -493,6 +500,14 @@ void area_shift(void)
             grd[ipos][jpos] = grd[i][j];
 
             // Move item.
+#ifdef DEBUG_ABYSS
+            if (igrd[i][j] != NON_ITEM)
+            {
+                 mprf(MSGCH_DIAGNOSTICS,
+                      "Move item stack from (%d, %d) to (%d, %d)",
+                      i, j, ipos, jpos);
+            }
+#endif
             move_item_stack_to_grid( i, j, ipos, jpos );
 
             // Move monster.
