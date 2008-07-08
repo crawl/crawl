@@ -6,7 +6,7 @@
 
 \usepackage{graphicx}
 
-\newcommand{\key}[1]{{{\texttt{\textbf{#1}}}}} % this does nasty things to underscores
+\newcommand{\key}[1]{{\texttt{#1}}} % this does nasty things to underscores
 \newcommand{\sex}[1]{{{\textbf{#1}}}} % \sec already defined
 
 \newcommand{\crawl}{\textsc{Crawl}}
@@ -45,7 +45,7 @@ a small number of new commands were introduced. The tables below list all
 of these. If you have been playing an older version and want to restore 
 the old key set, do so by adding this line to the 
 \texttt{init.txt} file: \\
-\texttt{additional\_macro\_file = 034\_command\_keys.txt} 
+\verb$additional_macro_file = 034_command_keys.txt$ 
 
 \para
 
@@ -108,4 +108,32 @@ Quivering is done via \key{Q} (quiver the currently fired item) or
 \key{fi} (choose an item and quiver it) or also by using \key{(} (cycling 
 appropriate ammunition) and then firing. \key{F} also lets you select an 
 item to be thrown, but this command does not affect the quiver.
+
+\newpage
+
+The colours of many monsters have been changed. Most notably, there are
+no darkgrey monsters anymore. In case darkgrey is actually better visible 
+than blue on your system, you can swap these colours using the line \\
+\verb#   colour: darkblue = darkgrey #\\
+in \key{init.txt}. Apart from that, more dangerous monsters are now 
+generally displayed in lighter colours.
+
+\para
+
+We are content that all of these changes are genuine improvements. Should
+your brain be hardwired to the old settings, you can effectively enforce
+the 0.3.4 state by using the following options:
+\begin{verbatim}
+   include                 = 034_monster_glyphs.txt
+   additional_macro_file   = 034_command_keys.txt
+   always_confirm_butcher  = true
+\end{verbatim}
+
+Note that the header of \key{init.txt} contains these lines. (It contains 
+some more options for using other old settings.) The options are commented 
+out, so you just need to remove the \key{\#} in front in order to activate 
+them. You can choose to use only part of these options. In case you decide 
+to use the old keyset, be aware that \key{D} and \key{d} are synonyms for 
+'yes' in the butcher interface.
+
 \end{document}

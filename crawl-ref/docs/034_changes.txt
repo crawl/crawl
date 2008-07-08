@@ -21,38 +21,50 @@ them:
    Ctrl-Q    quit             (was Q)
 
 * Added some new commands:
-   `         repeat previous command
-   0         repeat next command # of times
    !         annotate dungeon level
              (If your annotation contains '!' you'll be prompted whenever 
              you attempt to enter the level.)
    (         cycle the quiver to the next appropriate item
+   Q         quiver an item for firing
+   `         repeat previous command
+   0         repeat next command # of times
    Ctrl-D    define macros (synonym to '~')
    Ctrl-G    verbose list of monsters in sight
    Ctrl-T    change your allies' pickup behaviour
              (only available to some characters)
-   Q         quiver an item for firing
+
 
    There is a file called "key_changes.pdf" in the /docs directory that
    lists all of these command changes on a printable reference sheet.
 
-* Removed the v command (view item in inventory). Its functionality is
-   provided by pressing i (showing the inventory) and the letter for the
-   item, at the same number of key presses.
+* Removed the 'v' command (view item in inventory). Its functionality is
+  provided by pressing 'i' (showing the inventory) and the letter for the
+  item, at the same number of key presses.
 
 * The chop up (formerly dissect) interface is modified: there is no
-   prompt anymore for single corpses. In case of several corpses on the
-   square, you may use 'c' as a synonym for yes, and 'a' will answer yes
-   to this and all further corpses. In particular, all corpses in a square
-   can be sacrificed with 'pca'.
+  prompt anymore for single corpses. In case of several corpses on the
+  square, you may use 'c' as a synonym for yes, and 'a' will answer yes
+  to this and all further corpses. In particular, all corpses in a square
+  can be sacrificed with 'pca'.
+
+* When targeting, the functions of '!' and '.' have been swapped. Thus
+  firing with '.' will now stop at the target, whereas '!' will shoot 
+  further if the target was missed. Enter etc. still behave as in 0.3.4.
+  You can now target using the monster list; Cltr-L toggles this option.
+  You can quiver an item, meaning that you will preferably fire this
+  ammunition (and keep doing so even if you run out of it temporarily).
+  Quivering is done via 'Q' (quiver the currently fired item) or 'fi'
+  (choose an item for firing and quiver it) or also by using '(' which
+  cycles appropriate ammunition. 'F' lets you select an item to be thrown
+  without affecting the quiver.
 
 * The colours of many monsters have been changed. Most notably, there are
-   no darkgrey monsters anymore. In case darkgrey is actually better
-   visible than blue on your system, you can swap these colours using
+  no darkgrey monsters anymore. In case darkgrey is actually better
+  visible than blue on your system, you can swap these colours using
      colour: darkblue = darkgrey
-   in init.txt.
-   Apart from that, more dangerous monsters are now generally displayed in
-   lighter colours.
+  in init.txt.
+  Apart from that, more dangerous monsters are now generally displayed in
+  lighter colours.
 
 We are content that all of these changes are genuine improvements. Should
 your brain be hardwired to the old settings, you can effectively enforce
