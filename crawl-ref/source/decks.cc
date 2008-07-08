@@ -841,7 +841,7 @@ bool deck_peek()
 
 // Mark a deck: look at the next four cards, mark them, and shuffle
 // them back into the deck. The player won't know what order they're
-// in, and the if the top card is non-marked then the player won't
+// in, and if the top card is non-marked then the player won't
 // know what the next card is.  Return false if the operation was
 // failed/aborted along the way.
 bool deck_mark()
