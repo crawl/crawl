@@ -158,7 +158,7 @@ static int userfunc_getindex(const std::string &fname)
             return (i);
     }
 
-    // Pass 2 to hunt for gaps
+    // Pass 2 to hunt for gaps.
     for (int i = 0, count = userfunctions.size(); i < count; ++i)
     {
         if (userfunctions[i].empty())
@@ -172,14 +172,11 @@ static int userfunc_getindex(const std::string &fname)
     return (userfunctions.size() - 1);
 }
 
-/*
- * Returns the name of the file that contains macros.
- */
+// Returns the name of the file that contains macros.
 static std::string get_macro_file()
 {
-    std::string dir =
-        !Options.macro_dir.empty()? Options.macro_dir :
-        !SysEnv.crawl_dir.empty()?  SysEnv.crawl_dir : "";
+    std::string dir = !Options.macro_dir.empty() ? Options.macro_dir :
+                      !SysEnv.crawl_dir.empty()  ? SysEnv.crawl_dir : "";
 
     if (!dir.empty())
     {

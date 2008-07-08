@@ -1134,10 +1134,10 @@ static std::string _find_crawlrc()
     }
 
     // Check all possibilities for init.txt
-    for ( int i = 0; locations_data[i][1] != NULL; ++i )
+    for (int i = 0; locations_data[i][1] != NULL; ++i)
     {
         // Don't look at unset options
-        if ( locations_data[i][0] != NULL )
+        if (locations_data[i][0] != NULL)
         {
             const std::string rc =
                 catpath(locations_data[i][0], locations_data[i][1]);
@@ -1808,7 +1808,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     // Keep unlowercased field around
     const std::string orig_field = field;
 
-    if (key != "name" && key != "crawl_dir"
+    if (key != "name" && key != "crawl_dir" && key != "macro_dir"
         && key != "race" && key != "class" && key != "ban_pickup"
         && key != "autopickup_exceptions"
         && key != "stop_travel" && key != "sound"
@@ -2173,6 +2173,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // We shouldn't bother to allocate this a second time
         // if the user puts two crawl_dir lines in the init file.
         SysEnv.crawl_dir = field;
+    }
+    else if (key == "macro_dir")
+    {
+        macro_dir = field;
     }
 #endif
     else if (key == "race")
@@ -3039,10 +3043,10 @@ void get_system_environment(void)
     }
 #endif
 
-    // The full path to the init file -- this over-rides CRAWL_DIR
+    // The full path to the init file -- this overrides CRAWL_DIR.
     SysEnv.crawl_rc = check_string( getenv("CRAWL_RC") );
 
-    // rename giant and giant spiked clubs
+    // Rename giant and giant spiked clubs.
     SysEnv.board_with_nail = (getenv("BOARD_WITH_NAIL") != NULL);
 
 #ifdef MULTIUSER
