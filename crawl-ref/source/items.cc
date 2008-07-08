@@ -1686,11 +1686,11 @@ bool move_item_to_grid( int *const obj, int x, int y )
     // Need to actually move object, so first unlink from old position.
     unlink_item( *obj );
 
-    // move item to coord:
+    // Move item to coord.
     mitm[*obj].x = x;
     mitm[*obj].y = y;
 
-    // link item to top of list.
+    // Link item to top of list.
     mitm[*obj].link = igrd[x][y];
     igrd[x][y] = *obj;
 
@@ -1710,11 +1710,21 @@ bool move_item_to_grid( int *const obj, int x, int y )
 
 void move_item_stack_to_grid( int x, int y, int targ_x, int targ_y )
 {
+    if (igrd[x][y] == NON_ITEM)
+        return;
+
     // Tell all items in stack what the new coordinate is.
     for (int o = igrd[x][y]; o != NON_ITEM; o = mitm[o].link)
     {
         mitm[o].x = targ_x;
         mitm[o].y = targ_y;
+
+        // Link last of the stack to the top of the old stack.
+        if (mitm[o].link == NON_ITEM && igrd[targ_x][targ_y] != NON_ITEM)
+        {
+            mitm[o].link = igrd[targ_x][targ_y];
+            break;
+        }
     }
 
     igrd[targ_x][targ_y] = igrd[x][y];
