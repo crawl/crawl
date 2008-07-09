@@ -2307,18 +2307,18 @@ static bool _choose_weapon()
         {
             ASSERT(startwep[i] != WPN_UNKNOWN);
 
+            if (startwep_restrictions[i] == CC_BANNED)
+                continue;
+
             if (startwep_restrictions[i] == CC_UNRESTRICTED)
                 textcolor(LIGHTGREY);
             else
                 textcolor(DARKGREY);
 
-            char letter = (startwep_restrictions[i] == CC_BANNED)
-                            ? ' ' : ('a' + i);
-
-            if (startwep[i] == WPN_UNARMED)
-                cprintf("%c - claws" EOL, letter);
-            else
-                cprintf("%c - %s" EOL, letter, weapon_base_name(startwep[i]));
+            const char letter = 'a' + i;
+            cprintf("%c - %s" EOL, letter,
+                    startwep[i] == WPN_UNARMED ? "claws"
+                                               : weapon_base_name(startwep[i]));
 
             if (Options.prev_weapon == startwep[i])
                 prevmatch = true;
@@ -2332,7 +2332,7 @@ static bool _choose_weapon()
                     "Bksp - Back to species and class selection; "
                     "X - Quit" EOL);
 
-        if (Options.prev_weapon != WPN_UNKNOWN)
+        if (Options.prev_weapon == WPN_RANDOM || prevmatch)
         {
             cprintf("; Enter - %s",
                     Options.prev_weapon == WPN_RANDOM  ? "Random" :
@@ -3577,20 +3577,21 @@ spec_query:
             else
                 textcolor(DARKGREY);
 
-            // Show banned races but omit letter
-            char sletter;
+            // Show banned races as "unavailable".
             if (you.char_class != JOB_UNKNOWN
                 && _class_allowed(si, you.char_class) == CC_BANNED)
             {
-                sletter = ' ';
+                cprintf("    %s N/A", species_name(si, 1).c_str());
             }
             else
-                sletter = index_to_letter(i);
+            {
+                char sletter = index_to_letter(i);
 
-            if (sletter == Options.prev_race)
-                prevraceok = true;
+                if (sletter == Options.prev_race)
+                    prevraceok = true;
 
-            cprintf( "%c - %s", sletter, species_name(si,1).c_str() );
+                cprintf("%c - %s", sletter, species_name(si, 1).c_str());
+            }
 
             if (j % 2)
                 cprintf(EOL);
@@ -3824,17 +3825,20 @@ job_query:
             else
                 textcolor(DARKGREY);
 
-            // Show banned classes but omit letter.
-            char letter;
+            // Show banned races as "unavailable".
             if (_class_allowed(you.species, which_job) == CC_BANNED)
-                letter = ' ';
+            {
+                cprintf("    %s N/A", get_class_name(which_job));
+            }
             else
-                letter = index_to_letter(i);
+            {
+                char sletter = index_to_letter(i);
 
-            if (letter == Options.prev_cls)
-                prevclassok = true;
+                if (sletter == Options.prev_cls)
+                    prevclassok = true;
 
-            cprintf( "%c - %s", letter, get_class_name(which_job) );
+                cprintf("%c - %s", sletter, get_class_name(which_job));
+            }
 
             if (j % 2)
                 cprintf(EOL);
@@ -4204,10 +4208,11 @@ bool _give_items_skills()
                 cprintf("a - Zin (for traditional priests)" EOL);
                 cprintf("b - Yredelemnul (for priests of death)" EOL);
 
-                const bool valid = _is_valid_religion(GOD_BEOGH);
-                textcolor( valid ? LIGHTGREY : DARKGREY );
-                cprintf("%s - Beogh (priest of Orcs)" EOL,
-                        valid ? "c" : " ");
+                if (_is_valid_religion(GOD_BEOGH))
+                {
+                    textcolor(LIGHTGREY);
+                    cprintf("c - Beogh (priest of Orcs)" EOL);
+                }
 
                 textcolor( BROWN );
                 cprintf(EOL "* - Random choice; "

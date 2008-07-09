@@ -1367,7 +1367,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     /* lua */
     std::string luaFile = get_savedir_filename( you.your_name, "", "lua" );
     clua.save(luaFile.c_str());
-    // note that luaFile may not exist
+    // Note that luaFile may not exist.
     DO_CHMOD_PRIVATE(luaFile.c_str());
 #endif
 
@@ -1405,7 +1405,6 @@ void save_game(bool leave_game, const char *farewellmsg)
     }
 
     /* tutorial */
-
     std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
     FILE *tutorf = fopen(tutorFile.c_str(), "wb");
     if (tutorf)
@@ -1503,7 +1502,7 @@ void _load_ghost(void)
     ghosts.clear();
     _restore_ghost_version(gfile, majorVersion, minorVersion);
 
-    // sanity check - EOF
+    // Sanity check - EOF.
     if (!feof(gfile))
     {
         fclose(gfile);
@@ -1521,10 +1520,10 @@ void _load_ghost(void)
         mpr( "Loaded ghost.", MSGCH_DIAGNOSTICS );
 #endif
 
-    // remove bones file - ghosts are hardly permanent.
+    // Remove bones file - ghosts are hardly permanent.
     unlink(cha_fil.c_str());
 
-    // translate ghost to monster and place.
+    // Translate ghost to monster and place.
     for (int imn = 0; imn < MAX_MONSTERS - 10 && !ghosts.empty(); imn++)
     {
         if (menv[imn].type != -1)
@@ -1601,7 +1600,6 @@ void restore_game(void)
     }
 
     /* tutorial */
-
     std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
     FILE *tutorf = fopen(tutorFile.c_str(), "rb");
     if (tutorf)

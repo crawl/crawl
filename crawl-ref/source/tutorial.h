@@ -29,6 +29,7 @@ void init_tutorial_options(void);
 
 bool pick_tutorial(void);
 void print_tutorial_menu(unsigned int type);
+void tutorial_zap_secret_doors(void);
 
 formatted_string tut_starting_info2();
 void tut_starting_screen(void);

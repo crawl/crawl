@@ -262,6 +262,21 @@ static job_type _get_tutorial_job(unsigned int type)
     }
 }
 
+// Converts all secret doors in a fixed radius around the player's starting
+// position into normal closed doors.
+void tutorial_zap_secret_doors()
+{
+    for (int x = you.x_pos - 10; x <= you.x_pos + 10; x++)
+        for (int y = you.y_pos - 10; y <= you.y_pos + 10; y++)
+        {
+            if (!in_bounds(x,y))
+                continue;
+
+            if (grd[x][y] == DNGN_SECRET_DOOR)
+                grd[x][y] = DNGN_CLOSED_DOOR;
+        }
+}
+
 // Prints the tutorial welcome screen.
 static formatted_string _tut_starting_info(unsigned int width)
 {

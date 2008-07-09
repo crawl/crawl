@@ -525,7 +525,6 @@ void area_shift(void)
         }
     }
 
-
     for (unsigned int i = 0; i < MAX_CLOUDS; i++)
     {
         if (env.cloud[i].type == CLOUD_NONE)
