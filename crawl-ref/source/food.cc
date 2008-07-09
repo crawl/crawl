@@ -1206,6 +1206,7 @@ int eat_from_floor()
                 return 1;
             }
             need_more = true;
+            break;
         case 'i':
         case '?':
             // Directly skip ahead to inventory.

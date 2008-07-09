@@ -3697,8 +3697,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_VAMPIRIC:
         // Only may bite non-vampiric monsters (or player) capable of bleeding.
-        if (defender->atype() == ACT_PLAYER
-               && (you.species == SP_VAMPIRE || !victim_can_bleed(-1))
+        if (defender->atype() == ACT_PLAYER && !victim_can_bleed(-1)
             || defender->atype() == ACT_MONSTER
                && !victim_can_bleed(def->type))
         {

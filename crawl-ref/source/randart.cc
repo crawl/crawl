@@ -110,12 +110,12 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item)
         break;
 
     case GOD_SIF_MUNA:
-        // no weapons for Sif Muna
+    case GOD_KIKUBAAQUDGHA:
+    case GOD_VEHUMET:
+        // The magic gods: no weapons, no preventing spellcasting.
         if (item.base_type == OBJ_WEAPONS)
             return (false);
 
-    case GOD_KIKUBAAQUDGHA:
-    case GOD_VEHUMET:
         if (randart_wpn_property( item, RAP_PREVENT_SPELLCASTING ))
             return (false);
         break;

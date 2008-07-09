@@ -1206,11 +1206,11 @@ void purification(void)
 {
     mpr("You feel purified!");
 
-    you.duration[DUR_POISONING] = 0;
+    you.disease = 0;
     you.rotting = 0;
+    you.duration[DUR_POISONING] = 0;
     you.duration[DUR_CONF] = 0;
     you.duration[DUR_SLOW] = 0;
-    you.disease = 0;
     you.duration[DUR_PARALYSIS] = 0;          // can't currently happen -- bwr
     you.duration[DUR_PETRIFIED] = 0;
 }

@@ -4107,6 +4107,10 @@ static bool _initialise(void)
 
         // For a new game, wipe out monsters in LOS.
         zap_los_monsters();
+
+        // For a newly started tutorial, turn secret doors into normal ones.
+        if (Options.tutorial_left)
+            tutorial_zap_secret_doors();
     }
 
 #ifdef USE_TILE

@@ -1589,7 +1589,7 @@ void zap_los_monsters()
 
             int imon = mgrd[gx][gy];
 
-            // at tutorial beginning disallow items in line of sight
+            // At tutorial beginning disallow items in line of sight.
             if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
             {
                 int item = igrd[gx][gy];

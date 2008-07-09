@@ -1504,8 +1504,6 @@ bool acquirement(object_class_type class_wanted, int agent,
         for (int item_tries = 0; item_tries < 40; item_tries++)
         {
             int type_wanted = _find_acquirement_subtype(class_wanted, quant);
-            if (class_wanted == OBJ_BOOKS)
-                type_wanted = BOOK_MANUAL;
 
             // Clobber class_wanted for vampires.
             if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)

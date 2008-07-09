@@ -1209,6 +1209,16 @@ monster_pane_info::less_than(const monster_pane_info& m1,
     else if (m1.m_attitude > m2.m_attitude)
         return (false);
 
+    // Force plain but different coloured draconians to be treated like the
+    // same sub-type.
+    if (!zombified && m1.m_mon->type >= MONS_DRACONIAN
+        && m1.m_mon->type <= MONS_PALE_DRACONIAN
+        && m2.m_mon->type >= MONS_DRACONIAN
+        && m2.m_mon->type <= MONS_PALE_DRACONIAN)
+    {
+        return (false);
+    }
+
     // By descending difficulty
     if (m1.m_difficulty > m2.m_difficulty)
         return (true);
@@ -1234,8 +1244,8 @@ monster_pane_info::less_than(const monster_pane_info& m1,
 
     if (zombified)
     {
-        // Because of the type checks above, if one of the two is zombified, so is
-        // the other, and of the same type.
+        // Because of the type checks above, if one of the two is zombified, so
+        // is the other, and of the same type.
         if (mons_is_zombified(m1.m_mon)
             && m1.m_mon->base_monster < m2.m_mon->base_monster)
         {
@@ -1282,15 +1292,22 @@ void monster_pane_info::to_string( int count, std::string& desc,
     }
     else
     {
-        // Don't differentiate between dancing weapons or mimics
+        // Don't differentiate between dancing weapons, mimics, or draconians
         // of different types.
         if (m_fullname
             && m_mon->type != MONS_DANCING_WEAPON
+            && mons_genus(m_mon->type) != MONS_DRACONIAN
             && !mons_is_mimic(m_mon->type)
             && m_mon->mname.empty())
         {
             out << count << " "
                 << pluralise(m_mon->name(DESC_PLAIN));
+        }
+        else if (m_mon->type >= MONS_DRACONIAN
+                 && m_mon->type <= MONS_PALE_DRACONIAN)
+        {
+            out << count << " "
+                << pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
         }
         else
         {

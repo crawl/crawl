@@ -1459,7 +1459,7 @@ static void _display_vampire_attributes()
 
        {"Spell hunger         ", "full       ", "full    ", "full      ", "halved   ", "none     ", "none  "},
 
-       {EOL EOL "<w>Resistances</w>" EOL
+       {EOL "<w>Resistances</w>" EOL
         "Poison resistance    ", "           ", "        ", "          ", " +       ", " +       ", " +    "},
 
        {"Cold resistance      ", "           ", "        ", "          ", " +       ", " +       ", " ++   "},
@@ -1468,7 +1468,7 @@ static void _display_vampire_attributes()
 
        {"Torment resistance   ", "           ", "        ", "          ", "         ", "         ", " +    "},
 
-       {EOL EOL "<w>Other effects</w>" EOL
+       {EOL "<w>Other effects</w>" EOL
         "Mutation chance      ", "always     ", "often   ", "sometimes ", "never    ", "never    ", "never "},
 
        {"Non-physical " EOL
@@ -1519,9 +1519,7 @@ static void _display_vampire_attributes()
         result += EOL;
     }
 
-    result += EOL EOL;
-    result += EOL EOL;
-    result += EOL EOL;
+    result += EOL;
     result += "Press '<w>!</w>' to toggle between mutations and properties depending on your " EOL
               "hunger status." EOL;
 

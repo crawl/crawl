@@ -59,45 +59,44 @@ your strength is too low.
 %%%%
 Spit Acid
 
-There's currently no description for this ability...
+Spit acid at a targeted monster.
 %%%%
 # Both for Fly I and II.
 Fly
 
-There's currently no description for this ability...
+Pretty self-explanatory: Start flying.
 %%%%
 Summon Minor Demon
 
-There's currently no description for this ability...
+Summon a minor demon.
 %%%%
 Summon Demon
 
-There's currently no description for this ability...
+Summon a greater demon.
 %%%%
 Hellfire
 
-There's currently no description for this ability...
+Blast your enemies with hellfire.
 %%%%
 Torment
 
-There's currently no description for this ability...
+Torment yourself and the monsters around you.
 %%%%
 Raise Dead
 
-There's currently no description for this ability...
+Bring the corpses in your vicinity back to life.
 %%%%
 Control Demon
 
-There's currently no description for this ability...
+Temporarily enslave a demon.
 %%%%
 Gate Yourself to Pandemonium
 
-Enter the chaotic realm of Pandemonium. Getting back might be
-difficult.
+Enter the chaotic realm of Pandemonium. Note that getting back might be difficult.
 %%%%
 Channeling
 
-There's currently no description for this ability...
+Regain a small amount of magical energy.
 %%%%
 Throw Flame ability
 
@@ -109,7 +108,7 @@ Throw a blast of frost at a targeted monster.
 %%%%
 Bolt of Draining ability
 
-There's currently no description for this ability...
+Drain the life force of a targeted monster. This will reduce the experience you'll get from killing it.
 %%%%
 Release Delayed Fireball
 
@@ -118,7 +117,9 @@ additional cost in terms of magic or hunger.
 %%%%
 Self-Restoration
 
-There's currently no description for this ability...
+At the permanent loss of one magic point restore your Strength,
+Dexterity and Intelligence, and heal a large amount of rotted
+hitpoints.
 %%%%
 Evoke Sense Surroundings
 
@@ -185,7 +186,9 @@ greater effect.
 %%%%
 Sanctuary
 
-There's currently no description for this ability...
+For a short duration gain safety in a divine refuge. While the sanctuary
+is in effect monsters will not attack you, but the protection will
+disappear at once should you breach the divine peace.
 %%%%
 # The Shining One
 Divine Shield
@@ -208,33 +211,34 @@ by the Shining One to stay longer or even permanently in this world.
 # Both Kikubaaqudgha and Yredelmnul.
 Recall Undead Slaves
 
-There's currently no description for this ability...
+Recall your undead followers from anywhere on the level to your immediate surroundings.
 %%%%
 # Kikubaaqudgha
 Enslave Undead
 
-There's currently no description for this ability...
+Permanently enslave undead monsters.
 %%%%
 Invoke Death
 
-There's currently no description for this ability...
+Summon the personification of Death, depending on your Invocations
+skill possibly hostile.
 %%%%
 # Yredelemnul
 Animate Corpse
 
-There's currently no description for this ability...
+Reanimate a corpse as a follower.
 %%%%
 Animate Dead ability
 
-There's currently no description for this ability...
+Bring the corpses in your vicinity back to life.
 %%%%
 Drain Life
 
-There's currently no description for this ability...
+Drain the life force of the monsters surrounding you.
 %%%%
 Control Undead
 
-There's currently no description for this ability...
+Attempt to temporarily enslave undead monsters around you.
 %%%%
 # Okawaru
 Might
@@ -266,7 +270,7 @@ There's currently no description for this ability...
 # Sif Muna
 Channel Energy
 
-There's currently no description for this ability...
+Replenish your magical reservoir by an amount depending on your Invocations skill.
 %%%%
 Forget Spell
 
@@ -308,23 +312,25 @@ being accidentally destroyed, use the !D inscription.
 %%%%
 Lesser Healing
 
-There's currently no description for this ability...
+Depending on your Invocations skill, heal a small amount of your hitpoints.
 %%%%
 Purification
 
-There's currently no description for this ability...
+Purge your body of bad effects such as sickness, poisoning, slowness,
+confusion, and rotting.
 %%%%
 Healing
 
-There's currently no description for this ability...
+Depending on your Invocations skill, heal a moderate amount of your hitpoints.
 %%%%
 Restoration
 
-There's currently no description for this ability...
+Fully restore your Strength, Dexterity and Intelligence, and heal a large
+amount of rotted hitpoints.
 %%%%
 Greater Healing
 
-There's currently no description for this ability...
+Depending on your Invocations skill, heal a great amount of your hitpoints.
 %%%%
 # Lugonu
 Depart the Abyss
@@ -334,7 +340,7 @@ when you left the dungeon.
 %%%%
 Bend Space
 
-There's currently no description for this ability...
+Cause distortional damage to a targeted monster.
 %%%%
 Banish
 
@@ -343,7 +349,10 @@ banished into the Abyss.
 %%%%
 Corrupt
 
-There's currently no description for this ability...
+Corrupt the current level by unleashing Abyssal energies on it. This will
+cause the level largely changing appearance and will gate in demons from
+the Abyss bent on causing destruction. This will not work on levels
+already corrupted or in the Abyss.
 %%%%
 Enter the Abyss
 
@@ -367,7 +376,9 @@ which one to keep. Discard the other two.
 %%%%
 Mark Four
 
-There's currently no description for this ability...
+Draw four cards from your wielded deck, remember them and shuffle them
+back into the deck. The deck will be inscribed as containing those
+cards, and doing so will identify the deck.
 %%%%
 Stack Five
 
