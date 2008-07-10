@@ -22,7 +22,7 @@ them:
 
 * Added some new commands:
    !         annotate dungeon level
-             (If your annotation contains '!' you'll be prompted whenever 
+             (If your annotation contains '!' you'll be prompted whenever
              you attempt to enter the level.)
    (         cycle the quiver to the next appropriate item
    Q         quiver an item for firing
@@ -33,8 +33,7 @@ them:
    Ctrl-T    change your allies' pickup behaviour
              (only available to some characters)
 
-
-   There is a file called "key_changes.pdf" in the /docs directory that
+   There is a file called "key_changes.pdf" in the docs/ directory that
    lists all of these command changes on a printable reference sheet.
 
 * Removed the 'v' command (view item in inventory). Its functionality is
@@ -61,7 +60,7 @@ them:
 * The colours of many monsters have been changed. Most notably, there are
   no darkgrey monsters anymore. In case darkgrey is actually better
   visible than blue on your system, you can swap these colours using
-     colour: darkblue = darkgrey
+     colour.blue = darkgrey
   in init.txt.
   Apart from that, more dangerous monsters are now generally displayed in
   lighter colours.
@@ -73,17 +72,17 @@ the 0.3.4 state by using the following options:
    additional_macro_file   = 034_command_keys.txt
    always_confirm_butcher  = true
 
-Note that the header of init.txt contains these lines. (It contains some 
-more options for using other old settings.) The options are commented out, 
-so you just need to remove the # in front in order to activate them. You 
-can choose to use only part of these options. In case you decide to use 
-the old keyset, be aware that D is also a synonym for 'yes' in the 
+Note that the header of init.txt contains these lines. (It contains some
+more options for using other old settings.) The options are commented out,
+so you just need to remove the # in front in order to activate them. You
+can choose to use only part of these options. In case you decide to use
+the old keyset, be aware that D is also a synonym for 'yes' in the
 butcher interface.
 
 If you choose to go with the new keyset or the new butcher interface and
-you intend to use your old macros, you'll need to look through your 
+you intend to use your old macros, you'll need to look through your
 macro.txt file.
 
 There are a number of new options, some of them outsourced into various
-files in the /settings folder, so if you intend to use your old init file,
+files in the settings/ folder, so if you intend to use your old init file,
 you may still want to at least look through the new one.

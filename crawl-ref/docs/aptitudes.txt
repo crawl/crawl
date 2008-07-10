@@ -2,15 +2,15 @@ TABLES OF APTITUDES
 
 The following three tables describe all aptitudes of the various races for the
 various skills. These are not necessary for winning in Crawl, neither explicit
-nor implicit. The qualitative information behind this sheet (ie. which species
+nor implicit. The qualitative information behind this sheet (i.e. which species
 is good at which tasks) can be obtained in two other, less sophisticated ways:
 - read the species section in the manual about strengths and weaknesses
-- look which combinations of race and class are possible.
+- look which combinations of race and class are recommended (lightgrey).
 
 If you consider figuring out such things yourself to be fun, stop reading now.
 Otherwise, just go ahead. The lower a value, the better the aptitude. 100 is 
-the Human standard. Please note that many things affect how quick a character 
-will actually learn a skill. Thus the numbers below are good enough for 
+the Human standard. Please note that many things affect how quick a character
+will actually learn a skill. Thus the numbers below are good enough for
 comparisons among races, but not necessarily among skills.
 
 The abbreviations used for the skills are:

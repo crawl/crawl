@@ -3962,7 +3962,7 @@ void init_feature_table( void )
 
         case DNGN_ORCISH_IDOL:
             Feature[i].dchar  = DCHAR_STATUE;
-            Feature[i].colour = LIGHTRED; // plain orc colour
+            Feature[i].colour = BROWN; // same as clay golem, I hope that's okay
             break;
 
         case DNGN_WAX_WALL:

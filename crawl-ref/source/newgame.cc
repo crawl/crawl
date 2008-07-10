@@ -1450,23 +1450,17 @@ static char_choice_restriction _class_allowed( species_type speci,
         {
         case SP_DEMIGOD:
             return CC_BANNED;
-        case SP_HIGH_ELF:
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_GNOME:
-        case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
-        case SP_CENTAUR:
         case SP_OGRE:
         case SP_OGRE_MAGE:
         case SP_TROLL:
-        case SP_MINOTAUR:
         case SP_KENKU:
-        case SP_RED_DRACONIAN:
         case SP_GHOUL:
         case SP_VAMPIRE:
             return CC_RESTRICTED;
@@ -1494,6 +1488,7 @@ static char_choice_restriction _class_allowed( species_type speci,
         switch (speci)
         {
         case SP_GREY_ELF:
+        case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE_MAGE:
@@ -2439,6 +2434,8 @@ static char_choice_restriction  _religion_restriction(god_type god)
             return (CC_BANNED);
         case SP_HIGH_ELF:
         case SP_MOUNTAIN_DWARF:
+        case SP_CENTAUR:
+        case SP_MINOTAUR:
             return (CC_UNRESTRICTED);
         default:
             return (CC_RESTRICTED);
@@ -2451,14 +2448,27 @@ static char_choice_restriction  _religion_restriction(god_type god)
             // Restrict in favour of Beogh, else unrestricted.
             if (you.char_class == JOB_PRIEST)
                 return (CC_RESTRICTED);
-            // intentional fall-through
+            return (CC_UNRESTRICTED);
+
+        case SP_DEEP_ELF:
+        case SP_OGRE_MAGE:
+        case SP_KENKU:
+            // Unrestrict these only for Priests as Zin is worse, but
+            // Necromancy (DK) the better choice.
+            if (you.char_class == JOB_PRIEST)
+                return (CC_UNRESTRICTED);
+            return (CC_RESTRICTED);
+
         case SP_HUMAN:
         case SP_HIGH_ELF:
+        case SP_GREY_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_KOBOLD:
+        case SP_GNOME:
+        case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_OGRE:
         case SP_TROLL:
@@ -2500,14 +2510,18 @@ static char_choice_restriction  _religion_restriction(god_type god)
         {
         case SP_HUMAN:
         case SP_HIGH_ELF:
+        case SP_GREY_ELF:
+        case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_GNOME:
         case SP_KOBOLD:
+        case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE:
+        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_DEMONSPAWN:
@@ -2534,6 +2548,7 @@ static char_choice_restriction  _religion_restriction(god_type god)
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_DEMONSPAWN:
+        case SP_GHOUL:
         case SP_VAMPIRE:
             return (CC_UNRESTRICTED);
         default:
@@ -2555,6 +2570,7 @@ static bool _necromancy_okay()
     case SP_SLUDGE_ELF:
     case SP_OGRE_MAGE:
     case SP_DEMONSPAWN:
+    case SP_KENKU:
     case SP_MUMMY:
     case SP_VAMPIRE:
         return (true);
