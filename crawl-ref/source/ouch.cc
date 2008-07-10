@@ -321,7 +321,7 @@ void item_corrode( int itco )
     int how_rusty = ((you.inv[itco].base_type == OBJ_WEAPONS)
                             ? you.inv[itco].plus2 : you.inv[itco].plus);
 
-    // early return for "oRC and cloak/preservation {dlb}:
+    // Early return for "oRC and cloak/preservation {dlb}.
     if (wearing_amulet(AMU_RESIST_CORROSION) && !one_chance_in(10))
     {
 #if DEBUG_DIAGNOSTICS
