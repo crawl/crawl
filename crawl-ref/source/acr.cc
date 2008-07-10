@@ -2408,10 +2408,10 @@ void process_command( command_type cmd )
         int cur;
         you.m_quiver->get_desired_item(NULL, &cur);
         const int next = get_next_fire_item(cur, +1);
-#ifdef DEBUG_QUIVER
+//#ifdef DEBUG_QUIVER
         mprf(MSGCH_DIAGNOSTICS, "next slot: %d, item: %s", next,
              next == -1 ? "none" : you.inv[next].name(DESC_PLAIN).c_str());
-#endif
+//#endif
         if (next != -1)
         {
             // Kind of a hacky way to get quiver to change.

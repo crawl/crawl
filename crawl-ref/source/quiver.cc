@@ -234,6 +234,7 @@ void player_quiver::on_item_fired(const item_def& item, bool explicitly_chosen)
         // Don't do anything if this item is not really fit for throwing.
         if (projected == LRET_FUMBLED)
             return;
+
 #ifdef DEBUG_QUIVER
         mprf(MSGCH_DIAGNOSTICS, "item %s is for throwing",
              item.name(DESC_PLAIN).c_str());
@@ -405,6 +406,10 @@ void player_quiver::_get_fire_order( std::vector<int>& order,
         if (you.equip[EQ_WEAPON] == i_inv)
             continue;
 
+        // Don't do anything if this item is not really fit for throwing.
+        if (is_launched(&you, you.weapon(), item) == LRET_FUMBLED)
+            continue;
+
         // =f prevents item from being in fire order.
         if (!ignore_inscription_etc
             && strstr(item.inscription.c_str(), "=f"))
@@ -415,6 +420,7 @@ void player_quiver::_get_fire_order( std::vector<int>& order,
         for (unsigned int i_flags = 0; i_flags < Options.fire_order.size();
              i_flags++)
         {
+
             if (_item_matches(item, (fire_type) Options.fire_order[i_flags],
                               launcher))
             {
