@@ -897,7 +897,7 @@ special properties.
 Dwarven weapons and armours are very durable, and do not rust or
 corrode easily. All species get a bonus when wearing dwarven armours
 at the expense that these mails make spellcasting slightly more
-difficult. Dwarves get a larger bonus without the magical hampering.
+difficult. Dwarfs get a larger bonus without the magical hampering.
 
 Orcish (cross)bows do a bit more damage with orcish arrows/bolts. In
 general, Orcs do better with gear from their own kin; this applies to
@@ -1468,21 +1468,21 @@ Sludge Elves
   As fighters they are often more dangerous unarmed than armed. They
   advance in level slightly slower than humans.
 
-Mountain Dwarves
+Mountain Dwarfs
 ----------------
-Dwarves are generally short, hardy people. They love to fight, and often
+Dwarfs are generally short, hardy people. They love to fight, and often
 venture forth to seek fame and fortune through battle. Their armour and
 weapons are very well-crafted and much more durable than the products of
-lesser artisans. Dwarves are particularly dangerous when using dwarven
+lesser artisans. Dwarfs are particularly dangerous when using dwarven
 weaponry.
 
-Mountain Dwarves, as opposed to the subterranean specimen, come from 
+Mountain Dwarfs, as opposed to the subterranean specimen, come from 
 cities far above the Dungeon. They are very robust and excellent at hand
 combat, especially favouring axes or bludgeoning weapons, and are good 
 at using armour and shields. They are poor at missile combat, the single
 exception being crossbows, those being rather mechanical weapons. Since
 polearms usually are too big for them to wield comfortably, they make
-quite bad weapons for Dwarves.
+quite bad weapons for Dwarfs.
 
 In general, they are rather resistant to magic than capable of dealing
 with it. However, they are very proficient at earth and fire magics. 
@@ -1496,7 +1496,7 @@ Hill Orcs are Orcs from the upper world who, jealous of the riches which
 their cousins the Cave Orcs possess below the ground, descend in search
 of plunder and adventure.
 
-Hill Orcs are as robust as the Mountain Dwarves, but have very low
+Hill Orcs are as robust as the Mountain Dwarfs, but have very low
 reserves of magical energy. Their forte is brute-force fighting, and
 they are skilled at using most hand weapons (with the exception of short
 blades, at which they are only fair), although they are not particularly
@@ -1549,7 +1549,7 @@ weapons.
 Gnomes
 ------
 Gnomes are an underground-dwelling race of creatures, related to the
-Dwarves, but even more closely in touch with the earth.
+Dwarfs, but even more closely in touch with the earth.
 
 They are quite small, and share many characteristics with Halflings
 (except for the great agility), although they advance slightly more
