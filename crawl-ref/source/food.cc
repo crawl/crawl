@@ -582,9 +582,9 @@ bool butchery(int which_corpse)
                                     && god_likes_butchery(you.religion));
 
             // We don't need to check for undead because
-            // * Mummies can't eat
-            // * Ghouls relish the bad things
-            // * Vampires won't bottle bad corpses
+            // * Mummies can't eat.
+            // * Ghouls relish the bad things.
+            // * Vampires won't bottle bad corpses.
             // Also, don't bother colouring if it's only for sacrificing.
             if (!sacrifice && !you.is_undead)
             {
@@ -1187,10 +1187,13 @@ int eat_from_floor()
         }
 
         found_valid = true;
+        std::string item_name = get_message_colour_tags(*si, DESC_NOCAP_A,
+                                                        MSGCH_PROMPT);
+
         mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
              (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
              ((si->quantity > 1) ? "one of " : ""),
-             si->name(DESC_NOCAP_A).c_str());
+             item_name.c_str());
 
         int keyin = tolower(c_getch());
         switch (keyin)
