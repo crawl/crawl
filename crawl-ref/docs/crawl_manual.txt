@@ -1469,7 +1469,7 @@ Sludge Elves
   advance in level slightly slower than humans.
 
 Mountain Dwarfs
-----------------
+---------------
 Dwarfs are generally short, hardy people. They love to fight, and often
 venture forth to seek fame and fortune through battle. Their armour and
 weapons are very well-crafted and much more durable than the products of
