@@ -309,8 +309,7 @@ void weapon_acid( char acid_strength )
         msg::stream << "Your " << your_hand(true) << " burn!" << std::endl;
         ouch( roll_dice( 1, acid_strength ), 0, KILLED_BY_ACID );
     }
-
-    if (x_chance_in_y(acid_strength + 1, 20))
+    else if (x_chance_in_y(acid_strength + 1, 20))
         item_corrode( hand_thing );
 }
 
@@ -320,9 +319,9 @@ void item_corrode( int itco )
     bool it_resists = false;    // code simplifier {dlb}
     bool suppress_msg = false;  // code simplifier {dlb}
     int how_rusty = ((you.inv[itco].base_type == OBJ_WEAPONS)
-                                ? you.inv[itco].plus2 : you.inv[itco].plus);
+                            ? you.inv[itco].plus2 : you.inv[itco].plus);
 
-    // early return for "oRC and cloak/preservation {dlb}:
+    // Early return for "oRC and cloak/preservation {dlb}.
     if (wearing_amulet(AMU_RESIST_CORROSION) && !one_chance_in(10))
     {
 #if DEBUG_DIAGNOSTICS

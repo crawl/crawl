@@ -1983,7 +1983,7 @@ static bool _is_known_branch_id(int branch)
         return (true);
 
     // The Vestibule is special: there are no stairs to it, just a
-    // portal
+    // portal.
     if (branch == BRANCH_VESTIBULE_OF_HELL)
         return overmap_knows_portal(DNGN_ENTER_HELL);
 
@@ -3430,13 +3430,16 @@ void LevelInfo::fixup()
 bool TravelCache::know_stair(const coord_def &c) const
 {
     travel_levels_map::const_iterator i = levels.find(level_id::current());
-    return (i == levels.end()? false : i->second.know_stair(c));
+    return (i == levels.end() ? false : i->second.know_stair(c));
 }
 
 void TravelCache::travel_to_waypoint(int num)
 {
-    if (num < 0 || num >= TRAVEL_WAYPOINT_COUNT) return;
-    if (waypoints[num].id.depth == -1) return;
+    if (num < 0 || num >= TRAVEL_WAYPOINT_COUNT)
+        return;
+
+    if (waypoints[num].id.depth == -1)
+        return;
 
     start_translevel_travel(waypoints[num]);
 }

@@ -19,7 +19,7 @@ Breaks saves and bones compatibility.
 Interface
 ---------
 * Overhauled key settings of a number of commands. 
-  (See /settings/034_commands.txt or press ?v while playing.)
+  (See settings/034_commands.txt or press ?v while playing.)
 * Added monster list for monsters in line of sight (ASCII only).
 * Improved religion, skills, ability interface. (Commands are ^!, m?, and a!.)
 * Overhauled (f)iring interface: abolish (t)hrowing, output quiver in status.
@@ -101,7 +101,7 @@ Items
 Monsters
 --------
 * New glyphs and colours for many monsters.
-  (See /settings/034_monster_glyphs.txt.)
+  (See settings/034_monster_glyphs.txt.)
 * Beefed up demon lords.
 * Draconian ghosts of xl >= 7 get the shadow dragon breath attack.
 * Ghosts get Dispel Undead, Freezing Cloud, etc.
@@ -135,7 +135,7 @@ Monsters
 * Introduced fish zombies.
 * Fixed several spell/invocation attacks not waking monsters.
 * Improved monster shields.
-* More refined monster speech. (See /docs/monster_speech.txt.)
+* More refined monster speech. (See docs/monster_speech.txt.)
 
 Levels
 ------
@@ -175,7 +175,7 @@ Miscellaneous
 * Better feedback on Detect Traps.
 * Identify post-mortem inventory in morgue.txt.
 * Dump command also dumps level map.
-* init.txt/crawlrc allow loading of external options/macro files.
+* init.txt/.crawlrc allow loading of external options/macro files.
 * Changed stat display to be more compact and visually appealing.
 * Overhaul of ghost structure.
 * Overhauled and improved the documentation.
