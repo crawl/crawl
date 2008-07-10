@@ -163,7 +163,7 @@ mon_glyph = Frederick : darkgrey
 # feature                 old colour     new colour
 # -------                 ----------     ----------
 # granite statue          lightgrey      darkgrey
-# orcish idol             darkgrey       lightred
+# orcish idol             darkgrey       brown
 #
 # monster                 old colour     new colour
 # -------                 ----------     ----------
