@@ -1618,7 +1618,7 @@ static bool _do_ability(const ability_def& abil)
             you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
             simple_god_message(" hurls a blast of lightning!", GOD_MAKHLEB);
 
-            // make a divine lightning bolt...
+            // Make a divine lightning bolt, and fire!
             beam.beam_source = NON_MONSTER;
             beam.type        = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage      = dice_def(3, 30);
@@ -1631,8 +1631,7 @@ static bool _do_ability(const ability_def& abil)
             beam.aux_source  = "Makhleb's lightning strike";
             beam.ex_size     = 1 + you.skills[SK_INVOCATIONS] / 8;
             beam.is_tracer   = false;
-
-            // ... and fire!
+            beam.is_explosion = true;
             explosion(beam);
 
             // protection down
