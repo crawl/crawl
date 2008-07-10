@@ -1909,6 +1909,12 @@ std::string get_item_description( const item_def &item, bool verbose,
         }
     }
 
+    if (good_god_dislikes_item_handling(item))
+    {
+        description << "$$" << god_name(you.religion) << " opposes the use of "
+                    << "such an evil item.";
+    }
+
     if (god_dislikes_item_handling(item))
     {
         description << "$$" << god_name(you.religion) << " disapproves of the "
