@@ -2624,7 +2624,7 @@ static void _decrement_durations()
         if (you.duration[DUR_DIVINE_SHIELD] > 1)
         {
             if (--you.duration[DUR_DIVINE_SHIELD] == 1)
-                mpr("Your divine shield starts to fade.");
+                mpr("Your divine shield starts to fade.", MSGCH_DURATION);
         }
 
         if (you.duration[DUR_DIVINE_SHIELD] == 1 && !one_chance_in(3))
@@ -2633,7 +2633,7 @@ static void _decrement_durations()
             if (--you.attribute[ATTR_DIVINE_SHIELD] == 0)
             {
                 you.duration[DUR_DIVINE_SHIELD] = 0;
-                mpr("Your divine shield fades completely.");
+                mpr("Your divine shield fades completely.", MSGCH_DURATION);
             }
         }
     }
