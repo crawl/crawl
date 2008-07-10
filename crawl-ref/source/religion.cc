@@ -3052,6 +3052,12 @@ bool is_evil_item(const item_def& item)
     return retval;
 }
 
+bool good_god_dislikes_item_handling(const item_def &item)
+{
+    return (is_good_god(you.religion) && is_evil_item(item)
+            && (is_demonic(item) || item_type_known(item)));
+}
+
 bool god_dislikes_item_handling(const item_def &item)
 {
     if (you.religion == GOD_TROG)
@@ -3101,8 +3107,7 @@ bool god_dislikes_item_handling(const item_def &item)
         }
     }
 
-    return (is_good_god(you.religion) && is_evil_item(item)
-            && (is_demonic(item) || item_type_known(item)));
+    return (false);
 }
 
 // Is the destroyed weapon valuable enough to gain piety by doing so?
