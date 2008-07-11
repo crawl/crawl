@@ -1,4 +1,5 @@
 #include "AppHdr.h"
+#include "externs.h"
 
 #if defined(WIN32CONSOLE)
 
@@ -539,7 +540,12 @@ void textattr(int c)
 void textcolor(int c)
 {
     // change current color used to stamp chars
-    current_color = c;
+    short fg = c & 0xF;
+    short bg = (c >> 4) & 0xF;
+    short macro_fg = Options.colour[fg];
+    short macro_bg = Options.colour[bg];
+
+    current_color = macro_fg | (macro_bg << 4);
 }
 
 void clear_message_window()
