@@ -242,10 +242,10 @@ static job_type new_jobs_order[] = {
     JOB_HEALER,             JOB_CHAOS_KNIGHT,
     JOB_DEATH_KNIGHT,       JOB_CRUSADER,
     // general and niche spellcasters (incl. Crusader above)
-    JOB_REAVER,             JOB_WIZARD,
-    JOB_CONJURER,           JOB_ENCHANTER,
-    JOB_SUMMONER,           JOB_NECROMANCER,
-    JOB_WARPER,             JOB_TRANSMUTER,
+    JOB_REAVER,             JOB_WARPER,
+    JOB_WIZARD,             JOB_CONJURER,
+    JOB_ENCHANTER,          JOB_SUMMONER,
+    JOB_NECROMANCER,        JOB_TRANSMUTER,
     JOB_FIRE_ELEMENTALIST,  JOB_ICE_ELEMENTALIST,
     JOB_AIR_ELEMENTALIST,   JOB_EARTH_ELEMENTALIST,
     // poison specialists and stabbers
@@ -715,7 +715,7 @@ static unsigned char _random_potion_description()
         // in itemname.cc; this check ensures clear potions don't
         // get odd qualifiers.
     }
-    while ((colour == PDC_CLEAR && nature > PDQ_VISCOUS)
+    while (colour == PDC_CLEAR && nature > PDQ_VISCOUS
            || desc == PDESCS(PDC_CLEAR)
            || desc == PDESCQ(PDQ_GLUGGY, PDC_WHITE));
 
@@ -1270,6 +1270,9 @@ game_start:
     _mark_starting_books();
     _racialise_starting_equipment();
 
+    _give_basic_spells(you.char_class);
+    _give_basic_knowledge(you.char_class);
+
     _initialise_item_descriptions();
 
     _reassess_starting_skills();
@@ -1306,9 +1309,6 @@ game_start:
     // Make sure the starting player is fully charged up.
     set_hp( you.hp_max, false );
     set_mp( you.max_magic_points, false );
-
-    _give_basic_spells(you.char_class);
-    _give_basic_knowledge(you.char_class);
 
     // tmpfile purging removed in favour of marking
     tmp_file_pairs.init(false);
@@ -2243,8 +2243,13 @@ static bool _choose_weapon()
     weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
                                 WPN_HAND_AXE, WPN_SPEAR, WPN_UNKNOWN };
 
-    if (you.char_class == JOB_GLADIATOR)
+    // Gladiators that are at least medium sized get to choose a trident
+    // rather than a spear
+    if (you.char_class == JOB_GLADIATOR
+        && player_size(PSIZE_BODY) >= SIZE_MEDIUM)
+    {
         startwep[3] = WPN_TRIDENT;
+    }
 
     const bool claws_allowed =
         (you.char_class != JOB_GLADIATOR && you.has_claws());
@@ -2866,9 +2871,17 @@ static void _give_basic_spells(job_type which_job)
 
     switch (which_job)
     {
+    case JOB_WIZARD:
+        if (!you.skills[SK_CONJURATIONS])
+        {
+            // Wizards who start with Minor Magic III (summoning) have no
+            // Conjurations skill, and thus get another starting spell.
+            which_spell = SPELL_SUMMON_SMALL_MAMMALS;
+            break;
+        }
+        // intentional fall-through
     case JOB_CONJURER:
     case JOB_REAVER:
-    case JOB_WIZARD:
         which_spell = SPELL_MAGIC_DART;
         break;
     case JOB_STALKER:
@@ -4639,8 +4652,9 @@ bool _give_items_skills()
         else
             you.inv[0].plus2 = 4 - you.inv[0].plus;
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1,
-                           1, you.religion == GOD_XOM ? 1 + random2(3) : 0);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                           ARM_ROBE, 1, you.religion == GOD_XOM ? 1 + random2(3)
+                                                                : 0);
 
         you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
@@ -4817,7 +4831,8 @@ bool _give_items_skills()
             ng_dk = (keyn == '*'? DK_RANDOM : choice);
         }
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                              ARM_ROBE);
 
         switch (choice)
         {
@@ -4831,8 +4846,8 @@ bool _give_items_skills()
         case DK_YREDELEMNUL:
             you.religion = GOD_YREDELEMNUL;
             you.piety = 28;
-            you.inv[0].plus  = 1;
-            you.inv[0].plus2 = 1;
+            you.inv[0].plus  = 1 + random2(2);
+            you.inv[0].plus2 = 3 - you.inv[0].plus;
             you.inv[2].quantity = 0;
             you.skills[SK_INVOCATIONS] = 3;
             break;
@@ -4871,13 +4886,13 @@ bool _give_items_skills()
         if (you.inv[0].quantity < 1)
             _newgame_clear_item(0);
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                              ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_WAR_CHANTS);
 
         you.skills[SK_FIGHTING]     = 3;
         you.skills[SK_ARMOUR]       = 1;
         you.skills[SK_DODGING]      = 1;
-        you.skills[SK_STEALTH]      = 1;
         you.skills[SK_SPELLCASTING] = 2;
         you.skills[SK_ENCHANTMENTS] = 2;
         weap_skill = 2;
@@ -4891,7 +4906,8 @@ bool _give_items_skills()
         if (you.inv[0].quantity < 1)
             _newgame_clear_item(0);
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                              ARM_ROBE);
 
         if (!_choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 ))
             return (false);
@@ -4901,6 +4917,32 @@ bool _give_items_skills()
         you.skills[SK_DODGING]      = 1;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_CONJURATIONS] = 2;
+        weap_skill = 3;
+        break;
+
+    case JOB_WARPER:
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        if (!_choose_weapon())
+            return (false);
+
+        if (you.inv[0].quantity < 1)
+            _newgame_clear_item(0);
+
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
+                           ARM_ROBE);
+        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
+
+        // One free escape.
+        _newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
+        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
+                           10 + roll_dice( 2, 10 ));
+
+        you.skills[SK_FIGHTING]       = 1;
+        you.skills[SK_ARMOUR]         = 1;
+        you.skills[SK_DODGING]        = 2;
+        you.skills[SK_SPELLCASTING]   = 2;
+        you.skills[SK_TRANSLOCATIONS] = 3;
+        you.skills[SK_DARTS]          = 1;
         weap_skill = 3;
         break;
 
@@ -5009,31 +5051,6 @@ bool _give_items_skills()
         you.skills[SK_NECROMANCY]   = 4;
         you.skills[SK_DODGING]      = 2;
         you.skills[SK_STEALTH]      = 2;
-        break;
-
-    case JOB_WARPER:
-        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        if (!_choose_weapon())
-            return (false);
-
-        if (you.inv[0].quantity < 1)
-            _newgame_clear_item(0);
-
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                           ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_SPATIAL_TRANSLOCATIONS);
-
-        // One free escape.
-        _newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
-        _newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
-                           10 + roll_dice( 2, 10 ));
-
-        you.skills[SK_FIGHTING]       = 1;
-        you.skills[SK_DODGING]        = 2;
-        you.skills[SK_SPELLCASTING]   = 2;
-        you.skills[SK_TRANSLOCATIONS] = 3;
-        you.skills[SK_DARTS]          = 1;
-        weap_skill = 3;
         break;
 
     case JOB_TRANSMUTER:
