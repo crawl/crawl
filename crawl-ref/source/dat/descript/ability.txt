@@ -253,19 +253,21 @@ your magical contamination and may eventually cause glowing.
 # Makhleb
 Minor Destruction
 
-There's currently no description for this ability...
+Shoot a random harmful beam at the targetted monster.
 %%%%
 Lesser Servant of Makhleb
 
-There's currently no description for this ability...
+Summon a minor demon, with a chance of being hostile at low Invocations
+skill.
 %%%%
 Major Destruction
 
-There's currently no description for this ability...
+Inflict a random harmful beam or explosion on the targetted monster.
 %%%%
 Greater Servant of Makhleb
 
-There's currently no description for this ability...
+Summon a major demon, with a chance of being hostile at low Invocations
+skill.
 %%%%
 # Sif Muna
 Channel Energy
@@ -376,9 +378,9 @@ which one to keep. Discard the other two.
 %%%%
 Mark Four
 
-Draw four cards from your wielded deck, remember them and shuffle them
-back into the deck. The deck will be inscribed as containing those
-cards, and doing so will identify the deck.
+Draw four cards from your wielded deck, mark and remember them and
+shuffle them back into the deck. The deck will be inscribed as
+containing those cards, and doing so will identify the deck.
 %%%%
 Stack Five
 

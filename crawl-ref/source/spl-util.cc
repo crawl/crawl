@@ -782,13 +782,13 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
 bool spell_direction( dist &spelld, bolt &pbolt,
                       targeting_type restrict, targ_mode_type mode,
                       bool needs_path, bool may_target_monster,
-                      const char *prompt )
+                      const char *prompt, bool cancel_at_self )
 {
     if (restrict != DIR_DIR)
         message_current_target();
 
     direction( spelld, restrict, mode, -1, false, needs_path,
-               may_target_monster, prompt );
+               may_target_monster, prompt, NULL, cancel_at_self );
 
     if (!spelld.isValid)
     {

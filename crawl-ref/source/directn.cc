@@ -472,7 +472,7 @@ static void _fill_monster_list(bool full_info)
 void direction(dist& moves, targeting_type restricts,
                targ_mode_type mode, int range, bool just_looking,
                bool needs_path, bool may_target_monster, const char *prompt,
-               targeting_behaviour *beh)
+               targeting_behaviour *beh, bool cancel_at_self)
 {
     static targeting_behaviour stock_behaviour;
     if (!beh)
@@ -1049,12 +1049,16 @@ void direction(dist& moves, targeting_type restricts,
             if (moves.isTarget
                 && moves.tx == you.x_pos && moves.ty == you.y_pos
                 && mode == TARG_ENEMY
-                && (Options.allow_self_target == CONFIRM_CANCEL
-                    || (Options.allow_self_target == CONFIRM_PROMPT
-                        && !yesno("Really target yourself?", false, 'n'))))
+                && (cancel_at_self
+                    || Options.allow_self_target == CONFIRM_CANCEL
+                    || Options.allow_self_target == CONFIRM_PROMPT
+                       && !yesno("Really target yourself?", false, 'n')))
             {
-                if (Options.allow_self_target == CONFIRM_CANCEL )
+                if (cancel_at_self)
+                    mpr("Sorry, you can't target yourself.");
+                else if (Options.allow_self_target == CONFIRM_CANCEL)
                     mpr("That would be overly suicidal.", MSGCH_EXAMINE_FILTER);
+
                 show_prompt = true;
             }
             else if (moves.isTarget && !see_grid(moves.tx, moves.ty))

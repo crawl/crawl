@@ -132,7 +132,7 @@ bool spell_direction( dist &spelld, bolt &pbolt,
                       targeting_type restrict = DIR_NONE,
                       targ_mode_type mode = TARG_ENEMY,
                       bool needs_path = true, bool may_target_monster = true,
-                      const char *prompt = NULL );
+                      const char *prompt = NULL, bool cancel_at_self = false );
 
 void apply_area_cloud(int (*func) (int, int, int, int, cloud_type,
                                    kill_category),

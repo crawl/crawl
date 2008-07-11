@@ -711,7 +711,7 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     if (pbolt.beam_cancelled)
     {
 #if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "%s", "Beam stopped.");
+        mprf(MSGCH_DIAGNOSTICS, "%s", "Beam cancelled.");
 #endif
         canned_msg(MSG_OK);
         you.turn_is_over = false;
@@ -3630,13 +3630,20 @@ static int _affect_player( bolt &beam, item_def *item )
         if (YOU_KILL(beam.thrower))
         {
             // Don't ask if we're aiming at ourselves.
-            if (!beam.aimed_at_feet && !beam.dont_stop_player
-                && !yesno("That beam is likely to hit yourself. Continue "
-                          "anyway?", false, 'n'))
+            if (!beam.aimed_at_feet && !beam.dont_stop_player)
             {
-                beam.fr_count += 1;
-                beam.fr_power += you.experience_level;
-                beam.dont_stop_player = true;
+                if (yesno("That beam is likely to hit yourself. Continue "
+                          "anyway?", false, 'n'))
+                {
+                    beam.fr_count += 1;
+                    beam.fr_power += you.experience_level;
+                    beam.dont_stop_player = true;
+                }
+                else
+                {
+                    beam.beam_cancelled = true;
+                    return (BEAM_STOP);
+                }
             }
         }
         else if (beam.can_see_invis || !you.invisible()

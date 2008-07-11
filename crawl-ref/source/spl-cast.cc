@@ -1034,8 +1034,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         const bool needs_path = (!testbits(flags, SPFLAG_GRID)
                                  && !testbits(flags, SPFLAG_TARGET));
 
-        if (!spell_direction(spd, beam, dir, targ, needs_path, true, prompt))
+        if (!spell_direction(spd, beam, dir, targ, needs_path, true, prompt,
+                             testbits(flags, SPFLAG_NOT_SELF)))
+        {
             return (SPRET_ABORT);
+        }
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe)
         {
