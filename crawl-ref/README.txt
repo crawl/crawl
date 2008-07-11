@@ -93,7 +93,7 @@ the development. See the CREDITS in the main folder for a myriad of
 contributors, past and present; license.txt contains the legal blurb.
 
 Dungeon Crawl Stone Soup is an open source, freeware roguelike. It is supported
-on Linux, Windows, OS X  and, to a lesser extent, on DOS. The source should
+on Linux, Windows, OS X, and, to a lesser extent, on DOS. The source should
 compile and run on any reasonably modern Unix.
 Stone Soup features both ASCII and graphical (Tiles) display.
 
