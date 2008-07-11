@@ -1623,6 +1623,8 @@ void up_stairs(dungeon_feature_type force_stair,
              branches[you.where_are_you].longname);
     }
 
+    int stair_x = you.x_pos, stair_y = you.y_pos;
+
 #ifdef USE_TILE
     const bool newlevel =
 #endif
@@ -1677,8 +1679,6 @@ void up_stairs(dungeon_feature_type force_stair,
                         travel_cache.get_level_info(new_level_id);
             new_level_info.update();
 
-            int stair_x = you.x_pos, stair_y = you.y_pos;
-
             // First we update the old level's stair.
             level_pos lp;
             lp.id    = new_level_id;
@@ -1698,12 +1698,12 @@ void up_stairs(dungeon_feature_type force_stair,
             if (new_level_id == BRANCH_MAIN_DUNGEON
                 && old_level_id == BRANCH_VESTIBULE_OF_HELL)
             {
-                lp.id.depth = -1;
-                lp.pos.x = lp.pos.y = -1;
-                guess = true;
+                old_level_info.clear_stairs(DNGN_EXIT_HELL);
             }
-
-            old_level_info.update_stair(you.x_pos, you.y_pos, lp, guess);
+            else
+            {
+                old_level_info.update_stair(stair_x, stair_y, lp, guess);
+            }
 
             // We *guess* that going up a staircase lands us on a downstair,
             // and that we can descend that downstair and get back to where we

@@ -3185,6 +3185,21 @@ void LevelInfo::sync_branch_stairs(const stair_info *si)
     }
 }
 
+void LevelInfo::clear_stairs(dungeon_feature_type grid)
+{
+    for (int i = 0, size = stairs.size(); i < size; ++i)
+    {
+        stair_info &si = stairs[i];
+        if (si.grid != grid)
+            continue;
+
+        si.destination.id.depth = -1;
+        si.destination.pos.x = -1;
+        si.destination.pos.y = -1;
+        si.guessed_pos = true;
+    }
+}
+
 stair_info *LevelInfo::get_stair(int x, int y)
 {
     const coord_def c(x, y);
