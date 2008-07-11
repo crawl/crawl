@@ -1666,7 +1666,7 @@ static item_status_flag_type _determine_missile_race(const item_def& item,
             rc = ISFLAG_ORCISH;
         }
 
-        // Dwarves don't make arrows, sling bullets, javelins, or
+        // Dwarfs don't make arrows, sling bullets, javelins, or
         // throwing nets.
         if ((item.sub_type == MI_DART || item.sub_type == MI_BOLT)
             && one_chance_in(6))
@@ -1674,7 +1674,7 @@ static item_status_flag_type _determine_missile_race(const item_def& item,
             rc = ISFLAG_DWARVEN;
         }
 
-        // Dwarves don't make needles.
+        // Dwarfs don't make needles.
         if (item.sub_type == MI_NEEDLE)
         {
             if (one_chance_in(10))
