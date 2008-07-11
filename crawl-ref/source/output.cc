@@ -1600,20 +1600,26 @@ int equip_name_to_slot(const char *s)
     return -1;
 }
 
-static const char* _determine_color_string( int level )
+// Colour the string according to the level of an ability/resistance.
+// Take maximum possible level into account.
+static const char* _determine_colour_string( int level, int max_level )
 {
-    switch ( level )
+    switch (level)
     {
     case 3:
     case 2:
-        return "<lightgreen>";
+        if (max_level > 1)
+            return "<lightgreen>";
+        // else fall-through
     case 1:
         return "<green>";
-    case -1:
-        return "<red>";
     case -2:
     case -3:
-        return "<lightred>";
+        if (max_level > 1)
+            return "<lightred>";
+        // else fall-through
+    case -1:
+        return "<red>";
     default:
         return "<lightgrey>";
     }
@@ -1889,14 +1895,14 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sSust.Abil.: %s\n"
              "%sRes.Mut.  : %s\n"
              "%sRes.Slow  : %s\n",
-             _determine_color_string(rfire), itosym3(rfire),
-             _determine_color_string(rcold), itosym3(rcold),
-             _determine_color_string(rlife), itosym3(rlife),
-             _determine_color_string(rpois), itosym1(rpois),
-             _determine_color_string(relec), itosym1(relec),
-             _determine_color_string(rsust), itosym1(rsust),
-             _determine_color_string(rmuta), itosym1(rmuta),
-             _determine_color_string(rslow), itosym1(rslow));
+             _determine_colour_string(rfire, 3), itosym3(rfire),
+             _determine_colour_string(rcold, 3), itosym3(rcold),
+             _determine_colour_string(rlife, 3), itosym3(rlife),
+             _determine_colour_string(rpois, 1), itosym1(rpois),
+             _determine_colour_string(relec, 1), itosym1(relec),
+             _determine_colour_string(rsust, 1), itosym1(rsust),
+             _determine_colour_string(rmuta, 1), itosym1(rmuta),
+             _determine_colour_string(rslow, 1), itosym1(rslow));
     cols.add_formatted(0, buf, false);
 
     int saplevel = player_mutation_level(MUT_SAPROVOROUS);
@@ -1914,7 +1920,7 @@ static std::vector<formatted_string> _get_overview_resistances(
         postgourmand = itosym3(saplevel);
     }
     snprintf(buf, sizeof buf, "%s%s%s",
-             _determine_color_string(saplevel), pregourmand, postgourmand);
+             _determine_colour_string(saplevel, 3), pregourmand, postgourmand);
     cols.add_formatted(0, buf, false);
 
 
@@ -1932,23 +1938,23 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sRes.Corr.  : %s\n"
              "%sClarity    : %s\n"
              "\n",
-             _determine_color_string(rinvi), itosym1(rinvi),
-             _determine_color_string(rward), itosym1(rward),
-             _determine_color_string(rcons), itosym1(rcons),
-             _determine_color_string(rcorr), itosym1(rcorr),
-             _determine_color_string(rclar), itosym1(rclar));
+             _determine_colour_string(rinvi, 1), itosym1(rinvi),
+             _determine_colour_string(rward, 1), itosym1(rward),
+             _determine_colour_string(rcons, 1), itosym1(rcons),
+             _determine_colour_string(rcorr, 1), itosym1(rcorr),
+             _determine_colour_string(rclar, 1), itosym1(rclar));
     cols.add_formatted(1, buf, false);
 
     if ( scan_randarts(RAP_PREVENT_TELEPORTATION, calc_unid) )
     {
         snprintf(buf, sizeof buf, "\n%sPrev.Telep.: %s",
-                 _determine_color_string(-1), itosym1(1));
+                 _determine_colour_string(-1, 1), itosym1(1));
     }
     else
     {
         const int rrtel = !!player_teleport(calc_unid);
         snprintf(buf, sizeof buf, "\n%sRnd.Telep. : %s",
-                 _determine_color_string(rrtel), itosym1(rrtel));
+                 _determine_colour_string(rrtel, 1), itosym1(rrtel));
     }
     cols.add_formatted(1, buf, false);
 
@@ -1959,9 +1965,9 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sCtrl.Telep.: %s\n"
              "%sLevitation : %s\n"
              "%sCtrl.Flight: %s\n",
-             _determine_color_string(rctel), itosym1(rctel),
-             _determine_color_string(rlevi), itosym1(rlevi),
-             _determine_color_string(rcfli), itosym1(rcfli));
+             _determine_colour_string(rctel, 1), itosym1(rctel),
+             _determine_colour_string(rlevi, 1), itosym1(rlevi),
+             _determine_colour_string(rcfli, 1), itosym1(rcfli));
     cols.add_formatted(1, buf, false);
 
     _print_overview_screen_equip(cols, equip_chars);
