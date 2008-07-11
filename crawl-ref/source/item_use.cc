@@ -2350,6 +2350,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         if (wepClass == OBJ_MISSILES)
         {
+            // Identify ammo type.
+            set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
+
             switch (wepType)
             {
             case MI_LARGE_ROCK:
