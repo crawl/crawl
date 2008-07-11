@@ -339,9 +339,10 @@ std::string pluralise(const std::string &name,
         // knife -> knives
         return name.substr(0, name.length() - 2) + "ves";
     }
-    else if (ends_with(name, "elf") || ends_with(name, "olf"))
+    else if (ends_with(name, "elf") || ends_with(name, "olf")
+              || ends_with(name, "arf"))
     {
-        // Elf, wolf. Dwarfs can stay dwarfs, if there were dwarfs.
+        // Elf, wolf, dwarf.
         return name.substr(0, name.length() - 1) + "ves";
     }
     else if (ends_with(name, "mage"))

@@ -1077,7 +1077,7 @@ static std::string _describe_weapon( const item_def &item, bool verbose)
                 description += "$It is well-crafted and very durable.";
 
             description += "$";
-            description += (race == ISFLAG_DWARVEN) ? "Dwarfs" :
+            description += (race == ISFLAG_DWARVEN) ? "Dwarves" :
                            (race == ISFLAG_ELVEN)   ? "Elves"
                                                     : "Orcs";
             description += " are more deadly with it";
@@ -1190,7 +1190,7 @@ static std::string _describe_ammo( const item_def &item )
             unsigned long race = get_equip_race(item);
 
             description += "It is more deadly when thrown by ";
-            description += (race == ISFLAG_DWARVEN) ? "dwarfs" :
+            description += (race == ISFLAG_DWARVEN) ? "dwarves" :
                            (race == ISFLAG_ELVEN)   ? "elves"
                                                     : "orcs";
             description += (can_launch) ? ", and it" : ".";
@@ -1343,7 +1343,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         }
 
         description += "$It fits ";
-        description += (race == ISFLAG_DWARVEN) ? "dwarfs" :
+        description += (race == ISFLAG_DWARVEN) ? "dwarves" :
                        (race == ISFLAG_ELVEN)   ? "elves"
                                                 : "orcs";
         description += " well.";
