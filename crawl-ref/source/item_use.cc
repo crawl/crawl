@@ -2330,7 +2330,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             baseDam = property(item, PWPN_DAMAGE);
 
-            // Dwarfs/orcs with dwarven/orcish weapons.
+            // Dwarves/orcs with dwarven/orcish weapons.
             if (get_equip_race(item) == ISFLAG_DWARVEN
                    && player_genus(GENPC_DWARVEN)
                 || get_equip_race(item) == ISFLAG_ORCISH
