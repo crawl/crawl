@@ -1921,14 +1921,15 @@ of spells which should see them through the first several levels.
 Wizards:
 --------
 A Wizard is a magician who does not specialise in any area of magic.
-Wizards start with a variety of magical skills and the magic dart spell
-in memory.
+Wizards start with a variety of magical skills and with either
+Magic Dart or Summon Small Mammals in memory, depending on their
+starting book.
 
 Conjurers:
 ----------
 The Conjurer specialises in the violent and destructive magic of
-conjuration spells. Like the Wizard, the Conjurer starts with the
-magic dart spell.
+conjuration spells. Like most Wizards, the Conjurer starts with the
+Magic Dart spell.
 
 Enchanters:
 -----------
@@ -1937,7 +1938,7 @@ Although not as directly powerful as conjurations, high-level
 enchantments offer a wide range of very handy effects. The Enchanter
 begins with lightly enchanted weapons and armour, but no direct damage
 spell (since enchantments do not deal with direct attacks). Instead,
-they begin with the "Corona" spell and some enchanted darts, which
+they begin with the Corona spell and some enchanted darts, which
 should help them out until they can use the higher level enchantment
 spells.
 

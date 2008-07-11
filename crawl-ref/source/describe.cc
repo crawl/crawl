@@ -2888,7 +2888,7 @@ static void _detailed_god_description(god_type which_god)
 
     const int bottom_line = std::min(30, get_number_of_lines());
 
-    cgotoxy(1, bottom_line-1);
+    cgotoxy(1, bottom_line);
     formatted_string::parse_string(
         "Press '<w>!</w>' to toggle between the overview and the more detailed "
         "description.").display();
@@ -3105,7 +3105,7 @@ void describe_god( god_type which_god, bool give_title )
                                      numcols).c_str());
     }
 
-    cgotoxy(1, bottom_line - 1);
+    cgotoxy(1, bottom_line);
     textcolor(LIGHTGREY);
     formatted_string::parse_string(
         "Press '<w>!</w>' to toggle between the overview and the more detailed "
