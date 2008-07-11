@@ -362,7 +362,7 @@ static void _adjust_spells(void)
     mpr("Adjust which spell?", MSGCH_PROMPT);
 
     int keyin = 0;
-    if ( Options.auto_list )
+    if (Options.auto_list)
         keyin = list_spells();
     else
     {
@@ -371,7 +371,7 @@ static void _adjust_spells(void)
             keyin = list_spells();
     }
 
-    if ( !isalpha(keyin) )
+    if (!isalpha(keyin))
     {
         canned_msg( MSG_OK );
         return;
@@ -1744,7 +1744,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             0,
             "<h>Extended Movement:\n"
             "<w>o</w> : auto-explore\n"
-            "<w>G</w> : interlevel travel\n"
+            "<w>Ctrl-G</w> : interlevel travel\n"
             "<w>Ctrl-F</w> : Find items\n"
             "<w>Ctrl-W</w> : set Waypoint\n"
             "<w>Ctrl-E</w> : Exclude square from searches\n"
@@ -1830,7 +1830,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>)</w> : display current weapons\n"
             "<w>\"</w> : display worn jewellery\n"
             "<w>E</w> : display experience info\n"
-            "<w>Ctrl-G</w> : list monsters in sight\n",
+            "<w>G</w> : list monsters in sight\n",
             true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(

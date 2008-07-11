@@ -3476,7 +3476,7 @@ static command_type _keycode_to_command( keycode_type key )
     case 'D': return CMD_NO_CMD;
     case 'E': return CMD_EXPERIENCE_CHECK;
     case 'F': return CMD_THROW_ITEM_NO_QUIVER;
-    case 'G': return CMD_INTERLEVEL_TRAVEL;
+    case 'G': return CMD_FULL_VIEW;
     case 'I': return CMD_DISPLAY_SPELLS;
     case 'M': return CMD_MEMORISE_SPELL;
     case 'O': return CMD_OPEN_DOOR;
@@ -3533,7 +3533,7 @@ static command_type _keycode_to_command( keycode_type key )
     case CONTROL('C'): return CMD_CLEAR_MAP;
     case CONTROL('E'): return CMD_FORGET_STASH;
     case CONTROL('F'): return CMD_SEARCH_STASHES;
-    case CONTROL('G'): return CMD_FULL_VIEW;
+    case CONTROL('G'): return CMD_INTERLEVEL_TRAVEL;
     case CONTROL('I'): return CMD_NO_CMD; // Tab on most systems
     case CONTROL('M'): return CMD_NO_CMD; // Enter on most systems
     case CONTROL('O'): return CMD_DISPLAY_OVERMAP;
