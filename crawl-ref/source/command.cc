@@ -819,7 +819,7 @@ struct help_file
 
 help_file help_files[] = {
     { "crawl_manual.txt",  '*', true },
-    { "../readme.txt",     '!', false },
+    { "../README.txt",     '!', false },
     { "aptitudes.txt",     '%', false },
     { "quickstart.txt",    '^', false },
     { "macros_guide.txt",  '~', false },
@@ -1645,16 +1645,16 @@ static void _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             if (!fp)
                 continue;
 
-            // put in a separator
+            // Put in a separator...
             cmd_help.add_item_string("");
             cmd_help.add_item_string(std::string(get_number_of_cols()-1,'='));
             cmd_help.add_item_string("");
 
-            // and the file itself
+            // ...and the file itself.
             _add_file_to_scroller(fp, cmd_help, help_files[i].hotkey,
                                   help_files[i].auto_hotkey);
 
-            // done with this file
+            // Done with this file.
             fclose(fp);
         }
     }
