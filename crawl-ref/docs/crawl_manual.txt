@@ -2244,16 +2244,16 @@ Movement:
     Shift-direction     This moves straight until something interesting
     or  / direction     is found (like a monster). If the first square
                         is a trap, movement starts nonetheless.
-    G                   Interlevel travel (to arbitrary dungeon levels
-                        or waypoints). Remembers old destinations if
-                        interrupted. This command has its own set of
-                        shortcuts; use ? for help on them.
     o                   Auto-explore. Setting the option explore_greedy
                         to true makes auto-explore run to interesting
                         items (those that get picked up automatically)
                         or piles (checking the contents).
                         Autoexploration will open doors on its own
                         except if you set easy_open to false.
+    Ctrl-G              Interlevel travel (to arbitrary dungeon levels
+                        or waypoints). Remembers old destinations if
+                        interrupted. This command has its own set of
+                        shortcuts; use ? for help on them.
     Ctrl-W              Set waypoint (a digit between 0 and 9). Check
                         the option show_waypoints. You can go to a
                         waypoint by pressing Ctrl-G and the digit.
@@ -2378,6 +2378,7 @@ Other game-playing commands:
     p                   Pray (or renew an existing prayer).
     z                   Cast a spell. 
     I                   List spells. 
+    G                   Prints a short list of monsters in sight.
     t                   Tell commands to allies, or shout (the latter
                         with tt).
     Ctrl-A              Toggle autopickup. Note that encounters with 
