@@ -36,7 +36,7 @@ SQLLIB := sqlite3
 SQLIBA   := lib$(SQLLIB).a
 FSQLLIBA := $(SQLLIB)\$(SQLIBA)
 
-LIB = -static -lwinmm -mwindows -lcomctl32 -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB)
+LIB = -static -lwinmm -mwindows -lcomctl32 -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -lpcre
 INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC)
 
 CFWARN := -Wall -Wwrite-strings -pedantic
@@ -48,7 +48,6 @@ CFOTHERS := -fsigned-char \
 		-D$(OS_TYPE) $(EXTRA_FLAGS) \
 		-DWINMM_PLAY_SOUNDS -DCLUA_BINDINGS \
 		-DUSE_TILE -DWINVER=0x0400 -D_WIN32_IE=0x0400
-#		-DREGEX_PCRE
 
 CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS)
 YCFLAGS  := $(INCLUDES) $(CFOTHERS)
