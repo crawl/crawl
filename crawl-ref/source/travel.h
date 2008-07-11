@@ -486,6 +486,9 @@ struct LevelInfo
     // Updates/creates a StairInfo for the stair at (x, y) in grid coordinates
     void update_stair(int x, int y, const level_pos &p, bool guess = false);
 
+    // Clears all stair info for stairs matching this grid type.
+    void clear_stairs(dungeon_feature_type grid);
+
     // Returns true if the given branch is known to be accessible from the
     // current level.
     bool is_known_branch(unsigned char branch) const;
