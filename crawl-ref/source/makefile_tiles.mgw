@@ -174,13 +174,14 @@ endif
 		mkdir $(INSTALLDIR)\dat\descript 2>null || echo "">nul
 		mkdir $(INSTALLDIR)\dat\database 2>null || echo "">nul
 		mkdir $(INSTALLDIR)\settings 2>null || echo "">nul
+		mkdir $(INSTALLDIR)\docs 2>null || echo "">nul
 		copy /y dat\*.des $(INSTALLDIR)\dat
 		copy /y dat\lua\*.lua $(INSTALLDIR)\dat\lua
 		copy /y dat\clua\*.lua $(INSTALLDIR)\dat\clua
 		copy /y dat\descript\*.txt $(INSTALLDIR)\dat\descript
 		copy /y dat\database\*.txt $(INSTALLDIR)\dat\database
 		copy /y ..\settings\* $(INSTALLDIR)\settings
-		copy /y ..\*.txt $(INSTALLDIR)
+		copy /y ..\docs\* $(INSTALLDIR)\docs
 		mkdir $(INSTALLDIR)\dat\tiles 2>nul || echo "" > nul
 		copy /y dat\tiles\*.bmp $(INSTALLDIR)\dat\tiles
 
