@@ -2449,9 +2449,9 @@ level_map_title option to get rid of that.
     ?                   Level map help.
     -                   Scroll level map up
     +                   Scroll level map down
-    Direction           Move cursor.
-    Shift-Direction     Move cursor in bigger steps (check the option
-    or / Direction      level_map_cursor_step).
+    direction           Move cursor.
+    Shift-direction     Move cursor in bigger steps (check the option
+    or / direction      level_map_cursor_step).
     .                   Travel to cursor (also Enter, Del and , and ;)
                         (if the cursor is on the character, move cursor
                         to last travel destination instead).
@@ -2488,7 +2488,7 @@ It lets you have a look at items or monsters in line of sight. You may
 also examine stashed items outside current view using the option
 target_oos = true (if using this, check the option target_los_first).
     x, Esc, Space       Return to playing mode.
-    ?    ?              Special help screen.
+    ?                   Special help screen.
     * or '              Cycle objects forward.
     / or ;              Cycle objects backward.
     + or =              Cycle monsters forward.
@@ -2531,7 +2531,7 @@ work, with the exception of Space (which fires).
                         change missiles according to your launcher; i.e.
                         when wielding a bow, ( and ) will cycle through
                         all stacks of arrows in your inventory.
-    Shift-Direction     Fire straight in that direction. You can go
+    Shift-direction     Fire straight in that direction. You can go
                         back to the old targeting mode (allowing
                         straight firing by pressing just the direction
                         key) using the option target_unshifted_dirs.
@@ -2551,7 +2551,7 @@ following, if an item is already selected, the key will deselect it
     %                   Select all food.
     &                   Select all carrion.
     + or :              Select all books.
-    /    /              Select all wands.
+    /                   Select all wands.
     \ or |              Select all staves.
     !                   Select all potions.
     =                   Select all rings.

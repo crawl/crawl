@@ -52,14 +52,13 @@ and keymaps, press '~' and then 's' to save macros at the tilde prompt).
 The macro.txt file
 ==================
 
-Macros and keymaps are stored in a file called macro.txt in your main
-Crawl directory or your home directory. You can change where the file
-is read from and written to by specifying an alternate directory on
-the command line with -macro <dir> or with the crawl_dir option in your
-init file (see crawl_options.txt for details). The macro.txt file is
-human readable and editable, but you might have to figure out the key
-codes for non-alphanumeric keys through in-game experimentation or
-external utilities.
+Macros and keymaps are stored in a file called macro.txt in your
+settings/ directory. You can change where the file is read from and
+written to by specifying an alternate directory with the macro_dir
+option in your init file (see options_guide.txt for details). The
+macro.txt file is human readable and editable, but you might have to
+figure out the key codes for non-alphanumeric keys through in-game
+experimentation or external utilities.
 
 Lines beginning with the '#' are comments and will be ignored. Note
 that Crawl won't necessarily preserve your comments when saving macros
@@ -118,7 +117,7 @@ set to true (it is by default; see crawl_options.txt for details).
 
 # Tab: Order allies to attack your previous or the nearest target
 M:\{9}
-A:!a.
+A:ta.
 
 
 Conjurers need a slightly different macros for casting, such as this

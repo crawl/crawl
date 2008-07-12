@@ -58,7 +58,7 @@ fight with all weapons of this type and make you deal more damage with
 them. It is generally recommended to concentrate your efforts on one or 
 two weapon types to become more powerful in them.
 
-Being skilled in Polearms eases training in Maces/Flails or Staves.
+Being skilled in Polearms eases training in Axes or Staves.
 %%%%
 Staves
 

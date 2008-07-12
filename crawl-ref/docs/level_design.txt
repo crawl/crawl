@@ -21,6 +21,7 @@ the dat directory. If you are interested in adding some vaults, say, start
 with the existing ones and modify them. Currently, the following .des files
 are in use:
 
+ altar.des    - minivaults containing altars
  bazaar.des   - entrances to bazaar portal vaults, and bazaars proper
  crypt.des    - Crypt:5, Tomb:1, Tomb:2, Tomb:3
  elf.des      - Elf:7
@@ -199,7 +200,7 @@ Features
  ~ - random trap suitable for the branch and depth the map is being used.
 
  A - Vestibule gateway (opened by Horn).
- B - Altar. These are assigned specific types (eg of Zin etc) in dungeon.cc,
+ B - Altar. These are assigned specific types (e.g. of Zin etc) in dungeon.cc,
      in order.
  C - Random Altar.
 
@@ -216,8 +217,8 @@ Features
 Note: Due to the level maker having seen incremental improvements over
 the years, there are some inconsistencies. For examples, dangerous
 statues (orange, silver, ice) are now genuine monsters. In particular,
-the 'H' and 'S' glyphs should be dispensed with (but many older vaults
-use them, of course) - especially as there's no glyph for ice statues.
+you might see many older vaults still using the deprecated 'H' and 'S'
+glyphs which should otherwise be dispensed with.
 
 Also, the most of the other feature glyphs can be replaced with KFEAT:
 lines. The same goes for some item glyphs ('R', 'Z') which
@@ -639,7 +640,7 @@ NSUBST:   ? = 3:w / *:l
           This is equivalent to SUBST: ? = w .:15 A for three ? and
           SUBST: ? : =+CF for all the others.
 
-          You use any number of NSUBST specifiers:
+          You can use any number of NSUBST specifiers:
 
           ? = wW / l / A / 1234
 
@@ -1115,7 +1116,7 @@ G.    Hints for level makers
   very very often, so even small chances of something stupid happening
   (like creation of a really nasty monster) will kick in often enough.
 
-* Minivaults vs random vaults.
+* Minivaults vs. random vaults.
   Minivaults are handled very differently from regular vaults and special
   levels. They're placed *after* normal map generation, whereas normal
   vaults are placed before generating the rest of the level. There's no
