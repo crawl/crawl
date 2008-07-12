@@ -750,16 +750,16 @@ void tutorial_death_screen()
 
         case 2:
             text = "Rest between encounters, if possible in an area already "
-                   "already explored and cleared of monsters. In Crawl, "
-                   "searching and resting are one and the same. To search "
-                   "for one turn, press <w>s</w>, <w>.</w>, <w>delete</w> or "
+                   "explored and cleared of monsters. In Crawl, searching and "
+                   "resting are one and the same. To search for one turn, "
+                   "press <w>s</w>, <w>.</w>, <w>delete</w> or "
                    "<w>keypad-5</w>. Pressing <w>5</w> or "
-                   "<w>shift-and-keypad-5</w> "
+                   "<w>shift-and-keypad-5</w>"
 #ifdef USE_TILE
-                   ", or clicking into the stat area "
+                   ", or clicking into the stat area"
 #endif
-                   "will let you rest for a longer time (you will stop resting "
-                   "after 100 turns, or when fully healed).";
+                   " will let you rest for a longer time (you will stop "
+                   "resting after 100 turns, or when fully healed).";
             break;
 
         case 3:
@@ -821,7 +821,7 @@ void tutorial_finished()
     else if (Options.tut_travel)
     {
         text =  "There is a convenient way for travelling between far away "
-                "dungeon levels: press <w>G</w> and enter the desired "
+                "dungeon levels: press <w>Ctrl-G</w> and enter the desired "
                 "destination. If your travel gets interrupted, issueing "
                 "<w>G Enter</w> will continue it.";
     }
@@ -2731,7 +2731,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #ifdef USE_TILE
                 "<w>right-click</w> on the player avatar.";
 #else
-                "press <w>%%</w>.";
+                "press <w>%</w>.";
 #endif
         break;
 
@@ -3730,8 +3730,8 @@ static void _tutorial_describe_cloud(int x, int y)
         if (!is_damaging_cloud(ctype, true))
         {
             ostr << "currently harmless, but that could change at some point. "
-                    "Check the overview screen (<w>%%</w>) to view your "
-                    " resistances.";
+                    "Check the overview screen (<w>%</w>) to view your "
+                    "resistances.";
             need_cloud = true;
         }
         else
