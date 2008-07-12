@@ -253,7 +253,7 @@ your magical contamination and may eventually cause glowing.
 # Makhleb
 Minor Destruction
 
-Shoot a random harmful beam at the targetted monster.
+Shoot a random harmful beam at the targeted monster.
 %%%%
 Lesser Servant of Makhleb
 
@@ -262,7 +262,7 @@ skill.
 %%%%
 Major Destruction
 
-Inflict a random harmful beam or explosion on the targetted monster.
+Inflict a random harmful beam or explosion on the targeted monster.
 %%%%
 Greater Servant of Makhleb
 

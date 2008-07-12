@@ -84,12 +84,12 @@ War
 
 Eternal War
 
-Eternal Warrior
+the Eternal Warrior
 
 # Lemuel's Suggestions
-Warrior
+the Warrior
 
-Doomed Warrior
+the Doomed Warrior
 
 # akrasiac patch
 the Pyrrhic Victory
@@ -798,7 +798,7 @@ the Spinneret
 
 Grontol
 
-With Two Names
+the Two Names
 
 # akrasiac patch
 Irrepressible Laughter
@@ -821,8 +821,6 @@ Giant
 Beetle
 
 Jelly
-
-@player_genus@
 %%%%
 monster_name
 
