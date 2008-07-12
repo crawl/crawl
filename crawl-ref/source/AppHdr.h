@@ -180,6 +180,10 @@
 
     #include <dos.h>
 
+    // Use Perl-compatible regular expressions. libpcre must be available and
+    // linked in.  This is optional.
+    #define REGEX_PCRE
+
 #elif defined(WIN32CONSOLE) || defined(WIN32TILES)
     #if defined(WIN32CONSOLE)
         #include "libw32c.h"

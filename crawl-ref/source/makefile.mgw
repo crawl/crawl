@@ -140,6 +140,8 @@ endif
 		copy /y dat\database\*.txt $(INSTALLDIR)\dat\database
 		copy /y ..\settings\* $(INSTALLDIR)\settings
 		copy /y ..\docs\* $(INSTALLDIR)\docs
+		copy /y ..\* $(INSTALLDIR)
+		$(DELETE) $(INSTALLDIR)\*.sh
 
 clean:
 		$(DELETE) $(OPATH)\*.o

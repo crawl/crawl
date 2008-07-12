@@ -30,7 +30,7 @@ SQLLIB := sql3
 SQLLIBA := lib$(SQLLIB).a
 FSQLLIBA := $(SQLSRC)\$(SQLLIBA)
 
-LIB = -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB)
+LIB = -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -lpcre
 INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC)
 
 WORKDIR := $(shell cd)
