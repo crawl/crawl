@@ -999,7 +999,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     if ((flags & SPFLAG_TARGETING_MASK)
         && spell != SPELL_BURN && spell != SPELL_FREEZE
         && spell != SPELL_CRUSH && spell != SPELL_ARC
-        && spell != SPELL_PORTAL_PROJECTILE)
+        && spell != SPELL_FRAGMENTATION && spell != SPELL_PORTAL_PROJECTILE)
     {
         targ_mode_type targ =
             (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
