@@ -1788,10 +1788,11 @@ static int dgn_make_pillars(lua_State *ls)
         return 0;
     }
 
-    const float PI = 3.14159265f;
+    // [enne] The underscore is for DJGPP's brain damage.
+    const float _PI = 3.14159265f;
     for (int n = 0; n < num; n++)
     {
-        float angle = n * 2 * PI / (float)num;
+        float angle = n * 2 * _PI / (float)num;
         int x = (int)std::floor(std::cos(angle) * big_radius * scale_x + 0.5f);
         int y = (int)std::floor(std::sin(angle) * big_radius + 0.5f);
 

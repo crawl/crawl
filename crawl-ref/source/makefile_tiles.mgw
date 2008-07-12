@@ -184,6 +184,8 @@ endif
 		copy /y ..\docs\* $(INSTALLDIR)\docs
 		mkdir $(INSTALLDIR)\dat\tiles 2>nul || echo "" > nul
 		copy /y dat\tiles\*.bmp $(INSTALLDIR)\dat\tiles
+		copy /y ..\* $(INSTALLDIR)
+		$(DELETE) $(INSTALLDIR)\*.sh
 
 clean:
 		$(DELETE) $(OPATH)\*.o
