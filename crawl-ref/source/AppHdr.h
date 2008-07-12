@@ -196,8 +196,8 @@
     // #define WINMM_PLAY_SOUNDS
 
     // Use Perl-compatible regular expressions. libpcre must be available and
-    // linked in.
-    // #define REGEX_PCRE
+    // linked in.  This is optional.
+    #define REGEX_PCRE
 #else
     #error Missing platform #define or unsupported compiler.
 #endif

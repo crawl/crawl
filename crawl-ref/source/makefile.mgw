@@ -36,7 +36,7 @@ SQLLIB := sqlite3
 SQLIBA   := lib$(SQLLIB).a
 FSQLLIBA := $(SQLLIB)\$(SQLIBA)
 
-LIB = -static -lwinmm -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB)
+LIB = -static -lwinmm -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -lpcre
 INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC)
 
 CFWARN := -Wall -Wwrite-strings -Wshadow -pedantic
