@@ -1914,8 +1914,7 @@ std::string get_item_description( const item_def &item, bool verbose,
         description << "$$" << god_name(you.religion) << " opposes the use of "
                     << "such an evil item.";
     }
-
-    if (god_dislikes_item_handling(item))
+    else if (god_dislikes_item_handling(item))
     {
         description << "$$" << god_name(you.religion) << " disapproves of the "
                     << "use of such an item.";
@@ -2796,13 +2795,17 @@ static void _detailed_god_description(god_type which_god)
     textcolor(LIGHTGREY);
     cprintf(EOL);
 
-    std::string broken = get_god_powers(which_god);
-    if (!broken.empty())
+    std::string broken;
+    if (which_god != GOD_NEMELEX_XOBEH)
     {
-        linebreak_string2(broken, width);
-        formatted_string::parse_block(broken, false).display();
-        cprintf(EOL);
-        cprintf(EOL);
+        broken = get_god_powers(which_god);
+        if (!broken.empty())
+        {
+            linebreak_string2(broken, width);
+            formatted_string::parse_block(broken, false).display();
+            cprintf(EOL);
+            cprintf(EOL);
+        }
     }
 
     if (which_god != GOD_XOM)
@@ -2861,10 +2864,8 @@ static void _detailed_god_description(god_type which_god)
                          "card effects, potentially hazardous. High piety and "
                          "Evocations skill help here, as the power of Nemelex' "
                          "abilities is governed by Evocations instead of "
-                         "Invocations."
-                         EOL
-                         "The type of the deck gifts strongly depends on the "
-                         "dominating item class sacrificed:" EOL
+                         "Invocations. The type of the deck gifts strongly "
+                         "depends on the dominating item class sacrificed:" EOL
                          "  decks of Escape      -- armour" EOL
                          "  decks of Destruction -- weapons and ammunition" EOL
                          "  decks of Dungeons    -- jewellery, books, "
