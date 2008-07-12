@@ -37,7 +37,7 @@
 
 #ifdef REGEX_PCRE
     // Statically link pcre on Windows
-    #ifdef WIN32CONSOLE
+    #if defined(WIN32CONSOLE) || defined(WIN32TILES)
         #define PCRE_STATIC
     #endif
 
