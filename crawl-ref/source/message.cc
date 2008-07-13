@@ -711,7 +711,6 @@ static void mpr_formatted_output(formatted_string fs, int colour)
     if (need_prefix)
     {
         message_out( Message_Line, colour, "-", 1, false );
-        ++curcol;
         need_prefix = false;
     }
 
