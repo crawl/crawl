@@ -1885,8 +1885,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Additional help:\n"
             "Many commands have context sensitive \n"
             "help, among them <w>X</w>, <w>x</w>, <w>f</w> (or any \n"
-            "form of targeting), <w>G</w> and <w>Ctrl-F</w>."
-            "\n",
+            "form of targeting), <w>Ctrl-G</w> or <w>G</w>, and \n"
+            "<w>Ctrl-F</w>.\n",
             true, true, _cmdhelp_textfilter);
 }
 
