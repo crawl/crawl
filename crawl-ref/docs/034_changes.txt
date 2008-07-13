@@ -27,7 +27,7 @@ them:
    Q         quiver an item for firing
    `         repeat previous command
    0         repeat next command # of times
-   G         verbose list of monsters in sight
+   V         verbose list of monsters in sight
    Ctrl-D    define macros (synonym to '~')
    Ctrl-T    change your allies' pickup behaviour
              (only available to some characters)

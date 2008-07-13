@@ -382,16 +382,16 @@ with yellow glyphs.
 
 Automated Travel and Exploration
 --------------------------------
-Crawl has an extensive automated travel system: pressing 'G' lets you
-choose any dungeon level; the game will then take the shortest path to
-reach this destination. You can also use autotravel on the level map 
+Crawl has an extensive automated travel system: pressing 'Ctrl-G' lets
+you choose any dungeon level; the game will then take the shortest path
+to reach this destination. You can also use autotravel on the level map
 ('X'): Move the cursor to the place where you want to go and hit Enter.
 There are several shortcuts when choosing destinations: For example,
 try '<' and '>' to quickly reach the staircases.
 
 When your autotravel gets interrupted, Crawl will remember the previous
-destination. Hitting 'G' again and following with Enter puts the cursor
-on that square. See Appendix 4 for all commands and shortcuts in
+destination. Hitting 'Ctrl-G' again and following with Enter puts the
+cursor on that square. See Appendix 4 for all commands and shortcuts in
 level-map mode.
 
 Another use of autotravel is exploration: 'o' makes your character move
@@ -443,7 +443,8 @@ also appears in Appendix 4 of this text. Various other help texts are
 available as well, including this manual. You can also read the logbook
 from there by pressing ':'. Note that several commands have their own
 help screens, among them are targeting ('f'), level map ('X'), travel
-('G') and searching ('Ctrl-F'); again, press '?' when asked for input.
+('Ctrl-G') and searching ('Ctrl-F'); again, press '?' when asked for
+input.
 
 If you don't like the standard keyset (either because some keys do not
 work properly, or because you want to decrease the amount of typing
@@ -2378,7 +2379,7 @@ Other game-playing commands:
     p                   Pray (or renew an existing prayer).
     z                   Cast a spell. 
     I                   List spells. 
-    G                   Prints a short list of monsters in sight.
+    V                   Prints a short list of monsters in sight.
     t                   Tell commands to allies, or shout (the latter
                         with tt).
     Ctrl-A              Toggle autopickup. Note that encounters with 

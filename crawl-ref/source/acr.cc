@@ -3476,7 +3476,7 @@ static command_type _keycode_to_command( keycode_type key )
     case 'D': return CMD_NO_CMD;
     case 'E': return CMD_EXPERIENCE_CHECK;
     case 'F': return CMD_THROW_ITEM_NO_QUIVER;
-    case 'G': return CMD_FULL_VIEW;
+    case 'G': return CMD_INTERLEVEL_TRAVEL;
     case 'I': return CMD_DISPLAY_SPELLS;
     case 'M': return CMD_MEMORISE_SPELL;
     case 'O': return CMD_OPEN_DOOR;
@@ -3485,7 +3485,7 @@ static command_type _keycode_to_command( keycode_type key )
     case 'R': return CMD_REMOVE_JEWELLERY;
     case 'S': return CMD_SAVE_GAME;
     case 'T': return CMD_REMOVE_ARMOUR;
-    case 'V': return CMD_NO_CMD;
+    case 'V': return CMD_FULL_VIEW;
     case 'W': return CMD_WEAR_ARMOUR;
     case 'X': return CMD_DISPLAY_MAP;
     case 'Z': return CMD_ZAP_WAND;
