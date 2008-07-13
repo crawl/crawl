@@ -1489,9 +1489,6 @@ int update_monster_pane()
 
     std::vector<monster_pane_info> mons;
     get_monster_pane_info(mons);
-    if (mons.empty())
-        return (-1);
-
     std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
 
     // Count how many groups of monsters there are
@@ -1546,6 +1543,9 @@ int update_monster_pane()
         cgotoxy(crawl_view.mlistsz.x - 4, crawl_view.mlistsz.y, GOTO_MLIST);
         cprintf(" ... ");
     }
+
+    if (mons.empty())
+        return (-1);
 
     return full_info;
 }
