@@ -1412,6 +1412,8 @@ command_type fire_target_behaviour::get_command(int key)
         // Do this stuff unconditionally to make the prompt redraw.
         message_ammo_prompt();
         need_prompt = true;
+//        key = CMD_NO_CMD;
+        return (CMD_NO_CMD);
         break;
     }
     case 'i':

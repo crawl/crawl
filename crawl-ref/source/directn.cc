@@ -474,10 +474,11 @@ void direction(dist& moves, targeting_type restricts,
                bool needs_path, bool may_target_monster, const char *prompt,
                targeting_behaviour *beh, bool cancel_at_self)
 {
-    static targeting_behaviour stock_behaviour;
     if (!beh)
+    {
+        static targeting_behaviour stock_behaviour;
         beh = &stock_behaviour;
-
+    }
     beh->just_looking = just_looking;
 
 #ifndef USE_TILE
@@ -485,8 +486,16 @@ void direction(dist& moves, targeting_type restricts,
         && Options.mlist_targetting == MLIST_TARGET_HIDDEN)
     {
         Options.mlist_targetting = MLIST_TARGET_ON;
-        bool full_info = update_monster_pane();
-        _fill_monster_list(full_info);
+
+        const int full_info = update_monster_pane();
+        if (full_info == -1)
+        {
+            // If there are no monsters after all, turn the the targetting
+            // off again.
+            Options.mlist_targetting = MLIST_TARGET_HIDDEN;
+        }
+        else
+            _fill_monster_list(full_info);
     }
 #endif
 
@@ -735,10 +744,14 @@ void direction(dist& moves, targeting_type restricts,
             else
                 Options.mlist_targetting = MLIST_TARGET_ON;
 
-            bool full_info = update_monster_pane();
-
+            const int full_info = update_monster_pane();
             if (Options.mlist_targetting == MLIST_TARGET_ON)
-                _fill_monster_list(full_info);
+            {
+                if (full_info == -1)
+                    Options.mlist_targetting = MLIST_TARGET_HIDDEN;
+                else
+                    _fill_monster_list(full_info);
+            }
             break;
         }
 #endif

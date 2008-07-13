@@ -1477,16 +1477,21 @@ void get_monster_pane_info(std::vector<monster_pane_info>& mons)
 }
 
 #define BOTTOM_JUSTIFY_MONSTER_LIST 0
-bool update_monster_pane()
+// Returns -1 if the monster list is empty, 0 if there are so many monsters
+// they have to be consolidated, and 1 otherwise.
+int update_monster_pane()
 {
     const int max_print = crawl_view.mlistsz.y;
     textbackground(BLACK);
 
     if (max_print <= 0)
-        return (false);
+        return (-1);
 
     std::vector<monster_pane_info> mons;
     get_monster_pane_info(mons);
+    if (mons.empty())
+        return (-1);
+
     std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
 
     // Count how many groups of monsters there are
@@ -1495,10 +1500,10 @@ bool update_monster_pane()
         if (!monster_pane_info::less_than(mons[i-1], mons[i]))
             --lines_needed;
 
-    bool zombified = true;
+    bool full_info = true;
     if (lines_needed > (unsigned int) max_print)
     {
-        zombified = false;
+        full_info = false;
 
         // Use type names rather than full names ("small zombie" vs
         // "rat zombie") in order to take up less lines.
@@ -1527,7 +1532,7 @@ bool update_monster_pane()
         // i_mons is incremented by _print_next_monster_desc
         if (i_print >= skip_lines && i_mons < (int) mons.size())
         {
-             _print_next_monster_desc(mons, i_mons, zombified,
+             _print_next_monster_desc(mons, i_mons, full_info,
                         Options.mlist_targetting == MLIST_TARGET_ON ? i_print
                                                                     : -1);
         }
@@ -1542,11 +1547,11 @@ bool update_monster_pane()
         cprintf(" ... ");
     }
 
-    return zombified;
+    return full_info;
 }
 #else
 // FIXME: Implement this for Tiles!
-bool update_monster_pane()
+int update_monster_pane()
 {
     return (false);
 }

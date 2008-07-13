@@ -631,7 +631,7 @@ void annotate_level()
         li = li2;
     else if (li2 != level_id::current())
     {
-        if (yesno("Annotate level on other end of current stairs?"))
+        if (yesno("Annotate level on other end of current stairs?", true, 'n'))
             li = li2;
     }
 
@@ -644,7 +644,8 @@ void annotate_level()
     mpr( "Set level annotation to what? ", MSGCH_PROMPT );
 
     char buf[77];
-    cancelable_get_line( buf, sizeof(buf) );
+    if (cancelable_get_line( buf, sizeof(buf) ))
+        return;
 
     if (strlen(buf) == 0)
     {
