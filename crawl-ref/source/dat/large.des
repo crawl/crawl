@@ -272,7 +272,7 @@ ENDMAP
 # With depth-appropriate inhabitants and loot
 #
 NAME:   lemuel_castle
-DEPTH:  D:2-27
+DEPTH:  D:3-27
 ORIENT: northwest
 TAGS:   no_monster_gen no_rotate
 : if you.absdepth() < 7 then
