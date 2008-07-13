@@ -492,6 +492,11 @@ bool sort_item_equipped(const InvEntry *a)
     return !a->is_item_equipped();
 }
 
+bool sort_item_identified(const InvEntry *a)
+{
+    return !item_type_known(*(a->item));
+}
+
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
                                   const item_sort_comparators *cmps)
 {
@@ -540,6 +545,7 @@ void init_item_sort_comparators(item_sort_comparators &list,
           { "ego",       compare_item<bool, sort_item_ego> },
           { "art",       compare_item<bool, sort_item_art> },
           { "equipped",  compare_item<bool, sort_item_equipped> },
+          { "identified",compare_item<bool, sort_item_identified> },
           { "qty",       compare_item<int, sort_item_qty> },
           { "slot",      compare_item<int, sort_item_slot> },
           { "freshness", compare_item<int, sort_item_freshness> }
