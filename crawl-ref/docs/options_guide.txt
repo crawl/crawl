@@ -1073,6 +1073,11 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         * glowing:
           Unidentified glowing/shiny/runed/etc items show up first.
 
+        * identified:
+          Identified items show up before unidentified ones of the 
+          same type. An item is regarded as identified once you know 
+          its subtype or ego.
+
         * qty:
           The quantity for stackable items (such as scrolls, potions,
           etc.)
