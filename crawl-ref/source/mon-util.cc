@@ -78,9 +78,7 @@ FixedVector < unsigned short, 1000 > mcolour;
 static bool initialized_randmons = false;
 static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 
-static monsterentry mondata[] = {
 #include "mon-data.h"
-};
 
 #define MONDATASIZE ARRAYSZ(mondata)
 
@@ -6344,7 +6342,17 @@ int monsters::action_energy(energy_use_type et) const
         switch (et)
         {
         case EUT_MOVE:    return mu.move;
-        case EUT_SWIM:    return mu.swim;
+        case EUT_SWIM:
+            // [ds] Amphibious monsters get a significant speed boost
+            // when swimming, as discussed with dpeg. We do not
+            // distinguish between amphibians that favour land
+            // (HT_LAND, such as hydras) and those that favour water
+            // (HT_WATER, such as merfolk), but that's something we
+            // can think about.
+            if (mons_class_flag(type, M_AMPHIBIOUS))
+                return div_rand_round(mu.swim * 7, 10);
+            else
+                return mu.swim;
         case EUT_MISSILE: return mu.missile;
         case EUT_ITEM:    return mu.item;
         case EUT_SPECIAL: return mu.special;

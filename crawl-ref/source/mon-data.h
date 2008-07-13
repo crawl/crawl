@@ -135,8 +135,25 @@
 
  */
 
-#define DEFAULT_ENERGY {10, 10, 10, 10, 10, 10, 10, 100}
-#define MOVE_ENERGY(x) {(x), (x), 10, 10, 10, 10, 10, 100}
+const mon_energy_usage DEFAULT_ENERGY;
+
+static inline mon_energy_usage MOVE_ENERGY(int me)
+{
+    return mon_energy_usage::move_cost(me, me);
+}
+
+static inline mon_energy_usage ATTACK_ENERGY(int ae)
+{
+    return mon_energy_usage::attack_cost(ae);
+}
+
+static inline mon_energy_usage MISSILE_ENERGY(int ae)
+{
+    return mon_energy_usage::missile_cost(ae);
+}
+
+
+static monsterentry mondata[] = {
 
 // monster 250: The Thing That Should Not Be(tm)
 // do not remove, or seekmonster will crash on unknown mc request
@@ -501,7 +518,7 @@
     { {AT_SHOOT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK },
     { 15, 4, 2, 0 },
     0, 15, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SHOUT, I_HIGH,
-    HT_LAND, 11, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+    HT_LAND, 11, MISSILE_ENERGY(4), MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 },
 
 {
@@ -4299,3 +4316,5 @@
     - row 8: habitat, speed, energy_usage, gmon_use class, body size
 */
 #endif
+
+};

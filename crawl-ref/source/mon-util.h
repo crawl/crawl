@@ -271,6 +271,7 @@ struct mon_attack_def
 // to 10.
 struct mon_energy_usage
 {
+public:
     char move;
     char swim;
     char attack;
@@ -282,6 +283,51 @@ struct mon_energy_usage
     // Percent of monster->speed used when picking up an item; defaults
     // to 100%
     char pickup_percent;
+
+public:
+    mon_energy_usage(int mv = 10, int sw = 10, int att = 10, int miss = 10,
+                     int spl = 10, int spc = 10, int itm = 10, int pick = 100)
+        : move(mv), swim(sw), attack(att), missile(miss),
+          spell(spl), special(spc), item(itm), pickup_percent(pick)
+    {
+    }
+
+    static mon_energy_usage attack_cost(int cost)
+    {
+        mon_energy_usage me;
+        me.attack = cost;
+        return me;
+    }
+
+    static mon_energy_usage missile_cost(int cost)
+    {
+        mon_energy_usage me;
+        me.missile = cost;
+        return me;
+    }
+
+    static mon_energy_usage move_cost(int mv, int sw = 10)
+    {
+        const mon_energy_usage me(mv, sw);
+        return me;
+    }
+
+    mon_energy_usage operator | (const mon_energy_usage &o) const
+    {
+        return mon_energy_usage( combine(move, o.move),
+                                 combine(swim, o.swim),
+                                 combine(attack, o.attack),
+                                 combine(missile, o.missile),
+                                 combine(spell, o.spell),
+                                 combine(special, o.special),
+                                 combine(item, o.item),
+                                 combine(pickup_percent, o.pickup_percent,
+                                         100) );
+    }
+private:
+    char combine(char a, char b, char def = 10) const {
+        return (b != def? b : a);
+    }
 };
 
 struct mon_resist_def
