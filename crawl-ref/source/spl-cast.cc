@@ -203,8 +203,9 @@ int list_spells()
             "              Hunger    Level",
             MEL_TITLE));
     spell_menu.set_highlighter(NULL);
-    spell_menu.set_more(formatted_string("Press '!' to toggle spell view."));
+    spell_menu.set_more(formatted_string("Press '!' or 'I' to toggle spell view."));
     spell_menu.add_toggle_key('!');
+    spell_menu.add_toggle_key('I');
     spell_menu.set_tag("spell");
 
     for ( int i = 0; i < 52; ++i )
