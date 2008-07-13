@@ -1819,12 +1819,18 @@ bool recharge_wand(int item_slot)
         // Don't display zap counts any more.
         wand.plus2 = ZAPCOUNT_UNKNOWN;
 
-        mprf("%s glows for a moment.", wand.name(DESC_CAP_YOUR).c_str());
+        const int new_charges =
+            std::max<int>(
+                wand.plus,
+                std::min(charge_gain * 3,
+                         wand.plus +
+                         1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 )));
 
-        wand.plus += 1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 );
-
-        if (wand.plus > charge_gain * 3)
-            wand.plus = charge_gain * 3;
+        const bool charged = new_charges > wand.plus;
+        mprf("%s %s for a moment.",
+             wand.name(DESC_CAP_YOUR).c_str(),
+             charged? "glows" : "flickers");
+        wand.plus = new_charges;
     }
     else // It's a rod.
     {
