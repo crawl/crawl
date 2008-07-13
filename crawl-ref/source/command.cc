@@ -1736,8 +1736,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>s</w> : wait a turn; searches adjacent\n"
             "    squares (also <w>numpad-5</w>, <w>.</w>, <w>Del</w>)\n"
             "<w>5</w> : rest and long search; stops when\n"
-            "    HP or Magic full, something found \n"
-            "    or 100 turns over (<w>Shift-numpad-5</w>)\n",
+            "    Health or Magic become full,\n"
+            "    something is detected, or after\n"
+            "    100 turns over (<w>Shift-numpad-5</w>)\n",
             true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -1789,6 +1790,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>a</w> : use special Ability\n"
             "<w>p</w> : Pray\n"
             "<w>z</w> : cast a spell\n"
+            "<w>I</w> : list all spells\n"
             "<w>t</w> : tell allies (<w>tt</w> to shout)\n"
             "<w>`</w> : re-do previous command\n"
             "<w>0</w> : repeat next command # of times\n",
@@ -1862,7 +1864,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>M</w> : Memorise a spell from a book\n"
             "<w>w</w> : Wield an item ( <w>-</w> for none)\n"
             "<w>'</w> : wield item a, or switch to b\n"
-            "<w>v</w> : evoke power of wielded item\n"
+            "<w>v</w> : eVoke power of wielded item\n"
             "<w>W</w>/<w>T</w> : Wear or Take off armour\n"
             "<w>P</w>/<w>R</w> : Put on or Remove jewellery\n",
             true, true, _cmdhelp_textfilter);
