@@ -821,9 +821,10 @@ void tutorial_finished()
     else if (Options.tut_travel)
     {
         text =  "There is a convenient way for travelling between far away "
-                "dungeon levels: press <w>Ctrl-G</w> and enter the desired "
-                "destination. If your travel gets interrupted, issuing "
-                "<w>Ctrl-G Enter</w> will continue it.";
+                "dungeon levels: press <w>Ctrl-G</w> or <w>G</w> and enter "
+                "the desired destination. If your travel gets interrupted, "
+                "issuing <w>Ctrl-G Enter</w> or <w>G Enter</w> will continue "
+                "it.";
     }
     else if (Options.tut_stashes)
     {

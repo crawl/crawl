@@ -382,17 +382,17 @@ with yellow glyphs.
 
 Automated Travel and Exploration
 --------------------------------
-Crawl has an extensive automated travel system: pressing 'Ctrl-G' lets
-you choose any dungeon level; the game will then take the shortest path
-to reach this destination. You can also use autotravel on the level map
-('X'): Move the cursor to the place where you want to go and hit Enter.
-There are several shortcuts when choosing destinations: For example,
-try '<' and '>' to quickly reach the staircases.
+Crawl has an extensive automated travel system: pressing 'Ctrl-G' or 'G' 
+lets you choose any dungeon level; the game will then take the shortest 
+path to reach this destination. You can also use autotravel on the level 
+map ('X'): Move the cursor to the place where you want to go and hit 
+Enter. There are several shortcuts when choosing destinations: For 
+example, try '<' and '>' to quickly reach the staircases.
 
-When your autotravel gets interrupted, Crawl will remember the previous
-destination. Hitting 'Ctrl-G' again and following with Enter puts the
-cursor on that square. See Appendix 4 for all commands and shortcuts in
-level-map mode.
+When your autotravel gets interrupted, Crawl will remember the previous 
+destination. Hitting 'Ctrl-G' or 'G' again and following with Enter puts 
+the cursor on that square. See Appendix 4 for all commands and shortcuts 
+in level-map mode.
 
 Another use of autotravel is exploration: 'o' makes your character move
 to the nearest unexplored area. This can be dangerous -- do not use it
@@ -443,8 +443,8 @@ also appears in Appendix 4 of this text. Various other help texts are
 available as well, including this manual. You can also read the logbook
 from there by pressing ':'. Note that several commands have their own
 help screens, among them are targeting ('f'), level map ('X'), travel
-('Ctrl-G') and searching ('Ctrl-F'); again, press '?' when asked for
-input.
+('Ctrl-G' or 'G') and searching ('Ctrl-F'); again, press '?' when asked
+for input.
 
 If you don't like the standard keyset (either because some keys do not
 work properly, or because you want to decrease the amount of typing
@@ -2252,12 +2252,12 @@ Movement:
                         Autoexploration will open doors on its own
                         except if you set easy_open to false.
     Ctrl-G              Interlevel travel (to arbitrary dungeon levels
-                        or waypoints). Remembers old destinations if
+    or   G              or waypoints). Remembers old destinations if
                         interrupted. This command has its own set of
                         shortcuts; use ? for help on them.
     Ctrl-W              Set waypoint (a digit between 0 and 9). Check
                         the option show_waypoints. You can go to a
-                        waypoint by pressing Ctrl-G and the digit.
+                        waypoint by pressing Ctrl-G or G and the digit.
 
 Resting and Searching:
     s, Del, . or        Rests and searches (these are not distinguished)
