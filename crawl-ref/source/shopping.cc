@@ -44,7 +44,7 @@
 #include "view.h"
 
 static void _in_a_shop(int shopidx);
-static void _purchase( int shop, int item_got, int cost, bool id);
+static bool _purchase( int shop, int item_got, int cost, bool id);
 
 static void _shop_print( const char *shoppy, int line )
 {
@@ -139,7 +139,7 @@ static std::vector<int> _shop_get_stock(int shopidx)
 static int _shop_get_item_value(const item_def& item, int greed, bool id)
 {
     int result = (greed * item_value(item, id) / 10);
-    if ( you.duration[DUR_BARGAIN] ) // 20% discount
+    if (you.duration[DUR_BARGAIN]) // 20% discount
     {
         result *= 8;
         result /= 10;
@@ -152,7 +152,9 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id)
 }
 
 static std::string _shop_print_stock( const std::vector<int>& stock,
-                                     const shop_struct& shop )
+                                      const std::vector<bool>& selected,
+                                      const shop_struct& shop,
+                                      int total_cost )
 {
     ShopInfo &si  = StashTrack.get_shop(shop.x, shop.y);
     const bool id = shoptype_identifies_stock(shop.type);
@@ -168,19 +170,65 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
         if (can_afford)
             purchasable += c;
 
-        textcolor( can_afford ? LIGHTGREEN : LIGHTRED );
-        cprintf("%c - ", c);
+        // Colour stock as follows:
+        //  * lightred, if you can't buy all you selected.
+        //  * lightgreen, if this item is purchasable along with your selections
+        //  * red, if this item is not purchasable even by itself.
+        //  * yellow, if this item would be purchasable if you deselected
+        //            something else.
 
-        textcolor((i % 2) ? LIGHTGREY : WHITE);
+        // Is this too complicated?
+
+        if (total_cost > you.gold && selected[i])
+            textcolor(LIGHTRED);
+        else if (gp_value <= you.gold - total_cost || selected[i] && can_afford)
+            textcolor(LIGHTGREEN);
+        else if (!can_afford)
+            textcolor(RED);
+        else
+            textcolor(YELLOW);
+
+        if (selected[i])
+            cprintf("%c + ", c);
+        else
+            cprintf("%c - ", c);
+
+        textcolor(i % 2 ? LIGHTGREY : WHITE);
         cprintf("%-56s%5d gold",
                 mitm[stock[i]].name(DESC_NOCAP_A, false, id).c_str(),
                 gp_value);
+
         si.add_item(mitm[stock[i]], gp_value);
     }
     textcolor(LIGHTGREY);
-    return purchasable;
+
+    return (purchasable);
 }
 
+
+/*
+    Rather than prompting for each individual item, I think it should be
+like multi-pickup, in that pressing a letter only "selects" an item
+(changing the '-' next to its name to a '+').
+
+New, suggested shopping keys:
+* letter keys [a-t] (de)select item
+* Enter buys (with prompt)
+* ? toggles examination mode (where letter keys view items)
+* \ shows discovered items
+* * lists inventory
+* x exits (also Esc)
+
+For the ? key, the text should read:
+[?] switch to examination mode
+[?] switch to selection mode
+
+Display selected items in yellow.
+Use red/green letters to indicated availability as now. Update these as
+items are (de)selected.
+List funds: "You now have 119 gold pieces. After the purchase, you will
+have 24 gold pieces."
+*/
 static void _in_a_shop( int shopidx )
 {
     const shop_struct& shop = env.shop[shopidx];
@@ -191,14 +239,24 @@ static void _in_a_shop( int shopidx )
 
     const std::string hello = "Welcome to " + shop_name(shop.x, shop.y) + "!";
     bool first = true;
+    int total_cost = 0;
 
     const bool id_stock = shoptype_identifies_stock(shop.type);
-
-    while ( true )
+    std::vector<bool> selected;
+    while (true)
     {
         StashTrack.get_shop(shop.x, shop.y).reset();
 
         std::vector<int> stock = _shop_get_stock(shopidx);
+
+        // Deselect all.
+        if (stock.size() != selected.size())
+        {
+            total_cost = 0;
+            selected.resize(stock.size());
+            for (unsigned int i = 0; i < selected.size(); ++i)
+                selected[i] = false;
+        }
 
         clrscr();
         if (stock.empty())
@@ -208,12 +266,40 @@ static void _in_a_shop( int shopidx )
             return;
         }
 
-        const std::string purchasable = _shop_print_stock(stock, shop);
+        const std::string purchasable = _shop_print_stock(stock, selected, shop,
+                                                          total_cost);
         _list_shop_keys(purchasable);
 
-        snprintf( info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
-                  (you.gold == 1) ? "" : "s" );
-        textcolor(YELLOW);
+        if (!total_cost)
+        {
+            snprintf( info, INFO_SIZE, "You have %d gold piece%s.", you.gold,
+                      (you.gold == 1) ? "" : "s" );
+
+            textcolor(YELLOW);
+        }
+        else if (total_cost > you.gold)
+        {
+            snprintf( info, INFO_SIZE, "You now have %d gold piece%s. "
+                            "You are short %d gold piece%s for the purchase.",
+                      you.gold,
+                      (you.gold == 1) ? "" : "s",
+                      total_cost - you.gold,
+                      (total_cost - you.gold == 1) ? "" : "s" );
+
+            textcolor(LIGHTRED);
+        }
+        else
+        {
+            snprintf( info, INFO_SIZE, "You now have %d gold piece%s. "
+                      "After the purchase, you will have %d gold piece%s.",
+                      you.gold,
+                      (you.gold == 1) ? "" : "s",
+                      you.gold - total_cost,
+                      (you.gold - total_cost == 1) ? "" : "s" );
+
+            textcolor(YELLOW);
+        }
+
         _shop_print(info, 0);
 
         if (first)
@@ -236,10 +322,81 @@ static void _in_a_shop( int shopidx )
 
         int ft = get_ch();
 
-        if ( ft == '\\' )
+        if (ft == '\\')
             check_item_knowledge();
         else if (ft == 'x' || ft == ESCAPE)
             break;
+        else if (ft == '\r')
+        {
+            // Do purchase.
+            if (total_cost > you.gold)
+            {
+                _shop_print("I'm sorry, you don't seem to have enough money.", 1);
+                _shop_more();
+            }
+            else if (!total_cost)
+                continue;
+            else
+            {
+                textcolor(channel_to_colour(MSGCH_PROMPT));
+                snprintf(info, INFO_SIZE, "Purchase for %d gold? (y/n) ",
+                         total_cost);
+                _shop_print(info, 1);
+
+                if ( yesno(NULL, true, 'n', false, false, true) )
+                {
+                    std::vector<std::string> purchases;
+                    int num_items = 0, outside_items = 0, quant;
+                    for (int i = selected.size() - 1; i >= 0; --i)
+                    {
+                        if (selected[i])
+                        {
+                            item_def& item = mitm[stock[i]];
+                            purchases.push_back(item.name(DESC_NOCAP_A));
+
+                            quant = item.quantity;
+                            num_items += quant;
+
+                            const int gp_value = _shop_get_item_value(item,
+                                                        shop.greed, id_stock);
+                            if (!_purchase(shopidx, stock[i], gp_value,
+                                           id_stock))
+                            {
+                                // The purchased item didn't fit into your
+                                // knapsack.
+                                outside_items += quant;
+                            }
+                        }
+                    }
+
+                    // Hack to make sure the lines are empty for the mpr().
+                    for (int i = 0; i < 5; i++)
+                        _shop_print("\n", i);
+
+                    // This is so that note_messages can be used to note items
+                    // being bought, and also so you can use message history
+                    // to review what you bought.
+                    // FIXME: If you buy several items of the same type
+                    //        they are not merged in the listing.
+                    mprf("You bought %s for a total of %d gold piece%s.",
+                         comma_separated_line(purchases.begin(),
+                                              purchases.end(),
+                                              ", and ", ", ").c_str(),
+                         total_cost,
+                         total_cost > 1 ? "s" : "");
+
+                    if (outside_items)
+                    {
+                        mprf( "I'll put %s outside for you.",
+                              num_items == 1             ? "it" :
+                              num_items == outside_items ? "them"
+                                                         : "part of them" );
+                    }
+                }
+            }
+            _shop_more();
+            continue;
+        }
         else if (ft == 'v')
         {
             textcolor(CYAN);
@@ -250,9 +407,7 @@ static void _in_a_shop( int shopidx )
 
             ft = get_ch();
             if (!isalpha(ft))
-            {
                 is_ok = false;
-            }
             else
             {
                 ft = tolower(ft) - 'a';
@@ -303,23 +458,13 @@ static void _in_a_shop( int shopidx )
             }
 
             item_def& item = mitm[stock[ft]];
-
             const int gp_value = _shop_get_item_value(item, shop.greed, id_stock);
-            if (gp_value > you.gold)
-            {
-                _shop_print("I'm sorry, you don't seem to have enough money.", 1);
-                _shop_more();
-            }
-            else
-            {
-                textcolor(channel_to_colour(MSGCH_PROMPT));
-                snprintf(info, INFO_SIZE, "Purchase %s (%d gold)? (y/n) ",
-                         item.name(DESC_NOCAP_A).c_str(), gp_value);
-                _shop_print(info, 1);
 
-                if ( yesno(NULL, true, 'n', false, false, true) )
-                    _purchase( shopidx, stock[ft], gp_value, id_stock );
-            }
+            selected[ft] = !selected[ft];
+            if (selected[ft])
+                total_cost += gp_value;
+            else
+                total_cost -= gp_value;
         }
     }
 }
@@ -331,7 +476,7 @@ bool shoptype_identifies_stock(shop_type type)
             && type != SHOP_GENERAL_ANTIQUE);
 }
 
-static void _purchase( int shop, int item_got, int cost, bool id )
+static bool _purchase( int shop, int item_got, int cost, bool id )
 {
     you.gold -= cost;
 
@@ -339,13 +484,7 @@ static void _purchase( int shop, int item_got, int cost, bool id )
 
     origin_purchased(item);
 
-    // This is so that note_messages can be used to note items being
-    // bought, and also so you can use message history to review
-    // what you bought.
-    mprf("You bought %s.", item.name(DESC_NOCAP_A, false, id).c_str());
-    mesclr();
-
-    if ( id )
+    if (id)
     {
         // Identify the item and its type.
         // This also takes the ID note if necessary.
@@ -354,22 +493,16 @@ static void _purchase( int shop, int item_got, int cost, bool id )
     }
 
     const int quant = item.quantity;
-    // note that item will be invalidated if num == item.quantity
+    // Note that item will be invalidated if num == item.quantity.
     const int num = move_item_to_player( item_got, item.quantity, true );
 
     // Shopkeepers will now place goods you can't carry outside the shop.
     if (num < quant)
     {
-        snprintf( info, INFO_SIZE, "I'll put %s outside for you.",
-                                   (quant == 1) ? "it" :
-                                   (num > 0)    ? "the rest"
-                                                : "these" );
-
-        _shop_print(info, 1);
-        _shop_more();
-
         move_item_to_grid( &item_got, env.shop[shop].x, env.shop[shop].y );
+        return (false);
     }
+    return (true);
 }
 
 // This probably still needs some work.  Rings used to be the only
@@ -1501,6 +1634,7 @@ unsigned int item_value( item_def item, bool ident )
 
     return (valued);
 }                               // end item_value()
+
 
 void shop()
 {

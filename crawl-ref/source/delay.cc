@@ -1729,6 +1729,8 @@ static void _paranoid_option_disable( activity_interrupt_type ai,
         const monsters* mon = static_cast<const monsters*>(at.data);
         if (mon && !player_monster_visible(mon) && !mons_is_submerged(mon))
         {
+            // Now that autoprayer has been removed, so the vectors aren't
+            // really needed anymore, but let's keep them "just in case".
             std::vector<std::string> deactivatees;
             std::vector<std::string> restart;
 

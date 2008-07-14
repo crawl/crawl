@@ -334,7 +334,6 @@ note_skill_levels = 1,5,10,15,27
 note_all_skill_levels = true
 note_skill_max  = true
 note_all_spells = true
-note_all_spells = true
 note_items    = rod of, acquirement, preservation, running, of Zot
 note_messages = You pass through the gate
 note_messages = [bB]anish.*Abyss
