@@ -3852,15 +3852,18 @@ spec_query:
     bool randrace = (good_randrace || keyn == '*');
     if (randrace)
     {
+        if (you.char_class == JOB_THIEF || you.char_class == JOB_WANDERER)
+            good_randrace = false;
+
         int index;
         do
         {
             index = random2(num_species);
         }
         while (!_is_species_valid_choice(_get_species(index), false)
-               || (you.char_class != JOB_UNKNOWN
-                   && !_is_good_combination(_get_species(index), you.char_class,
-                                            good_randrace)));
+               || you.char_class != JOB_UNKNOWN
+                  && !_is_good_combination(_get_species(index), you.char_class,
+                                           good_randrace));
 
         keyn = index_to_letter(index);
     }
@@ -3996,7 +3999,7 @@ job_query:
         {
             cprintf(EOL
                     "Space - Choose species first; * - Random class; "
-                    "+ - Good random" EOL
+                    "+ - Good random class" EOL
                     "! - Random character; # - Good random character; X - Quit"
                     EOL);
         }

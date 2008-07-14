@@ -2095,18 +2095,22 @@ void inscribe_item(item_def &item, bool proper_prompt)
     int keyin = tolower(c_getch());
     switch (keyin)
     {
-    case 'a':
-        // Remove previous randart inscription
-        _trim_randart_inscrip(item);
-
-        if (!item.inscription.empty())
-            item.inscription += ", ";
-
-        item.inscription += ainscrip;
-        break;
     case 'c':
         item.inscription.clear();
         break;
+    case 'a':
+        if (need_autoinscribe)
+        {
+            // Remove previous randart inscription.
+            _trim_randart_inscrip(item);
+
+            if (!item.inscription.empty())
+                item.inscription += ", ";
+
+            item.inscription += ainscrip;
+            break;
+        }
+        // If autoinscription is impossible, prompt for an inscription instead.
     case 'y':
     {
         prompt = (is_inscribed ? "Add what to inscription? "
