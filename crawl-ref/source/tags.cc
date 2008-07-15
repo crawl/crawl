@@ -52,8 +52,8 @@
 */
 
 #include <cstdlib>
-#include <stdio.h>
-#include <string.h>            // for memcpy
+#include <cstdio>
+#include <cstring>            // for memcpy
 #include <iterator>
 #include <algorithm>
 
@@ -243,15 +243,15 @@ void marshallShort(writer &th, short data)
 }
 
 // Unmarshall 2 byte short in network order.
-short unmarshallShort(reader &th)
+int16_t unmarshallShort(reader &th)
 {
-    short b1 = th.readByte();
-    short b2 = th.readByte();
-    short data = (b1 << 8) | (b2 & 0x00FF);
+    int16_t b1 = th.readByte();
+    int16_t b2 = th.readByte();
+    int16_t data = (b1 << 8) | (b2 & 0x00FF);
     return data;
 }
 
-void marshallLong(std::vector<unsigned char>& buf, long data)
+void marshallLong(std::vector<unsigned char>& buf, int32_t data)
 {
     buf.push_back((unsigned char) ((data & 0xFF000000) >> 24));
     buf.push_back((unsigned char) ((data & 0x00FF0000) >> 16));
@@ -260,7 +260,7 @@ void marshallLong(std::vector<unsigned char>& buf, long data)
 }
 
 // Marshall 4 byte int in network order.
-void marshallLong(writer &th, long data)
+void marshallLong(writer &th, int32_t data)
 {
     char b4 = (char) (data & 0x000000FF);
     char b3 = (char)((data & 0x0000FF00) >> 8);
@@ -273,19 +273,20 @@ void marshallLong(writer &th, long data)
     th.writeByte(b4);
 }
 
-// Unmarshall 4 byte int in network order.
-long unmarshallLong(reader &th)
+// Unmarshall 4 byte signed int in network order.
+int32_t unmarshallLong(reader &th)
 {
-    long b1 = th.readByte();
-    long b2 = th.readByte();
-    long b3 = th.readByte();
-    long b4 = th.readByte();
+    int32_t b1 = th.readByte();
+    int32_t b2 = th.readByte();
+    int32_t b3 = th.readByte();
+    int32_t b4 = th.readByte();
 
-    long data = (b1 << 24) | ((b2 & 0x000000FF) << 16);
+    int32_t data = (b1 << 24) | ((b2 & 0x000000FF) << 16);
     data |= ((b3 & 0x000000FF) << 8) | (b4 & 0x000000FF);
     return data;
 }
 
+// FIXME: Kill this abomination - it will break!
 template<typename T>
 void marshall_as_long(writer& th, const T& t)
 {
