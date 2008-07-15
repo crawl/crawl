@@ -3092,7 +3092,7 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
 static bool _found_player(const bolt &beam, int x, int y)
 {
     const bool needs_fuzz = (beam.is_tracer && !beam.can_see_invis
-                             && you.invisible());
+                             && you.invisible() && !YOU_KILL(beam.thrower));
     const int dist = needs_fuzz? 2 : 0;
 
     return (grid_distance(x, y, you.x_pos, you.y_pos) <= dist);
