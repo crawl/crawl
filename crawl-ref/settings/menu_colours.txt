@@ -3,7 +3,10 @@
 menu := menu_colour 
 ae   := autopickup_exceptions
 
-# Useless items, overrides all other colours
+# Bad items
+menu = lightred:.*bad_item.*
+
+# Useless items, comes here to override artefacts etc.
 menu = darkgrey:.*useless_item.*
 
 : if you.race() == "Spriggan" then
@@ -46,9 +49,6 @@ menu = yellow:.*emergency_item.*
 # Good items
 menu = cyan:.*good_item.*
 menu = cyan:.*misc.*[lL]antern
-
-# Bad items
-menu = lightred:.*bad_item.*
 
 # Dangerous (but still useful) items
 menu = magenta:.*dangerous_item.*

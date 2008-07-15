@@ -4101,9 +4101,10 @@ static bool _handle_enchant_armour( int item_slot )
                                         OSEL_ENCH_ARM, true, true, false );
     }
 
-    if (item_slot == -1)
+    if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
     {
-        canned_msg( MSG_OK );
+        if (item_slot == PROMPT_ABORT)
+            canned_msg( MSG_OK );
         return (false);
     }
 
