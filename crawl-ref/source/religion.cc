@@ -5493,21 +5493,6 @@ void god_pitch(god_type which_god)
         you.gift_timeout = 0;
     }
 
-    if (god_gives_permanent_followers(you.religion))
-    {
-        // Enable ally pickup control for gods that give you permanent
-        // followers.
-        you.friendly_pickup = Options.default_friendly_pickup;
-    }
-    else
-    {
-        // With other gods, you can only get stupid (zombies!),
-        // summoned, or charmed allies, so pickup control makes no
-        // sense.  Sorry about that!
-        you.friendly_pickup = FRIENDLY_PICKUP_NONE;
-    }
-
-
     set_god_ability_slots();    // remove old god's slots, reserve new god's
 #ifdef DGL_WHEREIS
     whereis_record();

@@ -74,6 +74,9 @@ class monster_pane_info
     static bool less_than(const monster_pane_info& m1,
                           const monster_pane_info& m2, bool zombified = true);
 
+    static bool less_than_wrapper(const monster_pane_info& m1,
+                                  const monster_pane_info& m2);
+
     monster_pane_info(const monsters* m);
 
     void to_string(int count, std::string& desc, int& desc_color) const;

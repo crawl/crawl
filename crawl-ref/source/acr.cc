@@ -1785,21 +1785,21 @@ static void _print_friendly_pickup_setting(bool was_changed)
 
     if (you.friendly_pickup == FRIENDLY_PICKUP_NONE)
     {
-        mprf("Your allies are %sforbidden to pick up anything at all.",
+        mprf("Your intelligent, permanent allies are %sforbidden to pick up anything at all.",
              now.c_str());
     }
     else if (you.friendly_pickup == FRIENDLY_PICKUP_FRIEND)
     {
-        mprf("Your allies may %sonly pick up items dropped by allies.",
+        mprf("Your intelligent, permanent allies may %sonly pick up items dropped by allies.",
              now.c_str());
     }
     else if (you.friendly_pickup == FRIENDLY_PICKUP_ALL)
     {
-        mprf("Your allies may %spick up anything they need.", now.c_str());
+        mprf("Your intelligent, permanent allies may %spick up anything they need.", now.c_str());
     }
     else
     {
-        mprf("Your allies%s are collecting bugs!", now.c_str());
+        mprf(MSGCH_ERROR, "Your allies%s are collecting bugs!", now.c_str());
     }
 }
 
@@ -1934,23 +1934,17 @@ void process_command( command_type cmd )
 
     case CMD_TOGGLE_FRIENDLY_PICKUP:
     {
-#ifndef WIZARD
-        if (!god_gives_permanent_followers(you.religion))
-        {
-            mpr("I'm sorry, your allies won't ever be able to pick up items.");
-            if (Options.tutorial_left)
-            {
-                mpr("Only intelligent permanent allies may equip themselves, "
-                    "and these two restrictions are only met by allies of the "
-                    "followers of four gods in the pantheon: the Shining "
-                    "One, Yredelemnul, Kikubaaqudgha, and Beogh.",
-                    MSGCH_TUTORIAL);
-            }
-            break;
-        }
-#endif
         // Toggle pickup mode for friendlies.
         _print_friendly_pickup_setting(false);
+
+        if (Options.tutorial_left
+            && !god_gives_permanent_followers(you.religion))
+        {
+            mpr("Only intelligent, permanent allies may equip themselves, "
+                "which excludes all types of zombies as well as enslaved and "
+                "summoned monsters.", MSGCH_TUTORIAL);
+        }
+
         mpr("Change to (d)efault, (n)othing, (f)riend-dropped, or (a)ll? ",
             MSGCH_PROMPT);
 
@@ -4068,9 +4062,7 @@ static bool _initialise(void)
 
     if (newc) // start a new game
     {
-        you.friendly_pickup = FRIENDLY_PICKUP_NONE;
-        if (god_gives_permanent_followers(you.religion))
-            you.friendly_pickup = Options.default_friendly_pickup;
+        you.friendly_pickup = Options.default_friendly_pickup;
 
         // Mark items in inventory as of unknown origin.
         origin_set_inventory(origin_set_unknown);
