@@ -53,6 +53,9 @@ menu = darkgrey:.*jewellery.*(sustenance)
 ae   = >ring.*(sustenance)
 :end
 
+# Evil items
+inv = $evil:.*evil_item.*
+
 # Defaults for normal items
 #
 menu = lightred:.*equipped.* cursed
