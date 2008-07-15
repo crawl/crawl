@@ -1,3 +1,16 @@
+Stone Soup 0.4.1 (200807??)
+---------------------------
+
+Disclaimer: These are merely the highlights, not an exhaustive list of changes.
+
+* Fixed crashes related to mapmark.lua.
+* Fixed crash when attempting to autoinscribe non-artefacts via '{'.
+* Fixed Crawl looping infinitely upon "good random choice" for Thief/Wanderer
+* Fixed vampire bat jewellery exploit.
+* Fixed kills by hell effects counting as player kills.
+* Fixed friendly pickup toggle being inappropriately disallowed.
+
+
 Stone Soup 0.4.0 (20080714)
 ---------------------------
 

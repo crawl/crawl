@@ -2064,35 +2064,46 @@ void inscribe_item(item_def &item, bool proper_prompt)
         }
     }
 
-    std::string prompt = (is_inscribed ? "Add to inscription? "
-                                       : "Inscribe item? ");
+    std::string prompt;
+    int keyin;
+    bool did_prompt = false;
 
-    if (need_autoinscribe || is_inscribed)
+    // Don't prompt for whether to inscribe in the first place if the
+    // player is using '{' - unless autoinscribing or clearing an
+    // existing inscription become an option.
+    if (!proper_prompt || need_autoinscribe || is_inscribed)
     {
-        prompt += "(You may also ";
-        if (need_autoinscribe)
+        prompt = (is_inscribed ? "Add to inscription? "
+                               : "Inscribe item? ");
+
+        if (need_autoinscribe || is_inscribed)
         {
-            prompt += "(a)utoinscribe";
+            prompt += "(You may also ";
+            if (need_autoinscribe)
+            {
+                prompt += "(a)utoinscribe";
+                if (is_inscribed)
+                    prompt += ", or ";
+            }
             if (is_inscribed)
-                prompt += ", or ";
+                prompt += "(c)lear it";
+            prompt += ".) ";
         }
-        if (is_inscribed)
-            prompt += "(c)lear it";
-        prompt += ".) ";
+
+        if (proper_prompt)
+            mpr(prompt.c_str(), MSGCH_PROMPT);
+        else
+        {
+            prompt = "<cyan>" + prompt + "</cyan>";
+            formatted_string::parse_string(prompt).display();
+
+            if (Options.tutorial_left && wherey() <= get_number_of_lines() - 5)
+                tutorial_inscription_info(need_autoinscribe, prompt);
+        }
+        did_prompt = true;
     }
 
-    if (proper_prompt)
-        mpr(prompt.c_str(), MSGCH_PROMPT);
-    else
-    {
-        prompt = "<cyan>" + prompt + "</cyan>";
-        formatted_string::parse_string(prompt).display();
-
-        if (Options.tutorial_left && wherey() <= get_number_of_lines() - 5)
-            tutorial_inscription_info(need_autoinscribe, prompt);
-    }
-
-    int keyin = tolower(c_getch());
+    keyin = (did_prompt ? tolower(c_getch()) : 'y');
     switch (keyin)
     {
     case 'c':

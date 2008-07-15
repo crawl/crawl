@@ -335,6 +335,8 @@ static std::string _no_selectables_message(int item_selector)
     case OSEL_WIELD:
     case OBJ_WEAPONS:
         return("You aren't carrying any weapons.");
+    case OBJ_ARMOUR:
+        return("You aren't carrying any armour.");
     case OSEL_UNIDENT:
         return("You don't have any unidentified items.");
     case OSEL_MEMORISE:
@@ -342,7 +344,6 @@ static std::string _no_selectables_message(int item_selector)
     case OSEL_RECHARGE:
         return("You aren't carrying any rechargable items.");
     case OSEL_ENCH_ARM:
-    case OBJ_ARMOUR:
         return("You aren't carrying any armour which can be enchanted "
                "further.");
     case OBJ_CORPSES:

@@ -84,7 +84,7 @@ void examine_object(void);
  * called from: acr
  * *********************************************************************** */
 bool puton_ring(int slot = -1, bool prompt_finger = true);
-
+void jewellery_remove_effects(item_def &item, bool mesg = true);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

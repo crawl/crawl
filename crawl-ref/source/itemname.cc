@@ -2178,7 +2178,7 @@ bool is_interesting_item( const item_def& item )
     }
 
     const std::string iname = menu_colour_item_prefix(item, false)
-        + item.name(DESC_PLAIN);
+                              + item.name(DESC_PLAIN);
     for (unsigned i = 0; i < Options.note_items.size(); ++i)
         if (Options.note_items[i].matches(iname))
             return (true);
@@ -2436,6 +2436,10 @@ bool is_useless_item(const item_def &item, bool temp)
 
         if (!item_type_known(item))
             return (false);
+
+        // A bad item is always useless.
+        if (is_bad_item(item, temp))
+            return (true);
 
         switch (item.sub_type)
         {
