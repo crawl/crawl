@@ -13,7 +13,8 @@
 #ifndef TAGS_H
 #define TAGS_H
 
-#include <stdio.h>
+#include <cstdio>
+#include <stdint.h>
 #include "externs.h"
 
 enum tag_type   // used during save/load process to identify data blocks
@@ -85,8 +86,8 @@ private:
 };
 
 void marshallByte    (writer &, char );
-void marshallShort   (writer &, short );
-void marshallLong    (writer &, long );
+void marshallShort   (writer &, int16_t );
+void marshallLong    (writer &, int32_t );
 void marshallFloat   (writer &, float );
 void marshallBoolean (writer &, bool );
 void marshallString  (writer &, const std::string &, int maxSize = 0);
@@ -116,8 +117,8 @@ private:
 };
 
 char        unmarshallByte    (reader &);
-short       unmarshallShort   (reader &);
-long        unmarshallLong    (reader &);
+int16_t     unmarshallShort   (reader &);
+int32_t     unmarshallLong    (reader &);
 float       unmarshallFloat   (reader &);
 bool        unmarshallBoolean (reader &);
 int         unmarshallCString (reader &, char *data, int maxSize);
