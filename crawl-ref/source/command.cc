@@ -140,7 +140,6 @@ static std::string _get_version_changes(void)
     std::string help;
     char buf[200];
     bool start = false;
-    bool skip_lines = true;
     while (fgets(buf, sizeof buf, fp))
     {
         // Remove trailing spaces.
@@ -152,18 +151,10 @@ static std::string _get_version_changes(void)
                 break;
         }
         help = buf;
-        // Give up if you encountered the second set of underliners
-        // and still haven't encountered the keyword "Highlights".
-        if (help.find("---") != std::string::npos)
-        {
-            if (skip_lines)
-            {
-                skip_lines = false;
-                continue;
-            }
-            else if (!start)
-                break;
-        }
+
+        // Give up if you encounter an older version.
+        if (help.find("Stone Soup 0.3.4") != std::string::npos)
+            break;
 
         if (help.find("Highlights") != std::string::npos)
         {

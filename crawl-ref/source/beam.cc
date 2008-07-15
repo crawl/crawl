@@ -689,21 +689,21 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     if (range > 0)
         pbolt.rangeMax = range;
 
-    pbolt.is_tracer     = true;
-    pbolt.source_x      = you.x_pos;
-    pbolt.source_y      = you.y_pos;
-    pbolt.can_see_invis = player_see_invis();
-    pbolt.smart_monster = true;
-    pbolt.attitude      = ATT_FRIENDLY;
+    pbolt.is_tracer      = true;
+    pbolt.source_x       = you.x_pos;
+    pbolt.source_y       = you.y_pos;
+    pbolt.can_see_invis  = player_see_invis();
+    pbolt.smart_monster  = true;
+    pbolt.attitude       = ATT_FRIENDLY;
 
     // Init tracer variables.
-    pbolt.foe_count     = pbolt.fr_count = 0;
-    pbolt.foe_power     = pbolt.fr_power = 0;
-    pbolt.fr_helped     = pbolt.fr_hurt  = 0;
-    pbolt.foe_helped    = pbolt.foe_hurt = 0;
-    pbolt.foe_ratio     = 100;
-    pbolt.beam_cancelled= false;
-    pbolt.dont_stop_foe = pbolt.dont_stop_fr = false;
+    pbolt.foe_count      = pbolt.fr_count = 0;
+    pbolt.foe_power      = pbolt.fr_power = 0;
+    pbolt.fr_helped      = pbolt.fr_hurt  = 0;
+    pbolt.foe_helped     = pbolt.foe_hurt = 0;
+    pbolt.foe_ratio      = 100;
+    pbolt.beam_cancelled = false;
+    pbolt.dont_stop_foe  = pbolt.dont_stop_fr = pbolt.dont_stop_player = false;
 
     fire_beam(pbolt);
 

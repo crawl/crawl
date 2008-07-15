@@ -1019,9 +1019,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         {
             potion = prompt_invent_item("Throw which potion?",
                                         MT_INVLIST, OBJ_POTIONS);
-            if (potion == -1)
+
+            if (prompt_failed(potion))
                 return (SPRET_ABORT);
-            else if (you.inv[potion].base_type != OBJ_POTIONS)
+
+            if (you.inv[potion].base_type != OBJ_POTIONS)
             {
                 mpr("This spell works only on potions!");
                 return (SPRET_ABORT);

@@ -147,12 +147,7 @@ void choose_item_for_quiver()
                                    OSEL_THROWABLE, true, true, true, '-',
                                    you.equip[EQ_WEAPON], NULL, OPER_QUIVER );
 
-    if (slot == PROMPT_ABORT)
-    {
-        canned_msg(MSG_OK);
-        return;
-    }
-    else if (slot == PROMPT_NOTHING)
+    if (prompt_failed(slot))
         return;
 
     if (slot == PROMPT_GOT_SPECIAL)  // '-' or empty quiver

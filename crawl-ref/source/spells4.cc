@@ -1419,18 +1419,19 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
     }
 
     // Fire tracer.
-    beem.source_x      = you.x_pos;
-    beem.source_y      = you.y_pos;
-    beem.can_see_invis = player_see_invis();
-    beem.smart_monster = true;
-    beem.attitude      = ATT_FRIENDLY;
-    beem.fr_count      = 0;
-    beem.is_tracer     = true;
+    beem.source_x       = you.x_pos;
+    beem.source_y       = you.y_pos;
+    beem.can_see_invis  = player_see_invis();
+    beem.smart_monster  = true;
+    beem.attitude       = ATT_FRIENDLY;
+    beem.fr_count       = 0;
+    beem.beam_cancelled = false;
+    beem.is_tracer      = true;
     fire_beam(beem);
 
-    if (beem.fr_count > 0)
+    if (beem.beam_cancelled)
     {
-        // We don't want to fire through friendlies.
+        // We don't want to fire through friendlies or at ourselves.
         canned_msg(MSG_OK);
         return (false);
     }
