@@ -199,7 +199,7 @@ depend: $(OBJECTS:.o=.cc)
 ifeq ($(DOYACC),y)
 
 prebuildyacc:	$(UTIL)levcomp.tab.cc $(UTIL)levcomp.tab.h $(UTIL)levcomp.lex.cc
-		cp $^ prebuilt/
+		$(COPY) $^ prebuilt/
 
 $(UTIL)levcomp.tab.cc: $(UTIL)levcomp.ypp
 		cd $(UTIL) && $(YACC) -d -b levcomp levcomp.ypp \
@@ -213,12 +213,12 @@ else
 # Pull the level-compiler stuff up from prebuilt/
 
 $(UTIL)levcomp.tab.cc: prebuilt/levcomp.tab.cc
-		cp prebuilt/*.h $(UTIL)
-		cp $< $@
+		$(COPY) prebuilt/*.h $(UTIL)
+		$(COPY) $< $@
 
 
 $(UTIL)levcomp.lex.cc: prebuilt/levcomp.lex.cc
-		cp $< $@
+		$(COPY) $< $@
 
 endif
 
@@ -235,7 +235,7 @@ makerltiles:
 	cd $(RLTILES) && make -f makefile.unix all CFLAGS="$(PNG_INCLUDE)" LDFLAGS="$(PNG_LIB)" && cd ..
 
 $(TILEHEADERS): $(ORIGTILEHEADERS)
-	cp $(RLTILES)$@ .
+	$(COPY) $(RLTILES)$@ .
 
 $(ORIGTILEFILES): makerltiles
 
@@ -267,17 +267,17 @@ endif
 	mkdir -p $(DATADIR)/dat/clua
 	mkdir -p $(DATADIR)/dat/descript
 	mkdir -p $(DATADIR)/dat/database
-	cp dat/*.des $(DATADIR)/dat
-	cp dat/lua/*.lua $(DATADIR)/dat/lua
-	cp dat/clua/*.lua $(DATADIR)/dat/clua
-	cp dat/descript/*.txt $(DATADIR)/dat/descript
-	cp dat/database/*.txt $(DATADIR)/dat/database
+	$(COPY) dat/*.des $(DATADIR)/dat
+	$(COPY) dat/lua/*.lua $(DATADIR)/dat/lua
+	$(COPY) dat/clua/*.lua $(DATADIR)/dat/clua
+	$(COPY) dat/descript/*.txt $(DATADIR)/dat/descript
+	$(COPY) dat/database/*.txt $(DATADIR)/dat/database
 	mkdir -p $(DATADIR)/settings
-	cp ../settings/* $(DATADIR)/settings/
+	$(COPY) ../settings/* $(DATADIR)/settings/
 	mkdir -p $(DATADIR)/docs
-	cp ../docs/*.txt $(DATADIR)/docs
+	$(COPY) ../docs/*.txt $(DATADIR)/docs
 	mkdir -p $(DATADIR)/dat/tiles
-	cp dat/tiles/*.png $(DATADIR)/dat/tiles
+	$(COPY) dat/tiles/*.png $(DATADIR)/dat/tiles
 	chown -R $(INSTALL_UGRP) $(DATADIR)
 ifneq ($(SAVEDIR),)
 	mkdir -p $(SAVEDIR)
