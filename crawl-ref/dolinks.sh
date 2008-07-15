@@ -16,4 +16,5 @@ if [ -d tiles ]; then
 	true
 else
 	ln -sf source/rltiles tiles
+	pushd source/dat/tiles ; ln -sf ../../rltiles/*.png . ; popd
 fi
