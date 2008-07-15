@@ -560,11 +560,11 @@ static void _handle_wizard_command( void )
     {
         // This command isn't very exciting... feel free to replace.
         int i = prompt_invent_item( "Value of which item?", MT_INVLIST, -1 );
-        if (i == PROMPT_ABORT || !is_random_artefact( you.inv[i] ))
-        {
-            canned_msg( MSG_OK );
+
+        if (prompt_failed(i))
             break;
-        }
+        else if (!is_random_artefact( you.inv[i] ))
+            mpr("That item is not an artefact!");
         else
             mprf("randart val: %d", randart_value(you.inv[i]));
 
@@ -574,11 +574,9 @@ static void _handle_wizard_command( void )
     {
         int i = prompt_invent_item( "Make an artefact out of which item?",
                                     MT_INVLIST, -1 );
-        if (i == PROMPT_ABORT)
-        {
-            canned_msg( MSG_OK );
+
+        if (prompt_failed(i))
             break;
-        }
 
         if (!_item_type_can_be_artefact(you.inv[i].base_type))
         {
@@ -680,11 +678,9 @@ static void _handle_wizard_command( void )
     {
         // This command isn't very exciting but it's useful for debugging.
         int i = prompt_invent_item( "(Un)curse which item?", MT_INVLIST, -1 );
-        if (i == PROMPT_ABORT)
-        {
-            canned_msg( MSG_OK );
+
+        if (prompt_failed(i))
             break;
-        }
 
         item_def& item(you.inv[i]);
 

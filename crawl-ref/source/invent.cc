@@ -353,6 +353,8 @@ static std::string _no_selectables_message(int item_selector)
         return("You aren't carrying any decks from which to draw.");
     case OBJ_FOOD:
         return("You aren't carrying any food.");
+    case OBJ_POTIONS:
+        return("You aren't carrying any potions.");
     case OBJ_SCROLLS:
     case OBJ_BOOKS:
         return("You aren't carrying any books or scrolls.");

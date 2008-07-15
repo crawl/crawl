@@ -798,7 +798,7 @@ bool armour_prompt( const std::string & mesg, int *index, operation_types oper)
     }
 
     return (succeeded);
-}                               // end armour_prompt()
+}
 
 static bool cloak_is_being_removed( void )
 {
@@ -3163,8 +3163,8 @@ bool puton_ring(int slot, bool prompt_finger)
     else
     {
         item_slot = prompt_invent_item( "Put on which piece of jewellery?",
-                        MT_INVLIST, OBJ_JEWELLERY, true, true, true, 0, -1,
-                        NULL, OPER_PUTON );
+                                        MT_INVLIST, OBJ_JEWELLERY, true, true,
+                                        true, 0, -1, NULL, OPER_PUTON );
     }
 
     if (prompt_failed(item_slot))
@@ -3309,10 +3309,10 @@ bool remove_ring(int slot, bool announce)
     if (hand_used == EQ_NONE)
     {
         const int equipn =
-            (slot == -1)? prompt_invent_item( "Remove which piece of jewellery?",
-                                              MT_INVLIST,
-                                              OBJ_JEWELLERY, true, true, true,
-                                              0, -1, NULL, OPER_REMOVE)
+            (slot == -1)? prompt_invent_item("Remove which piece of jewellery?",
+                                             MT_INVLIST,
+                                             OBJ_JEWELLERY, true, true, true,
+                                             0, -1, NULL, OPER_REMOVE)
                         : slot;
 
         if (prompt_failed(equipn))
@@ -3598,6 +3598,7 @@ void prompt_inscribe_item()
     }
     item_slot = prompt_invent_item("Inscribe which item? ",
                                    MT_INVLIST, OSEL_ANY );
+
     if (prompt_failed(item_slot))
         return;
 
@@ -4110,12 +4111,8 @@ static bool _handle_enchant_armour( int item_slot )
                                         OSEL_ENCH_ARM, true, true, false );
     }
 
-    if (item_slot == PROMPT_ABORT || item_slot == PROMPT_NOTHING)
-    {
-        if (item_slot == PROMPT_ABORT)
-            canned_msg( MSG_OK );
+    if (prompt_failed(item_slot))
         return (false);
-    }
 
     item_def& arm(you.inv[item_slot]);
 
