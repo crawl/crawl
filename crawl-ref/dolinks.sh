@@ -3,8 +3,8 @@
 mkdir -p NORMAL
 mkdir -p WIZARD
 
-pushd NORMAL ; ln -sf ../source . ; popd
-pushd WIZARD ; ln -sf ../source . ; popd
+pushd NORMAL ; mkdir -p source ; cd source ; ln -sf ../../source/* . ; popd
+pushd WIZARD ; mkdir -p source ; cd source ; ln -sf ../../source/* . ; popd
 
 if [ -d dat ]; then
 	true
