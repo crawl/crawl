@@ -752,7 +752,11 @@ void map_markers::write(writer &outf) const
 
         // Write the marker data, prefixed by a size
         marshallLong(outf, buf.size());
-        outf.write(&buf[0], buf.size());
+        for ( std::vector<unsigned char>::const_iterator bi = buf.begin();
+              bi != buf.end(); ++bi )
+        {
+            outf.writeByte(*bi);
+        }
     }
 }
 
