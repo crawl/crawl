@@ -15,7 +15,16 @@ function ch_autopickup(it)
 end
 end >
 
-# Exclude potentially useful items of high risk, like ?torment.
+# Exclude items useless in general (?paper, bad potions unless you know
+# Evaporate) or for your current character (such as food for Mummies or
+# armour you can't wear).
+ae = useless_item
+
+# Exclude food items your character cannot eat.
+ae = inedible
+
+# Exclude potentially useful items of high risk, like ?torment or
+# !mutation.
 ae = dangerous_item
 
 # Excluding amulets as you only need one of each. (If you know the
