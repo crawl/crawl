@@ -54,7 +54,7 @@ menu = lightred:.*bad_item.*
 menu = magenta:.*dangerous_item.*
 
 # Evil items
-inv = $evil:.*evil_item.*
+menu = $evil:.*evil_item.*
 
 # Defaults for normal items
 #
