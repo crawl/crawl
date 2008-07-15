@@ -1195,14 +1195,17 @@ monster_pane_info::monster_pane_info(const monsters *m)
     if (m->has_ench(ENCH_BERSERK)) m_brands |= 4;
 }
 
-// Sort monsters by:
-//   attitude
-//   difficulty
-//   type
-//   brand
-bool // static
-monster_pane_info::less_than(const monster_pane_info& m1,
-                             const monster_pane_info& m2, bool zombified)
+// Needed because gcc 4.3 sort does not like comparison functions that take
+// more than 2 arguments.
+bool monster_pane_info::less_than_wrapper(const monster_pane_info& m1,
+                                          const monster_pane_info& m2)
+{
+    return monster_pane_info::less_than(m1, m2, true);
+}
+
+// Sort monsters by (in that order):    attitude, difficulty, type, brand
+bool monster_pane_info::less_than(const monster_pane_info& m1,
+                                  const monster_pane_info& m2, bool zombified)
 {
     if (m1.m_attitude < m2.m_attitude)
         return (true);
@@ -1473,7 +1476,7 @@ void get_monster_pane_info(std::vector<monster_pane_info>& mons)
             mons.push_back(monster_pane_info(visible[i]));
         }
     }
-    std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
+    std::sort(mons.begin(), mons.end(), monster_pane_info::less_than_wrapper);
 }
 
 #define BOTTOM_JUSTIFY_MONSTER_LIST 0
@@ -1489,7 +1492,7 @@ int update_monster_pane()
 
     std::vector<monster_pane_info> mons;
     get_monster_pane_info(mons);
-    std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
+    std::sort(mons.begin(), mons.end(), monster_pane_info::less_than_wrapper);
 
     // Count how many groups of monsters there are
     unsigned int lines_needed = mons.size();
@@ -1506,7 +1509,9 @@ int update_monster_pane()
         // "rat zombie") in order to take up less lines.
         for (unsigned int i = 0; i < mons.size(); i++)
             mons[i].m_fullname = false;
-        std::sort(mons.begin(), mons.end(), monster_pane_info::less_than);
+
+        std::sort(mons.begin(), mons.end(),
+                  monster_pane_info::less_than_wrapper);
 
         lines_needed = mons.size();
         for (unsigned int i = 1; i < mons.size(); i++)
