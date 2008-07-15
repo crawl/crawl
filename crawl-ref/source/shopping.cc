@@ -206,29 +206,24 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
 }
 
 
-/*
-    Rather than prompting for each individual item, I think it should be
-like multi-pickup, in that pressing a letter only "selects" an item
-(changing the '-' next to its name to a '+').
-
-New, suggested shopping keys:
-* letter keys [a-t] (de)select item
-* Enter buys (with prompt)
-* ? toggles examination mode (where letter keys view items)
-* \ shows discovered items
-* * lists inventory
-* x exits (also Esc)
-
-For the ? key, the text should read:
-[?] switch to examination mode
-[?] switch to selection mode
-
-Display selected items in yellow.
-Use red/green letters to indicated availability as now. Update these as
-items are (de)selected.
-List funds: "You now have 119 gold pieces. After the purchase, you will
-have 24 gold pieces."
-*/
+//  Rather than prompting for each individual item, shopping now works more
+//  like multi-pickup, in that pressing a letter only "selects" an item
+//  (changing the '-' next to its name to a '+'). Affordability is shown
+//  via colours that are updated every time the contents of your shopping
+//  cart change.
+//
+//  New, suggested shopping keys:
+//  * letter keys [a-t] (de)select item, as now
+//  * Enter buys (with prompt), as now
+//  * \ shows discovered items, as now
+//  * x exits (also Esc), as now
+//  --------
+//  * ? toggles examination mode (where letter keys view items)
+//  * * lists inventory  (currently also ?)
+//
+//  For the ? key, the text should read:
+//  [?] switch to examination mode
+//  [?] switch to selection mode
 static void _in_a_shop( int shopidx )
 {
     const shop_struct& shop = env.shop[shopidx];

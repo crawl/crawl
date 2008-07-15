@@ -3,6 +3,14 @@
 menu := menu_colour 
 ae   := autopickup_exceptions
 
+# Useless items, overrides all other colours
+menu = darkgrey:.*useless_item.*
+
+: if you.race() == "Spriggan" then
+menu = darkgrey:.*jewellery.*(sustenance)
+ae   = >ring.*(sustenance)
+:end
+
 # Important game items
 #
 menu = lightmagenta:.*misc.*rune( of Zot)?
@@ -44,14 +52,6 @@ menu = lightred:.*bad_item.*
 
 # Dangerous (but still useful) items
 menu = magenta:.*dangerous_item.*
-
-# Useless items
-menu = darkgrey:.*useless_item.*
-
-: if you.race() == "Spriggan" then
-menu = darkgrey:.*jewellery.*(sustenance)
-ae   = >ring.*(sustenance)
-:end
 
 # Evil items
 inv = $evil:.*evil_item.*

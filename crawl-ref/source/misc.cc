@@ -611,18 +611,19 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     if (freeslot >= 0 && freeslot < ENDOFPACK
         && !is_valid_item(you.inv[freeslot]))
     {
-        item_def &item = you.inv[freeslot];
-        item.link      = freeslot;
-        item.slot      = index_to_letter(item.link);
-        item.base_type = OBJ_POTIONS;
-        item.sub_type  = POT_BLOOD_COAGULATED;
-        item.quantity  = coag_count;
-        item.x         = -1;
-        item.y         = -1;
-        item.plus      = 0;
-        item.plus2     = 0;
-        item.special   = 0;
-        item.flags     = 0;
+        item_def &item   = you.inv[freeslot];
+        item.link        = freeslot;
+        item.slot        = index_to_letter(item.link);
+        item.base_type   = OBJ_POTIONS;
+        item.sub_type    = POT_BLOOD_COAGULATED;
+        item.quantity    = coag_count;
+        item.x           = -1;
+        item.y           = -1;
+        item.plus        = 0;
+        item.plus2       = 0;
+        item.special     = 0;
+        item.flags       = 0;
+        item.inscription = "";
         item_colour(item);
 
         CrawlHashTable &props_new = item.props;
