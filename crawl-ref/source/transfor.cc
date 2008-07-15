@@ -22,6 +22,7 @@
 
 #include "delay.h"
 #include "it_use2.h"
+#include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
 #include "misc.h"
@@ -99,7 +100,7 @@ bool remove_equipment(std::set<equipment_type> removed)
         canned_msg(MSG_EMPTY_HANDED);
     }
 
-    // Remove items in order (std::set is a sorted container)
+    // Remove items in order. (std::set is a sorted container)
     std::set<equipment_type>::const_iterator iter;
     for (iter = removed.begin(); iter != removed.end(); ++iter)
     {
@@ -110,12 +111,21 @@ bool remove_equipment(std::set<equipment_type> removed)
         mprf("%s falls away.",
              you.inv[you.equip[e]].name(DESC_CAP_YOUR).c_str());
 
-        unwear_armour( you.equip[e] );
-        you.equip[e] = -1;
+        if (e == EQ_LEFT_RING || e == EQ_RIGHT_RING || e == EQ_AMULET)
+        {
+            item_def &ring = you.inv[you.equip[e]];
+            you.equip[e] = -1;
+            jewellery_remove_effects(ring, false);
+        }
+        else // armour
+        {
+            unwear_armour( you.equip[e] );
+            you.equip[e] = -1;
+        }
     }
 
     return (true);
-}                               // end remove_equipment()
+}
 
 bool remove_one_equip(equipment_type eq)
 {

@@ -3166,9 +3166,9 @@ bool puton_ring(int slot, bool prompt_finger)
         return (false);
 
     return puton_item(item_slot, prompt_finger);
-}                               // end puton_ring()
+}
 
-void jewellery_remove_effects(item_def &item)
+void jewellery_remove_effects(item_def &item, bool mesg)
 {
     // The ring/amulet must already be removed from you.equip at this point.
 
@@ -3177,7 +3177,8 @@ void jewellery_remove_effects(item_def &item)
     const bool old_showuncursed = Options.show_uncursed;
     Options.show_uncursed = false;
 
-    mprf("You remove %s.", item.name(DESC_NOCAP_YOUR).c_str() );
+    if (mesg)
+        mprf("You remove %s.", item.name(DESC_NOCAP_YOUR).c_str() );
 
     Options.show_uncursed = old_showuncursed;
 
@@ -3246,7 +3247,7 @@ void jewellery_remove_effects(item_def &item)
     if (is_random_artefact(item))
         unuse_randart(item);
 
-    // must occur after ring is removed -- bwr
+    // Must occur after ring is removed. -- bwr
     calc_mp();
 }
 
