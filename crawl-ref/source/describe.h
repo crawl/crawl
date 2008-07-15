@@ -43,7 +43,7 @@ bool is_dumpable_artefact( const item_def &item, bool verbose );
  * called from: chardump - describe
  * *********************************************************************** */
 std::string get_item_description( const item_def &item, bool verbose,
-                                  bool dump = false );
+                                  bool dump = false, bool noquote = false );
 
 // last updated 12 Jun 2008 {jpeg}
 /* ***********************************************************************
