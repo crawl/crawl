@@ -1208,15 +1208,12 @@ void pickup()
 #ifndef USE_TILE
                 keyin = get_ch();
 #else
+                // TODO enne - why?
                 keyin = getch_ck();
 #endif
             }
 
-            if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g'
-#ifdef USE_TILE
-                || keyin == CK_MOUSE_B1
-#endif
-                )
+            if (keyin == '*' || keyin == '?' || keyin == ',' || keyin == 'g')
             {
                 _pickup_menu(o);
                 break;

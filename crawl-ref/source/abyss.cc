@@ -34,6 +34,9 @@
 #include "stuff.h"
 #include "spells3.h"
 #include "terrain.h"
+#ifdef USE_TILE
+#include "tiledef-dngn.h"
+#endif
 #include "tiles.h"
 #include "traps.h"
 #include "view.h"
@@ -654,11 +657,6 @@ void abyss_teleport( bool new_area )
     _generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
                    GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, true);
 
-#ifdef USE_TILE
-    // Update the wall colours.
-    TileLoadWall(true);
-#endif
-
     _xom_check_nearness();
 
     grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
@@ -884,16 +882,15 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
         env.grid_colours(c) = oenv.floor_colour;
 
 #ifdef USE_TILE
-    // Modify tile flavor to use corrupted tiles.
     if (feat == DNGN_ROCK_WALL)
     {
-        env.tile_flavor[c.x][c.y].wall =
-            TILE_DNGN_WALL_CORRUPT - get_wall_tile_idx() + random2(4);
+        env.tile_flv[c.x][c.y].wall = tile_DNGN_start[IDX_WALL_UNDEAD] 
+            + random2(tile_DNGN_count[IDX_WALL_UNDEAD]);
     }
     else if (feat == DNGN_FLOOR)
     {
-        env.tile_flavor[c.x][c.y].floor =
-            TILE_DNGN_FLOOR_CORRUPT - get_floor_tile_idx() + random2(4);
+        env.tile_flv[c.x][c.y].floor = tile_DNGN_start[IDX_FLOOR_NERVES] 
+            + random2(tile_DNGN_count[IDX_FLOOR_NERVES]);
     }
 #endif
 }

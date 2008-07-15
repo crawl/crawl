@@ -16,6 +16,8 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+#include <string>
+
 // Synch with ANSI definitions.
 #if DEBUG && defined(NDEBUG)
 #error DEBUG and NDEBUG are out of sync!

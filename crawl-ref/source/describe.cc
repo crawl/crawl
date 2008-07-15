@@ -1945,9 +1945,7 @@ void describe_feature_wide(int x, int y)
 
     print_description(desc);
 
-#ifdef USE_TILE
     mouse_control mc(MOUSE_MODE_MORE);
-#endif
 
     if (Options.tutorial_left)
         tutorial_describe_pos(x, y);
@@ -2212,9 +2210,7 @@ void describe_spell(spell_type spelled)
 
     print_description(description);
 
-#ifdef USE_TILE
     mouse_control mc(MOUSE_MODE_MORE);
-#endif
 
     if (getch() == 0)
         getch();
@@ -2496,9 +2492,7 @@ void describe_monsters(monsters& mons)
 
     print_description(body.str(), title, suffix, prefix);
 
-#ifdef USE_TILE
     mouse_control mc(MOUSE_MODE_MORE);
-#endif
 
     if (Options.tutorial_left)
         tutorial_describe_monster(static_cast<const monsters*>(&mons));
@@ -2915,9 +2909,7 @@ static void _detailed_god_description(god_type which_god)
         "Press '<w>!</w>' to toggle between the overview and the more detailed "
         "description.").display();
 
-#ifdef USE_TILE
     mouse_control mc(MOUSE_MODE_MORE);
-#endif
 
     const int keyin = getch();
     if (keyin == '!')
@@ -3133,9 +3125,7 @@ void describe_god( god_type which_god, bool give_title )
         "Press '<w>!</w>' to toggle between the overview and the more detailed "
         "description.").display();
 
-#ifdef USE_TILE
     mouse_control mc(MOUSE_MODE_MORE);
-#endif
 
     const int keyin = getch();
     if (keyin == '!')

@@ -30,7 +30,7 @@
 #include "files.h"
 #include "defines.h"
 #ifdef USE_TILE
- #include "guic.h"
+ #include "tilereg.h"
 #endif
 #include "invent.h"
 #include "item_use.h"
@@ -841,6 +841,7 @@ void game_options::reset_options()
     tile_lava_col        = MAP_MDGREY;
     tile_excluded_col    = MAP_DKCYAN;
     tile_excl_centre_col = MAP_DKBLUE;
+    tile_window_col      = MAP_YELLOW;
 #endif
 
 #ifdef WIN32TILES
@@ -2866,6 +2867,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         tile_excl_centre_col =
                _str_to_tile_colour(field);
+    }
+    else if (key == "tile_window_col")
+    {
+        tile_window_col =
+                _str_to_tile_colour(field);
     }
 #endif
 

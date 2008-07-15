@@ -121,15 +121,44 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
     moves.isCancel      = false;
     moves.dx = moves.dy = 0;
 
-#ifdef USE_TILE
     mouse_control mc(MOUSE_MODE_TARGET_DIR);
-#endif
 
     beh->compass        = true;
+
+#ifdef USE_TILE
+    // Force update of mouse cursor to direction-compatible location.
+    tiles.place_cursor(CURSOR_MOUSE, tiles.get_cursor());
+#endif
 
     do
     {
         const command_type key_command = beh->get_command();
+
+#ifdef USE_TILE
+        if (key_command == CMD_TARGET_MOUSE_MOVE)
+        {
+            continue;
+        }
+        else if (key_command == CMD_TARGET_MOUSE_SELECT)
+        {
+            const coord_def &gc = tiles.get_cursor();
+            if (gc == Region::NO_CURSOR)
+                continue;
+
+            coord_def delta = gc - you.pos();
+            if (delta.x < -1 || delta.x > 1
+                || delta.y < -1 || delta.y > 1)
+            {
+                // This shouldn't happen.
+                continue;
+            }
+
+            moves.dx = delta.x;
+            moves.dy = delta.y;
+            moves.isMe = (delta.x == 0) && (delta.y == 0);
+            break;
+        }
+#endif
 
         if (key_command == CMD_TARGET_SELECT)
         {
@@ -597,9 +626,7 @@ void direction(dist& moves, targeting_type restricts,
         }
         else
         {
-#ifdef USE_TILE
             mouse_control mc(MOUSE_MODE_TARGET);
-#endif
             key_command = beh->get_command();
         }
 
@@ -608,8 +635,8 @@ void direction(dist& moves, targeting_type restricts,
         if (key_command == CMD_TARGET_MOUSE_MOVE
             || key_command == CMD_TARGET_MOUSE_SELECT)
         {
-            coord_def gc;
-            if (gui_get_mouse_grid_pos(gc))
+            const coord_def &gc = tiles.get_cursor();
+            if (gc != Region::NO_CURSOR)
             {
                 moves.tx = gc.x;
                 moves.ty = gc.y;
@@ -2663,9 +2690,7 @@ targeting_behaviour::~targeting_behaviour()
 
 int targeting_behaviour::get_key()
 {
-#ifdef USE_TILE
     mouse_control mc(MOUSE_MODE_TARGET_DIR);
-#endif
 
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);

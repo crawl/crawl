@@ -255,10 +255,10 @@ static void _tile_exclude_gmap_update(const coord_def p)
         {
             int px = p.x+x, py = p.y+y;
             if (in_bounds(coord_def(px,py)))
-                GmapUpdate(px, py, env.map[px][py].glyph(), true);
+            {
+                tiles.update_minimap(px, py, MF_EXCL);
+            }
         }
-
-    GmapDisplay(p.x,p.y);
 }
 #endif
 

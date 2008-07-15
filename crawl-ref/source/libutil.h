@@ -324,4 +324,26 @@ basic_text_pattern<compile_glob_pattern,
                    free_compiled_glob_pattern,
                    glob_pattern_match> glob_pattern;
 
+
+class mouse_control
+{
+public:
+    mouse_control(mouse_mode mode)
+    {
+        m_previous_mode = ms_current_mode;
+        ms_current_mode = mode;
+    }
+
+    ~mouse_control()
+    {
+        ms_current_mode = m_previous_mode;
+    }
+    
+    static mouse_mode current_mode() { return ms_current_mode; }
+
+private:
+    mouse_mode m_previous_mode;
+    static mouse_mode ms_current_mode;
+};
+
 #endif

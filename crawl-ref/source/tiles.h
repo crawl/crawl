@@ -5,10 +5,22 @@
  *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
  */
 
+#ifndef TILES_H
+#define TILES_H
+
 #ifdef USE_TILE
 
 #include "tiledef.h"
 #include "beam.h"
+
+#include "tiledef-p.h"
+
+struct dolls_data
+{
+    dolls_data() { memset(parts, 0, sizeof(parts)); }
+
+    int parts[TILEP_PARTS_TOTAL];
+};
 
 //*tile1.cc: get data from core part and drives tile drawing codes
 
@@ -57,9 +69,8 @@ void tile_draw_rays(bool resetCount);
 void tile_clear_buf();
 
 void tile_finish_dngn(unsigned int *tileb, int cx, int cy);
-void tile_draw_dungeon(unsigned int *tileb);
 
-// Tile Inventry display
+// Tile Inventory display
 void tile_draw_inv(int flag = -1);
 // Multiple pickup
 void tile_pick_menu();
@@ -87,43 +98,18 @@ void TileResizeScreen(int x, int y);
 int TileDrawCursor(int x, int y, int flag);
 // display bolts
 void TileDrawBolt(int x, int y, int fg);
-// display dungeon: tileb = { fg(0,0),bg(0,0),fg(1,0),bg(1,0), ..
-void TileDrawDungeon(unsigned int *tileb);
-// display memorised dungeon
-void TileDrawFarDungeon(int cx, int cy);
-// display map centered on grid coords
-void TileDrawMap(int gx, int gy);
-void LoadDungeonView(unsigned int *tileb);
-void StoreDungeonView(unsigned int *tileb);
-
 void TileNewLevel(bool first_time);
 
-
-// display inventry
-void TileDrawInvData(int n, int flag, int *tiles, int *num,
-                     int *idx, int *iflags);
-void TileDrawOneItem(int region, int i, char key, int idx,
-                     int tile, int num, bool floor,
-                     bool select, bool equip, bool tried, bool cursed);
-void TileRedrawInv(int region);
-void TileClearInv(int region);
-void TileMoveInvCursor(int ix);
-int TileInvIdx(int i);
-
-// refresh player tile
-void TilePlayerRefresh();
 // edit player tile
 void TilePlayerEdit();
-// init player tile
-void TilePlayerInit();
 // init ghost tile
 void TileGhostInit(const struct ghost_demon &gs);
 // init pandem demon tile (only in iso mode)
 void TilePandemInit(struct ghost_demon &gs);
 // edit pandem tile (debug)
 void TileEditPandem();
-// init id-ed item tiles
-void TileInitItems();
+
+int item_unid_type(const item_def &item);
 
 // load wall tiles
 void TileLoadWall(bool wizard);
@@ -131,9 +117,10 @@ void TileLoadWall(bool wizard);
 void TileDrawTitle();
 
 // monster+weapon tile
-void TileMcacheUnlock();
-int  TileMcacheFind(int mon_tile, int eq_tile, int draco = 0);
+void tile_mcache_unlock();
 int get_base_idx_from_mcache(int tile_idx);
+void tile_get_monster_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y);
+bool get_mcache_entry(int tile_idx, int &mon_idx, int &equ_tile, int &draco);
 int get_clean_map_idx(int tile_idx);
 
 /* Flags for drawing routines */
@@ -164,18 +151,21 @@ enum tile_flags
     TILE_FLAG_TRAV_EXCL = 0x00080000,
     TILE_FLAG_EXCL_CTR  = 0x00100000,
     TILE_FLAG_SANCTUARY = 0x00200000,
+    TILE_FLAG_TUT_CURSOR= 0x00400000,
 
     // General
     TILE_FLAG_MASK      = 0x000007FF
 };
 
-
-#define TILEI_FLAG_SELECT 0x100
-#define TILEI_FLAG_TRIED  0x200
-#define TILEI_FLAG_EQUIP  0x400
-#define TILEI_FLAG_FLOOR  0x800
-#define TILEI_FLAG_CURSE  0x1000
-#define TILEI_FLAG_CURSOR 0x2000
+enum
+{
+    TILEI_FLAG_SELECT = 0x0100,
+    TILEI_FLAG_TRIED  = 0x0200,
+    TILEI_FLAG_EQUIP  = 0x0400,
+    TILEI_FLAG_FLOOR  = 0x0800,
+    TILEI_FLAG_CURSE  = 0x1000,
+    TILEI_FLAG_CURSOR = 0x2000
+};
 
 #define TILEP_SHOW_EQUIP  0x1000
 
@@ -230,3 +220,4 @@ int get_parts_idx(int part, char *name);
 #define TILEP_BOOTS_CENTAUR_BARDING (N_PART_BOOTS + 2)
 
 #endif // USE_TILES
+#endif

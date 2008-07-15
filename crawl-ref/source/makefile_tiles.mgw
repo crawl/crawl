@@ -15,6 +15,11 @@ CXX = g++
 DELETE = del
 COPY = copy
 OS_TYPE = WIN32TILES
+EXTRA_DEFINES = -DUSE_TILE -DCLUA_BINDINGS
+
+SDL_PREFIX ?= C:/mingw
+SDL_CFLAGS := -D_GNU_SOURCE=1 -Dmain=SDL_main -I$(SDL_PREFIX)/include/SDL
+SDL_LDFLAGS := -lmingw32 -lSDLmain -lSDL -mwindows
 
 INSTALLDIR := $(OPATH)
 
@@ -36,8 +41,8 @@ SQLLIB := sqlite3
 SQLIBA   := lib$(SQLLIB).a
 FSQLLIBA := $(SQLLIB)\$(SQLIBA)
 
-LIB = -static -lwinmm -mwindows -lcomctl32 -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -lpcre
-INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC)
+LIB = -lwinmm -mwindows -lcomctl32 -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -lpng $(SDL_LDFLAGS) -lopengl32 -lglu32 -lSDL_image -lfreetype
+INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC) $(EXTRA_INCLUDES)
 
 CFWARN := -Wall -Wwrite-strings -pedantic
 
@@ -47,12 +52,13 @@ CFOTHERS := -fsigned-char \
 		-O2 \
 		-D$(OS_TYPE) $(EXTRA_FLAGS) \
 		-DWINMM_PLAY_SOUNDS -DCLUA_BINDINGS \
-		-DUSE_TILE -DWINVER=0x0400 -D_WIN32_IE=0x0400
+		-DWINVER=0x0400 -D_WIN32_IE=0x0400 \
+		$(EXTRA_DEFINES) \
 
-CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS)
+CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS) $(SDL_CFLAGS)
 YCFLAGS  := $(INCLUDES) $(CFOTHERS)
 
-OBJECTS := $(OBJECTS) libgui.o tile1.o tile2.o libwt.o guic.o guic-win.o
+OBJECTS := $(OBJECTS) libgui.o tilepick.o tile2.o tilereg.o tilesdl.o tilefont.o tiletex.o
 
 LDFLAGS =
 
@@ -66,15 +72,16 @@ RLTILES = rltiles
 TILEHEADERS = \
 tiledef.h \
 tiledef-p.h \
-tiledef-w2d.h \
-tilecount-w2d.h \
-tilep-cmt.h
+tilep-cmt.h \
+tiledef-dngn.h \
+tilecount-dngn.h
 
 TILEFILES = \
-tile.bmp \
-player.bmp \
-wall2d.bmp \
-title.bmp
+tile.png \
+player.png \
+title.png \
+dngn.png
+
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
 ifeq ($(LEX),)

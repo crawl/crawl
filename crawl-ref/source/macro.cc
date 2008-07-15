@@ -763,9 +763,7 @@ void macro_add_query( void )
          (keymap ? "keymap" : "macro") );
 
     keyseq key;
-#ifdef USE_TILE
     mouse_control mc(MOUSE_MODE_MACRO);
-#endif
     key = getch_mul();
 
     cprintf( "%s" EOL, (vtostr( key )).c_str() ); // echo key to screen

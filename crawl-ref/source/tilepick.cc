@@ -1,5 +1,5 @@
 /*
- *  File:       tile1.cc
+ *  File:       tilepick.cc
  *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
  *
  *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
@@ -24,34 +24,87 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "tiles.h"
-#include "tiledef-p.h"
+#include "tiledef-dngn.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
 
+struct mcache_entry
+{
+    int mon_tile;
+    int equ_tile;
+    int draco;
+};
+
+std::vector<mcache_entry> mcache;
+
+int get_base_idx_from_mcache(int tile_idx)
+{
+    int mcache_idx = tile_idx - TILE_MCACHE_START;
+    if (mcache_idx >= 0 && mcache_idx < (int)mcache.size())
+    {
+        return mcache[mcache_idx].mon_tile;
+    }
+
+    return tile_idx;
+}
+
+bool get_mcache_entry(int tile_idx, int &mon_idx, int &equ_tile, int &draco)
+{
+    int mcache_idx = tile_idx - TILE_MCACHE_START;
+    if (mcache_idx >= 0 && (unsigned int)mcache_idx < mcache.size())
+    {
+        mon_idx = mcache[mcache_idx].mon_tile;
+        equ_tile = mcache[mcache_idx].equ_tile;
+        draco = mcache[mcache_idx].draco;
+
+        return true;
+    }
+
+    return false;
+}
+
+static int _mcache_register(int mon_tile, int equ_tile, int draco = 0)
+{
+    mcache_entry entry;
+    entry.mon_tile = mon_tile;
+    entry.equ_tile = equ_tile;
+    entry.draco = draco;
+
+    mcache.push_back(entry);
+
+    int idx = TILE_MCACHE_START + mcache.size() - 1;
+    return idx;
+}
+
+void tile_mcache_unlock()
+{
+    mcache.clear();
+}
+
 // tile index cache to reduce tileidx() calls
 static FixedArray < unsigned int, GXM, GYM > tile_dngn;
 
-bool is_bazaar()
+static inline bool _is_bazaar()
 {
     return (you.level_type == LEVEL_PORTAL_VAULT
             && you.level_type_name == "bazaar");
 }
 
-unsigned short get_bazaar_special_colour()
+static inline unsigned short _get_bazaar_special_colour()
 {
     return YELLOW;
 }
 
 void TileNewLevel(bool first_time)
 {
-    GmapInit(false);
+    init_minimap();
     TileLoadWall(false);
     tile_clear_buf();
     if (first_time)
         tile_init_flavor();
 
-    if (!player_in_mappable_area())
+    if (!player_in_mappable_area() || first_time)
     {
         for (unsigned int x = 0; x < GXM; x++)
             for (unsigned int y = 0; y < GYM; y++)
@@ -2013,9 +2066,10 @@ int tileidx_feature(int object, int gx, int gy)
     {
     case DNGN_UNSEEN:
         return TILE_DNGN_UNSEEN;
+    case DNGN_FLOOR_SPECIAL:
     case DNGN_ROCK_WALL:
     case DNGN_PERMAROCK_WALL:
-        return TILE_DNGN_ROCK_WALL_OFS;
+        return TILE_WALL_NORMAL;
     case DNGN_SECRET_DOOR:
         return (unsigned int)grid_secret_door_appearance(gx, gy);
     case DNGN_CLEAR_ROCK_WALL:
@@ -2044,9 +2098,7 @@ int tileidx_feature(int object, int gx, int gy)
         return TILE_DNGN_SHALLOW_WATER;
     case DNGN_FLOOR:
     case DNGN_UNDISCOVERED_TRAP:
-       return TILE_DNGN_FLOOR;
-    case DNGN_FLOOR_SPECIAL:
-       return TILE_DNGN_FLOOR_SPECIAL;
+       return TILE_FLOOR_NORMAL;
     case DNGN_ENTER_HELL:
         return TILE_DNGN_ENTER_HELL;
     case DNGN_OPEN_DOOR:
@@ -2268,13 +2320,13 @@ int tileidx_unseen(int ch, const coord_def& gc)
         case ' ': res = TILE_DNGN_UNSEEN; break;
         case 127: //old
         case 176:
-        case 177: res = TILE_DNGN_ROCK_WALL_OFS; break;
+        case 177: res = TILE_WALL_NORMAL; break;
 
         case 130:
         case ',':
         case '.':
         case 249:
-        case 250: res = TILE_DNGN_FLOOR; break;
+        case 250: res = TILE_FLOOR_NORMAL; break;
 
         case 137: res = TILE_DNGN_WAX_WALL; break;
         case 138: res = TILE_DNGN_STONE_WALL; break;
@@ -2293,7 +2345,7 @@ int tileidx_unseen(int ch, const coord_def& gc)
         case 134: res = TILE_DNGN_OPEN_DOOR; break;
         case '(':
         case ')': res = TILE_UNSEEN_WEAPON; break;
-        case '*': res = TILE_DNGN_ROCK_WALL_OFS ; break;
+        case '*': res = TILE_WALL_NORMAL ; break;
         case '+': res =  TILE_BOOK_PAPER_OFFSET + 15; break;
 
         case '/': res = TILE_WAND_OFFSET; break;
@@ -2340,12 +2392,11 @@ int tileidx_zap(int colour)
     return (TILE_SYM_BOLT_OFS - 1 + col);
 }
 
-// Convert normal tile to 3D tile if it exists
-// Plus modify wall tile index depending on
-//  1: floor/wall flavor in 2D mode
-//  2: connectivity in 3D mode
+// modify wall tile index depending on floor/wall flavor
 static void _finalize_tile(unsigned int *tile, bool is_special,
-                           char wall_flv, char floor_flv, char special_flv)
+                           unsigned char wall_flv,
+                           unsigned char floor_flv,
+                           unsigned char special_flv)
 {
     int orig = (*tile) & TILE_FLAG_MASK;
     int flag = (*tile) & (~TILE_FLAG_MASK);
@@ -2355,26 +2406,25 @@ static void _finalize_tile(unsigned int *tile, bool is_special,
     if ((you.where_are_you == BRANCH_CRYPT || you.where_are_you == BRANCH_TOMB)
         && orig == TILE_DNGN_STONE_WALL)
     {
-        orig = TILE_DNGN_ROCK_WALL_OFS;
+        orig = TILE_WALL_NORMAL;
     }
 
     // If there are special tiles for this level, then use them.
     // Otherwise, we'll fall through to the next case and replace
     // special tiles with normal floor.
-    if (orig == TILE_DNGN_FLOOR && is_special
+    if (orig == TILE_FLOOR_NORMAL && is_special
         && get_num_floor_special_flavors() > 0)
     {
         (*tile) = get_floor_special_tile_idx() + special_flv;
-        ASSERT(special_flv >= 0
-               && special_flv < get_num_floor_special_flavors());
+        ASSERT(special_flv < get_num_floor_special_flavors());
     }
-    else if (orig == TILE_DNGN_FLOOR || orig == TILE_DNGN_FLOOR_SPECIAL)
+    else if (orig == TILE_FLOOR_NORMAL)
     {
-        (*tile) = get_floor_tile_idx() + floor_flv;
+        (*tile) = floor_flv;
     }
-    else if (orig == TILE_DNGN_ROCK_WALL_OFS)
+    else if (orig == TILE_WALL_NORMAL)
     {
-        (*tile) = get_wall_tile_idx() + wall_flv;
+        (*tile) = wall_flv;
     }
     else if (orig == TILE_DNGN_SHALLOW_WATER
              || orig == TILE_DNGN_DEEP_WATER
@@ -2382,11 +2432,11 @@ static void _finalize_tile(unsigned int *tile, bool is_special,
              || orig == TILE_DNGN_STONE_WALL)
     {
         // These types always have four flavors...
-        (*tile) = orig + (floor_flv % 4);
+        (*tile) = orig + (special_flv % 4);
     }
     else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
     {
-        ASSERT(special_flv >= 0 && special_flv <= 3);
+        ASSERT(special_flv <= 3);
         (*tile) = orig + special_flv;
     }
 
@@ -3646,8 +3696,8 @@ int jitter(SpecialIdx i)
 
 void tile_init_flavor()
 {
-    const bool bazaar = is_bazaar();
-    const unsigned short baz_col = get_bazaar_special_colour();
+    const bool bazaar = _is_bazaar();
+    const unsigned short baz_col = _get_bazaar_special_colour();
 
     for (int x = 0; x < GXM; x++)
         for (int y = 0; y < GYM; y++)
@@ -3657,8 +3707,8 @@ void tile_init_flavor()
             int wall_flavor  = random_range(0, max_wall_flavor);
             int floor_flavor = random_range(0, max_floor_flavor);
 
-            env.tile_flavor[x][y].floor = floor_flavor;
-            env.tile_flavor[x][y].wall  = wall_flavor;
+            env.tile_flv[x][y].floor = get_floor_tile_idx() + floor_flavor;
+            env.tile_flv[x][y].wall = get_wall_tile_idx() + wall_flavor;
 
             if (grd[x][y] == DNGN_CLOSED_DOOR || grd[x][y] == DNGN_OPEN_DOOR)
             {
@@ -3680,12 +3730,12 @@ void tile_init_flavor()
                     // NOTE: This requires that closed gates and open gates
                     // are positioned in the tile set relative to their
                     // door counterpart.
-                    env.tile_flavor[x][y].special =
+                    env.tile_flv[x][y].special =
                         target - TILE_DNGN_CLOSED_DOOR;
                 }
                 else
                 {
-                    env.tile_flavor[x][y].special = 0;
+                    env.tile_flv[x][y].special = 0;
                 }
             }
             else if (bazaar && env.grid_colours[x][y] == baz_col
@@ -3722,140 +3772,140 @@ void tile_init_flavor()
                 if (l_nrm && r_nrm || u_nrm && d_nrm)
                 {
                     // Not much to do here...
-                    env.tile_flavor[x][y].special = SPECIAL_FULL;
+                    env.tile_flv[x][y].special = SPECIAL_FULL;
                 }
                 else if (l_nrm)
                 {
                     if (u_nrm)
-                        env.tile_flavor[x][y].special = SPECIAL_NW;
+                        env.tile_flv[x][y].special = SPECIAL_NW;
                     else if (d_nrm)
-                        env.tile_flavor[x][y].special = SPECIAL_SW;
+                        env.tile_flv[x][y].special = SPECIAL_SW;
                     else if (u_spc && d_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_W;
+                        env.tile_flv[x][y].special = SPECIAL_W;
                     else if (u_spc && r_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_SW;
+                        env.tile_flv[x][y].special = SPECIAL_SW;
                     else if (d_spc && r_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_NW;
+                        env.tile_flv[x][y].special = SPECIAL_NW;
                     else if (u_spc)
-                        env.tile_flavor[x][y].special = coinflip() ?
+                        env.tile_flv[x][y].special = coinflip() ?
                             SPECIAL_W : SPECIAL_SW;
                     else if (d_spc)
-                        env.tile_flavor[x][y].special = coinflip() ?
+                        env.tile_flv[x][y].special = coinflip() ?
                             SPECIAL_W : SPECIAL_NW;
                     else
-                        env.tile_flavor[x][y].special = jitter(SPECIAL_W);
+                        env.tile_flv[x][y].special = jitter(SPECIAL_W);
                 }
                 else if (r_nrm)
                 {
                     if (u_nrm)
-                        env.tile_flavor[x][y].special = SPECIAL_NE;
+                        env.tile_flv[x][y].special = SPECIAL_NE;
                     else if (d_nrm)
-                        env.tile_flavor[x][y].special = SPECIAL_SE;
+                        env.tile_flv[x][y].special = SPECIAL_SE;
                     else if (u_spc && d_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_E;
+                        env.tile_flv[x][y].special = SPECIAL_E;
                     else if (u_spc && l_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_SE;
+                        env.tile_flv[x][y].special = SPECIAL_SE;
                     else if (d_spc && l_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_NE;
+                        env.tile_flv[x][y].special = SPECIAL_NE;
                     else if (u_spc)
-                        env.tile_flavor[x][y].special = coinflip() ?
+                        env.tile_flv[x][y].special = coinflip() ?
                             SPECIAL_E : SPECIAL_SE;
                     else if (d_spc)
-                        env.tile_flavor[x][y].special = coinflip() ?
+                        env.tile_flv[x][y].special = coinflip() ?
                             SPECIAL_E : SPECIAL_NE;
                     else
-                        env.tile_flavor[x][y].special = jitter(SPECIAL_E);
+                        env.tile_flv[x][y].special = jitter(SPECIAL_E);
                 }
                 else if (u_nrm)
                 {
                     if (r_spc && l_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_N;
+                        env.tile_flv[x][y].special = SPECIAL_N;
                     else if (r_spc && d_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_NW;
+                        env.tile_flv[x][y].special = SPECIAL_NW;
                     else if (l_spc && d_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_NE;
+                        env.tile_flv[x][y].special = SPECIAL_NE;
                     else if (r_spc)
                     {
-                        env.tile_flavor[x][y].special = coinflip() ?
+                        env.tile_flv[x][y].special = coinflip() ?
                             SPECIAL_N : SPECIAL_NW;
                     }
                     else if (l_spc)
                     {
-                        env.tile_flavor[x][y].special = coinflip() ?
+                        env.tile_flv[x][y].special = coinflip() ?
                             SPECIAL_N : SPECIAL_NE;
                     }
                     else
-                        env.tile_flavor[x][y].special = jitter(SPECIAL_N);
+                        env.tile_flv[x][y].special = jitter(SPECIAL_N);
                 }
                 else if (d_nrm)
                 {
                     if (r_spc && l_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_S;
+                        env.tile_flv[x][y].special = SPECIAL_S;
                     else if (r_spc && u_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_SW;
+                        env.tile_flv[x][y].special = SPECIAL_SW;
                     else if (l_spc && u_spc)
-                        env.tile_flavor[x][y].special = SPECIAL_SE;
+                        env.tile_flv[x][y].special = SPECIAL_SE;
                     else if (r_spc)
                     {
-                        env.tile_flavor[x][y].special = coinflip() ?
+                        env.tile_flv[x][y].special = coinflip() ?
                             SPECIAL_S : SPECIAL_SW;
                     }
                     else if (l_spc)
                     {
-                        env.tile_flavor[x][y].special = coinflip() ?
+                        env.tile_flv[x][y].special = coinflip() ?
                             SPECIAL_S : SPECIAL_SE;
                     }
                     else
-                        env.tile_flavor[x][y].special = jitter(SPECIAL_S);
+                        env.tile_flv[x][y].special = jitter(SPECIAL_S);
                 }
                 else if (u_spc && d_spc)
                 {
                     // We know this value is already initialized and
                     // is necessarily in bounds.
-                    char t = env.tile_flavor[x][y-1].special;
+                    char t = env.tile_flv[x][y-1].special;
                     if (t == SPECIAL_NE || t == SPECIAL_E)
-                        env.tile_flavor[x][y].special = SPECIAL_E;
+                        env.tile_flv[x][y].special = SPECIAL_E;
                     else if (t == SPECIAL_NW || t == SPECIAL_W)
-                        env.tile_flavor[x][y].special = SPECIAL_W;
+                        env.tile_flv[x][y].special = SPECIAL_W;
                     else
-                        env.tile_flavor[x][y].special = SPECIAL_FULL;
+                        env.tile_flv[x][y].special = SPECIAL_FULL;
                 }
                 else if (r_spc && l_spc)
                 {
                     // We know this value is already initialized and
                     // is necessarily in bounds.
-                    char t = env.tile_flavor[x-1][y].special;
+                    char t = env.tile_flv[x-1][y].special;
                     if (t == SPECIAL_NW || t == SPECIAL_N)
-                        env.tile_flavor[x][y].special = SPECIAL_N;
+                        env.tile_flv[x][y].special = SPECIAL_N;
                     else if (t == SPECIAL_SW || t == SPECIAL_S)
-                        env.tile_flavor[x][y].special = SPECIAL_S;
+                        env.tile_flv[x][y].special = SPECIAL_S;
                     else
-                        env.tile_flavor[x][y].special = SPECIAL_FULL;
+                        env.tile_flv[x][y].special = SPECIAL_FULL;
                 }
                 else if (u_spc && l_spc)
                 {
-                    env.tile_flavor[x][y].special = SPECIAL_SE;
+                    env.tile_flv[x][y].special = SPECIAL_SE;
                 }
                 else if (u_spc && r_spc)
                 {
-                    env.tile_flavor[x][y].special = SPECIAL_SW;
+                    env.tile_flv[x][y].special = SPECIAL_SW;
                 }
                 else if (d_spc && l_spc)
                 {
-                    env.tile_flavor[x][y].special = SPECIAL_NE;
+                    env.tile_flv[x][y].special = SPECIAL_NE;
                 }
                 else if (d_spc && r_spc)
                 {
-                    env.tile_flavor[x][y].special = SPECIAL_NW;
+                    env.tile_flv[x][y].special = SPECIAL_NW;
                 }
                 else
                 {
-                    env.tile_flavor[x][y].special = SPECIAL_FULL;
+                    env.tile_flv[x][y].special = SPECIAL_FULL;
                 }
             }
             else
             {
-                env.tile_flavor[x][y].special = 0;
+                env.tile_flv[x][y].special = 0;
             }
         }
 
@@ -3886,39 +3936,39 @@ void tile_init_flavor()
             if (grd[x][y] != DNGN_FLOOR || env.grid_colours[x][y] != baz_col)
                 continue;
 
-            if (env.tile_flavor[x][y].special != SPECIAL_N
-                && env.tile_flavor[x][y].special != SPECIAL_S
-                && env.tile_flavor[x][y].special != SPECIAL_E
-                && env.tile_flavor[x][y].special != SPECIAL_W)
+            if (env.tile_flv[x][y].special != SPECIAL_N
+                && env.tile_flv[x][y].special != SPECIAL_S
+                && env.tile_flv[x][y].special != SPECIAL_E
+                && env.tile_flv[x][y].special != SPECIAL_W)
             {
                 continue;
             }
 
-            int right_flavor = x < GXM - 1 ? env.tile_flavor[x+1][y].special
+            int right_flavor = x < GXM - 1 ? env.tile_flv[x+1][y].special
                                            : SPECIAL_FULL;
-            int down_flavor  = y < GYM - 1 ? env.tile_flavor[x][y+1].special
+            int down_flavor  = y < GYM - 1 ? env.tile_flv[x][y+1].special
                                            : SPECIAL_FULL;
-            int this_flavor = env.tile_flavor[x][y].special;
+            int this_flavor = env.tile_flv[x][y].special;
 
             if (this_flavor == SPECIAL_N && right_flavor == SPECIAL_S)
             {
-                env.tile_flavor[x][y].special = SPECIAL_NE;
-                env.tile_flavor[x+1][y].special = SPECIAL_SW;
+                env.tile_flv[x][y].special = SPECIAL_NE;
+                env.tile_flv[x+1][y].special = SPECIAL_SW;
             }
             else if (this_flavor == SPECIAL_S && right_flavor == SPECIAL_N)
             {
-                env.tile_flavor[x][y].special = SPECIAL_SE;
-                env.tile_flavor[x+1][y].special = SPECIAL_NW;
+                env.tile_flv[x][y].special = SPECIAL_SE;
+                env.tile_flv[x+1][y].special = SPECIAL_NW;
             }
             else if (this_flavor == SPECIAL_E && down_flavor == SPECIAL_W)
             {
-                env.tile_flavor[x][y].special = SPECIAL_SE;
-                env.tile_flavor[x][y+1].special = SPECIAL_NW;
+                env.tile_flv[x][y].special = SPECIAL_SE;
+                env.tile_flv[x][y+1].special = SPECIAL_NW;
             }
             else if (this_flavor == SPECIAL_W && down_flavor == SPECIAL_E)
             {
-                env.tile_flavor[x][y].special = SPECIAL_NE;
-                env.tile_flavor[x][y+1].special = SPECIAL_SW;
+                env.tile_flv[x][y].special = SPECIAL_NE;
+                env.tile_flv[x][y+1].special = SPECIAL_SW;
             }
         }
     }
@@ -4070,7 +4120,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         {
             eq = tilep_equ_weapon(mitm[mon_wep]);
         }
-        t = flag | TileMcacheFind(cls, eq, race);
+        t = flag | _mcache_register(cls, eq, race);
     }
     else if (mon_wep != NON_ITEM)
     {
@@ -4155,7 +4205,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
             case TILE_MONS_MERFOLK_FIGHTER_WATER:
 
             if (eq != 0 )
-                t = flag | TileMcacheFind(t0, eq);
+                t = flag | _mcache_register(t0, eq);
             break;
 
         }
@@ -4164,6 +4214,11 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     if (foreground)
     {
         env.tile_fg[ep.x-1][ep.y-1] = t;
+        if (menv[idx].is_named())
+        {
+            tiles.add_text_tag(TAG_NAMED_MONSTER, 
+                               menv[idx].name(DESC_CAP_A), gc);
+        }
     }
     else
     {
@@ -4205,8 +4260,8 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
     int x, y;
     int count = 0;
 
-    const bool bazaar = is_bazaar();
-    const unsigned short baz_col = get_bazaar_special_colour();
+    const bool bazaar = _is_bazaar();
+    const unsigned short baz_col = _get_bazaar_special_colour();
 
     for (y = 0; y < crawl_view.viewsz.y; y++)
         for (x = 0; x < crawl_view.viewsz.x; x++)
@@ -4215,17 +4270,17 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
             const int gx = view2gridX(x + 1) + cx - you.x_pos;
             const int gy = view2gridY(y + 1) + cy - you.y_pos;
 
-            char wall_flv    = 0;
-            char floor_flv   = 0;
-            char special_flv = 0;
+            unsigned char wall_flv    = 0;
+            unsigned char floor_flv   = 0;
+            unsigned char special_flv = 0;
             bool is_special  = false;
             const bool in_bounds = (map_bounds(gx, gy));
 
             if (in_bounds)
             {
-                wall_flv    = env.tile_flavor[gx][gy].wall;
-                floor_flv   = env.tile_flavor[gx][gy].floor;
-                special_flv = env.tile_flavor[gx][gy].special;
+                wall_flv    = env.tile_flv[gx][gy].wall;
+                floor_flv   = env.tile_flv[gx][gy].floor;
+                special_flv = env.tile_flv[gx][gy].special;
                 is_special  = (bazaar && env.grid_colours[gx][gy] == baz_col);
             }
 
@@ -4271,416 +4326,6 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
 
             count += 2;
         }
-}
-
-void tile_draw_dungeon(unsigned int *tileb)
-{
-    tile_finish_dngn(tileb, you.x_pos, you.y_pos);
-    TileDrawDungeon(tileb);
-}
-
-#define swapint(a, b) {int tmp = a; a = b; b = tmp;}
-
-// Item is unided(1) or tried(2) or id'ed (0)
-static int _item_unid_type(const item_def &item)
-{
-    if ((item.flags & ISFLAG_KNOW_TYPE) != 0)
-        return 0;
-
-    const int s = item.sub_type;
-    const id_arr& id = get_typeid_array();
-    int id0 = 0;
-
-    switch (item.base_type)
-    {
-    case OBJ_STAVES:
-        id0 = id[ IDTYPE_STAVES ][s];
-        if (id0 != ID_KNOWN_TYPE)
-            return 1;
-        else
-            return 0;
-
-    case OBJ_SCROLLS:
-        id0 = id[ IDTYPE_SCROLLS ][s];
-        break;
-
-    case OBJ_WANDS:
-        id0 = id[ IDTYPE_WANDS ][s];
-        break;
-
-    case OBJ_POTIONS:
-        id0 = id[ IDTYPE_POTIONS ][s];
-        break;
-
-    case OBJ_JEWELLERY:
-        if (is_artefact(item))
-        {
-            if (item.props.exists("jewellery_tried")
-                && item.props["jewellery_tried"].get_bool())
-            {
-                return 2;
-            }
-            return 1;
-        }
-        id0 = id[ IDTYPE_JEWELLERY ][s];
-        break;
-
-    default:
-        return 0;
-    }
-
-    if (id0 == ID_TRIED_TYPE)
-        return 2;
-    else if (id0 != ID_KNOWN_TYPE)
-        return 1;
-
-    return 0;
-}
-
-// Helper routine: sort floor item index and pack into idx.
-static int _pack_floor_item(int *idx, int *flag, int *isort, int max)
-{
-    int n = 0;
-    static int isort_weapon2[NUM_WEAPONS];
-    static int isort_armour2[NUM_ARMOURS];
-
-    static const int isort_weapon[NUM_WEAPONS] =
-    {
-        WPN_WHIP, WPN_CLUB, WPN_HAMMER, WPN_MACE,
-        WPN_FLAIL, WPN_DEMON_WHIP,
-        WPN_ANKUS, WPN_MORNINGSTAR, WPN_EVENINGSTAR,
-        WPN_SPIKED_FLAIL, WPN_GREAT_MACE, WPN_DIRE_FLAIL,
-        WPN_GIANT_CLUB,  WPN_GIANT_SPIKED_CLUB,
-
-        WPN_KNIFE, WPN_DAGGER, WPN_SHORT_SWORD, WPN_SABRE, WPN_QUICK_BLADE,
-        WPN_FALCHION, WPN_LONG_SWORD, WPN_SCIMITAR, WPN_KATANA,
-        WPN_DEMON_BLADE, WPN_DOUBLE_SWORD, WPN_GREAT_SWORD, WPN_TRIPLE_SWORD,
-
-        WPN_HAND_AXE, WPN_WAR_AXE, WPN_BROAD_AXE,
-        WPN_BATTLEAXE, WPN_EXECUTIONERS_AXE,
-
-        WPN_SPEAR, WPN_TRIDENT, WPN_HALBERD, WPN_SCYTHE,
-        WPN_GLAIVE, WPN_DEMON_TRIDENT,
-
-        WPN_QUARTERSTAFF,
-
-        WPN_SLING, WPN_BOW, WPN_CROSSBOW, WPN_HAND_CROSSBOW
-    };
-    static const int isort_armour[NUM_ARMOURS] =
-    {
-        ARM_ROBE,
-        ARM_ANIMAL_SKIN,
-        ARM_LEATHER_ARMOUR,
-        ARM_TROLL_LEATHER_ARMOUR,
-        ARM_RING_MAIL, ARM_SCALE_MAIL, ARM_CHAIN_MAIL,
-        ARM_SPLINT_MAIL, ARM_BANDED_MAIL, ARM_PLATE_MAIL,
-        ARM_CRYSTAL_PLATE_MAIL,
-        ARM_SWAMP_DRAGON_ARMOUR,
-        ARM_MOTTLED_DRAGON_ARMOUR,
-        ARM_STEAM_DRAGON_ARMOUR,
-        ARM_DRAGON_ARMOUR,
-        ARM_ICE_DRAGON_ARMOUR,
-        ARM_STORM_DRAGON_ARMOUR,
-        ARM_GOLD_DRAGON_ARMOUR,
-        ARM_TROLL_HIDE,
-        ARM_SWAMP_DRAGON_HIDE,
-        ARM_MOTTLED_DRAGON_HIDE,
-        ARM_STEAM_DRAGON_HIDE,
-        ARM_DRAGON_HIDE,
-        ARM_ICE_DRAGON_HIDE,
-        ARM_STORM_DRAGON_HIDE,
-        ARM_GOLD_DRAGON_HIDE,
-        ARM_CLOAK,
-        ARM_BUCKLER, ARM_SHIELD, ARM_LARGE_SHIELD,
-        ARM_HELMET, ARM_GLOVES, ARM_BOOTS
-    };
-
-    for (int i = 0; i < NUM_WEAPONS; i++)
-         isort_weapon2[isort_weapon[i]] = i;
-
-    for (int i = 0; i < NUM_ARMOURS; i++)
-         isort_armour2[isort_armour[i]] = i;
-
-    int o = igrd[you.x_pos][you.y_pos];
-    if (o == NON_ITEM) return 0;
-
-    while (o != NON_ITEM)
-    {
-        int id0  = _item_unid_type(mitm[o]);
-        int next = mitm[o].link;
-        int typ  = mitm[o].base_type;
-
-        if (n >= max) break;
-
-        idx[n] = o;
-        isort[n] = typ * 256 * 3;
-        if (typ == OBJ_WEAPONS)
-        {
-            isort[n] += 3 * isort_weapon2[ mitm[o].sub_type];
-        }
-        if (typ == OBJ_ARMOUR)
-        {
-            isort[n] += 3 * isort_armour2[ mitm[o].sub_type ];
-        }
-        flag[n] = 0;
-
-        if (item_ident( mitm[o], ISFLAG_KNOW_CURSE ) &&
-            item_cursed(mitm[o]))
-        {
-            flag[n] |= TILEI_FLAG_CURSE;
-        }
-
-        if (id0 != 0)
-        {
-            isort[n] += id0;
-            if (id0 == 2)
-                flag[n] = TILEI_FLAG_TRIED;
-        }
-        flag[n] |= TILEI_FLAG_FLOOR;
-
-        // Simple Bubble sort
-        int k = n;
-        while (k > 0 && isort[k-1] > isort[k])
-        {
-            swapint(idx[k-1], idx[k]);
-            swapint(isort[k-1], isort[k]);
-            swapint(flag[k-1], flag[k]);
-            k--;
-        }
-        n++;
-        o = next;
-    }
-    return n;
-}
-
-// Helper routine: Calculate tile index and quantity data to be displayed
-static void _finish_inven_data(int n, int *tiles, int *num, int *idx,
-                               int *iflag)
-{
-    int i;
-
-    for (i = 0; i < n; i++)
-    {
-        int q = -1;
-        int j = idx[i];
-        item_def *itm;
-
-        if (j == -1)
-        {
-            num[i]   = -1;
-            tiles[i] = 0;
-            continue;
-        }
-
-        if (iflag[i] & TILEI_FLAG_FLOOR)
-            itm = &mitm[j];
-        else
-            itm = &you.inv[j];
-
-        int type = itm->base_type;
-
-        if (type == OBJ_FOOD || type == OBJ_SCROLLS
-            || type == OBJ_POTIONS || type == OBJ_MISSILES)
-        {
-            q = itm->quantity;
-        }
-        if (q == 1)
-            q = -1;
-
-        if (type == OBJ_WANDS
-            && ((itm->flags & ISFLAG_KNOW_PLUSES)
-                || itm->plus2 == ZAPCOUNT_EMPTY))
-        {
-            q = itm->plus;
-        }
-
-        tiles[i] = tileidx_item(*itm);
-        num[i] = q;
-    }
-}
-
-// Display Inventory/floor items
-#include "guic.h"
-extern TileRegionClass *region_item;
-extern TileRegionClass *region_item2;
-extern WinClass *win_main;
-
-void tile_draw_inv(int flag)
-{
-    // "inventory" including items on floor
-    #define MAXINV 200
-    int tiles[MAXINV];
-    int num[MAXINV];
-    int idx[MAXINV];
-    int iflag[MAXINV];
-    int isort[MAXINV];
-
-    if (flag == -1)
-    {
-        flag = (win_main->active_layer == 0) ? REGION_INV1
-                                             : REGION_INV2;
-    }
-
-    TileRegionClass *r = (flag == REGION_INV1) ? region_item
-                                               : region_item2;
-    int numInvTiles = r->mx * r->my;
-    if (numInvTiles > MAXINV)
-        numInvTiles = MAXINV;
-
-    // Show one row of ground tiles, no matter what.  This may cause some
-    // items not to show up, but theoretically you've ordered tile_show_items
-    // to prioritize the important stuff.
-    int max_inventory_items = std::min(numInvTiles - r->mx, ENDOFPACK);
-
-    // which items to show in inventory
-    const char *item_chars = Options.tile_show_items;
-
-    // show no items, please
-    if (item_chars[0] == 0)
-        return;
-
-    int eq_flag[ENDOFPACK];
-    int empty = 0; // counts empty slots
-
-    // first set eq_flag = 1 for all slots that actually hold valid items
-    // XXX: Why? --jpeg
-    for (int i = 0; i < max_inventory_items; i++)
-    {
-        eq_flag[i] =
-            (you.inv[i].quantity != 0 && is_valid_item( you.inv[i])) ? 1 : 0;
-
-        if (!eq_flag[i])
-            empty++;
-    }
-
-    // next, increase eq_flag to 2 if it's actually equipped
-    // FIX ME: Doesn't check for sensible equipment, i.e.
-    //         wielded armour counts, too
-    for (int eq = 0; eq < NUM_EQUIP; eq++)
-    {
-        int slot = you.equip[eq];
-        if (slot >= 0 && slot < ENDOFPACK)
-            eq_flag[slot] = 2;
-    }
-
-    int n = 0;
-
-    // item.base_type <-> char conversion table
-    const static char *obj_syms = ")([/%#?=!#+\\0}x";
-
-    for (int i = 0; i < (int)strlen(item_chars); i++)
-    {
-        int top = n;
-        char ic = item_chars[i];
-
-        if (n >= numInvTiles)
-            break;
-
-        // Items on the floor
-        if (ic == '.')
-        {
-            n += _pack_floor_item(&idx[n], &iflag[n], &isort[n],
-                                  numInvTiles - n);
-            continue;
-        }
-
-        // empty slots
-        if (ic == '_')
-        {
-            for (int j = 0; j < empty && n < numInvTiles; j++)
-            {
-                idx[n] = -1;
-                iflag[n] = 0;
-                n++;
-            }
-            continue;
-        }
-
-        // convert item char to item type
-        int type = -1;
-        for (int j = 0; j < (int)strlen(obj_syms); j++)
-        {
-            if (obj_syms[j] == ic)
-            {
-                type = j;
-                break;
-            }
-        }
-
-        if (type == -1)
-            continue;
-
-        for (int j = 0; j < max_inventory_items && n < numInvTiles; j++)
-        {
-            if (you.inv[j].base_type == type && eq_flag[j] != 0)
-            {
-                int sval = NUM_EQUIP + you.inv[j].sub_type;
-                int base = 0;
-                int id0  = _item_unid_type(you.inv[j]);
-
-                idx[n] = j;
-                iflag[n] = 0;
-
-                if (type == OBJ_JEWELLERY && sval >= AMU_RAGE)
-                {
-                    base = 1000;
-                    sval = base + sval;
-                }
-
-                if (id0 == 2)
-                {
-                     iflag[n] |= TILEI_FLAG_TRIED;
-                     // To the tail
-                     sval = base + 980;
-                }
-                else if (id0 == 1)
-                {
-                     // To the tail
-                     sval = base + 990;
-                }
-
-                // Equipment first
-                if (eq_flag[j] == 2)
-                {
-                     //sval = base;
-                     iflag[n] |= TILEI_FLAG_EQUIP;
-                }
-
-                if (item_cursed(you.inv[j])
-                    && item_ident( you.inv[j], ISFLAG_KNOW_CURSE ))
-                {
-                    iflag[n] |= TILEI_FLAG_CURSE;
-                }
-
-                if (flag == REGION_INV2)
-                    sval = j;
-
-                isort[n] = sval;
-
-                int k = n;
-                while (k > top && isort[k-1] > isort[k])
-                {
-                    swapint(idx[k-1], idx[k]);
-                    swapint(isort[k-1], isort[k]);
-                    swapint(iflag[k-1], iflag[k]);
-                    k--;
-                }
-
-                n++;
-            } // type == base
-        } // j
-    }  // i
-
-    _finish_inven_data(n, tiles, num, idx, iflag);
-
-    for (int i = n; i < numInvTiles; i++)
-    {
-         tiles[i] = 0;
-         num[i]   = 0;
-         idx[i]   = -1;
-         iflag[i] = 0;
-    }
-    TileDrawInvData(n, flag, tiles, num, idx, iflag);
 }
 
 #endif

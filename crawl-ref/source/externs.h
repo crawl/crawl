@@ -35,11 +35,14 @@
 #include "store.h"
 
 #ifdef USE_TILE
-struct TileFlavor
+struct tile_flavour
 {
-    char floor;
-    char wall;
-    char special;
+    // The floor tile to use.
+    unsigned char floor;
+    // The wall tile to use.
+    unsigned char wall;
+    // Used as a random value or for special cases e.g. (bazaars, gates).
+    unsigned char special;
 };
 #endif
 
@@ -1423,7 +1426,7 @@ public:
     // indexed by grid coords
     FixedArray<unsigned int,GXM, GYM> tile_bk_fg; // tile fg
     FixedArray<unsigned int,GXM, GYM> tile_bk_bg; // tile bg
-    FixedArray<TileFlavor, GXM, GYM> tile_flavor;
+    FixedArray<tile_flavour, GXM, GYM> tile_flv;
     // indexed by (show-1) coords
     FixedArray<unsigned int,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_fg;
     FixedArray<unsigned int,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_bg;
@@ -1504,6 +1507,7 @@ struct feature_def
     unsigned short      em_colour;       // Emphasised colour when in LoS.
     unsigned short      seen_em_colour;  // Emphasised colour when out of LoS
     unsigned            flags;
+    map_feature         minimap;         // mini-map categorization
 
     bool is_notable() const { return (flags & FFT_NOTABLE); }
 };
@@ -1872,6 +1876,7 @@ public:
     char        tile_lava_col;
     char        tile_excluded_col;
     char        tile_excl_centre_col;
+    char        tile_window_col;
 #endif
 #ifdef WIN32TILES
     bool        use_dos_char;

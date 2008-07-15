@@ -10,20 +10,36 @@ GAME = crawl
 # it will make a variable called OBJECTS that contains all the libraries
 include makefile.obj
 
-OBJECTS += libgui.o tile1.o tile2.o libx11.o guic.o guic-x11.o
+OBJECTS += libgui.o tilepick.o tile2.o tilereg.o tilesdl.o tilefont.o tiletex.o
+
+SDL_CFLAGS := $(shell sdl-config --cflags)
+SDL_LDFLAGS := $(shell sdl-config --libs) -lSDLmain
 
 CXX = g++
 DELETE = rm -f
 COPY = cp
 OS_TYPE = UNIX
-EXTRA_INCLUDES = -DUSE_X11 -DUSE_TILE
+EXTRA_INCLUDES = -DUSE_TILE -DCLUA_BINDINGS
+
+# Change this to y if you want to use Unicode glyphs in the map, and you have
+# libncursesw available.
+UNICODE_GLYPHS = n
 
 ifeq ($(strip $(OSX)),y)
 PNG_INCLUDE := -I/sw/include
 PNG_LIB := -L/sw/lib
+FREETYPE_INCLUDE := -I/sw/include/freetype2
+
+# 10.5 Fink bug
+FINK_OPENGL_WORKAROUND := -Wl,-dylib_file,/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
+
+SDL_LDFLAGS += -framework Cocoa -L/usr/X11/lib $(FINK_OPENGL_WORKAROUND)
+
+EXTRA_INCLUDES += -I/sw/include
 else
 PNG_INCLUDE :=
 PNG_LIB :=
+FREETYPE_INCLUDE := -I/usr/include/freetype2
 endif
 
 # If you have lex and yacc, set DOYACC to y (lowercase y).
@@ -36,8 +52,9 @@ MCHMOD := 2755
 MCHMOD_SAVEDIR := 775
 
 # The user:group to install the game as.
-INSTALL_UGRP ?= games:games
-INSTALLDIR   ?= /usr/games/crawl
+INSTALL_UGRP := games:games
+
+INSTALLDIR   := /usr/games/crawl
 
 # If you're installing Crawl for multiple users, you *must* set this to a
 # valid path before building Crawl. This is not necessary if you are building
@@ -84,9 +101,9 @@ EXTRA_INCLUDES += -I$(SQLSRC)
 EXTRA_DEPENDS  += $(FSQLLIBA)
 endif
 
-LIB = -L$(LUASRC) -l$(LUALIB) $(LIBDBM) -L/usr/X11R6/lib -lX11 -lpng $(PNG_LIB)
+LIB = -L$(LUASRC) -l$(LUALIB) $(LIBDBM) -lpng $(SDL_LDFLAGS) -lGL -lGLU -lSDL_image -lfreetype
 
-INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES) $(PNG_INCLUDE)
+INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES) $(PNG_INCLUDE) $(FREETYPE_INCLUDE)
 
 CFWARN := -Wall -Wwrite-strings -Wshadow -pedantic
 
@@ -109,7 +126,7 @@ endif
 
 CFOTHERS += $(SELDBM)
 
-CFLAGS  := $(INCLUDES) $(CFWARN) $(CFOTHERS)
+CFLAGS  := $(INCLUDES) $(CFWARN) $(CFOTHERS) $(SDL_CFLAGS)
 YCFLAGS := $(INCLUDES) $(CFOTHERS)
 
 UTIL = util/
@@ -122,15 +139,15 @@ RLTILES = rltiles/
 TILEHEADERS = \
 tiledef.h \
 tiledef-p.h \
-tiledef-w2d.h \
-tilecount-w2d.h \
-tilep-cmt.h
+tilep-cmt.h \
+tiledef-dngn.h \
+tilecount-dngn.h
 
 TILEFILES = \
 	tile.png \
 	player.png \
-	wall2d.png \
-	title.png
+	title.png \
+    dngn.png
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
 EXTRA_DEPENDS += $(TILEHEADERS) $(DESTTILEFILES)

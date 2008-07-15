@@ -638,9 +638,7 @@ void cio_init()
 {
     crawl_state.io_inited = true;
 
-#if defined(USE_TILE)
-    libgui_init();
-#elif defined(UNIX)
+#if defined(UNIX) && !defined(USE_TILE)
     unixcurses_startup();
 #endif
 
@@ -653,6 +651,10 @@ void cio_init()
 #endif
 
     crawl_view.init_geometry();
+
+#ifdef USE_TILE
+    tiles.resize();
+#endif
 
     if (Options.char_set == CSET_UNICODE && !crawl_state.unicode_ok)
     {
@@ -668,7 +670,7 @@ void cio_cleanup()
         return;
 
 #if defined(USE_TILE)
-    libgui_shutdown();
+    tiles.shutdown();
 #elif defined(UNIX)
     unixcurses_shutdown();
 #endif

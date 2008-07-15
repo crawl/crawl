@@ -9,7 +9,7 @@ MAKEFILE ?= makefile.unix
 #MAKEFILE ?= makefile.osx
 #MAKEFILE ?= makefile.mgw
 #MAKEFILE ?= makefile_tiles.mgw
-#MAKEFILE ?= makefile.x11
+#MAKEFILE ?= makefile_tiles.unix
 
 #jmf: number of concurrent jobs -- good value is (#_of_CPUs * 2) + 1
 #     cuts build time a lot on multi-cpu machines

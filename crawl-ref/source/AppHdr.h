@@ -206,10 +206,6 @@
     #error Missing platform #define or unsupported compiler.
 #endif
 
-#ifdef USE_TILE
-    #include "libgui.h"
-#endif
-
 // =========================================================================
 //  Defines for dgamelaunch-specific things.
 // =========================================================================
@@ -315,6 +311,12 @@
     #if !defined(NDEBUG)
         #define NDEBUG                  // used by <assert.h>
     #endif
+#endif
+
+
+#ifdef USE_TILE
+    #include "libgui.h"
+    #include "tilesdl.h"
 #endif
 
 // =========================================================================

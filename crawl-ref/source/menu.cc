@@ -210,10 +210,6 @@ void Menu::do_menu()
     alive = true;
     while (alive)
     {
-#ifdef USE_TILE
-        TileRedrawInv(REGION_INV2);
-        mouse_control mc(MOUSE_MODE_COMMAND);
-#endif
         int keyin = getchm(KC_NONE, c_getch);
 
         if (!process_key( keyin ))
@@ -687,10 +683,6 @@ void Menu::draw_menu()
         cgotoxy( 1, y_offset + pagesize - count_linebreaks(more) );
         more.display();
     }
-
-#ifdef USE_TILE
-    TileRedrawInv(REGION_INV2);
-#endif
 }
 
 void Menu::update_title()
@@ -1618,15 +1610,11 @@ bool formatted_scroller::process_key( int keyin )
     case CK_ESCAPE:
         return (false);
     case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':
-#ifdef USE_TILE
     case CK_MOUSE_B5:
-#endif
         repaint = page_down();
         break;
     case '-': case CK_PGUP: case '<': case ';':
-#ifdef USE_TILE
     case CK_MOUSE_B4:
-#endif
         repaint = page_up();
         break;
     case CK_UP:

@@ -1,4 +1,4 @@
-%width 20
+%width 32
 %back none
 %name player
 

@@ -796,11 +796,6 @@ void print_stats(void)
 {
     textcolor(LIGHTGREY);
 
-#ifdef USE_TILE
-    if (you.redraw_armour_class || you.wield_change)
-        TilePlayerRefresh();
-#endif
-
     // Displayed evasion is now tied to dex.
     if (you.redraw_dexterity)
         you.redraw_evasion = true;

@@ -6,67 +6,21 @@
  *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
  */
 
+// TODO enne - slowly morph this into tilesdl.h
+
 #ifndef LIBGUI_H
 #define LIBGUI_H
 #ifdef USE_TILE
 
-#ifdef USE_X11
-  #include <X11/Xlib.h>
-  #include <X11/X.h>
-#elif defined(WINDOWS)
-  #include <windows.h>
-  // windows.h defines 'near' as an empty string for compatibility.
-  // This breaks the use of that as a variable name.  Urgh.
-  #ifdef near
-    #undef near
-  #endif
-  #include <commdlg.h>
-#endif
-
 #include "defines.h"
 
 typedef unsigned int screen_buffer_t;
-
-void libgui_init();
-void libgui_shutdown();
-
-void edit_prefs();
-/* ***********************************************************************
- Minimap related
- * called from: misc view spells2
- * *********************************************************************** */
-void GmapInit(bool upd_tile);
-void GmapDisplay(int linex, int liney);
-void GmapUpdate(int x, int y, int what, bool upd_tile = true);
 
 //dungeon display size
 extern int tile_dngn_x;
 extern int tile_dngn_y;
 
 void set_mouse_enabled(bool enabled);
-
-// mouse ops
-// set mouse op mode
-void mouse_set_mode(int mode);
-// get mouse mode
-int mouse_get_mode();
-
-class mouse_control
-{
-public:
-    mouse_control(int mode)
-    {
-        oldmode = mouse_get_mode();
-        mouse_set_mode(mode);
-    }
-
-    ~mouse_control()
-    {
-        mouse_set_mode(oldmode);
-    }
-private:
-    int oldmode;
-};
 
 struct coord_def;
 struct crawl_view_geometry;
@@ -77,49 +31,9 @@ void gui_init_view_params(crawl_view_geometry &geom);
 // Otherwise, it just returns false.
 bool gui_get_mouse_grid_pos(coord_def &gc);
 
-enum InvAction
-{
-    INV_DROP,
-    INV_USE,  // primary   inventory use
-    INV_USE2, // secondary inventory use
-    INV_PICKUP,
-    INV_VIEW,
-    INV_USE_FLOOR,
-    INV_EAT_FLOOR,
-    INV_SELECT,
-    INV_NUMACTIONS
-};
-
-void gui_get_mouse_inv(int &idx, InvAction &act);
-
-void tile_place_cursor(int x, int y, bool display);
-
-void lock_region(int r);
-void unlock_region(int r);
-
-enum ScreenRegion
-{
-    REGION_NONE,
-    REGION_CRT,
-    REGION_STAT,  // stat area
-    REGION_MSG,   // message area
-    REGION_MAP,   // overview map area
-    REGION_DNGN,
-    REGION_TDNGN,
-    REGION_INV1,  // items in inventory
-    REGION_INV2,  // items in inventory?
-    REGION_XMAP,
-    REGION_TIP,
-    NUM_REGIONS
-};
-
 /* text display */
 void clrscr(void);
 void textcolor(int color);
-void cgotoxy(int x, int y, int region = GOTO_CRT);
-void message_out(int mline, int colour, const char *str, int firstcol = 0,
-                 bool newline = true);
-void clear_message_window();
 int wherex();
 int wherey();
 void cprintf(const char *format,...);    
@@ -136,39 +50,30 @@ void putwch(unsigned chr);
 void put_colour_ch(int colour, unsigned ch);
 void writeWChar(unsigned char *ch);
 
-void puttext(int x, int y, int lx, int ly, unsigned char *buf, 
-             bool mono = false, int where = 0);
-void ViewTextFile(const char *name);
-
 #define textattr(x) textcolor(x)
 void set_cursor_enabled(bool enabled);
 bool is_cursor_enabled();
-void enable_smart_cursor(bool);
-bool is_smart_cursor_enabled();
+inline void enable_smart_cursor(bool) { }
+inline bool is_smart_cursor_enabled() { return false; }
 
-#ifdef USE_X11
-char *strlwr(char *str); // non-unix
-int itoa(int value, char *strptr, int radix); // non-unix
-int stricmp(const char *str1, const char *str2); // non-unix
-#endif
 
-void delay(unsigned long time);
-int kbhit(void);
 void window(int x1, int y1, int x2, int y2);
-void update_screen(void);
+
 int getch();
 int getch_ck();
+void clrscr();
+void message_out(int which_line, int colour, const char *s, int firstcol = 0, bool newline = true);
+void cgotoxy(int x, int y, int region = GOTO_CRT);
+void clear_message_window();
+void delay(int ms);
+void update_screen();
+int kbhit();
 
-// types of events
-#define EV_KEYIN    1
-#define EV_MOVE     2
-#define EV_BUTTON   3
-#define EV_UNBUTTON 4
-
-#define _NORMALCURSOR 1
-#define _NOCURSOR     0
-
-#define textcolor_cake(col) textcolor((col)<<4 | (col))
+#ifdef UNIX
+char *strlwr(char *str);
+int itoa(int value, char *strptr, int radix);
+int stricmp(const char *str1, const char *str2);
+#endif
 
 #endif // USE_TILE
 #endif // LIBGUI_H

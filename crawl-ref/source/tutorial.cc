@@ -38,6 +38,7 @@
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
+#include "shopping.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
@@ -1182,9 +1183,9 @@ void tutorial_first_monster(const monsters &mon)
     if (!Options.tutorial_events[TUT_SEEN_MONSTER])
     {
         if (get_mons_colour(&mon) != mon.colour)
-            learned_something_new(TUT_MONSTER_BRAND);
+            learned_something_new(TUT_MONSTER_BRAND, mon.x, mon.y);
         if (mons_friendly(&mon))
-            learned_something_new(TUT_MONSTER_FRIENDLY);
+            learned_something_new(TUT_MONSTER_FRIENDLY, mon.x, mon.y);
 
         if (!Options.tut_just_triggered
             && one_chance_in(4)
@@ -1215,8 +1216,9 @@ void tutorial_first_monster(const monsters &mon)
     std::string text = "That ";
 #ifdef USE_TILE
     // need to highlight monster
-    const coord_def ep = grid2view(coord_def(mon.x, mon.y));
-    tile_place_cursor(ep.x-1,ep.y-1,true);
+    const coord_def gc(mon.x, mon.y);
+    tiles.place_cursor(CURSOR_TUTORIAL, gc);
+    tiles.add_text_tag(TAG_TUTORIAL, mon.name(DESC_CAP_A), gc);
 
     text += "monster is a ";
     text += mon.name(DESC_PLAIN).c_str();
@@ -1341,9 +1343,9 @@ void tutorial_first_item(const item_def &item)
     text += _colourize_glyph(col, ch);
     text += " ";
 #else
-    // Highlight item. XXX: Doesn't work, unfortunately.
-    const coord_def ep = grid2view(coord_def(item.x, item.y));
-    tile_place_cursor(ep.x-1,ep.y-1,true);
+    const coord_def gc = coord_def(item.x, item.y);
+    tiles.place_cursor(CURSOR_TUTORIAL, gc);
+    tiles.add_text_tag(TAG_TUTORIAL, item.name(DESC_CAP_A), gc);
 #endif
     text += "is an item. If you move there and press <w>g</w> or "
             "<w>,</w> you will pick it up. "
@@ -1369,10 +1371,6 @@ void tutorial_first_item(const item_def &item)
             ", you can read about its properties and its description.";
 
     formatted_message_history(text, MSGCH_TUTORIAL, 0, _get_tutorial_cols());
-#ifdef USE_TILE
-    // Force more() to highlight this item.
-    more();
-#endif
 }
 
 static void _new_god_conduct()
@@ -1460,7 +1458,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     unsigned short colour;
     int object;
 #else
-    const coord_def ep = grid2view(coord_def(x,y));
+    const coord_def gc(x, y);
 #endif
 
     Options.tut_just_triggered = true;
@@ -1671,8 +1669,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
                 text << _colourize_glyph(col, ch);
                 text << " ";
 #else
-                // Highlight item (if it works).
-                tile_place_cursor(ep.x-1,ep.y-1,true);
+                tiles.place_cursor(CURSOR_TUTORIAL, gc);
+                tiles.add_text_tag(TAG_TUTORIAL, mitm[i].name(DESC_CAP_A), gc);
 #endif
 
                 text << "is a corpse.";
@@ -1795,7 +1793,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
         text << _colourize_glyph(colour, ch) << " ";
 #else
-        tile_place_cursor(ep.x-1,ep.y-1,true);
+        tiles.place_cursor(CURSOR_TUTORIAL, gc);
+        tiles.add_text_tag(TAG_TUTORIAL, "Stairs", gc);
 #endif
         text << "are some downstairs. You can enter the next (deeper) "
                 "level by following them down (<w>></w>). To get back to "
@@ -1825,7 +1824,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         text << _colourize_glyph(colour, ch);
         text << " ";
 #else
-        tile_place_cursor(ep.x-1,ep.y-1,true);
+        tiles.place_cursor(CURSOR_TUTORIAL, gc);
+        tiles.add_text_tag(TAG_TUTORIAL, "Escape hatch", gc);
 #endif
         text << "are some kind of escape hatch. You can use them to "
                 "quickly leave a level with <w><<</w> and <w>></w>, "
@@ -1851,7 +1851,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
         text << _colourize_glyph(colour, ch) << " ";
 #else
-        tile_place_cursor(ep.x-1,ep.y-1,true);
+        tiles.place_cursor(CURSOR_TUTORIAL, gc);
+        tiles.add_text_tag(TAG_TUTORIAL, "Branch stairs", gc);
 #endif
         text << "is the entrance to a different branch of the dungeon, "
                 "which might have different terrain, level layout and "
@@ -1914,7 +1915,12 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         get_item_symbol( object, &ch, &colour );
         text << _colourize_glyph(colour, ch) << " ";
 #else
-        tile_place_cursor(ep.x-1,ep.y-1,true);
+        {
+            tiles.place_cursor(CURSOR_TUTORIAL, gc);
+            std::string altar = "An altar to ";
+            altar += god_name(grid_altar_god(grd(gc)));
+            tiles.add_text_tag(TAG_TUTORIAL, altar, gc);
+        }
 #endif
         text << "is an altar. You can get information about it by pressing "
                 "<w>p</w> while standing on the square. Before taking up "
@@ -1930,8 +1936,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_SEEN_SHOP:
-#ifdef USE_TILES
-        tile_place_cursor(ep.x-1,ep.y-1,true);
+#ifdef USE_TILE
+        tiles.place_cursor(CURSOR_TUTORIAL, gc);
+        tiles.add_text_tag(TAG_TUTORIAL, shop_name(gc.x, gc.y), gc);
 #endif
         text << "That "
 #ifndef USE_TILE
@@ -1946,12 +1953,13 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_SEEN_DOOR:
+#ifdef USE_TILE
+        tiles.place_cursor(CURSOR_TUTORIAL, gc);
+        tiles.add_text_tag(TAG_TUTORIAL, "Closed door", gc);
+#endif
         if (you.num_turns < 1)
             DELAY_EVENT;
 
-#ifdef USE_TILES
-        tile_place_cursor(ep.x-1,ep.y-1,true);
-#endif
         text << "That "
 #ifndef USE_TILE
              << _colourize_glyph(WHITE, get_screen_glyph(x,y)) << " "
@@ -1967,8 +1975,9 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_SEEN_SECRET_DOOR:
-#ifdef USE_TILES
-        tile_place_cursor(ep.x-1,ep.y-1,true);
+#ifdef USE_TILE
+        tiles.place_cursor(CURSOR_TUTORIAL, gc);
+        tiles.add_text_tag(TAG_TUTORIAL, "Secret door", gc);
 #endif
         text << "That "
 #ifndef USE_TILE
@@ -2633,7 +2642,12 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     case TUT_MONSTER_BRAND:
 #ifdef USE_TILE
-        tile_place_cursor(ep.x-1,ep.y-1,true);
+        tiles.place_cursor(CURSOR_TUTORIAL, gc);
+        if (mgrd(gc) != NON_MONSTER)
+        {
+            tiles.add_text_tag(TAG_TUTORIAL, menv[mgrd(gc)].name(DESC_CAP_A),
+                               gc);
+        }
 #endif
         text << "That monster looks a bit unusual. You might wish to examine "
                 "it a bit more closely by "
@@ -2646,7 +2660,12 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     case TUT_MONSTER_FRIENDLY:
 #ifdef USE_TILE
-        tile_place_cursor(ep.x-1,ep.y-1,true);
+        tiles.place_cursor(CURSOR_TUTORIAL, gc);
+        if (mgrd(gc) != NON_MONSTER)
+        {
+            tiles.add_text_tag(TAG_TUTORIAL, menv[mgrd(gc)].name(DESC_CAP_A), 
+                               gc);
+        }
 #endif
         text << "That monster is friendly to you and will attack your "
                 "enemies, though you'll get only half the experience for "

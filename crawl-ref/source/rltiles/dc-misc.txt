@@ -25,11 +25,8 @@ cloud_grey_smoke CLOUD_GREY_SMOKE
 cloud_miasma CLOUD_MIASMA
 cloud_purp_smoke CLOUD_PURP_SMOKE
 
-sanctuary SANCTUARY
-
 #########MAP
 %sdir dc-misc
-halo HALO
 %corpse 0
 %back none
 %mesh 0
@@ -41,23 +38,18 @@ unseen_item UNSEEN_ITEM
 %back dc-misc/blood_red
 unseen_monster UNSEEN_CORPSE
 %corpse 0
-dc-misc/blood_red BLOOD0
-dc-misc/blood_red1 BLOOD1
-dc-misc/blood_red2 BLOOD2
-dc-misc/blood_red3 BLOOD3
-dc-misc/blood_red4 BLOOD4
 %back none
 dc-dngn/dngn_altar UNSEEN_ALTAR
 dc-dngn/dngn_entrance UNSEEN_ENTRANCE
 
 %back none
-#mask_deep_water MASK_DEEP_WATER
-#mask_shallow_water MASK_SHALLOW_WATER
-#mask_lava MASK_LAVA
-sink_mask SINK_MASK
+mask_deep_water MASK_DEEP_WATER
+mask_shallow_water MASK_SHALLOW_WATER
+mask_lava MASK_LAVA
 cursor CURSOR
 cursor_red CURSOR2
 cursor_green CURSOR3
+tutorial_cursor TUTORIAL_CURSOR
 %rim 1
 heart HEART
 neutral NEUTRAL
@@ -71,15 +63,14 @@ unseen PLAYER
 blank MESH
 %mesh 0
 magicmap MAGIC_MAP_MESH
-ray RAY_MESH
 txt1 TEXT_PARTS_J
 txt2 TEXT_DOLLS_J
 txt3 TEXT_PARTS_E
 txt4 TEXT_DOLLS_E
 something_under SOMETHING_UNDER
 error ERROR
-travel_exclusion TRAVEL_EXCLUSION
-travel_exclusion_centre TRAVEL_EXCL_CENTRE
+travel_exclusion TRAVEL_EXCLUSION_FG
+travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_FG
 %rim 1
 todo TODO
 new_stair NEW_STAIR
@@ -98,89 +89,11 @@ char68
 char70
 char78
 
-slot ITEM_SLOT
 slot_eq ITEM_SLOT_EQUIP
 slot_cursed ITEM_SLOT_CURSED
 slot_eq_cursed ITEM_SLOT_EQUIP_CURSED
+ray ITEM_SLOT_SELECTED
 
 %back unseen
 dc-misc/unseen_monster MCACHE_START
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
-dc-misc/unseen_monster
 dc-misc/unseen_monster MCACHE_END

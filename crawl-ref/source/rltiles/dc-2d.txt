@@ -1,13 +1,13 @@
 %tiledef tiledef.h
-%width 30
+%width 32
 %back none
 #%htmlfile tile.htm
 #%tilelist tile.txt
 #%htmlbody
 %name tile
 
-## Dungeon features
-%include dc-dngn.txt
+# idx == 0 must be invalid.
+dc-dngn/dngn_unseen
 
 ## Set black rim
 ## Items

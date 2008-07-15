@@ -31,8 +31,8 @@ HEADERS = \
 tiledef.h \
 tiledef-p.h \
 tilep-cmt.h \
-tiledef-w2d.h \
-tilecount-w2d.h \
+tiledef-dngn.h \
+tilecount-dngn.h \
 map.htm
 
 ALLTOOLS = $(TOOLS) $(EXTRATOOLS)
@@ -40,7 +40,7 @@ ALLTOOLS = $(TOOLS) $(EXTRATOOLS)
 GENERATEDBMP = \
 tile.bmp \
 player.bmp \
-wall2d.bmp
+dngn.bmp
 
 TILEBMP = \
 $(GENERATEDBMP) \
@@ -89,6 +89,9 @@ dcreverse: $(SRC)dcreverse.o $(SRC)bm.o
 # there would be another tool elf that could read an input text file
 # and then output the .bmp and .txt dependencies for it.  It's kind
 # of a low priority though, as tiles will be rebuilt infrequently.
+
+dngn.bmp: dngn.txt dctile
+	./dctile dngn.txt
 
 tile.bmp: dc-2d.txt dctile
 	./dctile dc-2d.txt

@@ -812,3 +812,6 @@ bool pattern_match(void *compiled_pattern, const char *text, int length)
 }
 
 #endif
+
+mouse_mode mouse_control::ms_current_mode = MOUSE_MODE_NORMAL;
+

@@ -881,10 +881,7 @@ void more(void)
                         LIGHTGREY, "--more--", 2, false);
         }
 
-#ifdef USE_TILE
         mouse_control mc(MOUSE_MODE_MORE);
-#endif
-
         do
         {
             keypress = getch();

@@ -1928,9 +1928,9 @@ void tag_construct_level_tiles(writer &th)
     for (int count_x = 0; count_x < GXM; count_x++)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
-            marshallByte(th, env.tile_flavor[count_x][count_y].wall);
-            marshallByte(th, env.tile_flavor[count_x][count_y].floor);
-            marshallByte(th, env.tile_flavor[count_x][count_y].special);
+            marshallByte(th, env.tile_flv[count_x][count_y].wall);
+            marshallByte(th, env.tile_flv[count_x][count_y].floor);
+            marshallByte(th, env.tile_flv[count_x][count_y].special);
         }
 
 #endif
@@ -2243,9 +2243,9 @@ void tag_read_level_tiles(struct reader &th)
     for (int x = 0; x < gx; x++)
         for (int y = 0; y < gy; y++)
         {
-            env.tile_flavor[x][y].wall    = unmarshallByte(th);
-            env.tile_flavor[x][y].floor   = unmarshallByte(th);
-            env.tile_flavor[x][y].special = unmarshallByte(th);
+            env.tile_flv[x][y].wall    = unmarshallByte(th);
+            env.tile_flv[x][y].floor   = unmarshallByte(th);
+            env.tile_flv[x][y].special = unmarshallByte(th);
         }
 
 #endif

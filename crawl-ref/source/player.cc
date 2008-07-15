@@ -300,17 +300,6 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     // Move the player to new location.
     you.moveto(x, y);
 
-#ifdef USE_TILE
-    // We could check for this above, but we need to do this post-move
-    // to force the merfolk tile to be out of water.
-    if ((!grid_is_water(new_grid) && grid_is_water(old_grid)
-         || grid_is_water(new_grid) && !grid_is_water(old_grid))
-        && you.species == SP_MERFOLK)
-    {
-        TilePlayerRefresh();
-    }
-#endif
-
     viewwindow( true, false );
 
     // Other Effects:
@@ -2859,7 +2848,7 @@ void forget_map(unsigned char chance_forgotten, bool force)
         }
 
 #ifdef USE_TILE
-    GmapInit(false);
+    tiles.clear_minimap();
     tile_clear_buf();
 #endif
 }
@@ -3219,9 +3208,6 @@ void level_change(bool skip_attribute_increase)
             case SP_BASE_DRACONIAN:
                 if (you.experience_level == 7)
                 {
-#ifdef USE_TILE
-                    TilePlayerRefresh();
-#endif
                     switch (you.species)
                     {
                     case SP_RED_DRACONIAN:

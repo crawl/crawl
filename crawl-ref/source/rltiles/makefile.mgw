@@ -32,8 +32,8 @@ HEADERS = \
 tiledef.h \
 tiledef-p.h \
 tilep-cmt.h \
-tiledef-w2d.h \
-tilecount-w2d.h \
+tiledef-dngn.h \
+tilecount-dngn.h \
 map.htm
 
 ALLTOOLS = $(TOOLS) $(EXTRATOOLS)
@@ -41,7 +41,7 @@ ALLTOOLS = $(TOOLS) $(EXTRATOOLS)
 GENERATEDBMP = \
 tile.bmp \
 player.bmp \
-wall2d.bmp
+dngn.bmp
 
 TILEBMP = \
 $(GENERATEDBMP) \
@@ -57,7 +57,7 @@ all: tools tiles
 
 tools: $(TOOLS)
 
-tiles: $(TILEBMP)
+tiles: $(TILEBMP) $(TILEPNG)
 
 ##########################################################################
 # Tools
@@ -96,15 +96,15 @@ tile.bmp: dc-2d.txt dctile.exe
 player.bmp: dc-pl.txt dcpl.exe
 	./dcpl dc-pl.txt
 
-wall2d.bmp: dc-wall2d.txt dctile.exe
-	./dctile dc-wall2d.txt
+dngn.bmp: dngn.txt dctile.exe
+	./dctile dngn.txt
 
 ##########################################################################
 # PNG Conversion
 #
 
 $(B2PTOOL):
-	pushd $(B2PSRC) && $(MAKE) -f makefile.mgw $(B2P) && popd
+	pushd $(B2PSRC) && $(MAKE) -f makefile.lin $(B2P) && popd
 
 %.png: %.bmp $(B2PTOOL)
 	$(DELETE) $@

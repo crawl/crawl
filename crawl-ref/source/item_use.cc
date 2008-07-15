@@ -1364,11 +1364,6 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
         colour_length = (selected_from_inventory ? 11 : 3);
     }
 
-#ifdef USE_TILE
-    if (selected_from_inventory)
-        tile_draw_inv(REGION_INV1);
-#endif
-
     formatted_message_history(msg.str()
                               .substr(0, crawl_view.msgsz.x + colour_length),
                               MSGCH_PROMPT);
@@ -4053,10 +4048,6 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
         if (is_cursed)
             do_uncurse_item( arm );
 
-#ifdef USE_TILE
-        TilePlayerRefresh();
-#endif
-
         // No additional enchantment.
         return (true);
     }
@@ -4771,77 +4762,75 @@ bool wearing_slot(int inv_slot)
 
 #ifdef USE_TILE
 // Interactive menu for item drop/use.
-void tile_use_item(int idx, InvAction act)
-{
-    if (act == INV_PICKUP)
-    {
-         pickup_single_item(idx, mitm[idx].quantity);
-         return;
-    }
-    else if (act == INV_DROP)
-    {
-        TileMoveInvCursor(-1);
-        drop_item(idx, you.inv[idx].quantity);
-        return;
-    }
-    else if (act == INV_USE_FLOOR)
-    {
-        if (mitm[idx].base_type == OBJ_CORPSES
-            && mitm[idx].sub_type != CORPSE_SKELETON
-            && !food_is_rotten(mitm[idx]))
-        {
-            butchery(idx);
-        }
-        return;
-    }
-    else if (act == INV_EAT_FLOOR)
-    {
-        if (mitm[idx].base_type == OBJ_CORPSES
-                && you.species == SP_VAMPIRE
-            || mitm[idx].base_type == OBJ_FOOD
-                && you.is_undead != US_UNDEAD && you.species != SP_VAMPIRE)
-        {
-            if (can_ingest(mitm[idx].base_type, mitm[idx].sub_type, false))
-                eat_floor_item(idx);
-        }
-        return;
-    }
-    else if (act == INV_USE2) // secondary item use
-    {
-        const item_def item = you.inv[idx];
 
-        if (item.base_type == OBJ_WEAPONS
-            && is_throwable(item, player_size(PSIZE_BODY)))
-        {
-            if (check_warning_inscriptions(item, OPER_FIRE))
-                fire_thing(idx); // fire weapons
-        }
-        else if (item.base_type == OBJ_MISCELLANY
-                 || item.base_type == OBJ_STAVES
-                    && item_is_rod(item)) // unwield rods/misc. items
-        {
-            if (you.equip[EQ_WEAPON] == idx
-                && check_warning_inscriptions(item, OPER_WIELD))
-            {
-                wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
-            }
-        }
-        else if (you.equip[EQ_WEAPON] == idx
-                 && check_warning_inscriptions(item, OPER_WIELD))
+void tile_item_use_floor(int idx)
+{
+    if (mitm[idx].base_type == OBJ_CORPSES
+        && mitm[idx].sub_type != CORPSE_SKELETON
+        && !food_is_rotten(mitm[idx]))
+    {
+        butchery(idx);
+    }
+}
+
+void tile_item_pickup(int idx)
+{
+     pickup_single_item(idx, mitm[idx].quantity);
+}
+
+void tile_item_drop(int idx)
+{
+    drop_item(idx, you.inv[idx].quantity);
+}
+
+void tile_item_eat_floor(int idx)
+{
+    if (mitm[idx].base_type == OBJ_CORPSES
+            && you.species == SP_VAMPIRE
+        || mitm[idx].base_type == OBJ_FOOD
+            && you.is_undead != US_UNDEAD && you.species != SP_VAMPIRE)
+    {
+        if (can_ingest(mitm[idx].base_type, mitm[idx].sub_type, false))
+            eat_floor_item(idx);
+    }
+}
+
+void tile_item_use_secondary(int idx)
+{
+    const item_def item = you.inv[idx];
+
+    if (item.base_type == OBJ_WEAPONS
+        && is_throwable(item, player_size(PSIZE_BODY)))
+    {
+        if (check_warning_inscriptions(item, OPER_FIRE))
+            fire_thing(idx); // fire weapons
+    }
+    else if (item.base_type == OBJ_MISCELLANY
+             || item.base_type == OBJ_STAVES
+                && item_is_rod(item)) // unwield rods/misc. items
+    {
+        if (you.equip[EQ_WEAPON] == idx
+            && check_warning_inscriptions(item, OPER_WIELD))
         {
             wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
         }
-        else if (_valid_weapon_swap(item)
-                 && check_warning_inscriptions(item, OPER_WIELD))
-        {
-            // secondary wield for several spells and such
-            wield_weapon(true, idx); // wield
-        }
-
-        return;
     }
-    else if (act != INV_USE)
-        return;
+    else if (you.equip[EQ_WEAPON] == idx
+             && check_warning_inscriptions(item, OPER_WIELD))
+    {
+        wield_weapon(true, PROMPT_GOT_SPECIAL); // unwield
+    }
+    else if (_valid_weapon_swap(item)
+             && check_warning_inscriptions(item, OPER_WIELD))
+    {
+        // secondary wield for several spells and such
+        wield_weapon(true, idx); // wield
+    }
+}
+
+void tile_item_use(int idx)
+{
+    const item_def item = you.inv[idx];
 
     // Equipped?
     bool equipped = false;
@@ -4856,9 +4845,6 @@ void tile_use_item(int idx, InvAction act)
             break;
         }
     }
-
-    TileMoveInvCursor(-1);
-    const item_def item = you.inv[idx];
 
     // Special case for folks who are wielding something
     // that they shouldn't be wielding.

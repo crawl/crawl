@@ -185,7 +185,7 @@ enum KEYS
 
     // Mouse codes.
     CK_MOUSE_MOVE  = 10001,
-    CK_MOUSE_DONE,
+    CK_MOUSE_CMD,
     CK_MOUSE_B1,
     CK_MOUSE_B2,
     CK_MOUSE_B3,

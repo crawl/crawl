@@ -181,10 +181,12 @@ int item_special_wield_effect(const item_def &item);
 bool wearing_slot(int inv_slot);
 
 #ifdef USE_TILE
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
-void tile_use_item(int idx, InvAction act);
+void tile_item_use_floor(int idx);
+void tile_item_pickup(int idx);
+void tile_item_drop(int idx);
+void tile_item_eat_floor(int idx);
+void tile_item_use(int idx);
+void tile_item_use_secondary(int idx);
 #endif
 
 #endif

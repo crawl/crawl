@@ -191,6 +191,7 @@ void zap_animation(int colour, const monsters *mon, bool force)
     if (in_los_bounds(drawx, drawy))
     {
 #ifdef USE_TILE
+        // TODO enne - fixme!
         TileDrawBolt(drawx-1, drawy-1, tileidx_zap(colour));
 #else
         view_update();

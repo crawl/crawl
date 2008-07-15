@@ -140,7 +140,10 @@
 #include "stash.h"
 #include "xom.h"
 
+#ifdef USE_TILE
 #include "tiles.h"
+#include "tiledef-dngn.h"
+#endif
 
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed
@@ -206,13 +209,14 @@ static void _compile_time_asserts();
 //  to new_game and then input.
 //
 
-#ifdef WIN32TILES
-int old_main( int argc, char *argv[] )
-#else
-int main( int argc, char *argv[] )
+#ifdef USE_TILE
+#include <SDL_main.h>
 #endif
+
+int main( int argc, char *argv[] )
 {
     _compile_time_asserts();  // Just to quiet "unused static function" warning.
+
 
     // Load in the system environment variables
     get_system_environment();
@@ -244,6 +248,11 @@ int main( int argc, char *argv[] )
         // score listings.
         SysEnv.scorefile.clear();
     }
+
+#ifdef USE_TILE
+    if (!tiles.initialise())
+        return -1;
+#endif
 
     const bool game_start = _initialise();
 
@@ -281,7 +290,7 @@ int main( int argc, char *argv[] )
 
     // Should never reach this stage, right?
 #if defined(USE_TILE)
-    libgui_shutdown();
+    tiles.shutdown();
 #elif defined(UNIX)
     unixcurses_shutdown();
 #endif
@@ -419,10 +428,6 @@ static void _startup_tutorial()
 
     // Print stats and everything.
     _prep_input();
-
-#ifdef USE_TILE
-    tile_draw_inv(REGION_INV1);
-#endif
 
     msg::streams(MSGCH_TUTORIAL)
         << "Press any key to start the tutorial intro, or Escape to skip it."
@@ -1477,7 +1482,9 @@ static void _input()
     handle_delay();
 
     const coord_def cwhere = grid2view(you.pos());
+#ifndef USE_TILE
     cgotoxy(cwhere.x, cwhere.y);
+#endif
 
     if (you_are_delayed())
     {
@@ -1805,33 +1812,6 @@ void process_command( command_type cmd )
     switch (cmd)
     {
 #ifdef USE_TILE
-    case CMD_EDIT_PREFS:
-        edit_prefs();
-        break;
-
-    case CMD_USE_ITEM:
-        {
-            int idx;
-            InvAction act;
-            gui_get_mouse_inv(idx, act);
-            tile_use_item(idx, act);
-        }
-        break;
-
-    case CMD_VIEW_ITEM:
-        {
-            int idx;
-            InvAction act;
-            gui_get_mouse_inv(idx, act);
-
-            if (idx < 0) // item on floor
-                describe_item(mitm[-idx]);
-            else         // item in inventory
-                describe_item(you.inv[idx], true);
-            redraw_screen();
-        }
-        break;
-
     case CMD_EDIT_PLAYER_TILE:
         TilePlayerEdit();
         break;
@@ -3082,6 +3062,11 @@ static void _world_reacts()
 {
     crawl_state.clear_god_acting();
 
+#ifdef USE_TILE
+    tiles.clear_text_tags(TAG_TUTORIAL);
+    tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
+#endif
+
     if (you.num_turns != -1)
     {
         if (you.num_turns < LONG_MAX)
@@ -3426,9 +3411,7 @@ static command_type _keycode_to_command( keycode_type key )
     {
 #ifdef USE_TILE
     case '-':             return CMD_EDIT_PLAYER_TILE;
-    case CK_MOUSE_DONE:   return CMD_NEXT_CMD;
-    case CK_MOUSE_B1ITEM: return CMD_USE_ITEM;
-    case CK_MOUSE_B2ITEM: return CMD_VIEW_ITEM;
+    case CK_MOUSE_CMD:    return CMD_NEXT_CMD;
 #endif
 
     case KEY_MACRO_DISABLE_MORE: return CMD_DISABLE_MORE;
@@ -3542,11 +3525,7 @@ static command_type _keycode_to_command( keycode_type key )
     case CONTROL('R'): return CMD_REDRAW_SCREEN;
     case CONTROL('S'): return CMD_MARK_STASH;
     case CONTROL('T'): return CMD_TOGGLE_FRIENDLY_PICKUP;
-#ifdef USE_TILE
-    case CONTROL('V'): return CMD_EDIT_PREFS;
-#else
     case CONTROL('V'): return CMD_NO_CMD;
-#endif
     case CONTROL('W'): return CMD_FIX_WAYPOINT;
     case CONTROL('X'): return CMD_SAVE_GAME_NOW;
     case CONTROL('Z'): return CMD_SUSPEND_GAME;
@@ -3563,17 +3542,8 @@ static keycode_type _get_next_keycode()
 
     flush_input_buffer( FLUSH_BEFORE_COMMAND );
 
-#ifdef USE_TILE
-    tile_draw_inv(REGION_INV1);
- #ifdef USE_X11
-    update_screen();
- #endif
-    mouse_set_mode(MOUSE_MODE_COMMAND);
+    mouse_control mc(MOUSE_MODE_COMMAND);
     keyin = unmangle_direction_keys(getch_with_command_macros());
-    mouse_set_mode(MOUSE_MODE_NORMAL);
-#else // !USE_TILE
-    keyin = unmangle_direction_keys(getch_with_command_macros());
-#endif
 
     if (!is_synthetic_key(keyin))
         mesclr();
@@ -4114,8 +4084,7 @@ static bool _initialise(void)
     }
 
 #ifdef USE_TILE
-    TilePlayerInit();
-    TileInitItems();
+    tiles.initialise_items();
     TileNewLevel(newc);
 #endif
 

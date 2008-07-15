@@ -248,6 +248,8 @@ const int LABYRINTH_BORDER = 4;
     #define DARKGREY DARKGRAY
 #endif
 
+#define MAX_TERM_COLOUR 16
+
 // Colour options... these are used as bit flags along with the colour
 // value in the low byte.
 
@@ -325,7 +327,7 @@ enum GotoRegion
 };
 
 // Mouse modes (for tiles)
-enum MouseMode
+enum mouse_mode 
 {
      MOUSE_MODE_NORMAL,
      MOUSE_MODE_COMMAND,
