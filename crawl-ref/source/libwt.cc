@@ -182,10 +182,24 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
     GuicInit(hInstance, nCmdShow);
 
-    // Redirect output to the console
-    AttachConsole(ATTACH_PARENT_PROCESS);
-    freopen("CONOUT$", "wb", stdout);
-    freopen("CONOUT$", "wb", stderr);
+    // AttachConsole is a WindowsXP and above function.  If this function
+    // doesn't exist, then don't call it.  Call this function indirectly
+    // via GetProcAddress so that it is not implicitly linked in.
+
+    typedef BOOL (WINAPI *ac_func)(DWORD);
+    ac_func attach_console = (ac_func)GetProcAddress(
+        GetModuleHandle(TEXT("kernel32.dll")), "AttachConsole");
+    typedef BOOL (WINAPI *fc_func)(void);
+    fc_func free_console = (fc_func)GetProcAddress(
+        GetModuleHandle(TEXT("kernel32.dll")), "FreeConsole");
+
+    if (attach_console && free_console)
+    {
+        // Redirect output to the console
+        attach_console(ATTACH_PARENT_PROCESS);
+        freopen("CONOUT$", "wb", stdout);
+        freopen("CONOUT$", "wb", stderr);
+    }
 
     // I'll be damned if I have to parse lpCmdLine myself...
     int argc;
@@ -208,7 +222,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     delete args;
     delete argv;
 
-    FreeConsole();
+    if (attach_console && free_console)
+    {
+        free_console();
+    }
 
     return msg.wParam;
 }
