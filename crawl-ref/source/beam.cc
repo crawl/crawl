@@ -4098,9 +4098,9 @@ static int _affect_player( bolt &beam, item_def *item )
             was_affected = true;
         }
 
-        if (one_chance_in( 3 + 2 * player_prot_life() ))
+        if (one_chance_in(3 + 2 * player_prot_life()))
         {
-            potion_effect( POT_SLOWING, 5 );
+            potion_effect(POT_SLOWING, 5);
             was_affected = true;
         }
     }

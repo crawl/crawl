@@ -1781,13 +1781,13 @@ int player_prot_life(bool calc_unid, bool temp)
     }
 
     if (wearing_amulet(AMU_WARDING, calc_unid))
-        ++pl;
+        pl++;
 
     // rings
-    pl += player_equip( EQ_RINGS, RING_LIFE_PROTECTION, calc_unid );
+    pl += player_equip(EQ_RINGS, RING_LIFE_PROTECTION, calc_unid);
 
     // armour (checks body armour only)
-    pl += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY );
+    pl += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_POSITIVE_ENERGY);
 
     // randart wpns
     pl += scan_randarts(RAP_NEGATIVE_ENERGY, calc_unid);
@@ -1795,8 +1795,7 @@ int player_prot_life(bool calc_unid, bool temp)
     // undead/demonic power
     pl += player_mutation_level(MUT_NEGATIVE_ENERGY_RESISTANCE);
 
-    if (pl > 3)
-        pl = 3;
+    pl = std::min(3, pl);
 
     return (pl);
 }
