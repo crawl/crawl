@@ -3188,7 +3188,12 @@ item_def *monsters::launcher()
 
 item_def *monsters::weapon(int which_attack)
 {
-    if (which_attack > 1)
+    const mon_attack_def attk = mons_attack_spec(this, which_attack);
+    if ( attk.type != AT_HIT )
+        return NULL;
+
+    // Even/odd attacks use main/offhand weapon
+    if ( which_attack > 1 )
         which_attack &= 1;
 
     // This randomly picks one of the wielded weapons for monsters that can use

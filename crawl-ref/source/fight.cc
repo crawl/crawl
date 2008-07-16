@@ -3858,6 +3858,8 @@ void melee_attack::mons_perform_attack_rounds()
         if (attack_number > 0 && attacker == defender)
             break;
 
+        init_attack();
+
         const mon_attack_def attk = mons_attack_spec(atk, attack_number);
         if (attk.type == AT_NONE)
         {

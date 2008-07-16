@@ -830,7 +830,7 @@ void mesclr( bool force )
     New_Message_Count = 0;
 
     // If no messages, return.
-    if (!any_messages())
+    if (!any_messages() && !force)
         return;
 
     if (!force && Options.delay_message_clear)
