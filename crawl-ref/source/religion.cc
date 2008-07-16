@@ -5337,6 +5337,7 @@ void offer_items()
         return;
 
     int num_sacced = 0;
+    int num_disliked = 0;
 
     const int old_leading = _leading_sacrifice_group();
 
@@ -5344,10 +5345,13 @@ void offer_items()
     {
         item_def &item(mitm[i]);
         const int next = item.link;  // in case we can't get it later.
+        const bool disliked = !_god_likes_item(you.religion, item);
 
-        if (item_is_stationary(item) || !_god_likes_item(you.religion, item))
+        if (item_is_stationary(item) || disliked)
         {
             i = next;
+            if (disliked)
+                num_disliked++;
             continue;
         }
 
@@ -5410,7 +5414,8 @@ void offer_items()
         _show_pure_deck_chances();
 #endif
     }
-    else if (num_sacced == 0) // explanatory messages if nothing sacrificed
+    // Explanatory messages if nothing the god likes is sacrificed.
+    else if (num_sacced == 0 && num_disliked > 0)
     {
         // Zin was handled above, and the other gods don't care about
         // sacrifices.
