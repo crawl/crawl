@@ -184,10 +184,7 @@ int check_your_resists(int hurted, beam_type flavour)
         // TSO's protection.
         if (you.religion == GOD_SHINING_ONE && you.piety > resist * 50)
         {
-            int unhurted = (you.piety * hurted) / 150;
-
-            if (unhurted > hurted)
-                unhurted = hurted;
+            int unhurted = std::min(hurted, (you.piety * hurted) / 150);
 
             if (unhurted > 0)
                 hurted -= unhurted;
@@ -672,7 +669,7 @@ void drain_exp(bool announce_full)
 
     if (protection == 3)
     {
-        if ( announce_full )
+        if (announce_full)
             canned_msg(MSG_YOU_RESIST);
         return;
     }
@@ -697,10 +694,8 @@ void drain_exp(bool announce_full)
     // TSO's protection.
     if (you.religion == GOD_SHINING_ONE && you.piety > protection * 50)
     {
-        unsigned long undrained = (you.piety * exp_drained) / 150;
-
-        if (undrained > exp_drained)
-            undrained = exp_drained;
+        unsigned long undrained = std::min(exp_drained,
+                                           (you.piety * exp_drained) / 150);
 
         if (undrained > 0)
         {

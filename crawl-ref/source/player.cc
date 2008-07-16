@@ -1767,7 +1767,7 @@ int player_prot_life(bool calc_unid, bool temp)
         switch (you.attribute[ATTR_TRANSFORMATION])
         {
         case TRAN_STATUE:
-            pl += 1;
+            pl++;
             break;
         case TRAN_SERPENT_OF_HELL:
             pl += 2;

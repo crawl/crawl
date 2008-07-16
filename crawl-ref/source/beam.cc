@@ -2240,7 +2240,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_MIASMA:
-        if (mons_res_negative_energy( monster ) == 3)
+        if (mons_res_negative_energy(monster) == 3)
         {
             if (doFlavouredEffects)
                 simple_monster_message(monster, " appears unharmed.");
