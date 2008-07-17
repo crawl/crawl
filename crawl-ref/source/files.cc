@@ -213,6 +213,30 @@ static inline bool _is_good_filename(const std::string &s)
     return (s != "." && s != "..");
 }
 
+#if defined(DOS)
+// Abbreviates a given file name to DOS style "xxxxxx~1.txt".
+// Does not take into account files with differing suffixes or files
+// with a prepended path with more than one separator.
+// (It does handle all files included with the distribution except
+//  changes.stone_soup.)
+bool get_dos_compatible_file_name(std::string *fname)
+{
+    std::string::size_type pos1 = fname->find("\\");
+    if (pos1 == std::string::npos)
+        pos1 = 0;
+
+    const std::string::size_type pos2 = fname->find(".txt");
+    // Name already fits DOS requirements, nothing to be done.
+    if (fname->substr(pos1, pos2).length() <= 8)
+        return (false);
+
+    *fname = fname->substr(0,pos1) + fname->substr(pos1, pos1 + 6) + "~1.txt";
+
+    return (true);
+}
+#endif
+
+
 // Returns the names of all files in the given directory. Note that the
 // filenames returned are relative to the directory.
 std::vector<std::string> get_dir_files(const std::string &dirname)

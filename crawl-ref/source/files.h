@@ -44,6 +44,7 @@ std::string datafile_path(std::string basename,
                           bool croak_on_fail = true,
                           bool test_base_path = false);
 
+bool get_dos_compatible_file_name(std::string *fname);
 std::string get_parent_directory(const std::string &filename);
 std::string get_base_filename(const std::string &filename);
 std::string get_path_relative_to(const std::string &referencefile,

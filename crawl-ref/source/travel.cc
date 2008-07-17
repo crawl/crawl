@@ -2238,7 +2238,7 @@ static travel_target _parse_travel_target( std::string s, travel_target &targ )
     std::string::size_type epos = s.find(ekey);
 
     if (!s.empty())
-        targ.entrance_only = epos != std::string::npos;
+        targ.entrance_only = (epos != std::string::npos);
 
     if (targ.entrance_only && !s.empty())
         s = trimmed_string(s.substr(0, epos) + s.substr(epos + ekey.length()));
@@ -2255,8 +2255,7 @@ static travel_target _parse_travel_target( std::string s, travel_target &targ )
     return (targ);
 }
 
-static void _travel_depth_munge(int munge_method,
-                                const std::string &s,
+static void _travel_depth_munge(int munge_method, const std::string &s,
                                 travel_target &targ)
 {
     _parse_travel_target(s, targ);
