@@ -2479,9 +2479,7 @@ bool item_is_equipped(const item_def &item)
         if (!is_valid_item(eq))
             continue;
 
-        if (eq.slot == item.slot)
-            return (true);
-        else if (&eq == &item)
+        if (&eq == &item)
             return (true);
     }
 
