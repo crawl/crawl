@@ -2624,6 +2624,8 @@ const std::string menu_colour_item_prefix(const item_def &item, bool temp)
             prefixes.push_back("equipped");
         if (is_artefact(item))
             prefixes.push_back("artefact");
+        break;
+
     default:
         break;
     }

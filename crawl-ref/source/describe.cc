@@ -1638,6 +1638,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                     << std::dec << "$"
                     << "x: " << item.x << " y: " << item.y
                     << " link: " << item.link
+                    << " slot: " << item.slot
                     << " ident_type: "
                     << static_cast<int>(get_ident_type(item));
     }

@@ -13,6 +13,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed item quotes causing overlong descriptions.
 * Fixed vampire bat jewellery exploit.
 * Fixed secondary monster attacks being branded according to their weapon.
+* Fixed runes not being counted correctly in scoring.
 * Fixed kills by hell effects counting as player kills.
 * Fixed persistent --more-- in wizard mode.
 * Fixed cold/fire always destroying all potions/scrolls on the floor.

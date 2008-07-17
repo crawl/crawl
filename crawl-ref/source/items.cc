@@ -2389,7 +2389,9 @@ static bool _find_subtype_by_name(item_def &item,
     item.special   = 0;
     item.flags     = 0;
     item.quantity  = 1;
-    set_ident_flags( item, ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES );
+    // Don't use set_ident_flags in order to avoid triggering notes.
+    // FIXME - is this the proper solution?
+    item.flags |= (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
 
     int type_wanted = -1;
 
@@ -2475,14 +2477,12 @@ bool item_is_equipped(const item_def &item)
         if (you.equip[i] == EQ_NONE)
             continue;
 
-        item_def& eq(you.inv[you.equip[i]]);
+        const item_def& eq(you.inv[you.equip[i]]);
 
         if (!is_valid_item(eq))
             continue;
 
-        if (eq.slot == item.slot)
-            return (true);
-        else if (&eq == &item)
+        if (&eq == &item)
             return (true);
     }
 
