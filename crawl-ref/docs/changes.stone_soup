@@ -11,7 +11,9 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed DOS problems with long file names.
 * Fixed targetting prompts being ignored or having the wrong result.
 * Fixed vampire bat jewellery exploit.
+* Fixed secondary monster attacks being branded according to their weapon.
 * Fixed kills by hell effects counting as player kills.
+* Fixed persistent --more-- in wizard mode.
 * Fixed cold/fire always destroying all potions/scrolls on the floor.
 * Fixed Portal Projectile not handling throwing nets or branded ammo correctly.
 * Fixed friendly pickup toggle being inappropriately disallowed.

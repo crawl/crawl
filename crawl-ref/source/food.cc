@@ -1916,9 +1916,9 @@ bool causes_rot(const item_def &food)
 }
 
 // Returns 1 for herbivores, -1 for carnivores and 0 for either.
-static int _player_likes_food_type(int food_type)
+static int _player_likes_food_type(int type)
 {
-    switch (food_type)
+    switch (static_cast<food_type>(type))
     {
     case FOOD_BREAD_RATION:
     case FOOD_PEAR:
@@ -1941,10 +1941,19 @@ static int _player_likes_food_type(int food_type)
     case FOOD_CHUNK:
     case FOOD_MEAT_RATION:
     case FOOD_SAUSAGE:
+    case FOOD_BEEF_JERKY:
         return -1;
+
+    case FOOD_HONEYCOMB:
+    case FOOD_ROYAL_JELLY:
+        return 0;
+
+    case NUM_FOODS:
+        mpr("Bad food type", MSGCH_ERROR);
+        return 0;
     }
 
-    // Anything missing?
+    mprf(MSGCH_ERROR, "Couldn't handle food type: %d");
     return 0;
 }
 
