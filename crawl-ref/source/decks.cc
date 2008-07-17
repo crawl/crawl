@@ -1681,7 +1681,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
                               card_name(card));
 
     if (spell_direction(target, beam, DIR_NONE, TARG_ENEMY, true, true, info)
-        && player_tracer(ztype, power/4, beam))
+        && player_tracer(ZAP_DEBUGGING_RAY, power/4, beam))
     {
         zapping(ztype, random2(power/4), beam);
     }
