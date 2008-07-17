@@ -3091,16 +3091,17 @@ bool god_dislikes_item_handling(const item_def &item)
         {
             const int item_brand = get_weapon_brand(item);
 
-            if (item_brand == SPWPN_VENOM)
+            if (item_brand == SPWPN_VENOM && item_type_known(item))
                 return (true);
         }
         else if (item.base_type == OBJ_MISSILES)
         {
             const int item_brand = get_ammo_brand(item);
 
-            if (item_brand == SPMSL_POISONED
-                || item_brand == SPMSL_POISONED_II
-                || item_brand == SPMSL_CURARE)
+            if (item_type_known(item) &&
+                (item_brand == SPMSL_POISONED
+                 || item_brand == SPMSL_POISONED_II
+                 || item_brand == SPMSL_CURARE))
             {
                 return (true);
             }
