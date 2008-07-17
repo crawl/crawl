@@ -3,10 +3,12 @@ Stone Soup 0.4.1 (200807??)
 
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 
-(* Fixed crashes related to mapmark.lua.)
+* Fixed crashes related to mapmark.lua.
 * Fixed crash when attempting to autoinscribe non-artefacts via '{'.
 * Fixed Crawl looping infinitely upon "good random choice" for Thief/Wanderer.
 * Fixed crashes when selecting an item with no appropriate items in inventory.
+* Fixed tiles not working on Windows 2000 and earlier.
+* Fixed DOS problems with long file names.
 * Fixed targetting prompts being ignored or having the wrong result.
 * Fixed vampire bat jewellery exploit.
 * Fixed kills by hell effects counting as player kills.

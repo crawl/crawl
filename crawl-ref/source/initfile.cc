@@ -2905,6 +2905,9 @@ std::string game_options::resolve_include(
     // favoured file separator.
     parent_file   = canonicalise_file_separator(parent_file);
     included_file = canonicalise_file_separator(included_file);
+#if defined(DOS)
+    get_dos_compatible_file_name(&included_file);
+#endif
 
     // How we resolve include paths:
     // 1. If it's an absolute path, use it directly.
@@ -2945,9 +2948,8 @@ std::string game_options::resolve_include(
     return datafile_path(included_file, false, true);
 }
 
-std::string game_options::resolve_include(
-    const std::string &file,
-    const char *type)
+std::string game_options::resolve_include( const std::string &file,
+                                           const char *type)
 {
     try
     {
@@ -2955,9 +2957,11 @@ std::string game_options::resolve_include(
             resolve_include(this->filename, file, &SysEnv.rcdirs);
 
         if (resolved.empty())
+        {
             report_error(
                 make_stringf("Cannot find %sfile \"%s\".",
                              type, file.c_str()));
+        }
         return (resolved);
     }
     catch (const std::string &err)

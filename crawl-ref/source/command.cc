@@ -202,6 +202,7 @@ static std::string _get_version_changes(void)
     return (result);
 }
 
+//#define DEBUG_FILES
 static void _print_version(void)
 {
     formatted_scroller cmd_version;
@@ -221,8 +222,28 @@ static void _print_version(void)
     cmd_version.add_text(_get_version_features());
     cmd_version.add_text(_get_version_changes());
 
+    std::string fname = "034_changes.txt";
     // Read in information about changes in comparison to the latest version.
-    FILE* fp = fopen(datafile_path("034_changes.txt", false).c_str(), "r");
+    FILE* fp = fopen(datafile_path(fname, false).c_str(), "r");
+
+#if defined(DOS)
+    if (!fp)
+    {
+ #ifdef DEBUG_FILES
+        mprf(MSGCH_DIAGNOSTICS, "File '%s' could not be opened.",
+             fname.c_str());
+ #endif
+        if (get_dos_compatible_file_name(&fname))
+        {
+ #ifdef DEBUG_FILES
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Attempting to open file '%s'", fname.c_str());
+ #endif
+            fp = fopen(datafile_path(fname, false).c_str(), "r");
+        }
+    }
+#endif
+
     if (fp)
     {
         char buf[200];
@@ -1519,7 +1540,7 @@ int help_highlighter::entry_colour(const MenuEntry *entry) const
     return !pattern.empty() && pattern.matches(entry->text)? WHITE : -1;
 }
 
-// to highlight species in aptitudes list ('?%')
+// To highlight species in aptitudes list. ('?%')
 std::string help_highlighter::get_species_key() const
 {
     if (player_genus(GENPC_DRACONIAN) && you.experience_level < 7)
@@ -1631,8 +1652,27 @@ static void _show_keyhelp_menu(const std::vector<formatted_string> &lines,
         for (int i = 0; help_files[i].name != NULL; ++i)
         {
             // Attempt to open this file, skip it if unsuccessful.
-            FILE* fp =
-                fopen(datafile_path(help_files[i].name, false).c_str(), "r");
+            std::string fname = canonicalise_file_separator(help_files[i].name);
+            FILE* fp = fopen(datafile_path(fname, false).c_str(), "r");
+
+#if defined(DOS)
+            if (!fp)
+            {
+ #ifdef DEBUG_FILES
+                mprf(MSGCH_DIAGNOSTICS, "File '%s' could not be opened.",
+                     help_files[i].name);
+ #endif
+                if (get_dos_compatible_file_name(&fname))
+                {
+ #ifdef DEBUG_FILES
+                    mprf(MSGCH_DIAGNOSTICS,
+                         "Attempting to open file '%s'", fname.c_str());
+ #endif
+                    fp = fopen(datafile_path(fname, false).c_str(), "r");
+                }
+            }
+#endif
+
             if (!fp)
                 continue;
 
