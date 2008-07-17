@@ -3144,7 +3144,10 @@ int affect(bolt &beam, int x, int y, item_def *item)
     // If not a tracer, affect items and place clouds.
     if (!beam.is_tracer)
     {
-        expose_items_to_element(beam.flavour, x, y);
+        const int burn_power = (beam.is_explosion) ? 5 :
+                                    (beam.is_beam) ? 3 : 2;
+
+        expose_items_to_element(beam.flavour, x, y, burn_power);
         rangeUsed += _affect_place_clouds(beam, x, y);
     }
 

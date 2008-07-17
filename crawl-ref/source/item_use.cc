@@ -2580,7 +2580,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (teleport)
     {
         // Violating encapsulation somewhat...oh well.
-        hit = (affect(pbolt, pbolt.target_x, pbolt.target_y) != 0);
+        hit = (affect(pbolt, pbolt.target_x, pbolt.target_y, &item) != 0);
         if (acc_bonus != DEBUG_COOKIE)
             beam_drop_object(pbolt, &item, pbolt.target_x, pbolt.target_y);
     }

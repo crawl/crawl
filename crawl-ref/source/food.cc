@@ -314,7 +314,8 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     return (true);
 }
 
-static bool _butcher_corpse(int corpse_id, bool force_butcher = false)
+static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
+                            bool force_butcher = false)
 {
     ASSERT(corpse_id != -1);
 
@@ -324,7 +325,7 @@ static bool _butcher_corpse(int corpse_id, bool force_butcher = false)
 
     if (can_sac && !rotten)
     {
-        start_delay(DELAY_OFFER_CORPSE, 1, corpse_id);
+        start_delay(DELAY_OFFER_CORPSE, 0, corpse_id);
     }
     else
     {
@@ -336,7 +337,7 @@ static bool _butcher_corpse(int corpse_id, bool force_butcher = false)
                                you.religion);
         }
 
-        int work_req = 4 - mitm[corpse_id].plus2;
+        int work_req = 4 - mitm[corpse_id].plus2 - (first_corpse ? 1 : 0);
         if (work_req < 0)
             work_req = 0;
 
@@ -546,7 +547,7 @@ bool butchery(int which_corpse)
         {
             return (false);
         }
-        success = _butcher_corpse(corpse_id);
+        success = _butcher_corpse(corpse_id, true);
         _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);
 
         // Remind player of corpses in pack that could be butchered or
@@ -561,6 +562,8 @@ bool butchery(int which_corpse)
     bool bottle_all    = false; // for Vampires
     bool force_butcher = false;
     bool repeat_prompt = false;
+    bool did_weap_swap = false;
+    bool first_corpse  = true;
     int keyin;
     for (stack_iterator si(you.pos()); si; ++si)
     {
@@ -611,10 +614,15 @@ bool butchery(int which_corpse)
                 case 'c':
                 case 'd':
                 case 'a':
-                    if (!_prepare_butchery(can_butcher, removed_gloves,
-                                           wpn_switch, butcher_tool))
+                    if (!did_weap_swap)
                     {
-                        return (false);
+                        if (_prepare_butchery(can_butcher, removed_gloves,
+                                              wpn_switch, butcher_tool))
+                        {
+                            did_weap_swap = true;
+                        }
+                        else
+                            return (false);
                     }
                     corpse_id = si->index();
 
@@ -654,11 +662,15 @@ bool butchery(int which_corpse)
 
         if (corpse_id != -1)
         {
-            if (_butcher_corpse(corpse_id, force_butcher || butcher_all))
+            if (_butcher_corpse(corpse_id, first_corpse,
+                force_butcher || butcher_all))
+            {
                 success = true;
+                first_corpse = false;
+            }
 
-            if (!butcher_all && !bottle_all)
-                break;
+//            if (!butcher_all && !bottle_all)
+//                break;
         }
     }
 
@@ -2093,7 +2105,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
             if (ur_herbivorous)
             {
                 if (!suppress_msg)
-                    mpr("You can't eat raw meat!");
+                    mpr("Blech - you need greens!");
                 return (false);
             }
             else if (kindof_thing == FOOD_CHUNK)
@@ -2328,8 +2340,16 @@ static bool _vampire_consume_corpse(const int slot, bool invent)
     int chunk_amount     = 1 + max_chunks/2;
         chunk_amount     = stepdown_value( chunk_amount, 4, 4, 12, 12 );
 
-    start_delay( DELAY_FEED_VAMPIRE, 1 + chunk_amount/2,
-                 (int) invent, slot );
+    // Get some nutrition right away, in case we're interrupted.
+    // (-1 for the starting message.)
+    vampire_nutrition_per_turn(corpse, -1);
+    if (chunk_amount/2 > 0)
+    {
+        // The draining delay doesn't have a start action, and we only need
+        // the continue/finish messages if it takes longer than 1 turn.
+        start_delay( DELAY_FEED_VAMPIRE, chunk_amount/2,
+                     (int) invent, slot );
+    }
 
     return (true);
 }
