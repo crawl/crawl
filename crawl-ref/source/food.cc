@@ -1965,7 +1965,7 @@ static int _player_likes_food_type(int type)
         return 0;
     }
 
-    mprf(MSGCH_ERROR, "Couldn't handle food type: %d");
+    mprf(MSGCH_ERROR, "Couldn't handle food type: %d", type);
     return 0;
 }
 
