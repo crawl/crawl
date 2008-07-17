@@ -972,8 +972,7 @@ void scorefile_entry::init()
     num_diff_runes = 0;
 
     FixedVector< int, NUM_RUNE_TYPES >  rune_array;
-    for (int i = 0; i < NUM_RUNE_TYPES; i++)
-         rune_array[i] = 0;
+    rune_array.init(0);
 
     // inventory value is only calculated for winners
     const bool calc_item_values = (death_type == KILLED_BY_WINNING);
@@ -1003,9 +1002,10 @@ void scorefile_entry::init()
                     continue;
                 }
 
-                rune_array[ you.inv[d].plus ] += you.inv[d].quantity;
                 if (rune_array[ you.inv[d].plus ] == 0)
                     num_diff_runes++;
+
+                rune_array[ you.inv[d].plus ] += you.inv[d].quantity;
             }
         }
     }
