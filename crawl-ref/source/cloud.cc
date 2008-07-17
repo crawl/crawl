@@ -157,7 +157,7 @@ void manage_clouds(void)
         }
 
         expose_items_to_element(cloud2beam(env.cloud[cc].type),
-                                env.cloud[cc].x, env.cloud[cc].y);
+                                env.cloud[cc].x, env.cloud[cc].y, 2);
 
         _dissipate_cloud(cc, env.cloud[cc], dissipate);
     }

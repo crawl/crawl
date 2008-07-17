@@ -541,7 +541,7 @@ static void _expose_invent_to_element(beam_type flavour, int strength)
     }
 }
 
-void expose_items_to_element(beam_type flavour, int x, int y)
+void expose_items_to_element(beam_type flavour, int x, int y, int strength)
 {
     int num_dest = 0;
 
@@ -554,16 +554,18 @@ void expose_items_to_element(beam_type flavour, int x, int y)
         if (!is_valid_item(*si))
             continue;
 
-        if ( si->base_type == target_class
-             || (target_class == OBJ_FOOD && si->base_type == OBJ_CORPSES))
+        if (si->base_type == target_class
+            || target_class == OBJ_FOOD && si->base_type == OBJ_CORPSES)
         {
-            num_dest += si->quantity;
-            item_was_destroyed(*si);
-            destroy_item(si->index());
+            if (x_chance_in_y(strength, 100))
+            {
+                num_dest++;
+                dec_mitm_item_quantity(si->index(), 1);
+            }
         }
     }
 
-    if (num_dest > 0)
+    if (num_dest)
     {
         if (see_grid(x, y))
         {
@@ -605,7 +607,7 @@ void expose_items_to_element(beam_type flavour, int x, int y)
 //
 // This function now calls _expose_invent_to_element() if strength > 0.
 //
-// XXX: this function is far from perfect and a work in progress.
+// XXX: This function is far from perfect and a work in progress.
 void expose_player_to_element(beam_type flavour, int strength)
 {
     // Note that BEAM_TELEPORT is sent here when the player

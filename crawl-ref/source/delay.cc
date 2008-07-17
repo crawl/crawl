@@ -698,13 +698,6 @@ void handle_delay( void )
             if (apply_area_visible(_recite_to_monsters, delay.parm1))
                 viewwindow(true, false);
             break;
-        case DELAY_FEED_VAMPIRE:
-        {
-            item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
-                                            : mitm[delay.parm2]);
-            vampire_nutrition_per_turn(corpse, -1);
-            break;
-        }
         default:
             break;
         }

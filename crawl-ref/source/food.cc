@@ -2084,7 +2084,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
             if (ur_herbivorous)
             {
                 if (!suppress_msg)
-                    mpr("You can't eat raw meat!");
+                    mpr("Blech - you need greens!");
                 return (false);
             }
             else if (kindof_thing == FOOD_CHUNK)
@@ -2319,8 +2319,16 @@ static bool _vampire_consume_corpse(const int slot, bool invent)
     int chunk_amount     = 1 + max_chunks/2;
         chunk_amount     = stepdown_value( chunk_amount, 4, 4, 12, 12 );
 
-    start_delay( DELAY_FEED_VAMPIRE, 1 + chunk_amount/2,
-                 (int) invent, slot );
+    // Get some nutrition right away, in case we're interrupted.
+    // (-1 for the starting message.)
+    vampire_nutrition_per_turn(corpse, -1);
+    if (chunk_amount/2 > 0)
+    {
+        // The draining delay doesn't have a start action, and we only need
+        // the continue/finish messages if it takes longer than 1 turn.
+        start_delay( DELAY_FEED_VAMPIRE, chunk_amount/2,
+                     (int) invent, slot );
+    }
 
     return (true);
 }
