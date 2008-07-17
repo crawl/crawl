@@ -68,7 +68,7 @@ We are content that all of these changes are genuine improvements. Should
 your brain be hardwired to the old settings, you can effectively enforce
 the 0.3.4 state by using the following options:
    include                 = 034_monster_glyphs.txt
-   additional_macro_file   = 034_command_keys.txt
+   include                 = 034_command_keys.txt
    always_confirm_butcher  = true
 
 Note that the header of init.txt contains these lines. (It contains some

@@ -217,6 +217,8 @@ int main( int argc, char *argv[] )
 {
     _compile_time_asserts();  // Just to quiet "unused static function" warning.
 
+    // Hardcoded initial keybindings.
+    init_keybindings();
 
     // Load in the system environment variables
     get_system_environment();
@@ -3394,135 +3396,22 @@ static command_type _get_next_cmd()
     return _keycode_to_command(keyin);
 }
 
-// For now, this is an extremely yucky hack.
+// We handle the synthetic keys, key_to_command() handles the
+// real ones.
 static command_type _keycode_to_command( keycode_type key )
 {
     switch ( key )
     {
 #ifdef USE_TILE
-    case '-':             return CMD_EDIT_PLAYER_TILE;
     case CK_MOUSE_CMD:    return CMD_NEXT_CMD;
 #endif
 
     case KEY_MACRO_DISABLE_MORE: return CMD_DISABLE_MORE;
     case KEY_MACRO_ENABLE_MORE:  return CMD_ENABLE_MORE;
     case KEY_REPEAT_KEYS:        return CMD_REPEAT_KEYS;
-    case 'b': return CMD_MOVE_DOWN_LEFT;
-    case 'h': return CMD_MOVE_LEFT;
-    case 'j': return CMD_MOVE_DOWN;
-    case 'k': return CMD_MOVE_UP;
-    case 'l': return CMD_MOVE_RIGHT;
-    case 'n': return CMD_MOVE_DOWN_RIGHT;
-    case 'u': return CMD_MOVE_UP_RIGHT;
-    case 'y': return CMD_MOVE_UP_LEFT;
 
-    case 'a': return CMD_USE_ABILITY;
-    case 'c': return CMD_BUTCHER;
-    case 'd': return CMD_DROP;
-    case 'e': return CMD_EAT;
-    case 'f': return CMD_FIRE;
-    case 'g': return CMD_PICKUP;
-    case 'i': return CMD_DISPLAY_INVENTORY;
-    case 'm': return CMD_DISPLAY_SKILLS;
-    case 'o': return CMD_EXPLORE;
-    case 'p': return CMD_PRAY;
-    case 'q': return CMD_QUAFF;
-    case 'r': return CMD_READ;
-    case 's': return CMD_SEARCH;
-    case 't': return CMD_SHOUT;
-    case 'v': return CMD_EVOKE;
-    case 'w': return CMD_WIELD_WEAPON;
-    case 'x': return CMD_LOOK_AROUND;
-    case 'z': return CMD_CAST_SPELL;
-
-    case 'B': return CMD_RUN_DOWN_LEFT;
-    case 'H': return CMD_RUN_LEFT;
-    case 'J': return CMD_RUN_DOWN;
-    case 'K': return CMD_RUN_UP;
-    case 'L': return CMD_RUN_RIGHT;
-    case 'N': return CMD_RUN_DOWN_RIGHT;
-    case 'U': return CMD_RUN_UP_RIGHT;
-    case 'Y': return CMD_RUN_UP_LEFT;
-
-    case 'A': return CMD_DISPLAY_MUTATIONS;
-    case 'C': return CMD_CLOSE_DOOR;
-    case 'D': return CMD_NO_CMD;
-    case 'E': return CMD_EXPERIENCE_CHECK;
-    case 'F': return CMD_THROW_ITEM_NO_QUIVER;
-    case CONTROL('G'):
-    case 'G': return CMD_INTERLEVEL_TRAVEL;
-    case 'I': return CMD_DISPLAY_SPELLS;
-    case 'M': return CMD_MEMORISE_SPELL;
-    case 'O': return CMD_OPEN_DOOR;
-    case 'P': return CMD_WEAR_JEWELLERY;
-    case 'Q': return CMD_QUIVER_ITEM;
-    case 'R': return CMD_REMOVE_JEWELLERY;
-    case 'S': return CMD_SAVE_GAME;
-    case 'T': return CMD_REMOVE_ARMOUR;
-    case 'V': return CMD_FULL_VIEW;
-    case 'W': return CMD_WEAR_ARMOUR;
-    case 'X': return CMD_DISPLAY_MAP;
-    case 'Z': return CMD_ZAP_WAND;
-
-    case '.': return CMD_MOVE_NOWHERE;
-    case '<': return CMD_GO_UPSTAIRS;
-    case '>': return CMD_GO_DOWNSTAIRS;
-    case '@': return CMD_DISPLAY_CHARACTER_STATUS;
-    case '%': return CMD_RESISTS_SCREEN;
-    case ',': return CMD_PICKUP;
-    case ':': return CMD_MAKE_NOTE;
-    case '_': return CMD_READ_MESSAGES;
-    case ';': return CMD_INSPECT_FLOOR;
-    case '^': return CMD_DISPLAY_RELIGION;
-    case '#': return CMD_CHARACTER_DUMP;
-    case '=': return CMD_ADJUST_INVENTORY;
-    case '?': return CMD_DISPLAY_COMMANDS;
-    case '!': return CMD_ANNOTATE_LEVEL;
-    case CONTROL('D'):
-    case '~': return CMD_MACRO_ADD;
-    case '&': return CMD_WIZARD;
-    case '"': return CMD_LIST_JEWELLERY;
-    case '{': return CMD_INSCRIBE_ITEM;
-    case '[': return CMD_LIST_ARMOUR;
-    case ']': return CMD_LIST_EQUIPMENT;
-    case '(': return CMD_CYCLE_QUIVER_FORWARD;
-    case ')': return CMD_LIST_WEAPONS;
-    case '\\': return CMD_DISPLAY_KNOWN_OBJECTS;
-    case '\'': return CMD_WEAPON_SWAP;
-    case '`': return CMD_PREV_CMD_AGAIN;
-
-    case '0': return CMD_REPEAT_CMD;
-    case '5': return CMD_REST;
-
-    case CONTROL('B'): return CMD_OPEN_DOOR_DOWN_LEFT;
-    case CONTROL('H'): return CMD_OPEN_DOOR_LEFT;
-    case CONTROL('J'): return CMD_OPEN_DOOR_DOWN;
-    case CONTROL('K'): return CMD_OPEN_DOOR_UP;
-    case CONTROL('L'): return CMD_OPEN_DOOR_RIGHT;
-    case CONTROL('N'): return CMD_OPEN_DOOR_DOWN_RIGHT;
-    case CONTROL('U'): return CMD_OPEN_DOOR_UP_LEFT;
-    case CONTROL('Y'): return CMD_OPEN_DOOR_UP_RIGHT;
-
-    case CONTROL('A'): return CMD_TOGGLE_AUTOPICKUP;
-    case CONTROL('C'): return CMD_CLEAR_MAP;
-    case CONTROL('E'): return CMD_FORGET_STASH;
-    case CONTROL('F'): return CMD_SEARCH_STASHES;
-    case CONTROL('I'): return CMD_NO_CMD; // Tab on most systems
-    case CONTROL('M'): return CMD_NO_CMD; // Enter on most systems
-    case CONTROL('O'): return CMD_DISPLAY_OVERMAP;
-    case CONTROL('P'): return CMD_REPLAY_MESSAGES;
-    case CONTROL('Q'): return CMD_QUIT;
-    case CONTROL('R'): return CMD_REDRAW_SCREEN;
-    case CONTROL('S'): return CMD_MARK_STASH;
-    case CONTROL('T'): return CMD_TOGGLE_FRIENDLY_PICKUP;
-    case CONTROL('V'): return CMD_NO_CMD;
-    case CONTROL('W'): return CMD_FIX_WAYPOINT;
-    case CONTROL('X'): return CMD_SAVE_GAME_NOW;
-    case CONTROL('Z'): return CMD_SUSPEND_GAME;
-
-    case CK_MOUSE_MOVE:  return CMD_MOUSE_MOVE;
-    case CK_MOUSE_CLICK: return CMD_MOUSE_CLICK;
-    default: return CMD_NO_CMD;
+    default:
+        return key_to_command(key, KC_DEFAULT);
     }
 }
 

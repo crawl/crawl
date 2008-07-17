@@ -514,8 +514,17 @@ enum command_type
 
     CMD_ANNOTATE_LEVEL,
 
+    // Repeat previous command
+    CMD_PREV_CMD_AGAIN,
+
+    // Repeat next command a given number of times
+    CMD_REPEAT_CMD,
+
+    CMD_MAX_NORMAL = CMD_REPEAT_CMD,
+
     // overmap commands
     CMD_MAP_CLEAR_MAP,
+    CMD_MIN_OVERMAP = CMD_MAP_CLEAR_MAP,
     CMD_MAP_ADD_WAYPOINT,
     CMD_MAP_EXCLUDE_AREA,
     CMD_MAP_CLEAR_EXCLUDES,
@@ -558,8 +567,11 @@ enum command_type
 
     CMD_MAP_EXIT_MAP,
 
+    CMD_MAX_OVERMAP = CMD_MAP_EXIT_MAP,
+
     // targeting commands
     CMD_TARGET_DOWN_LEFT,
+    CMD_MIN_TARGET = CMD_TARGET_DOWN_LEFT,
     CMD_TARGET_DOWN,
     CMD_TARGET_DOWN_RIGHT,
     CMD_TARGET_LEFT,
@@ -609,29 +621,30 @@ enum command_type
     CMD_TARGET_WIZARD_MOVE,
     CMD_TARGET_WIZARD_PATHFIND,
     CMD_TARGET_HELP,
+    CMD_MAX_TARGET = CMD_TARGET_HELP,
 
 #ifdef USE_TILE
     CMD_TARGET_MOUSE_MOVE,
+    CMD_MIN_TILE = CMD_TARGET_MOUSE_MOVE,
     CMD_TARGET_MOUSE_SELECT,
     CMD_EDIT_PLAYER_TILE,
+    CMD_MAX_TILE = CMD_EDIT_PLAYER_TILE,
 #endif
 
     // Disable/enable -more- prompts.
     CMD_DISABLE_MORE,
+    CMD_MIN_SYNTHETIC = CMD_DISABLE_MORE,
     CMD_ENABLE_MORE,
 
     // [ds] Silently ignored, requests another round of input.
     CMD_NEXT_CMD,
 
-    // Repeat previous command
-    CMD_PREV_CMD_AGAIN,
-
-    // Repeat next command a given number of times
-    CMD_REPEAT_CMD,
-
     // Stick the keyspresses of the command to be repeated into the
     // input buffer.
-    CMD_REPEAT_KEYS
+    CMD_REPEAT_KEYS,
+
+    // Must always be last
+    CMD_MAX_CMD
 };
 
 enum conduct_type

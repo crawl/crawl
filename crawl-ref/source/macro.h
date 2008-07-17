@@ -29,6 +29,10 @@ enum KeymapContext {
     KC_TARGETING,       // Only during 'x' and other targeting modes
     KC_CONFIRM,         // When being asked y/n/q questions
 
+#ifdef USE_TILE
+    KC_TILE,            // For context_for_command()
+#endif
+
     KC_CONTEXT_COUNT,   // Must always be the last real context
     KC_NONE             // Don't apply any keymaps (for menus)
 };
@@ -85,4 +89,17 @@ void insert_macro_into_buff(const keyseq& keys);
 
 int get_macro_buf_size();
 
+///////////////////////////////////////////////////////////////
+// Keybinding stuff
+
+void init_keybindings();
+
+command_type name_to_command(std::string name);
+std::string  command_to_name(command_type cmd);
+
+command_type  key_to_command(int key, KeymapContext context);
+int           command_to_key(command_type cmd);
+KeymapContext context_for_command(command_type cmd);
+
+void bind_command_to_key(command_type cmd, int key);
 #endif

@@ -82,7 +82,7 @@ The contents of this text are:
                 autoinscribe
 4-n     Macro related Options.
                 flush.failure, flush.command, flush.message,
-                macro_meta_entry, additional_macro_file
+                macro_meta_entry, additional_macro_file, bindkey
 4-o     Tiles Options.
                 tile_show_items, title_screen, tile_player_col,
                 tile_monster_col, tile_neutral_col, tile_friendly_col, 
@@ -1471,6 +1471,12 @@ macro_meta_entry = true
 additional_macro_file = path/to/filename
         Add an additional macro file to be loaded after macro.txt.
         You can have multiple additional_macro_file lines.
+
+bindkey = [^D] CMD_BUTCHER
+        Change which key invokes which command at a lower level of
+        operation than macros.  Useful in that macros cannot (yet)
+        invoke each other, but a macro can invoke a command whose
+        key has changed.
 
 4-o     Tiles Options.
 ----------------------
