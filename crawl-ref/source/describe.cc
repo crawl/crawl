@@ -1612,8 +1612,11 @@ bool is_dumpable_artefact( const item_def &item, bool verbose)
 //
 //---------------------------------------------------------------
 std::string get_item_description( const item_def &item, bool verbose,
-                                  bool dump )
+                                  bool dump, bool noquote )
 {
+    if (dump)
+        noquote = true;
+
     std::ostringstream description;
 
     if (!dump)
@@ -1674,7 +1677,7 @@ std::string get_item_description( const item_def &item, bool verbose,
         {
             std::string db_name = item.name(DESC_DBNAME, true, false, false);
             std::string db_desc =
-                getLongDescription(db_name, is_artefact(item));
+                getLongDescription(db_name, is_artefact(item) || noquote);
 
             if (db_desc.empty())
             {
@@ -1956,7 +1959,21 @@ void describe_feature_wide(int x, int y)
 // Returns true if spells can be shown to player.
 static bool _show_item_description(const item_def &item)
 {
-    const std::string description = get_item_description( item, 1 );
+    const unsigned int lineWidth = get_number_of_cols()  - 1;
+    const          int height    = get_number_of_lines();
+
+    std::string description = get_item_description( item, 1, false,
+                                                   Options.tutorial_left);
+
+    int num_lines = _count_desc_lines(description, lineWidth) + 1;
+
+    // XXX: hack: Leave room for "Inscribe item?" and the blank line above
+    // it by removing item quote.  This should really be taken care of
+    // by putting the quotes into a separate DB and treating them as
+    // a suffix that can be ignored by print_description().
+    if (height - num_lines <= 2)
+        description = get_item_description( item, 1, false, true);
+
     print_description(description);
     if (Options.tutorial_left)
         tutorial_describe_item(item);

@@ -2268,7 +2268,7 @@ static void _miscast_conjuration(int severity, const char* cause)
         case 0:
             msg::stream << "Smoke pours from your " << your_hand(true)
                         << '!' << std::endl;
-            big_cloud( CLOUD_GREY_SMOKE, KC_YOU,
+            big_cloud( CLOUD_GREY_SMOKE, (cause ? KC_OTHER : KC_YOU),
                        you.x_pos, you.y_pos, 20,
                        7 + random2(7) );
             break;
@@ -3256,7 +3256,7 @@ static void _miscast_fire(int severity, const char* cause)
         case 0:
             msg::stream << "Smoke pours from your "
                         << your_hand(true) << "!" << std::endl;
-            big_cloud( random_smoke_type(), KC_YOU,
+            big_cloud( random_smoke_type(), (cause ? KC_OTHER : KC_YOU),
                        you.x_pos, you.y_pos, 20, 7 + random2(7) );
             break;
 
@@ -3453,8 +3453,8 @@ static void _miscast_ice(int severity, const char* cause)
         case 1:
             msg::stream << "Freezing gasses pour from your "
                         << your_hand(true) << "!" << std::endl;
-            big_cloud(CLOUD_COLD, KC_YOU, you.x_pos, you.y_pos, 20,
-                      8 + random2(4));
+            big_cloud(CLOUD_COLD, (cause ? KC_OTHER : KC_YOU),
+                      you.x_pos, you.y_pos, 20, 8 + random2(4));
             break;
         }
         break;
@@ -3653,8 +3653,8 @@ static void _miscast_air(int severity, const char* cause)
         case 1:
             msg::stream << "Noxious gasses pour from your "
                         << your_hand(true) << "!" << std::endl;
-            big_cloud(CLOUD_STINK, KC_YOU, you.x_pos, you.y_pos, 20,
-                      9 + random2(4));
+            big_cloud(CLOUD_STINK, (cause ? KC_OTHER : KC_YOU),
+                      you.x_pos, you.y_pos, 20, 9 + random2(4));
             break;
         }
         break;
@@ -3684,8 +3684,8 @@ static void _miscast_air(int severity, const char* cause)
         case 1:
             msg::stream << "Venomous gasses pour from your "
                         << your_hand(true) << "!" << std::endl;
-            big_cloud( CLOUD_POISON, KC_YOU, you.x_pos, you.y_pos, 20,
-                       8 + random2(5) );
+            big_cloud( CLOUD_POISON, (cause ? KC_OTHER : KC_YOU),
+                       you.x_pos, you.y_pos, 20, 8 + random2(5) );
             break;
         }
     }
@@ -3754,7 +3754,7 @@ static void _miscast_poison(int severity, const char* cause)
             msg::stream << "Noxious gasses pour from your "
                         << your_hand(true) << "!" << std::endl;
             place_cloud(CLOUD_STINK, you.x_pos, you.y_pos,
-                        2 + random2(4), KC_YOU);
+                        2 + random2(4), (cause ? KC_OTHER : KC_YOU) );
             break;
         }
         break;
@@ -3774,8 +3774,8 @@ static void _miscast_poison(int severity, const char* cause)
 
         case 1:
             mpr("Noxious gasses pour from your hands!");
-            big_cloud(CLOUD_STINK, KC_YOU, you.x_pos, you.y_pos, 20,
-                      8 + random2(5));
+            big_cloud(CLOUD_STINK, (cause ? KC_OTHER : KC_YOU),
+                      you.x_pos, you.y_pos, 20, 8 + random2(5));
             break;
 
         case 2:
@@ -3802,8 +3802,8 @@ static void _miscast_poison(int severity, const char* cause)
         case 1:
             msg::stream << "Venomous gasses pour from your "
                         << your_hand(true) << "!" << std::endl;
-            big_cloud(CLOUD_POISON, KC_YOU, you.x_pos, you.y_pos, 20,
-                      7 + random2(7));
+            big_cloud(CLOUD_POISON, (cause ? KC_OTHER : KC_YOU),
+                      you.x_pos, you.y_pos, 20, 7 + random2(7));
             break;
         case 2:
             if (player_res_poison())
