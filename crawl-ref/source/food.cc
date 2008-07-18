@@ -337,7 +337,11 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
                                you.religion);
         }
 
-        int work_req = 4 - mitm[corpse_id].plus2 - (first_corpse ? 1 : 0);
+        // Start work on the first corpse we butcher.
+        if (first_corpse)
+            mitm[corpse_id].plus2++;
+
+        int work_req = 4 - mitm[corpse_id].plus2;
         if (work_req < 0)
             work_req = 0;
 

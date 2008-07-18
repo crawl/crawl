@@ -3521,7 +3521,8 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
     // If a monster chooses a two-handed weapon as main weapon, it will
     // first have to drop any shield it might wear.
     // (Monsters will always favour damage over protection.)
-    if (slot == MSLOT_WEAPON && inv[MSLOT_SHIELD] != NON_ITEM
+    if ((slot == MSLOT_WEAPON || slot == MSLOT_ALT_WEAPON)
+        && inv[MSLOT_SHIELD] != NON_ITEM
         && hands_reqd(item, body_size(PSIZE_BODY)) == HANDS_TWO)
     {
         if (!drop_item(MSLOT_SHIELD, near))
@@ -3654,7 +3655,8 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
 
 bool monsters::pickup_melee_weapon(item_def &item, int near)
 {
-    if (mons_wields_two_weapons(this))
+    const bool dual_wielding = mons_wields_two_weapons(this);
+    if (dual_wielding)
     {
         // If we have either weapon slot free, pick up the weapon.
         if (inv[MSLOT_WEAPON] == NON_ITEM)
@@ -3668,41 +3670,44 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
     int eslot = -1;
     item_def *weap;
 
-    // FIXME: A monster already wielding a melee weapon can put a second-rate
-    //        weapon into its alternate slot but never use it.
-    // To fix this, this strange loop will have to be improved:
-    // - get weapons of first and second slot
-    // - compare weapons (or their non-existence) to the new one
-    // - ignore ranged weapons (we're picking up a melee weapon)
-    // - replace an existing melee weapon by a better one
-    // - else don't do anything
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         weap = mslot_item(static_cast<mon_inv_type>(i));
 
         if (!weap)
         {
-            // If no weapon in this slot, pick up this one.
-            eslot = i;
-            break;
+            // If no weapon in this slot, mark this one.
+            if (eslot == -1)
+                eslot = i;
         }
-
-        if (is_range_weapon(*weap))
-            continue;
-
-        // Don't drop weapons specific to the monster.
-        if (_is_signature_weapon(this, *weap))
-            continue;
-
-        // If the new weapon is better than the current one, replace it.
-        // If wielding two weapons, replace the one with the lower dam. rating.
-        if (mons_weapon_damage_rating(*weap) < mdam_rating
-            && ( eslot == -1 // current is main weapon
-                 || !weap->cursed()
-                    && mons_weapon_damage_rating(*weap)
-                       < mons_weapon_damage_rating(*mslot_item(MSLOT_WEAPON)) ))
+        else
         {
-            eslot = i;
+            if (is_range_weapon(*weap))
+                continue;
+
+            // Don't drop weapons specific to the monster.
+            if (_is_signature_weapon(this, *weap) && !dual_wielding)
+                return (false);
+
+            // If the new weapon is better than the current one, replace it.
+            if (mons_weapon_damage_rating(*weap) < mdam_rating
+                && !weap->cursed())
+            {
+                if (!dual_wielding
+                    || i == MSLOT_WEAPON
+                    || mons_weapon_damage_rating(*weap)
+                       < mons_weapon_damage_rating(*mslot_item(MSLOT_WEAPON)))
+                {
+                    eslot = i;
+                    if (!dual_wielding)
+                        break;
+                }
+            }
+            else if (!dual_wielding)
+            {
+                // We've got a good melee weapon, that's enough.
+               return (false);
+            }
         }
     }
 
@@ -3976,7 +3981,7 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
             launch = mslot_item(static_cast<mon_inv_type>(i));
             if (launch)
             {
-                const int bow_brand = get_bow_brand(*launch);
+                const int bow_brand = get_weapon_brand(*launch);
                 const int item_brand = get_ammo_brand(item);
                 // If this ammunition is better, drop the old ones.
                 // Don't upgrade to ammunition whose brand cancels the
@@ -3984,7 +3989,8 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
                 if (fires_ammo_type(*launch) == item.sub_type
                     && (fires_ammo_type(*launch) != miss->sub_type
                         || item.plus > miss->plus
-                        || item.plus == miss->plus
+                           && get_ammo_brand(*miss) == item_brand
+                        || item.plus >= miss->plus
                            && get_ammo_brand(*miss) == SPMSL_NORMAL
                            && item_brand != SPMSL_NORMAL
                            && (bow_brand != SPWPN_FLAME
@@ -4009,7 +4015,6 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
             if (!drop_item(MSLOT_MISSILE, near))
                 return (false);
         }
-
     }
 
     return pickup(item, MSLOT_MISSILE, near);
