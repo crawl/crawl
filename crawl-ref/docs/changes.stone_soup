@@ -1,3 +1,11 @@
+Stone Soup 0.4.2 (2008????)
+---------------------------
+
+Disclaimer: These are merely the highlights, not an exhaustive list of changes.
+
+* Fixed vampire draining not destroying small corpses.
+* Fixed repeatedly interrupted butchering making no progress.
+
 Stone Soup 0.4.1 (20080717)
 ---------------------------
 
