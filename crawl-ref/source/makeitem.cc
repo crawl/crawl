@@ -3707,6 +3707,17 @@ static void _give_ammo(monsters *mon, int level,
                               _got_curare_roll(level) ? SPMSL_CURARE
                                                       : SPMSL_POISONED);
         }
+        else
+        {
+            // Sanity check to avoid useless brands.
+            const int bow_brand = get_weapon_brand(*launcher);
+            const int ammo_brand = get_ammo_brand(mitm[thing_created]);
+            if (ammo_brand != SPMSL_NORMAL
+                && (bow_brand == SPWPN_FLAME || bow_brand == SPWPN_FROST))
+            {
+                mitm[thing_created].special = SPMSL_NORMAL;
+            }
+        }
 
         // Master archers get double ammo - archery is their only attack.
         if (mon->type == MONS_DEEP_ELF_MASTER_ARCHER)

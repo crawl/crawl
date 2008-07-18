@@ -314,7 +314,8 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     return (true);
 }
 
-static bool _butcher_corpse(int corpse_id, bool force_butcher = false)
+static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
+                            bool force_butcher = false)
 {
     ASSERT(corpse_id != -1);
 
@@ -335,6 +336,10 @@ static bool _butcher_corpse(int corpse_id, bool force_butcher = false)
                                           : " demands fresh blood!",
                                you.religion);
         }
+
+        // Start work on the first corpse we butcher.
+        if (first_corpse)
+            mitm[corpse_id].plus2++;
 
         int work_req = 4 - mitm[corpse_id].plus2;
         if (work_req < 0)
@@ -546,7 +551,7 @@ bool butchery(int which_corpse)
         {
             return (false);
         }
-        success = _butcher_corpse(corpse_id);
+        success = _butcher_corpse(corpse_id, true);
         _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);
 
         // Remind player of corpses in pack that could be butchered or
@@ -561,6 +566,7 @@ bool butchery(int which_corpse)
     bool bottle_all    = false; // for Vampires
     bool force_butcher = false;
     bool repeat_prompt = false;
+    bool first_corpse  = true;
     int keyin;
     for (stack_iterator si(you.pos()); si; ++si)
     {
@@ -654,8 +660,11 @@ bool butchery(int which_corpse)
 
         if (corpse_id != -1)
         {
-            if (_butcher_corpse(corpse_id, force_butcher || butcher_all))
+            if (_butcher_corpse(corpse_id, first_corpse,
+                force_butcher || butcher_all))
+            {
                 success = true;
+            }
 
             if (!butcher_all && !bottle_all)
                 break;

@@ -876,8 +876,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
         int count = 0;
         int skill = SK_FIGHTING;
 
-        // Can't do much with launchers, so we'll avoid them for now -- bwr
-        for (int i = SK_SHORT_BLADES; i < SK_DARTS; i++)
+        for (int i = SK_SHORT_BLADES; i <= SK_DARTS; i++)
         {
             if (i == SK_UNUSED_1)
                 continue;

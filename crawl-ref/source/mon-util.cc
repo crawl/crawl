@@ -3969,13 +3969,21 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
             launch = mslot_item(static_cast<mon_inv_type>(i));
             if (launch)
             {
+                const int bow_brand = get_weapon_brand(*launch);
+                const int item_brand = get_ammo_brand(item);
                 // If this ammunition is better, drop the old ones.
+                // Don't upgrade to ammunition whose brand cancels the
+                // launcher brand or doesn't improve it further.
                 if (fires_ammo_type(*launch) == item.sub_type
                     && (fires_ammo_type(*launch) != miss->sub_type
                         || item.plus > miss->plus
-                        || item.plus == miss->plus
+                           && get_ammo_brand(*miss) == item_brand
+                        || item.plus >= miss->plus
                            && get_ammo_brand(*miss) == SPMSL_NORMAL
-                           && get_ammo_brand(item) != SPMSL_NORMAL))
+                           && item_brand != SPMSL_NORMAL
+                           && (bow_brand != SPWPN_FLAME
+                               || item_brand == SPMSL_POISONED)
+                           && bow_brand != SPWPN_FROST))
                 {
                     if (!drop_item(MSLOT_MISSILE, near))
                         return (false);
