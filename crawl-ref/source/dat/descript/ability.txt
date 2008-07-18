@@ -342,7 +342,9 @@ when you left the dungeon.
 %%%%
 Bend Space
 
-Cause distortional damage to a targeted monster.
+Bends the fabric of space around you, instantly translocating you a small
+distance and possibly also translocating and damaging monsters in your
+vicinity.
 %%%%
 Banish
 
