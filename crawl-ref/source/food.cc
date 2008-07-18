@@ -2347,13 +2347,10 @@ static bool _vampire_consume_corpse(const int slot, bool invent)
     // Get some nutrition right away, in case we're interrupted.
     // (-1 for the starting message.)
     vampire_nutrition_per_turn(corpse, -1);
-    if (chunk_amount/2 > 0)
-    {
-        // The draining delay doesn't have a start action, and we only need
-        // the continue/finish messages if it takes longer than 1 turn.
-        start_delay( DELAY_FEED_VAMPIRE, chunk_amount/2,
-                     (int) invent, slot );
-    }
+    // The draining delay doesn't have a start action, and we only need
+    // the continue/finish messages if it takes longer than 1 turn.
+    start_delay( DELAY_FEED_VAMPIRE, chunk_amount/2,
+                 (int) invent, slot );
 
     return (true);
 }
