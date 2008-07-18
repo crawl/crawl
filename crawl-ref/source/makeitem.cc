@@ -2912,8 +2912,9 @@ static void _give_monster_item(monsters *mon, int thing,
     item_def &mthing = mitm[thing];
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf("Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
-                               mon->name(DESC_PLAIN).c_str());
+    mprf(MSGCH_DIAGNOSTICS,
+         "Giving %s to %s...", mthing.name(DESC_PLAIN).c_str(),
+         mon->name(DESC_PLAIN).c_str());
 #endif
 
     mthing.x = 0;

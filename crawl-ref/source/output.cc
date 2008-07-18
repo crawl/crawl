@@ -1171,7 +1171,8 @@ std::string mpr_monster_list(bool past)
 
 #ifndef USE_TILE
 monster_pane_info::monster_pane_info(const monsters *m)
-    : m_mon(m)
+    : m_mon(m), m_attitude(ATT_HOSTILE), m_difficulty(0),
+      m_brands(0), m_fullname(true)
 {
     // XXX: this doesn't take into account ENCH_NEUTRAL, but that's probably
     // a bug for mons_attitude, not this.
@@ -1181,10 +1182,11 @@ monster_pane_info::monster_pane_info(const monsters *m)
 
     // Currently, difficulty is defined as "average hp".  Leaks too much info?
     const monsterentry* me = get_monster_data(m->type);
+    // [ds] XXX: Use monster experience value as a better indicator of diff.?
     m_difficulty = me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]>>1))
         + me->hpdice[3];
 
-    m_brands = 0;
+    // [ds] XXX: Kill the magic numbers.
     if (mons_looks_stabbable(m))   m_brands |= 1;
     if (mons_looks_distracted(m))  m_brands |= 2;
     if (m->has_ench(ENCH_BERSERK)) m_brands |= 4;
@@ -2835,4 +2837,3 @@ std::string _status_mut_abilities()
 
     return text;
 }
-
