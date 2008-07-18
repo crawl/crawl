@@ -501,6 +501,8 @@ static void _expose_invent_to_element(beam_type flavour, int strength)
 
                     if (dec_inv_item_quantity(i, 1))
                         break;
+                    else if (is_blood_potion(you.inv[i]))
+                        remove_oldest_blood_potion(you.inv[i]);
                 }
             }
         }
