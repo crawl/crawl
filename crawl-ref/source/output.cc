@@ -468,7 +468,7 @@ static void _print_stats_wp(int y)
             textcolor(prefcol);
 
         cprintf("%s",
-                wpn.name(DESC_INVENTORY, true)
+                wpn.name(DESC_INVENTORY, true, false, true)
                 .substr(0, crawl_view.hudsz.x - 4).c_str());
         textcolor(LIGHTGREY);
     }
