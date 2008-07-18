@@ -4036,6 +4036,8 @@ void give_armour(monsters *mon, int level)
             mitm[bp].base_type = OBJ_ARMOUR;
             mitm[bp].sub_type  = ARM_CENTAUR_BARDING;
         }
+        else
+            return;
         break;
 
     case MONS_NAGA:
@@ -4056,6 +4058,8 @@ void give_armour(monsters *mon, int level)
             mitm[bp].base_type = OBJ_ARMOUR;
             mitm[bp].sub_type  = ARM_ROBE;
         }
+        else
+            return;
         break;
 
     case MONS_DONALD:
