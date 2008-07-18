@@ -741,6 +741,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     return (true);
 }
 
+// Removes the oldest timer of a stack of blood potions.
 // Mostly used for (q)uaff, (f)ire, and Evaporate.
 long remove_oldest_blood_potion(item_def &stack)
 {
@@ -759,7 +760,7 @@ long remove_oldest_blood_potion(item_def &stack)
     timer.pop_back();
 
     // The quantity will be decreased elsewhere.
-    return val;
+    return (val);
 }
 
 // Used whenever copies of blood potions have to be cleaned up.

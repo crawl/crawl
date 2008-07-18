@@ -559,7 +559,11 @@ void expose_items_to_element(beam_type flavour, int x, int y, int strength)
             if (x_chance_in_y(strength, 100))
             {
                 num_dest++;
-                dec_mitm_item_quantity(si->index(), 1);
+                if (!dec_mitm_item_quantity(si->index(), 1)
+                    && is_blood_potion(*si))
+                {
+                    remove_oldest_blood_potion(*si);
+                }
             }
         }
     }

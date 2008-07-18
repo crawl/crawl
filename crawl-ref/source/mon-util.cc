@@ -3668,6 +3668,14 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
     int eslot = -1;
     item_def *weap;
 
+    // FIXME: A monster already wielding a melee weapon can put a second-rate
+    //        weapon into its alternate slot but never use it.
+    // To fix this, this strange loop will have to be improved:
+    // - get weapons of first and second slot
+    // - compare weapons (or their non-existence) to the new one
+    // - ignore ranged weapons (we're picking up a melee weapon)
+    // - replace an existing melee weapon by a better one
+    // - else don't do anything
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         weap = mslot_item(static_cast<mon_inv_type>(i));
@@ -3945,7 +3953,8 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
 
             // Monsters in a fight will only pick up missiles if doing so
             // is worthwhile.
-            if (!mons_is_wandering(this) && (!mons_friendly(this) || foe != MHITYOU)
+            if (!mons_is_wandering(this)
+                && (!mons_friendly(this) || foe != MHITYOU)
                 && (item.quantity < 5 || miss && miss->quantity >= 7))
             {
                 return (false);
@@ -3967,13 +3976,20 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
             launch = mslot_item(static_cast<mon_inv_type>(i));
             if (launch)
             {
+                const int bow_brand = get_bow_brand(*launch);
+                const int item_brand = get_ammo_brand(item);
                 // If this ammunition is better, drop the old ones.
+                // Don't upgrade to ammunition whose brand cancels the
+                // launcher brand or doesn't improve it further.
                 if (fires_ammo_type(*launch) == item.sub_type
                     && (fires_ammo_type(*launch) != miss->sub_type
                         || item.plus > miss->plus
                         || item.plus == miss->plus
                            && get_ammo_brand(*miss) == SPMSL_NORMAL
-                           && get_ammo_brand(item) != SPMSL_NORMAL))
+                           && item_brand != SPMSL_NORMAL
+                           && (bow_brand != SPWPN_FLAME
+                               || item_brand == SPMSL_POISONED)
+                           && bow_brand != SPWPN_FROST))
                 {
                     if (!drop_item(MSLOT_MISSILE, near))
                         return (false);

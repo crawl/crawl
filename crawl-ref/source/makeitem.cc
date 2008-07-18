@@ -1417,21 +1417,21 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_CROSSBOW:
         {
             const int tmp = random2(1000);
-            if ( tmp < 375 )
+            if (tmp < 375)
                 rc = SPWPN_FLAME;
-            else if ( tmp < 750 )
+            else if (tmp < 750)
                 rc = SPWPN_FROST;
-            else if ( tmp < 920 )
+            else if (tmp < 920)
                 rc = SPWPN_PROTECTION;
-            else if ( tmp < 980 )
+            else if (tmp < 980)
                 rc = SPWPN_VORPAL;
             else
                 rc = SPWPN_SPEED;
             break;
         }
 
-        // quarterstaff - not powerful, as this would make
-        // the 'staves' skill just too good
+        // Quarterstaff - not powerful, as this would make
+        // the 'staves' skill just too good.
         case WPN_QUARTERSTAFF:
             if (one_chance_in(30))
                 rc = SPWPN_PAIN;
@@ -1758,7 +1758,7 @@ static void _generate_missile_item(item_def& item, int force_type,
                                    0);
     }
 
-    // no fancy rocks -- break out before we get to racial/special stuff
+    // No fancy rocks -- break out before we get to racial/special stuff.
     if (item.sub_type == MI_LARGE_ROCK)
     {
         item.quantity = 2 + random2avg(5,2);
@@ -1783,7 +1783,7 @@ static void _generate_missile_item(item_def& item, int force_type,
                            _determine_missile_brand(item, item_level) );
     }
 
-    // reduced quantity if special
+    // Reduced quantity if special.
     if (item.sub_type == MI_JAVELIN
         || get_ammo_brand( item ) == SPMSL_CURARE
         || get_ammo_brand( item ) == SPMSL_RETURNING)
@@ -1798,7 +1798,7 @@ static void _generate_missile_item(item_def& item, int force_type,
     if (x_chance_in_y(11 + item_level, 100))
         item.plus += random2(5);
 
-    // elven arrows and dwarven bolts are quality items
+    // Elven arrows and dwarven bolts are quality items.
     if (get_equip_race(item) == ISFLAG_ELVEN && item.sub_type == MI_ARROW
         || get_equip_race(item) == ISFLAG_DWARVEN && item.sub_type == MI_BOLT)
     {
@@ -1835,7 +1835,10 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
 
         // 10% of boots become barding.
         if (item.sub_type == ARM_BOOTS && one_chance_in(10))
-            item.sub_type = coinflip() ? ARM_NAGA_BARDING : ARM_CENTAUR_BARDING;
+        {
+            item.sub_type = coinflip() ? ARM_NAGA_BARDING
+                                       : ARM_CENTAUR_BARDING;
+        }
 
         // Determine enchantment and cursedness.
         if (one_chance_in(5))
@@ -2759,7 +2762,7 @@ int items( int allow_uniques,       // not just true-false,
 
     item.quantity = 1;          // generally the case
 
-    // determine sub_type accordingly {dlb}:
+    // Determine sub_type accordingly. {dlb}
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
@@ -3637,7 +3640,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     if (mons_genus(mon->type) == MONS_NAGA)
         item_race = MAKE_ITEM_NO_RACE;
 
-    // only happens if something in above switch doesn't set it {dlb}
+    // Only happens if something in above switch doesn't set it. {dlb}
     if (item.base_type == OBJ_UNASSIGNED)
         return (item_race);
 
@@ -3707,6 +3710,17 @@ static void _give_ammo(monsters *mon, int level,
             set_item_ego_type(mitm[thing_created], OBJ_MISSILES,
                               _got_curare_roll(level) ? SPMSL_CURARE
                                                       : SPMSL_POISONED);
+        }
+        else
+        {
+            // Sanity check to avoid useless brands.
+            const int bow_brand = get_bow_brand(*launcher);
+            const int ammo_brand = get_ammo_brand(mitm[thing_created]);
+            if (bow_brand == SPWPN_FLAME && ammo_brand != SPMSL_NORMAL
+                || bow_brand == SPWPN_FROST && ammo_brand != SPMSL_NORMAL)
+            {
+                mitm[thing_created].special = SPMSL_NORMAL;
+            }
         }
 
         // Master archers get double ammo - archery is their only attack.
