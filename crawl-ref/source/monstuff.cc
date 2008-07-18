@@ -3158,8 +3158,7 @@ static void _handle_behaviour(monsters *mon)
                         // is rather small.
 
                         int erase = -1;  // Erase how many waypoints?
-                        for (unsigned int i = mon->travel_path.size() - 1;
-                             i >= 0; --i)
+                        for (int i = mon->travel_path.size() - 1; i >= 0; --i)
                         {
                             if (grid_see_grid(mon->x, mon->y,
                                               mon->travel_path[i].x,
