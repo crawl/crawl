@@ -5529,22 +5529,27 @@ static void _explosion_cell(bolt &beam, int x, int y, bool drawOnly)
 static void _explosion_map( bolt &beam, int x, int y,
                            int count, int dir, int r )
 {
-    // 1. Check to see out of range.
+    // Check to see out of range.
     if (x*x + y*y > r*r + r)
         return;
 
-    // 2. Check count.
+    // Check count.
     if (count > 10*r)
         return;
+ 
+    const coord_def loc(beam.target_x + x, beam.target_y + y);
 
-    // 3. Check sanctuary.
-    if (is_sanctuary(beam.target_x + x, beam.target_y + y))
+    // Make sure we haven't run off the map.
+    if (map_bounds(loc))
         return;
 
-    // 4. Check to see if we're blocked by something
-    //    specifically, we're blocked by WALLS.  Not
-    //    statues, idols, etc.
-    const int dngn_feat = grd[beam.target_x + x][beam.target_y + y];
+    // Check sanctuary.
+    if (is_sanctuary(loc.x, loc.y))
+        return;
+
+    // Check to see if we're blocked by something specifically, we're blocked
+    // by WALLS.  Not statues, idols, etc.
+    const int dngn_feat = grd(loc);
 
     // Special case: Explosion originates from rock/statue
     // (e.g. Lee's rapid deconstruction) - in this case, ignore
