@@ -1139,6 +1139,23 @@ void monster_grid(bool do_updates)
                 handle_monster_shouts(monster);
             }
 
+            // [enne] - It's possible that mgrd and monster->x/y are out of
+            // sync because they are updated separately.  If we can see this
+            // monster, then make sure that the mgrd is set correctly.
+            if (mgrd[monster->x][monster->y] != s)
+            {
+#ifdef DEBUG_DIAGNOSTICS
+                // If this mprf triggers for you, please note any special
+                // circumstances so we can track down where this is coming
+                // from.
+                mprf(MSGCH_DIAGNOSTICS, "monster (%d) at (%d, %d) was "
+                     "improperly placed.  Updating mgrd.", s, 
+                     monster->x, monster->y);
+#endif
+                ASSERT(mgrd[monster->x][monster->y] == NON_MONSTER);
+                mgrd[monster->x][monster->y] = s;
+            }
+
             if (!_update_monster_grid(monster))
                 continue;
 
