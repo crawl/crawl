@@ -5540,7 +5540,7 @@ static void _explosion_map( bolt &beam, int x, int y,
     const coord_def loc(beam.target_x + x, beam.target_y + y);
 
     // Make sure we haven't run off the map.
-    if (map_bounds(loc))
+    if (!map_bounds(loc))
         return;
 
     // Check sanctuary.
