@@ -1796,6 +1796,37 @@ static bool _habitat_okay( const monsters *monster, dungeon_feature_type targ )
 // swap pets to their death, we can let that go). -- bwr
 bool swap_places(monsters *monster)
 {
+    coord_def loc;
+    if (swap_check(monster, loc))
+    {
+        swap_places(monster, loc);
+        return true;
+    }
+    return false;
+}
+
+// Swap monster to this location.  Player is swapped elsewhere.
+bool swap_places(monsters *monster, const coord_def &loc)
+{
+    ASSERT(map_bounds(loc));
+    ASSERT(_habitat_okay(monster, grd(loc)));
+
+    mpr("You swap places.");
+
+    mgrd[monster->x][monster->y] = NON_MONSTER;
+
+    monster->x = loc.x;
+    monster->y = loc.y;
+
+    mgrd[monster->x][monster->y] = monster_index(monster);
+
+    return true;
+}
+
+// Returns true if this is a valid swap for this monster.  If true, then
+// the valid location is set in loc.
+bool swap_check(monsters *monster, coord_def &loc)
+{
     int loc_x = you.x_pos;
     int loc_y = you.y_pos;
 
@@ -1859,14 +1890,8 @@ bool swap_places(monsters *monster)
 
     if (swap)
     {
-        mpr("You swap places.");
-
-        mgrd[monster->x][monster->y] = NON_MONSTER;
-
-        monster->x = loc_x;
-        monster->y = loc_y;
-
-        mgrd[monster->x][monster->y] = monster_index(monster);
+        loc.x = loc_x;
+        loc.y = loc_y;
     }
     else
     {

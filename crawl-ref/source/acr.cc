@@ -4257,13 +4257,15 @@ static void _move_player(int move_x, int move_y)
         return;
     }
 
+    coord_def mon_swap_dest;
+
     if (targ_monst != NON_MONSTER && !mons_is_submerged(&menv[targ_monst]))
     {
         monsters *mon = &menv[targ_monst];
 
         if (can_swap_places && !beholder)
         {
-            if (swap_places( mon ))
+            if (swap_check(mon, mon_swap_dest))
                 swap = true;
             else
                 moving = false;
@@ -4291,8 +4293,11 @@ static void _move_player(int move_x, int move_y)
     {
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
-        if (!move_player_to_grid(targ_x, targ_y, true, false, swap))
+        if (!move_player_to_grid(targ_x, targ_y, true, false, swap, swap))
             return;
+
+        if (swap)
+            swap_places(&menv[targ_monst], mon_swap_dest);
 
         you.prev_move_x = move_x;
         you.prev_move_y = move_y;

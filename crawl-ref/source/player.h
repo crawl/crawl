@@ -28,7 +28,7 @@ enum genus_type
 };
 
 bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
-                          bool force );
+                          bool force, bool swapping = false );
 
 bool player_in_mappable_area(void);
 bool player_in_branch( int branch );

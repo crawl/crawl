@@ -106,8 +106,9 @@ static void _attribute_increase();
 // stepped     - normal walking moves
 // allow_shift - allowed to scramble in any direction out of lava/water
 // force       - ignore safety checks, move must happen (traps, lava/water).
+// swapping    - player is swapping with a monster at (x,y)
 bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
-                          bool force )
+                          bool force, bool swapping )
 {
     ASSERT( in_bounds( x, y ) );
 
@@ -122,8 +123,9 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     ASSERT( you.can_pass_through_feat( new_grid ) );
 
     // Better not be an unsubmerged monster either.
-    ASSERT(mgrd[x][y] == NON_MONSTER
-           || mons_is_submerged( &menv[ mgrd[x][y] ] ));
+    ASSERT(swapping && mgrd[x][y] != NON_MONSTER ||
+           !swapping && (mgrd[x][y] == NON_MONSTER
+                         || mons_is_submerged( &menv[ mgrd[x][y] ])));
 
     const int cloud = env.cgrid[x][y];
     if (cloud != EMPTY_CLOUD)
