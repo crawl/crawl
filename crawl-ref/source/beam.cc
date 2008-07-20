@@ -1777,17 +1777,18 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
 #if DEBUG_DIAGNOSTICS
     if (pbolt.flavour != BEAM_LINE_OF_SIGHT)
     {
-        mprf( MSGCH_DIAGNOSTICS, "%s%s%s (%d,%d) to (%d,%d): "
+        mprf( MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
               "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
-                 (pbolt.is_beam) ? "beam" : "missile",
-                 (pbolt.is_explosion) ? "*" :
-                 (pbolt.is_big_cloud) ? "+" : "",
-                 (pbolt.is_tracer) ? " tracer" : "",
-                 pbolt.source_x, pbolt.source_y,
-                 pbolt.target_x, pbolt.target_y,
-                 pbolt.type, pbolt.colour, pbolt.flavour,
-                 pbolt.hit, pbolt.damage.num, pbolt.damage.size,
-                 pbolt.range);
+              (pbolt.is_beam) ? "beam" : "missile",
+              (pbolt.is_explosion) ? "*" :
+              (pbolt.is_big_cloud) ? "+" : "",
+              (pbolt.is_tracer) ? " tracer" : "",
+              pbolt.name.c_str(),
+              pbolt.source_x, pbolt.source_y,
+              pbolt.target_x, pbolt.target_y,
+              pbolt.type, pbolt.colour, pbolt.flavour,
+              pbolt.hit, pbolt.damage.num, pbolt.damage.size,
+              pbolt.range);
     }
 #endif
 
@@ -2815,7 +2816,7 @@ void _sticky_flame_monster( int mn, kill_category who, int levels )
 //  Note that beam properties must be set, as the tracer will take them
 //  into account, as well as the monster's intelligence.
 //
-void fire_tracer(const monsters *monster, bolt &pbolt)
+void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
 {
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
@@ -2831,19 +2832,27 @@ void fire_tracer(const monsters *monster, bolt &pbolt)
     pbolt.foe_power     = pbolt.fr_power = 0;
     pbolt.fr_helped     = pbolt.fr_hurt  = 0;
     pbolt.foe_helped    = pbolt.foe_hurt = 0;
-    pbolt.foe_ratio     = 80;        // default - see mons_should_fire()
 
-    // Foe ratio for summoning greater demons & undead -- they may be
-    // summoned, but they're hostile and would love nothing better
-    // than to nuke the player and his minions.
-    if (mons_att_wont_attack(pbolt.attitude)
-        && !mons_att_wont_attack(monster->attitude))
+    // If there's a specifically requested foe_ratio, honour it.
+    if (!pbolt.foe_ratio)
     {
-        pbolt.foe_ratio = 25;
+        pbolt.foe_ratio     = 80;        // default - see mons_should_fire()
+
+        // Foe ratio for summoning greater demons & undead -- they may be
+        // summoned, but they're hostile and would love nothing better
+        // than to nuke the player and his minions.
+        if (mons_att_wont_attack(pbolt.attitude)
+            && !mons_att_wont_attack(monster->attitude))
+        {
+            pbolt.foe_ratio = 25;
+        }
     }
 
     // Fire!
-    fire_beam(pbolt);
+    if (explode_only)
+        explosion(pbolt, false, false, true, true, false);
+    else
+        fire_beam(pbolt);
 
     // Unset tracer flag (convenience).
     pbolt.is_tracer     = false;
@@ -4323,11 +4332,16 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         // Can we see this monster?
         if (!beam.can_see_invis && menv[tid].invisible()
-            || thrower == KILL_YOU_MISSILE && !see_grid(mon->x, mon->y))
+            || (thrower == KILL_YOU_MISSILE && !see_grid(mon->x, mon->y)))
         {
             // Can't see this monster, ignore it.
             return 0;
         }
+
+        // Is this a self-detonating monster? Don't consider it either way
+        // if it is.
+        if (mons_self_destructs(mon))
+            return (BEAM_STOP);
 
         if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
         {
@@ -5536,7 +5550,7 @@ static void _explosion_map( bolt &beam, int x, int y,
     // Check count.
     if (count > 10*r)
         return;
- 
+
     const coord_def loc(beam.target_x + x, beam.target_y + y);
 
     // Make sure we haven't run off the map.

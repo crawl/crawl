@@ -5977,6 +5977,11 @@ int player::id() const
     return (-1);
 }
 
+int player::mindex() const
+{
+    return (MHITYOU);
+}
+
 int player::get_experience_level() const
 {
     return (experience_level);

@@ -243,15 +243,17 @@ bool fireball(int pow, bolt &beam)
     return (zapping(ZAP_FIREBALL, pow, beam, true));
 }
 
-void cast_fire_storm(int pow, bolt &beam)
+void setup_fire_storm(const actor *source, int pow, bolt &beam)
 {
     beam.name         = "great blast of fire";
     beam.ex_size      = 2 + (random2(pow) > 75);
     beam.flavour      = BEAM_LAVA;
     beam.type         = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour       = RED;
-    beam.beam_source  = MHITYOU;
-    beam.thrower      = KILL_YOU_MISSILE;
+    beam.beam_source  = source->mindex();
+    // XXX: Should this be KILL_MON_MISSILE?
+    beam.thrower      =
+        source->atype() == ACT_PLAYER? KILL_YOU_MISSILE : KILL_MON;
     beam.aux_source.clear();
     beam.obvious_effect = false;
     beam.is_beam      = false;
@@ -260,6 +262,11 @@ void cast_fire_storm(int pow, bolt &beam)
     beam.ench_power   = pow;      // used for radius
     beam.hit          = 20 + pow / 10;
     beam.damage       = calc_dice(9, 20 + pow);
+}
+
+void cast_fire_storm(int pow, bolt &beam)
+{
+    setup_fire_storm(&you, pow, beam);
 
     if (explosion(beam, false, false, true, true, false) > 0)
         mpr("A raging storm of fire appears!");

@@ -41,6 +41,7 @@
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
+#include "spells1.h"
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-cast.h"
@@ -499,6 +500,15 @@ static void _do_high_level_summon(monsters *monster, bool monsterNearby,
     }
 }
 
+static bool _los_free_spell(spell_type spell_cast)
+{
+    return spell_cast == SPELL_HELLFIRE_BURST
+        || spell_cast == SPELL_BRAIN_FEED
+        || spell_cast == SPELL_SMITING
+        || spell_cast == SPELL_FIRE_STORM
+        || spell_cast == SPELL_AIRSTRIKE;
+}
+
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 {
     // Always do setup.  It might be done already, but it doesn't
@@ -517,17 +527,16 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
          monster_index(monster), spell_title(spell_cast), spell_cast);
 #endif
 
-    if (spell_cast == SPELL_HELLFIRE_BURST || spell_cast == SPELL_BRAIN_FEED
-        || spell_cast == SPELL_SMITING)
+    if (_los_free_spell(spell_cast) && !spell_is_direct_explosion(spell_cast))
     {
         if (monster->foe == MHITYOU || monster->foe == MHITNOT)
         {
             if (monsterNearby)
-                direct_effect(pbolt);
+                direct_effect(monster, spell_cast, pbolt, &you);
             return;
         }
 
-        mons_direct_effect(pbolt, monster_index(monster));
+        direct_effect(monster, spell_cast, pbolt, monster->get_foe());
         return;
     }
 
@@ -720,6 +729,18 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
                               random_range(3, 5));
         return;
 
+    case SPELL_CONJURE_BALL_LIGHTNING:
+    {
+        const int n = 2 + random2(monster->hit_dice / 4);
+        for (int i = 0; i < n; ++i)
+        {
+            create_monster(mgen_data(MONS_BALL_LIGHTNING,
+                                     SAME_ATTITUDE(monster), 2,
+                                     monster->pos(), monster->foe));
+        }
+        return;
+    }
+
     case SPELL_SUMMON_UNDEAD:      // Summon undead around player.
         _do_high_level_summon(monster, monsterNearby, _pick_undead_summon,
                               2 + random2(2)
@@ -851,11 +872,20 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     }
     }
 
-    fire_beam(pbolt);
+    if (spell_is_direct_explosion(spell_cast))
+    {
+        const actor *foe = monster->get_foe();
+        const bool need_more =
+            foe && (foe == &you || see_grid(foe->pos()));
+        explosion(pbolt, false, false, true, true, need_more);
+    }
+    else
+        fire_beam(pbolt);
 }
 
 // Set up bolt structure for monster spell casting.
-void setup_mons_cast(const monsters *monster, bolt &pbolt, int spell_cast)
+void setup_mons_cast(monsters *monster, bolt &pbolt,
+                     spell_type spell_cast)
 {
     // always set these -- used by things other than fire_beam()
 
@@ -871,24 +901,29 @@ void setup_mons_cast(const monsters *monster, bolt &pbolt, int spell_cast)
 
     pbolt.beam_source = monster_index(monster);
 
+    // Convenience for the hapless innocent who assumes that this
+    // damn function does all possible setup. [ds]
+    if (!pbolt.target_x && !pbolt.target_y)
+    {
+        pbolt.target_x = monster->target_x;
+        pbolt.target_y = monster->target_y;
+    }
+
     // set bolt type
-    if (spell_cast == SPELL_HELLFIRE_BURST
-        || spell_cast == SPELL_BRAIN_FEED
-        || spell_cast == SPELL_SMITING)
-    {                           // etc.
+    if (_los_free_spell(spell_cast))
+    {
         switch (spell_cast)
         {
-        case SPELL_HELLFIRE_BURST:
-            pbolt.type = DMNBM_HELLFIRE;
-            break;
         case SPELL_BRAIN_FEED:
             pbolt.type = DMNBM_BRAIN_FEED;
-            break;
+            return;
         case SPELL_SMITING:
             pbolt.type = DMNBM_SMITING;
+            return;
+        default:
+            // Other spells get normal setup:
             break;
         }
-        return;
     }
 
     // The below are no-ops since they don't involve direct_effect,
@@ -910,6 +945,7 @@ void setup_mons_cast(const monsters *monster, bolt &pbolt, int spell_cast)
     case SPELL_SUMMON_UNDEAD:      // summon undead around player
     case SPELL_SUMMON_ICE_BEAST:
     case SPELL_SUMMON_MUSHROOMS:
+    case SPELL_CONJURE_BALL_LIGHTNING:
     case SPELL_SUMMON_DRAKES:
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_SUMMON_WRAITHS:
@@ -925,7 +961,7 @@ void setup_mons_cast(const monsters *monster, bolt &pbolt, int spell_cast)
     // Need to correct this for power of spellcaster
     int power = 12 * monster->hit_dice;
 
-    bolt theBeam         = mons_spells(spell_cast, power);
+    bolt theBeam         = mons_spells(monster, spell_cast, power);
 
     pbolt.colour         = theBeam.colour;
     pbolt.range          = theBeam.range;
@@ -946,6 +982,9 @@ void setup_mons_cast(const monsters *monster, bolt &pbolt, int spell_cast)
     pbolt.source_y       = monster->y;
     pbolt.is_tracer      = false;
     pbolt.is_explosion   = theBeam.is_explosion;
+    pbolt.ex_size        = theBeam.ex_size;
+
+    pbolt.foe_ratio      = theBeam.foe_ratio;
 
     if (pbolt.name.length() && pbolt.name[0] != '0')
         pbolt.aux_source = pbolt.name;
@@ -959,14 +998,6 @@ void setup_mons_cast(const monsters *monster, bolt &pbolt, int spell_cast)
     {
         pbolt.target_x = monster->x;
         pbolt.target_y = monster->y;
-    }
-
-    // Convenience for the hapless innocent who assumes that this
-    // damn function does all possible setup. [ds]
-    if (!pbolt.target_x && !pbolt.target_y)
-    {
-        pbolt.target_x = monster->target_x;
-        pbolt.target_y = monster->target_y;
     }
 }
 
@@ -1656,7 +1687,7 @@ void spore_goes_pop(monsters *monster)
     explosion(beam, false, false, true, true, mons_near(monster));
 }
 
-bolt mons_spells( int spell_cast, int power )
+bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 {
     ASSERT(power > 0);
 
@@ -1943,6 +1974,42 @@ bolt mons_spells( int spell_cast, int power )
         beam.flavour  = BEAM_FIRE;  // why not BEAM_FIRE? {dlb}
         beam.is_beam  = false;
         beam.is_explosion = true;
+        break;
+
+    case SPELL_FIRE_STORM:
+        setup_fire_storm(mons, power / 2, beam);
+        beam.foe_ratio = random_range(40, 55);
+        break;
+
+    case SPELL_ICE_STORM:
+        beam.name           = "great blast of cold";
+        beam.colour         = BLUE;
+        beam.range          = 9 + random2(5);
+        beam.damage         = calc_dice( 10, 18 + power / 2 );
+        beam.damage.num     = 0;                  // only does explosion damage
+        beam.hit            = 20 + power / 10;    // 50: 25   100: 30
+        beam.ench_power     = power;              // used for radius
+        beam.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.flavour        = BEAM_ICE;           // half resisted
+        beam.is_explosion   = true;
+        beam.foe_ratio      = random_range(40, 55);
+        break;
+
+    case SPELL_HELLFIRE_BURST:
+        beam.aux_source   = "burst of hellfire";
+        beam.name         = "hellfire";
+        beam.ex_size      = 1;
+        beam.flavour      = BEAM_HELLFIRE;
+        beam.is_explosion = true;
+        beam.type         = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.colour       = RED;
+        beam.thrower      = KILL_MON;
+        beam.aux_source.clear();
+        beam.is_beam      = false;
+        beam.is_tracer    = false;
+        beam.hit          = 20;
+        beam.damage       = mons_foe_is_mons(mons) ? dice_def(5, 7)
+                                                   : dice_def(3, 20);
         break;
 
     case SPELL_LESSER_HEALING:

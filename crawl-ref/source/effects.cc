@@ -603,120 +603,62 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
     return lose_stat(which_stat, stat_loss, force, verb + " " + name, true);
 }
 
-void direct_effect(struct bolt &pbolt)
+void direct_effect(monsters *source, spell_type spell,
+                   bolt &pbolt, actor *defender)
 {
-    int damage_taken = 0;
+    const bool mons_defender = defender->atype() == ACT_MONSTER;
+    monsters *mdef = mons_defender? dynamic_cast<monsters*>(defender) : NULL;
 
-    monsters* source = NULL;
-
-    if (pbolt.beam_source != NON_MONSTER)
-        source = &menv[pbolt.beam_source];
-
-    switch (pbolt.type)
+    if (mdef)
     {
-    case DMNBM_HELLFIRE:
-        pbolt.aux_source   = "burst of hellfire";
-        pbolt.name         = "hellfire";
-        pbolt.ex_size      = 1;
-        pbolt.flavour      = BEAM_HELLFIRE;
-        pbolt.is_explosion = true;
-        pbolt.type         = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.colour       = RED;
-        pbolt.thrower      = KILL_MON_MISSILE;
-        pbolt.aux_source.clear();
-        pbolt.is_beam      = false;
-        pbolt.is_tracer    = false;
-        pbolt.hit          = 20;
-        pbolt.damage       = dice_def( 3, 20 );
-        explosion( pbolt );
-        break;
+        // annoy the target
+        behaviour_event(mdef, ME_ANNOY, monster_index(source));
+    }
 
-    case DMNBM_SMITING:
-        mpr( "Something smites you!" );
+
+    int damage_taken = 0;
+    switch (spell)
+    {
+    case SPELL_SMITING:
+        if (mons_defender)
+            simple_monster_message(dynamic_cast<monsters*>(defender),
+                                   " is smitten.");
+        else
+            mpr( "Something smites you!" );
         pbolt.name       = "smiting";
+        pbolt.flavour    = BEAM_MISSILE;
         pbolt.aux_source = "by divine providence";
         damage_taken     = 7 + random2avg(11, 2);
         break;
 
-    case DMNBM_BRAIN_FEED:
-        // lose_stat() must come last {dlb}
-        if (one_chance_in(3)
-            && lose_stat(STAT_INTELLIGENCE, 1, source))
+    case SPELL_BRAIN_FEED:
+        if (!mons_defender)
         {
-            mpr("Something feeds on your intellect!");
-            xom_is_stimulated(50);
+            // lose_stat() must come last {dlb}
+            if (one_chance_in(3)
+                && lose_stat(STAT_INTELLIGENCE, 1, source))
+            {
+                mpr("Something feeds on your intellect!");
+                xom_is_stimulated(50);
+            }
+            else
+                mpr("Something tries to feed on your intellect!");
         }
-        else
-            mpr("Something tries to feed on your intellect!");
         break;
+
+    default:
+        ASSERT(false);
     }
 
     // apply damage and handle death, where appropriate {dlb}
     if (damage_taken > 0)
     {
-        ouch(damage_taken, pbolt.beam_source, KILLED_BY_BEAM,
-             pbolt.aux_source.c_str());
-    }
-
-    return;
-}                               // end direct_effect()
-
-// monster-to-monster
-void mons_direct_effect(struct bolt &pbolt, int i)
-{
-    // note the translation here - important {dlb}
-    int o = menv[i].foe;
-    monsters *monster = &menv[o];
-    int damage_taken = 0;
-
-    // annoy the target
-    behaviour_event(monster, ME_ANNOY, i);
-
-    switch (pbolt.type)
-    {
-    case DMNBM_HELLFIRE:
-        simple_monster_message(monster, " is engulfed in hellfire.");
-        pbolt.name    = "hellfire";
-        pbolt.flavour = BEAM_LAVA;
-
-        damage_taken  = 5 + random2(10) + random2(5);
-        damage_taken  = mons_adjust_flavoured(monster, pbolt, damage_taken);
-        break;
-
-    case DMNBM_SMITING:
-        simple_monster_message(monster, " is smitten.");
-        pbolt.name    = "smiting";
-        pbolt.flavour = BEAM_MISSILE;
-
-        damage_taken += 7 + random2avg(11, 2);
-        break;
-
-    case DMNBM_BRAIN_FEED:  // Not implemented here (nor, probably, can be).
-        break;
-
-    case DMNBM_MUTATION:
-        if (mons_holiness(monster) != MH_NATURAL
-            || mons_immune_magic(monster))
-        {
-            simple_monster_message(monster, " is unaffected.");
-        }
-        else if (check_mons_resist_magic( monster, pbolt.ench_power ))
-            simple_monster_message(monster, " resists.");
+        if (mdef)
+            mdef->hurt(source, damage_taken);
         else
-            monster_polymorph(monster, RANDOM_MONSTER);
-        break;
+            ouch(damage_taken, pbolt.beam_source, KILLED_BY_BEAM,
+                 pbolt.aux_source.c_str());
     }
-
-    // Apply damage and handle death, where appropriate {dlb}
-    if (damage_taken > 0)
-    {
-        hurt_monster(monster, damage_taken);
-
-        if (monster->hit_points < 1)
-            monster_die(monster, KILL_MON_MISSILE, i);
-    }
-
-    return;
 }
 
 void random_uselessness(int scroll_slot)

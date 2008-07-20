@@ -37,7 +37,7 @@ struct bolt;
 /* ***********************************************************************
  * called from: monstuff - mstuff2
  * *********************************************************************** */
-bolt mons_spells(int spell_cast, int power);
+bolt mons_spells(monsters *mons, spell_type spell_cast, int power);
 
 
 // last updated 12may2000 {dlb}
@@ -57,7 +57,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast);
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void setup_mons_cast(const monsters *monster, bolt &pbolt, int spell_cast);
+void setup_mons_cast(monsters *monster, bolt &pbolt,
+                     spell_type spell_cast);
 
 // last updated 28july2000 (gdl)
 /* ***********************************************************************

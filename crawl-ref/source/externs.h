@@ -87,6 +87,7 @@ public:
     virtual ~actor();
 
     virtual int       id() const = 0;
+    virtual int       mindex() const = 0;
     virtual actor_type atype() const = 0;
 
     virtual kill_category kill_alignment() const = 0;
@@ -813,6 +814,7 @@ public:
 
     // actor
     int id() const;
+    int mindex() const;
     int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
 
@@ -1135,6 +1137,7 @@ public:
 
     // actor interface
     int id() const;
+    int mindex() const;
     int       get_experience_level() const;
     god_type  deity() const;
     bool      alive() const;

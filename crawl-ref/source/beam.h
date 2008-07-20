@@ -227,7 +227,8 @@ bool poison_monster( monsters *monster, kill_category who,
 /* ***********************************************************************
  * called from: monstuff
  * *********************************************************************** */
-void fire_tracer( const monsters *monster, struct bolt &pbolt );
+void fire_tracer( const monsters *monster, struct bolt &pbolt,
+                  bool explode_only = false );
 
 bool check_line_of_sight( int sx, int sy, int tx, int ty );
 

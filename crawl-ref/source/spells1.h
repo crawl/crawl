@@ -26,29 +26,6 @@ struct bolt;
  * *********************************************************************** */
 bool cast_sure_blade(int power);
 
-
-#if 0
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
-char cast_greater_healing(void);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability
- * *********************************************************************** */
-char cast_greatest_healing(void);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
-char cast_lesser_healing(void);
-#endif
-
 // last updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - spell
@@ -85,6 +62,7 @@ void cast_confusing_touch(int power);
 void cast_cure_poison(int mabil);
 int allowed_deaths_door_hp(void);
 void cast_deaths_door(int pow);
+void setup_fire_storm(const actor *source, int pow, bolt &beam);
 void cast_fire_storm(int pow, bolt &beam);
 void cast_chain_lightning(int pow);
 bool cast_revivification(int pow);

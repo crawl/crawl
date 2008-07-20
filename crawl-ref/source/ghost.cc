@@ -30,6 +30,8 @@ std::vector<ghost_demon> ghosts;
 static spell_type search_order_conj[] = {
 // 0
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+    SPELL_FIRE_STORM,
+    SPELL_ICE_STORM,
     SPELL_BOLT_OF_DRAINING,
     SPELL_AGONY,
     SPELL_DISINTEGRATE,
@@ -245,6 +247,10 @@ void ghost_demon::init_random_demon()
         // Demon-summoning should be fairly common.
         if (one_chance_in(25))
             spells[0] = SPELL_HELLFIRE_BURST;
+        if (one_chance_in(25))
+            spells[0] = SPELL_FIRE_STORM;
+        if (one_chance_in(25))
+            spells[0] = SPELL_ICE_STORM;
         if (one_chance_in(25))
             spells[0] = SPELL_METAL_SPLINTERS;
         if (one_chance_in(25))

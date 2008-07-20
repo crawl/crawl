@@ -79,7 +79,7 @@ bool recharge_wand(const int item_slot = -1);
 /* ***********************************************************************
  * called from: mstuff2
  * *********************************************************************** */
-void direct_effect(struct bolt &pbolt);
+void direct_effect(monsters *src, spell_type spl, bolt &pbolt, actor *defender);
 
 
 // last updated 12may2000 {dlb}

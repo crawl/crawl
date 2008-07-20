@@ -570,6 +570,15 @@ bool mons_is_demon(int mc)
     return (false);
 }
 
+/**
+ * Returns true if the given monster's foe is also a monster.
+ */
+bool mons_foe_is_mons(const monsters *mons)
+{
+    const actor *foe = mons->get_foe();
+    return foe && foe->atype() == ACT_MONSTER;
+}
+
 int mons_zombie_size(int mc)
 {
     return (smc->zombie_size);
@@ -1380,6 +1389,8 @@ int exper_value( const struct monsters *monster )
             case SPELL_HELLFIRE_BURST:
             case SPELL_HELLFIRE:
             case SPELL_SYMBOL_OF_TORMENT:
+            case SPELL_ICE_STORM:
+            case SPELL_FIRE_STORM:
                 diff += 25;
                 break;
 
@@ -2066,6 +2077,11 @@ bool mons_eats_corpses(const monsters *m)
     return (m->type == MONS_NECROPHAGE || m->type == MONS_GHOUL);
 }
 
+bool mons_self_destructs(const monsters *m)
+{
+    return (m->type == MONS_GIANT_SPORE || m->type == MONS_BALL_LIGHTNING);
+}
+
 bool mons_is_summoned(const monsters *m)
 {
     return (m->has_ench(ENCH_ABJ));
@@ -2442,7 +2458,11 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     // handled here as well. -- bwr
     switch (monspell)
     {
+    case SPELL_BRAIN_FEED:
+        return (foe != &you);
+
     case SPELL_BOLT_OF_DRAINING:
+    case SPELL_MIASMA:
     case SPELL_AGONY:
     case SPELL_SYMBOL_OF_TORMENT:
     {
@@ -2740,7 +2760,8 @@ static bool _mons_can_smite(const monsters *monster)
     for (unsigned i = 0; i < hspell_pass.size(); ++i)
         if (hspell_pass[i] == SPELL_SYMBOL_OF_TORMENT
             || hspell_pass[i] == SPELL_SMITING
-            || hspell_pass[i] == SPELL_HELLFIRE_BURST)
+            || hspell_pass[i] == SPELL_HELLFIRE_BURST
+            || hspell_pass[i] == SPELL_FIRE_STORM)
         {
             return (true);
         }
@@ -3553,9 +3574,9 @@ bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
                   monster_index(this)),
         pos());
 
-    const int index = item.index();
-    unlink_item(index);
-    inv[slot] = index;
+    const int item_index = item.index();
+    unlink_item(item_index);
+    inv[slot] = item_index;
 
     pickup_message(item, near);
     equip(item, slot, near);
@@ -3568,8 +3589,8 @@ bool monsters::drop_item(int eslot, int near)
     if (eslot < 0 || eslot >= NUM_MONSTER_SLOTS)
         return (false);
 
-    int index = inv[eslot];
-    if (index == NON_ITEM)
+    int item_index = inv[eslot];
+    if (item_index == NON_ITEM)
         return (true);
 
     // Unequip equipped items before dropping them; unequip() prevents
@@ -3578,23 +3599,23 @@ bool monsters::drop_item(int eslot, int near)
     if (eslot == MSLOT_WEAPON || eslot == MSLOT_ARMOUR
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this))
     {
-        if (!unequip(mitm[index], eslot, near))
+        if (!unequip(mitm[item_index], eslot, near))
             return (false);
         was_unequipped = true;
     }
 
-    const std::string iname = mitm[index].name(DESC_NOCAP_A);
-    if (!move_item_to_grid(&index, x, y))
+    const std::string iname = mitm[item_index].name(DESC_NOCAP_A);
+    if (!move_item_to_grid(&item_index, x, y))
     {
         // Re-equip item if we somehow failed to drop it.
         if (was_unequipped)
-            equip(mitm[index], eslot, near);
+            equip(mitm[item_index], eslot, near);
 
         return (false);
     }
 
     if (mons_friendly(this))
-        mitm[index].flags |= ISFLAG_DROPPED_BY_ALLY;
+        mitm[item_index].flags |= ISFLAG_DROPPED_BY_ALLY;
 
     if (need_message(near))
         mprf("%s drops %s.", name(DESC_CAP_THE).c_str(), iname.c_str());
@@ -4283,8 +4304,8 @@ item_def *monsters::slot_item(equipment_type eq)
 
 item_def *monsters::mslot_item(mon_inv_type mslot) const
 {
-    const int mindex = (mslot == NUM_MONSTER_SLOTS) ? NON_ITEM : inv[mslot];
-    return (mindex == NON_ITEM ? NULL : &mitm[mindex]);
+    const int mi = (mslot == NUM_MONSTER_SLOTS) ? NON_ITEM : inv[mslot];
+    return (mi == NON_ITEM ? NULL : &mitm[mi]);
 }
 
 item_def *monsters::shield()
@@ -4354,6 +4375,11 @@ std::string monsters::conj_verb(const std::string &verb) const
 int monsters::id() const
 {
     return (type);
+}
+
+int monsters::mindex() const
+{
+    return (monster_index(this));
 }
 
 int monsters::get_experience_level() const

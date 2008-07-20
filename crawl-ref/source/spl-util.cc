@@ -235,6 +235,13 @@ bool spell_needs_tracer(spell_type spell)
     return (_seekspell(spell)->ms_needs_tracer);
 }
 
+// Checks if the spell is an explosion that can be placed anywhere even without
+// an unobstructed beam path, such as fire storm.
+bool spell_is_direct_explosion(spell_type spell)
+{
+    return (spell == SPELL_FIRE_STORM || spell == SPELL_HELLFIRE_BURST);
+}
+
 bool spell_needs_foe(spell_type spell)
 {
     return (!_seekspell(spell)->ms_utility);

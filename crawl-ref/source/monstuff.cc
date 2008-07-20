@@ -4698,7 +4698,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
 
     // set up the beam
     int power         = 30 + monster->hit_dice;
-    bolt theBeam      = mons_spells(mzap, power);
+    bolt theBeam      = mons_spells(monster, mzap, power);
 
     beem.name         = theBeam.name;
     beem.beam_source  = monster_index(monster);
@@ -4849,7 +4849,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
 
 // Returns a suitable breath weapon for the draconian; does not handle all
 // draconians, does fire a tracer.
-static spell_type _get_draconian_breath_spell( const monsters *monster )
+static spell_type _get_draconian_breath_spell( monsters *monster )
 {
     spell_type draco_breath = SPELL_NO_SPELL;
 
@@ -5298,7 +5298,8 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))
                 {
-                    fire_tracer(monster, beem);
+                    const bool explode = spell_is_direct_explosion(spell_cast);
+                    fire_tracer(monster, beem, explode);
                     // Good idea?
                     if (mons_should_fire(beem))
                         spellOK = true;

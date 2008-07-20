@@ -535,6 +535,7 @@ bool mons_is_demon( int mc );
 
 bool mons_wields_two_weapons(const monsters *m);
 bool mons_wields_two_weapons(monster_type m);
+bool mons_self_destructs(const monsters *m);
 bool mons_is_summoned(const monsters *m);
 
 // last updated 12may2000 {dlb}
@@ -689,6 +690,8 @@ bool mons_is_pacified(const monsters *m);
 bool mons_wont_attack(const monsters *m);
 bool mons_att_wont_attack(mon_attitude_type fr);
 mon_attitude_type mons_attitude(const monsters *m);
+
+bool mons_foe_is_mons(const monsters *mons);
 
 bool mons_behaviour_perceptible(const monsters *mon);
 bool mons_is_native_in_branch(const monsters *monster,
