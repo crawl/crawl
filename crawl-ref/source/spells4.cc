@@ -1202,10 +1202,8 @@ static int _passwall(int x, int y, int pow, int garbage)
         }
     }
 
-    // Note that the delay was (1 + howdeep * 2), but now that the
-    // delay is stopped when the player is attacked it can be much
-    // shorter since its harder to use for quick escapes. -- bwr
-    start_delay( DELAY_PASSWALL, 2 + howdeep, nx, ny );
+    // Passwall delay is reduced, and the delay cannot be interrupted.
+    start_delay( DELAY_PASSWALL, 1 + howdeep, nx, ny );
 
     return 1;
 }                               // end passwall()

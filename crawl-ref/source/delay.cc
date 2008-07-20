@@ -419,15 +419,6 @@ void stop_delay( bool stop_stair_travel )
         _pop_delay();
         break;
 
-    case DELAY_PASSWALL:
-        // The lost work here is okay since this spell requires
-        // the player to "attune to the rock".  If changed, then
-        // the delay should be increased to reduce the power of
-        // this spell. -- bwr
-        mpr( "Your meditation is interrupted." );
-        _pop_delay();
-        break;
-
     case DELAY_MULTIDROP:
         // No work lost
         if (!items_for_multidrop.empty())
