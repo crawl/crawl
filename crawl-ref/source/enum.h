@@ -203,62 +203,62 @@ enum beam_type                  // beam[].flavour
     BEAM_MMISSILE,                //    and similarly irresistible things
     BEAM_FIRE,
     BEAM_COLD,
-    BEAM_MAGIC,
+    BEAM_MAGIC,                   //  5
     BEAM_ELECTRICITY,
     BEAM_POISON,
     BEAM_NEG,
     BEAM_ACID,
-    BEAM_MIASMA,
+    BEAM_MIASMA,                  // 10
 
     BEAM_SPORE,
     BEAM_POISON_ARROW,
     BEAM_HELLFIRE,
     BEAM_NAPALM,
-    BEAM_STEAM,
+    BEAM_STEAM,                   // 15
     BEAM_HELLFROST,
     BEAM_ENERGY,
     BEAM_HOLY,                    //   aka beam of cleansing, golden flame
     BEAM_FRAG,
-    BEAM_LAVA,
+    BEAM_LAVA,                    // 20
     BEAM_BACKLIGHT,
     BEAM_SLEEP,
     BEAM_ICE,
     BEAM_NUKE,
-    BEAM_RANDOM,                  //   currently translates into FIRE..ACID
+    BEAM_RANDOM,                  // 25 - currently translates into FIRE..ACID
 
     // These used to be handled in the colour field:
     BEAM_SLOW,                  // BLACK
     BEAM_HASTE,                 // BLUE
     BEAM_HEALING,               // GREEN
     BEAM_PARALYSIS,             // CYAN
-    BEAM_CONFUSION,             // RED
+    BEAM_CONFUSION,             // RED - 30
     BEAM_INVISIBILITY,          // MAGENTA
     BEAM_DIGGING,               // BROWN
     BEAM_TELEPORT,              // LIGHTGREY
     BEAM_POLYMORPH,             // DARKGREY
-    BEAM_CHARM,                 // LIGHTBLUE
+    BEAM_CHARM,                 // LIGHTBLUE - 35
     BEAM_BANISH,                // LIGHTGREEN
     BEAM_DEGENERATE,            // LIGHTCYAN
     BEAM_ENSLAVE_UNDEAD,        // LIGHTRED
     BEAM_PAIN,                  // LIGHTMAGENTA
-    BEAM_DISPEL_UNDEAD,         // YELLOW
+    BEAM_DISPEL_UNDEAD,         // YELLOW - 40
     BEAM_DISINTEGRATION,        // WHITE
     BEAM_ENSLAVE_DEMON,         // colour "16"
     BEAM_BLINK,
     BEAM_PETRIFY,
 
     // new beams for evaporate
-    BEAM_POTION_STINKING_CLOUD,
+    BEAM_POTION_STINKING_CLOUD, // 45
     BEAM_POTION_POISON,
     BEAM_POTION_MIASMA,
     BEAM_POTION_STEAM,
     BEAM_POTION_FIRE,
-    BEAM_POTION_COLD,
+    BEAM_POTION_COLD,           // 50
     BEAM_POTION_BLACK_SMOKE,
     BEAM_POTION_GREY_SMOKE,
     BEAM_POTION_BLUE_SMOKE,
     BEAM_POTION_PURP_SMOKE,
-    BEAM_POTION_RANDOM,
+    BEAM_POTION_RANDOM,         // 55
 
     BEAM_LINE_OF_SIGHT          // only used for checking monster LOS
 };

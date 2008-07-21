@@ -571,7 +571,6 @@ bool stinking_cloud( int pow, bolt &beem )
     beem.damage      = dice_def( 1, 0 );
     beem.hit         = 20;
     beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
-    beem.flavour     = BEAM_MMISSILE;
     beem.ench_power  = pow;
     beem.beam_source = MHITYOU;
     beem.thrower     = KILL_YOU;
@@ -588,10 +587,11 @@ bool stinking_cloud( int pow, bolt &beem )
         beem.smart_monster = true;
         beem.attitude      = ATT_FRIENDLY;
         beem.fr_count      = 0;
+        beem.flavour       = BEAM_POTION_STINKING_CLOUD;
         beem.is_tracer     = true;
         fire_beam(beem);
 
-        if (beem.fr_count > 0)
+        if (beem.beam_cancelled)
         {
             // We don't want to fire through friendlies.
             canned_msg(MSG_OK);
@@ -600,6 +600,7 @@ bool stinking_cloud( int pow, bolt &beem )
     }
 
     // Really fire.
+    beem.flavour   = BEAM_MMISSILE;
     beem.is_tracer = false;
     fire_beam(beem);
 

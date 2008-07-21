@@ -3629,6 +3629,99 @@ static std::string _beam_zapper(const bolt &beam)
         return menv[beam_src].name(DESC_PLAIN);
 }
 
+static bool _beam_is_harmless(bolt &beam, monsters *mon)
+{
+    // For enchantments, this is already handled in _nasty_beam().
+    if (beam.name[0] == '0')
+        return (!_nasty_beam(mon, beam));
+
+    // The others are handled here.
+    switch (beam.flavour)
+    {
+    case BEAM_DIGGING:
+        return (true);
+
+    // Cleansing flame doesn't affect player's followers.
+    case BEAM_HOLY:
+        return (mons_is_holy(mon)
+                || is_good_god(you.religion)
+                   && ( is_follower(mon) || mons_neutral(mon) ));
+
+    case BEAM_STEAM:
+        return (mons_res_steam(mon) >= 3);
+
+    case BEAM_FIRE:
+        return (mons_res_fire(mon) >= 3);
+
+    case BEAM_COLD:
+        return (mons_res_cold(mon) >= 3);
+
+    case BEAM_MIASMA:
+    case BEAM_NEG:
+        return (mons_res_negative_energy(mon) == 3);
+
+    case BEAM_ELECTRICITY:
+        return (mons_res_elec(mon) >= 3);
+
+    case BEAM_POISON:
+        return (mons_res_poison(mon) >= 3);
+
+    case BEAM_ACID:
+        return (mons_res_acid(mon) >= 3);
+
+    default:
+        return (false);
+    }
+}
+
+static bool _beam_is_harmless_player(bolt &beam)
+{
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "beam flavour: %d", beam.flavour);
+#endif
+
+    // Shouldn't happen anyway since enchantments are either aimed at self
+    // (not prompted) or cast at monsters and don't explode or bounce.
+    if (beam.name[0] == '0')
+        return (false);
+
+    // The others are handled here.
+    switch (beam.flavour)
+    {
+    case BEAM_DIGGING:
+        return (true);
+
+    // Cleansing flame doesn't affect player's followers.
+    case BEAM_HOLY:
+        return (is_good_god(you.religion));
+
+    case BEAM_STEAM:
+        return (player_res_steam(false) >= 3);
+
+    case BEAM_MIASMA:
+    case BEAM_NEG:
+        return (player_prot_life(false) >= 3);
+
+    case BEAM_POISON:
+        return (player_res_poison(false));
+
+    case BEAM_POTION_STINKING_CLOUD:
+        return (player_res_poison(false) || player_mental_clarity(false));
+
+    case BEAM_ELECTRICITY:
+        return (player_res_electricity(false));
+
+    case BEAM_FIRE:
+    case BEAM_COLD:
+    case BEAM_ACID:
+        // Fire and ice can destroy inventory items, acid damage equipment.
+        return (false);
+
+    default:
+        return (false);
+    }
+}
+
 // Returns amount of extra range used up by affectation of the player.
 static int _affect_player( bolt &beam, item_def *item )
 {
@@ -3643,7 +3736,8 @@ static int _affect_player( bolt &beam, item_def *item )
         if (YOU_KILL(beam.thrower))
         {
             // Don't ask if we're aiming at ourselves.
-            if (!beam.aimed_at_feet && !beam.dont_stop_player)
+            if (!beam.aimed_at_feet && !beam.dont_stop_player
+                && !_beam_is_harmless_player(beam))
             {
                 if (yesno("That beam is likely to hit yourself. Continue "
                           "anyway?", false, 'n'))
@@ -4256,51 +4350,6 @@ static void _update_hurt_or_helped(bolt &beam, monsters *mon)
         }
         else if (_nice_beam(mon, beam))
             beam.fr_helped++;
-    }
-}
-
-static bool _beam_is_harmless(bolt &beam, monsters *mon)
-{
-    // For enchantments, this is already handled in _nasty_beam().
-    if (beam.name[0] == '0')
-        return (!_nasty_beam(mon, beam));
-
-    // The others are handled here.
-    switch (beam.flavour)
-    {
-    case BEAM_DIGGING:
-        return (true);
-
-    // Cleansing flame doesn't affect player's followers.
-    case BEAM_HOLY:
-        return (mons_is_holy(mon)
-                || is_good_god(you.religion)
-                   && ( is_follower(mon) || mons_neutral(mon) ));
-
-    case BEAM_STEAM:
-        return (mons_res_steam(mon) >= 3);
-
-    case BEAM_FIRE:
-        return (mons_res_fire(mon) >= 3);
-
-    case BEAM_COLD:
-        return (mons_res_cold(mon) >= 3);
-
-    case BEAM_MIASMA:
-    case BEAM_NEG:
-        return (mons_res_negative_energy(mon) == 3);
-
-    case BEAM_ELECTRICITY:
-        return (mons_res_elec(mon) >= 3);
-
-    case BEAM_POISON:
-        return (mons_res_poison(mon) >= 3);
-
-    case BEAM_ACID:
-        return (mons_res_acid(mon) >= 3);
-
-    default:
-        return (false);
     }
 }
 

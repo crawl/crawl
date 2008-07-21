@@ -5021,6 +5021,7 @@ bool _give_items_skills()
         else
             you.skills[SK_DARTS] = 1;
 
+        you.skills[SK_SHORT_BLADES] = 1;
         you.skills[SK_ENCHANTMENTS] = 4;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_DODGING]      = 2;
