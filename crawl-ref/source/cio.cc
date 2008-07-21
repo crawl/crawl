@@ -187,6 +187,51 @@ void cursorxy(int x, int y)
 #endif
 }
 
+// cprintf that stops outputting when wrapped
+// Conceptually very similar to wrapcprintf()
+int nowrapcprintf( int wrapcol, const char *s, ... )
+{
+    char buf[1000]; // Hard max
+
+    va_list args;
+    va_start(args, s);
+    // XXX: If snprintf isn't available, vsnprintf probably isn't, either.
+    const int len = vsnprintf(buf, sizeof buf, s, args);
+    va_end(args);
+
+    // Sanity checking to prevent buffer overflows
+    const int maxlen = std::min( std::max( wrapcol + 1 - wherex(), 0 ), len );
+
+    // Force the string to terminate at maxlen
+    buf[maxlen] = 0;
+
+    cprintf("%s", buf);
+    return std::min(len, maxlen);
+}
+
+// convenience wrapper (hah) for nowrapcprintf
+// FIXME: should pass off to nowrapcprintf() instead of doing it manually
+int nowrap_eol_cprintf( const char *s, ... )
+{
+    const int wrapcol = get_number_of_cols() - 1;
+    char buf[1000]; // Hard max
+
+    va_list args;
+    va_start(args, s);
+    // XXX: If snprintf isn't available, vsnprintf probably isn't, either.
+    const int len = vsnprintf(buf, sizeof buf, s, args);
+    va_end(args);
+
+    // Sanity checking to prevent buffer overflows
+    const int maxlen = std::min( std::max( wrapcol + 1 - wherex(), 0 ), len );
+
+    // Force the string to terminate at maxlen
+    buf[maxlen] = 0;
+
+    cprintf("%s", buf);
+    return std::min(len, maxlen);
+}
+
 // cprintf that knows how to wrap down lines (primitive, but what the heck)
 int wrapcprintf( int wrapcol, const char *s, ... )
 {
