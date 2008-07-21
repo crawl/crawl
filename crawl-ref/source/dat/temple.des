@@ -514,22 +514,21 @@ NAME:    zaba_temple_1
 PLACE:   Temple
 FLAGS:   no_rotate
 ORIENT:  encompass
-COLOUR:  b = magenta
+COLOUR:  c = magenta
 SHUFFLE: {[
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxbbbbbbbbbxxxxxbbbbbbbbbxxxxxbbbbbbbbbxxxxx
-xxxbbb.......bbbxbbb.......bbbxbbb.......bbbxxx
-xxbb...B...B...bbb...B...B...bbb...B...B...bbxx
-xxb.............b.............b.............bxx
-xxbb...........bbb...........bbb...........bbxx
-xxxbbb...(.............[.............{....bbxxx
-xxbb...........bbb...........bbb...........bbxx
-xxb.............b.............b.............bxx
-xxbb...B...B...bbb...B...B...bbb...B...B...bbxx
-xxxbbb.......bbbxbbb.......bbbxbbb.......bbbxxx
-xxxxxbbbbbbbbbxxxxxbbbbbbbbbxxxxxbbbbbbbbbxxxxx
+xxcccccccccccccccccccccccccccccccccccccccccccxx
+xxcccc.......ccccccc.......ccccccc.......ccccxx
+xxcc...B...B...ccc...B...B...ccc...B...B...ccxx
+xxc.............c.............c.............cxx
+xxcc...........ccc...........ccc...........ccxx
+xxcccc...(.............[.............{....cccxx
+xxcc...........ccc...........ccc...........ccxx
+xxc.............c.............c.............cxx
+xxcc...B...B...ccc...B...B...ccc...B...B...ccxx
+xxcccc.......ccccccc.......ccccccc.......ccccxx
+xxcccccccccccccccccccccccccccccccccccccccccccxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
