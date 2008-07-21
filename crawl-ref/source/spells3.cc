@@ -1055,38 +1055,27 @@ bool cast_simulacrum(int pow, god_type god)
 
 bool cast_twisted_resurrection(int pow, god_type god)
 {
-    if (igrd[you.x_pos][you.y_pos] == NON_ITEM)
-    {
-        mpr("There's nothing here!");
-        return (false);
-    }
-
-    int objl = igrd[you.x_pos][you.y_pos];
-    int next;
-
     int how_many_corpses = 0;
     int total_mass = 0;
     int rotted = 0;
 
-    while (objl != NON_ITEM)
+    for ( stack_iterator si(you.pos()); si; ++si )
     {
-        next = mitm[objl].link;
-
-        if (mitm[objl].base_type == OBJ_CORPSES
-                && mitm[objl].sub_type == CORPSE_BODY)
+        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
-            total_mass += mons_weight(mitm[objl].plus);
-
+            total_mass += mons_weight(si->plus);
             how_many_corpses++;
-
-            if (food_is_rotten(mitm[objl]))
+            if (food_is_rotten(*si))
                 rotted++;
-
-            destroy_item(objl);
+            destroy_item(si->index());
         }
-
-        objl = next;
     }
+
+    if (how_many_corpses == 0)
+    {
+        mpr("There are no corpses here!");
+        return (false);
+    }    
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Mass for abomination: %d", total_mass);
