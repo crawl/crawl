@@ -5556,10 +5556,7 @@ monster_los::~monster_los()
 void monster_los::set_monster(monsters *mon)
 {
     mons = mon;
-    if (gridx != mons->x)
-        gridx = mons->x;
-    if (gridy != mons->y)
-        gridy = mons->y;
+    set_los_centre(mon->pos());
 }
 
 void monster_los::set_los_centre(int x, int y)

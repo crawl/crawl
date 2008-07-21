@@ -265,9 +265,11 @@ public:
     // public methods
     void set_monster(monsters *mon);
     void set_los_centre(int x, int y);
+    void set_los_centre(const coord_def& p) { this->set_los_centre(p.x, p.y); }
     void set_los_range(int r);
     void fill_los_field(void);
     bool in_sight(int x, int y);
+    bool in_sight(const coord_def& p) { return this->in_sight(p.x, p.y); }
 
 protected:
     // protected methods

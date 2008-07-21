@@ -149,6 +149,7 @@ inline bool map_bounds(const coord_def &p)
 
 int grid_distance( const coord_def& p1, const coord_def& p2 );
 int grid_distance( int x, int y, int x2, int y2 );
+int distance( const coord_def& p1, const coord_def& p2 );
 int distance( int x, int y, int x2, int y2);
 bool adjacent( int x, int y, int x2, int y2 );
 

@@ -2186,14 +2186,11 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
     if (intel == I_PLANT && coinflip())
         return (true);
 
-    const int patrol_x = mon->patrol_point.x;
-    const int patrol_y = mon->patrol_point.y;
-
     // If there's no chance we'll find the patrol point, quit right away.
-    if (grid_distance(mon->x, mon->y, patrol_x, patrol_y) > 2 * LOS_RADIUS)
+    if (grid_distance(mon->pos(), mon->patrol_point) > 2 * LOS_RADIUS)
         return (false);
 
-    const bool patrol_seen = mon->mon_see_grid(patrol_x, patrol_y,
+    const bool patrol_seen = mon->mon_see_grid(mon->patrol_point,
                                                habitat2grid(mons_habitat(mon)));
 
     if (intel == I_PLANT && !patrol_seen)
@@ -2212,7 +2209,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
     monster_los patrol;
     // Set monster to make monster_los respect habitat restrictions.
     patrol.set_monster(mon);
-    patrol.set_los_centre(patrol_x, patrol_y);
+    patrol.set_los_centre(mon->patrol_point);
     patrol.set_los_range(rad);
     patrol.fill_los_field();
 
@@ -2224,85 +2221,73 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
         lm.fill_los_field();
     }
 
-    int pos_x, pos_y;
     int count_grids = 0;
-    bool set_target = false;
-    for (int j = -LOS_RADIUS; j < LOS_RADIUS; j++)
-        for (int k = -LOS_RADIUS; k < LOS_RADIUS; k++, set_target = false)
+    for (radius_iterator ri(mon->patrol_point, LOS_RADIUS, true, false);
+         ri; ++ri)
+    {        
+        // Don't bother for the current position. If everything fails,
+        // we'll stay here anyway.
+        if ( *ri == mon->pos() )
+            continue;
+
+        if (!mon->can_pass_through_feat(grd(*ri)))
+            continue;
+
+        // Don't bother moving to squares (currently) occupied by a
+        // monster. We'll usually be able to find other target squares
+        // (and if we're not, we couldn't move anyway), and this avoids
+        // monsters trying to move onto a grid occupied by a plant or
+        // sleeping monster.
+        if (mgrd(*ri) != NON_MONSTER)
+            continue;
+
+        if (patrol_seen)
         {
-            pos_x = patrol_x + j;
-            pos_y = patrol_y + k;
-
-            if (!in_bounds(pos_x, pos_y))
+            // If the patrol point can be easily (within LOS) reached
+            // from the current position, it suffices if the target is
+            // within reach of the patrol point OR the current position:
+            // we can easily get there.
+            // Only smart monsters will even attempt to move out of the
+            // patrol area.
+            // NOTE: Either of these can take us into a position where the
+            // target cannot be easily reached (e.g. blocked by a wall)
+            // and the patrol point is out of sight, too. Such a case
+            // will be handled below, though it might take a while until
+            // a monster gets out of a deadlock. (5% chance per turn.)
+            if (!patrol.in_sight(*ri) && (!is_smart || !lm.in_sight(*ri)))
                 continue;
-
-            // Don't bother for the current position. If everything fails,
-            // we'll stay here anyway.
-            if (pos_x == mon->x && pos_y == mon->y)
-                continue;
-
-            if (!mon->can_pass_through_feat(grd[pos_x][pos_y]))
-                continue;
-
-            // Don't bother moving to squares (currently) occupied by a
-            // monster. We'll usually be able to find other target squares
-            // (and if we're not, we couldn't move anyway), and this avoids
-            // monsters trying to move onto a grid occupied by a plant or
-            // sleeping monster.
-            if (mgrd[pos_x][pos_y] != NON_MONSTER)
-                continue;
-
-            if (patrol_seen)
-            {
-                // If the patrol point can be easily (within LOS) reached
-                // from the current position, it suffices if the target is
-                // within reach of the patrol point OR the current position:
-                // we can easily get there.
-                // Only smart monsters will even attempt to move out of the
-                // patrol area.
-                // NOTE: Either of these can take us into a position where the
-                // target cannot be easily reached (e.g. blocked by a wall)
-                // and the patrol point is out of sight, too. Such a case
-                // will be handled below, though it might take a while until
-                // a monster gets out of a deadlock. (5% chance per turn.)
-                if (!patrol.in_sight(pos_x, pos_y)
-                    && (!is_smart || !lm.in_sight(pos_x, pos_y)))
-                {
-                    continue;
-                }
-            }
-            else
-            {
-                // If, however, the patrol point is out of reach, we have to
-                // make sure the new target brings us into reach of it.
-                // This means that the target must be reachable BOTH from
-                // the patrol point AND the current position.
-                if (!patrol.in_sight(pos_x, pos_y)
-                    || !lm.in_sight(pos_x, pos_y))
-                {
-                    continue;
-                }
-                // If this fails for all surrounding squares (probably because
-                // we're too far away), we fall back to heading directly for
-                // the patrol point.
-            }
-
-            if (intel == I_PLANT && pos_x == patrol_x && pos_y == patrol_y)
-            {
-                // Slightly greater chance to simply head for the centre.
-                count_grids += 3;
-                if (x_chance_in_y(3, count_grids))
-                    set_target = true;
-            }
-            else if (one_chance_in(++count_grids))
-                set_target = true;
-
-            if (set_target)
-            {
-                mon->target_x = pos_x;
-                mon->target_y = pos_y;
-            }
         }
+        else
+        {
+            // If, however, the patrol point is out of reach, we have to
+            // make sure the new target brings us into reach of it.
+            // This means that the target must be reachable BOTH from
+            // the patrol point AND the current position.
+            if (!patrol.in_sight(*ri) || !lm.in_sight(*ri))
+                continue;
+
+            // If this fails for all surrounding squares (probably because
+            // we're too far away), we fall back to heading directly for
+            // the patrol point.
+        }
+
+        bool set_target = false;
+        if (intel == I_PLANT && *ri == mon->patrol_point)
+        {
+            // Slightly greater chance to simply head for the centre.
+            count_grids += 3;
+            if (x_chance_in_y(3, count_grids))
+                set_target = true;
+        }
+        else if (one_chance_in(++count_grids))
+            set_target = true;
+
+        if (set_target)
+        {
+            mon->target_x = ri->x;
+            mon->target_y = ri->y;
+        }
+    }
 
     return (count_grids);
 }
@@ -2317,34 +2302,27 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
 // hassle. :)
 static void _check_lava_water_in_sight()
 {
-    // Check the player's vision for lava or deep water,
-    // to avoid unnecessary pathfinding later.
     you.lava_in_sight = you.water_in_sight = 0;
-    coord_def gp;
-    for (gp.y = (you.y_pos - 8); (gp.y <= you.y_pos + 8); gp.y++)
-        for (gp.x = (you.x_pos - 8); (gp.x <= you.x_pos + 8); gp.x++)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    {
+        const coord_def ep = *ri - you.pos() + coord_def(9, 9);
+        if (env.show(ep))
         {
-            if (!in_bounds(gp))
-                continue;
-
-            const coord_def ep = gp - you.pos() + coord_def(9, 9);
-            if (env.show(ep))
+            const dungeon_feature_type feat = grd(*ri);
+            if (feat == DNGN_LAVA)
             {
-                dungeon_feature_type feat = grd[gp.x][gp.y];
-                if (feat == DNGN_LAVA)
-                {
-                    you.lava_in_sight = 1;
-                    if (you.water_in_sight > 0)
-                        break;
-                }
-                else if (feat == DNGN_DEEP_WATER)
-                {
-                    you.water_in_sight = 1;
-                    if (you.lava_in_sight > 0)
-                        break;
-                }
+                you.lava_in_sight = 1;
+                if (you.water_in_sight > 0)
+                    break;
+            }
+            else if (feat == DNGN_DEEP_WATER)
+            {
+                you.water_in_sight = 1;
+                if (you.lava_in_sight > 0)
+                    break;
             }
         }
+    }
 }
 
 // If a monster can see but not directly reach the target, and then fails to
@@ -2357,58 +2335,49 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
 {
     // Highly intelligent monsters are perfectly capable of pathfinding
     // and don't need their neighbour's advice.
-    const int intel = mons_intel(mon->type);
+    const mon_intel_type intel = mons_intel(mon->type);
     if (intel > I_NORMAL)
         return;
 
-    bool flies         = mons_flies(mon);
-    bool amphibious    = mons_amphibious(mon);
-    habitat_type habit = mons_habitat(mon);
+    const bool flies         = mons_flies(mon);
+    const bool amphibious    = mons_amphibious(mon);
+    const habitat_type habit = mons_habitat(mon);
 
-    int x, y;
-    monsters *m;
-    for (int i = -2; i <= 2; ++i)
-        for (int j = -2; j <= 2; ++j)
-        {
-            if (i == 0 && j == 0)
-                continue;
+    for (radius_iterator ri(mon->pos(), 2, true, false); ri; ++ri)
+    {
+        if ( *ri == mon->pos() )
+            continue;
+        
+        if (mgrd(*ri) == NON_MONSTER)
+            continue;
 
-            x = mon->x + i;
-            y = mon->y + j;
+        // Don't alert monsters out of sight (e.g. on the other side of
+        // a wall).
+        if (!mon->mon_see_grid(*ri))
+            continue;
 
-            if (!in_bounds(x,y))
-                continue;
+        monsters* const m = &menv[mgrd(*ri)];
 
-            if (mgrd[x][y] == NON_MONSTER)
-                continue;
+        // Don't restrict smarter monsters as they might find a path
+        // a dumber monster wouldn't.
+        if (mons_intel(m->type) > intel)
+            continue;
 
-            // Don't alert monsters out of sight (e.g. on the other side of
-            // a wall).
-            if (!mon->mon_see_grid(x, y))
-                continue;
+        // Monsters of differing habitats might prefer different routes.
+        if (mons_habitat(m) != habit)
+            continue;
 
-            m = &menv[mgrd[x][y]];
+        // A flying monster has an advantage over a non-flying one.
+        if (!flies && mons_flies(m))
+            continue;
 
-            // Don't restrict smarter monsters as they might find a path
-            // a dumber monster wouldn't.
-            if (mons_intel(m->type) > intel)
-                continue;
+        // Same for a swimming one, around water.
+        if (you.water_in_sight > 0 && !amphibious && mons_amphibious(m))
+            continue;
 
-            // Monsters of differing habitats might prefer different routes.
-            if (mons_habitat(m) != habit)
-                continue;
-
-            // A flying monster has an advantage over a non-flying one.
-            if (!flies && mons_flies(m))
-                continue;
-
-            // Same for a swimming one, around water.
-            if (you.water_in_sight > 0 && !amphibious && mons_amphibious(m))
-                continue;
-
-            if (m->travel_target == MTRAV_NONE)
-                m->travel_target = MTRAV_UNREACHABLE;
-        }
+        if (m->travel_target == MTRAV_NONE)
+            m->travel_target = MTRAV_UNREACHABLE;
+    }
 }
 
 static void _find_all_level_exits(std::vector<level_exit> &e)
@@ -4553,9 +4522,10 @@ static bool _handle_reaching(monsters *monster)
         {
             int foe_x = menv[monster->foe].x;
             int foe_y = menv[monster->foe].y;
+            coord_def foe_pos = menv[monster->foe].pos();
             // Same comments as to invisibility as above.
             if (monster->target_x == foe_x && monster->target_y == foe_y
-                && monster->mon_see_grid(foe_x, foe_y, true))
+                && monster->mon_see_grid(foe_pos, true))
             {
                 int dx = abs(monster->x - foe_x);
                 int dy = abs(monster->y - foe_y);

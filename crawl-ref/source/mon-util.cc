@@ -725,7 +725,7 @@ bool mons_see_invis(const monsters *mon)
 
 bool mon_can_see_monster( const monsters *mon, const monsters *targ )
 {
-    if (!mon->mon_see_grid(targ->x, targ->y))
+    if (!mon->mon_see_grid(targ->pos()))
         return (false);
 
     return (mons_monster_visible(mon, targ));
@@ -6181,9 +6181,9 @@ bool monsters::visible_to(const actor *looker) const
     }
 }
 
-bool monsters::mon_see_grid(int tx, int ty, bool reach) const
+bool monsters::mon_see_grid(const coord_def& p, bool reach) const
 {
-    if (distance(x, y, tx, ty) > LOS_RADIUS * LOS_RADIUS)
+    if (distance(pos(), p) > LOS_RADIUS * LOS_RADIUS)
         return (false);
 
     dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
@@ -6191,7 +6191,7 @@ bool monsters::mon_see_grid(int tx, int ty, bool reach) const
         max_disallowed = DNGN_MAX_NONREACH;
 
     // XXX: Ignoring clouds for now.
-    return (!num_feats_between(x, y, tx, ty, DNGN_UNSEEN, max_disallowed,
+    return (!num_feats_between(x, y, p.x, p.y, DNGN_UNSEEN, max_disallowed,
                                true, true));
 }
 
@@ -6208,7 +6208,7 @@ bool monsters::can_see(const actor *target) const
 
     const monsters* mon = dynamic_cast<const monsters*>(target);
 
-    return mon_see_grid(mon->x, mon->y);
+    return mon_see_grid(mon->pos());
 }
 
 bool monsters::can_mutate() const

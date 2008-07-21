@@ -1156,6 +1156,11 @@ int grid_distance( int x, int y, int x2, int y2 )
     return ((dx > dy) ? dx : dy);
 }
 
+int distance( const coord_def& p1, const coord_def& p2 )
+{
+    return distance(p1.x, p1.y, p2.x, p2.y);
+}
+
 int distance( int x, int y, int x2, int y2 )
 {
     //jmf: now accurate, but remember to only compare vs. pre-squared distances
