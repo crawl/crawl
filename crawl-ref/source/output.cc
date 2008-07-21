@@ -1073,33 +1073,23 @@ static bool _compare_monsters_attitude( const monsters *m1, const monsters *m2 )
 
 static void _get_visible_monsters(std::vector<std::string>& describe)
 {
-    int ystart = you.y_pos - 9, xstart = you.x_pos - 9;
-    int yend = you.y_pos + 9, xend = you.x_pos + 9;
-    if ( xstart < 0 ) xstart = 0;
-    if ( ystart < 0 ) ystart = 0;
-    if ( xend >= GXM ) xend = GXM - 1;
-    if ( yend >= GYM ) yend = GYM - 1;
-
     std::vector<const monsters*> mons;
 
     // monster check
-    for (int y = ystart; y <= yend; ++y)
-        for (int x = xstart; x <= xend; ++x)
-            if (see_grid(x,y))
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri )
+    {
+        if ( mgrd(*ri) != NON_MONSTER )
+        {
+            const monsters *mon = &menv[mgrd(*ri)];
+            if (player_monster_visible(mon)
+                && !mons_is_submerged(mon)
+                && (!mons_is_mimic(mon->type)
+                    || testbits(mon->flags, MF_KNOWN_MIMIC)))
             {
-                const unsigned short targ_monst = mgrd[x][y];
-                if (targ_monst != NON_MONSTER)
-                {
-                    const monsters *mon = &menv[targ_monst];
-                    if (player_monster_visible(mon)
-                        && !mons_is_submerged(mon)
-                        && (!mons_is_mimic(mon->type)
-                            || testbits(mon->flags, MF_KNOWN_MIMIC)))
-                    {
-                        mons.push_back(mon);
-                    }
-                }
+                mons.push_back(mon);
             }
+        }
+    }
 
     if (mons.empty())
         return;
