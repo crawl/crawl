@@ -27,7 +27,7 @@ enum genus_type
     GENPC_OGRE
 };
 
-bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
+bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                           bool force, bool swapping = false );
 
 bool player_in_mappable_area(void);

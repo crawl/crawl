@@ -1418,7 +1418,7 @@ void wizard_create_spec_object()
     if (!is_deck(mitm[thing_created]))
         item_colour( mitm[thing_created] );
 
-    move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
+    move_item_to_grid( &thing_created, you.pos() );
 
     if (thing_created != NON_ITEM)
     {
@@ -4101,7 +4101,7 @@ static void _move_player(int x, int y)
 
     if (!you.can_pass_through_feat(grd[x][y]))
         grd[x][y] = DNGN_FLOOR;
-    move_player_to_grid(x, y, false, true, true);
+    move_player_to_grid(coord_def(x, y), false, true, true);
 }
 
 static void _move_monster(int x, int y, int mid1)

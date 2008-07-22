@@ -214,7 +214,7 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
 
     god_acting gdact(GOD_XOM);
 
-    move_item_to_grid(&thing_created, you.x_pos, you.y_pos);
+    move_item_to_grid(&thing_created, you.pos());
     mitm[thing_created].inscription = "god gift";
     canned_msg(MSG_SOMETHING_APPEARS);
     stop_running();

@@ -135,7 +135,7 @@ static void create_monster_hide(int mons_class)
         break;
     }
 
-    move_item_to_grid( &o, you.x_pos, you.y_pos );
+    move_item_to_grid( &o, you.pos() );
 }
 
 // Vampire draining corpses currently leaves them a time of 90, while the
@@ -171,7 +171,7 @@ void turn_corpse_into_chunks( item_def &item )
 
     // Only fresh corpses bleed enough to colour the ground.
     if (!food_is_rotten(item))
-        bleed_onto_floor(you.x_pos, you.y_pos, mons_class, max_chunks, true);
+        bleed_onto_floor(you.pos(), mons_class, max_chunks, true);
 
     item.base_type = OBJ_FOOD;
     item.sub_type  = FOOD_CHUNK;
@@ -392,7 +392,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
 
     ASSERT(timer_new.size() == coag_count);
     props_new.assert_validity();
-    move_item_to_grid( &o, blood.x, blood.y );
+    move_item_to_grid( &o, coord_def(blood.x, blood.y) );
 
     dec_mitm_item_quantity(obj, rot_count + coag_count);
     ASSERT(timer.size() == blood.quantity);
@@ -722,7 +722,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
     ASSERT(timer_new.size() == coag_count);
     props_new.assert_validity();
-    move_item_to_grid( &o, you.x_pos, you.y_pos );
+    move_item_to_grid( &o, you.pos() );
 
     blood.quantity -= rot_count + coag_count;
     if (blood.quantity < 1)
@@ -801,7 +801,7 @@ void remove_newest_blood_potion(item_def &stack, int quant)
 
 // Called from copy_item_to_grid.
 // NOTE: Quantities are set afterwards, so don't ASSERT for those.
-void drop_blood_potions_stack(item_def &stack, int quant, int x, int y)
+void drop_blood_potions_stack(item_def &stack, int quant, const coord_def& p)
 {
     if (!is_valid_item(stack))
         return;
@@ -817,7 +817,7 @@ void drop_blood_potions_stack(item_def &stack, int quant, int x, int y)
     ASSERT(!timer.empty());
 
     // First check whether we can merge with an existing stack on the floor.
-    int o = igrd[x][y];
+    int o = igrd[p.x][p.y];
     while (o != NON_ITEM)
     {
         if (mitm[o].base_type == OBJ_POTIONS
@@ -1067,7 +1067,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         potion2.flags     = 0;
         potion2.special   = 0;
 
-        copy_item_to_grid( potion2, you.x_pos, you.y_pos );
+        copy_item_to_grid( potion2, you.pos() );
    }
    // Is decreased even if the decay stack goes splat.
    dec_inv_item_quantity(obj, amount);
@@ -1098,34 +1098,38 @@ bool victim_can_bleed(int montype)
     return (mons_has_blood(montype));
 }
 
-static bool allow_bleeding_on_square(int x, int y)
+static bool allow_bleeding_on_square(const coord_def& where)
 {
     // No bleeding onto sanctuary ground, please.
     // Also not necessary if already covered in blood.
-    if (env.map[x][y].property != FPROP_NONE)
+    if (env.map(where).property != FPROP_NONE)
         return (false);
 
     // No spattering into lava or water.
-    if (grd[x][y] >= DNGN_LAVA && grd[x][y] < DNGN_FLOOR)
+    if (grd(where) >= DNGN_LAVA && grd(where) < DNGN_FLOOR)
         return (false);
 
     // No spattering into fountains (other than blood).
-    if (grd[x][y] == DNGN_FOUNTAIN_BLUE || grd[x][y] == DNGN_FOUNTAIN_SPARKLING)
+    if (grd(where) == DNGN_FOUNTAIN_BLUE
+        || grd(where) == DNGN_FOUNTAIN_SPARKLING)
+    {
         return (false);
+    }
 
     // The good gods like to keep their altars pristine.
-    if (is_good_god(grid_altar_god(grd[x][y])))
+    if (is_good_god(grid_altar_god(grd(where))))
         return (false);
 
     return (true);
 }
 
-static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false)
+static void maybe_bloodify_square(const coord_def& where, int amount,
+                                  bool spatter = false)
 {
     if (amount < 1)
         return;
 
-    if (!spatter && !allow_bleeding_on_square(x,y))
+    if (!spatter && !allow_bleeding_on_square(where))
         return;
 
     if (x_chance_in_y(amount, 20))
@@ -1133,32 +1137,31 @@ static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
              "might bleed now; square: (%d, %d); amount = %d",
-             x, y, amount);
+             where.x, where.y, amount);
 #endif
-        if (allow_bleeding_on_square(x,y))
-            env.map[x][y].property = FPROP_BLOODY;
+        if (allow_bleeding_on_square(where))
+            env.map(where).property = FPROP_BLOODY;
 
         // If old or new blood on square, the smell reaches further.
-        if (env.map[x][y].property == FPROP_BLOODY)
-            blood_smell(12, x, y);
+        if (env.map(where).property == FPROP_BLOODY)
+            blood_smell(12, where);
         else // Still allow a lingering smell.
-            blood_smell(7, x, y);
+            blood_smell(7, where);
 
         if (spatter)
         {
             // Smaller chance of spattering surrounding squares.
-            for (int i = -1; i <= 1; i++)
-                for (int j = -1; j <= 1; j++)
-                {
-                    if (i == 0 && j == 0) // current square
-                        continue;
+            for ( radius_iterator ri(where, 1, true, false); ri; ++ri )
+            {
+                if ( *ri == where ) // current square
+                    continue;
 
-                    // Spattering onto walls etc. less likely.
-                    if (grd[x+i][y+j] < DNGN_MINMOVE && !one_chance_in(3))
-                        continue;
+                // Spattering onto walls etc. less likely.
+                if (grd(*ri) < DNGN_MINMOVE && !one_chance_in(3))
+                    continue;
 
-                    maybe_bloodify_square(x+i, y+j, amount/15);
-                }
+                maybe_bloodify_square(*ri, amount/15);
+            }
         }
     }
 }
@@ -1166,43 +1169,36 @@ static void maybe_bloodify_square(int x, int y, int amount, bool spatter = false
 // Currently flavour only: colour ground (and possibly adjacent squares) red.
 // "damage" depends on damage taken (or hitpoints, if damage higher),
 // or, for sacrifices, on the number of chunks possible to get out of a corpse.
-void bleed_onto_floor(int x, int y, int montype, int damage, bool spatter)
+void bleed_onto_floor(const coord_def& where, int montype,
+                      int damage, bool spatter)
 {
-    ASSERT(in_bounds(x,y));
+    ASSERT(in_bounds(where));
     if (!victim_can_bleed(montype))
         return;
 
-    maybe_bloodify_square(x, y, damage, spatter);
+    maybe_bloodify_square(where, damage, spatter);
 }
 
-static void _spatter_neighbours(int cx, int cy, int chance)
+static void _spatter_neighbours(const coord_def& where, int chance)
 {
-    int posx, posy;
-    for (int x = -1; x <= 1; x++)
-        for (int y = -1; y <= 1; y++)
+    for ( radius_iterator ri(where, 1, true, false); ri; ++ri )
+    {
+        if (!allow_bleeding_on_square(*ri))
+            continue;
+
+        if (grd(*ri) < DNGN_MINMOVE && !one_chance_in(3))
+            continue;
+
+        if (one_chance_in(chance))
         {
-            posx = cx + x;
-            posy = cy + y;
-            if (!in_bounds(posx, posy))
-                continue;
-
-            if (!allow_bleeding_on_square(posx, posy))
-                continue;
-
-            if (grd[posx][posy] < DNGN_MINMOVE && !one_chance_in(3))
-                continue;
-
-            if (one_chance_in(chance))
-            {
-                env.map[posx][posy].property = FPROP_BLOODY;
-                _spatter_neighbours(posx, posy, chance+1);
-            }
+            env.map(*ri).property = FPROP_BLOODY;
+            _spatter_neighbours(*ri, chance+1);
         }
+    }
 }
 
 void generate_random_blood_spatter_on_level()
 {
-    int cx, cy;
     int startprob;
 
     // startprob is used to initialize the chance for neighbours being
@@ -1230,13 +1226,14 @@ void generate_random_blood_spatter_on_level()
 
     for (int i = 0; i < max_cluster; i++)
     {
-        cx = 10 + random2(GXM - 10);
-        cy = 10 + random2(GYM - 10);
+        coord_def c;
+        c.x = 10 + random2(GXM - 10);
+        c.y = 10 + random2(GYM - 10);
         startprob = min_prob + random2(max_prob);
 
-        if (allow_bleeding_on_square(cx, cy))
-            env.map[cx][cy].property = FPROP_BLOODY;
-        _spatter_neighbours(cx, cy, startprob);
+        if (allow_bleeding_on_square(c))
+            env.map(c).property = FPROP_BLOODY;
+        _spatter_neighbours(c, startprob);
     }
 }
 
@@ -1281,7 +1278,7 @@ void search_around( bool only_adjacent )
                 else if (grd[srx][sry] == DNGN_UNDISCOVERED_TRAP
                          && x_chance_in_y(effective + 1, 17))
                 {
-                    i = trap_at_xy(srx, sry);
+                    i = trap_at_xy(coord_def(srx, sry));
 
                     if (i != -1)
                     {
@@ -1737,7 +1734,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     branch_type old_where = you.where_are_you;
 
     bool shaft = (!force_stair
-                      && trap_type_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT
+                  && trap_type_at_xy(you.pos()) == TRAP_SHAFT
                   || force_stair == DNGN_TRAP_NATURAL);
     level_id shaft_dest;
     int      shaft_level = -1;
@@ -2017,7 +2014,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         {
             if (you.flight_mode() == FL_FLY && !force_stair)
                 mpr("You dive down through the shaft.");
-            handle_items_on_shaft(you.x_pos, you.y_pos, false);
+            handle_items_on_shaft(you.pos(), false);
         }
         else
             climb_message(stair_find, false, old_level_type);
@@ -2410,7 +2407,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
 
         // No monster will attack you inside a sanctuary,
         // so presence of monsters won't matter -- until it starts shrinking...
-        if (is_sanctuary(you.x_pos, you.y_pos) && env.sanctuary_time >= 5)
+        if (is_sanctuary(you.pos()) && env.sanctuary_time >= 5)
             return (true);
     }
 
@@ -2563,11 +2560,9 @@ static void apply_environment_effect(const coord_def &c)
 {
     const dungeon_feature_type grid = grd(c);
     if (grid == DNGN_LAVA)
-        check_place_cloud( CLOUD_BLACK_SMOKE,
-                           c.x, c.y, random_range( 4, 8 ), KC_OTHER );
+        check_place_cloud(CLOUD_BLACK_SMOKE, c, random_range(4, 8), KC_OTHER);
     else if (grid == DNGN_SHALLOW_WATER)
-        check_place_cloud( CLOUD_MIST,
-                           c.x, c.y, random_range( 2, 5 ), KC_OTHER );
+        check_place_cloud(CLOUD_MIST,        c, random_range(2, 5), KC_OTHER);
 }
 
 static const int Base_Sfx_Chance = 5;
@@ -2654,7 +2649,7 @@ void reveal_secret_door(int x, int y)
 {
     ASSERT(grd[x][y] == DNGN_SECRET_DOOR);
 
-    dungeon_feature_type door = grid_secret_door_appearance(x, y);
+    dungeon_feature_type door = grid_secret_door_appearance(coord_def(x, y));
     grd[x][y] = grid_is_opaque(door) ?
         DNGN_CLOSED_DOOR : DNGN_OPEN_DOOR;
     viewwindow(true, false);
@@ -2709,8 +2704,8 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     bool retval = false;
     bool prompt = false;
 
-    const bool inSanctuary   = (is_sanctuary(you.x_pos, you.y_pos)
-                                 || is_sanctuary(mon->x, mon->y));
+    const bool inSanctuary   = (is_sanctuary(you.pos())
+                                || is_sanctuary(mon->pos()));
     const bool wontAttack    = mons_wont_attack(mon);
     const bool isFriendly    = mons_friendly(mon);
     const bool isNeutral     = mons_neutral(mon);

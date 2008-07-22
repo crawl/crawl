@@ -639,11 +639,7 @@ bool melee_attack::attack()
     if (env.sanctuary_time > 0 && retval && !cancel_attack
         && attacker != defender && !attacker->confused())
     {
-        const coord_def atk_pos = attacker->pos();
-        const coord_def def_pos = defender->pos();
-
-        if (is_sanctuary(atk_pos.x, atk_pos.y)
-            || is_sanctuary(def_pos.x, def_pos.y))
+        if (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
         {
             if (attacker->atype() == ACT_PLAYER || mons_friendly(atk))
                 remove_sanctuary(true);
@@ -826,7 +822,7 @@ bool melee_attack::player_attack()
             if (blood > defender->stat_hp())
                 blood = defender->stat_hp();
 
-            bleed_onto_floor(where.x, where.y, defender->id(), blood, true);
+            bleed_onto_floor(where, defender->id(), blood, true);
         }
 
         if (damage_done > 0 || !defender_visible && !shield_blocked)
@@ -2428,10 +2424,7 @@ bool melee_attack::chop_hydra_head( int dam,
 
             coord_def pos = defender->pos();
             if (!mons_is_summoned(def))
-            {
-                bleed_onto_floor(pos.x, pos.y, defender->id(),
-                                 def->hit_points, true);
-            }
+                bleed_onto_floor(pos, defender->id(), def->hit_points, true);
 
             defender->hurt(attacker, def->hit_points);
         }
@@ -3125,9 +3118,7 @@ bool melee_attack::mons_attack_mons()
     const coord_def def_pos = def->pos();
 
     // Self-attacks never violate sanctuary.
-    if ((is_sanctuary(atk_pos.x, atk_pos.y)
-         || is_sanctuary(def_pos.x, def_pos.y))
-        && atk != def)
+    if ((is_sanctuary(atk_pos) || is_sanctuary(def_pos)) && atk != def)
     {
         // Friendly monsters should only violate sanctuary if explicitly
         // ordered to do so by the player.
@@ -3950,7 +3941,7 @@ void melee_attack::mons_perform_attack_rounds()
                 if (blood > defender->stat_hp())
                     blood = defender->stat_hp();
 
-                bleed_onto_floor(pos.x, pos.y, type, blood, true);
+                bleed_onto_floor(pos, type, blood, true);
             }
             if (decapitate_hydra(damage_done,
                                  attacker->damage_type(attack_number)))

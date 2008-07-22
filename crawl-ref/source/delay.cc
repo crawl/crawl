@@ -480,8 +480,7 @@ void stop_delay( bool stop_stair_travel )
         else
         {
             mpr("All blood oozes out of the corpse!");
-            bleed_onto_floor(you.x_pos, you.y_pos, corpse.plus, delay.duration,
-                             false);
+            bleed_onto_floor(you.pos(), corpse.plus, delay.duration, false);
             turn_corpse_into_skeleton(corpse, 90);
         }
         did_god_conduct(DID_DRINK_BLOOD, 8);
@@ -1049,38 +1048,35 @@ static void _finish_delay(const delay_queue_item &delay)
         mpr( "You finish merging with the rock." );
         more();  // or the above message won't be seen
 
-        const int pass_x = delay.parm1;
-        const int pass_y = delay.parm2;
+        const coord_def pass(delay.parm1, delay.parm2);
 
-        if (pass_x != 0 && pass_y != 0)
+        if (pass.x != 0 && pass.y != 0)
         {
 
-            switch (grd[ pass_x ][ pass_y ])
+            switch (grd(pass))
             {
             default:
-                if (!you.can_pass_through_feat(grd[pass_x][pass_y]))
+                if (!you.can_pass_through_feat(grd(pass)))
                     ouch(1 + you.hp, 0, KILLED_BY_PETRIFICATION);
                 break;
 
             case DNGN_SECRET_DOOR:      // oughtn't happen
             case DNGN_CLOSED_DOOR:      // open the door
-                grd[ pass_x ][ pass_y ] = DNGN_OPEN_DOOR;
+                grd(pass) = DNGN_OPEN_DOOR;
                 break;
             }
 
             // Move any monsters out of the way:
-            int mon = mgrd[ pass_x ][ pass_y ];
+            int mon = mgrd(pass);
             if (mon != NON_MONSTER)
             {
+                monsters* m = &menv[mon];
                 // One square, a few squares, anywhere...
-                if (!shift_monster(&menv[mon])
-                    && !monster_blink(&menv[mon]))
-                {
-                    monster_teleport( &menv[mon], true, true );
-                }
+                if (!shift_monster(m) && !monster_blink(m))
+                    monster_teleport( m, true, true );
             }
 
-            move_player_to_grid(pass_x, pass_y, false, true, true);
+            move_player_to_grid(pass, false, true, true);
             redraw_screen();
         }
         break;
@@ -1217,7 +1213,7 @@ static void _finish_delay(const delay_queue_item &delay)
         }
 
         if (!copy_item_to_grid( you.inv[ delay.parm1 ],
-                                you.x_pos, you.y_pos, delay.parm2,
+                                you.pos(), delay.parm2,
                                 true ))
         {
             mpr("Too many items on this level, not dropping the item.");
@@ -1772,7 +1768,7 @@ bool interrupt_activity( activity_interrupt_type ai,
     {
         // no monster will attack you inside a sanctuary,
         // so presence of monsters won't matter
-        if (is_sanctuary(you.x_pos, you.y_pos))
+        if (is_sanctuary(you.pos()))
             return (false);
 
         _monster_warning(ai, at, item.type);

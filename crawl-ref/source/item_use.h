@@ -166,7 +166,8 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm );
 bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
               int acc_bonus = 0, dist *target = NULL);
 
-bool thrown_object_destroyed( item_def *item, int x, int y, bool returning );
+bool thrown_object_destroyed( item_def *item, const coord_def& where,
+                              bool returning );
 
 void prompt_inscribe_item();
 int launcher_shield_slowdown(const item_def &launcher,

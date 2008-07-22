@@ -152,7 +152,7 @@ bool inside_level_bounds(int x, int y)
     return (x > 0 && x < GXM && y > 0 && y < GYM);
 }
 
-bool inside_level_bounds(coord_def &p)
+bool inside_level_bounds(const coord_def &p)
 {
     return (inside_level_bounds(p.x, p.y));
 }
@@ -244,15 +244,15 @@ void set_envmap_prop( int x, int y, int prop )
     env.map[x][y].property = prop;
 }
 
-bool is_sanctuary(int x, int y)
+bool is_sanctuary(const coord_def& p)
 {
-    return (env.map[x][y].property == FPROP_SANCTUARY_1
-            || env.map[x][y].property == FPROP_SANCTUARY_2);
+    return (env.map(p).property == FPROP_SANCTUARY_1
+            || env.map(p).property == FPROP_SANCTUARY_2);
 }
 
-bool is_bloodcovered(int x, int y)
+bool is_bloodcovered(const coord_def& p)
 {
-    return (env.map[x][y].property == FPROP_BLOODY);
+    return (env.map(p).property == FPROP_BLOODY);
 }
 
 bool is_envmap_item(int x, int y)
@@ -414,7 +414,7 @@ static int _view_emphasised_colour(int x, int y, dungeon_feature_type feat,
 
 static bool _show_bloodcovered(int x, int y)
 {
-    if (!is_bloodcovered(x,y))
+    if (!is_bloodcovered(coord_def(x,y)))
         return (false);
 
     dungeon_feature_type grid = grd[x][y];
@@ -441,8 +441,8 @@ static void _get_symbol( int x, int y,
         {
             const int colmask = *colour & COLFLAG_MASK;
 
-            if (object < NUM_REAL_FEATURES
-                && is_sanctuary(x,y) && object >= DNGN_MINMOVE)
+            if (object < NUM_REAL_FEATURES && object >= DNGN_MINMOVE
+                && is_sanctuary(coord_def(x,y)) )
             {
                 if (env.map[x][y].property == FPROP_SANCTUARY_1)
                     *colour = YELLOW | colmask;
@@ -1103,7 +1103,7 @@ void handle_monster_shouts(monsters* monster, bool force)
 
     const int noise_level = get_shout_noise_level(s_type);
     if (noise_level > 0)
-        noisy(noise_level, monster->x, monster->y);
+        noisy(noise_level, monster->pos());
 }
 
 #ifdef WIZARD
@@ -1532,21 +1532,19 @@ void cloud_grid(void)
 // player is appropriate.
 //
 // Returns true if the PC heard the noise.
-bool noisy(int loudness, int nois_x, int nois_y, const char *msg)
+bool noisy(int loudness, const coord_def& where, const char *msg)
 {
-    struct monsters *monster = 0;       // NULL {dlb}
     bool ret = false;
 
     // If the origin is silenced there is no noise.
-    if (silenced(nois_x, nois_y))
+    if (silenced(where))
         return (false);
 
     const int dist = loudness * loudness;
+    const int player_distance = distance( you.pos(), where );
 
-    const int player_distance =
-        distance( you.x_pos, you.y_pos, nois_x, nois_y );
     // message the player
-    if (player_distance <= dist && player_can_hear( nois_x, nois_y ))
+    if (player_distance <= dist && player_can_hear( where ))
     {
         if (msg)
             mpr( msg, MSGCH_SOUND );
@@ -1567,20 +1565,20 @@ bool noisy(int loudness, int nois_x, int nois_y, const char *msg)
 
     for (int p = 0; p < MAX_MONSTERS; p++)
     {
-        monster = &menv[p];
+        monsters* monster = &menv[p];
 
         if (monster->type < 0)
             continue;
 
-        if (distance(monster->x, monster->y, nois_x, nois_y) <= dist
-            && !silenced(monster->x, monster->y))
+        if (distance(monster->pos(), where) <= dist
+            && !silenced(monster->pos()))
         {
             // If the noise came from the character, any nearby monster
             // will be jumping on top of them.
-            if (nois_x == you.x_pos && nois_y == you.y_pos)
+            if (where == you.pos())
                 behaviour_event( monster, ME_ALERT, MHITYOU );
             else
-                behaviour_event( monster, ME_DISTURB, MHITNOT, nois_x, nois_y );
+                behaviour_event( monster, ME_DISTURB, MHITNOT, where );
         }
     }
 
@@ -1603,15 +1601,15 @@ static const char* _player_vampire_smells_blood(int dist)
     return "";
 }
 
-void blood_smell( int strength, int blood_x, int blood_y )
+void blood_smell( int strength, const coord_def& where )
 {
-    struct monsters *monster = 0;       // NULL {dlb}
+    monsters *monster = NULL;
 
     const int range = strength * strength;
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "blood stain at (%d, %d), range of smell = %d",
-         blood_x, blood_y, range);
+         where.x, where.y, range);
 #endif
 
     // Of the player species, only Vampires can smell blood.
@@ -1623,8 +1621,7 @@ void blood_smell( int strength, int blood_x, int blood_y )
         {
             int vamp_range = vamp_strength * vamp_strength;
 
-            const int player_distance
-                = distance( you.x_pos, you.y_pos, blood_x, blood_y );
+            const int player_distance = distance( you.pos(), where );
 
             if (player_distance <= vamp_range)
             {
@@ -1635,7 +1632,7 @@ void blood_smell( int strength, int blood_x, int blood_y )
 #endif
                 you.check_awaken(range - player_distance);
                 // Don't message if you can see the square.
-                if (!see_grid(blood_x, blood_y))
+                if (!see_grid(where))
                 {
                     mprf("You smell fresh blood%s.",
                          _player_vampire_smells_blood(player_distance));
@@ -1654,7 +1651,7 @@ void blood_smell( int strength, int blood_x, int blood_y )
         if (!mons_class_flag(monster->type, M_BLOOD_SCENT))
             continue;
 
-        if (distance(monster->x, monster->y, blood_x, blood_y) <= range)
+        if (distance(monster->pos(), where) <= range)
         {
             // Let sleeping hounds lie.
             if (mons_is_sleeping(monster)
@@ -1672,8 +1669,7 @@ void blood_smell( int strength, int blood_x, int blood_y )
                              monster->name(DESC_PLAIN).c_str(),
                              monster->x, monster->y);
 #endif
-                        behaviour_event( monster, ME_DISTURB, MHITNOT,
-                                         blood_x, blood_y );
+                        behaviour_event(monster, ME_DISTURB, MHITNOT, where);
                     }
                     continue;
                 }
@@ -1682,10 +1678,10 @@ void blood_smell( int strength, int blood_x, int blood_y )
             mprf(MSGCH_DIAGNOSTICS, "alerting %s (%d, %d)",
                  monster->name(DESC_PLAIN).c_str(), monster->x, monster->y);
 #endif
-            behaviour_event( monster, ME_ALERT, MHITNOT, blood_x, blood_y );
+            behaviour_event( monster, ME_ALERT, MHITNOT, where );
         }
     }
-}      // end blood_smell()
+}
 
 // The LOS code now uses raycasting -- haranp
 
@@ -2348,7 +2344,7 @@ static bool _superior_ray(int shortest, int imbalance,
     return (slope_diff > ray_slope_diff);
 }
 
-// Find a nonblocked ray from sx, sy to tx, ty. Return false if no
+// Find a nonblocked ray from source to target. Return false if no
 // such ray could be found, otherwise return true and fill ray
 // appropriately.
 // If allow_fallback is true, fall back to a center-to-center ray
@@ -2359,15 +2355,22 @@ static bool _superior_ray(int shortest, int imbalance,
 // If find_shortest is true, examine all rays that hit the target and
 // take the shortest (starting at ray.fullray_idx).
 
-bool find_ray( int sourcex, int sourcey, int targetx, int targety,
+bool find_ray( const coord_def& source, const coord_def& target,
                bool allow_fallback, ray_def& ray, int cycle_dir,
                bool find_shortest, bool ignore_solid )
 {
     int cellray, inray;
+
+    const int sourcex = source.x;
+    const int sourcey = source.y;
+    const int targetx = target.x;
+    const int targety = target.y;
+
     const int signx = ((targetx - sourcex >= 0) ? 1 : -1);
     const int signy = ((targety - sourcey >= 0) ? 1 : -1);
     const int absx  = signx * (targetx - sourcex);
     const int absy  = signy * (targety - sourcey);
+
     int cur_offset  = 0;
     int shortest    = INFINITE_DISTANCE;
     int imbalance   = INFINITE_DISTANCE;
@@ -2526,21 +2529,21 @@ bool find_ray( int sourcex, int sourcey, int targetx, int targety,
 // By default, it excludes end points from the count.
 // If just_check is true, the function will return early once one
 // such feature is encountered.
-int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
+int num_feats_between(const coord_def& source, const coord_def& target,
                       dungeon_feature_type min_feat,
                       dungeon_feature_type max_feat,
                       bool exclude_endpoints, bool just_check)
 {
     ray_def ray;
     int     count    = 0;
-    int     max_dist = grid_distance(sourcex, sourcey, targetx, targety);
+    int     max_dist = grid_distance(source, target);
 
     ray.fullray_idx = -1; // to quiet valgrind
 
     // We don't need to find the shortest beam, any beam will suffice.
-    find_ray( sourcex, sourcey, targetx, targety, true, ray, 0, false, true );
+    find_ray( source, target, true, ray, 0, false, true );
 
-    if (exclude_endpoints && ray.x() == sourcex && ray.y() == sourcey)
+    if (exclude_endpoints && ray.pos() == source)
     {
         ray.advance(true);
         max_dist--;
@@ -2550,9 +2553,9 @@ int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
     bool reached_target = false;
     while (dist++ <= max_dist)
     {
-        dungeon_feature_type feat = grd[ray.x()][ray.y()];
+        const dungeon_feature_type feat = grd(ray.pos());
 
-        if (ray.x() == targetx && ray.y() == targety)
+        if (ray.pos() == target)
             reached_target = true;
 
         if (feat >= min_feat && feat <= max_feat
@@ -2611,10 +2614,12 @@ int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
 // Smoke will now only block LOS after two cells of smoke. This is
 // done by updating with a second array.
 void losight(env_show_grid &sh,
-             feature_grid &gr, int x_p, int y_p,
+             feature_grid &gr, const coord_def& center,
              bool clear_walls_block)
 {
     raycast();
+    const int x_p = center.x;
+    const int y_p = center.y;
     // go quadrant by quadrant
     const int quadrant_x[4] = {  1, -1, -1,  1 };
     const int quadrant_y[4] = {  1,  1, -1, -1 };
@@ -2649,7 +2654,7 @@ void losight(env_show_grid &sh,
 
                 dungeon_feature_type dfeat = gr[realx][realy];
                 if (dfeat == DNGN_SECRET_DOOR)
-                    dfeat = grid_secret_door_appearance(realx, realy);
+                    dfeat = grid_secret_door_appearance(coord_def(realx, realy));
 
                 // if this cell is opaque...
                 if ( grid_is_opaque(dfeat)
@@ -2713,24 +2718,24 @@ void losight(env_show_grid &sh,
 // 3. '^' for traps
 // 4. '_' for altars
 // 5. Anything else will look for the exact same character in the level map.
-bool is_feature(int feature, int x, int y)
+bool is_feature(int feature, const coord_def& where)
 {
-    if (!env.map[x][y].object)
+    if (!env.map(where).object)
         return (false);
 
     // 'grid' can fit in an unsigned char, but making this a short shuts up
     // warnings about out-of-range case values.
-    short grid = grd[x][y];
+    short grid = grd(where);
 
     switch (feature)
     {
     case 'X':
-        return (travel_point_distance[x][y] == PD_EXCLUDED);
+        return (travel_point_distance[where.x][where.y] == PD_EXCLUDED);
     case 'F':
     case 'W':
-        return is_waypoint(x, y);
+        return is_waypoint(where.x, where.y);
     case 'I':
-        return is_stash(x, y);
+        return is_stash(where.x, where.y);
     case '_':
         switch (grid)
         {
@@ -2838,21 +2843,21 @@ bool is_feature(int feature, int x, int y)
             return (false);
         }
     default:
-        return get_envmap_char(x, y) == (unsigned) feature;
+        return get_envmap_char(where.x, where.y) == (unsigned) feature;
     }
 }
 
-static bool _is_feature_fudged(int feature, int x, int y)
+static bool _is_feature_fudged(int feature, const coord_def& where)
 {
-    if (!env.map[x][y].object)
+    if (!env.map(where).object)
         return (false);
 
-    if (is_feature(feature, x, y))
+    if (is_feature(feature, where))
         return (true);
 
     // 'grid' can fit in an unsigned char, but making this a short shuts up
     // warnings about out-of-range case values.
-    short grid = grd[x][y];
+    short grid = grd(where);
 
     if (feature == '<')
     {
@@ -2918,7 +2923,7 @@ static int _find_feature(int feature, int curs_x, int curs_y,
                 int x = cx + dx, y = cy + dy;
                 if (!in_bounds(x, y))
                     continue;
-                if (_is_feature_fudged(feature, x, y))
+                if (_is_feature_fudged(feature, coord_def(x, y)))
                 {
                     ++matchcount;
                     if (!ignore_count--)
@@ -2953,7 +2958,7 @@ void find_features(const std::vector<coord_def>& features,
     for (unsigned feat = 0; feat < features.size(); ++feat)
     {
         const coord_def& coord = features[feat];
-        if (is_feature(feature, coord.x, coord.y))
+        if (is_feature(feature, coord))
             found->push_back(coord);
     }
 }
@@ -2972,7 +2977,7 @@ static int _find_feature( const std::vector<coord_def>& features,
     {
         const coord_def& coord = features[feat];
 
-        if (_is_feature_fudged(feature, coord.x, coord.y))
+        if (_is_feature_fudged(feature, coord))
         {
             ++matchcount;
             if (forward? !ignore_count-- : --ignore_count == 1)
@@ -3806,10 +3811,10 @@ bool trans_wall_blocking( const coord_def &p )
 // Yes, this ignores lava-loving monsters.
 // XXX: It turns out the beams are not symmetrical, i.e. switching
 // pos1 and pos2 may result in small variations.
-bool grid_see_grid(int posx_1, int posy_1, int posx_2, int posy_2,
+bool grid_see_grid(const coord_def& p1, const coord_def& p2,
                    dungeon_feature_type allowed)
 {
-    if (distance(posx_1, posy_1, posx_2, posy_2) > LOS_RADIUS * LOS_RADIUS)
+    if (distance(p1, p2) > LOS_RADIUS * LOS_RADIUS)
         return (false);
 
     dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
@@ -3817,8 +3822,8 @@ bool grid_see_grid(int posx_1, int posy_1, int posx_2, int posy_2,
         max_disallowed = static_cast<dungeon_feature_type>(allowed - 1);
 
     // XXX: Ignoring clouds for now.
-    return (!num_feats_between(posx_1, posy_1, posx_2, posy_2, DNGN_UNSEEN,
-                               max_disallowed, true, true));
+    return (!num_feats_between(p1, p2, DNGN_UNSEEN, max_disallowed,
+                               true, true));
 }
 
 static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
@@ -4607,7 +4612,7 @@ unsigned get_screen_glyph( int x, int y )
         return get_envmap_char(x, y);
 
     if (object == DNGN_SECRET_DOOR)
-        object = grid_secret_door_appearance( x, y );
+        object = grid_secret_door_appearance(coord_def(x, y));
 
     _get_symbol( x, y, object, &ch, &colour );
     return (ch);
@@ -4673,7 +4678,7 @@ std::string screenshot( bool fullscreen )
                 unsigned short glycol = 0;
 
                 if (object == DNGN_SECRET_DOOR)
-                    object = grid_secret_door_appearance( gc.x, gc.y );
+                    object = grid_secret_door_appearance( gc );
 
                 _get_symbol( gc.x, gc.y, object, &glych, &glycol );
                 ch = glych;
@@ -4772,7 +4777,7 @@ void view_update_at(const coord_def &pos)
     unsigned        ch = 0;
 
     if (object == DNGN_SECRET_DOOR)
-        object = grid_secret_door_appearance( pos.x, pos.y );
+        object = grid_secret_door_appearance( pos );
 
     _get_symbol( pos.x, pos.y, object, &ch, &colour );
 
@@ -4857,11 +4862,11 @@ void viewwindow(bool draw_it, bool do_updates)
 
     int count_x, count_y;
 
-    losight( env.show, grd, you.x_pos, you.y_pos ); // Must be done first.
+    losight( env.show, grd, you.pos() ); // Must be done first.
 
     // What would be visible, if all of the translucent walls were
     // made opaque.
-    losight( env.no_trans_show, grd, you.x_pos, you.y_pos, true );
+    losight( env.no_trans_show, grd, you.pos(), true );
 
 #ifdef USE_TILE
     tile_draw_floor();
@@ -4917,11 +4922,11 @@ void viewwindow(bool draw_it, bool do_updates)
                         }
                         else if (grid_is_branch_stairs(grd(gc)))
                             learned_something_new(TUT_SEEN_BRANCH, gc.x, gc.y);
-                        else if (is_feature('>', gc.x, gc.y))
+                        else if (is_feature('>', gc))
                         {
                             learned_something_new(TUT_SEEN_STAIRS, gc.x, gc.y);
                         }
-                        else if (is_feature('_', gc.x, gc.y))
+                        else if (is_feature('_', gc))
                             learned_something_new(TUT_SEEN_ALTAR, gc.x, gc.y);
                         else if (grd(gc) == DNGN_CLOSED_DOOR)
                             learned_something_new(TUT_SEEN_DOOR, gc.x, gc.y);
@@ -4930,8 +4935,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
                         if (igrd[gc.x][gc.y] != NON_ITEM
                             && Options.feature_item_brand != CHATTR_NORMAL
-                            && (is_feature('>', gc.x, gc.y)
-                                || is_feature('<', gc.x, gc.y)))
+                            && (is_feature('>', gc) || is_feature('<', gc)))
                         {
                             learned_something_new(TUT_STAIR_BRAND, gc.x, gc.y);
                         }
@@ -5020,7 +5024,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     unsigned        ch;
 
                     if (object == DNGN_SECRET_DOOR)
-                        object = grid_secret_door_appearance( gc.x, gc.y );
+                        object = grid_secret_door_appearance( gc );
 
                     _get_symbol( gc.x, gc.y, object, &ch, &colour );
 
@@ -5887,7 +5891,8 @@ void monster_los::check_los_beam(int dx, int dy)
 
             dist = 0;
             ray.fullray_idx = -1; // to quiet valgrind
-            find_ray( gridx, gridy, tx, ty, true, ray, 0, true, true );
+            find_ray( coord_def(gridx, gridy), coord_def(tx, ty),
+                      true, ray, 0, true, true );
 
             if (ray.x() == gridx && ray.y() == gridy)
                 ray.advance(true);

@@ -242,8 +242,7 @@ int detect_creatures( int pow, bool telepathic )
                 if (mons_intel( mon->type ) == I_HIGH
                     && mons_class_flag( mon->type, M_SPELLCASTER ))
                 {
-                    behaviour_event( mon, ME_DISTURB, MHITYOU,
-                                     you.x_pos, you.y_pos );
+                    behaviour_event( mon, ME_DISTURB, MHITYOU, you.pos() );
                 }
             }
         }
@@ -282,35 +281,29 @@ int corpse_rot(int power)
     for (adx = minx; adx != maxx; adx += xinc)
         for (ady = miny; ady != maxy; ady += yinc)
         {
-            if (see_grid_no_trans(adx, ady) && !is_sanctuary(adx, ady))
+            coord_def ad(adx, ady);
+            if (see_grid_no_trans(ad) && !is_sanctuary(ad))
             {
-                if (igrd[adx][ady] == NON_ITEM
-                    || env.cgrid[adx][ady] != EMPTY_CLOUD)
-                {
+                if (igrd(ad) == NON_ITEM || env.cgrid(ad) != EMPTY_CLOUD)
                     continue;
-                }
 
-                int objl = igrd[adx][ady];
-                int hrg = 0;
-
-                while (objl != NON_ITEM)
+                for ( stack_iterator si(ad); si; ++si )
                 {
-                    if (mitm[objl].base_type == OBJ_CORPSES
-                        && mitm[objl].sub_type == CORPSE_BODY)
+                    if (si->base_type == OBJ_CORPSES
+                        && si->sub_type == CORPSE_BODY)
                     {
-                        if (!mons_skeleton(mitm[objl].plus))
-                            destroy_item(objl);
+                        // Found a corpse. Skeletify it if possible.
+                        if (!mons_skeleton(si->plus))
+                            destroy_item(si->index());
                         else
-                            turn_corpse_into_skeleton(mitm[objl]);
+                            turn_corpse_into_skeleton(*si);
 
-                        place_cloud(CLOUD_MIASMA, adx, ady,
+                        place_cloud(CLOUD_MIASMA, ad,
                                     4 + random2avg(16, 3), KC_YOU);
 
                         // Don't look for more corpses here.
                         break;
                     }
-                    hrg = mitm[objl].link;
-                    objl = hrg;
                 }
             }
         }
@@ -416,7 +409,7 @@ bool brand_weapon(brand_type which_brand, int power)
         // Well, in theory, we could be silenced, but then how are
         // we casting the brand spell?
         msg += " shrieks in agony.";
-        noisy(15, you.x_pos, you.y_pos);
+        noisy(15, you.pos());
         duration_affected = 8;
         break;
 
@@ -801,7 +794,7 @@ void drain_life(int pow)
 
             hurted = 3 + random2(7) + random2(pow);
 
-            behaviour_event(monster, ME_WHACK, MHITYOU, you.x_pos, you.y_pos);
+            behaviour_event(monster, ME_WHACK, MHITYOU, you.pos());
 
             hurt_monster(monster, hurted);
 
@@ -1838,34 +1831,30 @@ bool cast_conjure_ball_lightning(int pow, god_type god)
 
     for (int i = 0; i < how_many; ++i)
     {
-        int tx = -1, ty = -1;
-
+        coord_def target;
+        bool found = false;
         for (int j = 0; j < 10; ++j)
         {
-            if (!random_near_space(you.x_pos, you.y_pos, tx, ty, true, true)
-                && distance(you.x_pos, you.y_pos, tx, ty) <= 5)
+            if (!random_near_space(you.pos(), target, true, true)
+                && distance(you.pos(), target) <= 5)
             {
+                found = true;
                 break;
             }
         }
 
         // If we fail, we'll try the ol' summon next to player trick.
-        if (tx == -1 || ty == -1)
-        {
-            tx = you.x_pos;
-            ty = you.y_pos;
-        }
+        if ( !found )
+            target = you.pos();
 
         int monster =
             mons_place(
                 mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY, 0,
-                          coord_def(tx, ty), MHITNOT,
-                          0, god));
+                          target, MHITNOT, 0, god));
 
         if (monster != -1)
         {
             success = true;
-
             menv[monster].add_ench(ENCH_SHORT_LIVED);
         }
     }

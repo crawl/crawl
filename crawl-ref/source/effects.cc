@@ -1677,7 +1677,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                     randart_name(thing, false);
             }
         }
-        move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
+        move_item_to_grid( &thing_created, you.pos() );
 
         // This should never actually be NON_ITEM because of the way
         // move_item_to_grid works (doesn't create a new item ever),
@@ -1890,7 +1890,7 @@ void yell(bool force)
     if (force)
     {
         mprf("A %s rips itself from your throat!", shout_verb.c_str());
-        noisy(noise_level, you.x_pos, you.y_pos);
+        noisy(noise_level, you.pos());
         return;
     }
 
@@ -1926,7 +1926,7 @@ void yell(bool force)
     case '!':    // for players using the old keyset
     case 't':
         mprf(MSGCH_SOUND, "You %s for attention!", shout_verb.c_str());
-        noisy(noise_level, you.x_pos, you.y_pos);
+        noisy(noise_level, you.pos());
         you.turn_is_over = true;
         return;
 
@@ -2011,7 +2011,7 @@ void yell(bool force)
     if (mons_targd != MHITNOT && mons_targd != MHITYOU)
         mpr("Attack!");
 
-    noisy(10, you.x_pos, you.y_pos);
+    noisy(10, you.pos());
 }                               // end yell()
 
 bool forget_inventory(bool quiet)
@@ -2099,7 +2099,7 @@ bool vitrify_area(int radius)
 
 static void _hell_effects()
 {
-    if (is_sanctuary(you.x_pos, you.y_pos))
+    if (is_sanctuary(you.pos()))
     {
         mpr("Zin's power protects you from Hell's scourges!", MSGCH_GOD);
         return;
@@ -2475,7 +2475,7 @@ void handle_time(long time_delta)
         // the original roll of 150 for 4.1.2, but I think players are
         // sufficiently used to beta 26's unkindness that we can use a lower
         // roll.)
-        if (is_sanctuary(you.x_pos, you.y_pos)
+        if (is_sanctuary(you.pos())
             && you.magic_contamination >= 5
             && x_chance_in_y(you.magic_contamination + 1, 25))
         {
@@ -2890,20 +2890,21 @@ static void _maybe_restart_fountain_flow(const int x, const int y,
               set_envmap_obj(x, y, grd[x][y]);
 
           // Clean bloody floor.
-          if (is_bloodcovered(x,y))
+          if (is_bloodcovered(coord_def(x,y)))
               env.map[x][y].property = FPROP_NONE;
 
           // Chance of cleaning adjacent squares.
           for (int i = -1; i <= 1; i++)
+          {
                for (int j = -1; j <= 1; j++)
                {
-                    if (is_bloodcovered(x+i,y+j)
-                        && one_chance_in(5))
-                    {
-                        env.map[x+i][y+j].property = FPROP_NONE;
-                    }
+                   if (is_bloodcovered(coord_def(x+i,y+j))
+                       && one_chance_in(5))
+                   {
+                       env.map[x+i][y+j].property = FPROP_NONE;
+                   }
                }
-
+          }
           return;
      }
 }

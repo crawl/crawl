@@ -590,8 +590,7 @@ public:
   int x_pos;
   int y_pos;
 
-  int prev_move_x;
-  int prev_move_y;
+  coord_def prev_move;
 
   int hunger;
   FixedVector<char, NUM_EQUIP> equip;
@@ -787,7 +786,6 @@ public:
     void moveto(int x, int y);
     void moveto(const coord_def &c);
 
-    coord_def prev_move() const;
     void reset_prev_move();
 
     bool in_water() const;
@@ -1318,6 +1316,7 @@ struct cloud_struct
     kill_category whose;
 
     killer_type beam_thrower() const;
+    coord_def pos() const { return coord_def(x,y); }
 };
 
 struct shop_struct
@@ -1329,6 +1328,7 @@ struct shop_struct
     unsigned char       level;
 
     FixedVector<unsigned char, 3> keeper_name;
+    coord_def pos() const { return coord_def(x,y); }
 };
 
 struct trap_struct
@@ -1336,6 +1336,8 @@ struct trap_struct
     unsigned char       x;
     unsigned char       y;
     trap_type        type;
+
+    coord_def pos() const { return coord_def(x,y); }
 };
 
 struct map_cell

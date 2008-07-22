@@ -105,7 +105,7 @@ void monster_cleanup(monsters *monster);
  * called from: monstuff beam effects fight view
  * *********************************************************************** */
 void behaviour_event(monsters *mon, int event_type, int src = MHITNOT,
-                     int src_x = 0, int src_y = 0);
+                     coord_def src_pos = coord_def() );
 
 /* ***********************************************************************
  * called from: fight - it_use3 - spells
@@ -124,7 +124,7 @@ bool monster_blink(monsters *monster);
  * defaults are set up for player blink;  monster blink should call with
  * false, false
  * *********************************************************************** */
-bool random_near_space( int ox, int oy, int &tx, int &ty,
+bool random_near_space( const coord_def& origin, coord_def& target,
     bool allow_adjacent = false, bool restrict_LOS = true,
     bool forbid_sanctuary = false);
 

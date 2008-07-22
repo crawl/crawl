@@ -270,7 +270,7 @@ void Stash::update()
         feat = DNGN_FLOOR;
 
     if (grid_is_trap(feat))
-        trap = trap_type_at_xy(x, y);
+        trap = trap_type_at_xy(coord_def(x, y));
 
     int objl = igrd[x][y];
     // If this is your position, you know what's on this square
@@ -769,7 +769,7 @@ ShopInfo::ShopInfo(int xp, int yp) : x(xp), y(yp), name(), shoptype(-1),
 {
     // Most of our initialization will be done externally; this class is really
     // a mildly glorified struct.
-    const shop_struct *sh = get_shop(x, y);
+    const shop_struct *sh = get_shop(coord_def(x, y));
     if (sh)
         shoptype = sh->type;
 }
@@ -1094,7 +1094,7 @@ ShopInfo &LevelStashes::get_shop(int x, int y)
             return m_shops[i];
     }
     ShopInfo si(x, y);
-    si.set_name(shop_name(x, y));
+    si.set_name(shop_name(coord_def(x, y)));
     m_shops.push_back(si);
     return get_shop(x, y);
 }

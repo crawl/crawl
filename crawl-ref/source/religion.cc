@@ -803,10 +803,7 @@ static void _inc_penance(god_type god, int val)
         you.penance[god] += val;
 
     if (god == GOD_BEOGH && _need_water_walking() && !beogh_water_walk())
-    {
-         fall_into_a_pool( you.x_pos, you.y_pos, true,
-                           grd[you.x_pos][you.y_pos] );
-    }
+        fall_into_a_pool( you.pos(), true, grd(you.pos()) );
 }
 
 static void _inc_penance(int val)
@@ -1059,7 +1056,7 @@ static void _give_nemelex_gift()
             deck.colour  = deck_rarity_to_color(rarity);
             deck.inscription = "god gift";
 
-            move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
+            move_item_to_grid( &thing_created, you.pos() );
             origin_acquired(deck, you.religion);
 
             simple_god_message(" grants you a gift!");
@@ -1885,7 +1882,7 @@ static void _do_god_gift(bool prayed_for)
                         if (thing_created == NON_ITEM)
                             return;
 
-                        move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
+                        move_item_to_grid( &thing_created, you.pos() );
 
                         if (thing_created != NON_ITEM)
                         {
@@ -3277,7 +3274,7 @@ bool trog_burn_books()
             if (durat > 23)
                 durat = 23;
 
-            place_cloud( CLOUD_FIRE, ri->x, ri->y, durat, KC_YOU );
+            place_cloud( CLOUD_FIRE, *ri, durat, KC_YOU );
 
             mpr(count == 1 ? "The book bursts into flames."
                            : "The books burst into flames.", MSGCH_GOD);
@@ -3354,10 +3351,7 @@ void lose_piety(int pgn)
                 }
 
                 if (_need_water_walking() && !beogh_water_walk())
-                {
-                    fall_into_a_pool(you.x_pos, you.y_pos, true,
-                                     grd[you.x_pos][you.y_pos]);
-                }
+                    fall_into_a_pool(you.pos(), true, grd(you.pos()));
             }
         }
     }
@@ -3433,7 +3427,7 @@ static bool _tso_retribution()
         if (coinflip())
         {
             simple_god_message(" booms out: \"Take the path of righteousness! REPENT!\"", god);
-            noisy(25, you.x_pos, you.y_pos); // same as scroll of noise
+            noisy(25, you.pos()); // same as scroll of noise
         }
         else
         {
@@ -3536,7 +3530,7 @@ static bool _zin_retribution()
         break;
     case 9: // noisiness (10%)
         simple_god_message(" booms out: \"Turn to the light! REPENT!\"", god);
-        noisy(25, you.x_pos, you.y_pos); // same as scroll of noise
+        noisy(25, you.pos()); // same as scroll of noise
         break;
     }
     return (false);
@@ -4854,10 +4848,7 @@ void excommunication(god_type new_god)
 
         // You might have lost water walking at a bad time...
         if (_need_water_walking())
-        {
-            fall_into_a_pool(you.x_pos, you.y_pos, true,
-                             grd[you.x_pos][you.y_pos]);
-        }
+            fall_into_a_pool(you.pos(), true, grd(you.pos()));
 
         // Penance has to come before retribution to prevent "mollify"
         _inc_penance(old_god, 50);
@@ -5014,8 +5005,9 @@ static bool _bless_weapon( god_type god, int brand, int colour )
             for (int i = -3; i <= 3; ++i)
                 for (int j = -3; j <= 3; j++)
                 {
-                     if (is_bloodcovered(you.x_pos+i, you.y_pos+j))
-                         env.map[you.x_pos+i][you.y_pos+j].property = FPROP_NONE;
+                    coord_def tmp = you.pos() + coord_def(i,j);
+                    if (is_bloodcovered(tmp))
+                        env.map(tmp).property = FPROP_NONE;
                 }
         }
 
@@ -5719,7 +5711,7 @@ void offer_corpse(int corpse)
     // ritual sacrifice can also bloodify the ground
     const int mons_class = mitm[corpse].plus;
     const int max_chunks = mons_weight( mons_class ) / 150;
-    bleed_onto_floor(you.x_pos, you.y_pos, mons_class, max_chunks, true);
+    bleed_onto_floor(you.pos(), mons_class, max_chunks, true);
     destroy_item(corpse);
 }
 

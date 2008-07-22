@@ -85,32 +85,32 @@ enum LOSSelect
     LOS_NONE     = 0xFFFF
 };
 
-static void _describe_feature(int mx, int my, bool oos);
-static void _describe_cell(int mx, int my);
+static void _describe_feature(const coord_def& where, bool oos);
+static void _describe_cell(const coord_def& where);
 
-static bool _find_object(  int x, int y, int mode, bool need_path, int range );
-static bool _find_monster( int x, int y, int mode, bool need_path, int range );
-static bool _find_feature( int x, int y, int mode, bool need_path, int range );
+static bool _find_object(  const coord_def& where, int mode, bool need_path, int range );
+static bool _find_monster( const coord_def& where, int mode, bool need_path, int range );
+static bool _find_feature( const coord_def& where, int mode, bool need_path, int range );
 
 #ifndef USE_TILE
-static bool _find_mlist( int x, int y, int mode, bool need_path, int range );
+static bool _find_mlist( const coord_def& where, int mode, bool need_path, int range );
 #endif
 
-static char _find_square_wrapper( int tx, int ty,
+static char _find_square_wrapper( const coord_def& targ,
                                   FixedVector<char, 2> &mfp, char direction,
-                                  bool (*targ)(int, int, int, bool, int),
+                                  bool (*targ)(const coord_def&, int, bool, int),
                                   bool need_path = false, int mode = TARG_ANY,
                                   int range = -1, bool wrap = false,
                                   int los = LOS_ANY);
 
-static char _find_square( int xps, int yps,
+static char _find_square( const coord_def& where,
                           FixedVector<char, 2> &mfp, int direction,
-                          bool (*targ)(int, int, int, bool, int),
+                          bool (*targ)(const coord_def&, int, bool, int),
                           bool need_path, int mode = TARG_ANY, int range = -1,
                           bool wrap = false, int los = LOS_ANY);
 
 static int  _targeting_cmd_to_compass( command_type command );
-static void _describe_oos_square(int x, int y);
+static void _describe_oos_square(const coord_def& where);
 static void _extend_move_to_edge(dist &moves);
 
 void direction_choose_compass( dist& moves, targeting_behaviour *beh)
@@ -292,13 +292,13 @@ static bool _mon_submerged_in_water(const monsters *mon)
             && !mons_flies(mon));
 }
 
-static bool _is_target_in_range(int x, int y, int range)
+static bool _is_target_in_range(const coord_def& where, int range)
 {
     // Range doesn't matter.
     if (range == -1)
         return (true);
 
-    return (grid_distance(you.x_pos, you.y_pos, x, y) <= range);
+    return (grid_distance(you.pos(), where) <= range);
 }
 
 // We handle targeting for repeating commands and re-doing the
@@ -382,8 +382,7 @@ static void _direction_again(dist& moves, targeting_type restricts,
                                           "square.");
             return;
         }
-        else if (!_is_target_in_range(you.prev_grd_targ.x, you.prev_grd_targ.y,
-                                      range))
+        else if (!_is_target_in_range(you.prev_grd_targ, range))
         {
             moves.isCancel = true;
 
@@ -396,8 +395,7 @@ static void _direction_again(dist& moves, targeting_type restricts,
         moves.ty = you.prev_grd_targ.y;
 
         ray_def ray;
-        find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray,
-                 0, true);
+        find_ray(you.pos(), moves.target(), true, ray, 0, true);
         moves.ray = ray;
     }
     else if (you.prev_targ == MHITYOU)
@@ -423,8 +421,7 @@ static void _direction_again(dist& moves, targeting_type restricts,
 
             return;
         }
-        else if (!_is_target_in_range(you.prev_grd_targ.x, you.prev_grd_targ.y,
-                                      range))
+        else if (!_is_target_in_range(you.prev_grd_targ, range))
         {
             moves.isCancel = true;
 
@@ -437,8 +434,7 @@ static void _direction_again(dist& moves, targeting_type restricts,
         moves.ty = montarget->y;
 
         ray_def ray;
-        find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray,
-                 0, true);
+        find_ray(you.pos(), moves.target(), true, ray, 0, true);
         moves.ray = ray;
     }
 
@@ -560,7 +556,7 @@ void direction(dist& moves, targeting_type restricts,
 
     // If we show the beam on startup, we have to initialise it.
     if (show_beam)
-        find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty, true, ray);
+        find_ray(you.pos(), moves.target(), true, ray);
 
     bool skip_iter = false;
     bool found_autotarget = false;
@@ -575,7 +571,7 @@ void direction(dist& moves, targeting_type restricts,
             const monsters *montarget = &menv[you.prev_targ];
             if (mons_near(montarget) && player_monster_visible(montarget)
                 && !mons_friendly(montarget) // not made friendly since then
-                && _is_target_in_range(montarget->x, montarget->y, range))
+                && _is_target_in_range(montarget->pos(), range))
             {
                 found_autotarget = true;
                 moves.tx = montarget->x;
@@ -689,7 +685,7 @@ void direction(dist& moves, targeting_type restricts,
             && key_command <= CMD_TARGET_CYCLE_MLIST_END)
         {
             const int idx = key_command - CMD_TARGET_CYCLE_MLIST;
-            if (_find_square_wrapper(moves.tx, moves.ty, monsfind_pos, 1,
+            if (_find_square_wrapper(moves.target(), monsfind_pos, 1,
                                      _find_mlist, needs_path, idx, range,
                                      Options.target_wrap))
             {
@@ -785,7 +781,7 @@ void direction(dist& moves, targeting_type restricts,
 
 #ifdef WIZARD
         case CMD_TARGET_CYCLE_BEAM:
-            show_beam = find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
+            show_beam = find_ray(you.pos(), moves.target(),
                                  true, ray, (show_beam ? 1 : 0));
             need_beam_redraw = true;
             break;
@@ -806,7 +802,7 @@ void direction(dist& moves, targeting_type restricts,
                     break;
                 }
 
-                show_beam = find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
+                show_beam = find_ray(you.pos(), moves.target(),
                                      true, ray, 0, true);
                 need_beam_redraw = show_beam;
             }
@@ -826,7 +822,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_FIND_DOWNSTAIR:
         {
             const int thing_to_find = _targeting_cmd_to_feature(key_command);
-            if (_find_square_wrapper(moves.tx, moves.ty, objfind_pos, 1,
+            if (_find_square_wrapper(moves.target(), objfind_pos, 1,
                                      _find_feature, needs_path, thing_to_find,
                                      range, true, Options.target_los_first ?
                                         LOS_FLIPVH : LOS_ANY))
@@ -925,7 +921,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_OBJ_CYCLE_BACK:
         case CMD_TARGET_OBJ_CYCLE_FORWARD:
             dir = (key_command == CMD_TARGET_OBJ_CYCLE_BACK) ? -1 : 1;
-            if (_find_square_wrapper( moves.tx, moves.ty, objfind_pos, dir,
+            if (_find_square_wrapper( moves.target(), objfind_pos, dir,
                                       _find_object, needs_path, TARG_ANY, range,
                                       true, Options.target_los_first ?
                                           (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
@@ -942,7 +938,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_CYCLE_FORWARD:
         case CMD_TARGET_CYCLE_BACK:
             dir = (key_command == CMD_TARGET_CYCLE_BACK) ? -1 : 1;
-            if (_find_square_wrapper( moves.tx, moves.ty, monsfind_pos, dir,
+            if (_find_square_wrapper( moves.target(), monsfind_pos, dir,
                                       _find_monster, needs_path, mode, range,
                                       Options.target_wrap))
             {
@@ -1132,8 +1128,8 @@ void direction(dist& moves, targeting_type restricts,
         if (old_tx != moves.tx || old_ty != moves.ty)
         {
             have_moved = true;
-            show_beam = show_beam && find_ray(you.x_pos, you.y_pos, moves.tx,
-                                              moves.ty, true, ray, 0, true);
+            show_beam = show_beam && find_ray(you.pos(), moves.target(),
+                                              true, ray, 0, true);
         }
 
         if (force_redraw)
@@ -1154,7 +1150,7 @@ void direction(dist& moves, targeting_type restricts,
 #ifdef USE_TILE
         // Tiles always need a beam redraw if show_beam is true (and valid...)
         if (need_beam_redraw
-            || show_beam && find_ray(you.x_pos, you.y_pos, moves.tx, moves.ty,
+            || show_beam && find_ray(you.pos(), moves.target(),
                                      true, ray, 0, true) )
         {
 #else
@@ -1174,7 +1170,7 @@ void direction(dist& moves, targeting_type restricts,
                     if (raycopy.pos() != you.pos())
                     {
                         // Sanity: don't loop forever if the ray is problematic
-                        if (!in_los(raycopy.x(), raycopy.y()))
+                        if (!in_los(raycopy.pos()))
                             break;
 
                         draw_ray_glyph(raycopy.pos(), MAGENTA, '*',
@@ -1205,10 +1201,10 @@ void direction(dist& moves, targeting_type restricts,
 
 void terse_describe_square(const coord_def &c)
 {
-    if (!see_grid(c.x, c.y))
-        _describe_oos_square(c.x, c.y);
+    if (!see_grid(c))
+        _describe_oos_square(c);
     else if (in_bounds(c) )
-        _describe_cell(c.x, c.y);
+        _describe_cell(c);
 }
 
 void full_describe_square(const coord_def &c)
@@ -1273,32 +1269,36 @@ static void _extend_move_to_edge(dist &moves)
 // there's a stash on the square, announces the top item and number
 // of items, otherwise, if there's a stair that's in the travel
 // cache and noted in the Dungeon (O)verview, names the stair.
-static void _describe_oos_square(int x, int y)
+static void _describe_oos_square(const coord_def& where)
 {
     mpr("You can't see that place.", MSGCH_EXAMINE_FILTER);
 
-    if (!in_bounds(x, y) || !is_terrain_seen(x, y))
+    if (!in_bounds(where) || !is_terrain_seen(where))
         return;
 
-    describe_stash(x, y);
-    _describe_feature(x, y, true);
+    describe_stash(where.x, where.y);
+    _describe_feature(where, true);
 }
 
 bool in_vlos(int x, int y)
 {
-    return (in_los_bounds(x, y)
-            && (env.show(view2show(coord_def(x, y)))
-                || coord_def(x, y) == grid2view(you.pos())));
+    return in_vlos(coord_def(x,y));
 }
 
 bool in_vlos(const coord_def &pos)
 {
-    return (in_vlos(pos.x, pos.y));
+    return (in_los_bounds(pos) && (env.show(view2show(pos))
+                                   || pos == grid2view(you.pos())));
 }
 
 bool in_los(int x, int y)
 {
-    return (in_vlos(grid2view(coord_def(x, y))));
+    return in_los(coord_def(x,y));
+}
+
+bool in_los(const coord_def& pos)
+{
+    return (in_vlos(grid2view(pos)));
 }
 
 static bool _mons_is_valid_target(monsters *mon, int mode, int range)
@@ -1326,15 +1326,15 @@ static bool _mons_is_valid_target(monsters *mon, int mode, int range)
 }
 
 #ifndef USE_TILE
-static bool _find_mlist( int x, int y, int idx, bool need_path, int range = -1)
+static bool _find_mlist( const coord_def& where, int idx, bool need_path, int range = -1)
 {
     if ((int) mlist.size() <= idx)
         return (false);
 
-    if (!_is_target_in_range(x, y, range) || !in_los(x,y))
+    if (!_is_target_in_range(where, range) || !in_los(where))
         return (false);
 
-    const int targ_mon = mgrd[ x ][ y ];
+    const int targ_mon = mgrd(where);
     if (targ_mon == NON_MONSTER)
         return (false);
 
@@ -1385,28 +1385,25 @@ static bool _find_mlist( int x, int y, int idx, bool need_path, int range = -1)
 }
 #endif
 
-static bool _find_monster( int x, int y, int mode, bool need_path,
+static bool _find_monster( const coord_def& where, int mode, bool need_path,
                            int range = -1)
 {
     // Target the player for friendly and general spells.
-    if ((mode == TARG_FRIEND || mode == TARG_ANY)
-         && x == you.x_pos && y == you.y_pos)
-    {
+    if ((mode == TARG_FRIEND || mode == TARG_ANY) && where == you.pos())
         return (true);
-    }
 
     // Don't target out of range.
-    if (!_is_target_in_range(x, y, range))
+    if (!_is_target_in_range(where, range))
         return (false);
 
-    const int targ_mon = mgrd[ x ][ y ];
+    const int targ_mon = mgrd(where);
 
     // No monster or outside LOS.
-    if (targ_mon == NON_MONSTER || !in_los(x,y))
+    if (targ_mon == NON_MONSTER || !in_los(where))
         return (false);
 
     // Monster in LOS but only via glass walls, so no direct path.
-    if (need_path && !see_grid_no_trans(x,y))
+    if (need_path && !see_grid_no_trans(where))
         return (false);
 
     monsters *mon = &menv[targ_mon];
@@ -1430,22 +1427,22 @@ static bool _find_monster( int x, int y, int mode, bool need_path,
             || !mons_class_flag( menv[targ_mon].type, M_NO_EXP_GAIN ));
 }
 
-static bool _find_feature( int x, int y, int mode,
+static bool _find_feature( const coord_def& where, int mode,
                            bool /* need_path */, int /* range */)
 {
     // The stair need not be in LOS if the square is mapped.
-    if (!in_los(x, y) && (!Options.target_oos || !is_terrain_seen(x, y)))
+    if (!in_los(where) && (!Options.target_oos || !is_terrain_seen(where)))
         return (false);
 
-    return is_feature(mode, x, y);
+    return is_feature(mode, where);
 }
 
-static bool _find_object(int x, int y, int mode,
+static bool _find_object(const coord_def& where, int mode,
                          bool /* need_path */, int /* range */)
 {
     // First, check for mimics.
     bool is_mimic = false;
-    const int mons = mgrd[ x ][ y ];
+    const int mons = mgrd(where);
     if (mons != NON_MONSTER
         && player_monster_visible( &(menv[mons]) )
         && mons_is_mimic(menv[mons].type)
@@ -1454,12 +1451,12 @@ static bool _find_object(int x, int y, int mode,
         is_mimic = true;
     }
 
-    const int item = igrd[x][y];
+    const int item = igrd(where);
     if (item == NON_ITEM && !is_mimic)
         return (false);
 
-    return (in_los(x, y) || Options.target_oos && is_terrain_seen(x, y)
-                            && (is_stash(x, y) || is_mimic));
+    return (in_los(where) || Options.target_oos && is_terrain_seen(where)
+            && (is_stash(where.x,where.y) || is_mimic));
 }
 
 static int _next_los(int dir, int los, bool wrap)
@@ -1513,9 +1510,9 @@ bool in_viewport_bounds(int x, int y)
     return crawl_view.in_view_viewport(coord_def(x, y));
 }
 
-bool in_los_bounds(int x, int y)
+bool in_los_bounds(const coord_def& p)
 {
-    return crawl_view.in_view_los(coord_def(x, y));
+    return crawl_view.in_view_los(p);
 }
 
 //---------------------------------------------------------------
@@ -1532,9 +1529,9 @@ bool in_los_bounds(int x, int y)
 // monsters will be targeted.
 //
 //---------------------------------------------------------------
-static char _find_square( int xps, int yps,
+static char _find_square( const coord_def& where,
                           FixedVector<char, 2> &mfp, int direction,
-                          bool (*find_targ)( int x, int y, int mode,
+                          bool (*find_targ)( const coord_def& wh, int mode,
                                              bool need_path, int range ),
                           bool need_path, int mode, int range, bool wrap,
                           int los )
@@ -1542,8 +1539,8 @@ static char _find_square( int xps, int yps,
     // the day will come when [unsigned] chars will be consigned to
     // the fires of Gehenna. Not quite yet, though.
 
-    int temp_xps = xps;
-    int temp_yps = yps;
+    int temp_xps = where.x;
+    int temp_yps = where.y;
     int x_change = 0;
     int y_change = 0;
 
@@ -1556,12 +1553,12 @@ static char _find_square( int xps, int yps,
 
     if (los == LOS_FLIPVH || los == LOS_FLIPHV)
     {
-        if (in_los_bounds(xps, yps))
+        if (in_los_bounds(where))
         {
             // We've been told to flip between visible/hidden, so we
             // need to find what we're currently on.
-            const bool vis = (env.show(view2show(coord_def(xps, yps)))
-                              || view2grid(coord_def(xps, yps)) == you.pos());
+            const bool vis = (env.show(view2show(where))
+                              || view2grid(where) == you.pos());
 
             if (wrap && (vis != (los == LOS_FLIPVH)) == (direction == 1))
             {
@@ -1601,20 +1598,20 @@ static char _find_square( int xps, int yps,
     {
         if (direction == 1 && temp_xps == minx && temp_yps == maxy)
         {
-            if (find_targ(you.x_pos, you.y_pos, mode, need_path, range))
+            if (find_targ(you.pos(), mode, need_path, range))
             {
                 mfp[0] = ctrx;
                 mfp[1] = ctry;
                 return (1);
             }
-            return _find_square(ctrx, ctry, mfp, direction, find_targ,
-                                need_path, mode, range, false,
+            return _find_square(coord_def(ctrx, ctry), mfp, direction,
+                                find_targ, need_path, mode, range, false,
                                 _next_los(direction, los, wrap));
         }
         if (direction == -1 && temp_xps == ctrx && temp_yps == ctry)
         {
-            return _find_square(minx, maxy, mfp, direction, find_targ,
-                                need_path, mode, range, false,
+            return _find_square(coord_def(minx, maxy), mfp, direction,
+                                find_targ, need_path, mode, range, false,
                                 _next_los(direction, los, wrap));
         }
 
@@ -1739,7 +1736,7 @@ static char _find_square( int xps, int yps,
         if ((onlyVis || onlyHidden) && onlyVis != in_los(targ_x, targ_y))
             continue;
 
-        if (find_targ(targ_x, targ_y, mode, need_path, range))
+        if (find_targ(coord_def(targ_x, targ_y), mode, need_path, range))
         {
             mfp[0] = temp_xps;
             mfp[1] = temp_yps;
@@ -1748,23 +1745,24 @@ static char _find_square( int xps, int yps,
     }
 
     return (direction == 1?
-        _find_square(ctrx, ctry, mfp, direction, find_targ, need_path, mode,
-                     range, false, _next_los(direction, los, wrap))
-      : _find_square(minx, maxy, mfp, direction, find_targ, need_path, mode,
-                     range, false, _next_los(direction, los, wrap)));
+      _find_square(coord_def(ctrx, ctry), mfp, direction, find_targ, need_path,
+                   mode, range, false, _next_los(direction, los, wrap))
+      : _find_square(coord_def(minx, maxy), mfp, direction, find_targ,
+                     need_path, mode, range, false,
+                     _next_los(direction, los, wrap)));
 }
 
 // XXX Unbelievably hacky. And to think that my goal was to clean up the code.
 // Identical to find_square, except that input (tx, ty) and output
 // (mfp) are in grid coordinates rather than view coordinates.
-static char _find_square_wrapper( int tx, int ty,
+static char _find_square_wrapper( const coord_def& targ,
                                   FixedVector<char, 2> &mfp, char direction,
-                                  bool (*find_targ)(int x, int y, int mode,
+                                  bool (*find_targ)(const coord_def& where, int mode,
                                                     bool need_path, int range),
                                   bool need_path, int mode, int range,
                                   bool wrap, int los )
 {
-    const char r =  _find_square(grid2viewX(tx), grid2viewY(ty), mfp,
+    const char r =  _find_square(grid2view(targ), mfp,
                                  direction, find_targ, need_path, mode, range,
                                  wrap, los);
     mfp[0] = view2gridX(mfp[0]);
@@ -1772,14 +1770,14 @@ static char _find_square_wrapper( int tx, int ty,
     return r;
 }
 
-static void _describe_feature(int mx, int my, bool oos)
+static void _describe_feature(const coord_def& where, bool oos)
 {
-    if (oos && !is_terrain_seen(mx, my))
+    if (oos && !is_terrain_seen(where))
         return;
 
-    dungeon_feature_type grid = grd[mx][my];
+    dungeon_feature_type grid = grd(where);
     if ( grid == DNGN_SECRET_DOOR )
-        grid = grid_secret_door_appearance(mx, my);
+        grid = grid_secret_door_appearance(where);
 
     std::string desc = feature_description(grid);
     if (desc.length())
@@ -1837,8 +1835,7 @@ void describe_floor()
         break;
     }
 
-    feat = feature_description(you.x_pos, you.y_pos,
-                               is_bloodcovered(you.x_pos, you.y_pos),
+    feat = feature_description(you.pos(), is_bloodcovered(you.pos()),
                                DESC_NOCAP_A, false);
     if (feat.empty())
         return;
@@ -2156,17 +2153,17 @@ static bool _interesting_feature(dungeon_feature_type feat)
 }
 #endif
 
-std::string feature_description(int mx, int my, bool bloody,
+std::string feature_description(const coord_def& where, bool bloody,
                                 description_level_type dtype, bool add_stop)
 {
-    dungeon_feature_type grid = grd[mx][my];
+    dungeon_feature_type grid = grd(where);
     if ( grid == DNGN_SECRET_DOOR )
-        grid = grid_secret_door_appearance(mx, my);
+        grid = grid_secret_door_appearance(where);
 
     if ( grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR )
     {
         std::set<coord_def> all_door;
-        find_connected_identical(coord_def(mx, my), grd[mx][my], all_door);
+        find_connected_identical(where, grd(where), all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
 
@@ -2185,15 +2182,15 @@ std::string feature_description(int mx, int my, bool bloody,
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
-        return (feature_description(grid, trap_type_at_xy(mx, my), bloody,
+        return (feature_description(grid, trap_type_at_xy(where), bloody,
                                     dtype, add_stop));
     case DNGN_ENTER_SHOP:
-        return (shop_name(mx, my, add_stop));
+        return (shop_name(where, add_stop));
 
     case DNGN_ENTER_PORTAL_VAULT:
         return (_feature_do_grammar(
                     dtype, add_stop, false,
-                    _marker_feature_description(coord_def(mx, my))));
+                    _marker_feature_description(where)));
     default:
         return (feature_description(grid, NUM_TRAPS, bloody, dtype, add_stop));
     }
@@ -2510,19 +2507,19 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     return desc;
 }
 
-static void _describe_cell(int mx, int my)
+static void _describe_cell(const coord_def& where)
 {
     bool mimic_item = false;
     bool monster_described = false;
     bool cloud_described = false;
     bool item_described = false;
 
-    if (mx == you.x_pos && my == you.y_pos)
+    if (where == you.pos())
         mpr("You.", MSGCH_EXAMINE_FILTER);
 
-    if (mgrd[mx][my] != NON_MONSTER)
+    if (mgrd(where) != NON_MONSTER)
     {
-        int i = mgrd[mx][my];
+        int i = mgrd(where);
 
         if (_mon_submerged_in_water(&menv[i]))
         {
@@ -2568,12 +2565,12 @@ static void _describe_cell(int mx, int my)
   look_clouds:
 #endif
 
-    if (is_sanctuary(mx, my))
+    if (is_sanctuary(where))
         mpr("This square lies inside a sanctuary.");
 
-    if (env.cgrid[mx][my] != EMPTY_CLOUD)
+    if (env.cgrid(where) != EMPTY_CLOUD)
     {
-        const int cloud_inspected = env.cgrid[mx][my];
+        const int cloud_inspected = env.cgrid(where);
         const cloud_type ctype = (cloud_type) env.cloud[cloud_inspected].type;
 
         mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
@@ -2582,7 +2579,7 @@ static void _describe_cell(int mx, int my)
         cloud_described = true;
     }
 
-    int targ_item = igrd[ mx ][ my ];
+    int targ_item = igrd(where);
 
     if (targ_item != NON_ITEM)
     {
@@ -2609,24 +2606,23 @@ static void _describe_cell(int mx, int my)
     }
 
     bool bloody = false;
-    if (is_bloodcovered(mx, my))
+    if (is_bloodcovered(where))
         bloody = true;
 
-    std::string feature_desc = feature_description(mx, my, bloody);
+    std::string feature_desc = feature_description(where, bloody);
 #ifdef DEBUG_DIAGNOSTICS
     std::string marker;
-    if (map_marker *mark = env.markers.find(coord_def(mx, my), MAT_ANY))
+    if (map_marker *mark = env.markers.find(where, MAT_ANY))
     {
         std::string desc = mark->debug_describe();
         if (desc.empty())
             desc = "?";
         marker = " (" + desc + ")";
     }
-    const std::string traveldest =
-        _stair_destination_description(coord_def(mx, my));
-    const dungeon_feature_type feat = grd[mx][my];
-    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s", mx, my,
-         stringize_glyph(get_screen_glyph(mx, my)).c_str(),
+    const std::string traveldest = _stair_destination_description(where);
+    const dungeon_feature_type feat = grd(where);
+    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s", where.x, where.y,
+         stringize_glyph(get_screen_glyph(where)).c_str(),
          feature_desc.c_str(),
          feat,
          dungeon_feature_name(feat),
@@ -2644,7 +2640,7 @@ static void _describe_cell(int mx, int my)
     }
     else
     {
-        const dungeon_feature_type feat = grd[mx][my];
+        const dungeon_feature_type feat = grd(where);
 
         if (_interesting_feature(feat))
         {

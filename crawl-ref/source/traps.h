@@ -21,7 +21,7 @@ struct bolt;
 class  monsters;
 
 bool trap_item(object_class_type base_type, char sub_type,
-               char beam_x, char beam_y);
+               const coord_def& where);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -36,8 +36,8 @@ void free_self_from_net(void);
  * called from: acr - misc
  * *********************************************************************** */
 void handle_traps(trap_type trt, int i, bool trap_known);
-int get_trapping_net(int x, int y, bool trapped = true);
-void mark_net_trapping(int x, int y);
+int get_trapping_net(const coord_def& where, bool trapped = true);
+void mark_net_trapping(const coord_def& where);
 void monster_caught_in_net(monsters *mon, bolt &pbolt);
 void player_caught_in_net(void);
 void clear_trapping_net(void);
@@ -46,12 +46,12 @@ void check_net_will_hold_monster(monsters *mon);
 void itrap(struct bolt &pbolt, int trapped);
 void destroy_trap( const coord_def& pos );
 dungeon_feature_type trap_category(trap_type type);
-int trap_at_xy(int x, int y);
-trap_type trap_type_at_xy(int x, int y);
+int trap_at_xy(const coord_def& xy);
+trap_type trap_type_at_xy(const coord_def& xy);
 
 bool     is_valid_shaft_level(const level_id &place = level_id::current());
 level_id generic_shaft_dest(coord_def pos);
-void     handle_items_on_shaft(int x, int y, bool open_shaft);
+void     handle_items_on_shaft(const coord_def& where, bool open_shaft);
 
 int       num_traps_for_place(int level_number = -1,
                               const level_id &place = level_id::current());

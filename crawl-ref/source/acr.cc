@@ -178,6 +178,7 @@ static void _do_berserk_no_combat_penalty(void);
 static bool _initialise(void);
 static void _input(void);
 static void _move_player(int move_x, int move_y);
+static void _move_player(coord_def move);
 static int  _check_adjacent(dungeon_feature_type feat, int &dx, int &dy);
 static void _open_door(int move_x, int move_y, bool check_confused = true);
 static void _close_door(int move_x, int move_y);
@@ -633,7 +634,7 @@ static void _handle_wizard_command( void )
                                             << mitm[islot].name(DESC_NOCAP_A)
                                             << std::endl;
 
-            move_item_to_grid( &islot, you.x_pos, you.y_pos );
+            move_item_to_grid( &islot, you.pos() );
         }
 
         // Create all fixed artefacts.
@@ -650,7 +651,7 @@ static void _handle_wizard_command( void )
                 item_colour( mitm[ islot ] );
                 set_ident_flags( mitm[ islot ], ISFLAG_IDENT_MASK );
 
-                move_item_to_grid( &islot, you.x_pos, you.y_pos );
+                move_item_to_grid( &islot, you.pos() );
 
                 msg::streams(MSGCH_DIAGNOSTICS) <<
                     "Made " << mitm[islot].name(DESC_NOCAP_A) << std::endl;
@@ -672,7 +673,7 @@ static void _handle_wizard_command( void )
             mitm[islot].quantity  = 1;
 
             set_ident_flags( mitm[ islot ], ISFLAG_IDENT_MASK );
-            move_item_to_grid( &islot, you.x_pos, you.y_pos );
+            move_item_to_grid( &islot, you.pos() );
 
             msg::streams(MSGCH_DIAGNOSTICS) << "Made "
                                             << mitm[islot].name(DESC_NOCAP_A)
@@ -1692,8 +1693,8 @@ static void _go_upstairs()
 
 static void _go_downstairs()
 {
-    bool shaft = (trap_type_at_xy(you.x_pos, you.y_pos) == TRAP_SHAFT
-                  && grd[you.x_pos][you.y_pos] != DNGN_UNDISCOVERED_TRAP);
+    bool shaft = (trap_type_at_xy(you.pos()) == TRAP_SHAFT
+                  && grd(you.pos()) != DNGN_UNDISCOVERED_TRAP);
 
 
     if (_stairs_check_beheld())
@@ -2906,7 +2907,7 @@ static void _decrement_durations()
             // Landing kills controlled flight.
             you.duration[DUR_CONTROLLED_FLIGHT] = 0;
             // Re-enter the terrain.
-            move_player_to_grid( you.x_pos, you.y_pos, false, true, true );
+            move_player_to_grid( you.pos(), false, true, true );
         }
     }
 
@@ -3036,9 +3037,9 @@ static void _check_shafts()
         if (trap.type != TRAP_SHAFT)
             continue;
 
-        ASSERT(in_bounds(trap.x, trap.y));
+        ASSERT(in_bounds(trap.pos()));
 
-        handle_items_on_shaft(trap.x, trap.y, true);
+        handle_items_on_shaft(trap.pos(), true);
     }
 }
 
@@ -3584,14 +3585,14 @@ static void _open_door(int move_x, int move_y, bool check_confused)
             {
                 mprf(MSGCH_SOUND, "The %s%s flies open with a bang!",
                      adj, noun);
-                noisy(15, you.x_pos, you.y_pos);
+                noisy(15, you.pos());
             }
         }
-        else if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
+        else if (one_chance_in(skill) && !silenced(you.pos()))
         {
             mprf(MSGCH_SOUND, "As you open the %s%s, it creaks loudly!",
                  adj, noun);
-            noisy(10, you.x_pos, you.y_pos);
+            noisy(10, you.pos());
         }
         else
         {
@@ -3613,11 +3614,11 @@ static void _open_door(int move_x, int move_y, bool check_confused)
 #ifdef USE_TILE
                 tile_place_tile_bk(dc.x, dc.y, TILE_DNGN_OPEN_DOOR);
 #endif
-                if (!seen_secret && grd[dc.x][dc.y] == DNGN_SECRET_DOOR)
+                if (!seen_secret && grd(dc) == DNGN_SECRET_DOOR)
                 {
                     seen_secret = true;
                     dungeon_feature_type secret
-                        = grid_secret_door_appearance(dc.x, dc.y);
+                        = grid_secret_door_appearance(dc);
                     mprf("That %s was a secret door!",
                          feature_description(secret, NUM_TRAPS, false,
                                              DESC_PLAIN, false).c_str());
@@ -3744,14 +3745,14 @@ static void _close_door(int door_x, int door_y)
             {
                 mprf(MSGCH_SOUND, "You slam the %s%s shut with an echoing bang!",
                      adj, noun);
-                noisy(25, you.x_pos, you.y_pos);
+                noisy(25, you.pos());
             }
         }
         else if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
         {
             mprf(MSGCH_SOUND, "As you close the %s%s, it creaks loudly!",
                  adj, noun);
-            noisy(10, you.x_pos, you.y_pos);
+            noisy(10, you.pos());
         }
         else
         {
@@ -4036,10 +4037,14 @@ static void _do_berserk_no_combat_penalty(void)
 // function etc when necessary.
 static void _move_player(int move_x, int move_y)
 {
+    _move_player( coord_def(move_x, move_y) );
+}
+
+static void _move_player(coord_def move)
+{
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)
     bool swap = false;
-    monsters *beholder = NULL;  // beholding monster preventing movement
 
     if (you.attribute[ATTR_HELD])
     {
@@ -4048,19 +4053,18 @@ static void _move_player(int move_x, int move_y)
         return;
     }
 
+    // When confused, sometimes make a random move
     if (you.duration[DUR_CONF])
     {
         if (!one_chance_in(3))
         {
-            move_x = random2(3) - 1;
-            move_y = random2(3) - 1;
+            move.x = random2(3) - 1;
+            move.y = random2(3) - 1;
             you.reset_prev_move();
         }
-
-        const int new_targ_x = you.x_pos + move_x;
-        const int new_targ_y = you.y_pos + move_y;
-        if (!in_bounds(new_targ_x, new_targ_y)
-            || !you.can_pass_through(new_targ_x, new_targ_y))
+        
+        const coord_def& new_targ = you.pos() + move;
+        if (!in_bounds(new_targ) || !you.can_pass_through(new_targ))
         {
             you.turn_is_over = true;
             mpr("Ouch!");
@@ -4069,13 +4073,12 @@ static void _move_player(int move_x, int move_y)
 
             return;
         }
-    } // end of if you.duration[DUR_CONF]
+    }
 
-    const int targ_x = you.x_pos + move_x;
-    const int targ_y = you.y_pos + move_y;
-    const dungeon_feature_type targ_grid  =  grd[ targ_x ][ targ_y ];
-    const unsigned short targ_monst = mgrd[ targ_x ][ targ_y ];
-    const bool           targ_pass  = you.can_pass_through(targ_x, targ_y);
+    const coord_def& targ = you.pos() + move;
+    const dungeon_feature_type targ_grid  =  grd(targ);
+    const unsigned short targ_monst = mgrd(targ);
+    const bool           targ_pass  = you.can_pass_through(targ);
 
     // You can swap places with a friendly or good neutral monster if
     // you're not confused, or if both of you are inside a sanctuary.
@@ -4083,33 +4086,30 @@ static void _move_player(int move_x, int move_y)
                                  && !mons_is_stationary(&menv[targ_monst])
                                  && (mons_wont_attack(&menv[targ_monst])
                                        && !you.duration[DUR_CONF]
-                                     || is_sanctuary(you.x_pos, you.y_pos)
-                                        && is_sanctuary(targ_x, targ_y));
+                                     || is_sanctuary(you.pos())
+                                        && is_sanctuary(targ));
 
     // You cannot move away from a mermaid but you CAN fight monsters on
     // neighbouring squares.
+    monsters *beholder = NULL;
     if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF])
     {
         for (unsigned int i = 0; i < you.beheld_by.size(); i++)
         {
-             monsters* mon = &menv[you.beheld_by[i]];
-             coord_def pos = mon->pos();
-             int olddist = grid_distance(you.x_pos, you.y_pos, pos.x, pos.y);
-             int newdist = grid_distance(you.x_pos + move_x, you.y_pos + move_y,
-                                         pos.x, pos.y);
+             monsters& mon = menv[you.beheld_by[i]];
+             int olddist = grid_distance(you.pos(), mon.pos());
+             int newdist = grid_distance(targ, mon.pos());
 
              if (olddist < newdist)
              {
-                 beholder = mon;
+                 beholder = &mon;
                  break;
              }
         }
-    } // end of beholding check
+    }
 
     if (you.running.check_stop_running())
     {
-        move_x = 0;
-        move_y = 0;
         // [ds] Do we need this? Shouldn't it be false to start with?
         you.turn_is_over = false;
         return;
@@ -4151,48 +4151,35 @@ static void _move_player(int move_x, int move_y)
     {
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
-        if (!move_player_to_grid(targ_x, targ_y, true, false, swap, swap))
+        if (!move_player_to_grid(targ, true, false, swap, swap))
             return;
 
         if (swap)
             swap_places(&menv[targ_monst], mon_swap_dest);
 
-        you.prev_move_x = move_x;
-        you.prev_move_y = move_y;
-
-        move_x = 0;
-        move_y = 0;
-
+        you.prev_move = move;
+        move.reset();
         you.turn_is_over = true;
-        // item_check( false );
         request_autopickup();
-
     }
 
     // BCR - Easy doors single move
     if (targ_grid == DNGN_CLOSED_DOOR && Options.easy_open && !attacking)
     {
-        _open_door(move_x, move_y, false);
-        you.prev_move_x = move_x;
-        you.prev_move_y = move_y;
+        _open_door(move.x, move.y, false);
+        you.prev_move = move;
     }
     else if (!targ_pass && !attacking)
     {
         stop_running();
-
-        move_x = 0;
-        move_y = 0;
-
-        you.turn_is_over = 0;
+        move.reset();
+        you.turn_is_over = false;
         crawl_state.cancel_cmd_repeat();
     }
     else if (beholder && !attacking)
     {
         mprf("You cannot move away from %s!",
             beholder->name(DESC_NOCAP_THE, true).c_str());
-
-        move_x = 0;
-        move_y = 0;
         return;
     }
 
@@ -4209,27 +4196,25 @@ static void _move_player(int move_x, int move_y)
 
 #if DEBUG_DIAGNOSTICS
         mpr( "Shifting.", MSGCH_DIAGNOSTICS );
-        int igly = 0;
-        int ig2 = 0;
+        int j = 0;
+        for (int i = 0; i < MAX_ITEMS; i++)
+            if (is_valid_item( mitm[i] ))
+                ++j;
 
-        for (igly = 0; igly < MAX_ITEMS; igly++)
-            if (is_valid_item( mitm[igly] ))
-                ig2++;
+        mprf( MSGCH_DIAGNOSTICS, "Number of items present: %d", j );
 
-        mprf( MSGCH_DIAGNOSTICS, "Number of items present: %d", ig2 );
+        j = 0;
+        for (int i = 0; i < MAX_MONSTERS; i++)
+            if (menv[i].type != -1)
+                ++j;
 
-        ig2 = 0;
-        for (igly = 0; igly < MAX_MONSTERS; igly++)
-            if (menv[igly].type != -1)
-                ig2++;
-
-        mprf( MSGCH_DIAGNOSTICS, "Number of monsters present: %d", ig2);
+        mprf( MSGCH_DIAGNOSTICS, "Number of monsters present: %d", j);
         mprf( MSGCH_DIAGNOSTICS, "Number of clouds present: %d", env.cloud_no);
 #endif
     }
 
     apply_berserk_penalty = !attacking;
-}                               // end move_player()
+}
 
 
 static int _get_num_and_char_keyfun(int &ch)

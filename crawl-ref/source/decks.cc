@@ -1385,7 +1385,7 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
             {
                 mpr("The net rips apart!");
                 you.attribute[ATTR_HELD] = 0;
-                int net = get_trapping_net(you.x_pos, you.y_pos);
+                int net = get_trapping_net(you.pos());
                 if (net != NON_ITEM)
                     destroy_item(net);
             }
@@ -1477,7 +1477,7 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
             const int rx = you.x_pos + dx;
             const int ry = you.y_pos + dy;
 
-            if (grd[rx][ry] == DNGN_FLOOR && trap_at_xy(rx,ry) == -1
+            if (grd[rx][ry] == DNGN_FLOOR && trap_at_xy(coord_def(rx,ry)) == -1
                 && one_chance_in(++count))
             {
                  fx = rx;
@@ -1492,7 +1492,7 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
             // Mark it discovered if enough power.
             if (get_power_level(power, rarity) >= 1)
             {
-                const int i = trap_at_xy(fx, fy);
+                const int i = trap_at_xy(coord_def(fx, fy));
                 if (i != -1)    // should always happen
                     grd[fx][fy] = trap_category(env.trap[i].type);
             }
@@ -1525,12 +1525,12 @@ static void _flight_card(int power, deck_rarity_type rarity)
 
     if (power_level == 2) // Stacks with the above.
     {
-        if (is_valid_shaft_level() && grd[you.x_pos][you.y_pos] == DNGN_FLOOR)
+        if (is_valid_shaft_level() && grd(you.pos()) == DNGN_FLOOR)
         {
             if (place_specific_trap(you.x_pos, you.y_pos, TRAP_SHAFT))
             {
-                const int i = trap_at_xy(you.x_pos, you.y_pos);
-                grd[you.x_pos][you.y_pos] = trap_category(env.trap[i].type);
+                const int i = trap_at_xy(you.pos());
+                grd(you.pos()) = trap_category(env.trap[i].type);
                 mpr("A shaft materialises beneath you!");
             }
         }
@@ -1559,7 +1559,7 @@ static void _minefield_card(int power, deck_rarity_type rarity)
             if (!in_bounds(rx, ry))
                 continue;
 
-            if (grd[rx][ry] == DNGN_FLOOR && trap_at_xy(rx,ry) == -1
+            if (grd[rx][ry] == DNGN_FLOOR && trap_at_xy(coord_def(rx,ry)) == -1
                 && one_chance_in(4 - power_level))
             {
                 if (you.level_type == LEVEL_ABYSS)
@@ -2566,7 +2566,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
         monster_type cur_try;
         do
         {
-            cur_try = random_monster_at_grid(you.x_pos + dx, you.y_pos + dy);
+            cur_try = random_monster_at_grid(you.pos() + coord_def(dx,dy));
         }
         while (mons_is_unique(cur_try));
 

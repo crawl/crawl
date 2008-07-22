@@ -60,7 +60,7 @@ static bool _place_feature_near( const coord_def &centre,
         if (cp == centre || (cp - centre).abs() > radius2 || !in_bounds(cp))
             continue;
 
-        if (not_seen && grid_see_grid(cp.x, cp.y, centre.x, centre.y))
+        if (not_seen && grid_see_grid(cp, centre))
             continue;
 
         if (grd(cp) == candidate)
@@ -259,7 +259,7 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
                                               true, items_level, 250);
                     }
 
-                    move_item_to_grid( &thing_created, i, j );
+                    move_item_to_grid( &thing_created, coord_def(i, j) );
 
                     if (thing_created != NON_ITEM)
                         items_placed++;
@@ -486,46 +486,36 @@ void area_shift(void)
         }
 
     // Shift all monsters & items to new area.
-    for (int i = you.x_pos - 10; i <= you.x_pos + 10; i++)
+    for (radius_iterator ri(you.pos(), 10, true, false); ri; ++ri)
     {
-        if (i < 0 || i >= GXM)
-            continue;
+        const coord_def newpos = coord_def(45,35) + *ri - you.pos();
 
-        for (int j = you.y_pos - 10; j <= you.y_pos + 10; j++)
-        {
-            if (j < 0 || j >= GYM)
-                continue;
-
-            const int ipos = 45 + i - you.x_pos;
-            const int jpos = 35 + j - you.y_pos;
-
-            // Move terrain.
-            grd[ipos][jpos] = grd[i][j];
-
-            // Move item.
+        // Move terrain.
+        grd(newpos) = grd(*ri);
+        
+        // Move item.
 #ifdef DEBUG_ABYSS
-            if (igrd[i][j] != NON_ITEM)
-            {
-                 mprf(MSGCH_DIAGNOSTICS,
-                      "Move item stack from (%d, %d) to (%d, %d)",
-                      i, j, ipos, jpos);
-            }
-#endif
-            move_item_stack_to_grid( i, j, ipos, jpos );
-
-            // Move monster.
-            mgrd[ipos][jpos] = mgrd[i][j];
-            if (mgrd[i][j] != NON_MONSTER)
-            {
-                menv[mgrd[ipos][jpos]].x = ipos;
-                menv[mgrd[ipos][jpos]].y = jpos;
-                mgrd[i][j] = NON_MONSTER;
-            }
-
-            // Move cloud,
-            if (env.cgrid[i][j] != EMPTY_CLOUD)
-                move_cloud( env.cgrid[i][j], ipos, jpos );
+        if (igrd(*ri) != NON_ITEM)
+        {
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Move item stack from (%d, %d) to (%d, %d)",
+                 ri->x, ri->y, newpos.x, newpos.y);
         }
+#endif
+        move_item_stack_to_grid( *ri, newpos );
+
+        // Move monster.
+        mgrd(newpos) = mgrd(*ri);
+        if (mgrd(*ri) != NON_MONSTER)
+        {
+            menv[mgrd(newpos)].x = newpos.x;
+            menv[mgrd(newpos)].y = newpos.y;
+            mgrd(*ri) = NON_MONSTER;
+        }
+
+        // Move cloud,
+        if (env.cgrid(*ri) != EMPTY_CLOUD)
+            move_cloud( env.cgrid(*ri), newpos );
     }
 
     for (unsigned int i = 0; i < MAX_CLOUDS; i++)

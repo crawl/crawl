@@ -106,7 +106,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false,
                       "Blink to where?");
 
-            if (!beam.isValid || coord_def(beam.tx, beam.ty) == you.pos())
+            if (!beam.isValid || coord_def(beam.target()) == you.pos())
             {
                 if (!wizard_blink
                     && !yesno("Are you sure you want to cancel this blink?",
@@ -120,9 +120,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             }
 
             // Wizard blink can move past translucent walls.
-            if (see_grid_no_trans(beam.tx, beam.ty))
+            if (see_grid_no_trans(beam.target()))
                 break;
-            else if (trans_wall_blocking( beam.tx, beam.ty ))
+            else if (trans_wall_blocking( beam.target() ))
             {
                 // Wizard blink can move past translucent walls.
                 if (wizard_blink)
@@ -160,7 +160,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             // no longer held in net
             clear_trapping_net();
 
-            move_player_to_grid(beam.tx, beam.ty, false, true, true);
+            move_player_to_grid(beam.target(), false, true, true);
 
             // controlling teleport contaminates the player -- bwr
             if (!wizard_blink)
@@ -182,7 +182,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
 void random_blink(bool allow_partial_control, bool override_abyss)
 {
-    int tx, ty;
+    coord_def target;
     bool succ = false;
 
     if (scan_randarts(RAP_PREVENT_TELEPORTATION))
@@ -194,8 +194,8 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     }
     // First try to find a random square not adjacent to the player,
     // then one adjacent if that fails.
-    else if (!random_near_space(you.x_pos, you.y_pos, tx, ty)
-             && !random_near_space(you.x_pos, you.y_pos, tx, ty, true))
+    else if (!random_near_space(you.pos(), target)
+             && !random_near_space(you.pos(), target, true))
     {
         mpr("You feel jittery for a moment.");
     }
@@ -219,7 +219,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         clear_trapping_net();
 
         succ = true;
-        you.moveto(tx, ty);
+        you.moveto(target);
 
         if (you.level_type == LEVEL_ABYSS)
         {
@@ -234,8 +234,6 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         you.duration[DUR_CONDENSATION_SHIELD] = 0;
         you.redraw_armour_class = true;
     }
-
-    return;
 }
 
 bool fireball(int pow, bolt &beam)
@@ -293,13 +291,9 @@ void cast_chain_lightning(int pow)
     beam.is_explosion   = false;
     beam.is_tracer      = false;
 
-    int sx, sy;
-    int tx, ty;
-    int i;
+    coord_def source, target;
 
-    for (sx = you.x_pos, sy = you.y_pos;
-         pow > 0;
-         pow -= 8 + random2(13), sx = tx, sy = ty)
+    for (source = you.pos(); pow > 0; pow -= 8 + random2(13), source = target)
     {
         // infinity as far as this spell is concerned
         // (Range - 1) is used because the distance is randomized and
@@ -309,17 +303,17 @@ void cast_chain_lightning(int pow)
         int dist;
         int count = 0;
 
-        tx = -1;
-        ty = -1;
+        target.x = -1;
+        target.y = -1;
 
-        for (i = 0; i < MAX_MONSTERS; i++)
+        for (int i = 0; i < MAX_MONSTERS; i++)
         {
-            struct monsters *monster = &menv[i];
+            monsters *monster = &menv[i];
 
-            if (monster->type == -1)
+            if (invalid_monster(monster))
                 continue;
 
-            dist = grid_distance( sx, sy, monster->x, monster->y );
+            dist = grid_distance( source, monster->pos() );
 
             // check for the source of this arc
             if (!dist)
@@ -332,7 +326,7 @@ void cast_chain_lightning(int pow)
             if (dist > min_dist)
                 continue;
 
-            if (!check_line_of_sight( sx, sy, monster->x, monster->y ))
+            if (!check_line_of_sight( source, monster->pos() ))
                 continue;
 
             count++;
@@ -343,16 +337,14 @@ void cast_chain_lightning(int pow)
                 if (!one_chance_in(10))
                 {
                     min_dist = dist;
-                    tx = monster->x;
-                    ty = monster->y;
+                    target = monster->pos();
                     count = 0;
                 }
             }
-            else if (tx == -1 || one_chance_in(count))
+            else if (target.x == -1 || one_chance_in(count))
             {
                 // either first target, or new selected target at min_dist
-                tx = monster->x;
-                ty = monster->y;
+                target = monster->pos();
 
                 // need to set min_dist for first target case
                 dist = std::max(dist, min_dist);
@@ -360,7 +352,7 @@ void cast_chain_lightning(int pow)
         }
 
         // now check if the player is a target
-        dist = grid_distance(sx, sy, you.x_pos, you.y_pos);
+        dist = grid_distance(source, you.pos());
 
         if (dist)       // i.e., player was not the source
         {
@@ -368,20 +360,19 @@ void cast_chain_lightning(int pow)
             dist += (random2(3) - 1);
 
             // select player if only, closest, or randomly selected
-            if ((tx == -1
+            if ((target.x == -1
                     || dist < min_dist
                     || (dist == min_dist && one_chance_in(count + 1)))
-                && check_line_of_sight(sx, sy, you.x_pos, you.y_pos))
+                && check_line_of_sight(source, you.pos()))
             {
-                tx = you.x_pos;
-                ty = you.y_pos;
+                target = you.pos();
             }
         }
 
-        const bool see_source = see_grid( sx, sy );
-        const bool see_targ   = see_grid( tx, ty );
+        const bool see_source = see_grid( source );
+        const bool see_targ   = see_grid( target );
 
-        if (tx == -1)
+        if (target.x == -1)
         {
             if (see_source)
                 mpr("The lightning grounds out.");
@@ -392,28 +383,28 @@ void cast_chain_lightning(int pow)
         // Trying to limit message spamming here so we'll only mention
         // the thunder when it's out of LoS.
         if (!see_source)
-            noisy(25, sx, sy, "You hear a mighty clap of thunder!");
+            noisy(25, source, "You hear a mighty clap of thunder!");
 
         if (see_source && !see_targ)
             mpr("The lightning arcs out of your line of sight!");
         else if (!see_source && see_targ)
             mpr("The lightning arc suddenly appears!");
 
-        if (!see_grid_no_trans( tx, ty ))
+        if (!see_grid_no_trans( target ))
         {
             // It's no longer in the caster's LOS and influence.
             pow = pow / 2 + 1;
         }
 
-        beam.source_x = sx;
-        beam.source_y = sy;
-        beam.target_x = tx;
-        beam.target_y = ty;
+        beam.source_x = source.x;
+        beam.source_y = source.y;
+        beam.target_x = target.x;
+        beam.target_y = target.y;
         beam.colour = LIGHTBLUE;
         beam.damage = calc_dice(5, 12 + pow * 2 / 3);
 
         // Be kinder to the player.
-        if (tx == you.x_pos && ty == you.y_pos)
+        if (target == you.pos())
         {
             if (!(beam.damage.num /= 2))
                 beam.damage.num = 1;
@@ -558,7 +549,7 @@ bool conjure_flame(int pow)
     if (durat > 23)
         durat = 23;
 
-    place_cloud( CLOUD_FIRE, spelld.tx, spelld.ty, durat, KC_YOU );
+    place_cloud( CLOUD_FIRE, spelld.target(), durat, KC_YOU );
     return (true);
 }
 
@@ -1707,21 +1698,12 @@ void manage_fire_shield(void)
     if (!you.duration[DUR_FIRE_SHIELD])
         return;
 
-    char stx = 0, sty = 0;
+    for ( radius_iterator ri(you.pos(), 1); ri; ++ri )
+    {
+        if ( *ri == you.pos() )
+            continue;
 
-    for (stx = -1; stx < 2; stx++)
-        for (sty = -1; sty < 2; sty++)
-        {
-            if (sty == 0 && stx == 0)
-                continue;
-
-            //if ( one_chance_in(3) ) beam.range ++;
-
-            if (!grid_is_solid(grd[you.x_pos + stx][you.y_pos + sty])
-                && env.cgrid[you.x_pos + stx][you.y_pos + sty] == EMPTY_CLOUD)
-            {
-                place_cloud( CLOUD_FIRE, you.x_pos + stx, you.y_pos + sty,
-                             1 + random2(6), KC_YOU );
-            }
-        }
+        if (!grid_is_solid(grd(*ri)) && env.cgrid(*ri) == EMPTY_CLOUD)
+            place_cloud( CLOUD_FIRE, *ri, 1 + random2(6), KC_YOU );
+    }
 }

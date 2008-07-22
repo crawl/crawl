@@ -145,9 +145,9 @@ static void _initialize_randmons()
     initialized_randmons = true;
 }
 
-monster_type random_monster_at_grid(int x, int y)
+monster_type random_monster_at_grid(const coord_def& p)
 {
-    return (random_monster_at_grid(grd[x][y]));
+    return (random_monster_at_grid(grd(p)));
 }
 
 monster_type random_monster_at_grid(dungeon_feature_type grid)
@@ -2292,11 +2292,8 @@ bool mons_should_fire(struct bolt &beam)
     if (beam.foe_count == 0)
         return (false);
 
-    if (is_sanctuary(you.x_pos, you.y_pos)
-        || is_sanctuary(beam.source_x, beam.source_y))
-    {
+    if (is_sanctuary(you.pos()) || is_sanctuary(beam.source()))
         return (false);
-    }
 
     // If we either hit no friends, or monster too dumb to care.
     if (beam.fr_count == 0 || !beam.smart_monster)
@@ -2350,16 +2347,16 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
 
     if (mon->foe == MHITYOU || mon->foe == MHITNOT)
     {
-        if (adjacent(you.x_pos, you.y_pos, mon->x, mon->y))
+        if (adjacent(you.pos(), mon->pos()))
             targ_adj = true;
-        if (is_sanctuary(you.x_pos, you.y_pos))
+        if (is_sanctuary(you.pos()))
             targ_sanct = true;
     }
     else
     {
-       if (adjacent( menv[mon->foe].x, menv[mon->foe].y, mon->x, mon->y ))
-          targ_adj = true;
-       if (is_sanctuary( menv[mon->foe].x, menv[mon->foe].y ))
+        if (adjacent(menv[mon->foe].pos(), mon->pos()))
+            targ_adj = true;
+        if (is_sanctuary(menv[mon->foe].pos()))
             targ_sanct = true;
     }
 
@@ -2440,11 +2437,8 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         if (spell_harms_area(monspell) && env.sanctuary_time > 0)
             return (true);
 
-        if (spell_harms_target(monspell)
-            && is_sanctuary(mon->target_x, mon->target_y))
-        {
+        if (spell_harms_target(monspell) && is_sanctuary(mon->target_pos()))
             return (true);
-        }
     }
 
     // Eventually, we'll probably want to be able to have monsters
@@ -3599,7 +3593,7 @@ bool monsters::drop_item(int eslot, int near)
     }
 
     const std::string iname = mitm[item_index].name(DESC_NOCAP_A);
-    if (!move_item_to_grid(&item_index, x, y))
+    if (!move_item_to_grid(&item_index, pos()))
     {
         // Re-equip item if we somehow failed to drop it.
         if (was_unequipped)
@@ -4392,7 +4386,7 @@ bool monsters::fumbles_attack(bool verbose)
                 mprf("%s splashes around in the water.",
                      this->name(DESC_CAP_THE).c_str());
             }
-            else if (!silenced(you.x_pos, you.y_pos) && !silenced(x, y))
+            else if (!silenced(you.pos()) && !silenced(x, y))
                 mpr("You hear a splashing noise.", MSGCH_SOUND);
         }
         return (true);
@@ -5184,7 +5178,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 
             if (in_bounds(pos) && mgrd(pos) == NON_MONSTER
                 && monster_habitable_grid(mon, grd(pos))
-                && trap_type_at_xy(pos.x, pos.y) == NUM_TRAPS)
+                && trap_type_at_xy(pos) == NUM_TRAPS)
             {
                 if (one_chance_in(++okay_squares))
                     target_square = pos;
@@ -5375,7 +5369,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_HELD:
     {
-        int net = get_trapping_net(x,y);
+        int net = get_trapping_net(this->pos());
         if (net != NON_ITEM)
             remove_item_stationary(mitm[net]);
 
@@ -5681,7 +5675,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             break;
         }
 
-        int net = get_trapping_net(x,y,true);
+        int net = get_trapping_net(this->pos(), true);
 
         if (net == NON_ITEM) // Really shouldn't happen!
         {
@@ -6191,7 +6185,7 @@ bool monsters::mon_see_grid(const coord_def& p, bool reach) const
         max_disallowed = DNGN_MAX_NONREACH;
 
     // XXX: Ignoring clouds for now.
-    return (!num_feats_between(x, y, p.x, p.y, DNGN_UNSEEN, max_disallowed,
+    return (!num_feats_between(pos(), p, DNGN_UNSEEN, max_disallowed,
                                true, true));
 }
 
@@ -6276,21 +6270,18 @@ void monsters::apply_location_effects()
 
 bool monsters::move_to_pos(const coord_def &newpos)
 {
-    if (mgrd[newpos.x][newpos.y] != NON_MONSTER
-        || you.x_pos == newpos.x && you.y_pos == newpos.y)
-    {
+    if (mgrd(newpos) != NON_MONSTER || you.pos() == newpos )
         return (false);
-    }
 
     // Clear old cell pointer.
-    mgrd[x][y] = NON_MONSTER;
+    mgrd(pos()) = NON_MONSTER;
 
     // Set monster x,y to new value.
     x = newpos.x;
     y = newpos.y;
 
     // set new monster grid pointer to this monster.
-    mgrd[x][y] = monster_index(this);
+    mgrd(newpos) = monster_index(this);
 
     return (true);
 }
@@ -6303,7 +6294,7 @@ bool monsters::do_shaft()
 
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
-    if (trap_type_at_xy(x, y) != TRAP_SHAFT)
+    if (trap_type_at_xy(this->pos()) != TRAP_SHAFT)
     {
         switch(grd[x][y])
         {
@@ -6333,7 +6324,7 @@ bool monsters::do_shaft()
                     mpr("A shaft briefly opens up in the floor!");
             }
 
-            handle_items_on_shaft(this->x, this->y, false);
+            handle_items_on_shaft(this->pos(), false);
             return (false);
         }
     }
@@ -6351,7 +6342,7 @@ bool monsters::do_shaft()
     const bool reveal =
         simple_monster_message(this, " falls through a shaft!");
 
-    handle_items_on_shaft(this->x, this->y, false);
+    handle_items_on_shaft(this->pos(), false);
 
     // Monster is no longer on this level.
     destroy_inventory();

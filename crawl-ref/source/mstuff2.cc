@@ -65,7 +65,7 @@ void mons_trap(monsters *monster)
     bool monsterNearby = mons_near(monster);
 
     // new function call {dlb}
-    int which_trap = trap_at_xy(monster->x, monster->y);
+    int which_trap = trap_at_xy(monster->pos());
     if (which_trap == -1)
         return;
 
@@ -157,9 +157,9 @@ void mons_trap(monsters *monster)
             return;
         }
 
-        noisy(12, monster->x, monster->y);
+        noisy(12, monster->pos());
 
-        if (!silenced(you.x_pos, you.y_pos))
+        if (!silenced(you.pos()))
         {
             if (monsterNearby)
             {
@@ -221,7 +221,7 @@ void mons_trap(monsters *monster)
 
             if (!mons_is_summoned(monster))
             {
-                bleed_onto_floor(monster->x, monster->y, monster->type,
+                bleed_onto_floor(monster->pos(), monster->type,
                                  damage_taken, true);
             }
         }
@@ -268,12 +268,12 @@ void mons_trap(monsters *monster)
             }
         }
         trap_item( OBJ_MISSILES, MI_THROWING_NET,
-                   env.trap[which_trap].x, env.trap[which_trap].y );
+                   env.trap[which_trap].pos() );
 
         if (mons_is_caught(monster))
-            mark_net_trapping(monster->x, monster->y);
+            mark_net_trapping(monster->pos());
 
-        grd[env.trap[which_trap].x][env.trap[which_trap].y] = DNGN_FLOOR;
+        grd(env.trap[which_trap].pos()) = DNGN_FLOOR;
         env.trap[which_trap].type = TRAP_UNASSIGNED;
         break;
     }
@@ -810,8 +810,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     case SPELL_CANTRIP:
     {
         const bool friendly      = mons_friendly(monster);
-        const bool buff_only     = !friendly && is_sanctuary(you.x_pos,
-                                                             you.y_pos);
+        const bool buff_only     = !friendly && is_sanctuary(you.pos());
         bool need_friendly_stub  = false;
         const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
                                                     : MSGCH_MONSTER_ENCHANT;
@@ -1035,30 +1034,27 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
 
     mons_clear_trapping_net(monster);
 
-    int newx, newy;
+    coord_def newpos;
     while (true)
     {
-        newx = 10 + random2(GXM - 20);
-        newy = 10 + random2(GYM - 20);
+        newpos.x = 10 + random2(GXM - 20);
+        newpos.y = 10 + random2(GYM - 20);
 
         // Don't land on top of another monster.
-        if (mgrd[newx][newy] != NON_MONSTER
-            || newx == you.x_pos && newy == you.y_pos)
-        {
-            continue;
-        }
-
-        if (is_sanctuary(newx, newy) && !mons_wont_attack(monster))
+        if (mgrd(newpos) != NON_MONSTER || newpos == you.pos())
             continue;
 
-        if (monster_habitable_grid(monster, grd[newx][newy]))
+        if (is_sanctuary(newpos) && !mons_wont_attack(monster))
+            continue;
+
+        if (monster_habitable_grid(monster, grd(newpos)))
             break;
     }
 
-    monster->x = newx;
-    monster->y = newy;
+    monster->x = newpos.x;
+    monster->y = newpos.y;
 
-    mgrd[monster->x][monster->y] = monster_index(monster);
+    mgrd(monster->pos()) = monster_index(monster);
 
     // Mimics change form/colour when teleported.
     if (mons_is_mimic( monster->type ))
@@ -1564,9 +1560,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     fire_beam( pbolt, &item, !really_returns );
 
     // The item can be destroyed before returning.
-    if (really_returns && mons_thrown_object_destroyed(&item, pbolt.target_x,
-                                                       pbolt.target_y, true,
-                                                       pbolt.beam_source))
+    if (really_returns && mons_thrown_object_destroyed(&item, pbolt.target(),
+                                                       true, pbolt.beam_source))
     {
         really_returns = false;
     }
@@ -1598,14 +1593,14 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     return (true);
 }                               // end mons_throw()
 
-bool mons_thrown_object_destroyed( item_def *item, int x, int y,
+bool mons_thrown_object_destroyed( item_def *item, const coord_def& where,
                                    bool returning, int midx )
 {
     ASSERT( item != NULL );
 
     bool destroyed = (item->base_type == OBJ_MISSILES
                       && item->sub_type != MI_THROWING_NET && coinflip());
-    bool hostile_grid = grid_destroys_items(grd[x][y]);
+    bool hostile_grid = grid_destroys_items(grd(where));
 
     // Non-returning items thrown into item-destroying grids are always
     // destroyed.  Returning items are only destroyed if they would have
@@ -1675,13 +1670,13 @@ void spore_goes_pop(monsters *monster)
     if (you.can_see(monster))
     {
         viewwindow(true, false);
-        if (is_sanctuary(monster->x, monster->y))
+        if (is_sanctuary(monster->pos()))
             mpr(sanct_msg, MSGCH_GOD);
         else
             mpr(msg);
     }
 
-    if (is_sanctuary(monster->x, monster->y))
+    if (is_sanctuary(monster->pos()))
         return;
 
     explosion(beam, false, false, true, true, mons_near(monster));
@@ -2357,7 +2352,7 @@ static int _monster_abjure_square(const coord_def &pos,
         if (pow < abj.duration)
             simple_god_message(" shields your ally from puny magic!");
     }
-    else if (is_sanctuary(target->x, target->y))
+    else if (is_sanctuary(target->pos()))
     {
         mpr("Zin's power protects your fellow warrior from evil magic!",
             MSGCH_GOD);
@@ -2519,24 +2514,21 @@ bool orc_battle_cry(monsters *chief)
                         seen_affected.push_back(mon);
 
                     if (mon->asleep())
-                    {
-                        behaviour_event(mon, ME_DISTURB, MHITNOT,
-                                        chief->x, chief->y);
-                    }
+                        behaviour_event(mon, ME_DISTURB, MHITNOT, chief->pos());
                 }
             }
         }
 
         if (affected)
         {
-            if (you.can_see(chief) && player_can_hear(chief->x, chief->y))
+            if (you.can_see(chief) && player_can_hear(chief->pos()))
             {
                 mprf(MSGCH_SOUND, "%s roars a battle-cry!",
                      chief->name(DESC_CAP_THE).c_str());
             }
 
             // The yell happens whether you happen to see it or not.
-            noisy(15, chief->x, chief->y);
+            noisy(15, chief->pos());
 
             // Disabling detailed frenzy announcement because it's so spammy.
             const msg_channel_type channel =
@@ -2619,11 +2611,8 @@ static bool _make_monster_angry(const monsters *mon, monsters *targ)
 
 bool moth_incite_monsters(const monsters *mon)
 {
-    if (is_sanctuary(you.x_pos, you.y_pos)
-        || is_sanctuary(mon->x, mon->y))
-    {
-        return 0;
-    }
+    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+        return false;
 
     int goaded = 0;
     for (int i = 0; i < MAX_MONSTERS; ++i)
@@ -2635,7 +2624,7 @@ bool moth_incite_monsters(const monsters *mon)
         if (mon->pos().distance_from(targ->pos()) > 3)
             continue;
 
-        if (is_sanctuary(targ->x, targ->y))
+        if (is_sanctuary(targ->pos()))
             continue;
 
         // Cannot goad other moths of wrath!
@@ -2654,7 +2643,7 @@ void mons_clear_trapping_net(monsters *mon)
     if (!mons_is_caught(mon))
         return;
 
-    const int net = get_trapping_net(mon->x, mon->y);
+    const int net = get_trapping_net(mon->pos());
     if (net != NON_ITEM)
         remove_item_stationary(mitm[net]);
 

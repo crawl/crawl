@@ -21,7 +21,7 @@ struct coord_def;
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool fall_into_a_pool( int entry_x, int entry_y, bool allow_shift,
+bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
                        unsigned char terrain );
 
 
@@ -50,7 +50,7 @@ void find_connected_range(coord_def d, dungeon_feature_type ft_min,
                           dungeon_feature_type ft_max,
                           std::set<coord_def>& out);
 void get_door_description(int door_size, const char** adjective, const char** noun);
-dungeon_feature_type grid_secret_door_appearance( int gx, int gy );
+dungeon_feature_type grid_secret_door_appearance( const coord_def& where );
 bool grid_destroys_items( dungeon_feature_type grid );
 
 const char *grid_item_destruction_message( dungeon_feature_type grid );

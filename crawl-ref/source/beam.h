@@ -172,6 +172,11 @@ public:
     {
         return (coord_def(target_x, target_y));
     }
+
+    coord_def source() const
+    {
+        return (coord_def(source_x, source_y));
+    }
 };
 
 dice_def calc_dice( int num_dice, int max_damage );
@@ -230,7 +235,7 @@ bool poison_monster( monsters *monster, kill_category who,
 void fire_tracer( const monsters *monster, struct bolt &pbolt,
                   bool explode_only = false );
 
-bool check_line_of_sight( int sx, int sy, int tx, int ty );
+bool check_line_of_sight( const coord_def& source, const coord_def& target );
 
 /* ***********************************************************************
  * called from: monstuff
@@ -244,8 +249,8 @@ bool zapping( zap_type ztype, int power, struct bolt &pbolt,
 bool player_tracer( zap_type ztype, int power, struct bolt &pbolt,
                     int range = 0 );
 
-int affect(bolt &beam, int x, int y, item_def *item = NULL);
+int affect(bolt &beam, const coord_def& p, item_def *item = NULL);
 
-void beam_drop_object( bolt &beam, item_def *item, int x, int y );
+void beam_drop_object( bolt &beam, item_def *item, const coord_def& where );
 
 #endif

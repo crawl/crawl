@@ -1297,8 +1297,9 @@ static int dgn_feature_desc_at(lua_State *ls)
         description_type_by_name(lua_tostring(ls, 3));
     const bool need_stop = lua_isboolean(ls, 4)? lua_toboolean(ls, 4) : false;
     const std::string s =
-        feature_description(luaL_checkint(ls, 1), luaL_checkint(ls, 2), false,
-                            dtype, need_stop);
+        feature_description(coord_def(luaL_checkint(ls, 1),
+                                      luaL_checkint(ls, 2)),
+                            false, dtype, need_stop);
     lua_pushstring(ls, s.c_str());
     return (1);
 }
@@ -1577,7 +1578,7 @@ static int make_a_lua_cloud(int x, int y, int garbage, int spread_rate,
     const int pow = random_range(lua_cloud_pow_min,
                                  lua_cloud_pow_max,
                                  lua_cloud_pow_rolls);
-    place_cloud( ctype, x, y, pow, whose, spread_rate );
+    place_cloud( ctype, coord_def(x, y), pow, whose, spread_rate );
 
     return 1;
 }

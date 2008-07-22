@@ -540,7 +540,8 @@ static void _expose_invent_to_element(beam_type flavour, int strength)
     }
 }
 
-void expose_items_to_element(beam_type flavour, int x, int y, int strength)
+void expose_items_to_element(beam_type flavour, const coord_def& where,
+                             int strength)
 {
     int num_dest = 0;
 
@@ -548,7 +549,7 @@ void expose_items_to_element(beam_type flavour, int x, int y, int strength)
     if (target_class == OBJ_UNASSIGNED)
         return;
 
-    for (stack_iterator si(coord_def(x,y)); si; ++si)
+    for (stack_iterator si(where); si; ++si)
     {
         if (!is_valid_item(*si))
             continue;
@@ -570,7 +571,7 @@ void expose_items_to_element(beam_type flavour, int x, int y, int strength)
 
     if (num_dest)
     {
-        if (see_grid(x, y))
+        if (see_grid(where))
         {
             switch (target_class)
             {

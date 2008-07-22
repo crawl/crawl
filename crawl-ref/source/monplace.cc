@@ -159,7 +159,7 @@ bool monster_habitable_grid(int monster_class,
 bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
 {
     if (mons->type == MONS_TRAPDOOR_SPIDER && grid == DNGN_FLOOR)
-        return (trap_type_at_xy(mons->x, mons->y) == NUM_TRAPS);
+        return (trap_type_at_xy(mons->pos()) == NUM_TRAPS);
 
     // Zombies of watery critters can not submerge.
     switch (mons_habitat(mons))
@@ -462,7 +462,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                     continue;
 
                 // Don't generate monsters on top of teleport traps.
-                int trap = trap_at_xy(pos.x, pos.y);
+                int trap = trap_at_xy(pos);
                 if (trap >= 0)
                 {
                     if (!_can_place_on_trap(mon_type, env.trap[trap].type))
@@ -566,12 +566,12 @@ static bool _valid_monster_location(const mgen_data &mg,
     if (!grid_compatible(grid_wanted, grd(mg_pos), true))
         return (false);
 
-    if (mg.behaviour != BEH_FRIENDLY && is_sanctuary(mg_pos.x, mg_pos.y))
+    if (mg.behaviour != BEH_FRIENDLY && is_sanctuary(mg_pos))
         return (false);
 
     // Don't generate monsters on top of teleport traps.
     // (How did they get there?)
-    int trap = trap_at_xy(mg_pos.x, mg_pos.y);
+    int trap = trap_at_xy(mg_pos);
     if (trap >= 0)
     {
         if (!_can_place_on_trap(mg.cls, env.trap[trap].type))
@@ -837,7 +837,7 @@ static int _place_monster_aux( const mgen_data &mg,
     // Setup habitat and placement.
     // If the space is occupied, try some neighbouring square instead.
     if (first_band_member && in_bounds(mg.pos)
-        && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos.x, mg.pos.y))
+        && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos))
         && mgrd(mg.pos) == NON_MONSTER && mg.pos != you.pos()
         && (force_pos || monster_habitable_grid(htype, grd(mg.pos))))
     {
@@ -2637,7 +2637,7 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
 #endif
     for (unsigned int i = 1; i < path.size(); i++)
     {
-        if (grid_see_grid(pos.x, pos.y, path[i].x, path[i].y, can_move))
+        if (grid_see_grid(pos, path[i], can_move))
             continue;
         else
         {
@@ -2684,7 +2684,7 @@ bool monster_pathfind::traversable(coord_def p)
         return (false);
     }
 
-    const int trap = trap_at_xy(p.x, p.y);
+    const int trap = trap_at_xy(p);
     if (trap >= 0)
     {
         trap_type tt = env.trap[trap].type;
@@ -2730,7 +2730,7 @@ int monster_pathfind::travel_cost(coord_def npos)
     }
 
     // Try to avoid (known) traps.
-    const int trap = trap_at_xy(npos.x, npos.y);
+    const int trap = trap_at_xy(npos);
     if (trap >= 0)
     {
         // A monster can be considered to know a trap if

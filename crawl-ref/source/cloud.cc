@@ -46,22 +46,23 @@ static unsigned char _actual_spread_rate(cloud_type type, int spread_rate)
     }
 }
 
-static void _new_cloud( int cloud, cloud_type type, int x, int y, int decay,
-                        kill_category whose, unsigned char spread_rate )
+static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
+                        int decay, kill_category whose,
+                        unsigned char spread_rate )
 {
     ASSERT( env.cloud[ cloud ].type == CLOUD_NONE );
 
     env.cloud[ cloud ].type        = type;
     env.cloud[ cloud ].decay       = decay;
-    env.cloud[ cloud ].x           = x;
-    env.cloud[ cloud ].y           = y;
+    env.cloud[ cloud ].x           = p.x;
+    env.cloud[ cloud ].y           = p.y;
     env.cloud[ cloud ].whose       = whose;
     env.cloud[ cloud ].spread_rate = spread_rate;
-    env.cgrid[ x ][ y ]            = cloud;
+    env.cgrid(p)                   = cloud;
     env.cloud_no++;
 }
 
-static void _place_new_cloud(cloud_type cltype, int x, int y, int decay,
+static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
                              kill_category whose, int spread_rate)
 {
     if (env.cloud_no >= MAX_CLOUDS)
@@ -72,7 +73,7 @@ static void _place_new_cloud(cloud_type cltype, int x, int y, int decay,
     {
         if (env.cloud[ci].type == CLOUD_NONE)   // i.e., is empty
         {
-            _new_cloud( ci, cltype, x, y, decay, whose, spread_rate );
+            _new_cloud( ci, cltype, p, decay, whose, spread_rate );
             break;
         }
     }
@@ -84,32 +85,28 @@ static int _spread_cloud(const cloud_struct &cloud)
                          cloud.decay > 20? 50 :
                                            30;
     int extra_decay = 0;
-
-    for (int yi = -1; yi <= 1; ++yi)
+    radius_iterator ri(coord_def(cloud.x, cloud.y), 1, true, false, true);
+    for ( ; ri; ++ri )
     {
-        for (int xi = -1; xi <= 1; ++xi)
+        if (random2(100) >= spreadch)
+            continue;
+
+        if (!in_bounds(*ri)
+            || env.cgrid(*ri) != EMPTY_CLOUD
+            || grid_is_solid(grd(*ri))
+            || is_sanctuary(*ri) && !is_harmless_cloud(cloud.type))
         {
-            if ((!xi && !yi) || random2(100) >= spreadch)
-                continue;
-
-            const int x = cloud.x + xi;
-            const int y = cloud.y + yi;
-
-            if (!in_bounds(x, y)
-                    || env.cgrid[x][y] != EMPTY_CLOUD
-                    || grid_is_solid(grd[x][y])
-                    || is_sanctuary(x, y) && !is_harmless_cloud(cloud.type))
-                continue;
-
-            int newdecay = cloud.decay / 2 + 1;
-            if (newdecay >= cloud.decay)
-                newdecay = cloud.decay - 1;
-
-            _place_new_cloud( cloud.type, x, y, newdecay, cloud.whose,
-                              cloud.spread_rate );
-
-            extra_decay += 8;
+            continue;
         }
+
+        int newdecay = cloud.decay / 2 + 1;
+        if (newdecay >= cloud.decay)
+            newdecay = cloud.decay - 1;
+        
+        _place_new_cloud( cloud.type, *ri, newdecay, cloud.whose,
+                          cloud.spread_rate );
+
+        extra_decay += 8;
     }
 
     return (extra_decay);
@@ -157,7 +154,7 @@ void manage_clouds(void)
         }
 
         expose_items_to_element(cloud2beam(env.cloud[cc].type),
-                                env.cloud[cc].x, env.cloud[cc].y, 2);
+                                env.cloud[cc].pos(), 2);
 
         _dissipate_cloud(cc, env.cloud[cc], dissipate);
     }
@@ -167,8 +164,7 @@ void delete_cloud( int cloud )
 {
     if (env.cloud[ cloud ].type != CLOUD_NONE)
     {
-        const int cloud_x = env.cloud[ cloud ].x;
-        const int cloud_y = env.cloud[ cloud ].y;
+        const coord_def cloud_pos = env.cloud[ cloud ].pos();
 
         env.cloud[ cloud ].type         = CLOUD_NONE;
         env.cloud[ cloud ].decay        = 0;
@@ -176,36 +172,36 @@ void delete_cloud( int cloud )
         env.cloud[ cloud ].y            = 0;
         env.cloud[ cloud ].whose        = KC_OTHER;
         env.cloud[ cloud ].spread_rate  = 0;
-        env.cgrid[ cloud_x ][ cloud_y ] = EMPTY_CLOUD;
+        env.cgrid(cloud_pos)            = EMPTY_CLOUD;
         env.cloud_no--;
     }
 }
 
 // The current use of this function is for shifting in the abyss, so
 // that clouds get moved along with the rest of the map.
-void move_cloud( int cloud, int new_x, int new_y )
+void move_cloud( int cloud, const coord_def& newpos )
 {
     if (cloud != EMPTY_CLOUD)
     {
         const int old_x = env.cloud[ cloud ].x;
         const int old_y = env.cloud[ cloud ].y;
 
-        env.cgrid[ new_x ][ new_y ] = cloud;
-        env.cloud[ cloud ].x        = new_x;
-        env.cloud[ cloud ].y        = new_y;
+        env.cgrid(newpos) = cloud;
+        env.cloud[ cloud ].x        = newpos.x;
+        env.cloud[ cloud ].y        = newpos.y;
         env.cgrid[ old_x ][ old_y ] = EMPTY_CLOUD;
     }
 }
 
 // Places a cloud with the given stats assuming one doesn't already
 // exist at that point.
-void check_place_cloud( cloud_type cl_type, int x, int y, int lifetime,
+void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
                         kill_category whose, int spread_rate )
 {
-    if (!in_bounds(x, y) || env.cgrid[x][y] != EMPTY_CLOUD)
+    if (!in_bounds(p) || env.cgrid(p) != EMPTY_CLOUD)
         return;
 
-    place_cloud( cl_type, x, y, lifetime, whose, spread_rate );
+    place_cloud( cl_type, p, lifetime, whose, spread_rate );
 }
 
 int steam_cloud_damage(const cloud_struct &cloud)
@@ -223,17 +219,15 @@ int steam_cloud_damage(const cloud_struct &cloud)
 //   Places a cloud with the given stats. May delete old clouds to
 //   make way if there are too many on level. Will overwrite an old
 //   cloud under some circumstances.
-void place_cloud(cloud_type cl_type, int ctarget_x,
-                 int ctarget_y, int cl_range,
+void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
                  kill_category whose, int _spread_rate)
 {
-    if (is_sanctuary(ctarget_x, ctarget_y) && !is_harmless_cloud(cl_type))
+    if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
 
     int cl_new = -1;
 
-    // more compact {dlb}
-    const int target_cgrid = env.cgrid[ctarget_x][ctarget_y];
+    const int target_cgrid = env.cgrid(ctarget);
 
     // that is, another cloud already there {dlb}
     if (target_cgrid != EMPTY_CLOUD)
@@ -245,8 +239,8 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
             || env.cloud[ target_cgrid ].type == CLOUD_MIST
             || env.cloud[ target_cgrid ].decay <= 20)     //soon gone
         {
-            cl_new = env.cgrid[ ctarget_x ][ ctarget_y ];
-            delete_cloud( env.cgrid[ ctarget_x ][ ctarget_y ] );
+            cl_new = env.cgrid(ctarget);
+            delete_cloud( env.cgrid(ctarget) );
         }
         else
         {
@@ -283,7 +277,7 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
     // Create new cloud.
     if (cl_new != -1)
     {
-        _new_cloud( cl_new, cl_type, ctarget_x, ctarget_y, cl_range * 10,
+        _new_cloud( cl_new, cl_type, ctarget, cl_range * 10,
                     whose, spread_rate );
     }
     else
@@ -293,7 +287,7 @@ void place_cloud(cloud_type cl_type, int ctarget_x,
         {
             if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
             {
-                _new_cloud( ci, cl_type, ctarget_x, ctarget_y, cl_range * 10,
+                _new_cloud( ci, cl_type, ctarget, cl_range * 10,
                             whose, spread_rate );
                 break;
             }

@@ -293,7 +293,7 @@ static int _shatter_walls(int x, int y, int pow, int garbage)
 
     if (x_chance_in_y(chance, 100))
     {
-        noisy(30, x, y);
+        noisy(30, coord_def(x, y));
 
         grd[x][y] = DNGN_FLOOR;
         return (1);
@@ -311,7 +311,7 @@ void cast_shatter(int pow)
         mpr("The dungeon shakes!");
     else
     {
-        noisy(30, you.x_pos, you.y_pos);
+        noisy(30, you.pos());
         mpr("The dungeon rumbles!", MSGCH_SOUND);
     }
 
@@ -558,8 +558,8 @@ static int _ignite_poison_objects(int x, int y, int pow, int garbage)
 
     if (strength > 0)
     {
-        place_cloud(CLOUD_FIRE, x, y, strength + roll_dice(3, strength / 4),
-                    KC_YOU);
+        place_cloud(CLOUD_FIRE, coord_def(x, y),
+                    strength + roll_dice(3, strength / 4), KC_YOU);
     }
 
     return (strength);
@@ -743,7 +743,7 @@ void cast_ignite_poison(int pow)
     if (totalstrength)
     {
         place_cloud(
-            CLOUD_FIRE, you.x_pos, you.y_pos,
+            CLOUD_FIRE, you.pos(),
             random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) +
             random2(totalstrength / 4 + 1) + random2(totalstrength / 4 + 1) + 1,
             KC_YOU);
@@ -1085,31 +1085,22 @@ void cast_swap(int pow)
 
 static int _make_a_rot_cloud(int x, int y, int pow, cloud_type ctype)
 {
-    int next = 0, obj = mgrd[x][y];
-
-    if (obj == NON_MONSTER)
-        return 0;
-
-    while (obj != NON_ITEM)
+    for ( stack_iterator si(coord_def(x,y)); si; ++si )
     {
-        next = mitm[obj].link;
-
-        if (mitm[obj].base_type == OBJ_CORPSES
-            && mitm[obj].sub_type == CORPSE_BODY)
+        if (si->base_type == OBJ_CORPSES
+            && si->sub_type == CORPSE_BODY)
         {
-            if (!mons_skeleton(mitm[obj].plus))
-                destroy_item(obj);
+            if (!mons_skeleton(si->plus))
+                destroy_item(si->index());
             else
-                turn_corpse_into_skeleton(mitm[obj]);
+                turn_corpse_into_skeleton(*si);
 
-            place_cloud(ctype, x, y,
+            place_cloud(ctype, coord_def(x,y),
                         (3 + random2(pow / 4) + random2(pow / 4) +
                          random2(pow / 4)),
                         KC_YOU);
             return 1;
         }
-
-        obj = next;
     }
 
     return 0;
@@ -1118,7 +1109,7 @@ static int _make_a_rot_cloud(int x, int y, int pow, cloud_type ctype)
 int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
                         cloud_type ctype, kill_category whose)
 {
-    place_cloud( ctype, x, y,
+    place_cloud( ctype, coord_def(x, y),
                  (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
                  whose, spread_rate );
 
@@ -2022,7 +2013,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
     case DNGN_UNDISCOVERED_TRAP:
     case DNGN_TRAP_MECHANICAL:
-        trap = trap_at_xy(spd.tx, spd.ty);
+        trap = trap_at_xy(spd.target());
         if (trap != -1
             && trap_category(env.trap[trap].type) != DNGN_TRAP_MECHANICAL)
         {
@@ -2529,32 +2520,30 @@ static int _quadrant_blink(int x, int y, int pow, int garbage)
         pow = 100;
 
     const int dist = random2(6) + 2;  // 2-7
-    const int ox = you.x_pos + (x - you.x_pos) * dist;
-    const int oy = you.y_pos + (y - you.y_pos) * dist;
+    coord_def orig;
+    orig.x = you.x_pos + (x - you.x_pos) * dist;
+    orig.y = you.y_pos + (y - you.y_pos) * dist;
 
     // This can take a while if pow is high and there's lots of translucent
     // walls nearby.
-    int tx, ty;
+    coord_def target;
     bool found = false;
     for ( int i = 0; i < (pow*pow) / 500 + 1; ++i )
     {
         // Find a space near our target...
         // First try to find a random square not adjacent to the player,
         // then one adjacent if that fails.
-        if (!random_near_space(ox, oy, tx, ty)
-            && !random_near_space(ox, oy, tx, ty, true))
+        if (!random_near_space(orig, target)
+            && !random_near_space(orig, target, true))
         {
             return 0;
         }
 
         // ... which is close enough, and also far enough from us.
-        if (distance(ox, oy, tx, ty) > 10
-            && distance(you.x_pos, you.y_pos, tx, ty) < 8)
-        {
+        if (distance(orig, target) > 10 && distance(you.pos(), target) < 8)
             continue;
-        }
 
-        if (!see_grid_no_trans(tx, ty))
+        if (!see_grid_no_trans(target))
             continue;
 
         found = true;
@@ -2564,7 +2553,7 @@ static int _quadrant_blink(int x, int y, int pow, int garbage)
     if (!found)
         return(0);
 
-    you.moveto(tx, ty);
+    you.moveto(target);
     return 1;
 }
 

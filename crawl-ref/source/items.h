@@ -37,8 +37,8 @@ bool dec_mitm_item_quantity( int obj, int amount );
 void inc_inv_item_quantity( int obj, int amount );
 void inc_mitm_item_quantity( int obj, int amount );
 
-bool move_item_to_grid( int *const obj, int x, int y );
-void move_item_stack_to_grid( int x, int y, int targ_x, int targ_y );
+bool move_item_to_grid( int *const obj, const coord_def& p );
+void move_item_stack_to_grid( const coord_def& from, const coord_def& to );
 int  move_item_to_player( int obj, int quant_got, bool quiet = false );
 void mark_items_non_pickup_at(const coord_def &pos);
 bool is_stackable_item( const item_def &item );
@@ -95,7 +95,7 @@ void pickup(void);
 /* ***********************************************************************
  * called from: beam - items - transfor
  * *********************************************************************** */
-bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
+bool copy_item_to_grid( const item_def &item, const coord_def& p,
                         int quant_drop = -1,    // item.quantity by default
                         bool mark_dropped = false);
 

@@ -1203,7 +1203,7 @@ void tutorial_first_monster(const monsters &mon)
     // (highlighting is an unnecessary complication).
     if (_mons_is_highlighted(&mon))
     {
-        noisy(1, mon.x, mon.y);
+        noisy(1, mon.pos());
         viewwindow(true, false);
     }
 
@@ -1938,7 +1938,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     case TUT_SEEN_SHOP:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        tiles.add_text_tag(TAG_TUTORIAL, shop_name(gc.x, gc.y), gc);
+        tiles.add_text_tag(TAG_TUTORIAL, shop_name(gc), gc);
 #endif
         text << "That "
 #ifndef USE_TILE

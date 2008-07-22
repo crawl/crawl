@@ -435,7 +435,7 @@ bool is_travelsafe_square(int x, int y, bool ignore_hostile,
         && is_terrain_changed(x, y))
     {
         const int c = get_envmap_obj(x, y);
-        const int secret_door = grid_secret_door_appearance(x, y);
+        const int secret_door = grid_secret_door_appearance(coord_def(x, y));
         return (c != secret_door);
     }
 
@@ -3933,7 +3933,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
 {
     if (grid == DNGN_ENTER_SHOP && ES_shop)
     {
-        shops.push_back( named_thing<int>( shop_name(pos.x, pos.y), grid ) );
+        shops.push_back( named_thing<int>( shop_name(pos), grid ) );
         es_flags |= ES_SHOP;
     }
     else if (is_stair(grid) && ES_stair)

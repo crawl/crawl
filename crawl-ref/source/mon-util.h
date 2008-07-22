@@ -751,7 +751,7 @@ monster_type draco_subspecies( const monsters *mon );
 std::string draconian_colour_name(monster_type mtype);
 monster_type draconian_colour_by_name(const std::string &colour);
 
-monster_type random_monster_at_grid(int x, int y);
+monster_type random_monster_at_grid(const coord_def& p);
 monster_type random_monster_at_grid(dungeon_feature_type grid);
 
 void         init_mon_name_cache();

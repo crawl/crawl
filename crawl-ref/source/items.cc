@@ -1630,74 +1630,76 @@ void mark_items_non_pickup_at(const coord_def &pos)
     }
 }
 
-// Moves mitm[obj] to (x,y)... will modify the value of obj to
+// Moves mitm[obj] to p... will modify the value of obj to
 // be the index of the final object (possibly different).
 //
 // Done this way in the hopes that it will be obvious from
 // calling code that "obj" is possibly modified.
-bool move_item_to_grid( int *const obj, int x, int y )
+bool move_item_to_grid( int *const obj, const coord_def& p )
 {
+    int& ob(*obj);
     // Must be a valid reference to a valid object.
-    if (*obj == NON_ITEM || !is_valid_item( mitm[*obj] ))
+    if (ob == NON_ITEM || !is_valid_item( mitm[ob] ))
         return (false);
 
+    item_def& item(mitm[ob]);
+
     // If it's a stackable type...
-    if (is_stackable_item( mitm[*obj] ))
+    if (is_stackable_item( item ))
     {
         // Look for similar item to stack:
-        for (int i = igrd[x][y]; i != NON_ITEM; i = mitm[i].link)
+        for (stack_iterator si(p); si; ++si)
         {
             // Check if item already linked here -- don't want to unlink it.
-            if (*obj == i)
+            if (ob == si->index())
                 return (false);
 
-            if (items_stack( mitm[*obj], mitm[i] ))
+            if (items_stack( item, *si ))
             {
                 // Add quantity to item already here, and dispose
                 // of obj, while returning the found item. -- bwr
-                inc_mitm_item_quantity( i, mitm[*obj].quantity );
-                destroy_item( *obj );
-                *obj = i;
+                inc_mitm_item_quantity( si->index(), item.quantity );
+                destroy_item( ob );
+                ob = si->index();
                 return (true);
             }
         }
     }
     // Non-stackable item that's been fudge-stacked (monster throwing weapons).
     // Explode the stack when dropped. We have to special case chunks, ew.
-    else if (mitm[*obj].quantity > 1
-             && (mitm[*obj].base_type != OBJ_FOOD
-                 || mitm[*obj].sub_type != FOOD_CHUNK))
+    else if (item.quantity > 1
+             && (item.base_type != OBJ_FOOD
+                 || item.sub_type != FOOD_CHUNK))
     {
-        while (mitm[*obj].quantity > 1)
+        while (item.quantity > 1)
         {
             // If we can't copy the items out, we lose the surplus.
-            if (copy_item_to_grid(mitm[*obj], x, y, 1, false))
-                --mitm[*obj].quantity;
+            if (copy_item_to_grid(item, p, 1, false))
+                --item.quantity;
             else
-                mitm[*obj].quantity = 1;
+                item.quantity = 1;
         }
     }
 
-    ASSERT( *obj != NON_ITEM );
+    ASSERT( ob != NON_ITEM );
 
     // Need to actually move object, so first unlink from old position.
-    unlink_item( *obj );
+    unlink_item( ob );
 
     // Move item to coord.
-    mitm[*obj].x = x;
-    mitm[*obj].y = y;
+    item.x = p.x;
+    item.y = p.y;
 
     // Link item to top of list.
-    mitm[*obj].link = igrd[x][y];
-    igrd[x][y] = *obj;
+    item.link = igrd(p);
+    igrd(p) = ob;
 
-    if (is_rune(mitm[*obj]))
+    if (is_rune(item))
     {
         if (player_in_branch(BRANCH_HALL_OF_ZOT))
-            you.attribute[ATTR_RUNES_IN_ZOT] += mitm[*obj].quantity;
+            you.attribute[ATTR_RUNES_IN_ZOT] += item.quantity;
     }
-    else if (mitm[*obj].base_type == OBJ_ORBS
-             && you.level_type == LEVEL_DUNGEON)
+    else if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
     {
         set_branch_flags(BFLAG_HAS_ORB);
     }
@@ -1705,32 +1707,32 @@ bool move_item_to_grid( int *const obj, int x, int y )
     return (true);
 }
 
-void move_item_stack_to_grid( int x, int y, int targ_x, int targ_y )
+void move_item_stack_to_grid( const coord_def& from, const coord_def& to )
 {
-    if (igrd[x][y] == NON_ITEM)
+    if (igrd(from) == NON_ITEM)
         return;
 
     // Tell all items in stack what the new coordinate is.
-    for (int o = igrd[x][y]; o != NON_ITEM; o = mitm[o].link)
+    for (stack_iterator si(from); si; ++si)
     {
-        mitm[o].x = targ_x;
-        mitm[o].y = targ_y;
+        si->x = to.x;
+        si->y = to.y;
 
         // Link last of the stack to the top of the old stack.
-        if (mitm[o].link == NON_ITEM && igrd[targ_x][targ_y] != NON_ITEM)
+        if (si->link == NON_ITEM && igrd(to) != NON_ITEM)
         {
-            mitm[o].link = igrd[targ_x][targ_y];
+            si->link = igrd(to);
             break;
         }
     }
 
-    igrd[targ_x][targ_y] = igrd[x][y];
-    igrd[x][y] = NON_ITEM;
+    igrd(to) = igrd(from);
+    igrd(from) = NON_ITEM;
 }
 
 
 // Returns quantity dropped.
-bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
+bool copy_item_to_grid( const item_def &item, const coord_def& p,
                         int quant_drop, bool mark_dropped )
 {
     if (quant_drop == 0)
@@ -1743,56 +1745,57 @@ bool copy_item_to_grid( const item_def &item, int x_plos, int y_plos,
     // Loop through items at current location.
     if (is_stackable_item( item ))
     {
-        for (int i = igrd[x_plos][y_plos]; i != NON_ITEM; i = mitm[i].link)
+        for (stack_iterator si(p); si; ++si)
         {
-            if (items_stack( item, mitm[i] ))
+            if (items_stack( item, *si ))
             {
-                inc_mitm_item_quantity( i, quant_drop );
+                inc_mitm_item_quantity( si->index(), quant_drop );
 
                 if (is_blood_potion(item))
                 {
                     item_def help = item;
-                    drop_blood_potions_stack(help, quant_drop, x_plos, y_plos);
+                    drop_blood_potions_stack(help, quant_drop, p);
                 }
 
                 // If the items on the floor already have a nonzero slot,
                 // leave it as such, otherwise set the slot.
-                if (mark_dropped && !mitm[i].slot)
-                    mitm[i].slot = index_to_letter(item.link);
+                if (mark_dropped && !si->slot)
+                    si->slot = index_to_letter(item.link);
                 return (true);
             }
         }
     }
 
     // Item not found in current stack, add new item to top.
-    int new_item = get_item_slot(10);
-    if (new_item == NON_ITEM)
+    int new_item_idx = get_item_slot(10);
+    if (new_item_idx == NON_ITEM)
         return (false);
+    item_def& new_item = mitm[new_item_idx];
 
     // Copy item.
-    mitm[new_item] = item;
+    new_item = item;
 
     // Set quantity, and set the item as unlinked.
-    mitm[new_item].quantity = quant_drop;
-    mitm[new_item].x = 0;
-    mitm[new_item].y = 0;
-    mitm[new_item].link = NON_ITEM;
+    new_item.quantity = quant_drop;
+    new_item.x = 0;
+    new_item.y = 0;
+    new_item.link = NON_ITEM;
 
     if (mark_dropped)
     {
-        mitm[new_item].slot   = index_to_letter(item.link);
-        mitm[new_item].flags |= ISFLAG_DROPPED;
-        mitm[new_item].flags &= ~ISFLAG_THROWN;
-        origin_set_unknown(mitm[new_item]);
+        new_item.slot   = index_to_letter(item.link);
+        new_item.flags |= ISFLAG_DROPPED;
+        new_item.flags &= ~ISFLAG_THROWN;
+        origin_set_unknown(new_item);
     }
 
-    move_item_to_grid( &new_item, x_plos, y_plos );
+    move_item_to_grid( &new_item_idx, p );
     if (is_blood_potion(item)
         && item.quantity != quant_drop) // partial drop only
     {
         // Since only the oldest potions have been dropped,
         // remove the newest ones.
-        remove_newest_blood_potion(mitm[new_item]);
+        remove_newest_blood_potion(new_item);
     }
 
     return (true);
@@ -1815,7 +1818,7 @@ bool move_top_item( const coord_def &pos, const coord_def &dest )
         dgn_event(DET_ITEM_MOVED, pos, 0, item, -1, dest), pos);
 
     // Now move the item to its new possition...
-    move_item_to_grid( &item, dest.x, dest.y );
+    move_item_to_grid( &item, dest );
 
     return (true);
 }
@@ -1886,11 +1889,11 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
         canned_msg( MSG_EMPTY_HANDED );
     }
 
-    const dungeon_feature_type my_grid = grd[you.x_pos][you.y_pos];
+    const dungeon_feature_type my_grid = grd(you.pos());
 
     if (!grid_destroys_items(my_grid)
         && !copy_item_to_grid( you.inv[item_dropped],
-                               you.x_pos, you.y_pos, quant_drop, true ))
+                               you.pos(), quant_drop, true ))
     {
         mpr("Too many items on this level, not dropping the item.");
         return (false);

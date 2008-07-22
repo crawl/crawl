@@ -868,7 +868,7 @@ bool animate_a_corpse(const coord_def &a, corpse_type class_allowed,
                       god_type god, bool actual,
                       bool quiet)
 {
-    if (is_sanctuary(a.x, a.y))
+    if (is_sanctuary(a))
         return (false);
 
     bool success = false;
@@ -939,7 +939,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     }
 
     if (caster != &you)
-        losight(losgrid, grd, c.x, c.y, true);
+        losight(losgrid, grd, c, true);
 
     env_show_grid &los(caster == &you? env.no_trans_show : losgrid);
 
@@ -1475,7 +1475,7 @@ bool entomb(int powc)
 
             // mechanical traps are destroyed {dlb}:
             int which_trap;
-            if ((which_trap = trap_at_xy(srx, sry)) != -1)
+            if ((which_trap = trap_at_xy(coord_def(srx, sry))) != -1)
             {
                 if (trap_category(env.trap[which_trap].type)
                                                     == DNGN_TRAP_MECHANICAL)
@@ -1498,10 +1498,9 @@ bool entomb(int powc)
         for (int i = you.beheld_by.size() - 1; i >= 0; i--)
         {
             const monsters* mon = &menv[you.beheld_by[i]];
-            const coord_def pos = mon->pos();
-            int walls = num_feats_between(you.x_pos, you.y_pos,
-                                          pos.x, pos.y, DNGN_UNSEEN,
-                                          DNGN_MAXWALL, true, true);
+            int walls = num_feats_between(you.pos(), mon->pos(),
+                                          DNGN_UNSEEN, DNGN_MAXWALL,
+                                          true, true);
 
             if (walls > 0)
             {
@@ -1530,7 +1529,7 @@ static int _inside_circle(int posx, int posy, int radius)
         return -1;
 
     const coord_def ep = grid2view(coord_def(posx, posy));
-    if (!in_los_bounds(ep.x, ep.y))
+    if (!in_los_bounds(ep))
         return -1;
 
     int dist = distance(posx, posy, you.x_pos, you.y_pos);
@@ -1550,22 +1549,15 @@ bool remove_sanctuary(bool did_attack)
 
     const int radius = 5;
     bool seen_change = false;
-    for (int x = -radius; x <= radius; x++)
-       for (int y = -radius; y <= radius; y++)
-       {
-          int posx = env.sanctuary_pos.x + x;
-          int posy = env.sanctuary_pos.y + y;
-
-          if (posx <= 0 || posx > GXM || posy <= 0 || posy > GYM)
-              continue;
-
-          if (is_sanctuary(posx, posy))
-          {
-              env.map[posx][posy].property = FPROP_NONE;
-              if (see_grid(coord_def(posx,posy)))
-                  seen_change = true;
-          }
-       }
+    for (radius_iterator ri(env.sanctuary_pos, radius, true, false); ri; ++ri)
+    {
+        if (is_sanctuary(*ri))
+        {
+            env.map(*ri).property = FPROP_NONE;
+            if (see_grid(*ri))
+                seen_change = true;
+        }
+    }
 
 //  do not reset so as to allow monsters to see if their fleeing source
 //  used to be the centre of a sanctuary
@@ -1597,7 +1589,7 @@ void decrease_sanctuary_radius()
     if (size >= radius)
         return;
 
-    if (you.running && is_sanctuary(you.x_pos, you.y_pos))
+    if (you.running && is_sanctuary(you.pos()))
     {
         mpr("The sanctuary starts shrinking.", MSGCH_DURATION);
         stop_running();
@@ -1684,11 +1676,11 @@ bool cast_sanctuary(const int power)
                 blood_count++;
             }
 
-            if (trap_type_at_xy(posx, posy) != NUM_TRAPS
+            if (trap_type_at_xy(pos) != NUM_TRAPS
                 && grd(pos) == DNGN_UNDISCOVERED_TRAP)
             {
                 const dungeon_feature_type type =
-                    trap_category( trap_type_at_xy(posx, posy) );
+                    trap_category( trap_type_at_xy(pos) );
                 grd(pos) = type;
                 set_envmap_obj(posx, posy, type);
                 trap_count++;
@@ -1860,11 +1852,11 @@ bool project_noise(void)
     mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
 #endif
 
-    if (!silenced( pos.x, pos.y ))
+    if (!silenced( pos ))
     {
         if (in_bounds(pos) && !grid_is_solid(grd(pos)))
         {
-            noisy(30, pos.x, pos.y);
+            noisy(30, pos);
             success = true;
         }
 

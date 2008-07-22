@@ -216,7 +216,7 @@ void place_transiting_items()
             = dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN, pos, true);
 
         // List of items we couldn't place
-        if (!copy_item_to_grid(*item, where_to_go.x, where_to_go.y))
+        if (!copy_item_to_grid(*item, where_to_go))
             keep.push_back(*item);
     }
 

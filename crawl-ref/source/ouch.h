@@ -107,7 +107,8 @@ void lose_level(void);
  * *********************************************************************** */
 void drain_exp(bool announce_full = true);
 
-void expose_items_to_element(beam_type flavour, int x, int y, int strength = 0);
+void expose_items_to_element(beam_type flavour, const coord_def& where,
+                             int strength = 0);
 void expose_player_to_element(beam_type flavour, int strength = 0);
 
 #endif

@@ -107,34 +107,32 @@ static void _attribute_increase();
 // allow_shift - allowed to scramble in any direction out of lava/water
 // force       - ignore safety checks, move must happen (traps, lava/water).
 // swapping    - player is swapping with a monster at (x,y)
-bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
+bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                           bool force, bool swapping )
 {
-    ASSERT( in_bounds( x, y ) );
+    ASSERT( in_bounds( p ) );
 
-    int id;
     // assuming that entering the same square means coming from above (levitate)
-    const bool from_above = (you.x_pos == x && you.y_pos == y);
-    const dungeon_feature_type old_grid = (from_above) ? DNGN_FLOOR
-                                            : grd[you.x_pos][you.y_pos];
-    const dungeon_feature_type new_grid = grd[x][y];
+    const bool from_above = (you.pos() == p);
+    const dungeon_feature_type old_grid = (from_above) ? DNGN_FLOOR : grd(p);
+    const dungeon_feature_type new_grid = grd(p);
 
     // Really must be clear.
     ASSERT( you.can_pass_through_feat( new_grid ) );
 
     // Better not be an unsubmerged monster either.
-    ASSERT(swapping && mgrd[x][y] != NON_MONSTER ||
-           !swapping && (mgrd[x][y] == NON_MONSTER
-                         || mons_is_submerged( &menv[ mgrd[x][y] ])));
+    ASSERT(swapping && mgrd(p) != NON_MONSTER ||
+           !swapping && (mgrd(p) == NON_MONSTER
+                         || mons_is_submerged( &menv[ mgrd(p) ])));
 
-    const int cloud = env.cgrid[x][y];
+    const int cloud = env.cgrid(p);
     if (cloud != EMPTY_CLOUD)
     {
         const cloud_type ctype = env.cloud[ cloud ].type;
         // Don't prompt if already in a cloud of the same type.
         if (is_damaging_cloud(ctype, false)
-            && (env.cgrid[you.x_pos][you.y_pos] == EMPTY_CLOUD
-                || ctype != env.cloud[ env.cgrid[you.x_pos][you.y_pos] ].type))
+            && (env.cgrid(you.pos()) == EMPTY_CLOUD
+                || ctype != env.cloud[ env.cgrid(you.pos()) ].type))
         {
             std::string prompt = make_stringf(
                                     "Really step into that cloud of %s?",
@@ -160,9 +158,9 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 
             if (random2( skill ) > 6)
             {
-                id = trap_at_xy( x, y );
+                const int id = trap_at_xy( p );
                 if (id != -1)
-                    grd[x][y] = trap_category( env.trap[id].type );
+                    grd(p) = trap_category( env.trap[id].type );
 
                 viewwindow(true, false);
 
@@ -187,7 +185,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 #endif
                  || new_grid == DNGN_TRAP_NATURAL)
         {
-            const trap_type type = trap_type_at_xy(x,y);
+            const trap_type type = trap_type_at_xy(p);
             if (type == TRAP_ZOT)
             {
                 if (!yes_or_no("Do you really want to step into the Zot trap"))
@@ -208,7 +206,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                  // as defined in init.txt (see trapwalk.lua)
                  if (new_grid != DNGN_TRAP_MECHANICAL
                      || !clua.callbooleanfn(false, "ch_cross_trap",
-                                            "s", trap_name(x, y)))
+                                            "s", trap_name(p.x, p.y)))
 #endif
             {
                 std::string prompt = make_stringf(
@@ -236,8 +234,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
         if (is_grid_dangerous(new_grid))
         {
             // lava and dangerous deep water (ie not merfolk)
-            int entry_x = (stepped) ? you.x_pos : x;
-            int entry_y = (stepped) ? you.y_pos : y;
+            const coord_def entry = (stepped) ? you.pos() : p;
 
             if (stepped && !force && !you.duration[DUR_CONF])
             {
@@ -246,12 +243,12 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
             }
 
             // Have to move now so fall_into_a_pool will work.
-            you.moveto(x, y);
+            you.moveto(p);
 
             viewwindow( true, false );
 
             // If true, we were shifted and so we're done.
-            if (fall_into_a_pool( entry_x, entry_y, allow_shift, new_grid ))
+            if (fall_into_a_pool( entry, allow_shift, new_grid ))
                 return (true);
         }
         else if (new_grid == DNGN_SHALLOW_WATER || new_grid == DNGN_DEEP_WATER)
@@ -275,7 +272,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                 ASSERT( new_grid != DNGN_DEEP_WATER );
 
                 if (!stepped)
-                    noisy(SL_SPLASH, you.x_pos, you.y_pos, "Splash!");
+                    noisy(SL_SPLASH, you.pos(), "Splash!");
 
                 you.time_taken *= 13 + random2(8);
                 you.time_taken /= 10;
@@ -300,7 +297,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     }
 
     // Move the player to new location.
-    you.moveto(x, y);
+    you.moveto(p);
 
     viewwindow( true, false );
 
@@ -316,7 +313,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
     // Traps go off.
     if (new_grid >= DNGN_TRAP_MECHANICAL && new_grid <= DNGN_UNDISCOVERED_TRAP)
     {
-        id = trap_at_xy( you.x_pos, you.y_pos );
+        int id = trap_at_xy( you.pos() );
 
         if (id != -1)
         {
@@ -328,7 +325,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
 
                 const dungeon_feature_type type =
                     trap_category( env.trap[id].type );
-                grd[you.x_pos][you.y_pos] = type;
+                grd(you.pos()) = type;
                 set_envmap_obj(you.x_pos, you.y_pos, type);
             }
 
@@ -2690,9 +2687,8 @@ void check_beholders()
             continue;
         }
         const coord_def pos = mon->pos();
-        int walls = num_feats_between(you.x_pos, you.y_pos,
-                                      pos.x, pos.y, DNGN_UNSEEN,
-                                      DNGN_MAXWALL);
+        int walls = num_feats_between(you.pos(), pos,
+                                      DNGN_UNSEEN, DNGN_MAXWALL);
 
         if (walls > 0)
         {
@@ -5546,8 +5542,7 @@ void player::init()
     x_pos = 0;
     y_pos = 0;
 
-    prev_move_x = 0;
-    prev_move_y = 0;
+    prev_move = coord_def(0,0);
 
     running.clear();
     travel_x = 0;
@@ -6667,15 +6662,9 @@ void player::moveto(const coord_def &c)
     }
 }
 
-coord_def player::prev_move() const
-{
-    return coord_def(prev_move_x, prev_move_y);
-}
-
 void player::reset_prev_move()
 {
-    prev_move_x = 0;
-    prev_move_y = 0;
+    prev_move = coord_def(0,0);
 }
 
 bool player::asleep() const
@@ -6957,7 +6946,7 @@ bool player::do_shaft()
 
     // Handle instances of do_shaft() being invoked magically when
     // the player isn't standing over a shaft.
-    if (trap_type_at_xy(x_pos, y_pos) != TRAP_SHAFT)
+    if (trap_type_at_xy(this->pos()) != TRAP_SHAFT)
     {
         switch(grd[x_pos][y_pos])
         {
@@ -6977,7 +6966,7 @@ bool player::do_shaft()
         if (airborne() || total_weight() == 0)
         {
             mpr("A shaft briefly opens up underneath you!");
-            handle_items_on_shaft(you.x_pos, you.y_pos, false);
+            handle_items_on_shaft(you.pos(), false);
             return (true);
         }
 

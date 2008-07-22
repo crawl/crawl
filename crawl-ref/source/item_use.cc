@@ -2580,9 +2580,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (teleport)
     {
         // Violating encapsulation somewhat...oh well.
-        hit = (affect(pbolt, pbolt.target_x, pbolt.target_y, &item) != 0);
+        hit = (affect(pbolt, pbolt.target(), &item) != 0);
         if (acc_bonus != DEBUG_COOKIE)
-            beam_drop_object(pbolt, &item, pbolt.target_x, pbolt.target_y);
+            beam_drop_object(pbolt, &item, pbolt.target());
     }
     else
     {
@@ -2593,11 +2593,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         fire_beam(pbolt, &item, !did_return);
 
         // The item can be destroyed before returning.
-        if (did_return && thrown_object_destroyed(&item, pbolt.target_x,
-                                                  pbolt.target_y, true))
-        {
+        if (did_return && thrown_object_destroyed(&item, pbolt.target(), true))
             did_return = false;
-        }
     }
 
     if (did_return)
@@ -2632,7 +2629,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     // Throwing and blowguns are silent...
     if (projected == LRET_LAUNCHED && lnchType != WPN_BLOWGUN)
-        noisy(6, you.x_pos, you.y_pos);
+        noisy(6, you.pos());
 
     // ...but any monster nearby can see that something has been thrown.
     alert_nearby_monsters();
@@ -2642,7 +2639,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     return (hit);
 }
 
-bool thrown_object_destroyed( item_def *item, int x, int y, bool returning )
+bool thrown_object_destroyed( item_def *item, const coord_def& where,
+                              bool returning )
 {
     ASSERT( item != NULL );
 
@@ -2675,7 +2673,7 @@ bool thrown_object_destroyed( item_def *item, int x, int y, bool returning )
     }
 
     destroyed = (chance == 0) ? false : one_chance_in(chance);
-    hostile_grid = grid_destroys_items(grd[x][y]);
+    hostile_grid = grid_destroys_items(grd(where));
 
     // Non-returning items thrown into item-destroying grids are always
     // destroyed.  Returning items are only destroyed if they would have
@@ -2685,8 +2683,8 @@ bool thrown_object_destroyed( item_def *item, int x, int y, bool returning )
 
     if (hostile_grid)
     {
-        if (player_can_hear(x, y))
-            mprf(MSGCH_SOUND, grid_item_destruction_message(grd[x][y]));
+        if (player_can_hear(where))
+            mprf(MSGCH_SOUND, grid_item_destruction_message(grd(where)));
 
         item_was_destroyed(*item, NON_MONSTER);
         destroyed = true;
@@ -4366,7 +4364,7 @@ void read_scroll( int slot )
     }
 
     case SCR_NOISE:
-        noisy(25, you.x_pos, you.y_pos, "You hear a loud clanging noise!");
+        noisy(25, you.pos(), "You hear a loud clanging noise!");
         break;
 
     case SCR_SUMMONING:

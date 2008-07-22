@@ -521,7 +521,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         {
             mpr("The net rips apart!");
             you.attribute[ATTR_HELD] = 0;
-            int net = get_trapping_net(you.x_pos, you.y_pos);
+            int net = get_trapping_net(you.pos());
             if (net != NON_ITEM)
                 destroy_item(net);
         }
@@ -602,7 +602,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         {
             mpr("You drift through the net!");
             you.attribute[ATTR_HELD] = 0;
-            int net = get_trapping_net(you.x_pos, you.y_pos);
+            int net = get_trapping_net(you.pos());
             if (net != NON_ITEM)
                 remove_item_stationary(mitm[net]);
         }
@@ -750,7 +750,7 @@ void untransform(void)
     }
 
     // Re-check terrain now that be may no longer be flying.
-    move_player_to_grid(you.x_pos, you.y_pos, false, true, true);
+    move_player_to_grid(you.pos(), false, true, true);
 
     if (transform_can_butcher_barehanded(old_form))
         stop_butcher_delay();
@@ -873,7 +873,7 @@ void drop_everything(void)
     {
         if (is_valid_item( you.inv[i] ))
         {
-            copy_item_to_grid( you.inv[i], you.x_pos, you.y_pos );
+            copy_item_to_grid( you.inv[i], you.pos() );
             you.inv[i].quantity = 0;
         }
     }

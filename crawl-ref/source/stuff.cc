@@ -1171,9 +1171,9 @@ int distance( int x, int y, int x2, int y2 )
     return ((dx * dx) + (dy * dy));
 }                               // end distance()
 
-bool adjacent( int x, int y, int x2, int y2 )
+bool adjacent( const coord_def& p1, const coord_def& p2 )
 {
-    return (abs(x - x2) <= 1 && abs(y - y2) <= 1);
+    return grid_distance(p1, p2) <= 1;
 }
 
 bool silenced(int x, int y)
@@ -1577,7 +1577,7 @@ bool is_trap_square(dungeon_feature_type grid)
 // applied to new games.
 void zap_los_monsters()
 {
-    losight(env.show, grd, you.x_pos, you.y_pos);
+    losight(env.show, grd, you.pos());
 
     for (int y = crawl_view.vlos1.y; y <= crawl_view.vlos2.y; ++y)
         for (int x = crawl_view.vlos1.x; x <= crawl_view.vlos2.x; ++x)

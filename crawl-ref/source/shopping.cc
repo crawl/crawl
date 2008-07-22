@@ -232,7 +232,7 @@ static void _in_a_shop( int shopidx )
 
     clrscr();
 
-    const std::string hello = "Welcome to " + shop_name(shop.x, shop.y) + "!";
+    const std::string hello = "Welcome to " + shop_name(shop.pos()) + "!";
     bool first = true;
     int total_cost = 0;
 
@@ -494,7 +494,8 @@ static bool _purchase( int shop, int item_got, int cost, bool id )
     // Shopkeepers will now place goods you can't carry outside the shop.
     if (num < quant)
     {
-        move_item_to_grid( &item_got, env.shop[shop].x, env.shop[shop].y );
+        move_item_to_grid( &item_got,
+                           coord_def(env.shop[shop].x, env.shop[shop].y) );
         return (false);
     }
     return (true);
@@ -1649,7 +1650,7 @@ void shop()
     if ( _shop_get_stock(i).empty() )
     {
         const shop_struct& shop = env.shop[i];
-        mprf("%s appears to be closed.", shop_name(shop.x, shop.y).c_str());
+        mprf("%s appears to be closed.", shop_name(shop.pos()).c_str());
         return;
     }
 
@@ -1658,16 +1659,16 @@ void shop()
     redraw_screen();
 }                               // end shop()
 
-shop_struct *get_shop(int sx, int sy)
+shop_struct *get_shop(const coord_def& where)
 {
-    if (grd[sx][sy] != DNGN_ENTER_SHOP)
+    if (grd(where) != DNGN_ENTER_SHOP)
         return (NULL);
 
     // find shop
     for (int shoppy = 0; shoppy < MAX_SHOPS; shoppy ++)
     {
         // find shop index plus a little bit of paranoia
-        if (env.shop[shoppy].x == sx && env.shop[shoppy].y == sy &&
+        if (env.shop[shoppy].pos() == where &&
             env.shop[shoppy].type != SHOP_UNASSIGNED)
         {
             return (&env.shop[shoppy]);
@@ -1676,20 +1677,20 @@ shop_struct *get_shop(int sx, int sy)
     return (NULL);
 }
 
-std::string shop_name(int sx, int sy, bool add_stop)
+std::string shop_name(const coord_def& where, bool add_stop)
 {
-    std::string name(shop_name(sx, sy));
+    std::string name(shop_name(where));
     if (add_stop)
         name += ".";
     return (name);
 }
 
-std::string shop_name(int sx, int sy)
+std::string shop_name(const coord_def& where)
 {
-    const shop_struct *cshop = get_shop(sx, sy);
+    const shop_struct *cshop = get_shop(where);
 
     // paranoia
-    if (grd[sx][sy] != DNGN_ENTER_SHOP)
+    if (grd(where) != DNGN_ENTER_SHOP)
         return ("");
 
     if (!cshop)
@@ -1729,7 +1730,7 @@ std::string shop_name(int sx, int sy)
     if (shop_type != SHOP_GENERAL
         && shop_type != SHOP_GENERAL_ANTIQUE && shop_type != SHOP_DISTILLERY)
     {
-        int temp = sx + sy % 4;
+        int temp = where.x + where.y % 4;
         sh_name += (temp == 0) ? " Shoppe" :
                    (temp == 1) ? " Boutique" :
                    (temp == 2) ? " Emporium"

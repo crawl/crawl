@@ -66,8 +66,8 @@ void maybe_coagulate_blood_potions_floor( int obj );
 bool maybe_coagulate_blood_potions_inv( item_def &blood );
 long remove_oldest_blood_potion( item_def &stack );
 void remove_newest_blood_potion( item_def &stack, int quant = -1 );
-void drop_blood_potions_stack( item_def &stack, int quant, int x = you.x_pos,
-                               int y = you.y_pos );
+void drop_blood_potions_stack( item_def &stack, int quant,
+                               const coord_def& p = you.pos() );
 void pick_up_blood_potions_stack( item_def &stack, int quant );
 
 bool can_bottle_blood_from_corpse( int mons_type );
@@ -75,7 +75,8 @@ void turn_corpse_into_blood_potions ( item_def &item );
 void split_potions_into_decay( int obj, int amount, bool need_msg = true );
 
 bool victim_can_bleed(int montype);
-void bleed_onto_floor(int x, int y, int mon, int damage, bool spatter = false);
+void bleed_onto_floor(const coord_def& where, int mon, int damage,
+                      bool spatter = false);
 void generate_random_blood_spatter_on_level();
 
 // last updated 12may2000 {dlb}

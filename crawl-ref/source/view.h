@@ -93,7 +93,7 @@ void find_features(const std::vector<coord_def>& features,
  * called from: direct - monstufff - view
  * *********************************************************************** */
 void losight(env_show_grid &sh, feature_grid &gr,
-             int x_p, int y_p, bool clear_walls_block = false);
+             const coord_def& center, bool clear_walls_block = false);
 
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
@@ -105,8 +105,8 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
  * called from: acr - effects - it_use2 - it_use3 - item_use - spell -
  *              spells - spells3 - spells4
  * *********************************************************************** */
-bool noisy(int loudness, int nois_x, int nois_y, const char *msg = NULL);
-void blood_smell( int strength, int blood_x, int blood_y);
+bool noisy(int loudness, const coord_def& where, const char *msg = NULL);
+void blood_smell( int strength, const coord_def& where);
 void handle_monster_shouts(monsters* monster, bool force = false);
 
 // last updated 12may2000 {dlb}
@@ -131,7 +131,7 @@ int count_detected_mons(void);
 
 void clear_map(bool clear_items = true, bool clear_mons = true);
 
-bool is_feature(int feature, int x, int y);
+bool is_feature(int feature, const coord_def& where);
 
 void get_item_glyph(const item_def *item, unsigned *glych,
                     unsigned short *glycol);
@@ -154,15 +154,15 @@ const feature_def &get_feature_def(dungeon_feature_type feat);
 void set_envmap_obj( int x, int y, int object );
 unsigned get_envmap_char(int x, int y);
 bool inside_level_bounds(int x, int y);
-bool inside_level_bounds(coord_def &p);
+bool inside_level_bounds(const coord_def &p);
 int get_envmap_obj(int x, int y);
 void set_envmap_detected_item(int x, int y, bool detected = true);
 void set_envmap_detected_mons(int x, int y, bool detected = true);
 void set_envmap_col( int x, int y, int colour, int flags );
 void set_envmap_col( int x, int y, int colour );
 void set_envmap_prop( int x, int y, int prop );
-bool is_sanctuary( int x, int y );
-bool is_bloodcovered( int x, int y );
+bool is_sanctuary( const coord_def& p );
+bool is_bloodcovered( const coord_def& p );
 
 bool is_envmap_detected_item(int x, int y);
 bool is_envmap_detected_mons(int x, int y);
@@ -197,7 +197,7 @@ bool see_grid( const env_show_grid &show,
 bool see_grid(const coord_def &p);
 bool see_grid_no_trans( const coord_def &p );
 bool trans_wall_blocking( const coord_def &p );
-bool grid_see_grid(int posx_1, int posy_1, int posx_2, int posy_2,
+bool grid_see_grid(const coord_def& p1, const coord_def& p2,
                    dungeon_feature_type allowed = DNGN_UNSEEN);
 
 inline bool see_grid( int grx, int gry )
@@ -232,11 +232,11 @@ void init_minimap();
 #endif
 
 struct ray_def;
-bool find_ray( int sourcex, int sourcey, int targetx, int targety,
+bool find_ray( const coord_def& source, const coord_def& target,
                bool allow_fallback, ray_def& ray, int cycle_dir = 0,
                bool find_shortest = false, bool ignore_solid = false );
 
-int num_feats_between(int sourcex, int sourcey, int targetx, int targety,
+int num_feats_between(const coord_def& source, const coord_def& target,
                       dungeon_feature_type min_feat,
                       dungeon_feature_type max_feat,
                       bool exclude_endpoints = true,

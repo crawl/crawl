@@ -1934,7 +1934,7 @@ static std::string _get_feature_description_wide(int feat)
 
 void describe_feature_wide(int x, int y)
 {
-    std::string desc = feature_description(x, y);
+    std::string desc = feature_description(coord_def(x, y));
     desc += "$$";
 
     // Get rid of trailing .$$ before lookup

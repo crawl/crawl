@@ -79,16 +79,17 @@ static bool _handle_pickup(monsters *monster);
 static void _handle_behaviour(monsters *monster);
 static void _set_nearest_monster_foe(monsters *monster);
 static void _mons_in_cloud(monsters *monster);
-static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
-                                 const int count_y, bool just_check = false);
-static bool _is_trap_safe(const monsters *monster, const int trap_x,
-                          const int trap_y, bool just_check = false);
+static bool _mon_can_move_to_pos(const monsters *monster,
+                                 const coord_def& delta,
+                                 bool just_check = false);
+static bool _is_trap_safe(const monsters *monster, const coord_def& where,
+                          bool just_check = false);
 static bool _monster_move(monsters *monster);
 static bool _plant_spit(monsters *monster, bolt &pbolt);
 static spell_type _map_wand_to_mspell(int wand_type);
 
 // [dshaligram] Doesn't need to be extern.
-static int mmov_x, mmov_y;
+static coord_def mmov;
 
 static int compass_x[8] = { -1, 0, 1, 1, 1, 0, -1, -1 };
 static int compass_y[8] = { -1, -1, -1, 0, 1, 1, 1, 0 };
@@ -294,7 +295,7 @@ static void _monster_drop_ething(monsters *monster,
                 if (mons_friendly(monster) && is_valid_item(mitm[item]))
                     mitm[item].flags |= ISFLAG_DROPPED_BY_ALLY;
 
-                move_item_to_grid( &item, monster->x, monster->y );
+                move_item_to_grid( &item, monster->pos() );
 
                 if (mark_item_origins && is_valid_item(mitm[item]))
                     origin_set_monster(mitm[item], monster);
@@ -349,8 +350,8 @@ static void _place_monster_corpse(const monsters *monster)
     origin_set_monster(mitm[o], monster);
 
     // Don't care if 'o' is changed, and it shouldn't be (corpses don't stack).
-    move_item_to_grid( &o, monster->x, monster->y );
-    if (see_grid(monster->x, monster->y))
+    move_item_to_grid( &o, monster->pos() );
+    if (see_grid(monster->pos()))
     {
         const bool poison = (mons_corpse_effect(monster->type) == CE_POISONOUS
                              && player_res_poison() <= 0);
@@ -800,7 +801,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
 
         if (monster->type == MONS_FIRE_VORTEX)
         {
-            place_cloud(CLOUD_FIRE, monster->x, monster->y, 2 + random2(4),
+            place_cloud(CLOUD_FIRE, monster->pos(), 2 + random2(4),
                         monster->kill_alignment());
         }
 
@@ -817,7 +818,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             silent = true;
         }
 
-        place_cloud(CLOUD_COLD, monster->x, monster->y, 2 + random2(4),
+        place_cloud(CLOUD_COLD, monster->pos(), 2 + random2(4),
                     monster->kill_alignment());
 
         if (killer == KILL_RESET)
@@ -1169,7 +1170,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
             }
 
             place_cloud( random_smoke_type(),
-                         monster->x, monster->y, 1 + random2(3),
+                         monster->pos(), 1 + random2(3),
                          monster->kill_alignment() );
 
             // KILL_RESET monsters no longer lose their whole inventory, only
@@ -1276,7 +1277,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                             "'s corpse disappears in a puff of smoke!");
 
                 place_cloud( random_smoke_type(),
-                             monster->x, monster->y, 1 + random2(3),
+                             monster->pos(), 1 + random2(3),
                              monster->kill_alignment() );
             }
         }
@@ -1511,7 +1512,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
         do
         {
             // Pick a monster that's guaranteed happy at this grid.
-            targetc = random_monster_at_grid(monster->x, monster->y);
+            targetc = random_monster_at_grid(monster->pos());
 
             // Valid targets are always base classes ([ds] which is unfortunate
             // in that well-populated monster classes will dominate polymorphs).
@@ -1640,13 +1641,13 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
 bool monster_blink(monsters *monster)
 {
-    int nx, ny;
+    coord_def near;
 
     {
         unwind_var<env_show_grid> visible_grid( env.show );
-        losight(env.show, grd, monster->x, monster->y, true);
+        losight(env.show, grd, monster->pos(), true);
 
-        if (!random_near_space(monster->x, monster->y, nx, ny,
+        if (!random_near_space(monster->pos(), near,
                                false, true,
                                !mons_wont_attack(monster)))
         {
@@ -1656,13 +1657,13 @@ bool monster_blink(monsters *monster)
 
     mons_clear_trapping_net(monster);
 
-    mgrd[monster->x][monster->y] = NON_MONSTER;
-
+    mgrd(monster->pos()) = NON_MONSTER;
     const coord_def oldplace = monster->pos();
-    monster->x = nx;
-    monster->y = ny;
 
-    mgrd[nx][ny] = monster_index(monster);
+    // FIXME Shouldn't this use monsters::move_to_pos() ?
+    monster->x = near.x;
+    monster->y = near.y;
+    mgrd(near) = monster_index(monster);
 
     if (player_monster_visible(monster) && mons_near(monster))
         seen_monster(monster);
@@ -1675,8 +1676,9 @@ bool monster_blink(monsters *monster)
 
 // allow_adjacent:  allow target to be adjacent to origin.
 // restrict_LOS:    restrict target to be within PLAYER line of sight.
-bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
-                       bool restrict_LOS, bool forbid_sanctuary)
+bool random_near_space(const coord_def& origin, coord_def& target,
+                       bool allow_adjacent, bool restrict_LOS,
+                       bool forbid_sanctuary)
 {
     // This might involve ray tracing (via num_feats_between()), so
     // cache results to avoid duplicating ray traces.
@@ -1684,14 +1686,14 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
     tried.init(false);
 
     // Is the monster on the other side of a transparent wall?
-    bool trans_wall_block  = trans_wall_blocking(ox, oy);
-    bool origin_is_player  = (you.pos() == coord_def(ox, oy));
-    int  min_walls_between = 0;
+    const bool trans_wall_block  = trans_wall_blocking(origin);
+    const bool origin_is_player  = (you.pos() == origin);
+    int min_walls_between = 0;
 
     // Skip ray tracing if possible.
     if (trans_wall_block)
     {
-        min_walls_between = num_feats_between(ox, oy, you.x_pos, you.y_pos,
+        min_walls_between = num_feats_between(origin, you.pos(),
                                               DNGN_CLEAR_ROCK_WALL,
                                               DNGN_CLEAR_PERMAROCK_WALL);
     }
@@ -1699,28 +1701,26 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
     int tries = 0;
     while (tries++ < 150)
     {
-        int dx = random2(14);
-        int dy = random2(14);
+        coord_def delta( random2(14), random2(14) );
 
-        tx = ox - 6 + dx;
-        ty = oy - 6 + dy;
+        target = origin - coord_def(6,6) + delta;
 
         // Origin is not 'near'.
-        if (tx == ox && ty == oy)
+        if (target == origin)
             continue;
 
-        if (tried[dx][dy])
+        if (tried(delta))
             continue;
 
-        tried[dx][dy] = true;
+        tried(delta) = true;
 
-        if (!in_bounds(tx, ty)
-            || restrict_LOS && !see_grid(tx, ty)
-            || grd[tx][ty] < DNGN_SHALLOW_WATER
-            || mgrd[tx][ty] != NON_MONSTER
-            || tx == you.x_pos && ty == you.y_pos
-            || !allow_adjacent && distance(ox, oy, tx, ty) <= 2
-            || forbid_sanctuary && is_sanctuary(tx, ty))
+        if (!in_bounds(target)
+            || restrict_LOS && !see_grid(target)
+            || grd(target) < DNGN_SHALLOW_WATER
+            || mgrd(target) != NON_MONSTER
+            || target == you.pos()
+            || !allow_adjacent && distance(origin, target) <= 2
+            || forbid_sanctuary && is_sanctuary(target))
         {
             continue;
         }
@@ -1738,19 +1738,19 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
         // away from the player, since in the absence of translucent
         // walls monsters can blink to places which are not in either
         // the monster's nor the player's LOS.
-        if (!origin_is_player && !see_grid(tx, ty))
+        if (!origin_is_player && !see_grid(target))
             return (true);
 
         // Player can't randomly pass through translucent walls.
         if (origin_is_player)
         {
-            if (see_grid_no_trans(tx, ty))
+            if (see_grid_no_trans(target))
                 return (true);
 
             continue;
         }
 
-        int walls_passed = num_feats_between(tx, ty, ox, oy,
+        int walls_passed = num_feats_between(target, origin,
                                              DNGN_CLEAR_ROCK_WALL,
                                              DNGN_CLEAR_PERMAROCK_WALL,
                                              true, true);
@@ -1761,7 +1761,7 @@ bool random_near_space(int ox, int oy, int &tx, int &ty, bool allow_adjacent,
         if (origin_is_player)
             continue;
 
-        int walls_between = num_feats_between(tx, ty, you.x_pos, you.y_pos,
+        int walls_between = num_feats_between(target, you.pos(),
                                               DNGN_CLEAR_ROCK_WALL,
                                               DNGN_CLEAR_PERMAROCK_WALL);
 
@@ -1990,7 +1990,7 @@ static bool _wounded_damaged(int monster_type)
 //
 //---------------------------------------------------------------
 void behaviour_event(monsters *mon, int event, int src,
-                     int src_x, int src_y)
+                     coord_def src_pos)
 {
     beh_type old_behaviour = mon->behaviour;
 
@@ -2022,8 +2022,8 @@ void behaviour_event(monsters *mon, int event, int src,
             if (mon->is_patrolling())
                 break;
 
-            mon->target_x = src_x;
-            mon->target_y = src_y;
+            mon->target_x = src_pos.x;
+            mon->target_y = src_pos.y;
         }
         break;
 
@@ -2079,7 +2079,7 @@ void behaviour_event(monsters *mon, int event, int src,
     case ME_SCARE:
     {
         const bool flee_sanct = !mons_wont_attack(mon)
-                                && is_sanctuary(mon->x, mon->y);
+                                && is_sanctuary(mon->pos());
 
         // Stationary monsters can't flee, even from sanctuary.
         if (mons_is_stationary(mon))
@@ -2106,7 +2106,7 @@ void behaviour_event(monsters *mon, int event, int src,
         // Assume monsters know where to run from, even if player is
         // invisible.
         setTarget = true;
-        if (see_grid(mon->x, mon->y))
+        if (see_grid(mon->pos()))
             learned_something_new(TUT_FLEEING_MONSTER);
         break;
     }
@@ -2117,7 +2117,7 @@ void behaviour_event(monsters *mon, int event, int src,
             break;
 
         // Don't stop fleeing from sanctuary.
-        if (!mons_wont_attack(mon) && is_sanctuary(mon->x, mon->y))
+        if (!mons_wont_attack(mon) && is_sanctuary(mon->pos()))
             break;
 
         // Just set behaviour... foe doesn't change.
@@ -2388,18 +2388,19 @@ static void _find_all_level_exits(std::vector<level_exit> &e)
     {
         for (int x = 0; x < GXM; ++x)
         {
-            if (in_bounds(x, y))
+            coord_def p(x,y);
+            if (in_bounds(p))
             {
-                const dungeon_feature_type gridc = grd[x][y];
+                const dungeon_feature_type gridc = grd(p);
 
                 // All types of stairs.
                 if (is_stair(gridc))
-                    e.push_back(level_exit(coord_def(x, y), false));
+                    e.push_back(level_exit(p, false));
 
                 // Teleportation and shaft traps.
-                const trap_type tt = trap_type_at_xy(x, y);
+                const trap_type tt = trap_type_at_xy(p);
                 if (tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
-                    e.push_back(level_exit(coord_def(x, y), false));
+                    e.push_back(level_exit(p, false));
             }
         }
     }
@@ -2421,8 +2422,7 @@ static int _mons_find_nearest_level_exit(const monsters *mon,
         if (e[i].unreachable)
             continue;
 
-        int dist = grid_distance(mon->x, mon->y, e[i].target.x,
-                                 e[i].target.y);
+        int dist = grid_distance(mon->pos(), e[i].target);
 
         if (old_dist == -1 || old_dist >= dist)
         {
@@ -2496,7 +2496,7 @@ static void _handle_behaviour(monsters *mon)
     bool isNeutral  = mons_neutral(mon);
     bool wontAttack = mons_wont_attack(mon);
     bool proxPlayer = mons_near(mon);
-    bool trans_wall_block = trans_wall_blocking(mon->x, mon->y);
+    bool trans_wall_block = trans_wall_blocking(mon->pos());
 
 #ifdef WIZARD
     // If stealth is greater than actually possible (wizmode level)
@@ -2540,13 +2540,13 @@ static void _handle_behaviour(monsters *mon)
         if (!mons_player_visible( mon ))
             proxPlayer = false;
         // Must be able to see each other.
-        else if (!see_grid(mon->x, mon->y))
+        else if (!see_grid(mon->pos()))
             proxPlayer = false;
 
         const int intel = mons_intel(mon->type);
         // Now, the corollary to that is that sometimes, if a
         // player is right next to a monster, they will 'see'.
-        if (grid_distance( you.x_pos, you.y_pos, mon->x, mon->y ) == 1
+        if (grid_distance( you.pos(), mon->pos() ) == 1
             && one_chance_in(3))
         {
             proxPlayer = true;
@@ -2808,7 +2808,7 @@ static void _handle_behaviour(monsters *mon)
                 // is already adjacent to you.
                 if (potentially_blocking && mons_intel(mon->type) >= I_NORMAL
                         && mons_has_los_ability(mon->type)
-                    || grid_distance(mon->x, mon->y, you.x_pos, you.y_pos) == 1)
+                    || grid_distance(mon->pos(), you.pos()) == 1)
                 {
                     potentially_blocking = false;
                 }
@@ -2839,7 +2839,7 @@ static void _handle_behaviour(monsters *mon)
                 }
 
                 if (!potentially_blocking
-                    || grid_see_grid(mon->x, mon->y, you.x_pos, you.y_pos,
+                    || grid_see_grid(mon->pos(), you.pos(),
                                      can_move))
                 {
                     if (mon->travel_target != MTRAV_PATROL
@@ -2862,8 +2862,7 @@ static void _handle_behaviour(monsters *mon)
                     {
                         int len = mon->travel_path.size();
                         coord_def targ = mon->travel_path[len - 1];
-                        if (grid_see_grid(targ.x, targ.y, you.x_pos, you.y_pos,
-                                          can_move))
+                        if (grid_see_grid(targ, you.pos(), can_move))
                         {
                             // Current target still valid?
                             if (mon->x == mon->travel_path[0].x
@@ -2880,9 +2879,8 @@ static void _handle_behaviour(monsters *mon)
                                     break;
                                 }
                             }
-                            else if (grid_see_grid(mon->x, mon->y,
-                                                   mon->travel_path[0].x,
-                                                   mon->travel_path[0].y,
+                            else if (grid_see_grid(mon->pos(),
+                                                   mon->travel_path[0],
                                                    can_move))
                             {
                                 mon->target_x = mon->travel_path[0].x;
@@ -2893,8 +2891,8 @@ static void _handle_behaviour(monsters *mon)
                     }
 
                     // Use pathfinding to find a (new) path to the player.
-                    const int dist = grid_distance(mon->x, mon->y,
-                                                   you.x_pos, you.y_pos);
+                    const int dist = grid_distance(mon->pos(),
+                                                   you.pos());
 
 #ifdef DEBUG_PATHFIND
                     mprf("Need to calculate a path... (dist = %d)", dist);
@@ -2943,8 +2941,8 @@ static void _handle_behaviour(monsters *mon)
 #ifdef DEBUG_PATHFIND
                         mprf("Need a path for %s from (%d, %d) to (%d, %d), "
                              "max. dist = %d",
-                             mon->name(DESC_PLAIN).c_str(), mon->x, mon->y,
-                             you.x_pos, you.y_pos, range);
+                             mon->name(DESC_PLAIN).c_str(), mon->pos(),
+                             you.pos(), range);
 #endif
                         monster_pathfind mp;
                         if (range > 0)
@@ -3065,7 +3063,7 @@ static void _handle_behaviour(monsters *mon)
 
                 // If a pacified monster is far enough away from the
                 // player, make it leave the level.
-                if (grid_distance(mon->x, mon->y, you.x_pos, you.y_pos)
+                if (grid_distance(mon->pos(), you.pos())
                         >= LOS_RADIUS * 4)
                 {
                     make_mons_leave_level(mon);
@@ -3133,9 +3131,8 @@ static void _handle_behaviour(monsters *mon)
 #endif
                         }
                     }
-                    else if (!grid_see_grid(mon->x, mon->y,
-                                            mon->travel_path[0].x,
-                                            mon->travel_path[0].y, can_move))
+                    else if (!grid_see_grid(mon->pos(), mon->travel_path[0],
+                                            can_move))
                     {
 #ifdef DEBUG_PATHFIND
                         mpr("Can't see waypoint grid.");
@@ -3154,9 +3151,8 @@ static void _handle_behaviour(monsters *mon)
                         int erase = -1;  // Erase how many waypoints?
                         for (int i = mon->travel_path.size() - 1; i >= 0; --i)
                         {
-                            if (grid_see_grid(mon->x, mon->y,
-                                              mon->travel_path[i].x,
-                                              mon->travel_path[i].y, can_move))
+                            if (grid_see_grid(mon->pos(), mon->travel_path[i],
+                                              can_move))
                             {
                                 mon->target_x = mon->travel_path[i].x;
                                 mon->target_y = mon->travel_path[i].y;
@@ -3242,12 +3238,12 @@ static void _handle_behaviour(monsters *mon)
                             {
                                 // Your ally was told to wait, and wait it will!
                                 // (Though possibly not where you told it to.)
-                                mon->patrol_point = coord_def(mon->x, mon->y);
+                                mon->patrol_point = mon->pos();
                             }
                             else
                             {
                                 // Stop patrolling.
-                                mon->patrol_point = coord_def(0, 0);
+                                mon->patrol_point.reset();
                                 mon->travel_target = MTRAV_NONE;
                                 need_target = true;
                             }
@@ -3410,30 +3406,30 @@ static void _handle_behaviour(monsters *mon)
     }
 }
 
-static bool _mons_check_set_foe(monsters *mon, int x, int y,
+static bool _mons_check_set_foe(monsters *mon, const coord_def& p,
                                 bool friendly, bool neutral)
 {
-    if (!inside_level_bounds(x, y))
+    if (!inside_level_bounds(p))
         return (false);
 
-    if (!friendly && !neutral && x == you.x_pos && y == you.y_pos
-        && mons_player_visible(mon) && !is_sanctuary(x, y))
+    if (!friendly && !neutral && p == you.pos()
+        && mons_player_visible(mon) && !is_sanctuary(p))
     {
         mon->foe = MHITYOU;
         return (true);
     }
 
-    if (mgrd[x][y] != NON_MONSTER)
+    if (mgrd(p) != NON_MONSTER)
     {
-        monsters *foe = &menv[mgrd[x][y]];
+        monsters *foe = &menv[mgrd(p)];
 
         if (foe != mon
             && mon_can_see_monster(mon, foe)
-            && (friendly || !is_sanctuary(x, y))
+            && (friendly || !is_sanctuary(p))
             && (mons_friendly(foe) != friendly
                 || (neutral && !mons_neutral(foe))))
         {
-            mon->foe = mgrd[x][y];
+            mon->foe = mgrd(p);
             return (true);
         }
     }
@@ -3452,15 +3448,15 @@ void _set_nearest_monster_foe(monsters *mon)
     for (int k = 1; k <= LOS_RADIUS; ++k)
     {
         for (int x = mx - k; x <= mx + k; ++x)
-            if (_mons_check_set_foe(mon, x, my - k, friendly, neutral)
-                || _mons_check_set_foe(mon, x, my + k, friendly, neutral))
+            if (_mons_check_set_foe(mon, coord_def(x, my - k), friendly, neutral)
+                || _mons_check_set_foe(mon, coord_def(x, my + k), friendly, neutral))
             {
                 return;
             }
 
         for (int y = my - k + 1; y < my + k; ++y)
-            if (_mons_check_set_foe(mon, mx - k, y, friendly, neutral)
-                || _mons_check_set_foe(mon, mx + k, y, friendly, neutral))
+            if (_mons_check_set_foe(mon, coord_def(mx - k, y), friendly, neutral)
+                || _mons_check_set_foe(mon, coord_def(mx + k, y), friendly, neutral))
             {
                 return;
             }
@@ -3624,7 +3620,7 @@ static void _maybe_set_patrol_route(monsters *monster)
         && !monster->is_patrolling()
         && _mon_on_interesting_grid(monster))
     {
-        monster->patrol_point = coord_def(monster->x, monster->y);
+        monster->patrol_point = monster->pos();
     }
 }
 
@@ -3642,14 +3638,14 @@ static void _handle_movement(monsters *monster)
     _maybe_set_patrol_route(monster);
 
     // Monsters will try to flee out of a sanctuary.
-    if (is_sanctuary(monster->x, monster->y) && !mons_friendly(monster)
+    if (is_sanctuary(monster->pos()) && !mons_friendly(monster)
         && !mons_is_fleeing(monster)
         && monster->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
     {
-        behaviour_event(monster, ME_SCARE, MHITNOT, monster->x, monster->y);
+        behaviour_event(monster, ME_SCARE, MHITNOT, monster->pos());
     }
     else if (mons_is_fleeing(monster) && inside_level_bounds(env.sanctuary_pos)
-             && !is_sanctuary(monster->x, monster->y)
+             && !is_sanctuary(monster->pos())
              && monster->target_pos() == env.sanctuary_pos)
     {
         // Once outside there's a chance they'll regain their courage.
@@ -3677,38 +3673,35 @@ static void _handle_movement(monsters *monster)
     }
 
     // Move the monster.
-    mmov_x = (dx > 0) ? 1 : ((dx < 0) ? -1 : 0);
-    mmov_y = (dy > 0) ? 1 : ((dy < 0) ? -1 : 0);
+    mmov.x = (dx > 0) ? 1 : ((dx < 0) ? -1 : 0);
+    mmov.y = (dy > 0) ? 1 : ((dy < 0) ? -1 : 0);
 
     if (mons_is_fleeing(monster)
         && (!mons_friendly(monster)
-            || monster->target_x != you.x_pos
-            || monster->target_y != you.y_pos))
+            || monster->target_pos() != you.pos()))
     {
-        mmov_x *= -1;
-        mmov_y *= -1;
+        mmov.x *= -1;
+        mmov.y *= -1;
     }
 
     // Don't allow monsters to enter a sanctuary
     // or attack you inside a sanctuary even if you're right next to them.
-    if (is_sanctuary(monster->x + mmov_x, monster->y + mmov_y)
-        && (!is_sanctuary(monster->x, monster->y)
-            || monster->x + mmov_x == you.x_pos
-               && monster->y + mmov_y == you.y_pos))
+    if (is_sanctuary(monster->pos() + mmov)
+        && (!is_sanctuary(monster->pos())
+            || monster->pos() + mmov == you.pos()))
     {
-        mmov_x = 0;
-        mmov_y = 0;
+        mmov.reset();
     }
 
     // Bounds check: don't let fleeing monsters try to run off the map.
-    if (monster->target_x + mmov_x < 0 || monster->target_x + mmov_x >= GXM)
-        mmov_x = 0;
+    if (monster->target_x + mmov.x < 0 || monster->target_x + mmov.x >= GXM)
+        mmov.x = 0;
 
-    if (monster->target_y + mmov_y < 0 || monster->target_y + mmov_y >= GYM)
-        mmov_y = 0;
+    if (monster->target_y + mmov.y < 0 || monster->target_y + mmov.y >= GYM)
+        mmov.y = 0;
 
     // now quit if we can't move
-    if (mmov_x == 0 && mmov_y == 0)
+    if (mmov == coord_def(0,0))
         return;
 
     // Reproduced here is some semi-legacy code that makes monsters
@@ -3723,14 +3716,14 @@ static void _handle_movement(monsters *monster)
         {
             // Sometimes we'll just move parallel the x axis.
             if (coinflip())
-                mmov_y = 0;
+                mmov.y = 0;
         }
 
         if (abs(dy) > abs(dx))
         {
             // Sometimes we'll just move parallel the y axis.
             if (coinflip())
-                mmov_x = 0;
+                mmov.x = 0;
         }
     }
 }                               // end handle_movement()
@@ -3743,8 +3736,8 @@ static void _make_mons_stop_fleeing(monsters *mon)
 
 static bool _is_player_or_mon_sanct(const monsters* monster)
 {
-    return (is_sanctuary(you.x_pos, you.y_pos)
-            || is_sanctuary(monster->x, monster->y));
+    return (is_sanctuary(you.pos())
+            || is_sanctuary(monster->pos()));
 }
 
 //---------------------------------------------------------------
@@ -3799,8 +3792,8 @@ static void _handle_nearby_ability(monsters *monster)
         && !player_beheld_by(monster) // No submerging if player entranced.
         && !mons_is_lurking(monster)  // Handled elsewhere.
         && (one_chance_in(5)
-            || grid_distance(monster->x, monster->y,
-                             you.x_pos, you.y_pos) > 1
+            || grid_distance(monster->pos(),
+                             you.pos()) > 1
                // FIXME This is better expressed as a
                // function such as
                // monster_has_ranged_attack:
@@ -3901,7 +3894,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     {
     case MONS_ORC_KNIGHT:
     case MONS_ORC_WARLORD:
-        if (is_sanctuary(monster->x, monster->y))
+        if (is_sanctuary(monster->pos()))
             break;
 
         used = orc_battle_cry(monster);
@@ -3923,11 +3916,11 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         break;
 
     case MONS_BALL_LIGHTNING:
-        if (is_sanctuary(monster->x, monster->y))
+        if (is_sanctuary(monster->pos()))
             break;
 
         if (monster->attitude == ATT_HOSTILE
-            && distance(you.x_pos, you.y_pos, monster->x, monster->y) <= 5)
+            && distance(you.pos(), monster->pos()) <= 5)
         {
             monster->hit_points = -1;
             used = true;
@@ -3941,7 +3934,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             if (targ->type == -1 || targ->type == NON_MONSTER)
                 continue;
 
-            if (distance(monster->x, monster->y, targ->x, targ->y) >= 5)
+            if (distance(monster->pos(), targ->pos()) >= 5)
                 continue;
 
             if (mons_atts_aligned(monster->attitude, targ->attitude))
@@ -4135,8 +4128,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                 break;
             }
 
-            mmov_x = 0;
-            mmov_y = 0;
+            mmov.reset();
         }
         break;
 
@@ -4239,8 +4231,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                 _make_mons_stop_fleeing(monster);
                 simple_monster_message(monster, " breathes.", spl);
                 fire_beam(beem);
-                mmov_x = 0;
-                mmov_y = 0;
+                mmov.reset();
                 used = true;
             }
         }
@@ -4269,8 +4260,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             || mons_is_fleeing(monster)
             || mons_is_pacified(monster)
             || mons_friendly(monster)
-            || silenced(monster->x, monster->y)
-            || silenced(you.x_pos, you.y_pos))
+            || silenced(monster->pos())
+            || silenced(you.pos()))
         {
             break;
         }
@@ -4292,9 +4283,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (one_chance_in(5)
             || monster->foe == MHITYOU && !already_beheld && coinflip())
         {
-            int walls = num_feats_between(you.x_pos, you.y_pos,
-                                          monster->x, monster->y, DNGN_UNSEEN,
-                                          DNGN_MAXWALL);
+            int walls = num_feats_between(you.pos(), monster->pos(),
+                                          DNGN_UNSEEN, DNGN_MAXWALL);
 
             if (walls > 0)
             {
@@ -4788,7 +4778,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
 
         if (!simple_monster_message(monster, " zaps a wand."))
         {
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear a zap.", MSGCH_SOUND);
         }
 
@@ -4908,7 +4898,7 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
         // Handle monsters within range of player.
         if (monster->type == MONS_GERYON)
         {
-            if (silenced(monster->x, monster->y))
+            if (silenced(monster->pos()))
                 return (false);
 
             simple_monster_message( monster, " winds a great silver horn.",
@@ -4927,8 +4917,8 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
                 {
                     if (!simple_monster_message(monster, " breathes.", spl))
                     {
-                        if (!silenced(monster->x, monster->y)
-                            && !silenced(you.x_pos, you.y_pos))
+                        if (!silenced(monster->pos())
+                            && !silenced(you.pos()))
                         {
                             mpr("You hear a roar.", MSGCH_SOUND);
                         }
@@ -4936,7 +4926,7 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
                     break;
                 }
 
-                if (silenced(monster->x, monster->y))
+                if (silenced(monster->pos()))
                     return (false);
 
                 if (mons_class_flag(monster->type, M_PRIEST))
@@ -5003,8 +4993,8 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
             case MONS_IRON_DRAGON:
                 if (!simple_monster_message(monster, " breathes.", spl))
                 {
-                    if (!silenced(monster->x, monster->y)
-                        && !silenced(you.x_pos, you.y_pos))
+                    if (!silenced(monster->pos())
+                        && !silenced(you.pos()))
                     {
                         mpr("You hear a roar.", MSGCH_SOUND);
                     }
@@ -5046,7 +5036,7 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
     {
         // Handle far-away monsters.
         if (monster->type == MONS_GERYON
-            && !silenced(you.x_pos, you.y_pos))
+            && !silenced(you.pos()))
         {
             mpr("You hear a weird and mournful sound.", MSGCH_SOUND);
         }
@@ -5069,7 +5059,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
     const spell_type draco_breath = _get_draconian_breath_spell(monster);
 
-    if (is_sanctuary(monster->x, monster->y)
+    if (is_sanctuary(monster->pos())
         && !mons_wont_attack(monster))
     {
         return (false);
@@ -5381,8 +5371,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 _make_mons_stop_fleeing(monster);
 
             mons_cast(monster, beem, spell_cast);
-            mmov_x = 0;
-            mmov_y = 0;
+            mmov.reset();
             monster->lose_energy(EUT_SPELL);
         }
     } // end "if mons_class_flag(monster->type, M_SPELLCASTER) ...
@@ -5490,11 +5479,8 @@ static bool _handle_throw(monsters *monster, bolt & beem)
 
     // Monsters won't shoot in melee range, largely for balance reasons.
     // Specialist archers are an exception to this rule.
-    if (!archer
-        && adjacent( beem.target_x, beem.target_y, monster->x, monster->y ))
-    {
+    if (!archer && adjacent(beem.target(), monster->pos()))
         return (false);
-    }
 
     // Greatly lowered chances if the monster is fleeing or pacified and
     // leaving the level.
@@ -5667,7 +5653,7 @@ static bool _swap_monsters(const int mover_idx, const int moved_idx)
         return (false);
 
     // Right now just happens in sanctuary.
-    if (!is_sanctuary(mover->x, mover->y) || !is_sanctuary(moved->x, moved->y))
+    if (!is_sanctuary(mover->pos()) || !is_sanctuary(moved->pos()))
         return (false);
 
     // A friendly or good-neutral monster moving past a fleeing hostile
@@ -5964,7 +5950,7 @@ static void _handle_monster_move(int i, monsters *monster)
         }
         else if (!mons_is_petrified(monster))
         {
-            // Calculates mmov_x, mmov_y based on monster target.
+            // Calculates mmov based on monster target.
             _handle_movement(monster);
 
             brkk = false;
@@ -5983,38 +5969,34 @@ static void _handle_monster_move(int i, monsters *monster)
                         if (in_bounds(c) && monster->can_pass_through(c)
                             && one_chance_in(++pfound))
                         {
-                            mmov_x = xi;
-                            mmov_y = yi;
+                            mmov.x = xi;
+                            mmov.y = yi;
                         }
                     }
 
                 if (x_chance_in_y(2, 2 + pfound))
-                    mmov_x = mmov_y = 0;
+                    mmov.reset();
 
                 // Bounds check: don't let confused monsters try to run
                 // off the map.
-                if (monster->x + mmov_x < 0 || monster->x + mmov_x >= GXM)
-                    mmov_x = 0;
+                if (monster->x + mmov.x < 0 || monster->x + mmov.x >= GXM)
+                    mmov.x = 0;
 
-                if (monster->y + mmov_y < 0 || monster->y + mmov_y >= GYM)
-                    mmov_y = 0;
+                if (monster->y + mmov.y < 0 || monster->y + mmov.y >= GYM)
+                    mmov.y = 0;
 
-                if (!monster->can_pass_through(monster->x + mmov_x,
-                                               monster->y + mmov_y))
-                {
-                    mmov_x = mmov_y = 0;
-                }
+                if (!monster->can_pass_through(monster->pos() + mmov))
+                    mmov.reset();
 
-                int enemy = mgrd[monster->x + mmov_x][monster->y + mmov_y];
+                int enemy = mgrd(monster->pos() + mmov);
                 if (enemy != NON_MONSTER
-                    && !is_sanctuary(monster->x, monster->y)
-                    && (mmov_x != 0 || mmov_y != 0))
+                    && !is_sanctuary(monster->pos())
+                    && (mmov.x != 0 || mmov.y != 0))
                 {
                     if (monsters_fight(i, enemy))
                     {
                         brkk = true;
-                        mmov_x = 0;
-                        mmov_y = 0;
+                        mmov.reset();
                         DEBUG_ENERGY_USE("monsters_fight()");
                     }
                     else
@@ -6024,8 +6006,7 @@ static void _handle_monster_move(int i, monsters *monster)
                         if (monster->add_ench(mon_enchant(ENCH_FEAR)))
                         {
                             behaviour_event(monster, ME_SCARE, MHITNOT,
-                                            monster->x + mmov_x,
-                                            monster->y + mmov_y);
+                                            monster->pos() + mmov);
                         }
                         break;
                     }
@@ -6099,7 +6080,7 @@ static void _handle_monster_move(int i, monsters *monster)
         if (!mons_is_caught(monster))
         {
             // See if we move into (and fight) an unfriendly monster.
-            int targmon = mgrd[monster->x + mmov_x][monster->y + mmov_y];
+            int targmon = mgrd(monster->pos() + mmov);
             if (targmon != NON_MONSTER
                 && targmon != i
                 && !mons_aligned(i, targmon))
@@ -6121,8 +6102,7 @@ static void _handle_monster_move(int i, monsters *monster)
                         // monster->speed_increment -= monster->speed;
                     }
 
-                    mmov_x = 0;
-                    mmov_y = 0;
+                    mmov.reset();
                     brkk = true;
                     DEBUG_ENERGY_USE("monsters_fight()");
                 }
@@ -6131,8 +6111,7 @@ static void _handle_monster_move(int i, monsters *monster)
             if (brkk)
                 continue;
 
-            if (monster->x + mmov_x == you.x_pos
-                && monster->y + mmov_y == you.y_pos)
+            if (monster->pos() + mmov == you.pos())
             {
                 bool isFriendly = mons_friendly(monster);
                 bool attacked   = false;
@@ -6166,9 +6145,8 @@ static void _handle_monster_move(int i, monsters *monster)
 
                 if (attacked)
                 {
-                    mmov_x = 0;
-                    mmov_y = 0;
-                    continue;   //break;
+                    mmov.reset();
+                    continue;
                 }
             }
 
@@ -6379,8 +6357,8 @@ static bool _handle_pickup(monsters *monster)
             if (monster->max_hit_points < monster->hit_points)
                 monster->max_hit_points = monster->hit_points;
 
-            if (!silenced(you.x_pos, you.y_pos)
-                && !silenced(monster->x, monster->y))
+            if (!silenced(you.pos())
+                && !silenced(monster->pos()))
             {
                 mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
                      monsterNearby ? "" : " distant");
@@ -6421,8 +6399,8 @@ static bool _handle_pickup(monsters *monster)
 
 static void _jelly_grows(monsters *monster)
 {
-    if (!silenced(you.x_pos, you.y_pos)
-        && !silenced(monster->x, monster->y))
+    if (!silenced(you.pos())
+        && !silenced(monster->pos()))
     {
         mprf(MSGCH_SOUND, "You hear a%s slurping noise.",
              mons_near(monster) ? "" : " distant");
@@ -6482,12 +6460,12 @@ static bool _mons_can_displace(const monsters *mpusher, const monsters *mpushee)
     return (true);
 }
 
-static bool _monster_swaps_places( monsters *mon, int mx, int my )
+static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
 {
-    if (!mx && !my)
+    if (delta.x == 0 && delta.y)
         return (false);
 
-    int targmon = mgrd[mon->x + mx][mon->y + my];
+    int targmon = mgrd(mon->pos() + delta);
     if (targmon == MHITNOT || targmon == MHITYOU)
         return (false);
 
@@ -6510,77 +6488,71 @@ static bool _monster_swaps_places( monsters *mon, int mx, int my )
     }
 
     // Check that both monsters will be happy at their proposed new locations.
-    const int cx = mon->x, cy = mon->y,
-              nx = mon->x + mx, ny = mon->y + my;
+    const coord_def c = mon->pos();
+    const coord_def n = mon->pos() + delta;
 
-    if (!_habitat_okay(mon, grd[nx][ny])
-        || !_habitat_okay(m2, grd[cx][cy]))
-    {
+    if (!_habitat_okay(mon, grd(n)) || !_habitat_okay(m2, grd(c)))
         return (false);
-    }
 
     // Okay, do the swap!
     _swim_or_move_energy(mon);
 
-    mon->x = nx;
-    mon->y = ny;
-    mgrd[nx][ny] = monster_index(mon);
+    mon->x = n.x;
+    mon->y = n.y;
+    mgrd(n) = monster_index(mon);
 
-    m2->x  = cx;
-    m2->y  = cy;
+    m2->x  = c.x;
+    m2->y  = c.y;
     const int m2i = monster_index(m2);
     ASSERT(m2i >= 0 && m2i < MAX_MONSTERS);
-    mgrd[cx][cy] = m2i;
+    mgrd(c) = m2i;
     immobile_monster[m2i] = true;
 
-    mon->check_redraw(coord_def(cx, cy));
+    mon->check_redraw(c);
     mon->apply_location_effects();
     m2->apply_location_effects();
 
     return (false);
 }
 
-static bool _do_move_monster(monsters *monster, int xi, int yi)
+static bool _do_move_monster(monsters *monster, const coord_def& delta)
 {
-    const int fx = monster->x + xi,
-              fy = monster->y + yi;
+    const coord_def f = monster->pos() + delta;
 
-    if (!in_bounds(fx, fy))
+    if (!in_bounds(f))
         return (false);
 
-    if (fx == you.x_pos && fy == you.y_pos)
+    if (f == you.pos())
     {
         monster_attack( monster_index(monster) );
         return (true);
     }
 
-    if (!xi && !yi)
+    // XXX Is this necessary? Isn't it handled by the next case?
+    if (f == monster->pos())
     {
         const int mx = monster_index(monster);
         monsters_fight( mx, mx );
         return (true);
     }
 
-    if (mgrd[fx][fy] != NON_MONSTER)
+    if (mgrd(f) != NON_MONSTER)
     {
-        monsters_fight( monster_index(monster), mgrd[fx][fy] );
+        monsters_fight( monster_index(monster), mgrd(f) );
         return (true);
     }
-
-    if (!xi && !yi)
-        return (false);
 
     // This appears to be the real one, ie where the movement occurs:
     _swim_or_move_energy(monster);
 
-    mgrd[monster->x][monster->y] = NON_MONSTER;
+    mgrd(monster->pos()) = NON_MONSTER;
 
-    monster->x = fx;
-    monster->y = fy;
+    monster->x = f.x;
+    monster->y = f.y;
 
-    mgrd[monster->x][monster->y] = monster_index(monster);
+    mgrd(monster->pos()) = monster_index(monster);
 
-    monster->check_redraw(monster->pos() - coord_def(xi, yi));
+    monster->check_redraw(monster->pos() - delta);
     monster->apply_location_effects();
 
     return (true);
@@ -6675,8 +6647,8 @@ static int _estimated_trap_damage(trap_type trap)
 // regarded as safe.  Takes into account monster intelligence and
 // allegiance.  (just_check is used for intelligent monsters trying to
 // avoid traps.)
-static bool _is_trap_safe(const monsters *monster, const int trap_x,
-                          const int trap_y, bool just_check)
+static bool _is_trap_safe(const monsters *monster, const coord_def& where,
+                          bool just_check)
 {
     const int intel = mons_intel(monster->type);
 
@@ -6684,7 +6656,7 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
     if (intel == I_PLANT)
         return (true);
 
-    const trap_struct &trap = env.trap[trap_at_xy(trap_x,trap_y)];
+    const trap_struct &trap = env.trap[trap_at_xy(where)];
 
     if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
     {
@@ -6701,7 +6673,7 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
     // checks for them here.
     const bool mechanical = trap_category(trap.type) == DNGN_TRAP_MECHANICAL;
 
-    const bool player_knows_trap = (grd[trap_x][trap_y] != DNGN_UNDISCOVERED_TRAP);
+    const bool player_knows_trap = (grd(where) != DNGN_UNDISCOVERED_TRAP);
 
     // Smarter trap handling for intelligent monsters
     // * monsters native to a branch can be assumed to know the trap
@@ -6721,8 +6693,8 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
         else
         {
             // Test for corridor-like environment.
-            const int x = trap_x - monster->x;
-            const int y = trap_y - monster->y;
+            const int x = where.x - monster->x;
+            const int y = where.y - monster->y;
 
             // The question is whether the monster (m) can easily reach its
             // presumable destination (x) without stepping on the trap. Traps
@@ -6744,10 +6716,10 @@ static bool _is_trap_safe(const monsters *monster, const int trap_x,
             // If a monster still gets stuck in a corridor it will usually be
             // because it has less than half its maximum hp.
 
-            if ((_mon_can_move_to_pos(monster, x-1, y, true)
-                   || _mon_can_move_to_pos(monster, x+1,y, true))
-                && (_mon_can_move_to_pos(monster, x,y-1, true)
-                    || _mon_can_move_to_pos(monster, x,y+1, true)))
+            if ((_mon_can_move_to_pos(monster, coord_def(x-1, y), true)
+                 || _mon_can_move_to_pos(monster, coord_def(x+1,y), true))
+                && (_mon_can_move_to_pos(monster, coord_def(x,y-1), true)
+                    || _mon_can_move_to_pos(monster, coord_def(x,y+1), true)))
             {
                 return (false);
             }
@@ -6796,7 +6768,7 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
         const coord_def& dc = *i;
         if (grd(dc) == DNGN_SECRET_DOOR && see_grid(dc))
         {
-            grid = grid_secret_door_appearance(dc.x, dc.y);
+            grid = grid_secret_door_appearance(dc);
             was_secret = true;
         }
 
@@ -6845,32 +6817,30 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
 // Check whether a monster can move to given square (described by its relative
 // coordinates to the current monster position). just_check is true only for
 // calls from is_trap_safe when checking the surrounding squares of a trap.
-static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
-                                 const int count_y, bool just_check)
+static bool _mon_can_move_to_pos(const monsters *monster,
+                                 const coord_def& delta, bool just_check)
 {
-    const int targ_x = monster->x + count_x;
-    const int targ_y = monster->y + count_y;
+    const coord_def targ = monster->pos() + delta;
 
     // Bounds check - don't consider moving out of grid!
-    if (!inside_level_bounds(targ_x, targ_y))
+    if (!inside_level_bounds(targ))
         return (false);
 
     // Non-friendly and non-good neutral monsters won't enter sanctuaries.
     if (!mons_wont_attack(monster)
-        && is_sanctuary(targ_x, targ_y)
-        && !is_sanctuary(monster->x, monster->y))
+        && is_sanctuary(targ)
+        && !is_sanctuary(monster->pos()))
     {
         return (false);
     }
     // Inside a sanctuary don't attack anything!
-    if (is_sanctuary(monster->x, monster->y)
-        && (targ_x == you.x_pos && targ_y == you.y_pos
-            || mgrd[targ_x][targ_y] != NON_MONSTER))
+    if (is_sanctuary(monster->pos())
+        && (targ == you.pos() || mgrd(targ) != NON_MONSTER))
     {
         return (false);
     }
 
-    const dungeon_feature_type target_grid = grd[targ_x][targ_y];
+    const dungeon_feature_type target_grid = grd(targ);
     const habitat_type habitat = mons_habitat(monster);
 
     // Effectively slows down monster movement across water.
@@ -6879,12 +6849,12 @@ static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
     if (monster->type == MONS_FIRE_ELEMENTAL || one_chance_in(5))
         no_water = true;
 
-    const int targ_cloud_num  = env.cgrid[ targ_x ][ targ_y ];
+    const int targ_cloud_num  = env.cgrid(targ);
     const int targ_cloud_type =
         targ_cloud_num == EMPTY_CLOUD ? CLOUD_NONE
                                       : env.cloud[targ_cloud_num].type;
 
-    const int curr_cloud_num = env.cgrid[ monster->x ][ monster->y ];
+    const int curr_cloud_num = env.cgrid(monster->pos());
     const int curr_cloud_type =
         curr_cloud_num == EMPTY_CLOUD ? CLOUD_NONE
                                      : env.cloud[curr_cloud_num].type;
@@ -6894,16 +6864,11 @@ static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
             || target_grid == DNGN_CLEAR_ROCK_WALL))
     {
         // Don't burrow out of bounds.
-        // XXX: Are these bounds still valid? (jpeg)
-        //      We should probably use in_bounds() instead.
-        if (targ_x <= 7 || targ_x >= (GXM - 8)
-            || targ_y <= 7 || targ_y >= (GYM - 8))
-        {
+        if (!in_bounds(targ))
             return (false);
-        }
 
         // Don't burrow at an angle (legacy behaviour).
-        if (count_x != 0 && count_y != 0)
+        if (delta.x != 0 && delta.y != 0)
             return (false);
     }
     else if (!monster->can_pass_through_feat(target_grid)
@@ -6917,7 +6882,7 @@ static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
         return (false);
     }
 
-    if (monster->type == MONS_WANDERING_MUSHROOM && see_grid(targ_x, targ_y))
+    if (monster->type == MONS_WANDERING_MUSHROOM && see_grid(targ))
         return (false);
 
     // Water elementals avoid fire and heat.
@@ -6943,9 +6908,9 @@ static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
     // they're low on hitpoints. No point in hiding if they want a
     // fight.
     if (habitat == HT_WATER
-        && (targ_x != you.x_pos || targ_y != you.y_pos)
+        && targ != you.pos()
         && target_grid != DNGN_DEEP_WATER
-        && grd[monster->x][monster->y] == DNGN_DEEP_WATER
+        && grd(monster->pos()) == DNGN_DEEP_WATER
         && monster->hit_points < (monster->max_hit_points * 3) / 4)
     {
         return (false);
@@ -6958,18 +6923,18 @@ static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
 
     // Smacking another monster is good, if the monsters
     // are aligned differently.
-    if (mgrd[targ_x][targ_y] != NON_MONSTER)
+    if (mgrd(targ) != NON_MONSTER)
     {
         if (just_check)
         {
-            if (targ_x == monster->x && targ_y == monster->y)
+            if (targ == monster->pos())
                 return (true);
 
             return (false); // blocks square
         }
 
         const int thismonster = monster_index(monster),
-                  targmonster = mgrd[targ_x][targ_y];
+                  targmonster = mgrd(targ);
 
         if (mons_aligned(thismonster, targmonster)
             && targmonster != MHITNOT
@@ -6985,16 +6950,15 @@ static bool _mon_can_move_to_pos(const monsters *monster, const int count_x,
     if (mons_wont_attack(monster)
         && monster->foe != MHITYOU
         && (monster->foe != MHITNOT || monster->is_patrolling())
-        && targ_x == you.x_pos
-        && targ_y == you.y_pos)
+        && targ == you.pos())
     {
         return (false);
     }
 
     // Wandering through a trap is OK if we're pretty healthy,
     // really stupid, or immune to the trap.
-    const int which_trap = trap_at_xy(targ_x,targ_y);
-    if (which_trap >= 0 && !_is_trap_safe(monster, targ_x, targ_y, just_check))
+    const int which_trap = trap_at_xy(targ);
+    if (which_trap >= 0 && !_is_trap_safe(monster, targ, just_check))
         return (false);
 
     if (targ_cloud_num != EMPTY_CLOUD)
@@ -7116,35 +7080,35 @@ static bool _monster_move(monsters *monster)
                     mprf(MSGCH_TALK_VISUAL, "%s rages.",
                          monster->name(DESC_CAP_THE).c_str());
                 }
-                noisy(noise_level, monster->x, monster->y);
+                noisy(noise_level, monster->pos());
             }
             else if (one_chance_in(5))
                 handle_monster_shouts(monster, true);
             else
             {
                 // Just be noisy without messaging the player.
-                noisy(noise_level, monster->x, monster->y);
+                noisy(noise_level, monster->pos());
             }
         }
     }
 
     if (monster->confused())
     {
-        if (mmov_x || mmov_y || one_chance_in(15))
+        if (mmov.x || mmov.y || one_chance_in(15))
         {
-            coord_def newpos = monster->pos() + coord_def(mmov_x, mmov_y);
+            const coord_def newpos = monster->pos() + mmov;
             if (in_bounds(newpos)
                 && (habitat == HT_LAND
                     || monster_habitable_grid(monster, grd(newpos))))
             {
-                return _do_move_monster(monster, mmov_x, mmov_y);
+                return _do_move_monster(monster, mmov);
             }
         }
         return (false);
     }
 
-    // Let's not even bother with this if mmov_x and mmov_y are zero.
-    if (mmov_x == 0 && mmov_y == 0)
+    // Let's not even bother with this if mmov.x and mmov.y are zero.
+    if (mmov.x == 0 && mmov.y == 0)
         return (false);
 
     for (count_x = 0; count_x < 3; count_x++)
@@ -7166,12 +7130,12 @@ static bool _monster_move(monsters *monster)
 
              const monsters* mons = dynamic_cast<const monsters*>(monster);
              good_move[count_x][count_y] =
-                 _mon_can_move_to_pos(mons, count_x-1, count_y-1);
+                 _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
         }
 
     // Now we know where we _can_ move.
 
-    const coord_def newpos = monster->pos() + coord_def(mmov_x, mmov_y);
+    const coord_def newpos = monster->pos() + mmov;
     // Normal/smart monsters know about secret doors
     // (they _live_ in the dungeon!)
     if (grd(newpos) == DNGN_CLOSED_DOOR
@@ -7195,15 +7159,14 @@ static bool _monster_move(monsters *monster)
     } // endif - secret/closed doors
 
     // Jellies eat doors.  Yum!
-    if ((grd[monster->x + mmov_x][monster->y + mmov_y] == DNGN_CLOSED_DOOR
-            || grd[monster->x + mmov_x][monster->y + mmov_y] == DNGN_OPEN_DOOR)
+    if ((grd(newpos) == DNGN_CLOSED_DOOR || grd(newpos) == DNGN_OPEN_DOOR)
         && mons_itemuse(monster->type) == MONUSE_EATS_ITEMS)
     {
-        grd[monster->x + mmov_x][monster->y + mmov_y] = DNGN_FLOOR;
+        grd(newpos) = DNGN_FLOOR;
 
         _jelly_grows(monster);
 
-        if (see_grid(monster->x + mmov_x, monster->y + mmov_y))
+        if (see_grid(newpos))
         {
             viewwindow(true, false);
 
@@ -7221,10 +7184,9 @@ static bool _monster_move(monsters *monster)
     // is in good health.
     if (habitat == HT_WATER
         && deep_water_available
-        && grd[monster->x][monster->y] != DNGN_DEEP_WATER
-        && grd[monster->x + mmov_x][monster->y + mmov_y] != DNGN_DEEP_WATER
-        && (monster->x + mmov_x != you.x_pos
-            || monster->y + mmov_y != you.y_pos)
+        && grd(monster->pos()) != DNGN_DEEP_WATER
+        && grd(newpos) != DNGN_DEEP_WATER
+        && newpos != you.pos()
         && (one_chance_in(3)
             || monster->hit_points <= (monster->max_hit_points * 3) / 4))
     {
@@ -7241,8 +7203,8 @@ static bool _monster_move(monsters *monster)
 
                     if (one_chance_in( count ))
                     {
-                        mmov_x = count_x - 1;
-                        mmov_y = count_y - 1;
+                        mmov.x = count_x - 1;
+                        mmov.y = count_y - 1;
                     }
                 }
             }
@@ -7252,18 +7214,17 @@ static bool _monster_move(monsters *monster)
     // either side.  If they're both good, move in whichever dir
     // gets it closer (farther for fleeing monsters) to its target.
     // If neither does, do nothing.
-    if (good_move[mmov_x + 1][mmov_y + 1] == false)
+    if (good_move[mmov.x + 1][mmov.y + 1] == false)
     {
-        int current_distance = grid_distance(monster->x, monster->y,
-                                             monster->target_x,
-                                             monster->target_y);
+        int current_distance = grid_distance(monster->pos(),
+                                             monster->target_pos());
 
         int dir = -1;
         int i, mod, newdir;
 
         for (i = 0; i < 8; i++)
         {
-            if (compass_x[i] == mmov_x && compass_y[i] == mmov_y)
+            if (compass_x[i] == mmov.x && compass_y[i] == mmov.y)
             {
                 dir = i;
                 break;
@@ -7318,14 +7279,14 @@ static bool _monster_move(monsters *monster)
             {
                 if (dist[0] >= dist[1] && dist[0] >= current_distance)
                 {
-                    mmov_x = compass_x[((dir+8)+sdir)%8];
-                    mmov_y = compass_y[((dir+8)+sdir)%8];
+                    mmov.x = compass_x[((dir+8)+sdir)%8];
+                    mmov.y = compass_y[((dir+8)+sdir)%8];
                     break;
                 }
                 if (dist[1] >= dist[0] && dist[1] >= current_distance)
                 {
-                    mmov_x = compass_x[((dir+8)-sdir)%8];
-                    mmov_y = compass_y[((dir+8)-sdir)%8];
+                    mmov.x = compass_x[((dir+8)-sdir)%8];
+                    mmov.y = compass_y[((dir+8)-sdir)%8];
                     break;
                 }
             }
@@ -7333,14 +7294,14 @@ static bool _monster_move(monsters *monster)
             {
                 if (dist[0] <= dist[1] && dist[0] <= current_distance)
                 {
-                    mmov_x = compass_x[((dir+8)+sdir)%8];
-                    mmov_y = compass_y[((dir+8)+sdir)%8];
+                    mmov.x = compass_x[((dir+8)+sdir)%8];
+                    mmov.y = compass_y[((dir+8)+sdir)%8];
                     break;
                 }
                 if (dist[1] <= dist[0] && dist[1] <= current_distance)
                 {
-                    mmov_x = compass_x[((dir+8)-sdir)%8];
-                    mmov_y = compass_y[((dir+8)-sdir)%8];
+                    mmov.x = compass_x[((dir+8)-sdir)%8];
+                    mmov.y = compass_y[((dir+8)-sdir)%8];
                     break;
                 }
             }
@@ -7356,29 +7317,26 @@ forget_it:
     // Take care of beetle burrowing.
     if (monster->type == MONS_BORING_BEETLE)
     {
-        dungeon_feature_type feat =
-            grd[monster->x + mmov_x][monster->y + mmov_y];
+        const dungeon_feature_type feat = grd(monster->pos() + mmov);
         if ((feat == DNGN_ROCK_WALL || feat == DNGN_ROCK_WALL)
-            && good_move[mmov_x + 1][mmov_y + 1] == true)
+            && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
-            grd[monster->x + mmov_x][monster->y + mmov_y] = DNGN_FLOOR;
-            set_terrain_changed(monster->pos() + coord_def(mmov_x, mmov_y));
+            grd(monster->pos() + mmov) = DNGN_FLOOR;
+            set_terrain_changed(monster->pos() + mmov);
 
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear a grinding noise.", MSGCH_SOUND);
         }
     }
 
     bool ret = false;
-    if (good_move[mmov_x + 1][mmov_y + 1] && !(mmov_x == 0 && mmov_y == 0))
+    if (good_move[mmov.x + 1][mmov.y + 1] && !(mmov.x == 0 && mmov.y == 0))
     {
         // Check for attacking player.
-        if (monster->x + mmov_x == you.x_pos
-            && monster->y + mmov_y == you.y_pos)
+        if (monster->pos() + mmov == you.pos())
         {
             ret    = monster_attack( monster_index(monster) );
-            mmov_x = 0;
-            mmov_y = 0;
+            mmov.reset();
         }
 
         // If we're following the player through stairs, the only valid
@@ -7400,8 +7358,7 @@ forget_it:
             else
             {
                 ret    = true;
-                mmov_x = 0;
-                mmov_y = 0;
+                mmov.reset();
 
 #if DEBUG_DIAGNOSTICS
                 mprf(MSGCH_DIAGNOSTICS,
@@ -7412,11 +7369,11 @@ forget_it:
         }
 
         // Check for attacking another monster.
-        int targmon = mgrd[monster->x + mmov_x][monster->y + mmov_y];
+        int targmon = mgrd(monster->pos() + mmov);
         if (targmon != NON_MONSTER)
         {
             if (mons_aligned(monster_index(monster), targmon))
-                ret = _monster_swaps_places(monster, mmov_x, mmov_y);
+                ret = _monster_swaps_places(monster, mmov);
             else
             {
                 monsters_fight(monster_index(monster), targmon);
@@ -7424,35 +7381,34 @@ forget_it:
             }
 
             // If the monster swapped places, the work's already done.
-            mmov_x = 0;
-            mmov_y = 0;
+            mmov.reset();
         }
 
         if (monster->type == MONS_EFREET
             || monster->type == MONS_FIRE_ELEMENTAL)
         {
-            place_cloud( CLOUD_FIRE, monster->x, monster->y,
+            place_cloud( CLOUD_FIRE, monster->pos(),
                          2 + random2(4), monster->kill_alignment() );
         }
 
         if (monster->type == MONS_ROTTING_DEVIL
             || monster->type == MONS_CURSE_TOE)
         {
-            place_cloud( CLOUD_MIASMA, monster->x, monster->y,
+            place_cloud( CLOUD_MIASMA, monster->pos(),
                          2 + random2(3), monster->kill_alignment() );
         }
     }
     else
     {
-        mmov_x = mmov_y = 0;
+        mmov.reset();
 
         // Fleeing monsters that can't move will panic and possibly
         // turn to face their attacker.
         _make_mons_stop_fleeing(monster);
     }
 
-    if (mmov_x || mmov_y || (monster->confused() && one_chance_in(6)))
-        return _do_move_monster(monster, mmov_x, mmov_y);
+    if (mmov.x || mmov.y || (monster->confused() && one_chance_in(6)))
+        return _do_move_monster(monster, mmov);
 
     return ret;
 }                               // end monster_move()
@@ -7636,7 +7592,7 @@ static void _mons_in_cloud(monsters *monster)
     {
         // We have no good coords to give the monster as the source of the
         // disturbance other than the cloud itself.
-        behaviour_event(monster, ME_DISTURB, MHITNOT, monster->x, monster->y);
+        behaviour_event(monster, ME_DISTURB, MHITNOT, monster->pos());
     }
 
     hurted = std::max(0, hurted);

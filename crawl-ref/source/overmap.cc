@@ -561,7 +561,7 @@ void seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
     {
     case DNGN_ENTER_SHOP:
         shops_present[where] =
-            static_cast<shop_type>(get_shop(pos.x, pos.y)->type);
+            static_cast<shop_type>(get_shop(pos)->type);
         break;
     default:
         const portal_type portal = feature_to_portal(which_thing);

@@ -153,9 +153,10 @@ void direction( dist &moves, targeting_type restricts = DIR_NONE,
                 bool may_target_monster = true, const char *prompt = NULL,
                 targeting_behaviour *mod = NULL, bool cancel_at_self = false );
 
-bool in_los_bounds(int x, int y);
+bool in_los_bounds(const coord_def& p);
 bool in_viewport_bounds(int x, int y);
 bool in_los(int x, int y);
+bool in_los(const coord_def &pos);
 bool in_vlos(int x, int y);
 bool in_vlos(const coord_def &pos);
 
@@ -168,7 +169,7 @@ std::string get_monster_desc(const monsters *mon,
 
 int dos_direction_unmunge(int doskey);
 
-std::string feature_description(int mx, int my, bool bloody = false,
+std::string feature_description(const coord_def& where, bool bloody = false,
                                 description_level_type dtype = DESC_CAP_A,
                                 bool add_stop = true);
 std::string raw_feature_description(dungeon_feature_type grid,

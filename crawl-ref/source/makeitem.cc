@@ -2859,7 +2859,7 @@ int items( int allow_uniques,       // not just true-false,
         while (grd[x_pos][y_pos] != DNGN_FLOOR
                || !unforbidden(coord_def(x_pos, y_pos), mapmask));
 
-        move_item_to_grid( &p, x_pos, y_pos );
+        move_item_to_grid( &p, coord_def(x_pos, y_pos) );
     }
 
     // Note that item might be invalidated now, since p could have changed.

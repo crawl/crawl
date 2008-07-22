@@ -47,9 +47,9 @@ static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison);
 // Returns the number of a net on a given square.
 // If trapped only stationary ones are counted
 // otherwise the first net found is returned.
-int get_trapping_net(int x, int y, bool trapped)
+int get_trapping_net(const coord_def& where, bool trapped)
 {
-    for (stack_iterator si(coord_def(x,y)); si; ++si)
+    for (stack_iterator si(where); si; ++si)
     {
          if (si->base_type == OBJ_MISSILES
              && si->sub_type == MI_THROWING_NET
@@ -63,7 +63,7 @@ int get_trapping_net(int x, int y, bool trapped)
 
 // If there are more than one net on this square
 // split off one of them for checking/setting values.
-static void maybe_split_nets(item_def &item, int x, int y)
+static void maybe_split_nets(item_def &item, const coord_def& where)
 {
     if (item.quantity == 1)
     {
@@ -85,17 +85,17 @@ static void maybe_split_nets(item_def &item, int x, int y)
     item.quantity = 1;
     set_item_stationary(item);
 
-    copy_item_to_grid( it, x, y );
+    copy_item_to_grid( it, where );
 }
 
-void mark_net_trapping(int x, int y)
+void mark_net_trapping(const coord_def& where)
 {
-    int net = get_trapping_net(x,y);
+    int net = get_trapping_net(where);
     if (net == NON_ITEM)
     {
-        net = get_trapping_net(x,y, false);
+        net = get_trapping_net(where, false);
         if (net != NON_ITEM)
-            maybe_split_nets(mitm[net], x, y);
+            maybe_split_nets(mitm[net], where);
     }
 }
 
@@ -168,7 +168,7 @@ void player_caught_in_net()
         if (you.flight_mode() == FL_FLY)
         {
             mpr("You fall like a stone!");
-            fall_into_a_pool(you.x_pos, you.y_pos, false, grd(you.pos()));
+            fall_into_a_pool(you.pos(), false, grd(you.pos()));
         }
 
         stop_delay(true); // even stair delays
@@ -179,11 +179,11 @@ void check_net_will_hold_monster(monsters *mons)
 {
     if (mons->body_size(PSIZE_BODY) >= SIZE_GIANT)
     {
-        int net = get_trapping_net(mons->x, mons->y);
+        int net = get_trapping_net(mons->pos());
         if (net != NON_ITEM)
             destroy_item(net);
 
-        if (see_grid(mons->x, mons->y))
+        if (see_grid(mons->pos()))
         {
             if (player_monster_visible(mons))
             {
@@ -198,7 +198,7 @@ void check_net_will_hold_monster(monsters *mons)
              || mons->type == MONS_OOZE
              || mons->type == MONS_PULSATING_LUMP)
     {
-        const int net = get_trapping_net(mons->x, mons->y);
+        const int net = get_trapping_net(mons->pos());
         if (net != NON_ITEM)
             remove_item_stationary(mitm[net]);
 
@@ -287,7 +287,7 @@ static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison)
 // itrap takes location from target_x, target_y of bolt strcture.
 //
 
-void itrap( struct bolt &pbolt, int trapped )
+void itrap( bolt &pbolt, int trapped )
 {
     object_class_type base_type = OBJ_MISSILES;
     int sub_type = MI_DART;
@@ -326,10 +326,10 @@ void itrap( struct bolt &pbolt, int trapped )
         return;
     }
 
-    trap_item( base_type, sub_type, pbolt.target_x, pbolt.target_y );
+    trap_item( base_type, sub_type, pbolt.target() );
 
     return;
-}                               // end itrap()
+}
 
 void handle_traps(trap_type trt, int i, bool trap_known)
 {
@@ -412,7 +412,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
             return;
         }
 
-        noisy(12, you.x_pos, you.y_pos, "An alarm trap emits a blaring wail!");
+        noisy(12, you.pos(), "An alarm trap emits a blaring wail!");
 
         break;
 
@@ -430,7 +430,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
             int damage = (you.your_level * 2) + random2avg(29, 2)
                           - random2(1 + player_AC());
             ouch( damage, 0, KILLED_BY_TRAP, " blade" );
-            bleed_onto_floor(you.x_pos, you.y_pos, -1, damage, true);
+            bleed_onto_floor(you.pos(), -1, damage, true);
         }
         break;
 
@@ -450,11 +450,11 @@ void handle_traps(trap_type trt, int i, bool trap_known)
                 player_caught_in_net();
             }
 
-            trap_item( OBJ_MISSILES, MI_THROWING_NET, env.trap[i].x, env.trap[i].y );
+            trap_item( OBJ_MISSILES, MI_THROWING_NET, env.trap[i].pos());
             if (you.attribute[ATTR_HELD])
-                mark_net_trapping(you.x_pos, you.y_pos);
+                mark_net_trapping(you.pos());
 
-            grd[env.trap[i].x][env.trap[i].y] = DNGN_FLOOR;
+            grd(env.trap[i].pos()) = DNGN_FLOOR;
             env.trap[i].type = TRAP_UNASSIGNED;
         }
         break;
@@ -577,7 +577,8 @@ void disarm_trap( struct dist &disa )
                     return;
 
                 mpr("You stumble into the trap!");
-                move_player_to_grid( env.trap[i].x, env.trap[i].y, true, false, true);
+                move_player_to_grid( coord_def(env.trap[i].x, env.trap[i].y),
+                                     true, false, true);
             }
             else
                 handle_traps(env.trap[i].type, i, false);
@@ -597,7 +598,7 @@ void disarm_trap( struct dist &disa )
     beam.target_y = you.y_pos + disa.dy;
 
     if (env.trap[i].type == TRAP_NET)
-        trap_item( OBJ_MISSILES, MI_THROWING_NET, beam.target_x, beam.target_y );
+        trap_item( OBJ_MISSILES, MI_THROWING_NET, beam.target() );
     else if (env.trap[i].type != TRAP_BLADE
              && trap_category(env.trap[i].type) == DNGN_TRAP_MECHANICAL)
     {
@@ -625,7 +626,7 @@ void remove_net_from(monsters *mon)
 {
     you.turn_is_over = true;
 
-    int net = get_trapping_net(mon->x, mon->y);
+    int net = get_trapping_net(mon->pos());
 
     if (net == NON_ITEM)
     {
@@ -772,7 +773,7 @@ static int damage_or_escape_net(int hold)
 // becomes feasible (for size etc.), so it may take even longer.
 void free_self_from_net()
 {
-    int net = get_trapping_net(you.x_pos, you.y_pos);
+    int net = get_trapping_net(you.pos());
 
     if (net == NON_ITEM) // really shouldn't happen!
     {
@@ -886,7 +887,7 @@ void clear_trapping_net()
     if (!you.attribute[ATTR_HELD])
         return;
 
-    const int net = get_trapping_net(you.x_pos, you.y_pos);
+    const int net = get_trapping_net(you.pos());
     if (net != NON_ITEM)
         remove_item_stationary(mitm[net]);
 
@@ -894,7 +895,7 @@ void clear_trapping_net()
 }
 
 bool trap_item(object_class_type base_type, char sub_type,
-               char beam_x, char beam_y)
+               const coord_def& where)
 {
     item_def item;
     item.base_type = base_type;
@@ -919,24 +920,24 @@ bool trap_item(object_class_type base_type, char sub_type,
 
     item_colour(item);
 
-    if (igrd[beam_x][beam_y] != NON_ITEM)
+    if (igrd(where) != NON_ITEM)
     {
-        if (items_stack( item, mitm[ igrd[beam_x][beam_y] ] ))
+        if (items_stack( item, mitm[ igrd(where) ] ))
         {
-            inc_mitm_item_quantity( igrd[beam_x][beam_y], 1 );
+            inc_mitm_item_quantity( igrd(where), 1 );
             return (false);
         }
 
         // don't want to go overboard here. Will only generate up to three
         // separate trap items, or less if there are other items present.
-        if (mitm[ igrd[beam_x][beam_y] ].link != NON_ITEM
+        if (mitm[ igrd(where) ].link != NON_ITEM
             && (item.base_type != OBJ_MISSILES
                 || item.sub_type != MI_THROWING_NET))
         {
-            if (mitm[ mitm[ igrd[beam_x][beam_y] ].link ].link != NON_ITEM)
+            if (mitm[ mitm[ igrd(where) ].link ].link != NON_ITEM)
                 return (false);
         }
-    }                           // end of if igrd != NON_ITEM
+    }
 
     // give appropriate racial flag for Orcish Mines and Elven Halls
     // should we ever allow properties of dungeon features, we could use that
@@ -945,7 +946,7 @@ bool trap_item(object_class_type base_type, char sub_type,
     else if (you.where_are_you == BRANCH_ELVEN_HALLS)
         set_equip_race( item, ISFLAG_ELVEN );
 
-    return (!copy_item_to_grid( item, beam_x, beam_y, 1 ));
+    return (!copy_item_to_grid( item, where, 1 ));
 }                               // end trap_item()
 
 // returns appropriate trap symbol for a given trap type {dlb}
@@ -975,12 +976,11 @@ dungeon_feature_type trap_category(trap_type type)
 }                               // end trap_category()
 
 // Returns index of the trap for a given (x,y) coordinate pair {dlb}
-int trap_at_xy(int which_x, int which_y)
+int trap_at_xy(const coord_def& xy)
 {
     for (int which_trap = 0; which_trap < MAX_TRAPS; which_trap++)
     {
-        if (env.trap[which_trap].x == which_x
-            && env.trap[which_trap].y == which_y
+        if (env.trap[which_trap].pos() == xy
             && env.trap[which_trap].type != TRAP_UNASSIGNED)
         {
             return (which_trap);
@@ -991,9 +991,9 @@ int trap_at_xy(int which_x, int which_y)
     return (-1);
 }
 
-trap_type trap_type_at_xy(int x, int y)
+trap_type trap_type_at_xy(const coord_def& xy)
 {
-    const int idx = trap_at_xy(x, y);
+    const int idx = trap_at_xy(xy);
     return (idx == -1 ? NUM_TRAPS : env.trap[idx].type);
 }
 
@@ -1075,12 +1075,11 @@ level_id generic_shaft_dest(coord_def pos)
     return generic_shaft_dest(level_pos(level_id::current(), pos));
 }
 
-void handle_items_on_shaft(int x, int y, bool open_shaft)
+void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
 {
     if (!is_valid_shaft_level())
         return;
 
-    coord_def pos(x, y);
     level_id  dest = generic_shaft_dest(pos);
 
     if (dest == level_id::current())
