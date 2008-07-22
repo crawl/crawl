@@ -1655,8 +1655,8 @@ patches of thick fur, and their mouths are full of ichor-dripping fangs.
 
 They can rip creatures apart with their claws, and regenerate very
 quickly from even the most terrible wounds. They learn very slowly
-indeed -- even more slowly than High Elves -- and need a great amount
-of food to survive.
+indeed -- as slowly as High Elves -- and need a great amount of food to
+survive.
 
 Minotaurs
 ---------
@@ -1784,7 +1784,7 @@ Mummies
   increase in levels, they become increasingly in touch with the powers
   of death, but cannot use some types of necromancy which only affect
   living creatures. The side effects of necromantic magic tend to be
-  relatively harmless to Mummies. However, their dessicated bodies are
+  relatively harmless to Mummies. However, their desiccated bodies are
   highly flammable. They also do not need to eat or drink, and in any
   case are incapable of doing so.
 
