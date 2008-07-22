@@ -3828,7 +3828,16 @@ static void _give_ammo(monsters *mon, int level,
 
         if (thing_created != NON_ITEM)
         {
-            mitm[thing_created].quantity = qty;
+            item_def& w(mitm[thing_created]);
+
+            // Limit returning brand to only one.
+            if (weap_type == OBJ_WEAPONS
+                && get_weapon_brand(w) == SPWPN_RETURNING)
+            {
+                qty = 1;
+            }
+                
+            w.quantity = qty;
             _give_monster_item(mon, thing_created, false,
                                &monsters::pickup_throwable_weapon);
         }
