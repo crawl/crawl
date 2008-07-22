@@ -85,6 +85,11 @@ type:' Here you need to choose the SSH button; it should be highlighted
 green.  If it's not already, simply click on it so that it is green.  
 When SSH is selected, the Port field will automatically change to 22.
 
+Finally, enable SSH compression by using 
+Category: Connection > SSH > Protocol Options > Enable compression. 
+It's disabled by default but helps on a busy server as akrasiac.
+
+
 3. Set controls to 'Nethack'
 ----------------------------
 That is all we do for the connection part.  Next we need to ensure our
