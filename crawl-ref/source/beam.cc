@@ -3739,8 +3739,8 @@ static int _affect_player( bolt &beam, item_def *item )
             if (!beam.aimed_at_feet && !beam.dont_stop_player
                 && !_beam_is_harmless_player(beam))
             {
-                if (yesno("That beam is likely to hit yourself. Continue "
-                          "anyway?", false, 'n'))
+                if (yesno("That beam is likely to hit you. Continue anyway?",
+                    false, 'n'))
                 {
                     beam.fr_count += 1;
                     beam.fr_power += you.experience_level;
