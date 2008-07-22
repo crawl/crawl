@@ -1662,7 +1662,7 @@ Minotaurs
 ---------
 The Minotaurs are yet another race of hybrids -- human bodies with
 bovine heads. They delve into the Dungeon because of their instinctive
-love of  twisting passageways.
+love of twisting passageways.
 
 Minotaurs are extremely good at all forms of physical combat, but are
 awful at using any type of magic. They can wear all armour except for
