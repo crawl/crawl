@@ -1825,7 +1825,6 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
     if (!pbolt.is_tracer)
         oldValue = set_buffering(false);
 #endif
-
     while (!beamTerminate)
     {
         testpos = ray.pos();
@@ -1878,7 +1877,7 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
                     while (grid_is_solid(grd(ray.pos())));
 
                     ray.advance_and_bounce();
-                    --rangeRemaining;
+                    rangeRemaining -= 2;
                 }
                 while (rangeRemaining > 0 && grid_is_solid(grd(ray.pos())));
 
