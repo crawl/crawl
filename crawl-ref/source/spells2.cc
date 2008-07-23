@@ -681,9 +681,11 @@ void cast_toxic_radiance(void)
         if (static_cast<int>(message.length()) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else
+        {
             // Exclamation mark to suggest that a lot of creatures were
             // affected.
             mpr("The monsters around you are poisoned!");
+        }
     }
 }
 

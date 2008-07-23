@@ -1172,7 +1172,8 @@ static bool _do_description(std::string key, std::string footer = "")
                     break;
                 }
 
-                describe_monsters(mon);
+                const monsters m = mon;
+                describe_monsters(m);
                 return (false);
             }
 

@@ -67,7 +67,7 @@ void inscribe_item( item_def &item, bool proper_prompt );
 /* ***********************************************************************
  * called from: command - direct
  * *********************************************************************** */
-void describe_monsters(monsters &mons);
+void describe_monsters(const monsters &mons);
 
 // last updated 12 Jun 2008 {jpeg}
 /* ***********************************************************************

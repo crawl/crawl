@@ -2328,9 +2328,9 @@ static std::string _describe_draconian(const monsters *mon)
 // Contains sketchy descriptions of every monster in the game.
 //
 //---------------------------------------------------------------
-void describe_monsters(monsters& mons)
+void describe_monsters(const monsters& mons)
 {
-    // for undetected mimics describe mimicked item instead
+    // For undetected mimics describe mimicked item instead.
     if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
     {
         item_def item;
@@ -2433,7 +2433,7 @@ void describe_monsters(monsters& mons)
         break;
     }
     case MONS_PLAYER_GHOST:
-       body << "The apparition of " << get_ghost_description(mons)
+       body << "$The apparition of " << get_ghost_description(mons)
             << ".$";
         break;
 
@@ -2454,6 +2454,21 @@ void describe_monsters(monsters& mons)
         break;
     default:
         break;
+    }
+
+    if (mons_behaviour_perceptible(&mons) && !mons_is_sleeping(&mons)
+        && !mons_is_confused(&mons)
+        && (mons_see_invis(&mons) || mons_sense_invis(&mons)))
+    {
+        if (you.invisible() && mons.foe == MHITYOU && !mons_is_fleeing(&mons))
+        {
+            if (mons_see_invis(&mons))
+                body << "$$It is watching you carefully.";
+            else
+                body << "$$It is looking in your general direction.";
+        }
+        else if (mons.foe == MHITNOT || mons_is_fleeing(&mons))
+            body << "$$It seems to be peering into the shadows.";
     }
 
     std::string symbol_suffix = "__";
@@ -2507,11 +2522,11 @@ void describe_monsters(monsters& mons)
     mouse_control mc(MOUSE_MODE_MORE);
 
     if (Options.tutorial_left)
-        tutorial_describe_monster(static_cast<const monsters*>(&mons));
+        tutorial_describe_monster(&mons);
 
     if (getch() == 0)
         getch();
-}                               // end describe_monsters
+}
 
 // Describes the current ghost's previous owner. The caller must
 // prepend "The apparition of" or whatever and append any trailing
