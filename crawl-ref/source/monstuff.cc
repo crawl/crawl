@@ -409,7 +409,7 @@ static void _give_monster_experience( monsters *victim,
         {
             if (you.religion == GOD_SHINING_ONE || you.religion == GOD_BEOGH
                 || player_under_penance()
-                || one_chance_in(3))
+                || !one_chance_in(3))
             {
                 return;
             }
@@ -2224,7 +2224,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
     int count_grids = 0;
     for (radius_iterator ri(mon->patrol_point, LOS_RADIUS, true, false);
          ri; ++ri)
-    {        
+    {
         // Don't bother for the current position. If everything fails,
         // we'll stay here anyway.
         if ( *ri == mon->pos() )
@@ -2347,7 +2347,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
     {
         if ( *ri == mon->pos() )
             continue;
-        
+
         if (mgrd(*ri) == NON_MONSTER)
             continue;
 

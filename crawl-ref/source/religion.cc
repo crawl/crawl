@@ -1291,6 +1291,22 @@ static bool _tso_blessing_holy_arm(monsters* mon)
     return (true);
 }
 
+static bool _increase_ench_duration(monsters *mon,
+                                    mon_enchant ench,
+                                    const int increase)
+{
+    // Durations are saved as 16-bit signed ints, so clamp at the largest such.
+    const int MARSHALL_MAX = (1 << 15) - 1;
+
+    const int newdur = std::min(ench.duration + increase, MARSHALL_MAX);
+    if (ench.duration >= newdur)
+        return false;
+
+    ench.duration = newdur;
+    mon->update_ench(ench);
+    return true;
+}
+
 static int _tso_blessing_extend_stay(monsters* mon)
 {
     if (!mon->has_ench(ENCH_ABJ))
@@ -1298,25 +1314,12 @@ static int _tso_blessing_extend_stay(monsters* mon)
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
-    const int increase = 300 + random2(300);
-    const int threshold = (increase + random2(increase)) * 2;
-
-    // Extend the time an abjurable monster has before disappearing.
-    abj.duration += increase;
-
-    // If the extended stay is long enough, make it permanent.  Note
-    // that we have to delete the enchantment without removing the
-    // enchantment effect, in order to keep the monster from
-    // disappearing.
-    if (abj.duration >= threshold)
-    {
-        mon->del_ench(ENCH_ABJ, true, false);
-        return 2;
-    }
-    else
-        mon->update_ench(abj);
-
-    return 1;
+    // [ds] Disabling permanence for balance reasons, but extending duration
+    // increase. These numbers are tenths of a player turn. Holy monsters
+    // get a much bigger boost than random beasties.
+    const int base_increase = mon->holiness() == MH_HOLY? 1100 : 500;
+    const int increase = base_increase + random2(base_increase);
+    return _increase_ench_duration(mon, abj, increase);
 }
 
 static bool _tso_blessing_friendliness(monsters* mon)
@@ -1324,21 +1327,10 @@ static bool _tso_blessing_friendliness(monsters* mon)
     if (!mon->has_ench(ENCH_CHARM))
         return (false);
 
-    mon->attitude = ATT_FRIENDLY;
-
-    // The monster is not really *created* friendly, but should it
-    // become hostile later on, it won't count as a good kill.
-    mon->flags |= MF_CREATED_FRIENDLY;
-
-    mons_make_god_gift(mon, GOD_SHINING_ONE);
-
-    // If the monster is charmed, make it permanently friendly.  Note
-    // that we have to delete the enchantment without removing the
-    // enchantment effect, in order to keep the monster from turning
-    // hostile.
-    mon->del_ench(ENCH_CHARM, true, false);
-
-    return (true);
+    // [ds] Just increase charm duration, no permanent friendliness.
+    const int base_increase = 700;
+    return _increase_ench_duration(mon, mon->get_ench(ENCH_CHARM),
+                                   base_increase + random2(base_increase));
 }
 
 // If you don't currently have any followers, send a small band to help
