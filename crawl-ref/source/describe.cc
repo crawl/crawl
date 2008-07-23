@@ -2456,21 +2456,6 @@ void describe_monsters(const monsters& mons)
         break;
     }
 
-    if (mons_behaviour_perceptible(&mons) && !mons_is_sleeping(&mons)
-        && !mons_is_confused(&mons)
-        && (mons_see_invis(&mons) || mons_sense_invis(&mons)))
-    {
-        if (you.invisible() && mons.foe == MHITYOU && !mons_is_fleeing(&mons))
-        {
-            if (mons_see_invis(&mons))
-                body << "$$It is watching you carefully.";
-            else
-                body << "$$It is looking in your general direction.";
-        }
-        else if (mons.foe == MHITNOT || mons_is_fleeing(&mons))
-            body << "$$It seems to be peering into the shadows.";
-    }
-
     std::string symbol_suffix = "__";
     symbol_suffix += symbol;
     symbol_suffix += "_suffix";

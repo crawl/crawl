@@ -2071,7 +2071,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_PERMAROCK_WALL:
         return TILE_WALL_NORMAL;
     case DNGN_SECRET_DOOR:
-        return (unsigned int)grid_secret_door_appearance(gx, gy);
+        return (unsigned int) grid_secret_door_appearance(coord_def(gx, gy));
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
     case DNGN_CLEAR_PERMAROCK_WALL:
@@ -2106,7 +2106,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
-        return _tileidx_trap(trap_type_at_xy(gx, gy));
+        return _tileidx_trap(trap_type_at_xy(coord_def(gx, gy)));
     case DNGN_ENTER_SHOP:
         return TILE_DNGN_ENTER_SHOP;
     case DNGN_ENTER_LABYRINTH:
@@ -3998,7 +3998,7 @@ void tile_draw_floor()
             if (in_bounds(gc) && object != 0)
             {
                 if (object == DNGN_SECRET_DOOR)
-                    object = (int)grid_secret_door_appearance(gc.x, gc.y);
+                    object = (int)grid_secret_door_appearance(gc);
 
                 tile_dngn[gc.x][gc.y] = tileidx_feature(object, gc.x, gc.y);
 
@@ -4061,9 +4061,7 @@ void tile_place_item_marker(int x, int y, int idx)
 void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
 {
     if (idx == NON_MONSTER)
-    {
         return;
-    }
 
     const coord_def gc(gx, gy);
     const coord_def ep = view2show(grid2view(gc));
@@ -4216,7 +4214,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
         env.tile_fg[ep.x-1][ep.y-1] = t;
         if (menv[idx].is_named())
         {
-            tiles.add_text_tag(TAG_NAMED_MONSTER, 
+            tiles.add_text_tag(TAG_NAMED_MONSTER,
                                menv[idx].name(DESC_CAP_A), gc);
         }
     }
@@ -4317,10 +4315,10 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                     }
                 }
 
-                if (print_blood && is_bloodcovered(gx, gy))
+                if (print_blood && is_bloodcovered(coord_def(gx, gy)))
                     tileb[count+1] |= TILE_FLAG_BLOOD;
 
-                if (is_sanctuary(gx, gy))
+                if (is_sanctuary(coord_def(gx, gy)))
                     tileb[count+1] |= TILE_FLAG_SANCTUARY;
             }
 
