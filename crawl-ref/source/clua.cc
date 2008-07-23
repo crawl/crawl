@@ -8,6 +8,7 @@
 #include "AppHdr.h"
 
 #include <algorithm>
+#include <sstream>
 
 #include "clua.h"
 
@@ -1313,18 +1314,44 @@ static int l_item_worn(lua_State *ls)
     return (2);
 }
 
+static std::string _item_name(lua_State *ls, item_def* item)
+{
+    description_level_type ndesc = DESC_PLAIN;
+    if (lua_isstring(ls, 2))
+        ndesc = description_type_by_name(lua_tostring(ls, 2));
+    else if (lua_isnumber(ls, 2))
+        ndesc = static_cast<description_level_type>(luaL_checkint(ls, 2));
+    bool terse = lua_toboolean(ls, 3);
+    return (item->name(ndesc, terse));
+}
+
 static int l_item_name(lua_State *ls)
 {
     LUA_ITEM(item, 1);
     if (item)
     {
-        description_level_type ndesc = DESC_PLAIN;
-        if (lua_isstring(ls, 2))
-            ndesc = description_type_by_name(lua_tostring(ls, 2));
-        else if (lua_isnumber(ls, 2))
-            ndesc = static_cast<description_level_type>(luaL_checkint(ls, 2));
-        bool terse = lua_toboolean(ls, 3);
-        lua_pushstring(ls, item->name(ndesc, terse).c_str());
+        std::string name = _item_name(ls, item);
+        lua_pushstring(ls, name.c_str());
+    }
+    else
+        lua_pushnil(ls);
+    return (1);
+}
+
+static int l_item_name_coloured(lua_State *ls)
+{
+    LUA_ITEM(item, 1);
+    if (item)
+    {
+        std::string name   = _item_name(ls, item);
+        int         col    = menu_colour(name, menu_colour_item_prefix(*item));
+        std::string colstr = colour_to_str(col);
+
+        std::ostringstream out;
+
+        out << "<" << colstr << ">" << name << "</" << colstr << ">";
+
+        lua_pushstring(ls, out.str().c_str());
     }
     else
         lua_pushnil(ls);
@@ -1481,6 +1508,7 @@ static const struct luaL_reg item_lib[] =
     { "cursed",            l_item_cursed },
     { "worn",              l_item_worn },
     { "name",              l_item_name },
+    { "name_coloured",     l_item_name_coloured },
     { "quantity",          l_item_quantity },
     { "inslot",            l_item_inslot },
     { "slot",              l_item_slot },
@@ -1682,6 +1710,33 @@ static int crawl_mpr(lua_State *ls)
         ch = MSGCH_PLAIN;
 
     mpr(message, static_cast<msg_channel_type>(ch));
+    return (0);
+}
+
+static int crawl_formatted_mpr(lua_State *ls)
+{
+    if (!crawl_state.io_inited)
+        return (0);
+
+    const char *message = luaL_checkstring(ls, 1);
+    if (!message)
+        return (0);
+
+    int ch = MSGCH_PLAIN;
+    if (lua_isnumber(ls, 2))
+        ch = luaL_checkint(ls, 2);
+    else
+    {
+        const char *channel = lua_tostring(ls, 2);
+        if (channel)
+            ch = str_to_channel(channel);
+    }
+
+    if (ch < 0 || ch >= NUM_MESSAGE_CHANNELS)
+        ch = MSGCH_PLAIN;
+
+    formatted_mpr(formatted_string::parse_string(message),
+                  static_cast<msg_channel_type>(ch));
     return (0);
 }
 
@@ -2067,6 +2122,7 @@ static int crawl_err_trace(lua_State *ls)
 static const struct luaL_reg crawl_lib[] =
 {
     { "mpr",            crawl_mpr },
+    { "formatted_mpr",  crawl_formatted_mpr },
     { "mesclr",         crawl_mesclr },
     { "random2",        crawl_random2 },
     { "one_chance_in",  crawl_one_chance_in },
