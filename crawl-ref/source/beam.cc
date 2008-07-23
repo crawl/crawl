@@ -3415,8 +3415,13 @@ static int _affect_place_clouds(bolt &beam, int x, int y)
         place_cloud( CLOUD_STEAM, x, y, 2 + random2(5), _whose_kill(beam) );
     }
 
-    if (beam.flavour == BEAM_COLD && grid_is_watery(grd[x][y]))
-        place_cloud( CLOUD_COLD, x, y, 2 + random2(5), _whose_kill(beam) );
+    if (grid_is_watery(grd[x][y]) && beam.flavour == BEAM_COLD
+        && beam.damage.num * beam.damage.size > 35)
+    {
+        place_cloud( CLOUD_COLD, x, y,
+                     beam.damage.num * beam.damage.size / 30 + 1,
+                     _whose_kill(beam) );
+    }
 
     // GREAT BLAST OF COLD
     if (beam.name == "great blast of cold")
