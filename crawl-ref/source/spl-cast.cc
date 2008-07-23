@@ -599,7 +599,7 @@ bool cast_a_spell()
         return (false);
     }
 
-    if (silenced(you.x_pos, you.y_pos))
+    if (silenced(you.pos()))
     {
         mpr("You cannot cast spells when silenced!");
         crawl_state.zero_turns_taken();
@@ -2377,7 +2377,7 @@ static void _miscast_enchantment(int severity, const char* cause)
             canned_msg(MSG_NOTHING_HAPPENS);
             break;
         case 9:
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear something strange.", MSGCH_SOUND);
             else if (you.attribute[ATTR_TRANSFORMATION] != TRAN_AIR)
                 mpr("Your skull vibrates slightly.");
@@ -2606,7 +2606,7 @@ static void _miscast_summoning(int severity, const char* cause)
             mpr("Shadowy shapes form in the air around you, then vanish.");
             break;
         case 1:
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear strange voices.", MSGCH_SOUND);
             else
                 mpr("You feel momentarily dizzy.");
@@ -2802,7 +2802,7 @@ static void _miscast_divination(int severity, const char* cause)
             mpr("Weird images run through your mind.");
             break;
         case 1:
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear strange voices.", MSGCH_SOUND);
             else
                 mpr("Your nose twitches.");
@@ -2927,7 +2927,7 @@ static void _miscast_necromancy(int severity, const char* cause)
                 canned_msg(MSG_NOTHING_HAPPENS);
             break;
         case 1:
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear strange and distant voices.", MSGCH_SOUND);
             else
                 mpr("You feel homesick.");
@@ -3242,7 +3242,7 @@ static void _miscast_fire(int severity, const char* cause)
             canned_msg(MSG_NOTHING_HAPPENS);
             break;
         case 9:
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear a sizzling sound.", MSGCH_SOUND);
             else
                 mpr("You feel like you have heartburn.");
@@ -3381,7 +3381,7 @@ static void _miscast_ice(int severity, const char* cause)
             canned_msg(MSG_NOTHING_HAPPENS);
             break;
         case 9:
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear a crackling sound.", MSGCH_SOUND);
             else
                 mpr("A snowflake lands on your nose.");
@@ -3484,7 +3484,7 @@ static void _miscast_earth(int severity, const char* cause)
             mpr("You feel a surge of energy from the ground.");
             break;
         case 4:
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear a distant rumble.", MSGCH_SOUND);
             else
                 mpr("You sympathise with the stones.");
@@ -3604,7 +3604,7 @@ static void _miscast_air(int severity, const char* cause)
             mpr("You are blasted with air!");
             break;
         case 7:
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear a whooshing sound.", MSGCH_SOUND);
             else if (player_can_smell())
                 mpr("You smell ozone.");
@@ -3617,7 +3617,7 @@ static void _miscast_air(int severity, const char* cause)
             canned_msg(MSG_NOTHING_HAPPENS);
             break;
         case 9:
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear a crackling sound.", MSGCH_SOUND);
             else if (player_can_smell())
                 mpr("You smell something musty.");
@@ -3637,7 +3637,7 @@ static void _miscast_air(int severity, const char* cause)
             break;
         case 1:
             mprf("The wind %s around you!",
-                 silenced(you.x_pos, you.y_pos) ? "whips" : "howls");
+                 silenced(you.pos()) ? "whips" : "howls");
             break;
         }
         break;
@@ -3727,7 +3727,7 @@ static void _miscast_poison(int severity, const char* cause)
             canned_msg(MSG_NOTHING_HAPPENS);
             break;
         case 9:
-            if (!silenced(you.x_pos, you.y_pos))
+            if (!silenced(you.pos()))
                 mpr("You hear a slurping sound.", MSGCH_SOUND);
             else if (you.species != SP_MUMMY)
                 mpr("You taste almonds.");

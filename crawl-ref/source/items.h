@@ -75,7 +75,7 @@ void unlink_item(int dest);
 void destroy_item( item_def &item, bool never_created = false );
 void destroy_item(int dest, bool never_created = false);
 void destroy_item_stack( int x, int y, int cause = -1 );
-void lose_item_stack( int x, int y );
+void lose_item_stack( const coord_def& where );
 
 // last updated: 08jun2000 {dlb}
 /* ***********************************************************************

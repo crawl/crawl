@@ -1983,7 +1983,7 @@ static bool _god_accepts_prayer(god_type type)
 
 void pray()
 {
-    if (silenced(you.x_pos, you.y_pos))
+    if (silenced(you.pos()))
     {
         mpr("You are unable to make a sound!");
         return;
@@ -5501,7 +5501,7 @@ void god_pitch(god_type which_god)
         mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
     if (you.religion == GOD_ZIN && _chaotic_beings_attitude_change())
         mpr("Your chaotic allies forsake you.", MSGCH_MONSTER_ENCHANT);
-    else if (you.religion == GOD_TROG && _magic_users_attitude_change())
+    if (you.religion == GOD_TROG && _magic_users_attitude_change())
         mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
 
     if (you.religion == GOD_ELYVILON)

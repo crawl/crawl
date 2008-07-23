@@ -568,7 +568,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_ELECTROCUTION:
-                    if (!silenced(you.x_pos, you.y_pos))
+                    if (!silenced(you.pos()))
                     {
                         mpr("You hear the crackle of electricity.",
                             MSGCH_SOUND);
@@ -3503,8 +3503,7 @@ void zap_wand( int slot )
     beam.source_y = you.y_pos;
     beam.set_target(zap_wand);
 
-    beam.aimed_at_feet =
-        (beam.target_x == you.x_pos && beam.target_y == you.y_pos);
+    beam.aimed_at_feet = (beam.target() == you.pos());
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
@@ -3610,8 +3609,8 @@ void drink( int slot )
 
     if (slot == -1)
     {
-        if (grd[you.x_pos][you.y_pos] >= DNGN_FOUNTAIN_BLUE
-            && grd[you.x_pos][you.y_pos] <= DNGN_FOUNTAIN_BLOOD)
+        if (grd(you.pos()) >= DNGN_FOUNTAIN_BLUE
+            && grd(you.pos()) <= DNGN_FOUNTAIN_BLOOD)
         {
             if (_drink_fountain())
                 return;
@@ -3709,7 +3708,7 @@ void drink( int slot )
 
 bool _drink_fountain()
 {
-    const dungeon_feature_type feat = grd[you.x_pos][you.y_pos];
+    const dungeon_feature_type feat = grd(you.pos());
 
     if (feat < DNGN_FOUNTAIN_BLUE || feat > DNGN_FOUNTAIN_BLOOD)
         return (false);
@@ -3801,7 +3800,7 @@ bool _drink_fountain()
         {
             // Turn fountain into a normal fountain without any message
             // but the glyph colour gives it away (lightblue vs. blue).
-            grd[you.x_pos][you.y_pos] = DNGN_FOUNTAIN_BLUE;
+            grd(you.pos()) = DNGN_FOUNTAIN_BLUE;
             set_terrain_changed(you.x_pos, you.y_pos);
         }
     }
@@ -3810,7 +3809,7 @@ bool _drink_fountain()
     {
         mpr("The fountain dries up!");
 
-        grd[you.x_pos][you.y_pos] = static_cast<dungeon_feature_type>(feat
+        grd(you.pos()) = static_cast<dungeon_feature_type>(feat
                          + DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE);
 
         set_terrain_changed(you.x_pos, you.y_pos);
@@ -4120,7 +4119,7 @@ static void handle_read_book( int item_slot )
 
     if (book.sub_type == BOOK_DESTRUCTION)
     {
-        if (silenced(you.x_pos, you.y_pos))
+        if (silenced(you.pos()))
             mpr("This book does not work if you cannot read it aloud!");
         else
             tome_of_power(item_slot);
@@ -4267,7 +4266,7 @@ void read_scroll( int slot )
         return;
     }
 
-    if (silenced(you.x_pos, you.y_pos))
+    if (silenced(you.pos()))
     {
         mpr("Magic scrolls do not work when you're silenced!");
         crawl_state.zero_turns_taken();

@@ -674,7 +674,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param)
     if (colour == MSGCOL_MUTED)
         return;
 
-    if (silenced(you.x_pos, you.y_pos)
+    if (silenced(you.pos())
         && (channel == MSGCH_SOUND || channel == MSGCH_TALK))
     {
         return;

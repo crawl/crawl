@@ -977,25 +977,22 @@ static bool _grab_follower_at(const coord_def &pos)
 static void _grab_followers()
 {
     const bool can_follow = level_type_allows_followers(you.level_type);
-    for (int i = you.x_pos - 1; i < you.x_pos + 2; i++)
-        for (int j = you.y_pos - 1; j < you.y_pos + 2; j++)
+
+    // Handle nearby ghosts.
+    for ( adjacent_iterator ai; ai; ++ai )
+    {
+        if (mgrd(*ai) == NON_MONSTER)
+            continue;
+
+        monsters *fmenv = &menv[mgrd(*ai)];
+
+        if (fmenv->type == MONS_PLAYER_GHOST
+            && fmenv->hit_points < fmenv->max_hit_points / 2)
         {
-            if (i == you.x_pos && j == you.y_pos)
-                continue;
-
-            if (mgrd[i][j] == NON_MONSTER)
-                continue;
-
-            monsters *fmenv = &menv[mgrd[i][j]];
-
-            if (fmenv->type == MONS_PLAYER_GHOST
-                && fmenv->hit_points < fmenv->max_hit_points / 2)
-            {
-                mpr("The ghost fades into the shadows.");
-                monster_teleport(fmenv, true);
-                continue;
-            }
+            mpr("The ghost fades into the shadows.");
+            monster_teleport(fmenv, true);
         }
+    }
 
     if (can_follow)
     {
@@ -1218,8 +1215,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
 
     // This should fix the "monster occurring under the player" bug?
-    if (make_changes && mgrd[you.x_pos][you.y_pos] != NON_MONSTER)
-        monster_teleport(&menv[mgrd[you.x_pos][you.y_pos]], true, true);
+    if (make_changes && mgrd(you.pos()) != NON_MONSTER)
+        monster_teleport(&menv[mgrd(you.pos())], true, true);
 
     // Actually "move" the followers if applicable.
     if (level_type_allows_followers(you.level_type)

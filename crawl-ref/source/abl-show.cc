@@ -1738,7 +1738,7 @@ static bool _do_ability(const ability_def& abil)
         if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY))
             return (false);
 
-        if (beam.target_x == you.x_pos && beam.target_y == you.y_pos)
+        if (beam.target() == you.pos())
         {
             mpr("You cannot banish yourself!");
             return (false);
@@ -2159,7 +2159,7 @@ std::vector<talent> your_talents( bool check_confused )
     // Gods take abilities away until penance completed. -- bwr
     // God abilities generally don't work while silenced (they require
     // invoking the god), but Nemelex is an exception.
-    if (!player_under_penance() && (!silenced(you.x_pos, you.y_pos)
+    if (!player_under_penance() && (!silenced(you.pos())
                                     || you.religion == GOD_NEMELEX_XOBEH))
     {
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
@@ -2174,7 +2174,7 @@ std::vector<talent> your_talents( bool check_confused )
     }
 
     // And finally, the ability to opt-out of your faith {dlb}:
-    if (you.religion != GOD_NO_GOD && !silenced( you.x_pos, you.y_pos ))
+    if (you.religion != GOD_NO_GOD && !silenced( you.pos() ))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused );
 
     //jmf: Check for breath weapons -- they're exclusive of each other, I hope!

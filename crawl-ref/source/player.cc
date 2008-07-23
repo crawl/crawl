@@ -2641,8 +2641,7 @@ void update_beholders(const monsters *mon, bool force)
     // Is an update even necessary?
     if (force || !mons_near(mon) || mons_friendly(mon) || mon->submerged()
         || mon->has_ench(ENCH_CONFUSION) || mons_cannot_move(mon)
-        || mon->asleep() || silenced(you.x_pos, you.y_pos)
-        || silenced(mon->x, mon->y))
+        || mon->asleep() || silenced(you.pos()) || silenced(mon->pos()))
     {
         const std::vector<int> help = you.beheld_by;
         you.beheld_by.clear();
@@ -5826,7 +5825,7 @@ int player::total_weight() const
 
 bool player::cannot_speak() const
 {
-    if (silenced(x_pos, y_pos))
+    if (silenced(this->pos()))
         return (true);
 
     if (you.cannot_move()) // we allow talking during sleep ;)

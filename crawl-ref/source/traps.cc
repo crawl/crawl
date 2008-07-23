@@ -403,7 +403,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
         break;
 
     case TRAP_ALARM:
-        if (silenced(you.x_pos, you.y_pos))
+        if (silenced(you.pos()))
         {
             if (trap_known)
                 mpr("The alarm is silenced.");

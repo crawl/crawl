@@ -667,7 +667,7 @@ void direction(dist& moves, targeting_type restricts,
         }
 #endif
 
-        if (target_unshifted && moves.tx == you.x_pos && moves.ty == you.y_pos
+        if (target_unshifted && moves.target() == you.pos()
             && restricts != DIR_TARGET)
         {
             key_command = shift_direction(key_command);
@@ -685,7 +685,7 @@ void direction(dist& moves, targeting_type restricts,
 
         if (key_command == CMD_TARGET_MAYBE_PREV_TARGET)
         {
-            if (moves.tx == you.x_pos && moves.ty == you.y_pos)
+            if (moves.target() == you.pos())
                 key_command = CMD_TARGET_PREV_TARGET;
             else
                 key_command = CMD_TARGET_SELECT;
@@ -929,7 +929,7 @@ void direction(dist& moves, targeting_type restricts,
 
             if (mid != NON_MONSTER)
                 you.prev_targ = mid;
-            else if (moves.tx == you.x_pos && moves.ty == you.y_pos)
+            else if (moves.target() == you.pos())
                 you.prev_targ = MHITYOU;
             else
                 you.prev_grd_targ = coord_def(moves.tx, moves.ty);
@@ -1105,7 +1105,7 @@ void direction(dist& moves, targeting_type restricts,
             // Confirm self-targeting on TARG_ENEMY (option-controlled.)
             // Conceivably we might want to confirm on TARG_ANY too.
             if (moves.isTarget
-                && moves.tx == you.x_pos && moves.ty == you.y_pos
+                && moves.target() == you.pos()
                 && mode == TARG_ENEMY
                 && (cancel_at_self
                     || Options.allow_self_target == CONFIRM_CANCEL
@@ -1213,7 +1213,7 @@ void direction(dist& moves, targeting_type restricts,
         }
         skip_iter = false;      // Only skip one iteration at most.
     }
-    moves.isMe = (moves.tx == you.x_pos && moves.ty == you.y_pos);
+    moves.isMe = (moves.target() == you.pos());
     mesclr();
 
     // We need this for directional explosions, otherwise they'll explode one
@@ -1866,8 +1866,8 @@ void describe_floor()
     msg_channel_type channel = MSGCH_EXAMINE;
 
     // Water is not terribly important if you don't mind it-
-    if ((grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER
-            || grd[you.x_pos][you.y_pos] == DNGN_SHALLOW_WATER)
+    if ((grd(you.pos()) == DNGN_DEEP_WATER
+            || grd(you.pos()) == DNGN_SHALLOW_WATER)
         && player_likes_water())
     {
         channel = MSGCH_EXAMINE_FILTER;

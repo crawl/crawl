@@ -85,16 +85,15 @@ static int _spread_cloud(const cloud_struct &cloud)
                          cloud.decay > 20? 50 :
                                            30;
     int extra_decay = 0;
-    radius_iterator ri(coord_def(cloud.x, cloud.y), 1, true, false, true);
-    for ( ; ri; ++ri )
+    for ( adjacent_iterator ai(cloud.pos()); ai; ++ai )
     {
         if (random2(100) >= spreadch)
             continue;
 
-        if (!in_bounds(*ri)
-            || env.cgrid(*ri) != EMPTY_CLOUD
-            || grid_is_solid(grd(*ri))
-            || is_sanctuary(*ri) && !is_harmless_cloud(cloud.type))
+        if (!in_bounds(*ai)
+            || env.cgrid(*ai) != EMPTY_CLOUD
+            || grid_is_solid(grd(*ai))
+            || is_sanctuary(*ai) && !is_harmless_cloud(cloud.type))
         {
             continue;
         }
@@ -103,7 +102,7 @@ static int _spread_cloud(const cloud_struct &cloud)
         if (newdecay >= cloud.decay)
             newdecay = cloud.decay - 1;
         
-        _place_new_cloud( cloud.type, *ri, newdecay, cloud.whose,
+        _place_new_cloud( cloud.type, *ai, newdecay, cloud.whose,
                           cloud.spread_rate );
 
         extra_decay += 8;
@@ -395,7 +394,7 @@ beam_type cloud2beam(cloud_type flavour)
 
 void in_a_cloud()
 {
-    int cl = env.cgrid[you.x_pos][you.y_pos];
+    int cl = env.cgrid(you.pos());
     int hurted = 0;
     int resist;
 

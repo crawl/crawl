@@ -1860,7 +1860,7 @@ void yell(bool force)
     else if (shout_verb == "scream")
         noise_level = 16;
 
-    if (silenced(you.x_pos, you.y_pos) || you.cannot_speak())
+    if (silenced(you.pos()) || you.cannot_speak())
         noise_level = 0;
 
     if (noise_level == 0)
@@ -2072,27 +2072,22 @@ bool vitrify_area(int radius)
     if (radius < 2)
         return (false);
 
-    const int radius2 = radius * radius;
     // This hinges on clear wall types having the same order as non-clear ones!
     const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
     bool something_happened = false;
-    for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+    for ( radius_iterator ri(you.pos(), radius, false, false); ri; ++ri )
+    {
+        const dungeon_feature_type grid = grd(*ri);
+        
+        if (grid == DNGN_ROCK_WALL
+            || grid == DNGN_STONE_WALL
+            || grid == DNGN_PERMAROCK_WALL )
         {
-            if (distance(x,y,you.x_pos,you.y_pos) < radius2)
-            {
-                dungeon_feature_type grid = grd[x][y];
-
-                if (grid == DNGN_ROCK_WALL
-                    || grid == DNGN_STONE_WALL
-                    || grid == DNGN_PERMAROCK_WALL )
-                {
-                    grd[x][y]
-                        = static_cast<dungeon_feature_type>(grid + clear_plus);
-                    something_happened = true;
-                }
-            }
+            grd(*ri)
+                = static_cast<dungeon_feature_type>(grid + clear_plus);
+            something_happened = true;
         }
+    }
 
     return (something_happened);
 }
@@ -2710,14 +2705,14 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         // ranged attack (missile or spell), then the monster will
         // flee to gain distance if its "too close", else it will
         // just shift its position rather than charge the player. -- bwr
-        if (grid_distance(mon->x, mon->y, mon->target_x, mon->target_y) < 3)
+        if (grid_distance(mon->pos(), mon->target_pos()) < 3)
         {
             mon->behaviour = BEH_FLEE;
 
             // If the monster is on the target square, fleeing won't work.
-            if (mon->x == mon->target_x && mon->y == mon->target_y)
+            if (mon->pos() == mon->target_pos())
             {
-                if (you.x_pos != mon->x || you.y_pos != mon->y)
+                if (you.pos() != mon->pos())
                 {
                     // Flee from player's position if different.
                     mon->target_x = you.x_pos;

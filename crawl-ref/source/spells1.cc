@@ -1691,19 +1691,15 @@ bool cast_sure_blade(int power)
     return (success);
 }
 
-void manage_fire_shield(void)
+void manage_fire_shield()
 {
     you.duration[DUR_FIRE_SHIELD]--;
 
     if (!you.duration[DUR_FIRE_SHIELD])
         return;
 
-    for ( radius_iterator ri(you.pos(), 1); ri; ++ri )
-    {
-        if ( *ri == you.pos() )
-            continue;
-
-        if (!grid_is_solid(grd(*ri)) && env.cgrid(*ri) == EMPTY_CLOUD)
-            place_cloud( CLOUD_FIRE, *ri, 1 + random2(6), KC_YOU );
-    }
+    // Place fire clouds all around you
+    for ( adjacent_iterator ai; ai; ++ai )
+        if (!grid_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
+            place_cloud( CLOUD_FIRE, *ai, 1 + random2(6), KC_YOU );
 }

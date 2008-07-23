@@ -497,27 +497,19 @@ void wizard_create_spec_monster_name()
         return;
     }
 
-    int x = you.x_pos;
-    int y = you.y_pos;
-
     int type = mspec.mid;
     if (mons_class_is_zombified(mspec.mid))
         type = mspec.monbase;
 
-    coord_def place = find_newmons_square(type, coord_def(x, y));
+    coord_def place = find_newmons_square(type, you.pos());
     if (!in_bounds(place))
     {
         // Try again with habitat HT_LAND.
         // (Will be changed to the necessary terrain type in dgn_place_monster.)
-        place = find_newmons_square(MONS_PROGRAM_BUG, coord_def(x,y));
+        place = find_newmons_square(MONS_PROGRAM_BUG, you.pos());
     }
 
-    if (in_bounds(place))
-    {
-        x = place.x;
-        y = place.y;
-    }
-    else
+    if (!in_bounds(place))
     {
         mpr("Found no space to place monster.", MSGCH_DIAGNOSTICS);
         return;
@@ -528,7 +520,8 @@ void wizard_create_spec_monster_name()
     if (mons_is_unique(mspec.mid) && you.unique_creatures[mspec.mid])
         you.unique_creatures[mspec.mid] = false;
 
-    if (!dgn_place_monster(mspec, you.your_level, x, y, true, false))
+    if (!dgn_place_monster(mspec, you.your_level,
+                           place.x, place.y, true, false))
     {
         mpr("Unable to place monster.", MSGCH_DIAGNOSTICS);
         return;
@@ -537,7 +530,7 @@ void wizard_create_spec_monster_name()
     // Need to set a name for the player ghost.
     if (mspec.mid == MONS_PLAYER_GHOST)
     {
-        unsigned short mid  = mgrd[x][y];
+        unsigned short mid = mgrd(place);
 
         if (mid >= MAX_MONSTERS || menv[mid].type != MONS_PLAYER_GHOST)
         {
@@ -693,7 +686,7 @@ void wizard_place_stairs( bool down )
     if (stairs == DNGN_UNSEEN)
         return;
 
-    grd[you.x_pos][you.y_pos] = stairs;
+    grd(you.pos()) = stairs;
 }
 #endif
 
@@ -1988,7 +1981,7 @@ void debug_item_scan( void )
 #ifdef WIZARD
 static void _debug_acquirement_stats(FILE *ostat)
 {
-    if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
+    if (grid_destroys_items(grd(you.pos())))
     {
         mpr("You must stand on a square which doesn't destroy items "
             "in order to do this.");
@@ -2814,7 +2807,7 @@ void wizard_get_religion(void)
         mpr( "That god doesn't seem to be taking followers today." );
     else
     {
-        grd[you.x_pos][you.y_pos] =
+        grd(you.pos()) =
             static_cast<dungeon_feature_type>( DNGN_ALTAR_FIRST_GOD + god - 1 );
 
         pray();
@@ -3406,7 +3399,7 @@ void debug_make_trap()
     char requested_trap[80];
     int trap_slot = find_trap_slot();
     trap_type trap = TRAP_UNASSIGNED;
-    int gridch = grd[you.x_pos][you.y_pos];
+    int gridch = grd(you.pos());
 
     if (trap_slot == -1)
     {
@@ -3472,7 +3465,7 @@ void debug_make_trap()
 void debug_make_shop()
 {
     char requested_shop[80];
-    int gridch = grd[you.x_pos][you.y_pos];
+    int gridch = grd(you.pos());
     bool have_shop_slots = false;
     int new_shop_type = SHOP_UNASSIGNED;
     bool representative = false;
@@ -3832,9 +3825,9 @@ void debug_make_monster_shout(monsters* mon)
 
     if (type == 's')
     {
-        if (silenced(you.x_pos, you.y_pos))
+        if (silenced(you.pos()))
             mpr("You are silenced and likely won't hear any shouts.");
-        else if (silenced(mon->x, mon->y))
+        else if (silenced(mon->pos()))
             mpr("The monster is silenced and likely won't give any shouts.");
 
         for (int i = 0; i < num_times; i++)
@@ -3845,14 +3838,14 @@ void debug_make_monster_shout(monsters* mon)
         if (mon->invisible())
             mpr("The monster is invisible and likely won't speak.");
 
-        if (silenced(you.x_pos, you.y_pos) && !silenced(mon->x, mon->y))
+        if (silenced(you.pos()) && !silenced(mon->pos()))
         {
             mpr("You are silenced but the monster isn't; you will "
                 "probably hear/see nothing.");
         }
-        else if (!silenced(you.x_pos, you.y_pos) && silenced(mon->x, mon->y))
+        else if (!silenced(you.pos()) && silenced(mon->pos()))
             mpr("The monster is silenced and likely won't say anything.");
-        else if (silenced(you.x_pos, you.y_pos) && silenced(mon->x, mon->y))
+        else if (silenced(you.pos()) && silenced(mon->pos()))
         {
             mpr("Both you and the monster are silenced, so you likely "
                 "won't hear anything.");

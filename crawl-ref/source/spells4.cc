@@ -228,7 +228,7 @@ static int _shatter_items(int x, int y, int pow, int garbage)
 
     if (broke_stuff)
     {
-        if (!silenced(x, y) && !silenced(you.x_pos, you.y_pos))
+        if (!silenced(coord_def(x, y)) && !silenced(you.pos()))
             mpr("You hear glass break.", MSGCH_SOUND);
 
         return 1;
@@ -305,7 +305,7 @@ static int _shatter_walls(int x, int y, int pow, int garbage)
 void cast_shatter(int pow)
 {
     int damage = 0;
-    const bool silence = silenced(you.x_pos, you.y_pos);
+    const bool silence = silenced(you.pos());
 
     if (silence)
         mpr("The dungeon shakes!");

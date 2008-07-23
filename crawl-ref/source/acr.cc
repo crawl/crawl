@@ -822,7 +822,7 @@ static void _handle_wizard_command( void )
         break;
 
     case 'p':
-        grd[you.x_pos][you.y_pos] = DNGN_ENTER_PANDEMONIUM;
+        grd(you.pos()) = DNGN_ENTER_PANDEMONIUM;
         break;
 
     case 'P':
@@ -849,7 +849,7 @@ static void _handle_wizard_command( void )
             break;
         }
 
-        grd[you.x_pos][you.y_pos] = DNGN_ENTER_PORTAL_VAULT;
+        grd(you.pos()) = DNGN_ENTER_PORTAL_VAULT;
         map_wiz_props_marker *marker = new map_wiz_props_marker(you.pos());
         marker->set_property("dst", dst);
         marker->set_property("desc", "wizard portal, dest = " + dst);
@@ -858,7 +858,7 @@ static void _handle_wizard_command( void )
     }
 
     case 'l':
-        grd[you.x_pos][you.y_pos] = DNGN_ENTER_LABYRINTH;
+        grd(you.pos()) = DNGN_ENTER_LABYRINTH;
         break;
 
     case 'L':
@@ -939,11 +939,9 @@ static void _handle_wizard_command( void )
         get_input_line( specs, sizeof( specs ) );
 
         if (specs[0] != '\0')
-        {
             if (const int feat = atoi(specs))
-                grd[you.x_pos][you.y_pos] =
-                    static_cast<dungeon_feature_type>( feat );
-        }
+                grd(you.pos()) = static_cast<dungeon_feature_type>( feat );
+
         break;
 
     case ')':
@@ -3101,7 +3099,7 @@ static void _world_reacts()
             you_teleport_now( false, true ); // to new area of the Abyss
     }
 
-    if (env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
+    if (env.cgrid(you.pos()) != EMPTY_CLOUD)
         in_a_cloud();
 
     if (you.level_type == LEVEL_DUNGEON && you.duration[DUR_TELEPATHY])
@@ -3436,21 +3434,15 @@ static keycode_type _get_next_keycode()
 static int _check_adjacent(dungeon_feature_type feat, int &dx, int &dy)
 {
     int num = 0;
-    int _dx = 0, _dy = 0;
 
-    for (int x = -1; x <= 1; x++)
-        for (int y = -1; y <= 1; y++)
-            if (grd[you.x_pos + x][you.y_pos + y] == feat)
-            {
-                num++;
-                _dx = x;
-                _dy = y;
-            }
-
-    if (num == 1)
+    for ( adjacent_iterator ai(you.pos(), false); ai; ++ai )
     {
-        dx = _dx;
-        dy = _dy;
+        if ( grd(*ai) == feat )
+        {
+            num++;
+            dx = ai->x - you.x_pos;
+            dy = ai->y - you.y_pos;
+        }
     }
 
     return num;
@@ -3579,7 +3571,7 @@ static void _open_door(int move_x, int move_y, bool check_confused)
         if (you.duration[DUR_BERSERKER])
         {
             // XXX: Better flavour for larger doors?
-            if (silenced(you.x_pos, you.y_pos))
+            if (silenced(you.pos()))
                 mprf("The %s%s flies open!", adj, noun);
             else
             {
@@ -3696,16 +3688,15 @@ static void _close_door(int door_x, int door_y)
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
 
-        const coord_def you_coord(you.x_pos, you.y_pos);
         for (std::set<coord_def>::iterator i = all_door.begin();
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
-            if (mgrd[dc.x][dc.y] != NON_MONSTER)
+            if (mgrd(dc) != NON_MONSTER)
             {
                 // Need to make sure that turn_is_over is set if creature is
                 // invisible.
-                if (!player_monster_visible(&menv[mgrd[dc.x][dc.y]]))
+                if (!player_monster_visible(&menv[mgrd(dc)]))
                 {
                     mprf("Something is blocking the %sway!", noun);
                     you.turn_is_over = true;
@@ -3718,7 +3709,7 @@ static void _close_door(int door_x, int door_y)
                 return;
             }
 
-            if (igrd[dc.x][dc.y] != NON_ITEM)
+            if (igrd(dc) != NON_ITEM)
             {
                 mprf("There's something blocking the %sway.", noun);
                 door_move.dx = 0;
@@ -3726,7 +3717,7 @@ static void _close_door(int door_x, int door_y)
                 return;
             }
 
-            if (you_coord == dc)
+            if (you.pos() == dc)
             {
                 mprf("There's a thickheaded creature in the %sway!", noun);
                 return;
@@ -3737,7 +3728,7 @@ static void _close_door(int door_x, int door_y)
 
         if (you.duration[DUR_BERSERKER])
         {
-            if (silenced(you.x_pos, you.y_pos))
+            if (silenced(you.pos()))
             {
                 mprf("You slam the %s%s shut!", adj, noun);
             }
@@ -3748,7 +3739,7 @@ static void _close_door(int door_x, int door_y)
                 noisy(25, you.pos());
             }
         }
-        else if (one_chance_in(skill) && !silenced(you.x_pos, you.y_pos))
+        else if (one_chance_in(skill) && !silenced(you.pos()))
         {
             mprf(MSGCH_SOUND, "As you close the %s%s, it creaks loudly!",
                  adj, noun);

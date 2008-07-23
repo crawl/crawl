@@ -585,9 +585,9 @@ void item_was_destroyed(const item_def &item, int cause)
     xom_check_destroyed_item( item, cause );
 }
 
-void lose_item_stack( int x, int y )
+void lose_item_stack( const coord_def& where )
 {
-    for ( stack_iterator si(coord_def(x,y)); si; ++si )
+    for ( stack_iterator si(where); si; ++si )
     {
         if (is_valid_item( *si )) // FIXME is this check necessary?
         {
@@ -595,7 +595,7 @@ void lose_item_stack( int x, int y )
             si->clear();
         }
     }
-    igrd[x][y] = NON_ITEM;
+    igrd(where) = NON_ITEM;
 }
 
 void destroy_item_stack( int x, int y, int cause )
@@ -1925,7 +1925,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
     if (try_offer
         && you.religion != GOD_NO_GOD
         && you.duration[DUR_PRAYER]
-        && grid_altar_god(grd[you.x_pos][you.y_pos]) == you.religion)
+        && grid_altar_god(grd(you.pos())) == you.religion)
     {
         offer_items();
     }

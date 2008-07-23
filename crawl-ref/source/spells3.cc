@@ -1630,7 +1630,7 @@ bool cast_sanctuary(const int power)
         return (false);
 
     // Yes, shamelessly stolen from NetHack...
-    if (!silenced(you.x_pos, you.y_pos)) // How did you manage that?
+    if (!silenced(you.pos())) // How did you manage that?
         mpr("You hear a choir sing!", MSGCH_SOUND);
     else
         mpr("You are suddenly bathed in radiance!");
@@ -1860,12 +1860,12 @@ bool project_noise(void)
             success = true;
         }
 
-        if (!silenced( you.x_pos, you.y_pos ))
+        if (!silenced( you.pos() ))
         {
             if (success)
             {
                 mprf(MSGCH_SOUND, "You hear a %svoice call your name.",
-                     (!see_grid( pos.x, pos.y ) ? "distant " : "") );
+                     (!see_grid( pos ) ? "distant " : "") );
             }
             else
                 mprf(MSGCH_SOUND, "You hear a dull thud.");

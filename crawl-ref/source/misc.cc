@@ -1151,16 +1151,13 @@ static void maybe_bloodify_square(const coord_def& where, int amount,
         if (spatter)
         {
             // Smaller chance of spattering surrounding squares.
-            for ( radius_iterator ri(where, 1, true, false); ri; ++ri )
+            for ( adjacent_iterator ai(where); ai; ++ai )
             {
-                if ( *ri == where ) // current square
-                    continue;
-
                 // Spattering onto walls etc. less likely.
-                if (grd(*ri) < DNGN_MINMOVE && !one_chance_in(3))
+                if (grd(*ai) < DNGN_MINMOVE && !one_chance_in(3))
                     continue;
 
-                maybe_bloodify_square(*ri, amount/15);
+                maybe_bloodify_square(*ai, amount/15);
             }
         }
     }
@@ -1181,18 +1178,18 @@ void bleed_onto_floor(const coord_def& where, int montype,
 
 static void _spatter_neighbours(const coord_def& where, int chance)
 {
-    for ( radius_iterator ri(where, 1, true, false); ri; ++ri )
+    for ( adjacent_iterator ai(where, false); ai; ++ai )
     {
-        if (!allow_bleeding_on_square(*ri))
+        if (!allow_bleeding_on_square(*ai))
             continue;
 
-        if (grd(*ri) < DNGN_MINMOVE && !one_chance_in(3))
+        if (grd(*ai) < DNGN_MINMOVE && !one_chance_in(3))
             continue;
 
         if (one_chance_in(chance))
         {
-            env.map(*ri).property = FPROP_BLOODY;
-            _spatter_neighbours(*ri, chance+1);
+            env.map(*ai).property = FPROP_BLOODY;
+            _spatter_neighbours(*ai, chance+1);
         }
     }
 }

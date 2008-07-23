@@ -1545,29 +1545,20 @@ static void _minefield_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     const int radius = power_level * 2 + 2;
-    for (int dx = -radius; dx <= radius; ++dx)
-        for (int dy = -radius; dy <= radius; ++dy)
+    for (radius_iterator ri(you.pos(), radius, false, false, false); ri; ++ri)
+    {
+        if ( *ri == you.pos() )
+            continue;
+
+        if (grd(*ri) == DNGN_FLOOR && trap_at_xy(*ri) == -1
+            && one_chance_in(4 - power_level))
         {
-            if (dx == 0 && dy == 0)
-                continue;
-
-            if (dx*dx + dy*dy > radius*radius + 1)
-                continue;
-
-            const int rx = you.x_pos + dx;
-            const int ry = you.y_pos + dy;
-            if (!in_bounds(rx, ry))
-                continue;
-
-            if (grd[rx][ry] == DNGN_FLOOR && trap_at_xy(coord_def(rx,ry)) == -1
-                && one_chance_in(4 - power_level))
-            {
-                if (you.level_type == LEVEL_ABYSS)
-                    grd[rx][ry] = coinflip() ? DNGN_DEEP_WATER : DNGN_LAVA;
-                else
-                    place_specific_trap(rx, ry, TRAP_RANDOM);
-            }
+            if (you.level_type == LEVEL_ABYSS)
+                grd(*ri) = coinflip() ? DNGN_DEEP_WATER : DNGN_LAVA;
+            else
+                place_specific_trap(ri->x, ri->y, TRAP_RANDOM);
         }
+    }
 }
 
 static int _drain_monsters(int x, int y, int pow, int garbage)
@@ -2193,8 +2184,7 @@ static void _sage_card(int power, deck_rarity_type rarity)
 
 static void _create_pond(const coord_def& center, int radius, bool allow_deep)
 {
-    radius_iterator ri(center, radius, false);
-    for ( ; ri; ++ri )
+    for ( radius_iterator ri(center, radius, false); ri; ++ri )
     {
         const coord_def p = *ri;
         if (p != you.pos() && coinflip())
@@ -2216,8 +2206,7 @@ static void _create_pond(const coord_def& center, int radius, bool allow_deep)
 
 static void _deepen_water(const coord_def& center, int radius)
 {
-    radius_iterator ri(center, radius, false);
-    for ( ; ri; ++ri )
+    for ( radius_iterator ri(center, radius, false); ri; ++ri )
     {
         // FIXME The iteration shouldn't affect the later squares in the
         // same iteration, i.e., a newly-flooded square shouldn't count
@@ -2258,8 +2247,7 @@ static void _water_card(int power, deck_rarity_type rarity)
         mpr("Water floods your area!");
 
         // Flood all visible squares.
-        radius_iterator ri( you.pos(), LOS_RADIUS, false );
-        for ( ; ri; ++ri )
+        for ( radius_iterator ri( you.pos(), LOS_RADIUS, false ); ri; ++ri )
         {
             coord_def p = *ri;
             destroy_trap(p);
@@ -2311,7 +2299,7 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
 static bool _trowel_card(int power, deck_rarity_type rarity)
 {
     // Early exit: don't clobber important features.
-    if (is_critical_feature(grd[you.x_pos][you.y_pos]))
+    if (is_critical_feature(grd(you.pos())))
     {
         mpr("The dungeon trembles momentarily.");
         return (false);
@@ -2388,7 +2376,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
                     DNGN_GRANITE_STATUE, DNGN_ORCISH_IDOL
                 };
                 // We leave the items on the square
-                grd[pos.x][pos.y] = RANDOM_ELEMENT(statfeat);
+                grd(pos) = RANDOM_ELEMENT(statfeat);
                 mpr("A statue takes form beside you.");
                 done_stuff = true;
             }
@@ -2397,13 +2385,13 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
     else
     {
         // Generate an altar.
-        if (grd[you.x_pos][you.y_pos] == DNGN_FLOOR)
+        if (grd(you.pos()) == DNGN_FLOOR)
         {
             // Might get GOD_NO_GOD and no altar.
             god_type rgod = static_cast<god_type>(random2(NUM_GODS));
-            grd[you.x_pos][you.y_pos] = altar_for_god(rgod);
+            grd(you.pos()) = altar_for_god(rgod);
 
-            if (grd[you.x_pos][you.y_pos] != DNGN_FLOOR)
+            if (grd(you.pos()) != DNGN_FLOOR)
             {
                 done_stuff = true;
                 mprf("An altar to %s grows from the floor before you!",
@@ -2543,7 +2531,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     monster_type mon_chosen = NUM_MONSTERS;
-    int chosen_x = 0, chosen_y = 0;
+    coord_def chosen_spot;
     int num_tries;
 
     if (power_level == 0)
@@ -2563,10 +2551,12 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
         }
         while (dx == 0 && dy == 0);
 
+        coord_def delta(dx,dy);
+
         monster_type cur_try;
         do
         {
-            cur_try = random_monster_at_grid(you.pos() + coord_def(dx,dy));
+            cur_try = random_monster_at_grid(you.pos() + delta);
         }
         while (mons_is_unique(cur_try));
 
@@ -2574,8 +2564,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
             || mons_power(mon_chosen) < mons_power(cur_try))
         {
             mon_chosen = cur_try;
-            chosen_x = you.x_pos;
-            chosen_y = you.y_pos;
+            chosen_spot = you.pos();
         }
     }
 
@@ -2587,7 +2576,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
     create_monster(
         mgen_data(mon_chosen,
                   friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                  3, coord_def(chosen_x, chosen_y),
+                  3, chosen_spot,
                   friendly ? you.pet_target : MHITYOU));
 }
 

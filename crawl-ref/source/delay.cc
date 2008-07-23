@@ -591,38 +591,27 @@ bool is_vampire_feeding()
 // Returns -1, if entire audience already affected or too dumb to understand.
 int check_recital_audience()
 {
-    int mid;
-    monsters *mons;
     bool found_monsters = false;
 
-    for (int x = you.x_pos - 8; x <= you.x_pos + 8; x++)
-       for (int y = you.y_pos - 8; y <= you.y_pos + 8; y++)
-       {
-            if (!in_bounds(x,y) || !see_grid(x, y))
-                continue;
+    for ( radius_iterator ri(you.pos(), 8); ri; ++ri )
+    {
+        if ( mgrd(*ri) == NON_MONSTER )
+            continue;
 
-            mid = mgrd[x][y];
-            if (mid == NON_MONSTER)
-                continue;
+        found_monsters = true;
 
-            mons = &menv[mid];
-            if (!found_monsters)
-                found_monsters = true;
-
-            // Can not be affected in these states.
-            if (_recite_mons_useless(mons))
-                continue;
-
+        // Check if audience can listen.
+        if (!_recite_mons_useless( &menv[mgrd(*ri)] ) )
             return (1);
-      }
-
+    }
+    
 #ifdef DEBUG_DIAGNOSTICS
-      if (!found_monsters)
-          mprf(MSGCH_DIAGNOSTICS, "No audience found!");
-      else
-          mprf(MSGCH_DIAGNOSTICS, "No sensible audience found!");
+    if (!found_monsters)
+        mprf(MSGCH_DIAGNOSTICS, "No audience found!");
+    else
+        mprf(MSGCH_DIAGNOSTICS, "No sensible audience found!");
 #endif
-
+    
    // No use preaching to the choir, nor to common animals.
    if (found_monsters)
        return (-1);

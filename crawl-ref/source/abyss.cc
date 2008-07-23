@@ -42,6 +42,8 @@
 #include "view.h"
 #include "xom.h"
 
+const coord_def abyss_center(45,35);
+
 // If not_seen is true, don't place the feature where it can be seen from
 // the centre.
 static bool _place_feature_near( const coord_def &centre,
@@ -82,25 +84,23 @@ static bool _place_feature_near( const coord_def &centre,
 // Public for abyss generation.
 void generate_abyss()
 {
-    int i, j;                   // loop variables
-    int temp_rand;              // probability determination {dlb}
-
 #ifdef DEBUG_ABYSS
     mprf(MSGCH_DIAGNOSTICS,
          "generate_abyss(); turn_on_level: %d", env.turns_on_level);
 #endif
 
-    for (i = 5; i < (GXM - 5); i++)
-        for (j = 5; j < (GYM - 5); j++)
-        {
-            temp_rand = random2(4000);
+    for ( rectangle_iterator ri(5); ri; ++ri )
+    {
+        grd(*ri) =
+            static_cast<dungeon_feature_type>(
+                random_choose_weighted(3000, DNGN_FLOOR,
+                                        600, DNGN_ROCK_WALL,
+                                        300, DNGN_STONE_WALL,
+                                        100, DNGN_METAL_WALL,
+                                          1, DNGN_CLOSED_DOOR,
+                                          0));
+    }
 
-            grd[i][j] = ((temp_rand > 999) ? DNGN_FLOOR :       // 75.0%
-                         (temp_rand > 400) ? DNGN_ROCK_WALL :   // 15.0%
-                         (temp_rand > 100) ? DNGN_STONE_WALL :  //  7.5%
-                         (temp_rand >   0) ? DNGN_METAL_WALL    //  2.5%
-                                           : DNGN_CLOSED_DOOR); // 1 in 4000
-        }
 
     // If we're starting out in the Abyss, make sure the starting grid is
     // an altar to Lugonu and there's an exit near-by.
@@ -108,16 +108,16 @@ void generate_abyss()
     // altar near-by.
     if (you.char_direction == GDT_GAME_START)
     {
-        grd[45][35] = DNGN_ALTAR_LUGONU;
-        _place_feature_near( coord_def(45, 35), LOS_RADIUS + 2,
+        grd(abyss_center) = DNGN_ALTAR_LUGONU;
+        _place_feature_near( abyss_center, LOS_RADIUS + 2,
                              DNGN_FLOOR, DNGN_EXIT_ABYSS, 50, true );
     }
     else
     {
-        grd[45][35] = DNGN_FLOOR;
+        grd(abyss_center) = DNGN_FLOOR;
         if (one_chance_in(5))
         {
-            _place_feature_near( coord_def(45, 35), LOS_RADIUS,
+            _place_feature_near( abyss_center, LOS_RADIUS,
                                  DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
         }
     }
@@ -155,8 +155,8 @@ static int _abyssal_rune_roll()
     return (odds);
 }
 
-static void _generate_area(int gx1, int gy1, int gx2, int gy2,
-                           bool spatter = false)
+static void _generate_area(const coord_def& topleft,
+                           const coord_def& bottomright, bool spatter = false)
 {
     // Any rune on the floor prevents the abyssal rune from being generated.
     bool placed_abyssal_rune =
@@ -173,7 +173,7 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
     const int thickness = random2(70) + 30;
     int thing_created;
 
-    FixedVector<dungeon_feature_type, 5> replaced;
+    dungeon_feature_type replaced[5];
 
     // Nuke map.
     env.map.init(map_cell());
@@ -194,33 +194,29 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
 
     if (one_chance_in(3))
     {
+        // Place some number of rooms.
         int rooms_to_do = 1 + random2(10);
 
-        for (int rooms_done = 0; rooms_done < rooms_to_do; ++rooms_done)
+        for (int i = 0; i < rooms_to_do; ++i)
         {
-            const int x1 = 10 + random2(GXM - 20);
-            const int y1 = 10 + random2(GYM - 20);
-            const int x2 = x1 + 1 + random2(10);
-            const int y2 = y1 + 1 + random2(10);
+            // Pick the corners
+            coord_def tl( 10 + random2(GXM - 20), 10 + random2(GYM - 20) );
+            coord_def br( tl.x + 1 + random2(10), tl.y + 1 + random2(10) );
 
             if (one_chance_in(100))
                 break;
 
             bool room_ok = true;
 
-            for (int i = x1; room_ok && i < x2; i++)
-                for (int j = y1; room_ok && j < y2; j++)
-                {
-                    if (grd[i][j] != DNGN_UNSEEN)
-                        room_ok = false;
-                }
+            // Check if the room is taken.
+            for ( rectangle_iterator ri(tl, br); ri && room_ok; ++ri )
+                if (grd(*ri) != DNGN_UNSEEN)
+                    room_ok = false;
 
+            // Make the room.
             if (room_ok)
-            {
-                for (int i = x1; i < x2; i++)
-                    for (int j = y1; j < y2; j++)
-                        grd[i][j] = DNGN_FLOOR;
-            }
+                for ( rectangle_iterator ri(tl,br); ri; ++ri )
+                    grd(*ri) = DNGN_FLOOR;
         }
     }
 
@@ -233,92 +229,90 @@ static void _generate_area(int gx1, int gy1, int gx2, int gy2,
         items_level = 0;
     }
 
-    for (int i = gx1; i <= gx2; i++)
-        for (int j = gy1; j <= gy2; j++)
+    for ( rectangle_iterator ri(topleft, bottomright); ri; ++ri )
+    {
+        if (grd(*ri) == DNGN_UNSEEN && x_chance_in_y(thickness + 1, 100))
         {
-            if (grd[i][j] == DNGN_UNSEEN && x_chance_in_y(thickness + 1, 100))
+            grd(*ri) = DNGN_FLOOR;
+
+            if (items_placed < num_items && one_chance_in(200))
             {
-                grd[i][j] = DNGN_FLOOR;
-
-                if (items_placed < num_items && one_chance_in(200))
+                if (!placed_abyssal_rune && abyssal_rune_roll != -1
+                    && you.char_direction != GDT_GAME_START
+                    && one_chance_in(abyssal_rune_roll))
                 {
-                    if (!placed_abyssal_rune && abyssal_rune_roll != -1
-                        && you.char_direction != GDT_GAME_START
-                        && one_chance_in(abyssal_rune_roll))
-                    {
-                        thing_created = items(1, OBJ_MISCELLANY,
-                                              MISC_RUNE_OF_ZOT, true, 51, 51);
-                        placed_abyssal_rune = true;
+                    thing_created = items(1, OBJ_MISCELLANY,
+                                          MISC_RUNE_OF_ZOT, true, 51, 51);
+                    placed_abyssal_rune = true;
 #ifdef DEBUG_ABYSS
-                        mpr("Placing an Abyssal rune.", MSGCH_DIAGNOSTICS);
+                    mpr("Placing an Abyssal rune.", MSGCH_DIAGNOSTICS);
 #endif
-                    }
-                    else
-                    {
-                        thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
-                                              true, items_level, 250);
-                    }
-
-                    move_item_to_grid( &thing_created, coord_def(i, j) );
-
-                    if (thing_created != NON_ITEM)
-                        items_placed++;
                 }
+                else
+                {
+                    thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
+                                          true, items_level, 250);
+                }
+
+                move_item_to_grid( &thing_created, *ri );
+
+                if (thing_created != NON_ITEM)
+                    items_placed++;
             }
         }
+    }
 
     int exits_wanted  = 0;
     int altars_wanted = 0;
 
-    for (int i = gx1; i <= gx2; i++)
-        for (int j = gy1; j <= gy2; j++)
+    for ( rectangle_iterator ri(topleft, bottomright); ri; ++ri )
+    {
+        if (grd(*ri) == DNGN_UNSEEN)
+            grd(*ri) = replaced[random2(5)];
+
+        if (one_chance_in(7500)) // place an exit
+            exits_wanted++;
+
+        // Don't place exit under items.
+        if (exits_wanted > 0 && igrd(*ri) == NON_ITEM)
         {
-            if (grd[i][j] == DNGN_UNSEEN)
-                grd[i][j] = replaced[random2(5)];
-
-            if (one_chance_in(7500)) // place an exit
-                exits_wanted++;
-
-            // Don't place exit under items.
-            if (exits_wanted > 0 && igrd[i][j] == NON_ITEM)
-            {
-                grd[i][j] = DNGN_EXIT_ABYSS;
-                exits_wanted--;
+            grd(*ri) = DNGN_EXIT_ABYSS;
+            exits_wanted--;
 #ifdef DEBUG_ABYSS
-                mpr("Placing Abyss exit.", MSGCH_DIAGNOSTICS);
+            mpr("Placing Abyss exit.", MSGCH_DIAGNOSTICS);
 #endif
-            }
+        }
 
-            // Except for the altar on the starting position, don't place
-            // any altars.
-            if (you.char_direction != GDT_GAME_START)
+        // Except for the altar on the starting position, don't place
+        // any altars.
+        if (you.char_direction != GDT_GAME_START)
+        {
+            if (one_chance_in(10000)) // Place an altar.
+                altars_wanted++;
+
+            // Don't place altars under items.
+            if (altars_wanted > 0 && igrd(*ri) == NON_ITEM)
             {
-                if (one_chance_in(10000)) // Place an altar.
-                    altars_wanted++;
-
-                // Don't place altars under items.
-                if (altars_wanted > 0 && igrd[i][j] == NON_ITEM)
+                do
                 {
-                    do
-                    {
-                        grd[i][j] = static_cast<dungeon_feature_type>(
-                                        DNGN_ALTAR_ZIN + random2(NUM_GODS-1) );
-                    }
-                    while (grd[i][j] == DNGN_ALTAR_ZIN
-                           || grd[i][j] == DNGN_ALTAR_SHINING_ONE
-                           || grd[i][j] == DNGN_ALTAR_ELYVILON);
-
-                    // Lugonu has a flat 50% chance of corrupting the altar.
-                    if (coinflip())
-                        grd[i][j] = DNGN_ALTAR_LUGONU;
-
-                    altars_wanted--;
-#ifdef DEBUG_ABYSS
-                    mpr("Placing altar.", MSGCH_DIAGNOSTICS);
-#endif
+                    grd(*ri) = static_cast<dungeon_feature_type>(
+                        DNGN_ALTAR_ZIN + random2(NUM_GODS-1) );
                 }
+                while (grd(*ri) == DNGN_ALTAR_ZIN
+                       || grd(*ri) == DNGN_ALTAR_SHINING_ONE
+                       || grd(*ri) == DNGN_ALTAR_ELYVILON);
+
+                // Lugonu has a flat 50% chance of corrupting the altar.
+                if (coinflip())
+                    grd(*ri) = DNGN_ALTAR_LUGONU;
+
+                altars_wanted--;
+#ifdef DEBUG_ABYSS
+                mpr("Placing altar.", MSGCH_DIAGNOSTICS);
+#endif
             }
         }
+    }
 
     generate_random_blood_spatter_on_level();
 
@@ -418,7 +412,7 @@ void area_shift(void)
     //
     // Also shift sanctuary center if it's close.
     bool      sanct_shifted = false;
-    coord_def sanct_pos(0, 0);
+    coord_def sanct_pos;
     FixedArray<unsigned short, LOS_DIAMETER, LOS_DIAMETER> fprops;
     const coord_def los_delta(LOS_RADIUS, LOS_RADIUS);
 
@@ -435,20 +429,7 @@ void area_shift(void)
     // If sanctuary centre is outside of preserved area then just get
     // rid of it.
     if (env.sanctuary_time > 0 && !sanct_shifted)
-    {
         remove_sanctuary(false);
-
-        coord_def pos;
-        for (pos.x = 0; pos.x < LOS_DIAMETER; pos.x++)
-            for (pos.y = 0; pos.y < LOS_DIAMETER; pos.y++)
-            {
-                if (fprops(pos) == FPROP_SANCTUARY_1
-                    || fprops(pos) == FPROP_SANCTUARY_2)
-                {
-                    fprops(pos) = FPROP_NONE;
-                }
-            }
-    }
 
     _xom_check_nearness_setup();
 
@@ -464,31 +445,30 @@ void area_shift(void)
             _abyss_lose_monster(m);
     }
 
-    for (int i = 5; i < (GXM - 5); i++)
-        for (int j = 5; j < (GYM - 5); j++)
-        {
-            // Don't modify terrain by player.
-            if (grid_distance(i, j, you.x_pos, you.y_pos) <= 10)
-                continue;
+    for (rectangle_iterator ri(5); ri; ++ri )
+    {
+        // Don't modify terrain by player.
+        if (grid_distance(*ri, you.pos()) <= 10)
+            continue;
 
-            // Nuke terrain otherwise.
-            grd[i][j] = DNGN_UNSEEN;
+        // Nuke terrain otherwise.
+        grd(*ri) = DNGN_UNSEEN;
 
-            // Nuke items.
+        // Nuke items.
 #ifdef DEBUG_ABYSS
-            if (igrd[i][j] != NON_ITEM)
-                mprf(MSGCH_DIAGNOSTICS, "Nuke item stack at (%d, %d)", i, j);
+        if (igrd(*ri) != NON_ITEM)
+            mprf(MSGCH_DIAGNOSTICS, "Nuke item stack at (%d, %d)", i, j);
 #endif
-            lose_item_stack( i, j );
+        lose_item_stack( *ri );
 
-            if (mgrd[i][j] != NON_MONSTER)
-                _abyss_lose_monster( menv[ mgrd[i][j] ] );
-        }
+        if (mgrd(*ri) != NON_MONSTER)
+            _abyss_lose_monster( menv[ mgrd(*ri) ] );
+    }
 
     // Shift all monsters & items to new area.
     for (radius_iterator ri(you.pos(), 10, true, false); ri; ++ri)
     {
-        const coord_def newpos = coord_def(45,35) + *ri - you.pos();
+        const coord_def newpos = abyss_center + *ri - you.pos();
 
         // Move terrain.
         grd(newpos) = grd(*ri);
@@ -518,22 +498,19 @@ void area_shift(void)
             move_cloud( env.cgrid(*ri), newpos );
     }
 
-    for (unsigned int i = 0; i < MAX_CLOUDS; i++)
+    for (int i = 0; i < MAX_CLOUDS; i++)
     {
         if (env.cloud[i].type == CLOUD_NONE)
             continue;
 
-        if (env.cloud[i].x < 35 || env.cloud[i].x > 55
-            || env.cloud[i].y < 25 || env.cloud[i].y > 45)
-        {
+        if ( grid_distance(abyss_center, env.cloud[i].pos()) > 10 )
             delete_cloud( i );
-        }
     }
 
-    you.moveto(45, 35);
+    you.moveto(abyss_center);
 
-    _generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
-                   GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, true);
+    _generate_area(coord_def(MAPGEN_BORDER, MAPGEN_BORDER),
+                   coord_def(GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER), true);
 
     _xom_check_nearness();
 
@@ -543,6 +520,7 @@ void area_shift(void)
     if (sanct_shifted)
         env.sanctuary_pos = sanct_pos + you.pos();
 
+    // Place some number of monsters.
     mgen_data mons;
     mons.level_type = LEVEL_ABYSS;
     mons.proximity  = PROX_AWAY_FROM_PLAYER;
@@ -566,35 +544,34 @@ void save_abyss_uniques()
 }
 
 void abyss_teleport( bool new_area )
-/**********************************/
 {
     _xom_check_nearness_setup();
 
-    int x, y, i, j, k;
-
     if (!new_area)
     {
+        coord_def newspot;
+        bool found = false;
         // Try to find a good spot within the shift zone.
-        for (i = 0; i < 100; i++)
+        for (int i = 0; i < 100 && !found; i++)
         {
-            x = 16 + random2( GXM - 32 );
-            y = 16 + random2( GYM - 32 );
+            newspot.x = 16 + random2( GXM - 32 );
+            newspot.y = 16 + random2( GYM - 32 );
 
-            if ((grd[x][y] == DNGN_FLOOR
-                    || grd[x][y] == DNGN_SHALLOW_WATER)
-                && mgrd[x][y] == NON_MONSTER
-                && env.cgrid[x][y] == EMPTY_CLOUD)
+            if ((grd(newspot) == DNGN_FLOOR
+                    || grd(newspot) == DNGN_SHALLOW_WATER)
+                && mgrd(newspot) == NON_MONSTER
+                && env.cgrid(newspot) == EMPTY_CLOUD)
             {
-                break;
+                found = true;
             }
         }
 
-        if (i < 100)
+        if (found)
         {
 #ifdef DEBUG_ABYSS
             mpr("Non-new area Abyss teleport.", MSGCH_DIAGNOSTICS);
 #endif
-            you.moveto(x, y);
+            you.moveto(newspot);
             _xom_check_nearness();
             return;
         }
@@ -614,42 +591,41 @@ void abyss_teleport( bool new_area )
     tile_init_flavor();
 #endif
 
-    for (i = 0; i < MAX_MONSTERS; ++i)
+    for (int i = 0; i < MAX_MONSTERS; ++i)
         if (menv[i].alive())
             _abyss_lose_monster(menv[i]);
 
     // Orbs and fixed artefacts are marked as "lost in the abyss".
-    for (k = 0; k < MAX_ITEMS; ++k)
+    for (int i = 0; i < MAX_ITEMS; ++i)
     {
-        if (is_valid_item( mitm[k] ))
+        if (is_valid_item( mitm[i] ))
         {
-            item_was_lost( mitm[k] );
-            destroy_item( k );
+            item_was_lost( mitm[i] );
+            destroy_item( i );
         }
     }
 
-    for (i = 0; i < MAX_CLOUDS; i++)
+    for (int i = 0; i < MAX_CLOUDS; i++)
         delete_cloud( i );
 
-    for (i = 10; i < (GXM - 9); i++)
-        for (j = 10; j < (GYM - 9); j++)
-        {
-            grd[i][j]       = DNGN_UNSEEN;  // So generate_area will pick it up.
-            igrd[i][j]      = NON_ITEM;
-            mgrd[i][j]      = NON_MONSTER;
-            env.cgrid[i][j] = EMPTY_CLOUD;
-        }
+    for ( rectangle_iterator ri(10); ri; ++ri )
+    {
+        grd(*ri)       = DNGN_UNSEEN;  // So generate_area will pick it up.
+        igrd(*ri)      = NON_ITEM;
+        mgrd(*ri)      = NON_MONSTER;
+        env.cgrid(*ri) = EMPTY_CLOUD;
+    }
 
     ASSERT( env.cloud_no == 0 );
 
-    you.moveto(45, 35);
+    you.moveto(abyss_center);
 
-    _generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
-                   GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, true);
+    _generate_area(coord_def(MAPGEN_BORDER, MAPGEN_BORDER),
+                   coord_def(GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER), true);
 
     _xom_check_nearness();
 
-    grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
+    grd(you.pos()) = DNGN_FLOOR;
     if (one_chance_in(5))
     {
         _place_feature_near( you.pos(), LOS_RADIUS,
@@ -816,19 +792,9 @@ static bool _is_crowded_square(const coord_def &c)
 // Returns true if the square has all opaque neighbours.
 static bool _is_sealed_square(const coord_def &c)
 {
-    for (int xi = -1; xi <= 1; ++xi)
-        for (int yi = -1; yi <= 1; ++yi)
-        {
-            if (!xi && !yi)
-                continue;
-
-            const coord_def n(c.x + xi, c.y + yi);
-            if (!in_bounds(n))
-                continue;
-
-            if (!grid_is_opaque(grd(n)))
-                return (false);
-        }
+    for (adjacent_iterator ai(c); ai; ++ai)
+        if ( !grid_is_opaque(grd(c)) )
+            return (false);
 
     return (true);
 }
@@ -874,12 +840,12 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
 #ifdef USE_TILE
     if (feat == DNGN_ROCK_WALL)
     {
-        env.tile_flv[c.x][c.y].wall = tile_DNGN_start[IDX_WALL_UNDEAD] 
+        env.tile_flv(c).wall = tile_DNGN_start[IDX_WALL_UNDEAD] 
             + random2(tile_DNGN_count[IDX_WALL_UNDEAD]);
     }
     else if (feat == DNGN_FLOOR)
     {
-        env.tile_flv[c.x][c.y].floor = tile_DNGN_start[IDX_FLOOR_NERVES] 
+        env.tile_flv(c).floor = tile_DNGN_start[IDX_FLOOR_NERVES] 
             + random2(tile_DNGN_count[IDX_FLOOR_NERVES]);
     }
 #endif
@@ -893,25 +859,23 @@ static void _corrupt_level_features(const crawl_environment &oenv)
 
     for (int i = 0, size = corrupt_markers.size(); i < size; ++i)
         corrupt_seeds.push_back(corrupt_markers[i]->pos);
-
-    for (int y = MAPGEN_BORDER; y < GYM - MAPGEN_BORDER; ++y)
-        for (int x = MAPGEN_BORDER; x < GXM - MAPGEN_BORDER; ++x)
+    
+    for ( rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri )
+    {
+        int distance = GXM * GXM + GYM * GYM;
+        for (int i = 0, size = corrupt_seeds.size(); i < size; ++i)
         {
-            const coord_def c(x, y);
-            int distance = GXM * GXM + GYM * GYM;
-            for (int i = 0, size = corrupt_seeds.size(); i < size; ++i)
-            {
-                const int dist = (c - corrupt_seeds[i]).rdist();
-                if (dist < distance)
-                    distance = dist;
-            }
-
-            if ((distance < 6 || one_chance_in(1 + distance - 6))
-                && _is_grid_corruptible(c))
-            {
-                _corrupt_square(oenv, c);
-            }
+            const int dist = (*ri - corrupt_seeds[i]).rdist();
+            if (dist < distance)
+                distance = dist;
         }
+        
+        if ((distance < 6 || one_chance_in(1 + distance - 6))
+            && _is_grid_corruptible(*ri))
+        {
+            _corrupt_square(oenv, *ri);
+        }
+    }
 }
 
 static bool _is_level_corrupted()
@@ -971,8 +935,8 @@ bool lugonu_corrupt_level(int power)
 
     std::auto_ptr<crawl_environment> backup(new crawl_environment(env));
     generate_abyss();
-    _generate_area(MAPGEN_BORDER, MAPGEN_BORDER,
-                   GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER, false);
+    _generate_area(coord_def(MAPGEN_BORDER, MAPGEN_BORDER),
+                   coord_def(GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER), false);
 
     _corrupt_choose_colours();
 

@@ -132,6 +132,61 @@ stack_iterator stack_iterator::operator++(int dummy)
     return copy;
 }
 
+rectangle_iterator::rectangle_iterator( const coord_def& corner1,
+                                        const coord_def& corner2 )
+{
+    topleft.x = std::min(corner1.x, corner2.x);
+    topleft.y = std::min(corner1.y, corner2.y); // not really necessary
+    bottomright.x = std::max(corner1.x, corner2.x);
+    bottomright.y = std::max(corner1.y, corner2.y);
+    current = topleft;
+}
+
+rectangle_iterator::rectangle_iterator( int x_border_dist, int y_border_dist )
+{
+    if ( y_border_dist < 0 )
+        y_border_dist = x_border_dist;
+    topleft.set( x_border_dist, y_border_dist );
+    bottomright.set( GXM - x_border_dist, GYM - y_border_dist );
+    current = topleft;
+}
+
+rectangle_iterator::operator bool() const
+{
+    return current.y > bottomright.y;
+}
+
+coord_def rectangle_iterator::operator *() const
+{
+    return current;
+}
+
+const coord_def* rectangle_iterator::operator->() const
+{
+    return &current;
+}
+
+rectangle_iterator& rectangle_iterator::operator ++()
+{
+    if ( current.x == bottomright.x )
+    {
+        current.x = topleft.x;
+        current.y++;
+    }
+    else
+    {
+        current.x++;
+    }
+    return *this;
+}
+
+rectangle_iterator rectangle_iterator::operator++( int dummy )
+{
+    const rectangle_iterator copy = *this;
+    ++(*this);
+    return (copy);
+}
+
 radius_iterator::radius_iterator( const coord_def& _center, int _radius,
                                   bool _roguelike_metric, bool _require_los,
                                   bool _exclude_center )
@@ -1176,28 +1231,15 @@ bool adjacent( const coord_def& p1, const coord_def& p2 )
     return grid_distance(p1, p2) <= 1;
 }
 
-bool silenced(int x, int y)
+bool silenced(const coord_def& p)
 {
-    if (you.duration[DUR_SILENCE] > 0
-        && distance(x, y, you.x_pos, you.y_pos) <= 36)  // (6 * 6)
-    {
-        return (true);
-    }
-    else
-    {
-        //else // FIXME: implement, and let monsters cast, too
-        //  for (int i = 0; i < MAX_SILENCES; i++)
-        //  {
-        //      if (distance(x, y, silencer[i].x, silencer[i].y) <= 36)
-        //         return (true);
-        //  }
-        return (false);
-    }
+    // FIXME: implement for monsters
+    return (you.duration[DUR_SILENCE] > 0 && distance(p, you.pos()) <= 6*6);
 }
 
 bool player_can_hear(int x, int y)
 {
-    return (!silenced(x, y) && !silenced(you.x_pos, you.y_pos));
+    return (!silenced(coord_def(x, y)) && !silenced(you.pos()));
 }
 
 // Returns true if inside the area the player can move and dig (ie exclusive).

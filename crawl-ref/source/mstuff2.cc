@@ -147,10 +147,9 @@ void mons_trap(monsters *monster)
     // Alarm traps aren't set off by hostile monsters, because that would
     // be way too nasty for the player.
     case TRAP_ALARM:
-        if (!mons_friendly(monster) || silenced(monster->x, monster->y))
+        if (!mons_friendly(monster) || silenced(monster->pos()))
         {
-            if (trapKnown && you.can_see(monster)
-                && !silenced(you.x_pos, you.y_pos))
+            if (trapKnown && you.can_see(monster) && !silenced(you.pos()))
             {
                 mpr("The alarm trap makes no noise.");
             }
@@ -296,8 +295,7 @@ void mons_trap(monsters *monster)
         }
 
         // output triggering message to player, where appropriate: {dlb}
-        if (!silenced(monster->x, monster->y)
-                && !silenced(you.x_pos, you.y_pos))
+        if (!silenced(monster->pos()) && !silenced(you.pos()))
         {
             if (monsterNearby)
                 mpr("You hear a loud \"Zot\"!", MSGCH_SOUND);
@@ -2471,7 +2469,7 @@ bool orc_battle_cry(monsters *chief)
 
     if (foe
         && (foe != &you || !mons_friendly(chief))
-        && !silenced(chief->x, chief->y)
+        && !silenced(chief->pos())
         && chief->can_see(foe)
         && coinflip())
     {

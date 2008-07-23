@@ -49,6 +49,9 @@ int roll_dice( int num, int size );
 int roll_dice( const struct dice_def &dice );
 void scale_dice( dice_def &dice, int threshold = 24 );
 
+
+// Various ways to iterate over things.
+
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're
 // examining but you can't kill the item linked to it.
@@ -69,6 +72,22 @@ public:
 private:
     int cur_link;
     int next_link;
+};
+
+class rectangle_iterator :
+    public std::iterator<std::forward_iterator_tag, coord_def>
+{
+public:
+    rectangle_iterator( const coord_def& corner1, const coord_def& corner2 );
+    explicit rectangle_iterator( int x_border_dist, int y_border_dist = -1 );
+    operator bool() const;
+    coord_def operator *() const;
+    const coord_def* operator->() const;
+
+    rectangle_iterator& operator ++ ();
+    rectangle_iterator operator ++ (int);    
+private:
+    coord_def current, topleft, bottomright;
 };
 
 class radius_iterator : public std::iterator<std::bidirectional_iterator_tag,
@@ -98,6 +117,14 @@ private:
     int radius;
     bool roguelike_metric, require_los, exclude_center;
     bool iter_done;
+};
+
+class adjacent_iterator : public radius_iterator
+{
+public:
+    adjacent_iterator( const coord_def& pos = you.pos(),
+                       bool _exclude_center = true ) :
+        radius_iterator(pos, 1, true, false, _exclude_center) {}
 };
 
 int random2limit(int max, int limit);
@@ -153,8 +180,7 @@ int distance( const coord_def& p1, const coord_def& p2 );
 int distance( int x, int y, int x2, int y2);
 bool adjacent( const coord_def& p1, const coord_def& p2 );
 
-bool silenced(int x, int y);
-inline bool silenced(const coord_def &p) { return silenced(p.x, p.y); }
+bool silenced(const coord_def& p);
 
 bool player_can_hear(int x, int y);
 inline bool player_can_hear(const coord_def &p)

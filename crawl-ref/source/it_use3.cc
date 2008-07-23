@@ -76,7 +76,7 @@ void special_wielded()
     case SPWLD_SING:
     case SPWLD_NOISE:
     {
-        makes_noise = (one_chance_in(20) && !silenced(you.x_pos, you.y_pos));
+        makes_noise = (one_chance_in(20) && !silenced(you.pos()));
 
         if (makes_noise)
         {

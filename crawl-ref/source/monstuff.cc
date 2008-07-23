@@ -1379,11 +1379,11 @@ static bool _jelly_divide(monsters *parent)
     child->x = parent->x + jex;
     child->y = parent->y + jey;
 
-    mgrd[child->x][child->y] = k;
+    mgrd(child->pos()) = k;
 
     if (!simple_monster_message(parent, " splits in two!"))
     {
-        if (!silenced(parent->x, parent->y) || !silenced(child->x, child->y))
+        if (!silenced(parent->pos()) || !silenced(child->pos()))
             mpr("You hear a squelching noise.", MSGCH_SOUND);
     }
 
