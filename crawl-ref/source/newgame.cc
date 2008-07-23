@@ -3796,7 +3796,7 @@ spec_query:
         break;
     case CK_BKSP:
     case ' ':
-        you.species = SP_UNKNOWN;
+        you.species  = SP_UNKNOWN;
         Options.race = 0;
         return (true);
     case '#':

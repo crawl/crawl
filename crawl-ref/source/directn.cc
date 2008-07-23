@@ -88,12 +88,16 @@ enum LOSSelect
 static void _describe_feature(const coord_def& where, bool oos);
 static void _describe_cell(const coord_def& where);
 
-static bool _find_object(  const coord_def& where, int mode, bool need_path, int range );
-static bool _find_monster( const coord_def& where, int mode, bool need_path, int range );
-static bool _find_feature( const coord_def& where, int mode, bool need_path, int range );
+static bool _find_object(  const coord_def& where, int mode, bool need_path,
+                           int range );
+static bool _find_monster( const coord_def& where, int mode, bool need_path,
+                           int range );
+static bool _find_feature( const coord_def& where, int mode, bool need_path,
+                           int range );
 
 #ifndef USE_TILE
-static bool _find_mlist( const coord_def& where, int mode, bool need_path, int range );
+static bool _find_mlist( const coord_def& where, int mode, bool need_path,
+                         int range );
 #endif
 
 static char _find_square_wrapper( const coord_def& targ,
@@ -492,6 +496,22 @@ static void _fill_monster_list(bool full_info)
         start = end;
     }
 }
+
+static int _mlist_letter_to_index(char idx)
+{
+    if (idx >= 'b')
+        idx--;
+    if (idx >= 'h')
+        idx--;
+    if (idx >= 'j')
+        idx--;
+    if (idx >= 'k')
+        idx--;
+    if (idx >= 'l')
+        idx--;
+
+    return (idx - 'a');
+}
 #endif
 
 void direction(dist& moves, targeting_type restricts,
@@ -507,7 +527,7 @@ void direction(dist& moves, targeting_type restricts,
     beh->just_looking = just_looking;
 
 #ifndef USE_TILE
-    if (!just_looking && may_target_monster && restricts != DIR_DIR
+    if (may_target_monster && restricts != DIR_DIR
         && Options.mlist_targetting == MLIST_TARGET_HIDDEN)
     {
         Options.mlist_targetting = MLIST_TARGET_ON;
@@ -684,7 +704,9 @@ void direction(dist& moves, targeting_type restricts,
         if (key_command >= CMD_TARGET_CYCLE_MLIST
             && key_command <= CMD_TARGET_CYCLE_MLIST_END)
         {
-            const int idx = key_command - CMD_TARGET_CYCLE_MLIST;
+            const int idx = _mlist_letter_to_index(key_command + 'a'
+                                                   - CMD_TARGET_CYCLE_MLIST);
+
             if (_find_square_wrapper(moves.target(), monsfind_pos, 1,
                                      _find_mlist, needs_path, idx, range,
                                      Options.target_wrap))
@@ -1326,7 +1348,8 @@ static bool _mons_is_valid_target(monsters *mon, int mode, int range)
 }
 
 #ifndef USE_TILE
-static bool _find_mlist( const coord_def& where, int idx, bool need_path, int range = -1)
+static bool _find_mlist( const coord_def& where, int idx, bool need_path,
+                         int range = -1)
 {
     if ((int) mlist.size() <= idx)
         return (false);
@@ -2724,18 +2747,21 @@ command_type targeting_behaviour::get_command(int key)
     if (key == -1)
         key = get_key();
 
+    command_type cmd = key_to_command(key, KC_TARGETING);
+    if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_CYCLE_TARGET_MODE)
+        return (cmd);
+
 #ifndef USE_TILE
     // Overrides the movement keys while mlist_targetting is active.
     if (Options.mlist_targetting == MLIST_TARGET_ON && islower(key))
         return static_cast<command_type> (CMD_TARGET_CYCLE_MLIST + (key - 'a'));
 #endif
 
-    command_type cmd = key_to_command(key, KC_TARGETING);
     // XXX: hack
     if (cmd == CMD_TARGET_SELECT && key == ' ' && just_looking)
         cmd = CMD_TARGET_CANCEL;
 
-    return cmd;
+    return (cmd);
 }
 
 bool targeting_behaviour::should_redraw()

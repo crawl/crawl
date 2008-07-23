@@ -3418,7 +3418,7 @@ std::string melee_attack::mons_weapon_desc()
     if (!you.can_see(attacker))
         return ("");
 
-    if (weapon && attacker->id() != MONS_DANCING_WEAPON)
+    if (weapon)
     {
         std::string result = "";
         const item_def wpn = *weapon;
@@ -3429,8 +3429,13 @@ std::string melee_attack::mons_weapon_desc()
             if (dx == 2 && dy <= 2 || dy == 2 && dx <= 2)
                 result += " from afar";
         }
-        result += " with ";
-        result += weapon->name(DESC_NOCAP_A);
+
+        if (attacker->id() != MONS_DANCING_WEAPON)
+        {
+            result += " with ";
+            result += weapon->name(DESC_NOCAP_A);
+        }
+
         return result;
     }
 
@@ -3727,7 +3732,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_DRAIN_STR:
-        if ((one_chance_in(20) || (damage_done > 0 && one_chance_in(3)))
+        if ((one_chance_in(20) || damage_done > 0 && one_chance_in(3))
             && defender->res_negative_energy() < random2(4))
         {
             defender->drain_stat(STAT_STRENGTH, 1, attacker);
