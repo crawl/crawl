@@ -1827,7 +1827,7 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
 #endif
 
     while (!beamTerminate)
-    {        
+    {
         testpos = ray.pos();
 
         // Shooting through clouds affects accuracy.
@@ -3411,9 +3411,6 @@ static int _affect_place_clouds(bolt &beam, const coord_def& p)
     {
         place_cloud( CLOUD_STEAM, p, 2 + random2(5), _whose_kill(beam) );
     }
-
-    if (beam.flavour == BEAM_COLD && grid_is_watery(grd(p)))
-        place_cloud( CLOUD_COLD, p, 2 + random2(5), _whose_kill(beam) );
 
     // GREAT BLAST OF COLD
     if (beam.name == "great blast of cold")
