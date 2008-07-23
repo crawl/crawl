@@ -192,7 +192,6 @@ include = travel_stoppers.txt
 
 ##### 4-h	Stashes ###############################
 #
-# stash_tracking = (all | explicit | dropped)
 # stash_filter = 14, 4:21
 # annotate_item_class = true
 # annotate_item_dropped = true

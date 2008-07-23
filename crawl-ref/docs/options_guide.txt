@@ -53,7 +53,7 @@ The contents of this text are:
                 runrest_ignore_monster, trapwalk_safe_hp, 
                 trap_prompt, rest_wait_both
 4-h     Stashes.
-                stash_tracking, stash_filter, annotate_item_class,
+                stash_filter, annotate_item_class,
                 annoate_item_dropped
 4-i     Command Enhancements.
                 auto_list, easy_open, easy_unequip, easy_confirm, 
@@ -529,9 +529,7 @@ target_oos = true
         target_oos to true allows you to jump the cursor to dungeon 
         features (<> for stairs, Tab for shops, ^ for traps) and stashes 
         (with the '*' and '/' keys) that are outside line-of-sight but 
-        in the main view. This is most sensibly used in connection with 
-             stash_tracking = all (see 4-g).  
-        Also see target_los_first below.
+        in the main view. Also see target_los_first below.
 
 target_los_first = true
         When cycling through items/features with the 'x' look-around 
@@ -755,13 +753,11 @@ travel_avoid_terrain = (shallow water | deep water)
         will prevent travel or explore from going through any water.
 
 explore_greedy = true
-        Greedy explore travels to items that are eligible for autopickup 
-        in addition to exploring the level, but is otherwise identical 
-        to regular explore. Greedy explore is only available with
-        stash_tracking = all (for any other value of stash_tracking, 
-        normal explore behaviour is used). Greedy explore is also best 
-        with pickup_dropped = false. Explore greed is disabled if you're
-        temporarily unable to pick up items (from uncontrolled 
+        Greedy explore travels to items that are eligible for
+        autopickup in addition to exploring the level, but is
+        otherwise identical to regular explore. Greedy explore is best
+        with pickup_dropped = false. Explore greed is disabled if
+        you're temporarily unable to pick up items (from uncontrolled
         levitation, for instance).
 
 explore_stop = items,greedy_pickup,stairs,shops,altars,gates
@@ -901,30 +897,11 @@ rest_wait_both = false
 4-h     Stashes.
 ----------------
 
-stash_tracking = (all | explicit | dropped)
-        A stash is a heap of items tracked by Crawl. You can search in 
-        your stashes with Ctrl-F. This options rules how stashes are 
-        generated. When stash_tracking is set to 'all' (the default), 
-        the game marks any square where it sees any object as a stash. 
-        That gives you a comprehensive list of everything your character 
-        sees in the dungeon, but may slow the game down and use too much 
-        memory on older computers.
-
-        With 'explicit', you have to explicitly tell the game what 
-        squares you want it to keep track of. You do that by stepping 
-        onto the square containing your stash of goodies and hitting 
-        Ctrl+S. The game will now keep track of what's on the square, 
-        when you add and remove stuff from your stash. You can also 
-        inscribe an item with "=s" to automatically mark a square as a 
-        stash whenever that item is dropped.  If you remove everything 
-        from that square, the game will stop tracking the square 
-        altogether. You can also erase a stash square with Ctrl-E. 
-        Explicitly marked stashes will never be sacrificed by a 
-        Nemelex Xobeh worshipper.
-
-        When stash_tracking is set to 'dropped', any square where you 
-        drop something becomes a stash, and the game keeps track of all 
-        such squares. You can still use Ctrl-S and Ctrl-E as above.
+A stash is a heap of items tracked by Crawl. You can search in your
+stashes with Ctrl-F. The weird name "stash" is for historical reasons
+when the stash-tracker tracked only specific stashes that you asked it
+to. Modern Crawls track all items in the dungeon without the need for
+explicit steps.
 
 stash_filter = <list of numbers>
         This option allows filtering certain classes of items when 

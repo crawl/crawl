@@ -457,7 +457,10 @@ void area_shift(void)
         // Nuke items.
 #ifdef DEBUG_ABYSS
         if (igrd(*ri) != NON_ITEM)
-            mprf(MSGCH_DIAGNOSTICS, "Nuke item stack at (%d, %d)", i, j);
+        {
+            const coord_def &p(*ri);
+            mprf(MSGCH_DIAGNOSTICS, "Nuke item stack at (%d, %d)", p.x, p.y);
+        }
 #endif
         lose_item_stack( *ri );
 
@@ -472,7 +475,7 @@ void area_shift(void)
 
         // Move terrain.
         grd(newpos) = grd(*ri);
-        
+
         // Move item.
 #ifdef DEBUG_ABYSS
         if (igrd(*ri) != NON_ITEM)
@@ -840,12 +843,12 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
 #ifdef USE_TILE
     if (feat == DNGN_ROCK_WALL)
     {
-        env.tile_flv(c).wall = tile_DNGN_start[IDX_WALL_UNDEAD] 
+        env.tile_flv(c).wall = tile_DNGN_start[IDX_WALL_UNDEAD]
             + random2(tile_DNGN_count[IDX_WALL_UNDEAD]);
     }
     else if (feat == DNGN_FLOOR)
     {
-        env.tile_flv(c).floor = tile_DNGN_start[IDX_FLOOR_NERVES] 
+        env.tile_flv(c).floor = tile_DNGN_start[IDX_FLOOR_NERVES]
             + random2(tile_DNGN_count[IDX_FLOOR_NERVES]);
     }
 #endif
@@ -859,7 +862,7 @@ static void _corrupt_level_features(const crawl_environment &oenv)
 
     for (int i = 0, size = corrupt_markers.size(); i < size; ++i)
         corrupt_seeds.push_back(corrupt_markers[i]->pos);
-    
+
     for ( rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri )
     {
         int distance = GXM * GXM + GYM * GYM;
@@ -869,7 +872,7 @@ static void _corrupt_level_features(const crawl_environment &oenv)
             if (dist < distance)
                 distance = dist;
         }
-        
+
         if ((distance < 6 || one_chance_in(1 + distance - 6))
             && _is_grid_corruptible(*ri))
         {

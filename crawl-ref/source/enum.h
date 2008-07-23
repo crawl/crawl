@@ -495,7 +495,6 @@ enum command_type
     CMD_WIZARD,
     CMD_DESTROY_ITEM,
 
-    CMD_MARK_STASH,
     CMD_FORGET_STASH,
     CMD_SEARCH_STASHES,
     CMD_EXPLORE,

@@ -2672,14 +2672,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(explore_greedy);
     else BOOL_OPTION(explore_improved);
 
-        BOOL_OPTION(trap_prompt);
-        else if (key == "stash_tracking")
-    {
-        stash_tracking =
-             field == "dropped" ? STM_DROPPED  :
-             field == "all"     ? STM_ALL      :
-                                  STM_EXPLICIT;
-    }
+    BOOL_OPTION(trap_prompt);
     else if (key == "stash_filter")
     {
         std::vector<std::string> seg = split_string(",", field);

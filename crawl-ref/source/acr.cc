@@ -1296,7 +1296,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_SUSPEND_GAME:
     case CMD_QUIT:
     case CMD_DESTROY_ITEM:
-    case CMD_MARK_STASH:
     case CMD_FORGET_STASH:
     case CMD_FIX_WAYPOINT:
     case CMD_CLEAR_MAP:
@@ -2000,11 +1999,6 @@ void process_command( command_type cmd )
         if (Options.tut_stashes)
             Options.tut_stashes = 0;
         StashTrack.search_stashes();
-        break;
-
-    case CMD_MARK_STASH:
-        if (Options.stash_tracking >= STM_EXPLICIT)
-            StashTrack.add_stash(-1, -1, true);
         break;
 
     case CMD_FORGET_STASH:
@@ -4053,7 +4047,7 @@ static void _move_player(coord_def move)
             move.y = random2(3) - 1;
             you.reset_prev_move();
         }
-        
+
         const coord_def& new_targ = you.pos() + move;
         if (!in_bounds(new_targ) || !you.can_pass_through(new_targ))
         {
