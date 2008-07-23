@@ -2629,7 +2629,7 @@ static void _describe_cell(const coord_def& where)
          marker.c_str(),
          traveldest.c_str());
 #else
-    if (Options.tutorial_left && tutorial_pos_interesting(mx, my))
+    if (Options.tutorial_left && tutorial_pos_interesting(where.x, where.y))
     {
 #ifdef USE_TILE
         feature_desc += " (<w>Right-click</w> for more information.)";
