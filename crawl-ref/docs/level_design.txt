@@ -749,7 +749,7 @@ KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: allows you to place multiple items on the same square:
             KITEM: ? = bread ration, potion of water, potion of porridge
 
-MARKER:   A = feat:<feature_name> or timer:
+MARKER:   A = feat:<feature_name> or lua:<marker_expr>
 
           A marker ties a square on the map to a game-trigger of some
           sort (which depends on the marker and what feature it is on).
@@ -763,23 +763,11 @@ MARKER:   A = feat:<feature_name> or timer:
           portal to Dis, the arch at G becomes the portal to Gehenna,
           etc. This behaviour applies only to the Vestibule of Hell.
 
-          Timer feature markers set a timer on a particular square;
-          when time runs out, the feature at that square is changed
-          (usually to floor). For instance:
+          Lua markers are used for more complex triggers, such as for
+          bazaar and labyrinth gates, rune pickup triggers for
+          the branches of Hell, fog generators, etc.
 
-          MARKER: A = timer: 500-1000
-
-          Sets a timer that's between 500-1000 turns, inclusive, at the
-          end of which whatever feature is on A gets converted to floor.
-
-          You can specify the final feature with a feat: qualifier:
-
-          MARKER: A = timer: 500 feat:deep_water
-
-          This sets a timer for exactly 500 turns, and changes the
-          feature to deep water at the end of it.
-
-          Another type of MARKER sets generators of various clouds, e.g.:
+          Here's a Lua marker that creates a cloud generator:
 
           MARKER:  A = lua:fog_machine { \
                        pow_max = 15, delay_min = 100, delay_max = 150, \
@@ -793,6 +781,25 @@ MARKER:   A = feat:<feature_name> or timer:
           names in the source code. There's a full list of feature
           names in section I (Feature names) at the end of this
           document.
+
+          An important thing to note with markers is that they are
+          also considered map transforms along with SUBST, NSUBST and
+          SHUFFLE. You usually want to place a MARKER line after all
+          SUBST, NSUBST and SHUFFLE lines so that the final position
+          of the marker key is used. For instance, if you want to
+          attach a marker to the rune in a map when you're randomising
+          the position of the rune, this is a mistake:
+
+          MARKER: O = lua:<expr>
+          SHUFFLE: Oa/|c
+
+          because the marker will be placed at O (the rune), then O
+          may be shuffled to a different position. The correct order
+          in this case is:
+
+          SHUFFLE: Oa/|c
+          MARKER: O = lua:<expr>
+
 
 
 E.    Conditionalising levels

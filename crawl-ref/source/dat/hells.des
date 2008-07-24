@@ -479,12 +479,12 @@ NAME:    antaeus_david_1
 PLACE:   Coc:7
 ORIENT:  encompass
 LFLAGS:  no_tele_control
-MARKER:  O = lua:item_pickup_change_flags { \
-             level_flags="!no_tele_control", item="icy rune of Zot" \
-         }
 MONS:    Antaeus, Ice Fiend, ice dragon / nothing
 ITEM:    any, any misc, any misc, any misc
 SHUFFLE: O1d / e0% / f9* / g8|
+MARKER:  O = lua:item_pickup_change_flags { \
+             level_flags="!no_tele_control", item="icy rune of Zot" \
+         }
 KMONS:   d = ice devil w:5 / Ice Fiend / nothing w:5
 KITEM:   d = any
 SUBST:   ' = w .
