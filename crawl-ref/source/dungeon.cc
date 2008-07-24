@@ -4303,7 +4303,7 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
     place.map.map.apply_overlays(place.pos);
     _register_place(place);
 
-    if (gluggy == MAP_FLOAT && target_connections.empty())
+    if (target_connections.empty())
         _pick_float_exits(place, target_connections);
 
     if (make_no_exits)

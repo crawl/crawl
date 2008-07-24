@@ -97,6 +97,7 @@ void debug_make_shop( void );
 void debug_place_map();
 // Honest debugging functions.
 void debug_item_scan( void );
+void debug_mons_scan();
 void debug_item_statistics( void );
 void debug_fight_statistics( bool use_init_defaults, bool defence = false );
 void debug_list_monsters();

@@ -3367,6 +3367,9 @@ static command_type _get_next_cmd()
 #if DEBUG_ITEM_SCAN
     debug_item_scan();
 #endif
+#if DEBUG_MONS_SCAN
+    debug_mons_scan();
+#endif
 
     const time_t before = time(NULL);
     keycode_type keyin = _get_next_keycode();
