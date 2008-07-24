@@ -118,7 +118,8 @@ public:
     const coord_def &get_cursor() const;
 protected:
 
-    bool load_font(const char *font_file, int font_size);
+    int load_font(const char *font_file, int font_size,
+                  bool default_on_fail = true);
     int handle_mouse(MouseEvent &event);
 
     // screen pixel dimensions
@@ -157,7 +158,14 @@ protected:
     CRTRegion *m_region_crt;
     InventoryRegion *m_region_menu_inv;
 
-    FTFont *m_font;
+    struct font_info
+    {
+        std::string name;
+        int size;
+        FTFont *font;
+    };
+    std::vector<font_info> m_fonts;
+    int m_tip_font;
 
     void do_layout();
 

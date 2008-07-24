@@ -5,7 +5,7 @@ tile_show_items = !?/%=([)X}+\_.
 
 # tile_title_screen = false
 
-#  tile_player_col      = white
+# tile_player_col      = white
 # tile_monster_col     = red
 # tile_neutral_col     = red
 # tile_friendly_col    = lightred
@@ -24,3 +24,15 @@ tile_show_items = !?/%=([)X}+\_.
 # tile_lava_col        = grey
 # tile_excluded_col    = darkcyan
 # tile_excl_centre     = darkblue
+# tile_window_col      = yellow
+
+# tile_font_crt_file = VeraMono.ttf
+# tile_font_crt_size = 15
+# tile_font_stat_file = VeraMono.ttf
+# tile_font_stat_size = 16
+# tile_font_msg_file = VeraMono.ttf
+# tile_font_msg_size = 14
+# tile_font_tip_file = VeraMono.ttf
+# tile_font_tip_size = 15
+# tile_font_lbl_file = Vera.ttf
+# tile_font_lbl_size = 14

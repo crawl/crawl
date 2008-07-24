@@ -50,10 +50,13 @@ protected:
     struct GlyphInfo
     {
         // offset before drawing glyph; can be negative
-        int offset;
+        char offset;
 
         // per-glyph horizontal advance
-        int advance;
+        char advance;
+
+        // per-glyph width
+        char width;
 
         bool renderable;
     };

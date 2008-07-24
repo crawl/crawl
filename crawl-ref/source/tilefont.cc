@@ -5,8 +5,10 @@
  *  Modified for Crawl Reference by $Author: ennewalker $ on $Date: 2008-03-07 $
  */
 
+#include "AppHdr.h"
 #include "tilefont.h"
 #include "defines.h"
+#include "files.h"
 
 #include <SDL.h>
 #include <SDL_opengl.h>
@@ -57,16 +59,26 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
         fprintf(stderr, "Failed to initialize freetype library.\n");
         return false;
     }
+
+    // TODO enne - need to find a cross-platform way to also
+    // attempt to locate system fonts by name...
+    std::string font_path = datafile_path(font_name, false, true);
+    if (font_path.c_str()[0] == 0)
+    {
+        fprintf(stderr, "Could not find font '%s'\n", font_name);
+        return false;
+    }
     
-    error = FT_New_Face(library, font_name, 0, &face);
+    error = FT_New_Face(library, font_path.c_str(), 0, &face);
     if (error == FT_Err_Unknown_File_Format)
     {
-        fprintf(stderr, "Unknown font format for file '%s'\n", font_name);
+        fprintf(stderr, "Unknown font format for file '%s'\n",
+                         font_path.c_str());
         return false;
     }
     else if (error)
     {
-        fprintf(stderr, "Invalid font from file '%s'\n", font_name);
+        fprintf(stderr, "Invalid font from file '%s'\n", font_path.c_str());
     }
 
     error = FT_Set_Pixel_Sizes(face, font_size, font_size);
@@ -75,8 +87,9 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
     // Get maximum advance
     m_max_advance = coord_def(0,0);
     int ascender = face->ascender >> 6;
-    int min_y = 100000; // TODO enne - fix me
+    int min_y = 100000;
     int max_y = 0;
+    int max_width = 0;
     m_min_offset = 0;
     m_glyphs = new GlyphInfo[256];
     for (unsigned int c = 0; c < 256; c++)
@@ -100,17 +113,16 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
 
         m_max_advance.x = std::max(m_max_advance.x, advance);
 
+        max_width = std::max(max_width, bmp->width);
         min_y = std::min(min_y, ascender - face->glyph->bitmap_top);
         max_y = std::max(max_y, ascender + bmp->rows - face->glyph->bitmap_top);
 
         m_glyphs[c].offset = face->glyph->bitmap_left;
         m_glyphs[c].advance = advance;
+        m_glyphs[c].width = bmp->width;
 
-        m_min_offset = std::min(m_min_offset, m_glyphs[c].offset);
+        m_min_offset = std::min((char)m_min_offset, m_glyphs[c].offset);
     }
-
-    // TEMP enne - this seems to be broken on OSX - it returns 8, when it should be 2?
-    m_max_advance.x = 10;
 
     // The ascender and text height given by FreeType2 is ridiculously large
     // (e.g. 37 pixels high for 14 pixel font).  Use min and max bounding
@@ -119,11 +131,13 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
     m_max_advance.y = max_y - min_y;
     ascender -= min_y;
 
+    int max_height = m_max_advance.y;
+
     // Grow character size to power of 2
     coord_def charsz(1,1);
-    while (charsz.x < m_max_advance.x)
+    while (charsz.x < max_width)
         charsz.x *= 2;
-    while (charsz.y < m_max_advance.y)
+    while (charsz.y < max_height)
         charsz.y *= 2;
 
     // Fill out texture to be (16*charsz.x) X (16*charsz.y) X (32-bit)
@@ -159,10 +173,6 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
 
         ASSERT(bmp->pixel_mode == FT_PIXEL_MODE_GRAY);
         ASSERT(bmp->num_grays == 256);
-        ASSERT(bmp->width + face->glyph->bitmap_left <= m_max_advance.x);
-        ASSERT(bmp->rows <= m_max_advance.y);
-        ASSERT(vert_offset >= 0);
-        ASSERT(vert_offset + bmp->rows <= m_max_advance.y);
 
         // Horizontal offset stored in m_glyphs and handled when drawing
         unsigned int offset_x = (c % 16) * charsz.x;
@@ -225,15 +235,16 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
         for (unsigned int x = 0; x < width; x++)
         {
             unsigned char c = chars[i];
-            unsigned int this_adv = m_glyphs[c].advance + 1;
             adv.x += m_glyphs[c].offset;
 
             if (m_glyphs[c].renderable)
             {
+                int this_width = m_glyphs[c].width;
+
                 unsigned char col = colours[i];
                 float tex_x = (float)(c % 16) / 16.0f;
                 float tex_y = (float)(c / 16) / 16.0f;
-                float tex_x2 = tex_x + (float)this_adv / (float)m_tex.width();
+                float tex_x2 = tex_x + (float)this_width / (float)m_tex.width();
                 float tex_y2 = tex_y + texcoord_dy;
                 FontVertLayout v;
 
@@ -257,7 +268,7 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 v.a = 255;
                 verts.push_back(v);
 
-                v.pos_x = adv.x + this_adv;
+                v.pos_x = adv.x + this_width;
                 v.pos_y = adv.y + m_max_advance.y;
                 v.tex_x = tex_x2;
                 v.tex_y = tex_y2;
@@ -267,7 +278,7 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 v.a = 255;
                 verts.push_back(v);
 
-                v.pos_x = adv.x + this_adv;
+                v.pos_x = adv.x + this_width;
                 v.pos_y = adv.y;
                 v.tex_x = tex_x2;
                 v.tex_y = tex_y;
@@ -279,7 +290,7 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
             }
 
             i++;
-            adv.x += this_adv - m_glyphs[c].offset - 1;
+            adv.x += m_glyphs[c].advance - m_glyphs[c].offset;
         }
 
         adv.x = 0;

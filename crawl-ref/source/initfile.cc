@@ -851,6 +851,18 @@ void game_options::reset_options()
     tile_excluded_col    = MAP_DKCYAN;
     tile_excl_centre_col = MAP_DKBLUE;
     tile_window_col      = MAP_YELLOW;
+
+    // font selection
+    tile_font_crt_file = "VeraMono.ttf";
+    tile_font_crt_size = 15;
+    tile_font_stat_file = "VeraMono.ttf";
+    tile_font_stat_size = 16;
+    tile_font_msg_file = "VeraMono.ttf";
+    tile_font_msg_size = 14;
+    tile_font_tip_file = "VeraMono.ttf";
+    tile_font_tip_size = 15;
+    tile_font_lbl_file = "Vera.ttf";
+    tile_font_lbl_size = 14;
 #endif
 
 #ifdef WIN32TILES
@@ -2943,6 +2955,31 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         tile_window_col =
                 _str_to_tile_colour(field);
     }
+    else if (key == "tile_font_crt_file")
+    {
+        tile_font_crt_file = field;
+    }
+    else INT_OPTION(tile_font_crt_size, 1, INT_MAX);
+    else if (key == "tile_font_msg_file")
+    {
+        tile_font_msg_file = field;
+    }
+    else INT_OPTION(tile_font_msg_size, 1, INT_MAX);
+    else if (key == "tile_font_stat_file")
+    {
+        tile_font_stat_file = field;
+    }
+    else INT_OPTION(tile_font_stat_size, 1, INT_MAX);
+    else if (key == "tile_font_tip_file")
+    {
+        tile_font_tip_file = field;
+    }
+    else INT_OPTION(tile_font_tip_size, 1, INT_MAX);
+    else if (key == "tile_font_lbl_file")
+    {
+        tile_font_lbl_file = field;
+    }
+    else INT_OPTION(tile_font_lbl_size, 1, INT_MAX);
 #endif
 
 #ifdef WIN32TILES

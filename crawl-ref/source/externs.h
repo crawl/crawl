@@ -1882,6 +1882,16 @@ public:
     char        tile_excluded_col;
     char        tile_excl_centre_col;
     char        tile_window_col;
+    std::string tile_font_crt_file;
+    int         tile_font_crt_size;
+    std::string tile_font_msg_file;
+    int         tile_font_msg_size;
+    std::string tile_font_stat_file;
+    int         tile_font_stat_size;
+    std::string tile_font_lbl_file;
+    int         tile_font_lbl_size;
+    std::string tile_font_tip_file;
+    int         tile_font_tip_size;
 #endif
 #ifdef WIN32TILES
     bool        use_dos_char;

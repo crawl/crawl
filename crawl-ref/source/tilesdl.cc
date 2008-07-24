@@ -78,7 +78,6 @@ TilesFramework::TilesFramework() :
     m_context(NULL),
     m_fullscreen(false),
     m_active_layer(LAYER_CRT),
-    m_font(NULL),
     m_buttons_held(0),
     m_key_mod(0),
     m_mouse(-1, -1),
@@ -111,6 +110,12 @@ void TilesFramework::shutdown()
     for (unsigned int i = 0; i < LAYER_MAX; i++)
     {
         m_layers[i].m_regions.clear();
+    }
+
+    for (unsigned int i = 0; i < m_fonts.size(); i++)
+    {
+        delete m_fonts[i].font;
+        m_fonts[i].font = NULL;
     }
 
     SDL_Quit();
@@ -157,25 +162,34 @@ bool TilesFramework::initialise()
     if (!m_image.load_textures())
         return false;
 
-    // TODO enne - make this configurable (and fall back on default if fails)
-    // TODO enne - use Crawl's dat file loading utilities
-	const char *font_file = "dat/tiles/VeraMono.ttf";
-    const int font_size = 14;
-    if (!load_font(font_file, font_size))
-        return false;
-
-    ASSERT(m_font);
-
     // TODO enne - grab these from options
     unsigned int map_pixsz = 4;
 
-    // TODO enne - different font for tooltip and for dungeon tags
-    m_region_tile = new DungeonRegion(&m_image, m_font, TILE_X, TILE_Y);
+    int crt_font = load_font(Options.tile_font_crt_file.c_str(),
+                             Options.tile_font_crt_size);
+    int msg_font = load_font(Options.tile_font_msg_file.c_str(),
+                             Options.tile_font_msg_size);
+    int stat_font = load_font(Options.tile_font_stat_file.c_str(),
+                              Options.tile_font_stat_size);
+    m_tip_font = load_font(Options.tile_font_tip_file.c_str(),
+                           Options.tile_font_tip_size);
+    int lbl_font = load_font(Options.tile_font_lbl_file.c_str(),
+                             Options.tile_font_lbl_size);
+
+    if (crt_font == -1 || msg_font == -1 || stat_font == -1
+        || m_tip_font == -1 || lbl_font == -1)
+    {
+        return false;
+    }
+
+    m_region_tile = new DungeonRegion(&m_image, m_fonts[lbl_font].font, 
+                                      TILE_X, TILE_Y);
     m_region_map = new MapRegion(map_pixsz);
     m_region_self_inv = new InventoryRegion(&m_image, TILE_X, TILE_Y);
-    m_region_msg = new MessageRegion(m_font);
-    m_region_stat = new StatRegion(m_font);
-    m_region_crt = new CRTRegion(m_font);
+
+    m_region_msg = new MessageRegion(m_fonts[msg_font].font);
+    m_region_stat = new StatRegion(m_fonts[stat_font].font);
+    m_region_crt = new CRTRegion(m_fonts[crt_font].font);
     m_region_menu_inv = new InventoryRegion(&m_image, TILE_X, TILE_Y);
 
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);
@@ -196,20 +210,34 @@ bool TilesFramework::initialise()
     return true;
 }
 
-bool TilesFramework::load_font(const char *font_file, int font_size)
+int TilesFramework::load_font(const char *font_file, int font_size,
+                              bool default_on_fail)
 {
-    m_font = new FTFont();
-    
-    if (!m_font->load_font(font_file, font_size))
-    {
-        delete m_font;
-        m_font = NULL;
+    FTFont *font = new FTFont();
 
-        printf("Failed to open font '%s'\n", font_file);
-        return false;
+    for (unsigned int i = 0; i < m_fonts.size(); i++)
+    {
+        font_info &finfo = m_fonts[i];
+        if (finfo.name == font_file && finfo.size == font_size)
+            return i;
+    }
+    
+    if (!font->load_font(font_file, font_size))
+    {
+        delete font;
+        if (default_on_fail)
+            return (load_font("VeraMono.ttf", 12, false));
+        else
+            return -1;
     }
 
-    return true;
+    font_info finfo;
+    finfo.name = font_file;
+    finfo.size = font_size;
+    finfo.font = font;
+    m_fonts.push_back(finfo);
+
+    return (m_fonts.size() - 1);
 }
 
 void TilesFramework::load_dungeon(unsigned int *tileb, int gx, int gy)
@@ -701,9 +729,10 @@ void TilesFramework::redraw()
     if (!m_tooltip.empty())
     {
         const coord_def min_pos(0, 0);
-        m_font->render_string(m_mouse.x, m_mouse.y - 2, m_tooltip.c_str(),
-                              min_pos, m_windowsz, WHITE, false, 150,
-                              BLUE, 5);
+        FTFont *font = m_fonts[m_tip_font].font;
+        font->render_string(m_mouse.x, m_mouse.y - 2, m_tooltip.c_str(),
+                            min_pos, m_windowsz, WHITE, false, 150,
+                            BLUE, 5);
     }
             
     SDL_GL_SwapBuffers();

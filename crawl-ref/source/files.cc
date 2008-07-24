@@ -521,11 +521,17 @@ std::string datafile_path(std::string basename,
 
     const std::string prefixes[] = {
         std::string("dat") + FILE_SEPARATOR,
+#ifdef USE_TILE
+        std::string("dat/tiles") + FILE_SEPARATOR,
+#endif
         std::string("docs") + FILE_SEPARATOR,
         std::string("settings") + FILE_SEPARATOR,
 #ifndef DATA_DIR_PATH
         std::string("..") + FILE_SEPARATOR + "docs" + FILE_SEPARATOR,
         std::string("..") + FILE_SEPARATOR + "dat" + FILE_SEPARATOR,
+#ifdef USE_TILE
+        std::string("..") + FILE_SEPARATOR + "dat/tiles" + FILE_SEPARATOR,
+#endif
         std::string("..") + FILE_SEPARATOR + "settings" + FILE_SEPARATOR,
         std::string("..") + FILE_SEPARATOR,
 #endif
