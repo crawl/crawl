@@ -47,6 +47,7 @@
 #include "mutation.h"
 #include "output.h"
 #include "player.h"
+#include "randart.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spells2.h"
@@ -208,17 +209,21 @@ static int _find_butchering_implement(int &butcher_tool)
     // Look for a butchering implement in your pack.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (is_valid_item( you.inv[i] )
-            && you.inv[i].base_type == OBJ_WEAPONS
-            && can_cut_meat( you.inv[i] )
-            && can_wield( &you.inv[i] ))
+        const item_def& tool(you.inv[i]);
+        if (is_valid_item( tool )
+            && tool.base_type == OBJ_WEAPONS
+            && can_cut_meat( tool )
+            && can_wield( &tool )
+            // Don't even suggest autocursing items.
+            && (!is_random_artefact(tool)
+                || !randart_known_wpn_property(tool, RAP_CURSED)))
         {
             if (Options.easy_butcher
-                && item_known_uncursed(you.inv[i])
-                && item_type_known(you.inv[i])
-                && get_weapon_brand(you.inv[i]) != SPWPN_DISTORTION
+                && item_known_uncursed(tool)
+                && item_type_known(tool)
+                && get_weapon_brand(tool) != SPWPN_DISTORTION
                 // Don't even ask!
-                && !has_warning_inscription(you.inv[i], OPER_WIELD))
+                && !has_warning_inscription(tool, OPER_WIELD))
             {
                 butcher_tool = i;
                 return (true);
