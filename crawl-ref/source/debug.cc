@@ -1978,7 +1978,47 @@ void debug_item_scan( void )
         }
     }
 }
+
 #endif
+
+#if DEBUG_MONS_SCAN
+void debug_mons_scan()
+{
+    bool warned = false;
+    for (int y = 0; y < GYM; ++y)
+        for (int x = 0; x < GXM; ++x)
+        {
+            const int mons = mgrd[x][y];
+            if (mons != NON_MONSTER &&
+                menv[mons].pos() != coord_def(x, y))
+            {
+                const monsters *m = &menv[mons];
+                mprf(MSGCH_WARN,
+                     "Bogosity: mgrd at %d,%d points at %s, "
+                     "but monster is at %d,%d",
+                     x, y, m->name(DESC_PLAIN).c_str(), m->x, m->y);
+                warned = true;
+            }
+        }
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        const monsters *m = &menv[i];
+        if (!m->alive())
+            continue;
+        if (mgrd(m->pos()) != i)
+        {
+            mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d)",
+                 m->name(DESC_PLAIN).c_str(), m->x, m->y);
+            warned = true;
+        }
+    }
+    // If there are warnings, force the dev to notice. :P
+    if (warned)
+        more();
+}
+#endif
+
 
 //---------------------------------------------------------------
 //

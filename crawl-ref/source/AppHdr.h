@@ -299,6 +299,7 @@
     // against the name.  Still, it is nice to know the
     // turn in which "bad" items appear.
     #define DEBUG_ITEM_SCAN     1
+    #define DEBUG_MONS_SCAN     1
 #endif
 
 #ifdef _DEBUG       // this is how MSVC signals a debug build

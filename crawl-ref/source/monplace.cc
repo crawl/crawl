@@ -547,8 +547,15 @@ static int _is_near_stairs(coord_def &p)
     return (result);
 }
 
+/*
+ * Checks if the monster is ok to place at mg_pos. If force_location
+ * is true, then we'll be less rigorous in our checks, in particular
+ * allowing land monsters to be placed in shallow water and water
+ * creatures in fountains.
+ */
 static bool _valid_monster_location(const mgen_data &mg,
-                                    const coord_def &mg_pos)
+                                    const coord_def &mg_pos,
+                                    bool force_location)
 {
     const int htype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                        : mg.cls);
@@ -563,7 +570,7 @@ static bool _valid_monster_location(const mgen_data &mg,
         return (false);
 
     // Is the monster happy where we want to put it?
-    if (!grid_compatible(grid_wanted, grd(mg_pos), true))
+    if (!grid_compatible(grid_wanted, grd(mg_pos), !force_location))
         return (false);
 
     if (mg.behaviour != BEH_FRIENDLY && is_sanctuary(mg_pos.x, mg_pos.y))
@@ -581,9 +588,9 @@ static bool _valid_monster_location(const mgen_data &mg,
     return (true);
 }
 
-static bool _valid_monster_location(mgen_data &mg)
+static bool _valid_monster_location(mgen_data &mg, bool force_location)
 {
-    return _valid_monster_location(mg, mg.pos);
+    return _valid_monster_location(mg, mg.pos, force_location);
 }
 
 int place_monster(mgen_data mg, bool force_pos)
@@ -665,7 +672,7 @@ int place_monster(mgen_data mg, bool force_pos)
             if (mg.proximity != PROX_NEAR_STAIRS)
                 mg.pos = random_in_bounds();
 
-            if (!_valid_monster_location(mg))
+            if (!_valid_monster_location(mg, false))
                 continue;
 
             // Is the grid verboten?
@@ -731,7 +738,7 @@ int place_monster(mgen_data mg, bool force_pos)
             break;
         } // end while... place first monster
     }
-    else if (!_valid_monster_location(mg))
+    else if (!_valid_monster_location(mg, true))
     {
         // Sanity check that the specified position is valid.
         return (-1);
@@ -852,7 +859,7 @@ static int _place_monster_aux( const mgen_data &mg,
             fpos = mg.pos + coord_def( random_range(-3, 3),
                                        random_range(-3, 3) );
 
-            if (_valid_monster_location(mg, fpos))
+            if (_valid_monster_location(mg, fpos, false))
                 break;
         }
 
