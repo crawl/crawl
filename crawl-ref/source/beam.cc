@@ -2919,7 +2919,7 @@ static void _beam_explodes(bolt &beam, const coord_def& p)
     beam.target_y = p.y;
 
     // Generic explosion.
-    if (beam.is_explosion) // beam.flavour == BEAM_EXPLOSION || beam.flavour == BEAM_HOLY)
+    if (beam.is_explosion)
     {
         _explosion1(beam);
         return;
@@ -5313,14 +5313,11 @@ int explosion( bolt &beam, bool hole_in_the_middle,
                bool explode_in_wall, bool stop_at_statues,
                bool stop_at_walls, bool show_more)
 {
-    if (in_bounds(beam.source_x, beam.source_y)
-        && !(beam.source_x == beam.target_x
-             && beam.source_y == beam.target_y)
+    if (in_bounds(beam.source()) && beam.source() != beam.target()
         && (!explode_in_wall || stop_at_statues || stop_at_walls))
     {
         ray_def ray;
-        int     max_dist = grid_distance(beam.source_x, beam.source_y,
-                                         beam.target_x, beam.target_y);
+        int     max_dist = grid_distance(beam.source(), beam.target());
 
         ray.fullray_idx = -1; // to quiet valgrind
         find_ray( beam.source(), beam.target(), true, ray, 0, true );
@@ -5333,12 +5330,11 @@ int explosion( bolt &beam, bool hole_in_the_middle,
         }
 
         int dist = 0;
-        while (dist++ <= max_dist && !(ray.x()    == beam.target_x
-                                       && ray.y() == beam.target_y))
+        while (dist++ <= max_dist && ray.pos() != beam.target())
         {
-            if (grid_is_solid(ray.x(), ray.y()))
+            if (grid_is_solid(ray.pos()))
             {
-                bool is_wall = grid_is_wall(grd[ray.x()][ray.y()]);
+                bool is_wall = grid_is_wall(grd(ray.pos()));
                 if (!stop_at_statues && !is_wall)
                 {
 #if DEBUG_DIAGNOSTICS
@@ -5380,7 +5376,7 @@ int explosion( bolt &beam, bool hole_in_the_middle,
         } // while (dist++ <= max_dist)
 
         // Backup so we don't explode inside the wall.
-        if (!explode_in_wall && grid_is_wall(grd[ray.x()][ray.y()]))
+        if (!explode_in_wall && grid_is_wall(grd(ray.pos())))
         {
 #if DEBUG_DIAGNOSTICS
             int old_x = ray.x();
