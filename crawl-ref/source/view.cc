@@ -198,7 +198,7 @@ static void _update_minimap(int x, int y)
 {
     int object = env.map[x][y].object;
     map_feature f = (object >= DNGN_START_OF_MONSTERS) ? MF_MONS_HOSTILE :
-        Feature[object].minimap; 
+        Feature[object].minimap;
 
     if (f == MF_SKIP)
         f = Feature[grd[x][y]].minimap;
@@ -1170,7 +1170,7 @@ void monster_grid(bool do_updates)
                 // circumstances so we can track down where this is coming
                 // from.
                 mprf(MSGCH_DIAGNOSTICS, "monster (%d) at (%d, %d) was "
-                     "improperly placed.  Updating mgrd.", s, 
+                     "improperly placed.  Updating mgrd.", s,
                      monster->x, monster->y);
 #endif
                 ASSERT(mgrd[monster->x][monster->y] == NON_MONSTER);
@@ -2720,7 +2720,7 @@ void losight(env_show_grid &sh,
 // 5. Anything else will look for the exact same character in the level map.
 bool is_feature(int feature, const coord_def& where)
 {
-    if (!env.map(where).object)
+    if (!env.map(where).object && !see_grid(where))
         return (false);
 
     // 'grid' can fit in an unsigned char, but making this a short shuts up
