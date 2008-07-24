@@ -1332,11 +1332,9 @@ force_more_message = <list of regexes>
         The syntax is identical to that of travel_stop_message (4-g).
 
 msg_condense_repeats = true
-        If the same message is repeated multiple times without repetition,
-        then the Show Previous Message command (Ctrl-P) will condense them
-        into one line indicating how many times it was repeated.  For
-        example:
-
+        If the same message is repeated multiple times, then the Show
+        Previous Message command (Ctrl-P) will condense them into one
+        line indicating how many times it was repeated.  For example:
             You hear a distant "Zot!" (x3)
 
 4-k     Missiles.

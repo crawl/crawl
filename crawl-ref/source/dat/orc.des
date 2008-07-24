@@ -52,7 +52,7 @@ ENDMAP
 # Generic Orc entry
 #
 NAME: david_orc_2
-TAGS: orc_entry
+TAGS: orc_entry no_rotate
 MONS: weight:50 orc / orc warrior / nothing
 ORIENT: float
 MAP
@@ -270,7 +270,7 @@ ENDMAP
 # Orc-henge
 #
 NAME: erik_orc_4
-TAGS: orc_entry
+TAGS: orc_entry no_rotate
 MONS: human/goblin/hobgoblin/weight:2 orc, orc priest, orc
 MONS: orc priest/orc wizard/weight:2 goblin/nothing, orc warrior/warg
 ORIENT: float
