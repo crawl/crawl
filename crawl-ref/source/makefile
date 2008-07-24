@@ -36,9 +36,10 @@ distclean:
 depend:
 	$(MAKE) $(OTHER) -f $(MAKEFILE) depend
 
-# WIZARD mode currently includes asserts, bounds checking, and item checking
+# WIZARD mode currently includes asserts, bounds checking, item checking and
+# monster checking.
 wizard:
-	$(MAKE) $(OTHER) -f $(MAKEFILE) debug EXTRA_FLAGS='-g -DWIZARD -DDEBUG -DDEBUG_ITEM_SCAN'
+	$(MAKE) $(OTHER) -f $(MAKEFILE) debug EXTRA_FLAGS='-g -DWIZARD -DDEBUG -DDEBUG_ITEM_SCAN -DDEBUG_MONS_SCAN'
 
 # DEBUG mode includes WIZARD mode as well as copious debugging input
 debug:
