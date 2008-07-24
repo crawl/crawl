@@ -1344,7 +1344,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_HOLY_WORD:
-        holy_word(50, HOLY_WORD_SPELL, you.x_pos, you.y_pos, true);
+        holy_word(50, HOLY_WORD_SPELL, you.pos(), true);
         break;
 
     case SPELL_REPEL_UNDEAD:
@@ -1477,7 +1477,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_SYMBOL_OF_TORMENT:
-        torment(TORMENT_SPELL, you.x_pos, you.y_pos);
+        torment(TORMENT_SPELL, you.pos());
         break;
 
     case SPELL_OZOCUBUS_REFRIGERATION:
@@ -3043,7 +3043,7 @@ static void _miscast_necromancy(int severity, const char* cause)
                 break;
             }
 
-            torment_monsters(you.x_pos, you.y_pos, 0, TORMENT_GENERIC);
+            torment_monsters(you.pos(), 0, TORMENT_GENERIC);
             break;
 
         case 1:

@@ -1764,7 +1764,7 @@ void melee_attack::player_check_weapon_effects()
 {
     if (spwld == SPWLD_TORMENT && coinflip())
     {
-        torment(TORMENT_SPWLD, you.x_pos, you.y_pos);
+        torment(TORMENT_SPWLD, you.pos());
         did_god_conduct(DID_UNHOLY, 5);
     }
 

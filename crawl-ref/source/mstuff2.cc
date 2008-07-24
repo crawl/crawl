@@ -751,7 +751,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
 
         simple_monster_message(monster, " calls on the powers of Hell!");
 
-        torment(monster_index(monster), monster->x, monster->y);
+        torment(monster_index(monster), monster->pos());
         return;
 
     case SPELL_SUMMON_GREATER_DEMON:

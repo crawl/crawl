@@ -100,10 +100,10 @@ void yell(bool force = false);
 /* ***********************************************************************
  * called from: item_use - spell
  * *********************************************************************** */
-int holy_word(int pow, int caster, int x, int y, bool silent);
+int holy_word(int pow, int caster, const coord_def& where, bool silent);
 
 int holy_word_player(int pow, int caster);
-int holy_word_monsters(int x, int y, int pow, int caster);
+int holy_word_monsters(coord_def where, int pow, int caster);
 
 
 // last updated 12may2000 {dlb}
@@ -111,10 +111,10 @@ int holy_word_monsters(int x, int y, int pow, int caster);
  * called from: ability - decks - fight - it_use3 - item_use - mstuff2 -
  *              spell
  * *********************************************************************** */
-int torment(int caster, int x, int y);
+int torment(int caster, const coord_def& where);
 
 int torment_player(int pow, int caster);
-int torment_monsters(int x, int y, int pow, int caster);
+int torment_monsters(coord_def where, int pow, int caster);
 
 bool forget_inventory(bool quiet = false);
 bool vitrify_area(int radius);

@@ -59,8 +59,8 @@ class stack_iterator : public std::iterator<std::forward_iterator_tag,
                                             item_def>
 {
 public:
-    stack_iterator( const coord_def& pos );
-    stack_iterator( int start_link );
+    explicit stack_iterator( const coord_def& pos );
+    explicit stack_iterator( int start_link );
 
     operator bool() const;
     item_def& operator *() const;
@@ -122,8 +122,8 @@ private:
 class adjacent_iterator : public radius_iterator
 {
 public:
-    adjacent_iterator( const coord_def& pos = you.pos(),
-                       bool _exclude_center = true ) :
+    explicit adjacent_iterator( const coord_def& pos = you.pos(),
+                                bool _exclude_center = true ) :
         radius_iterator(pos, 1, true, false, _exclude_center) {}
 };
 
@@ -182,11 +182,7 @@ bool adjacent( const coord_def& p1, const coord_def& p2 );
 
 bool silenced(const coord_def& p);
 
-bool player_can_hear(int x, int y);
-inline bool player_can_hear(const coord_def &p)
-{
-    return player_can_hear(p.x, p.y);
-}
+bool player_can_hear(const coord_def& p);
 
 unsigned char random_colour();
 unsigned char random_uncommon_colour();

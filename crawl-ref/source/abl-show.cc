@@ -1348,7 +1348,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        torment(TORMENT_GENERIC, you.x_pos, you.y_pos);
+        torment(TORMENT_GENERIC, you.pos());
         break;
 
     case ABIL_RAISE_DEAD:
@@ -1881,7 +1881,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        torment(TORMENT_GENERIC, you.x_pos, you.y_pos);
+        torment(TORMENT_GENERIC, you.pos());
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
@@ -2381,12 +2381,12 @@ static int _find_ability_slot( ability_type which_ability )
 
 ////////////////////////////////////////////////////////////////////////////
 
-static int _lugonu_warp_monster(int x, int y, int pow, int)
+static int _lugonu_warp_monster(coord_def where, int pow, int)
 {
-    if (!in_bounds(x, y) || mgrd[x][y] == NON_MONSTER)
+    if (!in_bounds(where) || mgrd(where) == NON_MONSTER)
         return (0);
 
-    monsters &mon = menv[ mgrd[x][y] ];
+    monsters &mon = menv[ mgrd(where) ];
 
     if (!mons_friendly(&mon))
         behaviour_event( &mon, ME_ANNOY, MHITYOU );
@@ -2415,7 +2415,7 @@ static int _lugonu_warp_monster(int x, int y, int pow, int)
 
 static void _lugonu_warp_area(int pow)
 {
-    apply_area_around_square( _lugonu_warp_monster, you.x_pos, you.y_pos, pow );
+    apply_area_around_square( _lugonu_warp_monster, you.pos(), pow );
 }
 
 static void _lugonu_bends_space()

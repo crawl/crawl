@@ -192,7 +192,7 @@ void special_wielded()
     case SPWLD_TORMENT:
         if (one_chance_in(200))
         {
-            torment(TORMENT_SPWLD, you.x_pos, you.y_pos);
+            torment(TORMENT_SPWLD, you.pos());
             did_god_conduct(DID_UNHOLY, 1);
         }
         break;

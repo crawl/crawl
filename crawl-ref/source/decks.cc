@@ -1561,14 +1561,14 @@ static void _minefield_card(int power, deck_rarity_type rarity)
     }
 }
 
-static int _drain_monsters(int x, int y, int pow, int garbage)
+static int _drain_monsters(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
-    if (coord_def(x,y) == you.pos())
+    if (where == you.pos())
         drain_exp();
     else
     {
-        const int mnstr = mgrd[x][y];
+        const int mnstr = mgrd(where);
         if (mnstr == NON_MONSTER)
             return 0;
 
@@ -2811,7 +2811,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_TROWEL:      rc = _trowel_card(power, rarity); break;
     case CARD_SPADE:   your_spells(SPELL_DIG, random2(power/4), false); break;
     case CARD_BANSHEE: mass_enchantment(ENCH_FEAR, power, MHITYOU); break;
-    case CARD_TORMENT: torment(TORMENT_CARDS, you.x_pos, you.y_pos); break;
+    case CARD_TORMENT: torment(TORMENT_CARDS, you.pos()); break;
 
     case CARD_VENOM:
         if (coinflip())

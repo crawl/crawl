@@ -3880,7 +3880,7 @@ static bool affix_weapon_enchantment()
         // Can't fix pain brand (balance)...you just get tormented.
         mprf("%s shrieks out in agony!", itname.c_str());
 
-        torment_monsters(you.x_pos, you.y_pos, 0, TORMENT_GENERIC);
+        torment_monsters(you.pos(), 0, TORMENT_GENERIC);
         success = false;
 
         // Is only naughty if you know you're doing it.
@@ -4397,7 +4397,7 @@ void read_scroll( int slot )
         break;
 
     case SCR_TORMENT:
-        torment( TORMENT_SCROLL, you.x_pos, you.y_pos );
+        torment( TORMENT_SCROLL, you.pos() );
 
         // Is only naughty if you know you're doing it.
         did_god_conduct(DID_UNHOLY, 10, item_type_known(scroll));
@@ -4573,7 +4573,7 @@ void read_scroll( int slot )
                                                        you.piety / 2;
         }
 
-        if (!holy_word(pow, HOLY_WORD_SCROLL, you.x_pos, you.y_pos,
+        if (!holy_word(pow, HOLY_WORD_SCROLL, you.pos(),
                        !item_type_known(scroll)))
         {
             canned_msg(MSG_NOTHING_HAPPENS);

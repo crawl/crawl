@@ -5087,7 +5087,7 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
 
     if (beam.flavour == BEAM_BACKLIGHT)
     {
-        if (backlight_monsters(mon->x, mon->y, beam.hit, 0))
+        if (backlight_monsters(mon->pos(), beam.hit, 0))
         {
             beam.obvious_effect = true;
             return (MON_AFFECTED);

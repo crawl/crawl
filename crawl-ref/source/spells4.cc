@@ -69,8 +69,8 @@ enum DEBRIS                 // jmf: add for shatter, dig, and Giants to throw
     NUM_DEBRIS
 };          // jmf: ...and I'll actually implement the items Real Soon Now...
 
-static int _make_a_rot_cloud(int x, int y, int pow, cloud_type ctype);
-static int _quadrant_blink(int x, int y, int pow, int garbage);
+static int _make_a_rot_cloud(const coord_def& where, int pow, cloud_type ctype);
+static int _quadrant_blink(coord_def where, int pow, int garbage);
 
 void do_monster_rot(int mon);
 
@@ -100,12 +100,12 @@ inline bool player_hurt_monster(int monster, int damage)
 }
 
 // Here begin the actual spells:
-static int _shatter_monsters(int x, int y, int pow, int garbage)
+static int _shatter_monsters(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
 
     dice_def   dam_dice( 0, 5 + pow / 3 );  // number of dice set below
-    const int  monster = mgrd[x][y];
+    const int  monster = mgrd(where);
 
     if (monster == NON_MONSTER)
         return (0);
@@ -195,40 +195,25 @@ static int _shatter_monsters(int x, int y, int pow, int garbage)
     return (damage);
 }
 
-static int _shatter_items(int x, int y, int pow, int garbage)
+static int _shatter_items(coord_def where, int pow, int garbage)
 {
     UNUSED( pow );
     UNUSED( garbage );
 
-    int broke_stuff = 0, next, obj = igrd[x][y];
+    int broke_stuff = 0;
 
-    if (obj == NON_ITEM)
-        return 0;
-
-    while (obj != NON_ITEM)
+    for ( stack_iterator si(where); si; ++si )
     {
-        next = mitm[obj].link;
-
-        switch (mitm[obj].base_type)
+        if (si->base_type == OBJ_POTIONS && !one_chance_in(10))
         {
-        case OBJ_POTIONS:
-            if (!one_chance_in(10))
-            {
-                broke_stuff++;
-                destroy_item(obj);
-            }
-            break;
-
-        default:
-            break;
+            broke_stuff++;
+            destroy_item(si->index());
         }
-
-        obj = next;
     }
 
     if (broke_stuff)
     {
-        if (!silenced(coord_def(x, y)) && !silenced(you.pos()))
+        if (player_can_hear(where))
             mpr("You hear glass break.", MSGCH_SOUND);
 
         return 1;
@@ -237,30 +222,30 @@ static int _shatter_items(int x, int y, int pow, int garbage)
     return 0;
 }
 
-static int _shatter_walls(int x, int y, int pow, int garbage)
+static int _shatter_walls(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
 
     int chance = 0;
 
     // if not in-bounds then we can't really shatter it -- bwr
-    if (x <= 5 || x >= GXM - 5 || y <= 5 || y >= GYM - 5)
-        return (0);
+    if ( !in_bounds(where) )
+        return 0;
 
-    switch (grd[x][y])
+    switch (grd(where))
     {
     case DNGN_SECRET_DOOR:
-        if (see_grid(x, y))
+        if (see_grid(where))
             mpr("A secret door shatters!");
-        grd[x][y] = DNGN_FLOOR;
+        grd(where) = DNGN_FLOOR;
         chance = 100;
         break;
 
     case DNGN_CLOSED_DOOR:
     case DNGN_OPEN_DOOR:
-        if (see_grid(x, y))
+        if (see_grid(where))
             mpr("A door shatters!");
-        grd[x][y] = DNGN_FLOOR;
+        grd(where) = DNGN_FLOOR;
         chance = 100;
         break;
 
@@ -293,9 +278,9 @@ static int _shatter_walls(int x, int y, int pow, int garbage)
 
     if (x_chance_in_y(chance, 100))
     {
-        noisy(30, coord_def(x, y));
+        noisy(30, where);
 
-        grd[x][y] = DNGN_FLOOR;
+        grd(where) = DNGN_FLOOR;
         return (1);
     }
 
@@ -348,11 +333,9 @@ void cast_shatter(int pow)
 
     int rad = 3 + (you.skills[SK_EARTH_MAGIC] / 5);
 
-    apply_area_within_radius(_shatter_items, you.x_pos, you.y_pos,
-                             pow, rad, 0);
-    apply_area_within_radius(_shatter_monsters, you.x_pos, you.y_pos,
-                             pow, rad, 0);
-    int dest = apply_area_within_radius( _shatter_walls, you.x_pos, you.y_pos,
+    apply_area_within_radius(_shatter_items, you.pos(), pow, rad, 0);
+    apply_area_within_radius(_shatter_monsters, you.pos(), pow, rad, 0);
+    int dest = apply_area_within_radius( _shatter_walls, you.pos(),
                                          pow, rad, 0 );
 
     if (dest && !silence)
@@ -419,10 +402,10 @@ void cast_detect_secret_doors(int pow)
     mprf("You detect %s", (found > 0) ? "secret doors!" : "nothing.");
 }
 
-static int _sleep_monsters(int x, int y, int pow, int garbage)
+static int _sleep_monsters(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
-    const int mnstr = mgrd[x][y];
+    const int mnstr = mgrd(where);
 
     if (mnstr == NON_MONSTER)
         return 0;
@@ -477,10 +460,10 @@ static bool _is_domesticated_animal(int type)
     return (false);
 }
 
-static int _tame_beast_monsters(int x, int y, int pow, int garbage)
+static int _tame_beast_monsters(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
-    const int which_mons = mgrd[x][y];
+    const int which_mons = mgrd(where);
 
     if (which_mons == NON_MONSTER)
         return 0;
@@ -518,22 +501,18 @@ void cast_tame_beasts(int pow)
     apply_area_visible(_tame_beast_monsters, pow);
 }
 
-static int _ignite_poison_objects(int x, int y, int pow, int garbage)
+static int _ignite_poison_objects(coord_def where, int pow, int garbage)
 {
     UNUSED( pow );
     UNUSED( garbage );
 
-    int obj = igrd[x][y], next, strength = 0;
+    int strength = 0;
 
-    if (obj == NON_ITEM)
-        return (0);
-
-    while (obj != NON_ITEM)
+    for ( stack_iterator si(where); si; ++si )
     {
-        next = mitm[obj].link;
-        if (mitm[obj].base_type == OBJ_POTIONS)
+        if (si->base_type == OBJ_POTIONS)
         {
-            switch (mitm[obj].sub_type)
+            switch (si->sub_type)
             {
                 // intentional fall-through all the way down
             case POT_STRONG_POISON:
@@ -542,37 +521,32 @@ static int _ignite_poison_objects(int x, int y, int pow, int garbage)
                 strength += 10;
             case POT_POISON:
                 strength += 10;
-                destroy_item(obj);
+                destroy_item(si->index());
             default:
                 break;
             }
         }
 
         // FIXME: implement burning poisoned ammo
-        // else if ( it's ammo that's poisoned) {
-        //   strength += number_of_ammo;
-        //   destroy_item(ammo);
-        //  }
-        obj = next;
     }
 
     if (strength > 0)
     {
-        place_cloud(CLOUD_FIRE, coord_def(x, y),
+        place_cloud(CLOUD_FIRE, where,
                     strength + roll_dice(3, strength / 4), KC_YOU);
     }
 
     return (strength);
 }
 
-static int _ignite_poison_clouds( int x, int y, int pow, int garbage )
+static int _ignite_poison_clouds( coord_def where, int pow, int garbage )
 {
     UNUSED( pow );
     UNUSED( garbage );
 
     bool did_anything = false;
 
-    const int cloud = env.cgrid[x][y];
+    const int cloud = env.cgrid(where);
 
     if (cloud != EMPTY_CLOUD)
     {
@@ -596,16 +570,16 @@ static int _ignite_poison_clouds( int x, int y, int pow, int garbage )
     return did_anything;
 }
 
-static int _ignite_poison_monsters(int x, int y, int pow, int garbage)
+static int _ignite_poison_monsters(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
 
-    struct bolt beam;
+    bolt beam;
     beam.flavour = BEAM_FIRE;   // This is dumb, only used for adjust!
 
     dice_def  dam_dice( 0, 5 + pow / 7 );  // Dice added below if applicable.
 
-    const int mon_index = mgrd[x][y];
+    const int mon_index = mgrd(where);
     if (mon_index == NON_MONSTER)
         return (0);
 
@@ -817,17 +791,17 @@ void cast_silence(int pow)
     }
 }
 
-static int _discharge_monsters( int x, int y, int pow, int garbage )
+static int _discharge_monsters( coord_def where, int pow, int garbage )
 {
     UNUSED( garbage );
 
-    const int mon = mgrd[x][y];
+    const int mon = mgrd(where);
     int damage = 0;
 
-    struct bolt beam;
+    bolt beam;
     beam.flavour = BEAM_ELECTRICITY; // used for mons_adjust_flavoured
 
-    if (x == you.x_pos && y == you.y_pos)
+    if (where == you.pos())
     {
         mpr( "You are struck by lightning." );
         damage = 3 + random2( 5 + pow / 10 );
@@ -859,7 +833,7 @@ static int _discharge_monsters( int x, int y, int pow, int garbage )
     {
         mpr( "The lightning arcs!" );
         pow /= (coinflip() ? 2 : 3);
-        damage += apply_random_around_square( _discharge_monsters, x, y,
+        damage += apply_random_around_square( _discharge_monsters, where,
                                               true, pow, 1 );
     }
     else if (damage > 0)
@@ -877,7 +851,7 @@ void cast_discharge( int pow )
     int num_targs = 1 + random2( 1 + pow / 25 );
     int dam;
 
-    dam = apply_random_around_square( _discharge_monsters, you.x_pos, you.y_pos,
+    dam = apply_random_around_square( _discharge_monsters, you.pos(),
                                       true, pow, num_targs );
 
 #if DEBUG_DIAGNOSTICS
@@ -904,20 +878,12 @@ void cast_discharge( int pow )
 // NB: this must be checked against the same effects
 // in fight.cc for all forms of attack !!! {dlb}
 // This function should be currently unused (the effect is too powerful).
-static int _distortion_monsters(int x, int y, int pow, int message)
+static int _distortion_monsters(coord_def where, int pow, int message)
 {
-    int specdam = 0;
-    int monster_attacked = mgrd[x][y];
-
-    if (monster_attacked == NON_MONSTER)
-        return 0;
-
-    struct monsters *defender = &menv[monster_attacked];
-
     if (pow > 100)
         pow = 100;
 
-    if (x == you.x_pos && y == you.y_pos)
+    if (where == you.pos())
     {
         if (you.skills[SK_TRANSLOCATIONS] < random2(8))
         {
@@ -932,6 +898,14 @@ static int _distortion_monsters(int x, int y, int pow, int message)
 
         return 1;
     }
+
+    int monster_attacked = mgrd(where);
+
+    if (monster_attacked == NON_MONSTER)
+        return 0;
+
+    int specdam = 0;
+    monsters *defender = &menv[monster_attacked];
 
     if (defender->type == MONS_BLINK_FROG)      // any others resist?
     {
@@ -995,16 +969,16 @@ void cast_bend(int pow)
 // Really this is just applying the best of Band/Warp weapon/Warp field
 // into a spell that gives the "make monsters go away" benefit without
 // the insane damage potential.  -- bwr
-int disperse_monsters(int x, int y, int pow, int message)
+int disperse_monsters(coord_def where, int pow, int message)
 {
     UNUSED( message );
 
-    const int monster_attacked = mgrd[x][y];
+    const int monster_attacked = mgrd(where);
 
     if (monster_attacked == NON_MONSTER)
         return 0;
 
-    struct monsters *defender = &menv[monster_attacked];
+    monsters *defender = &menv[monster_attacked];
 
     if (defender->type == MONS_BLINK_FROG)
     {
@@ -1035,23 +1009,22 @@ int disperse_monsters(int x, int y, int pow, int message)
 
 void cast_dispersal(int pow)
 {
-    if (apply_area_around_square( disperse_monsters,
-                                  you.x_pos, you.y_pos, pow ) == 0)
+    if (apply_area_around_square( disperse_monsters, you.pos(), pow ) == 0)
     {
         mpr( "The air shimmers briefly around you." );
     }
 }
 
-static int _spell_swap_func(int x, int y, int pow, int message)
+static int _spell_swap_func(coord_def where, int pow, int message)
 {
     UNUSED( message );
 
-    int monster_attacked = mgrd[x][y];
+    int monster_attacked = mgrd(where);
 
     if (monster_attacked == NON_MONSTER)
         return 0;
 
-    struct monsters *defender = &menv[monster_attacked];
+    monsters *defender = &menv[monster_attacked];
 
     if (defender->type == MONS_BLINK_FROG
         || check_mons_resist_magic( defender, pow ))
@@ -1068,11 +1041,10 @@ static int _spell_swap_func(int x, int y, int pow, int message)
         // standard swap procedure here... since we really want to apply
         // the same swap_places function as with friendly monsters...
         // see note over there. -- bwr
-        int old_x = defender->x;
-        int old_y = defender->y;
+        coord_def old_pos = defender->pos();
 
         if (swap_places( defender ))
-            you.moveto(old_x, old_y);
+            you.moveto(old_pos);
     }
 
     return 1;
@@ -1083,9 +1055,9 @@ void cast_swap(int pow)
     apply_one_neighbouring_square( _spell_swap_func, pow );
 }
 
-static int _make_a_rot_cloud(int x, int y, int pow, cloud_type ctype)
+static int _make_a_rot_cloud(const coord_def& where, int pow, cloud_type ctype)
 {
-    for ( stack_iterator si(coord_def(x,y)); si; ++si )
+    for ( stack_iterator si(where); si; ++si )
     {
         if (si->base_type == OBJ_CORPSES
             && si->sub_type == CORPSE_BODY)
@@ -1095,7 +1067,7 @@ static int _make_a_rot_cloud(int x, int y, int pow, cloud_type ctype)
             else
                 turn_corpse_into_skeleton(*si);
 
-            place_cloud(ctype, coord_def(x,y),
+            place_cloud(ctype, where,
                         (3 + random2(pow / 4) + random2(pow / 4) +
                          random2(pow / 4)),
                         KC_YOU);
@@ -1116,9 +1088,11 @@ int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
     return 1;
 }
 
-static int _passwall(int x, int y, int pow, int garbage)
+static int _passwall(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
+
+    int x = where.x, y = where.y;
 
     int dx, dy, nx = x, ny = y;
     int howdeep = 0;
@@ -1204,12 +1178,12 @@ void cast_passwall(int pow)
     apply_one_neighbouring_square(_passwall, pow);
 }
 
-static int _intoxicate_monsters(int x, int y, int pow, int garbage)
+static int _intoxicate_monsters(coord_def where, int pow, int garbage)
 {
     UNUSED( pow );
     UNUSED( garbage );
 
-    int mon = mgrd[x][y];
+    int mon = mgrd(where);
 
     if (mon == NON_MONSTER
         || mons_intel(menv[mon].type) < I_NORMAL
@@ -1237,12 +1211,12 @@ void cast_intoxicate(int pow)
     apply_area_visible(_intoxicate_monsters, pow);
 }
 
-bool backlight_monsters(int x, int y, int pow, int garbage)
+bool backlight_monsters(coord_def where, int pow, int garbage)
 {
     UNUSED( pow );
     UNUSED( garbage );
 
-    int mon = mgrd[x][y];
+    int mon = mgrd(where);
 
     if (mon == NON_MONSTER)
         return (false);
@@ -1603,11 +1577,11 @@ void cast_fulsome_distillation( int powc )
         mpr( "Unfortunately, you can't carry it right now!" );
 }
 
-static int _rot_living(int x, int y, int pow, int message)
+static int _rot_living(coord_def where, int pow, int message)
 {
     UNUSED( message );
 
-    int mon = mgrd[x][y];
+    int mon = mgrd(where);
     int ench;
 
     if (mon == NON_MONSTER)
@@ -1627,11 +1601,11 @@ static int _rot_living(int x, int y, int pow, int message)
     return 1;
 }
 
-static int _rot_undead(int x, int y, int pow, int garbage)
+static int _rot_undead(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
 
-    int mon = mgrd[x][y];
+    int mon = mgrd(where);
     int ench;
 
     if (mon == NON_MONSTER)
@@ -1685,11 +1659,11 @@ static int _rot_undead(int x, int y, int pow, int garbage)
     return 1;
 }
 
-static int _rot_corpses(int x, int y, int pow, int garbage)
+static int _rot_corpses(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
 
-    return _make_a_rot_cloud(x, y, pow, CLOUD_MIASMA);
+    return _make_a_rot_cloud(where, pow, CLOUD_MIASMA);
 }
 
 void cast_rotting(int pow)
@@ -1714,11 +1688,11 @@ void do_monster_rot(int mon)
     return;
 }
 
-static int _snake_charm_monsters(int x, int y, int pow, int message)
+static int _snake_charm_monsters(coord_def where, int pow, int message)
 {
     UNUSED( message );
 
-    int mon = mgrd[x][y];
+    int mon = mgrd(where);
 
     if (mon == NON_MONSTER
         || one_chance_in(4)
@@ -2501,11 +2475,11 @@ void cast_divine_shield()
     return;
 }
 
-static int _quadrant_blink(int x, int y, int pow, int garbage)
+static int _quadrant_blink(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
 
-    if (x == you.x_pos && y == you.y_pos)
+    if (where == you.pos())
         return (0);
 
     if (you.level_type == LEVEL_ABYSS)
@@ -2520,9 +2494,7 @@ static int _quadrant_blink(int x, int y, int pow, int garbage)
         pow = 100;
 
     const int dist = random2(6) + 2;  // 2-7
-    coord_def orig;
-    orig.x = you.x_pos + (x - you.x_pos) * dist;
-    orig.y = you.y_pos + (y - you.y_pos) * dist;
+    coord_def orig = you.pos() + (where - you.pos()) * dist;
 
     // This can take a while if pow is high and there's lots of translucent
     // walls nearby.

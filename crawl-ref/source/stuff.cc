@@ -1237,9 +1237,9 @@ bool silenced(const coord_def& p)
     return (you.duration[DUR_SILENCE] > 0 && distance(p, you.pos()) <= 6*6);
 }
 
-bool player_can_hear(int x, int y)
+bool player_can_hear(const coord_def& p)
 {
-    return (!silenced(coord_def(x, y)) && !silenced(you.pos()));
+    return (!silenced(p) && !silenced(you.pos()));
 }
 
 // Returns true if inside the area the player can move and dig (ie exclusive).

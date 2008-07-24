@@ -105,7 +105,7 @@ int holy_word_player(int pow, int caster)
     return 1;
 }
 
-int holy_word_monsters(int x, int y, int pow, int caster)
+int holy_word_monsters(coord_def where, int pow, int caster)
 {
     int retval = 0;
 
@@ -113,11 +113,11 @@ int holy_word_monsters(int x, int y, int pow, int caster)
     pow = std::min(300, pow);
 
     // Is the player in this cell?
-    if (x == you.x_pos && y == you.y_pos)
+    if (where == you.pos())
         retval = holy_word_player(pow, caster);
 
     // Is a monster in this cell?
-    int mon = mgrd[x][y];
+    int mon = mgrd(where);
 
     if (mon == NON_MONSTER)
         return retval;
@@ -162,12 +162,12 @@ int holy_word_monsters(int x, int y, int pow, int caster)
     return retval;
 }
 
-int holy_word(int pow, int caster, int x, int y, bool silent)
+int holy_word(int pow, int caster, const coord_def& where, bool silent)
 {
     if (!silent)
         mpr("You speak a Word of immense power!");
 
-    return apply_area_within_radius(holy_word_monsters, x, y, pow, 8, caster);
+    return apply_area_within_radius(holy_word_monsters, where, pow, 8, caster);
 }
 
 int torment_player(int pow, int caster)
@@ -234,18 +234,18 @@ int torment_player(int pow, int caster)
 // maximum power of 1000, high level monsters and characters would save
 // too often.  (GDL)
 
-int torment_monsters(int x, int y, int pow, int caster)
+int torment_monsters(coord_def where, int pow, int caster)
 {
     UNUSED(pow);
 
     int retval = 0;
 
     // Is the player in this cell?
-    if (x == you.x_pos && y == you.y_pos)
+    if (where == you.pos())
         retval = torment_player(0, caster);
 
     // Is a monster in this cell?
-    int mon = mgrd[x][y];
+    int mon = mgrd(where);
 
     if (mon == NON_MONSTER)
         return retval;
@@ -276,9 +276,9 @@ int torment_monsters(int x, int y, int pow, int caster)
     return retval;
 }
 
-int torment(int caster, int x, int y)
+int torment(int caster, const coord_def& where)
 {
-    return apply_area_within_radius(torment_monsters, x, y, 0, 8, caster);
+    return apply_area_within_radius(torment_monsters, where, 0, 8, caster);
 }
 
 static std::string _who_banished(const std::string &who)

@@ -357,37 +357,25 @@ const char *spell_title(spell_type spell)
 
 // Apply a function-pointer to all visible squares
 // Returns summation of return values from passed in function.
-int apply_area_visible( int (*func) (int, int, int, int), int power,
-                        bool pass_through_trans)
+int apply_area_visible( cell_func cf, int power, bool pass_through_trans)
 {
-    int x, y;
     int rv = 0;
 
-    //jmf: FIXME: randomly start from other quadrants, like raise_dead?
-    for (x = you.x_pos - 8; x <= you.x_pos + 8; x++)
-    {
-        for (y = you.y_pos - 8; y <= you.y_pos + 8; y++)
-        {
-            if ((pass_through_trans && see_grid(x, y))
-                 || (!pass_through_trans && see_grid_no_trans(x, y)))
-                rv += func(x, y, power, 0);
-        }
-    }
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+        if ( pass_through_trans || see_grid_no_trans(*ri) )
+            rv += cf(*ri, power, 0);
 
     return (rv);
 }
 
 // Applies the effect to all nine squares around/including the target.
 // Returns summation of return values from passed in function.
-int apply_area_square( int (*func) (int, int, int, int), int cx, int cy,
-                        int power )
+int apply_area_square( cell_func cf, const coord_def& where, int power )
 {
-    int x, y;
     int rv = 0;
 
-    for (x = cx - 1; x <= cx + 1; x++)
-        for (y = cy - 1; y <= cy + 1; y++)
-            rv += func(x, y, power, 0);
+    for (adjacent_iterator ai(where, false); ai; ++ai)
+        rv += cf(*ai, power, 0);
 
     return (rv);
 }
@@ -395,142 +383,123 @@ int apply_area_square( int (*func) (int, int, int, int), int cx, int cy,
 
 // Applies the effect to the eight squares beside the target.
 // Returns summation of return values from passed in function.
-int apply_area_around_square( int (*func) (int, int, int, int),
-                              int targ_x, int targ_y, int power)
+int apply_area_around_square( cell_func cf, const coord_def& where, int power)
 {
-    int x, y;
     int rv = 0;
 
-    for (x = targ_x - 1; x <= targ_x + 1; x++)
-        for (y = targ_y - 1; y <= targ_y + 1; y++)
-        {
-            if (x == targ_x && y == targ_y)
-                continue;
-            else
-                rv += func(x, y, power, 0);
-        }
+    for (adjacent_iterator ai(where, true); ai; ++ai)
+        rv += cf(*ai, power, 0);
 
     return (rv);
 }
 
 // Effect up to max_targs monsters around a point, chosen randomly
 // Return varies with the function called;  return values will be added up.
-int apply_random_around_square( int (*func) (int, int, int, int),
-                                int targ_x, int targ_y,
-                                bool hole_in_middle, int power, int max_targs )
+int apply_random_around_square( cell_func cf, const coord_def& where,
+                                bool exclude_center, int power, int max_targs )
 {
     int rv = 0;
 
     if (max_targs <= 0)
         return 0;
 
-    if (max_targs >= 9 && !hole_in_middle)
-        return (apply_area_square( func, targ_x, targ_y, power ));
+    if (max_targs >= 9 && !exclude_center)
+        return (apply_area_square( cf, where, power ));
 
-    if (max_targs >= 8 && hole_in_middle)
-        return (apply_area_around_square( func, targ_x, targ_y, power ));
+    if (max_targs >= 8 && exclude_center)
+        return (apply_area_around_square( cf, where, power ));
 
-    FixedVector< coord_def, 8 > targs;
+    coord_def targs[8];
+
     int count = 0;
 
-    for (int x = targ_x - 1; x <= targ_x + 1; x++)
+    for (adjacent_iterator ai(where, exclude_center); ai; ++ai)
     {
-        for (int y = targ_y - 1; y <= targ_y + 1; y++)
+        if (mgrd(*ai) == NON_MONSTER && *ai != you.pos())
+            continue;
+
+        // Found target
+        count++;
+
+        // Slight difference here over the basic algorithm...
+        //
+        // For cases where the number of choices <= max_targs it's
+        // obvious (all available choices will be selected).
+        //
+        // For choices > max_targs, here's a brief proof:
+        //
+        // Let m = max_targs, k = choices - max_targs, k > 0.
+        //
+        // Proof, by induction (over k):
+        //
+        // 1) Show n = m + 1 (k = 1) gives uniform distribution,
+        //    P(new one not chosen) = 1 / (m + 1).
+        //                                         m     1     1
+        //    P(specific previous one replaced) = --- * --- = ---
+        //                                        m+1    m    m+1
+        //
+        //    So the probablity is uniform (ie. any element has
+        //    a 1/(m+1) chance of being in the unchosen slot).
+        //
+        // 2) Assume the distribution is uniform at n = m+k.
+        //    (ie. the probablity that any of the found elements
+        //     was chosen = m / (m+k) (the slots are symetric,
+        //     so it's the sum of the probabilities of being in
+        //     any of them)).
+        //
+        // 3) Show n = m + k + 1 gives a uniform distribution.
+        //    P(new one chosen) = m / (m + k + 1)
+        //    P(any specific previous choice remaining chosen)
+        //    = [1 - P(swaped into m+k+1 position)] * P(prev. chosen)
+        //              m      1       m
+        //    = [ 1 - ----- * --- ] * ---
+        //            m+k+1    m      m+k
+        //
+        //       m+k     m       m
+        //    = ----- * ---  = -----
+        //      m+k+1   m+k    m+k+1
+        //
+        // Therefore, it's uniform for n = m + k + 1.  QED
+        //
+        // The important thing to note in calculating the last
+        // probability is that the chosen elements have already
+        // passed tests which verify that they *don't* belong
+        // in slots m+1...m+k, so the only positions an already
+        // chosen element can end up in are its original
+        // position (in one of the chosen slots), or in the
+        // new slot.
+        //
+        // The new item can, of course, be placed in any slot,
+        // swapping the value there into the new slot... we
+        // just don't care about the non-chosen slots enough
+        // to store them, so it might look like the item
+        // automatically takes the new slot when not chosen
+        // (although, by symetry all the non-chosen slots are
+        // the same... and similarly, by symetry, all chosen
+        // slots are the same).
+        //
+        // Yes, that's a long comment for a short piece of
+        // code, but I want people to have an understanding
+        // of why this works (or at least make them wary about
+        // changing it without proof and breaking this code). -- bwr
+
+        // Accept the first max_targs choices, then when
+        // new choices come up, replace one of the choices
+        // at random, max_targs/count of the time (the rest
+        // of the time it replaces an element in an unchosen
+        // slot -- but we don't care about them).
+        if (count <= max_targs)
         {
-            if (hole_in_middle && (x == targ_x && y == targ_y))
-                continue;
-
-            if (mgrd[x][y] == NON_MONSTER
-                && !(x == you.x_pos && y == you.y_pos))
-            {
-                continue;
-            }
-
-            // Found target
-            count++;
-
-            // Slight difference here over the basic algorithm...
-            //
-            // For cases where the number of choices <= max_targs it's
-            // obvious (all available choices will be selected).
-            //
-            // For choices > max_targs, here's a brief proof:
-            //
-            // Let m = max_targs, k = choices - max_targs, k > 0.
-            //
-            // Proof, by induction (over k):
-            //
-            // 1) Show n = m + 1 (k = 1) gives uniform distribution,
-            //    P(new one not chosen) = 1 / (m + 1).
-            //                                         m     1     1
-            //    P(specific previous one replaced) = --- * --- = ---
-            //                                        m+1    m    m+1
-            //
-            //    So the probablity is uniform (ie. any element has
-            //    a 1/(m+1) chance of being in the unchosen slot).
-            //
-            // 2) Assume the distribution is uniform at n = m+k.
-            //    (ie. the probablity that any of the found elements
-            //     was chosen = m / (m+k) (the slots are symetric,
-            //     so it's the sum of the probabilities of being in
-            //     any of them)).
-            //
-            // 3) Show n = m + k + 1 gives a uniform distribution.
-            //    P(new one chosen) = m / (m + k + 1)
-            //    P(any specific previous choice remaining chosen)
-            //    = [1 - P(swaped into m+k+1 position)] * P(prev. chosen)
-            //              m      1       m
-            //    = [ 1 - ----- * --- ] * ---
-            //            m+k+1    m      m+k
-            //
-            //       m+k     m       m
-            //    = ----- * ---  = -----
-            //      m+k+1   m+k    m+k+1
-            //
-            // Therefore, it's uniform for n = m + k + 1.  QED
-            //
-            // The important thing to note in calculating the last
-            // probability is that the chosen elements have already
-            // passed tests which verify that they *don't* belong
-            // in slots m+1...m+k, so the only positions an already
-            // chosen element can end up in are its original
-            // position (in one of the chosen slots), or in the
-            // new slot.
-            //
-            // The new item can, of course, be placed in any slot,
-            // swapping the value there into the new slot... we
-            // just don't care about the non-chosen slots enough
-            // to store them, so it might look like the item
-            // automatically takes the new slot when not chosen
-            // (although, by symetry all the non-chosen slots are
-            // the same... and similarly, by symetry, all chosen
-            // slots are the same).
-            //
-            // Yes, that's a long comment for a short piece of
-            // code, but I want people to have an understanding
-            // of why this works (or at least make them wary about
-            // changing it without proof and breaking this code). -- bwr
-
-            // Accept the first max_targs choices, then when
-            // new choices come up, replace one of the choices
-            // at random, max_targs/count of the time (the rest
-            // of the time it replaces an element in an unchosen
-            // slot -- but we don't care about them).
-            if (count <= max_targs)
-            {
-                targs[ count - 1 ].x = x;
-                targs[ count - 1 ].y = y;
-            }
-            else if (x_chance_in_y(max_targs, count))
-            {
-                const int pick = random2( max_targs );
-                targs[ pick ].x = x;
-                targs[ pick ].y = y;
-            }
+            targs[ count - 1 ] = *ai;
+        }
+        else if (x_chance_in_y(max_targs, count))
+        {
+            const int pick = random2( max_targs );
+            targs[ pick ] = *ai;
         }
     }
 
-    const int targs_found = (count < max_targs) ? count : max_targs;
+    const int targs_found = std::min(count, max_targs);
 
     if (targs_found)
     {
@@ -539,18 +508,18 @@ int apply_random_around_square( int (*func) (int, int, int, int),
         // balance the called function. -- bwr
         for (int i = 0; i < targs_found; i++)
         {
-            ASSERT( targs[i].x && targs[i].y );
-            rv += func( targs[i].x, targs[i].y, power, 0 );
+            ASSERT( !targs[i].origin() );
+            rv += cf( targs[i], power, 0 );
         }
     }
 
     return (rv);
-}                               // end apply_random_around_square()
+}
 
 // Apply func to one square of player's choice beside the player.
-int apply_one_neighbouring_square(int (*func) (int, int, int, int), int power)
+int apply_one_neighbouring_square(cell_func cf, int power)
 {
-    struct dist bmove;
+    dist bmove;
 
     mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
     direction( bmove, DIR_DIR, TARG_ENEMY );
@@ -561,7 +530,8 @@ int apply_one_neighbouring_square(int (*func) (int, int, int, int), int power)
         return (-1);
     }
 
-    int rv = func(you.x_pos + bmove.dx, you.y_pos + bmove.dy, power, 1);
+    int rv = cf(coord_def(you.x_pos + bmove.dx, you.y_pos + bmove.dy),
+                power, 1);
 
     if (rv == 0)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -569,37 +539,17 @@ int apply_one_neighbouring_square(int (*func) (int, int, int, int), int power)
     return (rv);
 }
 
-int apply_area_within_radius( int (*func) (int, int, int, int),
-                              int x, int y, int pow, int radius, int ctype )
+int apply_area_within_radius( cell_func cf, const coord_def& where,
+                              int pow, int radius, int ctype )
 {
-    int ix, iy;
-    int sq_radius = radius * radius;
-    int sx, sy, ex, ey;       // start and end x, y - bounds checked
+
     int rv = 0;
 
-    // begin x,y
-    sx = x - radius;
-    sy = y - radius;
-    if (sx < 0) sx = 0;
-    if (sy < 0) sy = 0;
-
-    // end x,y
-    ex = x + radius;
-    ey = y + radius;
-    if (ex > GXM) ex = GXM;
-    if (ey > GYM) ey = GYM;
-
-    for (ix = sx; ix < ex; ix++)
-    {
-        for (iy = sy; iy < ey; iy++)
-        {
-            if (distance(x, y, ix, iy) <= sq_radius)
-                rv += func(ix, iy, pow, ctype);
-        }
-    }
+    for ( radius_iterator ri(where, radius, false, false); ri; ++ri )
+        rv += cf(*ri, pow, ctype);
 
     return (rv);
-}                               // end apply_area_within_radius()
+}
 
 // apply_area_cloud:
 // Try to make a realistic cloud by expanding from a point, filling empty
