@@ -46,6 +46,8 @@ public:
     unsigned int char_width() const { return m_max_advance.x; }
     unsigned int char_height() const { return m_max_advance.y; }
 
+    unsigned int string_width(const char *text);
+
 protected:
     struct GlyphInfo
     {

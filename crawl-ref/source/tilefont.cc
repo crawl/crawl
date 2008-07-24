@@ -376,6 +376,32 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
 
 }
 
+unsigned int FTFont::string_width(const char *text)
+{
+    unsigned int base_width = std::max(-m_min_offset, 0);
+    unsigned int max_width = 0;
+
+    unsigned int width = 0; 
+    unsigned int adjust = 0;
+    for (const char *itr = text; *itr; itr++)
+    {
+        if (*itr == '\n')
+        {
+            max_width = std::max(width + adjust, max_width);
+            width = base_width;
+            adjust = 0;
+        }
+        else
+        {
+            width += m_glyphs[*itr].advance;
+            adjust = std::max(0, m_glyphs[*itr].width - m_glyphs[*itr].advance);
+        }
+    }
+
+    max_width = std::max(width + adjust, max_width);
+    return max_width;
+}
+
 void FTFont::render_string(unsigned int px, unsigned int py,
                            const char *text,
                            const coord_def &min_pos, const coord_def &max_pos,
@@ -429,7 +455,7 @@ void FTFont::render_string(unsigned int px, unsigned int py,
     // Find a suitable location on screen
     const int buffer = 5;  // additional buffer size from edges
 
-    int wx = max_cols * char_width();
+    int wx = string_width(text);
     int wy = max_rows * char_height();
 
     // text starting location
