@@ -1546,12 +1546,12 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     // mutations:
     rp += player_mutation_level(MUT_POISON_RESISTANCE);
 
+    // Only thirsty vampires are naturally poison resistant.
+    if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
+        rp++;
+
     if (temp)
     {
-        // Only thirsty vampires are naturally poison resistant.
-        if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
-            rp++;
-
         // spells:
         if (you.duration[DUR_RESIST_POISON] > 0)
             rp++;

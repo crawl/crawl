@@ -1338,26 +1338,31 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
     beem.ench_power = pow;               // used for duration only?
 
     beem.flavour    = BEAM_POTION_STINKING_CLOUD;
+    beam_type tracer_flavour = BEAM_MMISSILE;
 
     switch (you.inv[potion].sub_type)
     {
     case POT_STRONG_POISON:
-        beem.flavour = BEAM_POTION_POISON;
+        beem.flavour   = BEAM_POTION_POISON;
+        tracer_flavour = BEAM_POISON;
         beem.ench_power *= 2;
         break;
 
     case POT_DEGENERATION:
         beem.effect_known = false;
-        beem.flavour = (coinflip() ? BEAM_POTION_POISON : BEAM_POTION_MIASMA);
+        beem.flavour   = (coinflip() ? BEAM_POTION_POISON : BEAM_POTION_MIASMA);
+        tracer_flavour = BEAM_MIASMA;
         beem.ench_power *= 2;
         break;
 
     case POT_POISON:
-        beem.flavour = BEAM_POTION_POISON;
+        beem.flavour   = BEAM_POTION_POISON;
+        tracer_flavour = BEAM_POISON;
         break;
 
     case POT_DECAY:
-        beem.flavour = BEAM_POTION_MIASMA;
+        beem.flavour   = BEAM_POTION_MIASMA;
+        tracer_flavour = BEAM_MIASMA;
         beem.ench_power *= 2;
         break;
 
@@ -1366,12 +1371,12 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
         // fall through
     case POT_CONFUSION:
     case POT_SLOWING:
-        beem.flavour = BEAM_POTION_STINKING_CLOUD;
+        tracer_flavour = beem.flavour = BEAM_POTION_STINKING_CLOUD;
         break;
 
     case POT_WATER:
     case POT_PORRIDGE:
-        beem.flavour = BEAM_POTION_STEAM;
+        tracer_flavour = beem.flavour = BEAM_STEAM;
         break;
 
     case POT_BLOOD:
@@ -1382,6 +1387,10 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
     case POT_BERSERK_RAGE:
         beem.effect_known = false;
         beem.flavour = (coinflip() ? BEAM_POTION_FIRE : BEAM_POTION_STEAM);
+        if (you.inv[potion].sub_type == POT_BERSERK_RAGE)
+            tracer_flavour = BEAM_FIRE;
+        else
+            tracer_flavour = BEAM_RANDOM;
         break;
 
     case POT_MUTATION:
@@ -1399,6 +1408,7 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
         case 3:   beem.flavour = BEAM_POTION_MIASMA; break;
         default:  beem.flavour = BEAM_POTION_RANDOM; break;
         }
+        tracer_flavour = BEAM_RANDOM;
         break;
 
     default:
@@ -1415,6 +1425,7 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
         case 7:   beem.flavour = BEAM_POTION_PURP_SMOKE;      break;
         default:  beem.flavour = BEAM_POTION_STEAM;           break;
         }
+        tracer_flavour = BEAM_RANDOM;
         break;
     }
 
@@ -1427,6 +1438,9 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
     beem.fr_count       = 0;
     beem.beam_cancelled = false;
     beem.is_tracer      = true;
+
+    beam_type real_flavour = beem.flavour;
+    beem.flavour           = tracer_flavour;
     fire_beam(beem);
 
     if (beem.beam_cancelled)
@@ -1440,6 +1454,7 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
         exercise( SK_THROWING, 1 );
 
     // Really fire.
+    beem.flavour = real_flavour;
     beem.is_tracer = false;
     fire_beam(beem);
 

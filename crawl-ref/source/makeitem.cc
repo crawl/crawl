@@ -1829,13 +1829,18 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
 
         // The other 98% are normal randarts.
 
-        // No randart hides.
-        hide2armour(item);
-        make_item_randart( item );
-
         // 10% of boots become barding.
         if (item.sub_type == ARM_BOOTS && one_chance_in(10))
-            item.sub_type = coinflip() ? ARM_NAGA_BARDING : ARM_CENTAUR_BARDING;
+        {
+            item.sub_type = coinflip() ? ARM_NAGA_BARDING
+                                       : ARM_CENTAUR_BARDING;
+        }
+        else
+            hide2armour(item); // No randart hides.
+
+        // Needs to be done after the barding chance else we get randart
+        // bardings named Boots of xy.
+        make_item_randart( item );
 
         // Determine enchantment and cursedness.
         if (one_chance_in(5))

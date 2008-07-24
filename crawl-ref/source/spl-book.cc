@@ -1244,7 +1244,7 @@ bool learn_spell(int book)
     }
 
     // You can always memorise selective amnesia:
-    if (you.spell_no == 21 && specspell != SPELL_SELECTIVE_AMNESIA)
+    if (you.spell_no >= 21 && specspell != SPELL_SELECTIVE_AMNESIA)
     {
         mpr("Your head is already too full of spells!");
         return (false);

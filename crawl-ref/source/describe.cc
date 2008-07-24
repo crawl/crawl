@@ -2437,7 +2437,7 @@ void describe_monsters(monsters& mons)
         break;
     }
     case MONS_PLAYER_GHOST:
-       body << "The apparition of " << get_ghost_description(mons)
+       body << "$The apparition of " << get_ghost_description(mons)
             << ".$";
         break;
 

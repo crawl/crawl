@@ -2347,6 +2347,30 @@ static void _describe_monster(const monsters *mon)
              mon->pronoun(PRONOUN_CAP).c_str());
     }
 
+    if (mons_behaviour_perceptible(mon) && !mons_is_sleeping(mon)
+        && !mons_is_confused(mon)
+        && (mons_see_invis(mon) || mons_sense_invis(mon)))
+    {
+        if (you.invisible() && mon->foe == MHITYOU && !mons_is_fleeing(mon))
+        {
+            if (mons_see_invis(mon))
+            {
+                mprf(MSGCH_EXAMINE, "%s is watching you carefully.",
+                     mon->pronoun(PRONOUN_CAP).c_str());
+            }
+            else
+            {
+                mprf(MSGCH_EXAMINE, "%s is looking in your general direction.",
+                     mon->pronoun(PRONOUN_CAP).c_str());
+            }
+        }
+        else if (mon->foe == MHITNOT || mons_is_fleeing(mon))
+        {
+            mprf(MSGCH_EXAMINE, "%s seems to be peering into the shadows.",
+                 mon->pronoun(PRONOUN_CAP).c_str());
+        }
+    }
+
     std::string desc = "";
     std::string last_desc = "";
     std::string tmp = "";
