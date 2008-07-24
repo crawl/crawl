@@ -8,11 +8,11 @@
 -- See c_eat in this file if you want to tweak eating behaviour further.
 ---------------------------------------------------------------------------
 function prompt_eat(i)
-    local iname = item.name(i, "a")
+    local iname = item.name_coloured(i, "a")
     if item.quantity(i) > 1 then
         iname = "one of " .. iname
     end
-    crawl.mpr("Eat " .. iname .. "?", "prompt")
+    crawl.formatted_mpr("Eat " .. iname .. "?", "prompt")
 
     local res
     res = crawl.getch()
