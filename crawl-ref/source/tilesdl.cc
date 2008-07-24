@@ -580,9 +580,9 @@ int TilesFramework::getch_ck()
             }
         }
 
-        bool show_tooltip = 
-            ((ticks - m_last_tick_moved > Options.tile_tooltip_ms)
-                && ticks > m_last_tick_moved);
+        bool show_tooltip = ((ticks - m_last_tick_moved 
+                                > (unsigned int)Options.tile_tooltip_ms)
+                                && ticks > m_last_tick_moved);
 
         if (show_tooltip)
         {

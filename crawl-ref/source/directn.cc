@@ -561,6 +561,7 @@ void direction(dist& moves, targeting_type restricts,
     }
 
     cursor_control con(!Options.use_fake_cursor);
+    mouse_control mc(MOUSE_MODE_TARGET);
 
     int dir = 0;
     bool show_beam = Options.show_beam && !just_looking && needs_path;
@@ -642,7 +643,6 @@ void direction(dist& moves, targeting_type restricts,
         }
         else
         {
-            mouse_control mc(MOUSE_MODE_TARGET);
             key_command = beh->get_command();
         }
 
@@ -2733,8 +2733,6 @@ targeting_behaviour::~targeting_behaviour()
 
 int targeting_behaviour::get_key()
 {
-    mouse_control mc(MOUSE_MODE_TARGET_DIR);
-
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);
 

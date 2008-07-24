@@ -173,10 +173,9 @@ int c_getch()
 void cursorxy(int x, int y)
 {
 #if defined(USE_TILE)
-#if 0
-    // TODO enne - handle this old use of place cursor
-    tile_place_cursor(x-1, y-1, true);
-#endif
+    coord_def ep(x, y);
+    coord_def gc = view2grid(ep);
+    tiles.place_cursor(CURSOR_MOUSE, gc);
 #elif defined(UNIX)
     if (Options.use_fake_cursor)
         fakecursorxy(x, y);
