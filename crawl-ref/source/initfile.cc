@@ -863,10 +863,13 @@ void game_options::reset_options()
     tile_font_tip_size = 15;
     tile_font_lbl_file = "Vera.ttf";
     tile_font_lbl_size = 14;
-#endif
 
-#ifdef WIN32TILES
-    use_dos_char = true;
+    // window layout
+    tile_full_screen = false;
+    tile_window_width = 1024;
+    tile_window_height = 768;
+    tile_map_pixels = 4;
+    tile_tooltip_ms = 1000;
 #endif
 
     // map each colour to itself as default
@@ -2980,10 +2983,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         tile_font_lbl_file = field;
     }
     else INT_OPTION(tile_font_lbl_size, 1, INT_MAX);
-#endif
-
-#ifdef WIN32TILES
-    else BOOL_OPTION(use_dos_char);
+    else BOOL_OPTION(tile_full_screen);
+    else INT_OPTION(tile_window_width, 1, INT_MAX);
+    else INT_OPTION(tile_window_height, 1, INT_MAX);
+    else INT_OPTION(tile_map_pixels, 1, INT_MAX);
+    else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
 #endif
 
     else if(key == "bindkey")

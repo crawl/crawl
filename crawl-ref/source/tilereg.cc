@@ -1487,8 +1487,6 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
     if (event.event != MouseEvent::PRESS)
         return 0;
 
-    // TODO enne - if mouse_mode is command, then:
-
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
         return 0;
@@ -1589,6 +1587,9 @@ static bool _can_use_item(const item_def &item, bool equipped)
 
 bool InventoryRegion::update_tip_text(std::string& tip)
 {
+    if (m_cursor == NO_CURSOR)
+        return false;
+
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
         return false;

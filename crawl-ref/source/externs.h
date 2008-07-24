@@ -1892,9 +1892,11 @@ public:
     int         tile_font_lbl_size;
     std::string tile_font_tip_file;
     int         tile_font_tip_size;
-#endif
-#ifdef WIN32TILES
-    bool        use_dos_char;
+    bool        tile_full_screen;
+    int         tile_window_width;
+    int         tile_window_height;
+    int         tile_map_pixels;
+    int         tile_tooltip_ms;
 #endif
 
     typedef std::map<std::string, std::string> opt_map;

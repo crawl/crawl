@@ -36,3 +36,9 @@ tile_show_items = !?/%=([)X}+\_.
 # tile_font_tip_size = 15
 # tile_font_lbl_file = Vera.ttf
 # tile_font_lbl_size = 14
+
+# tile_full_screen = true
+# tile_window_width = 1024
+# tile_window_height = 768
+# tile_map_pixels = 4
+# tile_tooltip_ms = 1000

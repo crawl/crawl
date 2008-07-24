@@ -1,5 +1,6 @@
 #include "AppHdr.h"
 
+#include "files.h"
 #include "tiles.h"
 #include "tiletex.h"
 
@@ -29,14 +30,20 @@ bool GenericTexture::load_texture(const char *filename,
                                   tex_proc_func proc)
 {
     char acBuffer[512];
-    // TODO enne - use Crawl's helper functions to find images...
-    strcpy(acBuffer, "dat/tiles/");
-    strcat(acBuffer, filename);
-    SDL_Surface *img = IMG_Load(acBuffer);
+
+    std::string tex_path = datafile_path(filename);
+
+    if (tex_path.c_str()[0] == 0)
+    {
+        fprintf(stderr, "Couldn't find texture '%s'.\n", filename);
+        return false;
+    }
+
+    SDL_Surface *img = IMG_Load(tex_path.c_str());
 
     if (!img)
     {
-        printf("Warning: couldn't load file '%s'.\n", acBuffer);
+        fprintf(stderr, "Couldn't load texture '%s'.\n", tex_path.c_str());
         return false;
     }
 

@@ -148,10 +148,12 @@ bool TilesFramework::initialise()
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
   
     unsigned int flags = SDL_OPENGL;
-    if (m_fullscreen)
+    if (Options.tile_full_screen)
         flags |= SDL_FULLSCREEN;
 
-    // TODO enne - add options for screen size and fullscreen
+    m_windowsz.x = Options.tile_window_width;
+    m_windowsz.y = Options.tile_window_height;
+
     m_context = SDL_SetVideoMode(m_windowsz.x, m_windowsz.y, 0, flags);
     if (!m_context)
     {
@@ -161,9 +163,6 @@ bool TilesFramework::initialise()
 
     if (!m_image.load_textures())
         return false;
-
-    // TODO enne - grab these from options
-    unsigned int map_pixsz = 4;
 
     int crt_font = load_font(Options.tile_font_crt_file.c_str(),
                              Options.tile_font_crt_size);
@@ -184,7 +183,7 @@ bool TilesFramework::initialise()
 
     m_region_tile = new DungeonRegion(&m_image, m_fonts[lbl_font].font, 
                                       TILE_X, TILE_Y);
-    m_region_map = new MapRegion(map_pixsz);
+    m_region_map = new MapRegion(Options.tile_map_pixels);
     m_region_self_inv = new InventoryRegion(&m_image, TILE_X, TILE_Y);
 
     m_region_msg = new MessageRegion(m_fonts[msg_font].font);
@@ -581,10 +580,9 @@ int TilesFramework::getch_ck()
             }
         }
 
-        // TODO enne - outsource this value
-        unsigned int tooltip_ticks = 1000;
-        bool show_tooltip = ((ticks - m_last_tick_moved > tooltip_ticks)
-                                && ticks > m_last_tick_moved);
+        bool show_tooltip = 
+            ((ticks - m_last_tick_moved > Options.tile_tooltip_ms)
+                && ticks > m_last_tick_moved);
 
         if (show_tooltip)
         {
