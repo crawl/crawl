@@ -1149,7 +1149,7 @@ void monster_grid(bool do_updates)
                 // circumstances so we can track down where this is coming
                 // from.
                 mprf(MSGCH_DIAGNOSTICS, "monster (%d) at (%d, %d) was "
-                     "improperly placed.  Updating mgrd.", s, 
+                     "improperly placed.  Updating mgrd.", s,
                      monster->x, monster->y);
 #endif
                 ASSERT(mgrd[monster->x][monster->y] == NON_MONSTER);
@@ -2694,7 +2694,7 @@ void losight(env_show_grid &sh,
 // 5. Anything else will look for the exact same character in the level map.
 bool is_feature(int feature, int x, int y)
 {
-    if (!env.map[x][y].object)
+    if (!env.map[x][y].object && !see_grid(x, y))
         return (false);
 
     // 'grid' can fit in an unsigned char, but making this a short shuts up
