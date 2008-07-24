@@ -893,7 +893,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                     monster->hit_dice, true, monster);
                 }
 
-                if (mons_class_flag(monster->type, M_EVIL)
+                if (mons_is_evil(monster)
                     && mons_holiness(monster) == MH_NATURAL)
                 {
                     did_god_conduct(DID_KILL_NATURAL_EVIL,
@@ -1067,7 +1067,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                         notice |= did_god_conduct( DID_LIVING_KILLED_BY_SERVANT,
                                                    monster->hit_dice );
 
-                        if (mons_class_flag( monster->type, M_EVIL ))
+                        if (mons_is_evil(monster))
                         {
                             notice |=
                                 did_god_conduct(

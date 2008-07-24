@@ -58,6 +58,9 @@ void get_input_line( char *const buff, int len );
 // In view.cc, declared here for default argument to cancelable_get_line()
 int get_number_of_cols(void);
 
+int nowrapcprintf( int wrapcol, const char *s, ... );
+int nowrap_eol_cprintf( const char *s, ... );
+
 // Returns zero if user entered text and pressed Enter, otherwise returns the
 // key pressed that caused the exit, usually Escape.
 //

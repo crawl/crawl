@@ -374,15 +374,9 @@ static int _scan_mon_inv_randarts( const monsters *mon,
 // Twisted Resurrection.
 static bool _mons_your_abomination(const monsters *mon)
 {
-    if (mon->type != MONS_ABOMINATION_SMALL
-        && mon->type != MONS_ABOMINATION_LARGE)
-    {
-        return (false);
-    }
-
-    // XXX: Reusing the colour scheme - hacky! (jpeg)
-    return (mon->number == BROWN || mon->number == RED
-            || mon->number == LIGHTRED);
+    return ((mon->type == MONS_ABOMINATION_SMALL
+             || mon->type == MONS_ABOMINATION_LARGE)
+            && testbits(mon->flags, MF_CREATED_FRIENDLY));
 }
 
 mon_holy_type mons_holiness(const monsters *mon)

@@ -1830,7 +1830,7 @@ static void _restore_ghost_version( FILE *ghostFile,
 
 void save_ghost( bool force )
 {
-    if (!force && (you.your_level < 2 || you.is_undead))
+    if (!force && you.your_level < 2)
         return;
 
     std::string cha_fil = make_filename( "bones", you.your_level,
@@ -1848,6 +1848,9 @@ void save_ghost( bool force )
     }
 
     ghosts = ghost_demon::find_ghosts();
+
+    if (ghosts.empty())
+        return;
 
     gfile = lk_open("wb", cha_fil);
 

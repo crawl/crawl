@@ -1106,8 +1106,6 @@ bool cast_twisted_resurrection(int pow, god_type god)
     if (total_mass < 400 + roll_dice(2, 500)
         || how_many_corpses < (coinflip() ? 3 : 2))
     {
-        mpr("The spell fails.");
-
         mprf("The corpse%s collapse%s into a pulpy mess.",
              how_many_corpses > 1 ? "s": "", how_many_corpses > 1 ? "": "s");
         return (false);
@@ -1134,9 +1132,6 @@ bool cast_twisted_resurrection(int pow, god_type god)
         return (false);
     }
 
-    // This was probably intended, but it's really boring. (jpeg)
-    // Use menv[mon].number instead (set in create_monster()).
-//    menv[mon].colour = colour;
     mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
 
     if (mon == MONS_ABOMINATION_LARGE)

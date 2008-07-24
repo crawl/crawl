@@ -25,6 +25,7 @@
 
 #include "abl-show.h"
 #include "branch.h"
+#include "cio.h"
 #include "describe.h"
 #include "directn.h"
 #include "format.h"
@@ -964,11 +965,10 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
     // Level N Minotaur [of God]
     textcolor( YELLOW );
     cgotoxy(1, 2, GOTO_STAT);
-    cprintf("Level %d %s",
-            you.experience_level,
-            species_name( you.species, you.experience_level ).c_str());
+    nowrap_eol_cprintf("Level %d %s", you.experience_level,
+                       species_name(you.species,you.experience_level).c_str());
     if (you.religion != GOD_NO_GOD)
-        cprintf(" of %s", god_name(you.religion).c_str());
+        nowrap_eol_cprintf(" of %s", god_name(you.religion).c_str());
     clear_to_end_of_line();
 
     textcolor( LIGHTGREY );
