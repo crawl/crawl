@@ -4,7 +4,17 @@ Stone Soup 0.4.2 (2008????)
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 
 * Fixed vampire draining not destroying small corpses.
+* Fixed spell slot cap not working if Selective Amnesia is memorized.
 * Fixed repeatedly interrupted butchering making no progress.
+* Fixed player being incapable of attacking some monsters.
+* Existing ghosts are now saved back if an undead player dies on their level.
+* TSO no longer minds if you attack an evil monster in an unchivalric manner.
+* Abominations created by Twisted Resurrection count as undead again.
+* Fixed randart bardings masquerading as boots.
+* Fixed resistances for lava creatures.
+* Self-hit prompt now respects player's known resistances.
+* Fixed claws/ankus not being handled by the weapon option.
+* Show monsters sensing/seeing invisible in their 'x' description.
 
 Stone Soup 0.4.1 (20080717)
 ---------------------------

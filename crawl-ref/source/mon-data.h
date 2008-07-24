@@ -2914,7 +2914,7 @@
 {
     MONS_LAVA_WORM, 'w', RED, "lava worm",
     M_NO_FLAGS,
-    MR_RES_FIRE | MR_VUL_COLD,
+    mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 10, MONS_LAVA_WORM, MONS_LAVA_WORM, MH_NATURAL, -3,
     { {AT_BITE, AF_FIRE, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 6, 3, 5, 0 },
@@ -2925,7 +2925,7 @@
 {
     MONS_LAVA_FISH, ';', RED, "lava fish",
     M_WARM_BLOOD,
-    MR_RES_FIRE | MR_VUL_COLD,
+    mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 10, MONS_BIG_FISH, MONS_LAVA_FISH, MH_NATURAL, -3,
     { {AT_BITE, AF_FIRE, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 3, 5, 0 },

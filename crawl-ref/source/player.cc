@@ -5684,6 +5684,7 @@ std::string player_save_info::short_desc() const
 player::~player()
 {
     delete kills;
+    delete m_quiver;
 }
 
 coord_def player::pos() const

@@ -1820,6 +1820,7 @@ bool cast_tukimas_dance(int pow, god_type god,
 
     you.inv[wpn].quantity = 0;
 
+    destroy_item(menv[monster].inv[MSLOT_WEAPON]);
     menv[monster].inv[MSLOT_WEAPON] = i;
     menv[monster].colour = mitm[i].colour;
     burden_change();
