@@ -1164,14 +1164,13 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         if (!grid_is_solid(m_cursor[CURSOR_MOUSE]))
         {
             int mon_num = mgrd(m_cursor[CURSOR_MOUSE]);
-            const monsters *mons = &menv[mon_num];
-            if (mon_num == NON_MONSTER || mons_friendly(mons))
+            if (mon_num == NON_MONSTER || mons_friendly(&menv[mon_num]))
             {
                 tip = "[L-Click] Move\n";
             }
             else if (mon_num != NON_MONSTER)
             {
-                tip = mons->name(DESC_CAP_A);
+                tip = menv[mon_num].name(DESC_CAP_A);
                 tip += "\n[L-Click] Attack\n";
             }
         }
@@ -1454,7 +1453,7 @@ unsigned int InventoryRegion::cursor_index() const
 
 void InventoryRegion::place_cursor(const coord_def &cursor)
 {
-    if (m_cursor != NO_CURSOR)
+    if (m_cursor != NO_CURSOR && cursor_index() < m_items.size())
     {
         m_items[cursor_index()].flag &= ~TILEI_FLAG_CURSOR;
         m_need_to_pack = true;

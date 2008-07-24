@@ -502,6 +502,9 @@ int TilesFramework::getch_ck()
     SDL_Event event;
 
     int key = 0;
+
+    const unsigned int ticks_per_redraw = 16; // 60 FPS = 16.6 ms/frame
+    unsigned int last_redraw_tick = 0;
     
     while (!key)
     {
@@ -603,7 +606,11 @@ int TilesFramework::getch_ck()
             m_tooltip.clear();
         }
 
-        redraw();
+        if (ticks - last_redraw_tick > ticks_per_redraw)
+        {
+            redraw();
+            last_redraw_tick = ticks;
+        }
     }
 
     return key;
