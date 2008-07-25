@@ -9,6 +9,7 @@
 #include "tilesdl.h"
 #include "travel.h"
 #include "version.h"
+#include "view.h"
 
 #include "tiledef-dngn.h"
 #include "tilefont.h"
@@ -741,6 +742,22 @@ void TilesFramework::redraw()
     }
             
     SDL_GL_SwapBuffers();
+}
+
+void TilesFramework::update_minimap(int gx, int gy)
+{
+    if (!player_in_mappable_area())
+        return;
+
+    int object = env.map[gx][gy].object;
+    map_feature f = (object >= DNGN_START_OF_MONSTERS) ? MF_MONS_HOSTILE :
+        get_feature_def((dungeon_feature_type)object).minimap;
+
+    if (f == MF_SKIP)
+        f = get_feature_def(grd[gx][gy]).minimap;
+    ASSERT(f < MF_MAX);
+
+    tiles.update_minimap(gx, gy, f);
 }
 
 void TilesFramework::update_minimap(int gx, int gy, map_feature f)

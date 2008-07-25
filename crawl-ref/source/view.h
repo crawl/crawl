@@ -227,10 +227,6 @@ void view_update_at(const coord_def &pos);
 void viewwindow(bool draw_it, bool do_updates);
 void fire_monster_alerts();
 
-#ifdef USE_TILE
-void init_minimap();
-#endif
-
 struct ray_def;
 bool find_ray( const coord_def& source, const coord_def& target,
                bool allow_fallback, ray_def& ray, int cycle_dir = 0,

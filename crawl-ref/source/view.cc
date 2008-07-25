@@ -193,36 +193,13 @@ bool is_envmap_detected_mons(int x, int y)
     return (env.map[x][y].flags & MAP_DETECTED_MONSTER);
 }
 
-#ifdef USE_TILE
-static void _update_minimap(int x, int y)
-{
-    int object = env.map[x][y].object;
-    map_feature f = (object >= DNGN_START_OF_MONSTERS) ? MF_MONS_HOSTILE :
-        Feature[object].minimap;
-
-    if (f == MF_SKIP)
-        f = Feature[grd[x][y]].minimap;
-    ASSERT(f < MF_MAX);
-
-    tiles.update_minimap(x, y, f);
-}
-
-void init_minimap()
-{
-    tiles.clear_minimap();
-    for (int y = 0; y < GYM; y++)
-        for (int x = 0; x < GXM; x++)
-            _update_minimap(x, y);
-}
-#endif
-
 void set_envmap_glyph(int x, int y, int object, int col)
 {
     map_cell &c = env.map[x][y];
     c.object = object;
     c.colour = col;
 #ifdef USE_TILE
-    _update_minimap(x, y);
+    tiles.update_minimap(x, y);
 #endif
 }
 
@@ -230,7 +207,7 @@ void set_envmap_obj( int x, int y, int obj )
 {
     env.map[x][y].object = obj;
 #ifdef USE_TILE
-    _update_minimap(x, y);
+    tiles.update_minimap(x, y);
 #endif
 }
 

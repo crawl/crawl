@@ -100,6 +100,7 @@ public:
     void cgotoxy(int x, int y, int region = GOTO_CRT);
     void clear_message_window();
 
+    void update_minimap(int gx, int gy);
     void update_minimap(int gx, int gy, map_feature f);
     void clear_minimap();
     void update_inventory();

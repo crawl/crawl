@@ -98,7 +98,11 @@ static inline unsigned short _get_bazaar_special_colour()
 
 void TileNewLevel(bool first_time)
 {
-    init_minimap();
+    tiles.clear_minimap();
+    for (int y = 0; y < GYM; y++)
+        for (int x = 0; x < GXM; x++)
+            tiles.update_minimap(x, y);
+
     TileLoadWall(false);
     tile_clear_buf();
     if (first_time)

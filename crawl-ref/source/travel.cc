@@ -256,7 +256,7 @@ static void _tile_exclude_gmap_update(const coord_def p)
             int px = p.x+x, py = p.y+y;
             if (in_bounds(coord_def(px,py)))
             {
-                tiles.update_minimap(px, py, MF_EXCL);
+                tiles.update_minimap(px, py);
             }
         }
 }
