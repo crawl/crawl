@@ -2845,7 +2845,6 @@ void forget_map(unsigned char chance_forgotten, bool force)
 
 #ifdef USE_TILE
     tiles.clear_minimap();
-    tile_clear_buf();
 #endif
 }
 

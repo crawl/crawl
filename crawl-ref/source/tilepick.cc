@@ -36,7 +36,7 @@ struct mcache_entry
     int draco;
 };
 
-std::vector<mcache_entry> mcache;
+static std::vector<mcache_entry> mcache;
 
 int get_base_idx_from_mcache(int tile_idx)
 {
@@ -82,9 +82,6 @@ void tile_mcache_unlock()
     mcache.clear();
 }
 
-// tile index cache to reduce tileidx() calls
-static FixedArray < unsigned int, GXM, GYM > tile_dngn;
-
 static inline bool _is_bazaar()
 {
     return (you.level_type == LEVEL_PORTAL_VAULT
@@ -104,7 +101,6 @@ void TileNewLevel(bool first_time)
             tiles.update_minimap(x, y);
 
     TileLoadWall(false);
-    tile_clear_buf();
     if (first_time)
         tile_init_flavor();
 
@@ -3978,15 +3974,6 @@ void tile_init_flavor()
     }
 }
 
-void tile_clear_buf()
-{
-    for (int y = 0; y < GYM; y++)
-        for (int x = 0; x < GXM; x++)
-        {
-            tile_dngn[x][y] = TILE_DNGN_UNSEEN;
-        }
-}
-
 // Called from view.cc.
 void tile_draw_floor()
 {
@@ -4004,20 +3991,18 @@ void tile_draw_floor()
                 if (object == DNGN_SECRET_DOOR)
                     object = (int)grid_secret_door_appearance(gc);
 
-                tile_dngn[gc.x][gc.y] = tileidx_feature(object, gc.x, gc.y);
+                bg = tileidx_feature(object, gc.x, gc.y);
 
                 if (is_travelable_stair((dungeon_feature_type)object)
                     && !travel_cache.know_stair(gc))
                 {
-                    tile_dngn[gc.x][gc.y] |= TILE_FLAG_NEW_STAIR;
+                    bg |= TILE_FLAG_NEW_STAIR;
                 }
-                bg = tile_dngn[gc.x][gc.y];
             }
             else if (map_bounds(gc) && object != 0)
             {
                 // outside border
-                tile_dngn[gc.x][gc.y] = tileidx_feature(object, gc.x, gc.y);
-                bg = tile_dngn[gc.x][gc.y];
+                bg = tileidx_feature(object, gc.x, gc.y);
             }
             // init tiles
             env.tile_bg[ep.x-1][ep.y-1] = bg;
@@ -4216,7 +4201,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
     if (foreground)
     {
         env.tile_fg[ep.x-1][ep.y-1] = t;
-        if (menv[idx].is_named())
+        if (menv[idx].is_named() && !mons_friendly(&menv[idx]))
         {
             tiles.add_text_tag(TAG_NAMED_MONSTER,
                                menv[idx].name(DESC_CAP_A), gc);

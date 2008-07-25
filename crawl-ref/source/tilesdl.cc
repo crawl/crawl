@@ -789,6 +789,16 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
             f = MF_EXCL;
     }
 
+    if (f == MF_WALL || f == MF_FLOOR)
+    {
+        if (is_terrain_known(gx, gy) && !is_terrain_seen(gx, gy)
+            || is_envmap_detected_item(gx, gy)
+            || is_envmap_detected_mons(gx, gy))
+        {
+            f = (f == MF_WALL) ? MF_MAP_WALL : MF_MAP_FLOOR;
+        }
+    }
+
     m_region_map->set(gx, gy, f);
 }
 

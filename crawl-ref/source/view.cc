@@ -279,6 +279,9 @@ void set_terrain_mapped( int x, int y )
 {
     env.map[x][y].flags &= (~MAP_CHANGED_FLAG);
     env.map[x][y].flags |= MAP_MAGIC_MAPPED_FLAG;
+#ifdef USE_TILE
+    tiles.update_minimap(x, y);
+#endif
 }
 
 void set_terrain_seen( int x, int y )
@@ -3685,10 +3688,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                 }
             }
         }
-
-#ifdef USE_TILE
-    tile_clear_buf();
-#endif
 
     return (true);
 }                               // end magic_mapping()
