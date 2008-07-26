@@ -149,7 +149,22 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
     unsigned char *pixels = new unsigned char[4 * width * height];
     memset(pixels, 0, sizeof(unsigned char) * 4 * width * height);
 
-    for (unsigned int c = 0; c < 256; c++)
+    // Special case c = 0 for full block.
+    {
+        m_glyphs[0].renderable = false;
+        for (int x = 0; x < max_width; x++)
+            for (int y = 0; y < max_height; y++)
+            {
+                unsigned int idx = x + y * width;
+                idx *= 4;
+                pixels[idx] = 255;
+                pixels[idx + 1] = 255;
+                pixels[idx + 2] = 255;
+                pixels[idx + 3] = 255;
+            }    
+    }
+
+    for (unsigned int c = 1; c < 256; c++)
     {
         FT_Int glyph_index = FT_Get_Char_Index(face, c);
         if (!glyph_index)
@@ -163,7 +178,7 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
 
         FT_Bitmap *bmp = &face->glyph->bitmap;
         ASSERT(bmp);
-        // Some glyphs (e.g. " ") don't get a buffer.
+        // Some glyphs (e.g. ' ') don't get a buffer.
         if (!bmp->buffer)
             continue;
 
@@ -235,57 +250,73 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
         for (unsigned int x = 0; x < width; x++)
         {
             unsigned char c = chars[i];
+            unsigned char col_bg = colours[i] >> 4;
+            unsigned char col_fg = colours[i] & 0xF;
+
+            if (col_bg != 0)
+            {
+                FontVertLayout v;
+                v.tex_x = v.tex_y = 0;
+                v.r = term_colours[col_bg][0];
+                v.g = term_colours[col_bg][1];
+                v.b = term_colours[col_bg][2];
+                v.a = 255;
+
+                v.pos_x = adv.x;
+                v.pos_y = adv.y;
+                verts.push_back(v);
+
+                v.pos_x = adv.x;
+                v.pos_y = adv.y + m_max_advance.y;
+                verts.push_back(v);
+
+                v.pos_x = adv.x + m_max_advance.x;
+                v.pos_y = adv.y + m_max_advance.y;
+                verts.push_back(v);
+
+                v.pos_x = adv.x + m_max_advance.x;
+                v.pos_y = adv.y;
+                verts.push_back(v);
+            }
+
             adv.x += m_glyphs[c].offset;
 
             if (m_glyphs[c].renderable)
             {
                 int this_width = m_glyphs[c].width;
 
-                unsigned char col = colours[i];
                 float tex_x = (float)(c % 16) / 16.0f;
                 float tex_y = (float)(c / 16) / 16.0f;
                 float tex_x2 = tex_x + (float)this_width / (float)m_tex.width();
                 float tex_y2 = tex_y + texcoord_dy;
                 FontVertLayout v;
+                v.r = term_colours[col_fg][0];
+                v.g = term_colours[col_fg][1];
+                v.b = term_colours[col_fg][2];
+                v.a = 255;
 
                 v.pos_x = adv.x;
                 v.pos_y = adv.y;
                 v.tex_x = tex_x;
                 v.tex_y = tex_y;
-                v.r = term_colours[col][0];
-                v.g = term_colours[col][1];
-                v.b = term_colours[col][2];
-                v.a = 255;
                 verts.push_back(v);
 
                 v.pos_x = adv.x;
                 v.pos_y = adv.y + m_max_advance.y;
                 v.tex_x = tex_x;
                 v.tex_y = tex_y2;
-                v.r = term_colours[col][0];
-                v.g = term_colours[col][1];
-                v.b = term_colours[col][2];
-                v.a = 255;
                 verts.push_back(v);
 
                 v.pos_x = adv.x + this_width;
                 v.pos_y = adv.y + m_max_advance.y;
                 v.tex_x = tex_x2;
                 v.tex_y = tex_y2;
-                v.r = term_colours[col][0];
-                v.g = term_colours[col][1];
-                v.b = term_colours[col][2];
-                v.a = 255;
                 verts.push_back(v);
 
                 v.pos_x = adv.x + this_width;
                 v.pos_y = adv.y;
                 v.tex_x = tex_x2;
                 v.tex_y = tex_y;
-                v.r = term_colours[col][0];
-                v.g = term_colours[col][1];
-                v.b = term_colours[col][2];
-                v.a = 255;
                 verts.push_back(v);
             }
 

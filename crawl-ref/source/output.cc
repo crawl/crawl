@@ -136,6 +136,7 @@ class colour_bar
                 textcolor(m_empty);
                 putch('-');
             }
+#endif
 
             // If some change colour was rendered, redraw in a few
             // turns to clear it out.
@@ -143,7 +144,6 @@ class colour_bar
                 m_request_redraw_after = you.num_turns + 4;
             else
                 m_request_redraw_after = 0;
-#endif
         }
 
         textcolor(LIGHTGREY);

@@ -68,34 +68,6 @@ int tile_idx_unseen_terrain(int x, int y, int what)
     return t;
 }
 
-static void _draw_hgauge(int x, int y, int ofs, int region, int len, int col)
-{
-    int i;
-    cgotoxy(x, y, region);
-    textcolor(col);
-    for (i = 0; i < len; i++)
-    {
-        switch((i+ ofs) % 10)
-        {
-            case 0:  cprintf("%c",'+'); break;
-            case 4:  cprintf("%c",'0' + (1+(i+ofs)/10)%10); break;
-            case 5:  cprintf("%c",'0'); break;
-            default: cprintf("%c",'-');
-        }
-    }
-}
-
-static void _draw_vgauge(int x, int y, int ofs, int region, int len, int col)
-{
-    int i;
-    textcolor(col);
-    for (i = 0; i < len; i++)
-    {
-        cgotoxy(x, y+i, region);
-        cprintf("%02d", ofs+i);
-    }
-}
-
 int m_getch()
 {
     return getch();
