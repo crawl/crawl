@@ -3985,12 +3985,9 @@ void tile_draw_floor()
             const coord_def gc = view2grid(show2view(ep));
             int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
 
-            int object = env.show(ep);
+            int object = show_appearance(ep);
             if (in_bounds(gc) && object != 0)
             {
-                if (object == DNGN_SECRET_DOOR)
-                    object = (int)grid_secret_door_appearance(gc);
-
                 bg = tileidx_feature(object, gc.x, gc.y);
 
                 if (is_travelable_stair((dungeon_feature_type)object)

@@ -50,8 +50,10 @@ void find_connected_range(coord_def d, dungeon_feature_type ft_min,
                           dungeon_feature_type ft_max,
                           std::set<coord_def>& out);
 void get_door_description(int door_size, const char** adjective, const char** noun);
-dungeon_feature_type grid_secret_door_appearance( const coord_def& where );
-bool grid_destroys_items( dungeon_feature_type grid );
+dungeon_feature_type grid_secret_door_appearance(const coord_def &where);
+dungeon_feature_type grid_appearance(const coord_def &gc);
+unsigned int show_appearance(const coord_def &ep);
+bool grid_destroys_items(dungeon_feature_type grid);
 
 const char *grid_item_destruction_message( dungeon_feature_type grid );
 

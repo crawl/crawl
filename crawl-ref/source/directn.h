@@ -160,6 +160,7 @@ bool in_los(const coord_def &pos);
 bool in_vlos(int x, int y);
 bool in_vlos(const coord_def &pos);
 
+std::string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c);
 void full_describe_square(const coord_def &c);
 void describe_floor();

@@ -2631,9 +2631,8 @@ void losight(env_show_grid &sh,
                 if (realx < 0 || realx > 79 || realy < 0 || realy > 69)
                     continue;
 
-                dungeon_feature_type dfeat = gr[realx][realy];
-                if (dfeat == DNGN_SECRET_DOOR)
-                    dfeat = grid_secret_door_appearance(coord_def(realx, realy));
+                coord_def real(realx, realy);
+                dungeon_feature_type dfeat = grid_appearance(real);
 
                 // if this cell is opaque...
                 if ( grid_is_opaque(dfeat)
@@ -4579,15 +4578,12 @@ unsigned get_screen_glyph( int x, int y )
 {
     const coord_def ep = view2show(grid2view(coord_def(x,y)));
 
-    int             object = env.show(ep);
+    int             object = show_appearance(ep);
     unsigned short  colour = env.show_col(ep);
     unsigned        ch;
 
     if (!object)
         return get_envmap_char(x, y);
-
-    if (object == DNGN_SECRET_DOOR)
-        object = grid_secret_door_appearance(coord_def(x, y));
 
     _get_symbol( x, y, object, &ch, &colour );
     return (ch);
@@ -4648,12 +4644,9 @@ std::string screenshot( bool fullscreen )
             if (ch && !isprint(ch))
             {
                 // [ds] Evil hack time again. Peek at grid, use that character.
-                int object = grd(gc);
+                int object = grid_appearance(gc);
                 unsigned glych;
                 unsigned short glycol = 0;
-
-                if (object == DNGN_SECRET_DOOR)
-                    object = grid_secret_door_appearance( gc );
 
                 _get_symbol( gc.x, gc.y, object, &glych, &glycol );
                 ch = glych;
@@ -4743,16 +4736,13 @@ void view_update_at(const coord_def &pos)
     const coord_def ep = view2show(vp);
     _update_env_show(pos, ep);
 
-    int object = env.show(ep);
+    int object = show_appearance(ep);
 
     if (!object)
         return;
 
     unsigned short  colour = env.show_col(ep);
     unsigned        ch = 0;
-
-    if (object == DNGN_SECRET_DOOR)
-        object = grid_secret_door_appearance( pos );
 
     _get_symbol( pos.x, pos.y, object, &ch, &colour );
 
@@ -4994,12 +4984,9 @@ void viewwindow(bool draw_it, bool do_updates)
                 }
                 else
                 {
-                    int             object = env.show(ep);
+                    int             object = show_appearance(ep);
                     unsigned short  colour = env.show_col(ep);
                     unsigned        ch;
-
-                    if (object == DNGN_SECRET_DOOR)
-                        object = grid_secret_door_appearance( gc );
 
                     _get_symbol( gc.x, gc.y, object, &ch, &colour );
 

@@ -512,6 +512,7 @@ int TilesFramework::getch_ck()
 
         if (SDL_PollEvent(&event))
         {
+            tiles.clear_text_tags(TAG_CELL_DESC);
             switch(event.type)
             {
             case SDL_KEYDOWN:
@@ -587,6 +588,7 @@ int TilesFramework::getch_ck()
 
         if (show_tooltip)
         {
+            tiles.clear_text_tags(TAG_CELL_DESC);
             if (m_tooltip.empty())
             {
                 for (unsigned int i = 0; 

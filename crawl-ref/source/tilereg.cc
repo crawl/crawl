@@ -25,6 +25,7 @@
 #include "terrain.h"
 #include "transfor.h"
 #include "travel.h"
+#include "view.h"
 
 #include "tilereg.h"
 #include "tiles.h"
@@ -786,6 +787,15 @@ void DungeonRegion::draw_foreground(unsigned int bg, unsigned int fg, unsigned i
     }
 }
 
+void DungeonRegion::draw_cursor(cursor_type type, unsigned int tile)
+{
+    const coord_def &gc = m_cursor[type];
+    if (gc == NO_CURSOR || !on_screen(gc))
+        return;
+
+    add_quad(TEX_DEFAULT, tile, gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
+}
+
 void DungeonRegion::render()
 {
     if (m_tileb.size() == 0)
@@ -891,6 +901,18 @@ void DungeonRegion::render()
             tile += 2;
         }
 
+    draw_cursor(CURSOR_TUTORIAL, TILE_TUTORIAL_CURSOR);
+    draw_cursor(CURSOR_MOUSE, see_grid(m_cursor[CURSOR_MOUSE]) ? TILE_CURSOR
+                                                               : TILE_CURSOR2);
+
+    if (m_cursor[CURSOR_TUTORIAL] != NO_CURSOR
+        && on_screen(m_cursor[CURSOR_TUTORIAL]))
+    {
+        add_quad(TEX_DEFAULT, TILE_TUTORIAL_CURSOR,
+                 m_cursor[CURSOR_TUTORIAL].x,
+                 m_cursor[CURSOR_TUTORIAL].y);
+    }
+
     if (m_verts.size() > 0)
     {
         m_image->m_textures[TEX_DEFAULT].bind();
@@ -934,6 +956,8 @@ void DungeonRegion::on_resize()
 
 int DungeonRegion::handle_mouse(MouseEvent &event)
 {
+    tiles.clear_text_tags(TAG_CELL_DESC);
+
     if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
         || mouse_control::current_mode() == MOUSE_MODE_MACRO
         || mouse_control::current_mode() == MOUSE_MODE_MORE)
@@ -952,10 +976,13 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     const coord_def gc(cx + m_cx_to_gx, cy + m_cy_to_gy);
     tiles.place_cursor(CURSOR_MOUSE, gc);
 
-    // TODO enne - can we handle this through tooltips
-    // Destroying the message area is such bad behaviour.
-    // mesclr();
-    // terse_describe_square(gc);
+    if (event.event == MouseEvent::MOVE)
+    {
+        const std::string &desc = get_terse_square_desc(gc);
+        // Suppress floor description
+        if (desc != "floor")
+            tiles.add_text_tag(TAG_CELL_DESC, desc, gc);
+    }
 
     if (!on_map)
         return 0;
@@ -1073,18 +1100,6 @@ int DungeonRegion::get_buffer_index(const coord_def &gc)
 
 void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
 {
-    unsigned int unmask = ~((type == CURSOR_MOUSE) ? TILE_FLAG_CURSOR :
-                                                     TILE_FLAG_TUT_CURSOR);
-    unsigned int mask = (type == CURSOR_MOUSE) ? TILE_FLAG_CURSOR1 :
-                                                 TILE_FLAG_TUT_CURSOR;
-
-    // Remove cursor from previous location
-    if (on_screen(m_cursor[type]))
-    {
-        unsigned int idx = get_buffer_index(m_cursor[type]) + 1;
-        m_tileb[idx] &= unmask;
-    }
-
     // If we're only looking for a direction, put the mouse
     // cursor next to the player to let them know that their
     // spell/wand will only go one square.
@@ -1112,16 +1127,6 @@ void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
     else
     {
         m_cursor[type] = gc;
-    }
-
-    // Add cursor to new location
-    if ((m_cursor[type] != NO_CURSOR) && on_screen(m_cursor[type]))
-    {
-        unsigned int idx = get_buffer_index(m_cursor[type]) + 1;
-        m_tileb[idx] &= unmask;
-
-        // TODO enne - specify type of cursor in place_cursor? or determine type based on grd?
-        m_tileb[idx] |= mask;
     }
 }
 

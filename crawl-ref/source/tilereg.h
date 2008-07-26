@@ -212,6 +212,7 @@ enum text_tag_type
 {
     TAG_NAMED_MONSTER,
     TAG_TUTORIAL,
+    TAG_CELL_DESC,
     TAG_MAX
 };
 
@@ -246,6 +247,7 @@ protected:
     void draw_foreground(unsigned int bg, unsigned int fg, unsigned int x, unsigned int y);
     void draw_doll(dolls_data &doll, unsigned int x, unsigned int y);
     void draw_draco(int colour, int mon_idx, int equ_tile, unsigned int x, unsigned int y);
+    void draw_cursor(cursor_type type, unsigned int tile);
 
     void add_quad_doll(unsigned int part, unsigned int idx, int ymax, unsigned int x, unsigned int y, int ox, int oy);
 

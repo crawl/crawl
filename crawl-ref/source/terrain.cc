@@ -301,7 +301,27 @@ void get_door_description(int door_size, const char** adjective, const char** no
     *noun = descriptions[idx+1];
 }
 
-dungeon_feature_type grid_secret_door_appearance( const coord_def& where )
+unsigned int show_appearance(const coord_def &ep)
+{
+    unsigned int object = env.show(ep);
+    const coord_def gc = view2grid(show2view(ep));
+
+    if (object == DNGN_SECRET_DOOR)
+        object = grid_secret_door_appearance(gc);
+
+    return object;
+}
+
+dungeon_feature_type grid_appearance(const coord_def &gc)
+{
+    dungeon_feature_type grid = grd(gc);
+    if (grid == DNGN_SECRET_DOOR)
+        grid = grid_secret_door_appearance(gc);
+
+    return grid;
+}
+
+dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
 {
     dungeon_feature_type ret = DNGN_FLOOR;
 

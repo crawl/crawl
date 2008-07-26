@@ -1221,6 +1221,68 @@ void direction(dist& moves, targeting_type restricts,
     _extend_move_to_edge(moves);
 }
 
+std::string get_terse_square_desc(const coord_def &gc)
+{
+    std::string desc;
+    const char *unseen_desc = "[unseen terrain]";
+    bool is_feature = false;
+    if (gc == you.pos())
+    {
+        desc = you.your_name;
+    }
+    else if (!map_bounds(gc))
+    {
+        desc = unseen_desc;
+    }
+    else if (!see_grid(gc))
+    {
+        if (is_terrain_seen(gc)) 
+        {
+            desc = feature_description(gc, false, DESC_PLAIN, false);
+            if (!see_grid(gc))
+            {
+                desc = "[" + desc + "]";
+            }
+            is_feature = true;
+        }
+        else
+        {
+            desc = unseen_desc;
+        }
+    }
+    else if (mgrd(gc) != NON_MONSTER)
+    {
+        const monsters &mons = menv[mgrd(gc)];
+
+        if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
+        {
+            item_def item;
+            get_mimic_item(&mons, item);
+            desc = item.name(DESC_PLAIN);
+        }
+        else
+        {
+            desc = mons.name(DESC_PLAIN);
+            if (mons.has_base_name())
+            {
+                desc += ", ";
+                desc += mons.base_name(DESC_NOCAP_THE, false);
+            }
+        }
+    }
+    else if (igrd(gc) != NON_ITEM)
+    {
+        desc = mitm[igrd(gc)].name(DESC_PLAIN);
+    }
+    else
+    {
+        desc = feature_description(gc, false, DESC_PLAIN, false);
+        is_feature = true;
+    }
+
+    return desc;
+}
+
 void terse_describe_square(const coord_def &c)
 {
     if (!see_grid(c))
