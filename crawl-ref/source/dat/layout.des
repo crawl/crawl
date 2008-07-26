@@ -149,8 +149,9 @@ TAGS:    layout allow_dup
     dgn.fill_area(0, 0, gxm - 1, gym - 1, "rock_wall")
     dgn.octa_room(10, 10, gxm - 10, gym - 10, oblique, "floor")
 
-    if crawl.coinflip() then
-        local iterations = 100 + crawl.random2(200)
+    local smear = crawl.coinflip()
+    if smear then
+        local iterations = 100 + crawl.random2(400)
         dgn.smear_feature(iterations, false, wall, 0, 0, gxm - 1, gym - 1)
     end
 
@@ -241,6 +242,10 @@ TAGS:    layout allow_dup
 
             assert(ret)
         end
+    end
+
+    if smear then
+        dgn.fill_disconnected_zones(0, 0, gxm - 1, gym - 1, wall)
     end
 }}
 MAP

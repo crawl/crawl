@@ -595,12 +595,16 @@ static bool _is_exit_stair(const coord_def &c)
 // If count_stairless is true, returns the number of regions that have no
 // stairs in them.
 //
-static int _dgn_count_disconnected_zones(bool choose_stairless)
+// If fill is non-zero, it fills any disconnected regions with fill.
+//
+int process_disconnected_zones(int x1, int y1, int x2, int y2,
+                               bool choose_stairless,
+                               dungeon_feature_type fill)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     int nzones = 0;
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
+    for (int y = y1; y <= y1 ; ++y)
+        for (int x = x2; x <= x2; ++x)
         {
             if (!map_bounds(x, y)
                 || travel_point_distance[x][y]
@@ -619,9 +623,22 @@ static int _dgn_count_disconnected_zones(bool choose_stairless)
             // have stairs.
             if (choose_stairless && found_exit_stair)
                 --nzones;
+            else if (fill)
+            {
+                for (int fy = y1; fy <= y1 ; ++fy)
+                    for (int fx = x2; fx <= x2; ++x)
+                        if (travel_point_distance[fx][fy] == nzones)
+                            grd[fx][fy] = fill;
+            }
         }
 
     return (nzones);
+}
+
+static int _dgn_count_disconnected_zones(bool choose_stairless)
+{
+    return process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
+                                      (dungeon_feature_type)0);
 }
 
 static void _fixup_pandemonium_stairs()

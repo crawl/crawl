@@ -2050,6 +2050,25 @@ static int dgn_join_the_dots(lua_State *ls)
     return 1;
 }
 
+static int dgn_fill_disconnected_zones(lua_State *ls)
+{
+    int from_x = luaL_checkint(ls, 1);
+    int from_y = luaL_checkint(ls, 2);
+    int to_x = luaL_checkint(ls, 3);
+    int to_y = luaL_checkint(ls, 4);
+
+    dungeon_feature_type feat = _get_lua_feature(ls, 5);
+    if (!feat)
+    {
+        luaL_argerror(ls, 5, "Invalid feature.");
+        return 0;
+    }
+
+    process_disconnected_zones(from_x, from_y, to_x, to_y, true, feat);
+
+    return 0;
+}
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "default_depth", dgn_default_depth },
@@ -2132,6 +2151,7 @@ static const struct luaL_reg dgn_lib[] =
     { "count_antifeature_in_box", dgn_count_antifeature_in_box },
     { "count_neighbours", dgn_count_neighbours },
     { "join_the_dots", dgn_join_the_dots },
+    { "fill_disconnected_zones", dgn_fill_disconnected_zones },
 
     { NULL, NULL }
 };

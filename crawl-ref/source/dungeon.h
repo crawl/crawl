@@ -360,6 +360,9 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
 void spotty_level(bool seeded, int iterations, bool boxy);
 void smear_feature(int iterations, bool boxy, dungeon_feature_type feature,
                    int x1, int y1, int x2, int y2);
+int process_disconnected_zones(int x1, int y1, int x2, int y2,
+                               bool choose_stairless,
+                               dungeon_feature_type fill);
 bool octa_room(spec_room &sr, int oblique_max,
                dungeon_feature_type type_floor);
 
