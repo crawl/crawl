@@ -52,7 +52,10 @@
 #include "stuff.h"
 #include "spells4.h"
 #include "stash.h"
-#include "tiles.h"
+#ifdef USE_TILE
+ #include "tiles.h"
+ #include "tilereg.h"
+#endif
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
@@ -1219,6 +1222,10 @@ void direction(dist& moves, targeting_type restricts,
     // We need this for directional explosions, otherwise they'll explode one
     // square away from the player.
     _extend_move_to_edge(moves);
+
+#ifdef USE_TILE
+    tiles.place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+#endif
 }
 
 std::string get_terse_square_desc(const coord_def &gc)
