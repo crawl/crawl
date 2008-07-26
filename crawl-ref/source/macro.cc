@@ -67,6 +67,11 @@ static macromap *all_maps[] =
     &Keymaps[KC_LEVELMAP],
     &Keymaps[KC_TARGETING],
     &Keymaps[KC_CONFIRM],
+
+#ifdef USE_TILE
+    &Keymaps[KC_TILE],
+#endif
+
     &Macros,
 };
 
@@ -76,6 +81,38 @@ static keybuf Buffer;
 static std::vector<std::string> userfunctions;
 
 static std::vector<key_recorder*> recorders;
+
+typedef std::map<std::string, int> name_to_cmd_map;
+typedef std::map<int, std::string> cmd_to_name_map;
+
+struct command_name
+{
+    command_type cmd;
+    const char*  name;
+};
+
+static command_name _command_name_list[] = {
+#include "cmd-name.h"
+};
+
+static name_to_cmd_map _names_to_cmds;
+static cmd_to_name_map _cmds_to_names;
+
+struct default_binding
+{
+    int           key;
+    command_type  cmd;
+};
+
+static default_binding _default_binding_list[] = {
+#include "cmd-keys.h"
+};
+
+typedef std::map<int, int> key_to_cmd_map;
+typedef std::map<int, int> cmd_to_key_map;
+
+static key_to_cmd_map _keys_to_cmds[KC_CONTEXT_COUNT];
+static cmd_to_key_map _cmds_to_keys[KC_CONTEXT_COUNT];
 
 inline int userfunc_index(int key)
 {
@@ -991,4 +1028,162 @@ void insert_macro_into_buff(const keyseq& keys)
 int get_macro_buf_size()
 {
     return (Buffer.size());
+}
+
+///////////////////////////////////////////////////////////////
+// Keybinding stuff
+
+#define VALID_BIND_COMMAND(cmd) (cmd > CMD_NO_CMD && cmd < CMD_MIN_SYNTHETIC)
+
+void init_keybindings()
+{
+    int i;
+
+    for (i = 0; _command_name_list[i].cmd != CMD_NO_CMD
+             && _command_name_list[i].name != NULL; i++)
+    {
+        command_name &data = _command_name_list[i];
+
+        ASSERT(VALID_BIND_COMMAND(data.cmd));
+        ASSERT(_names_to_cmds.find(data.name) == _names_to_cmds.end());
+        ASSERT(_cmds_to_names.find(data.cmd)  == _cmds_to_names.end());
+
+        _names_to_cmds[data.name] = data.cmd;
+        _cmds_to_names[data.cmd]  = data.name;
+    }
+
+    ASSERT(i >= 130);
+
+    for (i = 0; _default_binding_list[i].cmd != CMD_NO_CMD
+             && _default_binding_list[i].key != '\0'; i++)
+    {
+        default_binding &data = _default_binding_list[i];
+        ASSERT(VALID_BIND_COMMAND(data.cmd));
+
+        KeymapContext context = context_for_command(data.cmd);
+
+        ASSERT(context < KC_CONTEXT_COUNT);
+
+        key_to_cmd_map &key_map = _keys_to_cmds[context];
+        cmd_to_key_map &cmd_map = _cmds_to_keys[context];
+
+        // Only one command per key, but it's okay to have several
+        // keys map to the same command.
+        ASSERT(key_map.find(data.key) == key_map.end());
+
+        key_map[data.key] = data.cmd;
+        cmd_map[data.cmd] = data.key;
+    }
+
+    ASSERT(i >= 130);
+}
+
+command_type name_to_command(std::string name)
+{
+    name_to_cmd_map::iterator it = _names_to_cmds.find(name);
+
+    if (it == _names_to_cmds.end())
+        return (CMD_NO_CMD);
+
+    return static_cast<command_type>(it->second);
+}
+
+std::string command_to_name(command_type cmd)
+{
+    cmd_to_name_map::iterator it = _cmds_to_names.find(cmd);
+
+    if (it == _cmds_to_names.end())
+        return ("CMD_NO_CMD");
+
+    return (it->second);
+}
+
+command_type key_to_command(int key, KeymapContext context)
+{
+    key_to_cmd_map           &key_map = _keys_to_cmds[context];
+    key_to_cmd_map::iterator it       = key_map.find(key);
+
+    if (it == key_map.end())
+        return CMD_NO_CMD;
+
+    command_type cmd = static_cast<command_type>(it->second);
+
+    ASSERT(context_for_command(cmd) == context);
+
+    return cmd;
+}
+
+int command_to_key(command_type cmd)
+{
+    KeymapContext context = context_for_command(cmd);
+
+    if (context == KC_NONE)
+        return ('\0');
+
+    cmd_to_key_map           &cmd_map = _cmds_to_keys[context];
+    cmd_to_key_map::iterator it       = cmd_map.find(cmd);
+
+    if (it == cmd_map.end())
+        return ('\0');
+
+    return (it->second);
+}
+
+KeymapContext context_for_command(command_type cmd)
+{
+#ifdef USE_TILE
+    if (cmd >= CMD_MIN_TILE && cmd <= CMD_MAX_TILE)
+        return KC_TILE;
+#endif
+
+    if (cmd > CMD_NO_CMD && cmd <= CMD_MAX_NORMAL)
+        return KC_DEFAULT;
+
+    if (cmd >= CMD_MIN_OVERMAP && cmd <= CMD_MAX_OVERMAP)
+        return KC_LEVELMAP;
+
+    if (cmd >= CMD_MIN_TARGET && cmd <= CMD_MAX_TARGET)
+        return KC_TARGETING;
+
+    return KC_NONE;
+}
+
+void bind_command_to_key(command_type cmd, int key)
+{
+    KeymapContext context      = context_for_command(cmd);
+    std::string   command_name = command_to_name(cmd);
+
+    if (context == KC_NONE || command_name == "CMD_NO_CMD"
+        || !VALID_BIND_COMMAND(cmd))
+    {
+        if (command_name == "CMD_NO_CMD")
+        {
+            mprf(MSGCH_ERROR, "Cannot bind command #%d to a key.",
+                 (int) cmd);
+            return;
+        }
+
+        mprf(MSGCH_ERROR, "Cannot bind command '%s' to a key.",
+             command_name.c_str());
+        return;
+    }
+
+    if (is_userfunction(key))
+    {
+        mpr("Cannot bind user function keys to a command.", MSGCH_ERROR);
+        return;
+    }
+
+    if (is_synthetic_key(key))
+    {
+        mpr("Cannot bind synthetic keys to a command.", MSGCH_ERROR);
+        return;
+    }
+
+    // We're good.
+    key_to_cmd_map &key_map = _keys_to_cmds[context];
+    cmd_to_key_map &cmd_map = _cmds_to_keys[context];
+
+    key_map[key] = cmd;
+    cmd_map[cmd] = key;
 }

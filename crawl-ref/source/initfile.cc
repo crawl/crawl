@@ -36,6 +36,7 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "macro.h"
 #include "message.h"
 #include "mon-util.h"
 #include "newgame.h"
@@ -1704,6 +1705,74 @@ void game_options::set_option_fragment(const std::string &s)
     }
 }
 
+// Not a method of the game_options class since keybindings aren't
+// stored in that class.
+static void _bindkey(std::string field)
+{
+    const size_t start_bracket = field.find_first_of('[');
+    const size_t end_bracket   = field.find_last_of(']');
+
+    if (start_bracket == std::string::npos
+	    || end_bracket == std::string::npos
+        || start_bracket > end_bracket)
+    {
+        mprf(MSGCH_ERROR, "Bad bindkey bracketing in '%s'",
+             field.c_str());
+        return;
+    }
+
+    const std::string key_str = field.substr(start_bracket + 1,
+                                             end_bracket - start_bracket - 1);
+
+    int key;
+
+    // TODO: Function keys.
+    if (key_str.length() == 0)
+    {
+        mprf(MSGCH_ERROR, "No key in bindkey directive '%s'",
+             field.c_str());
+        return;
+    }
+    else if (key_str.length() == 1)
+    {
+        key = key_str[0];
+    }
+    else if (key_str.length() == 2)
+    {
+        if(key_str[0] != '^')
+        {
+            mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
+                 key_str.c_str(), field.c_str());
+            return;
+        }
+        key = CONTROL(key_str[1]);
+    }
+    else
+    {
+        mprf(MSGCH_ERROR, "Invalid key '%s' in bindkey directive '%s'",
+             key_str.c_str(), field.c_str());
+        return;
+    }
+
+    const size_t start_name = field.find_first_not_of(' ', end_bracket + 1);
+    if (start_name == std::string::npos)
+    {
+        mprf(MSGCH_ERROR, "No command name for bindkey directive '%s'",
+             field.c_str());
+        return;
+    }
+
+    const std::string  name = field.substr(start_name);
+    const command_type cmd  = name_to_command(name);
+    if (cmd == CMD_NO_CMD)
+    {
+       mprf(MSGCH_ERROR, "No command named '%s'", name.c_str());
+       return;
+    }
+
+    bind_command_to_key(cmd, key);
+}
+
 void game_options::read_option_line(const std::string &str, bool runscript)
 {
 #define BOOL_OPTION_NAMED(_opt_str, _opt_var)               \
@@ -1830,7 +1899,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "menu_colour" && key != "menu_color"
         && key != "message_colour" && key != "message_color"
         && key != "levels" && key != "level" && key != "entries"
-        && key != "include")
+        && key != "include" && key != "bindkey")
     {
         lowercase( field );
     }
@@ -2880,6 +2949,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #ifdef WIN32TILES
     else BOOL_OPTION(use_dos_char);
 #endif
+
+    else if(key == "bindkey")
+    {
+        _bindkey(field);
+    }
 
     // Catch-all else, copies option into map
     else if (runscript)

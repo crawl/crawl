@@ -2709,78 +2709,12 @@ command_type targeting_behaviour::get_command(int key)
         return static_cast<command_type> (CMD_TARGET_CYCLE_MLIST + (key - 'a'));
 #endif
 
-    switch (key)
-    {
-    case ESCAPE:
-    case 'x':  return CMD_TARGET_CANCEL;
+    command_type cmd = key_to_command(key, KC_TARGETING);
+    // XXX: hack
+    if (cmd == CMD_TARGET_SELECT && key == ' ' && just_looking)
+        cmd = CMD_TARGET_CANCEL;
 
-#ifdef USE_TILE
-    case CK_MOUSE_MOVE:  return CMD_TARGET_MOUSE_MOVE;
-    case CK_MOUSE_CLICK: return CMD_TARGET_MOUSE_SELECT;
-#endif
-
-#ifdef WIZARD
-    case 'F':  return CMD_TARGET_WIZARD_MAKE_FRIENDLY;
-    case 'P':  return CMD_TARGET_WIZARD_BLESS_MONSTER;
-    case 's':  return CMD_TARGET_WIZARD_MAKE_SHOUT;
-    case 'g':  return CMD_TARGET_WIZARD_GIVE_ITEM;
-    case 'm':  return CMD_TARGET_WIZARD_MOVE;
-    case 'w':  return CMD_TARGET_WIZARD_PATHFIND;
-#endif
-    case 'v':  return CMD_TARGET_DESCRIBE;
-    case '?':  return CMD_TARGET_HELP;
-    case ' ':  return just_looking? CMD_TARGET_CANCEL : CMD_TARGET_SELECT;
-    case CONTROL('P'): return CMD_TARGET_SHOW_PROMPT;
-#ifdef WIZARD
-    case CONTROL('C'): return CMD_TARGET_CYCLE_BEAM;
-#endif
-    case ':':  return CMD_TARGET_HIDE_BEAM;
-    case '!':  return CMD_TARGET_SELECT;
-    case '\r': return CMD_TARGET_SELECT;
-    case '5':  return CMD_TARGET_SELECT;
-    case '.':  return CMD_TARGET_SELECT_ENDPOINT;
-
-    case '\\':
-    case '\t': return CMD_TARGET_FIND_PORTAL;
-    case '^':  return CMD_TARGET_FIND_TRAP;
-    case '_':  return CMD_TARGET_FIND_ALTAR;
-    case '<':  return CMD_TARGET_FIND_UPSTAIR;
-    case '>':  return CMD_TARGET_FIND_DOWNSTAIR;
-
-    case CONTROL('F'): return CMD_TARGET_CYCLE_TARGET_MODE;
-    case CONTROL('L'): return CMD_TARGET_TOGGLE_MLIST;
-    case 'p':  return CMD_TARGET_PREV_TARGET;
-    case 'f':  return CMD_TARGET_MAYBE_PREV_TARGET;
-    case 't':  return CMD_TARGET_MAYBE_PREV_TARGET; // for the 0.3.4 keys
-
-    case '-':  return CMD_TARGET_CYCLE_BACK;
-    case '+':
-    case '=':  return CMD_TARGET_CYCLE_FORWARD;
-    case ';':
-    case '/':  return CMD_TARGET_OBJ_CYCLE_BACK;
-    case '*':
-    case '\'': return CMD_TARGET_OBJ_CYCLE_FORWARD;
-
-    case 'b':  return CMD_TARGET_DOWN_LEFT;
-    case 'h':  return CMD_TARGET_LEFT;
-    case 'j':  return CMD_TARGET_DOWN;
-    case 'k':  return CMD_TARGET_UP;
-    case 'l':  return CMD_TARGET_RIGHT;
-    case 'n':  return CMD_TARGET_DOWN_RIGHT;
-    case 'u':  return CMD_TARGET_UP_RIGHT;
-    case 'y':  return CMD_TARGET_UP_LEFT;
-
-    case 'B':  return CMD_TARGET_DIR_DOWN_LEFT;
-    case 'H':  return CMD_TARGET_DIR_LEFT;
-    case 'J':  return CMD_TARGET_DIR_DOWN;
-    case 'K':  return CMD_TARGET_DIR_UP;
-    case 'L':  return CMD_TARGET_DIR_RIGHT;
-    case 'N':  return CMD_TARGET_DIR_DOWN_RIGHT;
-    case 'U':  return CMD_TARGET_DIR_UP_RIGHT;
-    case 'Y':  return CMD_TARGET_DIR_UP_LEFT;
-
-    default:   return CMD_NO_CMD;
-    }
+    return cmd;
 }
 
 bool targeting_behaviour::should_redraw()
