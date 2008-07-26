@@ -4343,7 +4343,7 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
     place.map.map.apply_overlays(place.pos);
     _register_place(place);
 
-    if (target_connections.empty())
+    if (target_connections.empty() && gluggy != MAP_ENCOMPASS)
         _pick_float_exits(place, target_connections);
 
     if (make_no_exits)
@@ -6243,11 +6243,11 @@ bool octa_room(spec_room &sr, int oblique_max,
             if (grd[x][y] == DNGN_BUILDER_SPECIAL_WALL)
                 return (false);
 
-        if (oblique > 0)
-            oblique--;
-
         if (x > sr.x2 - oblique_max)
             oblique += 2;
+
+        if (oblique > 0)
+            oblique--;
     }
 
     oblique = oblique_max;
@@ -6267,11 +6267,11 @@ bool octa_room(spec_room &sr, int oblique_max,
                 grd[x][y] = DNGN_FLOOR;       // ick
         }
 
-        if (oblique > 0)
-            oblique--;
-
         if (x > sr.x2 - oblique_max)
             oblique += 2;
+
+        if (oblique > 0)
+            oblique--;
     }
 
     return (true);
