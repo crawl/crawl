@@ -613,7 +613,7 @@ bool butchery(int which_corpse)
                      corpse_name.c_str());
                 repeat_prompt = false;
 
-                keyin = tolower(c_getch());
+                keyin = tolower(getchm(KC_CONFIRM));
                 switch (keyin)
                 {
                 case 'b':
@@ -1216,7 +1216,7 @@ int eat_from_floor()
              ((si->quantity > 1) ? "one of " : ""),
              item_name.c_str());
 
-        int keyin = tolower(c_getch());
+        int keyin = tolower(getchm(KC_CONFIRM));
         switch (keyin)
         {
         case 'q':
