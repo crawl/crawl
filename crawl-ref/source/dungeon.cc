@@ -911,6 +911,44 @@ static void _fixup_walls()
     }
 }
 
+// Remove any items that are on squares that items should not be on.
+// link_items() must be called after this function.
+static void _fixup_misplaced_items()
+{
+    for (int i = 0; i < MAX_ITEMS; i++)
+    {
+        if (!is_valid_item(mitm[i]) || (mitm[i].x == 0 && mitm[i].y == 0))
+            continue;
+
+        coord_def gc(mitm[i].x, mitm[i].y);
+
+        if (in_bounds(gc))
+        {
+            dungeon_feature_type feat = grd(gc);
+            if (feat >= DNGN_MINITEM)
+                continue;
+
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Item buggily placed in feature at (%d, %d).", gc.x, gc.y);
+#endif
+        }
+        else
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Item buggily placed out of bounds at (%d, %d).", gc.x, gc.y);
+#endif
+        }
+
+        // Can't just unlink item because it might not have been linked yet.
+        mitm[i].base_type = OBJ_UNASSIGNED;
+        mitm[i].quantity = 0;
+        mitm[i].x = 0;
+        mitm[i].y = 0;
+    }
+}
+
 static void _fixup_branch_stairs()
 {
     // Top level of branch levels - replaces up stairs
@@ -1281,6 +1319,8 @@ static void _build_dungeon_level(int level_number, int level_type)
     _fixup_branch_stairs();
 
     _place_altars();
+
+    _fixup_misplaced_items();
 
     link_items();
 
