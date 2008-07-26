@@ -917,7 +917,7 @@ static void _fixup_misplaced_items()
 {
     for (int i = 0; i < MAX_ITEMS; i++)
     {
-        if (!is_valid_item(mitm[i]) || (mitm[i].x == 0 && mitm[i].y == 0))
+        if (!is_valid_item(mitm[i]) || (mitm[i].x == 0))
             continue;
 
         coord_def gc(mitm[i].x, mitm[i].y);
