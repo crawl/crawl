@@ -916,6 +916,9 @@ enum dungeon_feature_type
     DNGN_SHALLOW_WATER = 65,           //   65
     DNGN_WATER_STUCK,
 
+    // Lowest grid value that an item can be placed on.
+    DNGN_MINITEM = DNGN_SHALLOW_WATER,
+
     DNGN_FLOOR_MIN = 67,
     DNGN_FLOOR = DNGN_FLOOR_MIN,
     DNGN_FLOOR_SPECIAL,        // currently only used for colouring bazaars
