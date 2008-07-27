@@ -36,8 +36,12 @@ SQLLIB := sqlite3
 SQLIBA   := lib$(SQLLIB).a
 FSQLLIBA := $(SQLLIB)\$(SQLIBA)
 
-LIB = -static -lwinmm -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -lpcre
-INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC)
+PCRESRC := util\pcre
+PCRELIB := pcre
+PCRELIBA := lib$(PCRELIB).a
+
+LIB = -static -lwinmm -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -L$(PCRESRC) -lpcre
+INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC) -I$(PCRESRC)
 
 CFWARN := -Wall -Wwrite-strings -Wshadow -pedantic
 
@@ -81,7 +85,7 @@ OBJECTS      := levcomp.tab.o levcomp.lex.o \
 
 OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
 
-GAME_DEPENDS := prepare $(LUASRC)\$(LUALIBA) $(FSQLLIBA) $(OBJECTS)
+GAME_DEPENDS := prepare $(LUASRC)\$(LUALIBA) $(FSQLLIBA) $(PCRESRC)\$(PCRELIBA) $(OBJECTS)
 
 ##########################################################################
 
@@ -159,7 +163,10 @@ clean-lua:
 clean-sql:
 	    cd $(SQLSRC) && $(MAKE) "RM_F=del /f" clean
 
-distclean: clean clean-lua clean-sql
+clean-pcre:
+	    cd $(PCRESRC) && $(MAKE) clean
+
+distclean: clean clean-lua clean-sql clean-pcre
 		$(DELETE) $(OPATH)\*.o
 		$(DELETE) *.o
 		$(DELETE) bones.*
@@ -208,6 +215,13 @@ $(LUASRC)\$(LUALIBA):
 $(FSQLLIBA):
 	@echo Building SQLite
 	cd $(SQLSRC) && $(MAKE)
+
+#############################################################################
+# Build PCRE
+
+$(PCRESRC)\$(PCRELIBA):
+	@echo Building PCRE...
+	@cd $(PCRESRC) && $(MAKE)
 
 ##########################################################################
 # Resources
