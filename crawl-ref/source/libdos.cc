@@ -27,6 +27,9 @@ void init_libdos()
     // Ignore Ctrl-C
     charmode.c_lflag &= ~ISIG;
     tcsetattr (0, TCSANOW, &charmode);
+
+    // Turn off blink.
+    intensevideo();
 }
 
 void clear_message_window()
