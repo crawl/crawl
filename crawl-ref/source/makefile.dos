@@ -32,8 +32,12 @@ SQLLIB := sql3
 SQLLIBA := lib$(SQLLIB).a
 FSQLLIBA := $(SQLSRC)\$(SQLLIBA)
 
-LIB = -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -lpcre
-INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC)
+PCRESRC := util\pcre
+PCRELIB := pcre
+PCRELIBA := lib$(PCRELIB).a
+
+LIB = -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -L$(PCRESRC) -lpcre
+INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC) -I$(PCRESRC)
 
 WORKDIR := $(shell cd)
 
@@ -64,7 +68,7 @@ endif
 
 OBJECTS := $(UTIL)levtab.o $(UTIL)levlex.o $(OBJECTS)
 
-GAME_DEPENDS := $(LUASRC)\$(LUALIBA) $(FSQLLIBA) $(OBJECTS)
+GAME_DEPENDS := $(LUASRC)\$(LUALIBA) $(FSQLLIBA) $(PCRESRC)\$(PCRELIBA) $(OBJECTS)
 
 ##########################################################################
 
@@ -139,7 +143,13 @@ clean-sql:
 		$(MAKE) "RM_F=cmd /c del /f" clean
 		cd $(WORKDIR)
 
-distclean: clean-lua clean-sql
+clean-pcre:
+		cd $(PCRESRC)
+		$(MAKE) clean
+		cd $(WORKDIR)
+
+
+distclean: clean-lua clean-sql clean-pcre
 		$(DELETE) *.o
 		$(DELETE) bones.*
 		$(DELETE) morgue.txt
@@ -186,3 +196,11 @@ $(FSQLLIBA):
 	$(MAKE) LIBSQL=$(SQLLIBA)
 	cd $(WORKDIR)
 
+#############################################################################
+# Build PCRE
+
+$(PCRESRC)\$(PCRELIBA):
+	@echo Building PCRE...
+	@cd $(PCRESRC)
+	@$(MAKE) CXX=$(CXX)
+	@cd $(WORKDIR)

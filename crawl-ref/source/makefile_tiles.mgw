@@ -41,8 +41,12 @@ SQLLIB := sqlite3
 SQLIBA   := lib$(SQLLIB).a
 FSQLLIBA := $(SQLLIB)\$(SQLIBA)
 
-LIB = -lwinmm -mwindows -lcomctl32 -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -lpng $(SDL_LDFLAGS) -lopengl32 -lglu32 -lSDL_image -lfreetype
-INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC) $(EXTRA_INCLUDES)
+PCRESRC := util\pcre
+PCRELIB := pcre
+PCRELIBA := lib$(PCRELIB).a
+
+LIB = -lwinmm -mwindows -lcomctl32 -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -L$(PCRESRC) -l$(PCRELIB) -lpng $(SDL_LDFLAGS) -lopengl32 -lglu32 -lSDL_image -lfreetype
+INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC) -I$(PCRESRC) $(EXTRA_INCLUDES)
 
 CFWARN := -Wall -Wwrite-strings -pedantic
 
@@ -102,7 +106,7 @@ OBJECTS      := levcomp.tab.o levcomp.lex.o \
 
 OBJECTS := $(foreach file,$(OBJECTS),$(OPATH)/$(file))
 
-GAME_DEPENDS := prepare $(LUASRC)\$(LUALIBA) $(FSQLLIBA) $(TILEHEADERS) $(DESTTILEFILES) $(OBJECTS)
+GAME_DEPENDS := prepare $(LUASRC)\$(LUALIBA) $(FSQLLIBA) $(PCRESRC)\$(PCRELIBA) $(TILEHEADERS) $(DESTTILEFILES) $(OBJECTS)
 
 ##########################################################################
 
@@ -158,7 +162,7 @@ $(TILEHEADERS): $(ORIGTILEHEADERS)
 
 $(ORIGTILEFILES): makerltiles
 
-dat/tiles/%.bmp: rltiles/%.bmp
+dat/tiles/%.png: rltiles/%.png
 	mkdir dat\tiles 2>nul || echo "" >nul
 	$(subst /,\,$(COPY) $< $@)
 
@@ -190,7 +194,7 @@ endif
 		copy /y ..\settings\* $(INSTALLDIR)\settings
 		copy /y ..\docs\* $(INSTALLDIR)\docs
 		mkdir $(INSTALLDIR)\dat\tiles 2>nul || echo "" > nul
-		copy /y dat\tiles\*.bmp $(INSTALLDIR)\dat\tiles
+		copy /y dat\tiles\*.png $(INSTALLDIR)\dat\tiles
 		copy /y ..\* $(INSTALLDIR)
 		$(DELETE) $(INSTALLDIR)\*.sh
 
@@ -210,7 +214,10 @@ clean-lua:
 clean-sql:
 	    cd $(SQLSRC) && $(MAKE) "RM_F=del /f" clean
 
-distclean: clean clean-lua clean-sql clean-rltiles
+clean-pcre:
+	    cd $(PCRESRC) && $(MAKE)
+
+distclean: clean clean-lua clean-sql clean-pcre clean-rltiles
 		$(DELETE) $(OPATH)\*.o
 		$(DELETE) *.o
 		$(DELETE) bones.*
@@ -259,6 +266,13 @@ $(LUASRC)\$(LUALIBA):
 $(FSQLLIBA):
 	@echo Building SQLite
 	cd $(SQLSRC) && $(MAKE)
+
+#############################################################################
+# Build PCRE
+
+$(PCRESRC)\$(PCRELIBA):
+	@echo Building PCRE...
+	@cd $(PCRESRC) && $(MAKE)
 
 ##########################################################################
 # Resources

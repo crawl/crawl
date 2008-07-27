@@ -213,17 +213,6 @@ binary will run on 9x), or build a DOS binary.
 * Build Crawl by running
         mingw32-make MAKEFILE=makefile.mgw install
 
-* If you want regular expression support, you can edit AppHdr.h and
-  uncomment this line:
-        // #define REGEX_PCRE
-  Note that there are multiple // #define REGEX_PCRE lines in AppHdr.h
-  - find the one in the Windows-specific section. Also see the section
-  below on obtaining the pcre library to link against.
-
-* If you enabled REGEX_PCRE, add -lpcre to the LIB line in makefile.mgw as:
-   LIB = -lpcre -static -lwinmm -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB)
-  and build Crawl to include regex support.
-
 * If you have flex and bison, edit makefile.mgw and set DOYACC := y.
 
 * When you're done, you should have crawl.exe under a "rel"
@@ -264,14 +253,6 @@ Building for DOS (djgpp)
 
 * Build Crawl by running
         make MAKEFILE=makefile.dos
-
-* If you want PCRE, edit makefile.dos and change this line:
-        CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS)
-  to
-        CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS) -DREGEX_PCRE
-  And add -lpcre to the LIB line in makefile.dos, like so:
-        LIB = -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -lpcre
-  then build Crawl.
 
 * When the build is done, crawl.exe should be in the source directory.
 
@@ -376,19 +357,15 @@ to enable user-scripts is to uncomment CLUA_BINDINGS in AppHdr.h.
 
 PCRE
 ----
+As of 0.4.2, PCRE 7.7 source is included with Crawl.  It is enabled
+by default.  The sources in pcre/util are identical to the 7.7 distro
+except for removed cmake, doc, and testdata folders (unused by Crawl)
+and a hand-rolled Makefile.
 
 On Unixes, you're better served by the existing POSIX regular
 expression support. If you want PCRE, your package management system
 is again your best bet. Remember to install development headers, not
 just the plain library.
-
-On Windows, PCRE binaries are available from 
-http://gnuwin32.sourceforge.net/packages/pcre.htm
-
-On DOS you get the joy of building PCRE yourself. It's a little more
-annoying than building Lua (you have to roll your own makefile), but
-not by much.
-
 
 Unicode (Unix only)
 -------------------
