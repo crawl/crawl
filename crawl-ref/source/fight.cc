@@ -4075,7 +4075,7 @@ int melee_attack::mons_to_hit()
 static bool wielded_weapon_check(const item_def *weapon)
 {
     bool result = true;
-    if (!you.received_weapon_warning
+    if (!you.received_weapon_warning && !you.duration[DUR_CONF]
         && (weapon && weapon->base_type != OBJ_STAVES
                && (weapon->base_type != OBJ_WEAPONS || is_range_weapon(*weapon))
             || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]))

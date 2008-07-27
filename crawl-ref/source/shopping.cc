@@ -1284,7 +1284,6 @@ unsigned int item_value( item_def item, bool ident )
             case POT_RESTORE_ABILITIES:
                 valued += 50;
                 break;
-            case POT_BLOOD:
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:
                 valued += 30;
@@ -1297,9 +1296,12 @@ unsigned int item_value( item_def item, bool ident )
             case POT_LEVITATION:
                 valued += 20;
                 break;
-            case POT_BLOOD_COAGULATED:
+            case POT_BLOOD:
             case POT_PORRIDGE:
                 valued += 10;
+                break;
+            case POT_BLOOD_COAGULATED:
+                valued += 5;
                 break;
             case POT_CONFUSION:
             case POT_DECAY:
@@ -1353,11 +1355,14 @@ unsigned int item_value( item_def item, bool ident )
             valued = 8;
             break;
 
+        case FOOD_CHUNK:
+            if (food_is_rotten(item))
+                break;
+
         case FOOD_CHOKO:
         case FOOD_LYCHEE:
         case FOOD_RAMBUTAN:
         case FOOD_SNOZZCUMBER:
-        case FOOD_CHUNK:
             valued = 4;
             break;
 
