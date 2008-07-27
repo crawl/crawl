@@ -104,7 +104,7 @@ dngn.bmp: dngn.txt dctile.exe
 #
 
 $(B2PTOOL):
-	pushd $(B2PSRC) && $(MAKE) -f makefile.lin $(B2P) && popd
+	pushd $(B2PSRC) && $(MAKE) -f makefile.lin bmp2png && popd
 
 %.png: %.bmp $(B2PTOOL)
 	$(DELETE) $@
