@@ -1915,7 +1915,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // Should only happen if the player answered 'n' to one of those
         // "Fire through friendly?" prompts.
-        if (pbolt.fr_count > 0 || pbolt.beam_cancelled)
+        if (pbolt.beam_cancelled)
         {
             canned_msg(MSG_OK);
             you.turn_is_over = false;

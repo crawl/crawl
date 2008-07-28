@@ -128,7 +128,7 @@ bool move_player_to_grid( int x, int y, bool stepped, bool allow_shift,
                          || mons_is_submerged( &menv[ mgrd[x][y] ])));
 
     const int cloud = env.cgrid[x][y];
-    if (cloud != EMPTY_CLOUD)
+    if (cloud != EMPTY_CLOUD && !you.duration[DUR_CONF])
     {
         const cloud_type ctype = env.cloud[ cloud ].type;
         // Don't prompt if already in a cloud of the same type.

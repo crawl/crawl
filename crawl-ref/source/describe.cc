@@ -315,7 +315,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         && item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
         const std::string type = jewellery_base_ability_string(item.sub_type);
-        if ( !type.empty() )
+        if (!type.empty())
             propnames.push_back(type);
     }
     else if (item.base_type == OBJ_WEAPONS
@@ -324,22 +324,23 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         std::string ego = weapon_brand_name(item, true);
         if (!ego.empty())
         {
-            // ugly hack to remove the brackets...
-            ego = ego.substr(2, ego.length()-3);
+            // XXX: Ugly hack to remove the brackets...
+            ego = ego.substr(2, ego.length() - 3);
 
-            // and another one for adding a comma if needed
-            for ( unsigned i = 0; i < ARRAYSZ(propanns); ++i )
-                 if (known_proprt(propanns[i].prop))
-                 {
-                     ego += ",";
-                     break;
-                 }
+            // ... and another one for adding a comma if needed.
+            for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
+                if (known_proprt(propanns[i].prop)
+                    && propanns[i].prop != RAP_BRAND)
+                {
+                    ego += ",";
+                    break;
+                }
 
             propnames.push_back(ego);
         }
     }
 
-    for ( unsigned i = 0; i < ARRAYSZ(propanns); ++i )
+    for (unsigned i = 0; i < ARRAYSZ(propanns); ++i)
     {
         if (known_proprt(propanns[i].prop))
         {
@@ -2091,22 +2092,27 @@ void inscribe_item(item_def &item, bool proper_prompt)
     // existing inscription become an option.
     if (!proper_prompt || need_autoinscribe || is_inscribed)
     {
-        prompt = (is_inscribed ? "Add to inscription? "
-                               : "Inscribe item? ");
+        prompt = "Press (i) to ";
+        prompt += (is_inscribed ? "add to inscription"
+                                : "inscribe");
 
         if (need_autoinscribe || is_inscribed)
         {
-            prompt += "(You may also ";
+            if (!need_autoinscribe || !is_inscribed)
+                prompt += " or ";
+            else
+                prompt += ", ";
+
             if (need_autoinscribe)
             {
-                prompt += "(a)utoinscribe";
+                prompt += "(a) to autoinscribe";
                 if (is_inscribed)
                     prompt += ", or ";
             }
             if (is_inscribed)
-                prompt += "(c)lear it";
-            prompt += ".) ";
+                prompt += "(c) to clear it";
         }
+        prompt += ". ";
 
         if (proper_prompt)
             mpr(prompt.c_str(), MSGCH_PROMPT);
@@ -2903,7 +2909,7 @@ static void _detailed_god_description(god_type which_god)
                          "  decks of Destruction -- weapons and ammunition" EOL
                          "  decks of Dungeons    -- jewellery, books, "
                                                     "miscellaneous items" EOL
-                         "  decks of Summoning   -- corpses" EOL
+                         "  decks of Summoning   -- corpses, chunks, blood" EOL
                          "  decks of Wonders     -- consumables: food, potions, "
                                                     "scrolls, wands" EOL;
             }

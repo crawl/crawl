@@ -169,7 +169,7 @@ static std::string _replace_name_parts(const std::string name_in,
         if (god_gift == GOD_NO_GOD || god_gift == GOD_XOM)
         {
             name = replace_all(name, "@player_death@",
-                               "@player_name@'s "
+                               "@player_name@"
                                + getRandNameString("killer_name"));
             name = replace_all(name, "@player_doom@",
                                "@player_name@'s "
@@ -177,7 +177,7 @@ static std::string _replace_name_parts(const std::string name_in,
         }
         else
         {
-            // simply overwrite the name with one of type "god's Favour"
+            // Simply overwrite the name with one of type "God's Favour".
             name = "of ";
             name += god_name(god_gift, false);
             name += "'s ";
@@ -857,13 +857,13 @@ void static _get_randart_properties(const item_def &item,
     if (!done_powers
         && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY
-            || (atype != RING_PROTECTION_FROM_COLD
-                && atype != RING_FIRE
-                && atype != RING_ICE))
+            || atype != RING_PROTECTION_FROM_COLD
+               && atype != RING_FIRE
+               && atype != RING_ICE)
         && (aclass != OBJ_ARMOUR
-            || (atype != ARM_DRAGON_ARMOUR
-                && atype != ARM_ICE_DRAGON_ARMOUR
-                && atype != ARM_GOLD_DRAGON_ARMOUR)))
+            || atype != ARM_DRAGON_ARMOUR
+               && atype != ARM_ICE_DRAGON_ARMOUR
+               && atype != ARM_GOLD_DRAGON_ARMOUR))
     {
         proprt[RAP_COLD] = 1;
         if (one_chance_in(5))

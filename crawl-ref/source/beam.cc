@@ -2264,9 +2264,13 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_HOLY:             // flame of cleansing
+        // Cleansing flame doesn't hurt holy monsters or monsters your
+        // god wouldn't like to be hurt.
         if (mons_is_holy(monster)
-            || (is_good_god(you.religion)
-                && (is_follower(monster) || mons_neutral(monster))))
+            || you.religion == GOD_SHINING_ONE
+               && is_unchivalric_attack(&you, monster, monster)
+            || is_good_god(you.religion)
+               && (is_follower(monster) || mons_neutral(monster)))
         {
             hurted = 0;
         }

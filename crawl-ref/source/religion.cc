@@ -931,7 +931,7 @@ static void _get_pure_deck_weights(int weights[])
 
 static void _update_sacrifice_weights(int which)
 {
-    switch ( which )
+    switch (which)
     {
     case 0:
         you.sacrifice_value[OBJ_ARMOUR] /= 5;
@@ -978,8 +978,8 @@ static void _show_pure_deck_chances()
 
     _get_pure_deck_weights(weights);
 
-    float total = (float) (weights[0] + weights[1] + weights[2] + weights[3] +
-                           weights[4]);
+    float total = (float) (weights[0] + weights[1] + weights[2] + weights[3]
+                           + weights[4]);
 
     mprf(MSGCH_DIAGNOSTICS, "Pure cards chances: "
          "escape %0.2f%%, destruction %0.2f%%, dungeons %0.2f%%,"
@@ -994,7 +994,7 @@ static void _show_pure_deck_chances()
 
 static void _give_nemelex_gift()
 {
-    if ( grid_destroys_items(grd[you.x_pos][you.y_pos]) )
+    if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
         return;
 
     // Nemelex will give at least one gift early.
@@ -2042,8 +2042,8 @@ void pray()
 
     // Nemelexites can abort out now instead of offering something
     // they don't want to lose.
-    if ( you.religion == GOD_NEMELEX_XOBEH && altar_god == GOD_NO_GOD
-         && !_confirm_pray_sacrifice() )
+    if (you.religion == GOD_NEMELEX_XOBEH && altar_god == GOD_NO_GOD
+        && !_confirm_pray_sacrifice())
     {
         you.turn_is_over = false;
         return;
@@ -5203,12 +5203,12 @@ static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
                  you.attribute[ATTR_CARD_COUNTDOWN]);
 #endif
         }
-        if (item.base_type == OBJ_CORPSES && one_chance_in(2+you.piety/50)
-            // Nemelex piety gain is fairly fast...at least
-            // when you have low piety.
+        // Nemelex piety gain is fairly fast...at least
+        // when you have low piety.
+        if (item.base_type == OBJ_CORPSES && one_chance_in(2 + you.piety/50)
             || x_chance_in_y(value/2 + 1, 30 + you.piety/2))
         {
-            if ( is_artefact(item) )
+            if (is_artefact(item))
             {
                 gain_piety(2);
                 relative_piety_gain = PIETY_LOTS;
@@ -5220,10 +5220,12 @@ static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
             }
         }
 
-        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
-            // No sacrifice value for chunks of flesh, since food
-            // value goes towards decks of wonder.
-            ;
+        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK
+            || is_blood_potion(item))
+        {
+            // Count chunks and blood potions towards decks of Summoning.
+            you.sacrifice_value[OBJ_CORPSES] += value;
+        }
         else if (item.base_type == OBJ_CORPSES)
         {
 #if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
@@ -5376,14 +5378,14 @@ void offer_items()
              item_value(item));
 #endif
 
-        for ( int j = 0; j < item.quantity; ++j )
+        for (int j = 0; j < item.quantity; ++j)
         {
             const piety_gain_t gain = _sacrifice_one_item_noncount(item);
 
             // Update piety gain if necessary.
-            if ( gain != PIETY_NONE )
+            if (gain != PIETY_NONE)
             {
-                if ( relative_piety_gain == PIETY_NONE )
+                if (relative_piety_gain == PIETY_NONE)
                     relative_piety_gain = gain;
                 else            // some + some = lots
                     relative_piety_gain = PIETY_LOTS;
