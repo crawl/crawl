@@ -1374,6 +1374,14 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 // Used to determine whether to apply the berserk penalty at end of round.
 bool apply_berserk_penalty = false;
 
+static void _center_cursor()
+{
+#ifndef USE_TILE
+    const coord_def cwhere = grid2view(you.pos());
+    cgotoxy(cwhere.x, cwhere.y);
+#endif
+}
+
 //
 //  This function handles the player's input. It's called from main(),
 //  from inside an endless loop.
@@ -1477,10 +1485,7 @@ static void _input()
 
     handle_delay();
 
-    const coord_def cwhere = grid2view(you.pos());
-#ifndef USE_TILE
-    cgotoxy(cwhere.x, cwhere.y);
-#endif
+    _center_cursor();
 
     if (you_are_delayed())
     {
@@ -3348,6 +3353,8 @@ static void _check_messages()
     {
         _announce_messages();
         update_message_status();
+        // Recenter the cursor on the player.
+        _center_cursor();
     }
 }
 #endif
