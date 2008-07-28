@@ -105,14 +105,14 @@ static bool _find_mlist( const coord_def& where, int mode, bool need_path,
 
 static char _find_square_wrapper( const coord_def& targ,
                                   FixedVector<char, 2> &mfp, char direction,
-                                  bool (*targ)(const coord_def&, int, bool, int),
+                                  bool (*find_targ)(const coord_def&, int, bool, int),
                                   bool need_path = false, int mode = TARG_ANY,
                                   int range = -1, bool wrap = false,
                                   int los = LOS_ANY);
 
 static char _find_square( const coord_def& where,
                           FixedVector<char, 2> &mfp, int direction,
-                          bool (*targ)(const coord_def&, int, bool, int),
+                          bool (*find_targ)(const coord_def&, int, bool, int),
                           bool need_path, int mode = TARG_ANY, int range = -1,
                           bool wrap = false, int los = LOS_ANY);
 
