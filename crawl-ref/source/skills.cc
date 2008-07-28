@@ -306,10 +306,10 @@ static int _exercise2(int exsk)
         {
             int fraction = (spending_limit * 10) / skill_change;
 
-            deg *= fraction;
+            deg = (deg * fraction) / 10;
 
             if (deg == 0)
-                bonus *= fraction;
+                bonus = (bonus * fraction) / 10;
         }
         else
             deg = ((skill_change / 2) > MAX_SPENDING_LIMIT) ? 5 : 10;
