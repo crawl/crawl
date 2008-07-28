@@ -150,8 +150,9 @@ struct dist
 void direction( dist &moves, targeting_type restricts = DIR_NONE,
                 targ_mode_type mode = TARG_ANY, int range = -1,
                 bool just_looking = false, bool needs_path = true,
-                bool may_target_monster = true, const char *prompt = NULL,
-                targeting_behaviour *mod = NULL, bool cancel_at_self = false );
+                bool may_target_monster = true, bool may_target_self = false,
+                const char *prompt = NULL, targeting_behaviour *mod = NULL,
+                bool cancel_at_self = false );
 
 bool in_los_bounds(const coord_def& p);
 bool in_viewport_bounds(int x, int y);

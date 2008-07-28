@@ -7,10 +7,10 @@
  *
  *  Change History (most recent first):
  *
- *               <4>     14/12/99       LRH             Added cast_spec_spell_name()
+ *               <4>     14/12/99       LRH     Added cast_spec_spell_name()
  *               <3>     5/06/99        JDJ     Added TRACE.
  *               <2>     -/--/--        JDJ     Added a bunch od debugging macros.
- *                                                   Old code is now #if WIZARD.
+ *                                              Old code is now #if WIZARD.
  *               <1>     -/--/--        LRH     Created
  */
 
@@ -4140,7 +4140,7 @@ static void _move_player(int x, int y)
 static void _move_monster(int x, int y, int mid1)
 {
     dist moves;
-    direction(moves, DIR_NONE, TARG_ANY, -1, true, false, true,
+    direction(moves, DIR_NONE, TARG_ANY, -1, true, false, true, true,
               "Move monster to where?");
 
     if (!moves.isValid || !in_bounds(moves.tx, moves.ty))

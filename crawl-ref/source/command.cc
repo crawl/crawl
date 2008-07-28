@@ -377,12 +377,12 @@ static void _adjust_spells(void)
 
     int keyin = 0;
     if (Options.auto_list)
-        keyin = list_spells();
+        keyin = list_spells(false);
     else
     {
         keyin = get_ch();
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells();
+            keyin = list_spells(false);
     }
 
     if (!isalpha(keyin))
@@ -393,7 +393,7 @@ static void _adjust_spells(void)
 
     const int input_1 = keyin;
     const int index_1 = letter_to_index( input_1 );
-    spell_type spell = get_spell_by_letter( input_1 );
+    spell_type spell  = get_spell_by_letter( input_1 );
 
     if (spell == SPELL_NO_SPELL)
     {

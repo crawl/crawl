@@ -2060,7 +2060,7 @@
 {
     SPELL_EVAPORATE, "Evaporate",
      SPTYP_FIRE | SPTYP_TRANSMIGRATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
      200,
      NULL,

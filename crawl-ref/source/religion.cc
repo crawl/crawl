@@ -911,19 +911,19 @@ static bool _need_missile_gift()
 
 static void _get_pure_deck_weights(int weights[])
 {
-    weights[0] =  you.sacrifice_value[OBJ_ARMOUR] + 1;
-    weights[1] =  you.sacrifice_value[OBJ_WEAPONS]
-                + you.sacrifice_value[OBJ_STAVES]
-                + you.sacrifice_value[OBJ_MISSILES] + 1;
-    weights[2] =  you.sacrifice_value[OBJ_MISCELLANY]
-                + you.sacrifice_value[OBJ_JEWELLERY]
-                + you.sacrifice_value[OBJ_BOOKS]
-                + you.sacrifice_value[OBJ_GOLD];        // only via acquirement
-    weights[3] =  you.sacrifice_value[OBJ_CORPSES] / 2;
-    weights[4] =  you.sacrifice_value[OBJ_POTIONS]
-                + you.sacrifice_value[OBJ_SCROLLS]
-                + you.sacrifice_value[OBJ_WANDS]
-                + you.sacrifice_value[OBJ_FOOD];
+    weights[0] = you.sacrifice_value[OBJ_ARMOUR] + 1;
+    weights[1] = you.sacrifice_value[OBJ_WEAPONS]
+                 + you.sacrifice_value[OBJ_STAVES]
+                 + you.sacrifice_value[OBJ_MISSILES] + 1;
+    weights[2] = you.sacrifice_value[OBJ_MISCELLANY]
+                 + you.sacrifice_value[OBJ_JEWELLERY]
+                 + you.sacrifice_value[OBJ_BOOKS]
+                 + you.sacrifice_value[OBJ_GOLD];     // only via acquirement
+    weights[3] = you.sacrifice_value[OBJ_CORPSES] / 2;
+    weights[4] = you.sacrifice_value[OBJ_POTIONS]
+                 + you.sacrifice_value[OBJ_SCROLLS]
+                 + you.sacrifice_value[OBJ_WANDS]
+                 + you.sacrifice_value[OBJ_FOOD];
 }
 
 static void _update_sacrifice_weights(int which)

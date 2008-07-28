@@ -1456,7 +1456,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
 
     // XXX: This stuff should be done by direction()!
     message_current_target();
-    direction( target, DIR_NONE, TARG_ENEMY, -1, false, !teleport, true,
+    direction( target, DIR_NONE, TARG_ENEMY, -1, false, !teleport, true, false,
                NULL, &beh );
 
     if (beh.m_slot == -1)

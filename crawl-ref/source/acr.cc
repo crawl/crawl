@@ -1936,9 +1936,9 @@ void process_command( command_type cmd )
         if (Options.tutorial_left
             && !god_gives_permanent_followers(you.religion))
         {
-            mpr("Only intelligent, permanent allies may equip themselves, "
-                "which excludes all types of zombies as well as enslaved and "
-                "summoned monsters.", MSGCH_TUTORIAL);
+            mpr("Only intelligent allies may equip themselves, which excludes "
+                "all types of zombies as well as hostile monsters you "
+                "enslaved.", MSGCH_TUTORIAL);
         }
 
         mpr("Change to (d)efault, (n)othing, (f)riend-dropped, or (a)ll? ",

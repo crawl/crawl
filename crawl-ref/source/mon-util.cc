@@ -4164,10 +4164,6 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
 
         if (mons_friendly(this))
         {
-            // No pickup for abjurable (summoned) allies - not worth the hassle.
-            if (has_ench(ENCH_ABJ))
-                return (false);
-
             // Never pick up gold or misc. items, it'd only annoy the player.
             if (itype == OBJ_MISCELLANY || itype == OBJ_GOLD)
                 return (false);

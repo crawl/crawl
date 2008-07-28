@@ -41,7 +41,7 @@ enum spret_type
     SPRET_SUCCESS
 };
 
-int list_spells();
+int list_spells(bool toggle_with_I = true);
 int spell_fail( spell_type spell );
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false );

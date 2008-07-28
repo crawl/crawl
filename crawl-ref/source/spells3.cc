@@ -78,7 +78,7 @@ bool cast_selective_amnesia(bool force)
             if (keyin == '?' || keyin == '*')
             {
                 // this reassignment is "key" {dlb}
-                keyin = (unsigned char) list_spells();
+                keyin = (unsigned char) list_spells(false);
 
                 redraw_screen();
             }
@@ -1075,7 +1075,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     {
         mpr("There are no corpses here!");
         return (false);
-    }    
+    }
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Mass for abomination: %d", total_mass);

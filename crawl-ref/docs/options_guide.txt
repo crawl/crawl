@@ -508,11 +508,12 @@ default_friendly_pickup = (friend | none | all)
         when you start a new game, or when you enter a level for the first
         time.
 
-        Note that this only works for intelligent permanent allies (such
-        as you can get when worshipping Beogh or the Shining One), and
-        that monsters have their own reasonings for which items they may
-        need, and when they feel safe enough to pick them up. Except for
-        "none", these options won't let you override these requirements.
+        Note that this only works for intelligent allies (such as you 
+        can get when worshipping Beogh or when summoning intelligent 
+        monsters), and that monsters have their own reasonings for which 
+        items they may need, and when they feel safe enough to pick them 
+        up. Except for "none", these options won't let you override these 
+        requirements.
         Also, friendly jellies won't ever eat any items, regardless of
         this option.
 
