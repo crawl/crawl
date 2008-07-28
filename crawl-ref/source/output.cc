@@ -203,13 +203,17 @@ static int _dur_colour( int running_out_color, bool running_out )
 #ifdef DGL_SIMPLE_MESSAGING
 void update_message_status()
 {
+    static const char *msg = "(Hit _)";
+    static const int len = strlen(msg);
+    static const std::string spc(len, ' ');
+
     textcolor(LIGHTBLUE);
 
-    cgotoxy(36, 1, GOTO_STAT);
+    cgotoxy(crawl_view.hudsz.x - len + 1, 1, GOTO_STAT);
     if (SysEnv.have_messages)
-        cprintf("(msg)");
+        cprintf(msg);
     else
-        cprintf("     ");
+        cprintf(spc.c_str());
     textcolor(LIGHTGREY);
 }
 #endif
@@ -959,7 +963,9 @@ void redraw_skill(const std::string &your_name, const std::string &class_name)
         cgotoxy(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
         cprintf(" *WIZARD*");
     }
-    clear_to_end_of_line();
+#ifdef DGL_SIMPLE_MESSAGING
+    update_message_status();
+#endif
 
     // Line 2:
     // Level N Minotaur [of God]
