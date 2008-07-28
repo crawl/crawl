@@ -6765,7 +6765,7 @@ void PlaceInfo::make_global()
     branch     = -1;
 }
 
-void PlaceInfo::assert_validity()
+void PlaceInfo::assert_validity() const
 {
     // Check that level_type and branch match up.
     ASSERT(is_global()
@@ -6777,10 +6777,10 @@ void PlaceInfo::assert_validity()
 #if DEBUG
     // Can't have visited a place without seeing any of its levels, and
     // vice versa.
-    if(!(num_visits == 0 && levels_seen == 0
-         || num_visits > 0 && levels_seen > 0))
+    if (!(num_visits == 0 && levels_seen == 0
+          || num_visits > 0 && levels_seen > 0))
     {
-        mprf(MSGCH_DIAGNOSTICS, "PlaceInfo: num_vists/levels_seen mismatch");
+        mprf(MSGCH_DIAGNOSTICS, "PlaceInfo: num_visits/levels_seen mismatch");
         num_visits  = std::max((unsigned long) 1, num_visits);
         levels_seen = std::max((unsigned long) 1, levels_seen);
     }
@@ -6814,8 +6814,8 @@ void PlaceInfo::assert_validity()
         }
     }
 
-    if(turns_total != (turns_explore + turns_travel + turns_interlevel
-                       + turns_resting + turns_other))
+    if (turns_total != (turns_explore + turns_travel + turns_interlevel
+                        + turns_resting + turns_other))
     {
         mprf(MSGCH_DIAGNOSTICS, "PlaceInfo: turns breakdown doesn't sum "
              "up properly.");
@@ -6823,8 +6823,8 @@ void PlaceInfo::assert_validity()
                        + turns_resting + turns_other);
     }
 
-    if(elapsed_total != (elapsed_explore + elapsed_travel + elapsed_interlevel
-                         + elapsed_resting + elapsed_other))
+    if (elapsed_total != (elapsed_explore + elapsed_travel + elapsed_interlevel
+                          + elapsed_resting + elapsed_other))
     {
         mprf(MSGCH_DIAGNOSTICS, "PlaceInfo: elapsed time breakdown doesn't "
              "sum up properly.");

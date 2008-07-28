@@ -191,7 +191,7 @@ static std::string _spell_extra_description(spell_type spell)
     return desc.str();
 }
 
-int list_spells()
+int list_spells(bool toggle_with_I)
 {
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
         MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
@@ -203,12 +203,22 @@ int list_spells()
             "              Hunger    Level",
             MEL_TITLE));
     spell_menu.set_highlighter(NULL);
-    spell_menu.set_more(formatted_string("Press '!' or 'I' to toggle spell view."));
     spell_menu.add_toggle_key('!');
-    spell_menu.add_toggle_key('I');
+    if (toggle_with_I)
+    {
+        spell_menu.set_more(
+            formatted_string("Press '!' or 'I' to toggle spell view."));
+        spell_menu.add_toggle_key('I');
+    }
+    else
+    {
+        spell_menu.set_more(
+            formatted_string("Press '!' to toggle spell view."));
+    }
+
     spell_menu.set_tag("spell");
 
-    for ( int i = 0; i < 52; ++i )
+    for (int i = 0; i < 52; ++i)
     {
         const char letter = index_to_letter(i);
         const spell_type spell = get_spell_by_letter(letter);
@@ -1037,7 +1047,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         const bool needs_path = (!testbits(flags, SPFLAG_GRID)
                                  && !testbits(flags, SPFLAG_TARGET));
 
-        if (!spell_direction(spd, beam, dir, targ, needs_path, true, prompt,
+        const bool dont_cancel_me = testbits(flags, SPFLAG_AREA);
+
+        if (!spell_direction(spd, beam, dir, targ, needs_path, true,
+                             dont_cancel_me, prompt,
                              testbits(flags, SPFLAG_NOT_SELF)))
         {
             return (SPRET_ABORT);

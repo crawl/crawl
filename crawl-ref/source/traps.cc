@@ -522,7 +522,7 @@ void destroy_trap( const coord_def& pos )
     }
 }
 
-void disarm_trap( struct dist &disa )
+void disarm_trap( dist &disa )
 {
     if (you.duration[DUR_BERSERKER])
     {

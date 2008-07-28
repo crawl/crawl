@@ -53,17 +53,18 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
     if (pow > 150)
         pow = 150;
 
-    const int factor =
-        (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED ? 2 : 1);
+    const int factor = (you.species == SP_VAMPIRE
+                        && you.hunger_state < HS_SATIATED && pow == 40 ? 2
+                                                                       : 1);
 
     switch (pot_eff)
     {
     case POT_HEALING:
 
-        inc_hp( (5 + random2(7)) / factor, false);
+        inc_hp((5 + random2(7)) / factor, false);
         mpr("You feel better.");
 
-        // only fix rot when healed to full
+        // Only fix rot when healed to full.
         if (you.hp == you.hp_max)
         {
             unrot_hp(1);
@@ -180,7 +181,8 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         break;
 
     case POT_LEVITATION:
-        mprf("You feel %s buoyant.", !player_is_airborne() ? "very"
+        mprf(MSGCH_DURATION,
+             "You feel %s buoyant.", !player_is_airborne() ? "very"
                                                            : "more");
 
         if (!player_is_airborne())
@@ -203,7 +205,8 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         }
         else
         {
-            mprf("That liquid tasted %s nasty...",
+            mprf(MSGCH_WARN,
+                 "That liquid tasted %s nasty...",
                  (pot_eff == POT_POISON) ? "very" : "extremely" );
 
             poison_player( ((pot_eff == POT_POISON) ? 1 + random2avg(5, 2)
@@ -229,7 +232,8 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
 
     case POT_INVISIBILITY:
         mpr(!you.duration[DUR_INVIS] ? "You fade into invisibility!"
-                                     : "You fade further into invisibility.");
+                                     : "You fade further into invisibility.",
+            MSGCH_DURATION);
 
         // Invisibility cancels backlight.
         you.duration[DUR_BACKLIGHT] = 0;
@@ -364,7 +368,7 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         break;
 
     case POT_RESISTANCE:
-        mpr("You feel protected.");
+        mpr("You feel protected.", MSGCH_DURATION);
         you.duration[DUR_RESIST_FIRE]   += (random2(pow) + 10) / factor;
         you.duration[DUR_RESIST_COLD]   += (random2(pow) + 10) / factor;
         you.duration[DUR_RESIST_POISON] += (random2(pow) + 10) / factor;

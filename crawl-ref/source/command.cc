@@ -296,18 +296,18 @@ void adjust(void)
 
 void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 {
-    // swap items
+    // Swap items.
     item_def tmp = you.inv[to_slot];
-    you.inv[to_slot] = you.inv[from_slot];
+    you.inv[to_slot]   = you.inv[from_slot];
     you.inv[from_slot] = tmp;
 
-    // slot switching
+    // Slot switching.
     tmp.slot = you.inv[to_slot].slot;
-    you.inv[to_slot].slot = you.inv[from_slot].slot;
+    you.inv[to_slot].slot  = you.inv[from_slot].slot;
     you.inv[from_slot].slot = tmp.slot;
 
     you.inv[from_slot].link = from_slot;
-    you.inv[to_slot].link = to_slot;
+    you.inv[to_slot].link  = to_slot;
 
     for (int i = 0; i < NUM_EQUIP; i++)
     {
@@ -330,6 +330,8 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
         you.wield_change = true;
         you.m_quiver->on_weapon_changed();
     }
+    else // just to make sure
+        you.redraw_quiver = true;
 }
 
 static void _adjust_item(void)
@@ -375,12 +377,12 @@ static void _adjust_spells(void)
 
     int keyin = 0;
     if (Options.auto_list)
-        keyin = list_spells();
+        keyin = list_spells(false);
     else
     {
         keyin = get_ch();
         if (keyin == '?' || keyin == '*')
-            keyin = list_spells();
+            keyin = list_spells(false);
     }
 
     if (!isalpha(keyin))
@@ -391,7 +393,7 @@ static void _adjust_spells(void)
 
     const int input_1 = keyin;
     const int index_1 = letter_to_index( input_1 );
-    spell_type spell = get_spell_by_letter( input_1 );
+    spell_type spell  = get_spell_by_letter( input_1 );
 
     if (spell == SPELL_NO_SPELL)
     {

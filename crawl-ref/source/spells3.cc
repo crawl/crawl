@@ -78,7 +78,7 @@ bool cast_selective_amnesia(bool force)
             if (keyin == '?' || keyin == '*')
             {
                 // this reassignment is "key" {dlb}
-                keyin = (unsigned char) list_spells();
+                keyin = (unsigned char) list_spells(false);
 
                 redraw_screen();
             }

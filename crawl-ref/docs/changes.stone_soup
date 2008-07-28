@@ -3,23 +3,38 @@ Stone Soup 0.4.2 (2008????)
 
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 
-* Fixed vampire draining not destroying small corpses.
 * Fixed defunct spell slot cap (and crash) with Selective Amnesia memorized.
-* Fixed Elf:1 arrival sometimes being disconnected.
+* Fixed the game crashing if PlaceInfo somehow ends up buggy.
+* Fixed runaway skill training.
+* Fixed vampire draining not destroying small corpses.
 * Fixed player being incapable of attacking some monsters.
+* Fixed Elf:1 arrival sometimes being disconnected.
+* Fixed picking up runes not enabling teleport control.
+* Fixed macros not working with 0.3.4 keymaps by introducing keybinding.
 * Fixed x_ and other feature hotkeys not working in the Abyss.
+* Fixed items being created in walls.
 * Fixed randart bardings masquerading as boots.
+* Fixed not swapping with a fiery monster into a fire cloud still moving it.
 * Fixed claws/ankus not being handled by the weapon option.
-* Fixed repeatedly interrupted butchering making no progress.
 * Fixed maps being unable to place monsters on shallow water.
+* Fixed non-potion effects taking Vampire hunger states into account.
+* Fixed repeatedly interrupted butchering making no progress.
+* Fixed prompting because of inappropriate weapon despite being confused.
 * Fixed resistances for lava creatures.
+* Weakened monster Dispel Undead.
 * Existing ghosts are now saved back if an undead player dies on their level.
 * TSO no longer minds if you attack an evil monster in an unchivalric manner.
+* TSO no longer grants permanent followers, only prolongs their existence.
+* Intelligent allies can now equip themselves even if non-permanent.
+* Cleansing Flame won't harm monsters if TSO would be angry about that.
 * Abominations created by Twisted Resurrection count as undead again.
 * Restrict freezing cloud to high-damage cold beams, reduce their duration.
 * Reduce number of times a beam can bounce.
-* Self-hit prompts now respect the player's known resistances.
+* Count chunks and blood towards decks of summoning rather than wonder.
 * Show monsters sensing/seeing invisible in their 'x' description.
+* Self-hit prompts now respect the player's known resistances.
+* Added chunk colour to lua eating prompt.
+* Added PCRE to the source tree.
 
 Stone Soup 0.4.1 (20080717)
 ---------------------------

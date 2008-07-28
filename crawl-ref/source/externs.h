@@ -530,9 +530,7 @@ public:
     bool is_global() const;
     void make_global();
 
-    // Not const since it now tries to patch up problems instead of
-    // merely asserting.
-    void assert_validity();
+    void assert_validity() const;
 
     const std::string short_name() const;
 
