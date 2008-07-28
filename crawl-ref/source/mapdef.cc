@@ -2481,7 +2481,7 @@ item_spec item_list::parse_single_spec(std::string s)
         int number = strip_number_tag(s, "level:");
         if (number != TAG_UNFOUND)
         {
-            if (number <= 0)
+            if (number <= 0 && number != ISPEC_GOOD && number != ISPEC_SUPERB)
             {
                 error = make_stringf("Bad item level: %d", number);
                 return (result);
