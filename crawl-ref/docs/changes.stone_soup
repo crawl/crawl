@@ -1,4 +1,4 @@
-Stone Soup 0.4.2 (2008????)
+Stone Soup 0.4.2 (20080729)
 ---------------------------
 
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
@@ -10,12 +10,12 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed player being incapable of attacking some monsters.
 * Fixed Elf:1 arrival sometimes being disconnected.
 * Fixed picking up runes not enabling teleport control.
+* Fixed items being created in walls.
 * Fixed macros not working with 0.3.4 keymaps by introducing keybinding.
 * Fixed x_ and other feature hotkeys not working in the Abyss.
-* Fixed firing at enslaved monsters being impossible.
-* Fixed items being created in walls.
-* Fixed randart bardings masquerading as boots.
 * Fixed not swapping with a fiery monster into a fire cloud still moving it.
+* Fixed firing at enslaved monsters being impossible.
+* Fixed randart bardings masquerading as boots.
 * Fixed claws/ankus not being handled by the weapon option.
 * Fixed maps being unable to place monsters on shallow water.
 * Fixed non-potion effects taking Vampire hunger states into account.
@@ -23,14 +23,14 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed prompting because of inappropriate weapon despite being confused.
 * Fixed resistances for lava creatures.
 * Weakened monster Dispel Undead.
-* Existing ghosts are now saved back if an undead player dies on their level.
 * TSO no longer minds if you attack an evil monster in an unchivalric manner.
 * TSO no longer grants permanent followers, only prolongs their existence.
-* Intelligent allies can now equip themselves even if non-permanent.
 * Cleansing Flame won't harm monsters if TSO would be angry about that.
-* Abominations created by Twisted Resurrection count as undead again.
+* Intelligent allies can now equip themselves even if non-permanent.
+* Existing ghosts are now saved back if an undead player dies on their level.
 * Restrict freezing cloud to high-damage cold beams, reduce their duration.
 * Reduce number of times a beam can bounce.
+* Abominations created by Twisted Resurrection count as undead again.
 * Don't autoswitch to randarts with the curse property as a butchering tool.
 * Count chunks and blood towards decks of summoning rather than wonder.
 * Show monsters sensing/seeing invisible in their 'x' description.
