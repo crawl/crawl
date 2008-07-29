@@ -277,6 +277,12 @@ int main( int argc, char *argv[] )
     else
         learned_something_new(TUT_LOAD_SAVED_GAME);
 
+    // Catch up on any experience levels we did not assign last time. This
+    // can happen if Crawl sees SIGHUP while it is waiting for the player
+    // to dismiss a level-up prompt.
+    _prep_input();
+    level_change();
+
     while (true)
         _input();
 
