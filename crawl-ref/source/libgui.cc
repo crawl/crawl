@@ -310,14 +310,14 @@ void window(int x1, int y1, int x2, int y2)
 {
 }
 
-int getch()
-{
-    return (tiles.getch());
-}
-
 int getch_ck()
 {
     return (tiles.getch_ck());
+}
+
+int getch()
+{
+    return getch_ck();
 }
 
 void clrscr()

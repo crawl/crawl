@@ -90,7 +90,6 @@ public:
     void shutdown();
     void load_dungeon(unsigned int *tileb, int gx, int gy);
     void load_dungeon(int gx, int gy);
-    int getch();
     int getch_ck();
     void resize();
     void clrscr();

@@ -366,24 +366,36 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_DELETE:
         return CK_DELETE;
 
+    case SDLK_KP5:
+        return '5';
+
+    case SDLK_KP8:
     case SDLK_UP:
         return CK_UP + offset;
+    case SDLK_KP2:
     case SDLK_DOWN:
         return CK_DOWN + offset;
+    case SDLK_KP4:
     case SDLK_LEFT:
         return CK_LEFT + offset;
+    case SDLK_KP6:
     case SDLK_RIGHT:
         return CK_RIGHT + offset;
+    case SDLK_KP0:
     case SDLK_INSERT:
         return CK_INSERT + offset;
+    case SDLK_KP7:
     case SDLK_HOME:
         return CK_HOME + offset;
+    case SDLK_KP1:
     case SDLK_END:
         return CK_END + offset;
     case SDLK_CLEAR:
         return CK_CLEAR + offset;
+    case SDLK_KP9:
     case SDLK_PAGEUP:
         return CK_PGUP + offset;
+    case SDLK_KP3:
     case SDLK_PAGEDOWN:
         return CK_PGDN + offset;
     default:
@@ -394,11 +406,6 @@ static int _translate_keysym(SDL_keysym &keysym)
     return is_ascii ? keysym.unicode & 0x7F : 0;
 }
 
-int TilesFramework::getch()
-{
-    // TODO enne - is there really a difference between these two functions??
-    return getch_ck();
-}
 
 int TilesFramework::handle_mouse(MouseEvent &event)
 {

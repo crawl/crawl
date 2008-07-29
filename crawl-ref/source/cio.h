@@ -194,8 +194,6 @@ enum KEYS
     CK_MOUSE_B3,
     CK_MOUSE_B4,
     CK_MOUSE_B5,
-    CK_MOUSE_B1ITEM,
-    CK_MOUSE_B2ITEM,
     CK_MOUSE_CLICK
 };
 
