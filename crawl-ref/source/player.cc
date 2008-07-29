@@ -2927,45 +2927,58 @@ void level_change(bool skip_attribute_increase)
         int hp_adjust = 0;
         int mp_adjust = 0;
 
-        you.experience_level++;
+        // [ds] Make sure we increment you.experience_level and apply
+        // any stat/hp increases only after we've cleared all prompts
+        // for this experience level. If we do part of the work before
+        // the prompt, and a player on telnet gets disconnected, the
+        // SIGHUP will save Crawl in the in-between state and rob the
+        // player of their level-up perks.
 
-        if (you.experience_level <= you.max_level)
+        const int new_exp = you.experience_level + 1;
+
+        if (new_exp <= you.max_level)
         {
             mprf(MSGCH_INTRINSIC_GAIN,
-                 "Welcome back to level %d!", you.experience_level );
+                 "Welcome back to level %d!", new_exp );
             if (!skip_more)
                 more();
 
+            // No more prompts for this XL past this point.
+
+            you.experience_level = new_exp;
             // Gain back the hp and mp we lose in lose_level().  -- bwr
-            inc_hp( 4, true );
-            inc_mp( 1, true );
+            inc_hp(4, true);
+            inc_mp(1, true);
         }
         else  // Character has gained a new level
         {
-            if (you.experience_level == 27)
-               mprf(MSGCH_INTRINSIC_GAIN, "You have reached level 27, the final one!");
+            if (new_exp == 27)
+               mprf(MSGCH_INTRINSIC_GAIN,
+                    "You have reached level 27, the final one!");
             else
-            {
                mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d!",
-                    you.experience_level);
-            }
+                    new_exp);
+
             if (!skip_more)
                 more();
 
+            if (!(new_exp % 3) && !skip_attribute_increase)
+                _attribute_increase();
+
+            // No more prompts for this XL past this point.
+
             int brek = 0;
 
-            if (you.experience_level > 21)
+            if (new_exp > 21)
                 brek = (coinflip() ? 3 : 2);
-            else if (you.experience_level > 12)
+            else if (new_exp > 12)
                 brek = 3 + random2(3);      // up from 2 + rand(3) -- bwr
             else
                 brek = 4 + random2(4);      // up from 3 + rand(4) -- bwr
 
+            you.experience_level = new_exp;
             inc_hp( brek, true );
             inc_mp( 1, true );
-
-            if (!(you.experience_level % 3) && !skip_attribute_increase)
-                _attribute_increase();
 
             switch (you.species)
             {
@@ -3506,7 +3519,6 @@ void level_change(bool skip_attribute_increase)
         xom_is_stimulated(16);
 
         learned_something_new(TUT_NEW_LEVEL);
-
     }
 
     redraw_skill( you.your_name, player_title() );
