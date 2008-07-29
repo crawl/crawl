@@ -1,0 +1,177 @@
+Here's a list of all commands, in the form they are parsed by the 
+bindkey option, with their default key and a short explanation 
+(where necessary).
+
+Movement
+--------
+Moving one grid into a given direction:
+b         CMD_MOVE_DOWN_LEFT
+h         CMD_MOVE_LEFT
+j         CMD_MOVE_DOWN
+k         CMD_MOVE_UP
+l         CMD_MOVE_RIGHT
+n         CMD_MOVE_DOWN_RIGHT
+u         CMD_MOVE_UP_RIGHT
+y         CMD_MOVE_UP_LEFT
+
+Moving into a given direction until interrupted:
+B         CMD_RUN_DOWN_LEFT
+H         CMD_RUN_LEFT
+J         CMD_RUN_DOWN
+K         CMD_RUN_UP
+L         CMD_RUN_RIGHT
+N         CMD_RUN_DOWN_RIGHT
+U         CMD_RUN_UP_RIGHT
+Y         CMD_RUN_UP_LEFT
+
+Untrapping or opening/closing doors in a given direction:
+^B        CMD_OPEN_DOOR_DOWN_LEFT
+^H        CMD_OPEN_DOOR_LEFT
+^J        CMD_OPEN_DOOR_DOWN
+^K        CMD_OPEN_DOOR_UP
+^L        CMD_OPEN_DOOR_RIGHT
+^N        CMD_OPEN_DOOR_DOWN_RIGHT
+^U        CMD_OPEN_DOOR_UP_LEFT
+^Y        CMD_OPEN_DOOR_UP_RIGHT
+
+Inventory management
+--------------------
+d         CMD_DROP
+e         CMD_EAT
+f         CMD_FIRE
+g, ,      CMD_PICKUP
+i         CMD_DISPLAY_INVENTORY
+q         CMD_QUAFF
+r         CMD_READ
+v         CMD_EVOKE
+w         CMD_WIELD_WEAPON
+F         CMD_THROW_ITEM_NO_QUIVER
+M         CMD_MEMORISE_SPELL
+P         CMD_WEAR_JEWELLERY
+Q         CMD_QUIVER_ITEM
+R         CMD_REMOVE_JEWELLERY
+T         CMD_REMOVE_ARMOUR
+W         CMD_WEAR_ARMOUR
+Z         CMD_ZAP_WAND
+=         CMD_ADJUST_INVENTORY
+{         CMD_INSCRIBE_ITEM
+(         CMD_CYCLE_QUIVER_FORWARD
+'         CMD_WEAPON_SWAP
+
+Dungeon interaction
+-------------------
+c         CMD_BUTCHER
+o         CMD_EXPLORE
+s, .      CMD_SEARCH, CMD_MOVE_NOWHERE  (same command)
+5         CMD_REST             (rest/search 100 turns)
+t         CMD_SHOUT
+x         CMD_LOOK_AROUND
+z         CMD_CAST_SPELL
+C         CMD_CLOSE_DOOR
+^E        CMD_FORGET_STASH
+^F        CMD_SEARCH_STASHES
+G, ^G     CMD_INTERLEVEL_TRAVEL
+O         CMD_OPEN_DOOR
+^S        CMD_MARK_STASH
+^T        CMD_TOGGLE_FRIENDLY_PICKUP
+^W        CMD_FIX_WAYPOINT
+X         CMD_DISPLAY_MAP
+<         CMD_GO_UPSTAIRS
+>         CMD_GO_DOWNSTAIRS
+;         CMD_INSPECT_FLOOR
+!         CMD_ANNOTATE_LEVEL
+
+Player status
+-------------
+a         CMD_USE_ABILITY
+m         CMD_DISPLAY_SKILLS
+p         CMD_PRAY
+A         CMD_DISPLAY_MUTATIONS
+E         CMD_EXPERIENCE_CHECK
+I         CMD_DISPLAY_SPELLS
+^O        CMD_DISPLAY_OVERMAP
+^P        CMD_REPLAY_MESSAGES
+@         CMD_DISPLAY_CHARACTER_STATUS
+%         CMD_RESISTS_SCREEN
+^         CMD_DISPLAY_RELIGION
+"         CMD_LIST_JEWELLERY
+[         CMD_LIST_ARMOUR
+]         CMD_LIST_EQUIPMENT
+)         CMD_LIST_WEAPONS
+\         CMD_DISPLAY_KNOWN_OBJECTS
+#         CMD_CHARACTER_DUMP
+
+Meta-commands
+-------------
+^A        CMD_TOGGLE_AUTOPICKUP
+^C        CMD_CLEAR_MAP
+^D, ~     CMD_MACRO_ADD
+^Q        CMD_QUIT
+^R        CMD_REDRAW_SCREEN
+S         CMD_SAVE_GAME
+^X        CMD_SAVE_GAME_NOW
+^Z        CMD_SUSPEND_GAME
+&         CMD_WIZARD            (issuing wiz-mode commands)
+:         CMD_MAKE_NOTE
+_         CMD_READ_MESSAGES     (messaging during online play)
+?         CMD_DISPLAY_COMMANDS
+`         CMD_PREV_CMD_AGAIN
+0         CMD_REPEAT_CMD
+
+Targetting sub-commands
+-----------------------
+Move cursor one step in a given direction:
+b         CMD_TARGET_DOWN_LEFT
+h         CMD_TARGET_LEFT
+j         CMD_TARGET_DOWN
+k         CMD_TARGET_UP
+l         CMD_TARGET_RIGHT
+n         CMD_TARGET_DOWN_RIGHT
+u         CMD_TARGET_UP_RIGHT
+y         CMD_TARGET_UP_LEFT
+
+Shoot in a given direction:
+B         CMD_TARGET_DIR_DOWN_LEFT
+H         CMD_TARGET_DIR_LEFT
+J         CMD_TARGET_DIR_DOWN
+K         CMD_TARGET_DIR_UP
+L         CMD_TARGET_DIR_RIGHT
+N         CMD_TARGET_DIR_DOWN_RIGHT
+U         CMD_TARGET_DIR_UP_RIGHT
+Y         CMD_TARGET_DIR_UP_LEFT
+
+x, ESCAPE      CMD_TARGET_CANCEL
+v              CMD_TARGET_DESCRIBE
+?              CMD_TARGET_HELP
+' ', !, 5, \r  CMD_TARGET_SELECT
+.              CMD_TARGET_SELECT_ENDPOINT
+^P             CMD_TARGET_SHOW_PROMPT
+^C             CMD_TARGET_CYCLE_BEAM
+^:             CMD_TARGET_HIDE_BEAM
+\t             CMD_TARGET_FIND_PORTAL
+^              CMD_TARGET_FIND_TRAP
+_              CMD_TARGET_FIND_ALTAR
+<              CMD_TARGET_FIND_UPSTAIR
+>              CMD_TARGET_FIND_DOWNSTAIR
+^F             CMD_TARGET_CYCLE_TARGET_MODE
+^L             CMD_TARGET_TOGGLE_MLIST     (non-Tiles only)
+p              CMD_TARGET_PREV_TARGET
+f, t           CMD_TARGET_MAYBE_PREV_TARGET
+-              CMD_TARGET_CYCLE_BACK},
++, =           CMD_TARGET_CYCLE_FORWARD
+/              CMD_TARGET_OBJ_CYCLE_BACK
+*, \           CMD_TARGET_OBJ_CYCLE_FORWARD
+
+Wiz-mode targetting sub-commands
+--------------------------------
+g         CMD_TARGET_WIZARD_GIVE_ITEM
+m         CMD_TARGET_WIZARD_MOVE
+s         CMD_TARGET_WIZARD_MAKE_SHOUT
+w         CMD_TARGET_WIZARD_PATHFIND
+F         CMD_TARGET_WIZARD_MAKE_FRIENDLY
+P         CMD_TARGET_WIZARD_BLESS_MONSTER
+
+Tile-only commands
+------------------
+-         CMD_EDIT_PLAYER_TILE  (edit player doll)
+^V        CMD_EDIT_PREFS        (edit screen preferences)
