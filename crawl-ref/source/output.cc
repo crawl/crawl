@@ -1365,6 +1365,24 @@ void monster_pane_info::to_string( int count, std::string& desc,
     desc = out.str();
 }
 
+static char _mlist_index_to_letter(int index)
+{
+    index += 'a';
+
+    if (index >= 'b')
+        index++;
+    if (index >= 'h')
+        index++;
+    if (index >= 'j')
+        index++;
+    if (index >= 'k')
+        index++;
+    if (index >= 'l')
+        index++;
+
+    return (index);
+}
+
 static void _print_next_monster_desc(const std::vector<monster_pane_info>& mons,
                                      int& start, bool zombified = false,
                                      int idx = -1)
@@ -1387,7 +1405,7 @@ static void _print_next_monster_desc(const std::vector<monster_pane_info>& mons,
         if (idx >= 0)
         {
             textcolor(WHITE);
-            cprintf( stringize_glyph('a' + idx).c_str() );
+            cprintf( stringize_glyph(_mlist_index_to_letter(idx)).c_str() );
             cprintf(" - ");
             printed += 4;
         }
