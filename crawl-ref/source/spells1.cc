@@ -537,7 +537,7 @@ bool conjure_flame(int pow)
             mpr( "The fire roars with new energy!" );
             const int extra_dur = 2 + std::min(random2(pow) / 2, 20);
             env.cloud[cloud].decay += extra_dur * 5;
-            env.cloud[cloud].whose = KC_YOU;
+            env.cloud[cloud].set_whose(KC_YOU);
             return (true);
         }
 
@@ -608,8 +608,22 @@ int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
 void big_cloud(cloud_type cl_type, kill_category whose,
                int cl_x, int cl_y, int pow, int size, int spread_rate)
 {
+    big_cloud(cl_type, whose, cloud_struct::whose_to_killer(whose),
+              cl_x, cl_y, pow, size, spread_rate);
+}
+
+void big_cloud(cloud_type cl_type, killer_type killer,
+               int cl_x, int cl_y, int pow, int size, int spread_rate)
+{
+    big_cloud(cl_type, cloud_struct::killer_to_whose(killer), killer,
+              cl_x, cl_y, pow, size, spread_rate);
+}
+
+void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
+               int cl_x, int cl_y, int pow, int size, int spread_rate)
+{
     apply_area_cloud(make_a_normal_cloud, cl_x, cl_y, pow, size,
-                     cl_type, whose, spread_rate);
+                     cl_type, whose, killer, spread_rate);
 }
 
 static bool _mons_hostile(const monsters *mon)

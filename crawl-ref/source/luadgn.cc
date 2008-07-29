@@ -1572,13 +1572,15 @@ static int lua_cloud_pow_max;
 static int lua_cloud_pow_rolls;
 
 static int make_a_lua_cloud(int x, int y, int garbage, int spread_rate,
-                             cloud_type ctype, kill_category whose)
+                            cloud_type ctype, kill_category whose,
+                            killer_type killer)
 {
     UNUSED( garbage );
+
     const int pow = random_range(lua_cloud_pow_min,
                                  lua_cloud_pow_max,
                                  lua_cloud_pow_rolls);
-    place_cloud( ctype, coord_def(x, y), pow, whose, spread_rate );
+    place_cloud( ctype, coord_def(x, y), pow, whose, killer, spread_rate );
 
     return 1;
 }
@@ -1663,7 +1665,8 @@ static int dgn_apply_area_cloud(lua_State *ls)
     }
 
     apply_area_cloud(make_a_lua_cloud, x, y, 0, size,
-                     ctype, kc, spread_rate);
+                     ctype, kc, cloud_struct::whose_to_killer(kc),
+                     spread_rate);
 
     return (0);
 }

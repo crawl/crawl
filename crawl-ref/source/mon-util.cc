@@ -2101,6 +2101,16 @@ size_type mons_size(const monsters *m)
     return m->body_size();
 }
 
+mon_attitude_type monsters::temp_attitude() const
+{
+    if (has_ench(ENCH_CHARM))
+        return ATT_FRIENDLY;
+    else if (has_ench(ENCH_NEUTRAL))
+        return ATT_NEUTRAL;
+    else
+        return attitude;
+}
+
 bool mons_friendly(const monsters *m)
 {
     return (m->attitude == ATT_FRIENDLY || m->has_ench(ENCH_CHARM));
@@ -2681,7 +2691,8 @@ bool mons_has_ranged_attack( const monsters *mon )
 // 3 : It sticks to her sword!      (lower case possessive)
 // ... as needed
 
-const char *mons_pronoun(monster_type mon_type, pronoun_type variant)
+const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
+                         bool visible)
 {
     gender_type gender = GENDER_NEUTER;
 
@@ -2710,6 +2721,9 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant)
             break;
         }
     }
+
+    if (!visible)
+        gender = GENDER_NEUTER;
 
     switch(variant)
     {
@@ -4309,11 +4323,6 @@ bool monsters::has_base_name() const
     return (!mname.empty() && !ghost.get());
 }
 
-std::string monsters::name(description_level_type desc) const
-{
-    return this->name(desc, false);
-}
-
 std::string monsters::name(description_level_type desc, bool force_vis) const
 {
     const bool possessive =
@@ -4340,9 +4349,10 @@ std::string monsters::base_name(description_level_type desc, bool force_vis)
     }
 }
 
-std::string monsters::pronoun(pronoun_type pro) const
+std::string monsters::pronoun(pronoun_type pro, bool force_visible) const
 {
-    return (mons_pronoun(static_cast<monster_type>(type), pro));
+    return (mons_pronoun(static_cast<monster_type>(type), pro,
+                         force_visible || you.can_see(this)));
 }
 
 std::string monsters::conj_verb(const std::string &verb) const
@@ -4354,6 +4364,213 @@ std::string monsters::conj_verb(const std::string &verb) const
         return ("is");
 
     return (pluralise(verb));
+}
+
+std::string monsters::hand_name(bool plural, bool *can_plural) const
+{
+    bool _can_plural;
+    if (can_plural == NULL)
+        can_plural = &_can_plural;
+    *can_plural = true;   
+
+    std::string str;
+    char        ch = mons_char(type);
+
+    switch(get_mon_shape(this))
+    {
+    case MON_SHAPE_CENTAUR:
+    case MON_SHAPE_NAGA:
+        // Defaults to "hand"
+        break;
+    case MON_SHAPE_HUMANOID:
+    case MON_SHAPE_HUMANOID_WINGED:
+    case MON_SHAPE_HUMANOID_TAILED:
+    case MON_SHAPE_HUMANOID_WINGED_TAILED:
+        if (ch == 'T' || ch == 'd' || ch == 'n' || mons_is_demon(type))
+            str = "claw";
+        break;
+
+    case MON_SHAPE_QUADRUPED:
+    case MON_SHAPE_QUADRUPED_TAILLESS:
+    case MON_SHAPE_QUADRUPED_WINGED:
+    case MON_SHAPE_ARACHNID:
+        if (type == MONS_SCORPION)
+            str = "pincer";
+        else
+        {
+            str = "front ";
+            return (str + foot_name(plural, can_plural));
+        }
+        break;
+
+    case MON_SHAPE_BLOB:
+    case MON_SHAPE_SNAKE:
+    case MON_SHAPE_FISH:
+        return foot_name(plural);
+
+    case MON_SHAPE_BAT:
+        str = "wing";
+        break;
+
+    case MON_SHAPE_INSECT:
+    case MON_SHAPE_INSECT_WINGED:
+    case MON_SHAPE_CENTIPEDE:
+        str = "antena";
+        break;
+
+    case MON_SHAPE_SNAIL:
+        str = "eye-stalk";
+        break;
+
+    case MON_SHAPE_PLANT:
+        str = "leaf";
+        break;
+
+    case MON_SHAPE_MISC:
+        if (ch == 'x' || ch == 'X')
+        {
+            str = "tentacle";
+            break;
+        }
+        // Deliberate fallthrough.
+    case MON_SHAPE_FUNGUS:
+        str         = "body";
+        *can_plural = false;
+        break;
+
+    case MON_SHAPE_ORB:
+        switch(type)
+        {
+            case MONS_GIANT_SPORE:
+                str = "rhizome";
+                break;
+
+            case MONS_GIANT_EYEBALL:
+            case MONS_EYE_OF_DRAINING:
+            case MONS_SHINING_EYE:
+            case MONS_EYE_OF_DEVASTATION:
+                *can_plural = false;
+                // Deliberate fallthrough.
+            case MONS_GREAT_ORB_OF_EYES:
+                str = "pupil";
+                break;
+
+            case MONS_GIANT_ORANGE_BRAIN:
+            default:
+                str        = "body";
+                can_plural = false;
+                break;
+        }
+    }
+
+   if (str.empty())
+       str = "hand";
+
+   if (plural && *can_plural)
+       str = pluralise(str);
+
+   return (str);
+}
+
+std::string monsters::foot_name(bool plural, bool *can_plural) const
+{
+    bool _can_plural;
+    if (can_plural == NULL)
+        can_plural = &_can_plural;
+    *can_plural = true;   
+
+    std::string str;
+    char        ch = mons_char(type);
+
+    switch(get_mon_shape(this))
+    {
+    case MON_SHAPE_INSECT:
+    case MON_SHAPE_INSECT_WINGED:
+    case MON_SHAPE_ARACHNID:
+    case MON_SHAPE_CENTIPEDE:
+        str = "leg";
+        break;
+
+    case MON_SHAPE_HUMANOID:
+    case MON_SHAPE_HUMANOID_WINGED:
+    case MON_SHAPE_HUMANOID_TAILED:
+    case MON_SHAPE_HUMANOID_WINGED_TAILED:
+        if (type == MONS_MINOTAUR)
+            str = "hoof";
+        else if (swimming() && (type == MONS_MERFOLK || type == MONS_MERMAID))
+        {
+            str         = "tail";
+            *can_plural = false;
+        }
+        break;
+
+    case MON_SHAPE_CENTAUR:
+        str = "hoof";
+        break;
+
+    case MON_SHAPE_QUADRUPED:
+    case MON_SHAPE_QUADRUPED_TAILLESS:
+    case MON_SHAPE_QUADRUPED_WINGED:
+        if (ch == 'h')
+            str = "paw";
+        else if (ch == 'l' || ch == 'D')
+            str = "talon";
+        else if (type == MONS_YAK || type == MONS_DEATH_YAK)
+            str = "hoof";
+        else if (ch == 'H')
+        {
+            if (type == MONS_MANTICORE || type == MONS_SPHINX)
+                str = "paw";
+            else
+                str = "talon";
+        }
+        break;
+
+    case MON_SHAPE_BAT:
+        str = "claw";
+        break;
+
+    case MON_SHAPE_SNAKE:
+    case MON_SHAPE_FISH:
+        str         = "tail";
+        *can_plural = false;
+        break;
+
+    case MON_SHAPE_PLANT:
+        str = "root";
+        break;
+
+    case MON_SHAPE_FUNGUS:
+        str         = "stem";
+        *can_plural = false;
+        break;
+
+    case MON_SHAPE_BLOB:
+        str = "pseudopod";
+        break;
+
+    case MON_SHAPE_MISC:
+        if (ch == 'x' || ch == 'X')
+        {
+            str = "tentacle";
+            break;
+        }
+        // Deliberate fallthrough.
+    case MON_SHAPE_SNAIL:
+    case MON_SHAPE_NAGA:
+    case MON_SHAPE_ORB:
+        str         = "underside";
+        *can_plural = false;
+        break;
+    }
+
+   if (str.empty())
+       return (plural ? "feet" : "foot");
+
+   if (plural && *can_plural)
+       str = pluralise(str);
+
+   return (str);
 }
 
 int monsters::id() const
@@ -4457,6 +4674,15 @@ bool monsters::visible() const
 bool monsters::confused() const
 {
     return (mons_is_confused(this));
+}
+
+bool monsters::confused_by_you() const
+{
+    if (mons_class_flag(type, M_CONFUSED))
+        return false;
+
+    const mon_enchant me = get_ench(ENCH_CONFUSION);
+    return (me.ench == ENCH_CONFUSION && me.who == KC_YOU);
 }
 
 bool monsters::paralysed() const
@@ -4591,6 +4817,15 @@ int monsters::res_rotting() const
     return (mons_holiness(this) == MH_NATURAL ? 0 : 1);
 }
 
+int monsters::res_torment() const
+{
+    mon_holy_type holy = mons_holiness(this);
+    if (holy == MH_UNDEAD || holy == MH_DEMONIC || holy == MH_NONLIVING)
+        return (1);
+
+    return (0);
+}
+
 flight_type monsters::flight_mode() const
 {
     return (mons_flies(this));
@@ -4631,7 +4866,7 @@ int monsters::skill(skill_type sk, bool) const
     }
 }
 
-void monsters::blink()
+void monsters::blink(bool)
 {
     monster_blink(this);
 }

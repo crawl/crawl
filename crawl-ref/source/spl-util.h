@@ -66,6 +66,8 @@ void init_spell_descs(void);
 void init_spell_name_cache();
 spell_type spell_by_name(std::string name, bool partial_match = false);
 
+spschool_flag_type school_by_name(std::string name);
+
 int get_spell_slot_by_letter( char letter );
 spell_type get_spell_by_letter( char letter );
 
@@ -95,6 +97,7 @@ int count_bits( unsigned int bits );
 
 const char *spell_title(spell_type which_spell);
 const char* spelltype_short_name( int which_spelltype );
+const char* spelltype_long_name( int which_spelltype );
 
 typedef int cell_func(coord_def where, int pow, int aux);
 int apply_area_visible(cell_func cf, int power,
@@ -120,9 +123,10 @@ bool spell_direction( dist &spelld, bolt &pbolt,
                       bool cancel_at_self = false );
 
 void apply_area_cloud(int (*func) (int, int, int, int, cloud_type,
-                                   kill_category),
+                                   kill_category, killer_type),
                       int x, int y, int pow, int number, cloud_type ctype,
-                      kill_category kc, int spread_rate = -1);
+                      kill_category kc, killer_type killer,
+                      int spread_rate = -1);
 
 const char *spelltype_name(unsigned int which_spelltype);
 

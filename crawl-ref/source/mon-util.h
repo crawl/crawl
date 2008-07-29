@@ -669,7 +669,8 @@ bool mons_has_ranged_attack( const monsters *mon );
 /* ***********************************************************************
  * called from:
  * *********************************************************************** */
-const char *mons_pronoun(monster_type mon_type, pronoun_type variant);
+const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
+                         bool visible = true);
 
 // last updated 14mar2001 (gdl)
 /* ***********************************************************************

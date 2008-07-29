@@ -51,7 +51,7 @@
 #include "skills.h"
 #include "spells1.h"
 #include "spells4.h"
-#include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -887,13 +887,13 @@ static int _distortion_monsters(coord_def where, int pow, int message)
     {
         if (you.skills[SK_TRANSLOCATIONS] < random2(8))
         {
-            miscast_effect( SPTYP_TRANSLOCATION, pow / 9 + 1, pow, 100,
-                            "cast bend on self" );
+            MiscastEffect( &you, NON_MONSTER, SPTYP_TRANSLOCATION,
+                           pow / 9 + 1, pow, "cast bend on self" );
         }
         else
         {
-            miscast_effect( SPTYP_TRANSLOCATION, 1, 1, 100,
-                            "cast bend on self" );
+            MiscastEffect( &you, NON_MONSTER, SPTYP_TRANSLOCATION, 1, 1,
+                           "cast bend on self" );
         }
 
         return 1;
@@ -1079,11 +1079,15 @@ static int _make_a_rot_cloud(const coord_def& where, int pow, cloud_type ctype)
 }
 
 int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
-                        cloud_type ctype, kill_category whose)
+                        cloud_type ctype, kill_category whose,
+                        killer_type killer)
 {
+    if (killer == KILL_NONE)
+        killer = cloud_struct::whose_to_killer(whose);
+
     place_cloud( ctype, coord_def(x, y),
                  (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
-                 whose, spread_rate );
+                 whose, killer, spread_rate );
 
     return 1;
 }
@@ -1681,7 +1685,7 @@ void do_monster_rot(int mon)
     if (mons_holiness(&menv[mon]) == MH_UNDEAD && !one_chance_in(5))
     {
         apply_area_cloud(make_a_normal_cloud, menv[mon].x, menv[mon].y,
-                         10, 1, CLOUD_MIASMA, KC_YOU);
+                         10, 1, CLOUD_MIASMA, KC_YOU, KILL_YOU_MISSILE);
     }
 
     player_hurt_monster( mon, damage );

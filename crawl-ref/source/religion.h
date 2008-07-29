@@ -95,8 +95,8 @@ bool god_hates_killing(god_type god, const monsters* mon);
 bool god_likes_butchery(god_type god);
 bool god_hates_butchery(god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
-void god_smites_you(god_type god, kill_method_type death_type,
-                    const char *message = NULL);
+void god_smites_you(god_type god, const char *message = NULL,
+                    kill_method_type death_type = NUM_KILLBY);
 void divine_retribution(god_type god);
 
 bool beogh_water_walk();

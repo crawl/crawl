@@ -134,9 +134,15 @@ public:
     {
     }
 
-    virtual std::string name(description_level_type type) const = 0;
-    virtual std::string pronoun(pronoun_type which_pronoun) const = 0;
+    virtual std::string name(description_level_type type,
+                             bool force_visible = false) const = 0;
+    virtual std::string pronoun(pronoun_type which_pronoun,
+                                bool force_visible = false) const = 0;
     virtual std::string conj_verb(const std::string &verb) const = 0;
+    virtual std::string hand_name(bool plural,
+                                  bool *can_plural = NULL) const = 0;
+    virtual std::string foot_name(bool plural,
+                                  bool *can_plural = NULL) const = 0;
 
     virtual bool fumbles_attack(bool verbose = true) = 0;
 
@@ -157,7 +163,7 @@ public:
     virtual int hurt(const actor *attacker, int amount) = 0;
     virtual void heal(int amount, bool max_too = false) = 0;
     virtual void banish(const std::string &who = "") = 0;
-    virtual void blink() = 0;
+    virtual void blink(bool allow_partial_control = true) = 0;
     virtual void teleport(bool right_now = false, bool abyss_shift = false) = 0;
     virtual void poison(actor *attacker, int amount = 1) = 0;
     virtual bool sicken(int amount) = 0;
@@ -199,6 +205,7 @@ public:
     virtual int res_poison() const = 0;
     virtual int res_negative_energy() const = 0;
     virtual int res_rotting() const = 0;
+    virtual int res_torment() const = 0;
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
@@ -834,9 +841,12 @@ public:
     item_def *weapon(int which_attack = -1);
     item_def *shield();
 
-    std::string name(description_level_type type) const;
-    std::string pronoun(pronoun_type pro) const;
+    std::string name(description_level_type type,
+                     bool force_visible = false) const;
+    std::string pronoun(pronoun_type pro, bool force_visible = false) const;
     std::string conj_verb(const std::string &verb) const;
+    std::string hand_name(bool plural, bool *can_plural = NULL) const;
+    std::string foot_name(bool plural, bool *can_plural = NULL) const;
 
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
@@ -849,7 +859,7 @@ public:
     bool can_safely_mutate() const;
     bool mutate();
     void banish(const std::string &who = "");
-    void blink();
+    void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false, bool abyss_shift = false);
     void drain_stat(int stat, int amount, actor* attacker);
 
@@ -881,6 +891,7 @@ public:
     int res_poison() const;
     int res_negative_energy() const;
     int res_rotting() const;
+    int res_torment() const;
     bool confusable() const;
     bool slowable() const;
 
@@ -1067,6 +1078,8 @@ public:
                                        // AI_SEE_MONSTER
 
 public:
+    mon_attitude_type temp_attitude() const;
+
     // Returns true if the monster is named with a proper name, or is
     // a player ghost.
     bool is_named() const;
@@ -1183,16 +1196,18 @@ public:
 
     bool      can_use_missile(const item_def &item) const;
 
-    std::string name(description_level_type type) const;
-    std::string name(description_level_type type, bool force_visible) const;
+    std::string name(description_level_type type,
+                     bool force_visible = false) const;
 
     // Base name of the monster, bypassing any mname setting. For an orc priest
     // named Arbolt, name() will return "Arbolt", but base_name() will return
     // "orc priest".
     std::string base_name(description_level_type type,
                           bool force_visible) const;
-    std::string pronoun(pronoun_type pro) const;
+    std::string pronoun(pronoun_type pro, bool force_visible = false) const;
     std::string conj_verb(const std::string &verb) const;
+    std::string hand_name(bool plural, bool *can_plural = NULL) const;
+    std::string foot_name(bool plural, bool *can_plural = NULL) const;
 
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
@@ -1219,6 +1234,7 @@ public:
     int res_poison() const;
     int res_negative_energy() const;
     int res_rotting() const;
+    int res_torment() const;
 
     flight_type flight_mode() const;
     bool is_levitating() const;
@@ -1232,6 +1248,7 @@ public:
     bool cannot_move() const;
     bool cannot_act() const;
     bool confused() const;
+    bool confused_by_you() const;
     bool caught() const;
     bool asleep() const;
     bool backlit(bool check_haloed = true) const;
@@ -1253,7 +1270,7 @@ public:
     void rot(actor *agent, int rotlevel, int immed_rot);
     int hurt(const actor *agent, int amount);
     void heal(int amount, bool max_too = false);
-    void blink();
+    void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false, bool abyss_shift = false);
 
     void put_to_sleep(int power = 0);
@@ -1314,8 +1331,14 @@ struct cloud_struct
     int           decay;
     unsigned char spread_rate;
     kill_category whose;
+    killer_type   killer;
 
-    killer_type beam_thrower() const;
+    void set_whose(kill_category _whose);
+    void set_killer(killer_type _killer);
+
+    static kill_category killer_to_whose(killer_type killer);
+    static killer_type   whose_to_killer(kill_category whose);
+
     coord_def pos() const { return coord_def(x,y); }
 };
 

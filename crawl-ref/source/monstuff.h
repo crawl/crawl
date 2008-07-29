@@ -89,7 +89,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
    *              spells1 - spells2 - spells3 - spells4
    * *********************************************************************** */
 void monster_die(monsters *monster, killer_type killer,
-                 int i, bool silent = false);
+                 int killer_index, bool silent = false);
 
 void mons_check_pool(monsters *monster, killer_type killer = KILL_NONE,
                      int killnum = -1);
@@ -111,7 +111,6 @@ void behaviour_event(monsters *mon, int event_type, int src = MHITNOT,
  * called from: fight - it_use3 - spells
  * *********************************************************************** */
 bool curse_an_item(bool decay_potions, bool quiet = false);
-
 
 /* ***********************************************************************
  * called from: fight

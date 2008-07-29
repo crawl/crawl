@@ -35,7 +35,7 @@
 #include "randart.h"
 #include "skills.h"
 #include "spells3.h"
-#include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "terrain.h"
 #include "transfor.h"
@@ -498,8 +498,8 @@ void handle_traps(trap_type trt, int i, bool trap_known)
     default:
         mpr((trap_known) ? "You enter the Zot trap."
                          : "Oh no! You have blundered into a Zot trap!");
-        miscast_effect( SPTYP_RANDOM, random2(30) + you.your_level,
-                        75 + random2(100), 3, "a Zot trap" );
+        MiscastEffect( &you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+                       3, "a Zot trap" );
         break;
     }
     learned_something_new(TUT_SEEN_TRAP, you.x_pos, you.y_pos);

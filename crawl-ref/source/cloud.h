@@ -42,8 +42,18 @@ void move_cloud( int cloud, const coord_def& newpos );
 
 void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
                         kill_category whose, int spread_rate = -1 );
+void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
+                        killer_type killer, int spread_rate = -1 );
+void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
+                        kill_category whose, killer_type killer,
+                        int spread_rate = -1 );
 void place_cloud( cloud_type cl_type, const coord_def& ctarget,
                   int cl_range, kill_category whose, int spread_rate = -1 );
+void place_cloud( cloud_type cl_type, const coord_def& ctarget,
+                  int cl_range, killer_type killer, int spread_rate = -1 );
+void place_cloud( cloud_type cl_type, const coord_def& ctarget,
+                  int cl_range, kill_category whose, killer_type killer,
+                  int spread_rate = -1 );
 
 void manage_clouds(void);
 

@@ -2985,7 +2985,8 @@ static void _beam_explodes(bolt &beam, const coord_def& p)
     // cloud producer -- POISON BLAST
     if (beam.name == "blast of poison")
     {
-        big_cloud(CLOUD_POISON, _whose_kill(beam), p.x, p.y, 0, 7 + random2(5));
+        big_cloud(CLOUD_POISON, _whose_kill(beam), beam.killer(), p.x, p.y,
+                  0, 7 + random2(5));
         return;
     }
 
@@ -2993,13 +2994,13 @@ static void _beam_explodes(bolt &beam, const coord_def& p)
     if (beam.name == "foul vapour")
     {
         cl_type = (beam.flavour == BEAM_MIASMA) ? CLOUD_MIASMA : CLOUD_STINK;
-        big_cloud( cl_type, _whose_kill(beam), p.x, p.y, 0, 9 );
+        big_cloud( cl_type, _whose_kill(beam), beam.killer(), p.x, p.y, 0, 9 );
         return;
     }
 
     if (beam.name == "freezing blast")
     {
-        big_cloud( CLOUD_COLD, _whose_kill(beam), p.x, p.y,
+        big_cloud( CLOUD_COLD, _whose_kill(beam), beam.killer(), p.x, p.y,
                    random_range(10, 15), 9 );
         return;
     }
@@ -3302,7 +3303,8 @@ static int _affect_wall(bolt &beam, const coord_def& p)
         else if (player_can_smell())
             _beam_mpr(MSGCH_PLAIN, "You smell burning wax.");
 
-        place_cloud(CLOUD_FIRE, p, random2(10) + 15, _whose_kill(beam));
+        place_cloud(CLOUD_FIRE, p, random2(10) + 15, _whose_kill(beam),
+                    beam.killer());
 
         beam.obvious_effect = true;
 
@@ -3406,37 +3408,43 @@ static int _affect_place_clouds(bolt &beam, const coord_def& p)
 
     // POISON BLAST
     if (beam.name == "blast of poison")
-        place_cloud( CLOUD_POISON, p, random2(4) + 2, _whose_kill(beam) );
+        place_cloud( CLOUD_POISON, p, random2(4) + 2, _whose_kill(beam),
+                     beam.killer() );
 
     // FIRE/COLD over water/lava
     if (grd(p) == DNGN_LAVA && beam.flavour == BEAM_COLD
         || grid_is_watery(grd(p)) && _is_fiery(beam))
     {
-        place_cloud( CLOUD_STEAM, p, 2 + random2(5), _whose_kill(beam) );
+        place_cloud( CLOUD_STEAM, p, 2 + random2(5), _whose_kill(beam),
+                     beam.killer() );
     }
 
     if (grid_is_watery(grd(p)) && beam.flavour == BEAM_COLD
         && beam.damage.num * beam.damage.size > 35)
     {
         place_cloud( CLOUD_COLD, p, beam.damage.num * beam.damage.size / 30 + 1,
-                     _whose_kill(beam) );
+                     _whose_kill(beam), beam.killer() );
     }
 
     // GREAT BLAST OF COLD
     if (beam.name == "great blast of cold")
-        place_cloud( CLOUD_COLD, p, random2(5) + 3, _whose_kill(beam) );
+        place_cloud( CLOUD_COLD, p, random2(5) + 3, _whose_kill(beam),
+                     beam.killer() );
 
 
     // BALL OF STEAM
     if (beam.name == "ball of steam")
-        place_cloud( CLOUD_STEAM, p, random2(5) + 2, _whose_kill(beam) );
+        place_cloud( CLOUD_STEAM, p, random2(5) + 2, _whose_kill(beam),
+                     beam.killer() );
 
     if (beam.flavour == BEAM_MIASMA)
-        place_cloud( CLOUD_MIASMA, p, random2(5) + 2, _whose_kill(beam) );
+        place_cloud( CLOUD_MIASMA, p, random2(5) + 2, _whose_kill(beam),
+                     beam.killer() );
 
     // POISON GAS
     if (beam.name == "poison gas")
-        place_cloud( CLOUD_POISON, p, random2(4) + 3, _whose_kill(beam) );
+        place_cloud( CLOUD_POISON, p, random2(4) + 3, _whose_kill(beam),
+                     beam.killer() );
 
     return (0);
 }
@@ -5730,6 +5738,9 @@ killer_type bolt::killer() const
     case KILL_MON:
     case KILL_MON_MISSILE:
         return (KILL_MON_MISSILE);
+
+    case KILL_YOU_CONF:
+        return (KILL_YOU_CONF);
 
     default:
         return (KILL_MON_MISSILE);

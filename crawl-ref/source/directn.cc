@@ -1077,6 +1077,19 @@ void direction(dist& moves, targeting_type restricts,
 
             debug_pathfind(mid);
             break;
+
+        case CMD_TARGET_WIZARD_GAIN_LEVEL:
+            break;
+
+        case CMD_TARGET_WIZARD_MISCAST:
+            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+                break;
+            mid = mgrd[moves.tx][moves.ty];
+            if (mid == NON_MONSTER && you.pos() != moves.target())
+                break;
+
+            debug_miscast(mid);
+            break;
 #endif
         case CMD_TARGET_DESCRIBE:
             full_describe_square(moves.target());

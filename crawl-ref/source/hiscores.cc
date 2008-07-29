@@ -1629,8 +1629,12 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         needs_damage = true;
         break;
 
-    case KILLED_BY_XOM:  // only used for old Xom kills
-        desc += terse? "xom" : "Killed for Xom's enjoyment";
+    case KILLED_BY_XOM:
+        if (terse)
+            desc += "xom";
+        else
+            desc += auxkilldata.empty() ? "Killed for Xom's enjoyment"
+                                        : auxkilldata;
         needs_damage = true;
         break;
 
@@ -1697,6 +1701,14 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
     case KILLED_BY_BLEEDING:
         desc += terse? "bleeding" : " bled to death";
+        break;
+
+    case KILLED_BY_DIVINE_WRATH:
+        if (terse)
+            desc += "divine wrath";
+        else
+            desc += auxkilldata.empty() ? "Divine wrath" : auxkilldata;
+        needs_damage = true;
         break;
 
     default:

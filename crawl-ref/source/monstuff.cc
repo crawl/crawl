@@ -60,7 +60,7 @@
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
-#include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "spells3.h"
 #include "spells4.h"
@@ -696,12 +696,77 @@ static void _fire_monster_death_event(monsters *monster,
     }
 }
 
-void monster_die(monsters *monster, killer_type killer, int i, bool silent)
+static void _mummy_curse(monsters* monster, killer_type killer, int index)
+{
+    int pow;
+
+    switch(killer)
+    {
+        // Mummy killed by trap or something other than the player or
+        // another monster, so no curse.
+        case KILL_MISC:
+        // Mummy sent to the Abyss wasn't actually killed, so no curse.
+        case KILL_RESET:
+        case KILL_DISMISSED:
+            return;
+
+        default:
+            break;
+    }
+
+    switch(monster->type)
+    {
+        case MONS_MUMMY:          pow = 1; break;
+        case MONS_GUARDIAN_MUMMY: pow = 3; break;
+        case MONS_MUMMY_PRIEST:   pow = 8; break;
+        case MONS_GREATER_MUMMY:  pow = 11; break;
+
+        default:
+            mpr("Unkown mummy type.", MSGCH_DIAGNOSTICS);
+            return;
+    }
+
+    // Killed by a Zot trap, a god, etc
+    if (index != NON_MONSTER && invalid_monster_index(killer))
+        return;
+
+    actor* target;
+    if (index == NON_MONSTER)
+        target = dynamic_cast<actor*>(&you);
+    else
+    {
+        // Mummies committing suicide don't cause a death curse.
+        if (index == (int) monster_index(monster))
+           return;
+        target = dynamic_cast<actor*>(&menv[index]);
+    }
+
+    // Mummy was killed by a giant spore or ball lightning?
+    if (!target->alive())
+        return;
+
+    if (monster->type == MONS_MUMMY && killer == NON_MONSTER)
+        curse_an_item(true);
+    else
+    {
+        if (index == NON_MONSTER)
+            mpr("You feel extremely nervous for a moment...",
+                MSGCH_MONSTER_SPELL);
+        else if (you.can_see(target))
+            mprf(MSGCH_MONSTER_SPELL, "A malignant arua surrounds %s.",
+                 target->name(DESC_NOCAP_THE).c_str());
+        MiscastEffect(target, monster_index(monster), SPTYP_NECROMANCY,
+                      pow, random2avg(88, 3), "a mummy death curse");
+    }
+}
+
+void monster_die(monsters *monster, killer_type killer,
+                 int killer_index, bool silent)
 {
     if (monster->type == -1)
         return;
 
-    if (!silent && _monster_avoided_death(monster, killer, i))
+    if (!silent && _monster_avoided_death(monster, killer, killer_index))
         return;
 
     mons_clear_trapping_net(monster);
@@ -717,15 +782,14 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
           bool drop_items    = !hard_reset && !mons_is_holy(monster);
 
 #ifdef DGL_MILESTONES
-    _check_kill_milestone(monster, killer, i);
+    _check_kill_milestone(monster, killer, killer_index);
 #endif
 
     // Award experience for suicide if the suicide was caused by the
     // player.
-    if (MON_KILL(killer) && monster_killed == i)
+    if (MON_KILL(killer) && monster_killed == killer_index)
     {
-        const mon_enchant me = monster->get_ench(ENCH_CONFUSION);
-        if (me.ench == ENCH_CONFUSION && me.who == KC_YOU)
+        if (monster->confused_by_you())
             killer = KILL_YOU_CONF;
     }
     else if (MON_KILL(killer) && monster->has_ench(ENCH_CHARM))
@@ -781,7 +845,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     if (killer == KILL_YOU)
         crawl_state.cancel_cmd_repeat();
 
-    const bool pet_kill = _is_pet_kill(killer, i);
+    const bool pet_kill = _is_pet_kill(killer, killer_index);
 
     if (monster->type == MONS_GIANT_SPORE
         || monster->type == MONS_BALL_LIGHTNING)
@@ -1020,10 +1084,11 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                 && pet_kill)
             {
                 bool notice = false;
-                const bool anon = (i == ANON_FRIENDLY_MONSTER);
+                const bool anon = (killer_index == ANON_FRIENDLY_MONSTER);
 
                 const mon_holy_type targ_holy = mons_holiness(monster),
-                    attacker_holy = anon ? MH_NATURAL : mons_holiness(&menv[i]);
+                    attacker_holy = anon ? MH_NATURAL
+                                         : mons_holiness(&menv[killer_index]);
 
                 if (attacker_holy == MH_UNDEAD)
                 {
@@ -1034,7 +1099,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                         // "slave", and I think it's okay that Yredelemnul
                         // ignores kills done by confused monsters as opposed
                         // to enslaved or friendly ones. (jpeg)
-                        if (mons_friendly(&menv[i]))
+                        if (mons_friendly(&menv[killer_index]))
                         {
                             notice |=
                                 did_god_conduct(DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
@@ -1052,7 +1117,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                          || you.religion == GOD_VEHUMET
                          || you.religion == GOD_MAKHLEB
                          || you.religion == GOD_LUGONU
-                         || !anon && mons_is_god_gift(&menv[i]))
+                         || !anon && mons_is_god_gift(&menv[killer_index]))
                 {
                     // Yes, we are splitting undead pets from the others
                     // as a way to focus Necromancy vs Summoning (ignoring
@@ -1114,9 +1179,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && mons_is_evil_or_unholy(monster)
                     && !player_under_penance()
                     && random2(you.piety) >= piety_breakpoint(0)
-                    && !invalid_monster_index(i))
+                    && !invalid_monster_index(killer_index))
                 {
-                    monsters *mon = &menv[i];
+                    monsters *mon = &menv[killer_index];
 
                     // Randomly bless the follower who killed.
                     if (!one_chance_in(3) && mon->alive()
@@ -1139,9 +1204,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                     && random2(you.piety) >= piety_breakpoint(2)
                     && !player_under_penance()
                     && !one_chance_in(3)
-                    && !invalid_monster_index(i))
+                    && !invalid_monster_index(killer_index))
                 {
-                    bless_follower(&menv[i]);
+                    bless_follower(&menv[killer_index]);
                 }
 
             }
@@ -1221,25 +1286,9 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     }
     else if (!mons_is_summoned(monster))
     {
-        if (monster->type == MONS_MUMMY)
+        if (mons_genus(monster->type) == MONS_MUMMY)
         {
-            if (YOU_KILL(killer) && killer != KILL_YOU_CONF)
-                curse_an_item(true);
-        }
-        else if (monster->type == MONS_GUARDIAN_MUMMY
-                 || monster->type == MONS_GREATER_MUMMY
-                 || monster->type == MONS_MUMMY_PRIEST)
-        {
-            if (YOU_KILL(killer) && killer != KILL_YOU_CONF)
-            {
-                mpr("You feel extremely nervous for a moment...",
-                    MSGCH_MONSTER_SPELL);
-
-                miscast_effect( SPTYP_NECROMANCY,
-                                3 + (monster->type == MONS_GREATER_MUMMY) * 8
-                                  + (monster->type == MONS_MUMMY_PRIEST) * 5,
-                                random2avg(88, 3), 100, "a mummy death curse" );
-            }
+            _mummy_curse(monster, killer, killer_index);
         }
     }
 
@@ -1253,7 +1302,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
                                                                  KC_OTHER;
 
         unsigned int exp_gain = 0, avail_gain = 0;
-        _give_adjusted_experience(monster, killer, pet_kill, i,
+        _give_adjusted_experience(monster, killer, pet_kill, killer_index,
                                   &exp_gain, &avail_gain);
 
         PlaceInfo& curr_PlaceInfo = you.get_place_info();
@@ -1288,7 +1337,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
         }
     }
 
-    _fire_monster_death_event(monster, killer, i);
+    _fire_monster_death_event(monster, killer, killer_index);
 
     const coord_def mwhere = monster->pos();
     if (drop_items)
@@ -7504,7 +7553,7 @@ static void _mons_in_cloud(monsters *monster)
             return;
 
         beam.flavour = BEAM_CONFUSION;
-        beam.thrower = cloud.beam_thrower();
+        beam.thrower = cloud.killer;
 
         if (cloud.whose == KC_FRIENDLY)
             beam.beam_source = ANON_FRIENDLY_MONSTER;
@@ -7608,7 +7657,7 @@ static void _mons_in_cloud(monsters *monster)
         if (monster->hit_points < 1)
         {
             mon_enchant death_ench(ENCH_NONE, 0, cloud.whose);
-            monster_die(monster, death_ench.killer(), death_ench.kill_agent());
+            monster_die(monster, cloud.killer, death_ench.kill_agent());
         }
     }
 }

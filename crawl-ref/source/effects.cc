@@ -53,7 +53,7 @@
 #include "spells2.h"
 #include "spells3.h"
 #include "spl-book.h"
-#include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -404,10 +404,16 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
     }
     else if (who == "drawing a card")
         you.entry_cause = EC_SELF_RISKY;
-    else if (who.find("miscast") != std::string::npos)
+    else if (who.find("you miscast") != std::string::npos)
         you.entry_cause = EC_MISCAST;
     else if (who == "wizard command")
         you.entry_cause = EC_SELF_EXPLICIT;
+    else if (who.find("effects of Hell") != std::string::npos)
+        you.entry_cause = EC_ENVIRONMENT;
+    else if (who.find("Zot") != std::string::npos)
+        you.entry_cause = EC_TRAP;
+    else if (who.find("trap") != std::string::npos)
+        you.entry_cause = EC_TRAP;
     else
         you.entry_cause = EC_MONSTER;
 
@@ -2147,8 +2153,9 @@ static void _hell_effects()
         else                // 1 in 8 odds {dlb}
             which_miscast = SPTYP_ENCHANTMENT;
 
-        miscast_effect(which_miscast, 4 + random2(6), random2avg(97, 3),
-                       100, "the effects of Hell");
+        MiscastEffect(&you, MISC_KNOWN_MISCAST, which_miscast,
+                      4 + random2(6), random2avg(97, 3),
+                      "the effects of Hell");
     }
     else if (temp_rand > 7) // 10 in 27 odds {dlb}
     {
@@ -2202,8 +2209,9 @@ static void _hell_effects()
         }
         else
         {
-            miscast_effect(which_miscast, 4 + random2(6),
-                           random2avg(97, 3), 100, "the effects of Hell");
+            MiscastEffect(&you, MISC_KNOWN_MISCAST, which_miscast,
+                          4 + random2(6), random2avg(97, 3),
+                          "the effects of Hell");
         }
     }
 

@@ -1,7 +1,7 @@
 /*
  *  File:       debug.cc
  *  Summary:    Debug and wizard related functions.
- *  Written by: Linley Henzell and Jesse Jones
+*  Written by: Linley Henzell and Jesse Jones
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
  *
@@ -89,6 +89,7 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -4248,6 +4249,186 @@ void debug_pathfind(int mid)
         mpr(path_str.c_str());
         mprf("-> #waypoints: %d", path.size());
     }
+}
+
+static void _miscast_screen_update()
+{
+    viewwindow(true, false);
+
+    you.redraw_status_flags =
+        REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
+    print_stats();
+
+#ifndef USE_TILE
+    update_monster_pane();
+#endif
+}
+
+void debug_miscast( int target_index )
+{
+    crawl_state.cancel_cmd_repeat();
+
+    actor* target;
+    if (target_index == NON_MONSTER)
+        target = dynamic_cast<actor*>(&you);
+    else
+        target = dynamic_cast<actor*>(&menv[target_index]);
+
+    if (!target->alive())
+    {
+        mpr("Can't make already dead target miscast.");
+        return;
+    }
+
+    char specs[100];
+    mpr( "Miscast which school or spell, by name? ", MSGCH_PROMPT );
+    if (cancelable_get_line(specs, sizeof specs) || !*specs)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    spell_type         spell  = spell_by_name(specs, true);
+    spschool_flag_type school = school_by_name(specs);
+
+    // Prefer exact matches for school name over partial matches for
+    // spell name.
+    if (school != SPTYP_NONE
+        && (strcasecmp(specs, spelltype_short_name(school)) == 0
+            || strcasecmp(specs, spelltype_long_name(school)) == 0))
+    {
+        spell = SPELL_NO_SPELL;
+    }
+
+    if (spell == SPELL_NO_SPELL && school == SPTYP_NONE)
+    {
+        mpr("No matching spell or spell school.");
+        return;
+    }
+    else if (spell != SPELL_NO_SPELL && school != SPTYP_NONE)
+    {
+        mprf("Ambiguous: can be spell '%s' or school '%s'.",
+            spell_title(spell), spelltype_short_name(school));
+        return;
+    }
+
+    int disciplines = 0;
+    if (spell != SPELL_NO_SPELL)
+    {
+        disciplines = get_spell_disciplines(spell);
+
+        if (disciplines == 0)
+        {
+            mprf("Spell '%s' has no disciplines.", spell_title(spell));
+            return;
+        }
+    }
+
+    if (school == SPTYP_HOLY || (disciplines & SPTYP_HOLY))
+    {
+        mpr("Can't miscast holy spells.");
+        return;
+    }
+
+    if (spell != SPELL_NO_SPELL)
+        mprf("Miscasting spell %s.", spell_title(spell));
+    else
+        mprf("Miscasting school %s.", spelltype_long_name(school));
+
+    if (spell != SPELL_NO_SPELL)
+        mpr( "Enter spell_power,spell_failure: ",
+              MSGCH_PROMPT );
+    else
+        mpr( "Enter miscast_level or spell_power,spell_failure: ",
+              MSGCH_PROMPT );
+    
+    if (cancelable_get_line(specs, sizeof specs) || !*specs)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    int level = -1, pow = -1, fail = -1;
+
+    if (strchr(specs, ','))
+    {
+        std::vector<std::string> nums = split_string(",", specs);
+        pow  = atoi(nums[0].c_str());
+        fail = atoi(nums[1].c_str());
+
+        if (pow <= 0 || fail <= 0)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+    }
+    else
+    {
+        if (spell != SPELL_NO_SPELL)
+        {
+            mpr("Can only enter fixed miscast level for schools, not spells.");
+            return;
+        }
+
+        level = atoi(specs);
+        if (level < 0)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        else if (level > 3)
+        {
+            mpr("Miscast level can be at most 3.");
+            return;
+        }
+    }
+
+    // Handle repeats ourselves since miscasts are likely to interrupt
+    // command repetions, especially if the player is the target.
+    int repeats = _debug_prompt_for_int("Number of repitions? ", true);
+    if (repeats < 1)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    // Supress "nothing happens" message for monster miscasts which are
+    // only harmless messages, since a large number of those are missing
+    // monster messages.
+    nothing_happens_when_type nothing = NH_DEFAULT;
+    if (target_index != NON_MONSTER && level == 0)
+        nothing = NH_NEVER;
+
+    MiscastEffect *miscast;
+
+    if (spell != SPELL_NO_SPELL)
+        miscast = new MiscastEffect(target, target_index, spell, pow, fail,
+                                    "", nothing);
+    else
+    {
+        if (level != -1)
+            miscast = new MiscastEffect(target, target_index, school,
+                                        level, "wizard testing miscast",
+                                        nothing);
+        else
+            miscast = new MiscastEffect(target, target_index, school,
+                                        pow, fail, "wizard testing miscast",
+                                        nothing);
+    }
+    // Merely creating the miscast object causes one miscast effect to
+    // happen.
+    repeats--;
+    if (level != 0)
+        _miscast_screen_update();
+
+    while (target->alive() && repeats-- > 0)
+    {
+        miscast->do_miscast();
+        if (level != 0)
+            _miscast_screen_update();
+    }
+
+    delete miscast;
 }
 #endif
 

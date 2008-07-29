@@ -20,7 +20,8 @@ struct bolt;
 
 bool backlight_monsters(coord_def where, int pow, int garbage);
 int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
-                        cloud_type ctype, kill_category);
+                        cloud_type ctype, kill_category,
+                        killer_type killer = KILL_NONE);
 int disperse_monsters(coord_def where, int pow, int message);
 
 void cast_bend(int pow);

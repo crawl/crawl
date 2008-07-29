@@ -44,7 +44,7 @@
 #include "spells1.h"
 #include "spells3.h"
 #include "spells4.h"
-#include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "traps.h"
@@ -58,8 +58,6 @@ void mons_trap(monsters *monster)
 {
     if (!is_trap_square(grd[monster->x][monster->y]))
         return;
-
-    int temp_rand = 0;          // probability determination {dlb}
 
     // single calculation permissible {dlb}
     bool monsterNearby = mons_near(monster);
@@ -282,13 +280,19 @@ void mons_trap(monsters *monster)
     // an "early return" - zot traps are *never* revealed - instead,
     // enchantment messages serve as clues to the trap's presence: {dlb}
     case TRAP_ZOT:
-        if (monsterNearby)
+        if (mons_friendly(monster) || mons_good_neutral(monster))
+        {
+            MiscastEffect( monster, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+                           3, "the power of Zot" );
+            return; // early return
+        }
+        else if (monsterNearby)
         {
             if (one_chance_in(5))
             {
                 mpr("The power of Zot is invoked against you!");
-                miscast_effect( SPTYP_RANDOM, 10 + random2(30),
-                                75 + random2(100), 0, "the power of Zot" );
+                MiscastEffect( &you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+                               3, "the power of Zot" );
 
                 return;         // early return {dlb}
             }
@@ -303,30 +307,24 @@ void mons_trap(monsters *monster)
                 mpr("You hear a distant \"Zot\"!", MSGCH_SOUND);
         }
 
-        // Determine trap effects upon monster, based upon
-        // whether it is naughty or nice to the player. {dlb}
-
-        // NB: beem[].colour values are mislabeled as colours (?) -
-        //     cf. mons_ench_f2() [which are also mislabeled] {dlb}
-        temp_rand = random2(16);
-
-        beem.thrower = KILL_MON;        // probably unnecessary
-        beem.aux_source.clear();
-
-        if (mons_friendly(monster))
+        // XXX: It seem that back when a beam's colour determined its
+        // flavour that Zot traps would heal, haste or make invisible
+        // hostile monsters.  The code has been fixed to work but
+        // commented out.
+#if 0
+        if (!mons_friendly(monster) && !mons_good_neutral(monster))
         {
-            beem.colour = ((temp_rand < 3) ? CYAN :  //paralyze - 3 in 16
-                           (temp_rand < 7) ? RED     // confuse - 4 in 16
-                                           : BLACK); //    slow - 9 in 16
-        }
-        else
-        {
-            beem.colour = ((temp_rand < 3) ? BLUE :  //haste - 3 in 16 {dlb}
-                           (temp_rand < 7) ? MAGENTA //invis - 4 in 16 {dlb}
-                                           : GREEN); // heal - 9 in 16 {dlb}
-        }
+            int temp_rand = random2(16);
 
-        mons_ench_f2(monster, beem);
+            beem.thrower = KILL_MON;        // probably unnecessary
+            beem.aux_source.clear();
+            beem.flavour = ((temp_rand < 3) ? BEAM_HASTE : // 3 in 16 {dlb}
+                            (temp_rand < 7) ? BEAM_INVISIBILITY //4 in 16 {dlb}
+                                            : BEAM_HEALING); // 9 in 16 {dlb}
+            mons_ench_f2(monster, beem);
+        }
+#endif
+
         damage_taken = 0;      // just to be certain {dlb}
         break;
 
@@ -2454,7 +2452,8 @@ bool orange_statue_effects(monsters *mons)
     {
         mpr("A hostile presence attacks your mind!", MSGCH_WARN);
 
-        miscast_effect(SPTYP_DIVINATION, random2(15), random2(150), 100,
+        MiscastEffect( &you, monster_index(mons), SPTYP_DIVINATION,
+                       random2(15), random2(150),
                        "an orange crystal statue");
         return (true);
     }

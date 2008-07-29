@@ -29,6 +29,7 @@
 #include "religion.h"
 #include "spells2.h"
 #include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -739,7 +740,8 @@ static bool _xom_is_bad(int sever)
         {
             god_speaks(GOD_XOM, _get_xom_speech("zero miscast effect").c_str());
 
-            miscast_effect(SPTYP_RANDOM, 0, 0, 0, "the mischief of Xom");
+            MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, 0,
+                          "the mischief of Xom");
 
             done = true;
         }
@@ -747,7 +749,7 @@ static bool _xom_is_bad(int sever)
         {
             god_speaks(GOD_XOM, _get_xom_speech("minor miscast effect").c_str());
 
-            miscast_effect(SPTYP_RANDOM, 0, 0, random2(2),
+            MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, random2(2),
                            "the capriciousness of Xom");
 
             done = true;
@@ -765,7 +767,7 @@ static bool _xom_is_bad(int sever)
         {
             god_speaks(GOD_XOM, _get_xom_speech("medium miscast effect").c_str());
 
-            miscast_effect(SPTYP_RANDOM, 0, 0, random2(3),
+            MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, random2(3),
                            "the capriciousness of Xom");
 
             done = true;
@@ -894,10 +896,11 @@ static bool _xom_is_bad(int sever)
         }
         else if (x_chance_in_y(11, sever))
         {
-            god_speaks(GOD_XOM, _get_xom_speech("major miscast effect").c_str());
+            god_speaks(GOD_XOM,
+                       _get_xom_speech("major miscast effect").c_str());
 
-            miscast_effect(SPTYP_RANDOM, 0, 0, random2(4),
-                           "the severe capriciousness of Xom");
+            MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, random2(4),
+                          "the severe capriciousness of Xom");
 
             done = true;
         }

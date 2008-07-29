@@ -72,6 +72,7 @@
 #include "spells3.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -738,8 +739,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 break;
 
             case SPWPN_STAFF_OF_WUCAD_MU:
-                miscast_effect( SPTYP_DIVINATION, 9, 90, 100,
-                                "the Staff of Wucad Mu" );
+                MiscastEffect(&you, WIELD_MISCAST, SPTYP_DIVINATION, 9, 90,
+                              "the Staff of Wucad Mu" );
                 you.special_wield = SPWLD_WUCAD_MU;
                 break;
             }
@@ -3895,8 +3896,8 @@ static bool affix_weapon_enchantment()
         mprf("%s twongs alarmingly.", itname.c_str());
 
         // from unwield_item
-        miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100,
-                        "distortion affixation" );
+        MiscastEffect( &you, NON_MONSTER, SPTYP_TRANSLOCATION, 9, 90,
+                       "distortion affixation" );
         success = false;
         break;
 

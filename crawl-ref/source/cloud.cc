@@ -46,24 +46,47 @@ static unsigned char _actual_spread_rate(cloud_type type, int spread_rate)
     }
 }
 
+static bool _killer_whose_match(kill_category whose, killer_type killer)
+{
+    switch(whose)
+    {
+        case KC_YOU:
+            return (killer == KILL_YOU_MISSILE || killer == KILL_YOU_CONF);
+
+        case KC_FRIENDLY:
+            return (killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF);
+
+        case KC_OTHER:
+            return (killer == KILL_MON_MISSILE || killer == KILL_MISC);
+
+        case KC_NCATEGORIES:
+            ASSERT(false);
+    }
+    return (false);
+}
+
 static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
-                        int decay, kill_category whose,
+                        int decay, kill_category whose, killer_type killer,
                         unsigned char spread_rate )
 {
     ASSERT( env.cloud[ cloud ].type == CLOUD_NONE );
+
+    ASSERT(_killer_whose_match(whose, killer));
 
     env.cloud[ cloud ].type        = type;
     env.cloud[ cloud ].decay       = decay;
     env.cloud[ cloud ].x           = p.x;
     env.cloud[ cloud ].y           = p.y;
     env.cloud[ cloud ].whose       = whose;
+    env.cloud[ cloud ].killer      = killer;
     env.cloud[ cloud ].spread_rate = spread_rate;
     env.cgrid(p)                   = cloud;
     env.cloud_no++;
 }
 
 static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
-                             kill_category whose, int spread_rate)
+                             kill_category whose, killer_type killer,
+                             int spread_rate)
 {
     if (env.cloud_no >= MAX_CLOUDS)
         return;
@@ -73,7 +96,7 @@ static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
     {
         if (env.cloud[ci].type == CLOUD_NONE)   // i.e., is empty
         {
-            _new_cloud( ci, cltype, p, decay, whose, spread_rate );
+            _new_cloud( ci, cltype, p, decay, whose, killer, spread_rate );
             break;
         }
     }
@@ -102,7 +125,7 @@ static int _spread_cloud(const cloud_struct &cloud)
         if (newdecay >= cloud.decay)
             newdecay = cloud.decay - 1;
         
-        _place_new_cloud( cloud.type, *ai, newdecay, cloud.whose,
+        _place_new_cloud( cloud.type, *ai, newdecay, cloud.whose, cloud.killer,
                           cloud.spread_rate );
 
         extra_decay += 8;
@@ -170,6 +193,7 @@ void delete_cloud( int cloud )
         env.cloud[ cloud ].x            = 0;
         env.cloud[ cloud ].y            = 0;
         env.cloud[ cloud ].whose        = KC_OTHER;
+        env.cloud[ cloud ].killer       = KILL_NONE;
         env.cloud[ cloud ].spread_rate  = 0;
         env.cgrid(cloud_pos)            = EMPTY_CLOUD;
         env.cloud_no--;
@@ -197,10 +221,30 @@ void move_cloud( int cloud, const coord_def& newpos )
 void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
                         kill_category whose, int spread_rate )
 {
+    check_place_cloud(cl_type, p, lifetime, whose,
+                      cloud_struct::whose_to_killer(whose), spread_rate);
+}
+
+// Places a cloud with the given stats assuming one doesn't already
+// exist at that point.
+void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
+                        killer_type killer, int spread_rate )
+{
+    check_place_cloud(cl_type, p, lifetime,
+                      cloud_struct::killer_to_whose(killer), killer,
+                      spread_rate);
+}
+
+// Places a cloud with the given stats assuming one doesn't already
+// exist at that point.
+void check_place_cloud( cloud_type cl_type, const coord_def& p, int lifetime,
+                        kill_category whose, killer_type killer,
+                        int spread_rate )
+{
     if (!in_bounds(p) || env.cgrid(p) != EMPTY_CLOUD)
         return;
 
-    place_cloud( cl_type, p, lifetime, whose, spread_rate );
+    place_cloud( cl_type, p, lifetime, whose, killer, spread_rate );
 }
 
 int steam_cloud_damage(const cloud_struct &cloud)
@@ -220,6 +264,26 @@ int steam_cloud_damage(const cloud_struct &cloud)
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
                  kill_category whose, int _spread_rate)
+{
+    place_cloud(cl_type, ctarget, cl_range, whose,
+                cloud_struct::whose_to_killer(whose), _spread_rate);
+}
+
+//   Places a cloud with the given stats. May delete old clouds to
+//   make way if there are too many on level. Will overwrite an old
+//   cloud under some circumstances.
+void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
+                 killer_type killer, int _spread_rate)
+{
+    place_cloud(cl_type, ctarget, cl_range,
+                cloud_struct::killer_to_whose(killer), killer, _spread_rate);
+}
+
+//   Places a cloud with the given stats. May delete old clouds to
+//   make way if there are too many on level. Will overwrite an old
+//   cloud under some circumstances.
+void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
+                 kill_category whose, killer_type killer, int _spread_rate)
 {
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
@@ -277,7 +341,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     if (cl_new != -1)
     {
         _new_cloud( cl_new, cl_type, ctarget, cl_range * 10,
-                    whose, spread_rate );
+                    whose, killer, spread_rate );
     }
     else
     {
@@ -287,7 +351,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
             if (env.cloud[ci].type == CLOUD_NONE)   // ie is empty
             {
                 _new_cloud( ci, cl_type, ctarget, cl_range * 10,
-                            whose, spread_rate );
+                            whose, killer, spread_rate );
                 break;
             }
         }
@@ -635,9 +699,62 @@ std::string cloud_name(cloud_type type)
 ////////////////////////////////////////////////////////////////////////
 // cloud_struct
 
-killer_type cloud_struct::beam_thrower() const
+kill_category cloud_struct::killer_to_whose(killer_type killer)
 {
-    return (whose == KC_YOU ? KILL_YOU_MISSILE : KILL_MON_MISSILE);
+    switch(killer)
+    {
+        case KILL_YOU:
+        case KILL_YOU_MISSILE:
+        case KILL_YOU_CONF:
+            return (KC_YOU);
+
+        case KILL_MON:
+        case KILL_MON_MISSILE:
+        case KILL_MISC:
+            return (KC_OTHER);
+
+        default:
+            ASSERT(false);
+    }
+    return (KC_OTHER);
+}
+
+killer_type cloud_struct::whose_to_killer(kill_category whose)
+{
+    switch(whose)
+    {
+        case KC_YOU:         return(KILL_YOU_MISSILE);
+        case KC_FRIENDLY:    return(KILL_MON_MISSILE);
+        case KC_OTHER:       return(KILL_MON_MISSILE);
+        case KC_NCATEGORIES: ASSERT(false);
+    }
+    return (KILL_NONE);
+}
+
+void cloud_struct::set_whose(kill_category _whose)
+{
+    whose  = _whose;
+    killer = whose_to_killer(whose);
+}
+
+void cloud_struct::set_killer(killer_type _killer)
+{
+    killer = _killer;
+    whose  = killer_to_whose(killer);
+
+    switch(killer)
+    {
+        case KILL_YOU:
+            killer = KILL_YOU_MISSILE;
+            break;
+
+        case KILL_MON:
+            killer = KILL_MON_MISSILE;
+            break;
+
+        default:
+            break;
+     }
 }
 //////////////////////////////////////////////////////////////////////////
 // Fog machine stuff

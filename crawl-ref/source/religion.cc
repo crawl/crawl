@@ -75,7 +75,7 @@
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-book.h"
-#include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
@@ -3257,7 +3257,7 @@ bool trog_burn_books()
                 mpr( "The fire roars with new energy!" );
                 const int extra_dur = count + random2(rarity/2);
                 env.cloud[cloud].decay += extra_dur * 5;
-                env.cloud[cloud].whose = KC_YOU;
+                env.cloud[cloud].set_whose(KC_YOU);
                 continue;
             }
 
@@ -3617,7 +3617,7 @@ static bool _elyvilon_retribution()
         break;
 
     case 2: // mostly flavour messages
-        miscast_effect(SPTYP_POISON, 0, 0, one_chance_in(3),
+        MiscastEffect(&you, -god, SPTYP_POISON, one_chance_in(3) ? 1 : 0,
                        "the will of Elyvilon");
         break;
 
@@ -3703,8 +3703,8 @@ static bool _kikubaaqudgha_retribution()
         god_speaks(god, (coinflip()) ? "You hear Kikubaaqudgha cackling."
                    : "Kikubaaqudgha's malice focuses upon you.");
 
-        miscast_effect(SPTYP_NECROMANCY, 5 + you.experience_level,
-                       random2avg(88, 3), 100, "the malice of Kikubaaqudgha");
+        MiscastEffect(&you, -god, SPTYP_NECROMANCY, 5 + you.experience_level,
+                      random2avg(88, 3), "the malice of Kikubaaqudgha");
     }
 
     return (true);
@@ -3739,8 +3739,8 @@ static bool _yredelemnul_retribution()
     else
     {
         simple_god_message("'s anger turns toward you for a moment.", god);
-        miscast_effect( SPTYP_NECROMANCY, 5 + you.experience_level,
-                        random2avg(88, 3), 100, "the anger of Yredelemnul" );
+        MiscastEffect( &you, -god, SPTYP_NECROMANCY, 5 + you.experience_level,
+                       random2avg(88, 3), "the anger of Yredelemnul" );
     }
 
     return (true);
@@ -3833,8 +3833,8 @@ static bool _trog_retribution()
         //    fire magic. -- bwr
         dec_penance(god, 2);
         mpr( "You feel Trog's fiery rage upon you!", MSGCH_WARN );
-        miscast_effect( SPTYP_FIRE, 8 + you.experience_level,
-                        random2avg(98, 3), 100, "the fiery rage of Trog" );
+        MiscastEffect( &you, -god, SPTYP_FIRE, 8 + you.experience_level,
+                       random2avg(98, 3), "the fiery rage of Trog" );
     }
 
     return (true);
@@ -3849,7 +3849,7 @@ static bool _beogh_retribution()
     {
     case 0: // smiting (25%)
     case 1:
-        god_smites_you(GOD_BEOGH, KILLED_BY_BEOGH_SMITING);
+        god_smites_you(GOD_BEOGH);
         break;
 
     case 2: // send out one or two dancing weapons (12.5%)
@@ -4014,7 +4014,8 @@ static bool _sif_muna_retribution()
 
     case 5:
     case 6:
-        miscast_effect(SPTYP_DIVINATION, 9, 90, 100, "the will of Sif Muna");
+        MiscastEffect(&you, -god, SPTYP_DIVINATION, 9, 90,
+                      "the will of Sif Muna");
         break;
 
     case 7:
@@ -4046,7 +4047,8 @@ static bool _lugonu_retribution()
     if (coinflip())
     {
         simple_god_message("'s wrath finds you!", god);
-        miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100, "Lugonu's touch" );
+        MiscastEffect( &you, -god, SPTYP_TRANSLOCATION, 9, 90,
+                       "Lugonu's touch" );
 
         // No return - Lugonu's touch is independent of other effects.
     }
@@ -4108,9 +4110,10 @@ static bool _vehumet_retribution()
     const god_type god = GOD_VEHUMET;
 
     simple_god_message("'s vengeance finds you.", god);
-    miscast_effect( coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
-                    8 + you.experience_level, random2avg(98, 3), 100,
-                    "the wrath of Vehumet" );
+    MiscastEffect( &you, -god,
+                   coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
+                   8 + you.experience_level, random2avg(98, 3),
+                   "the wrath of Vehumet" );
     return (true);
 }
 
@@ -4641,7 +4644,7 @@ void beogh_idol_revenge()
         else
             revenge = _get_beogh_speech("idol other").c_str();
 
-        god_smites_you(GOD_BEOGH, KILLED_BY_BEOGH_SMITING, revenge);
+        god_smites_you(GOD_BEOGH, revenge);
 
         if (you.religion == GOD_BEOGH)
         {
@@ -4802,28 +4805,32 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        miscast_effect(SPTYP_NECROMANCY, 5 + you.experience_level,
-                       random2avg(88, 3), 100, "the malice of Kikubaaqudgha");
+        MiscastEffect(&you, -old_god, SPTYP_NECROMANCY,
+                      5 + you.experience_level, random2avg(88, 3),
+                      "the malice of Kikubaaqudgha");
         _inc_penance(old_god, 30);
         break;
 
     case GOD_YREDELEMNUL:
-        miscast_effect(SPTYP_NECROMANCY, 5 + you.experience_level,
-                       random2avg(88, 3), 100, "the anger of Yredelemnul");
+        MiscastEffect(&you, -old_god, SPTYP_NECROMANCY,
+                      5 + you.experience_level, random2avg(88, 3),
+                      "the anger of Yredelemnul");
         _inc_penance(old_god, 30);
         break;
 
     case GOD_VEHUMET:
-        miscast_effect((coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
-                       8 + you.experience_level, random2avg(98, 3), 100,
-                       "the wrath of Vehumet");
+        MiscastEffect(&you, -old_god,
+                      (coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
+                      8 + you.experience_level, random2avg(98, 3),
+                      "the wrath of Vehumet");
         _inc_penance(old_god, 25);
         break;
 
     case GOD_MAKHLEB:
-        miscast_effect((coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
-                       8 + you.experience_level, random2avg(98, 3), 100,
-                       "the fury of Makhleb");
+        MiscastEffect(&you, -old_god,
+                      (coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING),
+                      8 + you.experience_level, random2avg(98, 3),
+                      "the fury of Makhleb");
         _inc_penance(old_god, 25);
         break;
 
@@ -5665,9 +5672,12 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     return HPT_NONE;
 }
 
-void god_smites_you(god_type god, kill_method_type death_type,
-                    const char *message)
+void god_smites_you(god_type god, const char *message,
+                    kill_method_type death_type)
+                    
 {
+    ASSERT(god != GOD_NO_GOD);
+
     // Your god won't protect you from his own smiting, and Xom is too
     // capricious to protect you from any god's smiting.
     if (you.religion != god && you.religion != GOD_XOM
@@ -5679,6 +5689,29 @@ void god_smites_you(god_type god, kill_method_type death_type,
     }
     else
     {
+        if (death_type == NUM_KILLBY)
+            switch(god)
+            {
+                case GOD_BEOGH:
+                    death_type = KILLED_BY_BEOGH_SMITING;
+                    break;
+                case GOD_SHINING_ONE:
+                    death_type = KILLED_BY_TSO_SMITING;
+                    break;
+                default:
+                    death_type = KILLED_BY_DIVINE_WRATH;
+                    break;
+            }
+
+        std::string aux;
+
+        if (death_type != KILLED_BY_BEOGH_SMITING
+            && death_type != KILLED_BY_TSO_SMITING)
+        {
+            aux = "smited by ";
+            aux += god_name(god);
+        }
+
         // If there's a message, display it before smiting.
         if (message)
             god_speaks(god, message);
@@ -5689,7 +5722,7 @@ void god_smites_you(god_type god, kill_method_type death_type,
             divine_hurt += random2( you.experience_level );
 
         simple_god_message( " smites you!", god );
-        ouch( divine_hurt, 0, death_type );
+        ouch( divine_hurt, 0, death_type, aux.c_str() );
         dec_penance( god, 1 );
     }
 }

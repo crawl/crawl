@@ -619,6 +619,8 @@ enum command_type
     CMD_TARGET_WIZARD_GIVE_ITEM,
     CMD_TARGET_WIZARD_MOVE,
     CMD_TARGET_WIZARD_PATHFIND,
+    CMD_TARGET_WIZARD_GAIN_LEVEL,
+    CMD_TARGET_WIZARD_MISCAST,
     CMD_TARGET_MOUSE_MOVE,
     CMD_TARGET_MOUSE_SELECT,
     CMD_TARGET_HELP,
@@ -1428,6 +1430,8 @@ enum entry_cause_type
     EC_GOD_RETRIBUTION,
     EC_GOD_ACT,        // Xom sending the player somewhere for amusement.
     EC_MONSTER,
+    EC_TRAP,          // Zot traps
+    EC_ENVIRONMENT,   // Hell effects.
     NUM_ENTRY_CAUSE_TYPES
 };
 

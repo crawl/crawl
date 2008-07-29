@@ -39,6 +39,7 @@
 #include "player.h"
 #include "religion.h"
 #include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -1326,20 +1327,23 @@ bool learn_spell(int book)
         if (you.inv[ book ].sub_type == BOOK_NECRONOMICON)
         {
             mpr("The pages of the Necronomicon glow with a dark malevolence...");
-            miscast_effect( SPTYP_NECROMANCY, 8, random2avg(88, 3), 100,
-                            "reading the Necronomicon" );
+            MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_NECROMANCY,
+                           8, random2avg(88, 3),
+                           "reading the Necronomicon" );
         }
         else if (you.inv[ book ].sub_type == BOOK_DEMONOLOGY)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
-            miscast_effect( SPTYP_SUMMONING, 7, random2avg(88, 3), 100,
-                            "reading the book of Demonology" );
+            MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_SUMMONING,
+                           7, random2avg(88, 3),
+                           "reading the book of Demonology" );
         }
         else if (you.inv[ book ].sub_type == BOOK_ANNIHILATIONS)
         {
             mpr("This book does not appreciate being disturbed by one of your ineptitude!");
-            miscast_effect( SPTYP_CONJURATION, 8, random2avg(88, 3), 100,
-                            "reading the book of Annihilations" );
+            MiscastEffect( &you, MISC_KNOWN_MISCAST, SPTYP_CONJURATION,
+                           8, random2avg(88, 3),
+                           "reading the book of Annihilations" );
         }
 
 #ifdef WIZARD

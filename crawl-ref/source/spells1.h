@@ -44,7 +44,10 @@ int cast_vitalisation(int pow);
  * *********************************************************************** */
 void big_cloud(cloud_type cl_type, kill_category whose, int cl_x, int cl_y,
                int pow, int size, int spread_rate = -1);
-
+void big_cloud(cloud_type cl_type, killer_type killer, int cl_x, int cl_y,
+               int pow, int size, int spread_rate = -1);
+void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
+               int cl_x, int cl_y, int pow, int size, int spread_rate = -1);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

@@ -44,6 +44,7 @@
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -2737,6 +2738,10 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     bool rc = true;
     const int power = _card_power(rarity);
 
+    const god_type god =
+        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
+                                      : GOD_NO_GOD;
+
 #ifdef DEBUG_DIAGNOSTICS
     msg::streams(MSGCH_DIAGNOSTICS) << "Card power: " << power
                                     << ", rarity: " << static_cast<int>(rarity)
@@ -2844,8 +2849,9 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
 
     case CARD_WILD_MAGIC:
         // Yes, high power is bad here.
-        miscast_effect( SPTYP_RANDOM, random2(power/15) + 5,
-                        random2(power), 0, "a card of wild magic" );
+        MiscastEffect( &you, god == GOD_NO_GOD ? NON_MONSTER : -god,
+                       SPTYP_RANDOM, random2(power/15) + 5, random2(power),
+                       "a card of wild magic" );
         break;
 
     case CARD_FAMINE:

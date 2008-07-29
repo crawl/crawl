@@ -58,7 +58,8 @@ enum kill_method_type
     KILLED_BY_CURARE,                  // 30
     KILLED_BY_MELTING,
     KILLED_BY_BLEEDING,
-    KILLED_BY_BEOGH_SMITING,           // 33
+    KILLED_BY_BEOGH_SMITING,
+    KILLED_BY_DIVINE_WRATH,            // 34
 
     NUM_KILLBY
 };

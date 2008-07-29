@@ -50,6 +50,7 @@
 #include "spells3.h"
 #include "spl-book.h"
 #include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -534,8 +535,10 @@ bool evoke_wielded()
 
                 if (one_chance_in(3))
                 {
-                    miscast_effect( SPTYP_DIVINATION, random2(9),
-                                    random2(70), 100, "the Staff of Wucad Mu" );
+                    // NH_NEVER prevents "nothing happens" messages.
+                    MiscastEffect( &you, NON_MONSTER, SPTYP_DIVINATION,
+                                   random2(9), random2(70),
+                                   "the Staff of Wucad Mu", NH_NEVER );
                 }
                 break;
 

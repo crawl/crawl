@@ -5954,12 +5954,12 @@ item_def *player::shield()
     return slot_item(EQ_SHIELD);
 }
 
-std::string player::name(description_level_type type) const
+std::string player::name(description_level_type type, bool) const
 {
     return (pronoun_you(type));
 }
 
-std::string player::pronoun(pronoun_type pro) const
+std::string player::pronoun(pronoun_type pro, bool) const
 {
     switch (pro)
     {
@@ -5975,6 +5975,54 @@ std::string player::pronoun(pronoun_type pro) const
 std::string player::conj_verb(const std::string &verb) const
 {
     return (verb);
+}
+
+std::string player::hand_name(bool plural, bool *can_plural) const
+{
+    if (can_plural != NULL)
+        *can_plural = true;
+    return your_hand(plural);
+}
+
+std::string player::foot_name(bool plural, bool *can_plural) const
+{
+    bool _can_plural;
+    if (can_plural == NULL)
+        can_plural = &_can_plural;
+    *can_plural = true;
+
+    std::string str;
+
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_AIR)
+    {
+        str         = "lowest portion";
+        *can_plural = false;
+    }
+    else if (!transform_changed_physiology())
+    {
+        if (player_mutation_level(MUT_HOOVES))
+            str = "hoof";
+        else if (player_mutation_level(MUT_TALONS))
+            str = "talon";
+        else if (you.species == SP_NAGA)
+        {
+            str         = "underbelly";
+            *can_plural = false;
+        }
+        else if (you.species == SP_MERFOLK && player_is_swimming())
+        {
+            str         = "tail";
+            *can_plural = false;
+        }
+    }
+
+    if (str.empty())
+        return (plural ? "feet" : "foot");
+
+    if (plural && *can_plural)
+        str = pluralise(str);
+
+    return str;
 }
 
 int player::id() const
@@ -6335,6 +6383,11 @@ int player::res_rotting() const
     return 0;
 }
 
+int player::res_torment() const
+{
+    return player_res_torment();
+}
+
 bool player::confusable() const
 {
     return (player_mental_clarity() == 0);
@@ -6423,9 +6476,9 @@ void player::expose_to_element(beam_type element, int st)
     ::expose_player_to_element(element, st);
 }
 
-void player::blink()
+void player::blink(bool allow_partial_control)
 {
-    random_blink(true);
+    random_blink(allow_partial_control);
 }
 
 void player::teleport(bool now, bool abyss_shift)

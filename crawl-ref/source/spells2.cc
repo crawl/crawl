@@ -50,7 +50,7 @@
 #include "randart.h"
 #include "religion.h"
 #include "spells4.h"
-#include "spl-cast.h"
+#include "spl-mis.h"
 #include "stuff.h"
 #include "tiles.h"
 #include "terrain.h"

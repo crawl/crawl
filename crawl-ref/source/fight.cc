@@ -71,7 +71,7 @@
 #include "spells1.h"
 #include "spells3.h"
 #include "spells4.h"
-#include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "transfor.h"
@@ -498,12 +498,10 @@ void melee_attack::check_special_wield_effects()
         break;
 
     case SPWLD_WUCAD_MU:
-        // XXX At some distant point in the future, allow
-        // miscast_effect to operate on any actor.
-        if (one_chance_in(9) && attacker->atype() == ACT_PLAYER)
+        if (one_chance_in(9))
         {
-            miscast_effect( SPTYP_DIVINATION, random2(9), random2(70), 100,
-                            "the Staff of Wucad Mu" );
+            MiscastEffect(attacker, MELEE_MISCAST, SPTYP_DIVINATION,
+                          random2(9), random2(70), "the Staff of Wucad Mu");
         }
         break;
     default:

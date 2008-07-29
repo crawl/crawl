@@ -54,9 +54,9 @@ static int spell_list[NUM_SPELLS];
 
 static struct spell_desc *_seekspell(spell_type spellid);
 static bool _cloud_helper(int (*func)(int, int, int, int, cloud_type,
-                                      kill_category),
+                                      kill_category, killer_type),
                           int x, int y, int pow, int spread_rate,
-                          cloud_type ctype, kill_category );
+                          cloud_type ctype, kill_category, killer_type );
 
 //
 //             BEGIN PUBLIC FUNCTIONS
@@ -132,6 +132,52 @@ spell_type spell_by_name(std::string name, bool partial_match)
 
     return (spellmatch != -1 ? static_cast<spell_type>(spellmatch)
                              : SPELL_NO_SPELL);
+}
+
+spschool_flag_type school_by_name(std::string name)
+{
+   spschool_flag_type short_match, long_match;
+   int                short_matches, long_matches;
+
+   short_match   = long_match   = SPTYP_NONE;
+   short_matches = long_matches = 0;
+
+   for (int i = 0; i <= SPTYP_RANDOM; i++)
+   {
+       spschool_flag_type type = (spschool_flag_type) (1 << i);
+
+       const char* short_name = spelltype_short_name(type);
+       const char* long_name  = spelltype_long_name(type);
+
+       if (strcasecmp(short_name, name.c_str()) == 0)
+           return type;
+       if (strcasecmp(long_name, name.c_str()) == 0)
+           return type;
+
+       if (strcasestr(short_name, name.c_str()))
+       {
+           short_match = type;
+           short_matches++;
+       }
+       if (strcasestr(long_name, name.c_str()))
+       {
+           long_match = type;
+           long_matches++;
+       }
+   }
+
+   if (short_matches != 1 && long_matches != 1)
+       return SPTYP_NONE;
+
+   if (short_matches == 1 && long_matches != 1)
+       return short_match;
+   if (short_matches != 1 && long_matches == 1)
+       return long_match;
+
+   if (short_match == long_match)
+       return short_match;
+
+   return SPTYP_NONE;
 }
 
 int get_spell_slot_by_letter( char letter )
@@ -558,10 +604,11 @@ int apply_area_within_radius( cell_func cf, const coord_def& where,
 // to do a (shallow) breadth-first-search of the dungeon floor.
 // This ought to work okay for small clouds.
 void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
-                                    kill_category),
+                                    kill_category, killer_type),
                        int x, int y,
                        int pow, int number, cloud_type ctype,
-                       kill_category whose, int spread_rate )
+                       kill_category whose, killer_type killer,
+                       int spread_rate )
 {
     int spread, clouds_left = number;
     int good_squares = 0, neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -569,7 +616,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
     bool x_first;
 
     if (clouds_left && _cloud_helper(func, x, y, pow, spread_rate,
-                                     ctype, whose))
+                                     ctype, whose, killer))
         clouds_left--;
 
     if (!clouds_left)
@@ -585,7 +632,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
     if (x_first)
     {
         if (clouds_left && _cloud_helper(func, x + dx, y, pow, spread_rate,
-                                         ctype, whose))
+                                         ctype, whose, killer))
         {
             clouds_left--;
             good_squares++;
@@ -593,7 +640,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
         }
 
         if (clouds_left && _cloud_helper(func, x - dx, y, pow, spread_rate,
-                                         ctype, whose))
+                                         ctype, whose, killer))
         {
             clouds_left--;
             good_squares++;
@@ -601,7 +648,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
         }
 
         if (clouds_left && _cloud_helper(func, x, y + dy, pow, spread_rate,
-                                         ctype, whose))
+                                         ctype, whose, killer))
         {
             clouds_left--;
             good_squares++;
@@ -609,7 +656,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
         }
 
         if (clouds_left && _cloud_helper(func, x, y - dy, pow, spread_rate,
-                                         ctype, whose))
+                                         ctype, whose, killer))
         {
             clouds_left--;
             good_squares++;
@@ -619,7 +666,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
     else
     {
         if (clouds_left && _cloud_helper(func, x, y + dy, pow, spread_rate,
-                                         ctype, whose))
+                                         ctype, whose, killer))
         {
             clouds_left--;
             good_squares++;
@@ -627,7 +674,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
         }
 
         if (clouds_left && _cloud_helper(func, x, y - dy, pow, spread_rate,
-                                         ctype, whose))
+                                         ctype, whose, killer))
         {
             clouds_left--;
             good_squares++;
@@ -635,7 +682,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
         }
 
         if (clouds_left && _cloud_helper(func, x + dx, y, pow, spread_rate,
-                                         ctype, whose))
+                                         ctype, whose, killer))
         {
             clouds_left--;
             good_squares++;
@@ -643,7 +690,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
         }
 
         if (clouds_left && _cloud_helper(func, x - dx, y, pow, spread_rate,
-                                         ctype, whose))
+                                         ctype, whose, killer))
         {
             clouds_left--;
             good_squares++;
@@ -653,7 +700,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
 
     // Mow diagonals; we could randomize dx & dy again here.
     if (clouds_left && _cloud_helper(func, x + dx, y + dy, pow, spread_rate,
-                                     ctype, whose))
+                                     ctype, whose, killer))
     {
         clouds_left--;
         good_squares++;
@@ -661,7 +708,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
     }
 
     if (clouds_left && _cloud_helper(func, x - dx, y + dy, pow, spread_rate,
-                                     ctype, whose))
+                                     ctype, whose, killer))
     {
         clouds_left--;
         good_squares++;
@@ -669,7 +716,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
     }
 
     if (clouds_left && _cloud_helper(func, x + dx, y - dy, pow, spread_rate,
-                                     ctype, whose))
+                                     ctype, whose, killer))
     {
         clouds_left--;
         good_squares++;
@@ -677,7 +724,7 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
     }
 
     if (clouds_left && _cloud_helper(func, x - dx, y - dy, pow, spread_rate,
-                                     ctype, whose))
+                                     ctype, whose, killer))
     {
         clouds_left--;
         good_squares++;
@@ -699,36 +746,36 @@ void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
         switch (i)
         {
         case 0:
-            apply_area_cloud(func, x + dx, y, pow, spread, ctype, whose,
+            apply_area_cloud(func, x + dx, y, pow, spread, ctype, whose, killer,
                              spread_rate);
             break;
         case 1:
-            apply_area_cloud(func, x - dx, y, pow, spread, ctype, whose,
+            apply_area_cloud(func, x - dx, y, pow, spread, ctype, whose, killer,
                              spread_rate);
             break;
         case 2:
-            apply_area_cloud(func, x, y + dy, pow, spread, ctype, whose,
+            apply_area_cloud(func, x, y + dy, pow, spread, ctype, whose, killer,
                              spread_rate);
             break;
         case 3:
-            apply_area_cloud(func, x, y - dy, pow, spread, ctype, whose,
+            apply_area_cloud(func, x, y - dy, pow, spread, ctype, whose, killer,
                              spread_rate);
             break;
         case 4:
             apply_area_cloud(func, x + dx, y + dy, pow, spread, ctype, whose,
-                             spread_rate);
+                             killer, spread_rate);
             break;
         case 5:
             apply_area_cloud(func, x - dx, y + dy, pow, spread, ctype, whose,
-                             spread_rate);
+                             killer, spread_rate);
             break;
         case 6:
             apply_area_cloud(func, x + dx, y - dy, pow, spread, ctype, whose,
-                             spread_rate);
+                             killer, spread_rate);
             break;
         case 7:
             apply_area_cloud(func, x - dx, y - dy, pow, spread, ctype, whose,
-                             spread_rate);
+                             killer, spread_rate);
             break;
         }
     }
@@ -793,6 +840,45 @@ const char* spelltype_short_name( int which_spelltype )
         return ("Erth");
     case SPTYP_AIR:
         return ("Air");
+    case SPTYP_RANDOM:
+        return ("Rndm");
+    default:
+        return "Bug";
+    }
+}
+
+const char* spelltype_long_name( int which_spelltype )
+{
+    switch (which_spelltype)
+    {
+    case SPTYP_CONJURATION:
+        return ("Conjuration");
+    case SPTYP_ENCHANTMENT:
+        return ("Enchantment");
+    case SPTYP_FIRE:
+        return ("Fire");
+    case SPTYP_ICE:
+        return ("Ice");
+    case SPTYP_TRANSMIGRATION:
+        return ("Transmigration");
+    case SPTYP_NECROMANCY:
+        return ("Necromancy");
+    case SPTYP_HOLY:
+        return ("Holy");
+    case SPTYP_SUMMONING:
+        return ("Summoning");
+    case SPTYP_DIVINATION:
+        return ("Divination");
+    case SPTYP_TRANSLOCATION:
+        return ("Translocation");
+    case SPTYP_POISON:
+        return ("Poison");
+    case SPTYP_EARTH:
+        return ("Earth");
+    case SPTYP_AIR:
+        return ("Air");
+    case SPTYP_RANDOM:
+        return ("Random");
     default:
         return "Bug";
     }
@@ -882,13 +968,14 @@ bool is_valid_spell(spell_type spell)
 }
 
 static bool _cloud_helper(int (*func)(int, int, int, int, cloud_type,
-                                      kill_category),
+                                      kill_category, killer_type),
                           int x, int y, int pow, int spread_rate,
-                          cloud_type ctype, kill_category whose )
+                          cloud_type ctype, kill_category whose,
+                          killer_type killer )
 {
     if (!grid_is_solid(grd[x][y]) && env.cgrid[x][y] == EMPTY_CLOUD)
     {
-        func(x, y, pow, spread_rate, ctype, whose);
+        func(x, y, pow, spread_rate, ctype, whose, killer);
         return (true);
     }
 

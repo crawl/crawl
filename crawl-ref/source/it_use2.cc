@@ -38,7 +38,7 @@
 #include "religion.h"
 #include "skills2.h"
 #include "spells2.h"
-#include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "tutorial.h"
@@ -437,8 +437,8 @@ bool unwield_item(bool showMsgs)
             case SPWPN_STAFF_OF_WUCAD_MU:
                 item.plus  = 0;
                 item.plus2 = 0;
-                miscast_effect( SPTYP_DIVINATION, 9, 90, 100,
-                                "the Staff of Wucad Mu" );
+                MiscastEffect( &you, WIELD_MISCAST, SPTYP_DIVINATION, 9, 90,
+                               "the Staff of Wucad Mu" );
                 break;
             default:
                 break;
@@ -502,8 +502,8 @@ bool unwield_item(bool showMsgs)
                 // if it's to be allowed as a player spell. -- bwr
 
                 // int effect = 9 - random2avg( you.skills[SK_TRANSLOCATIONS] * 2, 2 );
-                miscast_effect( SPTYP_TRANSLOCATION, 9, 90, 100,
-                                "distortion unwield" );
+                MiscastEffect( &you, WIELD_MISCAST, SPTYP_TRANSLOCATION, 9, 90,
+                               "distortion unwield" );
                 break;
 
                 // NOTE: When more are added here, *must* duplicate unwielding

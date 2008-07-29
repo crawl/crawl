@@ -1648,7 +1648,8 @@ static void tag_construct_level(writer &th)
         marshallByte(th, env.cloud[i].type);
         marshallShort(th, env.cloud[i].decay);
         marshallByte(th,  (char) env.cloud[i].spread_rate);
-        marshallShort(th, env.cloud[i].whose);
+        marshallByte(th, env.cloud[i].whose);
+        marshallByte(th, env.cloud[i].killer);
     }
 
     // how many shops?
@@ -1984,7 +1985,8 @@ static void tag_read_level( reader &th, char minorVersion )
         env.cloud[i].type  = static_cast<cloud_type>(unmarshallByte(th));
         env.cloud[i].decay = unmarshallShort(th);
         env.cloud[i].spread_rate = (unsigned char) unmarshallByte(th);
-        env.cloud[i].whose = static_cast<kill_category>(unmarshallShort(th));
+        env.cloud[i].whose = static_cast<kill_category>(unmarshallByte(th));
+        env.cloud[i].killer = static_cast<killer_type>(unmarshallByte(th));
     }
 
     // how many shops?
