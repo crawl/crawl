@@ -12,6 +12,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed picking up runes not enabling teleport control.
 * Fixed macros not working with 0.3.4 keymaps by introducing keybinding.
 * Fixed x_ and other feature hotkeys not working in the Abyss.
+* Fixed firing at enslaved monsters being impossible.
 * Fixed items being created in walls.
 * Fixed randart bardings masquerading as boots.
 * Fixed not swapping with a fiery monster into a fire cloud still moving it.
@@ -30,9 +31,11 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Abominations created by Twisted Resurrection count as undead again.
 * Restrict freezing cloud to high-damage cold beams, reduce their duration.
 * Reduce number of times a beam can bounce.
+* Don't autoswitch to randarts with the curse property as a butchering tool.
 * Count chunks and blood towards decks of summoning rather than wonder.
 * Show monsters sensing/seeing invisible in their 'x' description.
 * Self-hit prompts now respect the player's known resistances.
+* 'allow_self_target = no' no longer prevents self-targetting for area spells.
 * Added chunk colour to lua eating prompt.
 * Added PCRE to the source tree.
 

@@ -6765,7 +6765,7 @@ void PlaceInfo::make_global()
     branch     = -1;
 }
 
-void PlaceInfo::assert_validity() const
+void PlaceInfo::assert_validity()
 {
     // Check that level_type and branch match up.
     ASSERT(is_global()
