@@ -44,6 +44,32 @@
 #include "tutorial.h"
 #include "view.h"
 
+typedef std::string (*string_fn)();
+typedef std::map<std::string, string_fn> skill_op_map;
+
+static skill_op_map Skill_Op_Map;
+
+// The species for which the skill title is being worked out.
+static species_type Skill_Species = SP_UNKNOWN;
+
+struct skill_title_key_t {
+    const char *key;
+    string_fn op;
+
+    skill_title_key_t(const char *k, string_fn o) : key(k), op(o)
+    {
+        Skill_Op_Map[k] = o;
+    }
+
+    static std::string get(const std::string &key)
+    {
+        skill_op_map::const_iterator i = Skill_Op_Map.find(key);
+        return (i == Skill_Op_Map.end()? std::string() : (i->second)());
+    }
+};
+
+typedef skill_title_key_t stk;
+
 // Basic goals for titles:
 // The higher titles must come last.
 // Referring to the skill itself is fine ("Transmuter") but not impressive.
@@ -69,7 +95,7 @@ const char *skills[50][6] =
     {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Genus@ Porcupine"},
     {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff"},
     {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Genus@ Catapult"},
-    {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry %s"},
+    {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@"},
     {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Genus@ Arbalest"},   // 10
     {"Darts",          "Dart Thrower",  "Hurler",          "Hedgehog",        "Darts Champion", "Perforator"},
     {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Genus@ Ballista"},
@@ -80,7 +106,7 @@ const char *skills[50][6] =
     {"Shields",        "Shield-Bearer", "Hoplite",         "Blocker",         "Peltast",        "@Genus@ Barricade"},
     {"Traps & Doors",  "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
     // STR based fighters, for DEX/martial arts titles see below
-    {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "%sweight Champion"},
+    {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
 
     {NULL},   // 20- empty
     {NULL},   // 21- empty
@@ -92,9 +118,9 @@ const char *skills[50][6] =
     {"Conjurations",   "Ruinous",       "Conjurer",        "Destroyer",       "Devastator",     "Annihilator"},
     {"Enchantments",   "Charm-Maker",   "Infuser",         "Bewitcher",       "Enchanter",      "Spellbinder"},
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Demonologist",   "Hellbinder"},
-    {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "%s of Death"},
-    {"Translocations", "Grasshopper",   "Placeless %s",    "Blinker",         "Portalist",      "Plane %s"},           // 30
-    {"Transmigration", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless %s"},
+    {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
+    {"Translocations", "Grasshopper",   "Placeless @Genus@",    "Blinker",         "Portalist",      "Plane @Walker@"},           // 30
+    {"Transmigration", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@"},
     {"Divinations",    "Seer",          "Soothsayer",      "Diviner",         "Augur",          "Oracle"},
 
     {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist"},
@@ -1950,6 +1976,99 @@ int str_to_skill(const std::string &skill)
     return (SK_FIGHTING);
 }
 
+// [ds] @Genus@ distinguishes between Ogre-Mages and Ogres, but
+// @genus@ does not. This is rather confusing.
+static std::string _stk_genus_cap()
+{
+    return species_name(Skill_Species, 1, true, false, false);
+}
+
+static std::string _stk_genus_nocap()
+{
+    std::string s = species_name(Skill_Species, 1, true, false, true);
+    return (lowercase(s));
+}
+
+static std::string _stk_genus_short_cap()
+{
+    return (Skill_Species == SP_DEMIGOD ? "God" : _stk_genus_cap());
+}
+
+static std::string _stk_walker()
+{
+    return (Skill_Species == SP_NAGA  ? "Slider" :
+            Skill_Species == SP_KENKU ? "Glider"
+                                      : "Walker");
+}
+
+static std::string _stk_weight()
+{
+    switch (Skill_Species)
+    {
+    case SP_OGRE:
+    case SP_OGRE_MAGE:
+    case SP_TROLL:
+        return "Heavy";
+
+    case SP_NAGA:
+    case SP_CENTAUR:
+        return "Cruiser";
+
+    default:
+        return "Middle";
+
+    case SP_HIGH_ELF:
+    case SP_GREY_ELF:
+    case SP_DEEP_ELF:
+    case SP_SLUDGE_ELF:
+    case SP_KENKU:
+        return "Little";
+
+    case SP_HALFLING:
+    case SP_GNOME:
+    case SP_KOBOLD:
+        return "Feather";
+
+    case SP_SPRIGGAN:
+        return "Fly";
+    }
+}
+
+static skill_title_key_t _skill_title_keys[] = {
+    stk("Genus", _stk_genus_cap),
+    stk("genus", _stk_genus_nocap),
+    stk("Genus_Short", _stk_genus_short_cap),
+    stk("Walker", _stk_walker),
+    stk("Weight", _stk_weight),
+};
+
+static std::string _replace_skill_keys(const std::string &text)
+{
+    std::string::size_type at = 0, last = 0;
+    std::ostringstream res;
+    while ((at = text.find('@', last)) != std::string::npos)
+    {
+        res << text.substr(last, at - last);
+        const std::string::size_type end = text.find('@', at + 1);
+        if (end == std::string::npos)
+            break;
+
+        const std::string key = text.substr(at + 1, end - at - 1);
+        const std::string value = stk::get(key);
+
+        ASSERT(!value.empty());
+
+        res << value;
+
+        last = end + 1;
+    }
+    if (!last)
+        return text;
+
+    res << text.substr(last);
+    return res.str();
+}
+
 std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
                          int species, int str, int dex, int god )
 {
@@ -2015,79 +2134,12 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
         }
     }
 
-    // Replace all occurrences of @genus@ with the player genus.
-    std::string genus = species_name(you.species, 1, true, false, true);
-    std::string::size_type where = result.find("@genus@");
-    if (where != std::string::npos)
     {
-        lowercase(genus);
-        result = replace_all(result, "@genus@", genus);
-    }
-    else
-    {
-        if (you.species == SP_OGRE_MAGE)
-            genus = species_name(you.species, 1, true, false, false);
-        result = replace_all(result, "@Genus@", genus);
+        unwind_var<species_type> sp(Skill_Species,
+                                    static_cast<species_type>(species));
+        result = _replace_skill_keys(result);
     }
 
-    where = result.find("%s");
-    if (where != std::string::npos)
-    {
-        if (best_skill == SK_UNARMED_COMBAT)
-        {
-            std::string weightclass = "";
-            switch (species)
-            {
-            case SP_OGRE:
-            case SP_OGRE_MAGE:
-            case SP_TROLL:
-                weightclass = "Heavy";
-                break;
-
-            case SP_NAGA:
-            case SP_CENTAUR:
-                weightclass = "Cruiser";
-                break;
-
-            default:
-                weightclass = "Middle";
-                break;
-
-            case SP_HIGH_ELF:
-            case SP_GREY_ELF:
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_KENKU:
-                weightclass = "Little";
-                break;
-
-            case SP_HALFLING:
-            case SP_GNOME:
-            case SP_KOBOLD:
-                weightclass = "Feather";
-                break;
-
-            case SP_SPRIGGAN:
-                weightclass = "Fly";
-                break;
-            }
-            result.replace(where, 2, weightclass);
-        }
-        else if (best_skill == SK_TRANSLOCATIONS && skill_rank == 5)
-        {
-            result.replace(where, 2, (species == SP_NAGA  ? "Slider" :
-                                      species == SP_KENKU ? "Glider"
-                                                          : "Walker"));
-        }
-        else
-        {
-            const bool need_cap = (best_skill != SK_BOWS);
-            const std::string sp =
-                species_name(static_cast<species_type>(species), 0, true,
-                             need_cap);
-            result.replace(where, 2, sp);
-        }
-    }
     return (result.empty() ? std::string("Invalid Title")
                            : result);
 }
