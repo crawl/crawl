@@ -160,7 +160,7 @@ f, t           CMD_TARGET_MAYBE_PREV_TARGET
 -              CMD_TARGET_CYCLE_BACK},
 +, =           CMD_TARGET_CYCLE_FORWARD
 /              CMD_TARGET_OBJ_CYCLE_BACK
-*, \           CMD_TARGET_OBJ_CYCLE_FORWARD
+*, '           CMD_TARGET_OBJ_CYCLE_FORWARD
 
 Wiz-mode targetting sub-commands
 --------------------------------
