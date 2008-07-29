@@ -7911,19 +7911,8 @@ bool shift_monster( monsters *mon, int x, int y )
 
     if (x == 0 && y == 0)
     {
-        // Try and find a random floor space some distance away.
-        for (i = 0; i < 50; i++)
-        {
-            tx = 5 + random2( GXM - 10 );
-            ty = 5 + random2( GYM - 10 );
-
-            int dist = grid_distance(x, y, tx, ty);
-            if (grd[tx][ty] == DNGN_FLOOR && dist > 10)
-                break;
-        }
-
-        if (i == 50)
-            return (false);
+        x = mon->x;
+        y = mon->y;
     }
 
     for (i = -1; i <= 1; i++)
