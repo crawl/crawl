@@ -1760,6 +1760,11 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
     bool did_bounce = false;
     cursor_control coff(false);
 
+    // [ds] Forcing the beam out of explosion phase here - currently
+    // no caller relies on the beam already being in_explosion_phase.
+    // This fixes beams being in explosion after use as a tracer.
+    pbolt.in_explosion_phase = false;
+
     beam_message_cache.clear();
 
 #ifdef USE_TILE
