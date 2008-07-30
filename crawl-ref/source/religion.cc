@@ -4938,39 +4938,39 @@ void excommunication(god_type new_god)
                           coord_def((int)new_god, old_piety));
 }
 
-static bool _bless_weapon( god_type god, int brand, int colour )
+static bool _bless_weapon( god_type god, brand_type brand, int colour )
 {
-    const int wpn = get_player_wielded_weapon();
+    item_def& weap = *you.weapon();
 
     // Only bless melee weapons.
-    if (!is_artefact(you.inv[wpn]) && !is_range_weapon(you.inv[wpn]))
+    if (!is_artefact(weap) && !is_range_weapon(weap))
     {
         you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
 
-        set_equip_desc( you.inv[wpn], ISFLAG_GLOWING );
-        set_item_ego_type( you.inv[wpn], OBJ_WEAPONS, brand );
-        you.inv[wpn].colour = colour;
+        set_equip_desc( weap, ISFLAG_GLOWING );
+        set_item_ego_type( weap, OBJ_WEAPONS, brand );
+        weap.colour = colour;
 
-        do_uncurse_item( you.inv[wpn] );
+        do_uncurse_item( weap );
 
-        enchant_weapon( ENCHANT_TO_HIT, true, you.inv[wpn] );
-
-        if (coinflip())
-            enchant_weapon( ENCHANT_TO_HIT, true, you.inv[wpn] );
-
-        enchant_weapon( ENCHANT_TO_DAM, true, you.inv[wpn] );
+        enchant_weapon( ENCHANT_TO_HIT, true, weap );
 
         if (coinflip())
-            enchant_weapon( ENCHANT_TO_DAM, true, you.inv[wpn] );
+            enchant_weapon( ENCHANT_TO_HIT, true, weap );
+
+        enchant_weapon( ENCHANT_TO_DAM, true, weap );
+
+        if (coinflip())
+            enchant_weapon( ENCHANT_TO_DAM, true, weap );
 
         if ( god == GOD_SHINING_ONE )
         {
-            convert2good(you.inv[wpn]);
+            convert2good(weap);
 
-            if (is_convertible(you.inv[wpn]))
+            if (is_convertible(weap))
             {
-                origin_acquired(you.inv[wpn], GOD_SHINING_ONE);
-                make_item_blessed_blade(you.inv[wpn]);
+                origin_acquired(weap, GOD_SHINING_ONE);
+                make_item_blessed_blade(weap);
             }
 
             burden_change();
@@ -4991,13 +4991,9 @@ static bool _bless_weapon( god_type god, int brand, int colour )
             holy_word(100, HOLY_WORD_SHINING_ONE, you.pos(), true);
 
             // Un-bloodify surrounding squares.
-            for (int i = -3; i <= 3; ++i)
-                for (int j = -3; j <= 3; j++)
-                {
-                    coord_def tmp = you.pos() + coord_def(i,j);
-                    if (is_bloodcovered(tmp))
-                        env.map(tmp).property = FPROP_NONE;
-                }
+            for ( radius_iterator ri(you.pos(), 3, true, true); ri; ++ri )
+                if (is_bloodcovered(*ri))
+                    env.map(*ri).property = FPROP_NONE;
         }
 
         delay(1000);
