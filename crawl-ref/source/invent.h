@@ -100,6 +100,7 @@ public:
                            tag );
     }
 
+    virtual void select( int qty = -1 );
 
 private:
     void add_class_hotkeys(const item_def &i);

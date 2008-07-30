@@ -173,6 +173,13 @@ const int InvEntry::item_freshness() const
     return freshness;
 }
 
+void InvEntry::select(int qty)
+{
+    if ( item && item->quantity < qty )
+        qty = item->quantity;
+    MenuEntry::select(qty);
+}
+
 std::string InvEntry::get_text() const
 {
     std::ostringstream tstr;
