@@ -1336,6 +1336,12 @@ int prompt_invent_item( const char *prompt,
                         int *const count,
                         operation_types oper )
 {
+    if (!_any_items_to_select(type_expect) && type_expect == OSEL_THROWABLE
+        && oper == OPER_FIRE && mtype == MT_INVLIST)
+    {
+        type_expect = OSEL_ANY;
+    }
+
     if (!_any_items_to_select(type_expect) && type_expect != OSEL_WIELD
         && mtype == MT_INVLIST)
     {
