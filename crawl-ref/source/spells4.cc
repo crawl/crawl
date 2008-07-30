@@ -1376,7 +1376,7 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
 
     case POT_WATER:
     case POT_PORRIDGE:
-        tracer_flavour = beem.flavour = BEAM_STEAM;
+        tracer_flavour = beem.flavour = BEAM_POTION_STEAM;
         break;
 
     case POT_BLOOD:
