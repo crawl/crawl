@@ -1063,7 +1063,7 @@ void end_game( scorefile_entry &se )
     if (!crawl_state.seen_hups)
         more();
 
-    invent( -1, true );
+    browse_inventory(true);
     textcolor( LIGHTGREY );
     clrscr();
 

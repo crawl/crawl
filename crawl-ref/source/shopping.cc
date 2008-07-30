@@ -436,7 +436,7 @@ static void _in_a_shop( int shopidx )
                 item.flags = old_flags;
         }
         else if (ft == '?' || ft == '*')
-            invent(-1, false);
+            browse_inventory(false);
         else if (!isalpha(ft))
         {
             _shop_print("Huh?", 1);

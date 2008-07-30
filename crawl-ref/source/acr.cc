@@ -2413,7 +2413,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_LIST_EQUIPMENT:
-        get_invent( OSEL_EQUIP );
+        get_invent(OSEL_EQUIP);
         break;
 
     case CMD_INSCRIBE_ITEM:

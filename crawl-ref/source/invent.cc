@@ -938,10 +938,10 @@ unsigned char invent_select( const char *title,
     return (menu.getkey());
 }
 
-unsigned char invent( int item_class_inv, bool show_price )
+void browse_inventory( bool show_price )
 {
     InvShowPrices show_item_prices(show_price);
-    return (invent_select(NULL, MT_INVLIST, item_class_inv));
+    get_invent(OSEL_ANY);
 }
 
 // Reads in digits for a count and apprends then to val, the
