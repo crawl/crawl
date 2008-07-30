@@ -955,7 +955,7 @@ static std::string morgue_name(time_t when_crawl_got_even)
 #else  // !SHORT_FILE_NAMES
     std::string name = "morgue-" + std::string(you.your_name);
 
-    if (tm *loc = localtime(&when_crawl_got_even))
+    if (tm *loc = TIME_FN(&when_crawl_got_even))
     {
         char buf[25];
         snprintf(buf, sizeof buf, "-%04d%02d%02d-%02d%02d%02d",

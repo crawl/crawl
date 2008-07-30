@@ -327,19 +327,19 @@ std::string hiscores_format_single(const scorefile_entry &se)
 
 static bool _hiscore_same_day( time_t t1, time_t t2 )
 {
-    struct tm *d1  = localtime( &t1 );
+    struct tm *d1  = TIME_FN( &t1 );
     const int year = d1->tm_year;
     const int mon  = d1->tm_mon;
     const int day  = d1->tm_mday;
 
-    struct tm *d2  = localtime( &t2 );
+    struct tm *d2  = TIME_FN( &t2 );
 
     return (d2->tm_mday == day && d2->tm_mon == mon && d2->tm_year == year);
 }
 
 static void _hiscore_date_string( time_t time, char buff[INFO_SIZE] )
 {
-    struct tm *date = localtime( &time );
+    struct tm *date = TIME_FN( &time );
 
     const char *mons[12] = { "Jan", "Feb", "Mar", "Apr", "May", "June",
                              "July", "Aug", "Sept", "Oct", "Nov", "Dec" };

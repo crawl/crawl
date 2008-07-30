@@ -584,7 +584,7 @@ std::string make_date_string( time_t in_date )
         return (buff);
     }
 
-    struct tm *date = localtime( &in_date );
+    struct tm *date = TIME_FN( &in_date );
 
     snprintf( buff, sizeof buff,
               "%4d%02d%02d%02d%02d%02d%s",

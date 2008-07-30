@@ -271,6 +271,13 @@
     // Makes the game ask the user to hit Enter after bailing out with
     // an error message.
     #define DGL_PAUSE_AFTER_ERROR
+
+    // Use UTC for dgamelaunch servers.
+    #define TIME_FN gmtime
+#endif
+
+#ifndef TIME_FN
+#define TIME_FN localtime
 #endif
 
 #if defined(REGEX_POSIX) && defined(REGEX_PCRE)
