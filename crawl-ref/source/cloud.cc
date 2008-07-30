@@ -124,7 +124,7 @@ static int _spread_cloud(const cloud_struct &cloud)
         int newdecay = cloud.decay / 2 + 1;
         if (newdecay >= cloud.decay)
             newdecay = cloud.decay - 1;
-        
+
         _place_new_cloud( cloud.type, *ai, newdecay, cloud.whose, cloud.killer,
                           cloud.spread_rate );
 
@@ -951,4 +951,3 @@ fog_machine_data fogs_lab_type(int level_number)
 
     return data;
 }
-
