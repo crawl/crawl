@@ -26,6 +26,7 @@
 
 #include "decks.h"
 #include "food.h"
+#include "invent.h"
 #include "items.h"
 #include "itemprop.h"
 #include "it_use2.h"
@@ -485,7 +486,7 @@ void do_curse_item( item_def &item, bool quiet )
 
     // Xom is amused by the player's items being cursed, especially
     // if they're worn/equipped.
-    if (item.x == -1 && item.y == -1)
+    if (in_inventory(item))
     {
         int amusement = 64;
 
@@ -519,7 +520,7 @@ void do_curse_item( item_def &item, bool quiet )
 
 void do_uncurse_item( item_def &item )
 {
-    if (item.x == -1 && item.y == -1 && you.equip[EQ_WEAPON] == item.link)
+    if (in_inventory(item) && you.equip[EQ_WEAPON] == item.link)
     {
         // Redraw the weapon.
         you.wield_change = true;

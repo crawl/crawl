@@ -313,8 +313,8 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
 void level_clear_vault_memory();
 void level_welcome_messages();
 
-bool place_specific_trap(int spec_x, int spec_y,  trap_type spec_type);
-void place_spec_shop(int level_number, int shop_x, int shop_y,
+bool place_specific_trap(const coord_def& where, trap_type spec_type);
+void place_spec_shop(int level_number, const coord_def& where,
                      int force_s_type, bool representative = false);
 void replace_area_wrapper(dungeon_feature_type old_feat,
                           dungeon_feature_type new_feat);
@@ -324,7 +324,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
 
 class mons_spec;
 bool dgn_place_monster(mons_spec &mspec,
-                       int monster_level, int vx, int vy,
+                       int monster_level, const coord_def& where,
                        bool force_pos = false, bool generate_awake = false,
                        bool patrolling = false);
 
@@ -345,14 +345,15 @@ struct spec_room
 {
     bool created;
     bool hooked_up;
-    int x1;
-    int y1;
-    int x2;
-    int y2;
+    
+    coord_def tl;
+    coord_def br;
 
-    spec_room() : created(false), hooked_up(false), x1(0), y1(0), x2(0), y2(0)
+    spec_room() : created(false), hooked_up(false), tl(), br()
     {
     }
+
+    coord_def random_spot() const;
 };
 
 bool join_the_dots(const coord_def &from, const coord_def &to,
@@ -368,6 +369,11 @@ bool octa_room(spec_room &sr, int oblique_max,
 
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
+inline int count_feature_in_box( const coord_def& p1, const coord_def& p2,
+                          dungeon_feature_type feat )
+{
+    return count_feature_in_box(p1.x, p1.y, p2.x, p2.y, feat);
+}
 int count_antifeature_in_box(int x0, int y0, int x1, int y1,
                              dungeon_feature_type feat);
 int count_neighbours(int x, int y, dungeon_feature_type feat);

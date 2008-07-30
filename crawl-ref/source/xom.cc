@@ -704,8 +704,7 @@ static bool _xom_is_good(int sever)
             beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage       = dice_def(3, 30);
             beam.flavour      = BEAM_ELECTRICITY;
-            beam.target_x     = you.x_pos;
-            beam.target_y     = you.y_pos;
+            beam.target       = you.pos();
             beam.name         = "blast of lightning";
             beam.colour       = LIGHTCYAN;
             beam.thrower      = KILL_MISC;

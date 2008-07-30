@@ -686,17 +686,13 @@ int place_monster(mgen_data mg, bool force_pos)
             switch (mg.proximity)
             {
             case PROX_ANYWHERE:
-                if (grid_distance( you.x_pos, you.y_pos,
-                                   mg.pos.x, mg.pos.y ) < 2 + random2(3))
-                {
+                if (grid_distance( you.pos(), mg.pos ) < 2 + random2(3))
                     proxOK = false;
-                }
                 break;
 
             case PROX_CLOSE_TO_PLAYER:
             case PROX_AWAY_FROM_PLAYER:
-                close_to_player = (distance(you.x_pos, you.y_pos,
-                                            mg.pos.x, mg.pos.y) < 64);
+                close_to_player = (distance(you.pos(), mg.pos) < 64);
 
                 if (mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
                     || mg.proximity == PROX_AWAY_FROM_PLAYER && close_to_player)
@@ -753,10 +749,10 @@ int place_monster(mgen_data mg, bool force_pos)
     monsters *mon = &menv[id];
     if (mg.needs_patrol_point())
     {
-        mon->patrol_point = coord_def(mon->x, mon->y);
+        mon->patrol_point = mon->pos();
 #ifdef DEBUG_PATHFIND
         mprf("Monster %s is patrolling around (%d, %d).",
-             mon->name(DESC_PLAIN).c_str(), mon->x, mon->y);
+             mon->name(DESC_PLAIN).c_str(), mon->pos().x, mon->pos().y);
 #endif
     }
 
@@ -873,8 +869,7 @@ static int _place_monster_aux( const mgen_data &mg,
     menv[id].base_monster = mg.base_type;
     menv[id].number       = mg.number;
 
-    menv[id].x = fpos.x;
-    menv[id].y = fpos.y;
+    menv[id].moveto(fpos);
 
     // Link monster into monster grid.
     mgrd(fpos) = id;
@@ -2048,11 +2043,8 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
 
 coord_def find_newmons_square(int mons_class, const coord_def &p)
 {
-    FixedVector < char, 2 > empty;
+    coord_def empty;
     coord_def pos(-1, -1);
-
-    empty[0] = 0;
-    empty[1] = 0;
 
     if (mons_class == WANDERING_MONSTER)
         mons_class = RANDOM_MONSTER;
@@ -2062,11 +2054,8 @@ coord_def find_newmons_square(int mons_class, const coord_def &p)
     // Might be better if we chose a space and tried to match the monster
     // to it in the case of RANDOM_MONSTER, that way if the target square
     // is surrounded by water or lava this function would work.  -- bwr
-    if (empty_surrounds( p.x, p.y, spcw, 2, true, empty ))
-    {
-        pos.x = empty[0];
-        pos.y = empty[1];
-    }
+    if (empty_surrounds( p, spcw, 2, true, empty ))
+        pos = empty;
 
     return (pos);
 }
@@ -2174,54 +2163,35 @@ int create_monster( mgen_data mg, bool fail_msg )
 }
 
 
-bool empty_surrounds(int emx, int emy, dungeon_feature_type spc_wanted,
-                     int radius, bool allow_centre,
-                     FixedVector < char, 2 > &empty)
+bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
+                     int radius, bool allow_centre, coord_def& empty)
 {
-    bool success;
-
     // Assume all player summoning originates from player x,y.
-    bool playerSummon = (emx == you.x_pos && emy == you.y_pos);
+    bool playerSummon = (where == you.pos());
 
     int good_count = 0;
-    int count_x, count_y;
 
-    for (count_x = -radius; count_x <= radius; count_x++)
-        for (count_y = -radius; count_y <= radius; count_y++)
-        {
-            success = false;
+    for ( radius_iterator ri(where, radius, true, false, !allow_centre);
+          ri; ++ri)
+    {
+        bool success = false;
 
-            if (!allow_centre && count_x == 0 && count_y == 0)
-                continue;
+        if ( *ri == you.pos() )
+            continue;
+        
+        if (mgrd(*ri) != NON_MONSTER)
+            continue;
 
-            int tx = emx + count_x;
-            int ty = emy + count_y;
+        // Players won't summon out of LOS, or past transparent walls.
+        if (!see_grid_no_trans(*ri) && playerSummon)
+            continue;
 
-            if (tx == you.x_pos && ty == you.y_pos)
-                continue;
-
-            if (!in_bounds(tx,ty))
-                continue;
-
-            if (mgrd[tx][ty] != NON_MONSTER)
-                continue;
-
-            // Players won't summon out of LOS, or past transparent walls.
-            if (!see_grid_no_trans(tx, ty) && playerSummon)
-                continue;
-
-            if (grd[tx][ty] == spc_wanted)
-                success = true;
-
-            if (grid_compatible(spc_wanted, grd[tx][ty]))
-                success = true;
-
-            if (success && one_chance_in(++good_count))
-            {
-                empty[0] = tx;
-                empty[1] = ty;
-            }
-        }
+        success =
+            (grd(*ri) == spc_wanted) || grid_compatible(spc_wanted, grd(*ri));
+        
+        if (success && one_chance_in(++good_count))
+            empty = *ri;
+    }
 
     return (good_count > 0);
 }
@@ -2404,7 +2374,7 @@ bool monster_pathfind::start_pathfind(monsters *mon, coord_def dest, bool msg)
 
     // We're doing a reverse search from target to monster.
     start  = dest;
-    target = coord_def(mon->x, mon->y);
+    target = mon->pos();
     pos    = start;
 
     // Easy enough. :P

@@ -445,13 +445,9 @@ static bool _dgn_shift_feature(const coord_def &pos)
         grd(dest) = dfeat;
 
         if (dfeat == DNGN_ENTER_SHOP)
-        {
             if (shop_struct *s = get_shop(pos))
-            {
-                s->x = dest.x;
-                s->y = dest.y;
-            }
-        }
+                s->pos = dest;
+
         env.markers.move(pos, dest);
         dungeon_events.move_listeners(pos, dest);
     }
@@ -551,7 +547,7 @@ void dungeon_terrain_changed(const coord_def &pos,
         grd(pos) = nfeat;
         env.grid_colours(pos) = BLACK;
         if (is_notable_terrain(nfeat) && see_grid(pos))
-            seen_notable_thing(nfeat, pos.x, pos.y);
+            seen_notable_thing(nfeat, pos);
 
         destroy_trap(pos);
     }
@@ -588,7 +584,7 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
                        unsigned char terrain )
 {
     bool escape = false;
-    FixedVector< char, 2 > empty;
+    coord_def empty;
 
     if (you.species == SP_MERFOLK && terrain == DNGN_DEEP_WATER)
     {
@@ -634,26 +630,16 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
     {
         if (allow_shift)
         {
-            if (empty_surrounds( you.x_pos, you.y_pos, DNGN_FLOOR, 1,
-                                 false, empty ))
-            {
-                escape = true;
-            }
-            else
-            {
-                escape = false;
-            }
+            escape = empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty);
         }
         else
         {
             // back out the way we came in, if possible
             if (grid_distance( you.pos(), entry ) == 1
-                && (entry.x != empty[0] || entry.y != empty[1])
                 && mgrd(entry) == NON_MONSTER)
             {
                 escape = true;
-                empty[0] = entry.x;
-                empty[1] = entry.y;
+                empty = entry;
             }
             else  // zero or two or more squares away, with no way back
             {
@@ -671,11 +657,10 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
 
     if (escape)
     {
-        const coord_def pos(empty[0], empty[1]);
-        if (in_bounds(pos) && !is_grid_dangerous(grd(pos)))
+        if (in_bounds(empty) && !is_grid_dangerous(grd(empty)))
         {
             mpr("You manage to scramble free!");
-            move_player_to_grid( pos, false, false, true );
+            move_player_to_grid( empty, false, false, true );
 
             if (terrain == DNGN_LAVA)
                 expose_player_to_element( BEAM_LAVA, 14 );

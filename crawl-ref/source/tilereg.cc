@@ -366,7 +366,7 @@ void DungeonRegion::draw_player(unsigned int x, unsigned int y)
     result.parts[TILEP_PART_BASE] = default_doll.parts[TILEP_PART_BASE];
     result.parts[TILEP_PART_DRCHEAD] = default_doll.parts[TILEP_PART_DRCHEAD];
     result.parts[TILEP_PART_DRCWING] = default_doll.parts[TILEP_PART_DRCWING];
-    bool halo = inside_halo(you.x_pos, you.y_pos);
+    bool halo = inside_halo(you.pos());
     result.parts[TILEP_PART_HALO] = halo ? TILEP_HALO_TSO : 0;
 
     if (result.parts[TILEP_PART_HAND1] == TILEP_SHOW_EQUIP)
@@ -1066,7 +1066,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         return 0;
 
     // Activate travel.
-    start_travel(gc.x, gc.y);
+    start_travel(gc);
 
     return CK_MOUSE_CMD;
 }
@@ -2058,7 +2058,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
             if (!in_bounds(gc))
                 return 0;
 
-            start_travel(gc.x, gc.y);
+            start_travel(gc);
         }
         else if (event.button == MouseEvent::RIGHT)
         {

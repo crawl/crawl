@@ -1832,8 +1832,7 @@ static void _set_allies_patrol_point(bool clear = false)
         if (!mon->alive() || !mons_near(mon) || !mons_friendly(mon))
             continue;
 
-        mon->patrol_point = (clear ? coord_def(0, 0)
-                                   : coord_def(mon->x, mon->y));
+        mon->patrol_point = (clear ? coord_def(0, 0) : mon->pos());
 
         if (!clear)
             mon->behaviour = BEH_WANDER;
@@ -1995,14 +1994,14 @@ void yell(bool force)
             return;
         }
 
-        if (!targ.isValid || mgrd[targ.tx][targ.ty] == NON_MONSTER
-            || !player_monster_visible(&env.mons[mgrd[targ.tx][targ.ty]]))
+        if (!targ.isValid || mgrd(targ.target) == NON_MONSTER
+            || !player_monster_visible(&env.mons[mgrd(targ.target)]))
         {
             mpr("Yeah, whatever.");
             return;
         }
 
-        mons_targd = mgrd[targ.tx][targ.ty];
+        mons_targd = mgrd(targ.target);
         break;
 
     default:
@@ -2494,12 +2493,11 @@ void handle_time(long time_delta)
             // For particularly violent releases, make a little boom.
             if (you.magic_contamination >= 10 && coinflip())
             {
-                struct bolt boom;
+                bolt boom;
                 boom.type     = dchar_glyph(DCHAR_FIRED_BURST);
                 boom.colour   = BLACK;
                 boom.flavour  = BEAM_RANDOM;
-                boom.target_x = you.x_pos;
-                boom.target_y = you.y_pos;
+                boom.target   = you.pos();
                 // Undead enjoy extra contamination explosion damage because
                 // the magical contamination has a harder time dissipating
                 // through non-living flesh. :-)
@@ -2680,8 +2678,8 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     mprf(MSGCH_DIAGNOSTICS,
          "mon #%d: range %d; long %d; "
          "pos (%d,%d); targ %d(%d,%d); flags %ld",
-         monster_index(mon), range, long_time, mon->x, mon->y,
-         mon->foe, mon->target_x, mon->target_y, mon->flags );
+         monster_index(mon), range, long_time, mon->pos().x, mon->pos().y,
+         mon->foe, mon->target.x, mon->target.y, mon->flags );
 #endif
 
     if (range <= 0)
@@ -2698,8 +2696,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         {
             mon->behaviour = BEH_WANDER;
             mon->foe = MHITNOT;
-            mon->target_x = 10 + random2( GXM - 10 );
-            mon->target_y = 10 + random2( GYM - 10 );
+            mon->target.set(10 + random2(GXM - 10), 10 + random2(GYM - 10));
         }
         else
         {
@@ -2713,24 +2710,23 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         // ranged attack (missile or spell), then the monster will
         // flee to gain distance if its "too close", else it will
         // just shift its position rather than charge the player. -- bwr
-        if (grid_distance(mon->pos(), mon->target_pos()) < 3)
+        if (grid_distance(mon->pos(), mon->target) < 3)
         {
             mon->behaviour = BEH_FLEE;
 
             // If the monster is on the target square, fleeing won't work.
-            if (mon->pos() == mon->target_pos())
+            if (mon->pos() == mon->target)
             {
                 if (you.pos() != mon->pos())
                 {
                     // Flee from player's position if different.
-                    mon->target_x = you.x_pos;
-                    mon->target_y = you.y_pos;
+                    mon->target = you.pos();
                 }
                 else
                 {
                     // Randomize the target so we have a direction to flee.
-                    mon->target_x += (random2(3) - 1);
-                    mon->target_y += (random2(3) - 1);
+                    mon->target.x += (random2(3) - 1);
+                    mon->target.y += (random2(3) - 1);
                 }
             }
 
@@ -2740,10 +2736,11 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         }
         else
         {
-            shift_monster( mon, mon->x, mon->y );
+            shift_monster( mon, mon->pos() );
 
 #if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "shifted to (%d,%d)", mon->x, mon->y);
+            mprf(MSGCH_DIAGNOSTICS, "shifted to (%d,%d)",
+                 mon->pos().x, mon->pos().y);
 #endif
             return;
         }
@@ -2753,7 +2750,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     // dirt simple movement:
     for (int i = 0; i < moves; i++)
     {
-        coord_def inc(mon->target_pos() - pos);
+        coord_def inc(mon->target - pos);
         inc = coord_def(sgn(inc.x), sgn(inc.y));
 
         if (mons_is_fleeing(mon))
@@ -2778,11 +2775,11 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         pos = next;
     }
 
-    if (!shift_monster( mon, pos.x, pos.y ))
-        shift_monster( mon, mon->x, mon->y );
+    if (!shift_monster( mon, pos ))
+        shift_monster( mon, mon->pos() );
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "moved to (%d,%d)", mon->x, mon->y );
+    mprf(MSGCH_DIAGNOSTICS, "moved to (%d,%d)", mon->pos().x, mon->pos().y );
 #endif
 }
 
@@ -2871,44 +2868,37 @@ void update_level(double elapsedTime)
         delete_cloud(i);
 }
 
-static void _maybe_restart_fountain_flow(const int x, const int y,
+static void _maybe_restart_fountain_flow(const coord_def& where,
                                          const int tries)
 {
-     dungeon_feature_type grid = grd[x][y];
+     dungeon_feature_type grid = grd(where);
 
      if (grid < DNGN_DRY_FOUNTAIN_BLUE || grid > DNGN_DRY_FOUNTAIN_BLOOD)
          return;
 
-     int t = 0;
-     while (tries > t++)
+
+     for ( int i = 0; i < tries; ++i )
      {
           if (!one_chance_in(100))
               continue;
 
           // Make it start flowing again.
-          grd[x][y] = static_cast<dungeon_feature_type> (grid
+          grd(where) = static_cast<dungeon_feature_type> (grid
                         - (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE));
 
-          if (is_terrain_seen(coord_def(x,y)))
-              set_envmap_obj(x, y, grd[x][y]);
+          if (is_terrain_seen(where))
+              set_envmap_obj(where, grd(where));
 
           // Clean bloody floor.
-          if (is_bloodcovered(coord_def(x,y)))
-              env.map[x][y].property = FPROP_NONE;
+          if (is_bloodcovered(where))
+              env.map(where).property = FPROP_NONE;
 
           // Chance of cleaning adjacent squares.
-          for (int i = -1; i <= 1; i++)
-          {
-               for (int j = -1; j <= 1; j++)
-               {
-                   if (is_bloodcovered(coord_def(x+i,y+j))
-                       && one_chance_in(5))
-                   {
-                       env.map[x+i][y+j].property = FPROP_NONE;
-                   }
-               }
-          }
-          return;
+          for ( adjacent_iterator ai(where); ai; ++ai )
+              if (is_bloodcovered(*ai) && one_chance_in(5))
+                  env.map(*ai).property = FPROP_NONE;
+
+          break;
      }
 }
 
@@ -2923,8 +2913,6 @@ static void _maybe_restart_fountain_flow(const int x, const int y,
 //---------------------------------------------------------------
 void update_corpses(double elapsedTime)
 {
-    int cx, cy;
-
     if (elapsedTime <= 0.0)
         return;
 
@@ -2973,14 +2961,13 @@ void update_corpses(double elapsedTime)
     // dry fountains may start flowing again
     if (fountain_checks > 0)
     {
-        for (cx = 0; cx < GXM; cx++)
-            for (cy = 0; cy < GYM; cy++)
+        for ( rectangle_iterator ri(1); ri; ++ri )
+        {
+            if (grd(*ri) >= DNGN_DRY_FOUNTAIN_BLUE
+                && grd(*ri) < DNGN_PERMADRY_FOUNTAIN)
             {
-                if (grd[cx][cy] >= DNGN_DRY_FOUNTAIN_BLUE
-                    && grd[cx][cy] < DNGN_PERMADRY_FOUNTAIN)
-                {
-                    _maybe_restart_fountain_flow(cx, cy, fountain_checks);
-                }
+                _maybe_restart_fountain_flow(*ri, fountain_checks);
             }
+        }
     }
 }

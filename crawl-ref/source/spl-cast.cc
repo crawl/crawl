@@ -958,14 +958,12 @@ static void _try_monster_cast(spell_type spell, int powc,
                        | MF_WAS_IN_VIEW | MF_HARD_RESET);
     mon->hit_points = you.hp;
     mon->hit_dice   = you.experience_level;
-    mon->x          = you.x_pos;
-    mon->y          = you.y_pos;
-    mon->target_x   = spd.tx;
-    mon->target_y   = spd.ty;
+    mon->pos()      = you.pos();
+    mon->target     = spd.target;
 
     if (!spd.isTarget)
         mon->foe = MHITNOT;
-    else if (mgrd[spd.tx][spd.ty] == NON_MONSTER)
+    else if (mgrd(spd.target) == NON_MONSTER)
     {
         if (spd.isMe)
             mon->foe = MHITYOU;
@@ -973,7 +971,7 @@ static void _try_monster_cast(spell_type spell, int powc,
             mon->foe = MHITNOT;
     }
     else
-        mon->foe = mgrd[spd.tx][spd.ty];
+        mon->foe = mgrd(spd.target);
 
     mgrd(you.pos()) = midx;
 
@@ -1702,7 +1700,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_BANISHMENT:
-        if (beam.target_x == you.x_pos && beam.target_y == you.y_pos)
+        if (beam.target == you.pos())
         {
             mpr("You cannot banish yourself!");
             break;
@@ -2504,11 +2502,9 @@ void MiscastEffect::do_miscast()
 
     // Do this here since multiple miscasts (wizmode testing) might move
     // the target around.
-    beam.source_x = target->pos().x;
-    beam.source_y = target->pos().y;
-    beam.target_x = target->pos().x;
-    beam.target_y = target->pos().y;
-    beam.pos      = target->pos();
+    beam.source = target->pos();
+    beam.target = target->pos();
+    beam.pos    = target->pos();
 
     all_msg = you_msg = mon_msg = mon_msg_seen = mon_msg_unseen = "";
     msg_ch  = MSGCH_PLAIN;
@@ -2810,8 +2806,7 @@ void MiscastEffect::_conjuration(int severity)
             mon_msg_unseen = "Smoke appears from out of nowhere!";
 
             do_msg();
-            big_cloud( CLOUD_GREY_SMOKE, kc, kt,
-                       target->pos().x, target->pos().y,
+            big_cloud( CLOUD_GREY_SMOKE, kc, kt, target->pos(),
                        20, 7 + random2(7) );
             break;
         case 1:
@@ -2839,7 +2834,6 @@ void MiscastEffect::_conjuration(int severity)
             beam.damage  = dice_def( 3, 12 );
             beam.flavour = BEAM_MISSILE; // unsure about this
             // BEAM_EXPLOSION instead? {dlb}
-
             beam.name   = "explosion";
             beam.colour = random_colour();
 
@@ -3888,7 +3882,7 @@ void MiscastEffect::_fire(int severity)
 
             do_msg();
             big_cloud( random_smoke_type(), kc, kt,
-                       target->pos().x, target->pos().y, 20, 7 + random2(7) );
+                       target->pos(), 20, 7 + random2(7) );
             break;
 
         case 1:
@@ -4075,7 +4069,6 @@ void MiscastEffect::_ice(int severity)
             beam.flavour = BEAM_COLD;
             beam.name    = "explosion";
             beam.colour  = WHITE;
-
             _explosion();
             break;
         }
@@ -4099,7 +4092,7 @@ void MiscastEffect::_ice(int severity)
 
             do_msg();
             big_cloud(CLOUD_COLD, kc, kt,
-                      target->pos().x, target->pos().y, 20, 8 + random2(4));
+                      target->pos(), 20, 8 + random2(4));
             break;
         }
         break;
@@ -4343,8 +4336,7 @@ void MiscastEffect::_air(int severity)
             mon_msg_unseen = "Noxious gasses appear from out of thin air!";
 
             do_msg();
-            big_cloud(CLOUD_STINK, kc, kt,
-                      target->pos().x, target->pos().y, 20, 9 + random2(4));
+            big_cloud(CLOUD_STINK, kc, kt, target->pos(), 20, 9 + random2(4));
             break;
         }
         break;
@@ -4376,8 +4368,7 @@ void MiscastEffect::_air(int severity)
             mon_msg_unseen = "Venomous gasses pour forth from the thin air!";
 
             do_msg();
-            big_cloud( CLOUD_POISON, kc, kt,
-                       target->pos().x, target->pos().y, 20, 8 + random2(5) );
+            big_cloud(CLOUD_POISON, kc, kt, target->pos(), 20, 8 + random2(5));
             break;
         }
     }
@@ -4485,8 +4476,7 @@ void MiscastEffect::_poison(int severity)
             mon_msg_unseen = "Noxious gasses pour forth from the thin air!";
 
             do_msg();
-            big_cloud(CLOUD_STINK, kc, kt,
-                      target->pos().x, target->pos().y, 20, 8 + random2(5));
+            big_cloud(CLOUD_STINK, kc, kt, target->pos(), 20, 8 + random2(5));
             break;
 
         case 2:
@@ -4517,8 +4507,7 @@ void MiscastEffect::_poison(int severity)
             mon_msg_unseen = "Venomous gasses pour forth from the thin air!";
 
             do_msg();
-            big_cloud(CLOUD_POISON, kc, kt,
-                      target->pos().x, target->pos().y, 20, 7 + random2(7));
+            big_cloud(CLOUD_POISON, kc, kt, target->pos(), 20, 7 + random2(7));
             break;
         case 2:
             if (player_res_poison())

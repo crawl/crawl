@@ -685,8 +685,7 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
         pbolt.rangeMax = range;
 
     pbolt.is_tracer      = true;
-    pbolt.source_x       = you.x_pos;
-    pbolt.source_y       = you.y_pos;
+    pbolt.source         = you.pos();
     pbolt.can_see_invis  = player_see_invis();
     pbolt.smart_monster  = true;
     pbolt.attitude       = ATT_FRIENDLY;
@@ -1769,9 +1768,8 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
 
     if (item && !pbolt.is_tracer && pbolt.flavour == BEAM_MISSILE)
     {
-        tile_beam = tileidx_item_throw(*item,
-                                       pbolt.target_x - pbolt.source_x,
-                                       pbolt.target_y - pbolt.source_y);
+        const coord_def diff = pbolt.target - pbolt.source;
+        tile_beam = tileidx_item_throw(*item, diff.x, diff.y);
     }
 #endif
 
@@ -1785,8 +1783,8 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
               (pbolt.is_big_cloud) ? "+" : "",
               (pbolt.is_tracer) ? " tracer" : "",
               pbolt.name.c_str(),
-              pbolt.source_x, pbolt.source_y,
-              pbolt.target_x, pbolt.target_y,
+              pbolt.source.x, pbolt.source.y,
+              pbolt.target.x, pbolt.target.y,
               pbolt.type, pbolt.colour, pbolt.flavour,
               pbolt.hit, pbolt.damage.num, pbolt.damage.size,
               pbolt.range);
@@ -1794,8 +1792,7 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
 #endif
 
     // init
-    pbolt.aimed_at_feet = (pbolt.target_x == pbolt.source_x
-                           && pbolt.target_y == pbolt.source_y);
+    pbolt.aimed_at_feet = (pbolt.target == pbolt.source);
     pbolt.msg_generated = false;
 
     ray_def ray;
@@ -1805,11 +1802,11 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
     else
     {
         ray.fullray_idx = -1;   // to quiet valgrind
-        find_ray( pbolt.source(), pbolt.target(), true, ray, 0, true );
+        find_ray( pbolt.source, pbolt.target, true, ray, 0, true );
     }
 
     if (!pbolt.aimed_at_feet)
-        ray.advance_through(pbolt.target());
+        ray.advance_through(pbolt.target);
 
     // Give chance for beam to affect one cell even if aimed_at_feet.
     beamTerminate = false;
@@ -1906,7 +1903,7 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
         // In this case, don't affect the cell - players and
         // monsters have no chance to dodge or block such
         // a beam, and we want to avoid silly messages.
-        if (testpos == pbolt.target())
+        if (testpos == pbolt.target)
             beamTerminate = _beam_term_on_target(pbolt, testpos);
 
         // Affect the cell, except in the special case noted
@@ -1995,7 +1992,7 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
         }
 
         if (!did_bounce)
-            ray.advance_through(pbolt.target());
+            ray.advance_through(pbolt.target);
         else
             ray.advance(true);
     } // end- while !beamTerminate
@@ -2011,14 +2008,13 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
     // Check for explosion.  NOTE that for tracers, we have to make a copy
     // of target co-ords and then reset after calling this -- tracers should
     // never change any non-tracers fields in the beam structure. -- GDL
-    coord_def targetcopy = pbolt.target();
+    coord_def targetcopy = pbolt.target;
 
     _beam_explodes(pbolt, testpos);
 
     if (pbolt.is_tracer)
     {
-        pbolt.target_x = targetcopy.x;
-        pbolt.target_y = targetcopy.y;
+        pbolt.target = targetcopy;
     }
 
     // Canned msg for enchantments that affected no-one, but only if the
@@ -2551,11 +2547,8 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
     case BEAM_HEALING:
         if (YOU_KILL(pbolt.thrower))
         {
-            if (cast_healing(5 + roll_dice( pbolt.damage ),
-                             monster->x, monster->y) > 0)
-            {
+            if (cast_healing(5 + roll_dice( pbolt.damage ), monster->pos()) > 0)
                 pbolt.obvious_effect = true;
-            }
             pbolt.msg_generated = true; // to avoid duplicate "nothing happens"
         }
         else if (heal_monster( monster, 5 + roll_dice( pbolt.damage ), false ))
@@ -2816,8 +2809,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
 {
     // Don't fiddle with any input parameters other than tracer stuff!
     pbolt.is_tracer     = true;
-    pbolt.source_x      = monster->x;    // always safe to do.
-    pbolt.source_y      = monster->y;
+    pbolt.source        = monster->pos();
     pbolt.beam_source   = monster_index(monster);
     pbolt.can_see_invis = mons_see_invis(monster);
     pbolt.smart_monster = (mons_intel(monster->type) >= I_NORMAL);
@@ -2924,8 +2916,7 @@ static void _beam_explodes(bolt &beam, const coord_def& p)
     // This will be the last thing this beam does.  Set target_x
     // and target_y to hold explosion co'ords.
 
-    beam.target_x = p.x;
-    beam.target_y = p.y;
+    beam.target = p;
 
     // Generic explosion.
     if (beam.is_explosion)
@@ -2990,7 +2981,7 @@ static void _beam_explodes(bolt &beam, const coord_def& p)
     // cloud producer -- POISON BLAST
     if (beam.name == "blast of poison")
     {
-        big_cloud(CLOUD_POISON, _whose_kill(beam), beam.killer(), p.x, p.y,
+        big_cloud(CLOUD_POISON, _whose_kill(beam), beam.killer(), p,
                   0, 7 + random2(5));
         return;
     }
@@ -2999,13 +2990,13 @@ static void _beam_explodes(bolt &beam, const coord_def& p)
     if (beam.name == "foul vapour")
     {
         cl_type = (beam.flavour == BEAM_MIASMA) ? CLOUD_MIASMA : CLOUD_STINK;
-        big_cloud( cl_type, _whose_kill(beam), beam.killer(), p.x, p.y, 0, 9 );
+        big_cloud( cl_type, _whose_kill(beam), beam.killer(), p, 0, 9 );
         return;
     }
 
     if (beam.name == "freezing blast")
     {
-        big_cloud( CLOUD_COLD, _whose_kill(beam), beam.killer(), p.x, p.y,
+        big_cloud( CLOUD_COLD, _whose_kill(beam), beam.killer(), p,
                    random_range(10, 15), 9 );
         return;
     }
@@ -3056,7 +3047,7 @@ static bool _beam_term_on_target(bolt &beam, const coord_def& p)
     if (beam.name == "ball of vapour")
         return (true);
 
-    if (beam.aimed_at_spot && p == beam.target())
+    if (beam.aimed_at_spot && p == beam.target)
         return (true);
 
     return (false);
@@ -3184,7 +3175,7 @@ int affect(bolt &beam, const coord_def& p, item_def *item)
         // aimed at that spot.
         if (mon->alive()
             && (!mon->submerged()
-                || beam.aimed_at_spot && beam.target() == mon->pos()
+                || beam.aimed_at_spot && beam.target == mon->pos()
                    && grd(mon->pos()) == DNGN_SHALLOW_WATER))
         {
             if (!beam.is_big_cloud
@@ -3577,7 +3568,7 @@ static void _beam_ouch(int dam, bolt &beam)
 static bool _fuzz_invis_tracer(bolt &beem)
 {
     // Did the monster have a rough idea of where you are?
-    int dist = grid_distance(beem.target(), you.pos());
+    int dist = grid_distance(beem.target, you.pos());
 
     // No, ditch this.
     if (dist > 2)
@@ -3593,19 +3584,11 @@ static bool _fuzz_invis_tracer(bolt &beem)
     }
 
     // Apply fuzz now.
-    int xfuzz = random_range(-2, 2),
-        yfuzz = random_range(-2, 2);
+    coord_def fuzz( random_range(-2, 2), random_range(-2, 2) );
+    coord_def newtarget = beem.target + fuzz;
 
-    const int newx = beem.target_x + xfuzz,
-              newy = beem.target_y + yfuzz;
-
-    if (in_bounds(newx, newy)
-        && (newx != beem.source_x
-            || newy != beem.source_y))
-    {
-        beem.target_x = newx;
-        beem.target_y = newy;
-    }
+    if (in_bounds(newtarget))
+        beem.target = newtarget;
 
     // Fire away!
     return (true);
@@ -4361,7 +4344,7 @@ static void _update_hurt_or_helped(bolt &beam, monsters *mon)
 // Returns amount of range used up by affectation of this monster.
 static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 {
-    const int tid = mgrd[mon->x][mon->y];
+    const int tid = mgrd(mon->pos());
     const int mons_type  = menv[tid].type;
     const int thrower    = YOU_KILL(beam.thrower) ? KILL_YOU_MISSILE
                                                   : KILL_MON_MISSILE;
@@ -4386,7 +4369,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         // Can we see this monster?
         if (!beam.can_see_invis && menv[tid].invisible()
-            || (thrower == KILL_YOU_MISSILE && !see_grid(mon->x, mon->y)))
+            || (thrower == KILL_YOU_MISSILE && !see_grid(mon->pos())))
         {
             // Can't see this monster, ignore it.
             return 0;
@@ -4413,7 +4396,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     {
         if (!silenced(you.pos()))
         {
-            if (!see_grid( mon->x, mon->y ))
+            if (!see_grid( mon->pos() ))
                 mpr("You hear a hideous screaming!", MSGCH_SOUND);
             else
             {
@@ -4421,7 +4404,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                     MSGCH_SOUND);
             }
         }
-        else if (see_grid( mon->x, mon->y ))
+        else if (see_grid( mon->pos() ))
         {
                 mpr("The statue twists and shakes as its substance "
                     "crumbles away!");
@@ -4444,8 +4427,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                     && (beam.fr_count == 1 && !beam.dont_stop_fr
                         || beam.foe_count == 1 && !beam.dont_stop_foe))
                 {
-                    const bool target = (beam.target_x == mon->x
-                                         && beam.target_y == mon->y);
+                    const bool target = (beam.target == mon->pos());
 
                     if (stop_attack_prompt(mon, true, target))
                     {
@@ -4551,7 +4533,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         // Can't hurt submerged water creatures with electricity.
         if (beam.flavour == BEAM_ELECTRICITY)
         {
-            if (see_grid(mon->x, mon->y) && !beam.is_tracer)
+            if (see_grid(mon->pos()) && !beam.is_tracer)
             {
                 mprf("The %s arcs harmlessly into the water.",
                      beam.name.c_str());
@@ -4603,8 +4585,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 && (beam.fr_count == 1 && !beam.dont_stop_fr
                     || beam.foe_count == 1 && !beam.dont_stop_foe))
             {
-                const bool target = (beam.target_x == mon->x
-                                     && beam.target_y == mon->y);
+                const bool target = (beam.target == mon->pos());
 
                 if (stop_attack_prompt(mon, true, target))
                 {
@@ -5199,7 +5180,7 @@ static void _explosion1(bolt &pbolt)
 {
     int ex_size = 1;
     // convenience
-    coord_def p = pbolt.target();
+    coord_def p = pbolt.target;
     const char *seeMsg  = NULL;
     const char *hearMsg = NULL;
 
@@ -5330,24 +5311,24 @@ int explosion( bolt &beam, bool hole_in_the_middle,
                bool explode_in_wall, bool stop_at_statues,
                bool stop_at_walls, bool show_more)
 {
-    if (in_bounds(beam.source()) && beam.source() != beam.target()
+    if (in_bounds(beam.source) && beam.source != beam.target
         && (!explode_in_wall || stop_at_statues || stop_at_walls))
     {
         ray_def ray;
-        int     max_dist = grid_distance(beam.source(), beam.target());
+        int     max_dist = grid_distance(beam.source, beam.target);
 
         ray.fullray_idx = -1; // to quiet valgrind
-        find_ray( beam.source(), beam.target(), true, ray, 0, true );
+        find_ray( beam.source, beam.target, true, ray, 0, true );
 
         // Can cast explosions out from statues or walls.
-        if (ray.pos() == beam.source())
+        if (ray.pos() == beam.source)
         {
             max_dist--;
             ray.advance(true);
         }
 
         int dist = 0;
-        while (dist++ <= max_dist && ray.pos() != beam.target())
+        while (dist++ <= max_dist && ray.pos() != beam.target)
         {
             if (grid_is_solid(ray.pos()))
             {
@@ -5407,8 +5388,7 @@ int explosion( bolt &beam, bool hole_in_the_middle,
                  old_x, old_y, ray.x(), ray.y());
 #endif
         }
-        beam.target_x = ray.x();
-        beam.target_y = ray.y();
+        beam.target = ray.pos();
     } // if (!explode_in_wall)
 
     int r = beam.ex_size;
@@ -5416,9 +5396,9 @@ int explosion( bolt &beam, bool hole_in_the_middle,
     // Beam is now an explosion.
     beam.in_explosion_phase = true;
 
-    if (is_sanctuary(beam.target()))
+    if (is_sanctuary(beam.target))
     {
-        if (!beam.is_tracer && see_grid(beam.target()) && !beam.name.empty())
+        if (!beam.is_tracer && see_grid(beam.target) && !beam.name.empty())
         {
             mprf(MSGCH_GOD, "By Zin's power, the %s is contained.",
                  beam.name.c_str());
@@ -5429,7 +5409,7 @@ int explosion( bolt &beam, bool hole_in_the_middle,
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "explosion at (%d, %d) : t=%d c=%d f=%d hit=%d dam=%dd%d",
-         beam.target_x, beam.target_y,
+         beam.target.x, beam.target.y,
          beam.type, beam.colour, beam.flavour,
          beam.hit, beam.damage.num, beam.damage.size );
 #endif
@@ -5439,7 +5419,7 @@ int explosion( bolt &beam, bool hole_in_the_middle,
         r = MAX_EXPLOSION_RADIUS;
 
     // make a noise
-    noisy(10 + 5 * r, beam.target());
+    noisy(10 + 5 * r, beam.target);
 
     // set map to false
     explode_map.init(false);
@@ -5512,7 +5492,7 @@ int explosion( bolt &beam, bool hole_in_the_middle,
     for ( int i = -9; i <= 9; ++i )
         for ( int j = -9; j <= 9; ++j )
             if ( explode_map[i+9][j+9]
-                 && see_grid(beam.target_x + i, beam.target_y + j) )
+                 && see_grid(beam.target + coord_def(i,j)))
             {
                 cells_seen++;
             }
@@ -5535,7 +5515,7 @@ int explosion( bolt &beam, bool hole_in_the_middle,
 static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly)
 {
     bool random_beam = false;
-    coord_def realpos = beam.target() + p;
+    coord_def realpos = beam.target + p;
 
     if (!drawOnly)
     {
@@ -5592,7 +5572,7 @@ static void _explosion_map( bolt &beam, const coord_def& p,
     if (count > 10*r)
         return;
 
-    const coord_def loc(beam.target() + p);
+    const coord_def loc(beam.target + p);
 
     // Make sure we haven't run off the map.
     if (!map_bounds(loc))
@@ -5710,8 +5690,8 @@ static bool _nice_beam(monsters *mon, bolt &beam)
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
 bolt::bolt() : range(0), rangeMax(0), type('*'),
                colour(BLACK),
-               flavour(BEAM_MAGIC), source_x(0), source_y(0), damage(0,0),
-               ench_power(0), hit(0), target_x(0), target_y(0), pos(),
+               flavour(BEAM_MAGIC), source(), target(), pos(), damage(0,0),
+               ench_power(0), hit(0),
                thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT), name(),
                is_beam(false), is_explosion(false), is_big_cloud(false),
                is_enchant(false), is_energy(false), is_launched(false),
@@ -5757,8 +5737,7 @@ void bolt::set_target(const dist &d)
     if (!d.isValid)
         return;
 
-    target_x = d.tx;
-    target_y = d.ty;
+    target = d.target;
 
     chose_ray = d.choseRay;
     if (d.choseRay)
@@ -5771,12 +5750,9 @@ void bolt::set_target(const dist &d)
 void bolt::setup_retrace()
 {
     if (pos.x && pos.y)
-    {
-        target_x = pos.x;
-        target_y = pos.y;
-    }
-    std::swap(source_x, target_x);
-    std::swap(source_y, target_y);
+        target = pos;
+
+    std::swap(source, target);
     affects_nothing = true;
     aimed_at_spot   = true;
 }

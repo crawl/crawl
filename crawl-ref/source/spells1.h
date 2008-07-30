@@ -30,7 +30,7 @@ bool cast_sure_blade(int power);
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-int cast_healing(int pow, int target_x = -1, int target_y = -1);
+int cast_healing(int pow, const coord_def& where = coord_def(-1,1));
 
 void vitalisation_chain(int amount);
 void reduce_vitalisation_chain(int amount);
@@ -38,28 +38,15 @@ void remove_divine_robustness();
 void remove_divine_stamina();
 int cast_vitalisation(int pow);
 
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: beam - it_use3 - spells - spells1
- * *********************************************************************** */
-void big_cloud(cloud_type cl_type, kill_category whose, int cl_x, int cl_y,
+void big_cloud(cloud_type cl_type, kill_category whose, const coord_def& where,
                int pow, int size, int spread_rate = -1);
-void big_cloud(cloud_type cl_type, killer_type killer, int cl_x, int cl_y,
+void big_cloud(cloud_type cl_type, killer_type killer, const coord_def& where,
                int pow, int size, int spread_rate = -1);
 void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
-               int cl_x, int cl_y, int pow, int size, int spread_rate = -1);
+               const coord_def& where, int pow, int size, int spread_rate = -1);
 
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: acr (WIZARD only) - item_use - spell
- * *********************************************************************** */
-int blink(int pow, bool high_level_controlled_blink,
-          bool wizard_blink = false);
+int blink(int pow, bool high_level_controlled_blink, bool wizard_blink = false);
 
-
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
 int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam);
 void cast_confusing_touch(int power);
 void cast_cure_poison(int mabil);
@@ -76,18 +63,8 @@ void extension(int pow);
 bool fireball(int pow, bolt &beam);
 bool stinking_cloud(int pow, bolt &beam);
 void abjuration(int pow);
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - spell - spells1
- * *********************************************************************** */
 void cast_fly(int power);
 
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell - spells1
- * *********************************************************************** */
 void cast_insulation(int power);
 void cast_regen(int pow);
 void cast_resist_poison(int power);
@@ -98,37 +75,10 @@ void ice_armour(int pow, bool extending);
 void missile_prot(int pow);
 void stone_scales(int pow);
 
-// last updated sept 18
-/* ***********************************************************************
- * called from: religion
- * *********************************************************************** */
 void antimagic();
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: acr (WIZARD only) - item_use - spell
- * *********************************************************************** */
 void identify(int power, int item_slot = -1);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - spells1
- * *********************************************************************** */
 void manage_fire_shield(void);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
 void purification(void);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - decks - fight - spell - spells - spells1
- * *********************************************************************** */
 void random_blink(bool, bool override_abyss = false);
 
 

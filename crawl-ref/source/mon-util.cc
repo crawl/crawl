@@ -2302,7 +2302,7 @@ bool mons_should_fire(struct bolt &beam)
     if (beam.foe_count == 0)
         return (false);
 
-    if (is_sanctuary(you.pos()) || is_sanctuary(beam.source()))
+    if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
         return (false);
 
     // If we either hit no friends, or monster too dumb to care.
@@ -2447,7 +2447,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         if (spell_harms_area(monspell) && env.sanctuary_time > 0)
             return (true);
 
-        if (spell_harms_target(monspell) && is_sanctuary(mon->target_pos()))
+        if (spell_harms_target(monspell) && is_sanctuary(mon->target))
             return (true);
     }
 
@@ -2859,8 +2859,8 @@ bool monster_senior(const monsters *m1, const monsters *m2)
 
 monsters::monsters()
     : type(-1), hit_points(0), max_hit_points(0), hit_dice(0),
-      ac(0), ev(0), speed(0), speed_increment(0), x(0), y(0),
-      target_x(0), target_y(0), patrol_point(0, 0), travel_target(MTRAV_NONE),
+      ac(0), ev(0), speed(0), speed_increment(0),
+      target(0,0), patrol_point(0, 0), travel_target(MTRAV_NONE),
       inv(NON_ITEM), spells(), attitude(ATT_HOSTILE), behaviour(BEH_WANDER),
       foe(MHITYOU), enchantments(), flags(0L), experience(0), number(0),
       colour(BLACK), foe_memory(0), shield_blocks(0), god(GOD_NO_GOD), ghost(),
@@ -2908,11 +2908,11 @@ void monsters::reset()
     foe             = MHITNOT;
     number          = 0;
 
-    if (in_bounds(x, y))
-        mgrd[x][y] = NON_MONSTER;
+    if (in_bounds(pos()))
+        mgrd(pos()) = NON_MONSTER;
 
-    x = y = 0;
-    patrol_point  = coord_def(0, 0);
+    position.reset();
+    patrol_point.reset();
     travel_target = MTRAV_NONE;
     travel_path.clear();
     ghost.reset(NULL);
@@ -2930,10 +2930,8 @@ void monsters::init_with(const monsters &mon)
     ev                = mon.ev;
     speed             = mon.speed;
     speed_increment   = mon.speed_increment;
-    x                 = mon.x;
-    y                 = mon.y;
-    target_x          = mon.target_x;
-    target_y          = mon.target_y;
+    position          = mon.position;
+    target            = mon.target;
     patrol_point      = mon.patrol_point;
     travel_target     = mon.travel_target;
     travel_path       = mon.travel_path;
@@ -2956,19 +2954,9 @@ void monsters::init_with(const monsters &mon)
         ghost.reset(NULL);
 }
 
-coord_def monsters::pos() const
-{
-    return coord_def(x, y);
-}
-
-coord_def monsters::target_pos() const
-{
-    return coord_def(target_x, target_y);
-}
-
 bool monsters::swimming() const
 {
-    const dungeon_feature_type grid = grd[x][y];
+    const dungeon_feature_type grid = grd(pos());
     return (grid_is_watery(grid) && mons_habitat(this) == HT_WATER);
 }
 
@@ -2979,7 +2967,7 @@ bool monsters::submerged() const
 
 bool monsters::floundering() const
 {
-    const dungeon_feature_type grid = grd[x][y];
+    const dungeon_feature_type grid = grd(pos());
     return (grid_is_water(grid)
             // Can't use monster_habitable_grid because that'll return true
             // for non-water monsters in shallow water.
@@ -4588,6 +4576,11 @@ int monsters::get_experience_level() const
     return (hit_dice);
 }
 
+void monsters::moveto( const coord_def& c )
+{
+    position = c;
+}
+
 bool monsters::fumbles_attack(bool verbose)
 {
     if (floundering() && one_chance_in(4))
@@ -4713,7 +4706,7 @@ bool monsters::backlit(bool check_haloed) const
 
 bool monsters::haloed() const
 {
-    return (inside_halo(x, y));
+    return (inside_halo(pos()));
 }
 
 bool monsters::caught() const
@@ -5071,8 +5064,7 @@ bool monsters::find_home_around(const coord_def &c, int radius)
 
     if (nvalid)
     {
-        x = place.x;
-        y = place.y;
+        moveto(place);
         return (true);
     }
     return (false);
@@ -5092,10 +5084,9 @@ bool monsters::find_home_anywhere()
     int tries = 600;
     do
     {
-        x = random_range(6, GXM - 7);
-        y = random_range(6, GYM - 7);
+        position.set(random_range(6, GXM - 7), random_range(6, GYM - 7));
     }
-    while ((grd[x][y] != DNGN_FLOOR || mgrd[x][y] != NON_MONSTER)
+    while ((grd(pos()) != DNGN_FLOOR || mgrd(pos()) != NON_MONSTER)
            && tries-- > 0);
 
     return (tries >= 0);
@@ -5106,7 +5097,7 @@ bool monsters::find_place_to_live(bool near_player)
     if ((near_player && find_place_near_player())
         || find_home_anywhere())
     {
-        mgrd[x][y] = monster_index(this);
+        mgrd(pos()) = monster_index(this);
         return (true);
     }
 
@@ -5335,15 +5326,14 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
 
     case ENCH_CHARM:
         behaviour = BEH_SEEK;
-        target_x  = you.x_pos;
-        target_y  = you.y_pos;
+        target    = you.pos();
         foe       = MHITYOU;
 
         if (is_patrolling())
         {
             // Enslaved monsters stop patrolling and forget their patrol point,
             // they're supposed to follow you now.
-            patrol_point = coord_def(0, 0);
+            patrol_point.reset();
         }
         if (you.can_see(this))
             learned_something_new(TUT_MONSTER_FRIENDLY);
@@ -5365,22 +5355,13 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     // Monster un-submerging while under player.  Try to move to an
     // adjacent square in which the monster could have been submerged
     // and have it unusbmerge from there.
-    coord_def pos, target_square;
+    coord_def target_square;
     int       okay_squares = 0;
 
-    for (pos.x = you.x_pos - 1; pos.x <= you.x_pos + 1; ++pos.x)
-        for (pos.y = you.y_pos - 1; pos.y <= you.y_pos + 1; ++pos.y)
-        {
-            if (pos == you.pos())
-                continue;
-
-            if (in_bounds(pos) && mgrd(pos) == NON_MONSTER
-                && monster_can_submerge(mon, grd(pos)))
-            {
-                if (one_chance_in(++okay_squares))
-                    target_square = pos;
-            }
-        }
+    for ( adjacent_iterator ai; ai; ++ai )
+        if (mgrd(*ai) == NON_MONSTER && monster_can_submerge(mon, grd(*ai)))
+            if (one_chance_in(++okay_squares))
+                target_square = *ai;
 
     if (okay_squares > 0)
     {
@@ -5388,8 +5369,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
         mgrd(mon->pos()) = NON_MONSTER;
 
         mgrd(target_square) = mnum;
-        mon->x = target_square.x;
-        mon->y = target_square.y;
+        mon->moveto(target_square);
 
         return (true);
     }
@@ -5401,20 +5381,16 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 
     // The terrain changed and the monster can't remain submerged.
     // Try to move to an adjacent square where it would be happy.
-    for (pos.x = you.x_pos - 1; pos.x <= you.x_pos + 1; ++pos.x)
-        for (pos.y = you.y_pos - 1; pos.y <= you.y_pos + 1; ++pos.y)
+    for ( adjacent_iterator ai; ai; ++ai )
+    {
+        if (mgrd(*ai) == NON_MONSTER
+            && monster_habitable_grid(mon, grd(*ai))
+            && trap_type_at_xy(*ai) == NUM_TRAPS)
         {
-            if (pos == you.pos())
-                continue;
-
-            if (in_bounds(pos) && mgrd(pos) == NON_MONSTER
-                && monster_habitable_grid(mon, grd(pos))
-                && trap_type_at_xy(pos) == NUM_TRAPS)
-            {
-                if (one_chance_in(++okay_squares))
-                    target_square = pos;
-            }
+            if (one_chance_in(++okay_squares))
+                target_square = *ai;
         }
+    }
 
     if (okay_squares > 0)
     {
@@ -5422,8 +5398,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
         mgrd(mon->pos()) = NON_MONSTER;
 
         mgrd(target_square) = mnum;
-        mon->x = target_square.x;
-        mon->y = target_square.y;
+        mon->moveto(target_square);
     }
 
     return (true);
@@ -5664,7 +5639,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             }
         }
         else if (mons_near(this)
-                 && grid_compatible(grd[this->x][this->y], DNGN_DEEP_WATER))
+                 && grid_compatible(grd(pos()), DNGN_DEEP_WATER))
         {
             mpr("Something invisible bursts forth from the water.");
             interrupt_activity( AI_FORCE_INTERRUPT );
@@ -6034,7 +6009,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_SUBMERGED:
     {
         // Not even air elementals unsubmerge into clouds.
-        if (env.cgrid[x][y] != EMPTY_CLOUD)
+        if (env.cgrid(pos()) != EMPTY_CLOUD)
             break;
 
         // Air elementals are a special case, as their
@@ -6050,7 +6025,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         }
 
         // Now we handle the others:
-        const dungeon_feature_type grid = grd[x][y];
+        const dungeon_feature_type grid = grd(pos());
 
         // Badly injured monsters prefer to stay submerged...
         // electrical eels and lava snakes have ranged attacks
@@ -6420,18 +6395,18 @@ bool monsters::mon_see_grid(const coord_def& p, bool reach) const
                                true, true));
 }
 
-bool monsters::can_see(const actor *target) const
+bool monsters::can_see(const actor *targ) const
 {
-    if (this == target)
-        return visible_to(target);
+    if (this == targ)
+        return visible_to(targ);
 
-    if (!target->visible_to(this))
+    if (!targ->visible_to(this))
         return (false);
 
-    if (target->atype() == ACT_PLAYER)
+    if (targ->atype() == ACT_PLAYER)
         return mons_near(this);
 
-    const monsters* mon = dynamic_cast<const monsters*>(target);
+    const monsters* mon = dynamic_cast<const monsters*>(targ);
 
     return mon_see_grid(mon->pos());
 }
@@ -6489,7 +6464,7 @@ void monsters::apply_location_effects()
         mons_check_pool(this);
 
     if (alive() && has_ench(ENCH_SUBMERGED)
-        && (!monster_can_submerge(this, grd[x][y])
+        && (!monster_can_submerge(this, grd(pos()))
             || type == MONS_TRAPDOOR_SPIDER))
     {
         del_ench(ENCH_SUBMERGED);
@@ -6508,8 +6483,7 @@ bool monsters::move_to_pos(const coord_def &newpos)
     mgrd(pos()) = NON_MONSTER;
 
     // Set monster x,y to new value.
-    x = newpos.x;
-    y = newpos.y;
+    position = newpos;
 
     // set new monster grid pointer to this monster.
     mgrd(newpos) = monster_index(this);
@@ -6527,7 +6501,7 @@ bool monsters::do_shaft()
     // the monster isn't standing over a shaft.
     if (trap_type_at_xy(this->pos()) != TRAP_SHAFT)
     {
-        switch(grd[x][y])
+        switch(grd(pos()))
         {
         case DNGN_FLOOR:
         case DNGN_OPEN_DOOR:
@@ -6993,9 +6967,9 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@The_monster@",   "Your @the_monster@");
     }
 
-    if (see_grid(monster->x, monster->y))
+    if (see_grid(monster->pos()))
     {
-        dungeon_feature_type feat = grd[monster->x][monster->y];
+        dungeon_feature_type feat = grd(monster->pos());
         if (feat < DNGN_MINMOVE || feat >= NUM_REAL_FEATURES)
             msg = replace_all(msg, "@surface@", "buggy surface");
         else if (feat == DNGN_LAVA)

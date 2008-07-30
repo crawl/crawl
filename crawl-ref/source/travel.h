@@ -82,7 +82,7 @@ bool is_traversable(dungeon_feature_type grid);
 void explore_pickup_event(int did_pickup, int tried_pickup);
 bool is_excluded(const coord_def &p);
 
-void find_travel_pos(int you_x, int you_y, char *move_x, char *move_y,
+void find_travel_pos(const coord_def& youpos, char *move_x, char *move_y,
                      std::vector<coord_def>* coords = NULL);
 
 bool is_travelsafe_square(int x, int y, bool ignore_hostile = false,
@@ -109,7 +109,7 @@ void start_translevel_travel(const travel_target &pos);
 
 void start_translevel_travel(bool prompt_for_destination = true);
 
-void start_travel(int x, int y);
+void start_travel(const coord_def& p);
 
 command_type travel();
 
@@ -483,8 +483,9 @@ struct LevelInfo
     void update();              // Update LevelInfo to be correct for the
                                 // current level.
 
-    // Updates/creates a StairInfo for the stair at (x, y) in grid coordinates
-    void update_stair(int x, int y, const level_pos &p, bool guess = false);
+    // Updates/creates a StairInfo for the stair at stairpos in grid coordinates
+    void update_stair(const coord_def& stairpos, const level_pos &p,
+                      bool guess = false);
 
     // Clears all stair info for stairs matching this grid type.
     void clear_stairs(dungeon_feature_type grid);

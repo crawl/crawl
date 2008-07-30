@@ -93,7 +93,7 @@ static bool will_autoinscribe = false;
 
 // Used to be called "unlink_items", but all it really does is make
 // sure item coordinates are correct to the stack they're in. -- bwr
-void fix_item_coordinates(void)
+void fix_item_coordinates()
 {
     // Nails all items to the ground (i.e. sets x,y).
     for (int x = 0; x < GXM; x++)
@@ -103,8 +103,8 @@ void fix_item_coordinates(void)
 
             while (i != NON_ITEM)
             {
-                mitm[i].x = x;
-                mitm[i].y = y;
+                mitm[i].pos.x = x;
+                mitm[i].pos.y = y;
                 i = mitm[i].link;
             }
         }
@@ -121,7 +121,7 @@ void link_items(void)
 
     for (int i = 0; i < MAX_ITEMS; i++)
     {
-        if (!is_valid_item(mitm[i]) || (mitm[i].x == 0 && mitm[i].y == 0))
+        if (!is_valid_item(mitm[i]) || mitm[i].pos.origin())
         {
             // Item is not assigned, or is monster item.  Ignore.
             mitm[i].link = NON_ITEM;
@@ -129,8 +129,8 @@ void link_items(void)
         }
 
         // link to top
-        mitm[i].link = igrd[ mitm[i].x ][ mitm[i].y ];
-        igrd[ mitm[i].x ][ mitm[i].y ] = i;
+        mitm[i].link = igrd( mitm[i].pos );
+        igrd( mitm[i].pos ) = i;
     }
 }
 
@@ -174,48 +174,37 @@ static int _cull_items(void)
 
     // 2. Avoid shops by avoiding (0,5..9).
     // 3. Avoid monster inventory by iterating over the dungeon grid.
-    for (int x = 5; x < GXM; x++)
-        for (int y = 5; y < GYM; y++)
+    for ( rectangle_iterator ri(1); ri; ++ri )
+    {
+        if ( grid_distance( you.pos(), *ri ) <= 9 )
+            continue;
+
+        for ( stack_iterator si(*ri); si; ++si )
         {
-            // 1. Not near player!
-            if (x > you.x_pos - 9 && x < you.x_pos + 9
-                && y > you.y_pos - 9 && y < you.y_pos + 9)
+            if (_item_ok_to_clean(si->index()) && x_chance_in_y(15, 100))
             {
-                continue;
-            }
-
-            int next;
-
-            // Iterate through the grids list of items.
-            for (int item = igrd[x][y]; item != NON_ITEM; item = next)
-            {
-                next = mitm[item].link; // in case we can't get it later.
-
-                if (_item_ok_to_clean(item) && x_chance_in_y(15, 100))
+                if (is_fixed_artefact(*si))
                 {
-                    const item_def& obj(mitm[item]);
-                    if (is_fixed_artefact(obj))
-                    {
-                        // 7. Move uniques to abyss.
-                        set_unique_item_status( OBJ_WEAPONS, obj.special,
-                                                UNIQ_LOST_IN_ABYSS );
-                    }
-                    else if (is_unrandom_artefact(obj))
-                    {
-                        // 9. Unmark unrandart.
-                        const int z = find_unrandart_index(obj);
-                        if (z != -1)
-                            set_unrandart_exist(z, false);
-                    }
-
-                    // POOF!
-                    destroy_item( item );
-                    if (first_cleaned == NON_ITEM)
-                        first_cleaned = item;
+                    // 7. Move uniques to abyss.
+                    set_unique_item_status( OBJ_WEAPONS, si->special,
+                                            UNIQ_LOST_IN_ABYSS );
                 }
-            }
+                else if (is_unrandom_artefact(*si))
+                {
+                    // 9. Unmark unrandart.
+                    const int z = find_unrandart_index(*si);
+                    if (z != -1)
+                        set_unrandart_exist(z, false);
+                }
+                
+                if (first_cleaned == NON_ITEM)
+                    first_cleaned = si->index();
 
-        }
+                // POOF!
+                destroy_item( si->index() );
+            }
+        }    
+    }
 
     return (first_cleaned);
 }
@@ -368,7 +357,7 @@ void unlink_item( int dest )
     if (dest == NON_ITEM || !is_valid_item( mitm[dest] ))
         return;
 
-    if (mitm[dest].x == 0 && mitm[dest].y == 0)
+    if (mitm[dest].pos.origin())
     {
         // (0,0) is where the monster items are (and they're unlinked by igrd),
         // although it also contains items that are not linked in yet.
@@ -387,8 +376,7 @@ void unlink_item( int dest )
                 {
                     monster->inv[cy] = NON_ITEM;
 
-                    mitm[dest].x = 0;
-                    mitm[dest].y = 0;
+                    mitm[dest].pos.reset();
                     mitm[dest].link = NON_ITEM;
 
                     // This causes problems when changing levels. -- bwr
@@ -410,29 +398,25 @@ void unlink_item( int dest )
         // the item should be linked.
 
         // First check the top:
-        if (igrd[ mitm[dest].x ][ mitm[dest].y ] == dest)
+        if (igrd(mitm[dest].pos) == dest)
         {
             // link igrd to the second item
-            igrd[ mitm[dest].x ][ mitm[dest].y ] = mitm[dest].link;
+            igrd(mitm[dest].pos) = mitm[dest].link;
 
-            mitm[dest].x = 0;
-            mitm[dest].y = 0;
+            mitm[dest].pos.reset();
             mitm[dest].link = NON_ITEM;
             return;
         }
 
         // Okay, item is buried, find item that's on top of it.
-        for (int c = igrd[ mitm[dest].x ][ mitm[dest].y ]; c != NON_ITEM;
-             c = mitm[c].link)
+        for (stack_iterator si(mitm[dest].pos); si; ++si)
         {
             // Find item linking to dest item.
-            if (is_valid_item( mitm[c] ) && mitm[c].link == dest)
+            if (is_valid_item(*si) && si->link == dest)
             {
                 // unlink dest
-                mitm[c].link = mitm[dest].link;
-
-                mitm[dest].x = 0;
-                mitm[dest].y = 0;
+                si->link = mitm[dest].link;
+                mitm[dest].pos.reset();
                 mitm[dest].link = NON_ITEM;
                 return;
             }
@@ -442,7 +426,8 @@ void unlink_item( int dest )
 #if DEBUG
     // Okay, the sane ways are gone... let's warn the player:
     mprf(MSGCH_ERROR, "BUG WARNING: Problems unlinking item '%s', (%d, %d)!!!",
-          mitm[dest].name(DESC_PLAIN).c_str(), mitm[dest].x, mitm[dest].y );
+          mitm[dest].name(DESC_PLAIN).c_str(),
+         mitm[dest].pos.x, mitm[dest].pos.y );
 
     // Okay, first we scan all items to see if we have something
     // linked to this item.  We're not going to return if we find
@@ -454,9 +439,8 @@ void unlink_item( int dest )
     // Clean the relevant parts of the object.
     mitm[dest].base_type = OBJ_UNASSIGNED;
     mitm[dest].quantity  = 0;
-    mitm[dest].x = 0;
-    mitm[dest].y = 0;
     mitm[dest].link      = NON_ITEM;
+    mitm[dest].pos.reset();
     mitm[dest].props.clear();
 
     // Look through all items for links to this item.
@@ -565,11 +549,8 @@ static void _handle_gone_item(const item_def &item)
                 you.attribute[ATTR_DEMONIC_RUNES] -= item.quantity;
         }
 
-        if (player_in_branch(BRANCH_HALL_OF_ZOT)
-            && item.x != -1 && item.y != -1)
-        {
+        if (player_in_branch(BRANCH_HALL_OF_ZOT) && !in_inventory(item))
             you.attribute[ATTR_RUNES_IN_ZOT] -= item.quantity;
-        }
     }
 }
 
@@ -724,7 +705,7 @@ static int _item_name_specialness(const item_def& item)
 void item_check(bool verbose)
 {
     describe_floor();
-    origin_set(you.x_pos, you.y_pos);
+    origin_set(you.pos());
 
     std::ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
 
@@ -912,7 +893,7 @@ void origin_set_inventory(void (*oset)(item_def &item))
             oset(you.inv[i]);
 }
 
-static int _first_corpse_monnum(int x, int y)
+static int _first_corpse_monnum(const coord_def& where)
 {
     // We could look for a corpse on this square and assume that the
     // items belonged to it, but that is unsatisfactory.
@@ -963,11 +944,11 @@ static void _check_note_item(item_def &item)
     }
 }
 
-void origin_set(int x, int y)
+void origin_set(const coord_def& where)
 {
-    int monnum = _first_corpse_monnum(x, y);
+    int monnum = _first_corpse_monnum(where);
     unsigned short pplace = get_packed_place();
-    for (stack_iterator si(coord_def(x,y)); si; ++si)
+    for (stack_iterator si(where); si; ++si)
     {
         if (origin_known( *si ))
             continue;
@@ -982,17 +963,17 @@ void origin_set(int x, int y)
     }
 }
 
-void origin_set_monstercorpse(item_def &item, int x, int y)
+void origin_set_monstercorpse(item_def &item, const coord_def& where)
 {
-    item.orig_monnum = _first_corpse_monnum(x, y);
+    item.orig_monnum = _first_corpse_monnum(where);
 }
 
-static void _origin_freeze(item_def &item, int x, int y)
+static void _origin_freeze(item_def &item, const coord_def& where)
 {
     if (!origin_known(item))
     {
-        if (!item.orig_monnum && x != -1 && y != -1)
-            origin_set_monstercorpse(item, x, y);
+        if (!item.orig_monnum && where.x != -1 && where.y != -1)
+            origin_set_monstercorpse(item, where);
 
         item.orig_place = get_packed_place();
         _check_note_item(item);
@@ -1549,16 +1530,15 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         return (-1);
     }
 
-    coord_def pos(mitm[obj].x, mitm[obj].y);
+    coord_def p = mitm[obj].pos;
     dungeon_events.fire_position_event(
-        dgn_event(DET_ITEM_PICKUP, pos, 0, obj, -1), pos);
+        dgn_event(DET_ITEM_PICKUP, p, 0, obj, -1), p);
 
     item_def &item = you.inv[freeslot];
     // Copy item.
     item        = mitm[obj];
-    item.x      = -1;
-    item.y      = -1;
     item.link   = freeslot;
+    item.pos.set(-1, -1);
     // Remove "dropped by ally" flag.
     item.flags &= ~(ISFLAG_DROPPED_BY_ALLY);
 
@@ -1567,7 +1547,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
     _autoinscribe_item( item );
 
-    _origin_freeze(item, you.x_pos, you.y_pos);
+    _origin_freeze(item, you.pos());
     _check_note_item(item);
 
     item.quantity = quant_got;
@@ -1687,8 +1667,7 @@ bool move_item_to_grid( int *const obj, const coord_def& p )
     unlink_item( ob );
 
     // Move item to coord.
-    item.x = p.x;
-    item.y = p.y;
+    item.pos = p;
 
     // Link item to top of list.
     item.link = igrd(p);
@@ -1715,8 +1694,7 @@ void move_item_stack_to_grid( const coord_def& from, const coord_def& to )
     // Tell all items in stack what the new coordinate is.
     for (stack_iterator si(from); si; ++si)
     {
-        si->x = to.x;
-        si->y = to.y;
+        si->pos = to;
 
         // Link last of the stack to the top of the old stack.
         if (si->link == NON_ITEM && igrd(to) != NON_ITEM)
@@ -1777,8 +1755,7 @@ bool copy_item_to_grid( const item_def &item, const coord_def& p,
 
     // Set quantity, and set the item as unlinked.
     new_item.quantity = quant_drop;
-    new_item.x = 0;
-    new_item.y = 0;
+    new_item.pos.reset();
     new_item.link = NON_ITEM;
 
     if (mark_dropped)
@@ -2131,8 +2108,7 @@ static void _autoinscribe_item( item_def& item )
             // then the user explictly removed it because they
             // don't want to autopickup it again.
             std::string str = Options.autoinscriptions[i].second;
-            if ((item.flags & ISFLAG_DROPPED)
-                && (item.x != -1 || item.y != -1))
+            if ((item.flags & ISFLAG_DROPPED) && !in_inventory(item))
             {
                 str = replace_all(str, "=g", "");
             }
@@ -2469,7 +2445,7 @@ item_def find_item_type(object_class_type base_type, std::string name)
 
 bool item_is_equipped(const item_def &item)
 {
-    if (item.x != -1 || item.y != -1)
+    if (!in_inventory(item))
         return (false);
 
     for (int i = 0; i < NUM_EQUIP; i++)

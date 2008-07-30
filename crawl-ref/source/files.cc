@@ -1052,7 +1052,7 @@ static void _do_lost_items(level_area_type old_level_type)
             continue;
 
         // Item is in player intentory, so it's not lost.
-        if (item.x == -1 && item.y == -1)
+        if (item.pos.x == -1 && item.pos.y == -1)
             continue;
 
         item_was_lost(item);
@@ -1216,7 +1216,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (you.level_type != LEVEL_ABYSS)
             _place_player_on_stair(old_branch, stair_taken);
         else
-            you.moveto(45, 35);
+            you.moveto(coord_def(45, 35)); // FIXME: should be abyss_center
     }
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
 

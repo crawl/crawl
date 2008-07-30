@@ -58,75 +58,65 @@
 #include "view.h"
 #include "xom.h"
 
-unsigned char detect_traps( int pow )
+int detect_traps( int pow )
 {
-    unsigned char traps_found = 0;
+    int traps_found = 0;
 
     if (pow > 50)
         pow = 50;
 
     const int range = 8 + random2(8) + pow;
 
-    for (int count_x = 0; count_x < MAX_TRAPS; count_x++)
+    for (int i = 0; i < MAX_TRAPS; i++)
     {
-        const int etx = env.trap[ count_x ].x;
-        const int ety = env.trap[ count_x ].y;
+        const coord_def p = env.trap[i].pos;
 
-        // Used to just be visible screen:
-        // if (etx > you.x_pos - 15 && etx < you.x_pos + 15
-        //     && ety > you.y_pos - 8 && ety < you.y_pos + 8)
-
-        if (grid_distance( you.x_pos, you.y_pos, etx, ety ) < range)
+        if (grid_distance( you.pos(), p) < range
+            && grd(p) == DNGN_UNDISCOVERED_TRAP)
         {
-            if (grd[ etx ][ ety ] == DNGN_UNDISCOVERED_TRAP)
-            {
-                traps_found++;
+            traps_found++;
 
-                grd[ etx ][ ety ] = trap_category( env.trap[count_x].type );
-                set_envmap_obj(etx, ety, grd[etx][ety]);
-                set_terrain_mapped(etx, ety);
-            }
+            grd(p) = trap_category( env.trap[i].type );
+            set_envmap_obj(p, grd(p));
+            set_terrain_mapped(p);
         }
     }
 
     return (traps_found);
 }
 
-unsigned char detect_items( int pow )
+int detect_items( int pow )
 {
     if (pow > 50)
         pow = 50;
 
-    unsigned char items_found = 0;
-    const int     map_radius  = 8 + random2(8) + pow;
+    int items_found = 0;
+    const int map_radius  = 8 + random2(8) + pow;
 
-    for (int i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
-        for (int j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
+    for ( radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri )
+    {
+
+        // Don't expose new dug out areas:
+        // Note: assumptions are being made here about how
+        // terrain can change (eg it used to be solid, and
+        // thus item free).
+        if (is_terrain_changed(*ri))
+            continue;
+
+        if (igrd(*ri) != NON_ITEM
+            && (!get_envmap_obj(*ri) || !is_envmap_item(*ri)))
         {
-            if (!in_bounds(i, j))
-                continue;
-
-            // Don't expose new dug out areas:
-            // Note: assumptions are being made here about how
-            // terrain can change (eg it used to be solid, and
-            // thus item free).
-            if (is_terrain_changed(i, j))
-                continue;
-
-            if (igrd[i][j] != NON_ITEM
-                && (!get_envmap_obj(i, j) || !is_envmap_item(i, j)))
-            {
-                items_found++;
-
-                set_envmap_obj(i, j, DNGN_ITEM_DETECTED);
-                set_envmap_detected_item(i, j);
+            items_found++;
+            
+            set_envmap_obj(*ri, DNGN_ITEM_DETECTED);
+            set_envmap_detected_item(*ri);
 #ifdef USE_TILE
-                // Don't replace previously seen items with an unseen one.
-                if (!is_terrain_seen(i,j))
-                    tile_place_tile_bk(i, j, TILE_UNSEEN_ITEM);
+            // Don't replace previously seen items with an unseen one.
+            if (!is_terrain_seen(*ri))
+                tile_place_tile_bk(ri->x, ri->y, TILE_UNSEEN_ITEM);
 #endif
-            }
         }
+    }
 
     return (items_found);
 }
@@ -149,12 +139,12 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
         *fuzz_chance = 10;
 }
 
-static bool _mark_detected_creature(int gridx, int gridy, const monsters *mon,
+static bool _mark_detected_creature(coord_def where, const monsters *mon,
                                     int fuzz_chance, int fuzz_radius)
 {
 #ifdef USE_TILE
     // Get monster index pre-fuzz
-    int idx = mgrd[gridx][gridy];
+    int idx = mgrd(where);
 #endif
 
     bool found_good = false;
@@ -162,28 +152,28 @@ static bool _mark_detected_creature(int gridx, int gridy, const monsters *mon,
     if (fuzz_radius && x_chance_in_y(fuzz_chance, 100))
     {
         const int fuzz_diam = 2 * fuzz_radius + 1;
-
-        int gx, gy;
+        
+        coord_def place;
         // Try five times to find a valid placement, else we attempt to place
         // the monster where it really is (and may fail).
         for (int itry = 0; itry < 5; ++itry)
         {
-            gx = gridx + random2(fuzz_diam) - fuzz_radius;
-            gy = gridy + random2(fuzz_diam) - fuzz_radius;
+            place.set( where.x + random2(fuzz_diam) - fuzz_radius,
+                       where.y + random2(fuzz_diam) - fuzz_radius );
 
             // If the player would be able to see a monster at this location
             // don't place it there.
-            if (see_grid(gx, gy))
+            if (see_grid(place))
                 continue;
 
             // Try not to overwrite another detected monster.
-            if (is_envmap_detected_mons(gx, gy))
+            if (is_envmap_detected_mons(place))
                 continue;
 
             // Don't print monsters on terrain they cannot pass through,
             // not even if said terrain has since changed.
-            if (map_bounds(gx, gy) && !is_terrain_changed(gx, gy)
-                && mon->can_pass_through_feat(grd[gx][gy]))
+            if (map_bounds(place) && !is_terrain_changed(place)
+                && mon->can_pass_through_feat(grd(place)))
             {
                 found_good = true;
                 break;
@@ -191,17 +181,14 @@ static bool _mark_detected_creature(int gridx, int gridy, const monsters *mon,
         }
 
         if (found_good)
-        {
-            gridx = gx;
-            gridy = gy;
-        }
+            where = place;
     }
 
-    set_envmap_obj(gridx, gridy, mon->type + DNGN_START_OF_MONSTERS);
-    set_envmap_detected_mons(gridx, gridy);
+    set_envmap_obj(where, mon->type + DNGN_START_OF_MONSTERS);
+    set_envmap_detected_mons(where);
 
 #ifdef USE_TILE
-    tile_place_monster(gridx, gridy, idx, false, true);
+    tile_place_monster(where.x, where.y, idx, false, true);
 #endif
 
     return (found_good);
@@ -224,28 +211,24 @@ int detect_creatures( int pow, bool telepathic )
     if (!telepathic)
         clear_map(false);
 
-    for (int i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
-        for (int j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
+    for (radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri)
+    {
+        if (mgrd(*ri) != NON_MONSTER)
         {
-            if (!in_bounds(i, j))
-                continue;
+            monsters *mon = &menv[ mgrd(*ri) ];
+            creatures_found++;
 
-            if (mgrd[i][j] != NON_MONSTER)
+            _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
+            
+            // Assuming that highly intelligent spellcasters can
+            // detect scrying. -- bwr
+            if (mons_intel( mon->type ) == I_HIGH
+                && mons_class_flag( mon->type, M_SPELLCASTER ))
             {
-                monsters *mon = &menv[ mgrd[i][j] ];
-                creatures_found++;
-
-                _mark_detected_creature(i, j, mon, fuzz_chance, fuzz_radius);
-
-                // Assuming that highly intelligent spellcasters can
-                // detect scrying. -- bwr
-                if (mons_intel( mon->type ) == I_HIGH
-                    && mons_class_flag( mon->type, M_SPELLCASTER ))
-                {
-                    behaviour_event( mon, ME_DISTURB, MHITYOU, you.pos() );
-                }
+                behaviour_event( mon, ME_DISTURB, MHITYOU, you.pos() );
             }
         }
+    }
 
     return (creatures_found);
 }
@@ -254,27 +237,27 @@ int corpse_rot(int power)
 {
     UNUSED( power );
 
-    char adx = 0;
-    char ady = 0;
+    int adx = 0;
+    int ady = 0;
 
-    char minx = you.x_pos - 6;
-    char maxx = you.x_pos + 7;
-    char miny = you.y_pos - 6;
-    char maxy = you.y_pos + 7;
-    char xinc = 1;
-    char yinc = 1;
+    int minx = you.pos().x - 6;
+    int maxx = you.pos().x + 7;
+    int miny = you.pos().y - 6;
+    int maxy = you.pos().y + 7;
+    int xinc = 1;
+    int yinc = 1;
 
     if (coinflip())
     {
-        minx = you.x_pos + 6;
-        maxx = you.x_pos - 7;
+        minx = you.pos().x + 6;
+        maxx = you.pos().x - 7;
         xinc = -1;
     }
 
     if (coinflip())
     {
-        miny = you.y_pos + 6;
-        maxy = you.y_pos - 7;
+        miny = you.pos().y + 6;
+        maxy = you.pos().y - 7;
         yinc = -1;
     }
 
@@ -284,7 +267,7 @@ int corpse_rot(int power)
             coord_def ad(adx, ady);
             if (see_grid_no_trans(ad) && !is_sanctuary(ad))
             {
-                if (igrd(ad) == NON_ITEM || env.cgrid(ad) != EMPTY_CLOUD)
+                if (env.cgrid(ad) != EMPTY_CLOUD)
                     continue;
 
                 for ( stack_iterator si(ad); si; ++si )
@@ -823,7 +806,7 @@ void drain_life(int pow)
 
 bool vampiric_drain(int pow, const dist &vmove)
 {
-    int mgr = mgrd[you.x_pos + vmove.dx][you.y_pos + vmove.dy];
+    int mgr = mgrd(you.pos() + vmove.delta);
 
     if (mgr == NON_MONSTER)
     {
@@ -897,7 +880,7 @@ char burn_freeze(int pow, beam_type flavour)
         return (-1);
     }
 
-    const int mgr = mgrd[you.x_pos + spd.dx][you.y_pos + spd.dy];
+    const int mgr = mgrd(you.pos() + spd.delta);
 
     // Yes, this is strange, but it does maintain the original
     // behaviour.  Possibly to avoid giving information about invisible
@@ -1410,15 +1393,10 @@ bool cast_summon_elemental(int pow, god_type god,
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
-    struct dist smove;
-
-    int dir_x;
-    int dir_y;
-    int targ_x;
-    int targ_y;
+    coord_def targ;
+    dist smove;
 
     const int dur = std::min(2 + (random2(pow) / 5), 6);
-
     const bool any_elemental = (restricted_type == MONS_PROGRAM_BUG);
 
     while (true)
@@ -1433,14 +1411,11 @@ bool cast_summon_elemental(int pow, god_type god,
             return (false);
         }
 
-        dir_x  = smove.dx;
-        dir_y  = smove.dy;
-        targ_x = you.x_pos + dir_x;
-        targ_y = you.y_pos + dir_y;
+        targ = you.pos() + smove.delta;
 
-        if (mgrd[targ_x][targ_y] != NON_MONSTER)
+        if (mgrd(targ) != NON_MONSTER)
         {
-            if (player_monster_visible(&menv[mgrd[targ_x][targ_y]]))
+            if (player_monster_visible(&menv[mgrd(targ)]))
                 mpr("There's something there already!");
             else
             {
@@ -1448,13 +1423,17 @@ bool cast_summon_elemental(int pow, god_type god,
                 return (false);
             }
         }
-        else if (dir_x == 0 && dir_y == 0)
+        else if (smove.delta.origin())
             mpr("You can't summon an elemental from yourself!");
         else if ((any_elemental || restricted_type == MONS_EARTH_ELEMENTAL)
-                 && (grd[ targ_x ][ targ_y ] == DNGN_ROCK_WALL
-                     || grd[ targ_x ][ targ_y ] == DNGN_CLEAR_ROCK_WALL))
+                 && (grd(targ) == DNGN_ROCK_WALL
+                     || grd(targ) == DNGN_CLEAR_ROCK_WALL))
         {
-            if (targ_x <= 6 || targ_x >= 74 || targ_y <= 6 || targ_y >= 64)
+            const int boundary = 6;
+            if (targ.x <= boundary
+                || targ.x >= GXM - boundary
+                || targ.y <= boundary
+                || targ.y >= GYM - boundary)
             {
                 mpr("That wall won't yield to your beckoning.");
                 // XXX: Should this cost a turn?
@@ -1471,29 +1450,29 @@ bool cast_summon_elemental(int pow, god_type god,
 
     if (mon == MONS_EARTH_ELEMENTAL)
     {
-        grd[targ_x][targ_y] = DNGN_FLOOR;
+        grd(targ) = DNGN_FLOOR;
     }
-    else if (env.cgrid[targ_x][targ_y] != EMPTY_CLOUD
-             && env.cloud[env.cgrid[targ_x][targ_y]].type == CLOUD_FIRE
+    else if (env.cgrid(targ) != EMPTY_CLOUD
+             && env.cloud[env.cgrid(targ)].type == CLOUD_FIRE
              && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
     {
         mon = MONS_FIRE_ELEMENTAL;
-        delete_cloud(env.cgrid[targ_x][targ_y]);
+        delete_cloud(env.cgrid(targ));
     }
-    else if (grd[targ_x][targ_y] == DNGN_LAVA
+    else if (grd(targ) == DNGN_LAVA
              && (any_elemental || restricted_type == MONS_FIRE_ELEMENTAL))
     {
         mon = MONS_FIRE_ELEMENTAL;
     }
-    else if ((grd[targ_x][targ_y] == DNGN_DEEP_WATER
-                || grd[targ_x][targ_y] == DNGN_SHALLOW_WATER
-                || grd[targ_x][targ_y] == DNGN_FOUNTAIN_BLUE)
+    else if ((grd(targ) == DNGN_DEEP_WATER
+                || grd(targ) == DNGN_SHALLOW_WATER
+                || grd(targ) == DNGN_FOUNTAIN_BLUE)
              && (any_elemental || restricted_type == MONS_WATER_ELEMENTAL))
     {
         mon = MONS_WATER_ELEMENTAL;
     }
-    else if (grd[targ_x][targ_y] >= DNGN_FLOOR
-             && env.cgrid[targ_x][targ_y] == EMPTY_CLOUD
+    else if (grd(targ) >= DNGN_FLOOR
+             && env.cgrid(targ) == EMPTY_CLOUD
              && (any_elemental || restricted_type == MONS_AIR_ELEMENTAL))
     {
         mon = MONS_AIR_ELEMENTAL;
@@ -1530,11 +1509,9 @@ bool cast_summon_elemental(int pow, god_type god,
                         && random2(100) >= unfriendly);
 
     if (create_monster(
-            mgen_data(mon,
-                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, coord_def(targ_x, targ_y),
-                      friendly ? you.pet_target : MHITYOU,
-                      0, god)) == -1)
+            mgen_data(mon, friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      dur, targ, friendly ? you.pet_target : MHITYOU, 0, god))
+        == -1)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
@@ -1803,8 +1780,7 @@ bool cast_tukimas_dance(int pow, god_type god,
     // Copy the unwielded item.
     mitm[i] = you.inv[wpn];
     mitm[i].quantity = 1;
-    mitm[i].x = 0;
-    mitm[i].y = 0;
+    mitm[i].pos.reset();
     mitm[i].link = NON_ITEM;
 
     // Mark the weapon as thrown, so that we'll autograb it when the

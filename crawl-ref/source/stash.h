@@ -227,7 +227,13 @@ public:
     // Returns true if the square at (x,y) contains potentially interesting
     // swag that merits a personal visit (for EXPLORE_GREEDY).
     bool  needs_visit(int x, int y) const;
+    bool  needs_visit(const coord_def& c) const {
+        return needs_visit(c.x, c.y);
+    }
     bool  shop_needs_visit(int x, int y) const;
+    bool  shop_needs_visit(const coord_def& c) const {
+        return shop_needs_visit(c.x, c.y);
+    }
 
     // Add stash at (x,y), or player's current location if no parameters are 
     // supplied
@@ -293,6 +299,11 @@ public:
         return get_current_level().get_shop(x, y);
     }
 
+    ShopInfo &get_shop(const coord_def& p)
+    {
+        return get_shop(p.x, p.y);
+    }
+
     void remove_level(const level_id &which = level_id::current());
 
     enum stash_update_mode
@@ -344,6 +355,7 @@ private:
 extern StashTracker StashTrack;
 
 bool is_stash(int x, int y);
+inline bool is_stash( const coord_def& p ) { return is_stash(p.x, p.y); }
 void describe_stash(int x, int y);
 
 std::string userdef_annotate_item(const char *s, const item_def *item,

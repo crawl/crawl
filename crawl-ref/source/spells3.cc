@@ -198,11 +198,11 @@ int cast_smiting(int power, dist &beam)
 {
     bool success = false;
 
-    if (mgrd[beam.tx][beam.ty] == NON_MONSTER || beam.isMe)
+    if (mgrd(beam.target) == NON_MONSTER || beam.isMe)
         canned_msg(MSG_SPELL_FIZZLES);
     else
     {
-        monsters *monster = &menv[mgrd[beam.tx][beam.ty]];
+        monsters *monster = &menv[mgrd(beam.target)];
 
         god_conduct_trigger conducts[3];
         disable_attack_conducts(conducts);
@@ -243,11 +243,11 @@ int airstrike(int power, dist &beam)
 {
     bool success = false;
 
-    if (mgrd[beam.tx][beam.ty] == NON_MONSTER || beam.isMe)
+    if (mgrd(beam.target) == NON_MONSTER || beam.isMe)
         canned_msg(MSG_SPELL_FIZZLES);
     else
     {
-        monsters *monster = &menv[mgrd[beam.tx][beam.ty]];
+        monsters *monster = &menv[mgrd(beam.target)];
 
         god_conduct_trigger conducts[3];
         disable_attack_conducts(conducts);
@@ -1324,15 +1324,15 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
         if (is_controlled)
         {
             // no longer held in net
-            if (pos.x != you.x_pos || pos.y != you.y_pos)
+            if (pos != you.pos())
                 clear_trapping_net();
 
-            you.moveto(pos.x, pos.y);
+            you.moveto(pos);
 
-            if (grd[you.x_pos][you.y_pos] != DNGN_FLOOR
-                    && grd[you.x_pos][you.y_pos] != DNGN_SHALLOW_WATER
-                || mgrd[you.x_pos][you.y_pos] != NON_MONSTER
-                || env.cgrid[you.x_pos][you.y_pos] != EMPTY_CLOUD)
+            if (grd(you.pos()) != DNGN_FLOOR
+                    && grd(you.pos()) != DNGN_SHALLOW_WATER
+                || mgrd(you.pos()) != NON_MONSTER
+                || env.cgrid(you.pos()) != EMPTY_CLOUD)
             {
                 is_controlled = false;
             }
@@ -1346,31 +1346,30 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
 
     if (!is_controlled)
     {
-        int newx, newy;
+        coord_def newpos;
 
         do
         {
-            newx = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
-            newy = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
+            newpos.set( random_range(X_BOUND_1 + 1, X_BOUND_2 - 1),
+                        random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1) );
         }
-        while (grd[newx][newy] != DNGN_FLOOR
-                   && grd[newx][newy] != DNGN_SHALLOW_WATER
-               || mgrd[newx][newy] != NON_MONSTER
-               || env.cgrid[newx][newy] != EMPTY_CLOUD);
+        while (grd(newpos) != DNGN_FLOOR
+                   && grd(newpos) != DNGN_SHALLOW_WATER
+               || mgrd(newpos) != NON_MONSTER
+               || env.cgrid(newpos) != EMPTY_CLOUD);
 
         // no longer held in net
-        if (newx != you.x_pos || newy != you.y_pos)
+        if (newpos != you.pos())
             clear_trapping_net();
 
-        if ( newx == you.x_pos && newy == you.y_pos )
+        if ( newpos == you.pos() )
             mpr("Your surroundings flicker for a moment.");
-        else if ( see_grid(newx, newy) )
+        else if ( see_grid(newpos) )
             mpr("Your surroundings seem slightly different.");
         else
             mpr("Your surroundings suddenly seem different.");
 
-        you.x_pos = newx;
-        you.y_pos = newy;
+        you.position = newpos;
 
         // Necessary to update the view centre.
         you.moveto(you.pos());
@@ -1412,84 +1411,58 @@ bool entomb(int powc)
         DNGN_FLOOR_SPECIAL
     };
 
-    for (int srx = you.x_pos - 1; srx < you.x_pos + 2; srx++)
-        for (int sry = you.y_pos - 1; sry < you.y_pos + 2; sry++)
+    for ( adjacent_iterator ai; ai; ++ai )
+    {
+        // Tile already occupied by monster
+        if (mgrd(*ai) != NON_MONSTER)
+            continue;
+
+        // This is where power comes in.
+        if ( one_chance_in(powc/5) )
+            continue;
+
+        bool proceed = false;
+        for (unsigned int i=0; i < ARRAYSZ(safe_to_overwrite) && !proceed; ++i)
+            if (grd(*ai) == safe_to_overwrite[i])
+                proceed = true;
+
+        // checkpoint one - do we have a legitimate tile? {dlb}
+        if (!proceed)
+            continue;
+
+        // hate to see the orb get destroyed by accident {dlb}:
+        for ( stack_iterator si(*ai); si && proceed; ++si )
+            if (si->base_type == OBJ_ORBS)
+                proceed = false;
+
+        // checkpoint two - is the orb resting in the tile? {dlb}:
+        if (!proceed)
+            continue;
+        
+        // Destroy all items on the square.
+        for ( stack_iterator si(*ai); si; ++si )
+            destroy_item(si->index());
+        
+        // deal with clouds {dlb}:
+        if (env.cgrid(*ai) != EMPTY_CLOUD)
+            delete_cloud( env.cgrid(*ai) );
+
+        // mechanical traps are destroyed {dlb}:
+        int which_trap = trap_at_xy(*ai);
+        if ( which_trap != -1 )
         {
-            // Tile already occupied by monster or yourself {dlb}:
-            if (mgrd[srx][sry] != NON_MONSTER
-                || srx == you.x_pos && sry == you.y_pos)
+            trap_struct& trap(env.trap[which_trap]);
+            if (trap_category(trap.type) == DNGN_TRAP_MECHANICAL)
             {
-                continue;
+                trap.type = TRAP_UNASSIGNED;
+                trap.pos.set(1,1);
             }
-
-            if ( one_chance_in(powc/5) )
-                continue;
-
-            bool proceed = false;
-            for (unsigned int i = 0; i < ARRAYSZ(safe_to_overwrite); ++i)
-            {
-                if (grd[srx][sry] == safe_to_overwrite[i])
-                {
-                    proceed = true;
-                    break;
-                }
-            }
-
-            // checkpoint one - do we have a legitimate tile? {dlb}
-            if (!proceed)
-                continue;
-
-            int objl = igrd[srx][sry];
-            int hrg = 0;
-
-            while (objl != NON_ITEM)
-            {
-                // hate to see the orb get destroyed by accident {dlb}:
-                if (mitm[objl].base_type == OBJ_ORBS)
-                {
-                    proceed = false;
-                    break;
-                }
-
-                hrg = mitm[objl].link;
-                objl = hrg;
-            }
-
-            // checkpoint two - is the orb resting in the tile? {dlb}:
-            if (!proceed)
-                continue;
-
-            objl = igrd[srx][sry];
-            hrg = 0;
-
-            while (objl != NON_ITEM)
-            {
-                hrg = mitm[objl].link;
-                destroy_item(objl);
-                objl = hrg;
-            }
-
-            // deal with clouds {dlb}:
-            if (env.cgrid[srx][sry] != EMPTY_CLOUD)
-                delete_cloud( env.cgrid[srx][sry] );
-
-            // mechanical traps are destroyed {dlb}:
-            int which_trap;
-            if ((which_trap = trap_at_xy(coord_def(srx, sry))) != -1)
-            {
-                if (trap_category(env.trap[which_trap].type)
-                                                    == DNGN_TRAP_MECHANICAL)
-                {
-                    env.trap[which_trap].type = TRAP_UNASSIGNED;
-                    env.trap[which_trap].x = 1;
-                    env.trap[which_trap].y = 1;
-                }
-            }
-
-            // Finally, place the wall {dlb}:
-            grd[srx][sry] = DNGN_ROCK_WALL;
-            number_built++;
         }
+
+        // Finally, place the wall {dlb}:
+        grd(*ai) = DNGN_ROCK_WALL;
+        number_built++;
+    }
 
     if (number_built > 0)
     {
@@ -1518,21 +1491,21 @@ bool entomb(int powc)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (number_built > 0);
-}                               // end entomb()
+}
 
-// Is (posx, posy) inside a circle within LOS, with the given radius,
+// Is where inside a circle within LOS, with the given radius,
 // centered on the player's position?  If so, return the distance to it.
 // Otherwise, return -1.
-static int _inside_circle(int posx, int posy, int radius)
+static int _inside_circle(const coord_def& where, int radius)
 {
-    if (!inside_level_bounds(posx, posy))
+    if (!inside_level_bounds(where))
         return -1;
 
-    const coord_def ep = grid2view(coord_def(posx, posy));
+    const coord_def ep = grid2view(where);
     if (!in_los_bounds(ep))
         return -1;
 
-    int dist = distance(posx, posy, you.x_pos, you.y_pos);
+    const int dist = distance(where, you.pos());
     if (dist > radius*radius)
         return -1;
 
@@ -1642,8 +1615,7 @@ bool cast_sanctuary(const int power)
     delay(1000);
 #endif
 
-    env.sanctuary_pos.x = you.x_pos;
-    env.sanctuary_pos.y = you.y_pos;
+    env.sanctuary_pos  = you.pos();
     env.sanctuary_time = 7 + you.skills[SK_INVOCATIONS]/2;
 
     // Pets stop attacking and converge on you.
@@ -1659,100 +1631,93 @@ bool cast_sanctuary(const int power)
     int       cloud_count = 0;
     monsters *seen_mon    = NULL;
 
-    for (int x = -radius; x <= radius; x++)
-        for (int y = -radius; y <= radius; y++)
+    for ( radius_iterator ri(you.pos(), radius, false, false); ri; ++ri )
+    {
+        int dist = _inside_circle(*ri, radius);
+        
+        if (dist == -1)
+            continue;
+
+        const coord_def pos = *ri;
+        if (env.map(pos).property == FPROP_BLOODY && see_grid(pos))
+            blood_count++;
+
+        if (trap_type_at_xy(pos) != NUM_TRAPS
+            && grd(pos) == DNGN_UNDISCOVERED_TRAP)
         {
-            int posx = you.x_pos + x;
-            int posy = you.y_pos + y;
-            int dist = _inside_circle(posx, posy, radius);
-
-            if (dist == -1)
-                continue;
-
-            coord_def pos(posx, posy);
-            if (env.map(pos).property == FPROP_BLOODY
-                && see_grid(pos))
+            const dungeon_feature_type type =
+                trap_category( trap_type_at_xy(pos) );
+            grd(pos) = type;
+            set_envmap_obj(pos, type);
+            trap_count++;
+        }
+        
+        // forming patterns
+        const int x = pos.x - you.pos().x, y = pos.y - you.pos().y;
+        if (pattern == 0    // outward rays
+            && (x == 0 || y == 0 || x == y || x == -y)
+            || pattern == 1 // circles
+            && (dist >= (radius-1)*(radius-1) && dist <= radius*radius
+                || dist >= (radius/2-1)*(radius/2-1)
+                && dist <= radius*radius/4)
+            || pattern == 2 // latticed
+            && (x%2 == 0 || y%2 == 0)
+            || pattern == 3 // cross-like
+            && (abs(x)+abs(y) < 5 && x != y && x != -y))
+        {
+            env.map(pos).property = FPROP_SANCTUARY_1; // yellow
+        }
+        else
+            env.map(pos).property = FPROP_SANCTUARY_2; // white
+        
+        // scare all attacking monsters inside sanctuary, and make
+        // all friendly monsters inside sanctuary stop attacking and
+        // move towards the player.
+        int monster = mgrd(pos);
+        if (monster != NON_MONSTER)
+        {
+            monsters* mon = &menv[monster];
+            
+            if (mons_friendly(mon))
             {
-                blood_count++;
+                mon->foe       = MHITYOU;
+                mon->target    = you.pos();
+                mon->behaviour = BEH_SEEK;
+                behaviour_event(mon, ME_EVAL, MHITYOU);
             }
-
-            if (trap_type_at_xy(pos) != NUM_TRAPS
-                && grd(pos) == DNGN_UNDISCOVERED_TRAP)
+            else if (!mons_wont_attack(mon))
             {
-                const dungeon_feature_type type =
-                    trap_category( trap_type_at_xy(pos) );
-                grd(pos) = type;
-                set_envmap_obj(posx, posy, type);
-                trap_count++;
-            }
-
-            // forming patterns
-            if (pattern == 0    // outward rays
-                  && (x == 0 || y == 0 || x == y || x == -y)
-                || pattern == 1 // circles
-                  && (dist >= (radius-1)*(radius-1) && dist <= radius*radius
-                      || dist >= (radius/2-1)*(radius/2-1)
-                         && dist <= radius*radius/4)
-               || pattern == 2 // latticed
-                  && (x%2 == 0 || y%2 == 0)
-                || pattern == 3 // cross-like
-                  && (abs(x)+abs(y) < 5 && x != y && x != -y))
-            {
-                env.map[posx][posy].property = FPROP_SANCTUARY_1; // yellow
-            }
-            else
-                env.map[posx][posy].property = FPROP_SANCTUARY_2; // white
-
-            // scare all attacking monsters inside sanctuary, and make
-            // all friendly monsters inside sanctuary stop attacking and
-            // move towards the player.
-            int monster = mgrd[posx][posy];
-            if (monster != NON_MONSTER)
-            {
-                monsters* mon = &menv[monster];
-
-                if (mons_friendly(mon))
+                if (mons_is_mimic(mon->type))
                 {
-                   mon->foe       = MHITYOU;
-                   mon->target_x  = you.x_pos;
-                   mon->target_y  = you.y_pos;
-                   mon->behaviour = BEH_SEEK;
-                   behaviour_event(mon, ME_EVAL, MHITYOU);
-                }
-                else if (!mons_wont_attack(mon))
-                {
-                    if (mons_is_mimic(mon->type))
+                    mimic_alert(mon);
+                    if(you.can_see(mon))
                     {
-                        mimic_alert(mon);
-                        if(you.can_see(mon))
-                        {
-                            scare_count++;
-                            seen_mon = mon;
-                        }
-                    }
-                    else if (mon->add_ench(mon_enchant(ENCH_FEAR, 0,
-                             KC_YOU)))
-                    {
-                        behaviour_event(mon, ME_SCARE, MHITYOU);
-
-                        // Check to see that monster is actually fleeing,
-                        // since plants can't flee.
-                        if (mons_is_fleeing(mon) && you.can_see(mon))
-                        {
-                            scare_count++;
-                            seen_mon = mon;
-                        }
+                        scare_count++;
+                        seen_mon = mon;
                     }
                 }
-            } // if (monster != NON_MONSTER)
-
-            if (!is_harmless_cloud(cloud_type_at(pos)))
-            {
-                delete_cloud(env.cgrid[posx][posy]);
-                if (see_grid(pos))
-                    cloud_count++;
+                else if (mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
+                {
+                    behaviour_event(mon, ME_SCARE, MHITYOU);
+                    
+                    // Check to see that monster is actually fleeing,
+                    // since plants can't flee.
+                    if (mons_is_fleeing(mon) && you.can_see(mon))
+                    {
+                        scare_count++;
+                        seen_mon = mon;
+                    }
+                }
             }
-        } // radius loop
+        } // if (monster != NON_MONSTER)
+        
+        if (!is_harmless_cloud(cloud_type_at(pos)))
+        {
+            delete_cloud(env.cgrid(pos));
+            if (see_grid(pos))
+                cloud_count++;
+        }
+    } // radius loop
 
     if (trap_count > 0)
     {
@@ -1796,15 +1761,15 @@ int halo_radius()
     return 0;
 }
 
-bool inside_halo(int posx, int posy)
+bool inside_halo(const coord_def& where)
 {
     if (!halo_radius())
         return (false);
 
-    return (_inside_circle(posx, posy, halo_radius()) != -1);
+    return (_inside_circle(where, halo_radius()) != -1);
 }
 
-void cast_poison_ammo(void)
+void cast_poison_ammo()
 {
     const int ammo = you.equip[EQ_WEAPON];
 
@@ -1887,10 +1852,7 @@ bool recall(char type_recalled)
     int step_value     = 1;
     int end_count      = (MAX_MONSTERS - 1);
 
-    FixedVector < char, 2 > empty;
-    struct monsters *monster = 0;       // NULL {dlb}
-
-    empty[0] = empty[1] = 0;
+    monsters *monster = 0;
 
     // someone really had to make life difficult {dlb}:
     // sometimes goes through monster list backwards
@@ -1929,8 +1891,9 @@ bool recall(char type_recalled)
                 continue;
         }
 
-        if (empty_surrounds(you.x_pos, you.y_pos, DNGN_FLOOR, 3, false, empty)
-            && monster->move_to_pos( coord_def(empty[0], empty[1])) )
+        coord_def empty;
+        if (empty_surrounds(you.pos(), DNGN_FLOOR, 3, false, empty)
+            && monster->move_to_pos( empty ) )
         {
             // only informed if monsters recalled are visible {dlb}:
             if (simple_monster_message(monster, " is recalled."))
@@ -1955,7 +1918,7 @@ int portal()
         mpr("This spell doesn't work here.");
         return (-1);
     }
-    else if (grd[you.x_pos][you.y_pos] != DNGN_FLOOR)
+    else if (grd(you.pos()) != DNGN_FLOOR)
     {
         mpr("You must find a clear area in which to cast this spell.");
         return (-1);

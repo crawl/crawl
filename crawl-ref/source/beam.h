@@ -108,11 +108,11 @@ struct bolt
     unsigned    type;                  // missile gfx
     int         colour;
     beam_type   flavour;
-    int         source_x, source_y;    // beam origin
+    coord_def   source;                // beam origin
+    coord_def   target;                // intended target
+    coord_def   pos;                   // actual position
     dice_def    damage;
     int         ench_power, hit;
-    int         target_x, target_y;    // intended target
-    coord_def   pos;                   // actual position
     killer_type thrower;               // what kind of thing threw this?
     char        ex_size;               // explosion radius (0==none)
     int         beam_source;           // NON_MONSTER or monster index #
@@ -167,16 +167,6 @@ public:
 
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
     killer_type  killer() const;
-
-    coord_def target() const
-    {
-        return (coord_def(target_x, target_y));
-    }
-
-    coord_def source() const
-    {
-        return (coord_def(source_x, source_y));
-    }
 };
 
 dice_def calc_dice( int num_dice, int max_damage );

@@ -186,8 +186,8 @@ static void _init_traps()
     memset(curr_traps, -1, sizeof curr_traps);
     for (int i = 0; i < MAX_TRAPS; ++i)
     {
-        int x = env.trap[i].x,
-            y = env.trap[i].y;
+        int x = env.trap[i].pos.x,
+            y = env.trap[i].pos.y;
 
         if (inside_level_bounds(x,y))
             curr_traps[x][y] = i;
@@ -593,10 +593,8 @@ void prevent_travel_to(const std::string &feature)
         traversable_terrain[feature_type] = FORBIDDEN;
 }
 
-bool is_branch_stair(int gridx, int gridy)
+bool is_branch_stair(const coord_def& pos)
 {
-    const coord_def pos(gridx, gridy);
-
     const level_id curr = level_id::current();
     const level_id next = level_id::get_next_level_id(pos);
 
@@ -762,26 +760,17 @@ void stop_running()
     you.running.stop();
 }
 
-static bool _is_valid_explore_target(int x, int y)
+static bool _is_valid_explore_target(const coord_def& where)
 {
     // If an adjacent square is unmapped, it's valid.
-    for (int yi = -1; yi <= 1; ++yi)
-        for (int xi = -1; xi <= 1; ++xi)
-        {
-            if (!xi && !yi)
-                continue;
-
-            const int ax = x + xi, ay = y + yi;
-            if (!in_bounds(ax, ay))
-                continue;
-            if (!is_terrain_seen(ax, ay))
-                return (true);
-        }
+    for ( adjacent_iterator ai(where); ai; ++ai )
+        if (!is_terrain_seen(*ai))
+            return (true);
 
     if (you.running == RMODE_EXPLORE_GREEDY)
     {
         LevelStashes *lev = StashTrack.find_current_level();
-        return (lev && lev->needs_visit(x, y));
+        return (lev && lev->needs_visit(where));
     }
 
     return (false);
@@ -830,8 +819,7 @@ static void _reset_zigzag_info()
 
 static void _set_target_square(const coord_def &target)
 {
-    you.running.x = target.x;
-    you.running.y = target.y;
+    you.running.pos = target;
 }
 
 static void _explore_find_target_square()
@@ -1046,11 +1034,11 @@ command_type travel()
     if (you.running.is_explore())
     {
         // Exploring.
-        if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_SHOP
+        if (grd(you.pos()) == DNGN_ENTER_SHOP
             && you.running == RMODE_EXPLORE_GREEDY)
         {
             LevelStashes *lev = StashTrack.find_current_level();
-            if (lev && lev->shop_needs_visit(you.x_pos, you.y_pos))
+            if (lev && lev->shop_needs_visit(you.pos()))
             {
                 you.running = 0;
                 return (CMD_GO_UPSTAIRS);
@@ -1059,20 +1047,20 @@ command_type travel()
 
         // Speed up explore by not doing a double-floodfill if we have
         // a valid target.
-        if (!you.running.x
-            || you.running.x == you.x_pos && you.running.y == you.y_pos
-            || !_is_valid_explore_target(you.running.x, you.running.y))
+        if (!you.running.pos.x
+            || you.running.pos == you.pos()
+            || !_is_valid_explore_target(you.running.pos))
         {
             _explore_find_target_square();
         }
     }
 
-    if (you.running == RMODE_INTERLEVEL && !you.running.x)
+    if (you.running == RMODE_INTERLEVEL && !you.running.pos.x)
     {
         // Interlevel travel. Since you.running.x is zero, we've either just
         // initiated travel, or we've just climbed or descended a staircase,
         // and we need to figure out where to travel to next.
-        if (!_find_transtravel_square(level_target.p) || !you.running.x)
+        if (!_find_transtravel_square(level_target.p) || !you.running.pos.x)
             stop_running();
     }
 
@@ -1084,7 +1072,7 @@ command_type travel()
 
         // Get the next step to make. If the travel command can't find a route,
         // we turn off travel (find_travel_pos does that automatically).
-        find_travel_pos(you.x_pos, you.y_pos, move_x, move_y);
+        find_travel_pos(you.pos(), move_x, move_y);
 
         if (you.running < 0 && (*move_x || *move_y))
         {
@@ -1104,14 +1092,13 @@ command_type travel()
             // check after reaching the item, because at that point the stash
             // tracker will have verified the stash and say "false" to
             // needs_visit.
-            const int new_x = you.x_pos + *move_x;
-            const int new_y = you.y_pos + *move_y;
+            const coord_def newpos = you.pos() + coord_def(*move_x, *move_y);
 
-            if (new_x == you.running.x && new_y == you.running.y)
+            if (newpos == you.running.pos)
             {
                 const LevelStashes *lev = StashTrack.find_current_level();
-                if (lev && lev->needs_visit(new_x, new_y)
-                    && !lev->shop_needs_visit(new_x, new_y))
+                if (lev && lev->needs_visit(newpos)
+                    && !lev->shop_needs_visit(newpos))
                 {
                     const int estop =
                         (you.running == RMODE_EXPLORE_GREEDY) ?
@@ -1120,7 +1107,7 @@ command_type travel()
                     if ((Options.explore_stop & estop)
                         && prompt_stop_explore(estop))
                     {
-                        explore_stopped_pos = coord_def(new_x, new_y);
+                        explore_stopped_pos = newpos;
                         stop_running();
                     }
                     return direction_to_command( *move_x, *move_y );
@@ -1135,7 +1122,7 @@ command_type travel()
             // should continue doing so (explore has its own end condition
             // upstairs); if we're traveling between levels and we've reached
             // our travel target, we're on a staircase and should take it.
-            if (you.x_pos == you.running.x && you.y_pos == you.running.y)
+            if (you.pos() == you.running.pos)
             {
                 if (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY)
                     you.running = runmode;       // Turn explore back on
@@ -1191,7 +1178,7 @@ command_type travel()
                     // valid on the new level. Setting running.x to zero forces
                     // us to recalculate our travel target next turn (see
                     // previous if block).
-                    you.running.x = you.running.y = 0;
+                    you.running.pos.reset();
                 }
                 else
                 {
@@ -1743,19 +1730,16 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void find_travel_pos(int youx, int youy,
+void find_travel_pos(const coord_def& youpos,
                      char *move_x, char *move_y,
                      std::vector<coord_def>* features)
 {
     travel_pathfind tp;
 
     if (move_x && move_y)
-    {
-        tp.set_src_dst(coord_def(youx, youy),
-                       coord_def(you.running.x, you.running.y));
-    }
+        tp.set_src_dst(youpos, you.running.pos);
     else
-        tp.set_floodseed(coord_def(youx, youy));
+        tp.set_floodseed(youpos);
 
     tp.set_feature_vector(features);
 
@@ -1764,15 +1748,15 @@ void find_travel_pos(int youx, int youy,
 
     const coord_def dest = tp.pathfind( rmode );
 
-    if (dest.x == 0 && dest.y == 0)
+    if (dest.origin())
     {
         if (move_x && move_y)
             you.running = RMODE_NOT_RUNNING;
     }
     else if (move_x && move_y)
     {
-        *move_x = dest.x - youx;
-        *move_y = dest.y - youy;
+        *move_x = dest.x - youpos.x;
+        *move_y = dest.y - youpos.y;
     }
 }
 
@@ -2387,7 +2371,7 @@ void start_translevel_travel(const travel_target &pos)
 
     if (!can_travel_interlevel())
     {
-        start_travel(pos.p.pos.x, pos.p.pos.y);
+        start_travel(pos.p.pos);
         return;
     }
 
@@ -2440,7 +2424,7 @@ void start_translevel_travel(bool prompt_for_destination)
     if (level_target.p.id.depth > 0)
     {
         you.running = RMODE_INTERLEVEL;
-        you.running.x = you.running.y = 0;
+        you.running.pos.reset();
         last_stair.depth = -1;
         _start_running();
     }
@@ -2448,7 +2432,7 @@ void start_translevel_travel(bool prompt_for_destination)
 
 command_type _trans_negotiate_stairs()
 {
-    return grid_stair_direction(grd[you.x_pos][you.y_pos]);
+    return grid_stair_direction(grd(you.pos()));
 }
 
 static int _target_distance_from(const coord_def &pos)
@@ -2516,11 +2500,8 @@ static int _find_transtravel_stair( const level_id &cur,
             // for a location on the same level. If that's the case, we can get
             // the distance off the travel_point_distance matrix.
             deltadist = travel_point_distance[target.pos.x][target.pos.y];
-            if (!deltadist
-                && (stair.x != target.pos.x || stair.y != target.pos.y))
-            {
+            if (!deltadist && stair != target.pos)
                 deltadist = -1;
-            }
         }
 
         if (deltadist != -1)
@@ -2537,11 +2518,8 @@ static int _find_transtravel_stair( const level_id &cur,
             // Note that even if this *is* degenerate, interlevel travel may
             // still be able to find a shorter route, since it can consider
             // routes that leave and reenter the current level.
-            if (player_level == target.id && stair.x == you.x_pos
-                && stair.y == you.y_pos)
-            {
+            if (player_level == target.id && stair == you.pos())
                 best_stair = target.pos;
-            }
 
             // The local_distance is already set, but there may actually be
             // stairs we can take that'll get us to the target faster than the
@@ -2577,11 +2555,8 @@ static int _find_transtravel_stair( const level_id &cur,
         if (!this_stair)
         {
             deltadist = travel_point_distance[si.position.x][si.position.y];
-            if (!deltadist
-                && (you.x_pos != si.position.x || you.y_pos != si.position.y))
-            {
+            if (!deltadist && you.pos() != si.position)
                 deltadist = -1;
-            }
         }
 
         // deltadist == 0 is legal (if this_stair is NULL), since the player
@@ -2629,11 +2604,8 @@ static int _find_transtravel_stair( const level_id &cur,
                 if (local_distance == -1 || local_distance > dist2stair)
                 {
                     local_distance = dist2stair;
-                    if (cur == player_level && you.x_pos == stair.x
-                        && you.y_pos == stair.y)
-                    {
+                    if (cur == player_level && you.pos() == stair)
                         best_stair = si.position;
-                    }
                 }
                 continue;
             }
@@ -2674,11 +2646,8 @@ static int _find_transtravel_stair( const level_id &cur,
                 && (local_distance == -1 || local_distance > newdist))
             {
                 local_distance = newdist;
-                if (cur == player_level && you.x_pos == stair.x
-                    && you.y_pos == stair.y)
-                {
+                if (cur == player_level && you.pos() == stair)
                     best_stair = si.position;
-                }
             }
         }
     }
@@ -2717,7 +2686,7 @@ static bool _loadlev_populate_stair_distances(const level_pos &target)
 static void _populate_stair_distances(const level_pos &target)
 {
     // Populate travel_point_distance.
-    find_travel_pos(target.pos.x, target.pos.y, NULL, NULL, NULL);
+    find_travel_pos(target.pos, NULL, NULL, NULL);
 
     LevelInfo &li = travel_cache.get_level_info(target.id);
     const std::vector<stair_info> &stairs = li.get_stairs();
@@ -2742,13 +2711,13 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     level_id current = level_id::current();
 
     coord_def best_stair(-1, -1);
-    coord_def cur_stair(you.x_pos, you.y_pos);
+    coord_def cur_stair(you.pos());
 
     level_id closest_level;
     int best_level_distance = -1;
     travel_cache.clear_distances();
 
-    find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, NULL);
+    find_travel_pos(you.pos(), NULL, NULL, NULL);
 
     const LevelInfo &target_level =
         travel_cache.get_level_info( target.id );
@@ -2760,8 +2729,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
 
     if (best_stair.x != -1 && best_stair.y != -1)
     {
-        you.running.x = best_stair.x;
-        you.running.y = best_stair.y;
+        you.running.pos = best_stair;
         return (true);
     }
     else if (best_level_distance != -1 && closest_level != current
@@ -2789,22 +2757,21 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     return (false);
 }
 
-void start_travel(int x, int y)
+void start_travel(const coord_def& p)
 {
     // Redundant target?
-    if (x == you.x_pos && y == you.y_pos)
+    if (p == you.pos())
         return;
 
     // Remember where we're going so we can easily go back if interrupted.
-    you.travel_x = x;
-    you.travel_y = y;
+    you.travel_x = p.x;
+    you.travel_y = p.y;
 
     if (!i_feel_safe(true, true))
         return;
 
-    you.running.x = x;
-    you.running.y = y;
-    level_target  = level_pos(level_id::current(), coord_def(x, y));
+    you.running.pos = p;
+    level_target  = level_pos(level_id::current(), p);
 
     if (!can_travel_interlevel())
     {
@@ -2843,7 +2810,7 @@ void start_explore(bool grab_items)
     // Clone shadow array off map
     mapshadow = env.map;
 
-    you.running.x = you.running.y = 0;
+    you.running.pos.reset();
     _start_running();
 }
 
@@ -3070,8 +3037,7 @@ void LevelInfo::update_stair_distances()
     {
         // For each stair, we need to ask travel to populate the distance
         // array.
-        find_travel_pos(stairs[s].position.x, stairs[s].position.y,
-                        NULL, NULL, NULL);
+        find_travel_pos(stairs[s].position, NULL, NULL, NULL);
 
         for (int other = 0; other < end; ++other)
         {
@@ -3090,9 +3056,10 @@ void LevelInfo::update_stair_distances()
     }
 }
 
-void LevelInfo::update_stair(int x, int y, const level_pos &p, bool guess)
+void LevelInfo::update_stair(const coord_def& stairpos, const level_pos &p,
+                             bool guess)
 {
-    stair_info *si = get_stair(x, y);
+    stair_info *si = get_stair(stairpos);
 
     // What 'guess' signifies: whenever you take a stair from A to B, the
     // travel code knows that the stair takes you from A->B. In that case,
@@ -3124,7 +3091,7 @@ void LevelInfo::update_stair(int x, int y, const level_pos &p, bool guess)
             sync_branch_stairs(si);
     }
     else if (!si && guess)
-        create_placeholder_stair(coord_def(x, y), p);
+        create_placeholder_stair(stairpos, p);
 }
 
 void LevelInfo::create_placeholder_stair(const coord_def &stair,
@@ -3318,22 +3285,18 @@ int LevelInfo::distance_between(const stair_info *s1, const stair_info *s2)
 
 void LevelInfo::get_stairs(std::vector<coord_def> &st)
 {
-    for (int y = 0; y < GYM; ++y)
-        for (int x = 0; x < GXM; ++x)
-        {
-            dungeon_feature_type grid = grd[x][y];
-            int envc = env.map[x][y].object;
+    for ( rectangle_iterator ri(1); ri; ++ri )
+    {
+        const dungeon_feature_type grid = grd(*ri);
+        const int envc = env.map(*ri).object;
 
-            if ((x == you.x_pos && y == you.y_pos || envc)
-                && is_travelable_stair(grid)
-                && (is_terrain_seen(x, y) || !is_branch_stair(x, y)))
-            {
-                // Convert to grid coords, because that's what we use
-                // everywhere else.
-                const coord_def stair(x, y);
-                st.push_back(stair);
-            }
+        if ((*ri == you.pos() || envc)
+            && is_travelable_stair(grid)
+            && (is_terrain_seen(*ri) || !is_branch_stair(*ri)))
+        {
+            st.push_back(*ri);
         }
+    }
 }
 
 void LevelInfo::clear_distances()
@@ -3582,12 +3545,10 @@ void TravelCache::add_waypoint(int x, int y)
 
     int waynum = keyin - '0';
 
+    coord_def pos(x,y);
     if (x == -1 || y == -1)
-    {
-        x = you.x_pos;
-        y = you.y_pos;
-    }
-    const coord_def pos(x, y);
+        pos = you.pos();
+
     const level_id &lid = level_id::current();
 
     waypoints[waynum].id  = lid;
@@ -3721,7 +3682,7 @@ bool can_travel_interlevel()
 // Shift-running and resting.
 
 runrest::runrest()
-    : runmode(0), mp(0), hp(0), x(0), y(0)
+    : runmode(0), mp(0), hp(0), pos(0,0)
 {
 }
 
@@ -3735,16 +3696,14 @@ void runrest::initialise(int dir, int mode)
 
     if (dir == RDIR_REST)
     {
-        x = 0;
-        y = 0;
+        pos.reset();
         runmode = mode;
     }
     else
     {
         ASSERT( dir >= 0 && dir <= 7 );
 
-        x = Compass[dir].x;
-        y = Compass[dir].y;
+        pos = Compass[dir];
         runmode = mode;
 
         // Get the compass point to the left/right of intended travel:
@@ -3792,13 +3751,11 @@ static dungeon_feature_type _base_grid_type( dungeon_feature_type grid )
 
 void runrest::set_run_check(int index, int dir)
 {
-    run_check[index].dx = Compass[dir].x;
-    run_check[index].dy = Compass[dir].y;
+    run_check[index].delta = Compass[dir];
 
-    const int targ_x = you.x_pos + Compass[dir].x;
-    const int targ_y = you.y_pos + Compass[dir].y;
+    const coord_def targ = you.pos() + Compass[dir];
 
-    run_check[index].grid = _base_grid_type( grd[ targ_x ][ targ_y ] );
+    run_check[index].grid = _base_grid_type( grd(targ) );
 }
 
 bool runrest::check_stop_running()
@@ -3815,18 +3772,16 @@ bool runrest::check_stop_running()
 // traps and secret doors aren't running stopping points.
 bool runrest::run_grids_changed() const
 {
-    if (env.cgrid[you.x_pos + x][you.y_pos + y] != EMPTY_CLOUD)
+    if (env.cgrid(you.pos() + pos) != EMPTY_CLOUD)
         return (true);
 
-    if (mgrd[you.x_pos + x][you.y_pos + y] != NON_MONSTER)
+    if (mgrd(you.pos() + pos) != NON_MONSTER)
         return (true);
 
     for (int i = 0; i < 3; i++)
     {
-        const int targ_x = you.x_pos + run_check[i].dx;
-        const int targ_y = you.y_pos + run_check[i].dy;
-        const dungeon_feature_type targ_grid =
-            _base_grid_type( grd[ targ_x ][ targ_y ] );
+        const coord_def targ = you.pos() + run_check[i].delta;
+        const dungeon_feature_type targ_grid = _base_grid_type(grd(targ));
 
         if (run_check[i].grid != targ_grid)
             return (true);
@@ -3854,7 +3809,7 @@ void runrest::stop()
 
 bool runrest::is_rest() const
 {
-    return (runmode > 0 && !x && !y);
+    return (runmode > 0 && pos.origin());
 }
 
 bool runrest::is_explore() const
@@ -3886,7 +3841,7 @@ void runrest::rest()
 void runrest::clear()
 {
     runmode = RMODE_NOT_RUNNING;
-    x = y = 0;
+    pos.reset();
     mp = hp = 0;
 
     _reset_zigzag_info();

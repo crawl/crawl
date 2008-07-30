@@ -1843,8 +1843,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     pbolt.name     = item.name(DESC_PLAIN, false, false, false);
     pbolt.thrower  = KILL_YOU_MISSILE;
-    pbolt.source_x = you.x_pos;
-    pbolt.source_y = you.y_pos;
+    pbolt.source   = you.pos();
     pbolt.colour   = item.colour;
     pbolt.flavour  = BEAM_MISSILE;
     pbolt.aux_source.clear();
@@ -1942,8 +1941,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (you.duration[DUR_CONF])
     {
         thr.isTarget = true;
-        thr.tx = you.x_pos + random2(13) - 6;
-        thr.ty = you.y_pos + random2(13) - 6;
+        thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
     }
 
     // Even though direction is allowed, we're throwing so we
@@ -2581,9 +2579,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (teleport)
     {
         // Violating encapsulation somewhat...oh well.
-        hit = (affect(pbolt, pbolt.target(), &item) != 0);
+        hit = (affect(pbolt, pbolt.target, &item) != 0);
         if (acc_bonus != DEBUG_COOKIE)
-            beam_drop_object(pbolt, &item, pbolt.target());
+            beam_drop_object(pbolt, &item, pbolt.target);
     }
     else
     {
@@ -2594,7 +2592,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         fire_beam(pbolt, &item, !did_return);
 
         // The item can be destroyed before returning.
-        if (did_return && thrown_object_destroyed(&item, pbolt.target(), true))
+        if (did_return && thrown_object_destroyed(&item, pbolt.target, true))
             did_return = false;
     }
 
@@ -3492,19 +3490,17 @@ void zap_wand( int slot )
 
     if (you.duration[DUR_CONF])
     {
-        zap_wand.tx = you.x_pos + random2(13) - 6;
-        zap_wand.ty = you.y_pos + random2(13) - 6;
+        zap_wand.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
     }
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
         beam.effect_known = false;
 
     zap_type type_zapped = static_cast<zap_type>(wand.zap());
-    beam.source_x = you.x_pos;
-    beam.source_y = you.y_pos;
+    beam.source = you.pos();
     beam.set_target(zap_wand);
 
-    beam.aimed_at_feet = (beam.target() == you.pos());
+    beam.aimed_at_feet = (beam.target == you.pos());
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
@@ -3802,7 +3798,7 @@ bool _drink_fountain()
             // Turn fountain into a normal fountain without any message
             // but the glyph colour gives it away (lightblue vs. blue).
             grd(you.pos()) = DNGN_FOUNTAIN_BLUE;
-            set_terrain_changed(you.x_pos, you.y_pos);
+            set_terrain_changed(you.pos());
         }
     }
 
@@ -3813,7 +3809,7 @@ bool _drink_fountain()
         grd(you.pos()) = static_cast<dungeon_feature_type>(feat
                          + DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE);
 
-        set_terrain_changed(you.x_pos, you.y_pos);
+        set_terrain_changed(you.pos());
 
         crawl_state.cancel_cmd_repeat();
     }
@@ -3851,8 +3847,7 @@ static bool affix_weapon_enchantment()
         beam.type       = dchar_glyph(DCHAR_FIRED_BURST);
         beam.damage     = dice_def( 3, 10 );
         beam.flavour    = BEAM_FIRE;
-        beam.target_x   = you.x_pos;
-        beam.target_y   = you.y_pos;
+        beam.target     = you.pos();
         beam.colour     = RED;
         beam.thrower    = KILL_YOU;
         beam.ex_size    = 2;
@@ -4378,8 +4373,7 @@ void read_scroll( int slot )
 
     case SCR_FOG:
         mpr("The scroll dissolves into smoke.");
-        big_cloud( random_smoke_type(), KC_YOU, you.x_pos, you.y_pos,
-                   50, 8 + random2(8));
+        big_cloud(random_smoke_type(), KC_YOU, you.pos(), 50, 8 + random2(8));
         break;
 
     case SCR_MAGIC_MAPPING:
@@ -4415,8 +4409,7 @@ void read_scroll( int slot )
 
         beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
         beam.damage       = dice_def( 3, 10 );
-        beam.target_x     = you.x_pos;
-        beam.target_y     = you.y_pos;
+        beam.target       = you.pos();
         beam.name         = "fiery explosion";
         beam.colour       = RED;
         // your explosion, (not someone else's explosion)

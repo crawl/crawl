@@ -17,7 +17,7 @@
 #include "stash.h"
 #include <vector>
 
-void seen_notable_thing( dungeon_feature_type which_thing, int x, int y );
+void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos);
 bool overmap_knows_portal(dungeon_feature_type portal);
 void display_overmap();
 bool unnotice_feature(const level_pos &pos);

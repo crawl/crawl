@@ -222,7 +222,7 @@ static int _recite_to_monsters(coord_def where, int pow, int unused)
 
 static std::string _get_recite_speech(const std::string key, int weight)
 {
-    seed_rng( weight + you.x_pos + you.y_pos);
+    seed_rng( weight + you.pos().x + you.pos().y);
     const std::string str = getSpeakString("zin_recite_speech_" + key);
 
     if (!str.empty())
@@ -728,8 +728,7 @@ void handle_delay( void )
         // original and that's why we do it this way.
         if (is_valid_item(mitm[ delay.parm1 ])
             && mitm[ delay.parm1 ].base_type == OBJ_CORPSES
-            && mitm[ delay.parm1 ].x == you.x_pos
-            && mitm[ delay.parm1 ].y == you.y_pos)
+            && mitm[ delay.parm1 ].pos == you.pos())
         {
             if (mitm[ delay.parm1 ].sub_type == CORPSE_SKELETON)
             {
@@ -1421,7 +1420,7 @@ static command_type _get_running_command()
     else if (Options.travel_delay > 0)
         delay(Options.travel_delay);
 
-    return direction_to_command( you.running.x, you.running.y );
+    return direction_to_command( you.running.pos.x, you.running.pos.y );
 }
 
 static void _handle_run_delays(const delay_queue_item &delay)

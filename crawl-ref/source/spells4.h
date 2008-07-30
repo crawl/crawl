@@ -19,15 +19,15 @@
 struct bolt;
 
 bool backlight_monsters(coord_def where, int pow, int garbage);
-int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
+int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
                         cloud_type ctype, kill_category,
                         killer_type killer = KILL_NONE);
 int disperse_monsters(coord_def where, int pow, int message);
 
 void cast_bend(int pow);
 void cast_condensation_shield(int pow);
-void remove_divine_shield(void);
-void cast_divine_shield(void);
+void remove_divine_shield();
+void cast_divine_shield();
 void cast_detect_secret_doors(int pow);
 void cast_discharge(int pow);
 bool cast_evaporate(int pow, bolt& beem, int potion);

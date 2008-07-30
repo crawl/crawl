@@ -106,7 +106,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false,
                      false, "Blink to where?");
 
-            if (!beam.isValid || coord_def(beam.target()) == you.pos())
+            if (!beam.isValid || beam.target == you.pos())
             {
                 if (!wizard_blink
                     && !yesno("Are you sure you want to cancel this blink?",
@@ -120,9 +120,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             }
 
             // Wizard blink can move past translucent walls.
-            if (see_grid_no_trans(beam.target()))
+            if (see_grid_no_trans(beam.target))
                 break;
-            else if (trans_wall_blocking( beam.target() ))
+            else if (trans_wall_blocking( beam.target ))
             {
                 // Wizard blink can move past translucent walls.
                 if (wizard_blink)
@@ -140,11 +140,11 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
         // Allow wizard blink to send player into walls, in case the
         // user wants to alter that grid to something else.
-        if (wizard_blink && grid_is_solid(grd[beam.tx][beam.ty]))
-            grd[beam.tx][beam.ty] = DNGN_FLOOR;
+        if (wizard_blink && grid_is_solid(grd(beam.target)))
+            grd(beam.target) = DNGN_FLOOR;
 
-        if (grid_is_solid(grd[beam.tx][beam.ty])
-            || mgrd[beam.tx][beam.ty] != NON_MONSTER)
+        if (grid_is_solid(grd(beam.target))
+            || mgrd(beam.target) != NON_MONSTER)
         {
             mpr("Oops! Maybe something was there already.");
             random_blink(false);
@@ -160,7 +160,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             // no longer held in net
             clear_trapping_net();
 
-            move_player_to_grid(beam.target(), false, true, true);
+            move_player_to_grid(beam.target, false, true, true);
 
             // controlling teleport contaminates the player -- bwr
             if (!wizard_blink)
@@ -396,10 +396,8 @@ void cast_chain_lightning(int pow)
             pow = pow / 2 + 1;
         }
 
-        beam.source_x = source.x;
-        beam.source_y = source.y;
-        beam.target_x = target.x;
-        beam.target_y = target.y;
+        beam.source = source;
+        beam.target = target;
         beam.colour = LIGHTBLUE;
         beam.damage = calc_dice(5, 12 + pow * 2 / 3);
 
@@ -505,27 +503,27 @@ bool conjure_flame(int pow)
             return (false);
         }
 
-        if (trans_wall_blocking(spelld.tx, spelld.ty))
+        if (trans_wall_blocking(spelld.target))
         {
             mpr("A translucent wall is in the way.");
             return (false);
         }
-        else if (!see_grid(spelld.tx, spelld.ty))
+        else if (!see_grid(spelld.target))
         {
             mpr("You can't see that place!");
             continue;
         }
 
-        if (spelld.tx == you.x_pos && spelld.ty == you.y_pos)
+        if (spelld.target == you.pos())
         {
             mpr("You can't place the cloud here!");
             continue;
         }
 
-        const int cloud = env.cgrid[spelld.tx][spelld.ty];
+        const int cloud = env.cgrid(spelld.target);
 
-        if (grid_is_solid(grd[ spelld.tx ][ spelld.ty ]) ||
-            mgrd[ spelld.tx ][ spelld.ty ] != NON_MONSTER ||
+        if (grid_is_solid(grd(spelld.target)) ||
+            mgrd(spelld.target) != NON_MONSTER ||
             (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE))
         {
             mpr( "There's already something there!" );
@@ -549,7 +547,7 @@ bool conjure_flame(int pow)
     if (durat > 23)
         durat = 23;
 
-    place_cloud( CLOUD_FIRE, spelld.target(), durat, KC_YOU );
+    place_cloud( CLOUD_FIRE, spelld.target, durat, KC_YOU );
     return (true);
 }
 
@@ -569,11 +567,10 @@ bool stinking_cloud( int pow, bolt &beem )
     beem.aux_source.clear();
 
     // Don't bother tracing if you're targetting yourself.
-    if (beem.target_x != you.x_pos || beem.target_y != you.y_pos)
+    if (beem.target != you.pos())
     {
         // Fire tracer.
-        beem.source_x      = you.x_pos;
-        beem.source_y      = you.y_pos;
+        beem.source        = you.pos();
         beem.can_see_invis = player_see_invis();
         beem.smart_monster = true;
         beem.attitude      = ATT_FRIENDLY;
@@ -600,29 +597,28 @@ bool stinking_cloud( int pow, bolt &beem )
 
 int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
 {
-    big_cloud( cty, whose,
-               beam.target_x, beam.target_y, pow, 8 + random2(3) );
+    big_cloud( cty, whose, beam.target, pow, 8 + random2(3) );
     return (1);
 }
 
 void big_cloud(cloud_type cl_type, kill_category whose,
-               int cl_x, int cl_y, int pow, int size, int spread_rate)
+               const coord_def& where, int pow, int size, int spread_rate)
 {
     big_cloud(cl_type, whose, cloud_struct::whose_to_killer(whose),
-              cl_x, cl_y, pow, size, spread_rate);
+              where, pow, size, spread_rate);
 }
 
 void big_cloud(cloud_type cl_type, killer_type killer,
-               int cl_x, int cl_y, int pow, int size, int spread_rate)
+               const coord_def& where, int pow, int size, int spread_rate)
 {
     big_cloud(cl_type, cloud_struct::killer_to_whose(killer), killer,
-              cl_x, cl_y, pow, size, spread_rate);
+              where, pow, size, spread_rate);
 }
 
 void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
-               int cl_x, int cl_y, int pow, int size, int spread_rate)
+               const coord_def& where, int pow, int size, int spread_rate)
 {
-    apply_area_cloud(make_a_normal_cloud, cl_x, cl_y, pow, size,
+    apply_area_cloud(make_a_normal_cloud, where, pow, size,
                      cl_type, whose, killer, spread_rate);
 }
 
@@ -689,14 +685,14 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     return (false);
 }
 
-static int _healing_spell(int healed, int target_x = -1, int target_y = -1)
+static int _healing_spell(int healed, const coord_def where = coord_def(0,0))
 {
     ASSERT(healed >= 1);
 
     bolt beam;
     dist spd;
 
-    if (target_x == -1 || target_y == -1)
+    if (where.origin())
     {
         spd.isValid = spell_direction(spd, beam, DIR_TARGET,
                                       you.religion == GOD_ELYVILON ?
@@ -705,9 +701,8 @@ static int _healing_spell(int healed, int target_x = -1, int target_y = -1)
     }
     else
     {
-        spd.tx = target_x;
-        spd.ty = target_y;
-        spd.isValid = in_bounds(spd.tx, spd.ty);
+        spd.target = where;
+        spd.isValid = in_bounds(spd.target);
     }
 
     if (!spd.isValid)
@@ -716,14 +711,14 @@ static int _healing_spell(int healed, int target_x = -1, int target_y = -1)
         return (0);
     }
 
-    if (spd.tx == you.x_pos && spd.ty == you.y_pos)
+    if (spd.target == you.pos())
     {
         mpr("You are healed.");
         inc_hp(healed, false);
         return (1);
     }
 
-    const int mgr = mgrd[spd.tx][spd.ty];
+    const int mgr = mgrd(spd.target);
 
     if (mgr == NON_MONSTER)
     {
@@ -802,11 +797,11 @@ char cast_greatest_healing( int pow )
 }
 #endif
 
-int cast_healing(int pow, int target_x, int target_y)
+int cast_healing(int pow, const coord_def& where)
 {
     pow = std::min(50, pow);
 
-    return (_healing_spell(pow + roll_dice(2, pow) - 2, target_x, target_y));
+    return (_healing_spell(pow + roll_dice(2, pow) - 2, where));
 }
 
 void vitalisation_chain(int amount)

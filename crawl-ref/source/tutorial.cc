@@ -267,15 +267,9 @@ static job_type _get_tutorial_job(unsigned int type)
 // position into normal closed doors.
 void tutorial_zap_secret_doors()
 {
-    for (int x = you.x_pos - 10; x <= you.x_pos + 10; x++)
-        for (int y = you.y_pos - 10; y <= you.y_pos + 10; y++)
-        {
-            if (!in_bounds(x,y))
-                continue;
-
-            if (grd[x][y] == DNGN_SECRET_DOOR)
-                grd[x][y] = DNGN_CLOSED_DOOR;
-        }
+    for ( radius_iterator ri(you.pos(), 10, true, false); ri; ++ri )
+        if ( grd(*ri) == DNGN_SECRET_DOOR )
+            grd(*ri) = DNGN_CLOSED_DOOR;
 }
 
 // Prints the tutorial welcome screen.
@@ -1183,9 +1177,9 @@ void tutorial_first_monster(const monsters &mon)
     if (!Options.tutorial_events[TUT_SEEN_MONSTER])
     {
         if (get_mons_colour(&mon) != mon.colour)
-            learned_something_new(TUT_MONSTER_BRAND, mon.x, mon.y);
+            learned_something_new(TUT_MONSTER_BRAND, mon.pos());
         if (mons_friendly(&mon))
-            learned_something_new(TUT_MONSTER_FRIENDLY, mon.x, mon.y);
+            learned_something_new(TUT_MONSTER_FRIENDLY, mon.pos());
 
         if (!Options.tut_just_triggered
             && one_chance_in(4)
@@ -1216,7 +1210,7 @@ void tutorial_first_monster(const monsters &mon)
     std::string text = "That ";
 #ifdef USE_TILE
     // need to highlight monster
-    const coord_def gc(mon.x, mon.y);
+    const coord_def gc = mon.pos();
     tiles.place_cursor(CURSOR_TUTORIAL, gc);
     tiles.add_text_tag(TAG_TUTORIAL, mon.name(DESC_CAP_A), gc);
 
@@ -1303,15 +1297,15 @@ void tutorial_first_monster(const monsters &mon)
     }
 
     if (get_mons_colour(&mon) != mon.colour)
-        learned_something_new(TUT_MONSTER_BRAND, mon.x, mon.y);
+        learned_something_new(TUT_MONSTER_BRAND, mon.pos());
     if (mons_friendly(&mon))
-        learned_something_new(TUT_MONSTER_FRIENDLY, mon.x, mon.y);
+        learned_something_new(TUT_MONSTER_FRIENDLY, mon.pos());
 }
 
 void tutorial_first_item(const item_def &item)
 {
     // Happens if monster is standing on dropped corpse or item.
-    if (mgrd[item.x][item.y] != NON_MONSTER)
+    if (mgrd(item.pos) != NON_MONSTER)
         return;
 
     if (!Options.tutorial_events[TUT_SEEN_FIRST_OBJECT]
@@ -1321,9 +1315,9 @@ void tutorial_first_item(const item_def &item)
         // corpse, TUT_SEEN_CARRION is done when a corpse is first seen.
         if (!Options.tut_just_triggered
             && item.base_type == OBJ_CORPSES
-            && mgrd[item.x][item.y] == NON_MONSTER)
+            && mgrd(item.pos) == NON_MONSTER)
         {
-            learned_something_new(TUT_SEEN_CARRION, item.x, item.y);
+            learned_something_new(TUT_SEEN_CARRION, item.pos);
         }
         return;
     }
@@ -1343,7 +1337,7 @@ void tutorial_first_item(const item_def &item)
     text += _colourize_glyph(col, ch);
     text += " ";
 #else
-    const coord_def gc = coord_def(item.x, item.y);
+    const coord_def gc = item.pos;
     tiles.place_cursor(CURSOR_TUTORIAL, gc);
     tiles.add_text_tag(TAG_TUTORIAL, item.name(DESC_CAP_A), gc);
 #endif
@@ -1439,7 +1433,7 @@ static void _new_god_conduct()
 }
 
 // Here most of the tutorial messages for various triggers are handled.
-void learned_something_new(tutorial_event_type seen_what, int x, int y)
+void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 {
     // Already learned about that.
     if (!Options.tutorial_events[seen_what])
@@ -1452,13 +1446,10 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     std::ostringstream text;
 
 #ifndef USE_TILE
-    const int ex = x - you.x_pos + 9;
-    const int ey = y - you.y_pos + 9;
+    const coord_def e = gc - you.pos() + coord_def(9,9);
     unsigned ch;
     unsigned short colour;
     int object;
-#else
-    const coord_def gc(x, y);
 #endif
 
     Options.tut_just_triggered = true;
@@ -1645,11 +1636,11 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         //       first picked up, since a new player might not think to pick
         //        up a corpse.
 
-        if (x <= 0 || y <= 0)
+        if (gc.x <= 0 || gc.y <= 0)
             text << "Ah, a corpse!";
         else
         {
-            int i = igrd[x][y];
+            int i = igrd(gc);
             while (i != NON_ITEM)
             {
                 if (mitm[i].base_type == OBJ_CORPSES)
@@ -1784,11 +1775,11 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         text << "These ";
 #ifndef USE_TILE
         // Is a monster blocking the view?
-        if (mgrd[x][y] != NON_MONSTER)
+        if (mgrd(gc) != NON_MONSTER)
             DELAY_EVENT;
 
-        object = env.show[ex][ey];
-        colour = env.show_col[ex][ey];
+        object = env.show(e);
+        colour = env.show_col(e);
         { unsigned short dummy; get_item_symbol( object, &ch, &dummy ); }
 
         text << _colourize_glyph(colour, ch) << " ";
@@ -1812,13 +1803,13 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
             DELAY_EVENT;
 
         // monsters standing on stairs
-        if (mgrd[x][y] != NON_MONSTER)
+        if (mgrd(gc) != NON_MONSTER)
             DELAY_EVENT;
 
         text << "These ";
 #ifndef USE_TILE
-        object = env.show[ex][ey];
-        colour = env.show_col[ex][ey];
+        object = env.show(e);
+        colour = env.show_col(e);
         get_item_symbol( object, &ch, &colour );
 
         text << _colourize_glyph(colour, ch);
@@ -1841,12 +1832,12 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         text << "This ";
 #ifndef USE_TILE
         // Is a monster blocking the view?
-        if (mgrd[x][y] != NON_MONSTER)
+        if (mgrd(gc) != NON_MONSTER)
             DELAY_EVENT;
 
         // FIXME: Branch entrance character is not being colored yellow.
-        object = env.show[ex][ey];
-        colour = env.show_col[ex][ey];
+        object = env.show(e);
+        colour = env.show_col(e);
         { unsigned short dummy; get_item_symbol( object, &ch, &dummy ); }
 
         text << _colourize_glyph(colour, ch) << " ";
@@ -1874,7 +1865,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         return;
 #else
         // Monster or player standing on stairs.
-        if (mgrd[x][y] != NON_MONSTER || (you.x_pos == x && you.y_pos == y))
+        if (mgrd(gc) != NON_MONSTER || (you.pos() == gc))
             DELAY_EVENT;
 
         text << "If any items are covering stairs or an escape hatch then "
@@ -1885,7 +1876,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         break;
 
     case TUT_SEEN_TRAP:
-        if (x == you.x_pos && y == you.y_pos)
+        if (you.pos() == gc)
             text << "Oops... you just triggered a trap. ";
         else
             text << "You just discovered a trap. ";
@@ -1893,8 +1884,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
         text << "An unwary adventurer will occasionally stumble into one "
                 "of these nasty constructions";
 #ifndef USE_TILE
-        object = env.show[ex][ey];
-        colour = env.show_col[ex][ey];
+        object = env.show(e);
+        colour = env.show_col(e);
         get_item_symbol( object, &ch, &colour );
 
         if (ch == ' ' || colour == BLACK)
@@ -1910,8 +1901,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
     case TUT_SEEN_ALTAR:
         text << "That ";
 #ifndef USE_TILE
-        object = env.show[ex][ey];
-        colour = env.show_col[ex][ey];
+        object = env.show(e);
+        colour = env.show_col(e);
         get_item_symbol( object, &ch, &colour );
         text << _colourize_glyph(colour, ch) << " ";
 #else
@@ -1942,7 +1933,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
         text << "That "
 #ifndef USE_TILE
-             << _colourize_glyph(YELLOW, get_screen_glyph(x,y)) << " "
+             << _colourize_glyph(YELLOW, get_screen_glyph(gc)) << " "
 #endif
                 "is a shop. You can enter it by typing <w><<</w> "
 #ifdef USE_TILE
@@ -1962,7 +1953,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
         text << "That "
 #ifndef USE_TILE
-             << _colourize_glyph(WHITE, get_screen_glyph(x,y)) << " "
+             << _colourize_glyph(WHITE, get_screen_glyph(gc)) << " "
 #endif
                 "is a closed door. You can open it by walking into it. "
                 "Sometimes it is useful to close a door. Do so by pressing "
@@ -1981,7 +1972,7 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 #endif
         text << "That "
 #ifndef USE_TILE
-             << _colourize_glyph(WHITE, get_screen_glyph(x,y)) << " "
+             << _colourize_glyph(WHITE, get_screen_glyph(gc)) << " "
 #endif
                 "was a secret door. You can actively try to find secret "
                 "doors by searching. To search for one turn, press <w>s</w>, "
@@ -2498,8 +2489,8 @@ void learned_something_new(tutorial_event_type seen_what, int x, int y)
 
     case TUT_EXCOMMUNICATE:
     {
-        const god_type new_god   = (god_type) x;
-        const int      old_piety = y;
+        const god_type new_god   = (god_type) gc.x;
+        const int      old_piety = gc.y;
 
         god_type old_god = GOD_NO_GOD;
         for (int i = 0; i < MAX_NUM_GODS; i++)

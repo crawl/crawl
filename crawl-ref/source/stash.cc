@@ -146,8 +146,8 @@ Stash::Stash(int xp, int yp) : enabled(true), items()
     // First, fix what square we're interested in
     if (xp == -1)
     {
-        xp = you.x_pos;
-        yp = you.y_pos;
+        xp = you.pos().x;
+        yp = you.pos().y;
     }
     x = (unsigned char) xp;
     y = (unsigned char) yp;
@@ -263,18 +263,19 @@ bool Stash::is_boring_feature(dungeon_feature_type feat)
 
 void Stash::update()
 {
-    feat = grd[x][y];
+    coord_def p(x,y);
+    feat = grd(p);
     trap = NUM_TRAPS;
 
     if (is_boring_feature(feat))
         feat = DNGN_FLOOR;
 
     if (grid_is_trap(feat))
-        trap = trap_type_at_xy(coord_def(x, y));
+        trap = trap_type_at_xy(p);
 
     int objl = igrd[x][y];
     // If this is your position, you know what's on this square
-    if (x == you.x_pos && y == you.y_pos)
+    if (p == you.pos())
     {
         // Zap existing items
         items.clear();
@@ -1054,8 +1055,8 @@ const Stash *LevelStashes::find_stash(int x, int y) const
 {
     if (x == -1 || y == -1)
     {
-        x = you.x_pos;
-        y = you.y_pos;
+        x = you.pos().x;
+        y = you.pos().y;
     }
     const int abspos = (GXM * y) + x;
     stashes_t::const_iterator st = m_stashes.find(abspos);

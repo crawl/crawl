@@ -864,7 +864,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         desc.flag |= TILEI_FLAG_CURSE;
     if (item_type_tried(item))
         desc.flag |= TILEI_FLAG_TRIED;
-    if (item.x != -1)
+    if (item.pos.x != -1)
         desc.flag |= TILEI_FLAG_FLOOR;
 }
 
@@ -932,7 +932,7 @@ void TilesFramework::update_inventory()
 
     // How many ground items do we have?
     unsigned int num_ground = 0;
-    for (int i = igrd[you.x_pos][you.y_pos]; i != NON_ITEM; i = mitm[i].link)
+    for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         num_ground++;
 
     // Add extra rows, if needed.
@@ -959,7 +959,7 @@ void TilesFramework::update_inventory()
             continue;
         object_class_type type = (object_class_type)(find - obj_syms);
 
-        for (int i = igrd[you.x_pos][you.y_pos]; i != NON_ITEM; i = mitm[i].link)
+        for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         {
             if (inv.size() >= m_region_self_inv->mx * m_region_self_inv->my)
                 break;

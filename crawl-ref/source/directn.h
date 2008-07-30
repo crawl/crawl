@@ -128,23 +128,16 @@ struct dist
 {
     bool isValid;       // valid target chosen?
     bool isTarget;      // target (true), or direction (false)?
-    bool isMe;          // selected self (convenience: tx == you.x_pos,
-                        // ty == you.y_pos)
-    bool isEndpoint;    // Does the player want the attack to stop at (tx,ty)?
+    bool isMe;          // selected self (convenience: target == you.pos())
+    bool isEndpoint;    // Does the player want the attack to stop at target?
     bool isCancel;      // user cancelled (usually <ESC> key)
     bool choseRay;      // user wants a specific beam
-    int  tx,ty;         // target x,y or logical extension of beam to map edge
-    int  dx,dy;         // delta x and y if direction - always -1,0,1
+    coord_def target;   // target x,y or logical extension of beam to map edge
+    coord_def delta;    // delta x and y if direction - always -1,0,1
     ray_def ray;        // ray chosen if necessary
 
     // internal use - ignore
     int  prev_target;   // previous target
-
-    // target - source (source == you.pos())
-    coord_def target() const
-    {
-        return coord_def(tx, ty);
-    }
 };
 
 void direction( dist &moves, targeting_type restricts = DIR_NONE,
@@ -156,6 +149,9 @@ void direction( dist &moves, targeting_type restricts = DIR_NONE,
 
 bool in_los_bounds(const coord_def& p);
 bool in_viewport_bounds(int x, int y);
+inline bool in_viewport_bounds(const coord_def& pos) {
+  return in_viewport_bounds(pos.x, pos.y);
+}
 bool in_los(int x, int y);
 bool in_los(const coord_def &pos);
 bool in_vlos(int x, int y);

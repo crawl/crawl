@@ -399,18 +399,11 @@ static int follower_tag_radius2()
 {
     // If only friendlies are adjacent, we set a max radius of 6, otherwise
     // only adjacent friendlies may follow.
-    coord_def p;
-    for (p.x = you.x_pos - 1; p.x <= you.x_pos + 1; ++p.x)
-        for (p.y = you.y_pos - 1; p.y <= you.y_pos + 1; ++p.y)
-        {
-            if (p == you.pos())
-                continue;
-            if (const monsters *mon = monster_at(p))
-            {
-                if (!mons_friendly(mon))
-                    return (2);
-            }
-        }
+    for ( adjacent_iterator ai; ai; ++ai )
+        if (const monsters *mon = monster_at(*ai))
+            if (!mons_friendly(mon))
+                return (2);
+
     return (6 * 6);
 }
 
@@ -1285,8 +1278,8 @@ void random_in_bounds( int &x_pos, int &y_pos, int terr,
                  && grd[x_pos][y_pos] == DNGN_SHALLOW_WATER)
             done = true;
         else if (empty
-                && mgrd[x_pos][y_pos] != NON_MONSTER
-                && (x_pos != you.x_pos || y_pos != you.y_pos))
+                 && mgrd[x_pos][y_pos] != NON_MONSTER
+                 && (coord_def(x_pos,y_pos) != you.pos()))
         {
             done = true;
         }
@@ -1633,7 +1626,7 @@ void zap_los_monsters()
             if (!map_bounds(gx, gy))
                 continue;
 
-            if (gx == you.x_pos && gy == you.y_pos)
+            if (gx == you.pos().x && gy == you.pos().y)
                 continue;
 
             int imon = mgrd[gx][gy];

@@ -156,7 +156,7 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
                                       const shop_struct& shop,
                                       int total_cost )
 {
-    ShopInfo &si  = StashTrack.get_shop(shop.x, shop.y);
+    ShopInfo &si  = StashTrack.get_shop(shop.pos);
     const bool id = shoptype_identifies_stock(shop.type);
     std::string purchasable;
     for (unsigned int i = 0; i < stock.size(); ++i)
@@ -232,7 +232,7 @@ static void _in_a_shop( int shopidx )
 
     clrscr();
 
-    const std::string hello = "Welcome to " + shop_name(shop.pos()) + "!";
+    const std::string hello = "Welcome to " + shop_name(shop.pos) + "!";
     bool first = true;
     int total_cost = 0;
 
@@ -240,7 +240,7 @@ static void _in_a_shop( int shopidx )
     std::vector<bool> selected;
     while (true)
     {
-        StashTrack.get_shop(shop.x, shop.y).reset();
+        StashTrack.get_shop(shop.pos).reset();
 
         std::vector<int> stock = _shop_get_stock(shopidx);
 
@@ -494,8 +494,7 @@ static bool _purchase( int shop, int item_got, int cost, bool id )
     // Shopkeepers will now place goods you can't carry outside the shop.
     if (num < quant)
     {
-        move_item_to_grid( &item_got,
-                           coord_def(env.shop[shop].x, env.shop[shop].y) );
+        move_item_to_grid( &item_got, env.shop[shop].pos );
         return (false);
     }
     return (true);
@@ -1642,7 +1641,7 @@ void shop()
     int i;
 
     for (i = 0; i < MAX_SHOPS; i++)
-        if (env.shop[i].x == you.x_pos && env.shop[i].y == you.y_pos)
+        if (env.shop[i].pos == you.pos())
             break;
 
     if (i == MAX_SHOPS)
@@ -1655,7 +1654,7 @@ void shop()
     if ( _shop_get_stock(i).empty() )
     {
         const shop_struct& shop = env.shop[i];
-        mprf("%s appears to be closed.", shop_name(shop.pos()).c_str());
+        mprf("%s appears to be closed.", shop_name(shop.pos).c_str());
         return;
     }
 
@@ -1673,7 +1672,7 @@ shop_struct *get_shop(const coord_def& where)
     for (int shoppy = 0; shoppy < MAX_SHOPS; shoppy ++)
     {
         // find shop index plus a little bit of paranoia
-        if (env.shop[shoppy].pos() == where &&
+        if (env.shop[shoppy].pos == where &&
             env.shop[shoppy].type != SHOP_UNASSIGNED)
         {
             return (&env.shop[shoppy]);

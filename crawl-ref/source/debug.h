@@ -114,9 +114,10 @@ void debug_stethoscope(int mon);
 #endif
 
 class monsters;
+class coord_def;
 void wizard_apply_monster_blessing(monsters* mon);
 void wizard_give_monster_item(monsters* mon);
-void wizard_move_player_or_monster(int x, int y);
+void wizard_move_player_or_monster(const coord_def& where);
 void debug_make_monster_shout(monsters* mon);
 void debug_pathfind(int mid);
 void debug_miscast( int target );

@@ -75,8 +75,7 @@ static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
 
     env.cloud[ cloud ].type        = type;
     env.cloud[ cloud ].decay       = decay;
-    env.cloud[ cloud ].x           = p.x;
-    env.cloud[ cloud ].y           = p.y;
+    env.cloud[ cloud ].pos         = p;
     env.cloud[ cloud ].whose       = whose;
     env.cloud[ cloud ].killer      = killer;
     env.cloud[ cloud ].spread_rate = spread_rate;
@@ -108,7 +107,7 @@ static int _spread_cloud(const cloud_struct &cloud)
                          cloud.decay > 20? 50 :
                                            30;
     int extra_decay = 0;
-    for ( adjacent_iterator ai(cloud.pos()); ai; ++ai )
+    for ( adjacent_iterator ai(cloud.pos); ai; ++ai )
     {
         if (random2(100) >= spreadch)
             continue;
@@ -165,18 +164,18 @@ void manage_clouds(void)
         // water -> flaming clouds:
         // lava -> freezing clouds:
         if (env.cloud[cc].type == CLOUD_FIRE
-            && grd[env.cloud[cc].x][env.cloud[cc].y] == DNGN_DEEP_WATER)
+            && grd(env.cloud[cc].pos) == DNGN_DEEP_WATER)
         {
             dissipate *= 4;
         }
         else if (env.cloud[cc].type == CLOUD_COLD
-                && grd[env.cloud[cc].x][env.cloud[cc].y] == DNGN_LAVA)
+                 && grd(env.cloud[cc].pos) == DNGN_LAVA)
         {
             dissipate *= 4;
         }
 
         expose_items_to_element(cloud2beam(env.cloud[cc].type),
-                                env.cloud[cc].pos(), 2);
+                                env.cloud[cc].pos, 2);
 
         _dissipate_cloud(cc, env.cloud[cc], dissipate);
     }
@@ -186,12 +185,11 @@ void delete_cloud( int cloud )
 {
     if (env.cloud[ cloud ].type != CLOUD_NONE)
     {
-        const coord_def cloud_pos = env.cloud[ cloud ].pos();
+        const coord_def cloud_pos = env.cloud[ cloud ].pos;
 
         env.cloud[ cloud ].type         = CLOUD_NONE;
         env.cloud[ cloud ].decay        = 0;
-        env.cloud[ cloud ].x            = 0;
-        env.cloud[ cloud ].y            = 0;
+        env.cloud[ cloud ].pos.reset();
         env.cloud[ cloud ].whose        = KC_OTHER;
         env.cloud[ cloud ].killer       = KILL_NONE;
         env.cloud[ cloud ].spread_rate  = 0;
@@ -206,13 +204,10 @@ void move_cloud( int cloud, const coord_def& newpos )
 {
     if (cloud != EMPTY_CLOUD)
     {
-        const int old_x = env.cloud[ cloud ].x;
-        const int old_y = env.cloud[ cloud ].y;
-
+        const coord_def oldpos = env.cloud[cloud].pos;
+        env.cgrid(oldpos) = EMPTY_CLOUD;
         env.cgrid(newpos) = cloud;
-        env.cloud[ cloud ].x        = newpos.x;
-        env.cloud[ cloud ].y        = newpos.y;
-        env.cgrid[ old_x ][ old_y ] = EMPTY_CLOUD;
+        env.cloud[cloud].pos = newpos;
     }
 }
 

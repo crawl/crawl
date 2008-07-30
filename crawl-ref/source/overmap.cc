@@ -59,16 +59,16 @@ static void seen_staircase(dungeon_feature_type which_staircase,
 static void seen_other_thing(dungeon_feature_type which_thing,
                              const coord_def& pos);
 
-void seen_notable_thing( dungeon_feature_type which_thing, int x, int y )
+void seen_notable_thing( dungeon_feature_type which_thing,
+                         const coord_def& pos )
 {
     // Tell the world first.
-    dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, coord_def(x, y));
+    dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, pos);
 
     // Don't record in temporary terrain
     if (you.level_type != LEVEL_DUNGEON)
         return;
 
-    const coord_def pos(x, y);
     const god_type god = grid_altar_god(which_thing);
     if (god != GOD_NO_GOD)
         seen_altar( god, pos );
@@ -525,8 +525,7 @@ void seen_altar( god_type god, const coord_def& pos )
 
 void unnotice_altar()
 {
-    const coord_def pos(you.x_pos, you.y_pos);
-    const level_pos curpos(level_id::current(), pos);
+    const level_pos curpos(level_id::current(), you.pos());
     // Hmm, what happens when erasing a nonexistent key directly?
     if (altars_present.find(curpos) != altars_present.end())
         altars_present.erase(curpos);
@@ -613,7 +612,7 @@ void annotate_level()
     level_id li  = level_id::current();
     level_id li2 = level_id::current();
 
-    if (is_stair(grd[you.x_pos][you.y_pos]))
+    if (is_stair(grd(you.pos())))
     {
         li2 = level_id::get_next_level_id(you.pos());
 

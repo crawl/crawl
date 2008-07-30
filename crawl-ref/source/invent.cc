@@ -143,7 +143,7 @@ const bool InvEntry::is_item_art() const
 
 const bool InvEntry::is_item_equipped() const
 {
-    if (item->link == -1 || item->x != -1 || item->y != -1)
+    if (item->link == -1 || item->pos.x != -1 || item->pos.y != -1)
         return(false);
 
     for (int i = 0; i < NUM_EQUIP; i++)
@@ -695,7 +695,7 @@ unsigned char InvMenu::getkey() const
 
 bool in_inventory( const item_def &i )
 {
-    return i.x == -1 && i.y == -1;
+    return i.pos.x == -1 && i.pos.y == -1;
 }
 
 unsigned char get_invent( int invent_type )

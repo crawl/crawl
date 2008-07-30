@@ -204,7 +204,7 @@ void place_transiting_items()
 
     for (item = ilist.begin(); item != ilist.end(); item++)
     {
-        coord_def pos(item->x, item->y);
+        coord_def pos = item->pos;
 
         if (!in_bounds(pos))
         {
@@ -284,7 +284,7 @@ bool follower::place(bool near_player)
             mprf(MSGCH_DIAGNOSTICS, "Placed follower: %s",
                  m.name(DESC_PLAIN).c_str());
 #endif
-            m.target_x = m.target_y = 0;
+            m.target.reset();
 
             m.flags &= ~MF_TAKING_STAIRS;
             m.flags |= MF_JUST_SUMMONED;
@@ -315,7 +315,7 @@ void follower::restore_mons_items(monsters &m)
 
             item_def &it = mitm[islot];
             it = items[i];
-            it.x = it.y = 0;
+            it.pos.reset();
             it.link = NON_ITEM;
         }
     }

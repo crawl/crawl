@@ -1364,8 +1364,7 @@ static void _swap_monster_card(int power, deck_rarity_type rarity)
         // Pick the monster up.
         mgrd(newpos) = NON_MONSTER;
 
-        mon.x = you.x_pos;
-        mon.y = you.y_pos;
+        mon.moveto(you.pos());
 
         // Plunk it down.
         mgrd(mon.pos()) = monster_index(mon_to_swap);
@@ -1468,34 +1467,27 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
     }
 
     int count = 0;
-    int fx = -1, fy = -1;
-    for (int dx = -1; dx <= 1; ++dx)
-        for (int dy = -1; dy <= 1; ++dy)
-        {
-            if ( dx == 0 && dy == 0 )
-                continue;
-
-            const int rx = you.x_pos + dx;
-            const int ry = you.y_pos + dy;
-
-            if (grd[rx][ry] == DNGN_FLOOR && trap_at_xy(coord_def(rx,ry)) == -1
-                && one_chance_in(++count))
-            {
-                 fx = rx;
-                 fy = ry;
-            }
-        }
-
-    if (fx >= 0)              // found a spot
+    coord_def f;
+    for (adjacent_iterator ai; ai; ++ai)
     {
-        if (place_specific_trap(fx, fy, TRAP_TELEPORT))
+        if (grd(*ai) == DNGN_FLOOR
+            && trap_at_xy(*ai) == -1
+            && one_chance_in(++count))
+        {
+            f = *ai;
+        }
+    }
+
+    if (count > 0)              // found a spot
+    {
+        if (place_specific_trap(f, TRAP_TELEPORT))
         {
             // Mark it discovered if enough power.
             if (get_power_level(power, rarity) >= 1)
             {
-                const int i = trap_at_xy(coord_def(fx, fy));
+                const int i = trap_at_xy(f);
                 if (i != -1)    // should always happen
-                    grd[fx][fy] = trap_category(env.trap[i].type);
+                    grd(f) = trap_category(env.trap[i].type);
             }
         }
     }
@@ -1528,7 +1520,7 @@ static void _flight_card(int power, deck_rarity_type rarity)
     {
         if (is_valid_shaft_level() && grd(you.pos()) == DNGN_FLOOR)
         {
-            if (place_specific_trap(you.x_pos, you.y_pos, TRAP_SHAFT))
+            if (place_specific_trap(you.pos(), TRAP_SHAFT))
             {
                 const int i = trap_at_xy(you.pos());
                 grd(you.pos()) = trap_category(env.trap[i].type);
@@ -1557,7 +1549,7 @@ static void _minefield_card(int power, deck_rarity_type rarity)
             if (you.level_type == LEVEL_ABYSS)
                 grd(*ri) = coinflip() ? DNGN_DEEP_WATER : DNGN_LAVA;
             else
-                place_specific_trap(ri->x, ri->y, TRAP_RANDOM);
+                place_specific_trap(*ri, TRAP_RANDOM);
         }
     }
 }

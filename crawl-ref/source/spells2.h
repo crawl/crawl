@@ -40,134 +40,40 @@ int corpse_rot(int power);
 
 
 struct dist;
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
 bool vampiric_drain(int pow, const dist &vmove);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
 int detect_creatures( int pow, bool telepathic = false );
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
-unsigned char detect_items( int pow );
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
-unsigned char detect_traps( int pow );
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: item_use - spell
- * *********************************************************************** */
+int detect_items( int pow );
+int detect_traps( int pow );
 void cast_refrigeration(int pow);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: item_use - spell
- * *********************************************************************** */
 void cast_toxic_radiance(void);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability
- * *********************************************************************** */
 void drain_life(int pow);
-
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - food - it_use2 - spell
- * returns TRUE if a stat was restored.
- * *********************************************************************** */
 bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
                   bool suppress_msg, bool recovery = false);
 
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: spell
- * *********************************************************************** */
 bool summon_animals(int pow);
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
 bool cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_small_mammals(int pow, god_type god = GOD_NO_GOD);
 bool cast_sticks_to_snakes(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_scorpions(int pow, god_type god = GOD_NO_GOD);
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - religion - spell
- * *********************************************************************** */
 bool cast_summon_swarm(int pow, god_type god = GOD_NO_GOD,
                        bool force_hostile = false);
 
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
 bool cast_call_canine_familiar(int pow, god_type god = GOD_NO_GOD);
 
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: it_use3 - spell
- * *********************************************************************** */
 bool cast_summon_elemental(int pow, god_type god = GOD_NO_GOD,
                            monster_type restricted_type = MONS_PROGRAM_BUG,
                            int unfriendly = 2);
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
 bool cast_summon_ice_beast(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_ugly_thing(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_dragon(int pow, god_type god = GOD_NO_GOD);
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
 bool summon_berserker(int pow, god_type god = GOD_NO_GOD,
                       bool force_hostile = false);
 bool summon_guardian(int pow, god_type god = GOD_NO_GOD, bool quiet = false);
 bool summon_daeva(int pow, god_type god = GOD_NO_GOD, bool quiet = false);
 
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - religion - spell
- * *********************************************************************** */
 bool cast_tukimas_dance(int pow, god_type god = GOD_NO_GOD,
                         bool force_hostile = false);
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
 bool cast_conjure_ball_lightning(int pow, god_type god = GOD_NO_GOD);
-
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - spell
- * *********************************************************************** */
 void turn_undead(int pow);      // what should I use for pow?
 
 

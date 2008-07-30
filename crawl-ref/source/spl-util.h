@@ -100,6 +100,10 @@ const char* spelltype_short_name( int which_spelltype );
 const char* spelltype_long_name( int which_spelltype );
 
 typedef int cell_func(coord_def where, int pow, int aux);
+typedef int cloud_func(coord_def where, int pow, int spreadrate,
+                       cloud_type type, kill_category whose,
+                       killer_type killer);
+
 int apply_area_visible(cell_func cf, int power,
                        bool pass_through_trans = false);
 
@@ -122,9 +126,8 @@ bool spell_direction( dist &spelld, bolt &pbolt,
                       bool may_target_self = false, const char *prompt = NULL,
                       bool cancel_at_self = false );
 
-void apply_area_cloud(int (*func) (int, int, int, int, cloud_type,
-                                   kill_category, killer_type),
-                      int x, int y, int pow, int number, cloud_type ctype,
+void apply_area_cloud(cloud_func func, const coord_def& where,
+                      int pow, int number, cloud_type ctype,
                       kill_category kc, killer_type killer,
                       int spread_rate = -1);
 

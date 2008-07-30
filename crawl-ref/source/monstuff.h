@@ -195,7 +195,7 @@ bool heal_monster(monsters *patient, int health_boost, bool permit_growth);
 
 void seen_monster(monsters *monster);
 
-bool shift_monster(monsters *mon, int x = 0, int y = 0 );
+bool shift_monster(monsters *mon, coord_def p = coord_def(0,0) );
 
 int mons_weapon_damage_rating(const item_def &launcher);
 int mons_pick_best_missile(monsters *mons, item_def **launcher,

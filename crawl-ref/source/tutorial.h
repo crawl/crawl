@@ -43,7 +43,8 @@ void taken_new_item(unsigned char item_type);
 void tut_gained_new_skill(int skill);
 void tutorial_first_monster(const monsters& mon);
 void tutorial_first_item(const item_def& item);
-void learned_something_new(tutorial_event_type seen_what, int x = 0, int y = 0);
+void learned_something_new(tutorial_event_type seen_what,
+                           coord_def gc = coord_def(0,0));
 formatted_string tut_abilities_info(void);
 void print_tut_skills_info(void);
 void print_tut_skills_description_info(void);

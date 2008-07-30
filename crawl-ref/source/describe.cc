@@ -1637,7 +1637,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                     << " colour: " << static_cast<int>(item.colour)
                     << " flags: " << std::hex << std::setw(8) << item.flags
                     << std::dec << "$"
-                    << "x: " << item.x << " y: " << item.y
+                    << "x: " << item.pos.x << " y: " << item.pos.y
                     << " link: " << item.link
                     << " slot: " << item.slot
                     << " ident_type: "

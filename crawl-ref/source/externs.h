@@ -81,6 +81,135 @@ struct coord_def;
 class level_id;
 class player_quiver;
 
+struct coord_def
+{
+    int         x;
+    int         y;
+
+    explicit coord_def( int x_in = 0, int y_in = 0 ) : x(x_in), y(y_in) { }
+
+    void set(int xi, int yi)
+    {
+        x = xi;
+        y = yi;
+    }
+
+    void reset()
+    {
+        set(0, 0);
+    }
+
+    int distance_from(const coord_def &b) const;
+
+    bool operator == (const coord_def &other) const
+    {
+        return x == other.x && y == other.y;
+    }
+
+    bool operator != (const coord_def &other) const
+    {
+        return !operator == (other);
+    }
+
+    bool operator <  (const coord_def &other) const
+    {
+        return (x < other.x) || (x == other.x && y < other.y);
+    }
+
+    const coord_def &operator += (const coord_def &other)
+    {
+        x += other.x;
+        y += other.y;
+        return (*this);
+    }
+
+    const coord_def &operator += (int offset)
+    {
+        x += offset;
+        y += offset;
+        return (*this);
+    }
+
+    const coord_def &operator -= (const coord_def &other)
+    {
+        x -= other.x;
+        y -= other.y;
+        return (*this);
+    }
+
+    const coord_def &operator -= (int offset)
+    {
+        x -= offset;
+        y -= offset;
+        return (*this);
+    }
+
+    const coord_def &operator /= (int div)
+    {
+        x /= div;
+        y /= div;
+        return (*this);
+    }
+
+    const coord_def &operator *= (int mul)
+    {
+        x *= mul;
+        y *= mul;
+        return (*this);
+    }
+
+    coord_def operator + (const coord_def &other) const
+    {
+        coord_def copy = *this;
+        return (copy += other);
+    }
+
+    coord_def operator + (int other) const
+    {
+        coord_def copy = *this;
+        return (copy += other);
+    }
+
+    coord_def operator - (const coord_def &other) const
+    {
+        coord_def copy = *this;
+        return (copy -= other);
+    }
+
+    coord_def operator - (int other) const
+    {
+        coord_def copy = *this;
+        return (copy -= other);
+    }
+
+    coord_def operator / (int div) const
+    {
+        coord_def copy = *this;
+        return (copy /= div);
+    }
+
+    coord_def operator * (int mul) const
+    {
+        coord_def copy = *this;
+        return (copy *= mul);
+    }
+
+    int abs() const
+    {
+        return (x * x + y * y);
+    }
+
+    int rdist() const
+    {
+        return (std::max(std::abs(x), std::abs(y)));
+    }
+
+    bool origin() const
+    {
+        return (!x && !y);
+    }
+};
+
 class actor
 {
 public:
@@ -95,7 +224,10 @@ public:
 
     virtual bool      alive() const = 0;
 
-    virtual coord_def pos() const = 0;
+    virtual void moveto(const coord_def &c) = 0;
+    virtual const coord_def& pos() const { return position; }
+    virtual coord_def& pos() { return position; }
+
     virtual bool      swimming() const = 0;
     virtual bool      submerged() const = 0;
     virtual bool      floundering() const = 0;
@@ -246,136 +378,10 @@ public:
     virtual bool     will_trigger_shaft() const;
     virtual level_id shaft_dest() const;
     virtual bool     do_shaft() = 0;
+
+    coord_def position;
 };
 
-struct coord_def
-{
-    int         x;
-    int         y;
-
-    explicit coord_def( int x_in = 0, int y_in = 0 ) : x(x_in), y(y_in) { }
-
-    void set(int xi, int yi)
-    {
-        x = xi;
-        y = yi;
-    }
-
-    void reset()
-    {
-        set(0, 0);
-    }
-
-    int distance_from(const coord_def &b) const;
-
-    bool operator == (const coord_def &other) const
-    {
-        return x == other.x && y == other.y;
-    }
-
-    bool operator != (const coord_def &other) const
-    {
-        return !operator == (other);
-    }
-
-    bool operator <  (const coord_def &other) const
-    {
-        return (x < other.x) || (x == other.x && y < other.y);
-    }
-
-    const coord_def &operator += (const coord_def &other)
-    {
-        x += other.x;
-        y += other.y;
-        return (*this);
-    }
-
-    const coord_def &operator += (int offset)
-    {
-        x += offset;
-        y += offset;
-        return (*this);
-    }
-
-    const coord_def &operator -= (const coord_def &other)
-    {
-        x -= other.x;
-        y -= other.y;
-        return (*this);
-    }
-
-    const coord_def &operator -= (int offset)
-    {
-        x -= offset;
-        y -= offset;
-        return (*this);
-    }
-
-    const coord_def &operator /= (int div)
-    {
-        x /= div;
-        y /= div;
-        return (*this);
-    }
-
-    const coord_def &operator *= (int mul)
-    {
-        x *= mul;
-        y *= mul;
-        return (*this);
-    }
-
-    coord_def operator + (const coord_def &other) const
-    {
-        coord_def copy = *this;
-        return (copy += other);
-    }
-
-    coord_def operator + (int other) const
-    {
-        coord_def copy = *this;
-        return (copy += other);
-    }
-
-    coord_def operator - (const coord_def &other) const
-    {
-        coord_def copy = *this;
-        return (copy -= other);
-    }
-
-    coord_def operator - (int other) const
-    {
-        coord_def copy = *this;
-        return (copy -= other);
-    }
-
-    coord_def operator / (int div) const
-    {
-        coord_def copy = *this;
-        return (copy /= div);
-    }
-
-    coord_def operator * (int mul) const
-    {
-        coord_def copy = *this;
-        return (copy *= mul);
-    }
-
-    int abs() const
-    {
-        return (x * x + y * y);
-    }
-
-    int rdist() const
-    {
-        return (std::max(std::abs(x), std::abs(y)));
-    }
-
-    bool origin() const
-    {
-        return (!x && !y);
-    }
-};
 typedef bool (*coord_predicate)(const coord_def &c);
 
 struct dice_def
@@ -389,8 +395,7 @@ struct dice_def
 struct run_check_dir
 {
     dungeon_feature_type grid;
-    int dx;
-    int dy;
+    coord_def delta;
 };
 
 
@@ -415,8 +420,7 @@ struct item_def
     unsigned long  flags;          // item status flags
     short          quantity;       // number of items
 
-    short  x;          // x-location;         for inventory items = -1
-    short  y;          // y-location;         for inventory items = -1
+    coord_def pos;     // for inventory items == (-1, -1)
     short  link;       // link to next item;  for inventory items = slot
     short  slot;       // Inventory letter
 
@@ -430,7 +434,7 @@ struct item_def
 public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
                  special(0L), colour(0), flags(0L), quantity(0),
-                 x(0), y(0), link(NON_ITEM), slot(0), orig_place(0),
+                 pos(), link(NON_ITEM), slot(0), orig_place(0),
                  orig_monnum(0), inscription()
     {
     }
@@ -471,7 +475,7 @@ public:
     int runmode;
     int mp;
     int hp;
-    int x, y;
+    coord_def pos;
 
     FixedVector<run_check_dir,3> run_check; // array of grids to check
 
@@ -594,8 +598,7 @@ public:
 
   char max_level;
 
-  int x_pos;
-  int y_pos;
+  coord_def youpos;
 
   coord_def prev_move;
 
@@ -788,9 +791,7 @@ public:
 
     void init();
 
-    // Low-level move the player to (x, y). Use these functions instead of
-    // changing x_pos and y_pos directly.
-    void moveto(int x, int y);
+    // Low-level move the player. Use this instead of changing pos directly.
     void moveto(const coord_def &c);
 
     void reset_prev_move();
@@ -826,7 +827,6 @@ public:
     god_type  deity() const;
     bool      alive() const;
 
-    coord_def pos() const;
     bool      swimming() const;
     bool      submerged() const;
     bool      floundering() const;
@@ -1041,10 +1041,8 @@ public:
     int ev;
     int speed;
     int speed_increment;
-    unsigned char x;
-    unsigned char y;
-    unsigned char target_x;
-    unsigned char target_y;
+
+    coord_def target;
     coord_def patrol_point;
     montravel_target_type travel_target;
     std::vector<coord_def> travel_path;
@@ -1096,6 +1094,8 @@ public:
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos) const;
     void apply_location_effects();
+    
+    void moveto(const coord_def& c);
     bool move_to_pos(const coord_def &newpos);
 
     kill_category kill_alignment() const;
@@ -1152,8 +1152,6 @@ public:
     int       get_experience_level() const;
     god_type  deity() const;
     bool      alive() const;
-    coord_def pos() const;
-    coord_def target_pos() const;
     bool      swimming() const;
     bool      submerged() const;
     bool      can_drown() const;
@@ -1325,8 +1323,7 @@ private:
 
 struct cloud_struct
 {
-    int           x;
-    int           y;
+    coord_def     pos;
     cloud_type    type;
     int           decay;
     unsigned char spread_rate;
@@ -1339,28 +1336,22 @@ struct cloud_struct
     static kill_category killer_to_whose(killer_type killer);
     static killer_type   whose_to_killer(kill_category whose);
 
-    coord_def pos() const { return coord_def(x,y); }
 };
 
 struct shop_struct
 {
-    unsigned char       x;
-    unsigned char       y;
+    coord_def           pos;
     unsigned char       greed;
     shop_type           type;
     unsigned char       level;
 
     FixedVector<unsigned char, 3> keeper_name;
-    coord_def pos() const { return coord_def(x,y); }
 };
 
 struct trap_struct
 {
-    unsigned char       x;
-    unsigned char       y;
+    coord_def pos;
     trap_type        type;
-
-    coord_def pos() const { return coord_def(x,y); }
 };
 
 struct map_cell

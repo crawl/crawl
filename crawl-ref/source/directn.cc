@@ -104,14 +104,14 @@ static bool _find_mlist( const coord_def& where, int mode, bool need_path,
 #endif
 
 static char _find_square_wrapper( const coord_def& targ,
-                                  FixedVector<char, 2> &mfp, char direction,
+                                  coord_def &mfp, char direction,
                                   bool (*find_targ)(const coord_def&, int, bool, int),
                                   bool need_path = false, int mode = TARG_ANY,
                                   int range = -1, bool wrap = false,
                                   int los = LOS_ANY);
 
 static char _find_square( const coord_def& where,
-                          FixedVector<char, 2> &mfp, int direction,
+                          coord_def &mfp, int direction,
                           bool (*find_targ)(const coord_def&, int, bool, int),
                           bool need_path, int mode = TARG_ANY, int range = -1,
                           bool wrap = false, int los = LOS_ANY);
@@ -126,7 +126,7 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
     moves.isTarget      = false;
     moves.isMe          = false;
     moves.isCancel      = false;
-    moves.dx = moves.dy = 0;
+    moves.delta.reset();
 
     mouse_control mc(MOUSE_MODE_TARGET_DIR);
 
@@ -160,16 +160,15 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
                 continue;
             }
 
-            moves.dx = delta.x;
-            moves.dy = delta.y;
-            moves.isMe = (delta.x == 0) && (delta.y == 0);
+            moves.delta = delta;
+            moves.isMe = delta.origin();
             break;
         }
 #endif
 
         if (key_command == CMD_TARGET_SELECT)
         {
-            moves.dx = moves.dy = 0;
+            moves.delta.reset();
             moves.isMe = true;
             break;
         }
@@ -177,8 +176,7 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
         const int i = _targeting_cmd_to_compass(key_command);
         if (i != -1)
         {
-            moves.dx = Compass[i].x;
-            moves.dy = Compass[i].y;
+            moves.delta = Compass[i];
         }
         else if (key_command == CMD_TARGET_CANCEL)
         {
@@ -186,7 +184,7 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
             moves.isValid = false;
         }
     }
-    while (!moves.isCancel && moves.dx == 0 && moves.dy == 0);
+    while (!moves.isCancel && moves.delta.origin());
 }
 
 static int _targeting_cmd_to_compass( command_type command )
@@ -293,8 +291,8 @@ static bool _mon_submerged_in_water(const monsters *mon)
     if (!mon)
         return (false);
 
-    return (grd[mon->x][mon->y] == DNGN_SHALLOW_WATER
-            && see_grid(mon->x, mon->y)
+    return (grd(mon->pos()) == DNGN_SHALLOW_WATER
+            && see_grid(mon->pos())
             && !player_monster_visible(mon)
             && !mons_flies(mon));
 }
@@ -379,8 +377,7 @@ static void _direction_again(dist& moves, targeting_type restricts,
                                           "square you previously targeted.");
             return;
         }
-        else if (you.prev_grd_targ.x == you.x_pos
-                 && you.prev_grd_targ.y == you.y_pos)
+        else if (you.prev_grd_targ == you.pos())
         {
             moves.isCancel = true;
 
@@ -398,18 +395,16 @@ static void _direction_again(dist& moves, targeting_type restricts,
             return;
         }
 
-        moves.tx = you.prev_grd_targ.x;
-        moves.ty = you.prev_grd_targ.y;
+        moves.target = you.prev_grd_targ;
 
         ray_def ray;
-        find_ray(you.pos(), moves.target(), true, ray, 0, true);
+        find_ray(you.pos(), moves.target, true, ray, 0, true);
         moves.ray = ray;
     }
     else if (you.prev_targ == MHITYOU)
     {
         moves.isMe = true;
-        moves.tx   = you.x_pos;
-        moves.ty   = you.y_pos;
+        moves.target = you.pos();
 
         // Discard 'Y' player gave to yesno()
         if (mode == TARG_ENEMY)
@@ -437,11 +432,10 @@ static void _direction_again(dist& moves, targeting_type restricts,
             return;
         }
 
-        moves.tx = montarget->x;
-        moves.ty = montarget->y;
+        moves.target = montarget->pos();
 
         ray_def ray;
-        find_ray(you.pos(), moves.target(), true, ray, 0, true);
+        find_ray(you.pos(), moves.target, true, ray, 0, true);
         moves.ray = ray;
     }
 
@@ -571,17 +565,15 @@ void direction(dist& moves, targeting_type restricts,
     bool show_beam = Options.show_beam && !just_looking && needs_path;
     ray_def ray;
 
-    FixedVector < char, 2 > objfind_pos;
-    FixedVector < char, 2 > monsfind_pos;
+    coord_def objfind_pos, monsfind_pos;
 
     // init
-    moves.dx = moves.dy = 0;
-    moves.tx = you.x_pos;
-    moves.ty = you.y_pos;
+    moves.delta.reset();
+    moves.target = you.pos();
 
     // If we show the beam on startup, we have to initialise it.
     if (show_beam)
-        find_ray(you.pos(), moves.target(), true, ray);
+        find_ray(you.pos(), moves.target, true, ray);
 
     bool skip_iter = false;
     bool found_autotarget = false;
@@ -599,8 +591,7 @@ void direction(dist& moves, targeting_type restricts,
                 && _is_target_in_range(montarget->pos(), range))
             {
                 found_autotarget = true;
-                moves.tx = montarget->x;
-                moves.ty = montarget->y;
+                moves.target = montarget->pos();
             }
         }
     }
@@ -617,9 +608,9 @@ void direction(dist& moves, targeting_type restricts,
                  target_mode_help_text(restricts));
 
             if ((mode == TARG_ANY || mode == TARG_FRIEND)
-                 && moves.tx == you.x_pos && moves.ty == you.y_pos)
+                && moves.target == you.pos())
             {
-                terse_describe_square(moves.target());
+                terse_describe_square(moves.target);
             }
 
             show_prompt = false;
@@ -634,7 +625,7 @@ void direction(dist& moves, targeting_type restricts,
         moves.isEndpoint    = false;
         moves.choseRay      = false;
 
-        cursorxy( grid2viewX(moves.tx), grid2viewY(moves.ty) );
+        cursorxy( grid2viewX(moves.target.x), grid2viewY(moves.target.y) );
 
         command_type key_command;
 
@@ -658,8 +649,7 @@ void direction(dist& moves, targeting_type restricts,
             const coord_def &gc = tiles.get_cursor();
             if (gc != Region::NO_CURSOR)
             {
-                moves.tx = gc.x;
-                moves.ty = gc.y;
+                moves.target = gc;
 
                 if (key_command == CMD_TARGET_MOUSE_SELECT)
                     key_command = CMD_TARGET_SELECT;
@@ -671,7 +661,7 @@ void direction(dist& moves, targeting_type restricts,
         }
 #endif
 
-        if (target_unshifted && moves.target() == you.pos()
+        if (target_unshifted && moves.target == you.pos()
             && restricts != DIR_TARGET)
         {
             key_command = shift_direction(key_command);
@@ -689,7 +679,7 @@ void direction(dist& moves, targeting_type restricts,
 
         if (key_command == CMD_TARGET_MAYBE_PREV_TARGET)
         {
-            if (moves.target() == you.pos())
+            if (moves.target == you.pos())
                 key_command = CMD_TARGET_PREV_TARGET;
             else
                 key_command = CMD_TARGET_SELECT;
@@ -699,8 +689,9 @@ void direction(dist& moves, targeting_type restricts,
         bool force_redraw = false;
         bool loop_done = false;
 
-        const int old_tx = moves.tx + (skip_iter ? 500 : 0); // hmmm...hack
-        const int old_ty = moves.ty;
+        coord_def old_target = moves.target;
+        if ( skip_iter )
+            old_target.x += 500; // hmmm...hack
 
         int i, mid;
 
@@ -711,12 +702,11 @@ void direction(dist& moves, targeting_type restricts,
             const int idx = _mlist_letter_to_index(key_command + 'a'
                                                    - CMD_TARGET_CYCLE_MLIST);
 
-            if (_find_square_wrapper(moves.target(), monsfind_pos, 1,
+            if (_find_square_wrapper(moves.target, monsfind_pos, 1,
                                      _find_mlist, needs_path, idx, range,
                                      Options.target_wrap))
             {
-                moves.tx = monsfind_pos[0];
-                moves.ty = monsfind_pos[1];
+                moves.target = monsfind_pos;
             }
             else if (!skip_iter)
                 flush_input_buffer(FLUSH_ON_FAILURE);
@@ -735,8 +725,7 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_UP:
         case CMD_TARGET_UP_RIGHT:
             i = _targeting_cmd_to_compass(key_command);
-            moves.tx += Compass[i].x;
-            moves.ty += Compass[i].y;
+            moves.target += Compass[i];
             break;
 
         case CMD_TARGET_DIR_DOWN_LEFT:
@@ -752,11 +741,9 @@ void direction(dist& moves, targeting_type restricts,
             if (restricts != DIR_TARGET)
             {
                 // A direction is allowed, and we've selected it.
-                moves.dx       = Compass[i].x;
-                moves.dy       = Compass[i].y;
+                moves.delta    = Compass[i];
                 // Needed for now...eventually shouldn't be necessary
-                moves.tx       = you.x_pos + moves.dx;
-                moves.ty       = you.y_pos + moves.dy;
+                moves.target   = you.pos() + moves.delta;
                 moves.isValid  = true;
                 moves.isTarget = false;
                 show_beam      = false;
@@ -768,15 +755,9 @@ void direction(dist& moves, targeting_type restricts,
                 // Direction not allowed, so just move in that direction.
                 // Maybe make this a bigger jump?
                 if (restricts == DIR_TARGET)
-                {
-                    moves.tx += Compass[i].x * 3;
-                    moves.ty += Compass[i].y * 3;
-                }
+                    moves.target += Compass[i] * 3;
                 else
-                {
-                    moves.tx += Compass[i].x;
-                    moves.ty += Compass[i].y;
-                }
+                    moves.target += Compass[i];
             }
             break;
 
@@ -807,7 +788,7 @@ void direction(dist& moves, targeting_type restricts,
 
 #ifdef WIZARD
         case CMD_TARGET_CYCLE_BEAM:
-            show_beam = find_ray(you.pos(), moves.target(),
+            show_beam = find_ray(you.pos(), moves.target,
                                  true, ray, (show_beam ? 1 : 0));
             need_beam_redraw = true;
             break;
@@ -828,17 +809,15 @@ void direction(dist& moves, targeting_type restricts,
                     break;
                 }
 
-                show_beam = find_ray(you.pos(), moves.target(),
+                show_beam = find_ray(you.pos(), moves.target,
                                      true, ray, 0, true);
                 need_beam_redraw = show_beam;
             }
             break;
 
         case CMD_TARGET_FIND_YOU:
-            moves.tx = you.x_pos;
-            moves.ty = you.y_pos;
-            moves.dx = 0;
-            moves.dy = 0;
+            moves.target = you.pos();
+            moves.delta.reset();
             break;
 
         case CMD_TARGET_FIND_TRAP:
@@ -848,13 +827,12 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_FIND_DOWNSTAIR:
         {
             const int thing_to_find = _targeting_cmd_to_feature(key_command);
-            if (_find_square_wrapper(moves.target(), objfind_pos, 1,
+            if (_find_square_wrapper(moves.target, objfind_pos, 1,
                                      _find_feature, needs_path, thing_to_find,
                                      range, true, Options.target_los_first ?
                                         LOS_FLIPVH : LOS_ANY))
             {
-                moves.tx = objfind_pos[0];
-                moves.ty = objfind_pos[1];
+                moves.target = objfind_pos;
             }
             else
             {
@@ -895,8 +873,7 @@ void direction(dist& moves, targeting_type restricts,
                     // We have all the information we need.
                     moves.isValid  = true;
                     moves.isTarget = true;
-                    moves.tx       = montarget->x;
-                    moves.ty       = montarget->y;
+                    moves.target   = montarget->pos();
                     if (!just_looking)
                     {
                         // We have to turn off show_beam, because
@@ -917,8 +894,8 @@ void direction(dist& moves, targeting_type restricts,
             // intentional fall-through
         case CMD_TARGET_SELECT: // finalize current choice
             if (!moves.isEndpoint
-                && mgrd[moves.tx][moves.ty] != NON_MONSTER
-                && _mon_submerged_in_water(&menv[mgrd[moves.tx][moves.ty]]))
+                && mgrd(moves.target) != NON_MONSTER
+                && _mon_submerged_in_water(&menv[mgrd(moves.target)]))
             {
                 moves.isEndpoint = true;
             }
@@ -926,17 +903,17 @@ void direction(dist& moves, targeting_type restricts,
             moves.isTarget = true;
             loop_done      = true;
 
-            you.prev_grd_targ = coord_def(0, 0);
+            you.prev_grd_targ.reset();
 
             // Maybe we should except just_looking here?
-            mid = mgrd[moves.tx][moves.ty];
+            mid = mgrd(moves.target);
 
             if (mid != NON_MONSTER)
                 you.prev_targ = mid;
-            else if (moves.target() == you.pos())
+            else if (moves.target == you.pos())
                 you.prev_targ = MHITYOU;
             else
-                you.prev_grd_targ = coord_def(moves.tx, moves.ty);
+                you.prev_grd_targ = moves.target;
 
 #ifndef USE_TILE
             if (Options.mlist_targetting == MLIST_TARGET_ON)
@@ -947,14 +924,13 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_OBJ_CYCLE_BACK:
         case CMD_TARGET_OBJ_CYCLE_FORWARD:
             dir = (key_command == CMD_TARGET_OBJ_CYCLE_BACK) ? -1 : 1;
-            if (_find_square_wrapper( moves.target(), objfind_pos, dir,
+            if (_find_square_wrapper( moves.target, objfind_pos, dir,
                                       _find_object, needs_path, TARG_ANY, range,
                                       true, Options.target_los_first ?
                                           (dir == 1? LOS_FLIPVH : LOS_FLIPHV)
                                            : LOS_ANY))
             {
-                moves.tx = objfind_pos[0];
-                moves.ty = objfind_pos[1];
+                moves.target = objfind_pos;
             }
             else if (!skip_iter)
                 flush_input_buffer(FLUSH_ON_FAILURE);
@@ -964,12 +940,11 @@ void direction(dist& moves, targeting_type restricts,
         case CMD_TARGET_CYCLE_FORWARD:
         case CMD_TARGET_CYCLE_BACK:
             dir = (key_command == CMD_TARGET_CYCLE_BACK) ? -1 : 1;
-            if (_find_square_wrapper( moves.target(), monsfind_pos, dir,
+            if (_find_square_wrapper( moves.target, monsfind_pos, dir,
                                       _find_monster, needs_path, mode, range,
                                       Options.target_wrap))
             {
-                moves.tx = monsfind_pos[0];
-                moves.ty = monsfind_pos[1];
+                moves.target = monsfind_pos;
             }
             else if (!skip_iter)
                 flush_input_buffer(FLUSH_ON_FAILURE);
@@ -989,10 +964,10 @@ void direction(dist& moves, targeting_type restricts,
 #ifdef WIZARD
         case CMD_TARGET_WIZARD_MAKE_FRIENDLY:
             // Maybe we can skip this check...but it can't hurt
-            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+            if (!you.wizard || !in_bounds(moves.target))
                 break;
 
-            mid = mgrd[moves.tx][moves.ty];
+            mid = mgrd(moves.target);
             if (mid == NON_MONSTER) // can put in terrain description here
                 break;
 
@@ -1028,9 +1003,9 @@ void direction(dist& moves, targeting_type restricts,
             break;
 
         case CMD_TARGET_WIZARD_BLESS_MONSTER:
-            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+            if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd[moves.tx][moves.ty];
+            mid = mgrd(moves.target);
             if (mid == NON_MONSTER) // can put in terrain description here
                 break;
 
@@ -1039,9 +1014,9 @@ void direction(dist& moves, targeting_type restricts,
 
         case CMD_TARGET_WIZARD_MAKE_SHOUT:
             // Maybe we can skip this check...but it can't hurt
-            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+            if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd[moves.tx][moves.ty];
+            mid = mgrd(moves.target);
             if (mid == NON_MONSTER) // can put in terrain description here
                 break;
 
@@ -1049,9 +1024,9 @@ void direction(dist& moves, targeting_type restricts,
             break;
 
         case CMD_TARGET_WIZARD_GIVE_ITEM:
-            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+            if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd[moves.tx][moves.ty];
+            mid = mgrd(moves.target);
             if (mid == NON_MONSTER) // can put in terrain description here
                 break;
 
@@ -1059,9 +1034,9 @@ void direction(dist& moves, targeting_type restricts,
             break;
 
         case CMD_TARGET_WIZARD_MOVE:
-            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+            if (!you.wizard || !in_bounds(moves.target))
                 break;
-            wizard_move_player_or_monster(moves.tx, moves.ty);
+            wizard_move_player_or_monster(moves.target);
 
             loop_done = true;
             skip_iter = true;
@@ -1069,9 +1044,9 @@ void direction(dist& moves, targeting_type restricts,
             break;
 
         case CMD_TARGET_WIZARD_PATHFIND:
-            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+            if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd[moves.tx][moves.ty];
+            mid = mgrd(moves.target);
             if (mid == NON_MONSTER)
                 break;
 
@@ -1082,17 +1057,17 @@ void direction(dist& moves, targeting_type restricts,
             break;
 
         case CMD_TARGET_WIZARD_MISCAST:
-            if (!you.wizard || !in_bounds(moves.tx, moves.ty))
+            if (!you.wizard || !in_bounds(moves.target))
                 break;
-            mid = mgrd[moves.tx][moves.ty];
-            if (mid == NON_MONSTER && you.pos() != moves.target())
+            mid = mgrd(moves.target);
+            if (mid == NON_MONSTER && you.pos() != moves.target)
                 break;
 
             debug_miscast(mid);
             break;
 #endif
         case CMD_TARGET_DESCRIBE:
-            full_describe_square(moves.target());
+            full_describe_square(moves.target);
             force_redraw = true;
             break;
 
@@ -1122,7 +1097,7 @@ void direction(dist& moves, targeting_type restricts,
             // Confirm self-targeting on TARG_ENEMY (option-controlled.)
             // Conceivably we might want to confirm on TARG_ANY too.
             if (moves.isTarget
-                && moves.target() == you.pos()
+                && moves.target == you.pos()
                 && mode == TARG_ENEMY
                 && (cancel_at_self
                     || Options.allow_self_target == CONFIRM_CANCEL
@@ -1142,7 +1117,7 @@ void direction(dist& moves, targeting_type restricts,
 
                 show_prompt = true;
             }
-            else if (moves.isTarget && !see_grid(moves.tx, moves.ty))
+            else if (moves.isTarget && !see_grid(moves.target))
             {
                 mpr("Sorry, you can't target what you can't see.",
                     MSGCH_EXAMINE_FILTER);
@@ -1161,19 +1136,18 @@ void direction(dist& moves, targeting_type restricts,
 
         // We'll go on looping. Redraw whatever is necessary.
 
-        if ( !in_viewport_bounds(grid2viewX(moves.tx), grid2viewY(moves.ty)) )
+        if ( !in_viewport_bounds(grid2view(moves.target)) )
         {
             // Tried to step out of bounds
-            moves.tx = old_tx;
-            moves.ty = old_ty;
+            moves.target = old_target;
         }
 
         bool have_moved = false;
 
-        if (old_tx != moves.tx || old_ty != moves.ty)
+        if (old_target != moves.target)
         {
             have_moved = true;
-            show_beam = show_beam && find_ray(you.pos(), moves.target(),
+            show_beam = show_beam && find_ray(you.pos(), moves.target,
                                               true, ray, 0, true);
         }
 
@@ -1189,13 +1163,13 @@ void direction(dist& moves, targeting_type restricts,
             if (!skip_iter)     // Don't clear before we get a chance to see.
                 mesclr(true);   // Maybe not completely necessary.
 
-            terse_describe_square(moves.target());
+            terse_describe_square(moves.target);
         }
 
 #ifdef USE_TILE
         // Tiles always need a beam redraw if show_beam is true (and valid...)
         if (need_beam_redraw
-            || show_beam && find_ray(you.pos(), moves.target(),
+            || show_beam && find_ray(you.pos(), moves.target,
                                      true, ray, 0, true) )
         {
 #else
@@ -1204,13 +1178,13 @@ void direction(dist& moves, targeting_type restricts,
             viewwindow(true, false);
 #endif
             if (show_beam
-                && in_vlos(grid2viewX(moves.tx), grid2viewY(moves.ty))
-                && moves.target() != you.pos() )
+                && in_vlos(grid2view(moves.target))
+                && moves.target != you.pos() )
             {
                 // Draw the new ray with magenta '*'s, not including
                 // your square or the target square.
                 ray_def raycopy = ray; // temporary copy to work with
-                while (raycopy.pos() != moves.target())
+                while (raycopy.pos() != moves.target)
                 {
                     if (raycopy.pos() != you.pos())
                     {
@@ -1221,11 +1195,11 @@ void direction(dist& moves, targeting_type restricts,
                         draw_ray_glyph(raycopy.pos(), MAGENTA, '*',
                                        MAGENTA | COLFLAG_REVERSE);
                     }
-                    raycopy.advance_through(moves.target());
+                    raycopy.advance_through(moves.target);
                 }
                 textcolor(LIGHTGREY);
 #ifdef USE_TILE
-                draw_ray_glyph(moves.target(), MAGENTA, '*',
+                draw_ray_glyph(moves.target, MAGENTA, '*',
                                MAGENTA | COLFLAG_REVERSE);
             }
             viewwindow(true, false);
@@ -1236,7 +1210,7 @@ void direction(dist& moves, targeting_type restricts,
         }
         skip_iter = false;      // Only skip one iteration at most.
     }
-    moves.isMe = (moves.target() == you.pos());
+    moves.isMe = (moves.target == you.pos());
     mesclr();
 
     // We need this for directional explosions, otherwise they'll explode one
@@ -1349,21 +1323,21 @@ void full_describe_square(const coord_def &c)
 
 static void _extend_move_to_edge(dist &moves)
 {
-    if (!moves.dx && !moves.dy)
+    if ( moves.delta.origin() )
         return;
 
     // Now the tricky bit - extend the target x,y out to map edge.
     int mx = 0, my = 0;
 
-    if (moves.dx > 0)
-        mx = (GXM - 1) - you.x_pos;
-    if (moves.dx < 0)
-        mx = you.x_pos;
+    if (moves.delta.x > 0)
+        mx = (GXM - 1) - you.pos().x;
+    if (moves.delta.x < 0)
+        mx = you.pos().x;
 
-    if (moves.dy > 0)
-        my = (GYM - 1) - you.y_pos;
-    if (moves.dy < 0)
-        my = you.y_pos;
+    if (moves.delta.y > 0)
+        my = (GYM - 1) - you.pos().y;
+    if (moves.delta.y < 0)
+        my = you.pos().y;
 
     if (!(mx == 0 || my == 0))
     {
@@ -1372,8 +1346,8 @@ static void _extend_move_to_edge(dist &moves)
         else
             mx = my;
     }
-    moves.tx = you.x_pos + moves.dx * mx;
-    moves.ty = you.y_pos + moves.dy * my;
+    moves.target.x = you.pos().x + moves.delta.x * mx;
+    moves.target.y = you.pos().y + moves.delta.y * my;
 }
 
 // Attempts to describe a square that's not in line-of-sight. If
@@ -1642,7 +1616,7 @@ bool in_los_bounds(const coord_def& p)
 //
 //---------------------------------------------------------------
 static char _find_square( const coord_def& where,
-                          FixedVector<char, 2> &mfp, int direction,
+                          coord_def &mfp, int direction,
                           bool (*find_targ)( const coord_def& wh, int mode,
                                              bool need_path, int range ),
                           bool need_path, int mode, int range, bool wrap,
@@ -1712,11 +1686,10 @@ static char _find_square( const coord_def& where,
         {
             if (find_targ(you.pos(), mode, need_path, range))
             {
-                mfp[0] = ctrx;
-                mfp[1] = ctry;
+                mfp = vyou;
                 return (1);
             }
-            return _find_square(coord_def(ctrx, ctry), mfp, direction,
+            return _find_square(vyou, mfp, direction,
                                 find_targ, need_path, mode, range, false,
                                 _next_los(direction, los, wrap));
         }
@@ -1832,8 +1805,8 @@ static char _find_square( const coord_def& where,
         if (temp_yps + y_change <= maxy)  // it can wrap, unfortunately
             temp_yps += y_change;
 
-        const int targ_x = you.x_pos + temp_xps - ctrx;
-        const int targ_y = you.y_pos + temp_yps - ctry;
+        const int targ_x = you.pos().x + temp_xps - ctrx;
+        const int targ_y = you.pos().y + temp_yps - ctry;
 
         // We don't want to be looking outside the bounds of the arrays:
         //if (!in_los_bounds(temp_xps, temp_yps))
@@ -1850,8 +1823,7 @@ static char _find_square( const coord_def& where,
 
         if (find_targ(coord_def(targ_x, targ_y), mode, need_path, range))
         {
-            mfp[0] = temp_xps;
-            mfp[1] = temp_yps;
+            mfp.set(temp_xps, temp_yps);
             return (1);
         }
     }
@@ -1868,7 +1840,7 @@ static char _find_square( const coord_def& where,
 // Identical to find_square, except that input (tx, ty) and output
 // (mfp) are in grid coordinates rather than view coordinates.
 static char _find_square_wrapper( const coord_def& targ,
-                                  FixedVector<char, 2> &mfp, char direction,
+                                  coord_def& mfp, char direction,
                                   bool (*find_targ)(const coord_def& where, int mode,
                                                     bool need_path, int range),
                                   bool need_path, int mode, int range,
@@ -1877,8 +1849,7 @@ static char _find_square_wrapper( const coord_def& targ,
     const char r =  _find_square(grid2view(targ), mfp,
                                  direction, find_targ, need_path, mode, range,
                                  wrap, los);
-    mfp[0] = view2gridX(mfp[0]);
-    mfp[1] = view2gridY(mfp[1]);
+    mfp = view2grid(mfp);
     return r;
 }
 

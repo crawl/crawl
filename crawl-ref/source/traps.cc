@@ -276,8 +276,7 @@ static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison)
             exercise( SK_DODGING, 1 );
     }
 
-    pbolt.target_x = you.x_pos;
-    pbolt.target_y = you.y_pos;
+    pbolt.target = you.pos();
 
     if (coinflip())
         itrap( pbolt, trapped );
@@ -326,7 +325,7 @@ void itrap( bolt &pbolt, int trapped )
         return;
     }
 
-    trap_item( base_type, sub_type, pbolt.target() );
+    trap_item( base_type, sub_type, pbolt.target );
 
     return;
 }
@@ -408,7 +407,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
             if (trap_known)
                 mpr("The alarm is silenced.");
             else
-                grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
+                grd(you.pos()) = DNGN_UNDISCOVERED_TRAP;
             return;
         }
 
@@ -450,11 +449,11 @@ void handle_traps(trap_type trt, int i, bool trap_known)
                 player_caught_in_net();
             }
 
-            trap_item( OBJ_MISSILES, MI_THROWING_NET, env.trap[i].pos());
+            trap_item( OBJ_MISSILES, MI_THROWING_NET, env.trap[i].pos);
             if (you.attribute[ATTR_HELD])
                 mark_net_trapping(you.pos());
 
-            grd(env.trap[i].pos()) = DNGN_FLOOR;
+            grd(env.trap[i].pos) = DNGN_FLOOR;
             env.trap[i].type = TRAP_UNASSIGNED;
         }
         break;
@@ -469,7 +468,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
                 mpr("You don't fall through the shaft.");
 
             if (!trap_known)
-                grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
+                grd(you.pos()) = DNGN_UNDISCOVERED_TRAP;
 
             return;
         }
@@ -480,14 +479,14 @@ void handle_traps(trap_type trt, int i, bool trap_known)
             if (trap_known)
                 mpr("The shaft disappears in a puff of logic!");
 
-            grd[env.trap[i].x][env.trap[i].y] = DNGN_FLOOR;
+            grd(env.trap[i].pos) = DNGN_FLOOR;
             env.trap[i].type = TRAP_UNASSIGNED;
             return;
         }
 
         if (!you.do_shaft() && !trap_known)
         {
-            grd[you.x_pos][you.y_pos] = DNGN_UNDISCOVERED_TRAP;
+            grd(you.pos()) = DNGN_UNDISCOVERED_TRAP;
             return;
         }
 
@@ -502,7 +501,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
                        3, "a Zot trap" );
         break;
     }
-    learned_something_new(TUT_SEEN_TRAP, you.x_pos, you.y_pos);
+    learned_something_new(TUT_SEEN_TRAP, you.pos());
 
     if (!trap_known) // Now you know...
         exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
@@ -512,8 +511,7 @@ void destroy_trap( const coord_def& pos )
 {
     for (int i = 0; i < MAX_TRAPS; ++i)
     {
-        if (env.trap[i].x == pos.x && env.trap[i].y == pos.y
-            && env.trap[i].type != TRAP_UNASSIGNED)
+        if (env.trap[i].pos == pos && env.trap[i].type != TRAP_UNASSIGNED)
         {
             grd(pos) = DNGN_FLOOR;
             env.trap[i].type = TRAP_UNASSIGNED;
@@ -534,11 +532,8 @@ void disarm_trap( dist &disa )
 
     for (i = 0; i < MAX_TRAPS; i++)
     {
-        if (env.trap[i].x == you.x_pos + disa.dx
-            && env.trap[i].y == you.y_pos + disa.dy)
-        {
+        if (env.trap[i].pos == you.pos() + disa.delta)
             break;
-        }
 
         if (i == MAX_TRAPS - 1)
         {
@@ -570,15 +565,13 @@ void disarm_trap( dist &disa )
             exercise(SK_TRAPS_DOORS, 1 + random2(you.your_level / 5));
         else
         {
-            if (env.trap[i].type == TRAP_NET
-                && (env.trap[i].x != you.x_pos || env.trap[i].y != you.y_pos))
+            if (env.trap[i].type == TRAP_NET && env.trap[i].pos != you.pos())
             {
                 if (coinflip())
                     return;
 
                 mpr("You stumble into the trap!");
-                move_player_to_grid( coord_def(env.trap[i].x, env.trap[i].y),
-                                     true, false, true);
+                move_player_to_grid( env.trap[i].pos, true, false, true);
             }
             else
                 handle_traps(env.trap[i].type, i, false);
@@ -592,13 +585,12 @@ void disarm_trap( dist &disa )
 
     mpr("You have disarmed the trap.");
 
-    struct bolt beam;
+    bolt beam;
 
-    beam.target_x = you.x_pos + disa.dx;
-    beam.target_y = you.y_pos + disa.dy;
+    beam.target = you.pos() + disa.delta;
 
     if (env.trap[i].type == TRAP_NET)
-        trap_item( OBJ_MISSILES, MI_THROWING_NET, beam.target() );
+        trap_item( OBJ_MISSILES, MI_THROWING_NET, beam.target );
     else if (env.trap[i].type != TRAP_BLADE
              && trap_category(env.trap[i].type) == DNGN_TRAP_MECHANICAL)
     {
@@ -610,7 +602,7 @@ void disarm_trap( dist &disa )
         }
     }
 
-    grd[you.x_pos + disa.dx][you.y_pos + disa.dy] = DNGN_FLOOR;
+    grd(you.pos() + disa.delta) = DNGN_FLOOR;
     env.trap[i].type = TRAP_UNASSIGNED;
     you.turn_is_over = true;
 
@@ -980,7 +972,7 @@ int trap_at_xy(const coord_def& xy)
 {
     for (int which_trap = 0; which_trap < MAX_TRAPS; which_trap++)
     {
-        if (env.trap[which_trap].pos() == xy
+        if (env.trap[which_trap].pos == xy
             && env.trap[which_trap].type != TRAP_UNASSIGNED)
         {
             return (which_trap);

@@ -179,9 +179,13 @@ static bool _initialise(void);
 static void _input(void);
 static void _move_player(int move_x, int move_y);
 static void _move_player(coord_def move);
-static int  _check_adjacent(dungeon_feature_type feat, int &dx, int &dy);
-static void _open_door(int move_x, int move_y, bool check_confused = true);
-static void _close_door(int move_x, int move_y);
+static int  _check_adjacent(dungeon_feature_type feat, coord_def& delta);
+static void _open_door(coord_def move, bool check_confused = true);
+static void _open_door(int x, int y, bool check_confused = true)
+{
+    _open_door(coord_def(x,y), check_confused);
+}
+static void _close_door(coord_def move);
 static void _start_running( int dir, int mode );
 
 static void _prep_input();
@@ -993,7 +997,7 @@ static void _handle_wizard_command( void )
             }
 
             mprf(MSGCH_DIAGNOSTICS, "Setting (%d,%d) to %s (%d)",
-                 you.x_pos, you.y_pos, name.c_str(), feat);
+                 you.pos().x, you.pos().y, name.c_str(), feat);
             grd(you.pos()) = feat;
         }
         break;
@@ -1137,11 +1141,11 @@ static void _handle_wizard_command( void )
         for (int i = 0; i < MAX_ITEMS; i++)
         {
             item_def &item(mitm[i]);
-            if (!is_valid_item(item) || item.x == 0 || item.y == 0)
+            if (!is_valid_item(item) || item.pos.x == 0 || item.pos.y == 0)
                 continue;
 
             if (item.link != NON_ITEM)
-                mprf("(%2d,%2d): %s", item.x, item.y,
+                mprf("(%2d,%2d): %s", item.pos.x, item.pos.y,
                  item.name(DESC_PLAIN, false, false, false).c_str() );
         }
 
@@ -1998,7 +2002,7 @@ void process_command( command_type cmd )
     case CMD_GO_UPSTAIRS:     _go_upstairs(); break;
     case CMD_GO_DOWNSTAIRS:   _go_downstairs(); break;
     case CMD_OPEN_DOOR:       _open_door(0, 0); break;
-    case CMD_CLOSE_DOOR:      _close_door(0, 0); break;
+    case CMD_CLOSE_DOOR:      _close_door(coord_def(0, 0)); break;
 
     case CMD_DROP:
         drop();
@@ -2162,7 +2166,7 @@ void process_command( command_type cmd )
         struct dist lmove;   // Will be initialized by direction().
         direction(lmove, DIR_TARGET, TARG_ANY, -1, true);
         if (lmove.isValid && lmove.isTarget && !lmove.isCancel)
-            start_travel( lmove.tx, lmove.ty );
+            start_travel( lmove.target );
         break;
     }
 
@@ -2210,12 +2214,12 @@ void process_command( command_type cmd )
 
         if (!can_travel_interlevel())
         {
-            if (you.running.x == you.x_pos && you.running.y == you.running.y)
+            if (you.running.pos == you.pos())
             {
                 mpr("You're already here.");
                 break;
             }
-            else if (!you.running.x || !you.running.y)
+            else if (!you.running.pos.x || !you.running.pos.y)
             {
                 mpr("Sorry, you can't auto-travel out of here.");
                 break;
@@ -2223,7 +2227,7 @@ void process_command( command_type cmd )
 
             // Don't ask for a destination if you can only travel
             // within level anyway.
-            start_travel(you.running.x, you.running.y);
+            start_travel(you.running.pos);
         }
         else
             start_translevel_travel();
@@ -2269,7 +2273,7 @@ void process_command( command_type cmd )
             mpr("Returning to the game...");
 #endif
             if (pos.x > 0)
-                start_travel(pos.x, pos.y);
+                start_travel(pos);
         }
         break;
 
@@ -2338,11 +2342,11 @@ void process_command( command_type cmd )
             if (cme.left_clicked())
             {
                 if (in_bounds(dest))
-                    start_travel(dest.x, dest.y);
+                    start_travel(dest);
             }
             else if (cme.right_clicked())
             {
-                if (see_grid(dest.x, dest.y))
+                if (see_grid(dest))
                     full_describe_square(dest);
                 else
                     mpr("You can't see that place.");
@@ -3040,9 +3044,9 @@ static void _check_shafts()
         if (trap.type != TRAP_SHAFT)
             continue;
 
-        ASSERT(in_bounds(trap.pos()));
+        ASSERT(in_bounds(trap.pos));
 
-        handle_items_on_shaft(trap.pos(), true);
+        handle_items_on_shaft(trap.pos, true);
     }
 }
 
@@ -3441,7 +3445,7 @@ static keycode_type _get_next_keycode()
 
 // Check squares adjacent to player for given feature and return how
 // many there are.  If there's only one, return the dx and dy.
-static int _check_adjacent(dungeon_feature_type feat, int &dx, int &dy)
+static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 {
     int num = 0;
 
@@ -3450,8 +3454,7 @@ static int _check_adjacent(dungeon_feature_type feat, int &dx, int &dy)
         if ( grd(*ai) == feat )
         {
             num++;
-            dx = ai->x - you.x_pos;
-            dy = ai->y - you.y_pos;
+            delta = *ai - you.pos();
         }
     }
 
@@ -3461,11 +3464,8 @@ static int _check_adjacent(dungeon_feature_type feat, int &dx, int &dy)
 // Opens doors and handles some aspects of untrapping. If either move_x or
 // move_y are non-zero, the pair carries a specific direction for the door
 // to be opened (eg if you type ctrl + dir).
-static void _open_door(int move_x, int move_y, bool check_confused)
+static void _open_door(coord_def move, bool check_confused)
 {
-    struct dist door_move;
-    int dx, dy;             // door x, door y
-
     if (you.attribute[ATTR_HELD])
     {
         free_self_from_net();
@@ -3474,10 +3474,9 @@ static void _open_door(int move_x, int move_y, bool check_confused)
     }
 
     // If there's only one door to open, don't ask.
-    if ((!check_confused || !you.duration[DUR_CONF])
-        && !(move_x || move_y))
+    if ((!check_confused || !you.duration[DUR_CONF]) && move.origin())
     {
-        if (_check_adjacent(DNGN_CLOSED_DOOR, move_x, move_y) == 0)
+        if (_check_adjacent(DNGN_CLOSED_DOOR, move) == 0)
         {
             mpr("There's nothing to open.");
             return;
@@ -3486,20 +3485,19 @@ static void _open_door(int move_x, int move_y, bool check_confused)
 
     if (check_confused && you.duration[DUR_CONF] && !one_chance_in(3))
     {
-        move_x = random2(3) - 1;
-        move_y = random2(3) - 1;
+        move.x = random2(3) - 1;
+        move.y = random2(3) - 1;
     }
 
-    door_move.dx = move_x;
-    door_move.dy = move_y;
+    dist door_move;
+    door_move.delta = move;
+    coord_def doorpos;
 
-    if (move_x || move_y)
+    if (!move.origin())
     {
-        // convenience
-        dx = you.x_pos + move_x;
-        dy = you.y_pos + move_y;
+        doorpos = you.pos() + move;
 
-        const int mon = mgrd[dx][dy];
+        const int mon = mgrd(doorpos);
 
         if (mon != NON_MONSTER && player_can_hit_monster(&menv[mon]))
         {
@@ -3518,7 +3516,7 @@ static void _open_door(int move_x, int move_y, bool check_confused)
             }
 
             you.turn_is_over = true;
-            you_attack(mgrd[dx][dy], true);
+            you_attack(mgrd(doorpos), true);
 
             if (you.berserk_penalty != NO_BERSERK_PENALTY)
                 you.berserk_penalty = 0;
@@ -3526,10 +3524,10 @@ static void _open_door(int move_x, int move_y, bool check_confused)
             return;
         }
 
-        if (grd[dx][dy] >= DNGN_TRAP_MECHANICAL
-            && grd[dx][dy] <= DNGN_TRAP_NATURAL)
+        if (grd(doorpos) >= DNGN_TRAP_MECHANICAL
+            && grd(doorpos) <= DNGN_TRAP_NATURAL)
         {
-            if (env.cgrid[dx][dy] != EMPTY_CLOUD)
+            if (env.cgrid(doorpos) != EMPTY_CLOUD)
             {
                 mpr("You can't get to that trap right now.");
                 return;
@@ -3538,21 +3536,20 @@ static void _open_door(int move_x, int move_y, bool check_confused)
             disarm_trap(door_move);
             return;
         }
-
     }
     else
     {
         mpr("Which direction?", MSGCH_PROMPT);
         direction( door_move, DIR_DIR );
+
         if (!door_move.isValid)
             return;
 
-        // convenience
-        dx = you.x_pos + door_move.dx;
-        dy = you.y_pos + door_move.dy;
+        doorpos = you.pos() + door_move.delta;
 
         const dungeon_feature_type feat =
-            in_bounds(dx, dy) ? grd[dx][dy] : DNGN_UNSEEN;
+            in_bounds(doorpos) ? grd(doorpos) : DNGN_UNSEEN;
+
         if (feat != DNGN_CLOSED_DOOR)
         {
             switch (feat)
@@ -3568,15 +3565,16 @@ static void _open_door(int move_x, int move_y, bool check_confused)
         }
     }
 
-    if (grd[dx][dy] == DNGN_CLOSED_DOOR)
+    if (grd(doorpos) == DNGN_CLOSED_DOOR)
     {
         std::set<coord_def> all_door;
-        find_connected_range(coord_def(dx,dy), DNGN_CLOSED_DOOR,
+        find_connected_range(doorpos, DNGN_CLOSED_DOOR,
                              DNGN_SECRET_DOOR, all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
 
-        int skill = you.dex + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
+        int skill = you.dex +
+            (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
         if (you.duration[DUR_BERSERKER])
         {
@@ -3598,7 +3596,8 @@ static void _open_door(int move_x, int move_y, bool check_confused)
         }
         else
         {
-            const char* verb = player_is_airborne() ? "reach down and open" : "open";
+            const char* verb =
+                player_is_airborne() ? "reach down and open" : "open";
             mprf( "You %s the %s%s.", verb, adj, noun );
         }
 
@@ -3612,7 +3611,7 @@ static void _open_door(int move_x, int move_y, bool check_confused)
             // door!
             if (is_terrain_seen(dc))
             {
-                set_envmap_obj(dc.x, dc.y, DNGN_OPEN_DOOR);
+                set_envmap_obj(dc, DNGN_OPEN_DOOR);
 #ifdef USE_TILE
                 tile_place_tile_bk(dc.x, dc.y, TILE_DNGN_OPEN_DOOR);
 #endif
@@ -3626,12 +3625,12 @@ static void _open_door(int move_x, int move_y, bool check_confused)
                                              DESC_PLAIN, false).c_str());
                 }
             }
-            grd[dc.x][dc.y] = DNGN_OPEN_DOOR;
+            grd(dc) = DNGN_OPEN_DOOR;
         }
         you.turn_is_over = true;
     }
-    else if (grd[dx][dy] == DNGN_OPEN_DOOR)
-        _close_door(move_x, move_y); // for convenience
+    else if (grd(doorpos) == DNGN_OPEN_DOOR)
+        _close_door(move); // for convenience
     else
     {
         mpr("You swing at nothing.");
@@ -3640,21 +3639,21 @@ static void _open_door(int move_x, int move_y, bool check_confused)
     }
 }
 
-static void _close_door(int door_x, int door_y)
+static void _close_door(coord_def move)
 {
-    struct dist door_move;
-    int dx, dy;             // door x, door y
+    dist door_move;
+    coord_def doorpos;
 
     // If there's only one door to close, don't ask.
-    if (!you.duration[DUR_CONF] && !(door_x || door_y))
+    if (!you.duration[DUR_CONF] && move.origin())
     {
-        int num = _check_adjacent(DNGN_OPEN_DOOR, door_x, door_y);
+        int num = _check_adjacent(DNGN_OPEN_DOOR, move);
         if (num == 0)
         {
             mpr("There's nothing to close.");
             return;
         }
-        else if (num == 1 && !(door_x || door_y))
+        else if (num == 1 && move.origin())
         {
             mpr("You can't close doors on yourself!");
             return;
@@ -3663,14 +3662,13 @@ static void _close_door(int door_x, int door_y)
 
     if (you.duration[DUR_CONF] && !one_chance_in(3))
     {
-        door_x = random2(3) - 1;
-        door_y = random2(3) - 1;
+        move.x = random2(3) - 1;
+        move.y = random2(3) - 1;
     }
 
-    door_move.dx = door_x;
-    door_move.dy = door_y;
+    door_move.delta = move;
 
-    if (!door_x && !door_y)
+    if (move.origin())
     {
         mpr("Which direction?", MSGCH_PROMPT);
         direction( door_move, DIR_DIR );
@@ -3678,27 +3676,25 @@ static void _close_door(int door_x, int door_y)
             return;
     }
 
-    if (door_move.dx == 0 && door_move.dy == 0)
+    if (door_move.delta.origin())
     {
         mpr("You can't close doors on yourself!");
         return;
     }
 
-    // convenience
-    dx = you.x_pos + door_move.dx;
-    dy = you.y_pos + door_move.dy;
+    doorpos = you.pos() + door_move.delta;
 
     const dungeon_feature_type feat =
-        in_bounds(dx, dy) ? grd[dx][dy] : DNGN_UNSEEN;
+        in_bounds(doorpos) ? grd(doorpos) : DNGN_UNSEEN;
 
     if (feat == DNGN_OPEN_DOOR)
     {
         std::set<coord_def> all_door;
-        find_connected_identical(coord_def(dx,dy), grd[dx][dy], all_door);
+        find_connected_identical(doorpos, grd(doorpos), all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
 
-        for (std::set<coord_def>::iterator i = all_door.begin();
+        for (std::set<coord_def>::const_iterator i = all_door.begin();
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
@@ -3713,17 +3709,12 @@ static void _close_door(int door_x, int door_y)
                 }
                 else
                     mprf("There's a creature in the %sway!", noun);
-
-                door_move.dx = 0;
-                door_move.dy = 0;
                 return;
             }
 
             if (igrd(dc) != NON_ITEM)
             {
                 mprf("There's something blocking the %sway.", noun);
-                door_move.dx = 0;
-                door_move.dy = 0;
                 return;
             }
 
@@ -3734,7 +3725,8 @@ static void _close_door(int door_x, int door_y)
             }
         }
 
-        int skill = you.dex + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
+        int skill = you.dex +
+            (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
         if (you.duration[DUR_BERSERKER])
         {
@@ -3744,7 +3736,8 @@ static void _close_door(int door_x, int door_y)
             }
             else
             {
-                mprf(MSGCH_SOUND, "You slam the %s%s shut with an echoing bang!",
+                mprf(MSGCH_SOUND,
+                     "You slam the %s%s shut with an echoing bang!",
                      adj, noun);
                 noisy(25, you.pos());
             }
@@ -3762,7 +3755,7 @@ static void _close_door(int door_x, int door_y)
             mprf( "You %s the %s%s.", verb, adj, noun );
         }
 
-        for (std::set<coord_def>::iterator i = all_door.begin();
+        for (std::set<coord_def>::const_iterator i = all_door.begin();
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
@@ -3772,7 +3765,7 @@ static void _close_door(int door_x, int door_y)
             // door to be updated.
             if (is_terrain_seen(dc))
             {
-                set_envmap_obj(dc.x, dc.y, DNGN_CLOSED_DOOR);
+                set_envmap_obj(dc, DNGN_CLOSED_DOOR);
 #ifdef USE_TILE
                 tile_place_tile_bk(dc.x, dc.y, TILE_DNGN_CLOSED_DOOR);
 #endif
@@ -4188,8 +4181,8 @@ static void _move_player(coord_def move)
         you.running = RMODE_CONTINUE;
 
     if (you.level_type == LEVEL_ABYSS
-        && (you.x_pos <= 15 || you.x_pos >= (GXM - 16)
-            || you.y_pos <= 15 || you.y_pos >= (GYM - 16)))
+        && (you.pos().x <= 15 || you.pos().x >= (GXM - 16)
+            || you.pos().y <= 15 || you.pos().y >= (GYM - 16)))
     {
         area_shift();
         if (you.pet_target != MHITYOU)

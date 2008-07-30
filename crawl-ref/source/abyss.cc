@@ -488,13 +488,8 @@ void area_shift(void)
         move_item_stack_to_grid( *ri, newpos );
 
         // Move monster.
-        mgrd(newpos) = mgrd(*ri);
-        if (mgrd(*ri) != NON_MONSTER)
-        {
-            menv[mgrd(newpos)].x = newpos.x;
-            menv[mgrd(newpos)].y = newpos.y;
-            mgrd(*ri) = NON_MONSTER;
-        }
+        if ( mgrd(*ri) != NON_MONSTER )
+            menv[mgrd(*ri)].moveto(newpos);
 
         // Move cloud,
         if (env.cgrid(*ri) != EMPTY_CLOUD)
@@ -506,7 +501,7 @@ void area_shift(void)
         if (env.cloud[i].type == CLOUD_NONE)
             continue;
 
-        if ( grid_distance(abyss_center, env.cloud[i].pos()) > 10 )
+        if ( grid_distance(abyss_center, env.cloud[i].pos) > 10 )
             delete_cloud( i );
     }
 

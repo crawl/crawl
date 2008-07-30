@@ -123,7 +123,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer = false );
 
 int get_equip_slot(const item_def *item);
 
-void origin_set(int x, int y);
+void origin_set(const coord_def& where);
 void origin_set_monster(item_def &item, const monsters *monster);
 bool origin_known(const item_def &item);
 bool origin_describable(const item_def &item);

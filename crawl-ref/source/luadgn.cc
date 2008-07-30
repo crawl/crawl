@@ -1571,7 +1571,7 @@ static int lua_cloud_pow_min;
 static int lua_cloud_pow_max;
 static int lua_cloud_pow_rolls;
 
-static int make_a_lua_cloud(int x, int y, int garbage, int spread_rate,
+static int make_a_lua_cloud(coord_def where, int garbage, int spread_rate,
                             cloud_type ctype, kill_category whose,
                             killer_type killer)
 {
@@ -1580,8 +1580,7 @@ static int make_a_lua_cloud(int x, int y, int garbage, int spread_rate,
     const int pow = random_range(lua_cloud_pow_min,
                                  lua_cloud_pow_max,
                                  lua_cloud_pow_rolls);
-    place_cloud( ctype, coord_def(x, y), pow, whose, killer, spread_rate );
-
+    place_cloud( ctype, where, pow, whose, killer, spread_rate );
     return 1;
 }
 
@@ -1664,7 +1663,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
         return (0);
     }
 
-    apply_area_cloud(make_a_lua_cloud, x, y, 0, size,
+    apply_area_cloud(make_a_lua_cloud, coord_def(x, y), 0, size,
                      ctype, kc, cloud_struct::whose_to_killer(kc),
                      spread_rate);
 
@@ -1767,10 +1766,10 @@ static int dgn_octa_room(lua_State *ls)
     }
 
     spec_room sr;
-    sr.x1 = x1;
-    sr.x2 = x2;
-    sr.y1 = y1;
-    sr.y2 = y2;
+    sr.tl.x = x1;
+    sr.br.x = x2;
+    sr.tl.y = y1;
+    sr.br.y = y2;
 
     octa_room(sr, oblique, fill);
 
@@ -2286,9 +2285,9 @@ static const struct luaL_reg file_lib[] =
 
 LUARET1(you_can_hear_pos, boolean,
         player_can_hear(coord_def(luaL_checkint(ls,1), luaL_checkint(ls, 2))))
-LUARET1(you_x_pos, number, you.x_pos)
-LUARET1(you_y_pos, number, you.y_pos)
-LUARET2(you_pos, number, you.x_pos, you.y_pos)
+LUARET1(you_x_pos, number, you.pos().x)
+LUARET1(you_y_pos, number, you.pos().y)
+LUARET2(you_pos, number, you.pos().x, you.pos().y)
 
 static const struct luaL_reg you_lib[] =
 {

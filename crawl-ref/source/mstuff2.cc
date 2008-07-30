@@ -56,30 +56,31 @@ static int _monster_abjuration(const monsters *caster, bool actual);
 //     to be some sort of trap prior to function call: {dlb}
 void mons_trap(monsters *monster)
 {
-    if (!is_trap_square(grd[monster->x][monster->y]))
+    if (!is_trap_square(grd(monster->pos())))
         return;
 
     // single calculation permissible {dlb}
     bool monsterNearby = mons_near(monster);
 
-    // new function call {dlb}
-    int which_trap = trap_at_xy(monster->pos());
+    const int which_trap = trap_at_xy(monster->pos());
     if (which_trap == -1)
         return;
+    
+    trap_struct& trap(env.trap[which_trap]);
 
-    bool trapKnown = (grd[monster->x][monster->y] != DNGN_UNDISCOVERED_TRAP);
+    bool trapKnown = (grd(monster->pos()) != DNGN_UNDISCOVERED_TRAP);
     bool revealTrap = false;    // more sophisticated trap uncovering {dlb}
     bool projectileFired = false;       // <sigh> I had to do it, I swear {dlb}
     int damage_taken = -1;      // must initialize at -1 for this f(x) {dlb}
 
-    struct bolt beem;
+    bolt beem;
 
 
     // flying monsters neatly avoid mechanical traps
     // and may actually exit this function early: {dlb}
     if (mons_flies(monster))
     {
-        if (trap_category(env.trap[which_trap].type) == DNGN_TRAP_MECHANICAL)
+        if (trap_category(trap.type) == DNGN_TRAP_MECHANICAL)
         {
             if (trapKnown)
                 simple_monster_message(monster, " flies safely over a trap.");
@@ -92,7 +93,7 @@ void mons_trap(monsters *monster)
     // are fairly stupid and tend to have fewer hp than players -- this
     // choice prevents traps from easily killing large monsters fairly
     // deep within the dungeon.
-    switch (env.trap[which_trap].type)
+    switch (trap.type)
     {
     case TRAP_DART:
         projectileFired = true;
@@ -264,14 +265,13 @@ void mons_trap(monsters *monster)
                 monster_caught_in_net(monster, beem);
             }
         }
-        trap_item( OBJ_MISSILES, MI_THROWING_NET,
-                   env.trap[which_trap].pos() );
+        trap_item( OBJ_MISSILES, MI_THROWING_NET, trap.pos );
 
         if (mons_is_caught(monster))
             mark_net_trapping(monster->pos());
 
-        grd(env.trap[which_trap].pos()) = DNGN_FLOOR;
-        env.trap[which_trap].type = TRAP_UNASSIGNED;
+        grd(trap.pos) = DNGN_FLOOR;
+        trap.type = TRAP_UNASSIGNED;
         break;
     }
     // zot traps are out to get *the player*! Hostile monsters
@@ -335,8 +335,8 @@ void mons_trap(monsters *monster)
             if (trapKnown && monsterNearby)
                 mpr("The shaft disappears in a puff of logic!");
 
-            grd[env.trap[which_trap].x][env.trap[which_trap].y] = DNGN_FLOOR;
-            env.trap[which_trap].type = TRAP_UNASSIGNED;
+            grd(trap.pos) = DNGN_FLOOR;
+            trap.type = TRAP_UNASSIGNED;
             return;
         }
 
@@ -403,8 +403,7 @@ void mons_trap(monsters *monster)
         // Generate "fallen" projectile, where appropriate. {dlb}
         if (x_chance_in_y(7, 10))
         {
-            beem.target_x = monster->x;
-            beem.target_y = monster->y;
+            beem.target = monster->pos();
             itrap(beem, which_trap);
         }
     }
@@ -412,10 +411,7 @@ void mons_trap(monsters *monster)
 
     // reveal undiscovered traps, where appropriate: {dlb}
     if (monsterNearby && !trapKnown && revealTrap)
-    {
-        grd[env.trap[which_trap].x][env.trap[which_trap].y]
-                     = trap_category(env.trap[which_trap].type);
-    }
+        grd(trap.pos) = trap_category(trap.type);
 
     // apply damage and handle death, where appropriate: {dlb}
     if (damage_taken > 0)
@@ -898,11 +894,8 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
 
     // Convenience for the hapless innocent who assumes that this
     // damn function does all possible setup. [ds]
-    if (!pbolt.target_x && !pbolt.target_y)
-    {
-        pbolt.target_x = monster->target_x;
-        pbolt.target_y = monster->target_y;
-    }
+    if (pbolt.target.origin())
+        pbolt.target = monster->target;
 
     // set bolt type
     if (_los_free_spell(spell_cast))
@@ -973,8 +966,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     pbolt.aux_source.clear();
     pbolt.name           = theBeam.name;
     pbolt.is_beam        = theBeam.is_beam;
-    pbolt.source_x       = monster->x;
-    pbolt.source_y       = monster->y;
+    pbolt.source         = monster->pos();
     pbolt.is_tracer      = false;
     pbolt.is_explosion   = theBeam.is_explosion;
     pbolt.ex_size        = theBeam.ex_size;
@@ -991,8 +983,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
         || spell_cast == SPELL_LESSER_HEALING
         || spell_cast == SPELL_TELEPORT_SELF)
     {
-        pbolt.target_x = monster->x;
-        pbolt.target_y = monster->y;
+        pbolt.target = monster->pos();
     }
 }
 
@@ -1047,8 +1038,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
             break;
     }
 
-    monster->x = newpos.x;
-    monster->y = newpos.y;
+    monster->moveto(newpos);
 
     mgrd(monster->pos()) = monster_index(monster);
 
@@ -1556,7 +1546,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     fire_beam( pbolt, &item, !really_returns );
 
     // The item can be destroyed before returning.
-    if (really_returns && mons_thrown_object_destroyed(&item, pbolt.target(),
+    if (really_returns && mons_thrown_object_destroyed(&item, pbolt.target,
                                                        true, pbolt.beam_source))
     {
         really_returns = false;
@@ -1627,8 +1617,7 @@ void spore_goes_pop(monsters *monster)
     beam.is_explosion = true;
     beam.beam_source  = monster_index(monster);
     beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.target_x     = monster->x;
-    beam.target_y     = monster->y;
+    beam.target       = monster->pos();
     beam.thrower      = KILL_MON;    // someone else's explosion
     beam.aux_source.clear();
 

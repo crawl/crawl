@@ -894,8 +894,8 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.base_magic_points);
     marshallShort(th, you.base_magic_points2);
 
-    marshallShort(th, you.x_pos);
-    marshallShort(th, you.y_pos);
+    marshallShort(th, you.pos().x);
+    marshallShort(th, you.pos().y);
 
     marshallString(th, you.class_name, 30);
 
@@ -1282,7 +1282,7 @@ static void tag_read_you(reader &th, char minorVersion)
 
     const int x = unmarshallShort(th);
     const int y = unmarshallShort(th);
-    you.moveto(x, y);
+    you.moveto(coord_def(x, y));
 
     unmarshallCString(th, you.class_name, 30);
 
@@ -1643,8 +1643,8 @@ static void tag_construct_level(writer &th)
     marshallShort(th, MAX_CLOUDS);
     for (int i = 0; i < MAX_CLOUDS; i++)
     {
-        marshallByte(th, env.cloud[i].x);
-        marshallByte(th, env.cloud[i].y);
+        marshallByte(th, env.cloud[i].pos.x);
+        marshallByte(th, env.cloud[i].pos.y);
         marshallByte(th, env.cloud[i].type);
         marshallShort(th, env.cloud[i].decay);
         marshallByte(th,  (char) env.cloud[i].spread_rate);
@@ -1659,8 +1659,8 @@ static void tag_construct_level(writer &th)
         marshallByte(th, env.shop[i].keeper_name[0]);
         marshallByte(th, env.shop[i].keeper_name[1]);
         marshallByte(th, env.shop[i].keeper_name[2]);
-        marshallByte(th, env.shop[i].x);
-        marshallByte(th, env.shop[i].y);
+        marshallByte(th, env.shop[i].pos.x);
+        marshallByte(th, env.shop[i].pos.y);
         marshallByte(th, env.shop[i].greed);
         marshallByte(th, env.shop[i].type);
         marshallByte(th, env.shop[i].level);
@@ -1682,15 +1682,15 @@ void marshallItem(writer &th, const item_def &item)
     marshallShort(th, item.quantity);
 
     marshallByte(th, item.colour);
-    marshallShort(th, item.x);
-    marshallShort(th, item.y);
+    marshallShort(th, item.pos.x);
+    marshallShort(th, item.pos.y);
     marshallLong(th, item.flags);
 
     marshallShort(th, item.link);                //  unused
-    if (item.x == -1 && item.y == -1)
+    if (item.pos.x == -1 && item.pos.y == -1)
         marshallShort(th, -1); // unused
     else
-        marshallShort(th, igrd[item.x][item.y]);  //  unused
+        marshallShort(th, igrd(item.pos));  //  unused
 
     marshallByte(th, item.slot);
 
@@ -1710,8 +1710,8 @@ void unmarshallItem(reader &th, item_def &item)
     item.special     = unmarshallLong(th);
     item.quantity    = unmarshallShort(th);
     item.colour      = (unsigned char) unmarshallByte(th);
-    item.x           = unmarshallShort(th);
-    item.y           = unmarshallShort(th);
+    item.pos.x       = unmarshallShort(th);
+    item.pos.y       = unmarshallShort(th);
     item.flags       = (unsigned long) unmarshallLong(th);
 
     unmarshallShort(th);  // mitm[].link -- unused
@@ -1734,8 +1734,8 @@ static void tag_construct_level_items(writer &th)
     for (int i = 0; i < MAX_TRAPS; ++i)
     {
         marshallByte(th, env.trap[i].type);
-        marshallByte(th, env.trap[i].x);
-        marshallByte(th, env.trap[i].y);
+        marshallByte(th, env.trap[i].pos.x);
+        marshallByte(th, env.trap[i].pos.y);
     }
 
     // how many items?
@@ -1773,10 +1773,10 @@ static void marshall_monster(writer &th, const monsters &m)
     marshallByte(th, m.speed);
     marshallByte(th, m.speed_increment);
     marshallByte(th, m.behaviour);
-    marshallByte(th, m.x);
-    marshallByte(th, m.y);
-    marshallByte(th, m.target_x);
-    marshallByte(th, m.target_y);
+    marshallByte(th, m.pos().x);
+    marshallByte(th, m.pos().y);
+    marshallByte(th, m.target.x);
+    marshallByte(th, m.target.y);
     marshallCoord(th, m.patrol_point);
     int help = m.travel_target;
     marshallByte(th, help);
@@ -1980,8 +1980,8 @@ static void tag_read_level( reader &th, char minorVersion )
     const int num_clouds = unmarshallShort(th);
     for (int i = 0; i < num_clouds; i++)
     {
-        env.cloud[i].x = unmarshallByte(th);
-        env.cloud[i].y = unmarshallByte(th);
+        env.cloud[i].pos.x = unmarshallByte(th);
+        env.cloud[i].pos.y = unmarshallByte(th);
         env.cloud[i].type  = static_cast<cloud_type>(unmarshallByte(th));
         env.cloud[i].decay = unmarshallShort(th);
         env.cloud[i].spread_rate = (unsigned char) unmarshallByte(th);
@@ -1997,8 +1997,8 @@ static void tag_read_level( reader &th, char minorVersion )
         env.shop[i].keeper_name[0] = unmarshallByte(th);
         env.shop[i].keeper_name[1] = unmarshallByte(th);
         env.shop[i].keeper_name[2] = unmarshallByte(th);
-        env.shop[i].x = unmarshallByte(th);
-        env.shop[i].y = unmarshallByte(th);
+        env.shop[i].pos.x = unmarshallByte(th);
+        env.shop[i].pos.y = unmarshallByte(th);
         env.shop[i].greed = unmarshallByte(th);
         env.shop[i].type  = static_cast<shop_type>(unmarshallByte(th));
         env.shop[i].level = unmarshallByte(th);
@@ -2020,8 +2020,8 @@ static void tag_read_level_items(reader &th, char minorVersion)
             static_cast<trap_type>(
                 static_cast<unsigned char>(unmarshallByte(th)) );
 
-        env.trap[i].x = unmarshallByte(th);
-        env.trap[i].y = unmarshallByte(th);
+        env.trap[i].pos.x = unmarshallByte(th);
+        env.trap[i].pos.y = unmarshallByte(th);
     }
 
     // how many items?
@@ -2044,10 +2044,10 @@ static void unmarshall_monster(reader &th, monsters &m)
     // Avoid sign extension when loading files (Elethiomel's hang)
     m.speed_increment = (unsigned char) unmarshallByte(th);
     m.behaviour       = static_cast<beh_type>(unmarshallByte(th));
-    m.x               = unmarshallByte(th);
-    m.y               = unmarshallByte(th);
-    m.target_x        = unmarshallByte(th);
-    m.target_y        = unmarshallByte(th);
+    m.position.x      = unmarshallByte(th);
+    m.position.y      = unmarshallByte(th);
+    m.target.x        = unmarshallByte(th);
+    m.target.y        = unmarshallByte(th);
 
     if (_tag_minor_version >= TAG_MINOR_MPATROL)
         unmarshallCoord(th, m.patrol_point);
@@ -2126,7 +2126,7 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
         unmarshall_monster(th, m);
         // place monster
         if (m.type != -1)
-            mgrd[m.x][m.y] = i;
+            mgrd(m.pos()) = i;
     }
 }
 

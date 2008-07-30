@@ -53,10 +53,10 @@ static int spell_list[NUM_SPELLS];
 #define SPELLDATASIZE (sizeof(spelldata)/sizeof(struct spell_desc))
 
 static struct spell_desc *_seekspell(spell_type spellid);
-static bool _cloud_helper(int (*func)(int, int, int, int, cloud_type,
-                                      kill_category, killer_type),
-                          int x, int y, int pow, int spread_rate,
-                          cloud_type ctype, kill_category, killer_type );
+static bool _cloud_helper(cloud_func func, const coord_def& where,
+                          int pow, int spread_rate,
+                          cloud_type ctype, kill_category whose,
+                          killer_type killer);
 
 //
 //             BEGIN PUBLIC FUNCTIONS
@@ -581,8 +581,7 @@ int apply_one_neighbouring_square(cell_func cf, int power)
         return (-1);
     }
 
-    int rv = cf(coord_def(you.x_pos + bmove.dx, you.y_pos + bmove.dy),
-                power, 1);
+    int rv = cf(you.pos() + bmove.delta, power, 1);
 
     if (rv == 0)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -608,183 +607,64 @@ int apply_area_within_radius( cell_func cf, const coord_def& where,
 // We really need some sort of a queue structure, since ideally I'd like
 // to do a (shallow) breadth-first-search of the dungeon floor.
 // This ought to work okay for small clouds.
-void apply_area_cloud( int (*func) (int, int, int, int, cloud_type,
-                                    kill_category, killer_type),
-                       int x, int y,
+void apply_area_cloud( cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
                        kill_category whose, killer_type killer,
                        int spread_rate )
 {
-    int spread, clouds_left = number;
-    int good_squares = 0, neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    int dx = 1, dy = 1;
-    bool x_first;
+    int good_squares = 0;
+    int neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    if (clouds_left && _cloud_helper(func, x, y, pow, spread_rate,
-                                     ctype, whose, killer))
-        clouds_left--;
+    if (number && _cloud_helper(func, where, pow, spread_rate, ctype, whose,
+                                killer))
+        number--;
 
-    if (!clouds_left)
+    if (number == 0)
         return;
 
-    if (coinflip())
-        dx *= -1;
-    if (coinflip())
-        dy *= -1;
+    // These indices depend on the order in Compass (see acr.cc)
+    int compass_order_orth[4] = { 2, 6, 4, 0 };
+    int compass_order_diag[4] = { 1, 3, 5, 7 };
 
-    x_first = coinflip();
+    int* const arrs[2] = { compass_order_orth, compass_order_diag };
 
-    if (x_first)
+    for ( int m = 0; m < 2; ++m )
     {
-        if (clouds_left && _cloud_helper(func, x + dx, y, pow, spread_rate,
-                                         ctype, whose, killer))
+        // Randomise, but do orthogonals first and diagonals later.
+        std::random_shuffle( arrs[m], arrs[m] + 4 );
+        for ( int i = 0; i < 4 && number; ++i )
         {
-            clouds_left--;
-            good_squares++;
-            neighbours[0]++;
-        }
-
-        if (clouds_left && _cloud_helper(func, x - dx, y, pow, spread_rate,
-                                         ctype, whose, killer))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[1]++;
-        }
-
-        if (clouds_left && _cloud_helper(func, x, y + dy, pow, spread_rate,
-                                         ctype, whose, killer))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[2]++;
-        }
-
-        if (clouds_left && _cloud_helper(func, x, y - dy, pow, spread_rate,
-                                         ctype, whose, killer))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[3]++;
-        }
-    }
-    else
-    {
-        if (clouds_left && _cloud_helper(func, x, y + dy, pow, spread_rate,
-                                         ctype, whose, killer))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[2]++;
-        }
-
-        if (clouds_left && _cloud_helper(func, x, y - dy, pow, spread_rate,
-                                         ctype, whose, killer))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[3]++;
-        }
-
-        if (clouds_left && _cloud_helper(func, x + dx, y, pow, spread_rate,
-                                         ctype, whose, killer))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[0]++;
-        }
-
-        if (clouds_left && _cloud_helper(func, x - dx, y, pow, spread_rate,
-                                         ctype, whose, killer))
-        {
-            clouds_left--;
-            good_squares++;
-            neighbours[1]++;
+            const int aux = arrs[m][i];
+            if ( _cloud_helper(func, where + Compass[aux],
+                               pow, spread_rate, ctype, whose, killer))
+            {
+                number--;
+                good_squares++;
+                neighbours[aux]++;
+            }
         }
     }
 
-    // Mow diagonals; we could randomize dx & dy again here.
-    if (clouds_left && _cloud_helper(func, x + dx, y + dy, pow, spread_rate,
-                                     ctype, whose, killer))
+    // Get a random permutation.
+    int perm[8];
+    for ( int i = 0; i < 8; ++i )
+        perm[i] = i;
+    std::random_shuffle(perm, perm+8);
+    for (int i = 0; i < 8 && number; i++)
     {
-        clouds_left--;
-        good_squares++;
-        neighbours[4]++;
-    }
+        // Spread (in random order.)
+        const int j = perm[i];
 
-    if (clouds_left && _cloud_helper(func, x - dx, y + dy, pow, spread_rate,
-                                     ctype, whose, killer))
-    {
-        clouds_left--;
-        good_squares++;
-        neighbours[5]++;
-    }
-
-    if (clouds_left && _cloud_helper(func, x + dx, y - dy, pow, spread_rate,
-                                     ctype, whose, killer))
-    {
-        clouds_left--;
-        good_squares++;
-        neighbours[6]++;
-    }
-
-    if (clouds_left && _cloud_helper(func, x - dx, y - dy, pow, spread_rate,
-                                     ctype, whose, killer))
-    {
-        clouds_left--;
-        good_squares++;
-        neighbours[7]++;
-    }
-
-    if (!clouds_left || !good_squares)
-        return;
-
-    for (int i = 0; i < 8 && clouds_left; i++)
-    {
-        if (neighbours[i] == 0)
+        if (neighbours[j] == 0)
             continue;
 
-        spread = clouds_left / good_squares;
-        clouds_left -= spread;
+        int spread = number / good_squares;
+        number -= spread;
         good_squares--;
-
-        switch (i)
-        {
-        case 0:
-            apply_area_cloud(func, x + dx, y, pow, spread, ctype, whose, killer,
-                             spread_rate);
-            break;
-        case 1:
-            apply_area_cloud(func, x - dx, y, pow, spread, ctype, whose, killer,
-                             spread_rate);
-            break;
-        case 2:
-            apply_area_cloud(func, x, y + dy, pow, spread, ctype, whose, killer,
-                             spread_rate);
-            break;
-        case 3:
-            apply_area_cloud(func, x, y - dy, pow, spread, ctype, whose, killer,
-                             spread_rate);
-            break;
-        case 4:
-            apply_area_cloud(func, x + dx, y + dy, pow, spread, ctype, whose,
-                             killer, spread_rate);
-            break;
-        case 5:
-            apply_area_cloud(func, x - dx, y + dy, pow, spread, ctype, whose,
-                             killer, spread_rate);
-            break;
-        case 6:
-            apply_area_cloud(func, x + dx, y - dy, pow, spread, ctype, whose,
-                             killer, spread_rate);
-            break;
-        case 7:
-            apply_area_cloud(func, x - dx, y - dy, pow, spread, ctype, whose,
-                             killer, spread_rate);
-            break;
-        }
+        apply_area_cloud(func, where + Compass[j], pow, spread, ctype, whose,
+                         killer, spread_rate);
     }
-}                               // end apply_area_cloud()
+}
 
 // Select a spell direction and fill dist and pbolt appropriately.
 // Return false if the user canceled, true otherwise.
@@ -809,8 +689,7 @@ bool spell_direction( dist &spelld, bolt &pbolt,
     }
 
     pbolt.set_target(spelld);
-    pbolt.source_x = you.x_pos;
-    pbolt.source_y = you.y_pos;
+    pbolt.source = you.pos();
 
     return (true);
 }
@@ -972,15 +851,14 @@ bool is_valid_spell(spell_type spell)
     return (spell < NUM_SPELLS && spell_list[spell] != -1);
 }
 
-static bool _cloud_helper(int (*func)(int, int, int, int, cloud_type,
-                                      kill_category, killer_type),
-                          int x, int y, int pow, int spread_rate,
+static bool _cloud_helper(cloud_func func, const coord_def& where,
+                          int pow, int spread_rate,
                           cloud_type ctype, kill_category whose,
                           killer_type killer )
 {
-    if (!grid_is_solid(grd[x][y]) && env.cgrid[x][y] == EMPTY_CLOUD)
+    if (!grid_is_solid(grd(where)) && env.cgrid(where) == EMPTY_CLOUD)
     {
-        func(x, y, pow, spread_rate, ctype, whose, killer);
+        func(where, pow, spread_rate, ctype, whose, killer);
         return (true);
     }
 

@@ -326,7 +326,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                 const dungeon_feature_type type =
                     trap_category( env.trap[id].type );
                 grd(you.pos()) = type;
-                set_envmap_obj(you.x_pos, you.y_pos, type);
+                set_envmap_obj(you.pos(), type);
             }
 
             // It's not easy to blink onto a trap without setting it off.
@@ -5547,12 +5547,9 @@ void player::init()
     prev_targ  = MHITNOT;
     pet_target = MHITNOT;
 
-    prev_grd_targ = coord_def(0, 0);
-
-    x_pos = 0;
-    y_pos = 0;
-
-    prev_move = coord_def(0,0);
+    prev_grd_targ.reset();
+    position.reset();
+    prev_move.reset();
 
     running.clear();
     travel_x = 0;
@@ -5608,8 +5605,7 @@ void player::init()
         inv[i].colour    = 0;
         set_ident_flags( inv[i], ISFLAG_IDENT_MASK );
 
-        inv[i].x = -1;
-        inv[i].y = -1;
+        inv[i].pos.set(-1, -1);
         inv[i].link = i;
     }
 
@@ -5677,11 +5673,6 @@ player::~player()
     delete m_quiver;
 }
 
-coord_def player::pos() const
-{
-    return coord_def(x_pos, y_pos);
-}
-
 bool player::is_levitating() const
 {
     return (duration[DUR_LEVITATION]);
@@ -5690,7 +5681,7 @@ bool player::is_levitating() const
 bool player::in_water() const
 {
     return (!airborne() && !beogh_water_walk()
-            && grid_is_water(grd[you.x_pos][you.y_pos]));
+            && grid_is_water(grd(you.pos())));
 }
 
 bool player::can_swim() const
@@ -6702,16 +6693,10 @@ bool player::is_icy() const
     return (attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST);
 }
 
-void player::moveto(int x, int y)
-{
-    moveto(coord_def(x, y));
-}
-
 void player::moveto(const coord_def &c)
 {
     const bool real_move = (c != pos());
-    x_pos = c.x;
-    y_pos = c.y;
+    position = c;
     crawl_view.set_player_at(c);
 
     if (real_move)
@@ -7011,7 +6996,7 @@ bool player::do_shaft()
     // the player isn't standing over a shaft.
     if (trap_type_at_xy(this->pos()) != TRAP_SHAFT)
     {
-        switch(grd[x_pos][y_pos])
+        switch (grd(you.pos()))
         {
         case DNGN_FLOOR:
         case DNGN_OPEN_DOOR:

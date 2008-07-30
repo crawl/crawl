@@ -196,8 +196,8 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
         fs.cprintf("%s (", mon->name(DESC_PLAIN, true).c_str());
         fs.add_glyph( mon );
         fs.cprintf(") in view: (%d,%d), see_grid: %s",
-                   mon->x, mon->y,
-                   see_grid(mon->x, mon->y)? "yes" : "no");
+                   mon->pos().x, mon->pos().y,
+                   see_grid(mon->pos())? "yes" : "no");
         formatted_mpr(fs, MSGCH_WARN);
 #endif
 

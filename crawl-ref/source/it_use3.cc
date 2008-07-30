@@ -268,20 +268,21 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         return (false);
     }
 
-    const int x_distance = abs(beam.tx - you.x_pos);
-    const int y_distance = abs(beam.ty - you.y_pos);
+    const coord_def delta = beam.target - you.pos();
+    const int x_distance = abs(delta.x);
+    const int y_distance = abs(delta.y);
 
     if (x_distance > 2 || y_distance > 2)
     {
         mpr("Your weapon cannot reach that far!");
         return (false);
     }
-    else if (!see_grid_no_trans(beam.tx, beam.ty))
+    else if (!see_grid_no_trans(beam.target))
     {
         mpr("There's a wall in the way.");
         return (false);
     }
-    else if (mgrd[beam.tx][beam.ty] == NON_MONSTER)
+    else if (mgrd(beam.target) == NON_MONSTER)
     {
         // Must return true, otherwise you get a free discovery
         // of invisible monsters. Maybe we shouldn't do practice
@@ -298,13 +299,13 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     // If we're attacking more than a space away...
     if (x_distance > 1 || y_distance > 1)
     {
-        const int x_middle = MAX(beam.tx, you.x_pos) - (x_distance / 2);
-        const int y_middle = MAX(beam.ty, you.y_pos) - (y_distance / 2);
+        const int x_middle = MAX(beam.target.x, you.pos().x) - (x_distance / 2);
+        const int y_middle = MAX(beam.target.y, you.pos().y) - (y_distance / 2);
 
         bool success = false;
         // If either the x or the y is the same, we should check for
         // a monster:
-        if ((beam.tx == you.x_pos || beam.ty == you.y_pos)
+        if ((beam.target.x == you.pos().x || beam.target.y == you.pos().y)
             && mgrd[x_middle][y_middle] != NON_MONSTER)
         {
             const int skill = weapon_skill( wpn.base_type, wpn.sub_type );
@@ -312,7 +313,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             if (x_chance_in_y(5 + (3 * skill), 40))
             {
                 mpr("You reach to attack!");
-                success = you_attack(mgrd[beam.tx][beam.ty], false);
+                success = you_attack(mgrd(beam.target), false);
             }
             else
             {
@@ -323,22 +324,22 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         else
         {
             mpr("You reach to attack!");
-            success = you_attack(mgrd[beam.tx][beam.ty], false);
+            success = you_attack(mgrd(beam.target), false);
         }
 
         if (success)
         {
-            int mid = mgrd[beam.tx][beam.ty];
+            int mid = mgrd(beam.target);
             if (mid != NON_MONSTER)
             {
-                monsters *mon = &menv[mgrd[beam.tx][beam.ty]];
+                monsters *mon = &menv[mgrd(beam.target)];
                 if (mons_is_mimic( mon->type ))
                     mimic_alert(mon);
             }
         }
     }
     else
-        you_attack(mgrd[beam.tx][beam.ty], false);
+        you_attack(mgrd(beam.target), false);
 
     return (true);
 }
@@ -800,10 +801,8 @@ static bool disc_of_storms(void)
                                   (temp_rand > 0) ? ZAP_ELECTRICITY
                                                   : ZAP_ORB_OF_ELECTRICITY);
 
-            beam.source_x = you.x_pos;
-            beam.source_y = you.y_pos;
-            beam.target_x = you.x_pos + random2(13) - 6;
-            beam.target_y = you.y_pos + random2(13) - 6;
+            beam.source = you.pos();
+            beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
 
             // Non-controlleable, so no player tracer.
             zapping( which_zap, 30 + you.skills[SK_EVOCATIONS] * 2, beam );
@@ -846,20 +845,19 @@ void tome_of_power(int slot)
     {
         mpr("A cloud of weird smoke pours from the book's pages!");
         big_cloud( random_smoke_type(), KC_YOU,
-                   you.x_pos, you.y_pos, 20, 10 + random2(8) );
+                   you.pos(), 20, 10 + random2(8) );
         xom_is_stimulated(16);
     }
     else if (x_chance_in_y(2, 43))
     {
         mpr("A cloud of choking fumes pours from the book's pages!");
-        big_cloud(CLOUD_POISON, KC_YOU,
-                  you.x_pos, you.y_pos, 20, 7 + random2(5));
+        big_cloud(CLOUD_POISON, KC_YOU, you.pos(), 20, 7 + random2(5));
         xom_is_stimulated(64);
     }
     else if (x_chance_in_y(2, 41))
     {
         mpr("A cloud of freezing gas pours from the book's pages!");
-        big_cloud(CLOUD_COLD, KC_YOU, you.x_pos, you.y_pos, 20, 8 + random2(5));
+        big_cloud(CLOUD_COLD, KC_YOU, you.pos(), 20, 8 + random2(5));
         xom_is_stimulated(64);
     }
     else if (x_chance_in_y(3, 39))
@@ -875,8 +873,7 @@ void tome_of_power(int slot)
         beam.damage = dice_def( 3, 15 );
         // unsure about this    // BEAM_EXPLOSION instead? [dlb]
         beam.flavour = BEAM_FIRE;
-        beam.target_x = you.x_pos;
-        beam.target_y = you.y_pos;
+        beam.target = you.pos();
         beam.name = "fiery explosion";
         beam.colour = RED;
         // your explosion, (not someone else's explosion)

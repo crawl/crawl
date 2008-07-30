@@ -732,7 +732,7 @@ LUARET1(you_god_likes_butchery, boolean,
         god_likes_butchery(you.religion))
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
-LUARET2(you_pos, number, you.x_pos, you.y_pos)
+LUARET2(you_pos, number, you.pos().x, you.pos().y)
 LUARET1(you_hunger, string, hunger_level())
 LUARET2(you_strength, number, you.strength, you.max_strength)
 LUARET2(you_intelligence, number, you.intel, you.max_intel)
@@ -1051,7 +1051,7 @@ static int l_item_drop(lua_State *ls)
     return (1);
 }
 
-static int item_on_floor(const item_def &item, int x, int y);
+static int item_on_floor(const item_def &item, const coord_def& where);
 
 static item_def *dmx_get_item(lua_State *ls, int ndx, int subndx)
 {
@@ -1088,7 +1088,7 @@ static bool l_item_pickup2(item_def *item, int qty)
     if (!item || in_inventory(*item))
         return (false);
 
-    int floor_link = item_on_floor(*item, you.x_pos, you.y_pos);
+    int floor_link = item_on_floor(*item, you.pos());
     if (floor_link == NON_ITEM)
         return (false);
 
@@ -1591,10 +1591,10 @@ static int food_can_eat(lua_State *ls)
     return (1);
 }
 
-static int item_on_floor(const item_def &item, int x, int y)
+static int item_on_floor(const item_def &item, const coord_def& where)
 {
     // Check if the item is on the floor and reachable
-    for (int link = igrd[x][y]; link != NON_ITEM; link = mitm[link].link)
+    for (int link = igrd(where); link != NON_ITEM; link = mitm[link].link)
     {
         if (&mitm[link] == &item)
             return (link);
@@ -1614,7 +1614,7 @@ static bool eat_item(const item_def &item)
     }
     else
     {
-        int ilink =  item_on_floor(item, you.x_pos, you.y_pos);
+        int ilink =  item_on_floor(item, you.pos());
 
         if (ilink != NON_ITEM)
         {
@@ -2332,13 +2332,13 @@ static int l_mons_name(lua_State *ls, monsters *mons, const char *attr)
 
 static int l_mons_x(lua_State *ls, monsters *mons, const char *attr)
 {
-    lua_pushnumber(ls, int(mons->x) - int(you.x_pos));
+    lua_pushnumber(ls, int(mons->pos().x) - int(you.pos().x));
     return (1);
 }
 
 static int l_mons_y(lua_State *ls, monsters *mons, const char *attr)
 {
-    lua_pushnumber(ls, int(mons->y) - int(you.y_pos));
+    lua_pushnumber(ls, int(mons->pos().y) - int(you.pos().y));
     return (1);
 }
 

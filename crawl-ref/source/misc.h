@@ -19,45 +19,14 @@ struct bolt;
 struct dist;
 struct activity_interrupt_data;
 
-// last updated 08jan2001 {gdl}
-/* ***********************************************************************
- * called from: ability - decks - fight - it_use2 - spells1
- * *********************************************************************** */
 bool go_berserk(bool intentional);
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr
- * *********************************************************************** */
 void search_around( bool only_adjacent = false );
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - effects - spells3
- * *********************************************************************** */
 void down_stairs(int old_level,
                  dungeon_feature_type force_stair = DNGN_UNSEEN,
                  entry_cause_type entry_cause = EC_UNKNOWN);
-
-// Created Sept 1, 2000 -- bwr
-/* ***********************************************************************
- * called from: acr misc
- * *********************************************************************** */
-void merfolk_start_swimming(void);
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - misc - player - stuff
- * *********************************************************************** */
-void new_level(void);
-
+void merfolk_start_swimming();
+void new_level();
 void trackers_init_new_level(bool transit);
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: delay
- * *********************************************************************** */
 void turn_corpse_into_skeleton(item_def &corpse, int time = 200);
 void turn_corpse_into_chunks( item_def &item );
 
@@ -134,7 +103,7 @@ bool scramble(void);
 bool interrupt_cmd_repeat( activity_interrupt_type ai,
                            const activity_interrupt_data &at );
 
-void reveal_secret_door(int x, int y);
+void reveal_secret_door(const coord_def& p);
 
 std::string your_hand(bool plural);
 

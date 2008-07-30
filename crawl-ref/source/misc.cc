@@ -307,8 +307,8 @@ void maybe_coagulate_blood_potions_floor(int obj)
     ASSERT(blood.sub_type == POT_BLOOD);
 
     // Now that coagulating is necessary, check square for !coagulated blood.
-    ASSERT(blood.x >= 0 && blood.y >= 0);
-    for (int o = igrd[blood.x][blood.y]; o != NON_ITEM; o = mitm[o].link)
+    ASSERT(blood.pos.x >= 0 && blood.pos.y >= 0);
+    for (int o = igrd[blood.pos.x][blood.pos.y]; o != NON_ITEM; o = mitm[o].link)
     {
         if (mitm[o].base_type == OBJ_POTIONS
             && mitm[o].sub_type == POT_BLOOD_COAGULATED)
@@ -392,7 +392,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
 
     ASSERT(timer_new.size() == coag_count);
     props_new.assert_validity();
-    move_item_to_grid( &o, coord_def(blood.x, blood.y) );
+    move_item_to_grid( &o, blood.pos );
 
     dec_mitm_item_quantity(obj, rot_count + coag_count);
     ASSERT(timer.size() == blood.quantity);
@@ -617,13 +617,12 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         item.base_type   = OBJ_POTIONS;
         item.sub_type    = POT_BLOOD_COAGULATED;
         item.quantity    = coag_count;
-        item.x           = -1;
-        item.y           = -1;
         item.plus        = 0;
         item.plus2       = 0;
         item.special     = 0;
         item.flags       = 0;
         item.inscription = "";
+        item.pos.set(-1, -1);
         item_colour(item);
 
         CrawlHashTable &props_new = item.props;
@@ -654,7 +653,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     }
 
     // No space in inventory, check floor.
-    int o = igrd[you.x_pos][you.y_pos];
+    int o = igrd(you.pos());
     while (o != NON_ITEM)
     {
         if (mitm[o].base_type == OBJ_POTIONS
@@ -1023,8 +1022,6 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         item.base_type   = OBJ_POTIONS;
         item.sub_type    = POT_DECAY;
         item.quantity    = amount;
-        item.x           = -1;
-        item.y           = -1;
         // Keep description as it was.
         item.plus        = potion.plus;
         item.plus2       = 0;
@@ -1032,6 +1029,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         item.flags       = 0;
         item.colour      = potion.colour;
         item.inscription = "";
+        item.pos.set(-1, -1);
 
         you.inv[obj].quantity -= amount;
         return;
@@ -1039,22 +1037,19 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     // Okay, inventory is full.
 
     // Check whether we can merge with an existing stack on the floor.
-    int o = igrd[you.x_pos][you.y_pos];
-    while (o != NON_ITEM)
+    for ( stack_iterator si(you.pos()); si; ++si )
     {
-        if (mitm[o].base_type == OBJ_POTIONS
-            && mitm[o].sub_type == POT_DECAY)
+        if (si->base_type == OBJ_POTIONS && si->sub_type == POT_DECAY)
         {
             dec_inv_item_quantity(obj, amount);
-            inc_mitm_item_quantity(o, amount);
+            inc_mitm_item_quantity(si->index(), amount);
             return;
         }
-        o = mitm[o].link;
     }
 
     // Only bother creating a distinct stack of potions
     // if it won't get destroyed right away.
-    if (!grid_destroys_items(grd[you.x_pos][you.y_pos]))
+    if (!grid_destroys_items(grd(you.pos())))
     {
         item_def potion2;
         potion2.base_type = OBJ_POTIONS;
@@ -1236,8 +1231,6 @@ void generate_random_blood_spatter_on_level()
 
 void search_around( bool only_adjacent )
 {
-    int i;
-
     // Traps and doors stepdown skill:
     // skill/(2x-1) for squares at distance x
     int max_dist = (you.skills[SK_TRAPS_DOORS] + 1) / 2;
@@ -1248,58 +1241,54 @@ void search_around( bool only_adjacent )
     if ( max_dist < 1 )
         max_dist = 1;
 
-    for (int srx = you.x_pos - max_dist; srx <= you.x_pos + max_dist; ++srx)
-        for (int sry = you.y_pos - max_dist; sry <= you.y_pos + max_dist; ++sry)
+    for (radius_iterator ri(you.pos(), max_dist); ri; ++ri )
+    {
+        // Must have LOS, with no translucent walls in the way.
+        if (see_grid_no_trans(*ri))
         {
-            // Must have LOS, with no translucent walls in the way.
-            if (see_grid_no_trans(srx, sry))
+            // Maybe we want distance() instead of grid_distance()?
+            int dist = grid_distance(*ri, you.pos());
+
+            // Don't exclude own square; may be levitating.
+            // XXX: Currently, levitating over a trap will always detect it.
+            if (dist == 0)
+                ++dist;
+
+            // Making this harsher by removing the old +1...
+            int effective = you.skills[SK_TRAPS_DOORS] / (2*dist - 1);
+
+            if (grd(*ri) == DNGN_SECRET_DOOR && x_chance_in_y(effective+1, 17))
             {
-                // Maybe we want distance() instead of grid_distance()?
-                int dist = grid_distance(srx, sry, you.x_pos, you.y_pos);
+                mpr("You found a secret door!");
+                reveal_secret_door(*ri);
+                exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
+            }
+            else if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
+                     && x_chance_in_y(effective + 1, 17))
+            {
+                const int i = trap_at_xy(*ri);
 
-                // Don't exclude own square; may be levitating.
-                // XXX: Currently, levitating over a trap will always detect it.
-                if (dist == 0)
-                    ++dist;
-
-                // Making this harsher by removing the old +1...
-                int effective = you.skills[SK_TRAPS_DOORS] / (2*dist - 1);
-
-                if (grd[srx][sry] == DNGN_SECRET_DOOR
-                    && x_chance_in_y(effective + 1, 17))
+                if (i != -1)
                 {
-                    mpr("You found a secret door!");
-                    reveal_secret_door(srx, sry);
+                    grd(*ri) = trap_category(env.trap[i].type);
+                    mpr("You found a trap!");
+                    learned_something_new(TUT_SEEN_TRAP, *ri);
+                    
                     exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
                 }
-                else if (grd[srx][sry] == DNGN_UNDISCOVERED_TRAP
-                         && x_chance_in_y(effective + 1, 17))
+                else
                 {
-                    i = trap_at_xy(coord_def(srx, sry));
-
-                    if (i != -1)
-                    {
-                        grd[srx][sry] = trap_category(env.trap[i].type);
-                        mpr("You found a trap!");
-                        learned_something_new(TUT_SEEN_TRAP, srx, sry);
-
-                        exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
-                    }
-                    else
-                    {
-                        // Maybe we shouldn't kill the trap for debugging
-                        // purposes - oh well.
-                        grd[srx][sry] = DNGN_FLOOR;
+                    // Maybe we shouldn't kill the trap for debugging
+                    // purposes - oh well.
+                    grd(*ri) = DNGN_FLOOR;
 #if DEBUG_DIAGNOSTICS
-                        mpr("You found a buggy trap! It vanishes!",
-                            MSGCH_DIAGNOSTICS);
+                    mpr("You found a buggy trap! It vanishes!",
+                        MSGCH_DIAGNOSTICS);
 #endif
-                    }
                 }
             }
         }
-
-    return;
+    }
 }
 
 void curare_hits_player(int agent, int degree)
@@ -1435,8 +1424,7 @@ static int runes_in_pack()
 
 bool check_annotation_exclusion_warning()
 {
-    coord_def pos(you.x_pos, you.y_pos);
-    level_id  next_level_id = level_id::get_next_level_id(pos);
+    level_id  next_level_id = level_id::get_next_level_id(you.pos());
 
     crawl_state.level_annotation_shown = false;
     bool might_be_dangerous = false;
@@ -1450,7 +1438,7 @@ bool check_annotation_exclusion_warning()
         might_be_dangerous = true;
         crawl_state.level_annotation_shown = true;
     }
-    else if (is_exclude_root(pos))
+    else if (is_exclude_root(you.pos()))
     {
         mpr("This staircase is marked as excluded!", MSGCH_WARN);
         might_be_dangerous = true;
@@ -1471,7 +1459,7 @@ void up_stairs(dungeon_feature_type force_stair,
                entry_cause_type entry_cause)
 {
     dungeon_feature_type stair_find = (force_stair ? force_stair
-                                                   : grd[you.x_pos][you.y_pos]);
+                                       : grd(you.pos()));
     const branch_type     old_where      = you.where_are_you;
     const level_area_type old_level_type = you.level_type;
 
@@ -1619,7 +1607,7 @@ void up_stairs(dungeon_feature_type force_stair,
              branches[you.where_are_you].longname);
     }
 
-    int stair_x = you.x_pos, stair_y = you.y_pos;
+    const coord_def stair_pos = you.pos();
 
 #ifdef USE_TILE
     const bool newlevel =
@@ -1677,9 +1665,8 @@ void up_stairs(dungeon_feature_type force_stair,
 
             // First we update the old level's stair.
             level_pos lp;
-            lp.id    = new_level_id;
-            lp.pos.x = you.x_pos;
-            lp.pos.y = you.y_pos;
+            lp.id  = new_level_id;
+            lp.pos = you.pos();
 
             bool guess = false;
             // Ugly hack warning:
@@ -1698,7 +1685,7 @@ void up_stairs(dungeon_feature_type force_stair,
             }
             else
             {
-                old_level_info.update_stair(stair_x, stair_y, lp, guess);
+                old_level_info.update_stair(stair_pos, lp, guess);
             }
 
             // We *guess* that going up a staircase lands us on a downstair,
@@ -1711,9 +1698,8 @@ void up_stairs(dungeon_feature_type force_stair,
                 // downstairs will land you on the same upstairs you took to
                 // begin with (not necessarily true).
                 lp.id = old_level_id;
-                lp.pos.x = stair_x;
-                lp.pos.y = stair_y;
-                new_level_info.update_stair(you.x_pos, you.y_pos, lp, true);
+                lp.pos = stair_pos;
+                new_level_info.update_stair(you.pos(), lp, true);
             }
         }
     }
@@ -1858,7 +1844,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     level_id  old_level_id    = level_id::current();
     LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
-    int stair_x = you.x_pos, stair_y = you.y_pos;
+    const coord_def stair_pos = you.pos();
     if (collect_travel_data)
         old_level_info.update();
 
@@ -2129,7 +2115,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     switch (you.level_type)
     {
     case LEVEL_ABYSS:
-        grd[you.x_pos][you.y_pos] = DNGN_FLOOR;
+        grd(you.pos()) = DNGN_FLOOR;
 
         init_pandemonium();     // colours only
 
@@ -2206,19 +2192,17 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
             // First we update the old level's stair.
             level_pos lp;
-            lp.id    = new_level_id;
-            lp.pos.x = you.x_pos;
-            lp.pos.y = you.y_pos;
+            lp.id  = new_level_id;
+            lp.pos = you.pos();
 
-            old_level_info.update_stair(stair_x, stair_y, lp);
+            old_level_info.update_stair(stair_pos, lp);
 
             // Then the new level's stair, assuming arbitrarily that going
             // upstairs will land you on the same downstairs you took to begin
             // with (not necessarily true).
             lp.id = old_level_id;
-            lp.pos.x = stair_x;
-            lp.pos.y = stair_y;
-            new_level_info.update_stair(you.x_pos, you.y_pos, lp, true);
+            lp.pos = stair_pos;
+            new_level_info.update_stair(you.pos(), lp, true);
         }
     }
     request_autopickup();
@@ -2309,7 +2293,7 @@ bool go_berserk(bool intentional)
 
 bool mons_is_safe(const struct monsters *mon, bool want_move)
 {
-    int  dist    = grid_distance(you.x_pos, you.y_pos, mon->x, mon->y);
+    int  dist    = grid_distance(you.pos(), mon->pos());
 
     bool is_safe = (mons_wont_attack(mon)
                     || mons_class_flag(mon->type, M_NO_EXP_GAIN)
@@ -2318,7 +2302,7 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
                     || you.skills[SK_STEALTH] > 27 && dist > 2
 #endif
                        // Only seen through glass walls?
-                    || !see_grid_no_trans(mon->x, mon->y)
+                    || !see_grid_no_trans(mon->pos())
                        && !mons_has_ranged_spell(mon)
                        && !mons_has_los_ability(mon->type));
 
@@ -2642,15 +2626,14 @@ int speed_to_duration(int speed)
     return div_rand_round(100, speed);
 }
 
-void reveal_secret_door(int x, int y)
+void reveal_secret_door(const coord_def& p)
 {
-    ASSERT(grd[x][y] == DNGN_SECRET_DOOR);
+    ASSERT(grd(p) == DNGN_SECRET_DOOR);
 
-    dungeon_feature_type door = grid_secret_door_appearance(coord_def(x, y));
-    grd[x][y] = grid_is_opaque(door) ?
-        DNGN_CLOSED_DOOR : DNGN_OPEN_DOOR;
+    dungeon_feature_type door = grid_secret_door_appearance(p);
+    grd(p) = grid_is_opaque(door) ? DNGN_CLOSED_DOOR : DNGN_OPEN_DOOR;
     viewwindow(true, false);
-    learned_something_new(TUT_SEEN_SECRET_DOOR, x, y);
+    learned_something_new(TUT_SEEN_SECRET_DOOR, p);
 }
 
 // A feeble attempt at Nethack-like completeness for cute messages.

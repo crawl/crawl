@@ -196,7 +196,7 @@ std::string item_def::name(description_level_type descrip,
     buff << auxname;
 
     bool equipped = false;
-    if (descrip == DESC_INVENTORY_EQUIP && this->x == -1 && this->y == -1)
+    if (descrip == DESC_INVENTORY_EQUIP && in_inventory(*this))
     {
         ASSERT( this->link != -1 );
 

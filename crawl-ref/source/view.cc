@@ -114,7 +114,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour = false,
 void cloud_grid(void);
 void monster_grid(bool do_updates);
 
-static void _get_symbol( int x, int y,
+static void _get_symbol( const coord_def& where,
                          int object, unsigned *ch,
                          unsigned short *colour,
                          bool magic_mapped = false );
@@ -203,11 +203,11 @@ void set_envmap_glyph(int x, int y, int object, int col)
 #endif
 }
 
-void set_envmap_obj( int x, int y, int obj )
+void set_envmap_obj( const coord_def& where, int obj )
 {
-    env.map[x][y].object = obj;
+    env.map(where).object = obj;
 #ifdef USE_TILE
-    tiles.update_minimap(x, y);
+    tiles.update_minimap(where.x, where.y);
 #endif
 }
 
@@ -295,6 +295,11 @@ void set_terrain_seen( int x, int y )
     env.map[x][y].flags |= MAP_SEEN_FLAG;
 }
 
+void clear_envmap_grid( const coord_def& p )
+{
+    env.map(p).clear();
+}
+
 void clear_envmap_grid( int x, int y )
 {
     env.map[x][y].clear();
@@ -376,14 +381,15 @@ static unsigned _get_symbol(int object, unsigned short *colour,
                             bool magic_mapped)
 {
     unsigned ch;
-    _get_symbol(0, 0, object, &ch, NULL, magic_mapped);
+    _get_symbol(coord_def(0,0), object, &ch, NULL, magic_mapped);
     return (ch);
 }
 
-static int _view_emphasised_colour(int x, int y, dungeon_feature_type feat,
+static int _view_emphasised_colour(const coord_def& where,
+                                   dungeon_feature_type feat,
                                    int oldcolour, int newcolour)
 {
-    if (is_travelable_stair(feat) && !travel_cache.know_stair(coord_def(x, y)))
+    if (is_travelable_stair(feat) && !travel_cache.know_stair(where))
     {
         if ((you.your_level || grid_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL)
@@ -392,18 +398,18 @@ static int _view_emphasised_colour(int x, int y, dungeon_feature_type feat,
     return (oldcolour);
 }
 
-static bool _show_bloodcovered(int x, int y)
+static bool _show_bloodcovered(const coord_def& where)
 {
-    if (!is_bloodcovered(coord_def(x,y)))
+    if (!is_bloodcovered(where))
         return (false);
 
-    dungeon_feature_type grid = grd[x][y];
+    dungeon_feature_type grid = grd(where);
 
     // Altars, stairs (of any kind) and traps should not be coloured red.
     return (!is_critical_feature(grid) && !grid_is_trap(grid));
 }
 
-static void _get_symbol( int x, int y,
+static void _get_symbol( const coord_def& where,
                          int object, unsigned *ch,
                          unsigned short *colour,
                          bool magic_mapped )
@@ -422,11 +428,11 @@ static void _get_symbol( int x, int y,
             const int colmask = *colour & COLFLAG_MASK;
 
             if (object < NUM_REAL_FEATURES && object >= DNGN_MINMOVE
-                && is_sanctuary(coord_def(x,y)) )
+                && is_sanctuary(where) )
             {
-                if (env.map[x][y].property == FPROP_SANCTUARY_1)
+                if (env.map(where).property == FPROP_SANCTUARY_1)
                     *colour = YELLOW | colmask;
-                else if (env.map[x][y].property == FPROP_SANCTUARY_2)
+                else if (env.map(where).property == FPROP_SANCTUARY_2)
                 {
                     if (!one_chance_in(4))
                         *colour = WHITE | colmask;     // 3/4
@@ -436,13 +442,13 @@ static void _get_symbol( int x, int y,
                         *colour = LIGHTGREY | colmask; // 1/12
                 }
             }
-            else if (object < NUM_REAL_FEATURES && _show_bloodcovered(x,y))
+            else if (object < NUM_REAL_FEATURES && _show_bloodcovered(where))
             {
                 *colour = RED | colmask;
             }
-            else if (object < NUM_REAL_FEATURES && env.grid_colours[x][y])
+            else if (object < NUM_REAL_FEATURES && env.grid_colours(where))
             {
-                *colour = env.grid_colours[x][y] | colmask;
+                *colour = env.grid_colours(where) | colmask;
             }
             else
             {
@@ -454,11 +460,11 @@ static void _get_symbol( int x, int y,
                 if (fdef.em_colour != fdef.colour && fdef.em_colour)
                     *colour =
                         _view_emphasised_colour(
-                            x, y, static_cast<dungeon_feature_type>(object),
+                            where, static_cast<dungeon_feature_type>(object),
                             *colour, fdef.em_colour | colmask);
             }
 
-            if (object < NUM_REAL_FEATURES && inside_halo(x, y)
+            if (object < NUM_REAL_FEATURES && inside_halo(where)
                 && ((object >= DNGN_FLOOR_MIN && object <= DNGN_FLOOR_MAX)
                     || object == DNGN_UNDISCOVERED_TRAP))
             {
@@ -467,9 +473,9 @@ static void _get_symbol( int x, int y,
         }
 
         // Note anything we see that's notable
-        if ((x || y) && fdef.is_notable())
+        if ((!where.origin()) && fdef.is_notable())
             seen_notable_thing( static_cast<dungeon_feature_type>(object),
-                                x, y );
+                                where );
     }
     else
     {
@@ -646,7 +652,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
         && fdef.seen_em_colour)
     {
         feature_colour =
-            _view_emphasised_colour(x, y, grid_value, feature_colour,
+            _view_emphasised_colour(coord_def(x, y), grid_value, feature_colour,
                                     fdef.seen_em_colour);
     }
 
@@ -693,6 +699,8 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
     for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
         for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
         {
+            // FIXME convert to using p everywhere.
+            const coord_def p(x,y);
             // Don't expose new dug out areas:
             // Note: assumptions are being made here about how
             // terrain can change (eg it used to be solid, and
@@ -716,14 +724,14 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             if (!clear_detected_monsters && is_envmap_detected_mons(x, y))
                 continue;
 
-            set_envmap_obj(x, y, is_terrain_known(x, y)? grd[x][y] : 0);
+            set_envmap_obj(p, is_terrain_known(p)? grd(p) : 0);
             set_envmap_detected_mons(x, y, false);
             set_envmap_detected_item(x, y, false);
 
 #ifdef USE_TILE
-            set_envmap_obj(x, y, is_terrain_known(x, y)? grd[x][y] : 0);
+            set_envmap_obj(p, is_terrain_known(p)? grd(p) : 0);
             env.tile_bk_fg[x][y] = 0;
-            env.tile_bk_bg[x][y] = is_terrain_known(x, y) ?
+            env.tile_bk_bg[x][y] = is_terrain_known(p) ?
                 tile_idx_unseen_terrain(x, y, grd[x][y]) :
                 tileidx_feature(DNGN_UNSEEN, x, y);
 #endif
@@ -1094,29 +1102,28 @@ void force_monster_shout(monsters* monster)
 
 inline static bool _update_monster_grid(const monsters *monster)
 {
-    const int ex = monster->x - you.x_pos + 9;
-    const int ey = monster->y - you.y_pos + 9;
+    const coord_def e = monster->pos() - you.pos() + coord_def(9,9);
 
     if (!player_monster_visible( monster ))
     {
         // ripple effect?
-        if (grd[monster->x][monster->y] == DNGN_SHALLOW_WATER
+        if (grd(monster->pos()) == DNGN_SHALLOW_WATER
             && !mons_flies(monster)
             && env.cgrid(monster->pos()) == EMPTY_CLOUD)
         {
-            _set_show_backup(ex, ey);
-            env.show[ex][ey]     = DNGN_INVIS_EXPOSED;
-            env.show_col[ex][ey] = BLUE;
+            _set_show_backup(e.x, e.y);
+            env.show[e.x][e.y]     = DNGN_INVIS_EXPOSED;
+            env.show_col[e.x][e.y] = BLUE;
         }
         return (false);
     }
 
     // Mimics are always left on map.
     if (!mons_is_mimic( monster->type ))
-        _set_show_backup(ex, ey);
+        _set_show_backup(e.x, e.y);
 
-    env.show[ex][ey]     = monster->type + DNGN_START_OF_MONSTERS;
-    env.show_col[ex][ey] = get_mons_colour( monster );
+    env.show[e.x][e.y]     = monster->type + DNGN_START_OF_MONSTERS;
+    env.show_col[e.x][e.y] = get_mons_colour( monster );
 
     return (true);
 }
@@ -1142,7 +1149,7 @@ void monster_grid(bool do_updates)
             // [enne] - It's possible that mgrd and monster->x/y are out of
             // sync because they are updated separately.  If we can see this
             // monster, then make sure that the mgrd is set correctly.
-            if (mgrd[monster->x][monster->y] != s)
+            if (mgrd(monster->pos()) != s)
             {
 #ifdef DEBUG_DIAGNOSTICS
                 // If this mprf triggers for you, please note any special
@@ -1150,17 +1157,17 @@ void monster_grid(bool do_updates)
                 // from.
                 mprf(MSGCH_DIAGNOSTICS, "monster (%d) at (%d, %d) was "
                      "improperly placed.  Updating mgrd.", s,
-                     monster->x, monster->y);
+                     monster->pos().x, monster->pos().y);
 #endif
-                ASSERT(mgrd[monster->x][monster->y] == NON_MONSTER);
-                mgrd[monster->x][monster->y] = s;
+                ASSERT(mgrd(monster->pos()) == NON_MONSTER);
+                mgrd(monster->pos()) = s;
             }
 
             if (!_update_monster_grid(monster))
                 continue;
 
 #ifdef USE_TILE
-            tile_place_monster(monster->x, monster->y, s, true);
+            tile_place_monster(monster->pos().x, monster->pos().y, s, true);
 #endif
 
             if (player_monster_visible(monster)
@@ -1386,38 +1393,36 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
 
 void item_grid()
 {
-    coord_def gp;
-    for (gp.y = (you.y_pos - 8); (gp.y < you.y_pos + 9); gp.y++)
-        for (gp.x = (you.x_pos - 8); (gp.x < you.x_pos + 9); gp.x++)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, true, false); ri; ++ri)
+    {
+        if (igrd(*ri) != NON_ITEM)
         {
-            if (in_bounds(gp) && igrd(gp) != NON_ITEM)
-            {
-                const coord_def ep = gp - you.pos() + coord_def(9, 9);
-                if (env.show(ep))
-                    _update_item_grid(gp, ep);
-            }
+            const coord_def ep = *ri - you.pos() + coord_def(9, 9);
+            if (env.show(ep))
+                _update_item_grid(*ri, ep);
         }
+    }
 }
 
 void get_item_glyph( const item_def *item, unsigned *glych,
                      unsigned short *glycol )
 {
     *glycol = item->colour;
-    _get_symbol( 0, 0, _get_item_dngn_code( *item ), glych, glycol );
+    _get_symbol( coord_def(0,0), _get_item_dngn_code( *item ), glych, glycol );
 }
 
 void get_mons_glyph( const monsters *mons, unsigned *glych,
                      unsigned short *glycol )
 {
     *glycol = get_mons_colour( mons );
-    _get_symbol( 0, 0, mons->type + DNGN_START_OF_MONSTERS, glych, glycol );
+    _get_symbol( coord_def(0,0), mons->type + DNGN_START_OF_MONSTERS,
+                 glych, glycol );
 }
 
 inline static void _update_cloud_grid(int cloudno)
 {
     int which_colour = LIGHTGREY;
-    const int ex = env.cloud[cloudno].x - you.x_pos + 9;
-    const int ey = env.cloud[cloudno].y - you.y_pos + 9;
+    const coord_def e = env.cloud[cloudno].pos - you.pos() + coord_def(9,9);
 
     switch (env.cloud[cloudno].type)
     {
@@ -1477,12 +1482,12 @@ inline static void _update_cloud_grid(int cloudno)
         break;
     }
 
-    _set_show_backup(ex, ey);
-    env.show[ex][ey]     = DNGN_CLOUD;
-    env.show_col[ex][ey] = which_colour;
+    _set_show_backup(e.x, e.y);
+    env.show(e)     = DNGN_CLOUD;
+    env.show_col(e) = which_colour;
 
 #ifdef USE_TILE
-    tile_place_cloud(ex, ey, env.cloud[cloudno].type,
+    tile_place_cloud(e.x, e.y, env.cloud[cloudno].type,
                      env.cloud[cloudno].decay);
 #endif
 }
@@ -1501,7 +1506,7 @@ void cloud_grid(void)
         if (env.cloud[s].type != CLOUD_NONE)
         {
             mnc++;
-            if (see_grid(env.cloud[s].x, env.cloud[s].y))
+            if (see_grid(env.cloud[s].pos))
                 _update_cloud_grid(s);
         }
     }
@@ -1607,7 +1612,7 @@ void blood_smell( int strength, const coord_def& where )
 #ifdef DEBUG_DIAGNOSTICS
                 mprf(MSGCH_DIAGNOSTICS,
                      "Player smells blood, pos: (%d, %d), dist = %d)",
-                     you.x_pos, you.y_pos, player_distance);
+                     you.pos().x, you.pos().y, player_distance);
 #endif
                 you.check_awaken(range - player_distance);
                 // Don't message if you can see the square.
@@ -1646,7 +1651,7 @@ void blood_smell( int strength, const coord_def& where )
 #ifdef DEBUG_DIAGNOSTICS
                         mprf(MSGCH_DIAGNOSTICS, "disturbing %s (%d, %d)",
                              monster->name(DESC_PLAIN).c_str(),
-                             monster->x, monster->y);
+                             monster->pos().x, monster->pos().y);
 #endif
                         behaviour_event(monster, ME_DISTURB, MHITNOT, where);
                     }
@@ -1655,7 +1660,8 @@ void blood_smell( int strength, const coord_def& where )
             }
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "alerting %s (%d, %d)",
-                 monster->name(DESC_PLAIN).c_str(), monster->x, monster->y);
+                 monster->name(DESC_PLAIN).c_str(),
+                 monster->pos().x, monster->pos().y);
 #endif
             behaviour_event( monster, ME_ALERT, MHITNOT, where );
         }
@@ -3115,7 +3121,7 @@ static void _reset_travel_colours(std::vector<coord_def> &features)
 {
     // We now need to redo travel colours.
     features.clear();
-    find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
+    find_travel_pos(you.pos(), NULL, NULL, &features);
     // Sort features into the order the player is likely to prefer.
     arrange_features(features);
 }
@@ -3138,7 +3144,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
     {
         travel_cache.update();
 
-        find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
+        find_travel_pos(you.pos(), NULL, NULL, &features);
         // Sort features into the order the player is likely to prefer.
         arrange_features(features);
     }
@@ -3178,7 +3184,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
     const int block_step = Options.level_map_cursor_step;
     int start_y = 0;                                          // y does scroll
 
-    int screen_y = you.y_pos;
+    int screen_y = you.pos().y;
 
     // If close to top of known map, put min_y on top
     // else if close to bottom of known map, put max_y on bottom.
@@ -3195,8 +3201,8 @@ void show_map( coord_def &spec_place, bool travel_mode )
     else if (screen_y + half_screen > max_y)
         screen_y = max_y - half_screen;
 
-    int curs_x = you.x_pos - start_x + 1;
-    int curs_y = you.y_pos - screen_y + half_screen + 1;
+    int curs_x = you.pos().x - start_x + 1;
+    int curs_y = you.pos().y - screen_y + half_screen + 1;
     int search_feat = 0, search_found = 0, anchor_x = -1, anchor_y = -1;
 
     bool map_alive  = true;
@@ -3263,7 +3269,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
             // We need to do this all over again so that the user can jump
             // to the waypoint he just created.
             features.clear();
-            find_travel_pos(you.x_pos, you.y_pos, NULL, NULL, &features);
+            find_travel_pos(you.pos(), NULL, NULL, &features);
             // Sort features into the order the player is likely to prefer.
             arrange_features(features);
             break;
@@ -3475,7 +3481,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
         case ';':
         {
             int x = start_x + curs_x - 1, y = start_y + curs_y - 1;
-            if (travel_mode && x == you.x_pos && y == you.y_pos)
+            if (travel_mode && x == you.pos().x && y == you.pos().y)
             {
                 if (you.travel_x > 0 && you.travel_y > 0)
                 {
@@ -3600,8 +3606,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     if (!suppress_msg)
         mpr( "You feel aware of your surroundings." );
 
-    int i, j, k, l, empty_count;
-
     if (map_radius > 50 && map_radius != 1000)
         map_radius = 50;
     else if (map_radius < 5)
@@ -3612,84 +3616,71 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const int very_far = (map_radius * 9) / 10;
 
     const bool wizard_map = map_radius == 1000 && you.wizard;
-    for (i = you.x_pos - map_radius; i < you.x_pos + map_radius; i++)
-        for (j = you.y_pos - map_radius; j < you.y_pos + map_radius; j++)
-        {
-            if (proportion < 100 && random2(100) >= proportion)
-                continue;       // note that proportion can be over 100
+    for ( radius_iterator ri(you.pos(), map_radius, true, false); ri; ++ri )
+    {
+        if (proportion < 100 && random2(100) >= proportion)
+            continue;       // note that proportion can be over 100
+        
+        const int dist = grid_distance( you.pos(), *ri );
 
-            if (!map_bounds(i, j))
-                continue;
+        if (dist > pfar && one_chance_in(3))
+            continue;
 
-            const int dist = grid_distance( you.x_pos, you.y_pos, i, j );
+        if (dist > very_far && coinflip())
+            continue;
 
-            if (dist > pfar && one_chance_in(3))
-                continue;
-
-            if (dist > very_far && coinflip())
-                continue;
-
-            if (is_terrain_changed(i, j))
-                clear_envmap_grid(i, j);
+        if (is_terrain_changed(*ri))
+            clear_envmap_grid(*ri);
 
 #ifdef USE_TILE
-            if (!wizard_map && is_terrain_known(i,j))
-            {
-                // Can't use set_envmap_obj because that would
-                // overwrite the gmap.
-                env.tile_bk_bg[i][j] = tile_idx_unseen_terrain(i, j, grd[i][j]);
-            }
+        if (!wizard_map && is_terrain_known(*ri))
+        {
+            // Can't use set_envmap_obj because that would
+            // overwrite the gmap.
+            env.tile_bk_bg(*ri) = tile_idx_unseen_terrain(ri->x, ri->y,
+                                                          grd(*ri));
+        }
 #endif
+        
+        if (!wizard_map && is_terrain_known(*ri))
+            continue;
 
-            if (!wizard_map && is_terrain_known(i, j))
-                continue;
+        bool open = true;
 
-            empty_count = 8;
-
-            if (grid_is_solid(grd[i][j]) && grd[i][j] != DNGN_CLOSED_DOOR)
+        if (grid_is_solid(grd(*ri)) && grd(*ri) != DNGN_CLOSED_DOOR)
+        {
+            open = false;
+            for ( adjacent_iterator ai(*ri); ai; ++ai )
             {
-                for (k = -1; k <= 1; k++)
-                    for (l = -1; l <= 1; l++)
-                    {
-                        if (k == 0 && l == 0)
-                            continue;
-
-                        if (!map_bounds( i + k, j + l ))
-                        {
-                            --empty_count;
-                            continue;
-                        }
-
-                        if (grid_is_opaque( grd[i + k][j + l] )
-                            && grd[i + k][j + l] != DNGN_CLOSED_DOOR)
-                        {
-                            empty_count--;
-                        }
-                    }
-            }
-
-            if (empty_count > 0)
-            {
-                if (wizard_map || !get_envmap_obj(i, j))
-                    set_envmap_obj(i, j, grd[i][j]);
-
-                // Hack to give demonspawn Pandemonium mutation the ability
-                // to detect exits magically.
-                if (wizard_map
-                    || player_mutation_level(MUT_PANDEMONIUM) > 1
-                       && grd[i][j] == DNGN_EXIT_PANDEMONIUM)
+                if (map_bounds(*ai) && (!grid_is_opaque(grd(*ai))
+                                        || grd(*ai) == DNGN_CLOSED_DOOR))
                 {
-                    set_terrain_seen( i, j );
-                }
-                else
-                {
-                    set_terrain_mapped( i, j );
+                    open = true;
+                    break;
                 }
             }
         }
 
+        if (open > 0)
+        {
+            if (wizard_map || !get_envmap_obj(*ri))
+                set_envmap_obj(*ri, grd(*ri));
+
+            // Hack to give demonspawn Pandemonium mutation the ability
+            // to detect exits magically.
+            if (wizard_map
+                || player_mutation_level(MUT_PANDEMONIUM) > 1
+                && grd(*ri) == DNGN_EXIT_PANDEMONIUM)
+            {
+                set_terrain_seen( *ri );
+            }
+            else
+                set_terrain_mapped( *ri );
+        }
+    }
+
     return (true);
-}                               // end magic_mapping()
+}
 
 // Realize that this is simply a repackaged version of
 // stuff::see_grid() -- make certain they correlate {dlb}:
@@ -3701,10 +3692,10 @@ bool mons_near(const monsters *monster, unsigned short foe)
 
     if (foe == MHITYOU)
     {
-        if (monster->x > you.x_pos - 9 && monster->x < you.x_pos + 9
-            && monster->y > you.y_pos - 9 && monster->y < you.y_pos + 9)
+        if ( grid_distance(monster->pos(), you.pos()) <= LOS_RADIUS )
         {
-            if (env.show[monster->x - you.x_pos + 9][monster->y - you.y_pos + 9])
+            const coord_def diff = monster->pos() - you.pos() + coord_def(9,9);
+            if (env.show(diff))
                 return (true);
         }
         return (false);
@@ -3714,11 +3705,8 @@ bool mons_near(const monsters *monster, unsigned short foe)
     const monsters *myFoe = &menv[foe];
     if (myFoe->type >= 0)
     {
-        if (monster->x > myFoe->x - 9 && monster->x < myFoe->x + 9
-            && monster->y > myFoe->y - 9 && monster->y < myFoe->y + 9)
-        {
+        if ( grid_distance( monster->pos(), myFoe->pos() ) <= LOS_RADIUS )
             return (true);
-        }
     }
 
     return (false);
@@ -4569,23 +4557,23 @@ void init_feature_table( void )
     }
 }
 
-unsigned get_screen_glyph( const coord_def &p)
-{
-    return get_screen_glyph(p.x, p.y);
-}
-
 unsigned get_screen_glyph( int x, int y )
 {
-    const coord_def ep = view2show(grid2view(coord_def(x,y)));
+    return get_screen_glyph(coord_def(x,y));
+}
+
+unsigned get_screen_glyph( const coord_def& p )
+{
+    const coord_def ep = view2show(grid2view(p));
 
     int             object = show_appearance(ep);
     unsigned short  colour = env.show_col(ep);
     unsigned        ch;
 
     if (!object)
-        return get_envmap_char(x, y);
+        return get_envmap_char(p.x, p.y);
 
-    _get_symbol( x, y, object, &ch, &colour );
+    _get_symbol( p, object, &ch, &colour );
     return (ch);
 }
 
@@ -4648,7 +4636,7 @@ std::string screenshot( bool fullscreen )
                 unsigned glych;
                 unsigned short glycol = 0;
 
-                _get_symbol( gc.x, gc.y, object, &glych, &glycol );
+                _get_symbol( gc, object, &glych, &glycol );
                 ch = glych;
             }
 
@@ -4744,7 +4732,7 @@ void view_update_at(const coord_def &pos)
     unsigned short  colour = env.show_col(ep);
     unsigned        ch = 0;
 
-    _get_symbol( pos.x, pos.y, object, &ch, &colour );
+    _get_symbol( pos, object, &ch, &colour );
 
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
@@ -4882,27 +4870,26 @@ void viewwindow(bool draw_it, bool do_updates)
                     {
                         if (grid_is_escape_hatch(grd(gc)))
                         {
-                            learned_something_new(TUT_SEEN_ESCAPE_HATCH,
-                                                  gc.x, gc.y);
+                            learned_something_new(TUT_SEEN_ESCAPE_HATCH, gc);
                         }
                         else if (grid_is_branch_stairs(grd(gc)))
-                            learned_something_new(TUT_SEEN_BRANCH, gc.x, gc.y);
+                            learned_something_new(TUT_SEEN_BRANCH, gc);
                         else if (is_feature('>', gc))
                         {
-                            learned_something_new(TUT_SEEN_STAIRS, gc.x, gc.y);
+                            learned_something_new(TUT_SEEN_STAIRS, gc);
                         }
                         else if (is_feature('_', gc))
-                            learned_something_new(TUT_SEEN_ALTAR, gc.x, gc.y);
+                            learned_something_new(TUT_SEEN_ALTAR, gc);
                         else if (grd(gc) == DNGN_CLOSED_DOOR)
-                            learned_something_new(TUT_SEEN_DOOR, gc.x, gc.y);
+                            learned_something_new(TUT_SEEN_DOOR, gc);
                         else if (grd(gc) == DNGN_ENTER_SHOP)
-                            learned_something_new(TUT_SEEN_SHOP, gc.x, gc.y);
+                            learned_something_new(TUT_SEEN_SHOP, gc);
 
                         if (igrd[gc.x][gc.y] != NON_ITEM
                             && Options.feature_item_brand != CHATTR_NORMAL
                             && (is_feature('>', gc) || is_feature('<', gc)))
                         {
-                            learned_something_new(TUT_STAIR_BRAND, gc.x, gc.y);
+                            learned_something_new(TUT_STAIR_BRAND, gc);
                         }
                     }
                 }
@@ -4947,7 +4934,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     int             object = env.show(ep);
                     unsigned short  colour = env.show_col(ep);
                     unsigned        ch;
-                    _get_symbol( gc.x, gc.y, object, &ch, &colour );
+                    _get_symbol( gc, object, &ch, &colour );
 
                     if (map)
                     {
@@ -4988,7 +4975,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     unsigned short  colour = env.show_col(ep);
                     unsigned        ch;
 
-                    _get_symbol( gc.x, gc.y, object, &ch, &colour );
+                    _get_symbol( gc, object, &ch, &colour );
 
                     buffy[bufcount]     = ch;
                     buffy[bufcount + 1] = colour;
@@ -5045,8 +5032,7 @@ void viewwindow(bool draw_it, bool do_updates)
                         if (Options.clean_map && Show_Backup(ep)
                             && is_terrain_seen( gc.x, gc.y ))
                         {
-                            _get_symbol( gc.x, gc.y,
-                                         Show_Backup(ep), &ch, &colour );
+                            _get_symbol( gc, Show_Backup(ep), &ch, &colour );
                             set_envmap_glyph( gc.x, gc.y, Show_Backup(ep),
                                               colour );
                         }

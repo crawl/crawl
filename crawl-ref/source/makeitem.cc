@@ -2840,8 +2840,7 @@ int items( int allow_uniques,       // not just true-false,
 
     if (dont_place)
     {
-        item.x = 0;
-        item.y = 0;
+        item.pos.reset();
         item.link = NON_ITEM;
     }
     else
@@ -2923,8 +2922,7 @@ static void _give_monster_item(monsters *mon, int thing,
          mon->name(DESC_PLAIN).c_str());
 #endif
 
-    mthing.x = 0;
-    mthing.y = 0;
+    mthing.pos.reset();
     mthing.link = NON_ITEM;
     unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
 
@@ -3647,8 +3645,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     if (item.base_type == OBJ_UNASSIGNED)
         return (item_race);
 
-    item.x = 0;
-    item.y = 0;
+    item.pos.reset();
     item.link = NON_ITEM;
 
     if (!force_item && mons_is_unique( mon->type ))

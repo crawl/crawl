@@ -521,8 +521,7 @@ void wizard_create_spec_monster_name()
     if (mons_is_unique(mspec.mid) && you.unique_creatures[mspec.mid])
         you.unique_creatures[mspec.mid] = false;
 
-    if (!dgn_place_monster(mspec, you.your_level,
-                           place.x, place.y, true, false))
+    if (!dgn_place_monster(mspec, you.your_level, place, true, false))
     {
         mpr("Unable to place monster.", MSGCH_DIAGNOSTICS);
         return;
@@ -1691,8 +1690,9 @@ void wizard_tweak_object(void)
 // Prints a number of useful (for debugging, that is) stats on monsters.
 void debug_stethoscope(int mon)
 {
-    struct dist stth;
-    int steth_x, steth_y;
+    dist stth;
+    coord_def stethpos;
+
     int i;
 
     if (mon != RANDOM_MONSTER)
@@ -1707,59 +1707,55 @@ void debug_stethoscope(int mon)
             return;
 
         if (stth.isTarget)
-        {
-            steth_x = stth.tx;
-            steth_y = stth.ty;
-        }
+            stethpos = stth.target;
         else
-        {
-            steth_x = you.x_pos + stth.dx;
-            steth_y = you.x_pos + stth.dy;
-        }
+            stethpos = you.pos() + stth.delta;
 
-        if (env.cgrid[steth_x][steth_y] != EMPTY_CLOUD)
+        if (env.cgrid(stethpos) != EMPTY_CLOUD)
         {
             mprf(MSGCH_DIAGNOSTICS, "cloud type: %d delay: %d",
-                 env.cloud[ env.cgrid[steth_x][steth_y] ].type,
-                 env.cloud[ env.cgrid[steth_x][steth_y] ].decay );
+                 env.cloud[ env.cgrid(stethpos) ].type,
+                 env.cloud[ env.cgrid(stethpos) ].decay );
         }
 
-        if (mgrd[steth_x][steth_y] == NON_MONSTER)
+        if (mgrd(stethpos) == NON_MONSTER)
         {
-            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", igrd[steth_x][steth_y] );
+            mprf(MSGCH_DIAGNOSTICS, "item grid = %d", igrd(stethpos) );
             return;
         }
 
-        i = mgrd[steth_x][steth_y];
+        i = mgrd(stethpos);
     }
+
+    monsters& mons(menv[i]);
 
     // Print type of monster.
     mprf(MSGCH_DIAGNOSTICS, "%s (id #%d; type=%d loc=(%d,%d) align=%s)",
-         menv[i].name(DESC_CAP_THE, true).c_str(),
-         i, menv[i].type, menv[i].x, menv[i].y,
-         ((menv[i].attitude == ATT_HOSTILE)       ? "hostile" :
-          (menv[i].attitude == ATT_FRIENDLY)      ? "friendly" :
-          (menv[i].attitude == ATT_NEUTRAL)       ? "neutral" :
-          (menv[i].attitude == ATT_GOOD_NEUTRAL)  ? "good neutral"
+         mons.name(DESC_CAP_THE, true).c_str(),
+         i, mons.type, mons.pos().x, mons.pos().y,
+         ((mons.attitude == ATT_HOSTILE)       ? "hostile" :
+          (mons.attitude == ATT_FRIENDLY)      ? "friendly" :
+          (mons.attitude == ATT_NEUTRAL)       ? "neutral" :
+          (mons.attitude == ATT_GOOD_NEUTRAL)  ? "good neutral"
                                                   : "unknown alignment") );
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
          "HD=%d (%lu) HP=%d/%d AC=%d EV=%d MR=%d SP=%d "
          "energy=%d%s%s num=%d flags=%04lx",
-         menv[i].hit_dice,
-         menv[i].experience,
-         menv[i].hit_points, menv[i].max_hit_points,
-         menv[i].ac, menv[i].ev,
-         mons_resist_magic( &menv[i] ),
-         menv[i].speed, menv[i].speed_increment,
-         menv[i].base_monster != MONS_PROGRAM_BUG ? " base=" : "",
-         menv[i].base_monster != MONS_PROGRAM_BUG ?
-         get_monster_data(menv[i].base_monster)->name : "",
-         menv[i].number, menv[i].flags );
+         mons.hit_dice,
+         mons.experience,
+         mons.hit_points, mons.max_hit_points,
+         mons.ac, mons.ev,
+         mons_resist_magic( &mons ),
+         mons.speed, mons.speed_increment,
+         mons.base_monster != MONS_PROGRAM_BUG ? " base=" : "",
+         mons.base_monster != MONS_PROGRAM_BUG ?
+         get_monster_data(mons.base_monster)->name : "",
+         mons.number, mons.flags );
 
     // Print habitat and behaviour information.
-    const habitat_type hab = mons_habitat( &menv[i] );
+    const habitat_type hab = mons_habitat( &mons );
 
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) god=%s",
@@ -1768,40 +1764,40 @@ void debug_stethoscope(int mon)
           (hab == HT_ROCK)                       ? "rock" :
           (hab == HT_LAND)                       ? "floor"
                                                  : "unknown"),
-         (mons_is_sleeping(&menv[i])        ? "sleep" :
-          mons_is_wandering(&menv[i])       ? "wander" :
-          mons_is_seeking(&menv[i])         ? "seek" :
-          mons_is_fleeing(&menv[i])         ? "flee" :
-          mons_is_cornered(&menv[i])        ? "cornered" :
-          mons_is_panicking(&menv[i])       ? "panic" :
-          mons_is_lurking(&menv[i])         ? "lurk"
+         (mons_is_sleeping(&mons)        ? "sleep" :
+          mons_is_wandering(&mons)       ? "wander" :
+          mons_is_seeking(&mons)         ? "seek" :
+          mons_is_fleeing(&mons)         ? "flee" :
+          mons_is_cornered(&mons)        ? "cornered" :
+          mons_is_panicking(&mons)       ? "panic" :
+          mons_is_lurking(&mons)         ? "lurk"
                                             : "unknown"),
-         menv[i].behaviour,
-         ((menv[i].foe == MHITYOU)            ? "you" :
-          (menv[i].foe == MHITNOT)            ? "none" :
-          (menv[menv[i].foe].type == -1)      ? "unassigned monster"
-          : menv[menv[i].foe].name(DESC_PLAIN, true).c_str()),
-         menv[i].foe,
-         menv[i].foe_memory,
-         menv[i].target_x, menv[i].target_y,
-         god_name(menv[i].god).c_str() );
+         mons.behaviour,
+         ((mons.foe == MHITYOU)            ? "you" :
+          (mons.foe == MHITNOT)            ? "none" :
+          (menv[mons.foe].type == -1)      ? "unassigned monster"
+          : menv[mons.foe].name(DESC_PLAIN, true).c_str()),
+         mons.foe,
+         mons.foe_memory,
+         mons.target.x, mons.target.y,
+         god_name(mons.god).c_str() );
 
     // Print resistances.
     mprf(MSGCH_DIAGNOSTICS, "resist: fire=%d cold=%d elec=%d pois=%d neg=%d",
-         mons_res_fire( &menv[i] ),
-         mons_res_cold( &menv[i] ),
-         mons_res_elec( &menv[i] ),
-         mons_res_poison( &menv[i] ),
-         mons_res_negative_energy( &menv[i] ) );
+         mons_res_fire( &mons ),
+         mons_res_cold( &mons ),
+         mons_res_elec( &mons ),
+         mons_res_poison( &mons ),
+         mons_res_negative_energy( &mons ) );
 
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
-         menv[i].describe_enchantments().c_str());
+         mons.describe_enchantments().c_str());
 
-    if (menv[i].type == MONS_PLAYER_GHOST
-        || menv[i].type == MONS_PANDEMONIUM_DEMON)
+    if (mons.type == MONS_PLAYER_GHOST
+        || mons.type == MONS_PANDEMONIUM_DEMON)
     {
-        ASSERT(menv[i].ghost.get());
-        const ghost_demon &ghost = *menv[i].ghost;
+        ASSERT(mons.ghost.get());
+        const ghost_demon &ghost = *mons.ghost;
         mprf( MSGCH_DIAGNOSTICS,
               "Ghost damage: %d; brand: %d",
               ghost.damage, ghost.brand );
@@ -1822,7 +1818,7 @@ static void _dump_item( const char *name, int num, const item_def &item )
          item.quantity, item.colour, item.flags,
          get_ident_type( item ) );
 
-    mprf("    x: %d; y: %d; link: %d", item.x, item.y, item.link );
+    mprf("    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link );
 
     crawl_state.cancel_cmd_repeat();
 }
@@ -1862,7 +1858,7 @@ void debug_item_scan( void )
                 }
 
                 // Check that item knows what stack it's in
-                if (mitm[obj].x != x || mitm[obj].y != y)
+                if (mitm[obj].pos.x != x || mitm[obj].pos.y != y)
                 {
                     mprf(MSGCH_ERROR,"Item position incorrect at (%d,%d)!",x,y);
                     _dump_item( mitm[obj].name(DESC_PLAIN).c_str(),
@@ -1891,13 +1887,13 @@ void debug_item_scan( void )
         strcpy(name, mitm[i].name(DESC_PLAIN).c_str());
 
         // Don't check (-1,-1) player items or (0,0) monster items
-        if ((mitm[i].x > 0 || mitm[i].y > 0) && !visited[i])
+        if ((mitm[i].pos.x > 0 || mitm[i].pos.y > 0) && !visited[i])
         {
             mpr( "Unlinked item:", MSGCH_ERROR );
             _dump_item( name, i, mitm[i] );
 
             mprf("igrd(%d,%d) = %d",
-                 mitm[i].x, mitm[i].y, igrd[ mitm[i].x ][ mitm[i].y ] );
+                 mitm[i].pos.x, mitm[i].pos.y, igrd( mitm[i].pos ));
 
             // Let's check to see if it's an errant monster object:
             for (int j = 0; j < MAX_MONSTERS; j++)
@@ -1907,7 +1903,7 @@ void debug_item_scan( void )
                     {
                         mprf("Held by monster #%d: %s at (%d,%d)",
                              j, menv[j].name(DESC_CAP_A, true).c_str(),
-                             menv[j].x, menv[j].y );
+                             menv[j].pos().x, menv[j].pos().y );
                     }
                 }
         }
@@ -1968,7 +1964,7 @@ void debug_item_scan( void )
             mprf( MSGCH_ERROR, "Program bug detected!" );
             mprf( MSGCH_ERROR,
                   "Buggy monster detected: monster #%d; position (%d,%d)",
-                  i, monster.x, monster.y );
+                  i, monster.pos().x, monster.pos().y );
         }
     }
 }
@@ -1990,7 +1986,7 @@ void debug_mons_scan()
                 mprf(MSGCH_WARN,
                      "Bogosity: mgrd at %d,%d points at %s, "
                      "but monster is at %d,%d",
-                     x, y, m->name(DESC_PLAIN).c_str(), m->x, m->y);
+                     x, y, m->name(DESC_PLAIN).c_str(), m->pos().x, m->pos().y);
                 warned = true;
             }
         }
@@ -2003,7 +1999,7 @@ void debug_mons_scan()
         if (mgrd(m->pos()) != i)
         {
             mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d)",
-                 m->name(DESC_PLAIN).c_str(), m->x, m->y);
+                 m->name(DESC_PLAIN).c_str(), m->pos().x, m->pos().y);
             warned = true;
         }
     }
@@ -2972,8 +2968,7 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
         // throw_it() will decrease quantity by 1
         inc_inv_item_quantity(thrown, 1);
 
-        beam.target_x = mon.x;
-        beam.target_y = mon.y;
+        beam.target = mon.pos();
         if (throw_it(beam, thrown, true, DEBUG_COOKIE))
             hits++;
 
@@ -3498,7 +3493,7 @@ void debug_make_trap()
         }
     }
 
-    place_specific_trap(you.x_pos, you.y_pos, trap);
+    place_specific_trap(you.pos(), trap);
 
     mprf("Created a %s trap, marked it undiscovered", trap_name(trap));
 }
@@ -3549,7 +3544,7 @@ void debug_make_shop()
 
     representative = !!strchr(requested_shop, '*');
 
-    place_spec_shop(you.your_level, you.x_pos, you.y_pos,
+    place_spec_shop(you.your_level, you.pos(),
                     new_shop_type, representative);
     link_items();
     mprf("Done.");
@@ -4105,8 +4100,7 @@ void wizard_give_monster_item(monsters *mon)
     item_def &new_item = mitm[index];
     new_item      = item;
     new_item.link = NON_ITEM;
-    new_item.x    = 0;
-    new_item.y    = 0;
+    new_item.pos.reset();
 
     mon->inv[mon_slot] = index;
 
@@ -4128,29 +4122,29 @@ void wizard_give_monster_item(monsters *mon)
 #endif
 
 #ifdef WIZARD
-static void _move_player(int x, int y)
+static void _move_player(const coord_def& where)
 {
     // no longer held in net
     clear_trapping_net();
 
-    if (!you.can_pass_through_feat(grd[x][y]))
-        grd[x][y] = DNGN_FLOOR;
-    move_player_to_grid(coord_def(x, y), false, true, true);
+    if (!you.can_pass_through_feat(grd(where)))
+        grd(where) = DNGN_FLOOR;
+    move_player_to_grid(where, false, true, true);
 }
 
-static void _move_monster(int x, int y, int mid1)
+static void _move_monster(const coord_def& where, int mid1)
 {
     dist moves;
     direction(moves, DIR_NONE, TARG_ANY, -1, true, false, true, true,
               "Move monster to where?");
 
-    if (!moves.isValid || !in_bounds(moves.tx, moves.ty))
+    if (!moves.isValid || !in_bounds(moves.target))
         return;
 
     monsters* mon1 = &menv[mid1];
     mons_clear_trapping_net(mon1);
 
-    int mid2 = mgrd[moves.tx][moves.ty];
+    int mid2 = mgrd(moves.target);
     monsters* mon2 = NULL;
 
     if (mid2 != NON_MONSTER)
@@ -4159,23 +4153,20 @@ static void _move_monster(int x, int y, int mid1)
         mons_clear_trapping_net(mon2);
     }
 
-    mon1->x = moves.tx;
-    mon1->y = moves.ty;
-    mgrd[moves.tx][moves.ty] = mid1;
-    mon1->check_redraw(moves.target());
+    mon1->moveto(moves.target);
+    mgrd(moves.target) = mid1;
+    mon1->check_redraw(moves.target);
 
-    mgrd[x][y] = mid2;
+    mgrd(where) = mid2;
 
     if (mon2 != NULL)
     {
-        mon2->x = x;
-        mon2->y = y;
-
-        mon1->check_redraw(coord_def(x, y));
+        mon2->moveto(where);
+        mon1->check_redraw(where);
     }
 }
 
-void wizard_move_player_or_monster(int x, int y)
+void wizard_move_player_or_monster(const coord_def& where)
 {
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
@@ -4190,12 +4181,12 @@ void wizard_move_player_or_monster(int x, int y)
 
     already_moving = true;
 
-    int mid = mgrd[x][y];
+    int mid = mgrd(where);
 
     if (mid == NON_MONSTER)
-        _move_player(x, y);
+        _move_player(where);
     else
-        _move_monster(x, y, mid);
+        _move_monster(where, mid);
 
     already_moving = false;
 }
@@ -4220,7 +4211,7 @@ void debug_pathfind(int mid)
 
     monsters &mon = menv[mid];
     mprf("Attempting to calculate a path from (%d, %d) to (%d, %d)...",
-         mon.x, mon.y, dest.x, dest.y);
+         mon.pos().x, mon.pos().y, dest.x, dest.y);
     monster_pathfind mp;
     bool success = mp.start_pathfind(&mon, dest, true);
     if (success)
@@ -4600,9 +4591,10 @@ static bool mg_do_build_level(int niters)
 
             // Mapping would only have mapped squares that the player can
             // reach - explicitly map the full level.
-            for (int y = 0; y < GYM; ++y)
-                for (int x = 0; x < GXM; ++x)
-                    set_envmap_obj(x, y, grd[x][y]);
+            coord_def c;
+            for (c.y = 0; c.y < GYM; ++c.y)
+                for (c.x = 0; c.x < GXM; ++c.x)
+                    set_envmap_obj(c, grd(c));
 
             dump_map(fp);
 

@@ -378,21 +378,12 @@ void cast_detect_secret_doors(int pow)
 {
     int found = 0;
 
-    for (int x = you.x_pos - 8; x <= you.x_pos + 8; x++)
+    for ( radius_iterator ri(you.pos(), 8); ri; ++ri )
     {
-        for (int y = you.y_pos - 8; y <= you.y_pos + 8; y++)
+        if (grd(*ri) == DNGN_SECRET_DOOR && random2(pow) > random2(15))
         {
-            if (x < 5 || x > GXM - 5 || y < 5 || y > GYM - 5)
-                continue;
-
-            if (!see_grid(x, y))
-                continue;
-
-            if (grd[x][y] == DNGN_SECRET_DOOR && random2(pow) > random2(15))
-            {
-                reveal_secret_door(x, y);
-                found++;
-            }
+            reveal_secret_door(*ri);
+            found++;
         }
     }
 
@@ -1078,14 +1069,14 @@ static int _make_a_rot_cloud(const coord_def& where, int pow, cloud_type ctype)
     return 0;
 }
 
-int make_a_normal_cloud(int x, int y, int pow, int spread_rate,
+int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
                         cloud_type ctype, kill_category whose,
                         killer_type killer)
 {
     if (killer == KILL_NONE)
         killer = cloud_struct::whose_to_killer(whose);
 
-    place_cloud( ctype, coord_def(x, y),
+    place_cloud( ctype, where,
                  (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
                  whose, killer, spread_rate );
 
@@ -1096,9 +1087,6 @@ static int _passwall(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
 
-    int x = where.x, y = where.y;
-
-    int dx, dy, nx = x, ny = y;
     int howdeep = 0;
     bool done = false;
     int shallow = 1 + (you.skills[SK_EARTH_MAGIC] / 8);
@@ -1109,27 +1097,27 @@ static int _passwall(coord_def where, int pow, int garbage)
     // are used for impassable walls... I'm not sure we should
     // even allow statues (should be contiguous rock). -- bwr
     // XXX: Allow statues as entry points?
-    if (grd[x][y] != DNGN_ROCK_WALL && grd[x][y] != DNGN_CLEAR_ROCK_WALL)
+    if (grd(where) != DNGN_ROCK_WALL && grd(where) != DNGN_CLEAR_ROCK_WALL)
     {
         mpr("That's not a passable wall.");
         return 0;
     }
 
-    dx = x - you.x_pos;
-    dy = y - you.y_pos;
+    coord_def delta = where - you.pos();
+    coord_def n = where;
 
     while (!done)
     {
-        if (!in_bounds(nx, ny))
+        if (!in_bounds(n))
         {
             mpr("You sense an overwhelming volume of rock.");
             return 0;
         }
 
-        switch (grd[nx][ny])
+        switch (grd(n))
         {
         default:
-            if (grid_is_solid(grd[nx][ny]))
+            if (grid_is_solid(grd(n)))
                 non_rock_barriers = true;
             done = true;
             break;
@@ -1139,8 +1127,7 @@ static int _passwall(coord_def where, int pow, int garbage)
         case DNGN_ORCISH_IDOL:
         case DNGN_GRANITE_STATUE:
         case DNGN_SECRET_DOOR:
-            nx += dx;
-            ny += dy;
+            n += delta;
             howdeep++;
             break;
         }
@@ -1172,7 +1159,7 @@ static int _passwall(coord_def where, int pow, int garbage)
     }
 
     // Passwall delay is reduced, and the delay cannot be interrupted.
-    start_delay( DELAY_PASSWALL, 1 + howdeep, nx, ny );
+    start_delay( DELAY_PASSWALL, 1 + howdeep, n.x, n.y );
 
     return 1;
 }                               // end passwall()
@@ -1397,8 +1384,7 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
     }
 
     // Fire tracer.
-    beem.source_x       = you.x_pos;
-    beem.source_y       = you.y_pos;
+    beem.source         = you.pos();
     beem.can_see_invis  = player_see_invis();
     beem.smart_monster  = true;
     beem.attitude       = ATT_FRIENDLY;
@@ -1684,7 +1670,7 @@ void do_monster_rot(int mon)
 
     if (mons_holiness(&menv[mon]) == MH_UNDEAD && !one_chance_in(5))
     {
-        apply_area_cloud(make_a_normal_cloud, menv[mon].x, menv[mon].y,
+        apply_area_cloud(make_a_normal_cloud, menv[mon].pos(),
                          10, 1, CLOUD_MIASMA, KC_YOU, KILL_YOU_MISSILE);
     }
 
@@ -1744,8 +1730,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     beam.ex_size     = 1;              // default
     beam.type        = '#';
     beam.colour      = 0;
-    beam.source_x    = you.x_pos;
-    beam.source_y    = you.y_pos;
+    beam.source      = you.pos();
     beam.flavour     = BEAM_FRAG;
     beam.hit         = AUTOMATIC_HIT;
     beam.is_tracer   = false;
@@ -1755,10 +1740,8 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
     beam.damage = dice_def(0, 5 + pow / 10);
 
-    const int grid = grd[spd.tx][spd.ty];
-    const int mon  = mgrd[spd.tx][spd.ty];
-
-    const bool okay_to_dest = in_bounds(spd.target());
+    const dungeon_feature_type grid = grd(spd.target);
+    const int mon = mgrd(spd.target);
 
     if (mon != NON_MONSTER)
     {
@@ -1929,19 +1912,18 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         if (beam.colour == 0)
             beam.colour = LIGHTGREY;
 
-        if (okay_to_dest
-            && (grid == DNGN_ORCISH_IDOL
-                || grid == DNGN_GRANITE_STATUE
-                || pow >= 40 && grid == DNGN_ROCK_WALL && one_chance_in(3)
-                || pow >= 40 && grid == DNGN_CLEAR_ROCK_WALL
-                   && one_chance_in(3)
-                || pow >= 60 && grid == DNGN_STONE_WALL && one_chance_in(10)
-                || pow >= 60 && grid == DNGN_CLEAR_STONE_WALL
-                   && one_chance_in(10)))
+        if ((grid == DNGN_ORCISH_IDOL
+             || grid == DNGN_GRANITE_STATUE
+             || pow >= 40 && grid == DNGN_ROCK_WALL && one_chance_in(3)
+             || pow >= 40 && grid == DNGN_CLEAR_ROCK_WALL
+             && one_chance_in(3)
+             || pow >= 60 && grid == DNGN_STONE_WALL && one_chance_in(10)
+             || pow >= 60 && grid == DNGN_CLEAR_STONE_WALL
+             && one_chance_in(10)))
         {
             // terrain blew up real good:
             beam.ex_size        = 2;
-            grd[spd.tx][spd.ty] = DNGN_FLOOR;
+            grd(spd.target) = DNGN_FLOOR;
             debris              = DEBRIS_ROCK;
         }
         break;
@@ -1957,10 +1939,10 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         beam.name       = "blast of metal fragments";
         beam.damage.num = 4;
 
-        if (okay_to_dest && pow >= 80 && x_chance_in_y(pow / 5, 500))
+        if (pow >= 80 && x_chance_in_y(pow / 5, 500))
         {
             beam.damage.num += 2;
-            grd[spd.tx][spd.ty] = DNGN_FLOOR;
+            grd(spd.target) = DNGN_FLOOR;
             debris = DEBRIS_METAL;
         }
         break;
@@ -1977,10 +1959,10 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         beam.name       = "blast of crystal shards";
         beam.damage.num = 5;
 
-        if (okay_to_dest && grid == DNGN_GREEN_CRYSTAL_WALL && coinflip())
+        if (grid == DNGN_GREEN_CRYSTAL_WALL && coinflip())
         {
             beam.ex_size = coinflip() ? 3 : 2;
-            grd[spd.tx][spd.ty] = DNGN_FLOOR;
+            grd(spd.target) = DNGN_FLOOR;
             debris = DEBRIS_CRYSTAL;
         }
         break;
@@ -1991,7 +1973,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
     case DNGN_UNDISCOVERED_TRAP:
     case DNGN_TRAP_MECHANICAL:
-        trap = trap_at_xy(spd.target());
+        trap = trap_at_xy(spd.target);
         if (trap != -1
             && trap_category(env.trap[trap].type) != DNGN_TRAP_MECHANICAL)
         {
@@ -2009,11 +1991,8 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         beam.damage.num = 2;
 
         // Exploded traps are nonfunctional, ammo is also ruined -- bwr
-        if (okay_to_dest)
-        {
-            grd[spd.tx][spd.ty] = DNGN_FLOOR;
-            env.trap[trap].type = TRAP_UNASSIGNED;
-        }
+        grd(spd.target) = DNGN_FLOOR;
+        env.trap[trap].type = TRAP_UNASSIGNED;
         break;
 
     //
@@ -2023,8 +2002,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
     case DNGN_OPEN_DOOR:
     case DNGN_CLOSED_DOOR:
         // Doors always blow up, stone arches never do (would cause problems).
-        if (okay_to_dest)
-            grd[spd.tx][spd.ty] = DNGN_FLOOR;
+        grd(spd.target) = DNGN_FLOOR;
 
         // fall-through
     case DNGN_STONE_ARCH:          // Floor -- small explosion.
@@ -2084,7 +2062,7 @@ void cast_twist(int pow)
     if (!spell_direction(targ, tmp, DIR_TARGET))
         return;
 
-    const int mons = mgrd[ targ.tx ][ targ.ty ];
+    const int mons = mgrd(targ.target);
 
     // Anything there?
     if (mons == NON_MONSTER || targ.isMe)
@@ -2121,14 +2099,14 @@ bool cast_portal_projectile(int pow)
     if (item == -1)
         return (false);
 
-    if (grid_is_solid(target.tx, target.ty))
+    if (grid_is_solid(target.target))
     {
         mpr("You can't shoot at gazebos.");
         return (false);
     }
 
     // Can't use portal through walls. (That'd be just too cheap!)
-    if (trans_wall_blocking( target.tx, target.ty ))
+    if (trans_wall_blocking( target.target ))
     {
         mpr("A translucent wall is in the way.");
         return (false);
@@ -2168,13 +2146,13 @@ void cast_far_strike(int pow)
         return;
 
     // Get the target monster...
-    if (mgrd[targ.tx][targ.ty] == NON_MONSTER || targ.isMe)
+    if (mgrd(targ.target) == NON_MONSTER || targ.isMe)
     {
         mpr("There is no monster there!");
         return;
     }
 
-    if (trans_wall_blocking( targ.tx, targ.ty ))
+    if (trans_wall_blocking( targ.target ))
     {
         mpr("A translucent wall is in the way.");
         return;
@@ -2241,7 +2219,7 @@ void cast_far_strike(int pow)
     damage *= dammod;
     damage /= 78;
 
-    monsters *monster = &menv[ mgrd[targ.tx][targ.ty] ];
+    monsters *monster = &menv[ mgrd(targ.target) ];
 
     // Apply monster's AC.
     if (monster->ac > 0)
@@ -2290,14 +2268,14 @@ int cast_apportation(int pow)
         return (-1);
     }
 
-    if (trans_wall_blocking( beam.tx, beam.ty ))
+    if (trans_wall_blocking( beam.target ))
     {
         mpr("A translucent wall is in the way.");
         return (0);
     }
 
     // Protect the player from destroying the item
-    const dungeon_feature_type grid = grd[ you.x_pos ][ you.y_pos ];
+    const dungeon_feature_type grid = grd(you.pos());
 
     if (grid_destroys_items(grid))
     {
@@ -2315,17 +2293,17 @@ int cast_apportation(int pow)
     // of sight to the object first so it will only help a little
     // with snatching runes or the orb (although it can be quite
     // useful for getting items out of statue rooms or the abyss). -- bwr
-    if (!see_grid( beam.tx, beam.ty ))
+    if (!see_grid( beam.target ))
     {
         mpr( "You cannot see there!" );
         return (0);
     }
 
     // Let's look at the top item in that square...
-    const int item = igrd[ beam.tx ][ beam.ty ];
+    const int item = igrd(beam.target);
     if (item == NON_ITEM)
     {
-        const int  mon = mgrd[ beam.tx ][ beam.ty ];
+        const int  mon = mgrd(beam.target);
 
         if (mon == NON_MONSTER)
             mpr( "There are no items there." );
@@ -2363,7 +2341,7 @@ int cast_apportation(int pow)
 
     // Failure should never really happen after all the above checking,
     // but we'll handle it anyways...
-    if (move_top_item( beam.target(), you.pos() ))
+    if (move_top_item( beam.target, you.pos() ))
     {
         if (max_units < mitm[ item ].quantity)
         {
@@ -2383,11 +2361,11 @@ int cast_apportation(int pow)
             && mitm[item].sub_type == MI_THROWING_NET
             && item_is_stationary(mitm[item]))
         {
-           const int mon = mgrd[ beam.tx ][ beam.ty ];
-           remove_item_stationary(mitm[item]);
+            const int mon = mgrd(beam.target);
+            remove_item_stationary(mitm[item]);
 
-           if (mon != NON_MONSTER)
-               (&menv[mon])->del_ench(ENCH_HELD, true);
+            if (mon != NON_MONSTER)
+                (&menv[mon])->del_ench(ENCH_HELD, true);
         }
     }
     else

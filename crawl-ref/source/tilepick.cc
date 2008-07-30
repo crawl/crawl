@@ -157,7 +157,7 @@ int tile_unseen_flag(const coord_def& gc)
 static int _tileidx_monster_base(int mon_idx, bool detected)
 {
     const monsters* mon = &menv[mon_idx];
-    int grid = grd[mon->x][mon->y];
+    int grid = grd(mon->pos());
     bool in_water = (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
 
     int type = mon->type;
@@ -4251,8 +4251,8 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
         for (x = 0; x < crawl_view.viewsz.x; x++)
         {
             // View coords are not centered on you, but on (cx,cy)
-            const int gx = view2gridX(x + 1) + cx - you.x_pos;
-            const int gy = view2gridY(y + 1) + cy - you.y_pos;
+            const int gx = view2gridX(x + 1) + cx - you.pos().x;
+            const int gy = view2gridY(y + 1) + cy - you.pos().y;
 
             unsigned char wall_flv    = 0;
             unsigned char floor_flv   = 0;
@@ -4286,11 +4286,11 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
             if (in_bounds)
             {
                 bool print_blood = true;
-                if (inside_halo(gx, gy))
+                if (inside_halo(gc))
                 {
-                    if (see_grid(gx, gy) && mgrd[gx][gy] != NON_MONSTER)
+                    if (see_grid(gc) && mgrd(gc) != NON_MONSTER)
                     {
-                        monsters* m = &menv[mgrd[gx][gy]];
+                        monsters* m = &menv[mgrd(gc)];
                         if (!mons_class_flag(m->type, M_NO_EXP_GAIN)
                              && (!mons_is_mimic(m->type)
                                  || testbits(m->flags, MF_KNOWN_MIMIC)))
@@ -4301,7 +4301,7 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                     }
                 }
 
-                if (print_blood && is_bloodcovered(coord_def(gx, gy)))
+                if (print_blood && is_bloodcovered(gc))
                     tileb[count+1] |= TILE_FLAG_BLOOD;
 
                 if (is_sanctuary(coord_def(gx, gy)))

@@ -273,13 +273,8 @@ bool player_will_anger_monster(monsters *mon, bool *holy = NULL,
 
 bool player_angers_monster(monsters *mon);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: misc - monplace - spells3
- * *********************************************************************** */
-bool empty_surrounds( int emx, int emy, dungeon_feature_type spc_wanted,
-                      int radius,
-                      bool allow_centre, FixedVector<char, 2>& empty );
+bool empty_surrounds( const coord_def& where, dungeon_feature_type spc_wanted,
+                      int radius, bool allow_centre, coord_def& empty );
 
 
 // last updated 12may2000 {dlb}

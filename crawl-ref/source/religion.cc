@@ -754,7 +754,7 @@ bool beogh_water_walk()
 static bool _need_water_walking()
 {
     return (!player_is_airborne() && you.species != SP_MERFOLK
-            && grd[you.x_pos][you.y_pos] == DNGN_DEEP_WATER);
+            && grd(you.pos()) == DNGN_DEEP_WATER);
 }
 
 static void _inc_penance(god_type god, int val)
@@ -902,7 +902,7 @@ static bool _need_missile_gift()
     const item_def *launcher = _find_missile_launcher(best_missile_skill);
     return (you.piety > 80
             && random2( you.piety ) > 70
-            && !grid_destroys_items( grd[you.x_pos][you.y_pos] )
+            && !grid_destroys_items( grd(you.pos()) )
             && one_chance_in(8)
             && you.skills[ best_missile_skill ] >= 8
             && (launcher || best_missile_skill == SK_DARTS)
@@ -991,7 +991,7 @@ static void _show_pure_deck_chances()
 
 static void _give_nemelex_gift()
 {
-    if (grid_destroys_items(grd[you.x_pos][you.y_pos]))
+    if (grid_destroys_items(grd(you.pos())))
         return;
 
     // Nemelex will give at least one gift early.
@@ -1751,7 +1751,7 @@ static void _do_god_gift(bool prayed_for)
         case GOD_TROG:
             if (you.piety > 130
                 && random2(you.piety) > 120
-                && !grid_destroys_items(grd[you.x_pos][you.y_pos])
+                && !grid_destroys_items(grd(you.pos()))
                 && one_chance_in(4))
             {
                 if (you.religion == GOD_TROG
@@ -1863,7 +1863,7 @@ static void _do_god_gift(bool prayed_for)
                 }
 
                 if (gift != NUM_BOOKS
-                    && !(grid_destroys_items(grd[you.x_pos][you.y_pos])))
+                    && !(grid_destroys_items(grd(you.pos()))))
                 {
                     if (gift == OBJ_RANDOM)
                         success = acquirement(OBJ_BOOKS, you.religion);
@@ -1919,8 +1919,7 @@ static bool _is_risky_sacrifice(const item_def& item)
 
 static bool _confirm_pray_sacrifice()
 {
-    if (Options.stash_tracking == STM_EXPLICIT
-        && is_stash(you.x_pos, you.y_pos))
+    if (Options.stash_tracking == STM_EXPLICIT && is_stash(you.pos()))
     {
         mpr("You can't sacrifice explicitly marked stashes.");
         return (false);
@@ -1994,7 +1993,7 @@ void pray()
 
     const bool was_praying = !!you.duration[DUR_PRAYER];
 
-    const god_type altar_god = grid_altar_god(grd[you.x_pos][you.y_pos]);
+    const god_type altar_god = grid_altar_god(grd(you.pos()));
     if (altar_god != GOD_NO_GOD)
     {
         if (you.flight_mode() == FL_LEVITATE)
@@ -2016,7 +2015,7 @@ void pray()
                 mpr("Sorry, a being of your status cannot worship here.");
                 return;
             }
-            god_pitch( grid_altar_god(grd[you.x_pos][you.y_pos]) );
+            god_pitch( grid_altar_god(grd(you.pos())) );
             return;
         }
     }
@@ -3402,8 +3401,7 @@ static bool _tso_retribution()
         beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
         beam.damage       = calc_dice(3, 20 + (you.experience_level * 7) / 3);
         beam.flavour      = BEAM_HOLY;
-        beam.target_x     = you.x_pos;
-        beam.target_y     = you.y_pos;
+        beam.target       = you.pos();
         beam.name         = "golden flame";
         beam.colour       = YELLOW;
         beam.thrower      = KILL_MISC;
@@ -4536,49 +4534,39 @@ static bool _beogh_followers_abandon_you()
     }
     else
     {
-        const int ystart = MAX(0,       you.y_pos - 9);
-        const int yend   = MIN(GYM - 1, you.y_pos + 9);
-        const int xstart = MAX(0,       you.x_pos - 9);
-        const int xend   = MIN(GXM - 1, you.x_pos + 9);
-
-        // monster check
-        for (int y = ystart; y <= yend; ++y)
+        for ( radius_iterator ri(you.pos(), 9); ri; ++ri )
         {
-            for (int x = xstart; x <= xend; ++x)
+            if ( mgrd(*ri) == NON_MONSTER )
+                continue;
+
+            monsters *monster = &menv[mgrd(*ri)];
+            if (is_orcish_follower(monster))
             {
-                const unsigned short targ_monst = mgrd[x][y];
-                if (targ_monst != NON_MONSTER)
+                num_followers++;
+                
+                if (mons_player_visible(monster)
+                    && !mons_is_sleeping(monster)
+                    && !mons_is_confused(monster)
+                    && !mons_cannot_act(monster))
                 {
-                    monsters *monster = &menv[targ_monst];
-                    if (is_orcish_follower(monster))
+                    const int hd = monster->hit_dice;
+
+                    // During penance followers get a saving throw.
+                    if (random2((you.piety-you.penance[GOD_BEOGH])/18) +
+                        random2(you.skills[SK_INVOCATIONS]-6)
+                        > random2(hd) + hd + random2(5))
                     {
-                        num_followers++;
-
-                        if (mons_player_visible(monster)
-                            && !mons_is_sleeping(monster)
-                            && !mons_is_confused(monster)
-                            && !mons_cannot_act(monster))
-                        {
-                            const int hd = monster->hit_dice;
-
-                            // During penance followers get a saving throw.
-                            if (random2((you.piety-you.penance[GOD_BEOGH])/18) +
-                                random2(you.skills[SK_INVOCATIONS]-6)
-                                  > random2(hd) + hd + random2(5))
-                            {
-                                continue;
-                            }
-
-                            monster->attitude = ATT_HOSTILE;
-                            behaviour_event(monster, ME_ALERT, MHITYOU);
-                            // For now CREATED_FRIENDLY stays.
-
-                            if (player_monster_visible(monster))
-                                num_reconvert++; // only visible ones
-
-                            reconvert = true;
-                        }
+                        continue;
                     }
+
+                    monster->attitude = ATT_HOSTILE;
+                    behaviour_event(monster, ME_ALERT, MHITYOU);
+                    // For now CREATED_FRIENDLY stays.
+
+                    if (player_monster_visible(monster))
+                        num_reconvert++; // only visible ones
+
+                    reconvert = true;
                 }
             }
         }
@@ -4945,7 +4933,9 @@ void excommunication(god_type new_god)
     if (!is_good_god(new_god) && _holy_beings_attitude_change())
         mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
 
-    learned_something_new(TUT_EXCOMMUNICATE, (int)new_god, old_piety);
+    // Evil hack.
+    learned_something_new(TUT_EXCOMMUNICATE,
+                          coord_def((int)new_god, old_piety));
 }
 
 static bool _bless_weapon( god_type god, int brand, int colour )
@@ -5253,7 +5243,7 @@ void offer_items()
     if (you.religion == GOD_NO_GOD)
         return;
 
-    int i = igrd[you.x_pos][you.y_pos];
+    int i = igrd(you.pos());
 
     if (!god_likes_items(you.religion) && i != NON_ITEM)
     {

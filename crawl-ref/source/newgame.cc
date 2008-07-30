@@ -1286,8 +1286,7 @@ game_start:
             // Identify all items in pack.
             set_ident_type( you.inv[i], ID_KNOWN_TYPE );
             // link properly
-            you.inv[i].x = -1;
-            you.inv[i].y = -1;
+            you.inv[i].pos.set(-1, -1);
             you.inv[i].link = i;
             you.inv[i].slot = index_to_letter(you.inv[i].link);
             item_colour( you.inv[i] );  // set correct special and colour

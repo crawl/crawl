@@ -1623,8 +1623,7 @@ static bool _do_ability(const ability_def& abil)
             beam.type        = dchar_glyph(DCHAR_FIRED_BURST);
             beam.damage      = dice_def(3, 30);
             beam.flavour     = BEAM_ELECTRICITY;
-            beam.target_x    = you.x_pos;
-            beam.target_y    = you.y_pos;
+            beam.target      = you.pos();
             beam.name        = "blast of lightning";
             beam.colour      = LIGHTCYAN;
             beam.thrower     = KILL_YOU;
@@ -1738,7 +1737,7 @@ static bool _do_ability(const ability_def& abil)
         if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY))
             return (false);
 
-        if (beam.target() == you.pos())
+        if (beam.target == you.pos())
         {
             mpr("You cannot banish yourself!");
             return (false);
