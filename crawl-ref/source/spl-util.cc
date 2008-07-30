@@ -142,24 +142,29 @@ spschool_flag_type school_by_name(std::string name)
    short_match   = long_match   = SPTYP_NONE;
    short_matches = long_matches = 0;
 
+   lowercase(name);
+
    for (int i = 0; i <= SPTYP_RANDOM; i++)
    {
        spschool_flag_type type = (spschool_flag_type) (1 << i);
 
-       const char* short_name = spelltype_short_name(type);
-       const char* long_name  = spelltype_long_name(type);
+       std::string short_name = spelltype_short_name(type);
+       std::string long_name  = spelltype_long_name(type);
 
-       if (strcasecmp(short_name, name.c_str()) == 0)
+       lowercase(short_name);
+       lowercase(long_name);
+
+       if (name == short_name)
            return type;
-       if (strcasecmp(long_name, name.c_str()) == 0)
+       if (name == long_name)
            return type;
 
-       if (strcasestr(short_name, name.c_str()))
+       if (short_name.find(name) != std::string::npos)
        {
            short_match = type;
            short_matches++;
        }
-       if (strcasestr(long_name, name.c_str()))
+       if (long_name.find(name) != std::string::npos)
        {
            long_match = type;
            long_matches++;
