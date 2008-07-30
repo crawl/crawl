@@ -55,7 +55,7 @@ void GLStateManager::set(const GLState& state)
         glDisableClientState(GL_COLOR_ARRAY);
 
         // [enne] This should *not* be necessary, but the Linux OpenGL
-        // drive that I'm using sets this to the last colour of the
+        // driver that I'm using sets this to the last colour of the
         // colour array.  So, we need to unset it here.
         glColor3f(1.0f, 1.0f, 1.0f);
     }
@@ -124,7 +124,7 @@ void TilesFramework::shutdown()
 
 bool TilesFramework::initialise()
 {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
     {
         printf ("Failed to initialise SDL: %s\n", SDL_GetError());
         return false;
@@ -504,6 +504,17 @@ static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
     tile_event.py = sdl_event.y;
 }
 
+static unsigned int _timer_callback(unsigned int ticks)
+{
+    // force the event loop to break
+    SDL_Event event;
+    event.type = SDL_USEREVENT;
+    SDL_PushEvent(&event);
+
+    unsigned int res = std::max(30, Options.tile_tooltip_ms);
+    return res;
+}
+
 int TilesFramework::getch_ck()
 {
     SDL_Event event;
@@ -512,15 +523,22 @@ int TilesFramework::getch_ck()
 
     const unsigned int ticks_per_redraw = 16; // 60 FPS = 16.6 ms/frame
     unsigned int last_redraw_tick = 0;
-    
+
+    unsigned int res = std::max(30, Options.tile_tooltip_ms);
+    SDL_SetTimer(res, &_timer_callback);
+
     while (!key)
     {
-        unsigned int ticks = SDL_GetTicks();
+        unsigned int ticks;
 
-        if (SDL_PollEvent(&event))
+        if (SDL_WaitEvent(&event))
         {
-            tiles.clear_text_tags(TAG_CELL_DESC);
-            switch(event.type)
+            ticks = SDL_GetTicks();
+          
+            if (event.type != SDL_USEREVENT)
+                tiles.clear_text_tags(TAG_CELL_DESC);
+
+            switch (event.type)
             {
             case SDL_KEYDOWN:
                 m_key_mod |= _get_modifiers(event.key.keysym);
@@ -585,6 +603,7 @@ int TilesFramework::getch_ck()
                 
             case SDL_USEREVENT:
             default:
+                // This is only used to refresh the tooltip.
                 break;
             }
         }
@@ -620,6 +639,8 @@ int TilesFramework::getch_ck()
             last_redraw_tick = ticks;
         }
     }
+
+    SDL_SetTimer(0, NULL);
 
     return key;
 }
