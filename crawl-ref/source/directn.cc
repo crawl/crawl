@@ -511,6 +511,42 @@ static int _mlist_letter_to_index(char idx)
 }
 #endif
 
+class range_view_annotator
+{
+public:
+    range_view_annotator(int range) {
+        orig_colours.init(-1);
+        if ( range < 0 )
+            return;
+        for ( radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri )
+        {
+            if (grid_is_solid(*ri) && grid_distance(you.pos(), *ri) > range)
+            {
+                orig_colours(*ri - you.pos() + coord_def(9,9)) =
+                    env.grid_colours( *ri );
+                env.grid_colours(*ri) = DARKGREY;
+            }
+        }
+        viewwindow(true, false);
+    }
+
+    ~range_view_annotator() {
+        coord_def c;
+        for ( c.x = 0; c.x < 19; ++c.x )
+        {
+            for ( c.y = 0; c.y < 19; ++c.y )
+            {
+                const int old_colour = orig_colours(c);
+                if ( old_colour != -1 )
+                    env.grid_colours(you.pos()+c-coord_def(9,9)) = old_colour;
+            }
+        }
+        viewwindow(true, false);
+    }
+private:
+    FixedArray<int,19,19> orig_colours;
+};
+
 void direction(dist& moves, targeting_type restricts,
                targ_mode_type mode, int range, bool just_looking,
                bool needs_path, bool may_target_monster,
@@ -560,6 +596,7 @@ void direction(dist& moves, targeting_type restricts,
 
     cursor_control con(!Options.use_fake_cursor);
     mouse_control mc(MOUSE_MODE_TARGET);
+    range_view_annotator rva(range);
 
     int dir = 0;
     bool show_beam = Options.show_beam && !just_looking && needs_path;
