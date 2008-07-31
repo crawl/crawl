@@ -2042,7 +2042,7 @@ static bool _drop_item_order(const SelItem &first, const SelItem &second)
 // Prompts the user for an item to drop
 //
 //---------------------------------------------------------------
-void drop(void)
+void drop()
 {
     if (inv_count() < 1 && you.gold == 0)
     {

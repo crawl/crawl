@@ -4117,7 +4117,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     interrupt_activity(AI_HIT_MONSTER, defender);
 
     // Check if the player is fighting with something unsuitable.
-    if (!wielded_weapon_check(attk.weapon))
+    if (you.can_see(defender) && !wielded_weapon_check(attk.weapon))
     {
         you.turn_is_over = false;
         return (false);

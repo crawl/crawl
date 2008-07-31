@@ -4774,8 +4774,8 @@ void tile_use_item(int idx, InvAction act)
 {
     if (act == INV_PICKUP)
     {
-         pickup_single_item(idx, mitm[idx].quantity);
-         return;
+        pickup_single_item(idx, mitm[idx].quantity);
+        return;
     }
     else if (act == INV_DROP)
     {

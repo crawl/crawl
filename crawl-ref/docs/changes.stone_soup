@@ -1,3 +1,15 @@
+Stone Soup 0.4.3 (20080731)
+---------------------------
+
+* Fixed lack of mouse actions in Tiles version.
+* Fixed Evaporate not working with potions of water.
+* Fixed Evaporate trailing clouds before explosion.
+* Fixed buggy inscription prompt.
+* For DGAMELAUNCH, use gmtime() instead of localtime().
+* Only prompt for unsuitable weapons if you can see the target.
+* Don't discard Stoneskin when using non-conflicting transformations.
+* Allow examining items in end-game inventory and while browsing shops.
+
 Stone Soup 0.4.2 (20080729)
 ---------------------------
 

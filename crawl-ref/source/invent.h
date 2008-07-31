@@ -100,6 +100,7 @@ public:
                            tag );
     }
 
+    virtual void select( int qty = -1 );
 
 private:
     void add_class_hotkeys(const item_def &i);
@@ -199,12 +200,6 @@ std::vector<SelItem> prompt_invent_items(
                         const std::vector<SelItem> *pre_select = NULL );
 
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: invent - ouch - shopping
- * *********************************************************************** */
-unsigned char invent( int item_class_inv, bool show_price );
-
 unsigned char invent_select(
                    // Use NULL for stock Inventory title
                    const char *title = NULL,
@@ -219,10 +214,7 @@ unsigned char invent_select(
                    Menu::selitem_tfn fn = NULL,
                    const std::vector<SelItem> *pre_select = NULL );
 
-// last updated 24may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - command - food - item_use - items - spl-book - spells1
- * *********************************************************************** */
+void browse_inventory( bool show_price );
 unsigned char get_invent(int invent_type);
 
 bool in_inventory(const item_def &i);

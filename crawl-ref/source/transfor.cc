@@ -328,8 +328,13 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         return (false);
     }
 
-    //jmf: Silently discard this enchantment
-    you.duration[DUR_STONESKIN] = 0;
+    // Most transformations conflict with stone skin.
+    if (which_trans != TRAN_NONE
+        && which_trans != TRAN_BLADE_HANDS
+        && which_trans != TRAN_STATUE)
+    {
+        you.duration[DUR_STONESKIN] = 0;
+    }
 
     // We drop everything except jewellery by default.
     equipment_type default_rem[] = {
