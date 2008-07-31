@@ -514,6 +514,16 @@ enum command_type
 
     CMD_ANNOTATE_LEVEL,
 
+#ifdef USE_TILE
+    CMD_EDIT_PREFS,
+    CMD_EDIT_PLAYER_TILE,
+    CMD_USE_ITEM,
+    CMD_VIEW_ITEM,
+#endif
+
+    // [ds] Silently ignored, requests another round of input.
+    CMD_NEXT_CMD,
+
     // Repeat previous command
     CMD_PREV_CMD_AGAIN,
 
@@ -625,25 +635,10 @@ enum command_type
     CMD_TARGET_HELP,
     CMD_MAX_TARGET = CMD_TARGET_HELP,
 
-#ifdef USE_TILE
-    CMD_EDIT_PREFS,
-    CMD_MIN_TILE = CMD_EDIT_PREFS,
-    CMD_EDIT_PLAYER_TILE,
-    CMD_USE_ITEM,
-    CMD_NEXT_CMD,
-    CMD_VIEW_ITEM,
-    CMD_MAX_TILE = CMD_VIEW_ITEM,
-#endif
-
     // Disable/enable -more- prompts.
     CMD_DISABLE_MORE,
     CMD_MIN_SYNTHETIC = CMD_DISABLE_MORE,
     CMD_ENABLE_MORE,
-
-#ifndef USE_TILE
-    // [ds] Silently ignored, requests another round of input.
-    CMD_NEXT_CMD,
-#endif
 
     // Stick the keyspresses of the command to be repeated into the
     // input buffer.
