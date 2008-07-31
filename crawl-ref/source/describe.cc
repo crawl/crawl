@@ -2144,7 +2144,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
             break;
         }
         // If autoinscription is impossible, prompt for an inscription instead.
-    case 'y':
+    case 'i':
     {
         prompt = (is_inscribed ? "Add what to inscription? "
                                : "Inscribe with what? ");

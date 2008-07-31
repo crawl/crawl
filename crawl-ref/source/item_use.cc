@@ -2208,7 +2208,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             if (coinflip())
                 exercise(SK_THROWING, 1);
 
-            // they also get a minor tohit boost from throwing skill.
+            // They also get a minor tohit boost from throwing skill.
             exHitBonus += you.skills[SK_THROWING] / 5;
         }
 
@@ -2485,7 +2485,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             exHitBonus += slaying_bonus(PWPN_HIT);
         }
     }
-    else
+    else // LRET_FUMBLED
     {
         if (one_chance_in(20))
             exercise(SK_THROWING, 1);
@@ -4765,7 +4765,7 @@ void tile_item_use_floor(int idx)
 
 void tile_item_pickup(int idx)
 {
-     pickup_single_item(idx, mitm[idx].quantity);
+    pickup_single_item(idx, mitm[idx].quantity);
 }
 
 void tile_item_drop(int idx)

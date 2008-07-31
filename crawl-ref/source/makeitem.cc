@@ -3868,6 +3868,19 @@ static bool make_item_for_monster(
 
 void give_shield(monsters *mon, int level)
 {
+    const item_def *main_weap = mon->mslot_item(MSLOT_WEAPON);
+    const item_def *alt_weap  = mon->mslot_item(MSLOT_ALT_WEAPON);
+
+    // If the monster is already wielding/carrying a two-handed weapon, it
+    // doesn't get a shield. (Monsters always prefer raw damage to protection!)
+    if (main_weap
+           && hands_reqd(*main_weap, mon->body_size(PSIZE_BODY)) == HANDS_TWO
+        || alt_weap
+           && hands_reqd(*alt_weap, mon->body_size(PSIZE_BODY)) == HANDS_TWO)
+    {
+        return;
+    }
+
     switch (mon->type)
     {
     case MONS_DAEVA:
@@ -3888,8 +3901,8 @@ void give_shield(monsters *mon, int level)
         if (one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
-                                  one_chance_in(3)? ARM_LARGE_SHIELD
-                                  : ARM_SHIELD,
+                                  one_chance_in(3) ? ARM_LARGE_SHIELD
+                                                   : ARM_SHIELD,
                                   level, MAKE_ITEM_NO_RACE);
         }
         break;
