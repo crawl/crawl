@@ -989,8 +989,8 @@ static void _try_monster_cast(spell_type spell, int powc,
 // Others are currently unused or unimplemented.
 spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 {
-    struct dist spd;
-    struct bolt beam;
+    dist spd;
+    bolt beam;
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch().
@@ -1009,7 +1009,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     if ((flags & SPFLAG_TARGETING_MASK)
         && spell != SPELL_BURN && spell != SPELL_FREEZE
         && spell != SPELL_CRUSH && spell != SPELL_ARC
-        && spell != SPELL_FRAGMENTATION && spell != SPELL_PORTAL_PROJECTILE)
+        && spell != SPELL_PORTAL_PROJECTILE)
     {
         targ_mode_type targ =
             (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
@@ -1447,7 +1447,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_FRAGMENTATION:
-        cast_fragmentation(powc);
+        if (!cast_fragmentation(powc, spd))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_FAR_STRIKE:

@@ -33,7 +33,7 @@ void cast_discharge(int pow);
 bool cast_evaporate(int pow, bolt& beem, int potion);
 void cast_fulsome_distillation(int powc);
 void cast_forescry(int pow);
-void cast_fragmentation(int powc);
+bool cast_fragmentation(int powc, const dist& spd);
 void cast_twist(int powc);
 void cast_far_strike(int powc);
 void cast_swap(int powc);

@@ -2085,7 +2085,7 @@
      SPFLAG_GRID,
      5,
      200,
-     NULL,
+     "Fragment what (e.g. a wall or monster)?",
      false,
      false
 },

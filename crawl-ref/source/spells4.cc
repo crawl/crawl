@@ -1705,24 +1705,14 @@ void cast_snake_charm(int pow)
     apply_one_neighbouring_square(_snake_charm_monsters, pow);
 }
 
-void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
+bool cast_fragmentation(int pow, const dist& spd)
 {
     bolt beam;
-    dist spd;
     int debris = 0;
     int trap;
     bool explode = false;
     bool hole = true;
     const char *what = NULL;
-
-    mpr("Fragment what (e.g. a wall or monster)?", MSGCH_PROMPT);
-    direction(spd, DIR_TARGET, TARG_ENEMY);
-
-    if (!spd.isValid)
-    {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
-    }
 
     //FIXME: If (player typed '>' to attack floor) goto do_terrain;
     beam.beam_source = MHITYOU;
@@ -1745,12 +1735,8 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
 
     if (mon != NON_MONSTER)
     {
-        // This needs its own hand_buff... we also need to do it first
-        // in case the target dies. -- bwr
-        char explode_msg[INFO_SIZE];
-
-        snprintf(explode_msg, sizeof(explode_msg), "%s explodes!",
-                 menv[mon].name(DESC_CAP_THE).c_str());
+        // Save this message in case the monster isn't available later.
+        std::string explode_msg = menv[mon].name(DESC_CAP_THE) + " explodes!";
 
         switch (menv[mon].type)
         {
@@ -1872,7 +1858,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
             goto do_terrain;
         }
 
-        mpr(explode_msg);
+        mpr(explode_msg.c_str());
         goto all_done;
     }
 
@@ -2046,6 +2032,7 @@ void cast_fragmentation(int pow)        // jmf: ripped idea from airstrike
         // If damage dice are zero we assume that nothing happened at all.
         canned_msg(MSG_SPELL_FIZZLES);
     }
+    return true;
 }
 
 void cast_twist(int pow)
