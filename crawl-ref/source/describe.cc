@@ -2127,7 +2127,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
         did_prompt = true;
     }
 
-    keyin = (did_prompt ? tolower(c_getch()) : 'y');
+    keyin = (did_prompt ? tolower(c_getch()) : 'i');
     switch (keyin)
     {
     case 'c':

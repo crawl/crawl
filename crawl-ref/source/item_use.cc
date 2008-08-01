@@ -3586,17 +3586,16 @@ void zap_wand( int slot )
     }
 
     you.turn_is_over = true;
-}                               // end zap_wand()
+}
 
 void prompt_inscribe_item()
 {
-    int item_slot;
     if (inv_count() < 1)
     {
         mpr("You don't have anything to inscribe.");
         return;
     }
-    item_slot = prompt_invent_item("Inscribe which item? ",
+    int item_slot = prompt_invent_item("Inscribe which item? ",
                                    MT_INVLIST, OSEL_ANY );
 
     if (prompt_failed(item_slot))

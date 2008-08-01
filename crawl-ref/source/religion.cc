@@ -3061,10 +3061,10 @@ bool god_dislikes_item_handling(const item_def &item)
 
     if (you.religion == GOD_ZIN)
     {
-        if (((item.base_type == OBJ_POTIONS
-                && item.sub_type == POT_MUTATION)
-            || (item.base_type == OBJ_WANDS
-                && item.sub_type == WAND_POLYMORPH_OTHER))
+        if ((item.base_type == OBJ_POTIONS
+                && item.sub_type == POT_MUTATION
+            || item.base_type == OBJ_WANDS
+               && item.sub_type == WAND_POLYMORPH_OTHER)
             && item_type_known(item))
         {
             return (true);
@@ -3079,21 +3079,23 @@ bool god_dislikes_item_handling(const item_def &item)
 
     if (you.religion == GOD_SHINING_ONE)
     {
+        if (!item_type_known(item))
+            return (false);
+
         if (item.base_type == OBJ_WEAPONS)
         {
             const int item_brand = get_weapon_brand(item);
 
-            if (item_brand == SPWPN_VENOM && item_type_known(item))
+            if (item_brand == SPWPN_VENOM)
                 return (true);
         }
         else if (item.base_type == OBJ_MISSILES)
         {
             const int item_brand = get_ammo_brand(item);
 
-            if (item_type_known(item) &&
-                (item_brand == SPMSL_POISONED
-                 || item_brand == SPMSL_POISONED_II
-                 || item_brand == SPMSL_CURARE))
+            if (item_brand == SPMSL_POISONED
+                || item_brand == SPMSL_POISONED_II
+                || item_brand == SPMSL_CURARE)
             {
                 return (true);
             }

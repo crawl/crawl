@@ -2352,6 +2352,9 @@ bool is_dangerous_item(const item_def &item, bool temp)
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
+        if (!item_type_known(item))
+            return (false);
+
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
@@ -2362,7 +2365,11 @@ bool is_dangerous_item(const item_def &item, bool temp)
         default:
             return (false);
         }
+
     case OBJ_POTIONS:
+        if (!item_type_known(item))
+            return (false);
+
         switch (item.sub_type)
         {
         case POT_MUTATION:
@@ -2373,9 +2380,11 @@ bool is_dangerous_item(const item_def &item, bool temp)
         default:
             return (false);
         }
+
     case OBJ_BOOKS:
         // The Tome of Destruction is certainly risky.
         return (item.sub_type == BOOK_DESTRUCTION);
+
     default:
         return (false);
     }
@@ -2611,8 +2620,11 @@ const std::string menu_colour_item_prefix(const item_def &item, bool temp)
         break;
 
     case OBJ_POTIONS:
-        if (is_good_god(you.religion) && is_blood_potion(item))
+        if (is_good_god(you.religion) && item_type_known(item)
+            && is_blood_potion(item))
+        {
             prefixes.push_back("evil_eating");
+        }
         if (is_preferred_food(item))
             prefixes.push_back("preferred");
         break;
