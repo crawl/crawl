@@ -1094,7 +1094,7 @@ public:
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos) const;
     void apply_location_effects();
-    
+
     void moveto(const coord_def& c);
     bool move_to_pos(const coord_def &newpos);
 
@@ -1810,6 +1810,7 @@ public:
     std::vector<message_colour_mapping> message_colour_mappings;
 
     bool       menu_colour_prefix_class; // Prefix item class to string
+    bool       menu_colour_shops;   // Use menu colours in shops?
 
     std::vector<menu_sort_condition> sort_menus;
 

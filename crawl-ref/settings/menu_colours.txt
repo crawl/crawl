@@ -60,5 +60,5 @@ menu = $evil:.*evil_item.*
 #
 menu = lightred:.*equipped.* cursed
 menu = lightgreen:.*equipped.*
+menu = red: cursed
 menu = green:uncursed
-menu = red:cursed

@@ -1170,7 +1170,7 @@ int menu_colour(const std::string &text, const std::string &prefix,
     {
         const colour_mapping &cm = Options.menu_colour_mappings[i];
         if ((cm.tag.empty() || cm.tag == "any" || cm.tag == tag
-             || cm.tag == "inventory" && tag == "pickup")
+               || cm.tag == "inventory" && tag == "pickup")
             && cm.pattern.matches(tmp_text) )
         {
             return (cm.colour);

@@ -104,7 +104,7 @@ static void _list_shop_keys(const std::string &purchasable)
 
     std::string pkeys = _purchase_keys(purchasable);
     if (!pkeys.empty())
-        pkeys = "[" + pkeys + "] Buy Item";
+        pkeys = "[" + pkeys + "] Select Item";
 
     snprintf(buf, sizeof buf,
             "[<w>x</w>/<w>Esc</w>] Exit       [<w>v</w>] Examine Items  %s",
@@ -117,7 +117,7 @@ static void _list_shop_keys(const std::string &purchasable)
 
     fs = formatted_string::parse_string(
             "[<w>?</w>/<w>*</w>]   Inventory  "
-            "[<w>\\</w>] Known Items");
+            "[<w>\\</w>] Known Items    [<w>Enter</w>] Make Purchase");
     fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
     fs.display();
 }
@@ -193,7 +193,18 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
         else
             cprintf("%c - ", c);
 
-        textcolor(i % 2 ? LIGHTGREY : WHITE);
+
+        if (Options.menu_colour_shops)
+        {
+            // Colour stock according to menu colours.
+            const std::string colprf = menu_colour_item_prefix(mitm[stock[i]]);
+            const int col = menu_colour(mitm[stock[i]].name(DESC_NOCAP_A),
+                                        colprf, "shop");
+            textcolor(col != -1 ? col : LIGHTGREY);
+        }
+        else
+            textcolor(i % 2 ? LIGHTGREY : WHITE);
+
         cprintf("%-56s%5d gold",
                 mitm[stock[i]].name(DESC_NOCAP_A, false, id).c_str(),
                 gp_value);

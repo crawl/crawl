@@ -1260,6 +1260,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_LIST_ARMOUR:
     case CMD_LIST_JEWELLERY:
     case CMD_LIST_EQUIPMENT:
+    case CMD_LIST_GOLD:
     case CMD_CHARACTER_DUMP:
     case CMD_DISPLAY_COMMANDS:
     case CMD_DISPLAY_INVENTORY:
@@ -2414,6 +2415,11 @@ void process_command( command_type cmd )
 
     case CMD_LIST_EQUIPMENT:
         get_invent(OSEL_EQUIP);
+        break;
+
+    case CMD_LIST_GOLD:
+        mprf("You have %d gold piece%s.",
+             you.gold, (you.gold > 1) ? "s" : "");
         break;
 
     case CMD_INSCRIBE_ITEM:
