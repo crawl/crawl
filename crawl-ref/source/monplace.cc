@@ -2684,7 +2684,7 @@ bool monster_pathfind::traversable(coord_def p)
 // (Checked by traversable().)
 int monster_pathfind::travel_cost(coord_def npos)
 {
-    ASSERT(grid_distance(pos.x, pos.y, npos.x, npos.y) <= 1);
+    ASSERT(grid_distance(pos, npos) <= 1);
 
     // Doors need to be opened.
     if (grd(npos) == DNGN_CLOSED_DOOR || grd(npos) == DNGN_SECRET_DOOR)
@@ -2743,7 +2743,7 @@ int monster_pathfind::travel_cost(coord_def npos)
 // The estimated cost to reach a grid is simply max(dx, dy).
 int monster_pathfind::estimated_cost(coord_def p)
 {
-    return (grid_distance(p.x, p.y, target.x, target.y));
+    return (grid_distance(p, target));
 }
 
 void monster_pathfind::add_new_pos(coord_def npos, int total)

@@ -1560,42 +1560,32 @@ int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
 int near_stairs(const coord_def &p, int max_dist,
                 dungeon_char_type &stair_type, branch_type &branch)
 {
-    coord_def inc;
-
-    for (inc.x = -max_dist; inc.x <= max_dist; ++inc.x)
+    for (radius_iterator ri(p, max_dist, true, false); ri; ++ri)
     {
-        for (inc.y = -max_dist; inc.y <= max_dist; ++inc.y)
+        const dungeon_feature_type feat = grd(*ri);
+        if (is_stair(feat))
         {
-            const coord_def np(p + inc);
-
-            if (!in_bounds(np))
+            // Shouldn't happen for escape hatches.
+            if (grid_is_escape_hatch(feat))
                 continue;
-
-            const dungeon_feature_type feat = grd(np);
-            if (is_stair(feat))
+            
+            stair_type = get_feature_dchar(feat);
+            
+            // Is it a branch stair?
+            for (int i = 0; i < NUM_BRANCHES; ++i)
             {
-                // Shouldn't happen for escape hatches.
-                if (grid_is_escape_hatch(feat))
-                    continue;
-
-                stair_type = get_feature_dchar(feat);
-
-                // Is it a branch stair?
-                for (int i = 0; i < NUM_BRANCHES; ++i)
+                if (branches[i].entry_stairs == feat)
                 {
-                     if (branches[i].entry_stairs == feat)
-                     {
-                         branch = branches[i].id;
-                         break;
-                     }
-                     else if (branches[i].exit_stairs == feat)
-                     {
-                         branch = branches[i].parent_branch;
-                         break;
-                     }
+                    branch = branches[i].id;
+                    break;
                 }
-                return (np == you.pos()) ? 2 : 1;
+                else if (branches[i].exit_stairs == feat)
+                {
+                    branch = branches[i].parent_branch;
+                    break;
+                }
             }
+            return (*ri == you.pos()) ? 2 : 1;
         }
     }
 
@@ -1604,8 +1594,7 @@ int near_stairs(const coord_def &p, int max_dist,
 
 bool is_trap_square(dungeon_feature_type grid)
 {
-    return (grid >= DNGN_TRAP_MECHANICAL
-            && grid <= DNGN_UNDISCOVERED_TRAP);
+    return (grid >= DNGN_TRAP_MECHANICAL && grid <= DNGN_UNDISCOVERED_TRAP);
 }
 
 // Does the equivalent of KILL_RESET on all monsters in LOS. Should only be
@@ -1614,50 +1603,48 @@ void zap_los_monsters()
 {
     losight(env.show, grd, you.pos());
 
-    for (int y = crawl_view.vlos1.y; y <= crawl_view.vlos2.y; ++y)
-        for (int x = crawl_view.vlos1.x; x <= crawl_view.vlos2.x; ++x)
+    for (rectangle_iterator ri(crawl_view.vlos1, crawl_view.vlos2); ri; ++ri )
+    {
+        if (!in_vlos(*ri))
+            continue;
+
+        const coord_def g = view2grid(*ri);
+
+        if (!map_bounds(g))
+            continue;
+
+        if (g == you.pos())
+            continue;
+
+        int imon = mgrd(g);
+
+        // At tutorial beginning disallow items in line of sight.
+        if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
         {
-            if (!in_vlos(x, y))
-                continue;
+            int item = igrd(g);
+            
+            if (item != NON_ITEM && is_valid_item(mitm[item]) )
+                destroy_item(item);
+        }
 
-            const int gx = view2gridX(x),
-                      gy = view2gridY(y);
+        if (imon == NON_MONSTER || imon == MHITYOU)
+            continue;
 
-            if (!map_bounds(gx, gy))
-                continue;
-
-            if (gx == you.pos().x && gy == you.pos().y)
-                continue;
-
-            int imon = mgrd[gx][gy];
-
-            // At tutorial beginning disallow items in line of sight.
-            if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
-            {
-                int item = igrd[gx][gy];
-
-                if (item != NON_ITEM && is_valid_item(mitm[item]) )
-                    destroy_item(item);
-            }
-
-            if (imon == NON_MONSTER || imon == MHITYOU)
-                continue;
-
-            // If we ever allow starting with a friendly monster,
-            // we'll have to check here.
-            monsters *mon = &menv[imon];
-
-            if (mons_class_flag( mon->type, M_NO_EXP_GAIN ))
-                continue;
+        // If we ever allow starting with a friendly monster,
+        // we'll have to check here.
+        monsters *mon = &menv[imon];
+        
+        if (mons_class_flag( mon->type, M_NO_EXP_GAIN ))
+            continue;
 
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
-                 mon->name(DESC_PLAIN, true).c_str() );
+        mprf(MSGCH_DIAGNOSTICS, "Dismissing %s",
+             mon->name(DESC_PLAIN, true).c_str() );
 #endif
-            // Mark as summoned so its items will also be discarded.
-            mon->mark_summoned(1, true);
-            monster_die(mon, KILL_DISMISSED, 0);
-        }
+        // Mark as summoned so its items will also be discarded.
+        mon->mark_summoned(1, true);
+        monster_die(mon, KILL_DISMISSED, 0);
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////

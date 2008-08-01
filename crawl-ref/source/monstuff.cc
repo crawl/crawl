@@ -91,8 +91,10 @@ static spell_type _map_wand_to_mspell(int wand_type);
 // [dshaligram] Doesn't need to be extern.
 static coord_def mmov;
 
-static int compass_x[8] = { -1, 0, 1, 1, 1, 0, -1, -1 };
-static int compass_y[8] = { -1, -1, -1, 0, 1, 1, 1, 0 };
+static const coord_def mon_compass[8] = {
+    coord_def(-1,-1), coord_def(0,-1), coord_def(1,-1), coord_def(1,0),
+    coord_def( 1, 1), coord_def(0, 1), coord_def(-1,1), coord_def(-1,0)
+};
 
 static bool immobile_monster[MAX_MONSTERS];
 
@@ -6104,7 +6106,7 @@ static void _handle_monster_move(int i, monsters *monster)
 // This is the routine that controls monster AI.
 //
 //---------------------------------------------------------------
-void handle_monsters(void)
+void handle_monsters()
 {
     // Keep track of monsters that have already moved and don't allow
     // them to move again.
@@ -7120,11 +7122,10 @@ static bool _monster_move(monsters *monster)
         int current_distance = grid_distance(monster->pos(), monster->target);
 
         int dir = -1;
-        int i, mod, newdir;
 
-        for (i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
         {
-            if (compass_x[i] == mmov.x && compass_y[i] == mmov.y)
+            if (mon_compass[i] == mmov)
             {
                 dir = i;
                 break;
@@ -7153,15 +7154,13 @@ static bool _monster_move(monsters *monster)
             }
 
             // Try both directions.
-            for (mod = sdir, i = 0; i < 2; mod += inc, i++)
+            for (int mod = sdir, i = 0; i < 2; mod += inc, i++)
             {
-                newdir = (dir + 8 + mod) % 8;
-                if (good_move[compass_x[newdir] + 1][compass_y[newdir] + 1])
+                int newdir = (dir + 8 + mod) % 8;
+                if (good_move[mon_compass[newdir].x+1][mon_compass[newdir].y+1])
                 {
-                    dist[i] = grid_distance(monster->pos().x + compass_x[newdir],
-                                            monster->pos().y + compass_y[newdir],
-                                            monster->target.x,
-                                            monster->target.y);
+                    dist[i] = grid_distance(monster->pos()+mon_compass[newdir],
+                                            monster->target);
                 }
                 else
                 {
@@ -7179,14 +7178,12 @@ static bool _monster_move(monsters *monster)
             {
                 if (dist[0] >= dist[1] && dist[0] >= current_distance)
                 {
-                    mmov.x = compass_x[((dir+8)+sdir)%8];
-                    mmov.y = compass_y[((dir+8)+sdir)%8];
+                    mmov = mon_compass[((dir+8)+sdir)%8];
                     break;
                 }
                 if (dist[1] >= dist[0] && dist[1] >= current_distance)
                 {
-                    mmov.x = compass_x[((dir+8)-sdir)%8];
-                    mmov.y = compass_y[((dir+8)-sdir)%8];
+                    mmov = mon_compass[((dir+8)-sdir)%8];
                     break;
                 }
             }
@@ -7194,14 +7191,12 @@ static bool _monster_move(monsters *monster)
             {
                 if (dist[0] <= dist[1] && dist[0] <= current_distance)
                 {
-                    mmov.x = compass_x[((dir+8)+sdir)%8];
-                    mmov.y = compass_y[((dir+8)+sdir)%8];
+                    mmov = mon_compass[((dir+8)+sdir)%8];
                     break;
                 }
                 if (dist[1] <= dist[0] && dist[1] <= current_distance)
                 {
-                    mmov.x = compass_x[((dir+8)-sdir)%8];
-                    mmov.y = compass_y[((dir+8)-sdir)%8];
+                    mmov = mon_compass[((dir+8)-sdir)%8];
                     break;
                 }
             }
