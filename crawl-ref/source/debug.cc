@@ -3123,7 +3123,7 @@ static std::string _fsim_weapon(int missile_slot)
 static std::string _fsim_time_string()
 {
     time_t curr_time = time(NULL);
-    struct tm *ltime = localtime(&curr_time);
+    struct tm *ltime = TIME_FN(&curr_time);
     if (ltime)
     {
         char buf[100];
