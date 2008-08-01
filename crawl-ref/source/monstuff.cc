@@ -927,9 +927,23 @@ void monster_die(monsters *monster, killer_type killer,
 
             if (death_message)
             {
-                mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
-                     _wounded_damaged(monster->type) ? "destroy" : "kill",
-                     monster->name(DESC_NOCAP_THE).c_str());
+                bool passive = (killer == KILL_YOU_CONF
+                                && (killer_index == ANON_FRIENDLY_MONSTER
+                                    || !invalid_monster_index(killer_index)));
+                
+                if ( passive )
+                {
+                    mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
+                         monster->name(DESC_CAP_THE).c_str(),
+                         _wounded_damaged(monster->type) ?
+                         "destroyed" : "killed");
+                }
+                else
+                {
+                    mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
+                         _wounded_damaged(monster->type) ? "destroy" : "kill",
+                         monster->name(DESC_NOCAP_THE).c_str());
+                }
 
                 if ((created_friendly || was_neutral) && gives_xp)
                     mpr("That felt strangely unrewarding.");
