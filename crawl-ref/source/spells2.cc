@@ -237,59 +237,29 @@ int corpse_rot(int power)
 {
     UNUSED( power );
 
-    int adx = 0;
-    int ady = 0;
-
-    int minx = you.pos().x - 6;
-    int maxx = you.pos().x + 7;
-    int miny = you.pos().y - 6;
-    int maxy = you.pos().y + 7;
-    int xinc = 1;
-    int yinc = 1;
-
-    if (coinflip())
+    for (radius_iterator ri(you.pos(), 6); ri; ++ri)
     {
-        minx = you.pos().x + 6;
-        maxx = you.pos().x - 7;
-        xinc = -1;
-    }
-
-    if (coinflip())
-    {
-        miny = you.pos().y + 6;
-        maxy = you.pos().y - 7;
-        yinc = -1;
-    }
-
-    for (adx = minx; adx != maxx; adx += xinc)
-        for (ady = miny; ady != maxy; ady += yinc)
+        if (see_grid_no_trans(*ri) && !is_sanctuary(*ri)
+            && env.cgrid(*ri) == EMPTY_CLOUD)
         {
-            coord_def ad(adx, ady);
-            if (see_grid_no_trans(ad) && !is_sanctuary(ad))
+            for ( stack_iterator si(*ri); si; ++si )
             {
-                if (env.cgrid(ad) != EMPTY_CLOUD)
-                    continue;
-
-                for ( stack_iterator si(ad); si; ++si )
+                if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
                 {
-                    if (si->base_type == OBJ_CORPSES
-                        && si->sub_type == CORPSE_BODY)
-                    {
-                        // Found a corpse. Skeletify it if possible.
-                        if (!mons_skeleton(si->plus))
-                            destroy_item(si->index());
-                        else
-                            turn_corpse_into_skeleton(*si);
-
-                        place_cloud(CLOUD_MIASMA, ad,
-                                    4 + random2avg(16, 3), KC_YOU);
-
-                        // Don't look for more corpses here.
-                        break;
-                    }
+                    // Found a corpse. Skeletify it if possible.
+                    if (!mons_skeleton(si->plus))
+                        destroy_item(si->index());
+                    else
+                        turn_corpse_into_skeleton(*si);
+                    
+                    place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3), KC_YOU);
+                    
+                    // Don't look for more corpses here.
+                    break;
                 }
             }
         }
+    }
 
     if (player_can_smell())
         mpr("You smell decay.");
@@ -297,7 +267,7 @@ int corpse_rot(int power)
     // Should make zombies decay into skeletons?
 
     return 0;
-}                               // end corpse_rot()
+}
 
 bool brand_weapon(brand_type which_brand, int power)
 {
@@ -506,13 +476,11 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
 
 void turn_undead(int pow)
 {
-    struct monsters *monster;
-
     mpr("You attempt to repel the undead.");
 
-    for (int tu = 0; tu < MAX_MONSTERS; tu++)
+    for (int i = 0; i < MAX_MONSTERS; i++)
     {
-        monster = &menv[tu];
+        monsters* const monster = &menv[i];
 
         if (monster->type == -1 || !mons_near(monster))
             continue;
@@ -674,14 +642,7 @@ void cast_toxic_radiance(void)
 
 void cast_refrigeration(int pow)
 {
-    struct monsters *monster = 0;       // NULL {dlb}
-    int hurted = 0;
-    struct bolt beam;
-    int toxy;
-
-    beam.flavour = BEAM_COLD;
-
-    const dice_def  dam_dice( 3, 5 + pow / 10 );
+    const dice_def dam_dice( 3, 5 + pow / 10 );
 
     mpr("The heat is drained from your surroundings.");
 
@@ -690,9 +651,8 @@ void cast_refrigeration(int pow)
     more();
     mesclr();
 
-    // Do the player:
-    hurted = roll_dice( dam_dice );
-    hurted = check_your_resists( hurted, beam.flavour );
+    // Handle the player.
+    const int hurted = check_your_resists(roll_dice( dam_dice ), BEAM_COLD);
 
     if (hurted > 0)
     {
@@ -706,9 +666,12 @@ void cast_refrigeration(int pow)
     }
 
     // Now do the monsters:
-    for (toxy = 0; toxy < MAX_MONSTERS; toxy++)
+    bolt beam;   
+    beam.flavour = BEAM_COLD;
+    beam.thrower = KILL_YOU;
+    for (int i = 0; i < MAX_MONSTERS; i++)
     {
-        monster = &menv[toxy];
+        monsters* const monster = &menv[i];
 
         if (monster->type == -1)
             continue;
@@ -718,35 +681,31 @@ void cast_refrigeration(int pow)
             mprf("You freeze %s.",
                  monster->name(DESC_NOCAP_THE).c_str());
 
-            hurted = roll_dice( dam_dice );
-            hurted = mons_adjust_flavoured( monster, beam, hurted );
+            int hurt = mons_adjust_flavoured(monster,beam,roll_dice(dam_dice));
 
-            if (hurted > 0)
+            if (hurt > 0)
             {
-                hurt_monster( monster, hurted );
+                hurt_monster( monster, hurt );
 
                 if (monster->hit_points < 1)
                     monster_die(monster, KILL_YOU, 0);
                 else
-                {
-                    const monsters *mons = static_cast<const monsters*>(monster);
-                    print_wounds(mons);
+                {                    
+                    print_wounds(monster);
 
-                    //jmf: "slow snakes" finally available
-                    if (mons_class_flag( monster->type, M_COLD_BLOOD ) && coinflip())
+                    if (mons_class_flag(monster->type, M_COLD_BLOOD)
+                        && coinflip())
+                    {
                         monster->add_ench(ENCH_SLOW);
+                    }
                 }
             }
         }
     }
-}                               // end cast_refrigeration()
+}
 
 void drain_life(int pow)
 {
-    int hp_gain = 0;
-    int hurted = 0;
-    struct monsters *monster = 0;       // NULL {dlb}
-
     mpr("You draw life from your surroundings.");
 
     // Incoming power to this function is skill in INVOCATIONS, so
@@ -759,9 +718,11 @@ void drain_life(int pow)
     more();
     mesclr();
 
-    for (int toxy = 0; toxy < MAX_MONSTERS; toxy++)
+    int hp_gain = 0;
+
+    for (int i = 0; i < MAX_MONSTERS; i++)
     {
-        monster = &menv[toxy];
+        monsters* monster = &menv[i];
 
         if (monster->type == -1)
             continue;
@@ -777,12 +738,9 @@ void drain_life(int pow)
             mprf("You draw life from %s.",
                  monster->name(DESC_NOCAP_THE).c_str());
 
-            hurted = 3 + random2(7) + random2(pow);
-
+            const int hurted = 3 + random2(7) + random2(pow);
             behaviour_event(monster, ME_WHACK, MHITYOU, you.pos());
-
             hurt_monster(monster, hurted);
-
             hp_gain += hurted;
 
             if (monster->hit_points < 1)

@@ -400,54 +400,17 @@ int spell_fail(spell_type spell)
 
     chance2 = chance;
 
-    if (chance < 45)
-        chance2 = 45;
-    if (chance < 42)
-        chance2 = 43;
-    if (chance < 38)
-        chance2 = 41;
-    if (chance < 35)
-        chance2 = 40;
-    if (chance < 32)
-        chance2 = 38;
-    if (chance < 28)
-        chance2 = 36;
-    if (chance < 22)
-        chance2 = 34;
-    if (chance < 16)
-        chance2 = 32;
-    if (chance < 10)
-        chance2 = 30;
-    if (chance < 2)
-        chance2 = 28;
-    if (chance < -7)
-        chance2 = 26;
-    if (chance < -12)
-        chance2 = 24;
-    if (chance < -18)
-        chance2 = 22;
-    if (chance < -24)
-        chance2 = 20;
-    if (chance < -30)
-        chance2 = 18;
-    if (chance < -38)
-        chance2 = 16;
-    if (chance < -46)
-        chance2 = 14;
-    if (chance < -60)
-        chance2 = 12;
-    if (chance < -80)
-        chance2 = 10;
-    if (chance < -100)
-        chance2 = 8;
-    if (chance < -120)
-        chance2 = 6;
-    if (chance < -140)
-        chance2 = 4;
-    if (chance < -160)
-        chance2 = 2;
-    if (chance < -180)
-        chance2 = 0;
+    const int chance_breaks[][2] = {
+        {45, 45}, {42, 43}, {38, 41}, {35, 40}, {32, 38}, {28, 36},
+        {22, 34}, {16, 32}, {10, 30}, {2, 28}, {-7, 26}, {-12, 24},
+        {-18, 22}, {-24, 20}, {-30, 18}, {-38, 16}, {-46, 14},
+        {-60, 12}, {-80, 10}, {-100, 8}, {-120, 6}, {-140, 4},
+        {-160, 2}, {-180, 0}
+    };
+
+    for ( unsigned int i = 0; i < ARRAYSZ(chance_breaks); ++i )
+        if ( chance < chance_breaks[i][0] )
+            chance2 = chance_breaks[i][1];
 
     if (you.duration[DUR_TRANSFORMATION] > 0)
     {
