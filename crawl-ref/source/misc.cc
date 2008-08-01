@@ -1273,7 +1273,7 @@ void search_around( bool only_adjacent )
                     grd(*ri) = trap_category(env.trap[i].type);
                     mpr("You found a trap!");
                     learned_something_new(TUT_SEEN_TRAP, *ri);
-                    
+
                     exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
                 }
                 else
@@ -1802,9 +1802,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     {
         // Not entirely accurate - the player could die before
         // reaching the Abyss.
-        if (grd[you.x_pos][you.y_pos] == DNGN_ENTER_ABYSS)
+        if (grd(you.pos()) == DNGN_ENTER_ABYSS)
             mark_milestone("abyss.enter", "entered the Abyss!");
-        else if (grd[you.x_pos][you.y_pos] == DNGN_EXIT_ABYSS
+        else if (grd(you.pos()) == DNGN_EXIT_ABYSS
                  && you.char_direction != GDT_GAME_START)
         {
             mark_milestone("abyss.exit", "escaped from the Abyss!");
