@@ -6557,8 +6557,8 @@ int player::has_claws(bool allow_tran) const
     // these are the only other sources for claws
     if (species == SP_TROLL || species == SP_GHOUL)
         return 3;
-    else
-        return mutation[MUT_CLAWS];
+
+    return player_mutation_level(MUT_CLAWS);
 }
 
 bool player::has_usable_claws(bool allow_tran) const

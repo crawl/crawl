@@ -2673,7 +2673,8 @@ std::string your_hand(bool plural)
     case TRAN_NONE:
     case TRAN_STATUE:
     case TRAN_LICH:
-        result = you.has_usable_claws() ? "claw" : "hand";
+        result = (you.has_usable_claws()) ? "claw" : "hand";
+        break;
     case TRAN_ICE_BEAST:
         result = "hand";
         break;
