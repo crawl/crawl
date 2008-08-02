@@ -2488,7 +2488,8 @@ When roaming the dungeon, the surroundings mode is activated by 'x'.
 It lets you have a look at items or monsters in line of sight. You may
 also examine stashed items outside current view using the option
 target_oos = true (if using this, check the option target_los_first).
-    x, Esc, Space       Return to playing mode.
+    Esc, Space          Return to playing mode.
+    x                   List all monsters and items in view.
     ?                   Special help screen.
     * or '              Cycle objects forward.
     / or ;              Cycle objects backward.

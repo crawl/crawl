@@ -80,8 +80,6 @@
 #include "xom.h"
 
 static bool _invisible_to_player( const item_def& item );
-static void _item_list_on_square( std::vector<const item_def*>& items,
-                                  int obj, bool force_squelch = false );
 static void _autoinscribe_item( item_def& item );
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
@@ -196,14 +194,14 @@ static int _cull_items(void)
                     if (z != -1)
                         set_unrandart_exist(z, false);
                 }
-                
+
                 if (first_cleaned == NON_ITEM)
                     first_cleaned = si->index();
 
                 // POOF!
                 destroy_item( si->index() );
             }
-        }    
+        }
     }
 
     return (first_cleaned);
@@ -613,8 +611,8 @@ static int _count_nonsquelched_items( int obj )
 // the square contains *only* squelched items, in which case they
 // are included. If force_squelch is true, squelched items are
 // never displayed.
-static void _item_list_on_square( std::vector<const item_def*>& items,
-                                  int obj, bool force_squelch )
+void item_list_on_square( std::vector<const item_def*>& items,
+                          int obj, bool force_squelch )
 {
     const bool have_nonsquelched = (force_squelch
                                     || _count_nonsquelched_items(obj));
@@ -639,7 +637,7 @@ void request_autopickup(bool do_pickup)
 }
 
 // 2 - artefact, 1 - glowing/runed, 0 - mundane
-static int _item_name_specialness(const item_def& item)
+int item_name_specialness(const item_def& item)
 {
     // All jewellery is worth looking at.
     // And we can always tell from the name if it's an artefact.
@@ -711,7 +709,7 @@ void item_check(bool verbose)
 
     std::vector<const item_def*> items;
 
-    _item_list_on_square( items, igrd(you.pos()), true );
+    item_list_on_square( items, igrd(you.pos()), true );
 
     if (items.empty())
     {
@@ -740,7 +738,7 @@ void item_check(bool verbose)
             unsigned short glyph_col;
             get_item_glyph( items[i], &glyph_char, &glyph_col );
             item_chars.push_back( glyph_char * 0x100 +
-                                  (10 - _item_name_specialness(*(items[i]))) );
+                                  (10 - item_name_specialness(*(items[i]))) );
         }
         std::sort(item_chars.begin(), item_chars.end());
 
@@ -794,7 +792,7 @@ void item_check(bool verbose)
 static void _pickup_menu(int item_link)
 {
     std::vector<const item_def*> items;
-    _item_list_on_square( items, item_link, false );
+    item_list_on_square( items, item_link, false );
 
     std::vector<SelItem> selected =
         select_items( items, "Select items to pick up" );

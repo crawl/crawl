@@ -39,7 +39,9 @@
 #include "debug.h"
 #include "describe.h"
 #include "dungeon.h"
+#include "initfile.h"
 #include "itemname.h"
+#include "items.h"
 #include "mapmark.h"
 #include "message.h"
 #include "menu.h"
@@ -445,6 +447,194 @@ static void _direction_again(dist& moves, targeting_type restricts,
     return;
 }
 
+static void _describe_monster(const monsters *mon);
+
+// Lists all the monsters and items currently in view by the player.
+// Internals:
+// Menu items have meaningful tags. 'i' means item and 'm' means monster.
+//
+void _full_describe_view()
+{
+    const coord_def start = view2grid(coord_def(1,1));
+    const coord_def end(start.x + crawl_view.viewsz.x,
+                        start.y + crawl_view.viewsz.y);
+
+    std::vector<monsters*> list_mons;
+    std::vector<const item_def*> list_items;
+
+    coord_def p;
+
+    // Iterate over viewport and get all the items and monsters in view.
+    // TODO: Allow sorting of monster and items lists.
+    for (p.x = start.x; p.x < end.x; p.x++)
+        for (p.y = start.y; p.y < end.y; p.y++)
+        {
+            if (!in_bounds(p.x,p.y) || !see_grid(p.x,p.y))
+                continue;
+
+            const int mid = mgrd(p);
+            const int oid = igrd(p);
+
+            if (mid != NON_MONSTER && player_monster_visible(&menv[mid]))
+                list_mons.push_back(&menv[mid]);
+
+            if (oid != NON_ITEM)
+            {
+                std::vector<const item_def*> items;
+                item_list_on_square( items, oid, true );
+                list_items.insert(list_items.end(), items.begin(), items.end());
+            }
+        }
+
+    if (!list_mons.size() && !list_items.size())
+    {
+        mprf("Neither monsters nor items are visible.");
+        return;
+    }
+
+    Menu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
+                    /*MF_ALWAYS_SHOW_MORE |*/ MF_ALLOW_FORMATTING);
+
+    desc_menu.set_highlighter(NULL);
+    desc_menu.set_title(new MenuEntry("Visible Monsters/Items:",
+                                      MEL_TITLE));
+
+    desc_menu.set_tag("description");
+
+    int menu_index = -1;
+    // Build menu entries for monsters.
+    if (!list_mons.empty())
+    {
+        desc_menu.add_entry( new MenuEntry("Monsters", MEL_SUBTITLE) );
+        for (unsigned int i = 0; i < list_mons.size(); ++i)
+        {
+            // List monsters in the form
+            // (g) A goblin wielding an orcish dagger
+
+            ++menu_index;
+            const char letter = index_to_letter(menu_index);
+
+            // Get colour-coded letter.
+            unsigned char colour = mons_class_colour(list_mons[i]->type);
+            if (colour == BLACK)
+                colour = LIGHTGREY;
+
+            std::string prefix = "(<";
+            prefix += colour_to_str(colour);
+            prefix += ">";
+            prefix += stringize_glyph(mons_char( list_mons[i]->type) );
+            prefix += "</";
+            prefix += colour_to_str(colour);
+            prefix += ">) ";
+
+            // Get damage level.
+            std::string wound_str;
+            mon_dam_level_type dam_level;
+            mons_get_damage_level(list_mons[i], wound_str, dam_level);
+
+            // Get monster description.
+            // TODO: Show monsters being friendly or neutral, if not by
+            //       colour, then by description.
+            std::vector<formatted_string> fss;
+            std::string str = prefix + get_monster_desc(list_mons[i], true);
+            if (dam_level != MDAM_OKAY)
+                str = str + ", " + wound_str;
+
+            // Wraparound if the description is longer than allowed.
+            linebreak_string2(str, get_number_of_cols() - 4);
+            formatted_string::parse_string_to_multiple(str, fss);
+            MenuEntry *me;
+            for (unsigned int j = 0; j < fss.size(); j++)
+            {
+                if (j == 0)
+                {
+                    me = new MenuEntry(uppercase_first(str), MEL_ITEM, 1, letter);
+                    me->data = (void*) list_mons[i];
+                    me->tag = "m";
+                    me->quantity = 1; // Hack to make monsters selectable.
+                }
+                else
+                {
+                    str = "    " + fss[j].tostring();
+                    me = new MenuEntry(str, MEL_ITEM, 1);
+                }
+
+                desc_menu.add_entry(me);
+            }
+        }
+    }
+
+    // Build menu entries for items.
+    if (list_items.size())
+    {
+        desc_menu.add_entry( new MenuEntry( "Items", MEL_SUBTITLE ) );
+        for (unsigned int i = 0; i < list_items.size(); ++i)
+        {
+            ++menu_index;
+            const char letter = index_to_letter(menu_index);
+
+            unsigned glyph_char;
+            // TODO: check if this can be used instead of
+            // manually doing so with item_specialness --yy
+            unsigned short glyph_col;
+            get_item_glyph( list_items[i], &glyph_char, &glyph_col );
+
+            std::string col_string;
+            int specialness = item_name_specialness(*(list_items[i]));
+            switch (specialness)
+            {
+            case 2: col_string = "yellow";   break; // artefact
+            case 1: col_string = "white";    break; // glowing/runed
+            case 0: col_string = "darkgrey"; break; // mundane
+            }
+
+            std::string prefix = "(<" + col_string + ">"
+                                 + (char)glyph_char
+                                 + "</" + col_string + ">) ";
+
+            std::string str = prefix + list_items[i]->name(DESC_PLAIN);
+
+            MenuEntry *me = new MenuEntry(uppercase_first(str),
+                                          MEL_ITEM, 1, letter);
+            me->data = (void*) list_items[i];
+            me->tag = "i";
+            me->quantity = 2; // Hack to make items selectable.
+            desc_menu.add_entry(me);
+        }
+    }
+
+    // Menu loop
+    while (true)
+    {
+        std::vector<MenuEntry*> sel = desc_menu.show();
+        redraw_screen();
+
+        if (sel.empty())
+            break;
+
+        // Possibility to select a menu item to get full description
+        // HACK: quantity == 1: monsters, quantity == 2: items
+        const int quant = sel[0]->quantity;
+        if (quant == 1)
+        {
+            mesclr();
+            //Monster selected
+            monsters* m = (monsters*)(sel[0]->data);
+            _describe_monster( m );
+
+            if (getch() == 0)
+                getch();
+        }
+        else if (quant == 2)
+        {
+            //Item selected
+            item_def* i = (item_def*)(sel[0]->data);
+            describe_item( *i );
+        }
+    }
+}
+
+
 //---------------------------------------------------------------
 //
 // direction
@@ -727,7 +917,7 @@ void direction(dist& moves, targeting_type restricts,
         bool loop_done = false;
 
         coord_def old_target = moves.target;
-        if ( skip_iter )
+        if (skip_iter)
             old_target.x += 500; // hmmm...hack
 
         int i, mid;
@@ -1107,6 +1297,12 @@ void direction(dist& moves, targeting_type restricts,
             full_describe_square(moves.target);
             force_redraw = true;
             break;
+
+        case CMD_TARGET_ALL_DESCRIBE:
+        	_full_describe_view();
+        	//TODO: Check if this is neccesary
+        	//force_redraw = true;
+        	break;
 
         case CMD_TARGET_HELP:
             show_targeting_help();
@@ -2491,6 +2687,8 @@ static void _describe_monster(const monsters *mon)
              mon->pronoun(PRONOUN_CAP).c_str());
     }
 
+    // Give an indication of monsters being capable of seeing/sensing
+    // invisible creatures.
     if (mons_behaviour_perceptible(mon) && !mons_is_sleeping(mon)
         && !mons_is_confused(mon)
         && (mons_see_invis(mon) || mons_sense_invis(mon)))

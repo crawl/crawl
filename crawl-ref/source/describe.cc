@@ -2360,8 +2360,10 @@ void describe_monsters(const monsters& mons)
     if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
         body <<  getLongDescription("mimic");
     else
+    {
         body <<  getLongDescription(mons.base_name(DESC_DBNAME, false),
                                     mons.type == MONS_DANCING_WEAPON);
+    }
 
     std::string symbol = "";
     symbol += get_monster_data(mons.type)->showchar;
@@ -2454,9 +2456,9 @@ void describe_monsters(const monsters& mons)
 
     case MONS_PROGRAM_BUG:
         body << "If this monster is a \"program bug\", then it's "
-            "recommended that you save your game and reload.  Please report "
-            "monsters who masquerade as program bugs or run around the "
-            "dungeon without a proper description to the authorities.";
+                "recommended that you save your game and reload.  Please report "
+                "monsters who masquerade as program bugs or run around the "
+                "dungeon without a proper description to the authorities.";
         break;
     default:
         break;

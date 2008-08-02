@@ -1053,7 +1053,7 @@ void init_keybindings()
     ASSERT(i >= 130);
 
     for (i = 0; _default_binding_list[i].cmd != CMD_NO_CMD
-             && _default_binding_list[i].key != '\0'; i++)
+                && _default_binding_list[i].key != '\0'; i++)
     {
         default_binding &data = _default_binding_list[i];
         ASSERT(VALID_BIND_COMMAND(data.cmd));

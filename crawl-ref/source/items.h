@@ -90,6 +90,12 @@ void request_autopickup(bool do_pickup = true);
  * *********************************************************************** */
 void pickup(void);
 
+/* ***********************************************************************
+ * called from: directn
+ * *********************************************************************** */
+int item_name_specialness(const item_def& item);
+void item_list_on_square( std::vector<const item_def*>& items,
+                          int obj, bool force_squelch = false );
 
 // last updated 08jun2000 {dlb}
 /* ***********************************************************************
