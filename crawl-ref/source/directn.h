@@ -163,7 +163,8 @@ void full_describe_square(const coord_def &c);
 void describe_floor();
 std::string get_monster_desc(const monsters *mon,
                              bool full_desc = true,
-                             description_level_type mondtype = DESC_CAP_A);
+                             description_level_type mondtype = DESC_CAP_A,
+                             bool print_attitude = false);
 
 int dos_direction_unmunge(int doskey);
 

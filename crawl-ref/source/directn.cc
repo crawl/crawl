@@ -254,8 +254,8 @@ static const char *target_mode_help_text(int mode)
     switch (mode)
     {
     case DIR_NONE:
-        return Options.target_unshifted_dirs? "? - help" :
-            "? - help, Shift-Dir - shoot in a straight line";
+        return (Options.target_unshifted_dirs ? "? - help" :
+                "? - help, Shift-Dir - shoot in a straight line");
     case DIR_TARGET:
         return "? - help, Dir - move target cursor";
     default:
@@ -443,8 +443,6 @@ static void _direction_again(dist& moves, targeting_type restricts,
 
     moves.isValid  = true;
     moves.isTarget = true;
-
-    return;
 }
 
 static void _describe_monster(const monsters *mon);
@@ -496,8 +494,9 @@ void _full_describe_view()
                     /*MF_ALWAYS_SHOW_MORE |*/ MF_ALLOW_FORMATTING);
 
     desc_menu.set_highlighter(NULL);
-    desc_menu.set_title(new MenuEntry("Visible Monsters/Items:",
-                                      MEL_TITLE));
+    desc_menu.set_title(
+        new MenuEntry("Visible Monsters/Items (select for more detail):",
+                      MEL_TITLE));
 
     desc_menu.set_tag("description");
 
@@ -509,7 +508,7 @@ void _full_describe_view()
         for (unsigned int i = 0; i < list_mons.size(); ++i)
         {
             // List monsters in the form
-            // (g) A goblin wielding an orcish dagger
+            // (g) A goblin (hostile) wielding an orcish dagger
 
             ++menu_index;
             const char letter = index_to_letter(menu_index);
@@ -536,18 +535,20 @@ void _full_describe_view()
             // TODO: Show monsters being friendly or neutral, if not by
             //       colour, then by description.
             std::vector<formatted_string> fss;
-            std::string str = prefix + get_monster_desc(list_mons[i], true);
+            std::string str = get_monster_desc(list_mons[i], true, DESC_CAP_A,
+                                               true);
             if (dam_level != MDAM_OKAY)
                 str = str + ", " + wound_str;
 
             // Wraparound if the description is longer than allowed.
-            linebreak_string2(str, get_number_of_cols() - 4);
+            linebreak_string2(str, get_number_of_cols() - 8);
             formatted_string::parse_string_to_multiple(str, fss);
             MenuEntry *me;
             for (unsigned int j = 0; j < fss.size(); j++)
             {
                 if (j == 0)
                 {
+                    str = prefix + str;
                     me = new MenuEntry(uppercase_first(str), MEL_ITEM, 1, letter);
                     me->data = (void*) list_mons[i];
                     me->tag = "m";
@@ -555,7 +556,7 @@ void _full_describe_view()
                 }
                 else
                 {
-                    str = "    " + fss[j].tostring();
+                    str = "        " + fss[j].tostring();
                     me = new MenuEntry(str, MEL_ITEM, 1);
                 }
 
@@ -617,9 +618,20 @@ void _full_describe_view()
         const int quant = sel[0]->quantity;
         if (quant == 1)
         {
-            mesclr();
-            //Monster selected
+            // Get selected monster.
             monsters* m = (monsters*)(sel[0]->data);
+
+#ifdef USE_TILE
+            // Highlight selected monster on the screen.
+            const coord_def gc(m->pos());
+            tiles.place_cursor(CURSOR_MOUSE, gc);
+            // No terse description for now, could be nice though. (jpeg)
+            // (They disappear right away.)
+            //const std::string &desc = get_terse_square_desc(gc);
+            //tiles.add_text_tag(TAG_CELL_DESC, desc, gc);
+            //tiles.redraw();
+#endif
+            mesclr();
             _describe_monster( m );
 
             if (getch() == 0)
@@ -627,11 +639,16 @@ void _full_describe_view()
         }
         else if (quant == 2)
         {
-            //Item selected
+            // Get selected item.
             item_def* i = (item_def*)(sel[0]->data);
             describe_item( *i );
         }
     }
+
+    // Repeat the prompt to show where we are.
+    mpr("Move the cursor around to observe a square "
+        "(x - list visible monsters and items, v - describe square, "
+        "? - help)", MSGCH_PROMPT);
 }
 
 
@@ -2755,7 +2772,8 @@ static void _describe_monster(const monsters *mon)
 // a) Monsters coming into view: "An ogre comes into view. It is wielding ..."
 // b) Monster description via 'x': "An ogre, wielding a club and wearing ..."
 std::string get_monster_desc(const monsters *mon, bool full_desc,
-                             description_level_type mondtype)
+                             description_level_type mondtype,
+                             bool print_attitude)
 {
     std::string desc = "";
     if (mondtype != DESC_NONE)
@@ -2768,7 +2786,18 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
         // for this to make any sense.
         if (!(mon->mname).empty() && desc != mon->name(DESC_BASENAME))
             desc += " the " + mon->name(DESC_BASENAME);
+
+        if (print_attitude)
+        {
+            if (mons_friendly(mon))
+                desc += " (friendly)";
+            else if (mons_neutral(mon))
+                desc += " (neutral)";
+            else
+                desc += " (hostile)";
+        }
     }
+
     std::string weap = "";
 
     if (mon->type != MONS_DANCING_WEAPON)
