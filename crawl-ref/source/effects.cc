@@ -1677,10 +1677,13 @@ bool acquirement(object_class_type class_wanted, int agent,
             thing.inscription = "god gift";
             if (is_random_artefact(thing))
             {
-                origin_acquired(mitm[thing_created], agent);
-                // give another name that takes god gift into account
-                thing.props["randart_name"].get_string() =
-                    randart_name(thing, false);
+                origin_acquired(thing, agent);
+                if ( !is_unrandom_artefact(thing) )
+                {
+                    // give another name that takes god gift into account
+                    thing.props["randart_name"].get_string() =
+                        randart_name(thing, false);
+                }
             }
         }
         move_item_to_grid( &thing_created, you.pos() );
