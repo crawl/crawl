@@ -330,7 +330,7 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
 
     if (can_sac && !rotten)
     {
-        start_delay(DELAY_OFFER_CORPSE, 1, corpse_id);
+        start_delay(DELAY_OFFER_CORPSE, 0, corpse_id);
     }
     else
     {
