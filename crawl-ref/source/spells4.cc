@@ -411,9 +411,10 @@ static int _sleep_monsters(coord_def where, int pow, int garbage)
     // Works on friendlies too, so no check for that.
 
     //jmf: Now that sleep == hibernation:
-    if (mons_res_cold( &mon ) > 0 && coinflip())
+    const int res = mons_res_cold( &mon );
+    if (res > 0 && one_chance_in(std::max(4 - res, 1)))
         return 0;
-    if (mon.has_ench(ENCH_SLEEP_WARY))
+    if (mon.has_ench(ENCH_SLEEP_WARY) && !one_chance_in(3))
         return 0;
 
     mon.put_to_sleep();
