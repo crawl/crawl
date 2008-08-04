@@ -890,7 +890,7 @@ void more(void)
             keypress = getch();
         }
         while (keypress != ' ' && keypress != '\r' && keypress != '\n'
-               && keypress != -1);
+               && keypress != ESCAPE && keypress != -1);
     }
     mesclr(true);
 }                               // end more()
