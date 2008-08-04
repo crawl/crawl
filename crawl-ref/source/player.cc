@@ -4212,37 +4212,37 @@ int player_mental_clarity(bool calc_unid, bool items)
     return ((ret > 3) ? 3 : ret);
 }
 
+// Returns whether the player has the effect of the amulet
+// from a non-amulet source.
+bool extrinsic_amulet_effect(jewellery_type amulet)
+{
+    switch ( amulet )
+    {
+    case AMU_CONTROLLED_FLIGHT:
+        return (you.duration[DUR_CONTROLLED_FLIGHT]
+                || player_genus(GENPC_DRACONIAN)
+                || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
+    case AMU_CLARITY:
+        return (player_mutation_level(MUT_CLARITY) > 0);
+    case AMU_RESIST_CORROSION:
+    case AMU_CONSERVATION:
+        return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0);
+    default:
+        return false;
+    }
+}
+
 bool wearing_amulet(jewellery_type amulet, bool calc_unid)
 {
-    if (amulet == AMU_CONTROLLED_FLIGHT
-        && (you.duration[DUR_CONTROLLED_FLIGHT]
-            || player_genus(GENPC_DRACONIAN)
-            || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-            || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT))
-    {
+    if ( extrinsic_amulet_effect(amulet) )
         return (true);
-    }
-
-    if (amulet == AMU_CLARITY && player_mutation_level(MUT_CLARITY))
-        return (true);
-
-    if (amulet == AMU_RESIST_CORROSION || amulet == AMU_CONSERVATION)
-    {
-        // XXX: this is hackish {dlb}
-        if (player_equip_ego_type( EQ_CLOAK, SPARM_PRESERVATION ))
-            return (true);
-    }
-
+    
     if (you.equip[EQ_AMULET] == -1)
         return (false);
 
-    if (you.inv[you.equip[EQ_AMULET]].sub_type == amulet
-        && ( calc_unid || item_type_known(you.inv[you.equip[EQ_AMULET]]) ))
-    {
-        return (true);
-    }
-
-    return (false);
+    const item_def& amu(you.inv[you.equip[EQ_AMULET]]);
+    return (amu.sub_type == amulet && (calc_unid || item_type_known(amu)));
 }
 
 bool player_is_airborne(void)
