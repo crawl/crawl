@@ -345,6 +345,14 @@ struct travel_target
         p.clear();
         entrance_only = false;
     }
+    bool operator == (const travel_target &other) const
+    {
+        return p == other.p && entrance_only == other.entrance_only;
+    }
+    bool operator != (const travel_target &other) const
+    {
+        return !operator == (other);
+    }
 };
 
 // Tracks items discovered by explore in this turn.

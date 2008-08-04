@@ -93,6 +93,10 @@ static level_id last_stair;
 // Where travel wants to get to.
 static travel_target level_target;
 
+// How many stairs there are between the source and destination of
+// interlevel travel, as estimated by level_distance.
+static int _Src_Dest_Level_Delta = -1;
+
 // Remember the last place explore stopped because autopickup failed.
 static coord_def explore_stopped_pos;
 
@@ -122,6 +126,56 @@ const signed char FORBIDDEN   = -1;
 
 // Map of terrain types that are traversable.
 static signed char traversable_terrain[256];
+
+/*
+ * Warn if interlevel travel is going to take you outside levels in
+ * the range [src,dest].
+ */
+class deviant_route_warning
+{
+private:
+    travel_target target;
+    bool warned;
+
+public:
+    deviant_route_warning(): target(), warned(false)
+    {
+    }
+
+    void new_dest(const travel_target &dest);
+    bool warn_continue_travel(const travel_target &des,
+                              const level_id &deviant);
+};
+
+void deviant_route_warning::new_dest(const travel_target &dest)
+{
+    if (target != dest)
+    {
+        warned = false;
+        target = dest;
+    }
+}
+
+// Returns true if the player wants to continue travelling after the warning.
+bool deviant_route_warning::warn_continue_travel(
+    const travel_target &dest, const level_id &deviant)
+{
+    // We've already prompted, don't ask again, on the player's head be it.
+    if (target == dest && warned)
+        return (true);
+
+    target = dest;
+    const std::string prompt =
+        make_stringf("Have to go through %s. Continue?",
+                     deviant.describe().c_str());
+    // If the user says "Yes, shut up and take me there", we won't ask
+    // again for that destination. If the user says "No", we will
+    // prompt again.
+    cursor_control con(true);
+    return ((warned = yesno(prompt.c_str(), true, 'n', true, false)));
+}
+
+static deviant_route_warning _Route_Warning;
 
 static command_type _trans_negotiate_stairs();
 static bool _find_transtravel_square(const level_pos &pos,
@@ -2426,6 +2480,12 @@ void start_translevel_travel(bool prompt_for_destination)
         you.running = RMODE_INTERLEVEL;
         you.running.pos.reset();
         last_stair.depth = -1;
+
+        _Route_Warning.new_dest(level_target);
+
+        _Src_Dest_Level_Delta = level_distance(level_id::current(),
+                                               level_target.p.id);
+
         _start_running();
     }
 }
@@ -2729,6 +2789,30 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
 
     if (best_stair.x != -1 && best_stair.y != -1)
     {
+        // Is this stair going offlevel?
+        if ((level_target.p.id != current 
+             || level_target.p.pos != best_stair)
+            && _Src_Dest_Level_Delta != -1)
+        {
+            // If so, is the original level closer to the target level than
+            // the destination of the stair?
+            LevelInfo &li = travel_cache.get_level_info(current);
+            const stair_info *dest_stair = li.get_stair(best_stair);
+
+            if (dest_stair && dest_stair->destination.id.is_valid())
+            {
+                const int ndist =
+                    level_distance(dest_stair->destination.id,
+                                   level_target.p.id);
+
+                if (_Src_Dest_Level_Delta < ndist
+                    && !_Route_Warning.warn_continue_travel(
+                        level_target,
+                        dest_stair->destination.id))
+                    return (false);
+            }
+        }
+
         you.running.pos = best_stair;
         return (true);
     }
