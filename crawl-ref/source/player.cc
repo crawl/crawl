@@ -4212,7 +4212,7 @@ int player_mental_clarity(bool calc_unid, bool items)
     return ((ret > 3) ? 3 : ret);
 }
 
-bool wearing_amulet(char amulet, bool calc_unid)
+bool wearing_amulet(jewellery_type amulet, bool calc_unid)
 {
     if (amulet == AMU_CONTROLLED_FLIGHT
         && (you.duration[DUR_CONTROLLED_FLIGHT]

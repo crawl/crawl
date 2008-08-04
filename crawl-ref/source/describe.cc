@@ -3166,18 +3166,12 @@ void describe_god( god_type which_god, bool give_title )
     // Only give this additional information for worshippers.
     if (which_god == you.religion)
     {
-        if (you.religion == GOD_ZIN
-            || you.religion == GOD_SHINING_ONE
-            || you.religion == GOD_ELYVILON)
-        {
-            cgotoxy(1, bottom_line - 1, GOTO_CRT);
-        }
-        else
-            cgotoxy(1, bottom_line - 2, GOTO_CRT);
-
-        textcolor(LIGHTGREY);
-        cprintf(get_linebreak_string(_religion_help(which_god),
-                                     numcols).c_str());
+        std::string extra = get_linebreak_string(_religion_help(which_god),
+                                                 numcols).c_str();
+        cgotoxy(1, bottom_line - std::count(extra.begin(), extra.end(), '\n')-1,
+                GOTO_CRT);
+        textcolor(LIGHTGREY);        
+        cprintf( "%s", extra.c_str() );
     }
 
     cgotoxy(1, bottom_line);
