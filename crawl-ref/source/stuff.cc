@@ -1008,7 +1008,8 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
             tmp = map->find(tmp)->second;
 
         if (safeanswer
-            && (tmp == ' ' || tmp == 27 || tmp == '\r' || tmp == '\n'))
+            && (tmp == ' ' || tmp == ESCAPE || tmp == CONTROL('G')
+                || tmp == '\r' || tmp == '\n'))
         {
             tmp = safeanswer;
         }
@@ -1103,7 +1104,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
 
         int tmp = getchm(KC_CONFIRM);
 
-        if (tmp == CK_ESCAPE || tmp == 'q' || tmp == 'Q')
+        if (tmp == CK_ESCAPE || tmp == CONTROL('G') || tmp == 'q' || tmp == 'Q')
             return -1;
 
         if ((tmp == ' ' || tmp == '\r' || tmp == '\n') && safeanswer)
