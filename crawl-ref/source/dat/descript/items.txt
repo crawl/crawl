@@ -451,23 +451,9 @@ chunk of flesh
 
 A piece of meat found in the dungeon.
 %%%%
-cloak noquote
-
-A cloth cloak.
-%%%%
 cloak
 
 A cloth cloak.
-
-"O Bell my wife, why dost thou flyte?
-   Now is now, and then was then:
- Seek now all the world throughout,
-   Thou kens not clowns from gentlemen:
- They are clad in black, green, yellow and blue,
-   So far above their own degree.
- Once in my life I'll take a view;
-   For I'll have a new cloak about me."
-    -Anonymous, "The Old Cloak".  16th Century.
 %%%%
 club noquote
 
@@ -514,25 +500,9 @@ crystal plate mail
 An incredibly heavy but extremely effective suit of crystalline
 armour.  It is somewhat resistant to corrosion.
 %%%%
-dagger noquote
-
-A long knife or a very short sword, which can be held or thrown.
-%%%%
 dagger
 
 A long knife or a very short sword, which can be held or thrown.
-
-"He drew his dagger, that was sae sharp,
-   That was sae sharp and meet,
- And drave it into the nut-browne bride,
-   That fell deid at his feit.
-
- 'Now stay for me, dear Annet,' he sed,
-   'Now stay, my dear,' he cry'd;
- Then strake the dagger untill his heart,
-   And fell deid by her side."
-    -English traditional ballad, "Lord Thomas and Fair Annet",
-    circa 1650.
 %%%%
 dart
 
@@ -673,14 +643,6 @@ wanted to.
 gold piece
 
 A pile of glittering gold coins.
-
-"Here it was that the ambassadors of the Samnites, finding him
-boiling turnips in the chimney corner, offered him a present of
-gold; but he sent them away with this saying; that he, who was
-content with such a supper, had no need of gold; and that he
-thought it more honourable to conquer those who possessed the
-gold, than to possess the gold itself."
-    -Plutarch, "Marcus Cato"
 %%%%
 grape
 
@@ -806,24 +768,9 @@ lemon
 
 A yellow fruit.
 %%%%
-long sword noquote
-
-A sword with a long, slashing blade.
-%%%%
 long sword
 
 A sword with a long, slashing blade.
-
-"Oh I won't get up, I won't get up,
-   I can't get up for my life
- For you have two long beaten swords
-   And I have but a pocket knife.
-
- Well it's true I have two beaten swords,
-   They cost me deep in the purse
- But you will have the better of them
-   And I will have the worst."
-    -English traditional ballad, "Mattie Groves".  Circa 1600.
 %%%%
 longbow
 
@@ -833,20 +780,6 @@ a skilled archer can use it to great effect.
 lychee
 
 A tropical fruit.
-
-"The Litchi is the most celebrated native fruit of China.  It is
-nearly round, about an inch and a half in diameter, the shell is
-tough, becoming brittle, of a chocolate brown colour covered all
-over with wart-like protuberances. When fresh it is filled with a
-white almost transparent, sweet, jelly-like pulp in which lies a
-rather large, shining, brown seed; the pulp is of a delicious sub-acid
-flavour when fresh.  The Chinese dry it when it becomes black like
-a prune and thus preserve it for use throughout the year; in this state
-it is frequently to be seen in the London fruit shops."
-    -John Smith, _A Dictionary of Popular Names of the Plants
-    which Furnish the Natural and Acquired Wants of Man, in
-    All Matters of Domestic and General Economy: Their History,
-    Products, & Uses_. 1882.
 %%%%
 mace
 
@@ -900,16 +833,6 @@ A needle. It can be fired with a blowgun.
 orange
 
 A delicious, juicy orange fruit.
-
-"Conserve of Orange Peel
-
-HAVING grated the rinds of some Seville oranges as thin as you can,
-weigh them, and to every pound of orange rind add three pounds of loaf sugar.
-Pound the orange rind well in a marble mortar, mix the sugar by degrees
-with them and beat all well together.  Put it into gallipots and tie
-it down so as properly to prevent the air getting to it."
-    -Francis Collingwood, John Woollams, _The Universal
-    Cook: And City and Country Housekeeper._ 1792.
 %%%%
 orb of zot
 
@@ -1068,20 +991,6 @@ rambutan
 
 A small but delicious tropical fruit. How it got into this dungeon is
 anyone's guess.
-
-"The rambutan (_nephelium lappaceum_) is a beautiful fruit to which
-I have already alluded, as resembling the mammoth arbutus; and you suppose
-them at first, when at a little distance from you, a delicious dish of
-some tropical strawberry. But you find on inquiring into the 'particulars
-within' the outer coat, that there is concealed beneath the red and hairy
-covering a semi-transparent pulp of a pleasant acid taste, enveloping a
-single oval and oblong seed. I know not but I am peculiar in my memory
-of the beautiful fruits of the straits, but none lingers in my recollection
-so sweetly in its clustered beauties of the fruit-dish as the bearded
-and rosy rambutan."
-    -Fitch Waterman Taylor, _A Voyage Round the World And Visits
-    to Various Foreign Countries, in the United States Frigate 
-    Columbia_.  1847.
 %%%%
 ring mail
 
@@ -1415,9 +1324,6 @@ slice of pizza
 
 A slice of pizza; a flatbread with tomato sauce, mozarella di bufala,
 and basil.
-
-"When the moon hits your eye like a big pizza pie, that's amore."
-    -Jack Brooks, "That's Amore"
 %%%%
 sling
 
@@ -1547,26 +1453,10 @@ suppose you could wear it if you really wanted to.
 strawberry
 
 A small but delicious red fruit.
-
-"A Samurai was out walking when a large tiger began to chase him. The
-samurai ran for his life, never seeing the cliff under his feet. As
-he fell, he reached out and caught a vine that hung down. He looked
-down and saw another tiger circling below; the first tiger waited
-above. The vine began to give away. The samurai then saw a single
-strawberry growing on the vine. He reached out and ate the strawberry.
-How sweet it tasted!"
-    -Attributed to various Japanese buddhist monks.
 %%%%
 sultana
 
 A humble raisin.
-
-"A Turkish garden was among the curiosities to which the Jew found access
-for Bentham. It was a sort of orchard of vines and other trees, without
-order or apparent arrangement. From that garden Bentham sent specimens
-of the Sultana raisin to England which he believed to have been the first
-of that species which had ever reached his country."
-    -John Bowring, _The Works of Jeremy Bentham_.  1839.  
 %%%%
 swamp dragon armour
 

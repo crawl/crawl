@@ -94,6 +94,10 @@ static TextDB AllDBs[] =
             "database/miscname.txt", // names for miscellaneous things
             NULL),
 
+    TextDB( "db/quotes",
+            "database/quotes.txt",   // quotes for items and monsters
+            NULL),
+
     TextDB( "db/help",               // database for outsourced help texts
             "database/help.txt",
             NULL),
@@ -104,7 +108,8 @@ static TextDB& RandartDB     = AllDBs[1];
 static TextDB& SpeakDB       = AllDBs[2];
 static TextDB& ShoutDB       = AllDBs[3];
 static TextDB& MiscDB        = AllDBs[4];
-static TextDB& HelpDB        = AllDBs[5];
+static TextDB& QuotesDB      = AllDBs[5];
+static TextDB& HelpDB        = AllDBs[6];
 
 // ----------------------------------------------------------------------
 // TextDB
@@ -600,23 +605,25 @@ static std::string _query_database(DBM *db, std::string key,
 }
 
 /////////////////////////////////////////////////////////////////////////////
+// Quote DB specific functions.
+
+std::string getQuoteString(const std::string &key)
+{
+    if (!QuotesDB)
+        return ("");
+
+    return _query_database(QuotesDB.get(), key, true, true);
+}
+
+/////////////////////////////////////////////////////////////////////////////
 // Description DB specific functions.
 
-std::string getLongDescription(const std::string &key, bool noquote)
+std::string getLongDescription(const std::string &key)
 {
     if (!DescriptionDB.get())
         return ("");
 
-    std::string result = "";
-    if (noquote)
-    {
-        result = _query_database(DescriptionDB.get(), key + " noquote",
-                                 true, true);
-    }
-    if (result.empty())
-        result = _query_database(DescriptionDB.get(), key, true, true);
-
-    return result;
+    return _query_database(DescriptionDB.get(), key, true, true);
 }
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,

@@ -85,9 +85,6 @@ You can feel the heat. Gehenna seems to be made out of nothing but flames,
 lava and hellfire.
 %%%%
 A gateway to Hell
-
-"Lasciate ogne speranza, voi ch'intrate."
-   -Dante Alighieri, _Divina Commedia_, "L'Inferno", Canto III.  Circa 1315.
 %%%%
 A gateway to the Iron City of Dis
 
@@ -106,31 +103,12 @@ A glowing golden altar of the Shining One
 A glowing white marble altar of Zin
 %%%%
 A granite statue
-
-"I met a traveller from an antique land
- Who said: Two vast and trunkless legs of stone
- Stand in the desert. Near them on the sand,
- Half sunk, a shatter'd visage lies, whose frown
- And wrinkled lip and sneer of cold command
- Tell that its sculptor well those passions read
- Which yet survive, stamp'd on these lifeless things,
- The hand that mock'd them and the heart that fed.
- And on the pedestal these words appear:
- 'My name is Ozymandias, king of kings:
- Look on my works, ye Mighty, and despair!'
- Nothing beside remains: round the decay
- Of that colossal wreck, boundless and bare,
- The lone and level sands stretch far away."
-    -Percy Bysshe Shelley, "Ozymandias".  1818.
 %%%%
 A labyrinth entrance
 
 A gateway to an intricate maze designed by subtle and malicious minds,
 its exit guarded by a fearsome monster, where many a hapless
 adventurer has lost his way and starved to death.
-
-"Maze-treaders, whose vision ahead and behind is severely constricted and fragmented, suffer confusion, whereas maze-viewers who see the pattern whole, from above or in a diagram, are dazzled by its complex artistry. What you see depends on where you stand, and thus, at one and the same time, labyrinths are single (there is one physical structure) and double: they simultaneously incorporate order and disorder, clarity and confusion, unity and multiplicity, artistry and chaos."
-        -Mark Z. Danielewski, "House of Leaves".  2000.
 %%%%
 A magical trap
 %%%%
@@ -148,20 +126,8 @@ A one-way gate to the infinite horrors of the Abyss
 A one-way gate to a demon-haunted realm, riven by chaos, its very
 substance impermanent and whimsical, filled with creatures out
 of nightmare.
-
-"And if you gaze for long into an abyss,
- the abyss gazes also into you."
-    -Friedrich Nietzsche, "Beyond Good and Evil"
 %%%%
 A rock wall
-
-"I know not whether Laws be right,
-   Or whether Laws be wrong;
- All that we know who lie in gaol
-   Is that the wall is strong;
- And that each day is like a year,
-   A year whose days are long."
-    -Oscar Wilde, "Ballad of Reading Gaol"
 %%%%
 A roughly hewn altar of Beogh
 %%%%
@@ -242,17 +208,6 @@ A staircase to the Tomb
 
 A way to the Tomb of the Ancients, a place of damnation, of horrors
 animated by the vilest necromancy.
-
-"In the depths of every heart, there is a tomb and a dungeon, though
-the lights, the music, and revelry above may cause us to forget their
-existence, and the buried ones, or prisoners whom they hide. But
-sometimes, and oftenest at midnight, those dark receptacles are flung
-wide open. In an hour like this, when the mind has a passive
-sensibility, but no active strength; when the imagination is a mirror,
-imparting vividness to all ideas, without the power of selecting or
-controlling them; then pray that your grieves may slumber, and the
-brotherhood of remorse not break their chain."
-    -Nathaniel Hawthorne
 %%%%
 A staircase to the Vaults
 %%%%

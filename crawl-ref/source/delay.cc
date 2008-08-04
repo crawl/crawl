@@ -604,14 +604,14 @@ int check_recital_audience()
         if (!_recite_mons_useless( &menv[mgrd(*ri)] ) )
             return (1);
     }
-    
+
 #ifdef DEBUG_DIAGNOSTICS
     if (!found_monsters)
         mprf(MSGCH_DIAGNOSTICS, "No audience found!");
     else
         mprf(MSGCH_DIAGNOSTICS, "No sensible audience found!");
 #endif
-    
+
    // No use preaching to the choir, nor to common animals.
    if (found_monsters)
        return (-1);

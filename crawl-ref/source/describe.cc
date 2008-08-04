@@ -113,7 +113,7 @@ static int _count_desc_lines(const std::string _desc, const int width)
 //---------------------------------------------------------------
 void print_description(const std::string &d, const std::string title,
                        const std::string suffix, const std::string prefix,
-                       const std::string footer)
+                       const std::string footer, const std::string quote)
 {
     const unsigned int lineWidth = get_number_of_cols()  - 1;
     const          int height    = get_number_of_lines();
@@ -134,19 +134,32 @@ void print_description(const std::string &d, const std::string title,
     const int prefix_lines = _count_desc_lines(prefix, lineWidth);
     const int footer_lines = _count_desc_lines(footer, lineWidth)
                              + (footer.empty() ? 0 : 1);
+    const int quote_lines  = _count_desc_lines(quote, lineWidth);
 
-    // Prefer the footer over the suffix
+    // Prefer the footer over the suffix.
     if (num_lines + suffix_lines + footer_lines <= height)
     {
         desc = desc + suffix;
         num_lines += suffix_lines;
     }
 
-    // Prefer the footer over the prefix
+    // Prefer the footer over the prefix.
     if (num_lines + prefix_lines + footer_lines <= height)
     {
         desc = prefix + desc;
         num_lines += prefix_lines;
+    }
+
+    // Prefer the footer over the quote.
+    if (num_lines + footer_lines + quote_lines + 1 <= height)
+    {
+        if (!desc.empty())
+        {
+            desc += "$";
+            num_lines++;
+        }
+        desc = desc + quote;
+        num_lines += quote_lines;
     }
 
     if (!footer.empty() && num_lines + footer_lines <= height)
@@ -173,7 +186,7 @@ void print_description(const std::string &d, const std::string title,
         if (currentPos != 0)
             cgotoxy(1, wherey() + 1);
 
-        // see if $ sign is within one lineWidth
+        // See if $ sign is within one lineWidth.
         nextLine = desc.find('$', currentPos);
 
         if (nextLine >= currentPos && nextLine < currentPos + lineWidth)
@@ -195,7 +208,7 @@ void print_description(const std::string &d, const std::string title,
             continue;
         }
 
-        // no newline -- see if rest of string will fit.
+        // No newline -- see if rest of string will fit.
         if (currentPos + lineWidth >= desc.length())
         {
             cprintf((desc.substr(currentPos)).c_str());
@@ -203,7 +216,7 @@ void print_description(const std::string &d, const std::string title,
         }
 
 
-        // ok.. try to truncate at space.
+        // Ok, try to truncate at space.
         nextLine = desc.rfind(' ', currentPos + lineWidth);
 
         if (nextLine > 0)
@@ -213,7 +226,7 @@ void print_description(const std::string &d, const std::string title,
             continue;
         }
 
-        // oops.  just truncate.
+        // Oops.  Just truncate.
         nextLine = currentPos + lineWidth;
 
         nextLine = std::min(d.length(), nextLine);
@@ -1678,8 +1691,22 @@ std::string get_item_description( const item_def &item, bool verbose,
         else
         {
             std::string db_name = item.name(DESC_DBNAME, true, false, false);
-            std::string db_desc =
-                getLongDescription(db_name, is_artefact(item) || noquote);
+            std::string db_desc = getLongDescription(db_name);
+            if (!noquote && !is_artefact(item))
+            {
+                const unsigned int lineWidth = get_number_of_cols();
+                const          int height    = get_number_of_lines();
+
+                std::string quote = getQuoteString(db_name);
+
+                if (_count_desc_lines(db_desc, lineWidth)
+                    + _count_desc_lines(quote, lineWidth) <= height)
+                {
+                    if (!db_desc.empty())
+                        db_desc += "$";
+                    db_desc += quote;
+                }
+            }
 
             if (db_desc.empty())
             {
@@ -2347,7 +2374,7 @@ void describe_monsters(const monsters& mons)
     }
 
     std::ostringstream body;
-    std::string title, prefix, suffix;
+    std::string title, prefix, suffix, quote;
 
     std::string capname = mons.name(DESC_CAP_A);
     title = capname;
@@ -2357,13 +2384,14 @@ void describe_monsters(const monsters& mons)
         title += mons.base_name(DESC_NOCAP_THE, false);
     }
 
+    std::string db_name = mons.base_name(DESC_DBNAME, false);
     if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
-        body <<  getLongDescription("mimic");
-    else
-    {
-        body <<  getLongDescription(mons.base_name(DESC_DBNAME, false),
-                                    mons.type == MONS_DANCING_WEAPON);
-    }
+        db_name = "mimic";
+
+    // Don't get description for player ghosts.
+    if (mons.type != MONS_PLAYER_GHOST)
+        body << getLongDescription(db_name);
+    quote = getQuoteString(db_name);
 
     std::string symbol = "";
     symbol += get_monster_data(mons.type)->showchar;
@@ -2375,21 +2403,30 @@ void describe_monsters(const monsters& mons)
     symbol_prefix += "_prefix";
     prefix = getLongDescription(symbol_prefix);
 
+    std::string quote2 = getQuoteString(symbol_prefix);
+    if (!quote.empty() && !quote2.empty())
+        quote += "$";
+    quote += quote2;
+
+    // Except for draconians and player ghosts, I have to admit I find the
+    // following special descriptions rather pointless. I certainly can't
+    // say I like them, though "It has come for your soul!" and
+    // "It wants to drink your blood!" have something going for them. (jpeg)
     switch (mons.type)
     {
     case MONS_ROTTING_DEVIL:
         if (player_can_smell())
         {
             if (player_mutation_level(MUT_SAPROVOROUS) == 3)
-                body << "It smells great!";
+                body << "It smells great!$";
             else
-                body << "It stinks.";
+                body << "It stinks.$";
         }
         break;
 
     case MONS_SWAMP_DRAKE:
         if (player_can_smell())
-            body << "It smells horrible.";
+            body << "It smells horrible.$";
         break;
 
     case MONS_NAGA:
@@ -2398,26 +2435,26 @@ void describe_monsters(const monsters& mons)
     case MONS_GUARDIAN_NAGA:
     case MONS_GREATER_NAGA:
         if (you.species == SP_NAGA)
-            body << "It is particularly attractive.";
+            body << "It is particularly attractive.$";
         else
-            body << "It is strange and repulsive.";
+            body << "It is strange and repulsive.$";
         break;
 
     case MONS_VAMPIRE:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
         if (you.is_undead == US_ALIVE)
-            body << "It wants to drink your blood! ";
+            body << "It wants to drink your blood!$";
         break;
 
     case MONS_REAPER:
         if (you.is_undead == US_ALIVE)
-            body <<  "It has come for your soul!";
+            body <<  "It has come for your soul!$";
         break;
 
     case MONS_ELF:
         // These are only possible from polymorphing or shapeshifting.
-        body << "This one is remarkably plain looking.";
+        body << "This one is remarkably plain looking.$";
         break;
 
     case MONS_DRACONIAN:
@@ -2441,8 +2478,7 @@ void describe_monsters(const monsters& mons)
         break;
     }
     case MONS_PLAYER_GHOST:
-       body << "$The apparition of " << get_ghost_description(mons)
-            << ".$";
+        body << "The apparition of " << get_ghost_description(mons) << ".$";
         break;
 
     case MONS_PANDEMONIUM_DEMON:
@@ -2451,14 +2487,14 @@ void describe_monsters(const monsters& mons)
 
     case MONS_URUG:
         if (player_can_smell())
-            body << "He smells terrible.";
+            body << "He smells terrible.$";
         break;
 
     case MONS_PROGRAM_BUG:
         body << "If this monster is a \"program bug\", then it's "
                 "recommended that you save your game and reload.  Please report "
                 "monsters who masquerade as program bugs or run around the "
-                "dungeon without a proper description to the authorities.";
+                "dungeon without a proper description to the authorities.$";
         break;
     default:
         break;
@@ -2469,6 +2505,11 @@ void describe_monsters(const monsters& mons)
     symbol_suffix += "_suffix";
     suffix += getLongDescription(symbol_suffix);
     suffix += getLongDescription(symbol_suffix + "_examine");
+
+    quote2 = getQuoteString(symbol_suffix);
+    if (!quote.empty() && !quote2.empty())
+        quote += "$";
+    quote += quote2;
 
 #if DEBUG_DIAGNOSTICS
     if (mons_class_flag( mons.type, M_SPELLCASTER ))
@@ -2510,7 +2551,7 @@ void describe_monsters(const monsters& mons)
     }
 #endif
 
-    print_description(body.str(), title, suffix, prefix);
+    print_description(body.str(), title, suffix, prefix, "", quote);
 
     mouse_control mc(MOUSE_MODE_MORE);
 

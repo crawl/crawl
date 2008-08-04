@@ -1115,7 +1115,8 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
 
 static bool _do_description(std::string key, std::string footer = "")
 {
-    std::string desc = getLongDescription(key);
+    std::string desc  = getLongDescription(key);
+    std::string quote = getQuoteString(key);
 
     std::string prefix, suffix;
 
@@ -1189,18 +1190,20 @@ static bool _do_description(std::string key, std::string footer = "")
             symbol_prefix += symbol;
             symbol_prefix += "_prefix";
             prefix = getLongDescription(symbol_prefix);
+            quote += getQuoteString(symbol_prefix);
 
             std::string symbol_suffix = "__";
             symbol_suffix += symbol;
             symbol_suffix += "_suffix";
             suffix += getLongDescription(symbol_suffix);
             suffix += getLongDescription(symbol_suffix + "_lookup");
+            quote += getQuoteString(symbol_suffix);
         }
     }
 
     key = uppercase_first(key);
     linebreak_string2(footer, width - 1);
-    print_description(desc, key, suffix, prefix, footer);
+    print_description(desc, key, suffix, prefix, footer, quote);
 
     return (true);
 }
