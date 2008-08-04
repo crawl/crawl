@@ -30,7 +30,7 @@ bool cast_sure_blade(int power);
 /* ***********************************************************************
  * called from: ability - spell
  * *********************************************************************** */
-int cast_healing(int pow, const coord_def& where = coord_def(-1,1));
+int cast_healing(int pow, const coord_def& where = coord_def(0,0));
 
 void vitalisation_chain(int amount);
 void reduce_vitalisation_chain(int amount);
