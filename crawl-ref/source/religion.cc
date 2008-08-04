@@ -1314,10 +1314,10 @@ static int _tso_blessing_extend_stay(monsters* mon)
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
-    // [ds] Disabling permanence for balance reasons, but extending duration
-    // increase. These numbers are tenths of a player turn. Holy monsters
-    // get a much bigger boost than random beasties.
-    const int base_increase = mon->holiness() == MH_HOLY? 1100 : 500;
+    // [ds] Disabling permanence for balance reasons, but extending
+    // duration increase.  These numbers are tenths of a player turn.
+    // Holy monsters get a much bigger boost than random beasties.
+    const int base_increase = mon->holiness() == MH_HOLY ? 1100 : 500;
     const int increase = base_increase + random2(base_increase);
     return _increase_ench_duration(mon, abj, increase);
 }
