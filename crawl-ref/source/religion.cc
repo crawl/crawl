@@ -3100,6 +3100,11 @@ bool god_dislikes_item_handling(const item_def &item)
                 return (true);
             }
         }
+        else if (item.base_type == OBJ_STAVES
+            && item.sub_type == STAFF_POISON || item.sub_type == STAFF_VENOM)
+        {
+            return (true);
+        }
     }
 
     return (false);
