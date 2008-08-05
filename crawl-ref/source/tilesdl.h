@@ -97,6 +97,8 @@ public:
     void message_out(int which_line, int colour, const char *s, int firstcol, bool newline);
 
     void cgotoxy(int x, int y, int region = GOTO_CRT);
+    int get_number_of_lines();
+    int get_number_of_cols();
     void clear_message_window();
 
     void update_minimap(int gx, int gy);

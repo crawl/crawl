@@ -1,7 +1,7 @@
 ### The following lines define the colours of various objects within the
 ### tiles minimap. See options_guide.txt for more details.
 
-tile_show_items = !?/%=([)X}+\_.
+# tile_show_items = !?/%=([)X}+\_.
 
 # tile_title_screen = false
 
@@ -26,6 +26,13 @@ tile_show_items = !?/%=([)X}+\_.
 # tile_excl_centre     = darkblue
 # tile_window_col      = yellow
 
+# tile_tooltip_ms = 1000
+
+# tile_window_width = 1024
+# tile_window_height = 768
+# tile_map_pixels = 4
+# tile_full_screen = true
+
 # tile_font_crt_file = VeraMono.ttf
 # tile_font_crt_size = 15
 # tile_font_stat_file = VeraMono.ttf
@@ -37,8 +44,37 @@ tile_show_items = !?/%=([)X}+\_.
 # tile_font_lbl_file = Vera.ttf
 # tile_font_lbl_size = 14
 
+### Predefined layouts for smaller standard resolutions.  Any window size
+### at or above 1024x768 should probably use the above defaults.
+
+### 800 x 480 (EeePC)
+# tile_window_width = 800
+# tile_window_height = 480
+# tile_map_pixels = 3
 # tile_full_screen = true
+# tile_font_crt_size = 13
+# tile_font_stat_size = 12
+# tile_font_msg_size = 10
+# tile_font_tip_size = 13
+# tile_font_lbl_size = 11
+
+### 1024 x 600 (EeePC 900+)
 # tile_window_width = 1024
-# tile_window_height = 768
-# tile_map_pixels = 4
-# tile_tooltip_ms = 1000
+# tile_window_height = 600
+# tile_map_pixels = 3
+# tile_full_screen = true
+# tile_font_crt_size = 14
+# tile_font_stat_size = 14
+# tile_font_msg_size = 12
+# tile_font_tip_size = 13
+# tile_font_lbl_size = 12
+
+### 800 x 600
+# tile_window_width = 800
+# tile_window_height = 600
+# tile_map_pixels = 3
+# tile_font_crt_size = 14
+# tile_font_stat_size = 11
+# tile_font_msg_size = 12
+# tile_font_tip_size = 13
+# tile_font_lbl_size = 12

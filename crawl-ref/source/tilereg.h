@@ -161,8 +161,13 @@ class MessageRegion : public TextRegion
 public:
     MessageRegion(FTFont *font);
 
+    void set_overlay(bool is_overlay);
+
     virtual int handle_mouse(MouseEvent &event);
+    virtual void render();
     virtual bool update_tip_text(std::string &tip);
+protected:
+    bool m_overlay;
 };
 
 class CRTRegion : public TextRegion

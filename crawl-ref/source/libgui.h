@@ -16,10 +16,6 @@
 
 typedef unsigned int screen_buffer_t;
 
-//dungeon display size
-extern int tile_dngn_x;
-extern int tile_dngn_y;
-
 void set_mouse_enabled(bool enabled);
 
 struct coord_def;

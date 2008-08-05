@@ -47,9 +47,6 @@
 #include <SDL.h>
 #include "tilesdl.h"
 
-int tile_dngn_x;
-int tile_dngn_y;
-
 int tile_idx_unseen_terrain(int x, int y, int what)
 {
     const coord_def gc(x,y);
@@ -292,12 +289,12 @@ int wherey()
 
 int get_number_of_lines()
 {
-    return 30;
+    return tiles.get_number_of_lines();
 }
 
 int get_number_of_cols()
 {
-    return 80;
+    return tiles.get_number_of_cols();
 }
 
 void put_colour_ch(int colour, unsigned ch)

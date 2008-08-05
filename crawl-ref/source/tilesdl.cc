@@ -310,11 +310,6 @@ void TilesFramework::resize()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    // TODO enne - need better resizing
-    // View size in pixels is (m_viewsc * crawl_view.viewsz)
-    m_viewsc.x = 32;
-    m_viewsc.y = 32;
-
     // For ease, vertex positions are pixel positions.
     glOrtho(0, m_windowsz.x, m_windowsz.y, 0, 0, 100); 
 }
@@ -647,44 +642,177 @@ int TilesFramework::getch_ck()
 
 void TilesFramework::do_layout()
 {
-    const int map_stat_buffer = 5;
+    // View size in pixels is (m_viewsc * crawl_view.viewsz)
+    m_viewsc.x = 32;
+    m_viewsc.y = 32;
 
-    // TODO enne - use options
+    const int map_stat_buffer = 4;
     const int crt_width = 80;
     const int crt_height = 30;
     const int map_margin = 2;
 
-    // Size regions that we know about
+    crawl_view.viewsz.x = Options.view_max_width;
+    crawl_view.viewsz.y = Options.view_max_height;
+    crawl_view.msgsz.x = crt_width;
+
+    // Initial sizes.
+    m_region_tile->dx = m_viewsc.x;
+    m_region_tile->dy = m_viewsc.y;
     m_region_tile->resize(crawl_view.viewsz.x, crawl_view.viewsz.y);
     m_region_crt->resize(crt_width, crt_height);
     m_region_stat->resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
     m_region_msg->resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
     m_region_map->resize(GXM, GYM);
-
+    m_region_menu_inv->resize(24, 1);
 
     // Place regions for normal layer
     const int margin = 4;
+
     m_region_tile->place(0, 0, margin);
-    m_region_msg->place(0, m_region_tile->ey, margin);
+    m_region_msg->place(0, m_region_tile->ey - margin, margin);
 
-    int stat_col = m_region_tile->ex + map_stat_buffer;
+    bool message_overlay = false;
 
-    m_region_stat->place(stat_col, 0, 0);
+    if (m_windowsz.y < m_region_tile->dy * VIEW_MIN_HEIGHT)
+    {
+        crawl_view.viewsz.x = VIEW_MIN_WIDTH;
+        crawl_view.viewsz.y = VIEW_MIN_HEIGHT;
+        m_region_tile->place(0, 0, 0);
+        int factor = m_windowsz.y / crawl_view.viewsz.y;
+        m_viewsc.x = m_viewsc.y = std::min(32, factor);
+        m_region_tile->dx = m_viewsc.x;
+        m_region_tile->dy = m_viewsc.y;
+        m_region_tile->resize(crawl_view.viewsz.x, crawl_view.viewsz.y);
+        m_region_msg->place(0, 0, 0);
+        message_overlay = true;
+    }
+    else
+    {
+        // Shrink viewsz if too wide:
+        while (m_region_tile->wx + m_region_stat->wx > m_windowsz.x
+               && crawl_view.viewsz.x > VIEW_MIN_WIDTH)
+        {
+            crawl_view.viewsz.x -= 2;
+            m_region_tile->mx = crawl_view.viewsz.x;
+            m_region_tile->place(0, 0, margin);
+            m_region_msg->place(0, m_region_tile->ex, margin);
+        }
+
+        // Shrink viewsz if too tall:
+        while (m_region_tile->wy + m_region_msg->wy > m_windowsz.y
+               && crawl_view.viewsz.y > VIEW_MIN_HEIGHT)
+        {
+            crawl_view.viewsz.y -= 2;
+            m_region_tile->my = crawl_view.viewsz.y;
+            m_region_tile->place(0, 0, margin);
+            m_region_msg->place(0, m_region_tile->ey, margin);
+        }
+
+        // Shrink msgsz if too tall:
+        while (m_region_tile->wy + m_region_msg->wy > m_windowsz.y
+               && crawl_view.msgsz.y > MSG_MIN_HEIGHT)
+        {
+            m_region_msg->resize(m_region_msg->mx, --crawl_view.msgsz.y);
+        }
+
+        if (m_region_tile->wy + m_region_msg->wy > m_windowsz.y)
+        {
+            m_region_tile->place(0, 0, 0);
+            m_region_msg->place(0, 0, 0);
+            message_overlay = true;
+        }
+    }
+
+    if (message_overlay)
+    {
+        m_region_msg->resize_to_fit(m_region_tile->ex, m_region_msg->ey);
+        crawl_view.msgsz.x = m_region_msg->mx;
+        crawl_view.msgsz.y = m_region_msg->my;
+    }
+    else
+    {
+        m_region_msg->resize_to_fit(m_region_msg->wx,
+                                    m_windowsz.y - m_region_msg->sx);
+        int msg_y = std::min(Options.msg_max_height, (int)m_region_msg->my);
+        m_region_msg->resize(m_region_msg->mx, msg_y);
+    }
+    m_region_msg->set_overlay(message_overlay);
+
+    // Shrink view width if stat window can't fit...
+    int stat_col;
+    crawl_view.viewsz.x += 2;
+    do
+    {
+        crawl_view.viewsz.x -= 2;
+        m_region_tile->mx = crawl_view.viewsz.x;
+        m_region_tile->place(0, 0, margin);
+
+        stat_col = m_region_tile->ex + map_stat_buffer;
+        m_region_stat->place(stat_col, 0, 0);
+        m_region_stat->resize_to_fit(m_windowsz.x - m_region_stat->sx,
+                                     m_region_stat->wy);
+    }
+    while (m_region_stat->ex > m_windowsz.x
+           && crawl_view.viewsz.x > VIEW_MIN_WIDTH);
+
+    int hud_width = std::min(50, (int)m_region_stat->mx);
+    m_region_stat->resize(hud_width, m_region_stat->my);
+    crawl_view.hudsz.x = m_region_stat->mx;
+    crawl_view.hudsz.y = m_region_stat->my;
+
+    // Resize map to fit the screen
+    m_region_map->dx = m_region_map->dy = Options.tile_map_pixels;
     m_region_map->place(stat_col, m_region_stat->ey, map_margin);
+    while (m_region_map->ex > m_windowsz.x)
+    {
+        m_region_map->dx--;
+        m_region_map->dy--;
+        m_region_map->resize(GXM, GYM);
+    }
 
     int inv_col = std::max(m_region_tile->ex, m_region_msg->ex);
+    if (message_overlay)
+        inv_col = stat_col;
 
     m_region_self_inv->place(inv_col, m_region_map->ey, 0);
     m_region_self_inv->resize_to_fit(m_windowsz.x - 
-                                          m_region_self_inv->sx,
-                                          m_windowsz.y -
-                                          m_region_self_inv->sy);
+                                     m_region_self_inv->sx,
+                                     m_windowsz.y -
+                                     m_region_self_inv->sy);
+    m_region_self_inv->resize(std::min(13, (int)m_region_self_inv->mx),
+                              std::min(6, (int)m_region_self_inv->my));
+
+    int self_inv_y = m_windowsz.y - m_region_self_inv->wy - margin;
+    m_region_self_inv->place(inv_col, self_inv_y, 0);
+
+    // recenter map above inventory
+    int map_cen_x = m_region_self_inv->sx + (m_region_self_inv->wx) / 2;
+    m_region_map->place(map_cen_x - m_region_map->wy / 2, m_region_map->sy,
+                        map_margin);
 
     // Place regions for crt layer
     m_region_crt->place(0, 0, margin);
+
+    while (m_region_crt->ey + m_region_menu_inv->wy > m_windowsz.y)
+    {
+        m_region_crt->resize(m_region_crt->mx, m_region_crt->my - 1);
+    }
+    while (m_region_crt->ex > m_windowsz.x)
+    {
+        m_region_crt->resize(m_region_crt->mx - 1, m_region_crt->my);
+    }
+
     m_region_menu_inv->place(0, m_region_crt->ey, margin);
     m_region_menu_inv->resize_to_fit(m_windowsz.x, m_windowsz.y -
-                                          m_region_menu_inv->sy);
+                                     m_region_menu_inv->sy);
+ 
+    // Depending on the font, the menu inventory may hold fewer items
+    // than the crt menu can display.  Decrease the lines if necessary.
+    const int ex = 3;
+    if (m_region_crt->my - ex > m_region_menu_inv->mx)
+        m_region_crt->resize(m_region_crt->mx, m_region_menu_inv->mx + ex);
+
+    crawl_view.init_view();
 }
 
 void TilesFramework::clrscr()
@@ -721,6 +849,18 @@ void TilesFramework::clear_message_window()
 {
     m_region_msg->clear();
     m_active_layer = LAYER_NORMAL;
+}
+
+int TilesFramework::get_number_of_lines()
+{
+    return m_region_crt->my;
+}
+
+int TilesFramework::get_number_of_cols()
+{
+    // TODO enne - do we need to differentiate the number of columns
+    // in the message window and the number of columns on the CRT?
+    return m_region_crt->mx;
 }
 
 void TilesFramework::cgotoxy(int x, int y, int region)
@@ -883,6 +1023,12 @@ void TilesFramework::update_inventory()
 
     // TODO enne - if all inventory and ground can't fit, allow ground
     // and inventory items on the same row.
+
+    // TODO enne - if inventory fills up all squares, add up to one row
+    // of ground, depending.
+
+    // TODO enne - only fill up 52 squares of inventory, then start
+    // showing floor.
 
     // item.base_type <-> char conversion table
     const static char *obj_syms = ")([/%#?=!#+\\0}x";

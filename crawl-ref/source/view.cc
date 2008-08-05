@@ -5149,7 +5149,7 @@ void crawl_view_buffer::size(const coord_def &sz)
 // define VIEW_MAX_WIDTH use Options.view_max_width
 #define HUD_WIDTH  42
 #define HUD_HEIGHT 12
-#define MSG_MIN_HEIGHT 7
+// #define MSG_MIN_HEIGHT defined elsewhere
 #define MSG_MAX_HEIGHT Options.msg_max_height
 #define MLIST_MIN_HEIGHT Options.mlist_min_height
 #define MLIST_MIN_WIDTH 25  // non-inline layout only
@@ -5369,6 +5369,8 @@ crawl_view_geometry::crawl_view_geometry()
 
 void crawl_view_geometry::init_view()
 {
+    viewhalfsz = viewsz / 2;
+    vbuf.size(viewsz);
     set_player_at(you.pos(), true);
 }
 
@@ -5471,8 +5473,6 @@ void crawl_view_geometry::init_geometry()
     gui_init_view_params(*this);
 #endif
 
-    viewhalfsz = viewsz / 2;
-    vbuf.size(viewsz);
     init_view();
     return;
 }

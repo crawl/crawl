@@ -120,15 +120,10 @@ const int LABYRINTH_BORDER = 4;
 #define ENV_SHOW_OFFSET (LOS_RADIUS + 1)
 #define ENV_SHOW_DIAMETER (ENV_SHOW_OFFSET * 2 + 1)
 
-#ifdef USE_TILE
-#define VIEW_BASE_WIDTH (tile_dngn_x)
-#define VIEW_MIN_WIDTH (tile_dngn_x)
-#define VIEW_MIN_HEIGHT (tile_dngn_y)
-#else
 #define VIEW_BASE_WIDTH 33
 #define VIEW_MIN_WIDTH  17
 #define VIEW_MIN_HEIGHT 17
-#endif
+#define MSG_MIN_HEIGHT  7
 
 // max traps per level
 #define MAX_TRAPS 100

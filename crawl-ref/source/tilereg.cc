@@ -143,6 +143,9 @@ void Region::resize_to_fit(int _wx, int _wy)
     my = dy ? inner_y / dy : 0;
 
     recalculate();
+
+    ex = sx + _wx;
+    ey = sy + _wy;
 }
 
 void Region::recalculate()
@@ -161,7 +164,6 @@ Region::~Region()
 
 bool Region::inside(unsigned int x, unsigned int y)
 {
-    // TODO enne - need to handle invalid/unintialised regions?
     return (x >= sx && y >= sy && x <= ex && y <= ey);
 }
 
@@ -754,10 +756,10 @@ void DungeonRegion::draw_foreground(unsigned int bg, unsigned int fg, unsigned i
         add_quad(TEX_DEFAULT, TILE_ANIMATED_WEAPON, x, y);
     }
 
-    if (bg & TILE_FLAG_UNSEEN)
+    if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
         add_quad(TEX_DEFAULT, TILE_MESH, x, y);
 
-    if (bg & TILE_FLAG_MM_UNSEEN)
+    if (bg & TILE_FLAG_MM_UNSEEN && (bg != TILE_FLAG_MM_UNSEEN || fg))
         add_quad(TEX_DEFAULT, TILE_MAGIC_MAP_MESH, x, y);
 
     // Don't let the "new stair" icon cover up any existing icons, but
@@ -2117,9 +2119,6 @@ TextRegion::TextRegion(FTFont *font) :
 
     dx = m_font->char_width();
     dy = m_font->char_height();
-
-    // TODO enne - gah!
-    dx = 8;
 }
 
 void TextRegion::on_resize()
@@ -2343,7 +2342,7 @@ bool StatRegion::update_tip_text(std::string& tip)
     return true;
 }
 
-MessageRegion::MessageRegion(FTFont *font) : TextRegion(font)
+MessageRegion::MessageRegion(FTFont *font) : TextRegion(font), m_overlay(false)
 {
 }
 
@@ -2372,6 +2371,80 @@ bool MessageRegion::update_tip_text(std::string& tip)
 
     tip = "[L-Click] Browse message history";
     return true;
+}
+
+void MessageRegion::set_overlay(bool is_overlay)
+{
+    m_overlay = is_overlay;
+}
+
+struct box_vert
+{
+    float x;
+    float y;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
+};
+
+void MessageRegion::render()
+{
+    if (m_overlay)
+    {
+        unsigned int height;
+        bool found = false;
+        for (height = my; height > 0; height--)
+        {
+            unsigned char *buf = &cbuf[mx * (height - 1)];
+            for (unsigned int x = 0; x < mx; x++)
+            {
+                if (buf[x] != ' ')
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found)
+                break;
+        }
+
+        if (height > 0)
+        {
+            height *= m_font->char_height();
+            box_vert verts[4];
+            for (unsigned int i = 0; i < 4; i++)
+            {
+                verts[i].r = 100;
+                verts[i].g = 100;
+                verts[i].b = 100;
+                verts[i].a = 100;
+            }
+            verts[0].x = sx;
+            verts[0].y = sy;
+            verts[1].x = sx;
+            verts[1].y = sy + height;
+            verts[2].x = ex;
+            verts[2].y = sy + height;
+            verts[3].x = ex;
+            verts[3].y = sy;
+
+            glLoadIdentity();
+
+            GLState state;
+            state.array_vertex = true;
+            state.array_colour = true;
+            state.blend = true;
+            GLStateManager::set(state);
+
+            glVertexPointer(2, GL_FLOAT, sizeof(box_vert), &verts[0].x);
+            glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(box_vert), &verts[0].r);
+            glDrawArrays(GL_QUADS, 0, sizeof(verts) / sizeof(box_vert)); 
+        }
+    }
+
+    m_font->render_textblock(sx + ox, sy + oy, cbuf, abuf, mx, my, m_overlay);
 }
 
 CRTRegion::CRTRegion(FTFont *font) : TextRegion(font)
@@ -2486,7 +2559,7 @@ static void _copy_under(unsigned char *pixels, unsigned int width,
 {
     size_t image_size = 32 * 32 * 4;    
 
-    // Make a copy of the original images on the stack.
+    // Make a copy of the original images.
     unsigned char *under = new unsigned char[image_size];
     _copy_into(under, pixels, width, height, idx_under);
     unsigned char *over = new unsigned char[image_size];
@@ -2534,7 +2607,31 @@ static bool _process_item_image(unsigned char *pixels,
         int tile1 = TILE_ROD_SMITING + i - STAFF_SMITING;
         _copy_under(pixels, width, height, tile0, tile1);
     }
-    
+   
+    // TODO enne - fix rtiles so that it can accept PNGs.
+    {
+        size_t image_size = 32 * 32 * 4;    
+        unsigned char *mesh = new unsigned char[image_size];
+
+        for (unsigned int i = 0; i < image_size; i += 4)
+        {
+            mesh[i] = mesh[i+1] = mesh[i+2] = 0;
+            mesh[i+3] = 110;
+        }
+        _copy_onto(pixels, width, height, mesh, TILE_MESH, false);
+
+        for (unsigned int i = 0; i < image_size; i += 4)
+        {
+            mesh[i] = 70;
+            mesh[i+1] = 70;
+            mesh[i+2] = 180;
+            mesh[i+3] = 120;
+        }
+        _copy_onto(pixels, width, height, mesh, TILE_MAGIC_MAP_MESH, false);
+
+        delete[] mesh;
+    }
+
     return true;
 }
 
