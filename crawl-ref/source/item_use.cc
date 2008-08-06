@@ -131,10 +131,17 @@ bool can_wield(const item_def *weapon, bool say_reason,
         }
     }
 
-    // We don't have to check explicitly for staves - all staves are wieldable
-    // by everyone.
+    // All non-weapons only need a shield check.
     if (weapon->base_type != OBJ_WEAPONS)
-        return (true);
+    {
+        if (!ignore_temporary_disability && is_shield_incompatible(*weapon))
+        {
+            SAY(mpr("You can't wield that with a shield."));
+            return (false);
+        }
+        else
+            return (true);
+    }
 
     if (player_size(PSIZE_TORSO) < SIZE_LARGE && item_mass( *weapon ) >= 300)
     {
@@ -293,11 +300,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     {
         if (you.equip[EQ_WEAPON] != -1)
         {
+            item_def& wpn = *you.weapon();
             // Can we safely unwield this item?
-            if (has_warning_inscription(you.inv[you.equip[EQ_WEAPON]], OPER_WIELD))
+            if (has_warning_inscription(wpn, OPER_WIELD))
             {
                 std::string prompt = "Really unwield ";
-                prompt += you.inv[you.equip[EQ_WEAPON]].name(DESC_INVENTORY);
+                prompt += wpn.name(DESC_INVENTORY);
                 prompt += '?';
                 if (!yesno(prompt.c_str(), false, 'n'))
                     return (false);
@@ -318,15 +326,17 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
         return (true);
     }
 
-    if (!can_wield(&you.inv[item_slot], true))
+    item_def& new_wpn(you.inv[item_slot]);
+
+    if (!can_wield(&new_wpn, true))
         return (false);
 
     // For non-auto_wield cases checked above.
-    if (auto_wield && !check_warning_inscriptions(you.inv[item_slot], OPER_WIELD))
+    if (auto_wield && !check_warning_inscriptions(new_wpn, OPER_WIELD))
         return (false);
 
     // Wield the weapon.
-    if (!safe_to_remove_or_wear(you.inv[item_slot], false))
+    if (!safe_to_remove_or_wear(new_wpn, false))
         return (false);
 
     // Go ahead and wield the weapon.
@@ -338,7 +348,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
     // any oddness on wielding taken care of here
     wield_effects(item_slot, show_weff_messages);
 
-    mpr(you.inv[item_slot].name(DESC_INVENTORY_EQUIP).c_str());
+    mpr(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
 
     // Warn player about low str/dex or throwing skill.
     if (show_weff_messages)
