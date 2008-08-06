@@ -613,14 +613,18 @@ static void _handle_wizard_command( void )
 
                 if (is_random_artefact( you.inv[i] ))
                     unuse_randart( i );
-
                 break;
             }
         }
 
         make_item_randart( you.inv[i] );
+        if (Options.autoinscribe_randarts)
+        {
+            add_autoinscription(you.inv[i],
+                                randart_auto_inscription(you.inv[i]));
+        }
 
-        // if equipped, apply new randart benefits
+        // If equipped, apply new randart benefits.
         if (j != NUM_EQUIP)
             use_randart( i );
 

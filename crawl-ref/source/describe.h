@@ -91,6 +91,9 @@ void print_description(const std::string &d, const std::string title = "",
                        const std::string footer = "",
                        const std::string quote  = "");
 
+std::string randart_auto_inscription( const item_def& item );
+void add_autoinscription( item_def &item, std::string ainscrip);
+
 const char *trap_name(trap_type trap);
 int str_to_trap(const std::string &s);
 

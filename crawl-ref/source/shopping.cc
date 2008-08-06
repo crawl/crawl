@@ -206,7 +206,8 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
             textcolor(i % 2 ? LIGHTGREY : WHITE);
 
         cprintf("%-56s%5d gold",
-                mitm[stock[i]].name(DESC_NOCAP_A, false, id).c_str(),
+                mitm[stock[i]].name(DESC_NOCAP_A, false, id).substr(0, 56).
+                    c_str(),
                 gp_value);
 
         si.add_item(mitm[stock[i]], gp_value);
@@ -254,6 +255,15 @@ static void _in_a_shop( int shopidx )
         StashTrack.get_shop(shop.pos).reset();
 
         std::vector<int> stock = _shop_get_stock(shopidx);
+        for (unsigned int k = 0; k < stock.size(); k++)
+        {
+            if (Options.autoinscribe_randarts
+                && is_random_artefact(mitm[stock[k]]))
+            {
+                mitm[stock[k]].inscription =
+                    randart_auto_inscription(mitm[stock[k]]);
+            }
+        }
 
         // Deselect all.
         if (stock.size() != selected.size())
@@ -360,11 +370,16 @@ static void _in_a_shop( int shopidx )
                             item_def& item = mitm[stock[i]];
                             purchases.push_back(item.name(DESC_NOCAP_A));
 
+                            const int gp_value = _shop_get_item_value(item,
+                                                        shop.greed, id_stock);
+
+                            // Take a note of the purchase.
+                            take_note(Note(NOTE_BUY_ITEM, gp_value, 0,
+                                           item.name(DESC_NOCAP_A).c_str()));
+
                             quant = item.quantity;
                             num_items += quant;
 
-                            const int gp_value = _shop_get_item_value(item,
-                                                        shop.greed, id_stock);
                             if (!_purchase(shopidx, stock[i], gp_value,
                                            id_stock))
                             {
@@ -379,17 +394,17 @@ static void _in_a_shop( int shopidx )
                     for (int i = 0; i < 5; i++)
                         _shop_print("\n", i);
 
-                    // This is so that note_messages can be used to note items
-                    // being bought, and also so you can use message history
-                    // to review what you bought.
-                    // FIXME: If you buy several items of the same type
-                    //        they are not merged in the listing.
-                    mprf("You bought %s for a total of %d gold piece%s.",
-                         comma_separated_line(purchases.begin(),
-                                              purchases.end(),
-                                              ", and ", ", ").c_str(),
-                         total_cost,
-                         total_cost > 1 ? "s" : "");
+                    if (purchases.size() > 1)
+                    {
+                        // FIXME: If you buy several items of the same type
+                        //        they are not merged in the listing.
+                        mprf("You bought %s for a total of %d gold piece%s.",
+                             comma_separated_line(purchases.begin(),
+                                                  purchases.end(),
+                                                  ", and ", ", ").c_str(),
+                             total_cost,
+                             total_cost > 1 ? "s" : "");
+                    }
 
                     if (outside_items)
                     {

@@ -1402,6 +1402,24 @@ void wizard_create_spec_object()
             mitm[thing_created].quantity = 12;
             break;
 
+        case OBJ_JEWELLERY:
+            if (jewellery_is_amulet(mitm[thing_created]))
+                break;
+
+            switch(mitm[thing_created].sub_type)
+            {
+            case RING_SLAYING:
+                mitm[thing_created].plus2 = 5;
+                // intentional fall-through
+            case RING_PROTECTION:
+            case RING_EVASION:
+            case RING_STRENGTH:
+            case RING_DEXTERITY:
+            case RING_INTELLIGENCE:
+                mitm[thing_created].plus = 5;
+            default:
+                break;
+            }
         default:
             break;
         }
@@ -4332,7 +4350,7 @@ void debug_miscast( int target_index )
     else
         mpr( "Enter miscast_level or spell_power,spell_failure: ",
               MSGCH_PROMPT );
-    
+
     if (cancelable_get_line(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);

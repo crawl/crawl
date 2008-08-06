@@ -4547,7 +4547,7 @@ static bool _beogh_followers_abandon_you()
             if (is_orcish_follower(monster))
             {
                 num_followers++;
-                
+
                 if (mons_player_visible(monster)
                     && !mons_is_sleeping(monster)
                     && !mons_is_confused(monster)
@@ -5271,6 +5271,9 @@ void offer_items()
         mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
              "increase of piety by %d.", you.gold, donation_value);
 #endif
+        // Take a note of the donation.
+        take_note(Note(NOTE_DONATE_MONEY, you.gold));
+
         you.gold = 0;
         you.redraw_gold = true;
 
@@ -5664,7 +5667,7 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
 
 void god_smites_you(god_type god, const char *message,
                     kill_method_type death_type)
-                    
+
 {
     ASSERT(god != GOD_NO_GOD);
 

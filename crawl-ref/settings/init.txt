@@ -299,6 +299,7 @@ menu_colour = notes:white:Reached XP level
 # autoinscribe = royal jell:=g
 # autoinscribe = distortion:!w
 # autoinscribe = potion.*mutation:!q
+# autoinscribe_randarts = false
 
 ##### 4-n	Macro related Options #################
 #

@@ -422,11 +422,11 @@ the Empire
 
 Coronation
 
-Commoners
+the Commoners
 
-Peasants
+the Peasants
 
-Townfolk
+the Townfolk
 
 the City
 

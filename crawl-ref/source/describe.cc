@@ -418,14 +418,6 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
     return propnames;
 }
 
-static std::string _randart_auto_inscription( const item_def& item )
-{
-    const std::vector<std::string> propnames = _randart_propnames(item);
-
-    return comma_separated_line(propnames.begin(), propnames.end(),
-                                " ", " ");
-}
-
 // Remove randart auto-inscription.  Do it once for each property
 // string, rather than the return value of randart_auto_inscription(),
 // in case more information about the randart has been learned since
@@ -440,6 +432,25 @@ static void _trim_randart_inscrip( item_def& item )
         item.inscription = replace_all(item.inscription, propnames[i],     "");
     }
     trim_string(item.inscription);
+}
+
+std::string randart_auto_inscription( const item_def& item )
+{
+    const std::vector<std::string> propnames = _randart_propnames(item);
+
+    return comma_separated_line(propnames.begin(), propnames.end(),
+                                " ", " ");
+}
+
+void add_autoinscription( item_def &item, std::string ainscrip)
+{
+    // Remove previous randart inscription.
+    _trim_randart_inscrip(item);
+
+    if (!item.inscription.empty())
+        item.inscription += ", ";
+
+    item.inscription += ainscrip;
 }
 
 struct property_descriptor
@@ -1966,13 +1977,17 @@ void describe_feature_wide(int x, int y)
     desc += "$$";
 
     // Get rid of trailing .$$ before lookup
-    desc += getLongDescription(grd[x][y] == DNGN_ENTER_SHOP ? "A shop"
-                               : desc.substr(0, desc.length() - 3));
+    std::string db_name =
+        grd[x][y] == DNGN_ENTER_SHOP ? "A shop"
+                                     : desc.substr(0, desc.length() - 3);
 
+    desc += getLongDescription(db_name);
     // For things which require logic
     desc += _get_feature_description_wide(grd[x][y]);
 
-    print_description(desc);
+    std::string quote = getQuoteString(db_name);
+
+    print_description(desc, "", "", "", "", quote);
 
     mouse_control mc(MOUSE_MODE_MORE);
 
@@ -2099,7 +2114,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
     bool need_autoinscribe = false;
     if (is_random_artefact(item))
     {
-        ainscrip = _randart_auto_inscription(item);
+        ainscrip = randart_auto_inscription(item);
         if (!ainscrip.empty()
             && (!is_inscribed
                 || item.inscription.find(ainscrip) == std::string::npos))
@@ -2161,13 +2176,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
     case 'a':
         if (need_autoinscribe)
         {
-            // Remove previous randart inscription.
-            _trim_randart_inscrip(item);
-
-            if (!item.inscription.empty())
-                item.inscription += ", ";
-
-            item.inscription += ainscrip;
+            add_autoinscription(item, ainscrip);
             break;
         }
         // If autoinscription is impossible, prompt for an inscription instead.
@@ -3170,7 +3179,7 @@ void describe_god( god_type which_god, bool give_title )
                                                  numcols).c_str();
         cgotoxy(1, bottom_line - std::count(extra.begin(), extra.end(), '\n')-1,
                 GOTO_CRT);
-        textcolor(LIGHTGREY);        
+        textcolor(LIGHTGREY);
         cprintf( "%s", extra.c_str() );
     }
 

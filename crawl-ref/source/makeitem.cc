@@ -1838,7 +1838,6 @@ static bool _try_make_armour_artefact(item_def& item, int force_type,
         else
             hide2armour(item); // No randart hides.
 
-
         // Needs to be done after the barding chance else we get randart
         // bardings named Boots of xy.
         make_item_randart( item );

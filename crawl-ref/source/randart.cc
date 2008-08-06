@@ -25,6 +25,7 @@
 #include "externs.h"
 
 #include "database.h"
+#include "describe.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -371,7 +372,7 @@ void randart_desc_properties( const item_def &item,
     if (!force_fake_props && item_ident( item, ISFLAG_KNOW_PROPERTIES ))
         return;
 
-    // only jewellery need fake randart properties
+    // Only jewellery need fake randart properties.
     if (item.base_type != OBJ_JEWELLERY)
         return;
 
@@ -1138,7 +1139,7 @@ void randart_wpn_properties( const item_def &item,
     ASSERT( known_vec.size()         == RA_PROPERTIES);
     ASSERT( known_vec.get_max_size() == RA_PROPERTIES);
 
-    if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
+    if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
     {
         for (vec_size i = 0; i < RA_PROPERTIES; i++)
             known[i] = (bool) true;
@@ -1244,10 +1245,12 @@ void randart_wpn_learn_prop( item_def &item, randart_prop_type prop )
     ASSERT( known_vec.size()         == RA_PROPERTIES);
     ASSERT( known_vec.get_max_size() == RA_PROPERTIES);
 
-    if ( item_ident( item, ISFLAG_KNOW_PROPERTIES ) )
+    if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
         return;
 
     known_vec[prop] = (bool) true;
+    if (Options.autoinscribe_randarts)
+        add_autoinscription( item, randart_auto_inscription(item));
 }
 
 bool randart_wpn_known_prop( const item_def &item, randart_prop_type prop )

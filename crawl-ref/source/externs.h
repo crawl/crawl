@@ -1752,6 +1752,8 @@ public:
     std::vector<text_pattern> note_items;     // Objects to note
     std::vector<int> note_skill_levels;       // Skill levels to note
 
+    bool        autoinscribe_randarts; // Auto-inscribe identified randarts.
+
     bool        pickup_thrown;  // Pickup thrown missiles
     bool        pickup_dropped; // Pickup dropped objects
     int         travel_delay;   // How long to pause between travel moves

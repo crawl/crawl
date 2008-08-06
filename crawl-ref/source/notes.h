@@ -46,6 +46,8 @@ enum NOTE_TYPES
     NOTE_PENANCE,               /* needs: god id */
     NOTE_MOLLIFY_GOD,           /* needs: god id */
     NOTE_DEATH,                 /* needs: death cause */
+    NOTE_BUY_ITEM,              /* needs: item name (string), price (int) */
+    NOTE_DONATE_MONEY,          /* needs: amount of gold */
     NOTE_NUM_TYPES
 };
 

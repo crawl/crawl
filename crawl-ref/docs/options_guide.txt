@@ -1431,6 +1431,9 @@ autoinscribe = <regex>:<inscription>
         lose charges of important wands accidentally, as in
              autoinscribe = wand of healing:!z
 
+autoinscribe_randarts = true
+        Automatically inscribes identified randarts with their properties.
+
 4-n     Macro related Options.
 ------------------------------
 

@@ -905,6 +905,7 @@ void game_options::reset_options()
     note_monsters.clear();
     note_messages.clear();
     autoinscriptions.clear();
+    autoinscribe_randarts = true;
     note_items.clear();
     note_skill_levels.clear();
     travel_stop_message.clear();
@@ -1393,8 +1394,8 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             }
             continue;
         }
-        else if (inscriptcond &&
-                (str.find(">") == str.length() - 1 || str == ">L"))
+        else if (inscriptcond
+                 && (str.find(">") == str.length() - 1 || str == ">L"))
         {
             inscriptcond = false;
             str = str.substr(0, str.length() - 1);
@@ -2427,6 +2428,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         autoinscriptions.push_back(
             std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
     }
+    else BOOL_OPTION(autoinscribe_randarts);
     else if (key == "map_file_name")
     {
         map_file_name = field;

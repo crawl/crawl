@@ -2779,6 +2779,9 @@ void jewellery_wear_effects(item_def &item)
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         learn_pluses = true;
+
+        if (Options.autoinscribe_randarts && is_random_artefact(item))
+            add_autoinscription( item, randart_auto_inscription(item));
         break;
 
     case RING_DEXTERITY:
@@ -2786,6 +2789,9 @@ void jewellery_wear_effects(item_def &item)
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         learn_pluses = true;
+
+        if (Options.autoinscribe_randarts && is_random_artefact(item))
+            add_autoinscription( item, randart_auto_inscription(item));
         break;
 
     case RING_INTELLIGENCE:
@@ -2793,6 +2799,9 @@ void jewellery_wear_effects(item_def &item)
         if (item.plus != 0 && !artefact)
             ident = ID_KNOWN_TYPE;
         learn_pluses = true;
+
+        if (Options.autoinscribe_randarts && is_random_artefact(item))
+            add_autoinscription( item, randart_auto_inscription(item));
         break;
 
     case RING_MAGICAL_POWER:

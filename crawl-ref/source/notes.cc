@@ -114,6 +114,8 @@ static bool _is_noteworthy( const Note& note )
         || note.type == NOTE_LOSE_MUTATION
         || note.type == NOTE_GET_ITEM
         || note.type == NOTE_ID_ITEM
+        || note.type == NOTE_BUY_ITEM
+        || note.type == NOTE_DONATE_MONEY
         || note.type == NOTE_SEEN_MONSTER
         || note.type == NOTE_KILL_MONSTER
         || note.type == NOTE_POLY_MONSTER
@@ -304,11 +306,19 @@ std::string Note::describe( bool when, bool where, bool what ) const
             break;
         case NOTE_ID_ITEM:
             result << "Identified " << name;
-            if ( !desc.empty() )
+            if (!desc.empty())
                 result << " (" << desc << ")";
             break;
         case NOTE_GET_ITEM:
             result << "Got " << name;
+            break;
+        case NOTE_BUY_ITEM:
+            result << "Bought " << name << " for " << first << " gold piece"
+                   << (first == 1 ? "" : "s");
+            break;
+        case NOTE_DONATE_MONEY:
+            result << "Donated " << first << " gold piece"
+                   << (first == 1 ? "" : "s") << " to Zin";
             break;
         case NOTE_GAIN_SKILL:
             result << "Reached skill " << second
@@ -318,7 +328,7 @@ std::string Note::describe( bool when, bool where, bool what ) const
             result << "Noticed " << name;
             break;
         case NOTE_KILL_MONSTER:
-            if ( second )
+            if (second)
                 result << name << " (ally) was defeated";
             else
                 result << "Defeated " << name;

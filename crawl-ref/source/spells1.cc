@@ -29,6 +29,7 @@
 #include "abyss.h"
 #include "beam.h"
 #include "cloud.h"
+#include "describe.h"
 #include "directn.h"
 #include "effects.h"
 #include "invent.h"
@@ -446,6 +447,8 @@ void identify(int power, int item_slot)
 
         set_ident_type( item, ID_KNOWN_TYPE );
         set_ident_flags( item, ISFLAG_IDENT_MASK );
+        if (Options.autoinscribe_randarts && is_random_artefact(item))
+            add_autoinscription( item, randart_auto_inscription(item));
 
         // For scrolls, now id the scroll, unless already known.
         if (power == -1
