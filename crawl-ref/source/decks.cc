@@ -1260,7 +1260,7 @@ void evoke_deck( item_def& deck )
         // Nemelex likes gamblers.
         if (!no_brownie)
         {
-            brownie_points = 1;
+            brownie_points++;
             if (one_chance_in(3))
                 brownie_points++;
         }

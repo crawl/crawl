@@ -2633,12 +2633,11 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             piety_change = level;
             ret = true;
 
-            // For a stacked deck, 0% chance of card countdown decrement
-            // drawing a card which doesn't use up the deck, and 40%
-            // on a card which does.  For a non-stacked deck, an
-            // average 50% of decrement for drawing a card which doesn't
-            // use up the deck, and 80% on a card which does use up the
-            // deck.
+            // level == 0: stacked, deck not used up
+            // level == 1: used up or nonstacked
+            // level == 2: used up and nonstacked
+            // and there's a 1/3 chance of an additional bonus point
+            // for nonstacked cards.
             int chance = 0;
             switch (level)
             {
