@@ -2464,7 +2464,9 @@ static int _quadrant_blink(coord_def where, int pow, int garbage)
         pow = 100;
 
     const int dist = random2(6) + 2;  // 2-7
-    coord_def orig = you.pos() + (where - you.pos()) * dist;
+
+    // This is where you would *like* to go.
+    const coord_def base = you.pos() + (where - you.pos()) * dist;
 
     // This can take a while if pow is high and there's lots of translucent
     // walls nearby.
@@ -2472,17 +2474,17 @@ static int _quadrant_blink(coord_def where, int pow, int garbage)
     bool found = false;
     for ( int i = 0; i < (pow*pow) / 500 + 1; ++i )
     {
-        // Find a space near our target...
-        // First try to find a random square not adjacent to the player,
+        // Find a space near our base point...
+        // First try to find a random square not adjacent to the basepoint,
         // then one adjacent if that fails.
-        if (!random_near_space(orig, target)
-            && !random_near_space(orig, target, true))
+        if (!random_near_space(base, target)
+            && !random_near_space(base, target, true))
         {
             return 0;
         }
 
-        // ... which is close enough, and also far enough from us.
-        if (distance(orig, target) > 10 && distance(you.pos(), target) < 8)
+        // ... which is close enough, but also far enough from us.
+        if (distance(base, target) > 10 || distance(you.pos(), target) < 8)
             continue;
 
         if (!see_grid_no_trans(target))
