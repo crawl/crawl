@@ -59,6 +59,7 @@
 #include "monstuff.h"
 #include "mstuff2.h"
 #include "mon-util.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "quiver.h"
@@ -546,14 +547,26 @@ void wield_effects(int item_wield_2, bool showMsgs)
         // (could be extended to other talking weapons...)
         const char *old_desc = item.name(DESC_CAP_THE).c_str();
 
-        set_ident_flags( item, ISFLAG_EQ_WEAPON_MASK );
+        if (!was_known)
+        {
+            if (is_random_artefact(item))
+                item.flags |= ISFLAG_NOTED_ID;
+            set_ident_flags( item, ISFLAG_EQ_WEAPON_MASK );
+        }
 
         if (is_random_artefact( item ))
         {
             i_dam = randart_wpn_property(item, RAP_BRAND);
             use_randart(item_wield_2);
-            if (Options.autoinscribe_randarts && !was_known)
-                add_autoinscription( item, randart_auto_inscription(item));
+            if (!was_known)
+            {
+                if (Options.autoinscribe_randarts)
+                    add_autoinscription( item, randart_auto_inscription(item));
+
+                // Make a note of it.
+                take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
+                               origin_desc(item).c_str()));
+            }
         }
         else
         {

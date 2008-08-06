@@ -33,6 +33,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "mstuff2.h"
+#include "notes.h"
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
@@ -1246,11 +1247,19 @@ static void _armour_wear_effects(const int item_slot)
     item_def &arm = you.inv[item_slot];
 
     const bool was_known = item_type_known(arm);
+    if (is_random_artefact(arm))
+        arm.flags |= ISFLAG_NOTED_ID;
+
     set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK );
-    if (Options.autoinscribe_randarts && is_random_artefact( arm )
-        && !was_known)
+
+    if (!was_known)
     {
-        add_autoinscription( arm, randart_auto_inscription(arm));
+        if (Options.autoinscribe_randarts && is_random_artefact( arm ))
+            add_autoinscription( arm, randart_auto_inscription(arm));
+
+        // Make a note of it.
+        take_note(Note(NOTE_ID_ITEM, 0, 0, arm.name(DESC_NOCAP_A).c_str(),
+                       origin_desc(arm).c_str()));
     }
     mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
 
