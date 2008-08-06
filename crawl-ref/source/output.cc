@@ -1688,20 +1688,13 @@ static void _print_overview_screen_equip(column_composer& cols,
             const char* colname = colour_to_str(item.colour).c_str();
             const char equip_char = index_to_letter(item_idx);
 
-            char buf2[50];
-            if (item.inscription.empty())
-                buf2[0] = 0;
-            else
-                snprintf(buf2, sizeof buf2, " {%s}", item.inscription.c_str());
-
             snprintf(buf, sizeof buf,
-                     "%s<w>%c</w> - <%s>%s</%s>%s",
+                     "%s<w>%c</w> - <%s>%s</%s>",
                      slot,
                      equip_char,
                      colname,
                      item.name(DESC_PLAIN, true).substr(0,42).c_str(),
-                     colname,
-                     buf2);
+                     colname);
             equip_chars.push_back(equip_char);
         }
         else if (e_order[i] == EQ_WEAPON
