@@ -2442,7 +2442,7 @@ void cast_divine_shield()
     // shield bonus up to 8
     you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/5;
 
-    return;
+    you.redraw_armour_class = true;
 }
 
 static int _quadrant_blink(coord_def where, int pow, int garbage)
