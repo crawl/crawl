@@ -58,7 +58,6 @@ static void _shop_more()
     cgotoxy(65, 20, GOTO_CRT);
     cprintf("-more-");
     get_ch();
-    return;
 }
 
 static std::string _hyphenated_suffix(char prev, char last)
@@ -177,7 +176,7 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
         //  * yellow, if this item would be purchasable if you deselected
         //            something else.
 
-        // Is this too complicated?
+        // Is this too complicated? (jpeg)
 
         if (total_cost > you.gold && selected[i])
             textcolor(LIGHTRED);
@@ -376,6 +375,12 @@ static void _in_a_shop( int shopidx )
                             // Take a note of the purchase.
                             take_note(Note(NOTE_BUY_ITEM, gp_value, 0,
                                            item.name(DESC_NOCAP_A).c_str()));
+
+                            // But take no further similar notes.
+                            item.flags |= ISFLAG_NOTED_GET;
+
+                            if (fully_identified(item))
+                                item.flags |= ISFLAG_NOTED_ID;
 
                             quant = item.quantity;
                             num_items += quant;
@@ -881,7 +886,7 @@ unsigned int item_value( item_def item, bool ident )
 
         // elf/dwarf
         if (get_equip_race(item) == ISFLAG_ELVEN
-                || get_equip_race(item) == ISFLAG_DWARVEN)
+            || get_equip_race(item) == ISFLAG_DWARVEN)
         {
             valued *= 12;
             valued /= 10;

@@ -19,6 +19,7 @@
 #include "command.h"
 #include "database.h"
 #include "delay.h"
+#include "describe.h"
 #include "enum.h"
 #include "food.h"
 #include "invent.h"
@@ -1244,11 +1245,17 @@ static void _armour_wear_effects(const int item_slot)
 {
     item_def &arm = you.inv[item_slot];
 
+    const bool was_known = item_type_known(arm);
     set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK );
+    if (Options.autoinscribe_randarts && is_random_artefact( arm )
+        && !was_known)
+    {
+        add_autoinscription( arm, randart_auto_inscription(arm));
+    }
     mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
 
-    const equipment_type eq_slot      = get_armour_slot(arm);
-    const bool           known_cursed = item_known_cursed(arm);
+    const equipment_type eq_slot = get_armour_slot(arm);
+    const bool known_cursed = item_known_cursed(arm);
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {

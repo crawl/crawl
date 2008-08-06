@@ -552,6 +552,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
         {
             i_dam = randart_wpn_property(item, RAP_BRAND);
             use_randart(item_wield_2);
+            if (Options.autoinscribe_randarts && !was_known)
+                add_autoinscription( item, randart_auto_inscription(item));
         }
         else
         {
