@@ -1,3 +1,19 @@
+Stone Soup 0.4.4 (2008????)
+---------------------------
+
+Disclaimer: These are merely the highlights, not an exhaustive list of changes.
+
+* Fixed assertion failure upon high-scoring death.
+* Fixed Crawl spinning in CPU-pegging loop on disconnect on death screen.
+* Fixed time handling in dgl builds.
+* Fixed '{' inscription.
+* Fixed broken spacing on religion screen.
+* Fixed monsters being created with both a shield and wielding a two-hander.
+* Fixed bad names for god-gifted unrandarts.
+* Warn player if interlevel travel intends to take detours.
+* Make multi-corpse sacrifices take 1 turn only.
+* Mark staves of poison and rods of venom as disapproved by TSO.
+
 Stone Soup 0.4.3 (20080731)
 ---------------------------
 

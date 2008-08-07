@@ -2100,7 +2100,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         set_equip_race(item, _determine_armour_race(item, item_race));
 
     // Dwarven armour is high-quality.
-    if ( get_equip_race(item) == ISFLAG_DWARVEN && coinflip() )
+    if (get_equip_race(item) == ISFLAG_DWARVEN && coinflip())
         item.plus++;
 
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
@@ -2166,10 +2166,10 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
     // Don't overenchant items. FIXME: should use some kind of
     // max_enchantment() function here.
-    if ( (item.sub_type >= ARM_CLOAK && item.sub_type <= ARM_BOOTS)
-         || is_shield(item) )
+    if (item.sub_type >= ARM_CLOAK && item.sub_type <= ARM_BOOTS
+        || is_shield(item) )
     {
-        if ( item.plus > 2 )
+        if (item.plus > 2)
             item.plus = 2;
     }
 
@@ -3837,7 +3837,7 @@ static void _give_ammo(monsters *mon, int level,
             {
                 qty = 1;
             }
-               
+
             w.quantity = qty;
             _give_monster_item(mon, thing_created, false,
                                &monsters::pickup_throwable_weapon);
@@ -3869,6 +3869,19 @@ static bool make_item_for_monster(
 
 void give_shield(monsters *mon, int level)
 {
+    const item_def *main_weap = mon->mslot_item(MSLOT_WEAPON);
+    const item_def *alt_weap  = mon->mslot_item(MSLOT_ALT_WEAPON);
+
+    // If the monster is already wielding/carrying a two-handed weapon, it
+    // doesn't get a shield. (Monsters always prefer raw damage to protection!)
+    if (main_weap
+           && hands_reqd(*main_weap, mon->body_size(PSIZE_BODY)) == HANDS_TWO
+        || alt_weap
+           && hands_reqd(*alt_weap, mon->body_size(PSIZE_BODY)) == HANDS_TWO)
+    {
+        return;
+    }
+
     switch (mon->type)
     {
     case MONS_DAEVA:
@@ -3889,8 +3902,8 @@ void give_shield(monsters *mon, int level)
         if (one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
-                                  one_chance_in(3)? ARM_LARGE_SHIELD
-                                  : ARM_SHIELD,
+                                  one_chance_in(3) ? ARM_LARGE_SHIELD
+                                                   : ARM_SHIELD,
                                   level, MAKE_ITEM_NO_RACE);
         }
         break;

@@ -175,8 +175,9 @@ const int InvEntry::item_freshness() const
 
 void InvEntry::select(int qty)
 {
-    if ( item && item->quantity < qty )
+    if (item && item->quantity < qty)
         qty = item->quantity;
+
     MenuEntry::select(qty);
 }
 

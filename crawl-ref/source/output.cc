@@ -918,7 +918,7 @@ void print_stats_level()
         ypos++;
     cgotoxy(19, ypos, GOTO_STAT);
     textcolor(HUD_CAPTION_COLOR);
-    cprintf("Level: ");
+    cprintf("Place: ");
 
     textcolor(HUD_VALUE_COLOR);
 #if DEBUG_DIAGNOSTICS

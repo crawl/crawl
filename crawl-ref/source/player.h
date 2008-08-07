@@ -15,6 +15,7 @@
 #define PLAYER_H
 
 #include "externs.h"
+#include "itemprop.h"
 
 class monsters;
 struct item_def;
@@ -74,7 +75,7 @@ int player_wielded_item();
  * called from: ability - acr - fight - food - it_use2 - item_use - items -
  *              misc - mutation - ouch
  * *********************************************************************** */
-bool wearing_amulet(char which_am, bool calc_unid = true);
+bool wearing_amulet(jewellery_type which_am, bool calc_unid = true);
 
 
 /* ***********************************************************************
