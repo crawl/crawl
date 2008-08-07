@@ -392,9 +392,9 @@ static void _check_kill_milestone(const monsters *mons,
 }
 #endif // DGL_MILESTONES
 
-static void _give_monster_experience( monsters *victim,
+static void _give_monster_experience(monsters *victim,
                                      int killer_index, int experience,
-                                     bool victim_was_born_friendly )
+                                     bool victim_was_born_friendly)
 {
     if (invalid_monster_index(killer_index))
         return;
@@ -930,7 +930,7 @@ void monster_die(monsters *monster, killer_type killer,
                 bool passive = (killer == KILL_YOU_CONF
                                 && (killer_index == ANON_FRIENDLY_MONSTER
                                     || !invalid_monster_index(killer_index)));
-                
+
                 if ( passive )
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
@@ -3474,7 +3474,7 @@ monsters *choose_random_monster_on_level(int weight,
     // level.
     radius_iterator ri(you.pos(), near_by ? 9 : std::max(GXM,GYM),
                        true, in_sight);
-    
+
     for ( ; ri; ++ri )
     {
         if ( mgrd(*ri) != NON_MONSTER )
@@ -3596,7 +3596,7 @@ static void _maybe_set_patrol_route(monsters *monster)
 //
 //---------------------------------------------------------------
 static void _handle_movement(monsters *monster)
-{    
+{
     coord_def delta;
 
     _maybe_set_patrol_route(monster);
@@ -7033,7 +7033,7 @@ static bool _monster_move(monsters *monster)
         {
             const int targ_x = monster->pos().x + count_x - 1;
             const int targ_y = monster->pos().y + count_y - 1;
-            
+
             // Bounds check - don't consider moving out of grid!
             if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
             {
@@ -7044,7 +7044,7 @@ static bool _monster_move(monsters *monster)
 
             if (target_grid == DNGN_DEEP_WATER)
                 deep_water_available = true;
-            
+
             const monsters* mons = dynamic_cast<const monsters*>(monster);
             good_move[count_x][count_y] =
                 _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));

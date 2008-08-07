@@ -1869,6 +1869,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>[</w> : display worn armour\n"
             "<w>)</w> : display current weapons\n"
             "<w>\"</w> : display worn jewellery\n"
+            "<w>$</w>: display gold in possession\n"
             "<w>E</w> : display experience info\n"
             "<w>V</w> : list monsters in sight\n",
             true, true, _cmdhelp_textfilter);

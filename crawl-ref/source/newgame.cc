@@ -4948,14 +4948,10 @@ bool _give_items_skills()
         break;
 
     case JOB_WIZARD:
-        // The knife is a tool, not a weapon, so don't start wielding it.
-        if (_needs_butchering_tool())
-            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_HELMET, OBJ_ARMOUR, ARM_WIZARD_HAT);
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_WIZARD_HAT);
-
-        if (!_choose_book( you.inv[3], BOOK_MINOR_MAGIC_I, 3 ))
+        if (!_choose_book( you.inv[2], BOOK_MINOR_MAGIC_I, 3 ))
             return (false);
 
         you.skills[SK_DODGING] = 2;
@@ -4965,7 +4961,7 @@ bool _give_items_skills()
         you.skills[SK_TRANSLOCATIONS] = 1;
 
         // The other two schools depend on the chosen book.
-        switch (you.inv[3].sub_type)
+        switch (you.inv[2].sub_type)
         {
         case BOOK_MINOR_MAGIC_I:
             you.skills[SK_CONJURATIONS] = 1;
@@ -4983,13 +4979,9 @@ bool _give_items_skills()
         break;
 
     case JOB_CONJURER:
-        // The knife is a tool, not a weapon, so don't start wielding it.
-        if (_needs_butchering_tool())
-            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-
-        if (!_choose_book( you.inv[2], BOOK_CONJURATIONS_I, 2 ))
+        if (!_choose_book( you.inv[1], BOOK_CONJURATIONS_I, 2 ))
             return (false);
 
         you.skills[SK_CONJURATIONS] = 4;
@@ -5028,12 +5020,8 @@ bool _give_items_skills()
         break;
 
     case JOB_SUMMONER:
-        // The knife is a tool, not a weapon, so don't start wielding it.
-        if (_needs_butchering_tool())
-            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
-
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CALLINGS);
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_CALLINGS);
 
         you.skills[SK_SUMMONINGS]   = 4;
         you.skills[SK_SPELLCASTING] = 1;
@@ -5042,12 +5030,8 @@ bool _give_items_skills()
         break;
 
     case JOB_NECROMANCER:
-        // The knife is a tool, not a weapon, so don't start wielding it.
-        if (_needs_butchering_tool())
-            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
-
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
 
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_NECROMANCY]   = 4;
@@ -5089,12 +5073,8 @@ bool _give_items_skills()
         break;
 
     case JOB_FIRE_ELEMENTALIST:
-        // The knife is a tool, not a weapon, so don't start wielding it.
-        if (_needs_butchering_tool())
-            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
-
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_FLAMES);
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_FLAMES);
 
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_FIRE_MAGIC]   = 3;
@@ -5104,12 +5084,8 @@ bool _give_items_skills()
         break;
 
     case JOB_ICE_ELEMENTALIST:
-        // The knife is a tool, not a weapon, so don't start wielding it.
-        if (_needs_butchering_tool())
-            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
-
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_FROST);
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_FROST);
 
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_ICE_MAGIC]    = 3;
@@ -5119,12 +5095,8 @@ bool _give_items_skills()
         break;
 
     case JOB_AIR_ELEMENTALIST:
-        // The knife is a tool, not a weapon, so don't start wielding it.
-        if (_needs_butchering_tool())
-            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
-
-        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_AIR);
+        _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+        _newgame_make_item(1, EQ_NONE, OBJ_BOOKS, BOOK_AIR);
 
         you.skills[SK_CONJURATIONS] = 1;
         you.skills[SK_AIR_MAGIC]    = 3;
@@ -5134,20 +5106,15 @@ bool _give_items_skills()
         break;
 
     case JOB_EARTH_ELEMENTALIST:
-        // The knife is a tool, not a weapon, so don't start wielding it.
-        if (_needs_butchering_tool())
-            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
+        if (you.species == SP_GNOME)
+        {
+            _newgame_make_item(0, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
+            you.skills[SK_SLINGS] = 1;
+        }
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_GEOMANCY);
         _newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_STONE, -1, 20);
-
-        if (you.species == SP_GNOME)
-        {
-            _newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-            _newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-            you.skills[SK_SLINGS] = 1;
-        }
 
         you.skills[SK_TRANSMIGRATION] = 1;
         you.skills[SK_EARTH_MAGIC]    = 3;
