@@ -66,6 +66,8 @@ static struct termios game_term;
 #include <signal.h>
 #endif
 
+#include <time.h>
+
 // Its best if curses comes at the end (name conflicts with Solaris). -- bwr
 #ifndef CURSES_INCLUDE_FILE
     #ifndef _XOPEN_SOURCE_EXTENDED
@@ -421,6 +423,12 @@ void message_out(int which_line, int color, const char *s, int firstcol,
 void unixcurses_startup( void )
 {
     termio_init();
+
+#ifdef DGAMELAUNCH
+    // Force timezone to UTC.
+    setenv("TZ", "", 1);
+    tzset();
+#endif
 
 #ifdef USE_UNIX_SIGNALS
 #ifdef SIGQUIT
