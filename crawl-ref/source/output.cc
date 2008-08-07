@@ -1191,10 +1191,14 @@ monster_pane_info::monster_pane_info(const monsters *m)
     // will break saves a little bit though.
     m_attitude = mons_attitude(m);
 
+    int mtype = m->type;
+    if ( mtype == MONS_RAKSHASA_FAKE )
+        mtype = MONS_RAKSHASA;
+
     // Currently, difficulty is defined as "average hp".  Leaks too much info?
-    const monsterentry* me = get_monster_data(m->type);
+    const monsterentry* me = get_monster_data(mtype);
     // [ds] XXX: Use monster experience value as a better indicator of diff.?
-    m_difficulty = me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]>>1))
+    m_difficulty = me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]/2))
         + me->hpdice[3];
 
     // [ds] XXX: Kill the magic numbers.
@@ -1220,12 +1224,21 @@ bool monster_pane_info::less_than(const monster_pane_info& m1,
     else if (m1.m_attitude > m2.m_attitude)
         return (false);
 
+    int m1type = m1.m_mon->type;
+    int m2type = m2.m_mon->type;
+
+    // Don't differentiate real rakshasas from fake ones.
+    if ( m1type == MONS_RAKSHASA_FAKE )
+        m1type = MONS_RAKSHASA;
+    if ( m2type == MONS_RAKSHASA_FAKE )
+        m2type = MONS_RAKSHASA;
+
     // Force plain but different coloured draconians to be treated like the
     // same sub-type.
-    if (!zombified && m1.m_mon->type >= MONS_DRACONIAN
-        && m1.m_mon->type <= MONS_PALE_DRACONIAN
-        && m2.m_mon->type >= MONS_DRACONIAN
-        && m2.m_mon->type <= MONS_PALE_DRACONIAN)
+    if (!zombified && m1type >= MONS_DRACONIAN
+        && m1type <= MONS_PALE_DRACONIAN
+        && m2type >= MONS_DRACONIAN
+        && m2type <= MONS_PALE_DRACONIAN)
     {
         return (false);
     }
@@ -1237,20 +1250,17 @@ bool monster_pane_info::less_than(const monster_pane_info& m1,
         return (false);
 
     // Force mimics of different types to be treated like the same one.
-    if (mons_is_mimic(m1.m_mon->type)
-        && mons_is_mimic(m2.m_mon->type))
-    {
+    if (mons_is_mimic(m1type) && mons_is_mimic(m2type))
         return (false);
-    }
 
-    if (m1.m_mon->type < m2.m_mon->type)
+    if (m1type < m2type)
         return (true);
-    else if (m1.m_mon->type > m2.m_mon->type)
+    else if (m1type > m2type)
         return (false);
 
     // Never distinguish between dancing weapons.
     // The above checks guarantee that *both* monsters are of this type.
-    if (m1.m_mon->type == MONS_DANCING_WEAPON)
+    if (m1type == MONS_DANCING_WEAPON)
         return (false);
 
     if (zombified)
@@ -1271,7 +1281,7 @@ bool monster_pane_info::less_than(const monster_pane_info& m1,
         }
     }
 
-    if (m1.m_fullname && m2.m_fullname || m1.m_mon->type == MONS_PLAYER_GHOST)
+    if (m1.m_fullname && m2.m_fullname || m1type == MONS_PLAYER_GHOST)
         return (m1.m_mon->name(DESC_PLAIN) < m1.m_mon->name(DESC_PLAIN));
 
 #if 0 // for now, sort brands together.
@@ -1693,20 +1703,13 @@ static void _print_overview_screen_equip(column_composer& cols,
             const char* colname = colour_to_str(item.colour).c_str();
             const char equip_char = index_to_letter(item_idx);
 
-            char buf2[50];
-            if (item.inscription.empty())
-                buf2[0] = 0;
-            else
-                snprintf(buf2, sizeof buf2, " {%s}", item.inscription.c_str());
-
             snprintf(buf, sizeof buf,
-                     "%s<w>%c</w> - <%s>%s</%s>%s",
+                     "%s<w>%c</w> - <%s>%s</%s>",
                      slot,
                      equip_char,
                      colname,
                      item.name(DESC_PLAIN, true).substr(0,42).c_str(),
-                     colname,
-                     buf2);
+                     colname);
             equip_chars.push_back(equip_char);
         }
         else if (e_order[i] == EQ_WEAPON

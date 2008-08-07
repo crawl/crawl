@@ -75,6 +75,8 @@ int player_wielded_item();
  * called from: ability - acr - fight - food - it_use2 - item_use - items -
  *              misc - mutation - ouch
  * *********************************************************************** */
+
+bool extrinsic_amulet_effect(jewellery_type amulet);
 bool wearing_amulet(jewellery_type which_am, bool calc_unid = true);
 
 

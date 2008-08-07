@@ -2511,7 +2511,7 @@ void cast_divine_shield()
     // shield bonus up to 8
     you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/5;
 
-    return;
+    you.redraw_armour_class = true;
 }
 
 static int _quadrant_blink(int x, int y, int pow, int garbage)
@@ -2533,8 +2533,10 @@ static int _quadrant_blink(int x, int y, int pow, int garbage)
         pow = 100;
 
     const int dist = random2(6) + 2;  // 2-7
-    const int ox = you.x_pos + (x - you.x_pos) * dist;
-    const int oy = you.y_pos + (y - you.y_pos) * dist;
+
+    // This is where you would *like* to go.
+    const int base_x = you.x_pos + (x - you.x_pos) * dist;
+    const int base_y = you.y_pos + (y - you.y_pos) * dist;
 
     // This can take a while if pow is high and there's lots of translucent
     // walls nearby.
@@ -2542,18 +2544,18 @@ static int _quadrant_blink(int x, int y, int pow, int garbage)
     bool found = false;
     for ( int i = 0; i < (pow*pow) / 500 + 1; ++i )
     {
-        // Find a space near our target...
-        // First try to find a random square not adjacent to the player,
+        // Find a space near our base point...
+        // First try to find a random square not adjacent to the basepoint,
         // then one adjacent if that fails.
-        if (!random_near_space(ox, oy, tx, ty)
-            && !random_near_space(ox, oy, tx, ty, true))
+        if (!random_near_space(base_x, base_y, tx, ty)
+            && !random_near_space(base_x, base_y, tx, ty, true))
         {
             return 0;
         }
 
         // ... which is close enough, and also far enough from us.
-        if (distance(ox, oy, tx, ty) > 10
-            && distance(you.x_pos, you.y_pos, tx, ty) < 8)
+        if (distance(base_x, base_y, tx, ty) > 10
+            || distance(you.x_pos, you.y_pos, tx, ty) < 8)
         {
             continue;
         }

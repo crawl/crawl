@@ -6,8 +6,13 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed assertion failure upon high-scoring death.
 * Fixed Crawl spinning in CPU-pegging loop on disconnect on death screen.
 * Fixed time handling in dgl builds.
+* Fixed semi-controlled Blink.
 * Fixed '{' inscription.
+* Fixed Spriggans being capable to wield staves while wearing a shield.
+* Fixed explosive tracers leaking information about invisible monsters.
+* Fixed real/fake rakshasa identity being leaked in descriptions.
 * Fixed broken spacing on religion screen.
+* Fixed doubled inscriptions in equipped items in dump.
 * Fixed monsters being created with both a shield and wielding a two-hander.
 * Fixed bad names for god-gifted unrandarts.
 * Warn player if interlevel travel intends to take detours.

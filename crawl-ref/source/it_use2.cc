@@ -188,6 +188,19 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         if (!player_is_airborne())
             mpr("You gently float upwards from the floor.");
 
+        // Amulets can auto-ID.
+        // FIXME: should also happen when putting on/removing amulet
+        // while levitating.
+        if (!you.duration[DUR_LEVITATION]
+            && wearing_amulet(AMU_CONTROLLED_FLIGHT)
+            && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
+        {
+            item_def& amu(you.inv[you.equip[EQ_AMULET]]);
+            set_ident_type(amu.base_type, amu.sub_type, ID_KNOWN_TYPE);
+            set_ident_flags(amu, ISFLAG_KNOW_PROPERTIES);
+            mprf("You are wearing: %s", amu.name(DESC_INVENTORY_EQUIP).c_str());
+        }
+
         you.duration[DUR_LEVITATION] += 25 + random2(pow);
 
         if (you.duration[DUR_LEVITATION] > 100)

@@ -3181,10 +3181,13 @@ int affect(bolt &beam, int x, int y, item_def *item)
     if (mid != NON_MONSTER)
     {
         monsters *mon = &menv[mid];
+        const bool invisible = YOU_KILL(beam.thrower) && !you.can_see(mon);
 
         // Monsters submerged in shallow water can be targeted by beams
         // aimed at that spot.
         if (mon->alive()
+            // Don't stop tracers on invisible monsters.
+            && (!invisible || !beam.is_tracer)
             && (!mon->submerged()
                 || beam.aimed_at_spot && beam.target() == mon->pos()
                    && grd(mon->pos()) == DNGN_SHALLOW_WATER))

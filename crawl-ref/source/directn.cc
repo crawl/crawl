@@ -2453,8 +2453,14 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     }
     std::string weap = "";
 
-    if (mon->type != MONS_DANCING_WEAPON)
+    // We don't report rakshasa equipment in order not to give away the
+    // true rakshasa when it summons.
+
+    if (mon->type != MONS_DANCING_WEAPON
+        && (mon->type != MONS_RAKSHASA || mons_friendly(mon)))
+    {
         weap = _describe_monster_weapon(mon);
+    }
 
     if (!weap.empty())
     {
@@ -2464,7 +2470,7 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     }
 
     // Print the rest of the equipment only for full descriptions.
-    if (full_desc)
+    if (full_desc && (mon->type != MONS_RAKSHASA || mons_friendly(mon)))
     {
         const int mon_arm = mon->inv[MSLOT_ARMOUR];
         const int mon_shd = mon->inv[MSLOT_SHIELD];
