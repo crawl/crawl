@@ -2048,7 +2048,7 @@ void process_command( command_type cmd )
         break;
 
     case CMD_FULL_VIEW:
-        mpr(mpr_monster_list().c_str());
+        full_describe_view();
         break;
 
     case CMD_WIELD_WEAPON:

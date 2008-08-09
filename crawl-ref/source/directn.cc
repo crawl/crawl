@@ -448,33 +448,26 @@ static void _direction_again(dist& moves, targeting_type restricts,
 static void _describe_monster(const monsters *mon);
 
 // Lists all the monsters and items currently in view by the player.
-// Internals:
-// Menu items have meaningful tags. 'i' means item and 'm' means monster.
-//
-void _full_describe_view()
+// TODO: Allow sorting of items lists.
+void full_describe_view()
 {
     const coord_def start = view2grid(coord_def(1,1));
     const coord_def end(start.x + crawl_view.viewsz.x,
                         start.y + crawl_view.viewsz.y);
 
-    std::vector<monsters*> list_mons;
+    std::vector<const monsters*> list_mons;
     std::vector<const item_def*> list_items;
 
     coord_def p;
 
-    // Iterate over viewport and get all the items and monsters in view.
-    // TODO: Allow sorting of monster and items lists.
+    // Iterate over viewport and get all the itemsin view.
     for (p.x = start.x; p.x < end.x; p.x++)
         for (p.y = start.y; p.y < end.y; p.y++)
         {
             if (!in_bounds(p.x,p.y) || !see_grid(p.x,p.y))
                 continue;
 
-            const int mid = mgrd(p);
             const int oid = igrd(p);
-
-            if (mid != NON_MONSTER && player_monster_visible(&menv[mid]))
-                list_mons.push_back(&menv[mid]);
 
             if (oid != NON_ITEM)
             {
@@ -483,6 +476,14 @@ void _full_describe_view()
                 list_items.insert(list_items.end(), items.begin(), items.end());
             }
         }
+
+    // Get monsters via the monster_pane_info, sorted by difficulty.
+    std::vector<monster_pane_info> mons;
+    get_monster_pane_info(mons);
+    std::sort(mons.begin(), mons.end(), monster_pane_info::less_than_wrapper);
+
+    for (unsigned int i = 0; i < mons.size(); i++)
+        list_mons.push_back(mons[i].m_mon);
 
     if (!list_mons.size() && !list_items.size())
     {
@@ -508,7 +509,7 @@ void _full_describe_view()
         for (unsigned int i = 0; i < list_mons.size(); ++i)
         {
             // List monsters in the form
-            // (g) A goblin (hostile) wielding an orcish dagger
+            // (A) An angel (neutral), wielding a glowing long sword
 
             ++menu_index;
             const char letter = index_to_letter(menu_index);
@@ -1316,9 +1317,7 @@ void direction(dist& moves, targeting_type restricts,
             break;
 
         case CMD_TARGET_ALL_DESCRIBE:
-        	_full_describe_view();
-        	//TODO: Check if this is neccesary
-        	//force_redraw = true;
+        	full_describe_view();
         	break;
 
         case CMD_TARGET_HELP:
@@ -2796,8 +2795,6 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
                 desc += " (friendly)";
             else if (mons_neutral(mon))
                 desc += " (neutral)";
-            else
-                desc += " (hostile)";
         }
     }
 

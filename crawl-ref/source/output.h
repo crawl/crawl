@@ -51,6 +51,8 @@ void update_turn_count(void);
 void print_stats(void);
 void print_stats_level(void);
 void draw_border(void);
+bool compare_monsters_attitude( const monsters *m1, const monsters *m2 );
+
 std::string mpr_monster_list(bool past = false);
 void redraw_skill(const std::string &your_name, const std::string &class_name);
 int update_monster_pane(void);
@@ -65,7 +67,6 @@ void print_overview_screen(void);
 
 std::string dump_overview_screen(bool full_id);
 
-#ifndef USE_TILE
 // Monster info used by the pane; precomputes some data
 // to help with sorting and rendering.
 class monster_pane_info
@@ -89,6 +90,5 @@ class monster_pane_info
 };
 
 void get_monster_pane_info(std::vector<monster_pane_info>& mons);
-#endif
 
 #endif

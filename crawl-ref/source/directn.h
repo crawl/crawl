@@ -180,6 +180,8 @@ std::string feature_description(dungeon_feature_type grid,
 
 std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
+void full_describe_view(void);
+
 inline int view2gridX(int vx)
 {
     return (crawl_view.vgrdc.x + vx - crawl_view.view_centre().x);

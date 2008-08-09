@@ -1010,9 +1010,11 @@ static bool _mons_hostile(const monsters *mon)
     return (!mons_friendly(mon) && !mons_neutral(mon));
 }
 
-static std::string _get_monster_name(const monsters *mon, bool list_a = false)
+static std::string _get_monster_name(const monster_pane_info& m,
+                                     int count)
 {
     std::string desc = "";
+    const monsters *mon = m.m_mon;
 
     bool adj = false;
     if (mons_friendly(mon))
@@ -1026,29 +1028,23 @@ static std::string _get_monster_name(const monsters *mon, bool list_a = false)
         adj = true;
     }
 
-    if (adj && list_a)
-    {
-        desc = (mon->is_named() ? "the " : "a ") + desc;
-        list_a = false;
-    }
+    std::string monpane_desc;
+    int col;
+    m.to_string(count, monpane_desc, col);
 
-    if (mons_is_mimic(mon->type))
+    if (count == 1)
     {
-        if (list_a)
-            desc += "a ";
-        desc += "mimic";
-    }
-    else
-    {
-        desc += mon->name(list_a ? DESC_NOCAP_A : DESC_PLAIN);
-        if (!(mon->mname).empty())
+        if (!mon->is_named())
         {
-            desc += " (";
-            desc += mons_type_name(mon->type, DESC_PLAIN);
-            desc += ")";
+            desc = ((!adj && is_vowel(monpane_desc[0])) ? "an "
+                                                        : "a ")
+                   + desc;
         }
+        else if (adj)
+            desc = "the " + desc;
     }
 
+    desc += monpane_desc;
     return (desc);
 }
 
@@ -1056,7 +1052,7 @@ static std::string _get_monster_name(const monsters *mon, bool list_a = false)
 // hostile/neutral/friendly) than the second, or, if both monsters share the
 // same attitude, if the first monster has a lower type.
 // If monster type and attitude are the same, return false.
-static bool _compare_monsters_attitude( const monsters *m1, const monsters *m2 )
+bool compare_monsters_attitude( const monsters *m1, const monsters *m2 )
 {
     if (_mons_hostile(m1) && !_mons_hostile(m2))
         return (true);
@@ -1077,70 +1073,16 @@ static bool _compare_monsters_attitude( const monsters *m1, const monsters *m2 )
     return (m1->type < m2->type);
 }
 
-static void _get_visible_monsters(std::vector<std::string>& describe)
-{
-    std::vector<const monsters*> mons;
-
-    // monster check
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri )
-    {
-        if ( mgrd(*ri) != NON_MONSTER )
-        {
-            const monsters *mon = &menv[mgrd(*ri)];
-            if (player_monster_visible(mon)
-                && !mons_is_submerged(mon)
-                && (!mons_is_mimic(mon->type)
-                    || testbits(mon->flags, MF_KNOWN_MIMIC)))
-            {
-                mons.push_back(mon);
-            }
-        }
-    }
-
-    if (mons.empty())
-        return;
-
-    std::sort( mons.begin(), mons.end(), _compare_monsters_attitude );
-
-    int count = 0;
-    int size = mons.size();
-    for (int i = 0; i < size; ++i)
-    {
-        if (i > 0 && _compare_monsters_attitude(mons[i-1], mons[i]))
-        {
-            if (count == 1)
-                describe.push_back(_get_monster_name(mons[i-1], true).c_str());
-            else
-            {
-                describe.push_back(number_in_words(count) + " "
-                                   + pluralise(_get_monster_name(mons[i-1]).c_str()));
-            }
-            count = 0;
-        }
-        count++;
-    }
-    // handle last monster
-    if (mons.size() == 1
-        || _compare_monsters_attitude(mons[size-2], mons[size-1]))
-    {
-        describe.push_back(_get_monster_name(mons[size-1], true).c_str());
-    }
-    else
-    {
-        describe.push_back(number_in_words(count) + " "
-                           + pluralise(_get_monster_name(mons[size-1]).c_str()));
-    }
-}
-
 // If past is true, the messages should be printed in the past tense
 // because they're needed for the morgue dump.
 std::string mpr_monster_list(bool past)
 {
-    std::vector<std::string> describe;
-    _get_visible_monsters(describe);
+    // Get monsters via the monster_pane_info, sorted by difficulty.
+    std::vector<monster_pane_info> mons;
+    get_monster_pane_info(mons);
 
     std::string msg = "";
-    if (describe.empty())
+    if (mons.empty())
     {
         msg  = "There ";
         msg += (past ? "were" : "are");
@@ -1148,6 +1090,22 @@ std::string mpr_monster_list(bool past)
 
         return (msg);
     }
+
+    std::sort(mons.begin(), mons.end(), monster_pane_info::less_than_wrapper);
+    std::vector<std::string> describe;
+
+    int count = 0;
+    for (unsigned int i = 0; i < mons.size(); ++i)
+    {
+        if (i > 0 && monster_pane_info::less_than(mons[i-1], mons[i]))
+        {
+            describe.push_back(_get_monster_name(mons[i-1], count).c_str());
+            count = 0;
+        }
+        count++;
+    }
+
+    describe.push_back(_get_monster_name(mons[mons.size()-1], count).c_str());
 
     msg = "You ";
     msg += (past ? "could" : "can");
@@ -1165,7 +1123,6 @@ std::string mpr_monster_list(bool past)
     return (msg);
 }
 
-#ifndef USE_TILE
 monster_pane_info::monster_pane_info(const monsters *m)
     : m_mon(m), m_attitude(ATT_HOSTILE), m_difficulty(0),
       m_brands(0), m_fullname(true)
@@ -1177,7 +1134,7 @@ monster_pane_info::monster_pane_info(const monsters *m)
     m_attitude = mons_attitude(m);
 
     int mtype = m->type;
-    if ( mtype == MONS_RAKSHASA_FAKE )
+    if (mtype == MONS_RAKSHASA_FAKE)
         mtype = MONS_RAKSHASA;
 
     // Currently, difficulty is defined as "average hp".  Leaks too much info?
@@ -1213,9 +1170,9 @@ bool monster_pane_info::less_than(const monster_pane_info& m1,
     int m2type = m2.m_mon->type;
 
     // Don't differentiate real rakshasas from fake ones.
-    if ( m1type == MONS_RAKSHASA_FAKE )
+    if (m1type == MONS_RAKSHASA_FAKE)
         m1type = MONS_RAKSHASA;
-    if ( m2type == MONS_RAKSHASA_FAKE )
+    if (m2type == MONS_RAKSHASA_FAKE)
         m2type = MONS_RAKSHASA;
 
     // Force plain but different coloured draconians to be treated like the
@@ -1360,6 +1317,7 @@ void monster_pane_info::to_string( int count, std::string& desc,
     desc = out.str();
 }
 
+#ifndef USE_TILE
 static char _mlist_index_to_letter(int index)
 {
     index += 'a';
@@ -1484,6 +1442,7 @@ static void _print_next_monster_desc(const std::vector<monster_pane_info>& mons,
     start = end;
     textcolor(LIGHTGREY);
 }
+#endif
 
 void get_monster_pane_info(std::vector<monster_pane_info>& mons)
 {
@@ -1500,6 +1459,7 @@ void get_monster_pane_info(std::vector<monster_pane_info>& mons)
     std::sort(mons.begin(), mons.end(), monster_pane_info::less_than_wrapper);
 }
 
+#ifndef USE_TILE
 #define BOTTOM_JUSTIFY_MONSTER_LIST 0
 // Returns -1 if the monster list is empty, 0 if there are so many monsters
 // they have to be consolidated, and 1 otherwise.
