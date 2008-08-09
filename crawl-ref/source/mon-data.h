@@ -3874,8 +3874,8 @@ static monsterentry mondata[] = {
 // Antaeus is now demonic so that he'll resist torment. -- bwr
 {
     MONS_ANTAEUS, 'C', LIGHTCYAN, "Antaeus",
-    M_FIGHTER | M_SPELLCASTER | M_EVIL | M_SPEAKS | M_UNIQUE,
-    MR_RES_ELEC | MR_VUL_FIRE | MR_RES_COLD,
+    M_FIGHTER | M_SPELLCASTER | M_EVIL | M_SPEAKS | M_UNIQUE | M_AMPHIBIOUS,
+    MR_RES_ELEC | MR_VUL_FIRE | mrd(MR_RES_COLD, 2),
     0, 15, MONS_HILL_GIANT, MONS_ANTAEUS, MH_DEMONIC, -9,
     { {AT_HIT, AF_COLD, 75}, {AT_HIT, AF_COLD, 30}, AT_NO_ATK, AT_NO_ATK },
     { 22, 0, 0, 700 },
