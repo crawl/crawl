@@ -1609,7 +1609,10 @@ bool bless_follower(monsters *follower,
             bool healing = _blessing_healing(follower);
 
             if (!healing || coinflip())
-                healing = _blessing_healing(follower);
+            {
+                if (_blessing_healing(follower))
+                    healing = true;
+            }
 
             if (healing)
             {
