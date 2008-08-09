@@ -1211,6 +1211,7 @@ static bool _blessing_healing(monsters* mon)
             give_monster_proper_name(mon);
         return (true);
     }
+
     return (false);
 }
 
@@ -1302,11 +1303,12 @@ static bool _increase_ench_duration(monsters *mon,
 
     const int newdur = std::min(ench.duration + increase, MARSHALL_MAX);
     if (ench.duration >= newdur)
-        return false;
+        return (false);
 
     ench.duration = newdur;
     mon->update_ench(ench);
-    return true;
+
+    return (true);
 }
 
 static int _tso_blessing_extend_stay(monsters* mon)
