@@ -1594,8 +1594,7 @@ bool bless_follower(monsters *follower,
         // deliberate fallthrough for the healing effects
         case GOD_BEOGH:
         {
-            // Remove harmful ailments from a monster, or give it full
-            // healing, optionally giving it one extra hit point, if
+            // Remove harmful ailments from a monster, or heal it, if
             // possible.
             if (coinflip())
             {
