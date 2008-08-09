@@ -2186,7 +2186,7 @@ MiscastEffect::MiscastEffect(actor* _target, int _source, spell_type _spell,
     do_miscast();
 }
 
-MiscastEffect::MiscastEffect(actor *_target, int _source,
+MiscastEffect::MiscastEffect(actor* _target, int _source,
                              spschool_flag_type _school, int _level,
                              std::string _cause,
                              nothing_happens_when_type _nothing_happens) :
@@ -2204,7 +2204,7 @@ MiscastEffect::MiscastEffect(actor *_target, int _source,
     do_miscast();
 }
 
-MiscastEffect::MiscastEffect(actor *_target, int _source,
+MiscastEffect::MiscastEffect(actor* _target, int _source,
                              spschool_flag_type _school, int _pow, int _fail,
                              std::string _cause,
                              nothing_happens_when_type _nothing_happens) :
@@ -2248,7 +2248,7 @@ void MiscastEffect::init()
     }
     else
         target_known = true;
-    
+
     kill_source = source;
     if (source == WIELD_MISCAST || source == MELEE_MISCAST)
     {
@@ -2380,7 +2380,7 @@ std::string MiscastEffect::get_default_cause()
         return str;
     }
     else
-        return "something's spell miscasting";    
+        return "something's spell miscasting";
 }
 
 bool MiscastEffect::neither_end_silenced()
@@ -2535,7 +2535,7 @@ void MiscastEffect::do_msg(bool suppress_nothing_happnes)
     if (msg.empty())
     {
         if (!suppress_nothing_happnes
-            && (nothing_happens_when == NH_ALWAYS 
+            && (nothing_happens_when == NH_ALWAYS
                 || (nothing_happens_when == NH_DEFAULT && source_known
                     && target_known)))
         {
@@ -2720,7 +2720,7 @@ void MiscastEffect::_conjuration(int severity)
         case 1:
             you_msg      = "The air around you crackles with energy!";
             mon_msg_seen = "The air around @the_monster@ crackles "
-                              "with energy!";
+                           "with energy!";
             break;
         case 2:
             you_msg      = "Wisps of smoke drift from your @hands@.";
@@ -3659,8 +3659,8 @@ void MiscastEffect::_transmigration(int severity)
             break;
         case 1:
             you_msg        = "The air around you crackles with energy!";
-            mon_msg_seen   = "The air around @the_monster@ crackles with"
-                             " energy!";
+            mon_msg_seen   = "The air around @the_monster@ crackles with "
+                             "energy!";
             mon_msg_unseen = "The thin air crackles with energy!";
             break;
         case 2:
@@ -3927,7 +3927,7 @@ void MiscastEffect::_fire(int severity)
             else
                 mon_target->add_ench( mon_enchant(ENCH_STICKY_FLAME, dur, kc) );
             break;
-        }        
+        }
         }
         break;
     }
@@ -3981,7 +3981,7 @@ void MiscastEffect::_ice(int severity)
             if (neither_end_silenced())
             {
                 all_msg = "You hear a crackling sound.";
-                msg_ch  =  MSGCH_SOUND;
+                msg_ch  = MSGCH_SOUND;
             }
             else if (target->atype() == ACT_PLAYER)
                 you_msg = "A snowflake lands on your nose.";
@@ -4052,7 +4052,7 @@ void MiscastEffect::_ice(int severity)
         case 1:
             you_msg        = "Freezing gasses pour from your @hands@!";
             mon_msg_seen   = "Freezing gasses pour from @the_monsters@'s "
-                             " @hands@!";
+                             "@hands@!";
 
             do_msg();
             big_cloud(CLOUD_COLD, kc, kt,
@@ -4092,7 +4092,7 @@ void MiscastEffect::_earth(int severity)
             if (neither_end_silenced())
             {
                 all_msg = "You hear a distant rumble.";
-                msg_ch  =  MSGCH_SOUND;
+                msg_ch  = MSGCH_SOUND;
             }
             else if (target->atype() == ACT_PLAYER)
                 you_msg = "You sympathise with the stones.";
@@ -4257,7 +4257,7 @@ void MiscastEffect::_air(int severity)
             if (neither_end_silenced())
             {
                 all_msg = "You hear a crackling sound.";
-                msg_ch  =  MSGCH_SOUND;
+                msg_ch  = MSGCH_SOUND;
             }
             else if (player_can_smell())
                 all_msg = "You smell something musty.";
@@ -4279,7 +4279,7 @@ void MiscastEffect::_air(int severity)
             if (silenced(you.pos()))
                all_msg = "The wind whips around you!";
             else
-               all_msg = "The wind howls around you!"; 
+               all_msg = "The wind howls around you!";
             break;
         }
         do_msg();
