@@ -1199,10 +1199,12 @@ static bool _blessing_balms(monsters *mon)
     return success;
 }
 
-static bool _blessing_healing(monsters* mon, bool extra)
+static bool _blessing_healing(monsters* mon)
 {
-    // Heal a monster, giving them an extra hit point if extra is true.
-    if (heal_monster(mon, mon->max_hit_points, extra))
+    // Heal a monster somewhere between 1/4 and 1/2 of its maximum hit
+    // points.
+    if (heal_monster(mon, mon->max_hit_points / 4
+                     + random2(mon->max_hit_points / 4 + 1), false))
     {
         // A high-HP monster might get a unique name.
         if (x_chance_in_y(mon->max_hit_points + 1, 100))
@@ -1604,29 +1606,17 @@ bool bless_follower(monsters *follower,
                     mpr("Couldn't apply balms.");
             }
 
-            bool healing = _blessing_healing(follower, false);
-            bool vigour = false;
+            bool healing = _blessing_healing(follower);
 
-            // Maybe give an extra hit point.
             if (!healing || coinflip())
-                vigour = _blessing_healing(follower, true);
-
-            result = "";
+                healing = _blessing_healing(follower);
 
             if (healing)
             {
                 result += "healing";
-                if (vigour)
-                    result += " and ";
-            }
-
-            if (vigour)
-                result += "extra vigour";
-
-            if (healing || vigour)
                 break;
-
-            if (force)
+            }
+            else if (force)
                 mpr("Couldn't heal monster.");
 
             return (false);
