@@ -5874,17 +5874,17 @@ void handle_god_time()
             DEBUGSTR("Bad god, no bishop!");
         }
     }
-}                               // end handle_god_time()
+}
 
 // yet another wrapper for mpr() {dlb}:
 void simple_god_message(const char *event, god_type which_deity)
 {
     std::string msg = god_name(which_deity);
     msg += event;
-    god_speaks( which_deity, msg.c_str() );
+    god_speaks(which_deity, msg.c_str());
 }
 
-int god_colour( god_type god ) //mv - added
+int god_colour(god_type god) // mv - added
 {
     switch (god)
     {
