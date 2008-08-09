@@ -1459,7 +1459,7 @@ bool cast_summon_elemental(int pow, god_type god,
                  && (grd[ targ_x ][ targ_y ] == DNGN_ROCK_WALL
                      || grd[ targ_x ][ targ_y ] == DNGN_CLEAR_ROCK_WALL))
         {
-            if (targ_x <= 6 || targ_x >= 74 || targ_y <= 6 || targ_y >= 64)
+            if (!in_bounds(targ_x, targ_y))
             {
                 mpr("That wall won't yield to your beckoning.");
                 // XXX: Should this cost a turn?
