@@ -2454,7 +2454,7 @@ static bool _shaft_is_in_corridor(const coord_def& c)
 {
     const coord_def adjs[] = { coord_def(-1,0), coord_def(1,0),
                                coord_def(0,-1), coord_def(0,1) };
-    
+
     for ( unsigned int i = 0; i < ARRAYSZ(adjs); ++i )
     {
         const coord_def spot = c + adjs[i];
@@ -3526,13 +3526,13 @@ static void _beehive(spec_room &sr)
     {
         if (coinflip())
             continue;
-        
+
         const int i = get_item_slot();
         if (i == NON_ITEM)
             continue;
 
         item_def& item(mitm[i]);
-        
+
         item.quantity = 1;
         item.base_type = OBJ_FOOD;
         item.sub_type = (one_chance_in(25) ? FOOD_ROYAL_JELLY : FOOD_HONEYCOMB);
@@ -3549,14 +3549,14 @@ static void _beehive(spec_room &sr)
             continue;
 
         // The hive is chock full of bees!
-        
+
         mons_place(
             mgen_data::sleeper_at(
                 one_chance_in(7) ? MONS_KILLER_BEE_LARVA
                                  : MONS_KILLER_BEE,
                 *ri, MG_PATROLLING));
     }
-    
+
     mons_place(mgen_data::sleeper_at(MONS_QUEEN_BEE, queenpos, MG_PATROLLING));
 }
 
@@ -3725,7 +3725,7 @@ static bool _build_minivaults(int level_number, int force_vault,
     std::vector<coord_def> &target_connections = place.exits;
 
     // Paint the minivault onto the grid.
-    for (rectangle_iterator ri(v1, v1 + place.size); ri; ++ri)
+    for (rectangle_iterator ri(v1, v1 + place.size - 1); ri; ++ri)
     {
         const coord_def vdelta = *ri - v1;
 
@@ -4292,7 +4292,8 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
     dgn_region this_vault(place.pos, place.size);
     // NOTE: assumes *no* previous item (I think) or monster (definitely)
     // placement.
-    for ( rectangle_iterator ri(place.pos, place.pos + place.size); ri; ++ri )
+    for ( rectangle_iterator ri(place.pos, place.pos + place.size - 1);
+          ri; ++ri )
     {
         if (vgrid[ri->x][ri->y] == ' ')
             continue;
@@ -5468,7 +5469,7 @@ static void _place_shops(int level_number, int nshops)
     for (int i = 0; i < nshops; i++)
     {
         int timeout = 0;
-        
+
         do
         {
             shop_place.set(random_range(X_BOUND_1 + 1, X_BOUND_2 - 1),
@@ -6807,7 +6808,7 @@ static bool _treasure_area(int level_number, unsigned char ta1_x,
         int item_made = items( 1, OBJ_RANDOM, OBJ_RANDOM, true,
                                random2( level_number * 2 ),
                                MAKE_ITEM_RANDOM_RACE );
-        
+
         if (item_made != NON_ITEM)
             mitm[item_made].pos = *ri;
     }
@@ -7183,7 +7184,7 @@ static void _morgue(spec_room &sr)
         if (grd(*ri) == DNGN_FLOOR || grd(*ri) == DNGN_BUILDER_SPECIAL_FLOOR)
         {
             const int temp_rand = random2(24);
-            
+
             const monster_type mon_type =
                 ((temp_rand > 11) ? MONS_ZOMBIE_SMALL :  // 50.0%
                  (temp_rand >  7) ? MONS_WIGHT :         // 16.7%
