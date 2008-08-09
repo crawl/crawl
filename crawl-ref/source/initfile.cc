@@ -24,6 +24,7 @@
 
 #include "chardump.h"
 #include "clua.h"
+#include "luadgn.h"
 #include "delay.h"
 #include "directn.h"
 #include "Kills.h"
@@ -1337,8 +1338,9 @@ void game_options::read_options(InitLineInput &il, bool runscript,
     if (clear_aliases)
         aliases.clear();
 
-    std::string luacond;
-    std::string luacode;
+    dlua_chunk luacond(filename);
+    dlua_chunk luacode(filename);
+
     while (!il.eof())
     {
         std::string s   = il.getline();
@@ -1359,12 +1361,12 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             if (!str.empty() && runscript)
             {
                 // If we're in the middle of an option block, close it.
-                if (luacond.length() && l_init)
+                if (!luacond.empty() && l_init)
                 {
-                    luacond += "]] )\n";
+                    luacond.add(line - 1, "]] )");
                     l_init = false;
                 }
-                luacond += str + "\n";
+                luacond.add(line, str);
             }
             continue;
         }
@@ -1385,12 +1387,12 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             if (!str.empty() && runscript)
             {
                 // If we're in the middle of an option block, close it.
-                if (luacond.length() && l_init)
+                if (!luacond.empty() && l_init)
                 {
-                    luacond += "]] )\n";
+                    luacond.add(line - 1, "]] )");
                     l_init = false;
                 }
-                luacond += str + "\n";
+                luacond.add(line, str);
             }
             continue;
         }
@@ -1400,13 +1402,13 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             inscriptcond = false;
             str = str.substr(0, str.length() - 1);
             if (!str.empty() && runscript)
-                luacond += str + "\n";
+                luacond.add(line, str);
             continue;
         }
         else if (inscriptcond)
         {
             if (runscript)
-                luacond += s + "\n";
+                luacond.add(line, s);
             continue;
         }
 
@@ -1415,6 +1417,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
         {
             inscriptblock = true;
             luacode.clear();
+            luacode.set_file(filename);
 
             // Strip leading Lua[
             str = str.substr( str.find("Lua{") == 0? 4 : 1 );
@@ -1426,14 +1429,14 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             }
 
             if (!str.empty())
-                luacode += str + "\n";
+                luacode.add(line, str);
 
             if (!inscriptblock && runscript)
             {
 #ifdef CLUA_BINDINGS
-                clua.execstring(luacode.c_str());
-                if (!clua.error.empty())
-                    mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                if (luacode.run(clua))
+                    mprf(MSGCH_ERROR, "Lua error: %s",
+                         luacode.orig_error().c_str());
                 luacode.clear();
 #endif
             }
@@ -1446,9 +1449,9 @@ void game_options::read_options(InitLineInput &il, bool runscript,
 #ifdef CLUA_BINDINGS
             if (runscript)
             {
-                clua.execstring(luacode.c_str());
-                if (!clua.error.empty())
-                    mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+                if (luacode.run(clua))
+                    mprf(MSGCH_ERROR, "Lua error: %s",
+                         luacode.orig_error().c_str());
             }
 #endif
             luacode.clear();
@@ -1456,7 +1459,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
         }
         else if (inscriptblock)
         {
-            luacode += s + "\n";
+            luacode.add(line, s);
             continue;
         }
 
@@ -1464,11 +1467,11 @@ void game_options::read_options(InitLineInput &il, bool runscript,
         {
             if (!l_init)
             {
-                luacond += "crawl.setopt( [[\n";
+                luacond.add(line, "crawl.setopt( [[");
                 l_init = true;
             }
 
-            luacond += s + "\n";
+            luacond.add(line, s);
             continue;
         }
 
@@ -1479,10 +1482,9 @@ void game_options::read_options(InitLineInput &il, bool runscript,
     if (runscript && !luacond.empty())
     {
         if (l_init)
-            luacond += "]] )\n";
-        clua.execstring(luacond.c_str());
-        if (!clua.error.empty())
-            mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+            luacond.add(line, "]] )");
+        if (luacond.run(clua))
+            mprf(MSGCH_ERROR, "Lua error: %s", luacond.orig_error().c_str());
     }
 #endif
 

@@ -36,7 +36,7 @@ private:
         CT_SOURCE,
         CT_COMPILED
     };
-    
+
 private:
     int check_op(CLua &, int);
     std::string rewrite_chunk_prefix(const std::string &line,
@@ -51,23 +51,24 @@ public:
     dlua_chunk(lua_State *ls);
 
     static dlua_chunk precompiled(const std::string &compiled);
-    
+
     void clear();
     void add(int line, const std::string &line2);
     void set_chunk(const std::string &s);
-    
+
     int load(CLua &interp);
+    int run(CLua &interp);
     int load_call(CLua &interp, const char *function);
     void set_file(const std::string &s);
 
     const std::string &lua_string() const { return chunk; }
     std::string orig_error() const;
     bool rewrite_chunk_errors(std::string &err) const;
-    
+
     bool empty() const;
 
     const std::string &compiled_chunk() const { return compiled; }
-    
+
     void write(writer&) const;
     void read(reader&);
 };
