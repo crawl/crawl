@@ -895,8 +895,7 @@ static bool _xom_is_bad(int sever)
         }
         else if (x_chance_in_y(11, sever))
         {
-            god_speaks(GOD_XOM,
-                       _get_xom_speech("major miscast effect").c_str());
+            god_speaks(GOD_XOM, _get_xom_speech("major miscast effect").c_str());
 
             MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, random2(4),
                           "the severe capriciousness of Xom");
