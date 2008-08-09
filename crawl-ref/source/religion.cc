@@ -1521,24 +1521,14 @@ bool bless_follower(monsters *follower,
         }
     }
 
-    // Enchant a monster's weapon or armour/shield by one or two points,
-    // or at least uncurse it, if possible (10% chance).
+    // Enchant a monster's weapon or armour/shield by one point, or at
+    // least uncurse it, if possible (10% chance).
     // This will happen if the above blessing attempts are unsuccessful.
     if (chance <= 1)
     {
-        bool affected;
-
         if (coinflip())
         {
-            affected = _blessing_wpn(follower);
-
-            if (!affected || coinflip())
-            {
-                if (_blessing_wpn(follower))
-                    affected = true;
-            }
-
-            if (affected)
+            if (_blessing_wpn(follower))
             {
                 result = "extra attack power";
                 give_monster_proper_name(follower);
@@ -1549,15 +1539,7 @@ bool bless_follower(monsters *follower,
         }
         else
         {
-            affected = _blessing_AC(follower);
-
-            if (!affected || coinflip())
-            {
-                if (_blessing_AC(follower))
-                    affected = true;
-            }
-
-            if (affected)
+            if (_blessing_AC(follower))
             {
                 result = "extra defence";
                 give_monster_proper_name(follower);
