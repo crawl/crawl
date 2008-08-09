@@ -1201,8 +1201,7 @@ static bool _blessing_balms(monsters *mon)
 
 static bool _blessing_healing(monsters* mon)
 {
-    // Heal a monster somewhere between 1/4 and 1/2 of its maximum hit
-    // points.
+    // Heal a monster.
     if (heal_monster(mon, mon->max_hit_points / 4
                      + random2(mon->max_hit_points / 4 + 1), false))
     {
