@@ -107,7 +107,7 @@ int detect_items( int pow )
             && (!get_envmap_obj(*ri) || !is_envmap_item(*ri)))
         {
             items_found++;
-            
+
             set_envmap_obj(*ri, DNGN_ITEM_DETECTED);
             set_envmap_detected_item(*ri);
 #ifdef USE_TILE
@@ -152,7 +152,7 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
     if (fuzz_radius && x_chance_in_y(fuzz_chance, 100))
     {
         const int fuzz_diam = 2 * fuzz_radius + 1;
-        
+
         coord_def place;
         // Try five times to find a valid placement, else we attempt to place
         // the monster where it really is (and may fail).
@@ -219,7 +219,7 @@ int detect_creatures( int pow, bool telepathic )
             creatures_found++;
 
             _mark_detected_creature(*ri, mon, fuzz_chance, fuzz_radius);
-            
+
             // Assuming that highly intelligent spellcasters can
             // detect scrying. -- bwr
             if (mons_intel( mon->type ) == I_HIGH
@@ -251,9 +251,9 @@ int corpse_rot(int power)
                         destroy_item(si->index());
                     else
                         turn_corpse_into_skeleton(*si);
-                    
+
                     place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3), KC_YOU);
-                    
+
                     // Don't look for more corpses here.
                     break;
                 }
@@ -666,7 +666,7 @@ void cast_refrigeration(int pow)
     }
 
     // Now do the monsters:
-    bolt beam;   
+    bolt beam;
     beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
     for (int i = 0; i < MAX_MONSTERS; i++)
@@ -690,7 +690,7 @@ void cast_refrigeration(int pow)
                 if (monster->hit_points < 1)
                     monster_die(monster, KILL_YOU, 0);
                 else
-                {                    
+                {
                     print_wounds(monster);
 
                     if (mons_class_flag(monster->type, M_COLD_BLOOD)
@@ -1387,11 +1387,7 @@ bool cast_summon_elemental(int pow, god_type god,
                  && (grd(targ) == DNGN_ROCK_WALL
                      || grd(targ) == DNGN_CLEAR_ROCK_WALL))
         {
-            const int boundary = 6;
-            if (targ.x <= boundary
-                || targ.x >= GXM - boundary
-                || targ.y <= boundary
-                || targ.y >= GYM - boundary)
+            if (!in_bounds(targ))
             {
                 mpr("That wall won't yield to your beckoning.");
                 // XXX: Should this cost a turn?
