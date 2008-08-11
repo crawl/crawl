@@ -97,6 +97,9 @@ static travel_target level_target;
 // interlevel travel, as estimated by level_distance.
 static int _Src_Dest_Level_Delta = -1;
 
+// Source level where interlevel travel was last activated.
+static level_id _Src_Level;
+
 // Remember the last place explore stopped because autopickup failed.
 static coord_def explore_stopped_pos;
 
@@ -2483,7 +2486,8 @@ void start_translevel_travel(bool prompt_for_destination)
 
         _Route_Warning.new_dest(level_target);
 
-        _Src_Dest_Level_Delta = level_distance(level_id::current(),
+        _Src_Level = level_id::current();
+        _Src_Dest_Level_Delta = level_distance(_Src_Level,
                                                level_target.p.id);
 
         _start_running();
@@ -2790,7 +2794,7 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
     if (best_stair.x != -1 && best_stair.y != -1)
     {
         // Is this stair going offlevel?
-        if ((level_target.p.id != current 
+        if ((level_target.p.id != current
              || level_target.p.pos != best_stair)
             && _Src_Dest_Level_Delta != -1)
         {
@@ -2801,11 +2805,12 @@ static bool _find_transtravel_square(const level_pos &target, bool verbose)
 
             if (dest_stair && dest_stair->destination.id.is_valid())
             {
-                const int ndist =
-                    level_distance(dest_stair->destination.id,
-                                   level_target.p.id);
-
-                if (_Src_Dest_Level_Delta < ndist
+                if ((_Src_Dest_Level_Delta <
+                     level_distance(dest_stair->destination.id,
+                                    level_target.p.id) ||
+                     _Src_Dest_Level_Delta <
+                     level_distance(dest_stair->destination.id,
+                                    _Src_Level))
                     && !_Route_Warning.warn_continue_travel(
                         level_target,
                         dest_stair->destination.id))
