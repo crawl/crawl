@@ -2472,7 +2472,12 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         // that'll mean monsters can just "know" the player is fully
         // life-protected if he has triple life protection.
         const mon_holy_type holiness = foe->holiness();
-        return (holiness == MH_UNDEAD || holiness == MH_DEMONIC
+        return (holiness == MH_UNDEAD
+                // Demons, but not demonspawn - demonspawn will show
+                // up as demonic for purposes of things like holy
+                // wrath, but are still (usually) susceptible to
+                // torment and draining.
+                || (holiness == MH_DEMONIC && foe != &you)
                 || holiness == MH_NONLIVING || holiness == MH_PLANT);
     }
 
@@ -4359,7 +4364,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
     bool _can_plural;
     if (can_plural == NULL)
         can_plural = &_can_plural;
-    *can_plural = true;   
+    *can_plural = true;
 
     std::string str;
     char        ch = mons_char(type);
@@ -4465,7 +4470,7 @@ std::string monsters::foot_name(bool plural, bool *can_plural) const
     bool _can_plural;
     if (can_plural == NULL)
         can_plural = &_can_plural;
-    *can_plural = true;   
+    *can_plural = true;
 
     std::string str;
     char        ch = mons_char(type);
