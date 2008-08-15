@@ -2472,7 +2472,11 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         // that'll mean monsters can just "know" the player is fully
         // life-protected if he has triple life protection.
         const mon_holy_type holiness = foe->holiness();
-        return (holiness == MH_UNDEAD
+        return ((holiness == MH_UNDEAD
+                 // If the claimed undead is the player, it must be
+                 // a non-vampire, or a bloodless vampire.
+                 && (foe != &you || you.is_undead != US_SEMI_UNDEAD ||
+                     you.hunger_state == HS_STARVING))
                 // Demons, but not demonspawn - demonspawn will show
                 // up as demonic for purposes of things like holy
                 // wrath, but are still (usually) susceptible to
@@ -2482,6 +2486,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     }
 
     case SPELL_DISPEL_UNDEAD:
+        // [ds] How is dispel undead intended to interact with vampires?
         return (!foe || foe->holiness() != MH_UNDEAD);
 
     case SPELL_BACKLIGHT:
