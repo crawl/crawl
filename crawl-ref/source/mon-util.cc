@@ -2450,7 +2450,12 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         // that'll mean monsters can just "know" the player is fully
         // life-protected if he has triple life protection.
         const mon_holy_type holiness = foe->holiness();
-        return (holiness == MH_UNDEAD || holiness == MH_DEMONIC
+        return (holiness == MH_UNDEAD
+                // Demons, but not demonspawn - demonspawn will show
+                // up as demonic for purposes of things like holy
+                // wrath, but are still (usually) susceptible to
+                // torment and draining.
+                || (holiness == MH_DEMONIC && foe != &you)
                 || holiness == MH_NONLIVING || holiness == MH_PLANT);
     }
 
