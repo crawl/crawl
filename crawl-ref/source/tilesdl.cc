@@ -1015,23 +1015,22 @@ void TilesFramework::update_inventory()
     if (!Options.tile_show_items)
         return;
 
-    unsigned int max_pack_row = (ENDOFPACK-1) / m_region_self_inv->mx + 1;
-    max_pack_row = std::min(m_region_self_inv->my - 1, max_pack_row);
-    unsigned int max_pack_items = max_pack_row * m_region_self_inv->mx;
-
-    // TODO enne - document that '.' and '_' no longer work
-
-    // TODO enne - if all inventory and ground can't fit, allow ground
-    // and inventory items on the same row.
-
-    // TODO enne - if inventory fills up all squares, add up to one row
-    // of ground, depending.
-
-    // TODO enne - only fill up 52 squares of inventory, then start
-    // showing floor.
-
     // item.base_type <-> char conversion table
     const static char *obj_syms = ")([/%#?=!#+\\0}x";
+
+    const unsigned int mx = m_region_self_inv->mx;
+    const unsigned int my = m_region_self_inv->my;
+
+    unsigned int max_pack_row = (ENDOFPACK-1) / mx + 1;
+    unsigned int max_pack_items = max_pack_row * mx;
+
+    unsigned int num_ground = 0;
+    for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+        num_ground++;
+
+    // If the inventory is full, show at least one row of the ground.
+    unsigned int min_ground = std::min(num_ground, mx);
+    max_pack_items = std::min(max_pack_items, mx * my - min_ground);
 
     for (unsigned int c = 0; c < strlen(Options.tile_show_items); c++)
     {
@@ -1046,6 +1045,9 @@ void TilesFramework::update_inventory()
         // First, normal inventory
         for (int i = 0; i < ENDOFPACK; i++)
         {
+            if (inv.size() >= max_pack_items)
+                break;
+
             if (!is_valid_item(you.inv[i]) || you.inv[i].quantity == 0)
                 continue;
 
@@ -1069,35 +1071,50 @@ void TilesFramework::update_inventory()
         }
     }
 
-    // Finish out this row
-    while (inv.size() % m_region_self_inv->mx != 0)
+    int remaining = mx*my- inv.size();
+    int empty_on_this_row = mx - inv.size() % mx;
+
+    // If we're not on the last row...
+    if (inv.size() < mx * (my-1))
     {
-        InventoryTile desc;
-        inv.push_back(desc);
-    }
-
-    // How many ground items do we have?
-    unsigned int num_ground = 0;
-    for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
-        num_ground++;
-
-    // Add extra rows, if needed.
-    unsigned int ground_rows = 
-        std::max(((int)num_ground-1) / (int)m_region_self_inv->mx + 1, 1);
-
-    while (inv.size() / m_region_self_inv->mx + ground_rows < m_region_self_inv->my)
-    {
-        for (unsigned int i = 0; i < m_region_self_inv->mx; i++)
+        if ((int)num_ground > remaining - empty_on_this_row)
         {
-            InventoryTile desc;
-            inv.push_back(desc);
+            // Fill out part of this row.
+            int fill = remaining - num_ground;
+            for (int i = 0; i < fill; i++)
+            {
+                InventoryTile desc;
+                inv.push_back(desc);
+            }
+        }
+        else
+        {
+            // Fill out the rest of this row.
+            while (inv.size() % mx != 0)
+            {
+                InventoryTile desc;
+                inv.push_back(desc);
+            }
+
+            // Add extra rows, if needed.
+            unsigned int ground_rows = 
+                std::max(((int)num_ground-1) / (int)mx + 1, 1);
+
+            while (inv.size() / mx + ground_rows < my)
+            {
+                for (unsigned int i = 0; i < mx; i++)
+                {
+                    InventoryTile desc;
+                    inv.push_back(desc);
+                }
+            }
         }
     }
 
-    // Then, ground items...
+    // Then, as many ground items as we can fit.
     for (unsigned int c = 0; c < strlen(Options.tile_show_items); c++)
     {
-        if (inv.size() >= m_region_self_inv->mx * m_region_self_inv->my)
+        if (inv.size() >= mx * my)
             break;
 
         const char *find = strchr(obj_syms, Options.tile_show_items[c]);
@@ -1107,7 +1124,7 @@ void TilesFramework::update_inventory()
 
         for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         {
-            if (inv.size() >= m_region_self_inv->mx * m_region_self_inv->my)
+            if (inv.size() >= mx * my)
                 break;
 
             if (mitm[i].base_type != type)
@@ -1121,8 +1138,7 @@ void TilesFramework::update_inventory()
         }
     }
 
-    // Finish out ground inventory
-    while (inv.size() < m_region_self_inv->mx * m_region_self_inv->my)
+    while (inv.size() < mx * my)
     {
         InventoryTile desc;
         desc.flag = TILEI_FLAG_FLOOR;

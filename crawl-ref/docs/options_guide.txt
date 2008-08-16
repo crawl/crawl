@@ -1477,8 +1477,7 @@ In non-tile games the tile options are ignored.
 
 tile_show_items = <glyphs>
         This option controls the order and presence of items in the tiles
-        inventory.  By default, its value is !?/%=([)x}+\_.  The underscore
-        represents empty slots, the dot items on the floor.
+        inventory.  By default, its value is !?/%=([)x}+\
 
 title_screen = true
         When this is set to true, the graphical title screen will be
@@ -1503,6 +1502,7 @@ tile_water_col       = grey
 tile_lava_col        = grey
 tile_excluded_col    = darkcyan
 tile_excl_centre_col = darkblue
+tile_window_col      = yellow
 
 These options allow configuring the colours used for the minimap of
 the dungeon level.
@@ -1528,7 +1528,22 @@ the dungeon level.
                            (will only override tile_floor_col colour)
    tile_excl_centre_col  - colour of exclusion centre (overrides
                            tile_floor_col and tile_item_col, only)
+   tile_window_col       - colour of the rectangular view window
 
+
+tile_tooltip_ms = 1000
+         The number of milliseconds before a tooltip appears when hovering the
+         mouse over part of the screen.
+
+tile_window_width = 1024
+tile_window_height = 768
+         The width and height of the window, in pixels.
+
+tile_map_pixels = 4
+         The number of pixels each minimap square should take up.
+
+tile_full_screen = false
+         Setting this option to true will start Crawl in full screen mode.
 
 5-  Character Dump.
 ===================
