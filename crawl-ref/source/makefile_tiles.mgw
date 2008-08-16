@@ -194,7 +194,7 @@ endif
 		copy /y ..\settings\* $(INSTALLDIR)\settings
 		copy /y ..\docs\* $(INSTALLDIR)\docs
 		mkdir $(INSTALLDIR)\dat\tiles 2>nul || echo "" > nul
-		copy /y dat\tiles\*.png $(INSTALLDIR)\dat\tiles
+		copy /y dat\tiles\*.* $(INSTALLDIR)\dat\tiles
 		copy /y ..\* $(INSTALLDIR)
 		$(DELETE) $(INSTALLDIR)\*.sh
 

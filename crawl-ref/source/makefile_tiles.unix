@@ -277,7 +277,7 @@ endif
 	mkdir -p $(DATADIR)/docs
 	$(COPY) ../docs/*.txt $(DATADIR)/docs
 	mkdir -p $(DATADIR)/dat/tiles
-	$(COPY) dat/tiles/*.png $(DATADIR)/dat/tiles
+	$(COPY) dat/tiles/* $(DATADIR)/dat/tiles
 	chown -R $(INSTALL_UGRP) $(DATADIR)
 ifneq ($(SAVEDIR),)
 	mkdir -p $(SAVEDIR)
