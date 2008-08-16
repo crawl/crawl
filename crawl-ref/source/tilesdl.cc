@@ -361,8 +361,9 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_DELETE:
         return CK_DELETE;
 
+    // Hack.  libw32c overloads clear with '5' too.
     case SDLK_KP5:
-        return '5';
+        return CK_CLEAR + offset;
 
     case SDLK_KP8:
     case SDLK_UP:
