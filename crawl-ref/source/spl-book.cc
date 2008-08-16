@@ -1088,6 +1088,7 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_RESIST_POISON:
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
+        case SPELL_STONESKIN:
         case SPELL_SYMBOL_OF_TORMENT:
         case SPELL_TAME_BEASTS:
             return (true);
@@ -1129,6 +1130,7 @@ bool undead_cannot_memorise(spell_type spell, char being)
         case SPELL_RESIST_POISON:
         case SPELL_SPIDER_FORM:
         case SPELL_STATUE_FORM:
+        case SPELL_STONESKIN:
         case SPELL_SUMMON_HORRIBLE_THINGS:
         case SPELL_SYMBOL_OF_TORMENT:
         case SPELL_TAME_BEASTS:
