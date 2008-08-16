@@ -1314,9 +1314,9 @@ static void _build_dungeon_level(int level_number, int level_type)
     if (!player_in_branch( BRANCH_DIS ) && !player_in_branch( BRANCH_VAULTS ))
         _hide_doors();
 
-    // change pre-rock (105) to rock, and pre-floor (106) to floor
-    _replace_area( 0,0,GXM-1,GYM-1, DNGN_BUILDER_SPECIAL_WALL, DNGN_ROCK_WALL );
-    _replace_area( 0,0,GXM-1,GYM-1, DNGN_BUILDER_SPECIAL_FLOOR, DNGN_FLOOR );
+    // change pre-rock to rock, and pre-floor to floor
+    _replace_area(0,0,GXM-1,GYM-1, DNGN_BUILDER_SPECIAL_WALL, DNGN_ROCK_WALL);
+    _replace_area(0,0,GXM-1,GYM-1, DNGN_BUILDER_SPECIAL_FLOOR, DNGN_FLOOR);
 
     const unsigned nvaults = Level_Vaults.size();
 
@@ -4295,13 +4295,13 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
     for ( rectangle_iterator ri(place.pos, place.pos + place.size - 1);
           ri; ++ri )
     {
-        if (vgrid[ri->x][ri->y] == ' ')
+        if (vgrid[ri->y][ri->x] == ' ')
             continue;
 
         const dungeon_feature_type oldgrid = grd(*ri);
         altar_count = _vault_grid( place, level_number, *ri, altar_count,
                                    acq_item_class,
-                                   vgrid[ri->x][ri->y],
+                                   vgrid[ri->y][ri->x],
                                    target_connections,
                                    num_runes,
                                    rune_subst );
