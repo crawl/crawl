@@ -49,6 +49,12 @@ function TimedMessaging:init(tmarker, cm, verbose)
 
   if verbose and #self.initmsg > 0 and you.hear_pos(cm:pos()) then
     crawl.mpr(self.initmsg, "sound")
+    if lab then
+      crawl.mpr("Behold! There is an entrance to a minotaur's labyrinth on this level. Find the entrance quickly before it seals the gate!",
+                "sound")
+    else
+      crawl.mpr("An interdimensional caravan has stopped on this level and set up a bazaar. Hurry and find its entrance before they move on!", "sound")
+    end
   end
 end
 
