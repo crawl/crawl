@@ -881,6 +881,7 @@ static bool _vampire_cannot_cast(spell_type spell)
     case SPELL_RESIST_POISON:
     case SPELL_SPIDER_FORM:
     case SPELL_STATUE_FORM:
+    case SPELL_STONESKIN:
     case SPELL_TAME_BEASTS:
         return (true);
     default:
