@@ -1991,13 +1991,20 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 
         if (mspec.items.size() > 0)
         {
-            if (mspec.mid == RANDOM_MONSTER)
+            monster_type mid = (monster_type)mspec.mid;
+            if (mid == RANDOM_DRACONIAN
+                || mid == RANDOM_BASE_DRACONIAN
+                || mid == RANDOM_NONBASE_DRACONIAN)
+            {
+                mid = MONS_DRACONIAN;
+            }
+
+            if (mid >= NUM_MONSTERS)
             {
                 error = "Can't give spec items to a random monster.";
                 return (slot);
-            };
-
-            if (mons_itemuse(mspec.mid) < MONUSE_STARTING_EQUIPMENT)
+            }
+            else if (mons_itemuse(mid) < MONUSE_STARTING_EQUIPMENT)
             {
                 error = make_stringf("Monster '%s' can't use items.",
                                      mon_str.c_str());

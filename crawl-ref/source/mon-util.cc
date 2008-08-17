@@ -387,11 +387,13 @@ mon_holy_type mons_holiness(const monsters *mon)
 
 mon_holy_type mons_class_holiness(int mc)
 {
+    ASSERT(smc);
     return (smc->holiness);
 }
 
 bool mons_class_is_confusable(int mc)
 {
+    ASSERT(smc);
     return (smc->resist_magic < MAG_IMMUNE
             && mons_class_holiness(mc) != MH_NONLIVING
             && mons_class_holiness(mc) != MH_PLANT);
@@ -399,6 +401,7 @@ bool mons_class_is_confusable(int mc)
 
 bool mons_class_is_slowable(int mc)
 {
+    ASSERT(smc);
     return (smc->resist_magic < MAG_IMMUNE);
 }
 
@@ -575,16 +578,19 @@ bool mons_foe_is_mons(const monsters *mons)
 
 int mons_zombie_size(int mc)
 {
+    ASSERT(smc);
     return (smc->zombie_size);
 }
 
 int mons_weight(int mc)
 {
+    ASSERT(smc);
     return (smc->weight);
 }
 
 corpse_effect_type mons_corpse_effect(int mc)
 {
+    ASSERT(smc);
     return (smc->corpse_thingy);
 }
 
@@ -596,6 +602,12 @@ monster_type mons_species(int mc)
 
 monster_type mons_genus(int mc)
 {
+    if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
+        || mc == RANDOM_NONBASE_DRACONIAN)
+    {
+        return MONS_DRACONIAN;
+    }
+    ASSERT(smc);
     return (smc->genus);
 }
 
@@ -687,6 +699,7 @@ static bool _shout_fits_monster(int type, int shout)
 // for a pandemonium lord trying to shout.
 shout_type mons_shouts(int mc, bool demon_shout)
 {
+    ASSERT(smc);
     shout_type u = smc->shouts;
 
     // Pandemonium lords use this to get the noises.
@@ -775,6 +788,7 @@ int mons_class_colour(int mc)
 
 mon_itemuse_type mons_itemuse(int mc)
 {
+    ASSERT(smc);
     return (smc->gmon_use);
 }
 
@@ -863,6 +877,7 @@ mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
     if (zombified)
         mc = mons_zombie_base(mons);
 
+    ASSERT(smc);
     mon_attack_def attk = smc->attack[attk_number];
     if (attk.flavour == AF_KLOWN)
     {
@@ -884,6 +899,7 @@ int mons_damage(int mc, int rt)
 {
     if (rt < 0 || rt > 3)
         rt = 0;
+    ASSERT(smc);
     return smc->attack[rt].damage;
 }
 
@@ -1982,18 +1998,21 @@ monsterentry *get_monster_data(int p_monsterid)
 
 static int _mons_exp_mod(int mc)
 {
+    ASSERT(smc);
     return (smc->exp_mod);
 }
 
 
 int mons_speed(int mc)
 {
+    ASSERT(smc);
     return (smc->speed);
 }
 
 
 mon_intel_type mons_intel(int mc)
 {
+    ASSERT(smc);
     return (smc->intel);
 }
 
@@ -2018,6 +2037,7 @@ bool intelligent_ally(const monsters *monster)
 int mons_power(int mc)
 {
     // For now, just return monster hit dice.
+    ASSERT(smc);
     return (smc->hpdice[0]);
 }
 
