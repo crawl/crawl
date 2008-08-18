@@ -1536,8 +1536,7 @@ ENDMAP
 # wondering how to get it out. If you had both Shatter and Apportation,
 # you could become the monarch! Or not..... (by Shiori)
 NAME:   sword_in_stone
-#TAGS:   mini_float patrolling
-PLACE:  D:2 
+TAGS:   mini_float patrolling
 DEPTH:  5-26, !Lair, !Orc, !Tomb
 NSUBST: k= 4=k / *= .:19 k:1
 KITEM:  S= good_item long sword/ good_item great sword / w:1 good_item katana
