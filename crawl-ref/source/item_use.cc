@@ -4455,7 +4455,7 @@ void read_scroll( int slot )
         if (!alreadyknown)
             beam.effect_known = false;
 
-        explosion(beam);
+        explosion(beam, false, false, true, true, true, false);
         break;
 
     case SCR_CURSE_WEAPON:

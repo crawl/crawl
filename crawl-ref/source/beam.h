@@ -188,7 +188,8 @@ int explosion( bolt &pbolt, bool hole_in_the_middle = false,
                bool explode_in_wall = false,
                bool stop_at_statues = true,
                bool stop_at_walls   = true,
-               bool show_more       = true);
+               bool show_more       = true,
+               bool affect_items    = true);
 
 // last updated 22jan2001 {gdl}
 /* ***********************************************************************
@@ -239,7 +240,8 @@ bool zapping( zap_type ztype, int power, struct bolt &pbolt,
 bool player_tracer( zap_type ztype, int power, struct bolt &pbolt,
                     int range = 0 );
 
-int affect(bolt &beam, const coord_def& p, item_def *item = NULL);
+int affect(bolt &beam, const coord_def& p, item_def *item = NULL,
+           bool affect_items = true);
 
 void beam_drop_object( bolt &beam, item_def *item, const coord_def& where );
 

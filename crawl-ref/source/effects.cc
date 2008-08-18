@@ -1777,9 +1777,18 @@ bool recharge_wand(int item_slot)
                          1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 )));
 
         const bool charged = new_charges > wand.plus;
-        mprf("%s %s for a moment.",
+
+        std::string desc = "";
+        if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))
+        {
+            snprintf(info, INFO_SIZE, " and now has %d charges", new_charges);
+            desc = info;
+        }
+        mprf("%s %s for a moment%s.",
              wand.name(DESC_CAP_YOUR).c_str(),
-             charged? "glows" : "flickers");
+             charged? "glows" : "flickers",
+             desc.c_str());
+
         wand.plus = new_charges;
     }
     else // It's a rod.
@@ -2086,7 +2095,7 @@ bool vitrify_area(int radius)
     for ( radius_iterator ri(you.pos(), radius, false, false); ri; ++ri )
     {
         const dungeon_feature_type grid = grd(*ri);
-        
+
         if (grid == DNGN_ROCK_WALL
             || grid == DNGN_STONE_WALL
             || grid == DNGN_PERMAROCK_WALL )

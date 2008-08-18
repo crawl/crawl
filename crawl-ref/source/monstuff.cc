@@ -2525,7 +2525,6 @@ static void _handle_behaviour(monsters *mon)
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isMobile   = !mons_is_stationary(mon);
     bool isPacified = mons_is_pacified(mon);
-    bool travelling = mon->is_travelling();
     bool patrolling = mon->is_patrolling();
     static std::vector<level_exit> e;
     static int                     e_index = -1;
@@ -2692,7 +2691,7 @@ static void _handle_behaviour(monsters *mon)
             // Foe gone out of LOS?
             if (!proxFoe)
             {
-                if (mon->foe == MHITYOU && travelling
+                if (mon->foe == MHITYOU && mon->is_travelling()
                     && mon->travel_target == MTRAV_PLAYER)
                 {
                     // We've got a target, so we'll continue on our way.
@@ -2846,7 +2845,7 @@ static void _handle_behaviour(monsters *mon)
                     if (mon->travel_target != MTRAV_PATROL
                         && mon->travel_target != MTRAV_NONE)
                     {
-                        if (travelling)
+                        if (mon->is_travelling())
                             mon->travel_path.clear();
                         mon->travel_target = MTRAV_NONE;
                     }
@@ -2859,7 +2858,8 @@ static void _handle_behaviour(monsters *mon)
                          mon->name(DESC_PLAIN).c_str());
 #endif
                     // If we're already on our way, do nothing.
-                    if (travelling && mon->travel_target == MTRAV_PLAYER)
+                    if (mon->is_travelling()
+                        && mon->travel_target == MTRAV_PLAYER)
                     {
                         int len = mon->travel_path.size();
                         coord_def targ = mon->travel_path[len - 1];
@@ -3053,8 +3053,7 @@ static void _handle_behaviour(monsters *mon)
 
                 // If a pacified monster is far enough away from the
                 // player, make it leave the level.
-                if (grid_distance(mon->pos(), you.pos())
-                        >= LOS_RADIUS * 4)
+                if (grid_distance(mon->pos(), you.pos()) >= LOS_RADIUS * 4)
                 {
                     make_mons_leave_level(mon);
                     return;
@@ -3084,7 +3083,7 @@ static void _handle_behaviour(monsters *mon)
                 || mons_is_batty(mon) || !isPacified && one_chance_in(20))
             {
                 bool need_target = true;
-                if (travelling)
+                if (mon->is_travelling())
                 {
 #ifdef DEBUG_PATHFIND
                     mprf("Monster %s reached target (%d, %d)",
@@ -3137,7 +3136,8 @@ static void _handle_behaviour(monsters *mon)
                         // is rather small.
 
                         int erase = -1;  // Erase how many waypoints?
-                        for (int i = mon->travel_path.size() - 1; i >= 0; --i)
+                        int size = mon->travel_path.size();
+                        for (int i = size - 1; i >= 0; --i)
                         {
                             if (grid_see_grid(mon->pos(), mon->travel_path[i],
                                               can_move))
@@ -3304,7 +3304,7 @@ static void _handle_behaviour(monsters *mon)
                 || isPacified && one_chance_in(isSmart ? 40 : 120))
             {
                 new_foe = MHITNOT;
-                if (travelling && mon->travel_target != MTRAV_PATROL
+                if (mon->is_travelling() && mon->travel_target != MTRAV_PATROL
                     || isPacified)
                 {
 #ifdef DEBUG_PATHFIND

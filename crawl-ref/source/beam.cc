@@ -99,7 +99,8 @@ static int  _range_used_on_hit(bolt &beam);
 static void _explosion1(bolt &pbolt);
 static void _explosion_map(bolt &beam, const coord_def& p,
                            int count, int dir, int r);
-static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly);
+static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly,
+                            bool affect_items = true);
 
 static void _ench_animation(int flavour, const monsters *mon = NULL,
                             bool force = false);
@@ -3094,7 +3095,7 @@ static bool _found_player(const bolt &beam, const coord_def& p)
     return (grid_distance(p, you.pos()) <= dist);
 }
 
-int affect(bolt &beam, const coord_def& p, item_def *item)
+int affect(bolt &beam, const coord_def& p, item_def *item, bool affect_items)
 {
     // Extra range used by hitting something.
     int rangeUsed = 0;
@@ -3140,10 +3141,13 @@ int affect(bolt &beam, const coord_def& p, item_def *item)
     // If not a tracer, affect items and place clouds.
     if (!beam.is_tracer)
     {
-        const int burn_power = (beam.is_explosion) ? 5 :
-                                    (beam.is_beam) ? 3 : 2;
+        if (affect_items)
+        {
+            const int burn_power = (beam.is_explosion) ? 5 :
+                                        (beam.is_beam) ? 3 : 2;
 
-        expose_items_to_element(beam.flavour, p, burn_power);
+            expose_items_to_element(beam.flavour, p, burn_power);
+        }
         rangeUsed += _affect_place_clouds(beam, p);
     }
 
@@ -5312,7 +5316,7 @@ static void _explosion1(bolt &pbolt)
 // For each cell affected by the explosion, affect() is called.
 int explosion( bolt &beam, bool hole_in_the_middle,
                bool explode_in_wall, bool stop_at_statues,
-               bool stop_at_walls, bool show_more)
+               bool stop_at_walls, bool show_more, bool affect_items)
 {
     if (in_bounds(beam.source) && beam.source != beam.target
         && (!explode_in_wall || stop_at_statues || stop_at_walls))
@@ -5453,7 +5457,7 @@ int explosion( bolt &beam, bool hole_in_the_middle,
     {
         // do center -- but only if its affected
         if (!hole_in_the_middle)
-            _explosion_cell(beam, coord_def(0, 0), drawing);
+            _explosion_cell(beam, coord_def(0, 0), drawing, affect_items);
 
         // do the rest of it
         for (int rad = 1; rad <= r; rad ++)
@@ -5462,20 +5466,30 @@ int explosion( bolt &beam, bool hole_in_the_middle,
             for (int ay = 1 - rad; ay <= rad - 1; ay += 1)
             {
                 if (explode_map[-rad+9][ay+9])
-                    _explosion_cell(beam, coord_def(-rad, ay), drawing);
-
+                {
+                    _explosion_cell(beam, coord_def(-rad, ay), drawing,
+                                    affect_items);
+                }
                 if (explode_map[rad+9][ay+9])
-                    _explosion_cell(beam, coord_def(rad, ay), drawing);
+                {
+                    _explosion_cell(beam, coord_def(rad, ay), drawing,
+                                    affect_items);
+                }
             }
 
             // do top & bottom
             for (int ax = -rad; ax <= rad; ax += 1)
             {
                 if (explode_map[ax+9][-rad+9])
-                    _explosion_cell(beam, coord_def(ax, -rad), drawing);
-
+                {
+                    _explosion_cell(beam, coord_def(ax, -rad), drawing,
+                                    affect_items);
+                }
                 if (explode_map[ax+9][rad+9])
-                    _explosion_cell(beam, coord_def(ax, rad), drawing);
+                {
+                    _explosion_cell(beam, coord_def(ax, rad), drawing,
+                                    affect_items);
+                }
             }
 
             // new-- delay after every 'ring' {gdl}
@@ -5515,7 +5529,8 @@ int explosion( bolt &beam, bool hole_in_the_middle,
     return (cells_seen);
 }
 
-static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly)
+static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly,
+                            bool affect_items)
 {
     bool random_beam = false;
     coord_def realpos = beam.target + p;
@@ -5530,7 +5545,7 @@ static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly)
                                random_range(BEAM_FIRE, BEAM_ACID) );
         }
 
-        affect(beam, realpos);
+        affect(beam, realpos, NULL, affect_items);
 
         if (random_beam)
             beam.flavour = BEAM_RANDOM;

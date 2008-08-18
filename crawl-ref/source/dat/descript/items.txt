@@ -1251,7 +1251,7 @@ object.
 scroll of immolation
 
 Small writing on the back of the scroll reads: "Warning: contents
-under pressure.  Do not use near flammable objects."
+under pressure. May be harmful to the reader."
 %%%%
 scroll of magic mapping
 
