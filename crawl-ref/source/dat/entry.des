@@ -53,8 +53,7 @@ KFEAT: O=floor
 KFEAT: Q=floor
 : end
 
-KMONS: M= human / elf / orc
-#KMONS: M= human / elf / orc, nothing / naga, nothing / centaur, nothing / draconian, nothing / ogre, nothing / minotaur / troll / kobold, mummy / ghoul / w:30 nothing
+KMONS: M= human / elf / orc; nothing / naga; nothing / centaur; nothing / draconian; nothing / ogre; nothing / minotaur / troll / kobold / mummy / ghoul / w:30 nothing
 # no vampires or ogre-mages because they can get out of their cells or
 # create threats outside
 # no merfolk, alive or undead, because they insist on having deep water
@@ -136,12 +135,11 @@ xxxx.xxxxx.xxxx
       x+x
 ENDMAP
 
-
 ##############################################
-# Angband town! but this isn't Angband, so all
-# the shops are empty. Well, mostly... (Shiori)
+# Angband town! (Shiori)
 NAME:    angband_town
 ORIENT:  float
+CHANCE:  1
 TAGS:    entry no_rotate
 NSUBST:  { = { / > / .
 NSUBST:  = = 3== / *=x
@@ -233,15 +231,13 @@ ENDMAP
 
 #####################################
 # I am the great and powerful Oz! Pay no attention to the man behind
-# the curtain! (Shiori)
-# ...if you stick close to the wall, you should always be able to
-# avoid the flame clouds.
+# the curtain! ...if you stick close to the wall, you should always be
+# able to avoid the flame clouds.
 NAME:   oz_shiori
-CHANCE: 10000
 TAGS:   entry
 ORIENT: float
 NSUBST: 1 = 1/%
-MONS:   kobold/goblin/hobgoblin
+MONS:   kobold / goblin / hobgoblin
 MARKER: # = lua:fog_machine { \
             pow_max = 5, delay_min = 100, delay_max = 150, \
             size = 5, start_clouds = 1, \
@@ -265,7 +261,6 @@ bbb+b+bbb
 bbb.b.bbb
   b@b@b
 ENDMAP
-
 
 
 ##############################################################################

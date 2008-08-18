@@ -473,9 +473,10 @@ ENDMAP
 
 ###################################
 # Beogh 1
-NAME: mines1_david
-TAGS: allow_dup
-KFEAT: C = altar_beogh
+NAME:   mines1_david
+TAGS:   allow_dup
+KFEAT:  C = altar_beogh
+CHANCE: 20
 MAP
 ...........
 .xxxx.xxxx.
@@ -492,11 +493,12 @@ ENDMAP
 
 ###################################
 # Beogh 2
-NAME: mines2_david
-TAGS: allow_dup
-KFEAT: C = altar_beogh
-MONS: orc / orc warrior w:1
-SUBST: . = . 1:2
+NAME:  mines2_david
+TAGS:   allow_dup
+KFEAT:  C = altar_beogh
+MONS:   orc / orc warrior w:1
+SUBST:  . = . 1:2
+CHANCE: 20
 MAP
 .......
 .......
@@ -542,4 +544,35 @@ MAP
 !!xx$$?.xxxx
 !xxx$$xxxx!
  !xxxxxxx!
+ENDMAP
+
+
+##################################################
+# Some deep elves on a diplomatic mission (Shiori)
+# They have brought some of their enchanted armaments as gifts
+NAME:    elf_legates
+DEPTH:   Orc:3-4
+SHUFFLE: 23
+SUBST:   6 : 6 .
+NSUBST:  0 = 3=9. / *=0.
+SUBST:   X = xx. b:2 I:1 $:1 *:1
+MONS:    patrolling orc warlord
+MONS:    patrolling orc sorcerer, patrolling orc high priest
+MONS:    deep elf fighter / deep elf summoner / deep elf conjurer / deep elf priest
+MONS:    deep elf soldier / deep elf mage / deep elf priest
+MONS:    deep elf soldier
+ITEM:    good_item scimitar race:elven / good_item chain mail race:elven
+MAP
+ xxxxx=xxx
+xxXXXI1IXXx
+xX..02.3XXx
+xXX000.00Xx
+xXX000.00Xx
+xX.000.00Xx
+xXX00...0Xx
+xX.X.d4d.Xx
+xXX.65556Xx
+xxXX.6.6XXx
+xxxXX..XXxx
+ xxxx@@@xx
 ENDMAP

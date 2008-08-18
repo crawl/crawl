@@ -227,10 +227,84 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxx@@@xxxx
 ENDMAP
 
 
+##############################################
+# Some orcs on a diplomatic mission (Shiori)
+# They have brought some gold from their mines as a gift
+NAME:    orc_legates
+DEPTH:   Elf:1-2
+SHUFFLE: AB , 34 , 12
+SUBST:   6=4
+SUBST:   0= 0 .:9 9:1
+SUBST:   5= 5 .:9 4:1
+NSUBST:  1= 2:1 / *:.
+NSUBST:  2= 2:2 / *:.
+KITEM:   A= any good_item race:elven
+KITEM:   B= any good_item race:elven
+KMONS:   A= patrolling deep elf knight
+KMONS:   B= patrolling deep elf high priest / patrolling deep elf demonologist
+MONS:    ice dragon, dragon
+MONS:    orc knight / orc sorcerer / orc high priest
+MONS:    orc warrior / orc wizard / orc priest
+MONS:    orc
+ITEM:    q:120 gold / q:60 gold / q:30 gold
+# being able to blink and become invisible, the deep elves do not need a
+# hidden exit in back of their audience chamber.
+MAP
+cccccxxccccc
+c111cGGc222c
+cnnncABcnnnc
+xG00B..A00Gx
+xG00A..B00Gx
+xx00x..x00xx
+xG00.dd.00Gx
+xG...34...Gx
+xx.5x66x5.xx
+xG.555555.Gx
+xG.555555.Gx
+xx++x++x++xx
+ENDMAP
+
+####################################################################
+# A high-level negotiation between orc and deep elf leaders (Shiori)
+NAME:     elf_orc_summit_meeting
+DEPTH:    Elf:6-7
+SHUFFLE: 12 , 45
+NSUBST:  7= 1=7 / *= 7:1 .
+NSUBST:  6= 1=6 D:1 / *= 6 .:1
+SUBST:   3 = 3 .:1
+# the deep elf delegation:
+MONS:    deep elf blademaster / deep elf master archer
+MONS:    deep elf annihilator / deep elf sorcerer / deep elf death mage
+MONS:    deep elf knight / w:1 deep elf high priest / w:1 deep elf demonologist
+# the orcish delegation:
+MONS:    orc warlord / iron troll / w:1 fire giant / w:1 frost giant / w:1 stone giant
+MONS:    orc sorcerer / orc high priest / w:5 ogre-mage
+MONS:    orc knight / rock troll / ettin / w:1 orc sorcerer / w:1 orc high priest
+# the arbiter(s):
+MONS:    great orb of eyes / sphinx
+# The orcs might have a unique with them. He or she will likely be outclassed
+# by the others in attendance, but perhaps has some special testimony to
+# present. None of the uniques really fits in with the deep elves...
+KMONS:   D = Ijyb / Blork the Orc / Urug / Erolcha / Snorg
+MAP
+     xxxx
+    xxGGxx
+ xxxx3776xxxx
+.GxT33..66TxG.
+.xxx3x..x6xxx.
+@+3+331466+6+@
+@+3+332566+6+@
+.xxx3x..x.xxx.
+.GxT33..66TxG.
+ xxxx3776xxxx
+    xxGGxx
+     xxxx
+ENDMAP
+
 
 ############################################################################
 # elf_hall
-
+#
 NAME:    elf_hall
 PLACE:   Elf:7
 ORIENT:  northwest
