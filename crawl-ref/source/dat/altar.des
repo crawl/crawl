@@ -357,19 +357,20 @@ xxxxxxxxxxxxxx
 xxxxxxxxxxxxxx
 ENDMAP
 
-NAME:  lemuel_dead_fish_altar
+NAME:  lemuel_zombie_altar
 DEPTH: D:2-18, Crypt
 TAGS:  no_pool_fixup
-KMONS: 1 = giant goldfish zombie / big fish zombie / nothing
-KFEAT: 1 = deep_water
+MONS:  rat zombie / giant bat zombie / nothing w:200
+KMONS: w = giant goldfish zombie / big fish zombie / nothing w:200
+KFEAT: w = deep_water
 KFEAT: C = altar_kikubaaqudgha / altar_yredelemnul
 MAP
 xxxxxxxxxxxxxxxx
-xxxx11111111xxxx
 xxxxwwwwwwwwxxxx
+xxxx11111111xxxx
 @.............Cx
-xxxxwwwwwwwwxxxx
 xxxx11111111xxxx
+xxxxwwwwwwwwxxxx
 xxxxxxxxxxxxxxxx
 ENDMAP
 
@@ -402,19 +403,46 @@ SUBST:  1 = 1:25 2 3 4:8 5:6 6:4 7:2
 KFEAT:  C = altar_kikubaaqudgha / altar_yredelemnul
 KMONS:  C = human zombie
 MAP
-ccccccc
-c?+.+?c
-ccc.ccc
-c?+.+?c
-ccc.ccc
-c?+.+?c
-ccc.ccc
-c?+.+?c
-ccc.ccc
-c?+.+?c
-ccc.ccc
-c?+.+?c
-ccc.ccc
-ccc+ccc
-cGc@cGc
+ccccccccccccccc
+c?c?c?c?c?c?ccG
+c+c+c+c+c+c+ccc
+c............+@
+c+c+c+c+c+c+ccc
+c?c?c?c?c?c?ccG
+ccccccccccccccc
+ENDMAP
+
+###################################################################
+# Nemelex altar (Shiori)
+# Perhaps could have different parameters for the two types of clouds,
+# and different patterns.
+NAME:  nemelx_altar_shiori
+DEPTH: !Lair, !Orc
+TAGS:  no_pool_fixup no_monster_gen no_item_gen
+TAGS:  generate_awake patrolling mini_float no_rotate
+TAGS:  layout_rooms layout_city layout_open layout_cross
+KFEAT: _ = altar_nemelex_xobeh
+SUBST: b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
+SUBST: G:GTUVblw> , C=c
+KFEAT: z = teleport trap
+MARKER: R = lua:fog_machine { cloud_type="flame", walk_dist=1, size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, spread_rate=3, start_clouds=1 }
+MARKER: B = lua:fog_machine { cloud_type="foul pestilence", walk_dist=1, size=9,  pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, spread_rate=3, start_clouds=1 }
+MAP
+CCCCCCCC+++CCCCCCCC
+Cnnnnnnn...nnnnnnnC
+Cnab'ban...ncd'dcnC
+Cnb...bn.G.nd...dnC
+Cn'.B..n...n..R.'nC
+Cnb...bn...nd...dnC
+Cnab.ban...ncd.dcnC
+Cnnnnnnn...nnnnnnnC
+CG......._.......GC
+Cnnnnnnn...nnnnnnnC
+Cnef.fen...ngh.hgnC
+Cnf...fn...nh...hnC
+Cn'.R..n...n..B.'nC
+Cnf...fn.G.nh...hnC
+Cnef'fen...ngh'hgnC
+Cnnnnnnn...nnnnnnnC
+CCCCCCCC+++CCCCCCCC
 ENDMAP
