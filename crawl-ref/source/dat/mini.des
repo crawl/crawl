@@ -1529,3 +1529,58 @@ x.*.=
 x...x
 xxxxx
 ENDMAP
+
+
+#######################################
+# There's a sword stuck inside a stone. Some knights are milling around
+# wondering how to get it out. If you had both Shatter and Apportation,
+# you could become the monarch! Or not..... (by Shiori)
+NAME:   sword_in_stone
+#TAGS:   mini_float patrolling
+PLACE:  D:2 
+DEPTH:  5-26, !Lair, !Orc, !Tomb
+NSUBST: k= 4=k / *= .:19 k:1
+KITEM:  S= good_item long sword/ good_item great sword / w:1 good_item katana
+KFEAT:  S= teleport trap
+NSUBST: n= n/cbn
+: if you.absdepth() < 10 then
+SUBST: k= AWXYZ
+: elseif you.absdepth() < 13 then
+SUBST: k = ABCDE
+: elseif you.absdepth() < 16 then
+SUBST: k = CDEFG
+: elseif you.absdepth() < 19 then
+SUBST: k = FGHIJ
+: elseif you.absdepth() < 22 then
+SUBST: k= HIJKL
+: else
+SUBST: k =KLMNO
+: end
+KMONS: A=Blork the Orc / human; long sword|falchion . chain mail . shield
+KMONS: B=Michael / human; great sword . banded mail|plate mail
+KMONS: C=Urug / elf; sabre|long sword . leather armour . buckler|nothing
+KMONS: D=Joseph / elf; long sword|scimitar . chain mail . shield
+KMONS: E=Erica / orc knight
+KMONS: F=Harold / orc knight
+KMONS: G=Norbert / hell knight
+KMONS: H=Jozef / hell knight
+KMONS: I=Louise / wizard; long sword . robe|leather armour . shield
+KMONS: J=Maud / necromancer; great sword . robe|leather armour
+KMONS: K=Frances / deep elf knight
+KMONS: L=Francis / deep elf knight
+KMONS: M=Rupert / vampire knight
+KMONS: N=Wayne / vault guard
+KMONS: O=Frederick / draconian knight
+KMONS: W= human; short sword . banded mail|chain mail . large shield
+KMONS: X= human; scimitar . scale mail|chain mail . shield
+KMONS: Y= human; sabre|long sword . robe|leather armour . buckler|nothing
+KMONS: Z= orc; falchion|long sword . ring mail|scale mail . shield|nothing
+MAP
+kkkkkkk
+kkkkkkk
+kknnnkk
+kknSnkk
+kknnnkk
+kkkkkkk
+kkkkkkk
+ENDMAP
