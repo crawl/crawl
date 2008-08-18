@@ -31,7 +31,6 @@ ENDMAP
 # A horror show for the beginning adventurer (Shiori)
 NAME:    whats_in_store_for_you
 TAGS:    entry no_monster_gen no_pool_fixup no_item_gen
-CHANCE:  10000
 ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
 SUBST:   A== , B=@ , C=x , D=x
