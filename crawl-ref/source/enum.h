@@ -1144,7 +1144,6 @@ enum duration_type
     DUR_SLEEP,
     DUR_SAGE,
     DUR_TELEPATHY,
-    DUR_VITALISATION_CHAIN,
     DUR_PETRIFIED,
 
     NUM_DURATIONS

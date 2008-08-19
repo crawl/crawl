@@ -32,11 +32,9 @@ bool cast_sure_blade(int power);
  * *********************************************************************** */
 int cast_healing(int pow, const coord_def& where = coord_def(0,0));
 
-void vitalisation_chain(int amount);
-void reduce_vitalisation_chain(int amount);
 void remove_divine_robustness();
 void remove_divine_stamina();
-int cast_vitalisation(int pow);
+bool cast_vitalisation();
 
 void big_cloud(cloud_type cl_type, kill_category whose, const coord_def& where,
                int pow, int size, int spread_rate = -1);

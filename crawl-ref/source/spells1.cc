@@ -807,35 +807,6 @@ int cast_healing(int pow, const coord_def& where)
     return (_healing_spell(pow + roll_dice(2, pow) - 2, where));
 }
 
-void vitalisation_chain(int amount)
-{
-    if (amount <= 0)
-        return;
-
-    const int old_value = you.duration[DUR_VITALISATION_CHAIN];
-    you.duration[DUR_VITALISATION_CHAIN] += amount;
-
-    if (you.duration[DUR_VITALISATION_CHAIN] > 30)
-        you.duration[DUR_VITALISATION_CHAIN] = 30;
-
-    if (old_value == 0)
-        mpr("Zin amplifies your power of vitalisation!", MSGCH_DURATION);
-}
-
-void reduce_vitalisation_chain(int amount)
-{
-    if (you.duration[DUR_VITALISATION_CHAIN] == 0 || amount <= 0)
-        return;
-
-    you.duration[DUR_VITALISATION_CHAIN] -= amount;
-
-    if (you.duration[DUR_VITALISATION_CHAIN] <= 0)
-    {
-        you.duration[DUR_VITALISATION_CHAIN] = 0;
-        mpr("Your power of vitalisation returns to normal.", MSGCH_DURATION);
-    }
-}
-
 void remove_divine_robustness()
 {
     mpr("Your divine robustness fades.", MSGCH_DURATION);
@@ -856,324 +827,135 @@ void remove_divine_stamina()
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }
 
-int cast_vitalisation(int pow)
+bool cast_vitalisation()
 {
-    const int step_max_chain = 6;
-    const int type_max_chain = 4;
-
-    static int step;
-    static int step_max;
-    static int type;
-    static int hp_amt;
-    static int mp_amt;
-    static bool need_chain;
-
-    // If vitalisation chaining is turned off, start from the beginning.
-    if (you.duration[DUR_VITALISATION_CHAIN] == 0)
-    {
-        step = 0;
-        step_max = std::min(pow, step_max_chain);
-        type = random2(type_max_chain * 3 / 2);
-        hp_amt = 3;
-        mp_amt = 1;
-        need_chain = false;
-    }
-
     bool success = false;
+    int type = 0;
 
-    switch (type)
+    // Remove negative afflictions.
+    if (you.disease || you.rotting || you.duration[DUR_CONF]
+        || you.duration[DUR_PARALYSIS] || you.duration[DUR_POISONING]
+        || you.duration[DUR_PETRIFIED])
     {
-    case 0:
-        // Restore HP and MP.
-        if (you.hp < you.hp_max || you.magic_points < you.max_magic_points)
+        do
+        {
+            switch (random2(6))
+            {
+            case 0:
+                if (you.disease)
+                {
+                    success = true;
+                    you.disease = 0;
+                }
+                break;
+            case 1:
+                if (you.rotting)
+                {
+                    success = true;
+                    you.rotting = 0;
+                }
+                break;
+            case 2:
+                if (you.duration[DUR_CONF])
+                {
+                    success = true;
+                    you.duration[DUR_CONF] = 0;
+                }
+                break;
+            case 3:
+                if (you.duration[DUR_PARALYSIS])
+                {
+                    success = true;
+                    you.duration[DUR_PARALYSIS] = 0;
+                }
+                break;
+            case 4:
+                if (you.duration[DUR_POISONING])
+                {
+                    success = true;
+                    you.duration[DUR_POISONING] = 0;
+                }
+                break;
+            case 5:
+                if (you.duration[DUR_PETRIFIED])
+                {
+                    success = true;
+                    you.duration[DUR_PETRIFIED] = 0;
+                }
+                break;
+            }
+        }
+        while (!success);
+    }
+    // Restore stats.
+    else if (you.strength < you.max_strength
+        || you.intel < you.max_intel
+        || you.dex < you.max_dex)
+    {
+        type = 1;
+
+        do
+        {
+            switch (random2(3))
+            {
+            case 0:
+                if (you.strength < you.max_strength)
+                {
+                    success = true;
+                    restore_stat(STAT_STRENGTH, 0, true);
+                }
+                break;
+            case 1:
+                if (you.intel < you.max_intel)
+                {
+                    success = true;
+                    restore_stat(STAT_INTELLIGENCE, 0, true);
+                }
+                break;
+            case 2:
+                if (you.dex < you.max_dex)
+                {
+                    success = true;
+                    restore_stat(STAT_DEXTERITY, 0, true);
+                }
+                break;
+            }
+        }
+        while (!success);
+    }
+    else
+    {
+        // Add divine stamina.
+        if (!you.duration[DUR_DIVINE_STAMINA])
         {
             success = true;
-            inc_hp(hp_amt, false);
-            inc_mp(mp_amt, false);
-            hp_amt *= 2;
-            mp_amt *= 2;
-            need_chain =
-                (you.hp < you.hp_max
-                    || you.magic_points < you.max_magic_points);
-            break;
+            type = 2;
+
+            mprf("%s grants you divine stamina.",
+                 god_name(you.religion).c_str());
+
+            const int stamina_amt = 3;
+            you.attribute[ATTR_DIVINE_STAMINA] += stamina_amt;
+            you.duration[DUR_DIVINE_STAMINA]
+                = 35 + (you.skills[SK_INVOCATIONS]*5)/3;
+
+            modify_stat(STAT_STRENGTH, stamina_amt, true, "");
+            modify_stat(STAT_INTELLIGENCE, stamina_amt, true, "");
+            modify_stat(STAT_DEXTERITY, stamina_amt, true, "");
         }
-
-        need_chain = false;
-        step = 0;
-        type = 1;
-        // Deliberate fall through, resetting the vitalisation chaining
-        // indicator and the step counter.
-
-    case 1:
-        switch (step)
-        {
-        case 0:
-        case 1:
-        case 2:
-            // Restore stats.
-            if (you.strength < you.max_strength
-                || you.intel < you.max_intel
-                || you.dex < you.max_dex)
-            {
-                success = true;
-                restore_stat(STAT_STRENGTH, step + 1, true);
-                restore_stat(STAT_INTELLIGENCE, step + 1, true);
-                restore_stat(STAT_DEXTERITY, step + 1, true);
-                need_chain =
-                    (you.strength < you.max_strength
-                        || you.intel < you.max_intel
-                        || you.dex < you.max_dex);
-                break;
-            }
-
-            step = 3;
-            // Deliberate fall through.
-
-            if (step >= step_max)
-                break;
-
-        default:
-            break;
-        }
-
-        if (success)
-            break;
-
-        need_chain = false;
-        step = 0;
-        type = 2;
-        // Deliberate fall through, resetting the vitalisation chaining
-        // indicator and the step counter.
-
-    case 2:
-        // Remove negative afflictions.
-        switch (step)
-        {
-        // Remove confusion and poisoning.
-        case 0:
-            if (you.duration[DUR_CONF] || you.duration[DUR_POISONING])
-            {
-                success = true;
-                you.duration[DUR_CONF] = 0;
-                you.duration[DUR_POISONING] = 0;
-                need_chain = false;
-                break;
-            }
-
-            step = 1;
-            // Deliberate fall through.
-
-            if (step >= step_max)
-                break;
-
-        // Remove sickness and rotting.
-        case 1:
-            if (you.disease || you.rotting)
-            {
-                success = true;
-                you.disease = 0;
-                you.rotting = 0;
-                need_chain = false;
-                break;
-            }
-
-            step = 2;
-            // Deliberate fall through.
-
-            if (step >= step_max)
-                break;
-
-        // Restore rotted HP.
-        case 2:
-            if (player_rotted())
-            {
-                success = true;
-                unrot_hp(3 + random2(9));
-                need_chain = false;
-                break;
-            }
-
-            step = 3;
-            // Deliberate fall through.
-
-            if (step >= step_max)
-                break;
-
-        default:
-            break;
-        }
-
-        if (success)
-            break;
-
-        need_chain = false;
-        step = 0;
-        type = 3;
-        // Deliberate fall through, resetting the vitalisation chaining
-        // indicator and the step counter.
-
-    case 3:
-    {
-stamina_robustness:
-        int estep = step / 2;
-
-        // Add divine stamina and divine robustness.
-        switch (step)
-        {
-        // Divine stamina.
-        case 0:
-        case 2:
-        case 4:
-            if ((estep == 0 || you.duration[DUR_VITALISATION_CHAIN] > 0)
-                && ((you.attribute[ATTR_DIVINE_STAMINA] + 1) / 2) == estep
-                && ((player_mutation_level(MUT_STRONG) + 1) / 5) < (3 - estep)
-                && ((player_mutation_level(MUT_CLEVER) + 1) / 5) < (3 - estep)
-                && ((player_mutation_level(MUT_AGILE) + 1) / 5) < (3 - estep))
-            {
-                success = true;
-                mprf(MSGCH_DURATION, "Zin %s divine stamina.",
-                    (estep == 0) ? "grants you" :
-                    (estep == 1) ? "strengthens your"
-                                 : "maximises your");
-
-                const int stamina_amt = step + 1;
-                you.attribute[ATTR_DIVINE_STAMINA] += stamina_amt;
-                you.duration[DUR_DIVINE_STAMINA] +=
-                    (estep == 0) ? (you.skills[SK_INVOCATIONS] * 2) :
-                    (estep == 1) ? (you.skills[SK_INVOCATIONS])
-                                 : (you.skills[SK_INVOCATIONS] / 2);
-
-                modify_stat(STAT_STRENGTH, stamina_amt, true, "");
-                modify_stat(STAT_INTELLIGENCE, stamina_amt, true, "");
-                modify_stat(STAT_DEXTERITY, stamina_amt, true, "");
-
-                // Keep vitalisation chaining on if divine stamina can
-                // be increased two vitalisation attempts from now, or
-                // if divine robustness can be increased one
-                // vitalisation attempt from now.
-                need_chain =
-                    (((player_mutation_level(MUT_STRONG) + 1) / 5) < (2 - estep)
-                        && ((player_mutation_level(MUT_CLEVER) + 1) / 5) < (2 - estep)
-                        && ((player_mutation_level(MUT_AGILE) + 1) / 5) < (2 - estep))
-                            || (player_mutation_level(MUT_ROBUST) < (3 - estep));
-                break;
-            }
-
-            step++;
-            goto stamina_robustness;
-            // Deliberate fall through.
-
-        // Divine robustness.
-        case 1:
-        case 3:
-        case 5:
-            if ((estep == 0 || you.duration[DUR_VITALISATION_CHAIN] > 0)
-                && you.attribute[ATTR_DIVINE_ROBUSTNESS] == estep
-                && player_mutation_level(MUT_ROBUST) < (3 - estep))
-            {
-                success = true;
-                mprf(MSGCH_DURATION, "Zin %s divine robustness.",
-                    (estep == 0) ? "grants you" :
-                    (estep == 1) ? "strengthens your"
-                                 : "maximises your");
-
-                you.attribute[ATTR_DIVINE_ROBUSTNESS]++;
-                you.duration[DUR_DIVINE_ROBUSTNESS] +=
-                    (estep == 0) ? (you.skills[SK_INVOCATIONS] * 2) :
-                    (estep == 1) ? (you.skills[SK_INVOCATIONS])
-                                 : (you.skills[SK_INVOCATIONS] / 2);
-
-                const int old_hp_max = you.hp_max;
-                calc_hp();
-                set_hp(you.hp * you.hp_max / old_hp_max, false);
-
-                // Keep vitalisation chaining on if divine robustness
-                // can be increased two vitalisation attempts from now,
-                // or if divine stamina can be increased one
-                // vitalisation attempt from now.
-                need_chain =
-                    (player_mutation_level(MUT_ROBUST) < (2 - estep))
-                        || (((player_mutation_level(MUT_STRONG) + 1) / 5) < (3 - estep)
-                            && ((player_mutation_level(MUT_CLEVER) + 1) / 5) < (3 - estep)
-                            && ((player_mutation_level(MUT_AGILE) + 1) / 5) < (3 - estep));
-                break;
-            }
-
-            step++;
-            goto stamina_robustness;
-            // Deliberate fall through.
-
-        default:
-            break;
-        }
-
-        if (success)
-            break;
-
-        need_chain = false;
-        step = 0;
-        type = 4;
-        // Deliberate fall through, resetting the vitalisation chaining
-        // indicator and the step counter.
     }
-
-    default:
-        // Do nothing.
-        break;
-    }
-
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "vitalising: step = %d, type = %d, step_max = %d",
-         step, type, step_max);
-#endif
 
     // If vitalisation has succeeded, display an appropriate message.
     if (success)
     {
-        mprf("You feel %s %s.", (step == 0) ? "only nominally" :
-                                (step == 1) ? "very slightly" :
-                                (step == 2) ? "slightly" :
-                                (step == 3) ? "somewhat" :
-                                (step == 4) ? "appropriately"
-                                            : "impressively",
-                                (type == 0) ? "invigorated" :
-                                (type == 1) ? "renewed" :
-                                (type == 2) ? "better"
-                                            : "powerful");
-
-        // If vitalisation has succeeded, pay the extended piety cost,
-        // based on how far the step counter has advanced.
-        int loss_amt = step + 1 + (random2(3) - 1);
-
-        if (loss_amt > 0)
-            lose_piety(loss_amt);
-
-        // Increment the step counter.
-        step++;
+        mprf("You feel %s.", (type == 0) ? "better" :
+                             (type == 1) ? "renewed"
+                                         : "powerful");
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    // Whether vitalisation has succeeded or failed, pay the minimum
-    // piety cost.
-    lose_piety(2);
-
-    // If there's not enough piety left to vitalise again, turn off
-    // vitalisation chaining.
-    if (you.piety < piety_breakpoint(1))
-        need_chain = false;
-
-    // If vitalisation has succeeded, it hasn't succeeded as far as
-    // possible, and vitalisation chaining is needed, turn on
-    // vitalisation chaining for several turns.
-    if (success && step < step_max && need_chain)
-        vitalisation_chain(6);
-    // Otherwise, turn off vitalisation chaining.
-    else
-        reduce_vitalisation_chain(30);
-
-    return (success) ? (step + 1) : 0;
+    return (success);
 }
 
 bool cast_revivification(int pow)

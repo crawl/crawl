@@ -768,19 +768,9 @@ static void _inc_penance(god_type god, int val)
         // Orcish bonuses don't apply under penance.
         if (god == GOD_BEOGH)
             you.redraw_armour_class = true;
-        // Neither does Zin's vitalisation chaining, divine robustness,
-        // or divine stamina.
+        // Neither does Zin's divine stamina.
         else if (god == GOD_ZIN)
         {
-            if (you.duration[DUR_VITALISATION_CHAIN])
-            {
-                mpr("Your power of vitalisation disappears!");
-                you.duration[DUR_VITALISATION_CHAIN] = 0;
-            }
-
-            if (you.duration[DUR_DIVINE_ROBUSTNESS])
-                remove_divine_robustness();
-
             if (you.duration[DUR_DIVINE_STAMINA])
                 remove_divine_stamina();
         }
@@ -4863,15 +4853,6 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_ZIN:
-        if (you.duration[DUR_VITALISATION_CHAIN])
-        {
-            mpr("Your power of vitalisation disappears!");
-            you.duration[DUR_VITALISATION_CHAIN] = 0;
-        }
-
-        if (you.duration[DUR_DIVINE_ROBUSTNESS])
-            remove_divine_robustness();
-
         if (you.duration[DUR_DIVINE_STAMINA])
             remove_divine_stamina();
 

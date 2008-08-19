@@ -178,11 +178,10 @@ works best on humanoids, worse on demons and not at all on beasts.
 %%%%
 Vitalisation
 
-If Zin is most pleased with you, you can Vitalise yourself. This will
-restore Health, Magic, attribute points, or unrot you. In case none of
-these is necessary, you gain temporary boosts to your attributes
-instead. It is possible to Vitalise several times in succession for
-greater effect.
+If Zin is most pleased with you, you can Vitalise yourself. This will 
+remove a negative affliction from you, or restore one of your 
+attributes. In case neither of these is necessary, it will give you 
+temporary boosts to your attributes instead.
 %%%%
 Sanctuary
 
