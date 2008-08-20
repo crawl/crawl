@@ -2823,7 +2823,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DEATH_YAK, 'Y', YELLOW, "death yak",
-    M_WARM_BLOOD | M_EVIL,
+    M_WARM_BLOOD,
     MR_NO_FLAGS,
     1500, 10, MONS_YAK, MONS_DEATH_YAK, MH_NATURAL, -5,
     { {AT_BUTT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
