@@ -21,6 +21,8 @@
 #include <string.h>
 #include <limits.h>
 
+#include <algorithm>
+
 #include "externs.h"
 
 #include "beam.h"
