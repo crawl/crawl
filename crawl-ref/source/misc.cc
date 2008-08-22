@@ -2373,7 +2373,8 @@ void get_playervisible_monsters(std::vector<monsters*> &mons,
             if (see_grid(*ri))
             {
                 monsters *mon = &env.mons[targ_monst];
-                if (player_monster_visible(mon)
+                if (mon->alive()
+                    && player_monster_visible(mon)
                     && !mons_is_submerged(mon)
                     && (!mons_is_mimic(mon->type) || mons_is_known_mimic(mon))
                     && (!dangerous_only || !mons_is_safe(mon, want_move)))
