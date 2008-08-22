@@ -1899,10 +1899,10 @@ static inline int get_resistible_fraction(beam_type flavour)
     {
     // Assume ice storm and ice bolt are mostly solid.
     case BEAM_ICE:
-        return (15);
+        return (25);
 
     case BEAM_LAVA:
-        return (30);
+        return (35);
 
     case BEAM_POISON_ARROW:
         return (40);
