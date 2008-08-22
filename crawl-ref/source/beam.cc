@@ -1389,8 +1389,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name           = "great blast of cold";
         pbolt.colour         = BLUE;
         pbolt.range          = 9 + random2(5);
-        pbolt.damage         = calc_dice( 10, 18 + power );
-        pbolt.damage.num     = 0;                  // only does explosion damage
+        pbolt.damage         = calc_dice( 7, 22 + power );
         pbolt.hit            = 20 + power / 10;    // 50: 25   100: 30
         pbolt.ench_power     = power;              // used for radius
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -3534,8 +3533,11 @@ static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p)
                 (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                               : GOD_NO_GOD;
 
+            const beh_type att =
+                _whose_kill(beam) == KC_OTHER? BEH_HOSTILE : BEH_FRIENDLY;
             mons_place(
-                mgen_data::hostile_at(MONS_FIRE_VORTEX, p, 0, 0, false, god));
+                mgen_data(MONS_FIRE_VORTEX, att, 2, p,
+                          MHITNOT, 0, god) );
         }
     }
 }
@@ -5259,7 +5261,6 @@ static void _explosion1(bolt &pbolt)
         hearMsg = "You hear a raging storm!";
 
         pbolt.name       = "ice storm";
-        pbolt.damage.num = 6;
         pbolt.type       = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.colour     = WHITE;
         ex_size          = 2 + (random2( pbolt.ench_power ) > 75);
