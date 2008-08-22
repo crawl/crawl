@@ -65,7 +65,7 @@ void mons_trap(monsters *monster)
     const int which_trap = trap_at_xy(monster->pos());
     if (which_trap == -1)
         return;
-    
+
     trap_struct& trap(env.trap[which_trap]);
 
     bool trapKnown = (grd(monster->pos()) != DNGN_UNDISCOVERED_TRAP);
@@ -1966,7 +1966,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.colour         = BLUE;
         beam.range          = 9 + random2(5);
         beam.damage         = calc_dice( 10, 18 + power / 2 );
-        beam.damage.num     = 0;                  // only does explosion damage
         beam.hit            = 20 + power / 10;    // 50: 25   100: 30
         beam.ench_power     = power;              // used for radius
         beam.type           = dchar_glyph(DCHAR_FIRED_ZAP);
