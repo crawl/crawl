@@ -239,7 +239,7 @@ static int _shatter_items(int x, int y, int pow, int garbage)
 
 static int _shatter_walls(int x, int y, int pow, int garbage)
 {
-    UNUSED( garbage );
+    UNUSED(garbage);
 
     int chance = 0;
 
@@ -247,12 +247,13 @@ static int _shatter_walls(int x, int y, int pow, int garbage)
     if (x <= 5 || x >= GXM - 5 || y <= 5 || y >= GYM - 5)
         return (0);
 
-    switch (grd[x][y])
+    const dungeon_feature_type grid = grd[x][y];
+
+    switch (grid)
     {
     case DNGN_SECRET_DOOR:
         if (see_grid(x, y))
             mpr("A secret door shatters!");
-        grd[x][y] = DNGN_FLOOR;
         chance = 100;
         break;
 
@@ -260,7 +261,6 @@ static int _shatter_walls(int x, int y, int pow, int garbage)
     case DNGN_OPEN_DOOR:
         if (see_grid(x, y))
             mpr("A door shatters!");
-        grd[x][y] = DNGN_FLOOR;
         chance = 100;
         break;
 
@@ -296,6 +296,10 @@ static int _shatter_walls(int x, int y, int pow, int garbage)
         noisy(30, x, y);
 
         grd[x][y] = DNGN_FLOOR;
+
+        if (grid == DNGN_ORCISH_IDOL)
+            beogh_idol_revenge();
+
         return (1);
     }
 
