@@ -2775,7 +2775,7 @@ bool poison_monster( monsters *monster,
 }
 
 // Actually napalms a monster (w/ message).
-void _sticky_flame_monster( int mn, kill_category who, int levels )
+void _sticky_flame_monster(int mn, kill_category who, int levels)
 {
     monsters *monster = &menv[mn];
 
@@ -4241,7 +4241,7 @@ static int _affect_player( bolt &beam, item_def *item )
         && (you.species != SP_MOTTLED_DRACONIAN
             || you.experience_level < 6))
     {
-        if (!player_equip( EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR ))
+        if (!player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
         {
             you.duration[DUR_LIQUID_FLAMES] += random2avg(7, 3) + 1;
             was_affected = true;
@@ -4788,11 +4788,9 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         // sticky flame
         if (beam.name == "sticky flame")
         {
-            int levels = 1 + random2( hurt_final ) / 2;
-            if (levels > 4)
-                levels = 4;
+            int levels = std::min(4, 1 + random2(hurt_final) / 2);
 
-            _sticky_flame_monster( tid, _whose_kill(beam), levels );
+            _sticky_flame_monster(tid, _whose_kill(beam), levels);
         }
 
         // Handle missile effects.

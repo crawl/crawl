@@ -1208,20 +1208,6 @@ int player_res_magic(void)
     return rm;
 }
 
-// If temp is set to false, temporary sources or resistance won't be counted.
-int player_res_steam(bool calc_unid, bool temp, bool items)
-{
-    int res = 0;
-
-    if (you.species == SP_PALE_DRACONIAN && you.experience_level > 5)
-        res += 2;
-
-    if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
-        res += 2;
-
-    return (res + player_res_fire(calc_unid, temp, items) / 2);
-}
-
 bool player_can_smell()
 {
     return (you.species != SP_MUMMY);
@@ -1299,6 +1285,19 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     return (rf);
 }
 
+int player_res_steam(bool calc_unid, bool temp, bool items)
+{
+    int res = 0;
+
+    if (you.species == SP_PALE_DRACONIAN && you.experience_level > 5)
+        res += 2;
+
+    if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
+        res += 2;
+
+    return (res + player_res_fire(calc_unid, temp, items) / 2);
+}
+
 int player_res_cold(bool calc_unid, bool temp, bool items)
 {
     int rc = 0;
@@ -1328,7 +1327,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
             rc -= 2;
             break;
         }
-
 
         if (you.species == SP_VAMPIRE)
         {
@@ -1383,8 +1381,7 @@ int player_res_acid(bool calc_unid, bool items)
     int res = 0;
     if (!transform_changed_physiology())
     {
-        if (you.species == SP_YELLOW_DRACONIAN
-                    && you.experience_level >= 7)
+        if (you.species == SP_YELLOW_DRACONIAN && you.experience_level > 6)
             res += 2;
 
         res += player_mutation_level(MUT_YELLOW_SCALES) * 2 / 3;
@@ -1560,7 +1557,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         rp = 1;
 
     return (rp);
-}                               // end player_res_poison()
+}
 
 int player_spec_death()
 {
