@@ -409,7 +409,7 @@ static void _load_doll_data(const char *fn, dolls_data *dolls, int max,
             tilep_race_default(you.species, coinflip() ? 1 : 0,
                                you.experience_level, dolls[i].parts);
 
-            dolls[i].parts[TILEP_PART_SHADOW] = 1;
+            dolls[i].parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
             dolls[i].parts[TILEP_PART_CLOAK]  = TILEP_SHOW_EQUIP;
             dolls[i].parts[TILEP_PART_BOOTS]  = TILEP_SHOW_EQUIP;
             dolls[i].parts[TILEP_PART_LEG]    = TILEP_SHOW_EQUIP;

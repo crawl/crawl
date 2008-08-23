@@ -79,6 +79,7 @@ num6 NUM6
 num7 NUM7
 num8 NUM8
 num9 NUM9
+tried TRIED
 
 slot_eq ITEM_SLOT_EQUIP
 slot_cursed ITEM_SLOT_CURSED

@@ -512,10 +512,12 @@ void DungeonRegion::draw_draco(int colour, int mon_idx, int equ_tile, unsigned i
     for (int i = 0; i < TILEP_PART_MAX; i++)
          doll.parts[i] = 0;
 
-    doll.parts[TILEP_PART_SHADOW] = 1;
+    doll.parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
     doll.parts[TILEP_PART_BASE] = TILEP_BASE_DRACONIAN + colour * 2;
-    doll.parts[TILEP_PART_DRCWING] = 1 + colour;
-    doll.parts[TILEP_PART_DRCHEAD] = 1 + colour;
+    doll.parts[TILEP_PART_DRCWING] = tile_player_part_start[TILEP_PART_DRCWING] 
+                                     + colour;
+    doll.parts[TILEP_PART_DRCHEAD] = tile_player_part_start[TILEP_PART_DRCHEAD]
+                                     + colour;
 
     switch (mon_idx)
     {
@@ -1360,7 +1362,7 @@ void InventoryRegion::pack_verts()
 
 
             if (item.flag & TILEI_FLAG_TRIED)
-                add_quad_char('?', x, y, 0, TILE_Y / 2);
+                add_quad(TEX_DEFAULT, TILE_TRIED, x, y, 0, TILE_Y / 2, false);
         }
     }
 }

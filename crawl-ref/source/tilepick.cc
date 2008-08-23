@@ -2602,7 +2602,10 @@ void tilep_race_default(int race, int gender, int level, int *parts)
         case SP_PALE_DRACONIAN:
             hair = 0;
             if (player_mutation_level(MUT_BIG_WINGS))
-                parts[TILEP_PART_DRCWING] = 1 + draconian_color(race, level);
+            {
+                int st = tile_player_part_start[TILEP_PART_DRCWING];
+                parts[TILEP_PART_DRCWING] = st + draconian_color(race, level);
+            }
 
             result = TILEP_BASE_DRACONIAN + draconian_color(race, level)*2;
             break;
@@ -2652,7 +2655,7 @@ void tilep_race_default(int race, int gender, int level, int *parts)
     parts[TILEP_PART_BASE]   = result;
     parts[TILEP_PART_HAIR]   = hair;
     parts[TILEP_PART_BEARD]  = beard;
-    parts[TILEP_PART_SHADOW] = 1;
+    parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
 }
 
 void tilep_job_default(int job, int gender, int *parts)
