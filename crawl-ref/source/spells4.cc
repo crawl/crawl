@@ -224,20 +224,21 @@ static int _shatter_items(coord_def where, int pow, int garbage)
 
 static int _shatter_walls(coord_def where, int pow, int garbage)
 {
-    UNUSED( garbage );
+    UNUSED(garbage);
 
     int chance = 0;
 
     // if not in-bounds then we can't really shatter it -- bwr
-    if ( !in_bounds(where) )
+    if (!in_bounds(where))
         return 0;
 
-    switch (grd(where))
+    const dungeon_feature_type grid = grd(where);
+
+    switch (grid)
     {
     case DNGN_SECRET_DOOR:
         if (see_grid(where))
             mpr("A secret door shatters!");
-        grd(where) = DNGN_FLOOR;
         chance = 100;
         break;
 
@@ -245,7 +246,6 @@ static int _shatter_walls(coord_def where, int pow, int garbage)
     case DNGN_OPEN_DOOR:
         if (see_grid(where))
             mpr("A door shatters!");
-        grd(where) = DNGN_FLOOR;
         chance = 100;
         break;
 
@@ -281,6 +281,10 @@ static int _shatter_walls(coord_def where, int pow, int garbage)
         noisy(30, where);
 
         grd(where) = DNGN_FLOOR;
+
+        if (grid == DNGN_ORCISH_IDOL)
+            beogh_idol_revenge();
+
         return (1);
     }
 
