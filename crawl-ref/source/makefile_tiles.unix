@@ -19,7 +19,7 @@ CXX = g++
 DELETE = rm -f
 COPY = cp
 OS_TYPE = UNIX
-EXTRA_INCLUDES = -DUSE_TILE -DCLUA_BINDINGS
+EXTRA_INCLUDES := -DUSE_TILE -DCLUA_BINDINGS
 
 # Change this to y if you want to use Unicode glyphs in the map, and you have
 # libncursesw available.
@@ -101,6 +101,20 @@ EXTRA_INCLUDES += -I$(SQLSRC)
 EXTRA_DEPENDS  += $(FSQLLIBA)
 endif
 
+RLTILES = rltiles
+
+EXTRA_INCLUDES += -I$(RLTILES)
+OBJECTS += $(RLTILES)/tiledef-demon.o $(RLTILES)/tiledef-dngn.o $(RLTILES)/tiledef-main.o $(RLTILES)/tiledef-player.o
+
+TILEFILES = \
+	main.png \
+	player.png \
+	demon.png \
+    dngn.png
+DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
+
+EXTRA_DEPENDS += $(DESTTILEFILES)
+
 LIB = -L$(LUASRC) -l$(LUALIB) $(LIBDBM) -lpng $(SDL_LDFLAGS) -lGL -lGLU -lSDL_image -lfreetype
 
 INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES) $(PNG_INCLUDE) $(FREETYPE_INCLUDE)
@@ -133,24 +147,6 @@ UTIL = util/
 
 YTABC  := levcomp.tab.c
 YTABH  := levcomp.tab.h
-
-RLTILES = rltiles/
-
-TILEHEADERS = \
-tiledef.h \
-tiledef-p.h \
-tilep-cmt.h \
-tiledef-dngn.h \
-tilecount-dngn.h
-
-TILEFILES = \
-	tile.png \
-	player.png \
-	title.png \
-    dngn.png
-DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
-
-EXTRA_DEPENDS += $(TILEHEADERS) $(DESTTILEFILES)
 
 OBJECTS := $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o $(OBJECTS)
 
@@ -226,26 +222,18 @@ endif
 # RLTiles
 #
 
-ORIGTILEHEADERS = $(TILEHEADERS:%=$(RLTILES)%)
-ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)%)
-
-$(ORIGTILEHEADERS): makerltiles
+ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 
 makerltiles:
-	cd $(RLTILES) && make -f makefile.unix all CFLAGS="$(PNG_INCLUDE)" LDFLAGS="$(PNG_LIB)" && cd ..
-
-$(TILEHEADERS): $(ORIGTILEHEADERS)
-	$(COPY) $(RLTILES)$@ .
+	cd $(RLTILES) && make -f makefile.unix all
 
 $(ORIGTILEFILES): makerltiles
 
-dat/tiles/%.png: rltiles/%.png
-	mkdir -p dat/tiles
+dat/tiles/%.png: $(RLTILES)/%.png
 	$(COPY) $< $@
 
 clean-rltiles:
 	cd $(RLTILES) && make -f makefile.unix distclean && cd ..
-	$(DELETE) $(TILEHEADERS)
 
 ##########################################################################
 
@@ -319,7 +307,7 @@ profile: $(GAME_DEPENDS)
 	${CXX} -g -p ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
 
 .cc.o:
-	${CXX} ${CFLAGS} -c $<
+	${CXX} ${CFLAGS} -c $< -o $@
 
 # [ds] Note we don't use the standard CFLAGS here; that's intentional, most
 # flex/bison combos I've tried don't produce code that passes the warnings

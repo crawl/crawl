@@ -1,0 +1,660 @@
+#include "tile_list_processor.h"
+
+#include <assert.h>
+#include <iostream>
+#include <fstream>
+
+tile_list_processor::tile_list_processor() :
+    m_last_enum(~0),
+    m_rim(false),
+    m_corpsify(false),
+    m_composing(false),
+    m_shrink(true),
+    m_prefix("TILE")
+{
+}
+
+bool tile_list_processor::load_image(tile &img, const char *filename)
+{
+    assert(filename);
+
+    char temp[1024];
+
+    const int num_ext = 3;
+    const char *ext[3] =
+    {
+        ".png",
+        ".bmp",
+        ""
+    };
+
+    if (m_sdir != "")
+    {
+        for (unsigned int e = 0; e < num_ext; e++)
+        {
+            sprintf(temp, "%s/%s%s", m_sdir.c_str(), filename, ext[e]);
+            if (img.load(temp))
+                return true;
+        }
+    }
+
+    for (unsigned int e = 0; e < num_ext; e++)
+    {
+        sprintf(temp, "%s%s", filename, ext[e]);
+        if (img.load(temp))
+            return true;
+    }
+
+    return false;
+}
+
+bool tile_list_processor::process_list(const char *list_file)
+{
+    int line = 1;
+
+    std::ifstream input(list_file);
+    if (!input.is_open())
+    {
+        fprintf(stderr, "Error: couldn't open '%s' for read.\n", list_file);
+        return false;
+    }
+
+    const size_t bufsize = 1024;
+    char read_line[bufsize];
+    bool success = true;
+    while (!input.getline(read_line, bufsize).eof())
+    {
+        success &= process_line(read_line, list_file, line++);
+    }
+
+    return success;
+}
+
+static void eat_whitespace(char *&text)
+{
+    if (!text)
+        return;
+
+    while (*text)
+    {
+        if (*text != ' ' && *text != '\n' && *text != '\r')
+            break;
+        text++;
+    }
+
+    if (!*text)
+        return;
+
+    char *idx = &text[strlen(text) - 1];
+    while (*idx)
+    {
+        if (*idx != ' ' && *idx != '\n' && *idx != '\r')
+            break;
+        *idx = 0;
+        idx--;
+    }
+}
+
+static void eat_comments(char *&text)
+{
+    if (!text)
+        return;
+
+    char *idx = text;
+    while (*idx)
+    {
+        if (idx[0] == '/' && idx[1] == '*')
+        {
+            char *end = idx + 2;
+            bool found = false;
+            while (*end)
+            {
+                if (end[0] == '*' && end[1] == '/')
+                {
+                    found = true;
+
+                    end += 2;
+                    char *begin = idx;
+                    while (*end)
+                    {
+                        *begin = *end;
+                        begin++;
+                        end++;
+                    }
+                    *begin = 0;
+                }
+
+                end++;
+            }
+
+            if (!found)
+            {
+                *idx = 0;
+                break;
+            }
+        }
+
+        idx++;
+    }
+}
+
+bool tile_list_processor::process_line(char *read_line, const char *list_file,
+    int line)
+{
+    eat_comments(read_line);
+
+    const char *delim = " ";
+    char *arg1 = strtok(read_line, delim);
+    if (!arg1)
+        return true;
+
+    eat_whitespace(arg1);
+
+    if (!*arg1)
+        return true;
+    
+    if (arg1[0] == '#')
+        return true;
+
+    char *arg2 = strtok(NULL, delim);
+    eat_whitespace(arg2);
+
+    while (char *extra = strtok(NULL, delim))
+    {
+        eat_whitespace(extra);
+        if (!*extra)
+            continue;
+
+        fprintf(stderr, "Error (%s:%d): too many args.\n", list_file, line);
+        return false;
+    }
+
+    if (arg1[0] == '%')
+    {
+        arg1++;
+
+        #define CHECK_NO_ARG2 \
+            if (arg2) \
+            { \
+                fprintf(stderr, "Error (%s:%d): " \
+                    "invalid arg following '%s'.\n", \
+                    list_file, line, arg1); \
+                return false; \
+            }
+
+        #define CHECK_ARG2 \
+            if (!arg2) \
+            { \
+                fprintf(stderr, "Error (%s:%d): " \
+                    "missing arg following '%s'.\n", \
+                    list_file, line, arg1); \
+                return false; \
+            }
+
+        if (strcmp(arg1, "back") == 0)
+        {
+            CHECK_ARG2;
+
+            if (strcmp(arg2, "none") == 0)
+            {
+                m_back.unload();
+            }
+            else
+            {
+                if (!load_image(m_back, arg2))
+                {
+                    fprintf(stderr, "Error(%s:%d): couldn't load image "
+                       "'%s'.\n", list_file, line, arg2);
+                    return false;
+                }
+            }
+        }
+        else if (strcmp(arg1, "compose") == 0)
+        {
+            CHECK_ARG2;
+            if (!m_composing)
+            {
+                fprintf(stderr, "Error (%s:%d): not composing yet.\n",
+                    list_file, line);
+                return false;
+            }
+
+            if (m_compose.valid())
+            {
+                tile img;
+                if (!load_image(img, arg2))
+                {
+                    fprintf(stderr, "Error(%s:%d): couldn't load image "
+                       "'%s'.\n", list_file, line, arg2);
+                    return false;
+                }
+
+                if (m_rim)
+                    img.add_rim(tile_colour::black);
+
+                if (!m_compose.compose(img))
+                {
+                    fprintf(stderr, "Error (%s:%d): failed composing '%s'"
+                        " onto compose image.\n", list_file, line, arg2);
+                    return false;
+                }
+            }
+            else
+            {
+                if (!load_image(m_compose, arg2))
+                {
+                    fprintf(stderr, "Error(%s:%d): couldn't load image "
+                       "'%s'.\n", list_file, line, arg2);
+                    return false;
+                }
+            }
+        }
+        else if (strcmp(arg1, "corpse") == 0)
+        {
+            CHECK_ARG2;
+            m_corpsify = (bool)atoi(arg2);
+        }
+        else if (strcmp(arg1, "end") == 0)
+        {
+            CHECK_NO_ARG2;
+
+            if (m_parts_ctg.empty())
+            {
+                fprintf(stderr, "Error (%s:%d): no category to end.\n",
+                    list_file, line);
+                return false;
+            }
+
+            m_parts_ctg.clear();
+        }
+        else if (strcmp(arg1, "finish") == 0)
+        {
+            if (!m_composing)
+            {
+                fprintf(stderr, "Error (%s:%d): not composing yet.\n",
+                    list_file, line);
+                return false;
+            }
+
+            if (m_corpsify)
+                m_compose.corpsify();
+            else if (m_rim)
+                m_compose.add_rim(tile_colour::black);
+
+            if (m_back.valid())
+            {
+                tile img(m_back);
+                if (!img.compose(m_compose))
+                {
+                    fprintf(stderr, "Error (%s:%d): failed composing '%s'"
+                        " onto back image '%s'.\n", list_file, line,
+                        arg1, m_back.filename().c_str());
+                    return false;
+                }
+                add_image(img, arg2);
+            }
+            else
+            {
+                add_image(m_compose, arg2);
+            }
+
+            m_compose.unload();
+            m_composing = false;
+        }
+        else if (strcmp(arg1, "include") == 0)
+        {
+            CHECK_ARG2;
+            if (!process_list(arg2))
+            {
+                fprintf(stderr, "Error (%s:%d): include failed.\n",
+                    list_file, line);
+                return false;
+            }
+        }
+        else if (strcmp(arg1, "name") == 0)
+        {
+            CHECK_ARG2;
+
+            if (m_name != "")
+            {
+                fprintf(stderr,
+                    "Error (%s:%d): name already specified as '%s'\n",
+                    list_file, line, m_name.c_str());
+                return false;
+            }
+
+            m_name = arg2;
+        }
+        else if (strcmp(arg1, "parts_ctg") == 0)
+        {
+            CHECK_ARG2;
+
+            for (unsigned int i = 0; i < m_categories.size(); i++)
+            {
+                if (arg2 == m_categories[i])
+                {
+                    fprintf(stderr,
+                        "Error (%s:%d): category '%s' already used.\n",
+                        list_file, line, arg2);
+                    return false;
+                }
+            }
+
+            m_parts_ctg = arg2;
+            m_categories.push_back(m_parts_ctg);
+            m_ctg_counts.push_back(0);
+        }
+        else if (strcmp(arg1, "prefix") == 0)
+        {
+            CHECK_ARG2;
+            m_prefix = arg2;
+        }
+        else if (strcmp(arg1, "rim") == 0)
+        {
+            CHECK_ARG2;
+            m_rim = (bool)atoi(arg2);
+        }
+        else if (strcmp(arg1, "sdir") == 0)
+        {
+            CHECK_ARG2;
+            m_sdir = arg2;
+        }
+        else if (strcmp(arg1, "shrink") == 0)
+        {
+            CHECK_ARG2;
+            m_shrink = (bool)atoi(arg2);
+        }
+        else if (strcmp(arg1, "start") == 0)
+        {
+            CHECK_NO_ARG2;
+
+            if (m_composing)
+            {
+                fprintf(stderr, "Error (%s:%d): already composing.\n",
+                    list_file, line);
+                return false;
+            }
+            m_composing = true;
+            m_compose.unload();
+        }
+        else
+        {
+            fprintf(stderr, "Error (%s:%d): unknown command '%%%s'\n",
+                list_file, line, arg1);
+            return false;
+        }
+    }
+    else
+    {
+        if (m_composing)
+        {
+            fprintf(stderr, "Error (%s:%d): can't load while composing.\n",
+                list_file, line);
+            return false;
+        }
+
+        tile img;
+
+        if (m_back.valid())
+        {
+            // compose
+            if (!load_image(m_compose, arg1))
+            {
+                fprintf(stderr, "Error (%s:%d): couldn't load image "
+                   "'%s'.\n", list_file, line, arg1);
+                return false;
+            }
+
+            if (m_corpsify)
+                m_compose.corpsify();
+
+            img.copy(m_back);
+            if (!img.compose(m_compose))
+            {
+                fprintf(stderr, "Error (%s:%d): failed composing '%s'"
+                    " onto back image '%s'.\n", list_file, line,
+                    arg1, m_back.filename().c_str());
+                return false;
+            }
+        }
+        else
+        {
+            if (!load_image(img, arg1))
+            {
+                fprintf(stderr, "Error (%s:%d): couldn't load image "
+                   "'%s'.\n", list_file, line, arg1);
+                return false;
+            }
+
+            if (m_corpsify)
+                img.corpsify();
+        }
+
+        if (m_rim && !m_corpsify)
+            img.add_rim(tile_colour::black);
+
+        // push tile onto tile page
+        add_image(img, arg2);
+    }
+
+    return true;
+}
+
+void tile_list_processor::add_image(tile &img, const char *enumname)
+{
+    tile *new_img = new tile(img, enumname, m_parts_ctg.c_str());
+    new_img->set_shrink(m_shrink);
+
+    m_page.m_tiles.push_back(new_img);
+    m_page.m_counts.push_back(1);
+
+    if (enumname)
+        m_last_enum = m_page.m_counts.size() - 1;
+    else if (m_last_enum < m_page.m_counts.size())
+        m_page.m_counts[m_last_enum]++;
+
+    if (m_categories.size() > 0)
+    {
+        m_ctg_counts[m_categories.size()-1]++;
+    }
+}
+
+bool tile_list_processor::write_data()
+{
+    if (m_name == "")
+    {
+        fprintf(stderr, "Error: can't write data with no %name specified.\n");
+        return false;
+    }
+
+    std::string lcname = m_name;
+    std::string ucname = m_name;
+    for (unsigned int i = 0; i < m_name.size(); i++)
+    {
+        lcname[i] = std::tolower(m_name[i]);
+        ucname[i] = std::toupper(m_name[i]);
+    }
+    std::string max = m_prefix;
+    max += "_";
+    max += ucname;
+    max += "_MAX";
+
+    std::string ctg_max = m_prefix;
+    ctg_max += "_PART_MAX";
+
+    // write image page
+    {
+        if (!m_page.place_images())
+            return false;
+
+        char filename[1024];
+        sprintf(filename, "%s.png", lcname.c_str());
+        if (!m_page.write_image(filename))
+            return false;
+    }
+
+    int *part_min = NULL;
+
+    // write "tiledef-%name.h"
+    {
+        char filename[1024];
+        sprintf(filename, "tiledef-%s.h", lcname.c_str());
+        FILE *fp = fopen(filename, "w");
+        
+        if (!fp)
+        {
+            fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
+            return false;
+        }
+
+        if (m_categories.size() > 0)
+        {
+            part_min = new int[m_categories.size()];
+            memset(part_min, 0, sizeof(int) * m_categories.size());
+        }
+
+        fprintf(fp, "// This file has been automatically generated.\n\n");
+        fprintf(fp, "#ifndef TILEDEF_%s_H\n#define TILEDEF_%s_H\n\n",
+            ucname.c_str(), ucname.c_str());
+        fprintf(fp, "#include \"tiledef_defines.h\"\n\n");
+
+        fprintf(fp, "enum tile_%s_type\n{\n", lcname.c_str());
+
+        for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
+        {
+            const std::string &enumname = m_page.m_tiles[i]->enumname();
+            const std::string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
+            if (enumname.empty())
+            {
+                fprintf(fp, "    %s_%s_FILLER_%d,\n", m_prefix.c_str(), 
+                    ucname.c_str(), i);
+            }
+            else if (parts_ctg.empty())
+            {
+                fprintf(fp, "    %s_%s,\n", m_prefix.c_str(),
+                    enumname.c_str());
+            }
+            else
+            {
+                fprintf(fp, "    %s_%s_%s,\n", m_prefix.c_str(),
+                    parts_ctg.c_str(), enumname.c_str());
+            }
+
+            if (!parts_ctg.empty())
+            {
+                int idx;
+                for (idx = 0; idx < m_categories.size(); idx++)
+                {
+                    if (parts_ctg == m_categories[idx])
+                        break;
+                }
+                assert(idx < m_categories.size());
+                if (part_min[idx] == 0)
+                    part_min[idx] = i;
+            }
+        }
+
+        fprintf(fp, "    %s_%s_MAX\n};\n\n", m_prefix.c_str(), ucname.c_str());
+
+        fprintf(fp, "extern int tile_%s_count[%s];\n",
+            lcname.c_str(), max.c_str());
+        fprintf(fp, "extern const char *tile_%s_name[%s];\n",
+            lcname.c_str(), max.c_str());
+        fprintf(fp, "extern tile_info tile_%s_info[%s];\n",
+            lcname.c_str(), max.c_str());
+
+        if (m_categories.size() > 0)
+        {
+            fprintf(fp, "\nenum tile_%s_parts\n{\n", lcname.c_str());
+            for (unsigned int i = 0; i < m_categories.size(); i++)
+            {
+                fprintf(fp, "    %s_PART_%s,\n", m_prefix.c_str(),
+                    m_categories[i].c_str());
+            }
+
+            fprintf(fp, "    %s\n};\n\n", ctg_max.c_str());
+
+            fprintf(fp, "extern int tile_%s_part_count[%s];\n",
+                lcname.c_str(), ctg_max.c_str());
+            fprintf(fp, "extern int tile_%s_part_start[%s];\n",
+                lcname.c_str(), ctg_max.c_str());
+        }
+
+        fprintf(fp, "\n#endif\n\n");
+
+        fclose(fp);
+    }
+
+    // write "tiledef-%name.cc"
+    {
+        char filename[1024];
+        sprintf(filename, "tiledef-%s.cc", lcname.c_str());
+        FILE *fp = fopen(filename, "w");
+        
+        if (!fp)
+        {
+            fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
+            return false;
+        }
+
+        fprintf(fp, "// This file has been automatically generated.\n\n");
+        fprintf(fp, "#include \"tiledef-%s.h\"\n\n", lcname.c_str());
+
+        fprintf(fp, "int tile_%s_count[%s] =\n{\n",
+            lcname.c_str(), max.c_str());
+        for (unsigned int i = 0; i < m_page.m_counts.size(); i++)
+            fprintf(fp, "    %d,\n", m_page.m_counts[i]);
+        fprintf(fp, "};\n\n");
+
+        fprintf(fp, "const char *tile_%s_name[%s] =\n{\n",
+            lcname.c_str(), max.c_str());
+        for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
+        {
+            const std::string &enumname = m_page.m_tiles[i]->enumname();
+            if (enumname.empty())
+                fprintf(fp, "    \"%s_FILLER_%d\",\n", ucname.c_str(), i);
+            else
+                fprintf(fp, "    \"%s\",\n", enumname.c_str());
+        }
+        fprintf(fp, "};\n\n");
+
+        fprintf(fp, "tile_info tile_%s_info[%s] =\n{\n",
+            lcname.c_str(), max.c_str());
+        for (unsigned int i = 0; i < m_page.m_offsets.size(); i+=4)
+        {
+            fprintf(fp, "    tile_info(%d, %d, %d, %d, %d, %d, %d, %d),\n",
+                m_page.m_offsets[i+2], m_page.m_offsets[i+3],
+                m_page.m_offsets[i], m_page.m_offsets[i+1],
+                m_page.m_texcoords[i], m_page.m_texcoords[i+1],
+                m_page.m_texcoords[i+2], m_page.m_texcoords[i+3]);
+        }
+        fprintf(fp, "};\n\n");
+
+        if (m_categories.size() > 0)
+        {
+            fprintf(fp, "int tile_%s_part_count[%s] =\n{\n",
+                lcname.c_str(), ctg_max.c_str());
+
+            for (int i = 0; i < m_ctg_counts.size(); i++)
+            {
+                fprintf(fp, "    %d,\n", m_ctg_counts[i]);
+            }
+
+            fprintf(fp, "};\n\n");
+
+            fprintf(fp, "int tile_%s_part_start[%s] =\n{\n",
+                lcname.c_str(), ctg_max.c_str());
+
+            for (int i = 0; i < m_categories.size(); i++)
+            {
+                fprintf(fp, "    %d,\n", part_min[i]);
+            }
+
+            fprintf(fp, "};\n\n");
+        }
+    }
+
+    delete[] part_min;
+
+    return true;
+}

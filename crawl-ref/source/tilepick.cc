@@ -2182,7 +2182,7 @@ int tileidx_feature(int object, int gx, int gy)
        return TILE_DNGN_RETURN;
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
-       return TILE_DNGN_TRANSIT_PANDEMONIUM;
+       return TILE_DNGN_PORTAL;
     case DNGN_ALTAR_ZIN:
         return TILE_DNGN_ALTAR_ZIN;
     case DNGN_ALTAR_SHINING_ONE:
@@ -2393,10 +2393,10 @@ int tileidx_zap(int colour)
 }
 
 // modify wall tile index depending on floor/wall flavor
-static void _finalize_tile(unsigned int *tile, bool is_special,
-                           unsigned char wall_flv,
-                           unsigned char floor_flv,
-                           unsigned char special_flv)
+static inline void _finalize_tile(unsigned int *tile, bool is_special,
+                                  unsigned char wall_flv,
+                                  unsigned char floor_flv,
+                                  unsigned char special_flv)
 {
     int orig = (*tile) & TILE_FLAG_MASK;
     int flag = (*tile) & (~TILE_FLAG_MASK);
@@ -2431,8 +2431,7 @@ static void _finalize_tile(unsigned int *tile, bool is_special,
              || orig == TILE_DNGN_LAVA
              || orig == TILE_DNGN_STONE_WALL)
     {
-        // These types always have four flavors...
-        (*tile) = orig + (special_flv % 4);
+        (*tile) = orig + (special_flv % tile_dngn_count[orig]);
     }
     else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
     {
@@ -2447,7 +2446,7 @@ void tilep_calc_flags(int parts[], int flag[])
 {
     int i;
 
-    for (i = 0; i < TILEP_PARTS_TOTAL; i++)
+    for (i = 0; i < TILEP_PART_MAX; i++)
          flag[i] = TILEP_FLAG_NORMAL;
 
     if (parts[TILEP_PART_HELM] - 1 >= TILEP_HELM_HELM_OFS)
@@ -2994,10 +2993,11 @@ void tilep_scan_parts(char *fbuf, int *parts)
          }
          else if (idx == TILEP_SHOW_EQUIP)
              parts[p] = TILEP_SHOW_EQUIP;
-         else if (idx < 0) // no negative value
+         else if (idx < 0)
              parts[p] = 0;
-         else if (idx > tilep_parts_total[p]) // bound it
-             parts[p] = tilep_parts_total[p];
+         // TODO enne - is this right? did the old count end at idx not just subtotal?
+         else if (idx > tile_player_part_count[p])
+             parts[p] = tile_player_part_count[p];
          else
              parts[p] = idx;
     }
@@ -3634,7 +3634,7 @@ int get_ctg_idx(char *name)
 {
     int i;
 
-    for (i = 0; i < TILEP_PARTS_TOTAL; i++)
+    for (i = 0; i < TILEP_PART_MAX; i++)
          if (strcmp(name, tilep_parts_name[i]) == 0)
              return i;
 

@@ -31,7 +31,6 @@
 #include "tiles.h"
 #include "tilefont.h"
 #include "tilesdl.h"
-#include "tiledef-dngn.h"
 
 #include <SDL_opengl.h>
 
@@ -230,47 +229,7 @@ void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy
     place_cursor(CURSOR_TUTORIAL, m_cursor[CURSOR_TUTORIAL]);
 }
 
-void DungeonRegion::add_quad_doll(unsigned int part, unsigned int idx, int ymax, unsigned int x, unsigned int y, int ox_spec, int oy_spec)
-{
-    float tex_sx, tex_sy, tex_wx, tex_wy; 
-    int ox_extra, oy_extra, wx_pix, wy_pix;
-    m_image->m_textures[TEX_DOLL].get_texcoord_doll(part, idx, ymax, tex_sx, tex_sy, tex_wx, tex_wy, wx_pix, wy_pix, ox_extra, oy_extra);
-
-    if (wx_pix <= 0 || wy_pix <= 0)
-        return;
-
-    float pos_ox = (ox_spec + ox_extra) / (float)TILE_X;
-    float pos_oy = (oy_spec + oy_extra) / (float)TILE_Y;
-
-    float tex_ex = tex_sx + tex_wx;
-    float tex_ey = tex_sy + tex_wy;
-
-    float pos_sx = x + pos_ox;
-    float pos_sy = y + pos_oy;
-    float pos_ex = pos_sx + wx_pix / (float)TILE_X;
-    float pos_ey = pos_sy + wy_pix / (float)TILE_Y;
-
-    tile_vert v;
-    v.pos_x = pos_sx;
-    v.pos_y = pos_sy;
-    v.tex_x = tex_sx;
-    v.tex_y = tex_sy;
-    m_verts.push_back(v);
-
-    v.pos_y = pos_ey;
-    v.tex_y = tex_ey;
-    m_verts.push_back(v);
-
-    v.pos_x = pos_ex;
-    v.tex_x = tex_ex;
-    m_verts.push_back(v);
-
-    v.pos_y = pos_sy;
-    v.tex_y = tex_sy;
-    m_verts.push_back(v);
-}
-
-void TileRegion::add_quad(TextureID tex, unsigned int idx, unsigned int x, unsigned int y, int ofs_x, int ofs_y)
+void TileRegion::add_quad(TextureID tex, unsigned int idx, unsigned int x, unsigned int y, int ofs_x, int ofs_y, bool centre, int ymax)
 {
     // Generate quad
     //
@@ -282,17 +241,14 @@ void TileRegion::add_quad(TextureID tex, unsigned int idx, unsigned int x, unsig
     // float2 (position)
     // float2 (texcoord)
 
-    float tex_sx, tex_sy, tex_wx, tex_wy;
-    m_image->m_textures[tex].get_texcoord(idx, tex_sx, tex_sy, tex_wx, tex_wy);
-    float tex_ex = tex_sx + tex_wx;
-    float tex_ey = tex_sy + tex_wy;
+    float pos_sx = x;
+    float pos_sy = y;
+    float pos_ex, pos_ey, tex_sx, tex_sy, tex_ex, tex_ey; 
+    m_image->m_textures[tex].get_coords(idx, ofs_x, ofs_y,
+                                        pos_sx, pos_sy, pos_ex, pos_ey,
+                                        tex_sx, tex_sy, tex_ex, tex_ey,
+                                        centre, ymax);
 
-    float pos_sx = x + ofs_x / (float)TILE_X;
-    float pos_sy = y + ofs_y / (float)TILE_Y;
-    float pos_ex = pos_sx + 1;
-    float pos_ey = pos_sy + 1;
-
-    // TODO enne - handle wx/wy non-standard sizes
     tile_vert v;
     v.pos_x = pos_sx;
     v.pos_y = pos_sy;
@@ -325,7 +281,7 @@ void DungeonRegion::draw_background(unsigned int bg, unsigned int x, unsigned in
     if (bg & TILE_FLAG_BLOOD)
     {
         tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
-        unsigned int offset = flv.special % tile_DNGN_count[IDX_BLOOD];
+        unsigned int offset = flv.special % tile_dngn_count[TILE_BLOOD];
         add_quad(TEX_DUNGEON, TILE_BLOOD + offset, x, y);
     }
 
@@ -355,14 +311,14 @@ void DungeonRegion::draw_player(unsigned int x, unsigned int y)
     dolls_data result;
 
     // TODO enne - store character doll here and get gender
-    for (int i = 0; i < TILEP_PARTS_TOTAL; i++)
-        player_doll.parts[i] = TILEP_SHOW_EQUIP;
+    for (int i = 0; i < TILEP_PART_MAX; i++)
+        default_doll.parts[i] = TILEP_SHOW_EQUIP;
     int gender = 0;
 
     tilep_race_default(you.species, gender, you.experience_level, 
                        default_doll.parts);
 
-    result = player_doll;
+    result = default_doll;
 
     // TODO enne - make these configurable
     result.parts[TILEP_PART_BASE] = default_doll.parts[TILEP_PART_BASE];
@@ -460,6 +416,12 @@ void DungeonRegion::draw_player(unsigned int x, unsigned int y)
         else
             result.parts[TILEP_PART_ARM] = 0;
     }
+    if (result.parts[TILEP_PART_LEG] == TILEP_SHOW_EQUIP)
+        result.parts[TILEP_PART_LEG] = 0;
+    if (result.parts[TILEP_PART_DRCWING] == TILEP_SHOW_EQUIP)
+        result.parts[TILEP_PART_DRCWING] = 0;
+    if (result.parts[TILEP_PART_DRCHEAD] == TILEP_SHOW_EQUIP)
+        result.parts[TILEP_PART_DRCHEAD] = 0;
 
     draw_doll(result, x, y);
 }
@@ -490,7 +452,7 @@ bool DungeonRegion::draw_objects(unsigned int fg, unsigned int x, unsigned int y
 
 void DungeonRegion::draw_doll(dolls_data &doll, unsigned int x, unsigned int y)
 {
-    int p_order[TILEP_PARTS_TOTAL] =
+    int p_order[TILEP_PART_MAX] =
     {
         TILEP_PART_SHADOW,
         TILEP_PART_HALO,
@@ -509,7 +471,7 @@ void DungeonRegion::draw_doll(dolls_data &doll, unsigned int x, unsigned int y)
         TILEP_PART_DRCHEAD
     };
 
-    int flags[TILEP_PARTS_TOTAL];
+    int flags[TILEP_PART_MAX];
     tilep_calc_flags(doll.parts, flags);
 
     // For skirts, boots go under the leg armour.  For pants, they go over.
@@ -519,7 +481,7 @@ void DungeonRegion::draw_doll(dolls_data &doll, unsigned int x, unsigned int y)
         p_order[6] = TILEP_PART_LEG;
     }
 
-    for (int i = 0; i < TILEP_PARTS_TOTAL; i++)
+    for (int i = 0; i < TILEP_PART_MAX; i++)
     {
         int p = p_order[i];
         if (!doll.parts[p])
@@ -533,23 +495,7 @@ void DungeonRegion::draw_doll(dolls_data &doll, unsigned int x, unsigned int y)
             ymax = 18;
         }
 
-        if (doll.parts[p] && p == TILEP_PART_BOOTS
-            && (doll.parts[p] == TILEP_BOOTS_NAGA_BARDING
-                || doll.parts[p] == TILEP_BOOTS_CENTAUR_BARDING))
-        {
-            // Special case for barding.  They should be in "boots" but because
-            // they're double-wide, they're stored in a different part.  We just
-            // intercept it here before drawing.
-            char tile = (doll.parts[p] == TILEP_BOOTS_NAGA_BARDING) ?
-                            TILEP_SHADOW_NAGA_BARDING :
-                            TILEP_SHADOW_CENTAUR_BARDING;
-
-            add_quad_doll(TILEP_PART_SHADOW, tile, TILE_Y, x, y, 0, 0);
-        }
-        else
-        {
-            add_quad_doll(p, doll.parts[p], ymax, x, y, 0, 0);
-        }
+        add_quad(TEX_DOLL, doll.parts[p], x, y, 0, 0, true, ymax);
     }
 }
 
@@ -563,7 +509,7 @@ void DungeonRegion::draw_draco(int colour, int mon_idx, int equ_tile, unsigned i
     int weapon2 = 0;
     int arm = 0;
 
-    for (int i = 0; i < TILEP_PARTS_TOTAL; i++)
+    for (int i = 0; i < TILEP_PART_MAX; i++)
          doll.parts[i] = 0;
 
     doll.parts[TILEP_PART_SHADOW] = 1;
@@ -650,7 +596,7 @@ void DungeonRegion::draw_monster(unsigned int fg, unsigned int x, unsigned int y
         int ofs_x, ofs_y;
         tile_get_monster_weapon_offset(mon_tile, ofs_x, ofs_y);
 
-        add_quad_doll(TILEP_PART_HAND1, equ_tile, TILE_Y, x, y, ofs_x, ofs_y);
+        add_quad(TEX_DOLL, equ_tile, x, y, ofs_x, ofs_y, true, TILE_Y);
 
         // In some cases, overlay a second weapon tile...
         if (mon_tile == TILE_MONS_DEEP_ELF_BLADEMASTER)
@@ -669,7 +615,7 @@ void DungeonRegion::draw_monster(unsigned int fg, unsigned int x, unsigned int y
                     eq2 = TILEP_HAND2_SHORT_SWORD_SLANT;
                     break;
             };
-            add_quad_doll(TILEP_PART_HAND2, eq2, TILE_Y, x, y, -ofs_x, ofs_y);
+            add_quad(TEX_DOLL, eq2, x, y, -ofs_x, ofs_y, true, TILE_Y);
         }
     }
     else
@@ -827,8 +773,6 @@ void DungeonRegion::render()
             tile += 2;
         }
 
-    ASSERT(m_verts.size() > 0);
-
     if (m_verts.size() > 0)
     {
         m_image->m_textures[TEX_DUNGEON].bind();
@@ -836,7 +780,6 @@ void DungeonRegion::render()
         glTexCoordPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].tex_x);
         glDrawArrays(GL_QUADS, 0, m_verts.size());
     }
-
 
     tile = 0;
     m_verts.clear();
@@ -1311,41 +1254,11 @@ void InventoryRegion::render()
 
 void InventoryRegion::add_quad_char(char c, unsigned int x, unsigned int y, int ofs_x, int ofs_y)
 {
-    int idx = TILE_CHAR00 + (c - 32) / 8;
-    int subidx = c & 7;
+    int num = c - '0';
+    assert(num >=0 && num <= 9);
+    int idx = TILE_NUM0 + num;
 
-    float tex_sx, tex_sy, tex_wx, tex_wy;
-    m_image->m_textures[TEX_DEFAULT].get_texcoord(idx, tex_sx, tex_sy, tex_wx, tex_wy);
-    tex_wx /= 4.0f;
-    tex_wy /= 2.0f;
-    tex_sx += (subidx % 4) * tex_wx;
-    tex_sy += (subidx / 4) * tex_wy;
-    float tex_ex = tex_sx + tex_wx;
-    float tex_ey = tex_sy + tex_wy;
-
-    float pos_sx = x + ofs_x / (float)TILE_X;
-    float pos_sy = y + ofs_y / (float)TILE_Y;
-    float pos_ex = pos_sx + 0.25f;
-    float pos_ey = pos_sy + 0.5f;
-
-    tile_vert v;
-    v.pos_x = pos_sx;
-    v.pos_y = pos_sy;
-    v.tex_x = tex_sx;
-    v.tex_y = tex_sy;
-    m_verts.push_back(v);
-
-    v.pos_y = pos_ey;
-    v.tex_y = tex_ey;
-    m_verts.push_back(v);
-
-    v.pos_x = pos_ex;
-    v.tex_x = tex_ex;
-    m_verts.push_back(v);
-
-    v.pos_y = pos_sy;
-    v.tex_y = tex_sy;
-    m_verts.push_back(v);
+    add_quad(TEX_DEFAULT, idx, x, y, ofs_x, ofs_y, false);
 }
 
 void InventoryRegion::pack_verts()
@@ -2479,29 +2392,26 @@ bool ImageManager::load_textures()
     if (!m_textures[TEX_TITLE].load_texture("title.png", mip))
         return false;
 
+    m_textures[TEX_DUNGEON].set_info(TILE_DNGN_MAX, &tile_dngn_info[0]);
+    m_textures[TEX_DOLL].set_info(TILEP_PLAYER_MAX, &tile_player_info[0]);
+
     return true;
 }
 
 static void _copy_onto(unsigned char *pixels, unsigned int width,
                        unsigned int height, unsigned char *src,
-                       int idx, bool blend)
+                       const tile_info &inf, bool blend)
 {
-    const unsigned int tile_size = 32;
-    const unsigned int tiles_per_row = width / tile_size;
-
-    unsigned int row = idx / tiles_per_row;
-    unsigned int col = idx % tiles_per_row;
-
-    unsigned char *dest = &pixels[4 * 32 * (row * width + col)];
+    unsigned char *dest = &pixels[4 * (inf.sy * width + inf.sx)];
 
     size_t dest_row_size = width * 4;
-    size_t src_row_size = 32 * 4;
+    size_t src_row_size = inf.width * 4;
 
     if (blend)
     {
-        for (unsigned int r = 0; r < 32; r++)
+        for (unsigned int r = 0; r < inf.height; r++)
         {
-            for (unsigned int c = 0; c < 32; c++)
+            for (unsigned int c = 0; c < inf.width; c++)
             {
                 unsigned char a = src[3];
                 unsigned char inv_a = 255 - src[3];
@@ -2518,7 +2428,7 @@ static void _copy_onto(unsigned char *pixels, unsigned int width,
     }
     else
     {
-        for (unsigned int r = 0; r < 32; r++)
+        for (unsigned int r = 0; r < inf.height; r++)
         {
             memcpy(dest, src, src_row_size);
 
@@ -2528,25 +2438,25 @@ static void _copy_onto(unsigned char *pixels, unsigned int width,
     }
 }
 
-// Copy a 32x32 image at index idx from pixels into dest.
+// Copy an image at inf from pixels into dest.
 static void _copy_into(unsigned char *dest, unsigned char *pixels, 
                        unsigned int width,
-                       unsigned int height, int idx)
+                       unsigned int height, const tile_info &inf)
 {
-    const unsigned int tile_size = 32;
-    const unsigned int tiles_per_row = width / tile_size;
-
-    unsigned int row = idx / tiles_per_row;
-    unsigned int col = idx % tiles_per_row;
-
-    unsigned char *src = &pixels[4 * 32 * (row * width + col)];
+    unsigned char *src = &pixels[4 * (inf.sy * width + inf.sx)];
 
     size_t src_row_size = width * 4;
-    size_t dest_row_size = 32 * 4;
+    size_t dest_row_size = inf.width * 4;
 
-    for (unsigned int r = 0; r < 32; r++)
+    memset(dest, 0, 4 * inf.width * inf.height);
+
+    dest += inf.offset_x * 4 + inf.offset_y * dest_row_size;
+
+    int src_height = inf.ey - inf.sy;
+    int src_width = inf.ex - inf.sx;
+    for (int r = 0; r < src_height; r++)
     {
-        memcpy(dest, src, dest_row_size);
+        memcpy(dest, src, src_width * 4);
 
         dest += dest_row_size; 
         src += src_row_size;
@@ -2554,35 +2464,50 @@ static void _copy_into(unsigned char *dest, unsigned char *pixels,
 }
 
 // Stores "over" on top of "under" in the location of "over".
-static void _copy_under(unsigned char *pixels, unsigned int width,
+static bool _copy_under(unsigned char *pixels, unsigned int width,
                         unsigned int height, int idx_under, int idx_over)
 {
-    size_t image_size = 32 * 32 * 4;    
+    const tile_info &under = tile_main_info[idx_under];
+    const tile_info &over = tile_main_info[idx_over];
+
+    if (over.width != under.width || over.height != under.height)
+        return false;
+
+    if (over.ex - over.sx != over.width || over.ey - over.sy != over.height)
+        return false;
+
+    if (over.offset_x != 0 || over.offset_y != 0)
+        return false;
+
+    size_t image_size = under.width * under.height * 4;
 
     // Make a copy of the original images.
-    unsigned char *under = new unsigned char[image_size];
-    _copy_into(under, pixels, width, height, idx_under);
-    unsigned char *over = new unsigned char[image_size];
-    _copy_into(over, pixels, width, height, idx_over);
+    unsigned char *under_pixels = new unsigned char[image_size];
+    _copy_into(under_pixels, pixels, width, height, under);
+    unsigned char *over_pixels = new unsigned char[image_size];
+    _copy_into(over_pixels, pixels, width, height, over);
 
     // Replace the over image with the under image
-    _copy_onto(pixels, width, height, under, idx_over, false);
+    _copy_onto(pixels, width, height, under_pixels, over, false);
     // Blend the over image over top.
-    _copy_onto(pixels, width, height, over, idx_over, true);
+    _copy_onto(pixels, width, height, over_pixels, over, true);
 
-    delete[] under;
-    delete[] over;
+    delete[] under_pixels;
+    delete[] over_pixels;
+
+    return true;
 }
 
 static bool _process_item_image(unsigned char *pixels, 
                                 unsigned int width, unsigned int height)
 {
+    bool success = true;
     for (int i = 0; i < NUM_POTIONS; i++)
     {
         int special = you.item_description[IDESC_POTIONS][i];
         int tile0 = TILE_POTION_OFFSET + special % 14;
         int tile1 = TILE_POT_HEALING + i;
-        _copy_under(pixels, width, height, tile0, tile1);
+        success &= _copy_under(pixels, width, height, tile0, tile1);
     }
 
     for (int i = 0; i < NUM_WANDS; i++)
@@ -2590,7 +2515,7 @@ static bool _process_item_image(unsigned char *pixels,
         int special = you.item_description[IDESC_WANDS][i];
         int tile0 = TILE_WAND_OFFSET + special % 12;
         int tile1 = TILE_WAND_FLAME + i;
-        _copy_under(pixels, width, height, tile0, tile1);
+        success &= _copy_under(pixels, width, height, tile0, tile1);
     }
 
     for (int i = 0; i < STAFF_SMITING; i++)
@@ -2598,38 +2523,14 @@ static bool _process_item_image(unsigned char *pixels,
         int special = you.item_description[IDESC_STAVES][i];
         int tile0 = TILE_STAFF_OFFSET + (special / 4) % 10;
         int tile1 = TILE_STAFF_WIZARDRY + i;
-        _copy_under(pixels, width, height, tile0, tile1);
+        success &= _copy_under(pixels, width, height, tile0, tile1);
     }
     for (int i = STAFF_SMITING; i < NUM_STAVES; i++)
     {
         int special = you.item_description[IDESC_STAVES][i];
         int tile0 = TILE_ROD_OFFSET + (special / 4) % 10;
         int tile1 = TILE_ROD_SMITING + i - STAFF_SMITING;
-        _copy_under(pixels, width, height, tile0, tile1);
-    }
-   
-    // TODO enne - fix rtiles so that it can accept PNGs.
-    {
-        size_t image_size = 32 * 32 * 4;    
-        unsigned char *mesh = new unsigned char[image_size];
-
-        for (unsigned int i = 0; i < image_size; i += 4)
-        {
-            mesh[i] = mesh[i+1] = mesh[i+2] = 0;
-            mesh[i+3] = 110;
-        }
-        _copy_onto(pixels, width, height, mesh, TILE_MESH, false);
-
-        for (unsigned int i = 0; i < image_size; i += 4)
-        {
-            mesh[i] = 70;
-            mesh[i+1] = 70;
-            mesh[i+2] = 180;
-            mesh[i+3] = 120;
-        }
-        _copy_onto(pixels, width, height, mesh, TILE_MAGIC_MAP_MESH, false);
-
-        delete[] mesh;
+        success &= _copy_under(pixels, width, height, tile0, tile1);
     }
 
     return true;
@@ -2642,8 +2543,11 @@ bool ImageManager::load_item_texture()
     // is modified.  So, it cannot be loaded until after the item
     // description table has been initialised.
     GenericTexture::MipMapOptions mip = GenericTexture::MIPMAP_CREATE;
-    return m_textures[TEX_DEFAULT].load_texture("tile.png", mip, 
-                                                &_process_item_image);
+    bool success = m_textures[TEX_DEFAULT].load_texture("main.png", mip, 
+                                                        &_process_item_image);
+    m_textures[TEX_DEFAULT].set_info(TILE_MAIN_MAX, &tile_main_info[0]);
+
+    return success;
 }
 
 void ImageManager::unload_textures()

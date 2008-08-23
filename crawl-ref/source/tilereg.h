@@ -185,7 +185,7 @@ public:
     ~TileRegion();
 
 protected:
-    void add_quad(TextureID tex, unsigned int idx, unsigned int x, unsigned int y, int ofs_x = 0, int ofs_y = 0);
+    void add_quad(TextureID tex, unsigned int idx, unsigned int x, unsigned int y, int ofs_x = 0, int ofs_y = 0, bool centre = true, int ymax = -1);
 
     ImageManager *m_image;
 
@@ -253,8 +253,6 @@ protected:
     void draw_doll(dolls_data &doll, unsigned int x, unsigned int y);
     void draw_draco(int colour, int mon_idx, int equ_tile, unsigned int x, unsigned int y);
     void draw_cursor(cursor_type type, unsigned int tile);
-
-    void add_quad_doll(unsigned int part, unsigned int idx, int ymax, unsigned int x, unsigned int y, int ox, int oy);
 
     int get_buffer_index(const coord_def &gc);
     void to_screen_coords(const coord_def &gc, coord_def& pc) const;

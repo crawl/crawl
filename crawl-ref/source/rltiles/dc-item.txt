@@ -325,9 +325,9 @@ gem_glass
 gem_lead
 gem_plastic
 
+%shrink 0
 %sdir item/wand
 %back i-label
-
 i-flame WAND_FLAME
 i-frost WAND_FROST
 i-slowing WAND_SLOWING
@@ -348,6 +348,7 @@ i-enslavement WAND_ENSLAVEMENT
 i-draining WAND_DRAINING
 i-random_effects WAND_RANDOM_EFFECTS
 i-disintegration WAND_DISINTEGRATION
+%shrink 1
 
 %back none
 #################OBJ_FOOD
@@ -493,6 +494,7 @@ brown
 pink
 white
 
+%shrink 0
 %sdir item/potion
 %back i-label
 %rim 0
@@ -525,6 +527,7 @@ i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
 %back none
 %rim 1
+%shrink 1
 
 ####################OBJ_UNKNOWN_II
 #####################OBJ_BOOKS
@@ -579,6 +582,7 @@ staff07
 staff08
 staff09
 
+%shrink 0
 i-staff_wizardry STAFF_WIZARDRY
 i-staff_power STAFF_POWER
 i-staff_fire STAFF_FIRE
@@ -592,6 +596,7 @@ i-staff_summoning STAFF_SUMMONING
 i-staff_air STAFF_AIR
 i-staff_earth STAFF_EARTH
 i-staff_channeling STAFF_CHANNELING
+%shrink 1
 
 %sdir item/rod
 rod00 ROD_OFFSET
@@ -605,6 +610,7 @@ rod07
 rod08
 rod09
 
+%shrink 0
 i-rod_smiting ROD_SMITING
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE
@@ -616,6 +622,7 @@ i-rod_discovery ROD_DISCOVERY
 i-rod_demonology ROD_DEMONOLOGY
 i-rod_striking ROD_STRIKING
 i-rod_venom ROD_VENOM
+%shrink 1
 
 #OBJ_ORBS
 %sdir item/misc

@@ -1,0 +1,33 @@
+%name demon
+%prefix TILE
+
+%rim 1
+%sdir dc-mon/demon
+
+demon_body_fat DEMON_BODY
+demon_body_fatter
+demon_body_normal
+demon_body_spiked
+demon_body_spotty
+demon_body_thin
+
+demon_head_cthulhu DEMON_HEAD
+demon_head_elephant
+demon_head_eyeball
+demon_head_heads
+demon_head_helmet
+demon_head_horns
+demon_head_horse
+demon_head_medusa
+demon_head_monkey
+demon_head_mouse
+demon_head_ram
+demon_head_rhino
+demon_head_tentacles
+
+demon_wings_bones DEMON_WINGS
+demon_wings_butterfly
+demon_wings_demonic
+demon_wings_large
+demon_wings_medium
+demon_wings_red

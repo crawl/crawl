@@ -1,4 +1,3 @@
-%subst large_mimic
 %sdir dc-mon
 %rim 0
 shadow MONS_SHADOW /*' '*/
@@ -85,7 +84,6 @@ lava_fish MONS_LAVA_FISH /*';'*/
 #scroll_mimic MONS_SCROLL_MIMIC /*'?'(LIGHTGREY) An ancient parchment covered in arcane runes. Did it just twitch?
 
 ## Humans
-%subst asc/ch40
 shapeshifter MONS_SHAPESHIFTER /*'@'*/
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER /*'@'*/
 killer_klown MONS_KILLER_KLOWN /*'@'*/
@@ -130,7 +128,6 @@ daeva MONS_DAEVA /*'A'*/
 ####nh-mon0/m/large_mimic MONS_SHUGGOTH /*'A'(LIGHTGREEN) A vile creature with an elongated head, spiked tail and wicked six-fingered claws. Its awesome strength is matched by its umbrage at being transported to this backwater dimension. 
 
 ## Beetles
-%subst asc/ch42
 boring_beetle MONS_BORING_BEETLE /*'B'*/
 boulder_beetle MONS_BOULDER_BEETLE /*'B'*/
 giant_beetle MONS_GIANT_BEETLE /*'B'*/
@@ -148,16 +145,15 @@ titan MONS_TITAN /*'C'*/
 polyphemus MONS_POLYPHEMUS
 
 ## Dragons
-%subst asc/ch44
 dragon MONS_DRAGON /*'D'*/
 golden_dragon MONS_GOLDEN_DRAGON /*'D'*/
 hydra1 MONS_HYDRA /*'D'*/
-hydra2 MONS_HYDRA2
-hydra3 MONS_HYDRA3
-hydra4 MONS_HYDRA4
-hydra5 MONS_HYDRA5
-hydra5 MONS_HYDRA6
-hydra5 MONS_HYDRA7
+hydra2
+hydra3
+hydra4
+hydra5
+hydra5
+hydra5
 ice_dragon MONS_ICE_DRAGON /*'D'*/
 iron_dragon MONS_IRON_DRAGON /*'D'*/
 quicksilver_dragon MONS_QUICKSILVER_DRAGON /*'D'*/
@@ -174,7 +170,6 @@ xtahua MONS_XTAHUA /*'D'*/
 efreet MONS_EFREET /*'E'*/
 
 ## Frogs
-%subst asc/ch46
 %rim 0
 blink_frog MONS_BLINK_FROG /*'F'*/
 %rim 1
@@ -183,7 +178,6 @@ giant_frog MONS_GIANT_FROG /*'F'*/
 spiny_frog MONS_SPINY_FROG /*'F'*/
 
 ## Eyes
-%subst asc/ch47
 eye_of_devastation MONS_EYE_OF_DEVASTATION /*'G'*/
 eye_of_draining MONS_EYE_OF_DRAINING /*'G'*/
 giant_eyeball MONS_GIANT_EYEBALL /*'G'*/
@@ -193,7 +187,6 @@ great_orb_of_eyes MONS_GREAT_ORB_OF_EYES /*'G'*/
 shining_eye MONS_SHINING_EYE /*'G'*/
 
 ## Hybrids
-%subst asc/ch48
 griffon MONS_GRIFFON /*'H'*/
 hippogriff MONS_HIPPOGRIFF /*'H'*/
 sphinx MONS_SPHINX /*'H'*/
@@ -202,7 +195,6 @@ sphinx MONS_SPHINX /*'H'*/
 ice_beast MONS_ICE_BEAST /*'I'*/
 
 ## Jellies
-%subst asc/ch4a
 acid_blob MONS_ACID_BLOB /*'J'*/
 azure_jelly MONS_AZURE_JELLY /*'J'*/
 brown_ooze MONS_BROWN_OOZE /*'J'*/
@@ -216,51 +208,42 @@ royal_jelly MONS_ROYAL_JELLY /*'J'*/
 slime_creature MONS_SLIME_CREATURE /*'J'*/
 
 ## Kobolds
-%subst asc/ch4b
 big_kobold MONS_BIG_KOBOLD /*'K'*/
 kobold MONS_KOBOLD /*'K'*/
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST /*'K'*/
 
 ## Liches
-%subst asc/ch4c
 ancient_lich MONS_ANCIENT_LICH /*'L'*/
 boris MONS_BORIS /*'L'*/
 lich MONS_LICH /*'L'*/
 
 ## Mummies
-%subst asc/ch4d
 greater_mummy MONS_GREATER_MUMMY /*'M'*/
 guardian_mummy MONS_GUARDIAN_MUMMY /*'M'*/
 mummy MONS_MUMMY /*'M'*/
 mummy_priest MONS_MUMMY_PRIEST /*'M'*/
 
 ## Nagas
-%subst asc/ch4e
 naga0 MONS_NAGA /*'N'*/
 greater_naga0 MONS_GREATER_NAGA /*'N'*/
 naga_warrior0 MONS_NAGA_WARRIOR /*'N'*/
 guardian_naga MONS_GUARDIAN_NAGA /*'N'*/
 naga_mage MONS_NAGA_MAGE /*'N'*/
 
-%subst asc/ch4f
 erolcha MONS_EROLCHA /*'O'*/
 ogre MONS_OGRE /*'O'*/
 ogre_mage MONS_OGRE_MAGE /*'O'*/
 two_headed_ogre MONS_TWO_HEADED_OGRE /*'O'*/
 
-%subst asc/ch50
 oklob_plant MONS_OKLOB_PLANT /*'P'*/
 plant MONS_PLANT /*'P'*/
 
-%subst asc/ch51
 queen_ant MONS_QUEEN_ANT /*'Q'*/
 queen_bee MONS_QUEEN_BEE /*'Q'*/
 
-%subst asc/ch52
 rakshasa MONS_RAKSHASA /*'R'*/
 rakshasa_fake MONS_RAKSHASA_FAKE /*'R'*/
 
-%subst asc/ch53
 black_snake MONS_BLACK_SNAKE /*'S'*/
 brown_snake MONS_BROWN_SNAKE /*'S'*/
 grey_snake MONS_GREY_SNAKE /*'S'*/
@@ -270,25 +253,21 @@ small_snake MONS_SMALL_SNAKE /*'S'*/
 snake MONS_SNAKE /*'S'*/
 yellow_snake MONS_YELLOW_SNAKE /*'S'*/
 
-%subst asc/ch54
 deep_troll MONS_DEEP_TROLL /*'T'*/
 iron_troll MONS_IRON_TROLL /*'T'*/
 rock_troll MONS_ROCK_TROLL /*'T'*/
 snorg MONS_SNORG /*'T'*/
 troll MONS_TROLL /*'T'*/
 
-%subst asc/ch55
 bear MONS_BEAR /*'U'*/
 black_bear MONS_BLACK_BEAR /*'U'*/
 grizzly_bear MONS_GRIZZLY_BEAR /*'U'*/
 polar_bear MONS_POLAR_BEAR /*'U'*/
 
-%subst asc/ch56
 vampire MONS_VAMPIRE /*'V'*/
 vampire_knight MONS_VAMPIRE_KNIGHT /*'V'*/
 vampire_mage MONS_VAMPIRE_MAGE /*'V'*/
 
-%subst asc/ch57
 freezing_wraith MONS_FREEZING_WRAITH /*'W'*/
 shadow_wraith MONS_SHADOW_WRAITH /*'W'*/
 spectral_thing MONS_SPECTRAL_THING /*'W'*/
@@ -296,7 +275,6 @@ spectral_warrior MONS_SPECTRAL_WARRIOR /*'W'*/
 wight MONS_WIGHT /*'W'*/
 wraith MONS_WRAITH /*'W'*/
 
-%subst asc/ch58
 abomination_large MONS_ABOMINATION_LARGE /*'X'*/
 abomination_large1
 abomination_large2
@@ -307,23 +285,19 @@ abomination_large6
 orb_guardian MONS_ORB_GUARDIAN /*'X'*/
 tentacled_monstrosity MONS_TENTACLED_MONSTROSITY /*'X'*/
 
-%subst asc/ch59
 death_yak MONS_DEATH_YAK /*'Y'*/
 sheep MONS_SHEEP /*'Y'*/
 yak MONS_YAK /*'Y'*/
 
-%subst asc/ch5a
 simulacrum_large MONS_SIMULACRUM_LARGE /*'Z'*/
 skeleton_large MONS_SKELETON_LARGE /*'Z'*/
 zombie_large MONS_ZOMBIE_LARGE /*'Z'*/
 #armour_mimic MONS_ARMOUR_MIMIC /*'['(BLACK) An apparently abandoned suit of finely-made armour, actually a vicious little beast in disguise.
 
-%subst asc/ch61
 giant_ant MONS_GIANT_ANT /*'a'*/
 giant_cockroach MONS_GIANT_COCKROACH /*'a'*/
 soldier_ant MONS_SOLDIER_ANT /*'a'*/
 
-%subst asc/ch62
 butterfly MONS_BUTTERFLY /*'b'*/
 butterfly1
 butterfly2
@@ -333,13 +307,11 @@ butterfly5
 butterfly6
 giant_bat MONS_GIANT_BAT /*'b'*/
 
-%subst asc/ch63
 centaur MONS_CENTAUR /*'c'*/
 centaur_warrior MONS_CENTAUR_WARRIOR /*'c'*/
 yaktaur MONS_YAKTAUR /*'c'*/
 yaktaur_captain MONS_YAKTAUR_CAPTAIN /*'c'*/
 
-%subst asc/ch64
 firedrake MONS_FIREDRAKE /*'d'*/
 lindwurm MONS_LINDWURM /*'d'*/
 mottled_dragon MONS_MOTTLED_DRAGON /*'d'*/
@@ -347,7 +319,6 @@ steam_dragon MONS_STEAM_DRAGON /*'d'*/
 swamp_drake MONS_SWAMP_DRAKE /*'d'*/
 death_drake MONS_DEATH_DRAKE /*'d'*/
 
-%subst asc/ch65
 elf MONS_ELF /*'e'*/
 deep_elf_fighter0 MONS_DEEP_ELF_FIGHTER /*'e'*/
 deep_elf_soldier0 MONS_DEEP_ELF_SOLDIER /*'e'*/
@@ -364,11 +335,9 @@ deep_elf_high_priest MONS_DEEP_ELF_HIGH_PRIEST /*'e'*/
 deep_elf_blademaster MONS_DEEP_ELF_BLADEMASTER
 deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
 
-%subst asc/ch66
 fungus MONS_FUNGUS /*'f'*/
 wandering_mushroom MONS_WANDERING_MUSHROOM /*'f'*/
 
-%subst asc/ch67
 goblin0 MONS_GOBLIN /*'g'*/
 hobgoblin0 MONS_HOBGOBLIN /*'g'*/
 gnoll0 MONS_GNOLL /*'g'*/
@@ -378,7 +347,6 @@ gargoyle MONS_GARGOYLE /*'g'*/
 metal_gargoyle MONS_METAL_GARGOYLE /*'g'*/
 molten_gargoyle MONS_MOLTEN_GARGOYLE /*'g'*/
 
-%subst asc/ch68
 hell_hog MONS_HELL_HOG /*'h'*/
 hell_hound MONS_HELL_HOUND /*'h'*/
 hog MONS_HOG /*'h'*/
@@ -387,14 +355,11 @@ warg MONS_WARG /*'h'*/
 war_dog MONS_WAR_DOG /*'h'*/
 wolf MONS_WOLF /*'h'*/
 
-%subst asc/ch6a
 jackal MONS_JACKAL /*'j'*/
 
-%subst asc/ch6b
 bumblebee MONS_BUMBLEBEE /*'k'*/
 killer_bee MONS_KILLER_BEE /*'k'*/
 
-%subst asc/ch6c
 giant_gecko MONS_GIANT_GECKO /*'l'*/
 giant_iguana MONS_GIANT_IGUANA /*'l'*/
 giant_lizard MONS_GIANT_LIZARD /*'l'*/
@@ -402,19 +367,16 @@ giant_newt MONS_GIANT_NEWT /*'l'*/
 gila_monster MONS_GILA_MONSTER /*'l'*/
 komodo_dragon MONS_KOMODO_DRAGON /*'l'*/
 
-%subst asc/ch6d
 elephant_slug MONS_ELEPHANT_SLUG /*'m'*/
 giant_slug MONS_GIANT_SLUG /*'m'*/
 giant_snail MONS_GIANT_SNAIL /*'m'*/
 manticore MONS_MANTICORE /*'m'*/
 minotaur MONS_MINOTAUR /*'m'*/
 
-%subst asc/ch6e
 ghoul MONS_GHOUL /*'n'*/
 necrophage MONS_NECROPHAGE /*'n'*/
 rotting_hulk MONS_ROTTING_HULK /*'n'*/
 
-%subst asc/ch6f
 orc0 MONS_ORC /*'o'*/
 orc_warrior0 MONS_ORC_WARRIOR /*'o'*/
 orc_knight0 MONS_ORC_KNIGHT /*'o'*/
@@ -426,7 +388,6 @@ orc_high_priest MONS_ORC_HIGH_PRIEST /*'o'*/
 orc_sorcerer MONS_ORC_SORCERER /*'o'*/
 orc_wizard MONS_ORC_WIZARD /*'o'*/
 
-%subst asc/ch70
 flayed_ghost MONS_FLAYED_GHOST /*'p'*/
 hungry_ghost MONS_HUNGRY_GHOST /*'p'*/
 %rim 0
@@ -437,30 +398,25 @@ ghost MONS_PLAYER_GHOST /*'p'*/
 
 quasit MONS_QUASIT /*'q'*/
 
-%subst asc/ch72
 green_rat MONS_GREEN_RAT /*'r'*/
 grey_rat MONS_GREY_RAT /*'r'*/
 orange_rat MONS_ORANGE_RAT /*'r'*/
 quokka MONS_QUOKKA /*'r'*/
 rat MONS_RAT /*'r'*/
 
-%subst asc/ch73
 giant_centipede MONS_GIANT_CENTIPEDE /*'s'*/
 giant_mite MONS_GIANT_MITE /*'s'*/
 redback MONS_REDBACK /*'s'*/
 scorpion MONS_SCORPION /*'s'*/
 wolf_spider MONS_WOLF_SPIDER /*'s'*/
 
-%subst asc/ch75
 ugly_thing MONS_UGLY_THING /*'u'*/
 very_ugly_thing MONS_VERY_UGLY_THING /*'u'*/
 
-%subst asc/ch76
 air_elemental MONS_AIR_ELEMENTAL /*'v'*/
 fire_vortex MONS_FIRE_VORTEX /*'v'*/
 spatial_vortex MONS_SPATIAL_VORTEX /*'v'*/
 
-%subst asc/ch77
 killer_bee_larva MONS_ANT_LARVA /*'w'*/
 brain_worm MONS_BRAIN_WORM /*'w'*/
 killer_bee_larva MONS_KILLER_BEE_LARVA /*'w'*/
@@ -469,18 +425,15 @@ spiny_worm MONS_SPINY_WORM /*'w'*/
 swamp_worm MONS_SWAMP_WORM /*'w'*/
 worm MONS_WORM /*'w'*/
 
-%subst asc/ch78
 abomination_small MONS_ABOMINATION_SMALL /*'x'*/
 unseen_horror MONS_UNSEEN_HORROR /*'x'*/
 
-%subst asc/ch79
 giant_blowfly MONS_GIANT_BLOWFLY /*'y'*/
 giant_mosquito MONS_GIANT_MOSQUITO /*'y'*/
 moth_of_wrath MONS_MOTH_OF_WRATH /*'y'*/
 red_wasp MONS_RED_WASP /*'y'*/
 yellow_wasp MONS_YELLOW_WASP /*'y'*/
 
-%subst asc/ch7a
 curse_skull MONS_CURSE_SKULL /*'z'*/
 curse_toe MONS_CURSE_TOE /*'z'*/
 flying_skull MONS_FLYING_SKULL /*'z'*/

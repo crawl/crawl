@@ -1,128 +1,45 @@
-##########################################################################
-# makefile.unix
-#
-# This is a makefile to build all the rltiles files needed for Dungeon
-# Crawl - Stone Soup.
-#
-# - Enne (enne.walker@gmail.com)
-#
 
-SRC = tool/
-B2PSRC = bmp2png/
-B2P = bmp2png
-B2PTOOL = $(B2PSRC)$(B2P)
+SDL_CFLAGS := $(shell sdl-config --cflags)
+SDL_LDFLAGS := $(shell sdl-config --libs)
 
-CC = cc
+ifeq ($(strip $(OSX)),y)
+PNG_INCLUDE := -I/sw/include
+PNG_LIB := -L/sw/lib
+else
+PNG_INCLUDE :=
+PNG_LIB :=
+endif
+
+CFLAGS := $(SDL_CFLAGS) $(PNG_INCLUDE)
+LDFLAGS := $(SDL_LDFLAGS) $(PNGLIB) -lSDL_Image -lpng
+
+CXX = g++
 DELETE = rm -f
 
-OBJECTS = \
-$(SRC)bm.o \
-$(SRC)dcpl.o \
-$(SRC)dctile.o
+TOOLDIR := tool
+TILEGEN := $(TOOLDIR)/tilegen.elf
 
-TOOLS = \
-dcpl \
-dctile
+INPUTS := main dngn player demon
+INPUTFILES := $(INPUTS:%=dc-%.txt)
+HEADERS := $(INPUTS:%=tiledef-%.h)
+SOURCE := $(INPUTS:%=tiledef-%.cc)
+IMAGES := $(INPUTS:%=%.png)
 
-EXTRATOOLS = \
-dcreverse
+BASE_OBJECTS := tile_colour.o tile.o tile_page.o tile_list_processor.o main.o
+OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
 
-HEADERS = \
-tiledef.h \
-tiledef-p.h \
-tilep-cmt.h \
-tiledef-dngn.h \
-tilecount-dngn.h \
-map.htm
+all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
 
-ALLTOOLS = $(TOOLS) $(EXTRATOOLS)
-
-GENERATEDBMP = \
-tile.bmp \
-player.bmp \
-dngn.bmp
-
-TILEBMP = \
-$(GENERATEDBMP) \
-title.bmp
-
-TILEPNG = $(TILEBMP:.bmp=.png)
-
-##########################################################################
-# Top-level
-#
-
-all: tools tiles
-
-tools: $(TOOLS)
-
-tiles: $(TILEBMP) $(TILEPNG)
-
-##########################################################################
-# Tools
-#
-# Note: dcreverse is not built by default.  It does the opposite
-# of dctile.  It takes a bitmap with lots of tiles, specifies regions,
-# and cuts them out into smaller pieces.  It's useful only for when somebody
-# updates the tiles directly and then doesn't give you the source files.
-# Not that I'm bitter.
-#
-
-depend: $(OBJECTS:.o=.c)
-	@for i in $^; do \
-		$(CC) -c $$i
-
-dcpl: $(SRC)dcpl.o $(SRC)bm.o
-	$(CC) $(SRC)dcpl.o $(SRC)bm.o -o dcpl
-
-dctile: $(SRC)dctile.o $(SRC)bm.o
-	$(CC) $(SRC)dctile.o $(SRC)bm.o -o dctile
-
-dcreverse: $(SRC)dcreverse.o $(SRC)bm.o
-	$(CC) $(SRC)dcreverse.o $(SRC)bm.o -o dcreverse
-
-##########################################################################
-# Bitmaps
-#
-
-# NOTE: the dependencies here aren't fantastic.  In an ideal world,
-# there would be another tool elf that could read an input text file
-# and then output the .bmp and .txt dependencies for it.  It's kind
-# of a low priority though, as tiles will be rebuilt infrequently.
-
-dngn.bmp: dngn.txt dctile
-	./dctile dngn.txt
-
-tile.bmp: dc-2d.txt dctile
-	./dctile dc-2d.txt
-
-player.bmp: dc-pl.txt dcpl
-	./dcpl dc-pl.txt
-
-wall2d.bmp: dc-wall2d.txt dctile
-	./dctile dc-wall2d.txt
-
-##########################################################################
-# PNG Conversion
-#
-
-$(B2PTOOL):
-	cd $(B2PSRC) && make -f makefile.lin $(B2P) && cd ..
-
-%.png: %.bmp $(B2PTOOL)
-	$(DELETE) $@
-	$(B2PTOOL) -Q $<
-
-##########################################################################
-# Cleaning...
-#
+tiledef-%.h tiledef-%.cc %.png: dc-%.txt $(TILEGEN)
+	$(TILEGEN) $<
 
 clean:
-	$(DELETE) $(OBJECTS)
-	$(DELETE) $(ALLTOOLS)
-	cd $(B2PSRC) && make -f makefile.lin clean && cd ..
+	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES)
 
 distclean: clean
-	$(DELETE) $(GENERATEDBMP)
-	$(DELETE) $(TILEPNG)
-	$(DELETE) $(HEADERS)
+
+.cc.o:
+	${CXX} ${CFLAGS} -c $< -o $@
+
+$(TILEGEN): $(OBJECTS)
+	${CXX} ${LDFLAGS} $(OBJECTS) -o $@

@@ -10,16 +10,18 @@
 
 #ifdef USE_TILE
 
-#include "tiledef.h"
-#include "beam.h"
+#include "tiledef-main.h"
+#include "tiledef-demon.h"
+#include "tiledef-dngn.h"
+#include "tiledef-player.h"
 
-#include "tiledef-p.h"
+#include "beam.h"
 
 struct dolls_data
 {
     dolls_data() { memset(parts, 0, sizeof(parts)); }
 
-    int parts[TILEP_PARTS_TOTAL];
+    int parts[TILEP_PART_MAX];
 };
 
 //*tile1.cc: get data from core part and drives tile drawing codes
@@ -190,34 +192,9 @@ const char *get_parts_name(int part, int idx);
 int get_parts_idx(int part, char *name);
 #endif
 
-// Dungeon view window size
-#define TILE_DAT_XMAX 35
-#define TILE_DAT_YMAX 35
 // normal tile size in px
 #define TILE_X 32
 #define TILE_Y 32
-
-// Unit size
-// iso mode screen size
-#define TILE_XMAX_ISO 24
-#define TILE_YMAX_ISO 13
-// iso tile size in px
-#define TILE_X_EX_ISO 64
-#define TILE_Y_EX_ISO 64
-
-// iso mode  unit grid size in px
-#define TILE_UX_ISO (TILE_X_EX_ISO/2)
-#define TILE_UY_ISO (TILE_X_EX_ISO/2)
-
-// screen size in grids
-#define TILE_XMAX_NORMAL 17
-#define TILE_YMAX_NORMAL 17
-// grid size in px
-#define TILE_UX_NORMAL TILE_X
-#define TILE_UY_NORMAL TILE_Y
-
-#define TILEP_BOOTS_NAGA_BARDING (N_PART_BOOTS + 1)
-#define TILEP_BOOTS_CENTAUR_BARDING (N_PART_BOOTS + 2)
 
 #endif // USE_TILES
 #endif

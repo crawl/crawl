@@ -838,13 +838,13 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
 #ifdef USE_TILE
     if (feat == DNGN_ROCK_WALL)
     {
-        env.tile_flv(c).wall = tile_DNGN_start[IDX_WALL_UNDEAD]
-            + random2(tile_DNGN_count[IDX_WALL_UNDEAD]);
+        env.tile_flv(c).wall = TILE_WALL_UNDEAD
+            + random2(tile_dngn_count[TILE_WALL_UNDEAD]);
     }
     else if (feat == DNGN_FLOOR)
     {
-        env.tile_flv(c).floor = tile_DNGN_start[IDX_FLOOR_NERVES]
-            + random2(tile_DNGN_count[IDX_FLOOR_NERVES]);
+        env.tile_flv(c).floor = TILE_FLOOR_NERVES
+            + random2(tile_dngn_count[TILE_FLOOR_NERVES]);
     }
 #endif
 }

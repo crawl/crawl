@@ -7,6 +7,8 @@
 #ifndef TILETEX_H
 #define TILETEX_H
 
+#include "tiles.h"
+
 enum TextureID
 {
     TEX_DUNGEON,
@@ -52,9 +54,58 @@ protected:
 class TilesTexture : public GenericTexture
 {
 public:
-    void get_texcoord(int idx, float &x, float &y, float &wx, float &wy);
+    TilesTexture();
 
-    void get_texcoord_doll(int part, int idx, int ymax, float &x, float &y, float &wx, float &wy, int &wx_pix, int &wy_pix, int &ox, int &oy);
+    void set_info(int max, tile_info *info);
+    inline const tile_info &get_info(int idx);
+    inline void get_coords(int idx, int ofs_x, int ofs_y,
+                           float &pos_sx, float &pos_sy,
+                           float &pos_ex, float &pos_ey,
+                           float &tex_sx, float &tex_sy,
+                           float &tex_ex, float &tex_ey,
+                           bool centre = true, int ymax = -1);
+
+protected:
+    int m_tile_max;
+    tile_info *m_tile_info;
 };
+
+inline const tile_info &TilesTexture::get_info(int idx)
+{
+    assert(idx < m_tile_max);
+    return m_tile_info[idx];
+}
+
+inline void TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,
+                                     float &pos_sx, float &pos_sy,
+                                     float &pos_ex, float &pos_ey,
+                                     float &tex_sx, float &tex_sy,
+                                     float &tex_ex, float &tex_ey,
+                                     bool centre, int ymax)
+{
+    const tile_info &inf = get_info(idx);
+
+    float fwidth = m_width;
+    float fheight = m_height;
+
+    // center tiles on x, but allow taller tiles to extend upwards
+    int size_ox = centre ? TILE_X / 2 - inf.width / 2 : 0;
+    int size_oy = centre ? TILE_Y - inf.height : 0;
+    
+    int ey = inf.ey;
+    if (ymax > 0)
+        ey = std::min(inf.sy + ymax - inf.offset_y, ey);
+
+    pos_sx += (ofs_x + inf.offset_x + size_ox) / (float)TILE_X;
+    pos_sy += (ofs_y + inf.offset_y + size_oy) / (float)TILE_Y;
+    pos_ex = pos_sx + (inf.ex - inf.sx) / (float)TILE_X;
+    pos_ey = pos_sy + (ey - inf.sy) / (float)TILE_Y;
+
+    tex_sx = inf.sx / fwidth;
+    tex_sy = inf.sy / fheight;
+    tex_ex = inf.ex / fwidth;
+    tex_ey = ey / fheight;
+}
+
 
 #endif

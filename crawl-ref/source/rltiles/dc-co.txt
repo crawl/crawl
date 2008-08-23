@@ -3,7 +3,6 @@
 %sdir dc-mon
 
 %corpse 1
-%subst large_mimic
 %back dc-misc/blood_red
 glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER /* @ */
 hell_knight CORPSE_HELL_KNIGHT /* @ */
@@ -260,3 +259,5 @@ yellow_wasp CORPSE_YELLOW_WASP /* y */
 %back dc-misc/blood_red
 mermaid_water CORPSE_MERMAID
 merfolk_fighter_water CORPSE_MERFOLK_FIGHTER
+
+%corpse 0

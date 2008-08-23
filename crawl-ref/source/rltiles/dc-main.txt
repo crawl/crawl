@@ -1,0 +1,23 @@
+%back none
+%name main
+
+# idx == 0 must be invalid.
+dc-dngn/dngn_unseen
+
+## Set black rim
+## Items
+%include dc-item.txt
+## Monsters
+%include dc-mon.txt
+## Clear black rim
+%rim 0
+
+## Corpse
+%include dc-co.txt
+
+####PLAYER 
+####include dc-jobs.txt
+
+#### Effects, etc.
+%include dc-misc.txt
+

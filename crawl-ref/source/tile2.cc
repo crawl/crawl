@@ -26,7 +26,6 @@
 #include "spells3.h"
 #include "stuff.h"
 #include "tiles.h"
-#include "tilecount-dngn.h"
 #include "transfor.h"
 
 static int wall_flavors     = 0;
@@ -87,54 +86,54 @@ void WallIdx(int &wall, int &floor, int &special)
         {
         case BLUE:
         case LIGHTBLUE:
-            wall  = IDX_WALL_ZOT_BLUE;
-            floor = IDX_FLOOR_TOMB;
+            wall  = TILE_WALL_ZOT_BLUE;
+            floor = TILE_FLOOR_TOMB;
             break;
 
         case RED:
         case LIGHTRED:
-            wall  = IDX_WALL_ZOT_RED;
-            floor = IDX_FLOOR_TOMB;
+            wall  = TILE_WALL_ZOT_RED;
+            floor = TILE_FLOOR_TOMB;
             break;
 
         case MAGENTA:
         case LIGHTMAGENTA:
-            wall  = IDX_WALL_ZOT_MAGENTA;
-            floor = IDX_FLOOR_TOMB;
+            wall  = TILE_WALL_ZOT_MAGENTA;
+            floor = TILE_FLOOR_TOMB;
             break;
 
         case GREEN:
         case LIGHTGREEN:
-            wall  = IDX_WALL_ZOT_GREEN;
-            floor = IDX_FLOOR_TOMB;
+            wall  = TILE_WALL_ZOT_GREEN;
+            floor = TILE_FLOOR_TOMB;
             break;
 
         case CYAN:
         case LIGHTCYAN:
-            wall  = IDX_WALL_ZOT_CYAN;
-            floor = IDX_FLOOR_TOMB;
+            wall  = TILE_WALL_ZOT_CYAN;
+            floor = TILE_FLOOR_TOMB;
             break;
 
         case BROWN:
         case YELLOW:
-            wall  = IDX_WALL_ZOT_YELLOW;
-            floor = IDX_FLOOR_TOMB;
+            wall  = TILE_WALL_ZOT_YELLOW;
+            floor = TILE_FLOOR_TOMB;
             break;
 
         case BLACK:
         case WHITE:
         default:
-            wall  = IDX_WALL_ZOT_GRAY;
-            floor = IDX_FLOOR_TOMB;
+            wall  = TILE_WALL_ZOT_GRAY;
+            floor = TILE_FLOOR_TOMB;
             break;
         }
 
         unsigned int seen = you.get_place_info(LEVEL_PANDEMONIUM).levels_seen;
 
         if ((seen + env.rock_colour) % 3 == 1)
-            wall = IDX_WALL_FLESH;
+            wall = TILE_WALL_FLESH;
         if ((seen + env.floor_colour) % 3 == 1)
-            floor = IDX_FLOOR_NERVES;
+            floor = TILE_FLOOR_NERVES;
 
         return;
     }
@@ -144,34 +143,34 @@ void WallIdx(int &wall, int &floor, int &special)
         {
         case YELLOW:
         case BROWN:
-            wall = IDX_WALL_HIVE;
+            wall = TILE_WALL_HIVE;
             break;
         case RED:
         case LIGHTRED:
-            wall = IDX_WALL_PEBBLE_RED;
+            wall = TILE_WALL_PEBBLE_RED;
             break;
         case GREEN:
         case LIGHTGREEN:
-            wall = IDX_WALL_SLIME;
+            wall = TILE_WALL_SLIME;
             break;
         case BLUE:
-            wall = IDX_WALL_ICE;
+            wall = TILE_WALL_ICE;
             break;
         case LIGHTGREY:
         case WHITE:
-            wall = IDX_WALL_HALL;
+            wall = TILE_WALL_HALL;
             break;
         default:
-            wall = IDX_WALL_UNDEAD;
+            wall = TILE_WALL_UNDEAD;
             break;
         }
-        floor = IDX_FLOOR_NERVES;
+        floor = TILE_FLOOR_NERVES;
         return;
     }
     else if (you.level_type == LEVEL_LABYRINTH)
     {
-        wall  = IDX_WALL_UNDEAD;
-        floor = IDX_FLOOR_TOMB;
+        wall  = TILE_WALL_UNDEAD;
+        floor = TILE_FLOOR_TOMB;
         return;
     }
     else if (you.level_type == LEVEL_PORTAL_VAULT)
@@ -185,42 +184,42 @@ void WallIdx(int &wall, int &floor, int &special)
             switch (colour)
             {
                 case BLUE:
-                    wall    = IDX_WALL_BAZAAR_GRAY;
-                    floor   = IDX_FLOOR_BAZAAR_GRASS;
-                    special = IDX_FLOOR_BAZAAR_GRASS1_SPECIAL;
+                    wall    = TILE_WALL_BAZAAR_GRAY;
+                    floor   = TILE_FLOOR_BAZAAR_GRASS;
+                    special = TILE_FLOOR_BAZAAR_GRASS1_SPECIAL;
                     return;
 
                 case RED:
                     // Reds often have lava, which looks ridiculous
                     // next to grass or dirt, so we'll use existing
                     // floor and wall tiles here.
-                    wall    = IDX_WALL_PEBBLE_RED;
-                    floor   = IDX_FLOOR_VAULT;
-                    special = IDX_FLOOR_BAZAAR_VAULT_SPECIAL;
+                    wall    = TILE_WALL_PEBBLE_RED;
+                    floor   = TILE_FLOOR_VAULT;
+                    special = TILE_FLOOR_BAZAAR_VAULT_SPECIAL;
                     return;
 
                 case LIGHTBLUE:
-                    wall    = IDX_WALL_HIVE;
-                    floor   = IDX_FLOOR_BAZAAR_GRASS;
-                    special = IDX_FLOOR_BAZAAR_GRASS2_SPECIAL;
+                    wall    = TILE_WALL_HIVE;
+                    floor   = TILE_FLOOR_BAZAAR_GRASS;
+                    special = TILE_FLOOR_BAZAAR_GRASS2_SPECIAL;
                     return;
 
                 case GREEN:
-                    wall    = IDX_WALL_BAZAAR_STONE;
-                    floor   = IDX_FLOOR_BAZAAR_GRASS;
-                    special = IDX_FLOOR_BAZAAR_GRASS1_SPECIAL;
+                    wall    = TILE_WALL_BAZAAR_STONE;
+                    floor   = TILE_FLOOR_BAZAAR_GRASS;
+                    special = TILE_FLOOR_BAZAAR_GRASS1_SPECIAL;
                     return;
 
                 case MAGENTA:
-                    wall    = IDX_WALL_BAZAAR_STONE;
-                    floor   = IDX_FLOOR_BAZAAR_DIRT;
-                    special = IDX_FLOOR_BAZAAR_DIRT_SPECIAL;
+                    wall    = TILE_WALL_BAZAAR_STONE;
+                    floor   = TILE_FLOOR_BAZAAR_DIRT;
+                    special = TILE_FLOOR_BAZAAR_DIRT_SPECIAL;
                     return;
 
                 default:
-                    wall    = IDX_WALL_VAULT;
-                    floor   = IDX_FLOOR_VAULT;
-                    special = IDX_FLOOR_BAZAAR_VAULT_SPECIAL;
+                    wall    = TILE_WALL_VAULT;
+                    floor   = TILE_FLOOR_VAULT;
+                    special = TILE_FLOOR_BAZAAR_VAULT_SPECIAL;
                     return;
             }
         }
@@ -232,118 +231,118 @@ void WallIdx(int &wall, int &floor, int &special)
     switch (you.where_are_you)
     {
         case BRANCH_MAIN_DUNGEON:
-            wall  = IDX_WALL_NORMAL;
-            floor = IDX_FLOOR_NORMAL;
+            wall  = TILE_WALL_NORMAL;
+            floor = TILE_FLOOR_NORMAL;
             return;
 
         case BRANCH_HIVE:
-            wall  = IDX_WALL_HIVE;
-            floor = IDX_FLOOR_HIVE;
+            wall  = TILE_WALL_HIVE;
+            floor = TILE_FLOOR_HIVE;
             return;
 
         case BRANCH_VAULTS:
-            wall  = IDX_WALL_VAULT;
-            floor = IDX_FLOOR_VAULT;
+            wall  = TILE_WALL_VAULT;
+            floor = TILE_FLOOR_VAULT;
             return;
 
         case BRANCH_ECUMENICAL_TEMPLE:
-            wall  = IDX_WALL_VINES;
-            floor = IDX_FLOOR_VINES;
+            wall  = TILE_WALL_VINES;
+            floor = TILE_FLOOR_VINES;
             return;
 
         case BRANCH_ELVEN_HALLS:
         case BRANCH_HALL_OF_BLADES:
-            wall  = IDX_WALL_HALL;
-            floor = IDX_FLOOR_HALL;
+            wall  = TILE_WALL_HALL;
+            floor = TILE_FLOOR_HALL;
             return;
 
         case BRANCH_TARTARUS:
         case BRANCH_CRYPT:
         case BRANCH_VESTIBULE_OF_HELL:
-            wall  = IDX_WALL_UNDEAD;
-            floor = IDX_FLOOR_TOMB;
+            wall  = TILE_WALL_UNDEAD;
+            floor = TILE_FLOOR_TOMB;
             return;
 
         case BRANCH_TOMB:
-            wall  = IDX_WALL_TOMB;
-            floor = IDX_FLOOR_TOMB;
+            wall  = TILE_WALL_TOMB;
+            floor = TILE_FLOOR_TOMB;
             return;
 
         case BRANCH_DIS:
-            wall  = IDX_WALL_ZOT_CYAN;
-            floor = IDX_FLOOR_TOMB;
+            wall  = TILE_WALL_ZOT_CYAN;
+            floor = TILE_FLOOR_TOMB;
             return;
 
         case BRANCH_GEHENNA:
-            wall  = IDX_WALL_ZOT_RED;
-            floor = IDX_FLOOR_ROUGH_RED;
+            wall  = TILE_WALL_ZOT_RED;
+            floor = TILE_FLOOR_ROUGH_RED;
             return;
 
         case BRANCH_COCYTUS:
-            wall  = IDX_WALL_ICE;
-            floor = IDX_FLOOR_ICE;
+            wall  = TILE_WALL_ICE;
+            floor = TILE_FLOOR_ICE;
             return;
 
         case BRANCH_ORCISH_MINES:
-            wall  = IDX_WALL_ORC;
-            floor = IDX_FLOOR_ORC;
+            wall  = TILE_WALL_ORC;
+            floor = TILE_FLOOR_ORC;
             return;
 
         case BRANCH_LAIR:
-            wall  = IDX_WALL_LAIR;
-            floor = IDX_FLOOR_LAIR;
+            wall  = TILE_WALL_LAIR;
+            floor = TILE_FLOOR_LAIR;
             return;
 
         case BRANCH_SLIME_PITS:
-            wall  = IDX_WALL_SLIME;
-            floor = IDX_FLOOR_SLIME;
+            wall  = TILE_WALL_SLIME;
+            floor = TILE_FLOOR_SLIME;
             return;
 
         case BRANCH_SNAKE_PIT:
-            wall  = IDX_WALL_SNAKE;
-            floor = IDX_FLOOR_SNAKE;
+            wall  = TILE_WALL_SNAKE;
+            floor = TILE_FLOOR_SNAKE;
             return;
 
         case BRANCH_SWAMP:
-            wall  = IDX_WALL_SWAMP;
-            floor = IDX_FLOOR_SWAMP;
+            wall  = TILE_WALL_SWAMP;
+            floor = TILE_FLOOR_SWAMP;
             return;
 
         case BRANCH_SHOALS:
             if (depth == branch_depth)
-                wall = IDX_WALL_VINES;
+                wall = TILE_WALL_VINES;
             else
-                wall = IDX_WALL_YELLOW_ROCK;
+                wall = TILE_WALL_YELLOW_ROCK;
 
-            floor = IDX_FLOOR_SAND_STONE;
+            floor = TILE_FLOOR_SAND_STONE;
             return;
 
         case BRANCH_HALL_OF_ZOT:
             if (you.your_level - you.branch_stairs[7] <= 1)
             {
-                wall  = IDX_WALL_ZOT_YELLOW;
-                floor = IDX_FLOOR_TOMB;
+                wall  = TILE_WALL_ZOT_YELLOW;
+                floor = TILE_FLOOR_TOMB;
                 return;
             }
 
             switch (you.your_level - you.branch_stairs[7])
             {
                 case 2:
-                    wall  = IDX_WALL_ZOT_GREEN;
-                    floor = IDX_FLOOR_TOMB;
+                    wall  = TILE_WALL_ZOT_GREEN;
+                    floor = TILE_FLOOR_TOMB;
                     return;
                 case 3:
-                    wall  = IDX_WALL_ZOT_CYAN;
-                    floor = IDX_FLOOR_TOMB;
+                    wall  = TILE_WALL_ZOT_CYAN;
+                    floor = TILE_FLOOR_TOMB;
                     return;
                 case 4:
-                    wall  = IDX_WALL_ZOT_BLUE;
-                    floor = IDX_FLOOR_TOMB;
+                    wall  = TILE_WALL_ZOT_BLUE;
+                    floor = TILE_FLOOR_TOMB;
                     return;
                 case 5:
                 default:
-                    wall  = IDX_WALL_ZOT_MAGENTA;
-                    floor = IDX_FLOOR_TOMB;
+                    wall  = TILE_WALL_ZOT_MAGENTA;
+                    floor = TILE_FLOOR_TOMB;
                     return;
             }
 
@@ -357,30 +356,21 @@ void WallIdx(int &wall, int &floor, int &special)
         // the compiler will issue a warning when new branches are created.
     }
 
-    wall  = IDX_WALL_NORMAL;
-    floor = IDX_FLOOR_NORMAL;
+    wall  = TILE_WALL_NORMAL;
+    floor = TILE_FLOOR_NORMAL;
 }
 
 void TileLoadWall(bool wizard)
 {
-    int wall_idx;
-    int floor_idx;
-    int special_idx;
-    WallIdx(wall_idx, floor_idx, special_idx);
+    WallIdx(wall_tile_idx, floor_tile_idx, special_tile_idx);
 
     // Number of flavors are generated automatically...
-    // TODO enne - link floor tile index to the right location rather than
-    // starting at floor normal
-    floor_tile_idx = tile_DNGN_start[floor_idx];
-    floor_flavors  = tile_DNGN_count[floor_idx];
+    floor_flavors  = tile_dngn_count[floor_tile_idx];
+    wall_flavors  = tile_dngn_count[wall_tile_idx];
 
-    wall_tile_idx = tile_DNGN_start[wall_idx];
-    wall_flavors  = tile_DNGN_count[wall_idx];
-
-    if (special_idx != -1)
+    if (special_tile_idx != -1)
     {
-        special_tile_idx = tile_DNGN_start[special_idx];
-        special_flavors = tile_DNGN_count[special_idx];
+        special_flavors = tile_dngn_count[special_tile_idx];
     }
     else
     {
@@ -527,9 +517,9 @@ void TilePlayerEdit()
 }
 
     dolls_data dolls[DOLLS_MAX], undo_dolls[DOLLS_MAX];
-    int copy_doll[TILEP_PARTS_TOTAL];
+    int copy_doll[TILEP_PART_MAX];
 
-    //int parts[TILEP_PARTS_TOTAL];
+    //int parts[TILEP_PART_MAX];
     int i, j, x, y, kin, done = 0;
     int cur_doll = 0;
     int pre_part = 0;
@@ -976,7 +966,7 @@ void TileGhostInit(const struct ghost_demon &ghost)
     for (y = 0; y < TILE_X; y++)
          mask[x + y*TILE_X] = (x+y)&1;
 
-    for (x = 0; x < TILEP_PARTS_TOTAL; x++)
+    for (x = 0; x < TILEP_PART_MAX; x++)
     {
          doll.parts[x] = 0;
          current_parts[x] = 0;
@@ -985,7 +975,7 @@ void TileGhostInit(const struct ghost_demon &ghost)
                        ghost.xl, doll.parts);
     tilep_job_default (ghost.job, g_gender,  doll.parts);
 
-    for (x = TILEP_PART_CLOAK; x < TILEP_PARTS_TOTAL; x++)
+    for (x = TILEP_PART_CLOAK; x < TILEP_PART_MAX; x++)
     {
          if (doll.parts[x] == TILEP_SHOW_EQUIP)
          {
