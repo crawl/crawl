@@ -4556,7 +4556,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     hurt_final = hurt;
 
     if (beam.is_tracer)
-        hurt_final -= mon->ac / 2;
+        hurt_final -= std::max(mon->ac / 2, 0);
     else
         hurt_final -= random2(1 + mon->ac);
 
@@ -4609,7 +4609,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         }
 
         // Check only if actual damage.
-        if (hurt_final > 0)
+        if (hurt_final > 0 && hurt > 0)
         {
             // Monster could be hurt somewhat, but only apply the
             // monster's power based on how badly it is affected.
