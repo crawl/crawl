@@ -10,6 +10,7 @@ class tile_list_processor
 {
 public:
     tile_list_processor();
+    virtual ~tile_list_processor();
 
     bool process_list(const char *list_file);
     bool write_data();
@@ -28,7 +29,7 @@ protected:
     bool m_corpsify;
     bool m_composing;
     bool m_shrink;
-    tile m_back;
+    std::vector<tile*> m_back;
     std::string m_parts_ctg;
     std::string m_sdir;
     std::string m_prefix;

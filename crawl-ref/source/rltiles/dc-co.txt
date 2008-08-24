@@ -3,7 +3,7 @@
 %sdir dc-mon
 
 %corpse 1
-%back dc-misc/blood_red
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER /* @ */
 hell_knight CORPSE_HELL_KNIGHT /* @ */
 human CORPSE_HUMAN /* @ */
@@ -16,7 +16,7 @@ boring_beetle CORPSE_BORING_BEETLE /* B */
 boulder_beetle CORPSE_BOULDER_BEETLE /* B */
 giant_beetle CORPSE_GIANT_BEETLE /* B */
 
-%back dc-misc/blood_red
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 cyclops CORPSE_CYCLOPS /* C */
 fire_giant CORPSE_FIRE_GIANT /* C */
 frost_giant CORPSE_FROST_GIANT /* C */
@@ -53,7 +53,7 @@ giant_amoeba CORPSE_GIANT_AMOEBA /* J */
 kobold CORPSE_KOBOLD /* K */
 big_kobold CORPSE_BIG_KOBOLD
 
-%back dc-misc/blood_red
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 greater_naga0 CORPSE_GREATER_NAGA /* N */
 guardian_naga CORPSE_GUARDIAN_NAGA /* N */
 naga0 CORPSE_NAGA /* N */
@@ -67,7 +67,7 @@ two_headed_ogre CORPSE_TWO_HEADED_OGRE /* O */
 queen_ant CORPSE_QUEEN_ANT /* Q */
 queen_bee CORPSE_QUEEN_BEE /* Q */
 
-%back dc-misc/blood_red
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 black_snake CORPSE_BLACK_SNAKE /* S */
 brown_snake CORPSE_BROWN_SNAKE /* S */
 grey_snake CORPSE_GREY_SNAKE /* S */
@@ -95,7 +95,7 @@ giant_cockroach CORPSE_GIANT_COCKROACH /* a */
 soldier_ant CORPSE_SOLDIER_ANT /* a */
 
 butterfly CORPSE_BUTTERFLY /* b */
-%back dc-misc/blood_red
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 giant_bat CORPSE_GIANT_BAT /* b */
 
 centaur CORPSE_CENTAUR /* c */
@@ -140,7 +140,7 @@ jackal CORPSE_JACKAL /* j */
 bumblebee CORPSE_BUMBLEBEE /* k */
 killer_bee CORPSE_KILLER_BEE /* k */
 
-%back dc-misc/blood_red
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 giant_gecko CORPSE_GIANT_GECKO /* l */
 giant_iguana CORPSE_GIANT_IGUANA /* l */
 giant_lizard CORPSE_GIANT_LIZARD /* l */
@@ -153,14 +153,14 @@ elephant_slug CORPSE_ELEPHANT_SLUG /* m */
 giant_slug CORPSE_GIANT_SLUG /* m */
 giant_snail CORPSE_GIANT_SNAIL /* m */
 manticore CORPSE_MANTICORE /* m */
-%back dc-misc/blood_red
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 minotaur CORPSE_MINOTAUR /* m */
 
 %back dc-misc/blood_green
 ghoul CORPSE_GHOUL /* n */
 necrophage CORPSE_NECROPHAGE /* n */
 
-%back dc-misc/blood_red
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 orc0 CORPSE_ORC /* o */
 ###orc_high_priest CORPSE_ORC_HIGH_PRIEST /* o */
 ###orc_priest CORPSE_ORC_PRIEST /* o */
@@ -256,7 +256,7 @@ yellow_wasp CORPSE_YELLOW_WASP /* y */
 %finish CORPSE_DRACONIAN_YELLOW
 
 %sdir dc-mon
-%back dc-misc/blood_red
+%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 mermaid_water CORPSE_MERMAID
 merfolk_fighter_water CORPSE_MERFOLK_FIGHTER
 

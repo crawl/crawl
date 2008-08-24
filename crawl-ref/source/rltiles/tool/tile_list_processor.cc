@@ -14,6 +14,15 @@ tile_list_processor::tile_list_processor() :
 {
 }
 
+tile_list_processor::~tile_list_processor()
+{
+    for (unsigned int i = 0; i < m_back.size(); i++)
+    {
+        delete m_back[i];
+    }
+    m_back.resize(0);
+}
+
 bool tile_list_processor::load_image(tile &img, const char *filename)
 {
     assert(filename);
@@ -144,20 +153,22 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
     eat_comments(read_line);
 
     const char *delim = " ";
-    char *arg1 = strtok(read_line, delim);
-    if (!arg1)
+    char *arg;
+
+    arg = strtok(read_line, delim);
+    if (!arg)
         return true;
 
-    eat_whitespace(arg1);
+    eat_whitespace(arg);
 
-    if (!*arg1)
+    if (!*arg)
         return true;
     
-    if (arg1[0] == '#')
+    if (arg[0] == '#')
         return true;
 
-    char *arg2 = strtok(NULL, delim);
-    eat_whitespace(arg2);
+    std::vector<char *> m_args;
+    m_args.push_back(arg);
 
     while (char *extra = strtok(NULL, delim))
     {
@@ -165,53 +176,62 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         if (!*extra)
             continue;
 
-        fprintf(stderr, "Error (%s:%d): too many args.\n", list_file, line);
-        return false;
+        m_args.push_back(extra);
     }
 
-    if (arg1[0] == '%')
+    if (arg[0] == '%')
     {
-        arg1++;
+        arg++;
 
-        #define CHECK_NO_ARG2 \
-            if (arg2) \
+        #define CHECK_NO_ARG(x) \
+            if (m_args.size() > x) \
             { \
                 fprintf(stderr, "Error (%s:%d): " \
-                    "invalid arg following '%s'.\n", \
-                    list_file, line, arg1); \
+                    "invalid args following '%s'.\n", \
+                    list_file, line, arg); \
                 return false; \
             }
 
-        #define CHECK_ARG2 \
-            if (!arg2) \
+        #define CHECK_ARG1 \
+            if (m_args.size() <= 1) \
             { \
                 fprintf(stderr, "Error (%s:%d): " \
                     "missing arg following '%s'.\n", \
-                    list_file, line, arg1); \
+                    list_file, line, arg); \
                 return false; \
             }
 
-        if (strcmp(arg1, "back") == 0)
+        if (strcmp(arg, "back") == 0)
         {
-            CHECK_ARG2;
+            CHECK_ARG1;
 
-            if (strcmp(arg2, "none") == 0)
+            for (unsigned int i = 0; i < m_back.size(); i++)
             {
-                m_back.unload();
+                delete m_back[i];
             }
-            else
+            m_back.resize(0);
+
+            if (strcmp(m_args[1], "none") == 0)
             {
-                if (!load_image(m_back, arg2))
+                CHECK_NO_ARG(2);
+                return true;
+            }
+
+            for (unsigned int i = 1; i < m_args.size(); i++)
+            {
+                tile *img = new tile();
+                if (!load_image(*img, m_args[i]))
                 {
                     fprintf(stderr, "Error(%s:%d): couldn't load image "
-                       "'%s'.\n", list_file, line, arg2);
+                       "'%s'.\n", list_file, line, m_args[i]);
                     return false;
                 }
+                m_back.push_back(img);
             }
         }
-        else if (strcmp(arg1, "compose") == 0)
+        else if (strcmp(arg, "compose") == 0)
         {
-            CHECK_ARG2;
+            CHECK_ARG1;
             if (!m_composing)
             {
                 fprintf(stderr, "Error (%s:%d): not composing yet.\n",
@@ -222,10 +242,10 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             if (m_compose.valid())
             {
                 tile img;
-                if (!load_image(img, arg2))
+                if (!load_image(img, m_args[1]))
                 {
                     fprintf(stderr, "Error(%s:%d): couldn't load image "
-                       "'%s'.\n", list_file, line, arg2);
+                       "'%s'.\n", list_file, line, m_args[1]);
                     return false;
                 }
 
@@ -235,28 +255,28 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 if (!m_compose.compose(img))
                 {
                     fprintf(stderr, "Error (%s:%d): failed composing '%s'"
-                        " onto compose image.\n", list_file, line, arg2);
+                        " onto compose image.\n", list_file, line, m_args[1]);
                     return false;
                 }
             }
             else
             {
-                if (!load_image(m_compose, arg2))
+                if (!load_image(m_compose, m_args[1]))
                 {
                     fprintf(stderr, "Error(%s:%d): couldn't load image "
-                       "'%s'.\n", list_file, line, arg2);
+                       "'%s'.\n", list_file, line, m_args[1]);
                     return false;
                 }
             }
         }
-        else if (strcmp(arg1, "corpse") == 0)
+        else if (strcmp(arg, "corpse") == 0)
         {
-            CHECK_ARG2;
-            m_corpsify = (bool)atoi(arg2);
+            CHECK_ARG1;
+            m_corpsify = (bool)atoi(m_args[1]);
         }
-        else if (strcmp(arg1, "end") == 0)
+        else if (strcmp(arg, "end") == 0)
         {
-            CHECK_NO_ARG2;
+            CHECK_NO_ARG(1);
 
             if (m_parts_ctg.empty())
             {
@@ -267,7 +287,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             m_parts_ctg.clear();
         }
-        else if (strcmp(arg1, "finish") == 0)
+        else if (strcmp(arg, "finish") == 0)
         {
             if (!m_composing)
             {
@@ -281,39 +301,41 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             else if (m_rim)
                 m_compose.add_rim(tile_colour::black);
 
-            if (m_back.valid())
+            if (m_back.size() > 0)
             {
-                tile img(m_back);
+                unsigned int psuedo_rand = m_page.m_tiles.size() * 54321;
+                tile *back = m_back[psuedo_rand % m_back.size()];
+                tile img(*back);
                 if (!img.compose(m_compose))
                 {
                     fprintf(stderr, "Error (%s:%d): failed composing '%s'"
                         " onto back image '%s'.\n", list_file, line,
-                        arg1, m_back.filename().c_str());
+                        arg, back->filename().c_str());
                     return false;
                 }
-                add_image(img, arg2);
+                add_image(img, m_args[1]);
             }
             else
             {
-                add_image(m_compose, arg2);
+                add_image(m_compose, m_args[1]);
             }
 
             m_compose.unload();
             m_composing = false;
         }
-        else if (strcmp(arg1, "include") == 0)
+        else if (strcmp(arg, "include") == 0)
         {
-            CHECK_ARG2;
-            if (!process_list(arg2))
+            CHECK_ARG1;
+            if (!process_list(m_args[1]))
             {
                 fprintf(stderr, "Error (%s:%d): include failed.\n",
                     list_file, line);
                 return false;
             }
         }
-        else if (strcmp(arg1, "name") == 0)
+        else if (strcmp(arg, "name") == 0)
         {
-            CHECK_ARG2;
+            CHECK_ARG1;
 
             if (m_name != "")
             {
@@ -323,50 +345,50 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 return false;
             }
 
-            m_name = arg2;
+            m_name = m_args[1];
         }
-        else if (strcmp(arg1, "parts_ctg") == 0)
+        else if (strcmp(arg, "parts_ctg") == 0)
         {
-            CHECK_ARG2;
+            CHECK_ARG1;
 
             for (unsigned int i = 0; i < m_categories.size(); i++)
             {
-                if (arg2 == m_categories[i])
+                if (m_args[1] == m_categories[i])
                 {
                     fprintf(stderr,
                         "Error (%s:%d): category '%s' already used.\n",
-                        list_file, line, arg2);
+                        list_file, line, m_args[1]);
                     return false;
                 }
             }
 
-            m_parts_ctg = arg2;
+            m_parts_ctg = m_args[1];
             m_categories.push_back(m_parts_ctg);
             m_ctg_counts.push_back(0);
         }
-        else if (strcmp(arg1, "prefix") == 0)
+        else if (strcmp(arg, "prefix") == 0)
         {
-            CHECK_ARG2;
-            m_prefix = arg2;
+            CHECK_ARG1;
+            m_prefix = m_args[1];
         }
-        else if (strcmp(arg1, "rim") == 0)
+        else if (strcmp(arg, "rim") == 0)
         {
-            CHECK_ARG2;
-            m_rim = (bool)atoi(arg2);
+            CHECK_ARG1;
+            m_rim = (bool)atoi(m_args[1]);
         }
-        else if (strcmp(arg1, "sdir") == 0)
+        else if (strcmp(arg, "sdir") == 0)
         {
-            CHECK_ARG2;
-            m_sdir = arg2;
+            CHECK_ARG1;
+            m_sdir = m_args[1];
         }
-        else if (strcmp(arg1, "shrink") == 0)
+        else if (strcmp(arg, "shrink") == 0)
         {
-            CHECK_ARG2;
-            m_shrink = (bool)atoi(arg2);
+            CHECK_ARG1;
+            m_shrink = (bool)atoi(m_args[1]);
         }
-        else if (strcmp(arg1, "start") == 0)
+        else if (strcmp(arg, "start") == 0)
         {
-            CHECK_NO_ARG2;
+            CHECK_NO_ARG(1);
 
             if (m_composing)
             {
@@ -380,7 +402,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         else
         {
             fprintf(stderr, "Error (%s:%d): unknown command '%%%s'\n",
-                list_file, line, arg1);
+                list_file, line, arg);
             return false;
         }
     }
@@ -395,34 +417,36 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
         tile img;
 
-        if (m_back.valid())
+        if (m_back.size() > 0)
         {
             // compose
-            if (!load_image(m_compose, arg1))
+            if (!load_image(m_compose, arg))
             {
                 fprintf(stderr, "Error (%s:%d): couldn't load image "
-                   "'%s'.\n", list_file, line, arg1);
+                   "'%s'.\n", list_file, line, arg);
                 return false;
             }
 
             if (m_corpsify)
                 m_compose.corpsify();
 
-            img.copy(m_back);
+            unsigned int psuedo_rand = m_page.m_tiles.size() * 54321;
+            tile *back = m_back[psuedo_rand % m_back.size()];
+            img.copy(*back);
             if (!img.compose(m_compose))
             {
                 fprintf(stderr, "Error (%s:%d): failed composing '%s'"
                     " onto back image '%s'.\n", list_file, line,
-                    arg1, m_back.filename().c_str());
+                    arg, back->filename().c_str());
                 return false;
             }
         }
         else
         {
-            if (!load_image(img, arg1))
+            if (!load_image(img, arg))
             {
                 fprintf(stderr, "Error (%s:%d): couldn't load image "
-                   "'%s'.\n", list_file, line, arg1);
+                   "'%s'.\n", list_file, line, arg);
                 return false;
             }
 
@@ -434,7 +458,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             img.add_rim(tile_colour::black);
 
         // push tile onto tile page
-        add_image(img, arg2);
+        add_image(img, m_args[1]);
     }
 
     return true;
