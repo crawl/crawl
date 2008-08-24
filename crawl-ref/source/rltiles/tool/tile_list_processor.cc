@@ -313,11 +313,11 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                         arg, back->filename().c_str());
                     return false;
                 }
-                add_image(img, m_args[1]);
+                add_image(img, m_args.size() > 1 ? m_args[1] : NULL);
             }
             else
             {
-                add_image(m_compose, m_args[1]);
+                add_image(m_compose, m_args.size() > 1 ? m_args[1] : NULL);
             }
 
             m_compose.unload();
@@ -458,7 +458,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             img.add_rim(tile_colour::black);
 
         // push tile onto tile page
-        add_image(img, m_args[1]);
+        add_image(img, m_args.size() > 1 ? m_args[1] : NULL);
     }
 
     return true;
