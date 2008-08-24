@@ -45,6 +45,22 @@ PCRESRC := util\pcre
 PCRELIB := pcre
 PCRELIBA := lib$(PCRELIB).a
 
+RLTILES = rltiles
+EXTRA_INCLUDES += -I$(RLTILES)
+OBJECTS += \
+    $(RLTILES)/tiledef-demon.o \
+    $(RLTILES)/tiledef-dngn.o \
+    $(RLTILES)/tiledef-main.o \
+    $(RLTILES)/tiledef-player.o
+
+TILEFILES = \
+    main.png \
+    player.png \
+    dngn.png \
+    demon.png
+
+DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
+
 LIB = -lwinmm -mwindows -lcomctl32 -L$(LUASRC) -l$(LUALIB) -L$(SQLSRC) -l$(SQLLIB) -L$(PCRESRC) -l$(PCRELIB) -lpng $(SDL_LDFLAGS) -lopengl32 -lglu32 -lSDL_image -lfreetype
 INCLUDES := -Iutil -I. -I$(LUASRC) -I$(SQLSRC) -I$(PCRESRC) $(EXTRA_INCLUDES)
 
@@ -70,23 +86,6 @@ UTIL = util/
 
 YTABC  := levcomp.tab.c
 YTABH  := levcomp.tab.h
-
-RLTILES = rltiles
-
-TILEHEADERS = \
-tiledef.h \
-tiledef-p.h \
-tilep-cmt.h \
-tiledef-dngn.h \
-tilecount-dngn.h
-
-TILEFILES = \
-tile.png \
-player.png \
-title.png \
-dngn.png
-
-DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
 ifeq ($(LEX),)
 DOYACC :=
@@ -149,26 +148,19 @@ endif
 # RLTiles
 #
 
-ORIGTILEHEADERS = $(TILEHEADERS:%=$(RLTILES)/%)
 ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 
-$(ORIGTILEHEADERS): makerltiles
-
 makerltiles:
-	pushd $(RLTILES) && $(MAKE) -f makefile.mgw all && popd
-
-$(TILEHEADERS): $(ORIGTILEHEADERS)
-	copy /y $(RLTILES)\$@ .
+	pushd $(RLTILES) && $(MAKE) -f makefile.mgw all
+	mkdir $(OPATH)\rltiles 2>nul || echo.>nul
 
 $(ORIGTILEFILES): makerltiles
 
 dat/tiles/%.png: rltiles/%.png
-	mkdir dat\tiles 2>nul || echo "" >nul
 	$(subst /,\,$(COPY) $< $@)
 
 clean-rltiles:
-	pushd $(RLTILES) && $(MAKE) -f makefile.mgw distclean && popd
-	$(DELETE) $(TILEHEADERS)
+	pushd $(RLTILES) && $(MAKE) -f makefile.mgw distclean
 
 ##########################################################################
 
@@ -218,7 +210,8 @@ clean-pcre:
 	    cd $(PCRESRC) && $(MAKE)
 
 distclean: clean clean-lua clean-sql clean-pcre clean-rltiles
-		$(DELETE) $(OPATH)\*.o
+		$(DELETE) dbg\*.o
+		$(DELETE) rel\*.o
 		$(DELETE) *.o
 		$(DELETE) bones.*
 		$(DELETE) $(OPATH)\bones.*

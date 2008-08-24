@@ -36,7 +36,7 @@ static bool write_png(const char *filename, tile_colour *pixels,
        bit_depth, colour_type, interlace_type,
        compression_type, filter_method);
 
-    png_bytep* row_pointers = (png_bytep*)alloca(sizeof(png_bytep) * height);
+    png_bytep* row_pointers = (png_bytep*)malloc(sizeof(png_bytep) * height);
     for (unsigned int y = 0; y < height; y++)
         row_pointers[y] = (png_byte*)&pixels[y * width];
 
@@ -47,6 +47,7 @@ static bool write_png(const char *filename, tile_colour *pixels,
     png_write_end(png_ptr, info_ptr);
     png_destroy_write_struct(&png_ptr, &info_ptr);
 
+    free(row_pointers);
     fclose(fp);
 
     return true;

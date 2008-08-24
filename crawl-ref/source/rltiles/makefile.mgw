@@ -1,125 +1,46 @@
-##########################################################################
-# makefile.mgw
-#
-# This is a makefile to build all the rltiles files needed for Dungeon
-# Crawl - Stone Soup.
-#
-# - Enne (enne.walker@gmail.com)
-#
 
-SRC = tool
-B2PSRC = bmp2png
-B2P = bmp2png.exe
-B2PTOOL = $(B2PSRC)\$(B2P)
+SDL_PREFIX ?= C:/mingw
+SDL_CFLAGS := -D_GNU_SOURCE=1 -I$(SDL_PREFIX)/include/SDL
+SDL_LDFLAGS := -lSDL
 
-CC = mingw32-gcc
-DELETE = del
-MAKE = mingw32-make.exe
+ifeq ($(strip $(OSX)),y)
+PNG_INCLUDE := -I/sw/include
+PNG_LIB := -L/sw/lib
+else
+PNG_INCLUDE :=
+PNG_LIB :=
+endif
 
-OBJECTS = \
-$(SRC)\bm.o \
-$(SRC)\dcpl.o \
-$(SRC)\dctile.o
+CFLAGS := $(SDL_CFLAGS) $(PNG_INCLUDE)
+LDFLAGS := $(SDL_LDFLAGS) $(PNGLIB) -lSDL_Image -lpng
 
-TOOLS = \
-dcpl.exe \
-dctile.exe
+CXX = mingw32-g++
+DELETE = del /q
 
-EXTRATOOLS = \
-dcreverse.exe
+TOOLDIR := tool
+TILEGEN := $(TOOLDIR)\\tilegen.elf
 
-HEADERS = \
-tiledef.h \
-tiledef-p.h \
-tilep-cmt.h \
-tiledef-dngn.h \
-tilecount-dngn.h \
-map.htm
+INPUTS := main dngn player demon
+INPUTFILES := $(INPUTS:%=dc-%.txt)
+HEADERS := $(INPUTS:%=tiledef-%.h)
+SOURCE := $(INPUTS:%=tiledef-%.cc)
+IMAGES := $(INPUTS:%=%.png)
 
-ALLTOOLS = $(TOOLS) $(EXTRATOOLS)
+BASE_OBJECTS := tile_colour.o tile.o tile_page.o tile_list_processor.o main.o
+OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)\\%)
 
-GENERATEDBMP = \
-tile.bmp \
-player.bmp \
-dngn.bmp
+all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
 
-TILEBMP = \
-$(GENERATEDBMP) \
-title.bmp
-
-TILEPNG = $(TILEBMP:.bmp=.png)
-
-##########################################################################
-# Top-level
-#
-
-all: tools tiles
-
-tools: $(TOOLS)
-
-tiles: $(TILEBMP) $(TILEPNG)
-
-##########################################################################
-# Tools
-#
-# Note: dcreverse is not built by default.  It does the opposite
-# of dctile.  It takes a bitmap with lots of tiles, specifies regions,
-# and cuts them out into smaller pieces.  It's useful only for when somebody
-# updates the tiles directly and then doesn't give you the source files.
-#
-
-depend: $(OBJECTS:.o=.c)
-	@for i in $^; do \
-		$(CC) -c $$i
-
-dcpl.exe: $(SRC)\dcpl.o $(SRC)\bm.o
-	$(CC) $(SRC)\dcpl.o $(SRC)\bm.o -o dcpl
-
-dctile.exe: $(SRC)\dctile.o $(SRC)\bm.o
-	$(CC) $(SRC)\dctile.o $(SRC)\bm.o -o dctile
-
-dcreverse.exe: $(SRC)\dcreverse.o $(SRC)\bm.o
-	$(CC) $(SRC)\dcreverse.o $(SRC)\bm.o -o dcreverse
-
-##########################################################################
-# Bitmaps
-#
-
-# NOTE: the dependencies here aren't fantastic.  In an ideal world,
-# there would be another tool elf that could read an input text file
-# and then output the .bmp and .txt dependencies for it.  It's kind
-# of a low priority though, as tiles will be rebuilt infrequently.
-
-tile.bmp: dc-2d.txt dctile.exe
-	./dctile dc-2d.txt
-
-player.bmp: dc-pl.txt dcpl.exe
-	./dcpl dc-pl.txt
-
-dngn.bmp: dngn.txt dctile.exe
-	./dctile dngn.txt
-
-##########################################################################
-# PNG Conversion
-#
-
-$(B2PTOOL):
-	pushd $(B2PSRC) && $(MAKE) -f makefile.lin bmp2png && popd
-
-%.png: %.bmp $(B2PTOOL)
-	$(DELETE) $@
-	$(B2PTOOL) -Q $<
-
-##########################################################################
-# Cleaning...
-#
+tiledef-%.h tiledef-%.cc %.png: dc-%.txt $(TILEGEN)
+	$(TILEGEN) $<
 
 clean:
-	$(DELETE) $(OBJECTS)
-	$(DELETE) $(ALLTOOLS)
-#pushd $(B2PSRC) && $(MAKE) -f makefile.mgw clean && popd
+	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES)
 
 distclean: clean
-	$(DELETE) $(GENERATEDBMP)
-	$(DELETE) $(TILEPNG)
-	$(DELETE) $(HEADERS)
+
+.cc.o:
+	${CXX} ${CFLAGS} -c $< -o $@
+
+$(TILEGEN): $(OBJECTS)
+	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
