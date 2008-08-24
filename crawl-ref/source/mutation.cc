@@ -1912,6 +1912,15 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (mutat == MUT_BREATHE_POISON && you.species != SP_NAGA)
         return (false);
 
+    // Red Draconians can already breathe flames.
+    if (mutat == MUT_BREATHE_FLAMES && you.species == SP_RED_DRACONIAN)
+        return (false);
+
+    // Green Draconians can already breathe poison, so they don't need
+    // to spit it.
+    if (mutat == MUT_SPIT_POISON && you.species == SP_GREEN_DRACONIAN)
+        return (false);
+
     // Only Draconians can get wings.
     if (mutat == MUT_BIG_WINGS && !player_genus(GENPC_DRACONIAN))
         return (false);
