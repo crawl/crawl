@@ -3045,8 +3045,11 @@ void describe_god( god_type which_god, bool give_title )
                 god_protects_from_harm(which_god, false))
         {
             int prayer_prot = 0;
-            if (you.religion == GOD_ELYVILON && you.piety > 30)
+            if ((hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME)
+                && you.piety >= piety_breakpoint(0))
+            {
                 prayer_prot = 100 - 3000/you.piety;
+            }
 
             int prot_chance = 10 + you.piety/10 + prayer_prot; // chance * 100
 
