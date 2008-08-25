@@ -2361,7 +2361,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
     case DNGN_STONE_ARCH:
         return ("empty arch of ancient stone");
     case DNGN_ENTER_PANDEMONIUM:
-        return ("gate leading to the halls of Pandemonium");
+        return ("one-way gate leading to the halls of Pandemonium");
     case DNGN_EXIT_PANDEMONIUM:
         return ("gate leading out of Pandemonium");
     case DNGN_TRANSIT_PANDEMONIUM:
