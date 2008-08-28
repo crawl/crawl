@@ -439,9 +439,6 @@ int spell_fail(spell_type spell)
 
 int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
 {
-    unsigned int bit;
-    int ndx;
-
     // When checking failure rates, wizardry is handled after the various
     // stepping calulations.
     int power = (you.skills[SK_SPELLCASTING] / 2)
@@ -456,15 +453,11 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
     int skillcount = count_bits( disciplines );
     if (skillcount)
     {
-        for (ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
+        for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
         {
-            bit = 1 << ndx;
-            if ((bit != SPTYP_HOLY) && (disciplines & bit))
-            {
-                int skill = spell_type2skill( bit );
-
-                power += (you.skills[skill] * 2) / skillcount;
-            }
+            unsigned int bit = (1 << ndx);
+            if (disciplines & bit)
+                power += (you.skills[spell_type2skill(bit)] * 2) / skillcount;
         }
     }
 
@@ -478,7 +471,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
 
     if (enhanced > 0)
     {
-        for (ndx = 0; ndx < enhanced; ndx++)
+        for (int i = 0; i < enhanced; i++)
         {
             power *= 15;
             power /= 10;
@@ -486,7 +479,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check)
     }
     else if (enhanced < 0)
     {
-        for (ndx = enhanced; ndx < 0; ndx++)
+        for (int i = enhanced; i < 0; i++)
             power /= 2;
     }
 
