@@ -67,6 +67,10 @@ static void _init_equipment_removal(std::set<equipment_type> &rem_stuff,
         }
         break;
 
+    case TRAN_LICH:
+        rem_stuff.clear();
+        break;
+
     case TRAN_BLADE_HANDS:
         rem_stuff.erase(EQ_CLOAK);
         rem_stuff.erase(EQ_HELMET);
@@ -337,7 +341,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
     }
 
     // We drop everything except jewellery by default.
-    equipment_type default_rem[] = {
+    const equipment_type default_rem[] = {
         EQ_WEAPON, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS,
         EQ_SHIELD, EQ_BODY_ARMOUR
     };
@@ -433,11 +437,6 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         return (true);
 
     case TRAN_BLADE_HANDS:
-        rem_stuff.erase(EQ_CLOAK);
-        rem_stuff.erase(EQ_HELMET);
-        rem_stuff.erase(EQ_BOOTS);
-        rem_stuff.erase(EQ_BODY_ARMOUR);
-
         if (check_for_cursed_equipment( rem_stuff ))
             return (false);
 
@@ -533,10 +532,9 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         return (true);
 
     case TRAN_LICH:
-        // Don't need to remove anything.
-
-        // also AC +3, cold +1, neg +3, pois +1, is_undead, res magic +50,
+        // AC +3, cold +1, neg +3, pois +1, is_undead, res magic +50,
         // spec_death +1, and drain attack (if empty-handed)
+
         if (you.duration[DUR_DEATHS_DOOR])
         {
             if (!quiet)
@@ -548,7 +546,22 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
             return (false);
         }
 
+        // Remove holy wrath weapons if necessary.
+        if (you.weapon()
+            && get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
+        {
+            rem_stuff.insert(EQ_WEAPON);
+        }
+
+        if (check_for_cursed_equipment(rem_stuff, quiet))
+            return (false);
+        
+        if (check_transformation_stat_loss(rem_stuff, quiet))
+            return (false);
+
         mpr("Your body is suffused with negative energy!");
+
+        remove_equipment(rem_stuff);
 
         // undead cannot regenerate -- bwr
         if (you.duration[DUR_REGENERATION])
@@ -560,7 +573,6 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         // silently removed since undead automatically resist poison -- bwr
         you.duration[DUR_RESIST_POISON] = 0;
 
-        // no remove_equip
         you.attribute[ATTR_TRANSFORMATION] = TRAN_LICH;
         you.duration[DUR_TRANSFORMATION] = 20 + random2(pow) + random2(pow);
 
