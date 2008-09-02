@@ -884,8 +884,7 @@ void game_options::reset_options()
     mp_colour.push_back(std::pair<int, int>(50, YELLOW));
     mp_colour.push_back(std::pair<int, int>(25, RED));
 
-    never_pickup.clear();
-    always_pickup.clear();
+    force_autopickup.clear();
     note_monsters.clear();
     note_messages.clear();
     autoinscriptions.clear();
@@ -2381,7 +2380,14 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "ban_pickup")
     {
-        append_vector(never_pickup, split_string(",", field));
+        std::vector<std::string> args = split_string(",", field);
+        for (int i = 0, size = args.size(); i < size; ++i)
+        {
+            const std::string &s = args[i];
+            if (s.empty())
+                continue;
+            force_autopickup.push_back(std::make_pair(s, false));
+        }
     }
     else if (key == "autopickup_exceptions")
     {
@@ -2393,11 +2399,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 continue;
 
             if (s[0] == '>')
-                never_pickup.push_back( s.substr(1) );
+                force_autopickup.push_back(std::make_pair(s.substr(1), false));
             else if (s[0] == '<')
-                always_pickup.push_back( s.substr(1) );
+                force_autopickup.push_back(std::make_pair(s.substr(1), true));
             else
-                never_pickup.push_back( s );
+                force_autopickup.push_back(std::make_pair(s, false));
         }
     }
     else if (key == "note_items")

@@ -2182,34 +2182,14 @@ static inline std::string _autopickup_item_name(const item_def &item)
            + item.name(DESC_PLAIN);
 }
 
-static bool _is_denied_autopickup(const item_def &item, std::string &iname)
+static bool _is_option_autopickup(const item_def &item, std::string &iname)
 {
     if (iname.empty())
         iname = _autopickup_item_name(item);
 
-    for (unsigned i = 0, size = Options.never_pickup.size(); i < size; ++i)
-        if (Options.never_pickup[i].matches(iname))
-            return (true);
-
-#ifdef CLUA_BINDINGS
-    if (clua.callbooleanfn(false, "ch_deny_autopickup", "us",
-                           &item, iname.c_str()))
-    {
-        return (true);
-    }
-#endif
-
-    return (false);
-}
-
-static bool _is_forced_autopickup(const item_def &item, std::string &iname)
-{
-    if (iname.empty())
-        iname = _autopickup_item_name(item);
-
-    for (unsigned i = 0, size = Options.always_pickup.size(); i < size; ++i)
-        if (Options.always_pickup[i].matches(iname))
-            return (true);
+    for (unsigned i = 0, size = Options.force_autopickup.size(); i < size; ++i)
+        if (Options.force_autopickup[i].first.matches(iname))
+            return Options.force_autopickup[i].second;
 
 #ifdef CLUA_BINDINGS
     if (clua.callbooleanfn(false, "ch_force_autopickup", "us",
@@ -2219,7 +2199,7 @@ static bool _is_forced_autopickup(const item_def &item, std::string &iname)
     }
 #endif
 
-    return (false);
+    return (Options.autopickups & (1L << item.base_type));
 }
 
 bool item_needs_autopickup(const item_def &item)
@@ -2233,11 +2213,12 @@ bool item_needs_autopickup(const item_def &item)
     if ((item.flags & ISFLAG_THROWN) && Options.pickup_thrown)
         return (true);
 
+    if ((item.flags & ISFLAG_DROPPED) && !Options.pickup_dropped) {
+        return (false);
+    }
+
     std::string itemname;
-    return ((Options.autopickups & (1L << item.base_type)
-               || _is_forced_autopickup(item, itemname))
-            && (Options.pickup_dropped || !(item.flags & ISFLAG_DROPPED))
-            && !_is_denied_autopickup(item, itemname));
+    return _is_option_autopickup(item, itemname);
 }
 
 bool can_autopickup()
