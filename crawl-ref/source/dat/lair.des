@@ -132,11 +132,11 @@ ENDMAP
 ########################################################################
 # Welcome to Lair Island. We make great pancakes.
 #
-NAME: erik_lair_3
-TAGS: lair_entry
-MONS: w:50 troll / Snorg, w:30 hound / jackal / w:20 war dog
+NAME:   erik_lair_3
+TAGS:   lair_entry
+MONS:   w:60 troll / Snorg, w:30 hound / jackal / w:20 war dog
 ORIENT: float
-SUBST: ? = w.
+SUBST:  ? = w.
 MAP
 .@........wwwwww?.....
 ..?.?.?..wwwwwww.?..?.
@@ -145,7 +145,7 @@ MAP
 ...wwww?wwwwwwwwww??..
 ..wwwwww??w??w2wwww..@
 ..wwwwww??....wwww???.
-......1..2.2O2.wwww...
+....1....2.2O2.wwww...
 ..?wwwww???2.2www.ww?.
 .....wwww2..w.2www....
 ..wwwwwwwww?.wwww???..
