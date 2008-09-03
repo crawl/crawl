@@ -296,20 +296,21 @@ MONS:   flying skull
 MONS:   mummy/guardian mummy/w:5 nothing
 : end
 SUBST:  ; = .:6 ~:2 ^:1
+NSUBST: / = 1:| / 2:* / *:%
 MAP
            xxxxvvvvvvvvvvvvvvvvvxxxx           
            xxxvv..WWWWWWWWWWW..vvxxx           
            xxvv..WWWWWWWWWWWWW..vvxx           
            xxv...WWWb.b.b.bWWW...vxx           
            xxv...WWb$$|*|$$bWW...vxx           
-     xxxxxxxxv...WW.$||1||$.WW...vxxxxxxxx     
+     xxxxxxxxv...WW.$/|1|/$.WW...vxxxxxxxx     
      xxccccccv...WWb$$|*|$$bWW...vccccccxx     
-     xxc|*cccv...WWWb.b.b.bWWW...vccc*|cxx     
-     xxc$$$ccvv..WWWWWWWWWWWWW..vvcc$$$cxx     
-xxxxxxxc;;;|ccvv..WWWWWWWWWWW..vvcc|;;;cxxxxxxx
+     xxc/;cccv...WWWb.b.b.bWWW...vccc;/cxx     
+     xxc;;;ccvv..WWWWWWWWWWWWW..vvcc;;;cxx     
+xxxxxxxc;;;/ccvv..WWWWWWWWWWW..vvcc/;;;cxxxxxxx
 xxccccccc=cccccv...............vccccc=cccccccxx
-xxcU$.....cxxxxvv....2...2....vvxxxxc.....$Ucxx
-xxc$.3....cxxxxxvv.....6.....vvxxxxxc....3.$cxx
+xxcU......cxxxxvv....2...2....vvxxxxc......Ucxx
+xxc..3....cxxxxxvv.....6.....vvxxxxxc....3..cxx
 xxc.......cxxxxxvvv.6.....6.vvvxxxxxc.......cxx
 xxc.......cxxxxxvvvvv.....vvvvvxxxxxc.......cxx
 xxc...5.5.cxxxxxvvvvvvv+vvvvvvvxxxxxc.5.5...cxx
@@ -319,9 +320,9 @@ xxxxxxc;cxxxxxxxvc.U.cc+cc.U.cvxxxxxxxc;cxxxxxx
     xxc;cccccccG....45...54....Gccccccc;cxx    
     xxc.;;;;;;+.................+;;;;;;.cxx    
     xxc;cccccccG.......C.......Gccccccc;cxx    
-    xxc.c|$$+;ccc56.........65cccxxxxcc.cxx    
-  xxxxc;c|*$c;ccc5...........5cccxxxxcc;cxxxx  
-xxxxccc+ccc|c;=7+.............+7ccccccc+cccxxxx
+    xxc.c;;;+;ccc56.........65cccxxxxcc.cxx    
+  xxxxc;c/;;c;ccc5...........5cccxxxxcc;cxxxx  
+xxxxccc+ccc/c;=7+.............+7ccccccc+cccxxxx
 xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
 xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
 xxccc.....ccccccc..c.......c..ccccccc.....cccxx
@@ -331,10 +332,10 @@ xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
 xxccc.....ccccccc..c6.6.6.6c..ccccccc.....cccxx
 xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
 xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
-xxxxccc+cccxxxc7+.............+7=$*cccc+cccxxxx
-   xxc...cxxxxccc..c.......c..ccc||ccc...cxx   
+xxxxccc+cccxxxc7+.............+7=;;cccc+cccxxxx
+   xxc...cxxxxccc..c.......c..ccc;/ccc...cxx   
    xxc.4.cxxxxc7+.............+7cccccc.4.cxx   
-   xxc.|.cxxxxccc..c.......c..cccxxxxc.|.cxx   
+   xxc./.cxxxxccc..c.......c..cccxxxxc./.cxx   
    xxcccccxxxxc7+.............+7cxxxxcccccxx   
    xxxxxxxxxxxccc....c...c....cccxxxxxxxxxxx   
             xxxxc5.Vcc...ccV.5cxxxx            
@@ -386,6 +387,9 @@ COLOUR: r = red
 SUBST:  r = v
 # emergency exits; most are closed
 NSUBST: ? = 3:= / *:v
+SUBST:  / = |** 
+SUBST:  * = *%
+SUBST:  % = %$
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
@@ -394,10 +398,10 @@ vwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwvvvvvvvvvvvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv..........................vAwwwwwwwwwwwwwv
 vwwwwwwwwwwwwwwv.........rrrrrrrr.........vAAAwwwwwwwwwwwv
-vwwwwwwwwwwwwwwv.........r||||||r.........vAAAAAAwwwwwwwwv
-vwwwwwwvvvv?vvvv......rr=rr****rr=rr......v?v?v?v?vwwwwwwv
+vwwwwwwwwwwwwwwv.........r//||//r.........vAAAAAAwwwwwwwwv
+vwwwwwwvvvv?vvvv......rr=rr*/**rr=rr......v?v?v?v?vwwwwwwv
 vwwwwwwv.......v......r$$*rr++rr*$$r......v.......vwwwwwwv
-vwwwwww?....H..v.....rrrr|r$$$$r|rrrr.....v.......?wwwwwwv
+vwwwwww?....H..v.....rrrr*r$$$$r*rrrr.....v.......?wwwwwwv
 vwwwwwwv....H..+........rrr$$$$rrr........+.h..H..vwwwwwwv
 vwwwwww?....H..v......L...r$$$$r...L......v....H..?wwwwwwv
 vwwwwwwv.h.vvvvv...rrr....rr++rr....rrr...v....H..vwwwwwwv
@@ -426,8 +430,8 @@ vwwvv........v....v..z.vrr......rrv.z..v.............vvwwv
 vwwvvv.......+....v....vrrrr++rrrrv....v............vvvwwv
 vwwwvv.......v....v....vrrUz..zUrrv....v............vvwwwv
 vwwwvvvvvvvvvvvvvvvv+vvvrI......Irvvv+vvvvvvvvvvvvvvvvwwwv
-vwwwwvvv|**$$v.........vrrrr++rrrrv.........v$$**|vvvwwwwv
-vwwwwwvvv|*$$+.........vrrww..wwrrv.........+$$*|vvvwwwwwv
+vwwwwvvv/**$$v.........vrrrr++rrrrv.........v$$**/vvvwwwwv
+vwwwwwvvv/*$$+.........vrrww..wwrrv.........+$$*/vvvwwwwwv
 vwwwwwwvvv*$$v...X.....vrwAw..wAwrv...X.....v$$*vvvAwwwwwv
 vwwwwwwwwvvv$v....G....vwwww..wwwwv..G......v$vvvAAwwwwwwv
 vwwwwwwwwwvvvv.........vwwww..wwwwv.........vvvvwwwwwwwwwv
