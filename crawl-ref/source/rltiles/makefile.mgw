@@ -12,7 +12,7 @@ PNG_LIB :=
 endif
 
 CFLAGS := $(SDL_CFLAGS) $(PNG_INCLUDE)
-LDFLAGS := $(SDL_LDFLAGS) $(PNGLIB) -lSDL_Image -lpng
+LDFLAGS := $(SDL_LDFLAGS) $(PNGLIB) -lSDL_image -lpng
 
 CXX = mingw32-g++
 DELETE = del /q
