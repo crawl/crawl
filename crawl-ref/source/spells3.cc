@@ -943,10 +943,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 
     env_show_grid &los(caster == &you? env.no_trans_show : losgrid);
 
-    bool was_butchering = false;
-
     coord_def a;
-
     for (a.x = minx; a.x != maxx; a.x += xinc)
     {
         for (a.y = miny; a.y != maxy; a.y += yinc)
@@ -958,9 +955,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
             // one of a stack will be raised.
             for (stack_iterator si(a); si; ++si)
             {
-                if (is_being_butchered(*si, false))
-                    was_butchering = true;
-
+                const bool was_butchering = is_being_butchered(*si, false);
                 if (animate_a_corpse(a, CORPSE_BODY, beha, hitting, god,
                                      actual, true))
                 {
@@ -969,20 +964,16 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                     if (see_grid(env.show, you.pos(), a))
                          number_seen++;
 
+                    if (was_butchering)
+                        mpr("The corpse you are butchering rises to attack!");
+
                     break;
                 }
             }
         }
     }
-
-    if (actual)
-    {
-        if (was_butchering)
-            mpr("The corpse you are butchering rises to attack!");
-
-        if (number_seen > 0)
-            mpr("The dead are walking!");
-    }
+    if (actual && number_seen > 0)
+        mpr("The dead are walking!");
 
     return (number_raised);
 }
@@ -1438,11 +1429,11 @@ bool entomb(int powc)
         // checkpoint two - is the orb resting in the tile? {dlb}:
         if (!proceed)
             continue;
-        
+
         // Destroy all items on the square.
         for ( stack_iterator si(*ai); si; ++si )
             destroy_item(si->index());
-        
+
         // deal with clouds {dlb}:
         if (env.cgrid(*ai) != EMPTY_CLOUD)
             delete_cloud( env.cgrid(*ai) );
@@ -1634,7 +1625,7 @@ bool cast_sanctuary(const int power)
     for ( radius_iterator ri(you.pos(), radius, false, false); ri; ++ri )
     {
         int dist = _inside_circle(*ri, radius);
-        
+
         if (dist == -1)
             continue;
 
@@ -1651,7 +1642,7 @@ bool cast_sanctuary(const int power)
             set_envmap_obj(pos, type);
             trap_count++;
         }
-        
+
         // forming patterns
         const int x = pos.x - you.pos().x, y = pos.y - you.pos().y;
         if (pattern == 0    // outward rays
@@ -1669,7 +1660,7 @@ bool cast_sanctuary(const int power)
         }
         else
             env.map(pos).property = FPROP_SANCTUARY_2; // white
-        
+
         // scare all attacking monsters inside sanctuary, and make
         // all friendly monsters inside sanctuary stop attacking and
         // move towards the player.
@@ -1677,7 +1668,7 @@ bool cast_sanctuary(const int power)
         if (monster != NON_MONSTER)
         {
             monsters* mon = &menv[monster];
-            
+
             if (mons_friendly(mon))
             {
                 mon->foe       = MHITYOU;
@@ -1699,7 +1690,7 @@ bool cast_sanctuary(const int power)
                 else if (mon->add_ench(mon_enchant(ENCH_FEAR, 0, KC_YOU)))
                 {
                     behaviour_event(mon, ME_SCARE, MHITYOU);
-                    
+
                     // Check to see that monster is actually fleeing,
                     // since plants can't flee.
                     if (mons_is_fleeing(mon) && you.can_see(mon))
@@ -1710,7 +1701,7 @@ bool cast_sanctuary(const int power)
                 }
             }
         } // if (monster != NON_MONSTER)
-        
+
         if (!is_harmless_cloud(cloud_type_at(pos)))
         {
             delete_cloud(env.cgrid(pos));
