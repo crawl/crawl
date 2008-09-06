@@ -887,8 +887,6 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
 
     if (spell_cast == SPELL_TELEPORT_SELF)
         pbolt.ench_power = 2000;
-    else if (spell_cast == SPELL_PAIN) // this is cast by low HD monsters
-        pbolt.ench_power *= 2;
 
     pbolt.beam_source = monster_index(monster);
 
@@ -2096,9 +2094,8 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.type       = 0;
         beam.flavour    = BEAM_PAIN;     // pain
         beam.thrower    = KILL_MON;
-        // beam.damage = dice_def( 1, 50 );
         beam.damage     = dice_def( 1, 7 + (power / 20) );
-        beam.ench_power = 50;
+        beam.ench_power = std::max(50, 8 * mons->hit_dice);
         beam.is_beam    = true;
         break;
 
