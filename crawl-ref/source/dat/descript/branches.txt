@@ -37,8 +37,15 @@ carnivorous monsters.
 %%%%
 Shoals
 
-Here be the Shoals: exotic underground beaches, salty spray and creatures
-that bite, stab, and maul.
+From afar you hear the steady sounds of waves and smell the salty spray. 
+Upon reaching the Shoals, you are impressed by exotic underground beaches, 
+making up a few islands in a vast sea. Out of a sudden, a bloodcurling 
+scream fills the air, followed by a gurgle. Anxiously, you look around and 
+wonder: who is the predator? And who is the prey?
+
+The Shoals are five levels deep and contain the barnacled rune. A dungeon
+features only one of the Swamp or Shoals branches. If the Shoals are 
+present, the entry is located between Lair: and Lair:
 %%%%
 Slime Pits
 
@@ -46,36 +53,56 @@ The amorphous realm of acids, jellies and slimes. Any trace of intelligent
 beings has long been dissolved. Still, there are rumours of great treasures
 deep down, hidden safely away in secret chambers without door or window for
 acid to leak in.
+
+The Slime Pits are six levels deep and contain the slimy rune. The entry is
+between Lair:8 and Lair:10.
 %%%%
 Snake Pit
 
 Home of the serpent, lair of the naga.
+
+The Snake Pit is five levels deep and contains the serpentine rune. The
+entry is between Lair:3 and Lair:8.
 %%%%
 Hive
 
 You hear a many-fold buzzing. 
+
+The Hive is four levels deep. The entry is located between dungeon levels 
+11 and 16.
 %%%%
 Vaults
 
 Possibly constructed by some powerful madman, the vaults are said to be home
 to great treasures. The blood spots all around the entrance indicate that
 there is a certain amount of violence, too.
+
+The Vaults are eight levels deep and contain the silver rune. The entrance
+can be found between levels 14 and 19 of the main dungeon.
 %%%%
 Hall of Blades
 
 Once upon a time, all the daggers and axes and polearms would gather at the
 time of night and dance the waltz, dreaming of battlefields void of man and
 beast. That time is no more, yet the weapons are still there.
+
+The Hall of Blades is a single level amd can be found between Vaults:4 and
+Vaults:6.
 %%%%
 Crypt
 
 You hear moans and shrieks of tortured souls, suffering in acts of the
 unspeakable.
+
+The Crypt is five levels deep and can be found between Vaults:2 and Vaults:4.
 %%%%
 Tomb
 
 The Tomb of the Ancients, a place of damnation, of horrors animated 
 by the vilest necromancy.
+
+The Tomb is three levels deep and contains the golden rune. Its entry is
+either on Crypt:2 or Crypt:3.
 %%%%
 Hell
 
@@ -84,20 +111,32 @@ The hallway to the four hells, guarded by Geryon.
 Dis
 
 Who will stand the test of iron?
+
+Dis is seven levels deep and contains the iron rune. It can be accessed via
+the Vestibule of Hell.
 %%%%
 Gehenna
 
 The fires of Gehenna burnt many a confident hero, and they will burn
 evermore.
+
+Gehenna is seven levels deep and contains the obsidian rune. It can be 
+accessed via the Vestibule of Hell.
 %%%%
 Cocytus
 
 A grim and frost-bitten hell.
+
+Cocytus is seven levels deep and contains the icy rune. It can be accessed 
+via the Vestibule of Hell.
 %%%%
 Tartarus
 
 Over time, the undead, demons and devils of this place drain all life out of
 treasure-craving visitors.
+
+Tartarus is seven levels deep and contains the bone rune. It can be accessed 
+via the Vestibule of Hell.
 %%%%
 Zot
 
@@ -105,4 +144,6 @@ A region of the dungeon complex, safely locked away and referred to usually by
 madness, frenzy, lunacy. Only the most demented adventurers would dare to
 break the seal and press deeper - in the vain hope for a fabled artefact no 
 man has ever laid eyes on before.
+
+Zot is five levels deep.
 %%%%
