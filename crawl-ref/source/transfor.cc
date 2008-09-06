@@ -555,7 +555,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
 
         if (check_for_cursed_equipment(rem_stuff, quiet))
             return (false);
-        
+
         if (check_transformation_stat_loss(rem_stuff, quiet))
             return (false);
 
@@ -667,6 +667,8 @@ bool transform_can_butcher_barehanded(transformation_type tt)
 
 void untransform(void)
 {
+    const flight_type old_flight = you.flight_mode();
+
     you.redraw_evasion = true;
     you.redraw_armour_class = true;
     you.wield_change = true;
@@ -767,7 +769,8 @@ void untransform(void)
     }
 
     // Re-check terrain now that be may no longer be flying.
-    move_player_to_grid(you.pos(), false, true, true);
+    if (old_flight && you.flight_mode() == FL_NONE)
+        move_player_to_grid(you.pos(), false, true, true);
 
     if (transform_can_butcher_barehanded(old_form))
         stop_butcher_delay();
