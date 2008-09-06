@@ -257,7 +257,7 @@ This spell temporarily infuses the weapon held by the caster with the essence of
 %%%%
 Extension
 
-This spell extends the duration of most beneficial enchantments affecting the caster. 
+This spell extends the duration of most enchantments affecting the caster.
 %%%%
 Far Strike
 
