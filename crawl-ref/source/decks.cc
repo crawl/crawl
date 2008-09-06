@@ -2432,8 +2432,8 @@ static void _curse_card(int power, deck_rarity_type rarity)
     mpr("You feel a malignant aura surround you.");
     if (power_level >= 2)
     {
-        // Curse (almost) everything + decay.
-        while ( curse_an_item(true, true) && !one_chance_in(1000) )
+        // Curse (almost) everything + chance of decay.
+        while ( curse_an_item(one_chance_in(6), true) && !one_chance_in(1000) )
             ;
     }
     else if (power_level == 1)
