@@ -2261,6 +2261,7 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
         ch = 32;
 
     unsigned int flag = tile_unseen_flag(gc);
+    fg = 0;
     bg = TILE_FLOOR_NORMAL | flag;
 
     if (ch >= '@' && ch <= 'Z' || ch >= 'a' && ch <= 'z'
@@ -2318,6 +2319,7 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
         case 131: fg = TILE_UNSEEN_ALTAR; break;
         case '~': fg = TILE_UNSEEN_ITEM; break;
         case '{':
+        case 247:
         case 135: bg = TILE_DNGN_DEEP_WATER; break;
         case 133: bg = TILE_DNGN_BLUE_FOUNTAIN; break;
         case '}': fg = TILE_MISC_CRYSTAL_BALL_OF_SEEING; break;
@@ -2327,8 +2329,6 @@ void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
         case 132: fg = TILE_UNSEEN_ENTRANCE; break;
         case 136: bg = TILE_DNGN_ENTER; break;
         case 141: bg = TILE_DNGN_LAVA; break;
-
-        default: fg = TILE_ERROR; break;
     }
 
     bg |= flag;
