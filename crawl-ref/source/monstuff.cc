@@ -4090,7 +4090,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (one_chance_in(7) || mons_is_caught(monster) && one_chance_in(3))
         {
             simple_monster_message(monster, " blinks.");
-            monster_blink(monster);
+            used = monster_blink(monster);
         }
         break;
 
