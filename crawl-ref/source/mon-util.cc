@@ -2308,9 +2308,10 @@ bool mons_should_fire(struct bolt &beam)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
-         "tracer: foes %d, friends %d, foe_ratio: %d, smart: %s",
-         beam.foe_count, beam.fr_count, beam.foe_ratio,
-         beam.smart_monster ? "yes" : "no");
+         "tracer: foes %d (pow: %d), friends %d (pow: %d), "
+         "foe_ratio: %d, smart: %s",
+         beam.foe_count, beam.foe_power, beam.fr_count, beam.fr_power,
+         beam.foe_ratio, beam.smart_monster ? "yes" : "no");
 #endif
     // Use of foeRatio:
     // The higher this number, the more monsters will _avoid_ collateral
@@ -2325,8 +2326,8 @@ bool mons_should_fire(struct bolt &beam)
     if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
         return (false);
 
-    // If we either hit no friends, or monster too dumb to care.
-    if (beam.fr_count == 0 || !beam.smart_monster)
+    // If we hit no friends, fire away.
+    if (beam.fr_count == 0)
         return (true);
 
     // Only fire if they do acceptably low collateral damage.
