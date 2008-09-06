@@ -749,7 +749,7 @@ void macro_add_query( void )
 
     mesclr();
     mpr("(m)acro, keymap "
-        "[(k) default, (x) level-map, (t)argeting, (c)onfirm], "
+        "[(k) default, (x) level-map, (t)argeting, (c)onfirm, m(e)nu], "
         "(s)ave?",
         MSGCH_PROMPT);
     input = m_getch();
@@ -774,6 +774,11 @@ void macro_add_query( void )
         keymap = true;
         keymc  = KC_CONFIRM;
     }
+    else if (input == 'e')
+    {
+        keymap = true;
+        keymc  = KC_MENU;
+    }
     else if (input == 'm')
         keymap = false;
     else if (input == 's')
@@ -796,6 +801,7 @@ void macro_add_query( void )
                    keymc == KC_LEVELMAP  ? "level-map " :
                    keymc == KC_TARGETING ? "targeting " :
                    keymc == KC_CONFIRM   ? "confirm " :
+                   keymc == KC_MENU      ? "menu " :
                    "buggy") : "",
          (keymap ? "keymap" : "macro") );
 

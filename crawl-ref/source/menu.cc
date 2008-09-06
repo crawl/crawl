@@ -210,7 +210,7 @@ void Menu::do_menu()
     alive = true;
     while (alive)
     {
-        int keyin = getchm(KC_NONE, c_getch);
+        int keyin = getchm(KC_MENU, c_getch);
 
         if (!process_key( keyin ))
             return;
