@@ -1192,7 +1192,7 @@ void setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
 bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 {
     // XXX: Ugly hack, but avoids adding dynamic allocation to this code.
-    char throw_buff[ ITEMNAME_SIZE ];
+    char throw_buff[ITEMNAME_SIZE];
 
     bool returning = (get_weapon_brand(mitm[hand_used]) == SPWPN_RETURNING
                       || get_ammo_brand(mitm[hand_used]) == SPMSL_RETURNING);
@@ -1212,7 +1212,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     int wepType   = mitm[hand_used].sub_type;
 
     int weapon    = monster->inv[MSLOT_WEAPON];
-    int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type  :  0;
+    int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type : 0;
 
     const bool skilled = mons_class_flag(monster->type, M_FIGHTER);
 
@@ -1240,8 +1240,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     // extract launcher bonuses due to magic
     if (projected == LRET_LAUNCHED)
     {
-        lnchHitBonus = mitm[ weapon ].plus;
-        lnchDamBonus = mitm[ weapon ].plus2;
+        lnchHitBonus = mitm[weapon].plus;
+        lnchDamBonus = mitm[weapon].plus2;
         lnchBaseDam  = property(mitm[weapon], PWPN_DAMAGE);
     }
 
@@ -1273,7 +1273,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
             damMult = 25;
         }
 
-        baseDam = property( item, PWPN_DAMAGE );
+        baseDam = property(item, PWPN_DAMAGE);
 
         if (wepClass == OBJ_MISSILES)   // throw missile
         {
@@ -1295,11 +1295,12 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         exDamBonus = (damMult * monster->hit_dice) / 10 + 1;
     }
 
-    // Monsters no longer gain unfair advantages with weapons of fire/ice
-    // and incorrect ammo.  They now have same restriction as players.
+    // Monsters no longer gain unfair advantages with weapons of
+    // fire/ice and incorrect ammo.  They now have the same restrictions
+    // as players.
 
     int bow_brand = SPWPN_NORMAL;
-    const int ammo_brand = get_ammo_brand( item );
+    const int ammo_brand = get_ammo_brand(item);
     const bool poison = (ammo_brand == SPMSL_POISONED);
 
     if (projected == LRET_LAUNCHED)
@@ -1357,14 +1358,14 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         if (!baseDam && elemental_missile_beam(bow_brand, ammo_brand))
             baseDam = 4;
 
-        // [dshaligram] This is a horrible hack - we force beam.cc to consider
-        // this beam "needle-like".
+        // [dshaligram] This is a horrible hack - we force beam.cc to
+        // consider this beam "needle-like".
         if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
             pbolt.ench_power = AUTOMATIC_HIT;
 
         // elven bow w/ elven arrow, also orcish
-        if (get_equip_race( mitm[monster->inv[MSLOT_WEAPON]] )
-                == get_equip_race( mitm[monster->inv[MSLOT_MISSILE]] ))
+        if (get_equip_race(mitm[monster->inv[MSLOT_WEAPON]])
+                == get_equip_race(mitm[monster->inv[MSLOT_MISSILE]]))
         {
             baseHit++;
             baseDam++;
@@ -1375,7 +1376,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
         // POISON brand launchers poison ammo
         if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_NORMAL)
-            set_item_ego_type( item, OBJ_MISSILES, SPMSL_POISONED );
+            set_item_ego_type(item, OBJ_MISSILES, SPMSL_POISONED);
 
         // Vorpal brand increases damage dice size.
         if (bow_brand == SPWPN_VORPAL)
@@ -1484,23 +1485,23 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
     if (projected == LRET_LAUNCHED)
     {
-        snprintf( throw_buff, sizeof(throw_buff), "Shot with a%s %s by %s",
-                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
-                  monster->name(DESC_NOCAP_A).c_str() );
+        snprintf(throw_buff, sizeof(throw_buff), "Shot with a%s %s by %s",
+                 (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
+                 monster->name(DESC_NOCAP_A).c_str());
     }
     else
     {
-        snprintf( throw_buff, sizeof(throw_buff), "Hit by a%s %s thrown by %s",
-                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
-                  monster->name(DESC_NOCAP_A).c_str() );
+        snprintf(throw_buff, sizeof(throw_buff), "Hit by a%s %s thrown by %s",
+                 (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
+                 monster->name(DESC_NOCAP_A).c_str());
     }
 
     pbolt.aux_source = throw_buff;
 
-    // add everything up.
+    // Add everything up.
     pbolt.hit = baseHit + random2avg(exHitBonus, 2) + ammoHitBonus;
     pbolt.damage =
-        dice_def( 1, baseDam + random2avg(exDamBonus, 2) + ammoDamBonus );
+        dice_def(1, baseDam + random2avg(exDamBonus, 2) + ammoDamBonus);
 
     if (projected == LRET_LAUNCHED)
     {
@@ -1573,11 +1574,11 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
                             ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
         }
     }
-    else if (dec_mitm_item_quantity( hand_used, 1 ))
-        monster->inv[returning ? MSLOT_WEAPON : MSLOT_MISSILE] = NON_ITEM;
+    else if (dec_mitm_item_quantity(hand_used, 1))
+        monster->inv[returning ? hand_used : MSLOT_MISSILE] = NON_ITEM;
 
     return (true);
-}                               // end mons_throw()
+}
 
 bool mons_thrown_object_destroyed( item_def *item, const coord_def& where,
                                    bool returning, int midx )
