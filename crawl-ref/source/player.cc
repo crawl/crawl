@@ -114,7 +114,8 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
 
     // assuming that entering the same square means coming from above (levitate)
     const bool from_above = (you.pos() == p);
-    const dungeon_feature_type old_grid = (from_above) ? DNGN_FLOOR : grd(p);
+    const dungeon_feature_type old_grid =
+        (from_above) ? DNGN_FLOOR : grd(you.pos());
     const dungeon_feature_type new_grid = grd(p);
 
     // Really must be clear.
@@ -4250,7 +4251,7 @@ bool wearing_amulet(jewellery_type amulet, bool calc_unid)
 {
     if ( extrinsic_amulet_effect(amulet) )
         return (true);
-    
+
     if (you.equip[EQ_AMULET] == -1)
         return (false);
 
