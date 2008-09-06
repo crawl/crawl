@@ -57,7 +57,6 @@ poison POISON
 %rim 0
 may_stab_brand MAY_STAB_BRAND
 stab_brand STAB_BRAND
-unseen PLAYER
 out_of_sight MESH
 magicmap MAGIC_MAP_MESH
 something_under SOMETHING_UNDER
@@ -85,6 +84,3 @@ slot_eq ITEM_SLOT_EQUIP
 slot_cursed ITEM_SLOT_CURSED
 slot_eq_cursed ITEM_SLOT_EQUIP_CURSED
 ray ITEM_SLOT_SELECTED
-
-%back unseen
-dc-misc/unseen_monster MCACHE_START

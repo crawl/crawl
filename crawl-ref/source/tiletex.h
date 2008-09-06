@@ -56,7 +56,7 @@ class TilesTexture : public GenericTexture
 public:
     TilesTexture();
 
-    void set_info(int max, tile_info *info);
+    void set_info(int max, tile_info_func *info);
     inline const tile_info &get_info(int idx);
     inline void get_coords(int idx, int ofs_x, int ofs_y,
                            float &pos_sx, float &pos_sy,
@@ -67,13 +67,12 @@ public:
 
 protected:
     int m_tile_max;
-    tile_info *m_tile_info;
+    tile_info_func *m_info_func;
 };
 
 inline const tile_info &TilesTexture::get_info(int idx)
 {
-    assert(idx < m_tile_max);
-    return m_tile_info[idx];
+    return m_info_func(idx);
 }
 
 inline void TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,

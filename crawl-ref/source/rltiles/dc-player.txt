@@ -1,5 +1,9 @@
 %name player
+%startvalue TILE_MAIN_MAX tiledef-main.h
 %prefix TILEP
+
+%include dc-demon.txt
+%include dc-mon.txt
 
 %rim 1
 
@@ -845,3 +849,4 @@ drchead_purple PURPLE
 drchead_red RED
 drchead_white WHITE
 %end
+

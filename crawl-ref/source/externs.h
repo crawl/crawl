@@ -44,6 +44,20 @@ struct tile_flavour
     // Used as a random value or for special cases e.g. (bazaars, gates).
     unsigned char special;
 };
+
+// A glorified unsigned int that assists with ref-counting the mcache.
+class tile_fg_store
+{
+public:
+    tile_fg_store() : m_tile(0) {}
+    tile_fg_store(unsigned int tile) : m_tile(tile) {}
+    operator unsigned int() { return m_tile; }
+    unsigned int operator=(unsigned int tile);
+protected:
+    unsigned int m_tile;
+};
+
+
 #endif
 
 #define INFO_SIZE       200          // size of message buffers
@@ -1446,8 +1460,8 @@ public:
 
 #ifdef USE_TILE
     // indexed by grid coords
-    FixedArray<unsigned int,GXM, GYM> tile_bk_fg; // tile fg
-    FixedArray<unsigned int,GXM, GYM> tile_bk_bg; // tile bg
+    FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg; // tile fg
+    FixedArray<unsigned int, GXM, GYM> tile_bk_bg; // tile bg
     FixedArray<tile_flavour, GXM, GYM> tile_flv;
     // indexed by (show-1) coords
     FixedArray<unsigned int,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_fg;

@@ -11,17 +11,31 @@
 #ifdef USE_TILE
 
 #include "tiledef-main.h"
-#include "tiledef-demon.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 
 #include "beam.h"
+
+enum tag_version
+{
+    TILETAG_PRE_MCACHE = 71,
+    TILETAG_CURRENT = 72 
+};
 
 struct dolls_data
 {
     dolls_data() { memset(parts, 0, sizeof(parts)); }
 
     int parts[TILEP_PART_MAX];
+};
+
+struct demon_data
+{
+    demon_data() { head = body = wings = 0; }
+
+    int head;
+    int body;
+    int wings;
 };
 
 //*tile1.cc: get data from core part and drives tile drawing codes
@@ -37,11 +51,12 @@ int tileidx_bolt(const bolt &bolt);
 int tileidx_zap(int colour);
 int tile_idx_unseen_terrain(int x, int y, int what);
 int tile_unseen_flag(const coord_def& gc);
+int tileidx_monster(const monsters *mon, bool detected);
 
 // Player tile related
 void tilep_race_default(int race, int gender, int level, int *parts);
 void tilep_job_default(int job, int gender, int *parts);
-void tilep_calc_flags(int parts[], int flag[]);
+void tilep_calc_flags(const int parts[], int flag[]);
 
 void tilep_part_to_str(int number, char *buf);
 int  tilep_str_to_part(char *str);
@@ -104,12 +119,6 @@ void TileNewLevel(bool first_time);
 
 // edit player tile
 void TilePlayerEdit();
-// init ghost tile
-void TileGhostInit(const struct ghost_demon &gs);
-// init pandem demon tile (only in iso mode)
-void TilePandemInit(struct ghost_demon &gs);
-// edit pandem tile (debug)
-void TileEditPandem();
 
 int item_unid_type(const item_def &item);
 
@@ -118,11 +127,6 @@ void TileLoadWall(bool wizard);
 
 void TileDrawTitle();
 
-// monster+weapon tile
-void tile_mcache_unlock();
-int get_base_idx_from_mcache(int tile_idx);
-void tile_get_monster_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y);
-bool get_mcache_entry(int tile_idx, int &mon_idx, int &equ_tile, int &draco);
 int get_clean_map_idx(int tile_idx);
 
 /* Flags for drawing routines */
@@ -169,15 +173,14 @@ enum
     TILEI_FLAG_CURSOR = 0x2000
 };
 
-#define TILEP_SHOW_EQUIP  0x1000
+enum
+{
+    TILEP_GENDER_MALE = 0,
+    TILEP_GENDER_FEMALE = 1,
+    TILEP_SHOW_EQUIP = 0x1000
+};
 
-#define TILEP_GENDER_MALE   0
-#define TILEP_GENDER_FEMALE 1
-
-#define TILEP_M_DEFAULT   0
-#define TILEP_M_LOADING   1
-
-enum TilePlayerFlagCut
+enum tile_player_flag_cut
 {
     TILEP_FLAG_HIDE,
     TILEP_FLAG_NORMAL,
@@ -185,16 +188,12 @@ enum TilePlayerFlagCut
     TILEP_FLAG_CUT_NAGA
 };
 
-#ifdef TILEP_DEBUG
-const char *get_ctg_name(int part);
-int get_ctg_idx(char *name);
-const char *get_parts_name(int part, int idx);
-int get_parts_idx(int part, char *name);
-#endif
-
 // normal tile size in px
-#define TILE_X 32
-#define TILE_Y 32
+enum
+{
+    TILE_X = 32,
+    TILE_Y = 32
+};
 
 #endif // USE_TILES
 #endif

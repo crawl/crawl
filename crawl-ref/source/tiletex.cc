@@ -240,14 +240,14 @@ void GenericTexture::bind()
 }
 
 TilesTexture::TilesTexture() :
-    GenericTexture(), m_tile_max(0), m_tile_info(NULL)
+    GenericTexture(), m_tile_max(0), m_info_func(NULL)
 {
 
 }
 
-void TilesTexture::set_info(int _max, tile_info *_info)
+void TilesTexture::set_info(int tile_max, tile_info_func *info_func)
 {
-    m_tile_max = _max;
-    m_tile_info = _info;
+    m_tile_max = tile_max;
+    m_info_func = info_func;
 }
 

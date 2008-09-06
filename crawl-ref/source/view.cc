@@ -73,6 +73,7 @@
 #include "tiles.h"
 #include "state.h"
 #include "terrain.h"
+#include "tilemcache.h"
 #include "tilesdl.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -4823,7 +4824,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
 #ifdef USE_TILE
     tile_draw_floor();
-    tile_mcache_unlock();
+    mcache.clear_nonref();
 #endif
 
     env.show_col.init(LIGHTGREY);
@@ -5010,8 +5011,7 @@ void viewwindow(bool draw_it, bool do_updates)
                             else
                             {
                                 env.tile_bk_fg[gc.x][gc.y] =
-                                    get_base_idx_from_mcache(
-                                    env.tile_fg[ep.x-1][ep.y-1]);
+                                    env.tile_fg[ep.x-1][ep.y-1];
                             }
                             env.tile_bk_bg[gc.x][gc.y] =
                                 env.tile_bg[ep.x-1][ep.y-1];

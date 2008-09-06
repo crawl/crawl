@@ -48,7 +48,6 @@ PCRELIBA := lib$(PCRELIB).a
 RLTILES = rltiles
 EXTRA_INCLUDES += -I$(RLTILES)
 OBJECTS += \
-    $(RLTILES)/tiledef-demon.o \
     $(RLTILES)/tiledef-dngn.o \
     $(RLTILES)/tiledef-main.o \
     $(RLTILES)/tiledef-player.o
@@ -56,8 +55,7 @@ OBJECTS += \
 TILEFILES = \
     main.png \
     player.png \
-    dngn.png \
-    demon.png
+    dngn.png
 
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
@@ -78,7 +76,7 @@ CFOTHERS := -fsigned-char \
 CFLAGS   := $(INCLUDES) $(CFWARN) $(CFOTHERS) $(SDL_CFLAGS)
 YCFLAGS  := $(INCLUDES) $(CFOTHERS)
 
-OBJECTS := $(OBJECTS) libgui.o tilepick.o tile2.o tilereg.o tilesdl.o tilefont.o tiletex.o
+OBJECTS := $(OBJECTS) libgui.o tilepick.o tile2.o tilereg.o tilesdl.o tilefont.o tiletex.o tilemcache.o
 
 LDFLAGS =
 

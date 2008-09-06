@@ -365,12 +365,12 @@ void TileLoadWall(bool wizard)
     WallIdx(wall_tile_idx, floor_tile_idx, special_tile_idx);
 
     // Number of flavors are generated automatically...
-    floor_flavors  = tile_dngn_count[floor_tile_idx];
-    wall_flavors  = tile_dngn_count[wall_tile_idx];
+    floor_flavors  = tile_dngn_count(floor_tile_idx);
+    wall_flavors  = tile_dngn_count(wall_tile_idx);
 
     if (special_tile_idx != -1)
     {
-        special_flavors = tile_dngn_count[special_tile_idx];
+        special_flavors = tile_dngn_count(special_tile_idx);
     }
     else
     {
@@ -384,6 +384,7 @@ void TileLoadWall(bool wizard)
 #define TILEP_SELECT_DOLL 20
 
 static dolls_data current_doll;
+#if 0
 static int current_gender = 0;
 
 static void _load_doll_data(const char *fn, dolls_data *dolls, int max,
@@ -468,6 +469,7 @@ static void _load_doll_data(const char *fn, dolls_data *dolls, int max,
 
     current_gender = dolls[cur0].parts[TILEP_PART_BASE] % 2;
 }
+#endif
 
 void TilePlayerEdit()
 {
@@ -670,8 +672,8 @@ void TilePlayerEdit()
         ImgCopy(DollCacheImg, 0, 0, TILE_X, TILE_Y,
                 DollsListImg, cur_doll*TILE_X, 0, 1);
 
-        _ImgCopyToTileImg(TILE_PLAYER, DollCacheImg, 0, 0, 1);
-        _ImgCopyFromTileImg(TILE_PLAYER, ScrBufImg, 8*TILE_X, 8*TILE_Y, 0);
+        _ImgCopyToTileImg(TILEP_PLAYER, DollCacheImg, 0, 0, 1);
+        _ImgCopyFromTileImg(TILEP_PLAYER, ScrBufImg, 8*TILE_X, 8*TILE_Y, 0);
         ImgCopy(DollsListImg, 0, 0,
                 ImgWidth(DollsListImg), ImgHeight(DollsListImg),
                 ScrBufImg, 3 * TILE_X, PARTS_Y, 0);
@@ -909,7 +911,7 @@ void TilePlayerEdit()
 
     current_doll = dolls[cur_doll];
     _draw_doll(DollCacheImg, &current_doll);
-    _ImgCopyToTileImg(TILE_PLAYER, DollCacheImg, 0, 0, 1);
+    _ImgCopyToTileImg(TILEP_PLAYER, DollCacheImg, 0, 0, 1);
 
     std::string dollsTxtString = datafile_path("dolls.txt", false, true);
     const char *dollsTxt = (dollsTxtString.c_str()[0] == 0) ?
@@ -932,7 +934,7 @@ void TilePlayerEdit()
     ImgDestroy(DollsListImg);
 
     ImgClear(ScrBufImg);
-    _redraw_spx_tcache(TILE_PLAYER);
+    _redraw_spx_tcache(TILEP_PLAYER);
 
     for (x = 0; x < TILE_DAT_XMAX + 2; x++)
     {
@@ -953,272 +955,13 @@ void TilePlayerEdit()
 #endif
 }
 
-void TileGhostInit(const struct ghost_demon &ghost)
-{
-#if 0
-    dolls_data doll;
-    int x, y;
-    unsigned int pseudo_rand = ghost.max_hp * 54321 * 54321;
-    char mask[TILE_X*TILE_Y];
-    int g_gender = (pseudo_rand >> 8) & 1;
-
-    for (x = 0; x < TILE_X; x++)
-    for (y = 0; y < TILE_X; y++)
-         mask[x + y*TILE_X] = (x+y)&1;
-
-    for (x = 0; x < TILEP_PART_MAX; x++)
-    {
-         doll.parts[x] = 0;
-         current_parts[x] = 0;
-    }
-    tilep_race_default(ghost.species, g_gender,
-                       ghost.xl, doll.parts);
-    tilep_job_default (ghost.job, g_gender,  doll.parts);
-
-    for (x = TILEP_PART_CLOAK; x < TILEP_PART_MAX; x++)
-    {
-         if (doll.parts[x] == TILEP_SHOW_EQUIP)
-         {
-             doll.parts[x] = 1 + (pseudo_rand % tilep_parts_total[x]);
-
-             if (x == TILEP_PART_BODY)
-             {
-                 int p = 0;
-                 int ac = ghost.ac;
-                 ac *= (5 + (pseudo_rand/11) % 11);
-                 ac /= 10;
-
-                 if (ac > 25)
-                     p = TILEP_BODY_PLATE_BLACK;
-                 else if (ac > 20)
-                     p =  TILEP_BODY_BANDED;
-                 else if (ac > 15)
-                     p = TILEP_BODY_SCALEMAIL;
-                 else if (ac > 10)
-                     p = TILEP_BODY_CHAINMAIL;
-                 else if (ac > 5 )
-                     p = TILEP_BODY_LEATHER_HEAVY;
-                 else
-                     p = TILEP_BODY_ROBE_BLUE;
-                doll.parts[x] = p;
-            }
-        }
-    }
-
-    int sk = ghost.best_skill;
-    int dam = ghost.damage;
-    int p = 0;
-
-    dam *= (5 + pseudo_rand % 11);
-    dam /= 10;
-
-    switch (sk)
-    {
-    case SK_MACES_FLAILS:
-        if (dam > 30)
-            p = TILEP_HAND1_GREAT_FRAIL;
-        else if (dam > 25)
-            p = TILEP_HAND1_GREAT_MACE;
-        else if (dam > 20)
-            p = TILEP_HAND1_SPIKED_FRAIL;
-        else if (dam > 15)
-            p = TILEP_HAND1_MORNINGSTAR;
-        else if (dam > 10)
-            p = TILEP_HAND1_FRAIL;
-        else if (dam > 5)
-            p = TILEP_HAND1_MACE;
-        else
-            p = TILEP_HAND1_CLUB_SLANT;
-
-        doll.parts[TILEP_PART_HAND1] = p;
-        break;
-
-    case SK_SHORT_BLADES:
-        if (dam > 20)
-            p = TILEP_HAND1_SABRE;
-        else if (dam > 10)
-            p = TILEP_HAND1_SHORT_SWORD_SLANT;
-        else
-            p = TILEP_HAND1_DAGGER_SLANT;
-
-        doll.parts[TILEP_PART_HAND1] = p;
-        break;
-
-    case SK_LONG_BLADES:
-        if (dam > 25)
-            p = TILEP_HAND1_GREAT_SWORD_SLANT;
-        else if (dam > 20)
-            p = TILEP_HAND1_KATANA_SLANT;
-        else if (dam > 15)
-            p = TILEP_HAND1_SCIMITAR;
-        else if (dam > 10)
-            p = TILEP_HAND1_LONG_SWORD_SLANT;
-        else
-            p = TILEP_HAND1_FALCHION;
-
-        doll.parts[TILEP_PART_HAND1] = p;
-        break;
-
-    case SK_AXES:
-        if (dam > 30)
-            p = TILEP_HAND1_EXECUTIONERS_AXE;
-        else if (dam > 20)
-            p = TILEP_HAND1_BATTLEAXE;
-        else if (dam > 15)
-            p = TILEP_HAND1_BROAD_AXE;
-        else if (dam > 10)
-            p = TILEP_HAND1_WAR_AXE;
-        else
-            p = TILEP_HAND1_HAND_AXE;
-
-        doll.parts[TILEP_PART_HAND1] = p;
-        break;
-
-    case SK_POLEARMS:
-        if (dam > 30)
-            p =  TILEP_HAND1_GLAIVE;
-        else if (dam > 20)
-            p = TILEP_HAND1_SCYTHE;
-        else if (dam > 15)
-            p = TILEP_HAND1_HALBERD;
-        else if (dam > 10)
-            p = TILEP_HAND1_TRIDENT2;
-        else if (dam > 10)
-            p = TILEP_HAND1_HAMMER;
-        else
-            p = TILEP_HAND1_SPEAR;
-
-        doll.parts[TILEP_PART_HAND1] = p;
-        break;
-
-    case SK_BOWS:
-        doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_BOW2;
-        break;
-
-    case SK_CROSSBOWS:
-        doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_CROSSBOW;
-        break;
-
-    case SK_SLINGS:
-        doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_SLING;
-        break;
-
-    case SK_UNARMED_COMBAT:
-    default:
-        doll.parts[TILEP_PART_HAND1] = doll.parts[TILEP_PART_HAND2] = 0;
-        break;
-    }
-
-    ImgClear(DollCacheImg);
-    // Clear
-    _ImgCopyToTileImg(TILE_MONS_PLAYER_GHOST, DollCacheImg, 0, 0, 1);
-
-    _draw_doll(DollCacheImg, &doll);
-    _ImgCopyToTileImg(TILE_MONS_PLAYER_GHOST, DollCacheImg, 0, 0, 1, mask, false);
-    _redraw_spx_tcache(TILE_MONS_PLAYER_GHOST);
-#endif
-}
-
-void tile_get_monster_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
-{
-    ofs_x = 0;
-    ofs_y = 0;
-
-    switch (mon_tile)
-    {
-        case TILE_MONS_ORC:
-        case TILE_MONS_URUG:
-        case TILE_MONS_BLORK_THE_ORC:
-        case TILE_MONS_ORC_WARRIOR:
-        case TILE_MONS_ORC_KNIGHT:
-        case TILE_MONS_ORC_WARLORD:
-            ofs_y = 2;
-            break;
-        case TILE_MONS_GOBLIN:
-        case TILE_MONS_IJYB:
-            ofs_y = 4;
-            break;
-        case TILE_MONS_GNOLL:
-            ofs_x = -1;
-            break;
-        case TILE_MONS_BOGGART:
-            ofs_y = 2;
-            break;
-        case TILE_MONS_DEEP_ELF_FIGHTER:
-        case TILE_MONS_DEEP_ELF_SOLDIER:
-            ofs_y = 2;
-            break;
-        case TILE_MONS_DEEP_ELF_KNIGHT:
-            ofs_y = 1;
-            break;
-        case TILE_MONS_KOBOLD:
-            ofs_x = 3;
-            ofs_y = 4;
-            break;
-        case TILE_MONS_KOBOLD_DEMONOLOGIST:
-            ofs_y = -10;
-            break;
-        case TILE_MONS_BIG_KOBOLD:
-            ofs_x = 2;
-            ofs_y = 3;
-            break;
-        case TILE_MONS_MIDGE:
-            ofs_y = -2;
-            break;
-        case TILE_MONS_NAGA:
-        case TILE_MONS_GREATER_NAGA:
-        case TILE_MONS_NAGA_WARRIOR:
-        case TILE_MONS_GUARDIAN_NAGA:
-        case TILE_MONS_NAGA_MAGE:
-            ofs_y = 1;
-            break;
-        case TILE_MONS_HELL_KNIGHT:
-            ofs_x = -1;
-            ofs_y = 3;
-            break;
-        case TILE_MONS_RED_DEVIL:
-            ofs_x = 2;
-            ofs_y = -3;
-            break;
-        case TILE_MONS_WIZARD:
-            ofs_x = 2;
-            ofs_y = -2;
-            break;
-        case TILE_MONS_HUMAN:
-            ofs_x = 5;
-            ofs_y = 2;
-            break;
-        case TILE_MONS_ELF:
-            ofs_y = 1;
-            ofs_x = 4;
-            break;
-        case TILE_MONS_OGRE_MAGE:
-            ofs_y = -2;
-            ofs_x = -4;
-            break;
-        case TILE_MONS_DEEP_ELF_MAGE:
-        case TILE_MONS_DEEP_ELF_SUMMONER:
-        case TILE_MONS_DEEP_ELF_CONJURER:
-        case TILE_MONS_DEEP_ELF_PRIEST:
-        case TILE_MONS_DEEP_ELF_HIGH_PRIEST:
-        case TILE_MONS_DEEP_ELF_DEMONOLOGIST:
-        case TILE_MONS_DEEP_ELF_ANNIHILATOR:
-        case TILE_MONS_DEEP_ELF_SORCERER:
-            ofs_x = -1;
-            ofs_y = -2;
-            break;
-        case TILE_MONS_DEEP_ELF_DEATH_MAGE:
-            ofs_x = -1;
-            break;
-    }
-}
-
 int get_clean_map_idx(int tile_idx)
 {
+    // TODO enne - need to separate TILEP from non-TILEP...
     int idx = tile_idx & TILE_FLAG_MASK;
     if (idx >= TILE_CLOUD_FIRE_0 && idx <= TILE_CLOUD_PURP_SMOKE ||
-        idx >= TILE_MONS_SHADOW && idx <= TILE_MONS_WATER_ELEMENTAL ||
-        idx >= TILE_MCACHE_START)
+        idx >= TILEP_MONS_SHADOW && idx <= TILEP_MONS_WATER_ELEMENTAL ||
+        idx >= TILEP_MCACHE_START)
     {
         return 0;
     }

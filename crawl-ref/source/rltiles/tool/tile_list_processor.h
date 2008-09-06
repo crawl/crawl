@@ -33,6 +33,8 @@ protected:
     std::string m_parts_ctg;
     std::string m_sdir;
     std::string m_prefix;
+    std::string m_start_value;
+    std::string m_include;
     std::vector<std::string> m_categories;
     std::vector<int> m_ctg_counts;
     tile m_compose;

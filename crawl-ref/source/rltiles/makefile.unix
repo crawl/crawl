@@ -19,7 +19,7 @@ DELETE = rm -f
 TOOLDIR := tool
 TILEGEN := $(TOOLDIR)/tilegen.elf
 
-INPUTS := main dngn player demon
+INPUTS := main dngn player
 INPUTFILES := $(INPUTS:%=dc-%.txt)
 HEADERS := $(INPUTS:%=tiledef-%.h)
 SOURCE := $(INPUTS:%=tiledef-%.cc)

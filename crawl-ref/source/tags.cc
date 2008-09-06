@@ -87,6 +87,7 @@
 #include "stuff.h"
 #include "tags.h"
 #include "tiles.h"
+#include "tilemcache.h"
 #include "travel.h"
 
 // defined in overmap.cc
@@ -1856,7 +1857,7 @@ void tag_construct_level_tiles(writer &th)
     unsigned int last_tile = 0;
 
     // tile routine subversion
-    marshallShort(th, 71);
+    marshallShort(th, TILETAG_CURRENT);
 
     // Map grids.
     // how many X?
@@ -1934,6 +1935,8 @@ void tag_construct_level_tiles(writer &th)
             marshallByte(th, env.tile_flv[count_x][count_y].floor);
             marshallByte(th, env.tile_flv[count_x][count_y].special);
         }
+
+    mcache.construct(th);
 
 #endif
 }
@@ -2251,6 +2254,11 @@ void tag_read_level_tiles(struct reader &th)
             env.tile_flv[x][y].special = unmarshallByte(th);
         }
 
+    if (ver > TILETAG_PRE_MCACHE)
+        mcache.read(th);
+    else
+        mcache.clear_all();
+
 #endif
 }
 
@@ -2267,6 +2275,7 @@ static void tag_missing_level_tiles()
             env.tile_bk_fg[i][j] = 0;
         }
 
+    mcache.clear_all();
 #endif
 }
 

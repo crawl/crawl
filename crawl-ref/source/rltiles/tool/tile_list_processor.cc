@@ -10,7 +10,8 @@ tile_list_processor::tile_list_processor() :
     m_corpsify(false),
     m_composing(false),
     m_shrink(true),
-    m_prefix("TILE")
+    m_prefix("TILE"),
+    m_start_value("0")
 {
 }
 
@@ -192,8 +193,8 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 return false; \
             }
 
-        #define CHECK_ARG1 \
-            if (m_args.size() <= 1) \
+        #define CHECK_ARG(x) \
+            if (m_args.size() <= x) \
             { \
                 fprintf(stderr, "Error (%s:%d): " \
                     "missing arg following '%s'.\n", \
@@ -203,7 +204,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
         if (strcmp(arg, "back") == 0)
         {
-            CHECK_ARG1;
+            CHECK_ARG(1);
 
             for (unsigned int i = 0; i < m_back.size(); i++)
             {
@@ -231,7 +232,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         }
         else if (strcmp(arg, "compose") == 0)
         {
-            CHECK_ARG1;
+            CHECK_ARG(1);
             if (!m_composing)
             {
                 fprintf(stderr, "Error (%s:%d): not composing yet.\n",
@@ -271,7 +272,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         }
         else if (strcmp(arg, "corpse") == 0)
         {
-            CHECK_ARG1;
+            CHECK_ARG(1);
             m_corpsify = (bool)atoi(m_args[1]);
         }
         else if (strcmp(arg, "end") == 0)
@@ -325,7 +326,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         }
         else if (strcmp(arg, "include") == 0)
         {
-            CHECK_ARG1;
+            CHECK_ARG(1);
             if (!process_list(m_args[1]))
             {
                 fprintf(stderr, "Error (%s:%d): include failed.\n",
@@ -335,7 +336,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         }
         else if (strcmp(arg, "name") == 0)
         {
-            CHECK_ARG1;
+            CHECK_ARG(1);
 
             if (m_name != "")
             {
@@ -349,7 +350,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         }
         else if (strcmp(arg, "parts_ctg") == 0)
         {
-            CHECK_ARG1;
+            CHECK_ARG(1);
 
             for (unsigned int i = 0; i < m_categories.size(); i++)
             {
@@ -368,22 +369,22 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         }
         else if (strcmp(arg, "prefix") == 0)
         {
-            CHECK_ARG1;
+            CHECK_ARG(1);
             m_prefix = m_args[1];
         }
         else if (strcmp(arg, "rim") == 0)
         {
-            CHECK_ARG1;
+            CHECK_ARG(1);
             m_rim = (bool)atoi(m_args[1]);
         }
         else if (strcmp(arg, "sdir") == 0)
         {
-            CHECK_ARG1;
+            CHECK_ARG(1);
             m_sdir = m_args[1];
         }
         else if (strcmp(arg, "shrink") == 0)
         {
-            CHECK_ARG1;
+            CHECK_ARG(1);
             m_shrink = (bool)atoi(m_args[1]);
         }
         else if (strcmp(arg, "start") == 0)
@@ -398,6 +399,14 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             }
             m_composing = true;
             m_compose.unload();
+        }
+        else if (strcmp(arg, "startvalue") == 0)
+        {
+            CHECK_ARG(2);
+            CHECK_NO_ARG(3);
+
+            m_start_value = m_args[1];
+            m_include = m_args[2];
         }
         else
         {
@@ -542,7 +551,15 @@ bool tile_list_processor::write_data()
             ucname.c_str(), ucname.c_str());
         fprintf(fp, "#include \"tiledef_defines.h\"\n\n");
 
+        if (!m_include.empty())
+        {
+            fprintf(fp, "#include \"%s\"\n\n", m_include.c_str());
+        }
+
         fprintf(fp, "enum tile_%s_type\n{\n", lcname.c_str());
+
+        std::string start_val = " = ";
+        start_val += m_start_value;
 
         for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
         {
@@ -550,19 +567,21 @@ bool tile_list_processor::write_data()
             const std::string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
             if (enumname.empty())
             {
-                fprintf(fp, "    %s_%s_FILLER_%d,\n", m_prefix.c_str(), 
-                    ucname.c_str(), i);
+                fprintf(fp, "    %s_%s_FILLER_%d%s,\n", m_prefix.c_str(), 
+                    ucname.c_str(), i, start_val.c_str());
             }
             else if (parts_ctg.empty())
             {
-                fprintf(fp, "    %s_%s,\n", m_prefix.c_str(),
-                    enumname.c_str());
+                fprintf(fp, "    %s_%s%s,\n", m_prefix.c_str(),
+                    enumname.c_str(), start_val.c_str());
             }
             else
             {
-                fprintf(fp, "    %s_%s_%s,\n", m_prefix.c_str(),
-                    parts_ctg.c_str(), enumname.c_str());
+                fprintf(fp, "    %s_%s_%s%s,\n", m_prefix.c_str(),
+                    parts_ctg.c_str(), enumname.c_str(), start_val.c_str());
             }
+
+            start_val = "";
 
             if (!parts_ctg.empty())
             {
@@ -580,12 +599,11 @@ bool tile_list_processor::write_data()
 
         fprintf(fp, "    %s_%s_MAX\n};\n\n", m_prefix.c_str(), ucname.c_str());
 
-        fprintf(fp, "extern int tile_%s_count[%s];\n",
-            lcname.c_str(), max.c_str());
-        fprintf(fp, "extern const char *tile_%s_name[%s];\n",
-            lcname.c_str(), max.c_str());
-        fprintf(fp, "extern tile_info tile_%s_info[%s];\n",
-            lcname.c_str(), max.c_str());
+        fprintf(fp, "int tile_%s_count(unsigned int idx);\n", lcname.c_str());
+        fprintf(fp, "const char *tile_%s_name(unsigned int idx);\n",
+            lcname.c_str());
+        fprintf(fp, "tile_info &tile_%s_info(unsigned int idx);\n",
+            lcname.c_str());
 
         if (m_categories.size() > 0)
         {
@@ -624,14 +642,21 @@ bool tile_list_processor::write_data()
         fprintf(fp, "// This file has been automatically generated.\n\n");
         fprintf(fp, "#include \"tiledef-%s.h\"\n\n", lcname.c_str());
 
-        fprintf(fp, "int tile_%s_count[%s] =\n{\n",
-            lcname.c_str(), max.c_str());
+        fprintf(fp, "int _tile_%s_count[%s - %s] =\n{\n",
+            lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_counts.size(); i++)
             fprintf(fp, "    %d,\n", m_page.m_counts[i]);
         fprintf(fp, "};\n\n");
 
-        fprintf(fp, "const char *tile_%s_name[%s] =\n{\n",
-            lcname.c_str(), max.c_str());
+        fprintf(fp, "int tile_%s_count(unsigned int idx)\n{\n", lcname.c_str());
+        fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
+            m_start_value.c_str(), max.c_str());
+        fprintf(fp, "    return _tile_%s_count[idx - %s];\n",
+            lcname.c_str(), m_start_value.c_str());
+        fprintf(fp, "}\n\n");
+
+        fprintf(fp, "const char *_tile_%s_name[%s - %s] =\n{\n",
+            lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
         {
             const std::string &enumname = m_page.m_tiles[i]->enumname();
@@ -642,8 +667,16 @@ bool tile_list_processor::write_data()
         }
         fprintf(fp, "};\n\n");
 
-        fprintf(fp, "tile_info tile_%s_info[%s] =\n{\n",
-            lcname.c_str(), max.c_str());
+        fprintf(fp, "const char *tile_%s_name(unsigned int idx)\n{\n",
+            lcname.c_str());
+        fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
+            m_start_value.c_str(), max.c_str());
+        fprintf(fp, "    return _tile_%s_name[idx - %s];\n",
+            lcname.c_str(), m_start_value.c_str());
+        fprintf(fp, "}\n\n");
+
+        fprintf(fp, "tile_info _tile_%s_info[%s - %s] =\n{\n",
+            lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_offsets.size(); i+=4)
         {
             fprintf(fp, "    tile_info(%d, %d, %d, %d, %d, %d, %d, %d),\n",
@@ -653,6 +686,14 @@ bool tile_list_processor::write_data()
                 m_page.m_texcoords[i+2], m_page.m_texcoords[i+3]);
         }
         fprintf(fp, "};\n\n");
+
+        fprintf(fp, "tile_info &tile_%s_info(unsigned int idx)\n{\n",
+            lcname.c_str());
+        fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
+            m_start_value.c_str(), max.c_str());
+        fprintf(fp, "    return _tile_%s_info[idx - %s];\n",
+            lcname.c_str(), m_start_value.c_str());
+        fprintf(fp, "}\n\n");
 
         if (m_categories.size() > 0)
         {
@@ -671,7 +712,7 @@ bool tile_list_processor::write_data()
 
             for (int i = 0; i < m_categories.size(); i++)
             {
-                fprintf(fp, "    %d,\n", part_min[i]);
+                fprintf(fp, "    %d+%s,\n", part_min[i], m_start_value.c_str());
             }
 
             fprintf(fp, "};\n\n");

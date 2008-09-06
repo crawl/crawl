@@ -344,7 +344,6 @@ gate_open_left DNGN_GATE_OPEN_LEFT
 gate_open_middle DNGN_GATE_OPEN_MIDDLE
 gate_open_right DNGN_GATE_OPEN_RIGHT
 dngn_orcish_idol DNGN_ORCISH_IDOL
-dngn_silver_statue DNGN_SILVER_STATUE
 dngn_granite_statue DNGN_GRANITE_STATUE
 
 %rim 1

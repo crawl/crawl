@@ -43,4 +43,8 @@ public:
     unsigned short ey;
 };
 
+typedef unsigned int (tile_count_func)(unsigned int);
+typedef const char *(tile_name_func)(unsigned int);
+typedef tile_info &(tile_info_func)(unsigned int);
+
 #endif

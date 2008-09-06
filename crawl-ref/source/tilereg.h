@@ -12,6 +12,7 @@
 #include "tiletex.h"
 #include "tiles.h"
 #include <vector>
+class mcache_entry;
 
 class ImageManager
 {
@@ -246,12 +247,10 @@ public:
 
 protected:
     void draw_background(unsigned int bg, unsigned int x, unsigned int y);
-    bool draw_objects(unsigned int fg, unsigned int x, unsigned int y);
+    void draw_mcache(mcache_entry *entry, unsigned int x, unsigned int y);
     void draw_player(unsigned int x, unsigned int y);
-    void draw_monster(unsigned int fg, unsigned int x, unsigned int y);
     void draw_foreground(unsigned int bg, unsigned int fg, unsigned int x, unsigned int y);
-    void draw_doll(dolls_data &doll, unsigned int x, unsigned int y);
-    void draw_draco(int colour, int mon_idx, int equ_tile, unsigned int x, unsigned int y);
+    void draw_doll(const dolls_data &doll, unsigned int x, unsigned int y);
     void draw_cursor(cursor_type type, unsigned int tile);
 
     int get_buffer_index(const coord_def &gc);

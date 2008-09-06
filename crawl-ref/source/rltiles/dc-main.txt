@@ -7,8 +7,6 @@ dc-dngn/dngn_unseen
 ## Set black rim
 ## Items
 %include dc-item.txt
-## Monsters
-%include dc-mon.txt
 ## Clear black rim
 %rim 0
 

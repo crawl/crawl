@@ -31,6 +31,7 @@
 #include "tiles.h"
 #include "tilefont.h"
 #include "tilesdl.h"
+#include "tilemcache.h"
 
 #include <SDL_opengl.h>
 
@@ -281,7 +282,7 @@ void DungeonRegion::draw_background(unsigned int bg, unsigned int x, unsigned in
     if (bg & TILE_FLAG_BLOOD)
     {
         tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
-        unsigned int offset = flv.special % tile_dngn_count[TILE_BLOOD];
+        unsigned int offset = flv.special % tile_dngn_count(TILE_BLOOD);
         add_quad(TEX_DUNGEON, TILE_BLOOD + offset, x, y);
     }
 
@@ -426,31 +427,8 @@ void DungeonRegion::draw_player(unsigned int x, unsigned int y)
     draw_doll(result, x, y);
 }
 
-bool DungeonRegion::draw_objects(unsigned int fg, unsigned int x, unsigned int y)
-{
-    unsigned int fg_idx = fg & TILE_FLAG_MASK;
-
-    // handled elsewhere
-    if (fg_idx == TILE_PLAYER)
-        return false;
-
-    int equ_tile;
-    int draco;
-    int mon_tile;
-    if (get_mcache_entry(fg_idx, mon_tile, equ_tile, draco))
-    {
-        if (!draco)
-            add_quad(TEX_DEFAULT, get_base_idx_from_mcache(fg_idx), x, y);
-        return true;
-    }
-    else if (fg_idx)
-    {
-        add_quad(TEX_DEFAULT, fg_idx, x, y);
-    }
-    return false;
-}
-
-void DungeonRegion::draw_doll(dolls_data &doll, unsigned int x, unsigned int y)
+void DungeonRegion::draw_doll(const dolls_data &doll, unsigned int x,
+                              unsigned int y)
 {
     int p_order[TILEP_PART_MAX] =
     {
@@ -499,152 +477,31 @@ void DungeonRegion::draw_doll(dolls_data &doll, unsigned int x, unsigned int y)
     }
 }
 
-void DungeonRegion::draw_draco(int colour, int mon_idx, int equ_tile, unsigned int x, unsigned int y)
+void DungeonRegion::draw_mcache(mcache_entry *entry, unsigned int x, unsigned int y)
 {
-    dolls_data doll;
+    ASSERT(entry);
 
-    int armour = 0;
-    int armour2 = 0;
-    int weapon = 0;
-    int weapon2 = 0;
-    int arm = 0;
+    const dolls_data *doll = entry->doll();
+    if (doll)
+        draw_doll(*doll, x, y);
 
-    for (int i = 0; i < TILEP_PART_MAX; i++)
-         doll.parts[i] = 0;
+    tile_draw_info dinfo[3];
+    unsigned int draw_info_count = entry->info(&dinfo[0]);
+    ASSERT(draw_info_count <= sizeof(dinfo) / (sizeof(dinfo[0])));
 
-    doll.parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
-    doll.parts[TILEP_PART_BASE] = TILEP_BASE_DRACONIAN + colour * 2;
-    doll.parts[TILEP_PART_DRCWING] = tile_player_part_start[TILEP_PART_DRCWING] 
-                                     + colour;
-    doll.parts[TILEP_PART_DRCHEAD] = tile_player_part_start[TILEP_PART_DRCHEAD]
-                                     + colour;
-
-    switch (mon_idx)
-    {
-        case MONS_DRACONIAN_CALLER:
-            weapon = TILEP_HAND1_STAFF_EVIL;
-            weapon2 = TILEP_HAND2_BOOK_YELLOW;
-            armour = TILEP_BODY_ROBE_BROWN;
-            break;
-
-        case MONS_DRACONIAN_MONK:
-            arm = TILEP_ARM_GLOVE_SHORT_BLUE;
-            armour = TILEP_BODY_KARATE2;
-            break;
-
-        case MONS_DRACONIAN_ZEALOT:
-            weapon = TILEP_HAND1_MACE;
-            weapon2 = TILEP_HAND2_BOOK_CYAN;
-            armour = TILEP_BODY_MONK_BLUE;
-            break;
-
-        case MONS_DRACONIAN_SHIFTER:
-            weapon = TILEP_HAND1_STAFF_LARGE;
-            armour = TILEP_BODY_ROBE_CYAN;
-            weapon2 = TILEP_HAND2_BOOK_GREEN;
-            break;
-
-        case MONS_DRACONIAN_ANNIHILATOR:
-            weapon = TILEP_HAND1_STAFF_RUBY;
-            weapon2 = TILEP_HAND2_FIRE_CYAN;
-            armour = TILEP_BODY_ROBE_GREEN_GOLD;
-            break;
-
-        case MONS_DRACONIAN_KNIGHT:
-            weapon = equ_tile;
-            weapon2 = TILEP_HAND2_SHIELD_KNIGHT_GRAY;
-            armour = TILEP_BODY_BPLATE_METAL1;
-            armour2 = TILEP_LEG_BELT_GRAY;
-            break;
-
-        case MONS_DRACONIAN_SCORCHER:
-            weapon = TILEP_HAND1_FIRE_RED;
-            weapon2 = TILEP_HAND2_BOOK_RED;
-            armour = TILEP_BODY_ROBE_RED;
-            break;
-
-        default:
-            weapon = equ_tile;
-            armour = TILEP_BODY_BELT2;
-            armour2 = TILEP_LEG_LOINCLOTH_RED;
-            break;
-    }
-
-    doll.parts[TILEP_PART_HAND1] = weapon;
-    doll.parts[TILEP_PART_HAND2] = weapon2;
-    doll.parts[TILEP_PART_BODY]  = armour;
-    doll.parts[TILEP_PART_LEG]   = armour2;
-    doll.parts[TILEP_PART_ARM]   = arm;
-
-    draw_doll(doll, x, y);
-}
-
-void DungeonRegion::draw_monster(unsigned int fg, unsigned int x, unsigned int y)
-{
-    // Currently, monsters only get displayed weapons (no armour)
-    unsigned int fg_idx = fg & TILE_FLAG_MASK;
-    if (fg_idx < TILE_MCACHE_START)
-        return;
-
-    int equ_tile;
-    int draco;
-    int mon_tile;
-
-    if (!get_mcache_entry(fg_idx, mon_tile, equ_tile, draco))
-        return;
-
-    if (draco == 0)
-    {
-        int ofs_x, ofs_y;
-        tile_get_monster_weapon_offset(mon_tile, ofs_x, ofs_y);
-
-        add_quad(TEX_DOLL, equ_tile, x, y, ofs_x, ofs_y, true, TILE_Y);
-
-        // In some cases, overlay a second weapon tile...
-        if (mon_tile == TILE_MONS_DEEP_ELF_BLADEMASTER)
-        {
-            int eq2;
-            switch (equ_tile)
-            {
-                case TILEP_HAND1_DAGGER:
-                    eq2 = TILEP_HAND2_DAGGER;
-                    break;
-                case TILEP_HAND1_SABRE:
-                    eq2 = TILEP_HAND2_SABRE;
-                    break;
-                default:
-                case TILEP_HAND1_SHORT_SWORD_SLANT:
-                    eq2 = TILEP_HAND2_SHORT_SWORD_SLANT;
-                    break;
-            };
-            add_quad(TEX_DOLL, eq2, x, y, -ofs_x, ofs_y, true, TILE_Y);
-        }
-    }
-    else
-    {
-        int colour;
-        switch (draco)
-        {
-        default:
-        case MONS_DRACONIAN:        colour = 0; break;
-        case MONS_BLACK_DRACONIAN:  colour = 1; break;
-        case MONS_YELLOW_DRACONIAN: colour = 2; break;
-        case MONS_GREEN_DRACONIAN:  colour = 4; break;
-        case MONS_MOTTLED_DRACONIAN:colour = 5; break;
-        case MONS_PALE_DRACONIAN:   colour = 6; break;
-        case MONS_PURPLE_DRACONIAN: colour = 7; break;
-        case MONS_RED_DRACONIAN:    colour = 8; break;
-        case MONS_WHITE_DRACONIAN:  colour = 9; break;
-        }
-
-        draw_draco(colour, mon_tile, equ_tile, x, y);
-    }
+    for (unsigned int i = 0; i < draw_info_count; i++)
+        add_quad(TEX_DOLL, dinfo[i].idx, x, y, dinfo[i].ofs_x, dinfo[i].ofs_y);
 }
 
 void DungeonRegion::draw_foreground(unsigned int bg, unsigned int fg, unsigned int x, unsigned int y)
 {
     unsigned int fg_idx = fg & TILE_FLAG_MASK;
     unsigned int bg_idx = bg & TILE_FLAG_MASK;
+
+    if (fg_idx && fg_idx <= TILE_MAIN_MAX)
+    {
+        add_quad(TEX_DEFAULT, fg_idx, x, y);
+    }
 
     if (fg_idx && !(fg & TILE_FLAG_FLYING))
     {
@@ -786,47 +643,30 @@ void DungeonRegion::render()
     tile = 0;
     m_verts.clear();
 
-    int player_x = -1;
-    int player_y = -1;
-    bool need_doll = false;
     for (int y = 0; y < crawl_view.viewsz.y; y++)
+    {
         for (int x = 0; x < crawl_view.viewsz.x; x++)
         {
-            unsigned int fg = m_tileb[tile];
-            need_doll |= draw_objects(fg, x, y);
-
-            if ((fg & TILE_FLAG_MASK) == TILE_PLAYER)
+            unsigned int fg = m_tileb[tile] & TILE_FLAG_MASK;
+            if (fg >= TILEP_MCACHE_START)
             {
-                player_x = x;
-                player_y = y;
+                mcache_entry *entry = mcache.get(fg);
+                if (entry)
+                    draw_mcache(entry, x, y);
+                else
+                    add_quad(TEX_DOLL, TILEP_MONS_UNKNOWN, x, y);
+            }
+            else if (fg == TILEP_PLAYER)
+            {
+                draw_player(x, y);
+            }
+            else if (fg >= TILE_MAIN_MAX)
+            {
+                add_quad(TEX_DOLL, fg, x, y);
             }
 
             tile += 2;
         }
-
-    if (m_verts.size() > 0)
-    {
-        m_image->m_textures[TEX_DEFAULT].bind();
-        glVertexPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].pos_x);
-        glTexCoordPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].tex_x);
-        glDrawArrays(GL_QUADS, 0, m_verts.size());
-    }
-
-    tile = 0;
-    m_verts.clear();
-    if (player_x != -1)
-        draw_player(player_x, player_y);
-
-    if (need_doll)
-    {
-        for (int y = 0; y < crawl_view.viewsz.y; y++)
-            for (int x = 0; x < crawl_view.viewsz.x; x++)
-            {
-                unsigned int fg = m_tileb[tile];
-                draw_monster(fg, x, y);
-
-                tile += 2;
-            }
     }
 
     if (m_verts.size() > 0)
@@ -2394,8 +2234,8 @@ bool ImageManager::load_textures()
     if (!m_textures[TEX_TITLE].load_texture("title.png", mip))
         return false;
 
-    m_textures[TEX_DUNGEON].set_info(TILE_DNGN_MAX, &tile_dngn_info[0]);
-    m_textures[TEX_DOLL].set_info(TILEP_PLAYER_MAX, &tile_player_info[0]);
+    m_textures[TEX_DUNGEON].set_info(TILE_DNGN_MAX, &tile_dngn_info);
+    m_textures[TEX_DOLL].set_info(TILEP_PLAYER_MAX, &tile_player_info);
 
     return true;
 }
@@ -2469,8 +2309,8 @@ static void _copy_into(unsigned char *dest, unsigned char *pixels,
 static bool _copy_under(unsigned char *pixels, unsigned int width,
                         unsigned int height, int idx_under, int idx_over)
 {
-    const tile_info &under = tile_main_info[idx_under];
-    const tile_info &over = tile_main_info[idx_over];
+    const tile_info &under = tile_main_info(idx_under);
+    const tile_info &over = tile_main_info(idx_over);
 
     if (over.width != under.width || over.height != under.height)
         return false;
@@ -2547,7 +2387,7 @@ bool ImageManager::load_item_texture()
     GenericTexture::MipMapOptions mip = GenericTexture::MIPMAP_CREATE;
     bool success = m_textures[TEX_DEFAULT].load_texture("main.png", mip, 
                                                         &_process_item_image);
-    m_textures[TEX_DEFAULT].set_info(TILE_MAIN_MAX, &tile_main_info[0]);
+    m_textures[TEX_DEFAULT].set_info(TILE_MAIN_MAX, tile_main_info);
 
     return success;
 }

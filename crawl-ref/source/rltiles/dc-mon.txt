@@ -453,6 +453,11 @@ mermaid_water MONS_MERMAID_WATER
 rock_worm MONS_ROCK_WORM
 
 %sdir dc-dngn
-dngn_orange_crystal_statue DNGN_ORANGE_CRYSTAL_STATUE
-dngn_ice_statue DNGN_ICE_STATUE
+dngn_orange_crystal_statue ORANGE_CRYSTAL_STATUE
+dngn_ice_statue ICE_STATUE
+dngn_silver_statue SILVER_STATUE
 %sdir dc-mon
+
+dc-misc/unseen PLAYER
+dc-misc/unseen_monster MONS_UNKNOWN
+dc-misc/unseen_monster MCACHE_START

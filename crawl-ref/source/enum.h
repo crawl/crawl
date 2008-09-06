@@ -1802,6 +1802,7 @@ enum monster_type                      // (int) menv[].type
 // BCR - end second batch of uniques.
 
     MONS_DRACONIAN,
+    MONS_FIRST_DRACONIAN = MONS_DRACONIAN,
 
     // If adding more drac colours, sync up colour names in
     // mon-util.cc.
@@ -1822,6 +1823,8 @@ enum monster_type                      // (int) menv[].type
     MONS_DRACONIAN_ANNIHILATOR,         //  325
     MONS_DRACONIAN_KNIGHT,
     MONS_DRACONIAN_SCORCHER,
+
+    MONS_LAST_DRACONIAN = MONS_DRACONIAN_SCORCHER,
 
     MONS_MURRAY,
     MONS_TIAMAT,
