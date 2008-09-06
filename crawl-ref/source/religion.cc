@@ -4772,6 +4772,8 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_YREDELEMNUL:
+        _make_god_gifts_hostile(false);
+
         MiscastEffect(&you, -old_god, SPTYP_NECROMANCY,
                       5 + you.experience_level, random2avg(88, 3),
                       "the anger of Yredelemnul");
