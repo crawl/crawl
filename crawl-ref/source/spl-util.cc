@@ -1,5 +1,5 @@
 /*
- *  File:       spl-util.h                                           *
+ *  File:       spl-util.cc                                          *
  *  Summary:    data handlers for player-avilable spell list         *
  *  Written by: don brodale <dbrodale@bigfootinteractive.com>        *
  *                                                                   *
