@@ -824,7 +824,13 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
                     auxkilldata = mitm[monster->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
             }
 
-            death_source_name = monster->name(DESC_NOCAP_A, true);
+            const bool death = you.hp <= 0;
+
+            death_source_name = monster->name(DESC_NOCAP_A, death);
+            if (monster->has_base_name())
+                death_source_name +=
+                    ", " + monster->base_name(DESC_NOCAP_A, death);
+
             if (monster->has_ench(ENCH_SHAPESHIFTER))
             {
                 death_source_name += " (shapeshifter)";
