@@ -2593,10 +2593,7 @@ void MiscastEffect::_ouch(int dam, beam_type flavour)
 
         dam = check_your_resists(dam, flavour);
 
-        bool see_source = false;
-        if (kill_source != NON_MONSTER)
-            see_source = you.can_see(&menv[kill_source]);
-
+        bool see_source = mon_source ? you.can_see(mon_source) : false;
         ouch(dam, kill_source, method, cause.c_str(), see_source);
     }
 }
