@@ -1885,6 +1885,7 @@ static bool is_boolean_resist(beam_type flavour)
     switch (flavour)
     {
     case BEAM_ELECTRICITY:
+    case BEAM_NAPALM:
         return (true);
     default:
         return (false);
@@ -1928,9 +1929,9 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
     const bool monster = (defender->atype() == ACT_MONSTER);
 
-    // Check if this is a resist that pretends to be boolean for
-    // damage purposes - only electricity at the moment, raw poison
-    // damage uses the normal formula.
+    // Check if this is a resist that pretends to be boolean for damage
+    // damage purposes - only electricity and sticky flame (napalm) at
+    // the moment, raw poison damage uses the normal formula.
     int res_base = (is_boolean_resist(flavour) ? 2 : 1);
     const int resistible_fraction = get_resistible_fraction(flavour);
 
@@ -3832,6 +3833,28 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         }
 
         defender->go_berserk(false);
+        break;
+
+    case AF_NAPALM:
+        if (one_chance_in(20) || (damage_done > 0 && one_chance_in(3)))
+        {
+            if (needs_message)
+            {
+                mprf("%s %s covered in liquid flames%s",
+                     def_name(DESC_CAP_THE).c_str(),
+                     defender->conj_verb("are").c_str(),
+                     special_attack_punctuation().c_str());
+            }
+
+            if (defender->atype() == ACT_PLAYER)
+                sticky_flame_player();
+            else
+            {
+                sticky_flame_monster(monster_index(def),
+                                     mons_friendly(atk) ? KC_FRIENDLY : KC_OTHER,
+                                     std::min(4, 1 + random2(atk->hit_dice) / 2));
+            }
+        }
         break;
     }
 }

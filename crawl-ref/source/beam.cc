@@ -80,7 +80,6 @@
 static FixedArray < bool, 19, 19 > explode_map;
 
 // Helper functions (some of these should probably be public).
-static void _sticky_flame_monster(int mn, kill_category who, int hurt_final);
 static bool _affects_wall(const bolt &beam, int wall_feature);
 static bool _isBouncy(bolt &beam, unsigned char gridtype);
 static int _beam_source(const bolt &beam);
@@ -2774,8 +2773,14 @@ bool poison_monster( monsters *monster,
     return (new_pois.degree > old_pois.degree);
 }
 
-// Actually napalms a monster (w/ message).
-void _sticky_flame_monster(int mn, kill_category who, int levels)
+// Actually napalms the player.
+void sticky_flame_player()
+{
+    you.duration[DUR_LIQUID_FLAMES] += random2avg(7, 3) + 1;
+}
+
+// Actually napalms a monster (with message).
+void sticky_flame_monster(int mn, kill_category who, int levels)
 {
     monsters *monster = &menv[mn];
 
@@ -4237,13 +4242,11 @@ static int _affect_player( bolt &beam, item_def *item )
     }
 
     // Sticky flame.
-    if (beam.name == "sticky flame"
-        && (you.species != SP_MOTTLED_DRACONIAN
-            || you.experience_level < 6))
+    if (beam.name == "sticky flame")
     {
-        if (!player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
+        if (!player_res_sticky_flame())
         {
-            you.duration[DUR_LIQUID_FLAMES] += random2avg(7, 3) + 1;
+            sticky_flame_player();
             was_affected = true;
         }
     }
@@ -4790,7 +4793,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         {
             int levels = std::min(4, 1 + random2(hurt_final) / 2);
 
-            _sticky_flame_monster(tid, _whose_kill(beam), levels);
+            sticky_flame_monster(tid, _whose_kill(beam), levels);
         }
 
         // Handle missile effects.

@@ -810,45 +810,68 @@ static void _inc_gift_timeout(int val)
 }                               // end inc_gift_timeout()
 
 // Only Yredelemnul and Okawaru use this for now.
-static monster_type _random_servant(god_type god)
+static int _random_servants(god_type god, bool force_hostile = false)
 {
     // error trapping {dlb}
-    monster_type thing_called = MONS_PROGRAM_BUG;
+    monster_type mon = MONS_PROGRAM_BUG;
+    int how_many = 1;
     int temp_rand = random2(100);
 
     switch (god)
     {
     case GOD_YREDELEMNUL:
         // undead
-        thing_called = ((temp_rand > 66) ? MONS_WRAITH :            // 33%
-                        (temp_rand > 52) ? MONS_WIGHT :             // 13%
-                        (temp_rand > 40) ? MONS_SPECTRAL_WARRIOR :  // 11%
-                        (temp_rand > 31) ? MONS_ROTTING_HULK :      //  8%
-                        (temp_rand > 23) ? MONS_SKELETAL_WARRIOR :  //  7%
-                        (temp_rand > 16) ? MONS_VAMPIRE :           //  6%
-                        (temp_rand > 10) ? MONS_GHOUL :             //  5%
-                        (temp_rand >  4) ? MONS_MUMMY               //  5%
-                                         : MONS_FLAYED_GHOST);      //  4%
+        mon = ((temp_rand > 74) ? MONS_WRAITH :           // 25%
+               (temp_rand > 64) ? MONS_WIGHT :            // 10%
+               (temp_rand > 54) ? MONS_FLYING_SKULL :     // 10%
+               (temp_rand > 45) ? MONS_SPECTRAL_WARRIOR : //  9%
+               (temp_rand > 38) ? MONS_ROTTING_HULK :     //  7%
+               (temp_rand > 32) ? MONS_SKELETAL_WARRIOR : //  6%
+               (temp_rand > 27) ? MONS_FREEZING_WRAITH :  //  5%
+               (temp_rand > 22) ? MONS_FLAMING_CORPSE :   //  5%
+               (temp_rand > 18) ? MONS_GHOUL :            //  5%
+               (temp_rand > 13) ? MONS_MUMMY :            //  5%
+               (temp_rand > 9)  ? MONS_VAMPIRE :          //  4%
+               (temp_rand > 5)  ? MONS_FLAYED_GHOST :     //  4%
+               (temp_rand > 2)  ? MONS_SKELETAL_DRAGON    //  3%
+                                : MONS_DEATH_COB);        //  2%
+
+        if (mon == MONS_FLYING_SKULL)
+            how_many = 2 + random2(4);
         break;
     case GOD_OKAWARU:
         // warriors
-        thing_called = ((temp_rand > 84) ? MONS_ORC_WARRIOR :       // 15%
-                        (temp_rand > 69) ? MONS_ORC_KNIGHT :        // 14%
-                        (temp_rand > 59) ? MONS_NAGA_WARRIOR :      //  9%
-                        (temp_rand > 49) ? MONS_CENTAUR_WARRIOR :   //  9%
-                        (temp_rand > 39) ? MONS_STONE_GIANT :       //  9%
-                        (temp_rand > 29) ? MONS_FIRE_GIANT :        //  9%
-                        (temp_rand > 19) ? MONS_FROST_GIANT :       //  9%
-                        (temp_rand >  9) ? MONS_CYCLOPS :           //  9%
-                        (temp_rand >  4) ? MONS_HILL_GIANT          //  4%
-                                         : MONS_TITAN);             //  4%
-
+        mon = ((temp_rand > 84) ? MONS_ORC_WARRIOR :      // 15%
+               (temp_rand > 69) ? MONS_ORC_KNIGHT :       // 14%
+               (temp_rand > 59) ? MONS_NAGA_WARRIOR :     //  9%
+               (temp_rand > 49) ? MONS_CENTAUR_WARRIOR :  //  9%
+               (temp_rand > 39) ? MONS_STONE_GIANT :      //  9%
+               (temp_rand > 29) ? MONS_FIRE_GIANT :       //  9%
+               (temp_rand > 19) ? MONS_FROST_GIANT :      //  9%
+               (temp_rand >  9) ? MONS_CYCLOPS :          //  9%
+               (temp_rand >  4) ? MONS_HILL_GIANT         //  4%
+                                : MONS_TITAN);            //  4%
         break;
     default:
         break;
     }
 
-    return (thing_called);
+    int count = 0;
+
+    for (int i = 0; i < how_many; ++i)
+    {
+        if (create_monster(
+                mgen_data(mon,
+                          !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
+                          0, you.pos(),
+                          !force_hostile ? you.pet_target : MHITYOU,
+                          0, god)) != -1)
+        {
+            count++;
+        }
+    }
+
+    return (count);
 }
 
 static const item_def* _find_missile_launcher(int skill)
@@ -1764,14 +1787,13 @@ static void _do_god_gift(bool prayed_for)
         case GOD_YREDELEMNUL:
             if (random2(you.piety) > 80 && one_chance_in(5))
             {
-                monster_type mon = _random_servant(GOD_YREDELEMNUL);
+                int how_many = _random_servants(GOD_YREDELEMNUL);
 
-                if (create_monster(
-                        mgen_data(mon, BEH_FRIENDLY, 0,
-                                  you.pos(), you.pet_target,
-                                  0, GOD_YREDELEMNUL)) != -1)
+                if (how_many > 0)
                 {
-                    simple_god_message(" grants you an undead servant!");
+                    simple_god_message(
+                        how_many > 1 ? " grants you several undead servants!"
+                                     : " grants you an undead servant!");
                     more();
                     _inc_gift_timeout(4 + random2avg(7, 2));
                     you.num_gifts[you.religion]++;
@@ -3685,20 +3707,11 @@ static bool _yredelemnul_retribution()
 
     if (random2(you.experience_level) > 4)
     {
-        int count = 0;
         int how_many = 1 + random2(1 + (you.experience_level / 5));
+        int count = 0;
 
-        for (int i = 0; i < how_many; ++i)
-        {
-            monster_type punisher = _random_servant(GOD_YREDELEMNUL);
-
-            if (create_monster(
-                    mgen_data::hostile_at(punisher,
-                        you.pos(), 0, 0, true, GOD_YREDELEMNUL)) != -1)
-            {
-                count++;
-            }
-        }
+        for (; how_many > 0; --how_many)
+            count += _random_servants(GOD_YREDELEMNUL, true);
 
         simple_god_message(count > 1 ? " sends servants to punish you." :
                            count > 0 ? " sends a servant to punish you." :
@@ -3935,25 +3948,14 @@ static bool _okawaru_retribution()
     // warrior theme
     const god_type god = GOD_OKAWARU;
 
-    bool success = false;
-    const int how_many = 1 + (you.experience_level / 5);
+    int how_many = 1 + (you.experience_level / 5);
+    int count = 0;
 
-    for (int i = 0; i < how_many; ++i)
-    {
-        monster_type punisher = _random_servant(GOD_OKAWARU);
+    for (; how_many > 0; --how_many)
+        count += _random_servants(GOD_OKAWARU, true);
 
-        if (create_monster(
-                mgen_data::hostile_at(punisher,
-                    you.pos(), 0, 0, true, GOD_OKAWARU)) != -1)
-        {
-            success = true;
-        }
-    }
-
-    simple_god_message(success ?
-                       " sends forces against you!" :
-                       "'s forces are busy with other wars.",
-                       god);
+    simple_god_message(count > 0 ? " sends forces against you!"
+                                 : "'s forces are busy with other wars.", god);
 
     return (true);
 }

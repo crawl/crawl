@@ -4810,6 +4810,11 @@ int monsters::res_fire() const
     return (mons_res_fire(this));
 }
 
+int monsters::res_sticky_flame() const
+{
+    return (mons_res_sticky_flame(this));
+}
+
 int monsters::res_steam() const
 {
     return (mons_res_steam(this));

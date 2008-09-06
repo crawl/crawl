@@ -201,6 +201,7 @@ bool mons_abyss(int mcls)
     case MONS_EYE_OF_DEVASTATION:
     case MONS_EYE_OF_DRAINING:
     case MONS_FIRE_ELEMENTAL:
+    case MONS_FLAMING_CORPSE:
     case MONS_FLAYED_GHOST:
     case MONS_FLYING_SKULL:
     case MONS_FREEZING_WRAITH:
@@ -348,6 +349,7 @@ int mons_rare_abyss(int mcls)
         return 15;
 
     case MONS_EYE_OF_DRAINING:
+    case MONS_FLAMING_CORPSE:
     case MONS_LICH:
         return 14;
 
@@ -474,6 +476,7 @@ bool mons_pan(int mcls)
     case MONS_JELLY:
     case MONS_SLIME_CREATURE:
     // undead
+    case MONS_FLAMING_CORPSE:
     case MONS_FLAYED_GHOST:
     case MONS_FLYING_SKULL:
     case MONS_FREEZING_WRAITH:
@@ -597,6 +600,7 @@ int mons_dis_level(int mcls)
 
     case MONS_BLUE_DEVIL:
     case MONS_DANCING_WEAPON:
+    case MONS_FLAMING_CORPSE:
     case MONS_ICE_DEVIL:
     case MONS_ICE_DRAGON:
     case MONS_LICH:
@@ -664,6 +668,7 @@ int mons_dis_rare(int mcls)
     case MONS_ICE_DEVIL:
         return 30;
 
+    case MONS_FLAMING_CORPSE:
     case MONS_FLAYED_GHOST:
     case MONS_SKELETON_LARGE:
     case MONS_NECROPHAGE:
@@ -748,6 +753,7 @@ int mons_gehenna_level(int mcls)
         break;
 
     case MONS_EFREET:
+    case MONS_FLAMING_CORPSE:
     case MONS_FLAYED_GHOST:
     case MONS_HELLION:
     case MONS_TORMENTOR:
@@ -816,6 +822,7 @@ int mons_gehenna_rare(int mcls)
     case MONS_HELL_HOUND:
         return 41;
 
+    case MONS_FLAMING_CORPSE:
     case MONS_FLAYED_GHOST:
     case MONS_PHANTOM:
         return 32;
@@ -1640,6 +1647,7 @@ int mons_crypt_level(int mcls)
     case MONS_NECROMANCER:
     case MONS_PULSATING_LUMP:
     case MONS_FLAYED_GHOST:
+    case MONS_FREEZING_WRAITH:
     case MONS_GHOUL:
     case MONS_ROTTING_HULK:
     case MONS_WRAITH:
@@ -1647,6 +1655,7 @@ int mons_crypt_level(int mcls)
         mlev += 3;
         break;
 
+    case MONS_FLAMING_CORPSE:
     case MONS_SPECTRAL_WARRIOR:
     case MONS_SHADOW_WRAITH:
     case MONS_VAMPIRE_KNIGHT:
@@ -1724,8 +1733,10 @@ int mons_crypt_rare(int mcls)
 
     case MONS_FLYING_SKULL:
     case MONS_FLAYED_GHOST:
+    case MONS_FREEZING_WRAITH:
         return 13;
 
+    case MONS_FLAMING_CORPSE:
     case MONS_HUNGRY_GHOST:
         return 12;
 

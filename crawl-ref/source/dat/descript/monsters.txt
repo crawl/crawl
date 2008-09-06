@@ -578,6 +578,10 @@ firedrake
 
 A small dragon, puffing clouds of smoke.
 %%%%
+flaming corpse
+
+The remains of an adventurer who was burned to death, it now rushes madly through the dungeon seeking others to ignite.
+%%%%
 flayed ghost
 
 A hideous undead creature, with torn skin hanging from an emaciated body.

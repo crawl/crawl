@@ -1285,6 +1285,22 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     return (rf);
 }
 
+int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
+{
+    int res = 0;
+
+    if (you.species == SP_MOTTLED_DRACONIAN && you.experience_level > 5)
+        res++;
+
+    if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
+        res++;
+
+    if (res > 1)
+        res = 1;
+
+    return (res);
+}
+
 int player_res_steam(bool calc_unid, bool temp, bool items)
 {
     int res = 0;
@@ -6334,6 +6350,11 @@ int player_mutation_level(mutation_type mut)
 int player::res_fire() const
 {
     return (player_res_fire());
+}
+
+int player::res_sticky_flame() const
+{
+    return (player_res_sticky_flame());
 }
 
 int player::res_steam() const

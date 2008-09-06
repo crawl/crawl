@@ -80,7 +80,8 @@ enum mon_attack_flavour
     AF_VAMPIRIC,
     AF_KLOWN,
     AF_DISTORT,
-    AF_RAGE
+    AF_RAGE,
+    AF_NAPALM
 };
 
 // properties of the monster class (other than resists/vulnerabilities)

@@ -331,6 +331,7 @@ public:
 
     virtual mon_holy_type holiness() const = 0;
     virtual int res_fire() const = 0;
+    virtual int res_sticky_flame() const = 0;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
@@ -885,6 +886,7 @@ public:
 
     mon_holy_type holiness() const;
     int res_fire() const;
+    int res_sticky_flame() const;
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
@@ -1226,6 +1228,7 @@ public:
 
     mon_holy_type holiness() const;
     int res_fire() const;
+    int res_sticky_flame() const;
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;

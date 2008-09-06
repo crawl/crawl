@@ -169,6 +169,10 @@ public:
     killer_type  killer() const;
 };
 
+void sticky_flame_player();
+
+void sticky_flame_monster(int mn, kill_category who, int hurt_final);
+
 dice_def calc_dice( int num_dice, int max_damage );
 
 // Test if the to-hit (attack) beats evasion (defence).
