@@ -1600,8 +1600,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     }
 
     // Messaging.
-    bool invis = (!player_see_invis() && (mons_class_flag(targetc, M_INVIS)
-                                            || monster->invisible()));
+    bool can_see = you.can_see(monster);
 
     if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
         str_polymon = " changes into ";
@@ -1610,7 +1609,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     else
         str_polymon = " evaporates and reforms as ";
 
-    if (invis)
+    if (!can_see)
         str_polymon += "something you cannot see!";
     else
     {
