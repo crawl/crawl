@@ -44,7 +44,8 @@ struct demon_data
 int tileidx(unsigned int object, int extra);
 int tileidx_feature(int object, int gx, int gy);
 int tileidx_player(int job);
-int tileidx_unseen(int ch, const coord_def& gc);
+void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
+                    const coord_def& gc);
 int tileidx_item(const item_def &item);
 int tileidx_item_throw(const item_def &item, int dx, int dy);
 int tileidx_bolt(const bolt &bolt);

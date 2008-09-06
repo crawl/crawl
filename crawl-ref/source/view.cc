@@ -4902,8 +4902,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     buffy[bufcount]     = 0;
                     buffy[bufcount + 1] = DARKGREY;
 #ifdef USE_TILE
-                    tileb[bufcount]     = 0;
-                    tileb[bufcount + 1] = tileidx_unseen(' ', gc);
+                    tileidx_unseen(tileb[bufcount], tileb[bufcount+1], ' ', gc);
 #endif
                 }
                 else if (!crawl_view.in_grid_los(gc))
@@ -4919,12 +4918,11 @@ void viewwindow(bool draw_it, bool do_updates)
                     }
 
 #ifdef USE_TILE
-                    unsigned short bg = env.tile_bk_bg[gc.x][gc.y];
-                    unsigned short fg = env.tile_bk_fg[gc.x][gc.y];
+                    unsigned int bg = env.tile_bk_bg[gc.x][gc.y];
+                    unsigned int fg = env.tile_bk_fg[gc.x][gc.y];
                     if (bg == 0 && fg == 0)
                     {
-                        bg = tileidx_unseen(get_envmap_char(gc.x,gc.y), gc);
-                        env.tile_bk_bg[gc.x][gc.y] = bg;
+                        tileidx_unseen(fg, bg, get_envmap_char(gc.x, gc.y), gc);
                     }
                     tileb[bufcount]     = fg;
                     tileb[bufcount + 1] = bg | tile_unseen_flag(gc);
@@ -5072,10 +5070,10 @@ void viewwindow(bool draw_it, bool do_updates)
                             }
                             else
                             {
-                                tileb[bufcount] = 0;
-                                tileb[bufcount + 1] =
-                                    tileidx_unseen(
-                                        get_envmap_char( gc.x, gc.y ), gc);
+                                tileidx_unseen(tileb[bufcount],
+                                               tileb[bufcount+1],
+                                               get_envmap_char(gc.x, gc.y),
+                                               gc);
                             }
 #endif
                         }

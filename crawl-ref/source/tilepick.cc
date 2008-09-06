@@ -2253,79 +2253,85 @@ int tileidx_player(int job)
 }
 
 
-int tileidx_unseen(int ch, const coord_def& gc)
+void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
+                    const coord_def& gc)
 {
-    int res = TILE_ERROR;
     ch &= 0xff;
     if (ch < 32)
         ch = 32;
 
+    unsigned int flag = tile_unseen_flag(gc);
+    bg = TILE_FLOOR_NORMAL | flag;
+
     if (ch >= '@' && ch <= 'Z' || ch >= 'a' && ch <= 'z'
         || ch == '&' || ch >= '1' && ch <= '5' || ch == ';')
     {
-        return TILE_UNSEEN_MONSTER | tile_unseen_flag(gc);
+        fg = TILE_UNSEEN_MONSTER;
+        return;
     }
 
     switch (ch)
     {
         //blank, walls, and floors first, since they are frequent
-        case ' ': res = TILE_DNGN_UNSEEN; break;
+        case ' ': bg = TILE_DNGN_UNSEEN; break;
         case 127: //old
         case 176:
-        case 177: res = TILE_WALL_NORMAL; break;
+        case 177: bg = TILE_WALL_NORMAL; break;
 
         case 130:
         case ',':
         case '.':
         case 249:
-        case 250: res = TILE_FLOOR_NORMAL; break;
+        case 250: bg = TILE_FLOOR_NORMAL; break;
 
-        case 137: res = TILE_DNGN_WAX_WALL; break;
-        case 138: res = TILE_DNGN_STONE_WALL; break;
-        case 139: res = TILE_DNGN_METAL_WALL; break;
-        case 140: res = TILE_DNGN_GREEN_CRYSTAL_WALL; break;
+        case 137: bg = TILE_DNGN_WAX_WALL; break;
+        case 138: bg = TILE_DNGN_STONE_WALL; break;
+        case 139: bg = TILE_DNGN_METAL_WALL; break;
+        case 140: bg = TILE_DNGN_GREEN_CRYSTAL_WALL; break;
 
         // others
-        case '!': res = TILE_POTION_OFFSET + 13; break;
-        case '"': res = TILE_AMU_NORMAL_OFFSET + 2; break;
-        case '#': res = TILE_CLOUD_GREY_SMOKE; break;
-        case '$': res = TILE_GOLD; break;
-        case '%': res = TILE_FOOD_MEAT_RATION; break;
-        case 142: res = TILE_UNSEEN_CORPSE; break;
+        case '!': fg = TILE_POTION_OFFSET + 13; break;
+        case '"': fg = TILE_AMU_NORMAL_OFFSET + 2; break;
+        case '#': fg = TILE_CLOUD_GREY_SMOKE; break;
+        case '$': fg = TILE_GOLD; break;
+        case '%': fg = TILE_FOOD_MEAT_RATION; break;
+        case 142: fg = TILE_UNSEEN_CORPSE; break;
 
         case '\'':
-        case 134: res = TILE_DNGN_OPEN_DOOR; break;
+        case 134: bg = TILE_DNGN_OPEN_DOOR; break;
         case '(':
-        case ')': res = TILE_UNSEEN_WEAPON; break;
-        case '*': res = TILE_WALL_NORMAL ; break;
-        case '+': res =  TILE_BOOK_PAPER_OFFSET + 15; break;
+        case ')': fg = TILE_UNSEEN_WEAPON; break;
+        case '*': fg = TILE_WALL_NORMAL ; break;
+        case '+': fg = TILE_BOOK_PAPER_OFFSET + 15; break;
 
-        case '/': res = TILE_WAND_OFFSET; break;
-        case '8': res = TILEP_SILVER_STATUE; break;
-        case '<': res = TILE_DNGN_STONE_STAIRS_UP; break;
-        case '=': res = TILE_RING_NORMAL_OFFSET + 1; break;
-        case '>': res = TILE_DNGN_STONE_STAIRS_DOWN; break;
-        case '?': res = TILE_SCROLL; break;
+        case '/': fg = TILE_WAND_OFFSET; break;
+        case '8': fg = TILEP_SILVER_STATUE; break;
+        case '<': bg = TILE_DNGN_STONE_STAIRS_UP; break;
+        case '=': fg = TILE_RING_NORMAL_OFFSET + 1; break;
+        case '>': bg = TILE_DNGN_STONE_STAIRS_DOWN; break;
+        case '?': fg = TILE_UNSEEN_ITEM; break;
         case '[':
-        case ']': res = TILE_UNSEEN_ARMOUR; break;
-        case '\\': res = TILE_STAFF_OFFSET; break;
-        case '^': res = TILE_DNGN_TRAP_ZOT; break;
+        case ']': fg = TILE_UNSEEN_ARMOUR; break;
+        case '\\': fg = TILE_STAFF_OFFSET; break;
+        case '^': bg = TILE_DNGN_TRAP_ZOT; break;
         case '_':
-        case 131: res = TILE_UNSEEN_ALTAR; break;
-        case '~': res = TILE_UNSEEN_ITEM; break;
+        case 131: fg = TILE_UNSEEN_ALTAR; break;
+        case '~': fg = TILE_UNSEEN_ITEM; break;
         case '{':
-        case 135: res = TILE_DNGN_DEEP_WATER; break;
-        case 133: res = TILE_DNGN_BLUE_FOUNTAIN; break;
-        case '}': res = TILE_MISC_CRYSTAL_BALL_OF_SEEING; break;
+        case 135: bg = TILE_DNGN_DEEP_WATER; break;
+        case 133: bg = TILE_DNGN_BLUE_FOUNTAIN; break;
+        case '}': fg = TILE_MISC_CRYSTAL_BALL_OF_SEEING; break;
         case 128: //old
-        case 254: res = TILE_DNGN_CLOSED_DOOR; break;
-        case 129: res = TILE_DNGN_RETURN; break;
-        case 132: res = TILE_UNSEEN_ENTRANCE; break;
-        case 136: res = TILE_DNGN_ENTER; break;
-        case 141: res = TILE_DNGN_LAVA; break;
+        case 254: bg = TILE_DNGN_CLOSED_DOOR; break;
+        case 129: bg = TILE_DNGN_RETURN; break;
+        case 132: fg = TILE_UNSEEN_ENTRANCE; break;
+        case 136: bg = TILE_DNGN_ENTER; break;
+        case 141: bg = TILE_DNGN_LAVA; break;
+
+        default: fg = TILE_ERROR; break;
     }
-    //if (res == TILE_ERROR) printf("undefined mapchar %d [%c]\n",ch,ch);
-    return res | tile_unseen_flag(gc);
+
+    bg |= flag;
 }
 
 int tileidx_bolt(const bolt &bolt)

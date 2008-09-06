@@ -56,9 +56,12 @@ int tile_idx_unseen_terrain(int x, int y, int what)
     unsigned short grid_color;
     get_item_symbol(feature, &grid_symbol, &grid_color);
 
-    int t = tileidx_feature(feature, gc.x, gc.y);
+    unsigned int t = tileidx_feature(feature, gc.x, gc.y);
     if (t == TILE_ERROR || what == ' ')
-        t = tileidx_unseen(what, gc);
+    {
+        unsigned int fg_dummy;
+        tileidx_unseen(fg_dummy, t, what, gc);
+    }
 
     t |= tile_unseen_flag(gc);
 
@@ -146,7 +149,7 @@ void get_input_line_gui(char *const buff, int len)
         len = 1;
 
     /* Restrict the length */
-    if (x + len > r->mx)
+    if (x + len > (int)r->mx)
         len = r->mx - x;
     if (len > 40)
         len = 40;
