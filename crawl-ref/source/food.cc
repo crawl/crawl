@@ -1430,7 +1430,7 @@ static void _eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
 
             if (you.species == SP_GHOUL)
             {
-                _heal_from_food((!one_chance_in(5)? hp_amt : 0), 0,
+                _heal_from_food((!one_chance_in(5) ? hp_amt : 0), 0,
                                 !one_chance_in(3), false);
             }
         }

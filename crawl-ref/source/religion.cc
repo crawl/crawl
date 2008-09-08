@@ -1704,7 +1704,7 @@ static void _do_god_gift(bool prayed_for)
     god_acting gdact;
 
 #if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
-    int old_gifts = you.num_gifts[ you.religion ];
+    int old_gifts = you.num_gifts[you.religion];
 #endif
 
     // Consider a gift if we don't have a timeout and weren't already
@@ -1727,7 +1727,7 @@ static void _do_god_gift(bool prayed_for)
             {
                 god_speaks(you.religion, "Your stomach feels content.");
                 set_hunger(6000, true);
-                lose_piety(5 + random2avg(10, 2) + (you.gift_timeout? 5 : 0));
+                lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
                 _inc_gift_timeout(30 + random2avg(10, 2));
             }
             break;

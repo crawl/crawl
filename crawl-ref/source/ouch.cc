@@ -828,11 +828,11 @@ void ouch( int dam, int death_source, kill_method_type death_type,
     {
         if (dam >= you.hp && god_protects_from_harm(you.religion))
         {
-            simple_god_message( " protects you from harm!" );
+            simple_god_message(" protects you from harm!");
             return;
         }
 
-        dec_hp( dam, true );
+        dec_hp(dam, true);
 
         // Even if we have low HP messages off, we'll still give a
         // big hit warning (in this case, a hit for half our HPs) -- bwr

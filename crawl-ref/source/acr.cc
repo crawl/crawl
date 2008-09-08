@@ -2677,7 +2677,7 @@ static void _decrement_durations()
         you.wield_change = true;
     }
 
-    // Vampire bat transformations are permanent (until ended.)
+    // Vampire bat transformations are permanent (until ended).
     if (you.species != SP_VAMPIRE
         || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT
         || you.duration[DUR_TRANSFORMATION] <= 5)

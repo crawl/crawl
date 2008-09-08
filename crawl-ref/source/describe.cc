@@ -3105,14 +3105,14 @@ void describe_god( god_type which_god, bool give_title )
                                                     "";
 
             have_any = true;
-            cprintf( "%s %s watches over you%s." EOL,
-                     god_name(which_god).c_str(), how, when );
+            cprintf("%s %s watches over you%s." EOL,
+                    god_name(which_god).c_str(), how, when );
         }
 
         if (which_god == GOD_ZIN)
         {
             have_any = true;
-            if (you.piety >= 30)
+            if (you.piety >= piety_breakpoint(0))
             {
                 cprintf("Praying to %s will provide sustenance if starving."
                          EOL, god_name(which_god).c_str());
