@@ -335,15 +335,20 @@ void handle_traps(trap_type trt, int i, bool trap_known)
     struct bolt beam;
 
     bool branchtype = false;
-    if (trap_category(trt) == DNGN_TRAP_MECHANICAL && trt != TRAP_NET
-        && trt != TRAP_BLADE)
+
+    // Mark traps as racial, if applicable.  See the list of racial
+    // restrictions in _determine_weapon_race() and
+    // _determine_missile_race() in makeitem.cc.
+    if (trap_category(trt) == DNGN_TRAP_MECHANICAL && trt != TRAP_BLADE
+        && trt != TRAP_NET)
     {
         if (you.where_are_you == BRANCH_ORCISH_MINES)
         {
             beam.name = "n orcish";
             branchtype = true;
         }
-        else if (you.where_are_you == BRANCH_ELVEN_HALLS)
+        else if (you.where_are_you == BRANCH_ELVEN_HALLS
+            && trt != TRAP_AXE && trt != TRAP_BOLT)
         {
             beam.name = "n elven";
             branchtype = true;
