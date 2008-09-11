@@ -3533,12 +3533,13 @@ ENDMAP
 # can pack a punch, though. His window is secret, so autoexploring won't 
 # notice, except for characters with starting Traps and Doors skill, who 
 # will then bring Stealth and Evasion as well.
+#
 NAME:    david_entry_071
 TAGS:    entry no_rotate
 ORIENT:  float
 MONS:    goblin ; stone
 MONS:    hobgoblin ; stone
-MONS:    orc ; crossbow . bolt . mace
+MONS:    kobold ; dart . mace
 SHUFFLE: ABCD
 NSUBST:  X = 1:= / *:x
 NSUBST:  Y = 1:+ / *:x

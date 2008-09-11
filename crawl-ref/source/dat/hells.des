@@ -136,7 +136,7 @@ NAME:  lemuel_hellion_isle
 DEPTH: Geh:*
 MONS:  hellion, Fiend
 SUBST: L = l.
-SUBST: 1 = .:2 l:2 1
+SUBST: 1 = l:2 1
 MAP
       lL
      llL
