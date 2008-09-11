@@ -144,7 +144,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
             return (true);
     }
 
-    if (player_size(PSIZE_TORSO) < SIZE_LARGE && item_mass( *weapon ) >= 300)
+    if (player_size(PSIZE_TORSO) < SIZE_LARGE && item_mass(*weapon) >= 300)
     {
         SAY(mpr("That's too large and heavy for you to wield."));
         return (false);
@@ -170,7 +170,7 @@ bool can_wield(const item_def *weapon, bool say_reason,
         return (false);
     }
 
-    int weap_brand = get_weapon_brand( *weapon );
+    int weap_brand = get_weapon_brand(*weapon);
     if ((you.is_undead || you.species == SP_DEMONSPAWN)
         && (weap_brand == SPWPN_HOLY_WRATH || is_blessed_blade(*weapon)))
     {
@@ -252,7 +252,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 
     if (auto_wield)
     {
-        if ( item_slot == you.equip[EQ_WEAPON] )
+        if (item_slot == you.equip[EQ_WEAPON])
             item_slot = 1;      // backup is 'b'
 
         if (slot != -1)         // allow external override
@@ -315,14 +315,14 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
             if (!unwield_item(show_weff_messages))
                 return (false);
 
-            canned_msg( MSG_EMPTY_HANDED );
+            canned_msg(MSG_EMPTY_HANDED);
 
             you.turn_is_over = true;
             you.time_taken *= 3;
             you.time_taken /= 10;
         }
         else
-            mpr( "You are already empty-handed." );
+            mpr("You are already empty-handed.");
 
         return (true);
     }
@@ -551,17 +551,17 @@ void wield_effects(int item_wield_2, bool showMsgs)
         {
             if (is_random_artefact(item))
                 item.flags |= ISFLAG_NOTED_ID;
-            set_ident_flags( item, ISFLAG_EQ_WEAPON_MASK );
+            set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
         }
 
-        if (is_random_artefact( item ))
+        if (is_random_artefact(item))
         {
             i_dam = randart_wpn_property(item, RAP_BRAND);
             use_randart(item_wield_2);
             if (!was_known)
             {
                 if (Options.autoinscribe_randarts)
-                    add_autoinscription( item, randart_auto_inscription(item));
+                    add_autoinscription(item, randart_auto_inscription(item));
 
                 // Make a note of it.
                 take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
@@ -569,9 +569,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
             }
         }
         else
-        {
             i_dam = item.special;
-        }
 
         if (i_dam != SPWPN_NORMAL)
         {
@@ -736,7 +734,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
             case SPWPN_SCYTHE_OF_CURSES:
                 you.special_wield = SPWLD_CURSE;
                 if (!item_cursed(item) && one_chance_in(5))
-                    do_curse_item( item, false );
+                    do_curse_item(item, false);
                 break;
 
             case SPWPN_MACE_OF_VARIABILITY:
@@ -771,7 +769,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
             }
         }
 
-        if (item_cursed( item ))
+        if (item_cursed(item))
         {
             mpr("It sticks to your hand!");
             if (known_cursed)
