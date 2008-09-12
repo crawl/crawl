@@ -2729,7 +2729,7 @@ static void _handle_behaviour(monsters *mon)
                     {
                         if (mon->foe == MHITYOU)
                         {
-                            if (random2(you.skills[SK_STEALTH]/3))
+                            if (one_chance_in(you.skills[SK_STEALTH]/3))
                                 mon->target = you.pos();
                             else
                                 mon->foe_memory = 1;
