@@ -26,7 +26,7 @@ public:
     tile_draw_info() : idx(~0), ofs_x(0), ofs_y(0) {}
 
     void set(unsigned int _idx, int _ofs_x = 0, int _ofs_y = 0)
-        { idx = _idx; _ofs_x = ofs_x; _ofs_y = ofs_y; }
+        { idx = _idx; ofs_x = _ofs_x; ofs_y = _ofs_y; }
 
     unsigned int idx;
     int ofs_x;

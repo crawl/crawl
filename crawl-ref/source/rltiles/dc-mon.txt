@@ -308,9 +308,13 @@ butterfly6
 giant_bat MONS_GIANT_BAT /*'b'*/
 
 centaur MONS_CENTAUR /*'c'*/
+centaur-melee MONS_CENTAUR_MELEE
 centaur_warrior MONS_CENTAUR_WARRIOR /*'c'*/
+centaur_warrior-melee MONS_CENTAUR_WARRIOR_MELEE
 yaktaur MONS_YAKTAUR /*'c'*/
+yaktaur-melee MONS_YAKTAUR_MELEE
 yaktaur_captain MONS_YAKTAUR_CAPTAIN /*'c'*/
+yaktaur_captain-melee MONS_YAKTAUR_CAPTAIN_MELEE
 
 firedrake MONS_FIREDRAKE /*'d'*/
 lindwurm MONS_LINDWURM /*'d'*/

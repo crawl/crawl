@@ -1,3 +1,18 @@
+# A note on variations.  To create additional variations for weapons or armour,
+# simply create 1-5 images, e.g.:
+#
+#    weapon_normal WEP_SOME_WEAPON
+#    weapon_shiny
+#    weapon_runed
+#    weapon_glowing
+#    weapon_randart
+#
+# If only the first line has a define on it, then the following images will be
+# considered as variations.  If you don't have five, images will be reused for
+# multiple types.  Orcish/elven/dwarven equipment are considered separate items
+# with respect to variations and will not share variations with the base
+# equipment.  See tilepick.cc for more details.
+
 #####OBJ_WEAPONS
 #####ARTIFACTS
 %sdir item/weapon
@@ -28,21 +43,21 @@ spwpn_wucad_mu SPWPN_STAFF_OF_WUCAD_MU /* Its power varies in proportion to its 
 ##Blunt
 club WPN_CLUB/* D5H4S12 A heavy piece of wood.
 mace WPN_MACE/* D8H3S14 A long handle with a heavy lump on one end.
-mace2 WPN_MACE2
+mace2
 mace_large WPN_GREAT_MACE/* D16H-3S18 A large and heavy mace.
-mace_large2 WPN_GREAT_MACE2
+mace_large2
 flail WPN_FLAIL
-flail2 WPN_FLAIL2
+flail2
 spiked_flail WPN_SPIKED_FLAIL
-spiked_flail2 WPN_SPIKED_FLAIL2
+spiked_flail2
 great_flail WPN_GREAT_FLAIL
-great_flail2 WPN_GREAT_FLAIL2
+great_flail2
 morningstar WPN_MORNINGSTAR
-morningstar2 WPN_MORNINGSTAR2
+morningstar2
 eveningstar WPN_EVENINGSTAR
-eveningstar2 WPN_EVENINGSTAR2
+eveningstar2
 hammer WPN_HAMMER
-hammer2 WPN_HAMMER2
+hammer2
 ankus WPN_ANKUS/* D9H1S14 A large and vicious toothed club.
 bullwhip WPN_WHIP/* D3H1S14 A whip.
 demon_whip WPN_DEMON_WHIP/* D10H1S14 A terrible weapon, woven in the depths of the inferno.
@@ -57,32 +72,32 @@ orcish_dagger WPN_DAGGER_ORC
 elven_dagger WPN_DAGGER_ELF
 
 short_sword WPN_SHORT_SWORD/* D6H5S12 A sword with a short, slashing blade.
-short_sword2 WPN_SHORT_SWORD_1
+short_sword2
 orcish_short_sword WPN_SHORT_SWORD_ORC
 elven_short_sword WPN_SHORT_SWORD_ELF
 
 long_sword2 WPN_LONG_SWORD/* D10H3S14 A sword with a long, slashing blade.
 %rim 0
-long_sword3 WPN_LONG_SWORD_1
+long_sword3
 %rim 1
 orcish_long_sword WPN_LONG_SWORD_ORC
 
 greatsword WPN_GREAT_SWORD/* D16H-1S17 A sword with a very long, heavy blade and a long handle.
-greatsword2 WPN_GREAT_SWORD_1
+greatsword2
 orcish_great_sword WPN_GREAT_SWORD_ORC
 
 falchion WPN_FALCHION/* D8H2S13 A sword with a broad slashing blade.
+falchion2
 scimitar WPN_SCIMITAR/* D11H1S14 A long sword with a curved blade.
-scimitar2 WPN_SCIMITAR2
+scimitar2
 
 silver_saber WPN_SABRE/* D7H4S12 A sword with a medium length slashing blade.
-sabre2 WPN_SABRE_1
+sabre2
 
 quickblade WPN_QUICK_BLADE/* D5H6S7 A small and magically quick sword.
 
-#tsurugi WPN_KATANA
 katana2 WPN_KATANA/* D13H4S13 A very rare and extremely effective imported weapon, featuring a long single-edged blade.
-katana3 WPN_KATANA_1
+katana3
 
 double_sword WPN_DOUBLE_SWORD/* D15H3S16 A magical weapon with two razor-sharp blades.
 triple_sword WPN_TRIPLE_SWORD/* D19H-1S19 A magical weapon with three great razor-sharp blades.
@@ -90,39 +105,45 @@ demon_blade WPN_DEMON_BLADE/* D13H2S15 A terrible weapon, forged in the fires of
 
 ##Axe
 hand_axe WPN_HAND_AXE/* D7H2S13 An small axe designed for either hand combat or throwing.
+hand_axe2
 war_axe WPN_WAR_AXE/* D11H0S16 An axe intended for hand to hand combat. 
-battle_axe2 WPN_BROAD_AXE/* D14H1S17 An axe with a large blade.
+war_axe2
+broad_axe WPN_BROAD_AXE/* D14H1S17 An axe with a large blade.
 broad_axe2
+broad_axe3
 battle_axe WPN_BATTLEAXE/* D17H-2S18 A large axe with a double-headed blade.
-battle_axe3 WPN_BATTLEAXE_1
+battle_axe2
+battle_axe3
 executioner_axe WPN_EXECUTIONERS_AXE /* D20H-4S20 A huge axe.
-executioner_axe2 WPN_EXECUTIONERS_AXE_1
+executioner_axe2
 
 ##Ranged
 blowgun WPN_BLOWGUN /* D1H0S10 A long, light tube, open at both ends.  Doing very little damage,  its main use is to fire poisoned needles from afar.  It makes very little noise.
-blowgun2 WPN_BLOWGUN1
+blowgun2
 sling WPN_SLING /* D1H-1S11 A piece of cloth and leather for launching stones, which do a small amount of damage on impact.
 bow WPN_BOW /* D2H-3S11 A curved piece of wood and string, for shooting arrows. It does good damage in combat, and a skilled user can use it to great effect.
-bow2 WPN_BOW1
+bow2
 crossbow WPN_CROSSBOW /* D2H-1S15 A piece of machinery used for firing bolts, which takes some time to load and fire. It does very good damage in combat.
-crossbow2 WPN_CROSSBOW1
+crossbow2
 hand_crossbow WPN_HAND_CROSSBOW /* D1H-1S15 A small crossbow, for firing darts.
-hand_crossbow2 WPN_HAND_CROSSBOW1
+hand_crossbow2
 
 ##Pole
 quarterstaff WPN_QUARTERSTAFF /* D7H6S12 A sturdy wooden pole.
 
 elven_spear WPN_SPEAR /* D5H3S13 A long stick with a pointy blade on one end, to be held or thrown.
-spear2 WPN_SPEAR2
+spear2
 trident WPN_TRIDENT /* D9H-2S17 A hafted weapon with three points at one end. 
-trident2 WPN_TRIDENT2
+trident2
 halberd WPN_HALBERD /* D13H-3S19 A long pole with a spiked axe head on one end.
-halberd2 WPN_HALBERD2
+halberd2
 scythe WPN_SCYTHE /* D14H-4S22 A farm implement, usually unsuited to combat.
-scythe2 WPN_SCYTHE2
+scythe2
 glaive WPN_GLAIVE /* D15H-3S18 A pole with a large, heavy blade on one end.
-glaive2 WPN_GLAIVE2
+glaive2
 orcish_glaive WPN_GLAIVE_ORC
+bardiche WPN_BARDICHE
+bardiche2
 
 demon_trident WPN_DEMON_TRIDENT /* D15H-2S17 A terrible weapon, molded by fire and brimstone.
 
@@ -132,7 +153,7 @@ blessed_blade WPN_BLESSED_BLADE
 %rim 1
 longbow WPN_LONGBOW
 lajatang WPN_LAJATANG
-lajatang2 WPN_LAJATANG2
+lajatang2
 lochaber_axe WPN_LOCHABER_AXE
 
 ######OBJ_MISSILES
@@ -208,27 +229,27 @@ effect/rock0 MI_LARGE_ROCK0
 ######OBJ_ARMOUR
 %sdir item/armor
 robe ARM_ROBE /* A1E0 A cloth robe.
-robe2 ARM_ROBE_1
-robe3 ARM_ROBE_2
+robe2
+robe3
 
 leather_armor2 ARM_LEATHER_ARMOUR /* A2E-1 A suit made of hardened leather.
-breast_plate2 ARM_LEATHER_ARMOUR_1
-leather_armor4 ARM_LEATHER_ARMOUR_2
+breast_plate2
+leather_armor4
 orcish_leather_armor ARM_LEATHER_ARMOUR_ORC
 elven_leather_armor ARM_LEATHER_ARMOUR_ELF
 
 ring_mail ARM_RING_MAIL /* A4E-2 A leather suit covered in little rings.
-ring_mail2 ARM_RING_MAIL_1
+ring_mail2
 orcish_ringmail ARM_RING_MAIL_ORC
 elven_ringmail ARM_RING_MAIL_ELF
 dwarven_ringmail ARM_RING_MAIL_DWA
 
 scale_mail ARM_SCALE_MAIL /* A5E-2 A leather suit covered in little metal plates.
-scale_mail2 ARM_SCALE_MAIL_2
+scale_mail2
 elven_scalemail ARM_SCALE_MAIL_ELF
 
 chain_mail1 ARM_CHAIN_MAIL /* A6E-3 A suit made of interlocking metal rings.
-chain_mail2 ARM_CHAIN_MAIL_1
+chain_mail2
 chain_mail3 ARM_CHAIN_MAIL_ELF
 orcish_chain_mail ARM_CHAIN_MAIL_ORC
 
@@ -241,7 +262,7 @@ orcish_platemail ARM_PLATE_MAIL_ORC
 crystal_plate_mail ARM_CRYSTAL_PLATE_MAIL /* A16E-8
 
 animal_skin ARM_ANIMAL_SKIN /* A1E0 The skins of several animals.
-animal_skin2 ARM_ANIMAL_SKIN_1
+animal_skin2
 
 troll_hide ARM_TROLL_HIDE /* A1E-1 The stiff and knobbly hide of a troll. I suppose you could wear it if you really wanted to.
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR /* A3E-1 A magical armour, made from the stiff and knobbly skin of a common troll. It magically regenerates its wearer's flesh at a fairly slow rate (unless already a troll).
@@ -270,45 +291,45 @@ centaur_barding_magenta
 centaur_barding_red
 
 elven_shield ARM_SHIELD /* A0E0 A piece of metal, to be strapped on one's arm. It is cumbersome to wear, and slightly slows the rate at which you may attack.
-shield_kite2 ARM_SHIELD_1
-shield_round2 ARM_SHIELD_2
+shield_kite2
+shield_round2
 
 #dwarvish_roundshield ARM_BUCKLER
 %rim 0
 small_shield ARM_BUCKLER /* A small shield.
-small_shield2 ARM_BUCKLER_1
+small_shield2
 %rim 1
 
 large_shield ARM_LARGE_SHIELD /* Like a normal shield, only larger. It is very cumbersome to wear, and slows the rate at which you may attack.
-shield_large2 ARM_LARGE_SHIELD_1
-shield_kite3 ARM_LARGE_SHIELD_2
+shield_large2
+shield_kite3
 
 leather_cloak ARM_CLOAK /* A1E0 A cloth cloak.
-cloak2 ARM_CLOAK_1
-cloak3 ARM_CLOAK_2
-cloak4 ARM_CLOAK_3
+cloak2
+cloak3
+cloak4
 
 #####ARM_HELMET
 elven_leather_helm THELM_CAP /* A cloth or leather cap.
 wizard_hat THELM_WIZARD_HAT /* A conical cloth hat.
-wizard_hat2 THELM_WIZARD_HAT_1
+wizard_hat2
 
 visored_helmet THELM_HELM /* A1E0 A piece of metal headgear.
-etched_helmet THELM_HELM_1
-helm3 THELM_HELM_2
-helm_visor1 THELM_HELM_3
+etched_helmet
+helm3
+helm_visor1
 
 ###### GLOVES
 glove1 ARM_GLOVES /* A1E0 A pair of gloves.
-glove3 ARM_GLOVES_1
-glove5 ARM_GLOVES_2
-gauntlet2 ARM_GLOVES_3
+glove3
+glove5
+gauntlet2
 
 ###### BOOTS
 boots_brown1 ARM_BOOTS /* A1E0 A pair of sturdy boots.
-jackboots ARM_BOOTS_1
-boots_stripe1 ARM_BOOTS_2
-boots_green2 ARM_BOOTS_3
+jackboots
+boots_stripe1
+boots_green2
 
 ###########OBJ_WANDS
 %sdir item/wand
@@ -444,6 +465,36 @@ plain_black
 bronze
 moonstone
 
+#########ID-ed
+%rim 0
+%shrink 0
+i-regeneration RING_REGENERATION
+i-protection RING_PROTECTION
+i-r-fire RING_PROTECTION_FROM_FIRE
+i-r-poison RING_POISON_RESISTANCE
+i-r-cold RING_PROTECTION_FROM_COLD
+i-str RING_STRENGTH
+i-slaying RING_SLAYING
+i-see-invis RING_SEE_INVISIBLE
+i-invisibility RING_INVISIBILITY
+i-hunger RING_HUNGER
+i-teleport RING_TELEPORTATION
+i-evasion RING_EVASION
+i-s-abil RING_SUSTAIN_ABILITIES
+i-sustenance RING_SUSTENANCE
+i-dex RING_DEXTERITY
+i-int RING_INTELLIGENCE
+i-wizardry RING_WIZARDRY
+i-magical-power RING_MAGICAL_POWER
+i-levitation RING_LEVITATION
+i-life-protection RING_LIFE_PROTECTION
+i-r-magic RING_PROTECTION_FROM_MAGIC
+i-fire RING_FIRE
+i-ice RING_ICE
+i-c-teleport RING_TELEPORT_CONTROL
+%rim 1
+%shrink 1
+
 ###amulets
 %sdir item/amulet
 crystal_white AMU_NORMAL_OFFSET /*zirconium*/
@@ -476,6 +527,22 @@ stone1_green
 stone2_blue
 crystal_red
 eye_green
+
+%rim 0
+%shrink 0
+### ID-ed amulet
+i-rage AMU_RAGE
+i-r-slow AMU_RESIST_SLOW
+i-clarity AMU_CLARITY
+i-warding AMU_WARDING
+i-r-corrosion AMU_RESIST_CORROSION
+i-gourmand AMU_THE_GOURMAND
+i-conservation AMU_CONSERVATION
+i-c-flight AMU_CONTROLLED_FLIGHT
+i-inaccuracy AMU_INACCURACY
+i-r-mutation AMU_RESIST_MUTATION
+%rim 1
+%shrink 1
 
 ####################OBJ_POTIONS
 %sdir item/potion
@@ -595,7 +662,9 @@ i-staff_enchantment STAFF_ENCHANTMENT
 i-staff_summoning STAFF_SUMMONING
 i-staff_air STAFF_AIR
 i-staff_earth STAFF_EARTH
+%rim 0
 i-staff_channeling STAFF_CHANNELING
+%rim 1
 %shrink 1
 
 %sdir item/rod

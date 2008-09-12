@@ -490,7 +490,9 @@ void DungeonRegion::draw_mcache(mcache_entry *entry, unsigned int x, unsigned in
     ASSERT(draw_info_count <= sizeof(dinfo) / (sizeof(dinfo[0])));
 
     for (unsigned int i = 0; i < draw_info_count; i++)
+    {
         add_quad(TEX_DOLL, dinfo[i].idx, x, y, dinfo[i].ofs_x, dinfo[i].ofs_y);
+    }
 }
 
 void DungeonRegion::draw_foreground(unsigned int bg, unsigned int fg, unsigned int x, unsigned int y)
@@ -2283,7 +2285,8 @@ static void _copy_onto(unsigned char *pixels, unsigned int width,
 // Copy an image at inf from pixels into dest.
 static void _copy_into(unsigned char *dest, unsigned char *pixels, 
                        unsigned int width,
-                       unsigned int height, const tile_info &inf)
+                       unsigned int height, const tile_info &inf,
+                       int ofs_x = 0, int ofs_y = 0)
 {
     unsigned char *src = &pixels[4 * (inf.sy * width + inf.sx)];
 
@@ -2292,10 +2295,26 @@ static void _copy_into(unsigned char *dest, unsigned char *pixels,
 
     memset(dest, 0, 4 * inf.width * inf.height);
 
-    dest += inf.offset_x * 4 + inf.offset_y * dest_row_size;
-
+    int total_ofs_x = inf.offset_x + ofs_x;
+    int total_ofs_y = inf.offset_y + ofs_y;
     int src_height = inf.ey - inf.sy;
     int src_width = inf.ex - inf.sx;
+
+    if (total_ofs_x < 0)
+    {
+        src_width += total_ofs_x;
+        src -= 4 * total_ofs_x;
+        total_ofs_x = 0;
+    }
+    if (total_ofs_y < 0)
+    {
+        src_height += total_ofs_y;
+        src -= 4 * width * total_ofs_y;
+        total_ofs_y = 0;
+    }
+
+    dest += total_ofs_x * 4 + total_ofs_y * dest_row_size;
+
     for (int r = 0; r < src_height; r++)
     {
         memcpy(dest, src, src_width * 4);
@@ -2307,7 +2326,8 @@ static void _copy_into(unsigned char *dest, unsigned char *pixels,
 
 // Stores "over" on top of "under" in the location of "over".
 static bool _copy_under(unsigned char *pixels, unsigned int width,
-                        unsigned int height, int idx_under, int idx_over)
+                        unsigned int height, int idx_under, int idx_over,
+                        int uofs_x = 0, int uofs_y = 0)
 {
     const tile_info &under = tile_main_info(idx_under);
     const tile_info &over = tile_main_info(idx_over);
@@ -2325,7 +2345,7 @@ static bool _copy_under(unsigned char *pixels, unsigned int width,
 
     // Make a copy of the original images.
     unsigned char *under_pixels = new unsigned char[image_size];
-    _copy_into(under_pixels, pixels, width, height, under);
+    _copy_into(under_pixels, pixels, width, height, under, uofs_x, uofs_y);
     unsigned char *over_pixels = new unsigned char[image_size];
     _copy_into(over_pixels, pixels, width, height, over);
 
@@ -2372,6 +2392,20 @@ static bool _process_item_image(unsigned char *pixels,
         int special = you.item_description[IDESC_STAVES][i];
         int tile0 = TILE_ROD_OFFSET + (special / 4) % 10;
         int tile1 = TILE_ROD_SMITING + i - STAFF_SMITING;
+        success &= _copy_under(pixels, width, height, tile0, tile1);
+    }
+    for (int i = RING_FIRST_RING; i < NUM_RINGS; i++)
+    {
+        int special = you.item_description[IDESC_RINGS][i];
+        int tile0 = TILE_RING_NORMAL_OFFSET + special % 13;
+        int tile1 = TILE_RING_REGENERATION + i - RING_FIRST_RING;
+        success &= _copy_under(pixels, width, height, tile0, tile1, -5, -6);
+    }
+    for (int i = AMU_FIRST_AMULET; i < NUM_JEWELLERY; i++)
+    {
+        int special = you.item_description[IDESC_RINGS][i];
+        int tile0 = TILE_AMU_NORMAL_OFFSET + special % 13;
+        int tile1 = TILE_AMU_RAGE + i - AMU_FIRST_AMULET;
         success &= _copy_under(pixels, width, height, tile0, tile1);
     }
 

@@ -22,4 +22,7 @@ public:
     static tile_colour black;
 };
 
+bool write_png(const char *filename, tile_colour *pixels,
+    int width, int height);
+
 #endif

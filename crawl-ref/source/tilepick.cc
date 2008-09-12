@@ -102,7 +102,27 @@ int tile_unseen_flag(const coord_def& gc)
     }
 }
 
-static int _tileidx_monster_base(const monsters* mon, bool detected)
+// Special case for *taurs which have a different tile
+// for when they have a bow.
+static int _bow_offset(const monsters *mon)
+{
+    int mon_wep = mon->inv[MSLOT_WEAPON];
+    if (mon_wep == NON_ITEM)
+        return 1;
+   
+    switch (mitm[mon_wep].sub_type)
+    {
+    case WPN_BOW:
+    case WPN_LONGBOW:
+    case WPN_CROSSBOW:
+    case WPN_HAND_CROSSBOW:
+        return 0;
+    default:
+        return 1;
+    }
+}
+
+static int _tileidx_monster_base(const monsters *mon, bool detected)
 {
     int grid = grd(mon->pos());
     bool in_water = (grid == DNGN_SHALLOW_WATER || grid == DNGN_DEEP_WATER);
@@ -120,7 +140,7 @@ static int _tileidx_monster_base(const monsters* mon, bool detected)
     case MONS_GIANT_BAT:
         return TILEP_MONS_GIANT_BAT;
     case MONS_CENTAUR:
-        return TILEP_MONS_CENTAUR;
+        return TILEP_MONS_CENTAUR + _bow_offset(mon);
     case MONS_RED_DEVIL:
         return TILEP_MONS_RED_DEVIL;
     case MONS_ETTIN:
@@ -365,7 +385,7 @@ static int _tileidx_monster_base(const monsters* mon, bool detected)
     case MONS_STORM_DRAGON:
         return TILEP_MONS_STORM_DRAGON;
     case MONS_YAKTAUR:
-        return TILEP_MONS_YAKTAUR;
+        return TILEP_MONS_YAKTAUR + _bow_offset(mon);
     case MONS_DEATH_YAK:
         return TILEP_MONS_DEATH_YAK;
     case MONS_ROCK_TROLL:
@@ -722,9 +742,9 @@ static int _tileidx_monster_base(const monsters* mon, bool detected)
     case MONS_MUMMY_PRIEST:
         return TILEP_MONS_MUMMY_PRIEST;
     case MONS_CENTAUR_WARRIOR:
-        return TILEP_MONS_CENTAUR_WARRIOR;
+        return TILEP_MONS_CENTAUR_WARRIOR + _bow_offset(mon);
     case MONS_YAKTAUR_CAPTAIN:
-        return TILEP_MONS_YAKTAUR_CAPTAIN;
+        return TILEP_MONS_YAKTAUR_CAPTAIN + _bow_offset(mon);
     case MONS_KILLER_KLOWN:
         return TILEP_MONS_KILLER_KLOWN;
     case MONS_ELECTRIC_GOLEM:
@@ -968,25 +988,32 @@ static int _get_etype(const item_def &item)
     }
 }
 
-static int _tileidx_weapon(const item_def &item)
+static int _apply_variations(const item_def &item, int tile)
 {
-    static const int etable[4][4] = {
-      {0, 0, 0, 0}, // No ego tile
-      {0, 1, 1, 1}, // One ego tile
-      {0, 1, 1, 2}, // Two ego tile
-      {0, 1, 2, 3}
+    static const int etable[5][5] =
+    {
+      {0, 0, 0, 0, 0},
+      {0, 1, 1, 1, 1},
+      {0, 1, 1, 1, 2},
+      {0, 1, 1, 2, 3},
+      {0, 1, 2, 3, 4}
     };
 
-    int race  = item.flags & ISFLAG_RACIAL_MASK;
     int etype = _get_etype(item);
+    int idx = tile_main_count(tile) - 1;
+    ASSERT(idx < 5);
+    tile += etable[idx][etype];
 
-    if (etype > 1)
-        etype--;
+    return tile;
+}
+
+static int _tileidx_weapon_base(const item_def &item)
+{
+    int race  = item.flags & ISFLAG_RACIAL_MASK;
 
     switch (item.sub_type)
     {
-    case WPN_KNIFE:
-        return TILE_WPN_KNIFE;
+    case WPN_KNIFE: return TILE_WPN_KNIFE;
 
     case WPN_DAGGER:
         if (race == ISFLAG_ORCISH)
@@ -1000,32 +1027,25 @@ static int _tileidx_weapon(const item_def &item)
             return TILE_WPN_SHORT_SWORD_ORC;
         if (race == ISFLAG_ELVEN)
             return TILE_WPN_SHORT_SWORD_ELF;
-        return TILE_WPN_SHORT_SWORD + etable[1][etype];
+        return TILE_WPN_SHORT_SWORD;
 
-    case WPN_QUICK_BLADE:
-        return TILE_WPN_QUICK_BLADE;
-
-    case WPN_SABRE:
-        return TILE_WPN_SABRE + etable[1][etype];
-
-    case WPN_FALCHION:
-        return TILE_WPN_FALCHION;
-
-    case WPN_KATANA:
-        return TILE_WPN_KATANA + etable[1][etype];
+    case WPN_QUICK_BLADE: return TILE_WPN_QUICK_BLADE;
+    case WPN_SABRE: return TILE_WPN_SABRE;
+    case WPN_FALCHION: return TILE_WPN_FALCHION;
+    case WPN_KATANA: return TILE_WPN_KATANA;
 
     case WPN_LONG_SWORD:
         if (race == ISFLAG_ORCISH)
             return TILE_WPN_LONG_SWORD_ORC;
-        return TILE_WPN_LONG_SWORD + etable[1][etype];
+        return TILE_WPN_LONG_SWORD;
 
     case WPN_GREAT_SWORD:
         if (race == ISFLAG_ORCISH)
             return TILE_WPN_GREAT_SWORD_ORC;
-        return TILE_WPN_GREAT_SWORD + etable[1][etype];
+        return TILE_WPN_GREAT_SWORD;
 
     case WPN_SCIMITAR:
-        return TILE_WPN_SCIMITAR + etable[1][etype];
+        return TILE_WPN_SCIMITAR;
 
     case WPN_DOUBLE_SWORD:
         return TILE_WPN_DOUBLE_SWORD;
@@ -1040,45 +1060,45 @@ static int _tileidx_weapon(const item_def &item)
         return TILE_WPN_WAR_AXE;
 
     case WPN_BROAD_AXE:
-        return TILE_WPN_BROAD_AXE + etable[1][etype];
+        return TILE_WPN_BROAD_AXE;
 
     case WPN_BATTLEAXE:
-        return TILE_WPN_BATTLEAXE + etable[1][etype];
+        return TILE_WPN_BATTLEAXE;
 
     case WPN_EXECUTIONERS_AXE:
-        return TILE_WPN_EXECUTIONERS_AXE + etable[1][etype];
+        return TILE_WPN_EXECUTIONERS_AXE;
 
     case WPN_BLOWGUN:
-        return TILE_WPN_BLOWGUN + etable[1][etype];
+        return TILE_WPN_BLOWGUN;
 
     case WPN_SLING:
         return TILE_WPN_SLING;
 
     case WPN_BOW:
-        return TILE_WPN_BOW + etable[1][etype];
+        return TILE_WPN_BOW;
 
     case WPN_CROSSBOW:
-        return TILE_WPN_CROSSBOW + etable[1][etype];
+        return TILE_WPN_CROSSBOW;
 
     case WPN_HAND_CROSSBOW:
-        return TILE_WPN_HAND_CROSSBOW + etable[1][etype];
+        return TILE_WPN_HAND_CROSSBOW;
 
     case WPN_SPEAR:
-        return TILE_WPN_SPEAR + etable[1][etype];
+        return TILE_WPN_SPEAR;
 
     case WPN_TRIDENT:
-        return TILE_WPN_TRIDENT + etable[1][etype];
+        return TILE_WPN_TRIDENT;
 
     case WPN_HALBERD:
-        return TILE_WPN_HALBERD + etable[1][etype];
+        return TILE_WPN_HALBERD;
 
     case WPN_SCYTHE:
-        return TILE_WPN_SCYTHE + etable[1][etype];
+        return TILE_WPN_SCYTHE;
 
     case WPN_GLAIVE:
         if (race == ISFLAG_ORCISH)
             return TILE_WPN_GLAIVE_ORC;
-        return TILE_WPN_GLAIVE + etable[1][etype];
+        return TILE_WPN_GLAIVE;
 
     case WPN_QUARTERSTAFF:
         return TILE_WPN_QUARTERSTAFF;
@@ -1087,28 +1107,28 @@ static int _tileidx_weapon(const item_def &item)
         return TILE_WPN_CLUB;
 
     case WPN_HAMMER:
-        return TILE_WPN_HAMMER + etable[1][etype];
+        return TILE_WPN_HAMMER;
 
     case WPN_MACE:
-        return TILE_WPN_MACE + etable[1][etype];
+        return TILE_WPN_MACE;
 
     case WPN_FLAIL:
-        return TILE_WPN_FLAIL + etable[1][etype];
+        return TILE_WPN_FLAIL;
 
     case WPN_SPIKED_FLAIL:
-        return TILE_WPN_SPIKED_FLAIL + etable[1][etype];
+        return TILE_WPN_SPIKED_FLAIL;
 
     case WPN_GREAT_MACE:
-        return TILE_WPN_GREAT_MACE + etable[1][etype];
+        return TILE_WPN_GREAT_MACE;
 
     case WPN_DIRE_FLAIL:
-        return TILE_WPN_GREAT_FLAIL + etable[1][etype];
+        return TILE_WPN_GREAT_FLAIL;
 
     case WPN_MORNINGSTAR:
-        return TILE_WPN_MORNINGSTAR + etable[1][etype];
+        return TILE_WPN_MORNINGSTAR;
 
     case WPN_EVENINGSTAR:
-        return TILE_WPN_EVENINGSTAR + etable[1][etype];
+        return TILE_WPN_EVENINGSTAR;
 
     case WPN_GIANT_CLUB:
         return TILE_WPN_GIANT_CLUB;
@@ -1138,7 +1158,7 @@ static int _tileidx_weapon(const item_def &item)
         return TILE_WPN_LONGBOW;
 
     case WPN_LAJATANG:
-        return TILE_WPN_LAJATANG + etable[1][etype];
+        return TILE_WPN_LAJATANG;
 
     case WPN_BARDICHE:
         return TILE_WPN_LOCHABER_AXE;
@@ -1147,16 +1167,16 @@ static int _tileidx_weapon(const item_def &item)
         return TILE_WPN_FALCHION;
 
     case WPN_BLESSED_LONG_SWORD:
-        return TILE_WPN_LONG_SWORD + etable[1][etype];
+        return TILE_WPN_LONG_SWORD;
 
     case WPN_BLESSED_SCIMITAR:
-        return TILE_WPN_SCIMITAR + etable[1][etype];
+        return TILE_WPN_SCIMITAR;
 
     case WPN_BLESSED_KATANA:
-        return TILE_WPN_KATANA + etable[1][etype];
+        return TILE_WPN_KATANA;
 
     case WPN_BLESSED_GREAT_SWORD:
-        return TILE_WPN_GREAT_SWORD + etable[1][etype];
+        return TILE_WPN_GREAT_SWORD;
 
     case WPN_BLESSED_DOUBLE_SWORD:
         return TILE_WPN_DOUBLE_SWORD;
@@ -1166,6 +1186,12 @@ static int _tileidx_weapon(const item_def &item)
     }
 
     return TILE_ERROR;
+}
+
+static int _tileidx_weapon(const item_def &item)
+{
+    int tile = _tileidx_weapon_base(item);
+    return _apply_variations(item, tile);
 }
 
 static int _tileidx_missile(const item_def &item)
@@ -1195,31 +1221,21 @@ static int _tileidx_missile(const item_def &item)
   return TILE_ERROR;
 }
 
-static int _tileidx_armour(const item_def &item)
+static int _tileidx_armour_base(const item_def &item)
 {
     int race  = item.flags & ISFLAG_RACIAL_MASK;
     int type  = item.sub_type;
-    int etype = _get_etype(item);
-
-    static const int etable[5][5] = {
-        {0, 0, 0, 0, 0}, // No ego tile
-        {0, 1, 1, 1, 1}, // One ego tile
-        {0, 1, 1, 1, 2}, // Two ego tile
-        {0, 1, 1, 2, 3},
-        {0, 1, 2, 3, 4}
-    };
-
     switch(type)
     {
     case ARM_ROBE:
-        return TILE_ARM_ROBE + etable[2][etype];
+        return TILE_ARM_ROBE;
 
     case ARM_LEATHER_ARMOUR:
         if (race == ISFLAG_ORCISH)
             return TILE_ARM_LEATHER_ARMOUR_ORC;
         if (race == ISFLAG_ELVEN)
             return TILE_ARM_LEATHER_ARMOUR_ELF;
-        return TILE_ARM_LEATHER_ARMOUR  + etable[2][etype];
+        return TILE_ARM_LEATHER_ARMOUR;
 
     case ARM_RING_MAIL:
         if (race == ISFLAG_ORCISH)
@@ -1228,19 +1244,19 @@ static int _tileidx_armour(const item_def &item)
             return TILE_ARM_RING_MAIL_ELF;
         if (race == ISFLAG_DWARVEN)
             return TILE_ARM_RING_MAIL_DWA;
-        return TILE_ARM_RING_MAIL + etable[1][etype];
+        return TILE_ARM_RING_MAIL;
 
     case ARM_SCALE_MAIL:
         if (race == ISFLAG_ELVEN)
             return TILE_ARM_SCALE_MAIL_ELF;
-        return TILE_ARM_SCALE_MAIL + etable[1][etype];
+        return TILE_ARM_SCALE_MAIL;
 
     case ARM_CHAIN_MAIL:
         if (race == ISFLAG_ELVEN)
             return TILE_ARM_CHAIN_MAIL_ELF;
         if (race == ISFLAG_ORCISH)
             return TILE_ARM_CHAIN_MAIL_ORC;
-        return TILE_ARM_CHAIN_MAIL + etable[1][etype];
+        return TILE_ARM_CHAIN_MAIL;
 
     case ARM_SPLINT_MAIL:
         return TILE_ARM_SPLINT_MAIL;
@@ -1257,40 +1273,40 @@ static int _tileidx_armour(const item_def &item)
         return TILE_ARM_CRYSTAL_PLATE_MAIL;
 
     case ARM_SHIELD:
-        return TILE_ARM_SHIELD  + etable[2][etype];
+        return TILE_ARM_SHIELD;
 
     case ARM_CLOAK:
-        return TILE_ARM_CLOAK + etable[3][etype];
+        return TILE_ARM_CLOAK;
 
     case ARM_WIZARD_HAT:
-        return TILE_THELM_WIZARD_HAT + etable[1][etype];
+        return TILE_THELM_WIZARD_HAT;
 
     case ARM_CAP:
         return TILE_THELM_CAP;
 
     case ARM_HELMET:
-        return TILE_THELM_HELM  + etable[3][etype];
+        return TILE_THELM_HELM;
 
     case ARM_GLOVES:
-        return TILE_ARM_GLOVES  + etable[3][etype];
+        return TILE_ARM_GLOVES;
 
     case ARM_BOOTS:
-        return TILE_ARM_BOOTS + etable[3][etype];
+        return TILE_ARM_BOOTS;
 
     case ARM_BUCKLER:
-        return TILE_ARM_BUCKLER + etable[1][etype];
+        return TILE_ARM_BUCKLER;
 
     case ARM_LARGE_SHIELD:
-        return TILE_ARM_LARGE_SHIELD + etable[2][etype];
+        return TILE_ARM_LARGE_SHIELD;
 
     case ARM_CENTAUR_BARDING:
-        return TILE_ARM_CENTAUR_BARDING + etable[3][etype];
+        return TILE_ARM_CENTAUR_BARDING;
 
     case ARM_NAGA_BARDING:
-        return TILE_ARM_NAGA_BARDING + etable[3][etype];
+        return TILE_ARM_NAGA_BARDING;
 
     case ARM_ANIMAL_SKIN:
-        return TILE_ARM_ANIMAL_SKIN + etable[1][etype];
+        return TILE_ARM_ANIMAL_SKIN;
 
     case ARM_TROLL_HIDE:
         return TILE_ARM_TROLL_HIDE;
@@ -1342,6 +1358,12 @@ static int _tileidx_armour(const item_def &item)
     }
 
     return TILE_ERROR;
+}
+
+static int _tileidx_armour(const item_def &item)
+{
+    int tile = _tileidx_armour_base(item);
+    return _apply_variations(item, tile);
 }
 
 static int _tileidx_food(const item_def &item)
@@ -1820,13 +1842,19 @@ int tileidx_item(const item_def &item)
         return TILE_GOLD;
 
     case OBJ_JEWELLERY:
-
-        if (type < AMU_RAGE)
+        if (type < NUM_RINGS)
         {
             if (is_random_artefact( item ))
                 return TILE_RING_RANDOM_OFFSET + color - 1;
+            else if (id[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
+                     || (item.flags & ISFLAG_KNOW_TYPE))
+            {
+                return TILE_RING_REGENERATION + type - RING_FIRST_RING;
+            }
             else
+            {
                 return TILE_RING_NORMAL_OFFSET + special % 13;
+            }
         }
         else
         {
@@ -1834,8 +1862,15 @@ int tileidx_item(const item_def &item)
                 return _tileidx_unrand_artefact(find_unrandart_index(item));
             else if (is_random_artefact( item ))
                 return TILE_AMU_RANDOM_OFFSET + color - 1;
+            else if (id[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
+                     || (item.flags & ISFLAG_KNOW_TYPE))
+            {
+                return TILE_AMU_RAGE + type - AMU_FIRST_AMULET;
+            }
             else
+            {
                 return TILE_AMU_NORMAL_OFFSET + special % 13;
+            }
         }
 
     case OBJ_POTIONS:
