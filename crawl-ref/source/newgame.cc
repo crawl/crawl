@@ -2374,7 +2374,7 @@ static bool _choose_weapon()
            }
         }
         while (keyin != '*' && keyin != '+'
-               && (keyin < 'a' || keyin > ('a' + num_choices)
+               && (keyin < 'a' || keyin >= ('a' + num_choices)
                    || startwep_restrictions[keyin - 'a'] == CC_BANNED));
     }
 
