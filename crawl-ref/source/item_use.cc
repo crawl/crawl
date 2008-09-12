@@ -3850,22 +3850,46 @@ bool _drink_fountain()
     return (true);
 }
 
-static bool affix_weapon_enchantment()
+// Returns true if a message has already been printed (which will identify
+// the scroll.)
+static bool _vorpalise_weapon()
 {
-    const int wpn = you.equip[ EQ_WEAPON ];
+    if ( !you.weapon() )
+        return false;
+
+    // Check if you're wielding a brandable weapon.
+    item_def& wpn = *you.weapon();
+    if (wpn.base_type != OBJ_WEAPONS || wpn.sub_type == WPN_BLOWGUN
+        || is_artefact(wpn))
+    {
+        return false;
+    }
+
+    you.wield_change = true;
+
+    // If there's no brand, make it vorpal.
+    if (get_weapon_brand(wpn) == SPWPN_NORMAL)
+    {
+        alert_nearby_monsters();
+        mprf("%s emits a brilliant flash of light!",
+             wpn.name(DESC_CAP_YOUR).c_str());
+        set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_VORPAL);
+        return true;
+    }
+
+    // If there's a permanent brand, fail.
+    if (you.duration[DUR_WEAPON_BRAND] == 0)
+        return false;
+
+    // There's a temporary brand, attempt to make it permanent.
+    const std::string itname = wpn.name(DESC_CAP_YOUR);
     bool success = true;
+    bool msg = true;
 
-    struct bolt beam;
-
-    if (wpn == -1 || !you.duration[ DUR_WEAPON_BRAND ])
-        return (false);
-
-    std::string itname = you.inv[wpn].name(DESC_CAP_YOUR);
-
-    switch (get_weapon_brand( you.inv[wpn] ))
+    switch (get_weapon_brand(wpn))
     {
     case SPWPN_VORPAL:
-        if (get_vorpal_type( you.inv[wpn] ) != DVORP_CRUSHING)
+        if (get_vorpal_type(wpn) != DVORP_CRUSHING)
             mprf("%s's sharpness seems more permanent.", itname.c_str());
         else
             mprf("%s's heaviness feels very stable.", itname.c_str());
@@ -3873,20 +3897,23 @@ static bool affix_weapon_enchantment()
 
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
+        {
+            bolt beam;
 
-        beam.name       = "fiery explosion";
-        beam.aux_source = "a fiery explosion";
-        beam.type       = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage     = dice_def( 3, 10 );
-        beam.flavour    = BEAM_FIRE;
-        beam.target     = you.pos();
-        beam.colour     = RED;
-        beam.thrower    = KILL_YOU;
-        beam.ex_size    = 2;
-        beam.is_tracer  = false;
-        beam.is_explosion = true;
+            beam.name       = "fiery explosion";
+            beam.aux_source = "a fiery explosion";
+            beam.type       = dchar_glyph(DCHAR_FIRED_BURST);
+            beam.damage     = dice_def( 3, 10 );
+            beam.flavour    = BEAM_FIRE;
+            beam.target     = you.pos();
+            beam.colour     = RED;
+            beam.thrower    = KILL_YOU;
+            beam.ex_size    = 2;
+            beam.is_tracer  = false;
+            beam.is_explosion = true;
 
-        explosion(beam);
+            explosion(beam);
+        }
         break;
 
     case SPWPN_FREEZING:
@@ -3912,9 +3939,10 @@ static bool affix_weapon_enchantment()
         success = false;
 
         // Is only naughty if you know you're doing it.
+        // XXX: assumes this can only happen from Vorpalise Weapon scroll.
         did_god_conduct(DID_UNHOLY, 10,
-            get_ident_type(OBJ_SCROLLS, SCR_ENCHANT_WEAPON_III) == ID_KNOWN_TYPE);
-
+                        get_ident_type(OBJ_SCROLLS, SCR_VORPALISE_WEAPON)
+                        == ID_KNOWN_TYPE);
         break;
 
     case SPWPN_DISTORTION:
@@ -3930,13 +3958,14 @@ static bool affix_weapon_enchantment()
 
     default:
         success = false;
+        msg = false;
         break;
     }
 
     if (success)
         you.duration[DUR_WEAPON_BRAND] = 0;
 
-    return (success);
+    return (msg);
 }
 
 bool enchant_weapon( enchant_stat_type which_stat, bool quiet, item_def &wpn )
@@ -4484,28 +4513,22 @@ void read_scroll( int slot )
         break;
 
     case SCR_ENCHANT_WEAPON_III:
-        if (you.equip[ EQ_WEAPON ] != -1)
+        if (you.weapon())
         {
-            // Successfully affixing the enchantment will print
-            // its own message.
-            if (!affix_weapon_enchantment())
-            {
-                const std::string iname =
-                    you.inv[you.equip[EQ_WEAPON]].name(DESC_CAP_YOUR);
+            item_def& wpn = *you.weapon();
+            mprf("%s glows bright yellow for a while.",
+                 wpn.name(DESC_CAP_YOUR).c_str() );
 
-                mprf("%s glows bright yellow for a while.", iname.c_str() );
+            do_uncurse_item(wpn);
+            _handle_enchant_weapon( ENCHANT_TO_HIT, true );
 
-                do_uncurse_item( you.inv[you.equip[EQ_WEAPON]] );
+            if (coinflip())
                 _handle_enchant_weapon( ENCHANT_TO_HIT, true );
 
-                if (coinflip())
-                    _handle_enchant_weapon( ENCHANT_TO_HIT, true );
+            _handle_enchant_weapon( ENCHANT_TO_DAM, true );
 
+            if (coinflip())
                 _handle_enchant_weapon( ENCHANT_TO_DAM, true );
-
-                if (coinflip())
-                    _handle_enchant_weapon( ENCHANT_TO_DAM, true );
-            }
         }
         else
         {
@@ -4515,31 +4538,9 @@ void read_scroll( int slot )
         break;
 
     case SCR_VORPALISE_WEAPON:
-        nthing = you.equip[EQ_WEAPON];
-        if (nthing == -1
-            || you.inv[ nthing ].base_type != OBJ_WEAPONS
-            || (you.inv[ nthing ].base_type == OBJ_WEAPONS
-                && (is_fixed_artefact( you.inv[ nthing ] )
-                    || is_random_artefact( you.inv[ nthing ] )
-                    || you.inv[nthing].sub_type == WPN_BLOWGUN)))
-        {
+        id_the_scroll = _vorpalise_weapon();
+        if ( !id_the_scroll )
             canned_msg(MSG_NOTHING_HAPPENS);
-            break;
-        }
-
-        mprf("%s emits a brilliant flash of light!",
-             you.inv[nthing].name(DESC_CAP_YOUR).c_str());
-
-        alert_nearby_monsters();
-
-        if (get_weapon_brand( you.inv[nthing] ) != SPWPN_NORMAL)
-        {
-            mpr("You feel strangely frustrated.");
-            break;
-        }
-
-        you.wield_change = true;
-        set_item_ego_type( you.inv[nthing], OBJ_WEAPONS, SPWPN_VORPAL );
         break;
 
     case SCR_IDENTIFY:
