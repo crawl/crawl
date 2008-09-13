@@ -272,6 +272,11 @@
     // an error message.
     #define DGL_PAUSE_AFTER_ERROR
 
+    // Enable core dumps. Note that this will not create core dumps if
+    // Crawl is installed setuid or setgid, but dgamelaunch installs should
+    // not be installing Crawl set[ug]id anyway.
+    #define DGL_ENABLE_CORE_DUMP
+
     // Use UTC for dgamelaunch servers.
     #define TIME_FN gmtime
 #endif

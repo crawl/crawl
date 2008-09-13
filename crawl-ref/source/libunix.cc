@@ -51,6 +51,11 @@
 #include "stuff.h"
 #include "view.h"
 
+#ifdef DGL_ENABLE_CORE_DUMP
+#include <sys/time.h>
+#include <sys/resource.h>
+#endif
+
 #ifdef UNICODE_GLYPHS
 #include <wchar.h>
 #include <locale.h>
@@ -445,6 +450,14 @@ void unixcurses_startup( void )
 
     signal(SIGWINCH, handle_sigwinch);
 
+#endif
+
+#ifdef DGL_ENABLE_CORE_DUMP
+    rlimit lim;
+    if (!getrlimit(RLIMIT_CORE, &lim)) {
+        lim.rlim_cur = RLIM_INFINITY;
+        setrlimit(RLIMIT_CORE, &lim);
+    }
 #endif
 
     initscr();
