@@ -1513,7 +1513,7 @@
     SPELL_POISON_AMMUNITION, "Poison Ammunition",
      SPTYP_ENCHANTMENT | SPTYP_POISON,
      SPFLAG_HELPFUL,
-     2,
+     4,
      0,
      NULL,
      false,
