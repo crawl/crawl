@@ -3712,6 +3712,11 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
     int eslot = -1;
     item_def *weap;
 
+    // Monsters have two weapon slots, one of which can be a ranged, and
+    // the other a melee weapon. (The exception being dual-wielders who can
+    // wield two melee weapons). The weapon in MSLOT_WEAPON is the one
+    // currently wielded (can be empty).
+
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         weap = mslot_item(static_cast<mon_inv_type>(i));
@@ -3731,7 +3736,9 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
             if (_is_signature_weapon(this, *weap) && !dual_wielding)
                 return (false);
 
-            // If the new weapon is better than the current one, replace it.
+            // If we get here, the weapon is a melee weapon.
+            // If the new weapon is better than the current one and not cursed,
+            // replace it. Otherwise, give up.
             if (mons_weapon_damage_rating(*weap) < mdam_rating
                 && !weap->cursed())
             {

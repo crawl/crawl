@@ -581,6 +581,7 @@ void full_describe_view()
             unsigned short glyph_col;
             get_item_glyph( list_items[i], &glyph_char, &glyph_col );
 
+/*
             std::string col_string;
             int specialness = item_name_specialness(*(list_items[i]));
             switch (specialness)
@@ -589,7 +590,8 @@ void full_describe_view()
             case 1: col_string = "white";    break; // glowing/runed
             case 0: col_string = "darkgrey"; break; // mundane
             }
-
+*/
+            std::string col_string = colour_to_str(glyph_col);
             std::string prefix = "(<" + col_string + ">"
                                  + (char)glyph_char
                                  + "</" + col_string + ">) ";
