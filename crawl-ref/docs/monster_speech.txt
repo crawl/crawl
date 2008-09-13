@@ -487,12 +487,14 @@ If this specific search doesn't yield any results, i.e., such an
 entry hasn't been defined for the species in question, the general
 replacements are used instead.
 
-Weapon noises are handled differently in that all of the above
+Weapon noises are handled differently in that most of the above
 replacements don't hold. Instead you can use @The_weapon@,
 @the_weapon@, @Your_weapon@, @your_weapon@ and @weapon@ which will get
 replaced by "The (weapon name)", "the (weapon name)", "Your (weapon
 name)", "your (weapon name)", and the plain weapon name,
 respectively.
+@player_name@ is expanded as above, as is @player_god@, though for 
+atheists it returns "atheism".
 
 Note that the Singing Sword, being unique, cannot be referred to by
 the possessive variants, so they will be replaced with the appropriate

@@ -156,6 +156,11 @@ void special_wielded()
             msg = replace_all(msg, "@The_weapon@", "The @weapon@");
             msg = replace_all(msg, "@the_weapon@", "the @weapon@");
             msg = replace_all(msg, "@weapon@", you.inv[wpn].name(DESC_BASENAME));
+            // replace references to player name and god
+            msg = replace_all(msg, "@player_name@", you.your_name);
+            msg = replace_all(msg, "@player_god@",
+                              you.religion == GOD_NO_GOD ? "atheism"
+                                : god_name(you.religion, coinflip()));
 
             mpr(msg.c_str(), channel);
 
