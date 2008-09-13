@@ -37,21 +37,25 @@ SOUND:You hear @weapon_noise@
 ############################################################
 # for the SINGING SWORD only!
 ############################################################
+#
+# The different modes of the Singing Sword messages are not
+# equally probable. This is by design.
+
 weapon_sings
 
-#plain sings (58)
+#plain sings
 w:60
 @singing@
 
-#instrumental sounds (19)
+#instrumental sounds 
 w:15
 @singing_sword_instruments@
 
-#speaks (30)
-w:25
+#speaks
+w:23
 @speaking@
 
-# These should be really rare. (12)
+# These should be really rare.
 w:2
 @real_song@
 
@@ -117,6 +121,8 @@ In a hysterical voice, @the_weapon@ strikes up a march.
 @The_weapon@ repeatedly practises the high pitch.
 
 @The_weapon@ sings @several@ chords at once.
+
+@The_weapon@ repeatedly practises counterpoints.
 
 # more singing
 @The_weapon@ breaks into glorious song!
@@ -193,6 +199,8 @@ w:140
 
 @The_weapon@ beats time.
 
+@The_weapon@ pulls all registers.
+
 %%%%
 # also used by noisy weapons
 instrumental_noises
@@ -268,6 +276,8 @@ speaking
 
 @The_weapon@ grumbles, "I guess an audience of one is better than none..."
 
+@The_weapon@ complains, "When we kill all of them, noone is listening!"
+
 @The_weapon@ brightly asks, "How about a duet?"
 
 # These should happen about half as often.
@@ -295,7 +305,7 @@ w:5
 
 @The_weapon@ curses its smith, "I was supposed to be the Stinging Sword!"
 
-@The_weapon@ yells, "Ploughshares to swords!" and giggles.
+@The_weapon@ yells, "Ploughshares to swords!".
 
 @The_weapon@ asks, "What song would you like to be played for your funeral?"
 
@@ -308,21 +318,28 @@ real_song
 
 @The_weapon@ roars, "Silence is golden, golden ..."
 
+# Queen
 @The_weapon@ happily sings, "... another one bites the dust!"
 
+# Monty Python
 @The_weapon@ @sings_or_whistles@, "Always look on the bright side of death ..."
 
+# folklore, confusing flowers and monsters
 @The_weapon@ sings, "Where have all the monsters gone?"
 
 @The_weapon@ sings, "Song sung blue, everybody knows one ..."
 
+#Abba
 @The_weapon@ sings, "Thank you for the music..."
 
 @The_weapon@ wails, "Look what they done to my song!"
 
 @The_weapon@ sings, "Pop! Goes the weasel."
 
+# Beatles
 @The_weapon@ sings, "Obladi oblada, life goes on ..."
+
+@The_weapon@ sings, "Let it be, let it be..."
 
 @The_weapon@ sings, "Ain't no stopping us now ..."
 
@@ -330,6 +347,15 @@ real_song
 
 # Jingle Bells, misunderstood
 @The_weapon@ sings, "What fun it is to ride and sing a slaying song tonight!"
+
+# Frank Sinatra (or Sid Vicious)
+@The_weapon@ sings, "I did it my way!"
+
+# GG Allin
+@The_weapon@ sings, "Die when you die!"
+
+# Gloria Gaynor
+@The_weapon@ sings, "I will survive!"
 
 # end Singing Sword
 %%%%
