@@ -1020,6 +1020,21 @@ static bool _origin_is_original_equip(const item_def &item)
     return (item.orig_place == 0xFFFFU && item.orig_monnum == -1);
 }
 
+bool origin_is_god_gift(const item_def& item)
+{
+    if (!origin_describable(item))
+        return false;
+    
+    if (_origin_is_original_equip(item))
+        return false;
+    
+    if (item.orig_monnum >= 0)
+        return false;
+
+    const int iorig = -item.orig_monnum - 2;
+    return (iorig > AQ_SCROLL && iorig < AQ_CARD_GENIE);
+}
+
 std::string origin_desc(const item_def &item)
 {
     if (!origin_describable(item))

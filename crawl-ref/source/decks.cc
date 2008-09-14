@@ -445,7 +445,7 @@ static bool _wielding_deck()
     return is_deck(you.inv[you.equip[EQ_WEAPON]]);
 }
 
-static void _remember_drawn_card(item_def& deck, card_type card)
+static void _remember_drawn_card(item_def& deck, card_type card, bool allow_id)
 {
     ASSERT( is_deck(deck) );
     CrawlHashTable &props = deck.props;
@@ -453,8 +453,11 @@ static void _remember_drawn_card(item_def& deck, card_type card)
     drawn.push_back( static_cast<char>(card) );
 
     // Once you've drawn two cards, you know the deck.
-    if (drawn.size() >= 2)
+    if (allow_id &&
+        (drawn.size() >= 2 || origin_is_god_gift(deck)))
+    {
         _deck_ident(deck);
+    }
 }
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck)
@@ -1108,7 +1111,7 @@ bool deck_triple_draw()
     // Note how many cards were removed from the deck.
     deck.plus2 += num_to_draw;
     for (int i = 0; i < num_to_draw; ++i)
-        _remember_drawn_card(deck, draws[i]);
+        _remember_drawn_card(deck, draws[i], false);
     you.wield_change = true;
 
     // Make deck disappear *before* the card effect, since we
@@ -1194,6 +1197,10 @@ void evoke_deck( item_def& deck )
     unsigned char flags = 0;
     card_type card = _draw_top_card(deck, true, flags);
 
+    // Oddity cards don't give any information about the deck.
+    if (flags & CFLAG_ODDITY)
+        allow_id = false;
+
     // Passive Nemelex retribution: sometimes a card gets swapped out.
     // More likely to happen with marked decks.
     if (you.penance[GOD_NEMELEX_XOBEH])
@@ -1232,7 +1239,7 @@ void evoke_deck( item_def& deck )
         props["non_brownie_draws"]--;
 
     deck.plus2++;
-    _remember_drawn_card(deck, card);
+    _remember_drawn_card(deck, card, allow_id);
 
     // Get rid of the deck *before* the card effect because a card
     // might cause a wielded deck to be swapped out for something else,

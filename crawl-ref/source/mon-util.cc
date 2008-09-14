@@ -5188,7 +5188,7 @@ bool monsters::is_travelling() const
 
 bool monsters::is_patrolling() const
 {
-    return (patrol_point != coord_def(0, 0));
+    return (!patrol_point.origin());
 }
 
 bool monsters::needs_transit() const

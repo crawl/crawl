@@ -134,6 +134,7 @@ void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
 void origin_set_inventory( void (*oset)(item_def &item) );
+bool origin_is_god_gift(const item_def& item);
 std::string origin_monster_name(const item_def &item);
 
 bool item_needs_autopickup(const item_def &);
