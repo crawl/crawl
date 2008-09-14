@@ -1385,7 +1385,8 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
                 while (type_wanted == MISC_HORN_OF_GERYON
                        || type_wanted == MISC_RUNE_OF_ZOT
                        || type_wanted == MISC_CRYSTAL_BALL_OF_FIXATION
-                       || type_wanted == MISC_EMPTY_EBONY_CASKET);
+                       || type_wanted == MISC_EMPTY_EBONY_CASKET
+                       || type_wanted == MISC_DECK_OF_PUNISHMENT);
                 break;
             default:
                 break;
