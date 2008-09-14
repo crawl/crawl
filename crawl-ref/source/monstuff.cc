@@ -7623,8 +7623,6 @@ unsigned int monster_index(const monsters *monster)
 
 int hurt_monster(monsters * victim, int damage_dealt)
 {
-    damage_dealt = std::max(std::min(damage_dealt, victim->hit_points), 0);
-
     return (victim->hurt(NULL, damage_dealt));
 }
 

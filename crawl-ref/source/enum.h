@@ -260,6 +260,8 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_PURP_SMOKE,
     BEAM_POTION_RANDOM,         // 55
 
+    BEAM_TORMENT_DAMAGE,        // Pseudo-beam for damage flavour.
+
     BEAM_LINE_OF_SIGHT          // only used for checking monster LOS
 };
 

@@ -4928,7 +4928,7 @@ god_type monsters::deity() const
     return (god);
 }
 
-int monsters::hurt(const actor *agent, int amount)
+int monsters::hurt(const actor *agent, int amount, beam_type flavour)
 {
     if (amount <= 0)
         return (0);
@@ -4937,7 +4937,7 @@ int monsters::hurt(const actor *agent, int amount)
     hit_points -= amount;
 
     // Allow the victim to exhibit passive damage behaviour (royal jelly).
-    react_to_damage(amount);
+    react_to_damage(amount, flavour);
 
     if (agent && (hit_points < 1 || hit_dice < 1) && type != -1)
     {
@@ -6674,10 +6674,10 @@ static inline monster_type _royal_jelly_ejectable_monster()
                        -1 ) );
 }
 
-void monsters::react_to_damage(int damage)
+void monsters::react_to_damage(int damage, beam_type flavour)
 {
     // The royal jelly objects to taking damage and will SULK. :-)
-    if (type == MONS_ROYAL_JELLY && alive()
+    if (type == MONS_ROYAL_JELLY && flavour != BEAM_TORMENT_DAMAGE && alive()
         && damage > 8 && x_chance_in_y(damage, 50))
     {
         const int tospawn =

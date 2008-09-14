@@ -259,7 +259,7 @@ int torment_monsters(coord_def where, int pow, int caster)
 
     // Currently, torment doesn't annoy the monsters it affects because
     // it can't kill them, and because hostile monsters use it.
-    hurt_monster(monster, hploss);
+    monster->hurt(NULL, hploss, BEAM_TORMENT_DAMAGE);
 
     if (hploss)
     {
