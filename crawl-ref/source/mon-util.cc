@@ -3660,7 +3660,8 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
 
 bool monsters::pickup_melee_weapon(item_def &item, int near)
 {
-    if (mons_wields_two_weapons(this))
+    const bool dual_wielding = mons_wields_two_weapons(this);
+    if (dual_wielding)
     {
         // If we have either weapon slot free, pick up the weapon.
         if (inv[MSLOT_WEAPON] == NON_ITEM)
@@ -3674,33 +3675,51 @@ bool monsters::pickup_melee_weapon(item_def &item, int near)
     int eslot = -1;
     item_def *weap;
 
+    // Monsters have two weapon slots, one of which can be a ranged, and
+    // the other a melee weapon. (The exception being dual-wielders who can
+    // wield two melee weapons). The weapon in MSLOT_WEAPON is the one
+    // currently wielded (can be empty).
+
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
     {
         weap = mslot_item(static_cast<mon_inv_type>(i));
 
         if (!weap)
         {
-            // If no weapon in this slot, pick up this one.
-            eslot = i;
-            break;
+            // If no weapon in this slot, mark this one.
+            if (eslot == -1)
+                eslot = i;
         }
-
-        if (is_range_weapon(*weap))
-            continue;
-
-        // Don't drop weapons specific to the monster.
-        if (_is_signature_weapon(this, *weap))
-            continue;
-
-        // If the new weapon is better than the current one, replace it.
-        // If wielding two weapons, replace the one with the lower dam. rating.
-        if (mons_weapon_damage_rating(*weap) < mdam_rating
-            && ( eslot == -1 // current is main weapon
-                 || !weap->cursed()
-                    && mons_weapon_damage_rating(*weap)
-                       < mons_weapon_damage_rating(*mslot_item(MSLOT_WEAPON)) ))
+        else
         {
-            eslot = i;
+            if (is_range_weapon(*weap))
+                continue;
+
+            // Don't drop weapons specific to the monster.
+            if (_is_signature_weapon(this, *weap) && !dual_wielding)
+                return (false);
+
+            // If we get here, the weapon is a melee weapon.
+            // If the new weapon is better than the current one and not cursed,
+            // replace it. Otherwise, give up.
+            if (mons_weapon_damage_rating(*weap) < mdam_rating
+                && !weap->cursed())
+            {
+                if (!dual_wielding
+                    || i == MSLOT_WEAPON
+                    || mons_weapon_damage_rating(*weap)
+                       < mons_weapon_damage_rating(*mslot_item(MSLOT_WEAPON)))
+                {
+                    eslot = i;
+                    if (!dual_wielding)
+                        break;
+                }
+            }
+            else if (!dual_wielding)
+            {
+                // We've got a good melee weapon, that's enough.
+               return (false);
+            }
         }
     }
 
