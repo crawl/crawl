@@ -1916,7 +1916,7 @@ void yell(bool force)
 
     if (!you.duration[DUR_BERSERKER])
     {
-        std::string previous = "";
+        std::string previous;
         if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
         {
             monsters *target = &menv[you.prev_targ];
@@ -2021,6 +2021,7 @@ void yell(bool force)
         return;
     }
 
+    you.turn_is_over = true;
     you.pet_target = mons_targd;
     // Allow patrolling for "Stop fighting!" and "Wait here!"
     _set_friendly_foes(keyn == 's' || keyn == 'w');
