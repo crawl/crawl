@@ -80,6 +80,9 @@ private:
     bool msuppressed;
 };
 
+void save_messages(writer& outf);
+void load_messages(reader& inf);
+
 bool any_messages();
 void replay_messages();
 

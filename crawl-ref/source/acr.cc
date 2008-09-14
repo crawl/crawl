@@ -266,7 +266,8 @@ int main( int argc, char *argv[] )
     // Override some options for tutorial.
     init_tutorial_options();
 
-    msg::stream << "Welcome, " << you.your_name << " the "
+    msg::stream << "Welcome" << (game_start? "" : " back") << ", "
+                << you.your_name << " the "
                 << species_name( you.species,you.experience_level )
                 << " " << you.class_name << "."
                 << std::endl;

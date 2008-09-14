@@ -38,6 +38,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
+#include "tags.h"
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
@@ -937,6 +938,36 @@ std::string get_last_messages(int mcount)
     return text;
 }
 
+void save_messages(writer& outf)
+{
+    marshallLong( outf, Next_Message );
+    for (int i = 0; i < Next_Message; ++i)
+    {
+         marshallString4( outf, Store_Message[i].text );
+         marshallLong( outf, (long) Store_Message[i].channel );
+         marshallLong( outf, Store_Message[i].param );
+         marshallLong( outf, Store_Message[i].repeats );
+    }
+}
+
+void load_messages(reader& inf)
+{
+    Next_Message = 0;
+    int num = unmarshallLong( inf );
+    for (int i = 0; i < num; ++i)
+    {
+        std::string text;
+        unmarshallString4( inf, text );
+
+        msg_channel_type channel = (msg_channel_type) unmarshallLong( inf );
+        int param                = unmarshallLong( inf );
+        int repeats              = unmarshallLong( inf );
+
+        for (int k = 0; k < repeats; k++)
+             mpr_store_messages(text, channel, param);
+    }
+}
+
 void replay_messages(void)
 {
     int        win_start_line = 0;
@@ -1050,8 +1081,8 @@ void replay_messages(void)
 
         keyin = getch();
 
-        if ((full_buffer && NUM_STORED_MESSAGES > num_lines - 2)
-            || (!full_buffer && Next_Message > num_lines - 2))
+        if (full_buffer && NUM_STORED_MESSAGES > num_lines - 2
+            || !full_buffer && Next_Message > num_lines - 2)
         {
             int new_line;
             int end_mark;
@@ -1090,7 +1121,7 @@ void replay_messages(void)
             {
                 new_line = win_start_line + (num_lines - 2);
 
-                // as above, but since we're adding we want
+                // As above, but since we're adding we want
                 // this mark to always be greater.
                 end_mark = last_message;
                 if (end_mark < win_start_line)

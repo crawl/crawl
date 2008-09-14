@@ -1734,6 +1734,9 @@ static void _paranoid_option_disable( activity_interrupt_type ai,
                                            restart.end()).c_str());
             }
 
+            // Don't switch back after we encountered an invisible creature.
+            you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+
             if (Options.tutorial_left)
             {
                 learned_something_new(TUT_INVISIBLE_DANGER);

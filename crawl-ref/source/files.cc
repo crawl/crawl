@@ -1442,6 +1442,17 @@ void save_game(bool leave_game, const char *farewellmsg)
         DO_CHMOD_PRIVATE(tutorFile.c_str());
     }
 
+    /* messages */
+    std::string msgFile = get_savedir_filename(you.your_name, "", "msg");
+    FILE *msgf = fopen(msgFile.c_str(), "wb");
+    if (msgf)
+    {
+        writer outf(msgf);
+        save_messages(outf);
+        fclose(msgf);
+        DO_CHMOD_PRIVATE(msgFile.c_str());
+    }
+
     std::string charFile = get_savedir_filename(you.your_name, "", "sav");
     FILE *charf = fopen(charFile.c_str(), "wb");
     if (!charf)
@@ -1634,6 +1645,16 @@ void restore_game(void)
         reader inf(tutorf);
         load_tutorial(inf);
         fclose(tutorf);
+    }
+
+    /* messages */
+    std::string msgFile = get_savedir_filename(you.your_name, "", "msg");
+    FILE *msgf = fopen(msgFile.c_str(), "rb");
+    if (msgf)
+    {
+        reader inf(msgf);
+        load_messages(inf);
+        fclose(msgf);
     }
 }
 

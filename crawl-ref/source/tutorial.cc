@@ -140,7 +140,8 @@ bool pick_tutorial()
     {
         char keyn = c_getch();
 
-        if (keyn == '*' || keyn == '+')
+        // Random choice.
+        if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
             keyn = 'a' + random2(TUT_TYPES_NUM);
 
         // Choose character for tutorial game and set starting values.
@@ -156,17 +157,20 @@ bool pick_tutorial()
             Options.tutorial_events.init(true);
             Options.tutorial_left = TUT_EVENTS_NUM;
 
-            // Store whether explore, stash search or travelling was used.
-            Options.tut_explored = true;
-            Options.tut_stashes  = true;
-            Options.tut_travel   = true;
-
             // Used to compare which fighting means was used most often.
-            // XXX: Not stored across save games.
+            // XXX: This gets reset with every save, which seems odd.
+            //      On the other hand, it's precisely between saves that
+            //      players are most likely to forget these.
             Options.tut_spell_counter   = 0;
             Options.tut_throw_counter   = 0;
             Options.tut_melee_counter   = 0;
             Options.tut_berserk_counter = 0;
+
+            // Store whether explore, stash search or travelling was used.
+            // XXX: Also not stored across save games.
+            Options.tut_explored = true;
+            Options.tut_stashes  = true;
+            Options.tut_travel   = true;
 
             // For occasional healing reminders.
             Options.tut_last_healed = 0;
@@ -2654,7 +2658,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         if (mgrd(gc) != NON_MONSTER)
         {
-            tiles.add_text_tag(TAG_TUTORIAL, menv[mgrd(gc)].name(DESC_CAP_A), 
+            tiles.add_text_tag(TAG_TUTORIAL, menv[mgrd(gc)].name(DESC_CAP_A),
                                gc);
         }
 #endif

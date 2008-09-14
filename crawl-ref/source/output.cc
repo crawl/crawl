@@ -1641,11 +1641,11 @@ static void _print_overview_screen_equip(column_composer& cols,
         // uncomment (and change 42 to 33) to bring back slot names
         // snprintf(slot, sizeof slot, "%-7s: ", equip_slot_to_name(eqslot);
 
-        if ( you.equip[ e_order[i] ] != -1)
+        if (you.equip[ e_order[i] ] != -1)
         {
-            const int item_idx = you.equip[e_order[i]];
-            const item_def& item = you.inv[item_idx];
-            const char* colname = colour_to_str(item.colour).c_str();
+            const int item_idx    = you.equip[e_order[i]];
+            const item_def& item  = you.inv[item_idx];
+            const char* colname   = colour_to_str(item.colour).c_str();
             const char equip_char = index_to_letter(item_idx);
 
             snprintf(buf, sizeof buf,
