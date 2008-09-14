@@ -3004,15 +3004,14 @@ bool monsters::wants_submerge() const
         || type == MONS_LAVA_SNAKE
         || (type == MONS_MERMAID && you.species != SP_MERFOLK);
 
-    const actor *tfoe = get_foe();
-
     int roll = 8;
     // Shallow water takes a little more effort to submerge in, so we're
     // less likely to bother.
     if (grd(pos()) == DNGN_SHALLOW_WATER)
         roll = roll * 7 / 5;
 
-    if (foe && grid_distance(tfoe->pos(), pos()) > 1 && !has_ranged_attack)
+    const actor *tfoe = get_foe();
+    if (tfoe && grid_distance(tfoe->pos(), pos()) > 1 && !has_ranged_attack)
         roll /= 2;
 
     // Don't submerge if we just unsubmerged to shout
