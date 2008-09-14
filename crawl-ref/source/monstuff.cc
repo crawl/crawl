@@ -440,6 +440,7 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
     const bool no_xp = monster->has_ench(ENCH_ABJ);
     const bool already_got_half_xp = testbits(monster->flags, MF_GOT_HALF_XP);
 
+    bool need_xp_msg = false;
     if (created_friendly || was_neutral || no_xp)
         ; // No experience if monster was created friendly or summoned.
     else if (YOU_KILL(killer))
@@ -450,19 +451,30 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
         else
             gain_exp( experience, exp_gain, avail_gain );
 
-        // Give a message for monsters dying out of sight
-        if (exp_gain > 0 && !mons_near(monster)
-            && you.experience_level == old_lev)
-        {
-            mpr("You feel a bit more experienced.");
-        }
+        if (old_lev == you.experience_level)
+            need_xp_msg = true;
     }
     else if (pet_kill && !already_got_half_xp)
+    {
+        int old_lev = you.experience_level;
         gain_exp( experience / 2 + 1, exp_gain, avail_gain );
 
+        if (old_lev == you.experience_level)
+            need_xp_msg = true;
+    }
+
+    // Give a message for monsters dying out of sight.
+    if (need_xp_msg && exp_gain > 0
+        && (!mons_near(monster) || !you.can_see(monster)))
+    {
+        mpr("You feel a bit more experienced.");
+    }
+
     if (MON_KILL(killer) && !no_xp)
+    {
         _give_monster_experience( monster, killer_index, experience,
                                   created_friendly );
+    }
 }
 
 static bool _is_pet_kill(killer_type killer, int i)
