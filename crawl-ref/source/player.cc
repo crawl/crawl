@@ -685,9 +685,9 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     if (transform == TRAN_STATUE)
     {
-        if (eq == EQ_BODY_ARMOUR || eq == EQ_GLOVES || eq == EQ_SHIELD)
-            return (false);
-        return (true);
+        if (eq == EQ_WEAPON || eq == EQ_CLOAK || eq == EQ_HELMET)
+            return (true);
+        return (false);
     }
 
     return (true);

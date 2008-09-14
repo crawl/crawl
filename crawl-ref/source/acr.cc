@@ -2004,26 +2004,10 @@ void process_command( command_type cmd )
         break;
 
     case CMD_DISPLAY_OVERMAP: display_overmap(); break;
-    case CMD_GO_UPSTAIRS:     _go_upstairs(); break;
-    case CMD_GO_DOWNSTAIRS:   _go_downstairs(); break;
-
-    case CMD_OPEN_DOOR:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-        {
-            mpr("You can't open doors in your present form.");
-            break;
-        }
-       _open_door(0, 0);
-       break;
-
-    case CMD_CLOSE_DOOR:
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-        {
-            mpr("You can't open doors in your present form.");
-            break;
-        }
-       _close_door(coord_def(0, 0));
-       break;
+    case CMD_GO_UPSTAIRS:     _go_upstairs();    break;
+    case CMD_GO_DOWNSTAIRS:   _go_downstairs();  break;
+    case CMD_OPEN_DOOR:       _open_door(0, 0);  break;
+    case CMD_CLOSE_DOOR:      _close_door(coord_def(0, 0)); break;
 
     case CMD_DROP:
         drop();
@@ -3490,6 +3474,12 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 // to be opened (eg if you type ctrl + dir).
 static void _open_door(coord_def move, bool check_confused)
 {
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    {
+        mpr("You can't open doors in your present form.");
+        return;
+    }
+
     if (you.attribute[ATTR_HELD])
     {
         free_self_from_net();
@@ -3665,6 +3655,18 @@ static void _open_door(coord_def move, bool check_confused)
 
 static void _close_door(coord_def move)
 {
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    {
+        mpr("You can't close doors in your present form.");
+        return;
+    }
+
+    if (you.attribute[ATTR_HELD])
+    {
+        mpr("You can't close doors while held in a net.");
+        return;
+    }
+
     dist door_move;
     coord_def doorpos;
 

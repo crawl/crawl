@@ -276,7 +276,9 @@ speaking
 
 @The_weapon@ grumbles, "I guess an audience of one is better than none..."
 
-@The_weapon@ complains, "When we kill all of them, noone is listening!"
+@The_weapon@ complains, "If we kill all of them, no-one will be listening!"
+
+@The_weapon@ muses, "If you sing and nobody listens, are you really singing?"
 
 @The_weapon@ brightly asks, "How about a duet?"
 
@@ -327,12 +329,17 @@ real_song
 # folklore, confusing flowers and monsters
 @The_weapon@ sings, "Where have all the monsters gone?"
 
+# Neil Diamond
 @The_weapon@ sings, "Song sung blue, everybody knows one ..."
 
-#Abba
+# ABBA
 @The_weapon@ sings, "Thank you for the music..."
 
+# Melanie
 @The_weapon@ wails, "Look what they done to my song!"
+
+# folklore
+@The_weapon@ sings, "Old McDonald has a farm ..."
 
 @The_weapon@ sings, "Pop! Goes the weasel."
 
@@ -341,8 +348,10 @@ real_song
 
 @The_weapon@ sings, "Let it be, let it be..."
 
+# ?
 @The_weapon@ sings, "Ain't no stopping us now ..."
 
+# drinking song
 @The_weapon@ sings, "Ninety-nine potions of booze on the wall ..."
 
 # Jingle Bells, misunderstood
