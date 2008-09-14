@@ -3636,7 +3636,7 @@ int check_stealth(void)
         // Merfolk can sneak up on monsters underwater -- bwr
         if (you.species == SP_MERFOLK)
             stealth += 50;
-        else if ( !player_can_swim() )
+        else if ( !player_can_swim() && !you.extra_balanced() )
             stealth /= 2;       // splashy-splashy
     }
     else if (player_mutation_level(MUT_HOOVES))
@@ -5724,9 +5724,14 @@ bool player::has_spell(spell_type spell) const
     return (false);
 }
 
+bool player::extra_balanced() const
+{
+    return (species == SP_NAGA);
+}
+
 bool player::floundering() const
 {
-    return in_water() && !can_swim();
+    return in_water() && !can_swim() && !extra_balanced();
 }
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const

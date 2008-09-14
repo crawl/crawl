@@ -246,6 +246,9 @@ public:
     virtual bool      submerged() const = 0;
     virtual bool      floundering() const = 0;
 
+    // Returns true if the actor is exceptionally well balanced.
+    virtual bool      extra_balanced() const = 0;
+
     virtual int       get_experience_level() const = 0;
 
     virtual bool can_pass_through_feat(dungeon_feature_type grid) const = 0;
@@ -845,6 +848,7 @@ public:
     bool      swimming() const;
     bool      submerged() const;
     bool      floundering() const;
+    bool      extra_balanced() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;
@@ -1172,6 +1176,7 @@ public:
     bool      submerged() const;
     bool      can_drown() const;
     bool      floundering() const;
+    bool      extra_balanced() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;

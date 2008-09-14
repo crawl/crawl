@@ -2996,6 +2996,11 @@ bool monsters::submerged() const
     return (mons_is_submerged(this));
 }
 
+bool monsters::extra_balanced() const
+{
+    return (mons_genus(type) == MONS_NAGA);
+}
+
 bool monsters::floundering() const
 {
     const dungeon_feature_type grid = grd(pos());
@@ -3004,7 +3009,8 @@ bool monsters::floundering() const
             // for non-water monsters in shallow water.
             && mons_habitat(this) != HT_WATER
             && !mons_amphibious(this)
-            && !mons_flies(this));
+            && !mons_flies(this)
+            && !extra_balanced());
 }
 
 bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid)

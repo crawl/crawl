@@ -4252,7 +4252,7 @@ static monsterentry mondata[] = {
 {
     MONS_CEREBOV, '&', RED, "Cerebov",
     M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_EVIL | M_UNIQUE,
-    MR_RES_ELEC | MR_RES_POISON | mrd(MR_RES_HELLFIRE, 3),
+    MR_RES_POISON | mrd(MR_RES_HELLFIRE, 3),
     0, 15, MONS_CEREBOV, MONS_CEREBOV, MH_DEMONIC, -6,
     { {AT_HIT, AF_PLAIN, 60}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 21, 0, 0, 650 },
