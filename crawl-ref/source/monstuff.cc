@@ -1892,7 +1892,13 @@ bool swap_places(monsters *monster, const coord_def &loc)
 bool swap_check(monsters *monster, coord_def &loc)
 {
     loc = you.pos();
-    const dungeon_feature_type mgrid = grd(monster->pos());
+
+    // Don't move onto dangerous terrain.
+    if (is_grid_dangerous(grd(monster->pos())))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return (false);
+    }
 
     if (mons_is_caught(monster))
     {
@@ -1900,15 +1906,8 @@ bool swap_check(monsters *monster, coord_def &loc)
         return (false);
     }
 
-    const bool mon_dest_okay = _habitat_okay( monster, grd(you.pos()) );
-    const bool you_dest_okay =
-        !is_grid_dangerous(mgrid)
-        || yesno("Do you really want to step there?", false, 'n');
-
-    if (!you_dest_okay)
-        return (false);
-
-    bool swap = mon_dest_okay;
+    // First try: move monster onto your position.
+    bool swap = _habitat_okay( monster, grd(loc) );
 
     // Choose an appropriate habitat square at random around the target.
     if (!swap)
