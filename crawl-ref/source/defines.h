@@ -11,14 +11,6 @@
  *  Copyright � 1999 Brian Robinson.  // Me?  How come?
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *       <4>     7/29/00        JDJ     Renamed MNG NON_MONSTER, MNST MAX_MONSTERS, ITEMS MAX_ITEMS,
- *                                      ING NON_ITEM, CLOUDS MAX_CLOUDS, CNG EMPTY_CLOUD, NTRAPS MAX_TRAPS.
- *       <3>     9/25/99        CDL     linuxlib -> liblinux
- *       <2>     6/17/99        BCR     indented and added header
- *       <1>     --/--/--       LRH     Created
  */
 
 #ifndef DEFINES_H

@@ -4,22 +4,6 @@
  *  Written by: ?
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <6>     10/11/99        BCR     Swapped 'v' and 'V' commands, fixed
- *                                      & for debug command.
- *      <5>     9/25/99         CDL     linuxlib -> liblinux
- *                                      changes to fix "macro problem"
- *                                      keypad -> command lookup
- *      <4>     99/07/13        BWR     added translate_keypad(), to try and
- *                                      translate keypad escape sequences into
- *                                      numeric char values.
- *      <3>     99/06/18        BCR     moved CHARACTER_SET #define to AppHdr.h
- *      <2>     99/05/12        BWR     Tchars, signals, solaris support
- *
- *      <1>      -/--/--        ?       Created
- *
  */
 
 /* Some replacement routines missing in gcc

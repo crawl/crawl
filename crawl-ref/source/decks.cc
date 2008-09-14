@@ -3,10 +3,6 @@
  *  Summary:    Functions with decks of cards.
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *               <1>     -/--/--        LRH             Created
  */
 
 #include "AppHdr.h"

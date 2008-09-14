@@ -4,12 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- * <2>  5/26/99  JDJ  transform() and untransform() set you.wield_change so
- *                    the weapon line updates.
- * <1> -/--/--   LRH  Created
  */
 
 #include "AppHdr.h"

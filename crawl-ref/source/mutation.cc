@@ -4,16 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <5>      7/29/00        JDJ             Made give_cosmetic_mutation static
- *      <4>      9/25/99        CDL             linuxlib -> liblinux
- *      <3>      9/21/99        LRH             Added many new scales
- *      <2>      5/20/99        BWR             Fixed it so demonspwan should
- *                                              always get a mutation, 3 level
- *                                              perma_mutations now work.
- *      <1>      -/--/--        LRH             Created
  */
 
 #include "AppHdr.h"

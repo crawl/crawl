@@ -4,15 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *
- * <4> 19 June 2000    GDL Changed handles to FILE *
- * <3> 6/13/99         BWR Improved spell listing
- * <2> 5/30/99         JDJ dump_spells dumps failure rates (from Brent).
- * <1> 4/20/99         JDJ Reformatted, uses string objects, split out 7
- *                         functions from dump_char, dumps artefact info.
  */
 
 #include "AppHdr.h"

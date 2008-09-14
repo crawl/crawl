@@ -4,14 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *     <2>     9/29/99     BCR     Added the DEATH_NAME_LENGTH define
- *                                 It determines how many characters of
- *                                 a long player name are printed in
- *                                 the score list.
- *     <1>     -/--/--     LRH     Created
  */
 
 

@@ -4,10 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- * <1>     7/11/07    MPC   Split off from externs.h
  */
 
 #ifndef RAY_H

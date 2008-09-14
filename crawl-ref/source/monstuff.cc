@@ -4,18 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <8>      7 Aug  2001   MV      Intelligent monsters now pick up gold
- *      <7>     26 Mar  2001   GDL     Fixed monster reaching
- *      <6>     13 Mar  2001   GDL     Rewrite of monster AI
- *      <5>     31 July 2000   GDL     More Manticore fixes.
- *      <4>     29 July 2000   JDJ     Fixed a bunch of places in handle_pickup where MSLOT_WEAPON
- *                                     was being erroneously used.
- *      <3>     25 July 2000   GDL     Fixed Manticores
- *      <2>     11/23/99       LRH     Upgraded monster AI
- *      <1>     -/--/--        LRH     Created
  */
 
 #include "AppHdr.h"

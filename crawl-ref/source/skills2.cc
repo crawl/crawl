@@ -4,17 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *     01aug2000 jmf             RESTORED TITLES TO THEIR FORMER GLORY! MUA-HA!
- * <4> 22Jul2000 GDL             added warning for low throwing skill
- *                               Changed a few titles.
- * <3> 5/20/99   BWR             Changed Trapper titles, avoided
- *                               overflow on the weapon skill
- *                               column.
- * <2> -/--/--   WL              Extensive mods from Wladimir van der Laan.
- * <1> -/--/--   LRH             Created
  */
 
 #include "AppHdr.h"

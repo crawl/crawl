@@ -5,10 +5,6 @@
  *  Written by: Matthew Cline
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
-
- *   <1>      10/5/07    MPC    Created
  */
 
 #include "AppHdr.h"

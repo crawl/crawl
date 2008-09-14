@@ -9,12 +9,6 @@
  *  Written by: Gordon Lipford
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <2>      8 Mar 2001        GDL       Rewrite to use low level IO
- *      <1>      1 Mar 2000        GDL       Created
- *
  */
 
 // WINDOWS INCLUDES GO HERE

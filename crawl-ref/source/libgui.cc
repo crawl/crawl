@@ -4,11 +4,6 @@
  *  Written by: M.Itakura
  *
  *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
- *
- *  Change History (most recent first):
- *
- *      <1>     03/08/11        Ita     copied from liblinux.cc and modified
- *
  */
 
 #include <stdio.h>

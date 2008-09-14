@@ -4,47 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *     <16>      19-Jun-2000    GDL   changed handle to FILE *
- *     <15>      06-Mar-2000    bwr   changes to berserer, paladin, enchanter
- *     <14>      10-Jan-2000    DLB   class_allowed() lists excluded
- *                                       species for all but hunters
- *                                    some clean-up of init_player()
- *     <13>      1/10/2000      BCR   Made ogre berserkers get club
- *                                    skill, Trolls get unarmed skill
- *                                    Halflings can be assassins and
- *                                    warpers
- *     <12>      12/4/99        jmf   Gave Paladins more armour skill + a
- *                                    long sword (to compensate for
- *                                    their inability to use poison).
- *                                    Allowed Spriggan Stalkers (since
- *                                    that's basically just a venom mage
- *                                    + assassin, both of which are now
- *                                    legal).
- *     <11>      11/22/99       LRH   Er, re-un-capitalised class
- *                                    names (makes them distinguish-
- *                                    able in score list)
- *     <10>      10/31/99       CDL   Allow Spriggan Assassins
- *                                    Remove some old comments
- *      <9>      10/12/99       BCR   Made sure all the classes are
- *                                    capitalized correctly.
- *      <8>      9/09/99        BWR   Changed character selection
- *                                    screens look (added sub-species
- *                                    menus from Dustin Ragan)
- *      <7>      7/13/99        BWR   Changed assassins to use
- *                                    hand crossbows, changed
- *                                    rangers into hunters.
- *      <6>      6/22/99        BWR   Added new rangers/slingers
- *      <5>      6/17/99        BCR   Removed some Linux/Mac filename
- *                                    weirdness
- *      <4>      6/13/99        BWR   SysEnv support
- *      <3>      6/11/99        DML   Removed tmpfile purging.
- *      <2>      5/20/99        BWR   CRAWL_NAME, new berserk, upped
- *                                    troll food consumption, added
- *                                    demonspawn transmuters.
- *      <1>      -/--/--        LRH   Created
  */
 
 #include "AppHdr.h"

@@ -4,10 +4,6 @@
  *  Written by: Linley Henzell and Alexey Guzeev
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *               <1>     -/--/--        LRH             Created
  */
 
 

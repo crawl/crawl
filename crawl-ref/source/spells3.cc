@@ -4,12 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <2>     9/11/99        LRH    Teleportation takes longer in the Abyss
- *      <2>     8/05/99        BWR    Added allow_control_teleport
- *      <1>     -/--/--        LRH    Created
  */
 
 #include "AppHdr.h"

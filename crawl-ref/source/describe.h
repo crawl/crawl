@@ -5,11 +5,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <2>      5/21/99        BWR             Changed from is_artifact to is_dumpable_artifact
- *      <1>      4/20/99        JDJ             Added get_item_description and is_artifact.
  */
 
 #ifndef DESCRIBE_H

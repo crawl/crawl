@@ -4,12 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *               <3>     7 Aug 2001      MV             Added many new items
- *               <2>     5/09/99        JDJ             Cekugob no longer has fire and cold
- *                                                                      resistances.
- *               <1>     -/--/--        LRH             Created
  */
 #ifndef UNRAND_H
 #define UNRAND_H

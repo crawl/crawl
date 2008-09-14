@@ -4,10 +4,6 @@
  *  Written by: Josh Fishman
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- * 22mar2000   jmf   Created
  */
 
 

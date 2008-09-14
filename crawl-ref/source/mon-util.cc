@@ -4,14 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *   <2>    11/04/99        cdl     added a break to spell selection
- *                                  for kobold Summoners
- *                                  print just "[Ii]t" for invisible undead
- *                                  renamed params to monam()
- *   <1>     -/--/--        LRH     Created
  */
 
 // $pellbinder: (c) D.G.S.E 1998

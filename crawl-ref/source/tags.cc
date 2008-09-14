@@ -4,11 +4,6 @@
  *  Written by: Gordon Lipford
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *   <2>   16 Mar 2001      GDL    Added TAG_LEVEL_ATTITUDE
- *   <1>   27 Jan 2001      GDL    Created
  */
 
 /* ------------------------- how tags work ----------------------------------

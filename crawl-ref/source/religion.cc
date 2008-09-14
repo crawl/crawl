@@ -4,20 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *
- *   <7>   11jan2001     gdl    added M. Valvoda's changes to
- *                              god_colour() and god_name()
- *   <6>   06-Mar-2000   bwr    added penance, gift_timeout,
- *                              divine_retribution(), god_speaks()
- *   <5>   11/15/99      cdl    Fixed Daniel's yellow Xom patch  :)
- *                              Xom will sometimes answer prayers
- *   <4>   10/11/99      BCR    Added Daniel's yellow Xom patch
- *   <3>    6/13/99      BWR    Vehumet book giving code.
- *   <2>    5/20/99      BWR    Added screen redraws
- *   <1>    -/--/--      LRH    Created
  */
 
 #include "AppHdr.h"

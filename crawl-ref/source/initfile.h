@@ -4,10 +4,6 @@
  *  Written by: David Loewenstern
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *               <1>     6/9/99        DML             Created
  */
 
 

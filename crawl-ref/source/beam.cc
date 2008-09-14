@@ -4,17 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *   <7>    21mar2001    GDL    Replaced all FP arithmetic with integer*100 math
- *   <6>    07jan2001    GDL    complete rewrite.
- *   <5>    22July2000   GDL    allowed 'dummy' missiles from monsters
- *   <4>    11/14/99     cdl    evade beams with random40(ev) vice random2(ev)
- *                              all armour now protects against shrapnel
- *   <3>     6/ 2/99     DML    Added enums
- *   <2>     5/20/99     BWR    Added refreshs for curses
- *   <1>     -/--/--     LRH    Created
  */
 
 #include "AppHdr.h"

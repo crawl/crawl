@@ -4,13 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <4>      1/02/00        jmf             changed values, marked //jmf:
- *      <3>      6/13/99        BWR             Added Staff auto identify code
- *      <2>      5/20/99        BWR             Added some screen redraws
- *      <1>      -/--/--        LRH             Created
  */
 
 #include "AppHdr.h"

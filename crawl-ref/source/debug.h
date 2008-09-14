@@ -4,13 +4,6 @@
  *  Written by: Linley Henzell and Jesse Jones
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *              <4>             5/30/99         JDJ             Added synch checks.
- *              <3>             5/06/99         JDJ             Added TRACE.
- *              <2>             -/--/--         JDJ             Added a bunch of debugging macros. Old code is now #if WIZARD.
- *              <1>             -/--/--         LRH             Created
  */
 
 #ifndef DEBUG_H

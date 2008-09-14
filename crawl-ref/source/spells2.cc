@@ -5,18 +5,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *     <4>    03jan1999    jmf     Changed summon_small_mammals so at
- *                                 higher levels it indeed summons in plural.
- *                                 Removed some IMHO unnecessary failure msgs.
- *                                 (from e.g. animate_dead).
- *                                 Added protection by special deities.
- *     <3>     10/11/99    BCR     fixed range bug in burn_freeze,
- *                                 vamp_drain, and summon_elemental
- *     <2>     5/26/99     JDJ     detect_items uses '~' instead of '*'.
- *     <1>     -/--/--     LRH     Created
  */
 
 #include "AppHdr.h"

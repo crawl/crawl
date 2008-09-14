@@ -4,16 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      26jun2000   jmf   added ZAP_MAGMA
- *  <4> 19mar2000   jmf   Added ZAP_BACKLIGHT and ZAP_SLEEP
- *  <3>     10/1/99         BCR             Changed messages for speed and
- *                                          made amulet resist slow up speed
- *  <2>     5/20/99         BWR             Fixed bug with RAP_METABOLISM
- *                                          and RAP_NOISES artefacts/
- *  <1>     -/--/--         LRH             Created
  */
 
 #include "AppHdr.h"

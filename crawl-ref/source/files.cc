@@ -4,22 +4,6 @@
  *  Written by: Linley Henzell and Alexey Guzeev
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *   <7>   19 June 2000  GDL    Change handle to FILE *
- *   <6>   11/14/99      cdl    Don't let player ghosts follow you up/down
- *   <5>    7/13/99      BWR    Monsters now regenerate hps off level &
- *                              ghosts teleport
- *   <4>    6/13/99      BWR    Added tmp file pairs to save file.
- *   <3>    6/11/99      DML    Replaced temp file deletion code.
- *
- *   <2>    5/12/99      BWR    Multiuser system support,
- *                                        including appending UID to
- *                                        name, and compressed saves
- *                                        in the SAVE_DIR_PATH directory
- *
- *   <1>   --/--/--      LRH    Created
  */
 
 #include "AppHdr.h"

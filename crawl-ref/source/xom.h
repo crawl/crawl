@@ -4,10 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *               <1>     09/28/07        MPC             Split from religion.h
  */
 
 #ifndef XOM_H

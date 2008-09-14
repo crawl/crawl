@@ -4,14 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <5>     10/9/99     BCR     Added wizard help screen
- *      <4>     10/1/99     BCR     Clarified help screen
- *      <3>     6/9/99      DML     Autopickup
- *      <2>     5/20/99     BWR     Extended screen lines support
- *      <1>     -/--/--     LRH     Created
  */
 
 #include "AppHdr.h"

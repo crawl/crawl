@@ -4,11 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *               <2>     -/--/--        WL              Extensive mods from Wladimir van der Laan.
- *               <1>     -/--/--        LRH             Created
  */
 
 

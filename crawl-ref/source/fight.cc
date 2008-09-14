@@ -4,28 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *  <11>   07-jul-2000   JDJ    Fixed some of the code in you_attack so it doesn't
- *                              index past the end of arrays for unarmed attacks.
- *  <10>   03-mar-2000   bwr    changes for new spells, no stave magic
- *                              skill practising
- *   <9>   11/23/99      LRH    Now you don't get xp/piety for killing
- *                              monsters who were created friendly
- *   <8>   11/14/99      cdl    evade with random40(ev) vice random2(ev)
- *   <7>   10/ 8/99      BCR    Large races get a smaller
- *                                    penalty for large shields
- *   <6>    9/09/99      BWR    Code for 1-1/2 hand weapons
- *   <5>    8/08/99      BWR    Reduced power of EV/shields
- *   <4>    6/22/99      BWR    Changes to stabbing code, made
- *                              most gods not care about the
- *                              deaths of summoned monsters
- *   <3>    5/21/99      BWR    Upped learning of armour skill
- *                                    in combat slightly.
- *   <2>    5/12/99      BWR    Fixed a bug where burdened
- *                                    barehanded attacks where free
- *   <1>    -/--/--      LRH    Created
  */
 
 #include "AppHdr.h"

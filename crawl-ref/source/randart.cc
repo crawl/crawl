@@ -4,14 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *   <8>     19 Jun 99   GDL    added IBMCPP support
- *   <7>     14/12/99    LRH    random2 -> random5
- *   <6>     11/06/99    cdl    random4 -> random2
- *
- *   <1>     -/--/--     LRH    Created
  */
 
 #include "AppHdr.h"

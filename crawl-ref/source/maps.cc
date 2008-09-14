@@ -4,12 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- * <2>      5/20/99        BWR Added stone lining to Zot vault,
- *                             this should prevent digging?
- * <1>      -/--/--        LRH             Created
  */
 
 #include "AppHdr.h"

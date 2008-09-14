@@ -6,10 +6,6 @@
  *  Copyright © 1999 Jesse Jones.
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *               <1>     5/30/99        JDJ             Created.
  */
 
 

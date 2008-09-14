@@ -4,16 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- * <5>  01/08/01       GDL   complete rewrite of direction()
- * <4>  11/23/99       LRH   Looking at monsters now
- *                           displays more info
- * <3>  5/12/99        BWR   changes to allow for space selection of target.
- *                           CR, ESC, and 't' in targeting.
- * <2>  5/09/99        JDJ   look_around no longer prints a prompt.
- * <1>  -/--/--        LRH   Created
  */
 
 #include "AppHdr.h"

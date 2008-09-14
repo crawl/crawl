@@ -4,28 +4,6 @@
  *  Written by: Daniel Ligon
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <11>   7 Aug 01  MV     Changed MSLOT_UNASSIGNED_I to MSLOT_MISCELLANY
- *                              added NUM_MISCELLANY, changed MONS_ANOTHER_
- *                              LAVA_THING to MONS_SALAMANDER
- *      <10>   7/29/00   JDJ    Changed NUM_SPELL_TYPES to 14 (from 32767!).
- *             24jun2000 jmf    Changed comment spacing so stuff fit in 80
- *                              columns; deleted some leading numbers in
- *                              comments (reasoning as above).
- *                              Also removed many "must be last" comments,
- *                              esp. where less-than-accurate.
- *      <9>    10jan2000 dlb    extensive - see changes.340             S
- *      <8>    04nov1999 cdl    added killed_by
- *      <7>    29sep1999 BCR    Added comments showing where uniques are
- *      <6>    25sep1999 CDL    Added commands
- *      <5>    09sep1999 BWR    Removed Great Swords skill
- *      <4>    06aug1999 BWR    added branch and level types
- *      <3>    02jun1999 DML    beams, clouds, ench, ms, kill,
- *                              other minor changes
- *      <2>    26may1999 JDJ    Added a header guard.
- *      <1>    --/--/--  CDL    Created
  */
 
 

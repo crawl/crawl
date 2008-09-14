@@ -4,36 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- * <18> 7/29/00         JDJ             values.h isn't included on Macs
- * <17> 19jun2000       GDL             added Windows console support
- * <16> 06mar2000       bwr             changes to berserk
- * <15> 09jan2000       BCR             new Wiz command: blink
- * <14> 10/13/99        BCR             Added auto door opening,
- *                                       move "you have no
- *                                       religion" to describe.cc
- * <13> 10/11/99        BCR             Added Daniel's wizard patch
- * <12> 10/9/99         BCR             swapped 'v' and 'V' commands,
- *                                       added wizard help command
- * <11> 10/7/99         BCR             haste and slow now take amulet of
- *                                       resist slow into account
- * <10> 9/25/99         CDL             Changes to Linux input
- *                                       switch on command enums
- * <9>  6/12/99         BWR             New init code, restructured
- *                                       wiz commands, added equipment
- *                                       listing commands
- * <8>   6/7/99         DML             Autopickup
- * <7>  5/30/99         JDJ             Added game_has_started.
- * <6>  5/25/99         BWR             Changed move() to move_player()
- * <5>  5/20/99         BWR             New berserk code, checking
- *                                       scan_randarts for NO_TELEPORT
- *                                       and NO_SPELLCASTING.
- * <4>  5/12/99         BWR             Solaris support.
- * <3>  5/09/99         JDJ             look_around no longer prints a prompt.
- * <2>  5/08/99         JDJ             you and env are no longer arrays.
- * <1>  -/--/--         LRH             Created
  */
 
 #include "AppHdr.h"

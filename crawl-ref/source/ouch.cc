@@ -4,24 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <8>      7/30/00        JDJ     Fixed end_game so that it works with filenames longer than 6 characters.
- *      <7>      19 June 2000   GDL     Changed handle to FILE *
- *      <6>      11/23/99       LRH     Fixed file purging for DOS?
- *      <5>      9/29/99        BCR     Fixed highscore so that it
- *                                      doesn't take so long.  Also
- *                                      added some whitespace to the scores.
- *                                      Fixed problem with uniques and 'a'.
- *      <4>      6/13/99        BWR     applied a mix of DML and my tmp
- *                                      file purging improvements.
- *      <3>      5/26/99        JDJ     highscore() will print more scores on
- *                                      larger windows.
- *      <2>      5/21/99        BWR     Added SCORE_FILE_ENTRIES, so
- *                                      that more top scores can be
- *                                      saved.
- *      <1>      -/--/--        LRH     Created
  */
 
 #include "AppHdr.h"

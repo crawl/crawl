@@ -4,13 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- * <3>     7/29/00    JDJ   Renamed sh_x, sh_y, sh_greed, sh_type, sh_level so
- *                          they start with shop.
- * <2>     7/29/00    JDJ   Switched to using bounds checked array classes.
- *                          Made a few char arrays unsigned char arrays.
  */
 
 #ifndef EXTERNS_H

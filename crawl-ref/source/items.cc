@@ -4,18 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- * <9> 7/08/01   MV   Added messages for chunks/corpses rotting
- * <8> 8/07/99   BWR  Added Rune stacking
- * <7> 6/13/99   BWR  Added auto staff detection
- * <6> 6/12/99   BWR  Fixed time system.
- * <5> 6/9/99    DML  Autopickup
- * <4> 5/26/99   JDJ  Drop will attempt to take off armour.
- * <3> 5/21/99   BWR  Upped armour skill learning slightly.
- * <2> 5/20/99   BWR  Added assurance that against inventory count being wrong.
- * <1> -/--/--   LRH  Created
  */
 
 #include "AppHdr.h"

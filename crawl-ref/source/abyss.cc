@@ -4,11 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *     <2>     10/11/99       BCR     Added Daniel's crash patch
- *     <1>     -/--/--        LRH     Created
  */
 
 #include "AppHdr.h"

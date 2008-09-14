@@ -4,11 +4,6 @@
  *  Written by: Jesse Jones
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *         <2>     7/29/00    JDJ        Added a variable argument ctor.
- *         <1>     6/16/00    JDJ        Created
  */
 
 #ifndef FIXVEC_H

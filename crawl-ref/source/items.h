@@ -4,11 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *               <2>     6/9/99         DML             Autopickup
- *               <1>     -/--/--        LRH             Created
  */
 
 

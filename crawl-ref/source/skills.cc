@@ -4,14 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *       <3>     8/08/99        BWR             Increased skill cost in midgame
- *
- *       <2>     7/31/99        BWR             Inc skill_point granularity,
- *                                                  added MAX_SPENDING_LIMIT
- *       <1>     -/--/--        LRH             Created
  */
 
 #include "AppHdr.h"

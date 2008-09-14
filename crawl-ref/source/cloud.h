@@ -4,10 +4,6 @@
  *  Written by: Brent Ross
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *     <1>    Oct 1/2001      BWR             Created
  */
 
 

@@ -4,13 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *   <4>    11/14/99     cdl    added random40(), made arg to random*() signed
- *   <3>    11/06/99     cdl    added random22()
- *   <2>     9/25/99     cdl    linuxlib -> liblinux
- *   <1>     -/--/--     LRH    Created
  */
 
 #include "AppHdr.h"

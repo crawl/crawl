@@ -4,23 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *   <10>     29 Jul 00  JDJ    show_map iterates horizontally to 79 instead of 80.
- *                              item no longer indexes past the end of environ::grid.
- *   <9>      19 Jun 00  GDL    Complete rewrite of LOS code
- *   <8>      11/23/99   LRH    Added colour-coded play-screen map & clean_map
- *                                                              init options
- *   <7>      9/29/99    BCR    Removed first argument from draw_border
- *   <6>      9/11/99    LRH    Added calls to overmap functions
- *   <5>      6/22/99    BWR    Fixed and improved the stealth
- *   <4>      5/20/99    BWR    show_map colours all portals,
- *                              exits from subdungeons now
- *                              look like up stairs.
- *   <3>      5/09/99    JDJ    show_map draws shops in yellow.
- *   <2>      5/09/99    JDJ    show_map accepts '\r' along with '.'.
- *   <1>      -/--/--    LRH    Created
  */
 
 #include "AppHdr.h"

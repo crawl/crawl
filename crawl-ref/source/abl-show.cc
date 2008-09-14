@@ -4,21 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *  <6>    19mar2000     jmf    added elvish Glamour
- *  <5>     11/06/99     cdl    reduced power of minor destruction
- *
- *  <4>      9/25/99     cdl    linuxlib -> liblinux
- *
- *  <3>      5/20/99     BWR    Now use scan_randarts to
- *                              check for flags, rather than
- *                              only checking the weapon.
- *
- *  <2>      5/20/99     BWR    Extended screen line support
- *
- *  <1>      -/--/--     LRH             Created
  */
 
 #include "AppHdr.h"

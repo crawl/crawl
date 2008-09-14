@@ -4,25 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *
- *   <9>     07-Aug-2001 MV     clean up of give_item; distribution of
- *                              wands, potions and scrolls
- *                              underground rivers and lakes
- *   <8>     02-Apr-2001 gdl    cleanup; nuked all globals
- *   <7>     06-Mar-2000 bwr    reduced vorpal weapon freq,
- *                              spellbooks now hold up to eight spells.
- *   <6>     11/06/99    cdl    random3 -> random2
- *   <5>      8/08/99    BWR    Upped rarity of unique artefacts
- *   <4>      7/13/99    BWR    Made pole arms of speed.
- *   <3>      5/22/99    BWR    Made named artefact weapons
- *                              rarer, Sword of Power esp.
- *   <2>      5/09/99    LRH    Replaced some sanity checking code in
- *                              spellbook_template with a corrected version
- *                                              using ASSERTs.
- *   <1>      -/--/--    LRH    Created
  */
 
 #include <stdlib.h>

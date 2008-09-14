@@ -4,14 +4,6 @@
 *  Written by: Linley Henzell and Jesse Jones
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *               <4>     14/12/99       LRH     Added cast_spec_spell_name()
- *               <3>     5/06/99        JDJ     Added TRACE.
- *               <2>     -/--/--        JDJ     Added a bunch od debugging macros.
- *                                              Old code is now #if WIZARD.
- *               <1>     -/--/--        LRH     Created
  */
 
 #include "AppHdr.h"

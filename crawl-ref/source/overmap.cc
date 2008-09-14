@@ -7,13 +7,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <3>      30/7/00        MV      Made Over-map full-screen
- *      <2>      8/10/99        BCR     Changed Linley's macros
- *                                      to an enum in overmap.h
- *      <1>      29/8/99        LRH     Created
  */
 
 #include "AppHdr.h"

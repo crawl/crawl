@@ -4,13 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <4>      9/09/99        BWR             Added hands_required function
- *      <3>      6/13/99        BWR             Upped the base AC for heavy armour
- *      <2>      5/20/99        BWR             Extended screen lines support
- *      <1>      -/--/--        LRH             Created
  */
 
 #include "AppHdr.h"

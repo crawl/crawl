@@ -4,12 +4,6 @@
  *  Written by: David Loewenstern
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <3>     5 May 2000      GDL             Add field stripping for 'name'
- *      <2>     6/12/99         BWR             Added get_system_environment
- *      <1>     6/9/99          DML             Created
  */
 
 #include "AppHdr.h"

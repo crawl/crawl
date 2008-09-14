@@ -4,11 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *               <2>     5/08/99        JDJ             mpr takes a const char* instead of a char array.
- *               <1>     -/--/--        LRH             Created
  */
 
 #ifndef MESSAGE_H

@@ -4,13 +4,6 @@
  *  Written by: Josh Fishman
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      24jun2000  jmf  Changes to many books; addition of Assassinations;
- *                      alteration of type-printout to match new bitfield.
- *  <1> 19mar2000  jmf  Created by taking stuff from dungeon.cc, spells0.cc,
- *                      spells.cc, shopping.cc
  */
 
 #include "AppHdr.h"

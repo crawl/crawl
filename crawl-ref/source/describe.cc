@@ -4,18 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <4>      10/14/99     BCR     enummed describe_god()
- *      <3>      10/13/99     BCR     Added GOD_NO_GOD case in describe_god()
- *      <2>      5/20/99      BWR     Replaced is_artifact with
- *                                    is_dumpable_artefact
- *      <1>      4/20/99      JDJ     Reformatted, uses string objects,
- *                                    split out 10 new functions from
- *                                    describe_item(), added
- *                                    get_item_description and
- *                                    is_artifact.
  */
 
 #include "AppHdr.h"

@@ -3,11 +3,6 @@
  *  Summary:    System independent functions 
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <1>   2001/Nov/01        BWR     Created
- *
  */
 
 #ifndef LIBUTIL_H

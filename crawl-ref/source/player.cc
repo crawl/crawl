@@ -4,17 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- * <6> 7/30/99 BWR   Added player_spell_levels()
- * <5> 7/13/99 BWR   Added player_res_electricity()
- *                   and player_hunger_rate()
- * <4> 6/22/99 BWR   Racial adjustments to stealth and Armour.
- * <3> 5/20/99 BWR   Fixed problems with random stat increases, added kobold
- *                   stat increase.  increased EV recovery for Armour.
- * <2> 5/08/99 LRH   display_char_status correctly handles magic_contamination.
- * <1> -/--/-- LRH   Created
  */
 
 #include "AppHdr.h"

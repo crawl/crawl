@@ -15,28 +15,6 @@
  *  Copyright � 1999 Jesse Jones.
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *       <9>    9 Aug 2001   MV     Added USE_RIVERS,USE_NEW_UNRANDS
- *                                  and MISSILE_TRAILS_OFF #define
- *       <8>   10 May 2001  GDL     Added FreeBSD support
- *                                  courtesy Andrew E. Filonov
- *       <7>    9 May 2000  GDL     Added Windows 32 bit console support
- *       <6>    24mar2000   jmf     Added a whole slew of new options, which
- *                                  ought to be mandatory :-)
- *       <5>     10/12/99   BCR     Added USE_NEW_RANDOM #define
- *       <4>     9/25/99    CDL     linuxlib -> liblinux
- *       <3>     6/18/99    BCR     Moved the CHARACTER_SET #define here from
- *                                  linuxlib.cc.  Also wrapped the #define
- *                                  USE_MACROS to prevent it from being used by
- *                                  Linux.
- *       <2>     6/17/99    BCR     Removed 'linux' check, replaced it with
- *                                  'LINUX' check.  Now need to be -DLINUX
- *                                  during compile.  Also moved
- *                                  CHARACTER_SET #define here from
- *                                  linuxlib.cc
- *       <1>     5/30/99    JDJ     Created (from config.h)
  */
 
 

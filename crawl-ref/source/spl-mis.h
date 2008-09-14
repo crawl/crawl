@@ -5,10 +5,6 @@
  *
  *  Modified for Crawl Reference by $Author$ on $Date: 2008-06-28 22:
 16:39 -0700 (Sat, 28 Jun 2008) $
- *
- *  Change History (most recent first):
- *
- *               <1>     -/--/--        LRH             Created
  */
 
 #ifndef SPL_MIS_H

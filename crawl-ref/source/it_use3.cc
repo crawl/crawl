@@ -4,13 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <4>     6/13/99         BWR             Auto ID Channel staff
- *      <3>     5/22/99         BWR             SPWLD_POWER is now HP/13 - 3
- *      <2>     5/20/99         BWR             Capped SPWLD_POWER to +20
- *      <1>     -/--/--         LRH             Created
  */
 
 #include "AppHdr.h"

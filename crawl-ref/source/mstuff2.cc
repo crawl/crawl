@@ -4,16 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <5>     31 July 2000   JDJ      Fixed mon_throw to use lnchType.
- *      <4>     29 July 2000   JDJ      Tweaked mons_throw so it doesn't index past
- *                                      the end of the array when monsters don't have
- *                                      a weapon equipped.
- *      <3>     25 July 2000   GDL      Fixed Manticores
- *      <2>     28 July 2000   GDL      Revised monster throwing
- *      <1>     -/--/--        LRH      Created
  */
 
 #include "AppHdr.h"

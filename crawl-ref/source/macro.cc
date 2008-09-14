@@ -4,12 +4,6 @@
  *  Written by: Juho Snellman <jsnell@lyseo.edu.ouka.fi>
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *      <3>     6/25/02         JS              Completely rewritten
- *      <2>     6/13/99         BWR             SysEnv.crawl_dir support
- *      <1>     -/--/--         JS              Created
  */
 
 /*

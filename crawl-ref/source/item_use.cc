@@ -4,25 +4,6 @@
  *  Written by: Linley Henzell
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Change History (most recent first):
- *
- *   <8>     28July2000  GDL    Revised player throwing
- *   <7>     11/23/99    LRH    Horned characters can wear hats/caps
- *   <6>     7/13/99     BWR    Lowered learning rates for
- *                              throwing skills, and other
- *                              balance tweaks
- *   <5>     5/28/99     JDJ    Changed wear_armour to allow Spriggans to
- *                              wear bucklers.
- *   <4>     5/26/99     JDJ    body armour can be removed and worn if an
- *                              uncursed cloak is being worn.
- *                              Removed lots of unnessary mpr string copying.
- *                              Added missing ponderous message.
- *   <3>     5/20/99     BWR    Fixed staff of air bug, output of trial
- *                              identified items, a few you.wield_changes so
- *                              that the weapon gets updated.
- *   <2>     5/08/99     JDJ    Added armour_prompt.
- *   <1>     -/--/--     LRH    Created
  */
 
 #include "AppHdr.h"
