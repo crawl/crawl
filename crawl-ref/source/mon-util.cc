@@ -2991,6 +2991,34 @@ bool monsters::swimming() const
     return (grid_is_watery(grid) && mons_habitat(this) == HT_WATER);
 }
 
+bool monsters::wants_submerge() const
+{
+    // If we're in distress, we usually want to submerge.
+    if (env.cgrid(pos()) != EMPTY_CLOUD
+        || (hit_points < max_hit_points / 2
+            && random2(max_hit_points + 1) >= hit_points))
+        return (true);
+
+    const bool has_ranged_attack =
+        type == MONS_ELECTRICAL_EEL
+        || type == MONS_LAVA_SNAKE
+        || (type == MONS_MERMAID && you.species != SP_MERFOLK);
+
+    const actor *tfoe = get_foe();
+
+    int roll = 8;
+    // Shallow water takes a little more effort to submerge in, so we're
+    // less likely to bother.
+    if (grd(pos()) == DNGN_SHALLOW_WATER)
+        roll = roll * 7 / 5;
+
+    if (foe && grid_distance(tfoe->pos(), pos()) > 1 && !has_ranged_attack)
+        roll /= 2;
+
+    // Don't submerge if we just unsubmerged to shout
+    return (one_chance_in(roll) && seen_context != "bursts forth shouting");
+}
+
 bool monsters::submerged() const
 {
     return (mons_is_submerged(this));

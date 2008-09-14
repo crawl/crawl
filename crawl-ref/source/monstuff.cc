@@ -3743,22 +3743,7 @@ static void _handle_nearby_ability(monsters *monster)
     if (monster_can_submerge(monster, grd(monster->pos()))
         && !player_beheld_by(monster) // No submerging if player entranced.
         && !mons_is_lurking(monster)  // Handled elsewhere.
-        && (one_chance_in(5)
-            || grid_distance(monster->pos(),
-                             you.pos()) > 1
-               // FIXME This is better expressed as a
-               // function such as
-               // monster_has_ranged_attack:
-               && monster->type != MONS_ELECTRICAL_EEL
-               && monster->type != MONS_LAVA_SNAKE
-               && (monster->type != MONS_MERMAID
-                   || you.species == SP_MERFOLK)
-               // Don't submerge if we just unsubmerged for
-               // the sake of shouting.
-               && monster->seen_context != "bursts forth shouting"
-               && !one_chance_in(20)
-            || monster->hit_points <= monster->max_hit_points / 2
-            || env.cgrid(monster->pos()) != EMPTY_CLOUD))
+        && monster->wants_submerge())
     {
         monster->add_ench(ENCH_SUBMERGED);
         update_beholders(monster);

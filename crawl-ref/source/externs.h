@@ -1175,6 +1175,8 @@ public:
     god_type  deity() const;
     bool      alive() const;
     bool      swimming() const;
+    bool      wants_submerge() const;
+
     bool      submerged() const;
     bool      can_drown() const;
     bool      floundering() const;
