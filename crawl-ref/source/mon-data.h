@@ -142,6 +142,12 @@ static inline mon_energy_usage MOVE_ENERGY(int me)
     return mon_energy_usage::move_cost(me, me);
 }
 
+// Energy required for all non-movement action.
+static inline mon_energy_usage ACTION_ENERGY(int ae)
+{
+    return mon_energy_usage(10, 10, ae, ae, ae, ae, ae, ae * 10);
+}
+
 static inline mon_energy_usage ATTACK_ENERGY(int ae)
 {
     return mon_energy_usage::attack_cost(ae);
@@ -2349,7 +2355,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 5, 3, 5, 0 },
     6, 10, MST_NAGA, CE_POISONOUS, Z_SMALL, S_SHOUT, I_NORMAL,
-    HT_LAND, 8, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 },
 
 {
@@ -2371,7 +2377,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
     6, 10, MST_NAGA_MAGE, CE_POISONOUS, Z_NOZOMBIE, S_SHOUT, I_NORMAL,
-    HT_LAND, 8, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 },
 
 {
@@ -2382,7 +2388,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 28}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 9, 2, 0 },
     6, 10, MST_NAGA, CE_POISONOUS, Z_NOZOMBIE, S_SHOUT, I_NORMAL,
-    HT_LAND, 8, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 },
 
 {
@@ -2394,7 +2400,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 27}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 15, 3, 5, 0 },
     6, 10, MST_NAGA_MAGE, CE_POISONOUS, Z_NOZOMBIE, S_SHOUT, I_HIGH,
-    HT_LAND, 8, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_BIG
+    HT_LAND, 8, ACTION_ENERGY(8), MONUSE_WEAPONS_ARMOUR, SIZE_BIG
 },
 
 // ogres ('O')
