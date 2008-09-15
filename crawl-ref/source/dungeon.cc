@@ -2447,48 +2447,45 @@ static bool _shaft_is_in_corridor(const coord_def& c)
 
 static void _place_traps(int level_number)
 {
-    int i;
-    int num_traps = num_traps_for_place(level_number);
+    const int num_traps = num_traps_for_place(level_number);
 
     ASSERT(num_traps >= 0);
     ASSERT(num_traps <= MAX_TRAPS);
 
-    for (i = 0; i < num_traps; i++)
+    for (int i = 0; i < num_traps; i++)
     {
-        // Traps can be placed in vaults.
-        if (env.trap[i].type != TRAP_UNASSIGNED)
+        trap_struct& ts(env.trap[i]);
+        if (ts.type != TRAP_UNASSIGNED)
             continue;
 
         int tries = 200;
         do
         {
-            env.trap[i].pos.x = random2(GXM);
-            env.trap[i].pos.y = random2(GYM);
+            ts.pos.x = random2(GXM);
+            ts.pos.y = random2(GYM);
         }
-        while (grd(env.trap[i].pos) != DNGN_FLOOR
+        while (in_bounds(ts.pos)
+               && grd(ts.pos) != DNGN_FLOOR
                && --tries > 0);
 
         if (tries <= 0)
             break;
 
-        trap_type &trap_type = env.trap[i].type;
-        trap_type = random_trap_for_place(level_number);
-
-        if (trap_type == TRAP_SHAFT && level_number <= 7)
+        ts.type = random_trap_for_place(level_number);
+        if (ts.type == TRAP_SHAFT && level_number <= 7)
         {
             // Disallow shaft construction in corridors!
-            if ( _shaft_is_in_corridor(env.trap[i].pos) )
+            if ( _shaft_is_in_corridor(ts.pos) )
             {
                 // Choose again!
-                trap_type = random_trap_for_place(level_number);
+                ts.type = random_trap_for_place(level_number);
 
                 // If we get shaft a second time, turn it into an alarm trap.
-                if (trap_type == TRAP_SHAFT)
-                    trap_type = TRAP_ALARM;
+                if (ts.type == TRAP_SHAFT)
+                    ts.type = TRAP_ALARM;
             }
         }
-
-        grd(env.trap[i].pos) = DNGN_UNDISCOVERED_TRAP;
+        grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
     }
 }
 

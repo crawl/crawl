@@ -897,13 +897,12 @@ static bool is_channel_dumpworthy(msg_channel_type channel)
 std::string get_last_messages(int mcount)
 {
     if (mcount <= 0)
-        return std::string();
+        return "";
 
     if (mcount > NUM_STORED_MESSAGES)
         mcount = NUM_STORED_MESSAGES;
 
-    bool full_buffer
-       = (Store_Message[ NUM_STORED_MESSAGES - 1 ].text.length() == 0);
+    bool full_buffer = (Store_Message[NUM_STORED_MESSAGES - 1].text.empty());
     int initial = Next_Message - mcount;
     if (initial < 0 || initial > NUM_STORED_MESSAGES)
         initial = full_buffer ? initial + NUM_STORED_MESSAGES : 0;
@@ -914,9 +913,9 @@ std::string get_last_messages(int mcount)
     {
         const message_item &msg = Store_Message[i];
 
-        if (msg.text.length() && is_channel_dumpworthy(msg.channel))
+        if (!msg.text.empty() && is_channel_dumpworthy(msg.channel))
         {
-            text += msg.text;
+            text += formatted_string::parse_string(msg.text).tostring();
             text += EOL;
             count++;
         }
@@ -973,7 +972,7 @@ void replay_messages(void)
 
     const int  num_lines = get_number_of_lines();
 
-    if (Store_Message[ NUM_STORED_MESSAGES - 1 ].text.length() == 0)
+    if (Store_Message[NUM_STORED_MESSAGES - 1].text.empty())
     {
         full_buffer   = false;
         first_message = 0;
@@ -1022,7 +1021,7 @@ void replay_messages(void)
 
             textcolor( colour );
 
-            std::string text = Store_Message[ line ].text;
+            std::string text = Store_Message[line].text;
 
             // Allow formatted output of tagged messages.
             formatted_string fs = formatted_string::parse_string(text, true);
