@@ -57,7 +57,6 @@
 #endif
 
 #define MAX_PIT_MONSTERS   10
-const dungeon_feature_type LAB_WALL = DNGN_STONE_WALL;
 
 struct pit_mons_def
 {
@@ -313,6 +312,7 @@ bool builder(int level_number, int level_type)
         if (!dgn_level_vetoed && _valid_dungeon_level(level_number, level_type))
         {
             dgn_Layout_Type.clear();
+
             _dgn_map_colour_fixup();
             return (true);
         }
@@ -6246,8 +6246,7 @@ static void _find_maze_neighbours(const coord_def &c,
     }
 }
 
-static void _labyrinth_maze_recurse(const coord_def &c,
-                                    const dgn_region &where)
+static void _labyrinth_maze_recurse(const coord_def &c, const dgn_region &where)
 {
     coord_list neighbours;
     _find_maze_neighbours(c, where, neighbours);
@@ -6278,66 +6277,10 @@ static void _labyrinth_build_maze(coord_def &e, const dgn_region &lab)
     _labyrinth_maze_recurse(lab.random_point(), lab);
 
     do
-        e = lab.random_point();
-    while (grd(e) != DNGN_FLOOR);
-}
-
-static int _labyrinth_random_colour()
-{
-    // Avoid using existing wall colours.
-    return random_choose(BLACK, RED, YELLOW, BLUE, MAGENTA, DARKGREY,
-                         LIGHTBLUE, WHITE, LIGHTCYAN, LIGHTMAGENTA,
-                         LIGHTRED, -1);
-}
-
-static void _labyrinth_colour_maze_flood(
-    const coord_def &c,
-    const std::vector<coord_def> &corder,
-    int colour)
-{
-    if (colour)
-        env.grid_colours(c) = colour;
-
-    travel_point_distance[c.x][c.y] = 1;
-
-    if (one_chance_in(45))
-        colour = _labyrinth_random_colour();
-
-    for (int i = 0, size = corder.size(); i < size; ++i)
     {
-        coord_def dp = c + corder[i];
-        if (map_bounds(dp) && !travel_point_distance[dp.x][dp.y]
-            && grd(dp) == DNGN_ROCK_WALL)
-        {
-            _labyrinth_colour_maze_flood(dp, corder, colour);
-        }
+        e = lab.random_point();
     }
-}
-
-static void _labyrinth_colour_maze(const coord_def &e, const dgn_region &lab)
-{
-    coord_def start = e;
-    for (rectangle_iterator r(e - coord_def(1, 1), e + coord_def(1, 1));
-         r; ++r)
-        if (map_bounds(*r) && grd(*r) == DNGN_ROCK_WALL)
-            start = *r;
-    if (grd(start) != DNGN_ROCK_WALL)
-        return;
-
-    int colour = _labyrinth_random_colour();
-    std::vector<coord_def> flood_points[2];
-    int page = 0;
-    flood_points[page].push_back(start);
-
-    std::vector<coord_def> check_order;
-    for (int y = -1; y <= 1; ++y)
-        for (int x = -1; x <= 1; ++x)
-            if (!x != !y)
-                check_order.push_back(coord_def(x, y));
-
-    std::random_shuffle(check_order.begin(), check_order.end());
-    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-    _labyrinth_colour_maze_flood(start, check_order, colour);
+    while (grd(e) != DNGN_FLOOR);
 }
 
 static void _labyrinth_place_items(const coord_def &end)
@@ -6379,6 +6322,75 @@ static void _init_minivault_placement(int vault, vault_placement &place)
 {
     map_type vgrid;
     vault_main(vgrid, place, vault);
+}
+
+static void _change_walls_from_centre(const dgn_region &region,
+                                      const coord_def &centre,
+                                      bool  rectangular,
+                                      unsigned mmask,
+                                      dungeon_feature_type wall,
+                                      const std::vector<dist_feat> &ldist)
+{
+    if (ldist.empty())
+        return;
+
+    const coord_def &end = region.pos + region.size;
+    for (int y = region.pos.y; y < end.y; ++y)
+        for (int x = region.pos.x; x < end.x; ++x)
+        {
+            const coord_def c(x, y);
+            if (grd(c) != wall || !unforbidden(c, mmask))
+                continue;
+
+            const int distance =
+                rectangular? (c - centre).rdist() : (c - centre).abs();
+
+            for (int i = 0, size = ldist.size(); i < size; ++i)
+            {
+                if (distance <= ldist[i].dist)
+                {
+                    grd(c) = ldist[i].feat;
+                    break;
+                }
+            }
+        }
+}
+
+// Called as:
+// change_walls_from_centre( region_affected, centre, rectangular, wall,
+//                           dist1, feat1, dist2, feat2, ..., 0 )
+// What it does:
+// Examines each square in region_affected, calculates its distance from
+// "centre" (the centre need not be in region_affected). If the distance is
+// less than or equal to dist1, and the feature == wall, then it is replaced
+// by feat1. Otherwise, if the distance <= dist2 and feature == wall, it is
+// replaced by feat2, and so on. A distance of 0 indicates the end of the
+// list of distances.
+//
+static void _change_walls_from_centre(const dgn_region &region,
+                                      const coord_def &c,
+                                      bool  rectangular,
+                                      dungeon_feature_type wall,
+                                      ...)
+{
+    std::vector<dist_feat> ldist;
+
+    va_list args;
+    va_start(args, wall);
+
+    while (true)
+    {
+        const int dist = va_arg(args, int);
+        if (!dist)
+            break;
+
+        const dungeon_feature_type feat =
+            static_cast<dungeon_feature_type>( va_arg(args, int) );
+
+        ldist.push_back(dist_feat(dist, feat));
+    }
+
+    _change_walls_from_centre(region, c, rectangular, MMT_VAULT, wall, ldist);
 }
 
 static void _place_extra_lab_minivaults(int level_number)
@@ -6461,57 +6473,52 @@ static void _labyrinth_level(int level_number)
     int vault = random_map_for_tag("minotaur", true, false);
     vault_placement place;
 
+    if (vault != -1)
+        _init_minivault_placement(vault, place);
+
     coord_def end;
-
     _labyrinth_build_maze(end, lab);
-    _labyrinth_colour_maze(end, lab);
 
+    if (vault == -1 || !_build_minivaults(level_number, vault))
     {
-        // If we place any vaults, make sure they overwrite the maze
-        // colours where appropriate.
-        dgn_colour_override_manager colour_man;
-
-        if (vault != -1)
-            _init_minivault_placement(vault, place);
-
-        if (vault == -1 || !_build_minivaults(level_number, vault))
+        vault = -1;
+        _labyrinth_place_exit(end);
+    }
+    else
+    {
+        const vault_placement &rplace = *(Level_Vaults.end() - 1);
+        if (rplace.map.has_tag("generate_loot"))
         {
-            vault = -1;
-            _labyrinth_place_exit(end);
-        }
-        else
-        {
-            const vault_placement &rplace = *(Level_Vaults.end() - 1);
-            if (rplace.map.has_tag("generate_loot"))
+            for (int y = rplace.pos.y;
+                 y <= rplace.pos.y + rplace.size.y - 1; ++y)
             {
-                for (int y = rplace.pos.y;
-                     y <= rplace.pos.y + rplace.size.y - 1; ++y)
+                for (int x = rplace.pos.x;
+                     x <= rplace.pos.x + rplace.size.x - 1; ++x)
                 {
-                    for (int x = rplace.pos.x;
-                         x <= rplace.pos.x + rplace.size.x - 1; ++x)
+                    if (grd[x][y] == DNGN_ESCAPE_HATCH_UP)
                     {
-                        if (grd[x][y] == DNGN_ESCAPE_HATCH_UP)
-                        {
-                            _labyrinth_place_items(coord_def(x, y));
-                            break;
-                        }
+                        _labyrinth_place_items(coord_def(x, y));
+                        break;
                     }
                 }
             }
-            place.pos  = rplace.pos;
-            place.size = rplace.size;
         }
-
-        if (vault != -1)
-            end = place.pos + place.size / 2;
-
-        _place_extra_lab_minivaults(level_number);
-        _labyrinth_place_entry_point(lab, end);
+        place.pos  = rplace.pos;
+        place.size = rplace.size;
     }
 
-    // This must be done outside the scope of the
-    // dgn_colour_override_manager, or it will undo the colours.
-    _replace_area(0, 0, GXM - 1, GYM - 1, DNGN_ROCK_WALL, LAB_WALL, MMT_VAULT);
+    if (vault != -1)
+        end = place.pos + place.size / 2;
+
+    _place_extra_lab_minivaults(level_number);
+
+    _change_walls_from_centre(lab, end, false,
+                              DNGN_ROCK_WALL,
+                              15 * 15, DNGN_METAL_WALL,
+                              34 * 34, DNGN_STONE_WALL,
+                              0);
+
+    _labyrinth_place_entry_point(lab, end);
 
     link_items();
 }
