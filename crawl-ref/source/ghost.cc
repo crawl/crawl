@@ -302,27 +302,26 @@ void ghost_demon::init_player_ghost()
     resists.elec   = player_res_electricity();
     speed          = player_ghost_base_movement_speed();
 
-    int d = 4;
-    int e = SPWPN_NORMAL;
-    const int wpn = you.equip[EQ_WEAPON];
+    damage = 4;
+    brand = SPWPN_NORMAL;
 
-    if (wpn != -1)
+    if (you.weapon())
     {
-        if (you.inv[wpn].base_type == OBJ_WEAPONS
-            || you.inv[wpn].base_type == OBJ_STAVES)
+        const item_def& weapon = *you.weapon();
+        if (weapon.base_type == OBJ_WEAPONS || weapon.base_type == OBJ_STAVES)
         {
-            d = property( you.inv[wpn], PWPN_DAMAGE );
+            damage = property( weapon, PWPN_DAMAGE );
+            damage *= 25 + you.skills[weapon_skill(weapon)];
+            damage /= 25;
 
-            d *= 25 + you.skills[weapon_skill( you.inv[wpn].base_type,
-                                               you.inv[wpn].sub_type )];
-            d /= 25;
-
-            if (you.inv[wpn].base_type == OBJ_WEAPONS)
+            if (weapon.base_type == OBJ_WEAPONS)
             {
-                if (is_random_artefact( you.inv[wpn] ))
-                    e = randart_wpn_property( you.inv[wpn], RAP_BRAND );
-                else
-                    e = you.inv[wpn].special;
+                brand = static_cast<brand_type>(get_weapon_brand(weapon));
+                
+                // Ghosts can't get holy wrath, but they get to keep
+                // the weapon.
+                if ( brand == SPWPN_HOLY_WRATH )
+                    brand = SPWPN_NORMAL;
             }
         }
     }
@@ -330,21 +329,19 @@ void ghost_demon::init_player_ghost()
     {
         // Unarmed combat.
         if (you.species == SP_TROLL)
-            d += you.experience_level;
+            damage += you.experience_level;
 
-        d += you.skills[SK_UNARMED_COMBAT];
+        damage += you.skills[SK_UNARMED_COMBAT];
     }
 
-    d *= 30 + you.skills[SK_FIGHTING];
-    d /= 30;
+    damage *= 30 + you.skills[SK_FIGHTING];
+    damage /= 30;
 
-    d += you.strength / 4;
+    damage += you.strength / 4;
 
-    if (d > 50)
-        d = 50;
+    if (damage > 50)
+        damage = 50;
 
-    damage = d;
-    brand  = static_cast<brand_type>( e );
     species = you.species;
     best_skill = ::best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
     best_skill_level = you.skills[best_skill];
