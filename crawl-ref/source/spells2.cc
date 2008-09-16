@@ -259,35 +259,34 @@ int corpse_rot(int power)
 
 bool brand_weapon(brand_type which_brand, int power)
 {
-    int temp_rand;              // probability determination {dlb}
+    if ( !you.weapon() )
+        return (false);
+
+    const bool temp_brand = you.duration[DUR_WEAPON_BRAND];
+    item_def& weapon = *you.weapon();
+
+    // Can't brand non-weapons.
+    if (weapon.base_type != OBJ_WEAPONS || is_range_weapon(weapon))
+        return (false);
+
+    // Can't brand artefacts.
+    if (is_artefact(weapon))
+        return (false);
+
+    // Can't brand already-branded items.
+    if (!temp_brand && get_weapon_brand(weapon) != SPWPN_NORMAL)
+        return (false);
+
+    // Can't rebrand a temporarily-branded item to a different brand.
+    if (temp_brand && (get_weapon_brand(weapon) != which_brand))
+        return (false);
+    
+    std::string msg = weapon.name(DESC_CAP_YOUR);
+    const int wpn_type = get_vorpal_type(weapon);
+
+    bool emit_special_message = !temp_brand;
     int duration_affected = 0;
-
-    const int wpn = you.equip[EQ_WEAPON];
-
-    if (you.duration[DUR_WEAPON_BRAND])
-        return (false);
-
-    if (wpn == -1)
-        return (false);
-
-    if (you.inv[wpn].base_type != OBJ_WEAPONS
-        || is_range_weapon(you.inv[wpn]))
-    {
-        return (false);
-    }
-
-    if (is_fixed_artefact( you.inv[wpn] )
-        || is_random_artefact( you.inv[wpn] )
-        || get_weapon_brand( you.inv[wpn] ) != SPWPN_NORMAL )
-    {
-        return (false);
-    }
-
-    std::string msg = you.inv[wpn].name(DESC_CAP_YOUR);
-
-    const int wpn_type = get_vorpal_type(you.inv[wpn]);
-
-    switch (which_brand)        // use SPECIAL_WEAPONS here?
+    switch (which_brand)
     {
     case SPWPN_FLAMING:
         msg += " bursts into flame!";
@@ -322,15 +321,8 @@ bool brand_weapon(brand_type which_brand, int power)
 
     case SPWPN_DISTORTION:      //jmf: Added for Warp Weapon.
         msg += " seems to ";
-
-        temp_rand = random2(6);
-        msg += ((temp_rand == 0) ? "twist" :
-                (temp_rand == 1) ? "bend" :
-                (temp_rand == 2) ? "vibrate" :
-                (temp_rand == 3) ? "flex" :
-                (temp_rand == 4) ? "wobble"
-                                 : "twang");
-
+        msg += random_choose_string("twist", "bend", "vibrate",
+                                    "flex", "wobble", "twang", NULL);
         msg += (coinflip() ? " oddly." : " strangely.");
         duration_affected = 5;
 
@@ -352,6 +344,8 @@ bool brand_weapon(brand_type which_brand, int power)
         msg += " shrieks in agony.";
         noisy(15, you.pos());
         duration_affected = 8;
+        // We must repeat the special message here (as there's a side effect.)
+        emit_special_message = true;
         break;
 
     case SPWPN_DUMMY_CRUSHING:  //jmf: Added for Maxwell's Silver Hammer.
@@ -366,12 +360,18 @@ bool brand_weapon(brand_type which_brand, int power)
         break;
     }
 
-    set_item_ego_type( you.inv[wpn], OBJ_WEAPONS, which_brand );
+    if ( !temp_brand )
+    {
+        set_item_ego_type( weapon, OBJ_WEAPONS, which_brand );
+        you.wield_change = true;
+    }
 
-    mpr(msg.c_str());
-    you.wield_change = true;
+    if ( emit_special_message )
+        mpr(msg.c_str());
+    else
+        mprf("%s flashes.", weapon.name(DESC_CAP_YOUR).c_str());
 
-    int dur_change = duration_affected + roll_dice( 2, power );
+    const int dur_change = duration_affected + roll_dice( 2, power );
 
     you.duration[DUR_WEAPON_BRAND] += dur_change;
 
@@ -379,7 +379,7 @@ bool brand_weapon(brand_type which_brand, int power)
         you.duration[DUR_WEAPON_BRAND] = 50;
 
     return (true);
-}                               // end brand_weapon()
+}
 
 // Restore the stat in which_stat by the amount in stat_gain, displaying
 // a message if suppress_msg is false, and doing so in the recovery
