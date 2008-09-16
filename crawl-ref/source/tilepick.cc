@@ -874,6 +874,34 @@ int tileidx_monster(const monsters *mons, bool detected)
     {
         ch |= TILE_FLAG_MAY_STAB;
     }
+
+    std::string damage_desc;
+    mon_dam_level_type damage_level;
+    mons_get_damage_level(mons, damage_desc, damage_level);
+
+    switch (damage_level)
+    {
+    case MDAM_DEAD:
+    case MDAM_ALMOST_DEAD:
+        ch |= TILE_FLAG_MDAM_ADEAD;
+        break;
+    case MDAM_SEVERELY_DAMAGED:
+        ch |= TILE_FLAG_MDAM_SEV;
+        break;
+    case MDAM_HEAVILY_DAMAGED:
+        ch |= TILE_FLAG_MDAM_HEAVY;
+        break;
+    case MDAM_MODERATELY_DAMAGED:
+        ch |= TILE_FLAG_MDAM_MOD;
+        break;
+    case MDAM_LIGHTLY_DAMAGED:
+        ch |= TILE_FLAG_MDAM_LIGHT;
+        break;
+    case MDAM_OKAY:
+    default:
+        // no flag for okay.
+        break;
+    }
     return ch;
 }
 

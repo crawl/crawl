@@ -594,6 +594,21 @@ void DungeonRegion::draw_foreground(unsigned int bg, unsigned int fg, unsigned i
 
         add_quad(TEX_DEFAULT, type, x, y);
     }
+
+    if (fg & TILE_FLAG_MDAM_MASK)
+    {
+        unsigned int mdam_flag = fg & TILE_FLAG_MDAM_MASK;
+        if (mdam_flag == TILE_FLAG_MDAM_LIGHT)
+            add_quad(TEX_DEFAULT, TILE_MDAM_LIGHTLY_DAMAGED, x, y);
+        else if (mdam_flag == TILE_FLAG_MDAM_MOD)
+            add_quad(TEX_DEFAULT, TILE_MDAM_MODERATELY_DAMAGED, x, y);
+        else if (mdam_flag == TILE_FLAG_MDAM_HEAVY)
+            add_quad(TEX_DEFAULT, TILE_MDAM_HEAVILY_DAMAGED, x, y);
+        else if (mdam_flag == TILE_FLAG_MDAM_SEV)
+            add_quad(TEX_DEFAULT, TILE_MDAM_SEVERELY_DAMAGED, x, y);
+        else if (mdam_flag == TILE_FLAG_MDAM_ADEAD)
+            add_quad(TEX_DEFAULT, TILE_MDAM_ALMOST_DEAD, x, y);
+    }
 }
 
 void DungeonRegion::draw_cursor(cursor_type type, unsigned int tile)

@@ -84,3 +84,9 @@ slot_eq ITEM_SLOT_EQUIP
 slot_cursed ITEM_SLOT_CURSED
 slot_eq_cursed ITEM_SLOT_EQUIP_CURSED
 ray ITEM_SLOT_SELECTED
+
+mdam_lightly_damaged MDAM_LIGHTLY_DAMAGED
+mdam_moderately_damaged MDAM_MODERATELY_DAMAGED
+mdam_heavily_damaged MDAM_HEAVILY_DAMAGED
+mdam_severely_damaged MDAM_SEVERELY_DAMAGED
+mdam_almost_dead MDAM_ALMOST_DEAD
