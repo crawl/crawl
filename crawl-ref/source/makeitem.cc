@@ -2157,22 +2157,20 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
 
     // skin armours + Crystal PM don't get special enchantments
     // or species, but can be randarts
-    if (item.sub_type >= ARM_DRAGON_HIDE
-        && item.sub_type <= ARM_SWAMP_DRAGON_ARMOUR)
+    if (armour_is_hide(item, true)
+        || item.sub_type == ARM_CRYSTAL_PLATE_MAIL
+        || item.sub_type == ARM_ANIMAL_SKIN)
     {
         if (!forced_ego)
             set_item_ego_type( item, OBJ_ARMOUR, SPARM_NORMAL );
     }
 
-    // Don't overenchant items. FIXME: should use some kind of
-    // max_enchantment() function here.
-    if ( (item.sub_type >= ARM_CLOAK && item.sub_type <= ARM_BOOTS)
-         || is_shield(item) )
-    {
-        if ( item.plus > 2 )
-            item.plus = 2;
-    }
+    // Don't overenchant items.
+    if (item.plus > armour_max_enchant(item))
+        item.plus = armour_max_enchant(item);
 
+    if (armour_is_hide(item))
+        item.plus = 0;
 }
 
 static monster_type _choose_random_monster_corpse()
