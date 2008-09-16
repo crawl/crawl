@@ -1333,7 +1333,10 @@ static void _portal_card(int power, deck_rarity_type rarity)
     }
 
     const bool was_controlled = player_control_teleport();
-    if (controlled && !was_controlled)
+    const bool short_control = (you.duration[DUR_CONTROL_TELEPORT] > 0)
+        && (you.duration[DUR_CONTROL_TELEPORT] < 6);
+
+    if (controlled && (!was_controlled || short_control))
         you.duration[DUR_CONTROL_TELEPORT] = 6; // Long enough to kick in.
 
     if (instant)
@@ -2165,7 +2168,7 @@ static void _sage_card(int power, deck_rarity_type rarity)
 
         if (you.skills[i] < MAX_SKILL_LEVEL)
         {
-            // Choosing a skill is likelier if you are little skilled in it.
+            // Choosing a skill is likelier if you are somewhat skilled in it.
             const int curweight = 1 + you.skills[i] * (40 - you.skills[i]) * c;
             totalweight += curweight;
             if (x_chance_in_y(curweight, totalweight))
