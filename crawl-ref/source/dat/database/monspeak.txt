@@ -583,6 +583,15 @@ VISUAL:@The_monster@ smiles happily.
 
 @The_monster@ shouts, "Beware of monsters!"
 
+w:1
+@The_monster@ says, "Never gonna give you up."
+
+w:1
+@The_monster@ says, "Never gonna let you down."
+
+w:1
+@The_monster@ says, "Never gonna run around and desert you."
+
 VISUAL:@The_monster@ looks friendly.
 ## END friendly humanoid ##
 %%%%
@@ -801,6 +810,8 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ screams, "Don't try to defend!  You have no chance!"
 
+@The_monster@ screams, "Zot is a myth, the ORB is a fable, you'll soon be a tale!"
+
 @The_monster@ @wails@, "You will join me soon!"
 
 # Hamlet
@@ -824,6 +835,8 @@ VISUAL:@The_monster@ grins evilly.
 @The_monster@ whispers, "Death doesn't hurt.  What you feel is life."
 
 @The_monster@ whispers, "The ORB doesn't exist."
+
+@The_monster@ whispers, "You will understand me better in a moment."
 ## END player ghost ##
 #######################################
 # Unique monsters
