@@ -183,12 +183,15 @@ bool Region::mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy)
     return valid;
 }
 
-TileRegion::TileRegion(ImageManager* im, unsigned int tile_x, unsigned int tile_y)
+TileRegion::TileRegion(ImageManager* im, FTFont *tag_font, unsigned int tile_x, unsigned int tile_y)
 {
     ASSERT(im);
+    ASSERT(tag_font);
+
     m_image = im;
     dx = tile_x;
     dy = tile_y;
+    m_tag_font = tag_font;
 }
 
 TileRegion::~TileRegion()
@@ -197,12 +200,10 @@ TileRegion::~TileRegion()
 
 DungeonRegion::DungeonRegion(ImageManager* im, FTFont *tag_font,
                              unsigned int tile_x, unsigned int tile_y) :
-    TileRegion(im, tile_x, tile_y),
+    TileRegion(im, tag_font, tile_x, tile_y),
     m_cx_to_gx(0),
-    m_cy_to_gy(0),
-    m_tag_font(tag_font)
+    m_cy_to_gy(0)
 {
-    ASSERT(tag_font);
     for (unsigned int i = 0; i < CURSOR_MAX; i++)
         m_cursor[i] = NO_CURSOR;
 }
@@ -1029,8 +1030,8 @@ bool InventoryTile::empty() const
     return (idx == -1);
 }
 
-InventoryRegion::InventoryRegion(ImageManager* im, unsigned tile_x, unsigned int tile_y) :
-    TileRegion(im, tile_x, tile_y),
+InventoryRegion::InventoryRegion(ImageManager* im, FTFont *tag_font, unsigned tile_x, unsigned int tile_y) :
+    TileRegion(im, tag_font, tile_x, tile_y),
     m_flavour(NULL), m_cursor(NO_CURSOR), m_need_to_pack(false)
 {
 }
@@ -1109,6 +1110,32 @@ void InventoryRegion::render()
 
     m_image->m_textures[TEX_DEFAULT].bind();
     glDrawArrays(GL_QUADS, m_base_verts, m_verts.size() - m_base_verts);
+
+    if (m_cursor != NO_CURSOR)
+    {
+        unsigned int curs_index = cursor_index();
+        int idx = m_items[curs_index].idx;
+        if (idx == -1)
+            return;
+
+        bool floor = m_items[curs_index].flag & TILEI_FLAG_FLOOR;
+
+        float x = m_cursor.x * dx + sx + ox + dx / 2;
+        float y = m_cursor.y * dy + sy + oy;
+
+        const coord_def min_pos(sx, sy - dy);
+        const coord_def max_pos(ex, ey);
+
+        std::string desc;
+        if (floor)
+            desc = mitm[idx].name(DESC_PLAIN);
+        else
+            desc = you.inv[idx].name(DESC_INVENTORY_EQUIP);
+
+        m_tag_font->render_string(x, y, desc.c_str(),
+                                  min_pos, max_pos, WHITE, true,
+                                  200, BLACK);
+    }
 }
 
 void InventoryRegion::add_quad_char(char c, unsigned int x, unsigned int y, int ofs_x, int ofs_y)

@@ -496,18 +496,18 @@ void FTFont::render_string(unsigned int px, unsigned int py,
     // box with extra buffer to test against min_pos/max_pos window size
     int sx = tx - buffer;
     int sy = ty - buffer;
-    int ex = sx + wx + buffer;
-    int ey = sy + wy + buffer;
+    int ex = tx + wx + buffer;
+    int ey = ty + wy + buffer;
 
     if (ex > max_pos.x)
         tx += max_pos.x - ex;
     else if (sx < min_pos.x)
-        tx -= sx;
+        tx -= sx - min_pos.x;
 
     if (ey > max_pos.y)
         ty += max_pos.y - ey;
     else if (sy < min_pos.y)
-        ty -= sy;
+        ty -= sy - min_pos.y;
 
     if (box_alpha != 0)
         _draw_box(tx, ty, wx, wy, outline, box_colour, box_alpha);

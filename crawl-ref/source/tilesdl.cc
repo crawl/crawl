@@ -185,12 +185,14 @@ bool TilesFramework::initialise()
     m_region_tile = new DungeonRegion(&m_image, m_fonts[lbl_font].font, 
                                       TILE_X, TILE_Y);
     m_region_map = new MapRegion(Options.tile_map_pixels);
-    m_region_self_inv = new InventoryRegion(&m_image, TILE_X, TILE_Y);
+    m_region_self_inv = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
+                                            TILE_X, TILE_Y);
 
     m_region_msg = new MessageRegion(m_fonts[msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
     m_region_crt = new CRTRegion(m_fonts[crt_font].font);
-    m_region_menu_inv = new InventoryRegion(&m_image, TILE_X, TILE_Y);
+    m_region_menu_inv = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
+                                            TILE_X, TILE_Y);
 
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);

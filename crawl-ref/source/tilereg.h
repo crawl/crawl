@@ -182,7 +182,8 @@ public:
 class TileRegion : public Region
 {
 public:
-    TileRegion(ImageManager *im, unsigned int tile_x, unsigned int tile_y);
+    TileRegion(ImageManager *im, FTFont *tag_font,
+               unsigned int tile_x, unsigned int tile_y);
     ~TileRegion();
 
 protected:
@@ -199,6 +200,7 @@ protected:
     };
 
     std::vector<tile_vert> m_verts;
+    FTFont *m_tag_font;
 };
 
 struct TextTag
@@ -261,7 +263,6 @@ protected:
     int m_cy_to_gy;
     coord_def m_cursor[CURSOR_MAX];
     std::vector<TextTag> m_tags[TAG_MAX];
-    FTFont *m_tag_font;
 };
 
 class InventoryTile
@@ -286,7 +287,8 @@ public:
 class InventoryRegion : public TileRegion
 {
 public:
-    InventoryRegion(ImageManager *im, unsigned int tile_x, unsigned int tile_y);
+    InventoryRegion(ImageManager *im, FTFont *tag_font,
+                    unsigned int tile_x, unsigned int tile_y);
     virtual ~InventoryRegion();
 
     virtual void clear();
