@@ -1036,7 +1036,7 @@ void replay_messages(void)
                 case FSOP_TEXT:
                     textcolor( colour );
                     cgotoxy(curcol, wherey(), GOTO_CRT);
-                    cprintf(fs.ops[j].text.c_str());
+                    cprintf("%s", fs.ops[j].text.c_str());
                     curcol += multibyte_strlen(fs.ops[j].text);
                     break;
                 case FSOP_CURSOR:
