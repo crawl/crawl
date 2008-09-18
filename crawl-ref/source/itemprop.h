@@ -566,7 +566,8 @@ enum wand_type                         // mitm[].subtype
 enum zap_count_type
 {
     ZAPCOUNT_EMPTY = -1,
-    ZAPCOUNT_UNKNOWN = -2
+    ZAPCOUNT_UNKNOWN = -2,
+    ZAPCOUNT_RECHARGED = -3
 };
 
 void init_properties(void);

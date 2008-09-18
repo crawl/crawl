@@ -3546,6 +3546,9 @@ void zap_wand( int slot )
     // Take off a charge.
     wand.plus--;
 
+    // Zap counts count from the last recharge.
+    if (wand.plus2 == ZAPCOUNT_RECHARGED)
+        wand.plus2 = 0;
     // Increment zap count.
     if (wand.plus2 >= 0)
         wand.plus2++;

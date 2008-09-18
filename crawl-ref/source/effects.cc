@@ -1763,8 +1763,8 @@ bool recharge_wand(int item_slot)
             break;
         }
 
-        // Don't display zap counts any more.
-        wand.plus2 = ZAPCOUNT_UNKNOWN;
+        // Reinitialize zap counts.
+        wand.plus2 = ZAPCOUNT_RECHARGED;
 
         const int new_charges =
             std::max<int>(
@@ -1775,7 +1775,7 @@ bool recharge_wand(int item_slot)
 
         const bool charged = new_charges > wand.plus;
 
-        std::string desc = "";
+        std::string desc;
         if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))
         {
             snprintf(info, INFO_SIZE, " and now has %d charges", new_charges);
