@@ -1325,6 +1325,14 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_DROPPED_BY_ALLY   = 0x80000000   // Item was dropped by an ally
 };
 
+enum item_type_id_state_type
+{
+    ID_UNKNOWN_TYPE = 0,
+    ID_MON_TRIED_TYPE,
+    ID_TRIED_TYPE,
+    ID_KNOWN_TYPE
+};
+
 enum job_type
 {
     JOB_FIGHTER,                       //    0
@@ -2247,6 +2255,38 @@ enum player_size_type
     PSIZE_BODY,         // entire body size -- used for EV/size of target
     PSIZE_TORSO,        // torso only (hybrids -- size of parts that use equip)
     PSIZE_PROFILE       // profile only (for stealth checks)
+};
+
+enum potion_type
+{
+    POT_HEALING,                       //    0
+    POT_HEAL_WOUNDS,
+    POT_SPEED,
+    POT_MIGHT,
+    POT_GAIN_STRENGTH,
+    POT_GAIN_DEXTERITY,                //    5
+    POT_GAIN_INTELLIGENCE,
+    POT_LEVITATION,
+    POT_POISON,
+    POT_SLOWING,
+    POT_PARALYSIS,                     //   10
+    POT_CONFUSION,
+    POT_INVISIBILITY,
+    POT_PORRIDGE,
+    POT_DEGENERATION,
+    POT_DECAY,                         //   15
+    POT_WATER,
+    POT_EXPERIENCE,
+    POT_MAGIC,
+    POT_RESTORE_ABILITIES,
+    POT_STRONG_POISON,                 //   20
+    POT_BERSERK_RAGE,
+    POT_CURE_MUTATION,
+    POT_MUTATION,
+    POT_RESISTANCE,
+    POT_BLOOD,                         //   25
+    POT_BLOOD_COAGULATED,
+    NUM_POTIONS                        //   27
 };
 
 enum pronoun_type

@@ -6693,6 +6693,147 @@ static inline monster_type _royal_jelly_ejectable_monster()
                        -1 ) );
 }
 
+bool monsters::can_drink_potion(potion_type ptype) const
+{
+    bool rc = true;
+
+    switch (mons_species())
+    {
+    case MONS_LICH:
+    case MONS_MUMMY:
+        rc = false;
+        break;
+    default:
+        break;
+    }
+
+    switch (ptype)
+    {
+    case POT_HEALING:
+    case POT_HEAL_WOUNDS:
+        if (holiness() == MH_UNDEAD
+            || holiness() == MH_NONLIVING
+            || holiness() == MH_PLANT)
+        {
+            rc = false;
+        }
+        break;
+    case POT_BLOOD:
+    case POT_BLOOD_COAGULATED:
+        rc = (mons_species() == MONS_VAMPIRE);
+        break;
+    default:
+        break;
+    }
+
+    return rc;
+}
+
+bool monsters::should_drink_potion(potion_type ptype) const
+{
+    bool rc = false;
+    switch (ptype)
+    {
+    case POT_HEALING:
+        rc = (hit_points <= max_hit_points / 2)
+            || has_ench(ENCH_POISON)
+            || has_ench(ENCH_SICK)
+            || has_ench(ENCH_CONFUSION)
+            || has_ench(ENCH_ROT);
+        break;
+    case POT_HEAL_WOUNDS:
+        rc = (hit_points <= max_hit_points / 2);
+        break;
+    case POT_BLOOD:
+    case POT_BLOOD_COAGULATED:
+        rc = (hit_points <= max_hit_points / 2);
+        break;
+    case POT_SPEED:
+        rc = !has_ench(ENCH_HASTE);
+        break;
+    case POT_INVISIBILITY:
+        // We're being nice: friendlies won't go invisible
+        // if the player won't be able to see them.
+        rc = !has_ench(ENCH_INVIS)
+            && (player_see_invis(false) || !mons_friendly(this));
+        break;
+    default:
+        break;
+    }
+    return rc;
+}
+
+// Return the ID status gained.       
+item_type_id_state_type monsters::drink_potion_effect(potion_type ptype)
+{
+    simple_monster_message(this, " drinks a potion.");
+
+    item_type_id_state_type ident = ID_MON_TRIED_TYPE;
+
+    switch (ptype)
+    {
+    case POT_HEALING:
+    {
+        heal(5 + random2(7));
+        simple_monster_message(this, " is healed!");
+        
+        const enchant_type cured_enchants[] = {
+            ENCH_POISON, ENCH_SICK, ENCH_CONFUSION, ENCH_ROT
+        };
+        
+        // We can differentiate healing and heal wounds (and blood,
+        // for vampires) by seeing if any status ailments are cured.
+        for (unsigned int i = 0; i < ARRAYSZ(cured_enchants); ++i)
+            if (del_ench(cured_enchants[i]))                
+                ident = ID_KNOWN_TYPE;
+    }
+    break;
+
+    case POT_HEAL_WOUNDS:
+        heal(10 + random2avg(28, 3));
+        simple_monster_message(this, " is healed!");
+        break;
+
+    case POT_BLOOD:
+    case POT_BLOOD_COAGULATED:
+        if (mons_species() == MONS_VAMPIRE)
+        {
+            heal(10 + random2avg(28, 3));
+            simple_monster_message(this, " is healed!");
+        }
+        break;
+
+    case POT_SPEED:
+    {
+        // XXX FIXME Extract haste() function from mons_ench_f2().
+        bolt beem;
+        beem.target = pos();
+        beem.flavour = BEAM_HASTE;
+        mons_ench_f2(this, beem);
+        if (beem.obvious_effect)
+            ident = ID_KNOWN_TYPE;
+        break;
+    }
+
+    case POT_INVISIBILITY:
+    {
+        // XXX FIXME Extract go_invis() function from mons_ench_f2().
+        bolt beem;
+        beem.target = pos();
+        beem.flavour = BEAM_INVISIBILITY;
+        mons_ench_f2(this, beem);
+        if (beem.obvious_effect)
+            ident = ID_KNOWN_TYPE;
+        break;
+    }
+
+    default:
+        break;
+    }
+    
+    return ident;
+}
+
 void monsters::react_to_damage(int damage, beam_type flavour)
 {
     // The royal jelly objects to taking damage and will SULK. :-)

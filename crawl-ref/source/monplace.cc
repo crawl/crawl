@@ -905,11 +905,8 @@ static int _place_monster_aux( const mgen_data &mg,
         menv[id].flags |= MF_BATTY;
     }
 
-    if (monster_can_submerge(&menv[id], grd(fpos))
-        && !one_chance_in(5))
-    {
+    if (monster_can_submerge(&menv[id], grd(fpos)) && !one_chance_in(5))
         menv[id].add_ench(ENCH_SUBMERGED);
-    }
 
     menv[id].flags |= MF_JUST_SUMMONED;
 
@@ -2109,7 +2106,7 @@ bool player_angers_monster(monsters *mon)
 
         if (see_grid(mon->pos()) && player_monster_visible(mon))
         {
-            std::string aura = "";
+            std::string aura;
 
             if (holy)
                 aura = "holy";

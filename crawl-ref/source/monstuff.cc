@@ -4301,7 +4301,6 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 //---------------------------------------------------------------
 static bool _handle_potion(monsters *monster, bolt & beem)
 {
-    // Yes, there is a logic to this ordering {dlb}:
     if (mons_is_sleeping(monster)
         || monster->inv[MSLOT_POTION] == NON_ITEM
         || !one_chance_in(3))
@@ -4309,108 +4308,33 @@ static bool _handle_potion(monsters *monster, bolt & beem)
         return (false);
     }
 
-    bool                    imbibed     = false;
-    item_type_id_state_type ident       = ID_UNKNOWN_TYPE;
-    bool was_visible = (mons_near(monster) && player_monster_visible(monster));
+    bool rc = false;
 
-    const int potion_type = mitm[monster->inv[MSLOT_POTION]].sub_type;
-    switch (potion_type)
+    const int potion_idx = monster->inv[MSLOT_POTION];
+    item_def& potion = mitm[potion_idx];
+    const potion_type ptype = static_cast<potion_type>(potion.sub_type);
+
+    if (monster->can_drink_potion(ptype) && monster->should_drink_potion(ptype))
     {
-    case POT_HEALING:
-    case POT_HEAL_WOUNDS:
-        if (monster->hit_points <= monster->max_hit_points / 2
-            && mons_holiness(monster) != MH_UNDEAD
-            && mons_holiness(monster) != MH_NONLIVING
-            && mons_holiness(monster) != MH_PLANT)
-        {
-            simple_monster_message(monster, " drinks a potion.");
+        const bool was_visible = you.can_see(monster);
 
-            if (heal_monster(monster, 5 + random2(7), false))
-            {
-                simple_monster_message(monster, " is healed!");
-                ident = ID_MON_TRIED_TYPE;
-            }
+        // Drink the potion.
+        const item_type_id_state_type id = monster->drink_potion_effect(ptype);
 
-            if (mitm[monster->inv[MSLOT_POTION]].sub_type == POT_HEAL_WOUNDS)
-            {
-                heal_monster(monster, 10 + random2avg(28, 3), false);
-            }
-
-            if (potion_type == POT_HEALING)
-            {
-                monster->del_ench(ENCH_POISON);
-                monster->del_ench(ENCH_SICK);
-                if (monster->del_ench(ENCH_CONFUSION))
-                    ident = ID_KNOWN_TYPE;
-                if (monster->del_ench(ENCH_ROT))
-                    ident = ID_KNOWN_TYPE;
-            }
-
-            imbibed = true;
-        }
-        break;
-
-    case POT_BLOOD:
-    case POT_BLOOD_COAGULATED:
-        if (mons_species(monster->type) == MONS_VAMPIRE
-            && monster->hit_points <= monster->max_hit_points / 2)
-        {
-            simple_monster_message(monster, " drinks a potion.");
-
-            if (heal_monster(monster, 10 + random2avg(28, 3), false))
-            {
-                simple_monster_message(monster, " is healed!");
-                ident = ID_MON_TRIED_TYPE;
-            }
-
-            imbibed = true;
-        }
-        break;
-
-    case POT_SPEED:
-        // Notice that these are the same odd colours used in
-        // mons_ench_f2() {dlb}
-        if (monster->has_ench(ENCH_HASTE))
-            break;
-
-        beem.flavour = BEAM_HASTE;
-        // intentional fall through
-    case POT_INVISIBILITY:
-        if (mitm[monster->inv[MSLOT_POTION]].sub_type == POT_INVISIBILITY)
-        {
-            if (monster->has_ench(ENCH_INVIS))
-                break;
-
-            beem.flavour = BEAM_INVISIBILITY;
-            // Friendly monsters won't go invisible if the player can't
-            // see invisible. We're being nice.
-            if (mons_friendly(monster) && !player_see_invis(false))
-                break;
-        }
-
-        // Allow monsters to drink these when player in sight. (jpeg)
-        simple_monster_message(monster, " drinks a potion.");
-        mons_ench_f2(monster, beem);
-        imbibed = true;
-        if (beem.obvious_effect)
-            ident = ID_KNOWN_TYPE;
-        break;
-    }
-
-    if (imbibed)
-    {
-        if (dec_mitm_item_quantity( monster->inv[MSLOT_POTION], 1 ))
+        // Give ID if necessary.
+        if (was_visible && id != ID_UNKNOWN_TYPE)
+            set_ident_type(OBJ_POTIONS, ptype, id);
+        
+        // Remove it from inventory.
+        if (dec_mitm_item_quantity(potion_idx, 1))
             monster->inv[MSLOT_POTION] = NON_ITEM;
-        else if (is_blood_potion(mitm[monster->inv[MSLOT_POTION]]))
-            remove_oldest_blood_potion(mitm[monster->inv[MSLOT_POTION]]);
-
-        if (ident != ID_UNKNOWN_TYPE && was_visible)
-            set_ident_type(OBJ_POTIONS, potion_type, ident);
+        else if (is_blood_potion(potion))
+            remove_oldest_blood_potion(potion);
 
         monster->lose_energy(EUT_ITEM);
+        rc = true;
     }
-
-    return (imbibed);
+    return rc;
 }
 
 static bool _handle_reaching(monsters *monster)

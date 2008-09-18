@@ -28,14 +28,6 @@ enum item_type_id_type
     NUM_IDTYPE
 };
 
-enum item_type_id_state_type  // used for values in id[4][50]
-{
-    ID_UNKNOWN_TYPE = 0,
-    ID_MON_TRIED_TYPE,
-    ID_TRIED_TYPE,
-    ID_KNOWN_TYPE
-};
-
 // [dshaligram] If you edit potion colours/descriptions, also update
 // itemname.cc.
 enum potion_description_colour_type

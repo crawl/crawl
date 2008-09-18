@@ -12,38 +12,6 @@
 
 #include "externs.h"
 
-enum potion_type
-{
-    POT_HEALING,                       //    0
-    POT_HEAL_WOUNDS,
-    POT_SPEED,
-    POT_MIGHT,
-    POT_GAIN_STRENGTH,
-    POT_GAIN_DEXTERITY,                //    5
-    POT_GAIN_INTELLIGENCE,
-    POT_LEVITATION,
-    POT_POISON,
-    POT_SLOWING,
-    POT_PARALYSIS,                     //   10
-    POT_CONFUSION,
-    POT_INVISIBILITY,
-    POT_PORRIDGE,
-    POT_DEGENERATION,
-    POT_DECAY,                         //   15
-    POT_WATER,
-    POT_EXPERIENCE,
-    POT_MAGIC,
-    POT_RESTORE_ABILITIES,
-    POT_STRONG_POISON,                 //   20
-    POT_BERSERK_RAGE,
-    POT_CURE_MUTATION,
-    POT_MUTATION,
-    POT_RESISTANCE,
-    POT_BLOOD,                         //   25
-    POT_BLOOD_COAGULATED,
-    NUM_POTIONS                        //   27
-};
-
 
 /* ***********************************************************************
  * called from: ability - beam - decks - item_use - misc - religion -
