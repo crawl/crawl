@@ -2655,8 +2655,9 @@ static void _describe_monster(const monsters *mon)
     {
         if (mons_is_sleeping(mon))
         {
-            mprf(MSGCH_EXAMINE, "%s appears to be resting.",
-                 mon->pronoun(PRONOUN_CAP).c_str());
+            mprf(MSGCH_EXAMINE, "%s appears to be %s.",                 
+                 mon->pronoun(PRONOUN_CAP).c_str(),
+                 mons_is_confused(mon) ? "sleepwalking" : "resting");
         }
         // Applies to both friendlies and hostiles
         else if (mons_is_fleeing(mon))
