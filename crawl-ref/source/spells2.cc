@@ -630,8 +630,6 @@ void cast_toxic_radiance(void)
 
 void cast_refrigeration(int pow)
 {
-    const dice_def dam_dice( 3, 5 + pow / 10 );
-
     mpr("The heat is drained from your surroundings.");
 
     show_green = LIGHTCYAN;
@@ -640,6 +638,7 @@ void cast_refrigeration(int pow)
     mesclr();
 
     // Handle the player.
+    const dice_def dam_dice(3, 5 + pow / 10);
     const int hurted = check_your_resists(roll_dice( dam_dice ), BEAM_COLD);
 
     if (hurted > 0)
@@ -653,41 +652,56 @@ void cast_refrigeration(int pow)
         expose_player_to_element(BEAM_COLD, 5);
     }
 
-    // Now do the monsters:
+    // Now do the monsters.
+
+    // First build the message.
+    counted_monster_list affected_monsters;
+
+    for (int i = 0; i < MAX_MONSTERS; i++)
+    {
+        const monsters* const monster = &menv[i];
+        if (monster->alive() && mons_near(monster))
+            _record_monster_by_name(affected_monsters, monster);
+    }
+
+    if (!affected_monsters.empty())
+    {
+        const std::string message =
+            make_stringf("%s %s frozen.",
+                         _describe_monsters(affected_monsters).c_str(),
+                         _monster_count(affected_monsters) == 1? "is" : "are");
+        if (static_cast<int>(message.length()) < get_number_of_cols() - 2)
+            mpr(message.c_str());
+        else
+        {
+            // Exclamation mark to suggest that a lot of creatures were
+            // affected.
+            mpr("The monsters around you are frozen!");
+        }
+    }
+
+    // Now damage the creatures.
+    
+    // Set up the cold attack.
     bolt beam;
     beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
+
     for (int i = 0; i < MAX_MONSTERS; i++)
     {
         monsters* const monster = &menv[i];
-
-        if (monster->type == -1)
-            continue;
-
-        if (mons_near(monster))
+        if (monster->alive() && mons_near(monster))
         {
-            mprf("You freeze %s.",
-                 monster->name(DESC_NOCAP_THE).c_str());
-
+            // Calculate damage and apply.
             int hurt = mons_adjust_flavoured(monster,beam,roll_dice(dam_dice));
-
             if (hurt > 0)
-            {
-                hurt_monster( monster, hurt );
+                hurt_monster(monster, hurt);
 
-                if (monster->hit_points < 1)
-                    monster_die(monster, KILL_YOU, 0);
-                else
-                {
-                    print_wounds(monster);
-
-                    if (mons_class_flag(monster->type, M_COLD_BLOOD)
-                        && coinflip())
-                    {
-                        monster->add_ench(ENCH_SLOW);
-                    }
-                }
-            }
+            // Kill monster if necessary; cold-blooded creatures can be slowed.
+            if (monster->hit_points < 1)
+                monster_die(monster, KILL_YOU, 0);
+            else if (mons_class_flag(monster->type, M_COLD_BLOOD) && coinflip())
+                monster->add_ench(ENCH_SLOW);
         }
     }
 }
