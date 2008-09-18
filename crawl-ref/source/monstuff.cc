@@ -7210,7 +7210,7 @@ forget_it:
     if (monster->type == MONS_BORING_BEETLE)
     {
         const dungeon_feature_type feat = grd(monster->pos() + mmov);
-        if ((feat == DNGN_ROCK_WALL || feat == DNGN_ROCK_WALL)
+        if ((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
             && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             grd(monster->pos() + mmov) = DNGN_FLOOR;
