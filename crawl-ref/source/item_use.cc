@@ -3232,18 +3232,6 @@ void jewellery_remove_effects(item_def &item, bool mesg)
         modify_stat(STAT_INTELLIGENCE, -item.plus, false, item, true);
         break;
 
-    case RING_INVISIBILITY:
-        // removing this ring effectively cancels all invisibility {dlb}
-        if (you.duration[DUR_INVIS])
-            you.duration[DUR_INVIS] = 1;
-        break;
-
-    case RING_LEVITATION:
-        // removing this ring effectively cancels all levitation {dlb}
-        if (you.duration[DUR_LEVITATION])
-            you.duration[DUR_LEVITATION] = 1;
-        break;
-
     case RING_MAGICAL_POWER:
         mpr("You feel your mana capacity decrease.");
         // dec_max_mp(9);

@@ -2201,7 +2201,7 @@ std::vector<talent> your_talents( bool check_confused )
         || scan_randarts( RAP_LEVITATE ))
     {
         // Has no effect on permanently flying Kenku.
-        if (!you.permanent_flight() && you.flight_mode() != FL_FLY)
+        if (!you.permanent_flight())
         {
             // Now you can only turn levitation off if you have an
             // activatable item.  Potions and miscast effects will
