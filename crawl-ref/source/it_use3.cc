@@ -390,7 +390,7 @@ static bool evoke_sceptre_of_asmodeus()
     bool rc = true;
     if (one_chance_in(21))
         rc = false;
-    else if (coinflip())
+    else if (one_chance_in(20))
     {
         // Summon devils, maybe a Fiend.
         const monster_type mtype = (one_chance_in(4) ? MONS_FIEND :
@@ -421,7 +421,7 @@ static bool evoke_sceptre_of_asmodeus()
                                     0 ));
         your_spells( spl, you.skills[SK_EVOCATIONS] * 8, false );
     }
-    return (true);
+    return (rc);
 }
 
 // Returns true if item successfully evoked.
