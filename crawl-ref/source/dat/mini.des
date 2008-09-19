@@ -302,6 +302,7 @@ MONS:  white imp/ice beast w:30/polar bear/nothing w:50
 MONS:  white imp/ice beast w:30/polar bear/nothing w:50
 KFEAT: 2 = >
 KFEAT: 4 = >
+SUBST: | = ||****%%%% 
 MAP
 T..................T
 ..WWW..........WWW..
