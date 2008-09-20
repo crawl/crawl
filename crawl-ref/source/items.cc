@@ -1288,7 +1288,7 @@ bool items_similar(const item_def &item1, const item_def &item2)
 #define NON_IDENT_FLAGS ~(ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK | \
                           ISFLAG_DROPPED | ISFLAG_THROWN | \
                           ISFLAG_NOTED_ID | ISFLAG_NOTED_GET | \
-                          ISFLAG_BEEN_IN_INV)
+                          ISFLAG_BEEN_IN_INV | ISFLAG_DROPPED_BY_ALLY)
 
     if ((item1.flags & NON_IDENT_FLAGS) != (item2.flags & NON_IDENT_FLAGS))
         return (false);
