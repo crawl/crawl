@@ -2252,13 +2252,13 @@ void MiscastEffect::init()
     {
         kc           = KC_YOU;
         kt           = KILL_YOU_MISSILE;
-        act_source   = dynamic_cast<actor*>(&you);
+        act_source   = &you;
         source_known = true;
     }
     else if (kill_source >= 0 && kill_source < NON_MONSTER)
     {
         mon_source = &menv[kill_source];
-        act_source = dynamic_cast<actor*>(mon_source);
+        act_source = mon_source;
         ASSERT(mon_source->type != -1);
 
         if (death_curse && target->atype() == ACT_MONSTER

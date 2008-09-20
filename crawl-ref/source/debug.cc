@@ -4271,9 +4271,9 @@ void debug_miscast( int target_index )
 
     actor* target;
     if (target_index == NON_MONSTER)
-        target = dynamic_cast<actor*>(&you);
+        target = &you;
     else
-        target = dynamic_cast<actor*>(&menv[target_index]);
+        target = &menv[target_index];
 
     if (!target->alive())
     {

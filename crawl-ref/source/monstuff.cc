@@ -733,13 +733,13 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
 
     actor* target;
     if (index == NON_MONSTER)
-        target = dynamic_cast<actor*>(&you);
+        target = &you;
     else
     {
         // Mummies committing suicide don't cause a death curse.
-        if (index == (int) monster_index(monster))
+        if (index == static_cast<int>(monster_index(monster)))
            return;
-        target = dynamic_cast<actor*>(&menv[index]);
+        target = &menv[index];
     }
 
     // Mummy was killed by a giant spore or ball lightning?
@@ -6952,9 +6952,8 @@ static bool _monster_move(monsters *monster)
             if (target_grid == DNGN_DEEP_WATER)
                 deep_water_available = true;
 
-            const monsters* mons = dynamic_cast<const monsters*>(monster);
             good_move[count_x][count_y] =
-                _mon_can_move_to_pos(mons, coord_def(count_x-1, count_y-1));
+                _mon_can_move_to_pos(monster, coord_def(count_x-1, count_y-1));
         }
 
     // Now we know where we _can_ move.
