@@ -25,7 +25,7 @@ bool brand_weapon(brand_type which_brand, int power);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-char burn_freeze(int pow, beam_type b_f);
+bool burn_freeze(int pow, beam_type flavour, int targetmon);
 
 
 // last updated 24may2000 {dlb}

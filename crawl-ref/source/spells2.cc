@@ -819,44 +819,25 @@ bool vampiric_drain(int pow, const dist &vmove)
     return (true);
 }
 
-char burn_freeze(int pow, beam_type flavour)
+bool burn_freeze(int pow, beam_type flavour, int targetmon )
 {
-    dist spd;
-
     pow = std::min(25, pow);
 
-    mpr("Which direction?", MSGCH_PROMPT);
-    direction(spd, DIR_DIR, TARG_ENEMY);
-
-    if (!spd.isValid)
-    {
-        canned_msg(MSG_OK);
-        return (-1);
-    }
-
-    if (spd.isMe)
-    {
-        canned_msg(MSG_UNTHINKING_ACT);
-        return (-1);
-    }
-
-    const int mgr = mgrd(you.pos() + spd.delta);
-
-    // Yes, this is strange, but it does maintain the original
-    // behaviour.  Possibly to avoid giving information about invisible
-    // monsters?
-    if (mgr == NON_MONSTER)
+    if (targetmon == NON_MONSTER)
     {
         mpr("There isn't anything close enough!");
-        return (0);
+        // If there's no monster there, you still pay the costs in
+        // order to prevent locating invisible monsters, unless
+        // you know that you see invisible.
+        return (!player_see_invis(false));
     }
 
-    monsters *monster = &menv[mgr];
+    monsters *monster = &menv[targetmon];
 
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    bool success = !stop_attack_prompt(monster, false, false);
+    const bool success = !stop_attack_prompt(monster, false, false);
 
     if (success)
     {
@@ -879,27 +860,20 @@ char burn_freeze(int pow, beam_type flavour)
     {
         bolt beam;
         beam.flavour = flavour;
+        beam.thrower = KILL_YOU;
 
         int hurted = roll_dice(1, 3 + pow / 3);
+        hurted = mons_adjust_flavoured(monster, beam, hurted);
+        monster->hurt(&you, hurted);
 
-        if (flavour != BEAM_MISSILE)
-            hurted = mons_adjust_flavoured(monster, beam, hurted);
-
-        hurt_monster(monster, hurted);
-
-        if (monster->hit_points < 1)
-            monster_die(monster, KILL_YOU, 0);
-        else
+        if (monster->alive())
         {
             print_wounds(monster);
 
             if (flavour == BEAM_COLD)
             {
-                if (mons_class_flag(monster->type, M_COLD_BLOOD)
-                    && coinflip())
-                {
+                if (mons_class_flag(monster->type, M_COLD_BLOOD) && coinflip())
                     monster->add_ench(ENCH_SLOW);
-                }
 
                 const int cold_res = mons_res_cold( monster );
                 if (cold_res <= 0)
@@ -911,7 +885,7 @@ char burn_freeze(int pow, beam_type flavour)
         }
     }
 
-    return (1);
+    return (success);
 }
 
 bool summon_animals(int pow)

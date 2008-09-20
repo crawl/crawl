@@ -2674,7 +2674,7 @@ std::string your_hand(bool plural)
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                         bool beam_target)
 {
-    if (you.confused())
+    if (you.confused() || !you.can_see(mon))
         return (false);
 
     bool retval = false;

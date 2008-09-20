@@ -931,6 +931,19 @@ static void _try_monster_cast(spell_type spell, int powc,
 }
 #endif // WIZARD
 
+beam_type _spell_to_beam_type(spell_type spell)
+{
+    switch (spell)
+    {
+    case SPELL_BURN: return BEAM_FIRE;
+    case SPELL_FREEZE: return BEAM_COLD;
+    case SPELL_CRUSH: return BEAM_MISSILE;
+    case SPELL_ARC: return BEAM_ELECTRICITY;
+    default: break;
+    }
+    return BEAM_NONE;
+}
+
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
@@ -948,7 +961,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     if (_spell_is_uncastable(spell))
         return (SPRET_ABORT);
 
-    const int flags = get_spell_flags(spell);
+    const unsigned int flags = get_spell_flags(spell);
 
     int potion = -1;
 
@@ -956,10 +969,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     // there are others that do their own that will be missed by this
     // (and thus will not properly ESC without cost because of it).
     // Hopefully, those will eventually be fixed. -- bwr
-    if ((flags & SPFLAG_TARGETING_MASK)
-        && spell != SPELL_BURN && spell != SPELL_FREEZE
-        && spell != SPELL_CRUSH && spell != SPELL_ARC
-        && spell != SPELL_PORTAL_PROJECTILE)
+    if ((flags & SPFLAG_TARGETING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
     {
         targ_mode_type targ =
             (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_ENEMY);
@@ -1104,28 +1114,18 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     switch (spell)
     {
-    // Attack spells.
-    // using burn_freeze()
+    // spells using burn_freeze()
     case SPELL_BURN:
-        if (burn_freeze(powc, BEAM_FIRE) == -1)
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_FREEZE:
-        if (burn_freeze(powc, BEAM_COLD) == -1)
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_CRUSH:
-        if (burn_freeze(powc, BEAM_MISSILE) == -1)
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_ARC:
-        if (burn_freeze(powc, BEAM_ELECTRICITY) == -1)
+        if (!burn_freeze(powc, _spell_to_beam_type(spell),
+                         mgrd(you.pos() + spd.delta)))
+        {
             return (SPRET_ABORT);
+        }
         break;
-
+        
     // direct beams/bolts
     case SPELL_MAGIC_DART:
         if (!zapping(ZAP_MAGIC_DARTS, powc, beam, true))
