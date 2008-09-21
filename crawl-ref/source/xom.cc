@@ -589,14 +589,15 @@ static bool _xom_is_good(int sever)
     }
     else if (x_chance_in_y(7, sever))
     {
-        if (there_are_monsters_nearby())
+        if (there_are_monsters_nearby(false, false))
         {
             monsters *mon =
                 choose_random_nearby_monster(0, _choose_mutatable_monster);
 
             if (mon)
             {
-                god_speaks(GOD_XOM, _get_xom_speech("good monster polymorph").c_str());
+                god_speaks(GOD_XOM,
+                           _get_xom_speech("good monster polymorph").c_str());
 
                 monster_polymorph(mon, RANDOM_MONSTER,
                     mons_wont_attack(mon) ? PPT_MORE : PPT_LESS, true);
@@ -796,7 +797,7 @@ static bool _xom_is_bad(int sever)
         }
         else if (x_chance_in_y(8, sever))
         {
-            if (there_are_monsters_nearby())
+            if (there_are_monsters_nearby(false, false))
             {
                 monsters *mon =
                     choose_random_nearby_monster(0, _choose_mutatable_monster);

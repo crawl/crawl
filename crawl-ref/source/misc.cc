@@ -2320,22 +2320,26 @@ bool mons_is_safe(const struct monsters *mon, bool want_move)
     return (is_safe);
 }
 
-// Return all monsters in range (default: LOS) that the player is able to see
-// and recognize as being a monster.
+// Return all nearby monsters in range (default: LOS) that the player
+// is able to recognize as being monsters (i.e. no unknown mimics or
+// submerged creatures.)
 //
 // want_move       (??) Somehow affects what monsters are considered dangerous
 // just_check      Return zero or one monsters only
 // dangerous_only  Return only "dangerous" monsters
+// require_visible Require that monsters be visible to the player
 // range           search radius (defaults: LOS)
 //
-void get_playervisible_monsters(std::vector<monsters*> &mons,
-                                bool want_move,
-                                bool just_check,
-                                bool dangerous_only,
-                                int range)
+std::vector<monsters*> get_nearby_monsters(bool want_move,
+                                           bool just_check,
+                                           bool dangerous_only,
+                                           bool require_visible,
+                                           int range)
 {
     if (range == -1)
         range = LOS_RADIUS;
+
+    std::vector<monsters*> mons;
 
     // Sweep every square within range.
     for ( radius_iterator ri(you.pos(), range); ri; ++ri )
@@ -2345,20 +2349,21 @@ void get_playervisible_monsters(std::vector<monsters*> &mons,
         {
             if (see_grid(*ri))
             {
-                monsters *mon = &env.mons[targ_monst];
+                monsters *mon = &menv[targ_monst];
                 if (mon->alive()
-                    && player_monster_visible(mon)
+                    && (!require_visible || player_monster_visible(mon))
                     && !mons_is_submerged(mon)
                     && (!mons_is_mimic(mon->type) || mons_is_known_mimic(mon))
                     && (!dangerous_only || !mons_is_safe(mon, want_move)))
                 {
                     mons.push_back(mon);
                     if (just_check) // stop once you find one
-                        return;
+                        return mons;
                 }
             }
         }
     }
+    return mons;
 }
 
 bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
@@ -2388,8 +2393,8 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
     }
 
     // Monster check.
-    std::vector<monsters*> visible;
-    get_playervisible_monsters(visible, want_move, !announce, true, range);
+    std::vector<monsters*> visible =
+        get_nearby_monsters(want_move, !announce, true, true, range);
 
     // No monsters found.
     if (visible.empty())
@@ -2417,13 +2422,10 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
     return (false);
 }
 
-bool there_are_monsters_nearby()
+bool there_are_monsters_nearby(bool dangerous_only, bool require_visible)
 {
-    // Monster check.
-    std::vector<monsters*> visible;
-    get_playervisible_monsters(visible, false, true);
-
-    return (!visible.empty());
+    return (!get_nearby_monsters(false, true,
+                                 dangerous_only, require_visible).empty());
 }
 
 static const char *shop_types[] = {

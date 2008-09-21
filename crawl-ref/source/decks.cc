@@ -1615,7 +1615,7 @@ static void _mass_drain(int pow)
 // to target. This is still exploitable by finding popcorn monsters.
 static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
 {
-    bool rc = there_are_monsters_nearby();
+    bool rc = there_are_monsters_nearby(true, false);
     const int power_level = get_power_level(power, rarity);
 
     dist target;

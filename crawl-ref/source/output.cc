@@ -1441,8 +1441,7 @@ static void _print_next_monster_desc(const std::vector<monster_pane_info>& mons,
 
 void get_monster_pane_info(std::vector<monster_pane_info>& mons)
 {
-    std::vector<monsters*> visible;
-    get_playervisible_monsters(visible);
+    std::vector<monsters*> visible = get_nearby_monsters();
     for (unsigned int i = 0; i < visible.size(); i++)
     {
         if (Options.target_zero_exp
