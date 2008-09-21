@@ -123,7 +123,7 @@ struct item_def;
 /* ***********************************************************************
  * called from: food
  * *********************************************************************** */
-bool can_wield(const item_def *weapon, bool say_why = false,
+bool can_wield(item_def *weapon, bool say_why = false,
                bool ignore_temporary_disability = false);
 
 // last updated 12may2000 {dlb}

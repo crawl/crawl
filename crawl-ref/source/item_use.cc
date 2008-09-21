@@ -74,7 +74,7 @@ static bool _fire_validate_item(int selected, std::string& err);
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
-bool can_wield(const item_def *weapon, bool say_reason,
+bool can_wield(item_def *weapon, bool say_reason,
                bool ignore_temporary_disability)
 {
 #define SAY(x) if (say_reason) { x; } else
@@ -155,7 +155,18 @@ bool can_wield(const item_def *weapon, bool say_reason,
     if ((you.is_undead || you.species == SP_DEMONSPAWN)
         && (weap_brand == SPWPN_HOLY_WRATH || is_blessed_blade(*weapon)))
     {
-        SAY(mpr("This weapon will not allow you to wield it."));
+        if (say_reason)
+        {
+            mpr("This weapon is holy and will not allow you to wield it.");
+            // If it's a standard weapon, you know its ego now.
+            if (!is_artefact(*weapon) && !is_blessed_blade(*weapon)
+                && !item_type_known(*weapon))
+            {
+                set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
+                if (in_inventory(*weapon))
+                    mpr(weapon->name(DESC_INVENTORY_EQUIP).c_str());
+            }
+        }
         return (false);
     }
 
@@ -526,7 +537,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
         // Only used for Singing Sword introducing itself
         // (could be extended to other talking weapons...)
-        const char *old_desc = item.name(DESC_CAP_THE).c_str();
+        const std::string old_desc = item.name(DESC_CAP_THE);
 
         if (!was_known)
         {
@@ -638,7 +649,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     if (!was_known)
                     {
                         mprf(MSGCH_TALK, "%s says, "
-                             "\"Hi! I'm the Singing Sword!\"", old_desc);
+                             "\"Hi! I'm the Singing Sword!\"",
+                             old_desc.c_str());
                     }
                     else
                         mpr("The Singing Sword hums in delight!", MSGCH_TALK);

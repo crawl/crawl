@@ -204,7 +204,7 @@ static int _find_butchering_implement(int &butcher_tool)
     // Look for a butchering implement in your pack.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        const item_def& tool(you.inv[i]);
+        item_def& tool(you.inv[i]);
         if (is_valid_item( tool )
             && tool.base_type == OBJ_WEAPONS
             && can_cut_meat( tool )

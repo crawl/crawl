@@ -1458,7 +1458,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             if (thing_created == NON_ITEM)
                 continue;
 
-            const item_def &doodad(mitm[thing_created]);
+            item_def &doodad(mitm[thing_created]);
             if (doodad.base_type == OBJ_WEAPONS
                    && !can_wield(&doodad, false, true)
                 || doodad.base_type == OBJ_ARMOUR
