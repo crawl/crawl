@@ -2619,5 +2619,6 @@ void mons_clear_trapping_net(monsters *mon)
     const int net = get_trapping_net(mon->pos());
     if (net != NON_ITEM)
         remove_item_stationary(mitm[net]);
+
     mon->del_ench(ENCH_HELD, true);
 }

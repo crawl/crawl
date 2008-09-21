@@ -5480,7 +5480,6 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 
 bool monsters::del_ench(enchant_type ench, bool quiet, bool effect)
 {
-    mpr("in del_ench()", MSGCH_DIAGNOSTICS);
     mon_enchant_list::iterator i = enchantments.find(ench);
     if (i == enchantments.end())
         return (false);
@@ -5653,6 +5652,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         int net = get_trapping_net(this->pos());
         if (net != NON_ITEM)
             remove_item_stationary(mitm[net]);
+
         if (!quiet)
             simple_monster_message(this, " breaks free.");
         break;

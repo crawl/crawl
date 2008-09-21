@@ -1266,7 +1266,6 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 #ifndef USE_TILE
             viewwindow(true, false);
 #endif
-            mpr("Call handle_monsters()", MSGCH_DIAGNOSTICS);
             handle_monsters();
         }
     }
