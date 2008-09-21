@@ -132,6 +132,7 @@ int holy_word_monsters(coord_def where, int pow, int caster)
     // Currently, holy word annoys the monsters it affects because it
     // can kill them, and because hostile monsters don't use it.
     behaviour_event(monster, ME_ANNOY, MHITYOU);
+    simple_monster_message(monster, " convulses!");
     hurt_monster(monster, hploss);
 
     if (hploss)
@@ -143,8 +144,6 @@ int holy_word_monsters(coord_def where, int pow, int caster)
             return retval;
         }
     }
-
-    simple_monster_message(monster, " convulses!");
 
     if (monster->speed_increment >= 25)
     {
