@@ -236,7 +236,7 @@ static int _find_butchering_implement(int &butcher_tool)
 
     const int item_slot = prompt_invent_item(
                             "What would you like to use? (- for none)?",
-                            MT_INVLIST, OSEL_WIELD,
+                            MT_INVLIST, OSEL_BUTCHERY,
                             true, true, true, '-', -1, NULL, OPER_WIELD);
 
     if (prompt_failed(item_slot))

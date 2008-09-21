@@ -361,6 +361,8 @@ static std::string _no_selectables_message(int item_selector)
         return("You aren't carrying any wands.");
     case OSEL_THROWABLE:
         return("You aren't carrying any items that might be thrown or fired.");
+    case OSEL_BUTCHERY:
+        return("You aren't carrying any sharp implements.");
     }
 
     return("You aren't carrying any such object.");
@@ -819,6 +821,9 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OSEL_WIELD:
         return (itype == OBJ_WEAPONS || itype == OBJ_STAVES
                 || itype == OBJ_MISCELLANY);
+
+    case OSEL_BUTCHERY:
+        return (itype == OBJ_WEAPONS && can_cut_meat(i));
 
     case OSEL_MEMORISE:
         return (itype == OBJ_BOOKS && i.sub_type != BOOK_MANUAL
@@ -1326,7 +1331,7 @@ int prompt_invent_item( const char *prompt,
     }
 
     if (!_any_items_to_select(type_expect) && type_expect != OSEL_WIELD
-        && mtype == MT_INVLIST)
+        && type_expect != OSEL_BUTCHERY && mtype == MT_INVLIST)
     {
         mprf(MSGCH_PROMPT, "%s",
              _no_selectables_message(type_expect).c_str());
