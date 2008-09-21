@@ -14,7 +14,7 @@ DEPTH:  12-26
 ORIENT: float
 : messager = bell_clock_msg { initmsg="You hear a distant snort." }
 MARKER: O = lua: timed_marker {  \
-                 low=400, high=600, msg=messager \
+                 low=400, high=600, msg=messager, floor = 'stone_arch' \
             }
 MAP
 O
