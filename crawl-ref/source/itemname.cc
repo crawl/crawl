@@ -392,25 +392,25 @@ static const char* armour_ego_name( special_armour_type sparm, bool terse )
     {
         switch (sparm)
         {
-        case SPARM_RUNNING:           return " (run)";
-        case SPARM_FIRE_RESISTANCE:   return " (R-fire)";
-        case SPARM_COLD_RESISTANCE:   return " (R-cold)";
-        case SPARM_POISON_RESISTANCE: return " (R-poison)";
-        case SPARM_SEE_INVISIBLE:     return " (see invis)";
-        case SPARM_DARKNESS:          return " (darkness)";
-        case SPARM_STRENGTH:          return " (str)";
-        case SPARM_DEXTERITY:         return " (dex)";
-        case SPARM_INTELLIGENCE:      return " (int)";
-        case SPARM_PONDEROUSNESS:     return " (ponderous)";
-        case SPARM_LEVITATION:        return " (levitate)";
-        case SPARM_MAGIC_RESISTANCE:  return " (R-magic)";
-        case SPARM_PROTECTION:        return " (protect)";
-        case SPARM_STEALTH:           return " (stealth)";
-        case SPARM_RESISTANCE:        return " (resist)";
-        case SPARM_POSITIVE_ENERGY:   return " (R-neg)"; // ha ha
-        case SPARM_ARCHMAGI:          return " (Archmagi)";
-        case SPARM_PRESERVATION:      return " (preserve)";
-        default:                      return " (buggy)";
+        case SPARM_RUNNING:           return " {run}";
+        case SPARM_FIRE_RESISTANCE:   return " {rF+}";
+        case SPARM_COLD_RESISTANCE:   return " {rC+}";
+        case SPARM_POISON_RESISTANCE: return " {rPois}";
+        case SPARM_SEE_INVISIBLE:     return " {SInv}";
+        case SPARM_DARKNESS:          return " {darkness}";
+        case SPARM_STRENGTH:          return " {Str+3}";
+        case SPARM_DEXTERITY:         return " {Dex+3}";
+        case SPARM_INTELLIGENCE:      return " {Int+3}";
+        case SPARM_PONDEROUSNESS:     return " {ponderous}";
+        case SPARM_LEVITATION:        return " {Lev}";
+        case SPARM_MAGIC_RESISTANCE:  return " {MR}";
+        case SPARM_PROTECTION:        return " {AC+3}";
+        case SPARM_STEALTH:           return " {Stlth+}";
+        case SPARM_RESISTANCE:        return " {rC+ rF+}";
+        case SPARM_POSITIVE_ENERGY:   return " {rN+}";
+        case SPARM_ARCHMAGI:          return " {Archmagi}";
+        case SPARM_PRESERVATION:      return " {rCorr, Cons}";
+        default:                      return " {buggy}";
         }
     }
 }
