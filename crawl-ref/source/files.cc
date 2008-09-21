@@ -1158,7 +1158,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         char minorVersion;
 
         std::string reason;
-        if (!_get_and_validate_version( levelFile, majorVersion, minorVersion, &reason ))
+        if (!_get_and_validate_version( levelFile, majorVersion, minorVersion,
+                                        &reason ))
         {
             end(-1, false, "\nLevel file is invalid.  %s\n",
                 reason.c_str());
@@ -1265,6 +1266,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 #ifndef USE_TILE
             viewwindow(true, false);
 #endif
+            mpr("Call handle_monsters()", MSGCH_DIAGNOSTICS);
             handle_monsters();
         }
     }

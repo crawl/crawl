@@ -1961,8 +1961,9 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #endif
                 "is a closed door. You can open it by walking into it. "
                 "Sometimes it is useful to close a door. Do so by pressing "
-                "<w>C</w>, followed by the direction, or simply "
-                "<w>Ctrl-Direction</w>.";
+                "<w>C</w> while standing next to it. If there are several "
+                "doors you will then be prompted for a direction. "
+                "Alternatively, you can also use <w>Ctrl-Direction</w>.";
 #ifdef USE_TILE
         text << "\nIn Tiles, the same can be achieved by clicking on an "
                 "adjacent door square.";
@@ -2695,21 +2696,34 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         break;
 
     case TUT_SPELL_MISCAST:
-        text << "You just miscast a spell. If the spell casting success "
-                "chance is high (which can be checked by entering <w>z\?</w>) "
-                "then a miscast merely means the spell is not working, along "
-                "with a harmless side effect. However, for spells with a "
-                "low success rate there's a chance of contaminating yourself "
-                "with magical energy, plus a chance of an additional harmful "
-                "side effect. Normally this isn't a problem, since magical "
-                "contamination bleeds off over time, but if you're repeatedly "
-                "contaminated in a short amount of time you'll mutate or "
-                "suffer from other ill side effects.\n\n"
+    {
+        text << "You just miscast a spell. ";
 
-                "Note that a miscast spell will still consume the full amount "
+        item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+        item_def *shield = you.slot_item(EQ_SHIELD);
+        if (armour && !is_light_armour(*armour) || shield)
+        {
+            text << "Wearing heavy body armour or using a shield, especially a "
+                    "large one, can severely hamper your spellcasting "
+                    "abilities. You can check the effect of this by comparing "
+                    "the success rates on the <w>z\?</w> screen with and "
+                    "without the item being worn.\n\n";
+        }
+
+        text << "If the spellcasting success chance is high (which can be "
+                "checked by entering <w>z\?</w>) then a miscast merely means "
+                "the spell is not working, along with a harmless side effect. "
+                "However, for spells with a low success rate there's a chance "
+                "of contaminating yourself with magical energy, plus a chance "
+                "of an additional harmful side effect. Normally this isn't a "
+                "problem, since magical contamination bleeds off over time, "
+                "but if you're repeatedly contaminated in a short amount of "
+                "time you'll mutate or suffer from other ill side effects.\n\n";
+
+        text << "Note that a miscast spell will still consume the full amount "
                 "of MP and nutrition that a successfully cast spell would.";
         break;
-
+    }
     case TUT_SPELL_HUNGER:
         text << "The spell you just cast made you hungrier; you can see how "
                 "hungry spells make you by entering <w>z\?!</w>. The amount of "

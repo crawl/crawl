@@ -2597,14 +2597,21 @@ int mons_ench_f2(monsters *monster, bolt &pbolt)
                      player_monster_visible(monster) ? "for a moment."
                                                      : "and vanishes!" );
 
-                // Don't swap weapons just because you can't see it anymore!
-                you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-
-                if (Options.tutorial_left)
+                if (!player_monster_visible(monster))
                 {
-                    learned_something_new(TUT_INVISIBLE_DANGER);
-                    if (!player_monster_visible(monster))
+                    // Don't swap weapons just because you can't see it anymore!
+                    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+
+                    // Also turn off autopickup.
+                    Options.autopickup_on = false;
+                    mpr("Deactivating autopickup; reactivate with Ctrl-A.",
+                        MSGCH_WARN);
+
+                    if (Options.tutorial_left)
+                    {
+                        learned_something_new(TUT_INVISIBLE_DANGER);
                         Options.tut_seen_invisible = you.num_turns;
+                    }
                 }
             }
 

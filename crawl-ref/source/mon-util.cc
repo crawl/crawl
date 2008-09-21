@@ -5428,7 +5428,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 
     // Monster un-submerging while under player.  Try to move to an
     // adjacent square in which the monster could have been submerged
-    // and have it unusbmerge from there.
+    // and have it unsubmerge from there.
     coord_def target_square;
     int       okay_squares = 0;
 
@@ -5480,6 +5480,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 
 bool monsters::del_ench(enchant_type ench, bool quiet, bool effect)
 {
+    mpr("in del_ench()", MSGCH_DIAGNOSTICS);
     mon_enchant_list::iterator i = enchantments.find(ench);
     if (i == enchantments.end())
         return (false);
@@ -5652,7 +5653,6 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         int net = get_trapping_net(this->pos());
         if (net != NON_ITEM)
             remove_item_stationary(mitm[net]);
-
         if (!quiet)
             simple_monster_message(this, " breaks free.");
         break;
@@ -6772,7 +6772,7 @@ bool monsters::should_drink_potion(potion_type ptype) const
     return rc;
 }
 
-// Return the ID status gained.       
+// Return the ID status gained.
 item_type_id_state_type monsters::drink_potion_effect(potion_type ptype)
 {
     simple_monster_message(this, " drinks a potion.");
@@ -6785,15 +6785,15 @@ item_type_id_state_type monsters::drink_potion_effect(potion_type ptype)
     {
         heal(5 + random2(7));
         simple_monster_message(this, " is healed!");
-        
+
         const enchant_type cured_enchants[] = {
             ENCH_POISON, ENCH_SICK, ENCH_CONFUSION, ENCH_ROT
         };
-        
+
         // We can differentiate healing and heal wounds (and blood,
         // for vampires) by seeing if any status ailments are cured.
         for (unsigned int i = 0; i < ARRAYSZ(cured_enchants); ++i)
-            if (del_ench(cured_enchants[i]))                
+            if (del_ench(cured_enchants[i]))
                 ident = ID_KNOWN_TYPE;
     }
     break;
@@ -6839,7 +6839,7 @@ item_type_id_state_type monsters::drink_potion_effect(potion_type ptype)
     default:
         break;
     }
-    
+
     return ident;
 }
 

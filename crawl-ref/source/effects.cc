@@ -2863,6 +2863,10 @@ void update_level(double elapsedTime)
                          false);
         }
 
+        // Handle nets specially to remove the trapping property of the net.
+        if (mons_is_caught(mon))
+            mon->del_ench(ENCH_HELD, true);
+
         _catchup_monster_moves(mon, turns);
 
         if (turns >= 10 && mon->alive())
