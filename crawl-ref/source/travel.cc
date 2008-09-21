@@ -2056,7 +2056,7 @@ static bool _is_valid_branch(const Branch &br)
     return (br.shortname != NULL && br.depth != -1);
 }
 
-static int _prompt_travel_branch(int prompt_flags)
+static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
 {
     int branch = BRANCH_MAIN_DUNGEON;     // Default
     std::vector<branch_type> br =
@@ -2126,7 +2126,9 @@ static int _prompt_travel_branch(int prompt_flags)
                                               ", ", ", ");
             shortcuts += ") ";
         }
-        mprf(MSGCH_PROMPT, "Where to? %s", shortcuts.c_str());
+        mprf(MSGCH_PROMPT, "%s? %s",
+             *to_entrance ? "Entrance to where" : "Where to",
+             shortcuts.c_str());
 
         int keyin = get_ch();
         switch (keyin)
@@ -2151,6 +2153,14 @@ static int _prompt_travel_branch(int prompt_flags)
             if (waypoint_list || waycount)
                 waypoint_list = !waypoint_list;
             break;
+        case '^':
+            if (*to_entrance)
+                return (ID_CANCEL);
+            else
+            {
+                *to_entrance = true;
+                return _prompt_travel_branch(prompt_flags, to_entrance);
+            }
         default:
             // Is this a branch hotkey?
             for (int i = 0, count = br.size(); i < count; ++i)
@@ -2159,7 +2169,7 @@ static int _prompt_travel_branch(int prompt_flags)
                 {
 #ifdef WIZARD
                     Branch     &target = branches[br[i]];
-                    std::string msg    = "";
+                    std::string msg;
 
                     if (target.startdepth == -1
                         && (i == BRANCH_SWAMP || i == BRANCH_SHOALS ))
@@ -2328,13 +2338,14 @@ static void _travel_depth_munge(int munge_method, const std::string &s,
         targ.p.id.depth = 1;
 }
 
-static travel_target _prompt_travel_depth(const level_id &id)
+static travel_target _prompt_travel_depth(const level_id &id,
+                                          bool already_entrance)
 {
-    travel_target target = travel_target(level_pos(id), false);
+    travel_target target = travel_target(level_pos(id), already_entrance);
 
     // Handle one-level branches by not prompting.
     if (single_level_branch(target.p.id.branch))
-        return travel_target(level_id(target.p.id.branch, 1));
+        return travel_target(level_id(target.p.id.branch, 1), already_entrance);
 
     target.p.id.depth = _get_nearest_level_depth(target.p.id.branch);
     while (true)
@@ -2363,7 +2374,8 @@ static travel_target _prompt_travel_depth(const level_id &id)
 travel_target prompt_translevel_target(int prompt_flags)
 {
     travel_target target;
-    int branch = _prompt_travel_branch(prompt_flags);
+    bool to_entrance = false;
+    int branch = _prompt_travel_branch(prompt_flags, &to_entrance);
     const bool remember_targ = (prompt_flags & TPF_REMEMBER_TARGET);
 
     if (branch == ID_CANCEL)
@@ -2398,7 +2410,7 @@ travel_target prompt_translevel_target(int prompt_flags)
     target.p.id.branch = static_cast<branch_type>(branch);
 
     // User's chosen a branch, so now we ask for a level.
-    target = _prompt_travel_depth(target.p.id);
+    target = _prompt_travel_depth(target.p.id, to_entrance);
 
     if (target.p.id.depth < 1
         || target.p.id.depth > branches[target.p.id.branch].depth)
