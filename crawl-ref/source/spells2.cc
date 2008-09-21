@@ -819,7 +819,7 @@ bool vampiric_drain(int pow, const dist &vmove)
     return (true);
 }
 
-bool burn_freeze(int pow, beam_type flavour, int targetmon )
+bool burn_freeze(int pow, beam_type flavour, int targetmon)
 {
     pow = std::min(25, pow);
 
@@ -862,23 +862,21 @@ bool burn_freeze(int pow, beam_type flavour, int targetmon )
         beam.flavour = flavour;
         beam.thrower = KILL_YOU;
 
-        int hurted = roll_dice(1, 3 + pow / 3);
-        hurted = mons_adjust_flavoured(monster, beam, hurted);
+        const int orig_hurted = roll_dice(1, 3 + pow / 3);
+        int hurted = mons_adjust_flavoured(monster, beam, orig_hurted);
         monster->hurt(&you, hurted);
 
         if (monster->alive())
         {
+            monster->expose_to_element(flavour, orig_hurted);
             print_wounds(monster);
 
             if (flavour == BEAM_COLD)
             {
-                if (mons_class_flag(monster->type, M_COLD_BLOOD) && coinflip())
-                    monster->add_ench(ENCH_SLOW);
-
                 const int cold_res = mons_res_cold( monster );
                 if (cold_res <= 0)
                 {
-                    const int stun = (1 - cold_res) * random2( 2 + pow / 5 );
+                    const int stun = (1 - cold_res) * random2(2 + pow/5);
                     monster->speed_increment -= stun;
                 }
             }

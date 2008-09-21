@@ -4699,8 +4699,17 @@ void monsters::go_berserk(bool /* intentional */)
     simple_monster_message( this, " goes berserk!" );
 }
 
-void monsters::expose_to_element(beam_type, int)
+void monsters::expose_to_element(beam_type flavour, int strength)
 {
+    switch (flavour)
+    {
+    case BEAM_COLD:
+        if (mons_class_flag(this->type, M_COLD_BLOOD) && coinflip())
+            add_ench(ENCH_SLOW);
+        break;
+    default:
+        break;
+    }
 }
 
 void monsters::banish(const std::string &)
