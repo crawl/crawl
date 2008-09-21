@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <list>
 #include <set>
 #include <sstream>
 #include <algorithm>
@@ -850,11 +851,8 @@ static void _build_layout_skeleton(int level_number, int level_type,
     if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
     {
         // Do 'normal' building.  Well, except for the swamp and shoals.
-        if (!player_in_branch(BRANCH_SWAMP)
-            && !player_in_branch(BRANCH_SHOALS))
-        {
+        if (!player_in_branch(BRANCH_SWAMP) && !player_in_branch(BRANCH_SHOALS))
             skip_build = _builder_normal(level_number, level_type, sr);
-        }
 
         if (!dgn_level_vetoed && skip_build == BUILD_CONTINUE)
         {
@@ -1282,17 +1280,17 @@ static void _build_dungeon_level(int level_number, int level_type)
     // already exist.
 
     // Time to make the swamp or shoals {dlb}:
-    if (player_in_branch( BRANCH_SWAMP ))
+    if (player_in_branch(BRANCH_SWAMP))
         _prepare_swamp();
     else if (player_in_branch(BRANCH_SHOALS))
-        _prepare_shoals( level_number );
+        _prepare_shoals(level_number);
 
     if (dgn_level_vetoed)
         return;
 
     _check_doors();
 
-    if (!player_in_branch( BRANCH_DIS ) && !player_in_branch( BRANCH_VAULTS ))
+    if (!player_in_branch(BRANCH_DIS) && !player_in_branch(BRANCH_VAULTS))
         _hide_doors();
 
     // change pre-rock to rock, and pre-floor to floor
@@ -1313,7 +1311,7 @@ static void _build_dungeon_level(int level_number, int level_type)
 
     // Place shops, if appropriate. This must be protected by the connectivity
     // check.
-    if ( level_type == LEVEL_DUNGEON && your_branch().has_shops )
+    if (level_type == LEVEL_DUNGEON && your_branch().has_shops)
         _place_shops(level_number);
 
     // Any vault-placement activity must happen before this check.
@@ -1612,8 +1610,41 @@ static void _place_base_islands(int margin, int num_islands, int estradius,
     }
 }
 
+typedef std::pair<coord_def, dungeon_feature_type> located_feature;
+typedef std::list<located_feature> located_feature_list;
+
+bool _is_critical_feature(dungeon_feature_type feat)
+{
+    return (feat == DNGN_ENTER_PORTAL_VAULT
+            || feat == DNGN_ENTER_LABYRINTH
+            || feat == DNGN_ENTER_SHOP);
+}
+
+static located_feature_list _save_critical_features()
+{
+    located_feature_list result;
+
+    for (rectangle_iterator ri(1); ri; ++ri) 
+        if (_is_critical_feature(grd(*ri)))
+            result.push_back(located_feature(*ri, grd(*ri)));
+
+    return result;
+}
+
+static void _restore_critical_features(const located_feature_list& lfl)
+{
+    for (located_feature_list::const_iterator ci = lfl.begin();
+         ci != lfl.end(); ++ci)
+    {
+        grd(ci->first) = ci->second;
+    }
+}
+
 static void _prepare_shoals(int level_number)
 {
+    // Don't destroy portals, etc.
+    const located_feature_list lfl = _save_critical_features();
+
     dgn_Layout_Type = "shoals";
 
     // dpeg's algorithm.
@@ -1707,12 +1738,34 @@ static void _prepare_shoals(int level_number)
     _replace_in_grid(margin, margin, GXM-margin, GYM-margin,
                      DNGN_WATER_STUCK, DNGN_SHALLOW_WATER);
 
+    // Put important things back.
+    _restore_critical_features(lfl);
+
     if (at_branch_bottom())
     {
+        // Find an island to place the stairs up on.
+        int j;
+        const coord_def d1(1,0), d2(-1,0);
+        for ( j = 0; j < num_islands; ++j )
+        {
+            if (!_is_critical_feature(grd(centres[j]))
+                && !_is_critical_feature(grd(centres[j] + d1))
+                && !_is_critical_feature(grd(centres[j] + d2)))
+            {
+                break;
+            }
+        }
+        if (j == num_islands)
+        {
+            // Oh well.
+            j = 0;
+            mprf(MSGCH_ERROR, "Clobbering critical features: %d %d %d.",
+                 grd(centres[j]), grd(centres[j] + d1), grd(centres[j] + d2));
+        }
         // Put all the stairs on one island.
-        grd[centres[0].x  ][centres[0].y] = DNGN_STONE_STAIRS_UP_I;
-        grd[centres[0].x+1][centres[0].y] = DNGN_STONE_STAIRS_UP_II;
-        grd[centres[0].x-1][centres[0].y] = DNGN_STONE_STAIRS_UP_III;
+        grd[centres[j].x  ][centres[j].y] = DNGN_STONE_STAIRS_UP_I;
+        grd[centres[j].x+1][centres[j].y] = DNGN_STONE_STAIRS_UP_II;
+        grd[centres[j].x-1][centres[j].y] = DNGN_STONE_STAIRS_UP_III;
 
         // Place the rune
         int vaultidx;
@@ -3529,12 +3582,10 @@ static void _beehive(spec_room &sr)
             continue;
 
         // The hive is chock full of bees!
-
-        mons_place(
-            mgen_data::sleeper_at(
-                one_chance_in(7) ? MONS_KILLER_BEE_LARVA
-                                 : MONS_KILLER_BEE,
-                *ri, MG_PATROLLING));
+        mons_place(mgen_data::sleeper_at(
+                       one_chance_in(7) ? MONS_KILLER_BEE_LARVA
+                                        : MONS_KILLER_BEE,
+                       *ri, MG_PATROLLING));
     }
 
     mons_place(mgen_data::sleeper_at(MONS_QUEEN_BEE, queenpos, MG_PATROLLING));
@@ -7305,7 +7356,7 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
     int i, j;
     int x1, y1, x2, y2;
 
-    if (player_in_branch( BRANCH_CRYPT ) || player_in_branch( BRANCH_TOMB ))
+    if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
         return;
 
     // if (one_chance_in (10))
