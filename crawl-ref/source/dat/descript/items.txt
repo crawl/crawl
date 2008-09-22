@@ -78,32 +78,10 @@ The skins of several animals.
 apple
 
 A delicious, firm red fruit, tart to the tongue.
-
-"MINERVA was the goddess of wisdom, but on one occasion she
-did a very foolish thing; she entered into competition with
-Juno and Venus for the prize of beauty. It happened thus:
-At the nuptials of Peleus and Thetis all the gods were
-invited with the exception of Eris, or Discord. Enraged
-at her exclusion, the goddess threw a golden apple among
-the guests, with the inscription, 'For the fairest.'"
-    -Bullfinch's Mythology, Chap. XXVII. a.
 %%%%
 apricot
 
 A succulent yellow-orange fruit, Prunus armeniaca.
-
-"Apricot Ratafia
-
-This is made two Ways, viz. either by infusing the Apricots cut in
-Pieces in Brandy for a Day or two, and then passing it thro' the draining
-Bag, and putting in the usual Ingredients; or else the Apricots may be
-boil'd in White wine, and by that Means more easily clarify'd adding an
-equal Quantity of Brandy, and a quarter of a pound of Sugar to every quart,
-with Cinnamon, Cloves, Mace, and Kernels of the Apricots. After all
-the Ingredients have infused eight or ten Days the Liquor is to be strain'd
-again and put into Bottles and so kept."
-    -Charles Carter, _The Compleat City and Country Cook:
-    Or, Accomplish'd House-wife_.  1732.
 %%%%
 arrow
 
@@ -399,15 +377,6 @@ escape by opening the box's lid.
 bread ration
 
 A filling meal of stale, but hearty, bread.
-
-"It is further reported that in the provinces [Caesar] gave banquets
-constantly in two dining halls, in one of which his officers or Greek
-companions, in the other Roman civilians and the more distinguished of
-the provincials reclined at table. He was so punctilious and strict in
-the management of his household, in small matters as well as in those of
-greater importance, that he put his baker in irons for serving him with
-one kind of bread and his guests with another..."
-    -Suetonius, _De Vita Caesarum, Divus Iulius_. 110 CE.
 %%%%
 broad axe
 
@@ -436,16 +405,6 @@ A lump of cheese.
 choko
 
 An almost tasteless green vegetable, which grows on a vine.
-
-"I ought not to omit naming a vegetable which Mr Yates placed on
-our table, and to which he directed our attention. It was the
-Tchu-tchu (Sechium edule) called also by the people _pepinella_.
-It is a small gourd, very much like vegetable marrow; one seed
-covers a wall with its ramifications."
-    -John Overton Choules, _The Cruise of the Steam Yacht
-    North Star: A Narrative of the Excursion of Mr. Vanderbilt's
-    Party to England, Russia, Denmark, France, Spain, Malta, Turkey,
-    Madeira, Etc_.  1854.
 %%%%
 chunk of flesh
 
@@ -462,9 +421,6 @@ A heavy piece of wood.
 club
 
 A heavy piece of wood.
-
-"Speak softly and carry a big stick."
-    -Theodore Roosevelt
 %%%%
 corpse
 
