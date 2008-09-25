@@ -77,14 +77,16 @@ public:
     mcache_draco(const monsters *mon);
     mcache_draco(reader &th);
 
-    virtual const dolls_data *doll() const;
+    virtual unsigned int info(tile_draw_info *dinfo) const;
 
     static bool valid(const monsters *mon);
 
     virtual void construct(writer &th);
 
 protected:
-    dolls_data m_doll;
+    int m_mon_tile;
+    int m_job_tile;
+    int m_equ_tile;
 };
 
 class mcache_ghost : public mcache_entry
@@ -338,6 +340,7 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
     case TILEP_MONS_VAULT_GUARD:
     case TILEP_MONS_HOBGOBLIN:
     case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
+    case TILEP_MONS_DEEP_ELF_BLADEMASTER:
     case TILEP_MONS_IMP:
     case TILEP_MONS_ANGEL:
     case TILEP_MONS_NORRIS:
@@ -459,15 +462,22 @@ bool mcache_monster::get_weapon_offset(int mon_tile, int &ofs_x, int &ofs_y)
     case TILEP_MONS_DEEP_ELF_SUMMONER:
     case TILEP_MONS_DEEP_ELF_CONJURER:
     case TILEP_MONS_DEEP_ELF_PRIEST:
-    case TILEP_MONS_DEEP_ELF_HIGH_PRIEST:
     case TILEP_MONS_DEEP_ELF_DEMONOLOGIST:
     case TILEP_MONS_DEEP_ELF_ANNIHILATOR:
-    case TILEP_MONS_DEEP_ELF_SORCERER:
         ofs_x = -1;
         ofs_y = -2;
         break;
     case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
         ofs_x = -1;
+        ofs_y = 0;
+        break;
+    case TILEP_MONS_DEEP_ELF_SORCERER:
+    case TILEP_MONS_DEEP_ELF_HIGH_PRIEST:
+        ofs_x = 0;
+        ofs_y = -1;
+        break;
+    case TILEP_MONS_TIAMAT:
+        ofs_x = -2;
         ofs_y = 0;
         break;
     default:
@@ -557,79 +567,58 @@ mcache_draco::mcache_draco(const monsters *mon)
     case MONS_DRACONIAN:        colour = 0; break;
     case MONS_BLACK_DRACONIAN:  colour = 1; break;
     case MONS_YELLOW_DRACONIAN: colour = 2; break;
-    case MONS_GREEN_DRACONIAN:  colour = 4; break;
-    case MONS_MOTTLED_DRACONIAN:colour = 5; break;
-    case MONS_PALE_DRACONIAN:   colour = 6; break;
-    case MONS_PURPLE_DRACONIAN: colour = 7; break;
-    case MONS_RED_DRACONIAN:    colour = 8; break;
-    case MONS_WHITE_DRACONIAN:  colour = 9; break;
+    case MONS_GREEN_DRACONIAN:  colour = 3; break;
+    case MONS_MOTTLED_DRACONIAN:colour = 4; break;
+    case MONS_PALE_DRACONIAN:   colour = 5; break;
+    case MONS_PURPLE_DRACONIAN: colour = 6; break;
+    case MONS_RED_DRACONIAN:    colour = 7; break;
+    case MONS_WHITE_DRACONIAN:  colour = 8; break;
     }
 
-    m_doll.parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
-    m_doll.parts[TILEP_PART_BASE] = TILEP_BASE_DRACONIAN + colour * 2;
-    m_doll.parts[TILEP_PART_DRCWING] =
-        tile_player_part_start[TILEP_PART_DRCWING] + colour;
-    m_doll.parts[TILEP_PART_DRCHEAD] =
-        tile_player_part_start[TILEP_PART_DRCHEAD] + colour;
-
+    m_mon_tile = TILEP_DRACO_BASE + colour;
     int mon_wep = mon->inv[MSLOT_WEAPON];
-    int equ_tile = (mon_wep != NON_ITEM) ? tilep_equ_weapon(mitm[mon_wep]) : 0;
+    m_equ_tile = (mon_wep != NON_ITEM) ? tilep_equ_weapon(mitm[mon_wep]) : 0;
 
     switch (mon->type)
     {
         case MONS_DRACONIAN_CALLER:
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_EVIL;
-            m_doll.parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_YELLOW;
-            m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_ROBE_BROWN;
+            m_job_tile = TILEP_DRACO_CALLER;
             break;
-
         case MONS_DRACONIAN_MONK:
-            m_doll.parts[TILEP_PART_ARM] = TILEP_ARM_GLOVE_SHORT_BLUE;
-            m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_KARATE2;
+            m_job_tile = TILEP_DRACO_MONK;
             break;
-
         case MONS_DRACONIAN_ZEALOT:
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_MACE;
-            m_doll.parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_CYAN;
-            m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_MONK_BLUE;
+            m_job_tile = TILEP_DRACO_ZEALOT;
             break;
-
         case MONS_DRACONIAN_SHIFTER:
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_LARGE;
-            m_doll.parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_GREEN;
-            m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_ROBE_CYAN;
+            m_job_tile = TILEP_DRACO_SHIFTER;
             break;
-
         case MONS_DRACONIAN_ANNIHILATOR:
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_RUBY;
-            m_doll.parts[TILEP_PART_HAND2] = TILEP_HAND2_FIRE_CYAN;
-            m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_ROBE_GREEN_GOLD;
+            m_job_tile = TILEP_DRACO_ANNIHILATOR;
             break;
-
         case MONS_DRACONIAN_KNIGHT:
-            m_doll.parts[TILEP_PART_HAND1] = equ_tile;
-            m_doll.parts[TILEP_PART_HAND2] = TILEP_HAND2_SHIELD_KNIGHT_GRAY;
-            m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_BPLATE_METAL1;
-            m_doll.parts[TILEP_PART_LEG] = TILEP_LEG_BELT_GRAY;
+            m_job_tile = TILEP_DRACO_KNIGHT;
             break;
-
         case MONS_DRACONIAN_SCORCHER:
-            m_doll.parts[TILEP_PART_HAND1] = TILEP_HAND1_FIRE_RED;
-            m_doll.parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_RED;
-            m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_ROBE_RED;
+            m_job_tile = TILEP_DRACO_SCORCHER;
             break;
-
         default:
-            m_doll.parts[TILEP_PART_HAND1] = equ_tile;
-            m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_BELT2;
-            m_doll.parts[TILEP_PART_LEG] = TILEP_LEG_LOINCLOTH_RED;
+            m_job_tile = 0;
             break;
     }
 }
 
-const dolls_data *mcache_draco::doll() const
+unsigned int mcache_draco::info(tile_draw_info *dinfo) const
 {
-    return &m_doll;
+    unsigned int i = 0;
+
+    dinfo[i++].set(m_mon_tile);
+    if (m_job_tile)
+        dinfo[i++].set(m_job_tile);
+    if (m_equ_tile)
+        dinfo[i++].set(m_equ_tile, -2, 0);
+
+    return i;
 }
 
 bool mcache_draco::valid(const monsters *mon)
@@ -640,14 +629,18 @@ bool mcache_draco::valid(const monsters *mon)
 
 mcache_draco::mcache_draco(reader &th) : mcache_entry(th)
 {
-    unmarshallDoll(th, m_doll);
+    m_mon_tile = unmarshallLong(th);
+    m_job_tile = unmarshallLong(th);
+    m_equ_tile = unmarshallLong(th);
 }
 
 void mcache_draco::construct(writer &th)
 {
     mcache_entry::construct(th);
-
-    marshallDoll(th, m_doll);
+    
+    marshallLong(th, m_mon_tile);
+    marshallLong(th, m_job_tile);
+    marshallLong(th, m_equ_tile);
 }
 
 /////////////////////////////////////////////////////////////////////////////

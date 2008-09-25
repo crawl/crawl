@@ -462,6 +462,24 @@ dngn_ice_statue ICE_STATUE
 dngn_silver_statue SILVER_STATUE
 %sdir dc-mon
 
+%sdir dc-mon/draco
+draco-base-brown DRACO_BASE
+draco-base-black
+draco-base-yellow
+draco-base-green
+draco-base-mottle
+draco-base-pale
+draco-base-purple
+draco-base-red
+draco-base-white
+draco-job-ann DRACO_ANNIHILATOR
+draco-job-call DRACO_CALLER
+draco-job-kn DRACO_KNIGHT
+draco-job-monk DRACO_MONK
+draco-job-scor DRACO_SCORCHER
+draco-job-shif DRACO_SHIFTER
+draco-job-zea DRACO_ZEALOT
+
 dc-misc/unseen PLAYER
 dc-misc/unseen_monster MONS_UNKNOWN
 dc-misc/unseen_monster MCACHE_START

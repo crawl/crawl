@@ -295,8 +295,9 @@ shield_round2
 
 #dwarvish_roundshield ARM_BUCKLER
 %rim 0
-small_shield ARM_BUCKLER /* A small shield.
-small_shield2
+buckler ARM_BUCKLER /* A small shield.
+buckler2
+buckler3
 %rim 1
 
 large_shield ARM_LARGE_SHIELD /* Like a normal shield, only larger. It is very cumbersome to wear, and slows the rate at which you may attack.
