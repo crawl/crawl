@@ -3146,9 +3146,9 @@ void describe_god( god_type which_god, bool give_title )
         }
         else if (which_god == GOD_YREDELEMNUL)
         {
-            have_any = true;
             if (!player_under_penance() && you.piety >= piety_breakpoint(0))
             {
+                have_any = true;
                 cprintf("%s mirrors your injuries on your foes "
                         "during prayer." EOL, god_name(which_god).c_str());
             }

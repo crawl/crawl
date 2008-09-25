@@ -2203,8 +2203,11 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
             }
             piety_change = -level;
-            if (known || DID_ATTACK_HOLY && victim->attitude != ATT_HOSTILE)
+            if (known || thing_done == DID_ATTACK_HOLY
+                && victim->attitude != ATT_HOSTILE)
+            {
                 penance = level * ((you.religion == GOD_SHINING_ONE) ? 2 : 1);
+            }
             ret = true;
             break;
         default:

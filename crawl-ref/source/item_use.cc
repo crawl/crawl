@@ -3921,7 +3921,7 @@ static bool _vorpalise_weapon()
         torment_monsters(you.pos(), 0, TORMENT_GENERIC);
         success = false;
 
-        // Is only naughty if you know you're doing it.
+        // This is only naughty if you know you're doing it.
         // XXX: assumes this can only happen from Vorpalise Weapon scroll.
         did_god_conduct(DID_UNHOLY, 10,
                         get_ident_type(OBJ_SCROLLS, SCR_VORPALISE_WEAPON)
@@ -4436,9 +4436,9 @@ void read_scroll( int slot )
         break;
 
     case SCR_TORMENT:
-        torment( TORMENT_SCROLL, you.pos() );
+        torment(TORMENT_SCROLL, you.pos());
 
-        // Is only naughty if you know you're doing it.
+        // This is only naughty if you know you're doing it.
         did_god_conduct(DID_UNHOLY, 10, item_type_known(scroll));
         break;
 
