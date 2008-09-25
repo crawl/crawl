@@ -568,6 +568,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("kill living evil beings");
         break;
 
+    case GOD_YREDELEMNUL:
+        likes.push_back("kill holy beings");
+        break;
+
     case GOD_BEOGH:
         likes.push_back("kill the priests of other religions");
         break;
@@ -2471,6 +2475,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             ret = true;
             if (random2(level + 18) > 2)
                 piety_change = 1;
+
+            if (you.religion == GOD_YREDELEMNUL && thing_done == DID_KILL_HOLY)
+            {
+                simple_god_message(" appreciates your killing of a "
+                                   "holy being.");
+                ret = true;
+                if (random2(level + 10) > 5)
+                    piety_change = 1;
+            }
             break;
 
         default:
