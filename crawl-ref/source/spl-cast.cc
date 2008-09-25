@@ -666,15 +666,15 @@ bool cast_a_spell()
 
 // "Utility" spells for the sake of simplicity are currently ones with
 // enchantments, translocations, or divinations.
-static bool _spell_is_utility_spell( spell_type spell_id )
+static bool _spell_is_utility_spell(spell_type spell_id)
 {
-    return (spell_typematch( spell_id,
-                SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION | SPTYP_DIVINATION ));
+    return (spell_typematch(spell_id,
+                SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION | SPTYP_DIVINATION));
 }
 
-static bool _spell_is_unholy( spell_type spell_id )
+static bool _spell_is_unholy(spell_type spell_id)
 {
-    return (testbits( get_spell_flags( spell_id ), SPFLAG_UNHOLY ));
+    return (testbits(get_spell_flags(spell_id), SPFLAG_UNHOLY));
 }
 
 bool maybe_identify_staff(item_def &item, spell_type spell)
@@ -792,7 +792,7 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
 
     // Self-banishment gets a special exemption - you're there to spread light
     if (_spell_is_unholy(spell) && !you.banished)
-        did_god_conduct( DID_UNHOLY, 10 + spell_difficulty(spell) );
+        did_god_conduct(DID_UNHOLY, 10 + spell_difficulty(spell));
 
     // Linley says: Condensation Shield needs some disadvantages to keep
     // it from being a no-brainer... this isn't much, but its a start -- bwr
@@ -801,7 +801,7 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
 
     if (spell_typematch(spell, SPTYP_NECROMANCY))
     {
-        did_god_conduct( DID_NECROMANCY, 10 + spell_difficulty(spell) );
+        did_god_conduct(DID_NECROMANCY, 10 + spell_difficulty(spell));
 
         if (spell == SPELL_NECROMUTATION && is_good_god(you.religion))
             excommunication();
@@ -841,9 +841,10 @@ static bool _vampire_cannot_cast(spell_type spell)
 
 static bool _spell_is_uncastable(spell_type spell)
 {
-    if (you.is_undead && spell_typematch(spell, SPTYP_HOLY))
+    if ((you.is_undead || you.species == SP_DEMONSPAWN)
+        && spell_typematch(spell, SPTYP_HOLY))
     {
-        mpr( "You can't use this type of magic!" );
+        mpr("You can't use this type of magic!");
         return (true);
     }
 

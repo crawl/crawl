@@ -1246,9 +1246,10 @@ bool learn_spell(int book)
         return (false);
     }
 
-    if (you.is_undead && spell_typematch(specspell, SPTYP_HOLY))
+    if ((you.is_undead || you.species == SP_DEMONSPAWN)
+        && spell_typematch(specspell, SPTYP_HOLY))
     {
-        mpr("You cannot use this type of magic!");
+        mpr("You can't use this type of magic!");
         return (false);
     }
 
