@@ -435,18 +435,6 @@ bool is_priest_god(god_type god)
             || god == GOD_BEOGH);
 }
 
-bool god_gives_permanent_followers(god_type god)
-{
-    // Only TSO, Yredelemnul, Kikubaaqudgha and Beogh do this, but if you
-    // switch from TSO to another good god, you keep your (non-daeva) permanent
-    // followers, so count the other good gods here as well.
-    return (god == GOD_SHINING_ONE
-            || god == GOD_BEOGH
-            || god == GOD_YREDELEMNUL
-            || god == GOD_KIKUBAAQUDGHA
-            || you.worshipped[GOD_SHINING_ONE] && is_good_god(god));
-}
-
 std::string get_god_powers(god_type which_god)
 {
     // Return early for the special cases.

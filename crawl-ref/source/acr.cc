@@ -1924,14 +1924,6 @@ void process_command( command_type cmd )
         // Toggle pickup mode for friendlies.
         _print_friendly_pickup_setting(false);
 
-        if (Options.tutorial_left
-            && !god_gives_permanent_followers(you.religion))
-        {
-            mpr("Only intelligent allies may equip themselves, which excludes "
-                "all types of zombies as well as hostile monsters you "
-                "enslaved.", MSGCH_TUTORIAL);
-        }
-
         mpr("Change to (d)efault, (n)othing, (f)riend-dropped, or (a)ll? ",
             MSGCH_PROMPT);
 
