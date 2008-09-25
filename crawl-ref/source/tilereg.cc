@@ -947,6 +947,8 @@ bool DungeonRegion::update_tip_text(std::string& tip)
 
     if (m_cursor[CURSOR_MOUSE] == NO_CURSOR)
         return false;
+    if (!map_bounds(m_cursor[CURSOR_MOUSE]))
+        return false;
 
     if (m_cursor[CURSOR_MOUSE] == you.pos())
     {
@@ -1337,13 +1339,19 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
         if (on_floor)
         {
             if (event.mod & MOD_SHIFT)
+            {
                 tile_item_eat_floor(idx);
+            }
             else
+            {
                 describe_item(mitm[idx]);
+                redraw_screen();
+            }
         }
         else
         {
             describe_item(you.inv[idx]);
+            redraw_screen();
         }
         return CK_MOUSE_CMD;
     }
