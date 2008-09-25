@@ -788,7 +788,10 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
         return;
 
     if (!_spell_is_utility_spell(spell))
-        did_god_conduct( DID_SPELL_NONUTILITY, 10 + spell_difficulty(spell) );
+        did_god_conduct(DID_SPELL_NONUTILITY, 10 + spell_difficulty(spell));
+
+    if (spell_typematch(spell, SPTYP_HOLY))
+        did_god_conduct(DID_HOLY, 10 + spell_difficulty(spell));
 
     // Self-banishment gets a special exemption - you're there to spread light
     if (_spell_is_unholy(spell) && !you.banished)

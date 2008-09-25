@@ -100,6 +100,7 @@ void beogh_idol_revenge();
 void good_god_holy_attitude_change(monsters *holy);
 void beogh_convert_orc(monsters *orc, bool emergency,
                        bool converted_by_follower = false);
+bool is_holy_item(const item_def& item);
 bool is_evil_item(const item_def& item);
 bool good_god_dislikes_item_handling(const item_def &item);
 bool god_dislikes_item_handling(const item_def &item);

@@ -4583,8 +4583,10 @@ void read_scroll( int slot )
                                                        you.piety / 2;
         }
 
-        if (!holy_word(pow, HOLY_WORD_SCROLL, you.pos(),
-                       !item_type_known(scroll)))
+        const bool success = holy_word(pow, HOLY_WORD_SCROLL, you.pos(),
+                                       !item_type_known(scroll));
+
+        if (!success)
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             id_the_scroll = false;
@@ -4597,6 +4599,11 @@ void read_scroll( int slot )
             if (you.duration[DUR_PIETY_POOL] > 500)
                 you.duration[DUR_PIETY_POOL] = 500;
         }
+
+        // This is only naughty if you know you're doing it, or if it's
+        // succeeded, in which case you'll know for next time.
+        if (item_type_known(scroll) || success)
+            did_god_conduct(DID_HOLY, 10, item_type_known(scroll));
         break;
     }
 

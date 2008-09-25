@@ -664,6 +664,10 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("kill a living thing while praying");
         break;
 
+    case GOD_YREDELEMNUL:
+        dislikes.push_back("use holy magic or items");
+        break;
+
     case GOD_TROG:
         dislikes.push_back("memorise spells");
         dislikes.push_back("cast spells");
@@ -2215,6 +2219,20 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         }
         break;
 
+    case DID_HOLY:
+        if (you.religion == GOD_YREDELEMNUL)
+        {
+            if (!known)
+            {
+                simple_god_message(" did not appreciate that!");
+                break;
+            }
+            ret = true;
+            piety_change = -level;
+            penance = level * 2;
+        }
+        break;
+
     case DID_UNCHIVALRIC_ATTACK:
     case DID_POISON:
         if (you.religion == GOD_SHINING_ONE)
@@ -2711,7 +2729,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         static const char *conducts[] =
         {
           "",
-          "Necromancy", "Unholy", "Attack Holy", "Attack Neutral",
+          "Necromancy", "Holy", "Unholy", "Attack Holy", "Attack Neutral",
           "Attack Friend", "Friend Died", "Stab", "Unchivalric Attack",
           "Poison", "Field Sacrifice", "Kill Living", "Kill Undead",
           "Kill Demon", "Kill Natural Evil", "Kill Chaotic",
@@ -2977,6 +2995,29 @@ void gain_piety(int pgn)
     _do_god_gift(false);
 }
 
+bool is_holy_item(const item_def& item)
+{
+    bool retval = false;
+
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        {
+        const int item_brand = get_weapon_brand(item);
+
+        retval = (item_brand == SPWPN_HOLY_WRATH);
+        break;
+        }
+    case OBJ_SCROLLS:
+        retval = (item.sub_type == SCR_HOLY_WORD);
+        break;
+    default:
+        break;
+    }
+
+    return (retval);
+}
+
 bool is_evil_item(const item_def& item)
 {
     bool retval = false;
@@ -3089,6 +3130,15 @@ bool god_dislikes_item_handling(const item_def &item)
         {
             return (true);
         }
+    }
+
+    if (you.religion == GOD_YREDELEMNUL)
+    {
+        if (!item_type_known(item))
+            return (false);
+
+        if (is_holy_item(item))
+            return (true);
     }
 
     return (false);

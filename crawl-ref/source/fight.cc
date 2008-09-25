@@ -1752,10 +1752,13 @@ void melee_attack::player_check_weapon_effects()
 
     if (weapon)
     {
-        if (weapon->base_type == OBJ_WEAPONS
-            && is_demonic( *weapon ))
+        if (weapon->base_type == OBJ_WEAPONS)
         {
-            did_god_conduct(DID_UNHOLY, 1);
+            if (is_holy_item(*weapon))
+                did_god_conduct(DID_HOLY, 1);
+
+            if (is_demonic(*weapon))
+                did_god_conduct(DID_UNHOLY, 1);
         }
 
         if (is_fixed_artefact(*weapon))
