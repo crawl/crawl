@@ -84,6 +84,7 @@
 #include "tiles.h"
 #include "tilemcache.h"
 #include "travel.h"
+#include "view.h"
 
 // defined in overmap.cc
 extern std::map<branch_type, level_id> stair_level;
@@ -2260,17 +2261,21 @@ void tag_read_level_tiles(struct reader &th)
 static void tag_missing_level_tiles()
 {
 #ifdef USE_TILE
-    int i;
-    int j;
-
-    for (i = 0; i < GXM; i++)
-        for (j = 0; j < GYM; j++)
+    for (int i = 0; i < GXM; i++)
+        for (int j = 0; j < GYM; j++)
         {
-            env.tile_bk_bg[i][j] = 0;
-            env.tile_bk_fg[i][j] = 0;
+            coord_def gc(i, j);
+            unsigned int fg, bg;
+            tileidx_unseen(fg, bg, get_envmap_char(i, j), gc);
+            env.tile_bk_fg[i][j] = fg;
+            env.tile_bk_bg[i][j] = bg;
         }
 
     mcache.clear_all();
+
+    TileNewLevel(true);
+
+    
 #endif
 }
 
