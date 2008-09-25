@@ -527,10 +527,12 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
     case OBJ_WEAPONS:
     {
-        if (is_evil_item(item) && is_good_god(you.religion))
+        if (showMsgs)
         {
-            if (showMsgs)
-                mpr("You really shouldn't be using a nasty item like this.");
+            if (is_holy_item(item) && you.religion == GOD_YREDELEMNUL)
+                mpr("You really shouldn't be using a holy item like this.");
+            else if (is_evil_item(item) && is_good_god(you.religion))
+                mpr("You really shouldn't be using an evil item like this.");
         }
 
         const bool was_known = item_type_known(item);

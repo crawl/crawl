@@ -1756,8 +1756,7 @@ void melee_attack::player_check_weapon_effects()
         {
             if (is_holy_item(*weapon))
                 did_god_conduct(DID_HOLY, 1);
-
-            if (is_demonic(*weapon))
+            else if (is_demonic(*weapon))
                 did_god_conduct(DID_UNHOLY, 1);
         }
 
