@@ -4736,6 +4736,28 @@ void view_update_at(const coord_def &pos)
 #endif
 }
 
+#ifndef USE_TILE
+void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
+                          int fmc_delay)
+{
+    if (mons_near(mon) && player_monster_visible(mon))
+    {
+        unsigned char old_flash_colour = you.flash_colour;
+        coord_def c(mon->pos());
+
+        you.flash_colour = fmc_colour;
+        view_update_at(c);
+
+        update_screen();
+        delay(fmc_delay);
+
+        you.flash_colour = old_flash_colour;
+        view_update_at(c);
+        update_screen();
+    }
+}
+#endif
+
 bool view_update()
 {
     if (you.num_turns > you.last_view_update)

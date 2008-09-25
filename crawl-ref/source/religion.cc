@@ -1652,21 +1652,7 @@ blessing_done:
         god);
 
 #ifndef USE_TILE
-    if (see_follower)
-    {
-        unsigned char old_flash_colour = you.flash_colour;
-        coord_def c(follower->pos());
-
-        you.flash_colour = god_colour(god);
-        view_update_at(c);
-
-        update_screen();
-        delay(200);
-
-        you.flash_colour = old_flash_colour;
-        view_update_at(c);
-        update_screen();
-    }
+    flash_monster_colour(follower, god_colour(god), 200);
 #endif
 
     return (true);
@@ -2036,8 +2022,13 @@ void pray()
             you.duration[DUR_PRAYER] *= 2;
     }
 
-    if (you.religion == GOD_NEMELEX_XOBEH)
+    if (!_god_accepts_prayer(you.religion) || you.religion == GOD_ZIN
+        || you.religion == GOD_NEMELEX_XOBEH)
+    {
         you.duration[DUR_PRAYER] = 1;
+    }
+    else if (you.religion == GOD_YREDELEMNUL || you.religion == GOD_ELYVILON)
+        you.duration[DUR_PRAYER] = 20;
 
     if (!was_praying)
         _do_god_gift(true);

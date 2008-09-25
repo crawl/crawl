@@ -227,6 +227,8 @@ int choose_random_weighted(Iterator beg, const Iterator end)
     return result;
 }
 
+int integer_sqrt(int value);
+
 int random_rod_subtype();
 
 #endif

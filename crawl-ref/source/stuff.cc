@@ -1648,6 +1648,27 @@ int coord_def::distance_from(const coord_def &other) const
     return (grid_distance(x, y, other.x, other.y));
 }
 
+int integer_sqrt(int value)
+{
+    if (value <= 0)
+        return (value);
+
+    int very_old_retval = -1;
+    int old_retval = 0;
+    int retval = 1;
+
+    while (very_old_retval != old_retval
+        && very_old_retval != retval
+        && retval != old_retval)
+    {
+        very_old_retval = old_retval;
+        old_retval = retval;
+        retval = (value / old_retval + old_retval) / 2;
+    }
+
+    return (retval);
+}
+
 int random_rod_subtype()
 {
     return STAFF_SMITING + random2(NUM_STAVES - STAFF_SMITING);

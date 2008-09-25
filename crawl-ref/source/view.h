@@ -244,6 +244,10 @@ unsigned get_magicmap_char(int feature);
 
 bool view_update();
 void view_update_at(const coord_def &pos);
+#ifndef USE_TILE
+void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
+                          int fmc_delay);
+#endif
 void viewwindow(bool draw_it, bool do_updates);
 void fire_monster_alerts();
 
