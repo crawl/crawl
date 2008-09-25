@@ -613,6 +613,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("use necromancy");
         dislikes.push_back("use unholy magic or items");
         dislikes.push_back("attack holy beings");
+        dislikes.push_back("kill holy beings");
         dislikes.push_back("attack neutral beings");
     }
 
