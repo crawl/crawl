@@ -1236,6 +1236,10 @@ static void _finish_delay(const delay_queue_item &delay)
 
     // Chain onto the next delay.
     handle_delay();
+
+#ifdef USE_TILE
+    tiles.update_inventory();
+#endif
 }
 
 static void _armour_wear_effects(const int item_slot)

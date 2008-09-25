@@ -3681,7 +3681,6 @@ const char *get_parts_name(int part, int idx)
     return ptr;
 }
 
-// �p�[�c�̖��O�𐔎��ɕϊ�
 int get_parts_idx(int part, char *name)
 {
     int res = atoi(name);
