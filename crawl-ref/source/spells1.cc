@@ -798,12 +798,37 @@ int cast_healing(int pow, const coord_def& where)
     return (_healing_spell(pow + roll_dice(2, pow) - 2, where));
 }
 
-void remove_divine_robustness()
+void remove_divine_vigour()
 {
-    mpr("Your divine robustness fades.", MSGCH_DURATION);
-    you.duration[DUR_DIVINE_ROBUSTNESS] = 0;
-    you.attribute[ATTR_DIVINE_ROBUSTNESS] = 0;
+    mpr("Your divine vigour fades.", MSGCH_DURATION);
+    you.duration[DUR_DIVINE_VIGOUR] = 0;
+    you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     calc_hp();
+}
+
+bool cast_divine_vigour()
+{
+    bool success = false;
+
+    if (!you.duration[DUR_DIVINE_VIGOUR])
+    {
+        mprf("%s grants you divine vigour.",
+             god_name(you.religion).c_str());
+
+        const int vigour_amt = 1 + (you.skills[SK_INVOCATIONS]/6);
+        const int old_hp_max = you.hp_max;
+        you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
+        you.duration[DUR_DIVINE_VIGOUR]
+            = 35 + (you.skills[SK_INVOCATIONS]*5)/3;
+        calc_hp();
+        inc_hp(you.hp_max - old_hp_max, false);
+
+        success = true;
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
 }
 
 void remove_divine_stamina()
@@ -926,7 +951,7 @@ bool cast_vitalisation()
                  god_name(you.religion).c_str());
 
             const int stamina_amt = 3;
-            you.attribute[ATTR_DIVINE_STAMINA] += stamina_amt;
+            you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
             you.duration[DUR_DIVINE_STAMINA]
                 = 35 + (you.skills[SK_INVOCATIONS]*5)/3;
 

@@ -2993,8 +2993,8 @@ static void _decrement_durations()
         }
     }
 
-    if (_decrement_a_duration(DUR_DIVINE_ROBUSTNESS))
-        remove_divine_robustness();
+    if (_decrement_a_duration(DUR_DIVINE_VIGOUR))
+        remove_divine_vigour();
 
     if (_decrement_a_duration(DUR_DIVINE_STAMINA))
         remove_divine_stamina();

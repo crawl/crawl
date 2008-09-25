@@ -138,8 +138,8 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_NEMELEX_STACK_FIVE },
     // Elyvilon
     { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_PURIFICATION,
-      ABIL_ELYVILON_HEALING, ABIL_ELYVILON_RESTORATION,
-      ABIL_ELYVILON_GREATER_HEALING },
+      ABIL_ELYVILON_GREATER_HEALING, ABIL_ELYVILON_RESTORATION,
+      ABIL_ELYVILON_DIVINE_VIGOUR },
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE,
       ABIL_LUGONU_BANISH, ABIL_LUGONU_CORRUPT,
@@ -268,9 +268,10 @@ static const ability_def Ability_List[] =
       1, 0, 100, generic_cost::range(0, 1), ABFLAG_CONF_OK },
     { ABIL_ELYVILON_PURIFICATION, "Purification", 2, 0, 150, 1,
       ABFLAG_CONF_OK },
-    { ABIL_ELYVILON_HEALING, "Healing", 2, 0, 250, 2, ABFLAG_CONF_OK },
+    { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing",
+      2, 0, 250, 2, ABFLAG_CONF_OK },
     { ABIL_ELYVILON_RESTORATION, "Restoration", 3, 0, 400, 3, ABFLAG_CONF_OK },
-    { ABIL_ELYVILON_GREATER_HEALING, "Greater Healing", 6, 0, 600, 5,
+    { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour", 6, 0, 600, 5,
       ABFLAG_CONF_OK },
 
     // Lugonu
@@ -666,7 +667,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_KIKU_ENSLAVE_UNDEAD:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-    case ABIL_ELYVILON_HEALING:
+    case ABIL_ELYVILON_GREATER_HEALING:
     case ABIL_LUGONU_BEND_SPACE:
         invoc = true;
         failure = 40 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
@@ -706,7 +707,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ZIN_SANCTUARY:
     case ABIL_TSO_SUMMON_DAEVA:
     case ABIL_KIKU_INVOKE_DEATH:
-    case ABIL_ELYVILON_GREATER_HEALING:
+    case ABIL_ELYVILON_DIVINE_VIGOUR:
     case ABIL_LUGONU_ABYSS_ENTER:
         invoc = true;
         failure = 80 - (you.piety / 25) - (you.skills[SK_INVOCATIONS] * 4);
@@ -1667,36 +1668,36 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ELYVILON_LESSER_HEALING:
-        if (!cast_healing( 3 + (you.skills[SK_INVOCATIONS] / 6) ))
+        if (!cast_healing(3 + (you.skills[SK_INVOCATIONS] / 6)))
             return (false);
 
-        exercise( SK_INVOCATIONS, 1 );
+        exercise(SK_INVOCATIONS, 1);
         break;
 
     case ABIL_ELYVILON_PURIFICATION:
         purification();
-        exercise( SK_INVOCATIONS, 2 + random2(3) );
-        break;
-
-    case ABIL_ELYVILON_HEALING:
-        if (!cast_healing( 10 + (you.skills[SK_INVOCATIONS] / 3) ))
-            return (false);
-
-        exercise( SK_INVOCATIONS, 3 + random2(5) );
-        break;
-
-    case ABIL_ELYVILON_RESTORATION:
-        restore_stat( STAT_ALL, 0, false );
-        unrot_hp( 100 );
-
-        exercise( SK_INVOCATIONS, 4 + random2(6) );
+        exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_ELYVILON_GREATER_HEALING:
-        if (!cast_healing( 20 + you.skills[SK_INVOCATIONS] * 2 ))
+        if (!cast_healing(10 + (you.skills[SK_INVOCATIONS] / 3)))
             return (false);
 
-        exercise( SK_INVOCATIONS, 6 + random2(10) );
+        exercise(SK_INVOCATIONS, 3 + random2(5));
+        break;
+
+    case ABIL_ELYVILON_RESTORATION:
+        restore_stat(STAT_ALL, 0, false);
+        unrot_hp(100);
+
+        exercise(SK_INVOCATIONS, 4 + random2(6));
+        break;
+
+    case ABIL_ELYVILON_DIVINE_VIGOUR:
+        if (!cast_divine_vigour())
+            return (false);
+
+        exercise(SK_INVOCATIONS, 6 + random2(10));
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:

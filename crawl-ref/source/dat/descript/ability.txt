@@ -320,7 +320,7 @@ Purification
 Purge your body of bad effects such as sickness, poisoning, slowness,
 confusion, and rotting.
 %%%%
-Healing
+Greater Healing
 
 Depending on your Invocations skill, heal a moderate amount of your hitpoints.
 %%%%
@@ -329,9 +329,10 @@ Restoration
 Fully restore your Strength, Dexterity and Intelligence, and heal a large 
 amount of rotted hitpoints.
 %%%%
-Greater Healing
+Divine Vigour
 
-Depending on your Invocations skill, heal a great amount of your hitpoints.
+Depending on your Invocations skill, heal a moderate amount of, and 
+temporarily increase, your hitpoints.
 %%%%
 # Lugonu
 Depart the Abyss

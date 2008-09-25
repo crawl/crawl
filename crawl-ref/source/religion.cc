@@ -253,11 +253,11 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "mark four cards in a deck",
       "order the top five cards of a deck, losing the rest" },
     // Elyvilon
-    { "call upon Elyvilon for minor healing",
+    { "call upon Elyvilon for lesser healing",
       "call upon Elyvilon for purification",
-      "call upon Elyvilon for moderate healing",
+      "call upon Elyvilon for greater healing",
       "call upon Elyvilon to restore your abilities",
-      "call upon Elyvilon for greater healing" },
+      "call upon Elyvilon for divine vigour" },
     // Lugonu
     { "depart the Abyss",
       "bend space around yourself",
@@ -339,11 +339,11 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "mark decks",
       "stack decks" },
     // Elyvilon
-    { "call upon Elyvilon for minor healing",
+    { "call upon Elyvilon for lesser healing",
       "call upon Elyvilon for purification",
-      "call upon Elyvilon for moderate healing",
+      "call upon Elyvilon for greater healing",
       "call upon Elyvilon to restore your abilities",
-      "call upon Elyvilon for greater healing" },
+      "call upon Elyvilon for divine vigour" },
     // Lugonu
     { "depart the Abyss at will",
       "bend space around yourself",
@@ -760,7 +760,7 @@ static void _inc_penance(god_type god, int val)
             if (you.duration[DUR_DIVINE_STAMINA])
                 remove_divine_stamina();
         }
-        // neither does TSO's halo or divine shield
+        // Neither does TSO's halo or divine shield.
         else if (god == GOD_SHINING_ONE)
         {
             if (you.haloed())
@@ -770,6 +770,12 @@ static void _inc_penance(god_type god, int val)
                 remove_divine_shield();
 
             _make_god_gifts_disappear(); // only on level
+        }
+        // Neither does Ely's divine vigour.
+        else if (god == GOD_ELYVILON)
+        {
+            if (you.duration[DUR_DIVINE_VIGOUR])
+                remove_divine_vigour();
         }
     }
 
@@ -4860,6 +4866,9 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_ELYVILON:
+        if (you.duration[DUR_DIVINE_VIGOUR])
+            remove_divine_vigour();
+
         // Leaving Elyvilon for a non-good god will make all your
         // followers (originally from TSO) abandon you.
         if (!is_good_god(new_god))

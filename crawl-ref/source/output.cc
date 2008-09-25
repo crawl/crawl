@@ -2153,7 +2153,7 @@ std::string _status_mut_abilities()
     if (you.duration[DUR_MIGHT])
         text += "mighty, ";
 
-    if (you.duration[DUR_DIVINE_ROBUSTNESS])
+    if (you.duration[DUR_DIVINE_VIGOUR])
         text += "divinely robust, ";
 
     if (you.duration[DUR_DIVINE_STAMINA])

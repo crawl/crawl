@@ -3921,7 +3921,7 @@ void display_char_status()
     if (you.duration[DUR_MIGHT])
         mpr( "You are mighty." );
 
-    if (you.duration[DUR_DIVINE_ROBUSTNESS])
+    if (you.duration[DUR_DIVINE_VIGOUR])
         mpr( "You are divinely robust." );
 
     if (you.duration[DUR_DIVINE_STAMINA])
@@ -4912,10 +4912,10 @@ int get_real_hp(bool trans, bool rotted)
     if (rotted)
         hitp += player_rotted();
 
-    // Frail and robust mutations, and divine robustness.
-    hitp *= (10 + player_mutation_level(MUT_ROBUST)
-                + you.attribute[ATTR_DIVINE_ROBUSTNESS]
-                - player_mutation_level(MUT_FRAIL));
+    // Frail and robust mutations, and divine vigour.
+    hitp *= 10 + player_mutation_level(MUT_ROBUST)
+               + you.attribute[ATTR_DIVINE_VIGOUR]
+               - player_mutation_level(MUT_FRAIL);
     hitp /= 10;
 
     return (hitp);

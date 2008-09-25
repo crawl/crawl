@@ -28,7 +28,8 @@ bool cast_sure_blade(int power);
  * *********************************************************************** */
 int cast_healing(int pow, const coord_def& where = coord_def(0,0));
 
-void remove_divine_robustness();
+void remove_divine_vigour();
+bool cast_divine_vigour();
 void remove_divine_stamina();
 bool cast_vitalisation();
 

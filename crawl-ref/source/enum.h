@@ -84,9 +84,9 @@ enum ability_type
     ABIL_ELYVILON_DESTROY_WEAPONS = 219,
     ABIL_ELYVILON_LESSER_HEALING = 220,     //  220
     ABIL_ELYVILON_PURIFICATION,
-    ABIL_ELYVILON_HEALING,
+    ABIL_ELYVILON_GREATER_HEALING,
     ABIL_ELYVILON_RESTORATION,
-    ABIL_ELYVILON_GREATER_HEALING,          //  224
+    ABIL_ELYVILON_DIVINE_VIGOUR,            //  224
     ABIL_LUGONU_ABYSS_EXIT,                 //  225
     ABIL_LUGONU_BEND_SPACE,
     ABIL_LUGONU_BANISH,
@@ -151,7 +151,7 @@ enum attribute_type
     ATTR_HELD,                  // caught in a net
     ATTR_ABYSS_ENTOURAGE,       // maximum number of hostile monsters in
                                 // sight of the player while in the Abyss.
-    ATTR_DIVINE_ROBUSTNESS,     // strength of Zin's Divine Robustness
+    ATTR_DIVINE_VIGOUR,         // strength of Ely's Divine Vigour
     ATTR_DIVINE_STAMINA,        // strength of Zin's Divine Stamina
     ATTR_DIVINE_SHIELD,         // strength of TSO's Divine Shield
     ATTR_UNIQUE_RUNES,
@@ -1092,7 +1092,7 @@ enum duration_type
     DUR_REPEL_MISSILES,
     DUR_PRAYER,
     DUR_PIETY_POOL,             // distribute piety over time
-    DUR_DIVINE_ROBUSTNESS,      // duration of Zin's Divine Robustness
+    DUR_DIVINE_VIGOUR,          // duration of Ely's Divine Vigour
     DUR_DIVINE_STAMINA,         // duration of Zin's Divine Stamina
     DUR_DIVINE_SHIELD,          // duration of TSO's Divine Shield
     DUR_REGENERATION,
