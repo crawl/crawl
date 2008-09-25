@@ -1311,7 +1311,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_CENTAUR:
-        case SP_OGRE:
         case SP_RED_DRACONIAN:
         case SP_MUMMY:
             return CC_RESTRICTED;
@@ -1542,7 +1541,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_GHOUL:
@@ -1584,7 +1582,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_RED_DRACONIAN:
@@ -1607,7 +1604,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
             return CC_RESTRICTED;
@@ -1657,7 +1653,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_KOBOLD:
         case SP_GNOME:
         case SP_CENTAUR:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_KENKU:
@@ -1678,7 +1673,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_GHOUL:
@@ -1697,7 +1691,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_GHOUL:
@@ -1715,7 +1708,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MERFOLK:
         case SP_GNOME:
         case SP_CENTAUR:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_MUMMY:
@@ -1737,7 +1729,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_CENTAUR:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_KENKU:
@@ -1759,7 +1750,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_HALFLING:
         case SP_GNOME:
         case SP_CENTAUR:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_GHOUL:
