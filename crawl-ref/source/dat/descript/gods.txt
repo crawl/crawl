@@ -28,7 +28,7 @@ Kikubaaqudgha is a terrible Demon-God, served by those who seek knowledge of the
 %%%%
 Yredelemnul
 
-Yredelemnul is an evil God worshipped by those who seek powers over death and the undead without having to learn to use necromancy. Followers can raise legions of servile undead and gain a number of other useful (if unpleasant) powers. Yredelemnul appreciates killing, but prefers corpses to be put to use rather than sacrificed.
+Yredelemnul is an evil God worshipped by those who seek powers over death and the undead. Followers can raise legions of servile undead and gain a number of other useful (if unpleasant) powers. Yredelemnul appreciates killing, but prefers corpses to be put to use rather than sacrificed.
 %%%%
 Xom
 
@@ -84,7 +84,8 @@ Kikubaaqudgha offers the power to recall your undead followers to your near surr
 %%%%
 Yredelemnul powers
 
-Yredelemnul gives you the power to raise corpses to fight on your side, to recall your undead followers to your vicinity, and to drain the life force of living creatures. Eventually, you'll gain the power to sway hostile undeads' loyalties and make them fight for you instead. Yredelemnul will sporadically gift you with stronger undead servants. Sometimes, Yredelemnul may directly intervene to save a follower's life.
+Yredelemnul gives you the power to raise corpses to fight on your side, to recall your undead followers to your vicinity, and to drain the life force of living creatures. Eventually, you'll gain the power to sway hostile undeads' loyalties and make them fight for you instead. Yredelemnul will sporadically gift you with stronger undead servants. Under prayer, Yredelemnul will mirror any injury you
+have to suffer onto the attacker, at a loss of piety.
 %%%%
 Xom powers
 
