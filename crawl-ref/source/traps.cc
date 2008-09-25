@@ -260,7 +260,10 @@ static void dart_trap(bool trap_known, int trapped, bolt &pbolt, bool poison)
             damage_taken -= random2( player_AC() + 1 );
 
             if (damage_taken > 0)
-                ouch( damage_taken, 0, KILLED_BY_TRAP, pbolt.name.c_str() );
+            {
+                ouch(damage_taken, NON_MONSTER, KILLED_BY_TRAP,
+                     pbolt.name.c_str());
+            }
         }
         else
         {
@@ -429,7 +432,7 @@ void handle_traps(trap_type trt, int i, bool trap_known)
             mpr("A huge blade swings out and slices into you!");
             int damage = (you.your_level * 2) + random2avg(29, 2)
                           - random2(1 + player_AC());
-            ouch( damage, 0, KILLED_BY_TRAP, " blade" );
+            ouch(damage, NON_MONSTER, KILLED_BY_TRAP, " blade");
             bleed_onto_floor(you.pos(), -1, damage, true);
         }
         break;

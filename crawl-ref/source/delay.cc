@@ -1043,7 +1043,7 @@ static void _finish_delay(const delay_queue_item &delay)
             {
             default:
                 if (!you.can_pass_through_feat(grd(pass)))
-                    ouch(1 + you.hp, 0, KILLED_BY_PETRIFICATION);
+                    ouch(1 + you.hp, NON_MONSTER, KILLED_BY_PETRIFICATION);
                 break;
 
             case DNGN_SECRET_DOOR:      // oughtn't happen

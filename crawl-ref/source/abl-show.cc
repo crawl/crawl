@@ -2412,7 +2412,7 @@ static void _lugonu_bends_space()
     random_blink(false, true);
 
     const int damage = roll_dice(1, 4);
-    ouch(damage, 0, KILLED_BY_WILD_MAGIC, "a spatial distortion");
+    ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "a spatial distortion");
 }
 
 ////////////////////////////////////////////////////////////////////////

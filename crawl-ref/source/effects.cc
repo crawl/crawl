@@ -537,9 +537,9 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
     if (newValue < 1)
     {
         if (cause == NULL)
-            ouch(INSTANT_DEATH, 0, kill_type);
+            ouch(INSTANT_DEATH, NON_MONSTER, kill_type);
         else
-            ouch(INSTANT_DEATH, 0, kill_type, cause, see_source);
+            ouch(INSTANT_DEATH, NON_MONSTER, kill_type, cause, see_source);
     }
 
 

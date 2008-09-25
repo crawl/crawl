@@ -1944,7 +1944,10 @@ static void _focus_card(int power, deck_rarity_type rarity)
 
     for (int i = 0; i < 3; ++i)
         if (*max_statp[i] < 1 || *base_statp[i] < 1)
-            ouch(INSTANT_DEATH, 0, kill_types[i], cause.c_str(), true);
+        {
+            ouch(INSTANT_DEATH, NON_MONSTER, kill_types[i], cause.c_str(),
+                 true);
+        }
 
     // The player survived! Yay!
     you.redraw_strength     = true;
@@ -2001,7 +2004,10 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
 
     for (int i = 0; i < 3; ++i)
         if (new_base[i] < 1 || new_max[i] < 1)
-            ouch(INSTANT_DEATH, 0, kill_types[i], cause.c_str(), true);
+        {
+            ouch(INSTANT_DEATH, NON_MONSTER, kill_types[i], cause.c_str(),
+                 true);
+        }
 
     // The player survived!
 

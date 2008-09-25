@@ -95,7 +95,7 @@ public:
     char        best_skill;         // best skill #
     char        best_skill_lvl;     // best skill level
     int         death_type;
-    int         death_source;       // 0 or monster TYPE
+    int         death_source;       // NON_MONSTER or monster type
     int         mon_num;            // sigh...
     std::string death_source_name;  // overrides death_source
     std::string auxkilldata;        // weapon wielded, spell cast, etc

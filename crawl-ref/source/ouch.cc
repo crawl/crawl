@@ -271,7 +271,7 @@ void splash_with_acid( char acid_strength )
             if (post_res_dam < dam)
                 canned_msg(MSG_YOU_RESIST);
 
-            ouch( post_res_dam, 0, KILLED_BY_ACID );
+            ouch(post_res_dam, NON_MONSTER, KILLED_BY_ACID);
         }
     }
 }                               // end splash_with_acid()
@@ -286,7 +286,7 @@ void weapon_acid( char acid_strength )
     if (hand_thing == -1)
     {
         msg::stream << "Your " << your_hand(true) << " burn!" << std::endl;
-        ouch( roll_dice( 1, acid_strength ), 0, KILLED_BY_ACID );
+        ouch(roll_dice(1, acid_strength), NON_MONSTER, KILLED_BY_ACID);
     }
     else if (x_chance_in_y(acid_strength + 1, 20))
         item_corrode( hand_thing );
@@ -621,7 +621,7 @@ void lose_level()
     // must die straightaway.
     if (you.experience_level == 1)
     {
-        ouch(INSTANT_DEATH, 0, KILLED_BY_DRAINING);
+        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
         // Return in case death was canceled via wizard mode
         return;
     }
@@ -634,7 +634,7 @@ void lose_level()
 
     // Constant value to avoid grape jelly trick... see level_change() for
     // where these HPs and MPs are given back.  -- bwr
-    ouch( 4, 0, KILLED_BY_DRAINING );
+    ouch(4, NON_MONSTER, KILLED_BY_DRAINING);
     dec_max_hp(4);
 
     dec_mp(1);
@@ -667,7 +667,7 @@ void drain_exp(bool announce_full)
 
     if (you.experience == 0)
     {
-        ouch(INSTANT_DEATH, 0, KILLED_BY_DRAINING);
+        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
         // Return in case death was escaped via wizard mode.
         return;
     }
@@ -736,7 +736,7 @@ static void _xom_checks_damage(kill_method_type death_type,
         return;
     }
     else if (death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM
-             || death_source < 0 || death_source >= MAX_MONSTERS)
+             || invalid_monster_index(death_source))
     {
         return;
     }
@@ -790,9 +790,9 @@ static void _xom_checks_damage(kill_method_type death_type,
     xom_is_stimulated(amusementvalue);
 }
 
-// death_source should be set to zero for non-monsters. {dlb}
-void ouch( int dam, int death_source, kill_method_type death_type,
-           const char *aux, bool see_source )
+// death_source should be set to NON_MONSTER for non-monsters. {dlb}
+void ouch(int dam, int death_source, kill_method_type death_type,
+          const char *aux, bool see_source)
 {
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity( AI_HP_LOSS, &hpl );
@@ -806,7 +806,7 @@ void ouch( int dam, int death_source, kill_method_type death_type,
         return;
     }
 
-    if (dam > -9000)            // that is, a "death" caused by hp loss {dlb}
+    if (dam != INSTANT_DEATH)     // that is, a "death" caused by hp loss {dlb}
     {
         if (dam >= you.hp && god_protects_from_harm(you.religion))
         {
@@ -850,7 +850,7 @@ void ouch( int dam, int death_source, kill_method_type death_type,
 
             if (you.religion == GOD_YREDELEMNUL
                 && you.duration[DUR_PRAYER]
-                && death_source != 0 && !invalid_monster_index(death_source))
+                && !invalid_monster_index(death_source))
             {
                 yred_mirror_injury(&menv[death_source], dam);
             }

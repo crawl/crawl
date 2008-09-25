@@ -479,17 +479,17 @@ void in_a_cloud()
 
             hurted -= random2(player_AC());
 
-            if (hurted < 1)
+            if (hurted < 0)
                 hurted = 0;
             else
-                ouch( hurted, cl, KILLED_BY_CLOUD, "flame" );
+                ouch(hurted, cl, KILLED_BY_CLOUD, "flame");
         }
         else
         {
             canned_msg(MSG_YOU_RESIST);
             hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
             hurted /= (1 + resist * resist);
-            ouch( hurted, cl, KILLED_BY_CLOUD, "flame" );
+            ouch(hurted, cl, KILLED_BY_CLOUD, "flame");
         }
         expose_player_to_element(BEAM_FIRE, 7);
         break;
@@ -504,8 +504,8 @@ void in_a_cloud()
         if (hurted < 1)
             hurted = 0;
         else
-            ouch( (hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
-                    "noxious fumes" );
+            ouch((hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
+                 "noxious fumes");
 
         if (1 + random2(27) >= you.experience_level)
         {
@@ -530,14 +530,14 @@ void in_a_cloud()
             if (hurted < 0)
                 hurted = 0;
 
-            ouch( hurted, cl, KILLED_BY_CLOUD, "freezing vapour" );
+            ouch(hurted, cl, KILLED_BY_CLOUD, "freezing vapour");
         }
         else
         {
             canned_msg(MSG_YOU_RESIST);
             hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
             hurted /= (1 + resist * resist);
-            ouch( hurted, cl, KILLED_BY_CLOUD, "freezing vapour" );
+            ouch(hurted, cl, KILLED_BY_CLOUD, "freezing vapour");
         }
         expose_player_to_element(BEAM_COLD, 7);
         break;
@@ -547,8 +547,8 @@ void in_a_cloud()
         mpr("You are engulfed in poison gas!");
         if (!player_res_poison())
         {
-            ouch( (random2(10) * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
-                  "poison gas" );
+            ouch((random2(10) * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
+                 "poison gas");
             poison_player(1);
         }
         break;
@@ -581,8 +581,8 @@ void in_a_cloud()
         if (hurted < 0)
             hurted = 0;
 
-        ouch( (hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
-              "steam" );
+        ouch((hurted * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
+             "steam");
         break;
     }
 
@@ -599,7 +599,7 @@ void in_a_cloud()
         if (hurted < 0)
             hurted = 0;
 
-        ouch( hurted, cl, KILLED_BY_CLOUD, "foul pestilence" );
+        ouch(hurted, cl, KILLED_BY_CLOUD, "foul pestilence");
         potion_effect(POT_SLOWING, 5);
 
         if (you.hp_max > 4 && coinflip())

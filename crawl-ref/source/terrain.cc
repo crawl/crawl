@@ -608,13 +608,13 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
         if (resist <= 0)
         {
             mpr( "The lava burns you to a cinder!" );
-            ouch( INSTANT_DEATH, 0, KILLED_BY_LAVA );
+            ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LAVA);
         }
         else
         {
             // should boost # of bangs per damage in the future {dlb}
             mpr( "The lava burns you!" );
-            ouch( (10 + roll_dice(2,50)) / resist, 0, KILLED_BY_LAVA );
+            ouch((10 + roll_dice(2, 50)) / resist, NON_MONSTER, KILLED_BY_LAVA);
         }
 
         expose_player_to_element( BEAM_LAVA, 14 );
@@ -668,9 +668,9 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
     mpr("You drown...");
 
     if (terrain == DNGN_LAVA)
-        ouch( INSTANT_DEATH, 0, KILLED_BY_LAVA );
+        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LAVA);
     else if (terrain == DNGN_DEEP_WATER)
-        ouch( INSTANT_DEATH, 0, KILLED_BY_WATER );
+        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WATER);
 
     return (false);
 }

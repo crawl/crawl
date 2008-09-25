@@ -4548,9 +4548,9 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     if (amount < 0 && *ptr_stat < 1)
     {
         if (cause == NULL)
-            ouch(INSTANT_DEATH, 0, kill_type);
+            ouch(INSTANT_DEATH, NON_MONSTER, kill_type);
         else
-            ouch(INSTANT_DEATH, 0, kill_type, cause, see_source);
+            ouch(INSTANT_DEATH, NON_MONSTER, kill_type, cause, see_source);
     }
 
     if (ptr_stat == &you.strength)
@@ -4636,7 +4636,7 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
     // fatal, somebody else is doing the bookkeeping, and we don't want to mess
     // with that.
     if (!fatal && aux)
-        ouch(hp_loss, -1, KILLED_BY_SOMETHING, aux);
+        ouch(hp_loss, NON_MONSTER, KILLED_BY_SOMETHING, aux);
     else
         you.hp -= hp_loss;
 
@@ -6498,14 +6498,14 @@ int player::hurt(const actor *agent, int amount, beam_type flavour)
     const monsters *mon = dynamic_cast<const monsters*>(agent);
     if (agent->atype() == ACT_MONSTER)
     {
-        ouch(amount, monster_index( mon ),
+        ouch(amount, monster_index(mon),
              KILLED_BY_MONSTER, "", player_monster_visible(mon));
     }
     else
     {
         // Should never happen!
         ASSERT(false);
-        ouch(amount, 0, KILLED_BY_SOMETHING);
+        ouch(amount, NON_MONSTER, KILLED_BY_SOMETHING);
     }
     return (amount);
 }

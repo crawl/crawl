@@ -644,7 +644,7 @@ void cast_refrigeration(int pow)
     if (hurted > 0)
     {
         mpr("You feel very cold.");
-        ouch( hurted, 0, KILLED_BY_FREEZING );
+        ouch(hurted, NON_MONSTER, KILLED_BY_FREEZING);
 
         // Note: this used to be 12!... and it was also applied even if
         // the player didn't take damage from the cold, so we're being

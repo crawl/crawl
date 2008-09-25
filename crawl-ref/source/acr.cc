@@ -2406,7 +2406,7 @@ void process_command( command_type cmd )
 
     case CMD_QUIT:
         if (yes_or_no("Are you sure you want to quit"))
-            ouch(INSTANT_DEATH, 0, KILLED_BY_QUITTING);
+            ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_QUITTING);
         else
             canned_msg(MSG_OK);
         break;
@@ -2514,8 +2514,9 @@ static void _decrement_durations()
 
         if (res_fire > 0)
         {
-            ouch( (((random2avg(9, 2) + 1) * you.time_taken) /
-                    (1 + (res_fire * res_fire))) / 10, 0, KILLED_BY_BURNING );
+            ouch((((random2avg(9, 2) + 1) * you.time_taken) /
+                    (1 + (res_fire * res_fire))) / 10, NON_MONSTER,
+                    KILLED_BY_BURNING);
         }
 
         if (res_fire <= 0)
@@ -2703,7 +2704,7 @@ static void _decrement_durations()
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0 && player_res_cold() < 0)
     {
         mpr( "You feel very cold." );
-        ouch( 2 + random2avg(13, 2), 0, KILLED_BY_FREEZING );
+        ouch(2 + random2avg(13, 2), NON_MONSTER, KILLED_BY_FREEZING);
     }
 
     if ( _decrement_a_duration(DUR_MAGIC_SHIELD,
@@ -2907,7 +2908,7 @@ static void _decrement_durations()
         else if (x_chance_in_y(you.rotting, 20))
         {
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
-            ouch(1, 0, KILLED_BY_ROTTING);
+            ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
             rot_hp(1);
             you.rotting--;
         }
@@ -2923,7 +2924,7 @@ static void _decrement_durations()
         if (one_chance_in(400))
         {
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
-            ouch(1, 0, KILLED_BY_ROTTING);
+            ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
             rot_hp(1);
 
             if (you.rotting > 0)
@@ -2939,18 +2940,18 @@ static void _decrement_durations()
         {
             if (you.duration[DUR_POISONING] > 10 && random2(you.duration[DUR_POISONING]) >= 8)
             {
-                ouch(random2(10) + 5, 0, KILLED_BY_POISON);
+                ouch(random2(10) + 5, NON_MONSTER, KILLED_BY_POISON);
                 mpr("You feel extremely sick.", MSGCH_DANGER);
             }
             else if (you.duration[DUR_POISONING] > 5 && coinflip())
             {
-                ouch((coinflip()? 3 : 2), 0, KILLED_BY_POISON);
+                ouch((coinflip() ? 3 : 2), NON_MONSTER, KILLED_BY_POISON);
                 mpr("You feel very sick.", MSGCH_WARN);
             }
             else
             {
                 // the poison running through your veins.");
-                ouch(1, 0, KILLED_BY_POISON);
+                ouch(1, NON_MONSTER, KILLED_BY_POISON);
                 mpr("You feel sick.");
             }
 
@@ -3188,7 +3189,7 @@ static void _world_reacts()
         if (you.hunger <= 100)
         {
             mpr( "You have starved to death.", MSGCH_FOOD );
-            ouch( INSTANT_DEATH, 0, KILLED_BY_STARVATION );
+            ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_STARVATION);
         }
     }
 

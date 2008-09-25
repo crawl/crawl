@@ -777,69 +777,61 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 
     // for death by monster
     if ((death_type == KILLED_BY_MONSTER || death_type == KILLED_BY_BEAM)
-        && death_source >= 0 && death_source < MAX_MONSTERS)
+        && !invalid_monster_index(death_source))
     {
         const monsters *monster = &menv[death_source];
 
-        if (monster->type >= 0 && monster->type < NUM_MONSTERS)
+        death_source = monster->type;
+        mon_num = monster->base_monster;
+
+        // Previously the weapon was only used for dancing weapons,
+        // but now we pass it in as a string through the scorefile
+        // entry to be appended in hiscores_format_single in long or
+        // medium scorefile formats.
+        if (death_type == KILLED_BY_MONSTER
+            && monster->inv[MSLOT_WEAPON] != NON_ITEM)
         {
-            death_source = monster->type;
-            mon_num = monster->base_monster;
-
-            // Previously the weapon was only used for dancing weapons,
-            // but now we pass it in as a string through the scorefile
-            // entry to be appended in hiscores_format_single in long or
-            // medium scorefile formats.
-            if (death_type == KILLED_BY_MONSTER
-                && monster->inv[MSLOT_WEAPON] != NON_ITEM)
+            // [ds] The highscore entry may be constructed while the player
+            // is alive (for notes), so make sure we don't reveal info we
+            // shouldn't.
+            if (you.hp <= 0)
             {
-                // [ds] The highscore entry may be constructed while the player
-                // is alive (for notes), so make sure we don't reveal info we
-                // shouldn't.
-                if (you.hp <= 0)
-                {
 #if HISCORE_WEAPON_DETAIL
-                    set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
-                                     ISFLAG_IDENT_MASK );
+                set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
+                                 ISFLAG_IDENT_MASK );
 #else
-                    // changing this to ignore the pluses to keep it short
-                    unset_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
-                                       ISFLAG_IDENT_MASK );
+                // changing this to ignore the pluses to keep it short
+                unset_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
+                                   ISFLAG_IDENT_MASK );
 
-                    set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
-                                     ISFLAG_KNOW_TYPE );
+                set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
+                                 ISFLAG_KNOW_TYPE );
 
-                    // clear "runed" description text to make shorter yet
-                    set_equip_desc( mitm[monster->inv[MSLOT_WEAPON]], 0 );
+                // clear "runed" description text to make shorter yet
+                set_equip_desc( mitm[monster->inv[MSLOT_WEAPON]], 0 );
 #endif
-                }
-
-                // Setting this is redundant for dancing weapons, however
-                // we do care about the above indentification. -- bwr
-                if (monster->type != MONS_DANCING_WEAPON)
-                    auxkilldata = mitm[monster->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
             }
 
-            const bool death = you.hp <= 0;
-
-            death_source_name = monster->name(DESC_NOCAP_A, death);
-            if (monster->has_base_name())
-                death_source_name +=
-                    ", " + monster->base_name(DESC_NOCAP_A, death);
-
-            if (monster->has_ench(ENCH_SHAPESHIFTER))
-            {
-                death_source_name += " (shapeshifter)";
-            }
-            else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-            {
-                death_source_name += " (glowing shapeshifter)";
-            }
+            // Setting this is redundant for dancing weapons, however
+            // we do care about the above indentification. -- bwr
+            if (monster->type != MONS_DANCING_WEAPON)
+                auxkilldata = mitm[monster->inv[MSLOT_WEAPON]].name(DESC_NOCAP_A);
         }
+
+        const bool death = you.hp <= 0;
+
+        death_source_name = monster->name(DESC_NOCAP_A, death);
+        if (monster->has_base_name())
+            death_source_name +=
+                ", " + monster->base_name(DESC_NOCAP_A, death);
+
+        if (monster->has_ench(ENCH_SHAPESHIFTER))
+            death_source_name += " (shapeshifter)";
+        else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+            death_source_name += " (glowing shapeshifter)";
     }
     else
     {
-        death_source = death_source;
         mon_num = 0;
         death_source_name[0] = 0;
     }
@@ -867,7 +859,7 @@ void scorefile_entry::reset()
     best_skill           = 0;
     best_skill_lvl       = 0;
     death_type           = KILLED_BY_SOMETHING;
-    death_source         = 0;
+    death_source         = NON_MONSTER;
     mon_num              = 0;
     death_source_name[0] = 0;
     auxkilldata[0]       = 0;
@@ -1136,7 +1128,7 @@ std::string scorefile_entry::death_source_desc() const
         return ("");
 
     // XXX no longer handles mons_num correctly! FIXME
-    return (!death_source_name.empty()?
+    return (!death_source_name.empty() ?
             death_source_name : mons_type_name(death_source, DESC_NOCAP_A));
 }
 

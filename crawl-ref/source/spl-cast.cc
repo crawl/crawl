@@ -3870,7 +3870,7 @@ void MiscastEffect::_fire(int severity)
             mon_msg_seen   = "@The_monster@ is blasted with fire.";
             mon_msg_unseen = "A flame briefly burns in thin air.";
 
-            _ouch(5 + random2avg(29, 2), BEAM_FIRE );
+            _ouch(5 + random2avg(29, 2), BEAM_FIRE);
             target->expose_to_element(BEAM_FIRE, 5);
             break;
 

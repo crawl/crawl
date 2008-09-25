@@ -1301,7 +1301,7 @@ void curare_hits_player(int agent, int degree)
         if (hurted)
         {
             mpr("You feel difficulty breathing.");
-            ouch( hurted, agent, KILLED_BY_CURARE, "curare-induced apnoea" );
+            ouch(hurted, agent, KILLED_BY_CURARE, "curare-induced apnoea");
         }
         potion_effect(POT_SLOWING, 2 + random2(4 + degree));
     }
@@ -1488,8 +1488,8 @@ void up_stairs(dungeon_feature_type force_stair,
     {
         mpr("In your confused state, you trip and fall back down the stairs.");
 
-        ouch( roll_dice( 3 + you.burden_state, 5 ), 0,
-              KILLED_BY_FALLING_DOWN_STAIRS );
+        ouch(roll_dice(3 + you.burden_state, 5), NON_MONSTER,
+             KILLED_BY_FALLING_DOWN_STAIRS);
 
         you.turn_is_over = true;
         return;
@@ -1540,11 +1540,11 @@ void up_stairs(dungeon_feature_type force_stair,
             if (is_valid_item( you.inv[i] )
                 && you.inv[i].base_type == OBJ_ORBS)
             {
-                ouch(INSTANT_DEATH, 0, KILLED_BY_WINNING);
+                ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WINNING);
             }
         }
 
-        ouch(INSTANT_DEATH, 0, KILLED_BY_LEAVING);
+        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LEAVING);
     }
 
     you.prev_targ  = MHITNOT;
@@ -1936,8 +1936,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
         // Nastier than when climbing stairs, but you'll aways get to
         // your destination. -- bwr
-        ouch( roll_dice( 6 + you.burden_state, 10 ), 0,
-              KILLED_BY_FALLING_DOWN_STAIRS );
+        ouch(roll_dice(6 + you.burden_state, 10), NON_MONSTER,
+             KILLED_BY_FALLING_DOWN_STAIRS);
     }
 
     if (shaft)

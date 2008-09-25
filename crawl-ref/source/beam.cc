@@ -3362,7 +3362,7 @@ static void _beam_ouch(int dam, bolt &beam)
     // The order of this is important.
     if (YOU_KILL(beam.thrower) && beam.aux_source.empty())
     {
-        ouch(dam, 0, KILLED_BY_TARGETTING);
+        ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING);
     }
     else if (MON_KILL(beam.thrower))
     {
@@ -3376,8 +3376,8 @@ static void _beam_ouch(int dam, bolt &beam)
     }
     else // KILL_MISC || (YOU_KILL && aux_source)
     {
-        ouch( dam, beam.beam_source, KILLED_BY_WILD_MAGIC,
-              beam.aux_source.c_str() );
+        ouch(dam, beam.beam_source, KILLED_BY_WILD_MAGIC,
+             beam.aux_source.c_str());
     }
 }
 
@@ -3853,7 +3853,7 @@ static int _affect_player( bolt &beam, item_def *item )
             if (beam.aux_source.empty())
                 beam.aux_source = "by nerve-wracking pain";
 
-            _beam_ouch( roll_dice( beam.damage ), beam );
+            _beam_ouch(roll_dice(beam.damage), beam);
             beam.obvious_effect = true;
             break;
 
@@ -3879,7 +3879,7 @@ static int _affect_player( bolt &beam, item_def *item )
                     beam.damage.size /= 3;
                 }
             }
-            _beam_ouch( roll_dice( beam.damage ), beam );
+            _beam_ouch(roll_dice(beam.damage), beam);
             beam.obvious_effect = true;
             break;
 
@@ -3889,7 +3889,7 @@ static int _affect_player( bolt &beam, item_def *item )
             if (beam.aux_source.empty())
                 beam.aux_source = "a disintegration bolt";
 
-            _beam_ouch( roll_dice( beam.damage ), beam );
+            _beam_ouch(roll_dice(beam.damage), beam);
             beam.obvious_effect = true;
             break;
 
@@ -4099,7 +4099,7 @@ static int _affect_player( bolt &beam, item_def *item )
             beam.foe_hurt++;
     }
 
-    _beam_ouch( hurted, beam );
+    _beam_ouch(hurted, beam);
 
     return (_range_used_on_hit( beam ));
 }

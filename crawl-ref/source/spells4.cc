@@ -327,8 +327,8 @@ void cast_shatter(int pow)
         mpr("cast_shatter(): unknown transformation in spells4.cc");
     }
 
-    if (damage)
-        ouch(damage, 0, KILLED_BY_TARGETTING);
+    if (damage > 0)
+        ouch(damage, NON_MONSTER, KILLED_BY_TARGETTING);
 
     int rad = 3 + (you.skills[SK_EARTH_MAGIC] / 5);
 
@@ -748,7 +748,7 @@ void cast_ignite_poison(int pow)
             mpr("The poison in your system burns!");
         }
 
-        ouch( damage, 0, KILLED_BY_TARGETTING );
+        ouch(damage, NON_MONSTER, KILLED_BY_TARGETTING);
 
         if (you.duration[DUR_POISONING] > 0)
         {
@@ -799,7 +799,7 @@ static int _discharge_monsters( coord_def where, int pow, int garbage )
         damage = check_your_resists( damage, BEAM_ELECTRICITY );
         if ( player_is_airborne() )
             damage /= 2;
-        ouch( damage, 0, KILLED_BY_WILD_MAGIC );
+        ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC);
     }
     else if (mon == NON_MONSTER)
         return (0);
@@ -1144,7 +1144,7 @@ static int _passwall(coord_def where, int pow, int garbage)
         {
             if (howdeep > range || non_rock_barriers)
             {
-                ouch(1 + you.hp, 0, KILLED_BY_PETRIFICATION);
+                ouch(1 + you.hp, NON_MONSTER, KILLED_BY_PETRIFICATION);
                 //jmf: not return; if wizard, successful transport is option
             }
         }
