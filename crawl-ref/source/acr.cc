@@ -334,8 +334,10 @@ static void _god_greeting_message( bool game_start )
         simple_god_message(" says: Lead the forces of light to victory!");
         break;
     case GOD_KIKUBAAQUDGHA:
-    case GOD_YREDELEMNUL:
         simple_god_message(" says: Welcome...");
+        break;
+    case GOD_YREDELEMNUL:
+        simple_god_message(" says: Carry the black torch! Rouse the idle dead!");
         break;
     case GOD_NEMELEX_XOBEH:
         simple_god_message(" says: It's all in the cards!");
