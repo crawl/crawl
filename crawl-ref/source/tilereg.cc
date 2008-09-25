@@ -945,6 +945,9 @@ bool DungeonRegion::update_tip_text(std::string& tip)
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return false;
 
+    if (m_cursor[CURSOR_MOUSE] == NO_CURSOR)
+        return false;
+
     if (m_cursor[CURSOR_MOUSE] == you.pos())
     {
         tip = you.your_name; 
