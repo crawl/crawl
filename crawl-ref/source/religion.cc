@@ -2394,11 +2394,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         break;
 
     case DID_KILL_NATURAL_EVIL:
-        if (you.religion == GOD_SHINING_ONE)
+        if (you.religion == GOD_SHINING_ONE
+            && !god_hates_attacking_friend(you.religion, victim))
         {
-            if (god_hates_attacking_friend(you.religion, victim))
-                break;
-
             simple_god_message(" accepts your kill.");
             ret = true;
             if (random2(level + 18) > 3)
@@ -2407,11 +2405,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         break;
 
     case DID_KILL_CHAOTIC:
-        if (you.religion == GOD_ZIN)
+        if (you.religion == GOD_ZIN
+            && !god_hates_attacking_friend(you.religion, victim))
         {
-            if (god_hates_attacking_friend(you.religion, victim))
-                break;
-
             simple_god_message(" appreciates your killing of a "
                                "spawn of chaos.");
             ret = true;
