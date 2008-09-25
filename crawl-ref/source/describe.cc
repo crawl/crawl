@@ -3144,6 +3144,15 @@ void describe_god( god_type which_god, bool give_title )
             cprintf("You can call upon %s to destroy weapons "
                     "lying on the ground." EOL, god_name(which_god).c_str());
         }
+        else if (which_god == GOD_YREDELEMNUL)
+        {
+            have_any = true;
+            if (!player_under_penance() && you.piety >= piety_breakpoint(0))
+            {
+                cprintf("%s mirrors your injuries on your foes "
+                        "during prayer." EOL, god_name(which_god).c_str());
+            }
+        }
 
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())

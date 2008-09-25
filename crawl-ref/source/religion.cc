@@ -719,6 +719,27 @@ void dec_penance(int val)
     dec_penance(you.religion, val);
 }
 
+void yred_mirror_injury(monsters *mon, int dam)
+{
+    if (dam <= 0)
+        return;
+
+    simple_god_message(" mirrors your injury!");
+
+#ifndef USE_TILE
+    flash_monster_colour(mon, RED, 200);
+#endif
+
+    hurt_monster(mon, dam);
+
+    if (mon->hit_points < 1)
+        monster_die(mon, KILL_YOU, 0);
+    else
+        print_wounds(mon);
+
+    lose_piety(integer_sqrt(dam));
+}
+
 bool beogh_water_walk()
 {
     return (you.religion == GOD_BEOGH && !player_under_penance()
@@ -5568,13 +5589,6 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     // the player from harm, but doesn't actually do so.
     switch (god)
     {
-    case GOD_YREDELEMNUL:
-        if (!actual || praying)
-        {
-            if (you.piety >= min_piety)
-                return HPT_PRAYING;
-        }
-        break;
     case GOD_BEOGH:
         if (!penance && (!actual || anytime))
             return HPT_ANYTIME;

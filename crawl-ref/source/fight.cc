@@ -3971,8 +3971,12 @@ void melee_attack::mons_perform_attack_rounds()
 
             defender->hurt(attacker, damage_done + special_damage);
 
-            if (!defender->alive() || attacker == defender)
+            // Yredelemnul's injury mirroring can kill the attacker.
+            if (!attacker->alive() || !defender->alive()
+                || attacker == defender)
+            {
                 return;
+            }
 
             special_damage = 0;
             special_damage_message.clear();
@@ -3983,6 +3987,10 @@ void melee_attack::mons_perform_attack_rounds()
 
             if (special_damage > 0)
                 defender->hurt(attacker, special_damage);
+
+            // Yredelemnul's injury mirroring can kill the attacker.
+            if (!attacker->alive())
+                return;
         }
 
         item_def *weap = atk->mslot_item(MSLOT_WEAPON);
