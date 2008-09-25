@@ -4369,7 +4369,6 @@ void read_scroll( int slot )
 
     case SCR_RANDOM_USELESSNESS:
         random_uselessness(item_slot);
-        id_the_scroll = false;
         break;
 
     case SCR_BLINKING:
