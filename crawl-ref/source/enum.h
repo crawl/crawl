@@ -2440,42 +2440,42 @@ enum speed_type
 
 enum species_type
 {
-    SP_HUMAN = 1,                      //    1
+    SP_HUMAN = 1,
     SP_HIGH_ELF,
     SP_GREY_ELF,
     SP_DEEP_ELF,
-    SP_SLUDGE_ELF,                     //    5
+    SP_SLUDGE_ELF,
     SP_MOUNTAIN_DWARF,
     SP_HALFLING,
     SP_HILL_ORC,
     SP_KOBOLD,
-    SP_MUMMY,                          //   10
+    SP_MUMMY,
     SP_NAGA,
     SP_GNOME,
     SP_OGRE,
     SP_TROLL,
-    SP_OGRE_MAGE,                      //   15
     SP_RED_DRACONIAN,
     SP_WHITE_DRACONIAN,
     SP_GREEN_DRACONIAN,
     SP_YELLOW_DRACONIAN,
-    SP_GREY_DRACONIAN,                 //   20
+    SP_GREY_DRACONIAN,
     SP_BLACK_DRACONIAN,
     SP_PURPLE_DRACONIAN,
     SP_MOTTLED_DRACONIAN,
     SP_PALE_DRACONIAN,
-    SP_BASE_DRACONIAN,                 //   25
+    SP_BASE_DRACONIAN,
     SP_CENTAUR,
     SP_DEMIGOD,
     SP_SPRIGGAN,
     SP_MINOTAUR,
-    SP_DEMONSPAWN,                     //   30
+    SP_DEMONSPAWN,
     SP_GHOUL,
     SP_KENKU,
     SP_MERFOLK,
-    SP_VAMPIRE,                        //   34
+    SP_VAMPIRE,
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
+    SP_OGRE_MAGE,                      // (placeholder)
     NUM_SPECIES,                       // always after the last species
 
     SP_UNKNOWN  = 100

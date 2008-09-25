@@ -2409,13 +2409,13 @@ std::string _status_mut_abilities()
     }                           //end switch - innate abilities
 
     // a bit more stuff
-    if ( you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE
-         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN )
+    if (you.species == SP_OGRE || you.species == SP_TROLL
+        || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
         mutations.push_back("unfitting armour");
     }
 
-    if ( beogh_water_walk() )
+    if (beogh_water_walk())
         mutations.push_back("water walking");
 
     std::string current;

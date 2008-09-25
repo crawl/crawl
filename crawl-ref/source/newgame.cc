@@ -114,19 +114,18 @@ static god_type ng_pr;
 // The red draconian is later replaced by a random variant.
 // The old and new lists are expected to have the same length.
 static species_type old_species_order[] = {
-    SP_HUMAN,       SP_HIGH_ELF,
-    SP_GREY_ELF,    SP_DEEP_ELF,
-    SP_SLUDGE_ELF,  SP_MOUNTAIN_DWARF,
-    SP_HALFLING,    SP_HILL_ORC,
-    SP_KOBOLD,      SP_MUMMY,
-    SP_NAGA,        SP_GNOME,
-    SP_OGRE,        SP_TROLL,
-    SP_OGRE_MAGE,   SP_RED_DRACONIAN,
-    SP_CENTAUR,     SP_DEMIGOD,
-    SP_SPRIGGAN,    SP_MINOTAUR,
-    SP_DEMONSPAWN,  SP_GHOUL,
-    SP_KENKU,       SP_MERFOLK,
-    SP_VAMPIRE
+    SP_HUMAN,         SP_HIGH_ELF,
+    SP_GREY_ELF,      SP_DEEP_ELF,
+    SP_SLUDGE_ELF,    SP_MOUNTAIN_DWARF,
+    SP_HALFLING,      SP_HILL_ORC,
+    SP_KOBOLD,        SP_MUMMY,
+    SP_NAGA,          SP_GNOME,
+    SP_OGRE,          SP_TROLL,
+    SP_RED_DRACONIAN, SP_CENTAUR,
+    SP_DEMIGOD,       SP_SPRIGGAN,
+    SP_MINOTAUR,      SP_DEMONSPAWN,
+    SP_GHOUL,         SP_KENKU,
+    SP_MERFOLK,       SP_VAMPIRE
 };
 
 // Fantasy staples and humanoid creatures come first, then dimunitive and
@@ -143,9 +142,9 @@ static species_type new_species_order[] = {
     SP_KOBOLD,      SP_SPRIGGAN,
     // significantly different body type than human
     SP_NAGA,        SP_CENTAUR,
-    SP_OGRE,        SP_OGRE_MAGE,
-    SP_TROLL,       SP_MINOTAUR,
-    SP_KENKU,       SP_RED_DRACONIAN,
+    SP_OGRE,        SP_TROLL,
+    SP_MINOTAUR,    SP_KENKU,
+    SP_RED_DRACONIAN,
     // celestial species
     SP_DEMIGOD,     SP_DEMONSPAWN,
     // undead species
@@ -998,7 +997,6 @@ static void _give_species_bonus_hp()
         case SP_GHOUL:
         case SP_MINOTAUR:
         case SP_NAGA:
-        case SP_OGRE_MAGE:
         case SP_DEMIGOD:
             inc_max_hp(2);
             break;
@@ -1294,7 +1292,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_RED_DRACONIAN:
         case SP_VAMPIRE:
             return CC_RESTRICTED;
@@ -1315,7 +1312,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_RED_DRACONIAN:
         case SP_MUMMY:
             return CC_RESTRICTED;
@@ -1338,7 +1334,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_KENKU:
         case SP_RED_DRACONIAN:
         case SP_DEMIGOD:
@@ -1365,7 +1360,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_CENTAUR:
-        case SP_OGRE_MAGE:
         case SP_RED_DRACONIAN:
         case SP_MUMMY:
         case SP_GHOUL:
@@ -1394,7 +1388,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_KENKU:
         case SP_RED_DRACONIAN:
@@ -1416,7 +1409,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_KENKU:
         case SP_GHOUL:
@@ -1435,7 +1427,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_DEEP_ELF:
         case SP_SPRIGGAN:
         case SP_NAGA:
-        case SP_OGRE_MAGE:
         case SP_KENKU:
             return CC_RESTRICTED;
         default:
@@ -1449,7 +1440,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_NAGA:
-        case SP_OGRE_MAGE:
         case SP_KENKU:
             return CC_RESTRICTED;
         default:
@@ -1472,7 +1462,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
             return CC_RESTRICTED;
         default:
@@ -1489,7 +1478,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_KENKU:
@@ -1514,7 +1502,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_KENKU:
@@ -1538,7 +1525,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_GNOME:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_GHOUL:
@@ -1575,7 +1561,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_KENKU:
@@ -1600,7 +1585,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_RED_DRACONIAN:
@@ -1647,7 +1631,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_KENKU:
@@ -1675,7 +1658,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_GNOME:
         case SP_CENTAUR:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_KENKU:
@@ -1795,7 +1777,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_HILL_ORC:
         case SP_CENTAUR:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_RED_DRACONIAN:
@@ -1820,7 +1801,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_RED_DRACONIAN:
@@ -1838,7 +1818,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_RED_DRACONIAN:
         case SP_MUMMY:
@@ -1887,7 +1866,6 @@ static char_choice_restriction _book_restriction(int booktype,
         case SP_GNOME:
         case SP_KOBOLD:
         case SP_NAGA:
-        case SP_OGRE_MAGE:
         case SP_KENKU:
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
@@ -1914,7 +1892,6 @@ static char_choice_restriction _book_restriction(int booktype,
         case SP_GNOME:
         case SP_KOBOLD:
         case SP_NAGA:
-        case SP_OGRE_MAGE:
         case SP_KENKU:
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
@@ -2128,7 +2105,6 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
         case SP_CENTAUR:
         case SP_NAGA:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_MINOTAUR:
         case SP_KENKU:
         case SP_DEMIGOD:
@@ -2149,7 +2125,6 @@ static char_choice_restriction _weapon_restriction(weapon_type wpn)
         case SP_MERFOLK:
         case SP_NAGA:
         case SP_CENTAUR:
-        case SP_OGRE_MAGE:
         case SP_MINOTAUR:
         case SP_KENKU:
         case SP_DEMIGOD:
@@ -2223,7 +2198,6 @@ static bool _choose_weapon()
         switch (you.species)
         {
         case SP_OGRE:
-        case SP_OGRE_MAGE:
             startwep[1] = WPN_ANKUS;
             break;
         case SP_MERFOLK:
@@ -2414,7 +2388,6 @@ static char_choice_restriction  _religion_restriction(god_type god)
             return (CC_UNRESTRICTED);
 
         case SP_DEEP_ELF:
-        case SP_OGRE_MAGE:
         case SP_KENKU:
             // Unrestrict these only for Priests as Zin is worse, but
             // Necromancy (DK) the better choice.
@@ -2484,7 +2457,6 @@ static char_choice_restriction  _religion_restriction(god_type god)
         case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_DEMONSPAWN:
@@ -2603,8 +2575,7 @@ static void _species_stat_init(species_type which_species)
     case SP_MOUNTAIN_DWARF:     sb =  9; ib =  4; db =  5;      break;  // 18
 
     case SP_TROLL:              sb = 13; ib =  2; db =  3;      break;  // 18
-    case SP_OGRE:               sb = 12; ib =  3; db =  3;      break;  // 18
-    case SP_OGRE_MAGE:          sb =  9; ib =  7; db =  3;      break;  // 19
+    case SP_OGRE:               sb = 10; ib =  5; db =  3;      break;  // 18
 
     case SP_MINOTAUR:           sb = 10; ib =  3; db =  3;      break;  // 16
     case SP_HILL_ORC:           sb =  9; ib =  3; db =  4;      break;  // 16
@@ -2705,9 +2676,6 @@ void give_basic_mutations(species_type speci)
     case SP_OGRE:
         you.mutation[MUT_FAST_METABOLISM] = 1;
         you.mutation[MUT_SAPROVOROUS]     = 1;
-        break;
-    case SP_OGRE_MAGE:
-        you.mutation[MUT_FAST_METABOLISM] = 1;
         break;
     case SP_HALFLING:
         you.mutation[MUT_SLOW_METABOLISM] = 1;
@@ -5173,7 +5141,6 @@ bool _give_items_skills()
         case SP_HILL_ORC:
         case SP_CENTAUR:
         case SP_OGRE:
-        case SP_OGRE_MAGE:
             you.inv[0].sub_type = WPN_HAND_AXE;
             break;
         case SP_GHOUL:

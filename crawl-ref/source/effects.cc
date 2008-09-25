@@ -935,7 +935,6 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
         switch (you.species)
         {
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
         case SP_RED_DRACONIAN:
         case SP_WHITE_DRACONIAN:
@@ -996,14 +995,10 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
         // Do this here, before acquirement()'s call to can_wear_armour(),
         // so that caps will be just as common as helmets for those
         // that can't wear helmets.
-        // We could use player_mutation_level for the horns, but let's just
-        // check for the mutation directly to avoid acquirement fiddles.
+        // We check for the mutation directly to avoid acquirement fiddles
+        // with vampires.
         if (type_wanted == ARM_HELMET
-            && ((you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE)
-                || player_genus(GENPC_DRACONIAN)
-                || you.species == SP_KENKU
-                || you.species == SP_SPRIGGAN
-                || you.mutation[MUT_HORNS]))
+            && (!you_can_wear(EQ_HELMET) || you.mutation[MUT_HORNS]))
         {
             type_wanted = coinflip()? ARM_CAP : ARM_WIZARD_HAT;
         }

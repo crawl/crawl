@@ -666,11 +666,11 @@ const int spec_skills[ NUM_SPECIES ][40] =
      },
 
     {                           // SP_OGRE (15)
-     100,                       // SK_FIGHTING
-     140,                       // SK_SHORT_BLADES
-     120,                       // SK_LONG_BLADES
-     110,                       // SK_UNUSED_1
-     100,                       // SK_AXES
+      70,                       // SK_FIGHTING
+     160,                       // SK_SHORT_BLADES
+     150,                       // SK_LONG_BLADES
+     100,                       // SK_UNUSED_1
+     150,                       // SK_AXES
      100,                       // SK_MACES_FLAILS
      110,                       // SK_POLEARMS
      120,                       // SK_STAVES
@@ -678,34 +678,34 @@ const int spec_skills[ NUM_SPECIES ][40] =
      150,                       // SK_BOWS
      180,                       // SK_CROSSBOWS
      150,                       // SK_DARTS
-     100,                       // SK_THROWING
-     140,                       // SK_ARMOUR
-     150,                       // SK_DODGING
-     200,                       // SK_STEALTH
+      80,                       // SK_THROWING
+     150,                       // SK_ARMOUR
+     120,                       // SK_DODGING
+     150,                       // SK_STEALTH
      150,                       // SK_STABBING
-     110,                       // SK_SHIELDS
-     200,                       // SK_TRAPS_DOORS
+     120,                       // SK_SHIELDS
+     150,                       // SK_TRAPS_DOORS
      130,                       // SK_UNARMED_COMBAT
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
      100,                       // undefined
-     (220 * 130) / 100,         // SK_SPELLCASTING
-     180,                       // SK_CONJURATIONS
-     220,                       // SK_ENCHANTMENTS
-     200,                       // SK_SUMMONINGS
+     (70 * 130) / 100,          // SK_SPELLCASTING
+     150,                       // SK_CONJURATIONS
+     150,                       // SK_ENCHANTMENTS
+     150,                       // SK_SUMMONINGS
      150,                       // SK_NECROMANCY
-     200,                       // SK_TRANSLOCATIONS
-     200,                       // SK_TRANSMIGRATION
-     200,                       // SK_DIVINATIONS
+     150,                       // SK_TRANSLOCATIONS
+     150,                       // SK_TRANSMIGRATION
+     150,                       // SK_DIVINATIONS
      150,                       // SK_FIRE_MAGIC
      150,                       // SK_ICE_MAGIC
-     200,                       // SK_AIR_MAGIC
-     120,                       // SK_EARTH_MAGIC
+     150,                       // SK_AIR_MAGIC
+     150,                       // SK_EARTH_MAGIC
      150,                       // SK_POISON_MAGIC
-     (130 * 75) / 100,          // SK_INVOCATIONS
-     (170 * 75) / 100,          // SK_EVOCATIONS
+     (100 * 75) / 100,          // SK_INVOCATIONS
+     (150 * 75) / 100,          // SK_EVOCATIONS
      },
 
     {                           // SP_TROLL (16)
@@ -749,49 +749,6 @@ const int spec_skills[ NUM_SPECIES ][40] =
      160,                       // SK_POISON_MAGIC
      (150 * 75) / 100,          // SK_INVOCATIONS
      (180 * 75) / 100,          // SK_EVOCATIONS
-     },
-
-    {                           // SP_OGRE_MAGE (17)
-     100,                       // SK_FIGHTING
-     110,                       // SK_SHORT_BLADES
-     100,                       // SK_LONG_BLADES
-     100,                       // SK_UNUSED_1
-     100,                       // SK_AXES
-     100,                       // SK_MACES_FLAILS
-     100,                       // SK_POLEARMS
-     100,                       // SK_STAVES
-     150,                       // SK_SLINGS
-     150,                       // SK_BOWS
-     150,                       // SK_CROSSBOWS
-     150,                       // SK_DARTS
-     150,                       // SK_THROWING
-     170,                       // SK_ARMOUR
-     130,                       // SK_DODGING
-     100,                       // SK_STEALTH
-     130,                       // SK_STABBING
-     150,                       // SK_SHIELDS
-     150,                       // SK_TRAPS_DOORS
-     100,                       // SK_UNARMED_COMBAT
-     100,                       // undefined
-     100,                       // undefined
-     100,                       // undefined
-     100,                       // undefined
-     100,                       // undefined
-     (70 * 130) / 100,          // SK_SPELLCASTING
-     100,                       // SK_CONJURATIONS
-     80,                        // SK_ENCHANTMENTS
-     100,                       // SK_SUMMONINGS
-     100,                       // SK_NECROMANCY
-     100,                       // SK_TRANSLOCATIONS
-     100,                       // SK_TRANSMIGRATION
-     100,                       // SK_DIVINATIONS
-     100,                       // SK_FIRE_MAGIC
-     100,                       // SK_ICE_MAGIC
-     100,                       // SK_AIR_MAGIC
-     100,                       // SK_EARTH_MAGIC
-     100,                       // SK_POISON_MAGIC
-     (100 * 75) / 100,          // SK_INVOCATIONS
-     (100 * 75) / 100,           // SK_EVOCATIONS
      },
 
     {                           // SP_RED_DRACONIAN (18)
@@ -1619,6 +1576,10 @@ const int spec_skills[ NUM_SPECIES ][40] =
     {
     },
 
+    // SP_OGRE_MAGE placeholder
+    {
+    },
+
 
 /* ******************************************************
 
@@ -1965,16 +1926,14 @@ int str_to_skill(const std::string &skill)
     return (SK_FIGHTING);
 }
 
-// [ds] @Genus@ distinguishes between Ogre-Mages and Ogres, but
-// @genus@ does not. This is rather confusing.
 static std::string _stk_genus_cap()
 {
-    return species_name(Skill_Species, 1, true, false, false);
+    return species_name(Skill_Species, 1, true, false);
 }
 
 static std::string _stk_genus_nocap()
 {
-    std::string s = species_name(Skill_Species, 1, true, false, true);
+    std::string s = species_name(Skill_Species, 1, true, false);
     return (lowercase(s));
 }
 
@@ -1995,7 +1954,6 @@ static std::string _stk_weight()
     switch (Skill_Species)
     {
     case SP_OGRE:
-    case SP_OGRE_MAGE:
     case SP_TROLL:
         return "Heavy";
 

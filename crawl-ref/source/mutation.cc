@@ -1245,7 +1245,7 @@ formatted_string describe_mutations()
     }                           //end switch - innate abilities
 
     // a bit more stuff
-    if (you.species >= SP_OGRE && you.species <= SP_OGRE_MAGE
+    if (you.species == SP_OGRE || you.species == SP_TROLL
         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
         result += "Your body does not fit into most forms of armour." EOL;

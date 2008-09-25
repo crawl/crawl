@@ -80,7 +80,7 @@ bool wearing_amulet(jewellery_type which_am, bool calc_unid = true);
  * called from: acr - chardump - describe - newgame - view
  * *********************************************************************** */
 std::string species_name( species_type speci, int level, bool genus = false,
-                          bool adj = false, bool ogre = false );
+                          bool adj = false );
 int str_to_species(const std::string &species);
 
 /* ***********************************************************************

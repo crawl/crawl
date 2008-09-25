@@ -439,7 +439,6 @@ bool player_genus(genus_type which_genus, species_type species)
         return (which_genus == GENPC_DWARVEN);
 
     case SP_OGRE:
-    case SP_OGRE_MAGE:
         return (which_genus == GENPC_OGRE);
 
     default:
@@ -491,7 +490,6 @@ bool is_player_same_species(const int mon, bool transform)
                 return (true);
             return (false);
         case SP_OGRE:
-        case SP_OGRE_MAGE:
             if (mons_genus(mon) == MONS_OGRE)
                 return (true);
             return (false);
@@ -1161,10 +1159,10 @@ int player_res_magic(void)
     case SP_MOUNTAIN_DWARF:
     case SP_VAMPIRE:
     case SP_DEMIGOD:
+    case SP_OGRE:
         rm = you.experience_level * 4;
         break;
     case SP_NAGA:
-    case SP_OGRE_MAGE:
         rm = you.experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:
@@ -3174,13 +3172,8 @@ void level_change(bool skip_attribute_increase)
                 }
                 break;
 
-            case SP_OGRE:
             case SP_TROLL:
                 hp_adjust++;
-
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 14)
-                //     hp_adjust++;
 
                 if (!(you.experience_level % 2))
                     hp_adjust++;
@@ -3192,19 +3185,10 @@ void level_change(bool skip_attribute_increase)
                     modify_stat(STAT_STRENGTH, 1, false, "level gain");
                 break;
 
-            case SP_OGRE_MAGE:
+            case SP_OGRE:
                 hp_adjust++;
-
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 14)
-                //     hp_adjust++;
-
-                if (!(you.experience_level % 5))
-                {
-                    modify_stat( (coinflip() ? STAT_INTELLIGENCE
-                                                 : STAT_STRENGTH), 1, false,
-                                 "level gain");
-                }
+                if (!(you.experience_level % 3))
+                    modify_stat(STAT_STRENGTH, 1, false, "level gain");
                 break;
 
             case SP_RED_DRACONIAN:
@@ -3553,7 +3537,6 @@ int check_stealth(void)
             {
             case SP_TROLL:
             case SP_OGRE:
-            case SP_OGRE_MAGE:
             case SP_CENTAUR:
                 stealth += (you.skills[SK_STEALTH] * 9);
                 break;
@@ -4085,15 +4068,10 @@ int str_to_species(const std::string &species)
     return (SP_HUMAN);
 }
 
-std::string species_name(species_type speci, int level, bool genus, bool adj,
-                         bool ogre)
+std::string species_name(species_type speci, int level, bool genus, bool adj)
 // defaults:             false                          false       false
 {
     std::string res;
-
-    // If 'ogre' is true, the Ogre-Mage is described as like the Ogre.
-    if (ogre && speci == SP_OGRE_MAGE)
-        speci = SP_OGRE;
 
     if (player_genus( GENPC_DRACONIAN, speci ))
     {
@@ -4167,10 +4145,6 @@ std::string species_name(species_type speci, int level, bool genus, bool adj,
         case SP_KOBOLD:     res = "Kobold";                          break;
         case SP_MUMMY:      res = "Mummy";                           break;
         case SP_NAGA:       res = "Naga";                            break;
-        // We've previously declared that these are radically
-        // different from Ogres... so we're not going to
-        // refer to them as Ogres.  -- bwr
-        case SP_OGRE_MAGE:  res = "Ogre-Mage";                       break;
         case SP_CENTAUR:    res = "Centaur";                         break;
         case SP_SPRIGGAN:   res = "Spriggan";                        break;
         case SP_MINOTAUR:   res = "Minotaur";                        break;
@@ -4272,6 +4246,7 @@ static int _species_exp_mod(species_type species)
         case SP_KOBOLD:
             return 10;
         case SP_GNOME:
+        case SP_OGRE:
             return 11;
         case SP_SLUDGE_ELF:
         case SP_NAGA:
@@ -4283,7 +4258,6 @@ static int _species_exp_mod(species_type species)
             return 13;
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
-        case SP_OGRE:
         case SP_CENTAUR:
         case SP_MINOTAUR:
         case SP_DEMONSPAWN:
@@ -4292,7 +4266,6 @@ static int _species_exp_mod(species_type species)
         case SP_MUMMY:
         case SP_VAMPIRE:
         case SP_TROLL:
-        case SP_OGRE_MAGE:
             return 15;
         case SP_DEMIGOD:
             return 16;
@@ -5739,7 +5712,6 @@ size_type player::body_size(int psize, bool base) const
         switch (species)
         {
         case SP_OGRE:
-        case SP_OGRE_MAGE:
         case SP_TROLL:
             ret = SIZE_LARGE;
             break;
@@ -6740,8 +6712,7 @@ bool player::cannot_act() const
 
 bool player::can_throw_rocks() const
 {
-    return (species == SP_OGRE || species == SP_TROLL
-            || species == SP_OGRE_MAGE);
+    return (species == SP_OGRE || species == SP_TROLL);
 }
 
 void player::put_to_sleep(int)

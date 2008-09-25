@@ -2582,7 +2582,6 @@ std::string get_ghost_description(const monsters &mons, bool concise)
     case SP_MOUNTAIN_DWARF:
     case SP_TROLL:
     case SP_OGRE:
-    case SP_OGRE_MAGE:
     case SP_MINOTAUR:
     case SP_HILL_ORC:
     case SP_CENTAUR:

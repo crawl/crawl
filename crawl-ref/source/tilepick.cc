@@ -2607,9 +2607,6 @@ void tilep_race_default(int race, int gender, int level, int *parts)
             result = TILEP_BASE_TROLL;
             hair   = 0;
             break;
-        case SP_OGRE_MAGE:
-            result = TILEP_BASE_OGRE_MAGE;
-            break;
 
         case SP_BASE_DRACONIAN:
         case SP_RED_DRACONIAN:

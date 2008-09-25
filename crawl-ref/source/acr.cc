@@ -4534,7 +4534,7 @@ static void _compile_time_asserts()
     // disturbed accidentally.
     COMPILE_CHECK(SK_UNARMED_COMBAT == 19       , c1);
     COMPILE_CHECK(SK_EVOCATIONS == 39           , c2);
-    COMPILE_CHECK(SP_VAMPIRE == 34              , c3);
+    COMPILE_CHECK(SP_VAMPIRE == 33              , c3);
     COMPILE_CHECK(SPELL_BOLT_OF_MAGMA == 18     , c4);
     COMPILE_CHECK(SPELL_POISON_ARROW == 94      , c5);
     COMPILE_CHECK(SPELL_SUMMON_MUSHROOMS == 223 , c6);
