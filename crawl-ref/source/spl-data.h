@@ -135,6 +135,7 @@
      SPFLAG_NONE,
      6,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -146,6 +147,7 @@
      SPFLAG_ESCAPE,
      5,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -157,6 +159,7 @@
      SPFLAG_AREA,
      5,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      false
@@ -168,6 +171,7 @@
      SPFLAG_NONE,
      1,
      0,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      true
@@ -179,6 +183,7 @@
      SPFLAG_NONE,
      5,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -190,6 +195,7 @@
      SPFLAG_DIR_OR_TARGET,
      1,
      25,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -201,6 +207,7 @@
      SPFLAG_DIR_OR_TARGET,
      6,
      200,
+     6, 6,
      NULL,
      true,
      false
@@ -212,6 +219,7 @@
      SPFLAG_NONE,
      4,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -223,6 +231,7 @@
      SPFLAG_NONE,
      1,
      1000,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      false
@@ -234,6 +243,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,
      25,
+        LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -245,6 +255,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      3,
      100,
+        LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -256,6 +267,7 @@
      SPFLAG_NONE,
      7,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -267,6 +279,7 @@
      SPFLAG_DIR_OR_TARGET,
      1,
      25,
+     5, 5,
      NULL,
      true,
      false
@@ -278,6 +291,7 @@
      SPFLAG_NONE,
      3,
      100,
+     4, 4,
      NULL,
      false,
      false
@@ -289,6 +303,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_NEUTRAL,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -300,6 +315,7 @@
      SPFLAG_DIR_OR_TARGET,
      6,
      200,
+     6, 6,
      NULL,
      true,
      false
@@ -311,6 +327,7 @@
      SPFLAG_DIR_OR_TARGET,
      6,
      200,
+     7, 7,
      NULL,
      true,
      false
@@ -322,6 +339,7 @@
      SPFLAG_DIR_OR_TARGET,
      5,
      200,
+     5, 12,
      NULL,
      true,
      false
@@ -333,6 +351,7 @@
      SPFLAG_DIR_OR_TARGET,
      5,
      200,
+     5, 5,
      NULL,
      true,
      false
@@ -344,6 +363,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      5,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -355,6 +375,7 @@
      SPFLAG_DIR_OR_TARGET,
      3,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -368,6 +389,7 @@
          // and Swiftness is level 2 (and gives a similar effect).  It's also
          // not that much better than Invisibility.  -- bwr
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      true
@@ -379,6 +401,7 @@
      SPFLAG_DIR_OR_TARGET,
      4,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -390,6 +413,7 @@
      SPFLAG_DIR_OR_TARGET,
      4,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -401,6 +425,7 @@
      SPFLAG_DIR_OR_TARGET,
      3,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -412,6 +437,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,
      6,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      true
@@ -423,6 +449,7 @@
      SPFLAG_DIR_OR_TARGET,
      2,
      50,
+     7, 7,
      NULL,
      true,
      false
@@ -434,6 +461,7 @@
      SPFLAG_DIR_OR_TARGET,
      2,
      50,
+     8, 8,
      NULL,
      true,
      false
@@ -445,6 +473,7 @@
      SPFLAG_ESCAPE,
      7,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -456,6 +485,7 @@
      SPFLAG_GRID | SPFLAG_AREA,
      7,
      200,
+     6, 6,
      "Where do you want to put it?",
      true,
      false
@@ -467,6 +497,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
      3,
      200,
+     8, 8,
      NULL,
      true,
      false
@@ -478,6 +509,7 @@
      SPFLAG_AREA,
      8,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -489,6 +521,7 @@
      SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      2,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -500,6 +533,7 @@
      SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      2,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -511,6 +545,7 @@
      SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      2,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -522,6 +557,7 @@
      SPFLAG_DIR_OR_TARGET,
      5,
      200,
+     6, 6,
      NULL,
      true,
      false
@@ -533,6 +569,7 @@
      SPFLAG_AREA,
      4,
      0,
+     -1, -1,
      NULL,
      true,
      false
@@ -544,6 +581,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_ESCAPE,
      4,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -555,6 +593,7 @@
      SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      2,
      0,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      true
@@ -566,6 +605,7 @@
      SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      6,
      0,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      true
@@ -577,6 +617,7 @@
      SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      3,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -588,6 +629,7 @@
      SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      5,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -599,6 +641,7 @@
      SPFLAG_NONE,
      8,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -610,6 +653,7 @@
      SPFLAG_NONE,
      4,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -621,6 +665,7 @@
      SPFLAG_AREA,
      6,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -632,6 +677,7 @@
      SPFLAG_TARGET | SPFLAG_NOT_SELF,
      4,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      "Smite whom?",
      false,
      false
@@ -643,6 +689,7 @@
      SPFLAG_AREA,
      3,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -654,6 +701,7 @@
      SPFLAG_AREA,
      7,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -665,6 +713,7 @@
      SPFLAG_NONE,
      3,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -676,6 +725,7 @@
      SPFLAG_NONE,
      1,
      80,
+     -1, -1,
      NULL,
      false,
      false
@@ -687,6 +737,7 @@
      SPFLAG_AREA | SPFLAG_NEUTRAL,
      3,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -698,6 +749,7 @@
      SPFLAG_NONE,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -709,6 +761,7 @@
      SPFLAG_NONE,
      2,
      150,
+     -1, -1,
      NULL,
      false,
      true
@@ -720,6 +773,7 @@
      SPFLAG_DIR_OR_TARGET,
      6,
      200,
+     6, 6,
      NULL,
      true,
      false
@@ -731,6 +785,7 @@
      SPFLAG_DIR_OR_TARGET,
      8,
      200,
+     4, 4,
      NULL,
      true,
      false
@@ -742,6 +797,7 @@
      SPFLAG_DIR_OR_TARGET,
      3,
      1000,
+     7, 7,
      NULL,
      true,
      false
@@ -753,6 +809,7 @@
      SPFLAG_GRID | SPFLAG_AREA,
      6,
      200,
+     6, 6,
      "Where do you want to put it?",
      true,
      false
@@ -764,6 +821,7 @@
      SPFLAG_GRID | SPFLAG_AREA,
      9,
      200,
+     6, 6,
      "Where?",
      true,
      false
@@ -775,6 +833,7 @@
      SPFLAG_MAPPING,
      2,
      50,
+     -1, -1,
      NULL,
      false,
      true
@@ -786,6 +845,7 @@
      SPFLAG_ESCAPE,
      2,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -799,6 +859,7 @@
      SPFLAG_DIR_OR_TARGET,
      4,
      100,
+     5, 5,
      NULL,
      true,
      false
@@ -810,6 +871,7 @@
      SPFLAG_NONE,
      6,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -821,6 +883,7 @@
      SPFLAG_UNHOLY,
      8,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -831,7 +894,8 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      4,
-     200,
+     200,        
+        LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -843,6 +907,7 @@
      SPFLAG_MAPPING,
      4,
      45,
+     -1, -1,
      NULL,
      false,
      true
@@ -854,6 +919,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL | SPFLAG_NOT_SELF,
      3,
      100,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      true
@@ -865,6 +931,7 @@
      SPFLAG_AREA | SPFLAG_NEUTRAL,
      4,
      0,
+       -1, -1,
      NULL,
      false,
      true
@@ -876,6 +943,7 @@
      SPFLAG_DIR_OR_TARGET,
      1,
      25,
+     6, 6,
      NULL,
      true,
      false
@@ -887,6 +955,7 @@
      SPFLAG_NONE,
      5,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -898,6 +967,7 @@
      SPFLAG_NONE,
      6,
      200,
+     -1, -1,
      NULL,
      true
 },
@@ -908,6 +978,7 @@
      SPFLAG_NONE,
      1,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -919,6 +990,7 @@
      SPFLAG_DIR | SPFLAG_NOT_SELF,
      3,
      200,
+     1, 1,
      NULL,
      false,
      false
@@ -930,6 +1002,7 @@
      SPFLAG_NONE,
      7,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -941,6 +1014,7 @@
      SPFLAG_MAPPING,
      2,
      50,
+     -1, -1,
      NULL,
      false,
      true
@@ -952,6 +1026,7 @@
      SPFLAG_NONE,
      5,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -963,6 +1038,7 @@
      SPFLAG_DIR | SPFLAG_NOT_SELF,
      1,
      25,
+     1, 1,
      NULL,
      false,
      false
@@ -974,6 +1050,7 @@
      SPFLAG_DIR | SPFLAG_NOT_SELF,
      1,
      25,
+     1, 1,
      NULL,
      false,
      false
@@ -985,6 +1062,7 @@
      SPFLAG_NONE,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -996,6 +1074,7 @@
      SPFLAG_AREA,
      5,
      200,
+     -1, -1,
      NULL,
      true,
      false
@@ -1007,6 +1086,7 @@
      SPFLAG_DIR_OR_TARGET,
      4,
      100,
+     5, 5,
      NULL,
      true,
      false
@@ -1018,6 +1098,7 @@
      SPFLAG_NONE,
      5,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1029,6 +1110,7 @@
      SPFLAG_NONE,
      3,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1040,6 +1122,7 @@
      SPFLAG_UNHOLY,
      3,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1051,6 +1134,7 @@
      SPFLAG_NONE,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1062,6 +1146,7 @@
      SPFLAG_NONE,
      3,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -1073,6 +1158,7 @@
      SPFLAG_DIR_OR_TARGET,
      4,
      100,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -1084,6 +1170,7 @@
      SPFLAG_NONE,
      7,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1095,6 +1182,7 @@
      SPFLAG_NONE,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1106,6 +1194,7 @@
      SPFLAG_DIR_OR_TARGET,
      6,         // why is this the only holy spell with a secondary? {dlb}
      200,
+     8, 8,
      NULL,
      true,
      false
@@ -1118,6 +1207,7 @@
      SPFLAG_DIR_OR_TARGET,
      8,
      200,
+     6, 6,
      NULL,
      true,
      false
@@ -1129,6 +1219,7 @@
      SPFLAG_NONE,
      7,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1140,6 +1231,7 @@
      SPFLAG_NONE,
      8,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1151,6 +1243,7 @@
      SPFLAG_AREA | SPFLAG_NEUTRAL,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1162,6 +1255,7 @@
      SPFLAG_NONE,
      1,
      50,
+     -1, -1,
      NULL,
      false,
      true
@@ -1173,6 +1267,7 @@
      SPFLAG_DIR_OR_TARGET,
      6,
      200,
+     7, 7,
      NULL,
      true,
      false
@@ -1184,6 +1279,7 @@
      SPFLAG_NONE,
      5,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1195,6 +1291,7 @@
      SPFLAG_NONE,
      3,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1206,6 +1303,7 @@
      SPFLAG_DIR_OR_TARGET,
      3,
      200,
+     6, 6,
      NULL,
      true,
      false
@@ -1217,6 +1315,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY,
      4,
      200,
+     -1, -1,
      NULL,
      true,
      false
@@ -1228,6 +1327,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      5,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      false
@@ -1239,6 +1339,7 @@
      SPFLAG_DIR_OR_TARGET,
      1,
      25,
+     7, 7,
      NULL,
      true,
      false
@@ -1250,6 +1351,7 @@
      SPFLAG_NONE,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1261,6 +1363,7 @@
      SPFLAG_NONE,
      3,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1272,6 +1375,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY,
      9,
      200,
+     7, 7,
      NULL,
      true,
      false
@@ -1283,6 +1387,7 @@
      SPFLAG_UNHOLY,
      5,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1294,6 +1399,7 @@
      SPFLAG_UNHOLY,
      6,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1305,6 +1411,7 @@
      SPFLAG_UNHOLY,
      7,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1316,6 +1423,7 @@
      SPFLAG_AREA | SPFLAG_NEUTRAL,
      2,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -1327,6 +1435,7 @@
      SPFLAG_NONE,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1338,6 +1447,7 @@
      SPFLAG_NONE,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1349,6 +1459,7 @@
      SPFLAG_NONE,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1360,6 +1471,7 @@
      SPFLAG_NONE,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1371,6 +1483,7 @@
      SPFLAG_DIR | SPFLAG_NOT_SELF,
      1,
      25,
+     1, 1,
      NULL,
      false,
      false
@@ -1382,6 +1495,7 @@
      SPFLAG_DIR_OR_TARGET,
      6,
      200,
+     5, 5,
      NULL,
      true,
      false
@@ -1393,6 +1507,7 @@
      SPFLAG_DIR_OR_TARGET,
      3,
      50,
+     5, 5,
      NULL,
      true,
      false
@@ -1404,6 +1519,7 @@
      SPFLAG_NONE,
      7,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -1416,6 +1532,7 @@
      SPFLAG_NONE,
      6,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1427,6 +1544,7 @@
      SPFLAG_DIR_OR_TARGET,
      1,
      25,
+     8, 8,
      NULL,
      true,
      false
@@ -1438,6 +1556,7 @@
      SPFLAG_NONE,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1449,6 +1568,7 @@
      SPFLAG_NONE,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1460,6 +1580,7 @@
      SPFLAG_NONE,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1471,6 +1592,7 @@
      SPFLAG_DIR_OR_TARGET,
      7,
      200,
+     7, 12,
      NULL,
      true,
      false
@@ -1482,6 +1604,7 @@
      SPFLAG_MAPPING,
      2,
      60,                        // not 50, note the fuzz
+        -1, -1,
      NULL,
      false,
      false
@@ -1493,6 +1616,7 @@
      SPFLAG_RECOVERY | SPFLAG_HELPFUL,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1504,6 +1628,7 @@
      SPFLAG_HELPFUL,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1515,6 +1640,7 @@
      SPFLAG_HELPFUL,
      4,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -1526,6 +1652,7 @@
      SPFLAG_HELPFUL,
      2,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -1537,6 +1664,7 @@
      SPFLAG_HELPFUL,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1548,6 +1676,7 @@
      SPFLAG_NONE,
      2,
      0,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      false
@@ -1559,6 +1688,7 @@
      SPFLAG_NONE,
      7,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -1570,6 +1700,7 @@
      SPFLAG_DIR_OR_TARGET,
      7,
      100,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      false
@@ -1581,6 +1712,7 @@
      SPFLAG_NONE,
      3,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -1592,6 +1724,7 @@
      SPFLAG_ESCAPE,
      7,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -1603,6 +1736,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      5,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      false
@@ -1614,6 +1748,7 @@
      SPFLAG_HELPFUL,
      3,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1625,6 +1760,7 @@
      SPFLAG_DIR_OR_TARGET,
      1,
      25,
+     7, 7,
      NULL,
      false,
      false
@@ -1636,6 +1772,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      6,
      200,
+     6, 6,
      NULL,
      true,
      false
@@ -1647,6 +1784,7 @@
      SPFLAG_HELPFUL,
      5,  // only removes weapon, so I raised this from 4 -- bwr
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1658,6 +1796,7 @@
      SPFLAG_HELPFUL,
      6,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1669,6 +1808,7 @@
      SPFLAG_HELPFUL,
      4, // doesn't allow for equipment, so I lowered this from 5 -- bwr
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1680,6 +1820,7 @@
      SPFLAG_HELPFUL,
      8,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1691,6 +1832,7 @@
      SPFLAG_HELPFUL,
      8,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1702,6 +1844,7 @@
      SPFLAG_HELPFUL,
      9,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1713,6 +1856,7 @@
      SPFLAG_AREA,
      6,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -1724,6 +1868,7 @@
      SPFLAG_HELPFUL,
      6,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1735,8 +1880,10 @@
      SPFLAG_DIR_OR_TARGET,
      7,
      200,
+     5, 5,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1745,8 +1892,10 @@
      SPFLAG_DIR_OR_TARGET,
      4,
      100,
+     6, 6,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -1755,6 +1904,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
      9,
      200,
+     6, 6,
      NULL,
      true,
      false
@@ -1766,6 +1916,7 @@
      SPFLAG_DIR | SPFLAG_NOT_SELF,
      1,
      25,
+     1, 1,
      NULL,
      false,
      false
@@ -1777,6 +1928,7 @@
      SPFLAG_TARGET | SPFLAG_NOT_SELF,
      4,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      false
@@ -1788,6 +1940,7 @@
      SPFLAG_UNHOLY,
      5,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -1799,6 +1952,7 @@
      SPFLAG_NONE,
      1,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1810,6 +1964,7 @@
      SPFLAG_HELPFUL,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1821,6 +1976,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,
      25,
+     1, 2,
      NULL,
      false,
      false
@@ -1832,6 +1988,7 @@
      SPFLAG_ESCAPE,
      3,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1843,6 +2000,7 @@
      SPFLAG_AREA,
      6,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1854,6 +2012,7 @@
      SPFLAG_NONE,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1865,6 +2024,7 @@
      SPFLAG_NONE,
      3,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1876,6 +2036,7 @@
      SPFLAG_NONE,
      9,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1887,6 +2048,7 @@
      SPFLAG_AREA,
      5,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1898,6 +2060,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      2,
      56,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -1909,6 +2072,7 @@
      SPFLAG_AREA,
      7,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1920,6 +2084,7 @@
      SPFLAG_NONE,
      1,
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -1931,6 +2096,7 @@
      SPFLAG_NONE,
      1,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1942,6 +2108,7 @@
      SPFLAG_HELPFUL,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1953,6 +2120,7 @@
      SPFLAG_HELPFUL,
      5,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -1964,6 +2132,7 @@
      SPFLAG_NONE,
      1,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1975,6 +2144,7 @@
      SPFLAG_HELPFUL,
      7,     // this is high for a reason - Warp brands are very powerful.
      0,
+     -1, -1,
      NULL,
      false,
      true
@@ -1986,6 +2156,7 @@
      SPFLAG_AREA,
      5,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -1997,6 +2168,7 @@
      SPFLAG_AREA,
      9,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -2008,6 +2180,7 @@
      SPFLAG_AREA | SPFLAG_ESCAPE,
      7,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -2019,6 +2192,7 @@
      SPFLAG_AREA,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -2030,6 +2204,7 @@
      SPFLAG_DIR,
      1,
      100,
+     1, 1,
      NULL,
      false,
      false
@@ -2041,6 +2216,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -2052,6 +2228,7 @@
      SPFLAG_NONE,
      4,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -2063,6 +2240,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_AREA,
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
      200,
+     6, 6,
      NULL,
      true,
      false
@@ -2074,6 +2252,7 @@
      SPFLAG_NONE,
      4,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -2085,6 +2264,7 @@
      SPFLAG_GRID,
      5,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      "Fragment what (e.g. a wall or monster)?",
      false,
      false
@@ -2096,6 +2276,7 @@
      SPFLAG_HELPFUL,
      9,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -2107,6 +2288,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,
      50,
+     1, 2,
      NULL,
      true,
      false
@@ -2118,6 +2300,7 @@
      SPFLAG_AREA,
      5,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      false
@@ -2129,6 +2312,7 @@
      SPFLAG_HELPFUL,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -2140,6 +2324,7 @@
      SPFLAG_HELPFUL,
      4,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -2151,6 +2336,7 @@
      SPFLAG_ESCAPE,
      3,
      100,
+     -1, -1,
      NULL,
      false,
      true
@@ -2162,6 +2348,7 @@
      SPFLAG_HELPFUL,
      2,
      200,
+     -1, -1,
      NULL,
      false,
      true
@@ -2173,6 +2360,7 @@
      SPFLAG_NONE,
      6,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -2184,6 +2372,7 @@
      SPFLAG_NONE,
      7,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -2195,6 +2384,7 @@
      SPFLAG_AREA,
      8,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -2206,6 +2396,7 @@
      SPFLAG_HELPFUL,
      5,     // fairly high level - potentially one of the best brands
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -2217,6 +2408,7 @@
      SPFLAG_TARGET,
      2,
      50,
+     4, 8,
      NULL,
      false,
      false
@@ -2228,6 +2420,7 @@
      SPFLAG_NONE,
      5,
      200,
+     -1, -1,
      NULL,
      false,
      false
@@ -2239,6 +2432,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY,
      9,
      200,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -2250,6 +2444,7 @@
      SPFLAG_UNHOLY,
      3,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -2261,6 +2456,7 @@
      SPFLAG_UNHOLY | SPFLAG_TARGET,
      3,
      0,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      false,
      false
@@ -2272,6 +2468,7 @@
      SPFLAG_UNHOLY,
      3,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -2283,6 +2480,7 @@
      SPFLAG_DIR_OR_TARGET,
      4,
      0,
+     7, 7,
      NULL,
      true,
      false
@@ -2294,6 +2492,7 @@
      SPFLAG_UNHOLY,
      4,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -2305,6 +2504,7 @@
      SPFLAG_UNHOLY,
      4,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -2316,6 +2516,7 @@
      SPFLAG_DIR_OR_TARGET,
      4,
      0,
+     8, 8,
      NULL,
      true,
      false
@@ -2327,6 +2528,7 @@
      SPFLAG_DIR_OR_TARGET,
      2,
      0,
+     7, 7,
      NULL,
      true,
      false
@@ -2338,6 +2540,7 @@
      SPFLAG_NONE,
      7,
      0,
+     -1, -1,
      NULL,
      false,
      false,
@@ -2349,6 +2552,7 @@
      SPFLAG_NONE,
      1,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -2360,6 +2564,7 @@
      SPFLAG_DIR_OR_TARGET,
      5,
      0,
+     8, 8,
      NULL,
      true,
      false
@@ -2371,6 +2576,7 @@
      SPFLAG_DIR_OR_TARGET,
      5,
      0,
+     5, 5,
      NULL,
      true,
      false
@@ -2382,6 +2588,7 @@
      SPFLAG_DIR_OR_TARGET,
      6,
      0,
+     6, 6,
      NULL,
      true,
      false
@@ -2393,6 +2600,7 @@
      SPFLAG_NONE,
      6,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -2404,6 +2612,7 @@
      SPFLAG_ESCAPE | SPFLAG_DIR_OR_TARGET,
      2,
      0,
+     LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,
      false
@@ -2415,6 +2624,7 @@
      SPFLAG_NONE,
      4,
      0,
+     -1, -1,
      NULL,
      false,
      false
@@ -2426,6 +2636,7 @@
      0,
      0,
      0,
+     -1, -1,
      NULL,
      false,
      false

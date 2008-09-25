@@ -944,6 +944,27 @@ beam_type _spell_to_beam_type(spell_type spell)
     return BEAM_NONE;
 }
 
+int _setup_evaporate_cast()
+{
+    int rc = prompt_invent_item("Throw which potion?", MT_INVLIST, OBJ_POTIONS);
+    
+    if (prompt_failed(rc))
+    {
+        rc = -1;
+    }
+    else if (you.inv[rc].base_type != OBJ_POTIONS)
+    {
+        mpr("This spell works only on potions!");
+        rc = -1;
+    }
+    else
+    {
+        mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
+             you.inv[rc].name(DESC_NOCAP_YOUR).c_str());
+    }
+    return rc;
+}
+
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
@@ -986,19 +1007,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         const char *prompt = get_spell_target_prompt(spell);
         if (spell == SPELL_EVAPORATE)
         {
-            potion = prompt_invent_item("Throw which potion?",
-                                        MT_INVLIST, OBJ_POTIONS);
-
-            if (prompt_failed(potion))
+            potion = _setup_evaporate_cast();
+            if (potion == -1)
                 return (SPRET_ABORT);
-
-            if (you.inv[potion].base_type != OBJ_POTIONS)
-            {
-                mpr("This spell works only on potions!");
-                return (SPRET_ABORT);
-            }
-            mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
-                               you.inv[potion].name(DESC_NOCAP_YOUR).c_str());
         }
         else if (dir == DIR_DIR)
             mpr(prompt ? prompt : "Which direction?", MSGCH_PROMPT);
@@ -1008,12 +1019,16 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
         const bool dont_cancel_me = testbits(flags, SPFLAG_AREA);
 
-        if (!spell_direction(spd, beam, dir, targ, needs_path, true,
-                             dont_cancel_me, prompt,
+        const int range = spell_range(spell, powc, false);
+
+        if (!spell_direction(spd, beam, dir, targ, range,
+                             needs_path, true, dont_cancel_me, prompt,
                              testbits(flags, SPFLAG_NOT_SELF)))
         {
             return (SPRET_ABORT);
         }
+
+        beam.range = spell_range(spell, powc, true);
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe)
         {

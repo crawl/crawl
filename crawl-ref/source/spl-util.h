@@ -50,6 +50,11 @@ struct spell_desc
     unsigned int flags;       // bitfield
     unsigned int level;
     int power_cap;
+
+    // At power 0, you get min_range. At power power_cap, you get max_range.
+    int min_range;
+    int max_range;
+
     const char  *target_prompt;
 
 
@@ -78,6 +83,7 @@ int spell_hunger(spell_type which_spell);
 int spell_mana(spell_type which_spell);
 int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
+int spell_range(spell_type spell, int pow, bool real_cast);
 
 const char *get_spell_target_prompt( spell_type which_spell );
 
@@ -122,6 +128,7 @@ int apply_area_within_radius(cell_func cf,  const coord_def& where,
 bool spell_direction( dist &spelld, bolt &pbolt,
                       targeting_type restrict = DIR_NONE,
                       targ_mode_type mode = TARG_ENEMY,
+                      int range = LOS_RADIUS,
                       bool needs_path = true, bool may_target_monster = true,
                       bool may_target_self = false, const char *prompt = NULL,
                       bool cancel_at_self = false );

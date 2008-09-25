@@ -1865,45 +1865,38 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     pbolt.aux_source.clear();
     // pbolt.range is set below
 
+    int max_range = 0;
+    int range = 0;
+
     if (projected)
     {
         if (wepType == MI_LARGE_ROCK)
         {
-            pbolt.range    = 1 + random2( you.strength / 5 );
-            pbolt.rangeMax = you.strength / 5;
+            range     = 1 + random2( you.strength / 5 );
+            max_range = you.strength / 5;
             if (you.can_throw_rocks())
             {
-                pbolt.range    += random_range(4, 7);
-                pbolt.rangeMax += 7;
-            }
-            if (pbolt.rangeMax > 12)
-            {
-                pbolt.rangeMax = 12;
-                if (pbolt.range > 12)
-                    pbolt.range = 12;
+                range     += random_range(4, 7);
+                max_range += 7;
             }
         }
         else if (wepType == MI_THROWING_NET)
         {
-            pbolt.rangeMax = pbolt.range = 2 + player_size(PSIZE_BODY);
+            max_range = range = 2 + player_size(PSIZE_BODY);
         }
         else
         {
-            pbolt.rangeMax = pbolt.range = 12;
+            max_range = range = LOS_RADIUS;
         }
     }
     else
     {
         // Range based on mass & strength, between 1 and 9.
-        pbolt.range = you.strength - item_mass(item) / 10 + 3;
-        if (pbolt.range < 1)
-            pbolt.range = 1;
-
-        if (pbolt.range > 9)
-            pbolt.range = 9;
-
-        pbolt.rangeMax = pbolt.range;
+        max_range = range = std::max(you.strength - item_mass(item)/10 + 3, 1);
     }
+
+    range = std::min(range, LOS_RADIUS);
+    max_range = std::min(max_range, LOS_RADIUS);
 
     pbolt.is_beam       = false;
     pbolt.beam_source   = 0;
@@ -1911,6 +1904,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     pbolt.smart_monster = true;
     pbolt.attitude      = ATT_FRIENDLY;
     pbolt.is_tracer     = true;
+
+    // For the tracer, use max_range. For the actual shot, use range.
+    pbolt.range         = max_range;
 
     // Don't do the tracing when using Portaled Projectile, or when confused.
     if (!teleport && !you.duration[DUR_CONF])
@@ -1933,6 +1929,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             return (false);
         }
     }
+
+    // Use real range for firing.
+    pbolt.range = range;
 
     // Now start real firing!
     origin_set_unknown(item);

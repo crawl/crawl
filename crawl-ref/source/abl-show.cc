@@ -1078,14 +1078,14 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_DELAYED_FIREBALL:
-        if ( !spell_direction(spd, beam, DIR_NONE, TARG_ENEMY) )
+        if (!spell_direction(spd, beam, DIR_NONE, TARG_ENEMY))
             return (false);
 
         // Note: power level of ball calculated at release -- bwr
-        fireball( calc_spell_power( SPELL_DELAYED_FIREBALL, true ), beam );
+        fireball(calc_spell_power( SPELL_DELAYED_FIREBALL, true ), beam);
 
         // only one allowed since this is instantaneous -- bwr
-        you.attribute[ ATTR_DELAYED_FIREBALL ] = 0;
+        you.attribute[ATTR_DELAYED_FIREBALL] = 0;
         break;
 
     case ABIL_SPIT_POISON:      // Naga + spit poison mutation

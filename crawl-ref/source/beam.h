@@ -99,8 +99,7 @@ struct dist;
 struct bolt
 {
     // INPUT parameters set by caller
-    int         range;                 // minimum range
-    int         rangeMax;              // maximum range
+    int         range;
     unsigned    type;                  // missile gfx
     int         colour;
     beam_type   flavour;

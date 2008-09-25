@@ -3906,8 +3906,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         // Setup tracer.
         beem.name        = "glob of lava";
         beem.aux_source  = "glob of lava";
-        beem.range       = 4;
-        beem.rangeMax    = 13;
+        beem.range       = 6;
         beem.damage      = dice_def( 3, 10 );
         beem.hit         = 20;
         beem.colour      = RED;
@@ -3942,8 +3941,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         // Setup tracer.
         beem.name        = "bolt of electricity";
         beem.aux_source  = "bolt of electricity";
-        beem.range       = 4;
-        beem.rangeMax    = 13;
+        beem.range       = 8;
         beem.damage      = dice_def( 3, 6 );
         beem.hit         = 50;
         beem.colour      = LIGHTCYAN;
@@ -4096,8 +4094,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         // Set up the beam.
         beem.name        = "volley of spikes";
         beem.aux_source  = "volley of spikes";
-        beem.range       = 9;
-        beem.rangeMax    = 9;
+        beem.range       = 6;
         beem.hit         = 14;
         beem.damage      = dice_def( 2, 10 );
         beem.beam_source = monster_index(monster);
@@ -4511,7 +4508,6 @@ static bool _handle_wand(monsters *monster, bolt &beem)
     beem.source       = monster->pos();
     beem.colour       = theBeam.colour;
     beem.range        = theBeam.range;
-    beem.rangeMax     = theBeam.rangeMax;
     beem.damage       = theBeam.damage;
     beem.ench_power   = theBeam.ench_power;
     beem.hit          = theBeam.hit;
@@ -7232,8 +7228,8 @@ static void _setup_plant_spit(monsters *monster, bolt &pbolt)
 {
     pbolt.name        = "acid";
     pbolt.type        = dchar_glyph(DCHAR_FIRED_ZAP);
-    pbolt.range       = 9;
-    pbolt.rangeMax    = 9;
+    // immobile plants get long-range spit...
+    pbolt.range       = LOS_RADIUS;
     pbolt.colour      = YELLOW;
     pbolt.flavour     = BEAM_ACID;
     pbolt.beam_source = monster_index(monster);

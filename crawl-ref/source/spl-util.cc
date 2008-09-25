@@ -672,6 +672,7 @@ void apply_area_cloud( cloud_func func, const coord_def& where,
 // Return false if the user canceled, true otherwise.
 bool spell_direction( dist &spelld, bolt &pbolt,
                       targeting_type restrict, targ_mode_type mode,
+                      int range,
                       bool needs_path, bool may_target_monster,
                       bool may_target_self, const char *prompt,
                       bool cancel_at_self )
@@ -679,7 +680,7 @@ bool spell_direction( dist &spelld, bolt &pbolt,
     if (restrict != DIR_DIR)
         message_current_target();
 
-    direction( spelld, restrict, mode, -1, false, needs_path,
+    direction( spelld, restrict, mode, range, false, needs_path,
                may_target_monster, may_target_self, prompt, NULL,
                cancel_at_self );
 
@@ -870,4 +871,22 @@ static bool _cloud_helper(cloud_func func, const coord_def& where,
 int spell_power_cap(spell_type spell)
 {
     return (_seekspell(spell)->power_cap);
+}
+
+int spell_range(spell_type spell, int pow, bool real_cast)
+{
+    const int minrange = _seekspell(spell)->min_range;
+    const int maxrange = _seekspell(spell)->max_range;
+    ASSERT(maxrange >= minrange);
+
+    if (minrange == maxrange)
+        return minrange;
+
+    const int powercap = spell_power_cap(spell);
+
+    if (powercap <= pow)
+        return maxrange;
+
+    // Round appropriately.
+    return ((pow*(maxrange - minrange) + powercap/2) / powercap + minrange);
 }

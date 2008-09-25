@@ -205,8 +205,8 @@ static void _ench_animation( int flavour, const monsters *mon, bool force )
 
 static void _beam_set_default_values(bolt &beam, int power)
 {
-    beam.range          = 8 + random2(5);    // default for "0" beams (I think)
-    beam.rangeMax       = 0;
+    if (beam.range <= 0)
+        beam.range = LOS_RADIUS;
     beam.hit            = 0;                 // default for "0" beams (I think)
     beam.damage         = dice_def( 1, 0 );  // default for "0" beams (I think)
     beam.type           = 0;                 // default for "0" beams
@@ -275,48 +275,36 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
     switch (z_type)
     {
     case ZAP_SMALL_SANDBLAST:
-        pbolt.rangeMax       = 2;
-        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
+        pbolt.flavour        = BEAM_FRAG;
         break;
 
     case ZAP_SANDBLAST:
-        if (power > 50)
-            power = 50;
-
-//      pbolt.range          = 2 + random2(power) / 20;
-        pbolt.rangeMax       = 2 + (power-1) / 20; // max 4
-        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
+        pbolt.flavour        = BEAM_FRAG;
         break;
 
     case ZAP_FLAME_TONGUE:
         if (power > 25)
             power = 25;
 
-//      pbolt.range          = 1 + random2(2) + random2(power) / 10;
-        pbolt.rangeMax       = 2 + (power-1) / 10; // max 4
         pbolt.flavour        = BEAM_FIRE;
         break;
 
     case ZAP_CLEANSING_FLAME:
         pbolt.name           = "golden flame";
-        pbolt.rangeMax       = 7;
         pbolt.flavour        = BEAM_HOLY;
         pbolt.is_explosion   = true;
         break;
 
     case ZAP_MAGMA:
-        pbolt.rangeMax       = 8;
         pbolt.flavour        = BEAM_LAVA;
         pbolt.is_beam        = true;
         break;
 
     case ZAP_IRON_BOLT:
-        pbolt.rangeMax       = 9;
         pbolt.flavour        = BEAM_MMISSILE;               // unresistable
         break;
 
     case ZAP_CRYSTAL_SPEAR:
-        pbolt.rangeMax       = 9;
         pbolt.flavour        = BEAM_MMISSILE;                // unresistable
         break;
 
@@ -324,22 +312,12 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
         if (power > 50)
             power = 50;
 
-//      pbolt.range          = 3 + random2( 1 + power / 2 );
-        pbolt.rangeMax       = 3 + power / 2;
-        if (pbolt.rangeMax > 9)
-            pbolt.rangeMax = 9;
-
         pbolt.flavour        = BEAM_POISON;
         break;
 
     case ZAP_BREATHE_FIRE:
         if (power > 50)
             power = 50;
-
-//      pbolt.range          = 3 + random2( 1 + power / 2 );
-        pbolt.rangeMax       = 3 + power / 2;
-        if (pbolt.rangeMax > 9)
-            pbolt.rangeMax = 9;
 
         pbolt.flavour        = BEAM_FIRE;
         pbolt.is_beam        = true;
@@ -349,11 +327,6 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
         if (power > 50)
             power = 50;
 
-//      pbolt.range          = 3 + random2( 1 + power / 2 );
-        pbolt.rangeMax       = 3 + power / 2;
-        if (pbolt.rangeMax > 9)
-            pbolt.rangeMax = 9;
-
         pbolt.flavour        = BEAM_COLD;
         pbolt.is_beam        = true;
         break;
@@ -361,11 +334,6 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
     case ZAP_BREATHE_ACID:
         if (power > 50)
             power = 50;
-
-//      pbolt.range          = 3 + random2( 1 + power / 2 );
-        pbolt.rangeMax       = 3 + power / 2;
-        if (pbolt.rangeMax > 9)
-            pbolt.rangeMax = 9;
 
         pbolt.flavour        = BEAM_ACID;
         pbolt.is_beam        = true;
@@ -375,11 +343,6 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
         if (power > 50)
             power = 50;
 
-//      pbolt.range          = 3 + random2( 1 + power / 2 );
-        pbolt.rangeMax       = 3 + power / 2;
-        if (pbolt.rangeMax > 9)
-            pbolt.rangeMax = 9;
-
         pbolt.flavour        = BEAM_POISON;
         pbolt.is_beam        = true;
         break;
@@ -388,17 +351,11 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
         if (power > 50)
             power = 50;
 
-//      pbolt.range          = 6 + random2( 1 + power / 2 );
-        pbolt.rangeMax       = 6 + power / 2;
-        if (pbolt.rangeMax > 9)
-            pbolt.rangeMax = 9;
-
         pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
         pbolt.is_beam        = true;
         break;
 
     case ZAP_BREATHE_STEAM:
-        pbolt.rangeMax       = 9;
         pbolt.flavour        = BEAM_STEAM;
         pbolt.is_beam        = true;
         break;
@@ -407,34 +364,28 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
     case ZAP_MAGIC_DARTS:
     case ZAP_STONE_ARROW:
     case ZAP_MYSTIC_BLAST:
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_MMISSILE;               // unresistable
         break;
 
     case ZAP_STING:
     case ZAP_POISON_ARROW:
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_POISON;
         break;
 
     case ZAP_FLAME:
     case ZAP_STICKY_FLAME:
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_FIRE;
         break;
 
     case ZAP_FROST:
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_COLD;
         break;
 
     case ZAP_ICE_BOLT:
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_ICE;                     // half resistable
         break;
 
     case ZAP_ELECTRICITY:
-        pbolt.rangeMax       = 13;
         pbolt.flavour        = BEAM_ELECTRICITY;           // beams & reflects
         pbolt.is_beam        = true;
         break;
@@ -442,60 +393,50 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
     case ZAP_DISRUPTION:
     case ZAP_DISINTEGRATION:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 14;
         pbolt.flavour        = BEAM_DISINTEGRATION;
         break;
 
     case ZAP_PAIN:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 14;
         pbolt.flavour        = BEAM_PAIN;
         break;
 
     case ZAP_DISPEL_UNDEAD:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 14;
         pbolt.flavour        = BEAM_DISPEL_UNDEAD;
         break;
 
     case ZAP_FIRE:
-        pbolt.rangeMax       = 16;
         pbolt.flavour        = BEAM_FIRE;
         pbolt.is_beam        = true;
         break;
 
     case ZAP_BONE_SHARDS:
-        pbolt.rangeMax       = 16;
         pbolt.flavour        = BEAM_MAGIC;                      // unresisted
         pbolt.is_beam        = true;
         break;
 
     case ZAP_COLD:
-        pbolt.rangeMax       = 16;
         pbolt.flavour        = BEAM_COLD;
         pbolt.is_beam        = true;
         break;
 
     case ZAP_NEGATIVE_ENERGY:
-        pbolt.rangeMax       = 16;
         pbolt.flavour        = BEAM_NEG;                     // drains levels
         pbolt.is_beam        = true;
         break;
 
     case ZAP_BEAM_OF_ENERGY:    // bolt of innacuracy
-        pbolt.range          = 16;
         pbolt.flavour        = BEAM_ENERGY;                    // unresisted
         pbolt.is_beam        = true;
         break;
 
     case ZAP_VENOM_BOLT:
-        pbolt.rangeMax       = 17;
         pbolt.flavour        = BEAM_POISON;
         pbolt.is_beam        = true;
         break;
 
     case ZAP_LIGHTNING:
-        pbolt.rangeMax       = 17;
         pbolt.flavour        = BEAM_ELECTRICITY;           // beams & reflects
         pbolt.is_beam        = true;
         break;
@@ -503,110 +444,91 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
     // enchantments
     case ZAP_ENSLAVEMENT:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 11;
         pbolt.flavour        = BEAM_CHARM;
         break;
 
     case ZAP_BANISHMENT:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 11;
         pbolt.flavour        = BEAM_BANISH;
         break;
 
     case ZAP_DEGENERATION:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 11;
         pbolt.flavour        = BEAM_DEGENERATE;
         break;
 
     case ZAP_ENSLAVE_UNDEAD:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 11;
         pbolt.flavour        = BEAM_ENSLAVE_UNDEAD;
         break;
 
     case ZAP_CONTROL_DEMON:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 11;
         pbolt.flavour        = BEAM_ENSLAVE_DEMON;
         break;
 
     case ZAP_SLEEP:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 11;
         pbolt.flavour        = BEAM_SLEEP;
         break;
 
     case ZAP_BACKLIGHT:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 11;
         pbolt.flavour        = BEAM_BACKLIGHT;
         break;
 
     case ZAP_SLOWING:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_SLOW;
         break;
 
     case ZAP_HASTING:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_HASTE;
         break;
 
     case ZAP_PARALYSIS:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_PARALYSIS;
         break;
 
     case ZAP_PETRIFY:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_PETRIFY;
         break;
 
     case ZAP_CONFUSION:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_CONFUSION;
         break;
 
     case ZAP_INVISIBILITY:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_INVISIBILITY;
         break;
 
     case ZAP_HEALING:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_HEALING;
         break;
 
     case ZAP_TELEPORTATION:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 13;
         pbolt.flavour        = BEAM_TELEPORT;
         break;
 
     case ZAP_POLYMORPH_OTHER:
         pbolt.name           = "0";
-        pbolt.rangeMax       = 13;
         pbolt.flavour        = BEAM_POLYMORPH;
         break;
 
     case ZAP_AGONY:
         pbolt.name           = "0agony";
-        pbolt.rangeMax       = 14;
         pbolt.flavour        = BEAM_PAIN;
         break;
 
     case ZAP_DIGGING:
         pbolt.name           = "0";
-//        pbolt.range          = 3 + random2( power / 5 ) + random2(5);
-        pbolt.rangeMax       = 6 + power / 5;
         pbolt.flavour        = BEAM_DIGGING;
         pbolt.is_beam        = true;
         break;
@@ -614,14 +536,12 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
     // explosions
     case ZAP_FIREBALL:
         pbolt.name           = "fireball";
-        pbolt.rangeMax       = 12;
         pbolt.flavour        = BEAM_FIRE;                      // fire
         pbolt.is_explosion   = true;
         break;
 
     case ZAP_ICE_STORM:
         pbolt.name           = "great blast of cold";
-        pbolt.rangeMax       = 13;
         pbolt.ench_power     = power;              // used for radius
         pbolt.flavour        = BEAM_ICE;           // half resisted
         pbolt.is_explosion   = true;
@@ -629,27 +549,23 @@ static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
 
     case ZAP_ORB_OF_FRAGMENTATION:                      // cap 150
         pbolt.name           = "metal orb";
-        pbolt.rangeMax       = 16;
         pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
         pbolt.is_explosion   = true;
         break;
 
     case ZAP_HELLFIRE:
-        pbolt.rangeMax       = 16;
         pbolt.flavour        = BEAM_HELLFIRE;
         pbolt.is_explosion   = true;
         break;
 
     case ZAP_ORB_OF_ELECTRICITY:                        // cap 150
         pbolt.name           = "orb of electricity";
-        pbolt.rangeMax       = 20;
         pbolt.flavour        = BEAM_ELECTRICITY;
         pbolt.is_explosion   = true;
         break;
 
     case ZAP_DEBUGGING_RAY:
     default: // buggy beam
-        pbolt.rangeMax       = 16;
         pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
         break;
     }
@@ -668,10 +584,6 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     _beam_set_default_values(pbolt, power);
     pbolt.name = "unimportant";
     _get_max_range(ztype, power, pbolt);
-
-    // Override range if necessary.
-    if (range > 0)
-        pbolt.rangeMax = range;
 
     pbolt.is_tracer      = true;
     pbolt.source         = you.pos();
@@ -997,7 +909,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_STRIKING:                                  // cap 25
         pbolt.name           = "force bolt";
         pbolt.colour         = BLACK;
-        pbolt.range          = 8 + random2(5);
         pbolt.damage         = dice_def( 1, 5 );            // dam: 5
         pbolt.hit            = 8 + power / 10;              // 25: 10
         pbolt.type           = dchar_glyph(DCHAR_SPACE);
@@ -1008,7 +919,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_MAGIC_DARTS:                               // cap 25
         pbolt.name           = "magic dart";
         pbolt.colour         = LIGHTMAGENTA;
-        pbolt.range          = random2(5) + 8;
         pbolt.damage         = dice_def( 1, 3 + power / 5 ); // 25: 1d8
         pbolt.hit            = AUTOMATIC_HIT;                // hits always
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1019,7 +929,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_STING:                                     // cap 25
         pbolt.name           = "sting";
         pbolt.colour         = GREEN;
-        pbolt.range          = 8 + random2(5);
         pbolt.damage         = dice_def( 1, 3 + power / 5 ); // 25: 1d8
         pbolt.hit            = 8 + power / 5;                // 25: 13
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1030,7 +939,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_ELECTRICITY:                               // cap 20
         pbolt.name           = "zap";
         pbolt.colour         = LIGHTCYAN;
-        pbolt.range          = 6 + random2(8);               // extended in beam
         pbolt.damage         = dice_def( 1, 3 + random2(power) / 2 );// 25: 1d11
         pbolt.hit            = 8 + power / 7;                        // 25: 11
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1042,7 +950,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_DISRUPTION:                                // cap 25
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_DISINTEGRATION;
-        pbolt.range          = 7 + random2(8);
         pbolt.damage         = dice_def( 1, 4 + power / 5 );    // 25: 1d9
         pbolt.ench_power    *= 3;
         break;
@@ -1050,7 +957,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_PAIN:                                      // cap 25
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_PAIN;
-        pbolt.range          = 7 + random2(8);
         pbolt.damage         = dice_def( 1, 4 + power / 5 );    // 25: 1d9
         pbolt.ench_power    *= 7;
         pbolt.ench_power    /= 2;
@@ -1059,11 +965,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_FLAME_TONGUE:                              // cap 25
         pbolt.name           = "flame";
         pbolt.colour         = RED;
-
-        pbolt.range          = 1 + random2(2) + random2(power) / 10;
-        if (pbolt.range > 4)
-            pbolt.range = 4;
-
         pbolt.damage         = dice_def( 1, 8 + power / 4 );    // 25: 1d14
         pbolt.hit            = 7 + power / 6;                   // 25: 11
         pbolt.type           = dchar_glyph(DCHAR_FIRED_BOLT);
@@ -1080,7 +981,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
                                (temp_rand == 2) ? "grit" : "sand";
 
         pbolt.colour         = BROWN;
-        pbolt.range          = (random2(power) > random2(30)) ? 2 : 1;
         pbolt.damage         = dice_def( 1, 8 + power / 4 );    // 25: 1d14
         pbolt.hit            = 8 + power / 5;                   // 25: 13
         pbolt.type           = dchar_glyph(DCHAR_FIRED_BOLT);
@@ -1090,13 +990,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
 
     case ZAP_SANDBLAST:                                 // cap 50
         pbolt.name           = coinflip() ? "blast of rock" : "rocky blast";
-
         pbolt.colour         = BROWN;
-
-        pbolt.range          = 2 + random2(power) / 20;
-        if (pbolt.range > 4)
-            pbolt.range = 4;
-
         pbolt.damage         = dice_def( 2, 4 + power / 3 );    // 25: 2d12
         pbolt.hit            = 13 + power / 10;                 // 25: 15
         pbolt.type           = dchar_glyph(DCHAR_FIRED_BOLT);
@@ -1107,7 +1001,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_BONE_SHARDS:
         pbolt.name           = "spray of bone shards";
         pbolt.colour         = LIGHTGREY;
-        pbolt.range          = 7 + random2(10);
 
         // Incoming power is highly dependant on mass (see spells3.cc).
         // Basic function is power * 15 + mass...  with the largest
@@ -1124,7 +1017,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_FLAME:                                     // cap 50
         pbolt.name           = "puff of flame";
         pbolt.colour         = RED;
-        pbolt.range          = 8 + random2(5);
         pbolt.damage         = dice_def( 2, 4 + power / 10 );// 25: 2d6  50: 2d9
         pbolt.hit            = 8 + power / 10;               // 25: 10   50: 13
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1135,7 +1027,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_FROST:                                     // cap 50
         pbolt.name           = "puff of frost";
         pbolt.colour         = WHITE;
-        pbolt.range          = 8 + random2(5);
         pbolt.damage         = dice_def( 2, 4 + power / 10 );// 25: 2d6  50: 2d9
         pbolt.hit            = 8 + power / 10;               // 25: 10   50: 13
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1146,7 +1037,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_STONE_ARROW:                               // cap 100
         pbolt.name           = "stone arrow";
         pbolt.colour         = LIGHTGREY;
-        pbolt.range          = 8 + random2(5);
         pbolt.damage         = dice_def( 2, 5 + power / 7 );// 25: 2d8  50: 2d12
         pbolt.hit            = 8 + power / 10;              // 25: 10    50: 13
         pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
@@ -1157,7 +1047,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_STICKY_FLAME:                              // cap 100
         pbolt.name           = "sticky flame";          // extra damage
         pbolt.colour         = RED;
-        pbolt.range          = 8 + random2(5);
                                // 50: 2d7  100: 2d11
         pbolt.damage         = dice_def( 2, 3 + power / 12 );
                                // 50: 16   100: 21
@@ -1170,7 +1059,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_MYSTIC_BLAST:                              // cap 100
         pbolt.name           = "orb of energy";
         pbolt.colour         = LIGHTMAGENTA;
-        pbolt.range          = 8 + random2(5);
         pbolt.damage         = calc_dice( 2, 15 + (power * 2) / 5 );
         pbolt.hit            = 10 + power / 7;               // 50: 17   100: 24
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1181,7 +1069,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_ICE_BOLT:                                  // cap 100
         pbolt.name           = "bolt of ice";
         pbolt.colour         = WHITE;
-        pbolt.range          = 8 + random2(5);
         pbolt.damage         = calc_dice( 3, 10 + power / 2 );
         pbolt.hit            = 9 + power / 12;               // 50: 13   100: 17
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1191,7 +1078,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_DISPEL_UNDEAD:                             // cap 100
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_DISPEL_UNDEAD;
-        pbolt.range          = 7 + random2(8);
         pbolt.damage         = calc_dice( 3, 20 + (power * 3) / 4 );
         pbolt.ench_power    *= 3;
         pbolt.ench_power    /= 2;
@@ -1200,7 +1086,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_MAGMA:                                     // cap 150
         pbolt.name           = "bolt of magma";
         pbolt.colour         = RED;
-        pbolt.range          = 5 + random2(4);
         pbolt.damage         = calc_dice( 4, 10 + (power * 3) / 5 );
         pbolt.hit            = 8 + power / 25;               // 50: 10   100: 14
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1212,7 +1097,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_FIRE:                                      // cap 150
         pbolt.name           = "bolt of fire";
         pbolt.colour         = RED;
-        pbolt.range          = 7 + random2(10);
         pbolt.damage         = calc_dice( 6, 18 + power * 2 / 3 );
         pbolt.hit            = 10 + power / 25;              // 50: 12   100: 14
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1224,7 +1108,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_COLD:                                      // cap 150
         pbolt.name           = "bolt of cold";
         pbolt.colour         = WHITE;
-        pbolt.range          = 7 + random2(10);
         pbolt.damage         = calc_dice( 6, 18 + power * 2 / 3 );
         pbolt.hit            = 10 + power / 25;              // 50: 12   100: 14
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1236,7 +1119,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_VENOM_BOLT:                                // cap 150
         pbolt.name           = "bolt of poison";
         pbolt.colour         = LIGHTGREEN;
-        pbolt.range          = 8 + random2(10);
         pbolt.damage         = calc_dice( 4, 15 + power / 2 );
         pbolt.hit            = 8 + power / 20;               // 50: 10   100: 13
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1249,7 +1131,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         // These always auto-identify, so no generic name.
         pbolt.name           = "bolt of negative energy";
         pbolt.colour         = DARKGREY;
-        pbolt.range          = 7 + random2(10);
         pbolt.damage         = calc_dice( 4, 15 + (power * 3) / 5 );
         pbolt.hit            = 8 + power / 20;               // 50: 10   100: 13
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1261,7 +1142,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_IRON_BOLT:                                 // cap 150
         pbolt.name           = "iron bolt";
         pbolt.colour         = LIGHTCYAN;
-        pbolt.range          = 5 + random2(5);
         pbolt.damage         = calc_dice( 9, 15 + (power * 3) / 4 );
         pbolt.hit            = 7 + power / 15;               // 50: 10   100: 13
         pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
@@ -1272,7 +1152,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_POISON_ARROW:                              // cap 150
         pbolt.name           = "poison arrow";
         pbolt.colour         = LIGHTGREEN;
-        pbolt.range          = 8 + random2(5);
         pbolt.damage         = calc_dice( 4, 15 + power );
         pbolt.hit            = 5 + power / 10;                // 50: 10  100: 15
         pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
@@ -1284,7 +1163,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_DISINTEGRATION:                            // cap 150
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_DISINTEGRATION;
-        pbolt.range          = 7 + random2(8);
         pbolt.damage         = calc_dice( 3, 15 + (power * 3) / 4 );
         pbolt.ench_power    *= 5;
         pbolt.ench_power    /= 2;
@@ -1295,7 +1173,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         // also for breath (at pow = lev * 2; max dam: 33)
         pbolt.name           = "bolt of lightning";
         pbolt.colour         = LIGHTCYAN;
-        pbolt.range          = 8 + random2(10);            // extended in beam
         pbolt.damage         = calc_dice( 1, 10 + (power * 3) / 5 );
         pbolt.hit            = 7 + random2(power) / 20;    // 50: 7-9  100: 7-12
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1307,7 +1184,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_FIREBALL:                                  // cap 150
         pbolt.name           = "fireball";
         pbolt.colour         = RED;
-        pbolt.range          = 8 + random2(5);
         pbolt.damage         = calc_dice( 3, 10 + power / 2 );
         pbolt.hit            = 40;                             // hit: 40
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1318,7 +1194,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_ORB_OF_ELECTRICITY:                        // cap 150
         pbolt.name           = "orb of electricity";
         pbolt.colour         = LIGHTBLUE;
-        pbolt.range          = 9 + random2(12);
         pbolt.damage         = calc_dice( 1, 15 + (power * 4) / 5 );
         pbolt.damage.num     = 0;                  // only does explosion damage
         pbolt.hit            = 40;                 // hit: 40
@@ -1330,7 +1205,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_ORB_OF_FRAGMENTATION:                      // cap 150
         pbolt.name           = "metal orb";
         pbolt.colour         = CYAN;
-        pbolt.range          = 9 + random2(7);
         pbolt.damage         = calc_dice( 3, 30 + (power * 3) / 4 );
         pbolt.hit            = 20;                            // hit: 20
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1341,7 +1215,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_CLEANSING_FLAME:
         pbolt.name           = "golden flame";
         pbolt.colour         = YELLOW;
-        pbolt.range          = 7;
         pbolt.damage         = calc_dice( 3, 20 + (power * 2) / 3 );
         pbolt.hit            = 150;
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1353,7 +1226,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_CRYSTAL_SPEAR:                             // cap 200
         pbolt.name           = "crystal spear";
         pbolt.colour         = WHITE;
-        pbolt.range          = 6 + random2(4);
         pbolt.damage         = calc_dice( 10, 23 + power );
         pbolt.hit            = 10 + power / 15;              // 50: 13   100: 16
         pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
@@ -1364,7 +1236,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_HELLFIRE:                                  // cap 200
         pbolt.name           = "hellfire";
         pbolt.colour         = RED;
-        pbolt.range          = 7 + random2(10);
         pbolt.damage         = calc_dice( 3, 10 + (power * 3) / 4 );
         pbolt.hit            = 20 + power / 10;              // 50: 25   100: 30
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1376,7 +1247,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_ICE_STORM:                                 // cap 200
         pbolt.name           = "great blast of cold";
         pbolt.colour         = BLUE;
-        pbolt.range          = 9 + random2(5);
         pbolt.damage         = calc_dice( 7, 22 + power );
         pbolt.hit            = 20 + power / 10;    // 50: 25   100: 30
         pbolt.ench_power     = power;              // used for radius
@@ -1388,7 +1258,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_BEAM_OF_ENERGY:    // bolt of innacuracy
         pbolt.name           = "narrow beam of energy";
         pbolt.colour         = YELLOW;
-        pbolt.range          = 7 + random2(10);
         pbolt.damage         = calc_dice( 12, 40 + (power * 3) / 2 );
         pbolt.hit            = 1;
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1401,11 +1270,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         // max pow = lev + mut * 5 = 42
         pbolt.name           = "splash of poison";
         pbolt.colour         = GREEN;
-
-        pbolt.range          = 3 + random2( 1 + power / 2 );
-        if (pbolt.range > 9)
-            pbolt.range = 9;
-
         pbolt.damage         = dice_def( 1, 4 + power / 2 );    // max dam: 25
         pbolt.hit            = 5 + random2( 1 + power / 3 );    // max hit: 19
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1417,11 +1281,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         // max pow = lev + mut * 4 + 12 = 51 (capped to 50)
         pbolt.name           = "fiery breath";
         pbolt.colour         = RED;
-
-        pbolt.range          = 3 + random2( 1 + power / 2 );
-        if (pbolt.range > 9)
-            pbolt.range = 9;
-
         pbolt.damage         = dice_def( 3, 4 + power / 3 );    // max dam: 60
         pbolt.hit            = 8 + random2( 1 + power / 3 );    // max hit: 25
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1434,11 +1293,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         // max power = lev = 27
         pbolt.name           = "freezing breath";
         pbolt.colour         = WHITE;
-
-        pbolt.range          = 3 + random2( 1 + power / 2 );
-        if (pbolt.range > 9)
-            pbolt.range = 9;
-
         pbolt.damage         = dice_def( 3, 4 + power / 3 );    // max dam: 39
         pbolt.hit            = 8 + random2( 1 + power / 3 );
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1451,11 +1305,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         // max power = lev for ability, 50 for minor destruction (max dam: 57)
         pbolt.name           = "acid";
         pbolt.colour         = YELLOW;
-
-        pbolt.range          = 3 + random2( 1 + power / 2 );
-        if (pbolt.range > 9)
-            pbolt.range = 9;
-
         pbolt.damage         = dice_def( 3, 3 + power / 3 );    // max dam: 36
         pbolt.hit            = 5 + random2( 1 + power / 3 );
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1468,11 +1317,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         // max power = lev = 27
         pbolt.name           = "poison gas";
         pbolt.colour         = GREEN;
-
-        pbolt.range          = 3 + random2( 1 + power / 2 );
-        if (pbolt.range > 9)
-            pbolt.range = 9;
-
         pbolt.damage         = dice_def( 3, 2 + power / 6 );    // max dam: 18
         pbolt.hit            = 6 + random2( 1 + power / 3 );
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1493,10 +1337,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         if (random2(power) >= 17)
             pbolt.colour = LIGHTMAGENTA;
 
-        pbolt.range          = 6 + random2( 1 + power / 2 );
-        if (pbolt.range > 9)
-            pbolt.range = 9;
-
         pbolt.damage         = dice_def( 3, 3 + power / 3 );   // max dam: 36
         pbolt.hit            = 5 + random2( 1 + power / 3 );
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1509,11 +1349,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         // max power = lev = 27
         pbolt.name           = "ball of steam";
         pbolt.colour         = LIGHTGREY;
-
-        pbolt.range          = 6 + random2(5);
-        if (pbolt.range > 9)
-            pbolt.range = 9;
-
         pbolt.damage         = dice_def( 3, 4 + power / 5 );    // max dam: 27
         pbolt.hit            = 10 + random2( 1 + power / 5 );
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1569,56 +1404,48 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_DIGGING;
         // not ordinary "0" beam range {dlb}
-        pbolt.range          = 3 + random2( power / 5 ) + random2(5);
         pbolt.is_beam        = true;
         break;
 
     case ZAP_TELEPORTATION:
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_TELEPORT;
-        pbolt.range          = 9 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_POLYMORPH_OTHER:
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_POLYMORPH;
-        pbolt.range          = 9 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_ENSLAVEMENT:
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_CHARM;
-        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_BANISHMENT:
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_BANISH;
-        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_DEGENERATION:
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_DEGENERATE;
-        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_ENSLAVE_UNDEAD:
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_ENSLAVE_UNDEAD;
-        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_AGONY:
         pbolt.name           = "0agony";
         pbolt.flavour        = BEAM_PAIN;
-        pbolt.range          = 7 + random2(8);
         pbolt.ench_power    *= 5;
         // pbolt.is_beam = true;
         break;
@@ -1626,7 +1453,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_CONTROL_DEMON:
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_ENSLAVE_DEMON;
-        pbolt.range          = 7 + random2(5);
         pbolt.ench_power    *= 3;
         pbolt.ench_power    /= 2;
         // pbolt.is_beam = true;
@@ -1635,7 +1461,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_SLEEP:             //jmf: added
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_SLEEP;
-        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
@@ -1643,14 +1468,12 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.name           = "0";
         pbolt.flavour        = BEAM_BACKLIGHT;
         pbolt.colour         = BLUE;
-        pbolt.range          = 7 + random2(5);
         // pbolt.is_beam = true;
         break;
 
     case ZAP_DEBUGGING_RAY:
         pbolt.name           = "debugging ray";
         pbolt.colour         = random_colour();
-        pbolt.range          = 7 + random2(10);
         pbolt.damage         = dice_def( 1500, 1 );            // dam: 1500
         pbolt.hit            = 1500;                           // hit: 1500
         pbolt.type           = dchar_glyph(DCHAR_FIRED_DEBUG);
@@ -1661,7 +1484,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     default:
         pbolt.name           = "buggy beam";
         pbolt.colour         = random_colour();
-        pbolt.range          = 7 + random2(10);
         pbolt.damage         = dice_def( 1, 0 );
         pbolt.hit            = 60;
         pbolt.type           = dchar_glyph(DCHAR_FIRED_DEBUG);
@@ -1676,15 +1498,6 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
         pbolt.hit = std::max(0, pbolt.hit);
     }
 }
-
-/*  NEW (GDL):
- *  Now handles all beamed/thrown items and spells, tracers, and their effects.
- *  item is used for items actually thrown/launched
- *
- *  If item is NULL, there is no physical object being thrown that could
- *  land on the ground.
- */
-
 
 // Affect monster in wall unless it can shield itself using the wall.
 // The wall will always shield the monster if the beam bounces off the
@@ -1740,7 +1553,6 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
 {
     bool beamTerminate;     // Has beam been 'stopped' by something?
     coord_def &testpos(pbolt.pos);
-    int rangeRemaining;
     bool did_bounce = false;
     cursor_control coff(false);
 
@@ -1800,14 +1612,7 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
     beamTerminate = false;
 
     // Setup range.
-    rangeRemaining = pbolt.range;
-    if (pbolt.rangeMax > pbolt.range)
-    {
-        if (pbolt.is_tracer)
-            rangeRemaining = pbolt.rangeMax;
-        else
-            rangeRemaining += random2((pbolt.rangeMax - pbolt.range) + 1);
-    }
+    int rangeRemaining = pbolt.range;
 
     // Before we start drawing the beam, turn buffering off.
 #ifdef WIN32CONSOLE
@@ -5177,7 +4982,7 @@ static int _range_used_on_hit(bolt &beam)
 
     // If it isn't lightning, reduce range by a lot.
     if (beam.flavour != BEAM_ELECTRICITY)
-        return (random2(4) + 2);
+        return (2);
 
     return (0);
 }
@@ -5707,7 +5512,7 @@ static bool _nice_beam(monsters *mon, bolt &beam)
 //
 // TODO: Eventually it'd be nice to have a proper factory for these things
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
-bolt::bolt() : range(0), rangeMax(0), type('*'),
+bolt::bolt() : range(0), type('*'),
                colour(BLACK),
                flavour(BEAM_MAGIC), source(), target(), pos(), damage(0,0),
                ench_power(0), hit(0),

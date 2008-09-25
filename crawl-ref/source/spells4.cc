@@ -1266,21 +1266,13 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     return (true);
 }
 
-bool cast_evaporate(int pow, bolt& beem, int potion)
+bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 {
-    if (potion == -1)
-        return (false);
-    else if (you.inv[potion].base_type != OBJ_POTIONS)
-    {
-        mpr( "This spell works only on potions!" );
-        canned_msg(MSG_SPELL_FIZZLES);
-        return (false);
-    }
+    ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
+    item_def& potion = you.inv[pot_idx];
 
     beem.name        = "potion";
-    beem.colour      = you.inv[potion].colour;
-    beem.range       = 9;
-    beem.rangeMax    = 9;
+    beem.colour      = potion.colour;
     beem.type        = dchar_glyph(DCHAR_FIRED_FLASK);
     beem.beam_source = MHITYOU;
     beem.thrower     = KILL_YOU_MISSILE;
@@ -1294,7 +1286,7 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
     beem.flavour    = BEAM_POTION_STINKING_CLOUD;
     beam_type tracer_flavour = BEAM_MMISSILE;
 
-    switch (you.inv[potion].sub_type)
+    switch (potion.sub_type)
     {
     case POT_STRONG_POISON:
         beem.flavour   = BEAM_POTION_POISON;
@@ -1341,7 +1333,7 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
     case POT_BERSERK_RAGE:
         beem.effect_known = false;
         beem.flavour = (coinflip() ? BEAM_POTION_FIRE : BEAM_POTION_STEAM);
-        if (you.inv[potion].sub_type == POT_BERSERK_RAGE)
+        if (potion.sub_type == POT_BERSERK_RAGE)
             tracer_flavour = BEAM_FIRE;
         else
             tracer_flavour = BEAM_RANDOM;
@@ -1412,13 +1404,13 @@ bool cast_evaporate(int pow, bolt& beem, int potion)
     fire_beam(beem);
 
     // Use up a potion.
-    if (is_blood_potion(you.inv[potion]))
-        remove_oldest_blood_potion(you.inv[potion]);
+    if (is_blood_potion(potion))
+        remove_oldest_blood_potion(potion);
 
-    dec_inv_item_quantity( potion, 1 );
+    dec_inv_item_quantity( pot_idx, 1 );
 
     return (true);
-}                               // end cast_evaporate()
+}
 
 // The intent of this spell isn't to produce helpful potions
 // for drinking, but rather to provide ammo for the Evaporate

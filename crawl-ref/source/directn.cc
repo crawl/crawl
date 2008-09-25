@@ -1363,6 +1363,11 @@ void direction(dist& moves, targeting_type restricts,
                 mpr("Sorry, you can't target what you can't see.",
                     MSGCH_EXAMINE_FILTER);
             }
+            else if (range >= 0
+                     && grid_distance(moves.target, you.pos()) > range)
+            {
+                mpr("That is beyond the maximum range.", MSGCH_EXAMINE_FILTER);
+            }
             // Ask for confirmation if we're quitting for some odd reason.
             else if (moves.isValid || moves.isCancel
                      || yesno("Are you sure you want to fizzle?", false, 'n'))
@@ -1424,6 +1429,7 @@ void direction(dist& moves, targeting_type restricts,
             {
                 // Draw the new ray with magenta '*'s, not including
                 // your square or the target square.
+                // Out-of-range cells get grey '*'s instead.
                 ray_def raycopy = ray; // temporary copy to work with
                 while (raycopy.pos() != moves.target)
                 {
@@ -1433,8 +1439,12 @@ void direction(dist& moves, targeting_type restricts,
                         if (!in_los(raycopy.pos()))
                             break;
 
-                        draw_ray_glyph(raycopy.pos(), MAGENTA, '*',
-                                       MAGENTA | COLFLAG_REVERSE);
+                        const bool in_range = (range < 0)
+                            || grid_distance(raycopy.pos(), you.pos()) <= range;
+                        const int bcol = in_range ? MAGENTA : DARKGREY;
+
+                        draw_ray_glyph(raycopy.pos(), bcol, '*',
+                                       bcol | COLFLAG_REVERSE);
                     }
                     raycopy.advance_through(moves.target);
                 }

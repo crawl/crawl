@@ -274,7 +274,6 @@ void cast_chain_lightning(int pow)
     beam.beam_source    = MHITYOU;
     beam.thrower        = KILL_YOU_MISSILE;
     beam.range          = 8;
-    beam.rangeMax       = 8;
     beam.hit            = AUTOMATIC_HIT;
     beam.type           = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.flavour        = BEAM_ELECTRICITY;
@@ -550,7 +549,6 @@ bool stinking_cloud( int pow, bolt &beem )
     beem.name        = "ball of vapour";
     beem.colour      = GREEN;
     beem.range       = 6;
-    beem.rangeMax    = 6;
     beem.damage      = dice_def( 1, 0 );
     beem.hit         = 20;
     beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -691,6 +689,7 @@ static int _healing_spell(int healed, const coord_def where = coord_def(0,0))
         spd.isValid = spell_direction(spd, beam, DIR_TARGET,
                                       you.religion == GOD_ELYVILON ?
                                           TARG_ANY : TARG_FRIEND,
+                                      LOS_RADIUS,
                                       true, true, true, "Heal whom?");
     }
     else

@@ -941,7 +941,6 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
 
     pbolt.colour         = theBeam.colour;
     pbolt.range          = theBeam.range;
-    pbolt.rangeMax       = theBeam.rangeMax;
     pbolt.hit            = theBeam.hit;
     pbolt.damage         = theBeam.damage;
 
@@ -1089,6 +1088,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
         pbolt.aux_source = "blast of fiery breath";
         pbolt.flavour    = BEAM_FIRE;
         pbolt.colour     = RED;
+        pbolt.range      = 6;
         break;
 
     case MONS_ICE_DRAGON:
@@ -1096,6 +1096,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
         pbolt.aux_source = "blast of icy breath";
         pbolt.flavour    = BEAM_COLD;
         pbolt.colour     = WHITE;
+        pbolt.range      = 7;
         break;
 
     case MONS_RED_DRACONIAN:
@@ -1103,6 +1104,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
         pbolt.aux_source = "blast of searing breath";
         pbolt.flavour    = BEAM_FIRE;
         pbolt.colour     = RED;
+        pbolt.range      = 6;
         scaling          = 65;
         break;
 
@@ -1111,6 +1113,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
         pbolt.aux_source = "blast of chilling breath";
         pbolt.flavour    = BEAM_COLD;
         pbolt.colour     = WHITE;
+        pbolt.range      = 7;
         scaling = 65;
         break;
 
@@ -1119,6 +1122,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
         pbolt.aux_source = "blast of draining breath";
         pbolt.flavour    = BEAM_NEG;
         pbolt.colour     = DARKGREY;
+        pbolt.range      = LOS_RADIUS;
         scaling = 65;
         break;
 
@@ -1131,8 +1135,6 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
     mprf( MSGCH_DIAGNOSTICS, "bolt name: '%s'", pbolt.name.c_str() );
 #endif
 
-    pbolt.range       = 4;
-    pbolt.rangeMax    = 13;
     pbolt.damage      = dice_def( 3, (monster->hit_dice * 2) );
     pbolt.damage.size = scaling * pbolt.damage.size / 100;
     pbolt.type        = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1166,8 +1168,8 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
 
 void setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
 {
-    pbolt.range = 9;
-    pbolt.rangeMax = 9;
+    // FIXME we should use a sensible range here
+    pbolt.range = LOS_RADIUS;
     pbolt.beam_source = monster_index(monster);
 
     pbolt.type    = dchar_glyph(DCHAR_FIRED_MISSILE);
@@ -1213,7 +1215,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     if (mons_friendly(monster))
         item.flags |= ISFLAG_DROPPED_BY_ALLY;
 
-    pbolt.range       = 9;
+    // FIXME we should actually determine a sensible range here
+    pbolt.range       = LOS_RADIUS;
     pbolt.beam_source = monster_index(monster);
     pbolt.type        = dchar_glyph(DCHAR_FIRED_MISSILE);
     pbolt.colour      = item.colour;
@@ -1665,7 +1668,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     // Initialize to some bogus values so we can catch problems.
     beam.name         = "****";
     beam.colour       = 1000;
-    beam.range        = beam.rangeMax = 8;
     beam.hit          = -1;
     beam.damage       = dice_def( 1, 0 );
     beam.ench_power   = -1;
@@ -1675,13 +1677,13 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     beam.is_beam      = false;
     beam.is_explosion = false;
 
+    beam.range = spell_range(spell_cast, power, true);
+
     switch (spell_cast)
     {
     case SPELL_MAGIC_DART:
         beam.colour   = LIGHTMAGENTA;     // inv_colour [throw_2];
         beam.name     = "magic dart";     // inv_name [throw_2]);
-        beam.range    = 6;
-        beam.rangeMax = 10;
         beam.damage   = dice_def( 3, 4 + (power / 100) );
         beam.hit      = AUTOMATIC_HIT;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1693,8 +1695,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_THROW_FLAME:
         beam.colour   = RED;
         beam.name     = "puff of flame";
-        beam.range    = 6;
-        beam.rangeMax = 10;
 
         // should this be the same as magic missile?
         // No... magic missile is special in that it has a really
@@ -1711,8 +1711,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_THROW_FROST:
         beam.colour   = WHITE;
         beam.name     = "puff of frost";
-        beam.range    = 6;
-        beam.rangeMax = 10;
 
         // should this be the same as magic missile?
         // see SPELL_FLAME -- bwr
@@ -1729,16 +1727,12 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.name     = "0";
         beam.flavour  = BEAM_DISPEL_UNDEAD;
         beam.thrower  = KILL_MON_MISSILE;
-        beam.range    = 7 + random2(8);
-        beam.rangeMax = 9;
         beam.damage   = dice_def( 3, std::min(6 + power / 10, 40) );
         beam.is_beam  = true;
         break;
 
     case SPELL_PARALYSE:
         beam.name     = "0";
-        beam.range    = 5;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_PARALYSIS;
         beam.thrower  = KILL_MON_MISSILE;
@@ -1747,8 +1741,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_SLOW:
         beam.name     = "0";
-        beam.range    = 5;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_SLOW;
         beam.thrower  = KILL_MON_MISSILE;
@@ -1757,8 +1749,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_HASTE:              // (self)
         beam.name     = "0";
-        beam.range    = 5;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_HASTE;
         beam.thrower  = KILL_MON_MISSILE;
@@ -1767,8 +1757,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_BACKLIGHT:
         beam.name     = "0";
-        beam.range    = 5;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_BACKLIGHT;
         beam.thrower  = KILL_MON_MISSILE;
@@ -1777,8 +1765,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_CONFUSE:
         beam.name     = "0";
-        beam.range    = 5;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_CONFUSION;
         beam.thrower  = KILL_MON_MISSILE;
@@ -1787,8 +1773,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_SLEEP:
         beam.name     = "0";
-        beam.range    = 5;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_SLEEP;
         beam.thrower  = KILL_MON_MISSILE;
@@ -1797,8 +1781,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_POLYMORPH_OTHER:
         beam.name     = "0";
-        beam.range    = 6;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_POLYMORPH;
         beam.thrower  = KILL_MON_MISSILE;
@@ -1807,8 +1789,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_VENOM_BOLT:
         beam.name     = "bolt of poison";
-        beam.range    = 7;
-        beam.rangeMax = 16;
         beam.damage   = dice_def( 3, 6 + power / 13 );
         beam.colour   = LIGHTGREEN;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1826,13 +1806,10 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.thrower  = KILL_MON;
         beam.flavour  = BEAM_POISON_ARROW;
         beam.hit      = 20 + power / 25;
-        beam.range    = beam.rangeMax = 8;
         break;
 
     case SPELL_BOLT_OF_MAGMA:
         beam.name     = "bolt of magma";
-        beam.range    = 5;
-        beam.rangeMax = 13;
         beam.damage   = dice_def( 3, 8 + power / 11 );
         beam.colour   = RED;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1844,8 +1821,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_BOLT_OF_FIRE:
         beam.name     = "bolt of fire";
-        beam.range    = 5;
-        beam.rangeMax = 13;
         beam.damage   = dice_def( 3, 8 + power / 11 );
         beam.colour   = RED;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1857,8 +1832,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_ICE_BOLT:
         beam.name     = "bolt of ice";
-        beam.range    = 5;
-        beam.rangeMax = 13;
         beam.damage   = dice_def( 3, 8 + power / 11 );
         beam.colour   = WHITE;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1870,8 +1843,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_BOLT_OF_COLD:
         beam.name     = "bolt of cold";
-        beam.range    = 5;
-        beam.rangeMax = 13;
         beam.damage   = dice_def( 3, 8 + power / 11 );
         beam.colour   = WHITE;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1883,8 +1854,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_FREEZING_CLOUD:
         beam.name     = "freezing blast";
-        beam.range    = 5;
-        beam.rangeMax = 12;
         beam.damage   = dice_def( 2, 9 + power / 11 );
         beam.colour   = WHITE;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1897,8 +1866,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_SHOCK:
         beam.name     = "zap";
-        beam.range    = 8;
-        beam.rangeMax = 16;
         beam.damage   = dice_def( 1, 8 + (power / 20) );
         beam.colour   = LIGHTCYAN;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1910,8 +1877,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_LIGHTNING_BOLT:
         beam.name     = "bolt of lightning";
-        beam.range    = 7;
-        beam.rangeMax = 16;
         beam.damage   = dice_def( 3, 10 + power / 17 );
         beam.colour   = LIGHTCYAN;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1923,8 +1888,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_INVISIBILITY:
         beam.name     = "0";
-        beam.range    = 5;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_INVISIBILITY;
         beam.thrower  = KILL_MON;
@@ -1934,8 +1897,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_FIREBALL:
         beam.colour   = RED;
         beam.name     = "fireball";
-        beam.range    = 6;
-        beam.rangeMax = 10;
         beam.damage   = dice_def( 3, 7 + power / 10 );
         beam.hit      = 40;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -1953,7 +1914,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_ICE_STORM:
         beam.name           = "great blast of cold";
         beam.colour         = BLUE;
-        beam.range          = 9 + random2(5);
         beam.damage         = calc_dice( 10, 18 + power / 2 );
         beam.hit            = 20 + power / 10;    // 50: 25   100: 30
         beam.ench_power     = power;              // used for radius
@@ -1982,8 +1942,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_LESSER_HEALING:
         beam.name     = "0";
-        beam.range    = 5;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_HEALING;
         beam.thrower  = KILL_MON;
@@ -1993,8 +1951,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_TELEPORT_SELF:
         beam.name     = "0";
-        beam.range    = 5;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_TELEPORT;        // 6 is used by digging
         beam.thrower  = KILL_MON;
@@ -2003,8 +1959,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_TELEPORT_OTHER:
         beam.name     = "0";
-        beam.range    = 5;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_TELEPORT;        // 6 is used by digging
         beam.thrower  = KILL_MON;
@@ -2017,8 +1971,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_LEHUDIBS_CRYSTAL_SPEAR:      // was splinters
         beam.name     = "crystal spear";
-        beam.range    = 7;
-        beam.rangeMax = 16;
         beam.damage   = dice_def( 3, 16 + power / 10 );
         beam.colour   = WHITE;
         beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);
@@ -2030,8 +1982,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_DIG:
         beam.name     = "0";
-        beam.range    = 3;
-        beam.rangeMax = 7 + random2(power) / 10;
         beam.type     = 0;
         beam.flavour  = BEAM_DIGGING;
         beam.thrower  = KILL_MON;
@@ -2040,8 +1990,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_BOLT_OF_DRAINING:      // negative energy
         beam.name     = "bolt of negative energy";
-        beam.range    = 7;
-        beam.rangeMax = 16;
         beam.damage   = dice_def( 3, 6 + power / 13 );
         beam.colour   = DARKGREY;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2054,8 +2002,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_ISKENDERUNS_MYSTIC_BLAST: // mystic blast
         beam.colour   = LIGHTMAGENTA;
         beam.name     = "orb of energy";
-        beam.range    = 6;
-        beam.rangeMax = 10;
         beam.damage   = dice_def( 3, 7 + (power / 14) );
         beam.hit      = 20 + (power / 20);
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2067,8 +2013,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_STEAM_BALL:
         beam.colour   = LIGHTGREY;
         beam.name     = "ball of steam";
-        beam.range    = 6;
-        beam.rangeMax = 10;
         beam.damage   = dice_def( 3, 7 + (power / 15) );
         beam.hit      = 20 + power / 20;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2079,8 +2023,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_PAIN:
         beam.name       = "0";
-        beam.range      = 7;
-        beam.rangeMax   = 14;
         beam.type       = 0;
         beam.flavour    = BEAM_PAIN;     // pain
         beam.thrower    = KILL_MON;
@@ -2092,8 +2034,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_STICKY_FLAME:
         beam.colour   = RED;
         beam.name     = "sticky flame";
-        beam.range    = 6;
-        beam.rangeMax = 10;
         beam.damage   = dice_def( 3, 3 + power / 50 );
         beam.hit      = 18 + power / 15;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2104,8 +2044,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_POISONOUS_CLOUD:       // demon
         beam.name     = "blast of poison";
-        beam.range    = 7;
-        beam.rangeMax = 16;
         beam.damage   = dice_def( 3, 3 + power / 25 );
         beam.colour   = LIGHTGREEN;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2119,8 +2057,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_ENERGY_BOLT:        // eye of devastation
         beam.colour   = YELLOW;
         beam.name     = "bolt of energy";
-        beam.range    = 9;
-        beam.rangeMax = 23;
         beam.damage   = dice_def( 3, 20 );
         beam.hit      = 15 + power / 30;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2132,8 +2068,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_STING:              // sting
         beam.colour   = GREEN;
         beam.name     = "sting";
-        beam.range    = 8;
-        beam.rangeMax = 12;
         beam.damage   = dice_def( 1, 6 + power / 25 );
         beam.hit      = 60;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2145,8 +2079,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_BOLT_OF_IRON:
         beam.colour   = LIGHTCYAN;
         beam.name     = "iron bolt";
-        beam.range    = 4;
-        beam.rangeMax = 8;
         beam.damage   = dice_def( 3, 8 + (power / 9) );
         beam.hit      = 20 + (power / 25);
         beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);
@@ -2158,8 +2090,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_STONE_ARROW:
         beam.colour   = LIGHTGREY;
         beam.name     = "stone arrow";
-        beam.range    = 8;
-        beam.rangeMax = 12;
         beam.damage   = dice_def( 3, 5 + (power / 10) );
         beam.hit      = 14 + power / 35;
         beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);
@@ -2171,8 +2101,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_POISON_SPLASH:
         beam.colour   = GREEN;
         beam.name     = "splash of poison";
-        beam.range    = 5;
-        beam.rangeMax = 10;
         beam.damage   = dice_def( 1, 4 + power / 10 );
         beam.hit      = 16 + power / 20;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2183,8 +2111,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_DISINTEGRATE:
         beam.name       = "0";
-        beam.range      = 7;
-        beam.rangeMax   = 14;
         beam.type       = 0;
         beam.flavour    = BEAM_DISINTEGRATION;
         beam.thrower    = KILL_MON;
@@ -2196,8 +2122,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_MEPHITIC_CLOUD:          // swamp drake
         beam.name     = "foul vapour";
-        beam.range    = 7;
-        beam.rangeMax = 16;
         beam.damage   = dice_def( 3, 2 + power / 25 );
         beam.colour   = GREEN;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2210,7 +2134,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_MIASMA:            // death drake
         beam.name     = "foul vapour";
-        beam.range    = beam.rangeMax = 8;
         beam.damage   = dice_def( 3, 5 + power / 24 );
         beam.colour   = DARKGREY;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2224,8 +2147,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
     case SPELL_QUICKSILVER_BOLT:   // Quicksilver dragon
         beam.colour   = random_colour();
         beam.name     = "bolt of energy";
-        beam.range    = 9;
-        beam.rangeMax = 23;
         beam.damage   = dice_def( 3, 25 );
         beam.hit      = 16 + power / 25;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2238,8 +2159,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.name         = "hellfire";
         beam.aux_source   = "blast of hellfire";
         beam.colour       = RED;
-        beam.range        = 4;
-        beam.rangeMax     = 13;
         beam.damage       = dice_def( 3, 25 );
         beam.hit          = 24;
         beam.type         = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2251,8 +2170,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_METAL_SPLINTERS:
         beam.name     = "spray of metal splinters";
-        beam.range    = 7;
-        beam.rangeMax = 16;
         beam.damage   = dice_def( 3, 20 + power / 20 );
         beam.colour   = CYAN;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
@@ -2264,8 +2181,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     case SPELL_BANISHMENT:
         beam.name     = "0";
-        beam.range    = 5;
-        beam.rangeMax = 9;
         beam.type     = 0;
         beam.flavour  = BEAM_BANISH;
         beam.thrower  = KILL_MON_MISSILE;
@@ -2279,8 +2194,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.thrower    = KILL_MON;
         beam.is_beam    = true;
         beam.is_enchant = true;
-        beam.range      = 8;
-        beam.rangeMax   = 8;
         break;
 
     default:
