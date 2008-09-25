@@ -266,8 +266,8 @@ void TilesFramework::load_dungeon(int cx, int cy)
     {
         for (int x = 0; x < wx; x++)
         {
-            int fg;
-            int bg;
+            unsigned int fg;
+            unsigned int bg;
 
             const coord_def gc(cx + x - wx/2,
                                cy + y - wy/2);
@@ -283,8 +283,8 @@ void TilesFramework::load_dungeon(int cx, int cy)
             {
                 fg = env.tile_bk_fg[gc.x][gc.y];
                 bg = env.tile_bk_bg[gc.x][gc.y];
-                if (bg == 0)
-                    bg |= TILE_DNGN_UNSEEN;
+                if (!fg && !bg)
+                    tileidx_unseen(fg, bg, get_envmap_char(gc.x, gc.y), gc);
                 bg |=  tile_unseen_flag(gc);
             }
             else
