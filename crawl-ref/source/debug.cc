@@ -448,8 +448,15 @@ void wizard_create_spec_monster(void)
 {
     int mon = _debug_prompt_for_int( "Create which monster by number? ", true );
 
-    if (mon == -1)
+    if (mon == -1 || (mon >= NUM_MONSTERS
+                      && mon != RANDOM_MONSTER
+                      && mon != RANDOM_DRACONIAN
+                      && mon != RANDOM_BASE_DRACONIAN
+                      && mon != RANDOM_NONBASE_DRACONIAN
+                      && mon != WANDERING_MONSTER))
+    {
         canned_msg( MSG_OK );
+    }
     else
     {
         create_monster(
