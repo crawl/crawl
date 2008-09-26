@@ -96,6 +96,18 @@
 //      Internal Functions
 // ========================================================================
 
+// Do not use this templated function directly.  Use the macro below instead.
+template<int> int cancelable_get_line_autohist_temp(char *buf, int len)
+{
+    static input_history hist(10);
+    return cancelable_get_line(buf, len, get_number_of_cols(), &hist);
+}
+
+// This version of cancelable_get_line will automatically retain its own
+// input history, independent of other calls to cancelable_get_line.
+#define cancelable_get_line_autohist(buf, len) \
+    cancelable_get_line_autohist_temp<__LINE__>(buf, len)
+
 //---------------------------------------------------------------
 // BreakStrToDebugger
 //---------------------------------------------------------------
@@ -169,7 +181,7 @@ static int _debug_prompt_for_monster( void )
     char  specs[80];
 
     mpr( "Which monster by name? ", MSGCH_PROMPT );
-    if (!cancelable_get_line(specs, sizeof specs))
+    if (!cancelable_get_line_autohist(specs, sizeof specs))
     {
         if (specs[0] == '\0')
             return (-1);
@@ -475,7 +487,7 @@ void wizard_create_spec_monster_name()
 {
     char specs[100];
     mpr( "Which monster by name? ", MSGCH_PROMPT );
-    if (cancelable_get_line(specs, sizeof specs) || !*specs)
+    if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
         return;
@@ -3571,7 +3583,7 @@ void wizard_set_stats()
 {
     char buf[80];
     mprf(MSGCH_PROMPT, "Enter values for Str, Int, Dex (space separated): ");
-    if (cancelable_get_line(buf, sizeof buf))
+    if (cancelable_get_line_autohist(buf, sizeof buf))
         return;
 
     int sstr = you.strength,
@@ -3594,7 +3606,7 @@ void wizard_draw_card()
 {
     msg::streams(MSGCH_PROMPT) << "Which card? " << std::endl;
     char buf[80];
-    if (cancelable_get_line(buf, sizeof buf))
+    if (cancelable_get_line_autohist(buf, sizeof buf))
     {
         mpr("Unknown card.");
         return;
@@ -3640,7 +3652,7 @@ void wizard_set_xl()
 {
     mprf(MSGCH_PROMPT, "Enter new experience level: ");
     char buf[30];
-    if (cancelable_get_line(buf, sizeof buf))
+    if (cancelable_get_line_autohist(buf, sizeof buf))
     {
         canned_msg(MSG_OK);
         return;
@@ -3714,7 +3726,7 @@ void debug_place_map()
     char what_to_make[100];
     mesclr();
     mprf(MSGCH_PROMPT, "Enter map name: ");
-    if (cancelable_get_line(what_to_make, sizeof what_to_make))
+    if (cancelable_get_line_autohist(what_to_make, sizeof what_to_make))
     {
         canned_msg(MSG_OK);
         return;
@@ -3739,7 +3751,7 @@ void wizard_dismiss_all_monsters(bool force_all)
     if (!force_all)
     {
         mpr("Regex of monsters to dismiss (ENTER for all): ", MSGCH_PROMPT);
-        bool validline = !cancelable_get_line(buf, sizeof buf, 80);
+        bool validline = !cancelable_get_line_autohist(buf, sizeof buf);
 
         if (!validline)
         {
@@ -4290,7 +4302,7 @@ void debug_miscast( int target_index )
 
     char specs[100];
     mpr( "Miscast which school or spell, by name? ", MSGCH_PROMPT );
-    if (cancelable_get_line(specs, sizeof specs) || !*specs)
+    if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
         return;
@@ -4350,7 +4362,7 @@ void debug_miscast( int target_index )
         mpr( "Enter miscast_level or spell_power,spell_failure: ",
               MSGCH_PROMPT );
 
-    if (cancelable_get_line(specs, sizeof specs) || !*specs)
+    if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
         return;
