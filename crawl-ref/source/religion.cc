@@ -1776,14 +1776,14 @@ static void _do_god_gift(bool prayed_for)
             if (you.religion == GOD_OKAWARU
                 && _need_missile_gift())
             {
-                success = acquirement( OBJ_MISSILES, you.religion );
+                success = acquirement(OBJ_MISSILES, you.religion);
                 if (success)
                 {
-                    simple_god_message( " has granted you a gift!" );
+                    simple_god_message(" has granted you a gift!");
                     more();
 
-                    _inc_gift_timeout( 4 + roll_dice(2,4) );
-                    you.num_gifts[ you.religion ]++;
+                    _inc_gift_timeout(4 + roll_dice(2, 4));
+                    you.num_gifts[you.religion]++;
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
                 break;
@@ -1793,7 +1793,7 @@ static void _do_god_gift(bool prayed_for)
         case GOD_YREDELEMNUL:
             if (random2(you.piety) > 80 && one_chance_in(5))
             {
-                int how_many = _random_servants(GOD_YREDELEMNUL);
+                int how_many = _random_servants(you.religion);
 
                 if (how_many > 0)
                 {
@@ -3435,7 +3435,7 @@ static bool _tso_retribution()
         {
             if (create_monster(
                     mgen_data::hostile_at(MONS_DAEVA,
-                        you.pos(), 0, 0, true, GOD_SHINING_ONE)) != -1)
+                        you.pos(), 0, 0, true, god)) != -1)
             {
                 success = true;
             }
@@ -3531,7 +3531,7 @@ static bool _zin_retribution()
             {
                 if (create_monster(
                         mgen_data::hostile_at(MONS_ANGEL,
-                            you.pos(), 0, 0, true, GOD_ZIN)) != -1)
+                            you.pos(), 0, 0, true, god)) != -1)
                 {
                     success = true;
                 }
@@ -3545,7 +3545,7 @@ static bool _zin_retribution()
         else
         {
             bool success = cast_summon_swarm(you.experience_level * 20,
-                                             GOD_ZIN, true);
+                                             god, true);
             simple_god_message(success ? " sends a plague down upon you!"
                                        : "'s plague fails to arrive.", god);
         }
@@ -3556,13 +3556,13 @@ static bool _zin_retribution()
         switch (random2(3))
         {
         case 0:
-            confuse_player( 3 + random2(10), false );
+            confuse_player(3 + random2(10), false);
             break;
         case 1:
             you.put_to_sleep();
             break;
         case 2:
-            you.paralyse( 3 + random2(10) );
+            you.paralyse(3 + random2(10));
             break;
         }
         break;
@@ -3664,7 +3664,7 @@ static bool _elyvilon_retribution()
     {
     case 0:
     case 1:
-        confuse_player( 3 + random2(10), false );
+        confuse_player(3 + random2(10), false);
         break;
 
     case 2: // mostly flavour messages
@@ -3692,12 +3692,11 @@ static bool _makhleb_retribution()
                            mgen_data::hostile_at(
                                static_cast<monster_type>(
                                    MONS_EXECUTIONER + random2(5)),
-                               you.pos(), 0, 0, true, GOD_MAKHLEB)) != -1);
+                               you.pos(), 0, 0, true, god)) != -1);
 
-        simple_god_message(success ?
-                           " sends a greater servant after you!" :
-                           "'s greater servant is unavoidably detained.",
-                           god);
+        simple_god_message(success ? " sends a greater servant after you!"
+                                   : "'s greater servant is unavoidably "
+                                     "detained.", god);
     }
     else
     {
@@ -3710,15 +3709,15 @@ static bool _makhleb_retribution()
                     mgen_data::hostile_at(
                         static_cast<monster_type>(
                             MONS_NEQOXEC + random2(5)),
-                        you.pos(), 0, 0, true, GOD_MAKHLEB)) != -1)
+                        you.pos(), 0, 0, true, god)) != -1)
             {
                 count++;
             }
         }
 
         simple_god_message(count > 1 ? " sends minions to punish you." :
-                           count > 0 ? " sends a minion to punish you." :
-                                       "'s minions fail to arrive.", god);
+                           count > 0 ? " sends a minion to punish you."
+                                     : "'s minions fail to arrive.", god);
     }
 
     return (true);
@@ -3738,7 +3737,7 @@ static bool _kikubaaqudgha_retribution()
         {
             if (create_monster(
                     mgen_data::hostile_at(MONS_REAPER,
-                        you.pos(), 0, 0, true, GOD_KIKUBAAQUDGHA)) != -1)
+                        you.pos(), 0, 0, true, god)) != -1)
             {
                 success = true;
             }
@@ -3772,7 +3771,7 @@ static bool _yredelemnul_retribution()
         int count = 0;
 
         for (; how_many > 0; --how_many)
-            count += _random_servants(GOD_YREDELEMNUL, true);
+            count += _random_servants(god, true);
 
         simple_god_message(count > 1 ? " sends servants to punish you." :
                            count > 0 ? " sends a servant to punish you."
@@ -3793,7 +3792,7 @@ static bool _trog_retribution()
     // physical/berserk theme
     const god_type god = GOD_TROG;
 
-    if ( coinflip() )
+    if (coinflip())
     {
         int count = 0;
         int points = 3 + you.experience_level * 3;
@@ -3803,10 +3802,7 @@ static bool _trog_retribution()
 
             while (points > 0)
             {
-                int cost = random2(8) + 3;
-
-                if (cost > points)
-                    cost = points;
+                int cost = std::min(random2(8) + 3, points);
 
                 // quick reduction for large values
                 if (points > 20 && coinflip())
@@ -3817,7 +3813,7 @@ static bool _trog_retribution()
 
                 points -= cost;
 
-                if (summon_berserker(cost * 20, GOD_TROG, true))
+                if (summon_berserker(cost * 20, god, true))
                     count++;
             }
         }
@@ -3827,9 +3823,9 @@ static bool _trog_retribution()
                                      : " has no time to punish you... now.",
                            god);
     }
-    else if ( !one_chance_in(3) )
+    else if (!one_chance_in(3))
     {
-        simple_god_message("'s voice booms out, \"Feel my wrath!\"", god );
+        simple_god_message("'s voice booms out, \"Feel my wrath!\"", god);
 
         // A collection of physical effects that might be better
         // suited to Trog than wild fire magic... messages could
@@ -3838,7 +3834,7 @@ static bool _trog_retribution()
         switch (random2(6))
         {
         case 0:
-            potion_effect( POT_DECAY, 100 );
+            potion_effect(POT_DECAY, 100);
             break;
 
         case 1:
@@ -3863,7 +3859,7 @@ static bool _trog_retribution()
                 dec_penance(god, 1);
                 mpr( "You suddenly feel exhausted!", MSGCH_WARN );
                 you.duration[DUR_EXHAUSTED] = 100;
-                slow_player( 100 );
+                slow_player(100);
             }
             break;
         }
@@ -3875,9 +3871,9 @@ static bool _trog_retribution()
         //    we'll leave this effect in, but we'll remove the wild
         //    fire magic. -- bwr
         dec_penance(god, 2);
-        mpr( "You feel Trog's fiery rage upon you!", MSGCH_WARN );
-        MiscastEffect( &you, -god, SPTYP_FIRE, 8 + you.experience_level,
-                       random2avg(98, 3), "the fiery rage of Trog" );
+        mpr("You feel Trog's fiery rage upon you!", MSGCH_WARN);
+        MiscastEffect(&you, -god, SPTYP_FIRE, 8 + you.experience_level,
+                      random2avg(98, 3), "the fiery rage of Trog");
     }
 
     return (true);
@@ -3928,13 +3924,13 @@ static bool _beogh_retribution()
                 item.flags |= ISFLAG_CURSED;
 
             // Let the player see what he's being attacked by.
-            set_ident_flags( item, ISFLAG_KNOW_TYPE );
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
             // Now create monster.
             int mons =
                 create_monster(
                     mgen_data::hostile_at(MONS_DANCING_WEAPON,
-                        you.pos(), 0, 0, true, GOD_BEOGH));
+                        you.pos(), 0, 0, true, god));
 
             // Hand item information over to monster.
             if (mons != -1)
@@ -3966,7 +3962,7 @@ static bool _beogh_retribution()
     }
     case 4: // 25%, relatively harmless
     case 5: // in effect, only for penance
-        if (you.religion == GOD_BEOGH && _beogh_followers_abandon_you())
+        if (you.religion == god && _beogh_followers_abandon_you())
             break;
         // else fall through
     default: // send orcs after you (3/8 to 5/8)
@@ -3989,7 +3985,7 @@ static bool _beogh_retribution()
 
         int mons = create_monster(
                        mgen_data::hostile_at(punisher,
-                           you.pos(), 0, MG_PERMIT_BANDS, true, GOD_BEOGH));
+                           you.pos(), 0, MG_PERMIT_BANDS, true, god));
 
         // sometimes name band leader
         if (mons != -1 && one_chance_in(3))
@@ -4013,7 +4009,7 @@ static bool _okawaru_retribution()
     int count = 0;
 
     for (; how_many > 0; --how_many)
-        count += _random_servants(GOD_OKAWARU, true);
+        count += _random_servants(god, true);
 
     simple_god_message(count > 0 ? " sends forces against you!"
                                  : "'s forces are busy with other wars.", god);
@@ -4033,14 +4029,14 @@ static bool _sif_muna_retribution()
     {
     case 0:
     case 1:
-        lose_stat(STAT_INTELLIGENCE, 1 + random2( you.intel / 5 ), true,
+        lose_stat(STAT_INTELLIGENCE, 1 + random2(you.intel / 5), true,
                   "divine retribution from Sif Muna");
         break;
 
     case 2:
     case 3:
     case 4:
-        confuse_player( 3 + random2(10), false );
+        confuse_player(3 + random2(10), false);
         break;
 
     case 5:
@@ -4051,10 +4047,10 @@ static bool _sif_muna_retribution()
 
     case 7:
     case 8:
-        if (you.magic_points)
+        if (you.magic_points > 0)
         {
-            dec_mp( 100 );  // this should zero it.
-            mpr( "You suddenly feel drained of magical energy!", MSGCH_WARN );
+            dec_mp(100);  // This should zero it.
+            mpr("You suddenly feel drained of magical energy!", MSGCH_WARN);
         }
         break;
 
@@ -4063,7 +4059,7 @@ static bool _sif_muna_retribution()
         // a duration of one round, thus potentially exposing
         // the player to real danger.
         antimagic();
-        mpr( "You sense a dampening of magic.", MSGCH_WARN );
+        mpr("You sense a dampening of magic.", MSGCH_WARN);
         break;
     }
 
@@ -4079,7 +4075,6 @@ static bool _lugonu_retribution()
     {
         simple_god_message("'s wrath finds you!", god);
         MiscastEffect(&you, -god, SPTYP_TRANSLOCATION, 9, 90, "Lugonu's touch");
-
         // No return - Lugonu's touch is independent of other effects.
     }
     else if (coinflip())
@@ -4101,7 +4096,7 @@ static bool _lugonu_retribution()
                            mgen_data::hostile_at(
                                static_cast<monster_type>(
                                    MONS_GREEN_DEATH + random2(3)),
-                               you.pos(), 0, 0, true, GOD_LUGONU)) != -1);
+                               you.pos(), 0, 0, true, god)) != -1);
 
         simple_god_message(success ? " sends a demon after you!"
                                    : "'s demon is unavoidably detained.", god);
@@ -4117,7 +4112,7 @@ static bool _lugonu_retribution()
                    mgen_data::hostile_at(
                        static_cast<monster_type>(
                            MONS_NEQOXEC + random2(5)),
-                       you.pos(), 0, 0, true, GOD_LUGONU)) != -1)
+                       you.pos(), 0, 0, true, god)) != -1)
             {
                 success = true;
             }
@@ -4408,6 +4403,7 @@ static bool _make_god_gifts_on_level_disappear(bool seen = false)
             monster_die(monster, KILL_DISMISSED, 0);
         }
     }
+
     return (count);
 }
 
@@ -4453,6 +4449,7 @@ static bool _make_holy_god_gifts_on_level_good_neutral(bool seen = false)
                 count++;
         }
     }
+
     return (count);
 }
 
@@ -4498,6 +4495,7 @@ static bool _make_god_gifts_on_level_hostile(bool seen = false)
                 count++;
         }
     }
+
     return (count);
 }
 
@@ -4561,9 +4559,9 @@ static bool _beogh_followers_abandon_you()
     }
     else
     {
-        for ( radius_iterator ri(you.pos(), 9); ri; ++ri )
+        for (radius_iterator ri(you.pos(), 9); ri; ++ri)
         {
-            if ( mgrd(*ri) == NON_MONSTER )
+            if (mgrd(*ri) == NON_MONSTER)
                 continue;
 
             monsters *monster = &menv[mgrd(*ri)];
