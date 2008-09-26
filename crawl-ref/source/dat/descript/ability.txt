@@ -313,7 +313,7 @@ being accidentally destroyed, use the !D inscription.
 %%%%
 Lesser Healing
 
-Depending on your Invocations skill, heal a small amount of your hitpoints.
+Depending on your Invocations skill, heal a small amount of hitpoints.
 %%%%
 Purification
 
@@ -322,7 +322,7 @@ confusion, and rotting.
 %%%%
 Greater Healing
 
-Depending on your Invocations skill, heal a moderate amount of your hitpoints.
+Depending on your Invocations skill, heal a moderate amount of hitpoints.
 %%%%
 Restoration
 
@@ -331,7 +331,7 @@ amount of rotted hitpoints.
 %%%%
 Divine Vigour
 
-Depending on your Invocations skill, heal a moderate amount of, and 
+Depending on your Invocations skill, heal a large amount of, and 
 temporarily increase, your hitpoints.
 %%%%
 # Lugonu
