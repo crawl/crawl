@@ -2491,7 +2491,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
             }
 
             // Note that this bypasses the magic resistance
-            // (though not immunity) check. Specifically,
+            // (though not immunity) check.  Specifically,
             // you can convert Killer Klowns this way.
             // Might be too good.
             if (monster->hit_dice * 35 < random2(power))
@@ -2507,7 +2507,8 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                     // count this as a recruitment.
                     if (is_good_god(you.religion)
                         || you.religion == GOD_BEOGH
-                            && mons_species(monster->type) == MONS_ORC)
+                            && mons_species(monster->type) == MONS_ORC
+                            && !mons_is_shapeshifter(monster))
                     {
                         mons_make_god_gift(monster, is_good_god(you.religion) ?
                                            GOD_SHINING_ONE : GOD_BEOGH);
