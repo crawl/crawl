@@ -4564,8 +4564,21 @@ static bool _yred_slaves_abandon_you()
 
     for (; how_many > 0; --how_many)
     {
-        monsters *slave = choose_random_monster_on_level(0, is_yred_slave, true,
-                                                         true);
+        // Choose a random slave in LOS.
+        monsters *slave = choose_random_nearby_monster(0, is_yred_slave);
+
+        if (!slave)
+        {
+            // Try again, without the LOS restriction.
+            slave = choose_random_nearby_monster(0, is_yred_slave, false);
+        }
+
+        if (!slave)
+        {
+            // Try *again*, on the entire level.
+            slave = choose_random_monster_on_level(0, is_yred_slave, false);
+        }
+
         if (slave)
         {
             slave->attitude = ATT_HOSTILE;
