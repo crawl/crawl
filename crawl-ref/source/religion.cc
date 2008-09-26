@@ -4564,8 +4564,8 @@ static bool _yred_slaves_abandon_you()
 
     for (; how_many > 0; --how_many)
     {
-        monsters *slave = choose_random_nearby_monster(0, is_yred_slave, true,
-                                                       true);
+        monsters *slave = choose_random_monster_on_level(0, is_yred_slave, true,
+                                                         true);
         if (slave)
         {
             slave->attitude = ATT_HOSTILE;
