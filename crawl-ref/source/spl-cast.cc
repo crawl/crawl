@@ -2425,8 +2425,13 @@ void MiscastEffect::do_miscast()
         sp_type = school;
         if (sp_type == SPTYP_RANDOM)
         {
-            int exp = (random2(SPTYP_LAST_EXPONENT));
-            sp_type = (spschool_flag_type) (1 << exp);
+            // XXX: Monsters currently have no divintation miscasts.
+            do
+            {
+                int exp = (random2(SPTYP_LAST_EXPONENT));
+                sp_type = (spschool_flag_type) (1 << exp);
+            } while (sp_type == SPTYP_DIVINATION
+                     && target->atype() == ACT_MONSTER);
         }
     }
 
