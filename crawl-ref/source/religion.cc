@@ -714,14 +714,14 @@ void dec_penance(god_type god, int val)
             you.penance[god] = 0;
 
             // TSO's halo is once more available.
-            if (god == GOD_SHINING_ONE && you.religion == GOD_SHINING_ONE
+            if (god == GOD_SHINING_ONE && you.religion == god
                 && you.piety >= piety_breakpoint(0))
             {
                 mpr("Your divine halo returns!");
             }
 
             // Orcish bonuses are now once more effective.
-            if (god == GOD_BEOGH && you.religion == GOD_BEOGH)
+            if (god == GOD_BEOGH && you.religion == god)
                  you.redraw_armour_class = true;
 
             // When you've worked through all your penance, you get
@@ -3791,7 +3791,7 @@ static bool _yredelemnul_retribution()
     {
         simple_god_message("'s anger turns toward you for a moment.", god);
 
-        if (coinflip() && you.religion == god)
+        if (you.religion == god && coinflip())
             _yred_slaves_abandon_you();
         else
             MiscastEffect(&you, -god, SPTYP_NECROMANCY,
@@ -5569,9 +5569,10 @@ void god_pitch(god_type which_god)
     // hostile.
     if (is_good_god(you.religion) && _evil_beings_attitude_change())
         mpr("Your evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
+
     if (you.religion == GOD_ZIN && _chaotic_beings_attitude_change())
         mpr("Your chaotic allies forsake you.", MSGCH_MONSTER_ENCHANT);
-    if (you.religion == GOD_TROG && _magic_users_attitude_change())
+    else if (you.religion == GOD_TROG && _magic_users_attitude_change())
         mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
 
     if (you.religion == GOD_ELYVILON)
