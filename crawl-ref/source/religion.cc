@@ -3431,11 +3431,9 @@ static bool _tso_retribution()
             }
         }
 
-        simple_god_message(success ?
-                           " sends the divine host to punish you "
-                           "for your evil ways!" :
-                           "'s divine host fails to appear.",
-                           god );
+        simple_god_message(success ? " sends the divine host to punish "
+                                     "you for your evil ways!"
+                                   : "'s divine host fails to appear.", god);
 
         break;
     }
@@ -3529,20 +3527,17 @@ static bool _zin_retribution()
                 }
             }
 
-            simple_god_message(success ?
-                               " sends the divine host to punish you "
-                               "for your evil ways!" :
-                               "'s divine host fails to appear.",
+            simple_god_message(success ? " sends the divine host to punish "
+                                         "you for your evil ways!"
+                                       : "'s divine host fails to appear.",
                                god);
         }
         else
         {
             bool success = cast_summon_swarm(you.experience_level * 20,
                                              GOD_ZIN, true);
-            simple_god_message(success ?
-                               " sends a plague down upon you!" :
-                               "'s plague fails to arrive.",
-                               god);
+            simple_god_message(success ? " sends a plague down upon you!"
+                                       : "'s plague fails to arrive.", god);
         }
         break;
     case 5:
@@ -3664,7 +3659,7 @@ static bool _elyvilon_retribution()
 
     case 2: // mostly flavour messages
         MiscastEffect(&you, -god, SPTYP_POISON, one_chance_in(3) ? 1 : 0,
-                       "the will of Elyvilon");
+                       "the displeasure of Elyvilon");
         break;
 
     case 3:
@@ -3746,9 +3741,9 @@ static bool _kikubaaqudgha_retribution()
     }
     else
     {
-        god_speaks(god, (coinflip()) ? "You hear Kikubaaqudgha cackling."
-                   : "Kikubaaqudgha's malice focuses upon you.");
-
+        god_speaks(god,
+            coinflip() ? "You hear Kikubaaqudgha cackling."
+                       : "Kikubaaqudgha's malice focuses upon you.");
         MiscastEffect(&you, -god, SPTYP_NECROMANCY, 5 + you.experience_level,
                       random2avg(88, 3), "the malice of Kikubaaqudgha");
     }
@@ -3770,8 +3765,8 @@ static bool _yredelemnul_retribution()
             count += _random_servants(GOD_YREDELEMNUL, true);
 
         simple_god_message(count > 1 ? " sends servants to punish you." :
-                           count > 0 ? " sends a servant to punish you." :
-                                       "'s servants fail to arrive.", god);
+                           count > 0 ? " sends a servant to punish you."
+                                     : "'s servants fail to arrive.", god);
     }
     else
     {
@@ -3818,8 +3813,9 @@ static bool _trog_retribution()
         }
 
         simple_god_message(count > 1 ? " sends monsters to punish you." :
-                           count > 0 ? " sends a monster to punish you." :
-                           " has no time to punish you... now.", god);
+                           count > 0 ? " sends a monster to punish you."
+                                     : " has no time to punish you... now.",
+                           god);
     }
     else if ( !one_chance_in(3) )
     {
@@ -3989,10 +3985,9 @@ static bool _beogh_retribution()
         if (mons != -1 && one_chance_in(3))
             give_monster_proper_name(&menv[mons]);
 
-        simple_god_message(mons != -1 ?
-                           " sends forth an army of orcs." :
-                           " is still gathering forces against you.",
-                           god);
+        simple_god_message(
+            mons != -1 ? " sends forth an army of orcs."
+                       : " is still gathering forces against you.", god);
     }
     }
 
@@ -4073,8 +4068,7 @@ static bool _lugonu_retribution()
     if (coinflip())
     {
         simple_god_message("'s wrath finds you!", god);
-        MiscastEffect( &you, -god, SPTYP_TRANSLOCATION, 9, 90,
-                       "Lugonu's touch" );
+        MiscastEffect(&you, -god, SPTYP_TRANSLOCATION, 9, 90, "Lugonu's touch");
 
         // No return - Lugonu's touch is independent of other effects.
     }
@@ -4099,10 +4093,8 @@ static bool _lugonu_retribution()
                                    MONS_GREEN_DEATH + random2(3)),
                                you.pos(), 0, 0, true, GOD_LUGONU)) != -1);
 
-        simple_god_message(success ?
-                           " sends a demon after you!" :
-                           "'s demon is unavoidably detained.",
-                           god);
+        simple_god_message(success ? " sends a demon after you!"
+                                   : "'s demon is unavoidably detained.", god);
     }
     else
     {
@@ -4121,10 +4113,8 @@ static bool _lugonu_retribution()
             }
         }
 
-        simple_god_message(success ?
-                           " sends minions to punish you." :
-                           "'s minions fail to arrive.",
-                           god);
+        simple_god_message(success ? " sends minions to punish you."
+                                   : "'s minions fail to arrive.", god);
     }
 
     return (false);
@@ -4136,10 +4126,9 @@ static bool _vehumet_retribution()
     const god_type god = GOD_VEHUMET;
 
     simple_god_message("'s vengeance finds you.", god);
-    MiscastEffect( &you, -god,
-                   coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
+    MiscastEffect(&you, -god, coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
                    8 + you.experience_level, random2avg(98, 3),
-                   "the wrath of Vehumet" );
+                   "the wrath of Vehumet");
     return (true);
 }
 
