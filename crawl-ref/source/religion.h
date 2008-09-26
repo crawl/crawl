@@ -111,6 +111,7 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon);
 void mons_make_god_gift(monsters *mon, god_type god = you.religion);
 bool mons_is_god_gift(const monsters *mon, god_type god = you.religion);
 
+bool is_yred_undead_slave(const monsters* mon);
 bool is_orcish_follower(const monsters* mon);
 bool is_good_lawful_follower(const monsters* mon);
 bool is_good_follower(const monsters* mon);

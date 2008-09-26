@@ -362,6 +362,7 @@ static bool _holy_beings_attitude_change();
 static bool _evil_beings_attitude_change();
 static bool _chaotic_beings_attitude_change();
 static bool _magic_users_attitude_change();
+static bool _yred_slaves_abandon_you();
 static bool _beogh_followers_abandon_you();
 static void _altar_prayer();
 static void _dock_piety(int piety_loss, int penance);
@@ -1114,6 +1115,13 @@ bool mons_is_god_gift(const monsters *mon, god_type god)
     return (mon->god == god);
 }
 
+bool is_yred_slave(const monsters* mon)
+{
+    return (mon->alive() && mons_holiness(mon) == MH_UNDEAD
+            && mon->attitude == ATT_FRIENDLY
+            && mons_is_god_gift(mon, GOD_YREDELEMNUL));
+}
+
 bool is_orcish_follower(const monsters* mon)
 {
     return (mon->alive() && mons_species(mon->type) == MONS_ORC
@@ -1135,7 +1143,9 @@ bool is_good_follower(const monsters* mon)
 
 bool is_follower(const monsters* mon)
 {
-    if (you.religion == GOD_BEOGH)
+    if (you.religion == GOD_YREDELEMNUL)
+        return is_yred_slave(mon);
+    else if (you.religion == GOD_BEOGH)
         return is_orcish_follower(mon);
     else if (you.religion == GOD_ZIN)
         return is_good_lawful_follower(mon);
@@ -3765,7 +3775,11 @@ static bool _yredelemnul_retribution()
     // undead theme
     const god_type god = GOD_YREDELEMNUL;
 
-    if (random2(you.experience_level) > 4)
+    if (coinflip() && you.religion == god && _yred_slaves_abandon_you())
+    {
+        ;
+    }
+    else if (random2(you.experience_level) > 4)
     {
         int how_many = 1 + random2(1 + (you.experience_level / 5));
         int count = 0;
@@ -4541,6 +4555,29 @@ static bool _orcish_followers_on_level_abandon_you()
     }
 
     return success;
+}
+
+static bool _yred_slaves_abandon_you()
+{
+    int how_many = 1 + random2(1 + (you.experience_level / 5));
+    int count = 0;
+
+    for (; how_many > 0; --how_many)
+    {
+        monsters *slave = choose_random_nearby_monster(0, is_yred_slave, true,
+                                                       true);
+        if (slave)
+        {
+            slave->attitude = ATT_HOSTILE;
+            behaviour_event(slave, ME_ALERT, MHITYOU);
+
+            simple_monster_message(slave, " turns against you!");
+
+            count++;
+        }
+    }
+
+    return (count > 0);
 }
 
 // Upon excommunication, ex-Beoghites lose all their orcish followers.
