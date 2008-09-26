@@ -3011,6 +3011,9 @@ bool is_holy_item(const item_def& item)
     case OBJ_SCROLLS:
         retval = (item.sub_type == SCR_HOLY_WORD);
         break;
+    case OBJ_BOOKS:
+        retval = (item.sub_type == BOOK_HEALING);
+        break;
     default:
         break;
     }

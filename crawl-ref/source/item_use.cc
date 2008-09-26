@@ -3473,7 +3473,9 @@ void zap_wand( int slot )
         case WAND_HASTING:
         case WAND_HEALING:
         case WAND_INVISIBILITY:
-            targ_mode = TARG_FRIEND;
+            targ_mode = (wand.sub_type == WAND_HEALING
+                            && you.religion == GOD_ELYVILON) ?
+                                TARG_ANY : TARG_FRIEND;
             break;
 
         default:
