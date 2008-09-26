@@ -4559,7 +4559,7 @@ static bool _orcish_followers_on_level_abandon_you()
 
 static bool _yred_slaves_abandon_you()
 {
-    int how_many = 1 + random2(1 + (you.experience_level / 5));
+    int how_many = 2 + random2(2 + (you.experience_level / 2));
     int count = 0;
 
     for (; how_many > 0; --how_many)
