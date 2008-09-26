@@ -479,7 +479,7 @@ bool mons_is_native_in_branch(const monsters *monster,
 
 bool mons_is_chaotic(const monsters *mon)
 {
-    if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
+    if (mons_is_shapeshifter(mon))
         return (true);
 
     if (mon->has_spell(SPELL_POLYMORPH_OTHER))
@@ -2091,6 +2091,11 @@ bool mons_self_destructs(const monsters *m)
 bool mons_is_summoned(const monsters *m)
 {
     return (m->has_ench(ENCH_ABJ));
+}
+
+bool mons_is_shapeshifter(const monsters *m)
+{
+    return (m->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER));
 }
 
 // Does not check whether the monster can dual-wield - that is the

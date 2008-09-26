@@ -613,8 +613,7 @@ kill_monster_desc::kill_monster_desc(const monsters *mon)
     if (modifier != M_NORMAL)
         monnum = mon->base_monster;
 
-    if (mon->has_ench(ENCH_SHAPESHIFTER) ||
-            mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+    if (mons_is_shapeshifter(mon))
         modifier = M_SHAPESHIFTER;
 
     // XXX: Ugly hack - merge all mimics into one mimic record.

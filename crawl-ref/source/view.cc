@@ -826,6 +826,7 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
         && monster->foe == MHITYOU
         && mons_species(monster->type) == MONS_ORC
         && !mons_is_summoned(monster)
+        && !mons_is_shapeshifter(monster)
         && !testbits(monster->flags, MF_ATT_CHANGE_ATTEMPT)
         && !mons_friendly(monster)
         && mons_player_visible(monster) && !mons_is_sleeping(monster)

@@ -1602,7 +1602,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     // Messaging.
     bool can_see = you.can_see(monster);
 
-    if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
+    if (mons_is_shapeshifter(monster))
         str_polymon = " changes into ";
     else if (targetc == MONS_PULSATING_LUMP)
         str_polymon = " degenerates into ";
@@ -4907,12 +4907,12 @@ static bool _handle_spell(monsters *monster, bolt &beem)
         return (false);
     }
 
+    // Shapeshifters don't get spells.
     if ((mons_class_flag(monster->type, M_ACTUAL_SPELLS)
             || mons_class_flag(monster->type, M_PRIEST))
-        && monster->has_ench(ENCH_GLOWING_SHAPESHIFTER, ENCH_SHAPESHIFTER))
+        && mons_is_shapeshifter(monster))
     {
-        return (false);           //jmf: shapeshifters don't get spells, just
-                                  //     physical powers.
+        return (false);
     }
     else if (monster->has_ench(ENCH_CONFUSION)
              && !mons_class_flag(monster->type, M_CONFUSED))
@@ -5381,9 +5381,8 @@ static bool _handle_throw(monsters *monster, bolt & beem)
 static bool _handle_monster_spell(monsters *monster, bolt &beem)
 {
     // Shapeshifters don't get spells.
-    if (!monster->has_ench( ENCH_GLOWING_SHAPESHIFTER,
-                            ENCH_SHAPESHIFTER )
-        || !mons_class_flag( monster->type, M_ACTUAL_SPELLS ))
+    if (!mons_is_shapeshifter(monster)
+        || !mons_class_flag(monster->type, M_ACTUAL_SPELLS))
     {
         if (_handle_spell(monster, beem))
             return (true);

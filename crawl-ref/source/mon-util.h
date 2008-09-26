@@ -534,6 +534,7 @@ bool mons_wields_two_weapons(const monsters *m);
 bool mons_wields_two_weapons(monster_type m);
 bool mons_self_destructs(const monsters *m);
 bool mons_is_summoned(const monsters *m);
+bool mons_is_shapeshifter(const monsters *m);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
