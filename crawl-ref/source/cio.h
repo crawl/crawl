@@ -73,6 +73,18 @@ int cancelable_get_line( char *buf,
                          input_history *mh = NULL,
                          int (*keyproc)(int &c) = NULL );
 
+// Do not use this templated function directly.  Use the macro below instead.
+template<int> static int cancelable_get_line_autohist_temp(char *buf, int len)
+{
+    static input_history hist(10);
+    return cancelable_get_line(buf, len, get_number_of_cols(), &hist);
+}
+
+// This version of cancelable_get_line will automatically retain its own
+// input history, independent of other calls to cancelable_get_line.
+#define cancelable_get_line_autohist(buf, len) \
+    cancelable_get_line_autohist_temp<__LINE__>(buf, len)
+
 struct c_mouse_event
 {
     coord_def pos;
