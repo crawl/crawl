@@ -557,6 +557,16 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
+    switch (which_god)
+    {
+    case GOD_KIKUBAAQUDGHA: case GOD_MAKHLEB: case GOD_LUGONU:
+        likes.push_back("kill holy beings");
+        break;
+
+    default:
+        break;
+    }
+
     // Unusual kills.
     switch (which_god)
     {
