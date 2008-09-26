@@ -2661,8 +2661,6 @@ bool thrown_object_destroyed( item_def *item, const coord_def& where,
     ASSERT( item != NULL );
 
     int chance = 0;
-    bool destroyed = false;
-    bool hostile_grid = false;
 
     if (item->base_type == OBJ_MISSILES)
     {
@@ -2688,8 +2686,11 @@ bool thrown_object_destroyed( item_def *item, const coord_def& where,
         }
     }
 
-    destroyed = (chance == 0) ? false : one_chance_in(chance);
-    hostile_grid = grid_destroys_items(grd(where));
+    // Enchanted projectiles get an extra shot at avoiding
+    // destruction: plus / (1 + plus) chance of survival.
+    bool destroyed = (chance == 0) ? false :
+        (one_chance_in(chance) && one_chance_in(item->plus));
+    bool hostile_grid = grid_destroys_items(grd(where));
 
     // Non-returning items thrown into item-destroying grids are always
     // destroyed.  Returning items are only destroyed if they would have
