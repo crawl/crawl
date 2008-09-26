@@ -3775,11 +3775,7 @@ static bool _yredelemnul_retribution()
     // undead theme
     const god_type god = GOD_YREDELEMNUL;
 
-    if (coinflip() && you.religion == god && _yred_slaves_abandon_you())
-    {
-        ;
-    }
-    else if (random2(you.experience_level) > 4)
+    if (random2(you.experience_level) > 4)
     {
         int how_many = 1 + random2(1 + (you.experience_level / 5));
         int count = 0;
@@ -3794,8 +3790,13 @@ static bool _yredelemnul_retribution()
     else
     {
         simple_god_message("'s anger turns toward you for a moment.", god);
-        MiscastEffect(&you, -god, SPTYP_NECROMANCY, 5 + you.experience_level,
-                      random2avg(88, 3), "the anger of Yredelemnul");
+
+        if (coinflip() && you.religion == god)
+            _yred_slaves_abandon_you();
+        else
+            MiscastEffect(&you, -god, SPTYP_NECROMANCY,
+                          5 + you.experience_level, random2avg(88, 3),
+                          "the anger of Yredelemnul");
     }
 
     return (true);
