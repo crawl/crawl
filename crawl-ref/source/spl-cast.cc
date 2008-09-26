@@ -4123,7 +4123,7 @@ void MiscastEffect::_earth(int severity)
             std::ostringstream str;
 
             str << "Your " << feet << (pluralized ? " feel" : " feels")
-                << " warm";
+                << " warm.";
 
             you_msg = str.str();
             // Monster messages needed.

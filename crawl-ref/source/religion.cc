@@ -3776,8 +3776,8 @@ static bool _yredelemnul_retribution()
     else
     {
         simple_god_message("'s anger turns toward you for a moment.", god);
-        MiscastEffect( &you, -god, SPTYP_NECROMANCY, 5 + you.experience_level,
-                       random2avg(88, 3), "the anger of Yredelemnul" );
+        MiscastEffect(&you, -god, SPTYP_NECROMANCY, 5 + you.experience_level,
+                      random2avg(88, 3), "the anger of Yredelemnul");
     }
 
     return (true);
