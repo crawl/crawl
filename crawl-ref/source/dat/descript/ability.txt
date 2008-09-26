@@ -41,9 +41,7 @@ Breathe a blast of power at a targeted monster.
 %%%%
 Breathe Sticky Flame
 
-Breathe a blast of sticky flame at a targeted monster. As the name
-suggests, sticky flame will stick around, so the monster may be
-covered in flames for several rounds until they eventually go out.
+Breathe a blast of sticky flame at a targeted monster. As the name suggests, sticky flame will stick around, so the monster may be covered in flames for several rounds until they eventually go out.
 %%%%
 Breathe Steam
 
@@ -51,11 +49,7 @@ Breathe a jet of steam at a targeted monster.
 %%%%
 Bat Form
 
-Turn into a speedy vampire bat. In bat form you cannot interact with
-items in any form (except picking them up or dropping them), nor cast 
-spells. Note that Bat Form will decrease your current strength while
-increasing your dexterity. Thus, you won't be able to change form if 
-your strength is too low.
+Turn into a speedy vampire bat. In bat form you cannot interact with items in any form (except picking them up or dropping them), nor cast spells. Note that Bat Form will decrease your current strength while increasing your dexterity. Thus, you won't be able to change form if your strength is too low.
 %%%%
 Spit Acid
 
@@ -112,14 +106,11 @@ Drain the life force of a targeted monster. This will reduce the experience you'
 %%%%
 Release Delayed Fireball
 
-Release a previously memorised (delayed) fireball without 
-additional cost in terms of magic or hunger.
+Release a previously memorised (delayed) fireball without additional cost in terms of magic or hunger.
 %%%%
 Self-Restoration
 
-At the permanent loss of one magic point restore your Strength, 
-Dexterity and Intelligence, and heal a large amount of rotted 
-hitpoints.
+At the permanent loss of one magic point restore your Strength, Dexterity and Intelligence, and heal a large amount of rotted hitpoints.
 %%%%
 Evoke Sense Surroundings
 
@@ -135,20 +126,11 @@ Blink to another grid within your line of sight.
 %%%%
 Evoke Berserk Rage
 
-Berserk greatly if temporarily increases your hit points and damage 
-output in melee fights. It will time out quickly if you don't kill
-anything, but may be extended by multiple kills. While berserk, you
-cannot perform a number of actions such as, for example, (un)wield a
-weapon, quaff something, zap wands, evoke items, or cast spells.
-Such a rage is usually followed by deep exhaustion, a time during
-which you are slowed down, cannot berserk again, and occasionally
-even pass out.
+Berserk greatly if temporarily increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands, evoke items, or cast spells. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, cannot berserk again, and occasionally even pass out.
 %%%%
 Evoke Invisibility
 
-Turn yourself invisible for a limited amount of time. Turning
-invisible increases your magical contamination and may eventually 
-cause glowing.
+Turn yourself invisible for a limited amount of time. Turning invisible increases your magical contamination and may eventually cause glowing.
 %%%%
 Turn Visible
 
@@ -156,11 +138,7 @@ Pretty self-explanatory: turn visible again.
 %%%%
 Evoke Levitation
 
-Start levitating. During levitation you can safely cross water and 
-similar obstacles. Be warned, though, that levitation may time out at
-inopportune moments and cause you to fall to your death.
-While levitating, you cannot interact with items on the floor or pick
-them up.
+Start levitating. During levitation you can safely cross water and similar obstacles. Be warned, though, that levitation may time out at inopportune moments and cause you to fall to your death. While levitating, you cannot interact with items on the floor or pick them up.
 %%%%
 Stop Levitating
 
@@ -173,39 +151,28 @@ With a short delay, you revert to your normal form.
 # Zin
 Recite
 
-Preaching to monsters about Zin's laws leads to various results. It 
-works best on humanoids, worse on demons and not at all on beasts.
+Preaching to monsters about Zin's laws leads to various results. It works best on humanoids, worse on undead and demons, and not at all on beasts.
 %%%%
 Vitalisation
 
-If Zin is most pleased with you, you can Vitalise yourself. This will 
-remove a negative affliction from you, or restore one of your 
-attributes. In case neither of these is necessary, it will give you 
-temporary boosts to your attributes instead.
+If Zin is most pleased with you, you can Vitalise yourself. This will remove a negative affliction from you, or restore one of your attributes. In case neither of these is necessary, it will give you temporary boosts to your attributes instead.
 %%%%
 Sanctuary
 
-For a short duration gain safety in a divine refuge. While the sanctuary 
-is in effect monsters will not attack you, but the protection will 
-disappear at once should you breach the divine peace.
+For a short duration gain safety in a divine refuge. While the sanctuary is in effect monsters will not attack you, but the protection will disappear at once should you breach the divine peace.
 %%%%
 # The Shining One
 Divine Shield
 
-Conjures up a divine shield that stacks with an ordinary shield and can 
-be used even when wielding a two-handed weapon, as the Divine Shield is 
-managed by the Shining One.
+Conjures up a divine shield that stacks with an ordinary shield and can be used even when wielding a two-handed weapon, as the Divine Shield is managed by the Shining One.
 %%%%
 Cleansing Flame
 
-Hurls a huge blast of divine fury, severely damaging undead and demons. 
-All other hostiles also take damage, if less so, whereas allies are 
-never affected.
+Hurls a huge blast of divine fury, severely damaging undead and demons. All other hostiles also take damage, if less so, whereas allies are never affected.
 %%%%
 Summon Daeva
 
-Summoned Daevas are powerful warriors against evil. They might be blessed 
-by the Shining One to stay longer or even permanently in this world.
+Summoned Daevas are powerful warriors against evil. They might be blessed by the Shining One to stay longer or even permanently in this world.
 %%%%
 # Both Kikubaaqudgha and Yredelmnul.
 Recall Undead Slaves
@@ -219,8 +186,7 @@ Permanently enslave undead monsters.
 %%%%
 Invoke Death
 
-Summon the personification of Death, depending on your Invocations 
-skill possibly hostile.
+Summon the personification of Death, which, depending on your Invocations skill, may be hostile.
 %%%%
 # Yredelemnul
 Animate Corpse
@@ -229,7 +195,7 @@ Reanimate a corpse as a follower.
 %%%%
 Animate Dead ability
 
-Bring the corpses in your vicinity back to life.
+Reanimate all corpses in your vicinity as followers.
 %%%%
 Drain Life
 
@@ -242,12 +208,11 @@ Attempt to temporarily enslave undead monsters around you.
 # Okawaru
 Might
 
-Temporarily increases your Strength and damage output.
+Temporarily increase your Strength and damage output.
 %%%%
 Haste
 
-Greatly increases your movement speed. Hasting yourself increases
-your magical contamination and may eventually cause glowing.
+Greatly increase your movement speed. Hasting yourself will increase your magical contamination, and may eventually cause glowing.
 %%%%
 # Makhleb
 Minor Destruction
@@ -256,8 +221,7 @@ Shoot a random harmful beam at the targeted monster.
 %%%%
 Lesser Servant of Makhleb
 
-Summon a minor demon, with a chance of being hostile at low Invocations 
-skill.
+Summon a minor demon, with a chance of being hostile at low Invocations skill.
 %%%%
 Major Destruction
 
@@ -265,8 +229,7 @@ Inflict a random harmful beam or explosion on the targeted monster.
 %%%%
 Greater Servant of Makhleb
 
-Summon a major demon, with a chance of being hostile at low Invocations 
-skill.
+Summon a major demon, with a chance of being hostile at low Invocations skill.
 %%%%
 # Sif Muna
 Channel Energy
@@ -275,27 +238,16 @@ Replenish your magical reservoir by an amount depending on your Invocations skil
 %%%%
 Forget Spell
 
-Forget any spell out of the ones you've currently memorised, so as to
-free memory to learn others.
+Forget any spell out of the ones you've currently memorised, so as to free memory to learn others.
 %%%%
 # Trog
 Burn Books
 
-All spellbooks within your line of sight are set on fire. The fire is 
-fueled by Trog's hate, and Trog likes it most when you don't even care
-about which books of madness burst into flames.
+All spellbooks within your line of sight are set on fire. The fire is fueled by Trog's hatred, and Trog likes it most when you don't even care which books of madness burst into flames.
 %%%%
 Berserk
 
-Berserk greatly if temporarily increases your hit points and damage 
-output in melee fights. It will time out quickly if you don't kill
-anything, but may be extended by multiple kills. While berserk, you
-cannot perform a number of actions such as, for example, (un)wield a
-weapon, quaff something, zap wands, or evoke items.
-Such a rage is usually followed by deep exhaustion, a time during
-which you are slowed down, and cannot berserk again. Unlike other 
-sources of rage, depending on your piety Trog may occasionally 
-prevent you from passing out.
+Berserk greatly, if temporarily, increases your hit points and damage output in melee fights. It will time out quickly if you don't kill anything, but may be extended by multiple kills. While berserk, you cannot perform a number of actions such as, for example, (un)wield a weapon, quaff something, zap wands, or evoke items. Such a rage is usually followed by deep exhaustion, a time during which you are slowed down, and cannot berserk again. Unlike other sources of rage, depending on your piety Trog may occasionally prevent you from passing out.
 %%%%
 Trog's Hand
 
@@ -308,8 +260,7 @@ Sends huge angry allies to roam the dungeon.
 # Elyvilon
 Destroy Weapons
 
-Destroys all weapons on the ground. In order to prevent a weapon from
-being accidentally destroyed, use the !D inscription.
+Destroys all weapons on the ground. In order to prevent a weapon from being accidentally destroyed, use the !D inscription.
 %%%%
 Lesser Healing
 
@@ -317,8 +268,7 @@ Depending on your Invocations skill, heal a small amount of hitpoints.
 %%%%
 Purification
 
-Purge your body of bad effects such as sickness, poisoning, slowness,
-confusion, and rotting.
+Purge your body of bad effects such as sickness, poisoning, slowness, confusion, and rotting.
 %%%%
 Greater Healing
 
@@ -326,37 +276,28 @@ Depending on your Invocations skill, heal a moderate amount of hitpoints.
 %%%%
 Restoration
 
-Fully restore your Strength, Dexterity and Intelligence, and heal a large 
-amount of rotted hitpoints.
+Fully restore your Strength, Dexterity and Intelligence, and heal a large amount of rotted hitpoints.
 %%%%
 Divine Vigour
 
-Depending on your Invocations skill, heal a large amount of, and 
-temporarily increase, your hitpoints.
+Depending on your Invocations skill, heal a large amount of, and temporarily increase, your hitpoints.
 %%%%
 # Lugonu
 Depart the Abyss
 
-Leave the Abyss to return into the branch and level you last were in
-when you left the dungeon.
+Leave the Abyss to return into the branch and level you last were in when you left the dungeon.
 %%%%
 Bend Space
 
-Bends the fabric of space around you, instantly translocating you a small
-distance and possibly also translocating and damaging monsters in your
-vicinity.
+Bend the fabric of space around you, instantly translocating you a small distance, and possibly also translocating and damaging monsters in your vicinity.
 %%%%
 Banish
 
-Depending on the targeted monster's magic resistance, it may be 
-banished into the Abyss.
+Attempt to banish a monster into the Abyss.
 %%%%
 Corrupt
 
-Corrupt the current level by unleashing Abyssal energies on it. This will 
-cause the level to largely change appearance and will gate in demons from 
-the Abyss bent on causing destruction. This will not work on levels 
-already corrupted or in the Abyss.
+Corrupt the current level by unleashing Abyssal energies on it. This will cause the level to largely change appearance, and will gate in demons from the Abyss bent on causing destruction. This will not work on levels already corrupted or in the Abyss.
 %%%%
 Enter the Abyss
 
@@ -369,32 +310,24 @@ Choose any deck in your inventory and draw a card from it.
 %%%%
 Peek at Two
 
-Draw two cards from your wielded deck, look at them and shuffle them
-back into the deck. The deck will be inscribed as containing those
-two cards, and if they are different this will identify the deck.
+Draw two cards from your wielded deck, look at them, and shuffle them back into the deck. The deck will be inscribed as containing those two cards, and, if they are different, this will identify the deck.
 %%%%
 Triple Draw
 
-Draw three cards from your wielded deck, have a look at them and decide
-which one to keep. Discard the other two.
+Draw three cards from your wielded deck, look at them, and decide which one to keep, discarding the other two.
 %%%%
 Mark Four
 
-Draw four cards from your wielded deck, mark and remember them and 
-shuffle them back into the deck. The deck will be inscribed as 
-containing those cards, and doing so will identify the deck.
+Draw four cards from your wielded deck, mark and remember them, and shuffle them back into the deck. The deck will be inscribed as containing those cards, and doing so will identify the deck.
 %%%%
 Stack Five
 
-Draw five cards from your wielded deck, losing the rest of the deck.
-Look at the cards and sort them into any order you'd like. Subsequently
-you'll draw these cards in the order you chose.
+Draw five cards from your wielded deck, losing the rest of the deck. Look at the cards and sort them into any order you'd like. Subsequently, you'll draw these cards in the order you chose.
 %%%%
 # Beogh
 Smiting
 
-Smites an enemy within your field of vision. Doesn't require a direct 
-path.
+Smite an enemy within your field of vision. This doesn't require a direct path.
 %%%%
 Recall Orcish Followers
 
@@ -402,6 +335,5 @@ Recall all of your orcish followers on the level to your vicinity.
 %%%%
 Renounce Religion
 
-Renouncing your faith will make your character leave your god (and 
-usually anger said god).
+Renounce your faith. This will make your character leave your god (and usually anger said god).
 %%%%
