@@ -1886,8 +1886,8 @@ Healers:
 --------
 The Healer is a priest of Elyvilon. Healers begin with minor healing
 powers, but can gain far greater abilities in the long run. They are
-able to persuade monsters into abstaining from the bloodshed, gaining
-both piety and experience that way.
+able to persuade monsters to abstain from bloodshed, gaining both piety
+and experience that way.
 
 Crusaders:
 ----------
