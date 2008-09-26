@@ -596,13 +596,13 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     if (likes.size() == 0)
     {
-        text += " %s doesn't like anything?  This a bug; please report it.";
+        text += " %s doesn't like anything? This a bug; please report it.";
     }
     else
     {
         text += " likes it when you ";
         text += comma_separated_line(likes.begin(), likes.end(),
-                                     " and ", ", ");
+                                     ", and ", ", ");
         text += ".";
     }
 
