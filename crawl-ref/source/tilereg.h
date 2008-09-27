@@ -138,11 +138,6 @@ public:
     void adjust_region(int *x1, int *x2, int y);
     void scroll();
 
-    //Sys dep
-    void draw_cursor(int x, int y, int width);
-    void draw_cursor(int x, int y);
-    void erase_cursor();
-
 protected:
     virtual void on_resize();
     FTFont *m_font;

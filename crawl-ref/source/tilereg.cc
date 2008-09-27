@@ -2097,13 +2097,13 @@ void TextRegion::cgotoxy(int x, int y)
 
     if (cursor_region != NULL && cursor_flag)
     {
-        cursor_region ->erase_cursor();
+        cursor_x = -1;
+        cursor_y = -1;
         cursor_region = NULL;
     }
 
     if (cursor_flag)
     {
-        text_mode->draw_cursor(print_x, print_y);
         cursor_x = print_x;
         cursor_y = print_y;
         cursor_region = text_mode;
@@ -2124,30 +2124,40 @@ void TextRegion::_setcursortype(int curstype)
 {
     cursor_flag = curstype;
     if (cursor_region != NULL)
-        cursor_region->erase_cursor();
+    {
+        cursor_x = -1;
+        cursor_y = -1;
+    }
 
     if (curstype)
     {
-        text_mode->draw_cursor(print_x, print_y);
         cursor_x = print_x;
         cursor_y = print_y;
         cursor_region = text_mode;
     }
 }
 
-void TextRegion::draw_cursor(int x, int y)
-{
-    // TODO enne
-}
-
-void TextRegion::erase_cursor()
-{
-    // TODO enne
-}
-
 void TextRegion::render()
 {
-    m_font->render_textblock(sx + ox, sy + oy, cbuf, abuf, mx, my);
+    if (cursor_x > 0 && cursor_y > 0)
+    {
+        int idx = cursor_x + mx * cursor_y;
+
+        unsigned char char_back = cbuf[idx];
+        unsigned char col_back = abuf[idx];
+
+        cbuf[idx] = '_';
+        abuf[idx] = WHITE;
+
+        m_font->render_textblock(sx + ox, sy + oy, cbuf, abuf, mx, my);
+
+        cbuf[idx] = char_back;
+        abuf[idx] = col_back;
+    }
+    else
+    {
+        m_font->render_textblock(sx + ox, sy + oy, cbuf, abuf, mx, my);
+    }
 }
 
 void TextRegion::clear()
