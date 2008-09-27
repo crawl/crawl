@@ -1992,7 +1992,7 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
     {
         god_type which_god = crawl_state.which_god_acting();
         if (crawl_state.is_god_retribution())
-            cause  = "the wrath of " + god_name(which_god);
+            cause = "the wrath of " + god_name(which_god);
         else
         {
             if (which_god == GOD_XOM)

@@ -1562,9 +1562,9 @@ int near_stairs(const coord_def &p, int max_dist,
             // Shouldn't happen for escape hatches.
             if (grid_is_escape_hatch(feat))
                 continue;
-            
+
             stair_type = get_feature_dchar(feat);
-            
+
             // Is it a branch stair?
             for (int i = 0; i < NUM_BRANCHES; ++i)
             {
@@ -1616,7 +1616,7 @@ void zap_los_monsters()
         if (Options.tutorial_events[TUT_SEEN_FIRST_OBJECT])
         {
             int item = igrd(g);
-            
+
             if (item != NON_ITEM && is_valid_item(mitm[item]) )
                 destroy_item(item);
         }
@@ -1627,7 +1627,7 @@ void zap_los_monsters()
         // If we ever allow starting with a friendly monster,
         // we'll have to check here.
         monsters *mon = &menv[imon];
-        
+
         if (mons_class_flag( mon->type, M_NO_EXP_GAIN ))
             continue;
 
