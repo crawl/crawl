@@ -2508,10 +2508,13 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case GOD_YREDELEMNUL:
         case GOD_MAKHLEB:
         case GOD_LUGONU:
+            if (god_hates_attacking_friend(you.religion, victim))
+                break;
+
             simple_god_message(
                 make_stringf(" accepts your %skill.",
                              thing_done == DID_KILL_HOLY ? "" : "collateral ")
-                            .c_str());
+                             .c_str());
 
             ret = true;
             if (random2(level + 18) > 2)
@@ -2584,7 +2587,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             ret = true;
             if (random2(level + 10 - (is_good_god(you.religion) ? 0 :
                                       you.experience_level/3)) > 5)
+            {
                 piety_change = 1;
+            }
             break;
         default:
             break;
