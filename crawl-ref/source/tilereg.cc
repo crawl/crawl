@@ -1261,7 +1261,8 @@ void InventoryRegion::pack_verts()
                     num = 999;
 
                 const int offset_amount = TILE_X/4;
-                int offset = 0;
+                int offset_x = 3;
+                int offset_y = 1;
 
                 int help = num;
                 int c100 = help/100;
@@ -1269,19 +1270,19 @@ void InventoryRegion::pack_verts()
 
                 if (c100)
                 {
-                    add_quad_char('0' + c100, x, y, offset, 0);
-                    offset += offset_amount;
+                    add_quad_char('0' + c100, x, y, offset_x, offset_y);
+                    offset_x += offset_amount;
                 }
 
                 int c10 = help/10;
                 if (c10 || c100)
                 {
-                    add_quad_char('0' + c10, x, y, offset, 0);
-                    offset += offset_amount;
+                    add_quad_char('0' + c10, x, y, offset_x, offset_y);
+                    offset_x += offset_amount;
                 }
 
                 int c1 = help % 10;
-                add_quad_char('0' + c1, x, y, offset, 0);
+                add_quad_char('0' + c1, x, y, offset_x, offset_y);
             }
 
 
