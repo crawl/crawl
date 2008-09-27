@@ -2600,11 +2600,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         switch (you.religion)
         {
         case GOD_SHINING_ONE:
+        case GOD_OKAWARU:
+        case GOD_MAKHLEB:
             simple_god_message(" accepts your collateral kill.");
             ret = true;
-            // only holy gods care about this, so no XP level deduction
-            if (random2(level + 10) > 5)
+            if (random2(level + 10 - (is_good_god(you.religion) ? 0 :
+                                      you.experience_level/3)) > 5)
+            {
                 piety_change = 1;
+            }
             break;
         default:
             break;
