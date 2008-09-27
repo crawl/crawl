@@ -4600,8 +4600,8 @@ static bool _yred_slaves_abandon_you()
 
     if (count > 0)
     {
-        simple_god_message(count > 1 ? " reclaims some of your undead slaves."
-                                     : " reclaims one of your undead slaves.");
+        simple_god_message(count > 1 ? " reclaims some of your undead slaves!"
+                                     : " reclaims one of your undead slaves!");
         return (true);
     }
 
