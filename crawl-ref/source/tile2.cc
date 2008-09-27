@@ -65,15 +65,6 @@ int get_floor_special_tile_idx()
     return special_tile_idx;
 }
 
-void TileDrawBolt(int x, int y, int fg)
-{
-    // TODO enne
-#if 0
-    t1buf[x+1][y+1] = fg | TILE_FLAG_FLYING;
-    _update_single_grid(x, y);
-#endif
-}
-
 void WallIdx(int &wall, int &floor, int &special)
 {
     // Note: This function must be deterministic.

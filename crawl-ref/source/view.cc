@@ -4846,6 +4846,7 @@ void viewwindow(bool draw_it, bool do_updates)
 
 #ifdef USE_TILE
     tile_draw_rays(true);
+    tiles.clear_overlays();
 #endif
 
     if (draw_it)

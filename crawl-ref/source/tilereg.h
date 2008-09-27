@@ -247,6 +247,9 @@ public:
 
     const coord_def &get_cursor() const { return m_cursor[CURSOR_MOUSE]; }
 
+    void add_overlay(const coord_def &gc, int idx);
+    void clear_overlays();
+
 protected:
     void draw_background(unsigned int bg, unsigned int x, unsigned int y);
     void draw_mcache(mcache_entry *entry, unsigned int x, unsigned int y);
@@ -263,6 +266,13 @@ protected:
     int m_cy_to_gy;
     coord_def m_cursor[CURSOR_MAX];
     std::vector<TextTag> m_tags[TAG_MAX];
+
+    struct tile_overlay
+    {
+        coord_def gc;
+        int idx;
+    };
+    std::vector<tile_overlay> m_overlays;
 };
 
 class InventoryTile

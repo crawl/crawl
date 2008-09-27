@@ -1199,3 +1199,13 @@ const coord_def &TilesFramework::get_cursor() const
 {
     return (m_region_tile->get_cursor());
 }
+
+void TilesFramework::add_overlay(const coord_def &gc, int idx)
+{
+    m_region_tile->add_overlay(gc, idx);
+}
+
+void TilesFramework::clear_overlays()
+{
+    m_region_tile->clear_overlays();
+}

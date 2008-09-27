@@ -725,6 +725,29 @@ void DungeonRegion::render()
         glDrawArrays(GL_QUADS, 0, m_verts.size());
     }
 
+    m_verts.clear();
+    for (unsigned int i = 0; i < m_overlays.size(); i++)
+    {
+        // overlays must be from the main image and must be in LOS.
+        if (!crawl_view.in_grid_los(m_overlays[i].gc))
+            continue;
+
+        int idx = m_overlays[i].idx;
+        if (idx >= TILE_MAIN_MAX)
+            continue;
+
+        int x = m_overlays[i].gc.x - m_cx_to_gx;
+        int y = m_overlays[i].gc.y - m_cy_to_gy;
+        add_quad(TEX_DEFAULT, idx, x, y);
+    }
+    if (m_verts.size() > 0)
+    {
+        m_image->m_textures[TEX_DEFAULT].bind();
+        glVertexPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].pos_x);
+        glTexCoordPointer(2, GL_FLOAT, sizeof(tile_vert), &m_verts[0].tex_x);
+        glDrawArrays(GL_QUADS, 0, m_verts.size());
+    }
+
     // Draw text labels
     // TODO enne - add an option for this
     // TODO enne - be more intelligent about not covering stuff up
@@ -1019,6 +1042,19 @@ void DungeonRegion::add_text_tag(text_tag_type type, const std::string &tag,
     m_tags[type].push_back(t);
 }
 
+void DungeonRegion::add_overlay(const coord_def &gc, int idx)
+{
+    tile_overlay over;
+    over.gc = gc;
+    over.idx = idx;
+
+    m_overlays.push_back(over);
+}
+
+void DungeonRegion::clear_overlays()
+{
+    m_overlays.clear();
+}
 
 InventoryTile::InventoryTile()
 {

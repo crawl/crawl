@@ -175,8 +175,7 @@ void zap_animation(int colour, const monsters *mon, bool force)
     if (in_los_bounds(drawp))
     {
 #ifdef USE_TILE
-        // TODO enne - fixme!
-        TileDrawBolt(drawp.x-1, drawp.y-1, tileidx_zap(colour));
+        tiles.add_overlay(p, tileidx_zap(colour));
 #else
         view_update();
         cgotoxy(drawp.x, drawp.y, GOTO_DNGN);
@@ -1753,10 +1752,9 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
             if (tile_beam == -1)
                 tile_beam = tileidx_bolt(pbolt);
 
-            if (tile_beam != -1 && in_los_bounds(drawpos)
-                && (testpos != you.pos()))
+            if (tile_beam != -1 && in_los_bounds(drawpos))
             {
-                TileDrawBolt(drawpos.x-1, drawpos.y-1, tile_beam);
+                tiles.add_overlay(testpos, tile_beam);
                 delay(15);
             }
             else
@@ -5370,7 +5368,7 @@ static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly,
         {
 #ifdef USE_TILE
             if (in_los_bounds(drawpos))
-                TileDrawBolt(drawpos.x-1, drawpos.y-1, tileidx_bolt(beam));
+                tiles.add_overlay(realpos, tileidx_bolt(beam));
 #else
             // bounds check
             if (in_los_bounds(drawpos))

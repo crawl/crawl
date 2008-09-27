@@ -114,7 +114,6 @@ void TileResizeScreen(int x, int y);
 // display tile cursor, returns old cursor value there
 int TileDrawCursor(int x, int y, int flag);
 // display bolts
-void TileDrawBolt(int x, int y, int fg);
 void TileNewLevel(bool first_time);
 
 // edit player tile

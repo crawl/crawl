@@ -118,6 +118,9 @@ public:
     bool initialise_items();
 
     const coord_def &get_cursor() const;
+
+    void add_overlay(const coord_def &gc, int idx);
+    void clear_overlays();
 protected:
 
     int load_font(const char *font_file, int font_size,
