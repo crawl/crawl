@@ -3786,26 +3786,26 @@ static bool _yredelemnul_retribution()
 
     if (random2(you.experience_level) > 4)
     {
-        int how_many = 1 + random2(1 + (you.experience_level / 5));
-        int count = 0;
+        if (you.religion == god && coinflip() && _yred_slaves_abandon_you())
+            ;
+        else
+        {
+            int how_many = 1 + random2(1 + (you.experience_level / 5));
+            int count = 0;
 
-        for (; how_many > 0; --how_many)
-            count += _random_servants(god, true);
+            for (; how_many > 0; --how_many)
+                count += _random_servants(god, true);
 
-        simple_god_message(count > 1 ? " sends servants to punish you." :
-                           count > 0 ? " sends a servant to punish you."
-                                     : "'s servants fail to arrive.", god);
+            simple_god_message(count > 1 ? " sends servants to punish you." :
+                               count > 0 ? " sends a servant to punish you."
+                                         : "'s servants fail to arrive.", god);
+        }
     }
     else
     {
         simple_god_message("'s anger turns toward you for a moment.", god);
-
-        if (you.religion == god && coinflip())
-            _yred_slaves_abandon_you();
-        else
-            MiscastEffect(&you, -god, SPTYP_NECROMANCY,
-                          5 + you.experience_level, random2avg(88, 3),
-                          "the anger of Yredelemnul");
+        MiscastEffect(&you, -god, SPTYP_NECROMANCY, 5 + you.experience_level,
+                      random2avg(88, 3), "the anger of Yredelemnul");
     }
 
     return (true);
@@ -4594,13 +4594,18 @@ static bool _yred_slaves_abandon_you()
             slave->attitude = ATT_HOSTILE;
             behaviour_event(slave, ME_ALERT, MHITYOU);
 
-            simple_monster_message(slave, " turns against you!");
-
             count++;
         }
     }
 
-    return (count > 0);
+    if (count > 0)
+    {
+        simple_god_message(count > 1 ? " reclaims some of your undead slaves."
+                                     : " reclaims one of your undead slaves.");
+        return (true);
+    }
+
+    return (false);
 }
 
 // Upon excommunication, ex-Beoghites lose all their orcish followers.
