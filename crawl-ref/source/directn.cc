@@ -450,7 +450,11 @@ void full_describe_view()
 
     coord_def p;
 
-    // Iterate over viewport and get all the itemsin view.
+    // Iterate over viewport and get all the items in view.
+    // FIXME: This includes unknown stashes. I guess for stashes never
+    // seen before I could simply only add the top item (though I don't
+    // know how to do that) but what about stashes that changed since
+    // you last saw them? Just list the old content?
     for (p.x = start.x; p.x < end.x; p.x++)
         for (p.y = start.y; p.y < end.y; p.y++)
         {
@@ -571,16 +575,6 @@ void full_describe_view()
             unsigned short glyph_col;
             get_item_glyph( list_items[i], &glyph_char, &glyph_col );
 
-/*
-            std::string col_string;
-            int specialness = item_name_specialness(*(list_items[i]));
-            switch (specialness)
-            {
-            case 2: col_string = "yellow";   break; // artefact
-            case 1: col_string = "white";    break; // glowing/runed
-            case 0: col_string = "darkgrey"; break; // mundane
-            }
-*/
             std::string col_string = colour_to_str(glyph_col);
             std::string prefix = "(<" + col_string + ">"
                                  + (char)glyph_char
@@ -2665,7 +2659,7 @@ static void _describe_monster(const monsters *mon)
     {
         if (mons_is_sleeping(mon))
         {
-            mprf(MSGCH_EXAMINE, "%s appears to be %s.",                 
+            mprf(MSGCH_EXAMINE, "%s appears to be %s.",
                  mon->pronoun(PRONOUN_CAP).c_str(),
                  mons_is_confused(mon) ? "sleepwalking" : "resting");
         }

@@ -83,33 +83,24 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
   case POT_BLOOD_COAGULATED:
         if (you.species == SP_VAMPIRE)
         {
+            // No healing anymore! (jpeg)
+
+            int value = 1000;
             if (pot_eff == POT_BLOOD)
+            {
                 mpr("Yummy - fresh blood!");
+                value += 500;
+            }
             else // coagulated
                 mpr("This tastes delicious!");
 
-            lessen_hunger(1000, true);
-
-            // healing depends on thirst
-            if (you.hunger_state < HS_SATIATED) // !heal wounds
-            {
-                inc_hp((10 + random2avg(30,2)) / factor, false);
-                mpr("You feel much better.");
-            }
-            else
-            {
-                if (you.hunger_state <= HS_FULL)
-                    inc_hp(5 + random2(10), false); // !healing
-                else
-                    inc_hp(2 + random2(5), false);
-                mpr("You feel better.");
-            }
+            lessen_hunger(value, true);
         }
         else
         {
             if (you.omnivorous() || player_mutation_level(MUT_CARNIVOROUS))
             {
-                // Likes it
+                // Likes it.
                 mpr("This tastes like blood.");
                 lessen_hunger(200, true);
             }

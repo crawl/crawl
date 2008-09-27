@@ -307,7 +307,7 @@ w:5
 
 @The_weapon@ curses its smith, "I was supposed to be the Stinging Sword!"
 
-@The_weapon@ yells, "Ploughshares to swords!".
+@The_weapon@ yells, "Ploughshares to swords!"
 
 @The_weapon@ asks, "What song would you like to be played for your funeral?"
 
@@ -318,6 +318,7 @@ w:5
 %%%%
 real_song
 
+# The Tremoloes?
 @The_weapon@ roars, "Silence is golden, golden ..."
 
 # Queen
@@ -365,6 +366,18 @@ real_song
 
 # Gloria Gaynor
 @The_weapon@ sings, "I will survive!"
+
+# Buddy Holly and the Crickets
+@The_weapon@ sings, "This'll be the day that I die..."
+
+# R.E.M.
+@The_weapon@ rasps, "Baby, join me in death!"
+
+# Folklore (Sailing)
+@The_weapon@ sings, "Can you hear me through the dark night far away?"
+
+# The Carpenters
+@The_weapon@ sings, "Sing, sing a song, sing out loud, sing out strong..."
 
 # end Singing Sword
 %%%%

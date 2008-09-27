@@ -780,8 +780,7 @@ Some species are less fastidious about their food: Trolls can use
 their claws, so do not need a cutting device. Also Trolls, Orcs,
 Ogres, and Kobolds care less (in different degrees) about the quality
 of the corpse. Ogres, Trolls and Kobolds are happy to eat raw meat at
-any time. This does not apply to the more civilised (and more
-pretentious) Ogre-Mages.
+any time.
 
 Vampires are a special case. Members of this species can try to drink
 blood from a fresh corpse (use either the 'q' or the 'e' command).

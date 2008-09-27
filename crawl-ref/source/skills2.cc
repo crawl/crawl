@@ -2075,6 +2075,13 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
                 result = skills[best_skill][skill_rank];
             break;
 
+        case SK_SPELLCASTING:
+            if (species == SP_OGRE)
+            {
+                result = "Ogre-Mage";
+                break;
+            }
+            // else fall-through
         default:
             result = skills[best_skill][skill_rank];
             break;
@@ -2095,7 +2102,7 @@ std::string player_title()
 {
     const unsigned char best = best_skill( SK_FIGHTING, (NUM_SKILLS - 1), 99 );
     return (skill_title( best, you.skills[ best ] ));
-}                               // end player_title()
+}
 
 skill_type best_skill( int min_skill, int max_skill, int excl_skill )
 {
@@ -2107,7 +2114,7 @@ skill_type best_skill( int min_skill, int max_skill, int excl_skill )
     {
         if (i == excl_skill
             || i == SK_UNUSED_1
-            || (i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING))
+            || i > SK_UNARMED_COMBAT && i < SK_SPELLCASTING)
         {
             continue;
         }
@@ -2128,7 +2135,7 @@ skill_type best_skill( int min_skill, int max_skill, int excl_skill )
     }
 
     return static_cast<skill_type>(ret);
-}                               // end best_skill()
+}
 
 // Calculate the skill_order array from scratch.
 //
