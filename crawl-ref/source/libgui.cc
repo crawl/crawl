@@ -147,8 +147,8 @@ struct prefs pref_data[MAX_PREFS] =
     {"MAP PX   ", "MapPx", 'I', &map_px, 1,  10,  2},
     {"MSG X    ", "MsgX",  'I', &msg_x,  40, 80,  3},
     {"MSG Y    ", "MsgY",  'I', &msg_y,  8,  20,  4},
-    {"WIN TOP  ", "WindowTop", 'I', &winox, -100, 2000, 5},
-    {"WIN LEFT ", "WindowLeft",'I', &winoy, -100, 2000, 6},
+    {"WIN TOP  ", "WindowTop", 'I', &winoy, -100, 2000, 5},
+    {"WIN LEFT ", "WindowLeft",'I', &winox, -100, 2000, 6},
     {"FONT     ", "FontName", 'S', font_name, 0, 0,  0},
     {"FONT SIZE", "FontSize", 'I', &font_size, 8, 24, 7}
 #ifdef WIN32TILES
