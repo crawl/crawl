@@ -860,6 +860,7 @@ void game_options::reset_options()
     tile_font_lbl_size = 14;
 
     // window layout
+    tile_key_repeat = true;
     tile_full_screen = false;
     tile_window_width = 1024;
     tile_window_height = 768;
@@ -2990,6 +2991,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         tile_font_lbl_file = field;
     }
     else INT_OPTION(tile_font_lbl_size, 1, INT_MAX);
+    else BOOL_OPTION(tile_key_repeat);
     else BOOL_OPTION(tile_full_screen);
     else INT_OPTION(tile_window_width, 1, INT_MAX);
     else INT_OPTION(tile_window_height, 1, INT_MAX);

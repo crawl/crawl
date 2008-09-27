@@ -126,7 +126,7 @@ bool TilesFramework::initialise()
 {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
     {
-        printf ("Failed to initialise SDL: %s\n", SDL_GetError());
+        printf("Failed to initialise SDL: %s\n", SDL_GetError());
         return false;
     }
 
@@ -136,7 +136,7 @@ bool TilesFramework::initialise()
     SDL_Surface *icon = IMG_Load("dat/tiles/stone_soup_icon-32x32.png");
     if (!icon)
     {
-        printf ("Failed to load icon: %s\n", SDL_GetError());
+        printf("Failed to load icon: %s\n", SDL_GetError());
         return false;
     }
     SDL_WM_SetIcon(icon, NULL);
@@ -147,6 +147,14 @@ bool TilesFramework::initialise()
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+
+    if (Options.tile_key_repeat)
+    {
+        int delay = SDL_DEFAULT_REPEAT_DELAY;
+        int interval = SDL_DEFAULT_REPEAT_INTERVAL;
+        if (SDL_EnableKeyRepeat(delay, interval) != 0)
+            printf("Failed to set key repeat mode: %s\n", SDL_GetError());
+    }
   
     unsigned int flags = SDL_OPENGL;
     if (Options.tile_full_screen)
@@ -158,7 +166,7 @@ bool TilesFramework::initialise()
     m_context = SDL_SetVideoMode(m_windowsz.x, m_windowsz.y, 0, flags);
     if (!m_context)
     {
-        printf ("Failed to set video mode: %s\n", SDL_GetError());
+        printf("Failed to set video mode: %s\n", SDL_GetError());
         return false;
     }
 

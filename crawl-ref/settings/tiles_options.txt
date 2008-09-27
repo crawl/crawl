@@ -26,6 +26,8 @@
 # tile_excl_centre     = darkblue
 # tile_window_col      = yellow
 
+# tile_key_repeat = false
+
 # tile_tooltip_ms = 1000
 
 # tile_window_width = 1024

@@ -171,8 +171,3 @@ s         CMD_TARGET_WIZARD_MAKE_SHOUT
 w         CMD_TARGET_WIZARD_PATHFIND
 F         CMD_TARGET_WIZARD_MAKE_FRIENDLY
 P         CMD_TARGET_WIZARD_BLESS_MONSTER
-
-Tile-only commands
-------------------
--         CMD_EDIT_PLAYER_TILE  (edit player doll)
-^V        CMD_EDIT_PREFS        (edit screen preferences)
