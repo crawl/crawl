@@ -350,6 +350,7 @@ int kbhit()
 {
     // Look for the presence of any keyboard events in the queue.
     SDL_Event store;
+    SDL_PumpEvents();
     int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT,
                                SDL_EVENTMASK(SDL_KEYDOWN));
 
