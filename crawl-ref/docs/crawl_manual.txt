@@ -1632,8 +1632,8 @@ they are good at throwing things, in particular boulders.
 
 Contrary to expectations, Ogres are not reduced to mindless brutes. They
 possess a raw talent for witchcraft, letting them pick up the basics of
-spellcasting at an amazing speed. However, the more arcane schools of magic
-are foreign to them and are only learned at poor rates. 
+spellcasting at an amazing speed. However, the more arcane schools of
+magic are foreign to them and are only learned at poor rates. 
 
 Trolls
 ------
