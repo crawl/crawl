@@ -1424,7 +1424,7 @@ in levels and have equal abilities in all skills.
 Elves
 -----
 There are a number of distinct races of Elf. Elves are all physically
-slight but long-lived people, quicker-witted than humans, but sometimes
+slight but long-lived people, quicker-witted than Humans, but sometimes
 slower to learn new things. Elves are especially good at using those
 skills which require a degree of finesse, such as stealth,
 sword-fighting and archery, but tend to be poor at using brute force
@@ -1447,8 +1447,8 @@ Grey Elves
   These also advance slowly, but not as slowly as High Elves. They are
   good at using short and long swords and bows, but are poor at other
   fighting skills. They are excellent at all forms of magic except for
-  necromancy. In particular, they are masters of Enchantments and magics
-  related to Air.
+  necromancy. In particular, they are masters of enchantments and magics
+  related to air.
 
 Deep Elves
   This is an Elven race who long ago fled the overworld to live in
@@ -1460,8 +1460,8 @@ Deep Elves
   fighting from a distance. They advance at the pace of Grey Elves.
 
 Sludge Elves
-  This is a somewhat degenerate race of elves. They are mirror images of
-  normal elves in some respects: they have no special proficiency with
+  This is a somewhat degenerate race of Elves. They are mirror images of
+  normal Elves in some respects: they have no special proficiency with
   bows or swords (long or short), nor do they have any aptitude in the
   traditional areas of High Elven magic (enchantments, conjurations and
   divinations). On the other hand, they are superlative transmuters, and
@@ -1504,7 +1504,7 @@ blades, at which they are only fair), although they are not particularly
 good at using missile weapons. They prefer to use their own weapons.
 Orcs are poor at using most types of magic, with the exception of
 conjurations, necromancy, and the elemental magic of earth, fire, and
-ice. They advance as quickly as humans.
+ice. They advance as quickly as Humans.
 
 Merfolk
 -------
@@ -1534,9 +1534,9 @@ accomplished transmuters, but most other magics seem foreign to them.
 
 Halflings
 ---------
-Halflings, who are named for being about half the size of humans, live
+Halflings, who are named for being about half the size of Humans, live
 in small villages. They live simple lives and have simple interests.
-Sometimes a particularly restless halfling will leave his or her village
+Sometimes a particularly restless Halfling will leave his or her village
 in search of adventure.
 
 Halflings are very small and are among the least robust of any character
@@ -1544,7 +1544,7 @@ species. Although only average at most fighting skills, they can use
 short blades well and are good at all forms of missile combat. They are
 also very stealthy and good at dodging and stabbing, but are poor at
 magic (except enchantments and, for some reason, translocations). They
-advance in levels as rapidly as humans. Halflings cannot wield large
+advance in levels as rapidly as Humans. Halflings cannot wield large
 weapons.
 
 Gnomes
@@ -1590,8 +1590,8 @@ wear most armour.
 
 Nagas
 -----
-Nagas are a hybrid race: Humanoid from the waist up with a large snake
-tail instead of legs.
+Nagas are a hybrid race: Human from the waist up with a large snake tail
+instead of legs.
 
 They are reasonably good at most things and advance in experience levels
 at a decent rate. They are naturally immune to poisons, can see
@@ -1607,7 +1607,7 @@ damage of this poison increases with the Naga's experience level.
 
 Centaurs
 --------
-The Centaurs are another race of hybrid creatures: horses with human 
+The Centaurs are another race of hybrid creatures: horses with Human 
 torsos. They usually live in forests, surviving by hunting.
 
 Centaurs can move very quickly on their four legs, and are excellent
@@ -1622,7 +1622,7 @@ Ogres
 Ogres are huge, chunky creatures who typically are strong rather than 
 smart, and not nimble at all. Although Ogres can eat almost anything, 
 their size also means that they need to do so more frequently than 
-smaller folk. Ogres mature almost as quick as Humans.
+smaller folk. Ogres mature almost as quickly as Humans.
 
 Their preferred method of avoiding beatings is dodging and the use of 
 shields. Many Ogres find it natural to wield some large and blunt weapon.
@@ -1648,7 +1648,7 @@ survive.
 
 Minotaurs
 ---------
-The Minotaurs are yet another race of hybrids -- human bodies with
+The Minotaurs are yet another race of hybrids -- Human bodies with
 bovine heads. They delve into the Dungeon because of their instinctive
 love of twisting passageways.
 
@@ -1726,7 +1726,7 @@ Demigods
 --------
 Demigods are mortals (Humans, Orcs, or Elves, for example) with some
 divine or angelic ancestry, however distant; they can be created by a
-number of processes including magical experiments and the time-honoured
+number of processes, including magical experiments and the time-honoured
 practice of interplanar miscegenation.
 
 Demigods look more or less like members of their mortal part's race, but
@@ -1767,19 +1767,19 @@ Mummies
   These are undead creatures who travel into the depths in search of 
   revenge, redemption, or just because they want to.
 
-  Mummies progress very slowly in level, half again as slowly as humans
+  Mummies progress very slowly in level, half again as slowly as Humans
   in all skills except fighting, spellcasting and necromancy. As they
   increase in levels, they become increasingly in touch with the powers
   of death, but cannot use some types of necromancy which only affect
   living creatures. The side effects of necromantic magic tend to be
   relatively harmless to Mummies. However, their desiccated bodies are
-  highly flammable. They also do not need to eat or drink, and in any
-  case are incapable of doing so.
+  highly flammable. They also do not need to eat or drink, and, in any
+  case, are incapable of doing so.
 
 Ghouls
   They are horrible undead creatures, slowly rotting away. Although
   Ghouls can sleep in their graves for years on end, when they rise to
-  walk among the living they must eat flesh to survive. Raw flesh is
+  walk among the living, they must eat flesh to survive. Raw flesh is
   preferred, especially rotting or tainted meat, and Ghouls gain
   strength from consuming it.
 
@@ -1788,7 +1788,7 @@ Ghouls
   and death magic without too many difficulties.
 
 Vampires
-  Vampires are another form of undead, but with a peculiarity: By
+  Vampires are another form of undead, but with a peculiarity: by
   consuming fresh blood, they may become alive. A bloodless Vampire has
   all the traits of an undead, yet possesses no innate healing power at
   all -- in particular, magical items or spells which increase the rate
