@@ -609,9 +609,8 @@ enum command_type
     CMD_MAX_TARGET = CMD_TARGET_HELP,
 
 #ifdef USE_TILE
-    CMD_EDIT_PLAYER_TILE,
-    CMD_MIN_TILE = CMD_EDIT_PLAYER_TILE,
-    CMD_MAX_TILE = CMD_EDIT_PLAYER_TILE,
+    CMD_MIN_TILE,
+    CMD_MAX_TILE = CMD_MIN_TILE - 1,
 #endif
 
     // Disable/enable -more- prompts.

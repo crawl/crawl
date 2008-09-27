@@ -312,17 +312,16 @@ void DungeonRegion::draw_player(unsigned int x, unsigned int y)
     dolls_data player_doll;
     dolls_data result;
 
-    // TODO enne - store character doll here and get gender
     for (int i = 0; i < TILEP_PART_MAX; i++)
         default_doll.parts[i] = TILEP_SHOW_EQUIP;
-    int gender = 0;
+
+    int gender = you.your_name[0] % 2;
 
     tilep_race_default(you.species, gender, you.experience_level, 
                        default_doll.parts);
 
     result = default_doll;
 
-    // TODO enne - make these configurable
     result.parts[TILEP_PART_BASE] = default_doll.parts[TILEP_PART_BASE];
     result.parts[TILEP_PART_DRCHEAD] = default_doll.parts[TILEP_PART_DRCHEAD];
     result.parts[TILEP_PART_DRCWING] = default_doll.parts[TILEP_PART_DRCWING];

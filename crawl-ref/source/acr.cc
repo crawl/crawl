@@ -1800,12 +1800,6 @@ void process_command( command_type cmd )
 
     switch (cmd)
     {
-#ifdef USE_TILE
-    case CMD_EDIT_PLAYER_TILE:
-        TilePlayerEdit();
-        break;
-#endif // USE_TILE
-
     case CMD_OPEN_DOOR_UP_RIGHT:   _open_door(-1, -1); break;
     case CMD_OPEN_DOOR_UP:         _open_door( 0, -1); break;
     case CMD_OPEN_DOOR_UP_LEFT:    _open_door( 1, -1); break;
