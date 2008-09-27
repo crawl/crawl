@@ -58,6 +58,12 @@ void describe_feature_wide(int x, int y);
 void describe_item( item_def &item, bool allow_inscribe = false );
 void inscribe_item( item_def &item, bool proper_prompt );
 
+/* ***********************************************************************
+ * called from: command
+ * *********************************************************************** */
+void append_weapon_stats(std::string &description, const item_def &item);
+void append_armour_stats(std::string &description, const item_def &item);
+
 // last updated 12 Jun 2008 {jpeg}
 /* ***********************************************************************
  * called from: command - direct

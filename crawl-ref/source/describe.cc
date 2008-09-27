@@ -782,6 +782,20 @@ static std::string _describe_demon(const monsters &mons)
     return description.str();
 }
 
+void append_weapon_stats(std::string &description, const item_def &item)
+{
+    description += "$Damage rating: ";
+    _append_value(description, property( item, PWPN_DAMAGE ), false);
+    description += "   ";
+
+    description += "Accuracy rating: ";
+    _append_value(description, property( item, PWPN_HIT ), true);
+    description += "    ";
+
+    description += "Base attack delay: ";
+    _append_value(description, property( item, PWPN_SPEED ) * 10, false);
+   description += "%";
+}
 
 //---------------------------------------------------------------
 //
@@ -883,19 +897,7 @@ static std::string _describe_weapon( const item_def &item, bool verbose)
     }
 
     if (verbose)
-    {
-        description += "$Damage rating: ";
-        _append_value(description, property( item, PWPN_DAMAGE ), false);
-        description += "   ";
-
-        description += "Accuracy rating: ";
-        _append_value(description, property( item, PWPN_HIT ), true);
-        description += "    ";
-
-        description += "Base attack delay: ";
-        _append_value(description, property( item, PWPN_SPEED ) * 10, false);
-        description += "%";
-    }
+        append_weapon_stats(description, item);
 
     if (!is_fixed_artefact( item ))
     {
@@ -1216,6 +1218,15 @@ static std::string _describe_ammo( const item_def &item )
     return (description);
 }
 
+void append_armour_stats(std::string &description, const item_def &item)
+{
+    description += "$Armour rating: ";
+    _append_value(description, property( item, PARM_AC ), false);
+    description += "       ";
+
+    description += "Evasion modifier: ";
+    _append_value(description, property( item, PARM_EVASION ), true);
+}
 
 //---------------------------------------------------------------
 //
@@ -1233,12 +1244,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         && item.sub_type != ARM_BUCKLER
         && item.sub_type != ARM_LARGE_SHIELD)
     {
-        description += "$Armour rating: ";
-        _append_value(description, property( item, PARM_AC ), false);
-        description += "       ";
-
-        description += "Evasion modifier: ";
-        _append_value(description, property( item, PARM_EVASION ), true);
+        append_armour_stats(description, item);
     }
 
     const int ego = get_armour_ego_type( item );

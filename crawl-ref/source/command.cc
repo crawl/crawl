@@ -21,6 +21,7 @@
 #include "chardump.h"
 #include "cio.h"
 #include "database.h"
+#include "debug.h"
 #include "describe.h"
 #include "files.h"
 #include "initfile.h"
@@ -1190,6 +1191,28 @@ static bool _do_description(std::string key, std::string footer = "")
             suffix += getLongDescription(symbol_suffix);
             suffix += getLongDescription(symbol_suffix + "_lookup");
             quote += getQuoteString(symbol_suffix);
+        }
+        else
+        {
+            int thing_created = get_item_slot();
+            if (thing_created != NON_ITEM)
+            {
+                char name[80];
+                snprintf(name, 80, key.c_str());
+                if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
+                {
+                    append_weapon_stats(desc, mitm[thing_created]);
+                    desc += "$";
+                }
+                else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
+                {
+                    append_armour_stats(desc, mitm[thing_created]);
+                    desc += "$";
+                }
+
+                // Now we don't need the item anymore.
+                destroy_item(thing_created);
+            }
         }
     }
 

@@ -130,4 +130,10 @@ void mapgen_report_map_build_start();
 void mapgen_report_map_veto();
 #endif
 
+struct item_def;
+
+bool get_item_by_name(item_def *item, char* specs,
+                      object_class_type class_wanted,
+                      bool create_for_real = false);
+
 #endif

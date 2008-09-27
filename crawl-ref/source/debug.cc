@@ -834,7 +834,6 @@ void debug_list_monsters()
 #endif
 
 #ifdef WIZARD
-
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
     char specs[80];
@@ -1097,39 +1096,11 @@ static bool _book_from_spell(const char* specs, item_def &item)
 //---------------------------------------------------------------
 void wizard_create_spec_object()
 {
-    static int max_subtype[] =
-    {
-        NUM_WEAPONS,
-        NUM_MISSILES,
-        NUM_ARMOURS,
-        NUM_WANDS,
-        NUM_FOODS,
-        0,              // unknown I
-        NUM_SCROLLS,
-        NUM_JEWELLERY,
-        NUM_POTIONS,
-        0,              // unknown II
-        NUM_BOOKS,
-        NUM_STAVES,
-        0,              // Orbs         -- only one, handled specially
-        NUM_MISCELLANY,
-        0,              // corpses      -- handled specially
-        0,              // gold         -- handled specially
-        0,              // "gemstones"  -- no items of type
-    };
-
     char           specs[80];
-    char           obj_name[ ITEMNAME_SIZE ];
     char           keyin;
-
-    char *         ptr;
-    int            best_index;
     int            mon;
-    int            i;
 
     object_class_type class_wanted   = OBJ_UNASSIGNED;
-    int            type_wanted    = -1;
-    int            special_wanted = 0;
 
     int            thing_created;
 
@@ -1246,185 +1217,17 @@ void wizard_create_spec_object()
             return;
         }
 
-        // In order to get the sub-type, we'll fill out the base type...
-        // then we're going to iterate over all possible subtype values
-        // and see if we get a winner. -- bwr
-        mitm[thing_created].base_type = class_wanted;
-        mitm[thing_created].sub_type  = 0;
-        mitm[thing_created].plus      = 0;
-        mitm[thing_created].plus2     = 0;
-        mitm[thing_created].special   = 0;
-        mitm[thing_created].flags     = 0;
-        mitm[thing_created].quantity  = 1;
-        set_ident_flags( mitm[thing_created], ISFLAG_IDENT_MASK );
-
-        if (class_wanted == OBJ_MISCELLANY)
+        if (!get_item_by_name(&mitm[thing_created], specs, class_wanted, true))
         {
-            // Leaves object unmodified if it wasn't a rune or deck.
-            _rune_or_deck_from_specs(specs, mitm[thing_created]);
+            mpr( "No such item." );
 
-            if (mitm[thing_created].base_type == OBJ_UNASSIGNED)
-            {
-                // Rune or deck creation canceled, clean up item.
-                destroy_item(thing_created);
-                return;
-            }
-        }
-
-        if (!mitm[thing_created].sub_type)
-        {
-            type_wanted = -1;
-            best_index  = 10000;
-
-            for (i = 0; i < max_subtype[ mitm[thing_created].base_type ]; i++)
-            {
-                mitm[thing_created].sub_type = i;
-                strcpy(obj_name,mitm[thing_created].name(DESC_PLAIN).c_str());
-
-                ptr = strstr( strlwr(obj_name), specs );
-                if (ptr != NULL)
-                {
-                    // Earliest match is the winner.
-                    if (ptr - obj_name < best_index)
-                    {
-                        mpr( obj_name );
-                        type_wanted = i;
-                        best_index = ptr - obj_name;
-                    }
-                }
-            }
-
-            if (type_wanted == -1 && class_wanted == OBJ_BOOKS)
-            {
-                if (_book_from_spell(specs, mitm[thing_created]))
-                    type_wanted = mitm[thing_created].sub_type;
-            }
-
-            if (type_wanted == -1)
-            {
-                // ds -- If specs is a valid int, try using that.
-                //       Since zero is atoi's copout, the wizard
-                //       must enter (subtype + 1).
-                if (!(type_wanted = atoi(specs)))
-                {
-                    mpr( "No such item." );
-
-                    // Clean up item
-                    destroy_item(thing_created);
-                    return;
-                }
-                type_wanted--;
-            }
-
-            mitm[thing_created].sub_type = type_wanted;
-        }
-
-        switch (mitm[thing_created].base_type)
-        {
-        case OBJ_MISSILES:
-            mitm[thing_created].quantity = 30;
-            // intentional fall-through
-        case OBJ_WEAPONS:
-        case OBJ_ARMOUR:
-            mpr( "What ego type? ", MSGCH_PROMPT );
-            get_input_line( specs, sizeof( specs ) );
-
-            if (specs[0] != '\0')
-            {
-                special_wanted = 0;
-                best_index = 10000;
-
-                for (i = 1; i < 25; i++)
-                {
-                    mitm[thing_created].special = i;
-                    strcpy(obj_name,
-                           mitm[thing_created].name(DESC_PLAIN).c_str());
-
-                    ptr = strstr( strlwr(obj_name), strlwr(specs) );
-                    if (ptr != NULL)
-                    {
-                        // earliest match is the winner
-                        if (ptr - obj_name < best_index)
-                        {
-                            mpr( obj_name );
-                            special_wanted = i;
-                            best_index = ptr - obj_name;
-                        }
-                    }
-                }
-
-                mitm[thing_created].special = special_wanted;
-            }
-            break;
-
-        case OBJ_BOOKS:
-            if (mitm[thing_created].sub_type == BOOK_MANUAL)
-            {
-                special_wanted =
-                        _debug_prompt_for_skill( "A manual for which skill? " );
-
-                if (special_wanted != -1)
-                {
-                    mitm[thing_created].plus  = special_wanted;
-                    mitm[thing_created].plus2 = 3 + random2(15);
-                }
-                else
-                    mpr( "Sorry, no books on that skill today." );
-            }
-            break;
-
-        case OBJ_WANDS:
-            mitm[thing_created].plus = 24;
-            break;
-
-        case OBJ_STAVES:
-            if (item_is_rod( mitm[thing_created] ))
-            {
-                mitm[thing_created].plus  = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
-                mitm[thing_created].plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
-            }
-            break;
-
-        case OBJ_MISCELLANY:
-            if (!is_rune(mitm[thing_created]) && !is_deck(mitm[thing_created]))
-                mitm[thing_created].plus = 50;
-            break;
-
-        case OBJ_POTIONS:
-            mitm[thing_created].quantity = 12;
-            if (is_blood_potion(mitm[thing_created]))
-                init_stack_blood_potions(mitm[thing_created]);
-            break;
-
-        case OBJ_FOOD:
-        case OBJ_SCROLLS:
-            mitm[thing_created].quantity = 12;
-            break;
-
-        case OBJ_JEWELLERY:
-            if (jewellery_is_amulet(mitm[thing_created]))
-                break;
-
-            switch(mitm[thing_created].sub_type)
-            {
-            case RING_SLAYING:
-                mitm[thing_created].plus2 = 5;
-                // intentional fall-through
-            case RING_PROTECTION:
-            case RING_EVASION:
-            case RING_STRENGTH:
-            case RING_DEXTERITY:
-            case RING_INTELLIGENCE:
-                mitm[thing_created].plus = 5;
-            default:
-                break;
-            }
-        default:
-            break;
+            // Clean up item
+            destroy_item(thing_created);
+            return;
         }
     }
 
-    // Deck colour (which control rarity) already set
+    // Deck colour (which control rarity) already set.
     if (!is_deck(mitm[thing_created]))
         item_colour( mitm[thing_created] );
 
@@ -1441,14 +1244,286 @@ void wizard_create_spec_object()
 }
 #endif
 
+bool get_item_by_name(item_def *item, char* specs,
+                      object_class_type class_wanted, bool create_for_real)
+{
+    static int max_subtype[] =
+    {
+        NUM_WEAPONS,
+        NUM_MISSILES,
+        NUM_ARMOURS,
+        NUM_WANDS,
+        NUM_FOODS,
+        0,              // unknown I
+        NUM_SCROLLS,
+        NUM_JEWELLERY,
+        NUM_POTIONS,
+        0,              // unknown II
+        NUM_BOOKS,
+        NUM_STAVES,
+        0,              // Orbs         -- only one, handled specially
+        NUM_MISCELLANY,
+        0,              // corpses      -- handled specially
+        0,              // gold         -- handled specially
+        0,              // "gemstones"  -- no items of type
+    };
 
-//---------------------------------------------------------------
-//
-// create_spec_object
-//
-//---------------------------------------------------------------
+    char           obj_name[ ITEMNAME_SIZE ];
+    char*          ptr;
+    int            i;
+    int            best_index;
+    int            type_wanted    = -1;
+    int            special_wanted = 0;
+
+    // In order to get the sub-type, we'll fill out the base type...
+    // then we're going to iterate over all possible subtype values
+    // and see if we get a winner. -- bwr
+    item->base_type = class_wanted;
+    item->sub_type  = 0;
+    item->plus      = 0;
+    item->plus2     = 0;
+    item->special   = 0;
+    item->flags     = 0;
+    item->quantity  = 1;
+    set_ident_flags( *item, ISFLAG_IDENT_MASK );
+
+    if (class_wanted == OBJ_MISCELLANY)
+    {
+        // Leaves object unmodified if it wasn't a rune or deck.
+        _rune_or_deck_from_specs(specs, *item);
+
+        if (item->base_type == OBJ_UNASSIGNED)
+        {
+            // Rune or deck creation canceled, clean up item->
+            return (false);
+        }
+    }
+
+    if (!item->sub_type)
+    {
+        type_wanted = -1;
+        best_index  = 10000;
+
+        for (i = 0; i < max_subtype[ item->base_type ]; i++)
+        {
+            item->sub_type = i;
+            strcpy(obj_name, item->name(DESC_PLAIN).c_str());
+
+            ptr = strstr( strlwr(obj_name), specs );
+            if (ptr != NULL)
+            {
+                // Earliest match is the winner.
+                if (ptr - obj_name < best_index)
+                {
+                    mpr( obj_name );
+                    type_wanted = i;
+                    best_index = ptr - obj_name;
+                }
+            }
+        }
+
+        if (type_wanted != -1)
+        {
+            item->sub_type = type_wanted;
+            if (!create_for_real)
+                return (true);
+        }
+        else
+        {
+            switch (class_wanted)
+            {
+            case OBJ_BOOKS:
+                // Try if we get a match against a spell.
+                if (_book_from_spell(specs, *item))
+                    type_wanted = item->sub_type;
+                break;
+
+            case OBJ_WEAPONS:
+            {
+                // Try for fixed artefacts matching the name.
+                unique_item_status_type exists;
+                for (unsigned which = SPWPN_START_FIXEDARTS;
+                     which <= SPWPN_END_FIXEDARTS; which++)
+                {
+                    exists = get_unique_item_status(OBJ_WEAPONS, which);
+                    make_item_fixed_artefact(*item, false, which);
+                    strcpy(obj_name, item->name(DESC_PLAIN).c_str());
+
+                    ptr = strstr( strlwr(obj_name), specs );
+                    if (ptr != NULL)
+                    {
+                        if (create_for_real)
+                            mpr( obj_name );
+                        return(true);
+                    }
+                    else
+                    {
+                        set_unique_item_status(OBJ_WEAPONS, which, exists);
+                        do_uncurse_item(*item);
+                        item->props.clear();
+                    }
+                }
+            }
+            // intentional fall-through for the unrandarts
+            case OBJ_ARMOUR:
+            case OBJ_JEWELLERY:
+            {
+                bool exists;
+                for (int unrand = 0; unrand < NO_UNRANDARTS; unrand++)
+                {
+                    exists = does_unrandart_exist( unrand );
+                    make_item_unrandart(*item, unrand);
+                    strcpy(obj_name, item->name(DESC_PLAIN).c_str());
+
+                    ptr = strstr( strlwr(obj_name), specs );
+                    if (ptr != NULL && item->base_type == class_wanted)
+                    {
+                        if (create_for_real)
+                            mpr( obj_name );
+                        return(true);
+                    }
+
+                    set_unrandart_exist(unrand, exists);
+                    do_uncurse_item(*item);
+                    item->props.clear();
+                }
+
+                // Reset base type to class_wanted, if nothing found.
+                item->base_type = class_wanted;
+                item->sub_type  = 0;
+                break;
+            }
+
+            default:
+                break;
+            }
+        }
+
+        if (type_wanted == -1)
+        {
+            // ds -- If specs is a valid int, try using that.
+            //       Since zero is atoi's copout, the wizard
+            //       must enter (subtype + 1).
+            if (!(type_wanted = atoi(specs)))
+                return (false);
+
+            type_wanted--;
+
+            item->sub_type = type_wanted;
+        }
+    }
+
+    if (!create_for_real)
+        return (true);
+
+    switch (item->base_type)
+    {
+    case OBJ_MISSILES:
+        item->quantity = 30;
+        // intentional fall-through
+    case OBJ_WEAPONS:
+    case OBJ_ARMOUR:
+        mpr( "What ego type? ", MSGCH_PROMPT );
+        get_input_line( specs, sizeof( specs ) );
+
+        if (specs[0] != '\0')
+        {
+            special_wanted = 0;
+            best_index = 10000;
+
+            for (i = 1; i < 25; i++)
+            {
+                item->special = i;
+                strcpy(obj_name, item->name(DESC_PLAIN).c_str());
+
+                ptr = strstr( strlwr(obj_name), strlwr(specs) );
+                if (ptr != NULL)
+                {
+                    // earliest match is the winner
+                    if (ptr - obj_name < best_index)
+                    {
+                        mpr( obj_name );
+                        special_wanted = i;
+                        best_index = ptr - obj_name;
+                    }
+                }
+            }
+
+            item->special = special_wanted;
+        }
+        break;
+
+    case OBJ_BOOKS:
+        if (item->sub_type == BOOK_MANUAL)
+        {
+            special_wanted =
+                    _debug_prompt_for_skill( "A manual for which skill? " );
+
+            if (special_wanted != -1)
+            {
+                item->plus  = special_wanted;
+                item->plus2 = 3 + random2(15);
+            }
+            else
+                mpr( "Sorry, no books on that skill today." );
+        }
+        break;
+
+    case OBJ_WANDS:
+        item->plus = 24;
+        break;
+
+    case OBJ_STAVES:
+        if (item_is_rod(*item))
+        {
+            item->plus  = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+            item->plus2 = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+        }
+        break;
+
+    case OBJ_MISCELLANY:
+        if (!is_rune(*item) && !is_deck(*item))
+            item->plus = 50;
+        break;
+
+    case OBJ_POTIONS:
+        item->quantity = 12;
+        if (is_blood_potion(*item))
+            init_stack_blood_potions(*item);
+        break;
+
+    case OBJ_FOOD:
+    case OBJ_SCROLLS:
+        item->quantity = 12;
+        break;
+
+    case OBJ_JEWELLERY:
+        if (jewellery_is_amulet(*item))
+            break;
+
+        switch(item->sub_type)
+        {
+        case RING_SLAYING:
+            item->plus2 = 5;
+            // intentional fall-through
+        case RING_PROTECTION:
+        case RING_EVASION:
+        case RING_STRENGTH:
+        case RING_DEXTERITY:
+        case RING_INTELLIGENCE:
+            item->plus = 5;
+        default:
+            break;
+        }
+
+    default:
+        break;
+    }
+
+    return (true);
+}
+
 #ifdef WIZARD
-
 const char* _prop_name[RAP_NUM_PROPERTIES] = {
     "Brand",
     "AC",
