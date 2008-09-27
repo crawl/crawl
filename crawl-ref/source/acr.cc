@@ -3587,7 +3587,7 @@ static void _open_door(coord_def move, bool check_confused)
             {
                 set_envmap_obj(dc, DNGN_OPEN_DOOR);
 #ifdef USE_TILE
-                tile_place_tile_bk(dc.x, dc.y, TILE_DNGN_OPEN_DOOR);
+                env.tile_bk_bg[dc.x][dc.y] = TILE_DNGN_OPEN_DOOR;
 #endif
                 if (!seen_secret && grd(dc) == DNGN_SECRET_DOOR)
                 {
@@ -3753,7 +3753,7 @@ static void _close_door(coord_def move)
             {
                 set_envmap_obj(dc, DNGN_CLOSED_DOOR);
 #ifdef USE_TILE
-                tile_place_tile_bk(dc.x, dc.y, TILE_DNGN_CLOSED_DOOR);
+                env.tile_bk_bg[dc.x][dc.y] = TILE_DNGN_CLOSED_DOOR;
 #endif
             }
         }

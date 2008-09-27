@@ -79,7 +79,6 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground = true,
                         bool detected = false);
 void tile_place_item(int x, int y, int idx);
 void tile_place_item_bk(int gx, int gy, int idx);
-void tile_place_tile_bk(int gx, int gy, int tileidx);
 void tile_place_item_marker(int x, int y, int idx);
 void tile_place_cloud(int x, int y, int type, int decay);
 void tile_place_ray(const coord_def& gc);

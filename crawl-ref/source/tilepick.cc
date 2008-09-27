@@ -4049,11 +4049,6 @@ void tile_place_item_bk(int gx, int gy, int idx)
         env.tile_bk_bg[gx][gy] |= TILE_FLAG_CURSOR3;
 }
 
-void tile_place_tile_bk(int gx, int gy, int tileidx)
-{
-    env.tile_bk_fg[gx][gy] = tileidx;
-}
-
 // Called from item() in view.cc
 void tile_place_item_marker(int x, int y, int idx)
 {

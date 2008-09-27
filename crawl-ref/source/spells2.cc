@@ -101,7 +101,7 @@ int detect_items( int pow )
 #ifdef USE_TILE
             // Don't replace previously seen items with an unseen one.
             if (!is_terrain_seen(*ri))
-                tile_place_tile_bk(ri->x, ri->y, TILE_UNSEEN_ITEM);
+                tile_place_item_bk(ri->x, ri->y, TILE_UNSEEN_ITEM);
 #endif
         }
     }
