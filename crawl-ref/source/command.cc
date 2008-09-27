@@ -51,7 +51,6 @@
 static void _adjust_item(void);
 static void _adjust_spells(void);
 static void _adjust_ability(void);
-static void _list_wizard_commands();
 
 static const char *features[] = {
     "Stash-tracking",
@@ -1558,9 +1557,9 @@ std::string help_highlighter::get_species_key() const
 }
 ////////////////////////////////////////////////////////////////////////////
 
-static void _show_keyhelp_menu(const std::vector<formatted_string> &lines,
-                               bool with_manual, bool easy_exit = false,
-                               int hotkey = 0)
+static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
+                              bool with_manual, bool easy_exit = false,
+                              int hotkey = 0)
 {
     formatted_scroller cmd_help;
 
@@ -1694,6 +1693,8 @@ static void _show_keyhelp_menu(const std::vector<formatted_string> &lines,
         cmd_help.jump_to_hotkey(hotkey);
 
     cmd_help.show();
+
+    return cmd_help.getkey();
 }
 
 void show_specific_help( const std::string &help )
@@ -1988,18 +1989,8 @@ static void _add_formatted_tutorial_help(column_composer &cols)
             true, true, _cmdhelp_textfilter, 40);
 }
 
-void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
+void list_commands(int hotkey, bool do_redraw_screen)
 {
-    if (wizard)
-    {
-        _list_wizard_commands();
-
-        if (do_redraw_screen)
-            redraw_screen();
-
-        return;
-    }
-
     // 2 columns, split at column 40.
     column_composer cols(2, 41);
 
@@ -2020,9 +2011,9 @@ void list_commands(bool wizard, int hotkey, bool do_redraw_screen)
     }
 }
 
-static void _list_wizard_commands()
-{
 #ifdef WIZARD
+int list_wizard_commands(bool do_redraw_screen)
+{
     // 2 columns
     column_composer cols(2, 43);
     // Page size is number of lines - one line for --more-- prompt.
@@ -2098,6 +2089,9 @@ static void _list_wizard_commands()
                        "<w>?</w>      : list wizard commands\n",
                        true, true);
 
-    _show_keyhelp_menu(cols.formatted_lines(), false, true);
-#endif
+    int key = _show_keyhelp_menu(cols.formatted_lines(), false, true);
+    if (do_redraw_screen)
+        redraw_screen();
+    return key;
 }
+#endif

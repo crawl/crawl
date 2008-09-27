@@ -431,80 +431,23 @@ static bool _item_type_can_be_artefact( int type)
     return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY);
 }
 
-
-static void _handle_wizard_command( void )
+static void _do_wizard_command(int wiz_command, bool silent_fail)
 {
-    int   wiz_command, tmp;
-    char  specs[256];
-
-    // WIZ_NEVER gives protection for those who have wiz compiles,
-    // and don't want to risk their characters.
-    if (Options.wiz_mode == WIZ_NEVER)
+    ASSERT(you.wizard);
+    if (!you.wizard)
         return;
 
-    if (!you.wizard)
-    {
-        mpr( "WARNING: ABOUT TO ENTER WIZARD MODE!", MSGCH_WARN );
-
-#ifndef SCORE_WIZARD_MODE
-        mpr( "If you continue, your game will not be scored!", MSGCH_WARN );
-#endif
-
-        if (!yesno( "Do you really want to enter wizard mode?", false, 'n' ))
-            return;
-
-        take_note(Note(NOTE_MESSAGE, 0, 0, "Entered wizard mode."));
-
-        you.wizard = true;
-        redraw_screen();
-
-        if (crawl_state.cmd_repeat_start)
-        {
-            crawl_state.cancel_cmd_repeat("Can't repeat entering wizard "
-                                          "mode.");
-            return;
-        }
-    }
-
-    mpr( "Enter Wizard Command (? - help): ", MSGCH_PROMPT );
-    wiz_command = getch();
-
-    if (crawl_state.cmd_repeat_start)
-    {
-        // Easiest to list which wizard commands *can* be repeated.
-        switch (wiz_command)
-        {
-        case 'x':
-        case '$':
-        case 'a':
-        case 'c':
-        case 'h':
-        case 'H':
-        case 'm':
-        case 'M':
-        case 'X':
-        case '!':
-        case '[':
-        case ']':
-        case '^':
-        case '%':
-        case 'o':
-        case 'z':
-        case 'Z':
-            break;
-
-        default:
-            crawl_state.cant_cmd_repeat("You cannot repeat that "
-                                        "wizard command.");
-            return;
-        }
-    }
+    int tmp;
+    char specs[256];
 
     switch (wiz_command)
     {
     case '?':
-        list_commands(true, 0, true);  // tell it to list wizard commands
-        break;
+    {
+        int key = list_wizard_commands(true);
+        _do_wizard_command(key, true);
+        return;
+    }
 
     case CONTROL('G'):
         save_ghost(true);
@@ -1146,10 +1089,81 @@ static void _handle_wizard_command( void )
     }
 
     default:
-        formatted_mpr(formatted_string::parse_string("Not a <magenta>Wizard</magenta> Command."));
+        if (!silent_fail)
+            formatted_mpr(formatted_string::parse_string("Not a <magenta>Wizard</magenta> Command."));
         break;
     }
     you.turn_is_over = false;
+}
+
+static void _handle_wizard_command( void )
+{
+    int wiz_command;
+
+    // WIZ_NEVER gives protection for those who have wiz compiles,
+    // and don't want to risk their characters.
+    if (Options.wiz_mode == WIZ_NEVER)
+        return;
+
+    if (!you.wizard)
+    {
+        mpr( "WARNING: ABOUT TO ENTER WIZARD MODE!", MSGCH_WARN );
+
+#ifndef SCORE_WIZARD_MODE
+        mpr( "If you continue, your game will not be scored!", MSGCH_WARN );
+#endif
+
+        if (!yesno( "Do you really want to enter wizard mode?", false, 'n' ))
+            return;
+
+        take_note(Note(NOTE_MESSAGE, 0, 0, "Entered wizard mode."));
+
+        you.wizard = true;
+        redraw_screen();
+
+        if (crawl_state.cmd_repeat_start)
+        {
+            crawl_state.cancel_cmd_repeat("Can't repeat entering wizard "
+                                          "mode.");
+            return;
+        }
+    }
+
+    mpr( "Enter Wizard Command (? - help): ", MSGCH_PROMPT );
+    wiz_command = getch();
+
+    if (crawl_state.cmd_repeat_start)
+    {
+        // Easiest to list which wizard commands *can* be repeated.
+        switch (wiz_command)
+        {
+        case 'x':
+        case '$':
+        case 'a':
+        case 'c':
+        case 'h':
+        case 'H':
+        case 'm':
+        case 'M':
+        case 'X':
+        case '!':
+        case '[':
+        case ']':
+        case '^':
+        case '%':
+        case 'o':
+        case 'z':
+        case 'Z':
+            break;
+
+        default:
+            crawl_state.cant_cmd_repeat("You cannot repeat that "
+                                        "wizard command.");
+            return;
+        }
+    }
+
+    _do_wizard_command(wiz_command, false);
 }
 #endif
 
@@ -2275,7 +2289,7 @@ void process_command( command_type cmd )
 #endif
 
     case CMD_DISPLAY_COMMANDS:
-        list_commands(false, 0, true);
+        list_commands(0, true);
         break;
 
     case CMD_EXPERIENCE_CHECK:

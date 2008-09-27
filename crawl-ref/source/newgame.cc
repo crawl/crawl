@@ -4008,10 +4008,10 @@ job_query:
         break;
     // help files
     case '?':
-        list_commands(false, '2');
+        list_commands('2');
         return choose_class();
     case '%':
-        list_commands(false, '%');
+        list_commands('%');
         return choose_class();
     default:
         break;

@@ -1595,6 +1595,7 @@ bool formatted_scroller::jump_to_hotkey( int keyin )
 
 bool formatted_scroller::process_key( int keyin )
 {
+    lastch = keyin;
 
     if (f_keyfilter)
         keyin = (*f_keyfilter)(keyin);
