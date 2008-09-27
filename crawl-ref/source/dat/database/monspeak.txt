@@ -2255,7 +2255,7 @@ w:5
 
 @The_monster@ says, "Orcs get a bad rep."
 
-@The_monster@ @mutters@, "It's always elves, elves, elves."
+@The_monster@ @mutters@, "It's always Elves, Elves, Elves."
 
 @The_monster@ says, "I'm an Orc, you're an Orc, it's OK."
 
