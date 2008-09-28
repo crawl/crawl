@@ -36,6 +36,7 @@ void drop_blood_potions_stack( item_def &stack, int quant,
 void pick_up_blood_potions_stack( item_def &stack, int quant );
 
 bool can_bottle_blood_from_corpse( int mons_type );
+int num_blood_potions_from_corpse( int mons_class, int chunk_type = -1 );
 void turn_corpse_into_blood_potions ( item_def &item );
 void split_potions_into_decay( int obj, int amount, bool need_msg = true );
 

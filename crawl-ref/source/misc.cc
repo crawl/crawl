@@ -194,7 +194,7 @@ void init_stack_blood_potions(item_def &stack, int age)
     if (age == -1)
     {
         if (stack.sub_type == POT_BLOOD)
-            age = 2000;
+            age = 2500;
         else // coagulated blood
             age = 500;
     }
@@ -908,8 +908,29 @@ bool can_bottle_blood_from_corpse(int mons_type)
     return (false);
 }
 
-// Maybe potions should automatically merge into those already on the floor,
-// or the player's inventory.
+int num_blood_potions_from_corpse(int mons_class, int chunk_type)
+{
+    if (chunk_type == -1)
+        chunk_type = mons_corpse_effect(mons_class);
+
+    // Max. amount is about one third of the max. amount for chunks.
+    const int max_chunks = mons_weight( mons_class ) / 150;
+
+    // Max. amount is about one third of the max. amount for chunks.
+    int pot_quantity = max_chunks/3;
+        pot_quantity = stepdown_value( pot_quantity, 2, 2, 6, 6 );
+
+    // Halve number of potions obtained from contaminated chunk type corpses.
+    if (chunk_type == CE_CONTAMINATED)
+        pot_quantity /= 2;
+
+    if (pot_quantity < 1)
+        pot_quantity = 1;
+
+    return (pot_quantity);
+}
+
+// If autopickup is active, the potions are auto-picked up after creation.
 void turn_corpse_into_blood_potions( item_def &item )
 {
     ASSERT( item.base_type == OBJ_CORPSES );
@@ -923,24 +944,12 @@ void turn_corpse_into_blood_potions( item_def &item )
     item_colour(item);
     item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
-    // Max. amount is about one third of the max. amount for chunks.
-    const int max_chunks = mons_weight( mons_class ) / 150;
-    item.quantity  = 1 + random2( max_chunks/3 );
-    item.quantity  = stepdown_value( item.quantity, 2, 2, 6, 6 );
-
-    // Lower number of potions obtained from contaminated chunk type corpses.
-    if (mons_corpse_effect( mons_class ) == CE_CONTAMINATED)
-    {
-        item.quantity /= (random2(3) + 1);
-
-        if (item.quantity < 1)
-            item.quantity = 1;
-    }
+    item.quantity = num_blood_potions_from_corpse(mons_class);
 
     // Initialize timer depending on corpse age:
     // almost rotting: age = 100 --> potion timer =  500 --> will coagulate soon
-    // freshly killed: age = 200 --> potion timer = 2000 --> fresh !blood
-    init_stack_blood_potions(item, (item.special - 100) * 15 + 500);
+    // freshly killed: age = 200 --> potion timer = 2500 --> fresh !blood
+    init_stack_blood_potions(item, (item.special - 100) * 20 + 500);
 
     // Happens after the blood has been bottled.
     if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))

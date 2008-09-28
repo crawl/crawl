@@ -58,8 +58,8 @@ static void _eating(unsigned char item_class, int item_type);
 static void _describe_food_change(int hunger_increment);
 static bool _food_change(bool suppress_message);
 static bool _vampire_consume_corpse(int slot, bool invent);
-static void _heal_from_food(int hp_amt, int mp_amt, bool unrot,
-                            bool restore_str);
+static void _heal_from_food(int hp_amt, int mp_amt = 0, bool unrot = false,
+                            bool restore_str = false);
 
 /*
  *  BEGIN PUBLIC FUNCTIONS
@@ -97,6 +97,7 @@ void lessen_hunger( int satiated_amount, bool suppress_msg )
     if (you.is_undead == US_UNDEAD)
         return;
 
+    mprf("satiated_amount: %d", satiated_amount);
     you.hunger += satiated_amount;
 
     if (you.hunger > 12000)
@@ -1426,7 +1427,7 @@ static void _eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
             if (you.species == SP_GHOUL)
             {
                 _heal_from_food((!one_chance_in(5) ? hp_amt : 0), 0,
-                                !one_chance_in(3), false);
+                                !one_chance_in(3));
             }
         }
         else
@@ -1759,20 +1760,44 @@ void finished_eating_message(int food_type)
 // amount of nutrition. Also, experimentally regenerate 1 hp per feeding turn
 // - this is likely too strong.
 // feeding is -1 at start, 1 when finishing, and 0 else
+
+// Here are some values for nutrition (quantity * 1000) and duration:
+//    max_chunks      quantity    duration
+//     1               1           1
+//     2               1           1
+//     3               1           2
+//     4               1           2
+//     5               1           2
+//     6               2           3
+//     7               2           3
+//     8               2           3
+//     9               2           4
+//    10               2           4
+//    12               3           5
+//    15               3           5
+//    20               4           6
+//    25               4           6
+//    30               5           7
+
 void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 {
     const int mons_type  = corpse.plus;
     const int chunk_type = _determine_chunk_effect(
                                 mons_corpse_effect(mons_type), false);
 
-    // This is the exact formula of corpse nutrition for chunk lovers.
+    // Duration depends on corpse weight.
     const int max_chunks = mons_weight(mons_type)/150;
-    int chunk_amount     = 1 + max_chunks/2;
-        chunk_amount     = stepdown_value( chunk_amount, 4, 4, 12, 12 );
+    int chunk_amount     = 1 + max_chunks/3;
+        chunk_amount     = stepdown_value( chunk_amount, 6, 6, 12, 12 );
 
-    int food_value       = CHUNK_BASE_NUTRITION;
-//    int mass             = CHUNK_BASE_NUTRITION * chunk_amount;
-    const int duration   = 1 + chunk_amount/2;
+    // Add 1 for the artificial extra call at the start of draining.
+    const int duration   = 1 + chunk_amount;
+
+    // Use number of potions per corpse to calculate total nutrition, which
+    // then gets distributed over the entire duration.
+    int food_value = CHUNK_BASE_NUTRITION
+                     * num_blood_potions_from_corpse(mons_type, chunk_type);
+
     bool start_feeding   = false;
     bool during_feeding  = false;
     bool end_feeding     = false;
@@ -1787,70 +1812,73 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
     switch (mons_type)
     {
         case MONS_HUMAN:
-        {
             food_value += random2avg((you.experience_level * 10)/duration, 2);
-            int hp_amt = 1 + you.experience_level/2;
 
-
-            if (!end_feeding)
+            // Human may give a bit of healing during feeding as long as
+            // the corpse is still fairly fresh.
+            if (corpse.special > 150)
             {
-                if (start_feeding)
-                    mpr("This warm blood tastes really delicious!");
+                int hp_amt = 1 + you.experience_level/3;
 
-                // Human blood gives extra healing during feeding.
-                if (hp_amt >= duration)
-                    hp_amt /= duration;
-                else if (x_chance_in_y(hp_amt, duration))
-                    hp_amt = 1;
-
-                _heal_from_food(hp_amt, 0, one_chance_in(duration/2),
-                                one_chance_in(duration));
-            }
-            else
-            {
-                // Give the remainder of healing at the end.
-                if (hp_amt > duration)
+                if (!end_feeding)
                 {
-                    _heal_from_food(hp_amt % duration, 0,
-                                    one_chance_in(duration/2),
-                                    one_chance_in(duration));
+                    if (start_feeding)
+                        mpr("This warm blood tastes really delicious!");
+
+                    if (hp_amt >= duration)
+                        hp_amt /= duration;
+                    else if (x_chance_in_y(hp_amt, duration))
+                        hp_amt = 1;
+
+                    _heal_from_food(hp_amt);
+                }
+                else
+                {
+                    // Give the remainder of healing at the end.
+                    if (hp_amt > duration)
+                        _heal_from_food(hp_amt % duration);
                 }
             }
             break;
-        }
+
         case MONS_ELF:
-        {
             food_value += random2avg((you.experience_level * 10)/duration, 2);
 
-            if (end_feeding)
+            // Elven blood gives a bit of mana at the end of feeding, but
+            // only from fairly fresh corpses.
+            if (corpse.special > 150)
             {
-                // Elven blood gives mana at the end of feeding.
-                const int mp_amt = 1 + random2(3);
-                _heal_from_food(1, mp_amt, one_chance_in(duration/2),
-                                one_chance_in(duration));
+                if (end_feeding)
+                {
+                    const int mp_amt = 1 + random2(3);
+                    _heal_from_food(1, mp_amt);
+                }
+                else if (start_feeding)
+                    mpr("This warm blood tastes magically delicious!");
             }
-            else if (start_feeding)
-                mpr("This warm blood tastes magically delicious!");
             break;
-        }
+
         default:
             switch (chunk_type)
             {
                 case CE_CLEAN:
                     if (start_feeding)
                         mpr("This warm blood tastes delicious!");
-                    else if (end_feeding)
-                        _heal_from_food(1, 0, one_chance_in(duration), false);
+                    else if (end_feeding && corpse.special > 150)
+                        _heal_from_food(1);
                     break;
+
                 case CE_CONTAMINATED:
-                    food_value = CHUNK_BASE_NUTRITION/2;
+                    food_value /= 2;
+
                     if (start_feeding)
                         mpr("Somehow this blood was not very filling!");
-                    else if (end_feeding)
-                        _heal_from_food(1, 0, one_chance_in(duration), false);
+                    else if (end_feeding && corpse.special > 150)
+                        _heal_from_food(1);
                     break;
+
                 case CE_POISONOUS:
-                    make_hungry(CHUNK_BASE_NUTRITION/2, false);
+                    make_hungry(food_value/2, false);
                     // Always print this message - maybe you lost poison res.
                     // due to feeding.
                     mpr("Blech - this blood tastes nasty!");
@@ -1858,26 +1886,29 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                         xom_is_stimulated(random2(128));
                     stop_delay();
                     return;
+
                 case CE_MUTAGEN_RANDOM:
-                    food_value = CHUNK_BASE_NUTRITION/2;
+                    food_value /= 2;
                     if (start_feeding)
                         mpr("This blood tastes really weird!");
                     mutate(RANDOM_MUTATION);
                     did_god_conduct( DID_DELIBERATE_MUTATING, 10);
                     xom_is_stimulated(100);
-                    if (end_feeding)
-                        _heal_from_food(1, 0, false, false);
+                    // Sometimes heal by one hp.
+                    if (end_feeding && corpse.special > 150 && coinflip())
+                        _heal_from_food(1);
                     break;
+
                 case CE_MUTAGEN_BAD:
-                    food_value = CHUNK_BASE_NUTRITION/2;
+                    food_value /= 2;
                     if (start_feeding)
                         mpr("This blood tastes *really* weird.");
                     give_bad_mutation();
                     did_god_conduct( DID_DELIBERATE_MUTATING, 10);
                     xom_is_stimulated(random2(200));
-                    if (end_feeding)
-                        _heal_from_food(1, 0, false, false);
+                    // No healing from bad mutagenic blood.
                     break;
+
                 case CE_HCL:
                     rot_player( 5 + random2(5) );
                     if (disease_player( 50 + random2(100) ))
@@ -1889,6 +1920,8 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 
     if (!end_feeding)
         lessen_hunger(food_value / duration, !start_feeding);
+    else
+        mprf("feeding finished: %d turns", duration);
 }
 
 // Returns true if a food item (also corpses) is poisonous AND the player
@@ -2341,16 +2374,15 @@ static bool _vampire_consume_corpse(const int slot, bool invent)
     // Here the base nutrition value equals that of chunks,
     // but the delay should be smaller.
     const int max_chunks = mons_weight(corpse.plus)/150;
-    int chunk_amount     = 1 + max_chunks/2;
-        chunk_amount     = stepdown_value( chunk_amount, 4, 4, 12, 12 );
+    int duration = 1 + max_chunks/3;
+        duration = stepdown_value( duration, 6, 6, 12, 12 );
 
     // Get some nutrition right away, in case we're interrupted.
     // (-1 for the starting message.)
     vampire_nutrition_per_turn(corpse, -1);
     // The draining delay doesn't have a start action, and we only need
     // the continue/finish messages if it takes longer than 1 turn.
-    start_delay( DELAY_FEED_VAMPIRE, chunk_amount/2,
-                 (int) invent, slot );
+    start_delay( DELAY_FEED_VAMPIRE, duration, (int) invent, slot );
 
     return (true);
 }

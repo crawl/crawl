@@ -85,11 +85,11 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
         {
             // No healing anymore! (jpeg)
 
-            int value = 1000;
+            int value = 800;
             if (pot_eff == POT_BLOOD)
             {
                 mpr("Yummy - fresh blood!");
-                value += 500;
+                value += 200;
             }
             else // coagulated
                 mpr("This tastes delicious!");

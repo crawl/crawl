@@ -851,7 +851,7 @@ int stepdown_value(int base_value, int stepping, int first_step,
         return return_value;
 
     for (int this_step = first_step; this_step <= last_step;
-                                                    this_step += stepping)
+         this_step += stepping)
     {
         if (return_value > this_step)
             return_value = ((return_value - this_step) / 2) + this_step;
