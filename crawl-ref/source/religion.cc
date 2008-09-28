@@ -1115,7 +1115,7 @@ bool mons_is_god_gift(const monsters *mon, god_type god)
     return (mon->god == god);
 }
 
-bool is_yred_slave(const monsters* mon)
+bool is_yred_undead_slave(const monsters* mon)
 {
     return (mon->alive() && mons_holiness(mon) == MH_UNDEAD
             && mon->attitude == ATT_FRIENDLY
@@ -1144,7 +1144,7 @@ bool is_good_follower(const monsters* mon)
 bool is_follower(const monsters* mon)
 {
     if (you.religion == GOD_YREDELEMNUL)
-        return is_yred_slave(mon);
+        return is_yred_undead_slave(mon);
     else if (you.religion == GOD_BEOGH)
         return is_orcish_follower(mon);
     else if (you.religion == GOD_ZIN)
@@ -4540,17 +4540,17 @@ static bool _make_god_gifts_hostile(bool level_only)
     return (apply_to_all_dungeons(_god_gifts_hostile_wrapper) || success);
 }
 
-static bool _yred_slaves_on_level_abandon_you()
+static bool _yred_undead_slaves_on_level_abandon_you()
 {
     bool success = false;
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
-        if (is_yred_slave(monster))
+        if (is_yred_undead_slave(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Slave abandoning: %s on level %d, branch %d",
+            mprf(MSGCH_DIAGNOSTICS, "Undead abandoning: %s on level %d, branch %d",
                  monster->name(DESC_PLAIN).c_str(),
                  static_cast<int>(you.your_level),
                  static_cast<int>(you.where_are_you));
@@ -4604,7 +4604,8 @@ static bool _yred_slaves_abandon_you()
     int num_slaves = 0;
 
     if (you.religion != GOD_YREDELEMNUL)
-        reclaim = apply_to_all_dungeons(_yred_slaves_on_level_abandon_you);
+        reclaim =
+            apply_to_all_dungeons(_yred_undead_slaves_on_level_abandon_you);
     else
     {
         for (radius_iterator ri(you.pos(), 9); ri; ++ri)
@@ -4614,7 +4615,7 @@ static bool _yred_slaves_abandon_you()
 
             monsters *monster = &menv[mgrd(*ri)];
 
-            if (is_yred_slave(monster))
+            if (is_yred_undead_slave(monster))
             {
                 num_slaves++;
 
