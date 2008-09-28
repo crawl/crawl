@@ -676,7 +676,7 @@
     }
     ,
         "",
-        "A leather armour made of salamander's skin.",
+        "A leather armour made of a salamander's skin.",
         ""
 }
 ,
@@ -855,7 +855,7 @@
         0, -30                  // stealth
     }
     ,
-        "It's a really dark and malign artefact and no wise man would even touch it.",
+        "A really dark and malign artefact, which no wise man would even touch.",
         "",
         ""
 }
@@ -929,8 +929,8 @@
         0, 0
     }
     ,
-        "This powerful staff used to belong to the leader of"
-        " the Guild of Five Elements.",
+        "This powerful staff used to belong to the leader of "
+        "the Guild of Five Elements.",
         "A black glyphic staff.",
         ""
 }
@@ -984,7 +984,7 @@
         0, 50                   // stealth
     }
     ,
-        "According to legend this robe was the gift of Ratri the Goddess of the Night "
+        "According to legend, this robe was the gift of Ratri the Goddess of the Night "
         "to one of her followers.",
         "A long black robe made of strange flossy material.",
         ""
