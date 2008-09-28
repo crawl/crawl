@@ -317,7 +317,7 @@ void ghost_demon::init_player_ghost()
             if (weapon.base_type == OBJ_WEAPONS)
             {
                 brand = static_cast<brand_type>(get_weapon_brand(weapon));
-                
+
                 // Ghosts can't get holy wrath, but they get to keep
                 // the weapon.
                 if ( brand == SPWPN_HOLY_WRATH )

@@ -1024,10 +1024,10 @@ bool origin_is_god_gift(const item_def& item)
 {
     if (!origin_describable(item))
         return false;
-    
+
     if (_origin_is_original_equip(item))
         return false;
-    
+
     if (item.orig_monnum >= 0)
         return false;
 

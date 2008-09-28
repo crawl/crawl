@@ -31,7 +31,7 @@ enum STASH_TRACK_MODES
 {
     STM_NONE,             // Stashes are not tracked
     STM_EXPLICIT,         // Only explicitly marked stashes are tracked
-    STM_DROPPED,          // Dropped items and explicitly marked stashes are 
+    STM_DROPPED,          // Dropped items and explicitly marked stashes are
                           // tracked
     STM_ALL               // All seen items are tracked
 };
@@ -65,7 +65,7 @@ public:
     bool unverified() const;
 
     bool matches_search(const std::string &prefix,
-                        const base_pattern &search, 
+                        const base_pattern &search,
                         stash_search_result &res)
             const;
 
@@ -99,7 +99,7 @@ private:
     int  abspos;
     dungeon_feature_type feat;
     trap_type trap;
-    
+
     std::vector<item_def>   items;
 
     /*
@@ -123,8 +123,8 @@ public:
     ShopInfo(int xp, int yp);
 
     bool matches_search(const std::string &prefix,
-                        const base_pattern &search, 
-                        stash_search_result &res) 
+                        const base_pattern &search,
+                        stash_search_result &res)
             const;
 
     std::string description() const;
@@ -181,7 +181,7 @@ struct stash_search_result
     // Count of items stacks in the stash that matched. This will be the same as
     // matches if each matching stack's quantity is 1.
     int count;
-    
+
     // Text that describes this search result - usually the name of
     // the first matching item in the stash or the name of the shop.
     std::string match;
@@ -194,7 +194,7 @@ struct stash_search_result
                             count(0), match(), stash(NULL), shop(NULL)
     {
     }
-    
+
     bool operator < ( const stash_search_result &ssr ) const
     {
         return player_distance < ssr.player_distance ||
@@ -216,7 +216,7 @@ public:
     const ShopInfo *find_shop(int x, int y) const;
 
     level_id where() const;
-    
+
     void get_matching_stashes(const base_pattern &search,
                               std::vector<stash_search_result> &results) const;
 
@@ -235,7 +235,7 @@ public:
         return shop_needs_visit(c.x, c.y);
     }
 
-    // Add stash at (x,y), or player's current location if no parameters are 
+    // Add stash at (x,y), or player's current location if no parameters are
     // supplied
     void  add_stash(int x = -1, int y = -1);
 
@@ -264,7 +264,7 @@ public:
  private:
     typedef std::map<int, Stash>  stashes_t;
     typedef std::vector<ShopInfo> shops_t;
-    
+
     // which level
     level_id m_place;
     stashes_t m_stashes;
@@ -295,7 +295,7 @@ public:
     LevelStashes *find_level(const level_id &pos);
 
     ShopInfo &get_shop(int x, int y)
-    { 
+    {
         return get_current_level().get_shop(x, y);
     }
 
@@ -309,8 +309,8 @@ public:
     enum stash_update_mode
     {
         ST_PASSIVE,             // Maintain existing stashes only.
-        ST_AGGRESSIVE           // Create stashes for each square containing 
-                                // objects, even if those squares were not 
+        ST_AGGRESSIVE           // Create stashes for each square containing
+                                // objects, even if those squares were not
                                 // previously marked as stashes.
     };
 
@@ -319,11 +319,11 @@ public:
     void update_visible_stashes(StashTracker::stash_update_mode = ST_PASSIVE);
 
     // Update stash at (x,y) on current level, defaulting to player's current
-    // location if no parameters are supplied, return true if a stash was 
+    // location if no parameters are supplied, return true if a stash was
     // updated.
     bool update_stash(int x = -1, int y = -1);
 
-    // Add stash at (x,y), or player's current location if no parameters are 
+    // Add stash at (x,y), or player's current location if no parameters are
     // supplied
     void add_stash(int x = -1, int y = -1, bool verbose = false);
 
@@ -339,7 +339,7 @@ public:
     void dump(const char *filename, bool identify = false) const;
 
 private:
-    void get_matching_stashes(const base_pattern &search, 
+    void get_matching_stashes(const base_pattern &search,
                               std::vector<stash_search_result> &results) const;
     bool display_search_results(std::vector<stash_search_result> &results,
                                 const char* sort_style);

@@ -2275,7 +2275,7 @@ static void tag_missing_level_tiles()
 
     TileNewLevel(true);
 
-    
+
 #endif
 }
 

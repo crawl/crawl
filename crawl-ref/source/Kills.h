@@ -41,10 +41,10 @@ struct kill_monster_desc
 
     struct less_than
     {
-        bool operator () ( const kill_monster_desc &m1, 
+        bool operator () ( const kill_monster_desc &m1,
                            const kill_monster_desc &m2) const
         {
-            return m1.monnum < m2.monnum || 
+            return m1.monnum < m2.monnum ||
                 (m1.monnum == m2.monnum && m1.modifier < m2.modifier);
         }
     };
@@ -74,10 +74,10 @@ public:
     unsigned short kills;           // How many kills does the player have?
     int            exp;             // Experience gained for slaying the beast.
                                     // Only set *once*, even for shapeshifters.
-    
+
     std::vector<unsigned short> places; // Places where we've killed the beast.
 private:
-    std::string append_places(const kill_monster_desc &md, 
+    std::string append_places(const kill_monster_desc &md,
             const std::string &name) const;
 };
 
@@ -110,9 +110,9 @@ struct kill_exp
     int modifier;     // Nature of the beast
 
     std::vector<unsigned short> places;
-    
+
     kill_exp(const kill_def &k, const kill_monster_desc &md)
-        : nkills(k.kills), exp(k.exp), base_name(k.base_name(md)), 
+        : nkills(k.kills), exp(k.exp), base_name(k.base_name(md)),
           desc(k.info(md)),
           monnum(md.monnum), modifier(md.modifier)
     {
@@ -125,7 +125,7 @@ struct kill_exp
     {
         places.push_back(kg.place);
     }
-    
+
     // operator< is implemented for a descending sort.
     bool operator < ( const kill_exp &b) const
     {
@@ -145,11 +145,11 @@ public:
 
     long get_kills(std::vector<kill_exp> &v) const;
 private:
-    typedef std::map<kill_monster_desc, 
-                     kill_def, 
+    typedef std::map<kill_monster_desc,
+                     kill_def,
                      kill_monster_desc::less_than> kill_map;
     typedef std::vector<kill_ghost> ghost_vec;
-    
+
     kill_map    kills;
     ghost_vec   ghosts;
 

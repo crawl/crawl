@@ -68,7 +68,7 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
         fprintf(stderr, "Could not find font '%s'\n", font_name);
         return false;
     }
-    
+
     error = FT_New_Face(library, font_path.c_str(), 0, &face);
     if (error == FT_Err_Unknown_File_Format)
     {
@@ -161,7 +161,7 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
                 pixels[idx + 1] = 255;
                 pixels[idx + 2] = 255;
                 pixels[idx + 3] = 255;
-            }    
+            }
     }
 
     for (unsigned int c = 1; c < 256; c++)
@@ -203,7 +203,7 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
                 pixels[idx + 1] = 255;
                 pixels[idx + 2] = 255;
                 pixels[idx + 3] = alpha;
-            }    
+            }
     }
 
     bool success = m_tex.load_texture(pixels, width, height,
@@ -244,7 +244,7 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
     verts.reserve(4 * width * height);
 
     float texcoord_dy = (float)m_max_advance.y / (float)m_tex.height();
-   
+
     for (unsigned int y = 0; y < height; y++)
     {
         for (unsigned int x = 0; x < width; x++)
@@ -403,7 +403,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
 
     glVertexPointer(2, GL_FLOAT, sizeof(box_vert), &verts[0].x);
     glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(box_vert), &verts[0].r);
-    glDrawArrays(GL_QUADS, 0, sizeof(verts) / sizeof(box_vert)); 
+    glDrawArrays(GL_QUADS, 0, sizeof(verts) / sizeof(box_vert));
 
 }
 
@@ -412,7 +412,7 @@ unsigned int FTFont::string_width(const char *text)
     unsigned int base_width = std::max(-m_min_offset, 0);
     unsigned int max_width = 0;
 
-    unsigned int width = 0; 
+    unsigned int width = 0;
     unsigned int adjust = 0;
     for (const char *itr = text; *itr; itr++)
     {

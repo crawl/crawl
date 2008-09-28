@@ -1624,7 +1624,7 @@ static located_feature_list _save_critical_features()
 {
     located_feature_list result;
 
-    for (rectangle_iterator ri(1); ri; ++ri) 
+    for (rectangle_iterator ri(1); ri; ++ri)
         if (_is_critical_feature(grd(*ri)))
             result.push_back(located_feature(*ri, grd(*ri)));
 

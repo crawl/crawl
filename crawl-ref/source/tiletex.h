@@ -18,7 +18,7 @@ enum TextureID
     TEX_MAX
 };
 
-class GenericTexture 
+class GenericTexture
 {
 public:
     GenericTexture();
@@ -32,10 +32,10 @@ public:
     };
 
     // Arbitrary post-load texture processing
-    typedef bool(*tex_proc_func)(unsigned char *pixels, unsigned int w, 
+    typedef bool(*tex_proc_func)(unsigned char *pixels, unsigned int w,
         unsigned int h);
 
-    bool load_texture(const char *filename, MipMapOptions mip_opt, 
+    bool load_texture(const char *filename, MipMapOptions mip_opt,
                       tex_proc_func proc = NULL);
     bool load_texture(unsigned char *pixels, unsigned int w, unsigned int h,
                       MipMapOptions mip_opt);
@@ -90,7 +90,7 @@ inline void TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,
     // center tiles on x, but allow taller tiles to extend upwards
     int size_ox = centre ? TILE_X / 2 - inf.width / 2 : 0;
     int size_oy = centre ? TILE_Y - inf.height : 0;
-    
+
     int ey = inf.ey;
     if (ymax > 0)
         ey = std::min(inf.sy + ymax - inf.offset_y, ey);

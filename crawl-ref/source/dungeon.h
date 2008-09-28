@@ -341,7 +341,7 @@ struct spec_room
 {
     bool created;
     bool hooked_up;
-    
+
     coord_def tl;
     coord_def br;
 

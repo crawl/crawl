@@ -32,7 +32,7 @@ void clrscr(void);
 void textcolor(int color);
 int wherex();
 int wherey();
-void cprintf(const char *format,...);    
+void cprintf(const char *format,...);
 void clear_to_end_of_line(void);
 void clear_to_end_of_screen(void);
 int get_number_of_lines(void);

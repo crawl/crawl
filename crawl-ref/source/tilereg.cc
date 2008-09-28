@@ -221,7 +221,7 @@ void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy
 
     unsigned int len = 2 * crawl_view.viewsz.x * crawl_view.viewsz.y;
     m_tileb.resize(len);
-    // TODO enne - move this function into dungeonregion 
+    // TODO enne - move this function into dungeonregion
     tile_finish_dngn(tileb, cx_to_gx + mx/2, cy_to_gy + my/2);
     memcpy(&m_tileb[0], tileb, sizeof(unsigned int) * len);
 
@@ -245,7 +245,7 @@ void TileRegion::add_quad(TextureID tex, unsigned int idx, unsigned int x, unsig
 
     float pos_sx = x;
     float pos_sy = y;
-    float pos_ex, pos_ey, tex_sx, tex_sy, tex_ex, tex_ey; 
+    float pos_ex, pos_ey, tex_sx, tex_sy, tex_ex, tex_ey;
     m_image->m_textures[tex].get_coords(idx, ofs_x, ofs_y,
                                         pos_sx, pos_sy, pos_ex, pos_ey,
                                         tex_sx, tex_sy, tex_ex, tex_ey,
@@ -317,7 +317,7 @@ void DungeonRegion::draw_player(unsigned int x, unsigned int y)
 
     int gender = you.your_name[0] % 2;
 
-    tilep_race_default(you.species, gender, you.experience_level, 
+    tilep_race_default(you.species, gender, you.experience_level,
                        default_doll.parts);
 
     result = default_doll;
@@ -934,7 +934,7 @@ void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
         && type == CURSOR_MOUSE)
     {
         coord_def delta = gc - you.pos();
-        
+
         int ax = abs(delta.x);
         int ay = abs(delta.y);
 
@@ -974,23 +974,23 @@ bool DungeonRegion::update_tip_text(std::string& tip)
 
     if (m_cursor[CURSOR_MOUSE] == you.pos())
     {
-        tip = you.your_name; 
-        tip += " ("; 
-        tip += get_species_abbrev(you.species); 
-        tip += get_class_abbrev(you.char_class); 
-        tip += ")"; 
- 
-        if (igrd(m_cursor[CURSOR_MOUSE]) != NON_ITEM) 
-            tip += "\n[L-Click] Pick up items (g)"; 
+        tip = you.your_name;
+        tip += " (";
+        tip += get_species_abbrev(you.species);
+        tip += get_class_abbrev(you.char_class);
+        tip += ")";
 
-        if (grid_stair_direction(grd(m_cursor[CURSOR_MOUSE])) != CMD_NO_CMD) 
-            tip += "\n[Shift-L-Click] use stairs (</>)"; 
+        if (igrd(m_cursor[CURSOR_MOUSE]) != NON_ITEM)
+            tip += "\n[L-Click] Pick up items (g)";
 
-        // Character overview. 
-        tip += "\n[R-Click] Overview (%)"; 
+        if (grid_stair_direction(grd(m_cursor[CURSOR_MOUSE])) != CMD_NO_CMD)
+            tip += "\n[Shift-L-Click] use stairs (</>)";
 
-        // Religion. 
-        if (you.religion != GOD_NO_GOD) 
+        // Character overview.
+        tip += "\n[R-Click] Overview (%)";
+
+        // Religion.
+        if (you.religion != GOD_NO_GOD)
             tip += "\n[Shift-R-Click] Religion (^)";
     }
     else if (abs(m_cursor[CURSOR_MOUSE].x - you.pos().x) <= 1
@@ -1210,7 +1210,7 @@ void InventoryRegion::pack_verts()
             InventoryTile &item = m_items[i++];
 
             if (item.flag & TILEI_FLAG_FLOOR)
-                add_quad(TEX_DUNGEON, get_floor_tile_idx() 
+                add_quad(TEX_DUNGEON, get_floor_tile_idx()
                          + m_flavour[i] % get_num_floor_flavors(), x, y);
             else
                 add_quad(TEX_DUNGEON, TILE_ITEM_SLOT, x, y);
@@ -1661,14 +1661,14 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         {
             tip += "\n[Shift-L-Click] Drop (d)";
         }
-        
+
     }
 
     return true;
 }
 
 MapRegion::MapRegion(unsigned int pixsz) :
-    m_buf(NULL), 
+    m_buf(NULL),
     m_far_view(false)
 {
     dx = pixsz;
@@ -2296,7 +2296,7 @@ void MessageRegion::render()
 
             glVertexPointer(2, GL_FLOAT, sizeof(box_vert), &verts[0].x);
             glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(box_vert), &verts[0].r);
-            glDrawArrays(GL_QUADS, 0, sizeof(verts) / sizeof(box_vert)); 
+            glDrawArrays(GL_QUADS, 0, sizeof(verts) / sizeof(box_vert));
         }
     }
 
@@ -2362,7 +2362,7 @@ static void _copy_onto(unsigned char *pixels, unsigned int width,
                 dest[1] = (src[1] * a + dest[1] * inv_a) / 255;
                 dest[2] = (src[2] * a + dest[2] * inv_a) / 255;
                 dest[3] = (src[3] * a + dest[3] * inv_a) / 255;
-                
+
                 dest += 4;
                 src += 4;
             }
@@ -2375,14 +2375,14 @@ static void _copy_onto(unsigned char *pixels, unsigned int width,
         {
             memcpy(dest, src, src_row_size);
 
-            dest += dest_row_size; 
+            dest += dest_row_size;
             src += src_row_size;
         }
     }
 }
 
 // Copy an image at inf from pixels into dest.
-static void _copy_into(unsigned char *dest, unsigned char *pixels, 
+static void _copy_into(unsigned char *dest, unsigned char *pixels,
                        unsigned int width,
                        unsigned int height, const tile_info &inf,
                        int ofs_x = 0, int ofs_y = 0)
@@ -2418,7 +2418,7 @@ static void _copy_into(unsigned char *dest, unsigned char *pixels,
     {
         memcpy(dest, src, src_width * 4);
 
-        dest += dest_row_size; 
+        dest += dest_row_size;
         src += src_row_size;
     }
 }
@@ -2459,7 +2459,7 @@ static bool _copy_under(unsigned char *pixels, unsigned int width,
     return true;
 }
 
-static bool _process_item_image(unsigned char *pixels, 
+static bool _process_item_image(unsigned char *pixels,
                                 unsigned int width, unsigned int height)
 {
     bool success = true;
@@ -2518,7 +2518,7 @@ bool ImageManager::load_item_texture()
     // is modified.  So, it cannot be loaded until after the item
     // description table has been initialised.
     GenericTexture::MipMapOptions mip = GenericTexture::MIPMAP_CREATE;
-    bool success = m_textures[TEX_DEFAULT].load_texture("main.png", mip, 
+    bool success = m_textures[TEX_DEFAULT].load_texture("main.png", mip,
                                                         &_process_item_image);
     m_textures[TEX_DEFAULT].set_info(TILE_MAIN_MAX, tile_main_info);
 

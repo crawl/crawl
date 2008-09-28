@@ -19,7 +19,7 @@
 // * handling kerning
 //
 // * the possibility of streaming this class in and out so that Crawl doesn't
-//   have to link against FreeType2 or be forced do as much processing at 
+//   have to link against FreeType2 or be forced do as much processing at
 //   load time.
 
 class FTFont

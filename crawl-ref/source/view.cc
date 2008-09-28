@@ -3609,7 +3609,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     {
         if (proportion < 100 && random2(100) >= proportion)
             continue;       // note that proportion can be over 100
-        
+
         const int dist = grid_distance( you.pos(), *ri );
 
         if (dist > pfar && one_chance_in(3))
@@ -3630,7 +3630,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                                                           grd(*ri));
         }
 #endif
-        
+
         if (!wizard_map && is_terrain_known(*ri))
             continue;
 

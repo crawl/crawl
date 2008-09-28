@@ -4,7 +4,7 @@
  *  Created by: dshaligram on Sat Jul 21 12:17:29 2007 UTC
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *  
+ *
  */
 
 #ifndef __DGNEVENT_H__
@@ -17,7 +17,7 @@
 enum dgn_event_type
 {
     DET_NONE            = 0x0000,
-    
+
     DET_TURN_ELAPSED    = 0x0001,
     DET_MONSTER_MOVED   = 0x0002,
     DET_PLAYER_MOVED    = 0x0004,
@@ -63,7 +63,7 @@ struct dgn_square_alarm
 {
 public:
     dgn_square_alarm() : eventmask(0), listeners() { }
-    
+
 public:
     unsigned eventmask;
     std::list<dgn_event_listener*> listeners;
@@ -96,7 +96,7 @@ public:
     void clear_listeners_at(const coord_def &pos);
     bool has_listeners_at(const coord_def &pos) const;
     void move_listeners(const coord_def &from, const coord_def &to);
-    
+
     void fire_position_event(dgn_event_type et, const coord_def &pos);
     void fire_position_event(const dgn_event &e, const coord_def &pos);
     void fire_event(dgn_event_type et);
@@ -110,7 +110,7 @@ private:
     void register_listener_at(unsigned mask, const coord_def &pos,
                               dgn_event_listener *l);
     void remove_listener_at(const coord_def &pos, dgn_event_listener *l);
-    
+
 private:
     unsigned global_event_mask;
     std::auto_ptr<dgn_square_alarm> grid_triggers[GXM][GYM];

@@ -155,7 +155,7 @@ bool TilesFramework::initialise()
         if (SDL_EnableKeyRepeat(delay, interval) != 0)
             printf("Failed to set key repeat mode: %s\n", SDL_GetError());
     }
-  
+
     unsigned int flags = SDL_OPENGL;
     if (Options.tile_full_screen)
         flags |= SDL_FULLSCREEN;
@@ -190,7 +190,7 @@ bool TilesFramework::initialise()
         return false;
     }
 
-    m_region_tile = new DungeonRegion(&m_image, m_fonts[lbl_font].font, 
+    m_region_tile = new DungeonRegion(&m_image, m_fonts[lbl_font].font,
                                       TILE_X, TILE_Y);
     m_region_map = new MapRegion(Options.tile_map_pixels);
     m_region_self_inv = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
@@ -231,7 +231,7 @@ int TilesFramework::load_font(const char *font_file, int font_size,
         if (finfo.name == font_file && finfo.size == font_size)
             return i;
     }
-    
+
     if (!font->load_font(font_file, font_size))
     {
         delete font;
@@ -321,14 +321,14 @@ void TilesFramework::resize()
     glLoadIdentity();
 
     // For ease, vertex positions are pixel positions.
-    glOrtho(0, m_windowsz.x, m_windowsz.y, 0, 0, 100); 
+    glOrtho(0, m_windowsz.x, m_windowsz.y, 0, 0, 100);
 }
 
 static unsigned char _get_modifiers(SDL_keysym &keysym)
 {
     // keysym.mod can't be used to keep track of the modifier state.
     // If shift is hit by itself, this will not include KMOD_SHIFT.
-    // Instead, look for the key itself as a separate event. 
+    // Instead, look for the key itself as a separate event.
     switch (keysym.sym)
     {
     case SDLK_LSHIFT:
@@ -540,7 +540,7 @@ int TilesFramework::getch_ck()
         if (SDL_WaitEvent(&event))
         {
             ticks = SDL_GetTicks();
-          
+
             if (event.type != SDL_USEREVENT)
                 tiles.clear_text_tags(TAG_CELL_DESC);
 
@@ -552,12 +552,12 @@ int TilesFramework::getch_ck()
 
                 // If you hit a key, disable tooltips until the mouse
                 // is moved again.
-                m_last_tick_moved = ~0; 
+                m_last_tick_moved = ~0;
                 break;
 
             case SDL_KEYUP:
                 m_key_mod &= ~_get_modifiers(event.key.keysym);
-                m_last_tick_moved = ~0; 
+                m_last_tick_moved = ~0;
                 break;
 
             case SDL_MOUSEMOTION:
@@ -587,7 +587,7 @@ int TilesFramework::getch_ck()
                     mouse_event.held = m_buttons_held;
                     mouse_event.mod = m_key_mod;
                     key = handle_mouse(mouse_event);
-                    m_last_tick_moved = ticks; 
+                    m_last_tick_moved = ticks;
                 }
                 break;
 
@@ -599,14 +599,14 @@ int TilesFramework::getch_ck()
                     mouse_event.held = m_buttons_held;
                     mouse_event.mod = m_key_mod;
                     key = handle_mouse(mouse_event);
-                    m_last_tick_moved = ticks; 
+                    m_last_tick_moved = ticks;
                 }
                 break;
 
             case SDL_QUIT:
                 // TODO enne
                 exit(0);
-                
+
             case SDL_USEREVENT:
             default:
                 // This is only used to refresh the tooltip.
@@ -614,7 +614,7 @@ int TilesFramework::getch_ck()
             }
         }
 
-        bool show_tooltip = ((ticks - m_last_tick_moved 
+        bool show_tooltip = ((ticks - m_last_tick_moved
                                 > (unsigned int)Options.tile_tooltip_ms)
                                 && ticks > m_last_tick_moved);
 
@@ -623,7 +623,7 @@ int TilesFramework::getch_ck()
             tiles.clear_text_tags(TAG_CELL_DESC);
             if (m_tooltip.empty())
             {
-                for (unsigned int i = 0; 
+                for (unsigned int i = 0;
                     i < m_layers[m_active_layer].m_regions.size(); i++)
                 {
                     Region *reg = m_layers[m_active_layer].m_regions[i];
@@ -786,7 +786,7 @@ void TilesFramework::do_layout()
         inv_col = stat_col;
 
     m_region_self_inv->place(inv_col, m_region_map->ey, 0);
-    m_region_self_inv->resize_to_fit(m_windowsz.x - 
+    m_region_self_inv->resize_to_fit(m_windowsz.x -
                                      m_region_self_inv->sx,
                                      m_windowsz.y -
                                      m_region_self_inv->sy);
@@ -816,7 +816,7 @@ void TilesFramework::do_layout()
     m_region_menu_inv->place(0, m_region_crt->ey, margin);
     m_region_menu_inv->resize_to_fit(m_windowsz.x, m_windowsz.y -
                                      m_region_menu_inv->sy);
- 
+
     // Depending on the font, the menu inventory may hold fewer items
     // than the crt menu can display.  Decrease the lines if necessary.
     const int ex = 3;
@@ -921,7 +921,7 @@ void TilesFramework::redraw()
                             min_pos, m_windowsz, WHITE, false, 150,
                             BLUE, 5);
     }
-            
+
     SDL_GL_SwapBuffers();
 }
 
@@ -993,7 +993,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
     desc.tile = tileidx_item(item);
 
     int type = item.base_type;
-    if (type == OBJ_FOOD || type == OBJ_SCROLLS 
+    if (type == OBJ_FOOD || type == OBJ_SCROLLS
         || type == OBJ_POTIONS || type == OBJ_MISSILES)
     {
         // -1 specifies don't display anything
@@ -1108,7 +1108,7 @@ void TilesFramework::update_inventory()
             }
 
             // Add extra rows, if needed.
-            unsigned int ground_rows = 
+            unsigned int ground_rows =
                 std::max(((int)num_ground-1) / (int)mx + 1, 1);
 
             while (inv.size() / mx + ground_rows < my)
@@ -1159,14 +1159,14 @@ void TilesFramework::update_inventory()
     m_region_self_inv->update(inv.size(), &inv[0]);
 }
 
-void TilesFramework::update_menu_inventory(unsigned int slot, 
-                                           const item_def &item, 
+void TilesFramework::update_menu_inventory(unsigned int slot,
+                                           const item_def &item,
                                            bool selected, char key)
 {
     InventoryTile desc;
     _fill_item_info(desc, item);
     desc.key = key;
-    desc.idx = (desc.flag & TILEI_FLAG_FLOOR) ? item.index() : 
+    desc.idx = (desc.flag & TILEI_FLAG_FLOOR) ? item.index() :
                                                 letter_to_index(key);
     if (selected)
         desc.flag |= TILEI_FLAG_SELECT;
@@ -1184,7 +1184,7 @@ void TilesFramework::clear_text_tags(text_tag_type type)
     m_region_tile->clear_text_tags(type);
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag, 
+void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
                                   const coord_def &gc)
 {
     m_region_tile->add_text_tag(type, tag, gc);

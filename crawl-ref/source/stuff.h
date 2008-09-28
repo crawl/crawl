@@ -79,7 +79,7 @@ public:
     const coord_def* operator->() const;
 
     rectangle_iterator& operator ++ ();
-    rectangle_iterator operator ++ (int);    
+    rectangle_iterator operator ++ (int);
 private:
     coord_def current, topleft, bottomright;
 };

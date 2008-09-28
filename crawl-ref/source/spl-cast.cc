@@ -951,7 +951,7 @@ beam_type _spell_to_beam_type(spell_type spell)
 int _setup_evaporate_cast()
 {
     int rc = prompt_invent_item("Throw which potion?", MT_INVLIST, OBJ_POTIONS);
-    
+
     if (prompt_failed(rc))
     {
         rc = -1;
@@ -1144,7 +1144,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         }
         break;
-        
+
     // direct beams/bolts
     case SPELL_MAGIC_DART:
         if (!zapping(ZAP_MAGIC_DARTS, powc, beam, true))

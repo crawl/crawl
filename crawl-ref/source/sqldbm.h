@@ -38,13 +38,13 @@ public:
     virtual ~sql_datum();
 
     sql_datum &operator = (const sql_datum &other);
-    
+
     std::string to_str() const;
 
 public:
     char   *dptr;    // Canonically void*, but we're not a real Berkeley DB.
     size_t dsize;
-    
+
 private:
     bool   need_free;
 
@@ -61,13 +61,13 @@ public:
     ~SQL_DBM();
 
     bool is_open() const;
-    
+
     int open(const std::string &db = "");
     void close();
-    
+
     std::auto_ptr<std::string> firstkey();
     std::auto_ptr<std::string> nextkey();
-    
+
     std::string query(const std::string &key);
     int insert(const std::string &key, const std::string &value);
 
@@ -83,7 +83,7 @@ private:
     int init_insert();
     int init_schema();
     int ec(int err);
-        
+
 private:
     sqlite3      *db;
     sqlite3_stmt *s_insert;

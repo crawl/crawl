@@ -894,7 +894,7 @@
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      4,
-     200,        
+     200,
         LOS_RADIUS, LOS_RADIUS,
      NULL,
      true,

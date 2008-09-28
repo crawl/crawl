@@ -40,7 +40,7 @@ enum key_mod
 
 struct MouseEvent
 {
-    enum mouse_event_type 
+    enum mouse_event_type
     {
         PRESS,
         RELEASE,
@@ -57,7 +57,7 @@ struct MouseEvent
         SCROLL_DOWN = 0x10
     };
 
-    // kind of event 
+    // kind of event
     mouse_event_type event;
     // if PRESS or RELEASE, the button pressed
     mouse_event_button button;
@@ -190,7 +190,7 @@ extern TilesFramework tiles;
 
 #ifdef __MINGW32__
 #ifndef alloca
-// Srsly, MinGW, wtf?  
+// Srsly, MinGW, wtf?
 void *alloca(size_t);
 #endif
 #endif

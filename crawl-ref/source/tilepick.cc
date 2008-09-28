@@ -109,7 +109,7 @@ static int _bow_offset(const monsters *mon)
     int mon_wep = mon->inv[MSLOT_WEAPON];
     if (mon_wep == NON_ITEM)
         return 1;
-   
+
     switch (mitm[mon_wep].sub_type)
     {
     case WPN_BOW:

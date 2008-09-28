@@ -19,7 +19,7 @@
 enum tag_version
 {
     TILETAG_PRE_MCACHE = 71,
-    TILETAG_CURRENT = 72 
+    TILETAG_CURRENT = 72
 };
 
 struct dolls_data

@@ -172,7 +172,7 @@ bool GenericTexture::load_texture(const char *filename,
     }
     else
     {
-        printf("Warning: unsupported format, bpp = %d for '%s'\n", 
+        printf("Warning: unsupported format, bpp = %d for '%s'\n",
                bpp, acBuffer);
         return false;
     }

@@ -314,7 +314,7 @@ enum GotoRegion
 };
 
 // Mouse modes (for tiles)
-enum mouse_mode 
+enum mouse_mode
 {
      MOUSE_MODE_NORMAL,
      MOUSE_MODE_COMMAND,

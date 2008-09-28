@@ -280,7 +280,7 @@ bool brand_weapon(brand_type which_brand, int power)
     // Can't rebrand a temporarily-branded item to a different brand.
     if (temp_brand && (get_weapon_brand(weapon) != which_brand))
         return (false);
-    
+
     std::string msg = weapon.name(DESC_CAP_YOUR);
     const int wpn_type = get_vorpal_type(weapon);
 
@@ -681,7 +681,7 @@ void cast_refrigeration(int pow)
     }
 
     // Now damage the creatures.
-    
+
     // Set up the cold attack.
     bolt beam;
     beam.flavour = BEAM_COLD;

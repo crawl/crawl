@@ -1,6 +1,6 @@
 /*
  *  File:       libutil.h
- *  Summary:    System independent functions 
+ *  Summary:    System independent functions
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
  */
@@ -108,9 +108,9 @@ inline bool ends_with(const std::string &s, const std::string &suffix)
 // remainder of the string as the last segment; negative values of nsplits
 // split on all occurrences of the separator.
 std::vector<std::string> split_string(
-    const std::string &sep, 
-    std::string s, 
-    bool trim = true, 
+    const std::string &sep,
+    std::string s,
+    bool trim = true,
     bool accept_empties = false,
     int nsplits = -1);
 
@@ -189,7 +189,7 @@ public:
     {
         return oldval;
     }
-    
+
 private:
     T &val;
     T oldval;
@@ -210,7 +210,7 @@ template <p_compile pcomp, p_free pfree, p_match pmatch>
 class basic_text_pattern : public base_pattern
 {
 public:
-    basic_text_pattern(const std::string &s, bool icase = false) 
+    basic_text_pattern(const std::string &s, bool icase = false)
         : pattern(s), compiled_pattern(NULL),
           isvalid(true), ignore_case(icase)
     {
@@ -302,7 +302,7 @@ public:
     {
         return pattern;
     }
-    
+
 private:
     std::string pattern;
     mutable void *compiled_pattern;
@@ -333,7 +333,7 @@ public:
     {
         ms_current_mode = m_previous_mode;
     }
-    
+
     static mouse_mode current_mode() { return ms_current_mode; }
 
 private:

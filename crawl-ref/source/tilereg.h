@@ -255,8 +255,8 @@ protected:
 
     int get_buffer_index(const coord_def &gc);
     void to_screen_coords(const coord_def &gc, coord_def& pc) const;
-    
-    std::vector<unsigned int> m_tileb; 
+
+    std::vector<unsigned int> m_tileb;
     int m_cx_to_gx;
     int m_cy_to_gy;
     coord_def m_cursor[CURSOR_MAX];

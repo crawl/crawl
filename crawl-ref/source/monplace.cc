@@ -2171,7 +2171,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
 
         if ( *ri == you.pos() )
             continue;
-        
+
         if (mgrd(*ri) != NON_MONSTER)
             continue;
 
@@ -2181,7 +2181,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
 
         success =
             (grd(*ri) == spc_wanted) || grid_compatible(spc_wanted, grd(*ri));
-        
+
         if (success && one_chance_in(++good_count))
             empty = *ri;
     }

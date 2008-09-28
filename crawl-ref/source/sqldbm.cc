@@ -2,7 +2,7 @@
  *  File:       sqldbm.cc
  *  Summary:    dbm wrapper for SQLite
  *  Written by: Darshan Shaligram
- *  
+ *
  *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
@@ -49,12 +49,12 @@ int SQL_DBM::open(const std::string &s)
 
     if (!s.empty())
         dbfile = s;
-    
+
     if (!dbfile.empty())
     {
         if (dbfile.find(".db") != dbfile.length() - 3)
             dbfile += ".db";
-        
+
         if (ec( sqlite3_open(dbfile.c_str(), &db) ) != SQLITE_OK)
         {
             std::string saveerr = error;
@@ -140,7 +140,7 @@ std::string SQL_DBM::query(const std::string &key)
     std::string res;
     while ((err = ec(sqlite3_step(s_query))) == SQLITE_ROW)
         res = (const char *) sqlite3_column_text(s_query, 0);
-    
+
     sqlite3_reset(s_query);
 
     return (res);
@@ -150,7 +150,7 @@ std::auto_ptr<std::string> SQL_DBM::firstkey()
 {
     if (init_iterator() != SQLITE_OK)
     {
-        std::auto_ptr<std::string> result;        
+        std::auto_ptr<std::string> result;
         return (result);
     }
 
@@ -159,7 +159,7 @@ std::auto_ptr<std::string> SQL_DBM::firstkey()
 
 std::auto_ptr<std::string> SQL_DBM::nextkey()
 {
-    std::auto_ptr<std::string> result;        
+    std::auto_ptr<std::string> result;
     if (s_iterator)
     {
         int err = SQLITE_OK;
@@ -170,7 +170,7 @@ std::auto_ptr<std::string> SQL_DBM::nextkey()
         else
             sqlite3_reset(s_iterator);
     }
-    return (result);    
+    return (result);
 }
 
 int SQL_DBM::init_query()

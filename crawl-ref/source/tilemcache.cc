@@ -49,7 +49,7 @@ static void marshallDemon(writer &th, const demon_data &demon)
 }
 
 // Internal mcache classes.  The mcache_manager creates these internally.
-// The only access external clients need is through the virtual 
+// The only access external clients need is through the virtual
 // info function.
 
 class mcache_monster : public mcache_entry
@@ -168,19 +168,19 @@ unsigned int mcache_manager::register_monster(const monsters *mon)
 
     if (mcache_demon::valid(mon))
     {
-        entry = new mcache_demon(mon);        
+        entry = new mcache_demon(mon);
     }
     else if (mcache_ghost::valid(mon))
     {
-        entry = new mcache_ghost(mon);        
+        entry = new mcache_ghost(mon);
     }
     else if (mcache_draco::valid(mon))
     {
-        entry = new mcache_draco(mon);        
+        entry = new mcache_draco(mon);
     }
     else if (mcache_monster::valid(mon))
     {
-        entry = new mcache_monster(mon);        
+        entry = new mcache_monster(mon);
     }
     else
     {
@@ -214,7 +214,7 @@ void mcache_manager::clear_nonref()
     {
         if (!m_entries[i] || m_entries[i]->ref_count() > 0)
             continue;
-        
+
         delete m_entries[i];
         m_entries[i] = NULL;
     }
@@ -247,7 +247,7 @@ void mcache_manager::read(reader &th)
     unsigned int size = unmarshallLong(th);
     m_entries.reserve(size);
     m_entries.clear();
-    
+
     for (unsigned int i = 0; i < size; i++)
     {
         char type = unmarshallByte(th);
@@ -513,7 +513,7 @@ unsigned int mcache_monster::info(tile_draw_info *dinfo) const
                 eq2 = TILEP_HAND2_SHORT_SWORD_SLANT;
                 break;
         };
-        
+
         dinfo[2].set(eq2, -ofs_x, ofs_y);
 
         return 3;
@@ -547,7 +547,7 @@ mcache_monster::mcache_monster(reader &th) : mcache_entry(th)
 void mcache_monster::construct(writer &th)
 {
     mcache_entry::construct(th);
-    
+
     marshallLong(th, m_mon_tile);
     marshallLong(th, m_equ_tile);
 }
@@ -623,7 +623,7 @@ unsigned int mcache_draco::info(tile_draw_info *dinfo) const
 
 bool mcache_draco::valid(const monsters *mon)
 {
-    return (mon && mon->type >= MONS_FIRST_DRACONIAN 
+    return (mon && mon->type >= MONS_FIRST_DRACONIAN
             && mon->type <= MONS_LAST_DRACONIAN);
 }
 
@@ -637,7 +637,7 @@ mcache_draco::mcache_draco(reader &th) : mcache_entry(th)
 void mcache_draco::construct(writer &th)
 {
     mcache_entry::construct(th);
-    
+
     marshallLong(th, m_mon_tile);
     marshallLong(th, m_job_tile);
     marshallLong(th, m_equ_tile);

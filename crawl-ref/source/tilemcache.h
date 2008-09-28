@@ -70,7 +70,7 @@ public:
     void construct(writer &th);
 
 protected:
-    std::vector<mcache_entry*> m_entries;  
+    std::vector<mcache_entry*> m_entries;
 };
 
 // The global monster cache.
