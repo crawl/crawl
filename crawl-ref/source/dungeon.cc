@@ -2513,17 +2513,16 @@ static void _place_traps(int level_number)
         if (ts.type != TRAP_UNASSIGNED)
             continue;
 
-        int tries = 200;
-        do
+        int tries;
+        for (tries = 0; tries < 200; ++tries)
         {
             ts.pos.x = random2(GXM);
             ts.pos.y = random2(GYM);
+            if (in_bounds(ts.pos) && grd(ts.pos) == DNGN_FLOOR)
+                break;
         }
-        while (in_bounds(ts.pos)
-               && grd(ts.pos) != DNGN_FLOOR
-               && --tries > 0);
 
-        if (tries <= 0)
+        if (tries == 200)
             break;
 
         ts.type = random_trap_for_place(level_number);
