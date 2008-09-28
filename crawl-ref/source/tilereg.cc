@@ -1154,6 +1154,8 @@ void InventoryRegion::render()
     if (m_cursor != NO_CURSOR)
     {
         unsigned int curs_index = cursor_index();
+        if (curs_index >= m_items.size())
+            return;
         int idx = m_items[curs_index].idx;
         if (idx == -1)
             return;
@@ -1172,7 +1174,8 @@ void InventoryRegion::render()
         else
             desc = you.inv[idx].name(DESC_INVENTORY_EQUIP);
 
-        m_tag_font->render_string(x, y, desc.c_str(),
+        m_tag_font->render_string((unsigned int)x, (unsigned int)y,
+                                  desc.c_str(),
                                   min_pos, max_pos, WHITE, true,
                                   200, BLACK);
     }
