@@ -40,6 +40,7 @@
 #include "quiver.h"
 #include "religion.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
@@ -1106,6 +1107,126 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
     }
 }
 
+// Adds a list of all books/rods that contain a given spell (by name)
+// to a description string.
+static bool _append_books(std::string &desc, item_def &item, std::string key)
+{
+    spell_type type = spell_by_name(key, true);
+
+    if (type == SPELL_NO_SPELL)
+        return (false);
+
+    set_ident_flags(item, ISFLAG_IDENT_MASK);
+    std::vector<std::string> books;
+    std::vector<std::string> rods;
+
+    item.base_type = OBJ_BOOKS;
+    for (int i = 0; i < NUM_BOOKS; i++)
+        for (int j = 0; j < 8; j++)
+            if (which_spell_in_book(i, j) == type)
+            {
+                item.sub_type = i;
+                books.push_back(item.name(DESC_PLAIN));
+            }
+
+    item.base_type = OBJ_STAVES;
+    int book;
+    for (int i = STAFF_SMITING; i < NUM_STAVES; i++)
+    {
+        item.sub_type = i;
+        book = item.book_number();
+
+        for (int j = 0; j < 8; j++)
+            if (which_spell_in_book(book, j) == type)
+                rods.push_back(item.name(DESC_PLAIN));
+    }
+
+    if (books.empty() && rods.empty())
+        return (false);
+
+    if (!books.empty())
+    {
+        desc += "$$This spell can be found in the following book";
+        if (books.size() > 1)
+            desc += "s";
+        desc += ":$";
+        desc += comma_separated_line(books.begin(), books.end(), "$", "$");
+
+        if (!rods.empty())
+        {
+            desc += "$$... and the following rod";
+            if (rods.size() > 1)
+                desc += "s";
+            desc += ":$";
+            desc += comma_separated_line(rods.begin(), rods.end(), "$", "$");
+        }
+    }
+    else // rods-only
+    {
+        desc += "$$This spell can be found in the following rod";
+        if (rods.size() > 1)
+            desc += "s";
+        desc += ":$";
+        desc += comma_separated_line(rods.begin(), rods.end(), "$", "$");
+    }
+
+    return (true);
+}
+
+// Adds a list of all spells contained in a book or rod to its
+// description string.
+static void _append_spells(std::string &desc, const item_def &item)
+{
+    if (!item.has_spells())
+        return;
+
+    desc += "$$Spells                             Type                      Level$";
+
+    const int type = item.book_number();
+
+    for (int j = 0; j < 8; j++)
+    {
+        spell_type stype = which_spell_in_book(type, j);
+        if (stype == SPELL_NO_SPELL)
+            continue;
+
+        std::string name = spell_title(stype);
+        desc += name;
+        for (unsigned int i = 0; i < 35 - name.length(); i++)
+             desc += " ";
+
+        name = "";
+        if (item.base_type == OBJ_STAVES)
+            name += "Evocations";
+        else
+        {
+            bool already = false;
+
+            for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+            {
+                if (spell_typematch( stype, 1 << i ))
+                {
+                    if (already)
+                        name += "/" ;
+
+                    name += spelltype_name( 1 << i );
+                    already = true;
+                }
+            }
+        }
+        desc += name;
+
+        for (unsigned int i = 36; i < 65 - name.length(); i++)
+             desc += " ";
+
+        char sval[3];
+        itoa( spell_difficulty( stype ), sval, 10 );
+        desc += sval;
+        desc += "$";
+    }
+
+}
+
 static bool _do_description(std::string key, std::string footer = "")
 {
     std::string desc  = getLongDescription(key);
@@ -1199,7 +1320,16 @@ static bool _do_description(std::string key, std::string footer = "")
             {
                 char name[80];
                 snprintf(name, 80, key.c_str());
-                if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
+                if (_append_books(desc, mitm[thing_created], key))
+                {
+                    // nothing to be done
+                }
+                else if (get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
+                         || get_item_by_name(&mitm[thing_created], name, OBJ_STAVES))
+                {
+                    _append_spells(desc, mitm[thing_created]);
+                }
+                else if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
                 {
                     append_weapon_stats(desc, mitm[thing_created]);
                     desc += "$";

@@ -816,7 +816,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
     case RBOOK_MEMORISE:
         out.cprintf( "Select a spell to memorise (%d level%s available)." EOL,
-                 spell_levels, (spell_levels == 1) ? "" : "s" );
+                     spell_levels, (spell_levels == 1) ? "" : "s" );
         break;
 
     case RBOOK_READ_SPELL:

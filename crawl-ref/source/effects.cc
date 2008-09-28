@@ -700,7 +700,7 @@ void random_uselessness(int scroll_slot)
             mprf("You smell %s.", weird_smell().c_str());
         else if (you.species == SP_MUMMY)
             mpr("Your bandages flutter.");
-        else
+        else // currently not ever used
             canned_msg(MSG_NOTHING_HAPPENS);
         break;
 
