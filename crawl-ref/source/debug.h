@@ -10,6 +10,7 @@
 #define DEBUG_H
 
 #include <string>
+#include "enum.h"
 
 // Synch with ANSI definitions.
 #if DEBUG && defined(NDEBUG)
