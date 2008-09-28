@@ -360,6 +360,13 @@ static int _translate_keysym(SDL_keysym &keysym)
     else if (keysym.mod & KMOD_SHIFT)
         offset = shift_offset;
 
+    // Match what curses returns.
+    enum function_keys
+    {
+        F1 = 265,
+        F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, F13, F14, F15
+    };
+
     switch (keysym.sym)
     {
     case SDLK_RETURN:
@@ -370,6 +377,36 @@ static int _translate_keysym(SDL_keysym &keysym)
         return CK_ESCAPE;
     case SDLK_DELETE:
         return CK_DELETE;
+    case SDLK_F1:
+        return F1;
+    case SDLK_F2:
+        return F2;
+    case SDLK_F3:
+        return F3;
+    case SDLK_F4:
+        return F4;
+    case SDLK_F5:
+        return F5;
+    case SDLK_F6:
+        return F6;
+    case SDLK_F7:
+        return F7;
+    case SDLK_F8:
+        return F8;
+    case SDLK_F9:
+        return F9;
+    case SDLK_F10:
+        return F10;
+    case SDLK_F11:
+        return F11;
+    case SDLK_F12:
+        return F12;
+    case SDLK_F13:
+        return F13;
+    case SDLK_F14:
+        return F14;
+    case SDLK_F15:
+        return F15;
 
     // Hack.  libw32c overloads clear with '5' too.
     case SDLK_KP5:
