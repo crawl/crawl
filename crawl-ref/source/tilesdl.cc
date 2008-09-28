@@ -354,99 +354,117 @@ static int _translate_keysym(SDL_keysym &keysym)
     const int shift_offset = CK_SHIFT_UP - CK_UP;
     const int ctrl_offset = CK_CTRL_UP - CK_UP;
 
-    int offset = 0;
+    int mod = 0;
+    if (keysym.mod & KMOD_SHIFT)
+        mod |= MOD_SHIFT;
     if (keysym.mod & KMOD_CTRL)
-        offset = ctrl_offset;
-    else if (keysym.mod & KMOD_SHIFT)
-        offset = shift_offset;
+        mod |= MOD_CTRL;
+    if (keysym.mod & KMOD_ALT)
+        mod |= MOD_ALT;
 
-    // Match what curses returns.
-    enum function_keys
-    {
-        F1 = 265,
-        F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, F13, F14, F15
-    };
+    // This is arbitrary, but here's the current mappings.
+    // 0-256: ASCII, Crawl arrow keys
+    // 0-1k : Other SDL keys (F1, Windows keys, etc...) and modifiers
+    // 1k-3k: Non-ASCII with modifiers other than just shift or just ctrl.
+    // 3k+  : ASCII with the alt modifier.
+
+    int offset = mod ? 1000 + 256 * mod : 0;
+    int numpad_offset = 0;
+    if (mod == MOD_CTRL)
+        numpad_offset = ctrl_offset;
+    else if (mod == KMOD_SHIFT)
+        numpad_offset = shift_offset;
+    else
+        numpad_offset = offset;
 
     switch (keysym.sym)
     {
     case SDLK_RETURN:
-        return CK_ENTER;
+        return CK_ENTER + offset;
     case SDLK_BACKSPACE:
-        return CK_BKSP;
+        return CK_BKSP + offset;
     case SDLK_ESCAPE:
-        return CK_ESCAPE;
+        return CK_ESCAPE + offset;
     case SDLK_DELETE:
-        return CK_DELETE;
+        return CK_DELETE + offset;
+
     case SDLK_F1:
-        return F1;
     case SDLK_F2:
-        return F2;
     case SDLK_F3:
-        return F3;
     case SDLK_F4:
-        return F4;
     case SDLK_F5:
-        return F5;
     case SDLK_F6:
-        return F6;
     case SDLK_F7:
-        return F7;
     case SDLK_F8:
-        return F8;
     case SDLK_F9:
-        return F9;
     case SDLK_F10:
-        return F10;
     case SDLK_F11:
-        return F11;
     case SDLK_F12:
-        return F12;
     case SDLK_F13:
-        return F13;
     case SDLK_F14:
-        return F14;
     case SDLK_F15:
-        return F15;
+    case SDLK_NUMLOCK:
+    case SDLK_CAPSLOCK:
+    case SDLK_SCROLLOCK:
+    case SDLK_RMETA:
+    case SDLK_LMETA:
+    case SDLK_LSUPER:
+    case SDLK_RSUPER:
+    case SDLK_MODE:
+    case SDLK_COMPOSE:
+    case SDLK_HELP:
+    case SDLK_PRINT:
+    case SDLK_SYSREQ:
+    case SDLK_BREAK:
+    case SDLK_MENU:
+    case SDLK_POWER:
+    case SDLK_EURO:
+    case SDLK_UNDO:
+        ASSERT(keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_UNDO);
+        return keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod;
 
     // Hack.  libw32c overloads clear with '5' too.
     case SDLK_KP5:
-        return CK_CLEAR + offset;
+        return CK_CLEAR + numpad_offset;
 
     case SDLK_KP8:
     case SDLK_UP:
-        return CK_UP + offset;
+        return CK_UP + numpad_offset;
     case SDLK_KP2:
     case SDLK_DOWN:
-        return CK_DOWN + offset;
+        return CK_DOWN + numpad_offset;
     case SDLK_KP4:
     case SDLK_LEFT:
-        return CK_LEFT + offset;
+        return CK_LEFT + numpad_offset;
     case SDLK_KP6:
     case SDLK_RIGHT:
-        return CK_RIGHT + offset;
+        return CK_RIGHT + numpad_offset;
     case SDLK_KP0:
     case SDLK_INSERT:
-        return CK_INSERT + offset;
+        return CK_INSERT + numpad_offset;
     case SDLK_KP7:
     case SDLK_HOME:
-        return CK_HOME + offset;
+        return CK_HOME + numpad_offset;
     case SDLK_KP1:
     case SDLK_END:
-        return CK_END + offset;
+        return CK_END + numpad_offset;
     case SDLK_CLEAR:
-        return CK_CLEAR + offset;
+        return CK_CLEAR + numpad_offset;
     case SDLK_KP9:
     case SDLK_PAGEUP:
-        return CK_PGUP + offset;
+        return CK_PGUP + numpad_offset;
     case SDLK_KP3:
     case SDLK_PAGEDOWN:
-        return CK_PGDN + offset;
+        return CK_PGDN + numpad_offset;
     default:
         break;
     }
 
+    // Alt does not get baked into keycodes like shift and ctrl, so handle it.
+    int key_offset = (mod & MOD_ALT) ? 3000 : 0;
+
     bool is_ascii = ((keysym.unicode & 0xFF80) == 0);
-    return is_ascii ? keysym.unicode & 0x7F : 0;
+    return is_ascii ? (keysym.unicode & 0x7F) + key_offset : 0;
 }
 
 
