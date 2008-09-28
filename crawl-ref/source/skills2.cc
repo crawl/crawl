@@ -1969,7 +1969,7 @@ static std::string _stk_weight()
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
     case SP_KENKU:
-        return "Little";
+        return "Light";
 
     case SP_HALFLING:
     case SP_GNOME:
