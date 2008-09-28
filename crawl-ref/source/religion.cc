@@ -4271,7 +4271,7 @@ static bool _holy_beings_on_level_attitude_change()
                 monster->attitude = ATT_HOSTILE;
                 monster->del_ench(ENCH_CHARM, true);
                 behaviour_event(monster, ME_ALERT, MHITYOU);
-                // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+                // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
 
                 success = true;
             }
@@ -4310,7 +4310,7 @@ static bool _evil_beings_on_level_attitude_change()
                 monster->attitude = ATT_HOSTILE;
                 monster->del_ench(ENCH_CHARM, true);
                 behaviour_event(monster, ME_ALERT, MHITYOU);
-                // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+                // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
 
                 success = true;
             }
@@ -4349,7 +4349,7 @@ static bool _chaotic_beings_on_level_attitude_change()
                 monster->attitude = ATT_HOSTILE;
                 monster->del_ench(ENCH_CHARM, true);
                 behaviour_event(monster, ME_ALERT, MHITYOU);
-                // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+                // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
 
                 success = true;
             }
@@ -4388,7 +4388,7 @@ static bool _magic_users_on_level_attitude_change()
                 monster->attitude = ATT_HOSTILE;
                 monster->del_ench(ENCH_CHARM, true);
                 behaviour_event(monster, ME_ALERT, MHITYOU);
-                // for now CREATED_FRIENDLY/WAS_NEUTRAL stays
+                // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
 
                 success = true;
             }
@@ -4540,6 +4540,33 @@ static bool _make_god_gifts_hostile(bool level_only)
     return (apply_to_all_dungeons(_god_gifts_hostile_wrapper) || success);
 }
 
+static bool _yred_slaves_on_level_abandon_you()
+{
+    bool success = false;
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *monster = &menv[i];
+        if (is_yred_slave(monster))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Slave abandoning: %s on level %d, branch %d",
+                 monster->name(DESC_PLAIN).c_str(),
+                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.where_are_you));
+#endif
+
+            monster->attitude = ATT_HOSTILE;
+            behaviour_event(monster, ME_ALERT, MHITYOU);
+            // For now CREATED_FRIENDLY stays.
+
+            success = true;
+        }
+    }
+
+    return (success);
+}
+
 static bool _orcish_followers_on_level_abandon_you()
 {
     bool success = false;
@@ -4558,50 +4585,77 @@ static bool _orcish_followers_on_level_abandon_you()
 
             monster->attitude = ATT_HOSTILE;
             behaviour_event(monster, ME_ALERT, MHITYOU);
-            // for now CREATED_FRIENDLY stays
+            // For now CREATED_FRIENDLY stays.
 
             success = true;
         }
     }
 
-    return success;
+    return (success);
 }
 
+// Upon excommunication, ex-Yredelemnulites lose all their undead
+// slaves.  When under penance, Yredelemnulites can lose all undead
+// slaves in sight.
 static bool _yred_slaves_abandon_you()
 {
-    int how_many = 1 + random2(1 + (you.experience_level / 5));
-    int count = 0;
+    bool reclaim = false;
+    int num_reclaim = 0;
+    int num_slaves = 0;
 
-    for (; how_many > 0; --how_many)
+    if (you.religion != GOD_YREDELEMNUL)
+        reclaim = apply_to_all_dungeons(_yred_slaves_on_level_abandon_you);
+    else
     {
-        // Choose a random slave in LOS.
-        monsters *slave = choose_random_nearby_monster(0, is_yred_slave);
-
-        if (!slave)
+        for (radius_iterator ri(you.pos(), 9); ri; ++ri)
         {
-            // Try again, without the LOS restriction.
-            slave = choose_random_nearby_monster(0, is_yred_slave, false);
-        }
+            if (mgrd(*ri) == NON_MONSTER)
+                continue;
 
-        if (!slave)
-        {
-            // Try *again*, on the entire level.
-            slave = choose_random_monster_on_level(0, is_yred_slave, false);
-        }
+            monsters *monster = &menv[mgrd(*ri)];
 
-        if (slave)
-        {
-            slave->attitude = ATT_HOSTILE;
-            behaviour_event(slave, ME_ALERT, MHITYOU);
+            if (is_yred_slave(monster))
+            {
+                num_slaves++;
 
-            count++;
+                const int hd = monster->hit_dice;
+
+                // During penance, followers get a saving throw.
+                if (random2((you.piety-you.penance[GOD_YREDELEMNUL])/18) +
+                    random2(you.skills[SK_INVOCATIONS]-6)
+                    > random2(hd) + hd + random2(5))
+                {
+                    continue;
+                }
+
+                monster->attitude = ATT_HOSTILE;
+                behaviour_event(monster, ME_ALERT, MHITYOU);
+                // For now CREATED_FRIENDLY stays.
+
+                num_reclaim++;
+
+                reclaim = true;
+            }
         }
     }
 
-    if (count > 0)
+    if (reclaim)
     {
-        simple_god_message(count > 1 ? " reclaims some of your undead slaves!"
-                                     : " reclaims one of your undead slaves!");
+        if (you.religion != GOD_YREDELEMNUL)
+        {
+            simple_god_message(" reclaims all of your undead slaves!",
+                               GOD_YREDELEMNUL);
+        }
+        else if (num_reclaim > 0)
+        {
+            if (num_reclaim == 1 && num_slaves > 1)
+                simple_god_message(" reclaims one of your undead slaves!");
+            else if (num_reclaim == num_slaves)
+                simple_god_message(" reclaims your undead slaves!");
+            else
+                simple_god_message(" reclaims some of your undead slaves!");
+        }
+
         return (true);
     }
 
@@ -4630,6 +4684,7 @@ static bool _beogh_followers_abandon_you()
                 continue;
 
             monsters *monster = &menv[mgrd(*ri)];
+
             if (is_orcish_follower(monster))
             {
                 num_followers++;
@@ -4641,7 +4696,7 @@ static bool _beogh_followers_abandon_you()
                 {
                     const int hd = monster->hit_dice;
 
-                    // During penance followers get a saving throw.
+                    // During penance, followers get a saving throw.
                     if (random2((you.piety-you.penance[GOD_BEOGH])/18) +
                         random2(you.skills[SK_INVOCATIONS]-6)
                         > random2(hd) + hd + random2(5))
@@ -4654,7 +4709,7 @@ static bool _beogh_followers_abandon_you()
                     // For now CREATED_FRIENDLY stays.
 
                     if (player_monster_visible(monster))
-                        num_reconvert++; // only visible ones
+                        num_reconvert++; // Only visible ones.
 
                     reconvert = true;
                 }
@@ -4662,7 +4717,7 @@ static bool _beogh_followers_abandon_you()
         }
     }
 
-    if (reconvert) // maybe all of them are invisible
+    if (reconvert) // Maybe all of them are invisible.
     {
         simple_god_message("'s voice booms out, \"Who do you think you "
                            "are?\"", GOD_BEOGH);
@@ -4675,17 +4730,14 @@ static bool _beogh_followers_abandon_you()
         {
             if (num_reconvert == 1 && num_followers > 1)
                 chan << "One of your followers decides to abandon you.";
+            else if (num_reconvert == num_followers)
+                chan << "Your followers decide to abandon you.";
             else
-            {
-                if (num_reconvert == num_followers)
-                    chan << "Your";
-                else
-                    chan << "Some of your";
-                chan << " followers decide to abandon you.";
-            }
+                chan << "Some of your followers decide to abandon you.";
         }
 
         chan << std::endl;
+
         return (true);
     }
 
@@ -4890,7 +4942,7 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_YREDELEMNUL:
-        _make_god_gifts_hostile(false);
+        _yred_slaves_abandon_you();
 
         MiscastEffect(&you, -old_god, SPTYP_NECROMANCY,
                       5 + you.experience_level, random2avg(88, 3),
