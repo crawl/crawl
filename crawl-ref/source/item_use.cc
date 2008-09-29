@@ -504,6 +504,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
             setLOSRadius(you.current_vision);
             you.special_wield = SPWLD_SHADOW;
         }
+        else if (item.sub_type == MISC_HORN_OF_GERYON)
+        {
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
+        }
         break;
     }
 
