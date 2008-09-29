@@ -764,7 +764,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
 void monster_die(monsters *monster, killer_type killer,
                  int killer_index, bool silent)
 {
-    if (monster->type == -1)
+    if (invalid_monster(monster))
         return;
 
     if (!silent && _monster_avoided_death(monster, killer, killer_index))
