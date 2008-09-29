@@ -772,6 +772,9 @@ void wield_effects(int item_wield_2, bool showMsgs)
             else
                 xom_is_stimulated(64);
         }
+
+        // Give curse status when wielded.
+        set_ident_flags( item, ISFLAG_KNOW_CURSE );
         break;
     }
     default:
