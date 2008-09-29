@@ -2044,6 +2044,9 @@ bool is_preferred_food(const item_def &food)
 
     if (food.base_type != OBJ_FOOD)
         return (false);
+    
+    if (is_poisonous(food))
+        return (false);
 
     // Honeycombs are tasty for everyone.
     if (food.sub_type == FOOD_HONEYCOMB || food.sub_type == FOOD_ROYAL_JELLY)
