@@ -4719,7 +4719,7 @@ void monsters::expose_to_element(beam_type flavour, int strength)
 
 void monsters::banish(const std::string &)
 {
-    monster_die(this, KILL_RESET, 0);
+    monster_die(this, KILL_RESET, NON_MONSTER);
 }
 
 int monsters::holy_aura() const
@@ -4975,7 +4975,7 @@ int monsters::hurt(const actor *agent, int amount, beam_type flavour)
     if (agent && (hit_points < 1 || hit_dice < 1) && type != -1)
     {
         if (agent->atype() == ACT_PLAYER)
-            monster_die(this, KILL_YOU, 0);
+            monster_die(this, KILL_YOU, NON_MONSTER);
         else
         {
             monster_die(this, KILL_MON,
@@ -5669,7 +5669,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (this->has_ench(ENCH_BERSERK))
             simple_monster_message(this, " is no longer berserk.");
 
-        monster_die(this, quiet ? KILL_DISMISSED : KILL_RESET, 0);
+        monster_die(this, quiet ? KILL_DISMISSED : KILL_RESET, NON_MONSTER);
         break;
 
     case ENCH_SUBMERGED:

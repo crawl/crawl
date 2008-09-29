@@ -3510,7 +3510,7 @@ void debug_fight_statistics(bool use_defaults, bool defence)
                 break;
         }
     }
-    monster_die(&menv[mindex], KILL_DISMISSED, 0);
+    monster_die(&menv[mindex], KILL_DISMISSED, NON_MONSTER);
 }
 
 static int find_trap_slot()
@@ -3832,7 +3832,7 @@ void wizard_dismiss_all_monsters(bool force_all)
             monsters *monster = &menv[mon];
 
             if (monster->alive())
-                monster_die(monster, KILL_DISMISSED, 0);
+                monster_die(monster, KILL_DISMISSED, NON_MONSTER);
         }
         return;
     }
@@ -3844,7 +3844,7 @@ void wizard_dismiss_all_monsters(bool force_all)
         monsters *monster = &menv[mon];
 
         if (monster->alive() && tpat.matches(monster->name(DESC_PLAIN)))
-            monster_die(monster, KILL_DISMISSED, 0);
+            monster_die(monster, KILL_DISMISSED, NON_MONSTER);
     }
 }
 

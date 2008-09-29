@@ -753,7 +753,7 @@ void yred_mirror_injury(monsters *mon, int dam)
     hurt_monster(mon, dam);
 
     if (mon->hit_points < 1)
-        monster_die(mon, KILL_YOU, 0);
+        monster_die(mon, KILL_YOU, NON_MONSTER);
     else
         print_wounds(mon);
 
@@ -4424,7 +4424,7 @@ static bool _make_god_gifts_on_level_disappear(bool seen = false)
                 count++;
 
             // monster disappears
-            monster_die(monster, KILL_DISMISSED, 0);
+            monster_die(monster, KILL_DISMISSED, NON_MONSTER);
         }
     }
 

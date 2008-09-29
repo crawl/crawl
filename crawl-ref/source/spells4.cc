@@ -86,7 +86,7 @@ inline bool player_hurt_monster(int monster, int damage)
         }
         else
         {
-            monster_die( &menv[monster], KILL_YOU, 0 );
+            monster_die(&menv[monster], KILL_YOU, NON_MONSTER);
             return (true);
         }
     }
@@ -1759,7 +1759,7 @@ bool cast_fragmentation(int pow, const dist& spd)
 
             if (x_chance_in_y(pow / 5, 50))        // potential insta-kill
             {
-                monster_die(&menv[mon], KILL_YOU, 0);
+                monster_die(&menv[mon], KILL_YOU, NON_MONSTER);
                 beam.damage.num = 4;
             }
             else
@@ -2219,7 +2219,7 @@ void cast_far_strike(int pow)
     // Inflict the damage.
     hurt_monster( monster, damage );
     if (monster->hit_points < 1)
-        monster_die( monster, KILL_YOU, 0 );
+        monster_die(monster, KILL_YOU, NON_MONSTER);
     else
         print_wounds( monster );
 

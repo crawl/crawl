@@ -410,7 +410,7 @@ void mons_trap(monsters *monster)
 
         if (monster->hit_points < 1)
         {
-            monster_die(monster, KILL_MISC, 0);
+            monster_die(monster, KILL_MISC, NON_MONSTER);
             monster->speed_increment = 1;
         }
     }

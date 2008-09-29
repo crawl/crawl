@@ -1637,7 +1637,7 @@ void zap_los_monsters()
 #endif
         // Mark as summoned so its items will also be discarded.
         mon->mark_summoned(1, true);
-        monster_die(mon, KILL_DISMISSED, 0);
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
     }
 }
 

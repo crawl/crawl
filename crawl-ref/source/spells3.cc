@@ -224,7 +224,7 @@ int cast_smiting(int power, dist &beam)
             hurt_monster(monster, 7 + (random2(power) * 33 / 191));
 
             if (monster->hit_points < 1)
-                monster_die(monster, KILL_YOU, 0);
+                monster_die(monster, KILL_YOU, NON_MONSTER);
             else
                 print_wounds(monster);
         }
@@ -281,7 +281,7 @@ int airstrike(int power, dist &beam)
             hurt_monster(monster, hurted);
 
             if (monster->hit_points < 1)
-                monster_die(monster, KILL_YOU, 0);
+                monster_die(monster, KILL_YOU, NON_MONSTER);
             else
                 print_wounds(monster);
         }

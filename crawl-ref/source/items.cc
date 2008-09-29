@@ -367,7 +367,7 @@ void unlink_item( int dest )
 
                     // This causes problems when changing levels. -- bwr
                     // if (monster->type == MONS_DANCING_WEAPON)
-                    //     monster_die(monster, KILL_RESET, 0);
+                    //     monster_die(monster, KILL_RESET, NON_MONSTER);
                     return;
                 }
             }

@@ -1600,7 +1600,7 @@ static int _drain_monsters(coord_def where, int pow, int garbage)
                 mon.hit_points = 0;
 
             if (mon.hit_points <= 0)
-                monster_die( &mon, KILL_YOU, 0 );
+                monster_die(&mon, KILL_YOU, NON_MONSTER);
         }
     }
     return 1;

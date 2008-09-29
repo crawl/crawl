@@ -746,7 +746,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
     if (!target->alive())
         return;
 
-    if (monster->type == MONS_MUMMY && killer == NON_MONSTER)
+    if (monster->type == MONS_MUMMY && YOU_KILL(killer))
         curse_an_item(true);
     else
     {
@@ -2484,7 +2484,7 @@ void make_mons_leave_level(monsters *mon)
         // Pacified monsters leaving the level take their stuff with
         // them.
         mon->flags |= MF_HARD_RESET;
-        monster_die(mon, KILL_DISMISSED, 0);
+        monster_die(mon, KILL_DISMISSED, NON_MONSTER);
     }
 }
 
@@ -6011,7 +6011,7 @@ static void _handle_monster_move(int i, monsters *monster)
             return;
         }
         else
-            monster_die(monster, KILL_MISC, 0);
+            monster_die(monster, KILL_MISC, NON_MONSTER);
     }
 }
 

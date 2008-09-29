@@ -699,7 +699,7 @@ void cast_refrigeration(int pow)
 
             // Kill monster if necessary; cold-blooded creatures can be slowed.
             if (monster->hit_points < 1)
-                monster_die(monster, KILL_YOU, 0);
+                monster_die(monster, KILL_YOU, NON_MONSTER);
             else if (mons_class_flag(monster->type, M_COLD_BLOOD) && coinflip())
                 monster->add_ench(ENCH_SLOW);
         }
@@ -746,7 +746,7 @@ void drain_life(int pow)
             hp_gain += hurted;
 
             if (monster->hit_points < 1)
-                monster_die(monster, KILL_YOU, 0);
+                monster_die(monster, KILL_YOU, NON_MONSTER);
             else
                 print_wounds(monster);
         }
@@ -812,7 +812,7 @@ bool vampiric_drain(int pow, const dist &vmove)
     print_wounds(monster);
 
     if (monster->hit_points < 1)
-        monster_die(monster, KILL_YOU, 0);
+        monster_die(monster, KILL_YOU, NON_MONSTER);
 
     inc_hp(inflicted / 2, false);
 

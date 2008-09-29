@@ -2464,7 +2464,7 @@ void MiscastEffect::do_miscast()
     }
 
 #if DEBUG_DIAGNOSTICS || DEBUG_MISCAT
-    mprf(MSGCH_DIAGNOSTICS, "Sptype: %u, severity: %d",
+    mprf(MSGCH_DIAGNOSTICS, "Sptype: %s, severity: %d",
          spelltype_short_name(sp_type), severity );
 #endif
 

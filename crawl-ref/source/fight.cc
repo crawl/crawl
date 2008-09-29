@@ -1222,7 +1222,7 @@ bool melee_attack::player_apply_aux_unarmed()
 
     if (def->hit_points < 1)
     {
-        monster_die(def, KILL_YOU, 0);
+        monster_die(def, KILL_YOU, NON_MONSTER);
         return (true);
     }
 
@@ -1856,7 +1856,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
 
     if (def->hit_points < 1)
     {
-        monster_die(def, KILL_YOU, 0);
+        monster_die(def, KILL_YOU, NON_MONSTER);
         return (true);
     }
 
@@ -2638,7 +2638,7 @@ bool melee_attack::player_check_monster_died()
 
         player_monattk_hit_effects(true);
 
-        monster_die(def, KILL_YOU, 0);
+        monster_die(def, KILL_YOU, NON_MONSTER);
 
         return (true);
     }

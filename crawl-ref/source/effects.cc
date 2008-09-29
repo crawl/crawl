@@ -140,7 +140,7 @@ int holy_word_monsters(coord_def where, int pow, int caster)
         retval = 1;
         if (!monster->alive())
         {
-            monster_die(monster, KILL_YOU, 0);
+            monster_die(monster, KILL_YOU, NON_MONSTER);
             return retval;
         }
     }
@@ -261,7 +261,7 @@ int torment_monsters(coord_def where, int pow, int caster)
         retval = 1;
         if (!monster->alive())
         {
-            monster_die(monster, KILL_YOU, 0);
+            monster_die(monster, KILL_YOU, NON_MONSTER);
             return retval;
         }
     }
