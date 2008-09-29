@@ -484,7 +484,11 @@ void area_shift(void)
 
         // Move monster.
         if ( mgrd(*ri) != NON_MONSTER )
+        {
             menv[mgrd(*ri)].moveto(newpos);
+            mgrd(newpos) = mgrd(*ri);
+            mgrd(*ri) = NON_MONSTER;
+        }
 
         // Move cloud,
         if (env.cgrid(*ri) != EMPTY_CLOUD)
