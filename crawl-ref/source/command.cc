@@ -1116,6 +1116,28 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     if (type == SPELL_NO_SPELL)
         return (false);
 
+    desc += "$Type:       ";
+    bool already = false;
+
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+    {
+        if (spell_typematch( type, 1 << i ))
+        {
+            if (already)
+                desc += "/" ;
+
+            desc += spelltype_name( 1 << i );
+            already = true;
+        }
+    }
+    if (!already)
+        desc += "None";
+
+    desc += "$Level:      ";
+    char sval[3];
+    itoa( spell_difficulty( type ), sval, 10 );
+    desc += sval;
+
     set_ident_flags(item, ISFLAG_IDENT_MASK);
     std::vector<std::string> books;
     std::vector<std::string> rods;

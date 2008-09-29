@@ -97,7 +97,6 @@ void lessen_hunger( int satiated_amount, bool suppress_msg )
     if (you.is_undead == US_UNDEAD)
         return;
 
-    mprf("satiated_amount: %d", satiated_amount);
     you.hunger += satiated_amount;
 
     if (you.hunger > 12000)
@@ -1920,8 +1919,6 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
 
     if (!end_feeding)
         lessen_hunger(food_value / duration, !start_feeding);
-    else
-        mprf("feeding finished: %d turns", duration);
 }
 
 // Returns true if a food item (also corpses) is poisonous AND the player
