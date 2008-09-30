@@ -163,7 +163,6 @@ void DEBUGSTR(const char *format, ...)
 }
 #endif
 
-#ifdef WIZARD
 static int _debug_prompt_for_monster( void )
 {
     char  specs[80];
@@ -178,14 +177,12 @@ static int _debug_prompt_for_monster( void )
     }
     return (-1);
 }
-#endif
 
 //---------------------------------------------------------------
 //
 // debug_prompt_for_skill
 //
 //---------------------------------------------------------------
-#ifdef WIZARD
 static int _debug_prompt_for_skill( const char *prompt )
 {
     char specs[80];
@@ -223,7 +220,6 @@ static int _debug_prompt_for_skill( const char *prompt )
 
     return (skill);
 }
-#endif
 
 #ifdef WIZARD
 void wizard_change_species( void )
@@ -371,7 +367,6 @@ void wizard_change_species( void )
 // If !nonneg, then it returns an integer, and 0 on fail
 //
 //---------------------------------------------------------------
-#ifdef WIZARD
 static int _debug_prompt_for_int( const char *prompt, bool nonneg )
 {
     char specs[80];
@@ -390,7 +385,6 @@ static int _debug_prompt_for_int( const char *prompt, bool nonneg )
 
     return (ret);
 }
-#endif
 
 // Some debugging functions, accessible in wizard mode.
 
@@ -833,7 +827,6 @@ void debug_list_monsters()
 
 #endif
 
-#ifdef WIZARD
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
     char specs[80];
@@ -1242,7 +1235,6 @@ void wizard_create_spec_object()
         canned_msg( MSG_SOMETHING_APPEARS );
     }
 }
-#endif
 
 bool get_item_by_name(item_def *item, char* specs,
                       object_class_type class_wanted, bool create_for_real)
