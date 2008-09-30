@@ -1839,8 +1839,12 @@ static void _restore_ghost_version( FILE *ghostFile,
 
 void save_ghost( bool force )
 {
-    if (!force && you.your_level < 2)
+    // No ghosts on levels 1, 2, or the ET.
+    if (!force && (you.your_level < 2
+                   || you.where_are_you == BRANCH_ECUMENICAL_TEMPLE))
+    {
         return;
+    }
 
     std::string cha_fil = make_filename( "bones", you.your_level,
                                          you.where_are_you,
