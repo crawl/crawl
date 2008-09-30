@@ -848,12 +848,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             take_note(
                 Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()) );
 
-            if (you.religion == GOD_YREDELEMNUL
-                && you.duration[DUR_PRAYER]
-                && !invalid_monster_index(death_source))
-            {
+            if (!invalid_monster_index(death_source))
                 yred_mirror_injury(&menv[death_source], dam);
-            }
 
             return;
         } // else hp <= 0

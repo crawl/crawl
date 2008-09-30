@@ -94,7 +94,7 @@ void god_smites_you(god_type god, const char *message = NULL,
                     kill_method_type death_type = NUM_KILLBY);
 void divine_retribution(god_type god);
 
-void yred_mirror_injury(monsters *mon, int dam);
+bool yred_mirror_injury(monsters *mon, int dam);
 bool beogh_water_walk();
 void beogh_idol_revenge();
 void good_god_holy_attitude_change(monsters *holy);

@@ -739,25 +739,33 @@ void dec_penance(int val)
     dec_penance(you.religion, val);
 }
 
-void yred_mirror_injury(monsters *mon, int dam)
+bool yred_mirror_injury(monsters *mon, int dam)
 {
     if (dam <= 0)
-        return;
+        return (false);
 
-    simple_god_message(" mirrors your injury!");
+    if (you.religion == GOD_YREDELEMNUL && you.duration[DUR_PRAYER]
+        && !player_under_penance() && you.piety >= piety_breakpoint(0))
+    {
+        simple_god_message(" mirrors your injury!");
 
 #ifndef USE_TILE
-    flash_monster_colour(mon, RED, 200);
+        flash_monster_colour(mon, RED, 200);
 #endif
 
-    hurt_monster(mon, dam);
+        hurt_monster(mon, dam);
 
-    if (mon->hit_points < 1)
-        monster_die(mon, KILL_YOU, NON_MONSTER);
-    else
-        print_wounds(mon);
+        if (mon->hit_points < 1)
+            monster_die(mon, KILL_YOU, NON_MONSTER);
+        else
+            print_wounds(mon);
 
-    lose_piety(integer_sqrt(dam));
+        lose_piety(integer_sqrt(dam));
+
+        return (true);
+    }
+
+    return (false);
 }
 
 bool beogh_water_walk()
