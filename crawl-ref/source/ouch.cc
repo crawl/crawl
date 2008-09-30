@@ -790,6 +790,32 @@ static void _xom_checks_damage(kill_method_type death_type,
     xom_is_stimulated(amusementvalue);
 }
 
+static void _yred_mirrors_injury(int dam, int death_source)
+{
+    if (dam <= 0 || invalid_monster_index(death_source))
+        return;
+
+    if (yred_injury_mirror() && you.duration[DUR_PRAYER])
+    {
+        simple_god_message(" mirrors your injury!");
+
+        monsters *mon = &menv[death_source];
+
+#ifndef USE_TILE
+        flash_monster_colour(mon, RED, 200);
+#endif
+
+        hurt_monster(mon, dam);
+
+        if (mon->hit_points < 1)
+            monster_die(mon, KILL_YOU, NON_MONSTER);
+        else
+            print_wounds(mon);
+
+        lose_piety(integer_sqrt(dam));
+    }
+}
+
 // death_source should be set to NON_MONSTER for non-monsters. {dlb}
 void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux, bool see_source)
@@ -848,8 +874,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             take_note(
                 Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()) );
 
-            if (!invalid_monster_index(death_source))
-                yred_mirror_injury(&menv[death_source], dam);
+            _yred_mirrors_injury(dam, death_source);
 
             return;
         } // else hp <= 0
