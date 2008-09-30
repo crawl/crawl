@@ -3143,7 +3143,7 @@ void describe_god( god_type which_god, bool give_title )
         }
         else if (which_god == GOD_YREDELEMNUL)
         {
-            if (yred_injury_mirror())
+            if (yred_injury_mirror(false))
             {
                 have_any = true;
                 cprintf("%s mirrors your injuries on your foes "

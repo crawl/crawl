@@ -739,10 +739,11 @@ void dec_penance(int val)
     dec_penance(you.religion, val);
 }
 
-bool yred_injury_mirror()
+bool yred_injury_mirror(bool actual)
 {
     return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
-            && you.piety >= piety_breakpoint(0));
+            && you.piety >= piety_breakpoint(0)
+            && (!actual || you.duration[DUR_PRAYER]));
 }
 
 bool beogh_water_walk()

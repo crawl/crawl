@@ -795,7 +795,7 @@ static void _yred_mirrors_injury(int dam, int death_source)
     if (dam <= 0 || invalid_monster_index(death_source))
         return;
 
-    if (yred_injury_mirror() && you.duration[DUR_PRAYER])
+    if (yred_injury_mirror())
     {
         simple_god_message(" mirrors your injury!");
 
