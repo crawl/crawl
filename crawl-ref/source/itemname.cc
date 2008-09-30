@@ -195,15 +195,11 @@ std::string item_def::name(description_level_type descrip,
 
         if (this->link == you.equip[EQ_WEAPON])
         {
-            if (you.inv[ you.equip[EQ_WEAPON] ].base_type == OBJ_WEAPONS
-                || item_is_staff( you.inv[ you.equip[EQ_WEAPON] ] ))
-            {
+            if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
                 buff << " (weapon)";
-            }
             else
-            {
                 buff << " (in hand)";
-            }
+
             equipped = true;
         }
         else if (this->link == you.equip[EQ_CLOAK]
@@ -231,12 +227,17 @@ std::string item_def::name(description_level_type descrip,
             buff << " (around neck)";
             equipped = true;
         }
+        else if (this->link == you.m_quiver->get_fire_item(NULL))
+        {
+            buff << " (quivered)";
+            equipped = true; // well, sort of
+        }
    }
 
    if (descrip != DESC_BASENAME)
    {
         const bool  tried  =  !ident && !equipped && item_type_tried(*this);
-        std::string tried_str = "";
+        std::string tried_str;
 
         if (tried)
         {
@@ -2627,10 +2628,15 @@ const std::string menu_colour_item_prefix(const item_def &item, bool temp)
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
-        if (item_is_equipped(item))
+        if (item_is_equipped(item, true))
             prefixes.push_back("equipped");
         if (is_artefact(item))
             prefixes.push_back("artefact");
+        break;
+
+    case OBJ_MISSILES:
+        if (item_is_equipped(item, true))
+            prefixes.push_back("equipped");
         break;
 
     default:

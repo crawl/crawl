@@ -151,7 +151,7 @@ bool need_to_autoinscribe();
 void request_autoinscribe(bool do_inscribe = true);
 void autoinscribe();
 
-bool item_is_equipped(const item_def &item);
+bool item_is_equipped(const item_def &item, bool quiver_too = false);
 
 void item_was_lost(const item_def &item);
 void item_was_destroyed(const item_def &item, int cause = -1);
