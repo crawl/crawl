@@ -5464,7 +5464,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     {
         if (mgrd(*ai) == NON_MONSTER
             && monster_habitable_grid(mon, grd(*ai))
-            && trap_type_at_xy(*ai) == NUM_TRAPS)
+            && !find_trap(*ai))
         {
             if (one_chance_in(++okay_squares))
                 target_square = *ai;
@@ -6537,7 +6537,9 @@ void monsters::apply_location_effects()
     dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
 
     // monsters stepping on traps:
-    mons_trap(this);
+    trap_def* ptrap = find_trap(pos());
+    if (ptrap)
+        ptrap->trigger(*this);
 
     if (alive())
         mons_check_pool(this);
@@ -6578,7 +6580,7 @@ bool monsters::do_shaft()
 
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
-    if (trap_type_at_xy(this->pos()) != TRAP_SHAFT)
+    if (get_trap_type(this->pos()) != TRAP_SHAFT)
     {
         switch(grd(pos()))
         {

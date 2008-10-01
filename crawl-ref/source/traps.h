@@ -12,18 +12,14 @@
 #include "enum.h"
 #include "travel.h"
 
-struct dist;
 struct bolt;
 class  monsters;
-
-bool trap_item(object_class_type base_type, char sub_type,
-               const coord_def& where);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void disarm_trap(struct dist &disa);
+void disarm_trap(const coord_def& where);
 void remove_net_from( monsters *mon );
 void free_self_from_net(void);
 
@@ -39,11 +35,9 @@ void player_caught_in_net(void);
 void clear_trapping_net(void);
 void check_net_will_hold_monster(monsters *mon);
 
-void itrap(struct bolt &pbolt, int trapped);
-void destroy_trap( const coord_def& pos );
-dungeon_feature_type trap_category(trap_type type);
-int trap_at_xy(const coord_def& xy);
-trap_type trap_type_at_xy(const coord_def& xy);
+void destroy_trap(const coord_def& pos);
+trap_def* find_trap(const coord_def& where);
+trap_type get_trap_type(const coord_def& where);
 
 bool     is_valid_shaft_level(const level_id &place = level_id::current());
 level_id generic_shaft_dest(coord_def pos);

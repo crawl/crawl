@@ -2510,7 +2510,7 @@ std::string feature_description(const coord_def& where, bool bloody,
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
-        return (feature_description(grid, trap_type_at_xy(where), bloody,
+        return (feature_description(grid, get_trap_type(where), bloody,
                                     dtype, add_stop));
     case DNGN_ENTER_SHOP:
         return (shop_name(where, add_stop));

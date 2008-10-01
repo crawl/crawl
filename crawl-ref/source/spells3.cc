@@ -1432,17 +1432,9 @@ bool entomb(int powc)
         if (env.cgrid(*ai) != EMPTY_CLOUD)
             delete_cloud( env.cgrid(*ai) );
 
-        // mechanical traps are destroyed {dlb}:
-        int which_trap = trap_at_xy(*ai);
-        if ( which_trap != -1 )
-        {
-            trap_struct& trap(env.trap[which_trap]);
-            if (trap_category(trap.type) == DNGN_TRAP_MECHANICAL)
-            {
-                trap.type = TRAP_UNASSIGNED;
-                trap.pos.set(1,1);
-            }
-        }
+        // All traps are destroyed
+        if (trap_def* ptrap = find_trap(*ai))
+            ptrap->destroy();
 
         // Finally, place the wall {dlb}:
         grd(*ai) = DNGN_ROCK_WALL;
@@ -1627,14 +1619,13 @@ bool cast_sanctuary(const int power)
         if (env.map(pos).property == FPROP_BLOODY && see_grid(pos))
             blood_count++;
 
-        if (trap_type_at_xy(pos) != NUM_TRAPS
-            && grd(pos) == DNGN_UNDISCOVERED_TRAP)
+        if (trap_def* ptrap = find_trap(pos))
         {
-            const dungeon_feature_type type =
-                trap_category( trap_type_at_xy(pos) );
-            grd(pos) = type;
-            set_envmap_obj(pos, type);
-            trap_count++;
+            if (!ptrap->is_known())
+            {
+                ptrap->reveal();
+                ++trap_count;
+            }
         }
 
         // forming patterns

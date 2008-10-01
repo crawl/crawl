@@ -30,7 +30,7 @@ bool grid_is_rock(dungeon_feature_type grid);
 bool grid_is_permarock(dungeon_feature_type grid);
 bool grid_is_stone_stair(dungeon_feature_type grid);
 bool grid_is_escape_hatch(dungeon_feature_type grid);
-bool grid_is_trap(dungeon_feature_type grid);
+bool grid_is_trap(dungeon_feature_type grid, bool undiscovered_too = false);
 command_type grid_stair_direction(dungeon_feature_type grid);
 bool grid_sealable_portal(dungeon_feature_type grid);
 bool grid_is_portal(dungeon_feature_type grid);

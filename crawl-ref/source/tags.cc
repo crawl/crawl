@@ -1731,8 +1731,8 @@ static void tag_construct_level_items(writer &th)
     for (int i = 0; i < MAX_TRAPS; ++i)
     {
         marshallByte(th, env.trap[i].type);
-        marshallByte(th, env.trap[i].pos.x);
-        marshallByte(th, env.trap[i].pos.y);
+        marshallCoord(th, env.trap[i].pos);
+        marshallShort(th, env.trap[i].ammo_qty);
     }
 
     // how many items?
@@ -2018,9 +2018,8 @@ static void tag_read_level_items(reader &th, char minorVersion)
         env.trap[i].type =
             static_cast<trap_type>(
                 static_cast<unsigned char>(unmarshallByte(th)) );
-
-        env.trap[i].pos.x = unmarshallByte(th);
-        env.trap[i].pos.y = unmarshallByte(th);
+        unmarshallCoord(th, env.trap[i].pos);
+        env.trap[i].ammo_qty = unmarshallShort(th);
     }
 
     // how many items?

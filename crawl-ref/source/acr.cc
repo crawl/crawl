@@ -1697,9 +1697,8 @@ static void _go_upstairs()
 
 static void _go_downstairs()
 {
-    bool shaft = (trap_type_at_xy(you.pos()) == TRAP_SHAFT
+    bool shaft = (get_trap_type(you.pos()) == TRAP_SHAFT
                   && grd(you.pos()) != DNGN_UNDISCOVERED_TRAP);
-
 
     if (_stairs_check_beheld())
         return;
@@ -3021,7 +3020,7 @@ static void _check_shafts()
 {
     for (int i = 0; i < MAX_TRAPS; i++)
     {
-        trap_struct &trap = env.trap[i];
+        trap_def &trap = env.trap[i];
 
         if (trap.type != TRAP_SHAFT)
             continue;
@@ -3512,8 +3511,7 @@ static void _open_door(coord_def move, bool check_confused)
             return;
         }
 
-        if (grd(doorpos) >= DNGN_TRAP_MECHANICAL
-            && grd(doorpos) <= DNGN_TRAP_NATURAL)
+        if (find_trap(doorpos) && grd(doorpos) != DNGN_UNDISCOVERED_TRAP)
         {
             if (env.cgrid(doorpos) != EMPTY_CLOUD)
             {
@@ -3521,7 +3519,7 @@ static void _open_door(coord_def move, bool check_confused)
                 return;
             }
 
-            disarm_trap(door_move);
+            disarm_trap(doorpos);
             return;
         }
     }

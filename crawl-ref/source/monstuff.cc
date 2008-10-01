@@ -2410,7 +2410,7 @@ static void _find_all_level_exits(std::vector<level_exit> &e)
                     e.push_back(level_exit(p, false));
 
                 // Teleportation and shaft traps.
-                const trap_type tt = trap_type_at_xy(p);
+                const trap_type tt = get_trap_type(p);
                 if (tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
                     e.push_back(level_exit(p, false));
             }
@@ -6475,7 +6475,10 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
     if (intel == I_PLANT)
         return (true);
 
-    const trap_struct &trap = env.trap[trap_at_xy(where)];
+    const trap_def *ptrap = find_trap(where);
+    if (!ptrap)
+        return (true);
+    const trap_def& trap = *ptrap;
 
     if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
     {
@@ -6490,22 +6493,10 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
     // Monsters are not afraid of non-mechanical traps.  XXX: If we add
     // any non-mechanical traps that can damage monsters, we must add
     // checks for them here.
-    const bool mechanical = trap_category(trap.type) == DNGN_TRAP_MECHANICAL;
+    const bool mechanical = (trap.category() == DNGN_TRAP_MECHANICAL);
+    const bool player_knows_trap = (trap.is_known(&you));
 
-    const bool player_knows_trap = (grd(where) != DNGN_UNDISCOVERED_TRAP);
-
-    // Smarter trap handling for intelligent monsters
-    // * monsters native to a branch can be assumed to know the trap
-    //   locations and thus be able to avoid them
-    // * friendlies and good neutrals can be assumed to have been warned
-    //   by the player about all traps s/he knows about
-    // * very intelligent monsters can be assumed to have a high T&D
-    //   skill (or have memorised part of the dungeon layout ;) )
-    if (intel >= I_NORMAL && mechanical
-        && (mons_is_native_in_branch(monster)
-            || mons_wont_attack(monster)
-               && player_knows_trap
-            || intel >= I_HIGH && one_chance_in(3)))
+    if (trap.is_known(monster))
     {
         if (just_check)
             return (false); // Square is blocked.
@@ -6776,8 +6767,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
     // Wandering through a trap is OK if we're pretty healthy,
     // really stupid, or immune to the trap.
-    const int which_trap = trap_at_xy(targ);
-    if (which_trap >= 0 && !_is_trap_safe(monster, targ, just_check))
+    if (!_is_trap_safe(monster, targ, just_check))
         return (false);
 
     if (targ_cloud_num != EMPTY_CLOUD)

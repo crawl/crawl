@@ -2509,7 +2509,7 @@ static void _place_traps(int level_number)
 
     for (int i = 0; i < num_traps; i++)
     {
-        trap_struct& ts(env.trap[i]);
+        trap_def& ts(env.trap[i]);
         if (ts.type != TRAP_UNASSIGNED)
             continue;
 
@@ -2540,6 +2540,7 @@ static void _place_traps(int level_number)
             }
         }
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
+        ts.prepare_ammo();
     }
 }
 
@@ -7296,6 +7297,7 @@ bool place_specific_trap(const coord_def& where, trap_type spec_type)
             env.trap[tcount].type = spec_type;
             env.trap[tcount].pos  = where;
             grd(where)            = DNGN_UNDISCOVERED_TRAP;
+            env.trap[tcount].prepare_ammo();
             return (true);
         }
 

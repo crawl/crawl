@@ -57,16 +57,17 @@ int detect_traps( int pow )
 
     for (int i = 0; i < MAX_TRAPS; i++)
     {
-        const coord_def p = env.trap[i].pos;
+        trap_def& trap = env.trap[i];
 
-        if (grid_distance( you.pos(), p) < range
-            && grd(p) == DNGN_UNDISCOVERED_TRAP)
+        if (!trap.active())
+            continue;
+
+        if (grid_distance(you.pos(), trap.pos) < range && !trap.is_known())
         {
             traps_found++;
-
-            grd(p) = trap_category( env.trap[i].type );
-            set_envmap_obj(p, grd(p));
-            set_terrain_mapped(p);
+            trap.reveal();
+            set_envmap_obj(trap.pos, grd(trap.pos));
+            set_terrain_mapped(trap.pos);
         }
     }
 

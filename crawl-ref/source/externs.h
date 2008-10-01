@@ -363,6 +363,8 @@ public:
     virtual bool backlit(bool check_haloed = true) const = 0;
     virtual bool haloed() const = 0;
 
+    virtual bool handle_trap();
+
     virtual void god_conduct(conduct_type thing_done, int level) { }
 
     virtual bool incapacitated() const
@@ -1372,10 +1374,29 @@ struct shop_struct
     FixedVector<unsigned char, 3> keeper_name;
 };
 
-struct trap_struct
+struct trap_def
 {
     coord_def pos;
-    trap_type        type;
+    trap_type type;
+    int       ammo_qty;
+
+    dungeon_feature_type category() const;
+    std::string name(description_level_type desc = DESC_PLAIN) const;
+    bool is_known(const actor* act = 0) const;
+    void trigger(actor& triggerer, bool flat_footed = false);
+    void disarm();
+    void destroy();
+    void hide();
+    void reveal();
+    void prepare_ammo();
+    bool type_has_ammo() const;
+    bool active() const;
+
+private:
+    void message_trap_entry();
+    void shoot_ammo(actor& act, bool was_known);
+    item_def generate_trap_item();
+    int shot_damage(actor& act);
 };
 
 struct map_cell
@@ -1479,7 +1500,7 @@ public:
     unsigned char cloud_no;
 
     FixedVector< shop_struct, MAX_SHOPS >    shop;  // shop list
-    FixedVector< trap_struct, MAX_TRAPS >    trap;  // trap list
+    FixedVector< trap_def, MAX_TRAPS >       trap;  // trap list
 
     FixedVector< monster_type, 20 >          mons_alloc;
     map_markers                              markers;

@@ -271,7 +271,7 @@ void Stash::update()
         feat = DNGN_FLOOR;
 
     if (grid_is_trap(feat))
-        trap = trap_type_at_xy(p);
+        trap = get_trap_type(p);
 
     int objl = igrd[x][y];
     // If this is your position, you know what's on this square

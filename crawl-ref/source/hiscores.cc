@@ -1013,8 +1013,10 @@ void scorefile_entry::init()
 
     if (calc_item_values) // winners only
     {
-        points += (250000 * num_diff_runes)
-            * ((25000.0 * num_diff_runes) / (1+you.num_turns));
+        points +=
+            static_cast<long>(
+                (250000 * num_diff_runes)
+                * ((25000.0 * num_diff_runes) / (1+you.num_turns)));
     }
 
     // Players will have a hard time getting 1/10 of this (see XP cap):

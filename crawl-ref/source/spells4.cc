@@ -1701,7 +1701,6 @@ bool cast_fragmentation(int pow, const dist& spd)
 {
     bolt beam;
     int debris = 0;
-    int trap;
     bool explode = false;
     bool hole = true;
     const char *what = NULL;
@@ -1951,9 +1950,9 @@ bool cast_fragmentation(int pow, const dist& spd)
 
     case DNGN_UNDISCOVERED_TRAP:
     case DNGN_TRAP_MECHANICAL:
-        trap = trap_at_xy(spd.target);
-        if (trap != -1
-            && trap_category(env.trap[trap].type) != DNGN_TRAP_MECHANICAL)
+    {
+        trap_def* ptrap = find_trap(spd.target);
+        if (ptrap && ptrap->category() != DNGN_TRAP_MECHANICAL)
         {
             // Non-mechanical traps don't explode with this spell. -- bwr
             break;
@@ -1969,9 +1968,9 @@ bool cast_fragmentation(int pow, const dist& spd)
         beam.damage.num = 2;
 
         // Exploded traps are nonfunctional, ammo is also ruined -- bwr
-        grd(spd.target) = DNGN_FLOOR;
-        env.trap[trap].type = TRAP_UNASSIGNED;
+        ptrap->destroy();
         break;
+    }
 
     //
     // Stone doors and arches

@@ -1480,14 +1480,8 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
     int count = 0;
     coord_def f;
     for (adjacent_iterator ai; ai; ++ai)
-    {
-        if (grd(*ai) == DNGN_FLOOR
-            && trap_at_xy(*ai) == -1
-            && one_chance_in(++count))
-        {
+        if (grd(*ai) == DNGN_FLOOR && find_trap(*ai) && one_chance_in(++count))
             f = *ai;
-        }
-    }
 
     if (count > 0)              // found a spot
     {
@@ -1495,11 +1489,7 @@ static void _warpwright_card(int power, deck_rarity_type rarity)
         {
             // Mark it discovered if enough power.
             if (get_power_level(power, rarity) >= 1)
-            {
-                const int i = trap_at_xy(f);
-                if (i != -1)    // should always happen
-                    grd(f) = trap_category(env.trap[i].type);
-            }
+                find_trap(f)->reveal();
         }
     }
 }
@@ -1533,8 +1523,7 @@ static void _flight_card(int power, deck_rarity_type rarity)
         {
             if (place_specific_trap(you.pos(), TRAP_SHAFT))
             {
-                const int i = trap_at_xy(you.pos());
-                grd(you.pos()) = trap_category(env.trap[i].type);
+                find_trap(you.pos())->reveal();
                 mpr("A shaft materialises beneath you!");
             }
         }
@@ -1554,7 +1543,7 @@ static void _minefield_card(int power, deck_rarity_type rarity)
         if ( *ri == you.pos() )
             continue;
 
-        if (grd(*ri) == DNGN_FLOOR && trap_at_xy(*ri) == -1
+        if (grd(*ri) == DNGN_FLOOR && !find_trap(*ri)
             && one_chance_in(4 - power_level))
         {
             if (you.level_type == LEVEL_ABYSS)

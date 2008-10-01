@@ -858,7 +858,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             _xom_checks_damage(death_type, dam, death_source);
 
             // for note taking
-            std::string damage_desc = "";
+            std::string damage_desc;
             if (!see_source)
             {
                 snprintf(info, INFO_SIZE, "something (%d)", dam);

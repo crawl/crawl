@@ -3844,10 +3844,8 @@ static void _debug_kill_traps()
 {
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
-        {
-            if (is_trap_square(grd[x][y]))
+            if (grid_is_trap(grd[x][y], true))
                 grd[x][y] = DNGN_FLOOR;
-        }
 }
 
 static int _debug_time_explore()

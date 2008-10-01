@@ -1269,14 +1269,12 @@ void search_around( bool only_adjacent )
             else if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
                      && x_chance_in_y(effective + 1, 17))
             {
-                const int i = trap_at_xy(*ri);
-
-                if (i != -1)
+                trap_def* ptrap = find_trap(*ri);
+                if (ptrap)
                 {
-                    grd(*ri) = trap_category(env.trap[i].type);
+                    ptrap->reveal();
                     mpr("You found a trap!");
                     learned_something_new(TUT_SEEN_TRAP, *ri);
-
                     exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
                 }
                 else
@@ -1720,7 +1718,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     branch_type old_where = you.where_are_you;
 
     bool shaft = (!force_stair
-                  && trap_type_at_xy(you.pos()) == TRAP_SHAFT
+                  && get_trap_type(you.pos()) == TRAP_SHAFT
                   || force_stair == DNGN_TRAP_NATURAL);
     level_id shaft_dest;
     int      shaft_level = -1;

@@ -155,7 +155,7 @@ bool monster_habitable_grid(int monster_class,
 bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
 {
     if (mons->type == MONS_TRAPDOOR_SPIDER && grid == DNGN_FLOOR)
-        return (trap_type_at_xy(mons->pos()) == NUM_TRAPS);
+        return (!find_trap(mons->pos()));
 
     // Zombies of watery critters can not submerge.
     switch (mons_habitat(mons))
@@ -458,12 +458,9 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                     continue;
 
                 // Don't generate monsters on top of teleport traps.
-                int trap = trap_at_xy(pos);
-                if (trap >= 0)
-                {
-                    if (!_can_place_on_trap(mon_type, env.trap[trap].type))
-                        continue;
-                }
+                const trap_def* ptrap = find_trap(pos);
+                if (ptrap && !_can_place_on_trap(mon_type, ptrap->type))
+                    continue;
 
                 // Check whether there's a stair
                 // and whether it leads to another branch.
@@ -574,12 +571,9 @@ static bool _valid_monster_location(const mgen_data &mg,
 
     // Don't generate monsters on top of teleport traps.
     // (How did they get there?)
-    int trap = trap_at_xy(mg_pos);
-    if (trap >= 0)
-    {
-        if (!_can_place_on_trap(mg.cls, env.trap[trap].type))
-            return (false);
-    }
+    const trap_def* ptrap = find_trap(mg_pos);
+    if (ptrap && !_can_place_on_trap(mg.cls, ptrap->type))
+        return (false);
 
     return (true);
 }
@@ -2654,14 +2648,16 @@ bool monster_pathfind::traversable(coord_def p)
         return (false);
     }
 
-    const int trap = trap_at_xy(p);
-    if (trap >= 0)
+    const trap_def* ptrap = find_trap(p);
+    if (ptrap)
     {
-        trap_type tt = env.trap[trap].type;
-        if (tt == TRAP_ZOT && grd(p) != DNGN_UNDISCOVERED_TRAP
+        const trap_type tt = ptrap->type;
+
+        // Don't allow allies to pass over known (to them) Zot traps.
+        if (tt == TRAP_ZOT
+            && ptrap->is_known(mons)
             && mons_friendly(mons))
         {
-            // Don't allow allies to pass over known Zot traps.
             return (false);
         }
 
@@ -2700,19 +2696,11 @@ int monster_pathfind::travel_cost(coord_def npos)
     }
 
     // Try to avoid (known) traps.
-    const int trap = trap_at_xy(npos);
-    if (trap >= 0)
+    const trap_def* ptrap = find_trap(npos);
+    if (ptrap)
     {
-        // A monster can be considered to know a trap if
-        // a) they're hostile
-        // b) they're friendly and *you* know about the trap (and told them)
-        // c) they're friendly and know the terrain
-        bool knows_trap = (!mons_friendly(mons)
-                           || grd(npos) != DNGN_UNDISCOVERED_TRAP
-                           || mons_intel(mons->type) >= I_NORMAL
-                              && mons_is_native_in_branch(mons));
-
-        trap_type tt = env.trap[trap].type;
+        const bool knows_trap = ptrap->is_known(mons);
+        const trap_type tt = ptrap->type;
         if (tt == TRAP_ALARM || tt == TRAP_ZOT)
         {
             // Your allies take extra precautions to avoid known alarm traps.

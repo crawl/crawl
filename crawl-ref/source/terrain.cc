@@ -181,10 +181,11 @@ bool grid_is_permarock(dungeon_feature_type grid)
     return (grid == DNGN_PERMAROCK_WALL || grid == DNGN_CLEAR_PERMAROCK_WALL);
 }
 
-bool grid_is_trap(dungeon_feature_type grid)
+bool grid_is_trap(dungeon_feature_type grid, bool undiscovered_too)
 {
     return (grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_MAGICAL
-            || grid == DNGN_TRAP_NATURAL);
+            || grid == DNGN_TRAP_NATURAL
+            || (undiscovered_too && grid == DNGN_UNDISCOVERED_TRAP));
 }
 
 bool grid_is_water(dungeon_feature_type grid)

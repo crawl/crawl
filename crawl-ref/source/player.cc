@@ -146,11 +146,10 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                                 + player_mutation_level(MUT_ACUTE_VISION)
                                 - 2 * player_mutation_level(MUT_BLURRY_VISION);
 
-            if (random2( skill ) > 6)
+            if (random2(skill) > 6)
             {
-                const int id = trap_at_xy( p );
-                if (id != -1)
-                    grd(p) = trap_category( env.trap[id].type );
+                if (trap_def* ptrap = find_trap(p))
+                    ptrap->reveal();
 
                 viewwindow(true, false);
 
@@ -175,7 +174,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
 #endif
                  || new_grid == DNGN_TRAP_NATURAL)
         {
-            const trap_type type = trap_type_at_xy(p);
+            const trap_type type = get_trap_type(p);
             if (type == TRAP_ZOT)
             {
                 if (!yes_or_no("Do you really want to step into the Zot trap"))
@@ -301,37 +300,8 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
         expose_player_to_element( BEAM_LAVA );
 
     // Traps go off.
-    if (new_grid >= DNGN_TRAP_MECHANICAL && new_grid <= DNGN_UNDISCOVERED_TRAP)
-    {
-        int id = trap_at_xy( you.pos() );
-
-        if (id != -1)
-        {
-            bool trap_known = true;
-
-            if (new_grid == DNGN_UNDISCOVERED_TRAP)
-            {
-                trap_known = false;
-
-                const dungeon_feature_type type =
-                    trap_category( env.trap[id].type );
-                grd(you.pos()) = type;
-                set_envmap_obj(you.pos(), type);
-            }
-
-            // It's not easy to blink onto a trap without setting it off.
-            if (!stepped)
-                trap_known = false;
-
-            // mechanical traps and shafts cannot be set off if the
-            // player is flying or levitating
-            if (!player_is_airborne()
-                || trap_category( env.trap[id].type ) == DNGN_TRAP_MAGICAL)
-            {
-                handle_traps(env.trap[id].type, id, trap_known);
-            }
-        }
-    }
+    if (trap_def* ptrap = find_trap(you.pos()))
+        ptrap->trigger(you, !stepped); // blinking makes it hard to evade
 
     return (true);
 }
@@ -5410,6 +5380,14 @@ bool actor::can_pass_through(const coord_def &c) const
     return can_pass_through_feat(grd(c));
 }
 
+bool actor::handle_trap()
+{
+    trap_def* trap = find_trap(pos());
+    if (trap)
+        trap->trigger(*this);
+    return (trap != NULL);
+}
+
 //////////////////////////////////////////////////////////////////////////////
 // player
 
@@ -6275,7 +6253,7 @@ int player::armour_class() const
 int player::melee_evasion(const actor *act) const
 {
     return (player_evasion()
-            - (act->visible()? 0 : 10)
+            - ((!act || act->visible()) ? 0 : 10)
             - (you_are_delayed()? 5 : 0));
 }
 
@@ -6985,7 +6963,7 @@ bool player::do_shaft()
 
     // Handle instances of do_shaft() being invoked magically when
     // the player isn't standing over a shaft.
-    if (trap_type_at_xy(this->pos()) != TRAP_SHAFT)
+    if (get_trap_type(this->pos()) != TRAP_SHAFT)
     {
         switch (grd(you.pos()))
         {

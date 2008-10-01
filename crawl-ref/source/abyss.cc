@@ -811,8 +811,11 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
     else
         feat = oenv.grid(c);
 
-    if (is_trap_square(feat) || feat == DNGN_SECRET_DOOR || feat == DNGN_UNSEEN)
+    if (grid_is_trap(feat, true)
+        || feat == DNGN_SECRET_DOOR || feat == DNGN_UNSEEN)
+    {
         return;
+    }
 
     if (is_traversable(grd(c)) && !is_traversable(feat)
         && _is_crowded_square(c))
