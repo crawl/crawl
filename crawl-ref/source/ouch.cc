@@ -723,80 +723,79 @@ void drain_exp(bool announce_full)
 static void _xom_checks_damage(kill_method_type death_type,
                                int dam, int death_source)
 {
-    if (death_type == KILLED_BY_TARGETTING)
+    if (you.religion == GOD_XOM)
     {
-        // Xom thinks the player hurting him/herself is funny.
-        xom_is_stimulated(255 * dam / (dam + you.hp));
-        return;
-    }
-    else if (death_type == KILLED_BY_FALLING_DOWN_STAIRS)
-    {
-        // Xom thinks falling down the stairs is hilarious.
-        xom_is_stimulated(255);
-        return;
-    }
-    else if (death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM
-             || invalid_monster_index(death_source))
-    {
-        return;
-    }
+        if (death_type == KILLED_BY_TARGETTING)
+        {
+            // Xom thinks the player hurting him/herself is funny.
+            xom_is_stimulated(255 * dam / (dam + you.hp));
+            return;
+        }
+        else if (death_type == KILLED_BY_FALLING_DOWN_STAIRS)
+        {
+            // Xom thinks falling down the stairs is hilarious.
+            xom_is_stimulated(255);
+            return;
+        }
+        else if (death_type != KILLED_BY_MONSTER
+                && death_type != KILLED_BY_BEAM
+                    || invalid_monster_index(death_source))
+        {
+            return;
+        }
 
-    int amusementvalue = 1;
+        int amusementvalue = 1;
+        const monsters *monster = &menv[death_source];
 
-    const monsters *monster = &menv[death_source];
+        if (!monster->alive())
+            return;
 
-    if (!monster->alive())
-        return;
+        if (mons_wont_attack(monster))
+        {
+            // Xom thinks collateral damage is funny.
+            xom_is_stimulated(255 * dam / (dam + you.hp));
+            return;
+        }
 
-    if (mons_wont_attack(monster))
-    {
-        // Xom thinks collateral damage is funny.
-        xom_is_stimulated(255 * dam / (dam + you.hp));
-        return;
-    }
+        int leveldif = monster->hit_dice - you.experience_level;
+        if (leveldif == 0)
+            leveldif = 1;
 
-    int leveldif = monster->hit_dice - you.experience_level;
+        // Note that Xom is amused when you are significantly hurt by a
+        // creature of higher level than yourself, as well as by a
+        // creature of lower level than yourself.
+        amusementvalue += leveldif * leveldif * dam;
 
-    if (leveldif == 0)
-        leveldif = 1;
+        if (!player_monster_visible(monster))
+            amusementvalue += 10;
 
-    // Note that Xom is amused when you are significantly hurt by a
-    // creature of higher level than yourself, as well as by a creature
-    // of lower level than yourself.
-    amusementvalue += leveldif * leveldif * dam;
+        if (monster->speed < (int)player_movement_speed())
+            amusementvalue += 8;
 
-    if (!player_monster_visible(monster))
-        amusementvalue += 10;
-
-    if (monster->speed < (int) player_movement_speed())
-        amusementvalue += 8;
-
-    if (death_type != KILLED_BY_BEAM)
-    {
-        if (you.skills[SK_THROWING] <= (you.experience_level / 4))
+        if (death_type != KILLED_BY_BEAM
+            && you.skills[SK_THROWING] <= (you.experience_level / 4))
+        {
             amusementvalue += 2;
-    }
-    else
-    {
-        if (you.skills[SK_FIGHTING] <= (you.experience_level / 4))
+        }
+        else if (you.skills[SK_FIGHTING] <= (you.experience_level / 4))
             amusementvalue += 2;
+
+        if (player_in_a_dangerous_place())
+            amusementvalue += 2;
+
+        amusementvalue /= (you.hp > 0) ? you.hp : 1;
+
+        xom_is_stimulated(amusementvalue);
     }
-
-    if (player_in_a_dangerous_place())
-        amusementvalue += 2;
-
-    amusementvalue /= (you.hp > 0) ? you.hp : 1;
-
-    xom_is_stimulated(amusementvalue);
 }
 
 static void _yred_mirrors_injury(int dam, int death_source)
 {
-    if (dam <= 0 || invalid_monster_index(death_source))
-        return;
-
     if (yred_injury_mirror())
     {
+        if (dam <= 0 || invalid_monster_index(death_source))
+            return;
+
         simple_god_message(" mirrors your injury!");
 
         monsters *mon = &menv[death_source];
