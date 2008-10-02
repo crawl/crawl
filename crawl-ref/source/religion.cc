@@ -2537,7 +2537,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 make_stringf(" accepts your %skill.",
                              thing_done == DID_KILL_HOLY ? "" : "collateral ")
                              .c_str());
-
             ret = true;
             if (random2(level + 18) > 2)
                 piety_change = 1;
@@ -2565,15 +2564,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         {
         case GOD_KIKUBAAQUDGHA:
         case GOD_YREDELEMNUL:
+        case GOD_VEHUMET:
         case GOD_MAKHLEB:
         case GOD_LUGONU:
-            simple_god_message(" accepts your slave's kill.");
-            ret = true;
-            if (random2(level + 10 - you.experience_level/3) > 5)
-                piety_change = 1;
-            break;
-        case GOD_VEHUMET:
-            simple_god_message(" accepts your collateral kill.");
+            const bool slave_god = (you.religion == GOD_KIKUBAAQUDGHA
+                                       || you.religion == GOD_YREDELEMNUL);
+            simple_god_message(
+                make_stringf(" accepts your %skill.",
+                             slave_god ? "slave's " : "collateral ")
+                             .c_str());
             ret = true;
             if (random2(level + 10 - you.experience_level/3) > 5)
                 piety_change = 1;
