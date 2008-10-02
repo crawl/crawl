@@ -350,6 +350,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     const bool you_trigger = (triggerer.atype() == ACT_PLAYER);
     const bool in_sight = see_grid(this->pos);
 
+    // If set, the trap will be removed at the end of the
+    // triggering process.
+    bool trap_destroyed = false;
+
     monsters* m = NULL;
     if (triggerer.atype() == ACT_MONSTER)
         m = static_cast<monsters*>(&triggerer);
@@ -498,21 +502,26 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (you.attribute[ATTR_HELD])
                     mark_net_trapping(you.pos());
 
-                this->destroy();
+                trap_destroyed = true;
             }
         }
         else if (m)
         {
-            bool triggered = true;
+            bool triggered = false;
             if (one_chance_in(3) || (trig_knows && coinflip()))
             {
+                // Not triggered, trap stays.
                 triggered = false;
                 if (you_know)
                     simple_monster_message(m, " fails to trigger a net trap.");
+                else
+                    this->hide();
             }
-            if (random2(m->ev) > 8
-                || (trig_knows && random2(m->ev) > 8))
+            else if (random2(m->ev) > 8 || (trig_knows && random2(m->ev) > 8))
             {
+                // Triggered but evaded.
+                triggered = true;
+
                 if (in_sight)
                 {
                     if (!simple_monster_message(m,
@@ -522,24 +531,25 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                         mpr("A large net falls down!");
                     }
                 }
-                else
+            }
+            else
+            {
+                // Triggered and hit.
+                triggered = true;
+
+                if (in_sight)
                 {
-                    // FIXME: net traps don't trigger unless you can see
-                    // them? Preserving old behaviour here.
-                    if (in_sight)
-                    {
-                        msg::stream << "A large net falls down";
-                        if (player_monster_visible(m))
-                            msg::stream << " onto " << m->name(DESC_NOCAP_THE);
-                        msg::stream << "!" << std::endl;
-                    }
-                    // FIXME: Fake a beam for monster_caught_in_net.
-                    bolt beam;
-                    beam.flavour = BEAM_MISSILE;
-                    beam.thrower = KILL_MISC;
-                    beam.beam_source = NON_MONSTER;
-                    monster_caught_in_net(m, beam);
+                    msg::stream << "A large net falls down";
+                    if (player_monster_visible(m))
+                        msg::stream << " onto " << m->name(DESC_NOCAP_THE);
+                    msg::stream << "!" << std::endl;
                 }
+                // FIXME: Fake a beam for monster_caught_in_net.
+                bolt beam;
+                beam.flavour = BEAM_MISSILE;
+                beam.thrower = KILL_MISC;
+                beam.beam_source = NON_MONSTER;
+                monster_caught_in_net(m, beam);
             }
 
             if (triggered)
@@ -549,8 +559,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
                 if (mons_is_caught(m))
                     mark_net_trapping(m->pos());
-
-                this->destroy();
+                
+                trap_destroyed = true;
             }
         }
         break;
@@ -623,7 +633,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (you_know && in_sight)
                 mpr("The shaft disappears in a puff of logic!");
 
-            this->destroy();
+            trap_destroyed = true;
         }
         else
         {
@@ -646,6 +656,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         if (!you_know && this->is_known())
             exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
     }
+
+    if (trap_destroyed)
+        this->destroy();
 }
 
 int trap_def::shot_damage(actor& act)

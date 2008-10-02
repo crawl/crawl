@@ -1751,7 +1751,7 @@ static void _helm_card(int power, deck_rarity_type rarity)
     bool do_shield    = false;
     int num_resists = 0;
 
-    // Chances are cummulative.
+    // Chances are cumulative.
     if (power_level >= 2)
     {
         if (coinflip()) do_forescry  = true;
