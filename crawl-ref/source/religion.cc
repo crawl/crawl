@@ -2567,6 +2567,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case GOD_VEHUMET:
         case GOD_MAKHLEB:
         case GOD_LUGONU:
+        {
             const bool slave_god = (you.religion == GOD_KIKUBAAQUDGHA
                                        || you.religion == GOD_YREDELEMNUL);
             simple_god_message(
@@ -2577,6 +2578,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             if (random2(level + 10 - you.experience_level/3) > 5)
                 piety_change = 1;
             break;
+        }
         default:
             break;
         }
