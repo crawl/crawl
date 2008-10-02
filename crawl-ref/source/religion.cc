@@ -6018,7 +6018,8 @@ void handle_god_time()
                 excommunication();
             break;
 
-        case GOD_OKAWARU: // These gods accept corpses, so they time-out faster
+        // These gods accept corpses, so they time-out faster.
+        case GOD_OKAWARU:
         case GOD_TROG:
         case GOD_BEOGH:
             if (one_chance_in(14))
@@ -6045,7 +6046,8 @@ void handle_god_time()
                 excommunication();
             break;
 
-        case GOD_NEMELEX_XOBEH: // relatively patient
+        case GOD_NEMELEX_XOBEH:
+            // Nemelex is relatively patient
             if (one_chance_in(35))
                 lose_piety(1);
             if (you.attribute[ATTR_CARD_COUNTDOWN] > 0 && coinflip())
