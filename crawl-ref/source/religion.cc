@@ -2572,6 +2572,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             if (random2(level + 10 - you.experience_level/3) > 5)
                 piety_change = 1;
             break;
+        case GOD_VEHUMET:
+            simple_god_message(" accepts your collateral kill.");
+            ret = true;
+            if (random2(level + 10 - you.experience_level/3) > 5)
+                piety_change = 1;
+            break;
         default:
             break;
         }
