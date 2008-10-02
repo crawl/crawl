@@ -1854,22 +1854,19 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     pbolt.set_target(thr);
 
-    // Making a copy of the item: changed only for venom launchers.
-    item_def item = you.inv[throw_2];
-    item.quantity = 1;
-    item.slot     = index_to_letter(item.link);
+    const item_def& thrown = you.inv[throw_2];
 
     // Get the ammo/weapon type.  Convenience.
-    const object_class_type wepClass = item.base_type;
-    const int               wepType  = item.sub_type;
+    const object_class_type wepClass = thrown.base_type;
+    const int               wepType  = thrown.sub_type;
 
     // Figure out if we're thrown or launched.
-    const launch_retval projected = is_launched(&you, you.weapon(), item);
+    const launch_retval projected = is_launched(&you, you.weapon(), thrown);
 
-    pbolt.name     = item.name(DESC_PLAIN, false, false, false);
+    pbolt.name     = thrown.name(DESC_PLAIN, false, false, false);
     pbolt.thrower  = KILL_YOU_MISSILE;
     pbolt.source   = you.pos();
-    pbolt.colour   = item.colour;
+    pbolt.colour   = thrown.colour;
     pbolt.flavour  = BEAM_MISSILE;
     pbolt.aux_source.clear();
     // pbolt.range is set below
@@ -1901,7 +1898,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     else
     {
         // Range based on mass & strength, between 1 and 9.
-        max_range = range = std::max(you.strength - item_mass(item)/10 + 3, 1);
+        max_range = range = std::max(you.strength-item_mass(thrown)/10 + 3, 1);
     }
 
     range = std::min(range, LOS_RADIUS);
@@ -1942,16 +1939,21 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // Use real range for firing.
     pbolt.range = range;
 
-    // Now start real firing!
-    origin_set_unknown(item);
-
-    // Must unwield before fire_beam() makes a copy in order to remove things
-    // like temporary branding. -- bwr
-    if (throw_2 == you.equip[EQ_WEAPON] && you.inv[throw_2].quantity == 1)
+    // Must unwield before making a copy in order to remove things
+    // like temporary branding.
+    if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
     {
         unwield_item();
         canned_msg(MSG_EMPTY_HANDED);
     }
+
+    // Making a copy of the item: changed only for venom launchers.
+    item_def item = thrown;
+    item.quantity = 1;
+    item.slot     = index_to_letter(item.link);
+
+    // Now start real firing!
+    origin_set_unknown(item);
 
     if (is_blood_potion(item) && you.inv[throw_2].quantity > 1)
     {
