@@ -2239,7 +2239,6 @@ mons_spec mons_list::mons_by_name(std::string name) const
 
     if (name == "small abomination")
         return (MONS_ABOMINATION_SMALL);
-
     if (name == "large abomination")
         return (MONS_ABOMINATION_LARGE);
 
