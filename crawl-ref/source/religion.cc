@@ -739,6 +739,12 @@ void dec_penance(int val)
     dec_penance(you.religion, val);
 }
 
+bool zin_sustenance(bool actual)
+{
+    return (you.piety >= piety_breakpoint(0)
+            && (!actual || you.hunger_state == HS_STARVING));
+}
+
 bool yred_injury_mirror(bool actual)
 {
     return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
@@ -1724,8 +1730,7 @@ static void _do_god_gift(bool prayed_for)
 
         case GOD_ZIN:
             //jmf: this "good" god will feed you (a la Nethack)
-            if (you.hunger_state == HS_STARVING
-                && you.piety >= piety_breakpoint(0))
+            if (zin_sustenance())
             {
                 god_speaks(you.religion, "Your stomach feels content.");
                 set_hunger(6000, true);

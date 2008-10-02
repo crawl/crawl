@@ -3096,9 +3096,9 @@ void describe_god( god_type which_god, bool give_title )
 
         if (which_god == GOD_ZIN)
         {
-            have_any = true;
-            if (you.piety >= piety_breakpoint(0))
+            if (zin_sustenance(false))
             {
+                have_any = true;
                 cprintf("Praying to %s will provide sustenance if starving."
                          EOL, god_name(which_god).c_str());
             }
