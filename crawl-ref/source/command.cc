@@ -1256,9 +1256,7 @@ static bool _do_description(std::string key, std::string footer = "")
 
     std::string prefix, suffix;
 
-    int width = get_number_of_cols();
-    if (width > 80)
-        width = 80;
+    int width = std::min(80, get_number_of_cols());
 
     god_type which_god = string_to_god(key.c_str());
     if (which_god != GOD_NO_GOD)

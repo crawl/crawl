@@ -2856,7 +2856,8 @@ static int _piety_level()
 static void _detailed_god_description(god_type which_god)
 {
     clrscr();
-    int width = std::min(80, get_number_of_cols());
+
+    const int width = std::min(80, get_number_of_cols());
 
     std::string godname = god_name(which_god, true);
     int len = get_number_of_cols() - godname.length();

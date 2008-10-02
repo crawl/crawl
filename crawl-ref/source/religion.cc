@@ -454,6 +454,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     std::string text = god_name(which_god);
     std::vector<std::string> likes;
+    std::vector<std::string> really_likes;
 
     // Unique/unusual piety gain methods first.
     switch (which_god)
@@ -463,8 +464,8 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_TROG:
-        snprintf(info, INFO_SIZE, "destroy spellbooks (especially ones you've"
-                                  " never read)%s",
+        snprintf(info, INFO_SIZE, "destroy spellbooks (especially ones you've "
+                                  "never read)%s",
                  verbose ? " via the <w>a</w> command" : "");
 
         likes.push_back(info);
@@ -539,6 +540,16 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
+    case GOD_SHINING_ONE:
+        likes.push_back("kill living evil beings");
+        break;
+
+    default:
+        break;
+    }
+
+    switch (which_god)
+    {
     case GOD_SHINING_ONE: case GOD_OKAWARU: case GOD_VEHUMET:
     case GOD_MAKHLEB:     case GOD_LUGONU:
         likes.push_back("kill the undead");
@@ -568,43 +579,48 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    // Unusual kills.
+    // Especially appreciated kills.
     switch (which_god)
     {
     case GOD_ZIN:
-        likes.push_back("kill monsters which cause mutation or rotting");
-        break;
-
-    case GOD_SHINING_ONE:
-        likes.push_back("kill living evil beings");
+        really_likes.push_back("kill monsters which cause mutation or rotting");
         break;
 
     case GOD_YREDELEMNUL:
-        likes.push_back("kill holy beings");
+        really_likes.push_back("kill holy beings");
         break;
 
     case GOD_BEOGH:
-        likes.push_back("kill the priests of other religions");
+        really_likes.push_back("kill the priests of other religions");
         break;
 
     case GOD_TROG:
-        likes.push_back("kill wizards and other users of magic");
+        really_likes.push_back("kill wizards and other users of magic");
         break;
 
     default:
         break;
     }
 
-    if (likes.size() == 0)
-    {
+    if (likes.size() == 0 && really_likes.size() == 0)
         text += " %s doesn't like anything? This a bug; please report it.";
-    }
     else
     {
         text += " likes it when you ";
         text += comma_separated_line(likes.begin(), likes.end(),
                                      ", and ", ", ");
         text += ".";
+
+        if (really_likes.size() > 0)
+        {
+            text += " ";
+            text += god_name(which_god);
+
+            text += " especially likes it when you ";
+            text += comma_separated_line(really_likes.begin(),
+                                         really_likes.end(), ", and ", ", ");
+            text += ".";
+        }
     }
 
     return (text);
