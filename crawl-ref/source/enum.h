@@ -267,7 +267,7 @@ enum book_type
     BOOK_PRACTICAL_MAGIC,
     BOOK_WAR_CHANTS,                   //   20
     BOOK_CLOUDS,
-    BOOK_HEALING,
+    BOOK_HEALING,                      //   XXX: not used
     BOOK_NECROMANCY,
     BOOK_NECRONOMICON,
     BOOK_CALLINGS,                     //   25
@@ -1679,7 +1679,7 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT_COCKROACH,
     MONS_SMALL_SNAKE,
     //jmf: new monsters
-    MONS_SHUGGOTH, //jmf: added for evil spells
+    MONS_SHUGGOTH,                     //  XXX: not used
     MONS_WOLF,     //jmf: added
     MONS_WARG,     //jmf: added for orc mines
     MONS_BEAR,     //jmf: added bears!
@@ -1728,7 +1728,7 @@ enum monster_type                      // (int) menv[].type
     MONS_LOM_LOBON,
     MONS_CEREBOV,
     MONS_GLOORX_VLOQ,                  //  254
-    MONS_MOLLUSC_LORD, //  255 - deprecated, but still referenced in code {dlb}
+    MONS_MOLLUSC_LORD,                 //  XXX: not used
     // 256
     // 257
     // 258

@@ -856,7 +856,6 @@ static const char* book_type_name(int booktype)
     case BOOK_PRACTICAL_MAGIC:        return "Practical Magic";
     case BOOK_WAR_CHANTS:             return "War Chants";
     case BOOK_CLOUDS:                 return "Clouds";
-    case BOOK_HEALING:                return "Healing";
     case BOOK_NECROMANCY:             return "Necromancy";
     case BOOK_CALLINGS:               return "Callings";
     case BOOK_CHARMS:                 return "Charms";

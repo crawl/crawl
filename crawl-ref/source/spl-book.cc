@@ -928,13 +928,10 @@ int book_rarity(unsigned char which_book)
     case BOOK_DESTRUCTION:
         return 30;
 
-    case BOOK_HEALING:
-        return 100;
-
     default:
         return 1;
     }
-}                               // end book_rarity()
+}
 
 bool is_valid_spell_in_book( int splbook, int spell )
 {
