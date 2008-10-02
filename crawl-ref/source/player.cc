@@ -3783,25 +3783,25 @@ void display_char_status()
         mprf("You are studying %s.", skill_name(you.sage_bonus_skill));
 
     if (you.duration[DUR_BREATH_WEAPON])
-        mpr( "You are short of breath." );
+        mpr("You are short of breath.");
 
     if (you.duration[DUR_REPEL_UNDEAD])
-        mpr( "You have a holy aura protecting you from undead." );
+        mpr("You have a holy aura protecting you from undead.");
 
     if (you.duration[DUR_LIQUID_FLAMES])
-        mpr( "You are covered in liquid flames." );
+        mpr("You are covered in liquid flames.");
 
     if (you.duration[DUR_ICY_ARMOUR])
-        mpr( "You are protected by an icy shield." );
+        mpr("You are protected by an icy shield.");
 
     if (you.duration[DUR_REPEL_MISSILES])
-        mpr( "You are protected from missiles." );
+        mpr("You are protected from missiles.");
 
     if (you.duration[DUR_DEFLECT_MISSILES])
-        mpr( "You deflect missiles." );
+        mpr("You deflect missiles.");
 
     if (you.duration[DUR_PRAYER])
-        mpr( "You are praying." );
+        mpr("You are praying.");
 
     if (you.disease && !you.duration[DUR_REGENERATION]
         && (you.species != SP_VAMPIRE || you.hunger_state != HS_STARVING))
@@ -3819,82 +3819,82 @@ void display_char_status()
     }
 
     if (you.duration[DUR_SWIFTNESS])
-        mpr( "You can move swiftly." );
+        mpr("You can move swiftly.");
 
     if (you.duration[DUR_INSULATION])
-        mpr( "You are insulated." );
+        mpr("You are insulated.");
 
     if (you.duration[DUR_STONEMAIL])
-        mpr( "You are covered in scales of stone." );
+        mpr("You are covered in scales of stone.");
 
     if (you.duration[DUR_CONTROLLED_FLIGHT])
-        mpr( "You can control your flight." );
+        mpr("You can control your flight.");
 
     if (you.duration[DUR_TELEPORT])
-        mpr( "You are about to teleport." );
+        mpr("You are about to teleport.");
 
     if (you.duration[DUR_CONTROL_TELEPORT])
-        mpr( "You can control teleportation." );
+        mpr("You can control teleportation.");
 
     if (you.duration[DUR_DEATH_CHANNEL])
-        mpr( "You are channeling the dead." );
+        mpr("You are channeling the dead.");
 
     if (you.duration[DUR_FORESCRY])     //jmf: added 19mar2000
-        mpr( "You are forewarned." );
+        mpr("You are forewarned.");
 
     if (you.duration[DUR_SILENCE])      //jmf: added 27mar2000
-        mpr( "You radiate silence." );
+        mpr("You radiate silence.");
 
     if (you.duration[DUR_STONESKIN])
-        mpr( "Your skin is tough as stone." );
+        mpr("Your skin is tough as stone.");
 
     if (you.duration[DUR_SEE_INVISIBLE])
-        mpr( "You can see invisible." );
+        mpr("You can see invisible.");
 
     if (you.duration[DUR_INVIS])
-        mpr( "You are invisible." );
+        mpr("You are invisible.");
 
     if (you.duration[DUR_CONF])
-        mpr( "You are confused." );
+        mpr("You are confused.");
 
     if (you.duration[DUR_BEHELD])
-        mpr( "You are beheld." );
+        mpr("You are beheld.");
 
     // How exactly did you get to show the status?
     if (you.duration[DUR_PARALYSIS])
-        mpr( "You are paralysed." );
+        mpr("You are paralysed.");
     if (you.duration[DUR_PETRIFIED])
-        mpr( "You are petrified." );
+        mpr("You are petrified.");
     if (you.duration[DUR_SLEEP])
-        mpr( "You are asleep." );
+        mpr("You are asleep." );
 
     if (you.duration[DUR_EXHAUSTED])
-        mpr( "You are exhausted." );
+        mpr("You are exhausted.");
 
     if (you.duration[DUR_SLOW] && you.duration[DUR_HASTE])
-        mpr( "You are under both slowing and hasting effects." );
+        mpr("You are under both slowing and hasting effects.");
     else if (you.duration[DUR_SLOW])
-        mpr( "Your actions are slowed." );
+        mpr("Your actions are slowed.");
     else if (you.duration[DUR_HASTE])
-        mpr( "Your actions are hasted." );
+        mpr("Your actions are hasted.");
 
     if (you.duration[DUR_MIGHT])
-        mpr( "You are mighty." );
+        mpr("You are mighty.");
 
     if (you.duration[DUR_DIVINE_VIGOUR])
-        mpr( "You are divinely robust." );
+        mpr("You are divinely robust.");
 
     if (you.duration[DUR_DIVINE_STAMINA])
-        mpr( "You are divinely fortified." );
+        mpr("You are divinely fortified.");
 
     if (you.duration[DUR_BERSERKER])
-        mpr( "You are possessed by a berserker rage." );
+        mpr("You are possessed by a berserker rage.");
 
     if (player_is_airborne())
-        mpr( "You are hovering above the floor." );
+        mpr("You are hovering above the floor.");
 
     if (you.attribute[ATTR_HELD])
-        mpr( "You are held in a net." );
+        mpr("You are held in a net.");
 
     if (you.duration[DUR_POISONING])
     {
@@ -3902,7 +3902,7 @@ void display_char_status()
              (you.duration[DUR_POISONING] > 10) ? "extremely" :
              (you.duration[DUR_POISONING] > 5)  ? "very" :
              (you.duration[DUR_POISONING] > 3)  ? "quite"
-                                  : "mildly" );
+                                                : "mildly" );
     }
 
     if (you.disease)
@@ -3910,21 +3910,21 @@ void display_char_status()
         mprf("You are %sdiseased.",
              (you.disease > 120) ? "badly " :
              (you.disease >  40) ? ""
-                                 : "mildly " );
+                                 : "mildly ");
     }
 
     if (you.rotting || you.species == SP_GHOUL)
         mprf("Your flesh is rotting%s.", _get_rotting_how());
 
     // Prints a contamination message.
-    contaminate_player( 0, false, true );
+    contaminate_player(0, false, true);
 
     if (you.duration[DUR_CONFUSING_TOUCH])
     {
         mprf("Your hands are glowing %s red.",
              (you.duration[DUR_CONFUSING_TOUCH] > 40) ? "an extremely bright" :
              (you.duration[DUR_CONFUSING_TOUCH] > 20) ? "bright"
-                                                      : "a soft" );
+                                                      : "a soft");
     }
 
     if (you.duration[DUR_SURE_BLADE])
@@ -3932,10 +3932,10 @@ void display_char_status()
         mprf("You have a %sbond with your blade.",
              (you.duration[DUR_SURE_BLADE] > 15) ? "strong " :
              (you.duration[DUR_SURE_BLADE] >  5) ? ""
-                                                 : "weak " );
+                                                 : "weak ");
     }
 
-    int move_cost = (player_speed() * player_movement_speed()) / 10;
+    const int move_cost = (player_speed() * player_movement_speed()) / 10;
 
     const bool water  = player_in_water();
     const bool swim   = player_is_swimming();
@@ -6144,7 +6144,7 @@ int calc_hunger(int food_cost)
 
 int player::holy_aura() const
 {
-    return (duration[DUR_REPEL_UNDEAD]? piety : 0);
+    return (duration[DUR_REPEL_UNDEAD] ? piety : 0);
 }
 
 int player::warding() const
