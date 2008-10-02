@@ -1469,7 +1469,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_ABOMINATION_SMALL, 'x', BLACK, "abomination",
+    MONS_ABOMINATION_SMALL, 'x', BLACK, "small abomination",
     M_EVIL,
     MR_NO_FLAGS,
     0, 10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_SMALL, MH_DEMONIC, -5,
@@ -2781,9 +2781,8 @@ static monsterentry mondata[] = {
 },
 
 // large abominations ('X')
-// Large abom: (the previous one was small)
 {
-    MONS_ABOMINATION_LARGE, 'X', BLACK, "abomination",
+    MONS_ABOMINATION_LARGE, 'X', BLACK, "large abomination",
     M_EVIL,
     MR_NO_FLAGS,
     0, 10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_LARGE, MH_DEMONIC, -7,

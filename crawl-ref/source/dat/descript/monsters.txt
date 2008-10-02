@@ -256,10 +256,6 @@ Xtahua
 
 An ancient and mighty dragon.
 %%%%
-abomination
-
-A hideous form, created or summoned by some arcane process.
-%%%%
 acid blob
 
 A lump of sickly green flesh, dripping with lethal acid.
@@ -795,10 +791,6 @@ hound
 
 A fearsome hunting dog, lithe and alert.  Its master must be long gone, for it looks dishevelled, and has a lean and hungry look.
 %%%%
-huge abomination
-
-A huge and hideous form, created or summoned by some arcane process.
-%%%%
 human
 
 A remarkably nondescript person.  How odd.
@@ -895,6 +887,10 @@ komodo dragon
 An enormous monitor lizard. It's more than capable of preying on large
 animals. Bits of fetid and rotting flesh from its last few meals are
 stuck in its teeth.
+%%%%
+large abomination
+
+A large and hideous form, created or summoned by some arcane process.
 %%%%
 large simulacrum
 
@@ -1245,6 +1241,10 @@ The vicious and heavily armed skeleton of a humanoid creature, animated by unhol
 slime creature
 
 An icky glob of slime, which slithers along the ground.
+%%%%
+small abomination
+
+A hideous form, created or summoned by some arcane process.
 %%%%
 small snake
 

@@ -176,8 +176,7 @@ void init_mon_name_cache()
             if (mon == MONS_RAKSHASA_FAKE
                 || mon == MONS_ARMOUR_MIMIC
                 || mon == MONS_SCROLL_MIMIC
-                || mon == MONS_POTION_MIMIC
-                || mon == MONS_ABOMINATION_LARGE)
+                || mon == MONS_POTION_MIMIC)
             {
                 // Keep previous entry.
                 continue;
