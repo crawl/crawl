@@ -2569,20 +2569,23 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     // Print type of item as influenced by launcher.
     item_def ammo = item;
-    if (pbolt.flavour == BEAM_FIRE)
+    if (ammo.base_type == OBJ_MISSILES)
     {
-        if (ammo.special != SPMSL_FLAME)
-            ammo.special = SPMSL_FLAME;
-    }
-    else if (pbolt.flavour == BEAM_COLD)
-    {
-        if (ammo.special != SPMSL_ICE)
-            ammo.special = SPMSL_ICE;
-    }
-    else
-    {
-        if (ammo.special != SPMSL_NORMAL && ammo.special != SPMSL_POISONED)
-            ammo.special = SPMSL_NORMAL;
+        if (pbolt.flavour == BEAM_FIRE)
+        {
+            if (ammo.special != SPMSL_FLAME)
+                ammo.special = SPMSL_FLAME;
+        }
+        else if (pbolt.flavour == BEAM_COLD)
+        {
+            if (ammo.special != SPMSL_ICE)
+                ammo.special = SPMSL_ICE;
+        }
+        else
+        {
+            if (ammo.special != SPMSL_NORMAL && ammo.special != SPMSL_POISONED)
+                ammo.special = SPMSL_NORMAL;
+        }
     }
 
     // Create message.
