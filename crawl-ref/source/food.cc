@@ -2044,7 +2044,7 @@ bool is_preferred_food(const item_def &food)
 
     if (food.base_type != OBJ_FOOD)
         return (false);
-    
+
     if (is_poisonous(food))
         return (false);
 

@@ -57,7 +57,7 @@ bool trap_def::type_has_ammo() const
     default:
         break;
     }
-    return rc;        
+    return rc;
 }
 
 void trap_def::message_trap_entry()
@@ -159,7 +159,7 @@ bool trap_def::is_known(const actor* act) const
         //   by the player about all traps s/he knows about
         // * very intelligent monsters can be assumed to have a high T&D
         //   skill (or have memorised part of the dungeon layout ;) )
-        
+
         rc = (intel >= I_NORMAL && mechanical
               && (mons_is_native_in_branch(monster)
                   || (mons_wont_attack(monster) && player_knows)
@@ -463,17 +463,17 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
                 if (damage_taken < 0)
                     damage_taken = 0;
-                
+
                 if (!mons_is_summoned(m))
                     bleed_onto_floor(m->pos(), m->type, damage_taken, true);
-                
+
                 hurt_monster(m, damage_taken);
                 if (m->hit_points < 1)
                     monster_die(m, KILL_MISC, NON_MONSTER);
             }
         }
         break;
-        
+
     case TRAP_NET:
         if (you_trigger)
         {
@@ -549,7 +549,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
                 if (mons_is_caught(m))
                     mark_net_trapping(m->pos());
-                
+
                 this->destroy();
             }
         }
@@ -637,11 +637,11 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     default:
         break;
     }
-    
+
     if (you_trigger)
     {
         learned_something_new(TUT_SEEN_TRAP, this->pos);
-        
+
         // Exercise T&D if the trap revealed itself.
         if (!you_know && this->is_known())
             exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
@@ -1108,7 +1108,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
                 return;         // no ammo generated either
             }
-            
+
             // Start constructing the message.
             std::string msg = shot.name(DESC_CAP_A) + " shoots out and ";
 
@@ -1116,7 +1116,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             // Exercise only if the trap was unknown (to prevent scumming.)
             if (!was_known && you.shield() && one_chance_in(3))
                 exercise(SK_SHIELDS, 1);
-            
+
             if (random2(20 + 5 * you.shield_blocks * you.shield_blocks)
                 < player_shield_class())
             {
@@ -1140,7 +1140,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                     // OK, we've been hit.
                     msg += "hits you!";
                     mpr(msg.c_str());
-                    
+
                     // Needle traps can poison.
                     if (poison && !player_res_poison()
                         && x_chance_in_y(50 - (3*player_AC()) / 2, 100))
@@ -1156,7 +1156,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                     msg += "misses you.";
                     mpr(msg.c_str());
                 }
-                
+
                 // Exercise only if the trap was unknown (to prevent scumming.)
                 if (!was_known && player_light_armour(true) && coinflip())
                     exercise(SK_DODGING, 1);
@@ -1190,7 +1190,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                 poison_monster(monster, KC_OTHER);
 
             // Apply damage.
-            hurt_monster(monster, damage_taken);           
+            hurt_monster(monster, damage_taken);
             if (monster->hit_points < 1)
                 monster_die(monster, KILL_MISC, NON_MONSTER);
         }
