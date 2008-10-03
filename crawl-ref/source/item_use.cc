@@ -4429,6 +4429,11 @@ void read_scroll( int slot )
         {
             mpr("A horrible Thing appears!");
         }
+        else
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            id_the_scroll = false;
+        }
         break;
 
     case SCR_FOG:
