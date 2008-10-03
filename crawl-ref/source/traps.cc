@@ -380,8 +380,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     else switch (this->type)
     {
     case TRAP_TELEPORT:
-        // Never revealed.
-        if (!you_know)
+        // Never revealed by monsters.
+        if (!you_trigger && !you_know)
             this->hide();
         triggerer.teleport(true);
         break;
