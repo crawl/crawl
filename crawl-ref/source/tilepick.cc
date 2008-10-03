@@ -2121,7 +2121,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
-        return _tileidx_trap(trap_type_at_xy(coord_def(gx, gy)));
+        return _tileidx_trap(get_trap_type(coord_def(gx, gy)));
     case DNGN_ENTER_SHOP:
         return TILE_DNGN_ENTER_SHOP;
     case DNGN_ENTER_LABYRINTH:

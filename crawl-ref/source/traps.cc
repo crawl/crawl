@@ -1242,29 +1242,6 @@ dungeon_feature_type trap_def::category() const
     }
 }
 
-
-// Returns index of the trap for a given (x,y) coordinate pair {dlb}
-int trap_at_xy(const coord_def& xy)
-{
-    for (int which_trap = 0; which_trap < MAX_TRAPS; which_trap++)
-    {
-        if (env.trap[which_trap].pos == xy
-            && env.trap[which_trap].type != TRAP_UNASSIGNED)
-        {
-            return (which_trap);
-        }
-    }
-
-    // No idea how well this will be handled elsewhere. {dlb}
-    return (-1);
-}
-
-trap_type trap_type_at_xy(const coord_def& xy)
-{
-    const int idx = trap_at_xy(xy);
-    return (idx == -1 ? NUM_TRAPS : env.trap[idx].type);
-}
-
 bool is_valid_shaft_level(const level_id &place)
 {
     if (place.level_type != LEVEL_DUNGEON)
