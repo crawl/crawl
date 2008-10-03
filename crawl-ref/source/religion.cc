@@ -2513,6 +2513,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         {
         case GOD_KIKUBAAQUDGHA:
         case GOD_YREDELEMNUL:
+        case GOD_VEHUMET:
         case GOD_MAKHLEB:
         case GOD_LUGONU:
             simple_god_message(" accepts your slave's kill.");
