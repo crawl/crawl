@@ -441,9 +441,7 @@ This spell tunes the caster's body such that it can instantly pass through solid
 %%%%
 Petrify
 
-This spell attempts to petrify a monster. If successful, the monster is slowed
-down for a while until it is temporarily turned into stone. In this state, a
-monster will take less damage upon being hit.
+This spell attempts to petrify a monster. If successful, the monster is slowed down for a while until it is temporarily turned into stone. In this state, a monster will take less damage upon being hit.
 %%%%
 Poison Ammunition
 
