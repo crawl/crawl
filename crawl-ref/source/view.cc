@@ -1178,9 +1178,12 @@ void monster_grid(bool do_updates)
         if (monster->type != -1 && mons_near(monster))
         {
             if (do_updates && (mons_is_sleeping(monster)
-                                || mons_is_wandering(monster))
+                               || mons_is_wandering(monster))
                 && check_awaken(monster))
             {
+                if (mons_near(monster))
+                    remove_auto_exclude(monster, true);
+
                 behaviour_event( monster, ME_ALERT, MHITYOU );
                 handle_monster_shouts(monster);
             }

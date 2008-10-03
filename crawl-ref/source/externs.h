@@ -1813,6 +1813,8 @@ public:
     int         tc_exclude_circle; // Colour for squares in the exclusion radius
     int         tc_dangerous;   // Colour for trapped squares, deep water, lava.
     int         tc_disconnected;// Areas that are completely disconnected.
+    std::vector<text_pattern> auto_exclude; // Automatically set an exclusion
+                                            // around certain monsters.
 
     int         travel_stair_cost;
 

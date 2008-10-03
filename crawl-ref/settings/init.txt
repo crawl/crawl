@@ -161,6 +161,7 @@ trap_item_brand    = reverse
 # explore_greedy   = false
 # explore_stop     = items,greedy_items,stairs,shops,altars,gates
 # explore_improved = true
+auto_exclude = oklob plant,silver statue,orange crystal statue
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan

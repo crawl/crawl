@@ -51,7 +51,7 @@ The contents of this text are:
                 travel_stop_message, force_more_message,
                 runrest_ignore_message, runrest_ignore_poison, 
                 runrest_ignore_monster, trapwalk_safe_hp, 
-                trap_prompt, rest_wait_both
+                trap_prompt, rest_wait_both, auto_exclude
 4-h     Stashes.
                 stash_filter, annotate_item_class,
                 annoate_item_dropped
@@ -895,7 +895,14 @@ rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop
         when both HP and MP are fully restored, not when either one of
         them is restored.
-   
+
+auto_exclude = <list of monster names>
+        Whenever you encounter a sleeping or stationary monster during 
+        exploration that is included in this list, automatically a
+        travel exclusion is set centered on this monster, meaning 
+        autoexplore won't ever bring you in its line of sight. If the 
+        monster dies or wakes up while you are in sight, this exclusion 
+        is automatically removed again.
 
 4-h     Stashes.
 ----------------

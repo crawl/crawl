@@ -72,6 +72,8 @@ std::string weird_sound();
 void curare_hits_player(int agent, int degree);
 
 bool mons_is_safe(const monsters *mon, bool want_move = false);
+bool need_auto_exclude(const monsters *mon, bool sleepy = false);
+void remove_auto_exclude(const monsters *mon, bool sleepy = false);
 
 std::vector<monsters*> get_nearby_monsters(bool want_move = false,
                                            bool just_check = false,

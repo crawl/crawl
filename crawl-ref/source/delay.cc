@@ -1657,6 +1657,11 @@ inline static void _monster_warning(activity_interrupt_type ai,
         }
         else
         {
+            // If the monster is in the auto_exclude list, automatically
+            // set an exclusion.
+            if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
+                toggle_exclude(mon->pos());
+
             std::string text = mon->name(DESC_CAP_A);
             // For named monsters also mention the base type.
             if (!(mon->mname).empty() && mon->type != MONS_PLAYER_GHOST)

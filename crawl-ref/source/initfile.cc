@@ -2652,6 +2652,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         tc_disconnected = str_to_colour(field, tc_disconnected);
     }
+    else if (key == "auto_exclude")
+    {
+        append_vector(auto_exclude, split_string(",", field));
+    }
     else BOOL_OPTION(classic_item_colours);
     else BOOL_OPTION(item_colour);
     else BOOL_OPTION_NAMED("item_color", item_colour);
