@@ -1974,7 +1974,11 @@ enum monster_flag_type
                                     // and orcs (Beogh worshippers -> friendly)
     MF_WAS_IN_VIEW        = 0x1000, // Was in view during previous turn
     MF_BAND_MEMBER        = 0x2000, // Created as a member of a band
-    MF_GOT_HALF_XP        = 0x4000  // Player already got half xp value earlier
+    MF_GOT_HALF_XP        = 0x4000, // Player already got half xp value earlier
+    MF_HONORARY_UNDEAD    = 0x8000  // Consider this monster to have MH_UNDEAD
+                                    // holiness, regardless of its actual type;
+                                    // currently used for abominations created
+                                    // via Twisted Resurrection
 };
 
 // Adding slots breaks saves. YHBW.

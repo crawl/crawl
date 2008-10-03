@@ -359,18 +359,9 @@ static int _scan_mon_inv_randarts( const monsters *mon,
     return (ret);
 }
 
-// Returns true if a given monster is an abomination created by
-// Twisted Resurrection.
-static bool _mons_your_abomination(const monsters *mon)
-{
-    return ((mon->type == MONS_ABOMINATION_SMALL
-             || mon->type == MONS_ABOMINATION_LARGE)
-            && testbits(mon->flags, MF_CREATED_FRIENDLY));
-}
-
 mon_holy_type mons_holiness(const monsters *mon)
 {
-    if (_mons_your_abomination(mon))
+    if (testbits(mon->flags, MF_HONORARY_UNDEAD))
         return (MH_UNDEAD);
 
     return (mons_class_holiness(mon->type));

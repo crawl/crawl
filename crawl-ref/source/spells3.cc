@@ -1106,6 +1106,9 @@ bool cast_twisted_resurrection(int pow, god_type god)
         return (false);
     }
 
+    // Mark this abomination as undead.
+    menv[monster].flags |= MF_HONORARY_UNDEAD;
+
     mpr("The heap of corpses melds into an agglomeration of writhing flesh!");
 
     if (mon == MONS_ABOMINATION_LARGE)
