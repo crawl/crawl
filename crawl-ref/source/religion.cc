@@ -2569,7 +2569,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         switch (you.religion)
         {
         case GOD_SHINING_ONE:
-        case GOD_OKAWARU:
         case GOD_MAKHLEB:
             simple_god_message(" accepts your collateral kill.");
             ret = true;
