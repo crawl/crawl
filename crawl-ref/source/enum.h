@@ -1960,7 +1960,7 @@ enum monster_flag_type
     MF_TAKING_STAIRS      = 0x08,   // is following player through stairs
 
     MF_INTERESTING        = 0x10,   // Player finds monster interesting
-    MF_SEEN               = 0x20,   // Player already seen monster
+    MF_SEEN               = 0x20,   // Player has already seen monster
     MF_DIVINE_PROTECTION  = 0x40,   // Monster has divine protection.
 
     MF_KNOWN_MIMIC        = 0x80,   // Mimic that has taken a swing at the PC,
