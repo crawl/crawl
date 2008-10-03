@@ -729,13 +729,12 @@ static bool efreet_flask(void)
 
 static bool ball_of_seeing(void)
 {
-    int use = 0;
     bool ret = false;
 
     mpr("You gaze into the crystal ball.");
 
-    use = (!you.duration[DUR_CONF] ? random2(you.skills[SK_EVOCATIONS] * 6)
-                                   : random2(5));
+    int use = (!you.confused() ? random2(you.skills[SK_EVOCATIONS] * 6)
+                               : random2(5));
 
     if (use < 2)
     {
@@ -1016,14 +1015,12 @@ static bool box_of_beasts()
 
 static bool ball_of_energy(void)
 {
-    int use = 0;
-    int proportional = 0;
-
     bool ret = false;
 
     mpr("You gaze into the crystal ball.");
 
-    use = ((!you.duration[DUR_CONF]) ? random2(you.skills[SK_EVOCATIONS] * 6) : random2(6));
+    int use = ((!you.confused()) ? random2(you.skills[SK_EVOCATIONS] * 6)
+                                 : random2(6));
 
     if (use < 2 || you.max_magic_points == 0)
     {
@@ -1041,8 +1038,7 @@ static bool ball_of_energy(void)
     }
     else
     {
-        proportional = you.magic_points * 100;
-        proportional /= you.max_magic_points;
+        int proportional = (you.magic_points * 100) / you.max_magic_points;
 
         if (random2avg(77 - you.skills[SK_EVOCATIONS] * 2, 4) > proportional
             || one_chance_in(25))

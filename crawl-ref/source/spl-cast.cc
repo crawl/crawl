@@ -631,7 +631,7 @@ bool cast_a_spell()
     }
 
     const bool staff_energy = player_energy();
-    if (you.duration[DUR_CONF])
+    if (you.confused())
         random_uselessness();
     else
     {

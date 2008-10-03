@@ -681,7 +681,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(BLUE, "Blade"));
     }
 
-    if (you.duration[DUR_CONF])
+    if (you.confused())
     {
         out.push_back(status_light(RED, "Conf"));
     }
@@ -2132,13 +2132,13 @@ std::string _status_mut_abilities()
     if (you.duration[DUR_INVIS])
         text += "invisible, ";
 
-    if (you.duration[DUR_CONF])
+    if (you.confused())
         text += "confused, ";
 
     // How exactly did you get to show the status?
     // It's not so unreasonable anymore now that the new overview screen is
     // dumped. When the player dies while paralysed it's important information.
-    if (you.duration[DUR_PARALYSIS])
+    if (you.paralysed())
         text += "paralysed, ";
 
     if (you.duration[DUR_PETRIFIED])

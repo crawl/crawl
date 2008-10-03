@@ -898,7 +898,7 @@ static int damage_or_escape_net(int hold)
 
     // Confusion makes the whole thing somewhat harder
     // (less so for trying to escape).
-    if (you.duration[DUR_CONF])
+    if (you.confused())
     {
         if (escape > 1)
             escape--;

@@ -442,7 +442,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     if (check_confused)
     {
         const ability_def &abil = get_ability_def(result.which);
-        if (you.duration[DUR_CONF] && !testbits(abil.flags, ABFLAG_CONF_OK))
+        if (you.confused() && !testbits(abil.flags, ABFLAG_CONF_OK))
         {
             result.which = ABIL_NON_ABILITY;
             return result;
@@ -856,7 +856,7 @@ bool activate_ability()
         return (false);
     }
 
-    if (you.duration[DUR_CONF])
+    if (you.confused())
     {
         talents = your_talents(true);
         if (talents.empty())

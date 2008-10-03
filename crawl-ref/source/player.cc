@@ -116,7 +116,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                          || mons_is_submerged( &menv[ mgrd(p) ])));
 
     const int cloud = env.cgrid(p);
-    if (cloud != EMPTY_CLOUD && !you.duration[DUR_CONF])
+    if (cloud != EMPTY_CLOUD && !you.confused())
     {
         const cloud_type ctype = env.cloud[ cloud ].type;
         // Don't prompt if already in a cloud of the same type.
@@ -225,7 +225,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
             // lava and dangerous deep water (ie not merfolk)
             const coord_def entry = (stepped) ? you.pos() : p;
 
-            if (stepped && !force && !you.duration[DUR_CONF])
+            if (stepped && !force && !you.confused())
             {
                 canned_msg(MSG_UNTHINKING_ACT);
                 return (false);
@@ -3544,7 +3544,7 @@ int check_stealth(void)
     if (you.burden_state > BS_UNENCUMBERED)
         stealth /= you.burden_state;
 
-    if (you.duration[DUR_CONF])
+    if (you.confused())
         stealth /= 3;
 
     const int arm   = you.equip[EQ_BODY_ARMOUR];
@@ -3854,7 +3854,7 @@ void display_char_status()
     if (you.duration[DUR_INVIS])
         mpr("You are invisible.");
 
-    if (you.duration[DUR_CONF])
+    if (you.confused())
         mpr("You are confused.");
 
     if (you.duration[DUR_BEHELD])

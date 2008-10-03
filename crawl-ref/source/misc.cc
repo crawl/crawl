@@ -1487,7 +1487,7 @@ void up_stairs(dungeon_feature_type force_stair,
     // the overloaded character makes an attempt... so we're doing this
     // check before that one. -- bwr
     if (!player_is_airborne()
-        && you.duration[DUR_CONF]
+        && you.confused()
         && old_level_type == LEVEL_DUNGEON
         && stair_find >= DNGN_STONE_STAIRS_UP_I
         && stair_find <= DNGN_STONE_STAIRS_UP_III
@@ -1923,7 +1923,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         mprf("Welcome back to %s!", branches[you.where_are_you].longname);
 
     if (!player_is_airborne()
-        && you.duration[DUR_CONF]
+        && you.confused()
         && !grid_is_escape_hatch(stair_find)
         && force_stair != DNGN_ENTER_ABYSS
         && random2(100) > you.dex)

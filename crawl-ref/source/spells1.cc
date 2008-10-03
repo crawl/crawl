@@ -81,7 +81,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
     {
         mpr("The power of the Abyss keeps you in your place!");
     }
-    else if (you.duration[DUR_CONF] && !wizard_blink)
+    else if (you.confused() && !wizard_blink)
         random_blink(false);
     else if (!allow_control_teleport(true) && !wizard_blink)
     {
@@ -217,7 +217,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
 
 #ifdef USE_SEMI_CONTROLLED_BLINK
     //jmf: Add back control, but effect is cast_semi_controlled_blink(pow).
-    else if (player_control_teleport() && !you.duration[DUR_CONF]
+    else if (player_control_teleport() && !you.confused()
              && allow_partial_control && allow_control_teleport())
     {
         mpr("You may select the general direction of your translocation.");
@@ -871,7 +871,7 @@ bool cast_vitalisation()
     int type = 0;
 
     // Remove negative afflictions.
-    if (you.disease || you.rotting || you.duration[DUR_CONF]
+    if (you.disease || you.rotting || you.confused()
         || you.duration[DUR_PARALYSIS] || you.duration[DUR_POISONING]
         || you.duration[DUR_PETRIFIED])
     {

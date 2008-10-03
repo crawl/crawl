@@ -1189,7 +1189,7 @@ bool learn_spell(int book)
         return (false);
     }
 
-    if (you.duration[DUR_CONF])
+    if (you.confused())
     {
         mpr("You are too confused!");
         return (false);

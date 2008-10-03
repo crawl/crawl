@@ -1238,7 +1238,7 @@ void you_teleport(void)
 
 static bool _teleport_player( bool allow_control, bool new_abyss_area )
 {
-    bool is_controlled = (allow_control && !you.duration[DUR_CONF]
+    bool is_controlled = (allow_control && !you.confused()
                           && player_control_teleport()
                           && allow_control_teleport());
 

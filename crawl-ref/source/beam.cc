@@ -577,7 +577,7 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
 {
     // Non-controlleable during confusion.
     // (We'll shoot in a different direction anyway.)
-    if (you.duration[DUR_CONF])
+    if (you.confused())
         return (true);
 
     _beam_set_default_values(pbolt, power);

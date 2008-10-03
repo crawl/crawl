@@ -674,6 +674,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         you.duration[DUR_CONF] = 0;
         you.duration[DUR_POISONING] = 0;
         set_hp( abs(you.hp_max), false );
+        set_mp( you.max_magic_points, false);
         set_hunger( 10999, true );
         you.redraw_hit_points = true;
         break;
@@ -1645,7 +1646,7 @@ static bool _toggle_flag( bool* flag, const char* flagname )
 
 static bool _stairs_check_beheld()
 {
-    if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF])
+    if (you.duration[DUR_BEHELD] && !you.confused())
     {
         mprf("You cannot move away from %s!",
              menv[you.beheld_by[0]].name(DESC_NOCAP_THE, true).c_str());
@@ -3460,7 +3461,7 @@ static void _open_door(coord_def move, bool check_confused)
     }
 
     // If there's only one door to open, don't ask.
-    if ((!check_confused || !you.duration[DUR_CONF]) && move.origin())
+    if ((!check_confused || !you.confused()) && move.origin())
     {
         if (_check_adjacent(DNGN_CLOSED_DOOR, move) == 0)
         {
@@ -3469,7 +3470,7 @@ static void _open_door(coord_def move, bool check_confused)
         }
     }
 
-    if (check_confused && you.duration[DUR_CONF] && !one_chance_in(3))
+    if (check_confused && you.confused() && !one_chance_in(3))
     {
         move.x = random2(3) - 1;
         move.y = random2(3) - 1;
@@ -3642,7 +3643,7 @@ static void _close_door(coord_def move)
     coord_def doorpos;
 
     // If there's only one door to close, don't ask.
-    if (!you.duration[DUR_CONF] && move.origin())
+    if (!you.confused() && move.origin())
     {
         int num = _check_adjacent(DNGN_OPEN_DOOR, move);
         if (num == 0)
@@ -3657,7 +3658,7 @@ static void _close_door(coord_def move)
         }
     }
 
-    if (you.duration[DUR_CONF] && !one_chance_in(3))
+    if (you.confused() && !one_chance_in(3))
     {
         move.x = random2(3) - 1;
         move.y = random2(3) - 1;
@@ -4045,7 +4046,7 @@ static void _move_player(coord_def move)
     }
 
     // When confused, sometimes make a random move
-    if (you.duration[DUR_CONF])
+    if (you.confused())
     {
         if (!one_chance_in(3))
         {
@@ -4076,14 +4077,14 @@ static void _move_player(coord_def move)
     const bool can_swap_places = targ_monst != NON_MONSTER
                                  && !mons_is_stationary(&menv[targ_monst])
                                  && (mons_wont_attack(&menv[targ_monst])
-                                       && !you.duration[DUR_CONF]
+                                       && !you.confused()
                                      || is_sanctuary(you.pos())
                                         && is_sanctuary(targ));
 
     // You cannot move away from a mermaid but you CAN fight monsters on
     // neighbouring squares.
     monsters *beholder = NULL;
-    if (you.duration[DUR_BEHELD] && !you.duration[DUR_CONF])
+    if (you.duration[DUR_BEHELD] && !you.confused())
     {
         for (unsigned int i = 0; i < you.beheld_by.size(); i++)
         {

@@ -1915,7 +1915,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     pbolt.range         = max_range;
 
     // Don't do the tracing when using Portaled Projectile, or when confused.
-    if (!teleport && !you.duration[DUR_CONF])
+    if (!teleport && !you.confused())
     {
         // Init tracer variables.
         pbolt.foe_count     = pbolt.fr_count = 0;
@@ -1964,7 +1964,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         init_stack_blood_potions(item, val);
     }
 
-    if (you.duration[DUR_CONF])
+    if (you.confused())
     {
         thr.isTarget = true;
         thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
@@ -3517,7 +3517,7 @@ void zap_wand( int slot )
     }
 
 
-    if (you.duration[DUR_CONF])
+    if (you.confused())
     {
         zap_wand.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
     }
@@ -4346,7 +4346,7 @@ void read_scroll( int slot )
     // Decrement and handle inventory if any scroll other than paper {dlb}:
     const scroll_type which_scroll = static_cast<scroll_type>(scroll.sub_type);
     if (which_scroll != SCR_PAPER
-        && (which_scroll != SCR_IMMOLATION || you.duration[DUR_CONF]))
+        && (which_scroll != SCR_IMMOLATION || you.confused()))
     {
         mpr("As you read the scroll, it crumbles to dust.");
         // Actual removal of scroll done afterwards. -- bwr
@@ -4358,7 +4358,7 @@ void read_scroll( int slot )
     // Scrolls of paper are also exempted from this handling {dlb}:
     if (which_scroll != SCR_PAPER)
     {
-        if (you.duration[DUR_CONF])
+        if (you.confused())
         {
             random_uselessness(item_slot);
             dec_inv_item_quantity( item_slot, 1 );
