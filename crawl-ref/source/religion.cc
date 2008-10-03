@@ -2215,8 +2215,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case GOD_SHINING_ONE:
             if (!known)
             {
-                simple_god_message(" demands, \"Cease your blood-drinking, "
-                                   "mortal!\"");
+                simple_god_message(" forgives your inadvertent "
+                                   "blood-drinking, just this once.");
                 break;
             }
             penance = level;
@@ -2225,8 +2225,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case GOD_ELYVILON:
             if (!known)
             {
-                simple_god_message(" demands, \"Cease your blood-drinking, "
-                                   "mortal!\"");
+                simple_god_message(" forgives your inadvertent "
+                                   "blood-drinking, just this once.");
                 break;
             }
             piety_change = -2*level;
@@ -2264,8 +2264,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case GOD_ELYVILON:
             if (!known && thing_done != DID_ATTACK_HOLY)
             {
-                simple_god_message(" demands, \"Cease your unholy ways, "
-                                   "mortal!\"");
+                simple_god_message(" forgives your inadvertent unholy act, "
+                                   "just this once.");
                 break;
             }
             piety_change = -level;
@@ -2286,8 +2286,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         {
             if (!known)
             {
-                simple_god_message(" demands, \"Cease your holy ways, "
-                                   "mortal!\"");
+                simple_god_message(" forgives your inadvertent holy act, "
+                                   "just this once.");
                 break;
             }
             ret = true;
@@ -2307,8 +2307,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
                 if (!known)
                 {
-                    simple_god_message(" demands, \"Cease your dishonourable "
-                                       "attack, mortal!\"");
+                    simple_god_message(" forgives your inadvertent "
+                                       "dishonourable attack, just this once.");
                     break;
                 }
             }
@@ -2325,8 +2325,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case GOD_ELYVILON:
             if (!known)
             {
-                simple_god_message(" demands, \"Cease your attack on the "
-                                   "neutral, mortal!\"");
+                simple_god_message(" forgives your inadvertent attack on a "
+                                   "neutral, just this once.");
                 break;
             }
             penance = level/2 + 1;
@@ -2334,8 +2334,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case GOD_ZIN:
             if (!known)
             {
-                simple_god_message(" demands, \"Cease your attack on the "
-                                   "neutral, mortal!\"");
+                simple_god_message(" forgives your inadvertent attack on a "
+                                   "neutral, just this once.");
                 break;
             }
             piety_change = -(level/2 + 1);
@@ -2352,8 +2352,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         {
             if (!known)
             {
-                simple_god_message(" demands, \"Cease your attack on your "
-                                   "ally, mortal!\"");
+                simple_god_message(" forgives your inadvertent attack on an "
+                                   "ally, just this once.");
+                break;
             }
 
             piety_change = -level;
@@ -2386,8 +2387,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         switch (you.religion)
         {
         case GOD_ELYVILON:
-            simple_god_message(" does not appreciate your butchering "
-                               "the dead during prayer!");
+            simple_god_message(" does not appreciate your butchering the dead "
+                               "during prayer!");
             ret = true;
             piety_change = -10;
             penance = 10;
@@ -2416,8 +2417,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             // killing only disapproved during prayer
             if (you.duration[DUR_PRAYER])
             {
-                simple_god_message(" does not appreciate your shedding "
-                                   "blood during prayer!");
+                simple_god_message(" does not appreciate your shedding blood "
+                                   "during prayer!");
                 ret = true;
                 piety_change = -level;
                 penance = level * 2;
@@ -2757,13 +2758,13 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     case DID_DELIBERATE_MUTATING:
         if (you.religion == GOD_ZIN)
         {
-            if (!known)
+            if (!known && thing_done != DID_CAUSE_GLOWING)
             {
-                simple_god_message(" demands, \"Cease your dealings with "
-                                   "chaos, mortal!\"");
+                simple_god_message(" forgives your inadvertent chaotic act, "
+                                   "just this once.");
                 break;
             }
-            else if (thing_done == DID_CAUSE_GLOWING)
+            else
             {
                 static long last_glowing_lecture = -1L;
                 if (last_glowing_lecture != you.num_turns)
@@ -2772,9 +2773,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                                        "glow surrounding you!");
                     last_glowing_lecture = you.num_turns;
                 }
-
-                if (!known)
-                    break;
             }
             piety_change = -level;
             ret = true;
