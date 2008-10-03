@@ -895,10 +895,8 @@ static void _read_macros_from(const char* filename)
     }
 }
 
-int macro_init( void )
+void macro_init()
 {
-    _read_macros_from(get_macro_file().c_str());
-
     const std::vector<std::string>& files = Options.additional_macro_files;
     for (std::vector<std::string>::const_iterator it = files.begin();
          it != files.end();
@@ -907,8 +905,7 @@ int macro_init( void )
         _read_macros_from(it->c_str());
     }
 
-
-    return 0;
+    _read_macros_from(get_macro_file().c_str());
 }
 
 

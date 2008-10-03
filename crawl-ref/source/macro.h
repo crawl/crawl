@@ -63,9 +63,9 @@ int getch_with_command_macros(void);  // keymaps and macros (ie for commands)
 
 void flush_input_buffer( int reason );
 
-void macro_add_query(void);
-int macro_init(void);
-void macro_save(void);
+void macro_add_query();
+void macro_init();
+void macro_save();
 
 void macro_userfn(const char *keys, const char *registryname);
 
