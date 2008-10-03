@@ -1841,12 +1841,28 @@ bool cast_fragmentation(int pow, const dist& spd)
             break;
 
         default:
-            beam.damage.num = 1;  // to mark that a monster was targetted
+            // Petrified monsters can be exploded.
+            if (mons_is_petrified(&menv[mon]))
+            {
+                explode         = true;
+                beam.ex_size    = 2;
+                beam.name       = "blast of petrified fragments";
+                beam.colour     = menv[mon].colour;
+                beam.damage.num = 3;
+                if (player_hurt_monster(mon, roll_dice(beam.damage)))
+                    beam.damage.num++;
+                break;
+            }
+            else
+            {
+                // Mark that a monster was targetted.
+                beam.damage.num = 1;
 
-            // Yes, this spell does lousy damage if the
-            // monster isn't susceptible. -- bwr
-            player_hurt_monster(mon, roll_dice(1, 5 + pow / 25));
-            goto do_terrain;
+                // Yes, this spell does lousy damage if the monster
+                // isn't susceptible. -- bwr
+                player_hurt_monster(mon, roll_dice(1, 5 + pow / 25));
+                goto do_terrain;
+            }
         }
 
         mpr(explode_msg.c_str());
