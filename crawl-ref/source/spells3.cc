@@ -1204,7 +1204,7 @@ bool cast_death_channel(int pow, god_type god)
 bool allow_control_teleport(bool quiet)
 {
     bool retval = !(testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
-                      || testbits(get_branch_flags(), BFLAG_NO_TELE_CONTROL));
+                    || testbits(get_branch_flags(), BFLAG_NO_TELE_CONTROL));
 
     // Tell the player why if they have teleport control.
     if (!quiet && !retval && player_control_teleport())
@@ -1281,13 +1281,41 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
         mpr("Expect minor deviation.");
         more();
 
-        show_map(pos, false);
-
-        redraw_screen();
+        while (true)
+        {
+            show_map(pos, false);
+            redraw_screen();
 
 #if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
+            mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
 #endif
+
+            if (you.duration[DUR_BEHELD])
+            {
+                bool blocked_movement = false;
+                for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+                {
+                    monsters& mon = menv[you.beheld_by[i]];
+                    const int olddist = grid_distance(you.pos(), mon.pos());
+                    const int newdist = grid_distance(pos, mon.pos());
+
+                    if (olddist < newdist)
+                    {
+                        mprf("You cannot teleport away from %s!",
+                             mon.name(DESC_NOCAP_THE, true).c_str());
+                        mpr("Choose another destination (press '.' or delete to select).");
+                        more();
+
+                        blocked_movement = true;
+                        break;
+                    }
+                }
+
+                if (blocked_movement)
+                    continue;
+            }
+            break;
+        }
 
         pos.x += random2(3) - 1;
         pos.y += random2(3) - 1;

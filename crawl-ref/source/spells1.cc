@@ -111,6 +111,29 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                 return (-1);         // early return {dlb}
             }
 
+            if (!wizard_blink && you.duration[DUR_BEHELD])
+            {
+                bool blocked_movement = false;
+                for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+                {
+                    monsters& mon = menv[you.beheld_by[i]];
+                    const int olddist = grid_distance(you.pos(), mon.pos());
+                    const int newdist = grid_distance(beam.target, mon.pos());
+
+                    if (olddist < newdist)
+                    {
+                        mprf("You cannot blink away from %s!",
+                             mon.name(DESC_NOCAP_THE, true).c_str());
+
+                        blocked_movement = true;
+                        break;
+                    }
+                }
+
+                if (blocked_movement)
+                    continue;
+            }
+
             // Wizard blink can move past translucent walls.
             if (see_grid_no_trans(beam.target))
                 break;

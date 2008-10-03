@@ -725,7 +725,7 @@ static bool _cmdhelp_textfilter(const std::string &tag)
 
 static const char *targeting_help_1 =
     "<h>Examine surroundings ('<w>x</w><h>' in main):\n"
-    "<w>Esc</w> : cancel (also <w>Space</w>)\n"
+    "<w>Esc</w> : cancel (also <w>Space</w>, <w>x</w>)\n"
     "<w>Dir.</w>: move cursor in that direction\n"
     "<w>.</w> : move to cursor (also <w>Enter</w>, <w>Del</w>)\n"
     "<w>v</w> : describe monster under cursor\n"

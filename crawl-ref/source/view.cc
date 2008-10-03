@@ -377,7 +377,9 @@ static int _view_emphasised_colour(const coord_def& where,
     {
         if ((you.your_level || grid_stair_direction(feat) == CMD_GO_DOWNSTAIRS)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL)
+        {
             return (newcolour);
+        }
     }
     return (oldcolour);
 }
@@ -411,8 +413,32 @@ static void _get_symbol( const coord_def& where,
         {
             const int colmask = *colour & COLFLAG_MASK;
 
-            if (object < NUM_REAL_FEATURES && object >= DNGN_MINMOVE
-                && is_sanctuary(where) )
+            bool blocked_movement = false;
+            if (object < NUM_FEATURES && object >= DNGN_MINMOVE
+                && you.duration[DUR_BEHELD])
+            {
+                // Colour grids that cannot be reached due to beholders
+                // dark grey.
+                for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+                {
+                    monsters& mon = menv[you.beheld_by[i]];
+                    const int olddist = grid_distance(you.pos(), mon.pos());
+                    const int newdist = grid_distance(where, mon.pos());
+
+                    if (olddist < newdist)
+                    {
+                        blocked_movement = true;
+                        break;
+                    }
+                }
+            }
+
+            if (blocked_movement)
+            {
+                *colour = DARKGREY | colmask;
+            }
+            else if (object < NUM_REAL_FEATURES && object >= DNGN_MINMOVE
+                     && is_sanctuary(where) )
             {
                 if (env.map(where).property == FPROP_SANCTUARY_1)
                     *colour = YELLOW | colmask;
@@ -442,10 +468,12 @@ static void _get_symbol( const coord_def& where,
                     *colour = fdef.colour | colmask;
 
                 if (fdef.em_colour != fdef.colour && fdef.em_colour)
+                {
                     *colour =
                         _view_emphasised_colour(
                             where, static_cast<dungeon_feature_type>(object),
                             *colour, fdef.em_colour | colmask);
+                }
             }
 
             if (object < NUM_REAL_FEATURES && inside_halo(where)
@@ -457,9 +485,11 @@ static void _get_symbol( const coord_def& where,
         }
 
         // Note anything we see that's notable
-        if ((!where.origin()) && fdef.is_notable())
+        if (!where.origin() && fdef.is_notable())
+        {
             seen_notable_thing( static_cast<dungeon_feature_type>(object),
                                 where );
+        }
     }
     else
     {
@@ -642,6 +672,30 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
 
     if (feature_colour != DARKGREY)
         tc = feature_colour;
+    else if (you.duration[DUR_BEHELD])
+    {
+        // If beheld, colour the few grids that can be reached anyway
+        // lightgrey.
+        coord_def pos = coord_def(x,y);
+        if (grd(pos) >= DNGN_MINMOVE && mgrd(pos) == NON_MONSTER)
+        {
+            bool blocked_movement = false;
+            for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+            {
+                monsters& mon = menv[you.beheld_by[i]];
+                const int olddist = grid_distance(you.pos(), mon.pos());
+                const int newdist = grid_distance(pos, mon.pos());
+
+                if (olddist < newdist || !see_grid(env.show, pos, mon.pos()))
+                {
+                    blocked_movement = true;
+                    break;
+                }
+            }
+            if (!blocked_movement)
+                tc = LIGHTGREY;
+        }
+    }
 
     if (Options.feature_item_brand
         && is_critical_feature(grid_value)
@@ -3020,11 +3074,11 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
     screen_buffer_t buffer2[GYM * GXM * 2];
 
     int num_lines = _get_number_of_lines_levelmap();
-    if ( num_lines > GYM )
+    if (num_lines > GYM)
         num_lines = GYM;
 
     int num_cols = get_number_of_cols();
-    if ( num_cols > GXM )
+    if (num_cols > GXM)
         num_cols = GXM;
 
     cursor_control cs(false);

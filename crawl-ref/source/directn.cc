@@ -532,8 +532,11 @@ void full_describe_view()
             std::vector<formatted_string> fss;
             std::string str = get_monster_desc(list_mons[i], true, DESC_CAP_A,
                                                true);
+            if (player_beheld_by(list_mons[i]))
+                str += ", beholding you";
+
             if (dam_level != MDAM_OKAY)
-                str = str + ", " + wound_str;
+                str += ", " + wound_str;
 
             // Wraparound if the description is longer than allowed.
             linebreak_string2(str, get_number_of_cols() - 8);
@@ -631,11 +634,6 @@ void full_describe_view()
             describe_item( *i );
         }
     }
-
-    // Repeat the prompt to show where we are.
-    mpr("Move the cursor around to observe a square "
-        "(x - list visible monsters and items, v - describe square, "
-        "? - help)", MSGCH_PROMPT);
 }
 
 
