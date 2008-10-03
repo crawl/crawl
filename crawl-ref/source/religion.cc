@@ -460,19 +460,19 @@ std::string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_SIF_MUNA:
-        likes.push_back("train your various spell casting skills");
+        likes.push_back("you train your various spell casting skills");
         break;
 
     case GOD_TROG:
-        snprintf(info, INFO_SIZE, "destroy spellbooks (especially ones you've "
-                                  "never read)%s",
+        snprintf(info, INFO_SIZE, "you destroy spellbooks (especially ones "
+                                  "you've never read)%s",
                  verbose ? " via the <w>a</w> command" : "");
 
         likes.push_back(info);
         break;
 
     case GOD_NEMELEX_XOBEH:
-        snprintf(info, INFO_SIZE, "draw unmarked cards and use up decks%s",
+        snprintf(info, INFO_SIZE, "you draw unmarked cards and use up decks%s",
                  verbose ? " (by <w>w</w>ielding and e<w>v</w>oking them)"
                          : "");
 
@@ -480,7 +480,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_ELYVILON:
-        snprintf(info, INFO_SIZE, "destroy weapons (especially evil ones)%s",
+        snprintf(info, INFO_SIZE, "you destroy weapons (especially evil ones)%s",
                  verbose ? " via the <w>a</w> command (inscribe items with "
                            "<w>!D</w> to prevent their accidental destruction)"
                          : "");
@@ -495,20 +495,20 @@ std::string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_SHINING_ONE:
-        snprintf(info, INFO_SIZE, "sacrifice evil items%s",
+        snprintf(info, INFO_SIZE, "you sacrifice evil items%s",
                  verbose ? " (by dropping them on an altar and praying)" : "");
 
         likes.push_back(info);
         break;
 
     case GOD_NEMELEX_XOBEH:
-        snprintf(info, INFO_SIZE, "sacrifice items%s",
+        snprintf(info, INFO_SIZE, "you sacrifice items%s",
                  verbose ? " (by standing over them and <w>p</w>raying)" : "");
         likes.push_back(info);
         break;
 
     case GOD_ZIN:
-        snprintf(info, INFO_SIZE, "donate money%s",
+        snprintf(info, INFO_SIZE, "you donate money%s",
                  verbose ? " (by praying at an altar)" : "");
 
         likes.push_back(info);
@@ -520,7 +520,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     if (god_likes_butchery(which_god))
     {
-        snprintf(info, INFO_SIZE, "butcher corpses while praying%s",
+        snprintf(info, INFO_SIZE, "you butcher corpses while praying%s",
                  verbose ? " (press <w>pc</w> to do so)" : "");
 
         likes.push_back(info);
@@ -528,10 +528,30 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_KIKUBAAQUDGHA: case GOD_YREDELEMNUL: case GOD_OKAWARU:
-    case GOD_VEHUMET:       case GOD_MAKHLEB:     case GOD_TROG:
-    case GOD_BEOGH:         case GOD_LUGONU:
-        likes.push_back("kill living beings");
+    case GOD_VEHUMET: case GOD_MAKHLEB: case GOD_LUGONU:
+        likes.push_back("you or your allies kill living beings");
+        break;
+
+    case GOD_TROG:
+        likes.push_back("you or your god-given allies kill living beings");
+        break;
+
+    case GOD_YREDELEMNUL:
+        likes.push_back("you or your undead slaves kill living beings");
+        break;
+
+    case GOD_KIKUBAAQUDGHA:
+        likes.push_back("you kill living beings");
+        likes.push_back("your god-given allies kill living beings");
+        likes.push_back("your undead slaves kill living beings");
+        break;
+
+    case GOD_BEOGH:
+        likes.push_back("you or your allied orcs kill living beings");
+        break;
+
+    case GOD_OKAWARU:
+        likes.push_back("you kill living beings");
         break;
 
     default:
@@ -541,7 +561,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_SHINING_ONE:
-        likes.push_back("kill living evil beings");
+        likes.push_back("you or your allies kill living evil beings");
         break;
 
     default:
@@ -550,9 +570,13 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_SHINING_ONE: case GOD_OKAWARU: case GOD_VEHUMET:
-    case GOD_MAKHLEB:     case GOD_LUGONU:
-        likes.push_back("kill the undead");
+    case GOD_SHINING_ONE: case GOD_VEHUMET: case GOD_MAKHLEB:
+    case GOD_LUGONU:
+        likes.push_back("you or your allies kill the undead");
+        break;
+
+    case GOD_OKAWARU:
+        likes.push_back("you kill the undead");
         break;
 
     default:
@@ -561,8 +585,12 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_SHINING_ONE: case GOD_OKAWARU: case GOD_MAKHLEB:
-        likes.push_back("kill demons");
+    case GOD_SHINING_ONE: case GOD_MAKHLEB:
+        likes.push_back("you or your allies kill demons");
+        break;
+
+    case GOD_OKAWARU:
+        likes.push_back("you kill demons");
         break;
 
     default:
@@ -572,7 +600,11 @@ std::string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_KIKUBAAQUDGHA: case GOD_MAKHLEB: case GOD_LUGONU:
-        likes.push_back("kill holy beings");
+        likes.push_back("you or your allies kill holy beings");
+        break;
+
+    case GOD_YREDELEMNUL:
+        likes.push_back("your allies kill holy beings");
         break;
 
     default:
@@ -583,19 +615,19 @@ std::string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_ZIN:
-        really_likes.push_back("kill monsters which cause mutation or rotting");
+        really_likes.push_back("you kill monsters which cause mutation or rotting");
         break;
 
     case GOD_YREDELEMNUL:
-        really_likes.push_back("kill holy beings");
+        really_likes.push_back("you kill holy beings");
         break;
 
     case GOD_BEOGH:
-        really_likes.push_back("kill the priests of other religions");
+        really_likes.push_back("you kill the priests of other religions");
         break;
 
     case GOD_TROG:
-        really_likes.push_back("kill wizards and other users of magic");
+        really_likes.push_back("you kill wizards and other users of magic");
         break;
 
     default:
@@ -606,7 +638,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         text += " %s doesn't like anything? This a bug; please report it.";
     else
     {
-        text += " likes it when you ";
+        text += " likes it when ";
         text += comma_separated_line(likes.begin(), likes.end(),
                                      ", and ", ", ");
         text += ".";
@@ -616,7 +648,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
             text += " ";
             text += god_name(which_god);
 
-            text += " especially likes it when you ";
+            text += " especially likes it when ";
             text += comma_separated_line(really_likes.begin(),
                                          really_likes.end(), ", and ", ", ");
             text += ".";
@@ -635,28 +667,28 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     std::vector<std::string> dislikes;
 
     if (god_hates_butchery(which_god))
-        dislikes.push_back("butcher corpses while praying");
+        dislikes.push_back("you butcher corpses while praying");
 
     if (is_good_god(which_god))
     {
-        dislikes.push_back("drink blood");
-        dislikes.push_back("perform cannibalism");
-        dislikes.push_back("use necromancy");
-        dislikes.push_back("use unholy magic or items");
-        dislikes.push_back("attack holy beings");
-        dislikes.push_back("kill holy beings");
-        dislikes.push_back("attack neutral beings");
+        dislikes.push_back("you drink blood");
+        dislikes.push_back("you perform cannibalism");
+        dislikes.push_back("you use necromancy");
+        dislikes.push_back("you use unholy magic or items");
+        dislikes.push_back("you attack holy beings");
+        dislikes.push_back("you or your allies kill holy beings");
+        dislikes.push_back("you attack neutral beings");
     }
 
     switch (which_god)
     {
     case GOD_ZIN:     case GOD_SHINING_ONE:  case GOD_ELYVILON:
     case GOD_OKAWARU:
-        dislikes.push_back("attack allies");
+        dislikes.push_back("you attack allies");
         break;
 
     case GOD_BEOGH:
-        dislikes.push_back("attack allied orcs");
+        dislikes.push_back("you attack allied orcs");
         break;
 
     default:
@@ -666,7 +698,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     switch (which_god)
     {
     case GOD_ELYVILON: case GOD_ZIN: case GOD_OKAWARU:
-        dislikes.push_back("allow an ally to die");
+        dislikes.push_back("you allow an ally to die");
         break;
 
     default:
@@ -676,28 +708,28 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     switch (which_god)
     {
     case GOD_ZIN:
-        dislikes.push_back("cause yourself to mutate in a way that could "
+        dislikes.push_back("you cause yourself to mutate in a way that could "
                            "have been avoided");
-        dislikes.push_back("polymorph monsters");
-        dislikes.push_back("eat the flesh of sentient beings");
+        dislikes.push_back("you polymorph monsters");
+        dislikes.push_back("you eat the flesh of sentient beings");
         break;
 
     case GOD_SHINING_ONE:
-        dislikes.push_back("poison a monster");
-        dislikes.push_back("attack in an unchivalric manner");
+        dislikes.push_back("you poison a monster");
+        dislikes.push_back("you attack in an unchivalric manner");
         break;
 
     case GOD_ELYVILON:
-        dislikes.push_back("kill a living thing while praying");
+        dislikes.push_back("you kill a living thing while praying");
         break;
 
     case GOD_YREDELEMNUL:
-        dislikes.push_back("use holy magic or items");
+        dislikes.push_back("you use holy magic or items");
         break;
 
     case GOD_TROG:
-        dislikes.push_back("memorise spells");
-        dislikes.push_back("cast spells");
+        dislikes.push_back("you memorise spells");
+        dislikes.push_back("you cast spells");
         break;
 
     default:
@@ -708,7 +740,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         return "";
 
     std::string text = god_name(which_god);
-                text += " dislikes it when you ";
+                text += " dislikes it when ";
                 text += comma_separated_line(dislikes.begin(), dislikes.end(),
                                              ", or ", ", ");
                 text += ".";
