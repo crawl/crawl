@@ -575,9 +575,9 @@ void DungeonRegion::draw_foreground(unsigned int bg, unsigned int fg, unsigned i
         add_quad(TEX_DEFAULT, TILE_NEW_STAIR, x, y);
 
     if (bg & TILE_FLAG_EXCL_CTR && (bg & TILE_FLAG_UNSEEN))
-        add_quad(TEX_DUNGEON, TILE_TRAVEL_EXCLUSION_CENTRE_FG, x, y);
+        add_quad(TEX_DEFAULT, TILE_TRAVEL_EXCLUSION_CENTRE_FG, x, y);
     else if (bg & TILE_FLAG_TRAV_EXCL && (bg & TILE_FLAG_UNSEEN))
-        add_quad(TEX_DUNGEON, TILE_TRAVEL_EXCLUSION_FG, x, y);
+        add_quad(TEX_DEFAULT, TILE_TRAVEL_EXCLUSION_FG, x, y);
 
     // Tutorial cursor takes precedence over other cursors.
     if (bg & TILE_FLAG_TUT_CURSOR)
