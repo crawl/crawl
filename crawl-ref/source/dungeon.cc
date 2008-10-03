@@ -538,11 +538,9 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
-    case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-    case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_HELL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
