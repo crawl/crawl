@@ -4700,17 +4700,17 @@ static bool _yred_slaves_abandon_you()
     {
         if (you.religion != GOD_YREDELEMNUL)
         {
-            simple_god_message(" reclaims all of your undead slaves!",
+            simple_god_message(" reclaims all of your granted undead slaves!",
                                GOD_YREDELEMNUL);
         }
         else if (num_reclaim > 0)
         {
             if (num_reclaim == 1 && num_slaves > 1)
-                simple_god_message(" reclaims one of your undead slaves!");
+                simple_god_message(" reclaims one of your granted undead slaves!");
             else if (num_reclaim == num_slaves)
-                simple_god_message(" reclaims your undead slaves!");
+                simple_god_message(" reclaims your granted undead slaves!");
             else
-                simple_god_message(" reclaims some of your undead slaves!");
+                simple_god_message(" reclaims some of your granted undead slaves!");
         }
 
         return (true);
