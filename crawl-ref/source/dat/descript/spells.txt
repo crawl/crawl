@@ -89,7 +89,7 @@ This spell uses the bones of a skeleton (or similar materials: the rigid exoskel
 %%%%
 Borgnjor's Revivification
 
-This spell instantly heals any and all wounds suffered by the caster with an attendant, but also permanently lessens his or her resilience to injury - the severity of which is dependent on (and inverse to) magical skill. 
+This spell instantly heals any and all wounds suffered by the caster, but also permanently lessens his or her resilience to injury - to a degree dependent on (and inversely related to) magical skill. 
 %%%%
 Burn
 
