@@ -853,8 +853,10 @@ void TilesFramework::do_layout()
 
     // recenter map above inventory
     int map_cen_x = m_region_self_inv->sx + (m_region_self_inv->wx) / 2;
+    map_cen_x = std::min(map_cen_x, (int)(m_windowsz.x - m_region_map->wx));
     m_region_map->place(map_cen_x - m_region_map->wy / 2, m_region_map->sy,
                         map_margin);
+
 
     // Place regions for crt layer
     m_region_crt->place(0, 0, margin);
