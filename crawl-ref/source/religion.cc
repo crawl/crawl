@@ -3530,7 +3530,7 @@ static bool _tso_retribution()
         bolt beam;
         beam.beam_source  = NON_MONSTER;
         beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = calc_dice(3, 20 + (you.experience_level * 7) / 3);
+        beam.damage       = calc_dice(2, 20 + (you.experience_level * 7) / 3);
         beam.flavour      = BEAM_HOLY;
         beam.target       = you.pos();
         beam.name         = "golden flame";

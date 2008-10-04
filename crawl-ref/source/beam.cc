@@ -1214,7 +1214,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     case ZAP_CLEANSING_FLAME:
         pbolt.name           = "golden flame";
         pbolt.colour         = YELLOW;
-        pbolt.damage         = calc_dice( 3, 20 + (power * 2) / 3 );
+        pbolt.damage         = calc_dice( 2, 20 + (power * 2) / 3 );
         pbolt.hit            = 150;
         pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
         pbolt.flavour        = BEAM_HOLY;
