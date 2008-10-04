@@ -22,6 +22,9 @@ GenericTexture::~GenericTexture()
 
 void GenericTexture::unload_texture()
 {
+    if (!m_handle)
+        return;
+
     glDeleteTextures(1, (GLuint*)&m_handle);
 }
 
