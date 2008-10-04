@@ -589,6 +589,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("you or your allies kill demons");
         break;
 
+    case GOD_TROG:
+        likes.push_back("you or your god-given allies kill demons");
+        break;
+
     case GOD_OKAWARU:
         likes.push_back("you kill demons");
         break;
@@ -2477,6 +2481,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case GOD_SHINING_ONE:
         case GOD_OKAWARU:
         case GOD_MAKHLEB:
+        case GOD_TROG:
             if (god_hates_attacking_friend(you.religion, victim))
                 break;
 
@@ -2656,6 +2661,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         {
         case GOD_SHINING_ONE:
         case GOD_MAKHLEB:
+        case GOD_TROG:
             simple_god_message(" accepts your collateral kill.");
             ret = true;
             if (random2(level + 10 - (is_good_god(you.religion) ? 0 :
