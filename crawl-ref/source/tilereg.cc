@@ -766,7 +766,7 @@ void DungeonRegion::render()
             const coord_def min_pos(sx, sy);
             const coord_def max_pos(ex, ey);
             m_tag_font->render_string(pc.x, pc.y, m_tags[t][i].tag.c_str(),
-                                      min_pos, max_pos, WHITE, true);
+                                      min_pos, max_pos, WHITE, false);
         }
     }
 }
@@ -1194,8 +1194,7 @@ void InventoryRegion::render()
 
         m_tag_font->render_string((unsigned int)x, (unsigned int)y,
                                   desc.c_str(),
-                                  min_pos, max_pos, WHITE, true,
-                                  200, BLACK);
+                                  min_pos, max_pos, WHITE, false, 200);
     }
 }
 

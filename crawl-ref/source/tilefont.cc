@@ -47,7 +47,7 @@ FTFont::~FTFont()
     delete[] m_glyphs;
 }
 
-bool FTFont::load_font(const char *font_name, unsigned int font_size)
+bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
 {
     FT_Library library;
     FT_Face face;
@@ -113,13 +113,23 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
 
         m_max_advance.x = std::max(m_max_advance.x, advance);
 
-        max_width = std::max(max_width, bmp->width);
-        min_y = std::min(min_y, ascender - face->glyph->bitmap_top);
-        max_y = std::max(max_y, ascender + bmp->rows - face->glyph->bitmap_top);
+        int bmp_width = bmp->width;
+        int bmp_top = ascender - face->glyph->bitmap_top;
+        int bmp_bottom = ascender + bmp->rows - face->glyph->bitmap_top;
+        if (outl)
+        {
+            bmp_width += 2;
+            bmp_top -= 1;
+            bmp_bottom += 1;
+        }
+
+        max_width = std::max(max_width, bmp_width);
+        min_y = std::min(min_y, bmp_top);
+        max_y = std::max(max_y, bmp_bottom);
 
         m_glyphs[c].offset = face->glyph->bitmap_left;
         m_glyphs[c].advance = advance;
-        m_glyphs[c].width = bmp->width;
+        m_glyphs[c].width = bmp_width;
 
         m_min_offset = std::min((char)m_min_offset, m_glyphs[c].offset);
     }
@@ -193,17 +203,49 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size)
         unsigned int offset_x = (c % 16) * charsz.x;
         unsigned int offset_y = (c / 16) * charsz.y + vert_offset;
 
-        for (int x = 0; x < bmp->width; x++)
-            for (int y = 0; y < bmp->rows; y++)
-            {
-                unsigned int idx = offset_x + x + (offset_y + y) * width;
-                idx *= 4;
-                unsigned char alpha = bmp->buffer[x + bmp->width * y];
-                pixels[idx] = 255;
-                pixels[idx + 1] = 255;
-                pixels[idx + 2] = 255;
-                pixels[idx + 3] = alpha;
-            }
+        if (outl)
+        {
+            const int charw = bmp->width;
+            for (int x = -1; x <= bmp->width; x++)
+                for (int y = -1; y <= bmp->rows; y++)
+                {
+                    bool valid = x >= 0 && y >= 0 &&
+                                 x < bmp->width && y < bmp->rows;
+                    unsigned char orig = valid ? bmp->buffer[x + charw * y] : 0;
+
+                    unsigned char edge = 0;
+                    if (x > 0)
+                        edge = std::max(bmp->buffer[(x-1) + charw * y], edge);
+                    if (y > 0)
+                        edge = std::max(bmp->buffer[x + charw * (y-1)], edge);
+                    if (x < bmp->width - 1)
+                        edge = std::max(bmp->buffer[(x+1) + charw * y], edge);
+                    if (y < bmp->width - 1)
+                        edge = std::max(bmp->buffer[x + charw * (y+1)], edge);
+
+                    unsigned int idx = offset_x + x + (offset_y + y) * width;
+                    idx *= 4;
+
+                    pixels[idx] = orig;
+                    pixels[idx + 1] = orig;
+                    pixels[idx + 2] = orig;
+                    pixels[idx + 3] = std::min(orig + edge, 255);
+                }
+        }
+        else
+        {
+            for (int x = 0; x < bmp->width; x++)
+                for (int y = 0; y < bmp->rows; y++)
+                {
+                    unsigned int idx = offset_x + x + (offset_y + y) * width;
+                    idx *= 4;
+                    unsigned char alpha = bmp->buffer[x + bmp->width * y];
+                    pixels[idx] = 255;
+                    pixels[idx + 1] = 255;
+                    pixels[idx + 2] = 255;
+                    pixels[idx + 3] = alpha;
+                }
+        }
     }
 
     bool success = m_tex.load_texture(pixels, width, height,

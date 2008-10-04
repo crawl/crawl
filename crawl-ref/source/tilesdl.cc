@@ -133,6 +133,7 @@ bool TilesFramework::initialise()
     SDL_EnableUNICODE(true);
 
     SDL_WM_SetCaption(CRAWL " " VERSION, CRAWL);
+    // TODO enne - use a different icon on Windows, as this looks bad.
     SDL_Surface *icon = IMG_Load("dat/tiles/stone_soup_icon-32x32.png");
     if (!icon)
     {
@@ -174,15 +175,15 @@ bool TilesFramework::initialise()
         return false;
 
     int crt_font = load_font(Options.tile_font_crt_file.c_str(),
-                             Options.tile_font_crt_size);
+                             Options.tile_font_crt_size, true, false);
     int msg_font = load_font(Options.tile_font_msg_file.c_str(),
-                             Options.tile_font_msg_size);
+                             Options.tile_font_msg_size, true, false);
     int stat_font = load_font(Options.tile_font_stat_file.c_str(),
-                              Options.tile_font_stat_size);
+                              Options.tile_font_stat_size, true, false);
     m_tip_font = load_font(Options.tile_font_tip_file.c_str(),
-                           Options.tile_font_tip_size);
+                           Options.tile_font_tip_size, true, false);
     int lbl_font = load_font(Options.tile_font_lbl_file.c_str(),
-                             Options.tile_font_lbl_size);
+                             Options.tile_font_lbl_size, true, true);
 
     if (crt_font == -1 || msg_font == -1 || stat_font == -1
         || m_tip_font == -1 || lbl_font == -1)
@@ -221,7 +222,7 @@ bool TilesFramework::initialise()
 }
 
 int TilesFramework::load_font(const char *font_file, int font_size,
-                              bool default_on_fail)
+                              bool default_on_fail, bool outline)
 {
     FTFont *font = new FTFont();
 
@@ -232,11 +233,11 @@ int TilesFramework::load_font(const char *font_file, int font_size,
             return i;
     }
 
-    if (!font->load_font(font_file, font_size))
+    if (!font->load_font(font_file, font_size, outline))
     {
         delete font;
         if (default_on_fail)
-            return (load_font("VeraMono.ttf", 12, false));
+            return (load_font("VeraMono.ttf", 12, false, outline));
         else
             return -1;
     }

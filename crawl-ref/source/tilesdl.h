@@ -124,7 +124,7 @@ public:
 protected:
 
     int load_font(const char *font_file, int font_size,
-                  bool default_on_fail = true);
+                  bool default_on_fail, bool outline);
     int handle_mouse(MouseEvent &event);
 
     // screen pixel dimensions
