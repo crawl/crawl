@@ -2036,7 +2036,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "safe")
             easy_confirm = CONFIRM_SAFE_EASY;
     }
-    else BOOL_OPTION(easy_quit_item_prompts);
     else if (key == "allow_self_target")
     {
         if (field == "yes")
@@ -2046,6 +2045,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "prompt")
             allow_self_target = CONFIRM_PROMPT;
     }
+    else BOOL_OPTION(easy_quit_item_prompts);
     else BOOL_OPTION_NAMED("easy_quit_item_lists", easy_quit_item_prompts);
     else BOOL_OPTION(easy_open);
     else BOOL_OPTION(easy_unequip);

@@ -341,6 +341,8 @@ static void _direction_again(dist& moves, targeting_type restricts,
         if (key_command == CMD_TARGET_PREV_TARGET
             || key_command == CMD_TARGET_SELECT_ENDPOINT
             || key_command == CMD_TARGET_SELECT
+            || key_command == CMD_TARGET_SELECT_FORCE_ENDPOINT
+            || key_command == CMD_TARGET_SELECT_FORCE
             || key_command == CMD_TARGET_MAYBE_PREV_TARGET)
         {
             break;
@@ -356,8 +358,11 @@ static void _direction_again(dist& moves, targeting_type restricts,
         return;
     }
 
-    if (key_command == CMD_TARGET_SELECT_ENDPOINT)
+    if (key_command == CMD_TARGET_SELECT_ENDPOINT
+        || key_command == CMD_TARGET_SELECT_FORCE_ENDPOINT)
+    {
         moves.isEndpoint = true;
+    }
 
     if (you.prev_grd_targ != coord_def(0, 0))
     {
@@ -739,6 +744,62 @@ private:
     FixedArray<int,19,19> orig_colours;
 };
 
+bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
+              bool may_target_self, bool cancel_at_self)
+{
+    if (!moves.isCancel && moves.isTarget)
+    {
+        if (!see_grid(moves.target))
+        {
+            mpr("Sorry, you can't target what you can't see.",
+                MSGCH_EXAMINE_FILTER);
+            return (false);
+        }
+
+        if (moves.target == you.pos())
+        {                    
+            // may_target_self == makes (some) sense to target yourself
+            // (SPFLAG_AREA)
+
+            // cancel_at_self == not allowed to target yourself
+            // (SPFLAG_NOT_SELF)
+
+            if (cancel_at_self)
+            {
+                mpr("Sorry, you can't target yourself.", MSGCH_EXAMINE_FILTER);
+                return (false);
+            }
+
+            if (!may_target_self && mode == TARG_ENEMY)
+            {
+                if (Options.allow_self_target == CONFIRM_CANCEL)
+                {
+                    mpr("That would be overly suicidal.", MSGCH_EXAMINE_FILTER);
+                    return (false);
+                }
+                else if (Options.allow_self_target == CONFIRM_PROMPT)
+                {
+                    return yesno("Really target yourself?", false, 'n');
+                }
+            }
+        }
+
+        // Check range
+        if (range >= 0 && grid_distance(moves.target, you.pos()) > range)
+        {
+            mpr("That is beyond the maximum range.", MSGCH_EXAMINE_FILTER);
+            return (false);
+        }
+    }
+    
+    // Some odd cases
+    if (!moves.isValid && !moves.isCancel)
+        return yesno("Are you sure you want to fizzle?", false, 'n');
+
+    return (true);
+}
+
+
 void direction(dist& moves, targeting_type restricts,
                targ_mode_type mode, int range, bool just_looking,
                bool needs_path, bool may_target_monster,
@@ -829,6 +890,8 @@ void direction(dist& moves, targeting_type restricts,
 
     while (true)
     {
+        bool allow_out_of_range = false;
+
         // Prompts might get scrolled off if you have too few lines available.
         // We'll live with that.
         if ( !just_looking && (show_prompt || beh->should_redraw()) )
@@ -1118,8 +1181,20 @@ void direction(dist& moves, targeting_type restricts,
                 break;
             }
 
+            // some modifiers to the basic selection command
+        case CMD_TARGET_SELECT_FORCE:
         case CMD_TARGET_SELECT_ENDPOINT:
-            moves.isEndpoint = true;
+        case CMD_TARGET_SELECT_FORCE_ENDPOINT:
+            if (key_command == CMD_TARGET_SELECT_ENDPOINT
+                || key_command == CMD_TARGET_SELECT_FORCE_ENDPOINT)
+            {
+                moves.isEndpoint = true;
+            }
+            if (key_command == CMD_TARGET_SELECT_FORCE
+                || key_command == CMD_TARGET_SELECT_FORCE_ENDPOINT)
+            {
+                allow_out_of_range = true;
+            }
             // intentional fall-through
         case CMD_TARGET_SELECT: // finalize current choice
             if (!moves.isEndpoint
@@ -1318,51 +1393,14 @@ void direction(dist& moves, targeting_type restricts,
 
         if (loop_done == true)
         {
-            // This is where we either finalize everything, or else
-            // decide that we're not really done and continue looping.
+            // Confirm that the loop is really done. If it is,
+            // break out. If not, just continue looping.
 
             if (just_looking) // easy out
                 break;
 
-            // A bunch of confirmation tests; if we survive them all,
-            // then break out.
-
-            // Confirm self-targeting on TARG_ENEMY (option-controlled.)
-            // Conceivably we might want to confirm on TARG_ANY too.
-            if (moves.isTarget
-                && moves.target == you.pos()
-                && mode == TARG_ENEMY
-                && (cancel_at_self
-                    || Options.allow_self_target == CONFIRM_CANCEL
-                       && !may_target_self
-                    || (Options.allow_self_target == CONFIRM_PROMPT
-                           || Options.allow_self_target == CONFIRM_CANCEL
-                              && may_target_self)
-                        && !yesno("Really target yourself?", false, 'n')))
-            {
-                if (cancel_at_self)
-                    mpr("Sorry, you can't target yourself.");
-                else if (Options.allow_self_target == CONFIRM_CANCEL
-                         && !may_target_self)
-                {
-                    mpr("That would be overly suicidal.", MSGCH_EXAMINE_FILTER);
-                }
-
-                show_prompt = true;
-            }
-            else if (moves.isTarget && !see_grid(moves.target))
-            {
-                mpr("Sorry, you can't target what you can't see.",
-                    MSGCH_EXAMINE_FILTER);
-            }
-            else if (range >= 0
-                     && grid_distance(moves.target, you.pos()) > range)
-            {
-                mpr("That is beyond the maximum range.", MSGCH_EXAMINE_FILTER);
-            }
-            // Ask for confirmation if we're quitting for some odd reason.
-            else if (moves.isValid || moves.isCancel
-                     || yesno("Are you sure you want to fizzle?", false, 'n'))
+            if (_dist_ok(moves, allow_out_of_range ? -1 : range,
+                         mode, may_target_self, cancel_at_self))
             {
                 // Finalize whatever is inside the loop
                 // (moves-internal finalizations can be done later).
@@ -1370,10 +1408,13 @@ void direction(dist& moves, targeting_type restricts,
                 moves.ray = ray;
                 break;
             }
+            else
+            {
+                show_prompt = true;
+            }
         }
 
         // We'll go on looping. Redraw whatever is necessary.
-
         if ( !in_viewport_bounds(grid2view(moves.target)) )
         {
             // Tried to step out of bounds
