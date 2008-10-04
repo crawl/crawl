@@ -1478,6 +1478,9 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_KIKU_ENSLAVE_UNDEAD:
+    {
+        god_acting gdact;
+
         if (!spell_direction(spd, beam))
             return (false);
 
@@ -1486,8 +1489,10 @@ static bool _do_ability(const ability_def& abil)
         {
             return (false);
         }
+
         exercise(SK_INVOCATIONS, 5 + random2(5));
         break;
+    }
 
     case ABIL_KIKU_INVOKE_DEATH:
         summon_demon_type(MONS_REAPER,
@@ -1516,12 +1521,12 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_YRED_DRAIN_LIFE:
-        drain_life( you.skills[SK_INVOCATIONS] );
+        drain_life(you.skills[SK_INVOCATIONS]);
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
     case ABIL_YRED_CONTROL_UNDEAD:
-        mass_enchantment( ENCH_CHARM, you.skills[SK_INVOCATIONS] * 8, MHITYOU );
+        mass_enchantment(ENCH_CHARM, you.skills[SK_INVOCATIONS] * 8, MHITYOU);
         exercise(SK_INVOCATIONS, 3 + random2(4));
         break;
 

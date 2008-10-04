@@ -3339,12 +3339,12 @@ static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p)
             const god_type god =
                 (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                               : GOD_NO_GOD;
-
             const beh_type att =
-                _whose_kill(beam) == KC_OTHER? BEH_HOSTILE : BEH_FRIENDLY;
+                _whose_kill(beam) == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY;
+
             mons_place(
                 mgen_data(MONS_FIRE_VORTEX, att, 2, p,
-                          MHITNOT, 0, god) );
+                          MHITNOT, 0, god));
         }
     }
 }
@@ -4757,15 +4757,19 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
     if (beam.flavour == BEAM_ENSLAVE_UNDEAD
         && mons_holiness(mon) == MH_UNDEAD)
     {
+        const god_type god =
+            (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
+                                          : GOD_NO_GOD;
+
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
-             "HD: %d; pow: %d", mon->hit_dice, beam.ench_power );
+             "HD: %d; pow: %d", mon->hit_dice, beam.ench_power);
 #endif
 
         if (mon->attitude == ATT_FRIENDLY)
             return (MON_UNAFFECTED);
 
-        if (check_mons_resist_magic( mon, beam.ench_power ))
+        if (check_mons_resist_magic(mon, beam.ench_power))
             return mons_immune_magic(mon) ? MON_UNAFFECTED : MON_RESIST;
 
         beam.obvious_effect = true;
@@ -4779,6 +4783,10 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
 
         // Wow, permanent enslaving!
         mon->attitude = ATT_FRIENDLY;
+        behaviour_event(mon, ME_ALERT, MHITNOT);
+
+        mons_make_god_gift(mon, god);
+
         return (MON_AFFECTED);
     }
 
@@ -4814,9 +4822,8 @@ static int _affect_monster_enchantment(bolt &beam, monsters *mon)
             mon->attitude = ATT_FRIENDLY;
         else
             mon->add_ench(ENCH_CHARM);
+        behaviour_event(mon, ME_ALERT, MHITNOT);
 
-        // Break fleeing and suchlike.
-        mon->behaviour = BEH_SEEK;
         return (MON_AFFECTED);
     }
 
