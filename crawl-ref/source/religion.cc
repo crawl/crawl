@@ -1816,7 +1816,7 @@ static void _do_god_gift(bool prayed_for)
 
                 if (success)
                 {
-                    simple_god_message(" has granted you a gift!");
+                    simple_god_message(" grants you a gift!");
                     more();
 
                     _inc_gift_timeout(30 + random2avg(19, 2));
@@ -1832,7 +1832,7 @@ static void _do_god_gift(bool prayed_for)
                 success = acquirement(OBJ_MISSILES, you.religion);
                 if (success)
                 {
-                    simple_god_message(" has granted you a gift!");
+                    simple_god_message(" grants you a gift!");
                     more();
 
                     _inc_gift_timeout(4 + roll_dice(2, 4));
@@ -1933,7 +1933,7 @@ static void _do_god_gift(bool prayed_for)
 
                     if (success)
                     {
-                        simple_god_message(" has granted you a gift!");
+                        simple_god_message(" grants you a gift!");
                         more();
 
                         _inc_gift_timeout(40 + random2avg(19, 2));
