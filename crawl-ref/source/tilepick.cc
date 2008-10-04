@@ -2447,17 +2447,14 @@ static inline void _finalize_tile(unsigned int *tile, bool is_special,
     {
         (*tile) = wall_flv;
     }
-    else if (orig == TILE_DNGN_SHALLOW_WATER
-             || orig == TILE_DNGN_DEEP_WATER
-             || orig == TILE_DNGN_LAVA
-             || orig == TILE_DNGN_STONE_WALL)
-    {
-        (*tile) = orig + (special_flv % tile_dngn_count(orig));
-    }
     else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
     {
         ASSERT(special_flv <= 3);
         (*tile) = orig + special_flv;
+    }
+    else if (orig < TILE_DNGN_MAX)
+    {
+        (*tile) = orig + (special_flv % tile_dngn_count(orig));
     }
 
     (*tile) |= flag;
@@ -3925,7 +3922,7 @@ void tile_init_flavor()
             }
             else
             {
-                env.tile_flv[x][y].special = 0;
+                env.tile_flv[x][y].special = random2(256);
             }
         }
 
