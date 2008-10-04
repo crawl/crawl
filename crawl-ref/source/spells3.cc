@@ -221,11 +221,8 @@ int cast_smiting(int power, dist &beam)
             // Maxes out at around 40 damage at 27 Invocations, which is
             // plenty in my book (the old max damage was around 70,
             // which seems excessive).
-            hurt_monster(monster, 7 + (random2(power) * 33 / 191));
-
-            if (monster->hit_points < 1)
-                monster_die(monster, KILL_YOU, NON_MONSTER);
-            else
+            monster->hurt(&you, 7 + (random2(power) * 33 / 191));
+            if (monster->alive())
                 print_wounds(monster);
         }
     }
@@ -278,11 +275,8 @@ int airstrike(int power, dist &beam)
             if (hurted < 0)
                 hurted = 0;
 
-            hurt_monster(monster, hurted);
-
-            if (monster->hit_points < 1)
-                monster_die(monster, KILL_YOU, NON_MONSTER);
-            else
+            monster->hurt(&you, hurted);
+            if (monster->alive())
                 print_wounds(monster);
         }
     }

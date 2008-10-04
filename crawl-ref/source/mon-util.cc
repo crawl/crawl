@@ -4951,9 +4951,12 @@ god_type monsters::deity() const
     return (god);
 }
 
-int monsters::hurt(const actor *agent, int amount, beam_type flavour)
+int monsters::hurt(const actor *agent, int amount, beam_type flavour,
+                   bool cleanup_dead)
 {
-    if (amount <= 0)
+    if (amount == INSTANT_DEATH)
+        amount = hit_points;
+    else if (amount <= 0)
         return (0);
 
     amount = std::min(amount, hit_points);
@@ -4962,9 +4965,11 @@ int monsters::hurt(const actor *agent, int amount, beam_type flavour)
     // Allow the victim to exhibit passive damage behaviour (royal jelly).
     react_to_damage(amount, flavour);
 
-    if (agent && (hit_points < 1 || hit_dice < 1) && type != -1)
+    if (cleanup_dead && (hit_points < 1 || hit_dice < 1) && type != -1)
     {
-        if (agent->atype() == ACT_PLAYER)
+        if (agent == NULL)
+            monster_die(this, KILL_MISC, NON_MONSTER);
+        else if (agent->atype() == ACT_PLAYER)
             monster_die(this, KILL_YOU, NON_MONSTER);
         else
         {
@@ -6136,7 +6141,9 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         if (dam > 0)
         {
-            hurt_monster(this, dam);
+            // We don't have a reasonable agent to give.
+            // Don't clean up the monster in order to credit properly.
+            this->hurt(NULL, dam, BEAM_POISON, false);
 
 #if DEBUG_DIAGNOSTICS
             // For debugging, we don't have this silent.
@@ -6145,6 +6152,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             mprf(MSGCH_DIAGNOSTICS, "poison damage: %d", dam );
 #endif
 
+            // Credit the kill.
             if (hit_points < 1)
             {
                 monster_die(this, me.killer(), me.kill_agent());
@@ -6159,7 +6167,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     {
         if (hit_points > 1 && one_chance_in(3))
         {
-            hurt_monster(this, 1);
+            this->hurt(NULL, 1); // nonlethal so we don't care about agent
             if (hit_points < max_hit_points && coinflip())
                 --max_hit_points;
         }
@@ -6171,19 +6179,21 @@ void monsters::apply_enchantment(const mon_enchant &me)
     // Assumption: mons_res_fire has already been checked.
     case ENCH_STICKY_FLAME:
     {
-        int dam =
-            resist_adjust_damage(this, BEAM_FIRE, res_fire(),
-                                 roll_dice( 2, 4 ) - 1);
+        int dam = resist_adjust_damage(this, BEAM_FIRE, res_fire(),
+                                       roll_dice(2, 4) - 1);
 
         if (dam > 0)
         {
-            hurt_monster(this, dam);
             simple_monster_message(this, " burns!");
+            // We don't have a reasonable agent to give.
+            // Don't clean up the monster in order to credit properly.
+            this->hurt(NULL, dam, BEAM_NAPALM, false);
 
 #if DEBUG_DIAGNOSTICS
             mprf( MSGCH_DIAGNOSTICS, "sticky flame damage: %d", dam );
 #endif
 
+            // Credit the kill.
             if (hit_points < 1)
             {
                 monster_die(this, me.killer(), me.kill_agent());

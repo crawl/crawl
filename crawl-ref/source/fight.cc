@@ -1189,7 +1189,7 @@ bool melee_attack::player_apply_aux_unarmed()
     stab_bonus  = 0;
     aux_damage  = player_apply_monster_ac(aux_damage);
 
-    aux_damage  = hurt_monster(def, aux_damage);
+    aux_damage  = def->hurt(&you, aux_damage, BEAM_MISSILE, false);
     damage_done = aux_damage;
 
     if (damage_done > 0)
@@ -1221,12 +1221,9 @@ bool melee_attack::player_apply_aux_unarmed()
     }
 
     if (def->hit_points < 1)
-    {
         monster_die(def, KILL_YOU, NON_MONSTER);
-        return (true);
-    }
 
-    return (false);
+    return (!def->alive());
 }
 
 std::string melee_attack::debug_damage_number()
@@ -1722,7 +1719,8 @@ int melee_attack::player_weapon_type_modify(int damage)
 
 bool melee_attack::player_hurt_monster()
 {
-    return damage_done && (damage_done = hurt_monster(def, damage_done));
+    return damage_done && (damage_done = def->hurt(&you, damage_done,
+                                                   BEAM_MISSILE, false));
 }
 
 void melee_attack::player_exercise_combat_skills()
@@ -1852,15 +1850,9 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
          special_damage);
 #endif
 
-    special_damage = hurt_monster(def, special_damage);
+    special_damage = def->hurt(&you, special_damage);
 
-    if (def->hit_points < 1)
-    {
-        monster_die(def, KILL_YOU, NON_MONSTER);
-        return (true);
-    }
-
-    return (false);
+    return (!def->alive());
 }
 
 static bool is_boolean_resist(beam_type flavour)

@@ -1819,7 +1819,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.flavour    = BEAM_BLINK;
         beam.thrower    = KILL_MON;
         beam.is_beam    = true;
-        beam.is_enchant = true;
         break;
 
     default:

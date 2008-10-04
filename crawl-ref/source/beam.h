@@ -18,10 +18,18 @@ class monsters;
 
 enum demon_beam_type
 {
-    DMNBM_HELLFIRE,                    //    0
+    DMNBM_HELLFIRE,
     DMNBM_SMITING,
     DMNBM_BRAIN_FEED,
     DMNBM_MUTATION
+};
+
+enum mon_resist_type
+{
+    MON_RESIST,                 // monster resisted
+    MON_UNAFFECTED,             // monster unaffected
+    MON_AFFECTED,               // monster was affected
+    MON_OTHER                   // monster unaffected, but for other reasons
 };
 
 // must match wand subtypes! (see item_def::zap())
@@ -115,11 +123,6 @@ struct bolt
     bool        is_beam;               // beams? (can hits multiple targets?)
     bool        is_explosion;
     bool        is_big_cloud;          // expands into big_cloud at endpoint
-    bool        is_enchant;            // no block/dodge, but mag resist
-    bool        is_energy;             // mostly energy/non-physical attack
-    bool        is_launched;           // was fired from launcher?
-    bool        is_thrown;             // was thrown from hand?
-    bool        target_first;          // targeting by direction
     bool        aimed_at_spot;         // aimed at (x,y), should not cross
     std::string aux_source;            // source of KILL_MISC beams
 
@@ -151,38 +154,31 @@ struct bolt
 
     ray_def     ray;             // shoot on this specific ray
 
+
 public:
     // A constructor to try and fix some of the bugs that occur because
     // this struct never seems to be properly initialized.  Definition
     // is over in beam.cc.
     bolt();
 
+    bool is_enchantment() const; // no block/dodge, but mag resist
     void set_target(const dist &);
     void setup_retrace();
 
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
     killer_type  killer() const;
+
+    actor* agent() const;
 };
 
 void sticky_flame_player();
-
 void sticky_flame_monster(int mn, kill_category who, int hurt_final);
-
 dice_def calc_dice( int num_dice, int max_damage );
 
 // Test if the to-hit (attack) beats evasion (defence).
 bool test_beam_hit(int attack, int defence);
-
-/* ***********************************************************************
- * called from: bang - it_use2 - monstuff - mstuff2
- * *********************************************************************** */
 void fire_beam(bolt &pbolt, item_def *item = NULL, bool drop_item = false);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: ability - it_use3 - item_use - mstuff2 - religion -
- *              spells - spells4
- * *********************************************************************** */
 int explosion( bolt &pbolt, bool hole_in_the_middle = false,
                bool explode_in_wall = false,
                bool stop_at_statues = true,
@@ -190,58 +186,30 @@ int explosion( bolt &pbolt, bool hole_in_the_middle = false,
                bool show_more       = true,
                bool affect_items    = true);
 
-// last updated 22jan2001 {gdl}
-/* ***********************************************************************
- * called from: effects - spells2 - spells4
- * *********************************************************************** */
 int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                           bool doFlavouredEffects = true);
 
 
-/* ***********************************************************************
- * called from: ability - item_use - spell
- * returns true if messages were generated during the enchantment
- * *********************************************************************** */
+// returns true if messages were generated during the enchantment
 bool mass_enchantment( enchant_type wh_enchant, int pow, int who,
                        int *m_succumbed = NULL, int *m_attempted = NULL );
 
 
-/* ***********************************************************************
- * called from: fight - monstuff - mstuff2
- * *********************************************************************** */
-int mons_ench_f2( monsters *monster, struct bolt &pbolt );
+mon_resist_type mons_ench_f2(monsters *monster, bolt &pbolt);
 
 
-/* ***********************************************************************
- * called from: fight - monstuff - spells2
- * *********************************************************************** */
 bool poison_monster( monsters *monster, kill_category who,
                      int levels = 1, bool force = false, bool verbose = true );
-
-
-/* ***********************************************************************
- * called from: monstuff
- * *********************************************************************** */
 void fire_tracer( const monsters *monster, struct bolt &pbolt,
                   bool explode_only = false );
-
 bool check_line_of_sight( const coord_def& source, const coord_def& target );
-
-/* ***********************************************************************
- * called from: monstuff
- * *********************************************************************** */
 void mimic_alert( monsters *mimic );
-
-
 bool zapping( zap_type ztype, int power, struct bolt &pbolt,
               bool needs_tracer = false, std::string msg = "" );
-
 bool player_tracer( zap_type ztype, int power, struct bolt &pbolt,
                     int range = 0 );
-
 int affect(bolt &beam, const coord_def& p, item_def *item = NULL,
            bool affect_items = true);
-
 void beam_drop_object( bolt &beam, item_def *item, const coord_def& where );
 
 #endif

@@ -40,9 +40,7 @@ int random2avg( int max, int rolls );
 int bestroll(int max, int rolls);
 
 int roll_dice( int num, int size );
-int roll_dice( const struct dice_def &dice );
 void scale_dice( dice_def &dice, int threshold = 24 );
-
 
 // Various ways to iterate over things.
 

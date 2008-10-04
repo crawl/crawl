@@ -6450,8 +6450,10 @@ void player::teleport(bool now, bool abyss_shift)
         you_teleport();
 }
 
-int player::hurt(const actor *agent, int amount, beam_type flavour)
+int player::hurt(const actor *agent, int amount, beam_type flavour,
+                 bool cleanup_dead)
 {
+    // We ignore cleanup_dead here.
     const monsters *mon = dynamic_cast<const monsters*>(agent);
     if (agent->atype() == ACT_MONSTER)
     {

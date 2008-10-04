@@ -640,7 +640,7 @@ void cast_refrigeration(int pow)
 
     // Handle the player.
     const dice_def dam_dice(3, 5 + pow / 10);
-    const int hurted = check_your_resists(roll_dice( dam_dice ), BEAM_COLD);
+    const int hurted = check_your_resists(dam_dice.roll(), BEAM_COLD);
 
     if (hurted > 0)
     {
@@ -694,15 +694,16 @@ void cast_refrigeration(int pow)
         if (monster->alive() && mons_near(monster))
         {
             // Calculate damage and apply.
-            int hurt = mons_adjust_flavoured(monster,beam,roll_dice(dam_dice));
-            if (hurt > 0)
-                hurt_monster(monster, hurt);
+            int hurt = mons_adjust_flavoured(monster, beam, dam_dice.roll());
+            monster->hurt(&you, hurt, BEAM_COLD);
 
-            // Kill monster if necessary; cold-blooded creatures can be slowed.
-            if (monster->hit_points < 1)
-                monster_die(monster, KILL_YOU, NON_MONSTER);
-            else if (mons_class_flag(monster->type, M_COLD_BLOOD) && coinflip())
+            // Cold-blooded creatures can be slowed.
+            if (monster->alive()
+                && mons_class_flag(monster->type, M_COLD_BLOOD)
+                && coinflip())
+            {
                 monster->add_ench(ENCH_SLOW);
+            }
         }
     }
 }
@@ -743,12 +744,10 @@ void drain_life(int pow)
 
             const int hurted = 3 + random2(7) + random2(pow);
             behaviour_event(monster, ME_WHACK, MHITYOU, you.pos());
-            hurt_monster(monster, hurted);
             hp_gain += hurted;
 
-            if (monster->hit_points < 1)
-                monster_die(monster, KILL_YOU, NON_MONSTER);
-            else
+            monster->hurt(&you, hurted);
+            if (monster->alive())
                 print_wounds(monster);
         }
     }
@@ -805,15 +804,13 @@ bool vampiric_drain(int pow, const dist &vmove)
         return (false);
     }
 
-    hurt_monster(monster, inflicted);
-
     mprf("You feel life coursing from %s into your body!",
          monster->name(DESC_NOCAP_THE).c_str());
 
-    print_wounds(monster);
+    monster->hurt(&you, inflicted);
 
-    if (monster->hit_points < 1)
-        monster_die(monster, KILL_YOU, NON_MONSTER);
+    if (monster->alive())
+        print_wounds(monster);
 
     inc_hp(inflicted / 2, false);
 

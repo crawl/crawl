@@ -303,7 +303,8 @@ public:
     virtual bool can_safely_mutate() const = 0;
     virtual bool mutate() = 0;
     virtual int hurt(const actor *attacker, int amount,
-                     beam_type flavour = BEAM_MISSILE) = 0;
+                     beam_type flavour = BEAM_MISSILE,
+                     bool cleanup_dead = true) = 0;
     virtual void heal(int amount, bool max_too = false) = 0;
     virtual void banish(const std::string &who = "") = 0;
     virtual void blink(bool allow_partial_control = true) = 0;
@@ -404,6 +405,7 @@ struct dice_def
     int         size;
 
     dice_def( int n = 0, int s = 0 ) : num(n), size(s) {}
+    int roll() const;
 };
 
 struct run_check_dir
@@ -892,7 +894,8 @@ public:
     void rot(actor *agent, int rotlevel, int immed_rot);
     void heal(int amount, bool max_too = false);
     int hurt(const actor *attacker, int amount,
-             beam_type flavour = BEAM_MISSILE);
+             beam_type flavour = BEAM_MISSILE,
+             bool cleanup_dead = true);
 
     int holy_aura() const;
     int warding() const;
@@ -1292,7 +1295,8 @@ public:
     void confuse(int strength);
     void rot(actor *agent, int rotlevel, int immed_rot);
     int hurt(const actor *attacker, int amount,
-             beam_type flavour = BEAM_MISSILE);
+             beam_type flavour = BEAM_MISSILE,
+             bool cleanup_dead = true);
     void heal(int amount, bool max_too = false);
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false, bool abyss_shift = false);

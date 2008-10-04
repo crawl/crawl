@@ -113,46 +113,37 @@ int holy_word_monsters(coord_def where, int pow, int caster)
         retval = holy_word_player(pow, caster);
 
     // Is a monster in this cell?
-    int mon = mgrd(where);
+    const int mon = mgrd(where);
 
     if (mon == NON_MONSTER)
         return retval;
 
     monsters *monster = &menv[mon];
 
-    if (invalid_monster(monster) || !mons_is_unholy(monster)
+    if (!monster->alive()
+        || !mons_is_unholy(monster)
         || (is_good_god(you.religion)
             && (is_follower(monster) || mons_neutral(monster))))
     {
         return retval;
     }
 
-    int hploss = std::max(0, roll_dice(2, 15) + (random2(pow) / 3));
+    const int hploss = roll_dice(2, 15) + (random2(pow) / 3);
+    retval = 1;
 
     // Currently, holy word annoys the monsters it affects because it
     // can kill them, and because hostile monsters don't use it.
     behaviour_event(monster, ME_ANNOY, MHITYOU);
     simple_monster_message(monster, " convulses!");
-    hurt_monster(monster, hploss);
-
-    if (hploss)
+    monster->hurt(&you, hploss);
+   
+    if (monster->alive())
     {
-        retval = 1;
-        if (!monster->alive())
-        {
-            monster_die(monster, KILL_YOU, NON_MONSTER);
-            return retval;
-        }
-    }
+        if (monster->speed_increment >= 25)
+            monster->speed_increment -= 20;
 
-    if (monster->speed_increment >= 25)
-    {
-        retval = 1;
-        monster->speed_increment -= 20;
+        monster->add_ench(ENCH_FEAR);
     }
-
-    if (monster->add_ench(ENCH_FEAR))
-        retval = 1;
 
     return retval;
 }
@@ -247,7 +238,7 @@ int torment_monsters(coord_def where, int pow, int caster)
 
     monsters *monster = &menv[mon];
 
-    if (invalid_monster(monster) || mons_res_negative_energy(monster) == 3)
+    if (!monster->alive() || mons_res_negative_energy(monster) == 3)
         return retval;
 
     int hploss = std::max(0, monster->hit_points / 2 - 1);
@@ -260,10 +251,7 @@ int torment_monsters(coord_def where, int pow, int caster)
     {
         retval = 1;
         if (!monster->alive())
-        {
-            monster_die(monster, KILL_YOU, NON_MONSTER);
             return retval;
-        }
     }
 
     simple_monster_message(monster, " convulses!");

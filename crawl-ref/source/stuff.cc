@@ -650,11 +650,6 @@ int roll_dice( int num, int size )
     return (ret);
 }
 
-int roll_dice( const struct dice_def &dice )
-{
-    return (roll_dice( dice.num, dice.size ));
-}
-
 // originally designed to randomize evasion -
 // values are slightly lowered near (max) and
 // approach an upper limit somewhere near (limit/2)
@@ -1672,4 +1667,9 @@ int integer_sqrt(int value)
 int random_rod_subtype()
 {
     return STAFF_SMITING + random2(NUM_STAVES - STAFF_SMITING);
+}
+
+int dice_def::roll() const
+{
+    return roll_dice(this->num, this->size);
 }

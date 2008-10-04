@@ -471,9 +471,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (!mons_is_summoned(m))
                     bleed_onto_floor(m->pos(), m->type, damage_taken, true);
 
-                hurt_monster(m, damage_taken);
-                if (m->hit_points < 1)
-                    monster_die(m, KILL_MISC, NON_MONSTER);
+                m->hurt(NULL, damage_taken);
+                if (in_sight && m->alive())
+                    print_wounds(m);
             }
         }
         break;
@@ -1203,9 +1203,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                 poison_monster(monster, KC_OTHER);
 
             // Apply damage.
-            hurt_monster(monster, damage_taken);
-            if (monster->hit_points < 1)
-                monster_die(monster, KILL_MISC, NON_MONSTER);
+            monster->hurt(NULL, damage_taken);
         }
 
         // Drop the item (sometimes.)

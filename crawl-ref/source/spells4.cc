@@ -74,24 +74,16 @@ void do_monster_rot(int mon);
 inline bool player_hurt_monster(int monster, int damage)
 {
     ASSERT( monster != NON_MONSTER );
+    monsters& m = menv[monster];
 
     if (damage > 0)
     {
-        hurt_monster( &menv[monster], damage );
-
-        if (menv[monster].hit_points > 0)
-        {
-            const monsters *mons = static_cast<const monsters*>(&menv[monster]);
-            print_wounds(mons);
-        }
-        else
-        {
-            monster_die(&menv[monster], KILL_YOU, NON_MONSTER);
-            return (true);
-        }
+        m.hurt(&you, damage);
+        if (m.alive())
+            print_wounds(&m);
     }
 
-    return (false);
+    return (!m.alive());
 }
 
 // Here begin the actual spells:
@@ -180,7 +172,7 @@ static int _shatter_monsters(coord_def where, int pow, int garbage)
         break;
     }
 
-    int damage = roll_dice( dam_dice ) - random2( menv[monster].ac );
+    int damage = dam_dice.roll() - random2( menv[monster].ac );
 
     if (damage > 0)
         player_hurt_monster( monster, damage );
@@ -592,7 +584,7 @@ static int _ignite_poison_monsters(coord_def where, int pow, int garbage)
     // (although only one should actually be present at a given time).
     dam_dice.num += strength;
 
-    int damage = roll_dice( dam_dice );
+    int damage = dam_dice.roll();
     if (damage > 0)
     {
         damage = mons_adjust_flavoured( mon, beam, damage );
@@ -1742,7 +1734,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.colour     = WHITE;
             beam.damage.num = 2;
             beam.flavour    = BEAM_ICE;
-            if (player_hurt_monster(midx, roll_dice(beam.damage)))
+            if (player_hurt_monster(midx, beam.damage.roll()))
                 beam.damage.num++;
             break;
 
@@ -1766,7 +1758,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             else
             {
                 beam.damage.num = 2;
-                if (player_hurt_monster(midx, roll_dice(beam.damage)))
+                if (player_hurt_monster(midx, beam.damage.roll()))
                     beam.damage.num += 2;
             }
             goto all_done;      // i.e. no "Foo Explodes!"
@@ -1779,7 +1771,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             // fizzle (since we don't actually explode wood golems). -- bwr
             explode         = false;
             beam.damage.num = 2;
-            player_hurt_monster(midx, roll_dice(beam.damage));
+            player_hurt_monster(midx, beam.damage.roll());
             break;
 
         case MONS_IRON_GOLEM:
@@ -1788,7 +1780,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of metal fragments";
             beam.colour     = CYAN;
             beam.damage.num = 4;
-            if (player_hurt_monster(midx, roll_dice(beam.damage)))
+            if (player_hurt_monster(midx, beam.damage.roll()))
                 beam.damage.num += 2;
             break;
 
@@ -1801,7 +1793,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
             beam.damage.num = 3;
-            if (player_hurt_monster(midx, roll_dice(beam.damage)))
+            if (player_hurt_monster(midx, beam.damage.roll()))
                 beam.damage.num++;
             break;
 
@@ -1823,7 +1815,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             }
 
             {
-                int statue_damage = roll_dice(beam.damage) * 2;
+                int statue_damage = beam.damage.roll() * 2;
                 if (pow >= 50 && one_chance_in(10))
                     statue_damage = mon->hit_points;
 
@@ -1838,7 +1830,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of crystal shards";
             beam.colour     = WHITE;
             beam.damage.num = 4;
-            if (player_hurt_monster(midx, roll_dice(beam.damage)))
+            if (player_hurt_monster(midx, beam.damage.roll()))
                 beam.damage.num += 2;
             break;
 
@@ -1855,7 +1847,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                     beam.name       = "blast of petrified fragments";
                     beam.colour     = mon->colour;
                     beam.damage.num = petrifying ? 2 : 3;
-                    if (player_hurt_monster(midx, roll_dice(beam.damage)))
+                    if (player_hurt_monster(midx, beam.damage.roll()))
                         beam.damage.num++;
                     break;
                 }
@@ -2237,13 +2229,9 @@ void cast_far_strike(int pow)
     }
 
     // Inflict the damage.
-    hurt_monster( monster, damage );
-    if (monster->hit_points < 1)
-        monster_die(monster, KILL_YOU, NON_MONSTER);
-    else
-        print_wounds( monster );
-
-    return;
+    monster->hurt(&you, damage);
+    if (monster->alive())
+        print_wounds(monster);
 }
 
 int cast_apportation(int pow)

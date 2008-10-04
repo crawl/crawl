@@ -1968,14 +1968,8 @@ void mons_get_damage_level( const monsters* monster, std::string& desc,
 
 void print_wounds(const monsters *monster)
 {
-    if (monster->type == -1)
+    if (!monster->alive() || monster->hit_points == monster->max_hit_points)
         return;
-
-    if (monster->hit_points == monster->max_hit_points
-        || monster->hit_points < 1)
-    {
-        return;
-    }
 
     if (monster_descriptor(monster->type, MDSC_NOMSG_WOUNDS))
         return;
@@ -7398,15 +7392,13 @@ static void _mons_in_cloud(monsters *monster)
         behaviour_event(monster, ME_DISTURB, MHITNOT, monster->pos());
     }
 
-    hurted = std::max(0, hurted);
-
     if (hurted > 0)
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "%s takes %d damage from cloud.",
              monster->name(DESC_CAP_THE).c_str(), hurted);
 #endif
-        hurt_monster(monster, hurted);
+        monster->hurt(NULL, hurted, BEAM_MISSILE, false);
 
         if (monster->hit_points < 1)
         {

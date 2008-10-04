@@ -804,11 +804,9 @@ static void _yred_mirrors_injury(int dam, int death_source)
         flash_monster_colour(mon, RED, 200);
 #endif
 
-        hurt_monster(mon, dam);
+        mon->hurt(&you, dam);
 
-        if (mon->hit_points < 1)
-            monster_die(mon, KILL_YOU, NON_MONSTER);
-        else
+        if (mon->alive())
             print_wounds(mon);
 
         lose_piety(integer_sqrt(dam));

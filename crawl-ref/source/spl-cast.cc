@@ -2575,9 +2575,8 @@ void MiscastEffect::_ouch(int dam, beam_type flavour)
 
         beem.flavour = flavour;
         dam = mons_adjust_flavoured(mon_target, beem, dam, true);
-        hurt_monster(mon_target, dam);
-
-        if (mon_target->hit_points < 1)
+        mon_target->hurt(NULL, dam, BEAM_MISSILE, false);
+        if (!mon_target->alive())
             monster_die(mon_target, kt, kill_source);
     }
     else

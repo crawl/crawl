@@ -183,7 +183,8 @@ bool message_current_target(void);
 
 unsigned int monster_index(const monsters *monster);
 
-void mons_get_damage_level(const monsters*, std::string& desc, mon_dam_level_type&);
+void mons_get_damage_level(const monsters*, std::string& desc,
+                           mon_dam_level_type&);
 
 int hurt_monster(monsters *victim, int damage_dealt);
 
