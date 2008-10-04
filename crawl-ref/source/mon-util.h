@@ -477,6 +477,7 @@ bool mons_is_unique(int mclass);
  * called from: describe - fight
  * *********************************************************************** */
 // int exper_value(int mclass, int mHD, int maxhp);
+int mons_difficulty(int mtype);
 int exper_value( const monsters *monster );
 
 

@@ -274,9 +274,45 @@ bool is_traversable(dungeon_feature_type grid)
     return (traversable_terrain[grid] == TRAVERSABLE);
 }
 
+static feature_grid _map_to_grid(coord_def &pos)
+{
+    feature_grid fgrid = env.grid;
+
+    for (int x = pos.x - LOS_RADIUS; x < pos.x + LOS_RADIUS; x++)
+        for (int y = pos.y - LOS_RADIUS; y < pos.y + LOS_RADIUS; y++)
+        {
+            if (!in_bounds(x,y))
+                continue;
+
+            // For unseen terrain, assume transparency.
+            if (!is_terrain_seen(x,y))
+            {
+                fgrid[x][y] = DNGN_FLOOR;
+                continue;
+            }
+
+            if (!is_terrain_changed(x,y))
+                continue;
+
+            if (env.map[x][y].object < NUM_REAL_FEATURES)
+                fgrid[x][y] = (dungeon_feature_type) env.map[x][y].object;
+            else
+            {
+                // If you have seen monsters, items or clouds there,
+                // it must have been passable.
+                fgrid[x][y] = DNGN_FLOOR;
+            }
+        }
+
+    return fgrid;
+}
+
 void travel_exclude::set_exclude_show()
 {
-    losight(show, grd, pos);
+    // ignores clouds
+    feature_grid fgrid = _map_to_grid(pos);
+    losight(show, fgrid, pos, false, true);
+    uptodate = true;
 }
 
 void init_exclusion_los()
@@ -285,11 +321,20 @@ void init_exclusion_los()
         curr_excludes[i].set_exclude_show();
 }
 
-void update_exclusion_los(coord_def &p)
+void update_exclusion_los(const coord_def &p)
 {
     for (unsigned int i = 0; i < curr_excludes.size(); i++)
-        if ((curr_excludes[i].pos - p).abs() <= LOS_RADIUS)
+        if (!curr_excludes[i].uptodate
+            && (curr_excludes[i].pos - p).abs() <= LOS_RADIUS * LOS_RADIUS)
+        {
             curr_excludes[i].set_exclude_show();
+        }
+}
+
+void mark_all_excludes_non_updated()
+{
+    for (unsigned int i = 0; i < curr_excludes.size(); i++)
+        curr_excludes[i].uptodate = false;
 }
 
 static bool _is_excluded(const coord_def &p,

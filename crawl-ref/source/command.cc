@@ -862,14 +862,8 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
     if (*a == *b)
         return (false);
 
-    int a_toughness = mons_global_level(*a);
-    int b_toughness = mons_global_level(*b);
-
-    if (a_toughness == b_toughness)
-    {
-        a_toughness = mons_type_hit_dice(*a);
-        b_toughness = mons_type_hit_dice(*b);
-    }
+    int a_toughness = mons_difficulty(*a);
+    int b_toughness = mons_difficulty(*b);
 
     if (a_toughness == b_toughness)
     {
@@ -877,8 +871,7 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
         std::string b_name = mons_type_name(*b, DESC_PLAIN);
         return (lowercase(a_name) < lowercase(b_name));
     }
-
-    return (a_toughness < b_toughness);
+    return (a_toughness > b_toughness);
 }
 
 class DescMenu : public Menu
@@ -2195,7 +2188,7 @@ int list_wizard_commands(bool do_redraw_screen)
     cols.add_formatted(0,
                        "<yellow>Player stats</yellow>\n"
                        "<w>A</w>      : set all skills to level\n"
-                       "<w>g</w>      : add a skill\n"
+                       "<w>g</w>      : exercise a skill\n"
                        "<w>r</w>      : change character's species\n"
                        "<w>s</w>      : gain 20000 skill points\n"
                        "<w>S</w>      : set skill to level\n"

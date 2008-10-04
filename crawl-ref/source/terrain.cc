@@ -311,7 +311,12 @@ unsigned int show_appearance(const coord_def &ep)
 
 dungeon_feature_type grid_appearance(const coord_def &gc)
 {
-    dungeon_feature_type grid = grd(gc);
+    return grid_appearance(grd, gc);
+}
+
+dungeon_feature_type grid_appearance(feature_grid &gr, const coord_def &gc)
+{
+    dungeon_feature_type grid = gr(gc);
     if (grid == DNGN_SECRET_DOOR)
         grid = grid_secret_door_appearance(gc);
 

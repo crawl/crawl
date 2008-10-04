@@ -413,8 +413,13 @@ static void _get_symbol( const coord_def& where,
         {
             const int colmask = *colour & COLFLAG_MASK;
 
+            bool excluded_stairs = (object >= DNGN_STONE_STAIRS_DOWN_I
+                                    && object <= DNGN_ESCAPE_HATCH_UP
+                                    && is_exclude_root(where));
+
             bool blocked_movement = false;
-            if (object < NUM_FEATURES && object >= DNGN_MINMOVE
+            if (!excluded_stairs
+                && object < NUM_FEATURES && object >= DNGN_MINMOVE
                 && you.duration[DUR_BEHELD])
             {
                 // Colour grids that cannot be reached due to beholders
@@ -433,7 +438,11 @@ static void _get_symbol( const coord_def& where,
                 }
             }
 
-            if (blocked_movement)
+            if (excluded_stairs)
+            {
+                *colour = Options.tc_excluded | colmask;
+            }
+            else if (blocked_movement)
             {
                 *colour = DARKGREY | colmask;
             }
@@ -746,8 +755,6 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
 
             // This reasoning doesn't make sense when it comes to *clearing*
             // the map! (jpeg)
-//            if (is_terrain_changed(x, y))
-//                continue;
 
             unsigned envc = get_envmap_char(x, y);
             if (!envc)
@@ -2505,16 +2512,16 @@ bool find_ray( const coord_def& source, const coord_def& target,
                                           slope_diff, ray_slope_diff)))
                 {
                     // Success!
-                    ray        = fullrays[fullray];
+                    ray             = fullrays[fullray];
                     ray.fullray_idx = fullray;
 
                     shortest   = real_length;
                     imbalance  = cimbalance;
                     slope_diff = ray_slope_diff;
 
-                    if ( sourcex > targetx )
+                    if (sourcex > targetx)
                         ray.accx = 1.0 - ray.accx;
-                    if ( sourcey > targety )
+                    if (sourcey > targety)
                         ray.accy = 1.0 - ray.accy;
 
                     ray.accx += sourcex;
@@ -2642,7 +2649,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
 // done by updating with a second array.
 void losight(env_show_grid &sh,
              feature_grid &gr, const coord_def& center,
-             bool clear_walls_block)
+             bool clear_walls_block, bool ignore_clouds)
 {
     raycast();
     const int x_p = center.x;
@@ -2657,7 +2664,7 @@ void losight(env_show_grid &sh,
     const unsigned int num_cellrays = compressed_ray_x.size();
     const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
 
-    for ( int quadrant = 0; quadrant < 4; ++quadrant )
+    for (int quadrant = 0; quadrant < 4; ++quadrant)
     {
         const int xmult = quadrant_x[quadrant];
         const int ymult = quadrant_y[quadrant];
@@ -2668,9 +2675,9 @@ void losight(env_show_grid &sh,
 
         // kill all blocked rays
         const unsigned long* inptr = los_blockrays;
-        for ( int xdiff = 0; xdiff <= LOS_MAX_RANGE_X; ++xdiff )
+        for (int xdiff = 0; xdiff <= LOS_MAX_RANGE_X; ++xdiff)
             for (int ydiff = 0; ydiff <= LOS_MAX_RANGE_Y;
-                 ++ydiff, inptr += num_words )
+                 ++ydiff, inptr += num_words)
             {
 
                 const int realx = x_p + xdiff * xmult;
@@ -2680,20 +2687,21 @@ void losight(env_show_grid &sh,
                     continue;
 
                 coord_def real(realx, realy);
-                dungeon_feature_type dfeat = grid_appearance(real);
+                dungeon_feature_type dfeat = grid_appearance(gr, real);
 
                 // if this cell is opaque...
-                if ( grid_is_opaque(dfeat)
-                     || (clear_walls_block && grid_is_wall(dfeat)))
+                if (grid_is_opaque(dfeat)
+                    || clear_walls_block && grid_is_wall(dfeat))
                 {
                     // then block the appropriate rays
-                    for ( unsigned int i = 0; i < num_words; ++i )
+                    for (unsigned int i = 0; i < num_words; ++i)
                         dead_rays[i] |= inptr[i];
                 }
-                else if ( is_opaque_cloud(env.cgrid[realx][realy]) )
+                else if (!ignore_clouds
+                         && is_opaque_cloud(env.cgrid[realx][realy]))
                 {
                     // block rays which have already seen a cloud
-                    for ( unsigned int i = 0; i < num_words; ++i )
+                    for (unsigned int i = 0; i < num_words; ++i)
                     {
                         dead_rays[i] |= (smoke_rays[i] & inptr[i]);
                         smoke_rays[i] |= inptr[i];
@@ -2704,11 +2712,11 @@ void losight(env_show_grid &sh,
         // ray calculation done, now work out which cells in this
         // quadrant are visible
         unsigned int rayidx = 0;
-        for ( unsigned int wordloc = 0; wordloc < num_words; ++wordloc )
+        for (unsigned int wordloc = 0; wordloc < num_words; ++wordloc)
         {
             const unsigned long curword = dead_rays[wordloc];
             // Note: the last word may be incomplete
-            for ( unsigned int bitloc = 0; bitloc < LONGSIZE; ++bitloc)
+            for (unsigned int bitloc = 0; bitloc < LONGSIZE; ++bitloc)
             {
                 // make the cells seen by this ray at this point visible
                 if ( ((curword >> bitloc) & 1UL) == 0 )
@@ -2719,13 +2727,13 @@ void losight(env_show_grid &sh,
                     // update shadow map
                     if (x_p + realx >= 0 && x_p + realx < 80
                         && y_p + realy >= 0 && y_p + realy < 70
-                        && realx * realx + realy * realy <= los_radius_squared )
+                        && realx * realx + realy * realy <= los_radius_squared)
                     {
                         sh[sh_xo+realx][sh_yo+realy] = gr[x_p+realx][y_p+realy];
                     }
                 }
                 ++rayidx;
-                if ( rayidx == num_cellrays )
+                if (rayidx == num_cellrays)
                     break;
             }
         }
@@ -3716,7 +3724,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             // to detect exits magically.
             if (wizard_map
                 || player_mutation_level(MUT_PANDEMONIUM) > 1
-                && grd(*ri) == DNGN_EXIT_PANDEMONIUM)
+                   && grd(*ri) == DNGN_EXIT_PANDEMONIUM)
             {
                 set_terrain_seen( *ri );
             }
@@ -4920,6 +4928,7 @@ void viewwindow(bool draw_it, bool do_updates)
         if (flash_colour == BLACK)
             flash_colour = _viewmap_flash_colour();
 
+        std::vector<coord_def> update_excludes;
         for (count_y = crawl_view.viewp.y;
              count_y < crawl_view.viewp.y + crawl_view.viewsz.y; count_y++)
         {
@@ -5006,6 +5015,9 @@ void viewwindow(bool draw_it, bool do_updates)
                     if (map)
                     {
                         set_envmap_glyph( gc.x, gc.y, object, colour );
+                        if (is_terrain_changed(gc) || !is_terrain_seen(gc))
+                            update_excludes.push_back(gc);
+
                         set_terrain_seen( gc.x, gc.y );
                         set_envmap_detected_mons(gc.x, gc.y, false);
                         set_envmap_detected_item(gc.x, gc.y, false);
@@ -5061,6 +5073,9 @@ void viewwindow(bool draw_it, bool do_updates)
                         if (buffy[bufcount] != 0)
                         {
                             // ... map that we've seen this
+                            if (is_terrain_changed(gc) || !is_terrain_seen(gc))
+                                update_excludes.push_back(gc);
+
                             set_terrain_seen( gc.x, gc.y );
                             set_envmap_glyph( gc.x, gc.y, object, colour );
                             set_envmap_detected_mons(gc.x, gc.y, false);
@@ -5158,6 +5173,14 @@ void viewwindow(bool draw_it, bool do_updates)
 
                 bufcount += 2;
             }
+        }
+
+        if (!update_excludes.empty())
+        {
+            mark_all_excludes_non_updated();
+
+            for (unsigned int k = 0; k < update_excludes.size(); k++)
+                update_exclusion_los(update_excludes[k]);
         }
 
         // Leaving it this way because short flashes can occur in long ones,

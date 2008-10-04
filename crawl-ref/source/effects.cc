@@ -2082,12 +2082,10 @@ bool vitrify_area(int radius)
         {
             grd(*ri)
                 = static_cast<dungeon_feature_type>(grid + clear_plus);
+            set_terrain_changed(ri->x, ri->y);
             something_happened = true;
         }
     }
-    if (something_happened)
-        init_exclusion_los();
-
     return (something_happened);
 }
 

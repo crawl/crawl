@@ -436,13 +436,15 @@ public:
 };
 
 void init_exclusion_los();
-void update_exclusion_los(coord_def &p);
+void update_exclusion_los(const coord_def &p);
+void mark_all_excludes_non_updated();
 
 struct travel_exclude
 {
-    coord_def pos;
-    int       radius;
-    env_show_grid show;
+    coord_def     pos;       // exclusion centre
+    int           radius;    // exclusion radisu
+    env_show_grid show;      // los from exclusion centre
+    bool          uptodate;  // Is show up to date?
 
     void set_exclude_show();
 

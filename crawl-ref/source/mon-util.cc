@@ -1323,6 +1323,15 @@ int mons_type_hit_dice( int type )
     return (0);
 }
 
+int mons_difficulty(int mtype)
+{
+    // Currently, difficulty is defined as "average hp".  Leaks too much info?
+    const monsterentry* me = get_monster_data(mtype);
+
+    // [ds] XXX: Use monster experience value as a better indicator of diff.?
+    return (me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]/2))
+            + me->hpdice[3]);
+}
 
 int exper_value( const struct monsters *monster )
 {

@@ -85,7 +85,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
    *              spells1 - spells2 - spells3 - spells4
    * *********************************************************************** */
 void monster_die(monsters *monster, killer_type killer,
-                 int killer_index, bool silent = false);
+                 int killer_index, bool silent = false, bool wizard = false);
 
 void mons_check_pool(monsters *monster, killer_type killer = KILL_NONE,
                      int killnum = -1);

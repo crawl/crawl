@@ -88,7 +88,8 @@ void find_features(const std::vector<coord_def>& features,
  * called from: direct - monstufff - view
  * *********************************************************************** */
 void losight(env_show_grid &sh, feature_grid &gr,
-             const coord_def& center, bool clear_walls_block = false);
+             const coord_def& center, bool clear_walls_block = false,
+             bool ignore_clouds = false);
 
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,

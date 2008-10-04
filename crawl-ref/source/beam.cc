@@ -3049,6 +3049,11 @@ static int _affect_wall(bolt &beam, const coord_def& p)
         if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_CLEAR_ROCK_WALL)
         {
             grd(p) = DNGN_FLOOR;
+            // Mark terrain as changed so travel excludes can be updated
+            // as necessary.
+            // XXX: This doesn't work for some reason: after digging
+            //      the wrong grids are marked excluded.
+            set_terrain_changed(p);
 
             // Blood does not transfer onto floor.
             if (is_bloodcovered(p))
@@ -3082,8 +3087,10 @@ static int _affect_wall(bolt &beam, const coord_def& p)
             if (beam.flavour != BEAM_HELLFIRE)
             {
                 if (see_grid(p))
+                {
                     _beam_mpr(MSGCH_PLAIN,
                              "The wax appears to soften slightly.");
+                }
                 else if (player_can_smell())
                     _beam_mpr(MSGCH_PLAIN, "You smell warm wax.");
             }

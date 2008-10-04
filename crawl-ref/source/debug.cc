@@ -3824,7 +3824,7 @@ void wizard_dismiss_all_monsters(bool force_all)
             monsters *monster = &menv[mon];
 
             if (monster->alive())
-                monster_die(monster, KILL_DISMISSED, NON_MONSTER);
+                monster_die(monster, KILL_DISMISSED, NON_MONSTER, false, true);
         }
         return;
     }
@@ -3836,7 +3836,7 @@ void wizard_dismiss_all_monsters(bool force_all)
         monsters *monster = &menv[mon];
 
         if (monster->alive() && tpat.matches(monster->name(DESC_PLAIN)))
-            monster_die(monster, KILL_DISMISSED, NON_MONSTER);
+            monster_die(monster, KILL_DISMISSED, NON_MONSTER, false, true);
     }
 }
 

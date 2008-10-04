@@ -1132,11 +1132,8 @@ monster_pane_info::monster_pane_info(const monsters *m)
     if (mtype == MONS_RAKSHASA_FAKE)
         mtype = MONS_RAKSHASA;
 
-    // Currently, difficulty is defined as "average hp".  Leaks too much info?
-    const monsterentry* me = get_monster_data(mtype);
-    // [ds] XXX: Use monster experience value as a better indicator of diff.?
-    m_difficulty = me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]/2))
-        + me->hpdice[3];
+    // Currently, difficulty is defined as "average hp".
+    m_difficulty = mons_difficulty(mtype);
 
     // [ds] XXX: Kill the magic numbers.
     if (mons_looks_stabbable(m))   m_brands |= 1;

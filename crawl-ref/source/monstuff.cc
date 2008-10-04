@@ -762,7 +762,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
 }
 
 void monster_die(monsters *monster, killer_type killer,
-                 int killer_index, bool silent)
+                 int killer_index, bool silent, bool wizard)
 {
     if (invalid_monster(monster))
         return;
@@ -775,8 +775,9 @@ void monster_die(monsters *monster, killer_type killer,
     // Update list of monsters beholding player.
     update_beholders(monster, true);
 
-    // Clear auto exclusion now the monster is killed.
-    remove_auto_exclude(monster);
+    // Clear auto exclusion now the monster is killed -- if we know about it.
+    if (mons_near(monster) || wizard)
+        remove_auto_exclude(monster);
 
     const int monster_killed = monster_index(monster);
     const bool hard_reset    = testbits(monster->flags, MF_HARD_RESET);
@@ -6398,8 +6399,8 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
         if (grid == DNGN_LAVA && mons_res_fire(mons) >= 2)
             grid = DNGN_DEEP_WATER;
 
-        // Even fire resistant monsters perish in lava, but undead can survive
-        // deep water.
+        // Even fire resistant monsters perish in lava, but inanimate monsters
+        // can survive deep water.
         if (grid == DNGN_LAVA || mons->can_drown())
         {
             if (message)
@@ -7592,16 +7593,16 @@ static spell_type _map_wand_to_mspell(int wand_type)
 
 void seen_monster(monsters *monster)
 {
+    // If the monster is in the auto_exclude list, automatically
+    // set an exclusion.
+    if (need_auto_exclude(monster) && !is_exclude_root(monster->pos()))
+        toggle_exclude(monster->pos());
+
     if (monster->flags & MF_SEEN)
         return;
 
     // First time we've seen this particular monster.
     monster->flags |= MF_SEEN;
-
-    // If the monster is in the auto_exclude list, automatically
-    // set an exclusion.
-    if (need_auto_exclude(monster) && !is_exclude_root(monster->pos()))
-        toggle_exclude(monster->pos());
 
     if (!mons_is_mimic(monster->type)
         && MONST_INTERESTING(monster)
