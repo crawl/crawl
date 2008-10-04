@@ -1722,14 +1722,16 @@ bool cast_fragmentation(int pow, const dist& spd)
     beam.damage = dice_def(0, 5 + pow / 10);
 
     const dungeon_feature_type grid = grd(spd.target);
-    const int mon = mgrd(spd.target);
+    const int midx = mgrd(spd.target);
 
-    if (mon != NON_MONSTER)
+    if (midx != NON_MONSTER)
     {
-        // Save this message in case the monster isn't available later.
-        std::string explode_msg = menv[mon].name(DESC_CAP_THE) + " explodes!";
+        monsters *mon = &menv[midx];
 
-        switch (menv[mon].type)
+        // Save this message in case the monster isn't available later.
+        std::string explode_msg = mon->name(DESC_CAP_THE) + " explodes!";
+
+        switch (mon->type)
         {
         case MONS_ICE_STATUE:           // blast of ice fragments
         case MONS_ICE_BEAST:
@@ -1740,7 +1742,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.colour     = WHITE;
             beam.damage.num = 2;
             beam.flavour    = BEAM_ICE;
-            if (player_hurt_monster(mon, roll_dice(beam.damage)))
+            if (player_hurt_monster(midx, roll_dice(beam.damage)))
                 beam.damage.num++;
             break;
 
@@ -1750,7 +1752,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         case MONS_SKELETAL_DRAGON:
         case MONS_SKELETAL_WARRIOR:
             mprf("The %s explodes into sharp fragments of bone!",
-                 (menv[mon].type == MONS_FLYING_SKULL) ? "skull" : "skeleton");
+                 (mon->type == MONS_FLYING_SKULL) ? "skull" : "skeleton");
 
             explode     = true;
             beam.name   = "blast of bone shards";
@@ -1758,26 +1760,26 @@ bool cast_fragmentation(int pow, const dist& spd)
 
             if (x_chance_in_y(pow / 5, 50))        // potential insta-kill
             {
-                monster_die(&menv[mon], KILL_YOU, NON_MONSTER);
+                monster_die(mon, KILL_YOU, NON_MONSTER);
                 beam.damage.num = 4;
             }
             else
             {
                 beam.damage.num = 2;
-                if (player_hurt_monster(mon, roll_dice(beam.damage)))
+                if (player_hurt_monster(midx, roll_dice(beam.damage)))
                     beam.damage.num += 2;
             }
             goto all_done;      // i.e. no "Foo Explodes!"
 
         case MONS_WOOD_GOLEM:
-            simple_monster_message(&menv[mon], " shudders violently!");
+            simple_monster_message(mon, " shudders violently!");
 
             // We use beam.damage not only for inflicting damage here,
             // but so that later on we'll know that the spell didn't
             // fizzle (since we don't actually explode wood golems). -- bwr
             explode         = false;
             beam.damage.num = 2;
-            player_hurt_monster(mon, roll_dice(beam.damage));
+            player_hurt_monster(midx, roll_dice(beam.damage));
             break;
 
         case MONS_IRON_GOLEM:
@@ -1786,7 +1788,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of metal fragments";
             beam.colour     = CYAN;
             beam.damage.num = 4;
-            if (player_hurt_monster(mon, roll_dice(beam.damage)))
+            if (player_hurt_monster(midx, roll_dice(beam.damage)))
                 beam.damage.num += 2;
             break;
 
@@ -1799,7 +1801,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
             beam.damage.num = 3;
-            if (player_hurt_monster(mon, roll_dice(beam.damage)))
+            if (player_hurt_monster(midx, roll_dice(beam.damage)))
                 beam.damage.num++;
             break;
 
@@ -1807,7 +1809,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         case MONS_ORANGE_STATUE:
             explode         = true;
             beam.ex_size    = 2;
-            if (menv[mon].type == MONS_SILVER_STATUE)
+            if (mon->type == MONS_SILVER_STATUE)
             {
                 beam.name       = "blast of silver fragments";
                 beam.colour     = WHITE;
@@ -1823,9 +1825,9 @@ bool cast_fragmentation(int pow, const dist& spd)
             {
                 int statue_damage = roll_dice(beam.damage) * 2;
                 if (pow >= 50 && one_chance_in(10))
-                    statue_damage = menv[mon].hit_points;
+                    statue_damage = mon->hit_points;
 
-                if (player_hurt_monster(mon, statue_damage))
+                if (player_hurt_monster(midx, statue_damage))
                     beam.damage.num += 2;
             }
             break;
@@ -1836,33 +1838,36 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.name       = "blast of crystal shards";
             beam.colour     = WHITE;
             beam.damage.num = 4;
-            if (player_hurt_monster(mon, roll_dice(beam.damage)))
+            if (player_hurt_monster(midx, roll_dice(beam.damage)))
                 beam.damage.num += 2;
             break;
 
         default:
-            // Petrified monsters can be exploded.
-            if (mons_is_petrified(&menv[mon]))
             {
-                explode         = true;
-                beam.ex_size    = 2;
-                beam.name       = "blast of petrified fragments";
-                beam.colour     = menv[mon].colour;
-                beam.damage.num = 3;
-                if (player_hurt_monster(mon, roll_dice(beam.damage)))
-                    beam.damage.num++;
-                break;
-            }
-            else
-            {
-                // Mark that a monster was targetted.
-                beam.damage.num = 1;
+                const bool petrifying = mons_is_petrifying(mon);
+                const bool petrified = mons_is_petrified(mon);
 
-                // Yes, this spell does lousy damage if the monster
-                // isn't susceptible. -- bwr
-                player_hurt_monster(mon, roll_dice(1, 5 + pow / 25));
-                goto do_terrain;
+                // Petrifying or petrified monsters can be exploded.
+                if (petrifying || petrified)
+                {
+                    explode         = true;
+                    beam.ex_size    = petrifying ? 1 : 2;
+                    beam.name       = "blast of petrified fragments";
+                    beam.colour     = mon->colour;
+                    beam.damage.num = petrifying ? 2 : 3;
+                    if (player_hurt_monster(midx, roll_dice(beam.damage)))
+                        beam.damage.num++;
+                    break;
+                }
             }
+
+            // Mark that a monster was targetted.
+            beam.damage.num = 1;
+
+            // Yes, this spell does lousy damage if the monster
+            // isn't susceptible. -- bwr
+            player_hurt_monster(midx, roll_dice(1, 5 + pow / 25));
+            goto do_terrain;
         }
 
         mpr(explode_msg.c_str());
@@ -1909,14 +1914,14 @@ bool cast_fragmentation(int pow, const dist& spd)
              || grid == DNGN_GRANITE_STATUE
              || pow >= 40 && grid == DNGN_ROCK_WALL && one_chance_in(3)
              || pow >= 40 && grid == DNGN_CLEAR_ROCK_WALL
-             && one_chance_in(3)
+                 && one_chance_in(3)
              || pow >= 60 && grid == DNGN_STONE_WALL && one_chance_in(10)
              || pow >= 60 && grid == DNGN_CLEAR_STONE_WALL
-             && one_chance_in(10)))
+                 && one_chance_in(10)))
         {
             // terrain blew up real good:
             beam.ex_size        = 2;
-            grd(spd.target) = DNGN_FLOOR;
+            grd(spd.target)     = DNGN_FLOOR;
             debris              = DEBRIS_ROCK;
         }
         break;
@@ -1935,8 +1940,8 @@ bool cast_fragmentation(int pow, const dist& spd)
         if (pow >= 80 && x_chance_in_y(pow / 5, 500))
         {
             beam.damage.num += 2;
-            grd(spd.target) = DNGN_FLOOR;
-            debris = DEBRIS_METAL;
+            grd(spd.target)  = DNGN_FLOOR;
+            debris           = DEBRIS_METAL;
         }
         break;
 
@@ -1954,9 +1959,9 @@ bool cast_fragmentation(int pow, const dist& spd)
 
         if (grid == DNGN_GREEN_CRYSTAL_WALL && coinflip())
         {
-            beam.ex_size = coinflip() ? 3 : 2;
+            beam.ex_size    = coinflip() ? 3 : 2;
             grd(spd.target) = DNGN_FLOOR;
-            debris = DEBRIS_CRYSTAL;
+            debris          = DEBRIS_CRYSTAL;
         }
         break;
 
