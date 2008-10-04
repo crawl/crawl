@@ -435,14 +435,21 @@ public:
     bool can_travel() const { return (type == PHYSICAL); }
 };
 
+void init_exclusion_los();
+void update_exclusion_los(coord_def &p);
+
 struct travel_exclude
 {
     coord_def pos;
     int       radius;
+    env_show_grid show;
+
+    void set_exclude_show();
 
     travel_exclude(const coord_def &p, int r = LOS_RADIUS)
         : pos(p), radius(r)
     {
+        set_exclude_show();
     }
 
     int radius_sq() const

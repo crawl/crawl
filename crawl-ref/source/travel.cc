@@ -274,12 +274,33 @@ bool is_traversable(dungeon_feature_type grid)
     return (traversable_terrain[grid] == TRAVERSABLE);
 }
 
+void travel_exclude::set_exclude_show()
+{
+    losight(show, grd, pos);
+}
+
+void init_exclusion_los()
+{
+    for (unsigned int i = 0; i < curr_excludes.size(); i++)
+        curr_excludes[i].set_exclude_show();
+}
+
+void update_exclusion_los(coord_def &p)
+{
+    for (unsigned int i = 0; i < curr_excludes.size(); i++)
+        if ((curr_excludes[i].pos - p).abs() <= LOS_RADIUS)
+            curr_excludes[i].set_exclude_show();
+}
+
 static bool _is_excluded(const coord_def &p,
                          const std::vector<travel_exclude> &exc)
 {
     for (int i = 0, count = exc.size(); i < count; ++i)
-        if ((exc[i].pos - p).abs() < exc[i].radius_sq())
+        if ((exc[i].pos - p).abs() < exc[i].radius_sq()
+            && see_grid(exc[i].show, exc[i].pos, p))
+        {
             return (true);
+        }
 
     return (false);
 }
@@ -3107,6 +3128,13 @@ std::string stair_info::describe() const
 void LevelInfo::set_level_excludes()
 {
     curr_excludes = excludes;
+/*
+    for (unsigned int i = 0; i < curr_excludes.size(); i++)
+    {
+        curr_excludes[i] = travel_exclude(curr_excludes[i].pos,
+                                          curr_excludes[i].radius);
+    }
+*/
 }
 
 bool LevelInfo::empty() const

@@ -2097,6 +2097,8 @@ bool vitrify_area(int radius)
             something_happened = true;
         }
     }
+    if (something_happened)
+        init_exclusion_los();
 
     return (something_happened);
 }

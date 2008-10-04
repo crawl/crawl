@@ -3937,6 +3937,7 @@ static bool _initialise(void)
 
     // Set vision radius to player's current vision.
     setLOSRadius(you.current_vision);
+    init_exclusion_los();
 
     if (newc) // start a new game
     {
