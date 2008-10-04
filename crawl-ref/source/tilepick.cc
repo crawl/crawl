@@ -4193,8 +4193,6 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                 is_special  = (bazaar && env.grid_colours[gx][gy] == baz_col);
             }
 
-            _finalize_tile(&tileb[count], is_special,
-                           wall_flv, floor_flv, special_flv);
             _finalize_tile(&tileb[count+1], is_special,
                            wall_flv, floor_flv, special_flv);
 
