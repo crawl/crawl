@@ -1845,7 +1845,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         default:
             {
                 const bool petrifying = mons_is_petrifying(mon);
-                const bool petrified = mons_is_petrified(mon);
+                const bool petrified = mons_is_petrified(mon) && !petrifying;
 
                 // Petrifying or petrified monsters can be exploded.
                 if (petrifying || petrified)
