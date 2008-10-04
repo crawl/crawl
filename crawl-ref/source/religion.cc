@@ -5307,7 +5307,7 @@ bool god_likes_items(god_type god)
 {
     switch (god)
     {
-    case GOD_ZIN:      case GOD_SHINING_ONE:   case GOD_NEMELEX_XOBEH:
+    case GOD_ZIN: case GOD_SHINING_ONE: case GOD_NEMELEX_XOBEH:
         return (true);
 
     case GOD_NO_GOD: case NUM_GODS: case GOD_RANDOM:
