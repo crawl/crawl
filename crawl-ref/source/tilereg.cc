@@ -781,6 +781,25 @@ void DungeonRegion::on_resize()
     // TODO enne
 }
 
+static int _adjacent_cmd(const coord_def &gc, const MouseEvent &event)
+{
+    coord_def dir = gc - you.pos();
+    for (int i = 0; i < 9; i++)
+    {
+        if (dir_dx[i] != dir.x || dir_dy[i] != dir.y)
+            continue;
+
+        if (event.mod & MOD_SHIFT)
+            return cmd_shift[i];
+        else if (event.mod & MOD_CTRL)
+            return cmd_ctrl[i];
+        else
+            return cmd_normal[i];
+    }
+
+    return 0;
+}
+
 int DungeonRegion::handle_mouse(MouseEvent &event)
 {
     tiles.clear_text_tags(TAG_CELL_DESC);
@@ -873,29 +892,28 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     if (event.button != MouseEvent::LEFT)
         return 0;
 
-    // If adjacent, return that key (modified by shift or ctrl, etc...)
-    coord_def dir = gc - you.pos();
-    for (unsigned int i = 0; i < 9; i++)
-    {
-        if (dir_dx[i] == dir.x && dir_dy[i] == dir.y)
-        {
-            if (event.mod & MOD_SHIFT)
-                return cmd_shift[i];
-            else if (event.mod & MOD_CTRL)
-                return cmd_ctrl[i];
-            else
-                return cmd_normal[i];
-        }
-    }
-
-    // Otherwise, travel to that grid.
     if (!in_bounds(gc))
         return 0;
 
-    // Activate travel.
-    start_travel(gc);
+    int cmd = _adjacent_cmd(gc, event);
+    if (cmd)
+        return cmd;
 
-    return CK_MOUSE_CMD;
+    if (i_feel_safe())
+    {
+        start_travel(gc);
+        return CK_MOUSE_CMD;
+    }
+
+    // If not safe, then take one step towards the click.
+    travel_pathfind tp;
+    tp.set_src_dst(you.pos(), gc);
+    const coord_def dest = tp.pathfind(RMODE_TRAVEL);
+
+    if (!dest.x && !dest.y)
+        return 0;
+
+    return _adjacent_cmd(dest, event);
 }
 
 void DungeonRegion::to_screen_coords(const coord_def &gc, coord_def &pc) const
