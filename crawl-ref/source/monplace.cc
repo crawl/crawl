@@ -89,10 +89,10 @@ bool monster_habitable_grid(const monsters *m,
                             dungeon_feature_type actual_grid)
 {
     // Zombified monsters enjoy the same habitat as their original.
-    const int type = mons_is_zombified(m) ? mons_zombie_base(m)
-                                          : m->type;
+    const int montype = mons_is_zombified(m) ? mons_zombie_base(m)
+                                             : m->type;
 
-    return (monster_habitable_grid(type, actual_grid, mons_flies(m),
+    return (monster_habitable_grid(montype, actual_grid, mons_flies(m),
                                    mons_cannot_move(m)));
 }
 
@@ -550,10 +550,10 @@ static bool _valid_monster_location(const mgen_data &mg,
                                     const coord_def &mg_pos,
                                     bool force_location)
 {
-    const int htype = (mons_class_is_zombified(mg.cls) ? mg.base_type
-                                                       : mg.cls);
+    const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
+                                                         : mg.cls);
     dungeon_feature_type grid_wanted =
-        habitat2grid(mons_habitat_by_type(htype));
+        habitat2grid(mons_habitat_by_type(montype));
 
     if (!in_bounds(mg_pos))
         return (false);
@@ -824,15 +824,15 @@ static int _place_monster_aux( const mgen_data &mg,
 
     menv[id].reset();
 
-    const int htype = (mons_class_is_zombified(mg.cls) ? mg.base_type
-                                                       : mg.cls);
+    const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
+                                                         : mg.cls);
 
     // Setup habitat and placement.
     // If the space is occupied, try some neighbouring square instead.
     if (first_band_member && in_bounds(mg.pos)
         && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos))
         && mgrd(mg.pos) == NON_MONSTER && mg.pos != you.pos()
-        && (force_pos || monster_habitable_grid(htype, grd(mg.pos))))
+        && (force_pos || monster_habitable_grid(montype, grd(mg.pos))))
     {
         fpos = mg.pos;
     }
@@ -2123,17 +2123,18 @@ bool player_angers_monster(monsters *mon)
 
 int create_monster( mgen_data mg, bool fail_msg )
 {
+    const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
+                                                         : mg.cls);
+
     int summd = -1;
-    int type = (mons_class_is_zombified(mg.cls) ? mg.base_type
-                                                : mg.cls);
 
     if (!mg.force_place()
         || !in_bounds(mg.pos)
         || mgrd(mg.pos) != NON_MONSTER
         || mg.pos == you.pos()
-        || !mons_class_can_pass(type, grd(mg.pos)))
+        || !mons_class_can_pass(montype, grd(mg.pos)))
     {
-        mg.pos = find_newmons_square(type, mg.pos);
+        mg.pos = find_newmons_square(montype, mg.pos);
     }
 
     if (in_bounds(mg.pos))
