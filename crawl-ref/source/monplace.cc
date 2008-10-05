@@ -115,14 +115,14 @@ bool monster_habitable_grid(int monster_class,
                             dungeon_feature_type actual_grid,
                             int flies, bool paralysed)
 {
-    const dungeon_feature_type preferred_habitat =
+    const dungeon_feature_type grid_preferred =
         habitat2grid(mons_class_primary_habitat(monster_class));
-    const dungeon_feature_type nonpreferred_habitat =
+    const dungeon_feature_type grid_nonpreferred =
         habitat2grid(mons_class_secondary_habitat(monster_class));
 
-    if (grid_compatible(preferred_habitat, actual_grid)
-        || (nonpreferred_habitat != preferred_habitat
-            && grid_compatible(nonpreferred_habitat, actual_grid)))
+    if (grid_compatible(grid_preferred, actual_grid)
+        || (grid_nonpreferred != grid_preferred
+            && grid_compatible(grid_nonpreferred, actual_grid)))
     {
         return (true);
     }
@@ -145,7 +145,6 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
     if (mons->type == MONS_TRAPDOOR_SPIDER && grid == DNGN_FLOOR)
         return (!find_trap(mons->pos()));
 
-    // Zombies of watery critters can not submerge.
     switch (mons_primary_habitat(mons))
     {
     case HT_WATER:
@@ -1944,11 +1943,18 @@ int mons_place( mgen_data mg )
     return (mid);
 }
 
-static dungeon_feature_type _monster_habitat_feature(int mtype)
+static dungeon_feature_type _monster_primary_habitat_feature(int mc)
 {
-    if (mtype == RANDOM_MONSTER)
-        return DNGN_FLOOR;
-    return habitat2grid(mons_class_primary_habitat(mtype));
+    if (mc == RANDOM_MONSTER)
+        return (DNGN_FLOOR);
+    return (habitat2grid(mons_class_primary_habitat(mc)));
+}
+
+static dungeon_feature_type _monster_secondary_habitat_feature(int mc)
+{
+    if (mc == RANDOM_MONSTER)
+        return (DNGN_FLOOR);
+    return (habitat2grid(mons_class_secondary_habitat(mc)));
 }
 
 class newmons_square_find : public travel_pathfind
@@ -2015,10 +2021,25 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
                                          int distance)
 {
-    newmons_square_find nmfind(_monster_habitat_feature(mons_class),
-                               start, distance);
-    const coord_def p = nmfind.pathfind();
-    return (in_bounds(p)? p : coord_def(-1, -1));
+    coord_def p;
+
+    const dungeon_feature_type grid_preferred =
+        _monster_primary_habitat_feature(mons_class);
+    const dungeon_feature_type grid_nonpreferred =
+        _monster_secondary_habitat_feature(mons_class);
+
+    newmons_square_find nmpfind(grid_preferred, start, distance);
+    const coord_def pp = nmpfind.pathfind();
+    p = pp;
+
+    if (grid_nonpreferred != grid_preferred && !in_bounds(pp))
+    {
+        newmons_square_find nmsfind(grid_nonpreferred, start, distance);
+        const coord_def ps = nmsfind.pathfind();
+        p = ps;
+    }
+
+    return (in_bounds(p) ? p : coord_def(-1, -1));
 }
 
 coord_def find_newmons_square(int mons_class, const coord_def &p)
@@ -2029,13 +2050,22 @@ coord_def find_newmons_square(int mons_class, const coord_def &p)
     if (mons_class == WANDERING_MONSTER)
         mons_class = RANDOM_MONSTER;
 
-    const dungeon_feature_type spcw = _monster_habitat_feature(mons_class);
+    const dungeon_feature_type grid_preferred =
+        _monster_primary_habitat_feature(mons_class);
+    const dungeon_feature_type grid_nonpreferred =
+        _monster_secondary_habitat_feature(mons_class);
 
     // Might be better if we chose a space and tried to match the monster
     // to it in the case of RANDOM_MONSTER, that way if the target square
     // is surrounded by water or lava this function would work.  -- bwr
-    if (empty_surrounds( p, spcw, 2, true, empty ))
+    if (empty_surrounds(p, grid_preferred, 2, true, empty))
         pos = empty;
+
+    if (grid_nonpreferred != grid_preferred && !in_bounds(pos)
+        && empty_surrounds(p, grid_nonpreferred, 2, true, empty))
+    {
+        pos = empty;
+    }
 
     return (pos);
 }
@@ -2114,7 +2144,7 @@ bool player_angers_monster(monsters *mon)
     return (false);
 }
 
-int create_monster( mgen_data mg, bool fail_msg )
+int create_monster(mgen_data mg, bool fail_msg)
 {
     const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                          : mg.cls);
@@ -2131,7 +2161,7 @@ int create_monster( mgen_data mg, bool fail_msg )
     }
 
     if (in_bounds(mg.pos))
-        summd = mons_place( mg );
+        summd = mons_place(mg);
 
     // Determine whether creating a monster is successful (summd != -1) {dlb}:
     // then handle the outcome. {dlb}:
@@ -2142,7 +2172,6 @@ int create_monster( mgen_data mg, bool fail_msg )
     // or the index of the monster placed (if I read things right). {dlb}
     return (summd);
 }
-
 
 bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
                      int radius, bool allow_centre, coord_def& empty)
