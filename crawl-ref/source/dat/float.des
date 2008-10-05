@@ -373,21 +373,21 @@ ENDMAP
 
 #############################################################################
 # Oklob gauntlet
-# average of 2.5 oklobs, and at most 5 of them
+# average of 2.3 oklobs, and at most 5 of them
 NAME:    oklob_2
 DEPTH:   D:18-27, Lair, Snake, Elf
 MONS:    plant, oklob plant
 ORIENT:  float
-SHUFFLE: ]})yY / defzZ
+SHUFFLE: ]}) / def
 NSUBST:  ' = 5:2 *:1 
-SUBST:   1=1w, 2=2w, "=ww.
-SUBST:   d=|*, e=|*, f=|*, y=+, Y=@, z=x, Z=x
-SHUFFLE: xxxc
+NSUBST:  2 = 1:2 *:112
+SUBST:   1=1w, "=ww.
+SUBST:   d=|*, e=|*, f=|*
 MAP
-yyyyyyYyyyyyy
-xxxx.]}).xxxx
+xxxxxxxxxxxxx
+xxxxx]})xxxxx
+xxxxx...xxxxx
 x'ww.....ww'x
-x'"......."'x
 x'"......."'x
 x'"......."'x
 x'"......."'x
@@ -401,11 +401,14 @@ ENDMAP
 #
 # Disallowing this vault on branch starts, as brown stairs can't help there.
 # Chance for a plant to turn oklob based on dungeon level. Elf:7 is hard, but
-# considered okay.
+# considered okay. Has between 1 and 3 oklob plants.
+# Single oklob at absolute depth 10, expect 2 oklobs at depth 20.
+# Rarely (2.5% chance) the whole vault is enclosed. This is the hardest case,
+# and the walls are always diggable then. 
 #
 NAME:    oklob_3
-DEPTH:   D:21-27, Lair:2-10, Elf:2-7
-CHANCE:  1
+DEPTH:   D:18-27, Lair:2-10, Elf:2-7
+CHANCE:  2
 ORIENT:  float
 SHUFFLE: ab" / AB'
 SUBST:   a=[, b=(, A=., B=., '=., "=>
@@ -414,13 +417,11 @@ SUBST:   x : y:1 x:5 .:34
 SUBST:   x = x:2 .
 SHUFFLE: xcv
 SUBST:   y = x
-# Rarely (2.5% chance) the whole vault is enclosed. This is the hardest case,
-# and the walls are always diggable then. 
 #
-: wt = 240 / (you.absdepth() - 4) - 10
-: mons("oklob plant / w:" .. wt .. " plant")
-# Expecting 1 oklob at depth 10, 2 oklobs at depths 16, 3 oklobs at depth 22.
-#
+NSUBST:  1 = 1:2 1:3 *:1
+: wt = (you.absdepth()-10)/2
+: mons("oklob plant w:" .. wt .. " / plant")
+MONS:    plant, oklob plant
 MAP
 xxxxxxxxxxxxxxx
 xxxx...1...xxxx
