@@ -116,34 +116,22 @@ bool monster_habitable_grid(int monster_class,
                             int flies, bool paralysed)
 {
     const dungeon_feature_type preferred_habitat =
-        habitat2grid( mons_habitat_by_type(monster_class) );
+        habitat2grid(mons_class_primary_habitat(monster_class));
+    const dungeon_feature_type nonpreferred_habitat =
+        habitat2grid(mons_class_secondary_habitat(monster_class));
 
-    if (grid_compatible(preferred_habitat, actual_grid))
+    if (grid_compatible(preferred_habitat, actual_grid)
+        || (nonpreferred_habitat != preferred_habitat
+            && grid_compatible(nonpreferred_habitat, actual_grid)))
+    {
         return (true);
+    }
 
     // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
     // only have to check for the additional valid grids of deep
     // water and lava.
     if (_mons_airborne(monster_class, flies, paralysed)
         && (actual_grid == DNGN_LAVA || actual_grid == DNGN_DEEP_WATER))
-    {
-        return (true);
-    }
-
-    // Amphibious critters are happy in water or on land.
-    if (mons_class_amphibious(monster_class)
-        && (preferred_habitat == DNGN_FLOOR
-                && grid_compatible(DNGN_DEEP_WATER, actual_grid)
-            || preferred_habitat == DNGN_DEEP_WATER
-               && grid_compatible(DNGN_FLOOR, actual_grid)))
-    {
-        return (true);
-    }
-
-    // Rock wall critters are native to walls but are happy on
-    // the floor as well.
-    if (preferred_habitat == DNGN_ROCK_WALL
-        && grid_compatible(DNGN_FLOOR, actual_grid))
     {
         return (true);
     }
@@ -158,11 +146,11 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
         return (!find_trap(mons->pos()));
 
     // Zombies of watery critters can not submerge.
-    switch (mons_habitat(mons))
+    switch (mons_primary_habitat(mons))
     {
     case HT_WATER:
         // Monsters can submerge in shallow water - this is intentional.
-        return grid_is_watery(grid);
+        return (grid_is_watery(grid));
 
     case HT_LAVA:
         return (grid == DNGN_LAVA);
@@ -552,8 +540,10 @@ static bool _valid_monster_location(const mgen_data &mg,
 {
     const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                          : mg.cls);
-    dungeon_feature_type grid_wanted =
-        habitat2grid(mons_habitat_by_type(montype));
+    const dungeon_feature_type grid_preferred =
+        habitat2grid(mons_class_primary_habitat(montype));
+    const dungeon_feature_type grid_nonpreferred =
+        habitat2grid(mons_class_secondary_habitat(montype));
 
     if (!in_bounds(mg_pos))
         return (false);
@@ -563,8 +553,12 @@ static bool _valid_monster_location(const mgen_data &mg,
         return (false);
 
     // Is the monster happy where we want to put it?
-    if (!grid_compatible(grid_wanted, grd(mg_pos), !force_location))
+    if (!grid_compatible(grid_preferred, grd(mg_pos), !force_location)
+        && (grid_nonpreferred == grid_preferred
+            || !grid_compatible(grid_nonpreferred, grd(mg_pos), !force_location)))
+    {
         return (false);
+    }
 
     if (mg.behaviour != BEH_FRIENDLY && is_sanctuary(mg_pos))
         return (false);
@@ -1954,8 +1948,7 @@ static dungeon_feature_type _monster_habitat_feature(int mtype)
 {
     if (mtype == RANDOM_MONSTER)
         return DNGN_FLOOR;
-
-    return habitat2grid( mons_habitat_by_type(mtype) );
+    return habitat2grid(mons_class_primary_habitat(mtype));
 }
 
 class newmons_square_find : public travel_pathfind

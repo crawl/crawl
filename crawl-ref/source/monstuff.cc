@@ -2204,7 +2204,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
         return (false);
 
     const bool patrol_seen = mon->mon_see_grid(mon->patrol_point,
-                                               habitat2grid(mons_habitat(mon)));
+                                 habitat2grid(mons_primary_habitat(mon)));
 
     if (intel == I_PLANT && !patrol_seen)
     {
@@ -2351,7 +2351,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
 
     const bool flies         = mons_flies(mon);
     const bool amphibious    = mons_amphibious(mon);
-    const habitat_type habit = mons_habitat(mon);
+    const habitat_type habit = mons_primary_habitat(mon);
 
     for (radius_iterator ri(mon->pos(), 2, true, false); ri; ++ri)
     {
@@ -2374,7 +2374,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
             continue;
 
         // Monsters of differing habitats might prefer different routes.
-        if (mons_habitat(m) != habit)
+        if (mons_primary_habitat(m) != habit)
             continue;
 
         // A flying monster has an advantage over a non-flying one.
@@ -2824,7 +2824,7 @@ static void _handle_behaviour(monsters *mon)
                             || !mons_has_ranged_spell(mon)
                                && !mons_has_ranged_attack(mon)))
                     {
-                        const habitat_type habit = mons_habitat(mon);
+                        const habitat_type habit = mons_primary_habitat(mon);
                         if (you.lava_in_sight > 0 && habit != HT_LAVA
                             || you.water_in_sight > 0 && habit != HT_WATER
                                && can_move != DNGN_DEEP_WATER)
@@ -5442,7 +5442,7 @@ static void _monster_regenerate(monsters *monster)
     }
 
     // Non-land creatures out of their element cannot regenerate.
-    if (mons_habitat(monster) != HT_LAND
+    if (mons_primary_habitat(monster) != HT_LAND
         && !monster_habitable_grid(monster, grd(monster->pos())))
     {
         return;
@@ -6649,7 +6649,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     }
 
     const dungeon_feature_type target_grid = grd(targ);
-    const habitat_type habitat = mons_habitat(monster);
+    const habitat_type habitat = mons_primary_habitat(monster);
 
     // Effectively slows down monster movement across water.
     // Fire elementals can't cross at all.
@@ -6846,7 +6846,7 @@ static bool _monster_move(monsters *monster)
     FixedArray < bool, 3, 3 > good_move;
     int count_x, count_y, count;
 
-    const habitat_type habitat = mons_habitat(monster);
+    const habitat_type habitat = mons_primary_habitat(monster);
     bool deep_water_available = false;
 
     if (monster->type == MONS_TRAPDOOR_SPIDER)

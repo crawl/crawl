@@ -99,7 +99,7 @@ enum mons_class_flags
     M_CONFUSED          = (1<<10),        // monster is perma-confused,
     M_BATTY             = (1<<11),        // monster is batty
     M_SPLITS            = (1<<12),        // monster can split
-    M_AMPHIBIOUS        = (1<<13),        // monster can swim in water
+
     M_STATIONARY        = (1<<14),        // monster is stationary
     M_BLOOD_SCENT       = (1<<15),        // monster can smell blood
     M_COLD_BLOOD        = (1<<16),        // susceptible to cold,
@@ -150,10 +150,12 @@ enum mon_intel_type             // Must be in increasing intelligence order
 enum habitat_type
 {
     // Flying monsters will appear in all categories except rock walls
-    HT_LAND = 0,        // Land critters
-    HT_WATER,           // Water critters
-    HT_LAVA,            // Lava critters
-    HT_ROCK,            // Rock critters
+    HT_LAND = 0,         // Land critters
+    HT_AMPHIBIOUS_LAND,  // Amphibious land-preferring critters
+    HT_AMPHIBIOUS_WATER, // Amphibious water-preferring critters
+    HT_WATER,            // Water critters
+    HT_LAVA,             // Lava critters
+    HT_ROCK,             // Rock critters
 
     NUM_HABITATS
 };
@@ -444,6 +446,8 @@ flight_type mons_flies(const monsters *mon);
 
 bool mons_class_amphibious(int mc);
 bool mons_amphibious(const monsters *mon);
+bool mons_class_wall_shielded(int mc);
+bool mons_wall_shielded(const monsters *mon);
 
 // last updated XXmay2000 {dlb}
 /* ***********************************************************************
@@ -543,10 +547,14 @@ bool mons_is_shapeshifter(const monsters *m);
  * *********************************************************************** */
 mon_intel_type mons_intel(int mc);
 
-// Use mons_habitat(const monster *) wherever possible since the other
-// variant does not handle zombies correctly.
-habitat_type mons_habitat(const monsters *m);
-habitat_type mons_habitat_by_type(int mc);
+// Use mons_habitat() and mons_primary_habitat() wherever possible,
+// since the class variants do not handle zombies correctly.
+habitat_type mons_class_habitat(int mc);
+habitat_type mons_habitat(const monsters *mon);
+habitat_type mons_class_primary_habitat(int mc);
+habitat_type mons_primary_habitat(const monsters *mon);
+habitat_type mons_class_secondary_habitat(int mc);
+habitat_type mons_secondary_habitat(const monsters *mon);
 
 bool intelligent_ally(const monsters *mon);
 
@@ -730,7 +738,6 @@ bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
 bool mons_class_is_stationary(int mc);
 bool mons_is_stationary(const monsters *mon);
-bool mons_is_wall_shielded(int mc);
 bool mons_is_insubstantial(int mc);
 bool mons_has_blood(int mc);
 bool mons_is_submerged(const monsters *m);
@@ -793,7 +800,8 @@ std::string get_mon_shape_str(const monsters *mon);
 std::string get_mon_shape_str(const int type);
 std::string get_mon_shape_str(const mon_body_shape shape);
 
-bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid);
+bool mons_class_can_pass(int mc, const dungeon_feature_type grid);
+bool mons_can_pass(const monsters *mon, dungeon_feature_type grid);
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq);
 

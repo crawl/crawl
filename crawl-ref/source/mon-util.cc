@@ -107,6 +107,7 @@ dungeon_feature_type habitat2grid(habitat_type ht)
 {
     switch (ht)
     {
+    case HT_AMPHIBIOUS_WATER:
     case HT_WATER:
         return (DNGN_DEEP_WATER);
     case HT_LAVA:
@@ -114,6 +115,7 @@ dungeon_feature_type habitat2grid(habitat_type ht)
     case HT_ROCK:
         return (DNGN_ROCK_WALL);
     case HT_LAND:
+    case HT_AMPHIBIOUS_LAND:
     default:
         return (DNGN_FLOOR);
     }
@@ -385,11 +387,6 @@ bool mons_class_is_slowable(int mc)
 {
     ASSERT(smc);
     return (smc->resist_magic < MAG_IMMUNE);
-}
-
-bool mons_is_wall_shielded(int mc)
-{
-    return (mons_habitat_by_type(mc) == HT_ROCK);
 }
 
 bool mons_class_is_stationary(int mc)
@@ -1274,10 +1271,10 @@ flight_type mons_flies(const monsters *mon)
         return (mon->ghost->fly);
     }
 
-    const int type = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                            : mon->type;
+    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                               : mon->type;
 
-    const flight_type ret = mons_class_flies( type );
+    const flight_type ret = mons_class_flies(montype);
     return (ret ? ret
                 : (_scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? FL_LEVITATE
                                                                   : FL_NONE);
@@ -1285,15 +1282,27 @@ flight_type mons_flies(const monsters *mon)
 
 bool mons_class_amphibious(int mc)
 {
-    return mons_class_flag(mc, M_AMPHIBIOUS);
+    habitat_type ht = mons_class_habitat(mc);
+    return (ht == HT_AMPHIBIOUS_LAND || ht == HT_AMPHIBIOUS_WATER);
 }
 
 bool mons_amphibious(const monsters *mon)
 {
-    const int type = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                            : mon->type;
+    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                               : mon->type;
+    return (mons_class_amphibious(montype));
+}
 
-    return (mons_class_amphibious(type));
+bool mons_class_wall_shielded(int mc)
+{
+    return (mons_class_habitat(mc) == HT_ROCK);
+}
+
+bool mons_wall_shielded(const monsters *mon)
+{
+    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                               : mon->type;
+    return (mons_class_wall_shielded(montype));
 }
 
 // This nice routine we keep in exactly the way it was.
@@ -2007,22 +2016,53 @@ mon_intel_type mons_intel(int mc)
     return (smc->intel);
 }
 
-habitat_type mons_habitat_by_type(int mc)
+habitat_type mons_class_habitat(int mc)
 {
     const monsterentry *me = get_monster_data(mc);
     return (me ? me->habitat : HT_LAND);
 }
 
-habitat_type mons_habitat(const monsters *m)
+habitat_type mons_habitat(const monsters *mon)
 {
-    return mons_habitat_by_type( mons_is_zombified(m) ? mons_zombie_base(m)
-                                                      : m->type );
+    return mons_class_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                                     : mon->type);
 }
 
-bool intelligent_ally(const monsters *monster)
+habitat_type mons_class_primary_habitat(int mc)
 {
-    return (monster->attitude == ATT_FRIENDLY
-            && mons_intel(monster->type) >= I_NORMAL);
+    habitat_type ht = mons_class_habitat(mc);
+    if (ht == HT_AMPHIBIOUS_LAND)
+        ht = HT_LAND;
+    else if (ht == HT_AMPHIBIOUS_WATER)
+        ht = HT_WATER;
+    return (ht);
+}
+
+habitat_type mons_primary_habitat(const monsters *mon)
+{
+    return mons_class_primary_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                                             : mon->type);
+}
+
+habitat_type mons_class_secondary_habitat(int mc)
+{
+    habitat_type ht = mons_class_habitat(mc);
+    if (ht == HT_AMPHIBIOUS_LAND)
+        ht = HT_WATER;
+    else if (ht == HT_AMPHIBIOUS_WATER || ht == HT_ROCK)
+        ht = HT_LAND;
+    return (ht);
+}
+
+habitat_type mons_secondary_habitat(const monsters *mon)
+{
+    return mons_class_secondary_habitat(mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                                               : mon->type);
+}
+
+bool intelligent_ally(const monsters *mon)
+{
+    return (mon->attitude == ATT_FRIENDLY && mons_intel(mon->type) >= I_NORMAL);
 }
 
 int mons_power(int mc)
@@ -2984,7 +3024,7 @@ void monsters::init_with(const monsters &mon)
 bool monsters::swimming() const
 {
     const dungeon_feature_type grid = grd(pos());
-    return (grid_is_watery(grid) && mons_habitat(this) == HT_WATER);
+    return (grid_is_watery(grid) && mons_primary_habitat(this) == HT_WATER);
 }
 
 bool monsters::wants_submerge() const
@@ -3030,15 +3070,15 @@ bool monsters::floundering() const
     return (grid_is_water(grid)
             // Can't use monster_habitable_grid because that'll return true
             // for non-water monsters in shallow water.
-            && mons_habitat(this) != HT_WATER
+            && mons_primary_habitat(this) != HT_WATER
             && !mons_amphibious(this)
             && !mons_flies(this)
             && !extra_balanced());
 }
 
-bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid)
+bool mons_class_can_pass(int mc, const dungeon_feature_type grid)
 {
-    if (mons_is_wall_shielded(mclass))
+    if (mons_class_wall_shielded(mc))
     {
         // Permanent walls can't be passed through.
         return (!grid_is_solid(grid)
@@ -3048,9 +3088,16 @@ bool mons_class_can_pass(const int mclass, const dungeon_feature_type grid)
     return !grid_is_solid(grid);
 }
 
+bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
+{
+    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                               : mon->type;
+    return mons_class_can_pass(montype, grid);
+}
+
 bool monsters::can_pass_through_feat(dungeon_feature_type grid) const
 {
-    return mons_class_can_pass(type, grid);
+    return mons_can_pass(this, grid);
 }
 
 bool monsters::can_drown() const
@@ -6679,9 +6726,9 @@ int monsters::action_energy(energy_use_type et) const
             // [ds] Amphibious monsters get a significant speed boost
             // when swimming, as discussed with dpeg. We do not
             // distinguish between amphibians that favour land
-            // (HT_LAND, such as hydras) and those that favour water
-            // (HT_WATER, such as merfolk), but that's something we
-            // can think about.
+            // (HT_AMPHIBIOUS_LAND, such as hydras) and those that
+            // favour water (HT_AMPHIBIOUS_WATER, such as merfolk), but
+            // that's something we can think about.
             if (mons_class_amphibious(type))
                 return div_rand_round(mu.swim * 7, 10);
             else

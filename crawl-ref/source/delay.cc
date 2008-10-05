@@ -1681,9 +1681,9 @@ inline static void _monster_warning(activity_interrupt_type ai,
             else if (at.context.find("bursts forth") != std::string::npos)
             {
                 text += " bursts forth from the ";
-                if (mons_habitat(mon) == HT_LAVA)
+                if (mons_primary_habitat(mon) == HT_LAVA)
                     text += "lava";
-                else if (mons_habitat(mon) == HT_WATER)
+                else if (mons_primary_habitat(mon) == HT_WATER)
                     text += "water";
                 else
                     text += "realm of bugdom";

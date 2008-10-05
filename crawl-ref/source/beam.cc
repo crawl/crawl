@@ -1507,8 +1507,7 @@ static bool _affect_mon_in_wall(bolt &pbolt, item_def *item,
             && (grd(where) == DNGN_METAL_WALL
                 || pbolt.flavour != BEAM_ELECTRICITY)))
     {
-        monsters *mon = &menv[mid];
-        if (!mons_is_wall_shielded(mon->type))
+        if (!mons_wall_shielded(&menv[mid]))
             return (true);
     }
 

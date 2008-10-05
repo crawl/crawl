@@ -4654,10 +4654,11 @@ bool dgn_place_monster(mons_spec &mspec,
             const int montype = mons_class_is_zombified(mid) ? mspec.monbase
                                                              : mid;
 
-            const habitat_type habitat = mons_habitat_by_type(montype);
+            const habitat_type habitat = mons_class_primary_habitat(montype);
 
             if (habitat != HT_LAND
-                && (habitat != HT_WATER || !mons_class_amphibious(montype)))
+                && (habitat != HT_WATER || !mons_class_amphibious(montype))
+                && (habitat != HT_ROCK || !mons_class_wall_shielded(montype)))
             {
                 grd(where) = habitat2grid(habitat);
             }
