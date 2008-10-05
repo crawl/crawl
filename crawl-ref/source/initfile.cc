@@ -2210,7 +2210,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 #endif
     else BOOL_OPTION(show_gold_turns);
+#ifndef USE_TILE
     else BOOL_OPTION(show_beam);
+#endif
 #ifndef SAVE_DIR_PATH
     else if (key == "morgue_dir")
     {

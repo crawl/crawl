@@ -4140,28 +4140,37 @@ void tile_place_cloud(int x, int y, int type, int decay)
     env.tile_fg[x-1][y-1] = _tileidx_cloud(type, decay);
 }
 
-unsigned int tileRayCount = 0;
-FixedVector<coord_def, 30> tileRays;
+unsigned int num_tile_rays = 0;
+struct tile_ray
+{
+    coord_def ep;
+    bool in_range;
+};
+FixedVector<tile_ray, 30> tile_ray_vec;
 
-void tile_place_ray(const coord_def& gc)
+void tile_place_ray(const coord_def& gc, bool in_range)
 {
     // Record rays for later.  The curses version just applies
     // rays directly to the screen.  The tiles version doesn't have
     // (nor want) such direct access.  So, it batches up all of the
     // rays and applies them in viewwindow(...).
-    if (tileRayCount < tileRays.size() - 1)
+    if (num_tile_rays < tile_ray_vec.size() - 1)
     {
-        tileRays[tileRayCount++] = view2show(grid2view(gc));
+        tile_ray_vec[num_tile_rays].in_range = in_range;
+        tile_ray_vec[num_tile_rays++].ep = view2show(grid2view(gc));
     }
 }
 
-void tile_draw_rays(bool resetCount)
+void tile_draw_rays(bool reset_count)
 {
-    for (unsigned int i = 0; i < tileRayCount; i++)
-        env.tile_bg[tileRays[i].x-1][tileRays[i].y-1] |= TILE_FLAG_RAY;
+    for (unsigned int i = 0; i < num_tile_rays; i++)
+    {
+        int flag = tile_ray_vec[i].in_range ? TILE_FLAG_RAY : TILE_FLAG_RAY_OOR;
+        env.tile_bg[tile_ray_vec[i].ep.x-1][tile_ray_vec[i].ep.y-1] |= flag;
+    }
 
-    if (resetCount)
-        tileRayCount = 0;
+    if (reset_count)
+        num_tile_rays = 0;
 }
 
 void tile_finish_dngn(unsigned int *tileb, int cx, int cy)

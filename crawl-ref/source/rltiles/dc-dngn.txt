@@ -414,7 +414,8 @@ dc-misc/blood_red2
 dc-misc/blood_red3
 dc-misc/blood_red4
 dc-misc/halo HALO
-dc-misc/ray RAY_MESH
+dc-misc/ray RAY
+dc-misc/ray_out_of_range RAY_OUT_OF_RANGE
 dc-misc/travel_exclusion TRAVEL_EXCLUSION_BG
 dc-misc/travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
 dc-misc/slot ITEM_SLOT

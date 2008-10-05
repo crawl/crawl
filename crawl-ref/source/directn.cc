@@ -254,10 +254,10 @@ static const char *target_mode_help_text(int mode)
 }
 
 static void draw_ray_glyph(const coord_def &pos, int colour,
-                           int glych, int mcol)
+                           int glych, int mcol, bool in_range)
 {
 #ifdef USE_TILE
-    tile_place_ray(pos);
+    tile_place_ray(pos, in_range);
 #else
     int mid = mgrd(pos);
     if (mid != NON_MONSTER)
@@ -944,7 +944,21 @@ void direction(dist& moves, targeting_type restricts,
                 moves.target = gc;
 
                 if (key_command == CMD_TARGET_MOUSE_SELECT)
+                {
                     key_command = CMD_TARGET_SELECT;
+
+                    if (range > 0)
+                    {
+                        ray_def raycopy = ray;
+                        int l = 0;
+                        while (raycopy.pos() != moves.target && l < range)
+                        {
+                            l++;
+                            raycopy.advance_through(moves.target);
+                        }
+                        moves.target = raycopy.pos();
+                    }
+                }
             }
             else
             {
@@ -1477,14 +1491,16 @@ void direction(dist& moves, targeting_type restricts,
                         const int bcol = in_range ? MAGENTA : DARKGREY;
 
                         draw_ray_glyph(raycopy.pos(), bcol, '*',
-                                       bcol | COLFLAG_REVERSE);
+                                       bcol | COLFLAG_REVERSE, in_range);
                     }
                     raycopy.advance_through(moves.target);
                 }
                 textcolor(LIGHTGREY);
 #ifdef USE_TILE
+                const bool in_range = (range < 0)
+                    || grid_distance(raycopy.pos(), you.pos()) <= range;
                 draw_ray_glyph(moves.target, MAGENTA, '*',
-                               MAGENTA | COLFLAG_REVERSE);
+                               MAGENTA | COLFLAG_REVERSE, in_range);
             }
             viewwindow(true, false);
 #else

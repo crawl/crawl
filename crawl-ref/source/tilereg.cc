@@ -303,7 +303,9 @@ void DungeonRegion::draw_background(unsigned int bg, unsigned int x, unsigned in
         add_quad(TEX_DUNGEON, TILE_TRAVEL_EXCLUSION_BG, x, y);
 
     if (bg & TILE_FLAG_RAY)
-        add_quad(TEX_DUNGEON, TILE_RAY_MESH, x, y);
+        add_quad(TEX_DUNGEON, TILE_RAY, x, y);
+    else if (bg & TILE_FLAG_RAY_OOR)
+        add_quad(TEX_DUNGEON, TILE_RAY_OUT_OF_RANGE, x, y);
 }
 
 void DungeonRegion::draw_player(unsigned int x, unsigned int y)

@@ -1159,7 +1159,8 @@ show_beam = true
         When performing actions such as throwing or zapping, you can 
         toggle whether to show the beam path or not. This option 
         controls the initial status of this toggle. When set to true, 
-        the path will be shown.
+        the path will be shown.  This is always true for the tile
+        version.
 
 item_stack_summary_minimum = 5
         If you step over a stack with this number or more of items in 

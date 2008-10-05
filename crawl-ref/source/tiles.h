@@ -81,7 +81,7 @@ void tile_place_item(int x, int y, int idx);
 void tile_place_item_bk(int gx, int gy, int idx);
 void tile_place_item_marker(int x, int y, int idx);
 void tile_place_cloud(int x, int y, int type, int decay);
-void tile_place_ray(const coord_def& gc);
+void tile_place_ray(const coord_def& gc, bool in_range);
 void tile_draw_rays(bool resetCount);
 void tile_clear_buf();
 
@@ -164,6 +164,7 @@ enum tile_flags
     TILE_FLAG_EXCL_CTR  = 0x00100000,
     TILE_FLAG_SANCTUARY = 0x00200000,
     TILE_FLAG_TUT_CURSOR= 0x00400000,
+    TILE_FLAG_RAY_OOR   = 0x00800000,
 
     // General
     TILE_FLAG_MASK      = 0x000007FF
