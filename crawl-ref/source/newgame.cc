@@ -223,12 +223,12 @@ static job_type _get_class(const int index)
 
 static const char * Species_Abbrev_List[ NUM_SPECIES ] =
     { "XX", "Hu", "HE", "GE", "DE", "SE", "MD", "Ha",
-      "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr", "OM",
+      "HO", "Ko", "Mu", "Na", "Gn", "Og", "Tr",
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "DG", "Sp", "Mi", "DS", "Gh", "Ke", "Mf", "Vp",
       // placeholders
-      "HD", "El" };
+      "El", "HD", "OM" };
 
 int get_species_index_by_abbrev( const char *abbrev )
 {
