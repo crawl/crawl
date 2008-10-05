@@ -11,28 +11,14 @@
 
 #include <deque>
 
+#include "enum.h"
+
 #ifndef MACRO_CC
 
 #undef getch
 #define getch() getchm()
 
 #endif
-
-enum KeymapContext {
-    KC_DEFAULT,         // For no-arg getchm(), must be zero.
-    KC_LEVELMAP,        // When in the 'X' level map
-    KC_TARGETING,       // Only during 'x' and other targeting modes
-    KC_CONFIRM,         // When being asked y/n/q questions
-    KC_MENU,            // For menus
-
-#ifdef USE_TILE
-    KC_TILE,            // For context_for_command()
-#endif
-
-    KC_CONTEXT_COUNT,   // Must always be the last real context
-
-    KC_NONE
-};
 
 class key_recorder;
 typedef bool (*key_recorder_callback)(key_recorder *recorder,

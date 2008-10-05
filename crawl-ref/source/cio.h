@@ -10,9 +10,11 @@
 #define CIO_H
 
 #include "AppHdr.h"
+#include "enum.h"
 #include "externs.h"
 #include "defines.h"
 #include "directn.h"
+
 #include <cctype>
 #include <string>
 #include <vector>
@@ -50,7 +52,7 @@ int c_getch();
 // Converts a key to a direction key, converting keypad and other sequences
 // to vi key sequences (shifted/control key directions are also handled). Non
 // direction keys (hopefully) pass through unmangled.
-int unmangle_direction_keys(int keyin, int keymap = 0,
+int unmangle_direction_keys(int keyin, KeymapContext keymap = KC_DEFAULT,
                             bool fake_ctrl = true, bool fake_shift = true);
 
 void get_input_line( char *const buff, int len );

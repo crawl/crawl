@@ -1372,6 +1372,22 @@ enum job_type
     JOB_UNKNOWN = 100
 };
 
+enum KeymapContext {
+    KC_DEFAULT,         // For no-arg getchm(), must be zero.
+    KC_LEVELMAP,        // When in the 'X' level map
+    KC_TARGETING,       // Only during 'x' and other targeting modes
+    KC_CONFIRM,         // When being asked y/n/q questions
+    KC_MENU,            // For menus
+
+#ifdef USE_TILE
+    KC_TILE,            // For context_for_command()
+#endif
+
+    KC_CONTEXT_COUNT,   // Must always be the last real context
+
+    KC_NONE
+};
+
 // This order is *critical*. Don't mess with it (see mon_enchant)
 enum kill_category
 {

@@ -27,9 +27,9 @@ static keycode_type _numpad2vi(keycode_type key)
 }
 #endif
 
-int unmangle_direction_keys(int keyin, int km, bool fake_ctrl, bool fake_shift)
+int unmangle_direction_keys(int keyin, KeymapContext keymap,
+                            bool fake_ctrl, bool fake_shift)
 {
-    const KeymapContext keymap = static_cast<KeymapContext>(km);
 #ifdef UNIX
     // Kludging running and opening as two character sequences
     // for Unix systems.  This is an easy way out... all the
