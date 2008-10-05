@@ -81,7 +81,7 @@ enum LOSSelect
 };
 
 static void _describe_feature(const coord_def& where, bool oos);
-static void _describe_cell(const coord_def& where);
+static void _describe_cell(const coord_def& where, bool in_range = true);
 
 static bool _find_object(  const coord_def& where, int mode, bool need_path,
                            int range );
@@ -712,36 +712,72 @@ class range_view_annotator
 {
 public:
     range_view_annotator(int range) {
-        orig_colours.init(-1);
-        if ( range < 0 )
+        do_anything = (range >= 0);
+        if (range < 0)
             return;
+
+        // Save and replace grid colours. -1 means unchanged.
+        orig_colours.init(-1);
+        const coord_def offset(9,9);
         for ( radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri )
         {
-            if (grid_is_solid(*ri) && grid_distance(you.pos(), *ri) > range)
+            if (grid_distance(you.pos(), *ri) > range)
             {
-                orig_colours(*ri - you.pos() + coord_def(9,9)) =
-                    env.grid_colours( *ri );
+                orig_colours(*ri - you.pos() + offset) = env.grid_colours(*ri);
                 env.grid_colours(*ri) = DARKGREY;
             }
         }
+
+        // Save and replace monster colours.
+        for (int i = 0; i < MAX_MONSTERS; ++i)
+        {
+            if (menv[i].alive()
+                && grid_distance(menv[i].pos(), you.pos()) > range
+                && you.can_see(&menv[i]))
+            {
+                orig_mon_colours[i] = menv[i].colour;
+                menv[i].colour = DARKGREY;
+            }
+            else
+            {
+                orig_mon_colours[i] = -1;
+            }
+        }
+
+        // Repaint.
         viewwindow(true, false);
     }
-
+    
     ~range_view_annotator() {
+
+        if (!do_anything)
+            return;
+
+        // Restore grid colours.
         coord_def c;
+        const coord_def offset(9,9);
         for ( c.x = 0; c.x < 19; ++c.x )
         {
             for ( c.y = 0; c.y < 19; ++c.y )
             {
                 const int old_colour = orig_colours(c);
                 if ( old_colour != -1 )
-                    env.grid_colours(you.pos()+c-coord_def(9,9)) = old_colour;
+                    env.grid_colours(you.pos() + c - offset) = old_colour;
             }
         }
+
+        // Restore monster colours.
+        for (int i = 0; i < MAX_MONSTERS; ++i)
+            if (orig_mon_colours[i] != -1)
+                menv[i].colour = orig_mon_colours[i];
+
+        // Repaint.
         viewwindow(true, false);
     }
 private:
+    bool do_anything;
     FixedArray<int,19,19> orig_colours;
+    int orig_mon_colours[MAX_MONSTERS];
 };
 
 bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
@@ -1456,7 +1492,9 @@ void direction(dist& moves, targeting_type restricts,
             if (!skip_iter)     // Don't clear before we get a chance to see.
                 mesclr(true);   // Maybe not completely necessary.
 
-            terse_describe_square(moves.target);
+            bool in_range = (range < 0
+                             || grid_distance(moves.target, you.pos()) < range);
+            terse_describe_square(moves.target, in_range);
         }
 
 #ifdef USE_TILE
@@ -1584,12 +1622,12 @@ std::string get_terse_square_desc(const coord_def &gc)
     return desc;
 }
 
-void terse_describe_square(const coord_def &c)
+void terse_describe_square(const coord_def &c, bool in_range)
 {
     if (!see_grid(c))
         _describe_oos_square(c);
     else if (in_bounds(c) )
-        _describe_cell(c);
+        _describe_cell(c, in_range);
 }
 
 void full_describe_square(const coord_def &c)
@@ -2698,12 +2736,42 @@ static std::string _stair_destination_description(const coord_def &pos)
 }
 #endif
 
+std::string _mon_enchantments_string(const monsters* mon)
+{
+    const bool paralysed = mons_is_paralysed(mon);
+    std::vector<std::string> enchant_descriptors;
+
+    for (mon_enchant_list::const_iterator e = mon->enchantments.begin();
+         e != mon->enchantments.end(); ++e)
+    {
+        const std::string tmp =
+            _describe_mons_enchantment(*mon, e->second, paralysed);
+
+        if (!tmp.empty())
+            enchant_descriptors.push_back(tmp);
+    }
+    if (paralysed)
+        enchant_descriptors.push_back("paralysed");
+    
+    if (!enchant_descriptors.empty())
+    {
+        return
+            mon->pronoun(PRONOUN_CAP)
+            + " is "
+            + comma_separated_line(enchant_descriptors.begin(),
+                                   enchant_descriptors.end())
+            + ".";
+    }
+    else
+        return "";
+}
+
 static void _describe_monster(const monsters *mon)
 {
     // First print type and equipment.
-    std::string text = get_monster_desc(mon);
-    text += ".";
-    print_formatted_paragraph(text, get_number_of_cols());
+    const int numcols = get_number_of_cols();
+    std::string text = get_monster_desc(mon) + ".";
+    print_formatted_paragraph(text, numcols);
 
     if (player_beheld_by(mon))
         mpr("You are beheld by her song.", MSGCH_EXAMINE);
@@ -2781,42 +2849,9 @@ static void _describe_monster(const monsters *mon)
         }
     }
 
-    std::string desc = "";
-    std::string last_desc = "";
-    std::string tmp = "";
-
-    const bool paralysed = mons_is_paralysed(mon);
-    if (paralysed)
-        last_desc += "paralysed";
-
-    for (mon_enchant_list::const_iterator e = mon->enchantments.begin();
-         e != mon->enchantments.end(); ++e)
-    {
-         tmp = _describe_mons_enchantment(*mon, e->second, paralysed);
-         if (!tmp.empty())
-         {
-             if (!desc.empty())
-                 desc += ", ";
-             desc += last_desc;
-             last_desc = tmp;
-         }
-    }
-
-    if (!last_desc.empty())
-    {
-        if (!desc.empty())
-            desc += ", and ";
-        desc += last_desc;
-    }
-
-    if (!desc.empty())
-    {
-        text = mon->pronoun(PRONOUN_CAP);
-        text += " is ";
-        text += desc;
-        text += ".";
-        print_formatted_paragraph(text, get_number_of_cols());
-    }
+    text = _mon_enchantments_string(mon);
+    if (!text.empty())
+        print_formatted_paragraph(text, numcols);
 }
 
 // This method is called in two cases:
@@ -2933,7 +2968,7 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     return desc;
 }
 
-static void _describe_cell(const coord_def& where)
+static void _describe_cell(const coord_def& where, bool in_range)
 {
     bool mimic_item = false;
     bool monster_described = false;
@@ -2945,36 +2980,43 @@ static void _describe_cell(const coord_def& where)
 
     if (mgrd(where) != NON_MONSTER)
     {
-        int i = mgrd(where);
+        const monsters* mon = &menv[mgrd(where)];
 
-        if (_mon_submerged_in_water(&menv[i]))
+        if (_mon_submerged_in_water(mon))
         {
             mpr("There is a strange disturbance in the water here.",
                 MSGCH_EXAMINE_FILTER);
         }
 
 #if DEBUG_DIAGNOSTICS
-        if (!player_monster_visible( &menv[i] ))
+        if (!player_monster_visible(mon))
             mpr( "There is a non-visible monster here.", MSGCH_DIAGNOSTICS );
 #else
-        if (!player_monster_visible( &menv[i] ))
+        if (!player_monster_visible(mon))
             goto look_clouds;
 #endif
 
-        _describe_monster(&menv[i]);
+        _describe_monster(mon);
 
-        if (mons_is_mimic( menv[i].type ))
+        if (mons_is_mimic(mon->type))
         {
             mimic_item = true;
             item_described = true;
         }
         else
-            monster_described = true;
+        {
+            if ( !in_range )
+            {
+                mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
+                     mon->pronoun(PRONOUN_CAP).c_str());
+            }
+            monster_described = true;            
+        }
 
 #if DEBUG_DIAGNOSTICS
-        debug_stethoscope(i);
+        debug_stethoscope(mgrd(where));
 #endif
-        if (Options.tutorial_left && tutorial_monster_interesting(&menv[i]))
+        if (Options.tutorial_left && tutorial_monster_interesting(mon))
         {
             std::string msg;
 #ifdef USE_TILE
