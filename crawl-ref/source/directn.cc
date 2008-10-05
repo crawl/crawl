@@ -1604,7 +1604,7 @@ void full_describe_square(const coord_def &c)
     if (mid != NON_MONSTER && player_monster_visible(&menv[mid]))
     {
         // First priority: monsters.
-        describe_monsters(static_cast<const monsters>(menv[mid]));
+        describe_monsters(menv[mid]);
     }
     else if (oid != NON_ITEM)
     {

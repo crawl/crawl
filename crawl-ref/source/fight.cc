@@ -852,8 +852,7 @@ bool melee_attack::player_attack()
     if ((did_primary_hit || did_hit) && def->alive()
         && where == defender->pos())
     {
-        const monsters *mons = static_cast<const monsters*>(def);
-        print_wounds(mons);
+        print_wounds(def);
     }
 
     return (did_primary_hit || did_hit);
