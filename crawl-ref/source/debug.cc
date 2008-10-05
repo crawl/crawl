@@ -1844,11 +1844,11 @@ void debug_stethoscope(int mon)
     mprf(MSGCH_DIAGNOSTICS,
          "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) god=%s",
          ((hab == HT_LAND)                       ? "land" :
-          (hab == HT_LAND_AMPHIBIOUS)            ? "land (amphibious)" :
-          (hab == HT_WATER_AMPHIBIOUS)           ? "water (amphibious)" :
+          (hab == HT_AMPHIBIOUS_LAND)            ? "land (amphibious)" :
+          (hab == HT_AMPHIBIOUS_WATER)           ? "water (amphibious)" :
           (hab == HT_WATER)                      ? "water" :
           (hab == HT_LAVA)                       ? "lava" :
-          (hab == HT_ROCK)                       ? "rock" :
+          (hab == HT_ROCK)                       ? "rock"
                                                  : "unknown"),
          (mons_is_sleeping(&mons)        ? "sleep" :
           mons_is_wandering(&mons)       ? "wander" :
