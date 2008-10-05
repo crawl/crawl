@@ -6682,7 +6682,7 @@ int monsters::action_energy(energy_use_type et) const
             // (HT_LAND, such as hydras) and those that favour water
             // (HT_WATER, such as merfolk), but that's something we
             // can think about.
-            if (mons_class_flag(type, M_AMPHIBIOUS))
+            if (mons_class_amphibious(type))
                 return div_rand_round(mu.swim * 7, 10);
             else
                 return mu.swim;
