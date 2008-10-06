@@ -5294,7 +5294,7 @@ static bool _handle_throw(monsters *monster, bolt & beem)
     }
 
     // Zombies are always too stupid to do this.
-    if (mons_itemuse(monster->type) < MONUSE_OPEN_DOORS)
+    if (mons_itemuse(monster) < MONUSE_OPEN_DOORS)
         return (false);
 
     const bool archer = mons_class_flag(monster->type, M_ARCHER);
@@ -5717,8 +5717,8 @@ static void _handle_monster_move(int i, monsters *monster)
         }
 
         if (igrd(monster->pos()) != NON_ITEM
-            && (mons_itemuse(monster->type) == MONUSE_WEAPONS_ARMOUR
-                || mons_itemuse(monster->type) == MONUSE_EATS_ITEMS))
+            && (mons_itemuse(monster) == MONUSE_WEAPONS_ARMOUR
+                || mons_itemuse(monster) == MONUSE_EATS_ITEMS))
         {
             // Keep neutral and charmed monsters from picking up stuff.
             // Same for friendlies if friendly_pickup is set to "none".
@@ -6105,7 +6105,7 @@ static bool _handle_pickup(monsters *monster)
         return (false);
     }
 
-    if (mons_itemuse(monster->type) == MONUSE_EATS_ITEMS)
+    if (mons_itemuse(monster) == MONUSE_EATS_ITEMS)
     {
         // Friendly jellies won't eat.
         if (monster->attitude != ATT_HOSTILE)
@@ -6952,13 +6952,13 @@ static bool _monster_move(monsters *monster)
         if (mons_is_zombified(monster))
         {
             // For zombies, monster type is kept in mon->base_monster.
-            if (mons_itemuse(monster->base_monster) >= MONUSE_OPEN_DOORS)
+            if (mons_class_itemuse(monster->base_monster) >= MONUSE_OPEN_DOORS)
             {
                 _mons_open_door(monster, newpos);
                 return (true);
             }
         }
-        else if (mons_itemuse(monster->type) >= MONUSE_OPEN_DOORS)
+        else if (mons_itemuse(monster) >= MONUSE_OPEN_DOORS)
         {
             _mons_open_door(monster, newpos);
             return (true);
@@ -6967,7 +6967,7 @@ static bool _monster_move(monsters *monster)
 
     // Jellies eat doors.  Yum!
     if ((grd(newpos) == DNGN_CLOSED_DOOR || grd(newpos) == DNGN_OPEN_DOOR)
-        && mons_itemuse(monster->type) == MONUSE_EATS_ITEMS)
+        && mons_itemuse(monster) == MONUSE_EATS_ITEMS)
     {
         grd(newpos) = DNGN_FLOOR;
 

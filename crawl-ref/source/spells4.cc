@@ -1845,7 +1845,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                     explode         = true;
                     beam.ex_size    = petrifying ? 1 : 2;
                     beam.name       = "blast of petrified fragments";
-                    beam.colour     = mon->colour;
+                    beam.colour     = mons_class_colour(mon->type);
                     beam.damage.num = petrifying ? 2 : 3;
                     if (player_hurt_monster(midx, beam.damage.roll()))
                         beam.damage.num++;

@@ -453,7 +453,8 @@ bool mons_wall_shielded(const monsters *mon);
 /* ***********************************************************************
  * called from: dungeon - monstuff
  * *********************************************************************** */
-mon_itemuse_type mons_itemuse(int mc);
+mon_itemuse_type mons_class_itemuse(int mc);
+mon_itemuse_type mons_itemuse(const monsters *mon);
 
 
 // last updated 12may2000 {dlb}
@@ -559,16 +560,16 @@ habitat_type mons_secondary_habitat(const monsters *mon);
 
 bool intelligent_ally(const monsters *mon);
 
-bool mons_res_sticky_flame( const monsters *mon );
-int mons_res_cold( const monsters *mon );
-int mons_res_elec( const monsters *mon );
-int mons_res_fire( const monsters *mon );
-int mons_res_steam( const monsters *mon );
-int mons_res_poison( const monsters *mon );
-int mons_res_acid( const monsters *mon );
-int mons_res_negative_energy( const monsters *mon );
-int mons_res_miasma( const monsters *mon );
-bool mons_res_asphyx( const monsters *mon );
+bool mons_res_sticky_flame(const monsters *mon);
+int mons_res_cold(const monsters *mon);
+int mons_res_elec(const monsters *mon);
+int mons_res_fire(const monsters *mon);
+int mons_res_steam(const monsters *mon);
+int mons_res_poison(const monsters *mon);
+int mons_res_acid(const monsters *mon);
+int mons_res_negative_energy(const monsters *mon);
+int mons_res_miasma(const monsters *mon);
+bool mons_res_asphyx(const monsters *mon);
 
 
 // last updated 12may2000 {dlb}

@@ -328,12 +328,12 @@ bool mons_class_flag(int mc, int bf)
     return ((me->bitfields & bf) != 0);
 }
 
-static int _scan_mon_inv_randarts( const monsters *mon,
+static int _scan_mon_inv_randarts(const monsters *mon,
                                   randart_prop_type ra_prop)
 {
     int ret = 0;
 
-    if (mons_itemuse( mon->type ) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
         const int weapon = mon->inv[MSLOT_WEAPON];
         const int second = mon->inv[MSLOT_MISSILE]; // Two-headed ogres, etc.
@@ -760,15 +760,20 @@ unsigned mons_char(int mc)
     return monster_symbols[mc].glyph;
 }
 
-int mons_class_colour(int mc)
-{
-    return monster_symbols[mc].colour;
-}
-
-mon_itemuse_type mons_itemuse(int mc)
+mon_itemuse_type mons_class_itemuse(int mc)
 {
     ASSERT(smc);
     return (smc->gmon_use);
+}
+
+mon_itemuse_type mons_itemuse(const monsters *mon)
+{
+    return (mons_class_itemuse(mon->type));
+}
+
+int mons_class_colour(int mc)
+{
+    return (monster_symbols[mc].colour);
 }
 
 int mons_colour(const monsters *mon)
@@ -976,19 +981,17 @@ bool check_mons_resist_magic( const monsters *monster, int pow )
     return (mrch2 < mrchance);
 }
 
-int mons_res_elec( const monsters *mon )
+int mons_res_elec(const monsters *mon)
 {
-    int mc = mon->type;
-
     // This is a variable, not a player_xx() function, so can be above 1.
     int u = 0;
 
     u += get_mons_resists(mon).elec;
 
     // Don't bother checking equipment if the monster can't use it.
-    if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += _scan_mon_inv_randarts( mon, RAP_ELECTRICITY );
+        u += _scan_mon_inv_randarts(mon, RAP_ELECTRICITY);
 
         // No ego armour, but storm dragon.
         const int armour = mon->inv[MSLOT_ARMOUR];
@@ -1014,18 +1017,16 @@ bool mons_res_asphyx(const monsters *mon)
             || get_mons_resists(mon).asphyx > 0);
 }
 
-int mons_res_acid( const monsters *mon )
+int mons_res_acid(const monsters *mon)
 {
     return get_mons_resists(mon).acid;
 }
 
-int mons_res_poison( const monsters *mon )
+int mons_res_poison(const monsters *mon)
 {
-    int mc = mon->type;
-
     int u = get_mons_resists(mon).poison;
 
-    if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
         u += _scan_mon_inv_randarts( mon, RAP_POISON );
 
@@ -1043,14 +1044,14 @@ int mons_res_poison( const monsters *mon )
             }
 
             // ego armour resistance
-            if (get_armour_ego_type( mitm[armour] ) == SPARM_POISON_RESISTANCE)
+            if (get_armour_ego_type(mitm[armour]) == SPARM_POISON_RESISTANCE)
                 u += 1;
         }
 
         if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
         {
             // ego armour resistance
-            if (get_armour_ego_type( mitm[shield] ) == SPARM_POISON_RESISTANCE)
+            if (get_armour_ego_type(mitm[shield]) == SPARM_POISON_RESISTANCE)
                 u += 1;
         }
     }
@@ -1060,13 +1061,13 @@ int mons_res_poison( const monsters *mon )
     return (u);
 }
 
-bool mons_res_sticky_flame( const monsters *mon )
+bool mons_res_sticky_flame(const monsters *mon)
 {
     return (get_mons_resists(mon).sticky_flame
             || mon->has_equipped(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR));
 }
 
-int mons_res_steam( const monsters *mon )
+int mons_res_steam(const monsters *mon)
 {
     int res = get_mons_resists(mon).steam;
     if (mon->has_equipped(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
@@ -1074,17 +1075,15 @@ int mons_res_steam( const monsters *mon )
     return (res + mons_res_fire(mon) / 2);
 }
 
-int mons_res_fire( const monsters *mon )
+int mons_res_fire(const monsters *mon)
 {
-    int mc = mon->type;
-
     const mon_resist_def res = get_mons_resists(mon);
 
     int u = std::min(res.fire + res.hellfire * 3, 3);
 
-    if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += _scan_mon_inv_randarts( mon, RAP_FIRE );
+        u += _scan_mon_inv_randarts(mon, RAP_FIRE);
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         const int shield = mon->inv[MSLOT_SHIELD];
@@ -1101,7 +1100,7 @@ int mons_res_fire( const monsters *mon )
             }
 
             // check ego resistance
-            const int ego = get_armour_ego_type( mitm[armour] );
+            const int ego = get_armour_ego_type(mitm[armour]);
             if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
                 u += 1;
         }
@@ -1109,7 +1108,7 @@ int mons_res_fire( const monsters *mon )
         if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
         {
             // check ego resistance
-            const int ego = get_armour_ego_type( mitm[shield] );
+            const int ego = get_armour_ego_type(mitm[shield]);
             if (ego == SPARM_FIRE_RESISTANCE || ego == SPARM_RESISTANCE)
                 u += 1;
         }
@@ -1123,15 +1122,13 @@ int mons_res_fire( const monsters *mon )
     return (u);
 }
 
-int mons_res_cold( const monsters *mon )
+int mons_res_cold(const monsters *mon)
 {
-    int mc = mon->type;
-
     int u = get_mons_resists(mon).cold;
 
-    if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += _scan_mon_inv_randarts( mon, RAP_COLD );
+        u += _scan_mon_inv_randarts(mon, RAP_COLD);
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         const int shield = mon->inv[MSLOT_SHIELD];
@@ -1148,7 +1145,7 @@ int mons_res_cold( const monsters *mon )
             }
 
             // check ego resistance
-            const int ego = get_armour_ego_type( mitm[armour] );
+            const int ego = get_armour_ego_type(mitm[armour]);
             if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
                 u += 1;
         }
@@ -1156,7 +1153,7 @@ int mons_res_cold( const monsters *mon )
         if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
         {
             // check ego resistance
-            const int ego = get_armour_ego_type( mitm[shield] );
+            const int ego = get_armour_ego_type(mitm[shield]);
             if (ego == SPARM_COLD_RESISTANCE || ego == SPARM_RESISTANCE)
                 u += 1;
         }
@@ -1170,15 +1167,14 @@ int mons_res_cold( const monsters *mon )
     return (u);
 }
 
-int mons_res_miasma( const monsters *mon )
+int mons_res_miasma(const monsters *mon)
 {
     return (mons_holiness(mon) != MH_NATURAL
             || mon->type == MONS_DEATH_DRAKE ? 3 : 0);
 }
 
-int mons_res_negative_energy( const monsters *mon )
+int mons_res_negative_energy(const monsters *mon)
 {
-    int mc = mon->type;
     const mon_holy_type holiness = mons_holiness(mon);
 
     if (mons_is_unholy(mon)
@@ -1194,9 +1190,9 @@ int mons_res_negative_energy( const monsters *mon )
 
     int u = 0;
 
-    if (mons_itemuse(mc) >= MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
-        u += _scan_mon_inv_randarts( mon, RAP_NEGATIVE_ENERGY );
+        u += _scan_mon_inv_randarts(mon, RAP_NEGATIVE_ENERGY);
 
         const int armour = mon->inv[MSLOT_ARMOUR];
         const int shield = mon->inv[MSLOT_SHIELD];
@@ -1204,14 +1200,14 @@ int mons_res_negative_energy( const monsters *mon )
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         {
             // check for ego resistance
-            if (get_armour_ego_type( mitm[armour] ) == SPARM_POSITIVE_ENERGY)
+            if (get_armour_ego_type(mitm[armour]) == SPARM_POSITIVE_ENERGY)
                 u += 1;
         }
 
         if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR)
         {
             // check for ego resistance
-            if (get_armour_ego_type( mitm[shield] ) == SPARM_POSITIVE_ENERGY)
+            if (get_armour_ego_type(mitm[shield]) == SPARM_POSITIVE_ENERGY)
                 u += 1;
         }
     }
@@ -1220,7 +1216,7 @@ int mons_res_negative_energy( const monsters *mon )
         u = 3;
 
     return (u);
-}                               // end mons_res_negative_energy()
+}
 
 bool mons_is_holy(const monsters *mon)
 {
@@ -1364,10 +1360,10 @@ int exper_value( const struct monsters *monster )
     // These are some values we care about.
     const int  speed       = mons_speed(mclass);
     const int  modifier    = _mons_exp_mod(mclass);
-    const int  item_usage  = mons_itemuse(mclass);
+    const int  item_usage  = mons_itemuse(monster);
 
     // XXX: Shapeshifters can qualify here, even though they can't cast.
-    const bool spellcaster = mons_class_flag( mclass, M_SPELLCASTER );
+    const bool spellcaster = mons_class_flag(mclass, M_SPELLCASTER);
 
     // Early out for no XP monsters.
     if (mons_class_flag(mclass, M_NO_EXP_GAIN))
@@ -6033,7 +6029,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         }
 
         // Handled in handle_pickup.
-        if (mons_itemuse(type) == MONUSE_EATS_ITEMS)
+        if (mons_itemuse(this) == MONUSE_EATS_ITEMS)
             break;
 
         // The enchantment doubles as the durability of a net

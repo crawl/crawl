@@ -2004,7 +2004,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 error = "Can't give spec items to a random monster.";
                 return (slot);
             }
-            else if (mons_itemuse(mid) < MONUSE_STARTING_EQUIPMENT)
+            else if (mons_class_itemuse(mid) < MONUSE_STARTING_EQUIPMENT)
             {
                 error = make_stringf("Monster '%s' can't use items.",
                                      mon_str.c_str());

@@ -899,17 +899,17 @@ static int _place_monster_aux( const mgen_data &mg,
 
     if (mg.cls == MONS_DANCING_WEAPON && mg.number != 1) // ie not from spell
     {
-        give_item( id, mg.power );
+        give_item(id, mg.power);
 
         if (menv[id].inv[MSLOT_WEAPON] != NON_ITEM)
-            menv[id].colour = mitm[ menv[id].inv[MSLOT_WEAPON] ].colour;
+            menv[id].colour = mitm[menv[id].inv[MSLOT_WEAPON]].colour;
     }
-    else if (mons_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
+    else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
-        give_item( id, mg.power );
+        give_item(id, mg.power);
         // Give these monsters a second weapon -- bwr
         if (mons_wields_two_weapons(mg.cls))
-            give_item( id, mg.power );
+            give_item(id, mg.power);
 
         unwind_var<int> save_speedinc(menv[id].speed_increment);
         menv[id].wield_melee_weapon(false);
@@ -2656,10 +2656,15 @@ bool monster_pathfind::traversable(coord_def p)
         return (false);
 
     // Monsters that can't open doors won't be able to pass them.
-    if ((grd(p) == DNGN_CLOSED_DOOR || grd(p) == DNGN_SECRET_DOOR)
-        && mons_itemuse(montype) < MONUSE_OPEN_DOORS)
+    if (grd(p) == DNGN_CLOSED_DOOR || grd(p) == DNGN_SECRET_DOOR)
     {
-        return (false);
+        if (mons_is_zombified(mons))
+        {
+            if (mons_class_itemuse(montype) < MONUSE_OPEN_DOORS)
+                return (false);
+        }
+        else if (mons_itemuse(mons) < MONUSE_OPEN_DOORS)
+            return (false);
     }
 
     // Your friends only know about doors you know about, unless they feel

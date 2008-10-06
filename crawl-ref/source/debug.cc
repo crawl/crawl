@@ -4012,7 +4012,7 @@ void wizard_apply_monster_blessing(monsters* mon)
 #ifdef WIZARD
 void wizard_give_monster_item(monsters *mon)
 {
-    mon_itemuse_type item_use = mons_itemuse( mon->type );
+    mon_itemuse_type item_use = mons_itemuse(mon);
     if (item_use < MONUSE_STARTING_EQUIPMENT)
     {
         mpr("That type of monster can't use any items.");

@@ -656,7 +656,7 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
 
     monster_type type = static_cast<monster_type>(monnum);
 
-    if (mons_itemuse(monnum) < MONUSE_STARTING_EQUIPMENT)
+    if (mons_itemuse(mon) < MONUSE_STARTING_EQUIPMENT)
         return;
 
     // If the player picked up and dropped the corpse then all its
