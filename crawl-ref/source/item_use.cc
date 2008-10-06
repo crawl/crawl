@@ -1854,7 +1854,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     pbolt.set_target(thr);
 
-    const item_def& thrown = you.inv[throw_2];
+    item_def& thrown = you.inv[throw_2];
 
     // Get the ammo/weapon type.  Convenience.
     const object_class_type wepClass = thrown.base_type;
@@ -1863,14 +1863,19 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // Figure out if we're thrown or launched.
     const launch_retval projected = is_launched(&you, you.weapon(), thrown);
 
+    // Hack the quantity to 1 while getting the name.
+    const int old_quantity = thrown.quantity;
+    thrown.quantity = 1;
     pbolt.name     = thrown.name(DESC_PLAIN, false, false, false);
+    thrown.quantity = old_quantity;
+
     pbolt.thrower  = KILL_YOU_MISSILE;
     pbolt.source   = you.pos();
     pbolt.colour   = thrown.colour;
     pbolt.flavour  = BEAM_MISSILE;
     pbolt.aux_source.clear();
-    // pbolt.range is set below
 
+    // Determine range.
     int max_range = 0;
     int range = 0;
 
@@ -1955,10 +1960,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // Now start real firing!
     origin_set_unknown(item);
 
-    if (is_blood_potion(item) && you.inv[throw_2].quantity > 1)
+    if (is_blood_potion(item) && thrown.quantity > 1)
     {
         // Initialize thrown potion with oldest potion in stack.
-        long val = remove_oldest_blood_potion(you.inv[throw_2]);
+        long val = remove_oldest_blood_potion(thrown);
         val -= you.num_turns;
         item.props.clear();
         init_stack_blood_potions(item, val);
@@ -1995,18 +2000,14 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     pbolt.type = dchar_glyph(zapsym);
 
-    // Get the launcher class,type.  Convenience.
-    if (you.equip[EQ_WEAPON] < 0)
+    // Get the launcher class, type.  Convenience.
+    if (!you.weapon())
         lnchType = NUM_WEAPONS;
     else
-    {
-        lnchType =
-            static_cast<weapon_type>( you.inv[you.equip[EQ_WEAPON]].sub_type );
-    }
+        lnchType = static_cast<weapon_type>(you.weapon()->sub_type);
 
     // baseHit and damage for generic objects
     baseHit = std::min(0, you.strength - item_mass(item) / 10);
-
     baseDam = item_mass(item) / 100;
 
     // special: might be throwing generic weapon;
@@ -2021,7 +2022,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     int bow_brand = SPWPN_NORMAL;
 
     if (projected == LRET_LAUNCHED)
-        bow_brand = get_weapon_brand(you.inv[you.equip[EQ_WEAPON]]);
+        bow_brand = get_weapon_brand(*you.weapon());
 
     const int ammo_brand = get_ammo_brand( item );
     bool poisoned = (ammo_brand == SPMSL_POISONED);
