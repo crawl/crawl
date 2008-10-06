@@ -237,7 +237,6 @@ bool mons_speaks(const monsters *monster)
     if (monster->has_ench(ENCH_CHARM) && !one_chance_in(3))
         return (false);
 
-
     std::vector<std::string> prefixes;
     if (mons_neutral(monster))
     {
