@@ -218,7 +218,7 @@ bool monsters::gain_exp(int exp)
 
     if (levels_gained)
     {
-        if (mons_intel(type) >= I_NORMAL)
+        if (mons_intel(this) >= I_NORMAL)
             simple_monster_message(&mcopy, " looks more experienced.");
         else
             simple_monster_message(&mcopy, " looks stronger.");

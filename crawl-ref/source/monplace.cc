@@ -2665,7 +2665,7 @@ bool monster_pathfind::traversable(coord_def p)
     // Your friends only know about doors you know about, unless they feel
     // at home in this branch.
     if (grd(p) == DNGN_SECRET_DOOR && mons_friendly(mons)
-        && (mons_intel(mons->type) < I_NORMAL
+        && (mons_intel(mons) < I_NORMAL
             || !mons_is_native_in_branch(mons)))
     {
         return (false);

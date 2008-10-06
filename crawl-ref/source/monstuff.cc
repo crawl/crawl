@@ -2010,7 +2010,7 @@ void behaviour_event(monsters *mon, int event, int src,
 {
     beh_type old_behaviour = mon->behaviour;
 
-    bool isSmart          = (mons_intel(mon->type) > I_ANIMAL);
+    bool isSmart          = (mons_intel(mon) > I_ANIMAL);
     bool wontAttack       = mons_wont_attack(mon);
     bool sourceWontAttack = false;
     bool setTarget        = false;
@@ -2189,7 +2189,7 @@ void behaviour_event(monsters *mon, int event, int src,
 
 static bool _choose_random_patrol_target_grid(monsters *mon)
 {
-    const int intel = mons_intel(mon->type);
+    const int intel = mons_intel(mon);
 
     // Zombies will occasionally just stand around.
     // This does not mean that they don't move every second turn. Rather,
@@ -2345,7 +2345,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
 {
     // Highly intelligent monsters are perfectly capable of pathfinding
     // and don't need their neighbour's advice.
-    const mon_intel_type intel = mons_intel(mon->type);
+    const mon_intel_type intel = mons_intel(mon);
     if (intel > I_NORMAL)
         return;
 
@@ -2370,7 +2370,7 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
 
         // Don't restrict smarter monsters as they might find a path
         // a dumber monster wouldn't.
-        if (mons_intel(m->type) > intel)
+        if (mons_intel(m) > intel)
             continue;
 
         // Monsters of differing habitats might prefer different routes.
@@ -2517,7 +2517,7 @@ static void _handle_behaviour(monsters *mon)
     bool proxFoe;
     bool isHurt     = (mon->hit_points <= mon->max_hit_points / 4 - 1);
     bool isHealthy  = (mon->hit_points > mon->max_hit_points / 2);
-    bool isSmart    = (mons_intel(mon->type) > I_ANIMAL);
+    bool isSmart    = (mons_intel(mon) > I_ANIMAL);
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isMobile   = !mons_is_stationary(mon);
     bool isPacified = mons_is_pacified(mon);
@@ -2551,7 +2551,7 @@ static void _handle_behaviour(monsters *mon)
         else if (!see_grid(mon->pos()))
             proxPlayer = false;
 
-        const int intel = mons_intel(mon->type);
+        const int intel = mons_intel(mon);
         // Now, the corollary to that is that sometimes, if a
         // player is right next to a monster, they will 'see'.
         if (grid_distance( you.pos(), mon->pos() ) == 1
@@ -2585,7 +2585,7 @@ static void _handle_behaviour(monsters *mon)
     {
         // Intelligent monsters prefer to attack the player,
         // even when berserking.
-        if (!isFriendly && proxPlayer && mons_intel(mon->type) >= I_NORMAL)
+        if (!isFriendly && proxPlayer && mons_intel(mon) >= I_NORMAL)
             mon->foe = MHITYOU;
         else
             _set_nearest_monster_foe(mon);
@@ -2751,7 +2751,7 @@ static void _handle_behaviour(monsters *mon)
 
                 // Hack: smarter monsters will tend to pursue the player longer.
                 int memory = 0;
-                switch (mons_intel(monster_index(mon)))
+                switch (mons_intel(mon))
                 {
                 case I_HIGH:
                     memory = 100 + random2(200);
@@ -2802,7 +2802,7 @@ static void _handle_behaviour(monsters *mon)
                 // Smart monsters that can fire through walls won't use
                 // pathfinding, and it's also not necessary if the monster
                 // is already adjacent to you.
-                if (potentially_blocking && mons_intel(mon->type) >= I_NORMAL
+                if (potentially_blocking && mons_intel(mon) >= I_NORMAL
                         && mons_has_los_ability(mon->type)
                     || grid_distance(mon->pos(), you.pos()) == 1)
                 {
@@ -2820,7 +2820,7 @@ static void _handle_behaviour(monsters *mon)
                     // across the blocking terrain, and is smart enough to
                     // realize that.
                     if (!potentially_blocking && !mons_flies(mon)
-                        && (mons_intel(mon->type) < I_NORMAL
+                        && (mons_intel(mon) < I_NORMAL
                             || !mons_has_ranged_spell(mon)
                                && !mons_has_ranged_attack(mon)))
                     {
@@ -2893,7 +2893,7 @@ static void _handle_behaviour(monsters *mon)
                     const bool native = mons_is_native_in_branch(mon);
 
                     int range = 0;
-                    switch (mons_intel(mon->type))
+                    switch (mons_intel(mon))
                     {
                     case I_PLANT:
                         range = 2;
@@ -3212,7 +3212,7 @@ static void _handle_behaviour(monsters *mon)
                         //  * forget about patrolling
                         //  * head back to patrol point
 
-                        if (mons_intel(mon->type) == I_PLANT)
+                        if (mons_intel(mon) == I_PLANT)
                         {
                             // Really stupid monsters forget where they're
                             // supposed to be.
@@ -6467,7 +6467,7 @@ static int _estimated_trap_damage(trap_type trap)
 static bool _is_trap_safe(const monsters *monster, const coord_def& where,
                           bool just_check)
 {
-    const int intel = mons_intel(monster->type);
+    const int intel = mons_intel(monster);
 
     // Dumb monsters don't care at all.
     if (intel == I_PLANT)
@@ -6817,7 +6817,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
         case CLOUD_GREY_SMOKE:
             // This isn't harmful, but dumb critters might think so.
-            if (mons_intel(monster->type) > I_ANIMAL || coinflip())
+            if (mons_intel(monster) > I_ANIMAL || coinflip())
                 return (true);
 
             if (mons_res_fire(monster) > 0)
@@ -6833,7 +6833,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
         // If we get here, the cloud is potentially harmful.
         // Exceedingly dumb creatures will still wander in.
-        if (mons_intel(monster->type) != I_PLANT)
+        if (mons_intel(monster) != I_PLANT)
             return (false);
     }
 
@@ -6946,7 +6946,7 @@ static bool _monster_move(monsters *monster)
     // (they _live_ in the dungeon!)
     if (grd(newpos) == DNGN_CLOSED_DOOR
         || grd(newpos) == DNGN_SECRET_DOOR
-           && mons_intel(monster_index(monster)) >= I_NORMAL)
+           && mons_intel(monster) >= I_NORMAL)
     {
         if (mons_is_zombified(monster))
         {

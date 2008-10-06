@@ -1169,7 +1169,7 @@ static int _intoxicate_monsters(coord_def where, int pow, int garbage)
     int mon = mgrd(where);
 
     if (mon == NON_MONSTER
-        || mons_intel(menv[mon].type) < I_NORMAL
+        || mons_intel(&menv[mon]) < I_NORMAL
         || mons_holiness(&menv[mon]) != MH_NATURAL
         || mons_res_poison(&menv[mon]) > 0)
     {

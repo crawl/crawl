@@ -53,7 +53,7 @@
 #include "xom.h"
 
 static int  _determine_chunk_effect(int which_chunk_type, bool rotten_chunk);
-static void _eat_chunk( int chunk_effect, bool cannibal, int mon_intel = 0);
+static void _eat_chunk(int chunk_effect, bool cannibal, int mon_intel = 0);
 static void _eating(unsigned char item_class, int item_type);
 static void _describe_food_change(int hunger_increment);
 static bool _food_change(bool suppress_message);
@@ -1100,8 +1100,8 @@ void eat_from_inventory(int which_inventory_slot)
     {
         const int mons_type  = food.plus;
         const bool cannibal  = is_player_same_species(mons_type);
-        const int intel      = mons_intel(mons_type) - I_ANIMAL;
-        const int chunk_type = mons_corpse_effect( mons_type );
+        const int intel      = mons_class_intel(mons_type) - I_ANIMAL;
+        const int chunk_type = mons_corpse_effect(mons_type);
         const bool rotten    = food_is_rotten(food);
 
         if (rotten && !_player_can_eat_rotten_meat(true))
@@ -1131,16 +1131,16 @@ void eat_floor_item(int item_link)
     }
     else if (food.sub_type == FOOD_CHUNK)
     {
-        const int chunk_type = mons_corpse_effect( food.plus );
-        const int intel      = mons_intel( food.plus ) - I_ANIMAL;
-        const bool cannibal  = is_player_same_species( food.plus );
+        const int chunk_type = mons_corpse_effect(food.plus);
+        const int intel      = mons_class_intel(food.plus) - I_ANIMAL;
+        const bool cannibal  = is_player_same_species(food.plus);
         const bool rotten    = food_is_rotten(food);
 
         if (rotten && !_player_can_eat_rotten_meat(true))
             return;
 
         _eat_chunk(_determine_chunk_effect(chunk_type, rotten), cannibal,
-        intel);
+                   intel);
     }
     else
         _eating( food.base_type, food.sub_type );
@@ -1352,7 +1352,7 @@ static void _say_chunk_flavour(bool likes_chunks)
 
 // Never called directly - chunk_effect values must pass
 // through food::_determine_chunk_effect() first. {dlb}:
-static void _eat_chunk( int chunk_effect, bool cannibal, int mon_intel )
+static void _eat_chunk(int chunk_effect, bool cannibal, int mon_intel)
 {
 
     bool likes_chunks = (you.omnivorous() ||

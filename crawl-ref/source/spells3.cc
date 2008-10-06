@@ -633,7 +633,7 @@ bool cast_summon_horrible_things(int pow, god_type god)
 static bool _is_animatable_corpse(const item_def& item)
 {
     return (item.base_type == OBJ_CORPSES
-        && mons_zombie_size(item.plus) != Z_NOZOMBIE);
+        && mons_class_can_be_zombified(item.plus));
 }
 
 // Try to equip the zombie/skeleton with the objects it died with.

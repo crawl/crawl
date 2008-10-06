@@ -789,9 +789,19 @@ bool mons_class_is_zombified(int mc)
             || mc == MONS_SPECTRAL_THING);
 }
 
-bool mons_is_zombified(const monsters *monster)
+bool mons_is_zombified(const monsters *mon)
 {
-    return mons_class_is_zombified(monster->type);
+    return mons_class_is_zombified(mon->type);
+}
+
+bool mons_class_can_be_zombified(int mc)
+{
+    return (mons_zombie_size(mc) == Z_NOZOMBIE);
+}
+
+bool mons_can_be_zombified(const monsters *mon)
+{
+    return (mons_class_can_be_zombified(mon->type));
 }
 
 int downscale_zombie_damage(int damage)
@@ -1243,7 +1253,7 @@ bool mons_has_lifeforce(const monsters *mon)
 
 bool mons_skeleton(int mc)
 {
-    if (mons_zombie_size(mc) == Z_NOZOMBIE
+    if (!mons_class_can_be_zombified(mc)
         || mons_weight(mc) == 0 || (mons_class_flag(mc, M_NO_SKELETON)))
     {
         return (false);
@@ -2002,18 +2012,21 @@ static int _mons_exp_mod(int mc)
     return (smc->exp_mod);
 }
 
-
 int mons_speed(int mc)
 {
     ASSERT(smc);
     return (smc->speed);
 }
 
-
-mon_intel_type mons_intel(int mc)
+mon_intel_type mons_class_intel(int mc)
 {
     ASSERT(smc);
     return (smc->intel);
+}
+
+mon_intel_type mons_intel(const monsters *mon)
+{
+    return (mons_class_intel(mon->type));
 }
 
 habitat_type mons_class_habitat(int mc)
@@ -2062,7 +2075,7 @@ habitat_type mons_secondary_habitat(const monsters *mon)
 
 bool intelligent_ally(const monsters *mon)
 {
-    return (mon->attitude == ATT_FRIENDLY && mons_intel(mon->type) >= I_NORMAL);
+    return (mon->attitude == ATT_FRIENDLY && mons_intel(mon) >= I_NORMAL);
 }
 
 int mons_power(int mc)
@@ -2611,7 +2624,7 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
             return (false);
 
         // Only intelligent monsters estimate.
-        intel = mons_intel( mon->type );
+        intel = mons_intel(mon);
         if (intel != I_NORMAL && intel != I_HIGH)
             return (false);
 

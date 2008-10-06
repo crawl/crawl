@@ -1307,7 +1307,7 @@ bool check_awaken(monsters* monster)
         return (true);
 
     // I assume that creatures who can sense invisible are very perceptive.
-    mons_perc = 10 + (mons_intel(monster->type) * 4) + monster->hit_dice
+    mons_perc = 10 + (mons_intel(monster) * 4) + monster->hit_dice
                    + mons_sense_invis(monster) * 5;
 
     bool unnatural_stealthy = false; // "stealthy" only because of invisibility?

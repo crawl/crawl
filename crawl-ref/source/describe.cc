@@ -1831,7 +1831,7 @@ std::string get_item_description( const item_def &item, bool verbose,
 
             if (is_good_god(you.religion) && is_player_same_species(item.plus)
                 || you.religion == GOD_ZIN
-                   && mons_intel(item.plus) >= I_NORMAL)
+                   && mons_class_intel(item.plus) >= I_NORMAL)
             {
                 description << "$$" << god_name(you.religion) << " disapproves "
                                "of eating such meat.";

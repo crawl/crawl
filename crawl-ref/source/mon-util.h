@@ -545,7 +545,8 @@ bool mons_is_shapeshifter(const monsters *m);
 /* ***********************************************************************
  * called from: monstuff - spells4 - view
  * *********************************************************************** */
-mon_intel_type mons_intel(int mc);
+mon_intel_type mons_class_intel(int mc);
+mon_intel_type mons_intel(const monsters *mon);
 
 // Use mons_habitat() and mons_primary_habitat() wherever possible,
 // since the class variants do not handle zombies correctly.
@@ -600,6 +601,9 @@ int mons_zombie_size(int mc);
 monster_type mons_zombie_base(const monsters *monster);
 bool mons_class_is_zombified(int mc);
 bool mons_is_zombified(const monsters *monster);
+bool mons_class_can_be_zombified(int mc);
+bool mons_can_be_zombified(const monsters *mon);
+
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

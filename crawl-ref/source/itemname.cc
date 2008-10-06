@@ -2594,7 +2594,7 @@ const std::string menu_colour_item_prefix(const item_def &item, bool temp)
         if ((item.base_type == OBJ_CORPSES || item.sub_type == FOOD_CHUNK)
             && (is_good_god(you.religion) && is_player_same_species(item.plus)
                 || you.religion == GOD_ZIN
-                   && mons_intel(item.plus) >= I_NORMAL))
+                   && mons_class_intel(item.plus) >= I_NORMAL))
         {
             prefixes.push_back("evil_eating");
         }

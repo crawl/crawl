@@ -652,7 +652,7 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
-    if (mons_intel(mon->type) <= I_PLANT) // no self-awareness
+    if (mons_intel(mon) <= I_PLANT) // no self-awareness
         return (false);
 
     const mon_holy_type holiness = mons_holiness(mon);
@@ -671,7 +671,7 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     if (mons_is_sleeping(mon)) // not aware of what is happening
         return (false);
 
-    const int factor = (mons_intel(mon->type) <= I_ANIMAL) ? 3 : // animals
+    const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
                        (is_player_same_species(mon->type)) ? 2   // same species
                                                            : 1;  // other
 

@@ -267,7 +267,7 @@ bool mons_speaks(const monsters *monster)
     // animals only look at the current player form,
     // smart monsters at the actual player genus
     if (is_player_same_species(monster->type,
-                               mons_intel(monster->type) <= I_ANIMAL))
+                               mons_intel(monster) <= I_ANIMAL))
     {
         prefixes.push_back("related"); // maybe overkill for Beogh?
     }
@@ -373,7 +373,7 @@ bool mons_speaks(const monsters *monster)
     // include info on if the monster's intelligence is at odds with
     // its shape.
     mon_body_shape shape = get_mon_shape(monster);
-    mon_intel_type intel = mons_intel(monster->type);
+    mon_intel_type intel = mons_intel(monster);
     if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA
         && intel < I_NORMAL)
     {

@@ -1062,7 +1062,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     }
 
     // monster intelligence bonus
-    if (mons_intel(monster->type) == I_HIGH)
+    if (mons_intel(monster) == I_HIGH)
         exHitBonus += 10;
 
     // Now, if a monster is, for some reason, throwing something really

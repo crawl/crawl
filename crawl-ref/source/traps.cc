@@ -150,7 +150,7 @@ bool trap_def::is_known(const actor* act) const
     {
         const monsters* monster = static_cast<const monsters*>(act);
         const bool mechanical = (this->category() == DNGN_TRAP_MECHANICAL);
-        const int intel = mons_intel(monster->type);
+        const int intel = mons_intel(monster);
 
         // Smarter trap handling for intelligent monsters
         // * monsters native to a branch can be assumed to know the trap

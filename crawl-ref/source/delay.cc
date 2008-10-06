@@ -62,7 +62,7 @@ static bool _recite_mons_useless(const monsters *mon)
 {
     const mon_holy_type holiness = mons_holiness(mon);
 
-    return (mons_intel(mon->type) < I_NORMAL
+    return (mons_intel(mon) < I_NORMAL
             || holiness != MH_HOLY
                && holiness != MH_NATURAL
                && holiness != MH_UNDEAD
@@ -1110,7 +1110,7 @@ static void _finish_delay(const delay_queue_item &delay)
                                        "relatives.");
                 }
                 else if (you.religion == GOD_ZIN
-                         && mons_intel(item.plus) >= I_NORMAL)
+                         && mons_class_intel(item.plus) >= I_NORMAL)
                 {
                     simple_god_message(" expects more respect for this departed "
                                        "soul.");
