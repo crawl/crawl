@@ -801,7 +801,7 @@ bool mons_is_zombified(const monsters *mon)
 
 bool mons_class_can_be_zombified(int mc)
 {
-    return (mons_zombie_size(mc) == Z_NOZOMBIE);
+    return (mons_zombie_size(mc) != Z_NOZOMBIE);
 }
 
 bool mons_can_be_zombified(const monsters *mon)
