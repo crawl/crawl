@@ -4791,7 +4791,7 @@ static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon)
     case BEAM_ENSLAVE_DEMON:
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
-             "HD: %d; pow: %d", mon->hit_dice, beam.ench_power );
+             "HD: %d; pow: %d", mon->hit_dice, beam.ench_power);
 #endif
 
         if (mon->hit_dice * 11 / 2 >= random2(beam.ench_power)

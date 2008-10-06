@@ -715,7 +715,7 @@ void drain_life(int pow)
     // Incoming power to this function is skill in INVOCATIONS, so
     // we'll add an assert here to warn anyone who tries to use
     // this function with spell level power.
-    ASSERT( pow <= 27 );
+    ASSERT(pow <= 27);
 
     show_green = DARKGREY;
     viewwindow(true, false);
@@ -747,6 +747,7 @@ void drain_life(int pow)
             hp_gain += hurted;
 
             monster->hurt(&you, hurted);
+
             if (monster->alive())
                 print_wounds(monster);
         }
@@ -754,13 +755,12 @@ void drain_life(int pow)
 
     hp_gain /= 2;
 
-    if (hp_gain > pow * 2)
-        hp_gain = pow * 2;
+    hp_gain = std::min(pow * 2, hp_gain);
 
     if (hp_gain)
     {
-        mpr( "You feel life flooding into your body." );
-        inc_hp( hp_gain, false );
+        mpr("You feel life flooding into your body.");
+        inc_hp(hp_gain, false);
     }
 }
 
