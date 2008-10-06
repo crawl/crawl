@@ -4337,23 +4337,23 @@ static bool _handle_reaching(monsters *monster)
     bool       ret = false;
     const int  wpn = monster->inv[MSLOT_WEAPON];
 
-    if (mons_aligned(monster_index(monster), monster->foe))
-        return (false);
-
     if (monster->has_ench(ENCH_SUBMERGED))
         return (false);
 
-    if (wpn != NON_ITEM && get_weapon_brand( mitm[wpn] ) == SPWPN_REACHING )
+    if (mons_aligned(monster_index(monster), monster->foe))
+        return (false);
+
+    if (wpn != NON_ITEM && get_weapon_brand(mitm[wpn]) == SPWPN_REACHING)
     {
         if (monster->foe == MHITYOU)
         {
             // This check isn't redundant -- player may be invisible.
             if (monster->target == you.pos()
                 && see_grid_no_trans(monster->pos())
-                && grid_distance( monster->pos(), you.pos()) == 2)
+                && grid_distance(monster->pos(), you.pos()) == 2)
             {
                 ret = true;
-                monster_attack( monster_index(monster), false );
+                monster_attack(monster_index(monster), false);
             }
         }
         else if (monster->foe != MHITNOT)
@@ -4890,11 +4890,8 @@ static bool _handle_spell(monsters *monster, bolt &beem)
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
     const spell_type draco_breath = _get_draconian_breath_spell(monster);
 
-    if (is_sanctuary(monster->pos())
-        && !mons_wont_attack(monster))
-    {
+    if (is_sanctuary(monster->pos()) && !mons_wont_attack(monster))
         return (false);
-    }
 
     // Yes, there is a logic to this ordering {dlb}:
     if (mons_is_sleeping(monster)
