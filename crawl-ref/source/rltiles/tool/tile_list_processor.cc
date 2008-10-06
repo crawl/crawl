@@ -402,11 +402,12 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         }
         else if (strcmp(arg, "startvalue") == 0)
         {
-            CHECK_ARG(2);
+            CHECK_ARG(1);
             CHECK_NO_ARG(3);
 
             m_start_value = m_args[1];
-            m_include = m_args[2];
+            if (m_args.size() > 2)
+                m_include = m_args[2];
         }
         else
         {
