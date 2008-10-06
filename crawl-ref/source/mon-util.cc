@@ -5658,8 +5658,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                  && !has_ench(ENCH_SUBMERGED))
         {
             if (!quiet)
+            {
                 mprf("%s appears from thin air!",
-                     name(DESC_CAP_A, true).c_str() );
+                     name(DESC_CAP_A, true).c_str());
+            }
 
             seen_monster(this);
         }
