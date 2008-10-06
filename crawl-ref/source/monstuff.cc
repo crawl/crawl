@@ -1057,9 +1057,9 @@ void monster_die(monsters *monster, killer_type killer,
             }
 
             if (you.duration[DUR_DEATH_CHANNEL]
-                && gives_xp
                 && mons_holiness(monster) == MH_NATURAL
-                && mons_weight(mons_species(monster->type) > 0))
+                && mons_can_be_zombified(monster)
+                && gives_xp)
             {
                 const monster_type spectre = mons_species(monster->type);
 
