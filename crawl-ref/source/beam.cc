@@ -4822,7 +4822,7 @@ static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon)
             beam.obvious_effect = true;
         mon->hurt(beam.agent(), beam.damage.roll(), beam.flavour);
         return (MON_AFFECTED);
-        
+
     case BEAM_SLEEP:
         if (simple_monster_message(mon, " looks drowsy..."))
             beam.obvious_effect = true;
