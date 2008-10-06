@@ -781,7 +781,7 @@ void monster_die(monsters *monster, killer_type killer,
 
     const int monster_killed = monster_index(monster);
     const bool hard_reset    = testbits(monster->flags, MF_HARD_RESET);
-    const bool gives_xp      = !monster->has_ench(ENCH_ABJ);
+    const bool gives_xp      = !mons_is_summoned(monster);
 
           bool in_transit    = false;
           bool drop_items    = !hard_reset && !mons_is_holy(monster);
@@ -1059,7 +1059,7 @@ void monster_die(monsters *monster, killer_type killer,
             if (you.duration[DUR_DEATH_CHANNEL]
                 && gives_xp
                 && mons_holiness(monster) == MH_NATURAL
-                && mons_weight(mons_species(monster->type)))
+                && mons_weight(mons_species(monster->type) > 0))
             {
                 const monster_type spectre = mons_species(monster->type);
 

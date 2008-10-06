@@ -807,7 +807,8 @@ bool mons_class_can_be_zombified(int mc)
 
 bool mons_can_be_zombified(const monsters *mon)
 {
-    return (mons_class_can_be_zombified(mon->type));
+    return (mons_class_can_be_zombified(mon->type)
+        && !mons_is_summoned(mon));
 }
 
 int downscale_zombie_damage(int damage)
