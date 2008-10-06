@@ -801,7 +801,8 @@ bool mons_is_zombified(const monsters *mon)
 
 bool mons_class_can_be_zombified(int mc)
 {
-    return (mons_zombie_size(mc) != Z_NOZOMBIE);
+    int ms = mons_species(mc);
+    return (mons_zombie_size(ms) != Z_NOZOMBIE || mons_weight(ms) == 0);
 }
 
 bool mons_can_be_zombified(const monsters *mon)
@@ -1250,7 +1251,7 @@ bool mons_has_lifeforce(const monsters *mon)
 bool mons_skeleton(int mc)
 {
     if (!mons_class_can_be_zombified(mc)
-        || mons_weight(mc) == 0 || (mons_class_flag(mc, M_NO_SKELETON)))
+        || (mons_class_flag(mc, M_NO_SKELETON)))
     {
         return (false);
     }
