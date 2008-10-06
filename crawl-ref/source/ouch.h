@@ -56,48 +56,18 @@ enum kill_method_type
     NUM_KILLBY
 };
 
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: bang - beam - effects - spells
- * *********************************************************************** */
 int check_your_resists(int hurted, beam_type flavour);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: fight
- * *********************************************************************** */
 void splash_with_acid(char acid_strength);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: fight
- * *********************************************************************** */
 void weapon_acid(char acid_strength);
 
+class actor;
+int actor_to_death_source(const actor* agent);
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: acr - bang - beam - command - effects - fight - misc -
- *              ouch - output - religion - spells - spells2 - spells4
- * *********************************************************************** */
 void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux = NULL, bool see_source = true);
 
 
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: decks - ouch
- * *********************************************************************** */
 void lose_level(void);
-
-
-// last updated 12may2000 {dlb}
-/* ***********************************************************************
- * called from: decks - fight - item_use - ouch - religion - spells
- * *********************************************************************** */
 void drain_exp(bool announce_full = true);
 
 void expose_items_to_element(beam_type flavour, const coord_def& where,

@@ -447,34 +447,30 @@ static void _describe_monster(const monsters *mon);
 void full_describe_view()
 {
     const coord_def start = view2grid(coord_def(1,1));
-    const coord_def end(start.x + crawl_view.viewsz.x,
-                        start.y + crawl_view.viewsz.y);
+    const coord_def end = start + crawl_view.viewsz - coord_def(1,1);
 
     std::vector<const monsters*> list_mons;
     std::vector<const item_def*> list_items;
-
-    coord_def p;
 
     // Iterate over viewport and get all the items in view.
     // FIXME: This includes unknown stashes. I guess for stashes never
     // seen before I could simply only add the top item (though I don't
     // know how to do that) but what about stashes that changed since
     // you last saw them? Just list the old content?
-    for (p.x = start.x; p.x < end.x; p.x++)
-        for (p.y = start.y; p.y < end.y; p.y++)
+    for (rectangle_iterator ri(start, end); ri; ++ri)
+    {
+        if (!in_bounds(*ri) || !see_grid(*ri))
+            continue;
+        
+        const int oid = igrd(*ri);
+        
+        if (oid != NON_ITEM)
         {
-            if (!in_bounds(p.x,p.y) || !see_grid(p.x,p.y))
-                continue;
-
-            const int oid = igrd(p);
-
-            if (oid != NON_ITEM)
-            {
-                std::vector<const item_def*> items;
-                item_list_on_square( items, oid, true );
-                list_items.insert(list_items.end(), items.begin(), items.end());
-            }
+            std::vector<const item_def*> items;
+            item_list_on_square( items, oid, true );
+            list_items.insert(list_items.end(), items.begin(), items.end());
         }
+    }
 
     // Get monsters via the monster_pane_info, sorted by difficulty.
     std::vector<monster_pane_info> mons;
@@ -484,7 +480,7 @@ void full_describe_view()
     for (unsigned int i = 0; i < mons.size(); i++)
         list_mons.push_back(mons[i].m_mon);
 
-    if (!list_mons.size() && !list_items.size())
+    if (list_mons.empty() && list_items.empty())
     {
         mprf("Neither monsters nor items are visible.");
         return;
@@ -551,8 +547,7 @@ void full_describe_view()
             {
                 if (j == 0)
                 {
-                    str = prefix + str;
-                    me = new MenuEntry(uppercase_first(str), MEL_ITEM, 1, letter);
+                    me = new MenuEntry(prefix + str, MEL_ITEM, 1, letter);
                     me->data = (void*) list_mons[i];
                     me->tag = "m";
                     me->quantity = 1; // Hack to make monsters selectable.
@@ -583,16 +578,17 @@ void full_describe_view()
             unsigned short glyph_col;
             get_item_glyph( list_items[i], &glyph_char, &glyph_col );
 
-            std::string col_string = colour_to_str(glyph_col);
-            std::string prefix = "(<" + col_string + ">"
-                                 + (char)glyph_char
-                                 + "</" + col_string + ">) ";
+            const std::string col_string = colour_to_str(glyph_col);
+            const std::string prefix = "(<" + col_string + ">"
+                                       + static_cast<char>(glyph_char)
+                                       + "</" + col_string + ">) ";
 
-            std::string str = prefix + list_items[i]->name(DESC_PLAIN);
+            const std::string str = prefix +
+                uppercase_first(list_items[i]->name(DESC_PLAIN));
 
-            MenuEntry *me = new MenuEntry(uppercase_first(str),
-                                          MEL_ITEM, 1, letter);
-            me->data = (void*) list_items[i];
+            MenuEntry *me = new MenuEntry(str, MEL_ITEM, 1, letter);
+            me->data = reinterpret_cast<void*>(
+                const_cast<item_def*>(list_items[i]));
             me->tag = "i";
             me->quantity = 2; // Hack to make items selectable.
             desc_menu.add_entry(me);

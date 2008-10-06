@@ -1094,3 +1094,13 @@ void end_game( scorefile_entry &se )
         get_ch();
     end(0);
 }
+
+int actor_to_death_source(const actor* agent)
+{
+    if (agent->atype() == ACT_PLAYER)
+        return (NON_MONSTER);
+    else if (agent->atype() == ACT_MONSTER)
+        return (dynamic_cast<const monsters*>(agent)->mindex());
+    else
+        return (NON_MONSTER);
+}

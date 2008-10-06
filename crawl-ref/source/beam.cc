@@ -1482,10 +1482,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     }
 
     if (wearing_amulet(AMU_INACCURACY))
-    {
-        pbolt.hit -= 5;
-        pbolt.hit = std::max(0, pbolt.hit);
-    }
+        pbolt.hit = std::max(0, pbolt.hit - 5);
 }
 
 // Affect monster in wall unless it can shield itself using the wall.
@@ -3144,7 +3141,7 @@ static int _affect_wall(bolt &beam, const coord_def& p)
                 else
                 {
                     mpr("The statue screams as its substance crumbles away!",
-                            MSGCH_SOUND);
+                        MSGCH_SOUND);
                 }
             }
             else if (see_grid(p))
@@ -3195,11 +3192,8 @@ static int _affect_place_clouds(bolt &beam, const coord_def& p)
             || (env.cloud[clouty].type == CLOUD_FIRE
                 && beam.flavour == BEAM_COLD))
         {
-            if (!silenced(p)
-                && !silenced(you.pos()))
-            {
+            if (player_can_hear(p))
                 mpr("You hear a sizzling sound!", MSGCH_SOUND);
-            }
 
             delete_cloud( clouty );
             return (5);
@@ -3338,11 +3332,6 @@ static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p)
                           MHITNOT, 0, god));
         }
     }
-}
-
-static int _beam_ouch_agent(const bolt &beam)
-{
-    return YOU_KILL(beam.thrower) ? 0 : beam.beam_source;
 }
 
 // A little helper function to handle the calling of ouch()...
@@ -4028,7 +4017,8 @@ static int _affect_player( bolt &beam, item_def *item )
         {
             if (x_chance_in_y(90 - 3 * player_AC(), 100))
             {
-                curare_hits_player( _beam_ouch_agent(beam), 1 + random2(3) );
+                curare_hits_player(actor_to_death_source(beam.agent()),
+                                   1 + random2(3));
                 was_affected = true;
             }
         }
@@ -5029,7 +5019,7 @@ static void _explosion1(bolt &pbolt)
             mpr(seeMsg);
         else
         {
-            if (silenced(p) || silenced(you.pos()))
+            if (!player_can_hear(p))
                 pbolt.msg_generated = false;
             else
                 mpr(hearMsg, MSGCH_SOUND);
@@ -5317,7 +5307,7 @@ static void _explosion_map( bolt &beam, const coord_def& p,
                            int count, int dir, int r )
 {
     // Check to see out of range.
-    if (p.x*p.x + p.y*p.y > r*r + r)
+    if (p.abs() > r*(r+1))
         return;
 
     // Check count.
@@ -5334,19 +5324,22 @@ static void _explosion_map( bolt &beam, const coord_def& p,
     if (is_sanctuary(loc))
         return;
 
-    // Check to see if we're blocked by something specifically, we're blocked
-    // by WALLS.  Not statues, idols, etc.
     const dungeon_feature_type dngn_feat = grd(loc);
 
-    // Special case: Explosion originates from rock/statue
-    // (e.g. Lee's rapid deconstruction) - in this case, ignore
-    // solid cells at the center of the explosion.
-    if (dngn_feat <= DNGN_MAXWALL
-        && (p.x != 0 || p.y != 0) && !_affects_wall(beam, dngn_feat))
-    {
-        return;
-    }
+    // Check to see if we're blocked by something specifically, we're
+    // blocked by WALLS.  Not statues, idols, etc.  Special case:
+    // Explosion originates from rock/statue (e.g. Lee's rapid
+    // deconstruction) - in this case, ignore solid cells at the
+    // center of the explosion.
 
+    if (grid_is_wall(dngn_feat)
+        || dngn_feat == DNGN_SECRET_DOOR
+        || dngn_feat == DNGN_CLOSED_DOOR)
+    {
+        if (!(_affects_wall(beam, dngn_feat) && p.origin()))
+            return;
+    }
+    
     // Hmm, I think we're ok.
     explode_map(p + coord_def(9,9)) = true;
 
@@ -5446,7 +5439,6 @@ bolt::bolt() : range(0), type('*'),
                ench_power(0), hit(0),
                thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT), name(),
                is_beam(false), is_explosion(false), is_big_cloud(false),
-//               is_launched(false),
                aimed_at_spot(false),
                aux_source(), affects_nothing(false), obvious_effect(false),
                effect_known(true), fr_count(0), foe_count(0), fr_power(0),
