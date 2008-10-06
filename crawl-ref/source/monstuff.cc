@@ -4906,9 +4906,9 @@ static bool _handle_spell(monsters *monster, bolt &beem)
     }
 
     // Shapeshifters don't get spells.
-    if ((mons_class_flag(monster->type, M_ACTUAL_SPELLS)
-            || mons_class_flag(monster->type, M_PRIEST))
-        && mons_is_shapeshifter(monster))
+    if (mons_is_shapeshifter(monster)
+        && (mons_class_flag(monster->type, M_ACTUAL_SPELLS)
+            || mons_class_flag(monster->type, M_PRIEST)))
     {
         return (false);
     }
@@ -5385,6 +5385,7 @@ static bool _handle_monster_spell(monsters *monster, bolt &beem)
         if (_handle_spell(monster, beem))
             return (true);
     }
+
     return (false);
 }
 
