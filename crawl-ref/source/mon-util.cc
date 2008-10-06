@@ -771,14 +771,14 @@ mon_itemuse_type mons_itemuse(int mc)
     return (smc->gmon_use);
 }
 
-int mons_colour(const monsters *monster)
+int mons_colour(const monsters *mon)
 {
-    return (monster->colour);
+    return (mon->colour);
 }
 
-monster_type mons_zombie_base(const monsters *monster)
+monster_type mons_zombie_base(const monsters *mon)
 {
-    return (monster->base_monster);
+    return (mon->base_monster);
 }
 
 bool mons_class_is_zombified(int mc)

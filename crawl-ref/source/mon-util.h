@@ -598,7 +598,7 @@ int mons_speed(int mclass);
  * called from: dungeon - mon-util - spells2
  * *********************************************************************** */
 int mons_zombie_size(int mc);
-monster_type mons_zombie_base(const monsters *monster);
+monster_type mons_zombie_base(const monsters *mon);
 bool mons_class_is_zombified(int mc);
 bool mons_is_zombified(const monsters *monster);
 bool mons_class_can_be_zombified(int mc);
@@ -631,7 +631,7 @@ unsigned mons_char(int mc);
  * called from: dungeon - fight - misc
  * *********************************************************************** */
 int mons_class_colour(int mc);
-int mons_colour(const monsters *m);
+int mons_colour(const monsters *mon);
 
 void mons_load_spells( monsters *mon, mon_spellbook_type book );
 
