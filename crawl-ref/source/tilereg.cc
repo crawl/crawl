@@ -2162,7 +2162,7 @@ void TextRegion::_setcursortype(int curstype)
 
 void TextRegion::render()
 {
-    if (cursor_x > 0 && cursor_y > 0)
+    if (this == TextRegion::cursor_region && cursor_x > 0 && cursor_y > 0)
     {
         int idx = cursor_x + mx * cursor_y;
 
@@ -2268,6 +2268,20 @@ struct box_vert
 
 void MessageRegion::render()
 {
+    int idx = -1;
+    unsigned char char_back;
+    unsigned char col_back;
+
+    if (this == TextRegion::cursor_region && cursor_x > 0 && cursor_y > 0)
+    {
+        idx = cursor_x + mx * cursor_y;
+        char_back = cbuf[idx];
+        col_back = abuf[idx];
+
+        cbuf[idx] = '_';
+        abuf[idx] = WHITE;
+    }
+
     if (m_overlay)
     {
         unsigned int height;
@@ -2323,6 +2337,12 @@ void MessageRegion::render()
     }
 
     m_font->render_textblock(sx + ox, sy + oy, cbuf, abuf, mx, my, m_overlay);
+
+    if (idx >= 0)
+    {
+        cbuf[idx] = char_back;
+        abuf[idx] = col_back;
+    }
 }
 
 CRTRegion::CRTRegion(FTFont *font) : TextRegion(font)
