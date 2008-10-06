@@ -6982,7 +6982,7 @@ static const char *enchant_names[] =
     "none", "slow", "haste", "fear", "conf", "inv", "pois", "bers",
     "rot", "summon", "abj", "backlit", "charm", "fire",
     "gloshifter", "shifter", "tp", "wary", "submerged",
-    "short lived", "paralysis", "sick", "sleep", "fatigue", "held",
+    "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
     "blood-lust", "neutral", "petrifying", "petrified", "bug"
 };
 
