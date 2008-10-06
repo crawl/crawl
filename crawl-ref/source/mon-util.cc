@@ -5626,13 +5626,13 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (holiness() == MH_NONLIVING || has_ench(ENCH_BERSERK))
         {
             // This should only happen because of fleeing sanctuary
-            snprintf( info, INFO_SIZE, " stops retreating.");
+            snprintf(info, INFO_SIZE, " stops retreating.");
         }
         else
         {
-            snprintf( info, INFO_SIZE, " seems to regain %s courage.",
-                      mons_pronoun(static_cast<monster_type>(this->type),
-                                   PRONOUN_NOCAP_POSSESSIVE));
+            snprintf(info, INFO_SIZE, " seems to regain %s courage.",
+                     mons_pronoun(static_cast<monster_type>(this->type),
+                                  PRONOUN_NOCAP_POSSESSIVE));
         }
 
         if (!quiet)
@@ -5653,9 +5653,9 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_INVIS:
         // Invisible monsters stay invisible.
         if (mons_class_flag(type, M_INVIS))
-            add_ench( mon_enchant(ENCH_INVIS) );
+            add_ench(mon_enchant(ENCH_INVIS));
         else if (mons_near(this) && !player_see_invis()
-                 && !has_ench( ENCH_SUBMERGED ))
+                 && !has_ench(ENCH_SUBMERGED))
         {
             if (!quiet)
                 mprf("%s appears from thin air!",
