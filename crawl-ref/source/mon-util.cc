@@ -1361,7 +1361,7 @@ int exper_value(const monsters *monster)
     const int  maxhp       = monster->max_hit_points;
 
     // These are some values we care about.
-    const int  speed       = mons_speed(monster);
+    const int  speed       = mons_speed(monster->type);
     const int  modifier    = _mons_exp_mod(mclass);
     const int  item_usage  = mons_itemuse(monster);
 
@@ -2011,15 +2011,10 @@ static int _mons_exp_mod(int mc)
     return (smc->exp_mod);
 }
 
-int mons_class_speed(int mc)
+int mons_speed(int mc)
 {
     ASSERT(smc);
     return (smc->speed);
-}
-
-int mons_speed(const monsters *mon)
-{
-    return (mons_class_speed(mon->type));
 }
 
 mon_intel_type mons_class_intel(int mc)

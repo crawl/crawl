@@ -591,8 +591,7 @@ int mons_weight(int mclass);
 /* ***********************************************************************
  * called from: monplace mon-util
  * *********************************************************************** */
-int mons_class_speed(int mc);
-int mons_speed(const monsters *mon);
+int mons_speed(int mc);
 
 
 // last updated 12may2000 {dlb}
