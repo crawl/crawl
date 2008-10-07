@@ -855,24 +855,24 @@ mon_attack_def downscale_zombie_attack(const monsters *mons,
     return (attk);
 }
 
-mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
+mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
 {
-    int mc = mons->type;
-    const bool zombified = mons_is_zombified(mons);
+    int mc = mon->type;
+    const bool zombified = mons_is_zombified(mon);
 
-    if (attk_number < 0 || attk_number > 3 || mons->has_hydra_multi_attack())
+    if (attk_number < 0 || attk_number > 3 || mon->has_hydra_multi_attack())
         attk_number = 0;
 
     if (mc == MONS_PLAYER_GHOST || mc == MONS_PANDEMONIUM_DEMON)
     {
         if (attk_number == 0)
-            return mon_attack_def::attk(mons->ghost->damage);
+            return mon_attack_def::attk(mon->ghost->damage);
         else
             return mon_attack_def::attk(0, AT_NONE);
     }
 
     if (zombified)
-        mc = mons_zombie_base(mons);
+        mc = mons_zombie_base(mon);
 
     ASSERT(smc);
     mon_attack_def attk = smc->attack[attk_number];
@@ -889,7 +889,7 @@ mon_attack_def mons_attack_spec(const monsters *mons, int attk_number)
         }
     }
 
-    return (zombified ? downscale_zombie_attack(mons, attk) : attk);
+    return (zombified ? downscale_zombie_attack(mon, attk) : attk);
 }
 
 int mons_damage(int mc, int rt)

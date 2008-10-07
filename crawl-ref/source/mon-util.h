@@ -509,7 +509,7 @@ const char* mons_resist_string(const monsters *mon);
  * called from: fight - monstuff
  * *********************************************************************** */
 int mons_damage(int mc, int rt);
-mon_attack_def mons_attack_spec(const monsters *, int rt);
+mon_attack_def mons_attack_spec(const monsters *mon, int attk_number);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
