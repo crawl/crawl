@@ -77,6 +77,7 @@ void lose_piety(int pgn);
 void offer_corpse(int corpse);
 std::string god_prayer_reaction();
 void pray();
+void end_prayer();
 void handle_god_time(void);
 int god_colour(god_type god);
 void god_pitch(god_type which_god);

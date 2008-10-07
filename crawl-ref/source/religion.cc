@@ -2129,8 +2129,13 @@ void pray()
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "piety: %d (-%d)", you.piety, you.piety_hysteresis );
 #endif
+}
 
-}                               // end pray()
+void end_prayer(void)
+{
+    mpr("Your prayer is over.", MSGCH_PRAY, you.religion);
+    you.duration[DUR_PRAYER] = 0;
+}
 
 std::string god_name( god_type which_god, bool long_name )
 {
@@ -3481,10 +3486,7 @@ void lose_piety(int pgn)
     }
 
     if (!_god_accepts_prayer(you.religion))
-    {
-        mpr("Your prayer is over.", MSGCH_PRAY, you.religion);
-        you.duration[DUR_PRAYER] = 0;
-    }
+        end_prayer();
 
     if (you.piety > 0 && you.piety <= 5)
         learned_something_new(TUT_GOD_DISPLEASED);
