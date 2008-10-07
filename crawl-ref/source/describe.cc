@@ -3073,26 +3073,24 @@ void describe_god( god_type which_god, bool give_title )
                 god_protects_from_harm(which_god, false))
         {
             int prayer_prot = 0;
-            if ((hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME)
-                && you.piety >= piety_breakpoint(0))
-            {
+
+            if (hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME)
                 prayer_prot = 100 - 3000/you.piety;
-            }
 
             int prot_chance = 10 + you.piety/10 + prayer_prot; // chance * 100
 
             const char *how = (prot_chance >= 85) ? "carefully" :
                               (prot_chance >= 55) ? "often" :
-                              (prot_chance >= 25) ? "sometimes" :
-                                                    "occasionally";
+                              (prot_chance >= 25) ? "sometimes"
+                                                  : "occasionally";
             const char *when =
                 (hpt == HPT_PRAYING)              ? " during prayer" :
-                (hpt == HPT_PRAYING_PLUS_ANYTIME) ? ", especially during prayer" :
-                                                    "";
+                (hpt == HPT_PRAYING_PLUS_ANYTIME) ? ", especially during prayer"
+                                                  : "";
 
             have_any = true;
             cprintf("%s %s watches over you%s." EOL,
-                    god_name(which_god).c_str(), how, when );
+                    god_name(which_god).c_str(), how, when);
         }
 
         if (which_god == GOD_ZIN)

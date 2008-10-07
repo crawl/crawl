@@ -2008,9 +2008,12 @@ std::string god_prayer_reaction()
     return result;
 }
 
-static bool _god_accepts_prayer(god_type type)
+static bool _god_accepts_prayer(god_type god)
 {
-    switch(type)
+    if (god_protects_from_harm(god, false) == HPT_PRAYING)
+        return (true);
+
+    switch (god)
     {
     case GOD_ZIN:
         return (zin_sustenance(false));
@@ -5840,25 +5843,25 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     {
     case GOD_BEOGH:
         if (!penance && (!actual || anytime))
-            return HPT_ANYTIME;
+            return (HPT_ANYTIME);
         break;
     case GOD_ZIN:
     case GOD_SHINING_ONE:
         if (!actual || anytime)
-            return HPT_ANYTIME;
+            return (HPT_ANYTIME);
         break;
     case GOD_ELYVILON:
         if (!actual || praying || anytime)
         {
-            return (you.piety >= min_piety) ? HPT_PRAYING_PLUS_ANYTIME :
-                                              HPT_ANYTIME;
+            return (you.piety >= min_piety) ? HPT_PRAYING_PLUS_ANYTIME
+                                            : HPT_ANYTIME;
         }
         break;
     default:
         break;
     }
 
-    return HPT_NONE;
+    return (HPT_NONE);
 }
 
 void god_smites_you(god_type god, const char *message,
