@@ -4876,7 +4876,7 @@ void good_god_holy_attitude_change(monsters *holy)
                                                       MSGCH_TALK);
     }
 
-    holy->attitude  = ATT_GOOD_NEUTRAL;
+    holy->attitude = ATT_GOOD_NEUTRAL;
 
     // The monster is not really *created* neutral, but should it become
     // hostile later on, it won't count as a good kill.
