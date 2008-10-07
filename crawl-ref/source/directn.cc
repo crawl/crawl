@@ -979,7 +979,7 @@ void direction(dist& moves, targeting_type restricts,
                 {
                     key_command = CMD_TARGET_SELECT;
 
-                    if (range > 0)
+                    if (needs_path && range > 0)
                     {
                         ray_def raycopy = ray;
                         int l = 0;
