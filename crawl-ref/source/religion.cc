@@ -2012,6 +2012,9 @@ static bool _god_accepts_prayer(god_type type)
 {
     switch(type)
     {
+    case GOD_ZIN:
+        return (zin_sustenance(false));
+
     case GOD_YREDELEMNUL:
         return (yred_injury_mirror(false));
 
