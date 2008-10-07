@@ -4687,7 +4687,7 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
     default:
         break;
     }
-    
+
     return rc;
 }
 
@@ -4713,13 +4713,13 @@ static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon)
             beam.obvious_effect = true;
         monster_teleport(mon, false);
         return (MON_AFFECTED);
-        
+
     case BEAM_BLINK:
         if (you.can_see(mon))
             beam.obvious_effect = true;
         monster_blink(mon);
         return (MON_AFFECTED);
-        
+
     case BEAM_POLYMORPH:
         if (mon->mutate())
             beam.obvious_effect = true;
@@ -5339,7 +5339,7 @@ static void _explosion_map( bolt &beam, const coord_def& p,
         if (!(_affects_wall(beam, dngn_feat) && p.origin()))
             return;
     }
-    
+
     // Hmm, I think we're ok.
     explode_map(p + coord_def(9,9)) = true;
 

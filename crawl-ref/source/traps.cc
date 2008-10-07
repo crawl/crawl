@@ -559,7 +559,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
                 if (mons_is_caught(m))
                     mark_net_trapping(m->pos());
-                
+
                 trap_destroyed = true;
             }
         }

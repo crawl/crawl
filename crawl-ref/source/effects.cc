@@ -136,7 +136,7 @@ int holy_word_monsters(coord_def where, int pow, int caster)
     behaviour_event(monster, ME_ANNOY, MHITYOU);
     simple_monster_message(monster, " convulses!");
     monster->hurt(&you, hploss);
-   
+
     if (monster->alive())
     {
         if (monster->speed_increment >= 25)

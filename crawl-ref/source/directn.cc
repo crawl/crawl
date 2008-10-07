@@ -461,9 +461,9 @@ void full_describe_view()
     {
         if (!in_bounds(*ri) || !see_grid(*ri))
             continue;
-        
+
         const int oid = igrd(*ri);
-        
+
         if (oid != NON_ITEM)
         {
             std::vector<const item_def*> items;
@@ -743,7 +743,7 @@ public:
         // Repaint.
         viewwindow(true, false);
     }
-    
+
     ~range_view_annotator() {
 
         if (!do_anything)
@@ -789,7 +789,7 @@ bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
         }
 
         if (moves.target == you.pos())
-        {                    
+        {
             // may_target_self == makes (some) sense to target yourself
             // (SPFLAG_AREA)
 
@@ -823,7 +823,7 @@ bool _dist_ok(const dist& moves, int range, targ_mode_type mode,
             return (false);
         }
     }
-    
+
     // Some odd cases
     if (!moves.isValid && !moves.isCancel)
         return yesno("Are you sure you want to fizzle?", false, 'n');
@@ -2748,7 +2748,7 @@ std::string _mon_enchantments_string(const monsters* mon)
     }
     if (paralysed)
         enchant_descriptors.push_back("paralysed");
-    
+
     if (!enchant_descriptors.empty())
     {
         return
@@ -3006,7 +3006,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
                 mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
                      mon->pronoun(PRONOUN_CAP).c_str());
             }
-            monster_described = true;            
+            monster_described = true;
         }
 
 #if DEBUG_DIAGNOSTICS
