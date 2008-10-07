@@ -6369,7 +6369,7 @@ flight_type player::flight_mode() const
     if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
         || attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
     {
-        return FL_FLY;
+        return (FL_FLY);
     }
     else if (is_levitating())
     {

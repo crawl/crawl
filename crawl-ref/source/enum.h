@@ -1410,11 +1410,13 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_DISMISSED                     // only on new game startup
 };
 
+// This should be in order from the worst flight status to the best.
+// See mons_flies().
 enum flight_type
 {
     FL_NONE = 0,
-    FL_FLY,
-    FL_LEVITATE
+    FL_LEVITATE,
+    FL_FLY
 };
 
 enum level_area_type                   // you.level_type

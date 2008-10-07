@@ -1352,15 +1352,16 @@ static void climb_message(dungeon_feature_type stair, bool going_up,
             mpr("A mysterious force pulls you upwards.");
         else
         {
-            mprf("You %s downwards.", you.flight_mode() == FL_FLY? "fly" :
-                                     (player_is_airborne()? "float" : "slide"));
+            mprf("You %s downwards.",
+                 you.flight_mode() == FL_FLY ? "fly" :
+                     (player_is_airborne() ? "float" : "slide"));
         }
     }
     else
     {
-        mprf("You %s %swards.", you.flight_mode() == FL_FLY? "fly" :
-                                (player_is_airborne()? "float" : "climb"),
-                                going_up? "up": "down");
+        mprf("You %s %swards.", you.flight_mode() == FL_FLY ? "fly" :
+                                    (player_is_airborne() ? "float" : "climb"),
+                                        going_up ? "up" : "down");
     }
 }
 
@@ -1593,10 +1594,10 @@ void up_stairs(dungeon_feature_type force_stair,
 
     const dungeon_feature_type stair_taken = stair_find;
 
-    if (you.flight_mode() == FL_FLY)
-        mpr("You fly upwards.");
-    else if (you.flight_mode() == FL_LEVITATE)
+    if (you.flight_mode() == FL_LEVITATE)
         mpr("You float upwards... And bob straight up to the ceiling!");
+    else if (you.flight_mode() == FL_FLY)
+        mpr("You fly upwards.");
     else
         climb_message(stair_find, true, old_level_type);
 

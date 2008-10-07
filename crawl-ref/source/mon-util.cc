@@ -1263,11 +1263,11 @@ bool mons_skeleton(int mc)
 
 flight_type mons_class_flies(int mc)
 {
-    if (mons_class_flag(mc, M_FLIES))
-        return (FL_FLY);
-
     if (mons_class_flag(mc, M_LEVITATE))
         return (FL_LEVITATE);
+
+    if (mons_class_flag(mc, M_FLIES))
+        return (FL_FLY);
 
     return (FL_NONE);
 }
@@ -1280,13 +1280,22 @@ flight_type mons_flies(const monsters *mon)
         return (mon->ghost->fly);
     }
 
-    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
-                                               : mon->type;
+    flight_type ret = FL_NONE;
 
-    const flight_type ret = mons_class_flies(montype);
-    return (ret ? ret
-                : (_scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0) ? FL_LEVITATE
-                                                                  : FL_NONE);
+    if (mons_is_zombified(mon))
+        ret = mons_class_flies(mon->base_monster);
+
+    // Set flight status this way so that monsters will always have the
+    // best flight status possible.  This is necessary so that monsters
+    // with FL_NONE status when alive get FL_LEVITATE status as spectral
+    // things, and monsters with FL_FLY status when alive retain it as
+    // spectral things.
+    ret = std::max(mons_class_flies(mon->type), ret);
+
+    if (ret == FL_NONE && _scan_mon_inv_randarts(mon, RAP_LEVITATE) > 0)
+        ret = FL_LEVITATE;
+
+    return (ret);
 }
 
 bool mons_class_amphibious(int mc)

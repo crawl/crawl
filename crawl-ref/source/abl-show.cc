@@ -844,10 +844,10 @@ bool activate_ability()
         else if (you.species == SP_KENKU && you.experience_level >= 5
                  || player_mutation_level(MUT_BIG_WINGS))
         {
-            if (you.flight_mode() == FL_FLY)
-                mpr("You're already flying!");
-            else if (you.flight_mode() == FL_LEVITATE)
+            if (you.flight_mode() == FL_LEVITATE)
                 mpr("You can only start flying from the ground.");
+            else if (you.flight_mode() == FL_FLY)
+                mpr("You're already flying!");
         }
         else
             mpr("Sorry, you're not good enough to have a special ability.");
