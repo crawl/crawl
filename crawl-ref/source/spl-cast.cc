@@ -2379,7 +2379,7 @@ std::string MiscastEffect::get_default_cause()
 
     if (you.can_see(mon_source))
     {
-        std::string str = mon_source->base_name(DESC_PLAIN, false);
+        std::string str = mon_source->base_name(DESC_PLAIN);
 
         str += "'s spell miscasting";
         str = replace_all(str, "s's", "s'");

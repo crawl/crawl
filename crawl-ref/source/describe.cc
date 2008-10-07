@@ -2379,7 +2379,7 @@ void describe_monsters(const monsters& mons)
         title += mons.base_name(DESC_NOCAP_THE, false);
     }
 
-    std::string db_name = mons.base_name(DESC_DBNAME, false);
+    std::string db_name = mons.base_name(DESC_DBNAME);
     if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)
         db_name = "mimic";
 

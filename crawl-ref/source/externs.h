@@ -1228,7 +1228,7 @@ public:
     // named Arbolt, name() will return "Arbolt", but base_name() will return
     // "orc priest".
     std::string base_name(description_level_type type,
-                          bool force_visible) const;
+                          bool force_visible = false) const;
     std::string pronoun(pronoun_type pro, bool force_visible = false) const;
     std::string conj_verb(const std::string &verb) const;
     std::string hand_name(bool plural, bool *can_plural = NULL) const;

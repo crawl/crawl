@@ -1601,7 +1601,7 @@ std::string get_terse_square_desc(const coord_def &gc)
             if (mons.has_base_name())
             {
                 desc += ", ";
-                desc += mons.base_name(DESC_NOCAP_THE, false);
+                desc += mons.base_name(DESC_NOCAP_THE);
             }
         }
     }
