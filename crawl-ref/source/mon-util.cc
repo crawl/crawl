@@ -7088,8 +7088,8 @@ int mon_enchant::calc_duration(const monsters *mons,
 {
     int cturn = 0;
 
-    const int newdegree = added? added->degree : degree;
-    const int deg = newdegree? newdegree : 1;
+    const int newdegree = added ? added->degree : degree;
+    const int deg = newdegree ? newdegree : 1;
 
     // Beneficial enchantments (like Haste) should not be throttled by
     // monster HD via modded_speed(). Use mod_speed instead!
@@ -7161,13 +7161,10 @@ int mon_enchant::calc_duration(const monsters *mons,
         break;
     }
 
-    if (cturn < 2)
-        cturn = 2;
+    cturn = std::max(2, cturn);
 
     int raw_duration = (cturn * speed_to_duration(mons->speed));
-    raw_duration = fuzz_value(raw_duration, 60, 40);
-    if (raw_duration < 15)
-        raw_duration = 15;
+    raw_duration = std::max(15, fuzz_value(raw_duration, 60, 40));
 
     return (raw_duration);
 }
