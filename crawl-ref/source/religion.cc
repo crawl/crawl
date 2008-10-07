@@ -2012,6 +2012,9 @@ static bool _god_accepts_prayer(god_type type)
 {
     switch(type)
     {
+    case GOD_YREDELEMNUL:
+        return (yred_injury_mirror(false));
+
     case GOD_VEHUMET:
     case GOD_XOM:
     case GOD_SHINING_ONE:
@@ -2115,11 +2118,8 @@ void pray()
             you.duration[DUR_PRAYER] *= 2;
     }
 
-    if (!_god_accepts_prayer(you.religion) || you.religion == GOD_ZIN
-        || you.religion == GOD_NEMELEX_XOBEH)
-    {
+    if (you.religion == GOD_ZIN || you.religion == GOD_NEMELEX_XOBEH)
         you.duration[DUR_PRAYER] = 1;
-    }
     else if (you.religion == GOD_YREDELEMNUL || you.religion == GOD_ELYVILON)
         you.duration[DUR_PRAYER] = 20;
 
@@ -3478,6 +3478,12 @@ void lose_piety(int pgn)
                     fall_into_a_pool(you.pos(), true, grd(you.pos()));
             }
         }
+    }
+
+    if (!_god_accepts_prayer(you.religion))
+    {
+        mpr("Your prayer is over.", MSGCH_PRAY, you.religion);
+        you.duration[DUR_PRAYER] = 0;
     }
 
     if (you.piety > 0 && you.piety <= 5)

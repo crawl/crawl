@@ -2578,7 +2578,7 @@ static void _decrement_durations()
         you.duration[DUR_PRAYER]--;
     else if (you.duration[DUR_PRAYER] == 1)
     {
-        mpr( "Your prayer is over.", MSGCH_PRAY, you.religion );
+        mpr("Your prayer is over.", MSGCH_PRAY, you.religion);
         you.duration[DUR_PRAYER] = 0;
     }
 
