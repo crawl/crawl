@@ -619,9 +619,9 @@ int place_monster(mgen_data mg, bool force_pos)
     if (mg.proximity == PROX_NEAR_STAIRS)
     {
         // For some cases disallow monsters on stairs.
-        if (mons_class_is_stationary( mg.cls )
+        if (mons_class_is_stationary(mg.cls)
             || (pval == 2 // Stairs occupied by player.
-                && (mons_speed(mg.cls) == 0 || grd(mg.pos) == DNGN_LAVA
+                && (mons_class_speed(mg.cls) == 0 || grd(mg.pos) == DNGN_LAVA
                     || grd(mg.pos) == DNGN_DEEP_WATER)))
         {
             mg.proximity = PROX_AWAY_FROM_PLAYER;
@@ -688,7 +688,7 @@ int place_monster(mgen_data mg, bool force_pos)
                 if (pval == 2) // player on stairs
                 {
                     // 0 speed monsters can't shove player out of their way.
-                    if (mons_speed(mg.cls) == 0)
+                    if (mons_class_speed(mg.cls) == 0)
                     {
                         proxOK = false;
                         break;

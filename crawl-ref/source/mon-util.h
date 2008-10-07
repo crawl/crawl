@@ -483,7 +483,7 @@ bool mons_is_unique(int mclass);
  * *********************************************************************** */
 // int exper_value(int mclass, int mHD, int maxhp);
 int mons_difficulty(int mtype);
-int exper_value( const monsters *monster );
+int exper_value(const monsters *monster);
 
 
 // last updated 12may2000 {dlb}
@@ -591,7 +591,8 @@ int mons_weight(int mclass);
 /* ***********************************************************************
  * called from: monplace mon-util
  * *********************************************************************** */
-int mons_speed(int mclass);
+int mons_class_speed(int mc);
+int mons_speed(const monsters *mon);
 
 
 // last updated 12may2000 {dlb}
