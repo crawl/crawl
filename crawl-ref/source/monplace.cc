@@ -1177,7 +1177,7 @@ static void _define_zombie( int mid, monster_type ztype,
     }
     else if (cs == MONS_SIMULACRUM_SMALL || cs == MONS_SIMULACRUM_LARGE)
     {
-        // Simulacrum aren't tough, but you can create piles of them. -- bwr
+        // Simulacra aren't tough, but you can create piles of them. -- bwr
         menv[mid].hit_points     = hit_points( menv[mid].hit_dice, 1, 4 );
         menv[mid].max_hit_points = menv[mid].hit_points;
         menv[mid].type = ((mons_zombie_size( menv[mid].base_monster ) == Z_BIG)

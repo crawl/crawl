@@ -3137,7 +3137,7 @@ bool monsters::can_drown() const
 size_type monsters::body_size(int /* psize */, bool /* base */) const
 {
     const monsterentry *e = get_monster_data(type);
-    return (e? e->size : SIZE_MEDIUM);
+    return (e ? e->size : SIZE_MEDIUM);
 }
 
 int monsters::body_weight() const
@@ -3160,6 +3160,7 @@ int monsters::body_weight() const
     case MONS_SIMULACRUM_LARGE:
         mclass = number;
         break;
+
     default:
         break;
     }
