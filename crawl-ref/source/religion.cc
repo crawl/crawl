@@ -2010,7 +2010,12 @@ std::string god_prayer_reaction()
 
 static bool _god_accepts_prayer(god_type god)
 {
-    if (god_protects_from_harm(god, false) == HPT_PRAYING)
+    harm_protection_type hpt = god_protects_from_harm(god, false);
+
+    if (hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME)
+        return (true);
+
+    if (god_likes_butchery(god))
         return (true);
 
     switch (god)
@@ -2021,19 +2026,11 @@ static bool _god_accepts_prayer(god_type god)
     case GOD_YREDELEMNUL:
         return (yred_injury_mirror(false));
 
-    case GOD_VEHUMET:
-    case GOD_XOM:
-    case GOD_SHINING_ONE:
-    case GOD_SIF_MUNA:
-    case GOD_KIKUBAAQUDGHA:
-    case GOD_NO_GOD:
-        return (false);
-
     default:
         break;
     }
 
-    return (true);
+    return (false);
 }
 
 void pray()
