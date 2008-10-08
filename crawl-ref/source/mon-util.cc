@@ -576,7 +576,7 @@ corpse_effect_type mons_corpse_effect(int mc)
 monster_type mons_species(int mc)
 {
     const monsterentry *me = get_monster_data(mc);
-    return (me? me->species : MONS_PROGRAM_BUG);
+    return (me ? me->species : MONS_PROGRAM_BUG);
 }
 
 monster_type mons_genus(int mc)
@@ -3357,8 +3357,9 @@ item_def *monsters::weapon(int which_attack)
 
 bool monsters::can_throw_rocks() const
 {
-    return (type == MONS_STONE_GIANT || type == MONS_CYCLOPS
-            || type == MONS_OGRE || type == MONS_POLYPHEMUS);
+    return (type == MONS_STONE_GIANT
+        || ::mons_species(this->type) == MONS_CYCLOPS
+        || ::mons_species(this->type) == MONS_OGRE);
 }
 
 bool monsters::has_spell_of_type(unsigned disciplines) const
