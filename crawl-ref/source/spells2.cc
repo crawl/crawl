@@ -785,6 +785,8 @@ bool vampiric_drain(int pow, const dist &vmove)
     {
         set_attack_conducts(conducts, monster);
 
+        behaviour_event(monster, ME_ANNOY, MHITYOU, you.pos());
+
         if (mons_is_unholy(monster))
         {
             mpr("Aaaarggghhhhh!");
@@ -813,7 +815,6 @@ bool vampiric_drain(int pow, const dist &vmove)
         mprf("You feel life coursing from %s into your body!",
              monster->name(DESC_NOCAP_THE).c_str());
 
-        behaviour_event(monster, ME_ANNOY, MHITYOU, you.pos());
         monster->hurt(&you, inflicted);
 
         if (monster->alive())

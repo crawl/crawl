@@ -210,7 +210,7 @@ int cast_smiting(int power, dist &beam)
             mprf("You smite %s!", monster->name(DESC_NOCAP_THE).c_str());
 
             behaviour_event(monster, ME_ANNOY, MHITYOU);
-            if (mons_is_mimic( monster->type ))
+            if (mons_is_mimic(monster->type))
                 mimic_alert(monster);
         }
 
