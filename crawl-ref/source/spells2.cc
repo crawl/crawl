@@ -785,10 +785,13 @@ bool vampiric_drain(int pow, const dist &vmove)
     {
         set_attack_conducts(conducts, monster);
 
-        behaviour_event(monster, ME_WHACK, MHITYOU, you.pos());
+        behaviour_event(monster, ME_ANNOY, MHITYOU, you.pos());
+    }
 
-        enable_attack_conducts(conducts);
+    enable_attack_conducts(conducts);
 
+    if (success)
+    {
         if (mons_is_unholy(monster))
         {
             mpr("Aaaarggghhhhh!");
