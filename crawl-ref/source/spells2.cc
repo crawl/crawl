@@ -807,6 +807,7 @@ bool vampiric_drain(int pow, const dist &vmove)
     mprf("You feel life coursing from %s into your body!",
          monster->name(DESC_NOCAP_THE).c_str());
 
+    behaviour_event(monster, ME_WHACK, MHITYOU, you.pos());
     monster->hurt(&you, inflicted);
 
     if (monster->alive())
