@@ -709,7 +709,7 @@ bool mons_see_invis(const monsters *mon)
         return (mon->ghost->see_invis);
     else if (mons_class_flag(mon->type, M_SEE_INVIS))
         return (true);
-    else if (_scan_mon_inv_randarts( mon, RAP_EYESIGHT ) > 0)
+    else if (_scan_mon_inv_randarts(mon, RAP_EYESIGHT) > 0)
         return (true);
 
     return (false);
