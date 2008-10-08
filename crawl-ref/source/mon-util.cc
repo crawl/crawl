@@ -3395,15 +3395,23 @@ bool monsters::can_use_missile(const item_def &item) const
     if (item.base_type != OBJ_MISSILES)
         return (false);
 
-    if (item.sub_type == MI_THROWING_NET && body_size(PSIZE_BODY) < SIZE_MEDIUM)
+    if ((item.sub_type == MI_THROWING_NET || item.sub_type == MI_JAVELIN)
+        && body_size(PSIZE_BODY) < SIZE_MEDIUM)
+    {
         return (false);
+    }
 
     if (item.sub_type == MI_LARGE_ROCK && !can_throw_rocks())
         return (false);
 
-    // These don't need any launcher, and are always okay.
-    if (item.sub_type == MI_STONE || item.sub_type == MI_DART)
+    // Stones and darts don't need any launcher, and are always okay.
+    // Other missile types that don't need any launcher should be okay
+    // if we've gotten this far.
+    if (item.sub_type == MI_STONE || item.sub_type == MI_DART
+        || !has_launcher(item))
+    {
         return (true);
+    }
 
     item_def *launch;
     for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
