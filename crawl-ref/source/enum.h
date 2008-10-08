@@ -269,30 +269,31 @@ enum book_type
     BOOK_PRACTICAL_MAGIC,
     BOOK_WAR_CHANTS,                   //   20
     BOOK_CLOUDS,
+    BOOK_HEALING,                      // XXX: not used
     BOOK_NECROMANCY,
     BOOK_NECRONOMICON,
-    BOOK_CALLINGS,
-    BOOK_CHARMS,                       //   25
+    BOOK_CALLINGS,                     //   25
+    BOOK_CHARMS,
     BOOK_DEMONOLOGY,
     BOOK_AIR,
     BOOK_SKY,
-    BOOK_DIVINATIONS,
-    BOOK_WARP,                         //   30
+    BOOK_DIVINATIONS,                  //   30
+    BOOK_WARP,
     BOOK_ENVENOMATIONS,
     BOOK_ANNIHILATIONS,
     BOOK_UNLIFE,
-    BOOK_DESTRUCTION,
-    BOOK_CONTROL,                      //   35
+    BOOK_DESTRUCTION,                  //   35
+    BOOK_CONTROL,
     BOOK_MUTATIONS,
     BOOK_TUKIMA,
     BOOK_GEOMANCY,
-    BOOK_EARTH,
-    BOOK_MANUAL,                       //   40
+    BOOK_EARTH,                        //   40
+    BOOK_MANUAL,
     BOOK_WIZARDRY,
     BOOK_POWER,
     BOOK_CANTRIPS,                     //jmf: 04jan2000
-    BOOK_PARTY_TRICKS,                 //jmf: 04jan2000
-    BOOK_BEASTS,                       //   45
+    BOOK_PARTY_TRICKS,           // 45 //jmf: 04jan2000
+    BOOK_BEASTS,
     BOOK_STALKING,         // renamed -- assassination was confusing  -- bwr
     NUM_BOOKS
 };

@@ -928,6 +928,9 @@ int book_rarity(unsigned char which_book)
     case BOOK_DESTRUCTION:
         return 30;
 
+    case BOOK_HEALING: // XXX: not used
+        return 100;
+
     default:
         return 1;
     }
