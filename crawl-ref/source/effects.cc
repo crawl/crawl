@@ -1236,7 +1236,6 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
                 // If the book is invalid find any valid one.
                 while (book_rarity(type_wanted) == 100
-                       || type_wanted == BOOK_HEALING
                        || type_wanted == BOOK_DESTRUCTION
                        || type_wanted == BOOK_MANUAL)
                 {
