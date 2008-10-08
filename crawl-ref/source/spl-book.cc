@@ -264,7 +264,7 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 22 - Book of Healing -- XXX: not used
+    // 22 - Book of Healing --  XXX: not used
     {SPELL_CURE_POISON_I,
      SPELL_LESSER_HEALING,
      SPELL_GREATER_HEALING,
@@ -928,7 +928,7 @@ int book_rarity(unsigned char which_book)
     case BOOK_DESTRUCTION:
         return 30;
 
-    case BOOK_HEALING: // XXX: not used
+    case BOOK_HEALING: //  XXX: not used
         return 100;
 
     default:

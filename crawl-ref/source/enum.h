@@ -269,7 +269,7 @@ enum book_type
     BOOK_PRACTICAL_MAGIC,
     BOOK_WAR_CHANTS,                   //   20
     BOOK_CLOUDS,
-    BOOK_HEALING,                      // XXX: not used
+    BOOK_HEALING,                      //  XXX: not used
     BOOK_NECROMANCY,
     BOOK_NECRONOMICON,
     BOOK_CALLINGS,                     //   25
