@@ -3488,7 +3488,7 @@ void lose_piety(int pgn)
         }
     }
 
-    if (!_god_accepts_prayer(you.religion))
+    if (!_god_accepts_prayer(you.religion) && you.duration[DUR_PRAYER])
         end_prayer();
 
     if (you.piety > 0 && you.piety <= 5)
