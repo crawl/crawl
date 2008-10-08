@@ -2784,10 +2784,10 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 {
     gender_type gender = GENDER_NEUTER;
 
-    if (mons_is_unique( mon_type ) && mon_type != MONS_PLAYER_GHOST
+    if (mons_is_unique(mon_type) && mon_type != MONS_PLAYER_GHOST
         || mon_type == MONS_MERMAID)
     {
-        switch(mon_type)
+        switch (mon_type)
         {
         case MONS_JESSICA:
         case MONS_PSYCHE:
