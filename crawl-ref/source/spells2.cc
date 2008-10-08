@@ -776,46 +776,53 @@ bool vampiric_drain(int pow, const dist &vmove)
 
     monsters *monster = &menv[mgr];
 
-    if (mons_is_unholy(monster))
+    god_conduct_trigger conducts[3];
+    disable_attack_conducts(conducts);
+
+    const bool success = !stop_attack_prompt(monster, false, false);
+
+    if (success)
     {
-        mpr("Aaaarggghhhhh!");
-        dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
-        return (false);
+        set_attack_conducts(conducts, monster);
+
+        if (mons_is_unholy(monster))
+        {
+            mpr("Aaaarggghhhhh!");
+            dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
+            return (false);
+        }
+
+        if (mons_res_negative_energy(monster))
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return (false);
+        }
+
+        // The practical maximum of this is about 25 (pow @ 100).  -- bwr
+        int inflicted = 3 + random2avg(9, 2) + random2(pow) / 7;
+
+        inflicted = std::min(monster->hit_points, inflicted);
+        inflicted = std::min(you.hp_max - you.hp, inflicted);
+
+        if (inflicted == 0)
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return (false);
+        }
+
+        mprf("You feel life coursing from %s into your body!",
+             monster->name(DESC_NOCAP_THE).c_str());
+
+        behaviour_event(monster, ME_ANNOY, MHITYOU, you.pos());
+        monster->hurt(&you, inflicted);
+
+        if (monster->alive())
+            print_wounds(monster);
+
+        inc_hp(inflicted / 2, false);
     }
 
-    if (mons_res_negative_energy(monster))
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return (false);
-    }
-
-    // The practical maximum of this is about 25 (pow @ 100).  -- bwr
-    int inflicted = 3 + random2avg( 9, 2 ) + random2(pow) / 7;
-
-    if (inflicted >= monster->hit_points)
-        inflicted = monster->hit_points;
-
-    if (inflicted >= you.hp_max - you.hp)
-        inflicted = you.hp_max - you.hp;
-
-    if (inflicted == 0)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return (false);
-    }
-
-    mprf("You feel life coursing from %s into your body!",
-         monster->name(DESC_NOCAP_THE).c_str());
-
-    behaviour_event(monster, ME_WHACK, MHITYOU, you.pos());
-    monster->hurt(&you, inflicted);
-
-    if (monster->alive())
-        print_wounds(monster);
-
-    inc_hp(inflicted / 2, false);
-
-    return (true);
+    return (success);
 }
 
 bool burn_freeze(int pow, beam_type flavour, int targetmon)
