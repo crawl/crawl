@@ -1511,6 +1511,10 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_ORCS:
         mon_type = MONS_ORC;
+        if (one_chance_in(6))
+            mon_type = MONS_ORC_WIZARD;
+        if (one_chance_in(8))
+            mon_type = MONS_ORC_PRIEST;
         break;
 
     case BAND_ORC_WARRIOR:
