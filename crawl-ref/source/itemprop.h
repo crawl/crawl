@@ -535,32 +535,29 @@ enum vorpal_damage_type
     DAMV_MASK           = 0xf000        // strips non-vorpal specification
 };
 
-// NOTE:  This order is very special!  Its basically the same as ZAP_*,
-// and there are bits of the code that still use that fact.
-// See item_def::zap().
-enum wand_type                         // mitm[].subtype
+enum wand_type
 {
-    WAND_FLAME,                        //    0
+    WAND_FLAME,
     WAND_FROST,
     WAND_SLOWING,
     WAND_HASTING,
     WAND_MAGIC_DARTS,
-    WAND_HEALING,                      //    5
+    WAND_HEALING,
     WAND_PARALYSIS,
     WAND_FIRE,
     WAND_COLD,
     WAND_CONFUSION,
-    WAND_INVISIBILITY,                 //   10
+    WAND_INVISIBILITY,
     WAND_DIGGING,
     WAND_FIREBALL,
     WAND_TELEPORTATION,
     WAND_LIGHTNING,
-    WAND_POLYMORPH_OTHER,              //   15
+    WAND_POLYMORPH_OTHER,
     WAND_ENSLAVEMENT,
     WAND_DRAINING,
     WAND_RANDOM_EFFECTS,
     WAND_DISINTEGRATION,
-    NUM_WANDS                          // must remain last member {dlb}
+    NUM_WANDS
 };
 
 enum zap_count_type

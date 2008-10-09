@@ -32,78 +32,7 @@ enum mon_resist_type
     MON_OTHER                   // monster unaffected, but for other reasons
 };
 
-// must match wand subtypes! (see item_def::zap())
-enum zap_type
-{
-    ZAP_FLAME,                         //    0
-    ZAP_FROST,
-    ZAP_SLOWING,
-    ZAP_HASTING,
-    ZAP_MAGIC_DARTS,
-    ZAP_HEALING,                       //    5
-    ZAP_PARALYSIS,
-    ZAP_FIRE,
-    ZAP_COLD,
-    ZAP_CONFUSION,
-    ZAP_INVISIBILITY,                  //   10
-    ZAP_DIGGING,
-    ZAP_FIREBALL,
-    ZAP_TELEPORTATION,
-    ZAP_LIGHTNING,
-    ZAP_POLYMORPH_OTHER,               //   15
-    ZAP_VENOM_BOLT,
-    ZAP_NEGATIVE_ENERGY,
-    ZAP_CRYSTAL_SPEAR,
-    ZAP_BEAM_OF_ENERGY,
-    ZAP_MYSTIC_BLAST,                  //   20
-    ZAP_ENSLAVEMENT,
-    ZAP_PAIN,
-    ZAP_STICKY_FLAME,
-    ZAP_DISPEL_UNDEAD,
-    ZAP_CLEANSING_FLAME,               //   25
-    ZAP_BONE_SHARDS,
-    ZAP_BANISHMENT,
-    ZAP_DEGENERATION,
-    ZAP_STING,
-    ZAP_HELLFIRE,                      //   30
-    ZAP_IRON_BOLT,
-    ZAP_STRIKING,
-    ZAP_STONE_ARROW,
-    ZAP_ELECTRICITY,
-    ZAP_ORB_OF_ELECTRICITY,            //   35
-    ZAP_SPIT_POISON,
-    ZAP_DEBUGGING_RAY,
-    ZAP_BREATHE_FIRE,
-    ZAP_BREATHE_FROST,
-    ZAP_BREATHE_ACID,                  //   40
-    ZAP_BREATHE_POISON,
-    ZAP_BREATHE_POWER,
-    ZAP_ENSLAVE_UNDEAD,
-    ZAP_AGONY,
-    ZAP_DISRUPTION,                    //   45
-    ZAP_DISINTEGRATION,                //   46
-    // ZAP_ISKS_CROSS, //   47: Isk's Cross -- commented out, deprecated {dlb}
-    ZAP_BREATHE_STEAM = 48,            //   48
-    ZAP_CONTROL_DEMON,
-    ZAP_ORB_OF_FRAGMENTATION,          //   50
-    ZAP_ICE_BOLT,
-    ZAP_ICE_STORM,
-    ZAP_BACKLIGHT,                     //jmf: added next bunch 19mar2000
-    ZAP_SLEEP,
-    ZAP_FLAME_TONGUE,
-    ZAP_SANDBLAST,
-    ZAP_SMALL_SANDBLAST,
-    ZAP_MAGMA,
-    ZAP_POISON_ARROW,
-    ZAP_BREATHE_STICKY_FLAME,
-    ZAP_BREATHE_LIGHTNING,
-    ZAP_PETRIFY,
-    ZAP_HELLFROST,
-    NUM_ZAPS                           // must remain last member {dlb}
-};
-
 struct dist;
-
 struct bolt
 {
     // INPUT parameters set by caller

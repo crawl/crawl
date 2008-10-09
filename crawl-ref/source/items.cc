@@ -2475,29 +2475,42 @@ bool item_def::launched_by(const item_def &launcher) const
     return (sub_type == mt || (mt == MI_STONE && sub_type == MI_SLING_BULLET));
 }
 
-int item_def::zap() const
+zap_type item_def::zap() const
 {
     if (base_type != OBJ_WANDS)
         return (ZAP_DEBUGGING_RAY);
 
-    zap_type result;
-    switch (sub_type)
+    zap_type result = ZAP_DEBUGGING_RAY;
+    switch (static_cast<wand_type>(sub_type))
     {
-    case WAND_ENSLAVEMENT:    result = ZAP_ENSLAVEMENT;     break;
-    case WAND_DRAINING:       result = ZAP_NEGATIVE_ENERGY; break;
-    case WAND_DISINTEGRATION: result = ZAP_DISINTEGRATION;  break;
-
+    case WAND_FLAME:           result = ZAP_FLAME;           break;
+    case WAND_FROST:           result = ZAP_FROST;           break;
+    case WAND_SLOWING:         result = ZAP_SLOWING;         break;
+    case WAND_HASTING:         result = ZAP_HASTING;         break;
+    case WAND_MAGIC_DARTS:     result = ZAP_MAGIC_DARTS;     break;
+    case WAND_HEALING:         result = ZAP_HEALING;         break;
+    case WAND_PARALYSIS:       result = ZAP_PARALYSIS;       break;
+    case WAND_FIRE:            result = ZAP_FIRE;            break;
+    case WAND_COLD:            result = ZAP_COLD;            break;
+    case WAND_CONFUSION:       result = ZAP_CONFUSION;       break;
+    case WAND_INVISIBILITY:    result = ZAP_INVISIBILITY;    break;
+    case WAND_DIGGING:         result = ZAP_DIGGING;         break;
+    case WAND_FIREBALL:        result = ZAP_FIREBALL;        break;
+    case WAND_TELEPORTATION:   result = ZAP_TELEPORTATION;   break;
+    case WAND_LIGHTNING:       result = ZAP_LIGHTNING;       break;
+    case WAND_POLYMORPH_OTHER: result = ZAP_POLYMORPH_OTHER; break;
+    case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
+    case WAND_DRAINING:        result = ZAP_NEGATIVE_ENERGY; break;
+    case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATION;  break;
     case WAND_RANDOM_EFFECTS:
-        result = static_cast<zap_type>(random2(16));
+        result = static_cast<zap_type>(random2(ZAP_LAST_RANDOM + 1));
         if (one_chance_in(20))
             result = ZAP_NEGATIVE_ENERGY;
         if (one_chance_in(17))
             result = ZAP_ENSLAVEMENT;
         break;
 
-    default:
-        result = static_cast<zap_type>(sub_type);
-        break;
+    case NUM_WANDS: break;
     }
     return (result);
 }

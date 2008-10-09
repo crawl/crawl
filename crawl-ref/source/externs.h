@@ -462,10 +462,8 @@ public:
                      unsigned long ignore_flags = 0x0) const;
     bool has_spells() const;
     bool cursed() const;
-    int  book_number() const;
-    int zap() const; // what kind of beam it shoots (if wand).
-                     // XXX should really return zap_type!
-
+    int book_number() const;
+    zap_type zap() const; // what kind of beam it shoots (if wand).
 
     // Returns index in mitm array. Results are undefined if this item is
     // not in the array!
