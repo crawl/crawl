@@ -364,8 +364,7 @@ static void _terminate_butchery(bool wpn_switch, bool removed_gloves,
 {
     // Switch weapon back.
     if (wpn_switch && you.equip[EQ_WEAPON] != old_weapon
-        && (you.equip[EQ_WEAPON] == -1
-            || !item_cursed(you.inv[you.equip[EQ_WEAPON]])))
+        && (!you.weapon() || !item_cursed(*you.weapon())))
     {
         start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
     }
@@ -475,8 +474,7 @@ bool butchery(int which_corpse)
                              && !item_cursed(you.inv[you.equip[EQ_GLOVES]]));
 
     bool can_butcher      = teeth_butcher || barehand_butcher
-                            || you.equip[EQ_WEAPON] != -1
-                               && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
+                             || (you.weapon() && can_cut_meat(*you.weapon()));
 
     if (!Options.easy_butcher && !can_butcher)
     {

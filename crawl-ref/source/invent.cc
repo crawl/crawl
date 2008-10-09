@@ -1167,13 +1167,13 @@ static bool _check_old_item_warning( const item_def& item,
                                     operation_types oper )
 {
     item_def old_item;
-    std::string prompt = "";
+    std::string prompt;
     if (oper == OPER_WIELD) // can we safely unwield old item?
     {
-        if (you.equip[EQ_WEAPON] == -1)
+        if (!you.weapon())
             return (true);
 
-        old_item = you.inv[you.equip[EQ_WEAPON]];
+        old_item = *you.weapon();
         if (!has_warning_inscription(old_item, OPER_WIELD))
             return (true);
 

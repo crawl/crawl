@@ -92,9 +92,9 @@ bool can_wield(item_def *weapon, bool say_reason,
     }
 
     if (!ignore_temporary_disability
-        && you.equip[EQ_WEAPON] != -1
-        && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
-        && item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
+        && you.weapon()
+        && you.weapon()->base_type == OBJ_WEAPONS
+        && item_cursed(*you.weapon()))
     {
         SAY(mpr("You can't unwield your weapon to draw a new one!"));
         return (false);
@@ -1075,12 +1075,10 @@ bool do_wear_armour( int item, bool quiet )
         return (!takeoff_armour(item));
 
     // if you're wielding something,
-    if (you.equip[EQ_WEAPON] != -1
+    if (you.weapon()
         // attempting to wear a shield,
         && is_shield(you.inv[item])
-        && is_shield_incompatible(
-                    you.inv[you.equip[EQ_WEAPON]],
-                    &you.inv[item]))
+        && is_shield_incompatible(*you.weapon(), &you.inv[item]))
     {
         if (!quiet)
            mpr("You'd need three hands to do that!");
@@ -2030,7 +2028,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // CALCULATIONS FOR LAUNCHED WEAPONS
     if (projected == LRET_LAUNCHED)
     {
-        const item_def &launcher = you.inv[you.equip[EQ_WEAPON]];
+        const item_def &launcher = *you.weapon();
 
         // Extract launcher bonuses due to magic.
         lnchHitBonus = launcher.plus;
@@ -2071,17 +2069,15 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         ammoDamBonus = ammoHitBonus;
 
         // Check for matches; dwarven, elven, orcish.
-        if (!get_equip_race(you.inv[you.equip[EQ_WEAPON]]) == 0)
+        if (!(get_equip_race(*you.weapon()) == 0))
         {
-            if (get_equip_race(you.inv[you.equip[EQ_WEAPON]])
-                        == get_equip_race(item))
+            if (get_equip_race(*you.weapon()) == get_equip_race(item))
             {
                 baseHit++;
                 baseDam++;
 
                 // elves with elven bows
-                if (get_equip_race(you.inv[you.equip[EQ_WEAPON]])
-                        == ISFLAG_ELVEN
+                if (get_equip_race(*you.weapon()) == ISFLAG_ELVEN
                     && player_genus(GENPC_ELVEN))
                 {
                     baseHit++;
@@ -2259,7 +2255,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // ID check. Can't ID off teleported projectiles, uh, because
         // it's too weird. Also it messes up the messages.
-        if (item_ident(you.inv[you.equip[EQ_WEAPON]], ISFLAG_KNOW_PLUSES))
+        if (item_ident(*you.weapon(), ISFLAG_KNOW_PLUSES))
         {
             if (!teleport
                 && !item_ident(you.inv[throw_2], ISFLAG_KNOW_PLUSES)
@@ -2274,7 +2270,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
         else if (!teleport && x_chance_in_y(shoot_skill, 100))
         {
-            item_def& weapon = you.inv[you.equip[EQ_WEAPON]];
+            item_def& weapon = *you.weapon();
             set_ident_flags(weapon, ISFLAG_KNOW_PLUSES);
 
             mprf("You are wielding %s.", weapon.name(DESC_NOCAP_A).c_str());

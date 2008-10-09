@@ -1033,48 +1033,42 @@ bool cast_summon_small_mammals(int pow, god_type god)
 
 bool cast_sticks_to_snakes(int pow, god_type god)
 {
-    const int wpn = you.equip[EQ_WEAPON];
-
-    if (wpn == -1)
+    if (!you.weapon())
     {
         mprf("Your %s feel slithery!", your_hand(true).c_str());
         return (false);
     }
 
+    const item_def& wpn = *you.weapon();
+
     // Don't enchant sticks marked with {!D}.
-    if (!check_warning_inscriptions(you.inv[wpn], OPER_DESTROY))
+    if (!check_warning_inscriptions(wpn, OPER_DESTROY))
     {
         mprf("%s feel%s slithery for a moment!",
-             you.inv[wpn].name(DESC_CAP_YOUR).c_str(),
-             you.inv[wpn].quantity > 1 ? "s" : "");
+             wpn.name(DESC_CAP_YOUR).c_str(),
+             wpn.quantity > 1 ? "s" : "");
         return (false);
     }
 
     monster_type mon = MONS_PROGRAM_BUG;
 
     const int dur = std::min(3 + random2(pow) / 20, 5);
-
     int how_many_max = 1 + random2(1 + you.skills[SK_TRANSMIGRATION]) / 4;
-
-    const bool friendly = (!item_cursed(you.inv[wpn]));
-
-    const beh_type beha = (friendly) ? BEH_FRIENDLY
-                                     : BEH_HOSTILE;
-    const unsigned short hitting = (friendly) ? you.pet_target
-                                              : MHITYOU;
+    const bool friendly = (!item_cursed(wpn));
+    const beh_type beha = (friendly) ? BEH_FRIENDLY : BEH_HOSTILE;
+    const unsigned short hitting = (friendly) ? you.pet_target : MHITYOU;
 
     int count = 0;
 
-    if (you.inv[wpn].base_type == OBJ_MISSILES
-        && you.inv[wpn].sub_type == MI_ARROW)
+    if (wpn.base_type == OBJ_MISSILES && wpn.sub_type == MI_ARROW)
     {
-        if (you.inv[wpn].quantity < how_many_max)
-            how_many_max = you.inv[wpn].quantity;
+        if (wpn.quantity < how_many_max)
+            how_many_max = wpn.quantity;
 
         for (int i = 0; i <= how_many_max; i++)
         {
             if (one_chance_in(5 - std::min(4, div_rand_round(pow * 2, 25)))
-                || get_ammo_brand(you.inv[wpn]) == SPMSL_POISONED)
+                || get_ammo_brand(wpn) == SPMSL_POISONED)
             {
                 mon = x_chance_in_y(pow / 3, 100) ? MONS_BROWN_SNAKE
                                                   : MONS_SNAKE;
@@ -1092,19 +1086,19 @@ bool cast_sticks_to_snakes(int pow, god_type god)
         }
     }
 
-    if (you.inv[wpn].base_type == OBJ_WEAPONS
-        && (you.inv[wpn].sub_type == WPN_CLUB
-            || you.inv[wpn].sub_type == WPN_SPEAR
-            || you.inv[wpn].sub_type == WPN_QUARTERSTAFF
-            || you.inv[wpn].sub_type == WPN_SCYTHE
-            || you.inv[wpn].sub_type == WPN_GIANT_CLUB
-            || you.inv[wpn].sub_type == WPN_GIANT_SPIKED_CLUB
-            || you.inv[wpn].sub_type == WPN_BOW
-            || you.inv[wpn].sub_type == WPN_LONGBOW
-            || you.inv[wpn].sub_type == WPN_ANKUS
-            || you.inv[wpn].sub_type == WPN_HALBERD
-            || you.inv[wpn].sub_type == WPN_GLAIVE
-            || you.inv[wpn].sub_type == WPN_BLOWGUN))
+    if (wpn.base_type == OBJ_WEAPONS
+        && (wpn.sub_type == WPN_CLUB
+            || wpn.sub_type == WPN_SPEAR
+            || wpn.sub_type == WPN_QUARTERSTAFF
+            || wpn.sub_type == WPN_SCYTHE
+            || wpn.sub_type == WPN_GIANT_CLUB
+            || wpn.sub_type == WPN_GIANT_SPIKED_CLUB
+            || wpn.sub_type == WPN_BOW
+            || wpn.sub_type == WPN_LONGBOW
+            || wpn.sub_type == WPN_ANKUS
+            || wpn.sub_type == WPN_HALBERD
+            || wpn.sub_type == WPN_GLAIVE
+            || wpn.sub_type == WPN_BLOWGUN))
     {
         // Upsizing Snakes to Brown Snakes as the base class for using
         // the really big sticks (so bonus applies really only to trolls,
@@ -1112,7 +1106,7 @@ bool cast_sticks_to_snakes(int pow, god_type god)
         // any character is strong enough to bother lugging a few of
         // these around.  -- bwr
 
-        if (item_mass(you.inv[wpn]) < 300)
+        if (item_mass(wpn) < 300)
             mon = MONS_SNAKE;
         else
             mon = MONS_BROWN_SNAKE;
@@ -1138,7 +1132,8 @@ bool cast_sticks_to_snakes(int pow, god_type god)
         }
     }
 
-    count = MIN(count, you.inv[you.equip[EQ_WEAPON]].quantity);
+    if (wpn.quantity < count)
+        count = wpn.quantity;
 
     if (count > 0)
     {

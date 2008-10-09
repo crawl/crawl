@@ -2603,19 +2603,17 @@ static void _decrement_durations()
         you.duration[DUR_WEAPON_BRAND]--;
     else if (you.duration[DUR_WEAPON_BRAND] == 1)
     {
-        const int wpn = you.equip[EQ_WEAPON];
-        const int temp_effect = get_weapon_brand( you.inv[wpn] );
+        item_def& weapon = *you.weapon();
+        const int temp_effect = get_weapon_brand(weapon);
 
         you.duration[DUR_WEAPON_BRAND] = 0;
-
-        set_item_ego_type( you.inv[wpn], OBJ_WEAPONS, SPWPN_NORMAL );
-
-        std::string msg = you.inv[wpn].name(DESC_CAP_YOUR);
+        set_item_ego_type( weapon, OBJ_WEAPONS, SPWPN_NORMAL );
+        std::string msg = weapon.name(DESC_CAP_YOUR);
 
         switch (temp_effect)
         {
         case SPWPN_VORPAL:
-            if (get_vorpal_type(you.inv[you.equip[EQ_WEAPON]]) == DVORP_SLICING)
+            if (get_vorpal_type(weapon) == DVORP_SLICING)
                 msg += " seems blunter.";
             else
                 msg += " feels lighter.";

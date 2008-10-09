@@ -857,12 +857,12 @@ static int damage_or_escape_net(int hold)
     int damage = -escape;
 
     // your weapon may damage the net, max. bonus of 2
-    if (you.equip[EQ_WEAPON] != -1)
+    if (you.weapon())
     {
-        if (can_cut_meat(you.inv[you.equip[EQ_WEAPON]]))
+        if (can_cut_meat(*you.weapon()))
             damage++;
-
-        int brand = get_weapon_brand( you.inv[you.equip[EQ_WEAPON]] );
+            
+        int brand = get_weapon_brand(*you.weapon());
         if (brand == SPWPN_FLAMING || brand == SPWPN_VORPAL)
             damage++;
     }
@@ -947,9 +947,9 @@ void free_self_from_net()
     {
         // For previously undamaged nets this takes at least 2 and at most
         // 8 turns.
-        bool can_slice = you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS
-                         || you.equip[EQ_WEAPON] != -1
-                            && can_cut_meat(you.inv[you.equip[EQ_WEAPON]]);
+        bool can_slice =
+            (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+            || (you.weapon() && can_cut_meat(*you.weapon()));
 
         int damage = -do_what;
 

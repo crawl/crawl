@@ -198,8 +198,6 @@ enum beam_type                  // beam[].flavour
     BEAM_HOLY,
     BEAM_FRAG,
     BEAM_LAVA,
-    BEAM_BACKLIGHT,
-    BEAM_SLEEP,
     BEAM_ICE,
     BEAM_NUKE,
     BEAM_RANDOM,                  // 25 - currently translates into FIRE..ACID
@@ -225,6 +223,8 @@ enum beam_type                  // beam[].flavour
     BEAM_ENSLAVE_DEMON,
     BEAM_BLINK,
     BEAM_PETRIFY,
+    BEAM_BACKLIGHT,
+    BEAM_SLEEP,
     BEAM_LAST_ENCHANTMENT = BEAM_PETRIFY,
 
     // new beams for evaporate

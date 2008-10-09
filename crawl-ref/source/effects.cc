@@ -670,10 +670,10 @@ void random_uselessness(int scroll_slot)
         break;
 
     case 2:
-        if (you.equip[EQ_WEAPON] != -1)
+        if (you.weapon())
         {
             mprf("%s glows %s for a moment.",
-                 you.inv[you.equip[EQ_WEAPON]].name(DESC_CAP_YOUR).c_str(),
+                 you.weapon()->name(DESC_CAP_YOUR).c_str(),
                  weird_glowing_colour().c_str());
         }
         else
@@ -2524,14 +2524,14 @@ void handle_time(long time_delta)
 
     // Random chance to identify staff in hand based off of Spellcasting
     // and an appropriate other spell skill... is 1/20 too fast?
-    if (you.equip[EQ_WEAPON] != -1
-        && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_STAVES
-        && !item_type_known( you.inv[you.equip[EQ_WEAPON]] )
+    if (you.weapon()
+        && you.weapon()->base_type == OBJ_STAVES
+        && !item_type_known(*you.weapon())
         && one_chance_in(20))
     {
         int total_skill = you.skills[SK_SPELLCASTING];
 
-        switch (you.inv[you.equip[EQ_WEAPON]].sub_type)
+        switch (you.weapon()->sub_type)
         {
         case STAFF_WIZARDRY:
         case STAFF_ENERGY:
@@ -2580,10 +2580,10 @@ void handle_time(long time_delta)
 
         if (x_chance_in_y(total_skill, 100))
         {
-            item_def& item = you.inv[you.equip[EQ_WEAPON]];
+            item_def& item = *you.weapon();
 
-            set_ident_type( OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE );
-            set_ident_flags( item, ISFLAG_IDENT_MASK );
+            set_ident_type(OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE);
+            set_ident_flags(item, ISFLAG_IDENT_MASK);
 
             mprf("You are wielding %s.", item.name(DESC_NOCAP_A).c_str());
             more();

@@ -219,11 +219,6 @@ bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
     mprf(MSGCH_DIAGNOSTICS, "zapping: power=%d", power );
 #endif
 
-    // GDL: note that rangeMax is set to 0, which means that max range is
-    // equal to range.  This is OK, since rangeMax really only matters for
-    // stuff monsters throw/zap.
-
-    // All of the following settings might be changed by _zappy().
     _beam_set_default_values(pbolt, power);
 
     // For player bolts, check whether tracer goes through friendlies.
@@ -244,320 +239,14 @@ bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
         mpr(msg.c_str());
 
     if (ztype == ZAP_LIGHTNING)
-    {
-        // XXX: Needs to check silenced at other location, too. {dlb}
         noisy(25, you.pos(), "You hear a mighty clap of thunder!");
-    }
-    else if (ztype == ZAP_DIGGING)
+
+    if (ztype == ZAP_DIGGING)
         pbolt.aimed_at_spot = false;
 
     fire_beam(pbolt);
 
     return (true);
-}
-
-// pbolt needs to be initialized for tracing: with the the maximum range,
-// and the flavour to allow for completely resistant monsters.
-static void _get_max_range( zap_type z_type, int power, bolt &pbolt )
-{
-    // sorted by range
-    switch (z_type)
-    {
-    case ZAP_SMALL_SANDBLAST:
-        pbolt.flavour        = BEAM_FRAG;
-        break;
-
-    case ZAP_SANDBLAST:
-        pbolt.flavour        = BEAM_FRAG;
-        break;
-
-    case ZAP_FLAME_TONGUE:
-        if (power > 25)
-            power = 25;
-
-        pbolt.flavour        = BEAM_FIRE;
-        break;
-
-    case ZAP_CLEANSING_FLAME:
-        pbolt.name           = "golden flame";
-        pbolt.flavour        = BEAM_HOLY;
-        pbolt.is_explosion   = true;
-        break;
-
-    case ZAP_MAGMA:
-        pbolt.flavour        = BEAM_LAVA;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_IRON_BOLT:
-        pbolt.flavour        = BEAM_MMISSILE;               // unresistable
-        break;
-
-    case ZAP_CRYSTAL_SPEAR:
-        pbolt.flavour        = BEAM_MMISSILE;                // unresistable
-        break;
-
-    case ZAP_SPIT_POISON:
-        if (power > 50)
-            power = 50;
-
-        pbolt.flavour        = BEAM_POISON;
-        break;
-
-    case ZAP_BREATHE_FIRE:
-        if (power > 50)
-            power = 50;
-
-        pbolt.flavour        = BEAM_FIRE;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_BREATHE_FROST:
-        if (power > 50)
-            power = 50;
-
-        pbolt.flavour        = BEAM_COLD;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_BREATHE_ACID:
-        if (power > 50)
-            power = 50;
-
-        pbolt.flavour        = BEAM_ACID;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_BREATHE_POISON:    // leaves clouds of gas
-        if (power > 50)
-            power = 50;
-
-        pbolt.flavour        = BEAM_POISON;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_BREATHE_POWER:
-        if (power > 50)
-            power = 50;
-
-        pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_BREATHE_STEAM:
-        pbolt.flavour        = BEAM_STEAM;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_STRIKING:
-    case ZAP_MAGIC_DARTS:
-    case ZAP_STONE_ARROW:
-    case ZAP_MYSTIC_BLAST:
-        pbolt.flavour        = BEAM_MMISSILE;               // unresistable
-        break;
-
-    case ZAP_STING:
-    case ZAP_POISON_ARROW:
-        pbolt.flavour        = BEAM_POISON;
-        break;
-
-    case ZAP_FLAME:
-    case ZAP_STICKY_FLAME:
-        pbolt.flavour        = BEAM_FIRE;
-        break;
-
-    case ZAP_FROST:
-        pbolt.flavour        = BEAM_COLD;
-        break;
-
-    case ZAP_ICE_BOLT:
-        pbolt.flavour        = BEAM_ICE;                     // half resistable
-        break;
-
-    case ZAP_ELECTRICITY:
-        pbolt.flavour        = BEAM_ELECTRICITY;           // beams & reflects
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_DISRUPTION:
-    case ZAP_DISINTEGRATION:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_DISINTEGRATION;
-        break;
-
-    case ZAP_PAIN:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_PAIN;
-        break;
-
-    case ZAP_DISPEL_UNDEAD:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_DISPEL_UNDEAD;
-        break;
-
-    case ZAP_FIRE:
-        pbolt.flavour        = BEAM_FIRE;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_BONE_SHARDS:
-        pbolt.flavour        = BEAM_MAGIC;                      // unresisted
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_COLD:
-        pbolt.flavour        = BEAM_COLD;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_NEGATIVE_ENERGY:
-        pbolt.flavour        = BEAM_NEG;                     // drains levels
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_BEAM_OF_ENERGY:    // bolt of innacuracy
-        pbolt.flavour        = BEAM_ENERGY;                    // unresisted
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_VENOM_BOLT:
-        pbolt.flavour        = BEAM_POISON;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_LIGHTNING:
-        pbolt.flavour        = BEAM_ELECTRICITY;           // beams & reflects
-        pbolt.is_beam        = true;
-        break;
-
-    // enchantments
-    case ZAP_ENSLAVEMENT:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_CHARM;
-        break;
-
-    case ZAP_BANISHMENT:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_BANISH;
-        break;
-
-    case ZAP_DEGENERATION:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_DEGENERATE;
-        break;
-
-    case ZAP_ENSLAVE_UNDEAD:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_ENSLAVE_UNDEAD;
-        break;
-
-    case ZAP_CONTROL_DEMON:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_ENSLAVE_DEMON;
-        break;
-
-    case ZAP_SLEEP:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_SLEEP;
-        break;
-
-    case ZAP_BACKLIGHT:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_BACKLIGHT;
-        break;
-
-    case ZAP_SLOWING:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_SLOW;
-        break;
-
-    case ZAP_HASTING:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_HASTE;
-        break;
-
-    case ZAP_PARALYSIS:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_PARALYSIS;
-        break;
-
-    case ZAP_PETRIFY:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_PETRIFY;
-        break;
-
-    case ZAP_CONFUSION:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_CONFUSION;
-        break;
-
-    case ZAP_INVISIBILITY:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_INVISIBILITY;
-        break;
-
-    case ZAP_HEALING:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_HEALING;
-        break;
-
-    case ZAP_TELEPORTATION:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_TELEPORT;
-        break;
-
-    case ZAP_POLYMORPH_OTHER:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_POLYMORPH;
-        break;
-
-    case ZAP_AGONY:
-        pbolt.name           = "0agony";
-        pbolt.flavour        = BEAM_PAIN;
-        break;
-
-    case ZAP_DIGGING:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_DIGGING;
-        pbolt.is_beam        = true;
-        break;
-
-    // explosions
-    case ZAP_FIREBALL:
-        pbolt.name           = "fireball";
-        pbolt.flavour        = BEAM_FIRE;                      // fire
-        pbolt.is_explosion   = true;
-        break;
-
-    case ZAP_ICE_STORM:
-        pbolt.name           = "great blast of cold";
-        pbolt.ench_power     = power;              // used for radius
-        pbolt.flavour        = BEAM_ICE;           // half resisted
-        pbolt.is_explosion   = true;
-        break;
-
-    case ZAP_ORB_OF_FRAGMENTATION:                      // cap 150
-        pbolt.name           = "metal orb";
-        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
-        pbolt.is_explosion   = true;
-        break;
-
-    case ZAP_HELLFIRE:
-        pbolt.flavour        = BEAM_HELLFIRE;
-        pbolt.is_explosion   = true;
-        break;
-
-    case ZAP_ORB_OF_ELECTRICITY:                        // cap 150
-        pbolt.name           = "orb of electricity";
-        pbolt.flavour        = BEAM_ELECTRICITY;
-        pbolt.is_explosion   = true;
-        break;
-
-    case ZAP_DEBUGGING_RAY:
-    default: // buggy beam
-        pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
-        break;
-    }
 }
 
 // Returns true if the path is considered "safe", and false if there are
@@ -572,7 +261,6 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
 
     _beam_set_default_values(pbolt, power);
     pbolt.name = "unimportant";
-    _get_max_range(ztype, power, pbolt);
 
     pbolt.is_tracer      = true;
     pbolt.source         = you.pos();
@@ -633,856 +321,1030 @@ dice_def calc_dice( int num_dice, int max_damage )
     return (ret);
 }
 
-// Need to see zapping() for default values not set within this function {dlb}
-static void _zappy( zap_type z_type, int power, bolt &pbolt )
+template<typename T>
+struct power_deducer
 {
-    int temp_rand = 0;          // probability determination {dlb}
+    virtual T operator()(int pow) const = 0;
+};
 
-    // Note: The incoming power is not linear in the case of spellcasting.
-    // The power curve currently allows for the character to reasonably
-    // get up to a power level of about a 100, but more than that will
-    // be very hard (and the maximum is 200).  The low level power caps
-    // provide the useful feature in that they allow for low level spells
-    // to have quick advancement, but don't cause them to obsolete the
-    // higher level spells. -- bwr
-    //
-    // I've added some example characters below to show how little
-    // people should be concerned about the power caps.
-    //
-    // The example characters are simplified to three stats:
-    //
-    // - Intelligence: This magnifies power, it's very useful.
-    //
-    // - Skills: This represents the character having Spellcasting
-    //   and the average of the component skills at this level.
-    //   Although, Spellcasting probably isn't quite as high as
-    //   other spell skills for a lot of characters, note that it
-    //   contributes much less to the total power (about 20%).
-    //
-    // - Enhancers:  These are equipment that the player can use to
-    //   apply additional magnifiers (x1.5) to power.  There are
-    //   also inhibitors that reduce power (/2.0), but we're not
-    //   concerned about those here.  Anyways, the character can
-    //   currently have up to 3 levels (for x1.5, x2.25, x3.375).
-    //   The lists below should help to point out the difficulty
-    //   and cost of getting more than one level of enhancement.
-    //
-    //   Here's a list of current magnifiers:
-    //
-    //   - rings of fire/cold
-    //   - staff of fire/cold/air/earth/poison/death/conjure/enchant/summon
-    //   - staff of Olgreb (poison)
-    //   - robe of the Archmagi (necro, conjure, enchant, summon)
-    //   - Mummy intrinsic (+1 necromancy at level 13, +2 at level 26)
-    //   - Necromutation (+1 to necromancy -- note: undead can't use this)
-    //   - Ring of Fire (+1 to fire)
-    //
-    //   The maximum enhancement, by school (but capped at 3):
-    //
-    //   - Necromancy:  4 (Mummies), 3 (others)
-    //   - Fire:        4
-    //   - Cold:        3
-    //   - Conjuration: 2
-    //   - Enchantment: 2
-    //   - Summoning:   2
-    //   - Air:         1
-    //   - Earth:       1
-    //   - Poison:      1
-    //   - Translocations, Transmigrations, Divinations intentionally 0
+typedef power_deducer<int> tohit_deducer;
 
-    switch (z_type)
+template<int adder, int mult_num = 0, int mult_denom = 1>
+struct tohit_calculator : public tohit_deducer
+{
+    int operator()(int pow) const
     {
-    // level 1
-    //
-    // This cap is to keep these easy and very cheap spells from
-    // becoming too powerful.
-    //
-    // Example characters with about 25 power:
-    //
-    // - int  5, skills 20, 0 enhancers
-    // - int  5, skills 14, 1 enhancer
-    // - int 10, skills 10, 0 enhancers
-    // - int 10, skills  7, 1 enhancers
-    // - int 15, skills  7, 0 enhancers
-    // - int 20, skills  6, 0 enhancers
-    case ZAP_STRIKING:
-    case ZAP_MAGIC_DARTS:
-    case ZAP_STING:
-    case ZAP_ELECTRICITY:
-    case ZAP_FLAME_TONGUE:
-    case ZAP_SMALL_SANDBLAST:
-    case ZAP_DISRUPTION:                // ench_power boosted below
-    case ZAP_PAIN:                      // ench_power boosted below
-        if (power > 25)
-            power = 25;
-        break;
-
-    // level 2/3
-    //
-    // The following examples should make it clear that in the
-    // early game this cap is only limiting to serious spellcasters
-    // (they could easily reach the 20-10-0 example).
-    //
-    // Example characters with about 50 power:
-    //
-    // - int 10, skills 20, 0 enhancers
-    // - int 10, skills 14, 1 enhancer
-    // - int 15, skills 14, 0 enhancers
-    // - int 15, skills 10, 1 enhancer
-    // - int 20, skills 10, 0 enhancers
-    // - int 20, skills  7, 1 enhancer
-    // - int 25, skills  8, 0 enhancers
-    case ZAP_SANDBLAST:
-    case ZAP_FLAME:             // also ability (pow = lev * 2)
-    case ZAP_FROST:             // also ability (pow = lev * 2)
-    case ZAP_STONE_ARROW:
-        if (power > 50)
-            power = 50;
-        break;
-
-    // Here are some examples that show that its fairly safe to assume
-    // that a high level character can easily have 75 power.
-    //
-    // Example characters with about 75 power:
-    //
-    // - int 10, skills 27, 1 enhancer
-    // - int 15, skills 27, 0 enhancers
-    // - int 15, skills 16, 1 enhancer
-    // - int 20, skills 20, 0 enhancers
-    // - int 20, skills 14, 1 enhancer
-    // - int 25, skills 16, 0 enhancers
-
-    // level 4
-    //
-    // The following examples should make it clear that this is the
-    // effective maximum power.  Its not easy to get to 100 power,
-    // but 20-20-1 or 25-16-1 is certainly attainable by a high level
-    // spellcaster.  As you can see from the examples at 150 and 200,
-    // getting much power beyond this is very difficult.
-    //
-    // Level 3 and 4 spells cannot be overpowered.
-    //
-    // Example characters with about 100 power:
-    //
-    // - int 10, skills 27, 2 enhancers
-    // - int 15, skills 27, 1 enhancer
-    // - int 20, skills 20, 1 enhancer
-    // - int 25, skills 24, 0 enhancers
-    // - int 25, skills 16, 1 enhancer
-    case ZAP_MYSTIC_BLAST:
-    case ZAP_STICKY_FLAME:
-    case ZAP_ICE_BOLT:
-    case ZAP_DISPEL_UNDEAD:     // ench_power raised below
-        if (power > 100)
-            power = 100;
-        break;
-
-    // levels 5-7
-    //
-    // These spells used to be capped, but its very hard to raise
-    // power over 100, and these examples should show that.
-    // Only the twinkiest of characters are expected to get to 150.
-    //
-    // Example characters with about 150 power:
-    //
-    // - int 15, skills 27, 3 enhancers (actually, only 146)
-    // - int 20, skills 27, 2 enhancers (actually, only 137)
-    // - int 20, skills 21, 3 enhancers
-    // - int 25, skills 26, 2 enhancers
-    // - int 30, skills 21, 2 enhancers
-    // - int 40, skills 24, 1 enhancer
-    // - int 70, skills 20, 0 enhancers
-    case ZAP_FIRE:
-    case ZAP_COLD:
-    case ZAP_VENOM_BOLT:
-    case ZAP_MAGMA:
-    case ZAP_AGONY:
-    case ZAP_LIGHTNING:                 // also invoc * 6 or lev * 2 (abils)
-    case ZAP_NEGATIVE_ENERGY:           // also ability (pow = lev * 6)
-    case ZAP_IRON_BOLT:
-    case ZAP_DISINTEGRATION:
-    case ZAP_FIREBALL:
-    case ZAP_ORB_OF_ELECTRICITY:
-    case ZAP_ORB_OF_FRAGMENTATION:
-    case ZAP_POISON_ARROW:
-        // if (power > 150)
-        //     power = 150;
-        break;
-
-    // levels 8-9
-    //
-    // These spells are capped at 200 (which is the cap in calc_spell_power).
-    // As an example of how little of a cap that is, consider the fact
-    // that a 70-27-3 character has an uncapped power of 251.  Characters
-    // are never expected to get to this cap.
-    //
-    // Example characters with about 200 power:
-    //
-    // - int 30, skills 27, 3 enhancers (actually, only 190)
-    // - int 40, skills 27, 2 enhancers (actually, only 181)
-    // - int 40, skills 23, 3 enhancers
-    // - int 70, skills 27, 0 enhancers (actually, only 164)
-    // - int 70, skills 27, 1 enhancers (actually, only 194)
-    // - int 70, skills 20, 2 enhancers
-    // - int 70, skills 13, 3 enhancers
-    case ZAP_CRYSTAL_SPEAR:
-    case ZAP_HELLFIRE:
-    case ZAP_ICE_STORM:
-    case ZAP_CLEANSING_FLAME:
-        // if (power > 200)
-        //     power = 200;
-        break;
-
-    // unlimited power (needs a good reason)
-    case ZAP_BONE_SHARDS:    // incoming power is modified for mass
-    case ZAP_BEAM_OF_ENERGY: // inaccuracy (only on staff, hardly hits)
-        break;
-
-    // natural/mutant breath/spit powers (power ~= characer level)
-    case ZAP_SPIT_POISON:               // lev + mut * 5
-    case ZAP_BREATHE_FIRE:              // lev + mut * 4 + 12 (if dragonform)
-    case ZAP_BREATHE_FROST:             // lev
-    case ZAP_BREATHE_ACID:              // lev (or invoc * 3 from minor destr)
-    case ZAP_BREATHE_POISON:            // lev
-    case ZAP_BREATHE_POWER:             // lev
-    case ZAP_BREATHE_STEAM:             // lev
-        if (power > 50)
-            power = 50;
-        break;
-
-    // enchantments and other resistable effects
-    case ZAP_SLOWING:
-    case ZAP_HASTING:
-    case ZAP_PARALYSIS:
-    case ZAP_PETRIFY:
-    case ZAP_BACKLIGHT:
-    case ZAP_SLEEP:
-    case ZAP_CONFUSION:
-    case ZAP_INVISIBILITY:
-    case ZAP_ENSLAVEMENT:
-    case ZAP_TELEPORTATION:
-    case ZAP_DIGGING:
-    case ZAP_POLYMORPH_OTHER:
-    case ZAP_DEGENERATION:
-    case ZAP_BANISHMENT:
-        // This is the only power that matters.  We magnify it apparently
-        // to get values that work better with magic resistance checks...
-        // those checks will scale down this value and max it out at 120.
-        pbolt.ench_power *= 3;
-        pbolt.ench_power /= 2;
-        break;
-
-    // anything else we cap to 100
-    default:
-        if (power > 100)
-            power = 100;
-        break;
+        return adder + (pow * mult_num) / mult_denom;
     }
+};
 
-    // Note:  I'm only displaying the top damage and such here, that's
-    // because it's really not been known before (since the above caps
-    // didn't exist), so they were all pretty much unlimited before.
-    // Also note, that the high end damage occurs at the cap, only
-    // players that are that powerful can get that damage... and
-    // although these numbers might seem small, you should remember
-    // that Dragons in this game are 60-90 hp monsters, and very
-    // few monsters have more than 100 hp (and that 1d5 damage is
-    // still capable of taking a good sized chunk (and possibly killing)
-    // any monster you're likely to meet in the first three levels). -- bwr
+typedef power_deducer<dice_def> dam_deducer;
 
-    // Note: damage > 100 signals that "random2(damage - 100)" will be
-    // applied three times, which not only ups the damage but gives
-    // a more normal distribution.
-    switch (z_type)
+template<int numdice, int adder, int mult_num, int mult_denom>
+struct dicedef_calculator : public dam_deducer
+{
+    dice_def operator()(int pow) const
     {
-    case ZAP_STRIKING:                                  // cap 25
-        pbolt.name           = "force bolt";
-        pbolt.colour         = BLACK;
-        pbolt.damage         = dice_def( 1, 5 );            // dam: 5
-        pbolt.hit            = 8 + power / 10;              // 25: 10
-        pbolt.type           = dchar_glyph(DCHAR_SPACE);
-        pbolt.flavour        = BEAM_MMISSILE;               // unresistable
-        pbolt.obvious_effect = true;
-        break;
+        return dice_def(numdice, adder + (pow * mult_num) / mult_denom);
+    }
+};
 
-    case ZAP_MAGIC_DARTS:                               // cap 25
-        pbolt.name           = "magic dart";
-        pbolt.colour         = LIGHTMAGENTA;
-        pbolt.damage         = dice_def( 1, 3 + power / 5 ); // 25: 1d8
-        pbolt.hit            = AUTOMATIC_HIT;                // hits always
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_MMISSILE;                // unresistable
-        pbolt.obvious_effect = true;
-        break;
+template<int numdice, int adder, int mult_num, int mult_denom>
+struct calcdice_calculator : public dam_deducer
+{
+    dice_def operator()(int pow) const
+    {
+        return calc_dice(numdice, adder + (pow * mult_num) / mult_denom);
+    }
+};
 
-    case ZAP_STING:                                     // cap 25
-        pbolt.name           = "sting";
-        pbolt.colour         = GREEN;
-        pbolt.damage         = dice_def( 1, 3 + power / 5 ); // 25: 1d8
-        pbolt.hit            = 8 + power / 5;                // 25: 13
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_POISON;                  // extra damage
-        pbolt.obvious_effect = true;
-        break;
+struct zap_info
+{
+    zap_type ztype;
+    const char* name;           // NULL means handled specially
+    int power_cap;
+    dam_deducer* damage;
+    tohit_deducer* tohit;       // Enchantments have power modifier here
+    int colour;
+    bool is_enchantment;
+    beam_type flavour;
+    dungeon_char_type glyph;
+    bool always_obvious;
+    bool can_beam;
+    bool is_explosion;
+};
 
-    case ZAP_ELECTRICITY:                               // cap 20
-        pbolt.name           = "zap";
-        pbolt.colour         = LIGHTCYAN;
-        pbolt.damage         = dice_def( 1, 3 + random2(power) / 2 );// 25: 1d11
-        pbolt.hit            = 8 + power / 7;                        // 25: 11
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_ELECTRICITY;             // beams & reflects
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
+const zap_info zap_data[] = {
 
-    case ZAP_DISRUPTION:                                // cap 25
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_DISINTEGRATION;
-        pbolt.damage         = dice_def( 1, 4 + power / 5 );    // 25: 1d9
-        pbolt.ench_power    *= 3;
-        break;
+    {
+        ZAP_FLAME,
+        "puff of flame",
+        50,
+        new dicedef_calculator<2, 4, 1, 10>,
+        new tohit_calculator<8, 1, 10>,
+        RED,
+        false,
+        BEAM_FIRE,
+        DCHAR_FIRED_ZAP,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_PAIN:                                      // cap 25
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_PAIN;
-        pbolt.damage         = dice_def( 1, 4 + power / 5 );    // 25: 1d9
-        pbolt.ench_power    *= 7;
-        pbolt.ench_power    /= 2;
-        break;
+    {
+        ZAP_FROST,
+        "puff of frost",
+        50,
+        new dicedef_calculator<2, 4, 1, 10>,
+        new tohit_calculator<8, 1, 10>,
+        WHITE,
+        false,
+        BEAM_COLD,
+        DCHAR_FIRED_ZAP,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_FLAME_TONGUE:                              // cap 25
-        pbolt.name           = "flame";
-        pbolt.colour         = RED;
-        pbolt.damage         = dice_def( 1, 8 + power / 4 );    // 25: 1d14
-        pbolt.hit            = 7 + power / 6;                   // 25: 11
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_BOLT);
-        pbolt.flavour        = BEAM_FIRE;
-        pbolt.obvious_effect = true;
-        break;
+    {
+        ZAP_SLOWING,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_SLOW,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-    case ZAP_SMALL_SANDBLAST:                           // cap 25
-        pbolt.name           = "blast of ";
+    {
+        ZAP_HASTING,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_HASTE,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-        temp_rand            = random2(4);
-        pbolt.name          += (temp_rand == 0) ? "dust" :
-                               (temp_rand == 1) ? "dirt" :
-                               (temp_rand == 2) ? "grit" : "sand";
+    {
+        ZAP_MAGIC_DARTS,
+        "magic dart",
+        25,
+        new dicedef_calculator<1, 3, 1, 5>,
+        new tohit_calculator<AUTOMATIC_HIT>,
+        LIGHTMAGENTA,
+        false,
+        BEAM_MMISSILE,
+        DCHAR_FIRED_ZAP,
+        true,
+        false,
+        false
+    },
+    
+    {
+        ZAP_HEALING,
+        "0",
+        100,
+        new dicedef_calculator<1, 7, 1, 3>,
+        NULL,
+        BLACK,
+        true,
+        BEAM_HEALING,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-        pbolt.colour         = BROWN;
-        pbolt.damage         = dice_def( 1, 8 + power / 4 );    // 25: 1d14
-        pbolt.hit            = 8 + power / 5;                   // 25: 13
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_BOLT);
-        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
-        pbolt.obvious_effect = true;
-        break;
+    {
+        ZAP_PARALYSIS,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_PARALYSIS,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-    case ZAP_SANDBLAST:                                 // cap 50
-        pbolt.name           = coinflip() ? "blast of rock" : "rocky blast";
-        pbolt.colour         = BROWN;
-        pbolt.damage         = dice_def( 2, 4 + power / 3 );    // 25: 2d12
-        pbolt.hit            = 13 + power / 10;                 // 25: 15
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_BOLT);
-        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
-        pbolt.obvious_effect = true;
-        break;
+    {
+        ZAP_FIRE,
+        "bolt of fire",
+        200,
+        new calcdice_calculator<6, 18, 2, 3>,
+        new tohit_calculator<10, 1, 25>,
+        RED,
+        false,
+        BEAM_FIRE,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
+  
+    {
+        ZAP_COLD,
+        "bolt of cold",
+        200,
+        new calcdice_calculator<6, 18, 2, 3>,
+        new tohit_calculator<10, 1, 25>,
+        WHITE,
+        false,
+        BEAM_COLD,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
+        
+    {
+        ZAP_CONFUSION,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_CONFUSION,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-    case ZAP_BONE_SHARDS:
-        pbolt.name           = "spray of bone shards";
-        pbolt.colour         = LIGHTGREY;
+    {
+        ZAP_INVISIBILITY,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_INVISIBILITY,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
+    {
+        ZAP_DIGGING,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_DIGGING,
+        DCHAR_SPACE,
+        false,
+        true,
+        false
+    },
+
+    {
+        ZAP_FIREBALL,
+        "fireball",
+        200,
+        new calcdice_calculator<3, 10, 1, 2>,
+        new tohit_calculator<40>,
+        RED,
+        false,
+        BEAM_FIRE,
+        DCHAR_FIRED_ZAP,
+        false,
+        false,
+        true
+    },
+
+    {
+        ZAP_TELEPORTATION,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_TELEPORT,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
+
+    {
+        ZAP_LIGHTNING,
+        "bolt of lightning",
+        200,
+        new calcdice_calculator<1, 10, 3, 5>,
+        new tohit_calculator<7, 1, 40>,
+        LIGHTCYAN,
+        false,
+        BEAM_ELECTRICITY,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
+
+    {
+        ZAP_POLYMORPH_OTHER,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_POLYMORPH,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
+
+    {
+        ZAP_VENOM_BOLT,
+        "bolt of poison",
+        200,
+        new calcdice_calculator<4, 15, 1, 2>,
+        new tohit_calculator<8, 1, 20>,
+        LIGHTGREEN,
+        false,
+        BEAM_POISON,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
+    
+    {
+        ZAP_NEGATIVE_ENERGY,
+        "bolt of negative energy",
+        200,
+        new calcdice_calculator<4, 15, 3, 5>,
+        new tohit_calculator<8, 1, 20>,
+        DARKGREY,
+        false,
+        BEAM_NEG,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
+
+    {
+        ZAP_CRYSTAL_SPEAR,
+        "crystal spear",
+        200,
+        new calcdice_calculator<10, 23, 1, 1>,
+        new tohit_calculator<10, 1, 15>,
+        WHITE,
+        false,
+        BEAM_MMISSILE,
+        DCHAR_FIRED_MISSILE,
+        true,
+        false,
+        false
+    },
+
+    {
+        ZAP_BEAM_OF_ENERGY,
+        "narrow beam of energy",
+        1000,
+        new calcdice_calculator<12, 40, 3, 2>,
+        new tohit_calculator<1>,
+        YELLOW,
+        false,
+        BEAM_ENERGY,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
+
+    {
+        ZAP_MYSTIC_BLAST,
+        "orb of energy",
+        100,
+        new calcdice_calculator<2, 15, 2, 5>,
+        new tohit_calculator<10, 1, 7>,
+        LIGHTMAGENTA,
+        false,
+        BEAM_MMISSILE,
+        DCHAR_FIRED_ZAP,
+        true,
+        false,
+        false
+    },
+
+    {
+        ZAP_ENSLAVEMENT,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_CHARM,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
+
+    {
+        ZAP_PAIN,
+        "0",
+        100,
+        new dicedef_calculator<1, 4, 1,5>,
+        new tohit_calculator<0, 7, 2>,
+        BLACK,
+        true,
+        BEAM_PAIN,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
+
+    {
+        ZAP_STICKY_FLAME,
+        "sticky flame",
+        100,
+        new dicedef_calculator<2, 3, 1, 12>,
+        new tohit_calculator<11, 1, 10>,
+        RED,
+        false,
+        BEAM_FIRE,
+        DCHAR_FIRED_ZAP,
+        true,
+        false,
+        false
+    },
+
+    {
+        ZAP_DISPEL_UNDEAD,
+        "0",
+        100,
+        new calcdice_calculator<3, 20, 3, 4>,
+        new tohit_calculator<0, 3, 2>,
+        BLACK,
+        true,
+        BEAM_DISPEL_UNDEAD,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
+
+
+    {
+        ZAP_CLEANSING_FLAME,
+        "golden flame",
+        200,
+        new calcdice_calculator<2, 20, 2, 3>,
+        new tohit_calculator<150>,
+        YELLOW,
+        false,
+        BEAM_HOLY,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
+
+
+    {
+        ZAP_BONE_SHARDS,
+        "spray of bone shards",
         // Incoming power is highly dependant on mass (see spells3.cc).
         // Basic function is power * 15 + mass...  with the largest
         // available mass (3000) we get a power of 4500 at a power
         // level of 100 (for 3d20).
-        pbolt.damage         = dice_def( 3, 2 + (power / 250) );
-        pbolt.hit            = 8 + (power / 100);               // max hit: 53
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_MAGIC;                      // unresisted
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
+        10000,
+        new dicedef_calculator<3, 2, 1, 250>,
+        new tohit_calculator<8, 1, 100>,
+        LIGHTGREY,
+        false,
+        BEAM_MAGIC,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
 
-    case ZAP_FLAME:                                     // cap 50
-        pbolt.name           = "puff of flame";
-        pbolt.colour         = RED;
-        pbolt.damage         = dice_def( 2, 4 + power / 10 );// 25: 2d6  50: 2d9
-        pbolt.hit            = 8 + power / 10;               // 25: 10   50: 13
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_FIRE;
-        pbolt.obvious_effect = true;
-        break;
-
-    case ZAP_FROST:                                     // cap 50
-        pbolt.name           = "puff of frost";
-        pbolt.colour         = WHITE;
-        pbolt.damage         = dice_def( 2, 4 + power / 10 );// 25: 2d6  50: 2d9
-        pbolt.hit            = 8 + power / 10;               // 25: 10   50: 13
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_COLD;
-        pbolt.obvious_effect = true;
-        break;
-
-    case ZAP_STONE_ARROW:                               // cap 100
-        pbolt.name           = "stone arrow";
-        pbolt.colour         = LIGHTGREY;
-        pbolt.damage         = dice_def( 2, 5 + power / 7 );// 25: 2d8  50: 2d12
-        pbolt.hit            = 8 + power / 10;              // 25: 10    50: 13
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
-        pbolt.flavour        = BEAM_MMISSILE;               // irresistible
-        pbolt.obvious_effect = true;
-        break;
-
-    case ZAP_STICKY_FLAME:                              // cap 100
-        pbolt.name           = "sticky flame";          // extra damage
-        pbolt.colour         = RED;
-                               // 50: 2d7  100: 2d11
-        pbolt.damage         = dice_def( 2, 3 + power / 12 );
-                               // 50: 16   100: 21
-        pbolt.hit            = 11 + power / 10;
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_FIRE;
-        pbolt.obvious_effect = true;
-        break;
-
-    case ZAP_MYSTIC_BLAST:                              // cap 100
-        pbolt.name           = "orb of energy";
-        pbolt.colour         = LIGHTMAGENTA;
-        pbolt.damage         = calc_dice( 2, 15 + (power * 2) / 5 );
-        pbolt.hit            = 10 + power / 7;               // 50: 17   100: 24
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_MMISSILE;                // unresistable
-        pbolt.obvious_effect = true;
-        break;
-
-    case ZAP_ICE_BOLT:                                  // cap 100
-        pbolt.name           = "bolt of ice";
-        pbolt.colour         = WHITE;
-        pbolt.damage         = calc_dice( 3, 10 + power / 2 );
-        pbolt.hit            = 9 + power / 12;               // 50: 13   100: 17
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_ICE;                     // half resistable
-        break;
-
-    case ZAP_DISPEL_UNDEAD:                             // cap 100
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_DISPEL_UNDEAD;
-        pbolt.damage         = calc_dice( 3, 20 + (power * 3) / 4 );
-        pbolt.ench_power    *= 3;
-        pbolt.ench_power    /= 2;
-        break;
-
-    case ZAP_MAGMA:                                     // cap 150
-        pbolt.name           = "bolt of magma";
-        pbolt.colour         = RED;
-        pbolt.damage         = calc_dice( 4, 10 + (power * 3) / 5 );
-        pbolt.hit            = 8 + power / 25;               // 50: 10   100: 14
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_LAVA;
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_FIRE:                                      // cap 150
-        pbolt.name           = "bolt of fire";
-        pbolt.colour         = RED;
-        pbolt.damage         = calc_dice( 6, 18 + power * 2 / 3 );
-        pbolt.hit            = 10 + power / 25;              // 50: 12   100: 14
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_FIRE;
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_COLD:                                      // cap 150
-        pbolt.name           = "bolt of cold";
-        pbolt.colour         = WHITE;
-        pbolt.damage         = calc_dice( 6, 18 + power * 2 / 3 );
-        pbolt.hit            = 10 + power / 25;              // 50: 12   100: 14
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_COLD;
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_VENOM_BOLT:                                // cap 150
-        pbolt.name           = "bolt of poison";
-        pbolt.colour         = LIGHTGREEN;
-        pbolt.damage         = calc_dice( 4, 15 + power / 2 );
-        pbolt.hit            = 8 + power / 20;               // 50: 10   100: 13
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_POISON;                  // extra damage
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_NEGATIVE_ENERGY:                           // cap 150
-        // These always auto-identify, so no generic name.
-        pbolt.name           = "bolt of negative energy";
-        pbolt.colour         = DARKGREY;
-        pbolt.damage         = calc_dice( 4, 15 + (power * 3) / 5 );
-        pbolt.hit            = 8 + power / 20;               // 50: 10   100: 13
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_NEG;                     // drains levels
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
-
-    case ZAP_IRON_BOLT:                                 // cap 150
-        pbolt.name           = "iron bolt";
-        pbolt.colour         = LIGHTCYAN;
-        pbolt.damage         = calc_dice( 9, 15 + (power * 3) / 4 );
-        pbolt.hit            = 7 + power / 15;               // 50: 10   100: 13
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
-        pbolt.flavour        = BEAM_MMISSILE;                // unresistable
-        pbolt.obvious_effect = true;
-        break;
-
-    case ZAP_POISON_ARROW:                              // cap 150
-        pbolt.name           = "poison arrow";
-        pbolt.colour         = LIGHTGREEN;
-        pbolt.damage         = calc_dice( 4, 15 + power );
-        pbolt.hit            = 5 + power / 10;                // 50: 10  100: 15
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
-        pbolt.flavour        = BEAM_POISON_ARROW;             // extra damage
-        pbolt.obvious_effect = true;
-        break;
+    {
+        ZAP_BANISHMENT,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_BANISH,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
 
-    case ZAP_DISINTEGRATION:                            // cap 150
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_DISINTEGRATION;
-        pbolt.damage         = calc_dice( 3, 15 + (power * 3) / 4 );
-        pbolt.ench_power    *= 5;
-        pbolt.ench_power    /= 2;
-        pbolt.is_beam        = true;
-        break;
+    {
+        ZAP_DEGENERATION,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_DEGENERATE,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-    case ZAP_LIGHTNING:                                 // cap 150
-        // also for breath (at pow = lev * 2; max dam: 33)
-        pbolt.name           = "bolt of lightning";
-        pbolt.colour         = LIGHTCYAN;
-        pbolt.damage         = calc_dice( 1, 10 + (power * 3) / 5 );
-        pbolt.hit            = 7 + random2(power) / 20;    // 50: 7-9  100: 7-12
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_ELECTRICITY;           // beams & reflects
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
 
-    case ZAP_FIREBALL:                                  // cap 150
-        pbolt.name           = "fireball";
-        pbolt.colour         = RED;
-        pbolt.damage         = calc_dice( 3, 10 + power / 2 );
-        pbolt.hit            = 40;                             // hit: 40
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_FIRE;                      // fire
-        pbolt.is_explosion   = true;
-        break;
+    {
+        ZAP_STING,
+        "sting",
+        25,
+        new dicedef_calculator<1, 3, 1, 5>,
+        new tohit_calculator<8, 1, 5>,
+        GREEN,
+        false,
+        BEAM_POISON,
+        DCHAR_FIRED_ZAP,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_ORB_OF_ELECTRICITY:                        // cap 150
-        pbolt.name           = "orb of electricity";
-        pbolt.colour         = LIGHTBLUE;
-        pbolt.damage         = calc_dice( 1, 15 + (power * 4) / 5 );
-        pbolt.damage.num     = 0;                  // only does explosion damage
-        pbolt.hit            = 40;                 // hit: 40
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_ELECTRICITY;
-        pbolt.is_explosion   = true;
-        break;
 
-    case ZAP_ORB_OF_FRAGMENTATION:                      // cap 150
-        pbolt.name           = "metal orb";
-        pbolt.colour         = CYAN;
-        pbolt.damage         = calc_dice( 3, 30 + (power * 3) / 4 );
-        pbolt.hit            = 20;                            // hit: 20
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_FRAG;                     // extra AC resist
-        pbolt.is_explosion   = true;
-        break;
+    {
+        ZAP_HELLFIRE,
+        "hellfire",
+        200,
+        new calcdice_calculator<3, 10, 3, 4>,
+        new tohit_calculator<20, 1, 10>,
+        RED,
+        false,
+        BEAM_HELLFIRE,
+        DCHAR_FIRED_ZAP,
+        true,
+        false,
+        true
+    },
 
-    case ZAP_CLEANSING_FLAME:
-        pbolt.name           = "golden flame";
-        pbolt.colour         = YELLOW;
-        pbolt.damage         = calc_dice( 2, 20 + (power * 2) / 3 );
-        pbolt.hit            = 150;
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_HOLY;
-        pbolt.obvious_effect = true;
-        pbolt.is_explosion   = true;
-        break;
+    {
+        ZAP_IRON_BOLT,
+        "iron bolt",
+        200,
+        new calcdice_calculator<9, 15, 3, 4>,
+        new tohit_calculator<7, 1, 15>,
+        LIGHTCYAN,
+        false,
+        BEAM_MMISSILE,
+        DCHAR_FIRED_MISSILE,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_CRYSTAL_SPEAR:                             // cap 200
-        pbolt.name           = "crystal spear";
-        pbolt.colour         = WHITE;
-        pbolt.damage         = calc_dice( 10, 23 + power );
-        pbolt.hit            = 10 + power / 15;              // 50: 13   100: 16
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_MISSILE);
-        pbolt.flavour        = BEAM_MMISSILE;                // unresistable
-        pbolt.obvious_effect = true;
-        break;
+    {
+        ZAP_STRIKING,
+        "force bolt",
+        25,
+        new dicedef_calculator<1, 5, 0, 1>,
+        new tohit_calculator<8, 1, 10>,
+        BLACK,
+        false,
+        BEAM_MMISSILE,
+        DCHAR_SPACE,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_HELLFIRE:                                  // cap 200
-        pbolt.name           = "hellfire";
-        pbolt.colour         = RED;
-        pbolt.damage         = calc_dice( 3, 10 + (power * 3) / 4 );
-        pbolt.hit            = 20 + power / 10;              // 50: 25   100: 30
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_HELLFIRE;
-        pbolt.obvious_effect = true;
-        pbolt.is_explosion   = true;
-        break;
+    {
+        ZAP_STONE_ARROW,
+        "stone arrow",
+        50,
+        new dicedef_calculator<2, 5, 1, 7>,
+        new tohit_calculator<8, 1, 10>,
+        LIGHTGREY,
+        false,
+        BEAM_MMISSILE,
+        DCHAR_FIRED_MISSILE,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_ICE_STORM:                                 // cap 200
-        pbolt.name           = "great blast of cold";
-        pbolt.colour         = BLUE;
-        pbolt.damage         = calc_dice( 7, 22 + power );
-        pbolt.hit            = 20 + power / 10;    // 50: 25   100: 30
-        pbolt.ench_power     = power;              // used for radius
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_ICE;           // half resisted
-        pbolt.is_explosion   = true;
-        break;
+    {
+        ZAP_ELECTRICITY,
+        "zap",
+        25,
+        new dicedef_calculator<1, 3, 1, 4>,
+        new tohit_calculator<8, 1, 7>,
+        LIGHTCYAN,
+        false,
+        BEAM_ELECTRICITY,             // beams & reflects
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
 
-    case ZAP_BEAM_OF_ENERGY:    // bolt of innacuracy
-        pbolt.name           = "narrow beam of energy";
-        pbolt.colour         = YELLOW;
-        pbolt.damage         = calc_dice( 12, 40 + (power * 3) / 2 );
-        pbolt.hit            = 1;
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_ENERGY;                    // unresisted
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
+    {
+        ZAP_ORB_OF_ELECTRICITY,
+        "orb of electricity",
+        200,
+        new calcdice_calculator<0, 15, 4, 5>,
+        new tohit_calculator<40>,
+        LIGHTBLUE,
+        false,
+        BEAM_ELECTRICITY,
+        DCHAR_FIRED_ZAP,
+        true,
+        false,
+        true
+    },
 
-    case ZAP_SPIT_POISON:       // cap 50
-        // max pow = lev + mut * 5 = 42
-        pbolt.name           = "splash of poison";
-        pbolt.colour         = GREEN;
-        pbolt.damage         = dice_def( 1, 4 + power / 2 );    // max dam: 25
-        pbolt.hit            = 5 + random2( 1 + power / 3 );    // max hit: 19
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_POISON;
-        pbolt.obvious_effect = true;
-        break;
+    {
+        ZAP_SPIT_POISON,
+        "splash of poison",
+        50,
+        new dicedef_calculator<1, 4, 1, 2>,
+        new tohit_calculator<5, 1, 6>,
+        GREEN,
+        false,
+        BEAM_POISON,
+        DCHAR_FIRED_ZAP,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_BREATHE_FIRE:      // cap 50
-        // max pow = lev + mut * 4 + 12 = 51 (capped to 50)
-        pbolt.name           = "fiery breath";
-        pbolt.colour         = RED;
-        pbolt.damage         = dice_def( 3, 4 + power / 3 );    // max dam: 60
-        pbolt.hit            = 8 + random2( 1 + power / 3 );    // max hit: 25
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_FIRE;
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
+    {
+        ZAP_DEBUGGING_RAY,
+        "debugging ray",
+        10000,
+        new dicedef_calculator<1500, 1, 0, 1>,
+        new tohit_calculator<1500>,
+        WHITE,
+        false,
+        BEAM_MMISSILE,
+        DCHAR_FIRED_DEBUG,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_BREATHE_FROST:     // cap 50
-        // max power = lev = 27
-        pbolt.name           = "freezing breath";
-        pbolt.colour         = WHITE;
-        pbolt.damage         = dice_def( 3, 4 + power / 3 );    // max dam: 39
-        pbolt.hit            = 8 + random2( 1 + power / 3 );
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_COLD;
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
+    {
+        ZAP_BREATHE_FIRE,
+        "fiery breath",
+        50,
+        new dicedef_calculator<3, 4, 1, 3>,
+        new tohit_calculator<8, 1, 6>,
+        RED,
+        false,
+        BEAM_FIRE,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
 
-    case ZAP_BREATHE_ACID:      // cap 50
-        // max power = lev for ability, 50 for minor destruction (max dam: 57)
-        pbolt.name           = "acid";
-        pbolt.colour         = YELLOW;
-        pbolt.damage         = dice_def( 3, 3 + power / 3 );    // max dam: 36
-        pbolt.hit            = 5 + random2( 1 + power / 3 );
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_ACID;
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
 
-    case ZAP_BREATHE_POISON:    // leaves clouds of gas // cap 50
-        // max power = lev = 27
-        pbolt.name           = "poison gas";
-        pbolt.colour         = GREEN;
-        pbolt.damage         = dice_def( 3, 2 + power / 6 );    // max dam: 18
-        pbolt.hit            = 6 + random2( 1 + power / 3 );
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_POISON;
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
+    {
+        ZAP_BREATHE_FROST,
+        "freezing breath",
+        50,
+        new dicedef_calculator<3, 4, 1, 3>,
+        new tohit_calculator<8, 1, 6>,
+        WHITE,
+        false,
+        BEAM_COLD,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
 
-    case ZAP_BREATHE_POWER:     // cap 50
-        pbolt.name           = "bolt of energy";
-        // max power = lev = 27
+    {
+        ZAP_BREATHE_ACID,
+        "acid",
+        50,
+        new dicedef_calculator<3, 3, 1, 3>,
+        new tohit_calculator<5, 1, 6>,
+        YELLOW,
+        false,
+        BEAM_ACID,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
 
-        pbolt.colour         = BLUE;
-        if (random2(power) >= 8)
-            pbolt.colour = LIGHTBLUE;
-        if (random2(power) >= 12)
-            pbolt.colour = MAGENTA;
-        if (random2(power) >= 17)
-            pbolt.colour = LIGHTMAGENTA;
+    {
+        ZAP_BREATHE_POISON,
+        "poison gas",
+        50,
+        new dicedef_calculator<3, 2, 1, 6>,
+        new tohit_calculator<6, 1, 6>,
+        GREEN,
+        false,
+        BEAM_POISON,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
 
-        pbolt.damage         = dice_def( 3, 3 + power / 3 );   // max dam: 36
-        pbolt.hit            = 5 + random2( 1 + power / 3 );
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
+    {
+        ZAP_BREATHE_POWER,
+        "bolt of energy",
+        50,
+        new dicedef_calculator<3, 3, 1, 3>,
+        new tohit_calculator<5, 1, 6>,
+        BLUE,
+        false,
+        BEAM_MMISSILE,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
 
-    case ZAP_BREATHE_STEAM:     // cap 50
-        // max power = lev = 27
-        pbolt.name           = "ball of steam";
-        pbolt.colour         = LIGHTGREY;
-        pbolt.damage         = dice_def( 3, 4 + power / 5 );    // max dam: 27
-        pbolt.hit            = 10 + random2( 1 + power / 5 );
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour        = BEAM_STEAM;
-        pbolt.obvious_effect = true;
-        pbolt.is_beam        = true;
-        break;
+    {
+        ZAP_ENSLAVE_UNDEAD,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_ENSLAVE_UNDEAD,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-    case ZAP_SLOWING:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_SLOW;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_AGONY,
+        "0agony",
+        100,
+        NULL,
+        new tohit_calculator<0, 5, 1>,
+        BLACK,
+        true,
+        BEAM_PAIN,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-    case ZAP_HASTING:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_HASTE;
-        // pbolt.is_beam = true;
-        break;
 
-    case ZAP_PARALYSIS:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_PARALYSIS;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_DISRUPTION,
+        "0",
+        100,
+        new dicedef_calculator<1, 4, 1, 5>,
+        new tohit_calculator<0, 3, 1>,
+        BLACK,
+        true,
+        BEAM_DISINTEGRATION,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-    case ZAP_PETRIFY:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_PETRIFY;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_DISINTEGRATION,
+        "0",
+        100,
+        new calcdice_calculator<3, 15, 3, 4>,
+        new tohit_calculator<0, 5, 2>,
+        BLACK,
+        true,
+        BEAM_DISINTEGRATION,
+        DCHAR_SPACE,
+        false,
+        true,
+        false
+    },
+    
+    {
+        ZAP_BREATHE_STEAM,
+        "ball of steam",
+        50,
+        new dicedef_calculator<3, 4, 1, 5>,
+        new tohit_calculator<10, 1, 10>,
+        LIGHTGREY,
+        false,
+        BEAM_STEAM,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
 
-    case ZAP_CONFUSION:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_CONFUSION;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_CONTROL_DEMON,
+        "0",
+        100,
+        NULL,
+        new tohit_calculator<0, 3, 2>,
+        BLACK,
+        true,
+        BEAM_ENSLAVE_DEMON,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-    case ZAP_INVISIBILITY:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_INVISIBILITY;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_ORB_OF_FRAGMENTATION,
+        "metal orb",
+        200,
+        new calcdice_calculator<3, 30, 3, 4>,
+        new tohit_calculator<20>,
+        CYAN,
+        false,
+        BEAM_FRAG,
+        DCHAR_FIRED_ZAP,
+        false,
+        false,
+        true
+    },
 
-    case ZAP_HEALING:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_HEALING;
-        pbolt.damage         = dice_def( 1, 7 + power / 3 );
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_ICE_BOLT,
+        "bolt of ice",
+        100,
+        new calcdice_calculator<3, 10, 1, 2>,
+        new tohit_calculator<9, 1, 12>,
+        WHITE,
+        false,
+        BEAM_ICE,
+        DCHAR_FIRED_ZAP,
+        false,
+        false,
+        false
+    },
 
-    case ZAP_DIGGING:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_DIGGING;
-        // not ordinary "0" beam range {dlb}
-        pbolt.is_beam        = true;
-        break;
+    {                           // ench_power controls radius
+        ZAP_ICE_STORM,
+        "great blast of cold",
+        200,
+        new calcdice_calculator<7, 22, 1, 1>,
+        new tohit_calculator<20, 1, 10>,
+        BLUE,
+        false,
+        BEAM_ICE,
+        DCHAR_FIRED_ZAP,
+        true,
+        false,
+        true
+    },
 
-    case ZAP_TELEPORTATION:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_TELEPORT;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_BACKLIGHT,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLUE,
+        true,
+        BEAM_BACKLIGHT,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-    case ZAP_POLYMORPH_OTHER:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_POLYMORPH;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_SLEEP,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_SLEEP,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
 
-    case ZAP_ENSLAVEMENT:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_CHARM;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_FLAME_TONGUE,
+        "flame",
+        25,
+        new dicedef_calculator<1, 8, 1, 4>,
+        new tohit_calculator<7, 1, 6>,
+        RED,
+        false,
+        BEAM_FIRE,
+        DCHAR_FIRED_BOLT,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_BANISHMENT:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_BANISH;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_SANDBLAST,
+        "rocky blast",
+        50,
+        new dicedef_calculator<2, 4, 1, 3>,
+        new tohit_calculator<13, 1, 10>,
+        BROWN,
+        false,
+        BEAM_FRAG,
+        DCHAR_FIRED_BOLT,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_DEGENERATION:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_DEGENERATE;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_SMALL_SANDBLAST,
+        "blast of sand",
+        25,
+        new dicedef_calculator<1, 8, 1, 4>,
+        new tohit_calculator<8, 1, 5>,
+        BROWN,
+        false,
+        BEAM_FRAG,
+        DCHAR_FIRED_BOLT,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_ENSLAVE_UNDEAD:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_ENSLAVE_UNDEAD;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_MAGMA,
+        "bolt of magma",
+        200,
+        new calcdice_calculator<4, 10, 3, 5>,
+        new tohit_calculator<8, 1, 25>,
+        RED,
+        false,
+        BEAM_LAVA,
+        DCHAR_FIRED_ZAP,
+        true,
+        true,
+        false
+    },
 
-    case ZAP_AGONY:
-        pbolt.name           = "0agony";
-        pbolt.flavour        = BEAM_PAIN;
-        pbolt.ench_power    *= 5;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_POISON_ARROW,
+        "poison arrow",
+        200,
+        new calcdice_calculator<4, 15, 1, 1>,
+        new tohit_calculator<5, 1, 10>,
+        LIGHTGREEN,
+        false,
+        BEAM_POISON_ARROW,             // extra damage
+        DCHAR_FIRED_MISSILE,
+        true,
+        false,
+        false
+    },
 
-    case ZAP_CONTROL_DEMON:
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_ENSLAVE_DEMON;
-        pbolt.ench_power    *= 3;
-        pbolt.ench_power    /= 2;
-        // pbolt.is_beam = true;
-        break;
+    {
+        ZAP_PETRIFY,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_PETRIFY,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    }
+};
 
-    case ZAP_SLEEP:             //jmf: added
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_SLEEP;
-        // pbolt.is_beam = true;
-        break;
 
-    case ZAP_BACKLIGHT: //jmf: added
-        pbolt.name           = "0";
-        pbolt.flavour        = BEAM_BACKLIGHT;
-        pbolt.colour         = BLUE;
-        // pbolt.is_beam = true;
-        break;
+// Need to see zapping() for default values not set within this function {dlb}
+static void _zappy( zap_type z_type, int power, bolt &pbolt )
+{
+    const zap_info* zinfo = NULL;
 
-    case ZAP_DEBUGGING_RAY:
-        pbolt.name           = "debugging ray";
-        pbolt.colour         = random_colour();
-        pbolt.damage         = dice_def( 1500, 1 );            // dam: 1500
-        pbolt.hit            = 1500;                           // hit: 1500
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_DEBUG);
-        pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
-        pbolt.obvious_effect = true;
-        break;
-
-    default:
-        pbolt.name           = "buggy beam";
-        pbolt.colour         = random_colour();
-        pbolt.damage         = dice_def( 1, 0 );
-        pbolt.hit            = 60;
-        pbolt.type           = dchar_glyph(DCHAR_FIRED_DEBUG);
-        pbolt.flavour        = BEAM_MMISSILE;                  // unresistable
-        pbolt.obvious_effect = true;
-        break;
+    // Find the appropriate zap info.
+    for (unsigned int i = 0; i < ARRAYSZ(zap_data); ++i)
+    {
+        if (zap_data[i].ztype == z_type)
+        {
+            zinfo = &zap_data[i];
+            break;
+        }
     }
 
-    if (wearing_amulet(AMU_INACCURACY))
-        pbolt.hit = std::max(0, pbolt.hit - 5);
+    // None found?
+    if (zinfo == NULL)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_ERROR, "Couldn't find zap type %d", z_type);
+#endif
+        return;
+    }
+    
+    // Fill
+    pbolt.name = zinfo->name;
+    pbolt.flavour = zinfo->flavour;
+    pbolt.colour = zinfo->colour;
+    pbolt.type = dchar_glyph(zinfo->glyph);
+    pbolt.obvious_effect = zinfo->always_obvious;
+    pbolt.is_beam = zinfo->can_beam;
+    pbolt.is_explosion = zinfo->is_explosion;
+
+    if (zinfo->power_cap > 0)
+        power = std::min(zinfo->power_cap, power);
+
+    ASSERT(zinfo->is_enchantment == pbolt.is_enchantment());
+
+    if (zinfo->is_enchantment)
+    {
+        pbolt.ench_power = (zinfo->tohit ? (*zinfo->tohit)(power) : power);
+        pbolt.hit = AUTOMATIC_HIT;
+    }
+    else
+    {
+        pbolt.hit = (*zinfo->tohit)(power);
+        if (wearing_amulet(AMU_INACCURACY))
+            pbolt.hit = std::max(0, pbolt.hit - 5);
+    }
+
+    if (zinfo->damage)
+        pbolt.damage = (*zinfo->damage)(power);
+
+    // One special case
+    if (z_type == ZAP_ICE_STORM)
+        pbolt.ench_power     = power;              // used for radius
 }
 
 // Affect monster in wall unless it can shield itself using the wall.
@@ -4850,37 +4712,8 @@ static int _range_used_on_hit(bolt &beam)
     if (!beam.is_beam)
         return (BEAM_STOP);
 
-    // CHECK ENCHANTMENTS
     if (beam.is_enchantment())
-    {
-        switch(beam.flavour)
-        {
-        case BEAM_SLOW:
-        case BEAM_HASTE:
-        case BEAM_HEALING:
-        case BEAM_PARALYSIS:
-        case BEAM_PETRIFY:
-        case BEAM_CONFUSION:
-        case BEAM_INVISIBILITY:
-        case BEAM_TELEPORT:
-        case BEAM_POLYMORPH:
-        case BEAM_CHARM:
-        case BEAM_BANISH:
-        case BEAM_PAIN:
-        case BEAM_DISINTEGRATION:
-        case BEAM_DEGENERATE:
-        case BEAM_DISPEL_UNDEAD:
-        case BEAM_ENSLAVE_UNDEAD:
-        case BEAM_ENSLAVE_DEMON:
-        case BEAM_SLEEP:
-        case BEAM_BACKLIGHT:
-            return (BEAM_STOP);
-        default:
-            break;
-        }
-
-        return (0);
-    }
+        return (beam.flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
 
     // Hellfire stops for nobody!
     if (beam.name == "hellfire")

@@ -702,10 +702,10 @@ int get_player_wielded_weapon()
 // Returns false if the player is wielding a weapon inappropriate for Berserk.
 bool berserk_check_wielded_weapon()
 {
-    if (you.equip[EQ_WEAPON] == -1)
+    if (!you.weapon())
         return (true);
 
-    const item_def weapon = you.inv[you.equip[EQ_WEAPON]];
+    const item_def weapon = *you.weapon();
     if (is_valid_item(weapon) && weapon.base_type != OBJ_STAVES
            && (weapon.base_type != OBJ_WEAPONS || is_range_weapon(weapon))
         || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
@@ -736,21 +736,20 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
     {
     case EQ_WEAPON:
         // Hands can have more than just weapons.
-        if (you.equip[EQ_WEAPON] != -1
-            && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
-            && you.inv[you.equip[EQ_WEAPON]].sub_type == sub_type)
+        if (you.weapon()
+            && you.weapon()->base_type == OBJ_WEAPONS
+            && you.weapon()->sub_type == sub_type)
         {
             ret++;
         }
         break;
 
     case EQ_STAFF:
-        // Like above, but must be magical stave.
-        if (you.equip[EQ_WEAPON] != -1
-            && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_STAVES
-            && you.inv[you.equip[EQ_WEAPON]].sub_type == sub_type
-            && (calc_unid
-                || item_type_known( you.inv[you.equip[EQ_WEAPON]] )))
+        // Like above, but must be magical staff.
+        if (you.weapon()
+            && you.weapon()->base_type == OBJ_STAVES
+            && you.weapon()->sub_type == sub_type
+            && (calc_unid || item_type_known(*you.weapon())))
         {
             ret++;
         }
@@ -903,9 +902,9 @@ int player_teleport(bool calc_unid)
     tp += player_mutation_level(MUT_TELEPORT) * 3;
 
     // randart weapons only
-    if (you.equip[EQ_WEAPON] != -1
-        && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
-        && is_random_artefact( you.inv[you.equip[EQ_WEAPON]] ))
+    if (you.weapon()
+        && you.weapon()->base_type == OBJ_WEAPONS
+        && is_random_artefact(*you.weapon()))
     {
         tp += scan_randarts(RAP_CAUSE_TELEPORTATION, calc_unid);
     }
@@ -1482,9 +1481,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         rp += player_equip( EQ_STAFF, STAFF_POISON, calc_unid );
 
         // the staff of Olgreb:
-        if (you.equip[EQ_WEAPON] != -1
-            && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
-            && you.inv[you.equip[EQ_WEAPON]].special == SPWPN_STAFF_OF_OLGREB)
+        if (you.weapon()
+            && you.weapon()->base_type == OBJ_WEAPONS
+            && you.weapon()->special == SPWPN_STAFF_OF_OLGREB)
         {
             rp++;
         }
@@ -1677,9 +1676,9 @@ int player_spec_poison()
     /* Staves */
     sp += player_equip( EQ_STAFF, STAFF_POISON );
 
-    if (you.equip[EQ_WEAPON] != -1
-        && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS
-        && you.inv[you.equip[EQ_WEAPON]].special == SPWPN_STAFF_OF_OLGREB)
+    if (you.weapon()
+        && you.weapon()->base_type == OBJ_WEAPONS
+        && you.weapon()->special == SPWPN_STAFF_OF_OLGREB)
     {
         sp++;
     }

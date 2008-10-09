@@ -1527,7 +1527,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.hit      = 40;
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower  = KILL_MON;
-        beam.flavour  = BEAM_FIRE;  // why not BEAM_FIRE? {dlb}
+        beam.flavour  = BEAM_FIRE;
         beam.is_beam  = false;
         beam.is_explosion = true;
         break;

@@ -5220,8 +5220,7 @@ bool _give_items_skills()
             you.skills[SK_UNARMED_COMBAT] = weap_skill;
         else
         {
-            you.skills[weapon_skill(you.inv[you.equip[EQ_WEAPON]])]
-                = weap_skill;
+            you.skills[weapon_skill(*you.weapon())] = weap_skill;
         }
     }
 

@@ -1006,7 +1006,7 @@ static bool box_of_beasts()
         else
         {
             mpr("...but the box appears empty.");
-            you.inv[you.equip[EQ_WEAPON]].sub_type = MISC_EMPTY_EBONY_CASKET;
+            you.weapon()->sub_type = MISC_EMPTY_EBONY_CASKET;
         }
     }
 

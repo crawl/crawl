@@ -438,11 +438,7 @@ static void _push_top_card(item_def& deck, card_type card,
 
 static bool _wielding_deck()
 {
-    // Nothing wielded?
-    if (you.equip[EQ_WEAPON] == -1)
-        return (false);
-
-    return is_deck(you.inv[you.equip[EQ_WEAPON]]);
+    return (you.weapon() && is_deck(*you.weapon()));
 }
 
 static void _remember_drawn_card(item_def& deck, card_type card, bool allow_id)
@@ -941,7 +937,7 @@ bool deck_stack()
         crawl_state.zero_turns_taken();
         return (false);
     }
-    item_def& deck(you.inv[you.equip[EQ_WEAPON]]);
+    item_def& deck(*you.weapon());
     if (_check_buggy_deck(deck))
         return (false);
 

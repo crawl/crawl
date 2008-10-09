@@ -340,18 +340,17 @@ int spell_fail(spell_type spell)
             chance += armour;
     }
 
-    if (you.equip[EQ_WEAPON] != -1
-        && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS)
+    if (you.weapon() && you.weapon()->base_type == OBJ_WEAPONS)
     {
-        int wpn_penalty = (3 * (property( you.inv[you.equip[EQ_WEAPON]], PWPN_SPEED ) - 12)) / 2;
+        int wpn_penalty = (3 * (property(*you.weapon(), PWPN_SPEED) - 12))/2;
 
         if (wpn_penalty > 0)
             chance += wpn_penalty;
     }
 
-    if (you.equip[EQ_SHIELD] != -1)
+    if (you.shield())
     {
-        switch (you.inv[you.equip[EQ_SHIELD]].sub_type)
+        switch (you.shield()->sub_type)
         {
         case ARM_BUCKLER:
             chance += 5;
@@ -764,9 +763,8 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
 
     if (id_staff)
     {
-        item_def& wpn = you.inv[you.equip[EQ_WEAPON]];
-        // changed from ISFLAG_KNOW_TYPE
-        set_ident_type( wpn, ID_KNOWN_TYPE );
+        item_def& wpn = *you.weapon();
+        set_ident_type(wpn, ID_KNOWN_TYPE);
         set_ident_flags( wpn, ISFLAG_IDENT_MASK);
         mprf("You are wielding %s.", wpn.name(DESC_NOCAP_A).c_str());
         more();
@@ -778,11 +776,8 @@ bool maybe_identify_staff(item_def &item, spell_type spell)
 
 static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
 {
-    if (you.equip[EQ_WEAPON] != -1
-        && item_is_staff( you.inv[you.equip[EQ_WEAPON]] ))
-    {
-        maybe_identify_staff(you.inv[you.equip[EQ_WEAPON]], spell);
-    }
+    if (you.weapon() && item_is_staff(*you.weapon()))
+        maybe_identify_staff(*you.weapon(), spell);
 
     if (idonly)
         return;

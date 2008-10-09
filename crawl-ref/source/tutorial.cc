@@ -1261,9 +1261,9 @@ void tutorial_first_monster(const monsters &mon)
                 "<w>i</w>nventory, you'll find an explanation of how to do "
                 "this. ";
 
-        if (you.equip[EQ_WEAPON] == -1
-            || you.inv[you.equip[EQ_WEAPON]].base_type != OBJ_WEAPONS
-            || you.inv[you.equip[EQ_WEAPON]].sub_type != WPN_BOW)
+        if (!you.weapon()
+            || you.weapon()->base_type != OBJ_WEAPONS
+            || you.weapon()->sub_type != WPN_BOW)
         {
             text += "First <w>w</w>ield it, then follow the instructions.";
 

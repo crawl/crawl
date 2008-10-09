@@ -118,29 +118,25 @@ bool cast_selective_amnesia(bool force)
 
 bool remove_curse(bool suppress_msg)
 {
-    int loopy = 0;              // general purpose loop variable {dlb}
-    bool success = false;       // whether or not curse(s) removed {dlb}
+    bool success = false;
 
-    // Special "wield slot" case - see if you can figure out why {dlb}:
-    // ... because only cursed *weapons* in hand count as cursed -- bwr
-    if (you.equip[EQ_WEAPON] != -1
-        && you.inv[you.equip[EQ_WEAPON]].base_type == OBJ_WEAPONS)
+    // Only cursed *weapons* in hand count as cursed -- bwr
+    if (you.weapon()
+        && you.weapon()->base_type == OBJ_WEAPONS
+        && item_cursed(*you.weapon()))
     {
-        if (item_cursed( you.inv[you.equip[EQ_WEAPON]] ))
-        {
-            // Also sets wield_change.
-            do_uncurse_item( you.inv[you.equip[EQ_WEAPON]] );
-            success = true;
-        }
+        // Also sets wield_change.
+        do_uncurse_item(*you.weapon());
+        success = true;
     }
 
     // Everything else uses the same paradigm - are we certain?
     // What of artefact rings and amulets? {dlb}:
-    for (loopy = EQ_CLOAK; loopy < NUM_EQUIP; loopy++)
+    for (int i = EQ_WEAPON + 1; i < NUM_EQUIP; i++)
     {
-        if (you.equip[loopy] != -1 && item_cursed(you.inv[you.equip[loopy]]))
+        if (you.equip[i] != -1 && item_cursed(you.inv[you.equip[i]]))
         {
-            do_uncurse_item( you.inv[you.equip[loopy]] );
+            do_uncurse_item( you.inv[you.equip[i]] );
             success = true;
         }
     }
@@ -159,20 +155,21 @@ bool remove_curse(bool suppress_msg)
 
 bool detect_curse(bool suppress_msg)
 {
-    int loopy = 0;              // general purpose loop variable {dlb}
     bool success = false;       // whether or not any curses found {dlb}
 
-    for (loopy = 0; loopy < ENDOFPACK; loopy++)
+    for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[loopy].quantity
-            && (you.inv[loopy].base_type == OBJ_WEAPONS
-                || you.inv[loopy].base_type == OBJ_ARMOUR
-                || you.inv[loopy].base_type == OBJ_JEWELLERY))
+        item_def& item = you.inv[i];
+
+        if (is_valid_item(item)
+            && (item.base_type == OBJ_WEAPONS
+                || item.base_type == OBJ_ARMOUR
+                || item.base_type == OBJ_JEWELLERY))
         {
-            if (!item_ident( you.inv[loopy], ISFLAG_KNOW_CURSE ))
+            if (!item_ident(item, ISFLAG_KNOW_CURSE))
                 success = true;
 
-            set_ident_flags( you.inv[loopy], ISFLAG_KNOW_CURSE );
+            set_ident_flags(item, ISFLAG_KNOW_CURSE);
         }
     }
 
@@ -288,19 +285,18 @@ bool cast_bone_shards(int power, bolt &beam)
 {
     bool success = false;
 
-    if (you.equip[EQ_WEAPON] == -1
-        || you.inv[you.equip[EQ_WEAPON]].base_type != OBJ_CORPSES)
+    if (!you.weapon() || you.weapon()->base_type != OBJ_CORPSES)
     {
         canned_msg(MSG_SPELL_FIZZLES);
     }
-    else if (you.inv[you.equip[EQ_WEAPON]].sub_type != CORPSE_SKELETON)
+    else if (you.weapon()->sub_type != CORPSE_SKELETON)
         mpr("The corpse collapses into a mass of pulpy flesh.");
     else
     {
         // Practical max of 100 * 15 + 3000 = 4500.
         // Actual max of    200 * 15 + 3000 = 6000.
         power *= 15;
-        power += mons_weight( you.inv[you.equip[EQ_WEAPON]].plus );
+        power += mons_weight( you.weapon()->plus );
 
         if (!player_tracer(ZAP_BONE_SHARDS, power, beam))
             return (false);

@@ -449,11 +449,8 @@ static int _exercise2(int exsk)
         if (best != old_best_skill || old_best_skill == exsk)
             redraw_skill( you.your_name, player_title() );
 
-        if (you.equip[EQ_WEAPON] != -1
-            && item_is_staff( you.inv[you.equip[EQ_WEAPON]] ))
-        {
-            maybe_identify_staff(you.inv[you.equip[EQ_WEAPON]]);
-        }
+        if (you.weapon() && item_is_staff( *you.weapon() ))
+            maybe_identify_staff(*you.weapon());
     }
 
     return (skill_inc);

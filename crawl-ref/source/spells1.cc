@@ -1498,10 +1498,10 @@ bool cast_sure_blade(int power)
 {
     bool success = false;
 
-    if (you.equip[EQ_WEAPON] == -1)
+    if (!you.weapon())
         mpr("You aren't wielding a weapon!");
-    else if (weapon_skill( you.inv[you.equip[EQ_WEAPON]].base_type,
-                     you.inv[you.equip[EQ_WEAPON]].sub_type) != SK_SHORT_BLADES)
+    else if (weapon_skill(you.weapon()->base_type,
+                          you.weapon()->sub_type) != SK_SHORT_BLADES)
     {
         mpr("You cannot bond with this weapon.");
     }
