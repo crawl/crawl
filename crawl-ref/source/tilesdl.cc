@@ -373,7 +373,7 @@ static int _translate_keysym(SDL_keysym &keysym)
     int numpad_offset = 0;
     if (mod == MOD_CTRL)
         numpad_offset = ctrl_offset;
-    else if (mod == KMOD_SHIFT)
+    else if (mod == MOD_SHIFT)
         numpad_offset = shift_offset;
     else
         numpad_offset = offset;
