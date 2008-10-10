@@ -325,6 +325,7 @@ template<typename T>
 struct power_deducer
 {
     virtual T operator()(int pow) const = 0;
+    virtual ~power_deducer() {}
 };
 
 typedef power_deducer<int> tohit_deducer;

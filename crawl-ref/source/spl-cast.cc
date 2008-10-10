@@ -177,8 +177,9 @@ static std::string _spell_extra_description(spell_type spell)
     // spell name
     desc << std::setw(30) << spell_title(spell);
 
-    // spell power, hunger level, level
-    desc << std::setw(30) << spell_power_string(spell)
+    // spell power, spell range, hunger level, level
+    desc << std::setw(14) << spell_power_string(spell)
+         << std::setw(16) << spell_range_string(spell)
          << std::setw(12) << spell_hunger_string(spell)
          << spell_difficulty(spell);
 
@@ -191,10 +192,10 @@ int list_spells(bool toggle_with_I)
         MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
     spell_menu.set_title(
         new ToggleableMenuEntry(
-            " Your Spells                      Type            "
-            "              Success   Level",
-            " Your Spells                      Power           "
-            "              Hunger    Level",
+            " Your Spells                      Type          "
+            "                Success   Level",
+            " Your Spells                      Power         "
+            "Range           Hunger    Level",
             MEL_TITLE));
     spell_menu.set_highlighter(NULL);
     spell_menu.add_toggle_key('!');
@@ -4568,4 +4569,17 @@ std::string spell_power_string(spell_type spell)
         return "N/A";
     else
         return std::string(numbars, '#') + std::string(capbars - numbars, '.');
+}
+
+std::string spell_range_string(spell_type spell)
+{
+    const int cap = spell_power_cap(spell);
+    const int power = calc_spell_power(spell, true);
+    const int range = spell_range(spell, power, false);
+    const int maxrange = spell_range(spell, cap, false);
+    if (range < 0)
+        return "N/A";
+    else
+        return std::string("@") + std::string(range, '.')
+            + std::string(maxrange - range, ',');
 }

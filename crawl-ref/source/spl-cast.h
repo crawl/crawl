@@ -72,7 +72,7 @@ const char* failure_rate_to_string( int fail );
 int spell_power_colour(spell_type spell);
 int spell_power_bars(spell_type spell);
 std::string spell_power_string(spell_type spell);
-
+std::string spell_range_string(spell_type spell);
 const char* spell_hunger_string( spell_type spell );
 
 #endif
