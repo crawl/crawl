@@ -4091,7 +4091,7 @@ void MiscastEffect::_ice(int severity)
             break;
         case 1:
             you_msg        = "Freezing gasses pour from your @hands@!";
-            mon_msg_seen   = "Freezing gasses pour from @the_monsters@'s "
+            mon_msg_seen   = "Freezing gasses pour from @the_monster@'s "
                              "@hands@!";
 
             do_msg();
