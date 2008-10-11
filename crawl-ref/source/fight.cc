@@ -57,11 +57,9 @@
 #include "view.h"
 #include "xom.h"
 
-#define HIT_WEAK 7
-#define HIT_MED 18
-#define HIT_STRONG 36
-// ... was 5, 12, 21
-// how these are used will be replaced by a function in a second ... :P {dlb}
+const int HIT_WEAK   = 7;
+const int HIT_MED    = 18;
+const int HIT_STRONG = 36;
 
 static void stab_message(monsters *defender, int stab_bonus);
 

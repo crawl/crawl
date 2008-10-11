@@ -309,6 +309,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages)
 
             canned_msg(MSG_EMPTY_HANDED);
 
+            // Switching to bare hands is extra fast.
             you.turn_is_over = true;
             you.time_taken *= 3;
             you.time_taken /= 10;
@@ -3158,7 +3159,7 @@ bool puton_item(int item_slot, bool prompt_finger)
     jewellery_wear_effects( you.inv[item_slot] );
 
     // Putting on jewellery is as fast as wielding weapons.
-    you.time_taken = you.time_taken * 5 / 10;
+    you.time_taken /= 2;
     you.turn_is_over = true;
 
     return (true);

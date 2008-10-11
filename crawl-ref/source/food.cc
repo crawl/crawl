@@ -131,7 +131,7 @@ void weapon_switch( int targ )
     if (targ == -1) // Unarmed Combat.
     {
         // Already unarmed?
-        if (you.equip[EQ_WEAPON] == -1)
+        if (!you.weapon())
             return;
 
         mpr( "You switch back to your bare hands." );
@@ -156,7 +156,7 @@ void weapon_switch( int targ )
     // Well yeah, but that's because interacting with the wielding
     // code is a mess... this whole function's purpose was to
     // isolate this hack until there's a proper way to do things. -- bwr
-    if (you.equip[EQ_WEAPON] != -1)
+    if (you.weapon())
         unwield_item(false);
 
     you.equip[EQ_WEAPON] = targ;
@@ -168,13 +168,25 @@ void weapon_switch( int targ )
     if (Options.chunks_autopickup || you.species == SP_VAMPIRE)
         autopickup();
 
+    // Same amount of time as normal wielding.
+    // FIXME: this duplicated code is begging for a bug.
+    if (you.weapon())
+    {
+        you.time_taken /= 2;
+    }
+    else                        // swapping to empty hands is faster
+    {
+        you.time_taken *= 3;
+        you.time_taken /= 10;
+    }
+
     you.turn_is_over = true;
 }
 
 // Look for a butchering implement. If fallback is true,
 // prompt the user if no obvious options exist.
 // Returns whether a weapon was switched.
-static int _find_butchering_implement(int &butcher_tool)
+static bool _find_butchering_implement(int &butcher_tool)
 {
     // When berserk, you can't change weapons. Sanity check!
     if (!can_wield(NULL, true))

@@ -873,6 +873,15 @@ void handle_delay( void )
             mprf(MSGCH_MULTITURN_ACTION, "You continue bottling blood from "
                                          "the corpse.");
             break;
+
+        case DELAY_JEWELLERY_ON:
+        case DELAY_WEAPON_SWAP:
+            // These are 1-turn delays where the time cost is handled
+            // in _finish_delay().
+            // FIXME: get rid of this hack!
+            you.time_taken = 0;
+            break;
+
         case DELAY_MEMORISE:
             mpr("You continue memorising.", MSGCH_MULTITURN_ACTION);
             break;
@@ -926,15 +935,15 @@ static void _finish_delay(const delay_queue_item &delay)
     switch (delay.type)
     {
     case DELAY_WEAPON_SWAP:
-        weapon_switch( delay.parm1 );
+        weapon_switch(delay.parm1);
         break;
 
     case DELAY_JEWELLERY_ON:
-        puton_ring( delay.parm1, false );
+        puton_ring(delay.parm1, false);
         break;
 
     case DELAY_ARMOUR_ON:
-        _armour_wear_effects( delay.parm1 );
+        _armour_wear_effects(delay.parm1);
         break;
 
     case DELAY_ARMOUR_OFF:
@@ -942,8 +951,7 @@ static void _finish_delay(const delay_queue_item &delay)
         mprf("You finish taking off %s.",
              you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
 
-        const equipment_type slot =
-            get_armour_slot( you.inv[delay.parm1] );
+        const equipment_type slot = get_armour_slot(you.inv[delay.parm1]);
 
         if (slot == EQ_BODY_ARMOUR)
         {
@@ -954,28 +962,12 @@ static void _finish_delay(const delay_queue_item &delay)
             switch (slot)
             {
             case EQ_SHIELD:
-                if (delay.parm1 == you.equip[EQ_SHIELD])
-                    you.equip[EQ_SHIELD] = -1;
-                break;
-
             case EQ_CLOAK:
-                if (delay.parm1 == you.equip[EQ_CLOAK])
-                    you.equip[EQ_CLOAK] = -1;
-                break;
-
             case EQ_HELMET:
-                if (delay.parm1 == you.equip[EQ_HELMET])
-                    you.equip[EQ_HELMET] = -1;
-                break;
-
             case EQ_GLOVES:
-                if (delay.parm1 == you.equip[EQ_GLOVES])
-                    you.equip[EQ_GLOVES] = -1;
-                break;
-
             case EQ_BOOTS:
-                if (delay.parm1 == you.equip[EQ_BOOTS])
-                    you.equip[EQ_BOOTS] = -1;
+                if (delay.parm1 == you.equip[slot])
+                    you.equip[slot] = -1;
                 break;
 
             default:

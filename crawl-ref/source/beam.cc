@@ -3465,7 +3465,7 @@ static int _affect_player( bolt &beam, item_def *item )
             else if (_beam_is_blockable(beam))
             {
                 // Non-beams can be blocked or dodged.
-                if (you.equip[EQ_SHIELD] != -1
+                if (you.shield()
                     && !beam.aimed_at_feet
                     && player_shield_class() > 0)
                 {
