@@ -1426,6 +1426,8 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     if (item_is_stationary(mitm[obj]))
     {
         mpr("You cannot pick up the net that holds you!");
+        // Fake a successful pickup (return 1), so we can continue to pick up
+        // anything that might be on this square.
         return (1);
     }
 

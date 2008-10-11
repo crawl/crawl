@@ -266,7 +266,7 @@ speaking
 
 @The_weapon@ wails, "I am too young to rust!"
 
-@The_weapon@ comments about your taste in music.
+@The_weapon@ comments on your taste in music.
 
 @The_weapon@ complains about your lack of musical enthusiasm.
 
@@ -324,6 +324,8 @@ real_song
 # Queen
 @The_weapon@ happily sings, "... another one bites the dust!"
 
+@The_weapon@ sings, "We are the champions of the world!"
+
 # Monty Python
 @The_weapon@ @sings_or_whistles@, "Always look on the bright side of death ..."
 
@@ -349,7 +351,7 @@ real_song
 
 @The_weapon@ sings, "Let it be, let it be..."
 
-# ?
+# Spice Girls
 @The_weapon@ sings, "Ain't no stopping us now ..."
 
 # drinking song
@@ -378,6 +380,18 @@ real_song
 
 # The Carpenters
 @The_weapon@ sings, "Sing, sing a song, sing out loud, sing out strong..."
+
+# The Fugees
+@The_weapon@ sings, "Killing me softly with this song..."
+
+# Or was it the lion?
+@The_weapon@ sings, "In the dungeon the dragon sleeps tonight."
+
+# Eminem
+@The_weapon@ sings, "Sing for the laughter, sing for the tears..."
+
+# Bonnie Tyler
+@The_weapon@ sings, "I need a hero!"
 
 # end Singing Sword
 %%%%
@@ -540,8 +554,6 @@ weapon_noises
 @Your_weapon@ starts to sob noisily.
 
 @Your_weapon@ goes tick-tock.
-
-@Your_weapon@ starts beeping.
 
 @Your_weapon@ laughs crazily.
 

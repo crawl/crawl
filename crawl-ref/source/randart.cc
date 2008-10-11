@@ -1510,7 +1510,7 @@ bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
         item.base_type = OBJ_WEAPONS;
         item.sub_type = WPN_LONG_SWORD;
         item.plus  = 7;
-        item.plus2 = 6;
+        item.plus2 = 7;
         break;
 
     case SPWPN_WRATH_OF_TROG:

@@ -2026,7 +2026,12 @@ void behaviour_event(monsters *mon, int event, int src,
     case ME_DISTURB:
         // Assumes disturbed by noise...
         if (mons_is_sleeping(mon))
+        {
             mon->behaviour = BEH_WANDER;
+
+            if (mons_near(mon))
+                remove_auto_exclude(mon, true);
+        }
 
         // A bit of code to make Project Noise actually do
         // something again.  Basically, dumb monsters and
@@ -2058,6 +2063,9 @@ void behaviour_event(monsters *mon, int event, int src,
 
             mon->foe = src;
 
+            if (mons_is_sleeping(mon) && mons_near(mon))
+                remove_auto_exclude(mon, true);
+
             if (!mons_is_cornered(mon))
                 mon->behaviour = BEH_SEEK;
 
@@ -2078,6 +2086,9 @@ void behaviour_event(monsters *mon, int event, int src,
         if (mons_friendly(mon) && mon->is_patrolling())
             break;
 
+        if (mons_is_sleeping(mon) && mons_near(mon))
+            remove_auto_exclude(mon, true);
+
         // Will alert monster to <src> and turn them
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
@@ -2089,6 +2100,15 @@ void behaviour_event(monsters *mon, int event, int src,
 
         if (mon->foe == MHITNOT)
             mon->foe = src;
+
+        if (src_pos != coord_def()
+            && (mon->foe == MHITNOT || mons_is_wandering(mon)))
+        {
+            if (mon->is_patrolling())
+                break;
+
+            mon->target = src_pos;
+        }
         break;
 
     case ME_SCARE:
@@ -4215,8 +4235,11 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             int walls = num_feats_between(you.pos(), monster->pos(),
                                           DNGN_UNSEEN, DNGN_MAXWALL);
 
+            noisy(12, monster->pos(), NULL, true);
+
             if (walls > 0)
             {
+                // Since when do transparent walls block sound? (jpeg)
                 simple_monster_message(monster, " appears to sing, but you "
                                        "can't hear her.");
                 break;

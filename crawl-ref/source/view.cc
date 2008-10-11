@@ -1188,9 +1188,6 @@ void monster_grid(bool do_updates)
                                || mons_is_wandering(monster))
                 && check_awaken(monster))
             {
-                if (mons_near(monster))
-                    remove_auto_exclude(monster, true);
-
                 behaviour_event( monster, ME_ALERT, MHITYOU );
                 handle_monster_shouts(monster);
             }
@@ -1565,7 +1562,7 @@ void cloud_grid(void)
 // player is appropriate.
 //
 // Returns true if the PC heard the noise.
-bool noisy(int loudness, const coord_def& where, const char *msg)
+bool noisy(int loudness, const coord_def& where, const char *msg, bool mermaid)
 {
     bool ret = false;
 
@@ -1584,7 +1581,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg)
 
         you.check_awaken(dist - player_distance);
 
-        if (loudness >= 20 && you.duration[DUR_BEHELD])
+        if (!mermaid && loudness >= 20 && you.duration[DUR_BEHELD])
         {
             mprf("For a moment, you cannot hear the mermaid%s!",
                  you.beheld_by.size() == 1? "" : "s");
@@ -1610,6 +1607,12 @@ bool noisy(int loudness, const coord_def& where, const char *msg)
             // will be jumping on top of them.
             if (where == you.pos())
                 behaviour_event( monster, ME_ALERT, MHITYOU );
+            else if (mermaid && mons_habitat(monster) == HT_WATER
+                     && !mons_friendly(monster))
+            {
+                // Mermaids call (hostile) aquatic monsters.
+                behaviour_event( monster, ME_ALERT, MHITNOT, where );
+            }
             else
                 behaviour_event( monster, ME_DISTURB, MHITNOT, where );
         }
