@@ -3749,10 +3749,10 @@ spec_query:
         break;
     // access to the help files
     case '?':
-        list_commands(false, '1');
+        list_commands('1');
         return choose_race();
     case '%':
-        list_commands(false, '%');
+        list_commands('%');
         return choose_race();
     default:
         break;
