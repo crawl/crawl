@@ -576,7 +576,6 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     pbolt.type           = theBeam.type;
     pbolt.flavour        = theBeam.flavour;
     pbolt.thrower        = theBeam.thrower;
-    pbolt.aux_source.clear();
     pbolt.name           = theBeam.name;
     pbolt.is_beam        = theBeam.is_beam;
     pbolt.source         = monster->pos();
@@ -586,7 +585,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
 
     pbolt.foe_ratio      = theBeam.foe_ratio;
 
-    if (pbolt.name.length() && pbolt.name[0] != '0')
+    if (!pbolt.is_enchantment())
         pbolt.aux_source = pbolt.name;
     else
         pbolt.aux_source.clear();
@@ -807,9 +806,6 @@ void setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
 
 bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 {
-    // XXX: Ugly hack, but avoids adding dynamic allocation to this code.
-    char throw_buff[ITEMNAME_SIZE];
-
     bool returning = (get_weapon_brand(mitm[hand_used]) == SPWPN_RETURNING
                       || get_ammo_brand(mitm[hand_used]) == SPMSL_RETURNING);
 
@@ -1100,6 +1096,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
 
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
+    char throw_buff[ITEMNAME_SIZE];
     if (projected == LRET_LAUNCHED)
     {
         snprintf(throw_buff, sizeof(throw_buff), "Shot with a%s %s by %s",

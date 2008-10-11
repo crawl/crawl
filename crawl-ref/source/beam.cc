@@ -2872,8 +2872,8 @@ static bool _affects_wall(const bolt &beam, int wall)
     if (beam.flavour == BEAM_DIGGING)
         return (true);
 
-    // Isn't this much nicer than the hack to remove ice bolts, disrupt,
-    // and needles (just because they were also coloured "white") -- bwr
+    // FIXME: There should be a better way to test for ZAP_DISRUPTION
+    // vs. ZAP_DISINTEGRATION.
     if (beam.flavour == BEAM_DISINTEGRATION && beam.damage.num >= 3)
         return (true);
 

@@ -6147,7 +6147,7 @@ int god_colour(god_type god) // mv - added
 int piety_rank(int piety)
 {
     const int breakpoints[] = { 161, 120, 100, 75, 50, 30, 6 };
-    const int numbreakpoints = sizeof(breakpoints) / sizeof(int);
+    const int numbreakpoints = ARRAYSZ(breakpoints);
     if (piety < 0)
         piety = you.piety;
 

@@ -4541,22 +4541,27 @@ const char* failure_rate_to_string( int fail )
         "Perfect";                  // 100%
 }
 
+static unsigned int _breakpoint_rank(int val, const int breakpoints[],
+                            unsigned int num_breakpoints)
+{
+    unsigned int result = 0;
+    while (result < num_breakpoints && val >= breakpoints[result])
+        ++result;
+    return result;
+}
+
 const char* spell_hunger_string( spell_type spell )
 {
     if ( you.is_undead == US_UNDEAD )
         return "N/A";
 
     const int hunger = spell_hunger(spell);
-    if ( hunger == 0 )
-        return "None";
-    else if ( hunger < 25 )
-        return "Minor";
-    else if ( hunger < 150 )
-        return "Moderate";
-    else if ( hunger < 500 )
-        return "Major";
-    else
-        return "Extreme";
+    const char* hunger_descriptions[] = {
+        "None", "Grape", "Apple", "Choko", "Ration"
+    };
+    const int breakpoints[] = { 1, 25, 150, 500 };
+    return (hunger_descriptions[_breakpoint_rank(hunger, breakpoints,
+                                                 ARRAYSZ(breakpoints))]);
 }
 
 int spell_power_colour(spell_type spell)
@@ -4580,12 +4585,7 @@ static int _power_to_barcount( int power )
         return -1;
 
     const int breakpoints[] = { 5, 10, 15, 25, 35, 50, 75, 100, 150 };
-    int result = 0;
-    for (unsigned int i = 0; i < ARRAYSZ(breakpoints); ++i)
-        if (power > breakpoints[i])
-            ++result;
-
-    return (result + 1);
+    return (_breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1);
 }
 
 int spell_power_bars( spell_type spell )
