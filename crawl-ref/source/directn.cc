@@ -2667,6 +2667,8 @@ static std::string _describe_mons_enchantment(const monsters &mons,
         return "petrified";
     case ENCH_PETRIFYING:
         return "slowly petrifying";
+    case ENCH_LOWERED_MR:
+        return "susceptible to magic";
     default:
         return "";
     }

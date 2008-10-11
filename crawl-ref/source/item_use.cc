@@ -4276,6 +4276,7 @@ static void _antimagic_scroll()
     // First cast antimagic on yourself.
     antimagic();
 
+    // List of magical enchantments which will be dispelled.
     const enchant_type lost_enchantments[] = {
         ENCH_SLOW,
         ENCH_HASTE,
@@ -4291,18 +4292,20 @@ static void _antimagic_scroll()
 
     mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, KC_YOU, 40);
 
-    // All nearby creatures lose all magical enchantments, and halve
-    // their MR halved (if they're not magic-immune.)
+    // Go over all creatures in LOS.
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
         const unsigned short targ_monst = env.mgrid(*ri);
         if (targ_monst != NON_MONSTER)
         {
+            // Dispel all magical enchantments.
             monsters& mon = menv[targ_monst];
             for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
                 mon.del_ench(lost_enchantments[i], true, true);
             
-            mon.add_ench(lowered_mr);
+            // If relevant, monsters have their MR halved.
+            if (!mons_immune_magic(&mon))
+                mon.add_ench(lowered_mr);
             
             // Annoying but not enough to turn friendlies against you.
             behaviour_event(&mon, ME_ANNOY, MHITYOU);
