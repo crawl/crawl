@@ -2374,72 +2374,57 @@ static void _generate_scroll_item(item_def& item, int force_type,
         item.sub_type = force_type;
     else
     {
-        // only used in certain cases {dlb}
         const int depth_mod = random2(1 + item_level);
-        const int temp_rand = random2(935);
 
-        item.sub_type =
-            ((temp_rand > 766) ? SCR_IDENTIFY :          // 17.97%
-             (temp_rand > 644) ? SCR_REMOVE_CURSE :      // 13.05%
-             (temp_rand > 569) ? SCR_TELEPORTATION :     //  8.02%
-             (temp_rand > 509) ? SCR_DETECT_CURSE :      //  6.42%
-             (temp_rand > 479) ? SCR_FEAR :              //  3.21%
-             (temp_rand > 449) ? SCR_NOISE :             //  3.21%
-             (temp_rand > 419) ? SCR_MAGIC_MAPPING :     //  3.21%
-             (temp_rand > 389) ? SCR_FOG :               //  3.21%
-             (temp_rand > 359) ? SCR_RANDOM_USELESSNESS ://  3.21%
-             (temp_rand > 329) ? SCR_CURSE_WEAPON :      //  3.21%
-             (temp_rand > 299) ? SCR_CURSE_ARMOUR :      //  3.21%
-             (temp_rand > 269) ? SCR_RECHARGING :        //  3.21%
-             (temp_rand > 239) ? SCR_BLINKING :          //  3.21%
-             (temp_rand > 209) ? SCR_PAPER :             //  3.21%
-             (temp_rand > 179) ? SCR_ENCHANT_ARMOUR :    //  3.21%
-             (temp_rand > 149) ? SCR_ENCHANT_WEAPON_I :  //  3.21%
-             (temp_rand > 119) ? SCR_ENCHANT_WEAPON_II : //  3.21%
+        // total weight: 10000
+        item.sub_type = random_choose_weighted(
+            1797, SCR_IDENTIFY,
+            1305, SCR_REMOVE_CURSE,
+            802, SCR_TELEPORTATION,
+            642, SCR_DETECT_CURSE,
+            321, SCR_FEAR,
+            321, SCR_NOISE,
+            321, SCR_MAGIC_MAPPING,
+            321, SCR_FOG,
+            321, SCR_RANDOM_USELESSNESS,
+            321, SCR_CURSE_WEAPON,
+            321, SCR_CURSE_ARMOUR,
+            321, SCR_RECHARGING,
+            321, SCR_BLINKING,
+            161, SCR_PAPER,
+            321, SCR_ENCHANT_ARMOUR,
+            321, SCR_ENCHANT_WEAPON_I,
+            321, SCR_ENCHANT_WEAPON_II,
 
-             // Crawl is kind to newbie adventurers {dlb}:
-             // yes -- these five are messy {dlb}:
-             // yes they are a hellish mess of tri-ops and long lines,
-             // this formating is somewhat better -- bwr
-             (temp_rand > 89) ?
-              ((item_level < 4) ? SCR_TELEPORTATION
-                                : SCR_IMMOLATION) :    //  3.21%
-             (temp_rand > 74) ?
-              ((depth_mod < 4) ? SCR_TELEPORTATION
-                               : SCR_ACQUIREMENT) :    //  1.60%
-             (temp_rand > 59) ?
-              ((depth_mod < 4) ? SCR_DETECT_CURSE
-                               : SCR_SUMMONING) :      //  1.60%
-             (temp_rand > 44) ?
-              ((depth_mod < 4) ? SCR_TELEPORTATION     //  1.60%
-                               : SCR_ENCHANT_WEAPON_III) :
-             (temp_rand > 29) ?
-              ((depth_mod < 7) ? SCR_DETECT_CURSE
-                               : SCR_TORMENT) :        //  1.60%
-             (temp_rand > 14) ?
-              ((depth_mod < 7) ? SCR_DETECT_CURSE
-                               : SCR_HOLY_WORD) :      //  1.60%
-             // default:
-              ((depth_mod < 7) ? SCR_TELEPORTATION     //  1.60%
-                               : SCR_VORPALISE_WEAPON));
+            // Don't create ?oImmolation at low levels (encourage read-ID)
+            321, (item_level < 4 ? SCR_TELEPORTATION : SCR_IMMOLATION),
+
+            // Medium-level scrolls
+            160, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
+            160, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
+            160, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
+            160, (depth_mod < 4 ? SCR_PAPER :         SCR_ANTIMAGIC),
+
+            // High-level scrolls
+            160, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
+            160, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_TORMENT),
+            160, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_HOLY_WORD),
+            0);
     }
 
     // determine quantity
-    if ( item.sub_type == SCR_VORPALISE_WEAPON
-         || item.sub_type == SCR_ENCHANT_WEAPON_III
-         || item.sub_type == SCR_ACQUIREMENT
-         || item.sub_type == SCR_TORMENT
-         || item.sub_type == SCR_HOLY_WORD )
+    if (item.sub_type == SCR_VORPALISE_WEAPON
+        || item.sub_type == SCR_ENCHANT_WEAPON_III
+        || item.sub_type == SCR_ACQUIREMENT
+        || item.sub_type == SCR_TORMENT
+        || item.sub_type == SCR_HOLY_WORD)
     {
         item.quantity = 1;
     }
     else
     {
-        const int tmp = random2(48);
-        if ( tmp == 1 )
-            item.quantity = 2;
-        else if ( tmp == 0 )
-            item.quantity = 3;
+        if (one_chance_in(24))
+            item.quantity = (coinflip() ? 2 : 3);
         else
             item.quantity = 1;
     }

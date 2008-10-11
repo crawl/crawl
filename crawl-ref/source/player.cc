@@ -1162,6 +1162,10 @@ int player_res_magic(void)
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
         rm += 50;
 
+    // Enchantment effect
+    if (you.duration[DUR_LOWERED_MR])
+        rm /= 2;
+
     return rm;
 }
 

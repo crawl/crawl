@@ -2388,25 +2388,22 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
 
     std::vector<monsters*> mons;
 
-    // Sweep every square within range.
+    // Sweep every visible square within range.
     for ( radius_iterator ri(you.pos(), range); ri; ++ri )
     {
         const unsigned short targ_monst = env.mgrid(*ri);
         if (targ_monst != NON_MONSTER)
         {
-            if (see_grid(*ri))
+            monsters *mon = &menv[targ_monst];
+            if (mon->alive()
+                && (!require_visible || player_monster_visible(mon))
+                && !mons_is_submerged(mon)
+                && (!mons_is_mimic(mon->type) || mons_is_known_mimic(mon))
+                && (!dangerous_only || !mons_is_safe(mon, want_move)))
             {
-                monsters *mon = &menv[targ_monst];
-                if (mon->alive()
-                    && (!require_visible || player_monster_visible(mon))
-                    && !mons_is_submerged(mon)
-                    && (!mons_is_mimic(mon->type) || mons_is_known_mimic(mon))
-                    && (!dangerous_only || !mons_is_safe(mon, want_move)))
-                {
-                    mons.push_back(mon);
-                    if (just_check) // stop once you find one
-                        return mons;
-                }
+                mons.push_back(mon);
+                if (just_check) // stop once you find one
+                    return mons;
             }
         }
     }

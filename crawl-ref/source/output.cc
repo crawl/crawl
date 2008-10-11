@@ -596,8 +596,10 @@ static void _get_status_lights(std::vector<status_light>& out)
 
     if (you.duration[DUR_REPEL_UNDEAD])
     {
-        int color = _dur_colour( LIGHTGREY, (you.duration[DUR_REPEL_UNDEAD] <= 4) );
-        out.push_back(status_light(color, "Holy"));
+        int colour = _dur_colour(LIGHTGREY,
+                                 (you.duration[DUR_REPEL_UNDEAD] <= 4));
+
+        out.push_back(status_light(colour, "Holy"));
     }
 
     if (you.duration[DUR_TELEPORT])
@@ -684,6 +686,11 @@ static void _get_status_lights(std::vector<status_light>& out)
     if (you.confused())
     {
         out.push_back(status_light(RED, "Conf"));
+    }
+
+    if (you.duration[DUR_LOWERED_MR])
+    {
+        out.push_back(status_light(RED, "-MR"));
     }
 
     if (you.duration[DUR_BEHELD])
@@ -2116,6 +2123,10 @@ std::string _status_mut_abilities()
 // resistance part already says so
 //    if (you.duration[DUR_CONTROL_TELEPORT])
 //        text += "control teleport, ";
+
+// MR output already says so
+//    if (you.duration[DUR_LOWERED_MR])
+//        text += "vulnerable to magic, ";
 
     if (you.duration[DUR_DEATH_CHANNEL])
         text += "death channel, ";

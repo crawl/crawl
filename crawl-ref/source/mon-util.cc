@@ -936,6 +936,9 @@ int mons_resist_magic( const monsters *mon )
         u += 30;
     }
 
+    if (mon->has_ench(ENCH_LOWERED_MR))
+        u /= 2;
+
     return (u);
 }
 
@@ -5897,6 +5900,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
         case ENCH_PETRIFYING: case ENCH_PETRIFIED:
         case ENCH_BATTLE_FRENZY: case ENCH_NEUTRAL:
+        case ENCH_LOWERED_MR:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -6029,6 +6033,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_ABJ:
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
+    case ENCH_LOWERED_MR:
         decay_enchantment(me);
         break;
 
@@ -7004,7 +7009,8 @@ static const char *enchant_names[] =
     "rot", "summon", "abj", "backlit", "charm", "fire",
     "gloshifter", "shifter", "tp", "wary", "submerged",
     "short-lived", "paralysis", "sick", "sleep", "fatigue", "held",
-    "blood-lust", "neutral", "petrifying", "petrified", "bug"
+    "blood-lust", "neutral", "petrifying", "petrified", "magic-vulnerable",
+    "bug"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

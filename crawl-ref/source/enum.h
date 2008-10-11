@@ -1129,6 +1129,7 @@ enum duration_type
     DUR_SAGE,
     DUR_TELEPATHY,
     DUR_PETRIFIED,
+    DUR_LOWERED_MR,
 
     NUM_DURATIONS
 };
@@ -1166,6 +1167,7 @@ enum enchant_type
     ENCH_NEUTRAL,
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
+    ENCH_LOWERED_MR,
 
     // Update enchantment names in mon-util.cc when adding or removing
     // enchantments.

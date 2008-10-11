@@ -4271,17 +4271,50 @@ static bool _scroll_modify_item(item_def scroll)
     return (false);
 }
 
-void read_scroll( int slot )
+static void _antimagic_scroll()
 {
-    int affected = 0;
-    int i;
-    int count;
-    int nthing;
-    struct bolt beam;
+    // First cast antimagic on yourself.
+    antimagic();
 
-    // added: scroll effects are never tracers.
-    beam.is_tracer = false;
+    const enchant_type lost_enchantments[] = {
+        ENCH_SLOW,
+        ENCH_HASTE,
+        ENCH_FEAR,
+        ENCH_CONFUSION,
+        ENCH_INVIS,
+        ENCH_BACKLIGHT,
+        ENCH_CHARM,
+        ENCH_PARALYSIS,
+        ENCH_PETRIFYING,
+        ENCH_PETRIFIED
+    };
 
+    mon_enchant lowered_mr(ENCH_LOWERED_MR, 1, KC_YOU, 40);
+
+    // All nearby creatures lose all magical enchantments, and halve
+    // their MR halved (if they're not magic-immune.)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    {
+        const unsigned short targ_monst = env.mgrid(*ri);
+        if (targ_monst != NON_MONSTER)
+        {
+            monsters& mon = menv[targ_monst];
+            for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
+                mon.del_ench(lost_enchantments[i], true, true);
+            
+            mon.add_ench(lowered_mr);
+            
+            // Annoying but not enough to turn friendlies against you.
+            behaviour_event(&mon, ME_ANNOY, MHITYOU);
+        }
+    }
+
+    you.duration[DUR_LOWERED_MR] = 40;
+    mpr("Magic dampens around you!");
+}
+
+void read_scroll(int slot)
+{
     if (you.duration[DUR_BERSERKER])
     {
         canned_msg(MSG_TOO_BERSERK);
@@ -4461,16 +4494,20 @@ void read_scroll( int slot )
         break;
 
     case SCR_IMMOLATION:
+    {
         mpr("The scroll explodes in your hands!");
         // We do this here to prevent it from blowing itself up.
         set_ident_type( scroll, ID_KNOWN_TYPE );
         dec_inv_item_quantity( item_slot, 1 );
 
-        // unsure about this    // BEAM_EXPLOSION instead? {dlb}
-        beam.flavour      = BEAM_FIRE;
+        bolt beam;
 
+        beam.is_tracer = false;
+
+        // unsure about this: BEAM_EXPLOSION instead? {dlb}
+        beam.flavour      = BEAM_FIRE;
         beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = dice_def( 3, 10 );
+        beam.damage       = dice_def(3, 10);
         beam.target       = you.pos();
         beam.name         = "fiery explosion";
         beam.colour       = RED;
@@ -4485,21 +4522,20 @@ void read_scroll( int slot )
 
         explosion(beam, false, false, true, true, true, false);
         break;
+    }
 
     case SCR_CURSE_WEAPON:
-        nthing = you.equip[EQ_WEAPON];
-
-        if (nthing == -1
-            || you.inv[nthing].base_type != OBJ_WEAPONS
-            || item_cursed( you.inv[nthing] ))
+        if (!you.weapon()
+            || you.weapon()->base_type != OBJ_WEAPONS
+            || item_cursed(*you.weapon()))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             id_the_scroll = false;
         }
         else
-        {
+        {             
             // Also sets wield_change.
-            do_curse_item( you.inv[nthing], false );
+            do_curse_item( *you.weapon(), false );
             learned_something_new(TUT_YOU_CURSED);
         }
         break;
@@ -4566,15 +4602,16 @@ void read_scroll( int slot )
         break;
 
     case SCR_CURSE_ARMOUR:
+    {
         // make sure there's something to curse first
-        count = 0;
-        affected = EQ_WEAPON;
-        for (i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
+        int count = 0;
+        int affected = EQ_WEAPON;
+        for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
         {
-            if (you.equip[i] != -1 && !item_cursed( you.inv[you.equip[i]] ))
+            if (you.equip[i] != -1 && !item_cursed(you.inv[you.equip[i]]))
             {
                 count++;
-                if (one_chance_in( count ))
+                if (one_chance_in(count))
                     affected = i;
             }
         }
@@ -4590,6 +4627,7 @@ void read_scroll( int slot )
         do_curse_item( you.inv[you.equip[affected]], false );
         learned_something_new(TUT_YOU_CURSED);
         break;
+    }
 
     case SCR_HOLY_WORD:
     {
@@ -4625,6 +4663,10 @@ void read_scroll( int slot )
         break;
     }
 
+    case SCR_ANTIMAGIC:
+        _antimagic_scroll();
+        break;
+
     default:
         mpr("Read a buggy scroll, please report this.");
         break;
@@ -4649,7 +4691,7 @@ void read_scroll( int slot )
          // a dangerous monster nearby...
         xom_is_stimulated(255);
     }
-}                               // end read_scroll()
+}
 
 void examine_object(void)
 {
