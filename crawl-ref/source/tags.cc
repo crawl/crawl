@@ -848,6 +848,8 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.is_undead);
     marshallByte(th, you.special_wield);
     marshallByte(th, you.berserk_penalty);
+    marshallShort(th, you.sage_bonus_skill);
+    marshallLong(th, you.sage_bonus_degree);
     marshallByte(th, you.level_type);
     marshallString(th, you.level_type_name);
     marshallByte(th, you.entry_cause);
@@ -1236,6 +1238,8 @@ static void tag_read_you(reader &th, char minorVersion)
     you.is_undead       = static_cast<undead_state_type>(unmarshallByte(th));
     you.special_wield   = unmarshallByte(th);
     you.berserk_penalty = unmarshallByte(th);
+    you.sage_bonus_skill = static_cast<skill_type>(unmarshallShort(th));
+    you.sage_bonus_degree = unmarshallLong(th);
     you.level_type      = static_cast<level_area_type>( unmarshallByte(th) );
     you.level_type_name = unmarshallString(th);
     you.entry_cause     = static_cast<entry_cause_type>( unmarshallByte(th) );
