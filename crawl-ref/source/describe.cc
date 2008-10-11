@@ -2808,7 +2808,7 @@ const char *divine_title[NUM_GODS][8] =
      "Battle Magician",    "Warlock",               "Annihilator",              "Luminary of Lethal Lore"},
 
     //  Okawaru -- battle theme
-    {"Coward",             "Struggler",             "Combattant",               "Warrior",
+    {"Coward",             "Struggler",             "Combatant",                "Warrior",
      "Knight",             "Warmonger",             "Commander",                "Victor of a Thousand Battles"},
 
     //  Makhleb -- chaos theme
