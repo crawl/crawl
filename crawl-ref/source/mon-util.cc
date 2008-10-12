@@ -338,6 +338,7 @@ static int _scan_mon_inv_randarts(const monsters *mon,
         const int weapon = mon->inv[MSLOT_WEAPON];
         const int second = mon->inv[MSLOT_MISSILE]; // Two-headed ogres, etc.
         const int armour = mon->inv[MSLOT_ARMOUR];
+        const int shield = mon->inv[MSLOT_SHIELD];
 
         if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
             && is_random_artefact( mitm[weapon] ))
@@ -355,6 +356,12 @@ static int _scan_mon_inv_randarts(const monsters *mon,
             && is_random_artefact( mitm[armour] ))
         {
             ret += randart_wpn_property( mitm[armour], ra_prop );
+        }
+
+        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR
+            && is_random_artefact( mitm[shield] ))
+        {
+            ret += randart_wpn_property( mitm[shield], ra_prop );
         }
     }
 
