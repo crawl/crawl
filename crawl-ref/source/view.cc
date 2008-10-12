@@ -91,8 +91,7 @@ FixedArray < unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER > Show_Backup;
 unsigned char show_green;
 extern int stealth;             // defined in acr.cc
 
-// char colour_code_map(unsigned char map_value);
-screen_buffer_t colour_code_map( int x, int y, bool item_colour = false,
+screen_buffer_t colour_code_map( const coord_def& p, bool item_colour = false,
                                  bool travel_colour = false );
 
 void cloud_grid(void);
@@ -226,9 +225,9 @@ bool is_envmap_mons(int x, int y)
     return (_get_viewobj_flags(env.map[x][y].object) & MC_MONS);
 }
 
-int get_envmap_col(int x, int y)
+int get_envmap_col(const coord_def& p)
 {
-    return (env.map[x][y].colour);
+    return (env.map[p.x][p.y].colour);
 }
 
 bool is_terrain_known( int x, int y )
@@ -546,12 +545,12 @@ unsigned get_magicmap_char( int feature )
     return (0);
 }
 
-static char _get_travel_colour( int x, int y )
+static char _get_travel_colour( const coord_def& p )
 {
-    if (is_waypoint(x, y))
+    if (is_waypoint(p))
         return LIGHTGREEN;
 
-    short dist = travel_point_distance[x][y];
+    short dist = travel_point_distance[p.x][p.y];
     return dist > 0?                    Options.tc_reachable        :
            dist == PD_EXCLUDED?         Options.tc_excluded         :
            dist == PD_EXCLUDED_RADIUS?  Options.tc_exclude_circle   :
@@ -637,17 +636,16 @@ unsigned short dos_brand( unsigned short colour,
 
 // FIXME: Rework this function to use the new terrain known/seen checks
 // These are still env.map coordinates, NOT grid coordinates!
-screen_buffer_t colour_code_map( int x, int y, bool item_colour,
+screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
                                  bool travel_colour )
 {
-    const unsigned short map_flags = env.map[x][y].flags;
+    const unsigned short map_flags = env.map(p).flags;
     if (!(map_flags & MAP_GRID_KNOWN))
         return (BLACK);
 
-    const dungeon_feature_type grid_value = grd[x][y];
+    const dungeon_feature_type grid_value = grd(p);
 
-    unsigned tc = travel_colour ? _get_travel_colour(x, y)
-                                : DARKGREY;
+    unsigned tc = travel_colour ? _get_travel_colour(p) : DARKGREY;
 
     if (map_flags & MAP_DETECTED_ITEM)
         return real_colour(Options.detected_item_colour);
@@ -660,14 +658,14 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
 
     // If this is an important travel square, don't allow the colour
     // to be overridden.
-    if (is_waypoint(x, y) || travel_point_distance[x][y] == PD_EXCLUDED)
+    if (is_waypoint(p) || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
         return real_colour(tc);
 
-    if (item_colour && is_envmap_item(x, y))
-        return get_envmap_col(x, y);
+    if (item_colour && is_envmap_item(p))
+        return get_envmap_col(p);
 
     int feature_colour = DARKGREY;
-    const bool terrain_seen = is_terrain_seen(x, y);
+    const bool terrain_seen = is_terrain_seen(p);
     const feature_def &fdef = Feature[grid_value];
     feature_colour = terrain_seen? fdef.seen_colour : fdef.map_colour;
 
@@ -675,7 +673,7 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
         && fdef.seen_em_colour)
     {
         feature_colour =
-            _view_emphasised_colour(coord_def(x, y), grid_value, feature_colour,
+            _view_emphasised_colour(p, grid_value, feature_colour,
                                     fdef.seen_em_colour);
     }
 
@@ -685,17 +683,16 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
     {
         // If beheld, colour the few grids that can be reached anyway
         // lightgrey.
-        coord_def pos = coord_def(x,y);
-        if (grd(pos) >= DNGN_MINMOVE && mgrd(pos) == NON_MONSTER)
+        if (grd(p) >= DNGN_MINMOVE && mgrd(p) == NON_MONSTER)
         {
             bool blocked_movement = false;
             for (unsigned int i = 0; i < you.beheld_by.size(); i++)
             {
                 monsters& mon = menv[you.beheld_by[i]];
                 const int olddist = grid_distance(you.pos(), mon.pos());
-                const int newdist = grid_distance(pos, mon.pos());
+                const int newdist = grid_distance(p, mon.pos());
 
-                if (olddist < newdist || !see_grid(env.show, pos, mon.pos()))
+                if (olddist < newdist || !see_grid(env.show, p, mon.pos()))
                 {
                     blocked_movement = true;
                     break;
@@ -708,12 +705,12 @@ screen_buffer_t colour_code_map( int x, int y, bool item_colour,
 
     if (Options.feature_item_brand
         && is_critical_feature(grid_value)
-        && igrd[x][y] != NON_ITEM)
+        && igrd(p) != NON_ITEM)
     {
         tc |= COLFLAG_FEATURE_ITEM;
     }
     else if (Options.trap_item_brand
-             && grid_is_trap(grid_value) && igrd[x][y] != NON_ITEM)
+             && grid_is_trap(grid_value) && igrd(p) != NON_ITEM)
     {
         tc |= COLFLAG_TRAP_ITEM;
     }
@@ -2770,7 +2767,7 @@ bool is_feature(int feature, const coord_def& where)
         return (travel_point_distance[where.x][where.y] == PD_EXCLUDED);
     case 'F':
     case 'W':
-        return is_waypoint(where.x, where.y);
+        return is_waypoint(where);
     case 'I':
         return is_stash(where.x, where.y);
     case '_':
@@ -3131,7 +3128,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
             }
             else
             {
-                colour = colour_code_map(c.x, c.y,
+                colour = colour_code_map(c,
                                          Options.item_colour,
                                          travel_mode);
 
@@ -3154,7 +3151,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode)
                 {
                     // XXX: This is a horrible hack.
                     screen_buffer_t &bc = buffer2[bufcount2];
-                    unsigned char ch = is_waypoint(c.x, c.y);
+                    unsigned char ch = is_waypoint(c);
                     if (ch && (bc == get_sightmap_char(DNGN_FLOOR)
                                || bc == get_magicmap_char(DNGN_FLOOR)))
                     {
@@ -4994,7 +4991,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     if (Options.colour_map)
                     {
                         buffy[bufcount + 1] =
-                            colour_code_map(gc.x, gc.y, Options.item_colour);
+                            colour_code_map(gc, Options.item_colour);
                     }
 
 #ifdef USE_TILE
@@ -5140,8 +5137,7 @@ void viewwindow(bool draw_it, bool do_updates)
                             if (Options.colour_map)
                             {
                                 buffy[bufcount + 1] =
-                                    colour_code_map(gc.x, gc.y,
-                                                    Options.item_colour);
+                                    colour_code_map(gc, Options.item_colour);
                             }
 #ifdef USE_TILE
                             if (env.tile_bk_fg[gc.x][gc.y] != 0

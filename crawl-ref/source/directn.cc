@@ -714,7 +714,7 @@ public:
 
         // Save and replace grid colours. -1 means unchanged.
         orig_colours.init(-1);
-        const coord_def offset(9,9);
+        const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
         for ( radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri )
         {
             if (grid_distance(you.pos(), *ri) > range)
@@ -751,10 +751,10 @@ public:
 
         // Restore grid colours.
         coord_def c;
-        const coord_def offset(9,9);
-        for ( c.x = 0; c.x < 19; ++c.x )
+        const coord_def offset(ENV_SHOW_OFFSET, ENV_SHOW_OFFSET);
+        for ( c.x = 0; c.x < ENV_SHOW_DIAMETER; ++c.x )
         {
-            for ( c.y = 0; c.y < 19; ++c.y )
+            for ( c.y = 0; c.y < ENV_SHOW_DIAMETER; ++c.y )
             {
                 const int old_colour = orig_colours(c);
                 if ( old_colour != -1 )
@@ -772,7 +772,7 @@ public:
     }
 private:
     bool do_anything;
-    FixedArray<int,19,19> orig_colours;
+    FixedArray<int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> orig_colours;
     int orig_mon_colours[MAX_MONSTERS];
 };
 

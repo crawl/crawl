@@ -395,11 +395,11 @@ const char *run_mode_name(int runmode)
                                             : "");
 }
 
-unsigned char is_waypoint(int x, int y)
+unsigned char is_waypoint(const coord_def &p)
 {
     if (!can_travel_interlevel())
         return 0;
-    return curr_waypoints[x][y];
+    return curr_waypoints[p.x][p.y];
 }
 
 inline bool is_stash(const LevelStashes *ls, int x, int y)
@@ -1796,7 +1796,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                        && feature != DNGN_SHALLOW_WATER
                        && feature != DNGN_DEEP_WATER
                        && feature != DNGN_LAVA
-                    || is_waypoint(dc.x, dc.y)
+                    || is_waypoint(dc)
                     || is_stash(ls, dc.x, dc.y)))
             {
                 features->push_back(dc);
