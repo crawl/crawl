@@ -2362,8 +2362,7 @@ void describe_monsters(const monsters& mons)
     if (mons_is_mimic(mons.type) && !(mons.flags & MF_KNOWN_MIMIC))
     {
         item_def item;
-        const monsters *mon = &mons;
-        get_mimic_item( mon, item );
+        get_mimic_item(&mons, item);
         describe_item(item);
         return;
     }
@@ -2371,7 +2370,7 @@ void describe_monsters(const monsters& mons)
     std::ostringstream body;
     std::string title, prefix, suffix, quote;
 
-    std::string capname = mons.name(DESC_CAP_A);
+    const std::string capname = mons.name(DESC_CAP_A);
     title = capname;
     if (mons.has_base_name())
     {
@@ -2388,7 +2387,7 @@ void describe_monsters(const monsters& mons)
         body << getLongDescription(db_name);
     quote = getQuoteString(db_name);
 
-    std::string symbol = "";
+    std::string symbol;
     symbol += get_monster_data(mons.type)->showchar;
     if (isupper(symbol[0]))
         symbol = "cap-" + symbol;

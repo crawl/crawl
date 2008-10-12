@@ -5653,8 +5653,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         else
         {
             snprintf(info, INFO_SIZE, " seems to regain %s courage.",
-                     mons_pronoun(static_cast<monster_type>(this->type),
-                                  PRONOUN_NOCAP_POSSESSIVE));
+                     this->pronoun(PRONOUN_NOCAP_POSSESSIVE, true).c_str());
         }
 
         if (!quiet)
@@ -5704,7 +5703,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             // Enslaved monsters stop patrolling and forget their patrol point,
             // in case they were on order to wait.
-            patrol_point = coord_def(0, 0);
+            patrol_point.reset();
         }
 
         // Reevaluate behaviour.
@@ -5774,8 +5773,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         if (you.can_see(this))
         {
-            if (!mons_is_safe( static_cast<const monsters*>(this))
-                && is_run_delay(current_delay_action()))
+            if (!mons_is_safe(this) && is_run_delay(current_delay_action()))
             {
                 // Already set somewhere else.
                 if (!seen_context.empty())

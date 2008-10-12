@@ -1050,7 +1050,8 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
 bool do_wear_armour( int item, bool quiet )
 {
-    if (!is_valid_item( you.inv[item] ))
+    const item_def &invitem = you.inv[item];
+    if (!is_valid_item(invitem))
     {
         if (!quiet)
            mpr("You don't have any such object.");
@@ -1058,10 +1059,9 @@ bool do_wear_armour( int item, bool quiet )
         return (false);
     }
 
-    if (!can_wear_armour(you.inv[item], !quiet, false))
+    if (!can_wear_armour(invitem, !quiet, false))
         return (false);
 
-    const item_def &invitem   = you.inv[item];
     const equipment_type slot = get_armour_slot(invitem);
 
     if (item == you.equip[EQ_WEAPON])
@@ -1078,8 +1078,8 @@ bool do_wear_armour( int item, bool quiet )
     // if you're wielding something,
     if (you.weapon()
         // attempting to wear a shield,
-        && is_shield(you.inv[item])
-        && is_shield_incompatible(*you.weapon(), &you.inv[item]))
+        && is_shield(invitem)
+        && is_shield_incompatible(*you.weapon(), &invitem))
     {
         if (!quiet)
            mpr("You'd need three hands to do that!");
@@ -1090,6 +1090,7 @@ bool do_wear_armour( int item, bool quiet )
     bool removedCloak = false;
     int  cloak = -1;
 
+    // Removing body armour requires removing the cloak first.
     if (slot == EQ_BODY_ARMOUR
         && you.equip[EQ_CLOAK] != -1 && !cloak_is_being_removed())
     {
@@ -1121,48 +1122,24 @@ bool do_wear_armour( int item, bool quiet )
         }
     }
 
-    if (slot == EQ_CLOAK && you.equip[EQ_CLOAK] != -1)
+    if ((slot == EQ_CLOAK
+         || slot == EQ_HELMET
+         || slot == EQ_GLOVES
+         || slot == EQ_BOOTS
+         || slot == EQ_SHIELD
+         || slot == EQ_BODY_ARMOUR)
+        && you.equip[slot] != -1)
     {
-        if (!takeoff_armour(you.equip[EQ_CLOAK]))
+        if (!takeoff_armour(you.equip[slot]))
             return (false);
     }
 
-    if (slot == EQ_HELMET && you.equip[EQ_HELMET] != -1)
-    {
-        if (!takeoff_armour(you.equip[EQ_HELMET]))
-            return (false);
-    }
-
-    if (slot == EQ_GLOVES && you.equip[EQ_GLOVES] != -1)
-    {
-        if (!takeoff_armour(you.equip[EQ_GLOVES]))
-            return (false);
-    }
-
-    if (slot == EQ_BOOTS && you.equip[EQ_BOOTS] != -1)
-    {
-        if (!takeoff_armour(you.equip[EQ_BOOTS]))
-            return (false);
-    }
-
-    if (slot == EQ_SHIELD && you.equip[EQ_SHIELD] != -1)
-    {
-        if (!takeoff_armour(you.equip[EQ_SHIELD]))
-            return (false);
-    }
-
-    if (slot == EQ_BODY_ARMOUR && you.equip[EQ_BODY_ARMOUR] != -1)
-    {
-        if (!takeoff_armour(you.equip[EQ_BODY_ARMOUR]))
-            return (false);
-    }
-
-    if (!safe_to_remove_or_wear(you.inv[item], false))
+    if (!safe_to_remove_or_wear(invitem, false))
         return (false);
 
     you.turn_is_over = true;
 
-    int delay = armour_equip_delay( you.inv[item] );
+    const int delay = armour_equip_delay(invitem);
     if (delay)
         start_delay( DELAY_ARMOUR_ON, delay, item );
 
@@ -1174,7 +1151,9 @@ bool do_wear_armour( int item, bool quiet )
 
 bool takeoff_armour(int item)
 {
-    if (you.inv[item].base_type != OBJ_ARMOUR)
+    const item_def& invitem = you.inv[item];
+
+    if (invitem.base_type != OBJ_ARMOUR)
     {
         mpr("You aren't wearing that!");
         return (false);
@@ -1186,25 +1165,25 @@ bool takeoff_armour(int item)
         return (false);
     }
 
-    if (item_cursed( you.inv[item] ))
+    if (item_cursed( invitem ))
     {
-        for (int loopy = EQ_CLOAK; loopy <= EQ_BODY_ARMOUR; loopy++)
+        for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
         {
-            if (item == you.equip[loopy])
+            if (item == you.equip[i])
             {
                 mprf("%s is stuck to your body!",
-                     you.inv[item].name(DESC_CAP_YOUR).c_str());
+                     invitem.name(DESC_CAP_YOUR).c_str());
                 return (false);
             }
         }
     }
 
-    if (!safe_to_remove_or_wear(you.inv[item], true))
+    if (!safe_to_remove_or_wear(invitem, true))
         return (false);
 
     bool removedCloak = false;
     int cloak = -1;
-    const equipment_type slot = get_armour_slot(you.inv[item]);
+    const equipment_type slot = get_armour_slot(invitem);
 
     if (slot == EQ_BODY_ARMOUR)
     {
@@ -1236,39 +1215,11 @@ bool takeoff_armour(int item)
         switch (slot)
         {
         case EQ_SHIELD:
-            if (item != you.equip[EQ_SHIELD])
-            {
-                mpr("You aren't wearing that!");
-                return (false);
-            }
-            break;
-
         case EQ_CLOAK:
-            if (item != you.equip[EQ_CLOAK])
-            {
-                mpr("You aren't wearing that!");
-                return (false);
-            }
-            break;
-
         case EQ_HELMET:
-            if (item != you.equip[EQ_HELMET])
-            {
-                mpr("You aren't wearing that!");
-                return (false);
-            }
-            break;
-
         case EQ_GLOVES:
-            if (item != you.equip[EQ_GLOVES])
-            {
-                mpr("You aren't wearing that!");
-                return (false);
-            }
-            break;
-
         case EQ_BOOTS:
-            if (item != you.equip[EQ_BOOTS])
+            if (item != you.equip[slot])
             {
                 mpr("You aren't wearing that!");
                 return (false);
@@ -1282,14 +1233,14 @@ bool takeoff_armour(int item)
 
     you.turn_is_over = true;
 
-    int delay = armour_equip_delay( you.inv[item] );
+    const int delay = armour_equip_delay(invitem);
     start_delay( DELAY_ARMOUR_OFF, delay, item );
 
     if (removedCloak)
         start_delay( DELAY_ARMOUR_ON, 1, cloak );
 
     return (true);
-}                               // end takeoff_armour()
+}
 
 int get_next_fire_item(int current, int direction)
 {
@@ -4939,8 +4890,7 @@ void tile_item_use(int idx)
     }
 
     // Use it
-    const int type = item.base_type;
-    switch (type)
+    switch (item.base_type)
     {
         case OBJ_WEAPONS:
         case OBJ_STAVES:
@@ -4953,7 +4903,7 @@ void tile_item_use(int idx)
                 return;
             }
             // Evoke misc. items and rods.
-            if (type == OBJ_MISCELLANY || item_is_rod(item))
+            if (item.base_type == OBJ_MISCELLANY || item_is_rod(item))
             {
                 if (check_warning_inscriptions(item, OPER_EVOKE))
                     evoke_wielded();

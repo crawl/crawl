@@ -4852,8 +4852,7 @@ void beogh_idol_revenge()
             dummy.type = MONS_ORC;
             dummy.attitude = ATT_FRIENDLY;
 
-            did_god_conduct(DID_ATTACK_FRIEND, 8, true,
-                            static_cast<const monsters *>(&dummy));
+            did_god_conduct(DID_ATTACK_FRIEND, 8, true, &dummy);
         }
     }
 }

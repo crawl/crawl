@@ -148,7 +148,7 @@ bool trap_def::is_known(const actor* act) const
         rc = player_knows;
     else if (act->atype() == ACT_MONSTER)
     {
-        const monsters* monster = static_cast<const monsters*>(act);
+        const monsters* monster = dynamic_cast<const monsters*>(act);
         const bool mechanical = (this->category() == DNGN_TRAP_MECHANICAL);
         const int intel = mons_intel(monster);
 
@@ -232,19 +232,19 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt)
     if (mons_is_insubstantial(mon->type))
     {
         if (mons_near(mon) && player_monster_visible(mon))
-            mprf("The net passes right through %s!", mon->name(DESC_NOCAP_THE).c_str());
+            mprf("The net passes right through %s!",
+                 mon->name(DESC_NOCAP_THE).c_str());
         return;
     }
 
-    const monsters* mons = static_cast<const monsters*>(mon);
-    bool mon_flies = mons->flight_mode() == FL_FLY;
-    if (mon_flies && (!mons_is_confused(mons) || one_chance_in(3)))
+    bool mon_flies = mon->flight_mode() == FL_FLY;
+    if (mon_flies && (!mons_is_confused(mon) || one_chance_in(3)))
     {
         simple_monster_message(mon, " darts out from under the net!");
         return;
     }
 
-    if (mons->type == MONS_OOZE || mons->type == MONS_PULSATING_LUMP)
+    if (mon->type == MONS_OOZE || mon->type == MONS_PULSATING_LUMP)
     {
         simple_monster_message(mon, " oozes right through the net!");
         return;
@@ -356,7 +356,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
     monsters* m = NULL;
     if (triggerer.atype() == ACT_MONSTER)
-        m = static_cast<monsters*>(&triggerer);
+        m = dynamic_cast<monsters*>(&triggerer);
 
     // Anything stepping onto a trap almost always reveals it.
     // (We can rehide it later for the exceptions.)
@@ -1177,9 +1177,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         }
         else if (act.atype() == ACT_MONSTER)
         {
-            // XXX reveal the trap XXX
-
-            monsters* monster = static_cast<monsters *>(&act);
+            monsters* monster = dynamic_cast<monsters *>(&act);
 
             // Determine whether projectile hits.
             bool hit = (((20+(you.your_level*2))*random2(200))/100

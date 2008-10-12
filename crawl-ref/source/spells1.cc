@@ -759,10 +759,7 @@ static int _healing_spell(int healed, const coord_def where = coord_def(0,0))
         if (monster->hit_points == monster->max_hit_points)
             simple_monster_message(monster, " is completely healed.");
         else
-        {
-            const monsters *mons = static_cast<const monsters*>(monster);
-            print_wounds(mons);
-        }
+            print_wounds(monster);
 
         if (you.religion == GOD_ELYVILON && !_mons_hostile(monster))
         {

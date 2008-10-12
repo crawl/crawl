@@ -193,9 +193,9 @@ int calc_heavy_armour_penalty( bool random_factor )
     int heavy_armour = 0;
 
     // heavy armour modifiers for shield borne
-    if (you.equip[EQ_SHIELD] != -1)
+    if (you.shield())
     {
-        switch (you.inv[you.equip[EQ_SHIELD]].sub_type)
+        switch (you.shield()->sub_type)
         {
         case ARM_SHIELD:
             if (you.skills[SK_SHIELDS] < maybe_random2(7, random_factor))
@@ -4261,22 +4261,19 @@ int weapon_str_weight( object_class_type wpn_class, int wpn_type )
 
 // Returns a value from 0 to 10 representing the weight of strength to
 // dexterity for the players currently wielded weapon.
-static inline int player_weapon_str_weight( void )
+static inline int player_weapon_str_weight()
 {
-    const int weapon = you.equip[ EQ_WEAPON ];
+    const item_def* weapon = you.weapon();
 
     // unarmed, weighted slightly towards dex -- would have been more,
     // but then we'd be punishing Trolls and Ghouls who are strong and
     // get special unarmed bonuses.
-    if (weapon == -1)
+    if (!weapon)
         return (4);
 
-    int ret = weapon_str_weight( you.inv[weapon].base_type, you.inv[weapon].sub_type );
+    int ret = weapon_str_weight(weapon->base_type, weapon->sub_type);
 
-    const bool shield = (you.equip[EQ_SHIELD] != -1);
-    const int  hands  = hands_reqd(you.inv[weapon], player_size());
-
-    if (hands == HANDS_HALF && !shield)
+    if (hands_reqd(*weapon, player_size()) == HANDS_HALF && !you.shield())
         ret += 1;
 
     return (ret);

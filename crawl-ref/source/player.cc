@@ -6041,12 +6041,8 @@ static bool _equipment_make_berserk()
          if (!is_random_artefact(*item))
              continue;
 
-         if (one_chance_in(20)
-             && randart_wpn_property(*item,
-                  static_cast<randart_prop_type>(RAP_ANGRY)))
-         {
+         if (randart_wpn_property(*item, RAP_ANGRY) && one_chance_in(20))
              return (true);
-         }
     }
 
     // nothing found

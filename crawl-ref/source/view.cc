@@ -928,7 +928,7 @@ static void _handle_seen_interrupt(monsters* monster)
     else
         aid.context = "newly seen";
 
-    if (!mons_is_safe( static_cast<const monsters*>(monster) )
+    if (!mons_is_safe(monster)
         && !mons_class_flag( monster->type, M_NO_EXP_GAIN )
         && !mons_is_mimic( monster->type ))
     {
