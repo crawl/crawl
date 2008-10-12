@@ -336,32 +336,32 @@ static int _scan_mon_inv_randarts(const monsters *mon,
     if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
         const int weapon = mon->inv[MSLOT_WEAPON];
-        const int second = mon->inv[MSLOT_MISSILE]; // Two-headed ogres, etc.
+        const int second = mon->inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
         const int armour = mon->inv[MSLOT_ARMOUR];
         const int shield = mon->inv[MSLOT_SHIELD];
 
         if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
-            && is_random_artefact( mitm[weapon] ))
+            && is_random_artefact(mitm[weapon]))
         {
-            ret += randart_wpn_property( mitm[weapon], ra_prop );
+            ret += randart_wpn_property(mitm[weapon], ra_prop);
         }
 
         if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
-            && is_random_artefact( mitm[second] ))
+            && is_random_artefact(mitm[second]))
         {
-            ret += randart_wpn_property( mitm[second], ra_prop );
+            ret += randart_wpn_property(mitm[second], ra_prop);
         }
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR
-            && is_random_artefact( mitm[armour] ))
+            && is_random_artefact(mitm[armour]))
         {
-            ret += randart_wpn_property( mitm[armour], ra_prop );
+            ret += randart_wpn_property(mitm[armour], ra_prop);
         }
 
         if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR
-            && is_random_artefact( mitm[shield] ))
+            && is_random_artefact(mitm[shield]))
         {
-            ret += randart_wpn_property( mitm[shield], ra_prop );
+            ret += randart_wpn_property(mitm[shield], ra_prop);
         }
     }
 
