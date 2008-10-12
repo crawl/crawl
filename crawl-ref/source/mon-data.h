@@ -1470,7 +1470,7 @@ static monsterentry mondata[] = {
 {
     MONS_ABOMINATION_SMALL, 'x', BLACK, "small abomination",
     M_EVIL,
-    MR_NO_FLAGS,
+    MR_RES_POISON,
     0, 10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_SMALL, MH_DEMONIC, -5,
     { {AT_HIT, AF_PLAIN, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 6, 2, 5, 0 },
@@ -2783,7 +2783,7 @@ static monsterentry mondata[] = {
 {
     MONS_ABOMINATION_LARGE, 'X', BLACK, "large abomination",
     M_EVIL,
-    MR_NO_FLAGS,
+    MR_RES_POISON,
     0, 10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_LARGE, MH_DEMONIC, -7,
     { {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 2, 5, 0 },
