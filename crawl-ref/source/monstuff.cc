@@ -1090,7 +1090,10 @@ void monster_die(monsters *monster, killer_type killer,
             }
 
             // No piety loss if god gifts killed by other monsters.
-            if (mons_friendly(monster) && !mons_is_god_gift(monster))
+            // Also, dancing weapons aren't really friendlies.
+            if (mons_friendly(monster)
+                && !mons_is_god_gift(monster)
+                && monster->type != MONS_DANCING_WEAPON)
             {
                 did_god_conduct(DID_FRIEND_DIED, 1 + (monster->hit_dice / 2),
                                 true, monster);
