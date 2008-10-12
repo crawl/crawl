@@ -2821,6 +2821,14 @@ void jewellery_wear_effects(item_def &item)
     case AMU_THE_GOURMAND:
         you.duration[DUR_GOURMAND] = 0;
         break;
+
+    case AMU_CONTROLLED_FLIGHT:
+        if (you.duration[DUR_LEVITATION]
+            && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
+        {
+            ident = ID_KNOWN_TYPE;
+        }
+        break;
     }
 
     // Artefacts have completely different appearance than base types
