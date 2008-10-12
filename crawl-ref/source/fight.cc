@@ -3765,9 +3765,6 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_DRAIN_XP:
-        if (attacker->id() == MONS_SPECTRAL_THING && coinflip())
-            break;
-
         if (one_chance_in(30)
             || (damage_done > 5 && coinflip())
             || (attk.damage == 0 && !one_chance_in(3)))

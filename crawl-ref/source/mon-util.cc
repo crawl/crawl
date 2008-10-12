@@ -852,10 +852,10 @@ mon_attack_def downscale_zombie_attack(const monsters *mons,
     {
         attk.flavour = AF_COLD;
     }
+    else if (mons->type == MONS_SPECTRAL_THING && coinflip())
+        attk.flavour = AF_DRAIN_XP;
     else
-    {
-        attk.flavour =  AF_PLAIN;
-    }
+        attk.flavour = AF_PLAIN;
 
     attk.damage = downscale_zombie_damage(attk.damage);
 
@@ -883,6 +883,7 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
 
     ASSERT(smc);
     mon_attack_def attk = smc->attack[attk_number];
+
     if (attk.flavour == AF_KLOWN)
     {
         switch (random2(6))
