@@ -1216,7 +1216,7 @@ bool adjacent( const coord_def& p1, const coord_def& p2 )
 bool silenced(const coord_def& p)
 {
     // FIXME: implement for monsters
-    return (you.duration[DUR_SILENCE] > 0 && distance(p, you.pos()) <= 6*6);
+    return (you.duration[DUR_SILENCE] && distance(p, you.pos()) <= 6*6 + 1);
 }
 
 bool player_can_hear(const coord_def& p)
