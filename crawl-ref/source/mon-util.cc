@@ -361,18 +361,18 @@ static int _scan_mon_inv_randarts(const monsters *mon,
     return (ret);
 }
 
+mon_holy_type mons_class_holiness(int mc)
+{
+    ASSERT(smc);
+    return (smc->holiness);
+}
+
 mon_holy_type mons_holiness(const monsters *mon)
 {
     if (testbits(mon->flags, MF_HONORARY_UNDEAD))
         return (MH_UNDEAD);
 
     return (mons_class_holiness(mon->type));
-}
-
-mon_holy_type mons_class_holiness(int mc)
-{
-    ASSERT(smc);
-    return (smc->holiness);
 }
 
 bool mons_class_is_confusable(int mc)
