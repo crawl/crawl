@@ -1720,8 +1720,8 @@ bool cast_fragmentation(int pow, const dist& spd)
     {
         monsters *mon = &menv[midx];
 
-        // Save this message in case the monster isn't available later.
-        std::string explode_msg = mon->name(DESC_CAP_THE) + " explodes!";
+        // Save the monster's name in case it isn't available later.
+        std::string name_cap_the = mon->name(DESC_CAP_THE);
 
         switch (mon->type)
         {
@@ -1862,7 +1862,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             goto do_terrain;
         }
 
-        mpr(explode_msg.c_str());
+        mprf("%s explodes!", name_cap_the.c_str());
         goto all_done;
     }
 
