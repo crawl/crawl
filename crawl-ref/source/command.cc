@@ -681,8 +681,7 @@ void list_weapons(void)
     // Now we print out the current default fire weapon.
     wstring = "Firing    : ";
 
-    std::string error_reason;
-    int slot = you.m_quiver->get_fire_item(&error_reason);
+    int slot = you.m_quiver->get_fire_item();
 
     colour = MSGCOL_BLACK;
     if (slot == -1)

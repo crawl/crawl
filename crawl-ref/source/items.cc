@@ -2440,7 +2440,7 @@ bool item_is_equipped(const item_def &item, bool quiver_too)
         if (item.link == you.equip[i])
             return (true);
 
-    if (quiver_too && item.link == you.m_quiver->get_fire_item(NULL))
+    if (quiver_too && item.link == you.m_quiver->get_fire_item())
         return (true);
 
     return (false);

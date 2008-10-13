@@ -227,7 +227,7 @@ std::string item_def::name(description_level_type descrip,
             buff << " (around neck)";
             equipped = true;
         }
-        else if (this->link == you.m_quiver->get_fire_item(NULL))
+        else if (this->link == you.m_quiver->get_fire_item())
         {
             buff << " (quivered)";
             equipped = true; // well, sort of

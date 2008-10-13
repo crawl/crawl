@@ -168,41 +168,6 @@ static std::string _spell_base_description(spell_type spell)
     return desc.str();
 }
 
-static int _string_tag_length(const std::string& s)
-{
-    int taglen = 0;
-    bool in_tag = false;
-    int last_taglen = 0;
-    for (std::string::const_iterator ci = s.begin(); ci != s.end(); ++ci)
-    {
-        if (in_tag)
-        {
-            if (*ci == '<' && last_taglen == 1)
-            {
-                in_tag = false;
-                --taglen;
-            }
-            else if (*ci == '>')
-            {
-                in_tag = false;
-                ++taglen;
-            }
-            else
-            {
-                ++last_taglen;
-                ++taglen;
-            }
-        }
-        else if (*ci == '<')
-        {
-            in_tag = true;
-            last_taglen = 1;
-            ++taglen;
-        }
-    }
-    return (taglen);
-}
-
 static std::string _spell_extra_description(spell_type spell)
 {
     std::ostringstream desc;
@@ -216,7 +181,7 @@ static std::string _spell_extra_description(spell_type spell)
     const std::string rangestring = spell_range_string(spell);
 
     desc << std::setw(14) << spell_power_string(spell)
-         << std::setw(16 + _string_tag_length(rangestring)) << rangestring
+         << std::setw(16 + tagged_string_tag_length(rangestring)) << rangestring
          << std::setw(12) << spell_hunger_string(spell)
          << spell_difficulty(spell);
 

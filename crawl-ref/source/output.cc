@@ -495,8 +495,7 @@ static void _print_stats_qv(int y)
     textcolor(Options.status_caption_colour);
     cprintf("Qv: ");
 
-    std::string error_reason;
-    int q = you.m_quiver->get_fire_item(&error_reason);
+    int q = you.m_quiver->get_fire_item();
 
     ASSERT(q >= -1 && q < ENDOFPACK);
     if (q != -1)

@@ -294,8 +294,7 @@ void player_quiver::on_inv_quantity_changed(int slot, int amt)
     else
     {
         // We might need to update the quiver...
-        std::string error_reason;
-        int qv_slot = get_fire_item(&error_reason);
+        int qv_slot = get_fire_item();
         if (qv_slot == slot)
             you.redraw_quiver = true;
     }
