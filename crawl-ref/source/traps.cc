@@ -587,14 +587,11 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 MiscastEffect( m, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                                3, "the power of Zot" );
             }
-            else if (in_sight)
+            else if (in_sight && one_chance_in(5))
             {
-                if (one_chance_in(5))
-                {
-                    mpr("The power of Zot is invoked against you!");
-                    MiscastEffect( &you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
-                                   3, "the power of Zot" );
-                }
+                mpr("The power of Zot is invoked against you!");
+                MiscastEffect( &you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
+                               3, "the power of Zot" );
             }
             else if (player_can_hear(this->pos))
             {
