@@ -1259,6 +1259,13 @@ inflicting harm on its wielder's enemies. Using it on a weapon already
 affected by some kind of special enchantment (other than that produced
 by a normal scroll of enchant weapon) is not advised.
 %%%%
+scroll of vulnerability
+
+This scroll cancels all magical enchantments from the reader and from 
+beings in  he vicinity. Also, the magical resistances of the reader and
+nearby beings are halved for a short duration. Neither of these effects
+applies to beings fully immune to magic.
+%%%%
 scythe
 
 A farm implement, usually unsuited to combat.
