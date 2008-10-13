@@ -2368,7 +2368,7 @@ std::string MiscastEffect::get_default_cause()
     if (source == NON_MONSTER)
     {
         ASSERT(target->atype() == ACT_PLAYER);
-        std::string str = "you miscasting ";
+        std::string str = "your miscasting ";
         str += spell_title(spell);
         return str;
     }
@@ -2378,9 +2378,8 @@ std::string MiscastEffect::get_default_cause()
 
     if (you.can_see(mon_source))
     {
-        std::string str = apostrophise(mon_source->base_name(DESC_PLAIN));
-
-        str += " spell miscasting";
+        std::string str = apostrophise(mon_source->base_name(DESC_PLAIN))
+                              + " spell miscasting";
         return str;
     }
     else
