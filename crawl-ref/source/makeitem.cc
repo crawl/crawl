@@ -2403,7 +2403,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
             160, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
             160, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
             160, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
-            160, (depth_mod < 4 ? SCR_PAPER :         SCR_ANTIMAGIC),
+            160, (depth_mod < 4 ? SCR_PAPER :         SCR_VULNERABILITY),
 
             // High-level scrolls
             160, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),

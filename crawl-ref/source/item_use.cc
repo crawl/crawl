@@ -4262,7 +4262,7 @@ static bool _scroll_modify_item(item_def scroll)
     return (false);
 }
 
-static void _antimagic_scroll()
+static void _vulnerability_scroll()
 {
     // First cast antimagic on yourself.
     antimagic();
@@ -4657,8 +4657,8 @@ void read_scroll(int slot)
         break;
     }
 
-    case SCR_ANTIMAGIC:
-        _antimagic_scroll();
+    case SCR_VULNERABILITY:
+        _vulnerability_scroll();
         break;
 
     default:
