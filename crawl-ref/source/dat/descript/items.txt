@@ -1263,8 +1263,8 @@ scroll of vulnerability
 
 This scroll cancels all magical enchantments from the reader and from 
 beings in the vicinity. Also, the magical resistances of the reader and
-nearby beings are halved for a short duration. Neither of these effects
-applies to beings fully immune to magic.
+nearby beings are halved for a short duration. The latter effect does 
+not apply to beings fully immune to magic.
 %%%%
 scythe
 
