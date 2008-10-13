@@ -28,6 +28,7 @@
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "Kills.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
@@ -2377,10 +2378,9 @@ std::string MiscastEffect::get_default_cause()
 
     if (you.can_see(mon_source))
     {
-        std::string str = mon_source->base_name(DESC_PLAIN);
+        std::string str = apostrophise(mon_source->base_name(DESC_PLAIN));
 
-        str += "'s spell miscasting";
-        str = replace_all(str, "s's", "s'");
+        str += " spell miscasting";
         return str;
     }
     else

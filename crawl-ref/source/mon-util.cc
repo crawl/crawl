@@ -4477,7 +4477,7 @@ std::string monsters::name(description_level_type desc, bool force_vis) const
 
     std::string monnam = _str_monam(*this, desc, force_vis);
 
-    return (possessive? apostrophise(monnam) : monnam);
+    return (possessive ? apostrophise(monnam) : monnam);
 }
 
 std::string monsters::base_name(description_level_type desc, bool force_vis)

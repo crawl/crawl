@@ -28,6 +28,7 @@
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "Kills.h"
 #include "macro.h"
 #include "notes.h"
 #include "player.h"
@@ -1734,8 +1735,7 @@ std::string shop_name(const coord_def& where)
         | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 8)
         | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 16);
 
-    std::string sh_name = make_name(seed, false);
-    sh_name += "'s ";
+    std::string sh_name = apostrophise(make_name(seed, false)) + " ";
 
     if (shop_type == SHOP_WEAPON_ANTIQUE || shop_type == SHOP_ARMOUR_ANTIQUE)
         sh_name += "Antique ";
