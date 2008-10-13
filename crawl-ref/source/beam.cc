@@ -5343,7 +5343,7 @@ actor* bolt::agent() const
 {
     if (YOU_KILL(this->thrower))
         return (&you);
-    else if (this->beam_source != NON_MONSTER)
+    else if (this->beam_source < NON_MONSTER)
         return (&menv[this->beam_source]);
     else
         return (NULL);
