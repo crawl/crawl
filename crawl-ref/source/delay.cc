@@ -1637,7 +1637,7 @@ inline static void _monster_warning(activity_interrupt_type ai,
         const monsters* mon = static_cast<const monsters*>(at.data);
         if (!mon->visible())
             return;
-        if (at.context == "already seen")
+        if (at.context == "already seen" || at.context == "uncharm")
         {
             // Only say "comes into view" if the monster wasn't in view
             // during the previous turn.
