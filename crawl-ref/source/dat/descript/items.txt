@@ -1262,7 +1262,7 @@ by a normal scroll of enchant weapon) is not advised.
 scroll of vulnerability
 
 This scroll cancels all magical enchantments from the reader and from 
-beings in  he vicinity. Also, the magical resistances of the reader and
+beings in the vicinity. Also, the magical resistances of the reader and
 nearby beings are halved for a short duration. Neither of these effects
 applies to beings fully immune to magic.
 %%%%
