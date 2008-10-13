@@ -74,7 +74,8 @@ static void _beam_explodes(bolt &beam, const coord_def& p);
 static int  _affect_wall(bolt &beam, const coord_def& p);
 static int  _affect_place_clouds(bolt &beam, const coord_def& p);
 static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p);
-static int  _affect_player(bolt &beam, item_def *item = NULL);
+static int  _affect_player(bolt &beam, item_def *item = NULL,
+                           bool affect_items = true);
 static int  _affect_monster(bolt &beam, monsters *mon, item_def *item = NULL);
 static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon);
 static void _beam_paralyses_monster( bolt &pbolt, monsters *monster );
@@ -2811,7 +2812,7 @@ int affect(bolt &beam, const coord_def& p, item_def *item, bool affect_items)
         if (!beam.is_big_cloud
             && (!beam.is_explosion || beam.in_explosion_phase))
         {
-            rangeUsed += _affect_player( beam, item );
+            rangeUsed += _affect_player( beam, item, affect_items );
         }
 
         if (_beam_term_on_target(beam, p))
@@ -3370,7 +3371,7 @@ static bool _beam_is_harmless_player(bolt &beam)
 }
 
 // Returns amount of extra range used up by affectation of the player.
-static int _affect_player( bolt &beam, item_def *item )
+static int _affect_player( bolt &beam, item_def *item, bool affect_items )
 {
     // Digging -- don't care.
     if (beam.flavour == BEAM_DIGGING)
@@ -3897,25 +3898,28 @@ static int _affect_player( bolt &beam, item_def *item )
         }
     }
 
-    // Simple cases for scroll burns.
-    if (beam.flavour == BEAM_LAVA || beam.name == "hellfire")
-        expose_player_to_element(BEAM_LAVA, burn_power);
+    if (affect_items)
+    {
+        // Simple cases for scroll burns.
+        if (beam.flavour == BEAM_LAVA || beam.name == "hellfire")
+            expose_player_to_element(BEAM_LAVA, burn_power);
+        
+        // More complex (geez..)
+        if (beam.flavour == BEAM_FIRE && beam.name != "ball of steam")
+            expose_player_to_element(BEAM_FIRE, burn_power);
 
-    // More complex (geez..)
-    if (beam.flavour == BEAM_FIRE && beam.name != "ball of steam")
-        expose_player_to_element(BEAM_FIRE, burn_power);
+        // Potions exploding.
+        if (beam.flavour == BEAM_COLD)
+            expose_player_to_element(BEAM_COLD, burn_power);
+        
+        if (beam.flavour == BEAM_ACID)
+            splash_with_acid(5);
 
-    // Potions exploding.
-    if (beam.flavour == BEAM_COLD)
-        expose_player_to_element(BEAM_COLD, burn_power);
-
-    if (beam.flavour == BEAM_ACID)
-        splash_with_acid(5);
-
-    // Spore pops.
-    if (beam.in_explosion_phase && beam.flavour == BEAM_SPORE)
-        expose_player_to_element(BEAM_SPORE, burn_power);
-
+        // Spore pops.
+        if (beam.in_explosion_phase && beam.flavour == BEAM_SPORE)
+            expose_player_to_element(BEAM_SPORE, burn_power);
+    }
+        
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Damage: %d", hurted );
 #endif
