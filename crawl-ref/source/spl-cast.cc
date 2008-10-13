@@ -2378,9 +2378,8 @@ std::string MiscastEffect::get_default_cause()
 
     if (you.can_see(mon_source))
     {
-        std::string str = apostrophise(mon_source->base_name(DESC_PLAIN))
-                              + " spell miscasting";
-        return str;
+        return apostrophise(mon_source->base_name(DESC_PLAIN))
+            + " spell miscasting";
     }
     else
         return "something's spell miscasting";
