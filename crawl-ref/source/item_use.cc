@@ -1755,6 +1755,33 @@ static void identify_floor_missiles_matching(item_def mitem, int idflags)
             }
 }
 
+void _merge_ammo_in_inventory(int slot)
+{
+    if (!is_valid_item(you.inv[slot]))
+        return;
+
+    bool done_anything = false;
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        if (i == slot || !is_valid_item(you.inv[i]))
+            continue;
+        
+        // Merge with the thrower slot. This could be a bad
+        // thing if you're wielding IDed ammo and firing from
+        // an unIDed stack...but that's a pretty remote case.
+        if (items_stack(you.inv[i], you.inv[slot]))
+        {
+            if (!done_anything)
+                mpr("You combine your ammunition.");
+
+            inc_inv_item_quantity(slot, you.inv[i].quantity);
+            dec_inv_item_quantity(i, you.inv[i].quantity);
+            done_anything = true;
+        }
+    }
+}
+
 // throw_it - currently handles player throwing only.  Monster
 // throwing is handled in mstuff2:mons_throw()
 // Note: If teleport is true, assume that pbolt is already set up,
@@ -1767,6 +1794,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 {
     dist thr;
     int shoot_skill = 0;
+    bool ammo_ided = false;
 
     // launcher weapon sub-type
     weapon_type lnchType;
@@ -2075,7 +2103,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
             if (ammo_brand != SPMSL_NORMAL)
+            {
                 set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
+                ammo_ided = true;
+            }
         }
 
         // Removed 2 random2(2)s from each of the learning curves, but
@@ -2209,6 +2240,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             {
                 set_ident_flags( item, ISFLAG_KNOW_PLUSES );
                 set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
+                ammo_ided = true;
                 identify_floor_missiles_matching(item, ISFLAG_KNOW_PLUSES);
                 mprf("You are firing %s.",
                      you.inv[throw_2].name(DESC_NOCAP_A).c_str());
@@ -2315,6 +2347,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
             // Identify ammo type.
             set_ident_flags(you.inv[throw_2], ISFLAG_KNOW_TYPE);
+            ammo_ided = true;
 
             switch (wepType)
             {
@@ -2385,6 +2418,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             set_ident_flags( item, ISFLAG_KNOW_PLUSES );
             set_ident_flags( you.inv[throw_2], ISFLAG_KNOW_PLUSES );
             identify_floor_missiles_matching(item, ISFLAG_KNOW_PLUSES);
+            ammo_ided = true;
             mprf("You are throwing %s.",
                  you.inv[throw_2].name(DESC_NOCAP_A).c_str());
         }
@@ -2604,6 +2638,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     // ...but any monster nearby can see that something has been thrown.
     alert_nearby_monsters();
+
+    if (ammo_ided)
+        _merge_ammo_in_inventory(throw_2);
 
     you.turn_is_over = true;
 
