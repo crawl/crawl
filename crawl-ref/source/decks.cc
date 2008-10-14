@@ -2493,6 +2493,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                     if (is_good_god(you.religion)
                         || you.religion == GOD_BEOGH
                             && mons_species(monster->type) == MONS_ORC
+                            && !mons_is_summoned(monster)
                             && !mons_is_shapeshifter(monster))
                     {
                         mons_make_god_gift(monster, is_good_god(you.religion) ?

@@ -587,8 +587,9 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
 
     if (you.religion == GOD_BEOGH
         && mons_species(monster->type) == MONS_ORC
+        && !mons_is_summoned(monster) && !mons_is_shapeshifter(monster)
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
-        && mons_near(monster) && !mons_is_summoned(monster))
+        && mons_near(monster))
     {
         if (YOU_KILL(killer))
             convert = true;
