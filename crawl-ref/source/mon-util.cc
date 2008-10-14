@@ -810,7 +810,7 @@ bool mons_class_can_be_zombified(int mc)
 {
     int ms = mons_species(mc);
     return (mons_zombie_size(ms) != Z_NOZOMBIE
-        && mons_weight(ms) != 0);
+        && mons_weight(ms) > 0);
 }
 
 bool mons_can_be_zombified(const monsters *mon)
