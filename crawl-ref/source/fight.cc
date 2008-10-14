@@ -3805,7 +3805,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_NAPALM:
-        if (defender->res_sticky_flame())
+        if (defender->res_sticky_flame() > 0)
             break;
 
         if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
