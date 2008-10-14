@@ -1885,7 +1885,7 @@ static inline int get_resistible_fraction(beam_type flavour)
     }
 }
 
-// Adjusts damage for elemntal resists, electricity and poison.
+// Adjusts damage for elemental resists, electricity and poison.
 //
 // FIXME: Does not (yet) handle life draining, player acid damage
 // (does handle monster acid damage), miasma, and other exotic
