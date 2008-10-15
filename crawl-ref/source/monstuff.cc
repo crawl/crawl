@@ -5902,26 +5902,26 @@ static void _handle_monster_move(int i, monsters *monster)
 
                 if (_handle_scroll(monster))
                 {
-                    DEBUG_ENERGY_USE("handle_scroll()");
+                    DEBUG_ENERGY_USE("_handle_scroll()");
                     continue;
                 }
 
                 if (_handle_wand(monster, beem))
                 {
-                    DEBUG_ENERGY_USE("handle_wand()");
+                    DEBUG_ENERGY_USE("_handle_wand()");
                     continue;
                 }
 
                 if (_handle_reaching(monster))
                 {
-                    DEBUG_ENERGY_USE("handle_reaching()");
+                    DEBUG_ENERGY_USE("_handle_reaching()");
                     continue;
                 }
             }
 
             if (_handle_throw(monster, beem))
             {
-                DEBUG_ENERGY_USE("handle_throw()");
+                DEBUG_ENERGY_USE("_handle_throw()");
                 continue;
             }
         }
