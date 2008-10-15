@@ -3507,6 +3507,7 @@ void MiscastEffect::_necromancy(int severity)
             // Monster messages needed.
             break;
         }
+        do_msg();
         break;
 
     case 1:         // a bit nasty
@@ -3517,11 +3518,12 @@ void MiscastEffect::_necromancy(int severity)
             if (target->res_torment())
             {
                 you_msg = "You feel weird for a moment.";
-                do_msg();
-                break;
             }
-            you_msg = "Pain shoots through your body!";
-            _ouch(5 + random2avg(15, 2));
+            else
+            {
+                you_msg = "Pain shoots through your body!";
+                _ouch(5 + random2avg(15, 2));
+            }
             break;
         case 1:
             you_msg = "You feel horribly lethargic.";
@@ -3529,23 +3531,27 @@ void MiscastEffect::_necromancy(int severity)
             _potion_effect(POT_SLOWING, 15);
             break;
         case 2:
-            // josh declares mummies cannot smell {dlb}
             if (target->res_rotting() == 0)
             {
                 if (player_can_smell())
+                {
                     // identical to a harmless message
                     all_msg = "You smell decay.";
+                }
+
                 if (target->atype() == ACT_PLAYER)
                     you.rotting++;
                 else
                     mon_target->add_ench( mon_enchant(ENCH_ROT, 1, kc) );
             }
             else if (you.species == SP_MUMMY)
+            {
                 // Monster messages needed.
                 you_msg = "Your bandages flutter.";
-            do_msg();
+            }
             break;
         }
+        do_msg();
         break;
 
     case 2:         // much nastier
@@ -3584,12 +3590,14 @@ void MiscastEffect::_necromancy(int severity)
             if (target->res_torment())
             {
                 you_msg = "You feel weird for a moment.";
-                do_msg();
-                break;
             }
-            you_msg = "You convulse helplessly as pain tears through "
-                      "your body!";
-            _ouch(15 + random2avg(23, 2));
+            else
+            {
+                you_msg = "You convulse helplessly as pain tears through "
+                          "your body!";
+                _ouch(15 + random2avg(23, 2));
+            }
+            do_msg();
             break;
         }
         break;
@@ -3604,10 +3612,11 @@ void MiscastEffect::_necromancy(int severity)
                 // Monster messages needed.
                 you_msg = "Something just walked over your grave. No, really!";
                 do_msg();
-                break;
             }
-
-            torment_monsters(target->pos(), 0, TORMENT_GENERIC);
+            else
+            {
+                torment_monsters(target->pos(), 0, TORMENT_GENERIC);
+            }
             break;
 
         case 1:
