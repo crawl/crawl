@@ -2026,6 +2026,9 @@ static bool _god_accepts_prayer(god_type god)
     case GOD_YREDELEMNUL:
         return (yred_injury_mirror(false));
 
+    case GOD_NEMELEX_XOBEH:
+        return (true);
+
     default:
         break;
     }
