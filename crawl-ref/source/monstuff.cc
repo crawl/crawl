@@ -5461,7 +5461,7 @@ static inline bool _mons_natural_regen_roll(monsters *monster)
 static void _monster_regenerate(monsters *monster)
 {
     if (monster->has_ench(ENCH_SICK)
-        || mons_class_flag(monster->type, M_NO_REGEN))
+        || !mons_can_regenerate(monster))
     {
         return;
     }

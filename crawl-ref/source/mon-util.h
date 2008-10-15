@@ -598,6 +598,8 @@ int mons_speed(int mc);
 /* ***********************************************************************
  * called from: dungeon - mon-util - spells2
  * *********************************************************************** */
+bool mons_class_can_regenerate(int mc);
+bool mons_can_regenerate(const monsters *mon);
 int mons_zombie_size(int mc);
 monster_type mons_zombie_base(const monsters *mon);
 bool mons_class_is_zombified(int mc);

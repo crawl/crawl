@@ -562,12 +562,6 @@ bool mons_foe_is_mons(const monsters *mons)
     return foe && foe->atype() == ACT_MONSTER;
 }
 
-int mons_zombie_size(int mc)
-{
-    ASSERT(smc);
-    return (smc->zombie_size);
-}
-
 int mons_weight(int mc)
 {
     ASSERT(smc);
@@ -786,6 +780,22 @@ int mons_class_colour(int mc)
 int mons_colour(const monsters *mon)
 {
     return (mon->colour);
+}
+
+bool mons_class_can_regenerate(int mc)
+{
+    return (!mons_class_flag(mc, M_NO_REGEN));
+}
+
+bool mons_can_regenerate(const monsters *mon)
+{
+    return (mons_class_can_regenerate(mon->type));
+}
+
+int mons_zombie_size(int mc)
+{
+    ASSERT(smc);
+    return (smc->zombie_size);
 }
 
 monster_type mons_zombie_base(const monsters *mon)
@@ -1270,7 +1280,7 @@ bool mons_skeleton(int mc)
     }
 
     return (true);
-}                               // end mons_skeleton()
+}
 
 flight_type mons_class_flies(int mc)
 {
