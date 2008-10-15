@@ -1625,7 +1625,7 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
 
 #ifdef MISSILE_TRAILS_OFF
                 // mv: It's not optimal but is usually enough.
-                if (!pbolt.is_beam || pbolt.is_enchantment())
+                if (!pbolt.is_beam)
                     viewwindow(true, false);
 #endif
             }

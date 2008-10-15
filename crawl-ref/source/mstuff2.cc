@@ -1375,7 +1375,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.type     = 0;
         beam.flavour  = BEAM_HASTE;
         beam.thrower  = KILL_MON_MISSILE;
-        beam.is_beam  = true;
         break;
 
     case SPELL_BACKLIGHT:
@@ -1514,7 +1513,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.type     = 0;
         beam.flavour  = BEAM_INVISIBILITY;
         beam.thrower  = KILL_MON;
-        beam.is_beam  = true;
         break;
 
     case SPELL_FIREBALL:
@@ -1569,7 +1567,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.flavour  = BEAM_HEALING;
         beam.thrower  = KILL_MON;
         beam.hit      = 25 + (power / 5);
-        beam.is_beam  = true;
         break;
 
     case SPELL_TELEPORT_SELF:
@@ -1577,7 +1574,6 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.type     = 0;
         beam.flavour  = BEAM_TELEPORT;        // 6 is used by digging
         beam.thrower  = KILL_MON;
-        beam.is_beam  = true;
         break;
 
     case SPELL_TELEPORT_OTHER:
