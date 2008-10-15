@@ -229,8 +229,6 @@ void special_wielded()
                           2, you.pos(), you.pet_target));
             did_god_conduct(DID_NECROMANCY, 1);
         }
-
-        show_green = DARKGREY;
         break;
 
     //case SPWLD_PRUNE:

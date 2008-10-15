@@ -88,7 +88,6 @@ static FixedVector<feature_def, NUM_FEATURES> Feature;
 crawl_view_geometry crawl_view;
 FixedArray < unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER > Show_Backup;
 
-unsigned char show_green;
 extern int stealth;             // defined in acr.cc
 
 screen_buffer_t colour_code_map( const coord_def& p, bool item_colour = false,
