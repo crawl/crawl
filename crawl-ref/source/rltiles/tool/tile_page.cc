@@ -1,5 +1,6 @@
 #include "tile_page.h"
 #include "tile_colour.h"
+#include <string.h>
 #include "tile.h"
 
 tile_page::tile_page() : m_width(1024), m_height(0)

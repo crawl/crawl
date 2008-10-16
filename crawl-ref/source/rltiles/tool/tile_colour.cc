@@ -1,5 +1,6 @@
 #include "tile_colour.h"
 #include <vector>
+#include <stdlib.h>
 #include <stdio.h>
 #include <png.h>
 

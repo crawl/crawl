@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <iostream>
 #include <fstream>
+#include <string.h>
+#include <stdlib.h>
 
 tile_list_processor::tile_list_processor() :
     m_last_enum(~0),
