@@ -66,7 +66,7 @@ enum ability_type
     ABIL_YRED_RECALL_UNDEAD,
     ABIL_YRED_ANIMATE_DEAD,
     ABIL_YRED_DRAIN_LIFE,
-    ABIL_YRED_CONTROL_UNDEAD,               //  144
+    ABIL_YRED_ENSLAVE_SOUL,                 //  144
     // 160 - reserved for Vehumet
     ABIL_OKAWARU_MIGHT = 170,               //  170
     // Okawaru no longer heals (JPEG)
@@ -217,6 +217,7 @@ enum beam_type                  // beam[].flavour
     BEAM_BANISH,
     BEAM_DEGENERATE,
     BEAM_ENSLAVE_UNDEAD,
+    BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
     BEAM_DISPEL_UNDEAD,
     BEAM_DISINTEGRATION,
@@ -1978,31 +1979,34 @@ enum mon_flight_type
 // These are now saved in an unsigned long in the monsters struct.
 enum monster_flag_type
 {
-    MF_CREATED_FRIENDLY   = 0x01,   // no benefit from killing
-    MF_BATTY              = 0x02,   // flutters like a bat
-    MF_JUST_SUMMONED      = 0x04,   // monster skips next available action
-    MF_TAKING_STAIRS      = 0x08,   // is following player through stairs
+    MF_CREATED_FRIENDLY   = 0x01,    // no benefit from killing
+    MF_BATTY              = 0x02,    // flutters like a bat
+    MF_JUST_SUMMONED      = 0x04,    // monster skips next available action
+    MF_TAKING_STAIRS      = 0x08,    // is following player through stairs
 
-    MF_INTERESTING        = 0x10,   // Player finds monster interesting
-    MF_SEEN               = 0x20,   // Player has already seen monster
-    MF_DIVINE_PROTECTION  = 0x40,   // Monster has divine protection.
+    MF_INTERESTING        = 0x10,    // Player finds monster interesting
+    MF_SEEN               = 0x20,    // Player has already seen monster
+    MF_DIVINE_PROTECTION  = 0x40,    // Monster has divine protection.
 
-    MF_KNOWN_MIMIC        = 0x80,   // Mimic that has taken a swing at the PC,
-                                    // or that the player has inspected with ?
-    MF_BANISHED           = 0x100,  // Monster that has been banished.
-    MF_HARD_RESET         = 0x200,  // Summoned, should not drop gear on reset
-    MF_WAS_NEUTRAL        = 0x400,  // mirror to CREATED_FRIENDLY for neutrals
-    MF_ATT_CHANGE_ATTEMPT = 0x800,  // Saw player and attitude changed (or
-                                    // not); currently used for holy beings
-                                    // (good god worshippers -> neutral)
-                                    // and orcs (Beogh worshippers -> friendly)
-    MF_WAS_IN_VIEW        = 0x1000, // Was in view during previous turn
-    MF_BAND_MEMBER        = 0x2000, // Created as a member of a band
-    MF_GOT_HALF_XP        = 0x4000, // Player already got half xp value earlier
-    MF_HONORARY_UNDEAD    = 0x8000  // Consider this monster to have MH_UNDEAD
-                                    // holiness, regardless of its actual type;
-                                    // currently used for abominations created
-                                    // via Twisted Resurrection
+    MF_KNOWN_MIMIC        = 0x80,    // Mimic that has taken a swing at the PC,
+                                     // or that the player has inspected with ?
+    MF_BANISHED           = 0x100,   // Monster that has been banished.
+    MF_HARD_RESET         = 0x200,   // Summoned, should not drop gear on reset
+    MF_WAS_NEUTRAL        = 0x400,   // mirror to CREATED_FRIENDLY for neutrals
+    MF_ATT_CHANGE_ATTEMPT = 0x800,   // Saw player and attitude changed (or
+                                     // not); currently used for holy beings
+                                     // (good god worshippers -> neutral)
+                                     // and orcs (Beogh worshippers -> friendly)
+    MF_WAS_IN_VIEW        = 0x1000,  // Was in view during previous turn
+    MF_BAND_MEMBER        = 0x2000,  // Created as a member of a band
+    MF_GOT_HALF_XP        = 0x4000,  // Player already got half xp value earlier
+    MF_HONORARY_UNDEAD    = 0x8000,  // Consider this monster to have MH_UNDEAD
+                                     // holiness, regardless of its actual type;
+                                     // currently used for abominations created
+                                     // via Twisted Resurrection
+    MF_ENSLAVED_SOUL      = 0x10000  // An undead monster soul enslaved by
+                                     // Yredelemnul's power, or the natural
+                                     // monster from whom the soul is taken
 };
 
 // Adding slots breaks saves. YHBW.
@@ -2962,6 +2966,7 @@ enum zap_type
     ZAP_BREATHE_STICKY_FLAME,
     ZAP_BREATHE_LIGHTNING,
     ZAP_PETRIFY,
+    ZAP_ENSLAVE_SOUL,
     ZAP_HELLFROST,
     NUM_ZAPS
 };

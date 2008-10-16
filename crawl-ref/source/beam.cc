@@ -1049,6 +1049,21 @@ const zap_info zap_data[] = {
     },
 
     {
+        ZAP_ENSLAVE_SOUL,
+        "0",
+        100,
+        NULL,
+        NULL,
+        BLACK,
+        true,
+        BEAM_ENSLAVE_SOUL,
+        DCHAR_SPACE,
+        false,
+        false,
+        false
+    },
+
+    {
         ZAP_AGONY,
         "0agony",
         100,
@@ -4506,6 +4521,7 @@ bool _beam_has_saving_throw(const bolt& beam)
     case BEAM_HEALING:
     case BEAM_INVISIBILITY:
     case BEAM_DISPEL_UNDEAD:
+    case BEAM_ENSLAVE_SOUL:     // it has a different saving throw
     case BEAM_ENSLAVE_DEMON:    // it has a different saving throw
         rc = false;
         break;
@@ -4531,6 +4547,11 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
 
     case BEAM_ENSLAVE_UNDEAD:
         rc = (mons_holiness(mon) == MH_UNDEAD && mon->attitude != ATT_FRIENDLY);
+        break;
+
+    case BEAM_ENSLAVE_SOUL:
+        rc = (mons_holiness(mon) == MH_NATURAL
+            && mon->attitude != ATT_FRIENDLY);
         break;
 
     case BEAM_DISPEL_UNDEAD:
@@ -4644,6 +4665,26 @@ static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon)
 
         return (MON_AFFECTED);
     }
+
+    case BEAM_ENSLAVE_SOUL:
+#if DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+             "HD: %d; pow: %d", mon->hit_dice, beam.ench_power);
+#endif
+
+        if (!mons_can_be_zombified(mon) || mons_intel(mon) < I_NORMAL)
+        {
+            simple_monster_message(mon, " is unaffected.");
+            return (MON_OTHER);
+        }
+
+        if (mon->hit_dice >= random2(beam.ench_power / 2))
+            return (MON_RESIST);
+
+        beam.obvious_effect = true;
+        mon->flags |= MF_ENSLAVED_SOUL;
+        simple_monster_message(mon, "'s soul is now ripe for the taking.");
+        return (MON_AFFECTED);
 
     case BEAM_ENSLAVE_DEMON:
 #if DEBUG_DIAGNOSTICS
@@ -5220,9 +5261,12 @@ static bool _nasty_beam(monsters *mon, const bolt &beam)
     if (beam.flavour == BEAM_CHARM)
         return (mons_is_holy(mon));
 
-    // degeneration / sleep
-    if (beam.flavour == BEAM_DEGENERATE || beam.flavour == BEAM_SLEEP)
+    // degeneration / sleep / enslave soul
+    if (beam.flavour == BEAM_DEGENERATE || beam.flavour == BEAM_SLEEP
+        || beam.flavour == BEAM_ENSLAVE_SOUL)
+    {
         return (mons_holiness(mon) == MH_NATURAL);
+    }
 
     // dispel undead / control undead
     if (beam.flavour == BEAM_DISPEL_UNDEAD

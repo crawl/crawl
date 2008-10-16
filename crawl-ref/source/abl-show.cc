@@ -110,7 +110,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     // Yredelemnul
     { ABIL_YRED_ANIMATE_CORPSE, ABIL_YRED_RECALL_UNDEAD,
       ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_DRAIN_LIFE,
-      ABIL_YRED_CONTROL_UNDEAD },
+      ABIL_YRED_ENSLAVE_SOUL },
     // Xom
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_NON_ABILITY },
@@ -238,7 +238,7 @@ static const ability_def Ability_List[] =
     { ABIL_YRED_RECALL_UNDEAD, "Recall Undead Slaves", 2, 0, 50, 0, ABFLAG_NONE },
     { ABIL_YRED_ANIMATE_DEAD, "Animate Dead", 3, 0, 100, 1, ABFLAG_NONE },
     { ABIL_YRED_DRAIN_LIFE, "Drain Life", 6, 0, 200, 2, ABFLAG_NONE },
-    { ABIL_YRED_CONTROL_UNDEAD, "Control Undead", 5, 0, 150, 2, ABFLAG_NONE },
+    { ABIL_YRED_ENSLAVE_SOUL, "Enslave Soul", 8, 0, 150, 4, ABFLAG_NONE },
 
     // Okawaru
     { ABIL_OKAWARU_MIGHT, "Might", 2, 0, 50, 1, ABFLAG_NONE },
@@ -696,7 +696,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_TSO_CLEANSING_FLAME:
     case ABIL_ELYVILON_RESTORATION:
-    case ABIL_YRED_CONTROL_UNDEAD:
     case ABIL_OKAWARU_HASTE:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
@@ -707,6 +706,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ZIN_SANCTUARY:
     case ABIL_TSO_SUMMON_DAEVA:
     case ABIL_KIKU_INVOKE_DEATH:
+    case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_ELYVILON_DIVINE_VIGOUR:
     case ABIL_LUGONU_ABYSS_ENTER:
         invoc = true;
@@ -1525,10 +1525,22 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
-    case ABIL_YRED_CONTROL_UNDEAD:
-        mass_enchantment(ENCH_CHARM, you.skills[SK_INVOCATIONS] * 8, MHITYOU);
-        exercise(SK_INVOCATIONS, 3 + random2(4));
+    case ABIL_YRED_ENSLAVE_SOUL:
+    {
+        god_acting gdact;
+
+        if (!spell_direction(spd, beam))
+            return (false);
+
+        if (!zapping(ZAP_ENSLAVE_SOUL, you.skills[SK_INVOCATIONS] * 4, beam,
+                     true))
+        {
+            return (false);
+        }
+
+        exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
+    }
 
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         mpr("You channel some magical energy.");

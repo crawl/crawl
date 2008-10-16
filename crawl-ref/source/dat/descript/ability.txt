@@ -201,9 +201,9 @@ Drain Life
 
 Drain the life force of the monsters surrounding you.
 %%%%
-Control Undead
+Enslave Soul
 
-Attempt to temporarily enslave undead monsters around you.
+Mark a monster's living soul as yours, once the monster dies. The soul will retain at least some of the monster's faculties, and sometimes even the monster's equipment. However, you can only enslave one soul at any given time.
 %%%%
 # Okawaru
 Might

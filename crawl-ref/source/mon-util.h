@@ -523,6 +523,7 @@ corpse_effect_type mons_corpse_effect(int mc);
  * *********************************************************************** */
 bool mons_class_flag(int mc, int bf);
 
+int mons_unusable_items(const monsters *mon);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
@@ -606,6 +607,10 @@ bool mons_class_is_zombified(int mc);
 bool mons_is_zombified(const monsters *monster);
 bool mons_class_can_be_zombified(int mc);
 bool mons_can_be_zombified(const monsters *mon);
+bool mons_enslaved_body_and_soul(const monsters *mon);
+bool mons_enslaved_twisted_soul(const monsters *mon);
+bool mons_enslaved_intact_soul(const monsters *mon);
+bool mons_enslaved_soul(const monsters *mon);
 
 
 // last updated 12may2000 {dlb}

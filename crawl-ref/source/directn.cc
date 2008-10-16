@@ -2847,6 +2847,17 @@ static void _describe_monster(const monsters *mon)
         }
     }
 
+    if (mons_enslaved_body_and_soul(mon))
+    {
+        mprf(MSGCH_EXAMINE, "%s soul is ripe for the taking.",
+             mon->pronoun(PRONOUN_CAP_POSSESSIVE).c_str());
+    }
+    else if (mons_enslaved_soul(mon))
+    {
+        mprf(MSGCH_EXAMINE, "%s is a disembodied soul.",
+             mon->pronoun(PRONOUN_CAP).c_str());
+    }
+
     text = _mon_enchantments_string(mon);
     if (!text.empty())
         print_formatted_paragraph(text, numcols);

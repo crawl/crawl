@@ -254,9 +254,8 @@ bool curse_an_item( bool decay_potions, bool quiet )
     return (true);
 }
 
-static void _monster_drop_ething(monsters *monster,
-                                 bool mark_item_origins = false,
-                                 int owner_id = NON_ITEM)
+void monster_drop_ething(monsters *monster, bool mark_item_origins,
+                         int owner_id)
 {
     const bool hostile_grid = grid_destroys_items(grd(monster->pos()));
     const int midx = (int) monster_index(monster);
@@ -310,8 +309,11 @@ static void _place_monster_corpse(const monsters *monster)
         corpse_class = MONS_GLOWING_SHAPESHIFTER;
 
     // Doesn't leave a corpse.
-    if (mons_weight(corpse_class) == 0 || coinflip())
+    if (mons_weight(corpse_class) == 0 || mons_enslaved_body_and_soul(monster)
+        || coinflip())
+    {
         return;
+    }
 
     int o = get_item_slot();
     if (o == NON_ITEM)
@@ -623,6 +625,15 @@ static bool _monster_avoided_death(monsters *monster, killer_type killer, int i)
         }
     }
 
+    // Yredelemnul special
+    if (you.religion == GOD_YREDELEMNUL && mons_enslaved_body_and_soul(monster)
+        && mons_near(monster) && killer != KILL_RESET
+        && killer != KILL_DISMISSED)
+    {
+        yred_make_enslaved_soul(monster, player_under_penance());
+        return (true);
+    }
+
     return (false);
 }
 
@@ -782,7 +793,8 @@ void monster_die(monsters *monster, killer_type killer,
 
     const int monster_killed = monster_index(monster);
     const bool hard_reset    = testbits(monster->flags, MF_HARD_RESET);
-    const bool gives_xp      = !mons_is_summoned(monster);
+    const bool gives_xp      = !mons_is_summoned(monster)
+                               && !mons_enslaved_body_and_soul(monster);
 
           bool in_transit    = false;
           bool drop_items    = !hard_reset && !mons_is_holy(monster);
@@ -1364,7 +1376,7 @@ void monster_die(monsters *monster, killer_type killer,
 
     const coord_def mwhere = monster->pos();
     if (drop_items)
-        _monster_drop_ething(monster, YOU_KILL(killer) || pet_kill);
+        monster_drop_ething(monster, YOU_KILL(killer) || pet_kill);
     monster_cleanup(monster);
 
     // Force redraw for monsters that die.
@@ -1684,7 +1696,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 
     monster->speed_increment = 67 + random2(6);
 
-    _monster_drop_ething(monster);
+    monster_drop_ething(monster);
 
     // New monster type might be interesting.
     mark_interesting_monst(monster);

@@ -368,6 +368,101 @@ static int _scan_mon_inv_randarts(const monsters *mon,
     return (ret);
 }
 
+static int _scan_mon_inv_items(const monsters *mon,
+                               bool (*item_type)(const item_def&))
+{
+    int ret = 0;
+
+    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
+    {
+        const int weapon = mon->inv[MSLOT_WEAPON];
+        const int second = mon->inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
+        const int misc = mon->inv[MSLOT_MISCELLANY];
+        const int potion = mon->inv[MSLOT_POTION];
+        const int wand = mon->inv[MSLOT_WAND];
+        const int scroll = mon->inv[MSLOT_SCROLL];
+
+        if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
+            && item_type(mitm[weapon]))
+        {
+            ret++;
+        }
+
+        if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
+            && item_type(mitm[second]))
+        {
+            ret++;
+        }
+
+        if (misc != NON_ITEM && mitm[misc].base_type == OBJ_MISCELLANY
+            && item_type(mitm[misc]))
+        {
+            ret++;
+        }
+
+        if (potion != NON_ITEM && mitm[potion].base_type == OBJ_POTIONS
+            && item_type(mitm[potion]))
+        {
+            ret++;
+        }
+
+        if (wand != NON_ITEM && mitm[misc].base_type == OBJ_WANDS
+            && item_type(mitm[wand]))
+        {
+            ret++;
+        }
+
+        if (scroll != NON_ITEM && mitm[scroll].base_type == OBJ_SCROLLS
+            && item_type(mitm[scroll]))
+        {
+            ret++;
+        }
+    }
+
+    return (ret);
+}
+
+static bool _mons_has_undrinkable_potion(const monsters *mon)
+{
+    bool ret = false;
+
+    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
+    {
+        const int potion = mon->inv[MSLOT_POTION];
+
+        if (potion != NON_ITEM && mitm[potion].base_type == OBJ_POTIONS)
+        {
+            const potion_type ptype =
+                static_cast<potion_type>(mitm[potion].sub_type);
+
+            if (!mon->can_drink_potion(ptype))
+                ret = true;
+        }
+    }
+
+    return (ret);
+}
+
+int mons_unusable_items(const monsters *mon)
+{
+    int ret = 0;
+
+    if (mons_is_holy(mon))
+        ret += _scan_mon_inv_items(mon, is_evil_item) > 0;
+    else if (mons_is_unholy(mon))
+    {
+        ret += _scan_mon_inv_items(mon, is_holy_item) > 0;
+
+        if (mons_holiness(mon) == MH_UNDEAD
+            && _mons_has_undrinkable_potion(mon))
+        {
+            ret++;
+        }
+    }
+
+    return (ret);
+}
+
 mon_holy_type mons_class_holiness(int mc)
 {
     ASSERT(smc);
@@ -769,6 +864,11 @@ mon_itemuse_type mons_class_itemuse(int mc)
 
 mon_itemuse_type mons_itemuse(const monsters *mon)
 {
+    if (mons_enslaved_twisted_soul(mon))
+        return (MONUSE_OPEN_DOORS);
+    else if (mons_enslaved_intact_soul(mon))
+        return (mons_class_itemuse(mons_zombie_base(mon)));
+
     return (mons_class_itemuse(mon->type));
 }
 
@@ -826,7 +926,33 @@ bool mons_class_can_be_zombified(int mc)
 bool mons_can_be_zombified(const monsters *mon)
 {
     return (mons_class_can_be_zombified(mon->type)
-        && !mons_is_summoned(mon));
+        && !mons_is_summoned(mon)
+        && !mons_enslaved_body_and_soul(mon));
+}
+
+bool mons_enslaved_body_and_soul(const monsters *mon)
+{
+    return (testbits(mon->flags, MF_ENSLAVED_SOUL)
+        && mons_holiness(mon) == MH_NATURAL);
+}
+
+bool mons_enslaved_twisted_soul(const monsters *mon)
+{
+    return (testbits(mon->flags, MF_ENSLAVED_SOUL)
+        && (mon->type == MONS_ABOMINATION_SMALL
+            || mon->type == MONS_ABOMINATION_LARGE));
+}
+
+bool mons_enslaved_intact_soul(const monsters *mon)
+{
+    return (testbits(mon->flags, MF_ENSLAVED_SOUL)
+        && mon->type == MONS_SPECTRAL_THING);
+}
+
+bool mons_enslaved_soul(const monsters *mon)
+{
+    return (mons_enslaved_twisted_soul(mon)
+        || mons_enslaved_intact_soul(mon));
 }
 
 int downscale_zombie_damage(int damage)
@@ -2055,6 +2181,11 @@ mon_intel_type mons_class_intel(int mc)
 
 mon_intel_type mons_intel(const monsters *mon)
 {
+    if (mons_enslaved_twisted_soul(mon))
+        return (I_NORMAL);
+    else if (mons_enslaved_intact_soul(mon))
+        return (mons_class_intel(mons_zombie_base(mon)));
+
     return (mons_class_intel(mon->type));
 }
 

@@ -108,6 +108,10 @@ void behaviour_event(monsters *mon, int event_type, int src = MHITNOT,
  * *********************************************************************** */
 bool curse_an_item(bool decay_potions, bool quiet = false);
 
+
+void monster_drop_ething(monsters *monster, bool mark_item_origins = false,
+                         int owner_id = NON_ITEM);
+
 /* ***********************************************************************
  * called from: fight
  * *********************************************************************** */

@@ -213,7 +213,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "recall your undead slaves",
       "animate legions of the dead",
       "drain ambient lifeforce",
-      "control the undead" },
+      "enslave living souls" },
     // Xom
     { "", "", "", "", "" },
     // Vehumet
@@ -299,7 +299,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "recall your undead slaves",
       "animate legions of the dead",
       "drain ambient lifeforce",
-      "control the undead" },
+      "enslave living souls" },
     // Xom
     { "", "", "", "", "" },
     // Vehumet
@@ -1157,6 +1157,16 @@ void mons_make_god_gift(monsters *mon, god_type god)
 bool mons_is_god_gift(const monsters *mon, god_type god)
 {
     return (mon->god == god);
+}
+
+static bool _is_yred_enslaved_body_and_soul(const monsters* mon)
+{
+    return (mon->alive() && mons_enslaved_body_and_soul(mon));
+}
+
+static bool _is_yred_enslaved_soul(const monsters* mon)
+{
+    return (mon->alive() && mons_enslaved_soul(mon));
 }
 
 bool is_yred_undead_slave(const monsters* mon)
@@ -4610,6 +4620,34 @@ static bool _make_god_gifts_hostile(bool level_only)
     return (apply_to_all_dungeons(_god_gifts_hostile_wrapper) || success);
 }
 
+static bool _yred_enslaved_souls_on_level_disappear()
+{
+    bool success = false;
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        monsters *monster = &menv[i];
+        if (_is_yred_enslaved_soul(monster))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Undead soul disappearing: %s on level %d, branch %d",
+                 monster->name(DESC_PLAIN).c_str(),
+                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.where_are_you));
+#endif
+
+            simple_monster_message(monster, " is freed.");
+
+            // The monster disappears.
+            monster_die(monster, KILL_DISMISSED, NON_MONSTER);
+
+            success = true;
+        }
+    }
+
+    return (success);
+}
+
 static bool _yred_undead_slaves_on_level_abandon_you()
 {
     bool success = false;
@@ -4617,7 +4655,20 @@ static bool _yred_undead_slaves_on_level_abandon_you()
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *monster = &menv[i];
-        if (is_yred_undead_slave(monster))
+        if (_is_yred_enslaved_body_and_soul(monster))
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Undead soul abandoning: %s on level %d, branch %d",
+                 monster->name(DESC_PLAIN).c_str(),
+                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.where_are_you));
+#endif
+
+            yred_make_enslaved_soul(monster, true, true, false);
+
+            success = true;
+        }
+        else if (is_yred_undead_slave(monster))
         {
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Undead abandoning: %s on level %d, branch %d",
@@ -4664,6 +4715,11 @@ static bool _orcish_followers_on_level_abandon_you()
     return (success);
 }
 
+static bool _yred_souls_disappear()
+{
+    return (apply_to_all_dungeons(_yred_enslaved_souls_on_level_disappear));
+}
+
 // Upon excommunication, ex-Yredelemnulites lose all their undead
 // slaves.  When under penance, Yredelemnulites can lose all undead
 // slaves in sight.
@@ -4685,7 +4741,8 @@ static bool _yred_slaves_abandon_you()
 
             monsters *monster = &menv[mgrd(*ri)];
 
-            if (is_yred_undead_slave(monster))
+            if (_is_yred_enslaved_body_and_soul(monster)
+                || is_yred_undead_slave(monster))
             {
                 num_slaves++;
 
@@ -4699,9 +4756,15 @@ static bool _yred_slaves_abandon_you()
                     continue;
                 }
 
-                monster->attitude = ATT_HOSTILE;
-                behaviour_event(monster, ME_ALERT, MHITYOU);
-                // For now CREATED_FRIENDLY stays.
+
+                if (_is_yred_enslaved_body_and_soul(monster))
+                    yred_make_enslaved_soul(monster, true, true, false);
+                else
+                {
+                    monster->attitude = ATT_HOSTILE;
+                    behaviour_event(monster, ME_ALERT, MHITYOU);
+                    // For now CREATED_FRIENDLY stays.
+                }
 
                 num_reclaim++;
 
@@ -4897,6 +4960,75 @@ void good_god_holy_attitude_change(monsters *holy)
 
     // Avoid immobile "followers".
     behaviour_event(holy, ME_ALERT, MHITNOT);
+}
+
+void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
+                             bool quiet, bool allow_fail)
+{
+    if (allow_fail)
+        _yred_souls_disappear();
+
+    const int type = mon->type;
+    const std::string name_cap_the = mon->name(DESC_CAP_THE);
+    const std::string name_plain = mon->name(DESC_PLAIN);
+    bool twisted = false;
+
+    if ((allow_fail || mons_unusable_items(mon) > 0) && coinflip())
+        twisted = true;
+
+    if (!quiet)
+    {
+        mprf("%s's soul %s.", name_cap_the.c_str(),
+             twisted ? "becomes twisted" : "remains intact");
+    }
+
+    if (twisted)
+    {
+        mon->type = mons_zombie_size(type) == Z_BIG ?
+            MONS_ABOMINATION_LARGE : MONS_ABOMINATION_SMALL;
+        mon->base_monster = mons_species(mon->type);
+    }
+    else
+    {
+        mon->type = MONS_SPECTRAL_THING;
+        mon->base_monster = mons_species(type);
+    }
+
+    define_monster(*mon);
+
+    if (twisted)
+    {
+        // Mark abominations as undead.
+        mon->flags |= MF_HONORARY_UNDEAD;
+
+        monster_drop_ething(mon);
+    }
+
+    mon->flags |= MF_ENSLAVED_SOUL;
+
+    if (mons_is_unique(type))
+    {
+        mon->mname = name_plain;
+
+        // Special case for Blork the orc: shorten his name to "Blork"
+        // to avoid mentions of "Blork the orc the spectral orc" or
+        // "Blork the orc the small abomination".
+        if (type == MONS_BLORK_THE_ORC)
+            mon->mname = "Blork";
+    }
+
+    // Wow, permanent enslaving!
+    mon->attitude = !force_hostile ? ATT_FRIENDLY : ATT_HOSTILE;
+    mon->flags |= MF_CREATED_FRIENDLY;
+    behaviour_event(mon, ME_ALERT, !force_hostile ? MHITNOT : MHITYOU);
+
+    mons_make_god_gift(mon, GOD_YREDELEMNUL);
+
+    if (!quiet)
+    {
+        mprf("%s's soul %s.", name_cap_the.c_str(),
+             !force_hostile ? "is now yours" : "fights you");
+    }
 }
 
 static void _print_converted_orc_speech(const std::string key,
