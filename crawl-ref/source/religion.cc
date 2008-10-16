@@ -4493,7 +4493,7 @@ static bool _make_god_gifts_on_level_disappear(bool seen = false)
             if (!seen || simple_monster_message(monster, " abandons you!"))
                 count++;
 
-            // monster disappears
+            // The monster disappears.
             monster_die(monster, KILL_DISMISSED, NON_MONSTER);
         }
     }
