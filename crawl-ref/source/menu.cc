@@ -18,6 +18,59 @@
 #include "view.h"
 #include "initfile.h"
 
+MenuDisplay::MenuDisplay(Menu *menu) : m_menu(menu)
+{
+}
+
+MenuDisplayText::MenuDisplayText(Menu *menu) : MenuDisplay(menu), m_starty(1)
+{
+}
+
+void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
+{
+    textattr(m_menu->item_colour(index, me));
+    if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
+        formatted_string::parse_string(me->get_text()).display();
+    else
+    {
+        std::string text = me->get_text();
+        if ((int) text.length() > get_number_of_cols())
+            text = text.substr(0, get_number_of_cols());
+        cprintf("%s", text.c_str());
+    }
+}
+
+void MenuDisplayText::draw_more()
+{
+    cgotoxy(1, m_menu->get_y_offset() + m_menu->get_pagesize() -
+            count_linebreaks(m_menu->get_more()));
+    m_menu->get_more().display();
+}
+
+#ifdef USE_TILE
+MenuDisplayTile::MenuDisplayTile(Menu *menu) : MenuDisplay(menu)
+{
+    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
+}
+
+void MenuDisplayTile::draw_stock_item(int index, const MenuEntry *me)
+{
+    int colour = m_menu->item_colour(index, me);
+    std::string text = me->get_text();
+    tiles.get_menu()->set_entry(index, text, colour, me);
+}
+
+void MenuDisplayTile::set_offset(int lines)
+{
+    tiles.get_menu()->set_offset(lines);
+}
+
+void MenuDisplayTile::draw_more()
+{
+    tiles.get_menu()->set_more(m_menu->get_more());
+}
+#endif
+
 Menu::Menu( int _flags, const std::string& tagname )
  : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL), title(NULL),
    flags(_flags), tag(tagname), first_entry(0), y_offset(0),
@@ -25,6 +78,11 @@ Menu::Menu( int _flags, const std::string& tagname )
    sel(), select_filter(), highlighter(new MenuHighlighter), num(-1),
    lastch(0), alive(false), last_selected(-1)
 {
+#ifdef USE_TILE
+    mdisplay = new MenuDisplayTile(this);
+#else
+    mdisplay = new MenuDisplayText(this);
+#endif
     set_flags(flags);
 }
 
@@ -39,6 +97,12 @@ Menu::Menu( const formatted_string &fs )
    select_filter(), highlighter(new MenuHighlighter), num(-1),
    lastch(0), alive(false), last_selected(-1)
 {
+#ifdef USE_TILE
+    mdisplay = new MenuDisplayTile(this);
+#else
+    mdisplay = new MenuDisplayText(this);
+#endif
+
     int colour = LIGHTGREY;
     int last_text_colour = LIGHTGREY;
     std::string line;
@@ -122,6 +186,7 @@ Menu::~Menu()
         delete items[i];
     delete title;
     delete highlighter;
+    delete mdisplay;
 }
 
 void Menu::clear()
@@ -466,14 +531,14 @@ bool Menu::draw_title_suffix( const formatted_string &fs, bool titlefirst )
     return (true);
 }
 
-void Menu::draw_select_count( int count, bool force )
+void Menu::draw_select_count(int count, bool force)
 {
     if (!force && !is_set(MF_MULTISELECT))
         return;
 
     if (f_selitem)
     {
-        draw_title_suffix( f_selitem( &sel ) );
+        draw_title_suffix(f_selitem(&sel));
     }
     else
     {
@@ -482,7 +547,7 @@ void Menu::draw_select_count( int count, bool force )
             snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
                     (count > 1? "s" : ""));
 
-        draw_title_suffix( buf );
+        draw_title_suffix(buf);
     }
 }
 
@@ -672,6 +737,8 @@ void Menu::draw_menu()
     draw_select_count( sel.size() );
     y_offset = 1 + !!title;
 
+    mdisplay->set_offset(y_offset);
+
     int end = first_entry + pagesize;
     if (end > (int) items.size()) end = items.size();
 
@@ -679,10 +746,7 @@ void Menu::draw_menu()
         draw_item( i );
 
     if (end < (int) items.size() || is_set(MF_ALWAYS_SHOW_MORE))
-    {
-        cgotoxy( 1, y_offset + pagesize - count_linebreaks(more) );
-        more.display();
-    }
+        mdisplay->draw_more();
 }
 
 void Menu::update_title()
@@ -756,16 +820,7 @@ void Menu::draw_index_item(int index, const MenuEntry *me) const
 
 void Menu::draw_stock_item(int index, const MenuEntry *me) const
 {
-    textattr( item_colour(index, items[index]) );
-    if ( flags & MF_ALLOW_FORMATTING )
-        formatted_string::parse_string(items[index]->get_text()).display();
-    else
-    {
-        std::string text = items[index]->get_text();
-        if ((int) text.length() > get_number_of_cols())
-            text = text.substr(0, get_number_of_cols());
-        cprintf( "%s", text.c_str() );
-    }
+    mdisplay->draw_stock_item(index, me);
 }
 
 bool Menu::page_down()
@@ -982,8 +1037,10 @@ int slider_menu::item_colour(int index, const MenuEntry *me) const
     int colour = Menu::item_colour(index, me);
     if (index == selected && selected != -1)
     {
-#if defined(WIN32CONSOLE) || defined(DOS) || defined (USE_TILE)
+#if defined(WIN32CONSOLE) || defined(DOS)
         colour = dos_brand(colour, CHATTR_REVERSE);
+#elif defined(USE_TILE)
+        colour = colour == WHITE ? YELLOW : WHITE;
 #else
         colour |= COLFLAG_REVERSE;
 #endif
@@ -1010,7 +1067,7 @@ void slider_menu::show_more()
     const int end = entry_end();
     cgotoxy( 1, y_offset + pagesize );
     if (end < (int) items.size() || is_set(MF_ALWAYS_SHOW_MORE))
-        more.display();
+        mdisplay->draw_more();
     else
         textattr(LIGHTGREY);
     fill_line();
@@ -1042,6 +1099,8 @@ void slider_menu::draw_menu()
     cgotoxy(1, y_offset - 1);
 
     show_less();
+
+    mdisplay->set_offset(starty + 1);
 
     for (int i = first_entry; i < end; ++i)
         draw_item( i );

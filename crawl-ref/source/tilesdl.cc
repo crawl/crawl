@@ -98,7 +98,7 @@ void TilesFramework::shutdown()
     delete m_region_map;
     delete m_region_self_inv;
     delete m_region_crt;
-    delete m_region_menu_inv;
+    delete m_region_menu;
 
     m_region_tile = NULL;
     m_region_stat = NULL;
@@ -106,7 +106,7 @@ void TilesFramework::shutdown()
     m_region_map = NULL;
     m_region_self_inv = NULL;
     m_region_crt = NULL;
-    m_region_menu_inv = NULL;
+    m_region_menu = NULL;
 
     for (unsigned int i = 0; i < LAYER_MAX; i++)
     {
@@ -175,7 +175,7 @@ bool TilesFramework::initialise()
         return false;
 
     int crt_font = load_font(Options.tile_font_crt_file.c_str(),
-                             Options.tile_font_crt_size, true, false);
+                             Options.tile_font_crt_size, true, true);
     int msg_font = load_font(Options.tile_font_msg_file.c_str(),
                              Options.tile_font_msg_size, true, false);
     int stat_font = load_font(Options.tile_font_stat_file.c_str(),
@@ -200,8 +200,7 @@ bool TilesFramework::initialise()
     m_region_msg = new MessageRegion(m_fonts[msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
     m_region_crt = new CRTRegion(m_fonts[crt_font].font);
-    m_region_menu_inv = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
-                                            TILE_X, TILE_Y);
+    m_region_menu = new MenuRegion(&m_image, m_fonts[crt_font].font);
 
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);
@@ -210,7 +209,7 @@ bool TilesFramework::initialise()
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_stat);
 
     m_layers[LAYER_CRT].m_regions.push_back(m_region_crt);
-    m_layers[LAYER_CRT].m_regions.push_back(m_region_menu_inv);
+    m_layers[LAYER_CRT].m_regions.push_back(m_region_menu);
 
     cgotoxy(1, 1, GOTO_CRT);
 
@@ -229,8 +228,11 @@ int TilesFramework::load_font(const char *font_file, int font_size,
     for (unsigned int i = 0; i < m_fonts.size(); i++)
     {
         font_info &finfo = m_fonts[i];
-        if (finfo.name == font_file && finfo.size == font_size)
+        if (finfo.name == font_file && finfo.size == font_size
+            && outline == finfo.outline)
+        {
             return i;
+        }
     }
 
     if (!font->load_font(font_file, font_size, outline))
@@ -246,6 +248,7 @@ int TilesFramework::load_font(const char *font_file, int font_size,
     finfo.name = font_file;
     finfo.size = font_size;
     finfo.font = font;
+    finfo.outline = outline;
     m_fonts.push_back(finfo);
 
     return (m_fonts.size() - 1);
@@ -730,7 +733,6 @@ void TilesFramework::do_layout()
     m_region_stat->resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
     m_region_msg->resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
     m_region_map->resize(GXM, GYM);
-    m_region_menu_inv->resize(24, 1);
 
     // Place regions for normal layer
     const int margin = 4;
@@ -861,25 +863,9 @@ void TilesFramework::do_layout()
 
     // Place regions for crt layer
     m_region_crt->place(0, 0, margin);
-
-    while (m_region_crt->ey + m_region_menu_inv->wy > m_windowsz.y)
-    {
-        m_region_crt->resize(m_region_crt->mx, m_region_crt->my - 1);
-    }
-    while (m_region_crt->ex > m_windowsz.x)
-    {
-        m_region_crt->resize(m_region_crt->mx - 1, m_region_crt->my);
-    }
-
-    m_region_menu_inv->place(0, m_region_crt->ey, margin);
-    m_region_menu_inv->resize_to_fit(m_windowsz.x, m_windowsz.y -
-                                     m_region_menu_inv->sy);
-
-    // Depending on the font, the menu inventory may hold fewer items
-    // than the crt menu can display.  Decrease the lines if necessary.
-    const int ex = 3;
-    if (m_region_crt->my - ex > m_region_menu_inv->mx)
-        m_region_crt->resize(m_region_crt->mx, m_region_menu_inv->mx + ex);
+    m_region_crt->resize_to_fit(m_windowsz.x, m_windowsz.y);
+    m_region_menu->place(0, 0, margin);
+    m_region_menu->resize_to_fit(m_windowsz.x, m_windowsz.y);
 
     crawl_view.init_view();
 }
@@ -894,8 +880,8 @@ void TilesFramework::clrscr()
         m_region_msg->clear();
     if (m_region_crt)
         m_region_crt->clear();
-    if (m_region_menu_inv)
-        m_region_menu_inv->clear();
+    if (m_region_menu)
+        m_region_menu->clear();
 
     cgotoxy(1,1);
 }
@@ -1215,21 +1201,6 @@ void TilesFramework::update_inventory()
     }
 
     m_region_self_inv->update(inv.size(), &inv[0]);
-}
-
-void TilesFramework::update_menu_inventory(unsigned int slot,
-                                           const item_def &item,
-                                           bool selected, char key)
-{
-    InventoryTile desc;
-    _fill_item_info(desc, item);
-    desc.key = key;
-    desc.idx = (desc.flag & TILEI_FLAG_FLOOR) ? item.index() :
-                                                letter_to_index(key);
-    if (selected)
-        desc.flag |= TILEI_FLAG_SELECT;
-
-    m_region_menu_inv->update_slot(slot, desc);
 }
 
 void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)

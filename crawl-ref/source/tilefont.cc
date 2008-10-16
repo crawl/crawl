@@ -6,6 +6,7 @@
  */
 
 #include "AppHdr.h"
+#include "tilebuf.h"
 #include "tilefont.h"
 #include "defines.h"
 #include "files.h"
@@ -15,24 +16,24 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-const unsigned char term_colours[MAX_TERM_COLOUR][3] =
+const VColour term_colours[MAX_TERM_COLOUR] =
 {
-    {  0,   0,   0}, // BLACK
-    {  0,  82, 255}, // BLUE
-    {100, 185,  70}, // GREEN
-    {  0, 180, 180}, // CYAN
-    {255,  48,   0}, // RED
-    {238,  92, 238}, // MAGENTA
-    {165,  91,   0}, // BROWN
-    {162, 162, 162}, // LIGHTGREY
-    { 82,  82,  82}, // DARKGREY
-    { 82, 102, 255}, // LIGHTBLUE
-    { 82, 255,  82}, // LIGHTGREEN
-    { 82, 255, 255}, // LIGHTCYAN
-    {255,  82,  82}, // LIGHTRED
-    {255,  82, 255}, // LIGHTMAGENTA
-    {255, 255,  82}, // YELLOW
-    {255, 255, 255}  // WHITE
+    VColour(  0,   0,   0), // BLACK
+    VColour(  0,  82, 255), // BLUE
+    VColour(100, 185,  70), // GREEN
+    VColour(  0, 180, 180), // CYAN
+    VColour(255,  48,   0), // RED
+    VColour(238,  92, 238), // MAGENTA
+    VColour(165,  91,   0), // BROWN
+    VColour(162, 162, 162), // LIGHTGREY
+    VColour( 82,  82,  82), // DARKGREY
+    VColour( 82, 102, 255), // LIGHTBLUE
+    VColour( 82, 255,  82), // LIGHTGREEN
+    VColour( 82, 255, 255), // LIGHTCYAN
+    VColour(255,  82,  82), // LIGHTRED
+    VColour(255,  82, 255), // LIGHTMAGENTA
+    VColour(255, 255,  82), // YELLOW
+    VColour(255, 255, 255)  // WHITE
 };
 
 FTFont::FTFont() :
@@ -299,9 +300,9 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
             {
                 FontVertLayout v;
                 v.tex_x = v.tex_y = 0;
-                v.r = term_colours[col_bg][0];
-                v.g = term_colours[col_bg][1];
-                v.b = term_colours[col_bg][2];
+                v.r = term_colours[col_bg].r;
+                v.g = term_colours[col_bg].g;
+                v.b = term_colours[col_bg].b;
                 v.a = 255;
 
                 v.pos_x = adv.x;
@@ -332,9 +333,9 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 float tex_x2 = tex_x + (float)this_width / (float)m_tex.width();
                 float tex_y2 = tex_y + texcoord_dy;
                 FontVertLayout v;
-                v.r = term_colours[col_fg][0];
-                v.g = term_colours[col_fg][1];
-                v.b = term_colours[col_fg][2];
+                v.r = term_colours[col_fg].r;
+                v.g = term_colours[col_fg].g;
+                v.b = term_colours[col_fg].b;
                 v.a = 255;
 
                 v.pos_x = adv.x;
@@ -421,9 +422,9 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     box_vert verts[4];
     for (unsigned int i = 0; i < 4; i++)
     {
-        verts[i].r = term_colours[box_colour][0];
-        verts[i].g = term_colours[box_colour][1];
-        verts[i].b = term_colours[box_colour][2];
+        verts[i].r = term_colours[box_colour].r;
+        verts[i].g = term_colours[box_colour].g;
+        verts[i].b = term_colours[box_colour].b;
         verts[i].a = box_alpha;
     }
     verts[0].x = x_pos - box_width;
@@ -555,4 +556,100 @@ void FTFont::render_string(unsigned int px, unsigned int py,
         _draw_box(tx, ty, wx, wy, outline, box_colour, box_alpha);
 
     render_textblock(tx, ty, chars, colours, max_cols, max_rows, drop_shadow);
+}
+
+void FTFont::store(FontBuffer &buf, float &x, float &y,
+                   const std::string &str, const VColour &col)
+{
+    for (unsigned int i = 0; i < str.size(); i++)
+    {
+        char c = str[i];
+        if (c == '\n')
+        {
+            y += m_max_advance.y;
+        }
+        else
+        {
+            store(buf, x, y, c, col);
+        }
+    }
+}
+
+void FTFont::store(FontBuffer &buf, float &x, float &y,
+                   const formatted_string &fs)
+{
+    int colour = LIGHTGREY;
+    for (unsigned int i = 0; i < fs.ops.size(); i++)
+    {
+        switch (fs.ops[i].type)
+        {
+            case FSOP_COLOUR:
+                // Only foreground colors for now...
+                colour = fs.ops[i].x & 0xF;
+                break;
+            case FSOP_TEXT:
+                store(buf, x, y, fs.ops[i].text, term_colours[colour]);
+                break;
+            default:
+            case FSOP_CURSOR:
+                break;
+        }
+    }
+}
+
+void FTFont::store(FontBuffer &buf, float &x, float &y,
+                   char c, const VColour &col)
+{
+    if (!m_glyphs[c].renderable)
+    {
+        x += m_glyphs[c].advance;
+        return;
+    }
+
+    int this_width = m_glyphs[c].width;
+
+    float pos_sx = x + m_glyphs[c].offset;
+    float pos_sy = y;
+    float pos_ex = pos_sx + this_width;
+    float pos_ey = y + m_max_advance.y;
+
+    float tex_sx = (float)(c % 16) / 16.0f;
+    float tex_sy = (float)(c / 16) / 16.0f;
+    float tex_ex = tex_sx + (float)this_width / (float)m_tex.width();
+    float tex_ey = tex_sy + (float)m_max_advance.y / (float)m_tex.height();
+
+    {
+        PTCVert &v = buf.get_next();
+        v.col = col;
+        v.pos_x = pos_sx;
+        v.pos_y = pos_sy;
+        v.tex_x = tex_sx;
+        v.tex_y = tex_sy;
+    }
+    {
+        PTCVert &v = buf.get_next();
+        v.col = col;
+        v.pos_x = pos_sx;
+        v.pos_y = pos_ey;
+        v.tex_x = tex_sx;
+        v.tex_y = tex_ey;
+    }
+    {
+        PTCVert &v = buf.get_next();
+        v.col = col;
+        v.pos_x = pos_ex;
+        v.pos_y = pos_ey;
+        v.tex_x = tex_ex;
+        v.tex_y = tex_ey;
+    }
+    {
+        PTCVert &v = buf.get_next();
+        v.col = col;
+        v.pos_x = pos_ex;
+        v.pos_y = pos_sy;
+        v.tex_x = tex_ex;
+        v.tex_y = tex_sy;
+    }
+
+    x += m_glyphs[c].advance;
 }

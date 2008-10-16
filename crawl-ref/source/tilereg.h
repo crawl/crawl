@@ -9,9 +9,13 @@
 #ifndef TILEREG_H
 #define TILEREG_H
 
+#include "AppHdr.h"
+#include "format.h"
+#include "tilebuf.h"
 #include "tiletex.h"
 #include "tiles.h"
 #include <vector>
+
 class mcache_entry;
 
 class ImageManager
@@ -172,6 +176,52 @@ public:
     CRTRegion(FTFont *font);
 
     virtual int handle_mouse(MouseEvent &event);
+};
+
+class MenuEntry;
+
+class MenuRegion : public Region
+{
+public:
+    MenuRegion(ImageManager *im, FTFont *entry);
+
+    virtual int handle_mouse(MouseEvent &event);
+    virtual void render();
+    virtual void clear();
+
+    int maxpagesize() const;
+    void set_entry(int index, const std::string &s, int colour, const MenuEntry *me);
+    void set_offset(int lines);
+    void set_more(const formatted_string &more);
+protected:
+    virtual void on_resize();
+    virtual void place_entries();
+    int mouse_entry(int x, int y);
+
+    struct MenuRegionEntry
+    {
+        formatted_string text;
+        int tile;
+        TextureID texture;
+        int sx, ex, sy, ey;
+        bool selected;
+        bool heading;
+        char key;
+        bool valid;
+    };
+
+    ImageManager *m_image;
+    FTFont *m_font_entry;
+    formatted_string m_more;
+    int m_mouse_idx;
+    bool m_dirty;
+
+    std::vector<MenuRegionEntry> m_entries;
+
+    ShapeBuffer m_shape_buf;
+    LineBuffer m_line_buf;
+    FontBuffer m_font_buf;
+    TileBuffer m_tile_buf;
 };
 
 class TileRegion : public Region

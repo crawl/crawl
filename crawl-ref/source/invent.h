@@ -99,6 +99,10 @@ public:
 
     virtual void select( int qty = -1 );
 
+#ifdef USE_TILE
+    virtual bool tile(int &tile, TextureID &tex) const;
+#endif
+
 private:
     void add_class_hotkeys(const item_def &i);
 };
@@ -157,7 +161,6 @@ protected:
     void sort_menu(std::vector<InvEntry*> &items,
                    const menu_sort_condition *cond);
     const menu_sort_condition *find_menu_sort_condition() const;
-    virtual void draw_stock_item(int index, const MenuEntry *me) const;
     virtual bool is_selectable(int index) const;
 
 protected:

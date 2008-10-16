@@ -43,7 +43,7 @@ public:
 
     unsigned int width() const { return m_width; }
     unsigned int height() const { return m_height; }
-    void bind();
+    void bind() const;
 
 protected:
     unsigned int m_handle;

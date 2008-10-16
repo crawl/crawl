@@ -236,7 +236,7 @@ bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
     return true;
 }
 
-void GenericTexture::bind()
+void GenericTexture::bind() const
 {
     ASSERT(m_handle);
     glBindTexture(GL_TEXTURE_2D, m_handle);

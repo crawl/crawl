@@ -137,6 +137,13 @@ struct MenuEntry
         else if (quantity)
             selected_qty = (qty == -1? quantity : qty);
     }
+
+#ifdef USE_TILE
+    virtual bool tile(int &idx, TextureID &tex) const
+    {
+        return false;
+    }
+#endif
 };
 
 struct ToggleableMenuEntry : public MenuEntry
@@ -179,6 +186,38 @@ enum MenuFlag
     MF_ALLOW_FORMATTING = 0x0100,   // Parse index for formatted-string
     MF_SHOW_PAGENUMBERS = 0x0200,   // Show "(page X of Y)" when appropriate
     MF_EASY_EXIT        = 0x1000
+};
+
+class MenuDisplay
+{
+public:
+    MenuDisplay(Menu *menu);
+    virtual ~MenuDisplay() {}
+    virtual void draw_stock_item(int index, const MenuEntry *me) = 0;
+    virtual void set_offset(int lines) = 0;
+    virtual void draw_more() = 0;
+protected:
+    Menu *m_menu;
+};
+
+class MenuDisplayText : public MenuDisplay
+{
+public:
+    MenuDisplayText(Menu *menu);
+    virtual void draw_stock_item(int index, const MenuEntry *me);
+    virtual void draw_more();
+    virtual void set_offset(int lines) { m_starty = lines; }
+protected:
+    int m_starty;
+};
+
+class MenuDisplayTile : public MenuDisplay
+{
+public:
+    MenuDisplayTile(Menu *menu);
+    virtual void draw_stock_item(int index, const MenuEntry *me);
+    virtual void set_offset(int lines);
+    virtual void draw_more();
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -226,6 +265,7 @@ public:
 
     // Sets a replacement for the --more-- string.
     void set_more(const formatted_string &more);
+    const formatted_string &get_more() const { return more; }
 
     void set_highlighter( MenuHighlighter *h );
     void set_title( MenuEntry *e );
@@ -233,6 +273,7 @@ public:
     void get_selected( std::vector<MenuEntry*> *sel ) const;
 
     void set_maxpagesize(int max);
+    int maxpagesize() const { return max_pagesize; }
 
     void set_select_filter( std::vector<text_pattern> filter )
     {
@@ -249,6 +290,10 @@ public:
 
     // Get entry index, skipping quantity 0 entries. Returns -1 if not found.
     int get_entry_index( const MenuEntry *e ) const;
+
+    virtual int item_colour(int index, const MenuEntry *me) const;
+    int get_y_offset() const { return y_offset; }
+    int get_pagesize() const { return pagesize; }
 
 public:
     typedef std::string (*selitem_tfn)( const std::vector<MenuEntry*> *sel );
@@ -284,6 +329,8 @@ protected:
 
     int last_selected;
 
+    MenuDisplay *mdisplay;
+
 protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   std::string &line, bool check_eol);
@@ -312,8 +359,6 @@ protected:
 
     bool is_hotkey(int index, int key );
     virtual bool is_selectable(int index) const;
-
-    virtual int item_colour(int index, const MenuEntry *me) const;
 
     virtual bool process_key( int keyin );
 };

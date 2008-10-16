@@ -1,6 +1,6 @@
 /*
  *  File:       tilereg.cc
- *  Summary:    Region system implementaions
+ *  Summary:    Region system implementations
  *
  *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
  *
@@ -17,6 +17,7 @@
 #include "item_use.h"
 #include "message.h"
 #include "misc.h"
+#include "menu.h"
 #include "newgame.h"
 #include "mon-util.h"
 #include "player.h"
@@ -2351,9 +2352,265 @@ CRTRegion::CRTRegion(FTFont *font) : TextRegion(font)
 
 int CRTRegion::handle_mouse(MouseEvent &event)
 {
-    // TODO enne - clicking on menu items? We could probably
-    // determine which items were clicked based on text size.
     return 0;
+}
+
+MenuRegion::MenuRegion(ImageManager *im, FTFont *entry) :
+    m_image(im), m_font_entry(entry), m_mouse_idx(-1),
+    m_dirty(false), m_font_buf(entry), m_tile_buf(NULL)
+{
+    ASSERT(m_image);
+    ASSERT(m_font_entry);
+
+    dx = 1;
+    dy = 1;
+
+    m_entries.resize(128);
+}
+
+int MenuRegion::mouse_entry(int x, int y)
+{
+    if (m_dirty)
+        place_entries();
+
+    for (unsigned int i = 0; i < m_entries.size(); i++)
+    {
+        if (!m_entries[i].valid)
+            continue;
+
+        if (x >= m_entries[i].sx && x <= m_entries[i].ex
+            && y >= m_entries[i].sy && y <= m_entries[i].ey)
+        {
+            return i;
+        }
+    }
+
+    return -1; 
+}
+
+int MenuRegion::handle_mouse(MouseEvent &event)
+{
+    m_mouse_idx = -1;
+
+    int x, y;
+    if (!mouse_pos(event.px, event.py, x, y))
+        return 0;
+
+    if (event.event == MouseEvent::MOVE)
+    {
+        int old_idx = m_mouse_idx;
+        m_mouse_idx = mouse_entry(x, y);
+        if (old_idx == m_mouse_idx)
+            return 0;
+
+        const VColour mouse_colour(160, 160, 160, 255);
+
+        m_line_buf.clear();
+        if (!m_entries[m_mouse_idx].heading && m_entries[m_mouse_idx].key)
+        {
+            m_line_buf.add_square(m_entries[m_mouse_idx].sx-1,
+                                  m_entries[m_mouse_idx].sy,
+                                  m_entries[m_mouse_idx].ex+1,
+                                  m_entries[m_mouse_idx].ey+1,
+                                  mouse_colour);
+        }
+
+        return 0;
+    }
+
+    if (event.event == MouseEvent::PRESS)
+    {
+        switch (event.button)
+        {
+        case MouseEvent::LEFT:
+        {
+            int entry = mouse_entry(x, y);
+            if (entry == -1)
+                return 0;
+            return m_entries[entry].key;
+        }
+#if 0
+        // TODO enne - these events are wonky on OS X.
+        // TODO enne - fix menus so that mouse wheeling doesn't easy exit
+        case MouseEvent::SCROLL_UP:
+            return CK_UP;
+        case MouseEvent::SCROLL_DOWN:
+            return CK_DOWN;
+#endif
+        default:
+            return 0;
+        }
+    }
+
+    return 0;
+}
+
+void MenuRegion::place_entries()
+{
+    m_dirty = false;
+
+    const int heading_indent = 10;
+    const int tile_ident = 20;
+    const int text_indent = 58;
+    const unsigned int max_tile_height = 32;
+    const int column_width = mx / 2;
+    const int entry_buffer = 1;
+    const VColour selected_colour(50, 50, 10, 255);
+
+    m_font_buf.clear();
+    m_tile_buf.clear();
+    m_shape_buf.clear();
+    m_line_buf.clear();
+
+    TextureID tex = TEX_MAX;
+    int height = 2;
+
+    bool mouse_selected = false;
+
+    for (unsigned int i = 0; i < m_entries.size(); i++)
+    {
+        if (!m_entries[i].valid)
+        {
+            m_entries[i].sx = 0;
+            m_entries[i].sy = 0;
+            m_entries[i].ex = 0;
+            m_entries[i].ey = 0;
+            continue;
+        }
+
+        m_entries[i].sy = height;
+
+        int text_start = 0;
+        int text_height = height;
+
+        if (m_entries[i].heading)
+        {
+            mouse_selected = false;
+            m_entries[i].sx = heading_indent;
+            text_start = heading_indent;
+            height += m_font_entry->char_height();
+        }
+        else if (m_entries[i].tile)
+        {
+            m_entries[i].sx = tile_ident;
+            text_start = text_indent;
+            int entry_height =
+                std::max(max_tile_height, m_font_entry->char_height());
+            height += entry_height;
+            text_height += (entry_height - m_font_entry->char_height()) / 2;
+
+            ASSERT(m_entries[i].texture == tex || tex == TEX_MAX);
+            tex = m_entries[i].texture;
+            m_tile_buf.set_tex(&m_image->m_textures[tex]);
+
+            m_tile_buf.add(m_entries[i].tile, m_entries[i].sx, m_entries[i].sy);
+        }
+        else
+        {
+            m_entries[i].sx = text_start + text_indent;
+            height += m_font_entry->char_height();
+        }
+
+        std::string unfrm = m_entries[i].text.tostring();
+        m_entries[i].ex = text_start + m_font_entry->string_width(unfrm.c_str());
+        m_entries[i].ex = std::max(m_entries[i].ex, column_width);
+        m_entries[i].ey = height;
+
+        m_font_buf.add(m_entries[i].text, text_start, text_height);
+
+        if (m_entries[i].selected)
+        {
+            m_shape_buf.add(m_entries[i].sx-1, m_entries[i].sy-1,
+                            m_entries[i].ex+1, m_entries[i].ey+1,
+                            selected_colour);
+        }
+
+        height += entry_buffer;
+    }
+
+    int lines = count_linebreaks(m_more);
+    int more_height = (lines + 1) * m_font_entry->char_height();
+    m_font_buf.add(m_more, sx + ox, ey - oy - more_height);
+}
+
+void MenuRegion::render()
+{
+    if (m_dirty)
+        place_entries();
+
+    glLoadIdentity();
+    glTranslatef(sx + ox, sy + oy, 0);
+    glScalef(dx, dy, 1);
+
+    m_shape_buf.draw();
+    m_line_buf.draw();
+    m_tile_buf.draw();
+    m_font_buf.draw();
+}
+
+void MenuRegion::clear()
+{
+    m_shape_buf.clear();
+    m_line_buf.clear();
+    m_tile_buf.clear();
+    m_font_buf.clear();
+
+    m_more.clear();
+
+    for (unsigned int i = 0; i < m_entries.size(); i++)
+    {
+        m_entries[i].valid = false;
+    }
+    m_mouse_idx = -1;
+}
+
+void MenuRegion::set_entry(int idx, const std::string &str, int colour,
+                           const MenuEntry *me)
+{
+    if (idx >= (int)m_entries.size())
+    {
+        int new_size = m_entries.size();
+        while (idx >= new_size)
+            new_size *= 2;
+        m_entries.resize(new_size);
+    }
+
+    MenuRegionEntry &e = m_entries[idx];
+    e.valid = true;
+    e.text.clear();
+    e.text.textcolor(colour);
+    e.text += formatted_string::parse_string(str);
+    e.heading = (me->level == MEL_TITLE || me->level == MEL_SUBTITLE);
+    e.selected = me->selected();
+    e.key = me->hotkeys.size() > 0 ? me->hotkeys[0] : 0;
+    e.sx = e.sy = e.ex = e.ey = 0;
+    if (!me->tile(e.tile, e.texture))
+        e.tile = 0;
+
+    m_dirty = true;
+}
+
+void MenuRegion::on_resize()
+{
+    m_dirty = true;
+}
+
+int MenuRegion::maxpagesize() const
+{
+    // TODO enne - this could be much smarter.  Also, columns?
+    return my / 32 - 2;
+}
+
+void MenuRegion::set_offset(int lines)
+{
+    oy = (lines - 1) * m_font_entry->char_height();
+}
+
+void MenuRegion::set_more(const formatted_string &more)
+{
+    m_more.clear();
+    m_more += more;
+    m_dirty = true;
 }
 
 ImageManager::ImageManager()

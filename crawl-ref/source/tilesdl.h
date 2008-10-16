@@ -106,8 +106,6 @@ public:
     void clear_minimap();
     void update_inventory();
 
-    void update_menu_inventory(unsigned int slot, const item_def &item, bool selected, char key);
-
     void redraw();
 
     void place_cursor(cursor_type type, const coord_def &gc);
@@ -121,6 +119,8 @@ public:
 
     void add_overlay(const coord_def &gc, int idx);
     void clear_overlays();
+
+    MenuRegion *get_menu() { return m_region_menu; }
 protected:
 
     int load_font(const char *font_file, int font_size,
@@ -161,12 +161,13 @@ protected:
 
     // Full-screen CRT layer
     CRTRegion *m_region_crt;
-    InventoryRegion *m_region_menu_inv;
+    MenuRegion *m_region_menu;
 
     struct font_info
     {
         std::string name;
         int size;
+        bool outline;
         FTFont *font;
     };
     std::vector<font_info> m_fonts;

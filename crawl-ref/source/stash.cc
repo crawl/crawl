@@ -430,13 +430,6 @@ public:
 protected:
     void draw_title();
     bool process_key(int key);
-
-    void draw_stock_item(int index, const MenuEntry *me) const
-    {
-        // Skip inventory draw function, as tiles code can't currently
-        // handle drawing items that aren't in mitm or in inventory.
-        Menu::draw_stock_item(index, me);
-    }
 };
 
 void StashMenu::draw_title()
@@ -1742,6 +1735,7 @@ void StashSearchMenu::draw_title()
     }
 }
 
+
 bool StashSearchMenu::process_key(int key)
 {
     if (key == '?')
@@ -1781,8 +1775,11 @@ bool StashTracker::display_search_results(
     stashmenu.set_title(mtitle);
 
     // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (results.size() > 52)
+    if (results.size() > 52
+        && (stashmenu.maxpagesize() > 52 || stashmenu.maxpagesize() == 0))
+    {
         stashmenu.set_maxpagesize(52);
+    }
 
     menu_letter hotkey;
     for (unsigned i = 0; i < results.size(); ++i, ++hotkey)

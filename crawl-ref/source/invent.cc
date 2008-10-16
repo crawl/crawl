@@ -382,19 +382,18 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
         set_title("");
 }
 
-void InvMenu::draw_stock_item(int index, const MenuEntry *me) const
-{
 #ifdef USE_TILE
-    const InvEntry *ie = dynamic_cast<const InvEntry*>(me);
-    if (ie && me->quantity > 0)
-    {
-        char key = ie->hotkeys.size() > 0 ? ie->hotkeys[0] : 0;
-        tiles.update_menu_inventory(get_entry_index(ie), *ie->item, ie->selected(), key);
-    }
-#endif
+bool InvEntry::tile(int &idx, TextureID &tex) const
+{
+    if (quantity <= 0)
+        return false;
 
-    Menu::draw_stock_item(index, me);
+    idx = tileidx_item(*item);
+    tex = TEX_DEFAULT;
+
+    return (idx != 0);
 }
+#endif
 
 bool InvMenu::is_selectable(int index) const
 {
@@ -627,7 +626,7 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
     }
 
     // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (mitems.size() > 52)
+    if (mitems.size() > 52 && (max_pagesize > 52 || max_pagesize == 0))
         set_maxpagesize(52);
 }
 

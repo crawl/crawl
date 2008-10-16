@@ -22,6 +22,10 @@
 //   have to link against FreeType2 or be forced do as much processing at
 //   load time.
 
+class FontBuffer;
+class VColour;
+class formatted_string;
+
 class FTFont
 {
 public:
@@ -43,10 +47,18 @@ public:
                        unsigned char box_alpha = 0,
                        unsigned char box_colour = 0, unsigned int outline = 0);
 
+    // FontBuffer helper functions
+    void store(FontBuffer &buf, float &x, float &y,
+               const std::string &s, const VColour &c);
+    void store(FontBuffer &buf, float &x, float &y, const formatted_string &fs);
+    void store(FontBuffer &buf, float &x, float &y, char c, const VColour &col);
+
     unsigned int char_width() const { return m_max_advance.x; }
     unsigned int char_height() const { return m_max_advance.y; }
 
     unsigned int string_width(const char *text);
+
+    const GenericTexture *font_tex() const { return &m_tex; }
 
 protected:
     struct GlyphInfo
