@@ -4510,12 +4510,12 @@ static bool _god_gifts_disappear_wrapper()
 // current one.
 static bool _make_god_gifts_disappear(bool level_only)
 {
-   bool success = _make_god_gifts_on_level_disappear(true);
+    bool success = _make_god_gifts_on_level_disappear(true);
 
-   if (level_only)
-       return (success);
+    if (level_only)
+        return (success);
 
-   return (apply_to_all_dungeons(_god_gifts_disappear_wrapper) || success);
+    return (apply_to_all_dungeons(_god_gifts_disappear_wrapper) || success);
 }
 
 // When abandoning the god in question, turn friendly god gifts good
