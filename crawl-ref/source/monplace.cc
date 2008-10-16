@@ -908,7 +908,7 @@ static int _place_monster_aux( const mgen_data &mg,
     {
         give_item(id, mg.power);
         // Give these monsters a second weapon -- bwr
-        if (mons_wields_two_weapons(mg.cls))
+        if (mons_class_wields_two_weapons(mg.cls))
             give_item(id, mg.power);
 
         unwind_var<int> save_speedinc(menv[id].speed_increment);

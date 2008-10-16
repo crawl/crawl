@@ -1455,6 +1455,7 @@ bool mons_amphibious(const monsters *mon)
 {
     const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
                                                : mon->type;
+
     return (mons_class_amphibious(montype));
 }
 
@@ -1467,6 +1468,7 @@ bool mons_wall_shielded(const monsters *mon)
 {
     const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
                                                : mon->type;
+
     return (mons_class_wall_shielded(montype));
 }
 
@@ -2280,14 +2282,17 @@ bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2)
     return (fr1 == fr2);
 }
 
-bool mons_wields_two_weapons(monster_type m)
+bool mons_class_wields_two_weapons(int mc)
 {
-    return mons_class_flag(m, M_TWOWEAPON);
+    return (mons_class_flag(mc, M_TWOWEAPON));
 }
 
-bool mons_wields_two_weapons(const monsters *m)
+bool mons_wields_two_weapons(const monsters *mon)
 {
-    return (mons_wields_two_weapons(static_cast<monster_type>(m->type)));
+    const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
+                                               : mon->type;
+
+    return (mons_class_wields_two_weapons(montype));
 }
 
 bool mons_eats_corpses(const monsters *m)
@@ -3265,7 +3270,8 @@ bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
 {
     const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
                                                : mon->type;
-    return mons_class_can_pass(montype, grid);
+
+    return (mons_class_can_pass(montype, grid));
 }
 
 bool monsters::can_pass_through_feat(dungeon_feature_type grid) const
