@@ -1757,7 +1757,7 @@ bool cast_conjure_ball_lightning(int pow, god_type god)
         }
 
         // If we fail, we'll try the ol' summon next to player trick.
-        if ( !found )
+        if (!found)
             target = you.pos();
 
         int monster =
