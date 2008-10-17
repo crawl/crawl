@@ -874,12 +874,12 @@ static void _inc_gift_timeout(int val)
         you.gift_timeout += val;
 }
 
-static int _yred_random_servants(bool force_hostile = false)
+static int _yred_random_servants(int threshold, bool force_hostile = false)
 {
     // error trapping {dlb}
     monster_type mon = MONS_PROGRAM_BUG;
     int how_many = 1;
-    int temp_rand = random2(100);
+    int temp_rand = random2(std::min(100, threshold));
 
     // undead
     mon = ((temp_rand < 25) ? MONS_WRAITH :           // 25%
@@ -1865,7 +1865,8 @@ static void _do_god_gift(bool prayed_for)
         case GOD_YREDELEMNUL:
             if (random2(you.piety) >= piety_breakpoint(2) && one_chance_in(5))
             {
-                int how_many = _yred_random_servants();
+                int threshold = 100;
+                int how_many = _yred_random_servants(threshold);
 
                 if (how_many > 0)
                 {
@@ -3879,11 +3880,12 @@ static bool _yredelemnul_retribution()
             ;
         else
         {
+            int threshold = 100;
             int how_many = 1 + random2(1 + (you.experience_level / 5));
             int count = 0;
 
             for (; how_many > 0; --how_many)
-                count += _yred_random_servants(true);
+                count += _yred_random_servants(threshold, true);
 
             simple_god_message(count > 1 ? " sends servants to punish you." :
                                count > 0 ? " sends a servant to punish you."
