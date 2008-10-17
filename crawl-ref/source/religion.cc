@@ -882,19 +882,19 @@ static int _yred_random_servants(bool force_hostile = false)
     int temp_rand = random2(100);
 
     // undead
-    mon = ((temp_rand > 74) ? MONS_WRAITH :           // 25%
-           (temp_rand > 64) ? MONS_WIGHT :            // 10%
-           (temp_rand > 54) ? MONS_FLYING_SKULL :     // 10%
-           (temp_rand > 45) ? MONS_SPECTRAL_WARRIOR : //  9%
-           (temp_rand > 38) ? MONS_ROTTING_HULK :     //  7%
-           (temp_rand > 32) ? MONS_SKELETAL_WARRIOR : //  6%
-           (temp_rand > 27) ? MONS_FREEZING_WRAITH :  //  5%
-           (temp_rand > 22) ? MONS_FLAMING_CORPSE :   //  5%
-           (temp_rand > 18) ? MONS_GHOUL :            //  5%
-           (temp_rand > 13) ? MONS_MUMMY :            //  5%
-           (temp_rand > 9)  ? MONS_VAMPIRE :          //  4%
-           (temp_rand > 5)  ? MONS_FLAYED_GHOST :     //  4%
-           (temp_rand > 2)  ? MONS_SKELETAL_DRAGON    //  3%
+    mon = ((temp_rand < 25) ? MONS_WRAITH :           // 25%
+           (temp_rand < 35) ? MONS_WIGHT :            // 10%
+           (temp_rand < 45) ? MONS_FLYING_SKULL :     // 10%
+           (temp_rand < 54) ? MONS_SPECTRAL_WARRIOR : //  9%
+           (temp_rand < 61) ? MONS_ROTTING_HULK :     //  7%
+           (temp_rand < 67) ? MONS_SKELETAL_WARRIOR : //  6%
+           (temp_rand < 72) ? MONS_FREEZING_WRAITH :  //  5%
+           (temp_rand < 77) ? MONS_FLAMING_CORPSE :   //  5%
+           (temp_rand < 82) ? MONS_GHOUL :            //  5%
+           (temp_rand < 87) ? MONS_MUMMY :            //  5%
+           (temp_rand < 91) ? MONS_VAMPIRE :          //  4%
+           (temp_rand < 95) ? MONS_FLAYED_GHOST :     //  4%
+           (temp_rand < 98) ? MONS_SKELETAL_DRAGON    //  3%
                             : MONS_DEATH_COB);        //  2%
 
     if (mon == MONS_FLYING_SKULL)
