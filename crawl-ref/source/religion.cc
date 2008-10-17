@@ -925,16 +925,16 @@ static bool _okawaru_random_servant()
     int temp_rand = random2(100);
 
     // warriors
-    mon = ((temp_rand > 84) ? MONS_ORC_WARRIOR :      // 15%
-           (temp_rand > 69) ? MONS_ORC_KNIGHT :       // 14%
-           (temp_rand > 59) ? MONS_NAGA_WARRIOR :     //  9%
-           (temp_rand > 49) ? MONS_CENTAUR_WARRIOR :  //  9%
-           (temp_rand > 39) ? MONS_STONE_GIANT :      //  9%
-           (temp_rand > 29) ? MONS_FIRE_GIANT :       //  9%
-           (temp_rand > 19) ? MONS_FROST_GIANT :      //  9%
-           (temp_rand >  9) ? MONS_CYCLOPS :          //  9%
-           (temp_rand >  4) ? MONS_HILL_GIANT         //  4%
-                            : MONS_TITAN);            //  4%
+    mon = ((temp_rand < 15) ? MONS_ORC_WARRIOR :      // 15%
+           (temp_rand < 30) ? MONS_ORC_KNIGHT :       // 15%
+           (temp_rand < 40) ? MONS_NAGA_WARRIOR :     // 10%
+           (temp_rand < 50) ? MONS_CENTAUR_WARRIOR :  // 10%
+           (temp_rand < 60) ? MONS_STONE_GIANT :      // 10%
+           (temp_rand < 70) ? MONS_FIRE_GIANT :       // 10%
+           (temp_rand < 80) ? MONS_FROST_GIANT :      // 10%
+           (temp_rand < 90) ? MONS_CYCLOPS :          // 10%
+           (temp_rand < 95) ? MONS_HILL_GIANT         //  5%
+                            : MONS_TITAN);            //  5%
 
     bool success = false;
 
