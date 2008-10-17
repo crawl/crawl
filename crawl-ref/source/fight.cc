@@ -3161,21 +3161,6 @@ bool melee_attack::mons_self_destructs()
 
 bool melee_attack::mons_attack_warded_off()
 {
-    const int holy = defender->holy_aura();
-    if (holy && mons_holiness(atk) == MH_UNDEAD
-        && !check_mons_resist_magic( atk, holy ))
-    {
-        if (needs_message)
-        {
-            mprf("%s tries to attack %s, but is repelled by %s holy aura.",
-                 atk_name(DESC_CAP_THE).c_str(),
-                 def_name(DESC_NOCAP_THE).c_str(),
-                 pronoun(defender, PRONOUN_NOCAP_POSSESSIVE,
-                         defender_visible).c_str());
-        }
-        return (true);
-    }
-
     // [dshaligram] Note: warding is no longer a simple 50% chance.
     const int warding = defender->warding();
     if (warding
