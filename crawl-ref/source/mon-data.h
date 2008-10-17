@@ -1632,8 +1632,7 @@ static monsterentry mondata[] = {
 // angelic beings ('A')
 {
     MONS_ANGEL, 'A', WHITE, "Angel",
-    M_FIGHTER | M_FLIES | M_SPELLCASTER | M_SEE_INVIS | M_WARM_BLOOD
-        | M_SPEAKS,
+    M_FIGHTER | M_FLIES | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS,
     MR_RES_POISON | MR_RES_ELEC,
     0, 10, MONS_ANGEL, MONS_ANGEL, MH_HOLY, -8,
     { {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1644,8 +1643,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_DAEVA, 'A', YELLOW, "Daeva",
-    M_FIGHTER | M_LEVITATE | M_SPELLCASTER | M_SEE_INVIS | M_WARM_BLOOD
-        | M_SPEAKS,
+    M_FIGHTER | M_LEVITATE | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS,
     MR_RES_POISON,
     0, 12, MONS_ANGEL, MONS_DAEVA, MH_HOLY, -8,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 10}, {AT_HIT, AF_PLAIN, 10},
@@ -2965,7 +2963,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_LAVA_SNAKE, 'S', RED, "lava snake",
-    M_SPECIAL_ABILITY,
+    M_WARM_BLOOD | M_SPECIAL_ABILITY,
     mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 10, MONS_SNAKE, MONS_LAVA_SNAKE, MH_NATURAL, -3,
     { {AT_BITE, AF_FIRE, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
