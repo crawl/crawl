@@ -123,9 +123,9 @@ bool monster_blink(monsters *monster);
  * defaults are set up for player blink;  monster blink should call with
  * false, false
  * *********************************************************************** */
-bool random_near_space( const coord_def& origin, coord_def& target,
-    bool allow_adjacent = false, bool restrict_LOS = true,
-    bool forbid_sanctuary = false);
+bool random_near_space(const coord_def& origin, coord_def& target,
+                       bool allow_adjacent = false, bool restrict_LOS = true,
+                       bool forbid_sanctuary = false);
 
 
 /* ***********************************************************************
