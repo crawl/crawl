@@ -1865,7 +1865,7 @@ static void _do_god_gift(bool prayed_for)
         case GOD_YREDELEMNUL:
             if (random2(you.piety) >= piety_breakpoint(2) && one_chance_in(5))
             {
-                int threshold = 100;
+                int threshold = (you.piety - piety_breakpoint(2)) * 20 / 9;
                 int how_many = _yred_random_servants(threshold);
 
                 if (how_many > 0)
