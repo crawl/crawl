@@ -1080,13 +1080,21 @@ static void _define_zombie( int mid, monster_type ztype,
             if (zombie_size != -1 && mons_zombie_size(cls) != zombie_size)
                 continue;
 
-            // Skeletal or icy draconians shouldn't be coloured.
-            // How could you tell?
-            if ((cs == MONS_SKELETON_SMALL || cs == MONS_SIMULACRUM_SMALL)
-                && mons_genus(cls) == MONS_DRACONIAN
-                && cls != MONS_DRACONIAN)
+            if (cs == MONS_SKELETON_SMALL || cs == MONS_SIMULACRUM_SMALL)
             {
-                cls = MONS_DRACONIAN;
+                // Skeletal or icy draconians shouldn't be coloured.
+                // How could you tell?
+                if (mons_genus(cls) == MONS_DRACONIAN
+                    && cls != MONS_DRACONIAN)
+                {
+                    cls = MONS_DRACONIAN;
+                }
+                // The same goes for rats.
+                else if (mons_genus(cls) == MONS_RAT
+                    && cls != MONS_RAT)
+                {
+                    cls = MONS_RAT;
+                }
             }
 
             // Hack -- non-dungeon zombies are always made out of nastier

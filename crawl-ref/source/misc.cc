@@ -150,6 +150,12 @@ void turn_corpse_into_skeleton(item_def &corpse, int time)
     {
         corpse.plus = MONS_DRACONIAN;
     }
+    // The same goes for rat corpses.
+    else if (mons_genus(corpse.plus) == MONS_RAT
+        && corpse.plus != MONS_RAT)
+    {
+        corpse.plus = MONS_RAT;
+    }
 
     corpse.sub_type = CORPSE_SKELETON;
     corpse.special  = time;
