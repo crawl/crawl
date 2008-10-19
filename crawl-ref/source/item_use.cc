@@ -4642,14 +4642,6 @@ void read_scroll(int slot)
             id_the_scroll = false;
         }
 
-        // Good gods like this, regardless of whether it damages anything.
-        if (is_good_god(you.religion))
-        {
-            you.duration[DUR_PIETY_POOL] += 10;
-            if (you.duration[DUR_PIETY_POOL] > 500)
-                you.duration[DUR_PIETY_POOL] = 500;
-        }
-
         // This is only naughty if you know you're doing it, or if it's
         // succeeded, in which case you'll know for next time.
         if (item_type_known(scroll) || success)
