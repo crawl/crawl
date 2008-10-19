@@ -847,10 +847,10 @@ static bool _raise_corpse(const coord_def &a, int corps, beh_type beha,
     return (false);
 }
 
-bool animate_a_corpse(const coord_def &a, corpse_type class_allowed,
-                      beh_type beha, unsigned short hitting,
-                      god_type god, bool actual,
-                      bool quiet)
+bool animate_remains(const coord_def &a, corpse_type class_allowed,
+                     beh_type beha, unsigned short hitting,
+                     god_type god, bool actual,
+                     bool quiet)
 {
     if (is_sanctuary(a))
         return (false);
@@ -940,7 +940,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
             for (stack_iterator si(a); si; ++si)
             {
                 const bool was_butchering = is_being_butchered(*si, false);
-                if (animate_a_corpse(a, CORPSE_BODY, beha, hitting, god,
+                if (animate_remains(a, CORPSE_BODY, beha, hitting, god,
                                      actual, true))
                 {
                     number_raised++;
