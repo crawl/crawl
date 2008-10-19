@@ -1165,7 +1165,7 @@
 },
 
 {
-    SPELL_SUMMON_GUARDIAN, "Summon Guardian",
+    SPELL_SUMMON_ANGEL, "Summon Angel",
      SPTYP_HOLY,
      SPFLAG_NONE,
      7,

@@ -1641,7 +1641,7 @@ static bool _summon_holy_being_wrapper(int pow, god_type god,
 }
 
 // TSO sends an angel for a follower.
-bool summon_guardian(int pow, god_type god, bool quiet)
+bool summon_angel(int pow, god_type god, bool quiet)
 {
     return _summon_holy_being_wrapper(pow, god, MONS_ANGEL, quiet);
 }

@@ -1509,8 +1509,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         cast_summon_dragon(powc, god);
         break;
 
-    case SPELL_SUMMON_GUARDIAN:
-        summon_guardian(powc, god);
+    case SPELL_SUMMON_ANGEL:
+        summon_angel(powc, god);
         break;
 
     case SPELL_SUMMON_DAEVA:
