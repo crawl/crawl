@@ -272,10 +272,6 @@ ancient lich
 
 A lich who has grown mighty over countless years.
 %%%%
-angel
-
-A winged holy being of unnatural beauty. It has an aura of brilliant white light.
-%%%%
 ant larva
 
 A baby ant. Isn't it cute?
