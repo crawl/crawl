@@ -776,11 +776,11 @@ switch to an uncursed butchering tool when you type 'c', and will also
 switch back to your previous weapon unless you get interrupted while
 butchering your food.
 
-Some species are less fastidious about their food: Trolls can use
-their claws, so do not need a cutting device. Also Trolls, Orcs,
-Ogres, and Kobolds care less (in different degrees) about the quality
-of the corpse. Ogres, Trolls and Kobolds are happy to eat raw meat at
-any time.
+Some species are less fastidious about their food. Trolls and Ghouls can
+use their claws, and so do not need a cutting device. Also, Orcs, Ogres,
+Kobolds, Trolls, and Ghouls care less (in different degrees) about the
+quality of the corpse. Ogres, Kobolds, Trolls, and Ghouls are happy to
+eat raw meat at any time.
 
 Vampires are a special case. Members of this species can try to drink
 blood from a fresh corpse (use either the 'q' or the 'e' command).
