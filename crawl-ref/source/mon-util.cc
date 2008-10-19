@@ -1400,7 +1400,7 @@ bool mons_has_lifeforce(const monsters *mon)
 bool mons_skeleton(int mc)
 {
     if (!mons_class_can_be_zombified(mc)
-        || (mons_class_flag(mc, M_NO_SKELETON)))
+        || mons_class_flag(mc, M_NO_SKELETON))
     {
         return (false);
     }
