@@ -1269,6 +1269,7 @@ game_start:
     tmp_file_pairs.init(false);
 
     _initialise_branch_depths();
+    init_level_connectivity();
 
     _save_newgame_options();
     return (true);

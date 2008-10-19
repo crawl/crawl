@@ -229,6 +229,7 @@ typedef std::list<coord_def> coord_list;
 
 // MISC FUNCTIONS
 static void _dgn_set_floor_colours();
+static bool _fixup_interlevel_connectivity();
 
 //////////////////////////////////////////////////////////////////////////
 // Static data
@@ -468,8 +469,15 @@ static void _dgn_register_vault(const map_def &map)
     }
 }
 
+static bool _is_passable_ignore_vault(const coord_def &c)
+{
+    return (is_travelsafe_square(c.x, c.y, false, true)
+            || grd(c) == DNGN_SECRET_DOOR);
+}
+
 bool dgn_square_is_passable(const coord_def &c)
 {
+    // [enne] Why does this function check MMT_OPAQUE?
     return (!(dgn_Map_Mask(c) & MMT_OPAQUE)
             && (is_travelsafe_square(c.x, c.y, false, true)
                 || grd(c) == DNGN_SECRET_DOOR));
@@ -528,6 +536,56 @@ static bool _dgn_fill_zone(
     return (ret);
 }
 
+static bool _is_perm_down_stair(const coord_def &c)
+{
+    switch (grd(c))
+    {
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+    case DNGN_EXIT_HELL:
+    case DNGN_EXIT_PANDEMONIUM:
+    case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_EXIT_ABYSS:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+static bool _is_bottom_exit_stair(const coord_def &c)
+{
+    // Is this a valid exit stair from the bottom of a branch? In general,
+    // ensure that each region has a stone stair up.
+    switch (grd(c))
+    {
+    case DNGN_STONE_STAIRS_UP_I:
+    case DNGN_STONE_STAIRS_UP_II:
+    case DNGN_STONE_STAIRS_UP_III:
+    case DNGN_EXIT_HELL:
+    case DNGN_RETURN_FROM_ORCISH_MINES:
+    case DNGN_RETURN_FROM_HIVE:
+    case DNGN_RETURN_FROM_LAIR:
+    case DNGN_RETURN_FROM_SLIME_PITS:
+    case DNGN_RETURN_FROM_VAULTS:
+    case DNGN_RETURN_FROM_CRYPT:
+    case DNGN_RETURN_FROM_HALL_OF_BLADES:
+    case DNGN_RETURN_FROM_ZOT:
+    case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_RETURN_FROM_SNAKE_PIT:
+    case DNGN_RETURN_FROM_ELVEN_HALLS:
+    case DNGN_RETURN_FROM_TOMB:
+    case DNGN_RETURN_FROM_SWAMP:
+    case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_EXIT_PANDEMONIUM:
+    case DNGN_TRANSIT_PANDEMONIUM:
+    case DNGN_EXIT_ABYSS:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
 static bool _is_exit_stair(const coord_def &c)
 {
     // Branch entries, portals, and abyss entries are not considered exit
@@ -538,9 +596,11 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
+    case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
+    case DNGN_ESCAPE_HATCH_UP:
     case DNGN_EXIT_HELL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
@@ -605,8 +665,8 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     int nzones = 0;
-    for (int y = y1; y <= y1 ; ++y)
-        for (int x = x2; x <= x2; ++x)
+    for (int y = y1; y <= y2 ; ++y)
+        for (int x = x1; x <= x2; ++x)
         {
             if (!map_bounds(x, y)
                 || travel_point_distance[x][y]
@@ -619,7 +679,9 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
                 _dgn_fill_zone(coord_def(x, y), ++nzones,
                                _dgn_point_record_stub,
                                dgn_square_is_passable,
-                               choose_stairless? _is_exit_stair : NULL);
+                               choose_stairless ? (at_branch_bottom() ?
+                               _is_bottom_exit_stair :
+                               _is_exit_stair) : NULL);
 
             // If we want only stairless zones, screen out zones that did
             // have stairs.
@@ -627,8 +689,8 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
                 --nzones;
             else if (fill)
             {
-                for (int fy = y1; fy <= y1 ; ++fy)
-                    for (int fx = x2; fx <= x2; ++x)
+                for (int fy = y1; fy <= y2 ; ++fy)
+                    for (int fx = x1; fx <= x2; ++fx)
                         if (travel_point_distance[fx][fy] == nzones)
                             grd[fx][fy] = fill;
             }
@@ -741,6 +803,21 @@ static coord_def _find_level_feature(int feat)
         }
 
     return coord_def(0, 0);
+}
+
+static bool _has_connected_stone_stairs_from(const coord_def &c)
+{
+
+    flood_find<feature_grid, coord_predicate> ff(env.grid, in_bounds);
+    ff.add_feat(DNGN_STONE_STAIRS_DOWN_I);
+    ff.add_feat(DNGN_STONE_STAIRS_DOWN_II);
+    ff.add_feat(DNGN_STONE_STAIRS_DOWN_III);
+    ff.add_feat(DNGN_STONE_STAIRS_UP_I);
+    ff.add_feat(DNGN_STONE_STAIRS_UP_II);
+    ff.add_feat(DNGN_STONE_STAIRS_UP_III);
+
+    coord_def where = ff.find_first_from(c, dgn_Map_Mask);
+    return (where.x || !ff.did_leave_vault());
 }
 
 static bool _has_connected_downstairs_from(const coord_def &c)
@@ -1198,6 +1275,107 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
     return success;
 }
 
+static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &), 
+    dungeon_feature_type feat)
+{
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    int nzones = 0;
+    for (int y = 0; y < GYM; ++y)
+        for (int x = 0; x < GXM; ++x)
+        {
+            const coord_def gc(x, y);
+            if (!map_bounds(x, y)
+                || travel_point_distance[x][y]
+                || !_is_passable_ignore_vault(gc))
+            {
+                continue;
+            }
+
+            if (_dgn_fill_zone(gc, ++nzones, _dgn_point_record_stub,
+                               _is_passable_ignore_vault, iswanted))
+            {
+                continue;
+            }
+
+            bool found_feature = false;
+            for (int y2 = 0; y2 < GYM && !found_feature; ++y2)
+                for (int x2 = 0; x2 < GXM && !found_feature; ++x2)
+                {
+                    if (grd[x2][y2] == feat)
+                        found_feature = true;
+                }
+
+            if (found_feature)
+                continue;
+
+            int i = 0;
+            while (i++ < 2000)
+            {
+                coord_def rnd(random2(GXM), random2(GYM));
+                if (grd(rnd) != DNGN_FLOOR)
+                    continue;
+
+                if (travel_point_distance[rnd.x][rnd.y] != nzones)
+                    continue;
+               
+                grd(rnd) = feat;
+                return (true);
+            }
+
+            for (int y2 = 0; y2 < GYM; ++y2)
+                for (int x2 = 0; x2 < GXM; ++x2)
+                {
+                    coord_def rnd(x2, y2);
+                    if (grd(rnd) != DNGN_FLOOR)
+                        continue;
+
+                    if (travel_point_distance[rnd.x][rnd.y] != nzones)
+                        continue;
+
+                    grd(rnd) = feat;
+                    return (true);
+                }
+
+            ASSERT(!"Couldn't find region.");
+            return (false);
+        }
+
+    return (true);
+}
+
+static bool _add_connecting_escape_hatches()
+{
+    // For any regions without a down stone stair case, add an
+    // escape hatch.  This will always allow (downward) progress.
+
+    if (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
+        return (true);
+    if (you.level_type != LEVEL_DUNGEON)
+        return (true);
+
+    if (at_branch_bottom())
+        return (_dgn_count_disconnected_zones(true) == 0);
+
+    return (_add_feat_if_missing(_is_perm_down_stair, DNGN_ESCAPE_HATCH_DOWN));
+}
+
+static bool _branch_entrances_are_connected() 
+{
+    // Returns true if all branch entrances on the level are connected to
+    // stone stairs.
+    for (int y = 0; y < GYM; ++y)
+        for (int x = 0; x < GXM; ++x)
+        {
+            coord_def gc(x,y);
+            if (!grid_is_branch_stairs(grd(gc)))
+                continue;
+            if (!_has_connected_stone_stairs_from(gc))
+                return (false);
+        }
+
+    return (true);
+}
+
 static void _dgn_verify_connectivity(unsigned nvaults)
 {
     if (dgn_level_vetoed)
@@ -1235,9 +1413,6 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     }
 
     // Also check for isolated regions that have no stairs.
-    // [enne] - this is not a perfect check.  It's possible that a region
-    // could have a single staircase that leads to another a region on
-    // another level with a single return staircase.
     if (you.level_type == LEVEL_DUNGEON
         && !(branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
         && _dgn_count_disconnected_zones(true) > 0)
@@ -1246,6 +1421,47 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
              "VETO: %s has isolated areas with no stairs.",
+             level_id::current().describe().c_str());
+#endif
+        return;
+    }
+
+    if (!_fixup_stone_stairs(true))
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Warning: failed to preserve vault stairs.");
+#endif
+        _fixup_stone_stairs(false);
+    }
+
+    if (!_branch_entrances_are_connected())
+    {
+        dgn_level_vetoed = true;
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+             "VETO: %s has a disconnected branch entrance.",
+             level_id::current().describe().c_str());
+#endif
+        return;
+    }
+
+    if (!_add_connecting_escape_hatches())
+    {
+        dgn_level_vetoed = true;
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+             "VETO: %s failed to get connecting escape hatches.",
+             level_id::current().describe().c_str());
+#endif
+        return;
+    }
+
+    if (!_fixup_interlevel_connectivity())
+    {
+        dgn_level_vetoed = true;
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS,
+             "VETO: %s failed to ensure interlevel connectivity.",
              level_id::current().describe().c_str());
 #endif
         return;
@@ -1348,14 +1564,6 @@ static void _build_dungeon_level(int level_number, int level_type)
     // Translate stairs for pandemonium levels.
     if (level_type == LEVEL_PANDEMONIUM)
         _fixup_pandemonium_stairs();
-
-    if (!_fixup_stone_stairs(true))
-    {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Warning: failed to preserve vault stairs.");
-#endif
-        _fixup_stone_stairs(false);
-    }
 }                               // end builder()
 
 
@@ -2150,8 +2358,15 @@ static builder_rc_type _builder_by_branch(int level_number)
     case BRANCH_HIVE:
     case BRANCH_SLIME_PITS:
     case BRANCH_ORCISH_MINES:
-        spotty_level(false, 100 + random2(500), false);
+    {
+        int iterations;
+        if (at_branch_bottom())
+            iterations = 600 + random2(600);
+        else
+            iterations = 100 + random2(500);
+        spotty_level(false, iterations, false);
         return BUILD_SKIP;
+    }
 
     default:
         break;
@@ -7726,4 +7941,349 @@ coord_def dgn_region::random_edge_point() const
 coord_def dgn_region::random_point() const
 {
     return coord_def( pos.x + random2(size.x), pos.y + random2(size.y) );
+}
+
+struct StairConnectivity
+{
+    StairConnectivity()
+    {
+        region[0] = region[1] = region[2] = 0;
+        connected[0] = connected[1] = connected[2] = true;
+    }
+
+    void connect_region(int idx)
+    {
+        for (int i = 0; i < 3; i++)
+            connected[i] |= (region[i] == idx);
+    }
+
+    void read(reader &th)
+    {
+        region[0] = unmarshallByte(th);
+        region[1] = unmarshallByte(th);
+        region[2] = unmarshallByte(th);
+        connected[0] = unmarshallByte(th);
+        connected[1] = unmarshallByte(th);
+        connected[2] = unmarshallByte(th);
+    }
+
+    void write(writer &th)
+    {
+        marshallByte(th, region[0]);
+        marshallByte(th, region[1]);
+        marshallByte(th, region[2]);
+        marshallByte(th, connected[0]);
+        marshallByte(th, connected[1]);
+        marshallByte(th, connected[2]);
+    }
+
+    char region[3];
+    bool connected[3];
+};
+
+FixedVector<std::vector<StairConnectivity>, NUM_BRANCHES> connectivity;
+
+void init_level_connectivity()
+{
+    for (int i = 0; i < NUM_BRANCHES; i++)
+    {
+        int depth = branches[i].depth > 0 ? branches[i].depth : 0;
+        connectivity[i].resize(depth);
+    }
+}
+
+void read_level_connectivity(reader &th)
+{
+    for (int i = 0; i < NUM_BRANCHES; i++)
+    {
+        unsigned int depth = branches[i].depth > 0 ? branches[i].depth : 0;
+        unsigned int num_entries = unmarshallLong(th);
+        connectivity[i].resize(std::max(depth, num_entries));
+
+        for (unsigned int e = 0; e < num_entries; e++)
+            connectivity[i][e].read(th);
+    }
+}
+
+void write_level_connectivity(writer &th)
+{
+    for (int i = 0; i < NUM_BRANCHES; i++)
+    {
+        marshallLong(th, connectivity[i].size());
+        for (unsigned int e = 0; e < connectivity[i].size(); e++)
+            connectivity[i][e].write(th);
+    }
+}
+
+static bool _fixup_interlevel_connectivity()
+{
+    // Rotate the stairs on this level to attempt to preserve connectivity
+    // as much as possible.  At a minimum, it ensures a path from the bottom
+    // of a branch to the top of a branch.  If this is not possible, it
+    // returns false.
+    //
+    // Note: this check is undirectional and assumes that levels below this
+    // one have not been created yet.  If this is not the case, it will not
+    // guarantee or preserve connectivity.
+
+    if (you.level_type != LEVEL_DUNGEON || your_branch().depth == -1)
+        return (true);
+    if (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
+        return (true);
+
+    StairConnectivity full;
+    StairConnectivity &prev_con = (player_branch_depth() == 1) ? full :
+        (connectivity[your_branch().id][player_branch_depth() - 1]);
+    StairConnectivity &this_con =
+        (connectivity[your_branch().id][player_branch_depth()]);
+
+    FixedVector<coord_def, 3> up_gc;
+    FixedVector<coord_def, 3> down_gc;
+    FixedVector<int, 3> up_region;
+    FixedVector<int, 3> down_region;
+    FixedVector<bool, 3> has_down;
+    std::vector<bool> region_connected;
+
+    up_region[0] = up_region[1] = up_region[2] = -1;
+    down_region[0] = down_region[1] = down_region[2] = -1;
+    has_down[0] = has_down[1] = has_down[2] = false;
+
+    // Find up stairs and down stairs on the current level.
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    int nzones = 0;
+    for (int y = 0; y < GYM ; ++y)
+        for (int x = 0; x < GXM; ++x)
+        {
+            coord_def gc(x,y);
+            if (!map_bounds(x, y)
+                || travel_point_distance[x][y]
+                || !_is_passable_ignore_vault(gc))
+            {
+                continue;
+            }
+
+            _dgn_fill_zone(gc, ++nzones, _dgn_point_record_stub,
+                           _is_passable_ignore_vault, NULL);
+        }
+
+    int max_region = 0;
+    for (int y = 0; y < GYM ; ++y)
+        for (int x = 0; x < GXM; ++x)
+        {
+            coord_def gc(x,y);
+            dungeon_feature_type feat = grd(gc);
+            switch (feat)
+            {
+            case DNGN_STONE_STAIRS_DOWN_I:
+            case DNGN_STONE_STAIRS_DOWN_II:
+            case DNGN_STONE_STAIRS_DOWN_III:
+            {
+                int idx = feat - DNGN_STONE_STAIRS_DOWN_I;
+                if (down_region[idx] == -1)
+                {
+                    down_region[idx] = travel_point_distance[x][y];
+                    down_gc[idx] = gc;
+                    max_region = std::max(down_region[idx], max_region);
+                }
+                else
+                {
+                    // Too many stairs!
+                    return (false);
+                }
+                break;
+            }
+            case DNGN_STONE_STAIRS_UP_I:
+            case DNGN_STONE_STAIRS_UP_II:
+            case DNGN_STONE_STAIRS_UP_III:
+                int idx = feat - DNGN_STONE_STAIRS_UP_I;
+                if (up_region[idx] == -1)
+                {
+                    up_region[idx] = travel_point_distance[x][y];
+                    up_gc[idx] = gc;
+                    max_region = std::max(up_region[idx], max_region);
+                }
+                else
+                {
+                    // Too many stairs!
+                    return (false);
+                }
+                break;
+            default:
+                break;
+            }
+        }
+
+    // Ensure all up stairs were found.
+    for (int i = 0; i < 3; i++)
+    {
+        if (up_region[i] == -1)
+            return (false);
+    }
+    
+    region_connected.resize(max_region + 1);
+    for (unsigned int i = 0; i < region_connected.size(); i++)
+        region_connected[i] = false;
+
+    // Which up stairs have a down stair? (These are potentially connected.)
+    if (!at_branch_bottom())
+    {
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+            {
+                if (down_region[j] == up_region[i])
+                    has_down[i] = true;
+            }
+    }
+
+    bool any_connected = has_down[0] || has_down[1] || has_down[2];
+    if (!any_connected && !at_branch_bottom())
+        return (false);
+
+    // Keep track of what stairs we've assigned.
+    int assign_prev[3] = {-1, -1, -1};
+    int assign_cur[3] = {-1, -1, -1};
+
+    // Assign one connected down stair from the previous level to an
+    // upstair on the current level with a downstair in the same region.
+    // This ensures at least a single valid path to the top.
+    bool minimal_connectivity = false;
+    for (int i = 0; i < 3 && !minimal_connectivity; i++)
+    {
+        if (!prev_con.connected[i])
+            continue;
+        for (int j = 0; j < 3; j++)
+        {
+            if (!has_down[j] && !at_branch_bottom())
+                continue;
+
+            minimal_connectivity = true;
+            assign_prev[i] = j;
+            assign_cur[j] = i;
+            region_connected[up_region[j]] = true;
+            break;
+        }
+    }
+    if (!minimal_connectivity)
+        return (false);
+
+    // For each disconnected stair (in a unique region) on the previous level,
+    // try to reconnect to a connected up stair on the current level.
+    for (int i = 0; i < 3; i++)
+    {
+        if (assign_prev[i] != -1 || prev_con.connected[i])
+            continue;
+
+        bool unique_region = true;
+        for (int j = 0; j < i; j++)
+        {
+            if (prev_con.region[j] == prev_con.region[i])
+                unique_region = false;
+        }
+        if (!unique_region)
+            continue;
+      
+        // Try first to assign to any connected regions.
+        for (int j = 0; j < 3; j++)
+        {
+            if (assign_cur[j] != -1 || !region_connected[up_region[j]])
+                continue;
+
+            assign_prev[i] = j;
+            assign_cur[j] = i;
+            prev_con.connect_region(prev_con.region[i]);
+            break;
+        }
+        if (assign_prev[i] != -1)
+            continue;
+
+        // If we fail, then assign to any up stair with a down, and we'll
+        // try to reconnect this section on the next level.
+        for (int j = 0; j < 3; j++)
+        {
+            if (assign_cur[j] != -1 || !has_down[j])
+                continue;
+
+            assign_prev[i] = j;
+            assign_cur[j] = i;
+            break;
+        }
+    }
+
+    // Assign any connected down stairs from the previous level to any
+    // disconnected stairs on the current level.
+    for (int i = 0; i < 3; i++)
+    {
+        if (!prev_con.connected[i] || assign_prev[i] != -1)
+            continue;
+
+        for (int j = 0; j < 3; j++)
+        {
+            if (has_down[j] || assign_cur[j] != -1)
+                continue;
+            if (region_connected[up_region[j]])
+                continue;
+
+            assign_prev[i] = j;
+            assign_cur[j] = i;
+            region_connected[up_region[j]] = true;
+            break;
+        }
+    }
+
+    // If there are any remaining stairs, assign those.
+    for (int i = 0; i < 3; i++)
+    {
+        if (assign_prev[i] != -1)
+            continue;
+        for (int j = 0; j < 3; j++)
+        {
+            if (assign_cur[j] != -1)
+                continue;
+            assign_prev[i] = j;
+            assign_cur[j] = i;
+
+            if (region_connected[up_region[j]])
+                prev_con.connect_region(prev_con.region[i]);
+            else if (prev_con.connected[i])
+                region_connected[up_region[j]] = true;
+            break;
+        }
+    }
+
+    // At the branch bottom, all up stairs must be connected.
+    if (at_branch_bottom())
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (!region_connected[up_region[i]])
+                return (false);
+        }
+    }
+
+    // Sanity check that we're not duplicating stairs.
+    bool stairs_unique = (assign_cur[0] != assign_cur[1]
+                          && assign_cur[1] != assign_cur[2]);
+    ASSERT(stairs_unique);
+    if (!stairs_unique)
+        return (false);
+
+    // Reassign up stair numbers as needed.
+    for (int i = 0; i < 3; i++)
+    {
+        grd(up_gc[i]) =
+            (dungeon_feature_type)(DNGN_STONE_STAIRS_UP_I + assign_cur[i]);
+    }
+
+    // Fill in connectivity and regions.
+    for (int i = 0; i < 3; i++)
+    {
+        this_con.region[i] = down_region[i];
+        if (down_region[i] != -1)
+            this_con.connected[i] = region_connected[down_region[i]];
+        else
+            this_con.connected[i] = false;
+
+    }
+
+    return (true);
 }

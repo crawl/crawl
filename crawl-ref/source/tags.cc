@@ -1133,6 +1133,8 @@ static void tag_construct_you_dungeon(writer &th)
                       marshallStringNoMax);
     marshall_iterator(th, you.uniq_map_names.begin(), you.uniq_map_names.end(),
                       marshallStringNoMax);
+
+    write_level_connectivity(th);
 }
 
 static void marshall_follower(writer &th, const follower &f)
@@ -1589,6 +1591,8 @@ static void tag_read_you_dungeon(reader &th)
                          (ssipair (string_set::*)(const std::string &))
                          &string_set::insert,
                          unmarshallStringNoMax);
+
+    read_level_connectivity(th);
 }
 
 static void tag_read_lost_monsters(reader &th, int minorVersion)

@@ -295,6 +295,9 @@ bool flood_find<fgrd, bound_check>::path_flood(
 }
 //////////////////////////////////////////////////////////////////////////
 
+void init_level_connectivity();
+void read_level_connectivity(reader &th);
+void write_level_connectivity(writer &th);
 
 bool builder(int level_number, int level_type);
 
