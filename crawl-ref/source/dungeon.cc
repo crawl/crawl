@@ -8095,6 +8095,7 @@ static bool _fixup_interlevel_connectivity()
             case DNGN_STONE_STAIRS_UP_I:
             case DNGN_STONE_STAIRS_UP_II:
             case DNGN_STONE_STAIRS_UP_III:
+            {
                 int idx = feat - DNGN_STONE_STAIRS_UP_I;
                 if (up_region[idx] == -1)
                 {
@@ -8108,6 +8109,7 @@ static bool _fixup_interlevel_connectivity()
                     return (false);
                 }
                 break;
+            }
             default:
                 break;
             }
