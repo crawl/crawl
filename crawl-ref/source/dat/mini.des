@@ -224,7 +224,10 @@ DEPTH: D:3-10
 TAGS:  uniq_gnoll_camp
 MONS:  gnoll
 # "gnoll seargeant" with guaranteed good gear
-MONS:  gnoll ; potion of healing | potion of heal wounds . whip ego:reaching |whip good_item no_uniq | spear ego:reaching | glaive . scale mail | chain mail
+MONS:  gnoll ; potion of healing | potion of heal wounds \ 
+    . whip ego:reaching |whip good_item no_uniq | spear ego:reaching \
+        | glaive \
+    . scale mail | chain mail
 MONS: jackal / hound
 MAP
 xxxxxxxxxx

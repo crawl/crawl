@@ -40,26 +40,34 @@ static void clean()
     alloced = false;
 }
 
+// Enter a new state, first clearing yylval of junk.
+#define CBEGIN(x) do { BEGIN(x); clean(); } while (0)
+
+static void post_proc_text(char *text, bool trim_right, int strip_trailing)
+{
+    char *s = NULL;
+    if (trim_right)
+    {
+        s = text + strlen(text) - 1;
+        while (s >= text && isspace(*s))
+            *s-- = 0;
+    }
+    if (strip_trailing)
+    {
+        if (!s)
+            s = text + strlen(text) - 1;
+        while (s >= text && --strip_trailing >= 0)
+            *s-- = 0;
+    }
+}
+
 static char *copy_text(bool trim_right, int strip_trailing)
 {
     char *newstring = NULL;
     if ((yylval.text = newstring = strdup(yytext)))
     {
         alloced = true;
-        char *s = NULL;
-        if (trim_right)
-        {
-            s = newstring + strlen(newstring) - 1;
-            while (isspace(*s) && s >= newstring)
-                *s-- = 0;
-        }
-        if (strip_trailing)
-        {
-            if (!s)
-                s = newstring + strlen(newstring) - 1;
-            while (s >= newstring && --strip_trailing >= 0)
-                *s-- = 0;
-        }
+        post_proc_text(newstring, trim_right, strip_trailing);
     }
     return (newstring);
 }
@@ -69,6 +77,40 @@ static void settext(bool trim_right = false, int strip_trailing = 0)
     clean();
     char *newstring = copy_text(trim_right, strip_trailing);
     yylval.text = newstring;
+}
+
+static void str_check()
+{
+    if (!yylval.text)
+    {
+        char *buf = (char *) malloc(1);
+        if (buf)
+        {
+            yylval.text = buf;
+            *buf = 0;
+            alloced = true;
+        }
+    }
+}
+
+static void cattext(bool trim_right = false, int strip_trailing = 0)
+{
+    if (!yylval.text)
+        settext(trim_right, strip_trailing);
+    else
+    {
+        bool was_alloced = alloced;
+        char *newbuf = (char*) malloc(strlen(yylval.text) + strlen(yytext) + 1);
+        if (!newbuf)
+            end(1, "Out of memory");
+        alloced = true;
+        strcpy(newbuf, yylval.text);
+        strcat(newbuf, yytext);
+        post_proc_text(newbuf, trim_right, strip_trailing);
+        if (was_alloced)
+            free((void*) yylval.text);
+        yylval.text = newbuf;
+    }
 }
 
 %}
@@ -86,6 +128,7 @@ static void settext(bool trim_right = false, int strip_trailing = 0)
 %option never-interactive
 
 NSPACE [^\ \t\r\n]
+SPACE [\ \t\r]
 
 %%
 
@@ -125,40 +168,52 @@ NSPACE [^\ \t\r\n]
                         return STRING;
                     }
 
+<KEYWORDS>{SPACE}*\\{SPACE}*\n   ;
 <KEYWORDS>[ \t]+    ;
 <KEYWORDS>[ \t]*\r?\n  { BEGIN(INITIAL); }
 
+<ITEM_LIST>[^,\ \t\r\n][^,\r\n]*\\{SPACE}*\n {
+                        cattext(true, 1);
+                    }
+
+<ITEM_LIST>{SPACE}*\\{SPACE}*\n   ;
+
 <ITEM_LIST>[^, \t\r\n][^,\r\n]*[^, \t\r\n] {
-                        settext();
+                        cattext();
                         return ITEM_INFO;
                     }
 
-<ITEM_LIST>[^, \t\r\n] {
-                        settext();
-                        return ITEM_INFO;
-                    }
-
-<ITEM_LIST>,            return COMMA;
+<ITEM_LIST>,            { clean(); return COMMA; }
 <ITEM_LIST>[ \t]+       ;
 <ITEM_LIST>[ \t]*\r?\n  { BEGIN(INITIAL); }
 
 <MNAME>[\ \t\r]*\n  { BEGIN(INITIAL); }
 
-<MNAME>[^,\ \t\r\n][^,\r\n]+[^,\ \t\r\n] {
-                        settext();
+<MNAME>[^,\ \t\r\n][^,\r\n]*\\{SPACE}*\n {
+                        cattext(true, 1);
+                    }
+
+<MNAME>{SPACE}*\\{SPACE}*\n   ;
+
+<MNAME>[^,\ \t\r\n][^,\r\n]*[^,\ \t\r\n] {
+                        cattext();
                         return MONSTER_NAME;
                     }
 
-<MNAME>,            return COMMA;
+<MNAME>,            { clean(); return COMMA; }
 <MNAME>[ \t\r]+     ;
 
-<ARGUMENT>{NSPACE}.*{NSPACE} {
-                        BEGIN(INITIAL);
-                        settext();
-                        return STRING;
+<ARGUMENT>{NSPACE}.*\\{SPACE}*\n {
+                        cattext(true, 1);
                     }
 
-<ARGUMENT>\r?\n     { BEGIN(INITIAL); }
+<ARGUMENT>{SPACE}*\\{SPACE}*\n   ;
+
+<ARGUMENT>{NSPACE}.*{NSPACE} {
+                        cattext();
+                    }
+
+<ARGUMENT>{SPACE}*$ { BEGIN(INITIAL); str_check(); return STRING; }
 
 <TOEOL>.*\\[ \t\r]*$ {
                         settext(true, 1);
@@ -185,32 +240,32 @@ NSPACE [^\ \t\r\n]
 ^[ \t]*veto[ \t]*\{\{     { BEGIN(LUA); return VETO; }
 
 
-NAME:               { BEGIN(ARGUMENT); return NAME; }
-default-depth:      { BEGIN(ARGUMENT); return DEFAULT_DEPTH; }
-DEPTH:              { BEGIN(ARGUMENT); return DEPTH; }
-ORIENT:             { BEGIN(ARGUMENT); return ORIENT; }
-PLACE:              { BEGIN(ARGUMENT); return PLACE; }
-WELCOME:            { BEGIN(ARGUMENT); return WELCOME; }
+NAME:               { CBEGIN(ARGUMENT); return NAME; }
+default-depth:      { CBEGIN(ARGUMENT); return DEFAULT_DEPTH; }
+DEPTH:              { CBEGIN(ARGUMENT); return DEPTH; }
+ORIENT:             { CBEGIN(ARGUMENT); return ORIENT; }
+PLACE:              { CBEGIN(ARGUMENT); return PLACE; }
+WELCOME:            { CBEGIN(ARGUMENT); return WELCOME; }
 CHANCE:             return CHANCE;
 WEIGHT:             return CHANCE;
-FLAGS:              { BEGIN(KEYWORDS); return TAGS; }
-TAGS:               { BEGIN(KEYWORDS); return TAGS; }
-LFLAGS:             { BEGIN(ARGUMENT); return LFLAGS; }
-BFLAGS:             { BEGIN(ARGUMENT); return BFLAGS; }
-SUBST:              { BEGIN(ITEM_LIST); return SUBST; }
-NSUBST:             { BEGIN(ITEM_LIST); return NSUBST; }
-COLOUR:             { BEGIN(ITEM_LIST); return COLOUR; }
-FLOORCOL:           { BEGIN(ARGUMENT); return FLOORCOL; }
-ROCKCOL:            { BEGIN(ARGUMENT); return ROCKCOL; }
-MONS:               { BEGIN(MNAME); return MONS; }
-ITEM:               { BEGIN(ITEM_LIST); return ITEM; }
-MARKER:             { BEGIN(TOEOL); return MARKER; }
-SHUFFLE:            { BEGIN(ITEM_LIST); return SHUFFLE; }
+FLAGS:              { CBEGIN(KEYWORDS); return TAGS; }
+TAGS:               { CBEGIN(KEYWORDS); return TAGS; }
+LFLAGS:             { CBEGIN(ARGUMENT); return LFLAGS; }
+BFLAGS:             { CBEGIN(ARGUMENT); return BFLAGS; }
+SUBST:              { CBEGIN(ITEM_LIST); return SUBST; }
+NSUBST:             { CBEGIN(ITEM_LIST); return NSUBST; }
+COLOUR:             { CBEGIN(ITEM_LIST); return COLOUR; }
+FLOORCOL:           { CBEGIN(ARGUMENT); return FLOORCOL; }
+ROCKCOL:            { CBEGIN(ARGUMENT); return ROCKCOL; }
+MONS:               { CBEGIN(MNAME); return MONS; }
+ITEM:               { CBEGIN(ITEM_LIST); return ITEM; }
+MARKER:             { CBEGIN(TOEOL); return MARKER; }
+SHUFFLE:            { CBEGIN(ITEM_LIST); return SHUFFLE; }
 
-KFEAT:              { BEGIN(ARGUMENT); return KFEAT; }
-KITEM:              { BEGIN(ARGUMENT); return KITEM; }
-KMONS:              { BEGIN(ARGUMENT); return KMONS; }
-KMASK:              { BEGIN(ARGUMENT); return KMASK; }
+KFEAT:              { CBEGIN(ARGUMENT); return KFEAT; }
+KITEM:              { CBEGIN(ARGUMENT); return KITEM; }
+KMONS:              { CBEGIN(ARGUMENT); return KMONS; }
+KMASK:              { CBEGIN(ARGUMENT); return KMASK; }
 
 ,                   return COMMA;
 

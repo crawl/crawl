@@ -803,6 +803,36 @@ MARKER:   A = feat:<feature_name> or lua:<marker_expr>
           SHUFFLE: Oa/|c
           MARKER: O = lua:<expr>
 
+For most map headers, you can split long lines by ending the line that
+will be continued on the next line with \ as:
+
+KMONS: * = orc ; katana | quick blade . chain mail | scale mail / \
+           goblin ; dagger
+
+If you're using continuation lines for comma-separated lists of items
+or monsters, split your line after the comma, not before. For example:
+
+Wrong:
+        ITEM: potion of healing \
+              , potion of speed
+Right:
+        ITEM: potion of healing, \
+              potion of speed
+
+But in general, it is preferable to use multiple ITEM or MONS lines if
+you're splitting comma-separated values:
+
+Preferred:
+        ITEM: potion of healing
+        ITEM: potion of speed
+
+Spaces before the \ of the continued line are significant, leading
+spaces of the next (continuing) line are not. In other words, given:
+
+ITEM: potion of\
+      healing
+
+Crawl will see "potion ofhealing", not "potion of healing".
 
 
 E.    Conditionalising levels
