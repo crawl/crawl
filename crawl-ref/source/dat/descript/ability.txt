@@ -170,9 +170,9 @@ Cleansing Flame
 
 Hurls a huge blast of divine fury, severely damaging undead and demons. All other hostiles also take damage, if less so, whereas allies are never affected.
 %%%%
-Summon Daeva
+Summon Divine Warrior
 
-Summoned Daevas are powerful warriors against evil. They might be blessed by the Shining One to stay longer or even permanently in this world.
+Summoned Angels and Daevas are powerful warriors against evil. They might be blessed by the Shining One to stay longer or even permanently in this world.
 %%%%
 # Both Kikubaaqudgha and Yredelmnul.
 Recall Undead Slaves

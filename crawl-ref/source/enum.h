@@ -58,7 +58,7 @@ enum ability_type
     ABIL_ZIN_SANCTUARY,
     ABIL_TSO_DIVINE_SHIELD = 120,           //  120
     ABIL_TSO_CLEANSING_FLAME,
-    ABIL_TSO_SUMMON_DAEVA,                  //  122
+    ABIL_TSO_SUMMON_DIVINE_WARRIOR,         //  122
     ABIL_KIKU_RECALL_UNDEAD_SLAVES = 130,   //  130
     ABIL_KIKU_ENSLAVE_UNDEAD = 132,         //  132
     ABIL_KIKU_INVOKE_DEATH,                 //  133

@@ -1333,6 +1333,7 @@ int mons_res_negative_energy(const monsters *mon)
         || mon->type == MONS_SHADOW_DRAGON
         || mon->type == MONS_DEATH_DRAKE
            // TSO protects his warriors' life force
+        || mon->type == MONS_ANGEL
         || mon->type == MONS_DAEVA)
     {
         return (3);  // to match the value for players

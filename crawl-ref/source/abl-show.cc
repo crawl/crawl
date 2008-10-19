@@ -102,7 +102,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_NON_ABILITY, ABIL_ZIN_SANCTUARY },
     // TSO
     { ABIL_NON_ABILITY, ABIL_TSO_DIVINE_SHIELD, ABIL_NON_ABILITY,
-      ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DAEVA },
+      ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DIVINE_WARRIOR },
     // Kikubaaqudgha
     { ABIL_KIKU_RECALL_UNDEAD_SLAVES, ABIL_NON_ABILITY,
       ABIL_KIKU_ENSLAVE_UNDEAD, ABIL_NON_ABILITY,
@@ -226,7 +226,7 @@ static const ability_def Ability_List[] =
     // The Shining One
     { ABIL_TSO_DIVINE_SHIELD, "Divine Shield", 3, 0, 50, 2, ABFLAG_NONE },
     { ABIL_TSO_CLEANSING_FLAME, "Cleansing Flame", 5, 0, 100, 2, ABFLAG_NONE },
-    { ABIL_TSO_SUMMON_DAEVA, "Summon Daeva", 8, 0, 150, 4, ABFLAG_NONE },
+    { ABIL_TSO_SUMMON_DIVINE_WARRIOR, "Summon Divine Warrior", 8, 0, 150, 4, ABFLAG_NONE },
 
     // Kikubaaqudgha
     { ABIL_KIKU_RECALL_UNDEAD_SLAVES, "Recall Undead Slaves", 2, 0, 50, 0, ABFLAG_NONE },
@@ -704,7 +704,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_ZIN_SANCTUARY:
-    case ABIL_TSO_SUMMON_DAEVA:
+    case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
     case ABIL_KIKU_INVOKE_DEATH:
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_ELYVILON_DIVINE_VIGOUR:
@@ -1467,8 +1467,11 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 3 + random2(6));
         break;
 
-    case ABIL_TSO_SUMMON_DAEVA:
-        summon_daeva(you.skills[SK_INVOCATIONS] * 4, GOD_SHINING_ONE);
+    case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
+        if (coinflip())
+            summon_guardian(you.skills[SK_INVOCATIONS] * 4, GOD_SHINING_ONE);
+        else
+            summon_daeva(you.skills[SK_INVOCATIONS] * 4, GOD_SHINING_ONE);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
 

@@ -1640,7 +1640,7 @@ static bool _summon_holy_being_wrapper(int pow, god_type god,
     return (true);
 }
 
-// Zin sends an angel for a follower.
+// TSO sends an angel for a follower.
 bool summon_guardian(int pow, god_type god, bool quiet)
 {
     return _summon_holy_being_wrapper(pow, god, MONS_ANGEL, quiet);

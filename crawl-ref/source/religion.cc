@@ -3543,7 +3543,7 @@ static bool _tso_retribution()
         for (int i = 0; i < how_many; ++i)
         {
             if (create_monster(
-                    mgen_data::hostile_at(MONS_DAEVA,
+                    mgen_data::hostile_at(coinflip() ? MONS_ANGEL : MONS_DAEVA,
                         you.pos(), 0, 0, true, god)) != -1)
             {
                 success = true;
