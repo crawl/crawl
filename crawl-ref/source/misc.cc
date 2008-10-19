@@ -140,7 +140,7 @@ void turn_corpse_into_skeleton(item_def &corpse, int time)
     ASSERT(corpse.base_type == OBJ_CORPSES && corpse.sub_type == CORPSE_BODY);
 
     // Some monsters' corpses lack the structure to leave skeletons behind.
-    if (!mons_skeleton( corpse.plus ))
+    if (!mons_skeleton(corpse.plus))
         return;
 
     // While it is possible to distinguish draconian corpses by colour, their
