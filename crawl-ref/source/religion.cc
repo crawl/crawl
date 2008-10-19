@@ -209,7 +209,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "summon an emissary of Death" },
     // Yredelemnul
-    { "animate corpses",
+    { "animate remains",
       "recall your undead slaves",
       "animate legions of the dead",
       "drain ambient lifeforce",
@@ -295,7 +295,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "summon an emissary of Death" },
     // Yredelemnul
-    { "animate corpses",
+    { "animate remains",
       "recall your undead slaves",
       "animate legions of the dead",
       "drain ambient lifeforce",

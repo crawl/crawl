@@ -189,9 +189,9 @@ Invoke Death
 Summon the personification of Death, which, depending on your Invocations skill, may be hostile.
 %%%%
 # Yredelemnul
-Animate Corpse
+Animate Remains
 
-Reanimate a corpse or skeleton as a follower.
+Reanimate a single corpse or skeleton as a follower.
 %%%%
 Animate Dead ability
 

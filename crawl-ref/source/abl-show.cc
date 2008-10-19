@@ -108,7 +108,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_KIKU_ENSLAVE_UNDEAD, ABIL_NON_ABILITY,
       ABIL_KIKU_INVOKE_DEATH },
     // Yredelemnul
-    { ABIL_YRED_ANIMATE_CORPSE, ABIL_YRED_RECALL_UNDEAD,
+    { ABIL_YRED_ANIMATE_REMAINS, ABIL_YRED_RECALL_UNDEAD,
       ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_DRAIN_LIFE,
       ABIL_YRED_ENSLAVE_SOUL },
     // Xom
@@ -234,7 +234,7 @@ static const ability_def Ability_List[] =
     { ABIL_KIKU_INVOKE_DEATH, "Invoke Death", 4, 0, 250, 3, ABFLAG_NONE },
 
     // Yredelemnul
-    { ABIL_YRED_ANIMATE_CORPSE, "Animate Corpse", 1, 0, 100, 0, ABFLAG_NONE },
+    { ABIL_YRED_ANIMATE_REMAINS, "Animate Remains", 1, 0, 100, 0, ABFLAG_NONE },
     { ABIL_YRED_RECALL_UNDEAD, "Recall Undead Slaves", 2, 0, 50, 0, ABFLAG_NONE },
     { ABIL_YRED_ANIMATE_DEAD, "Animate Dead", 3, 0, 100, 1, ABFLAG_NONE },
     { ABIL_YRED_DRAIN_LIFE, "Drain Life", 6, 0, 200, 2, ABFLAG_NONE },
@@ -654,7 +654,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 160 - you.piety;      // starts at 60%
         break;
 
-    case ABIL_YRED_ANIMATE_CORPSE:
+    case ABIL_YRED_ANIMATE_REMAINS:
         invoc = true;
         failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
         break;
@@ -1501,7 +1501,7 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 10 + random2(14));
         break;
 
-    case ABIL_YRED_ANIMATE_CORPSE:
+    case ABIL_YRED_ANIMATE_REMAINS:
         mpr("You call on the dead to walk for you...");
         animate_a_corpse(you.pos(), CORPSE_BODY, BEH_FRIENDLY, you.pet_target,
                          GOD_YREDELEMNUL);
