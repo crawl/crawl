@@ -3434,16 +3434,17 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         break;
 
     case MONS_ANGEL:
-        force_item = true;
-        item_race = MAKE_ITEM_NO_RACE;
+        force_item     = true;
+        item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.colour = WHITE;        // forced by force_item above {dlb}
+        item.colour    = WHITE;        // forced by force_item above {dlb}
 
-        set_equip_desc( item, ISFLAG_GLOWING );
+        set_equip_desc(item, ISFLAG_GLOWING);
         if (one_chance_in(3))
         {
-            item.sub_type = (one_chance_in(3) ? WPN_GREAT_MACE : WPN_MACE);
-            set_item_ego_type( item, OBJ_WEAPONS, SPWPN_HOLY_WRATH );
+            item.sub_type = (one_chance_in(3) ? WPN_GREAT_MACE
+                                              : WPN_MACE);
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
         }
         else
             item.sub_type = WPN_LONG_SWORD;
@@ -3461,8 +3462,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.sub_type  = (one_chance_in(4) ? WPN_BLESSED_EUDEMON_BLADE
                                            : WPN_LONG_SWORD);
 
-        set_equip_desc( item, ISFLAG_GLOWING );
-        set_item_ego_type( item, OBJ_WEAPONS, SPWPN_HOLY_WRATH );
+        set_equip_desc(item, ISFLAG_GLOWING);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
         item.plus  = 1 + random2(3);
         item.plus2 = 1 + random2(3);
         break;

@@ -1614,7 +1614,8 @@ bool summon_berserker(int pow, god_type god, bool force_hostile)
 
 static bool _summon_holy_being_wrapper(int pow, god_type god,
                                        monster_type mon, bool quiet)
-{    const int dur = std::min(2 + (random2(pow) / 4), 6);
+{
+    const int dur = std::min(2 + (random2(pow) / 4), 6);
 
     const int monster =
         create_monster(
