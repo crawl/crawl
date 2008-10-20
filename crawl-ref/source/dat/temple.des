@@ -10,11 +10,11 @@
 ##############################################################################
 # hall with pillars
 #
-NAME: temple_hall_a
-TAGS: temple_entry
+NAME:   temple_hall_a
+TAGS:   temple_entry
 CHANCE: 9
 ORIENT: float
-SUBST: ? : c:20 x v b G:5
+SUBST:  ? : c:20 x v b G:5
 MAP
 ccccccccc
 c...O...c
@@ -33,11 +33,11 @@ c.......c
 c@..@..@c
 ENDMAP
 
-NAME: temple_hall_b
-TAGS: temple_entry no_pool_fixup no_monster_gen
+NAME:   temple_hall_b
+TAGS:   temple_entry no_pool_fixup no_monster_gen
 CHANCE: 1
 ORIENT: float
-SUBST: ? : v b G:5
+SUBST:  ? : v b G:5
 MAP
    ccc
    cOc
@@ -61,10 +61,10 @@ ENDMAP
 ##############################################################################
 # stairs with fountains
 #
-NAME: temple_fountains
-TAGS: temple_entry
+NAME:   temple_fountains
+TAGS:   temple_entry
 ORIENT: float
-SUBST: ? : T:30 U
+SUBST:  ? : T:30 U
 MAP
 ...?...
 .......
@@ -76,8 +76,8 @@ ENDMAP
 ##############################################################################
 # stairs with statues
 #
-NAME: temple_statues
-TAGS: temple_entry
+NAME:   temple_statues
+TAGS:   temple_entry
 ORIENT: float
 MAP
 GOG
@@ -86,10 +86,10 @@ ENDMAP
 ##############################################################################
 # the green room
 #
-NAME: temple_green
-TAGS: temple_entry
+NAME:   temple_green
+TAGS:   temple_entry
 ORIENT: float
-SUBST: ? = =+b
+SUBST:  ? = =+b
 MAP
 bbbb+bbbb
 b.......b
@@ -241,15 +241,15 @@ ENDMAP
 ##############################################################################
 # The garden of good and evil
 #
-NAME: temple_garden
-TAGS: temple_entry no_monster_gen
+NAME:   temple_garden
+TAGS:   temple_entry no_monster_gen
 ORIENT: float
-SUBST: . = .:900 3:30 G:5 T U:5 V:5
-SUBST: ' = .:300 3:30 G:5 T U:5 V:5
-SUBST: ! = .:200 3:30 G:5 T U:5 V:5
-SUBST: ? = .:100 3:30 G:5 T U:5 V:5
-SUBST: _=3., -=l.
-MONS: angel, iron devil, plant
+SUBST:  . = .:900 3:30 G:5 T U:0 V:5
+SUBST:  ' = .:300 3:30 G:5 T U:1 V:5
+SUBST:  ! = .:200 3:30 G:5 T U:2 V:5
+SUBST:  ? = .:100 3:30 G:5 T U:5 V:5
+SUBST:  _=3., -=l.
+MONS:   angel, iron devil, plant
 MAP
             ............................xxxxxxxx
         .............'''''...............-llxxxx
@@ -534,7 +534,6 @@ ENDMAP
 
 ##########################################################################
 # Five rooms temple (David Ploog). 12 + 3 = 5 x 3
-
 NAME:    five_temple
 PLACE:   Temple
 TAGS:    no_rotate

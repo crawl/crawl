@@ -396,7 +396,8 @@ ENDMAP
 NAME:   lemuel_mausoleum_altar
 DEPTH:  D:7-20, Crypt
 MONS:   w:50 human zombie/orc zombie/elf zombie/w:5 ogre zombie/w:5 troll zombie
-MONS:   w:50 human skeleton/orc skeleton/elf skeleton/w:5 ogre skeleton/w:5 troll skeleton
+MONS:   w:50 human skeleton/orc skeleton/elf skeleton/w:5 ogre skeleton/\
+        w:5 troll skeleton
 MONS:   mummy, wight, wraith, necrophage, ghoul
 NSUBST: ? = 1:C / *:1
 SUBST:  1 = 1:25 2 3 4:8 5:6 6:4 7:2
@@ -425,8 +426,12 @@ KFEAT: _ = altar_nemelex_xobeh
 SUBST: b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
 SUBST: G:GTUVblw> , C=c
 KFEAT: z = teleport trap
-MARKER: R = lua:fog_machine { cloud_type="flame", walk_dist=1, size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, spread_rate=3, start_clouds=1 }
-MARKER: B = lua:fog_machine { cloud_type="foul pestilence", walk_dist=1, size=9,  pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, spread_rate=3, start_clouds=1 }
+MARKER: R = lua:fog_machine { cloud_type="flame", walk_dist=1, size=9, \
+            pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
+            spread_rate=3, start_clouds=1 }
+MARKER: B = lua:fog_machine { cloud_type="foul pestilence", walk_dist=1, \
+            size=9,  pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
+            spread_rate=3, start_clouds=1 }
 MAP
 CCCCCCCC+++CCCCCCCC
 Cnnnnnnn...nnnnnnnC

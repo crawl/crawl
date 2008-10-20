@@ -180,16 +180,19 @@ ENDMAP
 ##############################################################################
 # Caught partying
 #
-NAME:  erik_orc_1
-TAGS:  orc_entry no_rotate
-MONS:  orc, orc priest/orc wizard, weight:50 orc warrior/ogre, swamp drake
+NAME:    erik_orc_1
+TAGS:    orc_entry no_rotate
+ORIENT:  float
+MONS:    orc, orc priest / orc wizard
+MONS:    w:50 orc warrior / ogre, swamp drake
 # The drake's name is Bobby. Since you did ask.
-KITEM: 1 = sausage / nothing / animal skin / potion of confusion / potion of paralysis / potion of slowing / potion of degeneration / w:2 potion of speed / w:2 potion of might
-KFEAT: 1 = 1
-ITEM:  club, potion of confusion, slice of pizza, sausage / weight:40 nothing
-ITEM:  potion of confusion / potion of water
+KITEM:   1 = sausage / nothing / animal skin / potion of confusion /\
+             potion of paralysis / potion of slowing /\
+             potion of degeneration / w:2 potion of speed / w:2 potion of might
+KFEAT:   1 = 1
+ITEM:    club, potion of confusion, slice of pizza, sausage / weight:40 nothing
+ITEM:    potion of confusion / potion of water
 SHUFFLE: defO
-ORIENT: float
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.........g..........2x...w4xxx
@@ -205,17 +208,17 @@ ENDMAP
 ##############################################################################
 # C'mon, you *gotta* have a *fort*!
 #
-NAME: erik_orc_2
-TAGS: orc_entry no_pool_fixup no_rotate
-MONS: orc warrior, orc priest/orc wizard, weight:100 orc / orc warrior
+NAME:  erik_orc_2
+TAGS:  orc_entry no_pool_fixup no_rotate
+ORIENT: float
+MONS:  orc warrior, orc priest/orc wizard, weight:100 orc / orc warrior
 : if you.absdepth() >= 10 and crawl.one_chance_in(10) then
 MONS: orc knight
 SUBST: G = .
 : else
-MONS: orc warrior
+MONS:  orc warrior
 SUBST: G = 4
 : end
-ORIENT: float
 SUBST: c = c:1000 x
 MAP
 .............................
@@ -239,7 +242,7 @@ ENDMAP
 #
 NAME:   erik_orc_3
 TAGS:   orc_entry no_item_gen
-MONS:   orc / weight:2 goblin / weight:2 hobgoblin / nothing
+MONS:   orc / w:2 goblin / w:2 hobgoblin / nothing
 MONS:   orc warrior / orc priest / orc wizard / nothing
 MONS:   warg / ogre / nothing
 ORIENT: float
@@ -271,8 +274,11 @@ ENDMAP
 #
 NAME: erik_orc_4
 TAGS: orc_entry no_rotate
-MONS: human/goblin/hobgoblin/weight:2 orc, orc priest, orc
-MONS: orc priest/orc wizard/weight:2 goblin/nothing, orc warrior/warg
+MONS: human / goblin / hobgoblin / w:2 orc
+MONS: orc priest
+MONS: orc
+MONS: orc priest / orc wizard / w:2 goblin / nothing
+MONS: orc warrior / warg
 ORIENT: float
 SUBST: ? : c:60 .
 SUBST: Z : c:60 .
@@ -307,12 +313,12 @@ ENDMAP
 #########################
 # Orcs are a clue, episode I
 #
-NAME: hiddenorc1_lemuel
-TAGS: orc_entry
+NAME:   hiddenorc1_lemuel
+TAGS:   orc_entry
 ORIENT: float
-MONS: orc w:40/orc wizard w:2/orc priest w:2, orc warrior
-SUBST: ? = .x
-SUBST: ! : .$
+MONS:   orc w:40 / orc wizard w:2 / orc priest w:2, orc warrior
+SUBST:  ? = .x
+SUBST:  ! : .$
 MAP
 x??@....@....@??x
 xx??.........??xx
@@ -331,16 +337,16 @@ ENDMAP
 #########################
 # Orcs are a clue, episode II
 #
-NAME: hiddenorc2_lemuel
-TAGS: orc_entry
+NAME:   hiddenorc2_lemuel
+TAGS:   orc_entry
 ORIENT: float
-MONS: orc w:20/orc wizard w:2/orc priest w:2/orc warrior w:1
-SUBST: a : x.
-SUBST: b : x.
-SUBST: c : x.
-SUBST: d : x.
-SUBST: ? = @ x:20 + =
-SUBST: ! : .$
+MONS:   orc w:20 / orc wizard w:2 / orc priest w:2 / orc warrior w:1
+SUBST:  a : x.
+SUBST:  b : x.
+SUBST:  c : x.
+SUBST:  d : x.
+SUBST:  ? = @ x:20 + =
+SUBST:  ! : .$
 MAP
 xx?xxxxxxx?xx
 x111xxxxx111x
@@ -360,13 +366,15 @@ ENDMAP
 #######################
 # Haunted orc entrance
 #
-NAME: zombieorc1_lemuel
-TAGS: orc_entry
+NAME:   zombieorc1_lemuel
+TAGS:   orc_entry
 ORIENT: float
-DEPTH: 11
-MONS: orc zombie/orc skeleton w:2/goblin zombie w:2/hobgoblin zombie w:2/goblin skeleton w:1/hobgoblin skeleton w:1
-MONS: ogre zombie/troll zombie w:3/hill giant zombie w:1
-MONS: hungry ghost/phantom/w:1 wraith, w:1 orc sorcerer/orc priest/nothing
+DEPTH:  11
+MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
+        hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
+MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   hungry ghost / phantom / w:1 wraith
+MONS:   w:1 orc sorcerer / orc priest / nothing
 SUBST:  ? = x . $:1
 MAP
 xxx.xxxxxxxxxxxxxxxxxxx
@@ -393,15 +401,17 @@ ENDMAP
 #######################
 # Haunted orc entrance
 #
-NAME: zombieorc2_lemuel
-TAGS: orc_entry
+NAME:   zombieorc2_lemuel
+TAGS:   orc_entry
 ORIENT: float
-MONS: orc zombie/orc skeleton w:2/goblin zombie w:2/hobgoblin zombie w:2/goblin skeleton w:1/hobgoblin skeleton w:1
-MONS: ogre zombie/troll zombie w:3/hill giant zombie w:1
-MONS: hungry ghost/phantom/w:1 wraith, w:1 orc sorcerer/orc priest
-SUBST: 4 = 34
-SUBST: ? = x . $:1
-DEPTH: 11
+DEPTH:  11
+MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
+        hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
+MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
+MONS:   hungry ghost / phantom / w:1 wraith
+MONS:   w:1 orc sorcerer / orc priest
+SUBST:  4 = 34
+SUBST:  ? = x . $:1
 MAP
 xxxxx..@..xxxxx
 x21....I....12x
@@ -435,14 +445,14 @@ ENDMAP
 
 ###################################
 # mage tower -- either orc with assistants, or ogre with guards
-NAME: mines4_lemuel
-TAGS: mini_float no_rotate
-SUBST: ? = +=
-SUBST: d = $d
-SUBST: I = IG
+NAME:    mines4_lemuel
+TAGS:    mini_float no_rotate
+SUBST:   ? = +=
+SUBST:   d = $d
+SUBST:   I = IG
 SHUFFLE: 112/334
-MONS: orc sorcerer, orc/orc wizard, ogre-mage, ogre/nothing
-ITEM: any book
+MONS:    orc sorcerer, orc / orc wizard, ogre-mage, ogre / nothing
+ITEM:    any book
 MAP
   xxxx?xxxx
  xx2.....2xx
@@ -457,10 +467,10 @@ ENDMAP
 
 ###################################
 # warg stables, with goblin stableboy
-NAME: mines5_lemuel
-TAGS: mini_float
+NAME:  mines5_lemuel
+TAGS:  mini_float
 SUBST: ?: wx
-MONS: warg/wolf,goblin
+MONS:  warg / wolf,goblin
 MAP
 x???????x
 xwwwwwwwx
@@ -493,7 +503,7 @@ ENDMAP
 
 ###################################
 # Beogh 2
-NAME:  mines2_david
+NAME:   mines2_david
 TAGS:   allow_dup
 KFEAT:  C = altar_beogh
 MONS:   orc / orc warrior w:1
@@ -525,12 +535,12 @@ ENDMAP
 ###################################
 # treasure chamber with oklob plant
 #
-NAME: mines3_lemuel
-TAGS: mini_float
+NAME:  mines3_lemuel
+TAGS:  mini_float
 SUBST: ? = +=.
 SUBST: ! = x.
 SUBST: $ = $:30 *
-MONS: oklob plant
+MONS:  oklob plant
 MAP
     !.!
    !x?x!
@@ -557,7 +567,8 @@ SUBST:   6 : 6 .
 NSUBST:  0 = 3=9. / *=0.
 SUBST:   X = xx. b:2 I:1 $:1 *:1
 MONS:    patrolling orc warlord
-MONS:    patrolling orc sorcerer, patrolling orc high priest
+MONS:    patrolling orc sorcerer
+MONS:    patrolling orc high priest
 MONS:    deep elf fighter / deep elf summoner / deep elf conjurer / deep elf priest
 MONS:    deep elf soldier / deep elf mage / deep elf priest
 MONS:    deep elf soldier

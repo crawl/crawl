@@ -14,9 +14,12 @@ default-depth: D:12-26
 # note that other than the imps, the demons here cannot fly
 NAME:   hellmouth_1
 TAGS:   no_rotate
-MONS:   imp / quasit / shadow imp, hellion / rotting devil / iron devil / hairy devil / hell hound
-ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / wand of draining 
-ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
+MONS:   imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
+        hairy devil / hell hound
+ITEM:   good_item demon blade / good_item demon whip /\
+        good_item demon trident / wand of draining 
+ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology /\
+        scroll of torment
 KFEAT:  A = enter_hell
 ORIENT: float
 SUBST:  d=de, ?:?.l, ?=l.
@@ -50,9 +53,12 @@ TAGS:   no_monster_gen no_rotate
 ORIENT: float
 MONS:   imp / quasit / shadow imp / manes / lemure
 MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
-ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / wand of draining 
-ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology / scroll of torment
-ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / w:30 nothing
+ITEM:   good_item demon blade / good_item demon whip /\
+        good_item demon trident / wand of draining 
+ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology /\
+        scroll of torment
+ITEM:   good_item demon blade / good_item demon whip /\
+        good_item demon trident / w:30 nothing
 KFEAT:  A = enter_hell
 SUBST:  d=de, ?:?.l, ?=l.
 SUBST:  b : b:30 c v .
@@ -83,7 +89,8 @@ ENDMAP
 # Hellmouth 3 (Lemuel)
 NAME:   hellmouth_3
 MONS:   weight:50 imp / quasit / shadow imp / manes / lemure, hell hound
-ITEM:   good_item demon blade / good_item demon whip / good_item demon trident / nothing
+ITEM:   good_item demon blade / good_item demon whip /\
+        good_item demon trident / nothing
 ORIENT: float
 KFEAT:  A = enter_hell
 SUBST:  ? : . l ?:40, ?=l.
@@ -161,6 +168,7 @@ ENDMAP
 
 NAME:   lemuel_mystery_crypt
 DEPTH:  Dis:*
+ORIENT: float
 MONS:   mummy / mummy priest / greater mummy, lich
 NSUBST: 1:1=} / *=1
 NSUBST: 1:1=) / *=1
@@ -168,7 +176,6 @@ NSUBST: 1:1=] / *=1
 SUBST:  = : =+
 SUBST:  }=}>, )=)>, ]=]>
 # occasionally (12.5%), all downstairs are in this vault
-ORIENT: float
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
 xxFxxxx1.x1x.1xxx2..=1x

@@ -61,19 +61,19 @@ ENDMAP
 #############################################################################
 # Cooperation Not Competition (Rot)
 #
-NAME: hive_david_3
-TAGS: hive_entry
-ORIENT: float
-ITEM: honeycomb, honeycomb, honeycomb / royal jelly, royal jelly
-MONS: killer bee larva / killer bee, queen bee
-MONS: giant ant / soldier ant, queen ant
-MONS: yellow wasp / nothing, red wasp / yellow wasp
-MONS: bumblebee
+NAME:    hive_david_3
+TAGS:    hive_entry
+ORIENT:  float
+ITEM:    honeycomb, honeycomb, honeycomb / royal jelly, royal jelly
+MONS:    killer bee larva / killer bee, queen bee
+MONS:    giant ant / soldier ant, queen ant
+MONS:    yellow wasp / nothing, red wasp / yellow wasp
+MONS:    bumblebee
 SHUFFLE: XY, VW, defgOR, 34/56
-SUBST: V==, W=a, X==, Y=a
-SUBST: ? = a .:20
-SUBST: 1 : 1 7:2
-SUBST: 7 = 7 .
+SUBST:   V==, W=a, X==, Y=a
+SUBST:   ? = a .:20
+SUBST:   1 : 1 7:2
+SUBST:   7 = 7 .
 MAP
    .......   ...............
    ..??...   ..??aaa?aaa???.
@@ -92,15 +92,16 @@ ENDMAP
 ##############################################################################
 # Bears Won't Share
 #
-NAME: erik_hive_1
-TAGS: hive_entry
-MONS: w:200 bear / polar bear / w:100 grizzly bear / w:100 black bear
-MONS: killer bee, queen bee, killer bee larva
-ITEM: honeycomb, royal jelly
-SUBST: ? = a.
-SUBST: ; = 1:1 .
+NAME:    erik_hive_1
+TAGS:    hive_entry
+ORIENT:  float
+MONS:    w:200 bear / polar bear / w:100 grizzly bear / w:100 black bear
+MONS:    killer bee, queen bee, killer bee larva
+ITEM:    honeycomb, royal jelly
+SUBST:   ? = a.
+SUBST:   ; = 1:1 .
 SHUFFLE: deO
-ORIENT: float
+
 MAP
   ...............  
  ;;;;;...?aaa???.  
@@ -116,12 +117,12 @@ ENDMAP
 ##############################################################################
 # Bucolic
 #
-NAME: erik_hive_2
-TAGS: hive_entry
-MONS: plant, killer bee
-SUBST: 1 = 1.
-SUBST: 2 = 2.
+NAME:   erik_hive_2
+TAGS:   hive_entry
 ORIENT: float
+MONS:   plant, killer bee
+SUBST:  1 = 1.
+SUBST:  2 = 2.
 MAP
  1.....2.......1.1   
  ..1.....1...2..1.   
@@ -177,7 +178,10 @@ NAME:      eino_hive_1
 TAGS:      hive_entry no_monster_gen
 ORIENT:    float
 # i'm not sure water creatures would fit this one.. change if you strongly think otherwise
-MONS:      killer bee / killer bee larva w:2, queen bee / killer bee w:2, oklob plant / plant w:1, plant / nothing
+MONS:      killer bee / killer bee larva w:2
+MONS:      queen bee / killer bee w:2
+MONS:      oklob plant / plant w:1
+MONS:      plant / nothing
 KMONS:     R = killer bee / killer bee larva w:2
 KFEAT:     R = R
 KMONS:     M = plant
@@ -227,7 +231,6 @@ ENDMAP
 
 ##########################################
 # Bees in trees by the pond
-
 NAME:      eino_hive_2
 TAGS:      hive_entry
 ORIENT:    float
@@ -254,9 +257,9 @@ ENDMAP
 # Hive vaults
 ##############################################################################
 
-NAME: Hive_Balancer
-DEPTH: Hive:*
-TAGS: dummy
+NAME:   Hive_Balancer
+DEPTH:  Hive:*
+TAGS:   dummy
 CHANCE: 200
 MAP
 x
@@ -264,7 +267,7 @@ ENDMAP
 # Note the higher weight to the empty vault:
 # this is because vaults in the Hive should be rare
 
-NAME: lemuel_Hive_Pool
+NAME:  lemuel_Hive_Pool
 DEPTH: Hive:*
 SUBST: W=W. ,  ?:W. , !:W.
 MAP
@@ -284,8 +287,8 @@ MAP
         WW
 ENDMAP
 
-NAME: lemuel_Hive_Moat
-DEPTH: Hive:*
+NAME:   lemuel_Hive_Moat
+DEPTH:  Hive:*
 ORIENT: float
 MAP
       www
@@ -302,18 +305,20 @@ MAP
       www
 ENDMAP
 
-NAME: lemuel_Hive_Zombies
-DEPTH: Hive:1-3
-ORIENT: float
-TAGS: no_monster_gen
-MONS: killer bee zombie/weight:2 killer bee larva zombie, necromancer, plant
+NAME:    lemuel_Hive_Zombies
+DEPTH:   Hive:1-3
+ORIENT:  float
+TAGS:    no_monster_gen
+MONS:    killer bee zombie / weight:2 killer bee larva zombie
+MONS:    necromancer
+MONS:    plant
 SHUFFLE: {}
-SUBST: . = .:50 1:4 3:1
-SUBST: > = <>
-SUBST: }=} .:3
-SUBST: {={ .:3
-SUBST: == +:5 = .:3
-SUBST: ? = a.
+SUBST:   . = .:50 1:4 3:1
+SUBST:   > = <>
+SUBST:   }=} .:3
+SUBST:   {={ .:3
+SUBST:   == +:5 = .:3
+SUBST:   ? = a.
 MAP
        aaaaaa
       aa?..?aa
@@ -342,15 +347,15 @@ cccccccaa?.......?aaaa
      aaa
 ENDMAP
 
-NAME: lemuel_Hive_Oklob
+NAME:  lemuel_Hive_Oklob
 DEPTH: Hive:*
-MONS: oklob plant
+MONS:  oklob plant
 MAP
 1
 ENDMAP
 
 NAME: lemuel_Big_Bunch_of_Bees
-MONS: killer bee/weight:1 killer bee larva
+MONS: killer bee / weight:1 killer bee larva
 MAP
       11111
     111111111
@@ -365,14 +370,14 @@ MAP
       11111
 ENDMAP
 
-NAME: lemuel_troublesome_eels
+NAME:  lemuel_troublesome_eels
 DEPTH: Hive:*
 KFEAT: X = deep_water
 KMONS: X = electrical eel
 SUBST: W=w1.
 SUBST: . = 1:1 .
 SUBST: 1 = 1 .:5
-MONS: plant
+MONS:  plant
 MAP
   ....111....  
  ...1111111... 
@@ -389,12 +394,12 @@ MAP
   ....111....  
 ENDMAP
 
-NAME: lemuel_wasp_nest
-DEPTH: Hive:2-3
-MONS: yellow wasp/weight:2 red wasp
+NAME:   lemuel_wasp_nest
+DEPTH:  Hive:2-3
+MONS:   yellow wasp / weight:2 red wasp
 CHANCE: 1
-SUBST: 1=1 .:15
-SUBST: ?=a.
+SUBST:  1=1 .:15
+SUBST:  ?=a.
 MAP
      a?@?a
      a?.?a
@@ -413,8 +418,8 @@ aa?...a.a...?aa
       aaa
 ENDMAP
 
-NAME: lemuel_hive_grid_a
-DEPTH: Hive:*
+NAME:   lemuel_hive_grid_a
+DEPTH:  Hive:*
 CHANCE: 4
 MAP
 a.a.a.a.a.a.a.a.a
@@ -430,8 +435,8 @@ aa.a.a.a.a.a.a.aa
 a.a.a.a.a.a.a.a.a
 ENDMAP
 
-NAME: lemuel_hive_grid_b
-DEPTH: Hive:*
+NAME:   lemuel_hive_grid_b
+DEPTH:  Hive:*
 CHANCE: 6
 MAP
 a.a.a.a.aa
@@ -443,8 +448,8 @@ aa.a.a.a.a
 a.a.a.a.aa
 ENDMAP
 
-NAME: lemuel_hive_grid_c
-DEPTH: Hive:*
+NAME:   lemuel_hive_grid_c
+DEPTH:  Hive:*
 CHANCE: 10
 MAP
      aa.aa
@@ -466,11 +471,11 @@ ENDMAP
 ############################################################################
 # Hive:4 beehive
 #
-NAME: beehive
-PLACE: Hive:4
+NAME:   beehive
+PLACE:  Hive:4
 ORIENT: encompass
-MONS: queen bee, killer bee, killer bee larva, plant, yellow wasp
-MONS: random, random
+MONS:   queen bee, killer bee, killer bee larva, plant, yellow wasp
+MONS:   random, random
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

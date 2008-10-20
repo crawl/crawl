@@ -92,15 +92,17 @@ NAME:    david_vaults_4
 TAGS:    vault_entry
 ORIENT:  float
 SHUFFLE: 123456
-MONS: dragon / golden dragon / ice dragon / iron dragon / shadow dragon / storm dragon
-MONS: freezing wraith / shadow wraith / wight / wraith
-MONS: deep troll / iron troll / rock troll / troll
-MONS: cyclops / ettin / fire giant / frost giant / hill giant / stone giant / titan
-MONS: necromancer / shapeshifter / vault guard / wizard
-MONS: nothing
-MONS: shapeshifter / weight:30 nothing
-SUBST: 1=.1, 2=.2, 3=.3, 4=.4, 5=.5, *:*.%
-SUBST: x : xcv
+MONS:    dragon / golden dragon / ice dragon / iron dragon / shadow dragon /\
+         storm dragon
+MONS:    freezing wraith / shadow wraith / wight / wraith
+MONS:    deep troll / iron troll / rock troll / troll
+MONS:    cyclops / ettin / fire giant / frost giant / hill giant /\
+         stone giant / titan
+MONS:    necromancer / shapeshifter / vault guard / wizard
+MONS:    nothing
+MONS:    shapeshifter / weight:30 nothing
+SUBST:   1=.1, 2=.2, 3=.3, 4=.4, 5=.5, *:*.%
+SUBST:   x : xcv
 MAP
 @..........@
 .xxxxxxxxxx.
@@ -120,10 +122,10 @@ ENDMAP
 NAME:   david_vaults_5
 TAGS:   vault_entry
 ORIENT: float
-SUBST: ! : ! .
-SUBST: ? : ? .
-SUBST: ? = .:30 0:10 9:4 8:1 %:10 *:4 |:1
-SUBST: ! = .:30 0:10 9:4 8:1 %:10 *:4 |:1
+SUBST:  ! : ! .
+SUBST:  ? : ? .
+SUBST:  ? = .:30 0:10 9:4 8:1 %:10 *:4 |:1
+SUBST:  ! = .:30 0:10 9:4 8:1 %:10 *:4 |:1
 MAP
 xxxxxxxxxxxxxx
 xOx!x!x?x!x?xx
@@ -140,10 +142,10 @@ ENDMAP
 ##############################################################################
 # The Guard of Blades
 # 
-NAME: erik_vaults_1
-TAGS: vault_entry
-MONS: dancing weapon
-ORIENT: float
+NAME:    erik_vaults_1
+TAGS:    vault_entry
+MONS:    dancing weapon
+ORIENT:  float
 SHUFFLE: vcxxx 
 MAP
 .............
@@ -160,10 +162,10 @@ ENDMAP
 ##############################################################################
 # Above As Below
 # 
-NAME: erik_vaults_2
-TAGS: vault_entry
-MONS: vault guard
-ORIENT: float
+NAME:    erik_vaults_2
+TAGS:    vault_entry
+MONS:    vault guard
+ORIENT:  float
 SHUFFLE: vxxx, bcc
 MAP
 vvvvvv.vvvvvv

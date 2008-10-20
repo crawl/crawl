@@ -33,7 +33,9 @@ ENDMAP
 NAME:  tombwall_bobbens
 TAGS:  allow_dup
 DEPTH: Crypt
-MONS:  w:5 small zombie/large zombie/w:1 large abomination/w:1 small abomination/w:1 skeletal warrior/w:1 necrophage/w:1 ghoul/w:1 rotting hulk/w:5 small skeleton/large skeleton/w:3 nothing
+MONS:  w:50 small zombie / w:100 large zombie / skeletal warrior /  ghoul / \
+       large abomination / small abomination / necrophage / rotting hulk / \
+       w:50 small skeleton / w:100 large skeleton / w:30 nothing
 MAP
 ccccccccccccccccccccccc
 ccc1c1c1c1c1c1c1c1c1ccc
@@ -266,7 +268,7 @@ MONS:   lich
 MONS:   necromancer
 MONS:   skeletal warrior
 MONS:   flying skull
-MONS:   skeletal warrior/w:20 large skeleton/w:5 small skeleton/w:5 nothing
+MONS:   w:20 skeletal warrior / w:40 large skeleton / small skeleton / nothing
 # vampire layout
 : elseif brnd > 4 then
 MONS:   vampire mage
@@ -275,16 +277,18 @@ MONS:   vampire knight
 MONS:   vampire
 MONS:   skeletal warrior/wraith
 MONS:   dancing weapon
-MONS:   vampire/skeletal warrior/large zombie/w:5 small zombie/wraith/w:5 nothing
+MONS:   vampire / skeletal warrior / large zombie / w:5 small zombie / \
+        wraith / w:5 nothing
 # ghost layout
 : elseif brnd > 0 then
 MONS:   curse skull
 MONS:   crystal golem
 MONS:   lich
 MONS:   spectral warrior
-MONS:   flayed ghost/wraith/freezing wraith/spectral warrior
+MONS:   flayed ghost / wraith / freezing wraith / spectral warrior
 MONS:   flying skull
-MONS:   flayed ghost/wraith/freezing wraith/spectral warrior/hungry ghost/large zombie/w:5 small zombie/w:5 nothing
+MONS:   flayed ghost / wraith / freezing wraith / spectral warrior / \
+        hungry ghost / large zombie / w:5 small zombie / w:5 nothing
 # mummy layout - rare
 : else
 MONS:   greater mummy
@@ -293,7 +297,7 @@ MONS:   mummy priest
 MONS:   mummy priest
 MONS:   guardian mummy
 MONS:   flying skull
-MONS:   mummy/guardian mummy/w:5 nothing
+MONS:   mummy / guardian mummy / w:5 nothing
 : end
 SUBST:  ; = .:6 ~:2 ^:1
 NSUBST: / = 1:| / 2:* / *:%
@@ -378,7 +382,8 @@ KMONS:  N = necromancer
 KFEAT:  H = .
 KMONS:  H = hell knight
 KFEAT:  M = .
-KMONS:  M = large zombie/small zombie/large skeleton/small skeleton/ghoul/necrophage
+KMONS:  M = large zombie / small zombie / large skeleton / small skeleton / \
+            ghoul / necrophage
 KFEAT:  h = .
 KMONS:  h = titan zombie/dragon zombie/golden dragon zombie
 # red metal walls

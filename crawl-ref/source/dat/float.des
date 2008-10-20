@@ -99,7 +99,8 @@ ORIENT:  float
 SHUFFLE: 1X / 1X / 2l / 3Y
 SUBST:   X=x, Y:x.
 MONS:    ogre, iron devil, nothing
-ITEM:    potion of heal wounds / potion of speed / potion of berserk rage / scroll of blinking
+ITEM:    potion of heal wounds / potion of speed / potion of berserk rage /\
+         scroll of blinking
 MAP
         xx@xx
         x...x
@@ -129,12 +130,13 @@ ENDMAP
 # Starter slime pit
 #
 # The slime creature or amoeba may seem too tough for the level where this appears,
-# but since they are normal speed with no range attacks, they can be escaped
+# but since they are normal speed with no range attacks, they can be escaped.
 #
 NAME:   slime_lemuel
 DEPTH:  D:6-16, Lair
 ORIENT: float
-MONS:   w:20 ooze/jelly/fungus, slime creature/giant amoeba/oklob plant
+MONS:   w:20 ooze / jelly / fungus
+MONS:   slime creature / giant amoeba / oklob plant
 MAP
 xxxxxxxxxx
 xxxx111xxx
@@ -151,8 +153,9 @@ ENDMAP
 NAME:    MiniTomb
 ORIENT:  float
 DEPTH:   D:15-26, Crypt
-MONS:    large zombie/nothing, mummy, patrolling guardian mummy
-MONS:    patrolling greater mummy, large zombie
+MONS:    large zombie / nothing
+MONS:    mummy, patrolling guardian mummy, patrolling greater mummy
+MONS:    large zombie
 MONS:    mummy / nothing
 SHUFFLE: 2F, cbv
 MAP
@@ -328,7 +331,7 @@ ENDMAP
 NAME:    vampire
 ORIENT:  float
 DEPTH:   D:12-26, Vault, Crypt
-MONS:    rat/grey rat/w:6 green rat/w:3 orange rat/w:20 giant bat
+MONS:    rat / grey rat / w:6 green rat / w:3 orange rat / w:20 giant bat
 MONS:    flying skull, human zombie
 MONS:    vampire, vampire mage, vampire knight
 KITEM:   > = any good_item
@@ -404,7 +407,7 @@ ENDMAP
 # considered okay. Has between 1 and 3 oklob plants.
 # Single oklob at absolute depth 10, expect 2 oklobs at depth 20.
 # Rarely (2.5% chance) the whole vault is enclosed. This is the hardest case,
-# and the walls are always diggable then. 
+# and the walls are always diggable then.
 #
 NAME:    oklob_3
 DEPTH:   D:18-27, Lair:2-10, Elf:2-7
@@ -456,8 +459,10 @@ KFEAT: F = w:150 w / w:70 W / ~ / . / x
 KFEAT: G = x / . / w / W
 KFEAT: H = . / W
 KMONS: D = Plant / w:200 nothing
-KMONS: E = w:2 slime creature / swamp worm / giant blowfly / w:2 giant mosquito / w:1 electrical eel / w:1000 nothing
-KMONS: F = w:2 slime creature / swamp worm / giant blowfly / w:2 giant mosquito / w:2 electrical eel / w:1000 nothing
+KMONS: E = w:2 slime creature / swamp worm / giant blowfly /\
+           w:2 giant mosquito / w:1 electrical eel / w:1000 nothing
+KMONS: F = w:2 slime creature / swamp worm / giant blowfly /\
+           w:2 giant mosquito / w:2 electrical eel / w:1000 nothing
 KMONS: H = swamp drake / swamp dragon / hydra / w:20 nothing
 KITEM: H = any good_item / any potion / w:20 nothing / gold
 MAP
@@ -484,19 +489,20 @@ ENDMAP
 ###########################
 # Another low-level vault - LP
 
-NAME:  reptile_caves
-DEPTH: D:10-13, Lair, Snake
-MONS:  giant gecko/giant newt, giant lizard, giant iguana, firedrake/swamp drake
-MONS:  snake, brown snake, yellow snake
-SUBST: 4 = 34
-SUBST: 3 = 3:20 2
-SUBST: 2 = 2:20 1
-SUBST: 1 = 1.
+NAME:    reptile_caves
+DEPTH:   D:10-13, Lair, Snake
+ORIENT:  float
+MONS:    giant gecko / giant newt, giant lizard, giant iguana
+MONS:    firedrake / swamp drake
+MONS:    snake, brown snake, yellow snake
+SUBST:   4 = 34
+SUBST:   3 = 3:20 2
+SUBST:   2 = 2:20 1
+SUBST:   1 = 1.
 SHUFFLE: ab/cd
-SUBST: a = w, b = x, c = x, d = .
+SUBST:   a = w, b = x, c = x, d = .
 SHUFFLE: 123/567
-SUBST: X=x.
-ORIENT: float
+SUBST:   X=x.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxXW**wXxxxxxxxxxxxxxxX**XXx
@@ -551,9 +557,13 @@ MONS:   elf; robe|leather armour . w:24 quarterstaff|w:1 lajatang|w:75 nothing
 MONS:   ghoul / necrophage / rotting hulk / vampire
 MONS:   wizard / necromancer
 MONS:   big kobold / kobold demonologist
-MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage / w:2 deep elf priest
-MONS:   Ijyb/Blork the Orc/Urug/Erolcha/Snorg/Terence/Jessica/Sigmund/Psyche/Michael/Erica/Norbert/Agnes/Maud/Louise/Rupert/Wayne/Duane/Norris/goblin
-KITEM:  ! = any potion/potion of confusion, any potion/potion of paralysis, any potion/potion of slowing
+MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\
+        w:2 deep elf priest
+MONS:   Ijyb / Blork the Orc / Urug / Erolcha / Snorg / Terence / Jessica /\
+        Sigmund / Psyche / Michael / Erica / Norbert / Agnes / Maud /\
+        Louise / Rupert / Wayne / Duane / Norris / goblin
+KITEM:  ! = any potion / potion of confusion, \
+            any potion / potion of paralysis, any potion / potion of slowing
 KITEM:  $ = q:132 gold / q:66 gold / q:33 gold
 MAP
 @............... 
