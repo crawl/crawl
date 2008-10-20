@@ -2993,7 +2993,14 @@ std::string keyed_mapspec::set_mons(const std::string &s, bool fix)
     err.clear();
     mons.clear();
 
-    return (mons.add_mons(s, fix));
+    std::vector<std::string> segments = split_string(",", s);
+    for (int i = 0, size = segments.size(); i < size; ++i)
+    {
+        const std::string error = mons.add_mons(segments[i], fix);
+        if (!error.empty())
+            return (error);
+    }
+    return ("");
 }
 
 std::string keyed_mapspec::set_item(const std::string &s, bool fix)

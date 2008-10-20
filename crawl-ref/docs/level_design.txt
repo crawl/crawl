@@ -690,7 +690,6 @@ KMONS:    ? = orc priest / w:3 deep elf priest
           places a rat on a shallow water square for all occurrences of Z.
 
 
---- The following feature is not yet working --------------------------------
           KMONS: also allows you to specify alternative monsters if the
           primary monster you want to place is unavailable (because it
           is a unique that was already generated). For instance, if you want
@@ -699,7 +698,6 @@ KMONS:    ? = orc priest / w:3 deep elf priest
             KMONS: n = Terence, Michael, Erica, human
           Or if you want to pick randomly:
             KMONS: n = Terence / Michael / Erica, human
------------------------------------------------------------------------------
 
 KMASK:    Z = no_monster_gen
 
