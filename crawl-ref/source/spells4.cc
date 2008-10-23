@@ -1862,7 +1862,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             goto do_terrain;
         }
 
-        mprf("%s explodes!", name_cap_the.c_str());
+        mprf("%s shatters!", name_cap_the.c_str());
         goto all_done;
     }
 
@@ -2024,7 +2024,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     if (explode && beam.damage.num > 0)
     {
         if (what != NULL)
-            mprf("The %s explodes!", what);
+            mprf("The %s shatters!", what);
 
         explosion(beam, hole, true);
 
