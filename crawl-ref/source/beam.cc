@@ -452,7 +452,7 @@ const zap_info zap_data[] = {
         false,
         false
     },
-    
+
     {
         ZAP_HEALING,
         "0",
@@ -497,7 +497,7 @@ const zap_info zap_data[] = {
         true,
         false
     },
-  
+
     {
         ZAP_COLD,
         "bolt of cold",
@@ -512,7 +512,7 @@ const zap_info zap_data[] = {
         true,
         false
     },
-        
+
     {
         ZAP_CONFUSION,
         "0",
@@ -632,7 +632,7 @@ const zap_info zap_data[] = {
         true,
         false
     },
-    
+
     {
         ZAP_NEGATIVE_ENERGY,
         "bolt of negative energy",
@@ -1108,7 +1108,7 @@ const zap_info zap_data[] = {
         true,
         false
     },
-    
+
     {
         ZAP_BREATHE_STEAM,
         "ball of steam",
@@ -1329,7 +1329,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
 #endif
         return;
     }
-    
+
     // Fill
     pbolt.name = zinfo->name;
     pbolt.flavour = zinfo->flavour;
@@ -3918,7 +3918,7 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
         // Simple cases for scroll burns.
         if (beam.flavour == BEAM_LAVA || beam.name == "hellfire")
             expose_player_to_element(BEAM_LAVA, burn_power);
-        
+
         // More complex (geez..)
         if (beam.flavour == BEAM_FIRE && beam.name != "ball of steam")
             expose_player_to_element(BEAM_FIRE, burn_power);
@@ -3926,7 +3926,7 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
         // Potions exploding.
         if (beam.flavour == BEAM_COLD)
             expose_player_to_element(BEAM_COLD, burn_power);
-        
+
         if (beam.flavour == BEAM_ACID)
             splash_with_acid(5);
 
@@ -3934,7 +3934,7 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
         if (beam.in_explosion_phase && beam.flavour == BEAM_SPORE)
             expose_player_to_element(BEAM_SPORE, burn_power);
     }
-        
+
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Damage: %d", hurted );
 #endif

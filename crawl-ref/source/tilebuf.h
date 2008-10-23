@@ -112,7 +112,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // template implementation
 
-template<class V> 
+template<class V>
 inline VertBuffer<V>::VertBuffer(const GenericTexture *tex, int prim) :
     m_tex(tex), m_prim(prim)
 {

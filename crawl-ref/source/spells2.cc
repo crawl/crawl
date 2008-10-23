@@ -632,7 +632,7 @@ void cast_toxic_radiance(void)
 void cast_refrigeration(int pow)
 {
     mpr("The heat is drained from your surroundings.");
-    
+
     you.flash_colour = LIGHTCYAN;
     viewwindow(true, false);
     more();

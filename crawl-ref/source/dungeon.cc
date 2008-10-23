@@ -1275,7 +1275,7 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
     return success;
 }
 
-static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &), 
+static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
     dungeon_feature_type feat)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
@@ -1317,7 +1317,7 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
 
                 if (travel_point_distance[rnd.x][rnd.y] != nzones)
                     continue;
-               
+
                 grd(rnd) = feat;
                 return (true);
             }
@@ -1359,7 +1359,7 @@ static bool _add_connecting_escape_hatches()
     return (_add_feat_if_missing(_is_perm_down_stair, DNGN_ESCAPE_HATCH_DOWN));
 }
 
-static bool _branch_entrances_are_connected() 
+static bool _branch_entrances_are_connected()
 {
     // Returns true if all branch entrances on the level are connected to
     // stone stairs.
@@ -8121,7 +8121,7 @@ static bool _fixup_interlevel_connectivity()
         if (up_region[i] == -1)
             return (false);
     }
-    
+
     region_connected.resize(max_region + 1);
     for (unsigned int i = 0; i < region_connected.size(); i++)
         region_connected[i] = false;
@@ -8183,7 +8183,7 @@ static bool _fixup_interlevel_connectivity()
         }
         if (!unique_region)
             continue;
-      
+
         // Try first to assign to any connected regions.
         for (int j = 0; j < 3; j++)
         {

@@ -858,7 +858,7 @@ static int damage_or_escape_net(int hold)
     {
         if (can_cut_meat(*you.weapon()))
             damage++;
-            
+
         int brand = get_weapon_brand(*you.weapon());
         if (brand == SPWPN_FLAMING || brand == SPWPN_VORPAL)
             damage++;

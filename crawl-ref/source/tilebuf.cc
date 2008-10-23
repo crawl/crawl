@@ -193,7 +193,7 @@ void TileBuffer::set_tex(const TilesTexture *tex)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// ShapeBuffer 
+// ShapeBuffer
 
 ShapeBuffer::ShapeBuffer() : VertBuffer<PCVert>(NULL, GL_QUADS)
 {
@@ -231,7 +231,7 @@ void ShapeBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// LineBuffer 
+// LineBuffer
 
 LineBuffer::LineBuffer() : VertBuffer<PCVert>(NULL, GL_LINES)
 {

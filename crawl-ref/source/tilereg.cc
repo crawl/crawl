@@ -2385,7 +2385,7 @@ int MenuRegion::mouse_entry(int x, int y)
         }
     }
 
-    return -1; 
+    return -1;
 }
 
 int MenuRegion::handle_mouse(MouseEvent &event)

@@ -1766,7 +1766,7 @@ void _merge_ammo_in_inventory(int slot)
     {
         if (i == slot || !is_valid_item(you.inv[i]))
             continue;
-        
+
         // Merge with the thrower slot. This could be a bad
         // thing if you're wielding IDed ammo and firing from
         // an unIDed stack...but that's a pretty remote case.
@@ -4293,11 +4293,11 @@ static void _vulnerability_scroll()
             monsters& mon = menv[targ_monst];
             for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
                 mon.del_ench(lost_enchantments[i], true, true);
-            
+
             // If relevant, monsters have their MR halved.
             if (!mons_immune_magic(&mon))
                 mon.add_ench(lowered_mr);
-            
+
             // Annoying but not enough to turn friendlies against you.
             behaviour_event(&mon, ME_ANNOY, MHITYOU);
         }
@@ -4527,7 +4527,7 @@ void read_scroll(int slot)
             id_the_scroll = false;
         }
         else
-        {             
+        {
             // Also sets wield_change.
             do_curse_item( *you.weapon(), false );
             learned_something_new(TUT_YOU_CURSED);
