@@ -736,6 +736,10 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("you cast spells");
         break;
 
+    case GOD_BEOGH:
+        dislikes.push_back("you destroy orcish idols");
+        break;
+
     default:
         break;
     }
