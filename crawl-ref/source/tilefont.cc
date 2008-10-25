@@ -210,21 +210,22 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
             for (int x = -1; x <= bmp->width; x++)
                 for (int y = -1; y <= bmp->rows; y++)
                 {
-                    bool valid = x >= 0 && y >= 0 &&
-                                 x < bmp->width && y < bmp->rows;
+                    bool x_valid = x >= 0 && x < bmp->width;
+                    bool y_valid = y >= 0 && y < bmp->rows;
+                    bool valid = x_valid && y_valid;
                     unsigned char orig = valid ? bmp->buffer[x + charw * y] : 0;
 
                     unsigned char edge = 0;
-                    if (x > 0)
+                    if (y_valid && x > 0)
                         edge = std::max(bmp->buffer[(x-1) + charw * y], edge);
-                    if (y > 0)
+                    if (x_valid && y > 0)
                         edge = std::max(bmp->buffer[x + charw * (y-1)], edge);
-                    if (x < bmp->width - 1)
+                    if (y_valid && x < bmp->width - 1)
                         edge = std::max(bmp->buffer[(x+1) + charw * y], edge);
-                    if (y < bmp->width - 1)
+                    if (x_valid && y < bmp->width - 1)
                         edge = std::max(bmp->buffer[x + charw * (y+1)], edge);
 
-                    unsigned int idx = offset_x + x + (offset_y + y) * width;
+                    unsigned int idx = offset_x+x+1 + (offset_y+y+1) * width;
                     idx *= 4;
 
                     pixels[idx] = orig;
