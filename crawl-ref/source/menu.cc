@@ -69,6 +69,11 @@ void MenuDisplayTile::draw_more()
 {
     tiles.get_menu()->set_more(m_menu->get_more());
 }
+
+void MenuDisplayTile::set_num_columns(int columns)
+{
+    tiles.get_menu()->set_num_columns(columns);
+}
 #endif
 
 Menu::Menu( int _flags, const std::string& tagname )
@@ -83,6 +88,7 @@ Menu::Menu( int _flags, const std::string& tagname )
 #else
     mdisplay = new MenuDisplayText(this);
 #endif
+    mdisplay->set_num_columns(1);
     set_flags(flags);
 }
 
@@ -102,6 +108,7 @@ Menu::Menu( const formatted_string &fs )
 #else
     mdisplay = new MenuDisplayText(this);
 #endif
+    mdisplay->set_num_columns(1);
 
     int colour = LIGHTGREY;
     int last_text_colour = LIGHTGREY;

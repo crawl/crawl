@@ -329,6 +329,27 @@ inline void cap(int &i, int max)
         i = 0;
 }
 
+char &formatted_string::operator [] (size_t idx)
+{
+    size_t rel_idx = idx;
+    int size = ops.size();
+    for (int i = 0; i < size; ++i)
+    {
+        if (ops[i] != FSOP_TEXT)
+            continue;
+
+        size_t len = ops[i].text.length();
+        if (rel_idx >= len)
+            rel_idx -= len;
+        else
+            return ops[i].text[rel_idx];
+    }
+    ASSERT(!"Invalid index");
+    char *invalid = NULL;
+    return *invalid;
+}
+
+
 std::string formatted_string::tostring(int s, int e) const
 {
     std::string st;

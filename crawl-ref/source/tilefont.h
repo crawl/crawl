@@ -57,10 +57,24 @@ public:
     unsigned int char_height() const { return m_max_advance.y; }
 
     unsigned int string_width(const char *text);
+    unsigned int string_width(const formatted_string &str);
+    unsigned int string_height(const char *text);
+    unsigned int string_height(const formatted_string &str);
+
+    // Try to split this string to fit in w x h pixel area.
+    formatted_string split(const formatted_string &str, unsigned int max_width,
+                           unsigned int max_height);
 
     const GenericTexture *font_tex() const { return &m_tex; }
 
 protected:
+    void store(FontBuffer &buf, float &x, float &y,
+               const std::string &s, const VColour &c, float orig_x);
+    void store(FontBuffer &buf, float &x, float &y, const formatted_string &fs,
+               float orig_x);
+
+    int find_index_before_width(const char *str, int max_width);
+
     struct GlyphInfo
     {
         // offset before drawing glyph; can be negative

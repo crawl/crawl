@@ -196,6 +196,7 @@ public:
     virtual void draw_stock_item(int index, const MenuEntry *me) = 0;
     virtual void set_offset(int lines) = 0;
     virtual void draw_more() = 0;
+    virtual void set_num_columns(int columns) = 0; 
 protected:
     Menu *m_menu;
 };
@@ -207,6 +208,7 @@ public:
     virtual void draw_stock_item(int index, const MenuEntry *me);
     virtual void draw_more();
     virtual void set_offset(int lines) { m_starty = lines; }
+    virtual void set_num_columns(int columns) {}
 protected:
     int m_starty;
 };
@@ -218,6 +220,7 @@ public:
     virtual void draw_stock_item(int index, const MenuEntry *me);
     virtual void set_offset(int lines);
     virtual void draw_more();
+    virtual void set_num_columns(int columns);
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -294,7 +297,6 @@ public:
     virtual int item_colour(int index, const MenuEntry *me) const;
     int get_y_offset() const { return y_offset; }
     int get_pagesize() const { return pagesize; }
-
 public:
     typedef std::string (*selitem_tfn)( const std::vector<MenuEntry*> *sel );
     typedef void (*drawitem_tfn)(int index, const MenuEntry *me);

@@ -193,6 +193,7 @@ public:
     void set_entry(int index, const std::string &s, int colour, const MenuEntry *me);
     void set_offset(int lines);
     void set_more(const formatted_string &more);
+    void set_num_columns(int columns);
 protected:
     virtual void on_resize();
     virtual void place_entries();
@@ -214,6 +215,7 @@ protected:
     FTFont *m_font_entry;
     formatted_string m_more;
     int m_mouse_idx;
+    int m_max_columns;
     bool m_dirty;
 
     std::vector<MenuRegionEntry> m_entries;

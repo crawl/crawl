@@ -26,7 +26,7 @@ class formatted_string
 {
 public:
     formatted_string(int init_colour = 0);
-    formatted_string(const std::string &s, int init_colour = 0);
+    explicit formatted_string(const std::string &s, int init_colour = 0);
 
     operator std::string() const;
     void display(int start = 0, int end = -1) const;
@@ -51,6 +51,7 @@ public:
 
     bool operator < ( const formatted_string &other ) const;
     const formatted_string &operator += (const formatted_string &other);
+    char &operator [] (size_t idx);
 
 public:
     static formatted_string parse_string(

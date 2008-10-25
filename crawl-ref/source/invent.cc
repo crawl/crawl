@@ -268,6 +268,13 @@ InvShowPrices::~InvShowPrices()
     InvEntry::set_show_prices(false);
 }
 
+InvMenu::InvMenu(int mflags)
+    : Menu(mflags, "inventory"), type(MT_INVLIST), pre_select(NULL),
+      title_annotate(NULL)
+{
+    mdisplay->set_num_columns(2);
+}
+
 // Returns vector of item_def pointers to each item_def in the given
 // vector. Note: make sure the original vector stays around for the lifetime
 // of the use of the item pointers, or mayhem results!

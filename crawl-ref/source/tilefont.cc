@@ -447,7 +447,29 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     glVertexPointer(2, GL_FLOAT, sizeof(box_vert), &verts[0].x);
     glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(box_vert), &verts[0].r);
     glDrawArrays(GL_QUADS, 0, sizeof(verts) / sizeof(box_vert));
+}
 
+unsigned int FTFont::string_height(const formatted_string &str)
+{
+    std::string temp = str.tostring();
+    return string_height(temp.c_str());
+}
+
+unsigned int FTFont::string_height(const char *text)
+{
+    int height = 1;
+    for (const char *itr = text; (*itr); itr++)
+    {
+        if (*itr == '\n')
+            height++;
+    }
+    return char_height() * height;
+}
+
+unsigned int FTFont::string_width(const formatted_string &str)
+{
+    std::string temp = str.tostring();
+    return string_width(temp.c_str());
 }
 
 unsigned int FTFont::string_width(const char *text)
@@ -455,7 +477,7 @@ unsigned int FTFont::string_width(const char *text)
     unsigned int base_width = std::max(-m_min_offset, 0);
     unsigned int max_width = 0;
 
-    unsigned int width = 0;
+    unsigned int width = base_width;
     unsigned int adjust = 0;
     for (const char *itr = text; *itr; itr++)
     {
@@ -474,6 +496,79 @@ unsigned int FTFont::string_width(const char *text)
 
     max_width = std::max(width + adjust, max_width);
     return max_width;
+}
+
+int FTFont::find_index_before_width(const char *text, int max_width)
+{
+    int width = std::max(-m_min_offset, 0);
+
+    for (int i = 0; text[i]; i++)
+    {
+        char c = text[i];
+        width += m_glyphs[c].advance;
+        int adjust = std::max(0, m_glyphs[c].width - m_glyphs[c].advance);
+        if (width + adjust > max_width)
+            return i;
+    }
+
+    return -1;
+}
+
+formatted_string FTFont::split(const formatted_string &str,
+                               unsigned int max_width, unsigned int max_height)
+{
+    int max_lines = max_height / char_height();
+
+    if (max_lines < 1)
+        return formatted_string();
+
+    formatted_string ret;
+    ret += str;
+
+    std::string base = str.tostring();
+    int num_lines = 0;
+
+    char *line = &base[0];
+    while (true)
+    {
+        int line_end = find_index_before_width(line, max_width);
+        if (line_end == -1)
+            break;
+
+        int space_idx = 0;
+        for (char *search = &line[line_end]; search > line; search--)
+        {
+            if (*search == ' ')
+            {
+                space_idx = search - line;
+                break;
+            }
+        }
+
+        if (++num_lines >= max_lines || !space_idx)
+        {
+            int ellipses;
+            if (space_idx && (space_idx - line_end > 2))
+                ellipses = space_idx;
+            else
+                ellipses = line_end - 2;
+
+            size_t idx = &line[ellipses] - &base[0];
+            ret[idx] = '.';
+            ret[idx+1] = '.';
+
+            return ret.substr(0, idx + 2);
+        }
+        else
+        {
+            line[space_idx] = '\n';
+            ret[&line[space_idx] - &base[0]] = '\n';
+        }
+
+        line = &line[space_idx+1];
+    }
+
+    return ret;
 }
 
 void FTFont::render_string(unsigned int px, unsigned int py,
@@ -561,11 +656,18 @@ void FTFont::render_string(unsigned int px, unsigned int py,
 void FTFont::store(FontBuffer &buf, float &x, float &y,
                    const std::string &str, const VColour &col)
 {
+    store(buf, x, y, str, col, x);
+}
+
+void FTFont::store(FontBuffer &buf, float &x, float &y,
+                   const std::string &str, const VColour &col, float orig_x)
+{
     for (unsigned int i = 0; i < str.size(); i++)
     {
         char c = str[i];
         if (c == '\n')
         {
+            x = orig_x;
             y += m_max_advance.y;
         }
         else
@@ -578,6 +680,12 @@ void FTFont::store(FontBuffer &buf, float &x, float &y,
 void FTFont::store(FontBuffer &buf, float &x, float &y,
                    const formatted_string &fs)
 {
+    store(buf, x, y, fs, x);
+}
+
+void FTFont::store(FontBuffer &buf, float &x, float &y,
+                   const formatted_string &fs, float orig_x)
+{
     int colour = LIGHTGREY;
     for (unsigned int i = 0; i < fs.ops.size(); i++)
     {
@@ -588,7 +696,7 @@ void FTFont::store(FontBuffer &buf, float &x, float &y,
                 colour = fs.ops[i].x & 0xF;
                 break;
             case FSOP_TEXT:
-                store(buf, x, y, fs.ops[i].text, term_colours[colour]);
+                store(buf, x, y, fs.ops[i].text, term_colours[colour], orig_x);
                 break;
             default:
             case FSOP_CURSOR:

@@ -2357,7 +2357,7 @@ int CRTRegion::handle_mouse(MouseEvent &event)
 
 MenuRegion::MenuRegion(ImageManager *im, FTFont *entry) :
     m_image(im), m_font_entry(entry), m_mouse_idx(-1),
-    m_dirty(false), m_font_buf(entry), m_tile_buf(NULL)
+    m_max_columns(1), m_dirty(false), m_font_buf(entry), m_tile_buf(NULL)
 {
     ASSERT(m_image);
     ASSERT(m_font_entry);
@@ -2366,6 +2366,11 @@ MenuRegion::MenuRegion(ImageManager *im, FTFont *entry) :
     dy = 1;
 
     m_entries.resize(128);
+}
+
+void MenuRegion::set_num_columns(int columns)
+{
+    m_max_columns = std::max(1, columns);
 }
 
 int MenuRegion::mouse_entry(int x, int y)
@@ -2450,10 +2455,9 @@ void MenuRegion::place_entries()
     m_dirty = false;
 
     const int heading_indent = 10;
-    const int tile_ident = 20;
+    const int tile_indent = 20;
     const int text_indent = 58;
-    const unsigned int max_tile_height = 32;
-    const int column_width = mx / 2;
+    const int max_tile_height = 32;
     const int entry_buffer = 1;
     const VColour selected_colour(50, 50, 10, 255);
 
@@ -2464,8 +2468,11 @@ void MenuRegion::place_entries()
 
     TextureID tex = TEX_MAX;
     int height = 2;
+    int prev_height = height;
 
-    bool mouse_selected = false;
+    int column = 0;
+    const int max_columns = std::min(2, m_max_columns);
+    const int column_width = mx / max_columns;
 
     for (unsigned int i = 0; i < m_entries.size(); i++)
     {
@@ -2478,45 +2485,110 @@ void MenuRegion::place_entries()
             continue;
         }
 
-        m_entries[i].sy = height;
-
-        int text_start = 0;
-        int text_height = height;
+        int text_width = m_font_entry->string_width(m_entries[i].text);
+        int text_height = m_font_entry->char_height();
 
         if (m_entries[i].heading)
         {
-            mouse_selected = false;
             m_entries[i].sx = heading_indent;
-            text_start = heading_indent;
-            height += m_font_entry->char_height();
-        }
-        else if (m_entries[i].tile)
-        {
-            m_entries[i].sx = tile_ident;
-            text_start = text_indent;
-            int entry_height =
-                std::max(max_tile_height, m_font_entry->char_height());
-            height += entry_height;
-            text_height += (entry_height - m_font_entry->char_height()) / 2;
+            m_entries[i].ex = m_entries[i].sx + text_width;
+            m_entries[i].sy = height;
+            m_entries[i].ey = m_entries[i].sy + text_height;
 
-            ASSERT(m_entries[i].texture == tex || tex == TEX_MAX);
-            tex = m_entries[i].texture;
-            m_tile_buf.set_tex(&m_image->m_textures[tex]);
+            m_font_buf.add(m_entries[i].text, m_entries[i].sx, m_entries[i].sy);
 
-            m_tile_buf.add(m_entries[i].tile, m_entries[i].sx, m_entries[i].sy);
+            height += text_height;
+            prev_height = height;
+            column = 0;
         }
         else
         {
-            m_entries[i].sx = text_start + text_indent;
-            height += m_font_entry->char_height();
+            int entry_start;
+            if (column > 0)
+            {
+                entry_start = column * column_width;
+                m_entries[i].sy = prev_height;
+            }
+            else
+            {
+                entry_start = 0;
+                m_entries[i].sy = height;
+            }
+
+            int text_sx = entry_start + text_indent;
+
+            int entry_height;
+            if (m_entries[i].tile)
+            {
+                m_entries[i].sx = entry_start + tile_indent;
+                entry_height = std::max(max_tile_height, text_height);
+                
+                // Currently, menus only support one texture at a time.
+                tex = m_entries[i].texture;
+                ASSERT(m_entries[i].texture == tex || tex == TEX_MAX);
+
+                m_tile_buf.set_tex(&m_image->m_textures[tex]);
+                m_tile_buf.add(m_entries[i].tile, m_entries[i].sx,
+                               m_entries[i].sy);
+            }
+            else
+            {
+                m_entries[i].sx = text_sx;
+                entry_height = text_height;
+            }
+
+            int text_sy = m_entries[i].sy;
+            text_sy += (entry_height - m_font_entry->char_height()) / 2;
+            if (text_sx + text_width > entry_start + column_width)
+            {
+                // [enne] - Ugh, hack.  Maybe MenuEntry could specify the
+                // presence and length of this substring?
+                std::string unfm = m_entries[i].text.tostring();
+                bool let = (unfm[1] >= 'a' && unfm[1] <= 'z'
+                            || unfm[1] >= 'A' && unfm[1] <= 'Z');
+                bool plus = (unfm[3] == '-' || unfm[3] == '+');
+
+                formatted_string text;
+                if (let && plus && unfm[0] == ' ' && unfm[2] == ' '
+                    && unfm[4] == ' ')
+                {
+                    formatted_string header = m_entries[i].text.substr(0, 5);
+                    m_font_buf.add(header, text_sx, text_sy);
+                    text_sx += m_font_entry->string_width(header);
+                    text = m_entries[i].text.substr(5);
+                }
+                else
+                {
+                    text += m_entries[i].text;
+                }
+
+                int w = entry_start + column_width - text_sx;
+                int h = m_font_entry->char_height() * 2;
+                formatted_string split = m_font_entry->split(text, w, h);
+
+                int string_height = m_font_entry->string_height(split);
+                if (string_height > entry_height)
+                {
+                    text_sy = m_entries[i].sy;
+                }
+                m_font_buf.add(split, text_sx, text_sy);
+
+                m_entries[i].ex = entry_start + column_width;
+
+                entry_height = std::max(entry_height, string_height);
+            }
+            else
+            {
+                m_entries[i].ex = entry_start + column_width;
+                m_font_buf.add(m_entries[i].text, text_sx, text_sy);
+            }
+
+            m_entries[i].ey = m_entries[i].sy + entry_height;
+
+            prev_height = m_entries[i].sy;
+            height = std::max(height, m_entries[i].ey);
+            column = (column + 1) % max_columns;
         }
-
-        std::string unfrm = m_entries[i].text.tostring();
-        m_entries[i].ex = text_start + m_font_entry->string_width(unfrm.c_str());
-        m_entries[i].ex = std::max(m_entries[i].ex, column_width);
-        m_entries[i].ey = height;
-
-        m_font_buf.add(m_entries[i].text, text_start, text_height);
 
         if (m_entries[i].selected)
         {
