@@ -151,8 +151,6 @@ public:
     // of the use of the item pointers, or mayhem results!
     static std::vector<const item_def*> xlat_itemvect(
             const std::vector<item_def> &);
-
-    virtual int max_columns() const { return 2; }
 protected:
     bool process_key(int key);
     void do_preselect(InvEntry *ie);
