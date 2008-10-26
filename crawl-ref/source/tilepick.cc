@@ -3755,6 +3755,10 @@ void tile_init_flavor()
                     env.tile_flv[x][y].special = 0;
                 }
             }
+            else if (grd[x][y] == DNGN_SECRET_DOOR)
+            {
+                env.tile_flv[x][y].special = 0;
+            }
             else if (bazaar && env.grid_colours[x][y] == baz_col
                      && grd[x][y] == DNGN_FLOOR)
             {

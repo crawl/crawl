@@ -920,6 +920,9 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             mprf(MSGCH_DIAGNOSTICS, "Setting (%d,%d) to %s (%d)",
                  you.pos().x, you.pos().y, name.c_str(), feat);
             grd(you.pos()) = feat;
+#ifdef USE_TILE
+            env.tile_flv[you.pos().x][you.pos().y].special = 0;
+#endif
         }
         break;
 
