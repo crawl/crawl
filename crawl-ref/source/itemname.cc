@@ -28,6 +28,7 @@
 #include "it_use2.h"
 #include "item_use.h"
 #include "itemprop.h"
+#include "items.h"
 #include "macro.h"
 #include "makeitem.h"
 #include "mon-util.h"
@@ -189,18 +190,19 @@ std::string item_def::name(description_level_type descrip,
     buff << auxname;
 
     bool equipped = false;
-    if (descrip == DESC_INVENTORY_EQUIP && in_inventory(*this))
+    if (descrip == DESC_INVENTORY_EQUIP && item_is_equipped(*this, true))
     {
         ASSERT( this->link != -1 );
+        equipped = true;
 
-        if (this->link == you.equip[EQ_WEAPON])
+        if (!you_tran_can_wear(*this))
+            buff << " (melded)";
+        else if (this->link == you.equip[EQ_WEAPON])
         {
             if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
                 buff << " (weapon)";
             else
                 buff << " (in hand)";
-
-            equipped = true;
         }
         else if (this->link == you.equip[EQ_CLOAK]
                  || this->link == you.equip[EQ_HELMET]
@@ -210,32 +212,27 @@ std::string item_def::name(description_level_type descrip,
                  || this->link == you.equip[EQ_BODY_ARMOUR])
         {
             buff << " (worn)";
-            equipped = true;
         }
         else if (this->link == you.equip[EQ_LEFT_RING])
         {
             buff << " (left hand)";
-            equipped = true;
         }
         else if (this->link == you.equip[EQ_RIGHT_RING])
         {
             buff << " (right hand)";
-            equipped = true;
         }
         else if (this->link == you.equip[EQ_AMULET])
         {
             buff << " (around neck)";
-            equipped = true;
         }
         else if (this->link == you.m_quiver->get_fire_item())
         {
             buff << " (quivered)";
-            equipped = true; // well, sort of
         }
-   }
+    }
 
-   if (descrip != DESC_BASENAME)
-   {
+    if (descrip != DESC_BASENAME)
+    {
         const bool  tried  =  !ident && !equipped && item_type_tried(*this);
         std::string tried_str;
 

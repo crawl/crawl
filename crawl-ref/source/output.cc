@@ -1638,7 +1638,19 @@ static void _print_overview_screen_equip(column_composer& cols,
         // uncomment (and change 42 to 33) to bring back slot names
         // snprintf(slot, sizeof slot, "%-7s: ", equip_slot_to_name(eqslot);
 
-        if (you.equip[ e_order[i] ] != -1)
+        if (!you_can_wear(e_order[i], true))
+        {
+            snprintf(buf, sizeof buf,
+                     "%s<darkgrey>(%s unavailable)</darkgrey>",
+                     slot, slot_name_lwr);
+        }
+        else if (!you_tran_can_wear(e_order[i], true))
+        {
+            snprintf(buf, sizeof buf,
+                     "%s<darkgrey>(%s currently unavailable)</darkgrey>",
+                     slot, slot_name_lwr);
+        }
+        else if (you.equip[ e_order[i] ] != -1)
         {
             const int item_idx    = you.equip[e_order[i]];
             const item_def& item  = you.inv[item_idx];
@@ -1654,6 +1666,12 @@ static void _print_overview_screen_equip(column_composer& cols,
                      colname);
             equip_chars.push_back(equip_char);
         }
+        else if (!you_can_wear(e_order[i]))
+        {
+            snprintf(buf, sizeof buf,
+                     "%s<lightgrey>(%s restricted)</lightgrey>",
+                     slot, slot_name_lwr);
+        }
         else if (e_order[i] == EQ_WEAPON
                  && you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
         {
@@ -1663,24 +1681,6 @@ static void _print_overview_screen_equip(column_composer& cols,
                  && you.skills[SK_UNARMED_COMBAT])
         {
             snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
-        }
-        else if (!you_can_wear(e_order[i], true))
-        {
-            snprintf(buf, sizeof buf,
-                     "%s<darkgrey>(%s unavailable)</darkgrey>",
-                     slot, slot_name_lwr);
-        }
-        else if (!you_tran_can_wear(e_order[i], true))
-        {
-            snprintf(buf, sizeof buf,
-                     "%s<darkgrey>(%s currently unavailable)</darkgrey>",
-                     slot, slot_name_lwr);
-        }
-        else if (!you_can_wear(e_order[i]))
-        {
-            snprintf(buf, sizeof buf,
-                     "%s<lightgrey>(%s restricted)</lightgrey>",
-                     slot, slot_name_lwr);
         }
         else
         {

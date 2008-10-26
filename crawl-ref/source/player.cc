@@ -588,6 +588,29 @@ bool player_has_feet()
    return (true);
 }
 
+bool you_tran_can_wear(const item_def &item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        return you_tran_can_wear(EQ_WEAPON);
+
+    case OBJ_JEWELLERY:
+        return you_tran_can_wear(jewellery_is_amulet(item) ? EQ_AMULET
+                                                           : EQ_LEFT_RING);
+    case OBJ_ARMOUR:
+        if (item.sub_type == ARM_CAP)
+        {
+            const int transform = you.attribute[ATTR_TRANSFORMATION];
+            return (transform != TRAN_BAT && transform != TRAN_AIR);
+        }
+        return you_tran_can_wear(get_armour_slot(item), true);
+
+    default:
+        return (true);
+    }
+}
+
 bool you_tran_can_wear(int eq, bool check_mutation)
 {
     // Not a transformation, but also temporary -> check first.
@@ -605,14 +628,14 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         }
     }
 
-    int transform = you.attribute[ATTR_TRANSFORMATION];
+    const int transform = you.attribute[ATTR_TRANSFORMATION];
 
     // No further restrictions.
     if (transform == TRAN_NONE || transform == TRAN_LICH)
         return (true);
 
-    // Bats cannot use anything, clouds obviously so.
-    if (transform == TRAN_BAT || transform == TRAN_AIR)
+    // Bats cannot wear anything except amulets, clouds obviously nothing.
+    if (transform == TRAN_BAT && eq != EQ_AMULET || transform == TRAN_AIR)
         return (false);
 
     // Everyone else can wear jewellery, at least.
@@ -730,6 +753,9 @@ bool berserk_check_wielded_weapon()
 // Returns number of matches (in the case of rings, both are checked)
 int player_equip( equipment_type slot, int sub_type, bool calc_unid )
 {
+    if (!you_tran_can_wear(slot))
+        return (0);
+
     int ret = 0;
 
     switch (slot)
@@ -826,6 +852,9 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
 // and armour type-id on wield/wear.
 int player_equip_ego_type( int slot, int special )
 {
+    if (!you_tran_can_wear(slot))
+        return (0);
+
     int ret = 0;
     int wpn;
 
@@ -1960,10 +1989,10 @@ int player_AC(void)
 
     for (i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
     {
-        if ( i == EQ_SHIELD )
+        if (i == EQ_SHIELD)
             continue;
 
-        if ( you.equip[i] == -1 )
+        if (you.equip[i] == -1 || !you_tran_can_wear(you.equip[i]))
             continue;
 
         const item_def& item = you.inv[you.equip[i]];
@@ -4416,7 +4445,7 @@ int scan_randarts(randart_prop_type which_property, bool calc_unid)
     {
         const int eq = you.equip[i];
 
-        if (eq == -1)
+        if (eq == -1 || !you_tran_can_wear(eq))
             continue;
 
         // Only weapons give their effects when in our hands.

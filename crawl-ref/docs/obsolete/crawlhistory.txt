@@ -1249,6 +1249,23 @@ File 'spl-mis.h':
 
 --------------------------------------------------
 
+File 'spl-util.cc':
+ *  Changelog(most recent first):                                    *
+ *
+ *  <3>     04oct2001     bwr     absorbed spells0.cc
+ *  <2>     24jun2000     jmf     changed to use new data structure
+ *  <1>     12jun2000     dlb     created after much thought
+
+--------------------------------------------------
+
+File 'spl-util.h':
+ *  Changelog(most recent first):
+ *
+ *           24jun2000     jmf     simplified structures
+ *  <00>     12jun2000     dlb     created after much thought
+
+--------------------------------------------------
+
 File 'state.cc':
  *  Change History (most recent first):
  *

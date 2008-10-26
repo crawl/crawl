@@ -1097,7 +1097,7 @@ bool do_wear_armour( int item, bool quiet )
         if (you.equip[EQ_BODY_ARMOUR] != -1 &&
             item_cursed(you.inv[you.equip[EQ_BODY_ARMOUR]]) )
         {
-            if ( !quiet )
+            if (!quiet)
             {
                 mprf("%s is stuck to your body!",
                      you.inv[you.equip[EQ_BODY_ARMOUR]].name(DESC_CAP_YOUR)
@@ -1178,12 +1178,19 @@ bool takeoff_armour(int item)
         }
     }
 
+    const equipment_type slot = get_armour_slot(invitem);
+    if (!you_tran_can_wear(invitem) && invitem.link == you.equip[slot])
+    {
+        mprf("%s is melded into your body!",
+             invitem.name(DESC_CAP_YOUR).c_str());
+        return (false);
+    }
+
     if (!safe_to_remove_or_wear(invitem, true))
         return (false);
 
     bool removedCloak = false;
     int cloak = -1;
-    const equipment_type slot = get_armour_slot(invitem);
 
     if (slot == EQ_BODY_ARMOUR)
     {
@@ -3029,7 +3036,7 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
 // one of the worn rings.
 //
 // Does not do amulets.
-static bool swap_rings(int ring_slot)
+static bool _swap_rings(int ring_slot)
 {
     // Ask the player which existing ring is persona non grata.
     int unwanted = prompt_ring_to_remove(ring_slot);
@@ -3086,7 +3093,7 @@ bool puton_item(int item_slot, bool prompt_finger)
         if (you.equip[EQ_LEFT_RING] != -1
             && you.equip[EQ_RIGHT_RING] != -1)
         {
-            return swap_rings(item_slot);
+            return _swap_rings(item_slot);
         }
     }
     else if (you.equip[EQ_AMULET] != -1)
@@ -4698,7 +4705,7 @@ void use_randart(unsigned char item_wield_2)
     use_randart( you.inv[ item_wield_2 ] );
 }
 
-void use_randart(item_def &item)
+void use_randart(item_def &item, bool unmeld)
 {
 #define unknown_proprt(prop) (proprt[(prop)] && !known[(prop)])
 
@@ -4791,7 +4798,7 @@ void use_randart(item_def &item)
         randart_wpn_learn_prop(item, RAP_BERSERK);
     }
 
-    if (!item_cursed(item) && proprt[RAP_CURSED] > 0
+    if (!unmeld && !item_cursed(item) && proprt[RAP_CURSED] > 0
          && one_chance_in(proprt[RAP_CURSED]))
     {
         do_curse_item( item, false );

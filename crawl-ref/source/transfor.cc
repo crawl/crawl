@@ -98,7 +98,7 @@ bool remove_equipment(std::set<equipment_type> removed)
         canned_msg(MSG_EMPTY_HANDED);
     }
 
-    // Remove items in order. (std::set is a sorted container)
+    // Meld items into you in (reverse) order. (std::set is a sorted container)
     std::set<equipment_type>::const_iterator iter;
     for (iter = removed.begin(); iter != removed.end(); ++iter)
     {
@@ -106,19 +106,41 @@ bool remove_equipment(std::set<equipment_type> removed)
         if (e == EQ_WEAPON || you.equip[e] == -1)
             continue;
 
-        mprf("%s falls away.",
+        mprf("%s melds into your body.",
              you.inv[you.equip[e]].name(DESC_CAP_YOUR).c_str());
 
         if (e == EQ_LEFT_RING || e == EQ_RIGHT_RING || e == EQ_AMULET)
         {
             item_def &ring = you.inv[you.equip[e]];
-            you.equip[e] = -1;
-            jewellery_remove_effects(ring, false);
+            jewellery_remove_effects(ring);
         }
         else // armour
         {
             unwear_armour( you.equip[e] );
-            you.equip[e] = -1;
+        }
+    }
+
+    return (true);
+}
+
+static bool _unmeld_equipment(std::set<equipment_type> melded)
+{
+    // Unmeld items in order.
+    std::set<equipment_type>::const_iterator iter;
+    for (iter = melded.begin(); iter != melded.end(); ++iter)
+    {
+        const equipment_type e = *iter;
+        if (e == EQ_WEAPON || you.equip[e] == -1)
+            continue;
+
+        if (e == EQ_LEFT_RING || e == EQ_RIGHT_RING || e == EQ_AMULET)
+        {
+            item_def &ring = you.inv[you.equip[e]];
+            jewellery_wear_effects(ring);
+        }
+        else // armour
+        {
+            armour_wear_effects( you.equip[e] );
         }
     }
 
@@ -138,7 +160,7 @@ static bool check_for_cursed_equipment(const std::set<equipment_type> &remove,
                                        bool quiet = false)
 {
     std::set<equipment_type>::const_iterator iter;
-    for (iter = remove.begin(); iter != remove.end(); ++iter )
+    for (iter = remove.begin(); iter != remove.end(); ++iter)
     {
         equipment_type e = *iter;
         if (you.equip[e] == -1)
@@ -670,9 +692,18 @@ void untransform(void)
     you.symbol = '@';
     you.colour = LIGHTGREY;
 
-    // must be unset first or else infinite loops might result -- bwr
+    // Must be unset first or else infinite loops might result. -- bwr
     const transformation_type old_form =
         static_cast<transformation_type>(you.attribute[ ATTR_TRANSFORMATION ]);
+
+    // We may have to unmeld a couple of equipment types.
+    const equipment_type default_rem[] = {
+        EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS, EQ_SHIELD, EQ_BODY_ARMOUR
+    };
+
+    std::set<equipment_type> melded(default_rem,
+                                    default_rem + ARRAYSZ(default_rem));
+    _init_equipment_removal(melded, old_form);
 
     you.attribute[ ATTR_TRANSFORMATION ] = TRAN_NONE;
     you.duration[ DUR_TRANSFORMATION ] = 0;
@@ -761,6 +792,8 @@ void untransform(void)
     default:
         break;
     }
+
+    _unmeld_equipment(melded);
 
     // Re-check terrain now that be may no longer be flying.
     if (old_flight && you.flight_mode() == FL_NONE)

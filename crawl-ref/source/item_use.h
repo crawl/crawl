@@ -81,6 +81,9 @@ void examine_object(void);
 bool puton_ring(int slot = -1, bool prompt_finger = true);
 void jewellery_remove_effects(item_def &item, bool mesg = true);
 
+// called from: transfor
+void jewellery_wear_effects(item_def &item);
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: acr
@@ -151,7 +154,7 @@ void wield_effects(int item_wield_2, bool showMsgs);
  * called from: delay.cc item_use.cc it_use2.cc
  * *********************************************************************** */
 void use_randart( unsigned char item_wield_2 );
-void use_randart(item_def &item);
+void use_randart(item_def &item, bool unmeld = false);
 
 bool puton_item(int slot, bool prompt_finger = true);
 

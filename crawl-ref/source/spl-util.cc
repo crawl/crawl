@@ -4,12 +4,6 @@
  *  Written by: don brodale <dbrodale@bigfootinteractive.com>        *
  *                                                                   *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Changelog(most recent first):                                    *
- *
- *  <3>     04oct2001     bwr     absorbed spells0.cc
- *  <2>     24jun2000     jmf     changed to use new data structure
- *  <1>     12jun2000     dlb     created after much thought
  */
 
 #include "AppHdr.h"

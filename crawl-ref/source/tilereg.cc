@@ -2270,8 +2270,8 @@ struct box_vert
 void MessageRegion::render()
 {
     int idx = -1;
-    unsigned char char_back;
-    unsigned char col_back;
+    unsigned char char_back = 0;
+    unsigned char col_back = 0;
 
     if (this == TextRegion::cursor_region && cursor_x > 0 && cursor_y > 0)
     {
@@ -2522,7 +2522,7 @@ void MenuRegion::place_entries()
             {
                 m_entries[i].sx = entry_start + tile_indent;
                 entry_height = std::max(max_tile_height, text_height);
-                
+
                 // Currently, menus only support one texture at a time.
                 tex = m_entries[i].texture;
                 ASSERT(m_entries[i].texture == tex || tex == TEX_MAX);

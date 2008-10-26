@@ -4,11 +4,6 @@
  *  Written by: don brodale <dbrodale@bigfootinteractive.com>
  *
  *  Modified for Crawl Reference by $Author$ on $Date$
- *
- *  Changelog(most recent first):
- *
- *           24jun2000     jmf     simplified structures
- *  <00>     12jun2000     dlb     created after much thought
  */
 
 

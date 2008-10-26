@@ -50,7 +50,6 @@ extern std::vector<SelItem> items_for_multidrop;
 static int  _interrupts_blocked = 0;
 
 static void _xom_check_corpse_waste();
-static void _armour_wear_effects(const int item_inv_slot);
 static void _handle_run_delays(const delay_queue_item &delay);
 static void _handle_macro_delay();
 static void _finish_delay(const delay_queue_item &delay);
@@ -943,7 +942,7 @@ static void _finish_delay(const delay_queue_item &delay)
         break;
 
     case DELAY_ARMOUR_ON:
-        _armour_wear_effects(delay.parm1);
+        armour_wear_effects(delay.parm1);
         break;
 
     case DELAY_ARMOUR_OFF:
@@ -1234,7 +1233,7 @@ static void _finish_delay(const delay_queue_item &delay)
 #endif
 }
 
-static void _armour_wear_effects(const int item_slot)
+void armour_wear_effects(const int item_slot)
 {
     item_def &arm = you.inv[item_slot];
 
@@ -1243,6 +1242,10 @@ static void _armour_wear_effects(const int item_slot)
         arm.flags |= ISFLAG_NOTED_ID;
 
     set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK );
+
+    const equipment_type eq_slot = get_armour_slot(arm);
+    const bool melded = (arm.link == you.equip[eq_slot]);
+    const bool known_cursed = item_known_cursed(arm);
 
     if (!was_known)
     {
@@ -1253,10 +1256,8 @@ static void _armour_wear_effects(const int item_slot)
         take_note(Note(NOTE_ID_ITEM, 0, 0, arm.name(DESC_NOCAP_A).c_str(),
                        origin_desc(arm).c_str()));
     }
-    mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
-
-    const equipment_type eq_slot = get_armour_slot(arm);
-    const bool known_cursed = item_known_cursed(arm);
+    if (!melded)
+        mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {
@@ -1269,17 +1270,20 @@ static void _armour_wear_effects(const int item_slot)
             you.duration[DUR_ICY_ARMOUR] = 0;
         }
     }
-    else
+    else if (eq_slot == EQ_SHIELD)
+    {
+        if (you.duration[DUR_CONDENSATION_SHIELD])
+        {
+            mpr( "Your icy shield evaporates.", MSGCH_DURATION );
+            you.duration[DUR_CONDENSATION_SHIELD] = 0;
+        }
+        you.equip[EQ_SHIELD] = item_slot;
+    }
+    else if (!melded)
     {
         switch (eq_slot)
         {
         case EQ_SHIELD:
-            if (you.duration[DUR_CONDENSATION_SHIELD])
-            {
-                mpr( "Your icy shield evaporates.", MSGCH_DURATION );
-                you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            }
-            you.equip[EQ_SHIELD] = item_slot;
             break;
         case EQ_CLOAK:
             you.equip[EQ_CLOAK] = item_slot;
@@ -1382,9 +1386,9 @@ static void _armour_wear_effects(const int item_slot)
     }
 
     if (is_random_artefact( arm ))
-        use_randart( item_slot );
+        use_randart( arm, melded );
 
-    if (item_cursed( arm ))
+    if (item_cursed( arm ) && !melded)
     {
         mpr( "Oops, that feels deathly cold." );
         learned_something_new(TUT_YOU_CURSED);

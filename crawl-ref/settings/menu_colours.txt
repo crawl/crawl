@@ -3,6 +3,9 @@
 menu := menu_colour 
 ae   := autopickup_exceptions
 
+# Items currently not affecting you.
+menu = darkgrey:(melded)
+
 # Bad items
 menu = lightred:.*bad_item.*
 

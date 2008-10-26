@@ -193,13 +193,13 @@ bool TilesFramework::initialise()
 
     m_region_tile = new DungeonRegion(&m_image, m_fonts[lbl_font].font,
                                       TILE_X, TILE_Y);
-    m_region_map = new MapRegion(Options.tile_map_pixels);
+    m_region_map  = new MapRegion(Options.tile_map_pixels);
     m_region_self_inv = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
                                             TILE_X, TILE_Y);
 
-    m_region_msg = new MessageRegion(m_fonts[msg_font].font);
+    m_region_msg  = new MessageRegion(m_fonts[msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
-    m_region_crt = new CRTRegion(m_fonts[crt_font].font);
+    m_region_crt  = new CRTRegion(m_fonts[crt_font].font);
     m_region_menu = new MenuRegion(&m_image, m_fonts[crt_font].font);
 
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);
@@ -594,7 +594,7 @@ int TilesFramework::getch_ck()
 
     while (!key)
     {
-        unsigned int ticks;
+        unsigned int ticks = 0;
 
         if (SDL_WaitEvent(&event))
         {
@@ -1115,7 +1115,7 @@ void TilesFramework::update_inventory()
 
             for (int eq = 0; eq < NUM_EQUIP; eq++)
             {
-                if (you.equip[eq] == i)
+                if (you.equip[eq] == i && you_tran_can_wear(you.inv[i]))
                 {
                     desc.flag |= TILEI_FLAG_EQUIP;
                     break;

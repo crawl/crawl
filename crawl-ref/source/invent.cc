@@ -800,11 +800,14 @@ std::vector<SelItem> select_items( const std::vector<const item_def*> &items,
 static bool _item_class_selected(const item_def &i, int selector)
 {
     const int itype = i.base_type;
-    if (selector == OSEL_ANY || selector == itype)
+    if (selector == OSEL_ANY || selector == itype && itype != OBJ_ARMOUR)
         return (true);
 
     switch (selector)
     {
+    case OBJ_ARMOUR:
+        return (you_tran_can_wear(i));
+
     case OSEL_UNIDENT:
         return !fully_identified(i);
 
@@ -1105,7 +1108,7 @@ std::vector<SelItem> prompt_invent_items(
         }
         else if (!isspace( keyin ))
         {
-            // we've got a character we don't understand...
+            // We've got a character we don't understand...
             canned_msg( MSG_HUH );
         }
         else

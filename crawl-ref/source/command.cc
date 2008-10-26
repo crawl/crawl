@@ -554,17 +554,20 @@ void list_armour()
                                  : "unknown")
              << " : ";
 
-        if (armour_id != -1)
+        if (!you_can_wear(i,true))
+            estr << "    (unavailable)";
+        else if (armour_id != -1 && !you_tran_can_wear(you.inv[armour_id])
+                 || !you_tran_can_wear(i))
+        {
+            estr << "    (currently unavailable)";
+        }
+        else if (armour_id != -1)
         {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
             colour = menu_colour(estr.str(),
                                  menu_colour_item_prefix(you.inv[armour_id]),
                                  "equip");
         }
-        else if (!you_can_wear(i,true))
-            estr << "    (unavailable)";
-        else if (!you_tran_can_wear(i, true))
-            estr << "    (currently unavailable)";
         else if (!you_can_wear(i))
             estr << "    (restricted)";
         else
@@ -595,15 +598,18 @@ void list_jewellery(void)
                                       : "unknown   ")
              << " : ";
 
-        if (jewellery_id != -1)
+        if (jewellery_id != -1 && !you_tran_can_wear(you.inv[jewellery_id])
+            || !you_tran_can_wear(i))
+        {
+            jstr << "    (currently unavailable)";
+        }
+        else if (jewellery_id != -1)
         {
             jstr << you.inv[jewellery_id].name(DESC_INVENTORY);
             std::string
                 prefix = menu_colour_item_prefix(you.inv[jewellery_id]);
             colour = menu_colour(jstr.str(), prefix, "equip");
         }
-        else if (!you_tran_can_wear(i))
-            jstr << "    (currently unavailable)";
         else
             jstr << "    none";
 
