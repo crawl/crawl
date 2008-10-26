@@ -2049,7 +2049,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     case MUT_HOOVES:
     case MUT_TALONS:
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
-        remove_one_equip(EQ_BOOTS);
+        if (you_tran_can_wear(EQ_BOOTS))
+            remove_one_equip(EQ_BOOTS);
         break;
 
     case MUT_CLAWS:
@@ -2060,7 +2061,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         // Gloves aren't prevented until level 3.  We don't have the
         // mutation yet, so we have to check for level 2 or higher claws
         // here.
-        if (you.mutation[mutat] >= 2)
+        if (you.mutation[mutat] >= 2 && you_tran_can_wear(EQ_GLOVES))
             remove_one_equip(EQ_GLOVES);
         break;
 
@@ -2070,7 +2071,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
         // Horns force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
-            && is_hard_helmet(you.inv[you.equip[EQ_HELMET]]))
+            && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
+            && you_tran_can_wear(EQ_HELMET))
         {
             remove_one_equip(EQ_HELMET);
         }

@@ -1340,16 +1340,7 @@ static bool _do_description(std::string key, std::string footer = "")
             {
                 char name[80];
                 snprintf(name, 80, key.c_str());
-                if (_append_books(desc, mitm[thing_created], key))
-                {
-                    // nothing to be done
-                }
-                else if (get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
-                         || get_item_by_name(&mitm[thing_created], name, OBJ_STAVES))
-                {
-                    _append_spells(desc, mitm[thing_created]);
-                }
-                else if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
+                if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
                 {
                     append_weapon_stats(desc, mitm[thing_created]);
                     desc += "$";
@@ -1358,6 +1349,17 @@ static bool _do_description(std::string key, std::string footer = "")
                 {
                     append_armour_stats(desc, mitm[thing_created]);
                     desc += "$";
+                }
+                else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES))
+                {
+                    append_missile_info(desc);
+                    desc += "$";
+                }
+                else if (get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
+                         || get_item_by_name(&mitm[thing_created], name, OBJ_STAVES))
+                {
+                    if (!_append_books(desc, mitm[thing_created], key))
+                        _append_spells(desc, mitm[thing_created]);
                 }
 
                 // Now we don't need the item anymore.

@@ -1475,7 +1475,8 @@ static void _input()
     // XXX: Is there some smart way to avoid autoswitching back if we're
     //      just about to continue butchering?
     if (!you.turn_is_over && player_feels_safe
-        && you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
+        && you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
+        && you_tran_can_wear(EQ_WEAPON))
     {
         // Decrease value by 1. (0 means attribute is false, 1 = a, 2 = b, ...)
         int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;

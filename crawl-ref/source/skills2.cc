@@ -1747,17 +1747,13 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
             if (you.skills[x] == 27)
                 textcolor(YELLOW);
 
-#if DEBUG_DIAGNOSTICS
-            if (you.skills[x] == 0)
+            if (you.skills[x] == 0 || you.skills[x] == 27)
                 putch(' ');
             else
                 putch(lcount++);
-#else
-            putch(lcount++);
-#endif
 
             cprintf( " %c %-14s Skill %2d",
-                     (you.skills[x] == 0)    ? ' ' :
+                     (you.skills[x] == 0 || you.skills[x] == 27) ? ' ' :
                      (you.practise_skill[x]) ? '+' : '-',
                      skill_name(x), you.skills[x] );
 
@@ -1897,6 +1893,9 @@ void show_skills()
 
             if (keyin == lcount)
             {
+                if (you.skills[x] >= 27)
+                    break;
+
                 if (!show_description)
                     you.practise_skill[x] = !you.practise_skill[x];
                 else

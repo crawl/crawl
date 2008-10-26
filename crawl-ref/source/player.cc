@@ -5939,6 +5939,9 @@ item_def *player::weapon(int /* which_attack */)
 
 item_def *player::shield()
 {
+    if (!you_tran_can_wear(EQ_SHIELD))
+        return (NULL);
+
     return slot_item(EQ_SHIELD);
 }
 

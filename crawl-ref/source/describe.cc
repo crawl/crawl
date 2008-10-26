@@ -1215,6 +1215,8 @@ static std::string _describe_ammo( const item_def &item )
         }
     }
 
+    append_missile_info(description);
+
     return (description);
 }
 
@@ -1226,6 +1228,12 @@ void append_armour_stats(std::string &description, const item_def &item)
 
     description += "Evasion modifier: ";
     _append_value(description, property( item, PARM_EVASION ), true);
+}
+
+void append_missile_info(std::string &description)
+{
+    description += "$All pieces of ammunition may get destroyed upon impact. "
+                   "Enchantment reduces the chances of such loss.";
 }
 
 //---------------------------------------------------------------

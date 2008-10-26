@@ -94,8 +94,10 @@ bool remove_equipment(std::set<equipment_type> removed)
     if (removed.find(EQ_WEAPON) != removed.end()
         && you.equip[EQ_WEAPON] != -1)
     {
+        const int wpn = you.equip[EQ_WEAPON];
         unwield_item();
         canned_msg(MSG_EMPTY_HANDED);
+        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = wpn + 1;
     }
 
     // Meld items into you in (reverse) order. (std::set is a sorted container)
@@ -140,7 +142,54 @@ static bool _unmeld_equipment(std::set<equipment_type> melded)
         }
         else // armour
         {
-            armour_wear_effects( you.equip[e] );
+            int arm = you.equip[e];
+            bool force_remove = false;
+
+            // In case the player was mutated during the transformation,
+            // check whether the equipment is still wearable.
+            switch (e)
+            {
+            case EQ_HELMET:
+                if (you.mutation[MUT_HORNS]
+                    && is_hard_helmet(you.inv[arm]))
+                {
+                    force_remove = true;
+                }
+                break;
+
+            case EQ_GLOVES:
+                if (you.mutation[MUT_CLAWS] >= 2)
+                    force_remove = true;
+                break;
+
+            case EQ_BOOTS:
+                if (you.mutation[MUT_HOOVES] || you.mutation[MUT_TALONS])
+                    force_remove = true;
+                break;
+
+            case EQ_SHIELD:
+                // If you switched weapons during the transformation, make
+                // sure you can still wear your shield.
+                // (This is only possible with Statue Form.)
+                if (you.equip[EQ_WEAPON] != -1
+                    && is_shield_incompatible(*you.weapon(), &you.inv[arm]))
+                {
+                    force_remove = true;
+                }
+                break;
+
+            default:
+                break;
+            }
+
+            if (force_remove)
+            {
+                mprf("%s is pushed off your body!",
+                     you.inv[arm].name(DESC_CAP_YOUR).c_str());
+                you.equip[e] = -1;
+            }
+            else
+                armour_wear_effects( arm );
         }
     }
 

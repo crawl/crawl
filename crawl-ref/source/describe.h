@@ -63,6 +63,7 @@ void inscribe_item( item_def &item, bool proper_prompt );
  * *********************************************************************** */
 void append_weapon_stats(std::string &description, const item_def &item);
 void append_armour_stats(std::string &description, const item_def &item);
+void append_missile_info(std::string &description);
 
 // last updated 12 Jun 2008 {jpeg}
 /* ***********************************************************************
