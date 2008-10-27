@@ -1888,14 +1888,11 @@ void show_skills()
             if (x == SK_BLANK_LINE || x == SK_COLUMN_BREAK)
                 continue;
 
-            if (you.skills[x] == 0)
+            if (you.skills[x] == 0 || you.skills[x] == 27)
                 continue;
 
             if (keyin == lcount)
             {
-                if (you.skills[x] >= 27)
-                    break;
-
                 if (!show_description)
                     you.practise_skill[x] = !you.practise_skill[x];
                 else
@@ -1905,6 +1902,7 @@ void show_skills()
                 }
                 break;
             }
+
             ++lcount;
         }
     }
