@@ -132,7 +132,7 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
                                     int fuzz_chance, int fuzz_radius)
 {
 #ifdef USE_TILE
-    // Get monster index pre-fuzz
+    // Get monster index pre-fuzz.
     int idx = mgrd(where);
 #endif
 
