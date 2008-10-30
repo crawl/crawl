@@ -1656,11 +1656,15 @@ static bool _summon_holy_being_wrapper(int pow, god_type god,
     return _summon_holy_being_wrapper(pow, god, mon, dur, friendly, quiet);
 }
 
-bool summon_holy_warrior(int pow, god_type god, bool quiet)
+bool summon_holy_warrior(int pow, god_type god,
+                         bool force_hostile, bool permanent,
+                         bool quiet)
 {
     return _summon_holy_being_wrapper(pow, god, HOLY_BEING_WARRIOR,
-                                      std::min(2 + (random2(pow) / 4), 6),
-                                      true, quiet);
+                                      !permanent ?
+                                          std::min(2 + (random2(pow) / 4), 6) :
+                                          0,
+                                      !force_hostile, quiet);
 }
 
 bool summon_holy_being_type(monster_type mon, int pow, god_type god)

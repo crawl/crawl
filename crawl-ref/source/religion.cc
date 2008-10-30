@@ -3543,17 +3543,15 @@ static bool _tso_retribution()
     {
     case 0:
     case 1:
-    case 2: // summon holy beings (3/7)
+    case 2: // summon holy warriors (3/7)
     {
         bool success = false;
         int how_many = 1 + random2(you.experience_level / 5) + random2(3);
 
         for (int i = 0; i < how_many; ++i)
         {
-            if (create_monster(
-                    mgen_data::hostile_at(
-                            summon_any_holy_being(HOLY_BEING_RANDOM),
-                            you.pos(), 0, 0, true, god)) != -1)
+            if (summon_holy_warrior(you.experience_level * 20, god, true, true,
+                                    true))
             {
                 success = true;
             }
@@ -5235,9 +5233,9 @@ void excommunication(god_type new_god)
 
         // Leaving TSO for a non-good god will make all your followers
         // abandon you.  Leaving him for a good god will make your holy
-        // followers (his daeva servants) indifferent, while leaving
-        // your other followers (blessed with friendliness by his power,
-        // but not his servants) alone.
+        // followers (his daeva and angel servants) indifferent, while
+        // leaving your other followers (blessed with friendliness by
+        // his power, but not his servants) alone.
         if (!is_good_god(new_god))
         {
             _inc_penance(old_god, 50);
