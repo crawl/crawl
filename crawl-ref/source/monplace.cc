@@ -2291,12 +2291,8 @@ monster_type summon_any_holy_being(holy_being_class_type hbct)
 
     switch (hbct)
     {
-    case HOLY_BEING_ZIN:
-        mon = MONS_ANGEL;
-        break;
-
     case HOLY_BEING_TSO:
-        mon = MONS_DAEVA;
+        mon = coinflip() ? MONS_DAEVA : MONS_ANGEL;
         break;
 
     default:
