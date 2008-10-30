@@ -1539,7 +1539,6 @@ bool cast_summon_dragon(int pow, god_type god)
     return (false);
 }
 
-// Trog sends a fighting buddy (or enemy) for a follower.
 bool summon_berserker(int pow, god_type god, bool force_hostile)
 {
     monster_type mon = MONS_PROGRAM_BUG;
