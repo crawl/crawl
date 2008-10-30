@@ -368,8 +368,15 @@ static bool tag_follower_at(const coord_def &pos)
         if (!mons_friendly(fmenv))
             return (false);
 
-        // Orcs will follow Beogh worshippers.
-        if (you.religion != GOD_BEOGH || !is_follower(fmenv))
+        // Non-mindless undead will follow Yredelemnul worshippers, and
+        // orcs will follow Beogh worshippers.
+        if (you.religion != GOD_YREDELEMNUL && you.religion != GOD_BEOGH)
+            return (false);
+
+        if (you.religion == GOD_YREDELEMNUL && mons_intel(fmenv) <= I_PLANT)
+            return (false);
+
+        if (!is_follower(fmenv))
             return (false);
     }
 
