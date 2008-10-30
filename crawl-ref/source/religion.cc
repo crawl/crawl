@@ -3550,11 +3550,8 @@ static bool _tso_retribution()
 
         for (int i = 0; i < how_many; ++i)
         {
-            if (summon_holy_warrior(you.experience_level * 20, god, true, true,
-                                    true))
-            {
+            if (summon_holy_warrior(100, god, true, true, true))
                 success = true;
-            }
         }
 
         simple_god_message(success ? " sends the divine host to punish "
@@ -3887,12 +3884,11 @@ static bool _yredelemnul_retribution()
             ;
         else
         {
-            int threshold = 100;
             int how_many = 1 + random2(1 + (you.experience_level / 5));
             int count = 0;
 
             for (; how_many > 0; --how_many)
-                count += _yred_random_servants(threshold, true);
+                count += _yred_random_servants(100, true);
 
             simple_god_message(count > 1 ? " sends servants to punish you." :
                                count > 0 ? " sends a servant to punish you."
