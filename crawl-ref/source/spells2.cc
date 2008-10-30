@@ -1243,7 +1243,7 @@ bool cast_summon_swarm(int pow, god_type god,
             break;
         }
 
-        bool friendly = (force_hostile) ? false : (random2(pow) > 7);
+        bool friendly = !force_hostile ? (random2(pow) > 7) : false;
 
         if (create_monster(
                 mgen_data(mon,
