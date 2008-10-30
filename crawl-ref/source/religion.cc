@@ -3662,7 +3662,7 @@ static bool _zin_retribution()
         else
         {
             bool success = cast_summon_swarm(you.experience_level * 20,
-                                             god, true);
+                                             god, true, true);
             simple_god_message(success ? " sends a plague down upon you!"
                                        : "'s plague fails to arrive.", god);
         }
