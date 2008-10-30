@@ -3308,7 +3308,7 @@ static bool _beam_is_harmless(bolt &beam, monsters *mon)
     case BEAM_HOLY:
         return (mons_is_holy(mon)
                 || is_good_god(you.religion)
-                   && ( is_follower(mon) || mons_neutral(mon) ));
+                   && (is_follower(mon) || mons_neutral(mon)));
 
     case BEAM_STEAM:
         return (mons_res_steam(mon) >= 3);

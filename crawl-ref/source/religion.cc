@@ -1182,11 +1182,15 @@ static bool _is_yred_enslaved_soul(const monsters* mon)
     return (mon->alive() && mons_enslaved_soul(mon));
 }
 
-bool is_yred_undead_slave(const monsters* mon)
+bool is_undead_slave(const monsters* mon)
 {
     return (mon->alive() && mons_holiness(mon) == MH_UNDEAD
-            && mon->attitude == ATT_FRIENDLY
-            && mons_is_god_gift(mon, GOD_YREDELEMNUL));
+            && mon->attitude == ATT_FRIENDLY);
+}
+
+bool is_yred_undead_slave(const monsters* mon)
+{
+    return (is_undead_slave(mon) && mons_is_god_gift(mon, GOD_YREDELEMNUL));
 }
 
 bool is_orcish_follower(const monsters* mon)
@@ -1211,7 +1215,7 @@ bool is_good_follower(const monsters* mon)
 bool is_follower(const monsters* mon)
 {
     if (you.religion == GOD_YREDELEMNUL)
-        return is_yred_undead_slave(mon);
+        return is_undead_slave(mon);
     else if (you.religion == GOD_BEOGH)
         return is_orcish_follower(mon);
     else if (you.religion == GOD_ZIN)
