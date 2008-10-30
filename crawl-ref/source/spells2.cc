@@ -1611,6 +1611,8 @@ bool summon_berserker(int pow, god_type god, bool force_hostile)
     summon->update_ench(berserk);
     summon->update_ench(abj);
 
+    player_angers_monster(&menv[monster]);
+
     return (true);
 }
 
@@ -1619,8 +1621,10 @@ static bool _summon_holy_being_wrapper(god_type god, monster_type mon, int dur,
 {
     const int monster =
         create_monster(
-            mgen_data(mon, BEH_FRIENDLY, dur,
-                      you.pos(), you.pet_target,
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      dur, you.pos(),
+                      friendly ? you.pet_target : MHITYOU,
                       MG_FORCE_BEH, god));
 
     if (monster == -1)
