@@ -3536,29 +3536,26 @@ static bool _tso_retribution()
 {
     const god_type god = GOD_SHINING_ONE;
 
-    // holy warriors/cleansing theme
+    // holy beings/cleansing theme
     int punishment = random2(7);
 
     switch (punishment)
     {
     case 0:
     case 1:
-    case 2: // summon holy warriors (3/7)
+    case 2: // summon holy beings (3/7)
     {
         bool success = false;
         int how_many = 1 + random2(you.experience_level / 5) + random2(3);
 
         for (int i = 0; i < how_many; ++i)
         {
-            if (coinflip())
+            if (create_monster(
+                    mgen_data::hostile_at(
+                            summon_any_holy_being(HOLY_BEING_RANDOM),
+                            you.pos(), 0, 0, true, god)) != -1)
             {
-                if (summon_daeva(100, god, true, true, true))
-                    success = true;
-            }
-            else
-            {
-                if (summon_angel(100, god, true, true, true))
-                    success = true;
+                success = true;
             }
         }
 
@@ -3650,8 +3647,12 @@ static bool _zin_retribution()
 
             for (int i = 0; i < how_many; ++i)
             {
-                if (summon_angel(100, god, true, true, true))
+                if (create_monster(
+                        mgen_data::hostile_at(MONS_ANGEL,
+                            you.pos(), 0, 0, true, god)) != -1)
+                {
                     success = true;
+                }
             }
 
             simple_god_message(success ? " sends the divine host to punish "

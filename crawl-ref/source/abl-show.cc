@@ -1468,10 +1468,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
-        if (coinflip())
-            summon_angel(you.skills[SK_INVOCATIONS] * 4, GOD_SHINING_ONE);
-        else
-            summon_daeva(you.skills[SK_INVOCATIONS] * 4, GOD_SHINING_ONE);
+        summon_holy_warrior(you.skills[SK_INVOCATIONS] * 4, GOD_SHINING_ONE);
         exercise(SK_INVOCATIONS, 8 + random2(10));
         break;
 

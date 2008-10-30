@@ -489,8 +489,6 @@ bool summon_greater_demon(int pow, god_type god,
                                  5, false, random2(pow) > 5, quiet);
 }
 
-// Makhleb or Kikubaaqudgha sends a demonic buddy (or enemy) for a
-// follower.
 bool summon_demon_type(monster_type mon, int pow, god_type god)
 {
     return _summon_demon_wrapper(pow, god, mon,

@@ -1616,9 +1616,11 @@ bool summon_berserker(int pow, god_type god, bool force_hostile)
     return (true);
 }
 
-static bool _summon_holy_being_wrapper(god_type god, monster_type mon, int dur,
-                                       bool friendly, bool quiet)
+static bool _summon_holy_being_wrapper(int pow, god_type god, monster_type mon,
+                                       int dur, bool friendly, bool quiet)
 {
+    UNUSED(pow);
+
     const int monster =
         create_monster(
             mgen_data(mon,
@@ -1646,24 +1648,27 @@ static bool _summon_holy_being_wrapper(god_type god, monster_type mon, int dur,
     return (true);
 }
 
-// TSO sends an angel for a follower.
-bool summon_angel(int pow, god_type god, bool quiet,
-                  bool force_hostile, bool permanent)
+static bool _summon_holy_being_wrapper(int pow, god_type god,
+                                       holy_being_class_type hbct,
+                                       int dur, bool friendly, bool quiet)
 {
-    int dur = !permanent ? std::min(2 + (random2(pow) / 4), 6) : 0;
+    monster_type mon = summon_any_holy_being(hbct);
 
-    return _summon_holy_being_wrapper(god, MONS_ANGEL, dur, !force_hostile,
-                                      quiet);
+    return _summon_holy_being_wrapper(pow, god, mon, dur, friendly, quiet);
 }
 
-// TSO sends a daeva for a follower.
-bool summon_daeva(int pow, god_type god, bool quiet,
-                  bool force_hostile, bool permanent)
+bool summon_holy_warrior(int pow, god_type god, bool quiet)
 {
-    int dur = !permanent ? std::min(2 + (random2(pow) / 4), 6) : 0;
+    return _summon_holy_being_wrapper(pow, god, HOLY_BEING_WARRIOR,
+                                      std::min(2 + (random2(pow) / 4), 6),
+                                      true, quiet);
+}
 
-    return _summon_holy_being_wrapper(god, MONS_DAEVA, dur, !force_hostile,
-                                      quiet);
+bool summon_holy_being_type(monster_type mon, int pow, god_type god)
+{
+    return _summon_holy_being_wrapper(pow, god, mon,
+                                      std::min(2 + (random2(pow) / 4), 6),
+                                      true, false);
 }
 
 bool cast_tukimas_dance(int pow, god_type god,

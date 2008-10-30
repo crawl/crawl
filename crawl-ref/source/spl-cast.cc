@@ -1510,11 +1510,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_SUMMON_ANGEL:
-        summon_angel(powc, god);
+        summon_holy_being_type(MONS_ANGEL, powc, god);
         break;
 
     case SPELL_SUMMON_DAEVA:
-        summon_daeva(powc, god);
+        summon_holy_being_type(MONS_DAEVA, powc, god);
         break;
 
     case SPELL_TUKIMAS_DANCE:
