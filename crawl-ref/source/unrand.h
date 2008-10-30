@@ -161,7 +161,7 @@
     {
         SPWPN_VORPAL, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 1,       // berserk
+        0, 0, 0, 0, 0, 1,       // go berserk
         0, 0, 0, 0, 0,
         1, 0, 0, 0, 0,          // force berserk
         0, -20                  // stealth
