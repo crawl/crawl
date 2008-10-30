@@ -32,7 +32,7 @@ bool burn_freeze(int pow, beam_type flavour, int targetmon);
 /* ***********************************************************************
  * called from: spell
  * *********************************************************************** */
-int corpse_rot(int power);
+int corpse_rot(int pow);
 
 
 struct dist;

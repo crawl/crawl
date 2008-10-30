@@ -222,16 +222,16 @@ int detect_creatures( int pow, bool telepathic )
     return (creatures_found);
 }
 
-int corpse_rot(int power)
+int corpse_rot(int pow)
 {
-    UNUSED( power );
+    UNUSED(pow);
 
     for (radius_iterator ri(you.pos(), 6); ri; ++ri)
     {
         if (see_grid_no_trans(*ri) && !is_sanctuary(*ri)
             && env.cgrid(*ri) == EMPTY_CLOUD)
         {
-            for ( stack_iterator si(*ri); si; ++si )
+            for (stack_iterator si(*ri); si; ++si)
             {
                 if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
                 {
@@ -255,7 +255,7 @@ int corpse_rot(int power)
 
     // Should make zombies decay into skeletons?
 
-    return 0;
+    return (0);
 }
 
 bool brand_weapon(brand_type which_brand, int power)
