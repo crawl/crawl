@@ -955,13 +955,11 @@ bool mons_enslaved_soul(const monsters *mon)
         || mons_enslaved_intact_soul(mon));
 }
 
-bool mons_twisted_resurrection_abomination(const monsters *mon)
+bool mons_undead_abomination(const monsters *mon)
 {
     return (mons_holiness(mon) == MH_UNDEAD
         && (mon->type == MONS_ABOMINATION_SMALL
-            || mon->type == MONS_ABOMINATION_LARGE)
-        && !mons_enslaved_twisted_soul(mon)
-        && !mons_is_summoned(mon));
+            || mon->type == MONS_ABOMINATION_LARGE));
 }
 
 int downscale_zombie_damage(int damage)
@@ -5457,9 +5455,9 @@ bool monsters::is_patrolling() const
 
 bool monsters::can_use_stairs() const
 {
-    return (!mons_twisted_resurrection_abomination(this)
-        && (!mons_is_zombified(this)
-            || mons_enslaved_intact_soul(this)));
+    return (mons_enslaved_soul(this)
+        || (!mons_is_zombified(this)
+            && !mons_undead_abomination(this)));
 }
 
 bool monsters::needs_transit() const
