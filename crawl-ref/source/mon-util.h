@@ -611,7 +611,6 @@ bool mons_enslaved_body_and_soul(const monsters *mon);
 bool mons_enslaved_twisted_soul(const monsters *mon);
 bool mons_enslaved_intact_soul(const monsters *mon);
 bool mons_enslaved_soul(const monsters *mon);
-bool mons_undead_abomination(const monsters *mon);
 
 
 // last updated 12may2000 {dlb}
