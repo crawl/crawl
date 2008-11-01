@@ -5452,7 +5452,9 @@ bool monsters::needs_transit() const
                 || (flags & MF_BANISHED)
                 || type == MONS_ROYAL_JELLY
                 || you.level_type == LEVEL_DUNGEON
-                   && hit_dice > 8 + random2(25))
+                   && hit_dice > 8 + random2(25)
+                   && (!mons_is_zombified(this)
+                       || mons_enslaved_intact_soul(this)))
             && !mons_is_summoned(this));
 }
 
