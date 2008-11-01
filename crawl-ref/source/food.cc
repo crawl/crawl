@@ -120,7 +120,7 @@ void set_hunger( int new_hunger_level, bool suppress_msg )
         make_hungry( abs(hunger_difference), suppress_msg );
     else if (hunger_difference > 0)
         lessen_hunger( hunger_difference, suppress_msg );
-}                               // end set_hunger()
+}
 
 // More of a "weapon_switch back from butchering" function, switching
 // to a weapon is done using the wield_weapon code.
