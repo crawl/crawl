@@ -955,6 +955,15 @@ bool mons_enslaved_soul(const monsters *mon)
         || mons_enslaved_intact_soul(mon));
 }
 
+bool mons_twisted_resurrection_abomination(const monsters *mon)
+{
+    return (mons_holiness(mon) == MH_UNDEAD
+        && (mon->type == MONS_ABOMINATION_SMALL
+            || mon->type == MONS_ABOMINATION_LARGE)
+        && !mons_enslaved_twisted_soul(mon)
+        && !mons_is_summoned(mon));
+}
+
 int downscale_zombie_damage(int damage)
 {
     // These are cumulative, of course: {dlb}
@@ -5446,6 +5455,13 @@ bool monsters::is_patrolling() const
     return (!patrol_point.origin());
 }
 
+bool monsters::can_use_stairs() const
+{
+    return (!mons_twisted_resurrection_abomination(this)
+        && (!mons_is_zombified(this)
+            || mons_enslaved_intact_soul(this)));
+}
+
 bool monsters::needs_transit() const
 {
     return ((mons_is_unique(type)
@@ -5453,8 +5469,7 @@ bool monsters::needs_transit() const
                 || type == MONS_ROYAL_JELLY
                 || you.level_type == LEVEL_DUNGEON
                    && hit_dice > 8 + random2(25)
-                   && (!mons_is_zombified(this)
-                       || mons_enslaved_intact_soul(this)))
+                   && can_use_stairs())
             && !mons_is_summoned(this));
 }
 

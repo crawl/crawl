@@ -1153,6 +1153,7 @@ public:
 
     bool is_travelling() const;
     bool is_patrolling() const;
+    bool can_use_stairs() const;
     bool needs_transit() const;
     void set_transit(const level_id &destination);
     bool find_place_to_live(bool near_player = false);

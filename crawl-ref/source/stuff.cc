@@ -341,8 +341,9 @@ static bool tag_follower_at(const coord_def &pos)
 
     if (fmenv->type == MONS_PLAYER_GHOST
         || !fmenv->alive()
-        || mons_is_stationary(fmenv)
-        || fmenv->incapacitated())
+        || !fmenv->can_use_stairs()
+        || fmenv->incapacitated()
+        || mons_is_stationary(fmenv))
     {
         return (false);
     }
@@ -361,11 +362,6 @@ static bool tag_follower_at(const coord_def &pos)
         return (false);
     }
 
-    // Zombified undead (not including enslaved souls) will not follow
-    // you.
-    if (mons_is_zombified(fmenv) && !mons_enslaved_intact_soul(fmenv))
-        return (false);
-
     // Monsters that are not directly adjacent are subject to more
     // stringent checks.
     if ((pos - you.pos()).abs() > 2)
@@ -373,17 +369,10 @@ static bool tag_follower_at(const coord_def &pos)
         if (!mons_friendly(fmenv))
             return (false);
 
-        // Non-zombified undead (including enslaved souls) will follow
-        // Yredelemnul worshippers, and orcs will follow Beogh
-        // worshippers.
+        // Undead will follow Yredelemnul worshippers, and orcs will
+        // follow Beogh worshippers.
         if (you.religion != GOD_YREDELEMNUL && you.religion != GOD_BEOGH)
             return (false);
-
-        if (you.religion == GOD_YREDELEMNUL
-            && mons_is_zombified(fmenv) && !mons_enslaved_intact_soul(fmenv))
-        {
-            return (false);
-        }
 
         if (!is_follower(fmenv))
             return (false);
