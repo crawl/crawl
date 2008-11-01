@@ -1782,13 +1782,6 @@ void define_monster(monsters &mons)
                               : YELLOW);                     // 1/7
         break;
 
-    case MONS_DRACONIAN:
-        // These are supposed to only be created by polymorph.
-        hd += random2(10);
-        ac += random2(5);
-        ev += random2(5);
-        break;
-
     case MONS_DRACONIAN_CALLER:
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_ZEALOT:
@@ -1822,8 +1815,10 @@ void define_monster(monsters &mons)
         monbase = static_cast<monster_type>(MONS_BLACK_DRACONIAN + random2(8));
         break;
     }
+
     case MONS_HUMAN:
     case MONS_ELF:
+    case MONS_DRACONIAN:
         // These are supposed to only be created by polymorph.
         hd += random2(10);
         ac += random2(5);
