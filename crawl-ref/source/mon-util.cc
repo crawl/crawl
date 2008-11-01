@@ -648,9 +648,7 @@ bool mons_is_demon(int mc)
     return (false);
 }
 
-/**
- * Returns true if the given monster's foe is also a monster.
- */
+// Returns true if the given monster's foe is also a monster.
 bool mons_foe_is_mons(const monsters *mons)
 {
     const actor *foe = mons->get_foe();
