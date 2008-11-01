@@ -371,11 +371,11 @@ static bool tag_follower_at(const coord_def &pos)
 
         // Undead will follow Yredelemnul worshippers, and orcs will
         // follow Beogh worshippers.
-        if (you.religion != GOD_YREDELEMNUL && you.religion != GOD_BEOGH)
+        if ((you.religion != GOD_YREDELEMNUL && you.religion != GOD_BEOGH)
+            || !is_follower(fmenv))
+        {
             return (false);
-
-        if (!is_follower(fmenv))
-            return (false);
+        }
     }
 
     // Monster is chasing player through stairs.
