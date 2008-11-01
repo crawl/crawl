@@ -1816,9 +1816,9 @@ void define_monster(monsters &mons)
         break;
     }
 
-    case MONS_HUMAN:
-    case MONS_ELF:
     case MONS_DRACONIAN:
+    case MONS_ELF:
+    case MONS_HUMAN:
         // These are supposed to only be created by polymorph.
         hd += random2(10) - 4;
         ac += random2(5) - 2;
