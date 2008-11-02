@@ -3536,9 +3536,9 @@ void lose_piety(int pgn)
 
 static bool _tso_retribution()
 {
+    // holy warriors/cleansing theme
     const god_type god = GOD_SHINING_ONE;
 
-    // holy beings/cleansing theme
     int punishment = random2(7);
 
     switch (punishment)
@@ -3602,9 +3602,9 @@ static bool _tso_retribution()
 
 static bool _zin_retribution()
 {
+    // surveillance/creeping doom theme
     const god_type god = GOD_ZIN;
 
-    // surveillance/creeping doom theme
     int punishment = random2(10);
 
     // If little mutated or can't unmutate, do something else instead.
@@ -4019,9 +4019,9 @@ static bool _trog_retribution()
 
 static bool _beogh_retribution()
 {
+    // orcish theme
     const god_type god = GOD_BEOGH;
 
-    // orcish theme
     switch (random2(8))
     {
     case 0: // smiting (25%)
@@ -6047,7 +6047,7 @@ void god_smites_you(god_type god, const char *message,
     else
     {
         if (death_type == NUM_KILLBY)
-            switch(god)
+            switch (god)
             {
                 case GOD_BEOGH:
                     death_type = KILLED_BY_BEOGH_SMITING;
@@ -6065,7 +6065,7 @@ void god_smites_you(god_type god, const char *message,
         if (death_type != KILLED_BY_BEOGH_SMITING
             && death_type != KILLED_BY_TSO_SMITING)
         {
-            aux = "smited by ";
+            aux = "smote by ";
             aux += god_name(god);
         }
 
@@ -6076,11 +6076,11 @@ void god_smites_you(god_type god, const char *message,
         int divine_hurt = 10 + random2(10);
 
         for (int i = 0; i < 5; ++i)
-            divine_hurt += random2( you.experience_level );
+            divine_hurt += random2(you.experience_level);
 
-        simple_god_message( " smites you!", god );
+        simple_god_message(" smites you!", god);
         ouch(divine_hurt, NON_MONSTER, death_type, aux.c_str());
-        dec_penance( god, 1 );
+        dec_penance(god, 1);
     }
 }
 
