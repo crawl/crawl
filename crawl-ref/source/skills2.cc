@@ -64,8 +64,9 @@ typedef skill_title_key_t stk;
 // Referring to the skill itself is fine ("Transmuter") but not impressive.
 // No overlaps, high diversity.
 
-// Replace @genus@ with lowercase genus, @Genus@ with uppercase, and %s
-// with special cases defined below, including but not limited to species.
+// Replace @Adj@ with uppercase adjective form, @genus@ with lowercase genus,
+// @Genus@ with uppercase genus, and %s with special cases defined below,
+// including but not limited to species.
 
 // NOTE:  Even though %s could be used with most of these, remember that
 // the character's race will be listed on the next line.  It's only really
@@ -77,22 +78,22 @@ const char *skills[50][6] =
   //  Skill name        levels 1-7       levels 8-14        levels 15-20       levels 21-26      level 27
     {"Fighting",       "Skirmisher",    "Fighter",         "Warrior",         "Slayer",         "Conqueror"},          //  0
     {"Short Blades",   "Cutter",        "Slicer",          "Swashbuckler",    "Blademaster",    "Eviscerator"},
-    {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Genus@ Blade",  "Swordmaster"},
+    {"Long Blades",    "Slasher",       "Carver",          "Fencer",          "@Adj@ Blade",    "Swordmaster"},
     {NULL},  //  3- was: great swords {dlb}
     {"Axes",           "Chopper",       "Cleaver",         "Hacker",          "Severer",        "Executioner"},
     {"Maces & Flails", "Cudgeler",      "Basher",          "Bludgeoner",      "Shatterer",      "Skullcrusher"},       //  5
-    {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Genus@ Porcupine"},
+    {"Polearms",       "Poker",         "Spear-Bearer",    "Impaler",         "Phalangite",     "@Adj@ Porcupine"},
     {"Staves",         "Twirler",       "Cruncher",        "Stickfighter",    "Pulveriser",     "Chief of Staff"},
-    {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Genus@ Catapult"},
+    {"Slings",         "Vandal",        "Slinger",         "Whirler",         "Slingshot",      "@Adj@ Catapult"},
     {"Bows",           "Shooter",       "Archer",          "Marks@genus@",    "Crack Shot",     "Merry @Genus@"},
-    {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Genus@ Arbalest"},   // 10
+    {"Crossbows",      "Bolt Thrower",  "Quickloader",     "Sharpshooter",    "Sniper",         "@Adj@ Arbalest"},     // 10
     {"Darts",          "Dart Thrower",  "Hurler",          "Hedgehog",        "Darts Champion", "Perforator"},
-    {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Genus@ Ballista"},
+    {"Throwing",       "Chucker",       "Thrower",         "Deadly Accurate", "Hawkeye",        "@Adj@ Ballista"},
     {"Armour",         "Covered",       "Protected",       "Tortoise",        "Impregnable",    "Invulnerable"},
     {"Dodging",        "Ducker",        "Nimble",          "Spry",            "Acrobat",        "Intangible"},
     {"Stealth",        "Sneak",         "Covert",          "Unseen",          "Imperceptible",  "Ninja"},              // 15
     {"Stabbing",       "Miscreant",     "Blackguard",      "Backstabber",     "Cutthroat",      "Politician"},
-    {"Shields",        "Shield-Bearer", "Hoplite",         "Blocker",         "Peltast",        "@Genus@ Barricade"},
+    {"Shields",        "Shield-Bearer", "Hoplite",         "Blocker",         "Peltast",        "@Adj@ Barricade"},
     {"Traps & Doors",  "Scout",         "Disarmer",        "Vigilant",        "Perceptive",     "Dungeon Master"},
     // STR based fighters, for DEX/martial arts titles see below
     {"Unarmed Combat", "Ruffian",       "Grappler",        "Brawler",         "Wrestler",       "@Weight@weight Champion"},
@@ -108,7 +109,7 @@ const char *skills[50][6] =
     {"Enchantments",   "Charm-Maker",   "Infuser",         "Bewitcher",       "Enchanter",      "Spellbinder"},
     {"Summonings",     "Caller",        "Summoner",        "Convoker",        "Demonologist",   "Hellbinder"},
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
-    {"Translocations", "Grasshopper",   "Placeless @Genus@",    "Blinker",         "Portalist",      "Plane @Walker@"},           // 30
+    {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},     // 30
     {"Transmigration", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@"},
     {"Divinations",    "Seer",          "Soothsayer",      "Diviner",         "Augur",          "Oracle"},
 
@@ -1923,6 +1924,11 @@ int str_to_skill(const std::string &skill)
     return (SK_FIGHTING);
 }
 
+static std::string _stk_adj_cap()
+{
+    return species_name(Skill_Species, 1, false, true);
+}
+
 static std::string _stk_genus_cap()
 {
     return species_name(Skill_Species, 1, true, false);
@@ -1979,6 +1985,7 @@ static std::string _stk_weight()
 }
 
 static skill_title_key_t _skill_title_keys[] = {
+    stk("Adj", _stk_adj_cap),
     stk("Genus", _stk_genus_cap),
     stk("genus", _stk_genus_nocap),
     stk("Genus_Short", _stk_genus_short_cap),
