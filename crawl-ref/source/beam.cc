@@ -3218,9 +3218,7 @@ static void _beam_ouch(int dam, bolt &beam)
 {
     // The order of this is important.
     if (YOU_KILL(beam.thrower) && beam.aux_source.empty())
-    {
         ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING);
-    }
     else if (MON_KILL(beam.thrower))
     {
         if (beam.flavour == BEAM_SPORE)
