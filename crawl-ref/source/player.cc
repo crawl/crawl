@@ -4140,8 +4140,8 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
         {
             switch (speci)
             {
-            case SP_MOUNTAIN_DWARF: res = "Mountain Dwarf"; break;
-            default:                res = "Dwarf";          break;
+            case SP_MOUNTAIN_DWARF: res = "Mountain Dwarf";            break;
+            default:                res = "Dwarf";                     break;
             }
         }
     }
@@ -4149,29 +4149,29 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
     {
         switch (speci)
         {
-        case SP_HUMAN:      res = "Human";                           break;
-        case SP_HALFLING:   res = "Halfling";                        break;
-        case SP_KOBOLD:     res = "Kobold";                          break;
-        case SP_MUMMY:      res = "Mummy";                           break;
-        case SP_NAGA:       res = "Naga";                            break;
-        case SP_CENTAUR:    res = "Centaur";                         break;
-        case SP_SPRIGGAN:   res = "Spriggan";                        break;
-        case SP_MINOTAUR:   res = "Minotaur";                        break;
-        case SP_KENKU:      res = "Kenku";                           break;
-        case SP_VAMPIRE:    res = "Vampire";                         break;
+        case SP_HUMAN:      res = "Human";                             break;
+        case SP_HALFLING:   res = "Halfling";                          break;
+        case SP_KOBOLD:     res = "Kobold";                            break;
+        case SP_MUMMY:      res = "Mummy";                             break;
+        case SP_NAGA:       res = "Naga";                              break;
+        case SP_CENTAUR:    res = "Centaur";                           break;
+        case SP_SPRIGGAN:   res = "Spriggan";                          break;
+        case SP_MINOTAUR:   res = "Minotaur";                          break;
+        case SP_KENKU:      res = "Kenku";                             break;
 
         case SP_HILL_ORC:
             res = (adj ? "Orcish" : genus ? "Orc" : "Hill Orc");
             break;
 
-        case SP_GNOME:      res = (adj ? "Gnomish"    : "Gnome");       break;
-        case SP_OGRE:       res = (adj ? "Ogreish"    : "Ogre");        break;
-        case SP_TROLL:      res = (adj ? "Trollish"   : "Troll");       break;
-        case SP_DEMIGOD:    res = (adj ? "Divine"     : "Demigod");     break;
-        case SP_DEMONSPAWN: res = (adj ? "Demonic"    : "Demonspawn" ); break;
-        case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");       break;
-        case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");     break;
-        default:            res = (adj ? "Yakish"     : "Yak");         break;
+        case SP_GNOME:      res = (adj ? "Gnomish"    : "Gnome");      break;
+        case SP_OGRE:       res = (adj ? "Ogreish"    : "Ogre");       break;
+        case SP_TROLL:      res = (adj ? "Trollish"   : "Troll");      break;
+        case SP_DEMIGOD:    res = (adj ? "Divine"     : "Demigod");    break;
+        case SP_DEMONSPAWN: res = (adj ? "Demonic"    : "Demonspawn"); break;
+        case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");      break;
+        case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
+        case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
+        default:            res = (adj ? "Yakish"     : "Yak");        break;
         }
     }
     return res;
