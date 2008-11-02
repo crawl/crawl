@@ -6042,8 +6042,8 @@ void god_smites_you(god_type god, const char *message,
         && !player_under_penance() && x_chance_in_y(you.piety, MAX_PIETY * 2))
     {
         god_speaks(you.religion,
-                   make_stringf("Mortal, I have averted the wrath of %s... "
-                                "this time.", god_name(god).c_str()).c_str());
+                   make_stringf("\"Mortal, I have averted the wrath of %s... "
+                                "this time.\"", god_name(god).c_str()).c_str());
     }
     else
     {
