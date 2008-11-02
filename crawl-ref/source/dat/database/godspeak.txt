@@ -319,7 +319,7 @@ You hear Xom's avuncular chuckle.
 # Beogh's messiah has destroyed an idol
 Beogh idol follower
 
-Beogh fumes, "This is no small sin, orc.  Repent!"
+Beogh fumes, "This is no small sin, orc. Repent!"
 
 Beogh whispers, "You will pay for this transgression.",
 
