@@ -1654,7 +1654,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_TSO_SMITING:
-        desc += terse? "smote by Shining One" : "Smote by The Shining One";
+        desc += terse? "smote by Shining One" : "Smote by the Shining One";
         needs_damage = true;
         break;
 
