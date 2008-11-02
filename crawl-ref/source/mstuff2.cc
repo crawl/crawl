@@ -604,7 +604,7 @@ bool monster_random_space(const monsters *monster, coord_def& target,
                           bool restrict_not_LOS)
 {
     int tries = 0;
-    while (tries++ < 150)
+    while (tries++ < 600)
     {
         target.x = 10 + random2(GXM - 20);
         target.y = 10 + random2(GYM - 20);
