@@ -46,6 +46,7 @@
 #include "mon-util.h"
 #include "monplace.h"
 #include "monstuff.h"
+#include "mstuff2.h"
 #include "mutation.h"
 #include "newgame.h"
 #include "notes.h"
@@ -3603,7 +3604,7 @@ static bool _zin_retribution()
 {
     const god_type god = GOD_ZIN;
 
-    // angels/creeping doom theme
+    // surveillance/creeping doom theme
     int punishment = random2(10);
 
     // If little mutated or can't unmutate, do something else instead.
@@ -3635,26 +3636,44 @@ static bool _zin_retribution()
     }
     case 2:
     case 3:
-    case 4: // Summon angels or bugs (pestilence). (30%)
+    case 4: // Summon eyes or bugs (pestilence). (30%)
         if (random2(you.experience_level) > 7 && !one_chance_in(5))
         {
+            const monster_type eyes[] = {
+                MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,
+                MONS_EYE_OF_DEVASTATION, MONS_GREAT_ORB_OF_EYES
+            };
+
             const int how_many = 1 + (you.experience_level / 10) + random2(3);
             bool success = false;
 
             for (int i = 0; i < how_many; ++i)
             {
+                const monster_type mon = RANDOM_ELEMENT(eyes);
+                coord_def mon_pos;
+
+                {
+                    monsters dummy;
+                    dummy.type = mon;
+                    dummy.attitude = ATT_HOSTILE;
+
+                    if (!monster_random_space(&dummy, mon_pos, true))
+                        continue;
+                }
+
                 if (create_monster(
-                        mgen_data::hostile_at(MONS_ANGEL,
-                            you.pos(), 0, 0, true, god)) != -1)
+                        mgen_data::hostile_at(mon,
+                            mon_pos, 0, MG_FORCE_PLACE, true, god)) != -1)
                 {
                     success = true;
                 }
             }
 
-            simple_god_message(success ? " sends the divine host to punish "
-                                         "you for your evil ways!"
-                                       : "'s divine host fails to appear.",
-                               god);
+            if (success)
+                god_speaks(god, "You feel Zin's eyes turn towards you...");
+            else
+                simple_god_message("'s eyes are elsewhere at the moment.",
+                                   god);
         }
         else
         {

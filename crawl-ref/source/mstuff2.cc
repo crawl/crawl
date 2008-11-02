@@ -599,6 +599,33 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     }
 }
 
+// restrict_not_LOS:  restrict target to be outside PLAYER line of sight.
+bool monster_random_space(const monsters *monster, coord_def& target,
+                          bool restrict_not_LOS)
+{
+    int tries = 0;
+    while (tries++ < 150)
+    {
+        target.x = 10 + random2(GXM - 20);
+        target.y = 10 + random2(GYM - 20);
+
+        // Don't land on top of another monster.
+        if (mgrd(target) != NON_MONSTER || target == you.pos())
+            continue;
+
+        if (is_sanctuary(target) && !mons_wont_attack(monster))
+            continue;
+
+        if (restrict_not_LOS && see_grid(target))
+            continue;
+
+        if (monster_habitable_grid(monster, grd(target)))
+            return (true);
+    }
+
+    return (false);
+}
+
 void monster_teleport(monsters *monster, bool instan, bool silent)
 {
     if (!instan)
@@ -634,23 +661,8 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
     mons_clear_trapping_net(monster);
 
     coord_def newpos;
-    while (true)
-    {
-        newpos.x = 10 + random2(GXM - 20);
-        newpos.y = 10 + random2(GYM - 20);
-
-        // Don't land on top of another monster.
-        if (mgrd(newpos) != NON_MONSTER || newpos == you.pos())
-            continue;
-
-        if (is_sanctuary(newpos) && !mons_wont_attack(monster))
-            continue;
-
-        if (monster_habitable_grid(monster, grd(newpos)))
-            break;
-    }
-
-    monster->moveto(newpos);
+    if (monster_random_space(monster, newpos))
+        monster->moveto(newpos);
 
     mgrd(monster->pos()) = monster_index(monster);
 

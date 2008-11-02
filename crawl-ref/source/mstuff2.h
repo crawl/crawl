@@ -25,6 +25,8 @@ bool mons_thrown_object_destroyed( item_def *item, const coord_def& where,
                                    bool returning, int midx );
 void setup_generic_throw(monsters *monster, bolt &pbolt);
 void mons_trap(monsters *monster);
+bool monster_random_space(const monsters *monster, coord_def& target,
+                          bool restrict_not_LOS = false);
 void monster_teleport(monsters *monster, bool instan, bool silent = false);
 void spore_goes_pop(monsters *monster);
 bool orc_battle_cry(monsters *chief);
