@@ -6030,7 +6030,7 @@ static void _handle_monster_move(int i, monsters *monster)
         if (monster->type != -1)
             _handle_behaviour(monster);
 
-    }                   // end while
+    }
 
     if (monster->type != -1 && monster->hit_points < 1)
     {
@@ -6088,7 +6088,7 @@ void handle_monsters()
             }
             break;
         }
-    }                           // end of for loop
+    }
 
     // Clear any summoning flags so that lower indiced
     // monsters get their actions in the next round.
