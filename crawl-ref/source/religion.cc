@@ -2599,7 +2599,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 || testbits(victim->flags, MF_WAS_NEUTRAL))
             {
                 level *= 3;
-                penance = level * ((you.religion == GOD_ZIN) ? 2 : 1);
+                penance = level;
             }
             piety_change = -level;
             ret = true;
