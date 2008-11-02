@@ -2848,7 +2848,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     }
 
     if (piety_change > 0)
-        gain_piety( piety_change );
+        gain_piety(piety_change);
     else
         _dock_piety(-piety_change, penance);
 
@@ -4928,7 +4928,8 @@ void beogh_idol_revenge()
 {
     god_acting gdact(GOD_BEOGH, true);
 
-    // Beogh watches his charges closely, but for others doesn't always notice
+    // Beogh watches his charges closely, but for others doesn't always
+    // notice.
     if (you.religion == GOD_BEOGH
         || (you.species == SP_HILL_ORC && coinflip())
         || one_chance_in(3))
