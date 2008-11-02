@@ -5018,7 +5018,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
 
     if (twisted)
     {
-        mon->type = mons_zombie_size(type) == Z_BIG ?
+        mon->type = mons_zombie_size(mons_species(type)) == Z_BIG ?
             MONS_ABOMINATION_LARGE : MONS_ABOMINATION_SMALL;
         mon->base_monster = mons_species(mon->type);
     }
