@@ -2233,7 +2233,7 @@ god_type string_to_god(const char *name)
     return (GOD_NO_GOD);
 }
 
-void god_speaks( god_type god, const char *mesg )
+void god_speaks(god_type god, const char *mesg)
 {
     mpr(mesg, MSGCH_GOD, god);
 }
