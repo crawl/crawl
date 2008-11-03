@@ -4076,7 +4076,7 @@ bool monsters::wants_weapon(const item_def &weap) const
     }
 
     // Wimpy monsters (e.g. kobold, goblin) shouldn't pick up halberds etc.
-    if (!check_weapon_wieldable_size( weap, body_size(PSIZE_BODY) ))
+    if (!check_weapon_wieldable_size(weap, body_size(PSIZE_BODY)))
         return (false);
 
     // Monsters capable of dual-wielding will always prefer two weapons
