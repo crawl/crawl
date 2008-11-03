@@ -2238,23 +2238,26 @@ void god_speaks(god_type god, const char *mesg)
     mpr(mesg, MSGCH_GOD, god);
 }
 
-god_type do_god_vengeance(conduct_type thing_done)
+bool do_god_vengeance(conduct_type thing_done)
 {
-    god_type god = GOD_NO_GOD;
+    bool retval = false;
 
-    if (thing_done == DID_DESTROY_ORCISH_IDOL)
+    switch (thing_done)
     {
-        god = GOD_BEOGH;
+    case DID_DESTROY_ORCISH_IDOL:
+        retval = true;
         beogh_idol_revenge();
-    }
-    else if (thing_done == DID_KILL_HOLY
-        || thing_done == DID_HOLY_KILLED_BY_SERVANT)
-    {
-        god = GOD_SHINING_ONE;
+        break;
+    case DID_KILL_HOLY:
+    case DID_HOLY_KILLED_BY_SERVANT:
+        retval = true;
         tso_holy_revenge();
+        break;
+    default:
+        break;
     }
 
-    return (god);
+    return (retval);
 }
 
 // This function is the merger of done_good() and naughty().
