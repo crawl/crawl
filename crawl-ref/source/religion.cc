@@ -366,7 +366,7 @@ static bool _magic_users_attitude_change();
 static bool _yred_slaves_abandon_you();
 static bool _beogh_followers_abandon_you();
 static void _altar_prayer();
-static void _dock_piety(int piety_loss, int penance, bool lecture);
+static void _dock_piety(int piety_loss, int penance);
 static bool _make_god_gifts_disappear(bool level_only = true);
 static bool _make_holy_god_gifts_good_neutral(bool level_only = true);
 static bool _make_god_gifts_hostile(bool level_only = true);
@@ -2880,10 +2880,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     if (piety_change > 0)
         gain_piety(piety_change);
     else
-    {
-        _dock_piety(-piety_change, penance,
-                    do_god_vengeance(thing_done, false) != you.religion);
-    }
+        _dock_piety(-piety_change, penance);
 
 #if DEBUG_DIAGNOSTICS
     if (ret)
@@ -2985,7 +2982,7 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
         conduct[i].enabled = false;
 }
 
-static void _dock_piety(int piety_loss, int penance, bool lecture)
+static void _dock_piety(int piety_loss, int penance)
 {
     static long last_piety_lecture   = -1L;
     static long last_penance_lecture = -1L;
@@ -3013,7 +3010,7 @@ static void _dock_piety(int piety_loss, int penance, bool lecture)
         excommunication();
     else if (penance)       // only if still in religion
     {
-        if (last_penance_lecture != you.num_turns && lecture)
+        if (last_penance_lecture != you.num_turns)
         {
             god_speaks(you.religion,
                        "\"You will pay for your transgression, mortal!\"");
