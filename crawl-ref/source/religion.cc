@@ -5059,14 +5059,15 @@ bool tso_holy_revenge()
     god_acting gdact(GOD_SHINING_ONE, true);
 
     // TSO watches evil god worshippers more closely.
-    if ((is_evil_god(you.religion) && one_chance_in(3))
-        || (!is_good_god(you.religion) && one_chance_in(4)))
+    if (!is_good_god(you.religion)
+        && ((is_evil_god(you.religion) && one_chance_in(3))
+            || one_chance_in(4)))
     {
         const char *revenge;
 
         if (is_evil_god(you.religion))
             revenge = _get_tso_speech("holy evil").c_str();
-        else if (!is_good_god(you.religion))
+        else
             revenge = _get_tso_speech("holy other").c_str();
 
         tso_blasts_cleansing_flame(revenge);
