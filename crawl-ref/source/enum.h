@@ -674,7 +674,7 @@ enum conduct_type
     DID_EAT_SOULED_BEING,     // Zin
     DID_DELIBERATE_MUTATING,  // Zin
     DID_CAUSE_GLOWING,        // Zin
-    DID_CREATED_LIFE,                   // unused
+    DID_CREATE_LIFE,                    // unused
 
     NUM_CONDUCTS
 };
