@@ -2238,20 +2238,18 @@ void god_speaks(god_type god, const char *mesg)
     mpr(mesg, MSGCH_GOD, god);
 }
 
-bool do_god_vengeance(conduct_type thing_done)
+bool do_god_revenge(conduct_type thing_done)
 {
     bool retval = false;
 
     switch (thing_done)
     {
     case DID_DESTROY_ORCISH_IDOL:
-        retval = true;
-        beogh_idol_revenge();
+        retval = beogh_idol_revenge();
         break;
     case DID_KILL_HOLY:
     case DID_HOLY_KILLED_BY_SERVANT:
-        retval = true;
-        tso_holy_revenge();
+        retval = tso_holy_revenge();
         break;
     default:
         break;
@@ -2912,7 +2910,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     }
 #endif
 
-    do_god_vengeance(thing_done);
+    do_god_revenge(thing_done);
 
     return (ret);
 }
@@ -4940,7 +4938,7 @@ static std::string _get_beogh_speech(const std::string key)
 }
 
 // Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh.
-void beogh_idol_revenge()
+bool beogh_idol_revenge()
 {
     god_acting gdact(GOD_BEOGH, true);
 
@@ -4960,7 +4958,11 @@ void beogh_idol_revenge()
             revenge = _get_beogh_speech("idol other").c_str();
 
         god_smites_you(GOD_BEOGH, revenge);
+
+        return (true);
     }
+
+    return (false);
 }
 
 static void _print_good_god_neutral_holy_being_speech(const std::string key,
@@ -5052,7 +5054,7 @@ static std::string _get_tso_speech(const std::string key)
 }
 
 // Killing holy beings may anger TSO.
-void tso_holy_revenge()
+bool tso_holy_revenge()
 {
     god_acting gdact(GOD_SHINING_ONE, true);
 
@@ -5068,7 +5070,11 @@ void tso_holy_revenge()
             revenge = _get_tso_speech("holy other").c_str();
 
         tso_blasts_cleansing_flame(revenge);
+
+        return (true);
     }
+
+    return (false);
 }
 
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile,

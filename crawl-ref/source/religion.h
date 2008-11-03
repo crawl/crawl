@@ -63,7 +63,7 @@ std::string get_god_dislikes(god_type which_god, bool verbose = false);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
-bool do_god_vengeance(conduct_type thing_done);
+bool do_god_revenge(conduct_type thing_done);
 bool did_god_conduct(conduct_type thing_done, int pgain, bool known = true,
                      const monsters *victim = NULL);
 void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
@@ -99,10 +99,10 @@ void divine_retribution(god_type god);
 bool zin_sustenance(bool actual = true);
 bool yred_injury_mirror(bool actual = true);
 bool beogh_water_walk();
-void beogh_idol_revenge();
+bool beogh_idol_revenge();
 void good_god_holy_attitude_change(monsters *holy);
 void tso_blasts_cleansing_flame(const char *message = NULL);
-void tso_holy_revenge();
+bool tso_holy_revenge();
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
                              bool quiet = false, bool allow_fail = true);
 void beogh_convert_orc(monsters *orc, bool emergency,
