@@ -2263,626 +2263,631 @@ bool do_god_revenge(conduct_type thing_done)
 bool did_god_conduct(conduct_type thing_done, int level, bool known,
                      const monsters *victim)
 {
-    if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
-        return (false);
+    bool retval = false;
 
-    bool ret = false;
-    int piety_change = 0;
-    int penance = 0;
-
-    god_acting gdact;
-
-    switch (thing_done)
+    if (you.religion != GOD_NO_GOD && you.religion != GOD_XOM)
     {
-    case DID_DRINK_BLOOD:
-        switch (you.religion)
-        {
-        case GOD_SHINING_ONE:
-            if (!known)
-            {
-                simple_god_message(" forgives your inadvertent "
-                                   "blood-drinking, just this once.");
-                break;
-            }
-            penance = level;
-            // deliberate fall-through
-        case GOD_ZIN:
-        case GOD_ELYVILON:
-            if (!known)
-            {
-                simple_god_message(" forgives your inadvertent "
-                                   "blood-drinking, just this once.");
-                break;
-            }
-            piety_change = -2*level;
-            ret = true;
-            break;
-        default:
-            break;
-        }
-        break;
+        int piety_change = 0;
+        int penance = 0;
 
-    case DID_CANNIBALISM:
-        switch (you.religion)
-        {
-        case GOD_ZIN:
-        case GOD_SHINING_ONE:
-        case GOD_ELYVILON:
-            piety_change = -level;
-            penance = level;
-            ret = true;
-            break;
-        default:
-            break;
-        }
-        break;
+        god_acting gdact;
 
-    // If you make some god like these acts, modify did_god_conduct call
-    // in beam.cc with god_likes_necromancy check or something similar
-    case DID_NECROMANCY:
-    case DID_UNHOLY:
-    case DID_ATTACK_HOLY:
-        switch (you.religion)
+        switch (thing_done)
         {
-        case GOD_ZIN:
-        case GOD_SHINING_ONE:
-        case GOD_ELYVILON:
-            if (!known && thing_done != DID_ATTACK_HOLY)
+        case DID_DRINK_BLOOD:
+            switch (you.religion)
             {
-                simple_god_message(" forgives your inadvertent unholy act, "
-                                   "just this once.");
-                break;
-            }
-            piety_change = -level;
-            if (known || thing_done == DID_ATTACK_HOLY
-                && victim->attitude != ATT_HOSTILE)
-            {
-                penance = level * ((you.religion == GOD_SHINING_ONE) ? 2 : 1);
-            }
-            ret = true;
-            break;
-        default:
-            break;
-        }
-        break;
-
-    case DID_HOLY:
-        if (you.religion == GOD_YREDELEMNUL)
-        {
-            if (!known)
-            {
-                simple_god_message(" forgives your inadvertent holy act, "
-                                   "just this once.");
-                break;
-            }
-            ret = true;
-            piety_change = -level;
-            penance = level * 2;
-        }
-        break;
-
-    case DID_UNCHIVALRIC_ATTACK:
-    case DID_POISON:
-        if (you.religion == GOD_SHINING_ONE)
-        {
-            if (thing_done == DID_UNCHIVALRIC_ATTACK)
-            {
-                if (tso_unchivalric_attack_safe_monster(victim))
-                    break;
-
+            case GOD_SHINING_ONE:
                 if (!known)
                 {
                     simple_god_message(" forgives your inadvertent "
-                                       "dishonourable attack, just this once.");
+                                       "blood-drinking, just this once.");
                     break;
                 }
-            }
-            ret = true;
-            piety_change = -level;
-            penance = level * 2;
-        }
-        break;
-
-    case DID_ATTACK_NEUTRAL:
-        switch (you.religion)
-        {
-        case GOD_SHINING_ONE:
-        case GOD_ELYVILON:
-            if (!known)
-            {
-                simple_god_message(" forgives your inadvertent attack on a "
-                                   "neutral, just this once.");
-                break;
-            }
-            penance = level/2 + 1;
-            // deliberate fall through
-        case GOD_ZIN:
-            if (!known)
-            {
-                simple_god_message(" forgives your inadvertent attack on a "
-                                   "neutral, just this once.");
-                break;
-            }
-            piety_change = -(level/2 + 1);
-            ret = true;
-            break;
-
-        default:
-            break;
-        }
-        break;
-
-    case DID_ATTACK_FRIEND:
-        if (god_hates_attacking_friend(you.religion, victim))
-        {
-            if (!known)
-            {
-                simple_god_message(" forgives your inadvertent attack on an "
-                                   "ally, just this once.");
-                break;
-            }
-
-            piety_change = -level;
-            if (known)
-                penance = level * 3;
-            ret = true;
-        }
-        break;
-
-    case DID_FRIEND_DIED:
-        switch (you.religion)
-        {
-        case GOD_ELYVILON: // healer god cares more about this
-            if (you.penance[GOD_ELYVILON])
-                penance = 1;  // if already under penance smaller bonus
-            else
                 penance = level;
-            // fall through
-        case GOD_ZIN: // in contrast to TSO, who doesn't mind martyrs
-        case GOD_OKAWARU:
-            piety_change = -level;
-            ret = true;
-            break;
-        default:
-            break;
-        }
-        break;
-
-    case DID_DEDICATED_BUTCHERY:  // a.k.a. field sacrifice
-        switch (you.religion)
-        {
-        case GOD_ELYVILON:
-            simple_god_message(" does not appreciate your butchering the dead "
-                               "during prayer!");
-            ret = true;
-            piety_change = -10;
-            penance = 10;
+                // deliberate fall-through
+            case GOD_ZIN:
+            case GOD_ELYVILON:
+                if (!known)
+                {
+                    simple_god_message(" forgives your inadvertent "
+                                       "blood-drinking, just this once.");
+                    break;
+                }
+                piety_change = -2*level;
+                retval = true;
+                break;
+            default:
+                break;
+            }
             break;
 
-        case GOD_OKAWARU:
-        case GOD_MAKHLEB:
-        case GOD_TROG:
-        case GOD_BEOGH:
-        case GOD_LUGONU:
-            simple_god_message(" accepts your offering.");
-            ret = true;
-            if (random2(level + 10) > 5)
-                piety_change = 1;
-            break;
-
-        default:
-            break;
-        }
-        break;
-
-    case DID_KILL_LIVING:
-        switch (you.religion)
-        {
-        case GOD_ELYVILON:
-            // killing only disapproved during prayer
-            if (you.duration[DUR_PRAYER])
+        case DID_CANNIBALISM:
+            switch (you.religion)
             {
-                simple_god_message(" does not appreciate your shedding blood "
-                                   "during prayer!");
-                ret = true;
+            case GOD_ZIN:
+            case GOD_SHINING_ONE:
+            case GOD_ELYVILON:
+                piety_change = -level;
+                penance = level;
+                retval = true;
+                break;
+            default:
+                break;
+            }
+            break;
+
+        case DID_NECROMANCY:
+        case DID_UNHOLY:
+        case DID_ATTACK_HOLY:
+            switch (you.religion)
+            {
+            case GOD_ZIN:
+            case GOD_SHINING_ONE:
+            case GOD_ELYVILON:
+                if (!known && thing_done != DID_ATTACK_HOLY)
+                {
+                    simple_god_message(" forgives your inadvertent unholy act, "
+                                       "just this once.");
+                    break;
+                }
+                piety_change = -level;
+                if (known || thing_done == DID_ATTACK_HOLY
+                    && victim->attitude != ATT_HOSTILE)
+                {
+                    penance = level * ((you.religion == GOD_SHINING_ONE) ? 2
+                                                                         : 1);
+                }
+                retval = true;
+                break;
+            default:
+                break;
+            }
+            break;
+
+        case DID_HOLY:
+            if (you.religion == GOD_YREDELEMNUL)
+            {
+                if (!known)
+                {
+                    simple_god_message(" forgives your inadvertent holy act, "
+                                       "just this once.");
+                    break;
+                }
+                retval = true;
                 piety_change = -level;
                 penance = level * 2;
             }
             break;
 
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_YREDELEMNUL:
-        case GOD_OKAWARU:
-        case GOD_VEHUMET:
-        case GOD_MAKHLEB:
-        case GOD_TROG:
-        case GOD_BEOGH:
-        case GOD_LUGONU:
-            if (god_hates_attacking_friend(you.religion, victim))
-                break;
-
-            simple_god_message(" accepts your kill.");
-            ret = true;
-            if (random2(level + 18 - you.experience_level / 2) > 5)
-                piety_change = 1;
-            break;
-
-        default:
-            break;
-        }
-        break;
-
-    case DID_KILL_UNDEAD:
-        switch (you.religion)
-        {
-        case GOD_SHINING_ONE:
-        case GOD_OKAWARU:
-        case GOD_VEHUMET:
-        case GOD_MAKHLEB:
-        case GOD_LUGONU:
-            if (god_hates_attacking_friend(you.religion, victim))
-                break;
-
-            simple_god_message(" accepts your kill.");
-            ret = true;
-            // Holy gods are easier to please this way
-            if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
-                                      you.experience_level / 2)) > 4)
-                piety_change = 1;
-            break;
-
-        default:
-            break;
-        }
-        break;
-
-    case DID_KILL_DEMON:
-        switch (you.religion)
-        {
-        case GOD_SHINING_ONE:
-        case GOD_OKAWARU:
-        case GOD_MAKHLEB:
-        case GOD_TROG:
-            if (god_hates_attacking_friend(you.religion, victim))
-                break;
-
-            simple_god_message(" accepts your kill.");
-            ret = true;
-            // Holy gods are easier to please this way
-            if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
-                                      you.experience_level / 2)) > 3)
-                piety_change = 1;
-            break;
-
-        default:
-            break;
-        }
-        break;
-
-    case DID_KILL_NATURAL_EVIL:
-        if (you.religion == GOD_SHINING_ONE
-            && !god_hates_attacking_friend(you.religion, victim))
-        {
-            simple_god_message(" accepts your kill.");
-            ret = true;
-            if (random2(level + 18) > 3)
-                piety_change = 1;
-        }
-        break;
-
-    case DID_KILL_CHAOTIC:
-        if (you.religion == GOD_ZIN
-            && !god_hates_attacking_friend(you.religion, victim))
-        {
-            simple_god_message(" appreciates your killing of a "
-                               "spawn of chaos.");
-            ret = true;
-            if (random2(level + 18) > 3)
-                piety_change = 1;
-        }
-        break;
-
-    case DID_KILL_PRIEST:
-        if (you.religion == GOD_BEOGH
-            && !god_hates_attacking_friend(you.religion, victim))
-        {
-            simple_god_message(" appreciates your killing of a "
-                               "heretic priest.");
-            ret = true;
-            if (random2(level + 10) > 5)
-                piety_change = 1;
-        }
-        break;
-
-    case DID_KILL_WIZARD:
-        if (you.religion == GOD_TROG
-            && !god_hates_attacking_friend(you.religion, victim))
-        {
-            simple_god_message(" appreciates your killing of a magic user.");
-            ret = true;
-            if (random2(level + 10) > 5)
-                piety_change = 1;
-        }
-        break;
-
-    // Note that holy deaths are special, they are always noticed...
-    // If you or any friendly kills one, you'll get the credit or the
-    // blame.
-    case DID_KILL_HOLY:
-    case DID_HOLY_KILLED_BY_SERVANT:
-        switch (you.religion)
-        {
-        case GOD_ZIN:
-        case GOD_SHINING_ONE:
-        case GOD_ELYVILON:
-            if (testbits(victim->flags, MF_CREATED_FRIENDLY)
-                || testbits(victim->flags, MF_WAS_NEUTRAL))
+        case DID_UNCHIVALRIC_ATTACK:
+        case DID_POISON:
+            if (you.religion == GOD_SHINING_ONE)
             {
-                level *= 3;
-                penance = level;
+                if (thing_done == DID_UNCHIVALRIC_ATTACK)
+                {
+                    if (tso_unchivalric_attack_safe_monster(victim))
+                        break;
+
+                    if (!known)
+                    {
+                        simple_god_message(" forgives your inadvertent "
+                                           "dishonourable attack, just this "
+                                           "once.");
+                        break;
+                    }
+                }
+                retval = true;
+                piety_change = -level;
+                penance = level * 2;
             }
-            piety_change = -level;
-            ret = true;
             break;
 
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_YREDELEMNUL:
-        case GOD_MAKHLEB:
-        case GOD_LUGONU:
-            if (god_hates_attacking_friend(you.religion, victim))
+        case DID_ATTACK_NEUTRAL:
+            switch (you.religion)
+            {
+            case GOD_SHINING_ONE:
+            case GOD_ELYVILON:
+                if (!known)
+                {
+                    simple_god_message(" forgives your inadvertent attack on a "
+                                       "neutral, just this once.");
+                    break;
+                }
+                penance = level/2 + 1;
+                // deliberate fall through
+            case GOD_ZIN:
+                if (!known)
+                {
+                    simple_god_message(" forgives your inadvertent attack on a "
+                                       "neutral, just this once.");
+                    break;
+                }
+                piety_change = -(level/2 + 1);
+                retval = true;
                 break;
 
-            simple_god_message(
-                make_stringf(" accepts your %skill.",
-                             thing_done == DID_KILL_HOLY ? "" : "collateral ")
-                             .c_str());
-            ret = true;
-            if (random2(level + 18) > 2)
-                piety_change = 1;
+            default:
+                break;
+            }
+            break;
 
-            if (you.religion == GOD_YREDELEMNUL && thing_done == DID_KILL_HOLY)
+        case DID_ATTACK_FRIEND:
+            if (god_hates_attacking_friend(you.religion, victim))
             {
-                simple_god_message(" appreciates your killing of a "
-                                   "holy being.");
-                ret = true;
+                if (!known)
+                {
+                    simple_god_message(" forgives your inadvertent attack on "
+                                       "an ally, just this once.");
+                    break;
+                }
+
+                piety_change = -level;
+                if (known)
+                    penance = level * 3;
+                retval = true;
+            }
+            break;
+
+        case DID_FRIEND_DIED:
+            switch (you.religion)
+            {
+            case GOD_ELYVILON: // healer god cares more about this
+                if (you.penance[GOD_ELYVILON])
+                    penance = 1;  // if already under penance smaller bonus
+                else
+                    penance = level;
+                // fall through
+            case GOD_ZIN: // in contrast to TSO, who doesn't mind martyrs
+            case GOD_OKAWARU:
+                piety_change = -level;
+                retval = true;
+                break;
+            default:
+                break;
+            }
+            break;
+
+        case DID_DEDICATED_BUTCHERY:  // a.k.a. field sacrifice
+            switch (you.religion)
+            {
+            case GOD_ELYVILON:
+                simple_god_message(" does not appreciate your butchering the "
+                                   "dead during prayer!");
+                retval = true;
+                piety_change = -10;
+                penance = 10;
+                break;
+
+            case GOD_OKAWARU:
+            case GOD_MAKHLEB:
+            case GOD_TROG:
+            case GOD_BEOGH:
+            case GOD_LUGONU:
+                simple_god_message(" accepts your offering.");
+                retval = true;
+                if (random2(level + 10) > 5)
+                    piety_change = 1;
+                break;
+
+            default:
+                break;
+            }
+            break;
+
+        case DID_KILL_LIVING:
+            switch (you.religion)
+            {
+            case GOD_ELYVILON:
+                // killing only disapproved during prayer
+                if (you.duration[DUR_PRAYER])
+                {
+                    simple_god_message(" does not appreciate your shedding "
+                                       "blood during prayer!");
+                    retval = true;
+                    piety_change = -level;
+                    penance = level * 2;
+                }
+                break;
+
+            case GOD_KIKUBAAQUDGHA:
+            case GOD_YREDELEMNUL:
+            case GOD_OKAWARU:
+            case GOD_VEHUMET:
+            case GOD_MAKHLEB:
+            case GOD_TROG:
+            case GOD_BEOGH:
+            case GOD_LUGONU:
+                if (god_hates_attacking_friend(you.religion, victim))
+                    break;
+
+                simple_god_message(" accepts your kill.");
+                retval = true;
+                if (random2(level + 18 - you.experience_level / 2) > 5)
+                    piety_change = 1;
+                break;
+
+            default:
+                break;
+            }
+            break;
+
+        case DID_KILL_UNDEAD:
+            switch (you.religion)
+            {
+            case GOD_SHINING_ONE:
+            case GOD_OKAWARU:
+            case GOD_VEHUMET:
+            case GOD_MAKHLEB:
+            case GOD_LUGONU:
+                if (god_hates_attacking_friend(you.religion, victim))
+                    break;
+
+                simple_god_message(" accepts your kill.");
+                retval = true;
+                // Holy gods are easier to please this way
+                if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
+                                          you.experience_level / 2)) > 4)
+                    piety_change = 1;
+                break;
+
+            default:
+                break;
+            }
+            break;
+
+        case DID_KILL_DEMON:
+            switch (you.religion)
+            {
+            case GOD_SHINING_ONE:
+            case GOD_OKAWARU:
+            case GOD_MAKHLEB:
+            case GOD_TROG:
+                if (god_hates_attacking_friend(you.religion, victim))
+                    break;
+
+                simple_god_message(" accepts your kill.");
+                retval = true;
+                // Holy gods are easier to please this way
+                if (random2(level + 18 - (is_good_god(you.religion) ? 0 :
+                                          you.experience_level / 2)) > 3)
+                    piety_change = 1;
+                break;
+
+            default:
+                break;
+            }
+            break;
+
+        case DID_KILL_NATURAL_EVIL:
+            if (you.religion == GOD_SHINING_ONE
+                && !god_hates_attacking_friend(you.religion, victim))
+            {
+                simple_god_message(" accepts your kill.");
+                retval = true;
+                if (random2(level + 18) > 3)
+                    piety_change = 1;
+            }
+            break;
+
+        case DID_KILL_CHAOTIC:
+            if (you.religion == GOD_ZIN
+                && !god_hates_attacking_friend(you.religion, victim))
+            {
+                simple_god_message(" appreciates your killing of a spawn of "
+                                   "chaos.");
+                retval = true;
+                if (random2(level + 18) > 3)
+                    piety_change = 1;
+            }
+            break;
+
+        case DID_KILL_PRIEST:
+            if (you.religion == GOD_BEOGH
+                && !god_hates_attacking_friend(you.religion, victim))
+            {
+                simple_god_message(" appreciates your killing of a heretic "
+                                   "priest.");
+                retval = true;
                 if (random2(level + 10) > 5)
                     piety_change = 1;
             }
             break;
 
-        default:
-            break;
-        }
-        break;
-
-    // Undead slave is any friendly undead monster.  Kiku and Yred pay
-    // attention to the undead, and both like the death of living
-    // things.
-    case DID_LIVING_KILLED_BY_UNDEAD_SLAVE:
-        switch (you.religion)
-        {
-        case GOD_KIKUBAAQUDGHA:
-        case GOD_YREDELEMNUL:
-        case GOD_VEHUMET:
-        case GOD_MAKHLEB:
-        case GOD_LUGONU:
-            simple_god_message(" accepts your slave's kill.");
-            ret = true;
-            if (random2(level + 10 - you.experience_level/3) > 5)
-                piety_change = 1;
-            break;
-        default:
-            break;
-        }
-        break;
-
-    // Servants are currently any friendly or charmed monster, excluding
-    // undead, which are handled above.
-    case DID_LIVING_KILLED_BY_SERVANT:
-        switch (you.religion)
-        {
-        case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
-        case GOD_VEHUMET:
-        case GOD_MAKHLEB:
-        case GOD_TROG:
-        case GOD_BEOGH:
-        case GOD_LUGONU:
-            simple_god_message(" accepts your collateral kill.");
-            ret = true;
-            if (random2(level + 10 - you.experience_level/3) > 5)
-                piety_change = 1;
-            break;
-        default:
-            break;
-        }
-        break;
-
-    case DID_UNDEAD_KILLED_BY_SERVANT:
-        switch (you.religion)
-        {
-        case GOD_SHINING_ONE:
-        case GOD_VEHUMET:
-        case GOD_MAKHLEB:
-        case GOD_LUGONU:
-            simple_god_message(" accepts your collateral kill.");
-            ret = true;
-            if (random2(level + 10 - (is_good_god(you.religion) ? 0 :
-                                      you.experience_level/3)) > 5)
+        case DID_KILL_WIZARD:
+            if (you.religion == GOD_TROG
+                && !god_hates_attacking_friend(you.religion, victim))
             {
-                piety_change = 1;
+                simple_god_message(" appreciates your killing of a magic "
+                                   "user.");
+                retval = true;
+                if (random2(level + 10) > 5)
+                    piety_change = 1;
             }
             break;
-        default:
-            break;
-        }
-        break;
 
-    case DID_DEMON_KILLED_BY_SERVANT:
-        switch (you.religion)
-        {
-        case GOD_SHINING_ONE:
-        case GOD_MAKHLEB:
-        case GOD_TROG:
-            simple_god_message(" accepts your collateral kill.");
-            ret = true;
-            if (random2(level + 10 - (is_good_god(you.religion) ? 0 :
-                                      you.experience_level/3)) > 5)
+        // Note that holy deaths are special, they are always noticed...
+        // If you or any friendly kills one, you'll get the credit or
+        // the blame.
+        case DID_KILL_HOLY:
+        case DID_HOLY_KILLED_BY_SERVANT:
+            switch (you.religion)
             {
-                piety_change = 1;
-            }
-            break;
-        default:
-            break;
-        }
-        break;
+            case GOD_ZIN:
+            case GOD_SHINING_ONE:
+            case GOD_ELYVILON:
+                if (testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    || testbits(victim->flags, MF_WAS_NEUTRAL))
+                {
+                    level *= 3;
+                    penance = level;
+                }
+                piety_change = -level;
+                retval = true;
+                break;
 
-    case DID_NATURAL_EVIL_KILLED_BY_SERVANT:
-        if (you.religion == GOD_SHINING_ONE)
-        {
-            simple_god_message(" accepts your collateral kill.");
-            ret = true;
+            case GOD_KIKUBAAQUDGHA:
+            case GOD_YREDELEMNUL:
+            case GOD_MAKHLEB:
+            case GOD_LUGONU:
+                if (god_hates_attacking_friend(you.religion, victim))
+                    break;
 
-            if (random2(level + 10) > 5)
-                piety_change = 1;
-        }
-        break;
+                if (thing_done == DID_KILL_HOLY)
+                    simple_god_message(" accepts your kill.");
+                else
+                    simple_god_message(" accepts your collateral kill.");
+                retval = true;
+                if (random2(level + 18) > 2)
+                    piety_change = 1;
 
-    case DID_SPELL_MEMORISE:
-        if (you.religion == GOD_TROG)
-        {
-            penance = level * 10;
-            piety_change = -penance;
-            ret = true;
-        }
-        break;
+                if (you.religion == GOD_YREDELEMNUL
+                    && thing_done == DID_KILL_HOLY)
+                {
+                    simple_god_message(" appreciates your killing of a holy "
+                                       "being.");
+                    retval = true;
+                    if (random2(level + 10) > 5)
+                        piety_change = 1;
+                }
+                break;
 
-    case DID_SPELL_CASTING:
-        if (you.religion == GOD_TROG)
-        {
-            piety_change = -level;
-            penance = level * 5;
-            ret = true;
-        }
-        break;
-
-    case DID_SPELL_PRACTISE:
-        // Like CAST, but for skill advancement.
-        // Level is number of skill points gained... typically 10 * exerise,
-        // but may be more/less if the skill is at 0 (INT adjustment), or
-        // if the PC's pool is low and makes change.
-        if (you.religion == GOD_SIF_MUNA)
-        {
-            // Old curve: random2(12) <= spell-level, this is similar,
-            // but faster at low levels (to help ease things for low level
-            // Power averages about (level * 20 / 3) + 10 / 3 now.  Also
-            // note that spell skill practise comes just after XP gain, so
-            // magical kills tend to do both at the same time (unlike melee).
-            // This means high level spells probably work pretty much like
-            // they used to (use spell, get piety).
-            piety_change = div_rand_round( level + 10, 80 );
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Spell practise, level: %d, dpiety: %d",
-                    level, piety_change);
-#endif
-            ret = true;
-        }
-        break;
-
-    case DID_CARDS:
-        if (you.religion == GOD_NEMELEX_XOBEH)
-        {
-            piety_change = level;
-            ret = true;
-
-            // level == 0: stacked, deck not used up
-            // level == 1: used up or nonstacked
-            // level == 2: used up and nonstacked
-            // and there's a 1/3 chance of an additional bonus point
-            // for nonstacked cards.
-            int chance = 0;
-            switch (level)
-            {
-            case 0: chance = 0;   break;
-            case 1: chance = 40;  break;
-            case 2: chance = 70;  break;
             default:
-            case 3: chance = 100; break;
-            }
-
-            if (x_chance_in_y(chance, 100)
-                && you.attribute[ATTR_CARD_COUNTDOWN])
-            {
-                you.attribute[ATTR_CARD_COUNTDOWN]--;
-#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_GIFTS
-                mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
-                     you.attribute[ATTR_CARD_COUNTDOWN]);
-#endif
-            }
-        }
-        break;
-
-    case DID_CAUSE_GLOWING:
-    case DID_DELIBERATE_MUTATING:
-        if (you.religion == GOD_ZIN)
-        {
-            if (!known && thing_done != DID_CAUSE_GLOWING)
-            {
-                simple_god_message(" forgives your inadvertent chaotic act, "
-                                   "just this once.");
                 break;
             }
-            else
+            break;
+
+        // Undead slave is any friendly undead monster.  Kiku and Yred pay
+        // attention to the undead, and both like the death of living
+        // things.
+        case DID_LIVING_KILLED_BY_UNDEAD_SLAVE:
+            switch (you.religion)
             {
-                static long last_glowing_lecture = -1L;
-                if (last_glowing_lecture != you.num_turns)
+            case GOD_KIKUBAAQUDGHA:
+            case GOD_YREDELEMNUL:
+            case GOD_VEHUMET:
+            case GOD_MAKHLEB:
+            case GOD_LUGONU:
+                simple_god_message(" accepts your slave's kill.");
+                retval = true;
+                if (random2(level + 10 - you.experience_level/3) > 5)
+                    piety_change = 1;
+                break;
+            default:
+                break;
+            }
+            break;
+
+        // Servants are currently any friendly or charmed monster, excluding
+        // undead, which are handled above.
+        case DID_LIVING_KILLED_BY_SERVANT:
+            switch (you.religion)
+            {
+            case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
+            case GOD_VEHUMET:
+            case GOD_MAKHLEB:
+            case GOD_TROG:
+            case GOD_BEOGH:
+            case GOD_LUGONU:
+                simple_god_message(" accepts your collateral kill.");
+                retval = true;
+                if (random2(level + 10 - you.experience_level/3) > 5)
+                    piety_change = 1;
+                break;
+            default:
+                break;
+            }
+            break;
+
+        case DID_UNDEAD_KILLED_BY_SERVANT:
+            switch (you.religion)
+            {
+            case GOD_SHINING_ONE:
+            case GOD_VEHUMET:
+            case GOD_MAKHLEB:
+            case GOD_LUGONU:
+                simple_god_message(" accepts your collateral kill.");
+                retval = true;
+                if (random2(level + 10 - (is_good_god(you.religion) ? 0 :
+                                          you.experience_level/3)) > 5)
                 {
-                    simple_god_message(" does not appreciate the mutagenic "
-                                       "glow surrounding you!");
-                    last_glowing_lecture = you.num_turns;
+                    piety_change = 1;
+                }
+                break;
+            default:
+                break;
+            }
+            break;
+
+        case DID_DEMON_KILLED_BY_SERVANT:
+            switch (you.religion)
+            {
+            case GOD_SHINING_ONE:
+            case GOD_MAKHLEB:
+            case GOD_TROG:
+                simple_god_message(" accepts your collateral kill.");
+                retval = true;
+                if (random2(level + 10 - (is_good_god(you.religion) ? 0 :
+                                          you.experience_level/3)) > 5)
+                {
+                    piety_change = 1;
+                }
+                break;
+            default:
+                break;
+            }
+            break;
+
+        case DID_NATURAL_EVIL_KILLED_BY_SERVANT:
+            if (you.religion == GOD_SHINING_ONE)
+            {
+                simple_god_message(" accepts your collateral kill.");
+                retval = true;
+
+                if (random2(level + 10) > 5)
+                    piety_change = 1;
+            }
+            break;
+
+        case DID_SPELL_MEMORISE:
+            if (you.religion == GOD_TROG)
+            {
+                penance = level * 10;
+                piety_change = -penance;
+                retval = true;
+            }
+            break;
+
+        case DID_SPELL_CASTING:
+            if (you.religion == GOD_TROG)
+            {
+                piety_change = -level;
+                penance = level * 5;
+                retval = true;
+            }
+            break;
+
+        case DID_SPELL_PRACTISE:
+            // Like CAST, but for skill advancement.
+            // Level is number of skill points gained...
+            // typically 10 * exercise, but may be more/less if the
+            // skill is at 0 (INT adjustment), or if the PC's pool is
+            // low and makes change.
+            if (you.religion == GOD_SIF_MUNA)
+            {
+                // Old curve: random2(12) <= spell-level, this is
+                // similar, but faster at low levels (to help ease
+                // things for low level spells).  Power averages about
+                // (level * 20 / 3) + 10 / 3 now.  Also note that spell
+                // skill practise comes just after XP gain, so magical
+                // kills tend to do both at the same time (unlike
+                // melee).  This means high level spells probably work
+                // pretty much like they used to (use spell, get piety).
+                piety_change = div_rand_round(level + 10, 80);
+#ifdef DEBUG_DIAGNOSTICS
+                mprf(MSGCH_DIAGNOSTICS, "Spell practise, level: %d, dpiety: %d",
+                        level, piety_change);
+#endif
+                retval = true;
+            }
+            break;
+
+        case DID_CARDS:
+            if (you.religion == GOD_NEMELEX_XOBEH)
+            {
+                piety_change = level;
+                retval = true;
+
+                // level == 0: stacked, deck not used up
+                // level == 1: used up or nonstacked
+                // level == 2: used up and nonstacked
+                // and there's a 1/3 chance of an additional bonus point
+                // for nonstacked cards.
+                int chance = 0;
+                switch (level)
+                {
+                case 0: chance = 0;   break;
+                case 1: chance = 40;  break;
+                case 2: chance = 70;  break;
+                default:
+                case 3: chance = 100; break;
+                }
+
+                if (x_chance_in_y(chance, 100)
+                    && you.attribute[ATTR_CARD_COUNTDOWN])
+                {
+                    you.attribute[ATTR_CARD_COUNTDOWN]--;
+#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_GIFTS
+                    mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
+                         you.attribute[ATTR_CARD_COUNTDOWN]);
+#endif
                 }
             }
-            piety_change = -level;
-            ret = true;
-        }
-        break;
+            break;
 
-    // level depends on intelligence: normal -> 1, high -> 2
-    // cannibalism is still worse
-    case DID_EAT_SOULED_BEING:
-        if (you.religion == GOD_ZIN)
-        {
-            piety_change = -level * 5;
-            if (level > 1)
-                penance = 5;
-            ret = true;
-        }
-        break;
+        case DID_CAUSE_GLOWING:
+        case DID_DELIBERATE_MUTATING:
+            if (you.religion == GOD_ZIN)
+            {
+                if (!known && thing_done != DID_CAUSE_GLOWING)
+                {
+                    simple_god_message(" forgives your inadvertent chaotic "
+                                       "act, just this once.");
+                    break;
+                }
+                else
+                {
+                    static long last_glowing_lecture = -1L;
+                    if (last_glowing_lecture != you.num_turns)
+                    {
+                        simple_god_message(" does not appreciate the mutagenic "
+                                           "glow surrounding you!");
+                        last_glowing_lecture = you.num_turns;
+                    }
+                }
+                piety_change = -level;
+                retval = true;
+            }
+            break;
 
-    case DID_DESTROY_ORCISH_IDOL:
-        if (you.religion == GOD_BEOGH)
-        {
-            piety_change = -level;
-            penance = level * 3;
-            ret = true;
-        }
-        break;
+        // level depends on intelligence: normal -> 1, high -> 2
+        // cannibalism is still worse
+        case DID_EAT_SOULED_BEING:
+            if (you.religion == GOD_ZIN)
+            {
+                piety_change = -level * 5;
+                if (level > 1)
+                    penance = 5;
+                retval = true;
+            }
+            break;
 
-    case DID_STABBING:                          // unused
-    case DID_STIMULANTS:                        // unused
-    case DID_EAT_MEAT:                          // unused
-    case DID_CREATE_LIFE:                       // unused
-    case DID_SPELL_NONUTILITY:                  // unused
-    case NUM_CONDUCTS:
-        break;
+        case DID_DESTROY_ORCISH_IDOL:
+            if (you.religion == GOD_BEOGH)
+            {
+                piety_change = -level;
+                penance = level * 3;
+                retval = true;
+            }
+            break;
+
+        case DID_STABBING:                          // unused
+        case DID_STIMULANTS:                        // unused
+        case DID_EAT_MEAT:                          // unused
+        case DID_CREATE_LIFE:                       // unused
+        case DID_SPELL_NONUTILITY:                  // unused
+        case NUM_CONDUCTS:
+            break;
+        }
+
+        if (piety_change > 0)
+            gain_piety(piety_change);
+        else
+            _dock_piety(-piety_change, penance);
     }
 
-    if (piety_change > 0)
-        gain_piety(piety_change);
-    else
-        _dock_piety(-piety_change, penance);
-
 #if DEBUG_DIAGNOSTICS
-    if (ret)
+    if (retval)
     {
         static const char *conducts[] =
         {
@@ -2912,7 +2917,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
     do_god_revenge(thing_done);
 
-    return (ret);
+    return (retval);
 }
 
 // These two arrays deal with the situation where a beam hits a non-fleeing
@@ -3025,7 +3030,7 @@ void gain_piety(int pgn)
         return;
 
     // Xom uses piety differently...
-    if (you.religion == GOD_XOM || you.religion == GOD_NO_GOD)
+    if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
         return;
 
     // check to see if we owe anything first
