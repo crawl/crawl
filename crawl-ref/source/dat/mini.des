@@ -144,6 +144,27 @@ m{}m
 mmmm
 ENDMAP
 
+##############################################################################
+# Sigmund's army
+# Sigmund has been educating the suppressed masses in guerilla warfare.
+#
+NAME:    sigmund_army
+DEPTH:   D:2-6
+MONS:    goblin;scythe.robe, hobgoblin;scythe.robe, kobold;scythe.robe
+SUBST:   n = 1:20 n:5
+KMONS:   n = Sigmund, goblin;scythe.robe / hobgoblin;scythe.robe / kobold;scythe.robe
+SHUFFLE: x+1 / x+1 / x+1 /y-5
+SUBST:   -=y, y=5, 5=1..
+SHUFFLE: 1234444444
+SUBST:   4 = 123
+MAP
+xxxxx
+x1n1x
+x111x
+xx+xx
+ ...
+ENDMAP
+
 ###################################
 # pond with fungi
 #
