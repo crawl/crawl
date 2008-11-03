@@ -2862,8 +2862,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     case DID_DESTROY_ORCISH_IDOL:
         if (you.religion == GOD_BEOGH)
         {
-            piety_change = -level * 2;
-            penance = level * 6;
+            piety_change = -level;
+            penance = level * 3;
             ret = true;
         }
         break;
