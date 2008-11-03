@@ -343,6 +343,21 @@ Beogh seems highly displeased.
 
 Your arrogance infuriates Beogh.
 %%%%
+#####################################
+# TSO rants on killing a holy being #
+#####################################
+# An evil worshipper has killed a holy being
+TSO holy evil
+The Shining One thunders, "Cease your foul attacks on the divine!"
+
+The Shining One shouts, "That base death shall not go unavenged!"
+%%%%
+# A non-good worshipper or atheist has killed a holy being
+TSO holy other
+The Shining One says, "As holy lives are taken, so shall yours be."
+
+The Shining One warns, "Defile yourself no further with such kills."
+%%%%
 ##########################################################
 # Messages for the *player* using Zin's Recite invocation
 ##########################################################

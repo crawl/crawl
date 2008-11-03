@@ -2881,6 +2881,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     }
 #endif
 
+    if (thing_done == DID_KILL_HOLY || thing_done == DID_HOLY_KILLED_BY_SERVANT)
+        tso_holy_revenge();
+
     return (ret);
 }
 
@@ -3564,25 +3567,8 @@ static bool _tso_retribution()
     }
     case 3:
     case 4: // cleansing flame (2/7)
-    {
-        simple_god_message(" blasts you with cleansing flame!", god);
-
-        bolt beam;
-        beam.beam_source  = NON_MONSTER;
-        beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = calc_dice(2, 20 + (you.experience_level * 7) / 3);
-        beam.flavour      = BEAM_HOLY;
-        beam.target       = you.pos();
-        beam.name         = "golden flame";
-        beam.colour       = YELLOW;
-        beam.thrower      = KILL_MISC;
-        beam.aux_source   = "the Shining One's cleansing flame";
-        beam.ex_size      = 2;
-        beam.is_tracer    = false;
-        beam.is_explosion = true;
-        explosion(beam);
+        tso_blasts_cleansing_flame();
         break;
-    }
     case 5:
     case 6: // either noisiness or silence (2/7)
         if (coinflip())
@@ -4995,6 +4981,75 @@ void good_god_holy_attitude_change(monsters *holy)
 
     // Avoid immobile "followers".
     behaviour_event(holy, ME_ALERT, MHITNOT);
+}
+
+void tso_blasts_cleansing_flame(const char *message)
+{
+    // TSO won't protect you from his own cleansing flame, and Xom is too
+    // capricious to protect you from it.
+    if (you.religion != GOD_SHINING_ONE && you.religion != GOD_XOM
+        && !player_under_penance() && x_chance_in_y(you.piety, MAX_PIETY * 2))
+    {
+        god_speaks(you.religion,
+                   make_stringf("\"Mortal, I have averted the wrath of %s... "
+                                "this time.\"",
+                                god_name(GOD_SHINING_ONE).c_str()).c_str());
+    }
+    else
+    {
+        // If there's a message, display it before firing.
+        if (message)
+            god_speaks(GOD_SHINING_ONE, message);
+
+        simple_god_message(" blasts you with cleansing flame!",
+                           GOD_SHINING_ONE);
+
+        bolt beam;
+        beam.beam_source  = NON_MONSTER;
+        beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+        beam.damage       = calc_dice(2, 20 + (you.experience_level * 7) / 3);
+        beam.flavour      = BEAM_HOLY;
+        beam.target       = you.pos();
+        beam.name         = "golden flame";
+        beam.colour       = YELLOW;
+        beam.thrower      = KILL_MISC;
+        beam.aux_source   = "the Shining One's cleansing flame";
+        beam.ex_size      = 2;
+        beam.is_tracer    = false;
+        beam.is_explosion = true;
+        explosion(beam);
+    }
+}
+
+// Currently only used when holy beings have been killed.
+static std::string _get_tso_speech(const std::string key)
+{
+    std::string result = getSpeakString("TSO " + key);
+
+    if (!result.empty())
+        return (result);
+
+    return ("The Shining One is angry!");
+}
+
+// Killing holy beings may anger TSO.
+void tso_holy_revenge()
+{
+    god_acting gdact(GOD_SHINING_ONE, true);
+
+    // TSO watches evil god worshippers more closely.
+    if ((is_evil_god(you.religion) && one_chance_in(3))
+        || (!is_good_god(you.religion) && one_chance_in(4)))
+    {
+        const char *revenge;
+
+        if (is_evil_god(you.religion))
+            revenge = _get_tso_speech("holy evil").c_str();
+        else if (!is_good_god(you.religion))
+            revenge = _get_tso_speech("holy other").c_str();
+
+        tso_blasts_cleansing_flame(revenge);
+    }
 }
 
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile,

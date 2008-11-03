@@ -100,6 +100,8 @@ bool yred_injury_mirror(bool actual = true);
 bool beogh_water_walk();
 void beogh_idol_revenge();
 void good_god_holy_attitude_change(monsters *holy);
+void tso_blasts_cleansing_flame(const char *message = NULL);
+void tso_holy_revenge();
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
                              bool quiet = false, bool allow_fail = true);
 void beogh_convert_orc(monsters *orc, bool emergency,
