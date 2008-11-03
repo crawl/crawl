@@ -2841,8 +2841,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         break;
 
     case DID_DESTROY_ORCISH_IDOL:
-        beogh_idol_revenge();
-
         if (you.religion == GOD_BEOGH)
         {
             piety_change = -level * 2;
@@ -2893,6 +2891,14 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
     }
 #endif
+
+    if (thing_done == DID_DESTROY_ORCISH_IDOL)
+        beogh_idol_revenge();
+    else if (thing_done == DID_KILL_HOLY
+        || thing_done == DID_HOLY_KILLED_BY_SERVANT)
+    {
+        tso_holy_revenge();
+    }
 
     return (ret);
 }
