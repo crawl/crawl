@@ -133,19 +133,7 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     // Small species wielding large weapons...
     if (player_size(PSIZE_BODY) < SIZE_MEDIUM
-        && (weapon->sub_type == WPN_GREAT_SWORD
-            || weapon->sub_type == WPN_TRIPLE_SWORD
-            || weapon->sub_type == WPN_GREAT_MACE
-            || weapon->sub_type == WPN_DIRE_FLAIL
-            || weapon->sub_type == WPN_BATTLEAXE
-            || weapon->sub_type == WPN_EXECUTIONERS_AXE
-            || weapon->sub_type == WPN_BARDICHE
-            || weapon->sub_type == WPN_HALBERD
-            || weapon->sub_type == WPN_GLAIVE
-            || weapon->sub_type == WPN_GIANT_CLUB
-            || weapon->sub_type == WPN_GIANT_SPIKED_CLUB
-            || weapon->sub_type == WPN_LONGBOW
-            || weapon->sub_type == WPN_SCYTHE))
+        && !check_weapon_wieldable_size(*weapon, player_size(PSIZE_BODY)))
     {
         SAY(mpr("That's too large for you to wield."));
         return (false);
