@@ -321,7 +321,7 @@ Beogh idol follower
 
 Beogh fumes, "This is no small sin, orc. Repent!"
 
-Beogh whispers, "You will pay for this transgression.",
+Beogh whispers, "You will suffer for this misdeed."
 
 Beogh rages, "An eye for an eye..."
 %%%%
