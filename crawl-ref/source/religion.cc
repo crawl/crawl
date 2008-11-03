@@ -2238,22 +2238,20 @@ void god_speaks(god_type god, const char *mesg)
     mpr(mesg, MSGCH_GOD, god);
 }
 
-god_type do_god_vengeance(conduct_type thing_done, bool actual)
+god_type do_god_vengeance(conduct_type thing_done)
 {
     god_type god = GOD_NO_GOD;
 
     if (thing_done == DID_DESTROY_ORCISH_IDOL)
     {
         god = GOD_BEOGH;
-        if (actual)
-            beogh_idol_revenge();
+        beogh_idol_revenge();
     }
     else if (thing_done == DID_KILL_HOLY
         || thing_done == DID_HOLY_KILLED_BY_SERVANT)
     {
         god = GOD_SHINING_ONE;
-        if (actual)
-            tso_holy_revenge();
+        tso_holy_revenge();
     }
 
     return (god);

@@ -63,7 +63,7 @@ std::string get_god_dislikes(god_type which_god, bool verbose = false);
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
 
-god_type do_god_vengeance(conduct_type thing_done, bool actual = true);
+god_type do_god_vengeance(conduct_type thing_done);
 bool did_god_conduct(conduct_type thing_done, int pgain, bool known = true,
                      const monsters *victim = NULL);
 void set_attack_conducts(god_conduct_trigger conduct[3], const monsters *mon,
