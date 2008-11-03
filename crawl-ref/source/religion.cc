@@ -2590,8 +2590,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     // blame.
     case DID_KILL_HOLY:
     case DID_HOLY_KILLED_BY_SERVANT:
-        tso_holy_revenge();
-
         switch (you.religion)
         {
         case GOD_ZIN:
