@@ -16,10 +16,10 @@ Contents:  A. Introduction
 A.   Introduction
 -----------------
 
-All fixed level information resides in various .des files to be found in
-the dat directory. If you are interested in adding some vaults, say, start
-with the existing ones and modify them. Currently, the following .des files
-are in use:
+All fixed level information resides in various .des files to be found in the 
+dat directory. If you are interested in adding some vaults, say, start with 
+the existing ones and modify them. Currently, the following .des files are in
+use:
 
  altar.des    - minivaults containing altars
  bazaar.des   - entrances to bazaar portal vaults, and bazaars proper
@@ -47,11 +47,11 @@ are in use:
 Kinds of Vaults
 ---------------
 The different kinds of vaults used by Crawl are described briefly below. In
-most cases, when the dungeon builder places a vault on a level, the rest of the
-level (assuming the vault is not a full-map vault) is generated as
+most cases, when the dungeon builder places a vault on a level, the rest of
+the level (assuming the vault is not a full-map vault) is generated as
 rooms+corridors. The only exceptions to this are branch entry vaults and
-minivaults, both of which are placed after the rest of the level is generated,
-and therefore do not influence level generation.
+minivaults - these are placed after the level is generated, and therefore 
+do not influence level generation.
 
 * Entry vault:
 
@@ -83,21 +83,20 @@ attributes.
 
 * Random minivaults:
 
-Random minivaults are small maps that are placed onto a level that the
+Random minivaults are small maps that are placed onto a level that the 
 dungeon builder has already constructed fully otherwise (the level may
 include other vaults).
 
-Minivaults are distinguished from normal vaults solely by the absence
-of an ORIENT: declaration. Any map without a specified ORIENT: is a
-minivault.
+Minivaults are distinguished from normal vaults solely by the absence of an 
+ORIENT: declaration. Any map without a specified ORIENT: is a minivault.
 
 
 B.   Sample Map
 ---------------
 
-Before going into the technical details of the level-file syntax,
-let's look at an example - a branch entry for the Ecumenical Temple -
-to see what a map definition looks like.
+Before going into the technical details of the level-file syntax, let's look
+at an example - a branch entry for the Ecumenical Temple - to see what a map
+definition looks like.
 
 # name below:
 NAME:    a_useless_temple_entry_02
@@ -119,13 +118,12 @@ x2www1x
 xx1.1xx
 ENDMAP
 
-Every map consists of a name, a header and the actual map (the order
-is not important as long as the name comes first, but stick to this
-order for consistency).
+Every map consists of a name, a header and the actual map (the order is not 
+important as long as the name comes first, but try to stick to this order for
+consistency).
 
-Lines starting with # are comments. The keywords available are
-explained briefly after the example map and in detail in the following
-sections.
+Lines starting with # are comments. The keywords available are explained 
+briefly after the example map and in detail in the following sections.
 
 "ORIENT: float" tells the level builder that this entry can be anywhere on the
                 level; other ORIENT: values can force a map to one edge of the
@@ -214,15 +212,15 @@ Features
  V - Permanently dry fountain
  Y - Blood fountain (use sparingly!)
 
-Note: Due to the level maker having seen incremental improvements over
-the years, there are some inconsistencies. For examples, dangerous
-statues (orange, silver, ice) are now genuine monsters. In particular,
-you might see many older vaults still using the deprecated 'H' and 'S'
-glyphs which should otherwise be dispensed with.
+Note: Due to the level maker having seen incremental improvements over the 
+years, there are some inconsistencies. For examples, dangerous statues 
+(orange, silver, ice) are now genuine monsters. In particular, you might see
+many older vaults still using the deprecated 'H' and 'S' glyphs which should
+otherwise be dispensed with.
 
-Also, the most of the other feature glyphs can be replaced with KFEAT:
-lines. The same goes for some item glyphs ('R', 'Z') which
-could be replaced by KITEM: lines.
+Similarly, the most of the other feature glyphs can be replaced with KFEAT: 
+lines. The same goes for some item glyphs ('R', 'Z') which could be replaced 
+by KITEM: lines.
 
 Items
 -----
@@ -249,8 +247,8 @@ Monsters
 D.   Header information
 -----------------------
 
-(All declarations apart from NAME: are translated to Lua function
-calls behind the scenes. See the Lua reference for more information.)
+(All declarations apart from NAME: are translated to Lua function calls 
+behind the scenes. See the Lua reference for more information.)
 
 NAME:     a_string
           Each map must have a unique name. Underscores and digits are ok.
@@ -303,11 +301,11 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
 
           You can constrain a map by branch:
 
-            DEPTH: Lair:7-9
+            DEPTH: Lair:3-6
 
-          (Anywhere between levels 7-9 of the Lair, inclusive.)
+          (Anywhere between levels 3-6 of the Lair, inclusive.)
 
-          You can apply multiple constraints in one DEPTH line,
+          You can apply multiple constraints in one DEPTH line, 
           comma-separated:
 
             DEPTH: 7-20, !12-14
@@ -410,41 +408,38 @@ TAGS:     Tags go an a TAGS: line and are space-separated. Valid tags are:
           Pre-0.3 Crawl distinguished between TAGS and FLAGS. 0.3 and
           newer Crawls treat TAGS and FLAGS as synonyms.
 
-LFLAGS:   Persistent, changeable per-level flags which affect game
-          behavior (FLAGS just controls how the vault is placed); should
-          only be used for vaults with ORIENT encompass or with PLACE.
-          This causes a level's flags to be set when the level is first
-          created. These flags can later be altered using Lua markers;
-          see the slime pit vault in lair.des, and the vaults in hell.des
-          and elf.des for examples.
+LFLAGS:   Persistent, changeable per-level flags which affect game behaviour
+          (FLAGS just controls how the vault is placed); should only be used
+          for vaults with ORIENT encompass or with PLACE. Causes a level's 
+          flags to be set when the level is first created. These flags can 
+          later be altered using Lua markers; for examples, look at the slime
+          pit vault in lair.des, and the vaults in hell.des and elf.des.
 
-          Valid flags are: no_tele_control, which prevents the player
-          from using teleport control; not_mappable, which prevents
-          the player from remembering where they've been (like in
-          the Abyss), and no_magic_map, which prevents magic mapping
-          from working.
+          Valid flags are: no_tele_control, which prevents the player from 
+          using teleport control; not_mappable, which prevents the player 
+          from remembering where they've been (like in the Abyss), and 
+          no_magic_map, which prevents magic mapping from working.
 
 BFLAGS:   Persistent, changeable per-*branch* flags which affect game
-          behavior; should only be used for vaults which go on the fist
+          behaviour; should only be used for vaults which go on the first
           level of a particular branch. These flags can later be altered
           using Lua markers; see the Tomb vaults in vaults.lua for an
           example.
 
-          Valid flags are: no_tele_control, which prevents the player
-          from using teleport control; not_mappable, which prevents
-          the player from remembering where they've been (like in
-          the Abyss), and no_magic_map, which prevents magic mapping
-          from working.
+          Valid flags are: no_tele_control, which prevents the player from 
+          using teleport control; not_mappable, which prevents the player 
+          from remembering where they've been (like in the Abyss), and 
+          no_magic_map, which prevents magic mapping from working.
 
 FLOORCOL: blue
-          FLOORCOL: allows you to set the floor colour for the level
-          the vault appears in. Should only be used for bazaars and
-          other portal vaults.
+          FLOORCOL: allows you to set the floor colour for the level the 
+          vault appears in. Should only be used for bazaars and other 
+          portal vaults.
 
 ROCKCOL:  yellow
-          ROCKCOL: allows you to set the colour of rock walls for the
-          level the vault appears in. Should only be used for bazaars and
-          other portal vaults.
+          ROCKCOL: allows you to set the colour of rock walls for the level
+          the vault appears in. Should only be used for bazaars and other 
+          portal vaults.
 
 ITEM:     (list of items, separated by comma)
           These are used to help place specified items at specific places
@@ -483,34 +478,32 @@ ITEM:     (list of items, separated by comma)
           * "any" by itself gives a random choice; you can combine "any" with
             "good_item."
           * "any book", "any misc" etc. gives a random item of that class.
-             Valid item class names are: gold, weapon, missile, armour,
-             wand, food, scroll, jewelry, potion, book, staff, orb,
-             misc, carrion. All of these are usable in map definitions,
-             apart from "orb" and "carrion".
-          * "race:race_name", where "race_name" is "elven", "dwarven"
-             or "orcish"; it can also be "none" or "no_race" to prevent
-             the item from being randomly being made racial.  Has no effect
-             if the item can't take that kind of racial setting.
-             NOTE: Can result in a non-racial item if used with "any" and
-             the chosen item isn't compatible with the desired race.
-          * "ego:ego_name", where "ego_name" is something like
-            "running", "fire_resistance", and so on; "none" can be used
-            to prevent the item from getting an ego.  The item must
-            be fully specified, so trying "any weapon ego:vorpal" or
-            "any armour ego:positive_energy" will result in an error.
-            Trying to give an ego to something which can't accept an
-            ego will also result in an error.
+            Valid item class names are: gold, weapon, missile, armour, wand,
+            food, scroll, jewelry, potion, book, staff, orb, misc, carrion.
+            All of these are usable in map definitions, apart from "orb" and
+            "carrion".
+          * "race:race_name", where "race_name" is "elven", "dwarven" or
+            "orcish"; it can also be "none" or "no_race" to prevent the item
+            from being randomly being made racial.  Has no effect if the item
+            can't take that kind of racial setting.
+            NOTE: Can result in a non-racial item if used with "any" and the
+            chosen item isn't compatible with the desired race.
+          * "ego:ego_name", where "ego_name" is something like  "running" or
+            "fire_resistance", and so on; "none" can be used to prevent the
+            item from getting an ego.  The item must be fully specified, so
+            trying "any weapon ego:vorpal" or "any armour ego:positive_energy"
+            will result in an error.  Trying to give an ego to something which
+            can't accept an ego will also result in an error.
 
-            WARNING: While checks are done to make sure that an armour
-            ego isn't given to a weapon, a weapon ego to a missile,
-            and so on, and also to make sure that egos are only given
-            to amrours, weapons and missiles, no other checking is
-            done.  Thus it is possible to create a demonic weapon of
-            holy wrath or a helmet of running.
+            WARNING: While checks are done to make sure that an armour ego
+            isn't given to a weapon, a weapon ego to a missile, and so on, and
+            also to make sure that egos are only given to amrours, weapons and
+            missiles, no other checking is done.  Thus it is possible to create
+            a demonic weapon of holy wrath or a helmet of running.
  
-          Limitations: You can't specify curse status, specificy
-          pluses or number of charges, force a randart or give fixedarts.
-          You also can't lay down corpses, skeletons, or chunks.
+          Limitations: You can't specify curse status, specificy pluses or
+          number of charges, force a randart or give fixedarts.  You also
+          can't lay down corpses, skeletons, or chunks.
 
 MONS:     (list of monsters)
           These are used to help place specific monsters at specific places
@@ -719,21 +712,20 @@ KMASK:    Z = no_monster_gen
 
             KMASK: W = no_monster_gen
 
-          will prevent monsters from randomly being generated on shallow
-          water squares. Note that if shuffling and substitutions cause
-          W to end up as water 10% of the time and floor 90% of the time,
-          then those floor squares will still have no_monster_gen set, but
-          that's still a higher degree of control than you get with TAGS.
+          will prevent monsters from randomly being generated on shallow water
+          squares.  Note that if shuffling and substitutions cause W to end up
+          as water 10% of the time and floor 90% of the time, then those floor
+          squares will still have no_monster_gen set, but that's still a higher
+          degree of control than you get with TAGS.
 
-          If TAGS has been used to set a mask for the entire vault, you
-          can use KMASK to remove that mask from particular symbols.
-          For instance:
+          If TAGS has been used to set a mask for the entire vault, you can use
+          KMASK to remove that mask from particular symbols.  For instance:
 
             TAGS:  no_monster_gen
             KMASK: W = !no_monster_gen
 
-          would make it so that monsters are only randomly generated
-          on shallow water squares.
+          would make it so that monsters are only randomly generated on shallow
+          water squares.
 
 KITEM:    ? = potion of healing / potion of restore abilities
           KITEM: places the specified item at all occurrences of the
@@ -752,63 +744,59 @@ KITEM:    ? = potion of healing / potion of restore abilities
 
 MARKER:   A = feat:<feature_name> or lua:<marker_expr>
 
-          A marker ties a square on the map to a game-trigger of some
-          sort (which depends on the marker and what feature it is on).
+          A marker ties a square on the map to a game-trigger of some sort
+          (which depends on the marker and what feature it is on).
 
-          The portals to the Hells in the Vestibule of Hell are each
-          annotated with feature markers like this:
+          The portals to the Hells in the Vestibule of Hell are each annotated
+          with feature markers like this:
 
           MARKER: D=feat:enter_dis, G=feat:enter_gehenna
 
-          When the horn is sounded, the stone arch at D becomes the
-          portal to Dis, the arch at G becomes the portal to Gehenna,
-          etc. This behaviour applies only to the Vestibule of Hell.
+          When the horn is sounded, the stone arch at D becomes the portal to
+          Dis, the arch at G becomes the portal to Gehenna.  This behaviour
+          applies only to the Vestibule of Hell.
 
-          Lua markers are used for more complex triggers, such as for
-          bazaar and labyrinth gates, rune pickup triggers for
-          the branches of Hell, fog generators, etc.
+          Lua markers are used for more complex triggers, such as for bazaar
+          and labyrinth gates, rune pickup triggers for the branches of Hell,
+          fog generators, etc.
 
-          Here's a Lua marker that creates a cloud generator:
+          Here's a Lua marker that creates a cloud generator (for a
+          full explanation of the various parameters, read the header
+          of dat/clua/lm_fog.lua):
 
           MARKER:  A = lua:fog_machine { \
                        pow_max = 15, delay_min = 100, delay_max = 150, \
                        size = 1, size_buildup_amnt = 29, \
                        size_buildup_time = 1000 }
 
-          For a full explanation of the various paramenters, read the
-          header of dat/clua/lm_fog.lua.
+          Feature names used in markers must be names matching the names in
+          the source code.  There's a full list of feature names in section I
+          (Feature names) at the end of this document.
 
-          Feature names used in markers must be names matching the
-          names in the source code. There's a full list of feature
-          names in section I (Feature names) at the end of this
-          document.
-
-          An important thing to note with markers is that they are
-          also considered map transforms along with SUBST, NSUBST and
-          SHUFFLE. You usually want to place a MARKER line after all
-          SUBST, NSUBST and SHUFFLE lines so that the final position
-          of the marker key is used. For instance, if you want to
-          attach a marker to the rune in a map when you're randomising
+          An important note about markers is that they are also considered map
+          transforms along with SUBST, NSUBST and SHUFFLE.  You usually want
+          to place a MARKER line after all SUBST, NSUBST and SHUFFLE lines so
+          that the final position of the marker key is used.  For instance, if
+          you want to attach a marker to the rune in a map which randomises
           the position of the rune, this is a mistake:
 
           MARKER: O = lua:<expr>
           SHUFFLE: Oa/|c
 
-          because the marker will be placed at O (the rune), then O
-          may be shuffled to a different position. The correct order
-          in this case is:
+          because the marker will be placed at O (the rune), then O may be
+          shuffled to a different position. The correct order in this case is:
 
           SHUFFLE: Oa/|c
           MARKER: O = lua:<expr>
 
-For most map headers, you can split long lines by ending the line that
-will be continued on the next line with \ as:
+For most map headers, you can split long lines by ending the line that will be
+continued on the next line with \ as:
 
 KMONS: * = orc ; katana | quick blade . chain mail | scale mail / \
            goblin ; dagger
 
-If you're using continuation lines for comma-separated lists of items
-or monsters, split your line after the comma, not before. For example:
+If you're using continuation lines for comma-separated lists of monsters or
+items, split your line after the comma, not before.  For example:
 
 Wrong:
         ITEM: potion of healing \
@@ -817,15 +805,15 @@ Right:
         ITEM: potion of healing, \
               potion of speed
 
-But in general, it is preferable to use multiple ITEM or MONS lines if
-you're splitting comma-separated values:
+But in general, it is preferable to use multiple ITEM or MONS lines if you're
+splitting comma-separated values:
 
 Preferred:
         ITEM: potion of healing
         ITEM: potion of speed
 
-Spaces before the \ of the continued line are significant, leading
-spaces of the next (continuing) line are not. In other words, given:
+Spaces before the \ of the continued line are significant, leading spaces of
+the next (continuing) line are not. In other words, given:
 
 ITEM: potion of\
       healing
@@ -836,10 +824,10 @@ Crawl will see "potion ofhealing", not "potion of healing".
 E.    Conditionalising levels
 -----------------------------
 
-Crawl translates level (.des) files into Lua code chunks and runs
-these chunks to produce the final level that is generated. While you
-don't need to use Lua for most levels, using Lua allows you to
-conditionalise or randomise levels with greater control.
+Crawl translates level (.des) files into Lua code chunks and runs these chunks
+to produce the final level that is generated.  While you don't need to use Lua
+for most levels, using Lua allows you to conditionalise or randomise levels 
+with greater control.
 
 Let's take a simple example of randomisation:
 
@@ -855,9 +843,9 @@ xxx.xxxxx.xxxxx.xxx
 xxx@xxxxx@xxxxx@xxx
 ENDMAP
 
-Now let's say you want A, B, and C to be randomly rock or floor, but B
-should be floor if both A and C are rock. Here's one way to do it (add
-these lines to the map definition):
+Now let's say you want A, B, and C to be randomly rock or floor, but B should
+be floor if both A and C are rock. Here's one way to do it (add these lines 
+to the map definition):
 
 : local asolid, csolid
 : if crawl.random2(2) == 0 then
