@@ -3029,8 +3029,9 @@ static int _affect_wall(bolt &beam, const coord_def& p)
             if (targ_grid == DNGN_ORCISH_IDOL
                 && beam.beam_source == NON_MONSTER)
             {
-                beogh_idol_revenge();
+                did_god_conduct(DID_DESTROY_ORCISH_IDOL, 4);
             }
+
             beam.obvious_effect = true;
         }
 

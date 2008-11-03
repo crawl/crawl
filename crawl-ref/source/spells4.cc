@@ -270,7 +270,7 @@ static int _shatter_walls(coord_def where, int pow, int garbage)
         grd(where) = DNGN_FLOOR;
 
         if (grid == DNGN_ORCISH_IDOL)
-            beogh_idol_revenge();
+            did_god_conduct(DID_DESTROY_ORCISH_IDOL, 4);
 
         return (1);
     }
@@ -2029,7 +2029,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         explosion(beam, hole, true);
 
         if (grid == DNGN_ORCISH_IDOL)
-            beogh_idol_revenge();
+            did_god_conduct(DID_DESTROY_ORCISH_IDOL, 4);
     }
     else if (beam.damage.num == 0)
     {

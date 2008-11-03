@@ -2590,6 +2590,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     // blame.
     case DID_KILL_HOLY:
     case DID_HOLY_KILLED_BY_SERVANT:
+        tso_holy_revenge();
+
         switch (you.religion)
         {
         case GOD_ZIN:
@@ -2838,6 +2840,17 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         }
         break;
 
+    case DID_DESTROY_ORCISH_IDOL:
+        beogh_idol_revenge();
+
+        if (you.religion == GOD_BEOGH)
+        {
+            piety_change = -level * 2;
+            penance = level * 6;
+            ret = true;
+        }
+        break;
+
     case DID_STABBING:                          // unused
     case DID_STIMULANTS:                        // unused
     case DID_EAT_MEAT:                          // unused
@@ -2869,7 +2882,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
           "Spell Cast", "Spell Practise", "Spell Nonutility", "Cards",
           "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
           "Eat Souled Being", "Deliberate Mutation", "Cause Glowing",
-          "Create Life"
+          "Destroy Orcish Idol", "Create Life"
         };
 
         COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
@@ -2880,9 +2893,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
     }
 #endif
-
-    if (thing_done == DID_KILL_HOLY || thing_done == DID_HOLY_KILLED_BY_SERVANT)
-        tso_holy_revenge();
 
     return (ret);
 }
@@ -4930,17 +4940,6 @@ void beogh_idol_revenge()
             revenge = _get_beogh_speech("idol other").c_str();
 
         god_smites_you(GOD_BEOGH, revenge);
-
-        if (you.religion == GOD_BEOGH)
-        {
-            // count this as an attack on a fellow orc; it comes closest
-            // and gives the same result (penance + piety loss)
-            monsters dummy;
-            dummy.type = MONS_ORC;
-            dummy.attitude = ATT_FRIENDLY;
-
-            did_god_conduct(DID_ATTACK_FRIEND, 8, true, &dummy);
-        }
     }
 }
 
