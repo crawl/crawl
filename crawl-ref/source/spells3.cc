@@ -286,9 +286,7 @@ bool cast_bone_shards(int power, bolt &beam)
     bool success = false;
 
     if (!you.weapon() || you.weapon()->base_type != OBJ_CORPSES)
-    {
         canned_msg(MSG_SPELL_FIZZLES);
-    }
     else if (you.weapon()->sub_type != CORPSE_SKELETON)
         mpr("The corpse collapses into a mass of pulpy flesh.");
     else
