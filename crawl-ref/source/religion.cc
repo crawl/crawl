@@ -366,7 +366,7 @@ static bool _magic_users_attitude_change();
 static bool _yred_slaves_abandon_you();
 static bool _beogh_followers_abandon_you();
 static void _altar_prayer();
-static void _dock_piety(int piety_loss, int penance);
+static void _dock_piety(int piety_loss, int penance, bool lecture);
 static bool _make_god_gifts_disappear(bool level_only = true);
 static bool _make_holy_god_gifts_good_neutral(bool level_only = true);
 static bool _make_god_gifts_hostile(bool level_only = true);
@@ -2238,6 +2238,27 @@ void god_speaks(god_type god, const char *mesg)
     mpr(mesg, MSGCH_GOD, god);
 }
 
+god_type do_god_vengeance(conduct_type thing_done, bool actual)
+{
+    god_type god = GOD_NO_GOD;
+
+    if (thing_done == DID_DESTROY_ORCISH_IDOL)
+    {
+        god = GOD_BEOGH;
+        if (actual)
+            beogh_idol_revenge();
+    }
+    else if (thing_done == DID_KILL_HOLY
+        || thing_done == DID_HOLY_KILLED_BY_SERVANT)
+    {
+        god = GOD_SHINING_ONE;
+        if (actual)
+            tso_holy_revenge();
+    }
+
+    return (god);
+}
+
 // This function is the merger of done_good() and naughty().
 // Returns true if god was interested (good or bad) in conduct.
 bool did_god_conduct(conduct_type thing_done, int level, bool known,
@@ -2859,7 +2880,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     if (piety_change > 0)
         gain_piety(piety_change);
     else
-        _dock_piety(-piety_change, penance);
+    {
+        _dock_piety(-piety_change, penance,
+                    do_god_vengeance(thing_done, false) != you.religion);
+    }
 
 #if DEBUG_DIAGNOSTICS
     if (ret)
@@ -2890,13 +2914,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     }
 #endif
 
-    if (thing_done == DID_DESTROY_ORCISH_IDOL)
-        beogh_idol_revenge();
-    else if (thing_done == DID_KILL_HOLY
-        || thing_done == DID_HOLY_KILLED_BY_SERVANT)
-    {
-        tso_holy_revenge();
-    }
+    do_god_vengeance(thing_done);
 
     return (ret);
 }
@@ -2967,7 +2985,7 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
         conduct[i].enabled = false;
 }
 
-static void _dock_piety(int piety_loss, int penance)
+static void _dock_piety(int piety_loss, int penance, bool lecture)
 {
     static long last_piety_lecture   = -1L;
     static long last_penance_lecture = -1L;
@@ -2995,7 +3013,7 @@ static void _dock_piety(int piety_loss, int penance)
         excommunication();
     else if (penance)       // only if still in religion
     {
-        if (last_penance_lecture != you.num_turns)
+        if (last_penance_lecture != you.num_turns && lecture)
         {
             god_speaks(you.religion,
                        "\"You will pay for your transgression, mortal!\"");
