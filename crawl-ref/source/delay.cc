@@ -219,17 +219,19 @@ static int _recite_to_monsters(coord_def where, int pow, int unused)
 
 static std::string _get_recite_speech(const std::string key, int weight)
 {
-    seed_rng( weight + you.pos().x + you.pos().y);
+    seed_rng(weight + you.pos().x + you.pos().y);
     const std::string str = getSpeakString("zin_recite_speech_" + key);
 
-    if (!str.empty())
-        return (str);
+    if (str.empty())
+    {
+        // In case nothing is found.
+        if (key == "start")
+            return ("begin reciting the Axioms of Law.");
 
-    // In case nothing is found.
-    if (key == "start")
-        return ("begin reciting the Axioms of Law.");
+        return ("reciting");
+    }
 
-    return ("reciting");
+    return (str);
 }
 
 // Returns true if this delay can act as a parent to other delays, i.e. if
