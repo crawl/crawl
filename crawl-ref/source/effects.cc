@@ -2233,6 +2233,11 @@ static void _hell_effects()
 //   .        #          2
 //  #x#  or  .x.   ->   0x1
 //   .        #          3
+//
+// FIXME: There needs to be some sort of "dead-end" check similar to floor
+//        grids, but the other way around: turning a wall into floor can
+//        turn perfectly fine corridors into too short wonky-looking
+//        dead-ends.
 static bool _grid_is_flanked_by_walls(const coord_def &p)
 {
     const coord_def adjs[] = { coord_def(p.x-1,p.y),
@@ -2255,9 +2260,9 @@ static bool _grid_is_flanked_by_walls(const coord_def &p)
 // If this is the case, we need to make sure that it is at least two grids
 // deep.
 //
-// Example: If a wall is built at X (A), two deadends are created, a short and
-//          a long one. The latter is perfectly fine, but the former looks
-//          a bit odd. If Y is chosen, this looks much better (B).
+// Example: If a wall is built at X (A), two dead-ends are created, a short
+//          and a long one. The latter is perfectly fine, but the former
+//          looks a bit odd. If Y is chosen, this looks much better (B).
 //
 // #######    (A)  #######    (B)  #######
 // ...XY..         ...#...         ....#..
@@ -2319,11 +2324,14 @@ static bool _deadend_check(const coord_def &p)
     return (true);
 }
 
+// Changes a small portion of a labyrinth by exchanging wall against floor
+// grids in such a way that connectivity remains guaranteed.
 void change_labyrinth(bool msg)
 {
-    int size = random_range(12, 24);
-    coord_def c1, c2;
+    int size = random_range(12, 24); // size of the shifted area (square)
+    coord_def c1, c2; // upper left, lower right corners of the shifted area
 
+    // Try 10 times for an area that is little mapped.
     for (int tries = 10; tries > 0; tries--)
     {
         int x = random_range(LABYRINTH_BORDER, GXM - LABYRINTH_BORDER - size);
@@ -2349,6 +2357,9 @@ void change_labyrinth(bool msg)
              c1.x, c1.y, c2.x, c2.y);
     }
 
+    // Fill a vector with wall grids that are potential targets for swapping
+    // against floor, i.e. are flanked by walls to two cardinal directions,
+    // and by floor on the two remaining sides.
     std::vector<coord_def> targets;
     for (int xi = c1.x; xi <= c2.x; xi++)
         for (int yi = c1.y; yi <= c2.y; yi++)
@@ -2381,22 +2392,16 @@ void change_labyrinth(bool msg)
         mprf(MSGCH_DIAGNOSTICS, "-> #targets = %d", targets.size());
     }
 
-    int max_targets = random_range(std::min((int) targets.size(), 12),
-                                   std::min((int) targets.size(), 45));
+    // How many switches we'll be doing.
+    const int max_targets = random_range(std::min((int) targets.size(), 12),
+                                         std::min((int) targets.size(), 45));
 
+    // Shuffle the targets, then pick the max_targets first ones.
     std::random_shuffle(targets.begin(), targets.end(), random2);
 
-    std::vector<coord_def> dirs;
-    dirs.push_back(coord_def(-1,-1));
-    dirs.push_back(coord_def( 0,-1));
-    dirs.push_back(coord_def( 1,-1));
-    dirs.push_back(coord_def(-1, 0));
-//    dirs.push_back(coord_def( 0, 0));
-    dirs.push_back(coord_def( 1, 0));
-    dirs.push_back(coord_def(-1, 1));
-    dirs.push_back(coord_def( 0, 1));
-    dirs.push_back(coord_def( 1, 1));
-
+    // For each of the chosen wall grids, calculate the path connecting the
+    // two floor grids to either side, and block off one floor grid on this
+    // path to close the circle opened by turning the wall into floor.
     for (int count = 0; count < max_targets; count++)
     {
         const coord_def c(targets[count]);
@@ -2404,6 +2409,7 @@ void change_labyrinth(bool msg)
         if (!_grid_is_flanked_by_walls(c))
             continue;
 
+        // Use the adjacent floor grids as source and destination.
         coord_def src(c.x-1,c.y);
         coord_def dst(c.x+1,c.y);
         if (grd(src) != DNGN_FLOOR || grd(dst) != DNGN_FLOOR)
@@ -2420,15 +2426,25 @@ void change_labyrinth(bool msg)
             if (msg)
             {
                 mpr("Something went badly wrong - no path found!",
-                MSGCH_DIAGNOSTICS);
+                    MSGCH_DIAGNOSTICS);
             }
             continue;
         }
+
+        // Get the actual path.
         const std::vector<coord_def> path = mp.backtrack();
-        std::vector<coord_def> points;
+
+        // Replace the wall with floor, but preserve the old grid for later
+        // change of the floor grid, or in case this fails.
+        // It's better if the change is done now, so the grid can be
+        // treated as floor rather than a wall, and we don't need any
+        // special cases.
         dungeon_feature_type old_grid = grd(c);
         grd(c) = DNGN_FLOOR;
 
+        // Add all floor grids meeting a couple of conditions to a vector
+        // of potential switch points.
+        std::vector<coord_def> points;
         for (unsigned int i = 0; i < path.size(); i++)
         {
             const coord_def p(path[i]);
@@ -2452,10 +2468,15 @@ void change_labyrinth(bool msg)
 
         if (points.empty())
         {
+            // Take back the previous change.
             grd(c) = old_grid;
             continue;
         }
 
+        // Randomly pick one floor grid from the vector and replace it
+        // with the original wall type.
+        // FIXME: This is not optimal since it may lead to e.g. a single
+        //        metal wall appearing among stone ones.
         const int pick = random_range(0, (int) points.size() - 1);
         if (msg)
         {
@@ -2466,6 +2487,21 @@ void change_labyrinth(bool msg)
         grd(points[pick]) = old_grid;
     }
 
+    // The directions are used to randomly decide where to place items that
+    // have ended up in walls during the switching.
+    std::vector<coord_def> dirs;
+    dirs.push_back(coord_def(-1,-1));
+    dirs.push_back(coord_def( 0,-1));
+    dirs.push_back(coord_def( 1,-1));
+    dirs.push_back(coord_def(-1, 0));
+//    dirs.push_back(coord_def( 0, 0));
+    dirs.push_back(coord_def( 1, 0));
+    dirs.push_back(coord_def(-1, 1));
+    dirs.push_back(coord_def( 0, 1));
+    dirs.push_back(coord_def( 1, 1));
+
+    // Search the entire shifted area for stacks of items now stuck in walls
+    // and move them to a random adjacent non-wall grid.
     for (int xi = c1.x; xi <= c2.x; xi++)
         for (int yi = c1.y; yi <= c2.y; yi++)
         {
@@ -2479,12 +2515,15 @@ void change_labyrinth(bool msg)
                      "Need to move around some items at pos (%d, %d)...",
                      xi, yi);
             }
+            // Search the eight possible directions in random order.
             std::random_shuffle(dirs.begin(), dirs.end(), random2);
             for (unsigned int i = 0; i < dirs.size(); i++)
             {
                 const coord_def p = c + dirs[i];
-                if (grd(p) == DNGN_FLOOR)
+                if (!grid_is_solid(grd(p)) && !grid_destroys_items(grd(p)))
                 {
+                    // Once a valid grid is found, move all items from the
+                    // stack onto it.
                     int it = igrd(c);
                     while (it != NON_ITEM)
                     {
@@ -2492,28 +2531,29 @@ void change_labyrinth(bool msg)
                         mitm[it].pos.y = p.y;
                         it = mitm[it].link;
                     }
+                    // Link to the stack on the target grid p, or
+                    // NON_ITEM if empty.
                     mitm[it].link = igrd(p);
 
                     igrd(p) = igrd(c);
                     igrd(c) = NON_ITEM;
+
+                    if (msg)
+                    {
+                        mprf(MSGCH_DIAGNOSTICS, "Moved items over to (%d, %d)",
+                             p.x, p.y);
+                    }
+                    break;
                 }
-#ifdef DEBUG_CHANGE
-                if (msg)
-                {
-                    mprf(MSGCH_DIAGNOSTICS, "Moved items over to (%d, %d)",
-                         p.x, p.y);
-                }
-#endif
-                break;
             }
         }
 
-    // Just to be on the safe side.
+    // Recheck item coordinates, to make totally sure.
     fix_item_coordinates();
 
     // Finally, give the player a clue about what just happened.
     const int which = (silenced(you.pos()) ? 2 + random2(2)
-                                          : random2(4));
+                                           : random2(4));
     switch (which)
     {
     case 0: mpr("You hear an odd grinding sound!"); break;

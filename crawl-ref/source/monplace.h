@@ -342,7 +342,7 @@ protected:
     // Our destination, and the current position we're looking at.
     coord_def start, target, pos;
 
-    // Do not move diagonally along the path.
+    // If false, do not move diagonally along the path.
     bool allow_diagonals;
 
     // Maximum range to search between start and target. None, if zero.
