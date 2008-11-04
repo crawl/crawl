@@ -6589,6 +6589,53 @@ static void _init_minivault_placement(int vault, vault_placement &place)
     vault_main(vgrid, place, vault);
 }
 
+// Checks whether a given grid has at least one neighbour surrounded
+// entirely by non-floor.
+static bool _has_no_floor_neighbours(const coord_def &pos, bool recurse = false)
+{
+    for (int x = -1; x <= 1; x++)
+        for (int y = -1; y <= 1; y++)
+        {
+            if (x == 0 && y == 0)
+                continue;
+
+            const coord_def p = pos + coord_def(x, y);
+            if (!in_bounds(p))
+                return (true);
+
+            if (recurse)
+            {
+                if (grd(p) == DNGN_FLOOR)
+                    return (false);
+            }
+            else if (_has_no_floor_neighbours(p, true))
+                return (true);
+        }
+
+    return (recurse);
+}
+
+// Change the borders of the labyrinth to another (undiggable) wall type.
+static void _change_labyrinth_border(const dgn_region &region,
+                                     const dungeon_feature_type wall)
+{
+    const coord_def &end = region.pos + region.size;
+    for (int y = region.pos.y-1; y <= end.y; ++y)
+        for (int x = region.pos.x-1; x <= end.x; ++x)
+        {
+            const coord_def c(x, y);
+            if (!in_bounds(c)) // paranoia
+                continue;
+
+            if (grd(c) == wall || !grid_is_wall(grd(c)))
+                continue;
+
+            // All border grids have neighbours without any access to floor.
+            if (_has_no_floor_neighbours(c))
+                grd[x][y] = wall;
+        }
+}
+
 static void _change_walls_from_centre(const dgn_region &region,
                                       const coord_def &centre,
                                       bool  rectangular,
@@ -6782,6 +6829,8 @@ static void _labyrinth_level(int level_number)
                               15 * 15, DNGN_METAL_WALL,
                               34 * 34, DNGN_STONE_WALL,
                               0);
+
+    _change_labyrinth_border(lab, DNGN_METAL_WALL);
 
     _labyrinth_place_entry_point(lab, end);
 

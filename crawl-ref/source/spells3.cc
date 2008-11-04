@@ -1350,6 +1350,33 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
     {
         coord_def newpos;
 
+        // If in a labyrinth, always teleport well away from the centre.
+        // (Check done for the straight line, no pathfinding involved.)
+        bool need_distance_check = false;
+        coord_def centre;
+        if (you.level_type == LEVEL_LABYRINTH)
+        {
+            bool success = false;
+            for (int xpos = 0; xpos < GXM; xpos++)
+            {
+                for (int ypos = 0; ypos < GYM; ypos++)
+                {
+                    centre = coord_def(xpos, ypos);
+                    if (!in_bounds(centre))
+                        continue;
+
+                    if (grd(centre) == DNGN_ESCAPE_HATCH_UP)
+                    {
+                        success = true;
+                        break;
+                    }
+                }
+                if (success)
+                    break;
+            }
+            need_distance_check = success;
+        }
+
         do
         {
             newpos.set( random_range(X_BOUND_1 + 1, X_BOUND_2 - 1),
@@ -1358,7 +1385,8 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
         while (grd(newpos) != DNGN_FLOOR
                    && grd(newpos) != DNGN_SHALLOW_WATER
                || mgrd(newpos) != NON_MONSTER
-               || env.cgrid(newpos) != EMPTY_CLOUD);
+               || env.cgrid(newpos) != EMPTY_CLOUD
+               || need_distance_check && (newpos - centre).abs() < 34*34);
 
         // no longer held in net
         if (newpos != you.pos())

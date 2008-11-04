@@ -64,7 +64,7 @@
 
 
 static void end_game( scorefile_entry &se );
-static void item_corrode( int itco );
+static void _item_corrode( int itco );
 
 
 // NOTE: DOES NOT check for hellfire!!!
@@ -244,20 +244,19 @@ void splash_with_acid( char acid_strength )
     char splc = 0;
     int  dam = 0;
 
-    const bool wearing_cloak = (you.equip[EQ_CLOAK] != -1);
+    const bool wearing_cloak = player_wearing_slot(EQ_CLOAK);
 
     for (splc = EQ_CLOAK; splc <= EQ_BODY_ARMOUR; splc++)
     {
-        if (you.equip[splc] == -1)
+        if (!player_wearing_slot(splc))
         {
             if (!wearing_cloak || coinflip())
                 dam += roll_dice( 1, acid_strength );
-
             continue;
         }
 
         if (x_chance_in_y(acid_strength + 1, 20))
-            item_corrode( you.equip[splc] );
+            _item_corrode( you.equip[splc] );
     }
 
     if (dam > 0)
@@ -280,7 +279,7 @@ void weapon_acid( char acid_strength )
 {
     char hand_thing = you.equip[EQ_WEAPON];
 
-    if (hand_thing == -1)
+    if (hand_thing == -1 && you_tran_can_wear(EQ_GLOVES, true))
         hand_thing = you.equip[EQ_GLOVES];
 
     if (hand_thing == -1)
@@ -289,10 +288,10 @@ void weapon_acid( char acid_strength )
         ouch(roll_dice(1, acid_strength), NON_MONSTER, KILLED_BY_ACID);
     }
     else if (x_chance_in_y(acid_strength + 1, 20))
-        item_corrode( hand_thing );
+        _item_corrode( hand_thing );
 }
 
-void item_corrode( int itco )
+void _item_corrode( int itco )
 {
     int chance_corr = 0;        // no idea what its full range is {dlb}
     bool it_resists = false;    // code simplifier {dlb}
@@ -325,7 +324,7 @@ void item_corrode( int itco )
         }
         else if ((item.sub_type == ARM_CRYSTAL_PLATE_MAIL
                     || get_equip_race(item) == ISFLAG_DWARVEN)
-                && !one_chance_in(5))
+                 && !one_chance_in(5))
         {
             it_resists = true;
             suppress_msg = false;
@@ -369,7 +368,7 @@ void item_corrode( int itco )
         // ---------------------------- but it needs to stay this way
         //                              (as it *was* this way)
 
-        // the embedded equation may look funny, but it actually works well
+        // The embedded equation may look funny, but it actually works well
         // to generate a pretty probability ramp {6%, 18%, 34%, 58%, 98%}
         // for values [0,4] which closely matches the original, ugly switch.
         // {dlb}
@@ -409,9 +408,7 @@ void item_corrode( int itco )
         if (you.equip[EQ_WEAPON] == itco)
             you.wield_change = true;
     }
-
-    return;
-}                               // end item_corrode()
+}
 
 // Helper function for the expose functions below.
 // This currently works because elements only target a single type each.

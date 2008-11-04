@@ -2631,6 +2631,8 @@ void handle_time(long time_delta)
             exercise(SK_STEALTH, 1);
         }
     }
+//    if (you.level_type == LEVEL_LABYRINTH)
+//        forget_map(you.species == SP_MINOTAUR ? 12 : 25);
 
     spawn_random_monsters();
 }

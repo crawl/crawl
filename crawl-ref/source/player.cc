@@ -588,6 +588,14 @@ bool player_has_feet()
    return (true);
 }
 
+bool player_wearing_slot(int eq)
+{
+    if (you.equip[eq] == -1)
+        return (false);
+
+    return (you_tran_can_wear(you.inv[you.equip[eq]]));
+}
+
 bool you_tran_can_wear(const item_def &item)
 {
     switch (item.base_type)
@@ -1992,7 +2000,7 @@ int player_AC(void)
         if (i == EQ_SHIELD)
             continue;
 
-        if (you.equip[i] == -1 || !you_tran_can_wear(you.equip[i]))
+        if (!player_wearing_slot(i))
             continue;
 
         const item_def& item = you.inv[you.equip[i]];
@@ -4443,10 +4451,10 @@ int scan_randarts(randart_prop_type which_property, bool calc_unid)
 
     for (i = EQ_WEAPON; i < NUM_EQUIP; i++)
     {
-        const int eq = you.equip[i];
-
-        if (eq == -1 || !you_tran_can_wear(eq))
+        if (!player_wearing_slot(i))
             continue;
+
+        const int eq = you.equip[i];
 
         // Only weapons give their effects when in our hands.
         if (i == EQ_WEAPON && you.inv[ eq ].base_type != OBJ_WEAPONS)
