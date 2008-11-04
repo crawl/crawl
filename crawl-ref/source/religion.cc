@@ -3681,8 +3681,7 @@ static bool _zin_retribution()
                     dummy.type = mon;
                     dummy.attitude = ATT_HOSTILE;
 
-                    if (!monster_random_space(&dummy, mon_pos, true))
-                        continue;
+                    monster_random_space(&dummy, mon_pos);
                 }
 
                 if (create_monster(
