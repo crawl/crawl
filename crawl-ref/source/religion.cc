@@ -3674,15 +3674,9 @@ static bool _zin_retribution()
             for (int i = 0; i < how_many; ++i)
             {
                 const monster_type mon = RANDOM_ELEMENT(eyes);
+
                 coord_def mon_pos;
-
-                {
-                    monsters dummy;
-                    dummy.type = mon;
-                    dummy.attitude = ATT_HOSTILE;
-
-                    monster_random_space(&dummy, mon_pos);
-                }
+                monster_random_space(mon, mon_pos, true);
 
                 if (create_monster(
                         mgen_data::hostile_at(mon,

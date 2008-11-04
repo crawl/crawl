@@ -599,7 +599,8 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     }
 }
 
-void monster_random_space(const monsters *monster, coord_def& target)
+void monster_random_space(const monsters *monster, coord_def& target,
+                          bool forbid_sanctuary)
 {
     while (true)
     {
@@ -610,12 +611,21 @@ void monster_random_space(const monsters *monster, coord_def& target)
         if (mgrd(target) != NON_MONSTER || target == you.pos())
             continue;
 
-        if (is_sanctuary(target) && !mons_wont_attack(monster))
+        if (is_sanctuary(target) && forbid_sanctuary)
             continue;
 
         if (monster_habitable_grid(monster, grd(target)))
             break;
     }
+}
+
+void monster_random_space(monster_type mon, coord_def& target,
+                          bool forbid_sanctuary)
+{
+    monsters dummy;
+    dummy.type = mon;
+
+    return monster_random_space(&dummy, target, forbid_sanctuary);
 }
 
 void monster_teleport(monsters *monster, bool instan, bool silent)
@@ -653,9 +663,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
     mons_clear_trapping_net(monster);
 
     coord_def newpos;
-
-    monster_random_space(monster, newpos);
-
+    monster_random_space(monster, newpos, !mons_wont_attack(monster));
     monster->moveto(newpos);
 
     mgrd(monster->pos()) = monster_index(monster);
