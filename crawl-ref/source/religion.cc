@@ -1555,8 +1555,8 @@ bool bless_follower(monsters *follower,
         if (chance > 2)
             return (false);
 
-        // Choose a random follower in LOS, preferably a named one, or a
-        // priestly one for Beogh (10% chance).
+        // Choose a random follower in LOS, preferably a named one, or
+        // preferably a priestly one for Beogh (10% chance).
         follower = choose_random_nearby_monster(0, suitable, true, true,
                                                 god == GOD_BEOGH);
 
