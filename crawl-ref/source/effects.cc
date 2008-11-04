@@ -2225,6 +2225,304 @@ static void _hell_effects()
     }
 }
 
+// This function checks whether we can turn a wall into a floor space and
+// still keep a corridor-like environment. The wall in position x is a
+// a candidate for switching if it's flanked by floor grids to two sides
+// and by walls (any type) to the remaining cardinal directions.
+//
+//   .        #          2
+//  #x#  or  .x.   ->   0x1
+//   .        #          3
+static bool _grid_is_flanked_by_walls(const coord_def &p)
+{
+    const coord_def adjs[] = { coord_def(p.x-1,p.y),
+                               coord_def(p.x+1,p.y),
+                               coord_def(p.x  ,p.y-1),
+                               coord_def(p.x  ,p.y+1) };
+
+    // paranoia!
+    for (unsigned int i = 0; i < ARRAYSZ(adjs); ++i)
+        if (!in_bounds(adjs[i]))
+            return (false);
+
+    return (grid_is_wall(grd(adjs[0])) && grid_is_wall(grd(adjs[1]))
+               && grd(adjs[2]) == DNGN_FLOOR && grd(adjs[3]) == DNGN_FLOOR
+            || grd(adjs[0]) == DNGN_FLOOR && grd(adjs[1]) == DNGN_FLOOR
+               && grid_is_wall(grd(adjs[2])) && grid_is_wall(grd(adjs[3])));
+}
+
+// Sometimes if a floor is turned into a wall, a dead-end will be created.
+// If this is the case, we need to make sure that it is at least two grids
+// deep.
+//
+// Example: If a wall is built at X (A), two deadends are created, a short and
+//          a long one. The latter is perfectly fine, but the former looks
+//          a bit odd. If Y is chosen, this looks much better (B).
+//
+// #######    (A)  #######    (B)  #######
+// ...XY..         ...#...         ....#..
+// #.#####         #.#####         #.#####
+//
+// What this function does is check whether the neighbouring floor grids
+// are flanked by walls on both sides, and if so, the grids following that
+// also have to be floor flanked by walls.
+//
+//   c.d
+//   a.b   -> if (a, b == walls) then (c, d == walls) or return (false)
+//   #X#
+//    .
+static bool _deadend_check(const coord_def &p)
+{
+    if (grid_is_wall(grd[p.x-1][p.y]))
+    {
+        for (int i = -1; i <= 1; i++)
+        {
+            if (i == 0)
+                continue;
+
+            coord_def a(p.x-1, p.y+i);
+            coord_def b(p.x+1, p.y+i);
+            coord_def c(p.x-1, p.y+2*i);
+            coord_def d(p.x+1, p.y+2*i);
+
+            if (in_bounds(a) && in_bounds(b)
+                && grid_is_wall(grd(a)) && grid_is_wall(grd(b))
+                && (!in_bounds(c) || !in_bounds(d)
+                    || !grid_is_wall(grd(c)) || !grid_is_wall(grd(d))))
+            {
+                return (false);
+            }
+        }
+    }
+    else
+    {
+        for (int i = -1; i <= 1; i++)
+        {
+            if (i == 0)
+                continue;
+
+            coord_def a(p.x+i  , p.y-1);
+            coord_def b(p.x+i  , p.y+1);
+            coord_def c(p.x+2*i, p.y-1);
+            coord_def d(p.x+2*i, p.y+1);
+
+            if (in_bounds(a) && in_bounds(b)
+                && grid_is_wall(grd(a)) && grid_is_wall(grd(b))
+                && (!in_bounds(c) || !in_bounds(d)
+                    || !grid_is_wall(grd(c)) || !grid_is_wall(grd(d))))
+            {
+                return (false);
+            }
+        }
+    }
+
+    return (true);
+}
+
+void change_labyrinth(bool msg)
+{
+    int size = random_range(12, 24);
+    coord_def c1, c2;
+
+    for (int tries = 10; tries > 0; tries--)
+    {
+        int x = random_range(LABYRINTH_BORDER, GXM - LABYRINTH_BORDER - size);
+        int y = random_range(LABYRINTH_BORDER, GYM - LABYRINTH_BORDER - size);
+        c1 = coord_def(x,y);
+        c2 = coord_def(x + size, y + size);
+
+        int count_known = 0;
+        for (int xi = c1.x; xi <= c2.x; xi++)
+            for (int yi = c1.y; yi <= c2.y; yi++)
+            {
+                if (is_terrain_seen(xi, yi))
+                    count_known++;
+            }
+
+        if (count_known < size*size/6)
+            break;
+    }
+
+    if (msg)
+    {
+        mprf(MSGCH_DIAGNOSTICS, "Changing labyrinth from (%d, %d) to (%d, %d)",
+             c1.x, c1.y, c2.x, c2.y);
+    }
+
+    std::vector<coord_def> targets;
+    for (int xi = c1.x; xi <= c2.x; xi++)
+        for (int yi = c1.y; yi <= c2.y; yi++)
+        {
+            const coord_def c(xi, yi);
+            if (is_terrain_seen(xi, yi) || !grid_is_wall(grd(c)))
+                continue;
+
+            if (_grid_is_flanked_by_walls(c))
+                targets.push_back(c);
+        }
+
+    if (targets.empty())
+    {
+        if (msg)
+            mpr("No unexplored wall grids found!");
+        return;
+    }
+
+    if (msg)
+    {
+        std::string path_str = "";
+        mpr("Here's the list of targets: ", MSGCH_DIAGNOSTICS);
+        for (unsigned int i = 0; i < targets.size(); i++)
+        {
+            snprintf(info, INFO_SIZE, "(%d, %d)  ", targets[i].x, targets[i].y);
+            path_str += info;
+        }
+        mpr(path_str.c_str(), MSGCH_DIAGNOSTICS);
+        mprf(MSGCH_DIAGNOSTICS, "-> #targets = %d", targets.size());
+    }
+
+    int max_targets = random_range(std::min((int) targets.size(), 12),
+                                   std::min((int) targets.size(), 45));
+
+    std::random_shuffle(targets.begin(), targets.end(), random2);
+
+    std::vector<coord_def> dirs;
+    dirs.push_back(coord_def(-1,-1));
+    dirs.push_back(coord_def( 0,-1));
+    dirs.push_back(coord_def( 1,-1));
+    dirs.push_back(coord_def(-1, 0));
+//    dirs.push_back(coord_def( 0, 0));
+    dirs.push_back(coord_def( 1, 0));
+    dirs.push_back(coord_def(-1, 1));
+    dirs.push_back(coord_def( 0, 1));
+    dirs.push_back(coord_def( 1, 1));
+
+    for (int count = 0; count < max_targets; count++)
+    {
+        const coord_def c(targets[count]);
+        // Maybe not valid anymore...
+        if (!_grid_is_flanked_by_walls(c))
+            continue;
+
+        coord_def src(c.x-1,c.y);
+        coord_def dst(c.x+1,c.y);
+        if (grd(src) != DNGN_FLOOR || grd(dst) != DNGN_FLOOR)
+        {
+            src = coord_def(c.x, c.y-1);
+            dst = coord_def(c.x, c.y+1);
+        }
+
+        // Pathfinding from src to dst...
+        monster_pathfind mp;
+        bool success = mp.init_pathfind(src, dst, false, msg);
+        if (!success)
+        {
+            if (msg)
+            {
+                mpr("Something went badly wrong - no path found!",
+                MSGCH_DIAGNOSTICS);
+            }
+            continue;
+        }
+        const std::vector<coord_def> path = mp.backtrack();
+        std::vector<coord_def> points;
+        dungeon_feature_type old_grid = grd(c);
+        grd(c) = DNGN_FLOOR;
+
+        for (unsigned int i = 0; i < path.size(); i++)
+        {
+            const coord_def p(path[i]);
+            if (p.x < c1.x || p.x > c2.x || p.y < c1.y || p.y > c2.y)
+                continue;
+
+            if (is_terrain_seen(p.x, p.y))
+                continue;
+
+            // We don't want to deal with monsters being shifted around.
+            if (mgrd(p) != NON_MONSTER)
+                continue;
+
+            // Do not pick a grid right next to the original wall.
+            if (std::abs(p.x-c.x) + std::abs(p.y-c.y) <= 1)
+                continue;
+
+            if (_grid_is_flanked_by_walls(p) && _deadend_check(p))
+                points.push_back(p);
+        }
+
+        if (points.empty())
+        {
+            grd(c) = old_grid;
+            continue;
+        }
+
+        const int pick = random_range(0, (int) points.size() - 1);
+        if (msg)
+        {
+            mprf(MSGCH_DIAGNOSTICS, "Switch %d (%d, %d) with %d (%d, %d).",
+                 (int) grd(c), c.x, c.y,
+                 (int) grd(points[pick]), points[pick].x, points[pick].y);
+        }
+        grd(points[pick]) = old_grid;
+    }
+
+    for (int xi = c1.x; xi <= c2.x; xi++)
+        for (int yi = c1.y; yi <= c2.y; yi++)
+        {
+            const coord_def c(xi, yi);
+            if (!grid_is_wall(grd(c)) || igrd(c) == NON_ITEM)
+                continue;
+
+            if (msg)
+            {
+                mprf(MSGCH_DIAGNOSTICS,
+                     "Need to move around some items at pos (%d, %d)...",
+                     xi, yi);
+            }
+            std::random_shuffle(dirs.begin(), dirs.end(), random2);
+            for (unsigned int i = 0; i < dirs.size(); i++)
+            {
+                const coord_def p = c + dirs[i];
+                if (grd(p) == DNGN_FLOOR)
+                {
+                    int it = igrd(c);
+                    while (it != NON_ITEM)
+                    {
+                        mitm[it].pos.x = p.x;
+                        mitm[it].pos.y = p.y;
+                        it = mitm[it].link;
+                    }
+                    mitm[it].link = igrd(p);
+
+                    igrd(p) = igrd(c);
+                    igrd(c) = NON_ITEM;
+                }
+#ifdef DEBUG_CHANGE
+                if (msg)
+                {
+                    mprf(MSGCH_DIAGNOSTICS, "Moved items over to (%d, %d)",
+                         p.x, p.y);
+                }
+#endif
+                break;
+            }
+        }
+
+    // Just to be on the safe side.
+    fix_item_coordinates();
+
+    // Finally, give the player a clue about what just happened.
+    const int which = (silenced(you.pos()) ? 2 + random2(2)
+                                          : random2(4));
+    switch (which)
+    {
+    case 0: mpr("You hear an odd grinding sound!"); break;
+    case 1: mpr("You hear the creaking of ancient gears!"); break;
+    case 2: mpr("The floor suddenly vibrates beneath you!"); break;
+    case 3: mpr("You feel a sudden draft!"); break;
+    }
+}
+
 static bool _food_item_needs_time_check(item_def &item)
 {
     if (!is_valid_item(item))
@@ -2631,9 +2929,17 @@ void handle_time(long time_delta)
             exercise(SK_STEALTH, 1);
         }
     }
-//    if (you.level_type == LEVEL_LABYRINTH)
-//        forget_map(you.species == SP_MINOTAUR ? 12 : 25);
 
+    if (you.level_type == LEVEL_LABYRINTH)
+    {
+        // Now that the labyrinth can be automapped, apply map rot as
+        // a counter-measure. (Those mazes sure are easy to forget.)
+        forget_map(you.species == SP_MINOTAUR ? 25 : 45);
+
+        // From time to time change a section of the labyrinth.
+        if (one_chance_in(10))
+            change_labyrinth();
+    }
     spawn_random_monsters();
 }
 

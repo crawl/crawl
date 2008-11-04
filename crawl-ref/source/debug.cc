@@ -4297,7 +4297,7 @@ void debug_pathfind(int mid)
     mprf("Attempting to calculate a path from (%d, %d) to (%d, %d)...",
          mon.pos().x, mon.pos().y, dest.x, dest.y);
     monster_pathfind mp;
-    bool success = mp.start_pathfind(&mon, dest, true);
+    bool success = mp.init_pathfind(&mon, dest, true);
     if (success)
     {
         std::vector<coord_def> path = mp.backtrack();
@@ -4324,6 +4324,16 @@ void debug_pathfind(int mid)
         mpr(path_str.c_str());
         mprf("-> #waypoints: %d", path.size());
     }
+}
+
+void debug_shift_labyrinth()
+{
+    if (you.level_type != LEVEL_LABYRINTH)
+    {
+        mpr("This only makes sense in a labyrinth!");
+        return;
+    }
+    change_labyrinth(true);
 }
 
 static void _miscast_screen_update()

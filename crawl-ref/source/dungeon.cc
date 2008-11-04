@@ -896,8 +896,8 @@ static void _reset_level()
     {
         env.level_flags = LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAGIC_MAP;
 
-        // Labyrinths are *only* mappable for minotaurs.
-        if (you.level_type != LEVEL_LABYRINTH || you.species != SP_MINOTAUR)
+        // Labyrinths are now mappable, but come with heavy map rot. (jpeg)
+        if (you.level_type == LEVEL_ABYSS)
             env.level_flags |= LFLAG_NOT_MAPPABLE;
     }
     else
@@ -6738,13 +6738,13 @@ static bool _has_vault_in_radius(const coord_def &pos, int radius,
 }
 
 // Find an entry point that's:
-// * At least 25 squares away from the exit.
-// * At least 4 squares away from the nearest vault.
+// * At least 28 squares away from the exit.
+// * At least 6 squares away from the nearest vault.
 // * Floor (well, obviously).
 static coord_def _labyrinth_find_entry_point(const dgn_region &reg,
                                              const coord_def &end)
 {
-    const int min_distance = 20 * 20;
+    const int min_distance = 28 * 28;
     // Try many times.
     for (int i = 0; i < 2000; ++i)
     {
@@ -6755,7 +6755,7 @@ static coord_def _labyrinth_find_entry_point(const dgn_region &reg,
         if ((place - end).abs() < min_distance)
             continue;
 
-        if (_has_vault_in_radius(place, 4, MMT_VAULT))
+        if (_has_vault_in_radius(place, 6, MMT_VAULT))
             continue;
 
         return (place);

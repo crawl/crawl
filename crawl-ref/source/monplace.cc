@@ -2386,7 +2386,8 @@ void monster_pathfind::set_range(int r)
 
 // The main method in the monster_pathfind class.
 // Returns true if a path was found, else false.
-bool monster_pathfind::start_pathfind(monsters *mon, coord_def dest, bool msg)
+bool monster_pathfind::init_pathfind(monsters *mon, coord_def dest, bool diag,
+                                     bool msg)
 {
     mons   = mon;
 
@@ -2394,6 +2395,7 @@ bool monster_pathfind::start_pathfind(monsters *mon, coord_def dest, bool msg)
     start  = dest;
     target = mon->pos();
     pos    = start;
+    allow_diagonals = diag;
 
     // Easy enough. :P
     if (start == target)
@@ -2403,6 +2405,27 @@ bool monster_pathfind::start_pathfind(monsters *mon, coord_def dest, bool msg)
 
         return (true);
     }
+
+    return start_pathfind(msg);
+}
+
+bool monster_pathfind::init_pathfind(coord_def src, coord_def dest, bool diag,
+                                     bool msg)
+{
+    start  = src;
+    target = dest;
+    pos    = start;
+    allow_diagonals = diag;
+
+    // Easy enough. :P
+    if (start == target)
+        return (true);
+
+    return start_pathfind(msg);
+}
+
+bool monster_pathfind::start_pathfind(bool msg)
+{
     // NOTE: We never do any traversable() check for the starting square
     //       (target). This means that even if the target cannot be reached
     //       we may still find a path leading adjacent to this position, which
@@ -2453,7 +2476,7 @@ bool monster_pathfind::calc_path_to_neighbours()
     // For each point, we look at all neighbour points. Check the orthogonals
     // last, so that, should an orthogonal and a diagonal direction have the
     // same total travel cost, the orthogonal will be picked first, and thus
-    // zigzagging can be significantly reduced.
+    // zigzagging will be significantly reduced.
     //
     //      1  0  3       This means directions are looked at, in order,
     //       \ | /        1, 3, 5, 7 (diagonals) followed by 0, 2, 4, 6
@@ -2463,6 +2486,10 @@ bool monster_pathfind::calc_path_to_neighbours()
     //
     for (int dir = 1; dir < 8; (dir += 2) == 9 && (dir = 0))
     {
+        // Skip diagonal movement.
+        if (!allow_diagonals && (dir % 2))
+            continue;
+
         npos = pos + Compass[dir];
 
 #ifdef DEBUG_PATHFIND
@@ -2653,9 +2680,17 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
     return (waypoints);
 }
 
+bool monster_pathfind::traversable(const coord_def p)
+{
+    if (mons)
+        return mons_traversable(p);
+
+    return (!grid_is_solid(grd(p)) && !grid_destroys_items(grd(p)));
+}
+
 // Checks whether a given monster can pass over a certain position, respecting
 // its preferred habit and capability of flight or opening doors.
-bool monster_pathfind::traversable(coord_def p)
+bool monster_pathfind::mons_traversable(const coord_def p)
 {
     const int montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
                                                 : mons->type;
@@ -2705,9 +2740,17 @@ bool monster_pathfind::traversable(coord_def p)
     return (true);
 }
 
+int monster_pathfind::travel_cost(coord_def npos)
+{
+    if (mons)
+        return mons_travel_cost(npos);
+
+    return (1);
+}
+
 // Assumes that grids that really cannot be entered don't even get here.
 // (Checked by traversable().)
-int monster_pathfind::travel_cost(coord_def npos)
+int monster_pathfind::mons_travel_cost(coord_def npos)
 {
     ASSERT(grid_distance(pos, npos) <= 1);
 

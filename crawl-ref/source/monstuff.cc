@@ -2977,7 +2977,7 @@ static void _handle_behaviour(monsters *mon)
                         if (range > 0)
                             mp.set_range(range);
 
-                        if (mp.start_pathfind(mon, you.pos()))
+                        if (mp.init_pathfind(mon, you.pos()))
                         {
                             mon->travel_path = mp.calc_waypoints();
                             if (!mon->travel_path.empty())
@@ -3203,7 +3203,7 @@ static void _handle_behaviour(monsters *mon)
                             // The last coordinate in the path vector is our
                             // destination.
                             int len = mon->travel_path.size();
-                            if (mp.start_pathfind(mon, mon->travel_path[len-1]))
+                            if (mp.init_pathfind(mon, mon->travel_path[len-1]))
                             {
                                 mon->travel_path = mp.calc_waypoints();
                                 if (!mon->travel_path.empty())
@@ -3284,7 +3284,7 @@ static void _handle_behaviour(monsters *mon)
                             // Hive entrance after some time, and that is what
                             // matters.
                             monster_pathfind mp;
-                            if (mp.start_pathfind(mon, mon->patrol_point))
+                            if (mp.init_pathfind(mon, mon->patrol_point))
                             {
                                 mon->travel_path = mp.calc_waypoints();
                                 if (!mon->travel_path.empty())

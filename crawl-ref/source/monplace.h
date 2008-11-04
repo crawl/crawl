@@ -315,7 +315,11 @@ public:
 
     // public methods
     void set_range(int r);
-    bool start_pathfind(monsters *mon, coord_def dest, bool msg = false);
+    bool init_pathfind(monsters *mon, coord_def dest,
+                       bool diag = true, bool msg = false);
+    bool init_pathfind(coord_def src, coord_def dest,
+                       bool diag = true, bool msg = false);
+    bool start_pathfind(bool msg = false);
     std::vector<coord_def> backtrack(void);
     std::vector<coord_def> calc_waypoints(void);
 
@@ -324,6 +328,8 @@ protected:
     bool calc_path_to_neighbours(void);
     bool traversable(coord_def p);
     int  travel_cost(coord_def npos);
+    bool mons_traversable(coord_def p);
+    int  mons_travel_cost(coord_def npos);
     int  estimated_cost(coord_def npos);
     void add_new_pos(coord_def pos, int total);
     void update_pos(coord_def pos, int total);
@@ -335,6 +341,9 @@ protected:
 
     // Our destination, and the current position we're looking at.
     coord_def start, target, pos;
+
+    // Do not move diagonally along the path.
+    bool allow_diagonals;
 
     // Maximum range to search between start and target. None, if zero.
     int range;

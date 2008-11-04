@@ -112,6 +112,9 @@ int torment(int caster, const coord_def& where);
 int torment_player(int pow, int caster);
 int torment_monsters(coord_def where, int pow, int caster);
 
+// called from: debug
+void change_labyrinth(bool msg = false);
+
 bool forget_inventory(bool quiet = false);
 bool vitrify_area(int radius);
 void update_corpses(double elapsedTime);

@@ -792,6 +792,13 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         grd(you.pos()) = DNGN_ENTER_LABYRINTH;
         break;
 
+    case 'k':
+        if (you.level_type == LEVEL_LABYRINTH)
+            change_labyrinth(true);
+        else
+            mpr("This only makes sense in a labyrinth!");
+        break;
+
     case 'L':
         debug_place_map();
         break;
