@@ -143,16 +143,16 @@ bool choose_any_monster(const monsters* mon);
 monsters *choose_random_nearby_monster(
     int weight,
     bool (*suitable)(const monsters* mon) =
-    choose_any_monster,
+        choose_any_monster,
     bool in_sight = true,
-    bool prefer_named = false);
+    bool prefer_named = false, bool prefer_priest = false);
 
 monsters *choose_random_monster_on_level(
     int weight,
     bool (*suitable)(const monsters* mon) =
-    choose_any_monster,
+        choose_any_monster,
     bool in_sight = true, bool near_by = false,
-    bool prefer_named = false);
+    bool prefer_named = false, bool prefer_priest = false);
 
 /* ***********************************************************************
  * called from: acr

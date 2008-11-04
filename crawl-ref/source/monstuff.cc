@@ -3487,18 +3487,21 @@ bool choose_any_monster(const monsters* mon)
 // for the type of monster wanted.
 // If prefer_named is true, named monsters (including uniques) are twice
 // as likely to get chosen compared to non-named ones.
+// If prefer_priest is true, priestly monsters (including uniques) are
+// twice as likely to get chosen compared to non-priestly ones.
 monsters *choose_random_nearby_monster(int weight,
                                        bool (*suitable)(const monsters* mon),
-                                       bool in_sight, bool prefer_named)
+                                       bool in_sight, bool prefer_named,
+                                       bool prefer_priest)
 {
     return choose_random_monster_on_level(weight, suitable, in_sight, true,
-                                          prefer_named);
+                                          prefer_named, prefer_priest);
 }
 
 monsters *choose_random_monster_on_level(int weight,
                                          bool (*suitable)(const monsters* mon),
                                          bool in_sight, bool near_by,
-                                         bool prefer_named)
+                                         bool prefer_named, bool prefer_priest)
 {
     monsters *chosen = NULL;
 
@@ -3525,8 +3528,15 @@ monsters *choose_random_monster_on_level(int weight,
                 // is fine, I think. Once more gods name followers (and
                 // prefer them) that should be changed, of course. (jpeg)
 
-                // Named monsters have doubled chances.
-                int mon_weight = ((prefer_named && mon->is_named()) ? 2 : 1);
+                // Named or priestly monsters have doubled chances.
+                int mon_weight = 1;
+
+                if ((prefer_named && mon->is_named())
+                    || (prefer_priest && mons_class_flag(mon->type, M_PRIEST)))
+                {
+                    mon_weight++;
+                }
+
                 if ( x_chance_in_y(mon_weight, (weight += mon_weight)) )
                     chosen = mon;
             }
