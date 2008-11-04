@@ -365,6 +365,11 @@ static bool _chaotic_beings_attitude_change();
 static bool _magic_users_attitude_change();
 static bool _yred_slaves_abandon_you();
 static bool _beogh_followers_abandon_you();
+static void _god_smites_you(god_type god, const char *message = NULL,
+                            kill_method_type death_type = NUM_KILLBY);
+static bool _beogh_idol_revenge();
+static void _tso_blasts_cleansing_flame(const char *message = NULL);
+static bool _tso_holy_revenge();
 static void _altar_prayer();
 static void _dock_piety(int piety_loss, int penance);
 static bool _make_god_gifts_disappear(bool level_only = true);
@@ -2238,18 +2243,18 @@ void god_speaks(god_type god, const char *mesg)
     mpr(mesg, MSGCH_GOD, god);
 }
 
-bool do_god_revenge(conduct_type thing_done)
+static bool _do_god_revenge(conduct_type thing_done)
 {
     bool retval = false;
 
     switch (thing_done)
     {
     case DID_DESTROY_ORCISH_IDOL:
-        retval = beogh_idol_revenge();
+        retval = _beogh_idol_revenge();
         break;
     case DID_KILL_HOLY:
     case DID_HOLY_KILLED_BY_SERVANT:
-        retval = tso_holy_revenge();
+        retval = _tso_holy_revenge();
         break;
     default:
         break;
@@ -2915,7 +2920,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
     }
 #endif
 
-    do_god_revenge(thing_done);
+    _do_god_revenge(thing_done);
 
     return (retval);
 }
@@ -3600,7 +3605,7 @@ static bool _tso_retribution()
     }
     case 3:
     case 4: // cleansing flame (2/7)
-        tso_blasts_cleansing_flame();
+        _tso_blasts_cleansing_flame();
         break;
     case 5:
     case 6: // either noisiness or silence (2/7)
@@ -4045,7 +4050,7 @@ static bool _beogh_retribution()
     {
     case 0: // smiting (25%)
     case 1:
-        god_smites_you(GOD_BEOGH);
+        _god_smites_you(GOD_BEOGH);
         break;
 
     case 2: // send out one or two dancing weapons (12.5%)
@@ -4943,7 +4948,7 @@ static std::string _get_beogh_speech(const std::string key)
 }
 
 // Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh.
-bool beogh_idol_revenge()
+static bool _beogh_idol_revenge()
 {
     god_acting gdact(GOD_BEOGH, true);
 
@@ -4962,7 +4967,7 @@ bool beogh_idol_revenge()
         else
             revenge = _get_beogh_speech("idol other").c_str();
 
-        god_smites_you(GOD_BEOGH, revenge);
+        _god_smites_you(GOD_BEOGH, revenge);
 
         return (true);
     }
@@ -5009,7 +5014,7 @@ void good_god_holy_attitude_change(monsters *holy)
     behaviour_event(holy, ME_ALERT, MHITNOT);
 }
 
-void tso_blasts_cleansing_flame(const char *message)
+static void _tso_blasts_cleansing_flame(const char *message)
 {
     // TSO won't protect you from his own cleansing flame, and Xom is too
     // capricious to protect you from it.
@@ -5059,7 +5064,7 @@ static std::string _get_tso_speech(const std::string key)
 }
 
 // Killing holy beings may anger TSO.
-bool tso_holy_revenge()
+static bool _tso_holy_revenge()
 {
     god_acting gdact(GOD_SHINING_ONE, true);
 
@@ -5075,7 +5080,7 @@ bool tso_holy_revenge()
         else
             revenge = _get_tso_speech("holy other").c_str();
 
-        tso_blasts_cleansing_flame(revenge);
+        _tso_blasts_cleansing_flame(revenge);
 
         return (true);
     }
@@ -6116,9 +6121,8 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     return (HPT_NONE);
 }
 
-void god_smites_you(god_type god, const char *message,
-                    kill_method_type death_type)
-
+static void _god_smites_you(god_type god, const char *message,
+                            kill_method_type death_type)
 {
     ASSERT(god != GOD_NO_GOD);
 
