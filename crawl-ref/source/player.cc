@@ -2844,11 +2844,19 @@ void forget_map(unsigned char chance_forgotten, bool force)
     if (force && !yesno("Really forget level map?", true, 'n'))
         return;
 
+    int radius = 25*25;
+    if (chance_forgotten < 100 && you.level_type == LEVEL_LABYRINTH
+        && you.species == SP_MINOTAUR)
+    {
+        radius = 40*40;
+    }
     for (unsigned char xcount = 0; xcount < GXM; xcount++)
         for (unsigned char ycount = 0; ycount < GYM; ycount++)
         {
-            if (!see_grid(xcount, ycount)
-                && (force || x_chance_in_y(chance_forgotten, 100)))
+            const coord_def c(xcount, ycount);
+            if (!see_grid(c)
+                && (force || x_chance_in_y(chance_forgotten, 100)
+                    || chance_forgotten < 100 && (you.pos()-c).abs() > radius))
             {
                 env.map[xcount][ycount].clear();
             }
