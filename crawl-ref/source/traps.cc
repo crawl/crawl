@@ -1096,8 +1096,9 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     {
         if (act.atype() == ACT_PLAYER)
             mpr("The trap is out of ammunition!");
-        else if (player_can_hear(this->pos))
+        else if (player_can_hear(this->pos) && see_grid(this->pos))
             mpr("You hear a soft click.");
+
         this->disarm();
     }
     else

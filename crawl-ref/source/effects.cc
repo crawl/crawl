@@ -2225,6 +2225,11 @@ static void _hell_effects()
     }
 }
 
+static bool _is_floor(const dungeon_feature_type feat)
+{
+    return (!grid_is_solid(feat) && !grid_destroys_items(feat));
+}
+
 // This function checks whether we can turn a wall into a floor space and
 // still keep a corridor-like environment. The wall in position x is a
 // a candidate for switching if it's flanked by floor grids to two sides
@@ -2251,8 +2256,8 @@ static bool _grid_is_flanked_by_walls(const coord_def &p)
             return (false);
 
     return (grid_is_wall(grd(adjs[0])) && grid_is_wall(grd(adjs[1]))
-               && grd(adjs[2]) == DNGN_FLOOR && grd(adjs[3]) == DNGN_FLOOR
-            || grd(adjs[0]) == DNGN_FLOOR && grd(adjs[1]) == DNGN_FLOOR
+               && _is_floor(grd(adjs[2])) && _is_floor(grd(adjs[3]))
+            || _is_floor(grd(adjs[0])) && _is_floor(grd(adjs[1]))
                && grid_is_wall(grd(adjs[2])) && grid_is_wall(grd(adjs[3])));
 }
 
@@ -2276,7 +2281,7 @@ static bool _grid_is_flanked_by_walls(const coord_def &p)
 //   a.b   -> if (a, b == walls) then (c, d == walls) or return (false)
 //   #X#
 //    .
-static bool _deadend_check(const coord_def &p)
+static bool _deadend_check_wall(const coord_def &p)
 {
     if (grid_is_wall(grd[p.x-1][p.y]))
     {
@@ -2285,10 +2290,10 @@ static bool _deadend_check(const coord_def &p)
             if (i == 0)
                 continue;
 
-            coord_def a(p.x-1, p.y+i);
-            coord_def b(p.x+1, p.y+i);
-            coord_def c(p.x-1, p.y+2*i);
-            coord_def d(p.x+1, p.y+2*i);
+            const coord_def a(p.x-1, p.y+i);
+            const coord_def b(p.x+1, p.y+i);
+            const coord_def c(p.x-1, p.y+2*i);
+            const coord_def d(p.x+1, p.y+2*i);
 
             if (in_bounds(a) && in_bounds(b)
                 && grid_is_wall(grd(a)) && grid_is_wall(grd(b))
@@ -2306,10 +2311,10 @@ static bool _deadend_check(const coord_def &p)
             if (i == 0)
                 continue;
 
-            coord_def a(p.x+i  , p.y-1);
-            coord_def b(p.x+i  , p.y+1);
-            coord_def c(p.x+2*i, p.y-1);
-            coord_def d(p.x+2*i, p.y+1);
+            const coord_def a(p.x+i  , p.y-1);
+            const coord_def b(p.x+i  , p.y+1);
+            const coord_def c(p.x+2*i, p.y-1);
+            const coord_def d(p.x+2*i, p.y+1);
 
             if (in_bounds(a) && in_bounds(b)
                 && grid_is_wall(grd(a)) && grid_is_wall(grd(b))
@@ -2317,6 +2322,79 @@ static bool _deadend_check(const coord_def &p)
                     || !grid_is_wall(grd(c)) || !grid_is_wall(grd(d))))
             {
                 return (false);
+            }
+        }
+    }
+
+    return (true);
+}
+
+// Similar to the above, checks whether turning a wall grid into floor
+// would create a short "dead-end" of only 1 grid.
+//
+// In the example below, X would create dead-ends at positions a and b,
+// but both Y and Z avoid this, and the resulting mini-mazes looks better.
+//
+// ########   (A)  ########     (B)  ########     (C)  ########
+// #.....#.        #....a#.          #.....#.          #.....#.
+// #.#YXZ#.        #.##.##.          #.#.###.          #.###.#.
+// #.#.....        #.#b....          #.#.....          #.#.....
+//
+// In general, if a floor grid horizontally or vertically adjacent to the
+// change target has a floor neighbour diagonally adjacent to the change
+// target, the next neighbour in the same direction needs to be floor,
+// as well.
+static bool _deadend_check_floor(const coord_def &p)
+{
+    if (grid_is_wall(grd[p.x-1][p.y]))
+    {
+        for (int i = -1; i <= 1; i++)
+        {
+            if (i == 0)
+                continue;
+
+            const coord_def a(p.x, p.y+2*i);
+            if (!in_bounds(a) || _is_floor(grd(a)))
+                continue;
+
+            for (int j = -1; j <= 1; j++)
+            {
+                if (j == 0)
+                    continue;
+
+                const coord_def b(p.x+2*j, p.y+i);
+                if (!in_bounds(b))
+                    continue;
+
+                const coord_def c(p.x+j, p.y+i);
+                if (_is_floor(grd(c)) && !_is_floor(grd(b)))
+                    return (false);
+            }
+        }
+    }
+    else
+    {
+        for (int i = -1; i <= 1; i++)
+        {
+            if (i == 0)
+                continue;
+
+            const coord_def a(p.x+2*i, p.y);
+            if (!in_bounds(a) || _is_floor(grd(a)))
+                continue;
+
+            for (int j = -1; j <= 1; j++)
+            {
+                if (j == 0)
+                    continue;
+
+                const coord_def b(p.x+i, p.y+2*j);
+                if (!in_bounds(b))
+                    continue;
+
+                const coord_def c(p.x+i, p.y+j);
+                if (_is_floor(grd(c)) && !_is_floor(grd(b)))
+                    return (false);
             }
         }
     }
@@ -2368,7 +2446,7 @@ void change_labyrinth(bool msg)
             if (is_terrain_seen(xi, yi) || !grid_is_wall(grd(c)))
                 continue;
 
-            if (_grid_is_flanked_by_walls(c))
+            if (_grid_is_flanked_by_walls(c) && _deadend_check_floor(c))
                 targets.push_back(c);
         }
 
@@ -2412,7 +2490,7 @@ void change_labyrinth(bool msg)
         // Use the adjacent floor grids as source and destination.
         coord_def src(c.x-1,c.y);
         coord_def dst(c.x+1,c.y);
-        if (grd(src) != DNGN_FLOOR || grd(dst) != DNGN_FLOOR)
+        if (!_is_floor(grd(src)) || !_is_floor(grd(dst)))
         {
             src = coord_def(c.x, c.y-1);
             dst = coord_def(c.x, c.y+1);
@@ -2434,8 +2512,8 @@ void change_labyrinth(bool msg)
         // Get the actual path.
         const std::vector<coord_def> path = mp.backtrack();
 
-        // Replace the wall with floor, but preserve the old grid for later
-        // change of the floor grid, or in case this fails.
+        // Replace the wall with floor, but preserve the old grid in case
+        // we find no floor grid to swap with.
         // It's better if the change is done now, so the grid can be
         // treated as floor rather than a wall, and we don't need any
         // special cases.
@@ -2462,7 +2540,7 @@ void change_labyrinth(bool msg)
             if (std::abs(p.x-c.x) + std::abs(p.y-c.y) <= 1)
                 continue;
 
-            if (_grid_is_flanked_by_walls(p) && _deadend_check(p))
+            if (_grid_is_flanked_by_walls(p) && _deadend_check_wall(p))
                 points.push_back(p);
         }
 
@@ -2478,13 +2556,30 @@ void change_labyrinth(bool msg)
         // FIXME: This is not optimal since it may lead to e.g. a single
         //        metal wall appearing among stone ones.
         const int pick = random_range(0, (int) points.size() - 1);
+        const coord_def p(points[pick]);
         if (msg)
         {
             mprf(MSGCH_DIAGNOSTICS, "Switch %d (%d, %d) with %d (%d, %d).",
-                 (int) grd(c), c.x, c.y,
-                 (int) grd(points[pick]), points[pick].x, points[pick].y);
+                 (int) old_grid, c.x, c.y, (int) grd(p), p.x, p.y);
         }
-        grd(points[pick]) = old_grid;
+
+        // Rather than use old_grid directly, replace with the adjacent
+        // wall type.
+        old_grid = grd[p.x-1][p.y];
+        if (!grid_is_wall(old_grid))
+        {
+            old_grid = grd[p.x][p.y-1];
+            if (!grid_is_wall(old_grid))
+            {
+                if (msg)
+                {
+                    mprf(MSGCH_DIAGNOSTICS,
+                         "No adjacent walls at pos (%d, %d)?", p.x, p.y);
+                }
+                old_grid = DNGN_STONE_WALL;
+            }
+        }
+        grd(p) = old_grid;
     }
 
     // The directions are used to randomly decide where to place items that
