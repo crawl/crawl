@@ -2615,7 +2615,10 @@ void change_labyrinth(bool msg)
             for (unsigned int i = 0; i < dirs.size(); i++)
             {
                 const coord_def p = c + dirs[i];
-                if (!grid_is_solid(grd(p)) && !grid_destroys_items(grd(p)))
+                if (!in_bounds(p))
+                    continue;
+
+                if (_is_floor(grd(p)))
                 {
                     // Once a valid grid is found, move all items from the
                     // stack onto it.
@@ -2624,12 +2627,17 @@ void change_labyrinth(bool msg)
                     {
                         mitm[it].pos.x = p.x;
                         mitm[it].pos.y = p.y;
+                        if (mitm[it].link == NON_ITEM)
+                        {
+                            // Link to the stack on the target grid p,
+                            // or NON_ITEM, if empty.
+                            mitm[it].link = igrd(p);
+                            break;
+                        }
                         it = mitm[it].link;
                     }
-                    // Link to the stack on the target grid p, or
-                    // NON_ITEM if empty.
-                    mitm[it].link = igrd(p);
 
+                    // Move entire stack over to p.
                     igrd(p) = igrd(c);
                     igrd(c) = NON_ITEM;
 
