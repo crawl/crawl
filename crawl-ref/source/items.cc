@@ -775,6 +775,9 @@ void item_check(bool verbose)
 
 static void _pickup_menu(int item_link)
 {
+    int n_did_pickup   = 0;
+    int n_tried_pickup = 0;
+
     std::vector<const item_def*> items;
     item_list_on_square( items, item_link, false );
 
@@ -782,6 +785,7 @@ static void _pickup_menu(int item_link)
         select_items( items, "Select items to pick up" );
     redraw_screen();
 
+    std::string pickup_warning;
     for (int i = 0, count = selected.size(); i < count; ++i)
         for (int j = item_link; j != NON_ITEM; j = mitm[j].link)
         {
@@ -790,31 +794,58 @@ static void _pickup_menu(int item_link)
                 if (j == item_link)
                     item_link = mitm[j].link;
 
+                int num_to_take = selected[i].quantity;
+                if (Options.autopickup_no_burden && item_mass(mitm[j]) != 0)
+                {
+                    int num_can_take =
+                        (carrying_capacity(you.burden_state) - you.burden) /
+                            item_mass(mitm[j]);
+
+                    if (num_can_take < num_to_take)
+                    {
+                        if (!n_tried_pickup)
+                        {
+                            mpr("You can't pick everything up without "
+                                "burdening yourself.");
+                        }
+                        n_tried_pickup++;
+                        num_to_take = num_can_take;
+                    }
+
+                    if (num_can_take == 0)
+                        continue;
+                }
                 unsigned long oldflags = mitm[j].flags;
                 mitm[j].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
-                int result = move_item_to_player( j, selected[i].quantity );
+                int result = move_item_to_player( j, num_to_take );
 
                 // If we cleared any flags on the items, but the pickup was
                 // partial, reset the flags for the items that remain on the
                 // floor.
-                if (is_valid_item(mitm[j]))
-                    mitm[j].flags = oldflags;
+                if (result == 0 || result == -1)
+                {
+                    n_tried_pickup++;
+                    if (result == 0)
+                        pickup_warning = "You can't carry that much weight.";
+                    else
+                        pickup_warning = "You can't carry that many items.";
 
-                if (result == 0)
-                {
-                    mpr("You can't carry that much weight.");
-                    learned_something_new(TUT_HEAVY_LOAD);
-                    return;
+                    if (is_valid_item(mitm[j]))
+                        mitm[j].flags = oldflags;
                 }
-                else if (result == -1)
-                {
-                    mpr("You can't carry that many items.");
-                    learned_something_new(TUT_HEAVY_LOAD);
-                    return;
-                }
-                break;
+                else
+                    n_did_pickup++;
             }
         }
+
+    if (!pickup_warning.empty())
+    {
+        mpr(pickup_warning.c_str());
+        learned_something_new(TUT_HEAVY_LOAD);
+    }
+
+    if (n_did_pickup)
+        you.turn_is_over = true;
 }
 
 bool origin_known(const item_def &item)
@@ -1167,6 +1198,8 @@ void pickup()
     {
         int next;
         mpr("There are several objects here.");
+        bool tried_pickup = false;
+        std::string pickup_warning;
         while ( o != NON_ITEM )
         {
             // Must save this because pickup can destroy the item.
@@ -1202,23 +1235,47 @@ void pickup()
 
             if (keyin == 'y' || keyin == 'a')
             {
-                mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
-                int result = move_item_to_player( o, mitm[o].quantity );
+                int num_to_take = mitm[o].quantity;
+                if (Options.autopickup_no_burden && item_mass(mitm[o]) != 0)
+                {
+                    int num_can_take =
+                        (carrying_capacity(you.burden_state) - you.burden) /
+                            item_mass(mitm[o]);
 
-                if (result == 0)
-                {
-                    mpr("You can't carry that much weight.");
-                    keyin = 'x';        // resets from 'a'
+                    if (num_can_take < num_to_take)
+                    {
+                        if (!tried_pickup)
+                        {
+                            mpr("You can't pick everything up without "
+                                "burdening yourself.");
+                            tried_pickup = true;
+                        }
+                        num_to_take = num_can_take;
+                    }
+
+                    if (num_can_take == 0)
+                        continue;
                 }
-                else if (result == -1)
+                const unsigned long old_flags(mitm[o].flags);
+                mitm[o].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+                int result = move_item_to_player( o, num_to_take );
+
+                if (result == 0 || result == -1)
                 {
-                    mpr("You can't carry that many items.");
-                    break;
+                    if (result == 0)
+                       pickup_warning = "You can't carry that much weight.";
+                    else
+                        pickup_warning = "You can't carry that many items.";
+
+                    mitm[o].flags = old_flags;
                 }
             }
 
             o = next;
         }
+
+        if (!pickup_warning.empty())
+            mpr(pickup_warning.c_str());
     }
 }                               // end pickup()
 
@@ -2221,7 +2278,7 @@ bool can_autopickup()
     if (you.flight_mode() == FL_LEVITATE)
         return (false);
 
-    if ( !i_feel_safe() )
+    if (!i_feel_safe())
         return (false);
 
     return (true);

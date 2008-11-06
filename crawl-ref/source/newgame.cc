@@ -1294,6 +1294,7 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_NAGA:
         case SP_OGRE:
         case SP_RED_DRACONIAN:
+        case SP_MUMMY:
         case SP_VAMPIRE:
             return CC_RESTRICTED;
         default:
@@ -1441,6 +1442,7 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_KENKU:
+        case SP_GHOUL:
             return CC_RESTRICTED;
         default:
             return CC_UNRESTRICTED;
@@ -1471,6 +1473,7 @@ static char_choice_restriction _class_allowed( species_type speci,
     case JOB_CRUSADER:
         switch (speci)
         {
+        case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
         case SP_HILL_ORC:
@@ -1523,9 +1526,11 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_GNOME:
+        case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_TROLL:
+        case SP_OGRE:
         case SP_MINOTAUR:
         case SP_GHOUL:
             return CC_RESTRICTED;
@@ -1653,14 +1658,15 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_HALFLING:
         case SP_KOBOLD:
         case SP_GNOME:
+        case SP_SPRIGGAN:
         case SP_CENTAUR:
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_KENKU:
-        case SP_RED_DRACONIAN:
         case SP_DEMONSPAWN:
         case SP_MUMMY:
         case SP_GHOUL:
+        case SP_VAMPIRE:
             return CC_RESTRICTED;
         default:
             return CC_UNRESTRICTED;
@@ -1809,7 +1815,6 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_OGRE:
-        case SP_TROLL:
         case SP_RED_DRACONIAN:
         case SP_MUMMY:
         case SP_GHOUL:
@@ -1948,7 +1953,8 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
         _print_character_info();
 
         textcolor( CYAN );
-        cprintf(EOL "You have a choice of books:" EOL);
+        cprintf(EOL "You have a choice of books:  "
+                "(Press %% for a list of aptitudes)" EOL);
 
         for (int i = 0; i < numbooks; ++i)
         {
@@ -2005,6 +2011,9 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
                     else
                         keyin = ('a' +  Options.prev_book - 1);
                 }
+            case '%':
+                list_commands('%');
+                return _choose_book(book, firstbook, numbooks);
             default:
                 break;
             }
@@ -2223,7 +2232,8 @@ static bool _choose_weapon()
         _print_character_info();
 
         textcolor( CYAN );
-        cprintf(EOL "You have a choice of weapons:" EOL);
+        cprintf(EOL "You have a choice of weapons:  "
+                "(Press %% for a list of aptitudes)" EOL);
 
         bool prevmatch = false;
         for (int i = 0; i < num_choices; i++)
@@ -2295,6 +2305,11 @@ static bool _choose_weapon()
                                  keyin = 'a' + i;
                     }
                 }
+            case '%':
+                list_commands('%');
+                return _choose_weapon();
+            default:
+                break;
            }
         }
         while (keyin != '*' && keyin != '+'
@@ -2360,7 +2375,7 @@ static char_choice_restriction  _religion_restriction(god_type god)
         case SP_GHOUL:
         case SP_VAMPIRE:
             return (CC_BANNED);
-        case SP_HIGH_ELF:
+        case SP_SLUDGE_ELF:
         case SP_MOUNTAIN_DWARF:
         case SP_CENTAUR:
         case SP_MINOTAUR:
@@ -2414,7 +2429,6 @@ static char_choice_restriction  _religion_restriction(god_type god)
     case GOD_XOM:
         switch (you.species)
         {
-        case SP_HUMAN:
         case SP_MOUNTAIN_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
@@ -2424,7 +2438,6 @@ static char_choice_restriction  _religion_restriction(god_type god)
         case SP_MINOTAUR:
         case SP_KENKU:
         case SP_DEMONSPAWN:
-        case SP_VAMPIRE:
             return (CC_UNRESTRICTED);
         default:
             if (player_genus(GENPC_DRACONIAN))
