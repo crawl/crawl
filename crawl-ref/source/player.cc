@@ -5032,6 +5032,7 @@ void curare_hits_player(int agent, int degree)
             mpr("You have difficulty breathing.");
             ouch(hurted, agent, KILLED_BY_CURARE, "curare-induced apnoea");
         }
+
         potion_effect(POT_SLOWING, 2 + random2(4 + degree));
     }
 }
@@ -5051,6 +5052,7 @@ bool poison_player(int amount, bool force)
     {
         mprf(MSGCH_WARN, "You are %spoisoned.",
              old_value > 0 ? "more " : "");
+
         learned_something_new(TUT_YOU_POISON);
     }
 
@@ -5073,14 +5075,14 @@ void reduce_poison_player(int amount)
         mpr("You feel a little better.", MSGCH_RECOVERY);
 }
 
-bool confuse_player( int amount, bool resistable )
+bool confuse_player(int amount, bool resistable)
 {
     if (amount <= 0)
         return (false);
 
     if (resistable && wearing_amulet(AMU_CLARITY))
     {
-        mpr( "You feel momentarily confused." );
+        mpr("You feel momentarily confused.");
         return (false);
     }
 
@@ -5093,16 +5095,19 @@ bool confuse_player( int amount, bool resistable )
     if (you.duration[DUR_CONF] > old_value)
     {
         you.check_awaken(500);
+
         mprf(MSGCH_WARN, "You are %sconfused.",
              (old_value > 0) ? "more " : "" );
+
         learned_something_new(TUT_YOU_ENCHANTED);
 
         xom_is_stimulated(you.duration[DUR_CONF] - old_value);
     }
+
     return (true);
 }
 
-void reduce_confuse_player( int amount )
+void reduce_confuse_player(int amount)
 {
     if (you.duration[DUR_CONF] == 0 || amount <= 0)
         return;
@@ -5112,49 +5117,50 @@ void reduce_confuse_player( int amount )
     if (you.duration[DUR_CONF] <= 0)
     {
         you.duration[DUR_CONF] = 0;
-        mpr( "You feel less confused." );
+        mpr("You feel less confused.");
     }
 }
 
-bool slow_player( int amount )
+bool slow_player(int amount)
 {
     if (amount <= 0)
         return (false);
 
-    if (wearing_amulet( AMU_RESIST_SLOW ))
+    if (wearing_amulet(AMU_RESIST_SLOW))
     {
         mpr("You feel momentarily lethargic.");
 
         // Identify amulet.
-        item_def amu = you.inv[you.equip[EQ_AMULET]];
-        if (!item_type_known(amu))
-            set_ident_type( amu, ID_KNOWN_TYPE );
+        item_def *amulet = you.slot_item(EQ_AMULET);
+        if (amulet && !item_type_known(*amulet))
+            set_ident_type(*amulet, ID_KNOWN_TYPE);
 
         return (false);
     }
     else if (you.duration[DUR_SLOW] >= 100)
-        mpr( "You already are as slow as you could be." );
+        mpr("You already are as slow as you could be.");
     else
     {
         if (you.duration[DUR_SLOW] == 0)
-            mpr( "You feel yourself slow down." );
+            mpr("You feel yourself slow down.");
         else
-            mpr( "You feel as though you will be slow longer." );
+            mpr("You feel as though you will be slow longer.");
 
         you.duration[DUR_SLOW] += amount;
-
         if (you.duration[DUR_SLOW] > 100)
             you.duration[DUR_SLOW] = 100;
+
         learned_something_new(TUT_YOU_ENCHANTED);
     }
+
     return (true);
 }
 
-void dec_slow_player( void )
+void dec_slow_player()
 {
     if (you.duration[DUR_SLOW] > 1)
     {
-        // BCR - Amulet of resist slow affects slow counter
+        // BCR - Amulet of resist slow affects slow counter.
         if (wearing_amulet(AMU_RESIST_SLOW))
         {
             you.duration[DUR_SLOW] -= 5;
@@ -5171,28 +5177,28 @@ void dec_slow_player( void )
     }
 }
 
-void haste_player( int amount )
+void haste_player(int amount)
 {
-    bool amu_eff = wearing_amulet( AMU_RESIST_SLOW );
-
     if (amount <= 0)
         return;
 
+    bool amu_eff = wearing_amulet(AMU_RESIST_SLOW);
+
     if (amu_eff)
     {
-        mpr( "Your amulet glows brightly." );
+        mpr("Your amulet glows brightly.");
         item_def *amulet = you.slot_item(EQ_AMULET);
         if (amulet && !item_type_known(*amulet))
-            set_ident_type( *amulet, ID_KNOWN_TYPE );
+            set_ident_type(*amulet, ID_KNOWN_TYPE);
     }
 
     if (you.duration[DUR_HASTE] == 0)
-        mpr( "You feel yourself speed up." );
+        mpr("You feel yourself speed up.");
     else if (you.duration[DUR_HASTE] > 80 + 20 * amu_eff)
-        mpr( "You already have as much speed as you can handle." );
+        mpr("You already have as much speed as you can handle.");
     else
     {
-        mpr( "You feel as though your hastened speed will last longer." );
+        mpr("You feel as though your hastened speed will last longer.");
         contaminate_player(1, true); // always deliberate
     }
 
@@ -5201,10 +5207,10 @@ void haste_player( int amount )
     if (you.duration[DUR_HASTE] > 80 + 20 * amu_eff)
         you.duration[DUR_HASTE] = 80 + 20 * amu_eff;
 
-    did_god_conduct( DID_STIMULANTS, 4 + random2(4) );
+    did_god_conduct(DID_STIMULANTS, 4 + random2(4));
 }
 
-void dec_haste_player( void )
+void dec_haste_player()
 {
     if (you.duration[DUR_HASTE] > 1)
     {
@@ -5214,24 +5220,24 @@ void dec_haste_player( void )
 
         if (you.duration[DUR_HASTE] == 6)
         {
-            mpr( "Your extra speed is starting to run out.", MSGCH_DURATION );
+            mpr("Your extra speed is starting to run out.", MSGCH_DURATION);
             if (coinflip())
                 you.duration[DUR_HASTE]--;
         }
     }
     else if (you.duration[DUR_HASTE] == 1)
     {
-        mpr( "You feel yourself slow down.", MSGCH_DURATION );
+        mpr("You feel yourself slow down.", MSGCH_DURATION);
         you.duration[DUR_HASTE] = 0;
     }
 }
 
-bool disease_player( int amount )
+bool disease_player(int amount)
 {
     return you.sicken(amount);
 }
 
-void dec_disease_player( void )
+void dec_disease_player()
 {
     if (you.disease > 0)
     {
@@ -5240,25 +5246,25 @@ void dec_disease_player( void )
         // kobolds and regenerators recuperate quickly
         if (you.disease > 5
             && (you.species == SP_KOBOLD
-                || you.duration[ DUR_REGENERATION ]
+                || you.duration[DUR_REGENERATION]
                 || player_mutation_level(MUT_REGENERATION) == 3))
         {
             you.disease -= 2;
         }
 
-        if (!you.disease)
+        if (you.disease == 0)
             mpr("You feel your health improve.", MSGCH_RECOVERY);
     }
 }
 
-bool rot_player( int amount )
+bool rot_player(int amount)
 {
     if (amount <= 0)
         return (false);
 
     if (you.res_rotting() > 0)
     {
-        mpr( "You feel terrible." );
+        mpr("You feel terrible.");
         return (false);
     }
 
@@ -5267,12 +5273,13 @@ bool rot_player( int amount )
         // Either this, or the actual rotting message should probably
         // be changed so that they're easier to tell apart. -- bwr
         mprf(MSGCH_WARN, "You feel your flesh %s away!",
-             (you.rotting) ? "rotting" : "start to rot" );
+             (you.rotting) ? "rotting" : "start to rot");
 
         you.rotting += amount;
 
         learned_something_new(TUT_YOU_ROTTING);
     }
+
     return (true);
 }
 

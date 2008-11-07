@@ -420,20 +420,20 @@ void curare_hits_player(int agent, int degree);
 bool poison_player(int amount, bool force = false);
 void reduce_poison_player(int amount);
 
-bool confuse_player( int amount, bool resistable = true );
-void reduce_confuse_player( int amount );
+bool confuse_player(int amount, bool resistable = true);
+void reduce_confuse_player(int amount);
 
-bool slow_player( int amount );
+bool slow_player(int amount);
 void dec_slow_player();
 
-void haste_player( int amount );
+void haste_player(int amount);
 void dec_haste_player();
 
 /* return true iff they were diseased */
-bool disease_player( int amount );
+bool disease_player(int amount);
 void dec_disease_player();
 
-bool rot_player( int amount );
+bool rot_player(int amount);
 
 bool player_has_spell( spell_type spell );
 size_type player_size( int psize = PSIZE_TORSO, bool base = false );
