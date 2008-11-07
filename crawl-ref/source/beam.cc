@@ -2458,7 +2458,6 @@ void sticky_flame_monster(int mn, kill_category who, int levels)
     }
 }
 
-//
 //  Used by monsters in "planning" which spell to cast. Fires off a "tracer"
 //  which tells the monster what it'll hit if it breathes/casts etc.
 //
@@ -2470,7 +2469,6 @@ void sticky_flame_monster(int mn, kill_category who, int levels)
 //
 //  Note that beam properties must be set, as the tracer will take them
 //  into account, as well as the monster's intelligence.
-//
 void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
 {
     // Don't fiddle with any input parameters other than tracer stuff!
@@ -4441,7 +4439,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         if (hurt_final > 0 || !mons_wont_attack(mon) || !YOU_KILL(beam.thrower))
             behaviour_event(mon, ME_ANNOY, _beam_source(beam));
 
-        // sticky flame
+        // Sticky flame.
         if (beam.name == "sticky flame")
         {
             int levels = std::min(4, 1 + random2(hurt_final) / 2);
