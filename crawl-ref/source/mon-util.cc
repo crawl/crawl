@@ -1213,7 +1213,7 @@ int mons_res_sticky_flame(const monsters *mon)
 {
     int res = get_mons_resists(mon).sticky_flame;
     if (mon->has_equipped(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
-        res += 3;
+        res += 1;
     return (res);
 }
 
