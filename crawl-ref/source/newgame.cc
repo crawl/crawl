@@ -669,9 +669,9 @@ static unsigned char _random_potion_description()
         nature = PQUAL(desc);
         colour = PCOLOUR(desc);
 
-        // nature and colour correspond to primary and secondary
-        // in itemname.cc; this check ensures clear potions don't
-        // get odd qualifiers.
+        // nature and colour correspond to primary and secondary in
+        // itemname.cc.  This check ensures clear potions don't get odd
+        // qualifiers.
     }
     while (colour == PDC_CLEAR && nature > PDQ_VISCOUS
            || desc == PDESCS(PDC_CLEAR)
