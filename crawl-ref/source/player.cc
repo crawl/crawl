@@ -5331,7 +5331,7 @@ bool rot_player(int amount)
         // Either this, or the actual rotting message should probably
         // be changed so that they're easier to tell apart. -- bwr
         mprf(MSGCH_WARN, "You feel your flesh %s away!",
-             you.rotting > 0 "rotting" : "start to rot");
+             you.rotting > 0 ? "rotting" : "start to rot");
 
         you.rotting += amount;
 
