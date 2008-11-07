@@ -4445,7 +4445,6 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         if (beam.name == "sticky flame")
         {
             int levels = std::min(4, 1 + random2(hurt_final) / 2);
-
             sticky_flame_monster(tid, _whose_kill(beam), levels);
         }
 

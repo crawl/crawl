@@ -2530,7 +2530,7 @@ static void _decrement_durations()
     {
         const int res_fire = player_res_fire();
 
-        mpr( "You are covered in liquid flames!", MSGCH_WARN );
+        mpr("You are covered in liquid flames!", MSGCH_WARN);
         expose_player_to_element(BEAM_NAPALM, 12);
 
         if (res_fire > 0)
@@ -2591,7 +2591,7 @@ static void _decrement_durations()
     else if (you.duration[DUR_PRAYER] == 1)
         end_prayer();
 
-    if (you.duration[DUR_DIVINE_SHIELD])
+    if (you.duration[DUR_DIVINE_SHIELD] > 0)
     {
         if (you.duration[DUR_DIVINE_SHIELD] > 1)
         {
@@ -2688,34 +2688,36 @@ static void _decrement_durations()
                           6, coinflip(),
                           "You start to feel a little less insulated.");
 
-    if ( _decrement_a_duration(DUR_STONEMAIL,
-                               "Your scaly stone armour disappears.",
-                               6, coinflip(),
-                               "Your scaly stone armour is starting "
-                               "to flake away.") )
+    if (_decrement_a_duration(DUR_STONEMAIL,
+                              "Your scaly stone armour disappears.",
+                              6, coinflip(),
+                              "Your scaly stone armour is starting "
+                              "to flake away."))
     {
         you.redraw_armour_class = true;
         burden_change();
     }
 
-    if ( _decrement_a_duration(DUR_FORESCRY,
-                               "You feel firmly rooted in the present.",
-                               6, coinflip(),
-                               "Your vision of the future begins to falter."))
+    if (_decrement_a_duration(DUR_FORESCRY,
+                              "You feel firmly rooted in the present.",
+                              6, coinflip(),
+                              "Your vision of the future begins to falter."))
     {
         you.redraw_evasion = true;
     }
 
-    if ( _decrement_a_duration(DUR_SEE_INVISIBLE) && !player_see_invis() )
+    if (_decrement_a_duration(DUR_SEE_INVISIBLE) && !player_see_invis())
         mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
 
     _decrement_a_duration(DUR_SEE_INVISIBLE); // jmf: cute message
                                               // handled elsewhere
     _decrement_a_duration(DUR_TELEPATHY, "You feel less empathic.");
 
-    if ( _decrement_a_duration(DUR_CONDENSATION_SHIELD,
-                               "Your icy shield evaporates.") )
+    if (_decrement_a_duration(DUR_CONDENSATION_SHIELD,
+                              "Your icy shield evaporates."))
+    {
         you.redraw_armour_class = true;
+    }
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0 && player_res_cold() < 0)
     {
@@ -2723,14 +2725,18 @@ static void _decrement_durations()
         ouch(2 + random2avg(13, 2), NON_MONSTER, KILLED_BY_FREEZING);
     }
 
-    if ( _decrement_a_duration(DUR_MAGIC_SHIELD,
-                               "Your magical shield disappears.") )
+    if (_decrement_a_duration(DUR_MAGIC_SHIELD,
+                              "Your magical shield disappears."))
+    {
         you.redraw_armour_class = true;
+    }
 
-    if ( _decrement_a_duration(DUR_STONESKIN, "Your skin feels tender.") )
+    if (_decrement_a_duration(DUR_STONESKIN, "Your skin feels tender."))
+    {
         you.redraw_armour_class = true;
+    }
 
-    if ( _decrement_a_duration(DUR_TELEPORT) )
+    if (_decrement_a_duration(DUR_TELEPORT))
     {
         // Only to a new area of the abyss sometimes (for abyss teleports).
         you_teleport_now( true, one_chance_in(5) );
@@ -2778,15 +2784,15 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_EXHAUSTED, "You feel less fatigued.");
 
-    _decrement_a_duration( DUR_CONFUSING_TOUCH,
+    _decrement_a_duration(DUR_CONFUSING_TOUCH,
                           ((std::string("Your ") + your_hand(true)) +
-                          " stop glowing.").c_str() );
+                          " stop glowing.").c_str());
 
-    _decrement_a_duration( DUR_SURE_BLADE,
+    _decrement_a_duration(DUR_SURE_BLADE,
                           "The bond with your blade fades away." );
 
-    if ( _decrement_a_duration( DUR_BEHELD, "You break out of your daze.",
-                                -1, 0, NULL, MSGCH_RECOVERY ))
+    if ( _decrement_a_duration(DUR_BEHELD, "You break out of your daze.",
+                               -1, 0, NULL, MSGCH_RECOVERY ))
     {
         you.beheld_by.clear();
     }
@@ -2845,7 +2851,7 @@ static void _decrement_durations()
         // This resets from an actual penalty or from NO_BERSERK_PENALTY.
         you.berserk_penalty = 0;
 
-        int dur = 12 + roll_dice( 2, 12 );
+        int dur = 12 + roll_dice(2, 12);
         you.duration[DUR_EXHAUSTED] += dur;
 
         // Don't trigger too many tutorial messages.
@@ -2855,13 +2861,12 @@ static void _decrement_durations()
         {
             // Don't give duplicate 'You feel yourself slow down' messages.
             no_messages nm;
-            slow_player( dur );
+            slow_player(dur);
         }
 
         make_hungry(700, true);
 
-        if (you.hunger < 50)
-            you.hunger = 50;
+        you.hunger = std::max(50, you.hunger);
 
         calc_hp();
 
@@ -2911,7 +2916,7 @@ static void _decrement_durations()
 
     if (!you.permanent_flight())
     {
-        if ( _decrement_a_duration(DUR_CONTROLLED_FLIGHT) && you.airborne() )
+        if (_decrement_a_duration(DUR_CONTROLLED_FLIGHT) && you.airborne())
             mpr("You lose control over your flight.", MSGCH_DURATION);
     }
 
@@ -2967,7 +2972,7 @@ static void _decrement_durations()
             }
             else
             {
-                // the poison running through your veins.");
+                // "the poison running through your veins.");
                 ouch(1, NON_MONSTER, KILLED_BY_POISON);
                 mpr("You feel sick.");
             }
