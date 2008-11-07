@@ -343,11 +343,11 @@ public:
 
     virtual mon_holy_type holiness() const = 0;
     virtual int res_fire() const = 0;
-    virtual int res_sticky_flame() const = 0;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
     virtual int res_poison() const = 0;
+    virtual int res_sticky_flame() const = 0;
     virtual int res_negative_energy() const = 0;
     virtual int res_rotting() const = 0;
     virtual int res_torment() const = 0;
@@ -902,11 +902,11 @@ public:
 
     mon_holy_type holiness() const;
     int res_fire() const;
-    int res_sticky_flame() const;
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
     int res_poison() const;
+    int res_sticky_flame() const;
     int res_negative_energy() const;
     int res_rotting() const;
     int res_torment() const;
@@ -1252,11 +1252,11 @@ public:
 
     mon_holy_type holiness() const;
     int res_fire() const;
-    int res_sticky_flame() const;
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
     int res_poison() const;
+    int res_sticky_flame() const;
     int res_negative_energy() const;
     int res_rotting() const;
     int res_torment() const;

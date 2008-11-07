@@ -127,8 +127,10 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int who,
 mon_resist_type mons_ench_f2(monsters *monster, bolt &pbolt);
 
 
-bool poison_monster( monsters *monster, kill_category who,
-                     int levels = 1, bool force = false, bool verbose = true );
+bool curare_hits_monster(const bolt &beam, monsters *monster,
+                         kill_category who, int levels = 1);
+bool poison_monster(monsters *monster, kill_category who, int levels = 1,
+                    bool force = false, bool verbose = true);
 void fire_tracer( const monsters *monster, struct bolt &pbolt,
                   bool explode_only = false );
 bool check_line_of_sight( const coord_def& source, const coord_def& target );

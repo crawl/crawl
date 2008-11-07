@@ -416,8 +416,9 @@ void contaminate_player(int change, bool controlled = false,
                         bool status_only = false);
 
 /* @return true iff they were poisoned (false if they are immune) */
-bool poison_player( int amount, bool force = false );
-void reduce_poison_player( int amount );
+void curare_hits_player(int agent, int degree);
+bool poison_player(int amount, bool force = false);
+void reduce_poison_player(int amount);
 
 bool confuse_player( int amount, bool resistable = true );
 void reduce_confuse_player( int amount );

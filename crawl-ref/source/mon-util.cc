@@ -5163,7 +5163,7 @@ int monsters::skill(skill_type sk, bool) const
     switch (sk)
     {
     case SK_NECROMANCY:
-        return (holiness() == MH_UNDEAD? hit_dice / 2 : hit_dice / 3);
+        return (holiness() == MH_UNDEAD ? hit_dice / 2 : hit_dice / 3);
 
     default:
         return (0);

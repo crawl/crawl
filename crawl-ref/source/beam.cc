@@ -2370,8 +2370,8 @@ static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
 }
 
 // Returns true if the curare killed the monster.
-bool curare_hits_monster( const bolt &beam,  monsters *monster,
-                          kill_category who, int levels )
+bool curare_hits_monster(const bolt &beam, monsters *monster,
+                         kill_category who, int levels)
 {
     const bool res_poison = mons_res_poison(monster) > 0;
 
@@ -2397,17 +2397,14 @@ bool curare_hits_monster( const bolt &beam,  monsters *monster,
 
     // Deities take notice.
     if (who == KC_YOU)
-        did_god_conduct( DID_POISON, 5 + random2(3) );
+        did_god_conduct(DID_POISON, 5 + random2(3));
 
     return (!monster->alive());
 }
 
-// Actually poisons a monster (w/ message).
-bool poison_monster( monsters *monster,
-                     kill_category from_whom,
-                     int levels,
-                     bool force,
-                     bool verbose)
+// Actually poisons a monster (with message).
+bool poison_monster(monsters *monster, kill_category who, int levels,
+                    bool force, bool verbose)
 {
     if (!monster->alive())
         return (false);
@@ -2416,21 +2413,23 @@ bool poison_monster( monsters *monster,
         return (false);
 
     const mon_enchant old_pois = monster->get_ench(ENCH_POISON);
-    monster->add_ench( mon_enchant(ENCH_POISON, levels, from_whom) );
+    monster->add_ench(mon_enchant(ENCH_POISON, levels, who));
     const mon_enchant new_pois = monster->get_ench(ENCH_POISON);
 
-    // Actually do the poisoning.
-    // Note: order important here.
-    if (verbose && new_pois.degree > old_pois.degree)
+    // Actually do the poisoning.  The order is important here.
+    if (new_pois.degree > old_pois.degree)
     {
-        simple_monster_message( monster,
-                                !old_pois.degree? " is poisoned."
-                                                : " looks even sicker." );
+        if (verbose)
+        {
+            simple_monster_message(monster,
+                                   old_pois.degree > 0 ? " looks even sicker."
+                                                       : " is poisoned.");
+        }
     }
 
     // Finally, take care of deity preferences.
-    if (from_whom == KC_YOU)
-        did_god_conduct( DID_POISON, 5 + random2(3) );
+    if (who == KC_YOU)
+        did_god_conduct(DID_POISON, 5 + random2(3));
 
     return (new_pois.degree > old_pois.degree);
 }
@@ -3887,7 +3886,7 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
                 && (hurted || beam.ench_power == AUTOMATIC_HIT
                               && x_chance_in_y(90 - 3 * player_AC(), 100)))
             {
-                poison_player( 1 + random2(3) );
+                poison_player(1 + random2(3));
                 was_affected = true;
             }
         }

@@ -728,11 +728,8 @@ static bool _player_vampire_draws_blood(const int mons, const int damage,
         int food_value = 0;
         if (chunk_type == CE_CLEAN)
             food_value = 30 + random2avg(59, 2);
-        else if (chunk_type == CE_CONTAMINATED
-                 || chunk_type == CE_POISONOUS)
-        {
+        else if (chunk_type == CE_CONTAMINATED || chunk_type == CE_POISONOUS)
             food_value = 15 + random2avg(29, 2);
-        }
 
         // Bats get a rather less nutrition out of it.
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
@@ -1200,7 +1197,7 @@ bool melee_attack::player_apply_aux_unarmed()
              attack_strength_punctuation().c_str());
 
         if (damage_brand == SPWPN_VENOM && coinflip())
-            poison_monster( def, KC_YOU );
+            poison_monster(def, KC_YOU);
 
         // Normal vampiric biting attack, not if already got stabbing special.
         if (damage_brand == SPWPN_VAMPIRICISM && you.species == SP_VAMPIRE
@@ -2207,7 +2204,7 @@ bool melee_attack::apply_damage_brand()
 
             // Weapons of venom do two levels of poisoning to the player,
             // but only one level to monsters.
-            defender->poison( attacker, 2 );
+            defender->poison(attacker, 2);
 
             if (defender->atype() == ACT_PLAYER
                    && old_poison < you.duration[DUR_POISONING]
@@ -3473,9 +3470,9 @@ void melee_attack::mons_do_poison(const mon_attack_def &attk)
         return;
 
     if (attk.flavour == AF_POISON_NASTY
-        || one_chance_in( 15 + 5 * (attk.flavour == AF_POISON) )
+        || one_chance_in(15 + 5 * (attk.flavour == AF_POISON ? 1 : 0))
         || (damage_done > 1
-            && one_chance_in( attk.flavour == AF_POISON? 4 : 3 )))
+            && one_chance_in(attk.flavour == AF_POISON ? 4 : 3)))
     {
         if (needs_message)
         {
@@ -3505,7 +3502,7 @@ void melee_attack::mons_do_poison(const mon_attack_def &attk)
         else if (attk.flavour == AF_POISON_STRONG)
             amount += roll_dice(2, 5);
 
-        defender->poison( attacker, amount );
+        defender->poison(attacker, amount);
     }
 }
 
@@ -3766,7 +3763,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_ACID:
         if (attacker->id() == MONS_SPINY_WORM && defender->res_poison() <= 0)
-            defender->poison( attacker, 2 + random2(4) );
+            defender->poison(attacker, 2 + random2(4));
         splash_defender_with_acid(3);
         break;
 

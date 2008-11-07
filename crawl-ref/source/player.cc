@@ -34,6 +34,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "it_use2.h"
 #include "Kills.h"
 #include "macro.h"
 #include "message.h"
@@ -5013,7 +5014,29 @@ void contaminate_player(int change, bool controlled, bool status_only)
     }
 }
 
-bool poison_player( int amount, bool force )
+void curare_hits_player(int agent, int degree)
+{
+    const bool res_poison = player_res_poison();
+
+    poison_player(degree);
+
+    if (!player_res_asphyx())
+    {
+        int hurted = roll_dice(2, 6);
+        // Note that the hurtage is halved by poison resistance.
+        if (res_poison)
+            hurted /= 2;
+
+        if (hurted)
+        {
+            mpr("You have difficulty breathing.");
+            ouch(hurted, agent, KILLED_BY_CURARE, "curare-induced apnoea");
+        }
+        potion_effect(POT_SLOWING, 2 + random2(4 + degree));
+    }
+}
+
+bool poison_player(int amount, bool force)
 {
     if (!force && player_res_poison() || amount <= 0)
         return (false);
@@ -5027,13 +5050,14 @@ bool poison_player( int amount, bool force )
     if (you.duration[DUR_POISONING] > old_value)
     {
         mprf(MSGCH_WARN, "You are %spoisoned.",
-             (old_value > 0) ? "more " : "" );
+             old_value > 0 ? "more " : "");
         learned_something_new(TUT_YOU_POISON);
     }
+
     return (true);
 }
 
-void reduce_poison_player( int amount )
+void reduce_poison_player(int amount)
 {
     if (you.duration[DUR_POISONING] == 0 || amount <= 0)
         return;
@@ -5043,10 +5067,10 @@ void reduce_poison_player( int amount )
     if (you.duration[DUR_POISONING] <= 0)
     {
         you.duration[DUR_POISONING] = 0;
-        mpr( "You feel better.", MSGCH_RECOVERY );
+        mpr("You feel better.", MSGCH_RECOVERY);
     }
     else
-        mpr( "You feel a little better.", MSGCH_RECOVERY );
+        mpr("You feel a little better.", MSGCH_RECOVERY);
 }
 
 bool confuse_player( int amount, bool resistable )
@@ -6474,7 +6498,7 @@ int player::mons_species() const
     }
 }
 
-void player::poison(actor*, int amount)
+void player::poison(actor *agent, int amount)
 {
     ::poison_player(amount);
 }

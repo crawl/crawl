@@ -48,7 +48,6 @@
 #include "food.h"
 #include "format.h"
 #include "hiscores.h"
-#include "it_use2.h"
 #include "itemprop.h"
 #include "items.h"
 #include "lev-pand.h"
@@ -1295,28 +1294,6 @@ void search_around( bool only_adjacent )
                 }
             }
         }
-    }
-}
-
-void curare_hits_player(int agent, int degree)
-{
-    const bool res_poison = player_res_poison();
-
-    poison_player(degree);
-
-    if (!player_res_asphyx())
-    {
-        int hurted = roll_dice(2, 6);
-        // Note that the hurtage is halved by poison resistance.
-        if (res_poison)
-            hurted /= 2;
-
-        if (hurted)
-        {
-            mpr("You have difficulty breathing.");
-            ouch(hurted, agent, KILLED_BY_CURARE, "curare-induced apnoea");
-        }
-        potion_effect(POT_SLOWING, 2 + random2(4 + degree));
     }
 }
 
