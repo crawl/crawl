@@ -2305,6 +2305,7 @@ static bool _choose_weapon()
                                  keyin = 'a' + i;
                     }
                 }
+                break;
             case '%':
                 list_commands('%');
                 return _choose_weapon();
