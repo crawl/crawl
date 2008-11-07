@@ -2453,11 +2453,11 @@ using G. Check the option show_waypoints. The commands are
 
 Travel exclusions mark certain spots of the map as no-go areas for
 autotravel and explore.
-    Ctrl-X              Set travel exclusion.
+    e                   Set travel exclusion. If an exclusion is already
+                        present, change size (from single square to full
+                        field of vision); after that, remove exclusion.
     Ctrl-E              Erase all travel exclusions at once.
-    X                   Cycle through travel exclusions.
-    x                   If on an exclusion centre, changes the radius of
-                        the exclusion disc: 8, 4, 1 squares.
+    E                   Cycle through travel exclusions.
 
 Examining surroundings ('x')
 ----------------------------
@@ -2639,9 +2639,11 @@ description of the spell causing the enchantment will explain these.
 6.                      INSCRIPTIONS
 ------------------------------------------------------------------------
 
-You can use the { command to manually inscribe items. This adds a note
-in curly braces to the item description. Besides simply allowing you
-to make comments about items, there are several further uses.
+You can use the { command to manually inscribe items; alternatively, 
+you can also inscribe when viewing items from the inventory (done by
+pressing the item's letter). This adds a note in curly braces to the
+item description. Besides simply allowing you to make comments about
+items, there are several further uses.
 
 Automatic inscriptions
 ----------------------
@@ -2707,7 +2709,8 @@ Randart autoinscriptions
 ------------------------
 Many players use inscriptions for properties of random artefacts. This
 makes browsing the inventory or stashes easier. Crawl provides a scheme
-to do this automatically: press 'a' when viewing an identified artefact.
+for automatic inscription (you can switch this off using the option
+autoinscribe_randarts=false).
 
 Here, one has to negotiate between two concurrent objectives: terseness
 for better use of limited line lengths versus verboseness for easier

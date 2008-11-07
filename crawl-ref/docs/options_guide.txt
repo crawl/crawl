@@ -79,7 +79,7 @@ The contents of this text are:
                 monster_damage, rotten_meat, equipment, floor, multiturn, 
                 examine, examine_filter, diagnostics, error, tutorial
 4-m     Inscriptions.
-                autoinscribe
+                autoinscribe, autoinscribe_randarts
 4-n     Macro related Options.
                 flush.failure, flush.command, flush.message,
                 macro_meta_entry, additional_macro_file, bindkey
