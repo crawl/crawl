@@ -1899,8 +1899,8 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
     const bool monster = (defender->atype() == ACT_MONSTER);
 
     // Check if this is a resist that pretends to be boolean for damage
-    // damage purposes - only electricity and sticky flame (napalm) at
-    // the moment, raw poison damage uses the normal formula.
+    // purposes.  Only electricity and sticky flame (napalm) do this at
+    // the moment; raw poison damage uses the normal formula.
     int res_base = (is_boolean_resist(flavour) ? 2 : 1);
     const int resistible_fraction = get_resistible_fraction(flavour);
 
