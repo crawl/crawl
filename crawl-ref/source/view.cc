@@ -2762,7 +2762,7 @@ bool is_feature(int feature, const coord_def& where)
 
     switch (feature)
     {
-    case 'X':
+    case 'E':
         return (travel_point_distance[where.x][where.y] == PD_EXCLUDED);
     case 'F':
     case 'W':
@@ -3324,28 +3324,22 @@ void show_map( coord_def &spec_place, bool travel_mode )
             break;
 
         // Cycle the radius of an exclude.
-        case 'x':
+        case 'e':
         {
             const coord_def p(start_x + curs_x - 1, start_y + curs_y - 1);
             if (is_exclude_root(p))
                 cycle_exclude_radius(p);
+            else
+                toggle_exclude(p);
 
             _reset_travel_colours(features);
             break;
         }
 
         case CONTROL('E'):
-        case CONTROL('X'):
-        {
-            int x = start_x + curs_x - 1, y = start_y + curs_y - 1;
-            if (getty == CONTROL('X'))
-                toggle_exclude(coord_def(x, y));
-            else
-                clear_excludes();
-
+            clear_excludes();
             _reset_travel_colours(features);
             break;
-        }
 
         case 'b':
         case '1':
@@ -3440,18 +3434,20 @@ void show_map( coord_def &spec_place, bool travel_mode )
             move_x = 0;
             scroll_y = 20;
             break;
+
         case '-':
             move_y = -20;
             move_x = 0;
             scroll_y = -20;
             break;
+
         case '<':
         case '>':
         case '@':
         case '\t':
         case '^':
         case '_':
-        case 'X':
+        case 'E':
         case 'F':
         case 'W':
         case 'I':

@@ -67,18 +67,25 @@ level-map
 <w>-</w>/<w>+</w>    : Scroll level map 20 grids up/down.
 <w>.</w>      : Start travel (also <w>Enter</w> and <w>,</w> and <w>;</w>).
          (Moves cursor to the last travel destination if still on @.)
+
+<h>Travel exclusions
+<w>e</w>      : Create a travel exclusion, change its radius, or remove it.
+<w>E</w>      : Cycle through travel exclusions.
+<w>Ctrl-E</w> : Erase all travel exclusions on the level.
+
+<h>Waypoints
+<w>Ctrl-W</w> : Set waypoint.
+<w>W</w>      : Cycle through waypoints.
+
+<h>Cycle through features
 <w><<</w>/<w>></w>    : Cycle through up/down stairs.
 <w>^</w>      : Cycle through traps.
 <w>Tab</w>    : Cycle through shops and portals.
-<w>X</w>      : Cycle through travel eXclusions.
-<w>x</w>      : Change the radius of a travel exclusion in three steps.
-<w>W</w>      : Cycle through waypoints.
 <w>*</w>      : Cycle forward through stashes (by default, all items).
 <w>/</w>      : Cycle backward through stashes (by default, all items).
 <w>_</w>      : Cycle through altars.
-<w>Ctrl-X</w> : Set travel exclusion.
-<w>Ctrl-E</w> : Erase all travel exclusions.
-<w>Ctrl-W</w> : Set waypoint.
+
+<h>Other
 <w>Ctrl-C</w> : Clear level and main maps.
 <w>Ctrl-F</w> : Forget level map.
 %%%%
