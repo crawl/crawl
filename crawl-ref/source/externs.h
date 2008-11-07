@@ -1407,10 +1407,10 @@ struct map_cell
     short object;           // The object: monster, item, feature, or cloud.
     unsigned short flags;   // Flags describing the mappedness of this square.
     unsigned short colour;
-    unsigned short property;
+    unsigned long property; // Flags for blood, sanctuary, ...
 
     map_cell() : object(0), flags(0), colour(0), property(0) { }
-    void clear() { flags = object = colour = property = 0; }
+    void clear() { flags = object = colour = 0; }
 
     unsigned glyph() const;
     bool known() const;

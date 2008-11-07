@@ -1415,12 +1415,15 @@ void you_teleport_now( bool allow_control, bool new_abyss_area )
     // teleported to escape from all the monsters chasing him/her,
     // since in that case the new dangerous area is almost certainly
     // *less* dangerous than the old dangerous area.
-    // Teleporting in a labyrinth is also funny, but only for non-minotaurs.
+    // Teleporting in a labyrinth is also funny, more so for non-minotaurs.
     if (randtele
-        && (you.level_type == LEVEL_LABYRINTH && you.species != SP_MINOTAUR
+        && (you.level_type == LEVEL_LABYRINTH
             || you.level_type != LEVEL_ABYSS && player_in_a_dangerous_place()))
     {
-        xom_is_stimulated(255);
+        if (you.level_type == LEVEL_LABYRINTH && you.species == SP_MINOTAUR)
+            xom_is_stimulated(128);
+        else
+            xom_is_stimulated(255);
     }
 }
 
@@ -1532,6 +1535,11 @@ static int _inside_circle(const coord_def& where, int radius)
     return (dist);
 }
 
+static void _remove_sanctuary_property(coord_def where)
+{
+    env.map(where).property &= ~(FPROP_SANCTUARY_1 | FPROP_SANCTUARY_2);
+}
+
 bool remove_sanctuary(bool did_attack)
 {
     if (env.sanctuary_time)
@@ -1546,14 +1554,14 @@ bool remove_sanctuary(bool did_attack)
     {
         if (is_sanctuary(*ri))
         {
-            env.map(*ri).property = FPROP_NONE;
+            _remove_sanctuary_property(*ri);
             if (see_grid(*ri))
                 seen_change = true;
         }
     }
 
-//  do not reset so as to allow monsters to see if their fleeing source
-//  used to be the centre of a sanctuary
+//  Do not reset so as to allow monsters to see if their fleeing source
+//  used to be the centre of a sanctuary. (jpeg)
 //    env.sanctuary_pos.x = env.sanctuary_pos.y = -1;
 
     if (did_attack)
@@ -1603,13 +1611,14 @@ void decrease_sanctuary_radius()
 
             // If necessary overwrite sanctuary property.
             if (dist > size*size)
-                env.map[posx][posy].property = FPROP_NONE;
+                _remove_sanctuary_property(coord_def(posx, posy));
         }
 
     // Special case for time-out of sanctuary.
     if (!size)
     {
-        env.map[env.sanctuary_pos.x][env.sanctuary_pos.y].property = FPROP_NONE;
+        _remove_sanctuary_property(coord_def(env.sanctuary_pos.x,
+                                             env.sanctuary_pos.y));
         if (see_grid(coord_def(env.sanctuary_pos.x,env.sanctuary_pos.y)))
             mpr("The sanctuary disappears.", MSGCH_DURATION);
     }
@@ -1659,7 +1668,7 @@ bool cast_sanctuary(const int power)
             continue;
 
         const coord_def pos = *ri;
-        if (env.map(pos).property == FPROP_BLOODY && see_grid(pos))
+        if (testbits(env.map(pos).property, FPROP_BLOODY) && see_grid(pos))
             blood_count++;
 
         if (trap_def* ptrap = find_trap(pos))
@@ -1684,10 +1693,12 @@ bool cast_sanctuary(const int power)
             || pattern == 3 // cross-like
             && (abs(x)+abs(y) < 5 && x != y && x != -y))
         {
-            env.map(pos).property = FPROP_SANCTUARY_1; // yellow
+            env.map(pos).property |= FPROP_SANCTUARY_1; // yellow
         }
         else
-            env.map(pos).property = FPROP_SANCTUARY_2; // white
+            env.map(pos).property |= FPROP_SANCTUARY_2; // white
+
+        env.map(pos).property &= ~(FPROP_BLOODY);
 
         // scare all attacking monsters inside sanctuary, and make
         // all friendly monsters inside sanctuary stop attacking and

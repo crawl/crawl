@@ -5452,9 +5452,9 @@ static bool _bless_weapon( god_type god, brand_type brand, int colour )
             holy_word(100, HOLY_WORD_SHINING_ONE, you.pos(), true);
 
             // Un-bloodify surrounding squares.
-            for ( radius_iterator ri(you.pos(), 3, true, true); ri; ++ri )
+            for (radius_iterator ri(you.pos(), 3, true, true); ri; ++ri)
                 if (is_bloodcovered(*ri))
-                    env.map(*ri).property = FPROP_NONE;
+                    env.map(*ri).property &= ~(FPROP_BLOODY);
         }
 
         delay(1000);

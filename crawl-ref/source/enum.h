@@ -786,6 +786,17 @@ enum level_flag_type
     LFLAG_NO_MAGIC_MAP    = (1 << 2)  // Level can't be magic mapped.
 };
 
+enum feature_property_type
+{
+    FPROP_NONE = 0,
+    FPROP_SANCTUARY_1 = (1 << 0),
+    FPROP_SANCTUARY_2 = (1 << 2),
+    FPROP_BLOODY      = (1 << 3),
+    FPROP_VAULT       = (1 << 4),
+    FPROP_HIGHLIGHT   = (1 << 5)
+    // NOTE: Bloody floor and sanctuary are exclusive.
+};
+
 // NOTE: The order of these is very important to their usage!
 // [dshaligram] If adding/removing from this list, also update view.cc!
 enum dungeon_char_type
@@ -1060,15 +1071,6 @@ enum dungeon_feature_type
 
     DNGN_RANDOM,
     DNGN_START_OF_MONSTERS = 297  // don't go past here! see view.cc
-};
-
-enum floor_property_type
-{
-    FPROP_NONE,          // 0
-    FPROP_SANCTUARY_1,
-    FPROP_SANCTUARY_2,
-    FPROP_BLOODY
-    // Bloody floor and sanctuary are exclusive, so that's okay.
 };
 
 enum duration_type

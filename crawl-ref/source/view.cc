@@ -198,20 +198,15 @@ void set_envmap_col( int x, int y, int colour )
     env.map[x][y].colour = colour;
 }
 
-void set_envmap_prop( int x, int y, int prop )
-{
-    env.map[x][y].property = prop;
-}
-
 bool is_sanctuary(const coord_def& p)
 {
-    return (env.map(p).property == FPROP_SANCTUARY_1
-            || env.map(p).property == FPROP_SANCTUARY_2);
+    return (testbits(env.map(p).property, FPROP_SANCTUARY_1)
+            || testbits(env.map(p).property, FPROP_SANCTUARY_2));
 }
 
 bool is_bloodcovered(const coord_def& p)
 {
-    return (env.map(p).property == FPROP_BLOODY);
+    return (testbits(env.map(p).property, FPROP_BLOODY));
 }
 
 bool is_envmap_item(int x, int y)
@@ -447,9 +442,9 @@ static void _get_symbol( const coord_def& where,
             else if (object < NUM_REAL_FEATURES && object >= DNGN_MINMOVE
                      && is_sanctuary(where) )
             {
-                if (env.map(where).property == FPROP_SANCTUARY_1)
+                if (testbits(env.map(where).property, FPROP_SANCTUARY_1))
                     *colour = YELLOW | colmask;
-                else if (env.map(where).property == FPROP_SANCTUARY_2)
+                else if (testbits(env.map(where).property, FPROP_SANCTUARY_2))
                 {
                     if (!one_chance_in(4))
                         *colour = WHITE | colmask;     // 3/4
@@ -641,6 +636,11 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
     const unsigned short map_flags = env.map(p).flags;
     if (!(map_flags & MAP_GRID_KNOWN))
         return (BLACK);
+
+#ifdef WIZARD
+    if (travel_colour && testbits(env.map(p).property, FPROP_HIGHLIGHT))
+        return (LIGHTGREEN);
+#endif
 
     const dungeon_feature_type grid_value = grd(p);
 
@@ -4993,9 +4993,8 @@ void viewwindow(bool draw_it, bool do_updates)
                     unsigned int bg = env.tile_bk_bg[gc.x][gc.y];
                     unsigned int fg = env.tile_bk_fg[gc.x][gc.y];
                     if (bg == 0 && fg == 0)
-                    {
                         tileidx_unseen(fg, bg, get_envmap_char(gc.x, gc.y), gc);
-                    }
+
                     tileb[bufcount]     = fg;
                     tileb[bufcount + 1] = bg | tile_unseen_flag(gc);
 #endif

@@ -167,7 +167,6 @@ inline void set_envmap_detected_mons(const coord_def& c, bool detected = true) {
 }
 void set_envmap_col( int x, int y, int colour, int flags );
 void set_envmap_col( int x, int y, int colour );
-void set_envmap_prop( int x, int y, int prop );
 bool is_sanctuary( const coord_def& p );
 bool is_bloodcovered( const coord_def& p );
 

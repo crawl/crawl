@@ -2930,7 +2930,7 @@ static int _affect_wall(bolt &beam, const coord_def& p)
 
             // Blood does not transfer onto floor.
             if (is_bloodcovered(p))
-                env.map(p).property = FPROP_NONE;
+                env.map(p).property &= ~(FPROP_BLOODY);
 
             if (!beam.msg_generated)
             {
@@ -3009,7 +3009,7 @@ static int _affect_wall(bolt &beam, const coord_def& p)
 
             // Blood does not transfer onto floor.
             if (is_bloodcovered(p))
-                env.map(p).property = FPROP_NONE;
+                env.map(p).property &= ~(FPROP_BLOODY);
 
             if (!silenced(you.pos()))
             {

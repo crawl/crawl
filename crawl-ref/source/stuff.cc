@@ -137,8 +137,9 @@ rectangle_iterator::rectangle_iterator( const coord_def& corner1,
 
 rectangle_iterator::rectangle_iterator( int x_border_dist, int y_border_dist )
 {
-    if ( y_border_dist < 0 )
+    if (y_border_dist < 0)
         y_border_dist = x_border_dist;
+
     topleft.set( x_border_dist, y_border_dist );
     bottomright.set( GXM - x_border_dist, GYM - y_border_dist );
     current = topleft;

@@ -2409,52 +2409,57 @@ void change_labyrinth(bool msg)
     int size = random_range(12, 24); // size of the shifted area (square)
     coord_def c1, c2; // upper left, lower right corners of the shifted area
 
+    std::vector<coord_def> targets;
+
     // Try 10 times for an area that is little mapped.
     for (int tries = 10; tries > 0; tries--)
     {
+        targets.clear();
+
         int x = random_range(LABYRINTH_BORDER, GXM - LABYRINTH_BORDER - size);
         int y = random_range(LABYRINTH_BORDER, GYM - LABYRINTH_BORDER - size);
         c1 = coord_def(x,y);
         c2 = coord_def(x + size, y + size);
 
         int count_known = 0;
-        for (int xi = c1.x; xi <= c2.x; xi++)
-            for (int yi = c1.y; yi <= c2.y; yi++)
-            {
-                if (is_terrain_seen(xi, yi))
-                    count_known++;
-            }
+        for (rectangle_iterator ri(c1, c2); ri; ++ri)
+            if (is_terrain_seen(*ri))
+                count_known++;
 
-        if (count_known < size*size/6)
-            break;
-    }
+        if (tries > 1 && count_known > size*size/6)
+            continue;
 
-    if (msg)
-    {
-        mprf(MSGCH_DIAGNOSTICS, "Changing labyrinth from (%d, %d) to (%d, %d)",
-             c1.x, c1.y, c2.x, c2.y);
-    }
-
-    // Fill a vector with wall grids that are potential targets for swapping
-    // against floor, i.e. are flanked by walls to two cardinal directions,
-    // and by floor on the two remaining sides.
-    std::vector<coord_def> targets;
-    for (int xi = c1.x; xi <= c2.x; xi++)
-        for (int yi = c1.y; yi <= c2.y; yi++)
+        // Fill a vector with wall grids that are potential targets for
+        // swapping against floor, i.e. are flanked by walls to two cardinal
+        // directions, and by floor on the two remaining sides.
+        for (rectangle_iterator ri(c1, c2); ri; ++ri)
         {
-            const coord_def c(xi, yi);
-            if (is_terrain_seen(xi, yi) || !grid_is_wall(grd(c)))
+            if (is_terrain_seen(*ri) || !grid_is_wall(grd(*ri)))
                 continue;
 
-            if (_grid_is_flanked_by_walls(c) && _deadend_check_floor(c))
-                targets.push_back(c);
+            // Skip on grids inside vaults so as not to disrupt them.
+            if (testbits(env.map(*ri).property, FPROP_VAULT))
+                continue;
+
+            if (_grid_is_flanked_by_walls(*ri) && _deadend_check_floor(*ri))
+                targets.push_back(*ri);
         }
+
+        if (targets.size() >= 8)
+            break;
+    }
 
     if (targets.empty())
     {
         if (msg)
             mpr("No unexplored wall grids found!");
         return;
+    }
+
+    if (msg)
+    {
+        mprf(MSGCH_DIAGNOSTICS, "Changing labyrinth from (%d, %d) to (%d, %d)",
+             c1.x, c1.y, c2.x, c2.y);
     }
 
     if (msg)
@@ -2469,6 +2474,10 @@ void change_labyrinth(bool msg)
         mpr(path_str.c_str(), MSGCH_DIAGNOSTICS);
         mprf(MSGCH_DIAGNOSTICS, "-> #targets = %d", targets.size());
     }
+
+    for (rectangle_iterator ri(1); ri; ++ri)
+        env.map(*ri).property &= ~(FPROP_HIGHLIGHT);
+
 
     // How many switches we'll be doing.
     const int max_targets = random_range(std::min((int) targets.size(), 12),
@@ -2562,6 +2571,8 @@ void change_labyrinth(bool msg)
             mprf(MSGCH_DIAGNOSTICS, "Switch %d (%d, %d) with %d (%d, %d).",
                  (int) old_grid, c.x, c.y, (int) grd(p), p.x, p.y);
         }
+        env.map(c).property |= FPROP_HIGHLIGHT;
+        env.map(p).property |= FPROP_HIGHLIGHT;
 
         // Rather than use old_grid directly, replace with the adjacent
         // wall type.
@@ -2578,6 +2589,16 @@ void change_labyrinth(bool msg)
                 }
                 old_grid = DNGN_STONE_WALL;
             }
+            else if (old_grid != DNGN_ROCK_WALL && old_grid != DNGN_STONE_WALL
+                     && old_grid != DNGN_METAL_WALL)
+            {
+                old_grid = grd[p.x][p.y+1];
+            }
+        }
+        else if (old_grid != DNGN_ROCK_WALL && old_grid != DNGN_STONE_WALL
+                 && old_grid != DNGN_METAL_WALL)
+        {
+            old_grid = grd[p.x+1][p.y];
         }
         grd(p) = old_grid;
     }
@@ -2597,59 +2618,57 @@ void change_labyrinth(bool msg)
 
     // Search the entire shifted area for stacks of items now stuck in walls
     // and move them to a random adjacent non-wall grid.
-    for (int xi = c1.x; xi <= c2.x; xi++)
-        for (int yi = c1.y; yi <= c2.y; yi++)
+    for (rectangle_iterator ri(c1, c2); ri; ++ri)
+    {
+        if (!grid_is_wall(grd(*ri)) || igrd(*ri) == NON_ITEM)
+            continue;
+
+        if (msg)
         {
-            const coord_def c(xi, yi);
-            if (!grid_is_wall(grd(c)) || igrd(c) == NON_ITEM)
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Need to move around some items at pos (%d, %d)...",
+                 ri->x, ri->y);
+        }
+        // Search the eight possible directions in random order.
+        std::random_shuffle(dirs.begin(), dirs.end(), random2);
+        for (unsigned int i = 0; i < dirs.size(); i++)
+        {
+            const coord_def p = *ri + dirs[i];
+            if (!in_bounds(p))
                 continue;
 
-            if (msg)
+            if (_is_floor(grd(p)))
             {
-                mprf(MSGCH_DIAGNOSTICS,
-                     "Need to move around some items at pos (%d, %d)...",
-                     xi, yi);
-            }
-            // Search the eight possible directions in random order.
-            std::random_shuffle(dirs.begin(), dirs.end(), random2);
-            for (unsigned int i = 0; i < dirs.size(); i++)
-            {
-                const coord_def p = c + dirs[i];
-                if (!in_bounds(p))
-                    continue;
-
-                if (_is_floor(grd(p)))
+                // Once a valid grid is found, move all items from the
+                // stack onto it.
+                int it = igrd(*ri);
+                while (it != NON_ITEM)
                 {
-                    // Once a valid grid is found, move all items from the
-                    // stack onto it.
-                    int it = igrd(c);
-                    while (it != NON_ITEM)
+                    mitm[it].pos.x = p.x;
+                    mitm[it].pos.y = p.y;
+                    if (mitm[it].link == NON_ITEM)
                     {
-                        mitm[it].pos.x = p.x;
-                        mitm[it].pos.y = p.y;
-                        if (mitm[it].link == NON_ITEM)
-                        {
-                            // Link to the stack on the target grid p,
-                            // or NON_ITEM, if empty.
-                            mitm[it].link = igrd(p);
-                            break;
-                        }
-                        it = mitm[it].link;
+                        // Link to the stack on the target grid p,
+                        // or NON_ITEM, if empty.
+                        mitm[it].link = igrd(p);
+                        break;
                     }
-
-                    // Move entire stack over to p.
-                    igrd(p) = igrd(c);
-                    igrd(c) = NON_ITEM;
-
-                    if (msg)
-                    {
-                        mprf(MSGCH_DIAGNOSTICS, "Moved items over to (%d, %d)",
-                             p.x, p.y);
-                    }
-                    break;
+                    it = mitm[it].link;
                 }
+
+                // Move entire stack over to p.
+                igrd(p) = igrd(*ri);
+                igrd(*ri) = NON_ITEM;
+
+                if (msg)
+                {
+                    mprf(MSGCH_DIAGNOSTICS, "Moved items over to (%d, %d)",
+                         p.x, p.y);
+                }
+                break;
             }
         }
+    }
 
     // Recheck item coordinates, to make totally sure.
     fix_item_coordinates();
@@ -3318,35 +3337,35 @@ void update_level(double elapsedTime)
 static void _maybe_restart_fountain_flow(const coord_def& where,
                                          const int tries)
 {
-     dungeon_feature_type grid = grd(where);
+    dungeon_feature_type grid = grd(where);
 
-     if (grid < DNGN_DRY_FOUNTAIN_BLUE || grid > DNGN_DRY_FOUNTAIN_BLOOD)
-         return;
+    if (grid < DNGN_DRY_FOUNTAIN_BLUE || grid > DNGN_DRY_FOUNTAIN_BLOOD)
+        return;
 
 
-     for ( int i = 0; i < tries; ++i )
-     {
-          if (!one_chance_in(100))
-              continue;
+    for (int i = 0; i < tries; ++i)
+    {
+        if (!one_chance_in(100))
+            continue;
 
-          // Make it start flowing again.
-          grd(where) = static_cast<dungeon_feature_type> (grid
+        // Make it start flowing again.
+        grd(where) = static_cast<dungeon_feature_type> (grid
                         - (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE));
 
-          if (is_terrain_seen(where))
-              set_envmap_obj(where, grd(where));
+        if (is_terrain_seen(where))
+            set_envmap_obj(where, grd(where));
 
-          // Clean bloody floor.
-          if (is_bloodcovered(where))
-              env.map(where).property = FPROP_NONE;
+        // Clean bloody floor.
+        if (is_bloodcovered(where))
+            env.map(where).property &= ~(FPROP_BLOODY);
 
-          // Chance of cleaning adjacent squares.
-          for ( adjacent_iterator ai(where); ai; ++ai )
-              if (is_bloodcovered(*ai) && one_chance_in(5))
-                  env.map(*ai).property = FPROP_NONE;
+        // Chance of cleaning adjacent squares.
+        for (adjacent_iterator ai(where); ai; ++ai)
+            if (is_bloodcovered(*ai) && one_chance_in(5))
+                env.map(*ai).property &= ~(FPROP_BLOODY);
 
-          break;
-     }
+        break;
+   }
 }
 
 //---------------------------------------------------------------

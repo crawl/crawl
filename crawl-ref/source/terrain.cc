@@ -504,11 +504,12 @@ static void _dgn_check_terrain_monsters(const coord_def &pos)
 
 }
 
+// Um, what does this do? (jpeg)
 static void _dgn_check_terrain_blood(const coord_def &pos,
                                      dungeon_feature_type old_feat,
                                      dungeon_feature_type new_feat)
 {
-    if (env.map(pos).property != FPROP_BLOODY)
+    if (!testbits(env.map(pos).property, FPROP_BLOODY))
         return;
 
     if (new_feat == DNGN_UNSEEN)
@@ -516,7 +517,7 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
         // Caller has already changed the grid, and old_feat is actually
         // the new feat.
         if (old_feat != DNGN_FLOOR && !grid_is_solid(old_feat))
-            env.map(pos).property = FPROP_NONE;
+            env.map(pos).property &= ~(FPROP_BLOODY);
     }
     else
     {
@@ -524,7 +525,7 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
             || grid_is_water(new_feat) || grid_destroys_items(new_feat)
             || is_critical_feature(new_feat))
         {
-            env.map(pos).property = FPROP_NONE;
+            env.map(pos).property &= ~(FPROP_BLOODY);
         }
     }
 }

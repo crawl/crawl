@@ -1105,7 +1105,7 @@ static bool allow_bleeding_on_square(const coord_def& where)
 {
     // No bleeding onto sanctuary ground, please.
     // Also not necessary if already covered in blood.
-    if (env.map(where).property != FPROP_NONE)
+    if (is_bloodcovered(where) || is_sanctuary(where))
         return (false);
 
     // No spattering into lava or water.
@@ -1143,10 +1143,10 @@ static void maybe_bloodify_square(const coord_def& where, int amount,
              where.x, where.y, amount);
 #endif
         if (allow_bleeding_on_square(where))
-            env.map(where).property = FPROP_BLOODY;
+            env.map(where).property |= FPROP_BLOODY;
 
         // If old or new blood on square, the smell reaches further.
-        if (env.map(where).property == FPROP_BLOODY)
+        if (testbits(env.map(where).property, FPROP_BLOODY))
             blood_smell(12, where);
         else // Still allow a lingering smell.
             blood_smell(7, where);
@@ -1191,7 +1191,7 @@ static void _spatter_neighbours(const coord_def& where, int chance)
 
         if (one_chance_in(chance))
         {
-            env.map(*ai).property = FPROP_BLOODY;
+            env.map(*ai).property |= FPROP_BLOODY;
             _spatter_neighbours(*ai, chance+1);
         }
     }
@@ -1232,7 +1232,7 @@ void generate_random_blood_spatter_on_level()
         startprob = min_prob + random2(max_prob);
 
         if (allow_bleeding_on_square(c))
-            env.map(c).property = FPROP_BLOODY;
+            env.map(c).property |= FPROP_BLOODY;
         _spatter_neighbours(c, startprob);
     }
 }

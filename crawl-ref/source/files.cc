@@ -1133,6 +1133,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
             tmp_file_pairs[you.your_level][you.where_are_you] = true;
         }
 
+        _clear_env_map();
         builder(you.your_level, you.level_type);
         just_created_level = true;
 
@@ -1190,9 +1191,6 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         _close_level_gates();
     }
-
-    if (just_created_level)
-        _clear_env_map();
 
     // Here's the second cloud clearing, on load (see above).
     if (make_changes)

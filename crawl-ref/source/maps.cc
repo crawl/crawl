@@ -228,23 +228,29 @@ static bool apply_vault_grid(map_def &def, map_type map,
 
     if (orient == MAP_SOUTH || orient == MAP_SOUTHEAST
             || orient == MAP_SOUTHWEST)
+    {
         start.y = GYM - height;
-
+    }
     if (orient == MAP_EAST || orient == MAP_NORTHEAST
             || orient == MAP_SOUTHEAST)
+    {
         start.x = GXM - width;
+    }
 
     // Handle maps aligned along cardinals that are smaller than
     // the corresponding map dimension.
     if ((orient == MAP_NORTH || orient == MAP_SOUTH
                 || orient == MAP_ENCOMPASS)
             && width < GXM)
+    {
         start.x = (GXM - width) / 2;
-
+    }
     if ((orient == MAP_EAST || orient == MAP_WEST
                 || orient == MAP_ENCOMPASS)
             && height < GYM)
+    {
         start.y = (GYM - height) / 2;
+    }
 
     // Floating maps can go anywhere, ask the map_def to suggest a place.
     if (orient == MAP_FLOAT)
@@ -278,6 +284,8 @@ static bool apply_vault_grid(map_def &def, map_type map,
     {
         const std::string &s = lines[y - start.y];
         strncpy(&map[y][start.x], s.c_str(), s.length());
+//        for (unsigned int x = start.x; x < start.x + s.length(); x++)
+//            env.map[x][y].property |= FPROP_VAULT;
     }
 
     place.pos  = start;
