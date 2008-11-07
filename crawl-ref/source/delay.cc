@@ -35,6 +35,7 @@
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
+#include "spells4.h"
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
@@ -1274,11 +1275,9 @@ void armour_wear_effects(const int item_slot)
     }
     else if (eq_slot == EQ_SHIELD)
     {
-        if (you.duration[DUR_CONDENSATION_SHIELD])
-        {
-            mpr( "Your icy shield evaporates.", MSGCH_DURATION );
-            you.duration[DUR_CONDENSATION_SHIELD] = 0;
-        }
+        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
+            remove_condensation_shield();
+
         you.equip[EQ_SHIELD] = item_slot;
     }
     else if (!melded)

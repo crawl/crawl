@@ -21,6 +21,7 @@
 #include "ouch.h"
 #include "place.h"
 #include "player.h"
+#include "spells4.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "view.h"
@@ -454,11 +455,7 @@ void in_a_cloud()
     int resist;
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-    {
-        mpr("Your icy shield dissipates!", MSGCH_DURATION);
-        you.duration[DUR_CONDENSATION_SHIELD] = 0;
-        you.redraw_armour_class = true;
-    }
+        remove_condensation_shield();
 
     switch (env.cloud[cl].type)
     {

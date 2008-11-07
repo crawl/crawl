@@ -12,6 +12,7 @@
 
 #include "externs.h"
 
+struct dist;
 struct bolt;
 
 bool backlight_monsters(coord_def where, int pow, int garbage);
@@ -21,6 +22,7 @@ int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
 int disperse_monsters(coord_def where, int pow, int message);
 
 void cast_bend(int pow);
+void remove_condensation_shield();
 void cast_condensation_shield(int pow);
 void remove_divine_shield();
 void cast_divine_shield();

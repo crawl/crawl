@@ -182,11 +182,8 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                 contaminate_player( 1, true );
         }
 
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0 && !wizard_blink)
-        {
-            you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            you.redraw_armour_class = true;
-        }
+        if (!wizard_blink && you.duration[DUR_CONDENSATION_SHIELD] > 0)
+            remove_condensation_shield();
     }
 
     crawl_state.cancel_cmd_again();
@@ -197,8 +194,8 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
 void random_blink(bool allow_partial_control, bool override_abyss)
 {
+    bool success = false;
     coord_def target;
-    bool succ = false;
 
     if (scan_randarts(RAP_PREVENT_TELEPORTATION))
         mpr("You feel a weird sense of stasis.");
@@ -222,10 +219,9 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     {
         mpr("You may select the general direction of your translocation.");
         cast_semi_controlled_blink(100);
-        succ = true;
+        success = true;
     }
 #endif
-
     else
     {
         mpr("You blink.");
@@ -233,22 +229,19 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         // No longer held in net.
         clear_trapping_net();
 
-        succ = true;
+        success = true;
         you.moveto(target);
 
         if (you.level_type == LEVEL_ABYSS)
         {
-            abyss_teleport( false );
+            abyss_teleport(false);
             if (you.pet_target != MHITYOU)
                 you.pet_target = MHITNOT;
         }
     }
 
-    if (succ && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-    {
-        you.duration[DUR_CONDENSATION_SHIELD] = 0;
-        you.redraw_armour_class = true;
-    }
+    if (success && you.duration[DUR_CONDENSATION_SHIELD] > 0)
+        remove_condensation_shield();
 }
 
 bool fireball(int pow, bolt &beam)

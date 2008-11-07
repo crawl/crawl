@@ -2381,6 +2381,13 @@ bool cast_sandblast(int pow, bolt &beam)
     return (success);
 }
 
+void remove_condensation_shield()
+{
+    mpr("Your icy shield dissipates!", MSGCH_DURATION);
+    you.duration[DUR_CONDENSATION_SHIELD] = 0;
+    you.redraw_armour_class = true;
+}
+
 void cast_condensation_shield(int pow)
 {
     if (you.shield() || you.duration[DUR_FIRE_SHIELD])
@@ -2395,16 +2402,13 @@ void cast_condensation_shield(int pow)
         else
         {
             mpr("A crackling disc of dense vapour forms in the air!");
-            you.redraw_armour_class = true;
-
             you.duration[DUR_CONDENSATION_SHIELD] = 10 + roll_dice(2, pow / 5);
+            you.redraw_armour_class = true;
         }
 
         if (you.duration[DUR_CONDENSATION_SHIELD] > 30)
             you.duration[DUR_CONDENSATION_SHIELD] = 30;
     }
-
-    return;
 }
 
 void remove_divine_shield()
@@ -2424,7 +2428,8 @@ void cast_divine_shield()
     if (!you.duration[DUR_DIVINE_SHIELD])
     {
         you.redraw_armour_class = true;
-        if (you.shield() || you.duration[DUR_FIRE_SHIELD]
+        if (you.shield()
+            || you.duration[DUR_FIRE_SHIELD]
             || you.duration[DUR_CONDENSATION_SHIELD])
         {
             mprf("Your shield is strengthened by %s's divine power.",

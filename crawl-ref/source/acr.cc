@@ -95,6 +95,7 @@
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"
+#include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -2553,11 +2554,7 @@ static void _decrement_durations()
         }
 
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        {
-            mpr("Your icy shield dissipates!", MSGCH_DURATION);
-            you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            you.redraw_armour_class = true;
-        }
+            remove_condensation_shield();
     }
 
     if (_decrement_a_duration(DUR_ICY_ARMOUR,
@@ -2713,15 +2710,12 @@ static void _decrement_durations()
                                               // handled elsewhere
     _decrement_a_duration(DUR_TELEPATHY, "You feel less empathic.");
 
-    if (_decrement_a_duration(DUR_CONDENSATION_SHIELD,
-                              "Your icy shield evaporates."))
-    {
-        you.redraw_armour_class = true;
-    }
+    if (_decrement_a_duration(DUR_CONDENSATION_SHIELD))
+        remove_condensation_shield();
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0 && player_res_cold() < 0)
     {
-        mpr( "You feel very cold." );
+        mpr("You feel very cold.");
         ouch(2 + random2avg(13, 2), NON_MONSTER, KILLED_BY_FREEZING);
     }
 
@@ -2732,9 +2726,7 @@ static void _decrement_durations()
     }
 
     if (_decrement_a_duration(DUR_STONESKIN, "Your skin feels tender."))
-    {
         you.redraw_armour_class = true;
-    }
 
     if (_decrement_a_duration(DUR_TELEPORT))
     {
@@ -2806,7 +2798,7 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_BERSERKER, "You are no longer berserk."))
     {
         //jmf: Guilty for berserking /after/ berserk.
-        did_god_conduct( DID_STIMULANTS, 6 + random2(6) );
+        did_god_conduct(DID_STIMULANTS, 6 + random2(6));
 
         // Sometimes berserk leaves us physically drained.
         //
@@ -2901,10 +2893,10 @@ static void _decrement_durations()
 
     if (!you.permanent_levitation() && !you.permanent_flight())
     {
-        if ( _decrement_a_duration(DUR_LEVITATION,
+        if (_decrement_a_duration(DUR_LEVITATION,
                                    "You float gracefully downwards.",
                                    10, random2(6),
-                                   "You are starting to lose your buoyancy!") )
+                                   "You are starting to lose your buoyancy!"))
         {
             burden_change();
             // Landing kills controlled flight.

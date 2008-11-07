@@ -56,6 +56,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
+#include "spells4.h"
 #include "state.h"
 #include "stuff.h"
 #include "tutorial.h"
@@ -81,11 +82,7 @@ int check_your_resists(int hurted, beam_type flavour)
         || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        {
-            mpr( "Your icy shield dissipates!", MSGCH_DURATION );
-            you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            you.redraw_armour_class = true;
-        }
+            remove_condensation_shield();
     }
 
     switch (flavour)
@@ -601,14 +598,10 @@ void expose_player_to_element(beam_type flavour, int strength)
         || flavour == BEAM_STEAM)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        {
-            mprf(MSGCH_DURATION, "Your icy shield dissipates!");
-            you.duration[DUR_CONDENSATION_SHIELD] = 0;
-            you.redraw_armour_class = true;
-        }
+            remove_condensation_shield();
     }
 
-    if (strength)
+    if (strength > 0)
         _expose_invent_to_element( flavour, strength );
 }
 

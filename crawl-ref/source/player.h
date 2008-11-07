@@ -420,6 +420,9 @@ void curare_hits_player(int agent, int degree);
 bool poison_player(int amount, bool force = false);
 void reduce_poison_player(int amount);
 
+bool napalm_player(int amount);
+void dec_napalm_player();
+
 bool confuse_player(int amount, bool resistable = true);
 void reduce_confuse_player(int amount);
 
