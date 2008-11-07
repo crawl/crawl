@@ -1313,7 +1313,7 @@ void curare_hits_player(int agent, int degree)
 
         if (hurted)
         {
-            mpr("You feel difficulty breathing.");
+            mpr("You have difficulty breathing.");
             ouch(hurted, agent, KILLED_BY_CURARE, "curare-induced apnoea");
         }
         potion_effect(POT_SLOWING, 2 + random2(4 + degree));
