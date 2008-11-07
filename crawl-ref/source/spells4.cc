@@ -1212,6 +1212,7 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     case MONS_SHADOW:
     case MONS_EFREET:
     case MONS_HELLION:
+    case MONS_FLAMING_CORPSE:
     case MONS_GLOWING_SHAPESHIFTER:
     case MONS_FIRE_ELEMENTAL:
     case MONS_AIR_ELEMENTAL:
