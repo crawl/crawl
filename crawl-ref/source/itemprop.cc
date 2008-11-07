@@ -326,10 +326,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CHOPPING, 2 },
 
     { WPN_QUARTERSTAFF,      "quarterstaff",        7,  6, 12, 180,  7,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
+        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE, MI_NONE, false,
         DAMV_CRUSHING, 10 },
     { WPN_LAJATANG,          "lajatang",           14, -3, 14, 200,  3,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
+        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE, MI_NONE, false,
         DAMV_SLICING, 2 },
 
     // Range weapons
@@ -1518,7 +1518,7 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
         // as a special case because we want to be very flexible with
         // these useful objects (we want spriggans and ogre magi to
         // be able to use them).
-        if (item.base_type == OBJ_STAVES || item.sub_type == WPN_QUARTERSTAFF)
+        if (item.base_type == OBJ_STAVES || weapon_skill(item) == SK_STAVES)
         {
             if (size < SIZE_SMALL)
                 ret = HANDS_TWO;
@@ -1910,7 +1910,7 @@ bool check_weapon_tool_size( const item_def &item, size_type size )
     ASSERT( item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES );
 
     // Staves are currently usable for everyone just to be nice.
-    if (item.base_type == OBJ_STAVES || item.sub_type == WPN_QUARTERSTAFF)
+    if (item.base_type == OBJ_STAVES || weapon_skill(item) == SK_STAVES)
         return (true);
 
     const int fit = cmp_weapon_size( item, size );
@@ -2650,9 +2650,9 @@ bool is_shield_incompatible(const item_def &weapon, const item_def *shield)
         return (false);
 
     hands_reqd_type hand = hands_reqd(weapon, player_size());
-    return  hand == HANDS_TWO
+    return (hand == HANDS_TWO
             && !item_is_rod(weapon)
-            && !is_range_weapon(weapon);
+            && !is_range_weapon(weapon));
 }
 
 std::string item_base_name(const item_def &item)

@@ -133,6 +133,7 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     // Small species wielding large weapons...
     if (player_size(PSIZE_BODY) < SIZE_MEDIUM
+        && weapon_skill(*weapon) != SK_STAVES
         && !check_weapon_wieldable_size(*weapon, player_size(PSIZE_BODY)))
     {
         SAY(mpr("That's too large for you to wield."));
@@ -414,7 +415,7 @@ void warn_shield_penalties()
     else if (is_range_weapon(*weapon))
         warn_launcher_shield_slowdown(*weapon);
     else if (weapon->base_type == OBJ_WEAPONS
-             && weapon->sub_type == WPN_QUARTERSTAFF)
+             && weapon_skill(*weapon) == SK_STAVES)
     {
         mprf(MSGCH_WARN, "Your %s severely limits your weapon's effectiveness.",
              shield_base_name(player_shield()));
