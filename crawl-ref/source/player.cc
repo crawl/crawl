@@ -5077,6 +5077,61 @@ void reduce_poison_player(int amount)
         mpr("You feel a little better.", MSGCH_RECOVERY);
 }
 
+bool napalm_player(int amount)
+{
+    if (player_res_sticky_flame() || amount <= 0)
+        return (false);
+
+    const int old_value = you.duration[DUR_LIQUID_FLAMES];
+    you.duration[DUR_LIQUID_FLAMES] += amount;
+
+    if (you.duration[DUR_LIQUID_FLAMES] > 40)
+        you.duration[DUR_LIQUID_FLAMES] = 40;
+
+    if (you.duration[DUR_LIQUID_FLAMES] > old_value)
+        mpr("You are covered in liquid flames!", MSGCH_WARN);
+
+    return (true);
+}
+
+void dec_napalm_player()
+{
+    if (you.duration[DUR_LIQUID_FLAMES] > 1)
+    {
+        you.duration[DUR_LIQUID_FLAMES]--;
+
+        mpr("You are covered in liquid flames!", MSGCH_WARN);
+
+        expose_player_to_element(BEAM_NAPALM, 12);
+
+        const int res_fire = player_res_fire();
+
+        if (res_fire > 0)
+        {
+            ouch((((random2avg(9, 2) + 1) * you.time_taken) /
+                    (1 + (res_fire * res_fire))) / 10, NON_MONSTER,
+                    KILLED_BY_BURNING);
+        }
+
+        if (res_fire <= 0)
+        {
+            ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10, 0,
+                 KILLED_BY_BURNING);
+        }
+
+        if (res_fire < 0)
+        {
+            ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10, 0,
+                 KILLED_BY_BURNING);
+        }
+
+        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
+            remove_condensation_shield();
+    }
+    else if (you.duration[DUR_LIQUID_FLAMES] == 1)
+        you.duration[DUR_LIQUID_FLAMES] = 0;
+}
+
 bool confuse_player(int amount, bool resistable)
 {
     if (amount <= 0)

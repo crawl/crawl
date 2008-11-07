@@ -100,8 +100,6 @@ public:
     actor* agent() const;
 };
 
-void sticky_flame_player();
-void sticky_flame_monster(int mn, kill_category who, int hurt_final);
 dice_def calc_dice( int num_dice, int max_damage );
 
 // Test if the to-hit (attack) beats evasion (defence).
@@ -131,6 +129,8 @@ bool curare_hits_monster(const bolt &beam, monsters *monster,
                          kill_category who, int levels = 1);
 bool poison_monster(monsters *monster, kill_category who, int levels = 1,
                     bool force = false, bool verbose = true);
+bool napalm_monster(monsters *monster, kill_category who, int levels = 1,
+                    bool verbose = true);
 void fire_tracer( const monsters *monster, struct bolt &pbolt,
                   bool explode_only = false );
 bool check_line_of_sight( const coord_def& source, const coord_def& target );

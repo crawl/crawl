@@ -2434,28 +2434,29 @@ bool poison_monster(monsters *monster, kill_category who, int levels,
     return (new_pois.degree > old_pois.degree);
 }
 
-// Actually napalms the player.
-void sticky_flame_player()
-{
-    you.duration[DUR_LIQUID_FLAMES] += random2avg(7, 3) + 1;
-}
-
 // Actually napalms a monster (with message).
-void sticky_flame_monster(int mn, kill_category who, int levels)
+bool napalm_monster(monsters *monster, kill_category who, int levels,
+                    bool verbose)
 {
-    monsters *monster = &menv[mn];
-
     if (!monster->alive())
-        return;
+        return (false);
 
-    if (mons_res_sticky_flame(monster))
-        return;
+    if (mons_res_sticky_flame(monster) > 0 || levels <= 0)
+        return (false);
 
-    if (monster->add_ench(mon_enchant(ENCH_STICKY_FLAME, levels, who)))
+    const mon_enchant old_flame = monster->get_ench(ENCH_STICKY_FLAME);
+    monster->add_ench(mon_enchant(ENCH_STICKY_FLAME, levels, who));
+    const mon_enchant new_flame = monster->get_ench(ENCH_STICKY_FLAME);
+
+    // Actually do the napalming.  The order is important here.
+    if (new_flame.degree > old_flame.degree)
     {
-        simple_monster_message(monster, " is covered in liquid flames!");
+        if (verbose)
+            simple_monster_message(monster, " is covered in liquid flames!");
         behaviour_event(monster, ME_WHACK, who == KC_YOU ? MHITYOU : MHITNOT);
     }
+
+    return (new_flame.degree > old_flame.degree);
 }
 
 //  Used by monsters in "planning" which spell to cast. Fires off a "tracer"
@@ -3904,7 +3905,7 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
     {
         if (!player_res_sticky_flame())
         {
-            sticky_flame_player();
+            napalm_player(random2avg(7, 3) + 1);
             was_affected = true;
         }
     }
@@ -4443,7 +4444,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         if (beam.name == "sticky flame")
         {
             int levels = std::min(4, 1 + random2(hurt_final) / 2);
-            sticky_flame_monster(tid, _whose_kill(beam), levels);
+            napalm_monster(mon, _whose_kill(beam), levels);
         }
 
         // Handle missile effects.

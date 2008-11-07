@@ -218,6 +218,7 @@ private:
     void mons_announce_dud_hit(const mon_attack_def &attk);
     void mons_set_weapon(const mon_attack_def &attk);
     void mons_do_poison(const mon_attack_def &attk);
+    void mons_do_napalm();
     std::string mons_defender_name();
     void wasp_paralyse_defender();
 

@@ -2520,42 +2520,12 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_SLEEP))
         you.awake();
 
-    // Paradox: It both lasts longer & does more damage overall if you're
-    //          moving slower.
-    // Rationalisation: I guess it gets rubbed off/falls off/etc if you
-    //                  move around more.
-    if (you.duration[DUR_LIQUID_FLAMES] > 0)
-        you.duration[DUR_LIQUID_FLAMES]--;
-
-    if (you.duration[DUR_LIQUID_FLAMES] != 0)
-    {
-        const int res_fire = player_res_fire();
-
-        mpr("You are covered in liquid flames!", MSGCH_WARN);
-        expose_player_to_element(BEAM_NAPALM, 12);
-
-        if (res_fire > 0)
-        {
-            ouch((((random2avg(9, 2) + 1) * you.time_taken) /
-                    (1 + (res_fire * res_fire))) / 10, NON_MONSTER,
-                    KILLED_BY_BURNING);
-        }
-
-        if (res_fire <= 0)
-        {
-            ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10, 0,
-                 KILLED_BY_BURNING);
-        }
-
-        if (res_fire < 0)
-        {
-            ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10, 0,
-                 KILLED_BY_BURNING);
-        }
-
-        if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
-    }
+    // Sticky flame paradox: It both lasts longer and does more damage
+    // overall if you're moving more slowly.
+    //
+    // Rationalisation: I guess it gets rubbed off/falls off/etc. if you
+    // move around more.
+    dec_napalm_player();
 
     if (_decrement_a_duration(DUR_ICY_ARMOUR,
                               "Your icy armour evaporates.",

@@ -3506,6 +3506,31 @@ void melee_attack::mons_do_poison(const mon_attack_def &attk)
     }
 }
 
+void melee_attack::mons_do_napalm()
+{
+    if (defender->res_sticky_flame() > 0)
+        return;
+
+    if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
+    {
+        if (needs_message)
+        {
+            mprf("%s %s covered in liquid flames%s",
+                 def_name(DESC_CAP_THE).c_str(),
+                 defender->conj_verb("are").c_str(),
+                 special_attack_punctuation().c_str());
+        }
+
+        if (defender->atype() == ACT_PLAYER)
+            napalm_player(random2avg(7, 3) + 1);
+        else
+        {
+            napalm_monster(def, mons_friendly(atk) ? KC_FRIENDLY : KC_OTHER,
+                           std::min(4, 1 + random2(atk->hit_dice) / 2));
+        }
+    }
+}
+
 void melee_attack::wasp_paralyse_defender()
 {
     // [dshaligram] Adopted 4.1.2's wasp mechanics, in slightly modified form.
@@ -3787,28 +3812,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_NAPALM:
-        if (defender->res_sticky_flame() > 0)
-            break;
-
-        if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-        {
-            if (needs_message)
-            {
-                mprf("%s %s covered in liquid flames%s",
-                     def_name(DESC_CAP_THE).c_str(),
-                     defender->conj_verb("are").c_str(),
-                     special_attack_punctuation().c_str());
-            }
-
-            if (defender->atype() == ACT_PLAYER)
-                sticky_flame_player();
-            else
-            {
-                sticky_flame_monster(monster_index(def),
-                                     mons_friendly(atk) ? KC_FRIENDLY : KC_OTHER,
-                                     std::min(4, 1 + random2(atk->hit_dice) / 2));
-            }
-        }
+        mons_do_napalm();
         break;
     }
 }
