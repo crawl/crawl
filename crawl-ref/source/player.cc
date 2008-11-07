@@ -1284,22 +1284,6 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     return (rf);
 }
 
-int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
-{
-    int res = 0;
-
-    if (you.species == SP_MOTTLED_DRACONIAN && you.experience_level > 5)
-        res++;
-
-    if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
-        res++;
-
-    if (res > 1)
-        res = 1;
-
-    return (res);
-}
-
 int player_res_steam(bool calc_unid, bool temp, bool items)
 {
     int res = 0;
@@ -1572,6 +1556,22 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         rp = 1;
 
     return (rp);
+}
+
+int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
+{
+    int rsf = 0;
+
+    if (you.species == SP_MOTTLED_DRACONIAN && you.experience_level > 5)
+        rsf++;
+
+    if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
+        rsf++;
+
+    if (rsf > 1)
+        rsf = 1;
+
+    return (rsf);
 }
 
 int player_spec_death()

@@ -1209,10 +1209,12 @@ int mons_res_poison(const monsters *mon)
     return (u);
 }
 
-bool mons_res_sticky_flame(const monsters *mon)
+int mons_res_sticky_flame(const monsters *mon)
 {
-    return (get_mons_resists(mon).sticky_flame
-            || mon->has_equipped(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR));
+    int res = get_mons_resists(mon).sticky_flame;
+    if (mon->has_equipped(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
+        res += 3;
+    return (res);
 }
 
 int mons_res_steam(const monsters *mon)
@@ -5086,11 +5088,6 @@ int monsters::res_fire() const
     return (mons_res_fire(this));
 }
 
-int monsters::res_sticky_flame() const
-{
-    return (mons_res_sticky_flame(this));
-}
-
 int monsters::res_steam() const
 {
     return (mons_res_steam(this));
@@ -5109,6 +5106,11 @@ int monsters::res_elec() const
 int monsters::res_poison() const
 {
     return (mons_res_poison(this));
+}
+
+int monsters::res_sticky_flame() const
+{
+    return (mons_res_sticky_flame(this));
 }
 
 int monsters::res_negative_energy() const

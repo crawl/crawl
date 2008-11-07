@@ -2373,9 +2373,9 @@ static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
 bool curare_hits_monster(const bolt &beam, monsters *monster,
                          kill_category who, int levels)
 {
-    const bool res_poison = mons_res_poison(monster) > 0;
-
     poison_monster(monster, who, levels, false);
+
+    const bool res_poison = mons_res_poison(monster) > 0;
 
     if (!mons_res_asphyx(monster))
     {
@@ -2409,7 +2409,7 @@ bool poison_monster(monsters *monster, kill_category who, int levels,
     if (!monster->alive())
         return (false);
 
-    if (levels <= 0 || (!force && mons_res_poison(monster) > 0))
+    if ((!force && mons_res_poison(monster) > 0) || levels <= 0)
         return (false);
 
     const mon_enchant old_pois = monster->get_ench(ENCH_POISON);
