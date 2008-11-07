@@ -2409,7 +2409,7 @@ bool poison_monster(monsters *monster, kill_category who, int levels,
     if (!monster->alive())
         return (false);
 
-    if (levels > 0 || (!force && mons_res_poison(monster) > 0))
+    if (levels <= 0 || (!force && mons_res_poison(monster) > 0))
         return (false);
 
     const mon_enchant old_pois = monster->get_ench(ENCH_POISON);
