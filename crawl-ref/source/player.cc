@@ -5085,8 +5085,8 @@ bool napalm_player(int amount)
     const int old_value = you.duration[DUR_LIQUID_FLAMES];
     you.duration[DUR_LIQUID_FLAMES] += amount;
 
-    if (you.duration[DUR_LIQUID_FLAMES] > 40)
-        you.duration[DUR_LIQUID_FLAMES] = 40;
+    if (you.duration[DUR_LIQUID_FLAMES] > 100)
+        you.duration[DUR_LIQUID_FLAMES] = 100;
 
     if (you.duration[DUR_LIQUID_FLAMES] > old_value)
         mpr("You are covered in liquid flames!", MSGCH_WARN);
@@ -5204,6 +5204,7 @@ bool slow_player(int amount)
             mpr("You feel as though you will be slow longer.");
 
         you.duration[DUR_SLOW] += amount;
+
         if (you.duration[DUR_SLOW] > 100)
             you.duration[DUR_SLOW] = 100;
 
@@ -5330,7 +5331,7 @@ bool rot_player(int amount)
         // Either this, or the actual rotting message should probably
         // be changed so that they're easier to tell apart. -- bwr
         mprf(MSGCH_WARN, "You feel your flesh %s away!",
-             (you.rotting) ? "rotting" : "start to rot");
+             you.rotting > 0 "rotting" : "start to rot");
 
         you.rotting += amount;
 
