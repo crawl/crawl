@@ -2238,11 +2238,6 @@ static bool _is_floor(const dungeon_feature_type feat)
 //   .        #          2
 //  #x#  or  .x.   ->   0x1
 //   .        #          3
-//
-// FIXME: There needs to be some sort of "dead-end" check similar to floor
-//        grids, but the other way around: turning a wall into floor can
-//        turn perfectly fine corridors into too short wonky-looking
-//        dead-ends.
 static bool _grid_is_flanked_by_walls(const coord_def &p)
 {
     const coord_def adjs[] = { coord_def(p.x-1,p.y),
@@ -2475,9 +2470,10 @@ void change_labyrinth(bool msg)
         mprf(MSGCH_DIAGNOSTICS, "-> #targets = %d", targets.size());
     }
 
+#ifdef WIZARD
     for (rectangle_iterator ri(1); ri; ++ri)
         env.map(*ri).property &= ~(FPROP_HIGHLIGHT);
-
+#endif
 
     // How many switches we'll be doing.
     const int max_targets = random_range(std::min((int) targets.size(), 12),
@@ -2561,9 +2557,7 @@ void change_labyrinth(bool msg)
         }
 
         // Randomly pick one floor grid from the vector and replace it
-        // with the original wall type.
-        // FIXME: This is not optimal since it may lead to e.g. a single
-        //        metal wall appearing among stone ones.
+        // with an adjacent wall type.
         const int pick = random_range(0, (int) points.size() - 1);
         const coord_def p(points[pick]);
         if (msg)
@@ -2571,11 +2565,13 @@ void change_labyrinth(bool msg)
             mprf(MSGCH_DIAGNOSTICS, "Switch %d (%d, %d) with %d (%d, %d).",
                  (int) old_grid, c.x, c.y, (int) grd(p), p.x, p.y);
         }
+#ifdef WIZARD
         env.map(c).property |= FPROP_HIGHLIGHT;
         env.map(p).property |= FPROP_HIGHLIGHT;
+#endif
 
-        // Rather than use old_grid directly, replace with the adjacent
-        // wall type.
+        // Rather than use old_grid directly, replace with an adjacent
+        // wall type, preferably stone, rock, or metal.
         old_grid = grd[p.x-1][p.y];
         if (!grid_is_wall(old_grid))
         {
