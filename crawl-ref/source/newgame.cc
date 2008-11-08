@@ -2010,7 +2010,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
                     if (Options.prev_book == SBT_RANDOM)
                         keyin = '*';
                     else
-                        keyin = ('a' +  Options.prev_book - 1);
+                        keyin = 'a' +  Options.prev_book - 1;
                 }
                 break;
             case '%':
