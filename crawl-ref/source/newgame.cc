@@ -2841,8 +2841,8 @@ static void _give_basic_knowledge(job_type which_job)
         set_ident_type( OBJ_POTIONS, POT_HEAL_WOUNDS, ID_KNOWN_TYPE );
         break;
 
-    case JOB_ASSASSIN:
     case JOB_STALKER:
+    case JOB_ASSASSIN:
     case JOB_VENOM_MAGE:
         set_ident_type( OBJ_POTIONS, POT_POISON, ID_KNOWN_TYPE );
         break;
