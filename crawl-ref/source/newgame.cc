@@ -1842,14 +1842,69 @@ static bool _is_good_combination( species_type spc, job_type cls, bool good)
     return (restrict != CC_BANNED);
 }
 
-// book 0 = fire (CONJ_I, MINOR_MAGIC_I), 1 = ice (CONJ_II, MINOR_MAGIC_II),
-//      2 = summoning (MINOR_MAGIC_III)
-static char_choice_restriction _book_restriction(int booktype,
-                                                 bool summon_too = false)
+static startup_book_type _book_to_start(int book)
+{
+    switch (book)
+    {
+    case BOOK_MINOR_MAGIC_I:
+    case BOOK_CONJURATIONS_I:
+        return (SBT_FIRE);
+
+    case BOOK_MINOR_MAGIC_II:
+    case BOOK_CONJURATIONS_II:
+        return (SBT_COLD);
+
+    case BOOK_MINOR_MAGIC_III:
+        return (SBT_SUMM);
+
+    default:
+        return (SBT_NO_SELECTION);
+    }
+}
+
+static int _start_to_book(int firstbook, int booktype)
+{
+    switch (firstbook)
+    {
+    case BOOK_MINOR_MAGIC_I:
+        switch (booktype)
+        {
+        case SBT_FIRE:
+            return (BOOK_MINOR_MAGIC_I);
+
+        case SBT_COLD:
+            return (BOOK_MINOR_MAGIC_II);
+
+        case SBT_SUMM:
+            return (BOOK_MINOR_MAGIC_III);
+
+        default:
+            return (NUM_BOOKS);
+        }
+
+    case BOOK_CONJURATIONS_I:
+        switch (booktype)
+        {
+        case SBT_FIRE:
+            return (BOOK_CONJURATIONS_I);
+
+        case SBT_COLD:
+            return (BOOK_CONJURATIONS_II);
+
+        default:
+            return (NUM_BOOKS);
+        }
+
+    default:
+        return (NUM_BOOKS);
+    }
+}
+
+static char_choice_restriction _book_restriction(startup_book_type booktype)
 {
     switch (booktype)
     {
-    case 0:    // Fire
+    case SBT_FIRE: // Fire
         switch (you.species)
         {
         case SP_HUMAN:
@@ -1875,7 +1930,7 @@ static char_choice_restriction _book_restriction(int booktype,
         }
         break;
 
-    case 1:    // Ice
+    case SBT_COLD: // Ice
         switch (you.species)
         {
         case SP_HUMAN:
@@ -1901,7 +1956,7 @@ static char_choice_restriction _book_restriction(int booktype,
         }
         break;
 
-    case 2:    // Summoning
+    case SBT_SUMM: // Summoning
         switch (you.species)
         {
         case SP_GREY_ELF:
@@ -1919,8 +1974,9 @@ static char_choice_restriction _book_restriction(int booktype,
         }
         break;
 
+    default:
+        return (CC_RESTRICTED);
     }
-    return (CC_RESTRICTED);
 }
 
 static bool _choose_book( item_def& book, int firstbook, int numbooks )
@@ -1932,22 +1988,32 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
     book.plus      = 0;
     book.special   = 1;
 
-    const bool summons_too = (numbooks == 3);
+    // Assume a choice of no more than three books, and that all book
+    // choices are contiguous.
     char_choice_restriction book_restrictions[3];
     for (int i = 0; i < numbooks; i++)
-        book_restrictions[i] = _book_restriction(i, summons_too);
-
-    // Using the fact that CONJ_I and MINOR_MAGIC_I are both
-    // fire books, CONJ_II and MINOR_MAGIC_II are both ice books.
-    if (Options.book && Options.book <= numbooks)
     {
-        book.sub_type = firstbook + Options.book - 1;
-        ng_book = Options.book;
-        return (true);
+        book_restrictions[i] = _book_restriction(
+                                   _book_to_start(firstbook + i));
     }
 
-    if (Options.prev_book > numbooks && Options.prev_book != SBT_RANDOM)
-        Options.prev_book = SBT_NO_SELECTION;
+    if (Options.book)
+    {
+        const int opt_book = _start_to_book(firstbook, Options.book);
+        if (opt_book != NUM_BOOKS)
+        {
+            book.sub_type = opt_book;
+            ng_book = Options.book;
+            return (true);
+        }
+    }
+
+    if (Options.prev_book)
+    {
+        const int opt_prev_book = _start_to_book(firstbook, Options.prev_book);
+        if (opt_prev_book == NUM_BOOKS && Options.prev_book != SBT_RANDOM)
+            Options.prev_book = SBT_NO_SELECTION;
+    }
 
     if (!Options.random_pick && Options.book != SBT_RANDOM)
     {
@@ -2010,7 +2076,11 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
                     if (Options.prev_book == SBT_RANDOM)
                         keyin = '*';
                     else
-                        keyin = 'a' +  Options.prev_book - 1;
+                    {
+                        keyin = 'a'
+                              + _start_to_book(firstbook, Options.prev_book)
+                              - firstbook;
+                    }
                 }
                 break;
             case '%':
@@ -2036,8 +2106,9 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
         {
             for (int i = 0; i < numbooks; i++)
             {
-                if (_book_restriction(i, summons_too) == CC_UNRESTRICTED
-                    && one_chance_in(++good_choices))
+                if (_book_restriction(
+                        _book_to_start(firstbook + i)) == CC_UNRESTRICTED
+                            && one_chance_in(++good_choices))
                 {
                     keyin = i;
                 }
@@ -2050,7 +2121,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
         keyin += 'a';
     }
     else
-        ng_book = keyin - 'a' + 1;
+        ng_book = _book_to_start(keyin - 'a' + firstbook);
 
     book.sub_type = firstbook + keyin - 'a';
     return (true);
