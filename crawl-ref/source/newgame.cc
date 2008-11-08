@@ -1273,10 +1273,10 @@ game_start:
 
     _save_newgame_options();
     return (true);
-}                               // end of new_game()
+}
 
-static char_choice_restriction _class_allowed( species_type speci,
-                                               job_type char_class )
+static char_choice_restriction _class_allowed(species_type speci,
+                                              job_type char_class)
 {
     switch (char_class)
     {
@@ -1296,9 +1296,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_RED_DRACONIAN:
         case SP_MUMMY:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_GLADIATOR:
@@ -1315,9 +1315,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_CENTAUR:
         case SP_RED_DRACONIAN:
         case SP_MUMMY:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_MONK:
@@ -1340,16 +1340,16 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
         case SP_MUMMY:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_BERSERKER:
         switch (speci)
         {
         case SP_DEMIGOD:
-            return CC_BANNED;
+            return (CC_BANNED);
         case SP_HIGH_ELF:
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
@@ -1365,9 +1365,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_PALADIN:
@@ -1378,7 +1378,7 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_BANNED;
+            return (CC_BANNED);
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
@@ -1392,16 +1392,16 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_TROLL:
         case SP_KENKU:
         case SP_RED_DRACONIAN:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_PRIEST:
         switch (speci)
         {
         case SP_DEMIGOD:
-            return CC_BANNED;
+            return (CC_BANNED);
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_MERFOLK:
@@ -1414,24 +1414,24 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_KENKU:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_CHAOS_KNIGHT:
         switch (speci)
         {
         case SP_DEMIGOD:
-            return CC_BANNED;
+            return (CC_BANNED);
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SPRIGGAN:
         case SP_NAGA:
         case SP_KENKU:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_DEATH_KNIGHT:
@@ -1443,9 +1443,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_NAGA:
         case SP_KENKU:
         case SP_GHOUL:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_HEALER:
@@ -1456,7 +1456,7 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_BANNED;
+            return (CC_BANNED);
         case SP_DEEP_ELF:
         case SP_MERFOLK:
         case SP_HALFLING:
@@ -1465,9 +1465,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_NAGA:
         case SP_OGRE:
         case SP_TROLL:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_CRUSADER:
@@ -1487,9 +1487,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_REAVER:
@@ -1513,9 +1513,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_WIZARD:
@@ -1533,9 +1533,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_OGRE:
         case SP_MINOTAUR:
         case SP_GHOUL:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_CONJURER:
@@ -1551,9 +1551,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MINOTAUR:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_ENCHANTER:
@@ -1571,9 +1571,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_RED_DRACONIAN:
         case SP_GHOUL:
         case SP_MUMMY:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_SUMMONER:
@@ -1594,9 +1594,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_DEMIGOD:
         case SP_DEMONSPAWN:
         case SP_GHOUL:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_NECROMANCER:
@@ -1612,9 +1612,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_CENTAUR:
         case SP_TROLL:
         case SP_MINOTAUR:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_WARPER:
@@ -1641,9 +1641,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_TRANSMUTER:
@@ -1667,9 +1667,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_FIRE_ELEMENTALIST:
@@ -1684,9 +1684,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MINOTAUR:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_ICE_ELEMENTALIST:
@@ -1702,9 +1702,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MINOTAUR:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_AIR_ELEMENTALIST:
@@ -1720,9 +1720,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_EARTH_ELEMENTALIST:
@@ -1742,9 +1742,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_RED_DRACONIAN:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_VENOM_MAGE:
@@ -1761,9 +1761,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MINOTAUR:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_STALKER:
@@ -1780,13 +1780,13 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_THIEF:
-        return CC_RESTRICTED;
+        return (CC_RESTRICTED);
 
     case JOB_ASSASSIN:
         switch (speci)
@@ -1801,9 +1801,9 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_RED_DRACONIAN:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_HUNTER:
@@ -1819,18 +1819,18 @@ static char_choice_restriction _class_allowed( species_type speci,
         case SP_MUMMY:
         case SP_GHOUL:
         case SP_VAMPIRE:
-            return CC_RESTRICTED;
+            return (CC_RESTRICTED);
         default:
-            return CC_UNRESTRICTED;
+            return (CC_UNRESTRICTED);
         }
 
     case JOB_WANDERER:
-        return CC_RESTRICTED;
+        return (CC_RESTRICTED);
 
     default:
-        return CC_BANNED;
+        return (CC_BANNED);
     }
-}                               // end class_allowed()
+}
 
 static bool _is_good_combination( species_type spc, job_type cls, bool good)
 {
