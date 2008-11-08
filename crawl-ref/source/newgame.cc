@@ -2011,6 +2011,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
                     else
                         keyin = ('a' +  Options.prev_book - 1);
                 }
+                break;
             case '%':
                 list_commands('%');
                 return _choose_book(book, firstbook, numbooks);
