@@ -1204,33 +1204,9 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     if (mon == NON_MONSTER)
         return (false);
 
-    switch (menv[mon].type)
-    {
-    case MONS_FIRE_VORTEX:
-    case MONS_ANGEL:
-    case MONS_FIEND:
-    case MONS_SHADOW:
-    case MONS_EFREET:
-    case MONS_HELLION:
-    case MONS_FLAMING_CORPSE:
-    case MONS_GLOWING_SHAPESHIFTER:
-    case MONS_FIRE_ELEMENTAL:
-    case MONS_AIR_ELEMENTAL:
-    case MONS_SHADOW_FIEND:
-    case MONS_SPECTRAL_WARRIOR:
-    case MONS_ORANGE_RAT:
-    case MONS_BALRUG:
-    case MONS_SPATIAL_VORTEX:
-    case MONS_PIT_FIEND:
-    case MONS_SHINING_EYE:
-    case MONS_DAEVA:
-    case MONS_SPECTRAL_THING:
-    case MONS_ORB_OF_FIRE:
-    case MONS_EYE_OF_DEVASTATION:
-        return (false);               // Already glowing or invisible.
-    default:
-        break;
-    }
+    // Already glowing.
+    if (mons_class_flag(menv[mon].type, M_GLOWS))
+        return (false);
 
     mon_enchant bklt = menv[mon].get_ench(ENCH_BACKLIGHT);
     const int lvl = bklt.degree;
