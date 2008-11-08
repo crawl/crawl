@@ -3589,8 +3589,11 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
             else
             {
                 mpr("You feel strangely conspicuous.");
-                if ((you.duration[DUR_BACKLIGHT] += random_range(3, 5)) > 250)
+
+                you.duration[DUR_BACKLIGHT] += random_range(3, 5);
+                if (you.duration[DUR_BACKLIGHT] > 250)
                     you.duration[DUR_BACKLIGHT] = 250;
+
                 beam.obvious_effect = true;
             }
             break;
