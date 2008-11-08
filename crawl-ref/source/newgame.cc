@@ -1913,11 +1913,12 @@ static char_choice_restriction _book_restriction(int booktype,
         case SP_MUMMY:
         case SP_VAMPIRE:
             return (CC_UNRESTRICTED);
-            break;
 
         default:
             return (CC_RESTRICTED);
         }
+        break;
+
     }
     return (CC_RESTRICTED);
 }
