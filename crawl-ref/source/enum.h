@@ -226,7 +226,7 @@ enum beam_type                  // beam[].flavour
     BEAM_PETRIFY,
     BEAM_BACKLIGHT,
     BEAM_SLEEP,
-    BEAM_LAST_ENCHANTMENT = BEAM_PETRIFY,
+    BEAM_LAST_ENCHANTMENT = BEAM_SLEEP,
 
     // new beams for evaporate
     BEAM_POTION_STINKING_CLOUD,
