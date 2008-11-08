@@ -284,8 +284,6 @@ static bool apply_vault_grid(map_def &def, map_type map,
     {
         const std::string &s = lines[y - start.y];
         strncpy(&map[y][start.x], s.c_str(), s.length());
-//        for (unsigned int x = start.x; x < start.x + s.length(); x++)
-//            env.map[x][y].property |= FPROP_VAULT;
     }
 
     place.pos  = start;

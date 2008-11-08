@@ -3923,8 +3923,6 @@ static bool _build_minivaults(int level_number, int force_vault,
                               bool building_level, bool clobber,
                               bool make_no_exits, const coord_def &where)
 {
-    mpr("in _build_minivaults");
-
     int altar_count = 0;
 
     FixedVector < object_class_type, 7 > acq_item_class;
@@ -3970,7 +3968,6 @@ static bool _build_minivaults(int level_number, int force_vault,
     int num_runes = 0;
     std::vector<coord_def> &target_connections = place.exits;
 
-    bool vault_prop = false;
     // Paint the minivault onto the grid.
     for (rectangle_iterator ri(v1, v1 + place.size - 1); ri; ++ri)
     {
@@ -3998,11 +3995,7 @@ static bool _build_minivaults(int level_number, int force_vault,
             env.markers.remove_markers_at(*ri, MAT_ANY);
         }
         env.map(*ri).property |= FPROP_VAULT;
-        vault_prop = true;
     }
-
-    if (vault_prop)
-        mpr("feature property set to vault");
 
     place.map.map.apply_overlays(v1);
 
@@ -4491,8 +4484,6 @@ static bool _build_secondary_vault(int level_number, int vault,
                                    bool clobber, bool no_exits,
                                    const coord_def &where)
 {
-    mpr("in _build_secondary_vault()");
-
     dgn_zones = _dgn_count_disconnected_zones(false);
     if (_build_vaults(level_number, vault, rune_subst, true, true,
                       generating_level, clobber, no_exits, where))
@@ -4510,7 +4501,6 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
                           bool generating_level, bool clobber,
                           bool make_no_exits, const coord_def &where)
 {
-    mpr("in _build_vaults");
     int altar_count = 0;
     FixedVector < char, 10 > stair_exist;
     char stx, sty;
@@ -4544,7 +4534,6 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
 
     int num_runes = 0;
 
-    bool vault_prop = false;
     dgn_region this_vault(place.pos, place.size);
     // NOTE: assumes *no* previous item (I think) or monster (definitely)
     // placement.
@@ -4572,11 +4561,7 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
             env.markers.remove_markers_at(*ri, MAT_ANY);
         }
         env.map(*ri).property |= FPROP_VAULT;
-        vault_prop = true;
     }
-
-    if (vault_prop)
-        mpr("feature property set to vault");
 
     place.map.map.apply_overlays(place.pos);
     _register_place(place);
@@ -6724,7 +6709,6 @@ static void _change_walls_from_centre(const dgn_region &region,
 
 static void _place_extra_lab_minivaults(int level_number)
 {
-    mpr("in _place_extra_lab_minivaults()");
     std::set<int> vaults_used;
     while (true)
     {
