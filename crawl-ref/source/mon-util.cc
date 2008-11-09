@@ -1400,13 +1400,7 @@ bool mons_has_lifeforce(const monsters *mon)
 
 bool mons_skeleton(int mc)
 {
-    if (!mons_class_can_be_zombified(mc)
-        || mons_class_flag(mc, M_NO_SKELETON))
-    {
-        return (false);
-    }
-
-    return (true);
+    return (!mons_class_flag(mc, M_NO_SKELETON));
 }
 
 flight_type mons_class_flies(int mc)
