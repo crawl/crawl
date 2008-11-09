@@ -780,8 +780,8 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
 #endif
 }
 
-static bool _raise_corpse(const coord_def &a, int corps, beh_type beha,
-                          unsigned short hitting, god_type god, bool actual)
+static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
+                           unsigned short hitting, god_type god, bool actual)
 {
     const item_def& item = mitm[corps];
 
@@ -863,7 +863,7 @@ bool animate_remains(const coord_def &a, corpse_type class_allowed,
         {
             const bool was_butchering = is_being_butchered(*si);
 
-            success = _raise_corpse(a, si.link(), beha, hitting, god, actual);
+            success = _raise_remains(a, si.link(), beha, hitting, god, actual);
 
             if (actual && success)
             {
