@@ -2705,7 +2705,7 @@ const std::string get_message_colour_tags(item_def &item,
         // Order is important here.
         colour_off  = "</" + colour + ">";
         colour      = "<" + colour + ">";
-        item_name = colour + item_name + colour_off;
+        item_name   = colour + item_name + colour_off;
     }
 
     return (item_name);

@@ -48,16 +48,15 @@ bool trap_def::active() const
 
 bool trap_def::type_has_ammo() const
 {
-    bool rc = false;
     switch (this->type)
     {
     case TRAP_DART:   case TRAP_ARROW:  case TRAP_BOLT:
     case TRAP_NEEDLE: case TRAP_SPEAR:  case TRAP_AXE:
-        rc = true;
+        return (true);
     default:
         break;
     }
-    return rc;
+    return (false);
 }
 
 void trap_def::message_trap_entry()
@@ -79,6 +78,9 @@ void trap_def::disarm()
 
 void trap_def::destroy()
 {
+    if (!in_bounds(this->pos))
+        ASSERT("trap position out of bounds!");
+
     grd(this->pos) = DNGN_FLOOR;
     this->ammo_qty = 0;
     this->pos = coord_def(-1,-1);
@@ -376,6 +378,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     if (you_trigger)
         this->message_trap_entry();
 
+    // Store the position now in case it gets cleared inbetween.
+    const coord_def p(this->pos);
+
     if (this->type_has_ammo())
         this->shoot_ammo(triggerer, trig_knows);
     else switch (this->type)
@@ -570,7 +575,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         if (you_trigger)
         {
             mpr((trig_knows) ? "You enter the Zot trap."
-                : "Oh no! You have blundered into a Zot trap!");
+                             : "Oh no! You have blundered into a Zot trap!");
             MiscastEffect( &you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                            3, "a Zot trap" );
         }
@@ -648,10 +653,11 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
     if (you_trigger)
     {
-        learned_something_new(TUT_SEEN_TRAP, this->pos);
+        learned_something_new(TUT_SEEN_TRAP, p);
 
-        // Exercise T&D if the trap revealed itself.
-        if (!you_know && this->is_known())
+        // Exercise T&D if the trap revealed itself, but not if it ran
+        // out of ammo.
+        if (!you_know && this->type != TRAP_UNASSIGNED && this->is_known())
             exercise(SK_TRAPS_DOORS, ((coinflip()) ? 2 : 1));
     }
 
@@ -1095,7 +1101,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 {
     if (this->ammo_qty <= 0)
     {
-        if (act.atype() == ACT_PLAYER)
+        if (was_known && act.atype() == ACT_PLAYER)
             mpr("The trap is out of ammunition!");
         else if (player_can_hear(this->pos) && see_grid(this->pos))
             mpr("You hear a soft click.");

@@ -1026,7 +1026,7 @@ void replay_messages(void)
             // Allow formatted output of tagged messages.
             formatted_string fs = formatted_string::parse_string(text, true);
             int curcol = 1;
-            for ( unsigned int j = 0; j < fs.ops.size(); ++j )
+            for (unsigned int j = 0; j < fs.ops.size(); ++j)
             {
                 switch ( fs.ops[j].type )
                 {
