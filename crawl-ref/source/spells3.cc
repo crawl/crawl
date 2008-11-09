@@ -623,7 +623,7 @@ bool cast_summon_horrible_things(int pow, god_type god)
     return (false);
 }
 
-static bool _is_animatable_corpse(const item_def& item)
+static bool _animatable_remains(const item_def& item)
 {
     return (item.base_type == OBJ_CORPSES
         && mons_class_can_be_zombified(item.plus));
@@ -785,7 +785,7 @@ static bool _raise_corpse(const coord_def &a, int corps, beh_type beha,
 {
     const item_def& item = mitm[corps];
 
-    if (!_is_animatable_corpse(item))
+    if (!_animatable_remains(item))
         return (false);
 
     if (!actual)
@@ -857,7 +857,7 @@ bool animate_remains(const coord_def &a, corpse_type class_allowed,
     // Search all the items on the ground for a corpse.
     for (stack_iterator si(a); si; ++si)
     {
-        if (_is_animatable_corpse(*si)
+        if (_animatable_remains(*si)
             && (class_allowed == CORPSE_BODY
                 || si->sub_type == CORPSE_SKELETON))
         {
