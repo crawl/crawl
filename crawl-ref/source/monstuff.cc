@@ -1752,7 +1752,7 @@ bool monster_blink(monsters *monster)
         seen_monster(monster);
 
     monster->check_redraw(oldplace);
-    monster->apply_location_effects();
+    monster->apply_location_effects(oldplace);
 
     return (true);
 }
@@ -2225,7 +2225,7 @@ void behaviour_event(monsters *mon, int event, int src,
         mon->behaviour = old_behaviour;
     }
     else if (wasLurking && mon->has_ench(ENCH_SUBMERGED)
-            && !mon->del_ench(ENCH_SUBMERGED))
+             && !mon->del_ench(ENCH_SUBMERGED))
     {
         // The same goes for lurking submerged monsters, if they can't
         // unsubmerge.
@@ -3766,7 +3766,7 @@ static void _handle_nearby_ability(monsters *monster)
 {
     if (!mons_near(monster)
         || mons_is_sleeping(monster)
-        || monster->has_ench(ENCH_SUBMERGED))
+        || mons_is_submerged(monster))
     {
         return;
     }
@@ -3881,7 +3881,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
 
     if (!mons_near(monster)
         || mons_is_sleeping(monster)
-        || monster->has_ench(ENCH_SUBMERGED))
+        || mons_is_submerged(monster))
     {
         return (false);
     }
@@ -4395,7 +4395,7 @@ static bool _handle_reaching(monsters *monster)
     bool       ret = false;
     const int  wpn = monster->inv[MSLOT_WEAPON];
 
-    if (monster->has_ench(ENCH_SUBMERGED))
+    if (mons_is_submerged(monster))
         return (false);
 
     if (mons_aligned(monster_index(monster), monster->foe))
@@ -4450,8 +4450,8 @@ static bool _handle_scroll(monsters *monster)
 {
     // Yes, there is a logic to this ordering {dlb}:
     if (mons_is_sleeping(monster)
-        || monster->has_ench(ENCH_CONFUSION)
-        || monster->has_ench(ENCH_SUBMERGED)
+        || mons_is_confused(monster)
+        || mons_is_submerged(monster)
         || monster->inv[MSLOT_SCROLL] == NON_ITEM
         || !one_chance_in(3))
     {
@@ -4953,7 +4953,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
 
     // Yes, there is a logic to this ordering {dlb}:
     if (mons_is_sleeping(monster)
-        || monster->has_ench(ENCH_SUBMERGED)
+        || mons_is_submerged(monster)
         || !mons_class_flag(monster->type, M_SPELLCASTER)
            && draco_breath == SPELL_NO_SPELL)
     {
@@ -4978,7 +4978,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
         return (false);
     }
     else if (random2(200) > monster->hit_dice + 50
-             || (monster->type == MONS_BALL_LIGHTNING && coinflip()))
+             || monster->type == MONS_BALL_LIGHTNING && coinflip())
     {
         return (false);
     }
@@ -5124,7 +5124,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                     // emergency spells harmful to the area.
                     if (spell_cast != SPELL_NO_SPELL
                         && mons_is_pacified(monster)
-                            && spell_harms_area(spell_cast))
+                        && spell_harms_area(spell_cast))
                     {
                         spell_cast = SPELL_NO_SPELL;
                     }
@@ -5137,6 +5137,14 @@ static bool _handle_spell(monsters *monster, bolt &beem)
 
                 if (spell_cast == SPELL_NO_SPELL)
                     continue;
+
+                // Friendly monsters don't use polymorph, for fear of harming
+                // the player.
+                if (spell_cast == SPELL_POLYMORPH_OTHER
+                    && mons_friendly(monster))
+                {
+                    continue;
+                }
 
                 // Setup the spell.
                 setup_mons_cast(monster, beem, spell_cast);
@@ -5628,7 +5636,7 @@ static void _handle_monster_move(int i, monsters *monster)
     // Handle clouds on nonmoving monsters.
     if (monster->speed == 0
         && env.cgrid(monster->pos()) != EMPTY_CLOUD
-        && !monster->has_ench(ENCH_SUBMERGED))
+        && !mons_is_submerged(monster))
     {
         _mons_in_cloud( monster );
     }
@@ -5714,7 +5722,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
         if (env.cgrid(monster->pos()) != EMPTY_CLOUD)
         {
-            if (monster->has_ench(ENCH_SUBMERGED))
+            if (mons_is_submerged(monster))
             {
                 monster->speed_increment -= entry->energy_usage.swim;
                 break;
@@ -5796,7 +5804,7 @@ static void _handle_monster_move(int i, monsters *monster)
             if (monster->foe != MHITNOT
                 && grid_distance(monster->target, monster->pos()) <= 1)
             {
-                if (monster->has_ench(ENCH_SUBMERGED))
+                if (mons_is_submerged(monster))
                 {
                     // Don't unsubmerge if the monster is too damaged or
                     // if the monster is afraid.
@@ -5837,7 +5845,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
             if (mons_is_confused(monster)
                 || monster->type == MONS_AIR_ELEMENTAL
-                   && monster->has_ench(ENCH_SUBMERGED))
+                   && mons_is_submerged(monster))
             {
                 std::vector<coord_def> moves;
 
@@ -6155,7 +6163,7 @@ static bool _handle_pickup(monsters *monster)
     int  item = NON_ITEM;
 
     if (mons_is_sleeping(monster)
-        || monster->has_ench(ENCH_SUBMERGED))
+        || mons_is_submerged(monster))
     {
         return (false);
     }
@@ -6383,8 +6391,8 @@ static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
     immobile_monster[m2i] = true;
 
     mon->check_redraw(c);
-    mon->apply_location_effects();
-    m2->apply_location_effects();
+    mon->apply_location_effects(c);
+    m2->apply_location_effects(n);
 
     return (false);
 }
@@ -6419,6 +6427,12 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     // This appears to be the real one, ie where the movement occurs:
     _swim_or_move_energy(monster);
 
+    if (grd(monster->pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
+        && !monster_habitable_grid(monster, DNGN_DEEP_WATER))
+    {
+        mpr("set seen_context...");
+        monster->seen_context = "emerges from the water";
+    }
     mgrd(monster->pos()) = NON_MONSTER;
 
     monster->pos() = f;
@@ -6426,12 +6440,13 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     mgrd(monster->pos()) = monster_index(monster);
 
     monster->check_redraw(monster->pos() - delta);
-    monster->apply_location_effects();
+    monster->apply_location_effects(monster->pos() - delta);
 
     return (true);
 }
 
-void mons_check_pool(monsters *mons, killer_type killer, int killnum)
+void mons_check_pool(monsters *mons, const coord_def &oldpos,
+                     killer_type killer, int killnum)
 {
     // Levitating/flying monsters don't make contact with the terrain.
     if (mons->airborne())
@@ -6445,7 +6460,7 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
 
         // Don't worry about invisibility - you should be able to
         // see if something has fallen into the lava.
-        if (message)
+        if (message && (oldpos == mons->pos() || grd(oldpos) != grid))
         {
             mprf("%s falls into the %s!",
                  mons->name(DESC_CAP_THE).c_str(),
@@ -6469,11 +6484,6 @@ void mons_check_pool(monsters *mons, killer_type killer, int killnum)
                 else if (mons_genus(mons->type) == MONS_MUMMY)
                 {
                     simple_monster_message( mons, " falls apart.",
-                                            MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
-                }
-                else if (mons_is_zombified(mons))
-                {
-                    simple_monster_message( mons, " sinks like a rock.",
                                             MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
                 }
                 else
@@ -6518,8 +6528,8 @@ static int _estimated_trap_damage(trap_type trap)
 
 // Check whether a given trap (described by trap position) can be
 // regarded as safe.  Takes into account monster intelligence and
-// allegiance.  (just_check is used for intelligent monsters trying to
-// avoid traps.)
+// allegiance.
+// (just_check is used for intelligent monsters trying to avoid traps.)
 static bool _is_trap_safe(const monsters *monster, const coord_def& where,
                           bool just_check)
 {
@@ -6678,6 +6688,15 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
     monster->lose_energy(EUT_MOVE);
 }
 
+static bool _no_habitable_adjacent_grids(const monsters *mon)
+{
+    for (adjacent_iterator ai(mon->pos()); ai; ++ai)
+        if (_habitat_okay(mon, grd(*ai)))
+            return (false);
+
+    return (true);
+}
+
 // Check whether a monster can move to given square (described by its relative
 // coordinates to the current monster position). just_check is true only for
 // calls from is_trap_safe when checking the surrounding squares of a trap.
@@ -6685,7 +6704,6 @@ static bool _mon_can_move_to_pos(const monsters *monster,
                                  const coord_def& delta, bool just_check)
 {
     const coord_def targ = monster->pos() + delta;
-
     // Bounds check - don't consider moving out of grid!
     if (!inside_level_bounds(targ))
         return (false);
@@ -6743,6 +6761,14 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     }
     else if (!_habitat_okay( monster, target_grid ))
     {
+        // If the monster somehow ended up in this habitat (and is
+        // not dead by now), give it a chance to get out again.
+        if (grd(monster->pos()) == target_grid
+            && _no_habitable_adjacent_grids(monster))
+        {
+            return (true);
+        }
+
         return (false);
     }
 
@@ -6907,7 +6933,7 @@ static bool _monster_move(monsters *monster)
 
     if (monster->type == MONS_TRAPDOOR_SPIDER)
     {
-        if(monster->has_ench(ENCH_SUBMERGED))
+        if(mons_is_submerged(monster))
            return (false);
 
         // Trapdoor spiders hide if they can't see their target.

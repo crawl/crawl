@@ -112,9 +112,9 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     ASSERT( you.can_pass_through_feat( new_grid ) );
 
     // Better not be an unsubmerged monster either.
-    ASSERT(swapping && mgrd(p) != NON_MONSTER ||
-           !swapping && (mgrd(p) == NON_MONSTER
-                         || mons_is_submerged( &menv[ mgrd(p) ])));
+    ASSERT(swapping && mgrd(p) != NON_MONSTER
+           || !swapping && (mgrd(p) == NON_MONSTER
+                            || mons_is_submerged( &menv[ mgrd(p) ])));
 
     const int cloud = env.cgrid(p);
     if (cloud != EMPTY_CLOUD && !you.confused())
@@ -2604,7 +2604,7 @@ int player_see_invis(bool calc_unid)
 // to find if the square the monster is in los see mons_near().
 bool player_monster_visible( const monsters *mon )
 {
-    if (mon->has_ench(ENCH_SUBMERGED)
+    if (mons_is_submerged(mon)
         || mon->invisible() && !player_see_invis())
     {
         return (false);

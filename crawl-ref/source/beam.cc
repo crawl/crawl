@@ -2328,7 +2328,8 @@ static void _beam_paralyses_monster(bolt &pbolt, monsters *monster)
         if (simple_monster_message(monster, " suddenly stops moving!"))
             pbolt.obvious_effect = true;
 
-        mons_check_pool(monster, pbolt.killer(), pbolt.beam_source);
+        mons_check_pool(monster, monster->pos(), pbolt.killer(),
+                        pbolt.beam_source);
     }
 }
 
@@ -2365,7 +2366,8 @@ static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
         if (simple_monster_message(monster, " is moving more slowly."))
             pbolt.obvious_effect = true;
 
-        mons_check_pool(monster, pbolt.killer(), pbolt.beam_source);
+        mons_check_pool(monster, monster->pos(), pbolt.killer(),
+                        pbolt.beam_source);
     }
 }
 

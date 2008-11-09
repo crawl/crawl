@@ -1111,7 +1111,7 @@ public:
     void mark_summoned(int longevity, bool mark_items_summoned );
     bool has_action_energy() const;
     void check_redraw(const coord_def &oldpos) const;
-    void apply_location_effects();
+    void apply_location_effects(const coord_def &oldpos);
 
     void moveto(const coord_def& c);
     bool move_to_pos(const coord_def &newpos);

@@ -87,8 +87,8 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
 void monster_die(monsters *monster, killer_type killer,
                  int killer_index, bool silent = false, bool wizard = false);
 
-void mons_check_pool(monsters *monster, killer_type killer = KILL_NONE,
-                     int killnum = -1);
+void mons_check_pool(monsters *monster, const coord_def &oldpos,
+                     killer_type killer = KILL_NONE, int killnum = -1);
 
 // last updated: 17dec2000 {gdl}
 /* ***********************************************************************

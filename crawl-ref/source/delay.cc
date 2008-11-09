@@ -1686,6 +1686,8 @@ inline static void _monster_warning(activity_interrupt_type ai,
                     text += "realm of bugdom";
                 text += ".";
             }
+            else if (at.context.find("emerges") != std::string::npos)
+                text += " emerges from the water.";
             else
                 text += " comes into view.";
 

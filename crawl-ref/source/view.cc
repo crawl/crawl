@@ -1116,8 +1116,10 @@ void handle_monster_shouts(monsters* monster, bool force)
         if (mons_is_submerged(monster))
         {
             if (!monster->del_ench(ENCH_SUBMERGED))
+            {
                 // Couldn't unsubmerge.
                 return;
+            }
 
             if (you.can_see(monster))
             {

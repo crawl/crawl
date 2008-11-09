@@ -141,12 +141,13 @@ std::string trap_def::name(description_level_type desc) const
 
 bool trap_def::is_known(const actor* act) const
 {
-    bool rc = false;
     const bool player_knows = (grd(pos) != DNGN_UNDISCOVERED_TRAP);
 
     if (act == NULL || act->atype() == ACT_PLAYER)
-        rc = player_knows;
-    else if (act->atype() == ACT_MONSTER)
+        return (player_knows);
+
+    bool rc = false;
+    if (act->atype() == ACT_MONSTER)
     {
         const monsters* monster = dynamic_cast<const monsters*>(act);
         const bool mechanical = (this->category() == DNGN_TRAP_MECHANICAL);
@@ -162,8 +163,8 @@ bool trap_def::is_known(const actor* act) const
 
         rc = (intel >= I_NORMAL && mechanical
               && (mons_is_native_in_branch(monster)
-                  || (mons_wont_attack(monster) && player_knows)
-                  || (intel >= I_HIGH && one_chance_in(3))));
+                  || mons_wont_attack(monster) && player_knows
+                  || intel >= I_HIGH && one_chance_in(3)));
     }
     return rc;
 }
@@ -260,7 +261,7 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt)
         if (mon_flies)
         {
             simple_monster_message(mon, " falls like a stone!");
-            mons_check_pool(mon, pbolt.killer(), pbolt.beam_source);
+            mons_check_pool(mon, mon->pos(), pbolt.killer(), pbolt.beam_source);
         }
     }
 }

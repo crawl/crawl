@@ -2387,7 +2387,16 @@ mon_attitude_type mons_attitude(const monsters *m)
 bool mons_is_submerged(const monsters *m)
 {
     // FIXME, switch to 4.1's MF_SUBMERGED system which is much cleaner.
-    return (m->has_ench(ENCH_SUBMERGED));
+    if (m->has_ench(ENCH_SUBMERGED))
+        return (true);
+
+    if (grd(m->pos()) == DNGN_DEEP_WATER
+        && !monster_habitable_grid(m, DNGN_DEEP_WATER))
+    {
+        return (true);
+    }
+
+    return (false);
 }
 
 bool mons_is_paralysed(const monsters *m)
@@ -3207,7 +3216,9 @@ bool monsters::wants_submerge() const
     if (env.cgrid(pos()) != EMPTY_CLOUD
         || (hit_points < max_hit_points / 2
             && random2(max_hit_points + 1) >= hit_points))
+    {
         return (true);
+    }
 
     const bool has_ranged_attack =
         type == MONS_ELECTRICAL_EEL
@@ -3284,7 +3295,6 @@ bool monsters::can_drown() const
             || mons_genus(type) == MONS_MUMMY
             || mons_genus(type) == MONS_GHOUL
             || mons_genus(type) == MONS_VAMPIRE
-            || mons_is_zombified(this)
             || holiness() == MH_DEMONIC);
 }
 
@@ -5681,9 +5691,11 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     int       okay_squares = 0;
 
     for ( adjacent_iterator ai; ai; ++ai )
-        if (mgrd(*ai) == NON_MONSTER && monster_can_submerge(mon, grd(*ai)))
-            if (one_chance_in(++okay_squares))
-                target_square = *ai;
+        if (mgrd(*ai) == NON_MONSTER && monster_can_submerge(mon, grd(*ai))
+            && one_chance_in(++okay_squares))
+        {
+            target_square = *ai;
+        }
 
     if (okay_squares > 0)
     {
@@ -5703,7 +5715,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 
     // The terrain changed and the monster can't remain submerged.
     // Try to move to an adjacent square where it would be happy.
-    for ( adjacent_iterator ai; ai; ++ai )
+    for (adjacent_iterator ai; ai; ++ai)
     {
         if (mgrd(*ai) == NON_MONSTER
             && monster_habitable_grid(mon, grd(*ai))
@@ -6782,7 +6794,7 @@ void monsters::check_redraw(const coord_def &old) const
     }
 }
 
-void monsters::apply_location_effects()
+void monsters::apply_location_effects(const coord_def &oldpos)
 {
     dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
 
@@ -6792,7 +6804,7 @@ void monsters::apply_location_effects()
         ptrap->trigger(*this);
 
     if (alive())
-        mons_check_pool(this);
+        mons_check_pool(this, oldpos);
 
     if (alive() && has_ench(ENCH_SUBMERGED)
         && (!monster_can_submerge(this, grd(pos()))

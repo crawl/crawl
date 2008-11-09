@@ -696,7 +696,7 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
         seen_monster(monster);
 
     monster->check_redraw(oldplace);
-    monster->apply_location_effects();
+    monster->apply_location_effects(oldplace);
 
     // Teleporting mimics change form - if they reappear out of LOS, they are
     // no longer known.

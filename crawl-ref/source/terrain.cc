@@ -499,7 +499,7 @@ static void _dgn_check_terrain_monsters(const coord_def &pos)
         if (grid_is_solid(grd(pos)))
             monster_teleport(mons, true, false);
         else
-            mons_check_pool(mons, KILL_MISC, -1);
+            mons_check_pool(mons, mons->pos(), KILL_MISC, -1);
     }
 
 }
