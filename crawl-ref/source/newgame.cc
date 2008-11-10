@@ -1382,16 +1382,13 @@ static char_choice_restriction _class_allowed(species_type speci,
         case SP_GREY_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
-        case SP_MERFOLK:
         case SP_HALFLING:
         case SP_GNOME:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
         case SP_NAGA:
-        case SP_OGRE:
         case SP_TROLL:
         case SP_KENKU:
-        case SP_RED_DRACONIAN:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
