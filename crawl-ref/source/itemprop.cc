@@ -1361,6 +1361,10 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse)
     if (arm.base_type != OBJ_ARMOUR)
         return (false);
 
+    // Melded armour cannot be enchanted.
+    if (!you_tran_can_wear(arm) && item_is_equipped(arm))
+        return (false);
+
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
     if (is_artefact(arm) || (arm.plus >= 2
