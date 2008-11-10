@@ -265,10 +265,10 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
     // 22 - Book of Healing --  XXX: not used
-    {SPELL_CURE_POISON_I,
-     SPELL_LESSER_HEALING,
-     SPELL_GREATER_HEALING,
+    {SPELL_LESSER_HEALING,
+     SPELL_CURE_POISON_I,
      SPELL_PURIFICATION,
+     SPELL_GREATER_HEALING,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -614,17 +614,17 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 54 - Rod of destruction (iron, fireball, lightning)
-    {SPELL_BOLT_OF_IRON,
+    // 54 - Rod of destruction (lightning, iron, fireball)
+    {SPELL_LIGHTNING_BOLT,
+     SPELL_BOLT_OF_IRON,
      SPELL_FIREBALL,
-     SPELL_LIGHTNING_BOLT,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-    // 55 - Rod of destruction (bolts)
+    // 55 - Rod of destruction (inaccuracy, magma, cold)
     {SPELL_BOLT_OF_INACCURACY,
      SPELL_BOLT_OF_MAGMA,
      SPELL_BOLT_OF_COLD,
