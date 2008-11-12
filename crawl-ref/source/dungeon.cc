@@ -449,7 +449,7 @@ void dgn_set_grid_colour_at(const coord_def &c, int colour)
     {
         env.grid_colours(c) = colour;
         if (!dgn_colour_grid.get())
-            dgn_colour_grid.reset( new dungeon_colour_grid );
+            dgn_colour_grid.reset(new dungeon_colour_grid);
 
         (*dgn_colour_grid)(c) = coloured_feature(grd(c), colour);
     }
