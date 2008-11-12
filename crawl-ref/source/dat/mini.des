@@ -460,6 +460,33 @@ ENDMAP
 
 
 ###############################################
+# Zaba's other ant hill
+#
+NAME:  antful_of_joy
+DEPTH: D:10-17, Lair, Hive
+TAGS:  no_rotate
+MONS:  queen ant, giant ant w:5 / soldier ant, giant ant / nothing w:5
+KFEAT: ^ = alarm trap / .
+MAP
+    xxxxxxxxxxx
+   xx333xxx333xx
+   x33333x33333x
+  xxx...xxx...xxx
+ xxx..x..x..x..xxx
+xx.2.xxx222xxx.2.xx
+x.333.x32123x.333.x
+xx...xxx222xxx...xx
+ xxx..x.3x3.x..xxx
+  xxx.^.xxx.^.xxx
+   x.....x.....x
+   xx...xxx...xx
+    xxx33x33xxx
+      xx.^.xx
+       x+++x
+ENDMAP
+
+
+###############################################
 # My mission is to annoy. -LP
 #
 NAME:  lemuel_jelly_drop_a

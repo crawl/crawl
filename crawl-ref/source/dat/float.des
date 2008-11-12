@@ -215,6 +215,26 @@ wwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 #############################################################################
+# Anthole (zaba)
+# Intentionally used ORIENT: float in order to enforce rooms+corridors.
+#
+NAME:   zaba_anthole
+ORIENT: float
+TAGS:   allow_dup
+DEPTH:  D:3-9, Lair
+MONS:   giant ant / nothing w:5
+MAP
+   @
+ xx+xx
+xx...xx
+x.111.x
+x.111.x
+xx...xx
+ xx+xx
+   @
+ENDMAP
+
+#############################################################################
 # Insect pit (Lemuel)
 #
 NAME:   insect_pit
