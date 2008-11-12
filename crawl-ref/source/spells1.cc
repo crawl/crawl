@@ -1013,14 +1013,12 @@ bool cast_revivification(int pow)
     return (success);
 }
 
-void cast_cure_poison(int mabil)
+void cast_cure_poison(int pow)
 {
-    if (!you.duration[DUR_POISONING])
-        canned_msg(MSG_NOTHING_HAPPENS);
+    if (you.duration[DUR_POISONING] > 0)
+        reduce_poison_player(2 + random2(pow) + random2(3));
     else
-        reduce_poison_player( 2 + random2(mabil) + random2(3) );
-
-    return;
+        canned_msg(MSG_NOTHING_HAPPENS);
 }
 
 void purification(void)

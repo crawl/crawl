@@ -2371,7 +2371,6 @@ static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
     }
 }
 
-// Returns true if the curare killed the monster.
 bool curare_hits_monster(const bolt &beam, monsters *monster,
                          kill_category who, int levels)
 {
@@ -2379,9 +2378,11 @@ bool curare_hits_monster(const bolt &beam, monsters *monster,
 
     const bool res_poison = mons_res_poison(monster) > 0;
 
+    int hurted = 0;
+
     if (!mons_res_asphyx(monster))
     {
-        int hurted = roll_dice(2, 6);
+        hurted = roll_dice(2, 6);
 
         // Note that the hurtage is halved by poison resistance.
         if (res_poison)
@@ -2401,7 +2402,7 @@ bool curare_hits_monster(const bolt &beam, monsters *monster,
     if (who == KC_YOU)
         did_god_conduct(DID_POISON, 5 + random2(3));
 
-    return (!monster->alive());
+    return (hurted > 0);
 }
 
 // Actually poisons a monster (with message).
@@ -4452,11 +4453,12 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             napalm_monster(mon, _whose_kill(beam), levels);
         }
 
+        bool wake_mimic = true;
+
         // Handle missile effects.
-        if (item)
+        if (item && item->base_type == OBJ_MISSILES)
         {
-            if (item->base_type == OBJ_MISSILES
-                && item->special == SPMSL_POISONED)
+            if (item->special == SPMSL_POISONED)
             {
                 int num_levels = 0;
                 // ench_power == AUTOMATIC_HIT if this is a poisoned needle.
@@ -4484,23 +4486,21 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                 {
                     if (num_success == 2)
                         num_levels++;
-                    poison_monster( mon, _whose_kill(beam), num_levels );
+                    poison_monster(mon, _whose_kill(beam), num_levels);
+                }
+            }
+            else if (item->special == SPMSL_CURARE)
+            {
+                if (beam.ench_power == AUTOMATIC_HIT
+                    && curare_hits_monster(beam, mon, _whose_kill(beam), 2)
+                    && !mon->alive())
+                {
+                    wake_mimic = false;
                 }
             }
         }
 
-        bool wake_mimic = true;
-        if (item && item->base_type == OBJ_MISSILES
-            && item->special == SPMSL_CURARE)
-        {
-            if (beam.ench_power == AUTOMATIC_HIT
-                && curare_hits_monster( beam, mon, _whose_kill(beam), 2 ))
-            {
-                wake_mimic = false;
-            }
-        }
-
-        if (wake_mimic && mons_is_mimic( mon->type ))
+        if (wake_mimic && mons_is_mimic(mon->type))
             mimic_alert(mon);
         else if (hit_woke_orc)
             beogh_follower_convert(mon, true);

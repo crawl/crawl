@@ -44,7 +44,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink = false);
 
 int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam);
 void cast_confusing_touch(int power);
-void cast_cure_poison(int mabil);
+void cast_cure_poison(int pow);
 int allowed_deaths_door_hp(void);
 void cast_deaths_door(int pow);
 void setup_fire_storm(const actor *source, int pow, bolt &beam);

@@ -795,9 +795,12 @@ static void _yred_mirrors_injury(int dam, int death_source)
         if (dam <= 0 || invalid_monster_index(death_source))
             return;
 
-        simple_god_message(" mirrors your injury!");
-
         monsters *mon = &menv[death_source];
+
+        if (!mon->alive())
+            return;
+
+        simple_god_message(" mirrors your injury!");
 
 #ifndef USE_TILE
         flash_monster_colour(mon, RED, 200);

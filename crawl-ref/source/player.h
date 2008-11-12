@@ -415,16 +415,15 @@ void set_mp(int new_amount, bool max_too);
 void contaminate_player(int change, bool controlled = false,
                         bool status_only = false);
 
-/* @return true iff they were poisoned (false if they are immune) */
-void curare_hits_player(int agent, int degree);
+bool confuse_player(int amount, bool resistable = true);
+
+bool curare_hits_player(int agent, int degree);
 bool poison_player(int amount, bool force = false);
+void dec_poison_player();
 void reduce_poison_player(int amount);
 
 bool napalm_player(int amount);
 void dec_napalm_player();
-
-bool confuse_player(int amount, bool resistable = true);
-void reduce_confuse_player(int amount);
 
 bool slow_player(int amount);
 void dec_slow_player();
@@ -432,7 +431,6 @@ void dec_slow_player();
 void haste_player(int amount);
 void dec_haste_player();
 
-/* return true iff they were diseased */
 bool disease_player(int amount);
 void dec_disease_player();
 

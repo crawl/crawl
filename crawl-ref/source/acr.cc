@@ -2918,31 +2918,7 @@ static void _decrement_durations()
 
     dec_disease_player();
 
-    if (you.duration[DUR_POISONING] > 0)
-    {
-        if (x_chance_in_y(you.duration[DUR_POISONING], 5))
-        {
-            if (you.duration[DUR_POISONING] > 10 && random2(you.duration[DUR_POISONING]) >= 8)
-            {
-                ouch(random2(10) + 5, NON_MONSTER, KILLED_BY_POISON);
-                mpr("You feel extremely sick.", MSGCH_DANGER);
-            }
-            else if (you.duration[DUR_POISONING] > 5 && coinflip())
-            {
-                ouch((coinflip() ? 3 : 2), NON_MONSTER, KILLED_BY_POISON);
-                mpr("You feel very sick.", MSGCH_WARN);
-            }
-            else
-            {
-                // "the poison running through your veins.");
-                ouch(1, NON_MONSTER, KILLED_BY_POISON);
-                mpr("You feel sick.");
-            }
-
-            if ((you.hp == 1 && one_chance_in(3)) || one_chance_in(8))
-                reduce_poison_player(1);
-        }
-    }
+    dec_poison_player();
 
     if (you.duration[DUR_DEATHS_DOOR])
     {
@@ -3172,7 +3148,7 @@ static void _world_reacts()
 
         if (you.hunger <= 100)
         {
-            mpr( "You have starved to death.", MSGCH_FOOD );
+            mpr("You have starved to death.", MSGCH_FOOD);
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_STARVATION);
         }
     }

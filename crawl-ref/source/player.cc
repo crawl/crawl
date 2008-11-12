@@ -5016,15 +5016,50 @@ void contaminate_player(int change, bool controlled, bool status_only)
     }
 }
 
-void curare_hits_player(int agent, int degree)
+bool confuse_player(int amount, bool resistable)
 {
-    const bool res_poison = player_res_poison();
+    if (amount <= 0)
+        return (false);
 
+    if (resistable && wearing_amulet(AMU_CLARITY))
+    {
+        mpr("You feel momentarily confused.");
+        return (false);
+    }
+
+    const int old_value = you.duration[DUR_CONF];
+    you.duration[DUR_CONF] += amount;
+
+    if (you.duration[DUR_CONF] > 40)
+        you.duration[DUR_CONF] = 40;
+
+    if (you.duration[DUR_CONF] > old_value)
+    {
+        you.check_awaken(500);
+
+        mprf(MSGCH_WARN, "You are %sconfused.",
+             old_value > 0 ? "more " : "");
+
+        learned_something_new(TUT_YOU_ENCHANTED);
+
+        xom_is_stimulated(you.duration[DUR_CONF] - old_value);
+    }
+
+    return (true);
+}
+
+bool curare_hits_player(int agent, int degree)
+{
     poison_player(degree);
+
+    const bool res_poison = player_res_poison() > 0;
+
+    int hurted = 0;
 
     if (!player_res_asphyx())
     {
-        int hurted = roll_dice(2, 6);
+        hurted = roll_dice(2, 6);
+
         // Note that the hurtage is halved by poison resistance.
         if (res_poison)
             hurted /= 2;
@@ -5037,11 +5072,13 @@ void curare_hits_player(int agent, int degree)
 
         potion_effect(POT_SLOWING, 2 + random2(4 + degree));
     }
+
+    return (hurted > 0);
 }
 
 bool poison_player(int amount, bool force)
 {
-    if (!force && player_res_poison() || amount <= 0)
+    if (!force && player_res_poison() > 0 || amount <= 0)
         return (false);
 
     const int old_value = you.duration[DUR_POISONING];
@@ -5061,25 +5098,60 @@ bool poison_player(int amount, bool force)
     return (true);
 }
 
+void dec_poison_player()
+{
+    if (you.duration[DUR_POISONING] > 0)
+    {
+        if (x_chance_in_y(you.duration[DUR_POISONING], 5))
+        {
+            int hurted = 1;
+            msg_channel_type channel = MSGCH_PLAIN;
+            const char *adj = "";
+
+            if (you.duration[DUR_POISONING] > 10
+                && random2(you.duration[DUR_POISONING]) >= 8)
+            {
+                hurted = random2(10) + 5;
+                channel = MSGCH_DANGER;
+                adj = "extremely ";
+            }
+            else if (you.duration[DUR_POISONING] > 5 && coinflip())
+            {
+                hurted = coinflip() ? 3 : 2;
+                channel = MSGCH_WARN;
+                adj = "very ";
+            }
+
+            ouch(hurted, NON_MONSTER, KILLED_BY_POISON);
+            mprf(channel, "You feel %ssick.", adj);
+
+            if ((you.hp == 1 && one_chance_in(3)) || one_chance_in(8))
+                reduce_poison_player(1);
+        }
+    }
+}
+
 void reduce_poison_player(int amount)
 {
-    if (you.duration[DUR_POISONING] == 0 || amount <= 0)
+    if (amount <= 0)
         return;
 
+    const int old_value = you.duration[DUR_POISONING];
     you.duration[DUR_POISONING] -= amount;
 
-    if (you.duration[DUR_POISONING] <= 0)
-    {
+    if (you.duration[DUR_POISONING] < 0)
         you.duration[DUR_POISONING] = 0;
-        mpr("You feel better.", MSGCH_RECOVERY);
+
+    if (you.duration[DUR_POISONING] < old_value)
+    {
+        mprf(MSGCH_RECOVERY, "You feel %sbetter.",
+             you.duration[DUR_POISONING] > 0 ? "a little " : "");
     }
-    else
-        mpr("You feel a little better.", MSGCH_RECOVERY);
 }
 
 bool napalm_player(int amount)
 {
-    if (player_res_sticky_flame() || amount <= 0)
+    if (player_res_sticky_flame() > 0 || amount <= 0)
         return (false);
 
     const int old_value = you.duration[DUR_LIQUID_FLAMES];
@@ -5115,14 +5187,14 @@ void dec_napalm_player()
 
         if (res_fire <= 0)
         {
-            ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10, 0,
-                 KILLED_BY_BURNING);
+            ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10,
+                 NON_MONSTER, KILLED_BY_BURNING);
         }
 
         if (res_fire < 0)
         {
-            ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10, 0,
-                 KILLED_BY_BURNING);
+            ouch(((random2avg(9, 2) + 1) * you.time_taken) / 10,
+                 NON_MONSTER, KILLED_BY_BURNING);
         }
 
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
@@ -5130,52 +5202,6 @@ void dec_napalm_player()
     }
     else if (you.duration[DUR_LIQUID_FLAMES] == 1)
         you.duration[DUR_LIQUID_FLAMES] = 0;
-}
-
-bool confuse_player(int amount, bool resistable)
-{
-    if (amount <= 0)
-        return (false);
-
-    if (resistable && wearing_amulet(AMU_CLARITY))
-    {
-        mpr("You feel momentarily confused.");
-        return (false);
-    }
-
-    const int old_value = you.duration[DUR_CONF];
-    you.duration[DUR_CONF] += amount;
-
-    if (you.duration[DUR_CONF] > 40)
-        you.duration[DUR_CONF] = 40;
-
-    if (you.duration[DUR_CONF] > old_value)
-    {
-        you.check_awaken(500);
-
-        mprf(MSGCH_WARN, "You are %sconfused.",
-             (old_value > 0) ? "more " : "" );
-
-        learned_something_new(TUT_YOU_ENCHANTED);
-
-        xom_is_stimulated(you.duration[DUR_CONF] - old_value);
-    }
-
-    return (true);
-}
-
-void reduce_confuse_player(int amount)
-{
-    if (you.duration[DUR_CONF] == 0 || amount <= 0)
-        return;
-
-    you.duration[DUR_CONF] -= amount;
-
-    if (you.duration[DUR_CONF] <= 0)
-    {
-        you.duration[DUR_CONF] = 0;
-        mpr("You feel less confused.");
-    }
 }
 
 bool slow_player(int amount)
