@@ -741,6 +741,10 @@ enum delay_type
 
     DELAY_MACRO,
 
+    // In a macro delay, a stacked delay to tell Crawl to read and act on
+    // one input command.
+    DELAY_MACRO_PROCESS_KEY,
+
     DELAY_INTERRUPTIBLE,                // simple interruptible delay
     DELAY_UNINTERRUPTIBLE,              // simple uninterruptible delay
 

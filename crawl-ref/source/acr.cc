@@ -1502,7 +1502,7 @@ static void _input()
 
     _center_cursor();
 
-    if (you_are_delayed())
+    if (you_are_delayed() && current_delay_action() != DELAY_MACRO_PROCESS_KEY)
     {
         if (you.time_taken)
             _world_reacts();
@@ -1533,6 +1533,8 @@ static void _input()
 #else
         cursor_control con(true);
 #endif
+
+        clear_macro_process_key_delay();
 
         crawl_state.waiting_for_command = true;
         c_input_reset(true);

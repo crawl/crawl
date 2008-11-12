@@ -631,12 +631,22 @@ static void _xom_check_corpse_waste()
     xom_is_stimulated(64 + (191 * food_need / 6000));
 }
 
+void clear_macro_process_key_delay()
+{
+    if (current_delay_action() == DELAY_MACRO_PROCESS_KEY)
+        _pop_delay();
+}
+
 void handle_delay( void )
 {
     if (!you_are_delayed())
         return;
 
     delay_queue_item &delay = you.delay_queue.front();
+
+    // If a Lua macro wanted Crawl to process a key normally, early exit.
+    if (delay.type == DELAY_MACRO_PROCESS_KEY)
+        return;
 
     if (!delay.started)
     {
@@ -1516,7 +1526,8 @@ void run_macro(const char *macroname)
     }
     else
     {
-        start_delay(DELAY_MACRO, 1);
+        if (!you_are_delayed())
+            start_delay(DELAY_MACRO, 1);
     }
 #else
     stop_delay();
@@ -1854,7 +1865,7 @@ static const char *delay_names[] =
     "jewellery_on", "memorise", "butcher", "bottle_blood", "offer_corpse",
     "weapon_swap", "passwall", "drop_item", "multidrop", "ascending_stairs",
     "descending_stairs", "recite", "run", "rest", "travel", "macro",
-    "interruptible", "uninterruptible"
+    "macro_process_key", "interruptible", "uninterruptible"
 };
 
 // Gets a delay given its name.

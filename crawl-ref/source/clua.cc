@@ -1810,6 +1810,25 @@ static int crawl_sendkeys(lua_State *ls)
     return (0);
 }
 
+// Tell Crawl to process one command.
+static int crawl_process_command(lua_State *ls)
+{
+    const bool will_process =
+        current_delay_action() == DELAY_MACRO || !you_are_delayed();
+
+    if (will_process)
+    {
+        // This should only be called from a macro delay, but run_macro
+        // may not have started the macro delay; do so now.
+        if (!you_are_delayed())
+            start_delay(DELAY_MACRO, 1);
+        start_delay(DELAY_MACRO_PROCESS_KEY, 1);
+    }
+
+    lua_pushboolean(ls, will_process);
+    return (1);
+}
+
 static int crawl_playsound(lua_State *ls)
 {
     const char *sf = luaL_checkstring(ls, 1);
@@ -2137,6 +2156,7 @@ static const struct luaL_reg crawl_lib[] =
     { "kbhit",          crawl_kbhit },
     { "flush_input",    crawl_flush_input },
     { "sendkeys",       crawl_sendkeys },
+    { "process_command", crawl_process_command },
     { "playsound",      crawl_playsound },
     { "runmacro",       crawl_runmacro },
     { "bindkey",        crawl_bindkey },
