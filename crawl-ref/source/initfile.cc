@@ -1390,7 +1390,7 @@ void game_options::read_options(InitLineInput &il, bool runscript,
             }
             continue;
         }
-        else if (inscriptcond
+        else if (inscriptcond && !str.empty()
                  && (str.find(">") == str.length() - 1 || str == ">L"))
         {
             inscriptcond = false;
