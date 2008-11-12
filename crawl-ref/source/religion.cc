@@ -2891,36 +2891,37 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             gain_piety(piety_change);
         else
             _dock_piety(-piety_change, penance);
-    }
 
 #if DEBUG_DIAGNOSTICS
-    if (retval)
-    {
-        static const char *conducts[] =
+        if (retval)
         {
-          "",
-          "Necromancy", "Holy", "Unholy", "Attack Holy", "Attack Neutral",
-          "Attack Friend", "Friend Died", "Stab", "Unchivalric Attack",
-          "Poison", "Field Sacrifice", "Kill Living", "Kill Undead",
-          "Kill Demon", "Kill Natural Evil", "Kill Chaotic",
-          "Kill Wizard", "Kill Priest", "Kill Holy",
-          "Undead Slave Kill Living", "Servant Kill Living",
-          "Servant Kill Undead", "Servant Kill Demon",
-          "Servant Kill Natural Evil", "Servant Kill Holy", "Spell Memorise",
-          "Spell Cast", "Spell Practise", "Spell Nonutility", "Cards",
-          "Stimulants", "Drink Blood", "Cannibalism", "Eat Meat",
-          "Eat Souled Being", "Deliberate Mutation", "Cause Glowing",
-          "Destroy Orcish Idol", "Create Life"
-        };
+            static const char *conducts[] =
+            {
+                "",
+                "Necromancy", "Holy", "Unholy", "Attack Holy", "Attack Neutral",
+                "Attack Friend", "Friend Died", "Stab", "Unchivalric Attack",
+                "Poison", "Field Sacrifice", "Kill Living", "Kill Undead",
+                "Kill Demon", "Kill Natural Evil", "Kill Chaotic",
+                "Kill Wizard", "Kill Priest", "Kill Holy",
+                "Undead Slave Kill Living", "Servant Kill Living",
+                "Servant Kill Undead", "Servant Kill Demon",
+                "Servant Kill Natural Evil", "Servant Kill Holy",
+                "Spell Memorise", "Spell Cast", "Spell Practise",
+                "Spell Nonutility", "Cards", "Stimulants", "Drink Blood",
+                "Cannibalism", "Eat Meat", "Eat Souled Being",
+                "Deliberate Mutation", "Cause Glowing",
+                "Destroy Orcish Idol", "Create Life"
+            };
 
-        COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
-        mprf(MSGCH_DIAGNOSTICS,
-             "conduct: %s; piety: %d (%+d); penance: %d (%+d)",
-             conducts[thing_done],
-             you.piety, piety_change, you.penance[you.religion], penance);
+            COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
+            mprf(MSGCH_DIAGNOSTICS,
+                 "conduct: %s; piety: %d (%+d); penance: %d (%+d)",
+                 conducts[thing_done],
+                 you.piety, piety_change, you.penance[you.religion], penance);
 
-    }
+        }
 #endif
+    }
 
     _do_god_revenge(thing_done);
 
