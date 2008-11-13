@@ -5257,10 +5257,20 @@ static bool _nasty_beam(monsters *mon, const bolt &beam)
         return (true);
 
     // Now for some non-hurtful enchantments.
+    if (beam.flavour == BEAM_DIGGING)
+        return (false);
+
+    // haste/healing/invisibility
+    if (_nice_beam(mon, beam))
+        return (false);
 
     // No charming holy beings!
     if (beam.flavour == BEAM_CHARM)
         return (mons_is_holy(mon));
+
+    // Friendly and good neutral monsters don't mind being teleported.
+    if (beam.flavour == BEAM_TELEPORT)
+        return (!mons_wont_attack(mon));
 
     // degeneration / sleep / enslave soul
     if (beam.flavour == BEAM_DEGENERATE || beam.flavour == BEAM_SLEEP
@@ -5283,13 +5293,6 @@ static bool _nasty_beam(monsters *mon, const bolt &beam)
     // control demon
     if (beam.flavour == BEAM_ENSLAVE_DEMON)
         return (mons_holiness(mon) == MH_DEMONIC);
-
-    // haste/healing/invisibility
-    if (beam.flavour == BEAM_HASTE || beam.flavour == BEAM_HEALING
-        || beam.flavour == BEAM_INVISIBILITY)
-    {
-        return (false);
-     }
 
     // everything else is considered nasty by everyone
     return (true);

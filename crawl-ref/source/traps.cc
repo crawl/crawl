@@ -152,7 +152,6 @@ bool trap_def::is_known(const actor* act) const
     if (act->atype() == ACT_MONSTER)
     {
         const monsters* monster = dynamic_cast<const monsters*>(act);
-        const bool mechanical = (this->category() == DNGN_TRAP_MECHANICAL);
         const int intel = mons_intel(monster);
 
         // Smarter trap handling for intelligent monsters
@@ -163,7 +162,7 @@ bool trap_def::is_known(const actor* act) const
         // * very intelligent monsters can be assumed to have a high T&D
         //   skill (or have memorised part of the dungeon layout ;) )
 
-        rc = (intel >= I_NORMAL && mechanical
+        rc = (intel >= I_NORMAL
               && (mons_is_native_in_branch(monster)
                   || mons_wont_attack(monster) && player_knows
                   || intel >= I_HIGH && one_chance_in(3)));

@@ -6535,14 +6535,20 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
 {
     const int intel = mons_intel(monster);
 
-    // Dumb monsters don't care at all.
-    if (intel == I_PLANT)
-        return (true);
-
     const trap_def *ptrap = find_trap(where);
     if (!ptrap)
         return (true);
     const trap_def& trap = *ptrap;
+
+    const bool player_knows_trap = (trap.is_known(&you));
+
+    // No friendly monsters will ever enter a Zot trap you know.
+    if (player_knows_trap && mons_friendly(monster) && trap.type == TRAP_ZOT)
+        return (false);
+
+    // Dumb monsters don't care at all.
+    if (intel == I_PLANT)
+        return (true);
 
     if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
     {
@@ -6554,11 +6560,9 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
         return (false);
     }
 
-    // Monsters are not afraid of non-mechanical traps.  XXX: If we add
-    // any non-mechanical traps that can damage monsters, we must add
-    // checks for them here.
+    // Hostile monsters are not afraid of non-mechanical traps.
+    // Allies will try to avoid teleportation and zot traps.
     const bool mechanical = (trap.category() == DNGN_TRAP_MECHANICAL);
-    const bool player_knows_trap = (trap.is_known(&you));
 
     if (trap.is_known(monster))
     {
@@ -6581,10 +6585,9 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
             // hostile terrain or other traps rather than walls.
             // What we do is check whether the squares with the relative
             // positions (-1,0)/(+1,0) or (0,-1)/(0,+1) form a "corridor"
-            // (relative to the _current_ monster position rather than the
-            // trap one).
+            // (relative to the _trap_ position rather than the monster one).
             // If they don't, the trap square is marked as "unsafe" (because
-            // there's good alternative move for the monster to take),
+            // there's a good alternative move for the monster to take),
             // otherwise the decision will be made according to later tests
             // (monster hp, trap type, ...)
             // If a monster still gets stuck in a corridor it will usually be
@@ -6618,7 +6621,10 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
     // Friendly and good neutral monsters don't enjoy Zot trap perks;
     // handle accordingly.
     if (mons_wont_attack(monster))
-        return (mechanical ? mons_flies(monster) : trap.type != TRAP_ZOT);
+    {
+        return (mechanical ? mons_flies(monster)
+                           : !trap.is_known(monster) || trap.type != TRAP_ZOT);
+    }
     else
         return (!mechanical || mons_flies(monster));
 }
@@ -6733,13 +6739,13 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
     const int targ_cloud_num  = env.cgrid(targ);
     const int targ_cloud_type =
-        targ_cloud_num == EMPTY_CLOUD ? CLOUD_NONE
-                                      : env.cloud[targ_cloud_num].type;
+        (targ_cloud_num == EMPTY_CLOUD) ? CLOUD_NONE
+                                        : env.cloud[targ_cloud_num].type;
 
     const int curr_cloud_num = env.cgrid(monster->pos());
     const int curr_cloud_type =
-        curr_cloud_num == EMPTY_CLOUD ? CLOUD_NONE
-                                     : env.cloud[curr_cloud_num].type;
+        (curr_cloud_num == EMPTY_CLOUD) ? CLOUD_NONE
+                                        : env.cloud[curr_cloud_num].type;
 
     if (monster->type == MONS_BORING_BEETLE
         && (target_grid == DNGN_ROCK_WALL
@@ -7007,7 +7013,7 @@ static bool _monster_move(monsters *monster)
             const int targ_y = monster->pos().y + count_y - 1;
 
             // Bounds check - don't consider moving out of grid!
-            if (targ_x < 0 || targ_x >= GXM || targ_y < 0 || targ_y >= GYM)
+            if (!in_bounds(targ_x, targ_y))
             {
                 good_move[count_x][count_y] = false;
                 continue;
@@ -7027,8 +7033,7 @@ static bool _monster_move(monsters *monster)
     // Normal/smart monsters know about secret doors
     // (they _live_ in the dungeon!)
     if (grd(newpos) == DNGN_CLOSED_DOOR
-        || grd(newpos) == DNGN_SECRET_DOOR
-           && mons_intel(monster) >= I_NORMAL)
+        || grd(newpos) == DNGN_SECRET_DOOR && mons_intel(monster) >= I_NORMAL)
     {
         if (mons_is_zombified(monster))
         {
