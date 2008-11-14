@@ -3649,6 +3649,9 @@ static void _maybe_set_patrol_route(monsters *monster)
     }
 }
 
+// Check whether there's a monster of the same alignment adjacent to the
+// given monster in at least one of three given directions (relative to
+// the monster position).
 static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
                                coord_def c)
 {
@@ -3674,6 +3677,10 @@ static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
     return (false);
 }
 
+// Check up to eight grids in the given direction for whether there's a
+// monster of the same alignment as the given monster that happens to
+// have a ranged attack. If this is true for the first monster encountered,
+// returns true. Otherwise returns false.
 static bool _ranged_allied_monster_in_dir(monsters *mon, coord_def p)
 {
     coord_def pos = mon->pos();
@@ -3810,11 +3817,24 @@ static void _handle_movement(monsters *monster)
                 _mon_can_move_to_pos(monster, coord_def(count_x-1, count_y-1));
         }
 
-    // The monster is moving in your direction, to attack or protect you.
-    if (newpos == you.pos() && mons_intel(monster) >= I_ANIMAL
+    // If the monster is moving in your direction, whether to attack or protect
+    // you, or towards a monster it intends to attack, check whether we first
+    // need to take a step to the side to make sure the reinforcement can
+    // follow through.
+    // First, check whether the monster is smart enough to consider this.
+    if ((newpos == you.pos()
+         || mgrd(newpos) != NON_MONSTER && monster->foe == mgrd(newpos))
+        && mons_intel(monster) >= I_ANIMAL
         && !mons_is_confused(monster) && !mons_is_caught(monster)
         && !monster->has_ench(ENCH_BERSERK))
     {
+        // If the monster is moving parallel to the x or y axis, check
+        // whether
+        // a) the neighbouring grids are blocked
+        // b) there are other unblocked grids adjacent to the target
+        // c) there's at least one allied monster waiting behind us.
+        // (For really smart monsters, also check whether there's a monster
+        //  farther back in the corridor that has some kind of ranged attack.)
         if (mmov.y == 0)
         {
             if (!good_move[1][0] && !good_move[1][2]
