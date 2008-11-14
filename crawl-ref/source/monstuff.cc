@@ -3649,6 +3649,55 @@ static void _maybe_set_patrol_route(monsters *monster)
     }
 }
 
+static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
+                               coord_def c)
+{
+    std::vector<coord_def> pos;
+    pos.push_back(mon->pos() + a);
+    pos.push_back(mon->pos() + b);
+    pos.push_back(mon->pos() + c);
+
+    for (unsigned int i = 0; i < pos.size(); i++)
+    {
+        if (!in_bounds(pos[i]))
+            continue;
+
+        if (mgrd(pos[i]) == NON_MONSTER)
+            continue;
+
+        if (mons_is_stationary(&menv[mgrd(pos[i])]))
+            return (false);
+
+        if (mons_aligned(monster_index(mon), mgrd(pos[i])))
+            return (true);
+    }
+    return (false);
+}
+
+static bool _ranged_allied_monster_in_dir(monsters *mon, coord_def p)
+{
+    coord_def pos = mon->pos();
+
+    for (int i = 1; i <= LOS_RADIUS; i++)
+    {
+        pos += p;
+        if (!in_bounds(pos))
+            break;
+
+        if (mgrd(pos) == NON_MONSTER)
+            continue;
+
+        if (mons_aligned(monster_index(mon), mgrd(pos)))
+        {
+            monsters *m = &menv[mgrd(pos)];
+            if (mons_has_ranged_attack(m) || mons_has_ranged_spell(m))
+                return (true);
+        }
+        break;
+    }
+    return (false);
+}
+
 //---------------------------------------------------------------
 //
 // handle_movement
@@ -3720,7 +3769,7 @@ static void _handle_movement(monsters *monster)
     if (s.y < 0 || s.y >= GYM)
         mmov.y = 0;
 
-    // now quit if we can't move
+    // Now quit if we can't move.
     if (mmov.origin())
         return;
 
@@ -3739,6 +3788,69 @@ static void _handle_movement(monsters *monster)
         // Sometimes we'll just move parallel the y axis.
         if (abs(delta.y) > abs(delta.x) && coinflip())
             mmov.x = 0;
+    }
+
+    const coord_def newpos(monster->pos() + mmov);
+    FixedArray < bool, 3, 3 > good_move;
+
+    for (int count_x = 0; count_x < 3; count_x++)
+        for (int count_y = 0; count_y < 3; count_y++)
+        {
+            const int targ_x = monster->pos().x + count_x - 1;
+            const int targ_y = monster->pos().y + count_y - 1;
+
+            // Bounds check - don't consider moving out of grid!
+            if (!in_bounds(targ_x, targ_y))
+            {
+                good_move[count_x][count_y] = false;
+                continue;
+            }
+
+            good_move[count_x][count_y] =
+                _mon_can_move_to_pos(monster, coord_def(count_x-1, count_y-1));
+        }
+
+    // The monster is moving in your direction, to attack or protect you.
+    if (newpos == you.pos() && mons_intel(monster) >= I_ANIMAL
+        && !mons_is_confused(monster) && !mons_is_caught(monster)
+        && !monster->has_ench(ENCH_BERSERK))
+    {
+        if (mmov.y == 0)
+        {
+            if (!good_move[1][0] && !good_move[1][2]
+                && (good_move[mmov.x+1][0] || good_move[mmov.x+1][2])
+                && (_allied_monster_at(monster, coord_def(-mmov.x, -1),
+                                       coord_def(-mmov.x, 0),
+                                       coord_def(-mmov.x, 1))
+                    || mons_intel(monster) >= I_NORMAL
+                       && !mons_wont_attack(monster)
+                       && _ranged_allied_monster_in_dir(monster,
+                                                        coord_def(-mmov.x, 0))))
+            {
+                if (good_move[mmov.x+1][0])
+                    mmov.y = -1;
+                if (good_move[mmov.x+1][2] && (mmov.y == 0 || coinflip()))
+                    mmov.y = 1;
+            }
+        }
+        else if (mmov.x == 0)
+        {
+            if (!good_move[0][1] && !good_move[2][1]
+                && (good_move[0][mmov.y+1] || good_move[2][mmov.y+1])
+                && (_allied_monster_at(monster, coord_def(-1, -mmov.y),
+                                      coord_def(0, -mmov.y),
+                                      coord_def(1, -mmov.y))
+                    || mons_intel(monster) >= I_NORMAL
+                       && !mons_wont_attack(monster)
+                       && _ranged_allied_monster_in_dir(monster,
+                                                        coord_def(0, -mmov.y))))
+            {
+                if (good_move[0][mmov.y+1])
+                    mmov.x = -1;
+                if (good_move[2][mmov.y+1] && (mmov.x == 0 || coinflip()))
+                    mmov.x = 1;
+            }
+        }
     }
 }
 
@@ -6760,8 +6872,8 @@ static bool _mon_can_move_to_pos(const monsters *monster,
             return (false);
     }
     else if (!monster->can_pass_through_feat(target_grid)
-             || (no_water && target_grid >= DNGN_DEEP_WATER
-                 && target_grid <= DNGN_WATER_STUCK))
+             || no_water && target_grid >= DNGN_DEEP_WATER
+                && target_grid <= DNGN_WATER_STUCK)
     {
         return (false);
     }
@@ -6778,6 +6890,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
         return (false);
     }
 
+    // Wandering mushrooms don't move while you are looking.
     if (monster->type == MONS_WANDERING_MUSHROOM && see_grid(targ))
         return (false);
 
@@ -7070,7 +7183,6 @@ static bool _monster_move(monsters *monster)
             }
         }
     } // done door-eating jellies
-
 
     // Water creatures have a preference for water they can hide in -- bwr
     // [ds] Weakened the powerful attraction to deep water if the monster
