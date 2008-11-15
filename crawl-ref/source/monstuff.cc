@@ -3669,7 +3669,15 @@ static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
             continue;
 
         if (mons_is_stationary(&menv[mgrd(pos[i])]))
-            return (false);
+            continue;
+
+        // Hostile monsters of animal-like intelligence only move aside
+        // for monsters of the same type.
+        if (mons_intel(mon) < I_NORMAL && !mons_wont_attack(mon)
+            && mons_genus(mon->type) != mons_genus((&menv[mgrd(pos[i])])->type))
+        {
+            continue;
+        }
 
         if (mons_aligned(monster_index(mon), mgrd(pos[i])))
             return (true);
@@ -3821,7 +3829,7 @@ static void _handle_movement(monsters *monster)
     // you, or towards a monster it intends to attack, check whether we first
     // need to take a step to the side to make sure the reinforcement can
     // follow through.
-    // First, check whether the monster is smart enough to consider this.
+    // First, check whether the monster is smart enough to even consider this.
     if ((newpos == you.pos()
          || mgrd(newpos) != NON_MONSTER && monster->foe == mgrd(newpos))
         && mons_intel(monster) >= I_ANIMAL
