@@ -5107,6 +5107,11 @@ int monsters::res_elec() const
     return (mons_res_elec(this));
 }
 
+int monsters::res_asphyx() const
+{
+    return (mons_res_asphyx(this));
+}
+
 int monsters::res_poison() const
 {
     return (mons_res_poison(this));

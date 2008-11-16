@@ -1474,6 +1474,7 @@ bool player_res_asphyx()
     case TRAN_AIR:
         return (true);
     }
+
     return (false);
 }
 
@@ -6467,11 +6468,6 @@ int player::res_fire() const
     return (player_res_fire());
 }
 
-int player::res_sticky_flame() const
-{
-    return (player_res_sticky_flame());
-}
-
 int player::res_steam() const
 {
     return (player_res_steam());
@@ -6487,9 +6483,19 @@ int player::res_elec() const
     return (player_res_electricity() * 2);
 }
 
+int player::res_asphyx() const
+{
+    return (player_res_asphyx());
+}
+
 int player::res_poison() const
 {
     return (player_res_poison());
+}
+
+int player::res_sticky_flame() const
+{
+    return (player_res_sticky_flame());
 }
 
 int player::res_negative_energy() const
