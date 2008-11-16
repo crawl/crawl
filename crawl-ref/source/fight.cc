@@ -3591,8 +3591,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_POISON_STR:
-        res = defender->res_poison();
-        if (res <= 0)
+        if (defender->res_poison() <= 0)
         {
             defender->poison(attacker, roll_dice(1, 3));
             if (one_chance_in(4))
