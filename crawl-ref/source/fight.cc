@@ -3572,7 +3572,6 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 {
     // Most of this is from BWR 4.1.2.
 
-    int res = 0;
     switch (attk.flavour)
     {
     default:
