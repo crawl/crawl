@@ -2371,8 +2371,8 @@ static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
     }
 }
 
-bool curare_hits_monster(const bolt &beam, monsters *monster,
-                         kill_category who, int levels)
+bool curare_hits_monster(actor *agent, monsters *monster, kill_category who,
+                         int levels)
 {
     poison_monster(monster, who, levels, false);
 
@@ -2391,7 +2391,7 @@ bool curare_hits_monster(const bolt &beam, monsters *monster,
         if (hurted)
         {
             simple_monster_message(monster, " convulses.");
-            monster->hurt(beam.agent(), hurted, BEAM_POISON);
+            monster->hurt(agent, hurted, BEAM_POISON);
         }
 
         if (monster->alive())
@@ -4492,7 +4492,8 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
             else if (item->special == SPMSL_CURARE)
             {
                 if (beam.ench_power == AUTOMATIC_HIT
-                    && curare_hits_monster(beam, mon, _whose_kill(beam), 2)
+                    && curare_hits_monster(beam.agent(),
+                                           mon, _whose_kill(beam), 2)
                     && !mon->alive())
                 {
                     wake_mimic = false;

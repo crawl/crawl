@@ -5048,9 +5048,9 @@ bool confuse_player(int amount, bool resistable)
     return (true);
 }
 
-bool curare_hits_player(int agent, int degree)
+bool curare_hits_player(int agent, int amount)
 {
-    poison_player(degree);
+    poison_player(amount);
 
     const bool res_poison = player_res_poison() > 0;
 
@@ -5070,7 +5070,7 @@ bool curare_hits_player(int agent, int degree)
             ouch(hurted, agent, KILLED_BY_CURARE, "curare-induced apnoea");
         }
 
-        potion_effect(POT_SLOWING, 2 + random2(4 + degree));
+        potion_effect(POT_SLOWING, 2 + random2(4 + amount));
     }
 
     return (hurted > 0);

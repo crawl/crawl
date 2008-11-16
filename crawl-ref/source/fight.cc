@@ -3594,9 +3594,9 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         res = defender->res_poison();
         if (res <= 0)
         {
-            defender->poison( attacker, roll_dice(1,3) );
+            defender->poison(attacker, roll_dice(1, 3));
             if (one_chance_in(4))
-                defender->drain_stat( STAT_STRENGTH, 1, attacker );
+                defender->drain_stat(STAT_STRENGTH, 1, attacker);
         }
         break;
 
