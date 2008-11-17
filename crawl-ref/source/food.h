@@ -99,8 +99,7 @@ bool prompt_eat_from_inventory(int slot = -1);
 
 void chunk_nutrition_message(int nutrition);
 
-void vampire_nutrition_per_turn(const item_def &corpse,
-                                int feeding = 0);
+void vampire_nutrition_per_turn(const item_def &corpse, int feeding = 0);
 
 void finished_eating_message(int food_type);
 

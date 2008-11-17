@@ -65,7 +65,8 @@ static void _heal_from_food(int hp_amt, int mp_amt = 0, bool unrot = false,
  *  BEGIN PUBLIC FUNCTIONS
  */
 
-void make_hungry( int hunger_amount, bool suppress_msg, bool allow_reducing )
+void make_hungry(int hunger_amount, bool suppress_msg,
+                 bool allow_reducing)
 {
     if (you.is_undead == US_UNDEAD)
         return;
@@ -92,7 +93,7 @@ void make_hungry( int hunger_amount, bool suppress_msg, bool allow_reducing )
         _describe_food_change( -hunger_amount );
 }
 
-void lessen_hunger( int satiated_amount, bool suppress_msg )
+void lessen_hunger(int satiated_amount, bool suppress_msg)
 {
     if (you.is_undead == US_UNDEAD)
         return;
@@ -109,7 +110,7 @@ void lessen_hunger( int satiated_amount, bool suppress_msg )
         _describe_food_change(satiated_amount);
 }
 
-void set_hunger( int new_hunger_level, bool suppress_msg )
+void set_hunger(int new_hunger_level, bool suppress_msg)
 {
     if (you.is_undead == US_UNDEAD)
         return;
@@ -117,16 +118,16 @@ void set_hunger( int new_hunger_level, bool suppress_msg )
     int hunger_difference = (new_hunger_level - you.hunger);
 
     if (hunger_difference < 0)
-        make_hungry( abs(hunger_difference), suppress_msg );
+        make_hungry(abs(hunger_difference), suppress_msg);
     else if (hunger_difference > 0)
-        lessen_hunger( hunger_difference, suppress_msg );
+        lessen_hunger(hunger_difference, suppress_msg);
 }
 
 // More of a "weapon_switch back from butchering" function, switching
 // to a weapon is done using the wield_weapon code.
 // special cases like staves of power or other special weps are taken
 // care of by calling wield_effects().    {gdl}
-void weapon_switch( int targ )
+void weapon_switch(int targ)
 {
     if (targ == -1) // Unarmed Combat.
     {
@@ -138,7 +139,7 @@ void weapon_switch( int targ )
     }
     else
     {
-        // Possibly not valid anymore (dropped etc.)
+        // Possibly not valid anymore (dropped, etc.).
         if (!is_valid_item(you.inv[targ]))
             return;
 
@@ -163,7 +164,7 @@ void weapon_switch( int targ )
 
     // Special checks: staves of power, etc.
     if (targ != -1)
-        wield_effects( targ, false );
+        wield_effects(targ, false);
 
     if (Options.chunks_autopickup || you.species == SP_VAMPIRE)
         autopickup();
@@ -171,10 +172,8 @@ void weapon_switch( int targ )
     // Same amount of time as normal wielding.
     // FIXME: this duplicated code is begging for a bug.
     if (you.weapon())
-    {
         you.time_taken /= 2;
-    }
-    else                        // swapping to empty hands is faster
+    else                        // Swapping to empty hands is faster.
     {
         you.time_taken *= 3;
         you.time_taken /= 10;
@@ -188,7 +187,7 @@ void weapon_switch( int targ )
 // Returns whether a weapon was switched.
 static bool _find_butchering_implement(int &butcher_tool)
 {
-    // When berserk, you can't change weapons. Sanity check!
+    // When berserk, you can't change weapons.  Sanity check!
     if (!can_wield(NULL, true))
         return (false);
 
@@ -247,9 +246,9 @@ static bool _find_butchering_implement(int &butcher_tool)
     }
 
     const int item_slot = prompt_invent_item(
-                            "What would you like to use? (- for none)?",
-                            MT_INVLIST, OSEL_BUTCHERY,
-                            true, true, true, '-', -1, NULL, OPER_WIELD);
+                              "What would you like to use? (- for none)?",
+                              MT_INVLIST, OSEL_BUTCHERY,
+                              true, true, true, '-', -1, NULL, OPER_WIELD);
 
     if (prompt_failed(item_slot))
     {
@@ -279,10 +278,10 @@ static bool _find_butchering_implement(int &butcher_tool)
         return (false);
     }
 
-    if (is_valid_item( you.inv[item_slot] )
+    if (is_valid_item(you.inv[item_slot])
         && you.inv[item_slot].base_type == OBJ_WEAPONS
-        && can_cut_meat( you.inv[item_slot] )
-        && can_wield( &you.inv[item_slot] ))
+        && can_cut_meat(you.inv[item_slot])
+        && can_wield(&you.inv[item_slot]))
     {
         butcher_tool = item_slot;
         return (true);
@@ -315,10 +314,9 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     if (wpn_switch)
     {
         mprf("Switching to %s.",
-             (butchering_tool == -1) ? "unarmed"
-                                   : "a butchering implement");
+             butchering_tool == -1 ? "unarmed" : "a butchering implement");
 
-        if (!wield_weapon( true, butchering_tool, false ))
+        if (!wield_weapon(true, butchering_tool, false))
             return (false);
     }
 
@@ -336,9 +334,7 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
                          && god_likes_butchery(you.religion);
 
     if (can_sac && !rotten)
-    {
         start_delay(DELAY_OFFER_CORPSE, 0, corpse_id);
-    }
     else
     {
         if (can_sac && rotten)
@@ -378,12 +374,12 @@ static void _terminate_butchery(bool wpn_switch, bool removed_gloves,
     if (wpn_switch && you.equip[EQ_WEAPON] != old_weapon
         && (!you.weapon() || !item_cursed(*you.weapon())))
     {
-        start_delay( DELAY_WEAPON_SWAP, 1, old_weapon );
+        start_delay(DELAY_WEAPON_SWAP, 1, old_weapon);
     }
 
     // Put on the removed gloves.
     if (removed_gloves && you.equip[EQ_GLOVES] != old_gloves)
-        start_delay( DELAY_ARMOUR_ON, 1, old_gloves );
+        start_delay(DELAY_ARMOUR_ON, 1, old_gloves);
 }
 
 static bool _have_corpses_in_pack(bool remind)
@@ -397,11 +393,11 @@ static bool _have_corpses_in_pack(bool remind)
     int num        = 0;
     int num_bottle = 0;
 
-    for (int i = 0; i < ENDOFPACK; i++)
+    for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def &obj(you.inv[i]);
 
-        if (!is_valid_item( obj ))
+        if (!is_valid_item(obj))
             continue;
 
         // Only actually count corpses, not skeletons.
@@ -453,7 +449,6 @@ static bool _have_corpses_in_pack(bool remind)
 
     return (true);
 }
-
 
 bool butchery(int which_corpse)
 {
@@ -526,7 +521,7 @@ bool butchery(int which_corpse)
         {
             mprf("There isn't anything to %sbutcher here.",
                  (you.species == SP_VAMPIRE
-                  && you.experience_level > 5) ? "bottle or " : "");
+                     && you.experience_level > 5) ? "bottle or " : "");
         }
         return (false);
     }
@@ -614,7 +609,7 @@ bool butchery(int which_corpse)
             {
                 mprf(MSGCH_PROMPT, "%s %s? (yc/n/a/q/?)",
                      (sacrifice || !can_bottle_blood_from_corpse(si->plus)) ?
-                        "Butcher" : "Bottle",
+                         "Butcher" : "Bottle",
                      corpse_name.c_str());
                 repeat_prompt = false;
 
@@ -704,7 +699,7 @@ bool butchery(int which_corpse)
     }
 
     return (success);
-}                               // end butchery()
+}
 
 void lua_push_items(lua_State *ls, int link)
 {
@@ -766,20 +761,20 @@ bool prompt_eat_from_inventory(int slot)
     if (you.species != SP_VAMPIRE)
     {
         which_inventory_slot = (slot != -1) ? slot :
-                prompt_invent_item( "Eat which item?",
-                                    MT_INVLIST,
-                                    OBJ_FOOD,
-                                    true, true, true, 0, -1, NULL,
-                                    OPER_EAT );
+                prompt_invent_item("Eat which item?",
+                                   MT_INVLIST,
+                                   OBJ_FOOD,
+                                   true, true, true, 0, -1, NULL,
+                                   OPER_EAT);
     }
     else
     {
         which_inventory_slot = (slot != -1) ? slot :
-                prompt_invent_item( "Drain what?",
-                                    MT_INVLIST,
-                                    OSEL_VAMP_EAT,
-                                    true, true, true, 0, -1, NULL,
-                                    OPER_EAT );
+                prompt_invent_item("Drain what?",
+                                   MT_INVLIST,
+                                   OSEL_VAMP_EAT,
+                                   true, true, true, 0, -1, NULL,
+                                   OPER_EAT);
     }
 
     if (prompt_failed(which_inventory_slot))
@@ -890,6 +885,7 @@ static bool _player_has_enough_food()
         {
             if (item.base_type != OBJ_FOOD)
                 continue;
+
             switch (item.sub_type)
             {
             case FOOD_CHUNK:
@@ -1013,7 +1009,7 @@ static bool _food_change(bool suppress_message)
                 else
                     msg += "are starving!";
 
-                mpr(msg.c_str(), MSGCH_FOOD, less_hungry);
+                mprf(MSGCH_FOOD, less_hungry, "You %s", msg.c_str());
 
                 // Xom thinks this is funny if you're in a labyrinth
                 // and are low on food.
@@ -1033,7 +1029,7 @@ static bool _food_change(bool suppress_message)
                 else
                     msg += "are near starving!";
 
-                mpr(msg.c_str(), MSGCH_FOOD, less_hungry);
+                mprf(MSGCH_FOOD, less_hungry, "You %s", msg.c_str());
 
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
@@ -1045,7 +1041,9 @@ static bool _food_change(bool suppress_message)
                     msg += "very ";
                 msg += _how_hungry();
                 msg += ".";
-                mpr(msg.c_str(), MSGCH_FOOD, less_hungry);
+
+                mprf(MSGCH_FOOD, less_hungry, "You %s", msg.c_str());
+
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
 
@@ -1056,7 +1054,7 @@ static bool _food_change(bool suppress_message)
     }
 
     return (state_changed);
-}                               // end food_change()
+}
 
 // food_increment is positive for eating, negative for hungering
 static void _describe_food_change(int food_increment)
@@ -1067,14 +1065,16 @@ static void _describe_food_change(int food_increment)
     if (magnitude == 0)
         return;
 
+    msg = "You feel ";
+
     if (magnitude <= 100)
-        msg = "You feel slightly ";
+        msg += "slightly ";
     else if (magnitude <= 350)
-        msg = "You feel somewhat ";
+        msg += "somewhat ";
     else if (magnitude <= 800)
-        msg = "You feel quite a bit ";
+        msg += "quite a bit ";
     else
-        msg = "You feel a lot ";
+        msg += "a lot ";
 
     if ((you.hunger_state > HS_SATIATED) ^ (food_increment < 0))
         msg += "more ";
@@ -1124,7 +1124,7 @@ void eat_from_inventory(int which_inventory_slot)
         _eating( food.base_type, food.sub_type );
 
     dec_inv_item_quantity( which_inventory_slot, 1 );
-}                               // end eat_from_inventory()
+}
 
 void eat_floor_item(int item_link)
 {
@@ -1254,8 +1254,8 @@ int eat_from_floor()
             if (you.species == SP_VAMPIRE)
             {
                 mprf("%s devoid of blood.",
-                     (unusable_corpse == 1) ? "This corpse is"
-                                            : "These corpses are");
+                     unusable_corpse == 1 ? "This corpse is"
+                                          : "These corpses are");
             }
             else
                 _player_can_eat_rotten_meat(true);
@@ -1288,7 +1288,7 @@ int eat_from_floor()
 static const char *_chunk_flavour_phrase(bool likes_chunks)
 {
     const char *phrase =
-        likes_chunks? "tastes great." : "tastes terrible.";
+        likes_chunks ? "tastes great." : "tastes terrible.";
 
     if (!likes_chunks)
     {
@@ -1364,7 +1364,6 @@ static void _say_chunk_flavour(bool likes_chunks)
 // through food::_determine_chunk_effect() first. {dlb}:
 static void _eat_chunk(int chunk_effect, bool cannibal, int mon_intel)
 {
-
     bool likes_chunks = (you.omnivorous() ||
                          player_mutation_level(MUT_CARNIVOROUS));
     int nutrition     = _chunk_nutrition(likes_chunks);
@@ -1403,7 +1402,7 @@ static void _eat_chunk(int chunk_effect, bool cannibal, int mon_intel)
 
     case CE_POISONOUS:
         mpr("Yeeuch - this meat is poisonous!");
-        if (poison_player( 3 + random2(4) ))
+        if (poison_player(3 + random2(4)))
             xom_is_stimulated(random2(128));
         break;
 
@@ -1412,7 +1411,7 @@ static void _eat_chunk(int chunk_effect, bool cannibal, int mon_intel)
         if (player_mutation_level(MUT_SAPROVOROUS) == 3)
         {
             mprf("This %sflesh tastes delicious!",
-                (chunk_effect == CE_ROTTEN) ? "rotting " : "");
+                chunk_effect == CE_ROTTEN ? "rotting " : "");
 
             if (you.species == SP_GHOUL)
                 _heal_from_food(hp_amt, 0, !one_chance_in(4), one_chance_in(5));
@@ -1422,7 +1421,7 @@ static void _eat_chunk(int chunk_effect, bool cannibal, int mon_intel)
         else
         {
             mpr("There is something wrong with this meat.");
-            if (disease_player( 50 + random2(100) ))
+            if (disease_player(50 + random2(100)))
                 xom_is_stimulated(random2(100));
         }
         break;
@@ -1448,18 +1447,16 @@ static void _eat_chunk(int chunk_effect, bool cannibal, int mon_intel)
     }
 
     if (cannibal)
-        did_god_conduct( DID_CANNIBALISM, 10 );
+        did_god_conduct(DID_CANNIBALISM, 10);
     else if (mon_intel > 0)
-        did_god_conduct( DID_EAT_SOULED_BEING, mon_intel);
+        did_god_conduct(DID_EAT_SOULED_BEING, mon_intel);
 
     if (do_eat)
     {
-        start_delay( DELAY_EAT, 2, (suppress_msg) ? 0 : nutrition, -1 );
-        lessen_hunger( nutrition, true );
+        start_delay(DELAY_EAT, 2, (suppress_msg) ? 0 : nutrition, -1);
+        lessen_hunger(nutrition, true);
     }
-
-    return;
-}                               // end eat_chunk()
+}
 
 static void _eating(unsigned char item_class, int item_type)
 {
@@ -1517,11 +1514,11 @@ static void _eating(unsigned char item_class, int item_type)
             food_value = 100;
             break;
         case FOOD_SULTANA:
-            food_value = 70;     // will not save you from starvation
+            food_value = 70;     // Will not save you from starvation.
             break;
         default:
             break;
-        }                       // end base sustenance listing {dlb}
+        }
 
         // Next, sustenance modifier for carnivores/herbivores {dlb}:
         switch (item_type)
@@ -1568,7 +1565,7 @@ static void _eating(unsigned char item_class, int item_type)
             carnivore_modifier = 0;
             herbivore_modifier = 0;
             break;
-        }                    // end carnivore/herbivore modifier listing {dlb}
+        }
 
         // Finally, modify player's hunger level {dlb}:
         if (carnivore_modifier && how_carnivorous > 0)
@@ -1591,9 +1588,7 @@ static void _eating(unsigned char item_class, int item_type)
     default:
         break;
     }
-
-    return;
-}                               // end eating()
+}
 
 // Handle messaging at the end of eating.
 // Some food types may not get a message.
@@ -2249,7 +2244,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg, bool reqid,
     }
 
     return (survey_says);
-}                               // end can_ingest()
+}
 
 // See if you can follow along here -- except for the amulet of the gourmand
 // addition (long missing and requested), what follows is an expansion of how
@@ -2356,7 +2351,7 @@ static int _determine_chunk_effect(int which_chunk_type, bool rotten_chunk)
     }
 
     return (this_chunk_effect);
-}                               // end determine_chunk_effect()
+}
 
 static bool _vampire_consume_corpse(const int slot, bool invent)
 {
@@ -2392,7 +2387,7 @@ static bool _vampire_consume_corpse(const int slot, bool invent)
     vampire_nutrition_per_turn(corpse, -1);
     // The draining delay doesn't have a start action, and we only need
     // the continue/finish messages if it takes longer than 1 turn.
-    start_delay( DELAY_FEED_VAMPIRE, duration, (int) invent, slot );
+    start_delay(DELAY_FEED_VAMPIRE, duration, (int)invent, slot);
 
     return (true);
 }
@@ -2423,24 +2418,24 @@ int you_max_hunger()
 {
     // This case shouldn't actually happen.
     if (you.is_undead == US_UNDEAD)
-        return 6000;
+        return (6000);
 
     // Take care of ghouls - they can never be 'full'.
     if (you.species == SP_GHOUL)
-        return 6999;
+        return (6999);
 
-    return 40000;
+    return (40000);
 }
 
 int you_min_hunger()
 {
     // This case shouldn't actually happen.
     if (you.is_undead == US_UNDEAD)
-        return 6000;
+        return (6000);
 
     // Vampires can never starve to death.
     if (you.species == SP_VAMPIRE)
-        return 701;
+        return (701);
 
-    return 0;
+    return (0);
 }
