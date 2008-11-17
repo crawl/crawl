@@ -3540,6 +3540,23 @@ x.xxxxxx.xxxxxx.x
 'xxxxxxx'xxxxxxx'
 ENDMAP
 
+##############################################################################
+# Fog
+NAME:    david_entry_073
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SHUFFLE: <>/>< , {}/}{
+MARKER:  # = lua:fog_machine { \
+             pow_max = 5, delay_min = 10, delay_max = 150, \
+             size = 5, start_clouds = 1}
+MAP
+xxxxxx
+x.{}.x
+x....x
+x.<>.x
+x....x
+x@##.x
+ENDMAP
 
 ##############################################################################
 # Erik's entry vaults
@@ -4152,7 +4169,7 @@ ORIENT:  float
 MONS:    rat / nothing, hobgoblin / goblin / nothing
 SHUFFLE: '"/AB, !?XY/CDVW
 SUBST:   ':., ":=, A:x, B:x, !:., ?:=, C:x, D:x, Y=@x, V=x, W=x
-KFEAT:   X = teleport trap / floor
+KFEAT:   X = teleport trap
 SUBST:   c : cxxx
 MAP
          x@x

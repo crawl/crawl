@@ -254,6 +254,42 @@ xxxxxxxx.xxxxx111.xxxx.xxxxxxxxxxxxxxxxxxxxxx
              xxxx@xx                   xxxxxx
 ENDMAP
 
+############################################################################
+# A comfortable, reclusive cottage for the summer holidays (Eino)
+#
+NAME:    pond_and_an_island_with_a_cottage
+ORIENT:  float
+DEPTH:   Lair:3-9
+# A swamp version would be nice, but the dungeon generator destroys
+# the walls and the floors
+SUBST:   % = %%%%%$$$**|
+MONS:    patrolling necromancer / necromancer
+SHUFFLE: 23
+MONS:    giant slug zombie / giant snail zombie / \
+         elephant slug zombie w:2 / nothing
+MONS:    giant lizard zombie / gila monster zombie / \
+         komodo dragon zombie w:4 / nothing
+MAP
+             wwwwwwwww
+        wwwwwwwwwwwwwwwww
+     wwwwwwwwwwwwwwwwwwwwww
+    wwwww..........wwwwwwwww
+  wwwwww.xxxxxxxxxx.wwwwwwwww
+ wwwwwww.x.3.2+.1.x..wwwwwwww
+ wwwwwww.x+xxxx2.3x..wwwwwwwww
+wwwwwwww.x.%%%x.32x..wwwwwwwww
+wwwwwwww.xxxxxxx+xx..wwwwwwwww
+wwwwwwwww...........wwwwwwwwww
+ wwwwwwwww....WW....wwwwwwwww
+  wwwwwwwwww..WWW..wwwwwwwww
+  wwwwwwwwwww..W..wwwwwwww
+   wwwwwwwwwww...wwwwwww
+    wwwwwwwwwww..wwwww
+     wwwwwwwww...www
+       wwwwww.@.www
+         www
+ENDMAP
+
 ##########################################
 # a pointless little "vaults" by Lemuel
 #
@@ -358,7 +394,6 @@ MAP
    ......
      ..
 ENDMAP
-
 
 #############################################################################
 # plantages

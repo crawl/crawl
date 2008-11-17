@@ -86,6 +86,60 @@ wwwwwwwwwww''..................xxxxxx
 .....'w........................xxxxxx
 ENDMAP
 
+############################################################################
+# Black bear nests (Eino)
+# Bears are wimpy when you meet them, so here's an early challenge.
+#
+NAME:   black_bear_nest_1
+ORIENT: northwest
+TAGS:   uniq_black_bear_nest
+DEPTH:  D:4-8
+NSUBST: ' = 1:1 / 2:R / *:.
+MONS:   patrolling black bear
+MAP
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx
+xxxxxxx''.xxxxxxxxxx
+xxxxxx''.......xxxxx
+xxxxxx''...xx....xxx
+xxxxxxx''xxxxxxx..xx
+xxxxxxxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxxxxxx@
+ENDMAP
+
+NAME:   black_bear_nest_2
+ORIENT: southeast
+TAGS:   uniq_black_bear_nest
+DEPTH:  D:4-8
+NSUBST: ' = 1:1 / 2:R / *:.
+MONS:   patrolling black bear
+MAP
+xxxxxxxx@xxxxxx
+xxxxxxxx.xxxxxx
+xxxxxxxx.xxxxxx
+xxxxxxx..xxxxxx
+xxxxxx...xxxxxx
+xxxxx...xxxxxxx
+xxxx...xxxxxxxx
+xxx...xx'xxxxxx
+xxx..xx'.xxxxxx
+xxx..x''.xxxxxx
+@....xx'.xxxxxx
+xxx...xx.xxxxxx
+xxxx.....xxxxxx
+xxxxx....xxxxxx
+xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx
+ENDMAP
+
 #####################################
 # Dragon's cave
 #

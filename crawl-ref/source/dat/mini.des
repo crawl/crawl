@@ -165,6 +165,27 @@ xx+xx
  ...
 ENDMAP
 
+##############################################################################
+# Eino's jars
+#
+NAME:    jars
+DEPTH:   D:4-14
+TAGS:    mini_float
+SHUFFLE: 11%
+: if you.absdepth() >7 then
+MONS:    killer bee / nothing w:5
+SUBST:   % = %*
+: else
+MONS:    giant mosquito / nothing
+: end
+MAP
+xxxxxx
+x1111x
+x1111x
+x++++x
+@....@
+ENDMAP
+
 ###################################
 # pond with fungi
 #
