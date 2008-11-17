@@ -1555,12 +1555,12 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             case OBJ_STAVES:
             case OBJ_MISCELLANY:
                 tip += "Wield (w)";
-                if (is_throwable(item, you.body_size()))
+                if (is_throwable(&you, item))
                     tip += "\n[Ctrl-L-Click] Fire (f)";
                 break;
             case OBJ_WEAPONS + EQUIP_OFFSET:
                 tip += "Unwield";
-                if (is_throwable(item, you.body_size()))
+                if (is_throwable(&you, item))
                     tip += "\n[Ctrl-L-Click] Fire (f)";
                 break;
             case OBJ_MISCELLANY + EQUIP_OFFSET:

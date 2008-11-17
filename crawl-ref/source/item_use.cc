@@ -1847,7 +1847,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         {
             range     = 1 + random2( you.strength / 5 );
             max_range = you.strength / 5;
-            if (you.can_throw_rocks())
+            if (you.can_throw_large_rocks())
             {
                 range     += random_range(4, 7);
                 max_range += 7;
@@ -2342,7 +2342,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             switch (wepType)
             {
             case MI_LARGE_ROCK:
-                if (you.can_throw_rocks())
+                if (you.can_throw_large_rocks())
                     baseHit = 1;
                 break;
             case MI_DART:
@@ -4848,8 +4848,7 @@ void tile_item_use_secondary(int idx)
 {
     const item_def item = you.inv[idx];
 
-    if (item.base_type == OBJ_WEAPONS
-        && is_throwable(item, you.body_size()))
+    if (item.base_type == OBJ_WEAPONS && is_throwable(&you, item))
     {
         if (check_warning_inscriptions(item, OPER_FIRE))
             fire_thing(idx); // fire weapons

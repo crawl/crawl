@@ -690,10 +690,9 @@ missile_type fires_ammo_type(weapon_type wtype);
 const char *ammo_name(missile_type ammo);
 const char *ammo_name(const item_def &bow);
 bool has_launcher(const item_def &ammo);
-bool is_throwable(const item_def &wpn, size_type bodysize = SIZE_MEDIUM,
-                  bool force = false);
-launch_retval is_launched(actor *actor, const item_def *launcher,
-                         const item_def &missile);
+bool is_throwable(const actor *actor, const item_def &wpn, bool force = false);
+launch_retval is_launched(const actor *actor, const item_def *launcher,
+                          const item_def &missile);
 
 // staff/rod functions:
 bool item_is_rod( const item_def &item );

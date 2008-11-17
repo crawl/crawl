@@ -3023,7 +3023,7 @@ void tutorial_describe_item(const item_def &item)
                 }
             }
 
-            if (is_throwable(item, you.body_size()) && !long_text)
+            if (is_throwable(&you, item) && !long_text)
             {
                 ostr << "\n\nSome weapons (including this one), can also be "
                         "<w>f</w>ired. ";
@@ -3048,7 +3048,7 @@ void tutorial_describe_item(const item_def &item)
                         "reading a scroll of remove curse or one of the "
                         "enchantment scrolls.";
 
-                if (!wielded && is_throwable(item, you.body_size()))
+                if (!wielded && is_throwable(&you, item))
                     ostr << " (Throwing it is safe, though.)";
 
                 Options.tutorial_events[TUT_YOU_CURSED] = false;
@@ -3057,7 +3057,7 @@ void tutorial_describe_item(const item_def &item)
             break;
        }
        case OBJ_MISSILES:
-            if (is_throwable(item, you.body_size()))
+            if (is_throwable(&you, item))
             {
                 ostr << item.name(DESC_CAP_YOUR)
                      << " can be <w>f</w>ired without the use of a launcher. ";

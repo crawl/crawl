@@ -533,8 +533,7 @@ static bool _item_matches(const item_def &item, fire_type types,
                 return (true);
         }
     }
-    else if (item.base_type == OBJ_WEAPONS
-             && is_throwable(item, you.body_size()))
+    else if (item.base_type == OBJ_WEAPONS && is_throwable(&you, item))
     {
         if ((types & FIRE_RETURNING)
             && item.special == SPWPN_RETURNING

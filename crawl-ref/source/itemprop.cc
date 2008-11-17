@@ -2063,24 +2063,39 @@ bool has_launcher(const item_def &ammo)
 }
 
 // Returns true if item can be reasonably thrown without a launcher.
-bool is_throwable(const item_def &wpn, size_type bodysize, bool force)
+bool is_throwable(const actor *actor, const item_def &wpn, bool force)
 {
+    size_type bodysize = actor->body_size();
+
     if (wpn.base_type == OBJ_WEAPONS)
-        return (Weapon_prop[ Weapon_index[wpn.sub_type] ].throwable);
+        return (Weapon_prop[Weapon_index[wpn.sub_type]].throwable);
     else if (wpn.base_type == OBJ_MISSILES)
     {
-        if (!force && bodysize < SIZE_MEDIUM
-            && (wpn.sub_type == MI_JAVELIN || wpn.sub_type == MI_THROWING_NET))
+        if (!force)
         {
-            return (false);
+            if ((bodysize < SIZE_LARGE
+                    || !actor->can_throw_large_rocks())
+                && wpn.sub_type == MI_LARGE_ROCK)
+            {
+                return (false);
+            }
+
+            if (bodysize < SIZE_MEDIUM
+                && (wpn.sub_type == MI_JAVELIN
+                    || wpn.sub_type == MI_THROWING_NET))
+            {
+                return (false);
+            }
         }
-        return (Missile_prop[ Missile_index[wpn.sub_type] ].throwable);
+
+        return (Missile_prop[Missile_index[wpn.sub_type]].throwable);
     }
+
     return (false);
 }
 
 // Decide if something is launched or thrown.
-launch_retval is_launched(actor *actor, const item_def *launcher,
+launch_retval is_launched(const actor *actor, const item_def *launcher,
                           const item_def &missile)
 {
     if (missile.base_type == OBJ_MISSILES
@@ -2090,8 +2105,7 @@ launch_retval is_launched(actor *actor, const item_def *launcher,
         return (LRET_LAUNCHED);
     }
 
-    return (is_throwable(missile, actor->body_size()) ? LRET_THROWN
-                                                      : LRET_FUMBLED);
+    return (is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED);
 }
 
 //

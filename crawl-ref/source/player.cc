@@ -6865,9 +6865,9 @@ bool player::cannot_act() const
     return (asleep() || cannot_move());
 }
 
-bool player::can_throw_rocks() const
+bool player::can_throw_large_rocks() const
 {
-    return (species == SP_OGRE || species == SP_TROLL);
+    return (player_genus(GENPC_OGRE) || species == SP_TROLL);
 }
 
 void player::put_to_sleep(int)

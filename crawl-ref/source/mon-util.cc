@@ -3513,7 +3513,7 @@ item_def *monsters::weapon(int which_attack)
 }
 
 
-bool monsters::can_throw_rocks() const
+bool monsters::can_throw_large_rocks() const
 {
     return (type == MONS_STONE_GIANT
         || ::mons_species(this->type) == MONS_CYCLOPS
@@ -3548,28 +3548,10 @@ bool monsters::can_use_missile(const item_def &item) const
     if (type == MONS_DEEP_ELF_BLADEMASTER)
         return (false);
 
-    if (item.base_type == OBJ_WEAPONS)
-        return (is_throwable(item));
-
-    if (item.base_type != OBJ_MISSILES)
-        return (false);
-
-    if ((item.sub_type == MI_THROWING_NET || item.sub_type == MI_JAVELIN)
-        && body_size(PSIZE_BODY) < SIZE_MEDIUM)
+    if (item.base_type == OBJ_WEAPONS
+        || item.base_type == OBJ_MISSILES && !has_launcher(item))
     {
-        return (false);
-    }
-
-    if (item.sub_type == MI_LARGE_ROCK && !can_throw_rocks())
-        return (false);
-
-    // Stones and darts don't need any launcher, and are always okay.
-    // Other missile types that don't need any launcher should be okay
-    // if we've gotten this far.
-    if (item.sub_type == MI_STONE || item.sub_type == MI_DART
-        || !has_launcher(item))
-    {
-        return (true);
+        return (is_throwable(this, item));
     }
 
     item_def *launch;
@@ -4056,7 +4038,8 @@ bool monsters::pickup_throwable_weapon(item_def &item, int near)
     item_def *launch = NULL;
     const int exist_missile = mons_pick_best_missile(this, &launch, true);
     if (exist_missile == NON_ITEM
-        || (_q_adj_damage(mons_missile_damage(launch, &mitm[exist_missile]),
+        || (_q_adj_damage(mons_missile_damage(this, launch,
+                                              &mitm[exist_missile]),
                           mitm[exist_missile].quantity)
             < _q_adj_damage(mons_thrown_weapon_damage(&item), item.quantity)))
     {

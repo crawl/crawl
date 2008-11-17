@@ -5420,21 +5420,21 @@ int mons_thrown_weapon_damage(const item_def *weap)
     return std::max(0, (property(*weap, PWPN_DAMAGE) + weap->plus2 / 2));
 }
 
+int mons_weapon_damage_rating(const item_def &launcher)
+{
+    return (property(launcher, PWPN_DAMAGE) + launcher.plus2);
+}
+
 // Returns a rough estimate of damage from firing/throwing missile.
-int mons_missile_damage(const item_def *launch,
+int mons_missile_damage(monsters *mons, const item_def *launch,
                         const item_def *missile)
 {
-    if (!missile || (!launch && !is_throwable(*missile)))
+    if (!missile || (!launch && !is_throwable(mons, *missile)))
         return (0);
 
     const int missile_damage = property(*missile, PWPN_DAMAGE) / 2 + 1;
     const int launch_damage  = launch? property(*launch, PWPN_DAMAGE) : 0;
     return std::max(0, launch_damage + missile_damage);
-}
-
-int mons_weapon_damage_rating(const item_def &launcher)
-{
-    return (property(launcher, PWPN_DAMAGE) + launcher.plus2);
 }
 
 // Given the monster's current weapon and alt weapon (either or both of
@@ -5465,7 +5465,7 @@ int mons_pick_best_missile(monsters *mons, item_def **launcher,
         launch = NULL;
 
     const int tdam = mons_thrown_weapon_damage(melee);
-    const int fdam = mons_missile_damage(launch, missiles);
+    const int fdam = mons_missile_damage(mons, launch, missiles);
 
     if (!tdam && !fdam)
         return (NON_ITEM);

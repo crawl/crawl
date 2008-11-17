@@ -199,10 +199,10 @@ void seen_monster(monsters *monster);
 bool shift_monster(monsters *mon, coord_def p = coord_def(0,0) );
 
 int mons_weapon_damage_rating(const item_def &launcher);
+int mons_missile_damage(monsters *mons, const item_def *launch,
+                        const item_def *missile);
 int mons_pick_best_missile(monsters *mons, item_def **launcher,
                            bool ignore_melee = false);
-int mons_missile_damage(const item_def *launch,
-                        const item_def *missile);
 int mons_thrown_weapon_damage(const item_def *weap);
 
 int mons_natural_regen_rate(monsters *monster);

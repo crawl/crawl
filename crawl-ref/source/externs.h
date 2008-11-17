@@ -331,6 +331,9 @@ public:
 
     virtual int stat_hp() const = 0;
     virtual int stat_maxhp() const = 0;
+
+    virtual bool can_throw_large_rocks() const = 0;
+
     virtual int armour_class() const = 0;
     virtual int melee_evasion(const actor *attacker) const = 0;
     virtual int shield_bonus() const = 0;
@@ -935,7 +938,7 @@ public:
 
     bool cannot_act() const;
 
-    bool can_throw_rocks() const;
+    bool can_throw_large_rocks() const;
 
     int armour_class() const;
     int melee_evasion(const actor *attacker) const;
@@ -1286,6 +1289,8 @@ public:
 
     bool has_spell(spell_type spell) const;
 
+    bool can_throw_large_rocks() const;
+
     int armour_class() const;
     int melee_evasion(const actor *attacker) const;
 
@@ -1345,7 +1350,6 @@ private:
     bool drop_item(int eslot, int near);
     bool wants_weapon(const item_def &item) const;
     bool wants_armour(const item_def &item) const;
-    bool can_throw_rocks() const;
     void lose_pickup_energy();
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
