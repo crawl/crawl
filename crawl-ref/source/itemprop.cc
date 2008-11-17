@@ -1654,7 +1654,7 @@ bool is_blessed_blade(const item_def &item)
     }
 
     return (false);
-}                               // end is_blessed_blade()
+}
 
 bool is_convertible(const item_def &item)
 {
@@ -1662,7 +1662,7 @@ bool is_convertible(const item_def &item)
         && (item.base_type == OBJ_WEAPONS
             && (is_demonic(item)
                 || weapon_skill(item) == SK_LONG_BLADES)));
-}                               // end is_convertible()
+}
 
 bool convert2good(item_def &item, bool allow_blessed)
 {

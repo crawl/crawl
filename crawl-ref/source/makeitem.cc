@@ -844,7 +844,7 @@ void item_colour( item_def &item )
     default:
         break;
     }
-}                               // end item_colour()
+}
 
 static weapon_type _determine_weapon_subtype(int item_level)
 {
@@ -3613,7 +3613,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     }
 
     default: break;
-    }                           // end "switch(mon->type)"
+    }
 
     // Nagas don't get racial stuff.
     if (mons_genus(mon->type) == MONS_NAGA)
@@ -4275,8 +4275,8 @@ void item_set_appearance(item_def &item)
     case OBJ_WEAPONS:
         if (_weapon_is_visibly_special(item))
         {
-            set_equip_desc( item,
-                            (coinflip() ? ISFLAG_GLOWING : ISFLAG_RUNED) );
+            set_equip_desc(item,
+                           (coinflip() ? ISFLAG_GLOWING : ISFLAG_RUNED));
         }
         break;
 

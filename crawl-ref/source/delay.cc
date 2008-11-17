@@ -1254,7 +1254,7 @@ void armour_wear_effects(const int item_slot)
     if (is_random_artefact(arm))
         arm.flags |= ISFLAG_NOTED_ID;
 
-    set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK );
+    set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK);
 
     const equipment_type eq_slot = get_armour_slot(arm);
     const bool melded = (arm.link == you.equip[eq_slot]);

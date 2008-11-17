@@ -434,8 +434,8 @@ void identify(int power, int item_slot)
     {
         if (item_slot == -1)
         {
-            item_slot = prompt_invent_item( "Identify which item?", MT_INVLIST,
-                                            OSEL_UNIDENT, true, true, false );
+            item_slot = prompt_invent_item("Identify which item?", MT_INVLIST,
+                                           OSEL_UNIDENT, true, true, false);
         }
         if (prompt_failed(item_slot))
             return;
@@ -451,8 +451,8 @@ void identify(int power, int item_slot)
             continue;
         }
 
-        set_ident_type( item, ID_KNOWN_TYPE );
-        set_ident_flags( item, ISFLAG_IDENT_MASK );
+        set_ident_type(item, ID_KNOWN_TYPE);
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
         if (Options.autoinscribe_randarts && is_random_artefact(item))
             add_autoinscription( item, randart_auto_inscription(item));
 

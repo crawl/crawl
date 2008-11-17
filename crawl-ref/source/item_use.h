@@ -45,8 +45,7 @@ struct dist;
 /* ***********************************************************************
  * called from: acr - item_use
  * *********************************************************************** */
-bool armour_prompt(const std::string & mesg, int *index,
-                   operation_types oper);
+bool armour_prompt(const std::string & mesg, int *index, operation_types oper);
 
 
 // last updated 12may2000 {dlb}
@@ -111,7 +110,7 @@ void throw_item_no_quiver(void);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-void wear_armour( int slot = -1 );
+void wear_armour(int slot = -1);
 
 bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary);
 
@@ -119,7 +118,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary);
 /* ***********************************************************************
  * called from: acr
  * *********************************************************************** */
-bool do_wear_armour( int item, bool quiet );
+bool do_wear_armour(int item, bool quiet);
 
 struct item_def;
 // last updated 30May2003 {ds}
@@ -158,14 +157,14 @@ void use_randart(item_def &item, bool unmeld = false);
 
 bool puton_item(int slot, bool prompt_finger = true);
 
-bool enchant_weapon( enchant_stat_type which_stat, bool quiet, item_def &wpn );
-bool enchant_armour( int &ac_change, bool quiet, item_def &arm );
+bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn);
+bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
 
 bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
               int acc_bonus = 0, dist *target = NULL);
 
-bool thrown_object_destroyed( item_def *item, const coord_def& where,
-                              bool returning );
+bool thrown_object_destroyed(item_def *item, const coord_def& where,
+                              bool returning);
 
 void prompt_inscribe_item();
 int launcher_shield_slowdown(const item_def &launcher,
