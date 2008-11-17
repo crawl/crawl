@@ -3802,7 +3802,7 @@ static void _give_ammo(monsters *mon, int level,
             return;
 
         const int thing_created =
-            items( 0, weap_class, weap_type, true, level, item_race );
+            items(0, weap_class, weap_type, true, level, item_race);
 
         if (thing_created != NON_ITEM)
         {
