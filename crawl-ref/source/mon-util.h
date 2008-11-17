@@ -44,6 +44,8 @@ enum mon_attack_type
     AT_TOUCH,
     AT_ENGULF,
     AT_CLAW,
+    AT_PUNCH,
+    AT_KICK,
     AT_TAIL_SLAP,
     AT_BUTT,
 
