@@ -3057,7 +3057,7 @@ void tutorial_describe_item(const item_def &item)
             break;
        }
        case OBJ_MISSILES:
-            if ( is_throwable(item, player_size()) )
+            if (is_throwable(item, you.body_size()))
             {
                 ostr << item.name(DESC_CAP_YOUR)
                      << " can be <w>f</w>ired without the use of a launcher. ";

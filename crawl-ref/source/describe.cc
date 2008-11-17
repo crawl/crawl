@@ -802,7 +802,7 @@ void append_weapon_stats(std::string &description, const item_def &item)
 // describe_weapon
 //
 //---------------------------------------------------------------
-static std::string _describe_weapon( const item_def &item, bool verbose)
+static std::string _describe_weapon(const item_def &item, bool verbose)
 {
     std::string description;
 
@@ -1142,7 +1142,7 @@ static std::string _describe_ammo( const item_def &item )
     }
 
     bool can_launch    = has_launcher(item);
-    bool can_throw     = is_throwable(item);
+    bool can_throw     = is_throwable(item, you.body_size(), true);
     bool need_new_line = true;
 
     if (item.special && item_type_known(item))

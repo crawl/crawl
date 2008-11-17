@@ -2251,7 +2251,7 @@ bool player_is_shapechanged(void)
 // that wears armour and wields weapons (which is different for some hybrids).
 // base defaults to "false", meaning consider our current size, not our
 // natural one.
-size_type player_size( int psize, bool base )
+size_type player_size(int psize, bool base)
 {
     return you.body_size(psize, base);
 }

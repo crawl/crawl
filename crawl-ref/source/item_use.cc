@@ -4849,7 +4849,7 @@ void tile_item_use_secondary(int idx)
     const item_def item = you.inv[idx];
 
     if (item.base_type == OBJ_WEAPONS
-        && is_throwable(item, player_size(PSIZE_BODY)))
+        && is_throwable(item, you.body_size()))
     {
         if (check_warning_inscriptions(item, OPER_FIRE))
             fire_thing(idx); // fire weapons

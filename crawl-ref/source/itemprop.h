@@ -683,15 +683,15 @@ skill_type range_skill( const item_def &item );
 skill_type range_skill( object_class_type wclass, int wtype );
 
 // launcher and ammo functions:
-bool          is_range_weapon( const item_def &item );
-bool          is_range_weapon_type( weapon_type wtype );
-missile_type  fires_ammo_type( const item_def &item );
-missile_type fires_ammo_type( weapon_type wtype );
-const char *  ammo_name( const item_def &bow );
-const char *  ammo_name( missile_type mtyp );
-bool          has_launcher( const item_def &ammo );
-bool          is_throwable( const item_def &wpn,
-                            size_type bodysize = SIZE_MEDIUM );
+bool is_range_weapon(const item_def &item);
+bool is_range_weapon_type(weapon_type wtype);
+missile_type fires_ammo_type(const item_def &item);
+missile_type fires_ammo_type(weapon_type wtype);
+const char *ammo_name(missile_type ammo);
+const char *ammo_name(const item_def &bow);
+bool has_launcher(const item_def &ammo);
+bool is_throwable(const item_def &wpn, size_type bodysize = SIZE_MEDIUM,
+                  bool force = false);
 launch_retval is_launched(actor *actor, const item_def *launcher,
                          const item_def &missile);
 

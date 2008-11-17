@@ -248,7 +248,7 @@ public:
     virtual bool can_pass_through(int x, int y) const;
     virtual bool can_pass_through(const coord_def &c) const;
 
-    virtual size_type body_size(int psize = PSIZE_TORSO,
+    virtual size_type body_size(int psize = PSIZE_BODY,
                                 bool base = false) const = 0;
     virtual int       body_weight() const = 0;
     virtual int       total_weight() const = 0;
@@ -847,7 +847,7 @@ public:
     bool      floundering() const;
     bool      extra_balanced() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
-    size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
+    size_type body_size(int psize = PSIZE_BODY, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;
     int       damage_type(int attk = -1);
@@ -1185,7 +1185,7 @@ public:
     bool      floundering() const;
     bool      extra_balanced() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
-    size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
+    size_type body_size(int psize = PSIZE_BODY, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;
     int       damage_type(int attk = -1);
