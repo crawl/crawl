@@ -179,7 +179,7 @@ void ghost_demon::init_random_demon()
     {
         do
         {
-            brand = static_cast<brand_type>( random2(MAX_PAN_LORD_BRANDS) );
+            brand = static_cast<brand_type>(random2(MAX_PAN_LORD_BRANDS));
             // some brands inappropriate (e.g. holy wrath)
         }
         while (brand == SPWPN_HOLY_WRATH

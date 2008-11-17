@@ -1543,11 +1543,11 @@ hands_reqd_type hands_reqd( const item_def &item, size_type size )
         }
 
         // Adjust handedness for size only for non-whip melee weapons.
-        if (!is_range_weapon( item )
+        if (!is_range_weapon(item)
             && item.sub_type != WPN_WHIP
             && item.sub_type != WPN_DEMON_WHIP)
         {
-            fit = cmp_weapon_size( item, size );
+            fit = cmp_weapon_size(item, size);
 
             // Adjust handedness for non-medium races:
             // (XX values don't matter, see fit_weapon_wieldable_size)
@@ -2085,13 +2085,13 @@ bool is_throwable( const item_def &wpn, size_type bodysize )
         return (Weapon_prop[ Weapon_index[wpn.sub_type] ].throwable);
     else if (wpn.base_type == OBJ_MISSILES)
     {
-        if (bodysize < SIZE_MEDIUM && wpn.sub_type == MI_JAVELIN)
+        if (bodysize < SIZE_MEDIUM
+            && (wpn.sub_type == MI_JAVELIN || wpn.sub_type == MI_THROWING_NET))
+        {
             return (false);
-        if (bodysize < SIZE_MEDIUM && wpn.sub_type == MI_THROWING_NET)
-            return (false);
+        }
         return (Missile_prop[ Missile_index[wpn.sub_type] ].throwable);
     }
-
     return (false);
 }
 
