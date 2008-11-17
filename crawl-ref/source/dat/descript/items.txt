@@ -700,7 +700,15 @@ user, with a small cost attached.
 %%%%
 large rock
 
-A rock, used by giants as a missile.
+A rock, used by giants as a missile. {{
+if string.find(you.race(), "Ogre")
+   or you.race() == "Troll"
+then
+    return ""
+else
+    return "Unfortunately, it is too heavy and awkward for you to use."
+end
+}}
 %%%%
 large shield
 
