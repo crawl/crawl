@@ -1815,10 +1815,10 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         if (!hurted && res > 0)
         {
             if (doFlavouredEffects)
-                simple_monster_message( monster, " appears unharmed." );
+                simple_monster_message(monster, " appears unharmed.");
         }
         else if (res <= 0 && doFlavouredEffects && !one_chance_in(3))
-            poison_monster( monster, _whose_kill(pbolt) );
+            poison_monster(monster, _whose_kill(pbolt));
 
         break;
     }
@@ -1836,11 +1836,11 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                 // Poison arrow can poison any living thing regardless of
                 // poison resistance. -- bwr
                 if (mons_has_lifeforce(monster))
-                    poison_monster( monster, _whose_kill(pbolt), 2, true );
+                    poison_monster(monster, _whose_kill(pbolt), 2, true);
             }
         }
         else if (doFlavouredEffects)
-            poison_monster( monster, _whose_kill(pbolt), 4 );
+            poison_monster(monster, _whose_kill(pbolt), 4);
 
         break;
 
@@ -1898,14 +1898,14 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             if (!doFlavouredEffects)
                 return (hurted);
 
-            if (mons_res_poison( monster ) <= 0)
-                poison_monster( monster, _whose_kill(pbolt) );
+            if (mons_res_poison(monster) <= 0)
+                poison_monster(monster, _whose_kill(pbolt));
 
-            if (one_chance_in( 3 + 2 * mons_res_negative_energy(monster) ))
+            if (one_chance_in(3 + 2 * mons_res_negative_energy(monster)))
             {
                 bolt beam;
                 beam.flavour = BEAM_SLOW;
-                mons_ench_f2( monster, beam );
+                mons_ench_f2(monster, beam);
             }
         }
         break;
@@ -1928,8 +1928,9 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
 
         if (doFlavouredEffects)
         {
-            simple_monster_message(monster, (hurted == 0) ?
-                " appears unharmed." : " writhes in agony!");
+            simple_monster_message(monster,
+                                   hurted == 0 ? " appears unharmed."
+                                               : " writhes in agony!");
         }
 
         break;
@@ -1977,7 +1978,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
     default:
         break;
-    }                           // end of switch
+    }
 
     if (pbolt.name == "hellfire")
     {
@@ -2047,7 +2048,7 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
             return (true);
         }
 
-        if (check_mons_resist_magic( monster, pow ))
+        if (check_mons_resist_magic(monster, pow))
         {
             simple_monster_message(monster,
                                    mons_immune_magic(monster)? " is unaffected."

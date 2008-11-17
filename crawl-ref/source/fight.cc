@@ -3602,11 +3602,11 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_ROT:
         if (one_chance_in(20) || (damage_done > 2 && one_chance_in(3)))
-            defender->rot( attacker, 2 + random2(3), damage_done > 5 );
+            defender->rot(attacker, 2 + random2(3), damage_done > 5);
         break;
 
     case AF_DISEASE:
-        defender->sicken( 50 + random2(100) );
+        defender->sicken(50 + random2(100));
         break;
 
     case AF_FIRE:
@@ -3635,7 +3635,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
             resist_adjust_damage(defender,
                                  BEAM_COLD,
                                  defender->res_cold(),
-                                 atk->hit_dice + random2( 2 * atk->hit_dice ));
+                                 atk->hit_dice + random2(2 * atk->hit_dice));
 
         if (needs_message && special_damage)
         {
@@ -3652,7 +3652,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                 defender,
                 BEAM_ELECTRICITY,
                 defender->res_elec(),
-                atk->hit_dice + random2( atk->hit_dice / 2 ));
+                atk->hit_dice + random2(atk->hit_dice / 2));
 
         if (defender->airborne())
             special_damage = special_damage * 2 / 3;
@@ -3706,7 +3706,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
             {
                 if (defender->atype() == ACT_PLAYER)
                     mprf("You feel less resilient.");
-                defender->rot( attacker, 0, coinflip()? 2 : 1 );
+                defender->rot(attacker, 0, coinflip() ? 2 : 1);
             }
         }
         break;
@@ -3767,7 +3767,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         if (one_chance_in(10)
             || (damage_done > 2 && one_chance_in(3)))
         {
-            defender->confuse( 1 + random2( 3 + atk->hit_dice ) );
+            defender->confuse(1 + random2(3 + atk->hit_dice));
         }
         break;
 
@@ -3819,7 +3819,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
 void melee_attack::mons_perform_attack_rounds()
 {
-    const int nrounds   = atk->has_hydra_multi_attack()? atk->number : 4;
+    const int nrounds   = atk->has_hydra_multi_attack() ? atk->number : 4;
     const coord_def pos = defender->pos();
 
     // Melee combat, tell attacker to wield its melee weapon.
