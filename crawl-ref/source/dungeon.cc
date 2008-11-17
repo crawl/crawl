@@ -4652,12 +4652,8 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
             stair_exist[sty] = 0;
     }
 
-    // Don't create any new up stairs on dungeon level 1.
-    const bool no_up_stairs =
-        level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1);
-
     for (int j = 0; j < (coinflip()? 4 : 3); j++)
-        for (int i = 0; i < (no_up_stairs ? 1 : 2); i++)
+        for (int i = 0; i < 2; i++)
         {
             const dungeon_feature_type stair
                 = static_cast<dungeon_feature_type>(
