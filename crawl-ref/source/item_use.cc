@@ -478,6 +478,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
     unsigned char i_dam = 0;
 
     item_def &item = you.inv[item_wield_2];
+    const bool artefact     = is_random_artefact(item);
     const bool known_cursed = item_known_cursed(item);
 
     // And here we finally get to the special effects of wielding. {dlb}
@@ -533,19 +534,16 @@ void wield_effects(int item_wield_2, bool showMsgs)
         // (could be extended to other talking weapons...)
         const std::string old_desc = item.name(DESC_CAP_THE);
 
-        if (!was_known)
-        {
-            if (is_random_artefact(item))
-                item.flags |= ISFLAG_NOTED_ID;
-            set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
-        }
+        set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
 
-        if (is_random_artefact(item))
+        if (artefact)
         {
             i_dam = randart_wpn_property(item, RAP_BRAND);
             use_randart(item_wield_2);
             if (!was_known)
             {
+                item.flags |= ISFLAG_NOTED_ID;
+
                 if (Options.autoinscribe_randarts)
                     add_autoinscription(item, randart_auto_inscription(item));
 
@@ -765,8 +763,6 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 xom_is_stimulated(64);
         }
 
-        // Give curse status when wielded.
-        set_ident_flags( item, ISFLAG_KNOW_CURSE );
         break;
     }
     default:
@@ -777,7 +773,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
         warn_shield_penalties();
 
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-}                               // end wield_weapon()
+}
 
 //---------------------------------------------------------------
 //
