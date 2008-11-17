@@ -2923,7 +2923,7 @@ static void _give_monster_item(monsters *mon, int thing,
              mthing.name(DESC_PLAIN).c_str(), mon->name(DESC_PLAIN).c_str());
 #endif
         destroy_item(thing);
-        return ;
+        return;
     }
 
     if (!force_item || mthing.colour == BLACK)
@@ -3542,11 +3542,11 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.colour = (one_chance_in(3) ? WHITE : CYAN);
         break;
 
-    case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_ORC_WIZARD:
     case MONS_ORC_SORCERER:
         item_race = MAKE_ITEM_ORCISH;
         // deliberate fall-through, I guess {dlb}
+    case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_NECROMANCER:
     case MONS_WIZARD:
     case MONS_PSYCHE:
@@ -3799,7 +3799,7 @@ static void _give_ammo(monsters *mon, int level,
         }
 
         if (weap_type == -1)
-            return ;
+            return;
 
         const int thing_created =
             items( 0, weap_class, weap_type, true, level, item_race );
