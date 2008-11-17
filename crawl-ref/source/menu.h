@@ -196,7 +196,7 @@ public:
     virtual void draw_stock_item(int index, const MenuEntry *me) = 0;
     virtual void set_offset(int lines) = 0;
     virtual void draw_more() = 0;
-    virtual void set_num_columns(int columns) = 0; 
+    virtual void set_num_columns(int columns) = 0;
 protected:
     Menu *m_menu;
 };
