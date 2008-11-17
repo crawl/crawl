@@ -47,10 +47,14 @@ PCRELIBA := lib$(PCRELIB).a
 
 RLTILES = rltiles
 EXTRA_INCLUDES += -I$(RLTILES)
-OBJECTS += \
-    $(RLTILES)/tiledef-dngn.o \
-    $(RLTILES)/tiledef-main.o \
-    $(RLTILES)/tiledef-player.o
+
+TILEDEFS = dngn main player
+TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
+TILEDEFOBJS = $(TILEDEFPRES:%=%.o)
+TILEDEFSRCS = $(TILEDEFPRES:%=%.cc)
+TILEDEFHDRS = $(TILEDEFPRES:%=%.h)
+
+OBJECTS += $(TILEDEFOBJS)
 
 TILEFILES = \
     main.png \
@@ -152,6 +156,10 @@ makerltiles:
 	pushd $(RLTILES) && $(MAKE) -f makefile.mgw all
 	mkdir $(OPATH)\rltiles 2>nul || echo.>nul
 
+$(TILEDEFSRCS): makerltiles
+
+$(TILEDEFHDRS): makerltiles
+
 $(ORIGTILEFILES): makerltiles
 
 dat/tiles/%.png: rltiles/%.png
@@ -238,10 +246,10 @@ debug:		$(GAME_DEPENDS)
 profile:	$(GAME_DEPENDS)
 		${CXX} -g -p ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(APPNAME) $(LIB)
 
-$(OPATH)/%.o: %.cc
+$(OPATH)/%.o: %.cc $(TILEDEFHDRS)
 		${CXX} ${CFLAGS} -o $@ -c $<
 
-$(OPATH)/%.o: $(UTIL)%.cc
+$(OPATH)/%.o: $(UTIL)%.cc $(TILEDEFHDRS)
 		$(CXX) $(YCFLAGS) -o $@ -c $<
 
 #############################################################################

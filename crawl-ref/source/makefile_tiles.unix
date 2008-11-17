@@ -104,7 +104,14 @@ endif
 RLTILES = rltiles
 
 EXTRA_INCLUDES += -I$(RLTILES)
-OBJECTS += $(RLTILES)/tiledef-dngn.o $(RLTILES)/tiledef-main.o $(RLTILES)/tiledef-player.o
+
+TILEDEFS = dngn main player
+TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
+TILEDEFOBJS = $(TILEDEFPRES:%=%.o)
+TILEDEFSRCS = $(TILEDEFPRES:%=%.cc)
+TILEDEFHDRS = $(TILEDEFPRES:%=%.h)
+
+OBJECTS += $(TILEDEFOBJS)
 
 TILEFILES = \
 	main.png \
@@ -226,6 +233,10 @@ ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 makerltiles:
 	cd $(RLTILES) && make -f makefile.unix all
 
+$(TILEDEFSRCS): makerltiles
+
+$(TILEDEFHDRS): makerltiles
+
 $(ORIGTILEFILES): makerltiles
 
 dat/tiles/%.png: $(RLTILES)/%.png
@@ -305,13 +316,13 @@ debug: $(GAME_DEPENDS)
 profile: $(GAME_DEPENDS)
 	${CXX} -g -p ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
 
-.cc.o:
+%.o: %.cc $(TILEDEFHDRS)
 	${CXX} ${CFLAGS} -c $< -o $@
 
 # [ds] Note we don't use the standard CFLAGS here; that's intentional, most
 # flex/bison combos I've tried don't produce code that passes the warnings
 # test.
-$(UTIL)%.o: $(UTIL)%.cc
+$(UTIL)%.o: $(UTIL)%.cc $(TILEDEFHDRS)
 	$(CXX) $(YCFLAGS) -o $@ -c $<
 
 #############################################################################
