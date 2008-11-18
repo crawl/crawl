@@ -503,6 +503,15 @@ static void _get_symbol( const coord_def& where,
         *colour = real_colour(*colour);
 }
 
+unsigned grid_character_at(const coord_def &c)
+{
+    unsigned glych;
+    unsigned short glycol = 0;
+
+    _get_symbol(c, grd(c), &glych, &glycol );
+    return glych;
+}
+
 void get_item_symbol(unsigned int object, unsigned *ch,
                      unsigned short *colour)
 {

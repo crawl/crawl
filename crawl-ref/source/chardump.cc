@@ -1125,7 +1125,7 @@ static std::string morgue_directory()
     return (dir);
 }
 
-void dump_map(FILE *fp)
+void dump_map(FILE *fp, bool debug)
 {
     // Duplicate the screenshot() trick.
     FixedVector<unsigned, NUM_DCHAR_TYPES> char_table_bk;
@@ -1134,24 +1134,38 @@ void dump_map(FILE *fp)
     init_char_table(CSET_ASCII);
     init_feature_table();
 
-    int min_x = GXM-1, max_x = 0, min_y = GYM-1, max_y = 0;
-
-    for (int i = X_BOUND_1; i <= X_BOUND_2; i++)
-        for (int j = Y_BOUND_1; j <= Y_BOUND_2; j++)
-            if (env.map[i][j].known())
-            {
-                if (i > max_x) max_x = i;
-                if (i < min_x) min_x = i;
-                if (j > max_y) max_y = j;
-                if (j < min_y) min_y = j;
-            }
-
-    for (int y = min_y; y <= max_y; ++y)
+    if (debug)
     {
-        for (int x = min_x; x <= max_x; ++x)
-            fputc( env.map[x][y].glyph(), fp );
+        // Write the whole map out without checking for mappedness. Handy
+        // for debugging level-generation issues.
+        for (int y = 0; y < GYM; ++y)
+        {
+            for (int x = 0; x < GXM; ++x)
+                fputc(grid_character_at(coord_def(x,y)), fp);
+            fputc('\n', fp);
+        }
+    }
+    else
+    {
+        int min_x = GXM-1, max_x = 0, min_y = GYM-1, max_y = 0;
 
-        fputc('\n', fp);
+        for (int i = X_BOUND_1; i <= X_BOUND_2; i++)
+            for (int j = Y_BOUND_1; j <= Y_BOUND_2; j++)
+                if (env.map[i][j].known())
+                {
+                    if (i > max_x) max_x = i;
+                    if (i < min_x) min_x = i;
+                    if (j > max_y) max_y = j;
+                    if (j < min_y) min_y = j;
+                }
+
+        for (int y = min_y; y <= max_y; ++y)
+        {
+            for (int x = min_x; x <= max_x; ++x)
+                fputc( env.map[x][y].glyph(), fp );
+
+            fputc('\n', fp);
+        }
     }
 
     // Restore char and feature tables
@@ -1159,13 +1173,13 @@ void dump_map(FILE *fp)
     init_feature_table();
 }
 
-void dump_map(const char* fname)
+void dump_map(const char* fname, bool debug)
 {
     FILE* fp = fopen(fname, "w");
     if (!fp)
         return;
 
-    dump_map(fp);
+    dump_map(fp, debug);
 
     fclose(fp);
 }

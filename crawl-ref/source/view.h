@@ -220,6 +220,7 @@ bool see_grid_no_trans( const coord_def &p );
 bool trans_wall_blocking( const coord_def &p );
 bool grid_see_grid(const coord_def& p1, const coord_def& p2,
                    dungeon_feature_type allowed = DNGN_UNSEEN);
+unsigned grid_character_at(const coord_def &c);
 
 inline bool see_grid( int grx, int gry )
 {

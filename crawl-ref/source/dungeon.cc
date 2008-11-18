@@ -17,6 +17,7 @@
 #include "AppHdr.h"
 #include "abyss.h"
 #include "branch.h"
+#include "chardump.h"
 #include "cloud.h"
 #include "defines.h"
 #include "enum.h"
@@ -478,6 +479,11 @@ static bool _is_passable_ignore_vault(const coord_def &c)
 bool dgn_square_is_passable(const coord_def &c)
 {
     // [enne] Why does this function check MMT_OPAQUE?
+    //
+    // Don't peek inside MMT_OPAQUE vaults (all vaults are opaque by
+    // default) because vaults may choose to create isolated regions,
+    // or otherwise cause connectivity issues even if the map terrain
+    // is travel-passable.
     return (!(dgn_Map_Mask(c) & MMT_OPAQUE)
             && (is_travelsafe_square(c.x, c.y, false, true)
                 || grd(c) == DNGN_SECRET_DOOR));
@@ -1283,16 +1289,21 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
         {
+            // [ds] Use dgn_square_is_passable instead of
+            // _is_passable_ignore_vault here, for we'll otherwise
+            // fail on floorless isolated pocket in vaults (like the
+            // altar surrounded by deep water), and trigger the assert
+            // downstairs.
             const coord_def gc(x, y);
             if (!map_bounds(x, y)
                 || travel_point_distance[x][y]
-                || !_is_passable_ignore_vault(gc))
+                || !dgn_square_is_passable(gc))
             {
                 continue;
             }
 
             if (_dgn_fill_zone(gc, ++nzones, _dgn_point_record_stub,
-                               _is_passable_ignore_vault, iswanted))
+                               dgn_square_is_passable, iswanted))
             {
                 continue;
             }
@@ -1336,6 +1347,9 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
                     return (true);
                 }
 
+#ifdef DEBUG_DIAGNOSTICS
+            dump_map("debug.map", true);
+#endif
             ASSERT(!"Couldn't find region.");
             return (false);
         }
@@ -4668,14 +4682,30 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
             if (stair_exist[stair - DNGN_STONE_STAIRS_DOWN_I] == 1)
                 continue;
 
+            int tries = 10000;
             do
             {
                 pos_x = random_range(X_BOUND_1 + 1, X_BOUND_2 - 1);
                 pos_y = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 1);
             }
-            while (grd[pos_x][pos_y] != DNGN_FLOOR
-                   || (pos_x >= v1x && pos_x <= v2x && pos_y >= v1y
-                       && pos_y <= v2y));
+            while ((grd[pos_x][pos_y] != DNGN_FLOOR
+                    || (!is_layout && pos_x >= v1x && pos_x <= v2x
+                        && pos_y >= v1y && pos_y <= v2y))
+                   && tries-- > 0);
+
+
+            if (tries <= 0)
+            {
+#ifdef DEBUG_DIAGNOSTICS
+                dump_map("debug.map", true);
+                end(1, false,
+                    "Failed to create level: vault stairs for %s "
+                    "(layout: %s) failed",
+                    place.map.name.c_str(), is_layout? "yes" : "no");
+#endif
+                pos_x = you.pos().x;
+                pos_y = you.pos().y;
+            }
 
             grd[pos_x][pos_y] = stair;
         }
