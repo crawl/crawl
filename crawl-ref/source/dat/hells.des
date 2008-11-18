@@ -199,7 +199,7 @@ ENDMAP
 NAME:    Lemuel_Dis_Dragons
 DEPTH:   Dis:2-6
 ORIENT:  float
-FLAGS:   no_rotate
+TAGS:    no_rotate
 MONS:    iron dragon, iron dragon
 SHUFFLE: ]})
 SUBST:   1=1. , }=}}> , )=))> , ]=]]>

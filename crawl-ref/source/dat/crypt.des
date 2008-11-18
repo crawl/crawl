@@ -211,8 +211,7 @@ ENDMAP
 ###########################################################
 # she sells tomb entry shells by the sea shore
 NAME:   tomb_entry_shell_bobbens
-TAGS:   tomb_entry no_monster_gen no_item_gen
-FLAGS:  no_rotate
+TAGS:   tomb_entry no_monster_gen no_item_gen no_rotate
 MONS:   guardian mummy
 MONS:   mummy priest
 MAP
@@ -356,8 +355,7 @@ ENDMAP
 #
 NAME:   cryptofortress_bobbens
 ORIENT: encompass
-TAGS:   no_monster_gen no_item_gen no_pool_fixup
-FLAGS:  no_rotate no_vmirror
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_vmirror
 PLACE:  Crypt:5
 KFEAT:  A = w
 KMONS:  A = flying skull

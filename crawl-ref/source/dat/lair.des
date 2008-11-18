@@ -892,7 +892,7 @@ ENDMAP
 #
 NAME:    snake_hunt
 PLACE:   Snake:5
-FLAGS:   no_rotate
+TAGS:    no_rotate
 ORIENT:  northwest
 KFEAT:   Z = weight:2 teleport trap / .
 KFEAT:   z = teleport trap / Zot trap / weight:20 .
@@ -960,7 +960,7 @@ ENDMAP
 NAME:   snake_pit
 PLACE:  Snake:5
 ORIENT: southwest
-FLAGS:  no_rotate
+TAGS:   no_rotate
 MONS:   greater naga / nothing
 MONS:   naga
 MONS:   naga mage / nothing
@@ -1012,7 +1012,7 @@ ENDMAP
 NAME:    swamp
 PLACE:   Swamp:5
 ORIENT:  southeast
-FLAGS:   no_rotate
+TAGS:    no_rotate
 MONS:    swamp dragon / nothing
 MONS:    swamp drake / nothing
 MONS:    hydra / nothing
@@ -1061,8 +1061,7 @@ ENDMAP
 #
 NAME:    swamp_alternative
 PLACE:   Swamp:5
-TAGS:    no_pool_fixup
-FLAGS:   no_rotate
+TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
 MONS:    swamp dragon, swamp drake, hydra, firedrake
 ITEM:    nothing

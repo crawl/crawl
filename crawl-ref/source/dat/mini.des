@@ -458,7 +458,7 @@ ENDMAP
 #
 NAME:   anthell
 DEPTH:  D:12-19, Lair:2-, Hive
-FLAGS:  no_rotate
+TAGS:   no_rotate
 MONS:   queen ant, soldier ant, giant ant, soldier ant / w:20 giant ant
 SUBST:  ? = . x
 MAP
