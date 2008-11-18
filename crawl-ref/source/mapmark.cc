@@ -188,13 +188,6 @@ map_lua_marker::map_lua_marker(const std::string &s, const std::string &,
 
 map_lua_marker::~map_lua_marker()
 {
-    // Remove the Lua marker table from the registry.
-    if (initialised)
-    {
-        lua_pushlightuserdata(dlua, this);
-        lua_pushnil(dlua);
-        lua_settable(dlua, LUA_REGISTRYINDEX);
-    }
 }
 
 map_marker *map_lua_marker::clone() const
@@ -216,22 +209,21 @@ void map_lua_marker::check_register_table()
     }
 
     // Got a table. Save it in the registry.
-
-    // Key is this.
-    lua_pushlightuserdata(dlua, this);
-    // Move key before value.
-    lua_insert(dlua, -2);
-    lua_settable(dlua, LUA_REGISTRYINDEX);
-
+    marker_table.reset(new lua_datum(dlua));
     initialised = true;
 }
 
 bool map_lua_marker::get_table() const
 {
-    // First save the unmarshall Lua function.
-    lua_pushlightuserdata(dlua, const_cast<map_lua_marker*>(this));
-    lua_gettable(dlua, LUA_REGISTRYINDEX);
-    return (lua_istable(dlua, -1));
+    if (marker_table.get())
+    {
+        marker_table->push();
+        return (lua_istable(dlua, -1));
+    }
+    else
+    {
+        return (false);
+    }
 }
 
 void map_lua_marker::write(writer &outf) const

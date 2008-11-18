@@ -84,12 +84,17 @@ CLua::CLua(bool managed)
 
 CLua::~CLua()
 {
+    // Copy the listener vector, because listeners may remove
+    // themselves from the listener list when we notify them of a
+    // shutdown.
+    const std::vector<lua_shutdown_listener*> slisteners = shutdown_listeners;
+    for (int i = 0, size = slisteners.size(); i < size; ++i)
+        slisteners[i]->shutdown(*this);
     shutting_down = true;
     if (_state)
         lua_close(_state);
 }
 
-// This has the disadvantage of repeatedly trying init_lua if it fails.
 lua_State *CLua::state()
 {
     if (!_state)
@@ -597,7 +602,7 @@ void CLua::init_lua()
 
     _state = managed_vm? lua_newstate(_clua_allocator, this) : luaL_newstate();
     if (!_state)
-        return;
+        end(1, false, "Unable to create Lua state.");
 
     lua_stack_cleaner clean(_state);
 
@@ -656,6 +661,22 @@ void CLua::load_chooks()
 void CLua::load_cmacro()
 {
     execfile("clua/macro.lua", true, true);
+}
+
+void CLua::add_shutdown_listener(lua_shutdown_listener *listener)
+{
+    if (std::find(shutdown_listeners.begin(), shutdown_listeners.end(),
+                  listener) == shutdown_listeners.end())
+        shutdown_listeners.push_back(listener);
+}
+
+void CLua::remove_shutdown_listener(lua_shutdown_listener *listener)
+{
+    std::vector<lua_shutdown_listener*>::iterator i =
+        std::find(shutdown_listeners.begin(), shutdown_listeners.end(),
+                  listener);
+    if (i != shutdown_listeners.end())
+        shutdown_listeners.erase(i);
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -2848,4 +2869,63 @@ static int _clua_dofile(lua_State *ls)
 std::string quote_lua_string(const std::string &s)
 {
     return replace_all_of(replace_all_of(s, "\\", "\\\\"), "\"", "\\\"");
+}
+
+/////////////////////////////////////////////////////////////////////
+
+lua_datum::lua_datum(CLua &_lua, int stackpos, bool pop)
+    : need_cleanup(true), lua(_lua)
+{
+    // Store the datum in the registry indexed by "this".
+    lua_pushvalue(lua, stackpos);
+    lua_pushlightuserdata(lua, this);
+    // Move the key (this) before the value.
+    lua_insert(lua, -2);
+    lua_settable(lua, LUA_REGISTRYINDEX);
+
+    if (pop && stackpos < 0)
+        lua_pop(lua, -stackpos);
+
+    lua.add_shutdown_listener(this);
+}
+
+lua_datum::lua_datum(const lua_datum &o)
+    : need_cleanup(true), lua(o.lua)
+{
+    lua_pushlightuserdata(lua, this);
+    o.push();
+    lua_settable(lua, LUA_REGISTRYINDEX);
+
+    lua.add_shutdown_listener(this);
+}
+
+void lua_datum::push() const
+{
+    lua_pushlightuserdata(lua, const_cast<lua_datum*>(this));
+    lua_gettable(lua, LUA_REGISTRYINDEX);
+
+    // The value we saved is now on top of the Lua stack.
+}
+
+lua_datum::~lua_datum()
+{
+    cleanup();
+}
+
+void lua_datum::shutdown(CLua &)
+{
+    cleanup();
+}
+
+void lua_datum::cleanup()
+{
+    if (need_cleanup)
+    {
+        need_cleanup = false;
+        lua.remove_shutdown_listener(this);
+
+        lua_pushlightuserdata(lua, this);
+        lua_pushnil(lua);
+        lua_settable(lua, LUA_REGISTRYINDEX);
+    }
 }

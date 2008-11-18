@@ -16,6 +16,7 @@
 #include "luadgn.h"
 #include <map>
 #include <string>
+#include <memory>
 
 //////////////////////////////////////////////////////////////////////////
 // Map markers
@@ -117,6 +118,8 @@ public:
         throw (std::string);
 private:
     bool initialised;
+    std::auto_ptr<lua_datum> marker_table;
+
 private:
     void check_register_table();
     bool get_table() const;

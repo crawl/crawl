@@ -57,6 +57,36 @@ private:
     static lua_clua_map lua_map;
 };
 
+class lua_shutdown_listener
+{
+public:
+    virtual void shutdown(CLua &lua) = 0;
+};
+
+// A convenience class to keep a reference to a lua object on the stack.
+// This is useful to hang on to things that cannot be directly retrieved by
+// C++ code, such as Lua function references.
+class lua_datum : public lua_shutdown_listener
+{
+public:
+    lua_datum(CLua &lua, int stackpos = -1, bool pop = true);
+    lua_datum(const lua_datum &other);
+
+    void shutdown(CLua &lua);
+
+    ~lua_datum();
+
+    // Push the datum onto the Lua stack.
+    void push() const;
+
+private:
+    bool need_cleanup;
+    CLua &lua;
+
+private:
+    void cleanup();
+};
+
 class CLua
 {
 public:
@@ -95,6 +125,9 @@ public:
     void fnreturns(const char *params, ...);
     bool runhook(const char *hook, const char *params, ...);
 
+    void add_shutdown_listener(lua_shutdown_listener *);
+    void remove_shutdown_listener(lua_shutdown_listener *);
+
     static int file_write(lua_State *ls);
     static int loadfile(lua_State *ls, const char *file,
                         bool trusted = false, bool die_on_fail = false);
@@ -127,6 +160,8 @@ private:
     typedef std::set<std::string> sfset;
     sfset sourced_files;
     unsigned long uniqindex;
+
+    std::vector<lua_shutdown_listener*> shutdown_listeners;
 
 private:
     void init_lua();
