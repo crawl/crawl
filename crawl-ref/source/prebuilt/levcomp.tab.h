@@ -118,7 +118,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 48 "levcomp.ypp"
+#line 46 "levcomp.ypp"
 {
     int i;
     const char *text;
