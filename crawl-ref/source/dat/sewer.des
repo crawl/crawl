@@ -67,6 +67,28 @@ xWWW..
 xW'...
 ENDMAP
 
+NAME:    portal_sewer_entry_c
+TAGS:    uniq_sewer no_monster_gen
+DEPTH:   D:3-7
+: sewer_portal(_G)
+NSUBST:  c = 2:= / 2:n / *:c
+NSUBST:  W = 8:1 / *:W
+SUBST:   1 = 111W
+KMONS:   1 = rat w:20 / grey rat w:20 / green rat/ small snake / snake w:2 / \
+             giant cockroach / giant mite / worm w:3
+KFEAT:   1 = W
+COLOUR:  W = green / cyan w:5
+MAP
+.........
+.ccccccc.
+.cWWWWWc.
+.cWWOWWc.
+.cWWWWWc.
+.cWWWWWc.
+.ccccccc.
+.........
+ENDMAP
+
 # The actual portal vaults #####################################
 
 # Sewer with a small kobold camp, potion treasure and Ely/Zin altar.
