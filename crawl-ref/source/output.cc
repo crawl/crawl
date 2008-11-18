@@ -893,8 +893,8 @@ static std::string _level_description_string_hud()
     else if (place.level_type == LEVEL_PORTAL_VAULT
              || place.level_type == LEVEL_LABYRINTH)
     {
-        if (you.level_type_name == "bazaar")
-            short_name = "A Bazaar";
+        if (!you.level_type_name.empty())
+            short_name = article_a(upcase_first(you.level_type_name), false);
         else
             short_name.insert(0, "A ");
     }

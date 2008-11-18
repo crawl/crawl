@@ -17,6 +17,16 @@
 #
 ##############################################################################
 
+{{
+
+function sewer_portal(e)
+  e.marker([[O = lua:one_way_stair { desc = "A glowing drain",
+                                     dst = "sewer", floor = "stone_arch" }]])
+  e.kfeat("O = enter_portal_vault")
+  e.colour("O = lightgreen")
+end
+
+}}
 
 #############################################################################
 #
@@ -30,10 +40,7 @@
 NAME:   portal_sewer_entry_a
 TAGS:   uniq_sewer_entry no_monster_gen mini_float
 DEPTH:  D:3-7
-MARKER: O = lua:one_way_stair { desc = "A glowing drain", \
-                                dst = "sewer" }
-KFEAT:  O = enter_portal_vault
-COLOUR: O = lightgreen
+: sewer_portal(_G)
 COLOUR: W = green / cyan w:5
 SUBST:  1 = 11234444444444
 MONS:   rat / grey rat / green rat w:5
@@ -56,10 +63,7 @@ NAME:   portal_sewer_entry_b
 TAGS:   uniq_sewer_entry no_monster_gen
 ORIENT: float
 DEPTH:  D:3-7
-MARKER: O = lua:one_way_stair { desc = "A glowing drain", \
-                                dst = "sewer" }
-KFEAT:  O = enter_portal_vault
-COLOUR: O = lightgreen
+: sewer_portal(_G)
 SUBST:  '=W. , W=WW1
 KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ small snake / snake w:2 / \
             giant cockroach / giant mite / worm w:3

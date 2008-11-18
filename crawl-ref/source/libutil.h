@@ -31,6 +31,8 @@ description_level_type description_type_by_name(const char *desc);
 std::string lowercase_string(std::string s);
 std::string &lowercase(std::string &s);
 std::string &uppercase(std::string &s);
+std::string upcase_first(std::string);
+
 bool ends_with(const std::string &s, const std::string &suffix);
 
 // String "tags"

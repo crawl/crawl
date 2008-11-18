@@ -158,6 +158,13 @@ std::string &uppercase(std::string &s)
     return (s);
 }
 
+std::string upcase_first(std::string s)
+{
+    if (!s.empty())
+        s[0] = toupper(s[0]);
+    return (s);
+}
+
 std::string &lowercase(std::string &s)
 {
     for (unsigned i = 0, sz = s.size(); i < sz; ++i)
@@ -809,4 +816,3 @@ bool pattern_match(void *compiled_pattern, const char *text, int length)
 #endif
 
 mouse_mode mouse_control::ms_current_mode = MOUSE_MODE_NORMAL;
-

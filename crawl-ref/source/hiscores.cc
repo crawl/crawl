@@ -663,9 +663,16 @@ void scorefile_entry::set_base_xlog_fields() const
                       skill_title( best_skill, best_skill_lvl,
                                    race, str, dex, god ).c_str() );
 
+    // "place" is a human readable place name, and it is write-only,
+    // so we can write place names like "Bazaar" that Crawl cannot
+    // translate back. This does have the unfortunate side-effect that
+    // Crawl will not preserve the "place" field in the highscores file.
     fields->add_field("place", "%s",
                       place_name(get_packed_place(branch, dlvl, level_type),
                                  false, true).c_str());
+
+    // Note: "br", "lvl" and "ltyp" are saved in canonical names that
+    // can be read back by future versions of Crawl.
     fields->add_field("br",   "%s", _short_branch_name(branch));
     fields->add_field("lvl",  "%d", dlvl);
     fields->add_field("ltyp", "%s", level_area_type_name(level_type));
