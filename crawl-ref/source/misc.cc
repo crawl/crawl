@@ -1702,7 +1702,13 @@ static void _mark_portal_return_point(const coord_def &pos)
     // previous portal vault exit marker.
     const std::vector<map_marker*> markers = env.markers.get_all(MAT_FEATURE);
     for (int i = 0, size = markers.size(); i < size; ++i)
-        env.markers.remove(markers[i]);
+    {
+        if (dynamic_cast<map_feature_marker*>(markers[i])->feat ==
+            DNGN_EXIT_PORTAL_VAULT)
+        {
+            env.markers.remove(markers[i]);
+        }
+    }
 
     if (!env.markers.find(pos, MAT_FEATURE))
     {
