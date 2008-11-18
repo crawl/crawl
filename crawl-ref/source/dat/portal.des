@@ -17,3 +17,230 @@
 #
 ##############################################################################
 
+
+#############################################################################
+#
+# The Sewer (Eino)
+#
+# The Sewer aspires to be an exciting place to go with a low level character.
+#
+#############################################################################
+
+# Basic sewer entries ##########################################
+NAME:   portal_sewer_entry_a
+TAGS:   uniq_sewer_entry no_monster_gen mini_float
+DEPTH:  D:3-7
+MARKER: O = lua:one_way_stair { desc = "A glowing drain", \
+                                dst = "sewer" }
+KFEAT:  O = enter_portal_vault
+COLOUR: O = lightgreen
+COLOUR: W = green / cyan w:5
+SUBST:  1 = 11234444444444
+MONS:   rat / grey rat / green rat w:5
+MONS:   small snake / snake w:2
+MONS:   giant cockroach / giant mite / worm w:3
+MONS:   nothing
+MAP
+.........
+...111...
+..1WWW1..
+.1WWWWW1.
+.1WWOWW1.
+.1WWWWW1.
+..1WWW1..
+...111...
+.........
+ENDMAP
+
+NAME:   portal_sewer_entry_b
+TAGS:   uniq_sewer_entry no_monster_gen
+ORIENT: float
+DEPTH:  D:3-7
+MARKER: O = lua:one_way_stair { desc = "A glowing drain", \
+                                dst = "sewer" }
+KFEAT:  O = enter_portal_vault
+COLOUR: O = lightgreen
+SUBST:  '=W. , W=WW1
+KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ small snake / snake w:2 / \
+            giant cockroach / giant mite / worm w:3
+KFEAT:  1 = W
+COLOUR: W = green
+MAP
+xxxxxx
+xOWWW'
+xWWWW.
+xWWW'.
+xWWW..
+xW'...
+ENDMAP
+
+# The actual portal vaults #####################################
+
+# Sewer with a small kobold camp, potion treasure and Ely/Zin altar.
+# The easiest one, so most probable (5 out of 9 sewers).
+NAME:     sewer_kobolds
+TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
+CHANCE:   40
+ORIENT:   encompass
+KFEAT:    > = exit_portal_vault
+COLOUR:   > = darkgrey
+ROCKCOL:  darkgrey
+COLOUR:   c = darkgrey
+FLOORCOL: lightgrey
+COLOUR:   w = green
+COLOUR:   W = lightgreen
+COLOUR:   y = blue
+COLOUR:   Y = lightblue
+# some fresh water for the kobolds
+KFEAT:    Y = deep_water
+KFEAT:    y = shallow_water
+KFEAT:    C = altar_zin / altar_elyvilon w:30
+KMONS:    q = big fish
+KFEAT:    q = w
+COLOUR:   q = green
+MONS:     jackal / w:3 nothing, kobold / w:5 nothing, big kobold
+SHUFFLE:  deef
+ITEM:     potion of heal wounds / potion of healing
+ITEM:     potion of healing / potion of healing q:2 w:5 / \
+          potion of heal wounds / potion of heal wounds q:2 w:5
+ITEM:     potion of restore abilities w:7 / potion of cure mutation / \
+          potion of gain intelligence / potion of gain strength / \
+          potion of gain dexterity
+MONS:     rat / grey rat / green rat w:2 / nothing w:3
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcwccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxccwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxcwccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxccwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcWwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxccWwWccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxccc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxc<..WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxccc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxcc.WwW.ccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc..WwW..cccccccccccccccccccccccccccccccccx
+xxxxxxc..WwWWWWWWWWWWWWWWWWWWWWWW..444.A.<..44cx
+xxxxxxc..WwW..cccccccccccccccccccccccccccccccccx
+xxxxxxc..WwW..cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc.WWwWW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc.WwwwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc.WwqwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc.WwwwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc.WWWWW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc.......cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxcccc1ccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xefCxxxx.122...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xdexxxx.2232.y..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xxxx....yYy.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx.xxxx....y.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.xx.x.x....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx..x.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# This one can be tough; you'll be in the water when the giant frogs notice you.
+# More rare (3 out of 9 sewers are this). 
+# Loot are good items, and often a scroll of blinking.
+NAME:     sewer_island
+TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
+ORIENT:   encompass
+KFEAT:    > = exit_portal_vault
+COLOUR:   > = darkgrey
+ROCKCOL:  darkgrey
+COLOUR:   c = darkgrey
+FLOORCOL: lightgrey
+SUBST:    - = W..
+COLOUR:   w = green
+COLOUR:   W = lightgreen
+ITEM:     scroll of teleportation w:2 / scroll of blinking / \
+          scroll of random uselessness w:1
+MONS:     giant newt / small snake w:5 / \
+          generate_awake giant newt / generate_awake small snake w:5 / \
+          snake w:4 / nothing w:4
+MONS:     giant frog / nothing w:2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccccccccccccccccxxxxxx
+xc.11..........................1111cxxxxxx
+xc1WWW.ccccccccccccccccccccccc1WWW1cxxxxxx
+xc1WwWWcxxxxxxxxxxxxxxxxxxxxxc1WwW.cxxxxxx
+xc1WwwWcxxxxxxxxxxxxxxxxxxxxxc.WwW.cxxxxxx
+xc.WwW1cxxxxxccccccccxxxxxxxxc.WwW.cxxxxxx
+xc.WwwWcxxccccwwwwwwccccxxxxxc.WwW.cxxxxxx
+xc.Wwwwccccwwwwwwwwww2.ccxxxxc.WwW.cxxxxxx
+xc.Wwwwccwwwwwwwwwwwwww2ccxxxc.WwW.cxxxxxx
+xc.Wwwwcwwwwwwwwwwwwwwwwwcccxc.WwW.cxxxxxx
+xc.Wwwwwwwwwwwwww.*.wwwwwwwcxc.WwW.cxxxxxx
+xc.WwWwWWWwwwwww.*|*.wwwwwwcxc.WwW.cxxxxxx
+xc.WwWWWwwWwwwwww.d.wwwwwwwccc.WwW.cxxxxxx
+xc.WwWWwwwwWwWwWWwwwwwwwwwwwcc.WwW.cxxxxxx
+xc.WwWWWwwwwWWWwwwwwwwwwwwwccc.WwW.cxxxxxx
+xc.WwWWWwwwwWWwwwwwwwwWwwwccxc.WwW.cxxxxxx
+xc.WwW.WwwwwwwwwwwwwwWwwwccxxc.WwW.cxxxxxx
+xc.WwW.WwwwwwWWwwwwwwwwccccccc.WwW.cxxxxxx
+xc.WwWW..WWWWwwWwWW............Www.cxxxxxx
+xc.WwwWWWWwwwWWwWWWWWWWWWWWWWWWWwW.cxxxxxx
+xc.WWwwwwwwwwwwwwwwwwwwwwwwwwwwwwW.cxxxxxx
+xc..WWWWWWWWWWWWWWWWWWWWWWWWWWWWwW.cxxxxxx
+xcc............................WwW.cxxxxxx
+xxcccccccccccccccccccccccccccc.WwW.cxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcccccccc.WwW.cxxxxxx
+xxxxxxxxxxxxxxxcccccccc.----WWWWwW.ccccxxx
+xxxxxxxxxxxxxxxc.<.A..--W-WWWWWWwwwwwwwwwx
+xxxxxxxxxxxxxxxcccccccc.-..WW-.WWW1cccccxx
+xxxxxxxxxxxxxxxxxxxxxxcccccccc11111cxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# The hardest one, and most rare (1 out of 9). Loot is good items.
+NAME:     sewer_lizard
+TAGS:     sewer no_item_gen no_monster_gen
+ORIENT:   encompass
+KFEAT:    > = exit_portal_vault
+COLOUR:   > = darkgrey
+ROCKCOL:  darkgrey
+COLOUR:   c = darkgrey
+FLOORCOL: lightgrey
+COLOUR:   w = green
+COLOUR:   W = lightgreen
+MONS:     giant lizard
+ITEM:     potion of berserk rage / potion of speed w:5
+MONS:     giant bat / giant mosquito w:2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xxcccccccxxxxxxxxxxxxxxxx
+xcc$*|*$ccxxxxxxxxxxxxxxx
+xc..$*$..cxxxxxxxxxxxxxxx
+xc.......cxxxxxxxxxxxxxxx
+xc...1...cxxxxxxxxxxxxxxx
+xc.......cxxxxxxxxxxxxxxx
+xc.......cxxxxxxxxxxxxxxx
+xcc.....ccxxxxxxxxxxxxxxx
+xxccc.cccxxxxxcccccccxxxx
+xxxxc.cxxxxxxcc2.2..ccxxx
+xxxxc.cxxxxxcc2..w...ccxx
+xxxxc.ccccccc...www...ccx
+xxxxc..........wwwww.A.cx
+xxxxc.ccccccc2..www...ccx
+xxxxc.cxxxxxcc...w...ccxx
+xxxxc.cxxxxxxcc2....ccxxx
+xxxxc.cxxxxxxxcccccccxxxx
+xxxxc.cxxxxxxxxxxxxxxxxxx
+xxxxc.cxxxxxxxxxxxxxxxxxx
+xxxxc.cxxxxxxxxxxxxxxxxxx
+xxxxc<cxxxxxxxxxxxxxxxxxx
+xxxxc.cxxxxxxxxxxxxxxxxxx
+xxxxcdcxxxxxxxxxxxxxxxxxx
+xxxxcccxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
