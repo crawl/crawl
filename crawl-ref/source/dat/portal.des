@@ -82,8 +82,8 @@ NAME:     sewer_kobolds
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
 CHANCE:   40
 ORIENT:   encompass
-KFEAT:    > = exit_portal_vault
-COLOUR:   > = darkgrey
+KFEAT:    < = exit_portal_vault
+COLOUR:   < = darkgrey
 ROCKCOL:  darkgrey
 COLOUR:   c = darkgrey
 FLOORCOL: lightgrey
@@ -153,8 +153,8 @@ ENDMAP
 NAME:     sewer_island
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
-KFEAT:    > = exit_portal_vault
-COLOUR:   > = darkgrey
+KFEAT:    < = exit_portal_vault
+COLOUR:   < = darkgrey
 ROCKCOL:  darkgrey
 COLOUR:   c = darkgrey
 FLOORCOL: lightgrey
@@ -206,8 +206,8 @@ ENDMAP
 NAME:     sewer_lizard
 TAGS:     sewer no_item_gen no_monster_gen
 ORIENT:   encompass
-KFEAT:    > = exit_portal_vault
-COLOUR:   > = darkgrey
+KFEAT:    < = exit_portal_vault
+COLOUR:   < = darkgrey
 ROCKCOL:  darkgrey
 COLOUR:   c = darkgrey
 FLOORCOL: lightgrey
