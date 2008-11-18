@@ -53,6 +53,7 @@
 #include "lev-pand.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "mapmark.h"
 #include "message.h"
 #include "mon-util.h"
 #include "monstuff.h"
@@ -1691,6 +1692,26 @@ void up_stairs(dungeon_feature_type force_stair,
     request_autopickup();
 }                               // end up_stairs()
 
+// Adds a dungeon marker at the point of the level where returning from
+// a labyrinth or portal vault should drop the player.
+static void _mark_portal_return_point(const coord_def &pos)
+{
+    // First toss all markers of this type. Stale markers are possible
+    // if the player goes to the Abyss from a portal vault /
+    // labyrinth, thus returning to this level without activating a
+    // previous portal vault exit marker.
+    const std::vector<map_marker*> markers = env.markers.get_all(MAT_FEATURE);
+    for (int i = 0, size = markers.size(); i < size; ++i)
+        env.markers.remove(markers[i]);
+
+    if (!env.markers.find(pos, MAT_FEATURE))
+    {
+        map_feature_marker *mfeat =
+            new map_feature_marker(pos, DNGN_EXIT_PORTAL_VAULT);
+        env.markers.add(mfeat);
+    }
+}
+
 void down_stairs( int old_level, dungeon_feature_type force_stair,
                   entry_cause_type entry_cause )
 {
@@ -1825,9 +1846,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     }
 
     // Interlevel travel data.
-    bool collect_travel_data = can_travel_interlevel();
+    const bool collect_travel_data = can_travel_interlevel();
 
-    level_id  old_level_id    = level_id::current();
+    const level_id  old_level_id    = level_id::current();
     LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
     const coord_def stair_pos = you.pos();
     if (collect_travel_data)
@@ -1872,7 +1893,13 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     }
 
     if (stair_find == DNGN_ENTER_LABYRINTH)
-        dungeon_terrain_changed(you.pos(), DNGN_FLOOR);
+        dungeon_terrain_changed(you.pos(), DNGN_STONE_ARCH);
+
+    if (stair_find == DNGN_ENTER_LABYRINTH
+        || stair_find == DNGN_ENTER_PORTAL_VAULT)
+    {
+        _mark_portal_return_point(you.pos());
+    }
 
     if (stair_find == DNGN_ENTER_LABYRINTH)
         you.level_type = LEVEL_LABYRINTH;

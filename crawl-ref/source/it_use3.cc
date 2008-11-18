@@ -364,8 +364,22 @@ static bool evoke_horn_of_geryon()
                     {
                         map_feature_marker *featm =
                             dynamic_cast<map_feature_marker*>(marker);
-                        grd[count_x][count_y] = featm->feat;
-                        env.markers.remove(marker);
+                        // [ds] Ensure we're activating the correct feature
+                        // markers. Feature markers are also used for other
+                        // things, notably to indicate the return point from
+                        // a labyrinth or portal vault.
+                        switch (featm->feat)
+                        {
+                        case DNGN_ENTER_COCYTUS:
+                        case DNGN_ENTER_DIS:
+                        case DNGN_ENTER_GEHENNA:
+                        case DNGN_ENTER_TARTARUS:
+                            grd[count_x][count_y] = featm->feat;
+                            env.markers.remove(marker);
+                            break;
+                        default:
+                            break;
+                        }
                     }
                 }
             }

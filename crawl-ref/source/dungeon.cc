@@ -7747,6 +7747,23 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
          dungeon_feature_name(stair_to_find));
 #endif
 
+    if (stair_to_find == DNGN_EXIT_PORTAL_VAULT)
+    {
+        const coord_def pos(_dgn_find_feature_marker(stair_to_find));
+        if (in_bounds(pos))
+        {
+            if (map_marker *marker = env.markers.find(pos, MAT_FEATURE))
+                env.markers.remove(marker);
+            return (pos);
+        }
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_WARN, "Ouch, no portal vault exit point!");
+#endif
+
+        stair_to_find = DNGN_FLOOR;
+    }
+
     if (stair_to_find == DNGN_ESCAPE_HATCH_UP
         || stair_to_find == DNGN_ESCAPE_HATCH_DOWN)
     {

@@ -820,7 +820,8 @@ static void _sanity_test_monster_inventory()
     }
 }
 
-static void _place_player_on_stair(branch_type old_branch,
+static void _place_player_on_stair(level_area_type old_level_type,
+                                   branch_type old_branch,
                                    int stair_taken)
 {
     bool find_first = true;
@@ -848,6 +849,14 @@ static void _place_player_on_stair(branch_type old_branch,
     {
         // The vestibule and labyrinth always start from this stair.
         stair_taken = DNGN_EXIT_HELL;
+    }
+    else if (stair_taken == DNGN_EXIT_PORTAL_VAULT
+             || ((old_level_type == LEVEL_LABYRINTH
+                  || old_level_type == LEVEL_PORTAL_VAULT)
+                 && (stair_taken == DNGN_ESCAPE_HATCH_DOWN
+                     || stair_taken == DNGN_ESCAPE_HATCH_UP)))
+    {
+        stair_taken = DNGN_EXIT_PORTAL_VAULT;
     }
     else if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
              && stair_taken <= DNGN_ESCAPE_HATCH_DOWN)
@@ -884,10 +893,6 @@ static void _place_player_on_stair(branch_type old_branch,
     else if (stair_taken == DNGN_ENTER_PORTAL_VAULT)
     {
         stair_taken = DNGN_STONE_ARCH;
-    }
-    else if (stair_taken == DNGN_EXIT_PORTAL_VAULT)
-    {
-        stair_taken = DNGN_ESCAPE_HATCH_DOWN;
     }
     else if (stair_taken == DNGN_ENTER_LABYRINTH)
     {
@@ -1197,7 +1202,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         _clear_clouds();
         if (you.level_type != LEVEL_ABYSS)
-            _place_player_on_stair(old_branch, stair_taken);
+            _place_player_on_stair(old_level_type, old_branch, stair_taken);
         else
             you.moveto(coord_def(45, 35)); // FIXME: should be abyss_center
     }
