@@ -27,7 +27,7 @@ end
 
 # Basic sewer entries ##########################################
 NAME:   portal_sewer_entry_a
-TAGS:   uniq_sewer_entry no_monster_gen mini_float
+TAGS:   uniq_sewer no_monster_gen mini_float
 DEPTH:  D:3-7
 : sewer_portal(_G)
 COLOUR: W = green / cyan w:5
@@ -49,7 +49,7 @@ MAP
 ENDMAP
 
 NAME:   portal_sewer_entry_b
-TAGS:   uniq_sewer_entry no_monster_gen
+TAGS:   uniq_sewer no_monster_gen
 ORIENT: float
 DEPTH:  D:3-7
 : sewer_portal(_G)

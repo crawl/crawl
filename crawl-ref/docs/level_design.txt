@@ -1393,6 +1393,11 @@ This feature must always have a marker that provides the portal with a
 description ("A portal to places unknown") and a destination
 ("generic_portal").
 
+In case you want to make sure that the portal vault entry is only used
+once, you add a TAGS: uniq_label line. It should be noted that the label
+may *not* end in _uniq (the level builder assumes that those belong to
+branch entries).
+
 This will produce a portal, but attempting to use it will trigger an
 ASSERT since there's no map for the destination. So we create a
 destination map like so:
