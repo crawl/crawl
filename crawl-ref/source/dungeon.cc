@@ -8102,9 +8102,9 @@ static bool _fixup_interlevel_connectivity()
 
     StairConnectivity full;
     StairConnectivity &prev_con = (player_branch_depth() == 1) ? full :
-        (connectivity[your_branch().id][player_branch_depth() - 1]);
+        (connectivity[your_branch().id][player_branch_depth() - 2]);
     StairConnectivity &this_con =
-        (connectivity[your_branch().id][player_branch_depth()]);
+        (connectivity[your_branch().id][player_branch_depth() - 1]);
 
     FixedVector<coord_def, 3> up_gc;
     FixedVector<coord_def, 3> down_gc;
