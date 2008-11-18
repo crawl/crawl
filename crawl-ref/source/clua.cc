@@ -131,10 +131,15 @@ void CLua::setregistry(const char *name)
     lua_settable(state(), LUA_REGISTRYINDEX);
 }
 
+void CLua::_getregistry(lua_State *ls, const char *name)
+{
+    lua_pushstring(ls, name);
+    lua_gettable(ls, LUA_REGISTRYINDEX);
+}
+
 void CLua::getregistry(const char *name)
 {
-    lua_pushstring(state(), name);
-    lua_gettable(state(), LUA_REGISTRYINDEX);
+    _getregistry(state(), name);
 }
 
 void CLua::save(const char *file)
@@ -639,6 +644,18 @@ void CLua::init_lua()
 
     lua_pushboolean(_state, managed_vm);
     setregistry("lua_vm_is_managed");
+
+    lua_pushlightuserdata(_state, this);
+    setregistry("__clua");
+}
+
+CLua &CLua::get_vm(lua_State *ls)
+{
+    _getregistry(ls, "__clua");
+    CLua *vm = util_get_userdata<CLua>(ls, -1);
+    if (!vm)
+        end(1, false, "Failed to find CLua for lua state %p", ls);
+    return (*vm);
 }
 
 bool CLua::is_managed_vm(lua_State *ls)

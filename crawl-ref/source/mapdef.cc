@@ -63,11 +63,11 @@ static int find_weight(std::string &s, int defweight = TAG_UNFOUND)
     return (weight == TAG_UNFOUND? defweight : weight);
 }
 
-static std::string split_key_item(const std::string &s,
+std::string mapdef_split_key_item(const std::string &s,
                                   std::string *key,
                                   int *separator,
                                   std::string *arg,
-                                  int key_max_len = 1)
+                                  int key_max_len)
 {
     std::string::size_type
         norm = s.find("=", 1),
@@ -383,11 +383,18 @@ std::string map_lines::add_feature_marker(const std::string &s)
 {
     std::string key, arg;
     int sep = 0;
-    std::string err = split_key_item(s, &key, &sep, &arg);
+    std::string err = mapdef_split_key_item(s, &key, &sep, &arg);
     if (!err.empty())
         return (err);
 
     transforms.push_back(new map_marker_spec(key[0], arg));
+    return ("");
+}
+
+std::string map_lines::add_lua_marker(const std::string &key,
+                                      const lua_datum &function)
+{
+    transforms.push_back(new map_marker_spec(key[0], function));
     return ("");
 }
 
@@ -546,7 +553,7 @@ std::string map_lines::add_colour(const std::string &sub)
     std::string key;
     std::string substitute;
 
-    std::string err = split_key_item(sub, &key, &sep, &substitute);
+    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute);
     if (!err.empty())
         return (err);
 
@@ -570,7 +577,7 @@ std::string map_lines::add_subst(const std::string &sub)
     std::string key;
     std::string substitute;
 
-    std::string err = split_key_item(sub, &key, &sep, &substitute);
+    std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute);
     if (!err.empty())
         return (err);
 
@@ -589,7 +596,7 @@ std::string map_lines::parse_nsubst_spec(const std::string &s,
 {
     std::string key, arg;
     int sep;
-    std::string err = split_key_item(s, &key, &sep, &arg);
+    std::string err = mapdef_split_key_item(s, &key, &sep, &arg);
     if (!err.empty())
         return err;
     const int keyval = key == "*"? -1 : atoi(key.c_str());
@@ -612,7 +619,7 @@ std::string map_lines::add_nsubst(const std::string &s)
     int sep;
     std::string key, arg;
 
-    std::string err = split_key_item(s, &key, &sep, &arg);
+    std::string err = mapdef_split_key_item(s, &key, &sep, &arg);
     if (!err.empty())
         return (err);
 
@@ -1769,7 +1776,7 @@ std::string map_def::add_key_field(
     int separator = 0;
     std::string key, arg;
 
-    std::string err = split_key_item(s, &key, &separator, &arg);
+    std::string err = mapdef_split_key_item(s, &key, &separator, &arg);
     if (!err.empty())
         return (err);
 
@@ -2810,8 +2817,7 @@ std::string map_marker_spec::apply_transform(map_lines &map)
     {
         try
         {
-            map_marker *mark =
-                map_marker::parse_marker(marker);
+            map_marker *mark = create_marker();
             if (!mark)
                 return make_stringf("Unable to parse marker from %s",
                                     marker.c_str());
@@ -2824,6 +2830,13 @@ std::string map_marker_spec::apply_transform(map_lines &map)
         }
     }
     return ("");
+}
+
+map_marker *map_marker_spec::create_marker()
+{
+    return lua_fn.get()
+        ? new map_lua_marker(*lua_fn.get())
+        : map_marker::parse_marker(marker);
 }
 
 map_transformer::transform_type map_marker_spec::type() const

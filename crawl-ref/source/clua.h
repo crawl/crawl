@@ -93,6 +93,8 @@ public:
     CLua(bool managed = true);
     ~CLua();
 
+    static CLua &get_vm(lua_State *);
+
     lua_State *state();
 
     operator lua_State * ()
@@ -169,6 +171,8 @@ private:
     void load_cmacro();
     void load_chooks();
     void init_throttle();
+
+    static void _getregistry(lua_State *, const char *name);
 
     void vfnreturns(const char *par, va_list va);
 

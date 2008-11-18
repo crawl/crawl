@@ -764,6 +764,23 @@ static int dgn_item(lua_State *ls)
     return (0);
 }
 
+static int dgn_lua_marker(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    if (lua_gettop(ls) != 3 || !lua_isstring(ls, 2) || !lua_isfunction(ls, 3))
+        luaL_error(ls, "Expected marker key and marker function.");
+
+    CLua &lvm(CLua::get_vm(ls));
+    std::string key = lua_tostring(ls, 2);
+    lua_datum function(lvm, 3, false);
+
+    const std::string err = map->map.add_lua_marker(key, function);
+    if (!err.empty())
+        luaL_error(ls, err.c_str());
+
+    return (0);
+}
+
 static int dgn_marker(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -2106,6 +2123,7 @@ static const struct luaL_reg dgn_lib[] =
     { "mons", dgn_mons },
     { "item", dgn_item },
     { "marker", dgn_marker },
+    { "lua_marker", dgn_lua_marker },
     { "kfeat", dgn_kfeat },
     { "kitem", dgn_kitem },
     { "kmons", dgn_kmons },

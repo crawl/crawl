@@ -165,6 +165,17 @@ map_lua_marker::map_lua_marker()
 {
 }
 
+map_lua_marker::map_lua_marker(const lua_datum &fn)
+    : map_marker(MAT_LUA_MARKER, coord_def())
+{
+    lua_stack_cleaner clean(dlua);
+    fn.push();
+    if (!dlua.callfn("dgn_run_map", 1, 1))
+        mprf(MSGCH_ERROR, "lua_marker exec error: %s", dlua.error.c_str());
+    else
+        check_register_table();
+}
+
 map_lua_marker::map_lua_marker(const std::string &s, const std::string &,
                                bool mapdef_marker)
     : map_marker(MAT_LUA_MARKER, coord_def()), initialised(false)

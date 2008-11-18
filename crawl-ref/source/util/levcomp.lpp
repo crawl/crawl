@@ -122,7 +122,6 @@ static void cattext(bool trim_right = false, int strip_trailing = 0)
 %s MNAME
 %s KEYWORDS
 %x ITEM_LIST
-%x TOEOL
 
 %option yylineno
 %option never-interactive
@@ -213,19 +212,9 @@ SPACE [\ \t\r]
                         cattext();
                     }
 
+<ARGUMENT>{NSPACE}  cattext();
+
 <ARGUMENT>{SPACE}*$ { BEGIN(INITIAL); str_check(); return STRING; }
-
-<TOEOL>.*\\[ \t\r]*$ {
-                        settext(true, 1);
-                        return STRING;
-                    }
-
-<TOEOL>.+$          {
-                        BEGIN(INITIAL);
-                        settext(true);
-                        return STRING;
-                    }
-<TOEOL>\r?\n        ;
 
 ^[ \t]*#.*          ;
 
@@ -259,7 +248,7 @@ FLOORCOL:           { CBEGIN(ARGUMENT); return FLOORCOL; }
 ROCKCOL:            { CBEGIN(ARGUMENT); return ROCKCOL; }
 MONS:               { CBEGIN(MNAME); return MONS; }
 ITEM:               { CBEGIN(ITEM_LIST); return ITEM; }
-MARKER:             { CBEGIN(TOEOL); return MARKER; }
+MARKER:             { CBEGIN(ARGUMENT); return MARKER; }
 SHUFFLE:            { CBEGIN(ITEM_LIST); return SHUFFLE; }
 
 KFEAT:              { CBEGIN(ARGUMENT); return KFEAT; }

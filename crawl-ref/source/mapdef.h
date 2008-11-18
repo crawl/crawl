@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 #include <cstdio>
+#include <memory>
 
 #include "luadgn.h"
 #include "enum.h"
@@ -202,15 +203,25 @@ class shuffle_spec : public map_transformer
 
 class map_marker_spec : public map_transformer
 {
- public:
+public:
     int key;
     std::string marker;
 
+    // Special handling for Lua markers:
+    std::auto_ptr<lua_datum> lua_fn;
+
     map_marker_spec(int _key, const std::string &mark)
-        : key(_key), marker(mark) { }
+        : key(_key), marker(mark), lua_fn() { }
+
+    map_marker_spec(int _key, const lua_datum &fn)
+        : key(_key), marker(), lua_fn(new lua_datum(fn)) { }
+
     std::string apply_transform(map_lines &map);
     transform_type type() const;
     std::string describe() const;
+
+private:
+    map_marker *create_marker();
 };
 
 class map_def;
@@ -266,6 +277,8 @@ public:
 
     void add_marker(map_marker *marker);
     std::string add_feature_marker(const std::string &desc);
+    std::string add_lua_marker(const std::string &key,
+                               const lua_datum &fn);
 
     void apply_markers(const coord_def &pos);
     void apply_colours(const coord_def &pos);
@@ -742,6 +755,13 @@ private:
 
 std::string escape_string(std::string in, const std::string &toesc,
                           const std::string &escapewith);
+
+std::string mapdef_split_key_item(const std::string &s,
+                                  std::string *key,
+                                  int *separator,
+                                  std::string *arg,
+                                  int key_max_len = 1);
+
 const char *map_section_name(int msect);
 
 #endif

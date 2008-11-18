@@ -98,6 +98,7 @@ class map_lua_marker : public map_marker, public dgn_event_listener
 {
 public:
     map_lua_marker();
+    map_lua_marker(const lua_datum &function);
     map_lua_marker(const std::string &s, const std::string &ctx,
                    bool mapdef_marker = true);
     ~map_lua_marker();
