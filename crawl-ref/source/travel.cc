@@ -4030,9 +4030,9 @@ explore_discoveries::explore_discoveries()
 }
 
 std::string explore_discoveries::cleaned_feature_description(
-    dungeon_feature_type grid) const
+    const coord_def &pos) const
 {
-    std::string s = lowercase_first(feature_description(grid));
+    std::string s = lowercase_first(feature_description(pos));
     if (s.length() && s[s.length() - 1] == '.')
         s.erase(s.length() - 1);
     if (s.find("a ") != std::string::npos)
@@ -4066,13 +4066,13 @@ void explore_discoveries::found_feature(const coord_def &pos,
     }
     else if (is_stair(grid) && ES_stair)
     {
-        const named_thing<int> stair(cleaned_feature_description(grid), 1);
+        const named_thing<int> stair(cleaned_feature_description(pos), 1);
         add_stair(stair);
         es_flags |= ES_STAIR;
     }
     else if (grid_is_portal(grid) && ES_portal)
     {
-        const named_thing<int> portal(cleaned_feature_description(grid), 1);
+        const named_thing<int> portal(cleaned_feature_description(pos), 1);
         add_stair(portal);
         es_flags |= ES_PORTAL;
     }
@@ -4080,7 +4080,7 @@ void explore_discoveries::found_feature(const coord_def &pos,
              && ES_altar
              && !player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {
-        const named_thing<int> altar(cleaned_feature_description(grid), 1);
+        const named_thing<int> altar(cleaned_feature_description(pos), 1);
         if (!merge_feature(altars, altar))
             altars.push_back(altar);
         es_flags |= ES_ALTAR;

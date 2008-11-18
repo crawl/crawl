@@ -2238,7 +2238,12 @@ static builder_rc_type _builder_by_type(int level_number, char level_type)
 
 static void _portal_vault_level(int level_number)
 {
-    std::string trimmed_name = trimmed_string(you.level_type_name);
+    // level_type_name may contain spaces for human readability, but the
+    // corresponding vault tag name cannot use spaces, so force spaces to
+    // _ when searching for the tag.
+    const std::string trimmed_name =
+        replace_all(trimmed_string(you.level_type_name), " ", "_");
+
     ASSERT(!trimmed_name.empty());
 
     const char* level_name = trimmed_name.c_str();

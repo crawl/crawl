@@ -390,7 +390,7 @@ private:
     template <class C> void say_any(const C &coll, const char *stub) const;
     template <class citer> bool has_duplicates(citer, citer) const;
 
-    std::string cleaned_feature_description(dungeon_feature_type feature) const;
+    std::string cleaned_feature_description(const coord_def &) const;
     void add_item(const item_def &item);
     void add_stair(const named_thing<int> &stair);
     std::vector<std::string> apply_quantities(
