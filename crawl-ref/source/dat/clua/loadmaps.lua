@@ -9,7 +9,7 @@
 local des_files = {
    "altar.des", "bazaar.des", "entry.des", "elf.des", "float.des", "hells.des",
    "hive.des", "lab.des", "lair.des", "large.des", "layout.des", "mini.des", 
-   "orc.des", "pan.des", "portal.des", "temple.des", "vaults.des", "crypt.des",
+   "orc.des", "pan.des", "sewer.des", "temple.des", "vaults.des", "crypt.des",
    "zot.des"
 }
 

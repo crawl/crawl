@@ -98,6 +98,14 @@ A gateway to the freezing wastes of Cocytus
 
 From the frost-bitten lands, a cold chill touches your soul.
 %%%%
+A glowing drain
+
+Every settlement brings forth the unpleasant sewers and drains, ignored by
+most but hideaways for others. Old tales speak of dangerous creatures, 
+bathing in disgustingly green water, preying on each other without mercy.
+The tales also tell of the valuable items left by daring and unfortunate
+visitors, left to collect dust in the damp caverns.
+%%%%
 A glowing golden altar of the Shining One
 %%%%
 A glowing white marble altar of Zin

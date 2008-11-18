@@ -1,19 +1,15 @@
 ##############################################################################
-# portal.des: Definition of entries leading to portal vaults.
 #
-# These vaults are used when the dungeon builder tries to place a portal
-# to a branch. There's no guarantee that one of these will be used because
-# portal vaults are placed last, after the rest of the level is generated, and 
-# will not be placed if they can't fit on the level without clobbering 
-# something.
+# The Sewer (Eino)
 #
-# With portal vaults (as with minivaults), smaller is better, since the dungeon
-# builder will frequently not be able to fit large vaults in anywhere (it
-# doesn't try very hard).
 #
-# Note that the rune symbol (O) is used for the portal in portal vaults. If you
-# do not put an O anywhere in the vault, there will be no portal for that 
-# branch!
+# The Sewer aspires to be an exciting place to go with a low level character.
+#
+# Flavour: drainage and sewer themed, so rats, kobolds, etc. Water is (dark 
+# and light) green. 
+# Gameplay: an early challenge, featuring monsters which are bland later but
+# interesting when encountered at low level (green rat, giant frog etc.) Loot
+# consists of renewable items; the harder maps contain a few good items.
 #
 ##############################################################################
 
@@ -28,13 +24,6 @@ end
 
 }}
 
-#############################################################################
-#
-# The Sewer (Eino)
-#
-# The Sewer aspires to be an exciting place to go with a low level character.
-#
-#############################################################################
 
 # Basic sewer entries ##########################################
 NAME:   portal_sewer_entry_a
