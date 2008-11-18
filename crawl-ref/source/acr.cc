@@ -2410,7 +2410,7 @@ void process_command( command_type cmd )
 
     case CMD_LIST_GOLD:
         mprf("You have %d gold piece%s.",
-             you.gold, (you.gold > 1) ? "s" : "");
+             you.gold, you.gold > 1 ? "s" : "");
         break;
 
     case CMD_INSCRIBE_ITEM:
@@ -2857,11 +2857,10 @@ static void _decrement_durations()
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
         mpr("Piety increases by 1 due to piety pool.", MSGCH_DIAGNOSTICS);
 
-        if (!you.duration[DUR_PIETY_POOL])
+        if (you.duration[DUR_PIETY_POOL] == 0)
             mpr("Piety pool is now empty.", MSGCH_DIAGNOSTICS);
 #endif
     }
-
 
     if (!you.permanent_levitation() && !you.permanent_flight())
     {

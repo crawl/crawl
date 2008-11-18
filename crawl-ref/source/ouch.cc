@@ -607,8 +607,8 @@ void expose_player_to_element(beam_type flavour, int strength)
 
 void lose_level()
 {
-    // Because you.experience is unsigned long, if it's going to be -ve
-    // must die straightaway.
+    // Because you.experience is unsigned long, if it's going to be
+    // negative, must die straightaway.
     if (you.experience_level == 1)
     {
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);

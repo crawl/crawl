@@ -1500,7 +1500,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
         if (!quiet)
         {
             mprf("You now have %d gold piece%s.",
-                 you.gold, (you.gold > 1) ? "s" : "");
+                 you.gold, you.gold > 1 ? "s" : "");
         }
 
         learned_something_new(TUT_SEEN_GOLD);

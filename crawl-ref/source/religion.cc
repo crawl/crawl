@@ -2440,7 +2440,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_ELYVILON: // healer god cares more about this
-                if (you.penance[GOD_ELYVILON])
+                if (player_under_penance())
                     penance = 1;  // if already under penance smaller bonus
                 else
                     penance = level;
@@ -5715,7 +5715,7 @@ void offer_items()
     // donate gold to gain piety distributed over time
     if (you.religion == GOD_ZIN)
     {
-        if (!you.gold)
+        if (you.gold == 0)
         {
             mpr("You don't have anything to sacrifice.");
             return;
@@ -5724,7 +5724,8 @@ void offer_items()
         if (!yesno("Do you wish to part with all of your money?", true, 'n'))
             return;
 
-        const int donation_value = (int) (you.gold/200 * log((double)you.gold));
+        const int donation_value =
+            (int)(you.gold / MAX_PIETY * log((double)you.gold));
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
         mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
              "increase of piety by %d.", you.gold, donation_value);
@@ -5741,13 +5742,13 @@ void offer_items()
             return;
         }
 
-        const int estimated_piety = you.piety + donation_value;
-
         you.duration[DUR_PIETY_POOL] += donation_value;
         if (you.duration[DUR_PIETY_POOL] > 500)
             you.duration[DUR_PIETY_POOL] = 500;
 
-        if (you.penance[GOD_ZIN])
+        const int estimated_piety = you.piety + you.duration[DUR_PIETY_POOL];
+
+        if (player_under_penance())
         {
             if (estimated_piety >= you.penance[GOD_ZIN])
                 mpr("You feel that you will soon be absolved of all your sins.");
