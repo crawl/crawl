@@ -802,7 +802,7 @@ tc_dangerous      = cyan
 tc_disconnected   = darkgrey
 tc_excluded       = lightmagenta
 tc_exclude_circle = red
-        The above five settle the colouring of the level map ('X'). 
+        The above five settle the colouring of the level map ('X').
         They are 
           reachable: all squares safely reachable (without leaving the
                      level)
@@ -811,9 +811,9 @@ tc_exclude_circle = red
           disconnected: squares which cannot be reached without leaving
                         the level
           excluded: the colour for the centre of travel exclusions 
-                    (Ctrl-X)
+                    ('e')
           excluded_circle: the colour for travel exclusions apart from 
-                           centre 
+                           centre
 
 travel_stop_message = <list of regexes>
         Travel will always stop upon hitpoint loss, confusion, stat 
