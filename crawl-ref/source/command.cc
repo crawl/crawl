@@ -2239,7 +2239,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>l</w>      : make entrance to labyrinth\n"
                        "<w>L</w>      : place a vault by name\n"
                        "<w>p</w>      : make entrance to pandemonium\n"
-                       "<w>P</w>      : make a portal (i.e., bazaars)\n"
+                       "<w>P</w>      : make a portal\n"
                        "<w>T</w>      : make a trap\n"
                        "<w><<</w>/<w>></w>    : create up/down staircase\n"
                        "<w>(</w>/<w>)</w>    : make feature by number/name\n"
