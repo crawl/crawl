@@ -5837,7 +5837,7 @@ bool player::has_spell(spell_type spell) const
 
 bool player::extra_balanced() const
 {
-    return (species == SP_NAGA);
+    return (species == SP_NAGA && !transform_changed_physiology());
 }
 
 bool player::floundering() const
