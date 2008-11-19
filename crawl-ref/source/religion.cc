@@ -5747,7 +5747,7 @@ void offer_items()
             you.duration[DUR_PIETY_POOL] = MAX_PIETY * 2;
 
         const int estimated_piety =
-            std::min(MAX_PIETY, you.piety + you.duration[DUR_PIETY_POOL]);
+            std::min(MAX_PIETY * 2, you.piety + you.duration[DUR_PIETY_POOL]);
 
         if (player_under_penance())
         {
@@ -5759,7 +5759,7 @@ void offer_items()
         }
 
         std::string result = "You feel that " + god_name(GOD_ZIN)
-                             + " will soon be ";
+                           + " will soon be ";
 
         result +=
             (estimated_piety > 130) ? "exalted by your worship" :
