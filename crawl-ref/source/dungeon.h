@@ -17,6 +17,7 @@
 #include "travel.h"
 #include "stuff.h"
 #include <vector>
+#include <set>
 #include <algorithm>
 
 enum portal_type
@@ -53,6 +54,9 @@ typedef FixedArray<unsigned short, GXM, GYM> map_mask;
 
 extern map_mask dgn_Map_Mask;
 extern std::string dgn_Layout_Type;
+
+extern std::set<std::string> Level_Unique_Maps;
+extern std::set<std::string> Level_Unique_Tags;
 
 // Map mask constants.
 

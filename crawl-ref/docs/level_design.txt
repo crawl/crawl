@@ -348,6 +348,26 @@ CHANCE:   <priority>:<roll> or <roll>
           CHANCE: 0 : 500
           : chance(0, 500)
 
+          A common case when using CHANCE is to assign a CHANCE to a
+          set of maps. For instance, if you have a set of portal vault
+          entries, and you want one of the set to be used on 5% of all
+          levels, you can do this:
+
+          NAME: portal_a
+          CHANCE: 50 : 5%
+          TAGS: chance_portal_group
+          ...
+
+          NAME: portal_b
+          CHANCE: 50 : 5%
+          TAGS: chance_portal_group
+          ...
+
+          That is, if you have a set of maps that use CHANCE and are
+          tagged chance_xxx, then one map of that set will be used
+          when the chance is met.
+          
+
 WEIGHT:   (number with 10 being default)
           For entry vaults and any other vaults randomly picked from among
           a set, this type of line affects the likelihood of the given vault
@@ -372,12 +392,22 @@ TAGS:     Tags go an a TAGS: line and are space-separated. You can have several
           * "allow_dup": Vaults are normally used only once per game. If you
              have a vault that can be used more than once, use allow_dup to tell
              the dungeon builder that the vault can be reused.
+          * "chance_FOO": Maps can be tagged chance_ with any unique suffix
+             to indicate that if the map's CHANCE roll is made, one of the maps
+             tagged chance_FOO should be picked.
           * "dummy": this tag indicates that the vault is a stub; if the dungeon
              builder picks a dummy vault, it pretends no vault was selected.
              Dummies are used to reduce the probability of other vaults at the
              same depth / place.
           * "entry": this tag MUST be there for a vault to be pickable as an
              entry vault.
+          * "extra": requests that the dungeon builder treat this as
+             an extra vault and try to immediately place another vault of the
+             same type it was trying to place when it placed this vault.
+             "extra" is good to use for things like labyrinth entries
+             that should not affect the chance of other minivaults on the level.
+             If you use "extra", you probably want to use one of the
+             "luniq" tags as well if your map is tagged "allow_dup".
           * "generate_awake": Monsters placed (using MONS, KMONS) in this vault
              will be generated awake.
           * "patrolling": Monsters placed (using MONS, KMONS) in this vault
@@ -398,6 +428,11 @@ TAGS:     Tags go an a TAGS: line and are space-separated. You can have several
              randomly converted from deep water (the default) to shallow.
           * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
              the vaults with this tag can be used in a game.
+          * "luniq": specifies that this vault can be used only once on a
+             given level. "luniq" is only relevant when used with "allow_dup".
+          * "luniq_BAR": (luniq_ with any suffix) specifies that only one
+             of the vaults with this tag can be used on any given level.
+             "luniq_BAR" is only relevant when used with "allow_dup".
           * "branch_entry" eg. "orc_entry", "lair_entry" etc.
              If chosen, these maps will contain the stairs for that branch.
              Use "O" to place the stairs. If a branch has very few entries,

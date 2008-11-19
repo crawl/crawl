@@ -765,8 +765,7 @@ ENDMAP
 #
 # Shoal:$ is hand-hacked to force lots of minivaults.
 NAME:    shoalhut_rune
-PLACE:   Shoal:$
-TAGS:    has_rune
+TAGS:    shoal_rune
 SHUFFLE: ABCD
 SUBST:   A:x, B:x, C:x=, D=+
 MAP

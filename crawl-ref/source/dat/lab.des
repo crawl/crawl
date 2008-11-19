@@ -9,13 +9,17 @@
 # Labyrinth entry vaults
 
 NAME:   lab_entry_generic
-TAGS:   lab_entry transparent trowel_portal allow_dup
-DEPTH:  12-26
-ORIENT: float
+TAGS:   luniq_lab chance_lab transparent trowel_portal allow_dup
+# Nominal chance for labs was 1 chance in 15, but making it eligible as a
+# random vault gives this vault more opportunities to be placed, so dropping
+# chance to 2.85%.
+CHANCE: 50 : 285
+DEPTH:  12-27
 : messager = bell_clock_msg { initmsg="You hear a distant snort." }
 MARKER: O = lua: timed_marker {  \
                  low=400, high=600, msg=messager, floor = 'stone_arch' \
             }
+KFEAT: O = enter_labyrinth
 MAP
 O
 ENDMAP

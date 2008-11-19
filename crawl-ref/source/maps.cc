@@ -327,8 +327,11 @@ static bool map_has_no_tags(const map_def &map, I begin, I end)
 static bool vault_unforbidden(const map_def &map)
 {
     return (you.uniq_map_names.find(map.name) == you.uniq_map_names.end()
+            && Level_Unique_Maps.find(map.name) == Level_Unique_Maps.end()
             && map_has_no_tags(map, you.uniq_map_tags.begin(),
-                               you.uniq_map_tags.end()));
+                               you.uniq_map_tags.end())
+            && map_has_no_tags(map, Level_Unique_Tags.begin(),
+                               Level_Unique_Tags.end()));
 }
 
 static bool map_matches_layout_type(const map_def &map)
@@ -387,9 +390,10 @@ public:
     }
 
     static map_selector by_tag(const std::string &tag, bool mini,
-                               bool check_depth)
+                               bool check_depth,
+                               const level_id &place = level_id::current())
     {
-        return map_selector(map_selector::TAG, level_id::current(), tag,
+        return map_selector(map_selector::TAG, place, tag,
                             mini, check_depth);
     }
 
@@ -558,8 +562,9 @@ static int _random_map_in_list(const map_selector &sel,
             // a lookup for that tag.
             if (!chance_tag.empty())
             {
-                map_selector msel = map_selector::by_tag(sel.tag, sel.mini,
-                                                         sel.check_depth);
+                map_selector msel = map_selector::by_tag(chance_tag, sel.mini,
+                                                         sel.check_depth,
+                                                         sel.place);
                 msel.ignore_chance = true;
                 return _random_map_by_selector(msel);
             }

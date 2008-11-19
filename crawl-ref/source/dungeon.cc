@@ -238,6 +238,8 @@ static bool _fixup_interlevel_connectivity();
 // A mask of vaults and vault-specific flags.
 map_mask dgn_Map_Mask;
 std::vector<vault_placement> Level_Vaults;
+std::set<std::string> Level_Unique_Maps;
+std::set<std::string> Level_Unique_Tags;
 std::string dgn_Build_Method;
 std::string dgn_Layout_Type;
 
@@ -295,6 +297,8 @@ bool builder(int level_number, int level_type)
 #endif
 
         dgn_level_vetoed = false;
+        Level_Unique_Maps.clear();
+        Level_Unique_Tags.clear();
 
         _reset_level();
 
@@ -314,7 +318,8 @@ bool builder(int level_number, int level_type)
         if (!dgn_level_vetoed && _valid_dungeon_level(level_number, level_type))
         {
             dgn_Layout_Type.clear();
-
+            Level_Unique_Maps.clear();
+            Level_Unique_Tags.clear();
             _dgn_map_colour_fixup();
             return (true);
         }
@@ -460,12 +465,17 @@ static void _dgn_register_vault(const map_def &map)
     if (!map.has_tag("allow_dup"))
         you.uniq_map_names.insert(map.name);
 
+    if (map.has_tag("uniq"))
+        Level_Unique_Maps.insert(map.name);
+
     std::vector<std::string> tags = split_string(" ", map.tags);
     for (int t = 0, ntags = tags.size(); t < ntags; ++t)
     {
         const std::string &tag = tags[t];
         if (tag.find("uniq_") == 0)
             you.uniq_map_tags.insert(tag);
+        else if (tag.find("luniq_") == 0)
+            Level_Unique_Tags.insert(tag);
     }
 }
 
@@ -1349,7 +1359,9 @@ static bool _add_feat_if_missing(bool (*iswanted)(const coord_def &),
 #ifdef DEBUG_DIAGNOSTICS
             dump_map("debug.map", true);
 #endif
-            ASSERT(!"Couldn't find region.");
+            // [ds] Too many normal cases trigger this ASSERT, including
+            // rivers that surround a stair with deep water.
+            // ASSERT(!"Couldn't find region.");
             return (false);
         }
 
@@ -1531,8 +1543,8 @@ static void _build_dungeon_level(int level_number, int level_type)
 
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
-    if (!player_in_branch(BRANCH_SHOALS))
-        _place_minivaults();
+
+    _place_minivaults();
     _place_branch_entrances( level_number, level_type );
     _place_extra_vaults();
 
@@ -1987,13 +1999,7 @@ static void _prepare_shoals(int level_number)
         grd[centres[j].x-1][centres[j].y] = DNGN_STONE_STAIRS_UP_III;
 
         // Place the rune
-        int vaultidx;
-        do
-        {
-            vaultidx = _dgn_random_map_for_place(true);
-        }
-        while ( vaultidx == -1
-                || !map_by_index(vaultidx)->has_tag("has_rune") );
+        int vaultidx = random_map_for_tag("shoal_rune", true);
 
         _build_minivaults( level_number, vaultidx, true, false, false,
                           centres[1] );
@@ -2005,8 +2011,7 @@ static void _prepare_shoals(int level_number)
             {
                 vaultidx = _dgn_random_map_for_place(true);
             }
-            while ( vaultidx == -1
-                    || map_by_index(vaultidx)->has_tag("has_rune") );
+            while ( vaultidx == -1 );
 
             _build_minivaults( level_number, vaultidx, true, false, false,
                                centres[i] );
@@ -2392,7 +2397,8 @@ static builder_rc_type _builder_by_branch(int level_number)
     return BUILD_CONTINUE;
 }
 
-static void _place_minivaults(const std::string &tag, int lo, int hi, bool force)
+static void _place_minivaults(const std::string &tag, int lo, int hi,
+                              bool force)
 {
     const level_id curr = level_id::current();
     // Dungeon-style branches only, thankyouverymuch.
@@ -2416,15 +2422,15 @@ static void _place_minivaults(const std::string &tag, int lo, int hi, bool force
         return;
     }
 
-    std::set<int> used;
     if (use_random_maps)
     {
-        const int vault = random_map_in_depth(level_id::current(), true);
-        if (vault != -1)
+        int vault = -1;
+        do
         {
-            _build_minivaults(you.your_level, vault);
-            used.insert(vault);
-        }
+            vault = random_map_in_depth(level_id::current(), true);
+            if (vault != -1)
+                _build_minivaults(you.your_level, vault);
+        } while (vault != -1 && map_by_index(vault)->has_tag("extra"));
     }
 
     int chance = you.your_level == 0? 50 : 100;
@@ -2434,16 +2440,7 @@ static void _place_minivaults(const std::string &tag, int lo, int hi, bool force
         if (vault == -1)
             break;
 
-        // If we've already used this minivault and it doesn't want duplicates,
-        // break.
-        if (used.find(vault) != used.end()
-            && !map_by_index(vault)->has_tag("allow_dup"))
-        {
-            break;
-        }
-
         _build_minivaults(you.your_level, vault);
-        used.insert(vault);
         chance /= 4;
     }
 }
@@ -2658,12 +2655,6 @@ static void _builder_extras( int level_number, int level_type )
 {
     UNUSED( level_type );
 
-    if (one_chance_in(15))
-    {
-        _place_specific_stair(DNGN_ENTER_LABYRINTH, "lab_entry",
-                              level_number, true);
-    }
-
     if (level_number > 6 && one_chance_in(10))
     {
         _many_pools( level_number < 11 || coinflip() ?
@@ -2834,18 +2825,28 @@ static void _place_specific_stair(dungeon_feature_type stair,
 
 static void _place_extra_vaults()
 {
-    if (!player_in_branch(BRANCH_MAIN_DUNGEON)
-        && use_random_maps
-        && can_create_vault)
+    for ( ; ; )
     {
-        int vault = random_map_in_depth(level_id::current());
+        if (!player_in_branch(BRANCH_MAIN_DUNGEON)
+            && use_random_maps
+            && can_create_vault)
+        {
+            int vault = random_map_in_depth(level_id::current());
 
-        // ORIENT: encompass maps are unsuitable as secondary vaults.
-        if (vault != -1 && map_by_index(vault)->orient == MAP_ENCOMPASS)
-            vault = -1;
+            // ORIENT: encompass maps are unsuitable as secondary vaults.
+            if (vault != -1 && map_by_index(vault)->orient == MAP_ENCOMPASS)
+                vault = -1;
 
-        if (vault != -1 && _build_secondary_vault(you.your_level, vault, -1))
-            can_create_vault = false;
+            if (vault != -1
+                && _build_secondary_vault(you.your_level, vault, -1))
+            {
+                const map_def &map(*map_by_index(vault));
+                if (map.has_tag("extra"))
+                    continue;
+                can_create_vault = false;
+            }
+        }
+        break;
     }
 }
 
