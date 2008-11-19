@@ -111,7 +111,7 @@ const char *skills[50][6] =
     {"Necromancy",     "Grave Robber",  "Reanimator",      "Necromancer",     "Thanatomancer",  "@Genus_Short@ of Death"},
     {"Translocations", "Grasshopper",   "Placeless @Genus@", "Blinker",       "Portalist",      "Plane @Walker@"},     // 30
     {"Transmigration", "Changer",       "Transmogrifier",  "Alchemist",       "Malleable",      "Shapeless @Genus@"},
-    {"Divinations",    "Seer",          "Soothsayer",      "Diviner",         "Augur",          "Oracle"},
+    {"Divinations",    "Seer",          "Clairvoyant",     "Diviner",         "Augur",          "Oracle"},
 
     {"Fire Magic",     "Firebug",       "Arsonist",        "Scorcher",        "Pyromancer",     "Infernalist"},
     {"Ice Magic",      "Chiller",       "Frost Mage",      "Gelid",           "Cryomancer",     "Englaciator"},
