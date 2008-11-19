@@ -881,25 +881,12 @@ void untransform(void)
 // cases to handle a large number of things (see wear_armour()) -- bwr
 bool can_equip( equipment_type use_which, bool ignore_temporary )
 {
-    // if more cases are added to this if must also change in
-    // item_use for naga barding
-    if (ignore_temporary || !player_is_shapechanged())
-        /* or a transformation which doesn't change overall shape */
+    if (use_which == EQ_HELMET
+        && (player_mutation_level(MUT_HORNS)
+            || player_mutation_level(MUT_BEAK)))
     {
-        if (use_which == EQ_HELMET)
-        {
-            switch (you.species)
-            {
-            case SP_KENKU:
-                return (false);
-            default:
-                break;
-            }
-        }
-    }
-
-    if (use_which == EQ_HELMET && player_mutation_level(MUT_HORNS))
         return (false);
+    }
 
     if (use_which == EQ_BOOTS && !player_has_feet())
         return (false);

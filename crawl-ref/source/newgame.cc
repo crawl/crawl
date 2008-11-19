@@ -2793,6 +2793,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_CARNIVOROUS] = 3;
         break;
     case SP_KENKU:
+        you.mutation[MUT_BEAK] = 1;
         you.mutation[MUT_TALONS] = 1;
         break;
     case SP_TROLL:

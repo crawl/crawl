@@ -962,11 +962,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
-        if (you.species == SP_KENKU
-            && (ignore_temporary || !player_is_shapechanged()))
+        if (player_mutation_level(MUT_BEAK))
         {
             if (verbose)
-                mpr("That helmet does not fit your head!");
+                mpr("You can't wear that with your beak!");
 
             return (false);
         }

@@ -3232,8 +3232,7 @@ std::string get_skill_description(int skill, bool need_title)
         {
             unarmed_attacks.push_back("bite other creatures");
         }
-
-        if (you.species == SP_KENKU)
+        else if (player_mutation_level(MUT_BEAK))
             unarmed_attacks.push_back("peck at monsters with your beak");
 
         if (player_mutation_level(MUT_HORNS))

@@ -185,6 +185,8 @@ const char *mutation_descrip[][3] = {
      "You have a pair of horns on your head.",
      "You have a pair of large horns on your head."},
 
+    {"You have a beak for a mouth.", "", ""},
+
     {"Your muscles are strong (Str +1), but stiff (Dex -1).",
      "Your muscles are very strong (Str +2), but stiff (Dex -2).",
      "Your muscles are extremely strong (Str +3), but stiff (Dex -3)."},
@@ -479,6 +481,8 @@ const char *gain_mutation[][3] = {
      "The horns on your head grow some more.",
      "The horns on your head grow some more."},
 
+    {"Your mouth lengthens and hardens into a beak!", "", ""},
+
     {"Your muscles feel sore.", "Your muscles feel sore.",
      "Your muscles feel sore."},
 
@@ -717,6 +721,8 @@ const char *lose_mutation[][3] = {
      "The horns on your head shrink a bit.",
      "The horns on your head shrink a bit."},
 
+    {"Your beak shortens and softens into a mouth.", "", ""},
+
     {"Your muscles feel loose.", "Your muscles feel loose.",
      "Your muscles feel loose."},
 
@@ -902,14 +908,15 @@ static mutation_def mutation_defs[] = {
     { MUT_BREATHE_FLAMES,             4,  3, false, false },
     { MUT_BLINK,                      3,  3, false, false },
     { MUT_HORNS,                      7,  3, false,  true },
+    { MUT_BEAK,                       1,  1, false,  true },
     { MUT_STRONG_STIFF,              10,  3, false,  true },
     { MUT_FLEXIBLE_WEAK,             10,  3, false,  true },
     { MUT_SCREAM,                     6,  3,  true, false },
     { MUT_CLARITY,                    6,  1, false, false },
     { MUT_BERSERK,                    7,  3,  true, false },
     { MUT_DETERIORATION,             10,  3,  true, false },
-    { MUT_BLURRY_VISION,             10,  3,  true, false },
 // 40
+    { MUT_BLURRY_VISION,             10,  3,  true, false },
     { MUT_MUTATION_RESISTANCE,        4,  3, false, false },
     { MUT_FRAIL,                     10,  3,  true,  true },
     { MUT_ROBUST,                     5,  3, false,  true },
@@ -921,8 +928,8 @@ static mutation_def mutation_defs[] = {
     { MUT_SUMMON_DEMONS,              0,  1, false, false },
     { MUT_HURL_HELLFIRE,              0,  1, false, false },
     { MUT_CALL_TORMENT,               0,  1, false, false },
-    { MUT_RAISE_DEAD,                 0,  1, false, false },
 // 50
+    { MUT_RAISE_DEAD,                 0,  1, false, false },
     { MUT_CONTROL_DEMONS,             0,  1, false, false },
     { MUT_PANDEMONIUM,                0,  1, false, false },
     { MUT_DEATH_STRENGTH,             0,  1, false, false },
@@ -934,8 +941,8 @@ static mutation_def mutation_defs[] = {
 // end of demonic powers
 
     { MUT_CLAWS,                      2,  3, false,  true },
-    { MUT_FANGS,                      1,  3, false,  true },
 // 60
+    { MUT_FANGS,                      1,  3, false,  true },
     { MUT_HOOVES,                     1,  1, false,  true },
     { MUT_TALONS,                     1,  1, false,  true },
 
@@ -955,10 +962,9 @@ static mutation_def mutation_defs[] = {
 
     { MUT_SHAGGY_FUR,                 2,  3, false,  true },
 
-    { MUT_HIGH_MAGIC,                 1,  3, false, false },
 // 70
+    { MUT_HIGH_MAGIC,                 1,  3, false, false },
     { MUT_LOW_MAGIC,                  9,  3,  true, false },
-    { RANDOM_MUTATION,                0,  3, false, false },
     { RANDOM_MUTATION,                0,  3, false, false },
     { RANDOM_MUTATION,                0,  3, false, false },
     { RANDOM_MUTATION,                0,  3, false, false },
@@ -1113,15 +1119,14 @@ formatted_string describe_mutations()
         break;
 
     case SP_KENKU:
-        result += "You cannot wear helmets." EOL;
         if (you.experience_level > 4)
         {
             result += "You can fly";
             if (you.experience_level > 14)
                 result += " continuously";
             result += "." EOL;
+            have_any = true;
         }
-        have_any = true;
         break;
 
     case SP_MUMMY:
@@ -1581,6 +1586,7 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BREATHE_FLAMES:
     case MUT_BLINK:
     case MUT_HORNS:
+    case MUT_BEAK:
     case MUT_SCREAM:
     case MUT_BERSERK:
     case MUT_DETERIORATION:
@@ -1887,16 +1893,19 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         return (false);
     }
 
+    // No fangs with beaks, or vice versa.
+    if ((mutat == MUT_FANGS && you.mutation[MUT_BEAK] > 0)
+        || (mutat == MUT_BEAK && you.mutation[MUT_FANGS] > 0))
+    {
+        return (false);
+    }
+
     // Putting boots on after they are forced off. -- bwr
     if ((mutat == MUT_HOOVES || mutat == MUT_TALONS)
          && !player_has_feet())
     {
         return (false);
     }
-
-    // No fangs sprouting from Kenkus' beaks.
-    if (mutat == MUT_FANGS && you.species == SP_KENKU)
-        return (false);
 
     // Already innate.
     if (mutat == MUT_BREATHE_POISON && you.species != SP_NAGA)
@@ -2067,9 +2076,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
 
     case MUT_HORNS:
+    case MUT_BEAK:
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
 
-        // Horns force hard helmets off.
+        // Horns and beaks force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
             && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
             && you_tran_can_wear(EQ_HELMET))

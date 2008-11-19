@@ -2345,7 +2345,6 @@ std::string _status_mut_abilities()
           break;
 
       case SP_KENKU:
-          mutations.push_back("cannot wear helmets");
           if (you.experience_level > 4)
           {
               std::string help = "able to fly";
@@ -2557,6 +2556,9 @@ std::string _status_mut_abilities()
             case MUT_HORNS:
                 snprintf(info, INFO_SIZE, "horns %d", level);
                 current = info;
+                break;
+            case MUT_BEAK:
+                current = "beak";
                 break;
             case MUT_STRONG_STIFF:
                 Str_change += level;

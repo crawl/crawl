@@ -2172,45 +2172,46 @@ enum mutation_type
     MUT_BREATHE_FLAMES,                //   30
     MUT_BLINK,
     MUT_HORNS,
+    MUT_BEAK,
     MUT_STRONG_STIFF,
-    MUT_FLEXIBLE_WEAK,
-    MUT_SCREAM,                        //   35
+    MUT_FLEXIBLE_WEAK,                 //   35
+    MUT_SCREAM,
     MUT_CLARITY,
     MUT_BERSERK,
     MUT_DETERIORATION,
-    MUT_BLURRY_VISION,
-    MUT_MUTATION_RESISTANCE,           //   40
+    MUT_BLURRY_VISION,                 //   40
+    MUT_MUTATION_RESISTANCE,
     MUT_FRAIL,
     MUT_ROBUST,
     MUT_TORMENT_RESISTANCE,
-    MUT_NEGATIVE_ENERGY_RESISTANCE,
-    MUT_SUMMON_MINOR_DEMONS,           //   45
+    MUT_NEGATIVE_ENERGY_RESISTANCE,    //   45
+    MUT_SUMMON_MINOR_DEMONS,
     MUT_SUMMON_DEMONS,
     MUT_HURL_HELLFIRE,
     MUT_CALL_TORMENT,
-    MUT_RAISE_DEAD,
-    MUT_CONTROL_DEMONS,                //   50
+    MUT_RAISE_DEAD,                    //   50
+    MUT_CONTROL_DEMONS,
     MUT_PANDEMONIUM,
     MUT_DEATH_STRENGTH,
     MUT_CHANNEL_HELL,
-    MUT_DRAIN_LIFE,
-    MUT_THROW_FLAMES,                  //   55
+    MUT_DRAIN_LIFE,                    //   55
+    MUT_THROW_FLAMES,
     MUT_THROW_FROST,
     MUT_SMITE,
     MUT_CLAWS,
-    MUT_FANGS,      // new in 0.3
+    MUT_FANGS,      // new in 0.3      --   60
     // hooves and talons can replace feet
-    MUT_HOOVES,                        //   60
+    MUT_HOOVES,
     MUT_TALONS,     // new in 0.4
     MUT_BREATHE_POISON,
     MUT_STINGER,
-    MUT_BIG_WINGS,
-    MUT_BLUE_MARKS, // 65, decorative, as in "mark of the devil"
+    MUT_BIG_WINGS,                     //   65
+    MUT_BLUE_MARKS, // decorative, as in "mark of the devil"
     MUT_GREEN_MARKS,
     MUT_SAPROVOROUS,
     MUT_SHAGGY_FUR, // new in 0.4
-    MUT_HIGH_MAGIC, // new in 0.4
-    MUT_LOW_MAGIC,  // new in 0.4      --   70
+    MUT_HIGH_MAGIC, // new in 0.4      --   70
+    MUT_LOW_MAGIC,  // new in 0.4
 
     // several types of scales (affect AC and sometimes more)
     MUT_RED_SCALES = 75,               //   75

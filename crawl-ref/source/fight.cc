@@ -941,7 +941,7 @@ bool melee_attack::player_aux_unarmed()
             if (uattack != UNAT_HEADBUTT)
             {
                 if (!player_mutation_level(MUT_HORNS)
-                       && you.species != SP_KENKU
+                       && !player_mutation_level(MUT_BEAK)
                     || !one_chance_in(3))
                 {
                     continue;
@@ -957,7 +957,7 @@ bool melee_attack::player_aux_unarmed()
                 continue;
             }
 
-            if (you.species == SP_KENKU
+            if (player_mutation_level(MUT_BEAK)
                 && (!player_mutation_level(MUT_HORNS) || coinflip()))
             {
                 unarmed_attack = "peck";

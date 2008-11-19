@@ -1236,18 +1236,18 @@ bool check_armour_shape( const item_def &item, bool quiet )
             if (!is_hard_helmet(item))
                 break;
 
-            if (you.species == SP_KENKU)
-            {
-                if (!quiet)
-                    mpr( "That helmet does not fit your head!" );
-
-                return (false);
-            }
-
             if (player_mutation_level(MUT_HORNS))
             {
                 if (!quiet)
                     mpr( "You can't wear that with your horns!" );
+
+                return (false);
+            }
+
+            if (player_mutation_level(MUT_BEAK))
+            {
+                if (!quiet)
+                    mpr( "You can't wear that with your beak!" );
 
                 return (false);
             }
