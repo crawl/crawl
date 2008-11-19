@@ -980,7 +980,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return (false);
     }
 
-    // Cannot swim in heavy armour
+    // Cannot swim in heavy armour.
     if (!ignore_temporary
         && player_is_swimming()
         && slot == EQ_BODY_ARMOUR
@@ -1009,7 +1009,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
     }
 
-    // Tiny races
+    // Tiny races.
     if (player_size(PSIZE_TORSO) <= SIZE_LITTLE)
     {
         if ((sub_type >= ARM_LEATHER_ARMOUR
