@@ -4698,6 +4698,7 @@ static bool mg_do_build_level(int niters)
 static std::vector<level_id> mg_dungeon_places()
 {
     std::vector<level_id> places;
+
     for (int br = BRANCH_MAIN_DUNGEON; br < NUM_BRANCHES; ++br)
     {
         if (branches[br].depth == -1)
@@ -4790,6 +4791,8 @@ static void _mapgen_report_available_random_vaults(FILE *outf)
          i != places.end(); ++i)
     {
         fprintf(outf, "\n%s -------------\n", i->describe().c_str());
+        mesclr();
+        mprf("Examining random maps at %s", i->describe().c_str());
         mg_report_random_maps(outf, *i);
         fprintf(outf, "---------------------------------\n");
     }

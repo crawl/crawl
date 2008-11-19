@@ -1164,7 +1164,7 @@ dlua_set_map::~dlua_set_map()
 //
 
 map_def::map_def()
-    : name(), tags(), place(), depths(), orient(), chance(),
+    : name(), tags(), place(), depths(), orient(), chance(), weight(),
       welcome_messages(), map(), mons(), items(), keyspecs(),
       prelude("dlprelude"), main("dlmain"), validate("dlvalidate"),
       veto("dlveto"), rock_colour(BLACK), floor_colour(BLACK),
@@ -1199,8 +1199,26 @@ void map_def::reinit()
 
     rock_colour = floor_colour = BLACK;
 
-    // Base chance; this is not a percentage.
-    chance = 10;
+    // Chance of using this level. Nonzero chance should be used
+    // sparingly. When selecting vaults for a place, first those
+    // vaults with chance > 0 are considered, in the order they were
+    // loaded (which is arbitrary). If random2(100) < chance, the
+    // vault is picked, and all other vaults are ignored for that
+    // random selection. weight is ignored if the vault is chosen
+    // based on its chance.
+    chance = 0;
+
+    // If multiple alternative vaults have a chance, the order in which
+    // they're tested is based on chance_priority: higher priority vaults
+    // are checked first. Vaults with the same priority are tested in
+    // unspecified order.
+    chance_priority = 0;
+
+    // Weight for this map. When selecting a map, if no map with a
+    // nonzero chance is picked, one of the other eligible vaults is
+    // picked with a probability of weight / (sum of weights of all
+    // eligible vaults).
+    weight = 10;
 
     // Clearing the map also zaps map transforms.
     map.clear();
@@ -1296,7 +1314,9 @@ void map_def::write_index(writer& outf) const
     marshallString4(outf, place_loaded_from.filename);
     marshallLong(outf, place_loaded_from.lineno);
     marshallShort(outf, orient);
+    marshallLong(outf, chance_priority);
     marshallLong(outf, chance);
+    marshallLong(outf, weight);
     marshallLong(outf, cache_offset);
     marshallString4(outf, tags);
     place.save(outf);
@@ -1310,7 +1330,9 @@ void map_def::read_index(reader& inf)
     unmarshallString4(inf, place_loaded_from.filename);
     place_loaded_from.lineno   = unmarshallLong(inf);
     orient       = static_cast<map_section_type>( unmarshallShort(inf) );
+    chance_priority = unmarshallLong(inf);
     chance       = unmarshallLong(inf);
+    weight       = unmarshallLong(inf);
     cache_offset = unmarshallLong(inf);
     unmarshallString4(inf, tags);
     place.load(inf);
@@ -1755,6 +1777,11 @@ bool map_def::has_tag_suffix(const std::string &suffix) const
 {
     return !tags.empty() && !suffix.empty()
         && tags.find(suffix + " ") != std::string::npos;
+}
+
+std::vector<std::string> map_def::get_tags() const
+{
+    return split_string(" ", tags);
 }
 
 const keyed_mapspec *map_def::mapspec_for_key(int key) const

@@ -209,7 +209,7 @@ ENDMAP
 NAME:   bazaar_general_marketplace
 TAGS:   bazaar allow_dup no_rotate
 ORIENT: encompass
-CHANCE: 5
+WEIGHT: 5
 KFEAT:  A = any shop
 : bazaar_message(_G)
 MAP
@@ -236,7 +236,7 @@ ENDMAP
 NAME:    bazaar_outfitter
 TAGS:    bazaar allow_dup
 ORIENT:  encompass
-CHANCE:  5
+WEIGHT:  5
 KFEAT:   A = any shop
 SHUFFLE: ABC, de
 KFEAT:   A = weapon shop / armour shop
@@ -262,7 +262,7 @@ ENDMAP
 # 4 random shops
 NAME:    bazaar_oval
 TAGS:    bazaar allow_dup no_rotate
-CHANCE:  5
+WEIGHT:  5
 ORIENT:  encompass
 SUBST:   A = TVBG
 KFEAT:   B = any shop
@@ -282,7 +282,7 @@ ENDMAP
 # 2 shops
 NAME:    bazaar_mystics
 TAGS:    bazaar allow_dup
-CHANCE:  5
+WEIGHT:  5
 ORIENT:  encompass
 SUBST:   w : wlx
 SHUFFLE: AB, def
@@ -452,7 +452,7 @@ ENDMAP
 # circle bazaar
 # 5 shops
 NAME:    bazaar_circle_1
-CHANCE:  2
+WEIGHT:  2
 TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 SHUFFLE: ABCD, EFGH
@@ -492,7 +492,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_circle_2
-CHANCE:  2
+WEIGHT:  2
 TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 SHUFFLE: EFGH
@@ -532,7 +532,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_circle_3
-CHANCE:  2
+WEIGHT:  2
 TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 SHUFFLE: EFGH
@@ -572,7 +572,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_circle_4
-CHANCE:  1
+WEIGHT:  1
 TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 SHUFFLE: ABCDEF
@@ -611,7 +611,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_circle_5
-CHANCE:  2
+WEIGHT:  2
 TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 KFEAT:   C = any shop
@@ -649,7 +649,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    bazaar_circle_6
-CHANCE:  1
+WEIGHT:  1
 TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
 KFEAT:   A = any shop / antique armour shop
@@ -796,7 +796,7 @@ ENDMAP
 # ~3 shops
 NAME:    bazaar_cross1
 TAGS:    bazaar allow_dup no_rotate
-CHANCE:  2
+WEIGHT:  2
 ORIENT:  encompass
 SHUFFLE: ABCD
 SUBST:   A = <, B = >
@@ -827,7 +827,7 @@ ENDMAP
 
 NAME:    bazaar_cross2
 TAGS:    bazaar allow_dup no_rotate
-CHANCE:  3
+WEIGHT:  3
 ORIENT:  encompass
 SHUFFLE: ABCD
 SUBST:   A = T E, B = >
@@ -909,7 +909,7 @@ ENDMAP
 # 5 shops
 NAME:    bazaar_ninerooms1
 TAGS:    bazaar allow_dup no_rotate
-CHANCE:  2
+WEIGHT:  2
 ORIENT:  encompass
 SUBST:   k : . x
 NSUBST:  A = 2=T:30 V / *:C
@@ -946,7 +946,7 @@ ENDMAP
 
 NAME:    bazaar_ninerooms2
 TAGS:    bazaar allow_dup no_rotate
-CHANCE:  2
+WEIGHT:  2
 ORIENT:  encompass
 SUBST:   k : . x
 NSUBST:  A = 2=T:30 V / *:C
@@ -983,7 +983,7 @@ ENDMAP
 
 NAME:    bazaar_ninerooms3
 TAGS:    bazaar allow_dup no_rotate
-CHANCE:  2
+WEIGHT:  2
 ORIENT:  encompass
 SUBST:   z = .:50 +
 SUBST:   k : . x
@@ -1021,7 +1021,7 @@ ENDMAP
 
 NAME:    bazaar_ninerooms4
 TAGS:    bazaar allow_dup no_rotate
-CHANCE:  2
+WEIGHT:  2
 ORIENT:  encompass
 SUBST:   z = .:50 +
 SUBST:   k : . x
@@ -1059,7 +1059,7 @@ ENDMAP
 
 NAME:    bazaar_ninerooms5
 TAGS:    bazaar allow_dup no_rotate
-CHANCE:  2
+WEIGHT:  2
 ORIENT:  encompass
 SUBST:   k : . x
 NSUBST:  A = 1:< / 1:> / 1:T C / 3=T:30 V / *:C
@@ -1100,7 +1100,7 @@ ENDMAP
 NAME:    bazaar_triangles
 TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
-CHANCE:  1
+WEIGHT:  1
 SHUFFLE: ACD
 SUBST:   A = <
 KFEAT:   B = any shop / antique armour shop / jewellery shop
@@ -1122,7 +1122,7 @@ ENDMAP
 NAME:    bazaar_hexagon
 TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
-CHANCE:  4
+WEIGHT:  4
 SHUFFLE: AC, BD
 KFEAT:   A = armour shop / weapon shop / wand shop
 KFEAT:   B = general shop / food shop
@@ -1152,7 +1152,7 @@ ENDMAP
 NAME:    bazaar_triangle_bulge
 TAGS:    bazaar allow_dup no_rotate
 ORIENT:  encompass
-CHANCE:  5
+WEIGHT:  5
 SHUFFLE: ABC
 SUBST:   A = <, B = >
 KFEAT:   C = any shop

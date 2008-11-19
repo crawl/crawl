@@ -27,7 +27,7 @@ DEPTH: D:1-11
 # by depth.
 TAGS: dummy
 ORIENT: float
-CHANCE: 100
+WEIGHT: 100
 MAP
 x
 ENDMAP
@@ -41,7 +41,7 @@ DEPTH: 1-, !D
 # by depth.
 TAGS: dummy
 ORIENT: float
-CHANCE: 60
+WEIGHT: 60
 MAP
 x
 ENDMAP
@@ -51,7 +51,7 @@ ENDMAP
 #
 NAME:   erik_1
 ORIENT: float
-CHANCE: 5
+WEIGHT: 5
 TAGS:   no_monster_gen
 DEPTH:  D:7-11, Lair
 #
@@ -431,7 +431,7 @@ ENDMAP
 #
 NAME:    oklob_3
 DEPTH:   D:18-27, Lair:2-10, Elf:2-7
-CHANCE:  2
+WEIGHT:  2
 ORIENT:  float
 SHUFFLE: ab" / AB'
 SUBST:   a=[, b=(, A=., B=., '=., "=>

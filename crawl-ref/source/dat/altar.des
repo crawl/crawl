@@ -17,7 +17,7 @@
 NAME:   minitemple
 TAGS:   allow_dup
 # More common than the others.
-CHANCE: 20
+WEIGHT: 20
 MAP
 cccccccccc
 cBcBcBcBcc
@@ -113,7 +113,7 @@ ENDMAP
 
 NAME:   lemuel_altar_in_water
 DEPTH:  D:2-18, Swamp, Shoal
-CHANCE: 9
+WEIGHT: 9
 : local brnd = crawl.random2(13)
 : if brnd > 10 then
 TAGS:   no_monster_gen no_rotate
@@ -138,7 +138,7 @@ ENDMAP
 NAME:   lemuel_altar_in_water2
 TAGS:   no_pool_fixup no_monster_gen
 DEPTH:  D:2-18, Lair, Snake, Swamp, Shoal
-CHANCE: 1
+WEIGHT: 1
 MAP
    www
   wwwww
@@ -176,7 +176,7 @@ MAP
 ENDMAP
 
 NAME:   lemuel_sealed_altar_a
-CHANCE: 3
+WEIGHT: 3
 DEPTH:  D:2-18, Vault, Elf, Crypt
 MAP
 xxxxxxxxxxxxx
@@ -194,7 +194,7 @@ xxxxxxxxxxxxx
 ENDMAP
 
 NAME: lemuel_sealed_altar_b
-CHANCE: 7
+WEIGHT: 7
 DEPTH: D:2-18, Vault, Elf, Crypt
 MAP
 xxxxxxxxxxx

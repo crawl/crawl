@@ -236,7 +236,7 @@ ORIENT:             { CBEGIN(ARGUMENT); return ORIENT; }
 PLACE:              { CBEGIN(ARGUMENT); return PLACE; }
 WELCOME:            { CBEGIN(ARGUMENT); return WELCOME; }
 CHANCE:             return CHANCE;
-WEIGHT:             return CHANCE;
+WEIGHT:             return WEIGHT;
 FLAGS:              { CBEGIN(KEYWORDS); return TAGS; }
 TAGS:               { CBEGIN(KEYWORDS); return TAGS; }
 LFLAGS:             { CBEGIN(ARGUMENT); return LFLAGS; }
@@ -258,7 +258,11 @@ KMASK:              { CBEGIN(ARGUMENT); return KMASK; }
 
 ,                   return COMMA;
 
-[0-9]+              {
+:                   return COLON;
+
+%                   return PERC;
+
+[+-]?[0-9]+         {
                         clean();
                         yylval.i = atoi(yytext);
                         return INTEGER;

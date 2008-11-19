@@ -11,7 +11,7 @@
 NAME: hive_0
 TAGS: hive_entry
 ORIENT: float
-CHANCE: 60
+WEIGHT: 60
 MAP
 O
 ENDMAP
@@ -260,7 +260,7 @@ ENDMAP
 NAME:   Hive_Balancer
 DEPTH:  Hive:*
 TAGS:   dummy
-CHANCE: 200
+WEIGHT: 200
 MAP
 x
 ENDMAP
@@ -397,7 +397,7 @@ ENDMAP
 NAME:   lemuel_wasp_nest
 DEPTH:  Hive:2-3
 MONS:   yellow wasp / weight:2 red wasp
-CHANCE: 1
+WEIGHT: 1
 SUBST:  1=1 .:15
 SUBST:  ?=a.
 MAP
@@ -420,7 +420,7 @@ ENDMAP
 
 NAME:   lemuel_hive_grid_a
 DEPTH:  Hive:*
-CHANCE: 4
+WEIGHT: 4
 MAP
 a.a.a.a.a.a.a.a.a
 aa.a.a.a.a.a.a.aa
@@ -437,7 +437,7 @@ ENDMAP
 
 NAME:   lemuel_hive_grid_b
 DEPTH:  Hive:*
-CHANCE: 6
+WEIGHT: 6
 MAP
 a.a.a.a.aa
 aa.a.a.a.a
@@ -450,7 +450,7 @@ ENDMAP
 
 NAME:   lemuel_hive_grid_c
 DEPTH:  Hive:*
-CHANCE: 10
+WEIGHT: 10
 MAP
      aa.aa
     aa.a.aa

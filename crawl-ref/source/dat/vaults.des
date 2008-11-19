@@ -14,7 +14,7 @@
 
 NAME:   vaults_0_dummy
 TAGS:   vault_entry
-CHANCE: 60
+WEIGHT: 60
 ORIENT: float
 MAP
 O

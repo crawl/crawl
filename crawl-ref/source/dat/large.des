@@ -16,7 +16,7 @@ default-depth: D:12-26
 NAME:    RatsNest_Dungeon
 ORIENT:  northeast
 TAGS:    uniq_rats_nest
-CHANCE:  5
+WEIGHT:  5
 DEPTH:   D:5-9
 SHUFFLE: 23, 34
 MONS:    rat / nothing, grey rat / nothing
@@ -1255,7 +1255,7 @@ NAME:    erik_rubicon_a
 DEPTH:   D:10-16
 ORIENT:  south
 TAGS:    no_pool_fixup no_rotate uniq_rubicon
-CHANCE:  6
+WEIGHT:  6
 ITEM:    ring of levitation / potion of levitation / nothing
 ITEM:    potion of levitation / nothing, nothing, nothing, nothing
 SHUFFLE: {[(, )gh
@@ -1290,7 +1290,7 @@ NAME:    erik_rubicon_b
 DEPTH:   D:10-16
 ORIENT:  south
 TAGS:    no_rotate uniq_rubicon
-CHANCE:  4
+WEIGHT:  4
 ITEM:    ring of levitation / potion of levitation / nothing
 ITEM:    potion of levitation, nothing, nothing, nothing, nothing
 SHUFFLE: {[(, fgW, )hi

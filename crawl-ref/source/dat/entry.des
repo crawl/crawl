@@ -114,7 +114,7 @@ ENDMAP
 # good luck! (Shiori)
 NAME:    shiawase
 TAGS:    entry no_monster_gen no_rotate no_vmirror
-CHANCE:  5
+WEIGHT:  5
 ORIENT:  float
 ITEM:    bread ration, meat ration, apple, orange, banana, choko, pear
 SUBST:   . = .:100 $ % d
@@ -142,7 +142,7 @@ ENDMAP
 # Angband town! (Shiori)
 NAME:    angband_town
 ORIENT:  float
-CHANCE:  1
+WEIGHT:  1
 TAGS:    entry no_rotate
 NSUBST:  { = { / > / .
 NSUBST:  = = 3== / *=x
@@ -295,7 +295,7 @@ ENDMAP
 NAME:    zelgadis_glass_entry_002
 TAGS:    entry
 ORIENT:  float
-CHANCE:  1
+WEIGHT:  1
 SHUFFLE: {[(<
 SUBST:   < = .
 NSUBST:  X = 4:+ / *:x
@@ -502,7 +502,7 @@ NAME:    lemuel_entry_005_a
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {}
-CHANCE:  2
+WEIGHT:  2
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxxx{.......}xxxxx
@@ -527,7 +527,7 @@ ENDMAP
 NAME:    lemuel_entry_005_b
 TAGS:    entry no_monster_gen
 ORIENT:  float
-CHANCE:  7
+WEIGHT:  7
 SHUFFLE: {}, XYZ
 SUBST:   X=W, Y=w, Z=w
 MAP
@@ -558,7 +558,7 @@ TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {}, ABC
 SUBST:   A:=, B:x, C:x
-CHANCE:  1
+WEIGHT:  1
 MAP  
 xxxxxxxxxxxxxxxxxxx  
 xxxWA{.......}xxxxx  
@@ -674,7 +674,7 @@ TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[(
 SUBST:   ? : xxcvG.
-CHANCE:  4
+WEIGHT:  4
 MAP
 xxxxxxxxxxx
 x{...(...[x
@@ -700,7 +700,7 @@ SUBST:   ? : xxcvG.
 ITEM:    meat ration / bread ration / beef jerky / spear / potion of water / \
          apple / club / hammer / knife
 SHUFFLE: {[(
-CHANCE:  3
+WEIGHT:  3
 MAP
 xxxxxxxxxxxx
 x{...(...[xx
@@ -726,7 +726,7 @@ SUBST:   ? : xxcvG.
 ITEM:    meat ration / bread ration / beef jerky / spear / potion of water / \
          apple / club / hammer / knife
 SHUFFLE: {[(
-CHANCE:  3
+WEIGHT:  3
 MAP
 xxxxxxxxxxxx
 x{...(...[xx
@@ -750,7 +750,7 @@ ENDMAP
 
 NAME:    lemuel_entry_010_a
 TAGS:    entry no_monster_gen
-CHANCE:  5
+WEIGHT:  5
 ORIENT:  float
 SHUFFLE: {(
 SUBST:   b : bcvxxx
@@ -770,7 +770,7 @@ ENDMAP
 
 NAME:    lemuel_entry_010_b
 TAGS:    entry no_monster_gen
-CHANCE:  5
+WEIGHT:  5
 ORIENT:  float
 SHUFFLE: {(
 SUBST:   b : bcvxxx
@@ -817,7 +817,7 @@ ENDMAP
 NAME:    david_entry_001_a
 TAGS:    entry no_rotate
 ORIENT:  float
-CHANCE:  5
+WEIGHT:  5
 SHUFFLE: {[(
 MAP
    xxxxx  x@x  xxxxx
@@ -843,7 +843,7 @@ ENDMAP
 NAME:    david_entry_001_b
 TAGS:    entry no_rotate no_monster_gen
 ORIENT:  float
-CHANCE:  5
+WEIGHT:  5
 SHUFFLE: {[, }>
 MAP
          xxxxx
@@ -1112,7 +1112,7 @@ ENDMAP
 #
 NAME:   david_entry_011_a
 TAGS:   entry no_monster_gen no_rotate
-CHANCE: 3
+WEIGHT: 3
 ORIENT: float
 NSUBST: . = 1:d / *:.
 ITEM:   stone / dart
@@ -1144,7 +1144,7 @@ ENDMAP
 
 NAME:   david_entry_011_b
 TAGS:   entry no_monster_gen no_rotate
-CHANCE: 1
+WEIGHT: 1
 ORIENT: float
 NSUBST: . = 1:d / *:.
 ITEM:   stone / dart
@@ -1176,7 +1176,7 @@ ENDMAP
 
 NAME:    david_entry_011_c
 TAGS:    entry no_monster_gen no_rotate
-CHANCE:  6
+WEIGHT:  6
 ORIENT:  float
 SHUFFLE: ab, cd, ef, gh, ij, kl, mn
 SUBST:   a=., c=., e=., g=., i=., k=., m=.
@@ -1303,7 +1303,7 @@ ENDMAP
 # (but commented out). All water is deep.
 # NAME: water_fire_template
 # TAGS: entry no_monster_gen no_pool_fixup no_rotate
-# CHANCE: 1
+# WEIGHT: 1
 # ORIENT: float
 # MONS: plant
 # MAP
@@ -1333,7 +1333,7 @@ ENDMAP
 
 NAME: david_entry_015_a_water_fire
 TAGS: entry no_monster_gen no_pool_fixup no_rotate
-CHANCE: 1
+WEIGHT: 1
 MONS: plant
 ORIENT: float
 MAP
@@ -1363,7 +1363,7 @@ ENDMAP
 
 NAME: david_entry_015_b_water_fire
 TAGS: entry no_monster_gen no_pool_fixup no_rotate
-CHANCE: 1
+WEIGHT: 1
 NSUBST: . = 1:d / *:.
 ITEM: stone/dart
 MONS: plant
@@ -1395,7 +1395,7 @@ ENDMAP
 
 NAME: david_entry_015_c_water_fire
 TAGS: entry no_monster_gen no_pool_fixup no_rotate
-CHANCE: 1
+WEIGHT: 1
 NSUBST: . = 1:d / *:.
 ITEM: stone/dart
 MONS: plant
@@ -1427,7 +1427,7 @@ ENDMAP
 
 NAME: david_entry_015_d_water_fire
 TAGS: entry no_monster_gen no_pool_fixup no_rotate
-CHANCE: 1
+WEIGHT: 1
 NSUBST: . = 1:d / *:.
 ITEM: stone/dart
 MONS: plant
@@ -1459,7 +1459,7 @@ ENDMAP
 
 NAME: david_entry_015_e_water_fire
 TAGS: entry no_monster_gen no_pool_fixup no_rotate
-CHANCE: 1
+WEIGHT: 1
 NSUBST: . = 1:d / *:.
 ITEM: stone/dart
 MONS: plant
@@ -1491,7 +1491,7 @@ ENDMAP
 
 NAME: david_entry_015_f_water_fire
 TAGS: entry no_monster_gen no_pool_fixup no_rotate
-CHANCE: 1
+WEIGHT: 1
 NSUBST: . = 1:d / *:.
 ITEM: stone/dart
 MONS: plant
@@ -1523,7 +1523,7 @@ ENDMAP
 
 NAME: david_entry_015_g_water_fire
 TAGS: entry no_monster_gen no_pool_fixup no_rotate
-CHANCE: 1
+WEIGHT: 1
 NSUBST: . = 1:d / *:.
 ITEM: stone/dart
 MONS: plant
@@ -1555,7 +1555,7 @@ ENDMAP
 
 NAME: david_entry_015_h_water_fire
 TAGS: entry no_monster_gen no_pool_fixup no_rotate
-CHANCE: 1
+WEIGHT: 1
 NSUBST: . = 1:d / *:.
 ITEM: stone/dart
 MONS: plant
@@ -1587,7 +1587,7 @@ ENDMAP
 
 NAME: david_entry_015_i_water_fire
 TAGS: entry no_monster_gen no_pool_fixup no_rotate
-CHANCE: 1
+WEIGHT: 1
 NSUBST: . = 1:d / *:.
 ITEM: stone/dart
 MONS: plant
@@ -1619,7 +1619,7 @@ ENDMAP
 
 NAME: david_entry_015_j_water_fire
 TAGS: entry no_monster_gen no_pool_fixup no_rotate
-CHANCE: 1
+WEIGHT: 1
 NSUBST: . = 1:d / *:.
 ITEM: stone/dart
 MONS: plant
@@ -1678,7 +1678,7 @@ ENDMAP
 #
 NAME:    david_entry_017_a
 TAGS:    entry no_monster_gen no_rotate
-CHANCE:  2
+WEIGHT:  2
 ORIENT:  float
 SHUFFLE: {[(
 MAP
@@ -1700,7 +1700,7 @@ ENDMAP
 NAME:    david_entry_017_b
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
-CHANCE:  8
+WEIGHT:  8
 SHUFFLE: cv
 MAP
 x@xxxxxxxxxxxxxxxxxxxx@x
@@ -2128,7 +2128,7 @@ NAME:    david_entry_033_a
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: TV
-CHANCE:  5
+WEIGHT:  5
 MAP
   xx..@..xx
  xx...x...xx
@@ -2148,7 +2148,7 @@ ENDMAP
 NAME:   david_entry_033_b
 TAGS:   entry
 ORIENT: float
-CHANCE: 5
+WEIGHT: 5
 MAP
   xx..@..xx
  xx...x...xx
@@ -2211,7 +2211,7 @@ ENDMAP
 NAME:    david_entry_036_a
 TAGS:    entry
 ORIENT:  float
-CHANCE:  2
+WEIGHT:  2
 SHUFFLE: {[(
 MAP
 @.......xxxxx..@
@@ -2229,7 +2229,7 @@ ENDMAP
 NAME:    david_entry_036_b
 TAGS:    entry
 ORIENT:  float
-CHANCE:  2
+WEIGHT:  2
 SHUFFLE: {[(
 MAP
 @.......xxxxx..@
@@ -2248,7 +2248,7 @@ NAME:    david_entry_036_c
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(
-CHANCE:  2
+WEIGHT:  2
 MAP
 @.......xxxxx..@
 .[......xxxxx...
@@ -2266,7 +2266,7 @@ NAME:    david_entry_036_d
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(
-CHANCE:  2
+WEIGHT:  2
 MAP
 @.......xxxxx..@
 .[......xxxxx...
@@ -2284,7 +2284,7 @@ NAME:    david_entry_036_e
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(
-CHANCE:  2
+WEIGHT:  2
 MAP
 @.......xxxxx..@
 .[......xxxxx...
@@ -2321,7 +2321,7 @@ ENDMAP
 NAME:   david_entry_038_a
 TAGS:   entry
 ORIENT: float
-CHANCE: 1
+WEIGHT: 1
 MAP
 xxxxxxxxxxxxx
 x%.x%.=..=.[x
@@ -2337,7 +2337,7 @@ ENDMAP
 NAME:   david_entry_038_b
 TAGS:   entry
 ORIENT: float
-CHANCE: 2
+WEIGHT: 2
 MAP
 xxxxxxxxxxxxx
 x.%x%.x..=.[x
@@ -2353,7 +2353,7 @@ ENDMAP
 NAME:   david_entry_038_c
 TAGS:   entry
 ORIENT: float
-CHANCE: 1
+WEIGHT: 1
 MAP
 xxxxxxxxxxxxx
 x.%x%%x..=.[x
@@ -2369,7 +2369,7 @@ ENDMAP
 NAME:   david_entry_038_d
 TAGS:   entry
 ORIENT: float
-CHANCE: 1
+WEIGHT: 1
 MAP
 xxxxxxxxxxxxx
 x%.=..=.%x.[x
@@ -2385,7 +2385,7 @@ ENDMAP
 NAME:   david_entry_038_e
 TAGS:   entry
 ORIENT: float
-CHANCE: 1
+WEIGHT: 1
 MAP
 xxxxxxxxxxxxx
 x..=..=..x%[x
@@ -2401,7 +2401,7 @@ ENDMAP
 NAME:   david_entry_038_f
 TAGS:   entry
 ORIENT: float
-CHANCE: 2
+WEIGHT: 2
 MAP
 xxxxxxxxxxxxx
 x..=..x%.=%[x
@@ -2417,7 +2417,7 @@ ENDMAP
 NAME:   david_entry_038_g
 TAGS:   entry
 ORIENT: float
-CHANCE: 2
+WEIGHT: 2
 MAP
 xxxxxxxxxxxxx
 x%.x..x..x%[x
@@ -2564,7 +2564,7 @@ ENDMAP
 NAME:    david_entry_045_a
 TAGS:    entry
 ORIENT:  float
-CHANCE:  5
+WEIGHT:  5
 SHUFFLE: {[(
 MAP
 xxxxxx@.xxx
@@ -2582,7 +2582,7 @@ ENDMAP
 NAME:    david_entry_045_b
 TAGS:    entry
 ORIENT:  float
-CHANCE:  5
+WEIGHT:  5
 SHUFFLE: {[(
 MAP
 xxxxxx@.xxx
@@ -2644,7 +2644,7 @@ ENDMAP
 NAME:    david_entry_048_a
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
-CHANCE:  5
+WEIGHT:  5
 SHUFFLE: cvba
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
@@ -2663,7 +2663,7 @@ ENDMAP
 NAME:    david_entry_048_b
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
-CHANCE:  5
+WEIGHT:  5
 SHUFFLE: cvba
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
@@ -2830,7 +2830,7 @@ ENDMAP
 NAME:    david_entry_055_a
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
-CHANCE:  5
+WEIGHT:  5
 SHUFFLE: lw
 MAP
       xxxxxxxxxxx
@@ -2855,7 +2855,7 @@ ENDMAP
 NAME:    david_entry_055_b
 TAGS:    entry no_monster_gen
 ORIENT:  float
-CHANCE:  5
+WEIGHT:  5
 SHUFFLE: {(, lw
 MAP
       xxxxx@xxxxx
@@ -2883,7 +2883,7 @@ ENDMAP
 NAME:    david_entry_056_a
 TAGS:    entry no_rotate
 ORIENT:  float
-CHANCE:  3
+WEIGHT:  3
 ITEM:    nothing, nothing, nothing
 SHUFFLE: cccbvxxx, def}
 MAP
@@ -2911,7 +2911,7 @@ ENDMAP
 NAME:    david_entry_056_b
 TAGS:    entry no_rotate
 ORIENT:  float
-CHANCE:  7
+WEIGHT:  7
 SHUFFLE: cccbvxxx
 MAP
    ....................   
@@ -2941,7 +2941,7 @@ ORIENT:  float
 SHUFFLE: {[AB
 MONS:    gnoll
 SUBST:   A=., B=.
-CHANCE:  3
+WEIGHT:  3
 MAP
 @....B........@
 ..............[
@@ -2964,7 +2964,7 @@ ORIENT:  float
 SHUFFLE: {[AB
 SUBST:   A=., B=.
 MONS:    gnoll
-CHANCE:  3
+WEIGHT:  3
 MAP
 @...B.........@
 ..............[
@@ -2987,7 +2987,7 @@ ORIENT:  float
 SHUFFLE: {[AB
 SUBST:   A=., B=.
 MONS:    gnoll
-CHANCE:  2
+WEIGHT:  2
 MAP
 @.....B.......@
 ..............[
@@ -3010,7 +3010,7 @@ ORIENT:  float
 SHUFFLE: {[AB
 SUBST:   A=., B=.
 MONS:    gnoll
-CHANCE:  2
+WEIGHT:  2
 MAP
 @......A......@
 ..............[
@@ -3100,7 +3100,7 @@ TAGS:    entry no_monster_gen
 ORIENT:  northwest
 SHUFFLE: Cc, {Y
 SUBST:   ?=l. , Y=.
-CHANCE:  6
+WEIGHT:  6
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx
@@ -3125,7 +3125,7 @@ ENDMAP
 NAME:    david_entry_061_b_altar
 TAGS:    entry no_monster_gen
 ORIENT:  northwest
-CHANCE:  4
+WEIGHT:  4
 SHUFFLE: Cc, {Y
 SUBST:   Y=.
 MAP
@@ -3176,7 +3176,7 @@ ENDMAP
 #
 NAME:   david_entry_063_tiny
 TAGS:   entry
-CHANCE: 10
+WEIGHT: 10
 ORIENT: float
 MAP
 {
@@ -3187,7 +3187,7 @@ ENDMAP
 #
 NAME:   david_entry_064_a_tiny
 TAGS:   entry
-CHANCE: 2
+WEIGHT: 2
 ORIENT: float
 MAP
 xxx
@@ -3197,7 +3197,7 @@ ENDMAP
 
 NAME:   david_entry_064_b_tiny
 TAGS:   entry
-CHANCE: 4
+WEIGHT: 4
 ORIENT: float
 MAP
 @....
@@ -3208,7 +3208,7 @@ ENDMAP
 
 NAME:   david_entry_064_c_tiny
 TAGS:   entry
-CHANCE: 4
+WEIGHT: 4
 ORIENT: float
 MAP
 @....
@@ -3223,7 +3223,7 @@ ENDMAP
 #
 NAME:   david_entry_065_a_tiny
 TAGS:   entry
-CHANCE: 1
+WEIGHT: 1
 ORIENT: float
 MAP
 xxxxx
@@ -3235,7 +3235,7 @@ ENDMAP
 
 NAME:   david_entry_065_b_tiny
 TAGS:   entry
-CHANCE: 3
+WEIGHT: 3
 ORIENT: float
 MAP
 @......
@@ -3248,7 +3248,7 @@ ENDMAP
 
 NAME:   david_entry_065_c_tiny
 TAGS:   entry
-CHANCE: 3
+WEIGHT: 3
 ORIENT: float
 MAP
 @...xx
@@ -3261,7 +3261,7 @@ ENDMAP
 
 NAME:   david_entry_065_d_tiny
 TAGS:   entry
-CHANCE: 3
+WEIGHT: 3
 ORIENT: float
 MAP
 @xxxxxx
@@ -3277,7 +3277,7 @@ ENDMAP
 #
 NAME:   david_entry_066_a_tiny
 TAGS:   entry
-CHANCE: 4
+WEIGHT: 4
 ORIENT: float
 MAP
 xxxxx
@@ -3287,7 +3287,7 @@ ENDMAP
 
 NAME:   david_entry_066_b_tiny
 TAGS:   entry
-CHANCE: 3
+WEIGHT: 3
 ORIENT: float
 SUBST:  v : vcbxxx
 MAP
@@ -3300,7 +3300,7 @@ ENDMAP
 
 NAME:   david_entry_066_d_tiny
 TAGS:   entry
-CHANCE: 3
+WEIGHT: 3
 ORIENT: float
 MAP
 xxxx
@@ -3373,7 +3373,7 @@ ENDMAP
 NAME:    david_entry_069_a
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
-CHANCE:  3
+WEIGHT:  3
 SHUFFLE: bxxxx
 MAP
  .......    .......
@@ -3392,7 +3392,7 @@ ENDMAP
 NAME:    david_entry_069_b
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
-CHANCE:  3
+WEIGHT:  3
 SHUFFLE: bxxxx
 MAP
  .......    .......
@@ -3411,7 +3411,7 @@ ENDMAP
 NAME: david_entry_069_c
 TAGS: entry no_monster_gen no_rotate
 ORIENT: float
-CHANCE: 3
+WEIGHT: 3
 SHUFFLE: bxxxx
 MAP
  .......    .......
@@ -3430,7 +3430,7 @@ ENDMAP
 NAME:    david_entry_069_d
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
-CHANCE:  1
+WEIGHT:  1
 SHUFFLE: bxxxx
 MAP
  .......    .......
@@ -3568,7 +3568,7 @@ ENDMAP
 NAME:    erik_entry_001_a
 TAGS:    entry
 ORIENT:  float
-CHANCE:  1
+WEIGHT:  1
 SHUFFLE: {[(
 SUBST:   X : x:20 G:4 l:1
 SUBST:   c : cxxx
@@ -3596,7 +3596,7 @@ NAME:    erik_entry_001_b
 TAGS:    entry
 ORIENT:  float
 MONS:    gnoll
-CHANCE:  3
+WEIGHT:  3
 SHUFFLE: {[(
 SUBST:   c : cxxx
 MAP
@@ -3623,7 +3623,7 @@ NAME:    erik_entry_001_c
 TAGS:    entry
 ORIENT:  float
 MONS:    centaur, orc
-CHANCE:  3
+WEIGHT:  3
 SHUFFLE: {[(
 SUBST:   c : cxxx
 MAP
@@ -3648,7 +3648,7 @@ ENDMAP
 
 NAME:    erik_entry_001_d
 TAGS:    entry
-CHANCE:  3
+WEIGHT:  3
 ORIENT:  float
 MONS:    orc
 SHUFFLE: {[(
@@ -3956,7 +3956,7 @@ ENDMAP
 NAME: matt_entry_007_a
 TAGS: entry no_monster_gen
 ORIENT:  float
-CHANCE:  1
+WEIGHT:  1
 SHUFFLE: {[(<
 MAP
 xxx@xxx@xxx
@@ -3975,7 +3975,7 @@ ENDMAP
 NAME: matt_entry_007_b
 TAGS: entry no_monster_gen
 ORIENT:  float
-CHANCE:  3
+WEIGHT:  3
 SHUFFLE: {[(<
 MAP
 xxx@xxx@xxx
@@ -3994,7 +3994,7 @@ ENDMAP
 NAME: matt_entry_007_c
 TAGS: entry no_monster_gen
 ORIENT:  float
-CHANCE:  6
+WEIGHT:  6
 SHUFFLE: {[(<
 MAP
 xxx@xxx@xxx
@@ -4313,7 +4313,7 @@ ENDMAP
 # Mini maze
 NAME:    onia_ninara_004_a_mini_maze
 TAGS:    entry
-CHANCE:  5
+WEIGHT:  5
 ORIENT:  float
 ITEM:    apple / sausage / nothing / stone / potion of water
 SHUFFLE: ({[, Aa, Bb, Cc, Ee, Ff
@@ -4338,7 +4338,7 @@ ENDMAP
 
 NAME:    onia_ninara_004_b_mini_maze
 TAGS:    entry
-CHANCE:  5
+WEIGHT:  5
 ORIENT:  float
 ITEM:    apple / sausage / nothing / stone / potion of water / w:30 nothing
 SHUFFLE: ({[ , AB
@@ -4447,7 +4447,7 @@ TAGS:     entry no_monster_gen no_rotate
 ORIENT:   northwest
 SUBST:    V = V T:2
 SUBST:    ' : x.
-CHANCE:   5
+WEIGHT:   5
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx
@@ -4479,7 +4479,7 @@ ENDMAP
 NAME:     entry_eino_001_b
 TAGS:     entry no_monster_gen no_rotate
 ORIENT:   northwest
-CHANCE:   5
+WEIGHT:   5
 MAP
 xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx
@@ -4512,7 +4512,7 @@ TAGS:     entry no_monster_gen no_rotate
 ORIENT:   northwest
 NSUBST:   A = 1:= / x
 SUBST:    % = % .:5
-CHANCE:   2
+WEIGHT:   2
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -4538,7 +4538,7 @@ TAGS:     entry no_rotate
 ORIENT:   northeast
 SHUFFLE:  bvc
 SUBST:    ' : x.
-CHANCE:   4
+WEIGHT:   4
 MAP
 xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx
@@ -4567,7 +4567,7 @@ NAME:     entry_eino_002_c
 TAGS:     entry no_monster_gen no_rotate
 ORIENT:   northeast
 SUBST:    ' : x. , " : x. , ? = x.
-CHANCE:   4
+WEIGHT:   4
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

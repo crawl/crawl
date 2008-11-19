@@ -37,7 +37,7 @@ default-depth: D:8-27
 NAME: mini_dummy
 DEPTH: 1-50, !D:8-27
 TAGS: dummy
-CHANCE: 90
+WEIGHT: 90
 MAP
 .
 ENDMAP
@@ -48,7 +48,7 @@ ENDMAP
 # still see you
 NAME:  glass_columns_a
 DEPTH: D, Elf, Crypt
-CHANCE: 5
+WEIGHT: 5
 MAP
 .....
 .m.m.
@@ -59,7 +59,7 @@ ENDMAP
 
 NAME:  glass_columns_b
 DEPTH: D, Elf, Crypt
-CHANCE: 3
+WEIGHT: 3
 MAP
 .......
 .m.m.m.
@@ -72,7 +72,7 @@ ENDMAP
 
 NAME:  glass_columns_c
 DEPTH: D, Elf, Crypt
-CHANCE: 2
+WEIGHT: 2
 MAP
 .........
 .m.m.m.m.
@@ -103,7 +103,7 @@ ENDMAP
 # An item encased in glass.  If the player wants it, it can be dug out.
 NAME:   item_on_display_a
 DEPTH:  D, Elf, Crypt, Vault
-CHANCE: 9
+WEIGHT: 9
 SUBST:  % = %%%*
 TAGS:   no_monster_gen no_item_gen
 MAP
@@ -118,7 +118,7 @@ ENDMAP
 # A good item encased in transparent stone.
 NAME:   item_on_display_b
 DEPTH:  D, Elf, Crypt, Vault
-CHANCE: 1
+WEIGHT: 1
 SUBST:  * = ***|
 TAGS:   no_monster_gen no_item_gen
 MAP
@@ -406,7 +406,7 @@ TAGS:    allow_dup
 NSUBST:  Z = 4=. / z
 KFEAT:   z = zot trap
 SUBST:   *: *$
-CHANCE:  3
+WEIGHT:  3
 MAP
 xxxxxxxxxx
 xxxxxxx**x
@@ -639,7 +639,7 @@ ENDMAP
 # Greed's colour
 
 NAME:    david_greed
-CHANCE:  4
+WEIGHT:  4
 DEPTH:   D:10-26, Vault, Elf
 ITEM:    nothing / any good_item
 MONS:    silver statue / orange crystal statue / ice statue
@@ -926,7 +926,7 @@ ENDMAP
 
 NAME:    minivault_16
 TAGS:    allow_dup
-CHANCE:  40
+WEIGHT:  40
 # as this replaces the former statue only minivaults
 SHUFFLE: G111
 MONS:    orange crystal statue / silver statue / ice statue
@@ -1522,7 +1522,7 @@ ENDMAP
 NAME:   small_statue_alley_a
 TAGS:   uniq_statue_alley
 DEPTH:  D:10-20
-CHANCE: 7
+WEIGHT: 7
 MAP
 xxxcccccx
 ...G...G@
@@ -1535,7 +1535,7 @@ ENDMAP
 NAME:   small_statue_alley_b
 TAGS:   uniq_statue_alley
 DEPTH:  D:3-10
-CHANCE: 2
+WEIGHT: 2
 MAP
 xxxcccccx
 ...G...G@
@@ -1548,7 +1548,7 @@ ENDMAP
 NAME:   small_statue_alley_c
 TAGS:   uniq_statue_alley
 DEPTH:  Orc
-CHANCE: 1
+WEIGHT: 1
 MAP
 xxxcccccx
 ...I...I@

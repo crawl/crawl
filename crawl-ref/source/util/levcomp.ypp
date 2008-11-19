@@ -53,11 +53,11 @@ level_range set_range(const char *s, int start, int end)
 %expect 2
 
 %token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS KMASK
-%token <i>      NAME DEPTH ORIENT PLACE CHANCE MONS ITEM MARKER COLOUR
+%token <i>      NAME DEPTH ORIENT PLACE CHANCE WEIGHT MONS ITEM MARKER COLOUR
 %token <i>      PRELUDE MAIN VALIDATE VETO NSUBST WELCOME LFLAGS BFLAGS
 %token <i>      FLOORCOL ROCKCOL
 
-%token <i>      COMMA INTEGER CHARACTER
+%token <i>      COMMA COLON PERC INTEGER CHARACTER
 
 %token <text>   STRING MAP_LINE MONSTER_NAME ITEM_INFO
 %token <text>   LUA_LINE
@@ -152,6 +152,7 @@ name            : NAME STRING
 metaline        : place
                 | depth
                 | chance
+                | weight
                 | orientation
                 | welcome
                 | mons
@@ -468,11 +469,40 @@ depth           : DEPTH {}
                 }
                 ;
 
-chance          : CHANCE INTEGER
+chance          : CHANCE INTEGER COLON INTEGER PERC
                 {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("chance(\"%d\")", $2));
+                        make_stringf("chance(%d, %d)", $2, $4 * 100));
+                }
+                |
+                CHANCE INTEGER COLON INTEGER
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("chance(%d, %d)", $2, $4));
+                }
+                |
+                CHANCE INTEGER PERC
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("chance(0, %d)", $2 * 100));
+                }
+                |
+                CHANCE INTEGER
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("chance(0, %d)", $2));
+                }
+                ;
+
+weight          : WEIGHT INTEGER
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("weight(%d)", $2));
                 }
                 ;
 

@@ -11,7 +11,7 @@
 
 NAME:   orc_0_dummy
 TAGS:   orc_entry
-CHANCE: 50
+WEIGHT: 50
 ORIENT: float
 MAP
 O
@@ -438,7 +438,7 @@ default-depth: Orc:*
 #
 NAME: mines_dummy
 TAGS: dummy
-CHANCE: 60
+WEIGHT: 60
 MAP
 x
 ENDMAP
@@ -486,7 +486,7 @@ ENDMAP
 NAME:   mines1_david
 TAGS:   allow_dup
 KFEAT:  C = altar_beogh
-CHANCE: 20
+WEIGHT: 20
 MAP
 ...........
 .xxxx.xxxx.
@@ -508,7 +508,7 @@ TAGS:   allow_dup
 KFEAT:  C = altar_beogh
 MONS:   orc / orc warrior w:1
 SUBST:  . = . 1:2
-CHANCE: 20
+WEIGHT: 20
 MAP
 .......
 .......

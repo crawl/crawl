@@ -95,7 +95,7 @@ ENDMAP
 # The easiest one, so most probable (5 out of 9 sewers).
 NAME:     sewer_kobolds
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
-CHANCE:   40
+WEIGHT:   40
 ORIENT:   encompass
 KFEAT:    < = exit_portal_vault
 COLOUR:   < = darkgrey

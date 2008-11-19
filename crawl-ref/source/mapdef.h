@@ -618,7 +618,10 @@ public:
 
     depth_ranges     depths;
     map_section_type orient;
+
+    int              chance_priority;
     int              chance;
+    int              weight;
 
     std::vector<std::string> welcome_messages;
 
@@ -711,6 +714,7 @@ public:
     bool has_tag(const std::string &tag) const;
     bool has_tag_prefix(const std::string &tag) const;
     bool has_tag_suffix(const std::string &suffix) const;
+    std::vector<std::string> get_tags() const;
 
     std::vector<std::string> get_shuffle_strings() const;
     std::vector<std::string> get_subst_strings() const;
@@ -752,6 +756,8 @@ private:
         std::string (keyed_mapspec::*set_field)(
             const std::string &s, bool fixed));
 };
+
+const int CHANCE_ROLL = 10000;
 
 std::string escape_string(std::string in, const std::string &toesc,
                           const std::string &escapewith);

@@ -534,12 +534,30 @@ static int dgn_change_branch_flags(lua_State *ls)
     return (1);
 }
 
+static int dgn_chance(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    if (!lua_isnil(ls, 2) && !lua_isnil(ls, 3))
+    {
+        const int chance_priority = luaL_checkint(ls, 2);
+        const int chance = luaL_checkint(ls, 3);
+        if (chance < 0 || chance > CHANCE_ROLL)
+            luaL_argerror(ls, 2,
+                          make_stringf("Chance must be in the range [0,%d]",
+                                       CHANCE_ROLL).c_str());
+
+        map->chance_priority = chance_priority;
+        map->chance = chance;
+    }
+    PLUARET(number, map->chance);
+}
+
 static int dgn_weight(lua_State *ls)
 {
     MAP(ls, 1, map);
     if (!lua_isnil(ls, 2))
-        map->chance = luaL_checkint(ls, 2);
-    PLUARET(number, map->chance);
+        map->weight = luaL_checkint(ls, 2);
+    PLUARET(number, map->weight);
 }
 
 static int dgn_orient(lua_State *ls)
@@ -2107,7 +2125,8 @@ static const struct luaL_reg dgn_lib[] =
     { "tags_remove", dgn_tags_remove },
     { "lflags", dgn_lflags },
     { "bflags", dgn_bflags },
-    { "chance", dgn_weight },
+    { "chance", dgn_chance },
+    { "weight", dgn_weight },
     { "welcome", dgn_welcome },
     { "weight", dgn_weight },
     { "orient", dgn_orient },

@@ -12,7 +12,7 @@
 #
 NAME:   temple_hall_a
 TAGS:   temple_entry
-CHANCE: 9
+WEIGHT: 9
 ORIENT: float
 SUBST:  ? : c:20 x v b G:5
 MAP
@@ -35,7 +35,7 @@ ENDMAP
 
 NAME:   temple_hall_b
 TAGS:   temple_entry no_pool_fixup no_monster_gen
-CHANCE: 1
+WEIGHT: 1
 ORIENT: float
 SUBST:  ? : v b G:5
 MAP
@@ -104,7 +104,7 @@ ENDMAP
 # Where's the entry to the temple?
 #
 NAME:   temple_secret_doors_a
-CHANCE: 1
+WEIGHT: 1
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  c:cxxx
@@ -120,7 +120,7 @@ cccccccccc
 ENDMAP
 
 NAME:   temple_secret_doors_b
-CHANCE: 1
+WEIGHT: 1
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
@@ -137,7 +137,7 @@ ccccccccccc
 ENDMAP
 
 NAME:   temple_secret_doors_c
-CHANCE: 1
+WEIGHT: 1
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
@@ -156,7 +156,7 @@ ccccc@ccc
 ENDMAP
 
 NAME:   temple_secret_doors_d
-CHANCE: 1
+WEIGHT: 1
 TAGS:   temple_entry 
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
@@ -175,7 +175,7 @@ ccccc@ccccc
 ENDMAP
 
 NAME:   temple_secret_doors_e
-CHANCE: 6
+WEIGHT: 6
 TAGS:   temple_entry no_rotate
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
@@ -200,7 +200,7 @@ ENDMAP
 #
 NAME:    temple_pool_a
 TAGS:    temple_entry no_monster_gen no_pool_fixup no_rotate
-CHANCE:  3
+WEIGHT:  3
 ORIENT:  float
 SHUFFLE: XY
 SUBST:   Y=w, X=.
@@ -220,7 +220,7 @@ ENDMAP
 
 NAME:    temple_pool_b
 TAGS:    temple_entry no_monster_gen no_rotate
-CHANCE:  7
+WEIGHT:  7
 ORIENT:  float
 SHUFFLE: ABCDEFGHIJKL
 SUBST:   A=W, B=W, C=W, D=w, E=w, F=w, G=w, H=w, I=w, J=w, K=w, L=w

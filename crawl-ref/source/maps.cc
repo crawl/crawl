@@ -22,6 +22,7 @@
 #include "dungeon.h"
 #include "enum.h"
 #include "files.h"
+#include "message.h"
 #include "monplace.h"
 #include "mapdef.h"
 #include "misc.h"
@@ -44,7 +45,8 @@ static bool resolve_map(map_def &def, const map_def &original);
 //////////////////////////////////////////////////////////////////////////
 // New style vault definitions
 
-static std::vector<map_def> vdefs;
+typedef std::vector<map_def> map_vector;
+static map_vector vdefs;
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************* */
 
@@ -356,109 +358,247 @@ std::vector<std::string> find_map_matches(const std::string &name)
     return (matches);
 }
 
-// Returns a map for which PLACE: matches the given place.
-int random_map_for_place(const level_id &place, bool want_minivault)
+struct map_selector {
+private:
+    enum select_type
+    {
+        PLACE,
+        DEPTH,
+        TAG
+    };
+
+public:
+    bool accept(const map_def &md) const;
+    void announce(int vault) const;
+
+    bool valid() const
+    {
+        return (sel == TAG || place.is_valid());
+    }
+
+    static map_selector by_place(const level_id &place, bool mini)
+    {
+        return map_selector(map_selector::PLACE, place, "", mini, false);
+    }
+
+    static map_selector by_depth(const level_id &place, bool mini)
+    {
+        return map_selector(map_selector::DEPTH, place, "", mini, true);
+    }
+
+    static map_selector by_tag(const std::string &tag, bool mini,
+                               bool check_depth)
+    {
+        return map_selector(map_selector::TAG, level_id::current(), tag,
+                            mini, check_depth);
+    }
+
+private:
+    map_selector(select_type _typ, const level_id &_pl,
+                 const std::string &_tag,
+                 bool _mini, bool _check_depth)
+        : ignore_chance(false), preserve_dummy(false),
+          sel(_typ), place(_pl), tag(_tag),
+          mini(_mini), check_depth(_check_depth),
+          check_layout(sel == DEPTH && place == level_id::current())
+    {
+    }
+
+public:
+    bool ignore_chance;
+    bool preserve_dummy;
+    const select_type sel;
+    const level_id place;
+    const std::string tag;
+    const bool mini;
+    const bool check_depth;
+    const bool check_layout;
+};
+
+bool map_selector::accept(const map_def &mapdef) const
 {
-    if (!place.is_valid())
+    switch (sel)
+    {
+    case PLACE:
+        return (mapdef.place == place
+                && mapdef.is_minivault() == mini
+                && !mapdef.has_tag("layout")
+                && map_matches_layout_type(mapdef)
+                && vault_unforbidden(mapdef));
+    case DEPTH:
+        return (mapdef.is_minivault() == mini
+                && !mapdef.place.is_valid()
+                && mapdef.is_usable_in(place)
+                // Some tagged levels cannot be selected by depth. This is
+                // the only thing preventing Pandemonium demon vaults from
+                // showing up in the main dungeon.
+                && !mapdef.has_tag_suffix("entry")
+                && !mapdef.has_tag("pan")
+                && !mapdef.has_tag("unrand")
+                && !mapdef.has_tag("bazaar")
+                && !mapdef.has_tag("layout")
+                && (!check_layout || map_matches_layout_type(mapdef))
+                && vault_unforbidden(mapdef));
+    case TAG:
+        return (mapdef.has_tag(tag) && mapdef.is_minivault() == mini
+                && (!check_depth || !mapdef.has_depth()
+                    || mapdef.is_usable_in(place))
+                && map_matches_layout_type(mapdef)
+                && vault_unforbidden(mapdef));
+    default:
+        return (false);
+    }
+}
+
+void map_selector::announce(int vault) const
+{
+#ifdef DEBUG_DIAGNOSTICS
+    if (vault != -1)
+    {
+        const char *format =
+            sel == PLACE? "[PLACE] Found map %s for %s" :
+            sel == DEPTH? "[DEPTH] Found random map %s for %s" :
+                          "[TAG] Found map %s tagged '%s'";
+
+        mprf(MSGCH_DIAGNOSTICS, format,
+             vdefs[vault].name.c_str(),
+             sel == TAG? tag.c_str() : place.describe().c_str());
+    }
+#endif
+}
+
+static bool _compare_vault_chance_priority(int a, int b)
+{
+    return (vdefs[b].chance_priority < vdefs[a].chance_priority);
+}
+
+static std::string _vault_chance_tag(const map_def &map)
+{
+    if (map.has_tag_prefix("chance_"))
+    {
+        const std::vector<std::string> tags = map.get_tags();
+        for (int i = 0, size = tags.size(); i < size; ++i)
+        {
+            if (tags[i].find("chance_") == 0)
+                return (tags[i]);
+        }
+    }
+    return ("");
+}
+
+static int _random_map_by_selector(const map_selector &sel)
+{
+    if (!sel.valid())
         return (-1);
 
     int mapindex = -1;
     int rollsize = 0;
 
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-    {
-        // We also accept tagged levels here.
-        if (vdefs[i].place == place
-            && vdefs[i].is_minivault() == want_minivault
-            && !vdefs[i].has_tag("layout")
-            && map_matches_layout_type(vdefs[i])
-            && vault_unforbidden(vdefs[i]))
-        {
-            rollsize += vdefs[i].chance;
+    typedef std::vector<unsigned> vault_indices;
 
-            if (rollsize && x_chance_in_y(vdefs[i].chance, rollsize))
-                mapindex = i;
+    // First build a list of vaults that could be used:
+    vault_indices eligible;
+
+    // Vaults that are eligible and have >0 chance.
+    vault_indices chance;
+
+    typedef std::set<std::string> tag_set;
+    tag_set chance_tags;
+
+    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
+        if (sel.accept(vdefs[i]))
+        {
+            if (!sel.ignore_chance && vdefs[i].chance > 0)
+            {
+                // There may be several alternatives for a portal
+                // vault that want to be governed by one common
+                // CHANCE. In this case each vault will use a
+                // CHANCE, and a common chance_xxx tag. Pick the
+                // first such vault for the chance roll. Note that
+                // at this point we ignore chance_priority.
+                const std::string tag = _vault_chance_tag(vdefs[i]);
+                if (chance_tags.find(tag) == chance_tags.end())
+                {
+                    if (!tag.empty())
+                        chance_tags.insert(tag);
+                    chance.push_back(i);
+                }
+            }
+            else
+            {
+                eligible.push_back(i);
+            }
+        }
+
+    // Sort chances by priority, high priority first.
+    std::sort(chance.begin(), chance.end(), _compare_vault_chance_priority);
+
+    // Check CHANCEs.
+    for (vault_indices::const_iterator i = chance.begin();
+         i != chance.end(); ++i)
+    {
+        const map_def &map(vdefs[*i]);
+        if (random2(CHANCE_ROLL) < map.chance)
+        {
+            const std::string chance_tag = _vault_chance_tag(map);
+            // If this map has a chance_ tag, convert the search into
+            // a lookup for that tag.
+            if (!chance_tag.empty())
+            {
+                map_selector msel = map_selector::by_tag(sel.tag, sel.mini,
+                                                         sel.check_depth);
+                msel.ignore_chance = true;
+                return _random_map_by_selector(msel);
+            }
+
+            mapindex = *i;
+            break;
         }
     }
 
-    if (mapindex != -1 && vdefs[mapindex].has_tag("dummy"))
-        mapindex = -1;
+    if (mapindex == -1)
+    {
+        for (vault_indices::const_iterator i = eligible.begin();
+             i != eligible.end(); ++i)
+        {
+            const map_def &map(vdefs[*i]);
+            rollsize += map.weight;
 
-#ifdef DEBUG_DIAGNOSTICS
-    if (mapindex != -1)
-        mprf(MSGCH_DIAGNOSTICS, "Found map %s for %s",
-             vdefs[mapindex].name.c_str(), place.describe().c_str());
-#endif
+            if (rollsize && x_chance_in_y(map.weight, rollsize))
+                mapindex = *i;
+        }
+    }
+
+    if (!sel.preserve_dummy && mapindex != -1
+        && vdefs[mapindex].has_tag("dummy"))
+    {
+        mapindex = -1;
+    }
+
+    sel.announce(mapindex);
 
     return (mapindex);
 }
 
+// Returns a map for which PLACE: matches the given place.
+int random_map_for_place(const level_id &place, bool want_minivault)
+{
+    return _random_map_by_selector(
+        map_selector::by_place(place, want_minivault));
+}
+
 int random_map_in_depth(const level_id &place, bool want_minivault)
 {
-    int mapindex = -1;
-    int rollsize = 0;
-
-    const bool check_layout = (place == level_id::current());
-
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-        if (vdefs[i].is_minivault() == want_minivault
-            && !vdefs[i].place.is_valid()
-            && vdefs[i].is_usable_in(place)
-            // Some tagged levels cannot be selected by depth. This is
-            // the only thing preventing Pandemonium demon vaults from
-            // showing up in the main dungeon.
-            && !vdefs[i].has_tag_suffix("entry")
-            && !vdefs[i].has_tag("pan")
-            && !vdefs[i].has_tag("unrand")
-            && !vdefs[i].has_tag("bazaar")
-            && !vdefs[i].has_tag("layout")
-            && (!check_layout || map_matches_layout_type(vdefs[i]))
-            && vault_unforbidden(vdefs[i]))
-        {
-            rollsize += vdefs[i].chance;
-
-            if (rollsize && x_chance_in_y(vdefs[i].chance, rollsize))
-                mapindex = i;
-        }
-
-    if (mapindex != -1 && vdefs[mapindex].has_tag("dummy"))
-        mapindex = -1;
-
-    return (mapindex);
+    return _random_map_by_selector(
+        map_selector::by_depth(place, want_minivault));
 }
 
 int random_map_for_tag(const std::string &tag,
                        bool want_minivault,
                        bool check_depth)
 {
-    int mapindex = -1;
-    int rollsize = 0;
-
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-    {
-        if (vdefs[i].has_tag(tag) && vdefs[i].is_minivault() == want_minivault
-            && (!check_depth || !vdefs[i].has_depth()
-                || vdefs[i].is_usable_in(level_id::current()))
-            && map_matches_layout_type(vdefs[i])
-            && vault_unforbidden(vdefs[i]))
-        {
-            rollsize += vdefs[i].chance;
-
-            if (rollsize && x_chance_in_y(vdefs[i].chance, rollsize))
-                mapindex = i;
-        }
-    }
-
-    if (mapindex != -1 && vdefs[mapindex].has_tag("dummy"))
-        mapindex = -1;
-
-#ifdef DEBUG_DIAGNOSTICS
-    if (mapindex != -1)
-        mprf(MSGCH_DIAGNOSTICS, "Found map %s tagged '%s'",
-                vdefs[mapindex].name.c_str(), tag.c_str());
-#endif
-
-    return (mapindex);
+    return _random_map_by_selector(
+        map_selector::by_tag(tag, want_minivault, check_depth));
 }
 
 const map_def *map_by_index(int index)
@@ -745,6 +885,14 @@ void run_map_preludes()
 typedef std::pair<std::string, int> weighted_map_name;
 typedef std::vector<weighted_map_name> weighted_map_names;
 
+static int _mg_random_vault_here(const level_id &place, bool mini)
+{
+    no_messages mx;
+    map_selector sel = map_selector::by_depth(place, mini);
+    sel.preserve_dummy = true;
+    return _random_map_by_selector(sel);
+}
+
 static weighted_map_names mg_find_random_vaults(
     const level_id &place, bool wantmini)
 {
@@ -753,22 +901,23 @@ static weighted_map_names mg_find_random_vaults(
     if (!place.is_valid())
         return (wms);
 
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
+    typedef std::map<std::string, int> map_count_t;
+
+    map_count_t map_counts;
+
+    for (int i = 0; i < 10000; ++i)
     {
-        if (vdefs[i].is_minivault() == wantmini
-            && !vdefs[i].place.is_valid()
-            && vdefs[i].is_usable_in(place)
-            // Some tagged levels cannot be selected by depth. This is
-            // the only thing preventing Pandemonium demon vaults from
-            // showing up in the main dungeon.
-            && !vdefs[i].has_tag_suffix("entry")
-            && !vdefs[i].has_tag("pan")
-            && !vdefs[i].has_tag("unrand")
-            && !vdefs[i].has_tag("bazaar"))
-        {
-            wms.push_back(
-                weighted_map_name( vdefs[i].name, vdefs[i].chance ) );
-        }
+        const int v = _mg_random_vault_here(place, wantmini);
+        if (v == -1)
+            map_counts["(none)"]++;
+        else
+            map_counts[vdefs[v].name]++;
+    }
+
+    for (map_count_t::const_iterator i = map_counts.begin();
+         i != map_counts.end(); ++i)
+    {
+        wms.push_back(*i);
     }
 
     return (wms);
@@ -794,7 +943,7 @@ static void mg_report_random_vaults(
     for (int i = 0, size = wms.size(); i < size; ++i)
     {
         std::string curr =
-            make_stringf("%s (%.2f%%)",
+            make_stringf("%s (%.4f%%)",
                          wms[i].first.c_str(),
                          100.0 * wms[i].second / weightsum);
         if (i < size - 1)

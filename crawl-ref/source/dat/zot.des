@@ -10,7 +10,7 @@
 #
 NAME:   lemuel_baited_zot_trap
 DEPTH:  Zot:*
-CHANCE: 20
+WEIGHT: 20
 TAGS:   allow_dup
 KFEAT:  * = Zot trap
 KITEM:  * = any good_item

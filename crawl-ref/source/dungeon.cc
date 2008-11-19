@@ -241,8 +241,7 @@ std::vector<vault_placement> Level_Vaults;
 std::string dgn_Build_Method;
 std::string dgn_Layout_Type;
 
-static int vault_chance = 9;
-static int minivault_chance = 3;
+static int can_create_vault = true;
 static bool dgn_level_vetoed = false;
 static bool use_random_maps  = true;
 static bool dgn_check_connectivity = false;
@@ -795,7 +794,7 @@ static bool _ensure_vault_placed(bool vault_success)
     if (!vault_success)
         dgn_level_vetoed = true;
     else
-        vault_chance = 0;
+        can_create_vault = false;
     return (vault_success);
 }
 
@@ -862,8 +861,7 @@ static void _reset_level()
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
 
-    vault_chance     = 9;
-    minivault_chance = 3;
+    can_create_vault = true;
     use_random_maps  = true;
     dgn_check_connectivity = false;
     dgn_zones        = 0;
@@ -2418,7 +2416,7 @@ static void _place_minivaults(const std::string &tag, int lo, int hi, bool force
     }
 
     std::set<int> used;
-    if (use_random_maps && minivault_chance && one_chance_in(minivault_chance))
+    if (use_random_maps)
     {
         const int vault = random_map_in_depth(level_id::current(), true);
         if (vault != -1)
@@ -2461,9 +2459,7 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
     int vault = _dgn_random_map_for_place(false);
 
     // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels.
-    if (vault == -1
-        && use_random_maps
-        && one_chance_in(vault_chance))
+    if (vault == -1 && use_random_maps && can_create_vault)
     {
         vault = random_map_in_depth(level_id::current());
 
@@ -2518,7 +2514,6 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
     if (level_number > 2 && level_number < 23 && one_chance_in(3))
     {
         _plan_main(level_number, 0);
-        minivault_chance = 3;
         return BUILD_SKIP;
     }
 
@@ -2534,7 +2529,6 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
 
         // Sometimes _roguey_level() generates a special room.
         _roguey_level(level_number, sr, just_roguey);
-        minivault_chance = 4;
 
         if (just_roguey)
             return BUILD_SKIP;
@@ -2841,8 +2835,7 @@ static void _place_extra_vaults()
 {
     if (!player_in_branch(BRANCH_MAIN_DUNGEON)
         && use_random_maps
-        && vault_chance
-        && one_chance_in(vault_chance))
+        && can_create_vault)
     {
         int vault = random_map_in_depth(level_id::current());
 
@@ -2851,7 +2844,7 @@ static void _place_extra_vaults()
             vault = -1;
 
         if (vault != -1 && _build_secondary_vault(you.your_level, vault, -1))
-            vault_chance = 0;
+            can_create_vault = false;
     }
 }
 
