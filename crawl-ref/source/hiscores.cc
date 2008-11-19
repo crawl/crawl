@@ -1563,7 +1563,8 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         else
         {
             snprintf( scratch, sizeof(scratch),
-                      "Killed by triggering a%s trap",
+                      "Killed by triggering a%s%s trap",
+                      auxkilldata.empty() ? "" : " ",
                       auxkilldata.c_str() );
             desc += scratch;
         }

@@ -428,7 +428,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("A huge blade swings out and slices into you!");
                 const int damage = (you.your_level * 2) + random2avg(29, 2)
                     - random2(1 + player_AC());
-                ouch(damage, NON_MONSTER, KILLED_BY_TRAP, " blade");
+                ouch(damage, NON_MONSTER, KILLED_BY_TRAP, "blade");
                 bleed_onto_floor(you.pos(), -1, damage, true);
             }
         }
