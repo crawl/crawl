@@ -1010,7 +1010,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     // Tiny races
-    if (you.species == SP_SPRIGGAN)
+    if (player_size(PSIZE_TORSO) <= SIZE_LITTLE)
     {
         if ((sub_type >= ARM_LEATHER_ARMOUR
                 && sub_type <= ARM_PLATE_MAIL)

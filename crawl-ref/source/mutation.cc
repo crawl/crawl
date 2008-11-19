@@ -1876,7 +1876,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         return (false);
     }
 
-    // blurred vision/see invis
+    // No blurred vision with see invisible.
     if (mutat == MUT_BLURRY_VISION && you.mutation[MUT_ACUTE_VISION] > 0)
         return (false);
 
@@ -2045,10 +2045,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
         break;
 
-    //jmf: like horns
     case MUT_HOOVES:
     case MUT_TALONS:
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
+
+        // Hooves and talons force boots off.
         if (you_tran_can_wear(EQ_BOOTS))
             remove_one_equip(EQ_BOOTS);
         break;
@@ -2066,7 +2067,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
 
     case MUT_HORNS:
-    {
         mpr(gain_mutation[mutat][you.mutation[mutat]], MSGCH_MUTATION);
 
         // Horns force hard helmets off.
@@ -2077,7 +2077,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             remove_one_equip(EQ_HELMET);
         }
         break;
-    }
 
     case MUT_STRONG_STIFF:
         if (you.mutation[MUT_FLEXIBLE_WEAK] > 0)

@@ -3242,13 +3242,9 @@ std::string get_skill_description(int skill, bool need_title)
             unarmed_attacks.push_back("do a headbutt attack");
 
         if (player_mutation_level(MUT_HOOVES))
-        {
             unarmed_attacks.push_back("kick your enemies with your hooves");
-        }
         else if (player_mutation_level(MUT_TALONS))
-        {
             unarmed_attacks.push_back("claw at your enemies with your talons");
-        }
         else if (you.species != SP_NAGA
                  && (you.species != SP_MERFOLK || !player_is_swimming()))
         {
