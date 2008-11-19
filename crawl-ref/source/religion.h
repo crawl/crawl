@@ -14,7 +14,8 @@
 #include "ouch.h"
 #include "externs.h"
 
-#define MAX_PIETY 200
+#define MAX_PIETY   200
+#define MAX_PENANCE 200
 
 enum harm_protection_type
 {

@@ -862,10 +862,8 @@ static void _inc_penance(god_type god, int val)
         }
     }
 
-    if (you.penance[god] + val > 200)
-        you.penance[god] = 200;
-    else
-        you.penance[god] += val;
+    you.penance[god] += val;
+    you.penance[god] = MIN(MAX_PENANCE, you.penance[god]);
 
     if (god == GOD_BEOGH && _need_water_walking() && !beogh_water_walk())
         fall_into_a_pool( you.pos(), true, grd(you.pos()) );
@@ -4351,7 +4349,7 @@ void divine_retribution( god_type god )
         if (coinflip())
         {
             mpr( "The divine experience confuses you!", MSGCH_WARN);
-            confuse_player( 3 + random2(10) );
+            confuse_player(3 + random2(10));
         }
         else
         {
@@ -4360,14 +4358,14 @@ void divine_retribution( god_type god )
                 mpr( "The divine experience leaves you feeling exhausted!",
                      MSGCH_WARN );
 
-                slow_player( random2(20) );
+                slow_player(random2(20));
             }
         }
     }
 
     // Just the thought of retribution mollifies the god by at least a
     // point...the punishment might have reduced penance further.
-    dec_penance( god, 1 + random2(3) );
+    dec_penance(god, 1 + random2(3));
 }
 
 static bool _holy_beings_on_level_attitude_change()
@@ -5747,7 +5745,8 @@ void offer_items()
             you.duration[DUR_PIETY_POOL] = 500;
 
         const int estimated_piety =
-            std::min(MAX_PIETY * 2, you.piety + you.duration[DUR_PIETY_POOL]);
+            std::min(MAX_PIETY + MAX_PENANCE,
+                     you.piety + you.duration[DUR_PIETY_POOL]);
 
         if (player_under_penance())
         {
@@ -6090,7 +6089,7 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     bool praying = (you.duration[DUR_PRAYER]
                     && random2(you.piety) >= min_piety);
     bool anytime = (one_chance_in(10) || x_chance_in_y(you.piety, 1000));
-    bool penance = you.penance[god];
+    bool penance = (you.penance[god] > 0);
 
     // If actual is true, return HPT_NONE if the given god can protect
     // the player from harm, but doesn't actually do so.
