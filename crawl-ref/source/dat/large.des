@@ -92,6 +92,7 @@ ENDMAP
 #
 NAME:   black_bear_nest_1
 ORIENT: northwest
+CHANCE: 5
 TAGS:   uniq_black_bear_nest
 DEPTH:  D:4-8
 NSUBST: ' = 1:1 / 2:R / *:.
@@ -113,6 +114,7 @@ ENDMAP
 
 NAME:   black_bear_nest_2
 ORIENT: southeast
+CHANCE: 5
 TAGS:   uniq_black_bear_nest
 DEPTH:  D:4-8
 NSUBST: ' = 1:1 / 2:R / *:.
