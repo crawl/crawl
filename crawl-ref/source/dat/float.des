@@ -295,7 +295,7 @@ NAME:    ice1_lemuel
 MONS:    ice statue
 TAGS:    no_pool_fixup
 ORIENT:  float
-DEPTH:   D:5-20, Elf
+DEPTH:   D:7-20, Elf
 SUBST:   * : *$
 SUBST:   * = |:5 * .
 SUBST:   T = TU
