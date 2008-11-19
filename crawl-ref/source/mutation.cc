@@ -210,10 +210,10 @@ const char *mutation_descrip[][3] = {
     {"Your body is slowly deteriorating.", "Your body is deteriorating.",
      "Your body is rapidly deteriorating."},
 
+// 40
     {"Your vision is a little blurry.", "Your vision is quite blurry.",
      "Your vision is extremely blurry."},
 
-// 40
     {"You are somewhat resistant to further mutation.",
      "You are somewhat resistant to both further mutation and mutation removal.",
      "Your current mutations are irrevocably fixed, and you can mutate no more."},
@@ -239,8 +239,8 @@ const char *mutation_descrip[][3] = {
     {"You can call on the torments of Hell.", "", ""},
 
     // Not summoners/necromancers/worshippers of Yredelemnul
-    {"You can raise the dead to walk for you.", "", ""},
 // 50
+    {"You can raise the dead to walk for you.", "", ""},
     {"You can control demons.", "", ""},
     {"You can travel to (but not from) Pandemonium at will.", "", ""},
     {"You can draw strength from death and destruction.", "", ""},
@@ -260,10 +260,11 @@ const char *mutation_descrip[][3] = {
     {"You have sharp fingernails.", "You have very sharp fingernails.",
      "You have claws for hands."},
 
+// 60
     {"You have very sharp teeth.", "You have extremely sharp teeth.",
      "You have razor-sharp teeth."},
 
-    // 60 - leave some space for more demonic powers
+    // Leave some space for more demonic powers
     {"You have hooves in place of feet.", "", ""},
 
     {"You have talons in place of feet.", "", ""},
@@ -279,7 +280,6 @@ const char *mutation_descrip[][3] = {
     //jmf: these next two are for evil gods to mark their followers; good gods
     //     will never accept a 'marked' worshipper
 
-    // 65
     {"There is a blue sigil on each of your hands.",
      "There are several blue sigils on your hands and arms.",
      "Your hands, arms and shoulders are covered in intricate, arcane blue writing."},
@@ -295,11 +295,11 @@ const char *mutation_descrip[][3] = {
      "You are covered in thick fur.",
      "Your thick and shaggy fur keeps you warm."},
 
+// 70
     {"You have an increased reservoir of magic (+10 percent mp).",
      "You have a strongly increased reservoir of magic (+20 percent mp).",
      "You have an extremely increased reservoir of magic (+30 percent mp)."},
 
-    // 70
     {"Your magical capacity is low (-10 percent mp).",
      "Your magical capacity is very low (-20 percent mp).",
      "Your magical capacity is extremely low (-30 percent mp)."},
@@ -307,9 +307,8 @@ const char *mutation_descrip[][3] = {
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
-    {"", "", ""},
 
-    // 75
+// 75
     {"You are partially covered in red scales (AC + 1).",
      "You are mostly covered in red scales (AC + 2).",
      "You are covered in red scales (AC + 4)."},
@@ -350,7 +349,7 @@ const char *mutation_descrip[][3] = {
      "You are mostly covered in purple scales (AC + 4).",
      "You are completely covered in purple scales (AC + 6)."},
 
-    // 85
+// 85
     {"You are partially covered in speckled scales (AC + 1).",
      "You are mostly covered in speckled scales (AC + 2).",
      "You are covered in speckled scales (AC + 3)."},
@@ -501,9 +500,9 @@ const char *gain_mutation[][3] = {
     {"You feel yourself wasting away.", "You feel yourself wasting away.",
      "You feel your body start to fall apart."},
 
+// 40
     {"Your vision blurs.", "Your vision blurs.", "Your vision blurs."},
 
-// 40
     {"You feel genetically stable.", "You feel genetically stable.",
      "You feel genetically immutable."},
 
@@ -517,8 +516,8 @@ const char *gain_mutation[][3] = {
     {"Help is not far away!", "", ""},
     {"You smell fire and brimstone.", "", ""},
     {"You feel a terrifying power at your call.", "", ""},
-    {"You feel an affinity for the dead.", "", ""},
 // 50
+    {"You feel an affinity for the dead.", "", ""},
     {"You feel an affinity for all demonkind.", "", ""},
     {"You feel something pulling you to a strange and terrible place.", "", ""},
     {"You feel hungry for death.", "", ""},
@@ -531,11 +530,11 @@ const char *gain_mutation[][3] = {
     {"Your fingernails lengthen.", "Your fingernails sharpen.",
      "Your hands twist into claws."},
 
+// 60
     {"Your teeth lengthen and sharpen.",
      "Your teeth lengthen and sharpen some more.",
      "Your teeth are very long and razor-sharp."},
 
-    // 60
     {"Your feet shrivel into cloven hooves.", "", ""},
     {"Your feet stretch and sharpen into talons.", "", ""},
 
@@ -548,7 +547,6 @@ const char *gain_mutation[][3] = {
 
     {"Your wings grow larger and stronger.", "", ""},
 
-    // 65
     {"Your hands itch.", "Your hands and forearms itch.",
      "Your arms, hands and shoulders itch."},
 
@@ -562,19 +560,18 @@ const char *gain_mutation[][3] = {
      "Your fur grows into a thick mane.",
      "Your thick fur grows shaggy and warm."},
 
+// 70
     {"You feel more energetic.", "You feel more energetic.",
      "You feel more energetic."},
 
-    // 70
     {"You feel less energetic.", "You feel less energetic.",
      "You feel less energetic."},
 
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
-    {"", "", ""},
 
-    // 75
+// 75
     {"Red scales grow over part of your body.",
      "Red scales spread over more of your body.",
      "Red scales cover you completely."},
@@ -606,7 +603,7 @@ const char *gain_mutation[][3] = {
      "Purple scales spread over more of your body.",
      "Purple scales cover you completely."},
 
-    // 85
+// 85
     {"Speckled scales grow over part of your body.",
      "Speckled scales spread over more of your body.",
      "Speckled scales cover you completely."},
@@ -656,6 +653,7 @@ const char *lose_mutation[][3] = {
 
     {"You feel a little less healthy.", "", ""},
 
+// 10
     {"You feel able to eat a more balanced diet.",
      "You feel able to eat a more balanced diet.",
      "You feel able to eat a more balanced diet."},
@@ -703,8 +701,8 @@ const char *lose_mutation[][3] = {
 
     {"You feel static.", "You feel less jumpy.", "You feel less jumpy."},
 
-    {"You feel an ache in your throat.",
-     "You feel an ache in your throat.", "You feel an ache in your throat."},
+    {"You feel an ache in your throat.", "You feel an ache in your throat.",
+     "You feel an ache in your throat."},
 
     {"You feel slightly disorientated.", "You feel slightly disorientated.",
      "You feel slightly disorientated."},
@@ -741,10 +739,10 @@ const char *lose_mutation[][3] = {
     {"You feel healthier.", "You feel a little healthier.",
      "You feel a little healthier."},
 
+// 40
     {"Your vision sharpens.", "Your vision sharpens a little.",
      "Your vision sharpens a little."},
 
-// 40
     {"You feel genetically unstable.", "You feel genetically unstable.",
      "You feel genetically unstable."},
 
@@ -752,7 +750,6 @@ const char *lose_mutation[][3] = {
     {"You feel frail.", "You feel frail.", "You feel frail."},
 
 // Some demonic powers (which can't be lost) start here...
-    {"", "", ""},
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
@@ -768,23 +765,22 @@ const char *lose_mutation[][3] = {
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
+    {"", "", ""},
 
     {"Your fingernails shrink to normal size.",
      "Your fingernails look duller.", "Your hands feel fleshier."},
 
+// 60
     {"Your teeth shrink to normal size.",
      "Your teeth shrink and become duller.",
      "Your teeth shrink and become duller."},
 
-    // 60
     {"Your hooves expand and flesh out into feet!", "", ""},
     {"Your talons dull and shrink into feet!", "", ""},
 
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
-
-    // 65
     {"", "", ""},
     {"", "", ""},
 
@@ -795,19 +791,18 @@ const char *lose_mutation[][3] = {
      "Your thick fur recedes somewhat.",
      "Your shaggy fur recedes somewhat."},
 
+// 70
     {"You feel less energetic.", "You feel less energetic.",
      "You feel less energetic."},
 
-    // 70
     {"You feel more energetic.", "You feel more energetic.",
      "You feel more energetic."},
 
     {"", "", ""},
     {"", "", ""},
     {"", "", ""},
-    {"", "", ""},
 
-    // 75
+// 75
     {"Your red scales disappear.", "Your red scales recede somewhat.",
      "Your red scales recede somewhat."},
 
@@ -841,7 +836,7 @@ const char *lose_mutation[][3] = {
     {"Your purple scales disappear.", "Your purple scales recede somewhat.",
      "Your purple scales recede somewhat."},
 
-    // 85
+// 85
     {"Your speckled scales disappear.",
      "Your speckled scales recede somewhat.",
      "Your speckled scales recede somewhat."},
