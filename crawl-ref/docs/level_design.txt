@@ -9,16 +9,16 @@ Contents:  A. Introduction
            E. Conditionalising levels
            F. Validating levels
            G. Hints for level makers
-           H. Lua reference
-           I. Feature names
-           J. Map statistics
-           K. Portal vaults
+           H. Portal vaults
+           I. Lua reference
+           J. Feature names
+           K. Map statistics
 
 A.   Introduction
 =================
 
-All fixed level information resides in various .des files to be found in the 
-dat directory. If you are interested in adding some vaults, say, start with 
+All fixed level information resides in various .des files to be found in the
+dat directory. If you are interested in adding some vaults, say, start with
 the existing ones and modify them. Currently, the following .des files are in
 use:
 
@@ -42,7 +42,7 @@ use:
  portal.des   - portal vaults entrances
  temple.des   - Ecumenical Temples, and Temple entrances
  vaults.des   - entrances for the Vaults, and Vaults:8
- zot.des      - vaults for the Zor branch and the maps for Zot:5
+ zot.des      - vaults for the Zot branch and the maps for Zot:5
 
 
 Kinds of Vaults
@@ -51,17 +51,17 @@ The different kinds of vaults used by Crawl are described briefly below. In
 most cases, when the dungeon builder places a vault on a level, the rest of
 the level (assuming the vault is not a full-map vault) is generated as
 rooms+corridors. The only exceptions to this are branch entry vaults and
-minivaults - these are placed after the level is generated, and therefore 
+minivaults - these are placed after the level is generated, and therefore
 do not influence level generation.
 
 Entry vault:
-    A map designed for D:1, which (usually) contains the primary upstair { 
-and is always tagged "entry". A player starting a new game will usually land 
+    A map designed for D:1, which (usually) contains the primary upstair {
+and is always tagged "entry". A player starting a new game will usually land
 in an entry vault.
 
 Branch entry vault, or branch portal vault:
-     A map containing the entry to a branch - either a branch stair (such as 
-the stair to the Orcish Mines), or a branch portal (a portal to Hell, say). 
+     A map containing the entry to a branch - either a branch stair (such as
+the stair to the Orcish Mines), or a branch portal (a portal to Hell, say).
 Always tagged "<branchname>_entry".
 
 Special level:
@@ -70,16 +70,16 @@ Temple, or the end of branches such as level 5 of the Snake Pit (Snake:5).
 Special level maps usually have a PLACE: attribute.
 
 Random vaults:
-    Random vaults may be randomly generated at any level in the dungeon. 
+    Random vaults may be randomly generated at any level in the dungeon.
 Random vault maps are selected by the dungeon builder based on their DEPTH:
 attributes.
 
 Random minivaults:
-    Random minivaults are small maps that are placed onto a level that the 
-dungeon builder has already constructed fully otherwise (the level may 
+    Random minivaults are small maps that are placed onto a level that the
+dungeon builder has already constructed fully otherwise (the level may
 include other vaults).
 
-Minivaults are distinguished from normal vaults solely by the absence of an 
+Minivaults are distinguished from normal vaults solely by the absence of an
 ORIENT: declaration. Any map without a specified ORIENT: is a minivault.
 
 
@@ -92,12 +92,12 @@ definition looks like.
 
 # name below:
 NAME:    useless_temple_entry
-# header section below:           
+# header section below:
 ORIENT:  float                    # "ORIENT: float" tells the level builder that
                                   #     this entry can be anywhere on the level.
-TAGS:    temple_entry             #  "TAGS: temple_entry" turns the 'O' on the 
+TAGS:    temple_entry             #  "TAGS: temple_entry" turns the 'O' on the
 MONS:    butterfly, plant         #               map into stairs to the Temple.
-ITEM:    stone                 
+ITEM:    stone
 # actual map below:               # The symbols on the map:
 MAP                               # x - rock wall
 xx.d.xx                           # . - floor
@@ -107,11 +107,11 @@ x..1..x                           # 1 - first monster from list (here butterfly)
 xx.d.xx                           # 2 - second monster from list (here plant)
 ENDMAP                            # d - first item from the list (here stones)
 
-Every map consists of a name, a header and the actual map (the order is not 
+Every map consists of a name, a header and the actual map (the order is not
 important as long as the name comes first, but try to stick to this order for
 consistency).
 
-Lines starting with # are comments. The keywords available are explained 
+Lines starting with # are comments. The keywords available are explained
 in detail in the following sections.
 
 
@@ -176,14 +176,14 @@ Features
  V - Permanently dry fountain
  Y - Blood fountain (use sparingly!)
 
-Note: Due to the level maker having seen incremental improvements over the 
+Note: Due to the level maker having seen incremental improvements over the
 years, there are some inconsistencies. For examples, dangerous statues (ice,
 orange, silver) are now genuine monsters. In particular, you might see many
 older vaults still using the deprecated 'H' and 'S' glyphs which should
 otherwise be dispensed with.
 
-Similarly, the most of the other feature glyphs can be replaced with KFEAT: 
-lines. The same goes for some item glyphs ('R', 'Z') which could be replaced 
+Similarly, the most of the other feature glyphs can be replaced with KFEAT:
+lines. The same goes for some item glyphs ('R', 'Z') which could be replaced
 by KITEM: lines.
 
 Items
@@ -211,7 +211,7 @@ Monsters
 D.   Header information
 =======================
 
-(All declarations apart from NAME: are translated to Lua function calls 
+(All declarations apart from NAME: are translated to Lua function calls
 behind the scenes. See the Lua reference for more information.)
 
 Try to respect line lengths of 80 characters. Should some line exceed that
@@ -275,7 +275,7 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
 
           (Anywhere between levels 3-6 of the Lair, inclusive.)
 
-          You can apply multiple constraints in one DEPTH line, 
+          You can apply multiple constraints in one DEPTH line,
           comma-separated:
 
             DEPTH: 7-20, !12-14
@@ -305,9 +305,8 @@ CHANCE:   (number with 10 being default)
           likelihood of a vault getting picked is:
           [vault's CHANCE: / sum of all CHANCE:s of vaults of that type]
 
-PLACE:    Used to specify certain special levels. Existing special levels are:
-          Temple, Hell, Dis:7, Geh:7, Coc:7, Tar:7, Hive:4, Vault:8, Snake:5,
-          Elf:7, Slime:6, Blade, Zot:5, Tomb:1, Tomb:2, Tomb:3, Swamp:5, Crypt:4
+PLACE:    Used to specify certain special levels. Existing special levels
+          include most branch ends.
 
           PLACE can also be used to specify arbitrary places, like D:3, which
           will force the map (or one of the maps with PLACE: D:3) to be picked
@@ -354,12 +353,12 @@ TAGS:     Tags go an a TAGS: line and are space-separated. You can have several
              Use "O" to place the stairs. If a branch has very few entries,
              a dummy entry is advisable to make sure the player doesn't get
              bored of the same few entries recycled ad nauseam.
-             Note: if any TAG argument contains an "entry", the vault will 
-                   be no longer eligible for random placement. (Currently, 
+             Note: if any TAG argument contains an "entry", the vault will
+                   be no longer eligible for random placement. (Currently,
                    this just affects your choice of BAR when using uniq_BAR.)
           * "mnoleg" or the name of some other pandemonium lord. This makes
              the map eligible for said pan lord's lair. See pan.des.
-          * "minotaur" turns this into a labyrinth exit vault. 
+          * "minotaur" turns this into a labyrinth exit vault.
             "lab" turns this into an additional labyrinth flavour vault.
             See lab.des for examples and details.
           * "no_rotate":  Normally, the dungeon builder can, at its whim,
@@ -380,14 +379,14 @@ TAGS:     Tags go an a TAGS: line and are space-separated. You can have several
 
 LFLAGS:   Persistent, changeable per-level flags which affect game behaviour
           (FLAGS just controls how the vault is placed); should only be used
-          for vaults with ORIENT encompass or with PLACE. Causes a level's 
-          flags to be set when the level is first created. These flags can 
+          for vaults with ORIENT encompass or with PLACE. Causes a level's
+          flags to be set when the level is first created. These flags can
           later be altered using Lua markers; for examples, look at the slime
           pit vault in lair.des, and the vaults in hell.des and elf.des.
 
-          Valid flags are: 
+          Valid flags are:
           * no_tele_control - prevents the player from using teleport control
-          * not_mappable    - prevents the player from remembering where 
+          * not_mappable    - prevents the player from remembering where
                               they've been (like in the Abyss)
           * no_magic_map    - which prevents magic mapping from working.
 
@@ -397,20 +396,20 @@ BFLAGS:   Persistent, changeable per-*branch* flags which affect game
           using Lua markers; see the Tomb vaults in vaults.lua for an
           example.
 
-          Valid flags are: 
+          Valid flags are:
           * no_tele_control - prevents the player from using teleport control
-          * not_mappable    - prevents the player from remembering where 
+          * not_mappable    - prevents the player from remembering where
                               they've been (like in the Abyss)
           * no_magic_map    - which prevents magic mapping from working.
-          
+
 FLOORCOL: blue
-          FLOORCOL: allows you to set the floor colour for the level the 
-          vault appears in. Should only be used for bazaars and other 
+          FLOORCOL: allows you to set the floor colour for the level the
+          vault appears in. Should only be used for bazaars and other
           portal vaults.
 
 ROCKCOL:  yellow
           ROCKCOL: allows you to set the colour of rock walls for the level
-          the vault appears in. Should only be used for bazaars and other 
+          the vault appears in. Should only be used for bazaars and other
           portal vaults.
 
 ITEM:     (list of items, separated by comma)
@@ -442,7 +441,7 @@ ITEM:     (list of items, separated by comma)
              if the item is not stackable.
           * "no_uniq" prevents the item from being turned into an artefact.
           * "good_item" makes the builder try to make the item a good one
-            (acquirement quality). 
+            (acquirement quality).
           * "level:N" sets the object's item level (can't be used with
             "good_item").  If set to -2 then the object's item level will
             be the same as a "*" symbol item (five plus twice the
@@ -472,7 +471,7 @@ ITEM:     (list of items, separated by comma)
             also to make sure that egos are only given to amrours, weapons and
             missiles, no other checking is done.  Thus it is possible to create
             a demonic weapon of holy wrath or a helmet of running.
- 
+
           Limitations: You can't specify curse status, specificy pluses or
           number of charges, force a randart or give fixedarts.  You also
           can't lay down corpses, skeletons, or chunks.
@@ -797,7 +796,7 @@ E.    Conditionalising levels
 
 Crawl translates level (.des) files into Lua code chunks and runs these chunks
 to produce the final level that is generated.  While you don't need to use Lua
-for most levels, using Lua allows you to conditionalise or randomise levels 
+for most levels, using Lua allows you to conditionalise or randomise levels
 with greater control.
 
 Let's take a simple example of randomisation:
@@ -815,7 +814,7 @@ xxx@xxxxx@xxxxx@xxx
 ENDMAP
 
 Now let's say you want A, B, and C to be randomly rock or floor, but B should
-be floor if both A and C are rock. Here's one way to do it (add these lines 
+be floor if both A and C are rock. Here's one way to do it (add these lines
 to the map definition):
 
 : local asolid, csolid
@@ -1037,9 +1036,9 @@ G.    Hints for level makers
 * Randomise!
   The level making syntax is very supportive for making a single map appear
   in many versions. Use the SHUFFLE: and SUBST: and NSUBST: directives and
-  look at the existing entry vaults. Besides reducing tedium, this avoids 
-  giving veterans a spoiled edge. As an example, if a secret chamber with 
-  loot is always at the same place, it's a no-brainer for those who know. 
+  look at the existing entry vaults. Besides reducing tedium, this avoids
+  giving veterans a spoiled edge. As an example, if a secret chamber with
+  loot is always at the same place, it's a no-brainer for those who know.
   The same goes for traps. This is much less so if there are several places
   for the chamber (or trap) and there's even a chance it doesn't exist.
 
@@ -1064,7 +1063,7 @@ G.    Hints for level makers
   making the actual level. For entry vaults, something simple like 'forest'
   or 'fortress' may be enough. For later (or larger) maps, try to think of
   distinguishing features your map may have. Being cool can be good enough,
-  but possessing some gameplay value (for example by being easier for 
+  but possessing some gameplay value (for example by being easier for
   particular skills/capabilities like ranged attacks or Traps & Doors or
   necromancy) is even better.
 
@@ -1080,8 +1079,8 @@ G.    Hints for level makers
   which makes it very likely that the minivault will appear in the chosen
   level.
 
-  Vaults can be conjured up in wizard mode using the &L command. You don't 
-  need to specify the full name of the vault, a substring which uniquely 
+  Vaults can be conjured up in wizard mode using the &L command. You don't
+  need to specify the full name of the vault, a substring which uniquely
   determines the vault is enough. You can playtest portal vaults using the &P
   wizard command. Branch ends can be conveniently tested with the &~ command.
 
@@ -1125,19 +1124,302 @@ G.    Hints for level makers
   available for nearly all operating systems, including Windows.
 
 
-H.    Lua reference
+H.   Portal Vaults
+==================
+
+Portal vaults are vaults accessed by portals in the dungeon (labyrinths
+and bazaars are special cases of portal vaults). You can create custom
+portal vaults in the following steps (no compilation is necessary):
+
+* Create a new file name.des in the dat/ folder. Rules:
+  The "name" should be descriptive of the vault you're adding.
+  The "name" should not exceed eight letters.
+  The ending must be "des".
+* Add "name.des" to the list of local files in dat/clua/loadmaps.lua.
+* "name.des" should contain a comment at the top, explaining flavour and
+  gameplay goals of the portal vault (and perhaps additional ideas etc.)
+* Define at least one vault containing the portal (see below).
+* Define at least one destination map (see below).
+* Add a short in-game description for the string "desc" (see below) to
+  dat/descript/features.txt.
+
+Before going into the details of portal vault creation, some words about
+their uses: Portal vaults are different from branches in that they are
+not guaranteed. Furthermore, there is only one go at a portal vault - if
+you leave, it's gone for good. Finally, you can apply special rules to a
+portal vault, like disabling mapping. Bazaars and labyrinths are typical
+examples.
+
+In order to test a portal vault, you can either use PLACE: D:2 for an
+entry vault, or use the wizard mode command &L for conjuring up the entry.
+
+
+Define a vault to hold the portal itself
+----------------------------------------
+
+# Bare-bones portal vault entry
+NAME: portal_generic_entry
+TAGS: allow_dup
+ORIENT: float
+MARKER: O = lua:one_way_stair { desc = "A portal to places unknown", \
+                                dst = "generic_portal" }
+KFEAT: O = enter_portal_vault
+MAP
+O
+ENDMAP
+
+Portal entries must contain a portal vault entry (enter_portal_vault).
+This feature must always have a marker that provides the portal with a
+description ("A portal to places unknown") and a destination
+("generic_portal").
+
+In case you want to make sure that the portal vault entry is only used
+once, you add a TAGS: uniq_BAR line. It should be noted that the label
+BAR may *not* end in _uniq (otherwise the level builder assumes that the
+vault is a branch entry).
+
+This will produce a portal, but attempting to use it will trigger an
+ASSERT since there's no map for the destination. So we create a
+destination map like so:
+
+
+Define a destination map
+------------------------
+
+NAME: portal_generic_generic
+# Tag must match dst value of portal in entry.
+TAGS: generic_portal allow_dup
+ORIENT: encompass
+MONS: ancient lich
+KFEAT: > = exit_portal_vault
+MAP
+xxxxxxxxxxx
+x111111111x
+x1A111111>x
+x111111111x
+xxxxxxxxxxx
+ENDMAP
+
+Note that the entry point into the map will be a stone arch. You must
+provide an exit to the dungeon explicitly (KFEAT: > =
+exit_portal_vault) or the player will not be able to leave.
+
+Stairs will not work right in portal vaults, do not use them.
+
+You can use multiple maps with the destination tag (generic_portal),
+and the dungeon builder will pick one at random.
+
+
+The MARKER parameters
+---------------------
+
+The lines
+        MARKER: O = lua:one_way_stair { desc = "A portal to places unknown", \
+                                        dst = "generic_portal" }
+        KFEAT: O = enter_portal_vault
+ensure that an 'O' glyph will be turned into a portal. Upon leaving the portal
+vault, you will be placed on its entry which has been turned into a floor. You
+can turn it into something different (usually an empty stone arch), by adding
+        floor = 'stone_arch'
+to the lua:one_way_stair parameters.
+
+Note that the desc string is what you will see upon examining the portal.
+The dst string is used for Crawl's right hand stat area; it will show
+  Place: generic portal
+in the above example. The dst string is also used to link the destination maps
+to the entry maps.
+
+You can replace lua:one_way_stair by lua:timed_marker in order to make timed
+portal vaults (which will disappear after some time). bazaar.des and lab.des
+contain examples.
+
+
+Using lua functions as shortcuts
+--------------------------------
+
+If you are making several entry and destination vaults, you will note a
+lot of duplicated header statements. This can be lessened using lua.
+Define a lua block right at the top (after your comments) as follows:
+
+{{
+
+function generic_portal(e)
+  e.marker([[O = lua:one_way_stair { desc = "A portal to places unknown",
+                                     dst = "generic_portal",
+                                     floor = "stone_arch" }]])
+  e.kfeat("O = enter_portal_vault")
+  e.colour("O = magenta")
+end
+
+}}
+
+Instead of the MARKER and KFEAT lines introduced above you now just use
+  :generic_portal(_G)
+and the resulting portal glyphs will even be magenta!
+
+I.    Lua reference
 ===================
 
 How maps are processed
 ----------------------
 
-Crawl uses Lua heavily when dealing with .des files:
+Under the hood, Crawl translates everything in a .des file to Lua. You
+don't need to know what the underlying Lua looks like to design
+levels, but it helps.
+
+Crawl uses Lua 5.1 from http://www.lua.org (the site has information
+on the Lua language). Let's examine how Crawl converts a map
+definition into Lua code with an example map:
+
+NAME: statue_in_pool
+TAGS: no_rotate no_pool_fixup
+: if you.absdepth() < 7 then
+MONS: plant
+: else
+MONS: oklob plant
+: end
+MAP
+1...1
+.www.
+.wGw.
+.www.
+1...1
+ENDMAP
+
+Crawl will convert this map into the following Lua code, wrapped in an
+anonymous function (this is called a Lua chunk):
+
+function ()
+  tags("no_rotate")
+  tags("no_pool_fixup")
+  if you.absdepth() < 7 then
+    mons("plant")
+  else
+    mons("oklob plant")
+  end
+  map(".....")
+  map(".www.")
+  map(".wGw.")
+  map(".www.")
+  map(".....")
+end
+
+If your level defines prelude or validation Lua code, such code is
+extracted into separate prelude and validation chunks. The prelude and
+validation chunks are empty unless specified.
+
+Apart from the special NAME map header, every map header translates to
+a Lua function with the same name in lowercase. For instance, KFEAT:
+<xyz> is translated into kfeat("<xyz>").
+
+If you have a space or comma separated list (such as TAGS, MONS, ITEM,
+etc.), then each space/comma separated item is passed into a separate
+call to the corresponding Lua function. For instance:
+
+TAGS: no_rotate no_pool_fixup
+->
+tags("no_rotate")
+tags("no_pool_fixup")
+
+MONS: orc, gnoll
+->
+mons("orc")
+mons("gnoll")
+
+Knowing what the generated Lua looks like under the hood is useful
+because it allows you to extract repeated boilerplate in similar
+vaults into a Lua function in the .des file's prelude. For instance,
+if you were planning to write a whole slew of vaults featuring statues
+in water guarded by plants, you could extract the common code into the
+top of the .des file as:
+
+# This block has to be placed before any other vault in the .des file.
+{{
+function statue_pool_map(e)
+  e.tags("no_rotate")
+  e.tags("no_pool_fixup")
+  if you.absdepth() < 7 then
+    e.mons("plant")
+  else
+    e.mons("oklob plant")
+  end
+end
+}}
+
+NAME: statue_in_pool
+# Pass in the Lua environment global _G to the prelude function.
+: statue_pool_map(_G)
+MAP
+1...1
+.www.
+.wGw.
+.www.
+1...1
+ENDMAP
+
+You can also use arbitrary Lua directly in vault definitions, which is
+handy when randomizing things:
+
+NAME: statue_in_pool
+: local plant_weight = crawl.random_range(1,10)
+: mons("plant w:" .. plant_weight ..
+:      " / oklob plant w:" .. (10 - plant_weight))
+MAP
+1...1
+.www.
+.wGw.
+.www.
+1...1
+ENDMAP
+
+How Lua chunks are associated with a C++ map object
+---------------------------------------------------
+
+A map's Lua chunk consists of calls to functions such as tags(),
+mons(), etc. These functions are defined in the dgn table (see the Lua
+API reference below), and they expect to act on an instance of Crawl's
+C++ mapdef object. Given:
+
+tags("no_rotate")
+
+the actual Lua call needs to be:
+
+dgn.tags(<map>, "no_rotate")
+
+Where <map> is the C++ map object to which the tag should be added.
+Since calling dgn.<foo>(<map>, <xxx>) is tedious, dat/clua/dungeon.lua
+wraps the Lua chunk for the map into an environment that defines
+wrappers for all the functions in 'dgn' as:
+
+    function <xyz>(...)
+      dgn.<xyz>(<map>, ...)
+    end
+
+i.e. for every function <xyz> in the 'dgn' table, we define a new
+function <xyz> that just calls dgn.<xyz>() with the current map as the
+first parameter, and the other parameters as passed in. Thus Lua code
+that you write as:
+
+tags("no_rotate")
+
+is translated to the correct dgn.tags(<map>, "no_rotate").
+
+While this is done automatically for map code, if you need to call Lua
+code that was not defined in the scope of the map, as in the example
+statue_pool_map() function, you need to pass in the map environment to
+that function if you want it to modify the map. Thus the call to
+statue_pool_map looks like:
+
+: statue_pool_map(_G)
+
+Steps involved in processing .des files
+---------------------------------------
 
 * Level files are compiled into a series of Lua chunks. Each map can
   have one or more Lua chunks associated with it: the prelude, the
-  body, and a validation chunk. The body is mandatory, but prelude and
-  validation chunks are necessary only if your map needs validation or
-  fancy selection criteria.
+  body, and a validation chunk. The body is mandatory, but validation
+  and prelude chunks are necessary only if your map needs validation
+  or fancy selection criteria.
 
 * When first compiling a .des file, Crawl compiles each map's Lua
   chunks, then compiles and runs the prelude, body and validation
@@ -1187,6 +1469,12 @@ Syntax for using Lua in .des files
   or
    lua {{
        <code>
+   }}
+  The "lua" word is optional; you can also use:
+   {{ <code> }}
+  and
+   {{
+   <code>
    }}
 
 NOTE: Colon-prefixed lines, or lua {{ }} blocks defined before any
@@ -1289,7 +1577,7 @@ res_mutation, res_slowing, gourmand, levitating, flying, transform,
 stop_activity, floor_items, where, branch, subdepth, absdepth
 
 
-I.   Feature Names
+J.   Feature Names
 ==================
 
 These are the feature names usable in MARKER declarations:
@@ -1320,16 +1608,17 @@ exit_portal_vault, altar_zin, altar_shining_one, altar_kikubaaqudgha,
 altar_yredelemnul, altar_xom, altar_vehumet, altar_okawaru,
 altar_makhleb, altar_sif_muna, altar_trog, altar_nemelex_xobeh,
 altar_elyvilon, altar_lugonu, altar_beogh, fountain_blue,
-fountain_sparkling, fountain_blood, dry_fountain_blue, 
+fountain_sparkling, fountain_blood, dry_fountain_blue,
 dry_fountain_sparkling, dry_fountain_blood, permadry_fountain
 
 
-J.   Map Statistics
+K.   Map Statistics
 ===================
 
 Full-debug Crawl builds (this does not include normal Crawl builds
-that have wizard-mode) can produce map generation statistics. To
-generate statistics, run crawl from the command-line as:
+that have wizard-mode - you must build Crawl with "make debug", not
+"make wizard") can produce map generation statistics. To generate
+statistics, run crawl from the command-line as:
 
 crawl -mapstat
 
@@ -1341,140 +1630,6 @@ You can change the number of dungeons to generate:
 crawl -mapstat 10
 
 Will generate 10 dungeons. If you merely want statistics on the
-probabilities of the levels, use:
+probabilities of the random map on each level, use:
 
 crawl -mapstat 1
-
-
-K.   Portal Vaults
-==================
-
-Portal vaults are vaults accessed by portals in the dungeon (labyrinths
-and bazaars are special cases of portal vaults). You can create custom 
-portal vaults in the following steps (no compilation is necessary):
-
-* Create a new file name.des in the dat/ folder. Rules:
-  The "name" should be descriptive of the vault you're adding.
-  The "name" should not exceed eight letters.
-  The ending must be "des".
-* Add "name.des" to the list of local files in dat/clua/loadmaps.lua.
-* "name.des" should contain a comment at the top, explaining flavour and
-  gameplay goals of the portal vault (and perhaps additional ideas etc.)
-* Define at least one vault containing the portal (see below).
-* Define at least one destination map (see below).
-* Add a short in-game description for the string "desc" (see below) to 
-  dat/descript/features.txt.
-
-Before going into the details of portal vault creation, some words about
-their uses: Portal vaults are different from branches in that they are
-not guaranteed. Furthermore, there is only one go at a portal vault - if
-you leave, it's gone for good. Finally, you can apply special rules to a
-portal vault, like disabling mapping. Bazaars and labyrinths are typical
-examples.
-
-In order to test a portal vault, you can either use PLACE: D:2 for an
-entry vault, or use the wizard mode command &L for conjuring up the entry.
-
-
-Define a vault to hold the portal itself
-----------------------------------------
-
-# Bare-bones portal vault entry
-NAME: portal_generic_entry
-TAGS: allow_dup
-ORIENT: float
-MARKER: O = lua:one_way_stair { desc = "A portal to places unknown", \
-                                dst = "generic_portal" }
-KFEAT: O = enter_portal_vault
-MAP
-O
-ENDMAP
-
-Portal entries must contain a portal vault entry (enter_portal_vault).
-This feature must always have a marker that provides the portal with a
-description ("A portal to places unknown") and a destination
-("generic_portal").
-
-In case you want to make sure that the portal vault entry is only used
-once, you add a TAGS: uniq_BAR line. It should be noted that the label
-BAR may *not* end in _uniq (otherwise the level builder assumes that the
-vault is a branch entry).
-
-This will produce a portal, but attempting to use it will trigger an
-ASSERT since there's no map for the destination. So we create a
-destination map like so:
-
-
-Define a destination map
-------------------------
-
-NAME: portal_generic_generic
-# Tag must match dst value of portal in entry.
-TAGS: generic_portal allow_dup
-ORIENT: encompass
-MONS: ancient lich
-KFEAT: > = exit_portal_vault
-MAP
-xxxxxxxxxxx
-x111111111x
-x1A111111>x
-x111111111x
-xxxxxxxxxxx
-ENDMAP
-
-Note that the entry point into the map will be a stone arch. You must
-provide an exit to the dungeon explicitly (KFEAT: > =
-exit_portal_vault) or the player will not be able to leave.
-
-Stairs will not work right in portal vaults, do not use them.
-
-You can use multiple maps with the destination tag (generic_portal),
-and the dungeon builder will pick one at random.
-
-
-The MARKER parameters
----------------------
-
-The lines
-        MARKER: O = lua:one_way_stair { desc = "A portal to places unknown", \
-                                        dst = "generic_portal" }
-        KFEAT: O = enter_portal_vault
-ensure that an 'O' glyph will be turned into a portal. Upon leaving the portal
-vault, you will be placed on its entry which has been turned into a floor. You
-can turn it into something different (usually an empty stone arch), by adding
-        floor = 'stone_arch'
-to the lua:one_way_stair parameters.
-
-Note that the desc string is what you will see upon examining the portal.
-The dst string is used for Crawl's right hand stat area; it will show
-  Place: generic portal 
-in the above example. The dst string is also used to link the destination maps
-to the entry maps.
-
-You can replace lua:one_way_stair by lua:timed_marker in order to make timed
-portal vaults (which will disappear after some time). bazaar.des and lab.des 
-contain examples.
-
-
-Using lua functions as shortcuts
---------------------------------
-
-If you are making several entry and destination vaults, you will note a 
-lot of duplicated header statements. This can be lessened using lua. 
-Define a lua block right at the top (after your comments) as follows:
-
-{{
-
-function generic_portal(e)
-  e.marker([[O = lua:one_way_stair { desc = "A portal to places unknown", \
-                                     dst = "generic_portal", \
-                                     floor = "stone_arch" }]])
-  e.kfeat("O = enter_portal_vault")
-  e.colour("O = magenta")
-end
-
-}}
-
-Instead of the MARKER and KFEAT lines introduced above you now just use
-  :generic_portal(_G)
-and the resulting portal glyphs will even be magenta!
