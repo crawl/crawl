@@ -559,9 +559,7 @@ bool evoke_wielded()
             }
         }
         else
-        {
             unevokable = true;
-        }
         break;
 
     case OBJ_STAVES:
@@ -582,7 +580,7 @@ bool evoke_wielded()
                 mpr("You channel some magical energy.");
                 inc_mp( 1 + random2(3), false );
                 make_hungry(50, false, true);
-                pract = (one_chance_in(5) ? 1 : 0);
+                pract = 1;
                 did_work = true;
 
                 if (!item_type_known(wpn))
