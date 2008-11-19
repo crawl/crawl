@@ -5,8 +5,8 @@
 #
 # The Sewer aspires to be an exciting place to go with a low level character.
 #
-# Flavour: drainage and sewer themed, so rats, kobolds, etc. Water is (dark 
-# and light) green. 
+# Flavour: drainage and sewer themed, so rats, kobolds, etc. Water is (dark
+# and light) green.
 # Gameplay: an early challenge, featuring monsters which are bland later but
 # interesting when encountered at low level (green rat, giant frog etc.) Loot
 # consists of renewable items; the harder maps contain a few good items.
@@ -100,8 +100,14 @@ ORIENT:   encompass
 KFEAT:    < = exit_portal_vault
 COLOUR:   < = darkgrey
 ROCKCOL:  darkgrey
-COLOUR:   c = darkgrey
 FLOORCOL: lightgrey
+: if crawl.random2(12) == 0 then
+SUBST:    C=c, X=w, V=W, v=w, *=f
+: else
+SUBST:    X=c, C=x, V=x, v=x, *=x
+: end
+SUBST:    ' = .W
+COLOUR:   c = darkgrey
 COLOUR:   w = green
 COLOUR:   W = lightgreen
 COLOUR:   y = blue
@@ -122,21 +128,22 @@ ITEM:     potion of restore abilities w:7 / potion of cure mutation / \
           potion of gain intelligence / potion of gain strength / \
           potion of gain dexterity
 MONS:     rat / grey rat / green rat w:2 / nothing w:3
+SUBST:    ? = .x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcwccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxccwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxcwccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxccwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcWwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxccWwWccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcccCCCCCCCCCCCCxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcwXvvvvvvvvvvvCCCxxxxxxxxxCCCxxxxxxxxxxx
+xxxxxxxxcwccCCCCCCCCCvvVCCCCxxxxxxC*CCCxxxxxxxxx
+xxxxxxxxcwwcxxxxxxxxCCCvvvvCCCCxxCCvvvCxxxxxxxxx
+xxxxxxxxccwcxxxxxxxxxxCCCCvvvvCCCCvvvvCxxxxxxxxx
+xxxxxxxxxcwccxxxxxxxxxxxxCCCCvvvvvvvvvCxxxxxxxxx
+xxcwcxxxccwwcxxxxxxxxxxxxxxxCCCCCCCCCCCxxxxxxxxx
+xxcwcxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxcwxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxcwxxxxcwwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxwxxxxcWwwcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxwxxxccWwWccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxwxxxc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxccc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxc<..WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxccc.WwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -145,25 +152,25 @@ xxxxxxcc.WwW.ccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxc..WwW..cccccccccccccccccccccccccccccccccx
 xxxxxxc..WwWWWWWWWWWWWWWWWWWWWWWW..444.A.<..44cx
 xxxxxxc..WwW..cccccccccccccccccccccccccccccccccx
-xxxxxxc..WwW..cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc.'WwW'.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxc.WWwWW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxc.WwwwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxc.WwqwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxc.WwwwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxc.WWWWW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxc.'WWW'.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxc.......cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxcccc1ccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xefCxxxx.122...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xdexxxx.2232.y..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx.xxxx....yYy.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxx.xxxx....y.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx.xx.x.x....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxx..x.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx?.?xxx....yYy.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx?.xxx?....y.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx?x..?.?....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx???.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # This one can be tough; you'll be in the water when the giant frogs notice you.
-# More rare (3 out of 9 sewers are this). 
+# More rare (3 out of 9 sewers are this).
 # Loot are good items, and often a scroll of blinking.
 NAME:     sewer_island
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
