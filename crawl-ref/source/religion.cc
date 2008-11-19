@@ -6340,7 +6340,7 @@ void handle_god_time()
             break;
 
         case GOD_NEMELEX_XOBEH:
-            // Nemelex is relatively patient
+            // Nemelex is relatively patient.
             if (one_chance_in(35))
                 lose_piety(1);
             if (you.attribute[ATTR_CARD_COUNTDOWN] > 0 && coinflip())
