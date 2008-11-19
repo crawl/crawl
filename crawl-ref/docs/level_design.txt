@@ -182,7 +182,7 @@ orange, silver) are now genuine monsters. In particular, you might see many
 older vaults still using the deprecated 'H' and 'S' glyphs which should
 otherwise be dispensed with.
 
-Similarly, the most of the other feature glyphs can be replaced with KFEAT:
+Similarly, most of the other feature glyphs can be replaced with KFEAT:
 lines. The same goes for some item glyphs ('R', 'Z') which could be replaced
 by KITEM: lines.
 
@@ -1147,7 +1147,7 @@ Before going into the details of portal vault creation, some words about
 their uses: Portal vaults are different from branches in that they are
 not guaranteed. Furthermore, there is only one go at a portal vault - if
 you leave, it's gone for good. Finally, you can apply special rules to a
-portal vault, like disabling mapping. Bazaars and labyrinths are typical
+portal vault, like enforcing maprot. Bazaars and labyrinths are typical
 examples.
 
 In order to test a portal vault, you can either use PLACE: D:2 for an
@@ -1175,8 +1175,8 @@ description ("A portal to places unknown") and a destination
 
 In case you want to make sure that the portal vault entry is only used
 once, you add a TAGS: uniq_BAR line. It should be noted that the label
-BAR may *not* end in _uniq (otherwise the level builder assumes that the
-vault is a branch entry).
+BAR may *not* end in _entry (otherwise the level builder assumes that 
+the vault is a branch entry).
 
 This will produce a portal, but attempting to use it will trigger an
 ASSERT since there's no map for the destination. So we create a
@@ -1256,6 +1256,7 @@ end
 Instead of the MARKER and KFEAT lines introduced above you now just use
   :generic_portal(_G)
 and the resulting portal glyphs will even be magenta!
+
 
 I.    Lua reference
 ===================
