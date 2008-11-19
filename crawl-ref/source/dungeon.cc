@@ -670,6 +670,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     int nzones = 0;
+    int ngood = 0;
     for (int y = y1; y <= y2 ; ++y)
         for (int x = x1; x <= x2; ++x)
         {
@@ -691,7 +692,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
             // If we want only stairless zones, screen out zones that did
             // have stairs.
             if (choose_stairless && found_exit_stair)
-                --nzones;
+                ++ngood;
             else if (fill)
             {
                 for (int fy = y1; fy <= y2 ; ++fy)
@@ -701,7 +702,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
             }
         }
 
-    return (nzones);
+    return (nzones - ngood);
 }
 
 static int _dgn_count_disconnected_zones(bool choose_stairless)

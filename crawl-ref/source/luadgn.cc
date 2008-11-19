@@ -13,6 +13,7 @@
 #include <cmath>
 
 #include "branch.h"
+#include "chardump.h"
 #include "clua.h"
 #include "cloud.h"
 #include "directn.h"
@@ -1727,10 +1728,11 @@ static dungeon_feature_type _get_lua_feature(lua_State *ls, int idx)
     return feat;
 }
 
-static void _clamp_to_bounds(int &x, int &y)
+static void _clamp_to_bounds(int &x, int &y, bool edge_ok = false)
 {
-    x = std::min(std::max(x, X_BOUND_1+1), X_BOUND_2-1);
-    y = std::min(std::max(y, Y_BOUND_1+1), Y_BOUND_2-1);
+    const int edge_offset = edge_ok ? 0 : 1;
+    x = std::min(std::max(x, X_BOUND_1 + edge_offset), X_BOUND_2 - edge_offset);
+    y = std::min(std::max(y, Y_BOUND_1 + edge_offset), Y_BOUND_2 - edge_offset);
 }
 
 static int dgn_fill_area(lua_State *ls)
@@ -2017,8 +2019,8 @@ static int dgn_smear_feature(lua_State *ls)
     int x2 = luaL_checkint(ls, 6);
     int y2 = luaL_checkint(ls, 7);
 
-    _clamp_to_bounds(x1, y1);
-    _clamp_to_bounds(x2, y2);
+    _clamp_to_bounds(x1, y1, true);
+    _clamp_to_bounds(x2, y2, true);
 
     smear_feature(iterations, boxy, feat, x1, y1, x2, y2);
 
@@ -2115,6 +2117,14 @@ static int dgn_fill_disconnected_zones(lua_State *ls)
     return 0;
 }
 
+static int dgn_debug_dump_map(lua_State *ls)
+{
+    const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
+    if (lua_isstring(ls, pos))
+        dump_map(lua_tostring(ls, pos), true);
+    return (0);
+}
+
 static const struct luaL_reg dgn_lib[] =
 {
     { "default_depth", dgn_default_depth },
@@ -2200,6 +2210,8 @@ static const struct luaL_reg dgn_lib[] =
     { "count_neighbours", dgn_count_neighbours },
     { "join_the_dots", dgn_join_the_dots },
     { "fill_disconnected_zones", dgn_fill_disconnected_zones },
+
+    { "debug_dump_map", dgn_debug_dump_map },
 
     { NULL, NULL }
 };

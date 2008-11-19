@@ -4794,6 +4794,8 @@ static void _mapgen_report_available_random_vaults(FILE *outf)
         mesclr();
         mprf("Examining random maps at %s", i->describe().c_str());
         mg_report_random_maps(outf, *i);
+        if (kbhit() && getch() == ESCAPE)
+            break;
         fprintf(outf, "---------------------------------\n");
     }
 }

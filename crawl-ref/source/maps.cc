@@ -486,15 +486,28 @@ static std::string _vault_chance_tag(const map_def &map)
     return ("");
 }
 
-static int _random_map_by_selector(const map_selector &sel)
-{
-    if (!sel.valid())
-        return (-1);
+typedef std::vector<unsigned> vault_indices;
 
+static vault_indices _eligible_maps_for_selector(const map_selector &sel)
+{
+    vault_indices eligible;
+
+    if (sel.valid())
+    {
+        for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
+            if (sel.accept(vdefs[i]))
+                eligible.push_back(i);
+    }
+
+    return (eligible);
+}
+
+static int _random_map_by_selector(const map_selector &sel);
+static int _random_map_in_list(const map_selector &sel,
+                               const vault_indices &filtered)
+{
     int mapindex = -1;
     int rollsize = 0;
-
-    typedef std::vector<unsigned> vault_indices;
 
     // First build a list of vaults that could be used:
     vault_indices eligible;
@@ -505,30 +518,30 @@ static int _random_map_by_selector(const map_selector &sel)
     typedef std::set<std::string> tag_set;
     tag_set chance_tags;
 
-    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-        if (sel.accept(vdefs[i]))
+    for (unsigned f = 0, size = filtered.size(); f < size; ++f)
+    {
+        const int i = filtered[f];
+        if (!sel.ignore_chance && vdefs[i].chance > 0)
         {
-            if (!sel.ignore_chance && vdefs[i].chance > 0)
+            // There may be several alternatives for a portal
+            // vault that want to be governed by one common
+            // CHANCE. In this case each vault will use a
+            // CHANCE, and a common chance_xxx tag. Pick the
+            // first such vault for the chance roll. Note that
+            // at this point we ignore chance_priority.
+            const std::string tag = _vault_chance_tag(vdefs[i]);
+            if (chance_tags.find(tag) == chance_tags.end())
             {
-                // There may be several alternatives for a portal
-                // vault that want to be governed by one common
-                // CHANCE. In this case each vault will use a
-                // CHANCE, and a common chance_xxx tag. Pick the
-                // first such vault for the chance roll. Note that
-                // at this point we ignore chance_priority.
-                const std::string tag = _vault_chance_tag(vdefs[i]);
-                if (chance_tags.find(tag) == chance_tags.end())
-                {
-                    if (!tag.empty())
-                        chance_tags.insert(tag);
-                    chance.push_back(i);
-                }
-            }
-            else
-            {
-                eligible.push_back(i);
+                if (!tag.empty())
+                    chance_tags.insert(tag);
+                chance.push_back(i);
             }
         }
+        else
+        {
+            eligible.push_back(i);
+        }
+    }
 
     // Sort chances by priority, high priority first.
     std::sort(chance.begin(), chance.end(), _compare_vault_chance_priority);
@@ -578,6 +591,12 @@ static int _random_map_by_selector(const map_selector &sel)
     sel.announce(mapindex);
 
     return (mapindex);
+}
+
+static int _random_map_by_selector(const map_selector &sel)
+{
+    const vault_indices filtered = _eligible_maps_for_selector(sel);
+    return _random_map_in_list(sel, filtered);
 }
 
 // Returns a map for which PLACE: matches the given place.
@@ -885,14 +904,6 @@ void run_map_preludes()
 typedef std::pair<std::string, int> weighted_map_name;
 typedef std::vector<weighted_map_name> weighted_map_names;
 
-static int _mg_random_vault_here(const level_id &place, bool mini)
-{
-    no_messages mx;
-    map_selector sel = map_selector::by_depth(place, mini);
-    sel.preserve_dummy = true;
-    return _random_map_by_selector(sel);
-}
-
 static weighted_map_names mg_find_random_vaults(
     const level_id &place, bool wantmini)
 {
@@ -905,9 +916,15 @@ static weighted_map_names mg_find_random_vaults(
 
     map_count_t map_counts;
 
+    map_selector sel = map_selector::by_depth(place, wantmini);
+    sel.preserve_dummy = true;
+
+    no_messages mx;
+    vault_indices filtered = _eligible_maps_for_selector(sel);
+
     for (int i = 0; i < 10000; ++i)
     {
-        const int v = _mg_random_vault_here(place, wantmini);
+        const int v = _random_map_in_list(sel, filtered);
         if (v == -1)
             map_counts["(none)"]++;
         else
@@ -943,7 +960,7 @@ static void mg_report_random_vaults(
     for (int i = 0, size = wms.size(); i < size; ++i)
     {
         std::string curr =
-            make_stringf("%s (%.4f%%)",
+            make_stringf("%s (%.2f%%)",
                          wms[i].first.c_str(),
                          100.0 * wms[i].second / weightsum);
         if (i < size - 1)
