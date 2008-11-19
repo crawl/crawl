@@ -1044,7 +1044,7 @@ bool melee_attack::player_aux_unarmed()
                 || (weapon
                     && hands == HANDS_TWO
                     && weapon->base_type != OBJ_STAVES
-                    && weapon->sub_type  != WPN_QUARTERSTAFF) )
+                    && weapon_skill(*weapon) != SK_STAVES))
             {
                 continue;
             }
@@ -3070,10 +3070,10 @@ int melee_attack::player_calc_base_weapon_damage()
     if (weapon->base_type == OBJ_WEAPONS || item_is_staff( *weapon ))
         damage = property( *weapon, PWPN_DAMAGE );
 
-    // Quarterstaves can be wielded with a worn shield, but are much
-    // less effective.
+    // Staves can be wielded with a worn shield, but are much less
+    // effective.
     if (shield && weapon->base_type == OBJ_WEAPONS
-        && weapon->sub_type == WPN_QUARTERSTAFF
+        && weapon_skill(*weapon) == SK_STAVES
         && hands_reqd(*weapon, player_size()) == HANDS_HALF)
     {
         damage /= 2;
