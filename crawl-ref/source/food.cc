@@ -475,13 +475,14 @@ bool butchery(int which_corpse)
                              && you.species != SP_VAMPIRE);
 
     bool barehand_butcher = (transform_can_butcher_barehanded(transform)
-                             || you.has_claws()) && you.equip[EQ_GLOVES] == -1;
+                                 || you.has_claws())
+                             && !player_wearing_slot(EQ_GLOVES);
 
-    bool gloved_butcher   = (you.has_claws() && you.equip[EQ_GLOVES] != -1
+    bool gloved_butcher   = (you.has_claws() && player_wearing_slot(EQ_GLOVES)
                              && !item_cursed(you.inv[you.equip[EQ_GLOVES]]));
 
-    bool can_butcher      = teeth_butcher || barehand_butcher
-                             || (you.weapon() && can_cut_meat(*you.weapon()));
+    bool can_butcher      = (teeth_butcher || barehand_butcher
+                             || you.weapon() && can_cut_meat(*you.weapon()));
 
     if (!Options.easy_butcher && !can_butcher)
     {
