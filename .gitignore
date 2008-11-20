@@ -6,6 +6,12 @@ morgue
 *.orig
 *.rej
 *.swp
+core
+debug.map
+err.txt
+map.dump
+mapgen.log
+\#*
 TAGS
 
 # The Crawl executable.

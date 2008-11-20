@@ -52,28 +52,31 @@
      ORIENT = 268,
      PLACE = 269,
      CHANCE = 270,
-     MONS = 271,
-     ITEM = 272,
-     MARKER = 273,
-     COLOUR = 274,
-     PRELUDE = 275,
-     MAIN = 276,
-     VALIDATE = 277,
-     VETO = 278,
-     NSUBST = 279,
-     WELCOME = 280,
-     LFLAGS = 281,
-     BFLAGS = 282,
-     FLOORCOL = 283,
-     ROCKCOL = 284,
-     COMMA = 285,
-     INTEGER = 286,
-     CHARACTER = 287,
-     STRING = 288,
-     MAP_LINE = 289,
-     MONSTER_NAME = 290,
-     ITEM_INFO = 291,
-     LUA_LINE = 292
+     WEIGHT = 271,
+     MONS = 272,
+     ITEM = 273,
+     MARKER = 274,
+     COLOUR = 275,
+     PRELUDE = 276,
+     MAIN = 277,
+     VALIDATE = 278,
+     VETO = 279,
+     NSUBST = 280,
+     WELCOME = 281,
+     LFLAGS = 282,
+     BFLAGS = 283,
+     FLOORCOL = 284,
+     ROCKCOL = 285,
+     COMMA = 286,
+     COLON = 287,
+     PERC = 288,
+     INTEGER = 289,
+     CHARACTER = 290,
+     STRING = 291,
+     MAP_LINE = 292,
+     MONSTER_NAME = 293,
+     ITEM_INFO = 294,
+     LUA_LINE = 295
    };
 #endif
 /* Tokens.  */
@@ -90,28 +93,31 @@
 #define ORIENT 268
 #define PLACE 269
 #define CHANCE 270
-#define MONS 271
-#define ITEM 272
-#define MARKER 273
-#define COLOUR 274
-#define PRELUDE 275
-#define MAIN 276
-#define VALIDATE 277
-#define VETO 278
-#define NSUBST 279
-#define WELCOME 280
-#define LFLAGS 281
-#define BFLAGS 282
-#define FLOORCOL 283
-#define ROCKCOL 284
-#define COMMA 285
-#define INTEGER 286
-#define CHARACTER 287
-#define STRING 288
-#define MAP_LINE 289
-#define MONSTER_NAME 290
-#define ITEM_INFO 291
-#define LUA_LINE 292
+#define WEIGHT 271
+#define MONS 272
+#define ITEM 273
+#define MARKER 274
+#define COLOUR 275
+#define PRELUDE 276
+#define MAIN 277
+#define VALIDATE 278
+#define VETO 279
+#define NSUBST 280
+#define WELCOME 281
+#define LFLAGS 282
+#define BFLAGS 283
+#define FLOORCOL 284
+#define ROCKCOL 285
+#define COMMA 286
+#define COLON 287
+#define PERC 288
+#define INTEGER 289
+#define CHARACTER 290
+#define STRING 291
+#define MAP_LINE 292
+#define MONSTER_NAME 293
+#define ITEM_INFO 294
+#define LUA_LINE 295
 
 
 
@@ -125,7 +131,7 @@ typedef union YYSTYPE
     raw_range range;
 }
 /* Line 1489 of yacc.c.  */
-#line 129 "levcomp.tab.h"
+#line 135 "levcomp.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
