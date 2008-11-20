@@ -324,6 +324,14 @@ dngn_shallow_water DNGN_SHALLOW_WATER
 dngn_shallow_water
 dngn_shallow_water
 dngn_shallow_water
+dngn_deep_water_murky DNGN_DEEP_WATER_MURKY
+dngn_deep_water_murky
+dngn_deep_water_murky
+dngn_deep_water_murky
+dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
+dngn_shallow_water_murky
+dngn_shallow_water_murky
+dngn_shallow_water_murky
 
 wall/stone2_gray0 DNGN_STONE_WALL
 wall/stone2_gray1

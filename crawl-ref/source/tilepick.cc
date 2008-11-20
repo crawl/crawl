@@ -36,6 +36,12 @@ static inline bool _is_bazaar()
             && you.level_type_name == "bazaar");
 }
 
+static inline bool _is_sewers()
+{
+    return (you.level_type == LEVEL_PORTAL_VAULT
+            && you.level_type_name == "sewer");
+}
+
 static inline unsigned short _get_bazaar_special_colour()
 {
     return YELLOW;
@@ -2108,8 +2114,12 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_LAVA:
         return TILE_DNGN_LAVA;
     case DNGN_DEEP_WATER:
+        if (_is_sewers())
+            return TILE_DNGN_DEEP_WATER_MURKY;
         return TILE_DNGN_DEEP_WATER;
     case DNGN_SHALLOW_WATER:
+        if (_is_sewers())
+            return TILE_DNGN_SHALLOW_WATER_MURKY;
         return TILE_DNGN_SHALLOW_WATER;
     case DNGN_FLOOR:
     case DNGN_UNDISCOVERED_TRAP:
@@ -2449,7 +2459,8 @@ static inline void _finalize_tile(unsigned int *tile, bool is_special,
     }
     else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
     {
-        ASSERT(special_flv <= 3);
+        if (special_flv > 3)
+            special_flv = 3;
         (*tile) = orig + special_flv;
     }
     else if (orig < TILE_DNGN_MAX)
@@ -3808,11 +3819,15 @@ void tile_init_flavor()
                     else if (d_spc && r_spc)
                         env.tile_flv[x][y].special = SPECIAL_NW;
                     else if (u_spc)
+                    {
                         env.tile_flv[x][y].special = coinflip() ?
                             SPECIAL_W : SPECIAL_SW;
+                    }
                     else if (d_spc)
+                    {
                         env.tile_flv[x][y].special = coinflip() ?
                             SPECIAL_W : SPECIAL_NW;
+                    }
                     else
                         env.tile_flv[x][y].special = jitter(SPECIAL_W);
                 }

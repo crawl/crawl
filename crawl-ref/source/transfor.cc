@@ -203,10 +203,24 @@ bool remove_one_equip(equipment_type eq)
     return remove_equipment(r);
 }
 
+static bool _tran_may_meld_cursed(int transformation)
+{
+    switch (transformation)
+    {
+    case TRAN_SPIDER:
+    case TRAN_BAT: // Maybe this should depend on xp?
+    case TRAN_AIR:
+    case TRAN_ICE_BEAST:
+        return (false);
+    default:
+        return (true);
+    }
+}
+
 // Returns true if any piece of equipment that has to be removed is cursed.
 // Useful for keeping low level transformations from being too useful.
-static bool check_for_cursed_equipment(const std::set<equipment_type> &remove,
-                                       bool quiet = false)
+static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
+                                        const int trans, bool quiet = false)
 {
     std::set<equipment_type>::const_iterator iter;
     for (iter = remove.begin(); iter != remove.end(); ++iter)
@@ -215,8 +229,11 @@ static bool check_for_cursed_equipment(const std::set<equipment_type> &remove,
         if (you.equip[e] == -1)
             continue;
 
-        if (item_cursed( you.inv[ you.equip[e] ] ))
+        if (item_cursed( you.inv[ you.equip[e] ]))
         {
+            if (e != EQ_WEAPON && _tran_may_meld_cursed(trans))
+                continue;
+
             if (!quiet)
             {
                 mpr( "Your cursed equipment won't allow you to complete the "
@@ -228,7 +245,7 @@ static bool check_for_cursed_equipment(const std::set<equipment_type> &remove,
     }
 
     return (false);
-}                               // end check_for_cursed_equipment()
+}
 
 // Count the stat boosts yielded by all items to be removed, and count
 // future losses (caused by the transformation) like a current stat boost,
@@ -423,7 +440,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
     switch (which_trans)
     {
     case TRAN_SPIDER:           // also AC +3, ev +3, fast_run
-        if (check_for_cursed_equipment(rem_stuff, quiet))
+        if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
             return (false);
 
         // Check in case we'll auto-remove stat boosting equipment.
@@ -447,7 +464,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         return (true);
 
     case TRAN_BAT:
-        if (check_for_cursed_equipment(rem_stuff, quiet))
+        if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
             return (false);
 
         if (check_transformation_stat_loss(rem_stuff, quiet, 5)) // Str loss = 5
@@ -475,7 +492,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
        return (true);
 
     case TRAN_ICE_BEAST:  // also AC +3, cold +3, fire -1, pois +1
-        if (check_for_cursed_equipment(rem_stuff, quiet))
+        if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
             return (false);
 
         // Check in case we'll auto-remove stat boosting equipment.
@@ -502,7 +519,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         return (true);
 
     case TRAN_BLADE_HANDS:
-        if (check_for_cursed_equipment( rem_stuff ))
+        if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
             return (false);
 
         // Check in case we'll auto-remove stat boosting equipment.
@@ -520,7 +537,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         return (true);
 
     case TRAN_STATUE: // also AC +20, ev -5, elec +1, pois +1, neg +1, slow
-        if (check_for_cursed_equipment(rem_stuff, quiet))
+        if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
             return (false);
 
         if (check_transformation_stat_loss(rem_stuff, quiet, 0, 2)) // Dex loss = 2
@@ -556,7 +573,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         return (true);
 
     case TRAN_DRAGON:  // also AC +10, ev -3, cold -1, fire +2, pois +1, flight
-        if (check_for_cursed_equipment(rem_stuff, quiet))
+        if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
             return (false);
 
         // Check in case we'll auto-remove stat boosting equipment.
@@ -618,7 +635,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
             rem_stuff.insert(EQ_WEAPON);
         }
 
-        if (check_for_cursed_equipment(rem_stuff, quiet))
+        if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
             return (false);
 
         if (check_transformation_stat_loss(rem_stuff, quiet))
@@ -654,7 +671,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         return (true);
 
     case TRAN_AIR:
-        if (check_for_cursed_equipment( rem_stuff ))
+        if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
             return (false);
 
         // Check in case we'll auto-remove stat boosting equipment.
@@ -691,7 +708,7 @@ bool transform(int pow, transformation_type which_trans, bool quiet)
         return (true);
 
     case TRAN_SERPENT_OF_HELL:
-        if (check_for_cursed_equipment(rem_stuff, quiet))
+        if (_check_for_cursed_equipment(rem_stuff, which_trans, quiet))
             return (false);
 
         // Check in case we'll auto-remove stat boosting equipment.

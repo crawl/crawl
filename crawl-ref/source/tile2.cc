@@ -214,6 +214,12 @@ void WallIdx(int &wall, int &floor, int &special)
                     return;
             }
         }
+        else if (you.level_type_name == "sewer")
+        {
+            wall  = TILE_WALL_SLIME;
+            floor = TILE_FLOOR_SLIME;
+            return;
+        }
     }
 
     int depth        = player_branch_depth();
@@ -356,7 +362,7 @@ void TileLoadWall(bool wizard)
     WallIdx(wall_tile_idx, floor_tile_idx, special_tile_idx);
 
     // Number of flavors are generated automatically...
-    floor_flavors  = tile_dngn_count(floor_tile_idx);
+    floor_flavors = tile_dngn_count(floor_tile_idx);
     wall_flavors  = tile_dngn_count(wall_tile_idx);
 
     if (special_tile_idx != -1)

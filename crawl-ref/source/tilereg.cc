@@ -519,10 +519,20 @@ void DungeonRegion::draw_foreground(unsigned int bg, unsigned int fg, unsigned i
         {
             add_quad(TEX_DEFAULT, TILE_MASK_SHALLOW_WATER, x, y);
         }
+        else if (bg_idx >= TILE_DNGN_SHALLOW_WATER_MURKY
+                 && bg_idx <= TILE_DNGN_SHALLOW_WATER_MURKY+ 3)
+        {
+            add_quad(TEX_DEFAULT, TILE_MASK_SHALLOW_WATER_MURKY, x, y);
+        }
         else if (bg_idx >= TILE_DNGN_DEEP_WATER
                  && bg_idx <= TILE_DNGN_DEEP_WATER + 3)
         {
             add_quad(TEX_DEFAULT, TILE_MASK_DEEP_WATER, x, y);
+        }
+        else if (bg_idx >= TILE_DNGN_DEEP_WATER_MURKY
+                 && bg_idx <= TILE_DNGN_DEEP_WATER_MURKY + 3)
+        {
+            add_quad(TEX_DEFAULT, TILE_MASK_DEEP_WATER_MURKY, x, y);
         }
     }
 
@@ -1233,8 +1243,10 @@ void InventoryRegion::pack_verts()
             InventoryTile &item = m_items[i++];
 
             if (item.flag & TILEI_FLAG_FLOOR)
+            {
                 add_quad(TEX_DUNGEON, get_floor_tile_idx()
                          + m_flavour[i] % get_num_floor_flavors(), x, y);
+            }
             else
                 add_quad(TEX_DUNGEON, TILE_ITEM_SLOT, x, y);
         }
@@ -1263,8 +1275,13 @@ void InventoryRegion::pack_verts()
                 else
                     add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_EQUIP, x, y);
             }
-            else if (item.flag & TILEI_FLAG_CURSE)
-                add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_CURSED, x, y);
+            else
+            {
+                if (item.flag & TILEI_FLAG_MELDED)
+                    add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_MELDED, x, y);
+                if (item.flag & TILEI_FLAG_CURSE)
+                    add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_CURSED, x, y);
+            }
 
             // TODO enne - need better graphic here
             if (item.flag & TILEI_FLAG_SELECT)

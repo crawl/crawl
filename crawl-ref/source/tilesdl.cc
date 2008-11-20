@@ -1115,9 +1115,12 @@ void TilesFramework::update_inventory()
 
             for (int eq = 0; eq < NUM_EQUIP; eq++)
             {
-                if (you.equip[eq] == i && you_tran_can_wear(you.inv[i]))
+                if (you.equip[eq] == i)
                 {
-                    desc.flag |= TILEI_FLAG_EQUIP;
+                    if (you_tran_can_wear(you.inv[i]))
+                        desc.flag |= TILEI_FLAG_EQUIP;
+                    else
+                        desc.flag |= TILEI_FLAG_MELDED;
                     break;
                 }
             }

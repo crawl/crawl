@@ -44,6 +44,8 @@ dc-dngn/dngn_entrance UNSEEN_ENTRANCE
 %back none
 mask_deep_water MASK_DEEP_WATER
 mask_shallow_water MASK_SHALLOW_WATER
+mask_deep_water_murky MASK_DEEP_WATER_MURKY
+mask_shallow_water_murky MASK_SHALLOW_WATER_MURKY
 mask_lava MASK_LAVA
 cursor CURSOR
 cursor_red CURSOR2
@@ -81,6 +83,7 @@ num9 NUM9
 tried TRIED
 
 slot_eq ITEM_SLOT_EQUIP
+slot_melded ITEM_SLOT_MELDED
 slot_cursed ITEM_SLOT_CURSED
 slot_eq_cursed ITEM_SLOT_EQUIP_CURSED
 ray ITEM_SLOT_SELECTED
