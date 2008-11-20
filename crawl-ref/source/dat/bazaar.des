@@ -61,7 +61,7 @@ end
 dgn.set_lt_callback("bazaar", "fixup_bazaar")
 }}
 
-default-depth: D:10-27
+default-depth: 10-27
 
 ###############################################################################
 # Dummy entry
