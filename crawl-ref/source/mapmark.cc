@@ -170,7 +170,7 @@ map_lua_marker::map_lua_marker(const lua_datum &fn)
 {
     lua_stack_cleaner clean(dlua);
     fn.push();
-    if (!dlua.callfn("dgn_run_map", 1, 1))
+    if (fn.is_function() && !dlua.callfn("dgn_run_map", 1, 1))
         mprf(MSGCH_ERROR, "lua_marker exec error: %s", dlua.error.c_str());
     else
         check_register_table();

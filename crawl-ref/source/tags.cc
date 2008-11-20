@@ -852,6 +852,7 @@ static void tag_construct_you(writer &th)
     marshallLong(th, you.sage_bonus_degree);
     marshallByte(th, you.level_type);
     marshallString(th, you.level_type_name);
+    marshallString(th, you.level_type_tag);
     marshallByte(th, you.entry_cause);
     marshallByte(th, you.entry_cause_god);
     marshallByte(th, you.synch_time);
@@ -1012,6 +1013,8 @@ static void tag_construct_you(writer &th)
 
     // minorVersion 7 starts here
     marshallByte(th, you.friendly_pickup);
+
+    dlua.callfn("dgn_save_data", "u", &th);
 }
 
 static void tag_construct_you_items(writer &th)
@@ -1244,6 +1247,10 @@ static void tag_read_you(reader &th, char minorVersion)
     you.sage_bonus_degree = unmarshallLong(th);
     you.level_type      = static_cast<level_area_type>( unmarshallByte(th) );
     you.level_type_name = unmarshallString(th);
+
+    if (minorVersion >= TAG_MINOR_LUADGN)
+        you.level_type_tag = unmarshallString(th);
+
     you.entry_cause     = static_cast<entry_cause_type>( unmarshallByte(th) );
     you.entry_cause_god = static_cast<god_type>( unmarshallByte(th) );
     you.synch_time      = unmarshallByte(th);
@@ -1408,6 +1415,9 @@ static void tag_read_you(reader &th, char minorVersion)
 
     if (minorVersion >= TAG_MINOR_FPICKUP)
         you.friendly_pickup = unmarshallByte(th);
+
+    if (minorVersion >= TAG_MINOR_LUADGN)
+        dlua.callfn("dgn_load_data", "u", &th);
 }
 
 static void tag_read_you_items(reader &th, char minorVersion)

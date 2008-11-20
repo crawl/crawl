@@ -2837,8 +2837,10 @@ std::string shuffle_spec::describe() const
 std::string map_marker_spec::apply_transform(map_lines &map)
 {
     std::vector<coord_def> positions = map.find_glyph(key);
+
+    // Markers with no key are not an error.
     if (positions.empty())
-        return make_stringf("cant find key '%c' for marker", key);
+        return ("");
 
     for (int i = 0, size = positions.size(); i < size; ++i)
     {

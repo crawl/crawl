@@ -3069,10 +3069,9 @@ static std::string _level_description_string()
 
     if (you.level_type == LEVEL_PORTAL_VAULT)
     {
-         if (you.level_type_name == "bazaar")
-             return "- a Bazaar";
-
-         return "- a Portal Chamber";
+        if (!you.level_type_name.empty())
+            return "- " + article_a(upcase_first(you.level_type_name));
+        return "- a Portal Chamber";
     }
 
     // level_type == LEVEL_DUNGEON

@@ -215,6 +215,11 @@ struct coord_def
     {
         return (!x && !y);
     }
+
+    bool zero() const
+    {
+        return origin();
+    }
 };
 
 class actor
@@ -731,7 +736,13 @@ public:
   KillMaster* kills;
 
   level_area_type level_type;
+
+  // Human-readable name for portal vault. Will be set to level_type_tag
+  // if not explicitly set by the entry portal.
   std::string level_type_name;
+
+  // .des file tag for portal vault
+  std::string level_type_tag;
 
   entry_cause_type entry_cause;
   god_type         entry_cause_god;

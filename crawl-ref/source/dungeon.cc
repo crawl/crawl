@@ -2256,11 +2256,11 @@ static builder_rc_type _builder_by_type(int level_number, char level_type)
 
 static void _portal_vault_level(int level_number)
 {
-    // level_type_name may contain spaces for human readability, but the
+    // level_type_tag may contain spaces for human readability, but the
     // corresponding vault tag name cannot use spaces, so force spaces to
     // _ when searching for the tag.
     const std::string trimmed_name =
-        replace_all(trimmed_string(you.level_type_name), " ", "_");
+        replace_all(trimmed_string(you.level_type_tag), " ", "_");
 
     ASSERT(!trimmed_name.empty());
 
@@ -2290,7 +2290,7 @@ static void _portal_vault_level(int level_number)
             lowercase(name);
             name = replace_all(name, " ", "_");
 
-            vault = find_map_by_name(you.level_type_name + "_" + name);
+            vault = find_map_by_name(you.level_type_tag + "_" + name);
 
             if (vault == -1)
                 mprf(MSGCH_DIAGNOSTICS, "No such %s, try again.",
@@ -2324,7 +2324,7 @@ static void _portal_vault_level(int level_number)
     // TODO: Let portal vault map have arbitrary properties which can
     // be passed onto the callback.
     callback_map::const_iterator
-        i = level_type_post_callbacks.find(you.level_type_name);
+        i = level_type_post_callbacks.find(you.level_type_tag);
 
     if (i != level_type_post_callbacks.end())
         dlua.callfn(i->second.c_str(), 0, 0);
@@ -4549,32 +4549,35 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
     int num_runes = 0;
 
     dgn_region this_vault(place.pos, place.size);
-    // NOTE: assumes *no* previous item (I think) or monster (definitely)
-    // placement.
-    for ( rectangle_iterator ri(place.pos, place.pos + place.size - 1);
-          ri; ++ri )
+    if (!place.size.zero())
     {
-        if (vgrid[ri->y][ri->x] == ' ')
-            continue;
-
-        const dungeon_feature_type oldgrid = grd(*ri);
-        altar_count = _vault_grid( place, level_number, *ri, altar_count,
-                                   acq_item_class,
-                                   vgrid[ri->y][ri->x],
-                                   target_connections,
-                                   num_runes,
-                                   rune_subst );
-        if (!generating_level)
+        // NOTE: assumes *no* previous item (I think) or monster (definitely)
+        // placement.
+        for ( rectangle_iterator ri(place.pos, place.pos + place.size - 1);
+              ri; ++ri )
         {
-            // Have to link items each square at a time, or
-            // dungeon_terrain_changed could blow up.
-            link_items();
-            const dungeon_feature_type newgrid = grd(*ri);
-            grd(*ri) = oldgrid;
-            dungeon_terrain_changed(*ri, newgrid, true, true);
-            env.markers.remove_markers_at(*ri, MAT_ANY);
+            if (vgrid[ri->y][ri->x] == ' ')
+                continue;
+
+            const dungeon_feature_type oldgrid = grd(*ri);
+            altar_count = _vault_grid( place, level_number, *ri, altar_count,
+                                       acq_item_class,
+                                       vgrid[ri->y][ri->x],
+                                       target_connections,
+                                       num_runes,
+                                       rune_subst );
+            if (!generating_level)
+            {
+                // Have to link items each square at a time, or
+                // dungeon_terrain_changed could blow up.
+                link_items();
+                const dungeon_feature_type newgrid = grd(*ri);
+                grd(*ri) = oldgrid;
+                dungeon_terrain_changed(*ri, newgrid, true, true);
+                env.markers.remove_markers_at(*ri, MAT_ANY);
+            }
+            env.map(*ri).property |= FPROP_VAULT;
         }
-        env.map(*ri).property |= FPROP_VAULT;
     }
 
     place.map.map.apply_overlays(place.pos);
@@ -5815,7 +5818,7 @@ void place_spec_shop( int level_number,
         env.shop[i].greed = 15 + random2avg(19, 2) + random2(level_number);
 
     // Allow bargains in bazaars, prices randomly between 60% and 95%.
-    if (you.level_type == LEVEL_PORTAL_VAULT && you.level_type_name == "bazaar")
+    if (you.level_type == LEVEL_PORTAL_VAULT && you.level_type_tag == "bazaar")
     {
         // Need to calculate with factor as greed (unsigned char)
         // is capped at 255.
@@ -5858,7 +5861,7 @@ void place_spec_shop( int level_number,
 
         // Make bazaar items more valuable (up to double value).
         if (you.level_type == LEVEL_PORTAL_VAULT
-            && you.level_type_name == "bazaar")
+            && you.level_type_tag == "bazaar")
         {
             int help = random2(item_level) + 1;
             item_level += help;
@@ -7964,17 +7967,31 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             }
         }
 
+    // Last attempt: look for marker.
+    const coord_def pos(_dgn_find_feature_marker(stair_to_find));
+    if (in_bounds(pos))
+        return (pos);
+
+    // Still hosed? If we're in a portal vault, convert to a search for
+    // any stone arch.
+    if (you.level_type == LEVEL_PORTAL_VAULT
+        && stair_to_find != DNGN_STONE_ARCH)
+    {
+        return dgn_find_nearby_stair(DNGN_STONE_ARCH, base_pos, find_closest);
+    }
+
+    // FAIL
     ASSERT( found );
     return result;
 }
 
-void dgn_set_lt_callback(std::string level_type_name,
+void dgn_set_lt_callback(std::string level_type_tag,
                          std::string callback_name)
 {
-    ASSERT(!level_type_name.empty());
+    ASSERT(!level_type_tag.empty());
     ASSERT(!callback_name.empty());
 
-    level_type_post_callbacks[level_type_name] = callback_name;
+    level_type_post_callbacks[level_type_tag] = callback_name;
 }
 
 ////////////////////////////////////////////////////////////////////

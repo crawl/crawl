@@ -79,6 +79,12 @@ public:
     // Push the datum onto the Lua stack.
     void push() const;
 
+    bool is_table() const;
+    bool is_function() const;
+    bool is_number() const;
+    bool is_string() const;
+    bool is_udata() const;
+
 private:
     bool need_cleanup;
     CLua &lua;

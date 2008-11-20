@@ -2946,3 +2946,33 @@ void lua_datum::cleanup()
         lua_settable(lua, LUA_REGISTRYINDEX);
     }
 }
+
+#define LUA_CHECK_TYPE(check) \
+    lua_stack_cleaner clean(lua);                               \
+    push();                                                     \
+    return check(lua, -1)
+
+bool lua_datum::is_table() const
+{
+    LUA_CHECK_TYPE(lua_istable);
+}
+
+bool lua_datum::is_function() const
+{
+    LUA_CHECK_TYPE(lua_isfunction);
+}
+
+bool lua_datum::is_number() const
+{
+    LUA_CHECK_TYPE(lua_isnumber);
+}
+
+bool lua_datum::is_string() const
+{
+    LUA_CHECK_TYPE(lua_isstring);
+}
+
+bool lua_datum::is_udata() const
+{
+    LUA_CHECK_TYPE(lua_isuserdata);
+}

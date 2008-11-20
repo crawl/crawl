@@ -1356,10 +1356,27 @@ static void leaving_level_now()
     const std::string newtype =
         env.markers.property_at(you.pos(), MAT_ANY, "dst");
 
+    std::string newname =
+        env.markers.property_at(you.pos(), MAT_ANY, "dstname");
+
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
-    you.level_type_name = newtype;
+    // Don't clobber level_type_name for stairs in portal vaults.
+    if (you.level_type_name.empty() || !newname.empty()
+        || you.level_type != LEVEL_PORTAL_VAULT)
+    {
+        you.level_type_name = newname;
+    }
+
+    if (you.level_type_tag.empty() || !newtype.empty()
+        || you.level_type != LEVEL_PORTAL_VAULT)
+    {
+        you.level_type_tag  = newtype;
+    }
+
+    if (!you.level_type_tag.empty() && you.level_type_name.empty())
+        you.level_type_name = you.level_type_tag;
 }
 
 static void set_entry_cause(entry_cause_type default_cause,
@@ -1866,7 +1883,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     if (you.level_type != LEVEL_DUNGEON
         && (you.level_type != LEVEL_PANDEMONIUM
-            || stair_find != DNGN_TRANSIT_PANDEMONIUM))
+            || stair_find != DNGN_TRANSIT_PANDEMONIUM)
+        && (you.level_type != LEVEL_PORTAL_VAULT
+            || !grid_is_stone_stair(stair_find)))
     {
         you.level_type = LEVEL_DUNGEON;
     }

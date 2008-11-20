@@ -56,7 +56,8 @@ enum tag_minor_version
     TAG_MINOR_MPATROL  =  8,     // Added monster patrol points.
     TAG_MINOR_PATHFIND =  9,     // Added monster pathfinding.
     TAG_MINOR_TRTARGET = 10,     // Added travel target.
-    TAG_MINOR_VERSION  = 10      // Current version
+    TAG_MINOR_LUADGN   = 11,     // Allow dungeon Lua to persist data.
+    TAG_MINOR_VERSION            // Current version
 };
 
 

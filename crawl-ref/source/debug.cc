@@ -4728,7 +4728,7 @@ static bool mg_build_dungeon()
         you.where_are_you = lid.branch;
         you.level_type = lid.level_type;
         if (you.level_type == LEVEL_PORTAL_VAULT)
-            you.level_type_name = "bazaar";
+            you.level_type_tag = you.level_type_name = "bazaar";
         if (!mg_do_build_level(1))
             return (false);
     }

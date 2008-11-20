@@ -315,6 +315,40 @@ std::string dlua_chunk::get_chunk_prefix(const std::string &sorig) const
 #define MAPMARKER(ls, n, var) \
     map_marker *var = *(map_marker **) luaL_checkudata(ls, n, MAPMARK_METATABLE)
 
+static dungeon_feature_type _get_lua_feature(lua_State *ls, int idx)
+{
+    dungeon_feature_type feat = (dungeon_feature_type)0;
+    if (lua_isnumber(ls, idx))
+        feat = (dungeon_feature_type)luaL_checkint(ls, idx);
+    else if (lua_isstring(ls, idx))
+        feat = dungeon_feature_by_name(luaL_checkstring(ls, idx));
+    else
+        luaL_argerror(ls, idx, "Feature must be a string or a feature index.");
+
+    return feat;
+}
+
+static dungeon_feature_type _check_lua_feature(lua_State *ls, int idx)
+{
+    const dungeon_feature_type f = _get_lua_feature(ls, idx);
+    if (!f)
+        luaL_argerror(ls, idx, "Invalid dungeon feature");
+    return (f);
+}
+
+#define COORDS(c, p1, p2)                                \
+    coord_def c;                                          \
+    c.x = luaL_checkint(ls, p1);                          \
+    c.y = luaL_checkint(ls, p2);                          \
+    if (!in_bounds(c))                                    \
+        luaL_error(                                         \
+            ls,                                                 \
+            make_stringf("Point (%d,%d) is out of map bounds",  \
+                         c.x, c.y).c_str());
+
+#define FEAT(f, pos) \
+    dungeon_feature_type f = _check_lua_feature(ls, pos)
+
 void dgn_reset_default_depth()
 {
     lc_default_depths.clear();
@@ -786,8 +820,11 @@ static int dgn_item(lua_State *ls)
 static int dgn_lua_marker(lua_State *ls)
 {
     MAP(ls, 1, map);
-    if (lua_gettop(ls) != 3 || !lua_isstring(ls, 2) || !lua_isfunction(ls, 3))
-        luaL_error(ls, "Expected marker key and marker function.");
+    if (lua_gettop(ls) != 3 || !lua_isstring(ls, 2)
+        || (!lua_isfunction(ls, 3) && !lua_istable(ls, 3)))
+    {
+        luaL_error(ls, "Expected marker key and marker function/table.");
+    }
 
     CLua &lvm(CLua::get_vm(ls));
     std::string key = lua_tostring(ls, 2);
@@ -871,16 +908,12 @@ static int dgn_welcome(lua_State *ls)
 
 static int dgn_grid(lua_State *ls)
 {
-    const int x = luaL_checkint(ls, 1), y = luaL_checkint(ls, 2);
-    if (!map_bounds(x, y))
-        luaL_error(ls,
-                   make_stringf("(%d,%d) is out of bounds (%d-%d,%d-%d)",
-                                x, y,
-                                X_BOUND_1, X_BOUND_2,
-                                Y_BOUND_1, Y_BOUND_2).c_str());
-    if (lua_isnumber(ls, 3))
-        grd[x][y] = static_cast<dungeon_feature_type>(luaL_checkint(ls, 3));
-    PLUARET(number, grd[x][y]);
+    COORDS(c, 1, 2);
+
+    const dungeon_feature_type feat = _get_lua_feature(ls, 3);
+    if (feat)
+        grd(c) = feat;
+    PLUARET(number, grd(c));
 }
 
 static int dgn_max_bounds(lua_State *ls)
@@ -1715,19 +1748,6 @@ static int dgn_apply_area_cloud(lua_State *ls)
     return (0);
 }
 
-static dungeon_feature_type _get_lua_feature(lua_State *ls, int idx)
-{
-    dungeon_feature_type feat = (dungeon_feature_type)0;
-    if (lua_isnumber(ls, idx))
-        feat = (dungeon_feature_type)luaL_checkint(ls, idx);
-    else if (lua_isstring(ls, idx))
-        feat = dungeon_feature_by_name(luaL_checkstring(ls, idx));
-    else
-        luaL_argerror(ls, idx, "Feature must be a string or a feature index.");
-
-    return feat;
-}
-
 static void _clamp_to_bounds(int &x, int &y, bool edge_ok = false)
 {
     const int edge_offset = edge_ok ? 0 : 1;
@@ -1741,12 +1761,7 @@ static int dgn_fill_area(lua_State *ls)
     int y1 = luaL_checkint(ls, 2);
     int x2 = luaL_checkint(ls, 3);
     int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type feat = _get_lua_feature(ls, 5);
-    if (!feat)
-    {
-        luaL_argerror(ls, 5, "Invalid feature.");
-        return 0;
-    }
+    dungeon_feature_type feat = _check_lua_feature(ls, 5);
 
     _clamp_to_bounds(x1, y1);
     _clamp_to_bounds(x2, y2);
@@ -1768,18 +1783,8 @@ static int dgn_replace_area(lua_State *ls)
     int y1 = luaL_checkint(ls, 2);
     int x2 = luaL_checkint(ls, 3);
     int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type search = _get_lua_feature(ls, 5);
-    if (!search)
-    {
-        luaL_argerror(ls, 5, "Invalid feature.");
-        return 0;
-    }
-    dungeon_feature_type replace = _get_lua_feature(ls, 6);
-    if (!replace)
-    {
-        luaL_argerror(ls, 6, "Invalid feature.");
-        return 0;
-    }
+    dungeon_feature_type search = _check_lua_feature(ls, 5);
+    dungeon_feature_type replace = _check_lua_feature(ls, 6);
 
     // gracefully handle out of bound areas by truncating them.
     _clamp_to_bounds(x1, y1);
@@ -1804,12 +1809,7 @@ static int dgn_octa_room(lua_State *ls)
     int x2 = luaL_checkint(ls, 3);
     int y2 = luaL_checkint(ls, 4);
     int oblique = luaL_checkint(ls, 5);
-    dungeon_feature_type fill = _get_lua_feature(ls, 6);
-    if (!fill)
-    {
-        luaL_argerror(ls, 6, "Invalid feature.");
-        return 0;
-    }
+    dungeon_feature_type fill = _check_lua_feature(ls, 6);
 
     spec_room sr;
     sr.tl.x = x1;
@@ -1830,12 +1830,7 @@ static int dgn_make_pillars(lua_State *ls)
     int scale_x = luaL_checkint(ls, 4);
     int big_radius = luaL_checkint(ls, 5);
     int pillar_radius = luaL_checkint(ls, 6);
-    dungeon_feature_type fill = _get_lua_feature(ls, 8);
-    if (!fill)
-    {
-        luaL_argerror(ls, 8, "Invalid feature.");
-        return 0;
-    }
+    dungeon_feature_type fill = _check_lua_feature(ls, 8);
 
     // [enne] The underscore is for DJGPP's brain damage.
     const float _PI = 3.14159265f;
@@ -1862,12 +1857,7 @@ static int dgn_make_square(lua_State *ls)
     int center_x = luaL_checkint(ls, 1);
     int center_y = luaL_checkint(ls, 2);
     int radius = std::abs(luaL_checkint(ls, 3));
-    dungeon_feature_type fill = _get_lua_feature(ls, 4);
-    if (!fill)
-    {
-        luaL_argerror(ls, 4, "Invalid feature.");
-        return 0;
-    }
+    dungeon_feature_type fill = _check_lua_feature(ls, 4);
 
     for (int x = -radius; x <= radius; x++)
         for (int y = -radius; y <= radius; y++)
@@ -1881,12 +1871,7 @@ static int dgn_make_rounded_square(lua_State *ls)
     int center_x = luaL_checkint(ls, 1);
     int center_y = luaL_checkint(ls, 2);
     int radius = std::abs(luaL_checkint(ls, 3));
-    dungeon_feature_type fill = _get_lua_feature(ls, 4);
-    if (!fill)
-    {
-        luaL_argerror(ls, 4, "Invalid feature.");
-        return 0;
-    }
+    dungeon_feature_type fill = _check_lua_feature(ls, 4);
 
     for (int x = -radius; x <= radius; x++)
         for (int y = -radius; y <= radius; y++)
@@ -1901,12 +1886,7 @@ static int dgn_make_circle(lua_State *ls)
     int center_x = luaL_checkint(ls, 1);
     int center_y = luaL_checkint(ls, 2);
     int radius = std::abs(luaL_checkint(ls, 3));
-    dungeon_feature_type fill = _get_lua_feature(ls, 4);
-    if (!fill)
-    {
-        luaL_argerror(ls, 4, "Invalid feature.");
-        return 0;
-    }
+    dungeon_feature_type fill = _check_lua_feature(ls, 4);
 
     for (int x = -radius; x <= radius; x++)
         for (int y = -radius; y <= radius; y++)
@@ -1931,20 +1911,8 @@ static int dgn_replace_first(lua_State *ls)
     int y = luaL_checkint(ls, 2);
     int dx = luaL_checkint(ls, 3);
     int dy = luaL_checkint(ls, 4);
-    dungeon_feature_type search = _get_lua_feature(ls, 5);
-    if (!search)
-    {
-        luaL_argerror(ls, 5, "Invalid feature.");
-        lua_pushboolean(ls, false);
-        return 1;
-    }
-    dungeon_feature_type replace = _get_lua_feature(ls, 6);
-    if (!replace)
-    {
-        luaL_argerror(ls, 6, "Invalid feature.");
-        lua_pushboolean(ls, false);
-        return 1;
-    }
+    dungeon_feature_type search = _check_lua_feature(ls, 5);
+    dungeon_feature_type replace = _check_lua_feature(ls, 6);
 
     _clamp_to_bounds(x, y);
     bool found = false;
@@ -1967,18 +1935,8 @@ static int dgn_replace_first(lua_State *ls)
 
 static int dgn_replace_random(lua_State *ls)
 {
-    dungeon_feature_type search = _get_lua_feature(ls, 1);
-    if (!search)
-    {
-        luaL_argerror(ls, 1, "Invalid feature.");
-        return 0;
-    }
-    dungeon_feature_type replace = _get_lua_feature(ls, 2);
-    if (!replace)
-    {
-        luaL_argerror(ls, 2, "Invalid feature.");
-        return 0;
-    }
+    dungeon_feature_type search = _check_lua_feature(ls, 1);
+    dungeon_feature_type replace = _check_lua_feature(ls, 2);
 
     int x, y;
     do
@@ -2007,12 +1965,7 @@ static int dgn_smear_feature(lua_State *ls)
 {
     int iterations = luaL_checkint(ls, 1);
     bool boxy = lua_toboolean(ls, 2);
-    dungeon_feature_type feat = _get_lua_feature(ls, 3);
-    if (!feat)
-    {
-        luaL_argerror(ls, 3, "Invalid feature.");
-        return 0;
-    }
+    dungeon_feature_type feat = _check_lua_feature(ls, 3);
 
     int x1 = luaL_checkint(ls, 4);
     int y1 = luaL_checkint(ls, 5);
@@ -2033,13 +1986,7 @@ static int dgn_count_feature_in_box(lua_State *ls)
     int y1 = luaL_checkint(ls, 2);
     int x2 = luaL_checkint(ls, 3);
     int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type feat = _get_lua_feature(ls, 5);
-    if (!feat)
-    {
-        luaL_argerror(ls, 5, "Invalid feature.");
-        lua_pushnil(ls);
-        return 1;
-    }
+    dungeon_feature_type feat = _check_lua_feature(ls, 5);
 
     lua_pushnumber(ls, count_feature_in_box(x1, y1, x2, y2, feat));
     return 1;
@@ -2051,13 +1998,7 @@ static int dgn_count_antifeature_in_box(lua_State *ls)
     int y1 = luaL_checkint(ls, 2);
     int x2 = luaL_checkint(ls, 3);
     int y2 = luaL_checkint(ls, 4);
-    dungeon_feature_type feat = _get_lua_feature(ls, 5);
-    if (!feat)
-    {
-        luaL_argerror(ls, 5, "Invalid feature.");
-        lua_pushnil(ls);
-        return 1;
-    }
+    dungeon_feature_type feat = _check_lua_feature(ls, 5);
 
     lua_pushnumber(ls, count_antifeature_in_box(x1, y1, x2, y2, feat));
     return 1;
@@ -2067,13 +2008,7 @@ static int dgn_count_neighbours(lua_State *ls)
 {
     int x = luaL_checkint(ls, 1);
     int y = luaL_checkint(ls, 2);
-    dungeon_feature_type feat = _get_lua_feature(ls, 3);
-    if (!feat)
-    {
-        luaL_argerror(ls, 3, "Invalid feature.");
-        lua_pushnil(ls);
-        return 1;
-    }
+    dungeon_feature_type feat = _check_lua_feature(ls, 3);
 
     lua_pushnumber(ls, count_neighbours(x, y, feat));
     return 1;
@@ -2105,16 +2040,32 @@ static int dgn_fill_disconnected_zones(lua_State *ls)
     int to_x = luaL_checkint(ls, 3);
     int to_y = luaL_checkint(ls, 4);
 
-    dungeon_feature_type feat = _get_lua_feature(ls, 5);
-    if (!feat)
-    {
-        luaL_argerror(ls, 5, "Invalid feature.");
-        return 0;
-    }
+    dungeon_feature_type feat = _check_lua_feature(ls, 5);
 
     process_disconnected_zones(from_x, from_y, to_x, to_y, true, feat);
 
     return 0;
+}
+
+static int dgn_register_feature_marker(lua_State *ls)
+{
+    COORDS(c, 1, 2);
+    FEAT(feat, 3);
+    env.markers.add( new map_feature_marker(c, feat) );
+    return (0);
+}
+
+static int dgn_register_lua_marker(lua_State *ls)
+{
+    COORDS(c, 1, 2);
+    if (!lua_istable(ls, 3) && !lua_isfunction(ls, 3))
+        return luaL_argerror(ls, 3, "Expected marker table or function");
+
+    lua_datum table(CLua::get_vm(ls), 3, false);
+    map_marker *marker = new map_lua_marker(table);
+    marker->pos = c;
+    env.markers.add(marker);
+    return (0);
 }
 
 static int dgn_debug_dump_map(lua_State *ls)
@@ -2210,6 +2161,9 @@ static const struct luaL_reg dgn_lib[] =
     { "count_neighbours", dgn_count_neighbours },
     { "join_the_dots", dgn_join_the_dots },
     { "fill_disconnected_zones", dgn_fill_disconnected_zones },
+
+    { "register_feature_marker", dgn_register_feature_marker },
+    { "register_lua_marker", dgn_register_lua_marker },
 
     { "debug_dump_map", dgn_debug_dump_map },
 

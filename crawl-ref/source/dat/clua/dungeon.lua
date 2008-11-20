@@ -4,6 +4,19 @@
 ------------------------------------------------------------------------------
 
 dgn.GXM, dgn.GYM = dgn.max_bounds()
+dgn.f_rockwall = dgn.feature_number("rock_wall")
+dgn.f_floor = dgn.feature_number("floor")
+
+-- Table that will be saved in <foo>.sav.
+dgn.persist = { }
+
+function dgn_save_data(th)
+  lmark.marshall_table(th, dgn.persist)
+end
+
+function dgn_load_data(th)
+  dgn.persist = lmark.unmarshall_table(th) or { }
+end
 
 -- Wraps a map_def into a Lua environment (a table) such that
 -- functions run in the environment (with setfenv) can directly
@@ -143,5 +156,30 @@ function dgn.replace_feat(rmap)
         dgn.terrain_changed(x, y, repl)
       end
     end
+  end
+end
+
+----------------------------------------------------------------------
+-- Convenience functions for vaults.
+
+-- Returns a marker table that sets the destination tag for that square,
+-- usually used to set a destination tag for a portal or a stair in a
+-- portal vault.
+function portal_stair_dst(dst)
+  return one_way_stair { dst = dst }
+end
+
+-- Common initialisation for portal vaults.
+function portal_vault(e, tag)
+  if tag then
+    e.tags(tag)
+  end
+  e.orient("encompass")
+end
+
+-- Set all stone downstairs in this vault to go to the tag 'next'.
+function portal_next(e, next)
+  for _, feat in ipairs({ "]", ")", "}" }) do
+    e.lua_marker(feat, portal_stair_dst(next))
   end
 end
