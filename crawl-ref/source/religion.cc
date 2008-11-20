@@ -5694,9 +5694,9 @@ static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
     return (relative_piety_gain);
 }
 
-static int _donation_value(int value)
+static int _gold_to_donation(int gold)
 {
-    return ((value * log((double)value)) / MAX_PIETY);
+    return ((gold * log((double)gold)) / MAX_PIETY);
 }
 
 void offer_items()
@@ -5727,7 +5727,7 @@ void offer_items()
         if (!yesno("Do you wish to part with all of your money?", true, 'n'))
             return;
 
-        const int donation = _donation_value(you.gold);
+        const int donation = _gold_to_donation(you.gold);
 
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
         mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
@@ -5746,8 +5746,8 @@ void offer_items()
         }
 
         you.duration[DUR_PIETY_POOL] += donation;
-        if (you.duration[DUR_PIETY_POOL] > (MAX_PENANCE + MAX_PIETY) * 2)
-            you.duration[DUR_PIETY_POOL] = (MAX_PENANCE + MAX_PIETY) * 2;
+        if (you.duration[DUR_PIETY_POOL] > 500)
+            you.duration[DUR_PIETY_POOL] = 500;
 
         const int estimated_piety =
             std::min(MAX_PENANCE + MAX_PIETY,
