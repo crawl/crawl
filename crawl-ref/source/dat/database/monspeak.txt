@@ -126,6 +126,8 @@ SPELL:@The_monster@ intones a terrible prayer.
 
 VISUAL:@The_monster@ looks excited.
 
+VISUAL:@The_monster@ performs a strange gesture.
+
 @The_monster@ starts to sing a prayer.
 
 @The_monster@ says, "All sinners must die."
@@ -162,6 +164,8 @@ VISUAL:@The_monster@ grins evilly.
 @The_monster@ says, "A dead adventurer is a good adventurer."
 
 @The_monster@ says, "Coming here was your last mistake."
+
+@The_monster@ says, "The best offense is a good offense."
 
 @The_monster@ screams, "One false step and I'll kill you."
 
@@ -815,12 +819,12 @@ VISUAL:@The_monster@ grins evilly.
 @The_monster@ @wails@, "You will join me soon!"
 
 # Hamlet
-@The_monster@ wails, "To die, to sleep, no more."
-
-# The Mysterious Stranger
-@The_monster@ whispers, "It is all a dream - a grotesque and foolish dream."
+@The_monster@ @wails@, "To die, to sleep, no more."
 
 @The_monster@ @wails@, "Death is your only future!"
+
+# Sid Vicious I
+@The_monster@ @wails@, "There is no future for me!"
 
 @The_monster@ whispers, "They're coming for you..."
 
@@ -837,6 +841,14 @@ VISUAL:@The_monster@ grins evilly.
 @The_monster@ whispers, "The ORB doesn't exist."
 
 @The_monster@ whispers, "You will understand me better in a moment."
+
+# Sid Vicious II
+@The_monster@ whispers, "There is no future for you."
+
+# The Mysterious Stranger
+@The_monster@ whispers, "It is all a dream - a grotesque and foolish dream."
+
+@The_monster@ whispers, "Soon you will have time, lots of time..."
 ## END player ghost ##
 #######################################
 # Unique monsters
