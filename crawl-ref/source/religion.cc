@@ -5694,6 +5694,11 @@ static piety_gain_t _sacrifice_one_item_noncount( const item_def& item)
     return (relative_piety_gain);
 }
 
+static int _donation_value(int value)
+{
+    return ((value * log((double)value)) / MAX_PIETY);
+}
+
 void offer_items()
 {
     if (you.religion == GOD_NO_GOD)
@@ -5722,11 +5727,11 @@ void offer_items()
         if (!yesno("Do you wish to part with all of your money?", true, 'n'))
             return;
 
-        const int donation_value =
-            (int)(you.gold / MAX_PIETY * log((double)you.gold));
+        const int donation = _donation_value(you.gold);
+
 #if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
         mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
-             "increase of piety by %d.", you.gold, donation_value);
+             "increase of piety by %d.", you.gold, donation);
 #endif
         // Take a note of the donation.
         take_note(Note(NOTE_DONATE_MONEY, you.gold));
@@ -5734,18 +5739,18 @@ void offer_items()
         you.gold = 0;
         you.redraw_gold = true;
 
-        if (donation_value < 1)
+        if (donation < 1)
         {
             simple_god_message(" finds your generosity lacking.");
             return;
         }
 
-        you.duration[DUR_PIETY_POOL] += donation_value;
+        you.duration[DUR_PIETY_POOL] += donation;
         if (you.duration[DUR_PIETY_POOL] > (MAX_PENANCE + MAX_PIETY) * 2)
             you.duration[DUR_PIETY_POOL] = (MAX_PENANCE + MAX_PIETY) * 2;
 
         const int estimated_piety =
-            std::min(MAX_PIETY + MAX_PENANCE,
+            std::min(MAX_PENANCE + MAX_PIETY,
                      you.piety + you.duration[DUR_PIETY_POOL]);
 
         if (player_under_penance())
@@ -5769,10 +5774,7 @@ void offer_items()
             (estimated_piety >   5) ? "noncommittal"
                                     : "displeased";
 
-        if (donation_value >= 30 && you.piety <= 170)
-            result += "!";
-        else
-            result += ".";
+        result += (donation >= 30 && you.piety <= 170) ? "!" : ".";
 
         mpr(result.c_str());
 
