@@ -910,9 +910,12 @@ static int dgn_grid(lua_State *ls)
 {
     COORDS(c, 1, 2);
 
-    const dungeon_feature_type feat = _get_lua_feature(ls, 3);
-    if (feat)
-        grd(c) = feat;
+    if (!lua_isnone(ls, 3))
+    {
+        const dungeon_feature_type feat = _get_lua_feature(ls, 3);
+        if (feat)
+            grd(c) = feat;
+    }
     PLUARET(number, grd(c));
 }
 
