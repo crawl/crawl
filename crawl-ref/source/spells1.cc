@@ -677,8 +677,8 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
     else if (holiness == MH_DEMONIC)
         divisor += 2;
 
-    const int random_factor = random2(you.skills[SK_INVOCATIONS] * healed /
-                                      divisor);
+    const int random_factor = random2((you.skills[SK_INVOCATIONS] + 1) *
+                                      healed / divisor);
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
