@@ -1,0 +1,53 @@
+# stashFile in save_game() never gets freed since the process exits
+# before save_game() returns.  Wildcards at start and end of function
+# names since they get mangled by the C++ compiler and mecheck goes
+# by the mangled names.
+#
+# Also, the first "obj:*" is for the new() operator, which gets mangled
+# in the valgrind library, and might be mangled differently in different
+# version of valgrind.
+#
+# NOTE: The number of copies of "obj:*libstdc++*" might need to be changed
+# for different versions of the C++ library.
+{
+	save_game_savedir_leak
+	Memcheck:Leak
+	obj:*
+	obj:*libstdc++*
+	obj:*libstdc++*
+	obj:*libstdc++*
+	obj:*libstdc++*
+	obj:*libstdc++*
+	fun:*get_savedir_filename*
+	fun:*save_game*
+}
+
+# The error variable in end() is stuff.cc never gets freed since
+# exit() is called before end() returns.  See above suppression for more
+# notes
+{
+	end_error_leak
+	Memcheck:Leak
+	obj:*
+	obj:*libstdc++*
+	obj:*libstdc++*
+	obj:*libstdc++*
+	obj:*libstdc++*
+	obj:*libstdc++*
+	fun:*end*
+}
+
+# The Berkeley DB code sometimes writes the contents of an unitialized buffer
+# when the save/db/ and save/des/ files are being generated.
+{
+	berkeley_db_write
+	Memcheck:Param
+	pwrite64(buf)
+	fun:pwrite64
+	fun:__os_io
+	fun:__memp_pgwrite
+	fun:__memp_bhwrite
+	fun:__memp_sync_int
+	fun:__memp_fsync
+	fun:__db_sync
+}
