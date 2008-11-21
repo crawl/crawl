@@ -1962,7 +1962,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
             true, true, _cmdhelp_textfilter);
 
     unsigned ch;
-    unsigned short colour;
+    // Initialize colour to quiet some Valgrind warnings
+    unsigned short colour = BLACK;
     std::string item_types =
         "<h>Item types (and common commands)\n"
         "<cyan>)</cyan> : hand weapons (<w>w</w>ield)\n"
