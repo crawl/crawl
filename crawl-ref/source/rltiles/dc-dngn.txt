@@ -375,7 +375,21 @@ rock_stairs_down DNGN_ROCK_STAIRS_DOWN
 stone_stairs_up DNGN_STONE_STAIRS_UP
 rock_stairs_up DNGN_ROCK_STAIRS_UP
 
-dngn_enter_shop DNGN_ENTER_SHOP
+##dngn_enter_shop DNGN_ENTER_SHOP
+%shrink 0
+%back dngn_enter_shop
+shops/shop_general SHOP_GENERAL
+shops/shop_weapon SHOP_WEAPONS
+shops/shop_armour SHOP_ARMOUR
+shops/shop_food SHOP_FOOD
+shops/shop_books SHOP_BOOKS
+shops/shop_scrolls SHOP_SCROLLS
+shops/shop_wands SHOP_WANDS
+shops/shop_jewellery SHOP_JEWELLERY
+shops/shop_potions SHOP_POTIONS
+%back none
+%shrink 1
+
 dngn_enter_labyrinth DNGN_ENTER_LABYRINTH
 dngn_enter_dis DNGN_ENTER_DIS
 dngn_enter_gehenna DNGN_ENTER_GEHENNA

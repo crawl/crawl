@@ -20,6 +20,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
+#include "shopping.h"
 #include "spells3.h" // for the halo
 #include "stuff.h"
 #include "terrain.h"
@@ -2081,6 +2082,38 @@ static int _tileidx_trap(trap_type type)
     }
 }
 
+static int _tileidx_shop(coord_def where)
+{
+    const shop_struct *shop = get_shop(where);
+
+    switch (shop->type)
+    {
+        case SHOP_WEAPON:
+        case SHOP_WEAPON_ANTIQUE:
+            return TILE_SHOP_WEAPONS;
+        case SHOP_ARMOUR:
+        case SHOP_ARMOUR_ANTIQUE:
+            return TILE_SHOP_ARMOUR;
+        case SHOP_JEWELLERY:
+            return TILE_SHOP_JEWELLERY;
+        case SHOP_WAND:
+            return TILE_SHOP_WANDS;
+        case SHOP_FOOD:
+            return TILE_SHOP_FOOD;
+        case SHOP_BOOK:
+            return TILE_SHOP_BOOKS;
+        case SHOP_SCROLL:
+            return TILE_SHOP_SCROLLS;
+        case SHOP_DISTILLERY:
+            return TILE_SHOP_POTIONS;
+        case SHOP_GENERAL:
+        case SHOP_GENERAL_ANTIQUE:
+            return TILE_SHOP_GENERAL;
+        default:
+            return TILE_ERROR;
+    }
+}
+
 int tileidx_feature(int object, int gx, int gy)
 {
     switch (object)
@@ -2114,12 +2147,18 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_LAVA:
         return TILE_DNGN_LAVA;
     case DNGN_DEEP_WATER:
-        if (_is_sewers())
+        if (_is_sewers() || env.grid_colours[gx][gy] == GREEN
+            || env.grid_colours[gx][gy] == LIGHTGREEN)
+        {
             return TILE_DNGN_DEEP_WATER_MURKY;
+        }
         return TILE_DNGN_DEEP_WATER;
     case DNGN_SHALLOW_WATER:
-        if (_is_sewers())
+        if (_is_sewers() || env.grid_colours[gx][gy] == GREEN
+            || env.grid_colours[gx][gy] == LIGHTGREEN)
+        {
             return TILE_DNGN_SHALLOW_WATER_MURKY;
+        }
         return TILE_DNGN_SHALLOW_WATER;
     case DNGN_FLOOR:
     case DNGN_UNDISCOVERED_TRAP:
@@ -2133,7 +2172,7 @@ int tileidx_feature(int object, int gx, int gy)
     case DNGN_TRAP_NATURAL:
         return _tileidx_trap(get_trap_type(coord_def(gx, gy)));
     case DNGN_ENTER_SHOP:
-        return TILE_DNGN_ENTER_SHOP;
+        return _tileidx_shop(coord_def(gx,gy));
     case DNGN_ENTER_LABYRINTH:
         return TILE_DNGN_ENTER_LABYRINTH;
     case DNGN_STONE_STAIRS_DOWN_I:
