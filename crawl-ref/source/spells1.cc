@@ -706,7 +706,7 @@ static int _healing_spell(int healed, const coord_def where = coord_def(0,0))
                                       you.religion == GOD_ELYVILON ?
                                           TARG_ANY : TARG_FRIEND,
                                       LOS_RADIUS,
-                                      true, true, true, "Heal whom?");
+                                      false, true, true, "Heal whom?");
     }
     else
     {
