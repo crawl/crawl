@@ -2664,8 +2664,6 @@ bool ms_quick_get_away( const monsters *mon /*unused*/, spell_type monspell )
 bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 {
     bool ret = false;
-    int intel, est_magic_resist, power, diff;
-
     const actor *foe = mon->get_foe();
 
     // Keep friendly summoners from spamming summons constantly.
@@ -2691,7 +2689,8 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     switch (monspell)
     {
     case SPELL_BRAIN_FEED:
-        return (foe != &you);
+        ret = (foe != &you);
+        break;
 
     case SPELL_BOLT_OF_DRAINING:
     case SPELL_MIASMA:
@@ -2699,35 +2698,38 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     case SPELL_SYMBOL_OF_TORMENT:
     {
         if (!foe)
-            return (true);
+        {
+            ret = true;
+            break;
+        }
 
         // Check if the foe *appears* to be immune to negative energy.
         // We can't just use foe->res_negative_energy() because
         // that'll mean monsters can just "know" the player is fully
         // life-protected if he has triple life protection.
         const mon_holy_type holiness = foe->holiness();
-        return ((holiness == MH_UNDEAD
-                 // If the claimed undead is the player, it must be
-                 // a non-vampire, or a bloodless vampire.
-                 && (foe != &you || you.is_undead != US_SEMI_UNDEAD ||
-                     you.hunger_state == HS_STARVING))
-                // Demons, but not demonspawn - demonspawn will show
-                // up as demonic for purposes of things like holy
-                // wrath, but are still (usually) susceptible to
-                // torment and draining.
-                || (holiness == MH_DEMONIC && foe != &you)
-                || holiness == MH_NONLIVING || holiness == MH_PLANT);
+        ret = ((holiness == MH_UNDEAD
+                  // If the claimed undead is the player, it must be
+                  // a non-vampire, or a bloodless vampire.
+                  && (foe != &you || you.is_undead != US_SEMI_UNDEAD ||
+                      you.hunger_state == HS_STARVING))
+                  // Demons, but not demonspawn - demonspawn will show
+                  // up as demonic for purposes of things like holy
+                  // wrath, but are still (usually) susceptible to
+                  // torment and draining.
+                  || (holiness == MH_DEMONIC && foe != &you)
+                  || holiness == MH_NONLIVING || holiness == MH_PLANT);
+        break;
     }
 
     case SPELL_DISPEL_UNDEAD:
         // [ds] How is dispel undead intended to interact with vampires?
-        return (!foe || foe->holiness() != MH_UNDEAD);
+        ret = (!foe || foe->holiness() != MH_UNDEAD);
+        break;
 
     case SPELL_BACKLIGHT:
-    {
         ret = (!foe || foe->backlit());
         break;
-    }
 
     case SPELL_BERSERKER_RAGE:
         if (!mon->needs_berserk(false))
@@ -2763,13 +2765,13 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         // Monsters aren't smart enough to know when to cancel teleport.
         if (mon->foe == MHITYOU)
         {
-            if (you.duration[DUR_TELEPORT])
-                return (true);
+            ret = you.duration[DUR_TELEPORT];
+            break;
         }
         else if (mon->foe != MHITNOT)
         {
-            if (menv[mon->foe].has_ench(ENCH_TP))
-                return (true);
+            ret = (menv[mon->foe].has_ench(ENCH_TP));
+            break;
         }
         // intentional fall-through
 
@@ -2780,21 +2782,31 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     case SPELL_DISINTEGRATE:
     case SPELL_PARALYSE:
     case SPELL_SLEEP:
+    {
         if (monspell == SPELL_SLEEP && (!foe || foe->asleep()))
-            return (true);
+        {
+            ret = true;
+            break;
+        }
 
         // Occasionally we don't estimate... just fire and see.
         if (one_chance_in(5))
-            return (false);
+        {
+            ret = false;
+            break;
+        }
 
         // Only intelligent monsters estimate.
-        intel = mons_intel(mon);
-        if (intel != I_NORMAL && intel != I_HIGH)
-            return (false);
+        int intel = mons_intel(mon);
+        if (intel < I_NORMAL)
+        {
+            ret = false;
+            break;
+        }
 
         // We'll estimate the target's resistance to magic, by first getting
         // the actual value and then randomizing it.
-        est_magic_resist = (mon->foe == MHITNOT) ? 10000 : 0;
+        int est_magic_resist = (mon->foe == MHITNOT) ? 10000 : 0;
 
         if (mon->foe != MHITNOT)
         {
@@ -2810,20 +2822,20 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
                 est_magic_resist += random2(30) - 15;
         }
 
-        power = 12 * mon->hit_dice * (monspell == SPELL_PAIN ? 2 : 1);
-        power = stepdown_value( power, 30, 40, 100, 120 );
+        int power = 12 * mon->hit_dice * (monspell == SPELL_PAIN ? 2 : 1);
+        power = stepdown_value(power, 30, 40, 100, 120);
 
         // Determine the amount of chance allowed by the benefit from
         // the spell.  The estimated difficulty is the probability
         // of rolling over 100 + diff on 2d100. -- bwr
-        diff = (monspell == SPELL_PAIN
-                || monspell == SPELL_SLOW
-                || monspell == SPELL_CONFUSE) ? 0 : 50;
+        int diff = (monspell == SPELL_PAIN
+                    || monspell == SPELL_SLOW
+                    || monspell == SPELL_CONFUSE) ? 0 : 50;
 
         if (est_magic_resist - power > diff)
             ret = true;
-
         break;
+    }
 
     case SPELL_NO_SPELL:
         ret = true;

@@ -5376,14 +5376,6 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 if (spell_cast == SPELL_NO_SPELL)
                     continue;
 
-                // Friendly monsters don't use polymorph, for fear of harming
-                // the player.
-                if (spell_cast == SPELL_POLYMORPH_OTHER
-                    && mons_friendly(monster))
-                {
-                    continue;
-                }
-
                 // Setup the spell.
                 setup_mons_cast(monster, beem, spell_cast);
 
@@ -5465,6 +5457,11 @@ static bool _handle_spell(monsters *monster, bolt &beem)
 
         // Should the monster *still* not have a spell, well, too bad {dlb}:
         if (spell_cast == SPELL_NO_SPELL)
+            return (false);
+
+        // Friendly monsters don't use polymorph other, for fear of harming
+        // the player.
+        if (spell_cast == SPELL_POLYMORPH_OTHER && mons_friendly(monster))
             return (false);
 
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
