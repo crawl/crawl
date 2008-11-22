@@ -3673,9 +3673,9 @@ static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
         if (mons_is_stationary(&menv[mgrd(pos[i])]))
             continue;
 
-        // Hostile monsters of animal-like intelligence only move aside
-        // for monsters of the same type.
-        if (mons_intel(mon) < I_NORMAL && !mons_wont_attack(mon)
+        // Hostile monsters of normal intelligence only move aside for
+        // monsters of the same type.
+        if (mons_intel(mon) <= I_NORMAL && !mons_wont_attack(mon)
             && mons_genus(mon->type) != mons_genus((&menv[mgrd(pos[i])])->type))
         {
             continue;
@@ -3868,8 +3868,8 @@ static void _handle_movement(monsters *monster)
             if (!good_move[0][1] && !good_move[2][1]
                 && (good_move[0][mmov.y+1] || good_move[2][mmov.y+1])
                 && (_allied_monster_at(monster, coord_def(-1, -mmov.y),
-                                      coord_def(0, -mmov.y),
-                                      coord_def(1, -mmov.y))
+                                       coord_def(0, -mmov.y),
+                                       coord_def(1, -mmov.y))
                     || mons_intel(monster) >= I_NORMAL
                        && !mons_wont_attack(monster)
                        && _ranged_allied_monster_in_dir(monster,
@@ -3879,6 +3879,34 @@ static void _handle_movement(monsters *monster)
                     mmov.x = -1;
                 if (good_move[2][mmov.y+1] && (mmov.x == 0 || coinflip()))
                     mmov.x = 1;
+            }
+        }
+        else // We're moving diagonally.
+        {
+            if (good_move[mmov.x+1][1])
+            {
+                if (!good_move[1][mmov.y+1]
+                    && (_allied_monster_at(monster, coord_def(-mmov.x, -1),
+                                           coord_def(-mmov.x, 0),
+                                           coord_def(-mmov.x, 1))
+                        || mons_intel(monster) >= I_NORMAL
+                           && !mons_wont_attack(monster)
+                           && _ranged_allied_monster_in_dir(monster,
+                                                coord_def(-mmov.x, -mmov.y))))
+                {
+                    mmov.y = 0;
+                }
+            }
+            else if (good_move[1][mmov.y+1]
+                     && (_allied_monster_at(monster, coord_def(-1, -mmov.y),
+                                           coord_def(0, -mmov.x),
+                                           coord_def(1, -mmov.x))
+                         || mons_intel(monster) >= I_NORMAL
+                            && !mons_wont_attack(monster)
+                            && _ranged_allied_monster_in_dir(monster,
+                                                coord_def(-mmov.x, -mmov.y))))
+            {
+                mmov.x = 0;
             }
         }
     }

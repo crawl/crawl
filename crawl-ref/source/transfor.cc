@@ -207,10 +207,14 @@ static bool _tran_may_meld_cursed(int transformation)
 {
     switch (transformation)
     {
+    case TRAN_BAT:
+        // Vampires of certain Xp may transform into bats even
+        // with cursed gear.
+        if (you.species == SP_VAMPIRE && you.experience_level >= 10)
+            return (true);
+        // intentional fall-through
     case TRAN_SPIDER:
-    case TRAN_BAT: // Maybe this should depend on xp?
     case TRAN_AIR:
-    case TRAN_ICE_BEAST:
         return (false);
     default:
         return (true);
