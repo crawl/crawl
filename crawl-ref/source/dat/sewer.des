@@ -14,16 +14,28 @@
 ##############################################################################
 
 {{
-
 function sewer_portal(e)
   e.marker([[O = lua:one_way_stair { desc = "A glowing drain",
                                      dst = "sewer", floor = "stone_arch" }]])
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightgreen")
 end
-
 }}
 
+# Use the following line in destination maps after all SUBST's have taken place
+# : sewer_colours(_G)
+# Note that the function also defines < to be the exit portal.
+{{
+function sewer_colours(e)
+  e.kfeat("< = exit_portal_vault")
+  e.colour("< = darkgrey")
+  e.colour("x = darkgrey")
+  e.colour("c = darkgrey")
+  e.colour(". = lightgrey")
+  e.colour("w = green")
+  e.colour("W = lightgreen")
+end
+}}
 
 # Basic sewer entries ##########################################
 NAME:   portal_sewer_entry_a
@@ -91,31 +103,26 @@ ENDMAP
 
 # The actual portal vaults #####################################
 
+############################################################################
 # Sewer with a small kobold camp, potion treasure and Ely/Zin altar.
-# The easiest one, so most probable (5 out of 9 sewers).
+# The easiest one, so most probable (5 out of 10 sewers).
+#
 NAME:     sewer_kobolds
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
-WEIGHT:   40
+WEIGHT:   50
 ORIENT:   encompass
-KFEAT:    < = exit_portal_vault
-COLOUR:   < = darkgrey
-ROCKCOL:  darkgrey
-FLOORCOL: lightgrey
 : if crawl.random2(12) == 0 then
 SUBST:    C=c, X=w, V=W, v=w, *=f
 : else
 SUBST:    X=c, C=x, V=x, v=x, *=x
 : end
 SUBST:    ' = .W
-COLOUR:   c = darkgrey
-COLOUR:   w = green
-COLOUR:   W = lightgreen
-COLOUR:   y = blue
-COLOUR:   Y = lightblue
+SUBST:    ? = .x
+: sewer_colours(_G)
 # some fresh water for the kobolds
 KFEAT:    Y = deep_water
 KFEAT:    y = shallow_water
-KFEAT:    C = altar_zin / altar_elyvilon w:30
+KFEAT:    E = altar_zin / altar_elyvilon w:30
 KMONS:    q = big fish
 KFEAT:    q = w
 COLOUR:   q = green
@@ -128,7 +135,6 @@ ITEM:     potion of restore abilities w:7 / potion of cure mutation / \
           potion of gain intelligence / potion of gain strength / \
           potion of gain dexterity
 MONS:     rat / grey rat / green rat w:2 / nothing w:3
-SUBST:    ? = .x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxcccCCCCCCCCCCCCxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -160,7 +166,7 @@ xxxxxxc.WwwwW.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxc.'WWW'.cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxc.......cxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxcccc1ccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xefCxxxx.122...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xefExxxx.122...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xdexxxx.2232.y..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx?.?xxx....yYy.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx?.xxx?....y.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -169,20 +175,17 @@ xxxx???.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+############################################################################
 # This one can be tough; you'll be in the water when the giant frogs notice you.
-# More rare (3 out of 9 sewers are this).
+# More rare (3 out of 10 sewers are this).
 # Loot are good items, and often a scroll of blinking.
+#
 NAME:     sewer_island
 TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
-KFEAT:    < = exit_portal_vault
-COLOUR:   < = darkgrey
-ROCKCOL:  darkgrey
-COLOUR:   c = darkgrey
-FLOORCOL: lightgrey
+WEIGHT:   30
 SUBST:    - = W..
-COLOUR:   w = green
-COLOUR:   W = lightgreen
+: sewer_colours(_G)
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
 MONS:     giant newt / small snake w:5 / \
@@ -224,17 +227,13 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcccccccxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# The hardest one, and most rare (1 out of 9). Loot is good items.
+############################################################################
+# The hardest one, and most rare (1 out of 10). Loot is good items.
+#
 NAME:     sewer_lizard
 TAGS:     sewer no_item_gen no_monster_gen
 ORIENT:   encompass
-KFEAT:    < = exit_portal_vault
-COLOUR:   < = darkgrey
-ROCKCOL:  darkgrey
-COLOUR:   c = darkgrey
-FLOORCOL: lightgrey
-COLOUR:   w = green
-COLOUR:   W = lightgreen
+: sewer_colours(_G)
 MONS:     giant lizard
 ITEM:     potion of berserk rage / potion of speed w:5
 MONS:     giant bat / giant mosquito w:2
@@ -265,4 +264,72 @@ xxxxc.cxxxxxxxxxxxxxxxxxx
 xxxxcdcxxxxxxxxxxxxxxxxxx
 xxxxcccxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+############################################################################
+# If you can get to the middle, there are four doors to try; two will give you
+# monsters, two will yield you treasure. As rare as the last one (1/10).
+#
+NAME:     sewer_fruit_machine
+TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
+ORIENT:   encompass
+SHUFFLE:  QEDS
+SUBST:    Q = 3, E = 4, D : fgh, S = $
+NSUBST:   f = 1:f / *:'
+NSUBST:   g = 2:g / *:'
+NSUBST:   h = 3:h / *:'
+NSUBST:   w = 4:" / *:w
+KFEAT:    " = w
+KMONS:    " = big fish
+COLOUR:   " = green
+: sewer_colours(_G)
+MONS:     giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
+          snake w:1 / giant mosquito w:2
+MONS:     giant bat / giant mosquito w:2 / nothing w:2
+MONS:     patrolling jackal
+MONS:     worm / nothing w:3
+MONS:     ooze / nothing w:2
+# chances are good you'll find something to cross the deep water
+ITEM:     scroll of fear / scroll of fog / scroll of teleportation w:50 / \
+          scroll of blinking / scroll of identify / nothing 
+ITEM:     potion of levitation w:50 / potion of invisibility / \
+          potion of might / nothing
+# possibly rather generous loot, if you get to the center
+ITEM:     scroll of vulnerability / scroll of identify / wizard hat / \
+          potion of magic / potion of gain intelligence / potion of resistance
+ITEM:     scroll of identify / scroll of recharging / potion of invisibility / \
+          pair of gloves w:5 / pair of boots w:5 / nothing
+ITEM:     scroll of identify / scroll of recharging / \
+          potion of resistance / potion of might / potion of berserk rage / \
+          buckler / nothing
+KITEM:    ' = scroll of paper w:50 / scroll of random uselessness w:30 / \
+              scroll of identify / scroll of teleportation / \
+              potion of confusion w:50 / potion of paralysis w:50 / \
+              potion of mutation / potion of levitation / \
+              wizard hat / buckler / pair of gloves w:5 / pair of boots w:5
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xwwwwwwwwwwwWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWwwwwwwwwwwwxxx
+xwwwwwwwwwww.wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.wwwwwwwwwwwxxx
+xwwwwwwwwwwwWwWWWWWWWWWWWWWWWWWWWWWWWWW.WWWWWWWwWwwwwwwwwwwwxxx
+xxxxxxxxxxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
+xxxxxxxxxxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxx.1.xxx
+xxxxxxxxxxxxWwWxxxxQQQQxxxDDDDxxxxxxxxWwWxxxxxWwWxxxx1xx....1xx
+xxxxxxxxxxxxWwWxxxxx++xxxxx++xxxxxxxxxWwWxxxxxWwW..W..........x
+xxxxxxxxxxxxWwWW.W..............>xxxxxWwWxxxxxWwWWW.1....A...1x
+xxxxxxxxxxxxWwWWW...............>xxxxxWwWxxxxxWwWW..xxxx......x
+xxxxxxxxxxxxWwWxxxxx++xxxxx++xxxxxxxxxWwWxxxxxWwWxxxxxxxxx.>xxx
+xxxxxxxxxxxxWwWxxxxEEEExxxSSSSxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
+xxxxxxxxxxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
+xxxx.d..dxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxx.exxx
+xx.....d.dxxWwWWWWWWWWWWWWWWWWWWWWWWWWWwWxxxxxWwWxxxxxxxx.22exx
+x..2...dxxxxWw.wwwwwwwwwwwwwwwwwwwwwww.wWxxxxxWwWWWWWWWWWW.2.ex
+xx2222xxxxxxWwWWWWWWWWWWWWWWWWWWWWWWWWWwWxxxxxWw.wwwwwwwwWW.2.x
+xxWW2...xxxxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWWWWWWWWWW.W..x
+xxxxWW....xxWwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxx..exx
+xxxxxxW.....WwWxxxxxxxxxxxxxxxxxxxxxxxWwWxxxxxWwWxxxxxxxxxxxxxx
+xwwwwwwWWWWwwwWWWWWWWWWWWWWWWWWWWWWWWWW.WWWWWWWwwwwwwwwwwwwwxxx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
+xwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
