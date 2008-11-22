@@ -5688,17 +5688,45 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     if (me.ench != ENCH_SUBMERGED)
         return (true);
 
-    if (mon->pos() != you.pos())
+    int midx = monster_index(mon);
+
+    if (mgrd(mon->pos()) == NON_MONSTER)
+        mgrd(mon->pos()) = midx;
+
+    if (mon->pos() != you.pos() && midx == mgrd(mon->pos()))
         return (true);
 
-    // Monster un-submerging while under player.  Try to move to an
-    // adjacent square in which the monster could have been submerged
-    // and have it unsubmerge from there.
+    if (midx != mgrd(mon->pos()))
+    {
+        monsters* other_mon = &menv[mgrd(mon->pos())];
+
+        if (other_mon->type == -1 || other_mon->type == NON_MONSTER)
+        {
+            mgrd(mon->pos()) = midx;
+
+            mprf(MSGCH_ERROR, "mgrd(%d,%d) points to dead monster, even "
+                 "though it contains submerged monster %s (see bug 2293518)",
+                 mon->pos().x, mon->pos().y,
+                 mon->name(DESC_PLAIN, true).c_str());
+
+            if (mon->pos() != you.pos())
+                return (true);
+        }
+        else
+            mprf(MSGCH_ERROR, "%s tried to unsubmerge while on same square as "
+                 "%s (see bug 2293518)", mon->name(DESC_CAP_THE, true).c_str(),
+                 mon->name(DESC_NOCAP_A, true).c_str());
+    }
+
+    // Monster un-submerging while under player or another monster.  Try to
+    // move to an adjacent square in which the monster could have been
+    // submerged and have it unsubmerge from there.
     coord_def target_square;
     int       okay_squares = 0;
 
     for ( adjacent_iterator ai; ai; ++ai )
-        if (mgrd(*ai) == NON_MONSTER && monster_can_submerge(mon, grd(*ai))
+        if (mgrd(*ai) == NON_MONSTER && *ai != you.pos()
+            && monster_can_submerge(mon, grd(*ai))
             && one_chance_in(++okay_squares))
         {
             target_square = *ai;
