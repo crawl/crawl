@@ -840,6 +840,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     int weapon    = monster->inv[MSLOT_WEAPON];
     int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type : 0;
 
+    mon_inv_type slot = get_mon_equip_slot(monster, mitm[hand_used]);
+
     const bool skilled = mons_class_flag(monster->type, M_FIGHTER);
 
     monster->lose_energy(EUT_MISSILE);
@@ -1203,7 +1205,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         }
     }
     else if (dec_mitm_item_quantity(hand_used, 1))
-        monster->inv[returning ? hand_used : MSLOT_MISSILE] = NON_ITEM;
+        monster->inv[returning ? slot : MSLOT_MISSILE] = NON_ITEM;
 
     return (true);
 }

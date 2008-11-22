@@ -818,5 +818,6 @@ bool mons_class_can_pass(int mc, const dungeon_feature_type grid);
 bool mons_can_pass(const monsters *mon, dungeon_feature_type grid);
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq);
+mon_inv_type item_to_mslot(const item_def &item);
 
 #endif
