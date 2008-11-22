@@ -278,10 +278,17 @@ SUBST:    Q = 3, E = 4, D : fgh, S = $
 NSUBST:   f = 1:f / *:'
 NSUBST:   g = 2:g / *:'
 NSUBST:   h = 3:h / *:'
+# some random monsters I: flying or big fish
 NSUBST:   w = 4:" / *:w
 KFEAT:    " = w
-KMONS:    " = big fish
+KMONS:    " = big fish w:2 / giant bat / giant mosquito w:2 / nothing
 COLOUR:   " = green
+# some random monsters II: standard Sewers set
+NSUBST:   W = 4:? / *:W
+KFEAT:    ? = W
+KMONS:    ? = giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
+          snake w:1 / giant mosquito w:2
+COLOUR:   ? = lightgreen
 : sewer_colours(_G)
 MONS:     giant bat / giant newt / small snake / ooze w:2 / worm w:2 / \
           snake w:1 / giant mosquito w:2
