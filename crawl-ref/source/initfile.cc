@@ -1727,7 +1727,7 @@ static void _bindkey(std::string field)
     const size_t end_bracket   = field.find_last_of(']');
 
     if (start_bracket == std::string::npos
-	    || end_bracket == std::string::npos
+        || end_bracket == std::string::npos
         || start_bracket > end_bracket)
     {
         mprf(MSGCH_ERROR, "Bad bindkey bracketing in '%s'",

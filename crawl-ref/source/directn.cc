@@ -1422,8 +1422,8 @@ void direction(dist& moves, targeting_type restricts,
             break;
 
         case CMD_TARGET_ALL_DESCRIBE:
-        	full_describe_view();
-        	break;
+            full_describe_view();
+            break;
 
         case CMD_TARGET_HELP:
             show_targeting_help();

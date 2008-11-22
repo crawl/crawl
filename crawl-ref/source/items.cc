@@ -2028,13 +2028,13 @@ mon_inv_type get_mon_equip_slot(const monsters* mon, const item_def &item)
     if (slot == NUM_MONSTER_SLOTS)
         return NUM_MONSTER_SLOTS;
 
-	if (mon->mslot_item(slot) == &item)
+    if (mon->mslot_item(slot) == &item)
         return slot;
 
     if (slot == MSLOT_WEAPON && mon->mslot_item(MSLOT_ALT_WEAPON) == &item)
         return MSLOT_ALT_WEAPON;
 
-	return NUM_MONSTER_SLOTS;
+    return NUM_MONSTER_SLOTS;
 }
 
 static std::string _drop_selitem_text( const std::vector<MenuEntry*> *s )

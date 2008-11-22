@@ -4136,23 +4136,23 @@ mon_inv_type item_to_mslot(const item_def &item)
     switch(item.base_type)
     {
     case OBJ_WEAPONS:
-		return MSLOT_WEAPON;
+        return MSLOT_WEAPON;
     case OBJ_MISSILES:
-		return MSLOT_MISSILE;
+        return MSLOT_MISSILE;
     case OBJ_ARMOUR:
         return equip_slot_to_mslot(get_armour_slot(item));
     case OBJ_WANDS:
-		return MSLOT_WAND;
+        return MSLOT_WAND;
     case OBJ_SCROLLS:
-		return MSLOT_SCROLL;
+        return MSLOT_SCROLL;
     case OBJ_POTIONS:
-		return MSLOT_POTION;
+        return MSLOT_POTION;
     case OBJ_MISCELLANY:
-		return MSLOT_MISCELLANY;
+        return MSLOT_MISCELLANY;
     case OBJ_GOLD:
-		return MSLOT_GOLD;
+        return MSLOT_GOLD;
     default:
-		return NUM_MONSTER_SLOTS;
+        return NUM_MONSTER_SLOTS;
     }
 }
 
