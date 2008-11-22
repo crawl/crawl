@@ -1803,7 +1803,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         if (!is_valid_shaft_level())
         {
             if (known_trap)
-                mpr("Strange, the shaft doesn't seem to lead anywhere.");
+                mpr("The shaft disappears is a puff of logic!");
+
+            find_trap(you.pos())->destroy();
             return;
         }
 
@@ -1811,7 +1813,13 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         if (shaft_dest == level_id::current())
         {
             if (known_trap)
-                mpr("Strange, the shaft doesn't seem to lead anywhere.");
+            {
+                mpr("Strange, the shaft seems to lead back to this level.");
+                mpr("The strain on the space-time continuum destroys the "
+                    "shaft!");
+            }
+
+            find_trap(you.pos())->destroy();
             return;
         }
         shaft_level = absdungeon_depth(shaft_dest.branch,

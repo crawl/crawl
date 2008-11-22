@@ -607,9 +607,33 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         break;
 
     case TRAP_SHAFT:
+        // Paranoia
+        if (!is_valid_shaft_level())
+        {
+            if (you_know && in_sight)
+                mpr("The shaft disappears in a puff of logic!");
+
+            trap_destroyed = true;
+            break;
+        }
+
         // Known shafts don't trigger as traps.
         if (trig_knows)
+        {
+            if (you_trigger)
+            {
+               if (triggerer.airborne())
+               {
+                   if (you.flight_mode() == FL_LEVITATE)
+                       mpr("You float over the shaft.");
+                   else
+                       mpr("You fly over the shaft.");
+               }
+               else
+                   mpr("You carefully avoid triggering the shaft.");
+            }
             break;
+        }
 
         if (!triggerer.will_trigger_shaft())
         {
@@ -629,17 +653,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             }
         }
 
-        // Paranoia
-        if (!is_valid_shaft_level())
+        // Fire away!
         {
-            if (you_know && in_sight)
-                mpr("The shaft disappears in a puff of logic!");
-
-            trap_destroyed = true;
-        }
-        else
-        {
-            // Fire away!
             const bool revealed = triggerer.do_shaft();
             if (!revealed && !you_know)
                 this->hide();

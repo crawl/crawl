@@ -3582,6 +3582,9 @@ void debug_make_trap()
     place_specific_trap(you.pos(), trap);
 
     mprf("Created a %s trap, marked it undiscovered", trap_name(trap));
+
+    if (trap == TRAP_SHAFT && !is_valid_shaft_level())
+        mpr("NOTE: Shaft traps aren't valid on this level.");
 }
 
 void debug_make_shop()
