@@ -88,6 +88,8 @@ static bool immobile_monster[MAX_MONSTERS];
 
 #define FAR_AWAY    1000000         // used in monster_move()
 
+#define ENERGY_SUBMERGE(entry) (std::max(entry->energy_usage.swim / 2, 1))
+
 // This function creates an artificial item to represent a mimic's appearance.
 // Eventually, mimics could be redone to be more like dancing weapons...
 // there'd only be one type and it would look like the item it carries. -- bwr
@@ -3894,6 +3896,71 @@ static bool _is_player_or_mon_sanct(const monsters* monster)
             || is_sanctuary(monster->pos()));
 }
 
+static bool _mons_avoids_cloud(const monsters *monster, cloud_type cl_type)
+{
+    switch (cl_type)
+    {
+    case CLOUD_MIASMA:
+        // Even the dumbest monsters will avoid miasma if they can.
+        return (mons_res_miasma(monster) <= 0);
+
+    case CLOUD_FIRE:
+        if (mons_res_fire(monster) > 1)
+            return (false);
+
+        if (monster->hit_points >= 15 + random2avg(46, 5))
+            return (false);
+        break;
+
+    case CLOUD_STINK:
+        if (mons_res_poison(monster) > 0)
+            return (false);
+        if (x_chance_in_y(monster->hit_dice - 1, 5))
+            return (false);
+        if (monster->hit_points >= random2avg(19, 2))
+            return (false);
+        break;
+
+    case CLOUD_COLD:
+        if (mons_res_cold(monster) > 1)
+            return (false);
+
+        if (monster->hit_points >= 15 + random2avg(46, 5))
+            return (false);
+        break;
+
+    case CLOUD_POISON:
+        if (mons_res_poison(monster) > 0)
+            return (false);
+
+        if (monster->hit_points >= random2avg(37, 4))
+            return (false);
+        break;
+
+    case CLOUD_GREY_SMOKE:
+        // This isn't harmful, but dumb critters might think so.
+        if (mons_intel(monster) > I_ANIMAL || coinflip())
+            return (false);
+
+        if (mons_res_fire(monster) > 0)
+            return (false);
+
+        if (monster->hit_points >= random2avg(19, 2))
+            return (false);
+        break;
+
+    default:
+        break;
+    }
+
+    // Exceedingly dumb creatures will wander into harmful clouds.
+    if (is_harmless_cloud(cl_type) || mons_intel(monster) == I_PLANT)
+        return (false);
+
+    // If we get here, the cloud is potentially harmful.
+    return (true);
+}
+
 //---------------------------------------------------------------
 //
 // handle_nearby_ability
@@ -3947,7 +4014,10 @@ static void _handle_nearby_ability(monsters *monster)
         && !mons_is_lurking(monster)  // Handled elsewhere.
         && monster->wants_submerge())
     {
+        monsterentry* entry = get_monster_data(monster->type);
+
         monster->add_ench(ENCH_SUBMERGED);
+        monster->speed_increment -= ENERGY_SUBMERGE(entry);
         update_beholders(monster);
         return;
     }
@@ -5860,18 +5930,24 @@ static void _handle_monster_move(int i, monsters *monster)
 
         monster->shield_blocks = 0;
 
-        if (env.cgrid(monster->pos()) != EMPTY_CLOUD)
+        const int        cloud_num = env.cgrid(monster->pos());
+        const cloud_type cl_type   =
+            cloud_num == EMPTY_CLOUD ? CLOUD_NONE : env.cloud[cloud_num].type;
+        if (cloud_num != EMPTY_CLOUD)
         {
-            if (mons_is_submerged(monster))
+            if (_mons_avoids_cloud(monster, cl_type))
             {
-                monster->speed_increment -= entry->energy_usage.swim;
-                break;
-            }
+                if (mons_is_submerged(monster))
+                {
+                    monster->speed_increment -= entry->energy_usage.swim;
+                    break;
+                }
 
-            if (monster->type == -1)
-            {
-                monster->speed_increment -= entry->energy_usage.move;
-                break;  // problem with vortices
+                if (monster->type == -1)
+                {
+                    monster->speed_increment -= entry->energy_usage.move;
+                    break;  // problem with vortices
+                }
             }
 
             _mons_in_cloud(monster);
@@ -5901,10 +5977,13 @@ static void _handle_monster_move(int i, monsters *monster)
         _handle_behaviour(monster);
 
         // Submerging monsters will hide from clouds.
-        if (monster_can_submerge(monster, grd(monster->pos()))
-            && env.cgrid(monster->pos()) != EMPTY_CLOUD)
+        if (cloud_num != EMPTY_CLOUD && _mons_avoids_cloud(monster, cl_type)
+            && monster_can_submerge(monster, grd(monster->pos()))
+            && !monster->submerged())
         {
             monster->add_ench(ENCH_SUBMERGED);
+            monster->speed_increment -= ENERGY_SUBMERGE(entry);
+            continue;
         }
 
         if (monster->speed >= 100)
@@ -5947,9 +6026,11 @@ static void _handle_monster_move(int i, monsters *monster)
                 if (mons_is_submerged(monster))
                 {
                     // Don't unsubmerge if the monster is too damaged or
-                    // if the monster is afraid.
+                    // if the monster is afraid, or if it's avoiding the
+                    // cloud on top of the water.
                     if (monster->hit_points <= monster->max_hit_points / 2
-                        || monster->has_ench(ENCH_FEAR))
+                        || monster->has_ench(ENCH_FEAR)
+                        || _mons_avoids_cloud(monster, cl_type))
                     {
                         monster->speed_increment -= non_move_energy;
                         continue;
@@ -6877,13 +6958,13 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     if (monster->type == MONS_FIRE_ELEMENTAL || one_chance_in(5))
         no_water = true;
 
-    const int targ_cloud_num  = env.cgrid(targ);
-    const int targ_cloud_type =
+    const int        targ_cloud_num  = env.cgrid(targ);
+    const cloud_type targ_cloud_type =
         (targ_cloud_num == EMPTY_CLOUD) ? CLOUD_NONE
                                         : env.cloud[targ_cloud_num].type;
 
-    const int curr_cloud_num = env.cgrid(monster->pos());
-    const int curr_cloud_type =
+    const int        curr_cloud_num  = env.cgrid(monster->pos());
+    const cloud_type curr_cloud_type =
         (curr_cloud_num == EMPTY_CLOUD) ? CLOUD_NONE
                                         : env.cloud[curr_cloud_num].type;
 
@@ -7005,65 +7086,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
             return (true);
         }
 
-        switch (targ_cloud_type)
-        {
-        case CLOUD_MIASMA:
-            // Even the dumbest monsters will avoid miasma if they can.
-            return (mons_res_miasma(monster) > 0);
-
-        case CLOUD_FIRE:
-            if (mons_res_fire(monster) > 1)
-                return (true);
-
-            if (monster->hit_points >= 15 + random2avg(46, 5))
-                return (true);
-            break;
-
-        case CLOUD_STINK:
-            if (mons_res_poison(monster) > 0)
-                return (true);
-            if (x_chance_in_y(monster->hit_dice - 1, 5))
-                return (true);
-            if (monster->hit_points >= random2avg(19, 2))
-                return (true);
-            break;
-
-        case CLOUD_COLD:
-            if (mons_res_cold(monster) > 1)
-                return (true);
-
-            if (monster->hit_points >= 15 + random2avg(46, 5))
-                return (true);
-            break;
-
-        case CLOUD_POISON:
-            if (mons_res_poison(monster) > 0)
-                return (true);
-
-            if (monster->hit_points >= random2avg(37, 4))
-                return (true);
-            break;
-
-        case CLOUD_GREY_SMOKE:
-            // This isn't harmful, but dumb critters might think so.
-            if (mons_intel(monster) > I_ANIMAL || coinflip())
-                return (true);
-
-            if (mons_res_fire(monster) > 0)
-                return (true);
-
-            if (monster->hit_points >= random2avg(19, 2))
-                return (true);
-            break;
-
-        default:
-            return (true);   // harmless clouds
-        }
-
-        // If we get here, the cloud is potentially harmful.
-        // Exceedingly dumb creatures will still wander in.
-        if (mons_intel(monster) != I_PLANT)
-            return (false);
+        return !_mons_avoids_cloud(monster, targ_cloud_type);
     }
 
     // If we end up here the monster can safely move.
