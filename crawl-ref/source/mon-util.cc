@@ -5700,7 +5700,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     {
         monsters* other_mon = &menv[mgrd(mon->pos())];
 
-        if (other_mon->type == -1 || other_mon->type == NON_MONSTER)
+        if (other_mon->type == -1 || other_mon->type == MONS_PROGRAM_BUG)
         {
             mgrd(mon->pos()) = midx;
 

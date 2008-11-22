@@ -4168,7 +4168,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         {
             monsters *targ = &menv[i];
 
-            if (targ->type == -1 || targ->type == NON_MONSTER)
+            if (targ->type == -1 || targ->type == MONS_PROGRAM_BUG)
                 continue;
 
             if (distance(monster->pos(), targ->pos()) >= 5)
