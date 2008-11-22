@@ -1260,6 +1260,12 @@ formatted_string describe_mutations()
         have_any = true;
     }
 
+    if (you.duration[DUR_FIRE_SHIELD])
+    {
+        result += "<green>You are immune to clouds of flame.</green>" EOL;
+        have_any = true;
+    }
+
     textcolor(LIGHTGREY);
 
     // first add (non-removable) inborn abilities and demon powers

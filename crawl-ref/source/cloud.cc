@@ -614,8 +614,11 @@ bool is_damaging_cloud(cloud_type type, bool temp)
 {
     switch (type)
     {
-    // always harmful
+    // always harmful...
     case CLOUD_FIRE:
+        // ... unless a Ring of Flames is up and it's a fire cloud.
+        if (temp && you.duration[DUR_FIRE_SHIELD])
+            return (false);
     case CLOUD_COLD:
         return (true);
 

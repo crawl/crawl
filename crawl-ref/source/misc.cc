@@ -2454,7 +2454,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
         {
             const cloud_type type = env.cloud[env.cgrid(you.pos())].type;
 
-            if (is_damaging_cloud(type, false))
+            if (is_damaging_cloud(type, want_move))
             {
                 if (announce)
                 {

@@ -121,7 +121,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     {
         const cloud_type ctype = env.cloud[ cloud ].type;
         // Don't prompt if already in a cloud of the same type.
-        if (is_damaging_cloud(ctype, false)
+        if (is_damaging_cloud(ctype, true)
             && (env.cgrid(you.pos()) == EMPTY_CLOUD
                 || ctype != env.cloud[ env.cgrid(you.pos()) ].type))
         {
@@ -3845,6 +3845,12 @@ void display_char_status()
 
     if (you.duration[DUR_LIQUID_FLAMES])
         mpr("You are covered in liquid flames.");
+
+    if (you.duration[DUR_FIRE_SHIELD])
+    {
+        mpr("You are surrounded by a ring of flames.");
+        mpr("You are immune to clouds of flame.");
+    }
 
     if (you.duration[DUR_ICY_ARMOUR])
         mpr("You are protected by an icy shield.");

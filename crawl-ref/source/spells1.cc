@@ -1513,10 +1513,17 @@ bool cast_sure_blade(int power)
 
 void manage_fire_shield()
 {
+    ASSERT(you.duration[DUR_FIRE_SHIELD]);
     you.duration[DUR_FIRE_SHIELD]--;
 
     if (!you.duration[DUR_FIRE_SHIELD])
+    {
+        mpr("Your ring of flames gutters out.", MSGCH_DURATION);
         return;
+    }
+
+    if (you.duration[DUR_FIRE_SHIELD] == 5)
+        mpr("Your ring of flames is guttering out.", MSGCH_WARN);
 
     // Place fire clouds all around you
     for ( adjacent_iterator ai; ai; ++ai )

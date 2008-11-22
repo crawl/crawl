@@ -677,6 +677,12 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(color, "Sage"));
     }
 
+    if (you.duration[DUR_FIRE_SHIELD])
+    {
+        int color = _dur_colour( BLUE, (you.duration[DUR_FIRE_SHIELD] <= 5) );
+        out.push_back(status_light(color, "RoF"));
+    }
+
     if (you.duration[DUR_SURE_BLADE])
     {
         out.push_back(status_light(BLUE, "Blade"));
@@ -2189,6 +2195,9 @@ std::string _status_mut_abilities()
 
     if (you.duration[DUR_MAGIC_SHIELD])
         text += "shielded, ";
+
+    if (you.duration[DUR_FIRE_SHIELD])
+        text += "immune to fire clouds, ";
 
     if (you.duration[DUR_POISONING])
     {
