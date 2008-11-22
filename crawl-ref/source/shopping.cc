@@ -38,7 +38,6 @@
 #include "stuff.h"
 #include "view.h"
 
-static void _in_a_shop(int shopidx);
 static bool _purchase( int shop, int item_got, int cost, bool id);
 
 static void _shop_print( const char *shoppy, int line )
@@ -230,7 +229,7 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
 //  For the ? key, the text should read:
 //  [?] switch to examination mode
 //  [?] switch to selection mode
-static void _in_a_shop( int shopidx )
+static bool _in_a_shop( int shopidx )
 {
     const shop_struct& shop = env.shop[shopidx];
 
@@ -244,6 +243,7 @@ static void _in_a_shop( int shopidx )
 
     const bool id_stock = shoptype_identifies_stock(shop.type);
     std::vector<bool> selected;
+    bool bought_something = false;
     while (true)
     {
         StashTrack.get_shop(shop.pos).reset();
@@ -273,7 +273,7 @@ static void _in_a_shop( int shopidx )
         {
             _shop_print("I'm sorry, my shop is empty now.", 1);
             _shop_more();
-            return;
+            return (bought_something);
         }
 
         const std::string purchasable = _shop_print_stock(stock, selected, shop,
@@ -315,14 +315,12 @@ static void _in_a_shop( int shopidx )
         if (first)
         {
             first = false;
-            snprintf( info, INFO_SIZE, "%s What would you like to %s? ",
-                      hello.c_str(),
-                      purchasable.length() ? "purchase" : "do");
+            snprintf( info, INFO_SIZE, "%s What would you like to do? ",
+                      hello.c_str() );
         }
         else
         {
-            snprintf( info, INFO_SIZE, "What would you like to %s? ",
-                      purchasable.length() ? "purchase" : "do");
+            snprintf( info, INFO_SIZE, "What would you like to do? ");
         }
 
         textcolor(CYAN);
@@ -355,14 +353,12 @@ static void _in_a_shop( int shopidx )
 
                 if ( yesno(NULL, true, 'n', false, false, true) )
                 {
-                    std::vector<std::string> purchases;
                     int num_items = 0, outside_items = 0, quant;
                     for (int i = selected.size() - 1; i >= 0; --i)
                     {
                         if (selected[i])
                         {
                             item_def& item = mitm[stock[i]];
-                            purchases.push_back(item.name(DESC_NOCAP_A));
 
                             const int gp_value = _shop_get_item_value(item,
                                                         shop.greed, id_stock);
@@ -390,22 +386,6 @@ static void _in_a_shop( int shopidx )
                         }
                     }
 
-                    // Hack to make sure the lines are empty for the mpr().
-                    for (int i = 0; i < 5; i++)
-                        _shop_print("\n", i);
-
-                    if (purchases.size() > 1)
-                    {
-                        // FIXME: If you buy several items of the same type
-                        //        they are not merged in the listing.
-                        mprf("You bought %s for a total of %d gold piece%s.",
-                             comma_separated_line(purchases.begin(),
-                                                  purchases.end(),
-                                                  ", and ", ", ").c_str(),
-                             total_cost,
-                             total_cost > 1 ? "s" : "");
-                    }
-
                     if (outside_items)
                     {
                         mprf( "I'll put %s outside for you.",
@@ -413,6 +393,7 @@ static void _in_a_shop( int shopidx )
                               num_items == outside_items ? "them"
                                                          : "part of them" );
                     }
+                    bought_something = true;
                 }
             }
             _shop_more();
@@ -488,6 +469,7 @@ static void _in_a_shop( int shopidx )
                 total_cost -= gp_value;
         }
     }
+    return (bought_something);
 }
 
 bool shoptype_identifies_stock(shop_type type)
@@ -1684,10 +1666,13 @@ void shop()
         return;
     }
 
-    _in_a_shop(i);
+    const bool bought_something = _in_a_shop(i);
     burden_change();
     redraw_screen();
-}                               // end shop()
+
+    if (bought_something)
+        mprf("Thank you for shopping at %s!", shop_name(env.shop[i].pos).c_str());
+}
 
 shop_struct *get_shop(const coord_def& where)
 {
