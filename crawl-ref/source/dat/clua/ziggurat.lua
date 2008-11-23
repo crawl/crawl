@@ -274,17 +274,19 @@ local function ziggurat_create_loot(c)
     loot_depth = you.absdepth() - 1
   end
 
+  local function place_loot(what)
+    free_space_do(function (p)
+                    dgn.create_item(p.x, p.y, what, loot_depth)
+                  end)
+  end
+
   for i = 1, nloot do
     if crawl.one_chance_in(depth) then
       for j = 1, 4 do
-        free_space_do(function (p)
-                        dgn.create_item(p.x, p.y, "*", loot_depth)
-                      end)
+        place_loot("*")
       end
     else
-      free_space_do(function (p)
-                      dgn.create_item(p.x, p.y, "|", loot_depth)
-                    end)
+      place_loot("|")
     end
   end
 end
@@ -338,5 +340,5 @@ for key, val in pairs(ziggurat_builder_map) do
 end
 
 function ziggurat_choose_builder()
-  return ziggurat_builders[crawl.random_range(1, #ziggurat_builders)]
+  return util.random_from(ziggurat_builders)
 end

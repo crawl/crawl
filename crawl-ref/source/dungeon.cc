@@ -210,12 +210,11 @@ static bool _build_minivaults(int level_number, int force_vault,
                               bool level_builder = true, bool clobber = false,
                               bool make_no_exits = false,
                               const coord_def &where = coord_def() );
-static int _vault_grid( vault_placement &,
-                        int level_number, const coord_def& where,
-                        int altar_count,
-                        FixedVector < object_class_type, 7 > &acq_item_class,
-                        int vgrid, std::vector<coord_def> &targets,
-                        int &num_runes, int rune_subst = -1, bool foll = false);
+static void _vault_grid( vault_placement &,
+                         int vgrid,
+                         const coord_def& where,
+                         std::vector<coord_def> &targets,
+                         bool recursive = false);
 
 static int  _dgn_random_map_for_place(bool wantmini);
 static void _dgn_load_colour_grid();
@@ -3937,22 +3936,13 @@ static bool _build_minivaults(int level_number, int force_vault,
                               bool building_level, bool clobber,
                               bool make_no_exits, const coord_def &where)
 {
-    int altar_count = 0;
-
-    FixedVector < object_class_type, 7 > acq_item_class;
-    acq_item_class[0] = OBJ_WEAPONS;
-    acq_item_class[1] = OBJ_ARMOUR;
-    acq_item_class[2] = OBJ_WEAPONS;
-    acq_item_class[3] = OBJ_JEWELLERY;
-    acq_item_class[4] = OBJ_BOOKS;
-    acq_item_class[5] = OBJ_STAVES;
-    acq_item_class[6] = OBJ_MISCELLANY;
-
     if (dgn_check_connectivity && !dgn_zones)
         dgn_zones = _dgn_count_disconnected_zones(false);
 
     map_type vgrid;
     vault_placement place;
+
+    place.level_number = level_number;
     vault_main(vgrid, place, force_vault);
 
     coord_def v1;
@@ -3978,8 +3968,7 @@ static bool _build_minivaults(int level_number, int force_vault,
 
     _register_place(place);
 
-    // These two are throwaways:
-    int num_runes = 0;
+    // This is a throwaway.
     std::vector<coord_def> &target_connections = place.exits;
 
     // Paint the minivault onto the grid.
@@ -3994,12 +3983,7 @@ static bool _build_minivaults(int level_number, int force_vault,
             continue;
 
         const dungeon_feature_type oldgrid = grd(*ri);
-        altar_count = _vault_grid( place,
-                                   level_number, *ri,
-                                   altar_count,
-                                   acq_item_class,
-                                   feat, target_connections,
-                                   num_runes );
+        _vault_grid( place, feat, *ri, target_connections );
         if (!building_level)
         {
             link_items();
@@ -4515,26 +4499,16 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
                           bool generating_level, bool clobber,
                           bool make_no_exits, const coord_def &where)
 {
-    int altar_count = 0;
     FixedVector < char, 10 > stair_exist;
     char stx, sty;
-
-    FixedVector < object_class_type, 7 > acq_item_class;
-    // XXX: Hack - passing chars through '...' promotes them to ints,
-    // which barfs under gcc in fixvec.h.  So don't. -- GDL
-    acq_item_class[0] = OBJ_WEAPONS;
-    acq_item_class[1] = OBJ_ARMOUR;
-    acq_item_class[2] = OBJ_WEAPONS;
-    acq_item_class[3] = OBJ_JEWELLERY;
-    acq_item_class[4] = OBJ_BOOKS;
-    acq_item_class[5] = OBJ_STAVES;
-    acq_item_class[6] = OBJ_MISCELLANY;
 
     if (dgn_check_connectivity && !dgn_zones)
         dgn_zones = _dgn_count_disconnected_zones(false);
 
     map_type vgrid;
     vault_placement place;
+
+    place.level_number = level_number;
     std::vector<coord_def> &target_connections = place.exits;
 
     if (map_bounds(where))
@@ -4545,8 +4519,6 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
 
     if (gluggy == MAP_NONE || !gluggy)
         return (false);
-
-    int num_runes = 0;
 
     dgn_region this_vault(place.pos, place.size);
     if (!place.size.zero())
@@ -4560,12 +4532,8 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
                 continue;
 
             const dungeon_feature_type oldgrid = grd(*ri);
-            altar_count = _vault_grid( place, level_number, *ri, altar_count,
-                                       acq_item_class,
-                                       vgrid[ri->y][ri->x],
-                                       target_connections,
-                                       num_runes,
-                                       rune_subst );
+            _vault_grid( place, vgrid[ri->y][ri->x], *ri,
+                         target_connections );
             if (!generating_level)
             {
                 // Have to link items each square at a time, or
@@ -4922,10 +4890,7 @@ bool dgn_place_monster(mons_spec &mspec,
 
         if (mg.cls == RANDOM_MONSTER && mspec.place.is_valid())
         {
-            int lev = monster_level;
-
-            if (mspec.place.level_type == LEVEL_DUNGEON)
-                lev = mspec.place.absdepth();
+            int lev = mspec.place.absdepth();
 
             if (mlev == -8)
                 lev = 4 + lev * 2;
@@ -5076,21 +5041,26 @@ dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
                              : DNGN_FLOOR); // includes everything else
 }
 
+static const object_class_type _acquirement_item_classes[] = {
+    OBJ_WEAPONS,
+    OBJ_ARMOUR,
+    OBJ_WEAPONS,
+    OBJ_JEWELLERY,
+    OBJ_BOOKS,
+    OBJ_STAVES,
+    OBJ_MISCELLANY
+};
+
 // Returns altar_count - seems rather odd to me to force such a return
 // when I believe the value is only used in the case of the ecumenical
 // temple - oh, well... {dlb} (XXX)
-static int _vault_grid( vault_placement &place,
-                        int level_number,
-                        const coord_def& where,
-                        int altar_count,
-                        FixedVector < object_class_type, 7 > &acq_item_class,
-                        int vgrid,
-                        std::vector<coord_def> &targets,
-                        int &num_runes,
-                        int rune_subst,
-                        bool following )
+static void _vault_grid( vault_placement &place,
+                         int vgrid,
+                         const coord_def& where,
+                         std::vector<coord_def> &targets,
+                         bool recursive )
 {
-    keyed_mapspec *mapsp = (following ? NULL
+    keyed_mapspec *mapsp = (recursive ? NULL
                                       : place.map.mapspec_for_key(vgrid));
     if (mapsp)
     {
@@ -5102,18 +5072,16 @@ static int _vault_grid( vault_placement &place,
         }
         else if (f.glyph >= 0)
         {
-            altar_count = _vault_grid( place, level_number, where,
-                                       altar_count, acq_item_class,
-                                       f.glyph, targets, num_runes,
-                                       rune_subst, true );
+            _vault_grid( place, f.glyph, where, targets, true );
         }
         else if (f.shop >= 0)
-            place_spec_shop(level_number, where, f.shop);
+            place_spec_shop(place.level_number, where, f.shop);
         else if (f.trap >= 0)
         {
-            const trap_type trap
-                = (f.trap == TRAP_INDEPTH) ? random_trap_for_place(level_number)
-                                           : static_cast<trap_type>(f.trap);
+            const trap_type trap =
+                (f.trap == TRAP_INDEPTH)
+                ? random_trap_for_place(place.level_number)
+                : static_cast<trap_type>(f.trap);
 
             place_specific_trap(where, trap);
         }
@@ -5121,12 +5089,12 @@ static int _vault_grid( vault_placement &place,
             grd(where) = DNGN_FLOOR;
 
         mons_list &mons = mapsp->get_monsters();
-        _dgn_place_one_monster(place, mons, level_number, where);
+        _dgn_place_one_monster(place, mons, place.level_number, where);
 
         item_list &items = mapsp->get_items();
-        dgn_place_multiple_items(items, where, level_number);
+        dgn_place_multiple_items(items, where, place.level_number);
 
-        return (altar_count);
+        return;
     }
 
     if (vgrid == 'F' && one_chance_in(100))
@@ -5162,7 +5130,7 @@ static int _vault_grid( vault_placement &place,
                    (vgrid == 'A') ? DNGN_STONE_ARCH :
                    (vgrid == 'B') ?
                    static_cast<dungeon_feature_type>(
-                       DNGN_ALTAR_FIRST_GOD + altar_count) :// see below
+                       DNGN_ALTAR_FIRST_GOD + place.altar_count) :// see below
                    (vgrid == 'C') ? _pick_an_altar() :   // f(x) elsewhere {dlb}
                    (vgrid == 'F') ? DNGN_GRANITE_STATUE :
                    (vgrid == 'I') ? DNGN_ORCISH_IDOL :
@@ -5178,7 +5146,7 @@ static int _vault_grid( vault_placement &place,
     switch (vgrid)
     {
     case 'B':
-        altar_count++;
+        place.altar_count++;
         break;
     case '@':
         targets.push_back( where );
@@ -5187,7 +5155,7 @@ static int _vault_grid( vault_placement &place,
         place_specific_trap(where, TRAP_RANDOM);
         break;
     case '~':
-        place_specific_trap(where, random_trap_for_place(level_number));
+        place_specific_trap(where, random_trap_for_place(place.level_number));
         break;
     }
 
@@ -5241,23 +5209,24 @@ static int _vault_grid( vault_placement &place,
                 which_type = ORB_ZOT;
             }
             else if (vgrid == '|'
-                    || (vgrid == 'P' && (!possible_rune || num_runes > 0))
-                    || (vgrid == 'O' && num_runes > 0))
+                    || (vgrid == 'P' && (!possible_rune || place.num_runes > 0))
+                    || (vgrid == 'O' && place.num_runes > 0))
             {
-                which_class = acq_item_class[random2(7)];
+                which_class = RANDOM_ELEMENT(_acquirement_item_classes);
                 which_type = OBJ_RANDOM;
             }
             else              // for 'P' (1 out of 3 times) {dlb}
             {
-                if (rune_subst != -1)
+                if (place.rune_subst != -1)
                 {
-                    grd(where) = static_cast<dungeon_feature_type>(rune_subst);
+                    grd(where) =
+                        static_cast<dungeon_feature_type>(place.rune_subst);
                     break;
                 }
 
                 which_class = OBJ_MISCELLANY;
                 which_type  = MISC_RUNE_OF_ZOT;
-                num_runes++;
+                place.num_runes++;
 
                 if (you.level_type == LEVEL_PANDEMONIUM)
                 {
@@ -5278,11 +5247,11 @@ static int _vault_grid( vault_placement &place,
                     spec = you.where_are_you;
             }
 
-            which_depth = level_number;
+            which_depth = place.level_number;
             if (vgrid == '|' || vgrid == 'P' || vgrid == 'O' || vgrid == 'Z')
                 which_depth = MAKE_GOOD_ITEM;
             else if (vgrid == '*')
-                which_depth = 5 + (level_number * 2);
+                which_depth = 5 + (place.level_number * 2);
 
             item_made = items( 1, which_class, which_type, true,
                                which_depth, spec );
@@ -5297,7 +5266,7 @@ static int _vault_grid( vault_placement &place,
 
     // defghijk - items
     if (vgrid >= 'd' && vgrid <= 'k')
-        _dgn_place_item_explicit(vgrid - 'd', where, place, level_number);
+        _dgn_place_item_explicit(vgrid - 'd', where, place, place.level_number);
 
     if (vgrid == 'S' || vgrid == 'H')
     {
@@ -5315,11 +5284,11 @@ static int _vault_grid( vault_placement &place,
         int monster_level;
         mons_spec monster_type_thing(RANDOM_MONSTER);
 
-        monster_level = level_number;
+        monster_level = place.level_number;
         if (vgrid == '8')
-            monster_level = 4 + (level_number * 2);
+            monster_level = 4 + (place.level_number * 2);
         else if (vgrid == '9')
-            monster_level = 5 + level_number;
+            monster_level = 5 + place.level_number;
 
         if (monster_level > 30) // very high level monsters more common here
             monster_level = 30;
@@ -5329,10 +5298,6 @@ static int _vault_grid( vault_placement &place,
 
         _dgn_place_monster(place, monster_type_thing, monster_level, where);
     }
-
-    // Again, this seems odd, given that this is just one of many
-    // vault types {dlb}
-    return (altar_count);
 }                               // end vault_grid()
 
 // Currently only used for Slime: branch end

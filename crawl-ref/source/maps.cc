@@ -161,43 +161,38 @@ static bool resolve_map(map_def &map, const map_def &original)
 
 // Determines if the region specified by (x, y, x + width - 1, y + height - 1)
 // is a bad place to build a vault.
-static bool bad_map_place(const map_def &map,
-                          int sx, int sy, int width, int height,
-                          bool check_place, bool clobber)
+static bool bad_map_place(const map_def &map, const coord_def &c,
+                          const coord_def &size)
 {
-    if (!check_place || clobber)
-        return (false);
-
     const std::vector<std::string> &lines = map.map.get_lines();
-    for (int y = sy; y < sy + height; ++y)
+    for (rectangle_iterator r(c, c + size - 1); r; ++r)
     {
-        for (int x = sx; x < sx + width; ++x)
+        const coord_def &p(*r);
+        const coord_def dp = p - c;
+        if (lines[dp.y][dp.x] == ' ')
+            continue;
+
+        if (dgn_Map_Mask[p.x][p.y])
+            return (true);
+
+        if (igrd(p) != NON_ITEM || mgrd(p) != NON_MONSTER)
+            return (true);
+
+        const dungeon_feature_type grid = grd(p);
+
+        if (!grid_is_opaque(grid)
+            && grid != DNGN_FLOOR
+            && grid != DNGN_SHALLOW_WATER
+            && grid != DNGN_CLOSED_DOOR
+            && grid != DNGN_OPEN_DOOR
+            && grid != DNGN_SECRET_DOOR)
         {
-            if (lines[y - sy][x - sx] == ' ')
-                continue;
-
-            if (dgn_Map_Mask[x][y])
-                return (true);
-
-            if (igrd[x][y] != NON_ITEM || mgrd[x][y] != NON_MONSTER)
-                return (true);
-
-            const dungeon_feature_type grid = grd[x][y];
-
-            if (!grid_is_opaque(grid)
-                && grid != DNGN_FLOOR
-                && grid != DNGN_SHALLOW_WATER
-                && grid != DNGN_CLOSED_DOOR
-                && grid != DNGN_OPEN_DOOR
-                && grid != DNGN_SECRET_DOOR)
-            {
 #ifdef DEBUG_DIAGNOSTICS
-                mprf(MSGCH_DIAGNOSTICS,
-                     "Rejecting place because of %s at (%d,%d)",
-                     dungeon_feature_name(grid), x, y);
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Rejecting place because of %s at (%d,%d)",
+                 dungeon_feature_name(grid), p.x, p.y);
 #endif
-                return (true);
-            }
+            return (true);
         }
     }
 
@@ -223,35 +218,35 @@ static bool apply_vault_grid(map_def &def, map_type map,
 {
     const map_lines &ml = def.map;
     const int orient = def.orient;
-    const int width = ml.width();
-    const int height = ml.height();
+
+    const coord_def size(ml.size());
 
     coord_def start(0, 0);
 
     if (orient == MAP_SOUTH || orient == MAP_SOUTHEAST
-            || orient == MAP_SOUTHWEST)
+        || orient == MAP_SOUTHWEST)
     {
-        start.y = GYM - height;
+        start.y = GYM - size.y;
     }
     if (orient == MAP_EAST || orient == MAP_NORTHEAST
-            || orient == MAP_SOUTHEAST)
+        || orient == MAP_SOUTHEAST)
     {
-        start.x = GXM - width;
+        start.x = GXM - size.x;
     }
 
     // Handle maps aligned along cardinals that are smaller than
     // the corresponding map dimension.
     if ((orient == MAP_NORTH || orient == MAP_SOUTH
-                || orient == MAP_ENCOMPASS)
-            && width < GXM)
+         || orient == MAP_ENCOMPASS)
+        && size.x < GXM)
     {
-        start.x = (GXM - width) / 2;
+        start.x = (GXM - size.x) / 2;
     }
     if ((orient == MAP_EAST || orient == MAP_WEST
-                || orient == MAP_ENCOMPASS)
-            && height < GYM)
+         || orient == MAP_ENCOMPASS)
+        && size.y < GYM)
     {
-        start.y = (GYM - height) / 2;
+        start.y = (GYM - size.y) / 2;
     }
 
     // Floating maps can go anywhere, ask the map_def to suggest a place.
@@ -259,19 +254,18 @@ static bool apply_vault_grid(map_def &def, map_type map,
     {
         if (map_bounds(place.pos))
         {
-            start = place.pos - coord_def(width, height) / 2;
-            fit_region_into_map_bounds(start, coord_def(width, height));
+            start = place.pos - size / 2;
+            fit_region_into_map_bounds(start, size);
         }
         else
             start = def.float_place();
     }
 
-    if (bad_map_place(def, start.x, start.y, width, height, check_place,
-                      clobber))
+    if (check_place && !clobber && bad_map_place(def, start, size))
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Bad vault place: (%d,%d) dim (%d,%d)",
-             start.x, start.y, width, height);
+             start.x, start.y, size.x, size.y);
 #endif
         return (false);
     }
@@ -279,17 +273,17 @@ static bool apply_vault_grid(map_def &def, map_type map,
     const std::vector<std::string> &lines = ml.get_lines();
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Applying %s at (%d,%d), dimensions (%d,%d)",
-            def.name.c_str(), start.x, start.y, width, height);
+            def.name.c_str(), start.x, start.y, size.x, size.y);
 #endif
 
-    for (int y = start.y; y < start.y + height; ++y)
+    for (int y = start.y; y < start.y + size.y; ++y)
     {
         const std::string &s = lines[y - start.y];
         strncpy(&map[y][start.x], s.c_str(), s.length());
     }
 
     place.pos  = start;
-    place.size = coord_def(width, height);
+    place.size = size;
 
     return (true);
 }

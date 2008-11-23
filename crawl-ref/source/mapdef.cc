@@ -362,7 +362,7 @@ void map_lines::init_from(const map_lines &map)
 template <typename V>
 void map_lines::clear_vector(V &vect)
 {
-    for (int i = 0, size = vect.size(); i < size; ++i)
+    for (int i = 0, vsize = vect.size(); i < vsize; ++i)
         delete vect[i];
     vect.clear();
 }
@@ -403,7 +403,7 @@ std::string map_lines::add_lua_marker(const std::string &key,
 
 void map_lines::apply_markers(const coord_def &c)
 {
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (int i = 0, vsize = markers.size(); i < vsize; ++i)
     {
         markers[i]->pos += c;
         env.markers.add(markers[i]);
@@ -460,7 +460,7 @@ std::string map_lines::check_block_shuffle(const std::string &s)
     const std::vector<std::string> segs = split_string("/", s);
     const unsigned seglen = segs[0].length();
 
-    for (int i = 1, size = segs.size(); i < size; ++i)
+    for (int i = 1, vsize = segs.size(); i < vsize; ++i)
     {
         if (seglen != segs[i].length())
             return ("block shuffle segment length mismatch");
@@ -488,7 +488,7 @@ std::string map_lines::parse_glyph_replacements(std::string s,
     s = replace_all_of(s, "\t", " ");
     std::vector<std::string> segs = split_string(" ", s);
 
-    for (int i = 0, size = segs.size(); i < size; ++i)
+    for (int i = 0, vsize = segs.size(); i < vsize; ++i)
     {
         const std::string &is = segs[i];
         if (is.length() > 2 && is[1] == ':')
@@ -514,7 +514,7 @@ std::string map_lines::parse_weighted_colours(const std::string &cspec,
                                               map_colour_list &colours) const
 {
     std::vector<std::string> cspeclist = split_string("/", cspec);
-    for (int i = 0, size = cspeclist.size(); i < size; ++i)
+    for (int i = 0, vsize = cspeclist.size(); i < vsize; ++i)
     {
         std::string col = cspeclist[i];
         lowercase(col);
@@ -627,13 +627,13 @@ std::string map_lines::add_nsubst(const std::string &s)
         return (err);
 
     std::vector<std::string> segs = split_string("/", arg);
-    for (int i = 0, size = segs.size(); i < size; ++i)
+    for (int i = 0, vsize = segs.size(); i < vsize; ++i)
     {
         std::string &ns = segs[i];
         if (ns.find('=') == std::string::npos
             && ns.find(':') == std::string::npos)
         {
-            if (i < size - 1)
+            if (i < vsize - 1)
                 ns = "1=" + ns;
             else
                 ns = "*=" + ns;
@@ -668,7 +668,7 @@ void map_lines::remove_shuffle(const std::string &raw)
     if (err.empty())
     {
         const shuffle_spec ss(s);
-        for (int i = 0, size = transforms.size(); i < size; ++i)
+        for (int i = 0, vsize = transforms.size(); i < vsize; ++i)
         {
             if (transforms[i]->type() == map_transformer::TT_SHUFFLE)
             {
@@ -696,7 +696,7 @@ void map_lines::remove_subst(const std::string &raw)
         delete sub;
         transforms.pop_back();
 
-        for (int i = 0, size = transforms.size(); i < size; ++i)
+        for (int i = 0, vsize = transforms.size(); i < vsize; ++i)
         {
             if (transforms[i]->type() == map_transformer::TT_SUBST)
             {
@@ -752,6 +752,11 @@ int map_lines::width() const
 int map_lines::height() const
 {
     return lines.size();
+}
+
+coord_def map_lines::size() const
+{
+    return coord_def(width(), height());
 }
 
 int map_lines::glyph(int x, int y) const
@@ -861,7 +866,8 @@ void map_lines::nsubst(nsubst_spec &spec)
 
     int pcount = 0;
     const int psize = positions.size();
-    for (int i = 0, size = spec.specs.size(); i < size && pcount < psize; ++i)
+    for (int i = 0, vsize = spec.specs.size();
+         i < vsize && pcount < psize; ++i)
     {
         const int nsubsts = spec.specs[i].key();
         pcount += apply_nsubst(positions, pcount, nsubsts, spec.specs[i]);
@@ -919,7 +925,7 @@ void map_lines::resolve_shuffle(const std::string &shufflage)
     if (toshuffle.empty() || shuffled.empty())
         return;
 
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (int i = 0, vsize = lines.size(); i < vsize; ++i)
     {
         std::string &s = lines[i];
 
@@ -936,7 +942,7 @@ void map_lines::resolve_shuffle(const std::string &shufflage)
 std::string map_lines::apply_transforms()
 {
     std::string error;
-    for (int i = 0, size = transforms.size(); i < size; ++i)
+    for (int i = 0, vsize = transforms.size(); i < vsize; ++i)
     {
         error = transforms[i]->apply_transform(*this);
         if (!error.empty())
@@ -950,7 +956,7 @@ std::string map_lines::apply_transforms()
 
 void map_lines::normalise(char fillch)
 {
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (int i = 0, vsize = lines.size(); i < vsize; ++i)
     {
         std::string &s = lines[i];
         if (static_cast<int>(s.length()) < map_width)
@@ -1005,7 +1011,7 @@ void map_lines::translate_marker(
     void (map_lines::*xform)(map_marker *, int),
     int par)
 {
-    for (int i = 0, size = markers.size(); i < size; ++i)
+    for (int i = 0, vsize = markers.size(); i < vsize; ++i)
         (this->*xform)(markers[i], par);
 }
 
@@ -1045,14 +1051,14 @@ void map_lines::rotate_markers(bool clock)
 
 void map_lines::vmirror()
 {
-    const int size = lines.size();
-    const int midpoint = size / 2;
+    const int vsize = lines.size();
+    const int midpoint = vsize / 2;
 
     for (int i = 0; i < midpoint; ++i)
     {
         std::string temp = lines[i];
-        lines[i] = lines[size - 1 - i];
-        lines[size - 1 - i] = temp;
+        lines[i] = lines[vsize - 1 - i];
+        lines[vsize - 1 - i] = temp;
     }
 
     if (colour_overlay.get())
@@ -1060,7 +1066,7 @@ void map_lines::vmirror()
         for (int i = 0; i < midpoint; ++i)
             for (int j = 0, wide = width(); j < wide; ++j)
                 std::swap( (*colour_overlay)(j, i),
-                           (*colour_overlay)(j, size - 1 - i) );
+                           (*colour_overlay)(j, vsize - 1 - i) );
     }
 
     vmirror_markers();
@@ -1070,7 +1076,7 @@ void map_lines::vmirror()
 void map_lines::hmirror()
 {
     const int midpoint = map_width / 2;
-    for (int i = 0, size = lines.size(); i < size; ++i)
+    for (int i = 0, vsize = lines.size(); i < vsize; ++i)
     {
         std::string &s = lines[i];
         for (int j = 0; j < midpoint; ++j)
@@ -1083,7 +1089,7 @@ void map_lines::hmirror()
 
     if (colour_overlay.get())
     {
-        for (int i = 0, size = lines.size(); i < size; ++i)
+        for (int i = 0, vsize = lines.size(); i < vsize; ++i)
             for (int j = 0; j < midpoint; ++j)
                 std::swap( (*colour_overlay)(j, i),
                            (*colour_overlay)(map_width - 1 - j, i) );
@@ -1096,7 +1102,7 @@ void map_lines::hmirror()
 std::vector<std::string> map_lines::get_shuffle_strings() const
 {
     std::vector<std::string> shuffles;
-    for (int i = 0, size = transforms.size(); i < size; ++i)
+    for (int i = 0, vsize = transforms.size(); i < vsize; ++i)
         if (transforms[i]->type() == map_transformer::TT_SHUFFLE)
             shuffles.push_back( transforms[i]->describe() );
     return (shuffles);
@@ -1105,7 +1111,7 @@ std::vector<std::string> map_lines::get_shuffle_strings() const
 std::vector<std::string> map_lines::get_subst_strings() const
 {
     std::vector<std::string> substs;
-    for (int i = 0, size = transforms.size(); i < size; ++i)
+    for (int i = 0, vsize = transforms.size(); i < vsize; ++i)
         if (transforms[i]->type() == map_transformer::TT_SUBST)
             substs.push_back( transforms[i]->describe() );
     return (substs);

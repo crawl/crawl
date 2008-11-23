@@ -26,9 +26,15 @@ struct vault_placement
     map_def map;
     std::vector<coord_def> exits;
 
+    int level_number, altar_count, num_runes;
+
+    // If we're not placing runes, this is the substitute feature.
+    int rune_subst;
+
     vault_placement()
         : pos(-1, -1), size(0, 0), orient(0), map(),
-          exits()
+          exits(), level_number(0), altar_count(0), num_runes(0),
+          rune_subst(-1)
     {
     }
 };

@@ -257,6 +257,7 @@ public:
 
     int width() const;
     int height() const;
+    coord_def size() const;
 
     int glyph(int x, int y) const;
     bool is_solid(int gly) const;
