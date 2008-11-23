@@ -613,13 +613,13 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("you or your allies kill holy beings");
         break;
 
-    case GOD_KIKUBAAQUDGHA:
-        likes.push_back("you kill holy beings");
-        likes.push_back("your god-given allies kill holy beings");
+    case GOD_YREDELEMNUL:
         likes.push_back("your undead slaves kill holy beings");
         break;
 
-    case GOD_YREDELEMNUL:
+    case GOD_KIKUBAAQUDGHA:
+        likes.push_back("you kill holy beings");
+        likes.push_back("your god-given allies kill holy beings");
         likes.push_back("your undead slaves kill holy beings");
         break;
 
