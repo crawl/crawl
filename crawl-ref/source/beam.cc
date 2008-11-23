@@ -4450,7 +4450,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         // Sticky flame.
         if (beam.name == "sticky flame")
         {
-            int levels = std::min(4, 1 + random2(hurt_final) / 2);
+            int levels = std::min(4, 1 + random2(mon->hit_dice) / 2);
             napalm_monster(mon, _whose_kill(beam), levels);
         }
 
