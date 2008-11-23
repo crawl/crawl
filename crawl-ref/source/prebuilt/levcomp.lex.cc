@@ -1535,6 +1535,7 @@ char *yytext;
 #include "AppHdr.h"
 #include "mapdef.h"
 #include "levcomp.tab.h"
+#include "stuff.h"
 
 static bool alloced = false;
 
@@ -1644,7 +1645,7 @@ static void cattext(bool trim_right = false, int strip_trailing = 0)
 
 
 
-#line 1648 "levcomp.lex.cc"
+#line 1649 "levcomp.lex.cc"
 
 #define INITIAL 0
 #define MAPDEF 1
@@ -1807,10 +1808,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 132 "levcomp.lpp"
+#line 133 "levcomp.lpp"
 
 
-#line 1814 "levcomp.lex.cc"
+#line 1815 "levcomp.lex.cc"
 
 	if ( !(yy_init) )
 		{
@@ -1902,12 +1903,12 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 134 "levcomp.lpp"
+#line 135 "levcomp.lpp"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 136 "levcomp.lpp"
+#line 137 "levcomp.lpp"
 {
                         settext(true);
                         return MAP_LINE;
@@ -1916,23 +1917,23 @@ YY_RULE_SETUP
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 141 "levcomp.lpp"
+#line 142 "levcomp.lpp"
 return CHARACTER;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 142 "levcomp.lpp"
+#line 143 "levcomp.lpp"
 return CHARACTER;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 143 "levcomp.lpp"
+#line 144 "levcomp.lpp"
 return CHARACTER;
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 145 "levcomp.lpp"
+#line 146 "levcomp.lpp"
 ;
 	YY_BREAK
 case 7:
@@ -1940,7 +1941,7 @@ case 7:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 147 "levcomp.lpp"
+#line 148 "levcomp.lpp"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 8:
@@ -1948,7 +1949,7 @@ case 8:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 148 "levcomp.lpp"
+#line 149 "levcomp.lpp"
 {
                             settext(true, 2);
                             BEGIN(INITIAL);
@@ -1957,7 +1958,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 153 "levcomp.lpp"
+#line 154 "levcomp.lpp"
 {
                             settext(true);
                             return LUA_LINE;
@@ -1966,7 +1967,7 @@ YY_RULE_SETUP
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 157 "levcomp.lpp"
+#line 158 "levcomp.lpp"
 ;
 	YY_BREAK
 case 11:
@@ -1974,7 +1975,7 @@ case 11:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 159 "levcomp.lpp"
+#line 160 "levcomp.lpp"
 {
                             settext(true);
                             return LUA_LINE;
@@ -1983,12 +1984,12 @@ YY_RULE_SETUP
 case 12:
 /* rule 12 can match eol */
 YY_RULE_SETUP
-#line 163 "levcomp.lpp"
+#line 164 "levcomp.lpp"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 165 "levcomp.lpp"
+#line 166 "levcomp.lpp"
 {
                         settext();
                         return STRING;
@@ -1997,24 +1998,24 @@ YY_RULE_SETUP
 case 14:
 /* rule 14 can match eol */
 YY_RULE_SETUP
-#line 170 "levcomp.lpp"
+#line 171 "levcomp.lpp"
 ;
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 171 "levcomp.lpp"
+#line 172 "levcomp.lpp"
 ;
 	YY_BREAK
 case 16:
 /* rule 16 can match eol */
 YY_RULE_SETUP
-#line 172 "levcomp.lpp"
+#line 173 "levcomp.lpp"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 174 "levcomp.lpp"
+#line 175 "levcomp.lpp"
 {
                         cattext(true, 1);
                     }
@@ -2022,12 +2023,12 @@ YY_RULE_SETUP
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 178 "levcomp.lpp"
+#line 179 "levcomp.lpp"
 ;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 180 "levcomp.lpp"
+#line 181 "levcomp.lpp"
 {
                         cattext();
                         return ITEM_INFO;
@@ -2035,30 +2036,30 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 185 "levcomp.lpp"
+#line 186 "levcomp.lpp"
 { clean(); return COMMA; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 186 "levcomp.lpp"
+#line 187 "levcomp.lpp"
 ;
 	YY_BREAK
 case 22:
 /* rule 22 can match eol */
 YY_RULE_SETUP
-#line 187 "levcomp.lpp"
+#line 188 "levcomp.lpp"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 23:
 /* rule 23 can match eol */
 YY_RULE_SETUP
-#line 189 "levcomp.lpp"
+#line 190 "levcomp.lpp"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 24:
 /* rule 24 can match eol */
 YY_RULE_SETUP
-#line 191 "levcomp.lpp"
+#line 192 "levcomp.lpp"
 {
                         cattext(true, 1);
                     }
@@ -2066,12 +2067,12 @@ YY_RULE_SETUP
 case 25:
 /* rule 25 can match eol */
 YY_RULE_SETUP
-#line 195 "levcomp.lpp"
+#line 196 "levcomp.lpp"
 ;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 197 "levcomp.lpp"
+#line 198 "levcomp.lpp"
 {
                         cattext();
                         return MONSTER_NAME;
@@ -2079,18 +2080,18 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 202 "levcomp.lpp"
+#line 203 "levcomp.lpp"
 { clean(); return COMMA; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 203 "levcomp.lpp"
+#line 204 "levcomp.lpp"
 ;
 	YY_BREAK
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 205 "levcomp.lpp"
+#line 206 "levcomp.lpp"
 {
                         cattext(true, 1);
                     }
@@ -2098,19 +2099,19 @@ YY_RULE_SETUP
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 209 "levcomp.lpp"
+#line 210 "levcomp.lpp"
 ;
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 211 "levcomp.lpp"
+#line 212 "levcomp.lpp"
 {
                         cattext();
                     }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 215 "levcomp.lpp"
+#line 216 "levcomp.lpp"
 cattext();
 	YY_BREAK
 case 33:
@@ -2118,12 +2119,12 @@ case 33:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 217 "levcomp.lpp"
+#line 218 "levcomp.lpp"
 { BEGIN(INITIAL); str_check(); return STRING; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 219 "levcomp.lpp"
+#line 220 "levcomp.lpp"
 ;
 	YY_BREAK
 case 35:
@@ -2131,182 +2132,182 @@ case 35:
 (yy_c_buf_p) = yy_cp -= 1;
 YY_DO_BEFORE_ACTION; /* set up yytext again */
 YY_RULE_SETUP
-#line 221 "levcomp.lpp"
+#line 222 "levcomp.lpp"
 { BEGIN(MAPDEF); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 223 "levcomp.lpp"
+#line 224 "levcomp.lpp"
 { BEGIN(LUA_ONELINER); return MAIN; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 225 "levcomp.lpp"
+#line 226 "levcomp.lpp"
 { BEGIN(LUA); return PRELUDE; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 226 "levcomp.lpp"
+#line 227 "levcomp.lpp"
 { BEGIN(LUA); return MAIN; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 227 "levcomp.lpp"
+#line 228 "levcomp.lpp"
 { BEGIN(LUA); return MAIN; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 228 "levcomp.lpp"
+#line 229 "levcomp.lpp"
 { BEGIN(LUA); return VALIDATE; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 229 "levcomp.lpp"
+#line 230 "levcomp.lpp"
 { BEGIN(LUA); return VETO; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 232 "levcomp.lpp"
+#line 233 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return NAME; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 233 "levcomp.lpp"
+#line 234 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return DEFAULT_DEPTH; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 234 "levcomp.lpp"
+#line 235 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return DEPTH; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 235 "levcomp.lpp"
+#line 236 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return ORIENT; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 236 "levcomp.lpp"
+#line 237 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return PLACE; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 237 "levcomp.lpp"
+#line 238 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return WELCOME; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 238 "levcomp.lpp"
+#line 239 "levcomp.lpp"
 return CHANCE;
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 239 "levcomp.lpp"
+#line 240 "levcomp.lpp"
 return WEIGHT;
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 240 "levcomp.lpp"
+#line 241 "levcomp.lpp"
 { CBEGIN(KEYWORDS); return TAGS; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 241 "levcomp.lpp"
+#line 242 "levcomp.lpp"
 { CBEGIN(KEYWORDS); return TAGS; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 242 "levcomp.lpp"
+#line 243 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return LFLAGS; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 243 "levcomp.lpp"
+#line 244 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return BFLAGS; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 244 "levcomp.lpp"
+#line 245 "levcomp.lpp"
 { CBEGIN(ITEM_LIST); return SUBST; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 245 "levcomp.lpp"
+#line 246 "levcomp.lpp"
 { CBEGIN(ITEM_LIST); return NSUBST; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 246 "levcomp.lpp"
+#line 247 "levcomp.lpp"
 { CBEGIN(ITEM_LIST); return COLOUR; }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 247 "levcomp.lpp"
+#line 248 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return FLOORCOL; }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 248 "levcomp.lpp"
+#line 249 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return ROCKCOL; }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 249 "levcomp.lpp"
+#line 250 "levcomp.lpp"
 { CBEGIN(MNAME); return MONS; }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 250 "levcomp.lpp"
+#line 251 "levcomp.lpp"
 { CBEGIN(ITEM_LIST); return ITEM; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 251 "levcomp.lpp"
+#line 252 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return MARKER; }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 252 "levcomp.lpp"
+#line 253 "levcomp.lpp"
 { CBEGIN(ITEM_LIST); return SHUFFLE; }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 254 "levcomp.lpp"
+#line 255 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return KFEAT; }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 255 "levcomp.lpp"
+#line 256 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return KITEM; }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 256 "levcomp.lpp"
+#line 257 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return KMONS; }
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 257 "levcomp.lpp"
+#line 258 "levcomp.lpp"
 { CBEGIN(ARGUMENT); return KMASK; }
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 259 "levcomp.lpp"
+#line 260 "levcomp.lpp"
 return COMMA;
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 261 "levcomp.lpp"
+#line 262 "levcomp.lpp"
 return COLON;
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 263 "levcomp.lpp"
+#line 264 "levcomp.lpp"
 return PERC;
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 265 "levcomp.lpp"
+#line 266 "levcomp.lpp"
 {
                         clean();
                         yylval.i = atoi(yytext);
@@ -2315,31 +2316,31 @@ YY_RULE_SETUP
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 271 "levcomp.lpp"
+#line 272 "levcomp.lpp"
 ;
 	YY_BREAK
 case 72:
 /* rule 72 can match eol */
 YY_RULE_SETUP
-#line 272 "levcomp.lpp"
+#line 273 "levcomp.lpp"
 ;
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 273 "levcomp.lpp"
+#line 274 "levcomp.lpp"
 ;
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 274 "levcomp.lpp"
+#line 275 "levcomp.lpp"
 return CHARACTER;
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 276 "levcomp.lpp"
+#line 277 "levcomp.lpp"
 ECHO;
 	YY_BREAK
-#line 2343 "levcomp.lex.cc"
+#line 2344 "levcomp.lex.cc"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(MAPDEF):
 case YY_STATE_EOF(LUA):
@@ -3355,7 +3356,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 276 "levcomp.lpp"
+#line 277 "levcomp.lpp"
 
 
 

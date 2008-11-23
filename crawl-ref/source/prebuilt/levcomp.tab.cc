@@ -1979,7 +1979,7 @@ yyreduce:
     {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("floor_colour(\"%s\")",
+                        make_stringf("floorcol(\"%s\")",
                             quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
                 }
     break;
@@ -1994,7 +1994,7 @@ yyreduce:
     {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("rock_colour(\"%s\")",
+                        make_stringf("rockcol(\"%s\")",
                             quote_lua_string((yyvsp[(2) - (2)].text)).c_str()));
                 }
     break;
