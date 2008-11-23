@@ -764,6 +764,11 @@ int map_lines::glyph(int x, int y) const
     return lines[y][x];
 }
 
+int map_lines::glyph(const coord_def &c) const
+{
+    return glyph(c.x, c.y);
+}
+
 bool map_lines::is_solid(int gly) const
 {
     return (gly == 'x' || gly == 'c' || gly == 'b' || gly == 'v');

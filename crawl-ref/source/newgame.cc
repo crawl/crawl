@@ -34,6 +34,7 @@
 #include "cio.h"
 #include "command.h"
 #include "describe.h"
+#include "dungeon.h"
 #include "files.h"
 #include "fight.h"
 #include "food.h"

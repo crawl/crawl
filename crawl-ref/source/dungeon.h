@@ -16,6 +16,8 @@
 #include "terrain.h"
 #include "travel.h"
 #include "stuff.h"
+#include "mapdef.h"
+
 #include <vector>
 #include <set>
 #include <algorithm>
@@ -46,13 +48,10 @@ const int MAKE_GOOD_ITEM = 351;
 // Should be the larger of GXM/GYM
 #define MAP_SIDE ( (GXM) > (GYM) ? (GXM) : (GYM) )
 
-// This may sometimes be used as map_type[x][y] (for minivaults) and as
-// map_type[y][x] for large-scale vaults. Keep an eye out for the associated
-// brain-damage. [dshaligram]
-typedef char map_type[MAP_SIDE + 1][MAP_SIDE + 1];
 typedef FixedArray<unsigned short, GXM, GYM> map_mask;
 
 extern map_mask dgn_Map_Mask;
+extern bool Generating_Level;
 extern std::string dgn_Layout_Type;
 
 extern std::set<std::string> Level_Unique_Maps;
@@ -139,6 +138,34 @@ class dgn_region
     bool overlaps(const dgn_region_list &others,
                   const map_mask &dgn_map_mask) const;
     bool overlaps(const map_mask &dgn_map_mask) const;
+};
+
+struct vault_placement
+{
+public:
+    coord_def pos;
+    coord_def size;
+
+    int orient;
+    map_def map;
+    std::vector<coord_def> exits;
+
+    int level_number, altar_count, num_runes;
+
+    // If we're not placing runes, this is the substitute feature.
+    int rune_subst;
+
+public:
+    vault_placement()
+        : pos(-1, -1), size(0, 0), orient(0), map(),
+          exits(), level_number(0), altar_count(0), num_runes(0),
+          rune_subst(-1)
+    {
+    }
+
+    void reset();
+    void apply_grid();
+    void draw_at(const coord_def &c);
 };
 
 //////////////////////////////////////////////////////////////////////////

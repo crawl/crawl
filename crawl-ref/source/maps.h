@@ -12,35 +12,12 @@
 
 #include "FixVec.h"
 #include "dungeon.h"
-#include "mapdef.h"
 
 #include <vector>
 
 class map_def;
-struct vault_placement
-{
-    coord_def pos;
-    coord_def size;
 
-    int orient;
-    map_def map;
-    std::vector<coord_def> exits;
-
-    int level_number, altar_count, num_runes;
-
-    // If we're not placing runes, this is the substitute feature.
-    int rune_subst;
-
-    vault_placement()
-        : pos(-1, -1), size(0, 0), orient(0), map(),
-          exits(), level_number(0), altar_count(0), num_runes(0),
-          rune_subst(-1)
-    {
-    }
-};
-
-int vault_main(map_type vgrid,
-               vault_placement &vp,
+int vault_main(vault_placement &vp,
                int vault_force,
                bool check_place = false);
 

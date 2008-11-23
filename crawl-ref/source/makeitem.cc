@@ -16,6 +16,7 @@
 
 #include "decks.h"
 #include "describe.h"
+#include "dungeon.h"
 #include "food.h"
 #include "it_use2.h"
 #include "itemname.h"
@@ -27,6 +28,7 @@
 #include "randart.h"
 #include "spl-book.h"
 #include "stuff.h"
+#include "travel.h"
 #include "view.h"
 
 void item_set_appearance(item_def &item);

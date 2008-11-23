@@ -260,6 +260,7 @@ public:
     coord_def size() const;
 
     int glyph(int x, int y) const;
+    int glyph(const coord_def &) const;
     bool is_solid(int gly) const;
 
     bool solid_borders(map_section_type border);

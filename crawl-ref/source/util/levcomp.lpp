@@ -11,6 +11,7 @@
 #include "AppHdr.h"
 #include "mapdef.h"
 #include "levcomp.tab.h"
+#include "stuff.h"
 
 static bool alloced = false;
 

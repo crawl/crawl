@@ -9,7 +9,6 @@
 #ifndef MAKEITEM_H
 #define MAKEITEM_H
 
-#include "dungeon.h"
 #include "itemprop.h"
 
 enum item_make_species_type

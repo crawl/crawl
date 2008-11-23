@@ -30,12 +30,11 @@
 #include "stuff.h"
 #include "terrain.h"
 
-static int write_vault(map_def &mdef, map_type mt,
+static int write_vault(map_def &mdef,
                        vault_placement &,
                        bool check_place);
 static int apply_vault_definition(
                         map_def &def,
-                        map_type map,
                         vault_placement &,
                         bool check_place);
 
@@ -57,8 +56,7 @@ static map_vector vdefs;
 
 // Make sure that vault_n, where n is a number, is a vault which can be put
 // anywhere, while other vault names are for specific level ranges, etc.
-int vault_main( map_type vgrid,
-                vault_placement &place,
+int vault_main( vault_placement &place,
                 int which_vault,
                 bool check_place)
 {
@@ -71,23 +69,13 @@ int vault_main( map_type vgrid,
         mapgen_report_map_try(vdefs[which_vault]);
 #endif
 
-    // First, fill in entirely with walls and null-terminate {dlb}:
-    for (int vx = 0; vx < MAP_SIDE; vx++)
-    {
-        for (int vy = 0; vy < MAP_SIDE; vy++)
-          vgrid[vx][vy] = 'x';
-
-        vgrid[MAP_SIDE][vx] = 0;
-        vgrid[vx][MAP_SIDE] = 0;
-    }
-
     // Return value of zero forces dungeon.cc to regenerate the level, except
     // for branch entry vaults where dungeon.cc just rejects the vault and
     // places a vanilla entry.
-    return (write_vault( vdefs[which_vault], vgrid, place, check_place ));
+    return (write_vault( vdefs[which_vault], place, check_place ));
 }
 
-static int write_vault(map_def &mdef, map_type map,
+static int write_vault(map_def &mdef,
                        vault_placement &place,
                        bool check_place)
 {
@@ -107,7 +95,7 @@ static int write_vault(map_def &mdef, map_type map,
         if (!resolve_map(place.map, mdef))
             continue;
 
-        place.orient = apply_vault_definition(place.map, map,
+        place.orient = apply_vault_definition(place.map,
                                               place, check_place);
 
         if (place.orient != MAP_NONE)
@@ -210,7 +198,7 @@ void fit_region_into_map_bounds(coord_def &pos, const coord_def &size)
         pos.y = Y_BOUND_2 - size.y + 1;
 }
 
-static bool apply_vault_grid(map_def &def, map_type map,
+static bool apply_vault_grid(map_def &def,
                              vault_placement &place,
                              bool check_place)
 {
@@ -268,17 +256,6 @@ static bool apply_vault_grid(map_def &def, map_type map,
         return (false);
     }
 
-    const std::vector<std::string> &lines = ml.get_lines();
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Applying %s at (%d,%d), dimensions (%d,%d)",
-            def.name.c_str(), start.x, start.y, size.x, size.y);
-#endif
-
-    for (int y = start.y; y < start.y + size.y; ++y)
-    {
-        const std::string &s = lines[y - start.y];
-        strncpy(&map[y][start.x], s.c_str(), s.length());
-    }
 
     place.pos  = start;
     place.size = size;
@@ -288,11 +265,10 @@ static bool apply_vault_grid(map_def &def, map_type map,
 
 static int apply_vault_definition(
         map_def &def,
-        map_type map,
         vault_placement &place,
         bool check_place)
 {
-    if (!apply_vault_grid(def, map, place, check_place))
+    if (!apply_vault_grid(def, place, check_place))
         return (MAP_NONE);
 
     int orient = def.orient;

@@ -211,7 +211,6 @@ static bool _build_minivaults(int level_number, int force_vault,
 static void _vault_grid( vault_placement &,
                          int vgrid,
                          const coord_def& where,
-                         std::vector<coord_def> &targets,
                          bool recursive = false);
 
 static int  _dgn_random_map_for_place(bool wantmini);
@@ -3941,11 +3940,10 @@ static bool _build_minivaults(int level_number, int force_vault,
     if (dgn_check_connectivity && !dgn_zones)
         dgn_zones = _dgn_count_disconnected_zones(false);
 
-    map_type vgrid;
     vault_placement place;
 
     place.level_number = level_number;
-    vault_main(vgrid, place, force_vault);
+    vault_main(place, force_vault);
 
     coord_def v1;
 
@@ -3970,37 +3968,13 @@ static bool _build_minivaults(int level_number, int force_vault,
 
     _register_place(place);
 
-    // This is a throwaway.
-    std::vector<coord_def> &target_connections = place.exits;
-
-    // Paint the minivault onto the grid.
-    for (rectangle_iterator ri(v1, v1 + place.size - 1); ri; ++ri)
-    {
-        const coord_def vdelta = *ri - v1;
-
-        // FIXME: why the y and x swap?
-        const int feat = vgrid[vdelta.y][vdelta.x];
-
-        if (feat == ' ')
-            continue;
-
-        const dungeon_feature_type oldgrid = grd(*ri);
-        _vault_grid( place, feat, *ri, target_connections );
-        if (!Generating_Level)
-        {
-            link_items();
-            const dungeon_feature_type newgrid = grd(*ri);
-            grd(*ri) = oldgrid;
-            dungeon_terrain_changed(*ri, newgrid, true, true);
-            env.markers.remove_markers_at(*ri, MAT_ANY);
-        }
-        env.map(*ri).property |= FPROP_VAULT;
-    }
-
-    place.map.map.apply_overlays(v1);
+    place.apply_grid();
 
     if (!make_no_exits)
     {
+        // This is a throwaway.
+        std::vector<coord_def> &target_connections = place.exits;
+
         if (target_connections.empty() && place.map.has_tag("mini_float"))
             _pick_float_exits(place, target_connections);
 
@@ -4501,52 +4475,22 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
     if (dgn_check_connectivity && !dgn_zones)
         dgn_zones = _dgn_count_disconnected_zones(false);
 
-    map_type vgrid;
     vault_placement place;
 
     place.level_number = level_number;
-    std::vector<coord_def> &target_connections = place.exits;
-
     if (map_bounds(where))
         place.pos = where;
 
-    const int gluggy = vault_main(vgrid, place, force_vault,
+    const int gluggy = vault_main(place, force_vault,
                                   check_collisions);
 
     if (gluggy == MAP_NONE || !gluggy)
         return (false);
 
-    dgn_region this_vault(place.pos, place.size);
-    if (!place.size.zero())
-    {
-        // NOTE: assumes *no* previous item (I think) or monster (definitely)
-        // placement.
-        for ( rectangle_iterator ri(place.pos, place.pos + place.size - 1);
-              ri; ++ri )
-        {
-            if (vgrid[ri->y][ri->x] == ' ')
-                continue;
-
-            const dungeon_feature_type oldgrid = grd(*ri);
-            _vault_grid( place, vgrid[ri->y][ri->x], *ri,
-                         target_connections );
-            if (!Generating_Level)
-            {
-                // Have to link items each square at a time, or
-                // dungeon_terrain_changed could blow up.
-                link_items();
-                const dungeon_feature_type newgrid = grd(*ri);
-                grd(*ri) = oldgrid;
-                dungeon_terrain_changed(*ri, newgrid, true, true);
-                env.markers.remove_markers_at(*ri, MAT_ANY);
-            }
-            env.map(*ri).property |= FPROP_VAULT;
-        }
-    }
-
-    place.map.map.apply_overlays(place.pos);
+    place.apply_grid();
     _register_place(place);
 
+    std::vector<coord_def> &target_connections = place.exits;
     if (target_connections.empty() && gluggy != MAP_ENCOMPASS)
         _pick_float_exits(place, target_connections);
 
@@ -5053,7 +4997,6 @@ static const object_class_type _acquirement_item_classes[] = {
 static void _vault_grid( vault_placement &place,
                          int vgrid,
                          const coord_def& where,
-                         std::vector<coord_def> &targets,
                          bool recursive )
 {
     keyed_mapspec *mapsp = (recursive ? NULL
@@ -5068,7 +5011,7 @@ static void _vault_grid( vault_placement &place,
         }
         else if (f.glyph >= 0)
         {
-            _vault_grid( place, f.glyph, where, targets, true );
+            _vault_grid( place, f.glyph, where, true );
         }
         else if (f.shop >= 0)
             place_spec_shop(place.level_number, where, f.shop);
@@ -5145,7 +5088,7 @@ static void _vault_grid( vault_placement &place,
         place.altar_count++;
         break;
     case '@':
-        targets.push_back( where );
+        place.exits.push_back( where );
         break;
     case '^':
         place_specific_trap(where, TRAP_RANDOM);
@@ -5160,7 +5103,7 @@ static void _vault_grid( vault_placement &place,
             || where.x == place.pos.x + place.size.x - 1
             || where.y == place.pos.y + place.size.y - 1))
     {
-        targets.push_back( where );
+        place.exits.push_back( where );
     }
 
     // Then, handle grids that place "stuff" {dlb}:
@@ -6623,8 +6566,7 @@ static void _labyrinth_place_exit(const coord_def &end)
 
 static void _init_minivault_placement(int vault, vault_placement &place)
 {
-    map_type vgrid;
-    vault_main(vgrid, place, vault);
+    vault_main(place, vault);
 }
 
 // Checks whether a given grid has at least one neighbour surrounded
@@ -8406,4 +8348,53 @@ static bool _fixup_interlevel_connectivity()
     }
 
     return (true);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// vault_placement
+
+void vault_placement::reset()
+{
+    altar_count = 0;
+}
+
+void vault_placement::apply_grid()
+{
+    if (!size.zero())
+    {
+        // NOTE: assumes *no* previous item (I think) or monster (definitely)
+        // placement.
+        for ( rectangle_iterator ri(pos, pos + size - 1); ri; ++ri )
+        {
+            const coord_def &rp(*ri);
+            const coord_def dp = rp - pos;
+
+            const int feat = map.map.glyph(dp);
+
+            if (feat == ' ')
+                continue;
+
+            const dungeon_feature_type oldgrid = grd(*ri);
+            _vault_grid( *this, feat, *ri );
+            if (!Generating_Level)
+            {
+                // Have to link items each square at a time, or
+                // dungeon_terrain_changed could blow up.
+                link_items();
+                const dungeon_feature_type newgrid = grd(*ri);
+                grd(*ri) = oldgrid;
+                dungeon_terrain_changed(*ri, newgrid, true, true);
+                env.markers.remove_markers_at(*ri, MAT_ANY);
+            }
+            env.map(*ri).property |= FPROP_VAULT;
+        }
+
+        map.map.apply_overlays(pos);
+    }
+}
+
+void vault_placement::draw_at(const coord_def &c)
+{
+    pos = c;
+    apply_grid();
 }
