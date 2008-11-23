@@ -1010,7 +1010,7 @@ static bool _food_change(bool suppress_message)
                 else
                     msg += "are starving!";
 
-                mprf(MSGCH_FOOD, less_hungry, "You %s", msg.c_str());
+                mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
 
                 // Xom thinks this is funny if you're in a labyrinth
                 // and are low on food.
@@ -1030,7 +1030,7 @@ static bool _food_change(bool suppress_message)
                 else
                     msg += "are near starving!";
 
-                mprf(MSGCH_FOOD, less_hungry, "You %s", msg.c_str());
+                mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
 
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
@@ -1043,7 +1043,7 @@ static bool _food_change(bool suppress_message)
                 msg += _how_hungry();
                 msg += ".";
 
-                mprf(MSGCH_FOOD, less_hungry, "You %s", msg.c_str());
+                mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
 
                 learned_something_new(TUT_YOU_HUNGRY);
                 break;
