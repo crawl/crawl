@@ -1017,67 +1017,71 @@ static int dgn_load_des_file(lua_State *ls)
     return (0);
 }
 
-static int dgn_floor_colour(lua_State *ls)
+static int dgn_floorcol(lua_State *ls)
 {
     MAP(ls, 1, map);
 
-    const char *s = luaL_checkstring(ls, 2);
-    int colour = str_to_colour(s);
-
-    if (colour < 0 || colour == BLACK)
+    if (!lua_isnone(ls, 2))
     {
-        std::string error;
+        const char *s = luaL_checkstring(ls, 2);
+        int colour = str_to_colour(s);
 
-        if (colour == BLACK)
+        if (colour < 0 || colour == BLACK)
         {
-            error = "Can't set floor to black.";
-        }
-        else
-        {
-            error = "No such colour as '";
-            error += s;
-            error += "'";
-        }
+            std::string error;
 
-        luaL_argerror(ls, 2, error.c_str());
+            if (colour == BLACK)
+            {
+                error = "Can't set floor to black.";
+            }
+            else
+            {
+                error = "No such colour as '";
+                error += s;
+                error += "'";
+            }
 
-        return (0);
+            luaL_argerror(ls, 2, error.c_str());
+
+            return (0);
+        }
+        map->floor_colour = (unsigned char) colour;
     }
-
-    map->floor_colour = (unsigned char) colour;
-    return (0);
+    PLUARET(string, colour_to_str(map->floor_colour).c_str());
 }
 
-static int dgn_rock_colour(lua_State *ls)
+static int dgn_rockcol(lua_State *ls)
 {
     MAP(ls, 1, map);
 
-    const char *s = luaL_checkstring(ls, 2);
-    int colour = str_to_colour(s);
-
-    if (colour < 0 || colour == BLACK)
+    if (!lua_isnone(ls, 2))
     {
-        std::string error;
+        const char *s = luaL_checkstring(ls, 2);
+        int colour = str_to_colour(s);
 
-        if (colour == BLACK)
+        if (colour < 0 || colour == BLACK)
         {
-            error = "Can't set rock to black.";
-        }
-        else
-        {
-            error = "No such colour as '";
-            error += s;
-            error += "'";
+            std::string error;
+
+            if (colour == BLACK)
+            {
+                error = "Can't set rock to black.";
+            }
+            else
+            {
+                error = "No such colour as '";
+                error += s;
+                error += "'";
+            }
+
+            luaL_argerror(ls, 2, error.c_str());
+
+            return (0);
         }
 
-        luaL_argerror(ls, 2, error.c_str());
-
-        return (0);
+        map->rock_colour = (unsigned char) colour;
     }
-
-    map->rock_colour = (unsigned char) colour;
-
-    return (0);
+    PLUARET(string, colour_to_str(map->rock_colour).c_str());
 }
 
 static int dgn_get_floor_colour(lua_State *ls)
@@ -2099,8 +2103,8 @@ static const struct luaL_reg dgn_lib[] =
     { "subst", dgn_subst },
     { "nsubst", dgn_nsubst },
     { "colour", dgn_colour },
-    { "floor_colour", dgn_floor_colour},
-    { "rock_colour", dgn_rock_colour},
+    { "floorcol", dgn_floorcol},
+    { "rockcol", dgn_rockcol},
     { "subst_remove", dgn_subst_remove },
     { "map", dgn_map },
     { "mons", dgn_mons },

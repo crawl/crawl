@@ -293,7 +293,7 @@ ITEM:    any book / good_item any book, any staff
 SUBST:   d=.d, e=.e, f=.f
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
+: floorcol(colour)
 : if colour == "red" then
 SUBST: l = w
 : else
@@ -328,7 +328,7 @@ ITEM:    any wand, ring of levitation
 SHUFFLE: leAB/wdBA
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
+: floorcol(colour)
 : if colour == "red" then
 SUBST: l = w
 : else
@@ -383,7 +383,7 @@ KFEAT:   Z = stone_arch
 SHUFFLE: lw
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
+: floorcol(colour)
 : if colour == "red" then
 SUBST: l = w
 : else
@@ -425,7 +425,7 @@ SUBST:   a=T, z=V
 SHUFFLE: lw
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
+: floorcol(colour)
 : if colour == "red" then
 SUBST: l = w
 : else
@@ -746,7 +746,7 @@ KFEAT:   F = scroll shop / distillery shop
 : bazaar_message(_G)
 # special cases for blue floor
 : local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
+: floorcol(colour)
 : if colour == "blue" then
 SUBST:   w = W
 : end
@@ -868,7 +868,7 @@ SUBST:   z = ., Z = w
 SHUFFLE: wl, ABCD
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
-: _G.floor_colour(colour)
+: floorcol(colour)
 : if colour == "red" then
 SUBST: l = w
 : else

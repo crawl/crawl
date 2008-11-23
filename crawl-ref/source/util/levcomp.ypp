@@ -359,7 +359,7 @@ floorcol        : FLOORCOL { }
                 {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("floor_colour(\"%s\")",
+                        make_stringf("floorcol(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
 
@@ -368,7 +368,7 @@ rockcol         : ROCKCOL { }
                 {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("rock_colour(\"%s\")",
+                        make_stringf("rockcol(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
 
