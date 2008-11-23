@@ -6430,6 +6430,7 @@ int piety_breakpoint(int i)
 bool tso_unchivalric_attack_safe_monster(const monsters *mon)
 {
     const mon_holy_type holiness = mon->holiness();
-    return (mons_is_evil(mon)
+    return (mons_intel(mon) < I_NORMAL
+            || mons_is_evil(mon)
             || (holiness != MH_NATURAL && holiness != MH_HOLY));
 }
