@@ -18,7 +18,7 @@
 class map_def;
 
 int vault_main(vault_placement &vp,
-               int vault_force,
+               const map_def *vault,
                bool check_place = false);
 
 // Given a rectangular region, slides it to fit into the map. size must be
@@ -27,11 +27,13 @@ void fit_region_into_map_bounds(coord_def &pos, const coord_def &size);
 
 const map_def *map_by_index(int index);
 int map_count();
-int find_map_by_name(const std::string &name);
-int random_map_for_place(const level_id &place, bool mini = false);
-int random_map_in_depth(const level_id &lid, bool want_minivault = false);
-int random_map_for_tag(const std::string &tag, bool want_minivault,
-                       bool check_depth = false);
+
+const map_def *find_map_by_name(const std::string &name);
+const map_def *random_map_for_place(const level_id &place, bool mini = false);
+const map_def *random_map_in_depth(const level_id &lid,
+                                   bool want_minivault = false);
+const map_def *random_map_for_tag(const std::string &tag, bool want_minivault,
+                                  bool check_depth = false);
 void add_parsed_map(const map_def &md);
 
 std::vector<std::string> find_map_matches(const std::string &name);

@@ -2306,8 +2306,8 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
     if (power_level >= 2)
     {
         // Generate a portal to something.
-        const int mapidx = random_map_for_tag("trowel_portal", false, false);
-        if (mapidx == -1)
+        const map_def *map = random_map_for_tag("trowel_portal", false, false);
+        if (!map)
         {
             mpr("A buggy portal flickers into view, then vanishes.");
         }
@@ -2315,7 +2315,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
         {
             {
                 no_messages n;
-                dgn_place_map(mapidx, true, true, you.pos());
+                dgn_place_map(map, true, true, you.pos());
             }
             mpr("A mystic portal forms.");
         }

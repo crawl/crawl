@@ -337,7 +337,7 @@ bool builder(int level_number, int level_type);
 void dgn_set_colours_from_monsters();
 void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
-bool dgn_place_map(int map, bool clobber, bool make_no_exits,
+bool dgn_place_map(const map_def *map, bool clobber, bool make_no_exits,
                    const coord_def &pos = coord_def(-1, -1));
 void level_clear_vault_memory();
 void level_welcome_messages();

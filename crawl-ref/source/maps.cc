@@ -38,7 +38,7 @@ static int apply_vault_definition(
                         vault_placement &,
                         bool check_place);
 
-static bool resolve_map(map_def &def, const map_def &original);
+static bool resolve_map(map_def &def);
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -57,22 +57,22 @@ static map_vector vdefs;
 // Make sure that vault_n, where n is a number, is a vault which can be put
 // anywhere, while other vault names are for specific level ranges, etc.
 int vault_main( vault_placement &place,
-                int which_vault,
+                const map_def *vault,
                 bool check_place)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Generating level: %s (%d,%d)",
-         vdefs[which_vault].name.c_str(),
-         place.pos.x, place.pos.y);
+         vault->name.c_str(), place.pos.x, place.pos.y);
 
     if (crawl_state.map_stat_gen)
-        mapgen_report_map_try(vdefs[which_vault]);
+        mapgen_report_map_try(*vault);
 #endif
 
     // Return value of zero forces dungeon.cc to regenerate the level, except
     // for branch entry vaults where dungeon.cc just rejects the vault and
     // places a vanilla entry.
-    return (write_vault( vdefs[which_vault], place, check_place ));
+
+    return (write_vault( const_cast<map_def&>(*vault), place, check_place ));
 }
 
 static int write_vault(map_def &mdef,
@@ -92,7 +92,7 @@ static int write_vault(map_def &mdef,
 
     while (tries-- > 0)
     {
-        if (!resolve_map(place.map, mdef))
+        if (!resolve_map(place.map))
             continue;
 
         place.orient = apply_vault_definition(place.map,
@@ -105,7 +105,7 @@ static int write_vault(map_def &mdef,
 }
 
 // Mirror the map if appropriate, resolve substitutable symbols (?),
-static bool resolve_map(map_def &map, const map_def &original)
+static bool resolve_map(map_def &map)
 {
     map.reinit();
     std::string err = map.run_lua(true);
@@ -309,13 +309,13 @@ static bool map_matches_layout_type(const map_def &map)
     return map.has_tag("layout_" + dgn_Layout_Type);
 }
 
-int find_map_by_name(const std::string &name)
+const map_def *find_map_by_name(const std::string &name)
 {
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
         if (vdefs[i].name == name)
-            return (i);
+            return (&vdefs[i]);
 
-    return (-1);
+    return (NULL);
 }
 
 std::vector<std::string> find_map_matches(const std::string &name)
@@ -473,9 +473,9 @@ static vault_indices _eligible_maps_for_selector(const map_selector &sel)
     return (eligible);
 }
 
-static int _random_map_by_selector(const map_selector &sel);
-static int _random_map_in_list(const map_selector &sel,
-                               const vault_indices &filtered)
+static const map_def *_random_map_by_selector(const map_selector &sel);
+static const map_def *_random_map_in_list(const map_selector &sel,
+                                          const vault_indices &filtered)
 {
     int mapindex = -1;
     int rollsize = 0;
@@ -562,42 +562,34 @@ static int _random_map_in_list(const map_selector &sel,
 
     sel.announce(mapindex);
 
-    return (mapindex);
+    return (mapindex == -1? NULL : &vdefs[mapindex]);
 }
 
-static int _random_map_by_selector(const map_selector &sel)
+static const map_def *_random_map_by_selector(const map_selector &sel)
 {
     const vault_indices filtered = _eligible_maps_for_selector(sel);
     return _random_map_in_list(sel, filtered);
 }
 
 // Returns a map for which PLACE: matches the given place.
-int random_map_for_place(const level_id &place, bool want_minivault)
+const map_def *random_map_for_place(const level_id &place, bool want_minivault)
 {
     return _random_map_by_selector(
         map_selector::by_place(place, want_minivault));
 }
 
-int random_map_in_depth(const level_id &place, bool want_minivault)
+const map_def *random_map_in_depth(const level_id &place, bool want_minivault)
 {
     return _random_map_by_selector(
         map_selector::by_depth(place, want_minivault));
 }
 
-int random_map_for_tag(const std::string &tag,
-                       bool want_minivault,
-                       bool check_depth)
+const map_def *random_map_for_tag(const std::string &tag,
+                                  bool want_minivault,
+                                  bool check_depth)
 {
     return _random_map_by_selector(
         map_selector::by_tag(tag, want_minivault, check_depth));
-}
-
-const map_def *map_by_index(int index)
-{
-    if (index < 0 || index >= (int) vdefs.size())
-        return (NULL);
-
-    return &vdefs[index];
 }
 
 int map_count()
@@ -868,6 +860,11 @@ void run_map_preludes()
     }
 }
 
+const map_def *map_by_index(int index)
+{
+    return (&vdefs[index]);
+}
+
 ///////////////////////////////////////////////////////////////////////////
 // Debugging code
 
@@ -896,11 +893,11 @@ static weighted_map_names mg_find_random_vaults(
 
     for (int i = 0; i < 10000; ++i)
     {
-        const int v = _random_map_in_list(sel, filtered);
-        if (v == -1)
+        const map_def *map(_random_map_in_list(sel, filtered));
+        if (!map)
             map_counts["(none)"]++;
         else
-            map_counts[vdefs[v].name]++;
+            map_counts[map->name]++;
     }
 
     for (map_count_t::const_iterator i = map_counts.begin();

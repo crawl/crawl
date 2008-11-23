@@ -3737,8 +3737,8 @@ static void debug_load_map_by_name(std::string name)
     const bool place_on_us = strip_tag(name, "*", true);
 
     level_clear_vault_memory();
-    int map = find_map_by_name(name);
-    if (map == -1)
+    const map_def *toplace = find_map_by_name(name);
+    if (!toplace)
     {
         std::vector<std::string> matches = find_map_matches(name);
 
@@ -3755,7 +3755,7 @@ static void debug_load_map_by_name(std::string name)
             if (!yesno(prompt.c_str(), true, 'y'))
                 return;
 
-            map = find_map_by_name(matches[0]);
+            toplace = find_map_by_name(matches[0]);
         }
         else
         {
@@ -3767,7 +3767,6 @@ static void debug_load_map_by_name(std::string name)
         }
     }
 
-    const map_def *toplace = map_by_index(map);
     coord_def where(-1, -1);
     if ((toplace->orient == MAP_FLOAT || toplace->orient == MAP_NONE)
         && place_on_us)
@@ -3775,10 +3774,10 @@ static void debug_load_map_by_name(std::string name)
         where = you.pos();
     }
 
-    if (dgn_place_map(map, true, false, where))
-        mprf("Successfully placed %s.", map_by_index(map)->name.c_str());
+    if (dgn_place_map(toplace, true, false, where))
+        mprf("Successfully placed %s.", toplace->name.c_str());
     else
-        mprf("Failed to place %s.", map_by_index(map)->name.c_str());
+        mprf("Failed to place %s.", toplace->name.c_str());
 }
 
 void debug_place_map()

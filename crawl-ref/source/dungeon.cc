@@ -194,17 +194,19 @@ static void _beehive(spec_room &sr);
 static void _jelly_pit(int level_number, spec_room &sr);
 
 // VAULT FUNCTIONS
-static bool _build_secondary_vault(int level_number, int vault,
+static bool _build_secondary_vault(int level_number, const map_def *vault,
                                    int rune_subst = -1,
                                    bool clobber = false,
                                    bool make_no_exits = false,
                                    const coord_def &where = coord_def(-1, -1));
-static bool _build_vaults(int level_number, int vault_number,
+static bool _build_vaults(int level_number,
+                          const map_def *vault,
                           int rune_subst = -1, bool build_only = false,
                           bool check_collisions = false,
                           bool make_no_exits = false,
                           const coord_def &where = coord_def(-1, -1));
-static bool _build_minivaults(int level_number, int force_vault,
+static bool _build_minivaults(int level_number,
+                              const map_def *vault,
                               bool clobber = false,
                               bool make_no_exits = false,
                               const coord_def &where = coord_def() );
@@ -213,7 +215,7 @@ static void _vault_grid( vault_placement &,
                          const coord_def& where,
                          bool recursive = false);
 
-static int  _dgn_random_map_for_place(bool wantmini);
+static const map_def *_dgn_random_map_for_place(bool wantmini);
 static void _dgn_load_colour_grid();
 static void _dgn_map_colour_fixup();
 
@@ -1999,9 +2001,9 @@ static void _prepare_shoals(int level_number)
         grd[centres[j].x-1][centres[j].y] = DNGN_STONE_STAIRS_UP_III;
 
         // Place the rune
-        int vaultidx = random_map_for_tag("shoal_rune", true);
+        const map_def *vault = random_map_for_tag("shoal_rune", true);
 
-        _build_minivaults( level_number, vaultidx, false, false,
+        _build_minivaults( level_number, vault, false, false,
                            centres[1] );
 
         for ( int i = 2; i < num_islands; ++i )
@@ -2009,11 +2011,11 @@ static void _prepare_shoals(int level_number)
             // Place (non-rune) minivaults on the other islands
             do
             {
-                vaultidx = _dgn_random_map_for_place(true);
+                vault = _dgn_random_map_for_place(true);
             }
-            while ( vaultidx == -1 );
+            while ( !vault );
 
-            _build_minivaults( level_number, vaultidx, false, false,
+            _build_minivaults( level_number, vault, false, false,
                                centres[i] );
         }
     }
@@ -2225,11 +2227,11 @@ static builder_rc_type _builder_by_type(int level_number, char level_type)
                 "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
             };
 
-            const int vault =
+            const map_def *vault =
                 random_map_for_tag(pandemon_level_names[which_demon], false);
 
-            ASSERT(vault != -1);
-            if (vault == -1)
+            ASSERT(vault);
+            if (!vault)
                 end(1, false, "Failed to find Pandemonium level %s!\n",
                     pandemon_level_names[which_demon]);
 
@@ -2238,11 +2240,8 @@ static builder_rc_type _builder_by_type(int level_number, char level_type)
         else
         {
             _plan_main(level_number, 0);
-            int vault = random_map_for_tag("pan", true);
-            ASSERT( vault != -1 );
-            // never output because of above assert
-//            if (vault == -1)
-//                end(1, false, "Failed to build Pandemonium minivault!\n");
+            const map_def *vault = random_map_for_tag("pan", true);
+            ASSERT( vault );
 
             _build_minivaults(level_number, vault);
         }
@@ -2266,11 +2265,10 @@ static void _portal_vault_level(int level_number)
 
     const char* level_name = trimmed_name.c_str();
 
-    int vault = random_map_for_place(level_id::current(), false);
+    const map_def *vault = random_map_for_place(level_id::current(), false);
 
 #ifdef WIZARD
-    if (vault == -1 && you.wizard
-        && random_map_for_tag(level_name, false) != -1)
+    if (!vault && you.wizard && random_map_for_tag(level_name, false))
     {
         char buf[80];
 
@@ -2292,18 +2290,18 @@ static void _portal_vault_level(int level_number)
 
             vault = find_map_by_name(you.level_type_tag + "_" + name);
 
-            if (vault == -1)
+            if (!vault)
                 mprf(MSGCH_DIAGNOSTICS, "No such %s, try again.",
                      level_name);
         }
-        while (vault == -1);
+        while (!vault);
     }
 #endif
 
-    if (vault == -1)
+    if (!vault)
         vault = random_map_for_tag(level_name, false);
 
-    if (vault != -1)
+    if (vault)
         _ensure_vault_placed( _build_vaults(level_number, vault) );
     else
     {
@@ -2330,27 +2328,27 @@ static void _portal_vault_level(int level_number)
         dlua.callfn(i->second.c_str(), 0, 0);
 }
 
-static int _random_portal_vault(const std::string &tag)
+static const map_def *_random_portal_vault(const std::string &tag)
 {
     return random_map_for_tag(tag, false, true);
 }
 
 static bool _place_portal_vault(int stair, const std::string &tag, int dlevel)
 {
-    const int vault = _random_portal_vault(tag);
-    if (vault == -1)
+    const map_def *vault = _random_portal_vault(tag);
+    if (!vault)
         return (false);
 
     return _build_secondary_vault(dlevel, vault, stair);
 }
 
-static int _dgn_random_map_for_place(bool wantmini)
+static const map_def *_dgn_random_map_for_place(bool wantmini)
 {
     const level_id lid = level_id::current();
-    int vault = random_map_for_place(lid, wantmini);
+    const map_def *vault = random_map_for_place(lid, wantmini);
 
     // Disallow entry vaults for tutorial (only complicates things).
-    if (vault == -1
+    if (!vault
         && lid.branch == BRANCH_MAIN_DUNGEON
         && lid.depth == 1 && !Options.tutorial_left)
     {
@@ -2365,9 +2363,9 @@ static int _dgn_random_map_for_place(bool wantmini)
 // otherwise.
 static builder_rc_type _builder_by_branch(int level_number)
 {
-    const int vault = _dgn_random_map_for_place(false);
+    const map_def *vault = _dgn_random_map_for_place(false);
 
-    if (vault != -1)
+    if (vault)
     {
         _ensure_vault_placed( _build_vaults(level_number, vault) );
         return BUILD_SKIP;
@@ -2413,8 +2411,8 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
     {
         for (int i = 0; i < nvaults; ++i)
         {
-            const int vault = random_map_for_tag(tag, true);
-            if (vault == -1)
+            const map_def *vault = random_map_for_tag(tag, true);
+            if (!vault)
                 return;
 
             _build_minivaults(you.your_level, vault);
@@ -2424,20 +2422,20 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
 
     if (use_random_maps)
     {
-        int vault = -1;
+        const map_def *vault = NULL;
         do
         {
             vault = random_map_in_depth(level_id::current(), true);
-            if (vault != -1)
+            if (vault)
                 _build_minivaults(you.your_level, vault);
-        } while (vault != -1 && map_by_index(vault)->has_tag("extra"));
+        } while (vault && vault->has_tag("extra"));
     }
 
     int chance = you.your_level == 0? 50 : 100;
     while (chance && x_chance_in_y(chance, 100) || nvaults-- > 0)
     {
-        const int vault = _dgn_random_map_for_place(true);
-        if (vault == -1)
+        const map_def *vault = _dgn_random_map_for_place(true);
+        if (!vault)
             break;
 
         _build_minivaults(you.your_level, vault);
@@ -2454,10 +2452,10 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
     UNUSED( level_type );
 
     bool skipped = false;
-    int vault = _dgn_random_map_for_place(false);
+    const map_def *vault = _dgn_random_map_for_place(false);
 
     // Can't have vaults on you.where_are_you != BRANCH_MAIN_DUNGEON levels.
-    if (vault == -1 && use_random_maps && can_create_vault)
+    if (!vault && use_random_maps && can_create_vault)
     {
         vault = random_map_in_depth(level_id::current());
 
@@ -2466,14 +2464,14 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
         // branches. Other kinds of vaults can still be placed in
         // other branches as secondary vaults.
 
-        if (vault != -1 && !player_in_branch(BRANCH_MAIN_DUNGEON)
-            && map_by_index(vault)->orient != MAP_ENCOMPASS)
+        if (vault && !player_in_branch(BRANCH_MAIN_DUNGEON)
+            && vault->orient != MAP_ENCOMPASS)
         {
-            vault = -1;
+            vault = NULL;
         }
     }
 
-    if (vault != -1)
+    if (vault)
     {
         _ensure_vault_placed( _build_vaults(level_number, vault) );
         return BUILD_SKIP;
@@ -2831,16 +2829,15 @@ static void _place_extra_vaults()
             && use_random_maps
             && can_create_vault)
         {
-            int vault = random_map_in_depth(level_id::current());
+            const map_def *vault = random_map_in_depth(level_id::current());
 
             // ORIENT: encompass maps are unsuitable as secondary vaults.
-            if (vault != -1 && map_by_index(vault)->orient == MAP_ENCOMPASS)
-                vault = -1;
+            if (vault && vault->orient == MAP_ENCOMPASS)
+                vault = NULL;
 
-            if (vault != -1
-                && _build_secondary_vault(you.your_level, vault, -1))
+            if (vault && _build_secondary_vault(you.your_level, vault, -1))
             {
-                const map_def &map(*map_by_index(vault));
+                const map_def &map(*vault);
                 if (map.has_tag("extra"))
                     continue;
                 can_create_vault = false;
@@ -3933,7 +3930,7 @@ static bool _find_minivault_place(const vault_placement &place,
     return (false);
 }
 
-static bool _build_minivaults(int level_number, int force_vault,
+static bool _build_minivaults(int level_number, const map_def *vault,
                               bool clobber, bool make_no_exits,
                               const coord_def &where)
 {
@@ -3943,7 +3940,7 @@ static bool _build_minivaults(int level_number, int force_vault,
     vault_placement place;
 
     place.level_number = level_number;
-    vault_main(place, force_vault);
+    vault_main(place, vault);
 
     coord_def v1;
 
@@ -4360,6 +4357,17 @@ static dungeon_feature_type _dgn_find_rune_subst_tags(const std::string &tags)
     return (DNGN_FLOOR);
 }
 
+void _fixup_after_vault()
+{
+    link_items();
+    env.markers.activate_all();
+
+    // Force teleport to place the player somewhere sane.
+    you_teleport_now(false, false);
+
+    setup_environment_effects();
+}
+
 // Places a map on the current level (minivault or regular vault).
 //
 // You can specify the centre of the map using "where" for floating vaults
@@ -4372,24 +4380,24 @@ static dungeon_feature_type _dgn_find_rune_subst_tags(const std::string &tags)
 // clobber: If true, assumes the newly placed vault can clobber existing
 //          items and monsters (items may be destroyed, monsters may be
 //          teleported).
-bool dgn_place_map(int map, bool clobber, bool make_no_exits,
+bool dgn_place_map(const map_def *mdef, bool clobber, bool make_no_exits,
                    const coord_def &where)
 {
     const dgn_colour_override_manager colour_man;
 
-    const map_def *mdef = map_by_index(map);
     bool did_map = false;
-    bool fixup   = false;
-
     if (mdef->orient == MAP_ENCOMPASS && !Generating_Level)
     {
         if (clobber)
         {
             // For encompass maps, clear the entire level.
             unwind_bool levgen(Generating_Level, true);
-            fixup = true;
             _reset_level();
             dungeon_events.clear();
+            const bool res = dgn_place_map(mdef, clobber, make_no_exits,
+                                           where);
+            _fixup_after_vault();
+            return (res);
         }
         else
         {
@@ -4403,7 +4411,7 @@ bool dgn_place_map(int map, bool clobber, bool make_no_exits,
 
     if (mdef->is_minivault())
     {
-        did_map = _build_minivaults(you.your_level, map, clobber,
+        did_map = _build_minivaults(you.your_level, mdef, clobber,
                                     make_no_exits, where);
     }
     else
@@ -4411,7 +4419,7 @@ bool dgn_place_map(int map, bool clobber, bool make_no_exits,
         dungeon_feature_type rune_subst = DNGN_FLOOR;
         if (mdef->has_tag_suffix("_entry"))
             rune_subst = _dgn_find_rune_subst_tags(mdef->tags);
-        did_map = _build_secondary_vault(you.your_level, map, rune_subst,
+        did_map = _build_secondary_vault(you.your_level, mdef, rune_subst,
                                          clobber, make_no_exits, where);
     }
 
@@ -4430,26 +4438,16 @@ bool dgn_place_map(int map, bool clobber, bool make_no_exits,
                 if (!see_grid(x, y))
                     set_terrain_changed(x, y);
             }
-    }
 
-    if (fixup)
-    {
-        link_items();
-        env.markers.activate_all();
-
-        // Force teleport to place the player somewhere sane.
-        you_teleport_now(false, false);
-    }
-
-    if (fixup || !Generating_Level)
         setup_environment_effects();
+    }
 
     return (did_map);
 }
 
 // Places a vault somewhere in an already built level if possible.
 // Returns true if the vault was successfully placed.
-static bool _build_secondary_vault(int level_number, int vault,
+static bool _build_secondary_vault(int level_number, const map_def *vault,
                                    int rune_subst, bool clobber,
                                    bool no_exits, const coord_def &where)
 {
@@ -4465,7 +4463,8 @@ static bool _build_secondary_vault(int level_number, int vault,
     return (false);
 }
 
-static bool _build_vaults(int level_number, int force_vault, int rune_subst,
+static bool _build_vaults(int level_number, const map_def *vault,
+                          int rune_subst,
                           bool build_only, bool check_collisions,
                           bool make_no_exits, const coord_def &where)
 {
@@ -4481,8 +4480,7 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
     if (map_bounds(where))
         place.pos = where;
 
-    const int gluggy = vault_main(place, force_vault,
-                                  check_collisions);
+    const int gluggy = vault_main(place, vault, check_collisions);
 
     if (gluggy == MAP_NONE || !gluggy)
         return (false);
@@ -6142,8 +6140,8 @@ static char _plan_1(int level_number)
     dgn_Build_Method = "plan_1";
     dgn_Layout_Type  = "open";
 
-    const int vault = find_map_by_name("layout_forbidden_donut");
-    ASSERT(vault != -1);
+    const map_def *vault = find_map_by_name("layout_forbidden_donut");
+    ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
     _ensure_vault_placed(success);
@@ -6156,8 +6154,8 @@ static char _plan_2(int level_number)
     dgn_Build_Method = "plan_2";
     dgn_Layout_Type  = "cross";
 
-    const int vault = find_map_by_name("layout_cross");
-    ASSERT(vault != -1);
+    const map_def *vault = find_map_by_name("layout_cross");
+    ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
     _ensure_vault_placed(success);
@@ -6387,8 +6385,8 @@ static char _plan_6(int level_number)
     dgn_Build_Method = "plan_6";
     dgn_Layout_Type  = "open";
 
-    const int vault = find_map_by_name("layout_big_octagon");
-    ASSERT(vault != -1);
+    const map_def *vault = find_map_by_name("layout_big_octagon");
+    ASSERT(vault);
 
     bool success = _build_vaults(level_number, vault);
     _ensure_vault_placed(success);
@@ -6564,7 +6562,8 @@ static void _labyrinth_place_exit(const coord_def &end)
     grd(end) = DNGN_ESCAPE_HATCH_UP;
 }
 
-static void _init_minivault_placement(int vault, vault_placement &place)
+static void _init_minivault_placement(const map_def *vault,
+                                      vault_placement &place)
 {
     vault_main(place, vault);
 }
@@ -6687,11 +6686,11 @@ static void _change_walls_from_centre(const dgn_region &region,
 
 static void _place_extra_lab_minivaults(int level_number)
 {
-    std::set<int> vaults_used;
+    std::set<const map_def*> vaults_used;
     while (true)
     {
-        const int vault = random_map_for_tag("lab", true, false);
-        if (vault == -1 || vaults_used.find(vault) != vaults_used.end())
+        const map_def *vault = random_map_for_tag("lab", true, false);
+        if (!vault || vaults_used.find(vault) != vaults_used.end())
             break;
 
         vaults_used.insert(vault);
@@ -6762,18 +6761,18 @@ static void _labyrinth_level(int level_number)
                                            GYM - LABYRINTH_BORDER - 1 );
 
     // First decide if we're going to use a Lab minivault.
-    int vault = random_map_for_tag("minotaur", true, false);
+    const map_def *vault = random_map_for_tag("minotaur", true, false);
     vault_placement place;
 
-    if (vault != -1)
+    if (vault)
         _init_minivault_placement(vault, place);
 
     coord_def end;
     _labyrinth_build_maze(end, lab);
 
-    if (vault == -1 || !_build_minivaults(level_number, vault))
+    if (!vault || !_build_minivaults(level_number, vault))
     {
-        vault = -1;
+        vault = NULL;
         _labyrinth_place_exit(end);
     }
     else
@@ -6799,7 +6798,7 @@ static void _labyrinth_level(int level_number)
         place.size = rplace.size;
     }
 
-    if (vault != -1)
+    if (vault)
         end = place.pos + place.size / 2;
 
     _place_extra_lab_minivaults(level_number);

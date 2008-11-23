@@ -773,8 +773,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         if (dst.empty())
             dst = "bazaar";
 
-        if (find_map_by_name(dst) == -1
-            && random_map_for_tag(dst, false) == -1)
+        if (!find_map_by_name(dst) && !random_map_for_tag(dst, false))
         {
             mprf("No map named '%s' or tagged '%s'.",
                  dst.c_str(), dst.c_str());
