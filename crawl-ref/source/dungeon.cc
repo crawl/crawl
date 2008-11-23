@@ -196,18 +196,16 @@ static void _jelly_pit(int level_number, spec_room &sr);
 // VAULT FUNCTIONS
 static bool _build_secondary_vault(int level_number, int vault,
                                    int rune_subst = -1,
-                                   bool generating_level = true,
                                    bool clobber = false,
                                    bool make_no_exits = false,
                                    const coord_def &where = coord_def(-1, -1));
 static bool _build_vaults(int level_number, int vault_number,
                           int rune_subst = -1, bool build_only = false,
-                          bool check_vault_place = false,
-                          bool generating_level = true, bool clobber = false,
+                          bool check_collisions = false,
                           bool make_no_exits = false,
                           const coord_def &where = coord_def(-1, -1));
 static bool _build_minivaults(int level_number, int force_vault,
-                              bool level_builder = true, bool clobber = false,
+                              bool clobber = false,
                               bool make_no_exits = false,
                               const coord_def &where = coord_def() );
 static void _vault_grid( vault_placement &,
@@ -241,6 +239,8 @@ std::set<std::string> Level_Unique_Maps;
 std::set<std::string> Level_Unique_Tags;
 std::string dgn_Build_Method;
 std::string dgn_Layout_Type;
+
+bool Generating_Level = false;
 
 static int can_create_vault = true;
 static bool dgn_level_vetoed = false;
@@ -286,6 +286,8 @@ bool builder(int level_number, int level_type)
 {
     const std::set<std::string> uniq_tags  = you.uniq_map_tags;
     const std::set<std::string> uniq_names = you.uniq_map_names;
+
+    unwind_bool levelgen(Generating_Level, true);
 
     // N tries to build the level, after which we bail with a capital B.
     int tries = 20;
@@ -2000,8 +2002,8 @@ static void _prepare_shoals(int level_number)
         // Place the rune
         int vaultidx = random_map_for_tag("shoal_rune", true);
 
-        _build_minivaults( level_number, vaultidx, true, false, false,
-                          centres[1] );
+        _build_minivaults( level_number, vaultidx, false, false,
+                           centres[1] );
 
         for ( int i = 2; i < num_islands; ++i )
         {
@@ -2012,7 +2014,7 @@ static void _prepare_shoals(int level_number)
             }
             while ( vaultidx == -1 );
 
-            _build_minivaults( level_number, vaultidx, true, false, false,
+            _build_minivaults( level_number, vaultidx, false, false,
                                centres[i] );
         }
     }
@@ -3933,8 +3935,8 @@ static bool _find_minivault_place(const vault_placement &place,
 }
 
 static bool _build_minivaults(int level_number, int force_vault,
-                              bool building_level, bool clobber,
-                              bool make_no_exits, const coord_def &where)
+                              bool clobber, bool make_no_exits,
+                              const coord_def &where)
 {
     if (dgn_check_connectivity && !dgn_zones)
         dgn_zones = _dgn_count_disconnected_zones(false);
@@ -3984,7 +3986,7 @@ static bool _build_minivaults(int level_number, int force_vault,
 
         const dungeon_feature_type oldgrid = grd(*ri);
         _vault_grid( place, feat, *ri, target_connections );
-        if (!building_level)
+        if (!Generating_Level)
         {
             link_items();
             const dungeon_feature_type newgrid = grd(*ri);
@@ -4393,14 +4395,11 @@ static dungeon_feature_type _dgn_find_rune_subst_tags(const std::string &tags)
 //
 // NOTE: encompass maps will destroy the existing level!
 //
-// generating_level: If true, assumes that this is in the middle of normal
-//                   level generation, and does not link items or handle
-//                   changing terrain.
 // clobber: If true, assumes the newly placed vault can clobber existing
 //          items and monsters (items may be destroyed, monsters may be
 //          teleported).
-bool dgn_place_map(int map, bool generating_level, bool clobber,
-                   bool make_no_exits, const coord_def &where)
+bool dgn_place_map(int map, bool clobber, bool make_no_exits,
+                   const coord_def &where)
 {
     const dgn_colour_override_manager colour_man;
 
@@ -4408,12 +4407,12 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
     bool did_map = false;
     bool fixup   = false;
 
-    if (mdef->orient == MAP_ENCOMPASS && !generating_level)
+    if (mdef->orient == MAP_ENCOMPASS && !Generating_Level)
     {
         if (clobber)
         {
             // For encompass maps, clear the entire level.
-            generating_level = true;
+            unwind_bool levgen(Generating_Level, true);
             fixup = true;
             _reset_level();
             dungeon_events.clear();
@@ -4430,8 +4429,8 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
 
     if (mdef->is_minivault())
     {
-        did_map = _build_minivaults(you.your_level, map, generating_level,
-                                    clobber, make_no_exits, where);
+        did_map = _build_minivaults(you.your_level, map, clobber,
+                                    make_no_exits, where);
     }
     else
     {
@@ -4439,12 +4438,11 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
         if (mdef->has_tag_suffix("_entry"))
             rune_subst = _dgn_find_rune_subst_tags(mdef->tags);
         did_map = _build_secondary_vault(you.your_level, map, rune_subst,
-                                         generating_level, clobber,
-                                         make_no_exits, where);
+                                         clobber, make_no_exits, where);
     }
 
     // Activate any markers within the map.
-    if (did_map && !generating_level)
+    if (did_map && !Generating_Level)
     {
         const vault_placement &vp = Level_Vaults[Level_Vaults.size() - 1];
         for (int y = vp.pos.y; y < vp.pos.y + vp.size.y; ++y)
@@ -4469,7 +4467,7 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
         you_teleport_now(false, false);
     }
 
-    if (fixup || !generating_level)
+    if (fixup || !Generating_Level)
         setup_environment_effects();
 
     return (did_map);
@@ -4478,13 +4476,12 @@ bool dgn_place_map(int map, bool generating_level, bool clobber,
 // Places a vault somewhere in an already built level if possible.
 // Returns true if the vault was successfully placed.
 static bool _build_secondary_vault(int level_number, int vault,
-                                   int rune_subst, bool generating_level,
-                                   bool clobber, bool no_exits,
-                                   const coord_def &where)
+                                   int rune_subst, bool clobber,
+                                   bool no_exits, const coord_def &where)
 {
     dgn_zones = _dgn_count_disconnected_zones(false);
-    if (_build_vaults(level_number, vault, rune_subst, true, true,
-                      generating_level, clobber, no_exits, where))
+    if (_build_vaults(level_number, vault, rune_subst, true, !clobber,
+                      no_exits, where))
     {
         const vault_placement &vp = Level_Vaults[ Level_Vaults.size() - 1 ];
         _connect_vault(vp);
@@ -4496,7 +4493,6 @@ static bool _build_secondary_vault(int level_number, int vault,
 
 static bool _build_vaults(int level_number, int force_vault, int rune_subst,
                           bool build_only, bool check_collisions,
-                          bool generating_level, bool clobber,
                           bool make_no_exits, const coord_def &where)
 {
     FixedVector < char, 10 > stair_exist;
@@ -4515,7 +4511,7 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
         place.pos = where;
 
     const int gluggy = vault_main(vgrid, place, force_vault,
-                                  check_collisions, clobber);
+                                  check_collisions);
 
     if (gluggy == MAP_NONE || !gluggy)
         return (false);
@@ -4534,7 +4530,7 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
             const dungeon_feature_type oldgrid = grd(*ri);
             _vault_grid( place, vgrid[ri->y][ri->x], *ri,
                          target_connections );
-            if (!generating_level)
+            if (!Generating_Level)
             {
                 // Have to link items each square at a time, or
                 // dungeon_terrain_changed could blow up.
