@@ -355,6 +355,7 @@ struct item_spec
 
     object_class_type base_type;
     int sub_type;
+    int plus, plus2;
     int ego;
     int allow_uniques;
     int level;
@@ -362,8 +363,8 @@ struct item_spec
     int qty;
 
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
-        ego(0), allow_uniques(1), level(-1), race(MAKE_ITEM_RANDOM_RACE),
-        qty(0)
+        plus(0), plus2(0), ego(0), allow_uniques(1), level(-1),
+        race(MAKE_ITEM_RANDOM_RACE), qty(0)
     {
     }
 };

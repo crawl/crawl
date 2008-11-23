@@ -2660,6 +2660,15 @@ void item_list::parse_random_by_class(std::string c, item_spec &spec)
         }
     }
 
+    // Random manual?
+    if (c == "manual")
+    {
+        spec.base_type = OBJ_BOOKS;
+        spec.sub_type = BOOK_MANUAL;
+        spec.plus = -1;
+        return;
+    }
+
     error = make_stringf("Bad item class: '%s'", c.c_str());
 }
 
@@ -2677,6 +2686,8 @@ void item_list::parse_raw_name(std::string name, item_spec &spec)
     {
         spec.base_type = parsed.base_type;
         spec.sub_type  = parsed.sub_type;
+        spec.plus      = parsed.plus;
+        spec.plus2     = parsed.plus2;
         return;
     }
 

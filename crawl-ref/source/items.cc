@@ -55,6 +55,7 @@
 #include "randart.h"
 #include "religion.h"
 #include "shopping.h"
+#include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -2437,7 +2438,25 @@ static bool _find_subtype_by_name(item_def &item,
     for (int i = 0; i < ntypes; i++)
     {
         item.sub_type = i;
-        if (name == lowercase_string(item.name(DESC_PLAIN)))
+
+        if (base_type == OBJ_BOOKS && i == BOOK_MANUAL)
+        {
+            for (int j = 0; j < NUM_SKILLS; ++j)
+            {
+                if (!skill_name(j))
+                    continue;
+
+                item.plus = j;
+
+                if (name == lowercase_string(item.name(DESC_PLAIN)))
+                {
+                    type_wanted = i;
+                    i = ntypes;
+                    break;
+                }
+            }
+        }
+        else if (name == lowercase_string(item.name(DESC_PLAIN)))
         {
             type_wanted = i;
             break;

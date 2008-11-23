@@ -4712,7 +4712,8 @@ static bool _build_vaults(int level_number, int force_vault, int rune_subst,
 }                               // end build_vaults()
 
 static void _dgn_place_item_explicit(const item_spec &spec,
-                                      const coord_def& where, int level)
+                                     const coord_def& where,
+                                     int level)
 {
     // Dummy object?
     if (spec.base_type == OBJ_UNASSIGNED)
@@ -4739,10 +4740,16 @@ static void _dgn_place_item_explicit(const item_spec &spec,
 
     if (item_made != NON_ITEM && item_made != -1)
     {
-        mitm[item_made].pos = where;
+        item_def &item(mitm[item_made]);
+        item.pos = where;
+        if (is_stackable_item(item) && spec.qty > 0)
+            item.quantity = spec.qty;
 
-        if (is_stackable_item(mitm[item_made]) && spec.qty > 0)
-            mitm[item_made].quantity = spec.qty;
+        if (spec.plus >= 0 && item.base_type == OBJ_BOOKS
+            && item.sub_type == BOOK_MANUAL)
+        {
+            item.plus = spec.plus;
+        }
     }
 
     // Modify dungeon to ensure that the item is not on an invalid feature.
