@@ -609,12 +609,18 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_KIKUBAAQUDGHA: case GOD_MAKHLEB: case GOD_LUGONU:
+    case GOD_MAKHLEB: case GOD_LUGONU:
         likes.push_back("you or your allies kill holy beings");
         break;
 
+    case GOD_KIKUBAAQUDGHA:
+        likes.push_back("you kill holy beings");
+        likes.push_back("your god-given allies kill holy beings");
+        likes.push_back("your undead slaves kill holy beings");
+        break;
+
     case GOD_YREDELEMNUL:
-        likes.push_back("your allies kill holy beings");
+        likes.push_back("your undead slaves kill holy beings");
         break;
 
     default:
@@ -2255,6 +2261,7 @@ static bool _do_god_revenge(conduct_type thing_done)
         retval = _beogh_idol_revenge();
         break;
     case DID_KILL_HOLY:
+    case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
     case DID_HOLY_KILLED_BY_SERVANT:
         retval = _tso_holy_revenge();
         break;
@@ -2292,7 +2299,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     break;
                 }
                 penance = level;
-                // deliberate fall-through
+                // deliberate fall through
             case GOD_ZIN:
             case GOD_ELYVILON:
                 if (!known)
@@ -2617,7 +2624,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         // If you or any friendly kills one, you'll get the credit or
         // the blame.
         case DID_KILL_HOLY:
-        case DID_HOLY_KILLED_BY_SERVANT:
             switch (you.religion)
             {
             case GOD_ZIN:
@@ -2640,16 +2646,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
-                if (thing_done == DID_KILL_HOLY)
-                    simple_god_message(" accepts your kill.");
-                else
-                    simple_god_message(" accepts your collateral kill.");
+                simple_god_message(" accepts your kill.");
                 retval = true;
                 if (random2(level + 18) > 2)
                     piety_change = 1;
 
-                if (you.religion == GOD_YREDELEMNUL
-                    && thing_done == DID_KILL_HOLY)
+                if (you.religion == GOD_YREDELEMNUL)
                 {
                     simple_god_message(" appreciates your killing of a holy "
                                        "being.");
@@ -2664,9 +2666,75 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        // Undead slave is any friendly undead monster.  Kiku and Yred pay
-        // attention to the undead, and both like the death of living
-        // things.
+        // You shouldn't have undead slaves if you worship a good god,
+        // but check anyway, just in case.
+        case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
+            switch (you.religion)
+            {
+            case GOD_ZIN:
+            case GOD_SHINING_ONE:
+            case GOD_ELYVILON:
+                if (testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    || testbits(victim->flags, MF_WAS_NEUTRAL))
+                {
+                    level *= 3;
+                    penance = level;
+                }
+                piety_change = -level;
+                retval = true;
+                break;
+
+            case GOD_YREDELEMNUL:
+            case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
+            case GOD_MAKHLEB:
+            case GOD_LUGONU:
+                if (god_hates_attacking_friend(you.religion, victim))
+                    break;
+
+                simple_god_message(" accepts your slave's kill.");
+                retval = true;
+                if (random2(level + 18) > 2)
+                    piety_change = 1;
+                break;
+
+            default:
+                break;
+            }
+            break;
+
+        case DID_HOLY_KILLED_BY_SERVANT:
+            switch (you.religion)
+            {
+            case GOD_ZIN:
+            case GOD_SHINING_ONE:
+            case GOD_ELYVILON:
+                if (testbits(victim->flags, MF_CREATED_FRIENDLY)
+                    || testbits(victim->flags, MF_WAS_NEUTRAL))
+                {
+                    level *= 3;
+                    penance = level;
+                }
+                piety_change = -level;
+                retval = true;
+                break;
+
+            case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
+            case GOD_MAKHLEB:
+            case GOD_LUGONU:
+                if (god_hates_attacking_friend(you.religion, victim))
+                    break;
+
+                simple_god_message(" accepts your collateral kill.");
+                retval = true;
+                if (random2(level + 18) > 2)
+                    piety_change = 1;
+                break;
+
+            default:
+                break;
+            }
+            break;
+
         case DID_LIVING_KILLED_BY_UNDEAD_SLAVE:
             switch (you.religion)
             {
@@ -2685,8 +2753,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        // Servants are currently any friendly or charmed monster, excluding
-        // undead, which are handled above.
         case DID_LIVING_KILLED_BY_SERVANT:
             switch (you.religion)
             {
@@ -2905,10 +2971,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Kill Wizard", "Kill Priest", "Kill Holy",
                 "Undead Slave Kill Living", "Servant Kill Living",
                 "Servant Kill Undead", "Servant Kill Demon",
-                "Servant Kill Natural Evil", "Servant Kill Holy",
-                "Spell Memorise", "Spell Cast", "Spell Practise",
-                "Spell Nonutility", "Cards", "Stimulants", "Drink Blood",
-                "Cannibalism", "Eat Meat", "Eat Souled Being",
+                "Servant Kill Natural Evil", "Undead Slave Kill Holy",
+                "Servant Kill Holy", "Spell Memorise", "Spell Cast",
+                "Spell Practise", "Spell Nonutility", "Cards", "Stimulants",
+                "Drink Blood", "Cannibalism", "Eat Meat", "Eat Souled Being",
                 "Deliberate Mutation", "Cause Glowing",
                 "Destroy Orcish Idol", "Create Life"
             };

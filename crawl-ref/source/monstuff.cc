@@ -1135,27 +1135,24 @@ void monster_die(monsters *monster, killer_type killer,
                     attacker_holy = anon ? MH_NATURAL
                                          : mons_holiness(&menv[killer_index]);
 
-                if (attacker_holy == MH_UNDEAD)
+                if (targ_holy == MH_NATURAL && attacker_holy == MH_UNDEAD)
                 {
-                    if (targ_holy == MH_NATURAL)
+                    // Yes, this is a hack, but it makes sure that confused
+                    // monsters doing the kill are not referred to as "slave",
+                    // and I think it's okay that Yredelemnul ignores kills
+                    // done by confused monsters as opposed to enslaved or
+                    // friendly ones. (jpeg)
+                    if (mons_friendly(&menv[killer_index]))
                     {
-                        // Yes, this is a hack, but it makes sure that confused
-                        // monsters doing the kill are not referred to as
-                        // "slave", and I think it's okay that Yredelemnul
-                        // ignores kills done by confused monsters as opposed
-                        // to enslaved or friendly ones. (jpeg)
-                        if (mons_friendly(&menv[killer_index]))
-                        {
-                            notice |=
-                                did_god_conduct(DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
+                        notice |=
+                            did_god_conduct(DID_LIVING_KILLED_BY_UNDEAD_SLAVE,
                                             monster->hit_dice);
-                        }
-                        else
-                        {
-                            notice |=
-                                did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
+                    }
+                    else
+                    {
+                        notice |=
+                            did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
                                             monster->hit_dice);
-                        }
                     }
                 }
                 else if (you.religion == GOD_SHINING_ONE
@@ -1172,37 +1169,57 @@ void monster_die(monsters *monster, killer_type killer,
                     // pass here since those followers are assumed to
                     // come from Summoning spells...  the others are
                     // from invocations (Zin, TSO, Makh, Kiku). -- bwr
-
                     if (targ_holy == MH_NATURAL)
                     {
-                        notice |= did_god_conduct( DID_LIVING_KILLED_BY_SERVANT,
-                                                   monster->hit_dice );
+                        notice |= did_god_conduct(DID_LIVING_KILLED_BY_SERVANT,
+                                                  monster->hit_dice);
 
                         if (mons_is_evil(monster))
                         {
                             notice |=
                                 did_god_conduct(
                                         DID_NATURAL_EVIL_KILLED_BY_SERVANT,
-                                        monster->hit_dice );
+                                        monster->hit_dice);
                         }
                     }
                     else if (targ_holy == MH_DEMONIC)
                     {
-                        notice |= did_god_conduct( DID_DEMON_KILLED_BY_SERVANT,
-                                                   monster->hit_dice );
+                        notice |= did_god_conduct(DID_DEMON_KILLED_BY_SERVANT,
+                                                  monster->hit_dice);
                     }
                     else if (targ_holy == MH_UNDEAD)
                     {
-                        notice |= did_god_conduct( DID_UNDEAD_KILLED_BY_SERVANT,
-                                                   monster->hit_dice );
+                        notice |= did_god_conduct(DID_UNDEAD_KILLED_BY_SERVANT,
+                                                  monster->hit_dice);
                     }
                 }
 
                 // Holy kills are always noticed.
                 if (targ_holy == MH_HOLY)
                 {
-                    notice |= did_god_conduct( DID_HOLY_KILLED_BY_SERVANT,
-                                               monster->hit_dice );
+                    if (attacker_holy == MH_UNDEAD)
+                    {
+                        // Yes, this is a hack, but it makes sure that confused
+                        // monsters doing the kill are not referred to as
+                        // "slave", and I think it's okay that Yredelemnul
+                        // ignores kills done by confused monsters as opposed
+                        // to enslaved or friendly ones. (jpeg)
+                        if (mons_friendly(&menv[killer_index]))
+                        {
+                            notice |=
+                                did_god_conduct(DID_HOLY_KILLED_BY_UNDEAD_SLAVE,
+                                                monster->hit_dice);
+                        }
+                        else
+                        {
+                            notice |=
+                                did_god_conduct(DID_HOLY_KILLED_BY_SERVANT,
+                                                monster->hit_dice);
+                        }
+                    }
+                    else
+                        notice |= did_god_conduct(DID_HOLY_KILLED_BY_SERVANT,
+                                                  monster->hit_dice);
                 }
 
                 if (you.religion == GOD_VEHUMET
