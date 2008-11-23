@@ -679,10 +679,12 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     if (god_hates_butchery(which_god))
         dislikes.push_back("you butcher corpses while praying");
 
+    if (god_hates_cannibalism(which_god))
+        dislikes.push_back("you perform cannibalism");
+
     if (is_good_god(which_god))
     {
         dislikes.push_back("you drink blood");
-        dislikes.push_back("you perform cannibalism");
         dislikes.push_back("you use necromancy");
         dislikes.push_back("you use unholy magic or items");
         dislikes.push_back("you attack holy beings");
@@ -6049,6 +6051,11 @@ std::string god_hates_your_god_reaction(god_type god,
     }
 
     return "";
+}
+
+bool god_hates_cannibalism(god_type god)
+{
+    return (is_good_god(god));
 }
 
 bool god_hates_killing(god_type god, const monsters* mon)

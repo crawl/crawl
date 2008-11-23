@@ -1107,7 +1107,7 @@ static void _finish_delay(const delay_queue_item &delay)
                                                        : "chopping",
                      mitm[delay.parm1].name(DESC_PLAIN).c_str());
 
-                if (is_good_god(you.religion)
+                if (god_hates_cannibalism(you.religion)
                     && is_player_same_species(item.plus))
                 {
                     simple_god_message(" expects more respect for your departed "
