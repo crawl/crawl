@@ -3933,11 +3933,14 @@ void MiscastEffect::_fire(int severity)
             mon_msg_seen = "@The_monster@ is covered in liquid flames!";
             do_msg();
 
-            int dur = random2avg(7, 3) + 1;
             if (target->atype() == ACT_PLAYER)
-                you.duration[DUR_LIQUID_FLAMES] += dur;
+                you.duration[DUR_LIQUID_FLAMES] += random2avg(7, 3) + 1;
             else
-                mon_target->add_ench( mon_enchant(ENCH_STICKY_FLAME, dur, kc) );
+            {
+                mon_target->add_ench(mon_enchant(ENCH_STICKY_FLAME,
+                    std::min(4, 1 + random2(mon_target->hit_dice) / 2), kc));
+            }
+
             break;
         }
         }
