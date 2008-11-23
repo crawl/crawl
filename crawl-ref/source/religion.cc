@@ -1868,8 +1868,7 @@ static void _do_god_gift(bool prayed_for)
                 break;
             }
 
-            if (you.religion == GOD_OKAWARU
-                && _need_missile_gift())
+            if (_need_missile_gift())
             {
                 success = acquirement(OBJ_MISSILES, you.religion);
                 if (success)
