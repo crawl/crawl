@@ -589,6 +589,28 @@ MONS:     (list of monsters)
 
           Note that 8, 9, 0 also place monsters (see the table).
 
+          If you want to place a random monster suitable for the level
+          the map is generated on, you can use
+              MONS: random
+
+          If you want to place a random monster suitable for some other
+          place, you can use a place: tag in the monster spec:
+              MONS: place:Abyss
+          or
+              MONS: place:Slime:6
+
+          Using place: with MONS implies that you want a random monster.
+          You can also request zombies from random monsters suitable
+          for some other depth as:
+              MONS: place:Elf:7 zombie
+          or
+              MONS: place:Zot:5 simulacrum
+          or
+              MONS: place:Vault:8 spectre
+
+          The available modifiers are "zombie", "skeleton",
+          "simulacrum" and "spectre".
+
           A monster can be given specific items by following the monster
           name with a semi-colon and then with an item list as described
           in ITEM:, but with slashes replaced with pipes and commas replaced

@@ -4918,12 +4918,50 @@ bool dgn_place_monster(mons_spec &mspec,
         }
 
         mgen_data mg(static_cast<monster_type>(mid));
+
+        if (mg.cls == RANDOM_MONSTER && mspec.place.is_valid())
+        {
+            int lev = monster_level;
+
+            if (mspec.place.level_type == LEVEL_DUNGEON)
+                lev = absdungeon_depth(mspec.place.branch, mspec.place.depth);
+
+            if (mlev == -8)
+                lev = 4 + lev * 2;
+            else if (mlev == -9)
+                lev += 5;
+
+            int tries = 100;
+            do
+            {
+                mg.cls = pick_random_monster(mspec.place, lev, lev);
+            } while (mg.cls != MONS_PROGRAM_BUG
+                     && mons_class_is_zombified(mspec.monbase)
+                     && !mons_zombie_size(mg.cls)
+                     && tries-- > 0);
+
+            if (mg.cls == MONS_PROGRAM_BUG
+                || (mons_class_is_zombified(mspec.monbase)
+                    && !mons_zombie_size(mg.cls)))
+            {
+                mg.cls = RANDOM_MONSTER;
+            }
+        }
+
         mg.power     = monster_level;
         mg.behaviour = (m_generate_awake) ? BEH_WANDER : BEH_SLEEP;
         mg.base_type = mspec.monbase;
         mg.number    = mspec.number;
         mg.colour    = mspec.colour;
         mg.pos       = where;
+
+        if (mons_class_is_zombified(mg.base_type))
+        {
+            if (mons_class_is_zombified(mg.cls))
+                mg.base_type = MONS_PROGRAM_BUG;
+            else
+                std::swap(mg.base_type, mg.cls);
+        }
 
         if (m_patrolling)
             mg.flags |= MG_PATROLLING;

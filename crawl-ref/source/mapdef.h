@@ -361,6 +361,7 @@ struct item_spec
     int level;
     int race;
     int qty;
+    level_id place;
 
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
         plus(0), plus2(0), ego(0), allow_uniques(1), level(-1),
@@ -411,6 +412,7 @@ class mons_spec
 {
  public:
     int  mid;
+    level_id place;
     monster_type monbase;     // Base monster for zombies and dracs.
     int  number;              // Head count for hydras
     int  genweight, mlevel;
@@ -426,9 +428,9 @@ class mons_spec
               int num = 0,
               int gw = 10, int ml = 0,
               bool _fixmons = false, bool awaken = false, bool patrol = false)
-        : mid(id), monbase(base), number(num), genweight(gw), mlevel(ml),
-          fix_mons(_fixmons), generate_awake(awaken), patrolling(false),
-          colour(BLACK), items()
+        : mid(id), place(), monbase(base), number(num), genweight(gw),
+          mlevel(ml), fix_mons(_fixmons), generate_awake(awaken),
+          patrolling(false), colour(BLACK), items()
     {
     }
 };

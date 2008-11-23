@@ -1990,6 +1990,26 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         mspec.generate_awake = strip_tag(mon_str, "generate_awake");
         mspec.patrolling     = strip_tag(mon_str, "patrolling");
 
+        // place:Elf:7 to choose monsters appropriate for that level,
+        // for example.
+        const std::string place = strip_tag_prefix(mon_str, "place:");
+        if (!place.empty())
+        {
+            try
+            {
+                mspec.place = level_id::parse_level_id(place);
+            }
+            catch (const std::string &err)
+            {
+                error = err;
+                return (slot);
+            }
+        }
+
+        mspec.mlevel = strip_number_tag(mon_str, "lev:");
+        if (mspec.mlevel == TAG_UNFOUND)
+            mspec.mlevel = 0;
+
         std::string colour = strip_tag_prefix(mon_str, "col:");
         if (!colour.empty())
         {
@@ -2010,6 +2030,22 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             mspec.mlevel = -9;
         else if (check_mimic(mon_str, &mspec.mid, &mspec.fix_mons))
             ;
+        else if (mspec.place.is_valid())
+        {
+            // For monster specs such as place:Orc:4 zombie, we may
+            // have a monster modifier, in which case we set the
+            // modifier in monbase.
+            const mons_spec nspec = mons_by_name("orc " + mon_str);
+            if (nspec.mid != MONS_PROGRAM_BUG)
+            {
+                // Is this a modified monster?
+                if (nspec.monbase != MONS_PROGRAM_BUG
+                    && mons_class_is_zombified(nspec.mid))
+                {
+                    mspec.monbase = static_cast<monster_type>(nspec.mid);
+                }
+            }
+        }
         else if (mon_str != "0")
         {
             const mons_spec nspec = mons_by_name(mon_str);
@@ -2094,7 +2130,7 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
 {
     static const char *zombie_types[] =
     {
-        " zombie", " skeleton", " simulacrum", NULL
+        " zombie", " skeleton", " simulacrum", " spectre", NULL
     };
 
     // This order must match zombie_types, indexed from one.
@@ -2103,7 +2139,8 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
         { MONS_PROGRAM_BUG,      MONS_PROGRAM_BUG },
         { MONS_ZOMBIE_SMALL,     MONS_ZOMBIE_LARGE },
         { MONS_SKELETON_SMALL,   MONS_SKELETON_LARGE },
-        { MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE }
+        { MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE },
+        { MONS_SPECTRAL_THING,   MONS_SPECTRAL_THING },
     };
 
     const int mod = ends_with(s, zombie_types);
