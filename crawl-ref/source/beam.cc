@@ -2016,7 +2016,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
     }
 
     return (hurted);
-}                               // end mons_adjust_flavoured()
+}
 
 static bool _monster_resists_mass_enchantment(monsters *monster,
                                               enchant_type wh_enchant,
@@ -2143,7 +2143,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (msg_generated);
-}                               // end mass_enchantment()
+}
 
 // Monster has probably failed save, now it gets enchanted somehow.
 // * Returns MON_RESIST if monster is unaffected due to magic resist.
@@ -4910,7 +4910,7 @@ static void _explosion1(bolt &pbolt)
 
     pbolt.ex_size = ex_size;
     explosion( pbolt );
-}                               // end explosion1()
+}
 
 
 #define MAX_EXPLOSION_RADIUS 9
