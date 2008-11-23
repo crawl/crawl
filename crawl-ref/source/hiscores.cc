@@ -587,7 +587,7 @@ const char *level_area_type_name(int level_type)
     return ("");
 }
 
-static level_area_type _str_to_level_area_type(const std::string &s)
+level_area_type str_to_level_area_type(const std::string &s)
 {
     for (int i = 0; i < NUM_LEVEL_AREA_TYPES; ++i)
         if (s == level_type_names[i])
@@ -616,7 +616,7 @@ void scorefile_entry::init_with_fields()
 
     branch     = str_to_branch(fields->str_field("br"), BRANCH_MAIN_DUNGEON);
     dlvl       = fields->int_field("lvl");
-    level_type = _str_to_level_area_type(fields->str_field("ltyp"));
+    level_type = str_to_level_area_type(fields->str_field("ltyp"));
 
     final_hp         = fields->int_field("hp");
     final_max_hp     = fields->int_field("mhp");

@@ -291,6 +291,35 @@ local function ziggurat_create_loot(c)
   end
 end
 
+local function ziggurat_place_pillars(c)
+  local range = crawl.random_range
+
+  local function pillar_spot()
+    local floor = dgn.fnum("floor")
+    for i = 1, 100 do
+      local place = { x = c.x + range(-30, 30), y = c.y + range(-30, 30) }
+      if (dgn.grid(place.x, place.y) == floor) then
+        return place
+      end
+    end
+    return nil
+  end
+
+  local function place_pillar(p)
+    local map = dgn.map_by_tag("ziggurat_pillar")
+    if map then
+      dgn.place_map(map, false, true, p.x, p.y)
+    end
+  end
+
+  for i = 1, crawl.random_range(1,3) do
+    local p = pillar_spot()
+    if p then
+      place_pillar(p)
+    end
+  end
+end
+
 local function ziggurat_rectangle_builder(e)
   local grid = dgn.grid
 
@@ -302,6 +331,7 @@ local function ziggurat_rectangle_builder(e)
   dgn.fill_area(unpack( util.catlist(flip_rectangle(x1, y1, x2, y2),
                                      { "floor" }) ) )
 
+  local cx = math.floor((x1 + x2) / 2)
   local cy = math.floor((y1 + y2) / 2)
 
   local entry = { x = x1, y = cy }
@@ -315,6 +345,8 @@ local function ziggurat_rectangle_builder(e)
   zigstair(exit.x, exit.y, "stone_stairs_down_i", zig_go_deeper)
   grid(exit.x, exit.y + 1, "exit_portal_vault")
   grid(exit.x, exit.y - 1, "exit_portal_vault")
+
+  ziggurat_place_pillars { x = cx, y = cy }
 
   ziggurat_create_loot(exit)
 

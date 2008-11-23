@@ -40,6 +40,7 @@ std::string hiscores_format_single_long( const scorefile_entry &se,
                                          bool verbose = false );
 
 const char *level_area_type_name(int level_type);
+level_area_type str_to_level_area_type(const std::string &s);
 
 #ifdef DGL_MILESTONES
 void mark_milestone(const std::string &type, const std::string &milestone);

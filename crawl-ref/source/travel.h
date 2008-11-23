@@ -179,7 +179,9 @@ enum explore_stop_type
 ////////////////////////////////////////////////////////////////////////////
 // Structs for interlevel travel.
 
-// Identifies a level.
+// Identifies a level. Should never include virtual methods or
+// dynamically allocated memory (see code to push level_id onto Lua
+// stack in luadgn.cc)
 class level_id
 {
 public:
@@ -231,6 +233,14 @@ public:
     {
         return (branch != NUM_BRANCHES && depth != -1)
             || level_type != LEVEL_DUNGEON;
+    }
+
+    const level_id &operator = (const level_id &id)
+    {
+        branch     = id.branch;
+        depth      = id.depth;
+        level_type = id.level_type;
+        return (*this);
     }
 
     bool operator == ( const level_id &id ) const

@@ -15,6 +15,31 @@ MAP
 O
 ENDMAP
 
+#######################################################################
+# Pillars for ziggurats.
+#######################################################################
+NAME: ziggurat_pillar_a
+TAGS: ziggurat_pillar
+SUBST: c : cxv
+MAP
+c
+ENDMAP
+
+NAME: ziggurat_pillar_b
+TAGS: ziggurat_pillar
+SUBST: c : cxv
+MAP
+cc
+cc
+ENDMAP
+
+NAME: ziggurat_pillar_c
+TAGS: ziggurat_pillar
+MAP
+lll
+lGl
+lll
+ENDMAP
 
 NAME: ziggurat1
 : ziggurat_level(_G)

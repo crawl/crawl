@@ -2159,6 +2159,106 @@ BRANCHFN(parent_branch, string,
          br.parent_branch == NUM_BRANCHES ? ""
          : branches[br.parent_branch].abbrevname)
 
+static void push_level_id(lua_State *ls, const level_id &lid)
+{
+    // We're skipping the constructor; naughty, but level_id has no
+    // virtual methods and no dynamically allocated memory.
+    level_id *nlev =
+        static_cast<level_id*>(lua_newuserdata(ls, sizeof(level_id)));
+    *nlev = lid;
+}
+
+static level_id _lua_level_id(lua_State *ls, int ndx)
+{
+    if (lua_isstring(ls, ndx))
+    {
+        const char *s = lua_tostring(ls, 1);
+        try
+        {
+            return level_id::parse_level_id(s);
+        }
+        catch (const std::string &err)
+        {
+            luaL_error(ls, err.c_str());
+        }
+    }
+    else if (lua_isuserdata(ls, ndx))
+    {
+        const level_id *lid = static_cast<level_id*>(lua_touserdata(ls, ndx));
+        return (*lid);
+    }
+
+    luaL_argerror(ls, ndx, "Expected level_id");
+    // Never gets here.
+    return level_id();
+}
+
+LUAFN(dgn_level_id)
+{
+    const int nargs = lua_gettop(ls);
+    if (!nargs)
+        push_level_id(ls, level_id::current());
+    else if (nargs == 1)
+        push_level_id(ls, _lua_level_id(ls, 1));
+    return (1);
+}
+
+static inline bool _lua_boolean(lua_State *ls, int ndx, bool defval)
+{
+    return lua_isnone(ls, ndx)? defval : lua_toboolean(ls, ndx);
+}
+
+static int _lua_push_map(lua_State *ls, const map_def *map)
+{
+    if (map)
+        lua_pushlightuserdata(ls, const_cast<map_def*>(map));
+    else
+        lua_pushnil(ls);
+    return (1);
+}
+
+LUAFN(dgn_map_by_tag)
+{
+    if (const char *tag = luaL_checkstring(ls, 1))
+    {
+        const bool mini = _lua_boolean(ls, 2, true);
+        const bool check_depth = _lua_boolean(ls, 3, true);
+        return _lua_push_map(ls, random_map_for_tag(tag, mini, check_depth));
+    }
+    return (0);
+}
+
+LUAFN(dgn_map_in_depth)
+{
+    const level_id lid = _lua_level_id(ls, 1);
+    const bool mini = _lua_boolean(ls, 2, true);
+    return _lua_push_map(ls, random_map_in_depth(lid, mini));
+}
+
+LUAFN(dgn_map_by_place)
+{
+    const level_id lid = _lua_level_id(ls, 1);
+    const bool mini = _lua_boolean(ls, 2, true);
+    return _lua_push_map(ls, random_map_for_place(lid, mini));
+}
+
+LUAFN(_dgn_place_map)
+{
+    if (!lua_isuserdata(ls, 1))
+        luaL_argerror(ls, 1, "Expected map");
+    const map_def *map = static_cast<map_def *>(lua_touserdata(ls, 1));
+    const bool clobber = _lua_boolean(ls, 2, false);
+    const bool no_exits = _lua_boolean(ls, 3, false);
+    coord_def where(-1, -1);
+    if (lua_isnumber(ls, 4) && lua_isnumber(ls, 5))
+    {
+        COORDS(c, 4, 5);
+        where = c;
+    }
+    lua_pushboolean(ls, dgn_place_map(map, clobber, no_exits, where));
+    return (1);
+}
+
 static int dgn_debug_dump_map(lua_State *ls)
 {
     const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
@@ -2269,6 +2369,12 @@ static const struct luaL_reg dgn_lib[] =
     { "br_has_shops", dgn_br_has_shops },
     { "br_has_uniques", dgn_br_has_uniques },
     { "br_parent_branch", dgn_br_parent_branch },
+
+    { "level_id", dgn_level_id },
+    { "map_by_tag", dgn_map_by_tag },
+    { "map_in_depth", dgn_map_in_depth },
+    { "map_by_place", dgn_map_by_place },
+    { "place_map", _dgn_place_map },
 
     { "debug_dump_map", dgn_debug_dump_map },
 
