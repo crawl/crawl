@@ -950,7 +950,9 @@ static bool _try_make_weapon_artefact(item_def& item, int force_type,
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Making fixed artefact.");
 #endif
-        if (make_item_fixed_artefact( item, (item_level == 51) ))
+        if (make_item_fixed_artefact(
+                item,
+                (item_level == level_id(LEVEL_ABYSS).absdepth()) ))
             return (true);
     }
 

@@ -1388,22 +1388,7 @@ static int num_traps_default(int level_number, const level_id &place)
 int num_traps_for_place(int level_number, const level_id &place)
 {
     if (level_number == -1)
-    {
-        switch(place.level_type)
-        {
-        case LEVEL_DUNGEON:
-            level_number = absdungeon_depth(place.branch, place.depth);
-            break;
-        case LEVEL_ABYSS:
-            level_number = 51;
-            break;
-        case LEVEL_PANDEMONIUM:
-            level_number = 52;
-            break;
-        default:
-            level_number = you.your_level;
-        }
-    }
+        level_number = place.absdepth();
 
     switch (place.level_type)
     {
@@ -1473,22 +1458,7 @@ static trap_type random_trap_default(int level_number, const level_id &place)
 trap_type random_trap_for_place(int level_number, const level_id &place)
 {
     if (level_number == -1)
-    {
-        switch (place.level_type)
-        {
-        case LEVEL_DUNGEON:
-            level_number = absdungeon_depth(place.branch, place.depth);
-            break;
-        case LEVEL_ABYSS:
-            level_number = 51;
-            break;
-        case LEVEL_PANDEMONIUM:
-            level_number = 52;
-            break;
-        default:
-            level_number = you.your_level;
-        }
-    }
+        level_number = place.absdepth();
 
     switch (place.level_type)
     {

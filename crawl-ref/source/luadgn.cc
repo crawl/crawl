@@ -26,6 +26,7 @@
 #include "mapmark.h"
 #include "maps.h"
 #include "misc.h"
+#include "mon-util.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "tags.h"
@@ -315,6 +316,8 @@ std::string dlua_chunk::get_chunk_prefix(const std::string &sorig) const
 #define MAPMARKER(ls, n, var) \
     map_marker *var = *(map_marker **) luaL_checkudata(ls, n, MAPMARK_METATABLE)
 
+#define LUAFN(name) static int name(lua_State *ls)
+
 static dungeon_feature_type _get_lua_feature(lua_State *ls, int idx)
 {
     dungeon_feature_type feat = (dungeon_feature_type)0;
@@ -336,15 +339,19 @@ static dungeon_feature_type _check_lua_feature(lua_State *ls, int idx)
     return (f);
 }
 
-#define COORDS(c, p1, p2)                                \
+#define GETCOORD(c, p1, p2, boundfn)                      \
     coord_def c;                                          \
     c.x = luaL_checkint(ls, p1);                          \
     c.y = luaL_checkint(ls, p2);                          \
-    if (!in_bounds(c))                                    \
-        luaL_error(                                         \
+    if (!boundfn(c))                                        \
+        luaL_error(                                             \
             ls,                                                 \
-            make_stringf("Point (%d,%d) is out of map bounds",  \
-                         c.x, c.y).c_str());
+            make_stringf("Point (%d,%d) is out of bounds",      \
+                         c.x, c.y).c_str());                    \
+    else ;                                                      \
+
+#define COORDS(c, p1, p2)                                \
+    GETCOORD(c, p1, p2, in_bounds)
 
 #define FEAT(f, pos) \
     dungeon_feature_type f = _check_lua_feature(ls, pos)
@@ -908,7 +915,7 @@ static int dgn_welcome(lua_State *ls)
 
 static int dgn_grid(lua_State *ls)
 {
-    COORDS(c, 1, 2);
+    GETCOORD(c, 1, 2, map_bounds);
 
     if (!lua_isnone(ls, 3))
     {
@@ -1094,68 +1101,51 @@ static int dgn_get_rock_colour(lua_State *ls)
     PLUARET(string, colour_to_str(env.rock_colour).c_str());
 }
 
+static int _lua_colour(lua_State *ls, int ndx,
+                       int forbidden_colour = -1)
+{
+    if (lua_isnumber(ls, ndx))
+        return lua_tonumber(ls, ndx);
+    else if (const char *s = luaL_checkstring(ls, ndx))
+    {
+        const int colour = str_to_colour(s);
+
+        if (colour < 0 || colour == forbidden_colour)
+        {
+            std::string error;
+            if (colour == forbidden_colour)
+                error = std::string("Can't set floor to ") + s;
+            else
+                error = std::string("Unknown colour: '") + s + "'";
+            return luaL_argerror(ls, 1, error.c_str());
+        }
+        return (colour);
+    }
+    return luaL_argerror(ls, ndx, "Expected colour name or number");
+}
+
 static int dgn_change_floor_colour(lua_State *ls)
 {
-    const char *s = luaL_checkstring(ls, 1);
-    int colour = str_to_colour(s);
-
-    if (colour < 0 || colour == BLACK)
-    {
-        std::string error;
-
-        if (colour == BLACK)
-        {
-            error = "Can't set floor to black.";
-        }
-        else
-        {
-            error = "No such colour as '";
-            error += s;
-            error += "'";
-        }
-
-        luaL_argerror(ls, 1, error.c_str());
-
-        return (0);
-    }
-
+    const int colour = _lua_colour(ls, 1, BLACK);
     env.floor_colour = (unsigned char) colour;
-
     viewwindow(true, false);
-
     return (0);
 }
 
 static int dgn_change_rock_colour(lua_State *ls)
 {
-    const char *s = luaL_checkstring(ls, 1);
-    int colour = str_to_colour(s);
-
-    if (colour < 0 || colour == BLACK)
-    {
-        std::string error;
-
-        if (colour == BLACK)
-        {
-            error = "Can't set rock to black.";
-        }
-        else
-        {
-            error = "No such colour as '";
-            error += s;
-            error += "'";
-        }
-
-        luaL_argerror(ls, 1, error.c_str());
-
-        return (0);
-    }
-
+    const int colour = _lua_colour(ls, 1, BLACK);
     env.rock_colour = (unsigned char) colour;
-
     viewwindow(true, false);
-
     return (0);
+}
+
+static int dgn_colour_at(lua_State *ls)
+{
+    COORDS(c, 1, 2);
+    if (!lua_isnone(ls, 3))
+        env.grid_colours(c) = _lua_colour(ls, 3);
+    PLUARET(string, colour_to_str(env.grid_colours(c)).c_str());
 }
 
 const char *dngn_feature_names[] =
@@ -1434,6 +1424,25 @@ static int dgn_mons_from_index(lua_State *ls)
     else
         lua_pushnil(ls);
 
+    return (1);
+}
+
+static int dgn_mons_at(lua_State *ls)
+{
+    COORDS(c, 1, 2);
+
+    monsters *mon = monster_at(c);
+    if (mon && mon->alive())
+        push_monster(ls, mon);
+    else
+        lua_pushnil(ls);
+    return (1);
+}
+
+static int dgn_items_at(lua_State *ls)
+{
+    COORDS(c, 1, 2);
+    lua_push_items(ls, env.igrid(c));
     return (1);
 }
 
@@ -2054,6 +2063,13 @@ static int dgn_fill_disconnected_zones(lua_State *ls)
     return 0;
 }
 
+static int _dgn_is_passable(lua_State *ls)
+{
+    COORDS(c, 1, 2);
+    lua_pushboolean(ls, is_travelsafe_square(c.x, c.y, false, true));
+    return (1);
+}
+
 static int dgn_register_feature_marker(lua_State *ls)
 {
     COORDS(c, 1, 2);
@@ -2074,6 +2090,74 @@ static int dgn_register_lua_marker(lua_State *ls)
     env.markers.add(marker);
     return (0);
 }
+
+static int dgn_create_monster(lua_State *ls)
+{
+    COORDS(c, 1, 2);
+
+    if (const char *spec = lua_tostring(ls, 3))
+    {
+        mons_list mlist;
+        const std::string err = mlist.add_mons(spec);
+        if (!err.empty())
+            luaL_error(ls, err.c_str());
+
+        for (int i = 0, size = mlist.size(); i < size; ++i)
+        {
+            mons_spec mspec = mlist.get_monster(i);
+            if (dgn_place_monster(mspec, you.your_level, c,
+                                  false, false, false))
+            {
+                push_monster(ls, &menv[mgrd(c)]);
+                return (1);
+            }
+        }
+    }
+    lua_pushnil(ls);
+    return (1);
+}
+
+static int dgn_create_item(lua_State *ls)
+{
+    COORDS(c, 1, 2);
+
+    if (const char *spec = lua_tostring(ls, 3))
+    {
+        item_list ilist;
+        const std::string err = ilist.add_item(spec);
+        if (!err.empty())
+            luaL_error(ls, err.c_str());
+
+        const int level =
+            lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : you.your_level;
+
+        dgn_place_multiple_items(ilist, c, level);
+        link_items();
+    }
+    return (0);
+}
+
+
+#define BRANCH(br, pos)                                                 \
+    const char *branch_name = luaL_checkstring(ls, pos);                \
+    branch_type req_branch_type = str_to_branch(branch_name);           \
+    if (req_branch_type == NUM_BRANCHES)                                \
+        luaL_error(ls, "Expected branch name");                         \
+    Branch &br = branches[req_branch_type]
+
+#define BRANCHFN(name, type, expr)   \
+    LUAFN(dgn_br_##name) {           \
+    BRANCH(br, 1);                   \
+    PLUARET(type, expr);             \
+    }
+
+BRANCHFN(floorcol, number, br.floor_colour)
+BRANCHFN(rockcol, number, br.rock_colour)
+BRANCHFN(has_shops, boolean, br.has_shops)
+BRANCHFN(has_uniques, boolean, br.has_uniques)
+BRANCHFN(parent_branch, string,
+         br.parent_branch == NUM_BRANCHES ? ""
+         : branches[br.parent_branch].abbrevname)
 
 static int dgn_debug_dump_map(lua_State *ls)
 {
@@ -2118,6 +2202,7 @@ static const struct luaL_reg dgn_lib[] =
 
     { "grid", dgn_grid },
     { "max_bounds", dgn_max_bounds },
+    { "colour_at", dgn_colour_at },
 
     { "terrain_changed", dgn_terrain_changed },
     { "points_connected", dgn_points_connected },
@@ -2138,6 +2223,8 @@ static const struct luaL_reg dgn_lib[] =
     { "feature_desc_at", dgn_feature_desc_at },
     { "item_from_index", dgn_item_from_index },
     { "mons_from_index", dgn_mons_from_index },
+    { "mons_at", dgn_mons_at },
+    { "items_at", dgn_items_at },
     { "change_level_flags", dgn_change_level_flags },
     { "change_branch_flags", dgn_change_branch_flags },
     { "get_floor_colour", dgn_get_floor_colour },
@@ -2169,8 +2256,19 @@ static const struct luaL_reg dgn_lib[] =
     { "join_the_dots", dgn_join_the_dots },
     { "fill_disconnected_zones", dgn_fill_disconnected_zones },
 
+    { "is_passable", _dgn_is_passable },
+
     { "register_feature_marker", dgn_register_feature_marker },
     { "register_lua_marker", dgn_register_lua_marker },
+
+    { "create_monster", dgn_create_monster },
+    { "create_item", dgn_create_item },
+
+    { "br_floorcol", dgn_br_floorcol },
+    { "br_rockcol", dgn_br_rockcol },
+    { "br_has_shops", dgn_br_has_shops },
+    { "br_has_uniques", dgn_br_has_uniques },
+    { "br_parent_branch", dgn_br_parent_branch },
 
     { "debug_dump_map", dgn_debug_dump_map },
 

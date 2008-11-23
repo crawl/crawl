@@ -225,6 +225,8 @@ public:
         level_type = LEVEL_DUNGEON;
     }
 
+    int absdepth() const;
+
     bool is_valid() const
     {
         return (branch != NUM_BRANCHES && depth != -1)
@@ -264,8 +266,6 @@ public:
         return !operator == (_branch);
     }
 
-
-    int absdepth() const;
 
     void save(writer&) const;
     void load(reader&);

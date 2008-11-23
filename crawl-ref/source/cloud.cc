@@ -815,22 +815,7 @@ bool valid_fog_machine_data(fog_machine_data data)
 int num_fogs_for_place(int level_number, const level_id &place)
 {
     if (level_number == -1)
-    {
-        switch(place.level_type)
-        {
-        case LEVEL_DUNGEON:
-            level_number = absdungeon_depth(place.branch, place.depth);
-            break;
-        case LEVEL_ABYSS:
-            level_number = 51;
-            break;
-        case LEVEL_PANDEMONIUM:
-            level_number = 52;
-            break;
-        default:
-            level_number = you.your_level;
-        }
-    }
+        level_number = place.absdepth();
 
     switch(place.level_type)
     {
@@ -865,22 +850,7 @@ fog_machine_data random_fog_for_place(int level_number, const level_id &place)
     fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
 
     if (level_number == -1)
-    {
-        switch(place.level_type)
-        {
-        case LEVEL_DUNGEON:
-            level_number = absdungeon_depth(place.branch, place.depth);
-            break;
-        case LEVEL_ABYSS:
-            level_number = 51;
-            break;
-        case LEVEL_PANDEMONIUM:
-            level_number = 52;
-            break;
-        default:
-            level_number = you.your_level;
-        }
-    }
+        level_number = place.absdepth();
 
     switch(place.level_type)
     {

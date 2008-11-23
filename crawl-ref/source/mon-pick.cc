@@ -22,9 +22,9 @@ int mons_level(int mcls, const level_id &place)
     int monster_level = 0;
 
     if (place.level_type == LEVEL_ABYSS)
-        monster_level = ((mons_abyss(mcls)) ? 51 : 0);
+        monster_level = ((mons_abyss(mcls)) ? place.absdepth() : 0);
     else if (place.level_type == LEVEL_PANDEMONIUM)
-        monster_level = ((mons_pan(mcls)) ? 52 : 0);
+        monster_level = ((mons_pan(mcls)) ? place.absdepth() : 0);
     else if (place.level_type == LEVEL_DUNGEON)
         monster_level = branches[place.branch].mons_level_function(mcls);
 

@@ -254,6 +254,9 @@ int place_monster( mgen_data mg, bool force_pos = false );
  * *********************************************************************** */
 
 class level_id;
+
+monster_type pick_random_monster(const level_id &place);
+
 monster_type pick_random_monster(const level_id &place,
                                  int power,
                                  int &lev_mons);

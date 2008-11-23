@@ -4759,8 +4759,8 @@ static void _dgn_place_item_explicit(const item_spec &spec,
         grd(where) = DNGN_FLOOR;
 }
 
-static void _dgn_place_multiple_items(item_list &list,
-                                      const coord_def& where, int level)
+void dgn_place_multiple_items(item_list &list,
+                              const coord_def& where, int level)
 {
     const int size = list.size();
     for (int i = 0; i < size; ++i)
@@ -4885,6 +4885,7 @@ bool dgn_place_monster(mons_spec &mspec,
         const int  mid = mspec.mid;
         const bool m_generate_awake = (generate_awake || mspec.generate_awake);
         const bool m_patrolling     = (patrolling || mspec.patrolling);
+        const bool m_band           = mspec.band;
 
         const int mlev = mspec.mlevel;
         if (mlev)
@@ -4924,7 +4925,7 @@ bool dgn_place_monster(mons_spec &mspec,
             int lev = monster_level;
 
             if (mspec.place.level_type == LEVEL_DUNGEON)
-                lev = absdungeon_depth(mspec.place.branch, mspec.place.depth);
+                lev = mspec.place.absdepth();
 
             if (mlev == -8)
                 lev = 4 + lev * 2;
@@ -4966,12 +4967,12 @@ bool dgn_place_monster(mons_spec &mspec,
         if (m_patrolling)
             mg.flags |= MG_PATROLLING;
 
+        if (m_band)
+            mg.flags |= MG_PERMIT_BANDS;
+
         const int mindex = place_monster(mg, true);
-        if (mindex != -1)
-        {
-            if (mspec.items.size() > 0)
-                _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
-        }
+        if (mindex != -1 && mspec.items.size() > 0)
+            _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
         return (mindex != -1);
     }
     return (false);
@@ -5123,7 +5124,7 @@ static int _vault_grid( vault_placement &place,
         _dgn_place_one_monster(place, mons, level_number, where);
 
         item_list &items = mapsp->get_items();
-        _dgn_place_multiple_items(items, where, level_number);
+        dgn_place_multiple_items(items, where, level_number);
 
         return (altar_count);
     }

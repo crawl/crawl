@@ -3022,7 +3022,18 @@ level_id level_id::current()
 
 int level_id::absdepth() const
 {
-    return absdungeon_depth(branch, depth);
+    switch (level_type)
+    {
+    case LEVEL_DUNGEON:
+        return absdungeon_depth(branch, depth);
+    case LEVEL_PANDEMONIUM:
+        return 52;
+    case LEVEL_ABYSS:
+        return 51;
+    default:
+        // No true notion of depth here.
+        return you.your_level;
+    }
 }
 
 level_id level_id::get_next_level_id(const coord_def &pos)

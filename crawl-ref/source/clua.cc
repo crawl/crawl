@@ -32,6 +32,7 @@
 #include "macro.h"
 #include "mapdef.h"
 #include "message.h"
+#include "monstuff.h"
 #include "mon-util.h"
 #include "newgame.h"
 #include "output.h"
@@ -636,6 +637,8 @@ void CLua::init_lua()
     lua_register(_state, "loadfile", _clua_loadfile);
     lua_register(_state, "dofile", _clua_dofile);
 
+    execfile("clua/util.lua", true, true);
+
     if (managed_vm)
     {
         lua_register(_state, "pcall", _clua_guarded_pcall);
@@ -943,6 +946,17 @@ void lua_push_inv_items(lua_State *ls);
 void lua_set_exclusive_item(const item_def *item)
 {
     excl_item = item;
+}
+
+void lua_push_items(lua_State *ls, int link)
+{
+    lua_newtable(ls);
+    int index = 0;
+    for ( ; link != NON_ITEM; link = mitm[link].link)
+    {
+        lua_pushlightuserdata(ls, &mitm[link]);
+        lua_rawseti(ls, -2, ++index);
+    }
 }
 
 static int l_item_inventory(lua_State *ls)
@@ -2382,22 +2396,65 @@ struct MonsterWrap
     long      turn;
 };
 
-static int l_mons_name(lua_State *ls, monsters *mons, const char *attr)
+#define MDEF(name)                                                      \
+    static int l_mons_##name(lua_State *ls, monsters *mons,             \
+                             const char *attr)                         \
+
+#define MDEFN(name, closure)                    \
+    static int l_mons_##name(lua_State *ls, monsters *mons, const char *attrs) \
+    {                                                                   \
+    lua_pushlightuserdata(ls, mons);                                    \
+    lua_pushcclosure(ls, l_mons_do_dismiss, 1);                         \
+    return (1);                                                         \
+    }
+
+#define ASSERT_DLUA \
+    do {                                                            \
+        if (CLua::get_vm(ls).managed_vm)                            \
+            luaL_error(ls, "Operation forbidden in end-user script");   \
+    } while (false)
+
+MDEF(name)
 {
-    lua_pushstring(ls, mons_type_name(mons->type, DESC_PLAIN).c_str());
-    return (1);
+    PLUARET(string, mons_type_name(mons->type, DESC_PLAIN).c_str());
 }
 
-static int l_mons_x(lua_State *ls, monsters *mons, const char *attr)
+MDEF(x)
 {
-    lua_pushnumber(ls, int(mons->pos().x) - int(you.pos().x));
-    return (1);
+    PLUARET(number, int(mons->pos().x) - int(you.pos().x));
 }
 
-static int l_mons_y(lua_State *ls, monsters *mons, const char *attr)
+MDEF(y)
 {
-    lua_pushnumber(ls, int(mons->pos().y) - int(you.pos().y));
-    return (1);
+    PLUARET(number, int(mons->pos().y) - int(you.pos().y));
+}
+
+MDEF(hd)
+{
+    PLUARET(number, mons->hit_dice);
+}
+
+static int l_mons_do_dismiss(lua_State *ls)
+{
+    // dismiss is only callable from dlua, not from managed VMs (i.e.
+    // end-user scripts cannot dismiss monsters).
+    ASSERT_DLUA;
+    monsters *mons =
+        util_get_userdata<monsters>(ls, lua_upvalueindex(1));
+    if (mons->alive())
+    {
+        mons->flags |= MF_HARD_RESET;
+        monster_die(mons, KILL_DISMISSED, NON_MONSTER);
+    }
+    return (0);
+}
+
+MDEFN(dismiss, do_dismiss)
+
+MDEF(experience)
+{
+    ASSERT_DLUA;
+    PLUARET(number, exper_value(mons));
 }
 
 struct MonsAccessor
@@ -2411,6 +2468,9 @@ static MonsAccessor mons_attrs[] =
     { "name", l_mons_name },
     { "x"   , l_mons_x    },
     { "y"   , l_mons_y    },
+    { "hd"  , l_mons_hd   },
+    { "dismiss", l_mons_dismiss },
+    { "experience", l_mons_experience },
 };
 
 static int monster_get(lua_State *ls)

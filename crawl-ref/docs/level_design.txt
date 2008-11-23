@@ -366,7 +366,7 @@ CHANCE:   <priority>:<roll> or <roll>
           That is, if you have a set of maps that use CHANCE and are
           tagged chance_xxx, then one map of that set will be used
           when the chance is met.
-          
+
 
 WEIGHT:   (number with 10 being default)
           For entry vaults and any other vaults randomly picked from among
@@ -610,6 +610,16 @@ MONS:     (list of monsters)
 
           The available modifiers are "zombie", "skeleton",
           "simulacrum" and "spectre".
+
+          If a monster is a member of a band, you can request that it
+          be eligible for band members by adding the keyword "band" to
+          the name. For instance:
+              MONS: orc warlord band
+
+          Specifying "band" doesn't force bands to be placed - it
+          requests that the game use the normal chances of creating a
+          band. If you use "band", leave some empty space around the
+          monster for its band members to be placed.
 
           A monster can be given specific items by following the monster
           name with a semi-colon and then with an item list as described
@@ -1286,7 +1296,7 @@ description ("A portal to places unknown") and a destination
 
 In case you want to make sure that the portal vault entry is only used
 once, you add a TAGS: uniq_BAR line. It should be noted that the label
-BAR may *not* end in _entry (otherwise the level builder assumes that 
+BAR may *not* end in _entry (otherwise the level builder assumes that
 the vault is a branch entry).
 
 This will produce a portal, but attempting to use it will trigger an

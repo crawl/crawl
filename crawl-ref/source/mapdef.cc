@@ -1989,6 +1989,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         mspec.fix_mons       = strip_tag(mon_str, "fix_mons");
         mspec.generate_awake = strip_tag(mon_str, "generate_awake");
         mspec.patrolling     = strip_tag(mon_str, "patrolling");
+        mspec.band           = strip_tag(mon_str, "band");
 
         // place:Elf:7 to choose monsters appropriate for that level,
         // for example.

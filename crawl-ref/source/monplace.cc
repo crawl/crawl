@@ -262,6 +262,12 @@ void spawn_random_monsters()
     // No monsters in the Labyrinth, or the Ecumenical Temple, or in Bazaars.
 }
 
+monster_type pick_random_monster(const level_id &place)
+{
+    int level = place.absdepth();
+    return pick_random_monster(place, level, level);
+}
+
 monster_type pick_random_monster(const level_id &place, int power,
                                  int &lev_mons)
 {
@@ -1906,16 +1912,14 @@ int mons_place( mgen_data mg )
     // Translate level_type.
     switch (mg.level_type)
     {
-        case LEVEL_PANDEMONIUM:
-            mg.power = 52;     // sigh..
-            break;
-        case LEVEL_ABYSS:
-            mg.power = 51;
-            break;
-        case LEVEL_DUNGEON:
-        default:
-            mg.power = you.your_level;
-            break;
+    case LEVEL_PANDEMONIUM:
+    case LEVEL_ABYSS:
+        mg.power = level_id(mg.level_type).absdepth();
+        break;
+    case LEVEL_DUNGEON:
+    default:
+        mg.power = you.your_level;
+        break;
     }
 
     int mid = place_monster(mg);

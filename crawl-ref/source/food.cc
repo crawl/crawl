@@ -702,17 +702,6 @@ bool butchery(int which_corpse)
     return (success);
 }
 
-void lua_push_items(lua_State *ls, int link)
-{
-    lua_newtable(ls);
-    int index = 0;
-    for ( ; link != NON_ITEM; link = mitm[link].link)
-    {
-        lua_pushlightuserdata(ls, &mitm[link]);
-        lua_rawseti(ls, -2, ++index);
-    }
-}
-
 void lua_push_floor_items(lua_State *ls)
 {
     lua_push_items(ls, igrd(you.pos()));

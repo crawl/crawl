@@ -681,9 +681,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         }
 
         // Got a place, summon the beast.
-        int level = 51;
-        monster_type mons = pick_random_monster(level_id(LEVEL_ABYSS), level,
-                                                level);
+        monster_type mons = pick_random_monster(level_id(LEVEL_ABYSS));
         if (mons == MONS_PROGRAM_BUG)
             return (false);
 

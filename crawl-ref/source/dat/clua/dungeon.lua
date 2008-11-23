@@ -4,8 +4,8 @@
 ------------------------------------------------------------------------------
 
 dgn.GXM, dgn.GYM = dgn.max_bounds()
-dgn.f_rockwall = dgn.feature_number("rock_wall")
-dgn.f_floor = dgn.feature_number("floor")
+
+dgn.f_map = { }
 
 -- Table that will be saved in <foo>.sav.
 dgn.persist = { }
@@ -16,6 +16,15 @@ end
 
 function dgn_load_data(th)
   dgn.persist = lmark.unmarshall_table(th) or { }
+end
+
+function dgn.fnum(name)
+  local fnum = dgn.f_map[name]
+  if not fnum then
+    fnum = dgn.feature_number(name)
+    dgn.f_map[name] = fnum
+  end
+  return fnum
 end
 
 -- Wraps a map_def into a Lua environment (a table) such that
@@ -34,7 +43,7 @@ function dgn_map_meta_wrap(map, tab)
 
    if not meta then
       meta = { }
-      
+
       local meta_meta = { __index = _G }
       setmetatable(meta, meta_meta)
       dgn._map_envs[name] = meta
@@ -94,7 +103,7 @@ function dgn.places_connected(map, map_glyph, test_connect, ...)
 end
 
 function dgn.any_glyph_connected(map, ...)
-   return dgn.places_connected(map, dgn.gly_points, 
+   return dgn.places_connected(map, dgn.gly_points,
                               dgn.any_point_connected, ...)
 end
 
@@ -144,7 +153,7 @@ function dgn.fnum_map(map)
   return fnmap
 end
 
--- Replaces all features matching 
+-- Replaces all features matching
 function dgn.replace_feat(rmap)
   local cmap = dgn.fnum_map(rmap)
 
@@ -154,6 +163,92 @@ function dgn.replace_feat(rmap)
       local repl = cmap[grid]
       if repl then
         dgn.terrain_changed(x, y, repl)
+      end
+    end
+  end
+end
+
+function dgn.adjacent_points(c, faccept)
+  local plist = { }
+
+  local compass = {
+    { 0, -1 }, { 1, 0 }, { 0, 1 }, { -1, 0 },
+    { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 }
+  }
+
+  for _, cp in ipairs(compass) do
+    local p = { x = c.x + cp[1], y = c.y + cp[2] }
+    if dgn.in_bounds(p.x, p.y) and faccept(p) then
+      table.insert(plist, p)
+    end
+  end
+  return plist
+end
+
+function dgn.find_adjacent_point(c, fcondition, fpassable)
+  local mapped_points = { }
+
+  local function pstr(p)
+    return p.x .. "," .. p.y
+  end
+
+  local function seen(p)
+    return mapped_points[pstr(p)]
+  end
+
+  local function record(p, val)
+    mapped_points[pstr(p)] = val or 1
+  end
+
+  if not fpassable then
+    fpassable = function (p)
+                  return dgn.is_passable(p.x, p.y)
+                end
+  end
+
+  local iter_points = { { }, { } }
+  local iter = 1
+  table.insert(iter_points[iter], c)
+
+  local function next_iter()
+    if iter == 1 then
+      return 2
+    else
+      return 1
+    end
+  end
+
+  local distance = 1
+  record(c, distance)
+
+  while #iter_points[iter] > 0 do
+    for _, p in ipairs(iter_points[iter]) do
+      if fcondition(p) then
+        return p
+      end
+
+      -- Add adjacent points to queue.
+      for _, np in ipairs(dgn.adjacent_points(p, fpassable)) do
+        if not seen(np) then
+          table.insert(iter_points[next_iter()], np)
+          record(np, distance + 1)
+        end
+      end
+    end
+    iter_points[iter] = { }
+    iter = next_iter()
+    distance = distance + 1
+  end
+
+  -- No suitable point.
+  return nil
+end
+
+function dgn.colour_map(fselect, colour)
+  for x = 0, dgn.GXM - 1 do
+    for y = 0, dgn.GYM - 1 do
+      if fselect(x, y) then
+        dgn.colour_at(x, y, colour)
       end
     end
   end

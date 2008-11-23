@@ -280,6 +280,8 @@ class dgn_event;
 void clua_push_map(lua_State *ls, map_def *map);
 void clua_push_dgn_event(lua_State *ls, const dgn_event *devent);
 
+void lua_push_items(lua_State *ls, int link);
+
 template <class T> T *clua_new_userdata(
         lua_State *ls, const char *mt)
 {

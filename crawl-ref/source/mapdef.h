@@ -419,6 +419,7 @@ class mons_spec
     bool fix_mons;
     bool generate_awake;
     bool patrolling;
+    bool band;
     int  colour;
 
     item_list items;
@@ -430,7 +431,7 @@ class mons_spec
               bool _fixmons = false, bool awaken = false, bool patrol = false)
         : mid(id), place(), monbase(base), number(num), genweight(gw),
           mlevel(ml), fix_mons(_fixmons), generate_awake(awaken),
-          patrolling(false), colour(BLACK), items()
+          patrolling(false), band(false), colour(BLACK), items()
     {
     }
 };
