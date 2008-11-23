@@ -269,16 +269,21 @@ local function ziggurat_create_loot(c)
     end
   end
 
+  local loot_depth = 20
+  if you.absdepth() > loot_depth then
+    loot_depth = you.absdepth() - 1
+  end
+
   for i = 1, nloot do
     if crawl.one_chance_in(depth) then
       for j = 1, 4 do
         free_space_do(function (p)
-                        dgn.create_item(p.x, p.y, "*", 20)
+                        dgn.create_item(p.x, p.y, "*", loot_depth)
                       end)
       end
     else
       free_space_do(function (p)
-                      dgn.create_item(p.x, p.y, "|", 20)
+                      dgn.create_item(p.x, p.y, "|", loot_depth)
                     end)
     end
   end
@@ -311,7 +316,7 @@ local function ziggurat_rectangle_builder(e)
 
   ziggurat_create_loot(exit)
 
-  --ziggurat_create_monsters(exit)
+  ziggurat_create_monsters(exit)
 
   dgn.colour_map(function (x, y)
                    return dgn.grid(x, y) == dgn.fnum("stone_wall")
