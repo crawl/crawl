@@ -91,6 +91,8 @@ extern std::map<branch_type, level_id> stair_level;
 extern std::map<level_pos, shop_type> shops_present;
 extern std::map<level_pos, god_type> altars_present;
 extern std::map<level_pos, portal_type> portals_present;
+extern std::map<level_pos, std::string> portal_vaults_present;
+extern std::map<level_pos, char> portal_vault_colours;
 extern std::map<level_id, std::string> level_annotations;
 
 // temp file pairs used for file level cleanup
@@ -213,7 +215,7 @@ int read2(FILE * file, void *buffer, unsigned int count)
     return fread(buffer, 1, count, file);
 }
 
-void marshallByte(writer &th, char data)
+void marshallByte(writer &th, const char& data)
 {
     th.writeByte(data);
 }
@@ -1122,6 +1124,10 @@ static void tag_construct_you_dungeon(writer &th)
                 marshall_level_pos, marshall_as_long<god_type>);
     marshallMap(th, portals_present,
                 marshall_level_pos, marshall_as_long<portal_type>);
+    marshallMap(th, portal_vaults_present,
+                marshall_level_pos, marshallStringNoMax);
+    marshallMap(th, portal_vault_colours,
+                marshall_level_pos, marshallByte);
     marshallMap(th, level_annotations,
                 marshall_level_id, marshallStringNoMax);
 
@@ -1575,6 +1581,10 @@ static void tag_read_you_dungeon(reader &th)
                   unmarshall_level_pos, unmarshall_long_as<god_type>);
     unmarshallMap(th, portals_present,
                   unmarshall_level_pos, unmarshall_long_as<portal_type>);
+    unmarshallMap(th, portal_vaults_present,
+                  unmarshall_level_pos, unmarshallStringNoMax);
+    unmarshallMap(th, portal_vault_colours,
+                  unmarshall_level_pos, unmarshallByte);
     unmarshallMap(th, level_annotations,
                   unmarshall_level_id, unmarshallStringNoMax);
 

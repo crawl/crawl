@@ -780,11 +780,11 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             break;
         }
 
-        dungeon_terrain_changed(you.pos(), DNGN_ENTER_PORTAL_VAULT, false);
         map_wiz_props_marker *marker = new map_wiz_props_marker(you.pos());
         marker->set_property("dst", dst);
         marker->set_property("desc", "wizard portal, dest = " + dst);
         env.markers.add(marker);
+        dungeon_terrain_changed(you.pos(), DNGN_ENTER_PORTAL_VAULT, false);
         break;
     }
 

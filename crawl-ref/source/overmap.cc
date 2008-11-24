@@ -25,6 +25,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "files.h"
+#include "initfile.h"
 #include "menu.h"
 #include "misc.h"
 #include "religion.h"
@@ -38,12 +39,19 @@ typedef std::map<branch_type, level_id> stair_map_type;
 typedef std::map<level_pos, shop_type> shop_map_type;
 typedef std::map<level_pos, god_type> altar_map_type;
 typedef std::map<level_pos, portal_type> portal_map_type;
+typedef std::map<level_pos, std::string> portal_vault_map_type;
+// NOTE: The value for colours here is char rather than unsigned char
+// because g++ needs it to be char for marshallMap in tags.cc to
+// compile properly.
+typedef std::map<level_pos, char> portal_vault_colour_map_type;
 typedef std::map<level_id, std::string> annotation_map_type;
 
 stair_map_type stair_level;
 shop_map_type shops_present;
 altar_map_type altars_present;
 portal_map_type portals_present;
+portal_vault_map_type portal_vaults_present;
+portal_vault_colour_map_type portal_vault_colours;
 annotation_map_type level_annotations;
 
 static void seen_altar( god_type god, const coord_def& pos );
@@ -174,6 +182,106 @@ bool overmap_knows_portal(dungeon_feature_type portal)
             return (true);
     }
     return (false);
+}
+
+static std::string _portals_description_string()
+{
+    std::string disp;
+    level_id    last_id;
+    for (int cur_portal = PORTAL_NONE; cur_portal < NUM_PORTALS; ++cur_portal)
+    {
+        last_id.depth = 10000;
+        portal_map_type::const_iterator ci_portals;
+        for ( ci_portals = portals_present.begin();
+              ci_portals != portals_present.end();
+              ++ci_portals )
+        {
+            // one line per region should be enough, they're all of
+            // the form D:XX, except for labyrinth portals, of which
+            // you would need 11 (at least) to have a problem.
+            if ( ci_portals->second == cur_portal )
+            {
+                if ( last_id.depth == 10000 )
+                    disp += portaltype_to_string(ci_portals->second);
+
+                if ( ci_portals->first.id == last_id )
+                    disp += '*';
+                else
+                {
+                    disp += ' ';
+                    disp += ci_portals->first.id.describe(false, true);
+                }
+                last_id = ci_portals->first.id;
+            }
+        }
+        if ( last_id.depth != 10000 )
+            disp += "\n";
+    }
+    return disp;
+}
+
+static std::string _portal_vaults_description_string()
+{
+    // Collect all the different portal vault entrance names and then
+    // display them in alphabetical order.
+    std::set<std::string>    vault_names_set;
+    std::vector<std::string> vault_names_vec;
+
+    portal_vault_map_type::const_iterator ci_portals;
+    for ( ci_portals = portal_vaults_present.begin();
+          ci_portals != portal_vaults_present.end();
+          ++ci_portals )
+    {
+        vault_names_set.insert(ci_portals->second);
+    }
+
+    for (std::set<std::string>::iterator i = vault_names_set.begin();
+         i != vault_names_set.end(); ++i)
+    {
+        vault_names_vec.push_back(*i);
+    }
+    std::sort(vault_names_vec.begin(), vault_names_vec.end() );
+
+    std::string disp;
+    level_id    last_id;
+    for (unsigned int i = 0; i < vault_names_vec.size(); i++)
+    {
+        last_id.depth = 10000;
+        for ( ci_portals = portal_vaults_present.begin();
+              ci_portals != portal_vaults_present.end();
+              ++ci_portals )
+        {
+            // one line per region should be enough, they're all of
+            // the form D:XX, except for labyrinth portals, of which
+            // you would need 11 (at least) to have a problem.
+            if ( ci_portals->second == vault_names_vec[i] )
+            {
+                if ( last_id.depth == 10000 )
+                {
+                    unsigned char col =
+                        (unsigned char) portal_vault_colours[ci_portals->first];
+                    disp += '<';
+                    disp += colour_to_str(col) + '>';
+                    disp += vault_names_vec[i];
+                    disp += "</";
+                    disp += colour_to_str(col) + '>';
+                    disp += ':';
+                }
+
+                if ( ci_portals->first.id == last_id )
+                    disp += '*';
+                else
+                {
+                    disp += ' ';
+                    disp += ci_portals->first.id.describe(false, true);
+                }
+                last_id = ci_portals->first.id;
+            }
+        }
+        if ( last_id.depth != 10000 )
+            disp += "\n";
+    }
+    return disp;
 }
 
 std::string overview_description_string()
@@ -323,40 +431,13 @@ std::string overview_description_string()
         disp += "\n";
 
     // print portals
-    if ( !portals_present.empty() )
+    if ( !portals_present.empty() || !portal_vaults_present.empty() )
     {
         disp += "\n<green>Portals:</green>\n";
         seen_anything = true;
     }
-    for (int cur_portal = PORTAL_NONE; cur_portal < NUM_PORTALS; ++cur_portal)
-    {
-        last_id.depth = 10000;
-        std::map<level_pos, portal_type>::const_iterator ci_portals;
-        for ( ci_portals = portals_present.begin();
-              ci_portals != portals_present.end();
-              ++ci_portals )
-        {
-            // one line per region should be enough, they're all of
-            // the form D:XX, except for labyrinth portals, of which
-            // you would need 11 (at least) to have a problem.
-            if ( ci_portals->second == cur_portal )
-            {
-                if ( last_id.depth == 10000 )
-                    disp += portaltype_to_string(ci_portals->second);
-
-                if ( ci_portals->first.id == last_id )
-                    disp += '*';
-                else
-                {
-                    disp += ' ';
-                    disp += ci_portals->first.id.describe(false, true);
-                }
-                last_id = ci_portals->first.id;
-            }
-        }
-        if ( last_id.depth != 10000 )
-            disp += "\n";
-    }
+    disp += _portals_description_string();
+    disp += _portal_vaults_description_string();
 
     if (!seen_anything)
     {
@@ -440,6 +521,12 @@ static bool unnotice_portal(const level_pos &pos)
     return find_erase(portals_present, pos);
 }
 
+static bool unnotice_portal_vault(const level_pos &pos)
+{
+    (void) find_erase(portal_vault_colours, pos);
+    return find_erase(portal_vaults_present, pos);
+}
+
 static bool unnotice_altar(const level_pos &pos)
 {
     return find_erase(altars_present, pos);
@@ -470,6 +557,7 @@ static bool unnotice_stair(const level_pos &pos)
 bool unnotice_feature(const level_pos &pos)
 {
     return (unnotice_portal(pos)
+            || unnotice_portal_vault(pos)
             || unnotice_altar(pos)
             || unnotice_shop(pos)
             || unnotice_stair(pos));
@@ -555,6 +643,32 @@ void seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
         shops_present[where] =
             static_cast<shop_type>(get_shop(pos)->type);
         break;
+
+    case DNGN_ENTER_PORTAL_VAULT:
+    {
+        std::string portal_name;
+
+        portal_name = env.markers.property_at(pos, MAT_ANY, "dstovermap");
+        if (portal_name.empty())
+            portal_name = env.markers.property_at(pos, MAT_ANY, "dstname");
+        if (portal_name.empty())
+            portal_name = env.markers.property_at(pos, MAT_ANY, "dst");
+        if (portal_name.empty())
+            portal_name = "buggy vault portal";
+
+        portal_name = replace_all(portal_name, "_", " ");
+        portal_vaults_present[where] = uppercase_first(portal_name);
+
+        unsigned char col;
+        if (env.grid_colours(pos) != BLACK)
+            col = env.grid_colours(pos);
+        else
+            col = get_feature_def(which_thing).colour;
+        portal_vault_colours[where] = (char) element_colour(col, true);
+
+        break;
+    }
+
     default:
         const portal_type portal = feature_to_portal(which_thing);
         if ( portal != PORTAL_NONE )

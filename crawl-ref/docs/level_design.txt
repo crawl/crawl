@@ -1316,6 +1316,11 @@ dump to be different than the default you can give one_way_stair a
 You can dynamically change the origin string using the lua function
 dgn.set_level_type_origin().
 
+Known portal vault entries will be displayed on the overmap.  By default
+the name shown on the overmap will be the "dstname" parameter, or if
+that isn't present the "dst" paremeter.  It can be set to something else
+with the "dstovermap" parameter.
+
 This will produce a portal, but attempting to use it will trigger an
 ASSERT since there's no map for the destination. So we create a
 destination map like so:

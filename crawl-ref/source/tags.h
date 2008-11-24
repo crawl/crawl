@@ -82,7 +82,7 @@ private:
     std::vector<unsigned char>* _pbuf;
 };
 
-void marshallByte    (writer &, char );
+void marshallByte    (writer &, const char& );
 void marshallShort   (writer &, int16_t );
 void marshallLong    (writer &, int32_t );
 void marshallFloat   (writer &, float );
