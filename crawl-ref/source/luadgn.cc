@@ -2203,6 +2203,25 @@ LUAFN(dgn_level_id)
     return (1);
 }
 
+LUAFN(dgn_set_level_type_origin)
+{
+    if (you.level_type != LEVEL_PORTAL_VAULT)
+    {
+        luaL_error(ls, "Can only set level type origin on portal vaults");
+        return(0);
+    }
+
+    if (!lua_isstring(ls, 1))
+    {
+        luaL_argerror(ls, 1, "Expected string for level type origin");
+        return(0);
+    }
+
+    you.level_type_origin = luaL_checkstring(ls, 1);
+
+    return(0);
+}
+
 static inline bool _lua_boolean(lua_State *ls, int ndx, bool defval)
 {
     return lua_isnone(ls, ndx)? defval : lua_toboolean(ls, ndx);
@@ -2371,6 +2390,7 @@ static const struct luaL_reg dgn_lib[] =
     { "br_parent_branch", dgn_br_parent_branch },
 
     { "level_id", dgn_level_id },
+    { "set_level_type_origin", dgn_set_level_type_origin },
     { "map_by_tag", dgn_map_by_tag },
     { "map_in_depth", dgn_map_in_depth },
     { "map_by_place", dgn_map_by_place },

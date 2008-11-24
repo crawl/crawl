@@ -1270,14 +1270,6 @@ their uses: Portal vaults are different from branches in that they are
 not guaranteed. Also, there is only one go at a portal vault - if you 
 leave, it's gone for good. You can apply special rules to a portal vault,
 like enforcing maprot.
-Portal vaults can be particularly thematic, using specialised monster 
-sets, fitting loot, coloured dungeon features etc. Avoid death traps; 
-it is no fun to enter a vault, unable to leave and be killed outright.
-Randomise in order to provide fun and reduce spoiler effects. For portal
-vaults, it is desirable to have several different layouts (ideally each
-of the maps has some randomisation on its own). Often, it is a good idea
-to skew the map distribution: e.g. with four destination vaults, weights
-like 40,30,20,10 might be more interesting than 25,25,25,25.
 
 Portal vaults can be particulary thematic, using specialised monster 
 sets, fitting loot, coloured dungeon features etc. Avoid death traps; it
@@ -1315,6 +1307,14 @@ In case you want to make sure that the portal vault entry is only used
 once, you add a TAGS: uniq_BAR line. It should be noted that the label
 BAR may *not* end in _entry (otherwise the level builder assumes that
 the vault is a branch entry).
+
+If you want the place name displayed while in the vault to be different
+than the destination name, then you can give one_way_stair() a "dstname"
+parameter.  If you want the place origin for items in a character
+dump to be different than the default you can give one_way_stair a
+"dstorigin" parameter (i.e., dstname = "garden", dstorigin = "in the gardens").
+You can dynamically change the origin string using the lua function
+dgn.set_level_type_origin().
 
 This will produce a portal, but attempting to use it will trigger an
 ASSERT since there's no map for the destination. So we create a

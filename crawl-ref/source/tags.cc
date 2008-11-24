@@ -852,6 +852,7 @@ static void tag_construct_you(writer &th)
     marshallLong(th, you.sage_bonus_degree);
     marshallByte(th, you.level_type);
     marshallString(th, you.level_type_name);
+    marshallString(th, you.level_type_origin);
     marshallString(th, you.level_type_tag);
     marshallByte(th, you.entry_cause);
     marshallByte(th, you.entry_cause_god);
@@ -1249,7 +1250,10 @@ static void tag_read_you(reader &th, char minorVersion)
     you.level_type_name = unmarshallString(th);
 
     if (minorVersion >= TAG_MINOR_LUADGN)
-        you.level_type_tag = unmarshallString(th);
+    {
+        you.level_type_origin = unmarshallString(th);
+        you.level_type_tag    = unmarshallString(th);
+    }
 
     you.entry_cause     = static_cast<entry_cause_type>( unmarshallByte(th) );
     you.entry_cause_god = static_cast<god_type>( unmarshallByte(th) );

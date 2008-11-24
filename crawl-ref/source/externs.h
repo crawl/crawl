@@ -741,6 +741,11 @@ public:
   // if not explicitly set by the entry portal.
   std::string level_type_name;
 
+  // Item origin string for items from portal vaults, so that dumps
+  // can have origins like "You found it in on level 2 of a ziggurat".
+  // Will be set relative to level_type_name if not explicitly set.
+  std::string level_type_origin;
+
   // .des file tag for portal vault
   std::string level_type_tag;
 

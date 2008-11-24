@@ -1359,8 +1359,17 @@ static void leaving_level_now()
     std::string newname =
         env.markers.property_at(you.pos(), MAT_ANY, "dstname");
 
+    std::string neworigin =
+        env.markers.property_at(you.pos(), MAT_ANY, "dstorigin");
+
+    you.level_type_origin = "";
+
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
+
+    // Lua scripts explicitly set level_type_origin, so use that.
+    if (!you.level_type_origin.empty())
+        neworigin = you.level_type_origin;
 
     // Don't clobber level_type_name for stairs in portal vaults.
     if (you.level_type_name.empty() || !newname.empty()
@@ -1377,6 +1386,37 @@ static void leaving_level_now()
 
     if (!you.level_type_tag.empty() && you.level_type_name.empty())
         you.level_type_name = you.level_type_tag;
+
+    if (!neworigin.empty())
+        you.level_type_origin = neworigin;
+    else if (!you.level_type_name.empty())
+    {
+        std::string lname = lowercase_string(you.level_type_name);
+        std::string article, prep;
+
+        if (starts_with(lname, "level "))
+            prep = "on ";
+        else
+            prep = "in ";
+
+        if (starts_with(lname, "a ") || starts_with(lname, "an ")
+            || starts_with(lname, "the ") || starts_with(lname, "level "))
+        {
+            ; // Doesn't need an article
+        }
+        else
+        {
+            char letter = you.level_type_name[0];
+            if (isupper(letter))
+                article = "the ";
+            else if (is_vowel(letter))
+                article = "an ";
+            else
+                article = "a ";
+        }
+
+        you.level_type_origin  = prep + article + you.level_type_name;
+    }
 }
 
 static void set_entry_cause(entry_cause_type default_cause,

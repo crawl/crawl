@@ -68,6 +68,8 @@
 #include "view.h"
 #include "xom.h"
 
+#define PORTAL_VAULT_ORIGIN_KEY "portal_vault_origin"
+
 static bool _invisible_to_player( const item_def& item );
 static void _autoinscribe_item( item_def& item );
 static void _autoinscribe_floor_items();
@@ -874,6 +876,14 @@ void origin_set_startequip(item_def &item)
     }
 }
 
+void _origin_set_portal_vault(item_def &item)
+{
+    if (you.level_type != LEVEL_PORTAL_VAULT)
+        return;
+
+    item.props[PORTAL_VAULT_ORIGIN_KEY] = you.level_type_origin;
+}
+
 void origin_set_monster(item_def &item, const monsters *monster)
 {
     if (!origin_known(item))
@@ -881,6 +891,7 @@ void origin_set_monster(item_def &item, const monsters *monster)
         if (!item.orig_monnum)
             item.orig_monnum = monster->type + 1;
         item.orig_place = get_packed_place();
+        _origin_set_portal_vault(item);
     }
 }
 
@@ -888,6 +899,7 @@ void origin_purchased(item_def &item)
 {
     // We don't need to check origin_known if it's a shop purchase
     item.orig_place  = get_packed_place();
+    _origin_set_portal_vault(item);
     // Hackiness
     item.orig_monnum = -1;
 }
@@ -896,6 +908,7 @@ void origin_acquired(item_def &item, int agent)
 {
     // We don't need to check origin_known if it's a divine gift
     item.orig_place  = get_packed_place();
+    _origin_set_portal_vault(item);
     // Hackiness
     item.orig_monnum = -2 - agent;
 }
@@ -990,6 +1003,7 @@ static void _origin_freeze(item_def &item, const coord_def& where)
             origin_set_monstercorpse(item, where);
 
         item.orig_place = get_packed_place();
+        _origin_set_portal_vault(item);
         _check_note_item(item);
 
 #ifdef DGL_MILESTONES
@@ -1010,6 +1024,12 @@ std::string origin_monster_name(const item_def &item)
 
 static std::string _origin_place_desc(const item_def &item)
 {
+    if (place_type(item.orig_place) == LEVEL_PORTAL_VAULT
+        && item.props.exists(PORTAL_VAULT_ORIGIN_KEY))
+    {
+        return item.props[PORTAL_VAULT_ORIGIN_KEY].get_string();
+    }
+    
     return prep_branch_level_name(item.orig_place);
 }
 

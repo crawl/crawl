@@ -16,7 +16,9 @@
 {{
 function sewer_portal(e)
   e.marker([[O = lua:one_way_stair { desc = "A glowing drain",
-                                     dst = "sewer", floor = "stone_arch" }]])
+                                     dst = "sewer",
+                                     dstorigin = "in the sewers",
+                                     floor = "stone_arch" }]])
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightgreen")
 end
