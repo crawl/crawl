@@ -3474,7 +3474,7 @@ bool ely_destroy_weapons()
                                GOD_ELYVILON);
         }
 
-        destroy_item( si.link() );
+        destroy_item(si.link());
         success = true;
     }
 
@@ -3484,8 +3484,8 @@ bool ely_destroy_weapons()
     return (success);
 }
 
-// Returns false if the invocation fails (no books in sight etc.).
-bool trog_burn_books()
+// Returns false if the invocation fails (no spellbooks in sight, etc.).
+bool trog_burn_spellbooks()
 {
     if (you.religion != GOD_TROG)
         return (false);
@@ -3534,7 +3534,7 @@ bool trog_burn_books()
                 continue;
             }
 
-            rarity += book_rarity( si->sub_type );
+            rarity += book_rarity(si->sub_type);
             // Piety increases by 2 for books never cracked open, else 1.
             // Conversely, rarity influences the duration of the pyre.
             if (!item_type_known(*si))
@@ -3554,8 +3554,8 @@ bool trog_burn_books()
             if (cloud != EMPTY_CLOUD)
             {
                 // Reinforce the cloud.
-                mpr( "The fire roars with new energy!" );
-                const int extra_dur = count + random2(rarity/2);
+                mpr("The fire roars with new energy!");
+                const int extra_dur = count + random2(rarity / 2);
                 env.cloud[cloud].decay += extra_dur * 5;
                 env.cloud[cloud].set_whose(KC_YOU);
                 continue;
@@ -3566,7 +3566,7 @@ bool trog_burn_books()
             if (durat > 23)
                 durat = 23;
 
-            place_cloud( CLOUD_FIRE, *ri, durat, KC_YOU );
+            place_cloud(CLOUD_FIRE, *ri, durat, KC_YOU);
 
             mpr(count == 1 ? "The book bursts into flames."
                            : "The books burst into flames.", MSGCH_GOD);

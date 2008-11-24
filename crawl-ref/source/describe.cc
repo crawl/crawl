@@ -365,7 +365,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
             }
 
             std::ostringstream work;
-            switch ( propanns[i].spell_out )
+            switch (propanns[i].spell_out)
             {
             case 0: // e.g. AC+4
                 work << std::showpos << propanns[i].name << val;
@@ -2640,7 +2640,25 @@ std::string get_ghost_description(const monsters &mons, bool concise)
 
 extern ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES];
 
-static bool _print_god_abil_desc( int god, int numpower )
+static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
+                                       const ability_type abil)
+{
+    // If no message or ability then no power.
+    if (!final_msg[0] || abil == ABIL_NON_ABILITY)
+        return (false);
+
+    std::ostringstream buf;
+    buf << final_msg;
+    const int spacesleft = 79 - buf.str().length();
+    const std::string cost = "(" + make_cost_description(abil) + ")";
+    buf << std::setw(spacesleft) << cost;
+
+    cprintf("%s\n", buf.str().c_str());
+
+    return (true);
+}
+
+static bool _print_god_abil_desc(int god, int numpower)
 {
     const char* pmsg = god_gain_power_messages[god][numpower];
 
@@ -2648,24 +2666,20 @@ static bool _print_god_abil_desc( int god, int numpower )
     if (!pmsg[0])
         return (false);
 
-    std::ostringstream buf;
-
+    std::string buf;
     if (isupper(pmsg[0]))
-        buf << pmsg;            // Complete sentence given.
+        buf = pmsg;             // Complete sentence given.
     else
-        buf << "You can " << pmsg << ".";
+    {
+        buf = "You can ";
+        buf += pmsg;
+        buf += ".";
+    }
 
     // This might be ABIL_NON_ABILITY for passive abilities.
     const ability_type abil = god_abilities[god][numpower];
+    _print_final_god_abil_desc(god, buf, abil);
 
-    if (abil != ABIL_NON_ABILITY)
-    {
-        const int spacesleft = 79 - buf.str().length();
-        const std::string cost = "(" + make_cost_description(abil) + ")";
-        buf << std::setw(spacesleft) << cost;
-    }
-
-    cprintf( "%s\n", buf.str().c_str() );
     return (true);
 }
 
@@ -3105,8 +3119,11 @@ void describe_god( god_type which_god, bool give_title )
             if (zin_sustenance(false))
             {
                 have_any = true;
-                cprintf("Praying to %s will provide sustenance if starving."
-                         EOL, god_name(which_god).c_str());
+                std::string buf = "Praying to ";
+                buf += god_name(which_god);
+                buf += " will provide sustenance if starving.";
+                _print_final_god_abil_desc(which_god, buf,
+                                           ABIL_ZIN_SUSTENANCE);
             }
             const char *how = (you.piety >= 150) ? "carefully" : // res mut. 3
                               (you.piety >= 100) ? "often" :
@@ -3130,30 +3147,27 @@ void describe_god( god_type which_god, bool give_title )
         else if (which_god == GOD_TROG)
         {
             have_any = true;
-            // XXX Mega-hack. Duplicates code in _print_god_abil_desc().
-            // FIXME.
-            std::ostringstream buf;
-            buf << "You can call upon " << god_name(which_god)
-                << " to burn books in your surroundings.";
-            const int spacesleft = 79 - buf.str().length();
-            const std::string cost = "(" + make_cost_description(
-                                                ABIL_TROG_BURN_BOOKS) + ")";
-            buf << std::setw(spacesleft) << cost;
-            cprintf("%s" EOL, buf.str().c_str());
+            std::string buf = "You can call upon ";
+            buf += god_name(which_god);
+            buf += " to burn spellbooks in your surroundings.";
+            _print_final_god_abil_desc(which_god, buf,
+                                       ABIL_TROG_BURN_SPELLBOOKS);
         }
         else if (which_god == GOD_ELYVILON)
         {
             have_any = true;
-            cprintf("You can call upon %s to destroy weapons "
-                    "lying on the ground." EOL, god_name(which_god).c_str());
+            cprintf("You can call upon %s to destroy weapons lying on the "
+                    "ground." EOL, god_name(which_god).c_str());
         }
         else if (which_god == GOD_YREDELEMNUL)
         {
             if (yred_injury_mirror(false))
             {
                 have_any = true;
-                cprintf("%s mirrors your injuries on your foes "
-                        "during prayer." EOL, god_name(which_god).c_str());
+                std::string buf = god_name(which_god);
+                buf += " mirrors your injuries on your foes during prayer.";
+                _print_final_god_abil_desc(which_god, buf,
+                                           ABIL_YRED_INJURY_MIRROR);
             }
         }
 

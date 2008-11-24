@@ -68,11 +68,12 @@ enum ability_flag_type
     ABFLAG_BREATH       = 0x00000001, // ability uses DUR_BREATH_WEAPON
     ABFLAG_DELAY        = 0x00000002, // ability has its own delay (ie recite)
     ABFLAG_PAIN         = 0x00000004, // ability must hurt player (ie torment)
-    ABFLAG_EXHAUSTION   = 0x00000008, // fails if you.exhausted
-    ABFLAG_INSTANT      = 0x00000010, // doesn't take time to use
-    ABFLAG_PERMANENT_HP = 0x00000020, // costs permanent HPs
-    ABFLAG_PERMANENT_MP = 0x00000040, // costs permanent MPs
-    ABFLAG_CONF_OK      = 0x00000080  // can use even if confused
+    ABFLAG_PIETY        = 0x00000008, // ability has its own piety cost
+    ABFLAG_EXHAUSTION   = 0x00000010, // fails if you.exhausted
+    ABFLAG_INSTANT      = 0x00000020, // doesn't take time to use
+    ABFLAG_PERMANENT_HP = 0x00000040, // costs permanent HPs
+    ABFLAG_PERMANENT_MP = 0x00000080, // costs permanent MPs
+    ABFLAG_CONF_OK      = 0x00000100  // can use even if confused
 };
 
 static void _lugonu_bends_space();
@@ -95,8 +96,8 @@ static std::string _describe_talent(const talent& tal);
 ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
 {
     // no god
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY },
     // Zin
     { ABIL_ZIN_RECITE, ABIL_ZIN_VITALISATION, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY, ABIL_ZIN_SANCTUARY },
@@ -105,49 +106,42 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_TSO_CLEANSING_FLAME, ABIL_TSO_SUMMON_DIVINE_WARRIOR },
     // Kikubaaqudgha
     { ABIL_KIKU_RECALL_UNDEAD_SLAVES, ABIL_NON_ABILITY,
-      ABIL_KIKU_ENSLAVE_UNDEAD, ABIL_NON_ABILITY,
-      ABIL_KIKU_INVOKE_DEATH },
+      ABIL_KIKU_ENSLAVE_UNDEAD, ABIL_NON_ABILITY, ABIL_KIKU_INVOKE_DEATH },
     // Yredelemnul
     { ABIL_YRED_ANIMATE_REMAINS, ABIL_YRED_RECALL_UNDEAD,
-      ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_DRAIN_LIFE,
-      ABIL_YRED_ENSLAVE_SOUL },
+      ABIL_YRED_ANIMATE_DEAD, ABIL_YRED_DRAIN_LIFE, ABIL_YRED_ENSLAVE_SOUL },
     // Xom
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY },
     // Vehumet
-    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+    { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_NON_ABILITY },
     // Okawaru
-    { ABIL_OKAWARU_MIGHT, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_OKAWARU_HASTE },
+    { ABIL_OKAWARU_MIGHT, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+      ABIL_OKAWARU_HASTE },
     // Makhleb
     { ABIL_NON_ABILITY, ABIL_MAKHLEB_MINOR_DESTRUCTION,
-      ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB,
-      ABIL_MAKHLEB_MAJOR_DESTRUCTION,
+      ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, ABIL_MAKHLEB_MAJOR_DESTRUCTION,
       ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB },
     // Sif Muna
-    { ABIL_SIF_MUNA_CHANNEL_ENERGY,
-      ABIL_SIF_MUNA_FORGET_SPELL, ABIL_NON_ABILITY,
-      ABIL_NON_ABILITY, ABIL_NON_ABILITY },
+    { ABIL_SIF_MUNA_CHANNEL_ENERGY, ABIL_SIF_MUNA_FORGET_SPELL,
+      ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY },
     // Trog
     { ABIL_TROG_BERSERK, ABIL_TROG_REGENERATION, ABIL_NON_ABILITY,
       ABIL_TROG_BROTHERS_IN_ARMS, ABIL_NON_ABILITY },
     // Nemelex
-    { ABIL_NEMELEX_DRAW_ONE, ABIL_NEMELEX_PEEK_TWO,
-      ABIL_NEMELEX_TRIPLE_DRAW, ABIL_NEMELEX_MARK_FOUR,
-      ABIL_NEMELEX_STACK_FIVE },
+    { ABIL_NEMELEX_DRAW_ONE, ABIL_NEMELEX_PEEK_TWO, ABIL_NEMELEX_TRIPLE_DRAW,
+      ABIL_NEMELEX_MARK_FOUR, ABIL_NEMELEX_STACK_FIVE },
     // Elyvilon
     { ABIL_ELYVILON_LESSER_HEALING, ABIL_ELYVILON_PURIFICATION,
       ABIL_ELYVILON_GREATER_HEALING, ABIL_ELYVILON_RESTORATION,
       ABIL_ELYVILON_DIVINE_VIGOUR },
     // Lugonu
-    { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE,
-      ABIL_LUGONU_BANISH, ABIL_LUGONU_CORRUPT,
-      ABIL_LUGONU_ABYSS_ENTER },
+    { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE, ABIL_LUGONU_BANISH,
+      ABIL_LUGONU_CORRUPT, ABIL_LUGONU_ABYSS_ENTER },
     // Beogh
-    { ABIL_NON_ABILITY, ABIL_BEOGH_SMITING,
-      ABIL_NON_ABILITY, ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS,
-      ABIL_NON_ABILITY }
+    { ABIL_NON_ABILITY, ABIL_BEOGH_SMITING, ABIL_NON_ABILITY,
+      ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_NON_ABILITY }
 };
 
 // The description screen was way out of date with the actual costs.
@@ -219,6 +213,7 @@ static const ability_def Ability_List[] =
 
     // INVOCATIONS:
     // Zin
+    { ABIL_ZIN_SUSTENANCE, "Sustenance", 0, 0, 0, 0, ABFLAG_PIETY },
     { ABIL_ZIN_RECITE, "Recite", 3, 0, 120, 0, ABFLAG_DELAY },
     { ABIL_ZIN_VITALISATION, "Vitalisation", 0, 0, 100, 2, ABFLAG_CONF_OK },
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE },
@@ -234,6 +229,7 @@ static const ability_def Ability_List[] =
     { ABIL_KIKU_INVOKE_DEATH, "Invoke Death", 4, 0, 250, 3, ABFLAG_NONE },
 
     // Yredelemnul
+    { ABIL_YRED_INJURY_MIRROR, "Injury Mirror", 0, 0, 0, 0, ABFLAG_PIETY },
     { ABIL_YRED_ANIMATE_REMAINS, "Animate Remains", 1, 0, 100, 0, ABFLAG_NONE },
     { ABIL_YRED_RECALL_UNDEAD, "Recall Undead Slaves", 2, 0, 50, 0, ABFLAG_NONE },
     { ABIL_YRED_ANIMATE_DEAD, "Animate Dead", 3, 0, 100, 1, ABFLAG_NONE },
@@ -256,7 +252,7 @@ static const ability_def Ability_List[] =
     { ABIL_SIF_MUNA_FORGET_SPELL, "Forget Spell", 5, 0, 0, 8, ABFLAG_NONE },
 
     // Trog
-    { ABIL_TROG_BURN_BOOKS, "Burn Books", 0, 0, 10, 0, ABFLAG_NONE },
+    { ABIL_TROG_BURN_SPELLBOOKS, "Burn Spellbooks", 0, 0, 10, 0, ABFLAG_NONE },
     { ABIL_TROG_BERSERK, "Berserk", 0, 0, 200, 0, ABFLAG_NONE },
     { ABIL_TROG_REGENERATION, "Trog's Hand", 0, 0, 50, 1, ABFLAG_NONE },
     { ABIL_TROG_BROTHERS_IN_ARMS, "Brothers in Arms",
@@ -341,7 +337,7 @@ std::string print_abilities()
     return text;
 }
 
-const std::string make_cost_description( ability_type ability )
+const std::string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
     std::ostringstream ret;
@@ -403,6 +399,14 @@ const std::string make_cost_description( ability_type ability )
             ret << ", ";
 
         ret << "Pain";
+    }
+
+    if (abil.flags & ABFLAG_PIETY)
+    {
+        if (!ret.str().empty())
+            ret << ", ";
+
+        ret << "Piety";
     }
 
     if (abil.flags & ABFLAG_EXHAUSTION)
@@ -633,7 +637,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 0;
         break;
 
-    case ABIL_TROG_BURN_BOOKS:
+    case ABIL_TROG_BURN_SPELLBOOKS:
         invoc = true;
         failure = 0;
         break;
@@ -1419,6 +1423,10 @@ static bool _do_ability(const ability_def& abil)
 
     // INVOCATIONS:
 
+    case ABIL_ZIN_SUSTENANCE:
+        // Activated via prayer elsewhere.
+        break;
+
     case ABIL_ZIN_RECITE:
     {
         int result = check_recital_audience();
@@ -1499,6 +1507,10 @@ static bool _do_ability(const ability_def& abil)
                           20 + you.skills[SK_INVOCATIONS] * 3,
                           GOD_KIKUBAAQUDGHA);
         exercise(SK_INVOCATIONS, 10 + random2(14));
+        break;
+
+    case ABIL_YRED_INJURY_MIRROR:
+        // Activated via prayer elsewhere.
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS:
@@ -1647,8 +1659,8 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 6 + random2(6));
         break;
 
-    case ABIL_TROG_BURN_BOOKS:
-        if (!trog_burn_books())
+    case ABIL_TROG_BURN_SPELLBOOKS:
+        if (!trog_burn_spellbooks())
             return (false);
         break;
 
@@ -1900,15 +1912,14 @@ static bool _do_ability(const ability_def& abil)
             excommunication();
         }
         else
-        {
             canned_msg(MSG_OK);
-        }
         break;
 
     case ABIL_NON_ABILITY:
         mpr("Sorry, you can't do that.");
         break;
     }
+
     return (true);
 }
 
@@ -2152,7 +2163,7 @@ std::vector<talent> your_talents( bool check_confused )
     if (you.religion == GOD_ELYVILON)
         _add_talent(talents, ABIL_ELYVILON_DESTROY_WEAPONS, check_confused );
     else if (you.religion == GOD_TROG)
-        _add_talent(talents, ABIL_TROG_BURN_BOOKS, check_confused );
+        _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused );
 
     // Gods take abilities away until penance completed. -- bwr
     // God abilities generally don't work while silenced (they require
@@ -2298,7 +2309,7 @@ static void _set_god_ability_helper( ability_type abil, char letter )
 }
 
 // Return GOD_NO_GOD if it isn't a god ability, otherwise return
-// the index of the god..
+// the index of the god.
 static int _is_god_ability(int abil)
 {
     if (abil == ABIL_NON_ABILITY)
@@ -2308,19 +2319,19 @@ static int _is_god_ability(int abil)
         for (int j = 0; j < MAX_GOD_ABILITIES; ++j)
         {
             if (god_abilities[i][j] == abil)
-                return i;
+                return (i);
         }
 
-    return GOD_NO_GOD;
+    return (GOD_NO_GOD);
 }
 
-void set_god_ability_slots( void )
+void set_god_ability_slots(void)
 {
-    ASSERT( you.religion != GOD_NO_GOD );
+    ASSERT(you.religion != GOD_NO_GOD);
 
     int i;
 
-    _set_god_ability_helper( ABIL_RENOUNCE_RELIGION, 'X' );
+    _set_god_ability_helper(ABIL_RENOUNCE_RELIGION, 'X');
 
     // Clear out other god invocations.
     for (i = 0; i < 52; i++)
@@ -2341,7 +2352,6 @@ void set_god_ability_slots( void )
         }
     }
 }
-
 
 // Returns an index (0-51) if successful, -1 if you should
 // just use the next one.
