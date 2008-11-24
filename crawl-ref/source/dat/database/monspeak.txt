@@ -1500,6 +1500,8 @@ VISUAL:@The_monster@ looks relaxed.
 
 @The_monster@ says, "This is called Combat Meditation."
 
+@The_monster@ asks, "What is the sound of one hand?"
+
 @The_monster@ sighs, "Enlightenment is such responsibility."
 
 @The_monster@ screams, "Enter NIRVANA! Now!"
