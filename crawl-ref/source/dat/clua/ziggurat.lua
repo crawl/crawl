@@ -11,33 +11,47 @@
 ------------------------------------------------------------------------------
 
 function zig()
-  if not dgn.persist.ziggurat then
+  if not dgn.persist.ziggurat or not dgn.persist.ziggurat.depth then
     dgn.persist.ziggurat = { }
+    -- Initialise here to handle ziggurats accessed directly by &P.
+    initialise_ziggurat(dgn.persist.ziggurat)
   end
   return dgn.persist.ziggurat
+end
+
+function cleanup_ziggurat()
+  return one_way_stair {
+    onclimb = function(...)
+                dgn.persist.ziggurat = { }
+              end
+  }
 end
 
 local wall_colours = {
   "blue", "red", "lightblue", "magenta", "green", "white"
 }
 
-local function wall_colour()
+function ziggurat_wall_colour()
   return util.random_from(wall_colours)
 end
 
-local function random_floor_colour()
-  return wall_colour()
-end
-
-function ziggurat_initializer()
-  local z = zig()
+function initialise_ziggurat(z)
   z.depth = 1
 
   -- Any given ziggurat will use the same builder for all its levels.
   z.builder = ziggurat_choose_builder()
 
-  z.colour = wall_colour()
+  z.colour = ziggurat_wall_colour()
   z.level  = { }
+end
+
+function ziggurat_initialiser()
+  -- First ziggurat will be initialised twice.
+  initialise_ziggurat(zig())
+end
+
+local function random_floor_colour()
+  return ziggurat_wall_colour()
 end
 
 -- Returns a function that changes the depth in the ziggurat to the depth
@@ -61,7 +75,7 @@ function ziggurat_portal(e)
       dst = "ziggurat",
       dstorigin = "on level 1 of a ziggurat",
       floor = "stone_arch",
-      onclimb = ziggurat_initializer
+      onclimb = ziggurat_initialiser
     }
   end
 
@@ -345,8 +359,8 @@ local function ziggurat_rectangle_builder(e)
 
   zigstair(entry.x, entry.y, "stone_arch", "stone_stairs_up_i")
   zigstair(exit.x, exit.y, "stone_stairs_down_i", zig_go_deeper)
-  grid(exit.x, exit.y + 1, "exit_portal_vault")
-  grid(exit.x, exit.y - 1, "exit_portal_vault")
+  zigstair(exit.x, exit.y + 1, "exit_portal_vault", cleanup_ziggurat())
+  zigstair(exit.x, exit.y - 1, "exit_portal_vault", cleanup_ziggurat())
 
   ziggurat_place_pillars { x = cx, y = cy }
 
