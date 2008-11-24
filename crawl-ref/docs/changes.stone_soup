@@ -31,7 +31,7 @@ Interface
 * Store message history across saves.
 * New option: Automatically set travel exclusions for statues and oklob plants.
 * Limit travel exclusions to line of sight.
-* Change exclusion commands to e, E, Ctrl-e.
+* Change exclusion commands to e, E, Ctrl-E (was Ctrl-X, x, Ctrl-E).
 * Switch off autopickup and autoswap if you see a monster turn invisible.
 * Shops now use shopping cart behaviour.
 * All 't' commands now take a turn.
@@ -55,14 +55,14 @@ Levels
 ------
 * Labyrinths are now mappable (map rot!) and from time to time change shape.
 * Teleporting within a labyrinth always sends you away from the exit.
-* A new portal vault (Sewers), and many new vaults.
+* New portal vaults (Sewer, Ice Cave), and many new vaults.
 * The Orcish Mines are now completely interconnected via the branch bottom.
 * Ghosts may no longer appear in the Ecumenic Temple.
-* Traps now remember how much ammo they have.
+* Traps now remember how much ammunition they have.
 * Properly disable traps in the Abyss.
 * Branch descriptions now mention depth and whether they contain a rune.
 * Fixed KMONS not accepting comma-separated list of alternative monsters.
-* Tweaked most of the oklob vaults to make them less deadly.
+* Tweaked most of the oklob vaults to make them less dangerous.
 * Allow bazaars outside of the main dungeon.
 
 Items
