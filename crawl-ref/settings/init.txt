@@ -264,8 +264,8 @@ include = menu_colours.txt
 menu_colour = pickup:green:god gift
 
 # Highlight (partly) selected items
-menu_colour = white:\w \+
-menu_colour = white:\w \#
+menu_colour = inventory:white:\w \+ \w
+menu_colour = inventory:white:\w \# \w
 
 # Colouring of messages
 include = messages.txt
