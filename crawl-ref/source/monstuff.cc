@@ -533,7 +533,7 @@ static bool _ely_heals_monster(monsters *monster, killer_type killer, int i)
     ASSERT(you.religion != GOD_ELYVILON);
     god_type god = GOD_ELYVILON;
 
-    if (!you.penance[god] || !is_evil_god(you.religion))
+    if (!you.penance[god] || !god_hates_your_god(god))
         return (false);
 
     const int ely_penance = you.penance[god];
