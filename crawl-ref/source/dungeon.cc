@@ -4477,6 +4477,8 @@ static bool _build_vaults(int level_number, const map_def *vault,
     vault_placement place;
 
     place.level_number = level_number;
+    place.rune_subst = rune_subst;
+
     if (map_bounds(where))
         place.pos = where;
 
