@@ -1474,9 +1474,9 @@ VISUAL:@The_monster@ smiles at you.
 
 VISUAL:@The_monster@ looks relaxed.
 
-@The_monster@ sings "Hare Rama, Hare Krishna!"
+@The_monster@ sings, "Hare Rama, Hare Krishna!"
 
-@The_monster@ sings, "Peace now, freedom now!  Peace now, freedom now!"
+@The_monster@ sings, "Peace now, freedom now! Peace now, freedom now!"
 
 @The_monster@ says, "After death you'll find inner peace."
 
@@ -1486,13 +1486,13 @@ VISUAL:@The_monster@ looks relaxed.
 
 @The_monster@ says, "Death is just a liberation!"
 
-@The_monster@ says, "Feel free to die. It's great thing."
+@The_monster@ says, "Feel free to die. It's a great thing."
 
 @The_monster@ says, "OHM MANI PADME HUM!"
 
 @The_monster@ says, "Breathe deeply."
 
-@The_monster@ says, "The Orb is only a myth.  Forget about it."
+@The_monster@ says, "The Orb is only a myth. Forget about it."
 
 @The_monster@ says, "It's all maya."
 
@@ -1500,13 +1500,13 @@ VISUAL:@The_monster@ looks relaxed.
 
 @The_monster@ says, "This is called Combat Meditation."
 
-@The_monster@ sighs "Enlightenment is such responsibility."
+@The_monster@ sighs, "Enlightenment is such responsibility."
 
-@The_monster@ screams, "Enter NIRVANA!  Now!"
+@The_monster@ screams, "Enter NIRVANA! Now!"
 
-@The_monster@ screams, "Love!  Eternal love!"
+@The_monster@ screams, "Love! Eternal love!"
 
-@The_monster@ screams, "Peace!  I bring you eternal peace!"
+@The_monster@ screams, "Peace! I bring you eternal peace!"
 
 @The_monster@ screams, "Free your soul! Die!"
 
