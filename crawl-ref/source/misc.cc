@@ -1747,7 +1747,7 @@ void up_stairs(dungeon_feature_type force_stair,
         }
     }
     request_autopickup();
-}                               // end up_stairs()
+}
 
 // Adds a dungeon marker at the point of the level where returning from
 // a labyrinth or portal vault should drop the player.
@@ -2290,7 +2290,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         }
     }
     request_autopickup();
-}                               // end down_stairs()
+}
 
 void trackers_init_new_level(bool transit)
 {
