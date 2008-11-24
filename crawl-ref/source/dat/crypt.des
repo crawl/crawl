@@ -172,59 +172,26 @@ ENDMAP
 
 ###########################################################
 # Vampire temple
-NAME:  weyrava_vampire_temple
-DEPTH: Crypt
-TAGS:  no_monster_gen no_item_gen
-MONS:  col:red fungus
-MONS:  col:lightred fungus
-MONS:  fungus
-MONS:  vampire / w:4 patrolling vampire knight / w:4 vampire mage
-SUBST: Q=qu , U=un , N=ns , S=sq
-KFEAT: Z = altar_kikubaaqudgha / altar_yredelemnul
-KITEM: z = book of Unlife / book of Death / nothing
-KFEAT: z = floor
-# create at least one blood fountain
-: local vdry, mdry, rdry
-: if crawl.random2(4) == 0 then
-SUBST: V = Y
-SUBST: v = 1:70 2
-SUBST: u = 1 2:40 3:15 .:25
-: else
-: vdry = true
-SUBST: V = V
-SUBST: v = 3:4 .
-SUBST: u = .
-: end
-: if crawl.random2(4) == 0 then
-SUBST: M = Y
-SUBST: m = 1:70 2
-SUBST: n = 1 2:40 3:15 .:25
-KMONS: z = col:red fungus / w:40 col:lightred fungus / w:20 fungus
-: else
-: mdry = true
-SUBST: M = V
-SUBST: m = 3:4 .
-SUBST: n = .
-: end
-: if crawl.random2(4) == 0 then
-SUBST: R = Y
-SUBST: r = 1:70 2
-SUBST: s = 1 2:40 3:15 .:25
-: else
-: rdry = true
-SUBST: R = V
-SUBST: r = 3:4 .
-SUBST: s = .
-: end
-: if crawl.random2(4) == 0 or (vdry and mdry and rdry) then
-SUBST: P = Y
-SUBST: p = 1:70 2
-SUBST: q = 1 2:40 3:15 .:25
-: else
-SUBST: P = V
-SUBST: p = 3:4 .
-SUBST: q = .
-: end
+NAME:    weyrava_vampire_temple
+DEPTH:   Crypt
+TAGS:    no_monster_gen no_item_gen
+MONS:    col:red fungus
+MONS:    col:lightred fungus
+MONS:    fungus
+MONS:    vampire / w:4 patrolling vampire knight / w:4 vampire mage
+KFEAT:   Z = altar_kikubaaqudgha / altar_yredelemnul
+KITEM:   z = book of Unlife / book of Death / nothing
+KFEAT:   z = floor
+# create between one and four blood fountains
+SUBST:   Q=qu, U=un, N=ns, S=sq
+SHUFFLE: Mmn / Xxy / Xxy / Xxy
+SUBST:   M=V , m=v , n=u , X=A , x=a , y=b
+SHUFFLE: Rrs / Xxy / Xxy / Xxy
+SUBST:   R=V , r=v , s=u , X=A , x=a , y=b
+SHUFFLE: Ppq / Xxy / Xxy / Xxy
+SUBST:   P=V , p=v , q=u , X=A , x=a , y=b
+SUBST:   V=Y, v=11111112, u=1222233...
+SUBST:   A=V, a=..3, b=.
 MAP
      c@G@c
    ccc.c.ccc
