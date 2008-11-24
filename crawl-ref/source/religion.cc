@@ -3985,7 +3985,7 @@ static bool _yredelemnul_retribution()
 
     if (random2(you.experience_level) > 4)
     {
-        if (one_chance_in(3) && animate_dead(&you, you.experience_level * 5,
+        if (one_chance_in(4) && animate_dead(&you, you.experience_level * 5,
                                              BEH_HOSTILE, MHITYOU, god, false))
         {
             simple_god_message(" animates the dead around you.", god);
