@@ -745,12 +745,12 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
         case MONS_GREATER_MUMMY:  pow = 11; break;
 
         default:
-            mpr("Unkown mummy type.", MSGCH_DIAGNOSTICS);
+            mpr("Unknown mummy type.", MSGCH_DIAGNOSTICS);
             return;
     }
 
-    // Killed by a Zot trap, a god, etc
-    if (index != NON_MONSTER && invalid_monster_index(killer))
+    // Killed by a Zot trap, a god, etc.
+    if (index != NON_MONSTER && invalid_monster_index(index))
         return;
 
     actor* target;
