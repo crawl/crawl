@@ -1477,7 +1477,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 }
             }
 
-            // MT - Check: god-gifted weapons and armor shouldn't kill you.
+            // MT - Check: god-gifted weapons and armour shouldn't kill you.
             // Except Xom.
             if ((agent == GOD_TROG || agent == GOD_OKAWARU)
                 && is_random_artefact(doodad))
@@ -1485,7 +1485,7 @@ bool acquirement(object_class_type class_wanted, int agent,
                 randart_properties_t  proprt;
                 randart_wpn_properties( doodad, proprt );
 
-                // Check vs stats. positive stats will automatically fall
+                // Check vs. stats. positive stats will automatically fall
                 // through.  As will negative stats that won't kill you.
                 if (-proprt[RAP_STRENGTH] >= you.strength
                     || -proprt[RAP_INTELLIGENCE] >= you.intel
@@ -1521,12 +1521,10 @@ bool acquirement(object_class_type class_wanted, int agent,
             init_stack_blood_potions(thing);
 
         // Remove curse flag from item.
-        do_uncurse_item( thing );
+        do_uncurse_item(thing);
 
         if (thing.base_type == OBJ_BOOKS)
-        {
             mark_had_book(thing.sub_type);
-        }
         else if (thing.base_type == OBJ_JEWELLERY)
         {
             switch (thing.sub_type)
@@ -1561,8 +1559,8 @@ bool acquirement(object_class_type class_wanted, int agent,
             }
         }
         else if (thing.base_type == OBJ_WEAPONS
-                 && !is_fixed_artefact( thing )
-                 && !is_unrandom_artefact( thing ))
+                 && !is_fixed_artefact(thing)
+                 && !is_unrandom_artefact(thing))
         {
             // HACK: Make unwieldable weapons wieldable.
             // Note: messing with fixed artefacts is probably very bad.
@@ -1682,7 +1680,7 @@ bool acquirement(object_class_type class_wanted, int agent,
     // Well, the item may have fallen in the drink, but the intent is
     // that acquirement happened. -- bwr
     return (true);
-}                               // end acquirement()
+}
 
 bool recharge_wand(int item_slot)
 {
