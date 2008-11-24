@@ -5,6 +5,7 @@
 ##############################################################################
 # Crypt minivaults
 
+
 ########################
 # Dead fish
 NAME: lemuel_dead_fish_pool
@@ -90,6 +91,158 @@ MAP
 .1.p..pp..
 ..........
 ENDMAP
+
+###########################################################
+# Lich vault
+NAME:  weyrava_lich_vault
+TAGS:  no_monster_gen no_item_gen
+ITEM:  gold
+KFEAT: Z = blade trap / needle trap / bolt trap / w:8 zot trap / w:25 floor
+KMONS: Y = Boris / ancient lich
+MONS:  w:3 large zombie / lich / w:3 large skeleton / w:3 skeletal dragon
+MONS:  small skeleton / small zombie
+KFEAT: v = w:5 ~ / .
+KITEM: v = $ / %
+SUBST: $ = $.*|
+SUBST: + = +=
+MAP
+   ccccc
+ccccv.vcccc
+c$.=.Y..=$c
+c.ccv.vcc.c
+c+ccc+ccc+c
+c..$c.c$..c
+c.1.c.c.1.c
+c$.$c.c$.$c
+ccc=c.ccccc
+cccZcZc$c
+c.=.cZczc
+cZcccZc=c
+c.=2+Z+2c
+cccccZccc
+    c.c
+    c@c
+ENDMAP
+
+###########################################################
+# Ghost lake
+NAME:  weyrava_ghost_lake
+DEPTH: Crypt
+TAGS:  no_monster_gen no_item_gen
+MONS:  flying skull
+MONS:  skeletal warrior ; long sword . shield . w:6 wand of lightning | nothing /\
+       skeletal warrior ; battleaxe | halberd . w:7 wand of lightning | nothing
+SUBST: y = .:8 c
+SUBST: v = z .
+SUBST: w = w z:6
+KFEAT: z = deep_water
+KMASK: z = no_pool_fixup
+KFEAT: T = .
+KITEM: T = * / w:5 |
+KMONS: T = w:25 spectral warrior / spectral dragon / spectral ice dragon / \
+           spectral storm dragon
+KFEAT: S = .
+KITEM: S = $ / nothing
+KMONS: S = w:25 spectral warrior / spectral dragon / spectral ice dragon / \
+           spectral storm dragon
+MAP
+    cccccccccccc
+  cccyy.yy..yyycccc
+  cyy..w..ww...12ycc
+  cy.wwzwwzzwwwww.ycc
+ cc.wzzzzzzzzzzzzw..@
+ccy1wzzzzzzzzzzzzzw.cc
+cy.wzzzzzzvvzzzzzzw.yc
+@.wzzzzzv1.11vzzzzw.yc
+cy.wzzzv.c++c.vzzzzw.c
+cy.wzzz.ccSScc1zzzzw2c
+cy2wzzv.+STTS+.vzzw1yc
+c.wzzzv.+STTS+.vzzw.yc
+c.wzzzz1ccSScc.zzzw.yc
+c.wzzzzv.c++c.vzzzzw.c
+c.wzzzzzv11.1vzzzzzw.@
+cy2wzzzzzzvvzzzzzzw.yc
+ccy1wzzzzzzzzzzzzw1ycc
+ ccy.wzzzzzwwwwww2ycc
+  cy.wzzwww......ycc
+  cc.www...yyyccccc
+   cy...yyccccc
+   ccc@cccc
+ENDMAP
+
+###########################################################
+# Vampire temple
+NAME:  weyrava_vampire_temple
+DEPTH: Crypt
+TAGS:  no_monster_gen no_item_gen
+MONS:  col:red fungus
+MONS:  col:lightred fungus
+MONS:  fungus
+MONS:  vampire / w:4 patrolling vampire knight / w:4 vampire mage
+SUBST: Q=qu , U=un , N=ns , S=sq
+KFEAT: Z = altar_kikubaaqudgha / altar_yredelemnul
+KITEM: z = book of Unlife / book of Death / nothing
+KFEAT: z = floor
+# create at least one blood fountain
+: local vdry, mdry, rdry
+: if crawl.random2(4) == 0 then
+SUBST: V = Y
+SUBST: v = 1:70 2
+SUBST: u = 1 2:40 3:15 .:25
+: else
+: vdry = true
+SUBST: V = V
+SUBST: v = 3:4 .
+SUBST: u = .
+: end
+: if crawl.random2(4) == 0 then
+SUBST: M = Y
+SUBST: m = 1:70 2
+SUBST: n = 1 2:40 3:15 .:25
+KMONS: z = col:red fungus / w:40 col:lightred fungus / w:20 fungus
+: else
+: mdry = true
+SUBST: M = V
+SUBST: m = 3:4 .
+SUBST: n = .
+: end
+: if crawl.random2(4) == 0 then
+SUBST: R = Y
+SUBST: r = 1:70 2
+SUBST: s = 1 2:40 3:15 .:25
+: else
+: rdry = true
+SUBST: R = V
+SUBST: r = 3:4 .
+SUBST: s = .
+: end
+: if crawl.random2(4) == 0 or (vdry and mdry and rdry) then
+SUBST: P = Y
+SUBST: p = 1:70 2
+SUBST: q = 1 2:40 3:15 .:25
+: else
+SUBST: P = V
+SUBST: p = 3:4 .
+SUBST: q = .
+: end
+MAP
+     c@G@c
+   ccc.c.ccc
+  cc4..u...cc
+ cc..cuvuc..cc
+ c..QuvVvuU.4c
+cc4cqQuvuUnc.cc
+@..qpqQuUnmn..@
+GcqpPpqZzmMmncG
+@..qpqSsNnmn..@
+cc.cqSsrsNnc.cc
+ c..SsrRrsN.4c
+ cc4.csrsc..cc
+  cc...s..4cc
+   ccc.c.ccc
+     c@G@c
+ENDMAP
+
 
 ##############################################################################
 # Tomb entries
