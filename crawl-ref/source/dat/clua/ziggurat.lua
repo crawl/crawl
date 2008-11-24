@@ -164,7 +164,7 @@ local mons_populations = {
 local function set_floor_colour(colour)
   if not zig().level.floor_colour then
     zig().level.floor_colour = colour
-    dgn.change_floor_colour(colour)
+    dgn.change_floor_colour(colour, false)
   end
 end
 

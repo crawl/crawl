@@ -340,6 +340,11 @@ static dungeon_feature_type _check_lua_feature(lua_State *ls, int idx)
     return (f);
 }
 
+static inline bool _lua_boolean(lua_State *ls, int ndx, bool defval)
+{
+    return lua_isnone(ls, ndx)? defval : lua_toboolean(ls, ndx);
+}
+
 #define GETCOORD(c, p1, p2, boundfn)                      \
     coord_def c;                                          \
     c.x = luaL_checkint(ls, p1);                          \
@@ -1136,8 +1141,11 @@ static int _lua_colour(lua_State *ls, int ndx,
 static int dgn_change_floor_colour(lua_State *ls)
 {
     const int colour = _lua_colour(ls, 1, BLACK);
+    const bool update_now = _lua_boolean(ls, 2, true);
+
     env.floor_colour = (unsigned char) colour;
-    if (crawl_state.need_save)
+
+    if (crawl_state.need_save && update_now)
         viewwindow(true, false);
     return (0);
 }
@@ -1145,8 +1153,11 @@ static int dgn_change_floor_colour(lua_State *ls)
 static int dgn_change_rock_colour(lua_State *ls)
 {
     const int colour = _lua_colour(ls, 1, BLACK);
+    const bool update_now = _lua_boolean(ls, 2, true);
+
     env.rock_colour = (unsigned char) colour;
-    if (crawl_state.need_save)
+
+    if (crawl_state.need_save && update_now)
         viewwindow(true, false);
     return (0);
 }
@@ -2231,11 +2242,6 @@ LUAFN(dgn_set_level_type_origin)
     you.level_type_origin = luaL_checkstring(ls, 1);
 
     return(0);
-}
-
-static inline bool _lua_boolean(lua_State *ls, int ndx, bool defval)
-{
-    return lua_isnone(ls, ndx)? defval : lua_toboolean(ls, ndx);
 }
 
 static int _lua_push_map(lua_State *ls, const map_def *map)
