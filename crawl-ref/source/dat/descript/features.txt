@@ -46,6 +46,14 @@ A gate leading out of Pandemonium
 %%%%
 A gate leading to another region of Pandemonium
 %%%%
+A glowing drain
+
+Every settlement brings forth the unpleasant sewers and drains, ignored by
+most but hideaways for others. Old tales speak of dangerous creatures,
+bathing in disgustingly green water, preying on each other without mercy.
+The tales also tell of the valuable items left by daring and unfortunate
+visitors, left to collect dust in the damp caverns.
+%%%%
 A one-way gate leading to the halls of Pandemonium
 
 Tales about successful loots of these netherworlds are rare. Even the strongest
@@ -102,9 +110,9 @@ A glowing drain
 
 Every settlement brings forth the unpleasant sewers and drains, ignored by
 most but hideaways for others. Old tales speak of dangerous creatures, 
-bathing in disgustingly green water, preying on each other without mercy.
-The tales also tell of the valuable items left by daring and unfortunate
-visitors, left to collect dust in the damp caverns.
+bathing in disgustingly smelling green water, preying on each other without mercy.
+The tales also allude to valuable items left by daring and unfortunate
+visitors, left to grow mildew in the damp caverns.
 %%%%
 A glowing golden altar of the Shining One
 %%%%

@@ -1117,9 +1117,8 @@ void TilesFramework::update_inventory()
             {
                 if (you.equip[eq] == i)
                 {
-                    if (you_tran_can_wear(you.inv[i]))
-                        desc.flag |= TILEI_FLAG_EQUIP;
-                    else
+                    desc.flag |= TILEI_FLAG_EQUIP;
+                    if (!you_tran_can_wear(you.inv[i]))
                         desc.flag |= TILEI_FLAG_MELDED;
                     break;
                 }

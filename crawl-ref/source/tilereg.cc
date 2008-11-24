@@ -1274,14 +1274,12 @@ void InventoryRegion::pack_verts()
                     add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_EQUIP_CURSED, x, y);
                 else
                     add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_EQUIP, x, y);
-            }
-            else
-            {
+
                 if (item.flag & TILEI_FLAG_MELDED)
-                    add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_MELDED, x, y);
-                if (item.flag & TILEI_FLAG_CURSE)
-                    add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_CURSED, x, y);
+                    add_quad(TEX_DEFAULT, TILE_MESH, x, y);
             }
+            else if (item.flag & TILEI_FLAG_CURSE)
+                add_quad(TEX_DEFAULT, TILE_ITEM_SLOT_CURSED, x, y);
 
             // TODO enne - need better graphic here
             if (item.flag & TILEI_FLAG_SELECT)
