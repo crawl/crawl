@@ -679,7 +679,7 @@ void wizard_place_stairs( bool down )
     if (stairs == DNGN_UNSEEN)
         return;
 
-    grd(you.pos()) = stairs;
+    dungeon_terrain_changed(you.pos(), stairs, false);
 }
 #endif
 
@@ -2930,8 +2930,9 @@ void wizard_get_religion(void)
         mpr( "That god doesn't seem to be taking followers today." );
     else
     {
-        grd(you.pos()) =
+        dungeon_feature_type feat = 
             static_cast<dungeon_feature_type>( DNGN_ALTAR_FIRST_GOD + god - 1 );
+        dungeon_terrain_changed(you.pos(), feat, false);
 
         pray();
     }

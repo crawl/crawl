@@ -754,7 +754,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 'p':
-        grd(you.pos()) = DNGN_ENTER_PANDEMONIUM;
+        dungeon_terrain_changed(you.pos(), DNGN_ENTER_PANDEMONIUM, false);
         break;
 
     case 'P':
@@ -780,7 +780,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             break;
         }
 
-        grd(you.pos()) = DNGN_ENTER_PORTAL_VAULT;
+        dungeon_terrain_changed(you.pos(), DNGN_ENTER_PORTAL_VAULT, false);
         map_wiz_props_marker *marker = new map_wiz_props_marker(you.pos());
         marker->set_property("dst", dst);
         marker->set_property("desc", "wizard portal, dest = " + dst);
@@ -789,7 +789,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     }
 
     case 'l':
-        grd(you.pos()) = DNGN_ENTER_LABYRINTH;
+        dungeon_terrain_changed(you.pos(), DNGN_ENTER_LABYRINTH, false);
         break;
 
     case 'k':
@@ -877,9 +877,15 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         get_input_line( specs, sizeof( specs ) );
 
         if (specs[0] != '\0')
-            if (const int feat = atoi(specs))
-                grd(you.pos()) = static_cast<dungeon_feature_type>( feat );
-
+            if (const int feat_num = atoi(specs))
+            {
+                dungeon_feature_type feat =
+                    static_cast<dungeon_feature_type>( feat_num );
+                dungeon_terrain_changed(you.pos(), feat, false);
+#ifdef USE_TILE
+                env.tile_flv[you.pos().x][you.pos().y].special = 0;
+#endif
+            }
         break;
 
     case ')':
@@ -926,7 +932,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
             mprf(MSGCH_DIAGNOSTICS, "Setting (%d,%d) to %s (%d)",
                  you.pos().x, you.pos().y, name.c_str(), feat);
-            grd(you.pos()) = feat;
+            dungeon_terrain_changed(you.pos(), feat, false);
 #ifdef USE_TILE
             env.tile_flv[you.pos().x][you.pos().y].special = 0;
 #endif
