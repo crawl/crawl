@@ -2869,7 +2869,8 @@ bool is_dragonkind(const actor *act, const monsters *mon)
     {
         return (true);
     }
-    else if (act->atype() == ACT_PLAYER
+
+    if (act->atype() == ACT_PLAYER
         && you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
     {
         return (true);
