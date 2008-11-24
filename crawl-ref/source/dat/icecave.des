@@ -1,7 +1,11 @@
-#Q: replace rock and water by stone?
-#   disable controlled teleports?
+# Questions;
+# replace rock and water by stone?
+# disable controlled teleports?
 #
-#todo: add several types of cloud generators
+# Todo: 
+# add several types of cloud generators
+# timed entry (around 2000 turns), also for Sewer
+# some ice cave destination maps could be smaller
 
 ###############################################################################
 #
@@ -329,10 +333,8 @@ ITEM:    ring of ice / staff of cold
 ITEM:    manual of ice magic
 ITEM:    nothing
 : else
-ITEM:    book of ice / book of frost 
-#XXX/ book of minor magic (ice)
-ITEM:    book of ice / book of frost 
-#XXX/ book of minor magic (cold)
+ITEM:    book of ice / book of frost / book of minor magic [frost]
+ITEM:    book of ice / book of frost / book of minor magic [frost]
 : end
 ITEM:    cap ego:cold_resistance w:9 / \
          pair of gloves ego:cold_resistance w:9 / \
