@@ -3985,8 +3985,18 @@ static bool _yredelemnul_retribution()
 
     if (random2(you.experience_level) > 4)
     {
-        if (you.religion == god && coinflip() && _yred_slaves_abandon_you())
+        if (one_chance_in(3) && animate_dead(&you, you.experience_level * 5,
+                                             BEH_HOSTILE, MHITYOU, god, false))
+        {
+            simple_god_message(" animates the dead around you.", god);
+            animate_dead(&you, you.experience_level * 5, BEH_HOSTILE, MHITYOU,
+                         god);
+        }
+        else if (you.religion == god && coinflip()
+            && _yred_slaves_abandon_you())
+        {
             ;
+        }
         else
         {
             int how_many = 1 + random2(1 + (you.experience_level / 5));
