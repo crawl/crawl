@@ -15,6 +15,7 @@ Xom snickers.
 
 "Let's try an experiment, hmmm?"
 
+w:1
 "I wonder... What does this button do?"
 %%%%
 ##############################
@@ -45,6 +46,9 @@ Xom cursed gift
 "Maybe this would work better."
 
 "Catch!"
+
+w:1
+"Vanity is a pleasure."
 %%%%
 # If you're wearing a cursed ring, Xom will give you another ring.
 Xom ring gift
@@ -54,6 +58,9 @@ Xom ring gift
 "Take this!"
 
 "Catch!"
+
+w:1
+"There is a nice ring to it."
 %%%%
 # Xom will choose a weapon of a different subtype from the one you're
 # currently wielding.
@@ -64,6 +71,9 @@ Xom weapon gift
 "Have you considered using one of these?"
 
 "How about this?"
+
+w:1
+"Variety is the spice of life."
 %%%%
 # If you're wearing a cursed cloak, Xom will give you either a cloak
 # or body armour.
@@ -74,6 +84,9 @@ Xom armour gift
 "Have you considered wearing one of these?"
 
 "Here you go."
+
+w:1
+"It's marvellous!"
 %%%%
 ####################
 # friendly summons
@@ -203,6 +216,9 @@ Xom's attention turns to you.
 Xom's power touches on you.
 
 Xom giggles.
+
+w:1
+"Running a series of toy crash tests now."
 %%%%
 Xom lose stats
 
@@ -342,6 +358,12 @@ Beogh is not amused by that idol's destruction.
 Beogh seems highly displeased.
 
 Your arrogance infuriates Beogh.
+
+Beogh utters a curse on your species.
+
+Beogh curses everyone not orcish, especially @player_genus_plural@.
+
+Beogh swears eternal hatred towards @player_god@.
 %%%%
 #####################################
 # TSO rants on killing a holy being #
@@ -352,6 +374,10 @@ TSO holy evil
 The Shining One thunders, "Cease your foul attacks on the divine!"
 
 The Shining One shouts, "That base death shall not go unavenged!"
+
+The Shining One shouts, "Your misdeeds are remembered unto the final battle!"
+
+The Shining One whispers, "The forces of light will burn you to a crisp."
 %%%%
 # a non-good worshipper or atheist has killed a holy being
 TSO holy other
@@ -359,6 +385,13 @@ TSO holy other
 The Shining One says, "As holy lives are taken, so shall yours be."
 
 The Shining One warns, "Defile yourself no further with such kills."
+
+The Shining One demands, "It is time to choose between the fair and the foul."
+
+The Shining One says, "Martyrs are remembered forever."
+
+w:1
+The Shining One says, "An eye for an eye, a tooth for a tooth,"
 %%%%
 ##########################################################
 # Messages for the *player* using Zin's Recite invocation
