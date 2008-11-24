@@ -2861,3 +2861,26 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
 
     return (retval);
 }
+
+bool is_dragonkind(const actor *act, const monsters *mon)
+{
+    if (mons_genus(act->mons_species()) == MONS_DRAGON
+        || mons_genus(act->mons_species()) == MONS_DRACONIAN)
+    {
+        return (true);
+    }
+    else if (act->atype() == ACT_PLAYER
+        && you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+    {
+        return (true);
+    }
+    else if (act->atype() == ACT_MONSTER
+        && mons_is_zombified(mon)
+        && (mons_genus(mon->base_monster) == MONS_DRAGON
+            || mons_genus(mon->base_monster) == MONS_DRACONIAN))
+    {
+        return (true);
+    }
+
+    return (false);
+}

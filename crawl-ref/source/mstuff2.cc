@@ -707,12 +707,12 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
         else
             monster->flags &= ~MF_KNOWN_MIMIC;
     }
-}                               // end monster_teleport()
+}
 
-void setup_dragon(struct monsters *monster, struct bolt &pbolt)
+void setup_dragon(struct monsters *monster, bolt &pbolt)
 {
-    const int type = (mons_genus( monster->type ) == MONS_DRACONIAN)
-                            ? draco_subspecies( monster ) : monster->type;
+    const int type = (mons_genus(monster->type) == MONS_DRACONIAN)
+                            ? draco_subspecies(monster) : monster->type;
     int scaling = 100;
 
     pbolt.name.clear();
@@ -788,8 +788,7 @@ void setup_dragon(struct monsters *monster, struct bolt &pbolt)
     // FIXME: This effect is not yet implemented for player draconians
     // or characters in dragon form breathing at monsters wielding a
     // weapon with this brand.
-    if (mons_genus(monster->type) == MONS_DRAGON
-        || mons_genus(monster->type) == MONS_DRACONIAN)
+    if (is_dragonkind(monster, monster))
     {
         if (actor *foe = monster->get_foe())
         {
