@@ -1467,6 +1467,20 @@ static int runes_in_pack()
 
 bool check_annotation_exclusion_warning()
 {
+    if (grd(you.pos()) == DNGN_ENTER_LABYRINTH
+        && player_mutation_level(MUT_TELEPORT))
+    {
+        mpr("Within the labyrinth you'll only be able to teleport away from "
+            "the exit!");
+        if (!yesno("Continue anyway?", false, 'N', true, false))
+        {
+            canned_msg(MSG_OK);
+            interrupt_activity( AI_FORCE_INTERRUPT );
+            return (false);
+        }
+        return (true);
+    }
+
     level_id  next_level_id = level_id::get_next_level_id(you.pos());
 
     crawl_state.level_annotation_shown = false;

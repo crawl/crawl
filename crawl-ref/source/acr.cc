@@ -1747,6 +1747,7 @@ static void _go_downstairs()
     }
 
     // Does the next level have a warning annotation?
+    // Also checks for entering a labyrinth with teleportitis.
     if (!check_annotation_exclusion_warning())
         return;
 

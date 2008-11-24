@@ -438,8 +438,8 @@ void cycle_exclude_radius(const coord_def &p)
 
         switch (curr_radius)
         {
-        case 1         : curr_radius = LOS_RADIUS; break;
-        case LOS_RADIUS: set_exclude(p, 0); break;
+        case LOS_RADIUS: curr_radius = 1; break;
+        case 1         : set_exclude(p, 0); break;
         }
 
 #ifdef USE_TILE
@@ -459,7 +459,7 @@ void toggle_exclude(const coord_def &p)
     if (is_exclude_root(p))
         set_exclude(p, 0);
     else
-        set_exclude(p, 1);
+        set_exclude(p, LOS_RADIUS);
 
 #ifdef USE_TILE
     _tile_exclude_gmap_update(p);
