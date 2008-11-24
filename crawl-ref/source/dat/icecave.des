@@ -1,0 +1,521 @@
+#Q: replace rock and water by stone?
+#   disable controlled teleports?
+#
+#todo: add several types of cloud generators
+
+###############################################################################
+#
+# The Ice Cave (Eino)
+#
+#
+# Ice Cave is aimed to appear at somewhere in the middle game. It should be
+# fairly challenging, but also allow retreating. The entries shouldn't be out
+# of depth.
+#
+# Flavour: white colours, ice monsters, appropriate clouds.
+# Gameplay: 
+# The escape is at the start. The player can back away if s/he decides
+# some challenges are much to handle.
+#
+###############################################################################
+
+{{
+function ice_cave_portal(e)
+  e.marker([[O = lua:one_way_stair { desc = "A frozen archway", 
+                                     dst = "ice_cave", 
+                                     floor = "stone_arch" }]])
+  e.kfeat("O = enter_portal_vault")
+  e.colour("O = white")
+end
+}}
+
+# For destination (not entry) vaults, use the following line after all 
+# substitutions have been performed:
+# : ice_cave_colours(_G)
+{{
+function ice_cave_colours(e)
+  e.kfeat("< = exit_portal_vault")
+  e.colour("< = white")
+  e.rockcol("white")
+  e.floorcol("blue")
+end
+}}
+
+
+# Entries ##########################################
+
+NAME:   portal_ice_cave_entry_animals_and_master
+TAGS:   uniq_ice_cave
+DEPTH:  D:16-24, Lair:6-
+ORIENT: float
+: ice_cave_portal(_G)
+COLOUR: X = white
+KFEAT:  X = x
+MONS:   wolf / yak w:5 / nothing w:1
+MONS:   yak / polar bear w:5 / nothing w:1
+MONS:   polar bear / nothing w:2
+MONS:   ice dragon w:8 / nothing w:2
+MAP
+ xxxxxxx
+xxXXXXXxx
+xXX.4.XXx
+xX.3.3.Xx
+xX..O..Xx
+xX.2.2.Xx
+xXX...XXx
+xxXX.1.Xx
+ xX11XXXx
+ xXX.XXxx
+ xXX.XXx
+ xxXX.Xx
+xxXX.XXx
+xXX@XXxx
+ENDMAP
+
+NAME:   portal_ice_cave_entry_horrid_things
+TAGS:   uniq_ice_cave
+DEPTH:  D:14-24
+ORIENT: float
+: ice_cave_portal(_G)
+COLOUR: X = white
+KFEAT:  X = x
+MONS:   ice beast / freezing wraith w:2 / nothing w:2
+MONS:   freezing wraith / nothing w:3
+MONS:   azure jelly w:3 / freezing wraith w:7
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxXXXXXxXXXXXXXXXXxxxxxx
+xXX...XXX........XXxxxxx
+xX.....X....2..1..XXXXXX
+xX..O..+..3..1..1......+
+xX.....X....2..1..XXXXXX
+xXX...XXX........XXxxxxx
+xxXXXXXxXXXXXXXXXXxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   portal_ice_cave_demonic_guard
+TAGS:   uniq_ice_cave
+DEPTH:  D:14-24
+ORIENT: float
+: ice_cave_portal(_G)
+COLOUR: x = white
+MONS:   ice devil
+MAP
+xxxxxxx
+x..O..x
+x.....x
+x.1.1.x
+x.....x
+xxx.xxx
+xxx.xxx
+xxx.xxx
+xxx.xxx
+xxx+xxx
+ENDMAP
+
+NAME:   portal_ice_cave_ice_statue_001
+TAGS:   uniq_ice_cave
+DEPTH:  D:14-24
+ORIENT: float
+: ice_cave_portal(_G)
+COLOUR: x = white
+MONS:   ice statue
+MAP
+xxxxxxx
+x.....x
+x..O..x
+x.....x
+x..1..x
+x.....x
+x.....x
+xxx+xxx
+ENDMAP
+
+NAME:   portal_ice_cave_ice_statue_002
+TAGS:   uniq_ice_cave
+DEPTH:  14-24
+ORIENT: float
+: ice_cave_portal(_G)
+MONS:   ice statue
+MAP
+   .....
+ .........
+...........
+.....1.....
+.....O.....
+.....1.....
+...........
+ .........
+   .....
+ENDMAP
+
+# The destination vaults ############
+
+############################################################################
+# small caves
+#
+# all start with a similar ice statue arrangement
+#
+# lacking possible random fog generators
+#
+# These have the starting point near the exit, so you can always retreat;
+# a middle point where there is some loot; and the end, where there is a
+# big challenge and some major loot. Ideally weaker characters attempt to
+# overcome the midpoint and then go back to dungeon, and strong characters
+# can try to clear the whole cave.
+
+# foes: animals + frost giant & the ice statues
+# loot: heavy weapons and rC gear wearable by big races
+#       plus some useful potions in the freezer
+NAME:    ice_cave_small_01
+TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
+WEIGHT:  3
+SHUFFLE: "'
+SUBST:   "=. , ':x .:1
+: ice_cave_colours(_G)
+MONS:    yak / wolf / polar bear w:4
+MONS:    polar bear
+MONS:    frost giant
+MONS:    polar bear w:3 generate_awake / wolf generate_awake / \
+         yak generate_awake
+MONS:    ice statue
+SHUFFLE: defg
+ITEM:    giant club / giant spiked club / great mace w:9 / \
+         battleaxe w:7 / glaive w:8 / halberd w:8 / great sword w:6 / \
+         nothing w:58
+ITEM:    great mace good_item / battleaxe good_item / glaive good_item / \
+         halberd good_item / great sword good_item / nothing w:50
+ITEM:    battleaxe ego:freezing / glaive ego:freezing / halberd ego:freezing / \
+         great sword ego:freezing / battleaxe ego:freezing good_item / \
+         glaive ego:freezing good_item / halberd ego:freezing good_item / \
+         great sword ego:freezing good_item / nothing w:80
+ITEM:    cap ego:cold_resistance w:9 / cap ego:resistance w:1 / \
+         cloak ego:cold_resistance w:9 / cloak ego:resistance w:1 / \
+         shield ego:cold_resistance w:9 / shield ego:protection w:1 / \
+         large shield ego:cold_resistance w:5 / \
+         animal skin ego:cold_resistance / nothing w:60
+ITEM:    potion of resistance w:5 / potion of gain strength / \
+         potion of might / potion of confusion / potion of levitation / \
+         potion of experience w:2
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx..xxxxxxxxxx12....xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx...xx...xxxx...2xxx...xxxxxxxxxxxxx
+xxxxxxxxxx......1..xxxxx..x212.xxxxxxx...1xxxxxxxxxx
+xxxxxxx.......1..1.xxxxxx....xxxxxxxxxxxx21..xxxxxxx
+xxxxxx...xxxx.3.1....xxxxxxxxxxxxxwwwxxxxxx....xxxxx
+xxxx...xxxfgxx.1..1...xxxxxxxxxxwwwwwxxxxxxxx....xxx
+xxx...xxdegefxx..1.....xxxxxwwwwwwwwwwwwwxxxxxx....x
+xxx...x$$$$gdex.......xxxxxwwwwwwwwwwwwwwwwwxxxxx..x
+xxx...x....$$xx.....xxxxwwwwxxwwwwwwwwwwwwxxxxxx11xx
+xxxx.......xxx.....xxwwwwxxxxxxxxxwwwwwwxxxxx...2xxx
+xxxxx............xxxwwwwxxxxxxxxxxxwwwxxxx......xxxx
+xxxx"xx.........x'wwwwwxxxxxxxxxxxxwxxxx...xxxxxxxxx
+xxwwxxxxxxxxxxxxxxwwwxxxxxxxxxxxxxxxxxx..xxxxxxxxxxx
+xxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxx
+xxwwwwwwwwwwwwwwwwwx'xxxxxxxxxxxxxxx....xxxxxxxxxxxx
+xxwwwxxxxxxxxxxwwxx'x'xxxxxxxxxxxx........xxxxxxxxxx
+xxwwxxxxxxxxxxxwwxxx'xxxxxxxxxxxx...........xxxxxxxx
+x"xxxxxxxxxxxxxxwxx'xxxxxx"xxxxx..............xxxxxx
+xx"xxxxxxxxxxxxxxx'xxxxxxx""""x................xxxxx
+xxx"xxxxxxxxxxxxx'xxxxxxx"xxxx......2...2......xxxxx
+xxx"xxxxxxxxxxxxx''xxxxx"xxx''xx...1..2..1....xxxxxx
+xxxx""xxxxxxxxxxxxx'xxx"xxx'xxxxx.....1......xxxxxxx
+xxxxxx""""xxxxxxxxxx'xx"xxx'xxwwxx..........xxxxxxxx
+xxxxxxxxxx"xxxxxxxxx'xxx"xxx'xxwwxx5x....x5xxxxxxxxx
+xxxxxxxxx"xxxxxxxxx'xxx"xxxxx'xxwwxxxx..xxxxxxxxxxxx
+xxxxxxx""xxxxxxxxx'xxx"xxxxxx'xxxwwxxx..xxxwwxxxxxxx
+xxxxxx"xxxxxxxxxxx''xxx"xxxxxx'xxwwxx..xxxwwxxxxxxxx
+xxxxx"xxxxxxxxxxxxx'xxxx""xxxx'xxwxx..xxxwwxxxxxxxxx
+xxxx"xxxxxxxxxxxxxxx'xxxx"xxx'xxxwwx...xxwwxxxxxxxxx
+xxx"xxxxxxxxxxxxxxxxx'xxxx"x'xxxxwwxx...xxwwxxxxxxxx
+xxx"xxxxxxxxxxxxxxxxx'xxxxx2xxxxxwwxxx44.xwwxxxxxxxx
+xxx"xxxxxxxxxxxxxxxxx'x..x.xxxxxwwxxxx4.4xxwwxxxxxxx
+xx"xxxxxxxxxxxxxxxxxxx.hx.xxxxxxwwxxx...xxxwwxxxxxxx
+xx"xxxxxxxxxxxxxxxx..xhxhx.xxxxwwwxxx...xxxwwwxxxxxx
+x"xxxxxxxxxxxxxxxxx.xhxhxh.xxxwwwxxx.....xxxwwxxxxxx
+xx"xxxxxxxxx"xxxxxxx......xxxxxwwxx...A...xxxwxxxxxx
+xxx"""xxx"""x""xxx""xxxxxxxxxxxwwxx.......xxwwxxxxxx
+xxxxxx"""xxxxxx"""xxxxxxxxxxxxxwwxxx..<..xxxwwxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwxxxx...xxxwwwxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# foes: ice beasts, ice dragons & the ice statues
+# loot: some gold, jewelry
+NAME:    ice_cave_small_02
+TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
+WEIGHT:  3
+SHUFFLE: "'
+SUBST:   "=. , ':x .:1
+: ice_cave_colours(_G)
+MONS:    ice beast
+MONS:    ice dragon
+MONS:    ice beast generate_awake
+MONS:    ice statue
+ITEM:    any jewellery / gold / nothing w:5
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx......xxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx.....xxx....xxxxxx
+xxxxxxxxxxxxxxxxxxxxxx..xxxxxxx...2..xxxx
+xxxxwwwxxxxxxxxxxxxxxxxx.xxxx$$.2....dexx
+xxwwwwwxxxxxxxxxxxxxx..xx.xx$$$$....deddx
+xwwwwwwwwwwxxxxxxxxx.xx..xx$$$$$$..deddxx
+xxxwwwwwwwwwwwxxxxx..xxxxxxxx$$$$$$$"xx'x
+xwwwwwwwwwwwxxxxxx11xxxxwwwxxxxxxxxxxwx'x
+xxxxwwwwwwxxxxx...1xxwwwwwwwwwwwwwwwwwwxx
+xxxxxwwwxxxx......xxwwwwwwwwwwwwwwwwwwwxx
+xxxxxwxxxx...xxxxxxxxxxxxxxxxxxxwwwwwwxxx
+xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxx"x'xxxx
+xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
+xxxxxx....xxxxxxxxxxxxxxxxxxx"""x..$$xxxx
+xxxx........xxxxxxxx""xxxxx""xxx.xxx$xxxx
+xxx...........xxxxx"xx""x""xxxxxx'xxx"xxx
+xx..............x""xxxxx"xxxxxxxxx'xxx"xx
+x................xxxxxxxxxxxxxxxxxx'xx"xx
+x.................xxxxxxxxxxxxxxxxxx'xx"x
+xx...1.111.1....xx'xxxxxxxxxxxxxxxxx'xx"x
+xxx...1.1.1.....xxx'xxx''xxxxx''x'x'xx"xx
+xwxx..........xxxxxx'''xx'xxx'xx'x'xx"xxx
+xwwxx3x....x3xxxxxxxxxxxxx''$xxxxxxx"xxxx
+xxwwxxxx..xxxxxxxxxxxxxxxxx$$$xxxx""xxxxx
+xxxwwxxx..xxxxxxxxxxxxxxxxx$$$$xx"xxxxxxx
+xxxwwxx..xxxxxxxxxxxxxxxxxxx$$"xxx"xxxxxx
+xxxwxx..xxxxxxxxxxxxxxxxxxxxxxx"x"xxxxxxx
+xxxwwx...xxxxxxxxxxxxxxxxxxxxxxx"xxxxxxxx
+xxxwwxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxwwxxx11.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxwwxxxx1.1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxwwxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xwwxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xwwxx...A...xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xwwxx.......xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xwwxxx..<..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xwwxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# foes: mostly in the undead vein & the ice statues
+# loot: ice magic loot
+NAME:    ice_cave_small_03
+TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
+WEIGHT:  2
+: ice_cave_colours(_G)
+KFEAT:   _ = altar_kikubaaqudgha
+KFEAT:   - = floor w:9 / alarm trap w:1
+COLOUR:  - = white
+MONS:    ice beast
+MONS:    white imp
+MONS:    freezing wraith
+MONS:    human simulacrum / elf simulacrum / orc simulacrum / \
+         draconian simulacrum w:5 / ogre simulacrum w:5 / \
+         centaur simulacrum w:5 / troll simulacrum w:5 / naga simulacrum w:5
+MONS:    necromancer ; robe ego:cold_resistance . wand of cold / \
+         necromancer ; robe ego:cold_resistance . wand of fire
+MONS:    polar bear simulacrum w:3 generate_awake / \
+         wolf simulacrum generate_awake / \
+         yak simulacrum generate_awake
+MONS:    ice statue
+ITEM:    wand of frost / wand of cold w:5
+ITEM:    ring of ice / staff of cold
+: if crawl.random2(2) == 0 then
+ITEM:    manual of ice magic
+ITEM:    nothing
+: else
+ITEM:    book of ice / book of frost 
+#XXX/ book of minor magic (ice)
+ITEM:    book of ice / book of frost 
+#XXX/ book of minor magic (cold)
+: end
+ITEM:    cap ego:cold_resistance w:9 / \
+         pair of gloves ego:cold_resistance w:9 / \
+         cloak ego:cold_resistance w:9 / \
+         naga barding ego:cold_resistance w:5 / \
+         centaur barding ego:cold_resistance w:5 / \
+         cap ego:resistance w:1 / pair of gloves ego:resistance w:1 / \
+         cloak ego:resistance w:1 / \
+         buckler ego:cold_resistance / helmet ego:cold_resistance
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxwwwxxxxxx....xxxxwxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxwwwwwxxx.......xxwxxxxxxxxxxxxxxxx
+xxwwxxxxxxxxxxxxxxwwwxxx...xxx..xxxxxxxxxxxxxxxxxxxx
+xxxwwwwwwwwwwwwwwwwwxxx...xxx..xxxxxxx..xxxxxxxxxxxx
+xxwwwwwwwwwwwwwwwwwxxx...xxx..xxxxxx....xxxxxxxxxxxx
+xxwwwxxxxxxxxxxwwxxxx3..xxx...xxxx........xxxxxxxxxx
+xxwwxx.G...G.xxwwxx..33xxxx..xxxx...........xxxxxxxx
+xxxxx.........xxwx....xxxxx...xx..............xxxxxx
+xxdx....2_.24..xxx..xxxxxxxx...................xxxxx
+xx*+...4.44..2..xx...xxxxxxxx.......2...2......xxxxx
+xxdx..4.423.342.xxx.33xxxxxxxxxx...1..2..1....xxxxxx
+xxxxx.4..3.324xxxxxxx3..xxxxxxxxx.....1......xxxxxxx
+xxxxxxxG4.2G...xxxxxxxx...xxxxwwxx2........2xxxxxxxx
+xxxxxxxxxxxx....xxxxxxxx....xxxwwxx7x....x7xxxxxxxxx
+xxxxxxxxxxxxxx...xx.xxxxxx....xxwwxxxx..xxxxxxxxxxxx
+xxxxxxxxxxxx....xx...xxxxxxx...xxwwxxx..xxxwwxxxxxxx
+xxxxxlm..xxx..xxx..x..xxxxxxxx..xwwxx..xxxwwxxxxxxxx
+xxxxxxxx+xxxx.....xxx.....xxx..xxwxx..xxxwwxxxxxxxxx
+xxxxx444544xxxxxxxx...3.......xxxwwx...xxwwxxxxxxxxx
+xxxx.444444.xxxxxx.....3..3...xxxwwxx...xxwwxxxxxxxx
+xxx..xgdegx..xxxxx..3...3.....xxxwwxxx.66xwwxxxxxxxx
+xx...xxffxx...xxxxx...3..3.3..xxwwxxxx6.6xxwwxxxxxxx
+xx....xxxx...xxxxxxx.........xxxwwxxx...xxxwwxxxxxxx
+xxxx.........xxxxxxxxx.....xxxxwwwxxx...xxxwwwxxxxxx
+xxxx...7....xxxxxxxxxxxxx..xxxwwwxxx.....xxxwwxxxxxx
+xxxxx------xxxxxxxxxxxxxxxx..xxwwxx...A...xxxwxxxxxx
+xxxxxx----xxxxxx...xxxxxxxx...xwwxx.......xxwwxxxxxx
+xxxxxx---xxxx...xx...xx.....xxxwwxxx..<..xxxwwxxxxxx
+xxxxxxx.......xxxxxx....xxxxxxwwwxxxx...xxxwwwxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# foes: ice devils, white imps & the ice statues
+# loot: ?
+NAME:    ice_cave_small_04
+TAGS:    ice_cave no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
+WEIGHT:  2
+: ice_cave_colours(_G)
+NSUBST:  . = 9:1 / 1:1 / *:.
+SHUFFLE: QZHBE
+SUBST:   Q : 2, Z : 2, H : ., B : ., E : .
+# TODO: Fog generators where the devils are + fitting treasure
+MONS:    white imp
+MONS:    ice devil
+MONS:    ice statue
+ITEM:    nothing
+ITEM:    nothing
+ITEM:    nothing
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx........xxxxxxxxxxx
+xxxxxx....xxxxxxxxxxxx...xxx....xxxxxxxxx
+xxxx........xxxxxxxxx..xxxxxxx...xxxxxxxx
+xxx...........xxxxxx...xxx3..xxxx..xxxxxx
+xx....1..1......xxxxx...xx.....xx...xxxxx
+x...1......1.....xxxxx........dxxx..xxxxx
+x............1...xxx.....xx..dxx...xxxxxx
+xx......1..1....xx.....xxxxxxxx...xxxxxxx
+xxx.................xxxxxxxxxx...xxxxxxxx
+xwxx..........x...xxxxxxxxxx...xxxxxxxxxx
+xwwxx3x....x3xxxxxxxxxx....Q..xxxxxxxxxxx
+xxwwxxxx..xxxxxxxxxx......Q.Q..xxxxxxxxxx
+xxxwwxxx..xxxwwxxx....xx.........xxxxxxxx
+xxxwwxx..xxxwwxx.....xx..xxxx......xxxxxx
+xxxwxx..xxxwwxx....x.....H..x...Z...xxxxx
+xxxwwx...xxwwxx..B.xxx....H.xx.Z.Z...xxxx
+xxxwwxx...xxwwx.B.B..xx..H...xx.......xxx
+xxxwwxxx...xwwxx.........x...........xxxx
+xxwwxxxx...xxwwxx...xxx..x..xxx.....xxxxx
+xxwwxxx...xxxwwxxxxxx....x.....x..xxxxxxx
+xxxxxxx...xxxwwwxxx......x.....xxxxxxxxxx
+xwwxxx.....xxxwwxxxx.xx.E....xxxxxxxxxxxx
+xwwxx...A...xxxwxxxxxx.E.E.xxxxxxxxxxxxxx
+xwwxx.......xxwwxx...xxx.xxx...xxxxxxxxxx
+xwwxxx..<..xxxwwxx.e.........f.xxxxxxxxxx
+xwwxxxx...xxxwwwxx...xx*|*xx...xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# sprawling cavern
+#
+# rather long, thight cavern with a hard challenge at the end.
+# you can always go back to the beginning to retreat.
+
+NAME: ice_cave_caverns
+TAGS: ice_cave no_item_gen no_monster_gen no_pool_fixup
+ORIENT: encompass
+: ice_cave_colours(_G)
+# a bit of layout randomization for the middle part..
+: if crawl.random2(2) == 0 then
+SUBST: ' = x
+SUBST: - = .
+: else
+SUBST: ' : .
+SUBST: - = x
+: end
+# two different populations: undead/demon and natural/giant
+: if crawl.random2(2) == 0 then
+MONS: white imp / human simulacrum w:2 / elf simulacrum w:2 / \
+      orc simulacrum w:2
+MONS: polar bear simulacrum / freezing wraith w:3 / nothing w:1
+MONS: ice statue
+MONS: ice devil
+MONS: draconian simulacrum / ogre simulacrum / centaur simulacrum / \
+      naga simulacrum / troll simulacrum
+MONS: freezing wraith
+MONS: Ice Fiend
+ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \
+      pair of gloves good_item / pair of boots good_item / nothing
+ITEM: book of ice / book of unlife / staff of cold / staff of death / \
+      nothing w:30
+ITEM: ring of ice / ring of protection from fire / ring of life protection / \
+      wand of cold / wand of draining / nothing
+: else
+MONS: wolf / yak w:3 / nothing w:1
+MONS: polar bear / nothing w:5
+MONS: ice statue
+MONS: polar bear / death yak w:5
+MONS: polar bear / yak
+MONS: wolf
+MONS: frost giant
+ITEM: animal skin good_item ego:fire_resistance / \
+      battleaxe good_item ego:freezing w:4 / \
+      glaive good_item ego:freezing w:4 / \
+      great sword good_item ego:freezing w:2 / nothing
+ITEM: book of ice / \
+      crossbow ego:frost good_item no_uniq / \
+      longbow ego:frost good_item no_uniq / nothing w:20
+ITEM: ring of ice / ring of protection from fire / wand of cold / \
+      arrow ego:ice q:25 / bolt ego:ice q:20 / nothing
+: end
+ITEM: any wand / any potion w:5 / any scroll w:5
+KFEAT: P = distillery shop / wand shop / scroll shop
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx.xxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx....xxxxxxxxx....xxxxxxxxxwwwxxxxxxxx$$xxxxxxxx...xx...xxxxxxxxxxxxx
+x...A.xxxxxx....xx....xxxxxxxwwwwxxxxxxx$$xx.x...xx...xx...xxxxxxxxxxx
+x.<....xx....xxxxxxx...xxxxxwwwwxxxxxxxxxx.xx..xxxxxxxxxx....xxxxxxxxx
+xx..xx....xxxxxxxx1111xxxxwwwwwwxxxxxx...xxxxx..xxxxxxxxxx..3..xxxxxxx
+xxxxxxxxxxxxxxx....xxxxxxwwwwwwxxxx1...x...xx..xxxxxxxxxxxx....xxxxxxx
+xxxxxxxxxxxx....xxxxxxwwwwwwwwxxxx51xxxxxx...xxxxxxxxxxxxx..6xxxxxxxxx
+xxxxxxxxx...xxxxxxxxxwwwwwwxxxx..1xxxxxxxxxxxxxxxxxxxxxxx.66xxxxxxxxxx
+xxxxxx....xxxxxxxxxxxxxxxwwwxx..xxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxx
+xxxx...xxxxxxxxxxxx....xxxwwxxx..xxxxxxxxxxxxx.-....x...xxxxxxxxxxxxxx
+xxx..xxxxxxxxxxxx...xx...xxxxxxx..xxxxxxxxxxx...--....xxxxxxxxxxxxxxxx
+x...xxxxxxxxxxx...x.xxxx...xxxx1.xxxxxxxxxxx..xxxx-xxxxxxxxxxx.xxxxxxx
+x..xxxxxxxxxxx141xxxgxxxx...xxxx511xxxxxwwxxx...xxxxxxxxxxxxx.x.xxxxxx
+xx..xxxxxxxxx...xxxgxxx...xxxxxxxx..xxxwwwxxxx..1.xxxxxxxxxx.xxx..xxxx
+xxx..xxxxxxxxx....xxxx5.xxxxxxxxx...xxxxxwwwxxxx.1.5xxxxxxx.xxx..xxxxx
+xx..xxxxxxxxx.x.xxxxx5..5xxxxxxxxxx1.xxxxxwwxxxxx5415.xxxxxx.xx...xxxx
+xx...xxxxxxx...xxxxxxx15.5xxxxxxx'''51xxxxwwxxxxxx5.41.xxxx..xxx...xxx
+xxx..xxxxxx..xxxxxxxxxxx5.1xxxx''xxxx1-xxxxwwwxxxxxx.5..x...xxx..U..xx
+xxx...xxxx..xxxxxxxxxxxxxx1.x'''xxxxx--xxxxwwwwxxxxxxx'...xxxxxx...xxx
+xxx...xxxxx..1xxxxxxxxxxxx..'xxxxxxxxxx--xxxwwwwxxxx*.xxxxxxxxx..xxxxx
+xxx...xxxxxxx..xx1xxxxxxxxx--xxxxx'''x--xxxwwwwwwxxxx*xxxx..xxxx..xxxx
+xxxx.11xxxxx1.x.1...2xxxx---xx.....xx..xxxxwwwwwwwwxxx-x..xx.x..xxxxxx
+xxx11.xxxxxxxx.xxxxx..xxxx--x.P.T.P.xxx15xxxwwwwxxxxxx..xxxxx.xxxxxxxx
+xxxx..xxxxxxxx2..1x.1..xxxx-........xx1.1xxwwwwwwxx...xxxxxxxxxxxxxxxx
+xxxxx.xxxxxxxxxxxx.xxx.1xxxx...xxxxxxxxx..xxwwwxxx.xxxxxxxxxxxxxxxxxxx
+xxxxx..xxxx.x....xxxx...xxxxxx.-xxxxxxx.xxxxwwwxx..xxxxxxxxxxxxxxxxxxx
+x*x$xx..xx.*..xx..xxxxx1.xxxx'.-xxxxx15xxxwwwwxxxx..xxxxxxxxxxxxxxxxxx
+xx$x.xx..xx..xxxx..xxxxxx.1''xx-xxxxx11.xxwwwwwxxxx...xxxxxxxxxxxxxxxx
+x$x..x....xx..xxx..xxxxxxx--xxxx-xx...xxxwwwwwwxxxxx....xxxxxxxxxxxxxx
+xx.xx.x..xxx..xx...xxxxxxxx1.xxxx...xxxxxwwwwwwxxxxxx.2.2.xxxxxxxxxxxx
+xxxxxx..xxxx...xx.3.xxxxxxxx.1xx''xxxxxwwwwwwwwxxxxxx.54.2.xxxxxxxxxxx
+xxxxx..xxxx21.xxxx...xxxx..x..''xxxxxxwwwwwwwxxxx$$x.2465...xxxxxxxxxx
+xxxx...xx.12xxxx.x.xxxxx...x.xxxxxxwwwwwwwwxxxxdf$$.......xx.xxxxxxxxx
+xxxx..xx...xxxxxx|x.xx...xx.xxxxxwwwwwwwwwwwxxed|*$$...xxxxxx..xxxxxxx
+xxxx......xxxxxxxx....xxxxxxxxxxwwwwwwwwwwwwwxxfe||$$$.xxxxxxxx....xxx
+xxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx...<x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP

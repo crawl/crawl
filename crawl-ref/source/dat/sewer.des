@@ -29,9 +29,8 @@ end
 function sewer_colours(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = darkgrey")
-  e.colour("x = darkgrey")
-  e.colour("c = darkgrey")
-  e.colour(". = lightgrey")
+  e.rockcol("darkgrey")
+  e.floorcol("lightgrey")
   e.colour("w = green")
   e.colour("W = lightgreen")
 end
