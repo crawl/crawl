@@ -581,6 +581,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("you or your allies kill the undead");
         break;
 
+    case GOD_BEOGH:
+        likes.push_back("you or your allied orcs kill the undead");
+        break;
+
     case GOD_OKAWARU:
         likes.push_back("you kill the undead");
         break;
@@ -597,6 +601,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_TROG:
         likes.push_back("you or your god-given allies kill demons");
+        break;
+
+    case GOD_BEOGH:
+        likes.push_back("you or your allied orcs kill demons");
         break;
 
     case GOD_OKAWARU:
@@ -621,6 +629,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("you kill holy beings");
         likes.push_back("your god-given allies kill holy beings");
         likes.push_back("your undead slaves kill holy beings");
+        break;
+
+    case GOD_BEOGH:
+        likes.push_back("you or your allied orcs kill holy beings");
         break;
 
     default:
@@ -2321,6 +2333,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
+            case GOD_BEOGH:
                 piety_change = -level;
                 penance = level;
                 retval = true;
@@ -2475,7 +2488,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_OKAWARU:
             case GOD_MAKHLEB:
             case GOD_TROG:
-            case GOD_BEOGH:
             case GOD_LUGONU:
                 simple_god_message(" accepts your offering.");
                 retval = true;
@@ -2532,6 +2544,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_OKAWARU:
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
+            case GOD_BEOGH:
             case GOD_LUGONU:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
@@ -2556,6 +2569,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_OKAWARU:
             case GOD_MAKHLEB:
             case GOD_TROG:
+            case GOD_BEOGH:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -2641,6 +2655,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_KIKUBAAQUDGHA:
             case GOD_YREDELEMNUL:
             case GOD_MAKHLEB:
+            case GOD_BEOGH:
             case GOD_LUGONU:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
@@ -2719,6 +2734,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
             case GOD_KIKUBAAQUDGHA: // note: reapers aren't undead
             case GOD_MAKHLEB:
+            case GOD_BEOGH:
             case GOD_LUGONU:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
@@ -2777,6 +2793,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_SHINING_ONE:
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
+            case GOD_BEOGH:
             case GOD_LUGONU:
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
@@ -2797,6 +2814,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_SHINING_ONE:
             case GOD_MAKHLEB:
             case GOD_TROG:
+            case GOD_BEOGH:
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
                 if (random2(level + 10 - (is_good_god(you.religion) ? 0 :
@@ -6130,7 +6148,7 @@ std::string god_hates_your_god_reaction(god_type god,
 
 bool god_hates_cannibalism(god_type god)
 {
-    return (is_good_god(god));
+    return (is_good_god(god) || god == GOD_BEOGH);
 }
 
 bool god_hates_killing(god_type god, const monsters* mon)
@@ -6158,7 +6176,6 @@ bool god_likes_butchery(god_type god)
     return (god == GOD_OKAWARU
             || god == GOD_MAKHLEB
             || god == GOD_TROG
-            || god == GOD_BEOGH
             || god == GOD_LUGONU);
 }
 
@@ -6397,7 +6414,6 @@ void handle_god_time()
         // These gods accept corpses, so they time-out faster.
         case GOD_OKAWARU:
         case GOD_TROG:
-        case GOD_BEOGH:
             if (one_chance_in(14))
                 lose_piety(1);
             if (you.piety < 1)
@@ -6405,6 +6421,7 @@ void handle_god_time()
             break;
 
         case GOD_MAKHLEB:
+        case GOD_BEOGH:
         case GOD_LUGONU:
             if (one_chance_in(16))
                 lose_piety(1);
