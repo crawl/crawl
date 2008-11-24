@@ -28,6 +28,11 @@ Also be warned that their nomadic lifestyle has taught these sellers to
 appropriate any items an adventurer might leave behind, and then leave 
 quickly, probably to sell them elsewhere.
 %%%%
+A frozen archway
+
+A permanent cold front seems to surround this portal. Whatever lives on the
+other side, they will be full of grim and arctic fury.
+%%%%
 A fountain of clear blue water
 
 'q'uaff to drink from this fountain. But it's far more pretty than useful, unless you're trying to fetch the Orb without eating, I guess.

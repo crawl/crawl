@@ -25,16 +25,18 @@
 
 {{
 function ice_cave_portal(e)
-  e.marker([[O = lua:one_way_stair { desc = "A frozen archway", 
-                                     dst = "ice_cave", 
+  e.marker([[O = lua:one_way_stair { desc = "A frozen archway",
+                                     dst = "ice_cave",
                                      dstname = "Ice Cave",
+                                     dstovermap = "frozen archway",
+                                     dstorigin = "in an ice cave",
                                      floor = "stone_arch" }]])
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")
 end
 }}
 
-# For destination (not entry) vaults, use the following line after all 
+# For destination (not entry) vaults, use the following line after all
 # substitutions have been performed:
 # : ice_cave_colours(_G)
 {{
