@@ -27,6 +27,7 @@
 function ice_cave_portal(e)
   e.marker([[O = lua:one_way_stair { desc = "A frozen archway", 
                                      dst = "ice_cave", 
+                                     dstname = "Ice Cave",
                                      floor = "stone_arch" }]])
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")
