@@ -28,6 +28,7 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "tags.h"
 #include "terrain.h"
@@ -900,6 +901,14 @@ static int dgn_kmask(lua_State *ls)
     return (0);
 }
 
+static int dgn_map_size(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    lua_pushnumber(ls, map->map.width());
+    lua_pushnumber(ls, map->map.height());
+    return (2);
+}
+
 static int dgn_name(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -1128,7 +1137,8 @@ static int dgn_change_floor_colour(lua_State *ls)
 {
     const int colour = _lua_colour(ls, 1, BLACK);
     env.floor_colour = (unsigned char) colour;
-    viewwindow(true, false);
+    if (crawl_state.need_save)
+        viewwindow(true, false);
     return (0);
 }
 
@@ -1136,7 +1146,8 @@ static int dgn_change_rock_colour(lua_State *ls)
 {
     const int colour = _lua_colour(ls, 1, BLACK);
     env.rock_colour = (unsigned char) colour;
-    viewwindow(true, false);
+    if (crawl_state.need_save)
+        viewwindow(true, false);
     return (0);
 }
 
@@ -2230,7 +2241,7 @@ static inline bool _lua_boolean(lua_State *ls, int ndx, bool defval)
 static int _lua_push_map(lua_State *ls, const map_def *map)
 {
     if (map)
-        lua_pushlightuserdata(ls, const_cast<map_def*>(map));
+        clua_push_map(ls, const_cast<map_def*>(map));
     else
         lua_pushnil(ls);
     return (1);
@@ -2263,9 +2274,7 @@ LUAFN(dgn_map_by_place)
 
 LUAFN(_dgn_place_map)
 {
-    if (!lua_isuserdata(ls, 1))
-        luaL_argerror(ls, 1, "Expected map");
-    const map_def *map = static_cast<map_def *>(lua_touserdata(ls, 1));
+    MAP(ls, 1, map);
     const bool clobber = _lua_boolean(ls, 2, false);
     const bool no_exits = _lua_boolean(ls, 3, false);
     coord_def where(-1, -1);
@@ -2274,8 +2283,86 @@ LUAFN(_dgn_place_map)
         COORDS(c, 4, 5);
         where = c;
     }
-    lua_pushboolean(ls, dgn_place_map(map, clobber, no_exits, where));
+    if (dgn_place_map(map, clobber, no_exits, where) && !Level_Vaults.empty())
+        lua_pushlightuserdata(ls, &Level_Vaults[Level_Vaults.size() - 1]);
+    else
+        lua_pushnil(ls);
     return (1);
+}
+
+LUAFN(_dgn_in_vault)
+{
+    GETCOORD(c, 1, 2, map_bounds);
+    const int mask = lua_isnone(ls, 3) ? MMT_VAULT : lua_tointeger(ls, 3);
+    lua_pushboolean(ls, dgn_Map_Mask(c) & mask);
+    return (1);
+}
+
+LUAFN(_dgn_resolve_map)
+{
+    if (lua_isnil(ls, 1))
+    {
+        lua_pushnil(ls);
+        return (1);
+    }
+
+    MAP(ls, 1, map);
+    const bool check_collisions = _lua_boolean(ls, 2, true);
+
+    // Save the vault_placement into Temp_Vaults because the map_def
+    // will need to be alive through to the end of dungeon gen.
+    Temp_Vaults.push_back(vault_placement());
+
+    vault_placement &place(Temp_Vaults[Temp_Vaults.size() - 1]);
+
+    if (vault_main(place, map, check_collisions) != MAP_NONE)
+    {
+        clua_push_map(ls, &place.map);
+        lua_pushlightuserdata(ls, &place);
+    }
+    else
+    {
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+    }
+    return (2);
+}
+
+LUAFN(_dgn_reuse_map)
+{
+    if (!lua_isuserdata(ls, 1))
+        luaL_argerror(ls, 1, "Expected vault_placement");
+
+    vault_placement &vp(
+        *static_cast<vault_placement*>(lua_touserdata(ls, 1)));
+
+    COORDS(place, 2, 3);
+
+    const bool flip_horiz = _lua_boolean(ls, 4, false);
+    const bool flip_vert = _lua_boolean(ls, 5, false);
+
+    // 1 for clockwise, -1 for anticlockwise, 0 for no rotation.
+    const int rotate_dir = lua_isnone(ls, 6) ? 0 : luaL_checkint(ls, 6);
+
+    const bool register_place = _lua_boolean(ls, 7, true);
+    const bool register_vault = register_place && _lua_boolean(ls, 8, false);
+
+    if (flip_horiz)
+        vp.map.hmirror();
+    if (flip_vert)
+        vp.map.vmirror();
+    if (rotate_dir)
+        vp.map.rotate(rotate_dir == 1);
+
+    vp.size = vp.map.map.size();
+
+    // draw_at changes vault_placement.
+    vp.draw_at(place);
+
+    if (register_place)
+        dgn_register_place(vp, register_vault);
+
+    return (0);
 }
 
 static int dgn_debug_dump_map(lua_State *ls)
@@ -2318,6 +2405,7 @@ static const struct luaL_reg dgn_lib[] =
     { "kitem", dgn_kitem },
     { "kmons", dgn_kmons },
     { "kmask", dgn_kmask },
+    { "mapsize", dgn_map_size },
 
     { "grid", dgn_grid },
     { "max_bounds", dgn_max_bounds },
@@ -2395,6 +2483,9 @@ static const struct luaL_reg dgn_lib[] =
     { "map_in_depth", dgn_map_in_depth },
     { "map_by_place", dgn_map_by_place },
     { "place_map", _dgn_place_map },
+    { "reuse_map", _dgn_reuse_map },
+    { "resolve_map", _dgn_resolve_map },
+    { "in_vault", _dgn_in_vault },
 
     { "debug_dump_map", dgn_debug_dump_map },
 

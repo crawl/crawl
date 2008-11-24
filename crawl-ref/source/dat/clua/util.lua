@@ -62,6 +62,24 @@ function util.map(fn, ...)
   return res
 end
 
+function util.forall(list, pred)
+  for _, value in ipairs(list) do
+    if not pred(value) then
+      return false
+    end
+  end
+  return true
+end
+
+function util.exists(list, pred)
+  for _, value in ipairs(list) do
+    if pred(value) then
+      return true
+    end
+  end
+  return false
+end
+
 function util.random_from(list)
   return list[ crawl.random2(#list) + 1 ]
 end

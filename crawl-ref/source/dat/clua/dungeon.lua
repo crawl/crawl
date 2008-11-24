@@ -3,6 +3,8 @@
 -- Dungeoneering functions.
 ------------------------------------------------------------------------------
 
+require("clua/point.lua")
+
 dgn.GXM, dgn.GYM = dgn.max_bounds()
 
 dgn.f_map = { }
@@ -247,11 +249,25 @@ end
 function dgn.colour_map(fselect, colour)
   for x = 0, dgn.GXM - 1 do
     for y = 0, dgn.GYM - 1 do
-      if fselect(x, y) then
+      if fselect(dgn.point(x, y)) then
         dgn.colour_at(x, y, colour)
       end
     end
   end
+end
+
+-- Returns true if fpred returns true for all squares in the rectangle
+-- whose top-left corner is tl and bottom right corner is br (br.x >=
+-- tl.x and br.y >= tl.y).
+function dgn.rectangle_forall(tl, br, fpred)
+  for x = tl.x, br.x do
+    for y = tl.y, br.y do
+      if not fpred(dgn.point(x, y)) then
+        return false
+      end
+    end
+  end
+  return true
 end
 
 ----------------------------------------------------------------------

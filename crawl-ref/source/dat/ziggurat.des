@@ -17,6 +17,10 @@ ENDMAP
 
 #######################################################################
 # Pillars for ziggurats.
+# Ziggurat pillars are handled specially in ziggurat.lua. In particular:
+# - ziggurat pillars do not need allow_dup. The pillar map is never 
+#   registered as used.
+# - ziggurat pillars cannot use map markers.
 #######################################################################
 NAME: ziggurat_pillar_a
 TAGS: ziggurat_pillar
@@ -29,17 +33,19 @@ NAME: ziggurat_pillar_b
 TAGS: ziggurat_pillar
 SUBST: c : cxv
 MAP
-cc
+c 
 cc
 ENDMAP
 
 NAME: ziggurat_pillar_c
-TAGS: ziggurat_pillar
+TAGS: ziggurat_pillar centered
 MAP
 lll
 lGl
 lll
 ENDMAP
+
+#######################################################################
 
 NAME: ziggurat1
 : ziggurat_level(_G)

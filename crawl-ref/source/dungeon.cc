@@ -236,6 +236,7 @@ static bool _fixup_interlevel_connectivity();
 // A mask of vaults and vault-specific flags.
 map_mask dgn_Map_Mask;
 std::vector<vault_placement> Level_Vaults;
+std::vector<vault_placement> Temp_Vaults;
 std::set<std::string> Level_Unique_Maps;
 std::set<std::string> Level_Unique_Tags;
 std::string dgn_Build_Method;
@@ -298,10 +299,6 @@ bool builder(int level_number, int level_type)
         mapgen_report_map_build_start();
 #endif
 
-        dgn_level_vetoed = false;
-        Level_Unique_Maps.clear();
-        Level_Unique_Tags.clear();
-
         _reset_level();
 
         // If we're getting low on available retries, disable random vaults
@@ -356,6 +353,7 @@ void level_welcome_messages()
 void level_clear_vault_memory()
 {
     Level_Vaults.clear();
+    Temp_Vaults.clear();
     dgn_Map_Mask.init(0);
 }
 
@@ -467,7 +465,7 @@ static void _dgn_register_vault(const map_def &map)
     if (!map.has_tag("allow_dup"))
         you.uniq_map_names.insert(map.name);
 
-    if (map.has_tag("uniq"))
+    if (map.has_tag("luniq"))
         Level_Unique_Maps.insert(map.name);
 
     std::vector<std::string> tags = split_string(" ", map.tags);
@@ -755,9 +753,10 @@ static void _mask_vault(const vault_placement &place, unsigned mask)
         }
 }
 
-static void _register_place(const vault_placement &place)
+void dgn_register_place(const vault_placement &place, bool register_vault)
 {
-    _dgn_register_vault(place.map);
+    if (register_vault)
+        _dgn_register_vault(place.map);
 
     if (!place.map.has_tag("layout"))
         _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
@@ -869,6 +868,10 @@ static bool _valid_dungeon_level(int level_number, int level_type)
 
 static void _reset_level()
 {
+    dgn_level_vetoed = false;
+    Level_Unique_Maps.clear();
+    Level_Unique_Tags.clear();
+
     dgn_Build_Method.clear();
     dgn_Layout_Type.clear();
     level_clear_vault_memory();
@@ -3963,7 +3966,7 @@ static bool _build_minivaults(int level_number, const map_def *vault,
         mapgen_report_map_use(place.map);
 #endif
 
-    _register_place(place);
+    dgn_register_place(place, true);
 
     place.apply_grid();
 
@@ -4488,7 +4491,7 @@ static bool _build_vaults(int level_number, const map_def *vault,
         return (false);
 
     place.apply_grid();
-    _register_place(place);
+    dgn_register_place(place, true);
 
     std::vector<coord_def> &target_connections = place.exits;
     if (target_connections.empty() && gluggy != MAP_ENCOMPASS)

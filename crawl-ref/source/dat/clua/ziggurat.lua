@@ -309,29 +309,65 @@ end
 
 local function ziggurat_place_pillars(c)
   local range = crawl.random_range
+  local floor = dgn.fnum("floor")
 
-  local function pillar_spot()
-    local floor = dgn.fnum("floor")
-    for i = 1, 100 do
-      local place = { x = c.x + range(-30, 30), y = c.y + range(-30, 30) }
-      if (dgn.grid(place.x, place.y) == floor) then
-        return place
+  local map, vplace = dgn.resolve_map(dgn.map_by_tag("ziggurat_pillar"))
+
+  if not map then
+    return
+  end
+
+  local name = dgn.name(map)
+
+  local size = dgn.point(dgn.mapsize(map))
+
+  -- Does the pillar want to be centered?
+  local centered = string.find(dgn.tags(map), " centered ")
+
+  local function good_place(p)
+    local function good_square(where)
+      return dgn.grid(where.x, where.y) == floor
+    end
+    return dgn.rectangle_forall(p, p + size - 1, good_square)
+  end
+
+  local function place_pillar()
+    if centered then
+      if good_place(c) then
+        return dgn.place_map(map, false, true, c.x, c.y)
+      end
+    else
+      for i = 1, 100 do
+        local offset = range(-15, -size.x)
+        local offsets = {
+          dgn.point(offset, offset) - size + 1,
+          dgn.point(offset - size.x + 1, -offset),
+          dgn.point(-offset, -offset),
+          dgn.point(-offset, offset - size.y + 1)
+        }
+
+        offsets = util.map(function (o)
+                             return o + c
+                           end, offsets)
+
+        if util.forall(offsets, good_place) then
+          local function replace(at, hflip, vflip)
+            dgn.reuse_map(vplace, at.x, at.y, hflip, vflip)
+          end
+
+          replace(offsets[1], false, false)
+          replace(offsets[2], false, true)
+          replace(offsets[3], true, false)
+          replace(offsets[4], false, true)
+          return true
+        end
       end
     end
-    return nil
   end
 
-  local function place_pillar(p)
-    local map = dgn.map_by_tag("ziggurat_pillar")
-    if map then
-      dgn.place_map(map, false, true, p.x, p.y)
-    end
-  end
-
-  for i = 1, crawl.random_range(1,3) do
-    local p = pillar_spot()
-    if p then
-      place_pillar(p)
+  for i = 1, 5 do
+    if place_pillar() then
+      break
     end
   end
 end
@@ -347,11 +383,10 @@ local function ziggurat_rectangle_builder(e)
   dgn.fill_area(unpack( util.catlist(flip_rectangle(x1, y1, x2, y2),
                                      { "floor" }) ) )
 
-  local cx = math.floor((x1 + x2) / 2)
-  local cy = math.floor((y1 + y2) / 2)
+  local c = dgn.point(x1 + x2, y1 + y2) / 2
 
-  local entry = { x = x1, y = cy }
-  local exit = { x = x2, y = cy }
+  local entry = { x = x1, y = c.y }
+  local exit = { x = x2, y = c.y }
 
   if zig_depth() % 2 == 0 then
     entry, exit = exit, entry
@@ -362,16 +397,18 @@ local function ziggurat_rectangle_builder(e)
   zigstair(exit.x, exit.y + 1, "exit_portal_vault", cleanup_ziggurat())
   zigstair(exit.x, exit.y - 1, "exit_portal_vault", cleanup_ziggurat())
 
-  ziggurat_place_pillars { x = cx, y = cy }
+  ziggurat_place_pillars(c)
 
   ziggurat_create_loot(exit)
 
   ziggurat_create_monsters(exit)
 
-  dgn.colour_map(function (x, y)
-                   return dgn.grid(x, y) == dgn.fnum("stone_wall")
-                 end,
-                 zig().colour)
+  local function needs_colour(p)
+    return not dgn.in_vault(p.x, p.y)
+      and dgn.grid(p.x, p.y) == dgn.fnum("stone_wall")
+  end
+
+  dgn.colour_map(needs_colour, zig().colour)
 
   crawl.mpr("Ziggurat depth is now " .. zig_depth(), "diagnostic")
 end

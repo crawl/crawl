@@ -50,13 +50,6 @@ const int MAKE_GOOD_ITEM = 351;
 
 typedef FixedArray<unsigned short, GXM, GYM> map_mask;
 
-extern map_mask dgn_Map_Mask;
-extern bool Generating_Level;
-extern std::string dgn_Layout_Type;
-
-extern std::set<std::string> Level_Unique_Maps;
-extern std::set<std::string> Level_Unique_Tags;
-
 // Map mask constants.
 
 enum map_mask_type
@@ -167,6 +160,16 @@ public:
     void apply_grid();
     void draw_at(const coord_def &c);
 };
+
+extern map_mask dgn_Map_Mask;
+extern bool Generating_Level;
+extern std::string dgn_Layout_Type;
+
+extern std::set<std::string> Level_Unique_Maps;
+extern std::set<std::string> Level_Unique_Tags;
+
+extern std::vector<vault_placement> Level_Vaults;
+extern std::vector<vault_placement> Temp_Vaults;
 
 //////////////////////////////////////////////////////////////////////////
 template <typename fgrd, typename bound_check>
@@ -374,6 +377,8 @@ void dgn_set_lt_callback(std::string level_type_name,
 // (specifically, saving and restoring a game discards information on the
 // vaults used in the current level).
 bool dgn_square_is_passable(const coord_def &c);
+
+void dgn_register_place(const vault_placement &place, bool register_vault);
 
 struct spec_room
 {
