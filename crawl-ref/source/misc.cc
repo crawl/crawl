@@ -2862,6 +2862,21 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
     return (retval);
 }
 
+bool is_orckind(const actor *act, const monsters *mon)
+{
+    if (mons_genus(act->mons_species()) == MONS_ORC)
+        return (true);
+
+    if (act->atype() == ACT_MONSTER
+        && mons_is_zombified(mon)
+        && mons_genus(mon->base_monster) == MONS_ORC)
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
 bool is_dragonkind(const actor *act, const monsters *mon)
 {
     if (mons_genus(act->mons_species()) == MONS_DRAGON
