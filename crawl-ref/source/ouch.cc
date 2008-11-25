@@ -1007,18 +1007,16 @@ void end_game( scorefile_entry &se )
     }
 
     // clean all levels that we think we have ever visited
-    for (int level = 0; level < MAX_LEVELS; level++)
+    for (level_id_set::const_iterator i = Generated_Levels.begin();
+         i != Generated_Levels.end(); ++i)
     {
-        for (int dungeon = 0; dungeon < NUM_BRANCHES; dungeon++)
-        {
-            if (tmp_file_pairs[level][dungeon])
-            {
-                unlink(
-                    make_filename( you.your_name, level,
-                                   static_cast<branch_type>(dungeon),
-                                   LEVEL_DUNGEON, false ).c_str() );
-            }
-        }
+        const level_id &place(*i);
+        unlink(
+            make_filename( you.your_name,
+                           place.absdepth(),
+                           place.branch,
+                           place.level_type,
+                           false ).c_str() );
     }
 
     // temp levels, if any
@@ -1041,7 +1039,7 @@ void end_game( scorefile_entry &se )
 #ifdef PACKAGE_SUFFIX
         PACKAGE_SUFFIX ,
 #endif
-        ".st", ".kil", ".tc", ".nts", ".tut", ".sav"
+        ".st", ".kil", ".tc", ".nts", ".tut", ".sav", ".msg"
     };
 
     const int num_suffixes = sizeof(suffixes) / sizeof(const char*);

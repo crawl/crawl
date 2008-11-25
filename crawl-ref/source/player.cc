@@ -6957,7 +6957,10 @@ void PlaceInfo::assert_validity() const
     if (level_type == LEVEL_LABYRINTH || level_type == LEVEL_ABYSS)
         ASSERT(num_visits == levels_seen);
     else if (level_type == LEVEL_PANDEMONIUM)
-        ASSERT(num_visits <= levels_seen);
+        // Ziggurats can allow a player to return to the same
+        // Pandemonium level.
+        // ASSERT(num_visits <= levels_seen);
+        ;
     else if (level_type == LEVEL_DUNGEON && branches[branch].depth > 0)
         ASSERT(levels_seen <= (unsigned long) branches[branch].depth);
 

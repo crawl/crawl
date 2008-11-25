@@ -827,15 +827,7 @@ static void _place_player_on_stair(level_area_type old_level_type,
     bool find_first = true;
 
     // Order is important here.
-    if (you.level_type == LEVEL_DUNGEON
-        && old_branch == BRANCH_VESTIBULE_OF_HELL
-        && stair_taken == DNGN_STONE_STAIRS_UP_I)
-    {
-        // Leaving hell - look for entry portal first.
-        stair_taken = DNGN_ENTER_HELL;
-        find_first = false;
-    }
-    else if (stair_taken == DNGN_EXIT_PANDEMONIUM)
+    if (stair_taken == DNGN_EXIT_PANDEMONIUM)
     {
         stair_taken = DNGN_ENTER_PANDEMONIUM;
         find_first = false;
@@ -844,6 +836,10 @@ static void _place_player_on_stair(level_area_type old_level_type,
     {
         stair_taken = DNGN_ENTER_ABYSS;
         find_first = false;
+    }
+    else if (stair_taken == DNGN_EXIT_HELL)
+    {
+        stair_taken = DNGN_ENTER_HELL;
     }
     else if (stair_taken == DNGN_ENTER_HELL)
     {
@@ -885,9 +881,15 @@ static void _place_player_on_stair(level_area_type old_level_type,
                         - DNGN_ENTER_FIRST_BRANCH);
     }
     else if (stair_taken >= DNGN_ENTER_DIS
-             && stair_taken <= DNGN_TRANSIT_PANDEMONIUM)
+             && stair_taken <= DNGN_ENTER_TARTARUS)
     {
-        // When entering a hell or pandemonium.
+        // Only when entering a hell - when exiting, go back to the
+        // entry stair.
+        if (player_in_hell())
+            stair_taken = DNGN_STONE_STAIRS_UP_I;
+    }
+    else if (stair_taken == DNGN_EXIT_ABYSS)
+    {
         stair_taken = DNGN_STONE_STAIRS_UP_I;
     }
     else if (stair_taken == DNGN_ENTER_PORTAL_VAULT)
@@ -1078,13 +1080,14 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (you.level_type == LEVEL_DUNGEON && old_level_type == LEVEL_DUNGEON
         || load_mode == LOAD_START_GAME && you.char_direction != GDT_GAME_START)
     {
-        if (tmp_file_pairs[you.your_level][you.where_are_you] == false)
+        const level_id current(level_id::current());
+        if (Generated_Levels.find(current) == Generated_Levels.end())
         {
             // Make sure the old file is gone.
             unlink(cha_fil.c_str());
 
             // Save the information for later deletion -- DML 6/11/99
-            tmp_file_pairs[you.your_level][you.where_are_you] = true;
+            Generated_Levels.insert(current);
         }
     }
 
@@ -1104,8 +1107,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         _grab_followers();
 
-        if (old_level_type == LEVEL_DUNGEON)
-            _save_level( old_level, LEVEL_DUNGEON, old_branch );
+        _save_level( old_level, old_level_type, old_branch );
     }
 
     if (make_changes)
@@ -1135,7 +1137,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
             // generation.
             you.your_level = 0;
             you.char_direction = GDT_DESCENDING;
-            tmp_file_pairs[you.your_level][you.where_are_you] = true;
+            Generated_Levels.insert(level_id::current());
         }
 
         _clear_env_map();
@@ -1657,13 +1659,11 @@ static void _restore_level(const level_id &original)
           you.level_type, you.your_level, you.where_are_you );
 }
 
-// Given a level in the dungeon (i.e. level_type == LEVEL_DUNGEON),
-// returns true if the level has been created already in this game.
-// Asserts if the level_type is not LEVEL_DUNGEON.
+// Given a level returns true if the level has been created already
+// in this game.
 bool is_existing_level(const level_id &level)
 {
-    ASSERT(level.level_type == LEVEL_DUNGEON);
-    return (tmp_file_pairs[level.absdepth()][level.branch]);
+    return (Generated_Levels.find(level) != Generated_Levels.end());
 }
 
 // Applies an operation (applicator) after switching to the specified level.

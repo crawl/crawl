@@ -1267,7 +1267,7 @@ game_start:
     set_mp( you.max_magic_points, false );
 
     // tmpfile purging removed in favour of marking
-    tmp_file_pairs.init(false);
+    Generated_Levels.clear();
 
     _initialise_branch_depths();
     init_level_connectivity();

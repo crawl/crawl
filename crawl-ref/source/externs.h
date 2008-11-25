@@ -434,6 +434,107 @@ struct delay_queue_item
 };
 
 
+// Identifies a level. Should never include virtual methods or
+// dynamically allocated memory (see code to push level_id onto Lua
+// stack in luadgn.cc)
+class level_id
+{
+public:
+    branch_type branch;     // The branch in which the level is.
+    int depth;              // What depth (in this branch - starting from 1)
+    level_area_type level_type;
+
+public:
+    // Returns the level_id of the current level.
+    static level_id current();
+
+    // Returns the level_id of the level that the stair/portal/whatever at
+    // 'pos' on the current level leads to.
+    static level_id get_next_level_id(const coord_def &pos);
+
+    level_id()
+        : branch(BRANCH_MAIN_DUNGEON), depth(-1),
+          level_type(LEVEL_DUNGEON)
+    {
+    }
+    level_id(branch_type br, int dep, level_area_type ltype = LEVEL_DUNGEON)
+        : branch(br), depth(dep), level_type(ltype)
+    {
+    }
+    level_id(const level_id &ot)
+        : branch(ot.branch), depth(ot.depth), level_type(ot.level_type)
+    {
+    }
+    level_id(level_area_type ltype)
+        : branch(BRANCH_MAIN_DUNGEON), depth(-1), level_type(ltype)
+    {
+    }
+
+    static level_id parse_level_id(const std::string &s) throw (std::string);
+
+    unsigned short packed_place() const;
+    std::string describe(bool long_name = false, bool with_number = true) const;
+
+    void clear()
+    {
+        branch = BRANCH_MAIN_DUNGEON;
+        depth  = -1;
+        level_type = LEVEL_DUNGEON;
+    }
+
+    int absdepth() const;
+
+    bool is_valid() const
+    {
+        return (branch != NUM_BRANCHES && depth != -1)
+            || level_type != LEVEL_DUNGEON;
+    }
+
+    const level_id &operator = (const level_id &id)
+    {
+        branch     = id.branch;
+        depth      = id.depth;
+        level_type = id.level_type;
+        return (*this);
+    }
+
+    bool operator == ( const level_id &id ) const
+    {
+        return (level_type == id.level_type
+                && (level_type != LEVEL_DUNGEON
+                    || (branch == id.branch && depth == id.depth)));
+    }
+
+    bool operator != ( const level_id &id ) const
+    {
+        return !operator == (id);
+    }
+
+    bool operator <( const level_id &id ) const
+    {
+        if (level_type != id.level_type)
+            return (level_type < id.level_type);
+
+        if (level_type != LEVEL_DUNGEON)
+            return (false);
+
+        return (branch < id.branch) || (branch==id.branch && depth < id.depth);
+    }
+
+    bool operator == ( const branch_type _branch ) const
+    {
+        return (branch == _branch && level_type == LEVEL_DUNGEON);
+    }
+
+    bool operator != ( const branch_type _branch  ) const
+    {
+        return !operator == (_branch);
+    }
+
+    void save(writer&) const;
+    void load(reader&);
+};
+
 struct item_def
 {
     object_class_type  base_type;  // basic class (ie OBJ_WEAPON)

@@ -23,7 +23,8 @@ function cleanup_ziggurat()
   return one_way_stair {
     onclimb = function(...)
                 dgn.persist.ziggurat = { }
-              end
+              end,
+    dstplace = zig().origin_level
   }
 end
 
@@ -43,6 +44,8 @@ function initialise_ziggurat(z)
 
   z.colour = ziggurat_wall_colour()
   z.level  = { }
+
+  z.origin_level = dgn.level_name(dgn.level_id())
 end
 
 function ziggurat_initialiser()
@@ -409,8 +412,6 @@ local function ziggurat_rectangle_builder(e)
   end
 
   dgn.colour_map(needs_colour, zig().colour)
-
-  crawl.mpr("Ziggurat depth is now " .. zig_depth(), "diagnostic")
 end
 
 ----------------------------------------------------------------------

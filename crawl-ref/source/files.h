@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <set>
 
 enum load_mode_type
 {
@@ -28,7 +29,8 @@ enum load_mode_type
 #define MAX_LEVELS 50
 
 // referenced in files - newgame - ouch:
-extern FixedArray<bool, MAX_LEVELS, NUM_BRANCHES> tmp_file_pairs;
+typedef std::set<level_id> level_id_set;
+extern level_id_set Generated_Levels;
 
 bool file_exists(const std::string &name);
 bool dir_exists(const std::string &dir);

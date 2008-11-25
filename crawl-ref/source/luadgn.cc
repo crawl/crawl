@@ -2225,6 +2225,13 @@ LUAFN(dgn_level_id)
     return (1);
 }
 
+LUAFN(dgn_level_name)
+{
+    const level_id lid(_lua_level_id(ls, 1));
+    lua_pushstring(ls, lid.describe().c_str());
+    return (1);
+}
+
 LUAFN(dgn_set_level_type_origin)
 {
     if (you.level_type != LEVEL_PORTAL_VAULT)
@@ -2484,6 +2491,7 @@ static const struct luaL_reg dgn_lib[] =
     { "br_parent_branch", dgn_br_parent_branch },
 
     { "level_id", dgn_level_id },
+    { "level_name", dgn_level_name },
     { "set_level_type_origin", dgn_set_level_type_origin },
     { "map_by_tag", dgn_map_by_tag },
     { "map_in_depth", dgn_map_in_depth },

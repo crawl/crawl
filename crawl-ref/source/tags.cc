@@ -96,7 +96,8 @@ extern std::map<level_pos, char> portal_vault_colours;
 extern std::map<level_id, std::string> level_annotations;
 
 // temp file pairs used for file level cleanup
-FixedArray < bool, MAX_LEVELS, NUM_BRANCHES > tmp_file_pairs;
+
+level_id_set Generated_Levels;
 
 // The minor version for the tag currently being read.
 static int _tag_minor_version = -1;
@@ -292,6 +293,16 @@ void marshall_as_long(writer& th, const T& t)
     marshallLong( th, static_cast<long>(t) );
 }
 
+template <typename data>
+void marshallSet(writer &th, const std::set<data> &s,
+                 void (*marshall)(writer &, const data &))
+{
+    marshallLong( th, s.size() );
+    typename std::set<data>::const_iterator i = s.begin();
+    for ( ; i != s.end(); ++i)
+        marshall(th, *i);
+}
+
 template<typename key, typename value>
 void marshallMap(writer &th, const std::map<key,value>& data,
                  void (*key_marshall)(writer&, const key&),
@@ -352,6 +363,16 @@ void marshall_level_pos( writer& th, const level_pos& lpos )
     marshallLong(th, lpos.pos.x);
     marshallLong(th, lpos.pos.y);
     marshall_level_id(th, lpos.id);
+}
+
+template <typename data, typename set>
+void unmarshallSet(reader &th, set &dset,
+                   data (*data_unmarshall)(reader &))
+{
+    dset.clear();
+    long len = unmarshallLong(th);
+    for (long i = 0L; i < len; ++i)
+        dset.insert(data_unmarshall(th));
 }
 
 template<typename key, typename value, typename map>
@@ -1096,25 +1117,20 @@ static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
 
 static void tag_construct_you_dungeon(writer &th)
 {
-    int i,j;
-
     // how many unique creatures?
     marshallShort(th, NUM_MONSTERS);
-    for (j = 0; j < NUM_MONSTERS; ++j)
+    for (int j = 0; j < NUM_MONSTERS; ++j)
         marshallByte(th,you.unique_creatures[j]); // unique beasties
 
     // how many branches?
     marshallByte(th, NUM_BRANCHES);
-    for (j = 0; j < NUM_BRANCHES; ++j)
+    for (int j = 0; j < NUM_BRANCHES; ++j)
     {
         marshallLong(th, branches[j].startdepth);
         marshallLong(th, branches[j].branch_flags);
     }
 
-    marshallShort(th, MAX_LEVELS);
-    for (i = 0; i < MAX_LEVELS; ++i)
-        for (j = 0; j < NUM_BRANCHES; ++j)
-            marshallBoolean(th, tmp_file_pairs[i][j]);
+    marshallSet(th, Generated_Levels, marshall_level_id);
 
     marshallMap(th, stair_level,
                 marshall_as_long<branch_type>, marshall_level_id);
@@ -1542,16 +1558,10 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
 
 static void tag_read_you_dungeon(reader &th)
 {
-    int   i,j;
-    int   count_c;
-    short count_s;
-
-    unsigned short count_p;
-
     // how many unique creatures?
-    count_c = unmarshallShort(th);
+    int count_c = unmarshallShort(th);
     you.unique_creatures.init(false);
-    for (j = 0; j < count_c; ++j)
+    for (int j = 0; j < count_c; ++j)
     {
         const bool created = static_cast<bool>(unmarshallByte(th));
 
@@ -1561,16 +1571,13 @@ static void tag_read_you_dungeon(reader &th)
 
     // how many branches?
     count_c = unmarshallByte(th);
-    for (j = 0; j < count_c; ++j)
+    for (int j = 0; j < count_c; ++j)
     {
         branches[j].startdepth   = unmarshallLong(th);
         branches[j].branch_flags = (unsigned long) unmarshallLong(th);
     }
 
-    count_s = unmarshallShort(th);
-    for (i = 0; i < count_s; ++i)
-        for (j = 0; j < count_c; ++j)
-            tmp_file_pairs[i][j] = unmarshallBoolean(th);
+    unmarshallSet(th, Generated_Levels, unmarshall_level_id);
 
     unmarshallMap(th, stair_level,
                   unmarshall_long_as<branch_type>,
@@ -1593,12 +1600,12 @@ static void tag_read_you_dungeon(reader &th)
     you.set_place_info(place_info);
 
     std::vector<PlaceInfo> list = you.get_all_place_info();
-    count_p = (unsigned short) unmarshallShort(th);
+    unsigned short count_p = (unsigned short) unmarshallShort(th);
     // Use "<=" so that adding more branches or non-dungeon places
     // won't break save-file compatibility.
     ASSERT(count_p <= list.size());
 
-    for (i = 0; i < count_p; i++)
+    for (int i = 0; i < count_p; i++)
     {
         place_info = unmarshallPlaceInfo(th);
         ASSERT(!place_info.is_global());
