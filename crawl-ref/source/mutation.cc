@@ -1814,18 +1814,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if ((mutat = get_random_mutation(false, 500)) == NUM_MUTATIONS)
             return (false);
     }
-    else if (you.mutation[mutat] >= 3
-             && mutat != MUT_STRONG && mutat != MUT_CLEVER
-             && mutat != MUT_AGILE && mutat != MUT_WEAK
-             && mutat != MUT_DOPEY && mutat != MUT_CLUMSY)
-    {
-        // Mutation level greater than allowed.
-        return (false);
-    }
-
-    // Mutation level greater than allowed for stat mutations.
-    if (you.mutation[mutat] >= 14 && !force_mutation)
-        return (false);
 
     // Saprovorous can't be randomly acquired.
     if (mutat == MUT_SAPROVOROUS && !force_mutation)
@@ -1851,13 +1839,14 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         {
             if (coinflip())
                 return (false);
-            {
-                mutat = MUT_BREATHE_POISON;
 
-                // breathe poison replaces spit poison (so it takes the slot)
-                for (int i = 0; i < 52; i++)
-                    if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
-                        you.ability_letter_table[i] = ABIL_BREATHE_POISON;
+            mutat = MUT_BREATHE_POISON;
+
+            // breathe poison replaces spit poison (so it takes the slot)
+            for (int i = 0; i < 52; ++i)
+            {
+                if (you.ability_letter_table[i] == ABIL_SPIT_POISON)
+                    you.ability_letter_table[i] = ABIL_BREATHE_POISON;
             }
         }
     }
@@ -2226,41 +2215,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     return (true);
 }
 
-int how_mutated(bool all, bool levels)
-{
-    int j = 0;
-
-    for (int i = 0; i < NUM_MUTATIONS; i++)
-    {
-        if (you.mutation[i])
-        {
-            if (!all && you.demon_pow[i] >= you.mutation[i])
-                continue;
-
-            if (levels)
-            {
-                // These allow for 14 levels.
-                if (i == MUT_STRONG || i == MUT_CLEVER || i == MUT_AGILE
-                    || i == MUT_WEAK || i == MUT_DOPEY || i == MUT_CLUMSY)
-                {
-                    j += (you.mutation[i] / 5 + 1);
-                }
-                else
-                    j += you.mutation[i];
-            }
-            else
-                j++;
-        }
-    }
-
-#if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "how_mutated(): all = %u, levels = %u, j = %d",
-         all, levels, j);
-#endif
-
-    return (j);
-}                               // end how_mutated()
-
 bool delete_mutation(mutation_type which_mutation, bool failMsg,
                      bool force_mutation)
 {
@@ -2419,7 +2373,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
         if (you.species == SP_NAGA)
         {
             // natural ability to spit poison retakes the slot
-            for (int i = 0; i < 52; i++)
+            for (int i = 0; i < 52; ++i)
             {
                 if (you.ability_letter_table[i] == ABIL_BREATHE_POISON)
                     you.ability_letter_table[i] = ABIL_SPIT_POISON;
@@ -2438,7 +2392,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
 
     take_note(Note(NOTE_LOSE_MUTATION, mutat, you.mutation[mutat]));
     return (true);
-}                               // end delete_mutation()
+}
 
 static int body_covered()
 {
@@ -2838,7 +2792,7 @@ void demonspawn()
         modify_stat(STAT_DEXTERITY, 1, true, "demonspawn mutation");
         mpr("You feel much better now.", MSGCH_INTRINSIC_GAIN);
     }
-}                               // end demonspawn()
+}
 
 bool perma_mutate(mutation_type which_mut, int how_much)
 {
@@ -2859,6 +2813,41 @@ bool perma_mutate(mutation_type which_mut, int how_much)
     you.demon_pow[which_mut] = levels;
 
     return (levels > 0);
+}
+
+int how_mutated(bool all, bool levels)
+{
+    int j = 0;
+
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+    {
+        if (you.mutation[i])
+        {
+            if (!all && you.demon_pow[i] >= you.mutation[i])
+                continue;
+
+            if (levels)
+            {
+                // These allow for 14 levels.
+                if (i == MUT_STRONG || i == MUT_CLEVER || i == MUT_AGILE
+                    || i == MUT_WEAK || i == MUT_DOPEY || i == MUT_CLUMSY)
+                {
+                    j += (you.mutation[i] / 5 + 1);
+                }
+                else
+                    j += you.mutation[i];
+            }
+            else
+                j++;
+        }
+    }
+
+#if DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "how_mutated(): all = %u, levels = %u, j = %d",
+         all, levels, j);
+#endif
+
+    return (j);
 }
 
 bool give_bad_mutation(bool failMsg, bool force_mutation)
