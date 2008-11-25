@@ -1824,7 +1824,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     }
 
     // Mutation level greater than allowed for stat mutations.
-    if (you.mutation[mutat] > 13 && !force_mutation)
+    if (you.mutation[mutat] >= 14 && !force_mutation)
         return (false);
 
     // Saprovorous can't be randomly acquired.
