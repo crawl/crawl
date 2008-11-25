@@ -575,27 +575,6 @@ static const char* _short_branch_name(int branch)
     return ("");
 }
 
-static const char *level_type_names[] =
-{
-    "D", "Lab", "Abyss", "Pan", "Port"
-};
-
-const char *level_area_type_name(int level_type)
-{
-    if (level_type >= 0 && level_type < NUM_LEVEL_AREA_TYPES)
-        return level_type_names[level_type];
-    return ("");
-}
-
-level_area_type str_to_level_area_type(const std::string &s)
-{
-    for (int i = 0; i < NUM_LEVEL_AREA_TYPES; ++i)
-        if (s == level_type_names[i])
-            return (static_cast<level_area_type>(i));
-
-    return (LEVEL_DUNGEON);
-}
-
 void scorefile_entry::init_with_fields()
 {
     version = fields->str_field("v");

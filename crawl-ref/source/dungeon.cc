@@ -2402,9 +2402,6 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
                               bool force)
 {
     const level_id curr = level_id::current();
-    // Dungeon-style branches only, thankyouverymuch.
-    if (curr.level_type != LEVEL_DUNGEON && !force)
-        return;
 
     if (lo == -1)
         lo = hi = 1;

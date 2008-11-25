@@ -103,7 +103,8 @@ std::string mapdef_split_key_item(const std::string &s,
 //
 
 level_range::level_range(branch_type br, int s, int d)
-    : branch(br), shallowest(), deepest(), deny(false)
+    : level_type(LEVEL_DUNGEON), branch(br), shallowest(),
+      deepest(), deny(false)
 {
     set(s, d);
 }
@@ -116,6 +117,7 @@ level_range::level_range(const raw_range &r)
 
 void level_range::write(writer& outf) const
 {
+    marshallShort(outf, level_type);
     marshallShort(outf, branch);
     marshallShort(outf, shallowest);
     marshallShort(outf, deepest);
@@ -124,6 +126,7 @@ void level_range::write(writer& outf) const
 
 void level_range::read(reader& inf)
 {
+    level_type = static_cast<level_area_type>( unmarshallShort(inf) );
     branch     = static_cast<branch_type>( unmarshallShort(inf) );
     shallowest = unmarshallShort(inf);
     deepest    = unmarshallShort(inf);
@@ -168,11 +171,9 @@ void level_range::set(const std::string &br, int s, int d)
 {
     if (br == "any" || br == "Any")
         branch = NUM_BRANCHES;
-    else
-    {
-        if ((branch = str_to_branch(br)) == NUM_BRANCHES)
-            throw make_stringf("Unknown branch: '%s'", br.c_str());
-    }
+    else if ((branch = str_to_branch(br)) == NUM_BRANCHES
+             && (level_type = str_to_level_area_type(br)) == LEVEL_DUNGEON)
+        throw make_stringf("Unknown branch: '%s'", br.c_str());
 
     shallowest = s;
     deepest    = d;
@@ -263,12 +264,13 @@ void level_range::set(int s, int d)
 void level_range::reset()
 {
     deepest = shallowest = -1;
+    level_type = LEVEL_DUNGEON;
 }
 
 bool level_range::matches(const level_id &lid) const
 {
     if (lid.level_type != LEVEL_DUNGEON)
-        return (false);
+        return (lid.level_type == level_type);
     if (branch == NUM_BRANCHES)
         return (matches(absdungeon_depth(lid.branch, lid.depth)));
     else
@@ -285,8 +287,11 @@ bool level_range::matches(int x) const
 
 bool level_range::operator == (const level_range &lr) const
 {
-    return (deny == lr.deny && shallowest == lr.shallowest
-            && deepest == lr.deepest && branch == lr.branch);
+    return (deny == lr.deny && level_type == lr.level_type
+            && (level_type != LEVEL_DUNGEON
+                || (shallowest == lr.shallowest
+                    && deepest == lr.deepest
+                    && branch == lr.branch)));
 }
 
 bool level_range::valid() const

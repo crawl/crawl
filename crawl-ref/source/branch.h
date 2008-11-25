@@ -69,6 +69,9 @@ bool at_branch_bottom();
 branch_type str_to_branch(const std::string &branch,
                           branch_type err = NUM_BRANCHES);
 
+const char *level_area_type_name(int level_type);
+level_area_type str_to_level_area_type(const std::string &s);
+
 bool set_branch_flags(unsigned long flags, bool silent = false,
                       branch_type branch = NUM_BRANCHES);
 bool unset_branch_flags(unsigned long flags, bool silent = false,

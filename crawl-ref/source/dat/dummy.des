@@ -5,7 +5,7 @@
 # This represents the old 8/9 chance of *not* placing a regular vault.
 NAME: primary_dummy
 TAGS: dummy
-DEPTH: 1-100
+DEPTH: 1-100, Pan, Abyss
 ORIENT: float
 CHANCE: 10 : 8888
 MAP
@@ -15,7 +15,7 @@ ENDMAP
 # This represents the old 2/3 chance of *not* placing a minivault.
 NAME: primary_mini_dummy
 TAGS: dummy
-DEPTH: 1-100
+DEPTH: 1-100, Pan, Abyss
 CHANCE: 10 : 6666
 MAP
 x

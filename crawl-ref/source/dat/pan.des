@@ -487,3 +487,22 @@ x....2.2.2....x
 xxxxxxxxxxxxxxx
 ENDMAP
 
+##############################################################################
+# Random vault and minivault balancers for Pan - no random Pan minivaults yet.
+
+NAME: pan_mini_dummy_balancer
+DEPTH: Pan
+TAGS: dummy
+WEIGHT: 100
+MAP
+x
+ENDMAP
+
+NAME: pan_dummy_balancer
+DEPTH: Pan
+TAGS: dummy
+ORIENT: float
+WEIGHT: 100
+MAP
+x
+ENDMAP

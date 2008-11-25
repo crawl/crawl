@@ -8,8 +8,8 @@
 : dofile("clua/ziggurat.lua")
 
 NAME: enter_the_ziggurat
-# Disabled; ziggurat is still incomplete.
-WEIGHT: 0
+# FIXME: Ziggurat is still incomplete - enabled for testing porpoises.
+DEPTH: D:20-27, Pan
 : ziggurat_portal(_G)
 MAP
 O
