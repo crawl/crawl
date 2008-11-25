@@ -22,32 +22,36 @@ function TollStair:activate(marker)
                         marker, marker:pos())
 end
 
-function TollStair:event(marker, ev)
-  if self.super.event(self, marker, ev) then
-    return true
+function TollStair:check_veto(marker, pname)
+  -- Have we enough gold?
+  local gold = you.gold()
+  local needed = self.props.amount
+
+  if gold < needed then
+    crawl.mpr("This portal charges " .. needed .. " gold for entry; " ..
+              "you have only " .. gold .. " gold.")
+    return "veto"
   end
 
-  if ev:type() == dgn.dgn_event_type('v_leave_level') then
-    -- Have we enough gold?
-    local gold = you.gold()
-    local needed = self.props.amount
-
-    if gold < needed then
-      crawl.mpr("This portal charges " .. needed .. " gold for entry; " ..
-                "you have only " .. gold .. " gold.")
-      return false
-    end
-
+  if pname == "veto_stair" then
     -- Ok, ask if the player wants to spend the $$$.
     if not crawl.yesno("This portal charges " .. needed ..
                        " gold for entry. Pay?", true, "n") then
-      return false
+      return "veto"
     end
-
+  elseif pname == "veto_level_change" then
     -- Gold gold gold! Forget that gold!
     you.gold(you.gold() - needed)
-    return true
+    return
   end
+end
+
+function TollStair:property(marker, pname)
+  if pname == 'veto_stair' or pname == 'veto_level_change' then
+    return self:check_veto(marker, pname)
+  end
+
+  return self.super.property(self, marker, pname)
 end
 
 function TollStair:read(marker, th)

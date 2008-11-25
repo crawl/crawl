@@ -29,10 +29,7 @@ enum dgn_event_type
     DET_MONSTER_DIED    = 0x0100,
     DET_ITEM_PICKUP     = 0x0200,
     DET_ITEM_MOVED      = 0x0400,
-    DET_FEAT_CHANGE     = 0x0800,
-
-    // Vetoable events, usually fired before the corresponding (real) event.
-    DETV_LEAVE_LEVEL    = 0x1000
+    DET_FEAT_CHANGE     = 0x0800
 };
 
 class dgn_event

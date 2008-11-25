@@ -24,6 +24,8 @@
 class reader;
 class writer;
 
+bool marker_vetoes_operation(const char *op);
+
 class map_marker
 {
 public:

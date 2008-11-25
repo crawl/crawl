@@ -1678,6 +1678,11 @@ static bool _stairs_check_beheld()
     return (false);
 }
 
+static bool _marker_vetoes_stair()
+{
+    return marker_vetoes_operation("veto_stair");
+}
+
 static void _go_downstairs();
 static void _go_upstairs()
 {
@@ -1711,6 +1716,9 @@ static void _go_upstairs()
 
     // Does the next level have a warning annotation?
     if (!check_annotation_exclusion_warning())
+        return;
+
+    if (_marker_vetoes_stair())
         return;
 
     tag_followers();  // Only those beside us right now can follow.
@@ -1759,6 +1767,9 @@ static void _go_downstairs()
     }
     else
     {
+        if (_marker_vetoes_stair())
+            return;
+
         tag_followers();  // only those beside us right now can follow
         start_delay( DELAY_DESCENDING_STAIRS,
                      1 + (you.burden_state > BS_UNENCUMBERED),

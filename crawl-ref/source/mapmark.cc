@@ -797,3 +797,10 @@ void map_markers::read(reader &inf, int minorVersion)
         }
     }
 }
+
+/////////////////////////////////////////////////////////////////////////
+
+bool marker_vetoes_operation(const char *op)
+{
+    return env.markers.property_at(you.pos(), MAT_ANY, op) == "veto";
+}
