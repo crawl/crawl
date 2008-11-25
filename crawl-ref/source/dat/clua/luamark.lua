@@ -3,12 +3,12 @@
 -- Lua map marker handling.
 ------------------------------------------------------------------------------
 
-dofile('clua/lm_pdesc.lua')
-dofile('clua/lm_1way.lua')
-dofile('clua/lm_timed.lua')
-dofile('clua/lm_flags.lua')
-dofile('clua/lm_fog.lua')
-dofile('clua/lm_props.lua')
+require('clua/lm_pdesc.lua')
+require('clua/lm_1way.lua')
+require('clua/lm_timed.lua')
+require('clua/lm_flags.lua')
+require('clua/lm_fog.lua')
+require('clua/lm_props.lua')
 
 function dlua_marker_function(table, name)
   return table[name]

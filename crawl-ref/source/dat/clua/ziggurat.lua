@@ -57,13 +57,11 @@ local function random_floor_colour()
   return ziggurat_wall_colour()
 end
 
--- Returns a function that changes the depth in the ziggurat to the depth
--- specified.
+-- Increments the depth in the ziggurat when the player takes a
+-- downstair in the ziggurat.
 function zig_depth_increment()
   zig().depth = zig().depth + 1
   zig().level = { }
-  dgn.set_level_type_name  ("Ziggurat:" .. zig().depth)
-  dgn.set_level_type_origin("on level " .. zig().depth .. " of a ziggurat")
 end
 
 -- Returns the current depth in the ziggurat.
@@ -120,8 +118,11 @@ end
 
 -- Creates a Lua marker table that increments ziggurat depth.
 local function zig_go_deeper()
+  local newdepth = zig().depth + 1
   return one_way_stair {
-    onclimb = zig_depth_increment
+    onclimb = zig_depth_increment,
+    dstname = "Ziggurat:" .. newdepth,
+    dstorigin = "on level " .. newdepth .. " of a ziggurat"
   }
 end
 

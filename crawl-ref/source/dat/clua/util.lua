@@ -5,6 +5,15 @@
 
 util = { }
 
+function util.subclass(parent)
+  -- parent should have no-arg constructor.
+  local subclass = parent:new()
+  subclass.super = parent
+  -- Not strictly necessary - parent constructor should do this.
+  subclass.__index = subclass
+  return subclass
+end
+
 function util.catlist(...)
   local res = { }
   local tables = { ... }

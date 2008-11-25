@@ -3,51 +3,45 @@
 -- Lua timed map feature markers.
 ------------------------------------------------------------------------------
 
-dofile('clua/lm_tmsg.lua')
+require('clua/lm_tmsg.lua')
+require('clua/lm_1way.lua')
 
-TimedMarker = PortalDescriptor:new()
-TimedMarker.__index = TimedMarker
+TimedMarker = util.subclass(OneWayStair)
 
-function TimedMarker:_new()
-  local marker = { }
-  setmetatable(marker, self)
-  self.__index = self
-  return marker
-end
+function TimedMarker:new(props)
+  props = props or { }
 
-function TimedMarker:new(pars)
-  pars = pars or { }
-  if not pars.msg then
+  local tmarker = self.super.new(self, props)
+
+  if not props.msg then
     error("No messaging object provided (msg = nil)")
   end
-  pars.high = pars.high or pars.low or pars.turns or 1
-  pars.low  = pars.low or pars.high or pars.turns or 1
-  local dur = crawl.random_range(pars.low, pars.high, pars.navg or 1)
-  local feat = pars.floor or 'floor'
-  local fnum = dgn.feature_number(feat)
+
+  props.high = props.high or props.low or props.turns or 1
+  props.low  = props.low or props.high or props.turns or 1
+
+  local dur = crawl.random_range(props.low, props.high, props.navg or 1)
   if fnum == dgn.feature_number('unseen') then
     error("Bad feature name: " .. feat)
   end
 
-  local tmarker     = self:_new()
-  tmarker.dur       = dur * 10
-  tmarker.fnum      = fnum
-  tmarker.feat      = feat
-  tmarker.msg       = pars.msg
-  tmarker.disappear = pars.disappear
+  tmarker.dur = dur * 10
+  tmarker.msg = props.msg
 
-  if pars.props then
-    tmarker.props = pars.props
-  end
+  props.msg = nil
+
   return tmarker
 end
 
 function TimedMarker:activate(marker, verbose)
+  self.super.activate(self, marker, verbose)
   self.msg:init(self, marker, verbose)
-
   dgn.register_listener(dgn.dgn_event_type('turn'), marker)
-  dgn.register_listener(dgn.dgn_event_type('player_climb'),
-                        marker, marker:pos())
+end
+
+function TimedMarker:disappear(marker, affect_player, x, y)
+  dgn.remove_listener(marker)
+  self.super.disappear(self, marker, affect_player, x, y)
 end
 
 function TimedMarker:timeout(marker, verbose, affect_player)
@@ -63,62 +57,51 @@ function TimedMarker:timeout(marker, verbose, affect_player)
 
   if verbose then
     if you.see_grid(marker:pos()) then
-      crawl.mpr( self.disappear or
+      crawl.mpr( self.props.disappear or
                  dgn.feature_desc_at(x, y, "The") .. " disappears!")
     else
       crawl.mpr("The walls and floor vibrate strangely for a moment.")
     end
   end
-  dgn.terrain_changed(x, y, self.fnum, affect_player, false)
-  dgn.remove_listener(marker)
-  dgn.remove_listener(marker, marker:pos())
-  dgn.remove_marker(marker)
+
+  self:disappear(marker, affect_player, x, y)
 end
 
 function TimedMarker:event(marker, ev)
-  self.ticktype = self.ticktype or dgn.dgn_event_type('turn')
-  self.stairtype = self.stairtype or dgn.dgn_event_type('player_climb')
-
-  if ev:type() == self.stairtype then
-    local mx, my = marker:pos()
-    local ex, ey = ev:pos()
-    if mx == ex and my == ey then
-      self:timeout(marker, false, false)
-    end
-    return
+  if self.super.event(self, marker, ev) then
+    return true
   end
+
+  self.ticktype = self.ticktype or dgn.dgn_event_type('turn')
 
   if ev:type() ~= self.ticktype then
     return
   end
+
   self.dur = self.dur - ev:ticks()
   self.msg:event(self, marker, ev)
   if self.dur <= 0 then
     self:timeout(marker, true, true)
+    return true
   end
 end
 
 function TimedMarker:describe(marker)
-  return self.feat .. "/" .. tostring(self.dur)
+  local feat = self.props.floor or 'floor'
+  return feat .. "/" .. tostring(self.dur)
 end
 
 function TimedMarker:read(marker, th)
-  PortalDescriptor.read(self, marker, th)
+  TimedMarker.super.read(self, marker, th)
   self.dur = file.unmarshall_number(th)
-  self.fnum = file.unmarshall_number(th)
-  self.feat = file.unmarshall_string(th)
-  self.disappear = file.unmarshall_meta(th)
   self.msg  = file.unmarshall_fn(th)(th)
   setmetatable(self, TimedMarker)
   return self
 end
 
 function TimedMarker:write(marker, th)
-  PortalDescriptor.write(self, marker, th)
+  TimedMarker.super.write(self, marker, th)
   file.marshall(th, self.dur)
-  file.marshall(th, self.fnum)
-  file.marshall(th, self.feat)
-  file.marshall_meta(th, self.disappear)
   file.marshall(th, self.msg.read)
   self.msg:write(th)
 end

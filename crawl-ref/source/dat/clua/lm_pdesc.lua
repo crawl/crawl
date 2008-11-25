@@ -9,6 +9,7 @@ PortalDescriptor.__index = PortalDescriptor
 function PortalDescriptor:new(properties)
   local pd = { }
   setmetatable(pd, self)
+  self.__index = self
   pd.props = properties
   return pd
 end
