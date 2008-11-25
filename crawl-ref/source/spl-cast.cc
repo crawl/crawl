@@ -3839,7 +3839,7 @@ void MiscastEffect::_fire(int severity)
             if (neither_end_silenced())
             {
                 all_msg = "You hear a sizzling sound.";
-                msg_ch  =  MSGCH_SOUND;
+                msg_ch  = MSGCH_SOUND;
             }
             else if (target->atype() == ACT_PLAYER)
                 you_msg = "You feel like you have heartburn.";
