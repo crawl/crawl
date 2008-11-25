@@ -65,6 +65,8 @@ int get_floor_special_tile_idx()
     return special_tile_idx;
 }
 
+// TODO: Add this sort of determinism to the lua maps,
+//       at least for the portal walls.
 void WallIdx(int &wall, int &floor, int &special)
 {
     // Note: This function must be deterministic.
@@ -218,6 +220,12 @@ void WallIdx(int &wall, int &floor, int &special)
         {
             wall  = TILE_WALL_SLIME;
             floor = TILE_FLOOR_SLIME;
+            return;
+        }
+        else if (you.level_type_name == "ice_cave")
+        {
+            wall  = TILE_WALL_ICE;
+            floor = TILE_FLOOR_ICE;
             return;
         }
     }
