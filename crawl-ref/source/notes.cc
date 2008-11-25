@@ -28,7 +28,7 @@
 #include "spl-util.h"
 #include "tags.h"
 
-#define NOTES_VERSION_NUMBER 1001
+#define NOTES_VERSION_NUMBER 1002
 
 std::vector<Note> note_list;
 
@@ -249,11 +249,11 @@ std::string Note::describe( bool when, bool where, bool what ) const
 
     if (where)
     {
-        if (type == NOTE_DUNGEON_LEVEL_CHANGE && !name.empty())
-            result << "| " << std::setw(7) << std::left
-                   << name << " | ";
+        if (!place_abbrev.empty())
+            result << "| " << std::setw(MAX_NOTE_PLACE_LEN) << std::left
+                   << place_abbrev << " | ";
         else
-            result << "| " << std::setw(7) << std::left
+            result << "| " << std::setw(MAX_NOTE_PLACE_LEN) << std::left
                    << short_place_name(packed_place) << " | ";
     }
 
@@ -378,19 +378,26 @@ std::string Note::describe( bool when, bool where, bool what ) const
 
 Note::Note()
 {
-    turn = you.num_turns;
+    turn         = you.num_turns;
     packed_place = get_packed_place();
+
+    if (you.level_type == LEVEL_PORTAL_VAULT)
+        place_abbrev = you.level_type_name_abbrev;
 }
 
 Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
-    type(t), first(f), second(s)
+    type(t), first(f), second(s), place_abbrev("")
 {
     if (n)
         name = std::string(n);
     if (d)
         desc = std::string(d);
-    turn = you.num_turns;
+
+    turn         = you.num_turns;
     packed_place = get_packed_place();
+
+    if (you.level_type == LEVEL_PORTAL_VAULT)
+        place_abbrev = you.level_type_name_abbrev;
 }
 
 void Note::check_milestone() const
@@ -432,6 +439,7 @@ void Note::save(writer& outf) const
     marshallLong( outf, first );
     marshallLong( outf, second );
     marshallString4( outf, name );
+    marshallString4( outf, place_abbrev );
     marshallString4( outf, desc );
 }
 
@@ -443,6 +451,7 @@ void Note::load(reader& inf)
     first  = unmarshallLong( inf );
     second = unmarshallLong( inf );
     unmarshallString4( inf, name );
+    unmarshallString4( inf, place_abbrev );
     unmarshallString4( inf, desc );
 }
 

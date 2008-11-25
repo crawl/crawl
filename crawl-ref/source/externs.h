@@ -842,6 +842,12 @@ public:
   // if not explicitly set by the entry portal.
   std::string level_type_name;
 
+  // Abbreviation of portal vault name, for use in notes.  If not
+  // explicitly set by the portal vault, will be set from level_type_name
+  // or level_type_tag if either is short enough, or the shorter of the
+  // two will be truncated if neither is short enough.
+  std::string level_type_name_abbrev;
+
   // Item origin string for items from portal vaults, so that dumps
   // can have origins like "You found it in on level 2 of a ziggurat".
   // Will be set relative to level_type_name if not explicitly set.

@@ -28,6 +28,7 @@ function ice_cave_portal(e)
   e.marker([[O = lua:one_way_stair { desc = "A frozen archway",
                                      dst = "ice_cave",
                                      dstname = "Ice Cave",
+                                     dstname_abbrev = "IceCv",
                                      dstovermap = "frozen archway",
                                      dstorigin = "in an ice cave",
                                      floor = "stone_arch" }]])

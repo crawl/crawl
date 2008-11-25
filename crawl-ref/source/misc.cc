@@ -1363,15 +1363,29 @@ static void leaving_level_now()
     std::string neworigin =
         env.markers.property_at(you.pos(), MAT_ANY, "dstorigin");
 
-    you.level_type_origin = "";
+    const std::string oldname_abbrev = you.level_type_name_abbrev;
+    std::string newname_abbrev =
+        env.markers.property_at(you.pos(), MAT_ANY, "dstname_abbrev");
 
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
-    // Lua scripts explicitly set level_type_na,e so use that.
+    // Lua scripts explicitly set level_type_name, so use that.
     if (you.level_type_name != oldname)
         newname = you.level_type_name;
 
+    // Lua scripts explicitly set level_type_name_abbrev, so use that.
+    if (you.level_type_name_abbrev != oldname_abbrev)
+        newname_abbrev = you.level_type_name_abbrev;
+
+    if (newname_abbrev.length() > MAX_NOTE_PLACE_LEN)
+    {
+        mprf(MSGCH_ERROR, "'%s' is too long for a portal vault name "
+                          "abbreviation, truncating");
+        newname_abbrev = newname_abbrev.substr(0, MAX_NOTE_PLACE_LEN);
+    }
+
+    you.level_type_origin = "";
     // Lua scripts explicitly set level_type_origin, so use that.
     if (!you.level_type_origin.empty())
         neworigin = you.level_type_origin;
@@ -1383,14 +1397,38 @@ static void leaving_level_now()
         you.level_type_name = newname;
     }
 
+    // Don't clobber level_type_name_abbrev for stairs in portal vaults.
+    if (you.level_type_name_abbrev.empty() || !newname_abbrev.empty()
+        || you.level_type != LEVEL_PORTAL_VAULT)
+    {
+        you.level_type_name_abbrev = newname_abbrev;
+    }
+
     if (you.level_type_tag.empty() || !newtype.empty()
         || you.level_type != LEVEL_PORTAL_VAULT)
     {
-        you.level_type_tag  = newtype;
+        you.level_type_tag = newtype;
     }
+    const std::string spaced_tag = replace_all(you.level_type_tag, "_", " ");
 
     if (!you.level_type_tag.empty() && you.level_type_name.empty())
-        you.level_type_name = you.level_type_tag;
+        you.level_type_name = spaced_tag;
+
+    if (!you.level_type_name.empty() && you.level_type_name_abbrev.empty())
+    {
+        if (you.level_type_name.length() <= MAX_NOTE_PLACE_LEN)
+            you.level_type_name_abbrev = you.level_type_name;
+        else if (you.level_type_tag.length() <= MAX_NOTE_PLACE_LEN)
+            you.level_type_name_abbrev = spaced_tag;
+        else
+        {
+            const std::string shorter =
+                you.level_type_name.length() < you.level_type_tag.length() ?
+                    you.level_type_name : spaced_tag;
+
+            you.level_type_name_abbrev = shorter.substr(0, MAX_NOTE_PLACE_LEN);
+        }
+    }
 
     if (!neworigin.empty())
         you.level_type_origin = neworigin;
@@ -1399,13 +1437,17 @@ static void leaving_level_now()
         std::string lname = lowercase_string(you.level_type_name);
         std::string article, prep;
 
-        if (starts_with(lname, "level "))
+        if (starts_with(lname, "level ")
+            || lname.find(":") != std::string::npos)
+        {
             prep = "on ";
+        }
         else
             prep = "in ";
 
         if (starts_with(lname, "a ") || starts_with(lname, "an ")
-            || starts_with(lname, "the ") || starts_with(lname, "level "))
+            || starts_with(lname, "the ") || starts_with(lname, "level ")
+            || lname.find(":") != std::string::npos)
         {
             ; // Doesn't need an article
         }
@@ -2420,18 +2462,6 @@ void new_level(void)
 {
     if (you.level_type == LEVEL_PORTAL_VAULT)
     {
-       std::string name = "Portal";
-       if (you.level_type_name.length() <= 7
-           && you.level_type_name.find(":") == std::string::npos)
-       {
-           name = uppercase_first(you.level_type_name);
-       }
-       else if (you.level_type_tag.length() <= 7)
-       {
-           name = uppercase_first(you.level_type_tag);
-           name = replace_all(name, "_", " ");
-       }
-
        // If there's more than one word in level_type_origin then skip
        // the first, since it's most likely a preposition.
        std::string desc  = "Entered ";
@@ -2442,12 +2472,12 @@ void new_level(void)
            desc += you.level_type_origin.substr(space + 1);
        desc += ".";
 
-       take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, 0, 0, name.c_str(),
+       take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, 0, 0, NULL,
                       desc.c_str()));
     }
     else
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
-
+  
     print_stats_level();
 #ifdef DGL_WHEREIS
     whereis_record();

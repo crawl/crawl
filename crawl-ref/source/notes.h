@@ -13,6 +13,8 @@
 #include <vector>
 #include <stdio.h>
 
+#define MAX_NOTE_PLACE_LEN 7
+
 class reader;
 class writer;
 
@@ -62,6 +64,7 @@ struct Note
     int first, second;
     long turn;
     unsigned short packed_place;
+    std::string place_abbrev;
     std::string name;
     std::string desc;
 };

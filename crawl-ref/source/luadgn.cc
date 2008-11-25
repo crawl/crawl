@@ -2251,6 +2251,27 @@ LUAFN(dgn_set_level_type_name)
     return(0);
 }
 
+LUAFN(dgn_set_level_type_name_abbrev)
+{
+    if (you.level_type != LEVEL_PORTAL_VAULT)
+    {
+        luaL_error(ls, "Can only set level type name abbreviation on "
+                       "portal vaults");
+        return(0);
+    }
+
+    if (!lua_isstring(ls, 1))
+    {
+        luaL_argerror(ls, 1, "Expected string for level type name "
+                             "abberviation");
+        return(0);
+    }
+
+    you.level_type_name_abbrev = luaL_checkstring(ls, 1);
+
+    return(0);
+}
+
 LUAFN(dgn_set_level_type_origin)
 {
     if (you.level_type != LEVEL_PORTAL_VAULT)
@@ -2512,6 +2533,7 @@ static const struct luaL_reg dgn_lib[] =
     { "level_id", dgn_level_id },
     { "level_name", dgn_level_name },
     { "set_level_type_name", dgn_set_level_type_name },
+    { "set_level_type_name_abbrev", dgn_set_level_type_name_abbrev },
     { "set_level_type_origin", dgn_set_level_type_origin },
     { "map_by_tag", dgn_map_by_tag },
     { "map_in_depth", dgn_map_in_depth },

@@ -1313,8 +1313,12 @@ than the destination name, then you can give one_way_stair() a "dstname"
 parameter.  If you want the place origin for items in a character
 dump to be different than the default you can give one_way_stair a
 "dstorigin" parameter (i.e., dstname = "garden", dstorigin = "in the gardens").
+If you want the place name abbreviation used when displaying notes to be
+different than than the default you can use the "dstname_abbrev" parameter.
+
 You can dynamically change the origin string using the lua function
-dgn.set_level_type_origin().
+dgn.set_level_type_origin(), and dynamically change the place name
+abbreviation with dgn.set_set_level_name_abbrev().
 
 Known portal vault entries will be displayed on the overmap.  By default
 the name shown on the overmap will be the "dstname" parameter, or if
