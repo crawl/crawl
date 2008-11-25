@@ -35,6 +35,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "newgame.h"
+#include "notes.h"
 #include "output.h"
 #include "player.h"
 #include "randart.h"
@@ -2025,6 +2026,13 @@ static int crawl_msgch_name(lua_State *ls)
     return (1);
 }
 
+static int crawl_take_note(lua_State *ls)
+{
+    const char* msg = luaL_checkstring(ls, 1);
+    take_note(Note(NOTE_MESSAGE, 0, 0, msg));
+    return (0);
+}
+
 #define REGEX_METATABLE "crawl.regex"
 #define MESSF_METATABLE "crawl.messf"
 
@@ -2150,6 +2158,19 @@ static int crawl_split(lua_State *ls)
         lua_pushstring(ls, segs[i].c_str());
         lua_rawseti(ls, -2, i + 1);
     }
+    return (1);
+}
+
+static int crawl_article_a(lua_State *ls)
+{
+    const char *s = luaL_checkstring(ls, 1);
+
+    bool lowercase = true;
+    if (lua_isboolean(ls, 2))
+        lowercase = lua_toboolean(ls, 2);
+
+    lua_pushstring(ls, article_a(s, lowercase).c_str());
+
     return (1);
 }
 
@@ -2281,11 +2302,13 @@ static const struct luaL_reg crawl_lib[] =
     { "read_options",   crawl_read_options },
     { "msgch_num",      crawl_msgch_num },
     { "msgch_name",     crawl_msgch_name },
+    { "take_note",      crawl_take_note },
 
     { "regex",          crawl_regex },
     { "message_filter", crawl_message_filter },
     { "trim",           crawl_trim },
     { "split",          crawl_split },
+    { "article_a",      crawl_article_a },
     { "game_started",   crawl_game_started },
     { "err_trace",      crawl_err_trace },
 

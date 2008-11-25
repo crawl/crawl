@@ -42,6 +42,15 @@ function TollStair:check_veto(marker, pname)
   elseif pname == "veto_level_change" then
     -- Gold gold gold! Forget that gold!
     you.gold(you.gold() - needed)
+
+    local toll_desc
+    if self.props.toll_desc then
+        toll_desc = self.props.toll_desc
+    else
+        toll_desc = "at " .. crawl.article_a(self.props.desc)
+    end
+    crawl.take_note("You paid a toll of " .. needed .. " gold " ..
+                    toll_desc .. ".")
     return
   end
 end

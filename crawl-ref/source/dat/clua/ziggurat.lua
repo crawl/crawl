@@ -80,6 +80,7 @@ function ziggurat_portal(e)
   local function stair()
     return toll_stair {
       amount = entry_fee,
+      toll_desc = "to enter a ziggurat",
       desc = "gateway to a ziggurat",
       dst = "ziggurat",
       dstovermap = "Ziggurat",
