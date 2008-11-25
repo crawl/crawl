@@ -168,10 +168,37 @@ local function rectangle_dimensions()
   return x1, y1, x2, y2
 end
 
+local function depth_if(spec, fn)
+  return { spec = spec, cond = fn }
+end
+
+local function depth_ge(lev, spec)
+  return depth_if(spec, function ()
+                          return zig().depth >= lev
+                        end)
+end
+
+local function depth_lt(lev, spec)
+  return depth_if(spec, function ()
+                          return zig().depth < lev
+                        end)
+end
+
 local mons_populations = {
-  "Elf:7", "Orc:4", "Vault:8", "Slime:6",
-  "Snake:5", "Lair:10", "Tomb:3", "Crypt:5",
-  "Abyss", "Shoal:5", "Pan"
+  -- Dress up monster sets a bit.
+  "place:Elf:7 w:300 / deep elf blademaster / deep elf master archer / " ..
+    "deep elf annihilator / deep elf sorcerer / deep elf demonologist",
+  "place:Orc:4 w:120 / orc warlord / orc knight / stone giant",
+  "place:Vault:8",
+  "place:Slime:6",
+  "place:Snake:5",
+  "place:Lair:10",
+  "place:Tomb:3",
+  "place:Crypt:5",
+  "place:Abyss",
+  "place:Shoal:5",
+  depth_ge(6, "place:Pan w:100 / w:15 pandemonium lord"),
+  depth_lt(6, "place:Pan")
 }
 
 local function set_floor_colour(colour)
@@ -187,8 +214,7 @@ end
 
 local function mons_random_gen(x, y, nth)
   set_random_floor_colour()
-  return dgn.create_monster(x, y, "place:" ..
-                            util.random_from(mons_populations))
+  return dgn.create_monster(x, y, util.random_from(mons_populations))
 end
 
 local function mons_drac_gen(x, y, nth)
@@ -199,7 +225,7 @@ end
 local function mons_panlord_gen(x, y, nth)
   set_random_floor_colour()
   if nth == 1 then
-    return dgn.create_monster(x, y, "pandemonium lord band")
+    return dgn.create_monster(x, y, "pandemonium lord")
   else
     return dgn.create_monster(x, y, "place:Pan")
   end
@@ -207,34 +233,43 @@ end
 
 local mons_generators = {
   mons_random_gen,
-  mons_drac_gen,
-  mons_panlord_gen
+  depth_ge(6, mons_drac_gen),
+  depth_ge(8, mons_panlord_gen)
 }
 
 local function monster_creator_fn(arg)
-  if type(arg) == "string" then
-    local _, _, branch = string.find(arg, "^(%w+):")
+  local atyp = type(arg)
+  if atyp == "string" then
+    local _, _, branch = string.find(arg, "^place:(%w+):")
     return function (x, y, nth)
              if branch then
                set_floor_colour(dgn.br_floorcol(branch))
              end
 
-             return dgn.create_monster(x, y, "place:" .. arg)
+             return dgn.create_monster(x, y, arg)
            end
+  elseif atyp == "table" then
+    if arg.cond() then
+      return monster_creator_fn(arg.spec)
+    end
   else
     return arg
   end
 end
 
-local monster_creators =
-  util.map(monster_creator_fn, util.catlist(mons_populations, mons_generators))
+function ziggurat_monster_creators()
+  return util.map(monster_creator_fn,
+                  util.catlist(mons_populations, mons_generators))
+end
 
 local function ziggurat_vet_monster(fn)
-  return function (x, y, nth)
-           while true do
+  return function (x, y, nth, hdmax)
+           for i = 1, 100 do
              local mons = fn(x, y, nth)
              if mons then
-               if mons.experience == 0 then
+               -- Discard zero-exp monsters, and monsters that explode
+               -- the HD limit.
+               if mons.experience == 0 or mons.hd > hdmax * 1.3 then
                  mons.dismiss()
                else
                  -- Monster is ok!
@@ -242,11 +277,13 @@ local function ziggurat_vet_monster(fn)
                end
              end
            end
+           -- Give up.
+           return nil
          end
 end
 
 local function choose_monster_set()
-  return ziggurat_vet_monster(util.random_from(monster_creators))
+  return ziggurat_vet_monster(util.random_from(ziggurat_monster_creators()))
 end
 
 local function ziggurat_create_monsters(p)
@@ -263,11 +300,13 @@ local function ziggurat_create_monsters(p)
   -- No monsters
   while hd_pool > 0 do
     local place = dgn.find_adjacent_point(p, mons_place_p)
-    local mons = mfn(place.x, place.y, nth)
+    local mons = mfn(place.x, place.y, nth, hd_pool)
 
     if mons then
       nth = nth + 1
       hd_pool = hd_pool - mons.hd
+    else
+      break
     end
   end
 end

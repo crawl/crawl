@@ -14,6 +14,10 @@ function util.subclass(parent)
   return subclass
 end
 
+function util.identity(x)
+  return x
+end
+
 function util.catlist(...)
   local res = { }
   local tables = { ... }
@@ -44,6 +48,7 @@ function util.cathash(...)
   return res
 end
 
+-- Classic map, but discards nil values (table.insert doesn't like nil).
 function util.map(fn, ...)
   local lists = { ... }
   local res = { }
@@ -51,7 +56,10 @@ function util.map(fn, ...)
     return res
   elseif #lists == 1 then
     for _, val in ipairs(lists[1]) do
-      table.insert(res, fn(val))
+      local nval = fn(val)
+      if nval ~= nil then
+        table.insert(res, nval)
+      end
     end
   else
     for i = 1, #lists[1] do
@@ -65,7 +73,20 @@ function util.map(fn, ...)
       if #args < #lists then
         break
       end
-      table.insert(res, fn(unpack(args)))
+      local nval = fn(unpack(args))
+      if nval ~= nil then
+        table.insert(res, nval)
+      end
+    end
+  end
+  return res
+end
+
+function util.filter(fn, list)
+  local res = { }
+  for _, val in ipairs(list) do
+    if fn(val) then
+      table.insert(res, val)
     end
   end
   return res
