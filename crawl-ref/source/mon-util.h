@@ -170,7 +170,9 @@ enum mon_itemuse_type
     MONUSE_OPEN_DOORS,
     MONUSE_STARTING_EQUIPMENT,
     MONUSE_WEAPONS_ARMOUR,
-    MONUSE_MAGIC_ITEMS
+    MONUSE_MAGIC_ITEMS,
+
+    NUM_MONUSE
 };
 
 // now saved in an unsigned long.

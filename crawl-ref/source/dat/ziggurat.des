@@ -45,6 +45,18 @@ lGl
 lll
 ENDMAP
 
+
+NAME: ziggurat_loot_1
+TAGS: ziggurat_loot_chamber allow_dup
+ORIENT: float
+MAP
+cccccccccccc
+c..........c
+@..........c
+c..........c
+cccccccccccc
+ENDMAP
+
 #######################################################################
 
 NAME: ziggurat1

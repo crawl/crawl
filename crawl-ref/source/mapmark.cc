@@ -804,3 +804,18 @@ bool marker_vetoes_operation(const char *op)
 {
     return env.markers.property_at(you.pos(), MAT_ANY, op) == "veto";
 }
+
+bool feature_marker_at(const coord_def &pos, dungeon_feature_type feat)
+{
+    std::vector<map_marker*> markers = env.markers.get_markers_at(pos);
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_marker *mark = markers[i];
+        if (mark->get_type() == MAT_FEATURE &&
+            dynamic_cast<map_feature_marker*>(mark)->feat == feat)
+        {
+            return (true);
+        }
+    }
+    return (false);
+}

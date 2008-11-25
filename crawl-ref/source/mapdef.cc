@@ -1663,17 +1663,62 @@ coord_def map_def::float_random_place() const
         random_range(minvborder, GYM - minvborder - map.height()));
 }
 
+point_vector map_def::anchor_points() const
+{
+    point_vector points;
+    for (int y = 0, cheight = map.height(); y < cheight; ++y)
+        for (int x = 0, cwidth = map.width(); x < cwidth; ++x)
+            if (map.glyph(x, y) == '@')
+                points.push_back(coord_def(x, y));
+    return (points);
+}
+
+coord_def map_def::float_aligned_place() const
+{
+    const point_vector our_anchors = anchor_points();
+    const coord_def fail(-1, -1);
+
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS,
+         "Aligning floating vault with %lu points vs %lu reference points",
+         our_anchors.size(), map_anchor_points.size());
+#endif
+
+    // Mismatch in the number of points we have to align, bail.
+    if (our_anchors.size() != map_anchor_points.size())
+        return (fail);
+
+    // Align first point of both vectors, then check that the others match.
+    const coord_def pos = map_anchor_points[0] - our_anchors[0];
+
+    for (int i = 1, psize = map_anchor_points.size(); i < psize; ++i)
+        if (pos + our_anchors[i] != map_anchor_points[i])
+            return (fail);
+
+    // Looking good, check bounds.
+    if (!map_bounds(pos) || !map_bounds(pos + size() - 1))
+        return (fail);
+
+    // Go us!
+    return (pos);
+}
+
 coord_def map_def::float_place()
 {
     ASSERT(orient == MAP_FLOAT);
 
     coord_def pos(-1, -1);
 
-    if (coinflip())
-        pos = float_dock();
+    if (!map_anchor_points.empty())
+        pos = float_aligned_place();
+    else
+    {
+        if (coinflip())
+            pos = float_dock();
 
-    if (pos.x == -1)
-        pos = float_random_place();
+        if (pos.x == -1)
+            pos = float_random_place();
+    }
 
     return (pos);
 }

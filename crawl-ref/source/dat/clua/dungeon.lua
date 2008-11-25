@@ -270,6 +270,18 @@ function dgn.rectangle_forall(tl, br, fpred)
   return true
 end
 
+function dgn.gridmark(x, y, grid, marker)
+  dgn.grid(x, y, grid)
+  if marker then
+    local t = type(marker)
+    if t == "function" or t == "table" then
+      dgn.register_lua_marker(x, y, marker)
+    else
+      dgn.register_feature_marker(x, y, marker)
+    end
+  end
+end
+
 ----------------------------------------------------------------------
 -- Convenience functions for vaults.
 

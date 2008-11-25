@@ -658,6 +658,7 @@ void CLua::init_lua()
 
 CLua &CLua::get_vm(lua_State *ls)
 {
+    lua_stack_cleaner clean(ls);
     _getregistry(ls, "__clua");
     CLua *vm = util_get_userdata<CLua>(ls, -1);
     if (!vm)
@@ -2516,6 +2517,27 @@ MDEF(hd)
     PLUARET(number, mons->hit_dice);
 }
 
+static const char *_monuse_names[] =
+{
+    "nothing", "eats_items", "open_doors", "starting_equipment",
+    "weapons_armour", "magic_items"
+};
+
+static const char *_monuse_to_str(mon_itemuse_type ityp)
+{
+    ASSERT(ARRAYSZ(_monuse_names) == NUM_MONUSE);
+    return _monuse_names[ityp];
+}
+
+MDEF(muse)
+{
+    if (const monsterentry *me = mons->find_monsterentry())
+    {
+        PLUARET(string, _monuse_to_str(me->gmon_use));
+    }
+    return (0);
+}
+
 static int l_mons_do_dismiss(lua_State *ls)
 {
     // dismiss is only callable from dlua, not from managed VMs (i.e.
@@ -2551,6 +2573,7 @@ static MonsAccessor mons_attrs[] =
     { "x"   , l_mons_x    },
     { "y"   , l_mons_y    },
     { "hd"  , l_mons_hd   },
+    { "muse", l_mons_muse },
     { "dismiss", l_mons_dismiss },
     { "experience", l_mons_experience },
 };
@@ -2625,6 +2648,12 @@ void clua_push_map(lua_State *ls, map_def *map)
 {
     map_def **mapref = clua_new_userdata<map_def *>(ls, MAP_METATABLE);
     *mapref = map;
+}
+
+void clua_push_coord(lua_State *ls, const coord_def &c)
+{
+    lua_pushnumber(ls, c.x);
+    lua_pushnumber(ls, c.y);
 }
 
 void clua_push_dgn_event(lua_State *ls, const dgn_event *devent)
@@ -3051,7 +3080,7 @@ lua_shutdown_listener::~lua_shutdown_listener()
 }
 
 lua_datum::lua_datum(CLua &_lua, int stackpos, bool pop)
-    : need_cleanup(true), lua(_lua)
+    : lua(_lua), need_cleanup(true)
 {
     // Store the datum in the registry indexed by "this".
     lua_pushvalue(lua, stackpos);
@@ -3067,13 +3096,28 @@ lua_datum::lua_datum(CLua &_lua, int stackpos, bool pop)
 }
 
 lua_datum::lua_datum(const lua_datum &o)
-    : need_cleanup(true), lua(o.lua)
+    : lua(o.lua), need_cleanup(true)
+{
+    set_from(o);
+}
+
+void lua_datum::set_from(const lua_datum &o)
 {
     lua_pushlightuserdata(lua, this);
     o.push();
     lua_settable(lua, LUA_REGISTRYINDEX);
-
     lua.add_shutdown_listener(this);
+    need_cleanup = true;
+}
+
+const lua_datum &lua_datum::operator = (const lua_datum &o)
+{
+    if (this != &o)
+    {
+        cleanup();
+        set_from(o);
+    }
+    return (*this);
 }
 
 void lua_datum::push() const

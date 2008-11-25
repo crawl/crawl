@@ -10,6 +10,7 @@
 
 #include <sstream>
 #include <algorithm>
+#include <memory>
 #include <cmath>
 
 #include "branch.h"
@@ -726,6 +727,18 @@ static int dgn_map(lua_State *ls)
         return (0);
     }
 
+    // map(<map>, x, y) = glyph at (x,y), subject to map being
+    // resolved and normalised.
+    if (lua_gettop(ls) == 3 && lua_isnumber(ls, 2) && lua_isnumber(ls, 3))
+    {
+        const int gly = map->map.glyph(luaL_checkint(ls, 2),
+                                          luaL_checkint(ls, 3));
+        char buf[2] = "";
+        buf[0] = gly;
+        lua_pushstring(ls, buf);
+        return (1);
+    }
+
     if (lua_isstring(ls, 2))
     {
         map->map.add_line(luaL_checkstring(ls, 2));
@@ -939,6 +952,9 @@ static int dgn_grid(lua_State *ls)
     }
     PLUARET(number, grd(c));
 }
+
+LUARET1(_dgn_is_wall, boolean,
+        grid_is_wall(static_cast<dungeon_feature_type>(luaL_checkint(ls, 1))))
 
 static int dgn_max_bounds(lua_State *ls)
 {
@@ -2159,6 +2175,103 @@ static int dgn_create_item(lua_State *ls)
     return (0);
 }
 
+static std::auto_ptr<lua_datum> _dgn_map_bad_bounds_fn;
+
+static bool _lua_map_place_invalid(const map_def &map,
+                                   const coord_def &c,
+                                   const coord_def &size)
+{
+#ifdef DEBUG_DIAGNOSTICS
+    mprf(MSGCH_DIAGNOSTICS, "lua_map_place_invalid: (%d,%d) (%d,%d)",
+         c.x, c.y, size.x, size.y);
+#endif
+
+    lua_stack_cleaner clean(_dgn_map_bad_bounds_fn->lua);
+
+    // Push the Lua function onto the stack.
+    _dgn_map_bad_bounds_fn->push();
+
+    lua_State *ls = _dgn_map_bad_bounds_fn->lua;
+
+    // Push map, pos.x, pos.y, size.x, size.y
+    clua_push_map(ls, const_cast<map_def*>(&map));
+    clua_push_coord(ls, c);
+    clua_push_coord(ls, size);
+
+    const int err = lua_pcall(ls, 5, 1, 0);
+
+    // Lua error invalidates place.
+    if (err)
+    {
+        mprf(MSGCH_ERROR, "Lua error: %s", lua_tostring(ls, -1));
+        return (true);
+    }
+
+    return (lua_toboolean(ls, -1));
+}
+
+LUAFN(dgn_with_map_bounds_fn)
+{
+    CLua &vm(CLua::get_vm(ls));
+    if (lua_gettop(ls) != 2 || !lua_isfunction(ls, 1) || !lua_isfunction(ls, 2))
+        luaL_error(ls, "Expected map-bounds check fn and action fn.");
+
+    _dgn_map_bad_bounds_fn.reset(new lua_datum(vm, 1, false));
+
+    int err = 0;
+    {
+        unwind_var<map_place_check_t> mpc(map_place_invalid,
+                                          _lua_map_place_invalid);
+
+        // All set, call our friend, the second function.
+        ASSERT(lua_isfunction(ls, -1));
+
+        // Copy the function since pcall will pop it off.
+        lua_pushvalue(ls, -1);
+
+        // Use pcall to catch the error here, else unwind_var won't
+        // happen when lua_call does its longjmp.
+        err = lua_pcall(ls, 0, 1, 0);
+
+        _dgn_map_bad_bounds_fn.reset(NULL);
+    }
+
+    if (err)
+        lua_error(ls);
+
+    return (1);
+}
+
+// Accepts any number of point coordinates and a function, binds the
+// points as anchors that floating vaults must match and calls the
+// function, returning the return value of the function.
+LUAFN(dgn_with_map_anchors)
+{
+    const int top = lua_gettop(ls);
+    int err = 0;
+    {
+        unwind_var<point_vector> uanchor(map_anchor_points);
+
+        map_anchor_points.clear();
+
+        int i;
+        for (i = 1; i < top; i += 2)
+        {
+            if (lua_isnumber(ls, i) && lua_isnumber(ls, i + 1))
+                map_anchor_points.push_back(
+                    coord_def( lua_tointeger(ls, i),
+                               lua_tointeger(ls, i + 1) ) );
+        }
+
+        ASSERT(lua_isfunction(ls, -1));
+
+        lua_pushvalue(ls, -1);
+        err = lua_pcall(ls, 0, 1, 0);
+    }
+    if (err)
+        lua_error(ls);
+    return (1);
+}
 
 #define BRANCH(br, pos)                                                 \
     const char *branch_name = luaL_checkstring(ls, pos);                \
@@ -2461,6 +2574,7 @@ static const struct luaL_reg dgn_lib[] =
     { "mapsize", dgn_map_size },
 
     { "grid", dgn_grid },
+    { "is_wall", _dgn_is_wall },
     { "max_bounds", dgn_max_bounds },
     { "colour_at", dgn_colour_at },
 
@@ -2523,6 +2637,9 @@ static const struct luaL_reg dgn_lib[] =
 
     { "create_monster", dgn_create_monster },
     { "create_item", dgn_create_item },
+
+    { "with_map_bounds_fn", dgn_with_map_bounds_fn },
+    { "with_map_anchors", dgn_with_map_anchors },
 
     { "br_floorcol", dgn_br_floorcol },
     { "br_rockcol", dgn_br_rockcol },

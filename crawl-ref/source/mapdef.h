@@ -715,7 +715,10 @@ public:
     coord_def dock_pos(map_section_type) const;
     coord_def float_dock();
     coord_def float_place();
+    coord_def float_aligned_place() const;
     coord_def float_random_place() const;
+
+    std::vector<coord_def> anchor_points() const;
 
     bool is_minivault() const;
     bool has_tag(const std::string &tag) const;

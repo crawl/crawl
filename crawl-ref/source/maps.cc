@@ -30,6 +30,9 @@
 #include "stuff.h"
 #include "terrain.h"
 
+static bool bad_map_place(const map_def &map, const coord_def &c,
+                          const coord_def &size);
+
 static int write_vault(map_def &mdef,
                        vault_placement &,
                        bool check_place);
@@ -40,6 +43,13 @@ static int apply_vault_definition(
 
 static bool resolve_map(map_def &def);
 
+// Globals: Use unwind_var to modify!
+
+// Checks whether a map place is valid.
+map_place_check_t map_place_invalid = bad_map_place;
+
+// If non-empty, any floating vault's @ exit must land on these point.
+point_vector map_anchor_points;
 
 //////////////////////////////////////////////////////////////////////////
 // New style vault definitions
@@ -247,7 +257,10 @@ static bool apply_vault_grid(map_def &def,
             start = def.float_place();
     }
 
-    if (check_place && bad_map_place(def, start, size))
+    if (!map_bounds(start))
+        return (false);
+
+    if (check_place && map_place_invalid(def, start, size))
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Bad vault place: (%d,%d) dim (%d,%d)",

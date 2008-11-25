@@ -73,6 +73,8 @@ public:
     lua_datum(CLua &lua, int stackpos = -1, bool pop = true);
     lua_datum(const lua_datum &other);
 
+    const lua_datum &operator = (const lua_datum &other);
+
     void shutdown(CLua &lua);
 
     ~lua_datum();
@@ -86,11 +88,14 @@ public:
     bool is_string() const;
     bool is_udata() const;
 
-private:
-    bool need_cleanup;
+public:
     CLua &lua;
 
 private:
+    bool need_cleanup;
+
+private:
+    void set_from(const lua_datum &o);
     void cleanup();
 };
 
@@ -285,6 +290,7 @@ std::string quote_lua_string(const std::string &s);
 class map_def;
 class dgn_event;
 void clua_push_map(lua_State *ls, map_def *map);
+void clua_push_coord(lua_State *ls, const coord_def &c);
 void clua_push_dgn_event(lua_State *ls, const dgn_event *devent);
 
 void lua_push_items(lua_State *ls, int link);

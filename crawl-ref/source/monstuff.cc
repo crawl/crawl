@@ -37,6 +37,7 @@
 #include "itemprop.h"
 #include "Kills.h"
 #include "makeitem.h"
+#include "mapmark.h"
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"
@@ -7259,7 +7260,9 @@ static bool _monster_move(monsters *monster)
 
     // Jellies eat doors.  Yum!
     if ((grd(newpos) == DNGN_CLOSED_DOOR || grd(newpos) == DNGN_OPEN_DOOR)
-        && mons_itemuse(monster) == MONUSE_EATS_ITEMS)
+        && mons_itemuse(monster) == MONUSE_EATS_ITEMS
+        // Doors with permarock marker cannot be eaten.
+        && !feature_marker_at(newpos, DNGN_PERMAROCK_WALL))
     {
         grd(newpos) = DNGN_FLOOR;
 

@@ -55,6 +55,14 @@ extern depth_ranges    lc_default_depths;
 extern dlua_chunk      lc_global_prelude;
 extern bool            lc_run_global_prelude;
 
+typedef bool (*map_place_check_t)(const map_def &, const coord_def &c,
+                                  const coord_def &size);
+
+typedef std::vector<coord_def> point_vector;
+
+extern map_place_check_t map_place_invalid;
+extern point_vector      map_anchor_points;
+
 const int              MAP_CACHE_VERSION = 1009;
 
 

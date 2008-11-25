@@ -25,6 +25,7 @@ class reader;
 class writer;
 
 bool marker_vetoes_operation(const char *op);
+bool feature_marker_at(const coord_def &pos, dungeon_feature_type feat);
 
 class map_marker
 {

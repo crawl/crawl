@@ -4,11 +4,31 @@
 
 local point_metatable = { }
 
+point_metatable.__index = point_metatable
+
 function dgn.point(x, y)
   local pt = { x = x, y = y }
   setmetatable(pt, point_metatable)
   return pt
 end
+
+local function sgn(x)
+  if x < 0 then
+    return -1
+  elseif x > 0 then
+    return 1
+  else
+    return 0
+  end
+end
+
+point_metatable.sgn = function (p)
+                        return dgn.point(sgn(p.x), sgn(p.y))
+                      end
+
+point_metatable.__eq = function (a, b)
+                         return a.x == b.x and a.y == b.y
+                       end
 
 point_metatable.__add = function (a, b)
                           if type(b) == "number" then

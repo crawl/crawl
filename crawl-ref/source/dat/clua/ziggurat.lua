@@ -12,6 +12,11 @@
 
 require("clua/lm_toll.lua")
 
+-- Deepest you can go in a ziggurat - at this point it's beyond
+-- obvious that we're not challenging the player, and one could hope
+-- she has enough loot by now.
+ZIGGURAT_MAX = 81
+
 function zig()
   if not dgn.persist.ziggurat or not dgn.persist.ziggurat.depth then
     dgn.persist.ziggurat = { }
@@ -101,7 +106,10 @@ function ziggurat_level(e)
   e.tags("ziggurat")
   e.tags("allow_dup")
   e.orient("encompass")
-  ziggurat_build_level(e)
+
+  if crawl.game_started() then
+    ziggurat_build_level(e)
+  end
 end
 
 -----------------------------------------------------------------------------
@@ -114,17 +122,7 @@ function ziggurat_build_level(e)
   end
 end
 
-local function zigstair(x, y, stair, marker)
-  dgn.grid(x, y, stair)
-  if marker then
-    local t = type(marker)
-    if t == "function" or t == "table" then
-      dgn.register_lua_marker(x, y, marker)
-    else
-      dgn.register_feature_marker(x, y, marker)
-    end
-  end
-end
+local zigstair = dgn.gridmark
 
 -- Creates a Lua marker table that increments ziggurat depth.
 local function zig_go_deeper()
@@ -280,6 +278,9 @@ local function ziggurat_vet_monster(fn)
                if mons.experience == 0 or mons.hd > hdmax * 1.3 then
                  mons.dismiss()
                else
+                 if mons.muse == "eats_items" then
+                   zig().level.jelly_protect = true
+                 end
                  -- Monster is ok!
                  return mons
                end
@@ -329,19 +330,31 @@ local function flip_rectangle(x1, y1, x2, y2)
   return { nx1, ny1, nx2, ny2 }
 end
 
-local function ziggurat_create_loot(c)
+local function ziggurat_create_loot_at(c)
   local nloot = zig_depth()
   local depth = zig_depth()
 
-  local function is_free_space(p)
-    return dgn.grid(p.x, p.y) == dgn.fnum("floor") and
-      #dgn.items_at(p.x, p.y) == 0
+  local function free_space_threshold(max)
+    local function is_free_space(p)
+      return dgn.grid(p.x, p.y) == dgn.fnum("floor") and
+        #dgn.items_at(p.x, p.y) <= max
+    end
+    return is_free_space
+  end
+
+  local door = dgn.fnum("closed_door")
+
+  local function passable(p)
+    return dgn.is_passable(p.x, p.y) and dgn.grid(p.x, p.y) ~= door
   end
 
   local function free_space_do(fn)
-    local p = dgn.find_adjacent_point(c, is_free_space)
-    if p then
-      fn(p)
+    for i = 0, 20 do
+      local p = dgn.find_adjacent_point(c, free_space_threshold(i), passable)
+      if p then
+        fn(p)
+        break
+      end
     end
   end
 
@@ -364,6 +377,70 @@ local function ziggurat_create_loot(c)
     else
       place_loot("|")
     end
+  end
+end
+
+local function ziggurat_create_loot_vault(entry, exit)
+  local inc = (exit - entry):sgn()
+
+  local function find_door_spot(p)
+    while not dgn.is_wall(dgn.grid(p.x, p.y)) do
+      p = p + inc
+    end
+    return p
+  end
+
+  -- Place a door.
+  local doorplace = find_door_spot(exit, inc)
+
+  -- Closed door with the permarock wall feature marker.
+  dgn.gridmark(doorplace.x, doorplace.y, "closed_door", "permarock_wall")
+
+  local connect_point = doorplace + inc
+
+  local map = dgn.map_by_tag("ziggurat_loot_chamber", false)
+
+  local function loot_fallback()
+    crawl.mpr("Failed to create loot vault, giving up", "diagnostic")
+    -- FAIL, generate loot the usual way.
+    ziggurat_create_loot_at(exit)
+  end
+
+  if not map then
+    return loot_fallback()
+  end
+
+  local function place_loot_chamber()
+    return dgn.place_map(map, false, true)
+  end
+
+  local function bad_loot_bounds(map, px, py, xs, ys)
+    local vc = dgn.point(px + math.floor(xs / 2),
+                         py + math.floor(ys / 2))
+    local linc = (vc - exit):sgn()
+    -- The map's positions should be at the same increment to the exit
+    -- as the exit is to the entrance, else reject the place.
+    return not (inc == linc)
+  end
+
+  local function connect_loot_chamber()
+    return dgn.with_map_bounds_fn(bad_loot_bounds, place_loot_chamber)
+  end
+
+  local res = dgn.with_map_anchors(connect_point.x, connect_point.y,
+                                   connect_loot_chamber)
+  if not res then
+    loot_fallback()
+  else
+    ziggurat_create_loot_at(connect_point)
+  end
+end
+
+local function ziggurat_create_loot(entrance, exit)
+  if zig().level.jelly_protect then
+    ziggurat_create_loot_vault(entrance, exit)
+  else
+    ziggurat_create_loot_at(exit)
   end
 end
 
@@ -445,23 +522,27 @@ local function ziggurat_rectangle_builder(e)
 
   local c = dgn.point(x1 + x2, y1 + y2) / 2
 
-  local entry = { x = x1, y = c.y }
-  local exit = { x = x2, y = c.y }
+  local entry = dgn.point(x1, c.y)
+  local exit = dgn.point(x2, c.y)
 
   if zig_depth() % 2 == 0 then
     entry, exit = exit, entry
   end
 
   zigstair(entry.x, entry.y, "stone_arch", "stone_stairs_up_i")
-  zigstair(exit.x, exit.y, "stone_stairs_down_i", zig_go_deeper)
+
+  if zig().depth < ZIGGURAT_MAX then
+    zigstair(exit.x, exit.y, "stone_stairs_down_i", zig_go_deeper)
+  end
+
   zigstair(exit.x, exit.y + 1, "exit_portal_vault", cleanup_ziggurat())
   zigstair(exit.x, exit.y - 1, "exit_portal_vault", cleanup_ziggurat())
 
   ziggurat_place_pillars(c)
 
-  ziggurat_create_loot(exit)
-
   ziggurat_create_monsters(exit)
+
+  ziggurat_create_loot(entry, exit)
 
   local function needs_colour(p)
     return not dgn.in_vault(p.x, p.y)
