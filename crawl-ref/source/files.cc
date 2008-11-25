@@ -1107,7 +1107,11 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         _grab_followers();
 
-        _save_level( old_level, old_level_type, old_branch );
+        if (old_level_type == LEVEL_DUNGEON
+            || old_level_type != you.level_type)
+        {
+            _save_level( old_level, old_level_type, old_branch );
+        }
     }
 
     if (make_changes)
