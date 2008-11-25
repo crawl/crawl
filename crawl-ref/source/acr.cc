@@ -1397,7 +1397,9 @@ static void _input()
     {
         // User pressed a key, so stop repeating commands and discard
         // the keypress.
-        crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_repeat("Key pressed, interrupting command "
+                                      "repetition.");
+        crawl_state.prev_cmd = CMD_NO_CMD;
         getchm();
         return;
     }
@@ -4391,7 +4393,8 @@ static void _setup_cmd_repeat()
         {
             repeat_again_rec.keys.pop_front();
         }
-        while (repeat_again_rec.keys[0] != ch);
+        while (repeat_again_rec.keys.size() > 0
+               && repeat_again_rec.keys[0] != ch);
 
         repeat_again_rec.keys.pop_front();
     }
