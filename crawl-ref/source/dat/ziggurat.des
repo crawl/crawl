@@ -45,9 +45,18 @@ lGl
 lll
 ENDMAP
 
-
+########################################################################
+# Ziggurat loot chamber (needs work).
+#
+# A reasonably large space to drop loot. Items will be stacked once all
+# free space is occupied by items.
+#
+# TODO:
+# Add marker to set a center point for loot.
+# Maybe programmatically generate loot chamber shapes?
+#
 NAME: ziggurat_loot_1
-TAGS: ziggurat_loot_chamber allow_dup
+TAGS: ziggurat_loot_chamber allow_dup no_rotate
 ORIENT: float
 MAP
 cccccccccccc
