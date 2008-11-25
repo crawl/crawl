@@ -1356,6 +1356,7 @@ static void leaving_level_now()
     const std::string newtype =
         env.markers.property_at(you.pos(), MAT_ANY, "dst");
 
+    const std::string oldname = you.level_type_name;
     std::string newname =
         env.markers.property_at(you.pos(), MAT_ANY, "dstname");
 
@@ -1366,6 +1367,10 @@ static void leaving_level_now()
 
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
+
+    // Lua scripts explicitly set level_type_na,e so use that.
+    if (you.level_type_name != oldname)
+        newname = you.level_type_name;
 
     // Lua scripts explicitly set level_type_origin, so use that.
     if (!you.level_type_origin.empty())
@@ -2400,7 +2405,36 @@ void trackers_init_new_level(bool transit)
 
 void new_level(void)
 {
-    take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
+    if (you.level_type == LEVEL_PORTAL_VAULT)
+    {
+       std::string name = "Portal";
+       if (you.level_type_name.length() <= 7
+           && you.level_type_name.find(":") == std::string::npos)
+       {
+           name = uppercase_first(you.level_type_name);
+       }
+       else if (you.level_type_tag.length() <= 7)
+       {
+           name = uppercase_first(you.level_type_tag);
+           name = replace_all(name, "_", " ");
+       }
+
+       // If there's more than one word in level_type_origin then skip
+       // the first, since it's most likely a preposition.
+       std::string desc  = "Entered ";
+       size_t      space = you.level_type_origin.find(" ");
+       if (space == std::string::npos)
+           desc += you.level_type_origin;
+       else
+           desc += you.level_type_origin.substr(space + 1);
+       desc += ".";
+
+       take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, 0, 0, name.c_str(),
+                      desc.c_str()));
+    }
+    else
+        take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
+
     print_stats_level();
 #ifdef DGL_WHEREIS
     whereis_record();

@@ -62,6 +62,7 @@ end
 function zig_depth_increment()
   zig().depth = zig().depth + 1
   zig().level = { }
+  dgn.set_level_type_name  ("Ziggurat:" .. zig().depth)
   dgn.set_level_type_origin("on level " .. zig().depth .. " of a ziggurat")
 end
 
@@ -76,6 +77,7 @@ function ziggurat_portal(e)
     return one_way_stair {
       desc = "gateway to a ziggurat",
       dst = "ziggurat",
+      dstname = "Ziggurat:1",
       dstorigin = "on level 1 of a ziggurat",
       floor = "stone_arch",
       onclimb = ziggurat_initialiser

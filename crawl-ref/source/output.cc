@@ -900,7 +900,15 @@ static std::string _level_description_string_hud()
              || place.level_type == LEVEL_LABYRINTH)
     {
         if (!you.level_type_name.empty())
-            short_name = article_a(upcase_first(you.level_type_name), false);
+        {
+            // If the level name is faking a dungeon depth
+            // (i.e., "Ziggurat:3") then don't add an article
+            if (you.level_type_name.find(":") != std::string::npos)
+                short_name = you.level_type_name;
+            else
+                short_name = article_a(upcase_first(you.level_type_name),
+                                       false);
+        }
         else
             short_name.insert(0, "A ");
     }

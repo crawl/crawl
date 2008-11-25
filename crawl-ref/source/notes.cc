@@ -249,8 +249,12 @@ std::string Note::describe( bool when, bool where, bool what ) const
 
     if (where)
     {
-        result << "| " << std::setw(7) << std::left
-               << short_place_name(packed_place) << " | ";
+        if (type == NOTE_DUNGEON_LEVEL_CHANGE && !name.empty())
+            result << "| " << std::setw(7) << std::left
+                   << name << " | ";
+        else
+            result << "| " << std::setw(7) << std::left
+                   << short_place_name(packed_place) << " | ";
     }
 
     if (what)
@@ -276,7 +280,10 @@ std::string Note::describe( bool when, bool where, bool what ) const
             result << "Reached XP level " << first << ". " << name;
             break;
         case NOTE_DUNGEON_LEVEL_CHANGE:
-            result << "Entered " << place_name(packed_place, true, true);
+            if ( !desc.empty() )
+                result << desc;
+            else
+                result << "Entered " << place_name(packed_place, true, true);
             break;
         case NOTE_LEARN_SPELL:
             result << "Learned a level "
