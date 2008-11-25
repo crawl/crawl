@@ -2106,7 +2106,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
                                           you.where_are_you,
                                           you.level_type, false);
 #if DEBUG_DIAGNOSTICS
-        mprf( MSGCH_WARN, "Deleting: %s", lname.c_str() );
+        mprf( MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str() );
 #endif
         unlink(lname.c_str());
     }
