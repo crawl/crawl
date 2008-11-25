@@ -983,6 +983,7 @@ void origin_set(const coord_def& where)
         if (!si->orig_monnum)
             si->orig_monnum = static_cast<short>( monnum );
         si->orig_place  = pplace;
+        _origin_set_portal_vault(*si);
 
 #ifdef DGL_MILESTONES
         _milestone_check(*si);
