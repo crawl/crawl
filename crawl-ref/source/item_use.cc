@@ -3880,7 +3880,7 @@ static bool _vorpalise_weapon()
             beam.name       = "fiery explosion";
             beam.aux_source = "a fiery explosion";
             beam.type       = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage     = dice_def( 3, 10 );
+            beam.damage     = dice_def(3, 10);
             beam.flavour    = BEAM_FIRE;
             beam.target     = you.pos();
             beam.colour     = RED;
@@ -3928,8 +3928,8 @@ static bool _vorpalise_weapon()
         mprf("%s twongs alarmingly.", itname.c_str());
 
         // from unwield_item
-        MiscastEffect( &you, NON_MONSTER, SPTYP_TRANSLOCATION, 9, 90,
-                       "distortion affixation" );
+        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 9, 90,
+                      "distortion affixation");
         success = false;
         break;
 
