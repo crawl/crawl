@@ -82,6 +82,7 @@ function ziggurat_portal(e)
       amount = entry_fee,
       desc = "gateway to a ziggurat",
       dst = "ziggurat",
+      dstovermap = "Ziggurat",
       dstname = "Ziggurat:1",
       dstname_abbrev = "Zig:1",
       dstorigin = "on level 1 of a ziggurat",
