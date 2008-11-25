@@ -298,6 +298,7 @@ void immolation(int caster, bool known)
     beam.is_explosion = true;
     beam.effect_known = known;
 
+    // The scroll of immolation doesn't affect items.
     explosion(beam, false, false, true, true, true,
               caster != IMMOLATION_SCROLL);
 }
