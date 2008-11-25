@@ -184,6 +184,37 @@ local function depth_lt(lev, spec)
                         end)
 end
 
+local function set_floor_colour(colour)
+  if not zig().level.floor_colour then
+    zig().level.floor_colour = colour
+    dgn.change_floor_colour(colour, false)
+  end
+end
+
+local function set_random_floor_colour()
+  set_floor_colour( random_floor_colour() )
+end
+
+local function monster_creator_fn(arg)
+  local atyp = type(arg)
+  if atyp == "string" then
+    local _, _, branch = string.find(arg, "^place:(%w+):")
+    return function (x, y, nth)
+             if branch then
+               set_floor_colour(dgn.br_floorcol(branch))
+             end
+
+             return dgn.create_monster(x, y, arg)
+           end
+  elseif atyp == "table" then
+    if arg.cond() then
+      return monster_creator_fn(arg.spec)
+    end
+  else
+    return arg
+  end
+end
+
 local mons_populations = {
   -- Dress up monster sets a bit.
   "place:Elf:7 w:300 / deep elf blademaster / deep elf master archer / " ..
@@ -197,24 +228,17 @@ local mons_populations = {
   "place:Crypt:5",
   "place:Abyss",
   "place:Shoal:5",
-  depth_ge(6, "place:Pan w:100 / w:15 pandemonium lord"),
+  depth_ge(6, "place:Pan w:400 / w:15 pandemonium lord"),
   depth_lt(6, "place:Pan")
 }
 
-local function set_floor_colour(colour)
-  if not zig().level.floor_colour then
-    zig().level.floor_colour = colour
-    dgn.change_floor_colour(colour, false)
-  end
-end
-
-local function set_random_floor_colour()
-  set_floor_colour( random_floor_colour() )
-end
-
 local function mons_random_gen(x, y, nth)
   set_random_floor_colour()
-  return dgn.create_monster(x, y, util.random_from(mons_populations))
+  local mgen = nil
+  while not mgen do
+    mgen = monster_creator_fn(util.random_from(mons_populations))
+  end
+  return mgen(x, y, nth)
 end
 
 local function mons_drac_gen(x, y, nth)
@@ -236,26 +260,6 @@ local mons_generators = {
   depth_ge(6, mons_drac_gen),
   depth_ge(8, mons_panlord_gen)
 }
-
-local function monster_creator_fn(arg)
-  local atyp = type(arg)
-  if atyp == "string" then
-    local _, _, branch = string.find(arg, "^place:(%w+):")
-    return function (x, y, nth)
-             if branch then
-               set_floor_colour(dgn.br_floorcol(branch))
-             end
-
-             return dgn.create_monster(x, y, arg)
-           end
-  elseif atyp == "table" then
-    if arg.cond() then
-      return monster_creator_fn(arg.spec)
-    end
-  else
-    return arg
-  end
-end
 
 function ziggurat_monster_creators()
   return util.map(monster_creator_fn,
