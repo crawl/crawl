@@ -60,6 +60,7 @@ private:
 class lua_shutdown_listener
 {
 public:
+    virtual ~lua_shutdown_listener();
     virtual void shutdown(CLua &lua) = 0;
 };
 

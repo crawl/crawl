@@ -3023,6 +3023,10 @@ std::string quote_lua_string(const std::string &s)
 
 /////////////////////////////////////////////////////////////////////
 
+lua_shutdown_listener::~lua_shutdown_listener()
+{
+}
+
 lua_datum::lua_datum(CLua &_lua, int stackpos, bool pop)
     : need_cleanup(true), lua(_lua)
 {

@@ -1119,7 +1119,7 @@ static int _lua_colour(lua_State *ls, int ndx,
                        int forbidden_colour = -1)
 {
     if (lua_isnumber(ls, ndx))
-        return lua_tonumber(ls, ndx);
+        return lua_tointeger(ls, ndx);
     else if (const char *s = luaL_checkstring(ls, ndx))
     {
         const int colour = str_to_colour(s);
