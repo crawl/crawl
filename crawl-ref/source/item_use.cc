@@ -3874,23 +3874,7 @@ static bool _vorpalise_weapon()
 
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
-        {
-            bolt beam;
-
-            beam.name       = "fiery explosion";
-            beam.aux_source = "a fiery explosion";
-            beam.type       = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage     = dice_def(3, 10);
-            beam.flavour    = BEAM_FIRE;
-            beam.target     = you.pos();
-            beam.colour     = RED;
-            beam.thrower    = KILL_YOU;
-            beam.ex_size    = 2;
-            beam.is_tracer  = false;
-            beam.is_explosion = true;
-
-            explosion(beam);
-        }
+        immolation(IMMOLATION_SPELL);
         break;
 
     case SPWPN_FREEZING:
@@ -4480,30 +4464,10 @@ void read_scroll(int slot)
     {
         mpr("The scroll explodes in your hands!");
         // We do this here to prevent it from blowing itself up.
-        set_ident_type( scroll, ID_KNOWN_TYPE );
-        dec_inv_item_quantity( item_slot, 1 );
+        set_ident_type(scroll, ID_KNOWN_TYPE);
+        dec_inv_item_quantity(item_slot, 1);
 
-        bolt beam;
-
-        beam.is_tracer = false;
-
-        // unsure about this: BEAM_EXPLOSION instead? {dlb}
-        beam.flavour      = BEAM_FIRE;
-        beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-        beam.damage       = dice_def(3, 10);
-        beam.target       = you.pos();
-        beam.name         = "fiery explosion";
-        beam.colour       = RED;
-        // your explosion, (not someone else's explosion)
-        beam.thrower      = KILL_YOU;
-        beam.aux_source   = "reading a scroll of immolation";
-        beam.ex_size      = 2;
-        beam.is_explosion = true;
-
-        if (!alreadyknown)
-            beam.effect_known = false;
-
-        explosion(beam, false, false, true, true, true, false);
+        immolation(IMMOLATION_SCROLL, alreadyknown);
         break;
     }
 

@@ -112,6 +112,8 @@ int torment(int caster, const coord_def& where);
 int torment_player(int pow, int caster);
 int torment_monsters(coord_def where, int pow, int caster);
 
+void immolation(int caster, bool known = false);
+
 // called from: debug
 void change_labyrinth(bool msg = false);
 

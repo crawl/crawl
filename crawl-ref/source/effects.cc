@@ -264,9 +264,47 @@ int torment(int caster, const coord_def& where)
     return apply_area_within_radius(torment_monsters, where, 0, 8, caster);
 }
 
+void immolation(int caster, bool known)
+{
+    const char *aux = "immolation";
+
+    if (caster < 0)
+    {
+        switch (caster)
+        {
+        case IMMOLATION_SCROLL:
+            aux = "scroll of immolation";
+            break;
+
+        case IMMOLATION_SPELL:
+            aux = "a fiery explosion";
+            break;
+        }
+
+        caster = IMMOLATION_GENERIC;
+    }
+
+    bolt beam;
+    beam.flavour      = BEAM_FIRE;
+    beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.damage       = dice_def(3, 10);
+    beam.target       = you.pos();
+    beam.name         = "fiery explosion";
+    beam.colour       = RED;
+    beam.thrower      = (caster == IMMOLATION_GENERIC) ? KILL_MISC : KILL_YOU;
+    beam.aux_source   = aux;
+    beam.ex_size      = 2;
+    beam.is_tracer    = false;
+    beam.is_explosion = true;
+    beam.effect_known = known;
+
+    explosion(beam, false, false, true, true, true,
+              caster != IMMOLATION_SCROLL);
+}
+
 static std::string _who_banished(const std::string &who)
 {
-    return (who.empty()? who : " (" + who + ")");
+    return (who.empty() ? who : " (" + who + ")");
 }
 
 void banished(dungeon_feature_type gate_type, const std::string &who)

@@ -1296,6 +1296,13 @@ enum hunger_state                  // you.hunger_state
     HS_ENGORGED                        //    8
 };
 
+enum immolation_source_type
+{
+    IMMOLATION_GENERIC = -1,
+    IMMOLATION_SCROLL  = -2,
+    IMMOLATION_SPELL   = -3
+};
+
 enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 {
     ISFLAG_KNOW_CURSE        = 0x00000001,  // curse status
