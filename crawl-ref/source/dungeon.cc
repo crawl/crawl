@@ -4619,6 +4619,16 @@ static bool _build_vaults(int level_number, const map_def *vault,
     return (true);
 }                               // end build_vaults()
 
+static const object_class_type _acquirement_item_classes[] = {
+    OBJ_WEAPONS,
+    OBJ_ARMOUR,
+    OBJ_WEAPONS,
+    OBJ_JEWELLERY,
+    OBJ_BOOKS,
+    OBJ_STAVES,
+    OBJ_MISCELLANY
+};
+
 static void _dgn_place_item_explicit(const item_spec &spec,
                                      const coord_def& where,
                                      int level)
@@ -4627,10 +4637,13 @@ static void _dgn_place_item_explicit(const item_spec &spec,
     if (spec.base_type == OBJ_UNASSIGNED)
         return;
 
+    object_class_type base_type = spec.base_type;
+
     if (spec.level >= 0)
         level = spec.level;
     else
     {
+        bool adjust_type = true;
         switch (spec.level)
         {
         case ISPEC_GOOD:
@@ -4639,10 +4652,16 @@ static void _dgn_place_item_explicit(const item_spec &spec,
         case ISPEC_SUPERB:
             level = MAKE_GOOD_ITEM;
             break;
+        default:
+            adjust_type = false;
+            break;
         }
+
+        if (adjust_type && base_type == OBJ_RANDOM)
+            base_type = RANDOM_ELEMENT(_acquirement_item_classes);
     }
 
-    const int item_made = items( spec.allow_uniques, spec.base_type,
+    const int item_made = items( spec.allow_uniques, base_type,
                                  spec.sub_type, true, level, spec.race, 0,
                                  spec.ego );
 
@@ -4980,16 +4999,6 @@ dungeon_feature_type map_feature(map_def *map, const coord_def &c, int rawfeat)
             (rawfeat == '\0')? DNGN_ROCK_WALL
                              : DNGN_FLOOR); // includes everything else
 }
-
-static const object_class_type _acquirement_item_classes[] = {
-    OBJ_WEAPONS,
-    OBJ_ARMOUR,
-    OBJ_WEAPONS,
-    OBJ_JEWELLERY,
-    OBJ_BOOKS,
-    OBJ_STAVES,
-    OBJ_MISCELLANY
-};
 
 // Returns altar_count - seems rather odd to me to force such a return
 // when I believe the value is only used in the case of the ecumenical
