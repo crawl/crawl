@@ -147,17 +147,17 @@ bool potion_effect( potion_type pot_eff, int pow, bool was_known )
     }
 
     case POT_GAIN_STRENGTH:
-        if (mutate(MUT_STRONG))
+        if (mutate(MUT_STRONG, true, false, false, true))
             learned_something_new(TUT_YOU_MUTATED);
         break;
 
     case POT_GAIN_DEXTERITY:
-        if (mutate(MUT_AGILE))
+        if (mutate(MUT_AGILE, true, false, false, true))
             learned_something_new(TUT_YOU_MUTATED);
         break;
 
     case POT_GAIN_INTELLIGENCE:
-        if (mutate(MUT_CLEVER))
+        if (mutate(MUT_CLEVER, true, false, false, true))
             learned_something_new(TUT_YOU_MUTATED);
         break;
 

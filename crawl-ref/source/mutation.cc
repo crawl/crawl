@@ -1691,7 +1691,7 @@ static mutation_type get_random_mutation(bool prefer_good,
 
 bool mutate(mutation_type which_mutation, bool failMsg,
             bool force_mutation, bool god_gift,
-            bool demonspawn)
+            bool stat_gain_potion, bool demonspawn)
 {
     if (demonspawn)
         force_mutation = true;
@@ -1701,9 +1701,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (!force_mutation)
     {
         // God gifts override all sources of mutation resistance other
-        // than the mutation resistance mutation and divine protection.
+        // than the mutation resistance mutation and divine protection,
+        // and stat gain potions override all sources of mutation
+        // resistance other than the mutation resistance mutation.
         if (wearing_amulet(AMU_RESIST_MUTATION)
-                && !one_chance_in(10) && !god_gift
+                && !one_chance_in(10) && !god_gift && !stat_gain_potion
             || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
             || player_mutation_level(MUT_MUTATION_RESISTANCE)
                && !one_chance_in(3))
@@ -1714,7 +1716,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         }
 
         // Zin's protection.
-        if (you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY))
+        if (you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY)
+            && !stat_gain_potion)
         {
             simple_god_message(" protects your body from chaos!");
             return (false);
@@ -2801,13 +2804,13 @@ bool perma_mutate(mutation_type which_mut, int how_much)
     how_much = std::min(static_cast<short>(how_much),
                         mutation_defs[which_mut].levels);
 
-    if (mutate(which_mut, false, true, false, true))
+    if (mutate(which_mut, false, true, false, false, true))
         levels++;
 
-    if (how_much >= 2 && mutate(which_mut, false, true, false, true))
+    if (how_much >= 2 && mutate(which_mut, false, true, false, false, true))
         levels++;
 
-    if (how_much >= 3 && mutate(which_mut, false, true, false, true))
+    if (how_much >= 3 && mutate(which_mut, false, true, false, false, true))
         levels++;
 
     you.demon_pow[which_mut] = levels;

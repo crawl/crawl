@@ -34,7 +34,7 @@ void fixup_mutations();
  * *********************************************************************** */
 bool mutate(mutation_type which_mutation, bool failMsg = true,
             bool force_mutation = false, bool god_gift = false,
-            bool demonspawn = false);
+            bool stat_gain_potion = false, bool demonspawn = false);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
