@@ -112,7 +112,7 @@ public:
     std::string feature_description() const;
     std::string property(const std::string &pname) const;
 
-    void notify_dgn_event(const dgn_event &e);
+    bool notify_dgn_event(const dgn_event &e);
 
     static map_marker *read(reader &, map_marker_type);
     static map_marker *parse(const std::string &s, const std::string &)

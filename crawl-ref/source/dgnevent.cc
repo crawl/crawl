@@ -40,6 +40,31 @@ bool dgn_event_dispatcher::has_listeners_at(const coord_def &pos) const
     return (grid_triggers[pos.x][pos.y].get());
 }
 
+bool dgn_event_dispatcher::fire_vetoable_position_event(
+    dgn_event_type et, const coord_def &pos)
+{
+    const dgn_event event(et, pos);
+    return fire_vetoable_position_event(event, pos);
+}
+
+bool dgn_event_dispatcher::fire_vetoable_position_event(
+    const dgn_event &et, const coord_def &pos)
+{
+    dgn_square_alarm *alarm = grid_triggers[pos.x][pos.y].get();
+    if (alarm && (alarm->eventmask & et.type))
+    {
+        dgn_square_alarm alcopy(*alarm);
+        for (std::list<dgn_event_listener*>::iterator
+                 i = alcopy.listeners.begin();
+             i != alcopy.listeners.end(); ++i)
+        {
+            if (!(*i)->notify_dgn_event(et))
+                return (false);
+        }
+    }
+    return (true);
+}
+
 void dgn_event_dispatcher::fire_position_event(
     dgn_event_type event, const coord_def &pos)
 {
@@ -61,7 +86,6 @@ void dgn_event_dispatcher::fire_position_event(
             (*i)->notify_dgn_event(et);
         }
     }
-
 }
 
 void dgn_event_dispatcher::fire_event(const dgn_event &e)

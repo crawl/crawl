@@ -816,6 +816,18 @@ LUARET1(you_see_grid_no_trans, boolean,
 LUARET1(you_can_smell, boolean, player_can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
 
+static int _you_gold(lua_State *ls)
+{
+    if (lua_gettop(ls) >= 1)
+    {
+        ASSERT_DLUA;
+        const int new_gold = luaL_checkint(ls, 1);
+        you.gold = std::max(new_gold, 0);
+        you.redraw_gold = true;
+    }
+    PLUARET(number, you.gold);
+}
+
 void lua_push_floor_items(lua_State *ls);
 static int you_floor_items(lua_State *ls)
 {
@@ -871,6 +883,7 @@ static const struct luaL_reg you_lib[] =
     { "race"        , you_race },
     { "class"       , you_class },
     { "god"         , you_god },
+    { "gold"        , _you_gold },
     { "good_god"    , you_good_god },
     { "evil_god"    , you_evil_god },
     { "hp"          , you_hp },
@@ -1824,6 +1837,48 @@ LUARET1(crawl_getch, number, getch())
 LUARET1(crawl_kbhit, number, kbhit())
 LUAWRAP(crawl_flush_input, flush_input_buffer(FLUSH_LUA))
 
+static char _lua_char(lua_State *ls, int ndx, char defval = 0)
+{
+    return (lua_isnone(ls, ndx) || !lua_isstring(ls, ndx)? defval
+            : lua_tostring(ls, ndx)[0]);
+}
+
+static int crawl_yesno(lua_State *ls)
+{
+    const char *prompt = luaL_checkstring(ls, 1);
+    const bool safe = lua_toboolean(ls, 2);
+    const int safeanswer = _lua_char(ls, 3);
+    const bool clear_after =
+        lua_isnone(ls, 4) ? true : lua_toboolean(ls, 4);
+    const bool interrupt_delays =
+        lua_isnone(ls, 5) ? true : lua_toboolean(ls, 5);
+    const bool noprompt =
+        lua_isnone(ls, 6) ? false : lua_toboolean(ls, 6);
+
+    cursor_control con(true);
+    lua_pushboolean(ls, yesno(prompt, safe, safeanswer, clear_after,
+                              interrupt_delays, noprompt));
+    return (1);
+}
+
+static int crawl_yesnoquit(lua_State *ls)
+{
+    const char *prompt = luaL_checkstring(ls, 1);
+    const bool safe = lua_toboolean(ls, 2);
+    const int safeanswer = _lua_char(ls, 3);
+    const bool allow_all =
+        lua_isnone(ls, 4) ? false : lua_toboolean(ls, 4);
+    const bool clear_after =
+        lua_isnone(ls, 5) ? true : lua_toboolean(ls, 5);
+
+    // Skipping the other params until somebody needs them.
+
+    cursor_control con(true);
+    lua_pushnumber(ls, yesnoquit(prompt, safe, safeanswer, allow_all,
+                                 clear_after));
+    return (1);
+}
+
 static void crawl_sendkeys_proc(lua_State *ls, int argi)
 {
     if (lua_isstring(ls, argi))
@@ -2107,6 +2162,10 @@ LUARET1(crawl_random_range, number,
         random_range( luaL_checkint(ls, 1), luaL_checkint(ls, 2),
                       lua_isnumber(ls, 3)? luaL_checkint(ls, 3) : 1 ))
 LUARET1(crawl_coinflip, boolean, coinflip())
+LUARET1(crawl_roll_dice, number,
+        lua_gettop(ls) == 1
+        ? roll_dice( 1, luaL_checkint(ls, 1) )
+        : roll_dice( luaL_checkint(ls, 1), luaL_checkint(ls, 2) ))
 
 static int crawl_random_element(lua_State *ls)
 {
@@ -2202,12 +2261,15 @@ static const struct luaL_reg crawl_lib[] =
     { "one_chance_in",  crawl_one_chance_in },
     { "random2avg"   ,  crawl_random2avg },
     { "coinflip",       crawl_coinflip },
+    { "roll_dice",      crawl_roll_dice },
     { "random_range",   crawl_random_range },
     { "random_element", crawl_random_element },
     { "redraw_screen",  crawl_redraw_screen },
     { "input_line",     crawl_input_line },
     { "c_input_line",   crawl_c_input_line},
     { "getch",          crawl_getch },
+    { "yesno",          crawl_yesno },
+    { "yesnoquit",      crawl_yesnoquit },
     { "kbhit",          crawl_kbhit },
     { "flush_input",    crawl_flush_input },
     { "sendkeys",       crawl_sendkeys },
@@ -2410,12 +2472,6 @@ struct MonsterWrap
     lua_pushcclosure(ls, l_mons_do_dismiss, 1);                         \
     return (1);                                                         \
     }
-
-#define ASSERT_DLUA \
-    do {                                                            \
-        if (CLua::get_vm(ls).managed_vm)                            \
-            luaL_error(ls, "Operation forbidden in end-user script");   \
-    } while (false)
 
 MDEF(name)
 {

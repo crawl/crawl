@@ -10,6 +10,8 @@
 -- upvalues cannot (yet) be saved.
 ------------------------------------------------------------------------------
 
+require("clua/lm_toll.lua")
+
 function zig()
   if not dgn.persist.ziggurat or not dgn.persist.ziggurat.depth then
     dgn.persist.ziggurat = { }
@@ -71,8 +73,13 @@ end
 
 -- Common setup for ziggurat entry vaults.
 function ziggurat_portal(e)
+  local d = crawl.roll_dice
+  local entry_fee =
+    10 * math.floor(100 + d(3,200) / 3 + d(10) * d(10) * d(10))
+
   local function stair()
-    return one_way_stair {
+    return toll_stair {
+      amount = entry_fee,
       desc = "gateway to a ziggurat",
       dst = "ziggurat",
       dstname = "Ziggurat:1",

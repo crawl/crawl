@@ -1676,6 +1676,11 @@ void up_stairs(dungeon_feature_type force_stair,
         return;
     }
 
+    // Bail if any markers veto the move.
+    if (!dungeon_events.fire_vetoable_position_event(DETV_LEAVE_LEVEL,
+                                                     you.pos()))
+        return;
+
     // Checks are done, the character is committed to moving between levels.
     leaving_level_now();
 
@@ -2055,6 +2060,11 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             return;
         }
     }
+
+    // Bail if any markers veto the move.
+    if (!dungeon_events.fire_vetoable_position_event(DETV_LEAVE_LEVEL,
+                                                     you.pos()))
+        return;
 
     const level_id destination_override(_stair_destination_override());
 

@@ -29,7 +29,10 @@ enum dgn_event_type
     DET_MONSTER_DIED    = 0x0100,
     DET_ITEM_PICKUP     = 0x0200,
     DET_ITEM_MOVED      = 0x0400,
-    DET_FEAT_CHANGE     = 0x0800
+    DET_FEAT_CHANGE     = 0x0800,
+
+    // Vetoable events, usually fired before the corresponding (real) event.
+    DETV_LEAVE_LEVEL    = 0x1000
 };
 
 class dgn_event
@@ -55,7 +58,8 @@ class dgn_event_listener
 {
 public:
     virtual ~dgn_event_listener();
-    virtual void notify_dgn_event(const dgn_event &e) = 0;
+    // For vetoable events, return false to veto.
+    virtual bool notify_dgn_event(const dgn_event &e) = 0;
 };
 
 // Alarm goes off when something enters this square.
@@ -96,6 +100,13 @@ public:
     void clear_listeners_at(const coord_def &pos);
     bool has_listeners_at(const coord_def &pos) const;
     void move_listeners(const coord_def &from, const coord_def &to);
+
+    // Returns false if the event is vetoed.
+    bool fire_vetoable_position_event(const dgn_event &e,
+                                      const coord_def &pos);
+
+    bool fire_vetoable_position_event(dgn_event_type et,
+                                      const coord_def &pos);
 
     void fire_position_event(dgn_event_type et, const coord_def &pos);
     void fire_position_event(const dgn_event &e, const coord_def &pos);

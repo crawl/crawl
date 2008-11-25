@@ -337,16 +337,27 @@ void map_lua_marker::activate(bool verbose)
     callfn("activate", true, 4);
 }
 
-void map_lua_marker::notify_dgn_event(const dgn_event &e)
+bool map_lua_marker::notify_dgn_event(const dgn_event &e)
 {
     lua_stack_cleaner clean(dlua);
     push_fn_args("event");
     clua_push_dgn_event(dlua, &e);
-    if (!dlua.callfn("dlua_marker_method", 4, 0))
+    if (!dlua.callfn("dlua_marker_method", 4, 1))
     {
         mprf(MSGCH_ERROR, "notify_dgn_event: Lua error: %s",
              dlua.error.c_str());
+
+        // Lua error prevents veto if the event is vetoable.
+        return (true);
     }
+
+    bool accepted = true;
+
+    // We accept only a real boolean false as a veto.
+    if (lua_isboolean(dlua, -1))
+        accepted = lua_toboolean(dlua, -1);
+
+    return (accepted);
 }
 
 std::string map_lua_marker::call_str_fn(const char *fn) const

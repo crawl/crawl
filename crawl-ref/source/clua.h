@@ -259,6 +259,12 @@ void lua_set_exclusive_item(const item_def *item = NULL);
         return (2); \
     }
 
+#define ASSERT_DLUA \
+    do {                                                            \
+        if (CLua::get_vm(ls).managed_vm)                            \
+            luaL_error(ls, "Operation forbidden in end-user script");   \
+    } while (false)
+
 template <class T>
 inline static T *util_get_userdata(lua_State *ls, int ndx)
 {
