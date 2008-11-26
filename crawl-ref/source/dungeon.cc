@@ -177,7 +177,8 @@ static bool _treasure_area(int level_number, unsigned char ta1_x,
                            unsigned char ta2_y);
 
 // SPECIAL ROOM BUILDERS
-static void _special_room(int level_number, spec_room &sr);
+static void _special_room(int level_number, spec_room &sr,
+                          const map_def *vault);
 static void _specr_2(spec_room &sr);
 static void _big_room(int level_number);
 static void _chequerboard(spec_room &sr, dungeon_feature_type target,
@@ -2540,8 +2541,15 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
 
     // maybe create a special room, if roguey_level hasn't done it
     // already.
-    if (!sr.created && level_number > 5 && one_chance_in(5))
-        _special_room(level_number, sr);
+    if (!sr.created && one_chance_in(5))
+    {
+        const map_def *sroom = random_map_for_tag("special_room", true, true);
+
+        // Might not be any special room definitions appropriate for
+        // this branch and depth.
+        if (sroom != NULL)
+            _special_room(level_number, sr, sroom);
+    }
 
     return BUILD_CONTINUE;
 }
@@ -3520,8 +3528,10 @@ static void _specr_2(spec_room &sr)
     sr.hooked_up = true;
 }
 
-static void _special_room(int level_number, spec_room &sr)
+static void _special_room(int level_number, spec_room &sr,
+                          const map_def *vault)
 {
+    ASSERT(vault);
 #if 0 // MATT
     char spec_room_type = SROOM_LAIR_KOBOLD;
     int lev_mons;
@@ -3552,15 +3562,6 @@ static void _special_room(int level_number, spec_room &sr)
     sr.tl.set(room_x1 + 1, room_y1 + 1);
     sr.br.set(room_x2 - 1, room_y2 - 1);
 
-    const map_def *vault = random_map_for_tag("special_room", true, true);
-
-    ASSERT(vault);
-    if (!vault)
-    {
-        mpr("ERROR: failed to create special room.", MSGCH_ERROR);
-        return;
-    }
-
     lua_special_room_spec  = sr;
     lua_special_room_level = level_number;
 
@@ -3571,34 +3572,6 @@ static void _special_room(int level_number, spec_room &sr)
     lua_special_room_level = -1;
 
 #if 0 // MATT
-    if (level_number < 7)
-        spec_room_type = SROOM_LAIR_KOBOLD;
-    else
-    {
-        spec_room_type = random2(NUM_SPECIAL_ROOMS);
-
-        if (level_number < 23 && one_chance_in(4))
-            spec_room_type = SROOM_BEEHIVE;
-
-        // Replace overly dangerous special rooms with a room full of orcs.
-        if (level_number > 13 && spec_room_type == SROOM_LAIR_KOBOLD
-            || level_number < 16 && spec_room_type == SROOM_MORGUE
-            || level_number < 14 && spec_room_type == SROOM_JELLY_PIT
-            || level_number < 17 && one_chance_in(4))
-        {
-            spec_room_type = SROOM_LAIR_ORC;
-        }
-
-        if (level_number > 19 && coinflip())
-            spec_room_type = SROOM_MORGUE;
-
-        if (level_number > 13 &&
-            one_chance_in(6 - (level_number > 23) - (level_number > 18)))
-        {
-            spec_room_type = SROOM_JELLY_PIT;
-        }
-    }
-
     switch (spec_room_type)
     {
     case SROOM_LAIR_ORC:
@@ -7506,7 +7479,10 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         }                       // end "for bp, for i"
 
     // Is one of them a special room?
-    if (level_number > 8 && one_chance_in(10))
+    const map_def *sroom;
+
+    if (one_chance_in(10)
+	    && (sroom = random_map_for_tag("special_room", true, true)) != NULL)
     {
         int spec_room_done = random2(25);
 
@@ -7514,7 +7490,7 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         sr.hooked_up = true;
         sr.tl.set( rox1[spec_room_done], roy1[spec_room_done] );
         sr.br.set( rox2[spec_room_done], roy2[spec_room_done] );
-        _special_room( level_number, sr );
+        _special_room( level_number, sr, sroom );
 
         // Make the room 'special' so it doesn't get overwritten
         // by something else (or put monsters in walls, etc...)
