@@ -837,9 +837,9 @@ static int _place_monster_aux( const mgen_data &mg,
     }
     else
     {
-        int i = 0;
+        int i;
         // We'll try 1000 times for a good spot.
-        for ( ; i < 1000; i++)
+        for (i = 0; i < 1000; ++i)
         {
             fpos = mg.pos + coord_def( random_range(-3, 3),
                                        random_range(-3, 3) );

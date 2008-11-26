@@ -1804,7 +1804,7 @@ bool random_near_space(const coord_def& origin, coord_def& target,
     int tries = 0;
     while (tries++ < 150)
     {
-        coord_def delta( random2(14), random2(14) );
+        coord_def delta(random2(14), random2(14));
 
         target = origin - coord_def(6,6) + delta;
 
