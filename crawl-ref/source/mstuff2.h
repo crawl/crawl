@@ -25,9 +25,9 @@ bool mons_thrown_object_destroyed( item_def *item, const coord_def& where,
                                    bool returning, int midx );
 void setup_generic_throw(monsters *monster, bolt &pbolt);
 void mons_trap(monsters *monster);
-void monster_random_space(const monsters *monster, coord_def& target,
+bool monster_random_space(const monsters *monster, coord_def& target,
                           bool forbid_sanctuary = false);
-void monster_random_space(monster_type mon, coord_def& target,
+bool monster_random_space(monster_type mon, coord_def& target,
                           bool forbid_sanctuary = false);
 void monster_teleport(monsters *monster, bool instan, bool silent = false);
 void spore_goes_pop(monsters *monster);
