@@ -60,11 +60,11 @@ TAGS: ziggurat_loot_chamber allow_dup no_rotate
 ORIENT: float
 : ziggurat_loot_spot(_G, "X")
 MAP
-cccccccccccc
-c..........c
-@.........Xc
-c..........c
-cccccccccccc
+ cccccc
+cc....cc
+@.....Xc
+cc....cc
+ cccccc
 ENDMAP
 
 #######################################################################
