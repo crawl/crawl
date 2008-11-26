@@ -2464,6 +2464,24 @@ LUAFN(_dgn_in_vault)
     return (1);
 }
 
+extern spec_room lua_special_room_spec;
+extern int       lua_special_room_level;
+
+LUAFN(dgn_get_special_room_info)
+{
+     if (!lua_special_room_spec.created || !in_bounds(lua_special_room_spec.tl)
+         || lua_special_room_level == -1)
+     {
+         return (0);
+     }
+
+     lua_pushnumber(ls,  lua_special_room_level);
+     dlua_push_coord(ls, lua_special_room_spec.tl);
+     dlua_push_coord(ls, lua_special_room_spec.br);
+
+     return (5);
+}
+
 LUAFN(_dgn_resolve_map)
 {
     if (lua_isnil(ls, 1))
@@ -2659,6 +2677,8 @@ static const struct luaL_reg dgn_lib[] =
     { "reuse_map", _dgn_reuse_map },
     { "resolve_map", _dgn_resolve_map },
     { "in_vault", _dgn_in_vault },
+
+    { "get_special_room_info", dgn_get_special_room_info },
 
     { "debug_dump_map", dgn_debug_dump_map },
 

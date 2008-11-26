@@ -58,13 +58,8 @@
 #include "cio.h" // for cancelable_get_line()
 #endif
 
-#define MAX_PIT_MONSTERS   10
-
-struct pit_mons_def
-{
-    monster_type type;
-    int rare;
-};
+spec_room lua_special_room_spec;
+int       lua_special_room_level;
 
 struct dist_feat
 {
@@ -189,9 +184,6 @@ static void _chequerboard(spec_room &sr, dungeon_feature_type target,
                           dungeon_feature_type floor1,
                           dungeon_feature_type floor2);
 static void _roguey_level(int level_number, spec_room &sr, bool make_stairs);
-static void _morgue(spec_room &sr);
-static void _beehive(spec_room &sr);
-static void _jelly_pit(int level_number, spec_room &sr);
 
 // VAULT FUNCTIONS
 static bool _build_secondary_vault(int level_number, const map_def *vault,
@@ -925,6 +917,10 @@ static void _reset_level()
 
     env.floor_colour = BLACK;
     env.rock_colour  = BLACK;
+
+    lua_special_room_spec.created = false;
+    lua_special_room_spec.tl.set(-1, -1);
+    lua_special_room_level = -1;
 }
 
 static void _build_layout_skeleton(int level_number, int level_type,
@@ -3524,83 +3520,9 @@ static void _specr_2(spec_room &sr)
     sr.hooked_up = true;
 }
 
-// Fill special room sr with monsters from the pit_list at density%...
-// then place a "lord of the pit" of lord_type at (lordx, lordy).
-static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
-                               MAX_PIT_MONSTERS> &pit_list, int density,
-                               monster_type lord_type, const coord_def& lordpos)
-{
-    int i;
-
-    // Make distribution cumulative.
-    for (i = 1; i < MAX_PIT_MONSTERS; ++i)
-    {
-        // assuming that the first zero rarity is the end of the list:
-        if (!pit_list[i].rare)
-            break;
-
-        pit_list[i].rare = pit_list[i].rare + pit_list[i - 1].rare;
-    }
-
-    const int num_types = i;
-    const int rare_sum = pit_list[num_types - 1].rare;
-
-    // Calculate die_size, factoring in the density% of the pit.
-    const int die_size = (rare_sum * 100) / density;
-
-#if DEBUG_DIAGNOSTICS
-    for (i = 0; i < num_types; ++i)
-    {
-        const int delta = ((i > 0) ? pit_list[i].rare - pit_list[i - 1].rare
-                                   : pit_list[i].rare);
-
-        const float perc = (static_cast<float>( delta ) * 100.0)
-                                / static_cast<float>( rare_sum );
-
-        mprf( MSGCH_DIAGNOSTICS, "%6.2f%%: %s", perc,
-              mons_type_name( pit_list[i].type, DESC_PLAIN).c_str() );
-    }
-#endif
-
-    // Put the boss monster down.
-    if (lord_type != MONS_PROGRAM_BUG)
-    {
-        mgen_data mg;
-        mg.cls       = lord_type;
-        mg.behaviour = BEH_SLEEP;
-        mg.pos       = lordpos;
-
-        mons_place(mgen_data::sleeper_at(lord_type, lordpos));
-    }
-
-    // Place monsters and give them items {dlb}:
-    for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
-    {
-        // Avoid the boss (or anyone else we may have dropped already).
-        if (mgrd(*ri) != NON_MONSTER)
-            continue;
-
-        const int roll = random2( die_size );
-
-        // Density skip (no need to iterate).
-        if (roll >= rare_sum)
-            continue;
-
-        // Run through the cumulative chances and place a monster.
-        for (i = 0; i < num_types; ++i)
-        {
-            if (roll < pit_list[i].rare)
-            {
-                mons_place(
-                    mgen_data::sleeper_at(pit_list[i].type, *ri));
-                break;
-            }
-        }
-    }
-}
-
 static void _special_room(int level_number, spec_room &sr)
 {
+#if 0 // MATT
     char spec_room_type = SROOM_LAIR_KOBOLD;
     int lev_mons;
     int thing_created = 0;
@@ -3611,6 +3533,7 @@ static void _special_room(int level_number, spec_room &sr)
     FixedVector < monster_type, 10 > mons_alloc; // was [20] {dlb}
 
     coord_def lordpos;
+#endif
 
     // Overwrites anything: this function better be called early on during
     // creation.
@@ -3629,6 +3552,25 @@ static void _special_room(int level_number, spec_room &sr)
     sr.tl.set(room_x1 + 1, room_y1 + 1);
     sr.br.set(room_x2 - 1, room_y2 - 1);
 
+    const map_def *vault = random_map_for_tag("special_room", true, true);
+
+    ASSERT(vault);
+    if (!vault)
+    {
+        mpr("ERROR: failed to create special room.", MSGCH_ERROR);
+        return;
+    }
+
+    lua_special_room_spec  = sr;
+    lua_special_room_level = level_number;
+
+    _build_minivaults( level_number, vault, false, false, sr.tl);
+
+    lua_special_room_spec.created = false;
+    lua_special_room_spec.tl.set(-1, -1);
+    lua_special_room_level = -1;
+
+#if 0 // MATT
     if (level_number < 7)
         spec_room_type = SROOM_LAIR_KOBOLD;
     else
@@ -3774,46 +3716,8 @@ static void _special_room(int level_number, spec_room &sr)
         _jelly_pit(level_number, sr);
         break;
     }
+#endif
 }                               // end special_room()
-
-// Fills a special room with bees.
-static void _beehive(spec_room &sr)
-{
-    for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
-    {
-        if (coinflip())
-            continue;
-
-        const int i = get_item_slot();
-        if (i == NON_ITEM)
-            continue;
-
-        item_def& item(mitm[i]);
-
-        item.quantity = 1;
-        item.base_type = OBJ_FOOD;
-        item.sub_type = (one_chance_in(25) ? FOOD_ROYAL_JELLY : FOOD_HONEYCOMB);
-        item.pos = *ri;
-        item_colour( item );
-    }
-
-    const coord_def queenpos(sr.random_spot());
-
-    // Mark all kinds of bees at patrolling to make them return to their hive.
-    for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
-    {
-        if (*ri == queenpos)
-            continue;
-
-        // The hive is chock full of bees!
-        mons_place(mgen_data::sleeper_at(
-                       one_chance_in(7) ? MONS_KILLER_BEE_LARVA
-                                        : MONS_KILLER_BEE,
-                       *ri, MG_PATROLLING));
-    }
-
-    mons_place(mgen_data::sleeper_at(MONS_QUEEN_BEE, queenpos, MG_PATROLLING));
-}
 
 // Used for placement of vaults.
 static bool _may_overwrite_feature(const dungeon_feature_type grid,
@@ -7462,6 +7366,82 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
         }
 }                               // end roguey_level()
 
+#if 0 // MATT
+// Fill special room sr with monsters from the pit_list at density%...
+// then place a "lord of the pit" of lord_type at (lordx, lordy).
+static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
+                               MAX_PIT_MONSTERS> &pit_list, int density,
+                               monster_type lord_type, const coord_def& lordpos)
+{
+    int i;
+
+    // Make distribution cumulative.
+    for (i = 1; i < MAX_PIT_MONSTERS; ++i)
+    {
+        // assuming that the first zero rarity is the end of the list:
+        if (!pit_list[i].rare)
+            break;
+
+        pit_list[i].rare = pit_list[i].rare + pit_list[i - 1].rare;
+    }
+
+    const int num_types = i;
+    const int rare_sum = pit_list[num_types - 1].rare;
+
+    // Calculate die_size, factoring in the density% of the pit.
+    const int die_size = (rare_sum * 100) / density;
+
+#if DEBUG_DIAGNOSTICS
+    for (i = 0; i < num_types; ++i)
+    {
+        const int delta = ((i > 0) ? pit_list[i].rare - pit_list[i - 1].rare
+                                   : pit_list[i].rare);
+
+        const float perc = (static_cast<float>( delta ) * 100.0)
+                                / static_cast<float>( rare_sum );
+
+        mprf( MSGCH_DIAGNOSTICS, "%6.2f%%: %s", perc,
+              mons_type_name( pit_list[i].type, DESC_PLAIN).c_str() );
+    }
+#endif
+
+    // Put the boss monster down.
+    if (lord_type != MONS_PROGRAM_BUG)
+    {
+        mgen_data mg;
+        mg.cls       = lord_type;
+        mg.behaviour = BEH_SLEEP;
+        mg.pos       = lordpos;
+
+        mons_place(mgen_data::sleeper_at(lord_type, lordpos));
+    }
+
+    // Place monsters and give them items {dlb}:
+    for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
+    {
+        // Avoid the boss (or anyone else we may have dropped already).
+        if (mgrd(*ri) != NON_MONSTER)
+            continue;
+
+        const int roll = random2( die_size );
+
+        // Density skip (no need to iterate).
+        if (roll >= rare_sum)
+            continue;
+
+        // Run through the cumulative chances and place a monster.
+        for (i = 0; i < num_types; ++i)
+        {
+            if (roll < pit_list[i].rare)
+            {
+                mons_place(
+                    mgen_data::sleeper_at(pit_list[i].type, *ri));
+                break;
+            }
+        }
+    }
+}
+
 static void _morgue(spec_room &sr)
 {
     for (rectangle_iterator ri(sr.tl, sr.br); ri; ++ri)
@@ -7522,6 +7502,46 @@ static void _jelly_pit(int level_number, spec_room &sr)
 
     _fill_monster_pit( sr, pit_list, 90, MONS_PROGRAM_BUG, lordpos );
 }
+
+// Fills a special room with bees.
+static void _beehive(spec_room &sr)
+{
+    for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
+    {
+        if (coinflip())
+            continue;
+
+        const int i = get_item_slot();
+        if (i == NON_ITEM)
+            continue;
+
+        item_def& item(mitm[i]);
+
+        item.quantity = 1;
+        item.base_type = OBJ_FOOD;
+        item.sub_type = (one_chance_in(25) ? FOOD_ROYAL_JELLY : FOOD_HONEYCOMB);
+        item.pos = *ri;
+        item_colour( item );
+    }
+
+    const coord_def queenpos(sr.random_spot());
+
+    // Mark all kinds of bees at patrolling to make them return to their hive.
+    for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
+    {
+        if (*ri == queenpos)
+            continue;
+
+        // The hive is chock full of bees!
+        mons_place(mgen_data::sleeper_at(
+                       one_chance_in(7) ? MONS_KILLER_BEE_LARVA
+                                        : MONS_KILLER_BEE,
+                       *ri, MG_PATROLLING));
+    }
+
+    mons_place(mgen_data::sleeper_at(MONS_QUEEN_BEE, queenpos, MG_PATROLLING));
+}
+#endif
 
 bool place_specific_trap(const coord_def& where, trap_type spec_type)
 {

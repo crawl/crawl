@@ -556,13 +556,23 @@ static const map_def *_random_map_in_list(const map_selector &sel,
 
     if (mapindex == -1)
     {
+        int absdepth = 0;
+        if (sel.place.level_type == LEVEL_DUNGEON && sel.place.is_valid())
+            absdepth = sel.place.absdepth();
+
         for (vault_indices::const_iterator i = eligible.begin();
              i != eligible.end(); ++i)
         {
             const map_def &map(vdefs[*i]);
-            rollsize += map.weight;
+            const int weight = map.weight
+                + absdepth * map.weight_depth_mult / map.weight_depth_div;
 
-            if (rollsize && x_chance_in_y(map.weight, rollsize))
+            if (weight <= 0)
+                continue;
+
+            rollsize += weight;
+
+            if (rollsize && x_chance_in_y(weight, rollsize))
                 mapindex = *i;
         }
     }

@@ -1,0 +1,19 @@
+NAME: special_room_test
+TAGS: special_room allow_dup
+
+{{
+    local level, tl_x, tl_y, br_x, br_y = dgn.get_special_room_info()
+
+    -- Return early if we're being called during map validation.
+    if not level then
+        return
+    end
+
+    for x = tl_x, br_x do
+        for y = tl_y, br_y do
+            dgn.create_monster(x, y, "rat")
+        end
+    end
+}}
+MAP
+ENDMAP

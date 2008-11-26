@@ -1184,10 +1184,10 @@ dlua_set_map::~dlua_set_map()
 
 map_def::map_def()
     : name(), tags(), place(), depths(), orient(), chance(), weight(),
-      welcome_messages(), map(), mons(), items(), keyspecs(),
-      prelude("dlprelude"), main("dlmain"), validate("dlvalidate"),
-      veto("dlveto"), rock_colour(BLACK), floor_colour(BLACK),
-      index_only(false), cache_offset(0L)
+      weight_depth_mult(), weight_depth_div(), welcome_messages(), map(),
+      mons(), items(), keyspecs(), prelude("dlprelude"), main("dlmain"),
+      validate("dlvalidate"), veto("dlveto"), rock_colour(BLACK),
+      floor_colour(BLACK), index_only(false), cache_offset(0L)
 {
     init();
 }
@@ -1238,6 +1238,12 @@ void map_def::reinit()
     // picked with a probability of weight / (sum of weights of all
     // eligible vaults).
     weight = 10;
+
+    // How to modify weight based on absolte dungeon depth.  This
+    // needs to be done in the C++ code since the map's lua code doesnt'
+    // get called again each time the depth changes.
+    weight_depth_mult = 0;
+    weight_depth_div  = 1;
 
     // Clearing the map also zaps map transforms.
     map.clear();

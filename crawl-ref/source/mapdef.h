@@ -629,6 +629,8 @@ public:
     int              chance_priority;
     int              chance;
     int              weight;
+    int              weight_depth_mult;
+    int              weight_depth_div;
 
     std::vector<std::string> welcome_messages;
 
