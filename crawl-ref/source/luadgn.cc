@@ -2464,6 +2464,22 @@ LUAFN(_dgn_in_vault)
     return (1);
 }
 
+LUAFN(_dgn_find_marker_prop)
+{
+    const char *prop = luaL_checkstring(ls, 1);
+    const std::string value(
+        lua_gettop(ls) >= 2 ? luaL_checkstring(ls, 2) : "");
+    const coord_def place = find_marker_prop(prop, value);
+    if (map_bounds(place))
+        clua_push_coord(ls, place);
+    else
+    {
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+    }
+    return (2);
+}
+
 extern spec_room lua_special_room_spec;
 extern int       lua_special_room_level;
 
@@ -2678,6 +2694,8 @@ static const struct luaL_reg dgn_lib[] =
     { "resolve_map", _dgn_resolve_map },
     { "in_vault", _dgn_in_vault },
 
+    { "find_marker_prop", _dgn_find_marker_prop },
+
     { "get_special_room_info", dgn_get_special_room_info },
 
     { "debug_dump_map", dgn_debug_dump_map },
@@ -2703,6 +2721,8 @@ static int file_marshall(lua_State *ls)
     writer &th(*static_cast<writer*>( lua_touserdata(ls, 1) ));
     if (lua_isnumber(ls, 2))
         marshallLong(th, luaL_checklong(ls, 2));
+    else if (lua_isboolean(ls, 2))
+        marshallByte(th, lua_toboolean(ls, 2));
     else if (lua_isstring(ls, 2))
         marshallString(th, lua_tostring(ls, 2));
     else if (lua_isfunction(ls, 2))
@@ -2711,6 +2731,15 @@ static int file_marshall(lua_State *ls)
         marshallString(th, chunk.compiled_chunk());
     }
     return (0);
+}
+
+static int file_unmarshall_boolean(lua_State *ls)
+{
+    if (lua_gettop(ls) != 1)
+        luaL_error(ls, "Need reader as one argument");
+    reader &th(*static_cast<reader*>( lua_touserdata(ls, 1) ));
+    lua_pushboolean(ls, unmarshallByte(th));
+    return (1);
 }
 
 static int file_unmarshall_number(lua_State *ls)
@@ -2749,7 +2778,8 @@ enum lua_persist_type
     LPT_NUMBER,
     LPT_STRING,
     LPT_FUNCTION,
-    LPT_NIL
+    LPT_NIL,
+    LPT_BOOLEAN
 };
 
 static int file_marshall_meta(lua_State *ls)
@@ -2762,6 +2792,8 @@ static int file_marshall_meta(lua_State *ls)
     lua_persist_type ptype = LPT_NONE;
     if (lua_isnumber(ls, 2))
         ptype = LPT_NUMBER;
+    else if (lua_isboolean(ls, 2))
+        ptype = LPT_BOOLEAN;
     else if (lua_isstring(ls, 2))
         ptype = LPT_STRING;
     else if (lua_isfunction(ls, 2))
@@ -2769,7 +2801,9 @@ static int file_marshall_meta(lua_State *ls)
     else if (lua_isnil(ls, 2))
         ptype = LPT_NIL;
     else
-        luaL_error(ls, "Can marshall only numbers, strings and functions.");
+        luaL_error(ls,
+                   make_stringf("Cannot marshall %s",
+                                lua_typename(ls, lua_type(ls, 2))).c_str());
     marshallByte(th, ptype);
     if (ptype != LPT_NIL)
         file_marshall(ls);
@@ -2783,6 +2817,8 @@ static int file_unmarshall_meta(lua_State *ls)
         static_cast<lua_persist_type>(unmarshallByte(th));
     switch (ptype)
     {
+    case LPT_BOOLEAN:
+        return file_unmarshall_boolean(ls);
     case LPT_NUMBER:
         return file_unmarshall_number(ls);
     case LPT_STRING:

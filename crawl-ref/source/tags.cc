@@ -1039,7 +1039,8 @@ static void tag_construct_you(writer &th)
     // minorVersion 7 starts here
     marshallByte(th, you.friendly_pickup);
 
-    dlua.callfn("dgn_save_data", "u", &th);
+    if (!dlua.callfn("dgn_save_data", "u", &th))
+        mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 }
 
 static void tag_construct_you_items(writer &th)
@@ -1445,7 +1446,11 @@ static void tag_read_you(reader &th, char minorVersion)
         you.friendly_pickup = unmarshallByte(th);
 
     if (minorVersion >= TAG_MINOR_LUADGN)
-        dlua.callfn("dgn_load_data", "u", &th);
+    {
+        if (!dlua.callfn("dgn_load_data", "u", &th))
+            mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
+                 dlua.error.c_str());
+    }
 }
 
 static void tag_read_you_items(reader &th, char minorVersion)

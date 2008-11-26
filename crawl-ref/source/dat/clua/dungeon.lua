@@ -29,6 +29,15 @@ function dgn.fnum(name)
   return fnum
 end
 
+-- Given a feature name or number, returns a feature number.
+function dgn.find_feature_number(name_num)
+  if type(name_num) == "number" then
+    return name_num
+  else
+    return dgn.fnum(name_num)
+  end
+end
+
 -- Wraps a map_def into a Lua environment (a table) such that
 -- functions run in the environment (with setfenv) can directly
 -- address the map with function calls such as name(), tags(), etc.
@@ -170,6 +179,20 @@ function dgn.replace_feat(rmap)
   end
 end
 
+-- Returns a function that returns true if the point specified is
+-- travel-passable and is not one of the features specified.
+function dgn.passable_excluding(...)
+  local forbidden_features =
+    util.set(util.map(dgn.find_feature_number, { ... }))
+  return function (p)
+           local x, y = p.x, p.y
+           return dgn.is_passable(x, y) and
+             not forbidden_features[dgn.grid(x, y)]
+         end
+end
+
+-- Returns all adjacent points of c which are in_bounds (i.e. excluding the
+-- outermost layer of wall) and for which faccept returns true.
 function dgn.adjacent_points(c, faccept)
   local plist = { }
 
@@ -179,7 +202,7 @@ function dgn.adjacent_points(c, faccept)
   }
 
   for _, cp in ipairs(compass) do
-    local p = { x = c.x + cp[1], y = c.y + cp[2] }
+    local p = dgn.point(c.x + cp[1], c.y + cp[2])
     if dgn.in_bounds(p.x, p.y) and faccept(p) then
       table.insert(plist, p)
     end
@@ -187,19 +210,25 @@ function dgn.adjacent_points(c, faccept)
   return plist
 end
 
+-- Returns the closest point p starting from c (including c) for which
+-- fcondition(p) is true, without passing through squares for which
+-- fpassable(p) is false. If no suitable square is found, returns nil.
+--
+-- All points are instances of dgn.point, i.e. a Lua table with x and y keys.
+--
+-- fpassable may be omitted, in which case it defaults to dgn.is_passable.
 function dgn.find_adjacent_point(c, fcondition, fpassable)
+  -- Just in case c isn't a real dgn.point - canonicalise.
+  c = dgn.point(c.x, c.y)
+
   local mapped_points = { }
 
-  local function pstr(p)
-    return p.x .. "," .. p.y
-  end
-
   local function seen(p)
-    return mapped_points[pstr(p)]
+    return mapped_points[p:str()]
   end
 
   local function record(p, val)
-    mapped_points[pstr(p)] = val or 1
+    mapped_points[p:str()] = val or 1
   end
 
   if not fpassable then
@@ -246,6 +275,8 @@ function dgn.find_adjacent_point(c, fcondition, fpassable)
   return nil
 end
 
+-- Scans the entire map, colouring squares for which fselect(p)
+-- returns true with colour.
 function dgn.colour_map(fselect, colour)
   for x = 0, dgn.GXM - 1 do
     for y = 0, dgn.GYM - 1 do
@@ -270,6 +301,17 @@ function dgn.rectangle_forall(tl, br, fpred)
   return true
 end
 
+-- Sets the grid feature at (x,y) to grid. Optionally, if a marker value
+-- is provided, creates a suitable marker at (x,y).
+--
+-- marker may be
+-- 1) a function, in which case a Lua marker is created that
+--    will call the function to create a marker table.
+-- 2) a table, in which case a Lua marker is created that uses the table
+--    directly as a marker table.
+-- 3) anything else, which is assumed to be a feature name or number, and
+--    is used to create a feature marker.
+--
 function dgn.gridmark(x, y, grid, marker)
   dgn.grid(x, y, grid)
   if marker then

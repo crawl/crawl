@@ -141,7 +141,7 @@ rectangle_iterator::rectangle_iterator( int x_border_dist, int y_border_dist )
         y_border_dist = x_border_dist;
 
     topleft.set( x_border_dist, y_border_dist );
-    bottomright.set( GXM - x_border_dist, GYM - y_border_dist );
+    bottomright.set( GXM - x_border_dist - 1, GYM - y_border_dist - 1 );
     current = topleft;
 }
 

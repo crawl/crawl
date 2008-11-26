@@ -65,13 +65,14 @@ point_metatable.__unm = function (a)
                           return dgn.point(-a.x, -a.y)
                         end
 
+point_metatable.str = function (p)
+                        return "(" .. p.x .. "," .. p.y .. ")"
+                      end
+
 point_metatable.__concat = function (pre, post)
-                             local function pstr(p)
-                               return "(" .. p.x .. "," .. p.y .. ")"
-                             end
                              if getmetatable(pre) == point_metatable then
-                               return pstr(pre) .. post
+                               return pre:str() .. post
                              else
-                               return pre .. pstr(post)
+                               return pre .. post:str()
                              end
                            end

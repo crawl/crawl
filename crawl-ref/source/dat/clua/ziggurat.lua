@@ -170,6 +170,21 @@ local function rectangle_dimensions()
   return x1, y1, x2, y2
 end
 
+local function set_floor_colour(colour)
+  if not zig().level.floor_colour then
+    zig().level.floor_colour = colour
+    dgn.change_floor_colour(colour, false)
+  end
+end
+
+local function set_random_floor_colour()
+  set_floor_colour( random_floor_colour() )
+end
+
+local function with_props(spec, props)
+  return util.cathash({ spec = spec }, props)
+end
+
 local function depth_if(spec, fn)
   return { spec = spec, cond = fn }
 end
@@ -186,34 +201,24 @@ local function depth_lt(lev, spec)
                         end)
 end
 
-local function set_floor_colour(colour)
-  if not zig().level.floor_colour then
-    zig().level.floor_colour = colour
-    dgn.change_floor_colour(colour, false)
-  end
-end
-
-local function set_random_floor_colour()
-  set_floor_colour( random_floor_colour() )
-end
-
 local function monster_creator_fn(arg)
   local atyp = type(arg)
   if atyp == "string" then
     local _, _, branch = string.find(arg, "^place:(%w+):")
-    return function (x, y, nth)
-             if branch then
-               set_floor_colour(dgn.br_floorcol(branch))
-             end
+    local function mspec(x, y, nth)
+      if branch then
+        set_floor_colour(dgn.br_floorcol(branch))
+      end
 
-             return dgn.create_monster(x, y, arg)
-           end
-  elseif atyp == "table" then
-    if arg.cond() then
-      return monster_creator_fn(arg.spec)
+      return dgn.create_monster(x, y, arg)
     end
-  else
-    return arg
+    return { fn = mspec }
+  elseif atyp == "table" then
+    if not arg.cond or arg.cond() then
+      return util.cathash(monster_creator_fn(arg.spec), arg)
+    end
+  elseif atyp == "function" then
+    return { fn = arg }
   end
 end
 
@@ -223,7 +228,7 @@ local mons_populations = {
     "deep elf annihilator / deep elf sorcerer / deep elf demonologist",
   "place:Orc:4 w:120 / orc warlord / orc knight / stone giant",
   "place:Vault:8",
-  "place:Slime:6",
+  with_props("place:Slime:6", { jelly_protect = true }),
   "place:Snake:5",
   "place:Lair:10",
   "place:Tomb:3",
@@ -239,6 +244,9 @@ local function mons_random_gen(x, y, nth)
   local mgen = nil
   while not mgen do
     mgen = monster_creator_fn(util.random_from(mons_populations))
+    if mgen then
+      mgen = mgen.fn
+    end
   end
   return mgen(x, y, nth)
 end
@@ -268,34 +276,39 @@ function ziggurat_monster_creators()
                   util.catlist(mons_populations, mons_generators))
 end
 
-local function ziggurat_vet_monster(fn)
-  return function (x, y, nth, hdmax)
-           for i = 1, 100 do
-             local mons = fn(x, y, nth)
-             if mons then
-               -- Discard zero-exp monsters, and monsters that explode
-               -- the HD limit.
-               if mons.experience == 0 or mons.hd > hdmax * 1.3 then
-                 mons.dismiss()
-               else
-                 if mons.muse == "eats_items" then
-                   zig().level.jelly_protect = true
-                 end
-                 -- Monster is ok!
-                 return mons
-               end
-             end
-           end
-           -- Give up.
-           return nil
-         end
+local function ziggurat_vet_monster(fmap)
+  local fn = fmap.fn
+  fmap.fn = function (x, y, nth, hdmax)
+              for i = 1, 100 do
+                local mons = fn(x, y, nth)
+                if mons then
+                  -- Discard zero-exp monsters, and monsters that explode
+                  -- the HD limit.
+                  if mons.experience == 0 or mons.hd > hdmax * 1.3 then
+                    mons.dismiss()
+                  else
+                    if mons.muse == "eats_items" then
+                      zig().level.jelly_protect = true
+                    end
+                    -- Monster is ok!
+                    return mons
+                  end
+                end
+              end
+              -- Give up.
+              return nil
+            end
+  return fmap
 end
 
 local function choose_monster_set()
   return ziggurat_vet_monster(util.random_from(ziggurat_monster_creators()))
 end
 
-local function ziggurat_create_monsters(p)
+-- Function to find travel-safe squares, excluding closed doors.
+local dgn_passable = dgn.passable_excluding("closed_door")
+
+local function ziggurat_create_monsters(p, mfn)
   local depth = zig_depth()
   local hd_pool = depth * (depth + 8)
 
@@ -303,18 +316,17 @@ local function ziggurat_create_monsters(p)
     return not dgn.mons_at(point.x, point.y)
   end
 
-  local mfn = choose_monster_set()
   local nth = 1
 
-  -- No monsters
   while hd_pool > 0 do
-    local place = dgn.find_adjacent_point(p, mons_place_p)
+    local place = dgn.find_adjacent_point(p, mons_place_p, dgn_passable)
     local mons = mfn(place.x, place.y, nth, hd_pool)
 
     if mons then
       nth = nth + 1
       hd_pool = hd_pool - mons.hd
     else
+      -- Can't find any suitable monster for the HD we have left.
       break
     end
   end
@@ -342,15 +354,10 @@ local function ziggurat_create_loot_at(c)
     return is_free_space
   end
 
-  local door = dgn.fnum("closed_door")
-
-  local function passable(p)
-    return dgn.is_passable(p.x, p.y) and dgn.grid(p.x, p.y) ~= door
-  end
-
   local function free_space_do(fn)
     for i = 0, 20 do
-      local p = dgn.find_adjacent_point(c, free_space_threshold(i), passable)
+      local p =
+        dgn.find_adjacent_point(c, free_space_threshold(i), dgn_passable)
       if p then
         fn(p)
         break
@@ -380,6 +387,14 @@ local function ziggurat_create_loot_at(c)
   end
 end
 
+-- Suitable for use in loot vaults.
+function ziggurat_loot_spot(e, key)
+  e.lua_marker(key, portal_desc { ziggurat_loot = "X" })
+  e.kfeat(key .. " = .")
+  e.marker("@ = feat: permarock_wall")
+  e.kfeat("@ = +")
+end
+
 local function ziggurat_create_loot_vault(entry, exit)
   local inc = (exit - entry):sgn()
 
@@ -390,13 +405,7 @@ local function ziggurat_create_loot_vault(entry, exit)
     return p
   end
 
-  -- Place a door.
-  local doorplace = find_door_spot(exit, inc)
-
-  -- Closed door with the permarock wall feature marker.
-  dgn.gridmark(doorplace.x, doorplace.y, "closed_door", "permarock_wall")
-
-  local connect_point = doorplace + inc
+  local connect_point = exit - inc * 3
 
   local map = dgn.map_by_tag("ziggurat_loot_chamber", false)
 
@@ -411,16 +420,32 @@ local function ziggurat_create_loot_vault(entry, exit)
   end
 
   local function place_loot_chamber()
-    return dgn.place_map(map, false, true)
+    local res = dgn.place_map(map, false, true)
+    if res then
+      zig().level.loot_chamber = true
+    end
+    return res
   end
 
   local function bad_loot_bounds(map, px, py, xs, ys)
     local vc = dgn.point(px + math.floor(xs / 2),
                          py + math.floor(ys / 2))
-    local linc = (vc - exit):sgn()
+
+
+    local function safe_area()
+      local p = dgn.point(px, py)
+      local sz = dgn.point(xs, ys)
+      local floor = dgn.fnum("floor")
+      return dgn.rectangle_forall(p, p + sz - 1,
+                                  function (c)
+                                    return dgn.grid(c.x, c.y) == floor
+                                  end)
+    end
+
+    local linc = (exit - vc):sgn()
     -- The map's positions should be at the same increment to the exit
     -- as the exit is to the entrance, else reject the place.
-    return not (inc == linc)
+    return not (inc == linc) or not safe_area()
   end
 
   local function connect_loot_chamber()
@@ -432,7 +457,14 @@ local function ziggurat_create_loot_vault(entry, exit)
   if not res then
     loot_fallback()
   else
-    ziggurat_create_loot_at(connect_point)
+    -- Find the square to drop the loot.
+    local lootx, looty = dgn.find_marker_prop("ziggurat_loot")
+
+    if lootx and looty then
+      ziggurat_create_loot_at(dgn.point(lootx, looty))
+    else
+      loot_fallback()
+    end
   end
 end
 
@@ -538,11 +570,21 @@ local function ziggurat_rectangle_builder(e)
   zigstair(exit.x, exit.y + 1, "exit_portal_vault", cleanup_ziggurat())
   zigstair(exit.x, exit.y - 1, "exit_portal_vault", cleanup_ziggurat())
 
-  ziggurat_place_pillars(c)
+  local monster_generation = choose_monster_set()
 
-  ziggurat_create_monsters(exit)
+  -- If we're going to spawn jellies, do our loot protection thing.
+  if monster_generation.jelly_protect then
+    zig().level.jelly_protect = true
+  end
 
   ziggurat_create_loot(entry, exit)
+
+  if not zig().level.loot_chamber then
+    -- Place pillars if we did not create a loot chamber.
+    ziggurat_place_pillars(c)
+  end
+
+  ziggurat_create_monsters(exit, monster_generation.fn)
 
   local function needs_colour(p)
     return not dgn.in_vault(p.x, p.y)

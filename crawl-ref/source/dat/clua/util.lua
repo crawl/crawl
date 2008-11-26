@@ -18,6 +18,15 @@ function util.identity(x)
   return x
 end
 
+-- Creates a set (a map of keys to true) from the list supplied.
+function util.set(list)
+  local set = { }
+  for _, value in ipairs(list) do
+    set[value] = true
+  end
+  return set
+end
+
 function util.catlist(...)
   local res = { }
   local tables = { ... }
@@ -40,7 +49,7 @@ function util.cathash(...)
     return tables[1]
   else
     for _, tab in ipairs(tables) do
-      for key, val in ipairs(tab) do
+      for key, val in pairs(tab) do
         res[key] = val
       end
     end

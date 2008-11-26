@@ -26,6 +26,8 @@ class writer;
 
 bool marker_vetoes_operation(const char *op);
 bool feature_marker_at(const coord_def &pos, dungeon_feature_type feat);
+const coord_def find_marker_prop(const std::string &prop,
+                                 const std::string &expected = "");
 
 class map_marker
 {

@@ -819,3 +819,17 @@ bool feature_marker_at(const coord_def &pos, dungeon_feature_type feat)
     }
     return (false);
 }
+
+const coord_def find_marker_prop(const std::string &prop,
+                                 const std::string &expected)
+{
+    for (rectangle_iterator i(0, 0); i; ++i)
+    {
+        const std::string value =
+            env.markers.property_at(*i, MAT_ANY, prop);
+        if (!value.empty() && (expected.empty() || value == expected))
+            return (*i);
+    }
+    const coord_def nowhere(-1, -1);
+    return (nowhere);
+}
