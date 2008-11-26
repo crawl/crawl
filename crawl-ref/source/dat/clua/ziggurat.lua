@@ -136,8 +136,8 @@ local function zig_go_deeper()
 end
 
 local function map_area()
-  local base_area = 20 + 8 * zig_depth()
-  return 2 * base_area + crawl.random2(base_area)
+  local base_area = 5 + 2 * zig_depth()
+  return 4 * base_area + crawl.random2(base_area)
 end
 
 local function clamp_in(val, low, high)
@@ -159,8 +159,18 @@ local function rectangle_dimensions()
 
   local cx, cy = dgn.GXM / 2, dgn.GYM / 2
 
-  local asqrt = math.sqrt(area)
-  local b = crawl.random_range(1 + asqrt / 2, asqrt + 1)
+  local function rectangle_eccentricity()
+  -- exc is the excentrity for the two rectangle, it grows with depth as
+  -- 0, 0-1, 1, 1-2, 2, ...
+    local exc = math.floor((zig().depth-1) / 2)
+    if ((zig().depth-1) % 2) ~= 0 and crawl.coinflip() then
+      exc = exc + 1
+    end
+    return exc
+  end
+
+  local exc = rectangle_eccentricity()
+  local b = math.floor(math.sqrt(area+12*exc*exc)) - 4*exc
   local a = math.floor((area + b - 1) / b)
 
   local a2 = math.floor(a / 2) + (a % 2)
