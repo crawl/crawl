@@ -66,7 +66,7 @@ int get_floor_special_tile_idx()
 }
 
 // TODO: Add this sort of determinism to the lua maps,
-//       at least for the portal walls.
+//       at least for the portal vaults.
 void WallIdx(int &wall, int &floor, int &special)
 {
     // Note: This function must be deterministic.

@@ -42,7 +42,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg = true );
 
 bool victim_can_bleed(int montype);
 void bleed_onto_floor(const coord_def& where, int mon, int damage,
-                      bool spatter = false);
+                      bool spatter = false, bool smell_alert = true);
 void generate_random_blood_spatter_on_level();
 
 // last updated 12may2000 {dlb}

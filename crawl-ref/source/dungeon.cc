@@ -6666,6 +6666,203 @@ static void _labyrinth_place_entry_point(const dgn_region &region,
         env.markers.add(new map_feature_marker(p, DNGN_ENTER_LABYRINTH));
 }
 
+static bool _is_deadend(const coord_def pos)
+{
+    std::vector<coord_def> dirs;
+    dirs.push_back(coord_def(0, -1));
+    dirs.push_back(coord_def(1,  0));
+    dirs.push_back(coord_def(0,  1));
+    dirs.push_back(coord_def(-1, 0));
+
+    int count_neighbours = 0;
+    for (unsigned int i = 0; i < dirs.size(); i++)
+    {
+        coord_def p = pos + dirs[i];
+        if (!in_bounds(p))
+            continue;
+
+        if (grd(p) == DNGN_FLOOR)
+            count_neighbours++;
+    }
+
+    return (count_neighbours <= 1);
+}
+
+static coord_def _find_random_deadend(const dgn_region &region)
+{
+    int tries = 0;
+    coord_def result;
+    bool floor_pos = false;
+    while (++tries < 50)
+    {
+        coord_def pos = region.random_point();
+        if (grd(pos) != DNGN_FLOOR)
+            continue;
+        else if (!floor_pos)
+        {
+            result = pos;
+            floor_pos = true;
+        }
+
+        if (!_is_deadend(pos))
+            continue;
+
+        return (pos);
+    }
+
+    return (result);
+}
+
+// Adds a bloody trail ending in a dead end with spattered walls.
+static void _labyrinth_add_blood_trail(const dgn_region &region)
+{
+    if (one_chance_in(5))
+        return;
+
+    int count_trails = 1 + one_chance_in(5) + one_chance_in(7);
+
+    int tries = 0;
+    while (++tries < 20)
+    {
+        const coord_def start = _find_random_deadend(region);
+        const coord_def dest  = region.random_point();
+        monster_pathfind mp;
+        if (!mp.init_pathfind(dest, start))
+            continue;
+
+        const std::vector<coord_def> path = mp.backtrack();
+
+        if (path.size() < 10)
+            continue;
+
+        env.map(start).property |= FPROP_BLOODY;
+#ifdef WIZARD
+        env.map(start).property |= FPROP_HIGHLIGHT;
+#endif
+        bleed_onto_floor(start, MONS_HUMAN, 150, true, false);
+
+        for (unsigned int step = 0; step < path.size(); step++)
+        {
+            coord_def pos = path[step];
+
+            if (step < 2 || step < 12 && coinflip()
+                || step >= 12 && one_chance_in(step/4))
+            {
+                env.map(pos).property |= FPROP_BLOODY;
+            }
+#ifdef WIZARD
+            env.map(pos).property |= FPROP_HIGHLIGHT;
+#endif
+
+            if (step >= 10 && one_chance_in(7))
+                break;
+        }
+
+        if (--count_trails > 0)
+            continue;
+
+        break;
+    }
+}
+
+static bool _find_random_nonmetal_wall(const dgn_region &region,
+                                       coord_def &pos)
+{
+    int tries = 0;
+    while (++tries < 50)
+    {
+        pos = region.random_point();
+        if (!in_bounds(pos))
+            continue;
+
+        if (grd(pos) == DNGN_ROCK_WALL || grd(pos) == DNGN_STONE_WALL)
+            return (true);
+    }
+    return (false);
+}
+
+static bool _grid_has_wall_neighbours(const coord_def pos, const coord_def dir)
+{
+    std::vector<coord_def> dirs;
+    dirs.push_back(coord_def(0, -1));
+    dirs.push_back(coord_def(1,  0));
+    dirs.push_back(coord_def(0,  1));
+    dirs.push_back(coord_def(-1, 0));
+
+    for (unsigned int i = 0; i < dirs.size(); i++)
+    {
+        coord_def p = pos + dirs[i];
+        if (!in_bounds(p))
+            continue;
+
+        if (dirs[i] == dir)
+            continue;
+
+        if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_STONE_WALL)
+            return (true);
+    }
+    return (false);
+}
+
+static void _vitrify_wall_neighbours(const coord_def pos)
+{
+    // This hinges on clear wall types having the same order as non-clear ones!
+    const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
+
+    std::vector<coord_def> dirs;
+    dirs.push_back(coord_def(0, -1));
+    dirs.push_back(coord_def(1,  0));
+    dirs.push_back(coord_def(0,  1));
+    dirs.push_back(coord_def(-1, 0));
+
+    for (unsigned int i = 0; i < dirs.size(); i++)
+    {
+        coord_def p = pos + dirs[i];
+        if (!in_bounds(p))
+            continue;
+
+        // Don't vitrify vault grids
+        if (testbits(env.map(p).property, FPROP_VAULT))
+            continue;
+
+        if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_STONE_WALL)
+        {
+            grd(p) = static_cast<dungeon_feature_type>(grd(p) + clear_plus);
+#ifdef WIZARD
+            env.map(p).property |= FPROP_HIGHLIGHT;
+#endif
+            if (one_chance_in(3) || _grid_has_wall_neighbours(p, dirs[i]))
+                _vitrify_wall_neighbours(p);
+        }
+    }
+}
+
+static void _labyrinth_add_glass_walls(const dgn_region &region)
+{
+    int glass_num = random2(3) + random2(4);
+    if (!glass_num)
+        return;
+
+    // This hinges on clear wall types having the same order as non-clear ones!
+    const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
+
+    coord_def pos;
+    while (0 < glass_num--)
+    {
+        if (!_find_random_nonmetal_wall(region, pos))
+            break;
+
+        if (_has_vault_in_radius(pos, 6, MMT_VAULT))
+            continue;
+
+        grd(pos) = static_cast<dungeon_feature_type>(grd(pos) + clear_plus);
+#ifdef WIZARD
+        env.map(pos).property |= FPROP_HIGHLIGHT;
+#endif
+        _vitrify_wall_neighbours(pos);
+    }
+}
+
 static void _labyrinth_level(int level_number)
 {
     dgn_Layout_Type = "labyrinth";
@@ -6725,6 +6922,9 @@ static void _labyrinth_level(int level_number)
                               0);
 
     _change_labyrinth_border(lab, DNGN_METAL_WALL);
+
+    _labyrinth_add_blood_trail(lab);
+    _labyrinth_add_glass_walls(lab);
 
     _labyrinth_place_entry_point(lab, end);
 

@@ -1127,8 +1127,9 @@ static bool allow_bleeding_on_square(const coord_def& where)
     return (true);
 }
 
-static void maybe_bloodify_square(const coord_def& where, int amount,
-                                  bool spatter = false)
+static void _maybe_bloodify_square(const coord_def& where, int amount,
+                                   bool spatter = false,
+                                   bool smell_alert = true)
 {
     if (amount < 1)
         return;
@@ -1146,22 +1147,25 @@ static void maybe_bloodify_square(const coord_def& where, int amount,
         if (allow_bleeding_on_square(where))
             env.map(where).property |= FPROP_BLOODY;
 
-        // If old or new blood on square, the smell reaches further.
-        if (testbits(env.map(where).property, FPROP_BLOODY))
-            blood_smell(12, where);
-        else // Still allow a lingering smell.
-            blood_smell(7, where);
+        if (smell_alert)
+        {
+            // If old or new blood on square, the smell reaches further.
+            if (testbits(env.map(where).property, FPROP_BLOODY))
+                blood_smell(12, where);
+            else // Still allow a lingering smell.
+                blood_smell(7, where);
+        }
 
         if (spatter)
         {
             // Smaller chance of spattering surrounding squares.
-            for ( adjacent_iterator ai(where); ai; ++ai )
+            for (adjacent_iterator ai(where); ai; ++ai)
             {
                 // Spattering onto walls etc. less likely.
                 if (grd(*ai) < DNGN_MINMOVE && !one_chance_in(3))
                     continue;
 
-                maybe_bloodify_square(*ai, amount/15);
+                _maybe_bloodify_square(*ai, amount/15);
             }
         }
     }
@@ -1171,18 +1175,18 @@ static void maybe_bloodify_square(const coord_def& where, int amount,
 // "damage" depends on damage taken (or hitpoints, if damage higher),
 // or, for sacrifices, on the number of chunks possible to get out of a corpse.
 void bleed_onto_floor(const coord_def& where, int montype,
-                      int damage, bool spatter)
+                      int damage, bool spatter, bool smell_alert)
 {
     ASSERT(in_bounds(where));
     if (!victim_can_bleed(montype))
         return;
 
-    maybe_bloodify_square(where, damage, spatter);
+    _maybe_bloodify_square(where, damage, spatter, smell_alert);
 }
 
 static void _spatter_neighbours(const coord_def& where, int chance)
 {
-    for ( adjacent_iterator ai(where, false); ai; ++ai )
+    for (adjacent_iterator ai(where, false); ai; ++ai)
     {
         if (!allow_bleeding_on_square(*ai))
             continue;
@@ -2477,7 +2481,7 @@ void new_level(void)
     }
     else
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
-  
+
     print_stats_level();
 #ifdef DGL_WHEREIS
     whereis_record();
