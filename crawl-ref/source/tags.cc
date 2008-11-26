@@ -2149,6 +2149,9 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
     int i;
     int count, icount;
 
+    for (i = 0; i < MAX_MONSTERS; i++)
+        menv[i].reset();
+
     // how many mons_alloc?
     count = unmarshallByte(th);
     for (i = 0; i < count; ++i)
@@ -2165,7 +2168,17 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
         unmarshall_monster(th, m);
         // place monster
         if (m.type != -1)
+        {
+#if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
+            int midx = mgrd(m.pos());
+            if (midx != NON_MONSTER)
+                mprf(MSGCH_ERROR, "(%d,%d) for %s already occupied by %s",
+                     m.pos().x, m.pos().y,
+                     m.name(DESC_PLAIN, true).c_str(),
+                     menv[midx].name(DESC_PLAIN, true).c_str());
+#endif
             mgrd(m.pos()) = i;
+        }
     }
 }
 
