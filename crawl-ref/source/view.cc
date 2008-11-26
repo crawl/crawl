@@ -3289,7 +3289,21 @@ void show_map( coord_def &spec_place, bool travel_mode )
             tiles.load_dungeon(cx, cy);
 #else
             _draw_level_map(start_x, start_y, travel_mode);
-#endif
+
+#ifdef WIZARD
+            if (you.wizard)
+            {
+                cgotoxy(get_number_of_cols() / 2, 1);
+                textcolor(WHITE);
+                cprintf("(%d, %d)", start_x + curs_x - 1,
+                        start_y + curs_y - 1);
+
+                textcolor(LIGHTGREY);
+                cgotoxy(curs_x, curs_y + top - 1);
+            }
+#endif // WIZARD
+
+#endif // USE_TILE
         }
 #ifndef USE_TILE
         cursorxy(curs_x, curs_y + top - 1);
