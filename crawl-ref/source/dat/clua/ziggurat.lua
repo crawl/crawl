@@ -163,8 +163,8 @@ local function rectangle_dimensions()
   local b = crawl.random_range(1 + asqrt / 2, asqrt + 1)
   local a = math.floor((area + b - 1) / b)
 
-  local a2 = math.floor(a / 2) + (a % 2);
-  local b2 = math.floor(b / 2) + (b % 2);
+  local a2 = math.floor(a / 2) + (a % 2)
+  local b2 = math.floor(b / 2) + (b % 2)
   local x1, y1 = clamp_in_bounds(cx - a2, cy - b2)
   local x2, y2 = clamp_in_bounds(cx + a2, cy + b2)
   return x1, y1, x2, y2
@@ -224,17 +224,17 @@ end
 
 local mons_populations = {
   -- Dress up monster sets a bit.
-  "place:Elf:7 w:300 / deep elf blademaster / deep elf master archer / " ..
+  "place:Elf:$ w:300 / deep elf blademaster / deep elf master archer / " ..
     "deep elf annihilator / deep elf sorcerer / deep elf demonologist",
-  "place:Orc:4 w:120 / orc warlord / orc knight / stone giant",
-  "place:Vault:8",
-  with_props("place:Slime:6", { jelly_protect = true }),
-  "place:Snake:5",
-  "place:Lair:10",
-  "place:Tomb:3",
-  "place:Crypt:5",
+  "place:Orc:$ w:120 / orc warlord / orc knight / stone giant",
+  "place:Vault:$",
+  with_props("place:Slime:$", { jelly_protect = true }),
+  "place:Snake:$",
+  "place:Lair:$",
+  "place:Tomb:$",
+  "place:Crypt:$",
   "place:Abyss",
-  "place:Shoal:5",
+  "place:Shoal:$",
   depth_ge(6, "place:Pan w:400 / w:15 pandemonium lord"),
   depth_lt(6, "place:Pan")
 }
