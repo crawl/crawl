@@ -766,7 +766,7 @@ const zap_info zap_data[] = {
         DCHAR_FIRED_ZAP,
         true,
         true,
-        false
+        true
     },
 
 
