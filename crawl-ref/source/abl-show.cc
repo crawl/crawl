@@ -1615,7 +1615,7 @@ static bool _do_ability(const ability_def& abil)
         if (!player_tracer(ZAP_DEBUGGING_RAY, power, beam, 20))
             return (false);
 
-        switch (random2(8))
+        switch (random2(7))
         {
         case 0: zapping( ZAP_FIRE,               power, beam ); break;
         case 1: zapping( ZAP_FIREBALL,           power, beam ); break;
@@ -1624,30 +1624,6 @@ static bool _do_ability(const ability_def& abil)
         case 4: zapping( ZAP_STICKY_FLAME,       power, beam ); break;
         case 5: zapping( ZAP_IRON_BOLT,          power, beam ); break;
         case 6: zapping( ZAP_ORB_OF_ELECTRICITY, power, beam ); break;
-
-        case 7:
-            you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
-            simple_god_message(" hurls a blast of lightning!", GOD_MAKHLEB);
-
-            // Make a divine lightning bolt, and fire!
-            beam.beam_source  = NON_MONSTER;
-            beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-            beam.damage       = dice_def(3, 30);
-            beam.flavour      = BEAM_ELECTRICITY;
-            beam.target       = you.pos();
-            beam.name         = "blast of lightning";
-            beam.colour       = LIGHTCYAN;
-            beam.thrower      = KILL_YOU;
-            beam.aux_source   = "Makhleb's lightning strike";
-            beam.ex_size      = 1 + you.skills[SK_INVOCATIONS] / 8;
-            beam.is_tracer    = false;
-            beam.is_explosion = true;
-            explosion(beam);
-
-            // protection down
-            mpr("Your divine protection wanes.");
-            you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
-            break;
         }
 
         exercise(SK_INVOCATIONS, 3 + random2(5));
