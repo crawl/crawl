@@ -2087,6 +2087,16 @@ void debug_mons_scan()
             mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d)",
                  m->name(DESC_PLAIN).c_str(), m->pos().x, m->pos().y);
             warned = true;
+            for (int j = 0; j < MAX_MONSTERS; ++j)
+            {
+                if (i == j)
+                    continue;
+
+                const monsters *m2 = &menv[j];
+                if (m2->alive() && m2->pos() == m->pos())
+                    mprf(MSGCH_WARN, "Also at (%d, %d): %s",
+                         m->pos().x, m->pos().y, m2->name(DESC_PLAIN).c_str());
+            }
         }
     }
     // If there are warnings, force the dev to notice. :P
