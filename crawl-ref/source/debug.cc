@@ -2072,7 +2072,8 @@ void debug_mons_scan()
                 mprf(MSGCH_WARN,
                      "Bogosity: mgrd at %d,%d points at %s, "
                      "but monster is at %d,%d",
-                     x, y, m->name(DESC_PLAIN).c_str(), m->pos().x, m->pos().y);
+                     x, y, m->name(DESC_PLAIN, true).c_str(),
+                     m->pos().x, m->pos().y);
                 warned = true;
             }
         }
@@ -2085,7 +2086,7 @@ void debug_mons_scan()
         if (mgrd(m->pos()) != i)
         {
             mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d)",
-                 m->name(DESC_PLAIN).c_str(), m->pos().x, m->pos().y);
+                 m->name(DESC_PLAIN, true).c_str(), m->pos().x, m->pos().y);
             warned = true;
             for (int j = 0; j < MAX_MONSTERS; ++j)
             {
@@ -2093,9 +2094,22 @@ void debug_mons_scan()
                     continue;
 
                 const monsters *m2 = &menv[j];
-                if (m2->alive() && m2->pos() == m->pos())
+
+                if (m2->pos() != m->pos())
+                    continue;
+
+                if (m2->alive())
+                {
                     mprf(MSGCH_WARN, "Also at (%d, %d): %s",
-                         m->pos().x, m->pos().y, m2->name(DESC_PLAIN).c_str());
+                         m->pos().x, m->pos().y,
+                         m2->name(DESC_PLAIN, true).c_str());
+                }
+                else if (m2->type != -1)
+                {
+                    mprf(MSGCH_WARN, "Dead mon also at (%d, %d): %s",
+                         m->pos().x, m->pos().y,
+                         m2->name(DESC_PLAIN, true).c_str());
+                }
             }
         }
     }
