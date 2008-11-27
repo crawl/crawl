@@ -1,6 +1,6 @@
 lua {{
 
-function fill_special_room(mon)
+function fill_special_room(mon, lord_mon, pack)
     local level, tl_x, tl_y, br_x, br_y = dgn.get_special_room_info()
 
     -- Return early if we're being called during map validation.
@@ -8,16 +8,136 @@ function fill_special_room(mon)
         return
     end
 
-    crawl.mpr("mon = " .. mon .. ", level = " .. level)
+    if type(mon) == "table" then
+        local str = mon[1]
+
+        for i = 2, table.getn(mon) do
+            str = str .. " / " .. mon[i]
+        end
+        mon = str
+    end
+
+    local lord_x, los_y = -1, -1
+    if lord_mon then
+        lord_x = crawl.random_range(tl_x, br_x)
+        lord_y = crawl.random_range(tl_y, br_y)
+    end
 
     for x = tl_x, br_x do
         for y = tl_y, br_y do
-            dgn.create_monster(x, y, mon)
+            if (pack or not crawl.one_chance_in(4))
+               and not (lord_x == x and lord_y == y)
+            then
+                dgn.create_monster(x, y, mon)
+            end
         end
     end
-return
+
+    if lord_mon then
+        dgn.create_monster(lord_x, lord_y, lord_mon)
+    end
 end
 
+function sroom_kobold_lair()
+    local level = dgn.get_special_room_info()
+
+    -- Return early if we're being called during map validation.
+    if not level then
+        return
+    end
+
+    local level_mons = 3
+
+    if level < 4 then
+        level_mons = 0
+    elseif level < 6 then
+        level_mons = 1
+    elseif level < 9 then
+        level_mons = 2
+    end
+
+    local big_freq   = 3 + level_mons
+    local small_freq = 10 - big_freq
+
+    local mon = "kobold w:" .. small_freq .. " / big kobold w:" .. big_freq
+
+    fill_special_room(mon, "big kobold")
+end
+
+function sroom_orc_lair()
+    local level = dgn.get_special_room_info()
+
+    -- Return early if we're being called during map validation.
+    if not level then
+        return
+    end
+
+    local mon
+    if level > 24 then
+        mon = "orc w:2 / orc warrior w:3 / orc knight w:2 / ogre w:2 / "
+              .. "troll w:1"
+    elseif level > 15 then
+        mon = "orc w:6 / orc knight w:1 / orc warrior w:2 / ogre w:1"
+    elseif level > 9 then
+        mon = "orc w:8 / orc warrior w:2"
+    else
+        mon = "orc w:9 / orc warrior w:1"
+    end
+
+    fill_special_room(mon)
+end
+
+function sroom_beehive()
+    local level, tl_x, tl_y, br_x, br_y = dgn.get_special_room_info()
+
+    -- Return early if we're being called during map validation.
+    if not level then
+        return
+    end
+
+    fill_special_room("patrolling killer bee larva w:1 / "
+                      .. "patrolling killer bee w:6",
+                      "patrolling queen bee", true)
+
+    for x = tl_x, br_x do
+        for y = tl_y, br_y do
+            if crawl.one_chance_in(2) then
+                dgn.create_item(x, y, "royal jelly w:1 / honeycomb w:24")
+            end
+        end
+    end
+end
+
+function sroom_morgue()
+    fill_special_room("small zombie w:500 / wight w:167 / necrophage w:167 / "
+                      .. "wraith w:125 / vampire w:42", nil, true)
+end
+
+function sroom_jelly_pit()
+    local level = dgn.get_special_room_info()
+
+    -- Return early if we're being called during map validation.
+    if not level then
+        return
+    end
+
+    local mons = {}
+
+    mons[1] = "ooze w:" .. (27 - math.floor(level / 5))
+    mons[2] = "jelly w:20"
+    mons[3] = "brown_ooze w:" .. (3 + level)
+    mons[4] = "death ooze w:" .. (2 + (2 * math.floor(level / 3)))
+
+    if level >= 12 then
+        mons[5] = "azure jelly w:" .. (1 + math.floor((level - 12)/3))
+    end
+
+    if level >= 15 then
+        mons[6] = "acid blob w:" .. (1 + math.floor((level - 15) / 4))
+    end
+
+    fill_special_room(mons, nil, true)
+end
 }}
 
 ##########################
@@ -26,7 +146,7 @@ NAME:   special_room_kobold
 DEPTH:  6-14, !Lair, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 11
-: fill_special_room("kobold")
+: sroom_kobold_lair()
 MAP
 ENDMAP
 
@@ -34,7 +154,7 @@ NAME:   special_room_orc_a
 DEPTH:  8-14, !Lair, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 59
-: fill_special_room("orc")
+: sroom_orc_lair()
 MAP
 ENDMAP
 
@@ -42,7 +162,7 @@ NAME:   special_room_bee_a
 DEPTH:  8-14, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 30
-: fill_special_room("killer bee")
+: sroom_beehive()
 MAP
 ENDMAP
 ################################
@@ -50,7 +170,7 @@ NAME:   special_room_orc_b
 DEPTH:  15-16, !Lair, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 50
-: fill_special_room("orc")
+: sroom_orc_lair()
 MAP
 ENDMAP
 
@@ -58,7 +178,7 @@ NAME:   special_room_bee_b
 DEPTH:  15-16, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 25
-: fill_special_room("killer bee")
+: sroom_beehive()
 MAP
 ENDMAP
 
@@ -66,7 +186,7 @@ NAME:   special_room_morgue_b
 DEPTH:  15-16, !Lair
 TAGS:   special_room allow_dup
 WEIGHT: 25
-: fill_special_room("rat zombie")
+: sroom_morgue()
 MAP
 ENDMAP
 #################################
@@ -74,7 +194,7 @@ NAME:   special_room_orc_c
 DEPTH:  17, !Lair, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 40
-: fill_special_room("orc")
+: sroom_orc_lair() 
 MAP
 ENDMAP
 
@@ -82,7 +202,7 @@ NAME:   special_room_bee_c
 DEPTH:  17, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 25
-: fill_special_room("killer bee")
+: sroom_beehive()
 MAP
 ENDMAP
 
@@ -90,7 +210,7 @@ NAME:   special_room_morgue_c
 DEPTH:  17, !Lair
 TAGS:   special_room allow_dup
 WEIGHT: 27
-: fill_special_room("rat zombie")
+: sroom_morgue()
 MAP
 ENDMAP
 
@@ -98,7 +218,7 @@ NAME:   special_room_jelly_c
 DEPTH:  17, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 9
-: fill_special_room("jelly")
+: sroom_jelly_pit()
 MAP
 ENDMAP
 #################################
@@ -106,7 +226,7 @@ NAME:   special_room_orc_d
 DEPTH:  18-20, !Lair, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 25
-: fill_special_room("orc")
+: sroom_orc_lair()
 MAP
 ENDMAP
 
@@ -114,7 +234,7 @@ NAME:   special_room_bee_d
 DEPTH:  18-20, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 33
-: fill_special_room("killer bee")
+: sroom_beehive()
 MAP
 ENDMAP
 
@@ -122,7 +242,7 @@ NAME:   special_room_morgue_d
 DEPTH:  18-20, !Lair
 TAGS:   special_room allow_dup
 WEIGHT: 29
-: fill_special_room("rat zombie")
+: sroom_morgue()
 MAP
 ENDMAP
 
@@ -130,7 +250,7 @@ NAME:   special_room_jelly_d
 DEPTH:  18-20, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 13
-: fill_special_room("jelly")
+: sroom_jelly_pit()
 MAP
 ENDMAP
 #################################
@@ -138,7 +258,7 @@ NAME:   special_room_orc_e
 DEPTH:  21-, !Lair, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 15
-: fill_special_room("orc")
+: sroom_orc_lair()
 MAP
 ENDMAP
 
@@ -146,7 +266,7 @@ NAME:   special_room_bee_e
 DEPTH:  21-, !Crypt
 TAGS:   special_room allow_dup
 WEIGHT: 8
-: fill_special_room("killer bee")
+: sroom_beehive()
 MAP
 ENDMAP
 
@@ -154,15 +274,16 @@ NAME:   special_room_morgue_e
 DEPTH:  21-, !Lair
 TAGS:   special_room allow_dup
 WEIGHT: 32
-: fill_special_room("rat zombie")
+: sroom_morgue()
 MAP
 ENDMAP
 
 NAME:   special_room_jelly_e
 DEPTH:  21-, !Crypt
 TAGS:   special_room allow_dup
-WEIGHT: 45
-: fill_special_room("jelly")
+#WEIGHT: 45
+WEIGHT: 10000
+: sroom_jelly_pit()
 MAP
 ENDMAP
 
