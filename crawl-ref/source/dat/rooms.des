@@ -281,8 +281,7 @@ ENDMAP
 NAME:   special_room_jelly_e
 DEPTH:  21-, !Crypt
 TAGS:   special_room allow_dup
-#WEIGHT: 45
-WEIGHT: 10000
+WEIGHT: 45
 : sroom_jelly_pit()
 MAP
 ENDMAP
