@@ -93,7 +93,7 @@ std::string place_name( unsigned short place, bool long_name,
             {
                 return long_name
                     ? article_a(you.level_type_name)
-                    : upcase_first(you.level_type_name);
+                    : upcase_first(you.level_type_name_abbrev);
             }
             else
             {
