@@ -2052,11 +2052,15 @@ static void _prepare_swamp()
 {
     dgn_Layout_Type = "swamp";
 
-    const int margin = 10;
+    const int margin = 5;
 
     for (int i = margin; i < (GXM - margin); i++)
         for (int j = margin; j < (GYM - margin); j++)
         {
+            // Don't apply Swamp prep in vaults.
+            if (!unforbidden(coord_def(i, j), MMT_VAULT))
+                continue;
+
             // doors -> floors {dlb}
             if (grd[i][j] == DNGN_CLOSED_DOOR || grd[i][j] == DNGN_SECRET_DOOR)
                 grd[i][j] = DNGN_FLOOR;

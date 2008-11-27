@@ -1010,49 +1010,34 @@ ENDMAP
 #
 NAME:    swamp
 PLACE:   Swamp:5
-ORIENT:  southeast
+ORIENT:  float
 TAGS:    no_rotate
 MONS:    swamp dragon / nothing
 MONS:    swamp drake / nothing
 MONS:    hydra / nothing
 SHUFFLE: 12
 SUBST:   ' = xc
-# NB - most of the 'x's here will be set to water in dungeon.cc
 MAP
-xxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx2xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx2xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx2x2xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxcc.ccxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxcc3.2ccxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxx'c3.2.3c'xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxx'c11.3322c''xxxxxxxxxxxxxxxxxxxxxx
-xxxxx'cc...21.1cccxxxxxxxxxxxxxxxxxxxxxx
-xxxxx'c.13321.1.cc'xxxxxxxxxxxxxxxxxxxxx
-xxxx'cc31333.113cc'xxxxxxxxxxxxxxxxxxxxx
-xxxx'cc22113.223ccxxxxxxxxxxxxxxxxxxxxxx
-xxxxx'cc3333113cc'xxxxxxxxxxxxxxxxxxxxxx
-xxxxx'cccc3O3ccc'xxxxxxxxxxxxxxxxxxxxxxx
-xxxxxx'cccccccc'xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxx''ccccc'xxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx''cc'xxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx'xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+       @
+       2
+      2
+       .
+      2 2
+        .
+     cc.cc
+    cc3.2cc
+   'c3.2.3c'
+  'c11.3322c''
+ 'cc...21.1ccc
+ 'c.13321.1.cc'
+'cc31333.113cc'
+'cc22113.223cc
+ 'cc3333113cc'
+ 'cccc3O3ccc'
+  'cccccccc'
+   ''ccccc'
+     ''cc'
+       '
 ENDMAP
 
 #############################################################################
@@ -1067,22 +1052,21 @@ ITEM:    nothing
 SUBST:   1=1., 2=2., 3=3., 4=4., L=l.
 SHUFFLE: Od, 123, lw
 SUBST:   l=l .:2, '=.x, "=cx, _=c.
-# NB - most of the 'x's here will be set to water in dungeon.cc
 MAP
-xxx@xxxxxxx@xxxxxxxxxxx
-xxx1'xxxxxxx2'xxxxxxxxx
-xxxx1xxxxxx2'xxxxxxxxxx
-xxxx.xxxxxx.xxxxxxxxxxx
-xx'2x3.x''3xxxxxxxxxxxx
-xx''x"c..1""""xxxxxxxxx
-xxxx""c".ccccc""xxx'3xx
-xxx"cc_.2LLl.ccc""2.'3x
-xx"cc..33LL..2._c1'xxx@
-x"cc1122lLL...1.1""xxxx
-x"c....llllll21.2c"xxxx
-x"cc33l4llllll2.cc"xxxx
-xx"ccll.llll34lcc"xxxxx
-xxx"cccO.lld3ccc"xxxxxx
-xxxx""cccccccc""xxxxxxx
-xxxxxx""""""""xxxxxxxxx
+   @       @
+   1'       2'
+    1      2'
+    .      .
+  '2 3. ''3
+  '' "c..1""""
+    ""c".ccccc""   '3
+   "cc_.2LLl.ccc""2.'3
+  "cc..33LL..2._c1'   @
+ "cc1122lLL...1.1""
+ "c....llllll21.2c"
+ "cc33l4llllll2.cc"
+  "ccll.llll34lcc"
+   "cccO.lld3ccc"
+    ""cccccccc""
+      """"""""
 ENDMAP
