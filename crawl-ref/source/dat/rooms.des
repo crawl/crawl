@@ -9,12 +9,7 @@ function fill_special_room(mon, lord_mon, pack)
     end
 
     if type(mon) == "table" then
-        local str = mon[1]
-
-        for i = 2, table.getn(mon) do
-            str = str .. " / " .. mon[i]
-        end
-        mon = str
+        mon = util.join(" / ", mon)
     end
 
     local lord_x, los_y = -1, -1

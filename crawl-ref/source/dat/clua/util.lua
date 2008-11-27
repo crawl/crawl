@@ -18,6 +18,36 @@ function util.identity(x)
   return x
 end
 
+-- Returns a list of the keys in the given map.
+function util.keys(map)
+  local keys = { }
+  for key, _ in pairs(ziggurat_builder_map) do
+    table.insert(keys, key)
+  end
+  return keys
+end
+
+-- Returns a list of the values in the given map.
+function util.values(map)
+  local values = { }
+  for _, value in pairs(ziggurat_builder_map) do
+    table.insert(values, value)
+  end
+  return values
+end
+
+-- Creates a string of the elements in list joined by separator.
+function util.join(sep, list)
+  local res = ""
+  for i, val in ipairs(list) do
+    if i > 1 then
+      res = res .. sep
+    end
+    res = res .. val
+  end
+  return res
+end
+
 -- Creates a set (a map of keys to true) from the list supplied.
 function util.set(list)
   local set = { }

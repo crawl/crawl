@@ -46,9 +46,15 @@ end
 function initialise_ziggurat(z)
   z.depth = 1
 
-  -- Any given ziggurat will use the same builder for all its levels.
-  z.builder = ziggurat_choose_builder()
+  -- Any given ziggurat will use the same builder for all its levels,
+  -- and the same colours for outer walls. Before choosing the builder,
+  -- we specify a global excentricity. If zig_exc=0, then the ellipses
+  -- will be circles etc. It is not the actual excentricity but some
+  -- value between 0 and 100. For deformed ellipses and rectangles, make
+  -- sure that the map is wider than it is high for the sake of ASCII.
 
+  z.zig_exc = crawl.random2(101)
+  z.builder = ziggurat_choose_builder()
   z.colour = ziggurat_wall_colour()
   z.level  = { }
 
@@ -136,8 +142,10 @@ local function zig_go_deeper()
   }
 end
 
+-- the estimated total map area for ziggurat maps of given depth
+-- this is be independent of the layout type
 local function map_area()
-  local base_area = 5 + 2 * zig_depth()
+  local base_area = 5 + 3 * zig_depth()
   return 4 * base_area + crawl.random2(base_area)
 end
 
@@ -161,22 +169,18 @@ local function rectangle_dimensions()
   local cx, cy = dgn.GXM / 2, dgn.GYM / 2
 
   local function rectangle_eccentricity()
-  -- exc is the excentrity for the two rectangle, it grows with depth as
-  -- 0, 0-1, 1, 1-2, 2, ...
-    local exc = math.floor((zig().depth-1) / 2)
-    if ((zig().depth-1) % 2) ~= 0 and crawl.coinflip() then
+    -- exc is the local eccentricity for the two rectangles
+    -- exc grows with depth as 0-1, 1, 1-2, 2, 2-3 ...
+    local exc = math.floor(zig().depth / 2)
+    if ((zig().depth-1) % 2) == 0 and crawl.coinflip() then
       exc = exc + 1
     end
     return exc
   end
 
   local exc = rectangle_eccentricity()
-  local b = math.floor(math.sqrt(area+12*exc*exc)) - 4*exc
-  if b <= 0 then
-      b = 1
-  end
-
-  local a = math.floor((area + b - 1) / b)
+  local b = math.floor(math.sqrt(area+4*exc*exc))
+  local a = b-2*exc
 
   local a2 = math.floor(a / 2) + (a % 2)
   local b2 = math.floor(b / 2) + (b % 2)
@@ -556,6 +560,43 @@ local function ziggurat_place_pillars(c)
   end
 end
 
+local function ziggurat_stairs(entry, exit)
+  zigstair(entry.x, entry.y, "stone_arch", "stone_stairs_up_i")
+
+  if zig().depth < ZIGGURAT_MAX then
+    zigstair(exit.x, exit.y, "stone_stairs_down_i", zig_go_deeper)
+  end
+
+  zigstair(exit.x, exit.y + 1, "exit_portal_vault", cleanup_ziggurat())
+  zigstair(exit.x, exit.y - 1, "exit_portal_vault", cleanup_ziggurat())
+end
+
+local function ziggurat_furnish(centre, entry, exit)
+  local monster_generation = choose_monster_set()
+
+  -- If we're going to spawn jellies, do our loot protection thing.
+  if monster_generation.jelly_protect then
+    zig().level.jelly_protect = true
+  end
+
+  ziggurat_create_loot(entry, exit)
+
+  if not zig().level.loot_chamber then
+    -- Place pillars if we did not create a loot chamber.
+    ziggurat_place_pillars(centre)
+  end
+
+  ziggurat_create_monsters(exit, monster_generation.fn)
+
+  local function needs_colour(p)
+    return not dgn.in_vault(p.x, p.y)
+      and dgn.grid(p.x, p.y) == dgn.fnum("stone_wall")
+  end
+
+  dgn.colour_map(needs_colour, zig().colour)
+end
+
+-- builds ziggurat maps consisting of two overimposed rectangles
 local function ziggurat_rectangle_builder(e)
   local grid = dgn.grid
 
@@ -576,49 +617,56 @@ local function ziggurat_rectangle_builder(e)
     entry, exit = exit, entry
   end
 
-  zigstair(entry.x, entry.y, "stone_arch", "stone_stairs_up_i")
+  ziggurat_stairs(entry, exit)
+  ziggurat_furnish(c, entry, exit)
+end
 
-  if zig().depth < ZIGGURAT_MAX then
-    zigstair(exit.x, exit.y, "stone_stairs_down_i", zig_go_deeper)
+-- builds elliptic ziggurat maps
+-- given the area, half axes a and b are determined by:
+-- pi*a*b=area,
+-- a=b for zig_exc=0,
+-- a=b*3/2 for zig_exc=100
+local function ziggurat_ellipse_builder(e)
+  local grid = dgn.grid
+
+  dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "stone_wall")
+
+  local zig_exc = zig().zig_exc
+
+  local area = map_area()
+  local b = math.floor(math.sqrt(200*area/(200+zig_exc) * 100/314))
+  local a = math.floor(b * (200+zig_exc) / 200)
+  local cx, cy = dgn.GXM / 2, dgn.GYM / 2
+
+  local floor = dgn.fnum("floor")
+
+  for x=0, dgn.GXM-1 do
+    for y=0, dgn.GYM-1 do
+      if b*b*(cx-x)*(cx-x) + a*a*(cy-y)*(cy-y) <= a*a*b*b then
+        dgn.grid(x, y, floor)
+      end
+    end
   end
 
-  zigstair(exit.x, exit.y + 1, "exit_portal_vault", cleanup_ziggurat())
-  zigstair(exit.x, exit.y - 1, "exit_portal_vault", cleanup_ziggurat())
+  local entry = dgn.point(cx-a+2, cy)
+  local exit  = dgn.point(cx+a-2, cy)
 
-  local monster_generation = choose_monster_set()
-
-  -- If we're going to spawn jellies, do our loot protection thing.
-  if monster_generation.jelly_protect then
-    zig().level.jelly_protect = true
+  if zig_depth() % 2 == 0 then
+    entry, exit = exit, entry
   end
 
-  ziggurat_create_loot(entry, exit)
-
-  if not zig().level.loot_chamber then
-    -- Place pillars if we did not create a loot chamber.
-    ziggurat_place_pillars(c)
-  end
-
-  ziggurat_create_monsters(exit, monster_generation.fn)
-
-  local function needs_colour(p)
-    return not dgn.in_vault(p.x, p.y)
-      and dgn.grid(p.x, p.y) == dgn.fnum("stone_wall")
-  end
-
-  dgn.colour_map(needs_colour, zig().colour)
+  ziggurat_stairs(entry, exit)
+  ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
 ----------------------------------------------------------------------
 
 ziggurat_builder_map = {
-  rectangle = ziggurat_rectangle_builder
+  rectangle = ziggurat_rectangle_builder,
+  ellipse = ziggurat_ellipse_builder
 }
 
-local ziggurat_builders = { }
-for key, val in pairs(ziggurat_builder_map) do
-  table.insert(ziggurat_builders, key)
-end
+local ziggurat_builders = util.keys(ziggurat_builder_map)
 
 function ziggurat_choose_builder()
   return util.random_from(ziggurat_builders)
