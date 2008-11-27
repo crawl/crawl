@@ -29,8 +29,8 @@ function ice_cave_portal(e)
                                      dst = "ice_cave",
                                      dstname = "Ice Cave",
                                      dstname_abbrev = "IceCv",
-                                     dstovermap = "frozen archway",
                                      dstorigin = "in an ice cave",
+                                     overmap = "frozen archway",
                                      floor = "stone_arch" }]])
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")

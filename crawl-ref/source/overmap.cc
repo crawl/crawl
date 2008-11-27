@@ -40,6 +40,7 @@ typedef std::map<level_pos, shop_type> shop_map_type;
 typedef std::map<level_pos, god_type> altar_map_type;
 typedef std::map<level_pos, portal_type> portal_map_type;
 typedef std::map<level_pos, std::string> portal_vault_map_type;
+typedef std::map<level_pos, std::string> portal_note_map_type;
 // NOTE: The value for colours here is char rather than unsigned char
 // because g++ needs it to be char for marshallMap in tags.cc to
 // compile properly.
@@ -51,6 +52,7 @@ shop_map_type shops_present;
 altar_map_type altars_present;
 portal_map_type portals_present;
 portal_vault_map_type portal_vaults_present;
+portal_note_map_type portal_vault_notes;
 portal_vault_colour_map_type portal_vault_colours;
 annotation_map_type level_annotations;
 
@@ -268,14 +270,33 @@ static std::string _portal_vaults_description_string()
                     disp += ':';
                 }
 
-                if ( ci_portals->first.id == last_id )
-                    disp += '*';
+                const level_id  lid   = ci_portals->first.id;
+                const level_pos where = ci_portals->first;
+
+                if ( lid == last_id )
+                {
+                    if (!portal_vault_notes[where].empty())
+                    {
+                        disp += " (";
+                        disp += portal_vault_notes[where];
+                        disp += ")";
+                    }
+                    else
+                        disp += '*';
+                }
                 else
                 {
                     disp += ' ';
-                    disp += ci_portals->first.id.describe(false, true);
+                    disp += lid.describe(false, true);
+
+                    if (!portal_vault_notes[where].empty())
+                    {
+                        disp += " (";
+                        disp += portal_vault_notes[where];
+                        disp += ") ";
+                    }
                 }
-                last_id = ci_portals->first.id;
+                last_id = lid;
             }
         }
         if ( last_id.depth != 10000 )
@@ -524,6 +545,7 @@ static bool unnotice_portal(const level_pos &pos)
 static bool unnotice_portal_vault(const level_pos &pos)
 {
     (void) find_erase(portal_vault_colours, pos);
+    (void) find_erase(portal_vault_notes, pos);
     return find_erase(portal_vaults_present, pos);
 }
 
@@ -648,7 +670,7 @@ void seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
     {
         std::string portal_name;
 
-        portal_name = env.markers.property_at(pos, MAT_ANY, "dstovermap");
+        portal_name = env.markers.property_at(pos, MAT_ANY, "overmap");
         if (portal_name.empty())
             portal_name = env.markers.property_at(pos, MAT_ANY, "dstname");
         if (portal_name.empty())
@@ -665,6 +687,9 @@ void seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
         else
             col = get_feature_def(which_thing).colour;
         portal_vault_colours[where] = (char) element_colour(col, true);
+
+        portal_vault_notes[where] =
+            env.markers.property_at(pos, MAT_ANY, "overmap_note");
 
         break;
     }

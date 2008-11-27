@@ -1323,7 +1323,8 @@ abbreviation with dgn.set_set_level_name_abbrev().
 Known portal vault entries will be displayed on the overmap.  By default
 the name shown on the overmap will be the "dstname" parameter, or if
 that isn't present the "dst" paremeter.  It can be set to something else
-with the "dstovermap" parameter.
+with the "overmap" parameter.  A note can be made to accompany the
+portal's position on the overmap with the "overmap_note" parameter.
 
 This will produce a portal, but attempting to use it will trigger an
 ASSERT since there's no map for the destination. So we create a
