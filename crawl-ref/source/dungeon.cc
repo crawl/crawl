@@ -2268,7 +2268,7 @@ static void _portal_vault_level(int level_number)
     const map_def *vault = random_map_for_place(level_id::current(), false);
 
 #ifdef WIZARD
-    if (!vault && you.wizard && random_map_for_tag(level_name, false))
+    if (!vault && you.wizard && map_count_for_tag(level_name, false) > 1)
     {
         char buf[80];
 

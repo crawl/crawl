@@ -27,6 +27,8 @@ void fit_region_into_map_bounds(coord_def &pos, const coord_def &size);
 
 const map_def *map_by_index(int index);
 int map_count();
+int map_count_for_tag(const std::string &tag, bool want_minivault,
+                      bool check_depth = false);
 
 const map_def *find_map_by_name(const std::string &name);
 const map_def *random_map_for_place(const level_id &place, bool mini = false);

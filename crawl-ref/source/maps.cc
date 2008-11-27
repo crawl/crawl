@@ -620,6 +620,14 @@ int map_count()
     return (vdefs.size());
 }
 
+int map_count_for_tag(const std::string &tag,
+                      bool want_minivault,
+                      bool check_depth)
+{
+    return _eligible_maps_for_selector(
+        map_selector::by_tag(tag, want_minivault, check_depth)).size();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Reading maps from .des files.
 
