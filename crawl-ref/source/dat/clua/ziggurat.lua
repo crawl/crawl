@@ -250,10 +250,14 @@ local mons_populations = {
   with_props("place:Slime:$", { jelly_protect = true }),
   "place:Snake:$",
   "place:Lair:$",
-  "place:Tomb:$",
+  "place:Tomb:$ w:200 / greater mummy",
   "place:Crypt:$",
   "place:Abyss",
   "place:Shoal:$",
+  "place:Coc:$",
+  "place:Geh:$",
+  "place:Dis:$",
+  "place:Tar:$",
   depth_ge(6, "place:Pan w:400 / w:15 pandemonium lord"),
   depth_lt(6, "place:Pan")
 }
