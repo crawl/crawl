@@ -7,12 +7,53 @@
 
 : require("clua/ziggurat.lua")
 
+### Entry vaults to ziggurats##########################################
+
+default-depth: D:20-27, Zot, Pan
+
 NAME: enter_the_ziggurat
 # FIXME: Ziggurat is still incomplete - enabled for testing porpoises.
-DEPTH: D:20-27, Pan
+TAGS:  trowel_portal
+WEIGHT: 1
 : ziggurat_portal(_G)
 MAP
 O
+ENDMAP
+
+NAME: enter_ziggurat_a
+COLOUR: ; : cyan / lightblue
+COLOUR: ' = blue
+SUBST:  ' = .
+SUBST:  ; = .
+: ziggurat_portal(_G)
+MAP
+.......
+.;;;;;.
+.;''';.
+.;'O';.
+.;''';.
+.;;;;;.
+.......
+ENDMAP
+
+NAME: enter_ziggurat_b
+MONS: lich / ancient lich
+MONS: angel / daeva
+MONS: eye of draining / eye of devastation / giant eyeball / \
+      great orb of eyes / shining eye
+SHUFFLE: 123
+SUBST: 1=1..., 2=2.
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..n..
+  ..nnn..
+ ..nn1nn..
+..nn1O1nn..
+ ..nn1nn..
+  ..nnn..
+   ..n..
+    ...
 ENDMAP
 
 #######################################################################
@@ -73,6 +114,7 @@ NAME: ziggurat1
 : ziggurat_level(_G)
 MAP
 ENDMAP
+
 
 #############################################################################
 # Multilevel portal vault structure:

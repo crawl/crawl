@@ -258,6 +258,7 @@ local mons_populations = {
   "place:Geh:$",
   "place:Dis:$",
   "place:Tar:$",
+  "daeva / angel",
   depth_ge(6, "place:Pan w:400 / w:15 pandemonium lord"),
   depth_lt(6, "place:Pan")
 }
