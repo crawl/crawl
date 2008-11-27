@@ -684,8 +684,46 @@ void wizard_place_stairs( bool down )
 #endif
 
 #ifdef WIZARD
+// Try to find and use stairs already in the portal vault level,
+// since this might be a multi-level portal vault like a ziggurat.
+bool _take_portal_vault_stairs( const bool down )
+{
+    ASSERT(you.level_type == LEVEL_PORTAL_VAULT);
+
+    const command_type cmd = down ? CMD_GO_DOWNSTAIRS : CMD_GO_UPSTAIRS;
+
+    coord_def stair_pos(-1, -1);
+
+    for (int x = 0; x < GXM; x++)
+        for (int y = 0; y < GYM; y++)
+        {
+             if (grid_stair_direction(grd[x][y]) == cmd)
+             {
+                stair_pos.set(x, y);
+                break;
+             }
+        }
+
+    if (!in_bounds(stair_pos))
+        return (false);
+
+    you.position = stair_pos;
+    if (down)
+        down_stairs(you.your_level);
+    else
+        up_stairs();
+
+    return (true);
+}
+#endif
+
+#ifdef WIZARD
 void wizard_level_travel( bool down )
 {
+    if (you.level_type == LEVEL_PORTAL_VAULT)
+        if (_take_portal_vault_stairs(down))
+            return;
+
     dungeon_feature_type stairs = _find_appropriate_stairs(down);
 
     if (stairs == DNGN_UNSEEN)
