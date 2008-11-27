@@ -303,4 +303,12 @@ shadow imp
 white imp
 
 @imp@
+####################################
+# Shouts for specific uniques
+####################################
+%%%%
+Polyphemus
+
+# This would also work for other monsters that are surrounded by allies.
+@The_monster@ shouts, "Attack, my pets! Attack!"
 %%%%

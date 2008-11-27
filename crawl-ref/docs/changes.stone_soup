@@ -36,7 +36,6 @@ Interface
 * Shops now use shopping cart behaviour.
 * All 't' commands now take a turn.
 * Wizard commands can now be used from the wizard help screen.
-* Allow examining your inventory at game end and in shops.
 * With a full pack, check entire list of selected items to allow for merging.
 * Added an aptitudes hotkey for the book/weapon choice submenus.
 * Added an option to make menu colours apply to shops.
