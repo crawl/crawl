@@ -145,8 +145,7 @@ end
 -- the estimated total map area for ziggurat maps of given depth
 -- this is be independent of the layout type
 local function map_area()
-  local base_area = 5 + 3 * zig_depth()
-  return 4 * base_area + crawl.random2(base_area)
+  return 30 + 18*zig_depth() + 2*zig_depth()*zig_depth()
 end
 
 local function clamp_in(val, low, high)
@@ -161,32 +160,6 @@ end
 
 local function clamp_in_bounds(x, y)
   return clamp_in(x, 2, dgn.GXM - 3), clamp_in(y, 2, dgn.GYM - 3)
-end
-
-local function rectangle_dimensions()
-  local area = map_area()
-
-  local cx, cy = dgn.GXM / 2, dgn.GYM / 2
-
-  local function rectangle_eccentricity()
-    -- exc is the local eccentricity for the two rectangles
-    -- exc grows with depth as 0-1, 1, 1-2, 2, 2-3 ...
-    local exc = math.floor(zig().depth / 2)
-    if ((zig().depth-1) % 2) == 0 and crawl.coinflip() then
-      exc = exc + 1
-    end
-    return exc
-  end
-
-  local exc = rectangle_eccentricity()
-  local b = math.floor(math.sqrt(area+4*exc*exc))
-  local a = b-2*exc
-
-  local a2 = math.floor(a / 2) + (a % 2)
-  local b2 = math.floor(b / 2) + (b % 2)
-  local x1, y1 = clamp_in_bounds(cx - a2, cy - b2)
-  local x2, y2 = clamp_in_bounds(cx + a2, cy + b2)
-  return x1, y1, x2, y2
 end
 
 local function set_floor_colour(colour)
@@ -354,16 +327,6 @@ local function ziggurat_create_monsters(p, mfn)
       break
     end
   end
-end
-
-local function flip_rectangle(x1, y1, x2, y2)
-  local cx = math.floor((x1 + x2) / 2)
-  local cy = math.floor((y1 + y2) / 2)
-
-  local nx1, ny1 = clamp_in_bounds(cx + y1 - cy, cy + x1 - cx)
-  local nx2, ny2 = clamp_in_bounds(cx + y2 - cy, cy + x2 - cx)
-
-  return { nx1, ny1, nx2, ny2 }
 end
 
 local function ziggurat_create_loot_at(c)
@@ -604,19 +567,39 @@ end
 -- builds ziggurat maps consisting of two overimposed rectangles
 local function ziggurat_rectangle_builder(e)
   local grid = dgn.grid
-
   dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "stone_wall")
+  
+  local area = map_area()
+  area = math.floor(area*3/4)
+  
+  local cx, cy = dgn.GXM / 2, dgn.GYM / 2
 
-  local x1, y1, x2, y2 = rectangle_dimensions()
+  -- exc is the local eccentricity for the two rectangles
+  -- exc grows with depth as 0-1, 1, 1-2, 2, 2-3 ...
+  local exc = math.floor(zig().depth / 2)
+  if ((zig().depth-1) % 2) == 0 and crawl.coinflip() then
+    exc = exc + 1
+  end
+
+  local a = math.floor(math.sqrt(area+4*exc*exc))
+  local b = a - 2*exc
+  local a2 = math.floor(a / 2) + (a % 2)
+  local b2 = math.floor(b / 2) + (b % 2)
+  local x1, y1 = clamp_in_bounds(cx - a2, cy - b2)
+  local x2, y2 = clamp_in_bounds(cx + a2, cy + b2)
   dgn.fill_area(x1, y1, x2, y2, "floor")
 
-  dgn.fill_area(unpack( util.catlist(flip_rectangle(x1, y1, x2, y2),
-                                     { "floor" }) ) )
+  local zig_exc = zig().zig_exc
+  local nx1 = cx + y1 - cy
+  local ny1 = cy + x1 - cx + math.floor(zig().depth/2*(200-zig_exc)/300)
+  local nx2 = cx + y2 - cy
+  local ny2 = cy + x2 - cx - math.floor(zig().depth/2*(200-zig_exc)/300)
+  nx1, ny1 = clamp_in_bounds(nx1, ny1)
+  nx2, ny2 = clamp_in_bounds(nx2, ny2)
+  dgn.fill_area(nx1, ny1, nx2, ny2, "floor")
 
-  local c = dgn.point(x1 + x2, y1 + y2) / 2
-
-  local entry = dgn.point(x1, c.y)
-  local exit = dgn.point(x2, c.y)
+  local entry = dgn.point(x1, cy)
+  local exit = dgn.point(x2, cy)
 
   if zig_depth() % 2 == 0 then
     entry, exit = exit, entry
@@ -642,6 +625,8 @@ local function ziggurat_ellipse_builder(e)
   local a = math.floor(b * (200+zig_exc) / 200)
   local cx, cy = dgn.GXM / 2, dgn.GYM / 2
 
+--crawl.mpr("area= " ..area .. ", a=" .. a .. ", b=" .. b .. ", exc=" .. zig_exc)
+  
   local floor = dgn.fnum("floor")
 
   for x=0, dgn.GXM-1 do
@@ -663,6 +648,8 @@ local function ziggurat_ellipse_builder(e)
   ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
+
+-- builds hexagonal ziggurat maps
 local function ziggurat_hexagon_builder(e)
   local grid = dgn.grid
   dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "stone_wall")
@@ -673,13 +660,14 @@ local function ziggurat_hexagon_builder(e)
   local area = map_area()
 
   local a = math.floor(math.sqrt(2 * area / math.sqrt(27))) + 2
-
-  crawl.mpr("a: " .. a)
+  local b = math.floor(a*math.sqrt(3)/4)
 
   local left = dgn.point(math.floor(c.x - (a + math.sqrt(2 * a)) / 2),
                          c.y)
   local right = dgn.point(2 * c.x - left.x, c.y)
 
+--crawl.mpr("area=" .. area .. ", a: " .. a .. ", lx=" .. left.x .. ", rx=" .. right.x)  
+  
   local floor = dgn.fnum("floor")
 
   for x = 1, dgn.GXM - 2 do
@@ -691,7 +679,7 @@ local function ziggurat_hexagon_builder(e)
 
       if dlx >= dly and drx <= dry
         and dlx >= -dly and drx <= -dry
-        and y >= c.y - a and y <= c.y + a then
+        and y >= c.y - b and y <= c.y + b then
         grid(x, y, floor)
       end
     end
