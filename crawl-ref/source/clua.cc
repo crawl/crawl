@@ -3180,3 +3180,31 @@ bool lua_datum::is_udata() const
 {
     LUA_CHECK_TYPE(lua_isuserdata);
 }
+
+// Can be called from within a debugger to look at the current Lua
+// call stack.  (Borrowed from ToME 3)
+void print_clua_stack(void)
+{
+    struct lua_Debug dbg;
+    int              i = 0;
+    lua_State       *L = clua.state();
+
+    fprintf(stderr, "\n");
+    while (lua_getstack(L, i++, &dbg) == 1)
+    {
+        lua_getinfo(L, "lnuS", &dbg);
+
+        char* file = strrchr(dbg.short_src, '/');
+        if (file == NULL)
+            file = dbg.short_src;
+        else
+            file++;
+
+        // Have to use "\r\n" instead of just "\n" here, for some
+        // reason.
+        fprintf(stderr, "%s, function %s, line %d\r\n", file,
+                dbg.name, dbg.currentline);
+    }
+
+    fprintf(stderr, "\n");
+}
