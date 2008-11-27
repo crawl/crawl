@@ -784,6 +784,86 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
     }
 }
 
+static void _spore_goes_pop(monsters *monster, killer_type killer,
+                            int killer_index, bool pet_kill, bool wizard)
+{
+    if (monster->hit_points > 0 || monster->hit_points <= -15 || wizard
+        || killer == KILL_RESET || killer == KILL_DISMISSED)
+    {
+        return;
+    }
+
+    if (killer == KILL_MISC)
+        killer = KILL_MON;
+
+    bolt beam;
+    const int type = monster->type;
+
+    beam.is_tracer    = false;
+    beam.is_explosion = true;
+    beam.beam_source  = monster_index(monster);
+    beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.pos          = monster->pos();
+    beam.source       = monster->pos();
+    beam.target       = monster->pos();
+    beam.thrower      = killer;
+    beam.aux_source.clear();
+
+    if (YOU_KILL(killer))
+        beam.aux_source = "set off by themselves";
+    else if (pet_kill)
+        beam.aux_source = "set off by their pet";
+
+    const char* msg       = NULL;
+    const char* sanct_msg = NULL;
+    if (type == MONS_GIANT_SPORE)
+    {
+        beam.flavour = BEAM_SPORE;
+        beam.name    = "explosion of spores";
+        beam.colour  = LIGHTGREY;
+        beam.damage  = dice_def( 3, 15 );
+        beam.ex_size = 2;
+        msg = "The giant spore explodes!";
+        sanct_msg = "By Zin's power, the giant spore's explosion is contained.";
+    }
+    else if (type == MONS_BALL_LIGHTNING)
+    {
+        beam.flavour = BEAM_ELECTRICITY;
+        beam.name    = "blast of lightning";
+        beam.colour  = LIGHTCYAN;
+        beam.damage  = dice_def( 3, 20 );
+        beam.ex_size = coinflip() ? 3 : 2;
+        msg = "The ball lightning explodes!";
+        sanct_msg = "By Zin's power, the ball lightning's explosion "
+                    "is contained.";
+    }
+    else
+    {
+        msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
+                                        << static_cast<int>(type)
+                                        << std::endl;
+        return;
+    }
+
+    if (you.can_see(monster))
+    {
+        viewwindow(true, false);
+        if (is_sanctuary(monster->pos()))
+            mpr(sanct_msg, MSGCH_GOD);
+        else
+            mpr(msg);
+    }
+
+    if (is_sanctuary(monster->pos()))
+        return;
+
+    // Detach monster from the grid first, so it doesn't get hit by
+    // its own explosion. (GDL)
+    mgrd(monster->pos()) = NON_MONSTER;
+    explosion(beam, false, false, true, true, mons_near(monster));
+    mgrd(monster->pos()) = monster_index(monster);
+}
+
 void monster_die(monsters *monster, killer_type killer,
                  int killer_index, bool silent, bool wizard)
 {
@@ -879,20 +959,20 @@ void monster_die(monsters *monster, killer_type killer,
     if (monster->type == MONS_GIANT_SPORE
         || monster->type == MONS_BALL_LIGHTNING)
     {
-        if (monster->hit_points < 1 && monster->hit_points > -15)
-            return;
+        _spore_goes_pop(monster, killer, killer_index, pet_kill, wizard);
     }
     else if (monster->type == MONS_FIRE_VORTEX
              || monster->type == MONS_SPATIAL_VORTEX)
     {
-        if (!silent)
+        if (!silent && killer != KILL_RESET)
         {
             simple_monster_message( monster, " dissipates!",
                                     MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
             silent = true;
         }
 
-        if (monster->type == MONS_FIRE_VORTEX)
+        if (monster->type == MONS_FIRE_VORTEX && !wizard
+            && killer != KILL_RESET)
         {
             place_cloud(CLOUD_FIRE, monster->pos(), 2 + random2(4),
                         monster->kill_alignment());
@@ -904,15 +984,16 @@ void monster_die(monsters *monster, killer_type killer,
     else if (monster->type == MONS_SIMULACRUM_SMALL
              || monster->type == MONS_SIMULACRUM_LARGE)
     {
-        if (!silent)
+        if (!silent && killer != KILL_RESET)
         {
             simple_monster_message( monster, " vapourises!",
                                     MSGCH_MONSTER_DAMAGE,  MDAM_DEAD );
             silent = true;
         }
 
-        place_cloud(CLOUD_COLD, monster->pos(), 2 + random2(4),
-                    monster->kill_alignment());
+        if (!wizard && killer != KILL_RESET)
+            place_cloud(CLOUD_COLD, monster->pos(), 2 + random2(4),
+                        monster->kill_alignment());
 
         if (killer == KILL_RESET)
             killer = KILL_DISMISSED;
@@ -5860,7 +5941,7 @@ static void _swim_or_move_energy(monsters *mon)
 
 #if DEBUG
 #    define DEBUG_ENERGY_USE(problem) \
-         if (monster->speed_increment == old_energy) \
+    if (monster->speed_increment == old_energy && monster->alive()) \
              mprf(MSGCH_DIAGNOSTICS, \
                   problem " for monster '%s' consumed no energy", \
                   monster->name(DESC_PLAIN).c_str(), true);
@@ -6282,19 +6363,6 @@ static void _handle_monster_move(int i, monsters *monster)
                     DEBUG_ENERGY_USE("monster_attack()");
                 }
 
-                if ((monster->type == MONS_GIANT_SPORE
-                        || monster->type == MONS_BALL_LIGHTNING)
-                    && monster->hit_points < 1)
-                {
-                    // Detach monster from the grid first, so it
-                    // doesn't get hit by its own explosion. (GDL)
-                    mgrd(monster->pos()) = NON_MONSTER;
-
-                    spore_goes_pop(monster);
-                    monster_cleanup(monster);
-                    continue;
-                }
-
                 if (attacked)
                 {
                     mmov.reset();
@@ -6324,21 +6392,7 @@ static void _handle_monster_move(int i, monsters *monster)
     }
 
     if (monster->type != -1 && monster->hit_points < 1)
-    {
-        if (monster->type == MONS_GIANT_SPORE
-            || monster->type == MONS_BALL_LIGHTNING)
-        {
-            // Detach monster from the grid first, so it
-            // doesn't get hit by its own explosion. (GDL)
-            mgrd(monster->pos()) = NON_MONSTER;
-
-            spore_goes_pop(monster);
-            monster_cleanup(monster);
-            return;
-        }
-        else
             monster_die(monster, KILL_MISC, NON_MONSTER);
-    }
 }
 
 //---------------------------------------------------------------

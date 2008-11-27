@@ -3219,18 +3219,26 @@ static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p)
 // A little helper function to handle the calling of ouch()...
 static void _beam_ouch(int dam, bolt &beam)
 {
+    monsters *monst = NULL;
+    if (!invalid_monster_index(beam.beam_source)
+        && menv[beam.beam_source].type != -1)
+    {
+        monst = &menv[beam.beam_source];
+    }
+
     // The order of this is important.
-    if (YOU_KILL(beam.thrower) && beam.aux_source.empty())
+    if (monst && (monst->type == MONS_GIANT_SPORE
+                  || monst->type == MONS_BALL_LIGHTNING))
+    {
+        ouch(dam, beam.beam_source, KILLED_BY_SPORE,
+             beam.aux_source.c_str());
+    }
+    else if (YOU_KILL(beam.thrower) && beam.aux_source.empty())
         ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING);
     else if (MON_KILL(beam.thrower))
     {
-        if (beam.flavour == BEAM_SPORE)
-            ouch(dam, beam.beam_source, KILLED_BY_SPORE);
-        else
-        {
-            ouch(dam, beam.beam_source, KILLED_BY_BEAM,
-                 beam.aux_source.c_str());
-        }
+        ouch(dam, beam.beam_source, KILLED_BY_BEAM,
+             beam.aux_source.c_str());
     }
     else // KILL_MISC || (YOU_KILL && aux_source)
     {

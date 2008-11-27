@@ -1237,69 +1237,6 @@ bool mons_thrown_object_destroyed( item_def *item, const coord_def& where,
     return destroyed;
 }
 
-// XXX: Should really do something about mons_hit, but can't be bothered.
-void spore_goes_pop(monsters *monster)
-{
-    bolt beam;
-    const int type = monster->type;
-
-    if (monster == NULL)
-        return;
-
-    beam.is_tracer    = false;
-    beam.is_explosion = true;
-    beam.beam_source  = monster_index(monster);
-    beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.target       = monster->pos();
-    beam.thrower      = KILL_MON;    // someone else's explosion
-    beam.aux_source.clear();
-
-    const char* msg       = NULL;
-    const char* sanct_msg = NULL;
-    if (type == MONS_GIANT_SPORE)
-    {
-        beam.flavour = BEAM_SPORE;
-        beam.name    = "explosion of spores";
-        beam.colour  = LIGHTGREY;
-        beam.damage  = dice_def( 3, 15 );
-        beam.ex_size = 2;
-        msg = "The giant spore explodes!";
-        sanct_msg = "By Zin's power, the giant spore's explosion is contained.";
-    }
-    else if (type == MONS_BALL_LIGHTNING)
-    {
-        beam.flavour = BEAM_ELECTRICITY;
-        beam.name    = "blast of lightning";
-        beam.colour  = LIGHTCYAN;
-        beam.damage  = dice_def( 3, 20 );
-        beam.ex_size = coinflip() ? 3 : 2;
-        msg = "The ball lightning explodes!";
-        sanct_msg = "By Zin's power, the ball lightning's explosion "
-                    "is contained.";
-    }
-    else
-    {
-        msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
-                                        << static_cast<int>(type)
-                                        << std::endl;
-        return;
-    }
-
-    if (you.can_see(monster))
-    {
-        viewwindow(true, false);
-        if (is_sanctuary(monster->pos()))
-            mpr(sanct_msg, MSGCH_GOD);
-        else
-            mpr(msg);
-    }
-
-    if (is_sanctuary(monster->pos()))
-        return;
-
-    explosion(beam, false, false, true, true, mons_near(monster));
-}
-
 bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 {
     ASSERT(power > 0);

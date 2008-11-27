@@ -762,8 +762,10 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         auxkilldata = aux;
 
     // for death by monster
-    if ((death_type == KILLED_BY_MONSTER || death_type == KILLED_BY_BEAM)
-        && !invalid_monster_index(death_source))
+    if ((death_type == KILLED_BY_MONSTER || death_type == KILLED_BY_BEAM
+         || death_type == KILLED_BY_SPORE)
+        && !invalid_monster_index(death_source)
+        && menv[death_source].type != -1)
     {
         const monsters *monster = &menv[death_source];
 
@@ -806,10 +808,13 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 
         const bool death = you.hp <= 0;
 
-        death_source_name = monster->name(DESC_NOCAP_A, death);
+        const description_level_type desc =
+            death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_NOCAP_A;
+
+        death_source_name = monster->name(desc, death);
         if (monster->has_base_name())
             death_source_name +=
-                ", " + monster->base_name(DESC_NOCAP_A, death);
+                ", " + monster->base_name(desc, death);
 
         if (monster->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";
@@ -1636,7 +1641,21 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_SPORE:
-        desc += terse? "spore" : "Killed by an exploding spore";
+        if (terse)
+        {
+            if (death_source_name.empty())
+                desc += "spore";
+            else
+                desc += get_monster_data(death_source)->name;
+        }
+        else
+        {
+            desc += "Killed by an exploding ";
+            if (death_source_name.empty())
+                desc += "spore";
+            else
+                desc += death_source_name;
+        }
         needs_damage = true;
         break;
 
@@ -1849,6 +1868,14 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             }
             desc += _hiscore_newline_string();
         }
+    }
+
+    if (death_type == KILLED_BY_SPORE && !terse && !auxkilldata.empty())
+    {
+        desc += "... ";
+        desc += auxkilldata;
+        desc += "\n";
+        desc += "             ";
     }
 
     if (terse)

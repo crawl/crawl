@@ -2234,10 +2234,7 @@ void MiscastEffect::init()
            || pow == -1 && fail == -1 && level >= 0 && level <= 3);
 
     ASSERT(target != NULL);
-    // A dead but not-yet-exploded giant spore or ball lightning *might*
-    // be the target of a miscast effect.
-    ASSERT(target->alive() || target->id() ==  MONS_GIANT_SPORE
-           || target->id() == MONS_BALL_LIGHTNING);
+    ASSERT(target->alive());
 
     source_known = target_known = false;
 
