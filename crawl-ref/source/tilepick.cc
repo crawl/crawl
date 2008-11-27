@@ -1745,6 +1745,37 @@ static int _tileidx_corpse(int mon)
   return TILE_ERROR;
 }
 
+static int _tileidx_rune(const item_def &item)
+{
+    switch (item.plus)
+    {
+    case RUNE_DIS:         return TILE_MISC_RUNE_DIS;
+    case RUNE_GEHENNA:     return TILE_MISC_RUNE_GEHENNA;
+    case RUNE_COCYTUS:     return TILE_MISC_RUNE_COCYTUS;
+    case RUNE_TARTARUS:    return TILE_MISC_RUNE_TARTARUS;
+
+    // special pandemonium runes:
+    case RUNE_MNOLEG:      return TILE_MISC_RUNE_MNOLEG;
+    case RUNE_LOM_LOBON:   return TILE_MISC_RUNE_LOM_LOBON;
+    case RUNE_CEREBOV:     return TILE_MISC_RUNE_CEREBOV;
+    case RUNE_GLOORX_VLOQ: return TILE_MISC_RUNE_GLOORX_VLOQ;
+
+    // All others use the default rune for now.
+    case RUNE_SLIME_PITS:
+    case RUNE_VAULTS:
+    case RUNE_SNAKE_PIT:
+    case RUNE_ELVEN_HALLS:
+    case RUNE_TOMB:
+    case RUNE_SWAMP:
+    case RUNE_SHOALS:
+
+    // pandemonium and abyss runes:
+    case RUNE_DEMONIC:
+    case RUNE_ABYSSAL:
+    default:               return TILE_MISC_RUNE_OF_ZOT;
+    }
+}
+
 static int _tileidx_misc(const item_def &item)
 {
     switch(item.sub_type)
@@ -1818,7 +1849,7 @@ static int _tileidx_misc(const item_def &item)
         return ch;
     }
     case MISC_RUNE_OF_ZOT:
-        return TILE_MISC_RUNE_OF_ZOT;
+        return _tileidx_rune(item);
     }
 
     return TILE_ERROR;

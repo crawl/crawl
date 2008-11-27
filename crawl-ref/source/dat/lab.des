@@ -352,3 +352,13 @@ MAP
 ........
 ENDMAP
 # Disheartened?
+
+############################################################################
+# A few monsters: Nothing is as it seems.
+NAME:   labyrinth_single_monster
+TAGS:   lab allow_dup generate_awake
+KFEAT:  x = .
+KMONS:  x = trapdoor spider / w:3 wandering mushroom
+MAP
+x
+ENDMAP

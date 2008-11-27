@@ -222,7 +222,7 @@ void WallIdx(int &wall, int &floor, int &special)
             floor = TILE_FLOOR_SLIME;
             return;
         }
-        else if (you.level_type_name == "ice_cave")
+        else if (you.level_type_name == "ice cave")
         {
             wall  = TILE_WALL_ICE;
             floor = TILE_FLOOR_ICE;

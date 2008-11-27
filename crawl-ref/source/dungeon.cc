@@ -6682,6 +6682,7 @@ static void _vitrify_wall_neighbours(const coord_def pos)
     }
 }
 
+// Turns some connected rock or stone walls into the transparent versions.
 static void _labyrinth_add_glass_walls(const dgn_region &region)
 {
     int glass_num = random2(3) + random2(4);
@@ -8269,7 +8270,7 @@ void vault_placement::apply_grid()
     {
         // NOTE: assumes *no* previous item (I think) or monster (definitely)
         // placement.
-        for ( rectangle_iterator ri(pos, pos + size - 1); ri; ++ri )
+        for (rectangle_iterator ri(pos, pos + size - 1); ri; ++ri)
         {
             const coord_def &rp(*ri);
             const coord_def dp = rp - pos;

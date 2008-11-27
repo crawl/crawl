@@ -821,8 +821,16 @@ misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY
 misc_box MISC_EMPTY_EBONY_CASKET
 misc_crystal MISC_CRYSTAL_BALL_OF_FIXATION
 misc_disc MISC_DISC_OF_STORMS
-misc_rune MISC_RUNE_OF_ZOT
 misc_altar MISC_PORTABLE_ALTAR_OF_NEMELEX
+misc_rune MISC_RUNE_OF_ZOT
+runes/rune_tartarus MISC_RUNE_TARTARUS
+runes/rune_cocytus MISC_RUNE_COCYTUS
+runes/rune_dis MISC_RUNE_DIS
+runes/rune_gehenna MISC_RUNE_GEHENNA
+runes/rune_cerebov MISC_RUNE_CEREBOV
+runes/rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
+runes/rune_mnoleg MISC_RUNE_MNOLEG
+runes/rune_lom_lobon MISC_RUNE_LOM_LOBON
 
 #OBJ_CORPSES
 

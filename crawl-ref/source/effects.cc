@@ -2508,6 +2508,7 @@ void change_labyrinth(bool msg)
     }
 
 #ifdef WIZARD
+    // Remove old highlighted areas to make place for the new ones.
     for (rectangle_iterator ri(1); ri; ++ri)
         env.map(*ri).property &= ~(FPROP_HIGHLIGHT);
 #endif
@@ -2609,6 +2610,9 @@ void change_labyrinth(bool msg)
 
         // Rather than use old_grid directly, replace with an adjacent
         // wall type, preferably stone, rock, or metal.
+        // TODO: Blood is currently left on the grid even though it turned
+        //       into a wall or floor. Rather, it should be nudged aside to
+        //       a grid of similar type.
         old_grid = grd[p.x-1][p.y];
         if (!grid_is_wall(old_grid))
         {
@@ -2623,13 +2627,13 @@ void change_labyrinth(bool msg)
                 old_grid = DNGN_STONE_WALL;
             }
             else if (old_grid != DNGN_ROCK_WALL && old_grid != DNGN_STONE_WALL
-                     && old_grid != DNGN_METAL_WALL)
+                     && old_grid != DNGN_METAL_WALL && !one_chance_in(3))
             {
                 old_grid = grd[p.x][p.y+1];
             }
         }
         else if (old_grid != DNGN_ROCK_WALL && old_grid != DNGN_STONE_WALL
-                 && old_grid != DNGN_METAL_WALL)
+                 && old_grid != DNGN_METAL_WALL && !one_chance_in(3))
         {
             old_grid = grd[p.x+1][p.y];
         }
