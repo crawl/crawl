@@ -5050,7 +5050,7 @@ int explosion( bolt &beam, bool hole_in_the_middle,
     // corners where a simple 'line of sight' isn't quite
     // enough.  This might be slow for really big explosions,
     // as the recursion runs approximately as R^2.
-    _explosion_map(beam, coord_def(0, 0), 0, 0, r);
+    _explosion_map(beam, coord_def(0, 0), 0, -1, r);
 
     // Go through affected cells, drawing effect and
     // calling affect() for each.  Now, we get a bit
@@ -5233,21 +5233,17 @@ static void _explosion_map( bolt &beam, const coord_def& p,
     // Hmm, I think we're ok.
     explode_map(p + coord_def(9,9)) = true;
 
-    const coord_def spread[] = { coord_def(0, -1), coord_def( 0, 1),
-                                 coord_def(1,  0), coord_def(-1, 0) };
-    const int opdir[]        = { 2, 1, 4, 3 };
-
     // Now recurse in every direction except the one we came from.
-    const int spreadsize = ARRAYSZ(spread);
-    for (int i = 0; i < spreadsize; i++)
+    for (int i = 0; i < 8; i++)
     {
-        if (i+1 != dir)
+        if ((i + 1) != dir)
         {
             int cadd = 5;
-            if (p.x * spread[i].x < 0 || p.y * spread[i].y < 0)
+            if (p.x * Compass[i].x < 0 || p.y * Compass[i].y < 0)
                 cadd = 17;
 
-            _explosion_map( beam, p + spread[i], count + cadd, opdir[i], r );
+            _explosion_map( beam, p + Compass[i], count + cadd,
+                            (i + 4) % 8, r );
         }
     }
 }
