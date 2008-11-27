@@ -628,7 +628,6 @@ end
 -- a=b*3/2 for zig_exc=100
 local function ziggurat_ellipse_builder(e)
   local grid = dgn.grid
-
   dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "stone_wall")
 
   local zig_exc = zig().zig_exc
@@ -643,7 +642,7 @@ local function ziggurat_ellipse_builder(e)
   for x=0, dgn.GXM-1 do
     for y=0, dgn.GYM-1 do
       if b*b*(cx-x)*(cx-x) + a*a*(cy-y)*(cy-y) <= a*a*b*b then
-        dgn.grid(x, y, floor)
+        grid(x, y, floor)
       end
     end
   end
@@ -659,11 +658,57 @@ local function ziggurat_ellipse_builder(e)
   ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
+local function ziggurat_hexagon_builder(e)
+  local grid = dgn.grid
+  dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "stone_wall")
+
+  local zig_exc = zig().zig_exc
+
+  local c = dgn.point(dgn.GXM, dgn.GYM) / 2
+  local area = map_area()
+
+  local a = math.floor(math.sqrt(2 * area / math.sqrt(27))) + 2
+
+  crawl.mpr("a: " .. a)
+
+  local left = dgn.point(math.floor(c.x - (a + math.sqrt(2 * a)) / 2),
+                         c.y)
+  local right = dgn.point(2 * c.x - left.x, c.y)
+
+  local floor = dgn.fnum("floor")
+
+  for x = 1, dgn.GXM - 2 do
+    for y = 1, dgn.GYM - 2 do
+      local dlx = x - left.x
+      local drx = x - right.x
+      local dly = y - left.y
+      local dry = y - right.y
+
+      if dlx >= dly and drx <= dry
+        and dlx >= -dly and drx <= -dry
+        and y >= c.y - a and y <= c.y + a then
+        grid(x, y, floor)
+      end
+    end
+  end
+
+  local entry = left + dgn.point(1,0)
+  local exit  = right - dgn.point(1, 0)
+
+  if zig_depth() % 2 == 0 then
+    entry, exit = exit, entry
+  end
+
+  ziggurat_stairs(entry, exit)
+  ziggurat_furnish(c, entry, exit)
+end
+
 ----------------------------------------------------------------------
 
 ziggurat_builder_map = {
   rectangle = ziggurat_rectangle_builder,
-  ellipse = ziggurat_ellipse_builder
+  ellipse = ziggurat_ellipse_builder,
+  hex = ziggurat_hexagon_builder
 }
 
 local ziggurat_builders = util.keys(ziggurat_builder_map)
