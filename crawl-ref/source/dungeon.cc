@@ -2541,7 +2541,11 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
 
     // maybe create a special room, if roguey_level hasn't done it
     // already.
+#ifdef DEBUG_SPECIAL_ROOMS
+    if (!sr.created)
+#else
     if (!sr.created && one_chance_in(5))
+#endif
     {
         const map_def *sroom = random_map_for_tag("special_room", true, true);
 
@@ -3532,18 +3536,6 @@ static void _special_room(int level_number, spec_room &sr,
                           const map_def *vault)
 {
     ASSERT(vault);
-#if 0 // MATT
-    char spec_room_type = SROOM_LAIR_KOBOLD;
-    int lev_mons;
-    int thing_created = 0;
-
-    object_class_type obj_type = OBJ_RANDOM;  // used in calling items() {dlb}
-    unsigned char i;        // general purpose loop variable {dlb}
-
-    FixedVector < monster_type, 10 > mons_alloc; // was [20] {dlb}
-
-    coord_def lordpos;
-#endif
 
     // Overwrites anything: this function better be called early on during
     // creation.
@@ -3570,126 +3562,6 @@ static void _special_room(int level_number, spec_room &sr,
     lua_special_room_spec.created = false;
     lua_special_room_spec.tl.set(-1, -1);
     lua_special_room_level = -1;
-
-#if 0 // MATT
-    switch (spec_room_type)
-    {
-    case SROOM_LAIR_ORC:
-        // Determine which monster array to generate {dlb}:
-        lev_mons = ((level_number > 24) ? 3 :
-                    (level_number > 15) ? 2 :
-                    (level_number >  9) ? 1
-                                        : 0);
-
-        // Fill with baseline monster type {dlb}:
-        for (i = 0; i < 10; i++)
-            mons_alloc[i] = MONS_ORC;
-
-        // Fill in with special monster types {dlb}:
-        switch (lev_mons)
-        {
-        case 0:
-            mons_alloc[9] = MONS_ORC_WARRIOR;
-            break;
-        case 1:
-            mons_alloc[8] = MONS_ORC_WARRIOR;
-            mons_alloc[9] = MONS_ORC_WARRIOR;
-            break;
-        case 2:
-            mons_alloc[6] = MONS_ORC_KNIGHT;
-            mons_alloc[7] = MONS_ORC_WARRIOR;
-            mons_alloc[8] = MONS_ORC_WARRIOR;
-            mons_alloc[9] = MONS_OGRE;
-            break;
-        case 3:
-            mons_alloc[2] = MONS_ORC_WARRIOR;
-            mons_alloc[3] = MONS_ORC_WARRIOR;
-            mons_alloc[4] = MONS_ORC_WARRIOR;
-            mons_alloc[5] = MONS_ORC_KNIGHT;
-            mons_alloc[6] = MONS_ORC_KNIGHT;
-            mons_alloc[7] = MONS_OGRE;
-            mons_alloc[8] = MONS_OGRE;
-            mons_alloc[9] = MONS_TROLL;
-            break;
-        }
-
-        // Place monsters and give them items {dlb}:
-        for (rectangle_iterator ri(sr.tl, sr.br); ri; ++ri)
-            if (!one_chance_in(4))
-                mons_place(mgen_data::sleeper_at(mons_alloc[random2(10)], *ri));
-
-        break;
-
-    case SROOM_LAIR_KOBOLD:
-        lordpos = sr.random_spot();
-
-        // Determine which monster array to generate {dlb}:
-        lev_mons = ((level_number < 4) ? 0 :
-                    (level_number < 6) ? 1 : (level_number < 9) ? 2 : 3);
-
-        // Fill with baseline monster type {dlb}:
-        for (i = 0; i < 10; i++)
-            mons_alloc[i] = MONS_KOBOLD;
-
-        // Fill in with special monster types {dlb}:
-        // In this case, they are uniformly the same {dlb}:
-        for (i = (7 - lev_mons); i < 10; i++)
-            mons_alloc[i] = MONS_BIG_KOBOLD;
-
-        // Place monsters and give them items {dlb}:
-        for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
-            if ( *ri != lordpos && !one_chance_in(4) )
-                mons_place(mgen_data::sleeper_at(mons_alloc[random2(10)], *ri));
-
-        // Put the boss monster down.
-        mons_place(mgen_data::sleeper_at(MONS_BIG_KOBOLD, lordpos));
-        break;
-
-    case SROOM_TREASURY:
-        // Should only appear in deep levels, with a guardian.
-        // Maybe have several types of treasure room?
-        // place treasure {dlb}:
-        for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
-        {
-            const int temp_rand = random2(11);
-
-            obj_type = ((temp_rand > 8) ? OBJ_WEAPONS :       // 2 in 11
-                        (temp_rand > 6) ? OBJ_ARMOUR :        // 2 in 11
-                        (temp_rand > 5) ? OBJ_MISSILES :      // 1 in 11
-                        (temp_rand > 4) ? OBJ_WANDS :         // 1 in 11
-                        (temp_rand > 3) ? OBJ_SCROLLS :       // 1 in 11
-                        (temp_rand > 2) ? OBJ_JEWELLERY :     // 1 in 11
-                        (temp_rand > 1) ? OBJ_BOOKS :         // 1 in 11
-                        (temp_rand > 0) ? OBJ_STAVES          // 1 in 11
-                        : OBJ_POTIONS);       // 1 in 11
-
-            thing_created = items( 1, obj_type, OBJ_RANDOM, true,
-                                   level_number * 3, MAKE_ITEM_RANDOM_RACE);
-
-            if (thing_created != NON_ITEM)
-                mitm[thing_created].pos = *ri;
-        }
-
-        // place guardian {dlb}:
-        // If wandering, the guardian should return to the treasure room.
-        mons_place(
-            mgen_data::sleeper_at( MONS_GUARDIAN_NAGA, sr.random_spot(),
-                                   MG_PATROLLING ));
-        break;
-
-    case SROOM_BEEHIVE:
-        _beehive(sr);
-        break;
-
-    case SROOM_MORGUE:
-        _morgue(sr);
-        break;
-
-    case SROOM_JELLY_PIT:
-        _jelly_pit(level_number, sr);
-        break;
-    }
-#endif
 }                               // end special_room()
 
 // Used for placement of vaults.
@@ -7481,8 +7353,12 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
     // Is one of them a special room?
     const map_def *sroom;
 
+#ifdef DEBUG_SPECIAL_ROOMS
+    if ((sroom = random_map_for_tag("special_room", true, true)) != NULL)
+#else
     if (one_chance_in(10)
 	    && (sroom = random_map_for_tag("special_room", true, true)) != NULL)
+#endif
     {
         int spec_room_done = random2(25);
 
@@ -7541,183 +7417,6 @@ static void _roguey_level(int level_number, spec_room &sr, bool make_stairs)
                                                   : DNGN_STONE_STAIRS_UP_I)) );
         }
 }                               // end roguey_level()
-
-#if 0 // MATT
-// Fill special room sr with monsters from the pit_list at density%...
-// then place a "lord of the pit" of lord_type at (lordx, lordy).
-static void _fill_monster_pit( spec_room &sr, FixedVector<pit_mons_def,
-                               MAX_PIT_MONSTERS> &pit_list, int density,
-                               monster_type lord_type, const coord_def& lordpos)
-{
-    int i;
-
-    // Make distribution cumulative.
-    for (i = 1; i < MAX_PIT_MONSTERS; ++i)
-    {
-        // assuming that the first zero rarity is the end of the list:
-        if (!pit_list[i].rare)
-            break;
-
-        pit_list[i].rare = pit_list[i].rare + pit_list[i - 1].rare;
-    }
-
-    const int num_types = i;
-    const int rare_sum = pit_list[num_types - 1].rare;
-
-    // Calculate die_size, factoring in the density% of the pit.
-    const int die_size = (rare_sum * 100) / density;
-
-#if DEBUG_DIAGNOSTICS
-    for (i = 0; i < num_types; ++i)
-    {
-        const int delta = ((i > 0) ? pit_list[i].rare - pit_list[i - 1].rare
-                                   : pit_list[i].rare);
-
-        const float perc = (static_cast<float>( delta ) * 100.0)
-                                / static_cast<float>( rare_sum );
-
-        mprf( MSGCH_DIAGNOSTICS, "%6.2f%%: %s", perc,
-              mons_type_name( pit_list[i].type, DESC_PLAIN).c_str() );
-    }
-#endif
-
-    // Put the boss monster down.
-    if (lord_type != MONS_PROGRAM_BUG)
-    {
-        mgen_data mg;
-        mg.cls       = lord_type;
-        mg.behaviour = BEH_SLEEP;
-        mg.pos       = lordpos;
-
-        mons_place(mgen_data::sleeper_at(lord_type, lordpos));
-    }
-
-    // Place monsters and give them items {dlb}:
-    for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
-    {
-        // Avoid the boss (or anyone else we may have dropped already).
-        if (mgrd(*ri) != NON_MONSTER)
-            continue;
-
-        const int roll = random2( die_size );
-
-        // Density skip (no need to iterate).
-        if (roll >= rare_sum)
-            continue;
-
-        // Run through the cumulative chances and place a monster.
-        for (i = 0; i < num_types; ++i)
-        {
-            if (roll < pit_list[i].rare)
-            {
-                mons_place(
-                    mgen_data::sleeper_at(pit_list[i].type, *ri));
-                break;
-            }
-        }
-    }
-}
-
-static void _morgue(spec_room &sr)
-{
-    for (rectangle_iterator ri(sr.tl, sr.br); ri; ++ri)
-    {
-        if (grd(*ri) == DNGN_FLOOR || grd(*ri) == DNGN_BUILDER_SPECIAL_FLOOR)
-        {
-            const int temp_rand = random2(24);
-
-            const monster_type mon_type =
-                ((temp_rand > 11) ? MONS_ZOMBIE_SMALL :  // 50.0%
-                 (temp_rand >  7) ? MONS_WIGHT :         // 16.7%
-                 (temp_rand >  3) ? MONS_NECROPHAGE :    // 16.7%
-                 (temp_rand >  0) ? MONS_WRAITH          // 12.5%
-                                  : MONS_VAMPIRE);       //  4.2%
-
-            mons_place(mgen_data::sleeper_at(mon_type, *ri));
-        }
-    }
-}
-
-static void _jelly_pit(int level_number, spec_room &sr)
-{
-    FixedVector< pit_mons_def, MAX_PIT_MONSTERS >  pit_list;
-    const coord_def lordpos = sr.random_spot();
-
-    for (int i = 0; i < MAX_PIT_MONSTERS; i++)
-    {
-        pit_list[i].type = MONS_PROGRAM_BUG;
-        pit_list[i].rare = 0;
-    }
-
-#if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "Build: Jelly Pit" );
-#endif
-    pit_list[0].type = MONS_OOZE;
-    pit_list[0].rare = 27 - level_number / 5;
-
-    pit_list[1].type = MONS_JELLY;
-    pit_list[1].rare = 20;
-
-    pit_list[2].type = MONS_BROWN_OOZE;
-    pit_list[2].rare = 3 + level_number;
-
-    pit_list[3].type = MONS_DEATH_OOZE;
-    pit_list[3].rare = 2 + (2 * level_number) / 3;
-
-    if (level_number >= 12)
-    {
-        pit_list[4].type = MONS_AZURE_JELLY;
-        pit_list[4].rare = 1 + (level_number - 12) / 3;
-    }
-
-    if (level_number >= 15)
-    {
-        pit_list[5].type = MONS_ACID_BLOB;
-        pit_list[5].rare = 1 + (level_number - 15) / 4;
-    }
-
-    _fill_monster_pit( sr, pit_list, 90, MONS_PROGRAM_BUG, lordpos );
-}
-
-// Fills a special room with bees.
-static void _beehive(spec_room &sr)
-{
-    for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
-    {
-        if (coinflip())
-            continue;
-
-        const int i = get_item_slot();
-        if (i == NON_ITEM)
-            continue;
-
-        item_def& item(mitm[i]);
-
-        item.quantity = 1;
-        item.base_type = OBJ_FOOD;
-        item.sub_type = (one_chance_in(25) ? FOOD_ROYAL_JELLY : FOOD_HONEYCOMB);
-        item.pos = *ri;
-        item_colour( item );
-    }
-
-    const coord_def queenpos(sr.random_spot());
-
-    // Mark all kinds of bees at patrolling to make them return to their hive.
-    for ( rectangle_iterator ri(sr.tl, sr.br); ri; ++ri )
-    {
-        if (*ri == queenpos)
-            continue;
-
-        // The hive is chock full of bees!
-        mons_place(mgen_data::sleeper_at(
-                       one_chance_in(7) ? MONS_KILLER_BEE_LARVA
-                                        : MONS_KILLER_BEE,
-                       *ri, MG_PATROLLING));
-    }
-
-    mons_place(mgen_data::sleeper_at(MONS_QUEEN_BEE, queenpos, MG_PATROLLING));
-}
-#endif
 
 bool place_specific_trap(const coord_def& where, trap_type spec_type)
 {
