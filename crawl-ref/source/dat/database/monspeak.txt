@@ -14,7 +14,7 @@
 ############################################################
 # Library of randomized word/phrase substitutions.
 # The keys will have to be changed in the unlikely event that 
-# monsters are ever given names like "yells" or "begs".)
+# monsters are ever given names like "yells" or "begs".
 ############################################################
 %%%%
 __RESIST_OR_NOTHING
@@ -127,7 +127,7 @@ _high_priest_
 
 @_high_priest_common_@
 
-w:7
+w:5
 @_high_priest_medium_@
 
 w:1
@@ -141,7 +141,7 @@ SPELL:@The_monster@ mumbles some strange prayers.
 
 SPELL:@The_monster@ intones a terrible prayer.
 
-@The_monster@ shouts, "You are a heretic and must be destroyed!"
+@The_monster@ starts to sing a prayer.
 
 @The_monster@ says, "All sinners must die."
 
@@ -152,7 +152,7 @@ VISUAL:@The_monster@ looks excited.
 
 VISUAL:@The_monster@ performs a strange gesture.
 
-@The_monster@ starts to sing a prayer.
+@The_monster@ shouts, "You are a heretic and must be destroyed!"
 
 @The_monster@ says, "You will make a fine sacrifice."
 
@@ -163,14 +163,17 @@ _high_priest_rare_
 @The_monster@ says, "Right in the middle of my sermon, too."
 
 @The_monster@ says "The wages of sin are death, you know."
+
+# Mother Theresa
+@The_monster@ whispers, "Deep inside, it's sometimes so empty."
 ## END _high_priest_ ##
 %%%%
 _mercenary_guard_
 
 @_mercenary_guard_common_@
 
-w:6
-@_mercenary_guard_common_@
+w:5
+@_mercenary_guard_medium_@
 
 w:1
 @_mercenary_guard_rare_@
@@ -312,6 +315,7 @@ VISUAL:@The_monster@ looks very upset.
 
 @The_monster@ screams, "I hate you!"
 
+@The_monster@ laughs, "I am free! Free to kill you!"
 ## END _hostile_adventurer_ ##
 %%%%
 _friendly_imp_
