@@ -152,7 +152,7 @@ local function clamp_in(val, low, high)
 end
 
 local function clamp_in_bounds(x, y)
-  return clamp_in(x, 1, dgn.GXM - 2), clamp_in(y, 1, dgn.GYM - 2)
+  return clamp_in(x, 2, dgn.GXM - 3), clamp_in(y, 2, dgn.GYM - 3)
 end
 
 local function rectangle_dimensions()
@@ -172,6 +172,10 @@ local function rectangle_dimensions()
 
   local exc = rectangle_eccentricity()
   local b = math.floor(math.sqrt(area+12*exc*exc)) - 4*exc
+  if b <= 0 then
+      b = 1
+  end
+
   local a = math.floor((area + b - 1) / b)
 
   local a2 = math.floor(a / 2) + (a % 2)
@@ -346,10 +350,10 @@ end
 local function flip_rectangle(x1, y1, x2, y2)
   local cx = math.floor((x1 + x2) / 2)
   local cy = math.floor((y1 + y2) / 2)
-  local nx1 = cx + y1 - cy
-  local nx2 = cx + y2 - cy
-  local ny1 = cy + x1 - cx
-  local ny2 = cy + x2 - cx
+
+  local nx1, ny1 = clamp_in_bounds(cx + y1 - cy, cy + x1 - cx)
+  local nx2, ny2 = clamp_in_bounds(cx + y2 - cy, cy + x2 - cx)
+
   return { nx1, ny1, nx2, ny2 }
 end
 
