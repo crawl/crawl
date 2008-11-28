@@ -1429,7 +1429,9 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
         ecol |= COLFLAG_TRAP_ITEM;
     else
     {
-        ecol = (grid == DNGN_SHALLOW_WATER) ? CYAN : eitem.colour;
+        const unsigned short gcol = env.grid_colours(gp);
+        ecol = (grid == DNGN_SHALLOW_WATER) ?
+               (gcol != BLACK ? gcol : CYAN) : eitem.colour;
         if (eitem.link != NON_ITEM)
             ecol |= COLFLAG_ITEM_HEAP;
         env.show(ep) = _get_item_dngn_code( eitem );
