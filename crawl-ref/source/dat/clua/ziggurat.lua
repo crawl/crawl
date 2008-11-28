@@ -407,7 +407,7 @@ local function ziggurat_create_loot_vault(entry, exit)
   local map = dgn.map_by_tag("ziggurat_loot_chamber", false)
 
   local function loot_fallback()
-    crawl.mpr("Failed to create loot vault, giving up", "diagnostic")
+    --crawl.mpr("Failed to create loot vault, giving up", "diagnostic")
     -- FAIL, generate loot the usual way.
     ziggurat_create_loot_at(exit)
   end
@@ -635,8 +635,6 @@ local function ziggurat_ellipse_builder(e)
   local a = math.floor(b * (200+zig_exc) / 200)
   local cx, cy = dgn.GXM / 2, dgn.GYM / 2
 
---crawl.mpr("area= " ..area .. ", a=" .. a .. ", b=" .. b .. ", exc=" .. zig_exc)
-
   local floor = dgn.fnum("floor")
 
   for x=0, dgn.GXM-1 do
@@ -675,8 +673,6 @@ local function ziggurat_hexagon_builder(e)
   local left = dgn.point(math.floor(c.x - (a + math.sqrt(2 * a)) / 2),
                          c.y)
   local right = dgn.point(2 * c.x - left.x, c.y)
-
---crawl.mpr("area=" .. area .. ", a: " .. a .. ", lx=" .. left.x .. ", rx=" .. right.x)
 
   local floor = dgn.fnum("floor")
 

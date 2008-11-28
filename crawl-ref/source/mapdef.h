@@ -367,7 +367,7 @@ struct item_spec
     level_id place;
 
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
-        plus(0), plus2(0), ego(0), allow_uniques(1), level(-1),
+        plus(-1), plus2(-1), ego(0), allow_uniques(1), level(-1),
         race(MAKE_ITEM_RANDOM_RACE), qty(0)
     {
     }
