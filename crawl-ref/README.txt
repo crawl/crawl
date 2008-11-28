@@ -145,12 +145,15 @@ branches.
 * Tiles.
 Since version 0.4, tiles are integrated within Crawl. Having variants of
 often-used glyphs is always good. If you want to give this a shot, please
-contact us via the mailing list.
+contact us via the mailing list. In case you drew some tiles of your own,
+tell us via the list.
 
 * Patches.
 If you like to, you can download the source code and apply patches. Both
 patches for bug fixes as well as implementation of new features are very much
-welcome. 
+welcome. If you want to code a cool feature that is likely to be accepted but
+unlikely to be coded by the devteam, search the Feature Requests tracker on 
+the Sourceforge site for Groups "Patches Welcome".
 Please be sure to read docs/coding_conventions.txt first.
 
 Thank you, and have fun crawling!
