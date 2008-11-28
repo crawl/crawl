@@ -7,10 +7,10 @@ fire_elemental MONS_FIRE_ELEMENTAL /*'#'*/
 %rim 0
 vapour MONS_VAPOUR /*'#'*/
 %rim 1
-#item/gem/gold_piece MONS_GOLD_MIMIC /*(YELLOW) An apparently harmless pile of gold coins hides a nasty venomous shapechanging predator.
 death_cob MONS_DEATH_COB /*'%'*/
 
 ## Arch demons
+%sdir dc-mon/unique
 asmodeus MONS_ASMODEUS /*'&'*/
 cerebov MONS_CEREBOV /*'&'*/
 dispater MONS_DISPATER /*'&'*/
@@ -19,9 +19,8 @@ geryon MONS_GERYON /*'&'*/
 gloorx_vloq MONS_GLOORX_VLOQ /*'&'*/
 lom_lobon MONS_LOM_LOBON /*'&'*/
 mnoleg MONS_MNOLEG /*'&'*/
+%sdir dc-mon
 pandemonium_demon MONS_PANDEMONIUM_DEMON /*'&'*/
-#item/weapon/halberd MONS_DANCING_WEAPON /*'('(BLACK) A weapon dancing in the air. 
-#weapon_mimic MONS_WEAPON_MIMIC /*')'(BLACK) An apparently abandoned weapon, actually a vicious little beast in disguise.
 ball_lightning MONS_BALL_LIGHTNING /*'*'*/
 %rim 0
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
@@ -81,7 +80,6 @@ big_fish MONS_BIG_FISH /*';'*/
 electrical_eel MONS_ELECTRICAL_EEL /*';'*/
 giant_goldfish MONS_GIANT_GOLDFISH /*';'*/
 lava_fish MONS_LAVA_FISH /*';'*/
-#scroll_mimic MONS_SCROLL_MIMIC /*'?'(LIGHTGREY) An ancient parchment covered in arcane runes. Did it just twitch?
 
 ## Humans
 shapeshifter MONS_SHAPESHIFTER /*'@'*/
@@ -93,39 +91,37 @@ necromancer MONS_NECROMANCER /*'@'*/
 wizard MONS_WIZARD /*'@'*/
 human MONS_HUMAN /*'@'*/
 
-## Unique human  NO_SPELLS first
-terence0 MONS_TERENCE /*'@'*/
-edmund0 MONS_EDMUND /*'@'*/
-donald MONS_DONALD /*'@'*/
-joseph0 MONS_JOSEPH /*'@'*/
-norbert MONS_NORBERT /*'@'*/
+%sdir dc-mon/unique
+## Unique human, in alphabetical order
 agnes MONS_AGNES /*'@'*/
-maud0 MONS_MAUD /*'@'*/
-
-adolf MONS_ADOLF /*'@'*/
-duane0 MONS_DUANE /*'@'*/
-frances0 MONS_FRANCES /*'@'*/
-harold0 MONS_HAROLD /*'@'*/
-jozef0 MONS_JOZEF /*'@'*/
-norris2 MONS_NORRIS /*'@'*/
-rupert0 MONS_RUPERT /*'@'*/
-sigmund MONS_SIGMUND /*'@'*/
-wayne0 MONS_WAYNE /*'@'*/
-
-josephine MONS_JOSEPHINE /*'@'*/
+donald MONS_DONALD /*'@'*/
+duane MONS_DUANE /*'@'*/
+edmund MONS_EDMUND /*'@'*/
 erica MONS_ERICA /*'@'*/
+frances MONS_FRANCES /*'@'*/
 francis MONS_FRANCIS /*'@'*/
+frederick MONS_FREDERICK
+harold MONS_HAROLD /*'@'*/
 jessica MONS_JESSICA /*'@'*/
+joseph MONS_JOSEPH /*'@'*/
+josephine MONS_JOSEPHINE /*'@'*/
+jozef MONS_JOZEF /*'@'*/
 louise MONS_LOUISE /*'@'*/
 margery MONS_MARGERY /*'@'*/
+maud MONS_MAUD /*'@'*/
 michael MONS_MICHAEL /*'@'*/
+norbert MONS_NORBERT /*'@'*/
+norris MONS_NORRIS /*'@'*/
 psyche MONS_PSYCHE /*'@'*/
-frederick MONS_FREDERICK
+rupert MONS_RUPERT /*'@'*/
+sigmund MONS_SIGMUND /*'@'*/
+terence MONS_TERENCE /*'@'*/
+wayne MONS_WAYNE /*'@'*/
+%sdir dc-mon
 
 ##Angels
 angel MONS_ANGEL /*'A'*/
 daeva MONS_DAEVA /*'A'*/
-####nh-mon0/m/large_mimic MONS_SHUGGOTH /*'A'(LIGHTGREEN) A vile creature with an elongated head, spiked tail and wicked six-fingered claws. Its awesome strength is matched by its umbrage at being transported to this backwater dimension. 
 
 ## Beetles
 boring_beetle MONS_BORING_BEETLE /*'B'*/
@@ -134,7 +130,10 @@ giant_beetle MONS_GIANT_BEETLE /*'B'*/
 program_bug MONS_PROGRAM_BUG /*'B'*/
 
 ## Giants
+%sdir dc-mon/unique
 antaeus MONS_ANTAEUS /*'C'*/
+polyphemus MONS_POLYPHEMUS
+%sdir dc-mon
 cyclops MONS_CYCLOPS /*'C'*/
 ettin MONS_ETTIN /*'C'*/
 fire_giant MONS_FIRE_GIANT /*'C'*/
@@ -142,9 +141,11 @@ frost_giant MONS_FROST_GIANT /*'C'*/
 hill_giant MONS_HILL_GIANT /*'C'*/
 stone_giant MONS_STONE_GIANT /*'C'*/
 titan MONS_TITAN /*'C'*/
-polyphemus MONS_POLYPHEMUS
 
 ## Dragons
+%sdir dc-mon/unique
+xtahua MONS_XTAHUA /*'D'*/
+%sdir dc-mon
 dragon MONS_DRAGON /*'D'*/
 golden_dragon MONS_GOLDEN_DRAGON /*'D'*/
 hydra1 MONS_HYDRA /*'D'*/
@@ -162,9 +163,7 @@ shadow_dragon MONS_SHADOW_DRAGON /*'D'*/
 skeletal_dragon MONS_SKELETAL_DRAGON /*'D'*/
 storm_dragon MONS_STORM_DRAGON /*'D'*/
 swamp_dragon MONS_SWAMP_DRAGON /*'D'*/
-tiamat MONS_TIAMAT
 wyvern MONS_WYVERN /*'D'*/
-xtahua MONS_XTAHUA /*'D'*/
 
 ## Efreet only
 efreet MONS_EFREET /*'E'*/
@@ -213,8 +212,10 @@ kobold MONS_KOBOLD /*'K'*/
 kobold_demonologist MONS_KOBOLD_DEMONOLOGIST /*'K'*/
 
 ## Liches
-ancient_lich MONS_ANCIENT_LICH /*'L'*/
+%sdir dc-mon/unique
 boris MONS_BORIS /*'L'*/
+%sdir dc-mon
+ancient_lich MONS_ANCIENT_LICH /*'L'*/
 lich MONS_LICH /*'L'*/
 
 ## Mummies
@@ -230,7 +231,9 @@ naga_warrior0 MONS_NAGA_WARRIOR /*'N'*/
 guardian_naga MONS_GUARDIAN_NAGA /*'N'*/
 naga_mage MONS_NAGA_MAGE /*'N'*/
 
+%sdir dc-mon/unique
 erolcha MONS_EROLCHA /*'O'*/
+%sdir dc-mon
 ogre MONS_OGRE /*'O'*/
 ogre_mage MONS_OGRE_MAGE /*'O'*/
 two_headed_ogre MONS_TWO_HEADED_OGRE /*'O'*/
@@ -242,7 +245,7 @@ queen_ant MONS_QUEEN_ANT /*'Q'*/
 queen_bee MONS_QUEEN_BEE /*'Q'*/
 
 rakshasa MONS_RAKSHASA /*'R'*/
-rakshasa_fake MONS_RAKSHASA_FAKE /*'R'*/
+rakshasa MONS_RAKSHASA_FAKE /*'R'*/
 
 black_snake MONS_BLACK_SNAKE /*'S'*/
 brown_snake MONS_BROWN_SNAKE /*'S'*/
@@ -253,10 +256,12 @@ small_snake MONS_SMALL_SNAKE /*'S'*/
 snake MONS_SNAKE /*'S'*/
 yellow_snake MONS_YELLOW_SNAKE /*'S'*/
 
+%sdir dc-mon/unique
+snorg MONS_SNORG /*'T'*/
+%sdir dc-mon
 deep_troll MONS_DEEP_TROLL /*'T'*/
 iron_troll MONS_IRON_TROLL /*'T'*/
 rock_troll MONS_ROCK_TROLL /*'T'*/
-snorg MONS_SNORG /*'T'*/
 troll MONS_TROLL /*'T'*/
 
 bear MONS_BEAR /*'U'*/
@@ -292,7 +297,6 @@ yak MONS_YAK /*'Y'*/
 simulacrum_large MONS_SIMULACRUM_LARGE /*'Z'*/
 skeleton_large MONS_SKELETON_LARGE /*'Z'*/
 zombie_large MONS_ZOMBIE_LARGE /*'Z'*/
-#armour_mimic MONS_ARMOUR_MIMIC /*'['(BLACK) An apparently abandoned suit of finely-made armour, actually a vicious little beast in disguise.
 
 giant_ant MONS_GIANT_ANT /*'a'*/
 giant_cockroach MONS_GIANT_COCKROACH /*'a'*/
@@ -342,10 +346,12 @@ deep_elf_master_archer MONS_DEEP_ELF_MASTER_ARCHER
 fungus MONS_FUNGUS /*'f'*/
 wandering_mushroom MONS_WANDERING_MUSHROOM /*'f'*/
 
+%sdir dc-mon/unique
+ijyb MONS_IJYB /*'g'*/
+%sdir dc-mon
 goblin0 MONS_GOBLIN /*'g'*/
 hobgoblin0 MONS_HOBGOBLIN /*'g'*/
 gnoll0 MONS_GNOLL /*'g'*/
-ijyb0 MONS_IJYB /*'g'*/
 boggart MONS_BOGGART /*'g'*/
 gargoyle MONS_GARGOYLE /*'g'*/
 metal_gargoyle MONS_METAL_GARGOYLE /*'g'*/
@@ -381,12 +387,14 @@ ghoul MONS_GHOUL /*'n'*/
 necrophage MONS_NECROPHAGE /*'n'*/
 rotting_hulk MONS_ROTTING_HULK /*'n'*/
 
+%sdir dc-mon/unique
+blork_the_orc MONS_BLORK_THE_ORC /*'o'*/
+urug MONS_URUG /*'o'*/
+%sdir dc-mon
 orc0 MONS_ORC /*'o'*/
 orc_warrior0 MONS_ORC_WARRIOR /*'o'*/
 orc_knight0 MONS_ORC_KNIGHT /*'o'*/
 orc_warlord0 MONS_ORC_WARLORD /*'o'*/
-blork_the_orc0 MONS_BLORK_THE_ORC /*'o'*/
-urug0 MONS_URUG /*'o'*/
 orc_priest MONS_ORC_PRIEST /*'o'*/
 orc_high_priest MONS_ORC_HIGH_PRIEST /*'o'*/
 orc_sorcerer MONS_ORC_SORCERER /*'o'*/
@@ -413,6 +421,7 @@ giant_mite MONS_GIANT_MITE /*'s'*/
 redback MONS_REDBACK /*'s'*/
 scorpion MONS_SCORPION /*'s'*/
 wolf_spider MONS_WOLF_SPIDER /*'s'*/
+trapdoor_spider MONS_TRAPDOOR_SPIDER /*'s'*/
 
 ugly_thing MONS_UGLY_THING /*'u'*/
 very_ugly_thing MONS_VERY_UGLY_THING /*'u'*/
@@ -438,6 +447,9 @@ moth_of_wrath MONS_MOTH_OF_WRATH /*'y'*/
 red_wasp MONS_RED_WASP /*'y'*/
 yellow_wasp MONS_YELLOW_WASP /*'y'*/
 
+%sdir dc-mon/unique
+murray MONS_MURRAY
+%sdir dc-mon
 curse_skull MONS_CURSE_SKULL /*'z'*/
 curse_toe MONS_CURSE_TOE /*'z'*/
 flying_skull MONS_FLYING_SKULL /*'z'*/
@@ -445,10 +457,9 @@ simulacrum_small MONS_SIMULACRUM_SMALL /*'z'*/
 skeletal_warrior0 MONS_SKELETAL_WARRIOR /*'z'*/
 skeleton_small MONS_SKELETON_SMALL /*'z'*/
 zombie_small MONS_ZOMBIE_SMALL /*'z'*/
-murray MONS_MURRAY
+flaming_corpse MONS_FLAMING_CORPSE /*'z'*/
 
 water_elemental MONS_WATER_ELEMENTAL /*'{'*/
-####nh-mon0/m/large_mimic MONS_MOLLUSC_LORD
 
 merfolk_fighter MONS_MERFOLK_FIGHTER
 merfolk_fighter_water MONS_MERFOLK_FIGHTER_WATER
@@ -462,6 +473,8 @@ dngn_ice_statue ICE_STATUE
 dngn_silver_statue SILVER_STATUE
 %sdir dc-mon
 
+%sdir dc-mon/unique
+tiamat MONS_TIAMAT
 %sdir dc-mon/draco
 draco-base-brown DRACO_BASE
 draco-base-black

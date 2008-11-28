@@ -4117,7 +4117,7 @@ static void _handle_nearby_ability(monsters *monster)
     {
         // Non-humanoid-ish monsters have a low chance of speaking
         // without the M_SPEAKS flag, to give the dungeon some
-        // atmosphere/flavor.
+        // atmosphere/flavour.
         int chance = MON_SPEAK_CHANCE * 4;
 
         // Band members are a lot less likely to speak, since there's

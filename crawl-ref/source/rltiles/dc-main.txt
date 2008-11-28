@@ -11,7 +11,7 @@ dc-dngn/dngn_unseen
 %rim 0
 
 ## Corpse
-%include dc-co.txt
+%include dc-corpse.txt
 
 ####PLAYER 
 ####include dc-jobs.txt

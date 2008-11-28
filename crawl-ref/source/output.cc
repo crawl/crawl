@@ -589,9 +589,7 @@ static void _get_status_lights(std::vector<status_light>& out)
     }
 
     if (you.duration[DUR_PRAYER])
-    {
         out.push_back(status_light(WHITE, "Pray"));  // no end of effect warning
-    }
 
     if (you.duration[DUR_REPEL_UNDEAD])
     {
@@ -602,9 +600,7 @@ static void _get_status_lights(std::vector<status_light>& out)
     }
 
     if (you.duration[DUR_TELEPORT])
-    {
         out.push_back(status_light(LIGHTBLUE, "Tele"));
-    }
 
     if (you.duration[DUR_DEFLECT_MISSILES])
     {
@@ -684,29 +680,19 @@ static void _get_status_lights(std::vector<status_light>& out)
     }
 
     if (you.duration[DUR_SURE_BLADE])
-    {
         out.push_back(status_light(BLUE, "Blade"));
-    }
 
     if (you.confused())
-    {
         out.push_back(status_light(RED, "Conf"));
-    }
 
     if (you.duration[DUR_LOWERED_MR])
-    {
         out.push_back(status_light(RED, "-MR"));
-    }
 
     if (you.duration[DUR_BEHELD])
-    {
         out.push_back(status_light(RED, "Bhld"));
-    }
 
     if (you.duration[DUR_LIQUID_FLAMES])
-    {
         out.push_back(status_light(RED, "Fire"));
-    }
 
     if (you.duration[DUR_POISONING])
     {
@@ -727,9 +713,7 @@ static void _get_status_lights(std::vector<status_light>& out)
     }
 
     if (you.attribute[ATTR_HELD])
-    {
         out.push_back(status_light(RED, "Held"));
-    }
 
     if (you.backlit(false))
     {
@@ -746,9 +730,7 @@ static void _get_status_lights(std::vector<status_light>& out)
     }
 
     if (you.duration[DUR_SLOW] && !you.duration[DUR_HASTE])
-    {
         out.push_back(status_light(RED, "Slow"));
-    }
     else if (you.duration[DUR_HASTE] && !you.duration[DUR_SLOW])
     {
         int color = _dur_colour( BLUE, (you.duration[DUR_HASTE] <= 6) );
@@ -756,10 +738,7 @@ static void _get_status_lights(std::vector<status_light>& out)
     }
 
     if (you.duration[DUR_BREATH_WEAPON])
-    {
         out.push_back(status_light(YELLOW, "BWpn"));
-    }
-
 }
 
 static void _print_status_lights(int y)

@@ -5,7 +5,7 @@
 
 mcache_manager mcache;
 
-// Used internally for streaming
+// Used internally for streaming.
 enum mcache_type
 {
     MCACHE_MONSTER,
@@ -21,17 +21,13 @@ enum mcache_type
 static void unmarshallDoll(reader &th, dolls_data &doll)
 {
     for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
-    {
         doll.parts[i] = unmarshallLong(th);
-    }
 }
 
 static void marshallDoll(writer &th, const dolls_data &doll)
 {
     for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
-    {
         marshallLong(th, doll.parts[i]);
-    }
 }
 
 static void unmarshallDemon(reader &th, demon_data &demon)
@@ -661,10 +657,10 @@ mcache_ghost::mcache_ghost(const monsters *mon)
 
     for (int p = TILEP_PART_CLOAK; p < TILEP_PART_MAX; p++)
     {
-         if (m_doll.parts[p] == TILEP_SHOW_EQUIP)
-         {
-             int part_offset = pseudo_rand % tile_player_part_count[p];
-             m_doll.parts[p] = tile_player_part_start[p] + part_offset;
+        if (m_doll.parts[p] == TILEP_SHOW_EQUIP)
+        {
+            int part_offset = pseudo_rand % tile_player_part_count[p];
+            m_doll.parts[p] = tile_player_part_start[p] + part_offset;
         }
     }
 

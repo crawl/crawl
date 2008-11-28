@@ -325,11 +325,14 @@ void DungeonRegion::draw_player(unsigned int x, unsigned int y)
 
     result = default_doll;
 
-    result.parts[TILEP_PART_BASE] = default_doll.parts[TILEP_PART_BASE];
+    result.parts[TILEP_PART_BASE]    = default_doll.parts[TILEP_PART_BASE];
     result.parts[TILEP_PART_DRCHEAD] = default_doll.parts[TILEP_PART_DRCHEAD];
     result.parts[TILEP_PART_DRCWING] = default_doll.parts[TILEP_PART_DRCWING];
-    bool halo = inside_halo(you.pos());
+
+    const bool halo = inside_halo(you.pos());
     result.parts[TILEP_PART_HALO] = halo ? TILEP_HALO_TSO : 0;
+    result.parts[TILEP_PART_ENCH] =
+        (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
 
     if (result.parts[TILEP_PART_HAND1] == TILEP_SHOW_EQUIP)
     {
@@ -394,6 +397,7 @@ void DungeonRegion::draw_player(unsigned int x, unsigned int y)
             result.parts[TILEP_PART_HELM] = 0;
         }
     }
+
     if (result.parts[TILEP_PART_BOOTS] == TILEP_SHOW_EQUIP)
     {
         int item = you.equip[EQ_BOOTS];
@@ -404,6 +408,7 @@ void DungeonRegion::draw_player(unsigned int x, unsigned int y)
         else
             result.parts[TILEP_PART_BOOTS] = 0;
     }
+
     if (result.parts[TILEP_PART_ARM] == TILEP_SHOW_EQUIP)
     {
         int item = you.equip[EQ_GLOVES];
@@ -420,6 +425,7 @@ void DungeonRegion::draw_player(unsigned int x, unsigned int y)
         else
             result.parts[TILEP_PART_ARM] = 0;
     }
+
     if (result.parts[TILEP_PART_LEG] == TILEP_SHOW_EQUIP)
         result.parts[TILEP_PART_LEG] = 0;
     if (result.parts[TILEP_PART_DRCWING] == TILEP_SHOW_EQUIP)
@@ -435,21 +441,22 @@ void DungeonRegion::draw_doll(const dolls_data &doll, unsigned int x,
 {
     int p_order[TILEP_PART_MAX] =
     {
-        TILEP_PART_SHADOW,
+        TILEP_PART_SHADOW,  //  0
         TILEP_PART_HALO,
+        TILEP_PART_ENCH,
         TILEP_PART_DRCWING,
         TILEP_PART_CLOAK,
-        TILEP_PART_BASE,
+        TILEP_PART_BASE,    //  5
         TILEP_PART_BOOTS,
         TILEP_PART_LEG,
         TILEP_PART_BODY,
         TILEP_PART_ARM,
-        TILEP_PART_HAND1,
+        TILEP_PART_HAND1,   // 10
         TILEP_PART_HAND2,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
         TILEP_PART_HELM,
-        TILEP_PART_DRCHEAD
+        TILEP_PART_DRCHEAD // 15
     };
 
     int flags[TILEP_PART_MAX];
@@ -458,8 +465,8 @@ void DungeonRegion::draw_doll(const dolls_data &doll, unsigned int x,
     // For skirts, boots go under the leg armour.  For pants, they go over.
     if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
-        p_order[5] = TILEP_PART_BOOTS;
-        p_order[6] = TILEP_PART_LEG;
+        p_order[6] = TILEP_PART_BOOTS;
+        p_order[7] = TILEP_PART_LEG;
     }
 
     for (int i = 0; i < TILEP_PART_MAX; i++)
@@ -1245,7 +1252,7 @@ void InventoryRegion::pack_verts()
             if (item.flag & TILEI_FLAG_FLOOR)
             {
                 add_quad(TEX_DUNGEON, get_floor_tile_idx()
-                         + m_flavour[i] % get_num_floor_flavors(), x, y);
+                         + m_flavour[i] % get_num_floor_flavours(), x, y);
             }
             else
                 add_quad(TEX_DUNGEON, TILE_ITEM_SLOT, x, y);

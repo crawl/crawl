@@ -34,7 +34,7 @@ for a step by step guide on how to set this up.
 
 Tiles:
 Crawl features an alternative to the classical ASCII display; Tile-based
-Crawl is often a lot more accessible by new players. Tiles are available for
+Crawl is often a lot more accessible to new players. Tiles are available for
 Linux, Windows and OS X.
 Unfortunately, it is not yet possible to combine tiles and Internet play.
 

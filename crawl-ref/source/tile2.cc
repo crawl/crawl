@@ -28,26 +28,26 @@
 #include "tiles.h"
 #include "transfor.h"
 
-static int wall_flavors     = 0;
-static int floor_flavors    = 0;
-static int special_flavors  = 0;
+static int wall_flavours    = 0;
+static int floor_flavours   = 0;
+static int special_flavours = 0;
 static int wall_tile_idx    = 0;
 static int floor_tile_idx   = 0;
 static int special_tile_idx = 0;
 
-int get_num_wall_flavors()
+int get_num_wall_flavours()
 {
-    return wall_flavors;
+    return wall_flavours;
 }
 
-int get_num_floor_flavors()
+int get_num_floor_flavours()
 {
-    return floor_flavors;
+    return floor_flavours;
 }
 
-int get_num_floor_special_flavors()
+int get_num_floor_special_flavours()
 {
-    return special_flavors;
+    return special_flavours;
 }
 
 int get_wall_tile_idx()
@@ -369,26 +369,22 @@ void TileLoadWall(bool wizard)
 {
     WallIdx(wall_tile_idx, floor_tile_idx, special_tile_idx);
 
-    // Number of flavors are generated automatically...
-    floor_flavors = tile_dngn_count(floor_tile_idx);
-    wall_flavors  = tile_dngn_count(wall_tile_idx);
+    // Number of flavours are generated automatically...
+    floor_flavours = tile_dngn_count(floor_tile_idx);
+    wall_flavours  = tile_dngn_count(wall_tile_idx);
 
     if (special_tile_idx != -1)
-    {
-        special_flavors = tile_dngn_count(special_tile_idx);
-    }
+        special_flavours = tile_dngn_count(special_tile_idx);
     else
-    {
-        special_flavors = 0;
-    }
+        special_flavours = 0;
 }
 
 int get_clean_map_idx(int tile_idx)
 {
     int idx = tile_idx & TILE_FLAG_MASK;
-    if (idx >= TILE_CLOUD_FIRE_0 && idx <= TILE_CLOUD_PURP_SMOKE ||
-        idx >= TILEP_MONS_SHADOW && idx <= TILEP_MONS_WATER_ELEMENTAL ||
-        idx >= TILEP_MCACHE_START)
+    if (idx >= TILE_CLOUD_FIRE_0 && idx <= TILE_CLOUD_PURP_SMOKE
+        || idx >= TILEP_MONS_SHADOW && idx <= TILEP_MONS_WATER_ELEMENTAL
+        || idx >= TILEP_MCACHE_START)
     {
         return 0;
     }

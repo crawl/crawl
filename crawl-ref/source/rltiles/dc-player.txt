@@ -92,6 +92,13 @@ halo_player TSO
 %rim 1
 %end
 
+%parts_ctg ENCH
+%rim 0
+%sdir player/ench
+sticky_flame STICKY_FLAME
+%rim 1
+%end
+
 ###Cloak
 %parts_ctg CLOAK
 %sdir player/cloak

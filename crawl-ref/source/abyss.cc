@@ -585,7 +585,7 @@ void abyss_teleport( bool new_area )
     // Get new monsters and colours.
     init_pandemonium();
 #ifdef USE_TILE
-    tile_init_flavor();
+    tile_init_flavour();
 #endif
 
     for (int i = 0; i < MAX_MONSTERS; ++i)

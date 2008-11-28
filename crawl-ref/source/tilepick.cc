@@ -57,7 +57,7 @@ void TileNewLevel(bool first_time)
 
     TileLoadWall(false);
     if (first_time)
-        tile_init_flavor();
+        tile_init_flavour();
 
     if (!player_in_mappable_area() || first_time)
     {
@@ -264,6 +264,8 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_OKLOB_PLANT;
     case MONS_WOLF_SPIDER:
         return TILEP_MONS_WOLF_SPIDER;
+    case MONS_TRAPDOOR_SPIDER:
+        return TILEP_MONS_TRAPDOOR_SPIDER;
     case MONS_SHADOW:
         return TILEP_MONS_SHADOW;
     case MONS_HUNGRY_GHOST:
@@ -401,6 +403,8 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_STONE_GIANT;
     case MONS_FLAYED_GHOST:
         return TILEP_MONS_FLAYED_GHOST;
+    case MONS_FLAMING_CORPSE:
+        return TILEP_MONS_FLAMING_CORPSE;
     case MONS_BUMBLEBEE:
         return TILEP_MONS_BUMBLEBEE;
     case MONS_REDBACK:
@@ -1585,6 +1589,8 @@ static int _tileidx_corpse(int mon)
         return TILE_CORPSE_WOLF_SPIDER;
     case MONS_REDBACK:
         return TILE_CORPSE_REDBACK;
+    case MONS_TRAPDOOR_SPIDER:
+        return TILE_CORPSE_TRAPDOOR_SPIDER;
     case MONS_MINOTAUR:
         return TILE_CORPSE_MINOTAUR;
     case MONS_UGLY_THING:
@@ -1861,7 +1867,7 @@ int tileidx_item(const item_def &item)
     int clas    = item.base_type;
     int type    = item.sub_type;
     int special = item.special;
-    int color   = item.colour;
+    int colour  = item.colour;
 
     id_arr& id = get_typeid_array();
 
@@ -1911,7 +1917,7 @@ int tileidx_item(const item_def &item)
         if (type < NUM_RINGS)
         {
             if (is_random_artefact( item ))
-                return TILE_RING_RANDOM_OFFSET + color - 1;
+                return TILE_RING_RANDOM_OFFSET + colour - 1;
             else if (id[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
                      || (item.flags & ISFLAG_KNOW_TYPE))
             {
@@ -1927,7 +1933,7 @@ int tileidx_item(const item_def &item)
             if (is_unrandom_artefact( item ))
                 return _tileidx_unrand_artefact(find_unrandart_index(item));
             else if (is_random_artefact( item ))
-                return TILE_AMU_RANDOM_OFFSET + color - 1;
+                return TILE_AMU_RANDOM_OFFSET + colour - 1;
             else if (id[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
                      || (item.flags & ISFLAG_KNOW_TYPE))
             {
@@ -1953,7 +1959,7 @@ int tileidx_item(const item_def &item)
     case OBJ_BOOKS:
         type= special % 10;
         if (type < 2)
-            return TILE_BOOK_PAPER_OFFSET + color;
+            return TILE_BOOK_PAPER_OFFSET + colour;
         if (type == 2)
             return TILE_BOOK_LEATHER_OFFSET + special/10;
         if (type == 3)
@@ -2493,7 +2499,7 @@ int tileidx_zap(int colour)
     return (TILE_SYM_BOLT_OFS - 1 + col);
 }
 
-// modify wall tile index depending on floor/wall flavor
+// Modify wall tile index depending on floor/wall flavour.
 static inline void _finalize_tile(unsigned int *tile, bool is_special,
                                   unsigned char wall_flv,
                                   unsigned char floor_flv,
@@ -2514,10 +2520,10 @@ static inline void _finalize_tile(unsigned int *tile, bool is_special,
     // Otherwise, we'll fall through to the next case and replace
     // special tiles with normal floor.
     if (orig == TILE_FLOOR_NORMAL && is_special
-        && get_num_floor_special_flavors() > 0)
+        && get_num_floor_special_flavours() > 0)
     {
         (*tile) = get_floor_special_tile_idx() + special_flv;
-        ASSERT(special_flv < get_num_floor_special_flavors());
+        ASSERT(special_flv < get_num_floor_special_flavours());
     }
     else if (orig == TILE_FLOOR_NORMAL)
     {
@@ -2582,7 +2588,7 @@ void tilep_calc_flags(const int parts[], int flag[])
  * body + optional beard, hair, etc
  */
 
-int draconian_color(int race, int level)
+static int _draconian_colour(int race, int level)
 {
     if (level < 0) // hack:monster
     {
@@ -2700,10 +2706,10 @@ void tilep_race_default(int race, int gender, int level, int *parts)
             if (player_mutation_level(MUT_BIG_WINGS))
             {
                 int st = tile_player_part_start[TILEP_PART_DRCWING];
-                parts[TILEP_PART_DRCWING] = st + draconian_color(race, level);
+                parts[TILEP_PART_DRCWING] = st + _draconian_colour(race, level);
             }
 
-            result = TILEP_BASE_DRACONIAN + draconian_color(race, level)*2;
+            result = TILEP_BASE_DRACONIAN + _draconian_colour(race, level) * 2;
             break;
 
         case SP_CENTAUR:
@@ -3069,36 +3075,36 @@ void tilep_scan_parts(char *fbuf, int *parts)
     int ccount = 0;
     for (int i = 0; parts_saved[i] != -1; i++)
     {
-         int idx;
-         ccount = 0;
-         int p = parts_saved[i];
+        int idx;
+        ccount = 0;
+        int p = parts_saved[i];
 
-         while (fbuf[gcount] != ':' && fbuf[gcount] != '\n'
-                && ccount < 4 && gcount < 48)
-         {
-             ibuf[ccount++] = fbuf[gcount++];
-         }
+        while (fbuf[gcount] != ':' && fbuf[gcount] != '\n'
+               && ccount < 4 && gcount < 48)
+        {
+            ibuf[ccount++] = fbuf[gcount++];
+        }
 
-         ibuf[ccount] = '\0';
-         gcount++;
+        ibuf[ccount] = '\0';
+        gcount++;
 
-         idx = tilep_str_to_part(ibuf);
-         if (p == TILEP_PART_BASE)
-         {
-             int p0 = (parts[p]-1) & (0xfe);
-             if (((1-idx) & 1) == 1)
-                 p0++;
-             parts[p] = p0 + 1;
-         }
-         else if (idx == TILEP_SHOW_EQUIP)
-             parts[p] = TILEP_SHOW_EQUIP;
-         else if (idx < 0)
-             parts[p] = 0;
-         // TODO enne - is this right? did the old count end at idx not just subtotal?
-         else if (idx > tile_player_part_count[p])
-             parts[p] = tile_player_part_count[p];
-         else
-             parts[p] = idx;
+        idx = tilep_str_to_part(ibuf);
+        if (p == TILEP_PART_BASE)
+        {
+            int p0 = (parts[p]-1) & (0xfe);
+            if (((1-idx) & 1) == 1)
+                p0++;
+            parts[p] = p0 + 1;
+        }
+        else if (idx == TILEP_SHOW_EQUIP)
+            parts[p] = TILEP_SHOW_EQUIP;
+        else if (idx < 0)
+            parts[p] = 0;
+        // TODO enne - is this right? did the old count end at idx not just subtotal?
+        else if (idx > tile_player_part_count[p])
+            parts[p] = tile_player_part_count[p];
+        else
+            parts[p] = idx;
     }
 }
 
@@ -3111,19 +3117,19 @@ void tilep_print_parts(char *fbuf, int *parts)
     char *ptr = fbuf;
     for (i = 0; parts_saved[i] != -1; i++)
     {
-         int p = parts_saved[i];
-         if (p == TILEP_PART_BASE) // 0:female  1:male
-         {
-             sprintf(ptr, "%03d", parts[p]%2);
-             ptr += 3;
-         }
-         else
-         {
-             tilep_part_to_str(parts[p], ptr);
-             ptr += 3;
-         }
-         *ptr = ':';
-         ptr++;
+        int p = parts_saved[i];
+        if (p == TILEP_PART_BASE) // 0:female  1:male
+        {
+            sprintf(ptr, "%03d", parts[p]%2);
+            ptr += 3;
+        }
+        else
+        {
+            tilep_part_to_str(parts[p], ptr);
+            ptr += 3;
+        }
+        *ptr = ':';
+        ptr++;
     }
     ptr--; // erase the last ':'
     *ptr = 0;
@@ -3734,8 +3740,8 @@ int get_ctg_idx(char *name)
     int i;
 
     for (i = 0; i < TILEP_PART_MAX; i++)
-         if (strcmp(name, tilep_parts_name[i]) == 0)
-             return i;
+        if (strcmp(name, tilep_parts_name[i]) == 0)
+            return i;
 
     return 0;
 }
@@ -3762,8 +3768,8 @@ int get_parts_idx(int part, char *name)
     int i;
 
     for (i = 0; i < tilep_parts_total[part]; i++)
-         if (strcmp(name, tilep_comment[ tilep_comment_ofs[part]+i]) == 0)
-             return i+1;
+        if (strcmp(name, tilep_comment[ tilep_comment_ofs[part]+i]) == 0)
+            return i+1;
 
     return res;
 }
@@ -3792,7 +3798,7 @@ int jitter(SpecialIdx i)
     return (i + random_range(-1, 1) + 8) % 8;
 }
 
-void tile_init_flavor()
+void tile_init_flavour()
 {
     const bool bazaar = _is_bazaar();
     const unsigned short baz_col = _get_bazaar_special_colour();
@@ -3800,13 +3806,13 @@ void tile_init_flavor()
     for (int x = 0; x < GXM; x++)
         for (int y = 0; y < GYM; y++)
         {
-            int max_wall_flavor  = get_num_wall_flavors() - 1;
-            int max_floor_flavor = get_num_floor_flavors() - 1;
-            int wall_flavor  = random_range(0, max_wall_flavor);
-            int floor_flavor = random_range(0, max_floor_flavor);
+            int max_wall_flavour  = get_num_wall_flavours() - 1;
+            int max_floor_flavour = get_num_floor_flavours() - 1;
+            int wall_flavour  = random_range(0, max_wall_flavour);
+            int floor_flavour = random_range(0, max_floor_flavour);
 
-            env.tile_flv[x][y].floor = get_floor_tile_idx() + floor_flavor;
-            env.tile_flv[x][y].wall = get_wall_tile_idx() + wall_flavor;
+            env.tile_flv[x][y].floor = get_floor_tile_idx() + floor_flavour;
+            env.tile_flv[x][y].wall = get_wall_tile_idx() + wall_flavour;
 
             if (grd[x][y] == DNGN_CLOSED_DOOR || grd[x][y] == DNGN_OPEN_DOOR)
             {
@@ -4027,7 +4033,7 @@ void tile_init_flavor()
     //
     // (KEY: N = normal floor, # = special floor)
     //
-    // Into these flavors:
+    // Into these flavours:
     // 1 - SPECIAL_S
     // 2 - SPECIAL_N
     // 3-6, not important
@@ -4036,7 +4042,6 @@ void tile_init_flavor()
     // of a south tile.  What we really want to do is to separate the
     // two regions, by making 1 a SPECIAL_SE and 2 a SPECIAL_NW tile.
     for (int x = 0; x < GXM - 1; x++)
-    {
         for (int y = 0; y < GYM - 1; y++)
         {
             if (grd[x][y] != DNGN_FLOOR || env.grid_colours[x][y] != baz_col)
@@ -4050,34 +4055,33 @@ void tile_init_flavor()
                 continue;
             }
 
-            int right_flavor = x < GXM - 1 ? env.tile_flv[x+1][y].special
+            int right_flavour = x < GXM - 1 ? env.tile_flv[x+1][y].special
                                            : SPECIAL_FULL;
-            int down_flavor  = y < GYM - 1 ? env.tile_flv[x][y+1].special
+            int down_flavour  = y < GYM - 1 ? env.tile_flv[x][y+1].special
                                            : SPECIAL_FULL;
-            int this_flavor = env.tile_flv[x][y].special;
+            int this_flavour  = env.tile_flv[x][y].special;
 
-            if (this_flavor == SPECIAL_N && right_flavor == SPECIAL_S)
+            if (this_flavour == SPECIAL_N && right_flavour == SPECIAL_S)
             {
                 env.tile_flv[x][y].special = SPECIAL_NE;
                 env.tile_flv[x+1][y].special = SPECIAL_SW;
             }
-            else if (this_flavor == SPECIAL_S && right_flavor == SPECIAL_N)
+            else if (this_flavour == SPECIAL_S && right_flavour == SPECIAL_N)
             {
                 env.tile_flv[x][y].special = SPECIAL_SE;
                 env.tile_flv[x+1][y].special = SPECIAL_NW;
             }
-            else if (this_flavor == SPECIAL_E && down_flavor == SPECIAL_W)
+            else if (this_flavour == SPECIAL_E && down_flavour == SPECIAL_W)
             {
                 env.tile_flv[x][y].special = SPECIAL_SE;
                 env.tile_flv[x][y+1].special = SPECIAL_NW;
             }
-            else if (this_flavor == SPECIAL_W && down_flavor == SPECIAL_E)
+            else if (this_flavour == SPECIAL_W && down_flavour == SPECIAL_E)
             {
                 env.tile_flv[x][y].special = SPECIAL_NE;
                 env.tile_flv[x][y+1].special = SPECIAL_SW;
             }
         }
-    }
 }
 
 // Called from view.cc.

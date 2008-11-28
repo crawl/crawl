@@ -92,13 +92,13 @@ void tile_draw_inv(int flag = -1);
 // Multiple pickup
 void tile_pick_menu();
 
-int get_num_wall_flavors();
-int get_num_floor_flavors();
-int get_num_floor_special_flavors();
+int get_num_wall_flavours();
+int get_num_floor_flavours();
+int get_num_floor_special_flavours();
 int get_wall_tile_idx();
 int get_floor_tile_idx();
 int get_floor_special_tile_idx();
-void tile_init_flavor();
+void tile_init_flavour();
 
 void tile_set_force_redraw_tiles(bool redraw);
 void tile_set_force_redraw_inv(bool redraw);
