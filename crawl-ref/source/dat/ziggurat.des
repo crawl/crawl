@@ -9,18 +9,18 @@
 
 ### Entry vaults to ziggurats##########################################
 
-default-depth: D:20-27, Zot, Pan
-
 NAME: enter_the_ziggurat
 # FIXME: Ziggurat is still incomplete - enabled for testing porpoises.
-TAGS:  trowel_portal
+TAGS:   trowel_portal
+DEPTH:  D:20-27, Zot, Pan
 WEIGHT: 1
 : ziggurat_portal(_G)
 MAP
 O
 ENDMAP
 
-NAME: enter_ziggurat_a
+NAME:   enter_ziggurat_a
+DEPTH:  D:20-27, Zot, Pan
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 SUBST:  ' = .
@@ -36,13 +36,14 @@ MAP
 .......
 ENDMAP
 
-NAME: enter_ziggurat_b
-MONS: lich / ancient lich
-MONS: angel / daeva
-MONS: eye of draining / eye of devastation / giant eyeball / \
-      great orb of eyes / shining eye
+NAME:    enter_ziggurat_b
+DEPTH:   D:20-27, Zot, Pan
+MONS:    lich / ancient lich
+MONS:    angel / daeva
+MONS:    eye of draining / eye of devastation / giant eyeball / \
+         great orb of eyes / shining eye
 SHUFFLE: 123
-SUBST: 1=1..., 2=2.
+SUBST:   1=1..., 2=2.
 : ziggurat_portal(_G)
 MAP
     ...
@@ -57,6 +58,7 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_c
+DEPTH:   D:20-27, Zot, Pan
 TAGS:    no_pool_fixup
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
@@ -107,7 +109,7 @@ cc
 cc
 ENDMAP
 
-NAME: ziggurat_pillar_d
+NAME: ziggurat_pillar_centre_a
 TAGS: ziggurat_pillar centered
 MAP
 lll
@@ -115,7 +117,7 @@ lGl
 lll
 ENDMAP
 
-NAME: ziggurat_pillar_e
+NAME: ziggurat_pillar_centre_b
 TAGS: ziggurat_pillar centered
 SHUFFLE: w< / l< / nb / c< / bx
 MAP
@@ -124,6 +126,26 @@ wwwww
 ww<ww
 wwwww
  www
+ENDMAP
+
+NAME: ziggurat_pillar_centre_c
+TAGS: ziggurat_pillar centered
+# This is evil. Monster sets are: summoners (1), evil eyes (2), harmless (3).
+MONS: ancient lich / boggart / curse skull
+MONS: eye of draining / eye of devastation / giant eyeball
+MONS: plant col:lightred
+: if zig().depth > 21 then
+SUBST: 1 = 12222
+: elseif zig().depth > 15 then
+SUBST: 1 = 12
+: elseif zig().depth > 8 and crawl.coinflip() then
+SUBST: 3 = 12
+SUBST: n = m
+: end
+MAP
+nnn
+n3n
+nnn
 ENDMAP
 
 
@@ -148,6 +170,17 @@ cc....cc
 cc....cc
  cccccc
 ENDMAP
+
+# not finished!
+NAME: ziggurat_arena
+MAP
+nnnnnnnnnnnnnn
+n...........An
+n<..........>n
+n...........An
+nnnnnnnnnnnnnn
+ENDMAP
+
 
 #######################################################################
 
