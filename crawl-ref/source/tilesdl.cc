@@ -4,6 +4,7 @@
 #include "itemprop.h"
 #include "mon-util.h"
 #include "player.h"
+#include "randart.h"
 #include "stuff.h"
 #include "tiles.h"
 #include "tilesdl.h"
@@ -109,9 +110,7 @@ void TilesFramework::shutdown()
     m_region_menu = NULL;
 
     for (unsigned int i = 0; i < LAYER_MAX; i++)
-    {
         m_layers[i].m_regions.clear();
-    }
 
     for (unsigned int i = 0; i < m_fonts.size(); i++)
     {
@@ -1052,6 +1051,38 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
     else
     {
         desc.quantity = -1;
+    }
+
+    if (item.base_type == OBJ_WEAPONS)
+    {
+        if (!is_fixed_artefact(item)
+            && get_weapon_brand(item) != SPWPN_NORMAL)
+        {
+            desc.special = TILE_BRAND_FLAMING + get_weapon_brand(item) - 1;
+        }
+    }
+    else if (item.base_type == OBJ_MISSILES)
+    {
+        switch (get_ammo_brand(item))
+        {
+        case SPMSL_FLAME:
+            desc.special = TILE_BRAND_FLAME;
+            break;
+        case SPMSL_ICE:
+            desc.special = TILE_BRAND_ICE;
+            break;
+        case SPMSL_POISONED:
+            desc.special = TILE_BRAND_POISONED;
+            break;
+        case SPMSL_CURARE:
+            desc.special = TILE_BRAND_CURARE;
+            break;
+        case SPMSL_RETURNING:
+            desc.special = TILE_BRAND_RETURNING;
+            break;
+        default:
+            break;
+        }
     }
 
     desc.flag = 0;

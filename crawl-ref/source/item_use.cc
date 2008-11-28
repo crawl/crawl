@@ -447,9 +447,6 @@ int item_special_wield_effect(const item_def &item)
     case SPWPN_MACE_OF_VARIABILITY:
         return (SPWLD_VARIABLE);
 
-    case SPWPN_GLAIVE_OF_PRUNE:
-        return (SPWLD_NONE);
-
     case SPWPN_SCEPTRE_OF_TORMENT:
         return (SPWLD_TORMENT);
 
@@ -475,7 +472,7 @@ int item_special_wield_effect(const item_def &item)
 // other places *cough* auto-butchering *cough*.    {gdl}
 void wield_effects(int item_wield_2, bool showMsgs)
 {
-    unsigned char i_dam = 0;
+    unsigned char special = 0;
 
     item_def &item = you.inv[item_wield_2];
     const bool artefact     = is_random_artefact(item);
@@ -538,7 +535,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
         if (artefact)
         {
-            i_dam = randart_wpn_property(item, RAP_BRAND);
+            special = randart_wpn_property(item, RAP_BRAND);
             use_randart(item_wield_2);
             if (!was_known)
             {
@@ -553,14 +550,14 @@ void wield_effects(int item_wield_2, bool showMsgs)
             }
         }
         else
-            i_dam = item.special;
+            special = item.special;
 
-        if (i_dam != SPWPN_NORMAL)
+        if (special != SPWPN_NORMAL)
         {
             // message first
             if (showMsgs)
             {
-                switch (i_dam)
+                switch (special)
                 {
                 case SPWPN_SWORD_OF_CEREBOV:
                 case SPWPN_FLAMING:
@@ -695,7 +692,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
             }
 
             // effect second
-            switch (i_dam)
+            switch (special)
             {
             case SPWPN_PROTECTION:
                 you.redraw_armour_class = true;
@@ -708,56 +705,27 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     xom_is_stimulated(32);
                 break;
 
-            case SPWPN_SINGING_SWORD:
-                you.special_wield = SPWLD_SING;
-                break;
-
-            case SPWPN_WRATH_OF_TROG:
-                you.special_wield = SPWLD_TROG;
-                break;
-
             case SPWPN_SCYTHE_OF_CURSES:
-                you.special_wield = SPWLD_CURSE;
                 if (!item_cursed(item) && one_chance_in(3))
                     do_curse_item(item, false);
-                break;
-
-            case SPWPN_MACE_OF_VARIABILITY:
-                you.special_wield = SPWLD_VARIABLE;
-                break;
-
-            case SPWPN_GLAIVE_OF_PRUNE:
-                you.special_wield = SPWLD_NONE;
-                break;
-
-            case SPWPN_SCEPTRE_OF_TORMENT:
-                you.special_wield = SPWLD_TORMENT;
-                break;
-
-            case SPWPN_SWORD_OF_ZONGULDROK:
-                you.special_wield = SPWLD_ZONGULDROK;
-                break;
-
-            case SPWPN_SWORD_OF_POWER:
-                you.special_wield = SPWLD_POWER;
-                break;
-
-            case SPWPN_STAFF_OF_OLGREB:
-                you.special_wield = SPWLD_OLGREB;
                 break;
 
             case SPWPN_STAFF_OF_WUCAD_MU:
                 MiscastEffect(&you, WIELD_MISCAST, SPTYP_DIVINATION, 9, 90,
                               "the Staff of Wucad Mu" );
-                you.special_wield = SPWLD_WUCAD_MU;
+                break;
+
+            default:
                 break;
             }
+            if (is_fixed_artefact(item))
+                you.special_wield = item_special_wield_effect(item);
         }
 
         if (item_cursed(item))
         {
             mpr("It sticks to your hand!");
-            if (known_cursed)
+            if (known_cursed || was_known && special == SPWPN_SCYTHE_OF_CURSES)
                 xom_is_stimulated(32);
             else
                 xom_is_stimulated(64);

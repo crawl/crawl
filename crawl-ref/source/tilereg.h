@@ -337,6 +337,8 @@ public:
     unsigned short flag;
     // for inventory items, the slot
     char key;
+    // a special property, such as for brands
+    int special;
 
     bool empty() const;
 };

@@ -1211,8 +1211,27 @@
         ""
 },
 
-/* This is a dummy */
-/* 1 */
+/* 59 */
+{
+    // This used to be a fixed artefact but since it has no special
+    // properties I decided it more closely fits here. (jpeg)
+    "knife of Accuracy", "thin dagger",
+        OBJ_WEAPONS, WPN_DAGGER, +27, -1, LIGHTCYAN,
+    {
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0
+    }
+    ,
+        "It is almost unerringly accurate.",
+        "",
+        ""
+},
+
+/* This is a dummy. */
 {
     "Dum", "",
 /* class, type, plus (to-hit), plus2 (depends on class), colour */

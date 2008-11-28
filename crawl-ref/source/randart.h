@@ -13,7 +13,7 @@
 #include "externs.h"
 
 // used in files.cc, newgame.cc, randart.cc {dlb}
-#define NO_UNRANDARTS 58
+#define NO_UNRANDARTS 59
 #define RA_PROPERTIES RAP_NUM_PROPERTIES
 
 // Reserving the upper bits for later expansion/versioning.

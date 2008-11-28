@@ -1599,18 +1599,6 @@ const fixedart_setting fixedarts[] = {
     },
 
     {
-        SPWPN_KNIFE_OF_ACCURACY,
-        "Knife of Accuracy",
-        "thin dagger",
-        OBJ_WEAPONS,
-        WPN_DAGGER,
-        27,
-        -1,
-        LIGHTCYAN,
-        false
-    },
-
-    {
         SPWPN_STAFF_OF_OLGREB,
         "Staff of Olgreb",
         "green glowing staff",

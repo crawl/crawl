@@ -1096,11 +1096,12 @@ void DungeonRegion::clear_overlays()
 
 InventoryTile::InventoryTile()
 {
-    tile = 0;
-    idx = -1;
+    tile     = 0;
+    idx      = -1;
     quantity = -1;
-    key = 0;
-    flag = 0;
+    key      = 0;
+    flag     = 0;
+    special  = 0;
 }
 
 bool InventoryTile::empty() const
@@ -1142,9 +1143,7 @@ void InventoryRegion::update(unsigned int num, InventoryTile *items)
 {
     m_items.clear();
     for (unsigned int i = 0; i < num; i++)
-    {
         m_items.push_back(items[i]);
-    }
 
     m_need_to_pack = true;
 }
@@ -1232,7 +1231,7 @@ void InventoryRegion::pack_verts()
     m_need_to_pack = false;
     m_verts.clear();
 
-    // ensure the cursor has been placed
+    // Ensure the cursor has been placed.
     place_cursor(m_cursor);
 
     // Pack base separately, as it comes from a different texture...
@@ -1330,6 +1329,8 @@ void InventoryRegion::pack_verts()
                 add_quad_char('0' + c1, x, y, offset_x, offset_y);
             }
 
+            if (item.special)
+                add_quad(TEX_DEFAULT, item.special, x, y, 0, 0, false);
 
             if (item.flag & TILEI_FLAG_TRIED)
                 add_quad(TEX_DEFAULT, TILE_TRIED, x, y, 0, TILE_Y / 2, false);
@@ -2590,9 +2591,8 @@ void MenuRegion::place_entries()
 
                 int string_height = m_font_entry->string_height(split);
                 if (string_height > entry_height)
-                {
                     text_sy = m_entries[i].sy;
-                }
+
                 m_font_buf.add(split, text_sx, text_sy);
 
                 m_entries[i].ex = entry_start + column_width;

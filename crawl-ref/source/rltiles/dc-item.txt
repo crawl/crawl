@@ -15,7 +15,7 @@
 
 #####OBJ_WEAPONS
 #####ARTIFACTS
-%sdir item/weapon
+%sdir item/weapon/artefact
 spwpn_singing_sword SPWPN_SINGING_SWORD
 spwpn_wrath_of_trog SPWPN_WRATH_OF_TROG
 spwpn_scythe_of_curses SPWPN_SCYTHE_OF_CURSES
@@ -29,7 +29,6 @@ spwpn_staff_of_dispater SPWPN_STAFF_OF_DISPATER
 spwpn_sceptre_of_asmodeus SPWPN_SCEPTRE_OF_ASMODEUS
 spwpn_sword_of_power SPWPN_SWORD_OF_POWER
 %rim 0
-spwpn_knife_of_accuracy SPWPN_KNIFE_OF_ACCURACY
 spwpn_staff_of_olgreb SPWPN_STAFF_OF_OLGREB
 spwpn_vampires_tooth SPWPN_VAMPIRES_TOOTH
 spwpn_wucad_mu SPWPN_STAFF_OF_WUCAD_MU
@@ -155,6 +154,33 @@ longbow WPN_LONGBOW
 lajatang WPN_LAJATANG
 lajatang2
 
+%sdir item/weapon/brands
+%shrink 0
+%rim 0
+i-flaming BRAND_FLAMING
+i-freezing BRAND_FREEZING
+i-holy_wrath BRAND_HOLY_WRATH
+i-electrocution BRAND_ELECTROCUTION
+i-orc_slaying BRAND_ORC_SLAYING
+i-dragon_slaying BRAND_DRAGON_SLAYING
+i-venom BRAND_VENOM
+i-protection BRAND_PROTECTION
+i-draining BRAND_DRAINING
+i-speed BRAND_SPEED
+i-vorpal BRAND_VORPAL
+i-flaming BRAND_FLAME
+i-freezing BRAND_ICE
+i-vampiricism BRAND_VAMPIRICISM
+i-pain BRAND_PAIN
+i-distortion BRAND_DISTORTION
+i-reaching BRAND_REACHING
+i-returning BRAND_RETURNING
+i-venom BRAND_POISONED
+i-curare BRAND_CURARE
+%rim 1
+%shrink 1
+%sdir item/weapon
+
 ######OBJ_MISSILES
 item/gem/stone MI_STONE
 effect/stone0 MI_STONE0
@@ -225,8 +251,9 @@ effect/net_trap TRAP_NET
 
 item/gem/rock MI_LARGE_ROCK
 effect/rock0 MI_LARGE_ROCK0
+
 ######OBJ_ARMOUR
-%sdir item/armor
+%sdir item/armour
 robe ARM_ROBE
 robe2
 robe3

@@ -952,9 +952,8 @@ bool slider_menu::process_key(int key)
         return (false);
     }
 
-    if (Menu::is_set(MF_NOWRAP) &&
-        selected == 0 &&
-        (key == CK_UP || key == CK_PGUP || key == '<' || key == ';'))
+    if (Menu::is_set(MF_NOWRAP) && selected == 0
+        && (key == CK_UP || key == CK_PGUP || key == '<' || key == ';'))
     {
         oldselect = selected;
         selected = -1;

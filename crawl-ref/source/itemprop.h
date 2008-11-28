@@ -92,11 +92,11 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_VAMPIRICISM,
     SPWPN_PAIN,                        //   15
     SPWPN_DISTORTION,
-    SPWPN_REACHING,                    //   17
+    SPWPN_REACHING,
+    SPWPN_RETURNING,                   //   18
 
-    MAX_PAN_LORD_BRANDS,               //   18
+    MAX_PAN_LORD_BRANDS = SPWPN_RETURNING,
 
-    SPWPN_RETURNING = MAX_PAN_LORD_BRANDS,
     SPWPN_CONFUSE,
     SPWPN_RANDART_I = 25,              //   25
     SPWPN_RANDART_II,
@@ -117,7 +117,6 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_SCEPTRE_OF_TORMENT,
     SPWPN_SWORD_OF_ZONGULDROK,
     SPWPN_SWORD_OF_POWER,
-    SPWPN_KNIFE_OF_ACCURACY,
     SPWPN_STAFF_OF_OLGREB,
     SPWPN_VAMPIRES_TOOTH,
     SPWPN_STAFF_OF_WUCAD_MU,

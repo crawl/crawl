@@ -866,9 +866,6 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 description += "It rewards the powerful with power "
                     "and the meek with weakness.";
                 break;
-            case SPWPN_KNIFE_OF_ACCURACY:
-                description += "It is almost unerringly accurate.";
-                break;
             case SPWPN_STAFF_OF_OLGREB:
                 description += "It was the magical weapon wielded by the "
                     "mighty wizard Olgreb before he met his "

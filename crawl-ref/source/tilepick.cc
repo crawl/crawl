@@ -938,7 +938,6 @@ static int _tileidx_fixed_artefact(int special)
   case SPWPN_STAFF_OF_DISPATER:   return TILE_SPWPN_STAFF_OF_DISPATER;
   case SPWPN_SCEPTRE_OF_ASMODEUS: return TILE_SPWPN_SCEPTRE_OF_ASMODEUS;
   case SPWPN_SWORD_OF_POWER:      return TILE_SPWPN_SWORD_OF_POWER;
-  case SPWPN_KNIFE_OF_ACCURACY:   return TILE_SPWPN_KNIFE_OF_ACCURACY;
   case SPWPN_STAFF_OF_OLGREB:     return TILE_SPWPN_STAFF_OF_OLGREB;
   case SPWPN_VAMPIRES_TOOTH:      return TILE_SPWPN_VAMPIRES_TOOTH;
   case SPWPN_STAFF_OF_WUCAD_MU:   return TILE_SPWPN_STAFF_OF_WUCAD_MU;
@@ -951,63 +950,64 @@ static int _tileidx_unrand_artefact(int idx)
 {
     switch (idx)
     {
-        case 1: return TILE_URAND_BLOODBANE;
-        case 2: return TILE_URAND_SHADOWS;
-        case 3: return TILE_URAND_FLAMING_DEATH;
-        case 4: return TILE_URAND_IGNORANCE;
-        case 5: return TILE_URAND_AIR;
-        case 6: return TILE_URAND_AUGMENTATION;
-        case 7: return TILE_URAND_BRILLIANCE;
-        case 8: return TILE_URAND_THIEF;
-        case 9: return TILE_URAND_BULLSEYE;
-        case 10: return TILE_URAND_DYROVEPREVA;
-        case 11: return TILE_URAND_LEECH;
-        case 12: return TILE_URAND_CEKUGOB;
-        case 13: return TILE_URAND_MISFORTUNE;
-        case 14: return TILE_URAND_CHILLY_DEATH;
-        case 15: return TILE_URAND_FOUR_WINDS;
-        case 16: return TILE_URAND_MORG;
-        case 17: return TILE_URAND_FINISHER;
-        case 18: return TILE_URAND_PUNK;
-        case 19: return TILE_URAND_KRISHNA;
-        case 20: return TILE_URAND_FLASH;
-        case 21: return TILE_URAND_SKULLCRUSHER;
-        case 22: return TILE_URAND_ASSASSIN;
-        case 23: return TILE_URAND_GUARD;
-        case 24: return TILE_URAND_JIHAD;
-        case 25: return TILE_URAND_LEAR;
-        case 26: return TILE_URAND_ZHOR;
-        case 27: return TILE_URAND_FIERY_DEVIL;
-        case 28: return TILE_URAND_SALAMANDER;
-        case 29: return TILE_URAND_WAR;
-        case 30: return TILE_URAND_DOOM_KNIGHT;
-        case 31: return TILE_URAND_RESISTANCE;
-        case 32: return TILE_URAND_FOLLY;
-        case 33: return TILE_URAND_BLOODLUST;
-        case 34: return TILE_URAND_EOS;
-        case 35: return TILE_URAND_SHAOLIN;
-        case 36: return TILE_URAND_ROBUSTNESS;
-        case 37: return TILE_URAND_MAXWELL;
-        case 38: return TILE_URAND_VOO_DOO;
-        case 39: return TILE_URAND_OCTOPUS_KING;
-        case 40: return TILE_URAND_DRAGONMASK;
-        case 41: return TILE_URAND_ARGA;
-        case 42: return TILE_URAND_ELEMENTAL;
-        case 43: return TILE_URAND_SNIPER;
-        case 44: return TILE_URAND_ERCHIDEL;
-        case 45: return TILE_URAND_NIGHT;
-        case 46: return TILE_URAND_PLUTONIUM;
-        case 47: return TILE_URAND_UNDEADHUNTER;
-        case 48: return TILE_URAND_DRAGON_KING;
-        case 49: return TILE_URAND_ALCHEMIST;
-        case 50: return TILE_URAND_FENCER;
-        case 51: return TILE_URAND_MAGE;
-        case 52: return TILE_URAND_BLOWGUN;
-        case 53: return TILE_URAND_WYRMBANE;
-        case 54: return TILE_URAND_SPRIGGANS_KNIFE;
-        case 55: return TILE_URAND_STARLIGHT;
-        case 56: return TILE_URAND_BROOCH_OF_SHIELDING;
-        case 57: return TILE_URAND_SERPENT_SCOURGE;
+        case 2: return TILE_URAND_BLOODBANE;
+        case 3: return TILE_URAND_SHADOWS;
+        case 4: return TILE_URAND_FLAMING_DEATH;
+        case 5: return TILE_URAND_IGNORANCE;
+        case 6: return TILE_URAND_AIR;
+        case 7: return TILE_URAND_AUGMENTATION;
+        case 8: return TILE_URAND_BRILLIANCE;
+        case 9: return TILE_URAND_THIEF;
+        case 10: return TILE_URAND_BULLSEYE;
+        case 11: return TILE_URAND_DYROVEPREVA;
+        case 12: return TILE_URAND_LEECH;
+        case 13: return TILE_URAND_CEKUGOB;
+        case 14: return TILE_URAND_MISFORTUNE;
+        case 15: return TILE_URAND_CHILLY_DEATH;
+        case 16: return TILE_URAND_FOUR_WINDS;
+        case 17: return TILE_URAND_MORG;
+        case 18: return TILE_URAND_FINISHER;
+        case 19: return TILE_URAND_PUNK;
+        case 20: return TILE_URAND_KRISHNA;
+        case 21: return TILE_URAND_FLASH;
+        case 22: return TILE_URAND_SKULLCRUSHER;
+        case 23: return TILE_URAND_ASSASSIN;
+        case 24: return TILE_URAND_GUARD;
+        case 25: return TILE_URAND_JIHAD;
+        case 26: return TILE_URAND_LEAR;
+        case 27: return TILE_URAND_ZHOR;
+        case 28: return TILE_URAND_FIERY_DEVIL;
+        case 29: return TILE_URAND_SALAMANDER;
+        case 30: return TILE_URAND_WAR;
+        case 31: return TILE_URAND_DOOM_KNIGHT;
+        case 32: return TILE_URAND_RESISTANCE;
+        case 33: return TILE_URAND_FOLLY;
+        case 34: return TILE_URAND_BLOODLUST;
+        case 35: return TILE_URAND_EOS;
+        case 36: return TILE_URAND_SHAOLIN;
+        case 37: return TILE_URAND_ROBUSTNESS;
+        case 38: return TILE_URAND_MAXWELL;
+        case 39: return TILE_URAND_VOO_DOO;
+        case 40: return TILE_URAND_OCTOPUS_KING;
+        case 41: return TILE_URAND_DRAGONMASK;
+        case 42: return TILE_URAND_ARGA;
+        case 43: return TILE_URAND_ELEMENTAL;
+        case 44: return TILE_URAND_SNIPER;
+        case 45: return TILE_URAND_ERCHIDEL;
+        case 46: return TILE_URAND_NIGHT;
+        case 47: return TILE_URAND_PLUTONIUM;
+        case 48: return TILE_URAND_UNDEADHUNTER;
+        case 49: return TILE_URAND_DRAGON_KING;
+        case 50: return TILE_URAND_ALCHEMIST;
+        case 51: return TILE_URAND_FENCER;
+        case 52: return TILE_URAND_MAGE;
+        case 53: return TILE_URAND_BLOWGUN;
+        case 54: return TILE_URAND_WYRMBANE;
+        case 55: return TILE_URAND_SPRIGGANS_KNIFE;
+        case 56: return TILE_URAND_STARLIGHT;
+        case 57: return TILE_URAND_BROOCH_OF_SHIELDING;
+        case 58: return TILE_URAND_SERPENT_SCOURGE;
+        case 59: return TILE_URAND_KNIFE_OF_ACCURACY;
         default: return TILE_TODO;
     }
 }
@@ -1877,7 +1877,7 @@ int tileidx_item(const item_def &item)
         if (is_fixed_artefact(item))
             return _tileidx_fixed_artefact(special);
         else if (is_unrandom_artefact( item ))
-            return _tileidx_unrand_artefact(find_unrandart_index(item));
+            return _tileidx_unrand_artefact(find_unrandart_index(item) + 1);
         else
             return _tileidx_weapon(item);
 
@@ -1886,7 +1886,7 @@ int tileidx_item(const item_def &item)
 
     case OBJ_ARMOUR:
         if (is_unrandom_artefact( item ))
-            return _tileidx_unrand_artefact(find_unrandart_index(item));
+            return _tileidx_unrand_artefact(find_unrandart_index(item) + 1);
         else
             return _tileidx_armour(item);
 
@@ -1931,7 +1931,7 @@ int tileidx_item(const item_def &item)
         else
         {
             if (is_unrandom_artefact( item ))
-                return _tileidx_unrand_artefact(find_unrandart_index(item));
+                return _tileidx_unrand_artefact(find_unrandart_index(item) + 1);
             else if (is_random_artefact( item ))
                 return TILE_AMU_RANDOM_OFFSET + colour - 1;
             else if (id[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
@@ -2886,7 +2886,7 @@ void tilep_job_default(int job, int gender, int *parts)
         case JOB_HEALER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_WHITE;
             parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_WHITE;
-            parts[TILEP_PART_HAND1] = 38;
+            parts[TILEP_PART_HAND1] = 38; // ?
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_HEALER;
             break;
@@ -3198,9 +3198,7 @@ int tilep_equ_weapon(const item_def &item)
             case SPWPN_STAFF_OF_DISPATER:   return TILEP_HAND1_DISPATER;
             case SPWPN_SCEPTRE_OF_ASMODEUS: return TILEP_HAND1_ASMODEUS;
             case SPWPN_STAFF_OF_OLGREB:     return TILEP_HAND1_OLGREB;
-
             case SPWPN_SWORD_OF_POWER:      return TILEP_HAND1_SWORD_OF_POWER;
-            case SPWPN_KNIFE_OF_ACCURACY:   return TILEP_HAND1_KNIFE_OF_ACCURACY;
             case SPWPN_VAMPIRES_TOOTH:      return TILEP_HAND1_VAMPIRES_TOOTH;
             case SPWPN_STAFF_OF_WUCAD_MU:   return TILEP_HAND1_WUCAD_MU;
         }
@@ -3258,9 +3256,14 @@ int tilep_equ_weapon(const item_def &item)
             case 48: return TILEP_HAND1_UNDEADHUNTER;
             // blowgun of the Assassin
             case 53: return TILEP_HAND1_BLOWGUN_ASSASSIN;
+            // Wyrmbane
             case 54: return TILEP_HAND1_WYRMBANE;
+            // Spriggan's Knife
             case 55: return TILEP_HAND1_SPRIGGANS_KNIFE;
+            // whip "Serpent Scourge"
             case 58: return TILEP_HAND1_SERPENT_SCOURGE;
+            // knife of Accuracy
+            case 59: return TILEP_HAND1_KNIFE_OF_ACCURACY;
         }
     }
 

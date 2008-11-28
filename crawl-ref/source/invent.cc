@@ -671,10 +671,8 @@ bool InvMenu::process_key( int key )
         && type == MT_DROP
         && (key == CONTROL('D') || key == '@'))
     {
-        int newflag =
-            is_set(MF_MULTISELECT)?
-                MF_SINGLESELECT | MF_ANYPRINTABLE
-              : MF_MULTISELECT;
+        int newflag = is_set(MF_MULTISELECT) ? MF_SINGLESELECT | MF_ANYPRINTABLE
+                                             : MF_MULTISELECT;
 
         flags &= ~(MF_SINGLESELECT | MF_MULTISELECT | MF_ANYPRINTABLE);
         flags |= newflag;
@@ -789,8 +787,10 @@ std::vector<SelItem> select_items( const std::vector<const item_def*> &items,
         if (mtype == MT_PICKUP)
             menu.set_tag("pickup");
         menu.load_items(items);
-        menu.set_flags(noselect ? MF_NOSELECT | MF_SHOW_PAGENUMBERS :
-                       MF_MULTISELECT | MF_ALLOW_FILTER | MF_SHOW_PAGENUMBERS);
+        int new_flags = noselect ? MF_NOSELECT
+                                 : MF_MULTISELECT | MF_ALLOW_FILTER;
+        new_flags |= MF_SHOW_PAGENUMBERS;
+        menu.set_flags(new_flags);
         menu.show();
         selected = menu.get_selitems();
     }
@@ -1041,9 +1041,8 @@ std::vector<SelItem> prompt_invent_items(
         }
         else if (keyin == '?' || keyin == '*' || keyin == ',')
         {
-            int selmode =
-                Options.drop_mode == DM_SINGLE
-                    && (!pre_select || pre_select->empty())?
+            int selmode = Options.drop_mode == DM_SINGLE
+                          && (!pre_select || pre_select->empty()) ?
                         MF_SINGLESELECT | MF_EASY_EXIT | MF_ANYPRINTABLE :
                         MF_MULTISELECT | MF_ALLOW_FILTER;
 

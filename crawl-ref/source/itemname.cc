@@ -1030,11 +1030,13 @@ std::string item_def::name_aux( description_level_type desc,
         }
 
         if (!basename && !dbname && know_racial)
-            // always give racial type (it does have game effects)
+        {
+            // Always give racial type (it does have game effects).
             buff << racial_description_string(*this, terse);
+        }
 
-        if (know_brand && !terse &&
-            (get_weapon_brand(*this) == SPWPN_VAMPIRICISM))
+        if (know_brand && !terse
+            && get_weapon_brand(*this) == SPWPN_VAMPIRICISM)
         {
             buff << "vampiric ";
         }
