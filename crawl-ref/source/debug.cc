@@ -1453,8 +1453,10 @@ bool get_item_by_name(item_def *item, char* specs,
         // intentional fall-through
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
+    {
+        char buf[80];
         mpr( "What ego type? ", MSGCH_PROMPT );
-        get_input_line( specs, sizeof( specs ) );
+        get_input_line( buf, sizeof( buf ) );
 
         if (specs[0] != '\0')
         {
@@ -1466,7 +1468,7 @@ bool get_item_by_name(item_def *item, char* specs,
                 item->special = i;
                 strcpy(obj_name, item->name(DESC_PLAIN).c_str());
 
-                ptr = strstr( strlwr(obj_name), strlwr(specs) );
+                ptr = strstr( strlwr(obj_name), strlwr(buf) );
                 if (ptr != NULL)
                 {
                     // earliest match is the winner
@@ -1482,6 +1484,7 @@ bool get_item_by_name(item_def *item, char* specs,
             item->special = special_wanted;
         }
         break;
+    }
 
     case OBJ_BOOKS:
         if (item->sub_type == BOOK_MANUAL)
