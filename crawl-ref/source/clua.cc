@@ -706,12 +706,11 @@ void CLua::remove_shutdown_listener(lua_shutdown_listener *listener)
 
 /////////////////////////////////////////////////////////////////////
 
-static void _clua_register_metatable(lua_State *ls, const char *tn,
-                                     const luaL_reg *lr,
-                                     int (*gcfn)(lua_State *ls) = NULL)
+void clua_register_metatable(lua_State *ls, const char *tn,
+                             const luaL_reg *lr,
+                             int (*gcfn)(lua_State *ls))
 {
-    int top = lua_gettop(ls);
-
+    lua_stack_cleaner clean(ls);
     luaL_newmetatable(ls, tn);
     lua_pushstring(ls, "__index");
     lua_pushvalue(ls, -2);
@@ -724,9 +723,10 @@ static void _clua_register_metatable(lua_State *ls, const char *tn,
         lua_settable(ls, -3);
     }
 
-    luaL_openlib(ls, NULL, lr, 0);
-
-    lua_settop(ls, top);
+    if (lr)
+    {
+        luaL_openlib(ls, NULL, lr, 0);
+    }
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -2069,15 +2069,6 @@ static int crawl_regex_find(lua_State *ls)
     return (1);
 }
 
-static int crawl_regex_gc(lua_State *ls)
-{
-    text_pattern **pattern =
-        static_cast<text_pattern **>( lua_touserdata(ls, 1) );
-    if (pattern)
-        delete *pattern;
-    return (0);
-}
-
 static const luaL_reg crawl_regex_ops[] =
 {
     { "matches",        crawl_regex_find },
@@ -2116,15 +2107,6 @@ static int crawl_messf_matches(lua_State *ls)
         lua_pushboolean(ls, filt);
         return (1);
     }
-    return (0);
-}
-
-static int crawl_messf_gc(lua_State *ls)
-{
-    message_filter **pattern =
-        static_cast<message_filter**>( lua_touserdata(ls, 1) );
-    if (pattern)
-        delete *pattern;
     return (0);
 }
 
@@ -2318,10 +2300,10 @@ static const struct luaL_reg crawl_lib[] =
 
 void luaopen_crawl(lua_State *ls)
 {
-    _clua_register_metatable(ls, REGEX_METATABLE, crawl_regex_ops,
-                             crawl_regex_gc);
-    _clua_register_metatable(ls, MESSF_METATABLE, crawl_messf_ops,
-                             crawl_messf_gc);
+    clua_register_metatable(ls, REGEX_METATABLE, crawl_regex_ops,
+                            lua_object_gc<text_pattern>);
+    clua_register_metatable(ls, MESSF_METATABLE, crawl_messf_ops,
+                            lua_object_gc<message_filter>);
 
     luaL_openlib(ls, "crawl", crawl_lib, 0);
 }

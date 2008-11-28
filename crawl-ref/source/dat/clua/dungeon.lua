@@ -6,6 +6,7 @@
 require("clua/point.lua")
 
 dgn.GXM, dgn.GYM = dgn.max_bounds()
+dgn.MAX_MONSTERS = dgn.max_monsters()
 
 dgn.f_map = { }
 
@@ -27,6 +28,13 @@ function dgn.fnum(name)
     dgn.f_map[name] = fnum
   end
   return fnum
+end
+
+function dgn.monster_fn(spec)
+  local mspec = dgn.monster_spec(spec)
+  return function (x, y)
+           return dgn.create_monster(x, y, mspec)
+         end
 end
 
 -- Given a feature name or number, returns a feature number.

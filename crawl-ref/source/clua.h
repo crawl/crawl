@@ -280,9 +280,18 @@ inline static T *util_get_userdata(lua_State *ls, int ndx)
 }
 
 template <class T>
-inline static T *clua_get_userdata(lua_State *ls, const char *mt)
+inline static T *clua_get_userdata(lua_State *ls, const char *mt, int ndx = 1)
 {
-    return static_cast<T*>( luaL_checkudata( ls, 1, mt ) );
+    return static_cast<T*>( luaL_checkudata( ls, ndx, mt ) );
+}
+
+template <class T>
+static int lua_object_gc(lua_State *ls)
+{
+    T **pptr = static_cast<T**>( lua_touserdata(ls, 1) );
+    if (pptr)
+        delete *pptr;
+    return (0);
 }
 
 std::string quote_lua_string(const std::string &s);
@@ -305,6 +314,10 @@ template <class T> T *clua_new_userdata(
 }
 
 void push_monster(lua_State *ls, monsters *mons);
+
+void clua_register_metatable(lua_State *ls, const char *tn,
+                             const luaL_reg *lr,
+                             int (*gcfn)(lua_State *ls) = NULL);
 
 #define MAP_METATABLE "dgn.mtmap"
 #define DEVENT_METATABLE "dgn.devent"

@@ -190,3 +190,27 @@ function util.random_weighted_from(weightfn, list)
                end)
   return chosen
 end
+
+----------------------------------------------------------
+
+util.Timer = { }
+util.Timer.__index = util.Timer
+
+function util.Timer:new(pars)
+  self.__index = self
+  local timer = pars or { }
+  setmetatable(timer, self)
+  timer:init()
+  return timer
+end
+
+function util.Timer:init()
+  self.epoch = crawl.millis()
+end
+
+function util.Timer:mark(what)
+  local last = self.last or self.epoch
+  local now = crawl.millis()
+  crawl.mpr(what .. ": " .. (now - last) .. " ms")
+  self.last = now
+end

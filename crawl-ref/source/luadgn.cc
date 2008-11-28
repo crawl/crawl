@@ -35,6 +35,24 @@
 #include "terrain.h"
 #include "view.h"
 
+#ifdef UNIX
+#include <sys/time.h>
+#include <time.h>
+#endif
+
+#define MONSLIST_METATABLE "crawldgn.monster_list"
+#define ITEMLIST_METATABLE "crawldgn.item_list"
+
+static mons_list _lua_get_mlist(lua_State *ls, int ndx);
+static item_list _lua_get_ilist(lua_State *ls, int ndx);
+
+template <class T>
+static void _push_object_type(lua_State *ls, const char *meta, const T &data)
+{
+    T **ptr = clua_new_userdata<T*>(ls, meta);
+    *ptr = new T(data);
+}
+
 template <typename list, typename lpush>
 static int dlua_gentable(lua_State *ls, const list &strings, lpush push)
 {
@@ -2133,45 +2151,47 @@ static int dgn_create_monster(lua_State *ls)
 {
     COORDS(c, 1, 2);
 
-    if (const char *spec = lua_tostring(ls, 3))
+    mons_list mlist = _lua_get_mlist(ls, 3);
+    for (int i = 0, size = mlist.size(); i < size; ++i)
     {
-        mons_list mlist;
-        const std::string err = mlist.add_mons(spec);
-        if (!err.empty())
-            luaL_error(ls, err.c_str());
-
-        for (int i = 0, size = mlist.size(); i < size; ++i)
+        mons_spec mspec = mlist.get_monster(i);
+        if (dgn_place_monster(mspec, you.your_level, c,
+                              false, false, false))
         {
-            mons_spec mspec = mlist.get_monster(i);
-            if (dgn_place_monster(mspec, you.your_level, c,
-                                  false, false, false))
-            {
-                push_monster(ls, &menv[mgrd(c)]);
-                return (1);
-            }
+            push_monster(ls, &menv[mgrd(c)]);
+            return (1);
         }
     }
     lua_pushnil(ls);
     return (1);
 }
 
+static int _dgn_monster_spec(lua_State *ls)
+{
+    const mons_list mlist = _lua_get_mlist(ls, 1);
+    _push_object_type<mons_list>(ls, MONSLIST_METATABLE, mlist);
+    return (1);
+}
+
+static int _dgn_item_spec(lua_State *ls)
+{
+    const item_list ilist = _lua_get_ilist(ls, 1);
+    _push_object_type<item_list>(ls, ITEMLIST_METATABLE, ilist);
+    return (1);
+}
+
+LUARET1(_dgn_max_monsters, number, MAX_MONSTERS)
+
 static int dgn_create_item(lua_State *ls)
 {
     COORDS(c, 1, 2);
 
-    if (const char *spec = lua_tostring(ls, 3))
-    {
-        item_list ilist;
-        const std::string err = ilist.add_item(spec);
-        if (!err.empty())
-            luaL_error(ls, err.c_str());
+    item_list ilist = _lua_get_ilist(ls, 3);
+    const int level =
+        lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : you.your_level;
 
-        const int level =
-            lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : you.your_level;
-
-        dgn_place_multiple_items(ilist, c, level);
-        link_items();
-    }
+    dgn_place_multiple_items(ilist, c, level);
+    link_items();
     return (0);
 }
 
@@ -2672,6 +2692,11 @@ static const struct luaL_reg dgn_lib[] =
     { "create_monster", dgn_create_monster },
     { "create_item", dgn_create_item },
 
+    { "monster_spec", _dgn_monster_spec },
+    { "item_spec", _dgn_item_spec },
+
+    { "max_monsters", _dgn_max_monsters },
+
     { "with_map_bounds_fn", dgn_with_map_bounds_fn },
     { "with_map_anchors", dgn_with_map_anchors },
 
@@ -2703,14 +2728,32 @@ static const struct luaL_reg dgn_lib[] =
     { NULL, NULL }
 };
 
-static int crawl_args(lua_State *ls)
+LUAFN(_crawl_args)
 {
     return dlua_stringtable(ls, SysEnv.cmd_args);
 }
 
+#ifdef UNIX
+LUAFN(_crawl_millis)
+{
+    struct timeval tv;
+    struct timezone tz;
+    const int error = gettimeofday(&tv, &tz);
+    if (error)
+        luaL_error(ls, make_stringf("Failed to get time: %s",
+                                    strerror(error)).c_str());
+
+    lua_pushnumber(ls, tv.tv_sec * 1000 + tv.tv_usec / 1000);
+    return (1);
+}
+#endif
+
 static const struct luaL_reg crawl_lib[] =
 {
-    { "args", crawl_args },
+    { "args", _crawl_args },
+#ifdef UNIX
+    { "millis", _crawl_millis },
+#endif
     { NULL, NULL }
 };
 
@@ -2949,6 +2992,62 @@ static int mapmarker_move(lua_State *ls)
     return (0);
 }
 
+static mons_list _lua_get_mlist(lua_State *ls, int ndx)
+{
+    if (lua_isstring(ls, ndx))
+    {
+        const char *spec = lua_tostring(ls, ndx);
+        mons_list mlist;
+        const std::string err = mlist.add_mons(spec);
+        if (!err.empty())
+            luaL_error(ls, err.c_str());
+        return (mlist);
+    }
+    else
+    {
+        mons_list **mlist(
+            clua_get_userdata<mons_list*>(ls, MONSLIST_METATABLE, ndx));
+        if (mlist)
+            return (**mlist);
+
+        luaL_argerror(ls, ndx, "Expected monster list object or string");
+        return mons_list();
+    }
+}
+
+static item_list _lua_get_ilist(lua_State *ls, int ndx)
+{
+    if (lua_isstring(ls, ndx))
+    {
+        const char *spec = lua_tostring(ls, ndx);
+
+        item_list ilist;
+        const std::string err = ilist.add_item(spec);
+        if (!err.empty())
+            luaL_error(ls, err.c_str());
+
+        return (ilist);
+    }
+    else
+    {
+        item_list **ilist(
+            clua_get_userdata<item_list*>(ls, ITEMLIST_METATABLE, ndx));
+        if (ilist)
+            return (**ilist);
+
+        luaL_argerror(ls, ndx, "Expected item list object or string");
+        return item_list();
+    }
+}
+
+static void _register_mapdef_tables(lua_State *ls)
+{
+    clua_register_metatable(ls, MONSLIST_METATABLE, NULL,
+                            lua_object_gc<mons_list>);
+    clua_register_metatable(ls, ITEMLIST_METATABLE, NULL,
+                            lua_object_gc<item_list>);
+}
+
 static const struct luaL_reg mapmarker_lib[] =
 {
     { "pos", mapmarker_pos },
@@ -2980,6 +3079,8 @@ void init_dungeon_lua()
 
     luaopen_dgnevent(dlua);
     luaopen_mapmarker(dlua);
+
+    _register_mapdef_tables(dlua);
 }
 
 // Can be called from within a debugger to look at the current Lua

@@ -211,12 +211,12 @@ local function monster_creator_fn(arg)
   local atyp = type(arg)
   if atyp == "string" then
     local _, _, branch = string.find(arg, "^place:(%w+):")
+    local mcreator = dgn.monster_fn(arg)
     local function mspec(x, y, nth)
       if branch then
         set_floor_colour(dgn.br_floorcol(branch))
       end
-
-      return dgn.create_monster(x, y, arg)
+      return mcreator(x, y)
     end
     return { fn = mspec }
   elseif atyp == "table" then
@@ -259,17 +259,21 @@ mset("place:Elf:$ w:300 / deep elf blademaster / deep elf master archer / " ..
 mset_if(depth_ge(6), "place:Pan w:400 / w:15 pandemonium lord")
 mset_if(depth_lt(6), "place:Pan")
 
+local drac_creator = dgn.monster_fn("random draconian")
 local function mons_drac_gen(x, y, nth)
   set_random_floor_colour()
-  return dgn.create_monster(x, y, "random draconian")
+  return drac_creator(x, y)
 end
+
+local pan_lord_fn = dgn.monster_fn("pandemonium lord")
+local pan_critter_fn = dgn.monster_fn("place:Pan")
 
 local function mons_panlord_gen(x, y, nth)
   set_random_floor_colour()
   if nth == 1 then
-    return dgn.create_monster(x, y, "pandemonium lord")
+    return pan_lord_fn(x, y)
   else
-    return dgn.create_monster(x, y, "place:Pan")
+    return pan_critter_fn(x, y)
   end
 end
 
@@ -283,7 +287,10 @@ end
 local function ziggurat_vet_monster(fmap)
   local fn = fmap.fn
   fmap.fn = function (x, y, nth, hdmax)
-              for i = 1, 100 do
+              if nth >= dgn.MAX_MONSTERS then
+                return nil
+              end
+              for i = 1, 10 do
                 local mons = fn(x, y, nth)
                 if mons then
                   -- Discard zero-exp monsters, and monsters that explode
@@ -319,29 +326,40 @@ local function ziggurat_create_monsters(p, mfn)
   local depth = zig_depth()
   local hd_pool = depth * (depth + 8)
 
-  local function mons_place_p(point)
-    return not dgn.mons_at(point.x, point.y)
-  end
-
   local nth = 1
 
-  while hd_pool > 0 do
-    local place = dgn.find_adjacent_point(p, mons_place_p, dgn_passable)
-    local mons = mfn(place.x, place.y, nth, hd_pool)
+  local function mons_do_place(p)
+    if hd_pool > 0 then
+      local mons = mfn(p.x, p.y, nth, hd_pool)
 
-    if mons then
-      nth = nth + 1
-      hd_pool = hd_pool - mons.hd
-    else
-      -- Can't find any suitable monster for the HD we have left.
-      break
+      if mons then
+        nth = nth + 1
+        hd_pool = hd_pool - mons.hd
+
+        if nth >= dgn.MAX_MONSTERS then
+          hd_pool = 0
+        end
+      else
+        -- Can't find any suitable monster for the HD we have left.
+        hd_pool = 0
+      end
     end
   end
+
+  local function mons_place(point)
+    if hd_pool <= 0 then
+      return true
+    elseif not dgn.mons_at(point.x, point.y) then
+      mons_do_place(point)
+    end
+  end
+
+  dgn.find_adjacent_point(p, mons_place, dgn_passable)
 end
 
 local function ziggurat_create_loot_at(c)
-  local nloot = zig_depth()
   local depth = zig_depth()
+  local nloot = depth
 
   local function free_space_threshold(max)
     local function is_free_space(p)
@@ -351,15 +369,18 @@ local function ziggurat_create_loot_at(c)
     return is_free_space
   end
 
-  local function free_space_do(fn)
-    for i = 0, 20 do
-      local p =
-        dgn.find_adjacent_point(c, free_space_threshold(i), dgn_passable)
-      if p then
-        fn(p)
-        break
+  local function find_free_space(nspaces)
+    local spaces = { }
+    local function add_spaces(p)
+      if nspaces <= 0 then
+        return true
+      else
+        table.insert(spaces, p)
+        nspaces = nspaces - 1
       end
     end
+    dgn.find_adjacent_point(c, add_spaces, dgn_passable)
+    return spaces
   end
 
   local loot_depth = 20
@@ -367,19 +388,36 @@ local function ziggurat_create_loot_at(c)
     loot_depth = you.absdepth() - 1
   end
 
+  local good_loot = dgn.item_spec("*")
+  local super_loot = dgn.item_spec("|")
+
+  local loot_spots = find_free_space(nloot * 4)
+
+  if #loot_spots == 0 then
+    return
+  end
+
+  local curspot = 0
+  local function next_loot_spot()
+    curspot = curspot + 1
+    if curspot > #loot_spots then
+      curspot = 1
+    end
+    return loot_spots[curspot]
+  end
+
   local function place_loot(what)
-    free_space_do(function (p)
-                    dgn.create_item(p.x, p.y, what, loot_depth)
-                  end)
+    local p = next_loot_spot()
+    dgn.create_item(p.x, p.y, what, loot_depth)
   end
 
   for i = 1, nloot do
     if crawl.one_chance_in(depth) then
       for j = 1, 4 do
-        place_loot("*")
+        place_loot(good_loot)
       end
     else
-      place_loot("|")
+      place_loot(super_loot)
     end
   end
 end
@@ -406,14 +444,8 @@ local function ziggurat_create_loot_vault(entry, exit)
 
   local map = dgn.map_by_tag("ziggurat_loot_chamber", false)
 
-  local function loot_fallback()
-    --crawl.mpr("Failed to create loot vault, giving up", "diagnostic")
-    -- FAIL, generate loot the usual way.
-    ziggurat_create_loot_at(exit)
-  end
-
   if not map then
-    return loot_fallback()
+    return exit
   end
 
   local function place_loot_chamber()
@@ -452,24 +484,24 @@ local function ziggurat_create_loot_vault(entry, exit)
   local res = dgn.with_map_anchors(connect_point.x, connect_point.y,
                                    connect_loot_chamber)
   if not res then
-    loot_fallback()
+    return exit
   else
     -- Find the square to drop the loot.
     local lootx, looty = dgn.find_marker_prop("ziggurat_loot")
 
     if lootx and looty then
-      ziggurat_create_loot_at(dgn.point(lootx, looty))
+      return dgn.point(lootx, looty)
     else
-      loot_fallback()
+      return exit
     end
   end
 end
 
-local function ziggurat_create_loot(entrance, exit)
+local function ziggurat_locate_loot(entrance, exit)
   if zig().level.jelly_protect then
-    ziggurat_create_loot_vault(entrance, exit)
+    return ziggurat_create_loot_vault(entrance, exit)
   else
-    ziggurat_create_loot_at(exit)
+    return exit
   end
 end
 
@@ -557,12 +589,16 @@ local function ziggurat_furnish(centre, entry, exit)
     zig().level.jelly_protect = true
   end
 
-  ziggurat_create_loot(entry, exit)
+  -- Identify where we're going to place loot, but don't actually put
+  -- anything down until we've placed pillars.
+  local lootspot = ziggurat_locate_loot(entry, exit)
 
   if not zig().level.loot_chamber then
     -- Place pillars if we did not create a loot chamber.
     ziggurat_place_pillars(centre)
   end
+
+  ziggurat_create_loot_at(lootspot)
 
   ziggurat_create_monsters(exit, monster_generation.fn)
 

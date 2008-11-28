@@ -887,8 +887,11 @@ void monster_die(monsters *monster, killer_type killer,
     const bool gives_xp      = !mons_is_summoned(monster)
                                && !mons_enslaved_body_and_soul(monster);
 
-          bool in_transit    = false;
-          bool drop_items    = !hard_reset && !mons_is_holy(monster);
+    const bool drop_items    = !hard_reset && !mons_is_holy(monster);
+
+    const bool mons_reset( killer == KILL_RESET || killer == KILL_DISMISSED );
+
+    bool in_transit          = false;
 
 #ifdef DGL_MILESTONES
     _check_kill_milestone(monster, killer, killer_index);
@@ -905,7 +908,7 @@ void monster_die(monsters *monster, killer_type killer,
         killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
 
     // Take note!
-    if (killer != KILL_RESET && killer != KILL_DISMISSED)
+    if (!mons_reset)
     {
         if (MONST_INTERESTING(monster))
         {
@@ -961,7 +964,7 @@ void monster_die(monsters *monster, killer_type killer,
     else if (monster->type == MONS_FIRE_VORTEX
              || monster->type == MONS_SPATIAL_VORTEX)
     {
-        if (!silent && killer != KILL_RESET)
+        if (!silent && !mons_reset)
         {
             simple_monster_message( monster, " dissipates!",
                                     MSGCH_MONSTER_DAMAGE, MDAM_DEAD );
@@ -969,7 +972,7 @@ void monster_die(monsters *monster, killer_type killer,
         }
 
         if (monster->type == MONS_FIRE_VORTEX && !wizard
-            && killer != KILL_RESET)
+            && !mons_reset)
         {
             place_cloud(CLOUD_FIRE, monster->pos(), 2 + random2(4),
                         monster->kill_alignment());
@@ -981,14 +984,14 @@ void monster_die(monsters *monster, killer_type killer,
     else if (monster->type == MONS_SIMULACRUM_SMALL
              || monster->type == MONS_SIMULACRUM_LARGE)
     {
-        if (!silent && killer != KILL_RESET)
+        if (!silent && !mons_reset)
         {
             simple_monster_message( monster, " vapourises!",
                                     MSGCH_MONSTER_DAMAGE,  MDAM_DEAD );
             silent = true;
         }
 
-        if (!wizard && killer != KILL_RESET)
+        if (!wizard && !mons_reset)
             place_cloud(CLOUD_COLD, monster->pos(), 2 + random2(4),
                         monster->kill_alignment());
 
@@ -1366,9 +1369,9 @@ void monster_die(monsters *monster, killer_type killer,
             break;
 
         case KILL_RESET:
-        // Monster doesn't die, just goes back to wherever it came from
-        // This must only be called by monsters running out of time (or
-        // abjuration), because it uses the beam variables! Or does it???
+            // Monster doesn't die, just goes back to wherever it came from
+            // This must only be called by monsters running out of time (or
+            // abjuration), because it uses the beam variables! Or does it???
             if (!silent)
             {
                 simple_monster_message( monster,
@@ -1433,7 +1436,7 @@ void monster_die(monsters *monster, killer_type killer,
         }
     }
 
-    if (killer != KILL_RESET && killer != KILL_DISMISSED)
+    if (!mons_reset)
     {
         you.kills->record_kill(monster, killer, pet_kill);
 
