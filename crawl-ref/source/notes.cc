@@ -373,6 +373,11 @@ std::string Note::describe( bool when, bool where, bool what ) const
             break;
         }
     }
+
+    if (type == NOTE_SEEN_MONSTER || type == NOTE_KILL_MONSTER)
+        if (what && first == MONS_PANDEMONIUM_DEMON)
+            result << " the pandemonium lord";
+
     return result.str();
 }
 

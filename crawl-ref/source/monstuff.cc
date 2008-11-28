@@ -907,10 +907,7 @@ void monster_die(monsters *monster, killer_type killer,
     // Take note!
     if (killer != KILL_RESET && killer != KILL_DISMISSED)
     {
-        if (MONST_INTERESTING(monster)
-            // XXX yucky hack
-            || monster->type == MONS_PLAYER_GHOST
-            || monster->type == MONS_PANDEMONIUM_DEMON)
+        if (MONST_INTERESTING(monster))
         {
             take_note(Note(NOTE_KILL_MONSTER,
                            monster->type, mons_friendly(monster),
@@ -7953,10 +7950,7 @@ void seen_monster(monsters *monster)
     // First time we've seen this particular monster.
     monster->flags |= MF_SEEN;
 
-    if (!mons_is_mimic(monster->type)
-        && MONST_INTERESTING(monster)
-        && monster->type != MONS_PANDEMONIUM_DEMON
-        && monster->type != MONS_PLAYER_GHOST)
+    if (!mons_is_mimic(monster->type) && MONST_INTERESTING(monster))
     {
         take_note(
             Note(NOTE_SEEN_MONSTER, monster->type, 0,

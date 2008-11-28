@@ -5324,6 +5324,7 @@ void monsters::pandemon_init()
     max_hit_points  = ghost->max_hp;
     ac              = ghost->ac;
     ev              = ghost->ev;
+    flags           = MF_INTERESTING;
     // Don't make greased-lightning Pandemonium demons in the dungeon
     // max speed = 17). Demons in Pandemonium can be up to speed 24.
     if (you.level_type == LEVEL_DUNGEON)
@@ -5353,7 +5354,7 @@ void monsters::ghost_init()
     speed_increment = 70;
     attitude        = ATT_HOSTILE;
     behaviour       = BEH_WANDER;
-    flags           = 0;
+    flags           = MF_INTERESTING;
     foe             = MHITNOT;
     foe_memory      = 0;
     colour          = mons_class_colour(MONS_PLAYER_GHOST);
