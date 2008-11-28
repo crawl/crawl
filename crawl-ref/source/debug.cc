@@ -1458,7 +1458,7 @@ bool get_item_by_name(item_def *item, char* specs,
         mpr( "What ego type? ", MSGCH_PROMPT );
         get_input_line( buf, sizeof( buf ) );
 
-        if (specs[0] != '\0')
+        if (buf[0] != '\0')
         {
             special_wanted = 0;
             best_index = 10000;
