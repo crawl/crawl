@@ -933,6 +933,7 @@ TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
 SHUFFLE: {[(, cxxx
 NSUBST:  . = 1:d / *:.
+SUBST:   T = TVVVV
 ITEM:    stone / dart
 MAP
         ccccccc@ccccccc
@@ -958,6 +959,7 @@ ORIENT:  float
 SHUFFLE: {[(, cxxx
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
+SUBST:   T = TVVVV
 MAP
      ccccccccccc
   cccc....[....cccc
@@ -984,6 +986,7 @@ ORIENT:  float
 SHUFFLE: {[(, cxxx
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
+SUBST:   T = TVVVV
 MAP
          ccccc
         cc...cc
@@ -1007,6 +1010,7 @@ NAME:    david_entry_007_temple
 TAGS:    entry no_rotate
 ORIENT:  float
 SHUFFLE: {[(, cxxx
+SUBST:   T = TVVVV
 MAP
 cccccccccccccc@ccccccccccccccc
 cccc......................cccc
@@ -1037,6 +1041,7 @@ ORIENT:  float
 SHUFFLE: {[, cxxx
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
+SUBST:   T = TVVVV
 MAP
    ccccccccccccccccc
   cc.ccccccccccccc.cc
