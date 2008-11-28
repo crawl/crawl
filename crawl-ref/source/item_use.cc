@@ -718,7 +718,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
             case SPWPN_SCYTHE_OF_CURSES:
                 you.special_wield = SPWLD_CURSE;
-                if (!item_cursed(item) && one_chance_in(5))
+                if (!item_cursed(item) && one_chance_in(3))
                     do_curse_item(item, false);
                 break;
 

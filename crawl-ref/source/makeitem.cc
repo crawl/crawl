@@ -347,48 +347,9 @@ void item_colour( item_def &item )
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
-        if (is_unrandom_artefact( item ))
-            break;              // unrandarts already coloured
+        if (is_unrandom_artefact( item ) || is_fixed_artefact( item ))
+            break;              // unrandarts and fixed arts already coloured
 
-        if (is_fixed_artefact( item ))
-        {
-            switch (item.special)
-            {
-            case SPWPN_SINGING_SWORD:
-            case SPWPN_SCEPTRE_OF_TORMENT:
-                item.colour = YELLOW;
-                break;
-            case SPWPN_WRATH_OF_TROG:
-            case SPWPN_SWORD_OF_POWER:
-                item.colour = RED;
-                break;
-            case SPWPN_SCYTHE_OF_CURSES:
-                item.colour = DARKGREY;
-                break;
-            case SPWPN_MACE_OF_VARIABILITY:
-                item.colour = random_colour();
-                break;
-            case SPWPN_GLAIVE_OF_PRUNE:
-                item.colour = MAGENTA;
-                break;
-            case SPWPN_SWORD_OF_ZONGULDROK:
-                item.colour = LIGHTGREY;
-                break;
-            case SPWPN_KNIFE_OF_ACCURACY:
-                item.colour = LIGHTCYAN;
-                break;
-            case SPWPN_STAFF_OF_OLGREB:
-                item.colour = GREEN;
-                break;
-            case SPWPN_VAMPIRES_TOOTH:
-                item.colour = WHITE;
-                break;
-            case SPWPN_STAFF_OF_WUCAD_MU:
-                item.colour = BROWN;
-                break;
-            }
-            break;
-        }
 
         if (is_demonic( item ))
             item.colour = random_uncommon_colour();

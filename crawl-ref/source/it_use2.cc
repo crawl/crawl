@@ -425,7 +425,6 @@ bool unwield_item(bool showMsgs)
                 if (showMsgs)
                     mpr("You feel less violent.");
                 break;
-            case SPWPN_SCYTHE_OF_CURSES:
             case SPWPN_STAFF_OF_OLGREB:
                 item.plus  = 0;
                 item.plus2 = 0;

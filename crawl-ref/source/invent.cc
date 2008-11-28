@@ -806,7 +806,7 @@ static bool _item_class_selected(const item_def &i, int selector)
     switch (selector)
     {
     case OBJ_ARMOUR:
-        return (you_tran_can_wear(i));
+        return (itype == OBJ_ARMOUR && you_tran_can_wear(i));
 
     case OSEL_UNIDENT:
         return !fully_identified(i);

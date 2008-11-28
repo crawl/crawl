@@ -31,6 +31,8 @@
 #define RANDART_NAME_KEY   "randart_name"
 #define RANDART_APPEAR_KEY "randart_appearance"
 
+static const char* _get_fixedart_name(const item_def &item);
+
 // The initial generation of a randart is very simple - it occurs in
 // dungeon.cc and consists of giving it a few random things - plus &
 // plus2 mainly.
@@ -1290,13 +1292,16 @@ static bool _pick_db_name( const item_def &item )
     }
 }
 
-std::string randart_name(const item_def &item, bool appearance)
+std::string artefact_name(const item_def &item, bool appearance)
 {
     ASSERT(is_artefact(item));
 
     ASSERT(item.base_type == OBJ_WEAPONS
            || item.base_type == OBJ_ARMOUR
            || item.base_type == OBJ_JEWELLERY);
+
+    if (is_fixed_artefact( item ))
+        return _get_fixedart_name( item );
 
     if (is_unrandom_artefact( item ))
     {
@@ -1411,7 +1416,7 @@ std::string randart_name(const item_def &item, bool appearance)
     return result;
 }
 
-std::string get_randart_name( const item_def &item )
+std::string get_artefact_name( const item_def &item )
 {
     ASSERT( is_artefact( item ) );
 
@@ -1420,12 +1425,12 @@ std::string get_randart_name( const item_def &item )
         // print artefact's real name
         if (item.props.exists(RANDART_NAME_KEY))
             return item.props[RANDART_NAME_KEY].get_string();
-        return randart_name(item, false);
+        return artefact_name(item, false);
     }
     // print artefact appearance
     if (item.props.exists(RANDART_APPEAR_KEY))
         return item.props[RANDART_APPEAR_KEY].get_string();
-    return randart_name(item, false);
+    return artefact_name(item, false);
 }
 
 int find_unrandart_index(const item_def& artefact)
@@ -1482,11 +1487,222 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype)
     return (ret);
 }
 
+struct fixedart_setting
+{
+    int which;
+    const char* name;
+    const char* appearance;
+    object_class_type base;
+    int subtype;
+    int acc;
+    int dam;
+    int colour;
+    bool curse;
+};
+
+const fixedart_setting fixedarts[] = {
+
+    {
+        SPWPN_SINGING_SWORD,
+        "Singing Sword",
+        "golden long sword",
+        OBJ_WEAPONS,
+        WPN_LONG_SWORD,
+        7,
+        7,
+        YELLOW,
+        false
+    },
+
+    {
+        SPWPN_WRATH_OF_TROG,
+        "Wrath of Trog",
+        "bloodstained battleaxe",
+        OBJ_WEAPONS,
+        WPN_BATTLEAXE,
+        3,
+        11,
+        RED,
+        false
+    },
+
+    {
+        SPWPN_SCYTHE_OF_CURSES,
+        "Scythe of Curses",
+        "warped scythe",
+        OBJ_WEAPONS,
+        WPN_SCYTHE,
+        13,
+        13,
+        DARKGREY,
+        true
+    },
+
+    {
+        SPWPN_MACE_OF_VARIABILITY,
+        "Mace of Variability",
+        "shimmering mace",
+        OBJ_WEAPONS,
+        WPN_MACE,
+        random2(16) - 4,
+        random2(16) - 4,
+        random_colour(),
+        false
+    },
+
+    {
+        SPWPN_GLAIVE_OF_PRUNE,
+        "Glaive of Prune",
+        "purple glaive",
+        OBJ_WEAPONS,
+        WPN_GLAIVE,
+        0,
+        12,
+        MAGENTA,
+        false
+    },
+
+    {
+        SPWPN_SCEPTRE_OF_TORMENT,
+        "Sceptre of Torment",
+        "jewelled golden mace",
+        OBJ_WEAPONS,
+        WPN_MACE,
+        7,
+        6,
+        YELLOW,
+        false
+    },
+
+    {
+        SPWPN_SWORD_OF_ZONGULDROK,
+        "Sword of Zonguldrok",
+        "bone long sword",
+        OBJ_WEAPONS,
+        WPN_LONG_SWORD,
+        9,
+        9,
+        LIGHTGREY,
+        false
+    },
+
+    {
+        SPWPN_SWORD_OF_POWER,
+        "Sword of Power",
+        "chunky great sword",
+        OBJ_WEAPONS,
+        WPN_GREAT_SWORD,
+        0, // set on wield
+        0, // set on wield
+        RED,
+        false
+    },
+
+    {
+        SPWPN_KNIFE_OF_ACCURACY,
+        "Knife of Accuracy",
+        "thin dagger",
+        OBJ_WEAPONS,
+        WPN_DAGGER,
+        27,
+        -1,
+        LIGHTCYAN,
+        false
+    },
+
+    {
+        SPWPN_STAFF_OF_OLGREB,
+        "Staff of Olgreb",
+        "green glowing staff",
+        OBJ_WEAPONS,
+        WPN_QUARTERSTAFF,
+        0, // set on wield
+        0, // set on wield
+        GREEN,
+        false
+    },
+
+    {
+        SPWPN_VAMPIRES_TOOTH,
+        "Vampire's Tooth",
+        "ivory dagger",
+        OBJ_WEAPONS,
+        WPN_DAGGER,
+        3,
+        4,
+        WHITE,
+        false
+    },
+
+    {
+        SPWPN_STAFF_OF_WUCAD_MU,
+        "Staff of Wucad Mu",
+        "ephemeral quarterstaff",
+        OBJ_WEAPONS,
+        WPN_QUARTERSTAFF,
+        0, // set on wield
+        0, // set on wield
+        BROWN,
+        false
+    },
+
+    {
+        SPWPN_SWORD_OF_CEREBOV,
+        "Sword of Cerebov",
+        "great serpentine sword",
+        OBJ_WEAPONS,
+        WPN_GREAT_SWORD,
+        6,
+        6,
+        YELLOW,
+        true
+    },
+
+    {
+        SPWPN_STAFF_OF_DISPATER,
+        "Staff of Dispater",
+        "golden staff",
+        OBJ_WEAPONS,
+        WPN_QUARTERSTAFF,
+        4,
+        4,
+        YELLOW,
+        false
+    },
+
+    {
+        SPWPN_SCEPTRE_OF_ASMODEUS,
+        "Sceptre of Asmodeus",
+        "ruby sceptre",
+        OBJ_WEAPONS,
+        WPN_QUARTERSTAFF,
+        7,
+        7,
+        RED,
+        false
+    }
+};
+
+static const char* _get_fixedart_name(const item_def &item)
+{
+    // Find the appropriate fixed artefact.
+    for (unsigned int i = 0; i < ARRAYSZ(fixedarts); ++i)
+    {
+        if (fixedarts[i].which == item.special)
+        {
+            const fixedart_setting *fixed = &fixedarts[i];
+            return (item_type_known(item) ? fixed->name : fixed->appearance);
+        }
+    }
+    return (item_type_known(item) ? "Unnamed Artefact" : "buggy fixedart");
+}
+
 // which == 0 (default) gives random fixed artefact.
 // Returns true if successful.
 bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
 {
     const bool force = (which != 0);
+    const fixedart_setting *fixedart = NULL;
 
     if (!force)
     {
@@ -1505,125 +1721,44 @@ bool make_item_fixed_artefact( item_def &item, bool in_abyss, int which )
         return (false);
     }
 
-    switch (which)
+    // Find the appropriate fixed artefact.
+    for (unsigned int i = 0; i < ARRAYSZ(fixedarts); ++i)
     {
-    case SPWPN_SINGING_SWORD:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_LONG_SWORD;
-        item.plus  = 7;
-        item.plus2 = 7;
-        break;
+        if (fixedarts[i].which == which)
+        {
+            fixedart = &fixedarts[i];
+            break;
+        }
+    }
 
-    case SPWPN_WRATH_OF_TROG:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_BATTLEAXE;
-        item.plus  = 3;
-        item.plus2 = 11;
-        break;
-
-    case SPWPN_SCYTHE_OF_CURSES:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_SCYTHE;
-        item.plus  = 13;
-        item.plus2 = 13;
-        break;
-
-    case SPWPN_MACE_OF_VARIABILITY:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_MACE;
-        item.plus  = random2(16) - 4;
-        item.plus2 = random2(16) - 4;
-        break;
-
-    case SPWPN_GLAIVE_OF_PRUNE:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_GLAIVE;
-        item.plus  = 0;
-        item.plus2 = 12;
-        break;
-
-    case SPWPN_SCEPTRE_OF_TORMENT:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_MACE;
-        item.plus  = 7;
-        item.plus2 = 6;
-        break;
-
-    case SPWPN_SWORD_OF_ZONGULDROK:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_LONG_SWORD;
-        item.plus  = 9;
-        item.plus2 = 9;
-        break;
-
-    case SPWPN_SWORD_OF_POWER:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_GREAT_SWORD;
-        item.plus  = 0; // set on wield
-        item.plus2 = 0; // set on wield
-        break;
-
-    case SPWPN_KNIFE_OF_ACCURACY:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_DAGGER;
-        item.plus  = 27;
-        item.plus2 = -1;
-        break;
-
-    case SPWPN_STAFF_OF_OLGREB:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_QUARTERSTAFF;
-        item.plus  = 0; // set on wield
-        item.plus2 = 0; // set on wield
-        break;
-
-    case SPWPN_VAMPIRES_TOOTH:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_DAGGER;
-        item.plus  = 3;
-        item.plus2 = 4;
-        break;
-
-    case SPWPN_STAFF_OF_WUCAD_MU:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_QUARTERSTAFF;
-        item.plus  = 0; // set on wield
-        item.plus2 = 0; // set on wield
-        break;
-
-    case SPWPN_SWORD_OF_CEREBOV:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_GREAT_SWORD;
-        item.plus  = 6;
-        item.plus2 = 6;
-        item.colour = YELLOW;
-        do_curse_item( item );
-        break;
-
-    case SPWPN_STAFF_OF_DISPATER:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_QUARTERSTAFF;
-        item.plus  = 4;
-        item.plus2 = 4;
-        item.colour = YELLOW;
-        break;
-
-    case SPWPN_SCEPTRE_OF_ASMODEUS:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = WPN_QUARTERSTAFF;
-        item.plus  = 7;
-        item.plus2 = 7;
-        item.colour = RED;
-        break;
-
-    default:
-        DEBUGSTR( "Trying to create illegal fixed artefact!" );
+    // None found?
+    if (fixedart == NULL)
+    {
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_ERROR, "Couldn't find fixed artefact %d", which);
+#endif
         return (false);
     }
 
     // If we get here, we've made the artefact
-    item.special = which;
-    item.quantity = 1;
+    item.base_type = fixedart->base;
+    item.sub_type  = fixedart->subtype;
+    item.plus      = fixedart->acc;
+    item.plus2     = fixedart->dam;
+    item.colour    = fixedart->colour;
+    item.special   = which;
+    item.quantity  = 1;
+
+    // get true artefact name
+    ASSERT(!item.props.exists( RANDART_NAME_KEY ));
+    item.props[RANDART_NAME_KEY].get_string() = fixedart->name;
+
+    // get artefact appearance
+    ASSERT(!item.props.exists( RANDART_APPEAR_KEY ));
+    item.props[RANDART_APPEAR_KEY].get_string() = fixedart->appearance;
+
+    if (fixedart->curse)
+        do_curse_item(item);
 
     // Items originally generated in the abyss and not found will be
     // shifted to "lost in abyss", and will only be found there. -- bwr
@@ -1882,11 +2017,11 @@ bool make_item_randart( item_def &item )
 
     // get true artefact name
     ASSERT(!item.props.exists( RANDART_NAME_KEY ));
-    item.props[RANDART_NAME_KEY].get_string() = randart_name(item, false);
+    item.props[RANDART_NAME_KEY].get_string() = artefact_name(item, false);
 
     // get artefact appearance
     ASSERT(!item.props.exists( RANDART_APPEAR_KEY ));
-    item.props[RANDART_APPEAR_KEY].get_string() = randart_name(item, true);
+    item.props[RANDART_APPEAR_KEY].get_string() = artefact_name(item, true);
 
     return (true);
 }

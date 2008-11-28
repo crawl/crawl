@@ -1331,13 +1331,13 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     }
 
     // Fill
-    pbolt.name = zinfo->name;
-    pbolt.flavour = zinfo->flavour;
-    pbolt.colour = zinfo->colour;
-    pbolt.type = dchar_glyph(zinfo->glyph);
+    pbolt.name           = zinfo->name;
+    pbolt.flavour        = zinfo->flavour;
+    pbolt.colour         = zinfo->colour;
+    pbolt.type           = dchar_glyph(zinfo->glyph);
     pbolt.obvious_effect = zinfo->always_obvious;
-    pbolt.is_beam = zinfo->can_beam;
-    pbolt.is_explosion = zinfo->is_explosion;
+    pbolt.is_beam        = zinfo->can_beam;
+    pbolt.is_explosion   = zinfo->is_explosion;
 
     if (zinfo->power_cap > 0)
         power = std::min(zinfo->power_cap, power);

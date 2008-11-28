@@ -261,54 +261,6 @@ std::string item_def::name(description_level_type descrip,
 }
 
 
-static const char* fixed_artefact_name( const item_def& item, bool ident )
-{
-    if (ident)
-    {
-        switch (item.special)
-        {
-        case SPWPN_SINGING_SWORD:       return "Singing Sword";
-        case SPWPN_WRATH_OF_TROG:       return "Wrath of Trog";
-        case SPWPN_SCYTHE_OF_CURSES:    return "Scythe of Curses";
-        case SPWPN_MACE_OF_VARIABILITY: return "Mace of Variability";
-        case SPWPN_GLAIVE_OF_PRUNE:     return "Glaive of Prune";
-        case SPWPN_SCEPTRE_OF_TORMENT:  return "Sceptre of Torment";
-        case SPWPN_SWORD_OF_ZONGULDROK: return "Sword of Zonguldrok";
-        case SPWPN_SWORD_OF_CEREBOV:    return "Sword of Cerebov";
-        case SPWPN_STAFF_OF_DISPATER:   return "Staff of Dispater";
-        case SPWPN_SCEPTRE_OF_ASMODEUS: return "Sceptre of Asmodeus";
-        case SPWPN_SWORD_OF_POWER:      return "Sword of Power";
-        case SPWPN_KNIFE_OF_ACCURACY:   return "Knife of Accuracy";
-        case SPWPN_STAFF_OF_OLGREB:     return "Staff of Olgreb";
-        case SPWPN_VAMPIRES_TOOTH:      return "Vampire's Tooth";
-        case SPWPN_STAFF_OF_WUCAD_MU:   return "Staff of Wucad Mu";
-        default:                        return "Brodale's Buggy Bola";
-        }
-    }
-    else
-    {
-        switch (item.special)
-        {
-        case SPWPN_SINGING_SWORD:       return "golden long sword";
-        case SPWPN_WRATH_OF_TROG:       return "bloodstained battleaxe";
-        case SPWPN_SCYTHE_OF_CURSES:    return "warped scythe";
-        case SPWPN_MACE_OF_VARIABILITY: return "shimmering mace";
-        case SPWPN_GLAIVE_OF_PRUNE:     return "purple glaive";
-        case SPWPN_SCEPTRE_OF_TORMENT:  return "jewelled golden mace";
-        case SPWPN_SWORD_OF_ZONGULDROK: return "bone long sword";
-        case SPWPN_SWORD_OF_CEREBOV:    return "great serpentine sword";
-        case SPWPN_STAFF_OF_DISPATER:   return "golden staff";
-        case SPWPN_SCEPTRE_OF_ASMODEUS: return "ruby sceptre";
-        case SPWPN_SWORD_OF_POWER:      return "chunky great sword";
-        case SPWPN_KNIFE_OF_ACCURACY:   return "thin dagger";
-        case SPWPN_STAFF_OF_OLGREB:     return "green glowing staff";
-        case SPWPN_VAMPIRES_TOOTH:      return "ivory dagger";
-        case SPWPN_STAFF_OF_WUCAD_MU:   return "ephemeral quarterstaff";
-        default:                        return "buggy bola";
-        }
-    }
-}
-
 const char* weapon_brand_name(const item_def& item, bool terse)
 {
     switch (get_weapon_brand(item))
@@ -1053,15 +1005,9 @@ std::string item_def::name_aux( description_level_type desc,
             buff << " ";
         }
 
-        if (is_random_artefact( *this ) && !dbname)
+        if (is_artefact( *this ) && !dbname)
         {
-            buff << get_randart_name(*this);
-            break;
-        }
-
-        if (is_fixed_artefact( *this ) && !dbname)
-        {
-            buff << fixed_artefact_name( *this, know_type );
+            buff << get_artefact_name(*this);
             break;
         }
 
@@ -1168,7 +1114,7 @@ std::string item_def::name_aux( description_level_type desc,
         // When asking for the base item name, randartism is ignored.
         if (is_random_artefact( *this ) && !basename && !dbname)
         {
-            buff << get_randart_name(*this);
+            buff << get_artefact_name(*this);
             break;
         }
 
@@ -1419,7 +1365,7 @@ std::string item_def::name_aux( description_level_type desc,
 
         if (is_randart && !dbname)
         {
-            buff << get_randart_name(*this);
+            buff << get_artefact_name(*this);
             break;
         }
 

@@ -4064,7 +4064,8 @@ static bool wielded_weapon_check(const item_def *weapon)
     if (!you.received_weapon_warning && !you.confused()
         && (weapon && weapon->base_type != OBJ_STAVES
                && (weapon->base_type != OBJ_WEAPONS || is_range_weapon(*weapon))
-            || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]))
+            || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
+               && you_tran_can_wear(EQ_WEAPON)))
     {
         std::string prompt  = "Really attack while ";
         if (!weapon)

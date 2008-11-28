@@ -1694,11 +1694,11 @@ bool acquirement(object_class_type class_wanted, int agent,
             if (is_random_artefact(thing))
             {
                 origin_acquired(thing, agent);
-                if ( !is_unrandom_artefact(thing) )
+                if (!is_unrandom_artefact(thing))
                 {
-                    // give another name that takes god gift into account
+                    // Give another name that takes god gift into account.
                     thing.props["randart_name"].get_string() =
-                        randart_name(thing, false);
+                        artefact_name(thing, false);
                 }
             }
         }

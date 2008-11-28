@@ -179,6 +179,7 @@ void weapon_switch(int targ)
         you.time_taken /= 10;
     }
 
+    you.wield_change = true;
     you.turn_is_over = true;
 }
 
