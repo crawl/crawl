@@ -28,7 +28,7 @@ end
 
 function cleanup_ziggurat()
   return one_way_stair {
-    onclimb = function(...)
+    onclimb = function()
                 dgn.persist.ziggurat = { }
               end,
     dstplace = zig().origin_level
@@ -43,7 +43,11 @@ function ziggurat_wall_colour()
   return util.random_from(wall_colours)
 end
 
-function initialise_ziggurat(z)
+function initialise_ziggurat(z, portal)
+  if portal then
+    z.props = portal.props
+  end
+
   z.depth = 1
 
   -- Any given ziggurat will use the same builder for all its levels,
@@ -61,9 +65,9 @@ function initialise_ziggurat(z)
   z.origin_level = dgn.level_name(dgn.level_id())
 end
 
-function ziggurat_initialiser()
+function ziggurat_initialiser(portal)
   -- First ziggurat will be initialised twice.
-  initialise_ziggurat(zig())
+  initialise_ziggurat(zig(), portal)
 end
 
 local function random_floor_colour()
@@ -180,20 +184,27 @@ local function with_props(spec, props)
   return util.cathash({ spec = spec }, props)
 end
 
-local function depth_if(spec, fn)
+local function spec_if(fn, spec)
   return { spec = spec, cond = fn }
 end
 
-local function depth_ge(lev, spec)
-  return depth_if(spec, function ()
-                          return zig().depth >= lev
-                        end)
+local function depth_ge(lev)
+  return function ()
+           return zig().depth >= lev
+         end
 end
 
-local function depth_lt(lev, spec)
-  return depth_if(spec, function ()
-                          return zig().depth < lev
-                        end)
+local function depth_range(low, high)
+  return function ()
+           local depth = zig().depth
+           return depth >= low and depth <= high
+         end
+end
+
+local function depth_lt(lev)
+  return function ()
+           return zig().depth < lev
+         end
 end
 
 local function monster_creator_fn(arg)
@@ -217,39 +228,36 @@ local function monster_creator_fn(arg)
   end
 end
 
-local mons_populations = {
-  -- Dress up monster sets a bit.
-  "place:Elf:$ w:300 / deep elf blademaster / deep elf master archer / " ..
-    "deep elf annihilator / deep elf sorcerer / deep elf demonologist",
-  "place:Orc:$ w:120 / orc warlord / orc knight / stone giant",
-  "place:Vault:$",
-  with_props("place:Slime:$", { jelly_protect = true }),
-  "place:Snake:$",
-  "place:Lair:$",
-  "place:Tomb:$ w:200 / greater mummy",
-  "place:Crypt:$",
-  "place:Abyss",
-  "place:Shoal:$",
-  "place:Coc:$",
-  "place:Geh:$",
-  "place:Dis:$",
-  "place:Tar:$",
-  "daeva / angel",
-  depth_ge(6, "place:Pan w:400 / w:15 pandemonium lord"),
-  depth_lt(6, "place:Pan")
-}
+local mons_populations = { }
 
-local function mons_random_gen(x, y, nth)
-  set_random_floor_colour()
-  local mgen = nil
-  while not mgen do
-    mgen = monster_creator_fn(util.random_from(mons_populations))
-    if mgen then
-      mgen = mgen.fn
-    end
-  end
-  return mgen(x, y, nth)
+local function mset(...)
+  util.foreach({ ... }, function (spec)
+                          table.insert(mons_populations, spec)
+                        end)
 end
+
+local function mset_if(condition, ...)
+  mset(unpack(util.map(util.curry(spec_if, condition), { ... })))
+end
+
+mset("place:Elf:$ w:300 / deep elf blademaster / deep elf master archer / " ..
+     "deep elf annihilator / deep elf sorcerer / deep elf demonologist",
+     "place:Orc:$ w:120 / orc warlord / orc knight / stone giant",
+     "place:Vault:$",
+     with_props("place:Slime:$", { jelly_protect = true }),
+     "place:Snake:$",
+     with_props("place:Lair:$", { weight = 5 }),
+     "place:Tomb:$ w:200 / greater mummy",
+     "place:Crypt:$",
+     "place:Abyss",
+     "place:Shoal:$",
+     "place:Coc:$",
+     "place:Geh:$",
+     "place:Dis:$",
+     "place:Tar:$",
+     "daeva / angel")
+mset_if(depth_ge(6), "place:Pan w:400 / w:15 pandemonium lord")
+mset_if(depth_lt(6), "place:Pan")
 
 local function mons_drac_gen(x, y, nth)
   set_random_floor_colour()
@@ -265,15 +273,11 @@ local function mons_panlord_gen(x, y, nth)
   end
 end
 
-local mons_generators = {
-  mons_random_gen,
-  depth_ge(6, mons_drac_gen),
-  depth_ge(8, mons_panlord_gen)
-}
+mset_if(depth_ge(6), mons_drac_gen)
+mset_if(depth_ge(8), mons_panlord_gen)
 
 function ziggurat_monster_creators()
-  return util.map(monster_creator_fn,
-                  util.catlist(mons_populations, mons_generators))
+  return util.map(monster_creator_fn, mons_populations)
 end
 
 local function ziggurat_vet_monster(fmap)
@@ -302,7 +306,10 @@ local function ziggurat_vet_monster(fmap)
 end
 
 local function choose_monster_set()
-  return ziggurat_vet_monster(util.random_from(ziggurat_monster_creators()))
+  return ziggurat_vet_monster(
+           util.random_weighted_from(
+             'weight',
+             ziggurat_monster_creators()))
 end
 
 -- Function to find travel-safe squares, excluding closed doors.
@@ -571,10 +578,10 @@ end
 local function ziggurat_rectangle_builder(e)
   local grid = dgn.grid
   dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "stone_wall")
-  
+
   local area = map_area()
   area = math.floor(area*3/4)
-  
+
   local cx, cy = dgn.GXM / 2, dgn.GYM / 2
 
   -- exc is the local eccentricity for the two rectangles
@@ -629,7 +636,7 @@ local function ziggurat_ellipse_builder(e)
   local cx, cy = dgn.GXM / 2, dgn.GYM / 2
 
 --crawl.mpr("area= " ..area .. ", a=" .. a .. ", b=" .. b .. ", exc=" .. zig_exc)
-  
+
   local floor = dgn.fnum("floor")
 
   for x=0, dgn.GXM-1 do
@@ -669,8 +676,8 @@ local function ziggurat_hexagon_builder(e)
                          c.y)
   local right = dgn.point(2 * c.x - left.x, c.y)
 
---crawl.mpr("area=" .. area .. ", a: " .. a .. ", lx=" .. left.x .. ", rx=" .. right.x)  
-  
+--crawl.mpr("area=" .. area .. ", a: " .. a .. ", lx=" .. left.x .. ", rx=" .. right.x)
+
   local floor = dgn.fnum("floor")
 
   for x = 1, dgn.GXM - 2 do

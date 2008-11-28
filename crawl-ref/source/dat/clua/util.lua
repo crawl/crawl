@@ -18,6 +18,19 @@ function util.identity(x)
   return x
 end
 
+function util.curry(fn, ...)
+  local params = { ... }
+  if #params == 1 then
+    return function (...)
+             return fn(params[1], ...)
+           end
+  else
+    return function (...)
+             return fn(unpack(util.catlist(params, ...)))
+           end
+  end
+end
+
 -- Returns a list of the keys in the given map.
 function util.keys(map)
   local keys = { }
@@ -87,6 +100,12 @@ function util.cathash(...)
   return res
 end
 
+function util.foreach(list, fn)
+  for _, val in ipairs(list) do
+    fn(val)
+  end
+end
+
 -- Classic map, but discards nil values (table.insert doesn't like nil).
 function util.map(fn, ...)
   local lists = { ... }
@@ -151,4 +170,23 @@ end
 
 function util.random_from(list)
   return list[ crawl.random2(#list) + 1 ]
+end
+
+function util.random_weighted_from(weightfn, list)
+  if type(weightfn) ~= "function" then
+    weightfn = function (table)
+                 return table[weightfn]
+               end
+  end
+  local cweight = 0
+  local chosen = nil
+  util.foreach(list,
+               function (e)
+                 local wt = weightfn(e) or 10
+                 cweight = cweight + wt
+                 if crawl.random2(cweight) < wt then
+                   chosen = e
+                 end
+               end)
+  return chosen
 end
