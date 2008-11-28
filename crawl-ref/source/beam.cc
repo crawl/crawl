@@ -62,7 +62,7 @@
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
 
-static FixedArray < bool, 19, 19 > explode_map;
+static FixedArray < int, 19, 19 > explode_map;
 
 // Helper functions (some of these should probably be public).
 static bool _affects_wall(const bolt &beam, int wall_feature);
@@ -83,7 +83,7 @@ static void _beam_petrifies_monster( bolt &pbolt, monsters *monster );
 static int  _range_used_on_hit(bolt &beam);
 static void _explosion1(bolt &pbolt);
 static void _explosion_map(bolt &beam, const coord_def& p,
-                           int count, int dir, int r);
+                           int count, int r);
 static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly,
                             bool affect_items = true);
 
@@ -5042,15 +5042,15 @@ int explosion( bolt &beam, bool hole_in_the_middle,
     // make a noise
     noisy(10 + 5 * r, beam.target);
 
-    // set map to false
-    explode_map.init(false);
+    // set map to INT_MAX
+    explode_map.init(INT_MAX);
 
     // Discover affected cells - recursion is your friend!
     // this is done to model an explosion's behaviour around
     // corners where a simple 'line of sight' isn't quite
     // enough.  This might be slow for really big explosions,
     // as the recursion runs approximately as R^2.
-    _explosion_map(beam, coord_def(0, 0), 0, -1, r);
+    _explosion_map(beam, coord_def(0, 0), 0, r);
 
     // Go through affected cells, drawing effect and
     // calling affect() for each.  Now, we get a bit
@@ -5079,12 +5079,12 @@ int explosion( bolt &beam, bool hole_in_the_middle,
             // do sides
             for (int ay = 1 - rad; ay <= rad - 1; ay += 1)
             {
-                if (explode_map[-rad+9][ay+9])
+                if (explode_map[-rad+9][ay+9] < INT_MAX)
                 {
                     _explosion_cell(beam, coord_def(-rad, ay), drawing,
                                     affect_items);
                 }
-                if (explode_map[rad+9][ay+9])
+                if (explode_map[rad+9][ay+9] < INT_MAX)
                 {
                     _explosion_cell(beam, coord_def(rad, ay), drawing,
                                     affect_items);
@@ -5094,12 +5094,12 @@ int explosion( bolt &beam, bool hole_in_the_middle,
             // do top & bottom
             for (int ax = -rad; ax <= rad; ax += 1)
             {
-                if (explode_map[ax+9][-rad+9])
+                if (explode_map[ax+9][-rad+9] < INT_MAX)
                 {
                     _explosion_cell(beam, coord_def(ax, -rad), drawing,
                                     affect_items);
                 }
-                if (explode_map[ax+9][rad+9])
+                if (explode_map[ax+9][rad+9] < INT_MAX)
                 {
                     _explosion_cell(beam, coord_def(ax, rad), drawing,
                                     affect_items);
@@ -5194,7 +5194,7 @@ static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly,
 }
 
 static void _explosion_map( bolt &beam, const coord_def& p,
-                           int count, int dir, int r )
+                           int count, int r )
 {
     // Check to see out of range.
     if (p.abs() > r*(r+1))
@@ -5231,20 +5231,21 @@ static void _explosion_map( bolt &beam, const coord_def& p,
     }
 
     // Hmm, I think we're ok.
-    explode_map(p + coord_def(9,9)) = true;
+    explode_map(p + coord_def(9,9)) = count;
 
-    // Now recurse in every direction except the one we came from.
+    // Now recurse in every direction.
     for (int i = 0; i < 8; i++)
     {
-        if ((i + 1) != dir)
-        {
-            int cadd = 5;
-            if (p.x * Compass[i].x < 0 || p.y * Compass[i].y < 0)
-                cadd = 17;
+        // Is that cell already covered by a recursion that was closer
+        // to the center?
+        if (explode_map(p + coord_def(9,9) + Compass[i]) <= count)
+            continue;
 
-            _explosion_map( beam, p + Compass[i], count + cadd,
-                            (i + 4) % 8, r );
-        }
+        int cadd = 5;
+        if (p.x * Compass[i].x < 0 || p.y * Compass[i].y < 0)
+            cadd = 17;
+
+        _explosion_map( beam, p + Compass[i], count + cadd, r);
     }
 }
 
