@@ -123,6 +123,9 @@ end
 -- Ziggurat level builders.
 
 function ziggurat_build_level(e)
+  if zig().depth == 1 then
+    e.welcome("You land on top of a ziggurat so tall you cannot make out the ground.")
+  end
   local builder = zig().builder
   if builder then
     return ziggurat_builder_map[builder](e)
