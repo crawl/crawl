@@ -1,7 +1,7 @@
 
 The Dungeon Crawl Stone Soup team (Peter Berger, Matthew Cline, Paul Du Bois,
 Nat Lanza, Haran Pilpel, David Ploog, Johanna Ploog, David Lawrence Ramsey,
-Darshan Shaligram, Enne Walker) would like to thank:
+Enne Walker) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
@@ -15,15 +15,15 @@ Darshan Shaligram, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              Iainuki                   Dylan O'Donnell
-Juha Arpiainen               Ilyak                     Stefan O'Rear
-Roy Axenov                   Mitsuhiro Itakura         Yuuma Oohara
-Bill Beher                   Eino Keskitalo            Erik Piper
-Alexander Beisig             Jarmo Kielosto            Lemuel Pitkin
-Erik Inge Bolsø              Kornel Kisielewicz        Remsleep
-Peter Borgmann               Vsevolod Kozlov           David Rose
-Terje Bø                     Ryan Kusnery              Sebastian Salman
-Aaron Curtis                 Jukka Kuusisto            Brett Scarborough
+Warwick Allison              Iainuki                   Stefan O'Rear
+Juha Arpiainen               Ilyak                     Yuuma Oohara
+Roy Axenov                   Mitsuhiro Itakura         Erik Piper
+Bill Beher                   Eino Keskitalo            Lemuel Pitkin
+Alexander Beisig             Jarmo Kielosto            Remsleep
+Erik Inge Bolsø              Kornel Kisielewicz        David Rose
+Peter Borgmann               Vsevolod Kozlov           Sebastian Salman
+Terje Bø                     Ryan Kusnery              Brett Scarborough
+Aaron Curtis                 Jukka Kuusisto            Darshan Shaligram
 Denzi                        Maciej Lapinski           Robert Shimmin
 Rachel Elizabeth Dillon      Jordan Lewis              Sigurd
 Mike Drinen                  Icy Lich                  Edgar Simo
@@ -36,4 +36,4 @@ Shayne Halvorson             Eva Myers                 Steven Wheeler
 Ciaran Hamilton              Onia Ninara               Jeremey Wilson
 Chris Hamons                 Erkki Nurmi               Yelve Yakut
 R. Dan Henry                 nyra                      Zooko
-Benoit Hudson
+Benoit Hudson                Dylan O'Donnell

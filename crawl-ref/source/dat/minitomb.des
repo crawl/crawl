@@ -157,7 +157,7 @@ c1........TTTTTTTTTTTTTTTT^.....Mcc
 cc........TTTTTTTTTTTTTTTT^.....cc
  ccc.......c+c+c+c+c+c+c+c^.....c
    ccccccccc2c2c2c3c3c3c3cddddccc
-        cccccccccccccccccccc
+           cccccccccccccccccccc
 ENDMAP
 
 NAME:    minitomb_crypta
@@ -208,8 +208,8 @@ ccc...=....U....=...ccc
 c2+...c.........c...+2c
 ccc..ccc.......ccc..ccc
 c2+.cc cc.....cc cc.+2c
-ccc'c   ccc.ccc   c'ccc
- cc'cc    c+c    cc'cc
+ccc'c   ccc+ccc   c'ccc
+ cc'cc    c.c    cc'cc
  ckkkc   cc.cc   cjjjc
  ckkkc   c.A.c   cjjjc
  ccccc   c.<.c   ccccc

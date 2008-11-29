@@ -1349,8 +1349,8 @@ xxxxxxxxxxx
 ENDMAP
 
 Note that the entry point into the map will be a stone arch. You must
-provide an exit to the dungeon explicitly (KFEAT: > =
-exit_portal_vault) or the player will not be able to leave.
+provide an exit to the dungeon explicitly (KFEAT: > = exit_portal_vault)
+or the player will not be able to leave.
 
 Stairs will not work right in portal vaults, do not use them.
 
@@ -1374,12 +1374,23 @@ to the lua:one_way_stair parameters.
 Note that the desc string is what you will see upon examining the portal.
 The dst string is used for Crawl's right hand stat area; it will show
   Place: generic portal
-in the above example. The dst string is also used to link the destination maps
-to the entry maps.
+in the above example. Here is a lost of the parameters that can be used
+within one_way_stair (taken from icecave.des):
+        desc = "A frozen archway",    # description of the portal before entry
+        dst = "ice_cave",             # label used for maps and entry vaults
+        dstname = "Ice Cave",         # used for PLACE: on the main screen
+        dstname_abbrev = "IceCv",     # used in the notes
+        dstorigin = "in an ice cave", # appendix for items picked up there
+        overmap = "frozen archway",   # used on the overmap (X)
+        floor = "stone_arch"          # feature left after escaping the portal
+
+The dst string is also used to link the destination maps to the entry maps.
+In case dstname is missing, dst will be used.
 
 You can replace lua:one_way_stair by lua:timed_marker in order to make timed
 portal vaults (which will disappear after some time). bazaar.des and lab.des
-contain examples.
+contain examples. For timed portals, you may want to add messages to the file
+dat/clua/lm_tmsg.lua.
 
 
 Using lua functions as shortcuts
