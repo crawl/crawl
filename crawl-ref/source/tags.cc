@@ -958,7 +958,7 @@ static void tag_construct_you(writer &th)
     // how many attributes?
     marshallByte(th, NUM_ATTRIBUTES);
     for (j = 0; j < NUM_ATTRIBUTES; ++j)
-        marshallByte(th, you.attribute[j]);
+        marshallLong(th, you.attribute[j]);
 
     // Was: remembered quiver items.
     marshallByte(th, 0);
@@ -1373,7 +1373,7 @@ static void tag_read_you(reader &th, char minorVersion)
     // how many attributes?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-        you.attribute[j] = unmarshallByte(th);
+        you.attribute[j] = unmarshallLong(th);
 
     // old: quiver info.  Discard it.
     count_c = unmarshallByte(th);

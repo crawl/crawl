@@ -1515,6 +1515,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
     // Gold has no mass, so we handle it first.
     if (mitm[obj].base_type == OBJ_GOLD)
     {
+        you.attribute[ATTR_GOLD_FOUND] += quant_got;
         you.gold += quant_got;
         dec_mitm_item_quantity( obj, quant_got );
         you.redraw_gold = true;

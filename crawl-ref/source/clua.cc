@@ -824,8 +824,13 @@ static int _you_gold(lua_State *ls)
     {
         ASSERT_DLUA;
         const int new_gold = luaL_checkint(ls, 1);
+        const int old_gold = you.gold;
         you.gold = std::max(new_gold, 0);
         you.redraw_gold = true;
+        if (new_gold > old_gold)
+            you.attribute[ATTR_GOLD_FOUND] += new_gold - old_gold;
+        else if (old_gold > new_gold)
+            you.attribute[ATTR_MISC_SPENDING] += old_gold - new_gold;
     }
     PLUARET(number, you.gold);
 }

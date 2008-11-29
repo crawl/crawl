@@ -5832,6 +5832,7 @@ void offer_items()
         // Take a note of the donation.
         take_note(Note(NOTE_DONATE_MONEY, you.gold));
 
+        you.attribute[ATTR_DONATIONS] += you.gold;
         you.gold = 0;
         you.redraw_gold = true;
 

@@ -1240,7 +1240,7 @@ void monster_grid(bool do_updates)
 
 void fire_monster_alerts()
 {
-    int num_hostile = 0;
+    unsigned int num_hostile = 0;
 
     for (int s = 0; s < MAX_MONSTERS; s++)
     {

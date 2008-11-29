@@ -483,6 +483,8 @@ static bool _purchase( int shop, int item_got, int cost, bool id )
 {
     you.gold -= cost;
 
+    you.attribute[ATTR_PURCHASES] += cost;
+
     item_def& item = mitm[item_got];
 
     origin_purchased(item);

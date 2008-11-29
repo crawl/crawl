@@ -801,7 +801,7 @@ public:
 
   int berserk_penalty;                // penalty for moving while berserk
 
-  FixedVector<unsigned char, NUM_ATTRIBUTES> attribute;
+  FixedVector<unsigned long, NUM_ATTRIBUTES> attribute;
   FixedVector<unsigned char, NUM_QUIVER> quiver; // default items for quiver
   FixedVector<long, NUM_OBJECT_CLASSES> sacrifice_value;
 

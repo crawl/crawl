@@ -3427,6 +3427,17 @@ static monsterentry mondata[] = {
     HT_LAND, 11, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_SMALL
 },
 
+{
+    MONS_CHAOS_SPAWN, '3', EC_RANDOM, "chaos spawn",
+    M_SEE_INVIS | M_EVIL,
+    MR_NO_FLAGS,
+    0, 10, MONS_CHAOS_SPAWN, MONS_CHAOS_SPAWN, MH_NATURAL, -3,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 0, 0, 0, 0 },
+    0, 0, MST_NO_SPELLS, CE_MUTAGEN_RANDOM, Z_NOZOMBIE, S_RANDOM, I_NORMAL,
+    HT_LAND, 0, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_BIG
+},
+
 // reaper etc. ('2')
 {
     MONS_SUN_DEMON, '2', YELLOW, "sun demon",

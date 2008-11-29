@@ -161,6 +161,10 @@ enum attribute_type
     ATTR_ABYSSAL_RUNES,
     ATTR_RUNES_IN_ZOT,
     ATTR_WEAPON_SWAP_INTERRUPTED,
+    ATTR_GOLD_FOUND,
+    ATTR_PURCHASES,            // Gold amount spent at shops.
+    ATTR_DONATIONS,            // Gold amount donated to Zin.
+    ATTR_MISC_SPENDING,        // Spending for things like ziggurats.
     NUM_ATTRIBUTES
 };
 
@@ -1896,7 +1900,7 @@ enum monster_type                      // (int) menv[].type
     MONS_ORB_OF_FIRE,    // Swords renamed to fit -- bwr
     MONS_QUOKKA,         // Quokka are a type of wallaby, returned -- bwr 382
     MONS_TRAPDOOR_SPIDER,
-    // 384
+    MONS_CHAOS_SPAWN,
     MONS_EYE_OF_DEVASTATION = 385,     //  385
     MONS_MOTH_OF_WRATH,
     MONS_DEATH_COB,

@@ -65,6 +65,7 @@ static void _sdump_burden(dump_params &);
 static void _sdump_hunger(dump_params &);
 static void _sdump_transform(dump_params &);
 static void _sdump_visits(dump_params &);
+static void _sdump_gold(dump_params &);
 static void _sdump_misc(dump_params &);
 static void _sdump_turns_by_place(dump_params &);
 static void _sdump_notes(dump_params &);
@@ -118,6 +119,7 @@ static dump_section_handler dump_handlers[] = {
     { "hunger",         _sdump_hunger        },
     { "transform",      _sdump_transform     },
     { "visits",         _sdump_visits        },
+    { "gold",           _sdump_gold          },
     { "misc",           _sdump_misc          },
     { "turns_by_place", _sdump_turns_by_place},
     { "notes",          _sdump_notes         },
@@ -329,6 +331,49 @@ static void _sdump_visits(dump_params &par)
     text += "\n";
 }
 
+static void _sdump_gold(dump_params &par)
+{
+    std::string &text(par.text);
+
+    int lines = 0;
+
+    const char* have = "have ";
+    if (par.se) // you died -> past tense
+        have = "";
+
+    if (you.attribute[ATTR_GOLD_FOUND] > 0)
+    {
+        lines++;
+        text += make_stringf("You %scollected %d gold pieces.\n", have,
+                             you.attribute[ATTR_GOLD_FOUND]);
+    }
+
+    if (you.attribute[ATTR_PURCHASES] > 0)
+    {
+        lines++;
+        text += make_stringf("You %sspent %d gold pieces at shops.\n", have,
+                             you.attribute[ATTR_PURCHASES]);
+    }
+
+    if (you.attribute[ATTR_DONATIONS] > 0)
+    {
+        lines++;
+        text += make_stringf("You %sdonated %d gold pices.\n", have,
+                             you.attribute[ATTR_DONATIONS]);
+    }
+
+    if (you.attribute[ATTR_MISC_SPENDING] > 0)
+    {
+        lines++;
+        text += make_stringf("You %sused %d gold pieces for miscellaneous "
+                             "purposes.\n", have,
+                             you.attribute[ATTR_MISC_SPENDING]);
+    }
+
+    if (lines > 0)
+        text += "\n";
+}
+
 static void _sdump_misc(dump_params &par)
 {
     _sdump_location(par);
@@ -337,6 +382,7 @@ static void _sdump_misc(dump_params &par)
     _sdump_hunger(par);
     _sdump_transform(par);
     _sdump_visits(par);
+    _sdump_gold(par);
 }
 
 #define TO_PERCENT(x, y) (100.0f * ((float) (x)) / ((float) (y)))
