@@ -36,9 +36,7 @@ default-depth: D:4-8
 
 NAME:   enter_minitomb_1
 TAGS:   uniq_minitomb no_monster_gen
-SUBST:  . = .:10 C:7
-COLOUR: C = yellow
-SUBST:  C:.
+COLOUR: . = none / yellow:7
 : minitomb_portal(_G)
 MAP
 .....
@@ -51,8 +49,7 @@ ENDMAP
 NAME:   enter_minitomb_2
 TAGS:   uniq_minitomb no_monster_gen
 COLOUR: C = yellow
-# [ds] Why is the portal buried in stone?
-SUBST:  C:cc.
+SUBST:  C:.
 : minitomb_portal(_G)
 MAP
 .......
@@ -121,6 +118,102 @@ x.3.3.3..G.G..3.3.3.x
 x..3.3.........3.3..x
 x...................x
 xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    minitomb_the_hunt_dp
+WEIGHT:  60
+ORIENT:  encompass
+TAGS:    minitomb no_item_gen no_monster_gen
+# loot: 8 items of which 6 should be good.
+ITEM:    potion of healing / potion of heal wounds / potion of speed / \
+         potion of confusion w:5 / potion of mutation w:5 / \
+         scroll of identify / scroll of teleportation w:5 / \
+         scroll of blinking w:5 / scroll of remove curse / \
+         scroll of curse armour w:5 / scroll of curse weapon w:5
+SHUFFLE: +T2M / =~45
+# The +T shuffle has few traps but the player is chased.
+# The C~ shuffle has harder traps but fewer monsters.
+SUBST:   4 = 3
+SUBST:   + = .+
+SUBST:   M = .
+SUBST:   5 = 11.
+MONS:    mummy
+MONS:    generate_awake goblin zombie / generate_awake hobgoblin zombie / \
+         generate_awake kobold zombie / nothing w:20
+MONS:    goblin zombie / hobgoblin zombie / kobold zombie / nothing w:20
+KFEAT:   ~ = dart trap w:20 / axe trap / net trap / needle trap / alarm trap / \
+             floor w:40
+KFEAT:   T = alarm trap w:20 / net trap / floor w:70
+KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
+: minitomb_setup_features(_G)
+MAP
+           cccccccccccccccccccc
+   ccccccccc2c2c2c3c3c3c3cddddccc
+ ccc.......c+c+c+c+c+c+c+c^.....c
+cc........TTTTTTTTTTTTTTTT^.....cc
+c1........TTTTTTTTTTTTTTTT^.....Mcc
+c.....<.A.TTTTTTTTTTTTTTTT^.....M<c
+c1........TTTTTTTTTTTTTTTT^.....Mcc
+cc........TTTTTTTTTTTTTTTT^.....cc
+ ccc.......c+c+c+c+c+c+c+c^.....c
+   ccccccccc2c2c2c3c3c3c3cddddccc
+        cccccccccccccccccccc
+ENDMAP
+
+NAME:    minitomb_crypta
+WEIGHT:  30
+ORIENT:  encompass
+TAGS:    minitomb no_item_gen no_monster_gen no_rotate no_vmirror
+MONS:    mummy
+MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
+         big kobold zombie / kobold zombie
+ITEM:    any potion / any scroll w:5 / nothing
+# mix of strictly good items with strictly useless ones
+ITEM:    scroll of curse armour / scroll of enchant armour w:5 / \
+         scroll of curse weapon / scroll of remove curse       / \
+         potion of mutation w:5 / potion of cure mutation w:5  / \
+         potion of confusion    / potion of healing w:15       / \
+         potion of degeneration / potion of restore abilities  / \
+         scroll of immolation   / scroll of identify
+# and sometimes strictly useless ones
+ITEM:    scroll of curse armour / scroll of curse weapon / \
+         scroll of paper        / scroll of random uselessness / \
+         potion of mutation w:5 / potion of confusion    / \
+         potion of degeneration / scroll of immolation   / \
+         potion of confusion    / potion of paralysis
+SHUFFLE: hjkl
+SUBST:   h:d, j:e, k:de, l:.de
+NSUBST:  d = 2:M / *:d
+NSUBST:  e = 2:M / *:e
+SUBST:   M = 1de
+SUBST:   ' = ^~..
+SUBST:   . = .:95 ~:5
+KFEAT:   ^ = alarm trap
+KFEAT:   ~ = net trap
+SUBST:   = : =+
+SUBST:   = = =+
+: minitomb_setup_features(_G)
+MAP
+          vvv
+        vvv1vvv
+ ccccc vveeeeevv ccccc
+ clllc veeeeeeev chhhc
+ clllc vvvv'vvvv chhhc
+ cc'cc    c'c    cc'cc
+ccc'c   ccc+ccc   c'ccc
+c2+.cc cc.....cc cc.+2c
+ccc..ccc.......ccc..ccc
+c2+...c.........c...+2c
+ccc...=....U....=...ccc
+c2+...c.........c...+2c
+ccc..ccc.......ccc..ccc
+c2+.cc cc.....cc cc.+2c
+ccc'c   ccc.ccc   c'ccc
+ cc'cc    c+c    cc'cc
+ ckkkc   cc.cc   cjjjc
+ ckkkc   c.A.c   cjjjc
+ ccccc   c.<.c   ccccc
+         ccccc
 ENDMAP
 
 NAME:    minitomb_2
@@ -213,42 +306,3 @@ ccc$ddccc.<A.cccdd$ccc
 cccccccccccccccccccccc
 ENDMAP
 
-NAME:    minitomb_4_dp
-WEIGHT:  60
-ORIENT:  encompass
-TAGS:    minitomb no_item_gen no_monster_gen
-# loot: 8 items of which 6 should be good.
-ITEM:    potion of healing / potion of heal wounds / potion of speed / \
-         potion of confusion w:5 / potion of mutation w:5 / \
-         scroll of identify / scroll of teleportation w:5 / \
-         scroll of blinking w:5 / scroll of remove curse / \
-         scroll of curse armour w:5 / scroll of curse weapon w:5
-SHUFFLE: +T2M / =~45
-# The +T shuffle has few traps but the player is chased.
-# The C~ shuffle has harder traps but fewer monsters.
-SUBST:   4 = 3
-SUBST:   + = .+
-SUBST:   M = .
-SUBST:   5 = 11.
-MONS:    mummy
-MONS:    generate_awake goblin zombie / generate_awake hobgoblin zombie / \
-         generate_awake kobold zombie / nothing w:20
-MONS:    goblin zombie / hobgoblin zombie / kobold zombie / nothing w:20
-KFEAT:   ~ = dart trap w:20 / axe trap / net trap / needle trap / alarm trap / \
-             floor w:40
-KFEAT:   T = alarm trap w:20 / net trap / floor w:70
-KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
-: minitomb_setup_features(_G)
-MAP
-           cccccccccccccccccccc
-   ccccccccc2c2c2c3c3c3c3cddddccc
- ccc.......c+c+c+c+c+c+c+c^.....c
-cc........TTTTTTTTTTTTTTTT^.....cc
-c1........TTTTTTTTTTTTTTTT^.....Mcc
-c.....<.A.TTTTTTTTTTTTTTTT^.....M<c
-c1........TTTTTTTTTTTTTTTT^.....Mcc
-cc........TTTTTTTTTTTTTTTT^.....cc
- ccc.......c+c+c+c+c+c+c+c^.....c
-   ccccccccc2c2c2c3c3c3c3cddddccc
-        cccccccccccccccccccc
-ENDMAP
