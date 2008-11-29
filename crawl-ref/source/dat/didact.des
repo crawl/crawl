@@ -1,7 +1,8 @@
 ##############################################################################
 #
 # This file contains vaults and lua for didactical purposes --
-# it is not included in clua/loadmaps.lua (and shouldn't be!).
+# it is included in clua/loadmaps.lua for syntax checking. None of the maps
+# here will be used in real games.
 #
 ##############################################################################
 

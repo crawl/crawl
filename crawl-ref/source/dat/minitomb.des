@@ -30,7 +30,7 @@ function minitomb_setup_features(e)
 end
 }}
 
-default-depth: D:4-8 ######################################
+default-depth: D:4-8
 
 #### Portal entry vaults.
 
@@ -51,6 +51,7 @@ ENDMAP
 NAME:   enter_minitomb_2
 TAGS:   uniq_minitomb no_monster_gen
 COLOUR: C = yellow
+# [ds] Why is the portal buried in stone?
 SUBST:  C:cc.
 : minitomb_portal(_G)
 MAP
@@ -77,8 +78,10 @@ MAP
 ...
 ENDMAP
 
-
 #### The portal vaults.####################################
+
+# Reset default depth to prevent random generation of portal vaults.
+default-depth:
 
 NAME:    minitomb_1
 WEIGHT:  60

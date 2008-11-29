@@ -47,6 +47,16 @@ static const char *map_section_names[] = {
     "float",
 };
 
+// atoi that rejects strings containing non-numeric trailing characters.
+// returns defval for invalid input.
+template <typename V>
+static V strict_aton(const char *s, V defval = 0)
+{
+    char *end;
+    const V res = strtol(s, &end, 10);
+    return (!*s || *end) ? defval : res;
+}
+
 const char *map_section_name(int msect)
 {
     if (msect < 0 || msect >= MAP_NUM_SECTION_TYPES)
@@ -234,19 +244,19 @@ void level_range::parse_depth_range(const std::string &s, int *l, int *h)
     std::string::size_type hy = s.find('-');
     if (hy == std::string::npos)
     {
-        *l = *h = atoi(s.c_str());
+        *l = *h = strict_aton<int>(s.c_str());
         if (!*l)
             throw std::string("Bad depth: ") + s;
     }
     else
     {
-        *l = atoi(s.substr(0, hy).c_str());
+        *l = strict_aton<int>(s.substr(0, hy).c_str());
 
         std::string tail = s.substr(hy + 1);
         if (tail.empty())
             *h = 100;
         else
-            *h = atoi(tail.c_str());
+            *h = strict_aton<int>(tail.c_str());
 
         if (!*l || !*h || *l > *h)
             throw std::string("Bad depth: ") + s;
