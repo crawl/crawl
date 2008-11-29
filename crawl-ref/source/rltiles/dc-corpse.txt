@@ -179,6 +179,7 @@ giant_mite CORPSE_GIANT_MITE /* s */
 redback CORPSE_REDBACK /* s */
 scorpion CORPSE_SCORPION /* s */
 wolf_spider CORPSE_WOLF_SPIDER /* s */
+trapdoor_spider CORPSE_TRAPDOOR_SPIDER /* s */
 
 ugly_thing CORPSE_UGLY_THING /* u */
 very_ugly_thing CORPSE_VERY_UGLY_THING /* u */
