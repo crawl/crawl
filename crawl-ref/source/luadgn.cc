@@ -1175,7 +1175,7 @@ static int _lua_colour(lua_State *ls, int ndx,
 static int dgn_change_floor_colour(lua_State *ls)
 {
     const int colour = _lua_colour(ls, 1, BLACK);
-    const bool update_now = _lua_boolean(ls, 2, true);
+    const bool update_now = _lua_boolean(ls, 2, false);
 
     env.floor_colour = (unsigned char) colour;
 
@@ -1187,7 +1187,7 @@ static int dgn_change_floor_colour(lua_State *ls)
 static int dgn_change_rock_colour(lua_State *ls)
 {
     const int colour = _lua_colour(ls, 1, BLACK);
-    const bool update_now = _lua_boolean(ls, 2, true);
+    const bool update_now = _lua_boolean(ls, 2, false);
 
     env.rock_colour = (unsigned char) colour;
 

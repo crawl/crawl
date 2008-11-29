@@ -25,7 +25,7 @@ function bazaar_portal()
     return timed_marker {
                   low=1000, high=1500, msg=messager,
                   disappear='The gate to the bazaar disappears!',
-                  props = { desc = pdesc, dst = 'bazaar'},
+                  desc = pdesc, dst = 'bazaar',
                   floor = 'stone_arch'
               }
   else

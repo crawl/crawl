@@ -10,6 +10,7 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cctype>
+#include <cstdlib>
 #include <algorithm>
 
 #include "AppHdr.h"
