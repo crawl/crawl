@@ -1,0 +1,251 @@
+##############################################################################
+#
+# The Miniature Tomb (Zaba)
+#
+#
+# The Tomb en miniature tries to pose an unusual early challenge: many traps
+# and slow monsters, making the player choose between pressing on towards the
+# loot or leaving the vault.
+#
+# Flavour: Mini versions of Tomb:* and otherwise crypt like.
+#
+##############################################################################
+
+{{
+function minitomb_portal(e)
+        e.marker([[O = lua:one_way_stair { desc = "A dusty staircase",
+                                           dst  = "minitomb",
+                                           dstorigin = "in a tomb",
+                                           overmap = "dusty staircase",
+                                           floor = "stone_arch" }]])
+        e.kfeat("O = enter_portal_vault")
+        e.colour("O = yellow")
+end
+
+function minitomb_setup_features(e)
+        e.kfeat("< = exit_portal_vault")
+        e.colour("< = yellow")
+        e.rockcol("white")
+        e.floorcol("yellow")
+end
+}}
+
+default-depth: D:4-8 ######################################
+
+#### Portal entry vaults.
+
+NAME:   enter_minitomb_1
+TAGS:   uniq_minitomb no_monster_gen
+SUBST:  . = .:10 C:7
+COLOUR: C = yellow
+SUBST:  C:.
+: minitomb_portal(_G)
+MAP
+.....
+.....
+..O..
+.....
+.....
+ENDMAP
+
+NAME:   enter_minitomb_2
+TAGS:   uniq_minitomb no_monster_gen
+COLOUR: C = yellow
+SUBST:  C:cc.
+: minitomb_portal(_G)
+MAP
+.......
+.cc=cc.
+.cCCCc.
+.cCOCc.
+.cCCCc.
+.ccccc.
+.......
+ENDMAP
+
+NAME:   enter_minitomb_3
+TAGS:   uniq_minitomb no_monster_gen
+COLOUR: . = yellow / none
+MONS:   rat zombie / jackal zombie / worm zombie
+MONS:   kobold zombie / goblin zombie / hobgoblin zombie
+MONS:   orc zombie / gnoll zombie / human zombie
+SUBST:  . = .:100 11 2 3
+: minitomb_portal(_G)
+MAP
+...
+.O.
+...
+ENDMAP
+
+
+#### The portal vaults.####################################
+
+NAME:    minitomb_1
+WEIGHT:  60
+ORIENT:  encompass
+TAGS:    minitomb no_item_gen no_monster_gen no_rotate
+SHUFFLE: ^d / Ww / Yy / Zz
+SUBST:   W=. , Y=. , Z=., w=2, y=2
+NSUBST:  z= 1:1 / *:.
+KFEAT:   ^ = alarm trap
+# loot: 12.5 items
+ITEM:    any scroll w:2 / any scroll q:2 w:3 / \
+         any potion w:4 / any potion q:2 w:6
+MONS:    mummy
+MONS:    rat zombie / jackal zombie / snake zombie / goblin zombie / \
+         hobgoblin zombie / kobold zombie
+MONS:    kobold zombie / orc zombie / hobgoblin zombie
+: minitomb_setup_features(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+x<........A........<x
+x...................x
+x...ccccccccccccc...x
+x...c.12<c..cdddc...x
+x3..c.cccc..c^ddc..3x
+x..3c.......+cccc3..x
+x3..cccccc......c..3x
+x..3c.Zzzc......c3..x
+x3..c.czzc......c..3x
+x...c.cccc......c...x
+x...c...........c...x
+x...c.cccc.cccc.c...x
+x...c.cyyc.cwwc.c...x
+x...c.Yyyc.cwwW.c...x
+x...cccccc.cccccc...x
+x...................x
+x.3.3.3..G.G..3.3.3.x
+x..3.3.........3.3..x
+x...................x
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    minitomb_2
+WEIGHT:  30
+ORIENT:  encompass
+TAGS:    minitomb no_item_gen no_monster_gen no_rotate
+KFEAT:   ~ = floor / dart trap / arrow trap / needle trap / alarm trap
+KFEAT:   ^ = dart trap / arrow trap / alarm trap
+SHUFFLE: 1~ / ZT
+# In the 1~ shuffle, rooms are largely separated into monster and trap rooms;
+# in the ZT shuffle, everything will be mixed up.
+# Number of 1's is 51, number of ~'s is 57.
+# Aim for 27 monsters of 1 type, 45 ~ traps, 9 ^ traps (without z and t).
+# z and t will be turned into zombies and traps at last, it's the first room.
+# (Using SUBST instead of NSUBST for higher variance.)
+SUBST:   1 = 1:27 ~:16 .:8
+SUBST:   ~ = ~:45 ^:9  .:19
+SUBST:   T = Z
+SUBST:   Z = 1:27 ~:45 ^:9 .:27
+SUBST:   z = 1
+NSUBST:  t = 4:~ / 2:^ / *:.
+# loot: 12 items
+ITEM:    any scroll w:5 / any potion
+MONS:    snake zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
+MONS:    big kobold zombie / brown snake zombie / nothing
+MONS:    mummy
+# You either get a view on the loot, or a hint about the secret door.
+SHUFFLE: XY / xy
+SUBST:   X==, Y=c
+COLOUR:  = : yellow
+SUBST:   x==, y=n
+: minitomb_setup_features(_G)
+MAP
+cccccccccccccccccccccc
+c<11c~~~c1111c~~~c111c
+c111c~~~+1221+~~~c111c
+c111+~~~c1111c~~~+111c
+ccc+cccccccccccccc+ccc
+c~~~c            c~~~c
+c~~~c            c~~~c
+c~~~c            c~~~c
+c~~~c            c~~~c
+cc+cc            cc+cc
+c111c            c111c
+c111c            c111c
+c111c            c111c
+c111c            c111c
+c+ccc            ccc+c
+c~~~c            cztzc
+c~~~cccccccccccccctttc
+c~~~c...cddddc...ctttc
+c~~~+.<3XddddY.A.+tttc
+c~~~c...cddddc...ctt<c
+cccccccccccccccccccccc
+ENDMAP
+
+NAME:    minitomb_3
+WEIGHT:  10
+ORIENT:  encompass
+TAGS:    minitomb no_item_gen no_monster_gen no_rotate no_vmirror
+# zombies should be awake, so they march downwards in a line
+MONS:    generate_awake orc zombie / generate_awake kobold zombie / \
+         generate_awake hobgoblin zombie / generate_awake gnoll zombie
+MONS:    mummy
+MONS:    orc zombie / kobold zombie / big kobold zombie / hobgoblin zombie
+# loot: 24 items
+ITEM:    nothing / any scroll w:5 / any potion
+KFEAT:   ^ = alarm trap
+: minitomb_setup_features(_G)
+MAP
+cccccccccccccccccccccc
+cccc.....2222.....cccc
+ccc..2...cccc...2..ccc
+cc......cc..cc......cc
+cc.....cc....cc.....cc
+cc........22........cc
+ccc..3....22....3..ccc
+cccc..............cccc
+cccc+cc........cc+cccc
+cccc^^cc111111cc^^cccc
+cccd...cc....cc...dccc
+ccdd....c....c....ddcc
+c$ddd...c....c...ddd$c
+c$ddd...c....c...ddd$c
+c$$dd...c....c...dd$$c
+cc$ddd..c....c..ddd$cc
+cc$$dd.cc....cc.dd$$cc
+ccc$dd.cc....cc.dd$ccc
+ccc$ddccc.<A.cccdd$ccc
+cccccccccccccccccccccc
+ENDMAP
+
+NAME:    minitomb_4_dp
+WEIGHT:  60
+ORIENT:  encompass
+TAGS:    minitomb no_item_gen no_monster_gen
+# loot: 8 items of which 6 should be good.
+ITEM:    potion of healing / potion of heal wounds / potion of speed / \
+         potion of confusion w:5 / potion of mutation w:5 / \
+         scroll of identify / scroll of teleportation w:5 / \
+         scroll of blinking w:5 / scroll of remove curse / \
+         scroll of curse armour w:5 / scroll of curse weapon w:5
+SHUFFLE: +T2M / =~45
+# The +T shuffle has few traps but the player is chased.
+# The C~ shuffle has harder traps but fewer monsters.
+SUBST:   4 = 3
+SUBST:   + = .+
+SUBST:   M = .
+SUBST:   5 = 11.
+MONS:    mummy
+MONS:    generate_awake goblin zombie / generate_awake hobgoblin zombie / \
+         generate_awake kobold zombie / nothing w:20
+MONS:    goblin zombie / hobgoblin zombie / kobold zombie / nothing w:20
+KFEAT:   ~ = dart trap w:20 / axe trap / net trap / needle trap / alarm trap / \
+             floor w:40
+KFEAT:   T = alarm trap w:20 / net trap / floor w:70
+KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
+: minitomb_setup_features(_G)
+MAP
+           cccccccccccccccccccc
+   ccccccccc2c2c2c3c3c3c3cddddccc
+ ccc.......c+c+c+c+c+c+c+c^.....c
+cc........TTTTTTTTTTTTTTTT^.....cc
+c1........TTTTTTTTTTTTTTTT^.....Mcc
+c.....<.A.TTTTTTTTTTTTTTTT^.....M<c
+c1........TTTTTTTTTTTTTTTT^.....Mcc
+cc........TTTTTTTTTTTTTTTT^.....cc
+ ccc.......c+c+c+c+c+c+c+c^.....c
+   ccccccccc2c2c2c3c3c3c3cddddccc
+        cccccccccccccccccccc
+ENDMAP
