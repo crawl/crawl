@@ -49,6 +49,14 @@ function ice_cave_colours(e)
 end
 }}
 
+# Using this function will turn any ^ glyph on the map into a fog generator
+# of the following kind:
+#{{
+#function place_vapours()
+#subst("^ = lua:fog_machine{ pow_max = 20, delay_min = 50, delay_max = 300, size = 12, #start_clouds = 1, cloud_type = "freezing vapour"} ")
+#end
+#}}
+
 
 # Entries ##########################################
 

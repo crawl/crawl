@@ -2,14 +2,6 @@
 # bazaar.des - Bazaar entry vaults and bazaar layouts.
 ###############################################################################
 
-# To do:
-# 1) Ideally, the portal duration should depend on absolute depth (the deeper,
-#    the less time the player gets). I suggest a duration of
-#    100 + 10*(30-abs.depth) + rn(100*(30-abs.depth))
-# 2) I think there should be more bazaars: each shop should have a chance of
-#    (abs.depth-10)/30 of becoming a portal (with negative chance==0), and at
-#    most one bazaar per level
-# 3) The above would (and should) include bazaars outside of the dungeon.
 
 ###############################################################################
 # Bazaar entries
@@ -20,10 +12,12 @@ lua {{
 
 function bazaar_portal()
   local messager = bell_clock_msg { initmsg="You hear coins being counted." }
-  if not crawl.one_chance_in(3) then
+  local blow = 200 + 30*(40 - you.absdepth()) + crawl.random2(200)
+  local bhigh = blow + crawl.random2(blow) + 100
+  if not crawl.one_chance_in(6) then
     local pdesc = 'flickering gateway to a bazaar'
     return timed_marker {
-                  low=1000, high=1500, msg=messager,
+                  low=blow, high=bhigh, msg=messager,
                   disappear='The gate to the bazaar disappears!',
                   desc = pdesc, dst = 'bazaar',
                   floor = 'stone_arch'
@@ -401,7 +395,7 @@ xxx.....xxxxxxx...xxxxxxxxx...xxxxxxxxx...xxxxxxx.....xxx
 xx..www..xxxxxx.a.xxxxxxxxx.c.xxxxxxxxx.e.xxxxxx..lll..xx
 x<.wwwww..+...........+...........+...........+..lllll.>x
 xx..www..xxxxxx.b.xxxxxxxxx.d.xxxxxxxxx.f.xxxxxx..lll..xx
-xx......xxxxxxx...xxxxxxxxx...xxxxxxxxx...xxxxxxx.....xxx
+xxx.....xxxxxxx...xxxxxxxxx...xxxxxxxxx...xxxxxxx.....xxx
 xxxxxxxxxxxxxxxxBxxxxxxxxxxxDxxxxxxxxxxxFxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
