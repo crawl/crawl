@@ -45,7 +45,7 @@ end
 
 function initialise_ziggurat(z, portal)
   if portal then
-    z.props = portal.props
+    z.portal = portal.props
   end
 
   z.depth = 1
@@ -358,7 +358,7 @@ local function ziggurat_create_monsters(p, mfn)
 end
 
 local function ziggurat_create_loot_at(c)
-  -- Basically, loot grows linearly with depth. However, the entry fee 
+  -- Basically, loot grows linearly with depth. However, the entry fee
   -- affects the loot randomly (separatedly on each stage).
   local depth = zig_depth()
   local nloot = depth
