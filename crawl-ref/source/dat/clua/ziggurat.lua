@@ -15,7 +15,7 @@ require("clua/lm_toll.lua")
 -- Deepest you can go in a ziggurat - at this point it's beyond
 -- obvious that we're not challenging the player, and one could hope
 -- she has enough loot by now.
-ZIGGURAT_MAX = 81
+ZIGGURAT_MAX = 27
 
 function zig()
   if not dgn.persist.ziggurat or not dgn.persist.ziggurat.depth then
@@ -150,9 +150,9 @@ local function zig_go_deeper()
 end
 
 -- the estimated total map area for ziggurat maps of given depth
--- this is be independent of the layout type
+-- this is (almost) independent of the layout type
 local function map_area()
-  return 30 + 18*zig_depth() + 2*zig_depth()*zig_depth()
+  return 30 + 18*zig_depth() + zig_depth()*zig_depth()
 end
 
 local function clamp_in(val, low, high)
@@ -250,12 +250,12 @@ mset("place:Elf:$ w:300 / deep elf blademaster / deep elf master archer / " ..
      "place:Tomb:$ w:200 / greater mummy",
      "place:Crypt:$",
      "place:Abyss",
-     "place:Shoal:$",
-     "place:Coc:$",
-     "place:Geh:$",
-     "place:Dis:$",
-     "place:Tar:$",
-     "daeva / angel")
+     with_props("place:Shoal:$", { weight = 5 }),
+     with_props("place:Coc:$", { weight = 5 }),
+     with_props("place:Geh:$", { weight = 5 }),
+     with_props("place:Dis:$", { weight = 5 }),
+     with_props("place:Tar:$", { weight = 5 }),
+     with_props("daeva / angel", { weight = 2 }))
 mset_if(depth_ge(6), "place:Pan w:400 / w:15 pandemonium lord")
 mset_if(depth_lt(6), "place:Pan")
 
@@ -358,8 +358,11 @@ local function ziggurat_create_monsters(p, mfn)
 end
 
 local function ziggurat_create_loot_at(c)
+  -- Basically, loot grows linearly with depth. However, the entry fee 
+  -- affects the loot randomly (separatedly on each stage).
   local depth = zig_depth()
   local nloot = depth
+--  nloot = nloot + crawl.random2(math.floor(nloot * stair().amount / 10000))
 
   local function free_space_threshold(max)
     local function is_free_space(p)
