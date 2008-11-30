@@ -537,7 +537,7 @@ bool mons_is_native_in_branch(const monsters *monster,
     case BRANCH_SHOALS:
         return (mons_species(monster->type) == MONS_CYCLOPS
                 || mons_species(monster->type) == MONS_MERFOLK
-                || mons_species(monster->type) == MONS_MERMAID);
+                || mons_genus(monster->type) == MONS_MERMAID);
 
     case BRANCH_SLIME_PITS:
         return (mons_species(monster->type) == MONS_JELLY);
@@ -2709,16 +2709,16 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         // life-protected if he has triple life protection.
         const mon_holy_type holiness = foe->holiness();
         ret = ((holiness == MH_UNDEAD
-                  // If the claimed undead is the player, it must be
-                  // a non-vampire, or a bloodless vampire.
-                  && (foe != &you || you.is_undead != US_SEMI_UNDEAD ||
-                      you.hunger_state == HS_STARVING))
-                  // Demons, but not demonspawn - demonspawn will show
-                  // up as demonic for purposes of things like holy
-                  // wrath, but are still (usually) susceptible to
-                  // torment and draining.
-                  || (holiness == MH_DEMONIC && foe != &you)
-                  || holiness == MH_NONLIVING || holiness == MH_PLANT);
+                   // If the claimed undead is the player, it must be
+                   // a non-vampire, or a bloodless vampire.
+                   && (foe != &you || you.is_undead != US_SEMI_UNDEAD
+                       || you.hunger_state == HS_STARVING))
+                // Demons, but not demonspawn - demonspawn will show
+                // up as demonic for purposes of things like holy
+                // wrath, but are still (usually) susceptible to
+                // torment and draining.
+                || holiness == MH_DEMONIC && foe != &you
+                || holiness == MH_NONLIVING || holiness == MH_PLANT);
         break;
     }
 
@@ -2895,7 +2895,7 @@ bool mons_has_los_ability( int mclass )
         return (true);
 
     // Beholding just needs LOS.
-    if (mclass == MONS_MERMAID)
+    if (mons_genus(mclass) == MONS_MERMAID)
         return (true);
 
     return (false);
@@ -2952,8 +2952,9 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 {
     gender_type gender = GENDER_NEUTER;
 
-    if (mons_is_unique(mon_type) && mon_type != MONS_PLAYER_GHOST
-        || mon_type == MONS_MERMAID)
+    if (mons_genus(mon_type) == MONS_MERMAID)
+        gender = GENDER_FEMALE;
+    else if (mons_is_unique(mon_type) && mon_type != MONS_PLAYER_GHOST)
     {
         switch (mon_type)
         {
@@ -2969,7 +2970,6 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
         case MONS_ERICA:
         case MONS_TIAMAT:
         case MONS_ERESHKIGAL:
-        case MONS_MERMAID:
             gender = GENDER_FEMALE;
             break;
         default:
@@ -3226,10 +3226,10 @@ bool monsters::wants_submerge() const
         return (true);
     }
 
-    const bool has_ranged_attack =
-        type == MONS_ELECTRICAL_EEL
-        || type == MONS_LAVA_SNAKE
-        || (type == MONS_MERMAID && you.species != SP_MERFOLK);
+    const bool has_ranged_attack = (type == MONS_ELECTRICAL_EEL
+                                    || type == MONS_LAVA_SNAKE
+                                    || mons_genus(type) == MONS_MERMAID
+                                       && you.species != SP_MERFOLK);
 
     int roll = 8;
     // Shallow water takes a little more effort to submerge in, so we're
@@ -4808,7 +4808,8 @@ std::string monsters::foot_name(bool plural, bool *can_plural) const
     case MON_SHAPE_HUMANOID_WINGED_TAILED:
         if (type == MONS_MINOTAUR)
             str = "hoof";
-        else if (swimming() && (type == MONS_MERFOLK || type == MONS_MERMAID))
+        else if (swimming()
+                 && (type == MONS_MERFOLK || mons_genus(type) == MONS_MERMAID))
         {
             str         = "tail";
             *can_plural = false;

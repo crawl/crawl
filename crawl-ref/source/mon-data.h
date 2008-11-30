@@ -73,6 +73,14 @@
    hp_dice [4]
    - hit dice, min hp per HD, extra random hp per HD, fixed HP (unique mons)
 
+    Further explanations copied from mon-util.h:
+        hpdice[4]: [0]=HD [1]=min_hp [2]=rand_hp [3]=add_hp
+        min hp = [0]*[1]+[3] & max hp = [0]*([1]+[2])+[3])
+        example: the Iron Golem, hpdice={15,7,4,0}
+           15*7 < hp < 15*(7+4),
+           105 < hp < 165
+        hp will be around 135 each time.
+
    corpse_thingy
    - err, bad name. Describes effects of eating corpses.
      CE_NOCORPSE,        leaves no corpse (mass == 0)
@@ -971,18 +979,29 @@ static monsterentry mondata[] = {
     MR_RES_POISON | MR_RES_COLD,
     500, 10, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 2, 4, 0 },
+    { 9, 2, 4, 0 },
     4, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL,
     HT_AMPHIBIOUS_WATER, 10, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 },
 
 {
-    MONS_MERMAID, 'm', LIGHTCYAN, "mermaid",
+    MONS_MERMAID, 'm', LIGHTCYAN, "cyan",
     M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS,
     MR_RES_POISON | MR_RES_COLD,
     500, 10, MONS_MERMAID, MONS_MERMAID, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 2, 4, 0 },
+    { 8, 2, 3, 0 },
+    4, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL,
+    HT_AMPHIBIOUS_WATER, 10, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
+},
+
+{
+    MONS_SIREN, 'm', LIGHTCYAN, "siren",
+    M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS,
+    MR_RES_POISON | MR_RES_COLD,
+    500, 12, MONS_MERMAID, MONS_SIREN, MH_NATURAL, -7,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 8, 2, 3, 0 },
     4, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT, I_NORMAL,
     HT_AMPHIBIOUS_WATER, 10, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_MEDIUM
 },
@@ -1173,7 +1192,7 @@ static monsterentry mondata[] = {
     HT_LAND, 10, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_TINY
 },
 
-// rats ('r')
+// rodents ('r')
 {
     MONS_RAT, 'r', BROWN, "rat",
     M_WARM_BLOOD,
@@ -1445,6 +1464,17 @@ static monsterentry mondata[] = {
 },
 
 {
+    MONS_SWAMP_WORM, 'w', BROWN, "swamp worm",
+    M_NO_FLAGS,
+    MR_NO_FLAGS,
+    0, 10, MONS_WORM, MONS_SWAMP_WORM, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 5, 5, 5, 0 },
+    3, 12, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT,
+    HT_WATER, 12, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_LARGE
+},
+
+{
     MONS_SPINY_WORM, 'w', LIGHTGREEN, "spiny worm",
     M_NO_FLAGS,
     MR_VUL_POISON | MR_RES_ACID,
@@ -1478,7 +1508,7 @@ static monsterentry mondata[] = {
     HT_LAND, 0, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_LARGE
 },
 
-// wasps ('y')
+// flying insects ('y')
 {
     MONS_YELLOW_WASP, 'y', YELLOW, "yellow wasp",
     M_FLIES,
@@ -1592,6 +1622,17 @@ static monsterentry mondata[] = {
     HT_LAND, 15, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_TINY
 },
 
+{
+    MONS_FLAMING_CORPSE, 'z', LIGHTRED, "flaming corpse",
+    M_SENSE_INVIS | M_EVIL | M_GLOWS,
+    MR_RES_POISON | MR_VUL_COLD | mrd(MR_RES_FIRE, 3) | MR_RES_STICKY_FLAME,
+    0, 17, MONS_FLAMING_CORPSE, MONS_FLAMING_CORPSE, MH_UNDEAD, -4,
+    { {AT_HIT, AF_NAPALM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 8, 3, 5, 0 },
+    12, 13, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SCREAM, I_NORMAL,
+    HT_LAND, 12, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_MEDIUM
+},
+
 // These nasties are never randomly generated, only sometimes specially
 // placed in the Crypt.
 {
@@ -1616,17 +1657,6 @@ static monsterentry mondata[] = {
     { 14, 0, 0, 77 },
     50, 1, MST_CURSE_TOE, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN, I_HIGH,
     HT_LAND, 12, MOVE_ENERGY(20), MONUSE_NOTHING, SIZE_TINY
-},
-
-{
-    MONS_FLAMING_CORPSE, 'z', LIGHTRED, "flaming corpse",
-    M_SENSE_INVIS | M_EVIL | M_GLOWS,
-    MR_RES_POISON | MR_VUL_COLD | mrd(MR_RES_FIRE, 3) | MR_RES_STICKY_FLAME,
-    0, 17, MONS_FLAMING_CORPSE, MONS_FLAMING_CORPSE, MH_UNDEAD, -4,
-    { {AT_HIT, AF_NAPALM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 8, 3, 5, 0 },
-    12, 13, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SCREAM, I_NORMAL,
-    HT_LAND, 12, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_MEDIUM
 },
 
 // angelic beings ('A')
@@ -2926,17 +2956,6 @@ static monsterentry mondata[] = {
     { 4, 3, 5, 0 },
     0, 5, MST_NO_SPELLS, CE_NOCORPSE, Z_SMALL, S_SILENT, I_PLANT,
     HT_WATER, 10, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_LITTLE
-},
-
-{
-    MONS_SWAMP_WORM, 'w', BROWN, "swamp worm",
-    M_NO_FLAGS,
-    MR_NO_FLAGS,
-    0, 10, MONS_WORM, MONS_SWAMP_WORM, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 5, 5, 5, 0 },
-    3, 12, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT,
-    HT_WATER, 12, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_LARGE
 },
 
 // lava monsters

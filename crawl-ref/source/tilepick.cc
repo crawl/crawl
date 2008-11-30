@@ -142,461 +142,37 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
 
     switch (type)
     {
-    case MONS_GIANT_ANT:
-        return TILEP_MONS_GIANT_ANT;
-    case MONS_GIANT_BAT:
-        return TILEP_MONS_GIANT_BAT;
-    case MONS_CENTAUR:
-        return TILEP_MONS_CENTAUR + _bow_offset(mon);
-    case MONS_RED_DEVIL:
-        return TILEP_MONS_RED_DEVIL;
-    case MONS_ETTIN:
-        return TILEP_MONS_ETTIN;
-    case MONS_FUNGUS:
-        return TILEP_MONS_FUNGUS;
-    case MONS_GOBLIN:
-        return TILEP_MONS_GOBLIN;
-    case MONS_HOUND:
-        return TILEP_MONS_HOUND;
-    case MONS_IMP:
-        return TILEP_MONS_IMP;
-    case MONS_JACKAL:
-        return TILEP_MONS_JACKAL;
-    case MONS_KILLER_BEE:
-        return TILEP_MONS_KILLER_BEE;
-    case MONS_KILLER_BEE_LARVA:
-        return TILEP_MONS_KILLER_BEE_LARVA;
-    case MONS_MANTICORE:
-        return TILEP_MONS_MANTICORE;
-    case MONS_NECROPHAGE:
-        return TILEP_MONS_NECROPHAGE;
-    case MONS_ORC:
-        return TILEP_MONS_ORC;
-    case MONS_PHANTOM:
-        return TILEP_MONS_PHANTOM;
-    case MONS_QUASIT:
-        return TILEP_MONS_QUASIT;
-    case MONS_RAT:
-        return TILEP_MONS_RAT;
-    case MONS_SCORPION:
-        return TILEP_MONS_SCORPION;
-    case MONS_UGLY_THING :
-        return TILEP_MONS_UGLY_THING ;
-    case MONS_FIRE_VORTEX:
-        return TILEP_MONS_FIRE_VORTEX;
-    case MONS_WORM:
-        return TILEP_MONS_WORM;
-    case MONS_ABOMINATION_SMALL:
-        return TILEP_MONS_ABOMINATION_SMALL;
-    case MONS_YELLOW_WASP:
-        return TILEP_MONS_YELLOW_WASP;
-    case MONS_ZOMBIE_SMALL:
-        return TILEP_MONS_ZOMBIE_SMALL;
-    case MONS_ANGEL:
-        return TILEP_MONS_ANGEL;
-    case MONS_GIANT_BEETLE:
-        return TILEP_MONS_GIANT_BEETLE;
-    case MONS_CYCLOPS:
-        return TILEP_MONS_CYCLOPS;
-    case MONS_DRAGON:
-        return TILEP_MONS_DRAGON;
-    case MONS_TWO_HEADED_OGRE:
-        return TILEP_MONS_TWO_HEADED_OGRE;
-    case MONS_FIEND:
-        return TILEP_MONS_FIEND;
-    case MONS_GIANT_SPORE:
-        return TILEP_MONS_GIANT_SPORE;
-    case MONS_HOBGOBLIN:
-        return TILEP_MONS_HOBGOBLIN;
-    case MONS_ICE_BEAST:
-        return TILEP_MONS_ICE_BEAST;
-    case MONS_JELLY:
-        return TILEP_MONS_JELLY;
-    case MONS_KOBOLD:
-        return TILEP_MONS_KOBOLD;
-    case MONS_LICH:
-        return TILEP_MONS_LICH;
-    case MONS_MUMMY:
-        return TILEP_MONS_MUMMY;
-    case MONS_GUARDIAN_NAGA:
-        return TILEP_MONS_GUARDIAN_NAGA;
-    case MONS_OGRE:
-        return TILEP_MONS_OGRE;
-    case MONS_PLANT:
-        return TILEP_MONS_PLANT;
-    case MONS_QUEEN_BEE:
-        return TILEP_MONS_QUEEN_BEE;
-    case MONS_RAKSHASA:
-        return TILEP_MONS_RAKSHASA;
-    case MONS_SNAKE:
-        return TILEP_MONS_SNAKE;
-    case MONS_TROLL:
-        return TILEP_MONS_TROLL;
-    case MONS_UNSEEN_HORROR:
-        return TILEP_MONS_UNSEEN_HORROR;
-    case MONS_VAMPIRE:
-        return TILEP_MONS_VAMPIRE;
-    case MONS_WRAITH:
-        return TILEP_MONS_WRAITH;
-    case MONS_ABOMINATION_LARGE:
-        return TILEP_MONS_ABOMINATION_LARGE + ((mon->colour)%7);
-    case MONS_YAK:
-        return TILEP_MONS_YAK;
-    case MONS_ZOMBIE_LARGE:
-        return TILEP_MONS_ZOMBIE_LARGE;
-    case MONS_ORC_WARRIOR:
-        return TILEP_MONS_ORC_WARRIOR;
-    case MONS_KOBOLD_DEMONOLOGIST:
-        return TILEP_MONS_KOBOLD_DEMONOLOGIST;
-    case MONS_ORC_WIZARD:
-        return TILEP_MONS_ORC_WIZARD;
-    case MONS_ORC_KNIGHT:
-        return TILEP_MONS_ORC_KNIGHT;
-    case MONS_WYVERN:
-        return TILEP_MONS_WYVERN;
-    case MONS_BIG_KOBOLD:
-        return TILEP_MONS_BIG_KOBOLD;
-    case MONS_GIANT_EYEBALL:
-        return TILEP_MONS_GIANT_EYEBALL;
-    case MONS_WIGHT:
-        return TILEP_MONS_WIGHT;
-    case MONS_OKLOB_PLANT:
-        return TILEP_MONS_OKLOB_PLANT;
-    case MONS_WOLF_SPIDER:
-        return TILEP_MONS_WOLF_SPIDER;
-    case MONS_TRAPDOOR_SPIDER:
-        return TILEP_MONS_TRAPDOOR_SPIDER;
-    case MONS_SHADOW:
-        return TILEP_MONS_SHADOW;
-    case MONS_HUNGRY_GHOST:
-        return TILEP_MONS_HUNGRY_GHOST;
-    case MONS_EYE_OF_DRAINING:
-        return TILEP_MONS_EYE_OF_DRAINING;
-    case MONS_BUTTERFLY:
-        return TILEP_MONS_BUTTERFLY + ((mon->colour)%7);
-    case MONS_WANDERING_MUSHROOM:
-        return TILEP_MONS_WANDERING_MUSHROOM;
-    case MONS_EFREET:
-        return TILEP_MONS_EFREET;
-    case MONS_BRAIN_WORM:
-        return TILEP_MONS_BRAIN_WORM;
-    case MONS_GIANT_ORANGE_BRAIN:
-        return TILEP_MONS_GIANT_ORANGE_BRAIN;
-    case MONS_BOULDER_BEETLE:
-        return TILEP_MONS_BOULDER_BEETLE;
-    case MONS_FLYING_SKULL:
-        return TILEP_MONS_FLYING_SKULL;
-    case MONS_HELL_HOUND:
-        return TILEP_MONS_HELL_HOUND;
-    case MONS_MINOTAUR:
-        return TILEP_MONS_MINOTAUR;
-    case MONS_ICE_DRAGON:
-        return TILEP_MONS_ICE_DRAGON;
-    case MONS_SLIME_CREATURE:
-        return TILEP_MONS_SLIME_CREATURE;
-    case MONS_FREEZING_WRAITH:
-        return TILEP_MONS_FREEZING_WRAITH;
-    case MONS_RAKSHASA_FAKE:
-        return TILEP_MONS_RAKSHASA_FAKE;
-    case MONS_GREAT_ORB_OF_EYES:
-        return TILEP_MONS_GREAT_ORB_OF_EYES;
-    case MONS_HELLION:
-        return TILEP_MONS_HELLION;
-    case MONS_ROTTING_DEVIL:
-        return TILEP_MONS_ROTTING_DEVIL;
-    case MONS_TORMENTOR:
-        return TILEP_MONS_TORMENTOR;
-    case MONS_REAPER:
-        return TILEP_MONS_REAPER;
-    case MONS_SOUL_EATER:
-        return TILEP_MONS_SOUL_EATER;
-    case MONS_HAIRY_DEVIL:
-        return TILEP_MONS_HAIRY_DEVIL;
-    case MONS_ICE_DEVIL:
-        return TILEP_MONS_ICE_DEVIL;
-    case MONS_BLUE_DEVIL:
-        return TILEP_MONS_BLUE_DEVIL;
-    case MONS_BEAST:
-        return TILEP_MONS_BEAST;
-    case MONS_IRON_DEVIL:
-        return TILEP_MONS_IRON_DEVIL;
-    case MONS_GLOWING_SHAPESHIFTER:
-        return TILEP_MONS_GLOWING_SHAPESHIFTER;
-    case MONS_SHAPESHIFTER:
-        return TILEP_MONS_SHAPESHIFTER;
-    case MONS_GIANT_MITE:
-        return TILEP_MONS_GIANT_MITE;
-    case MONS_STEAM_DRAGON:
-        return TILEP_MONS_STEAM_DRAGON;
-    case MONS_VERY_UGLY_THING:
-        return TILEP_MONS_VERY_UGLY_THING;
-    case MONS_ORC_SORCERER:
-        return TILEP_MONS_ORC_SORCERER;
-    case MONS_HIPPOGRIFF:
-        return TILEP_MONS_HIPPOGRIFF;
-    case MONS_GRIFFON:
-        return TILEP_MONS_GRIFFON;
-
-    case MONS_HYDRA:
-        // Number of heads
-        return TILEP_MONS_HYDRA + std::min((int)mon->number, 7) - 1;
-
-    case MONS_SKELETON_SMALL:
-        return TILEP_MONS_SKELETON_SMALL;
-    case MONS_SKELETON_LARGE:
-        return TILEP_MONS_SKELETON_LARGE;
-    case MONS_HELL_KNIGHT:
-        return TILEP_MONS_HELL_KNIGHT;
-    case MONS_NECROMANCER:
-        return TILEP_MONS_NECROMANCER;
-    case MONS_WIZARD:
-        return TILEP_MONS_WIZARD;
-    case MONS_ORC_PRIEST:
-        return TILEP_MONS_ORC_PRIEST;
-    case MONS_ORC_HIGH_PRIEST:
-        return TILEP_MONS_ORC_HIGH_PRIEST;
-    case MONS_HUMAN:
-        return TILEP_MONS_HUMAN;
-    case MONS_GNOLL:
-        return TILEP_MONS_GNOLL;
-    case MONS_CLAY_GOLEM:
-        return TILEP_MONS_CLAY_GOLEM;
-    case MONS_WOOD_GOLEM:
-        return TILEP_MONS_WOOD_GOLEM;
-    case MONS_STONE_GOLEM:
-        return TILEP_MONS_STONE_GOLEM;
-    case MONS_IRON_GOLEM:
-        return TILEP_MONS_IRON_GOLEM;
-    case MONS_CRYSTAL_GOLEM:
-        return TILEP_MONS_CRYSTAL_GOLEM;
-    case MONS_TOENAIL_GOLEM:
-        return TILEP_MONS_TOENAIL_GOLEM;
-    case MONS_MOTTLED_DRAGON:
-        return TILEP_MONS_MOTTLED_DRAGON;
-    case MONS_EARTH_ELEMENTAL:
-        return TILEP_MONS_EARTH_ELEMENTAL;
-    case MONS_FIRE_ELEMENTAL:
-        return TILEP_MONS_FIRE_ELEMENTAL;
-    case MONS_AIR_ELEMENTAL:
-        return TILEP_MONS_AIR_ELEMENTAL;
-    case MONS_ICE_FIEND:
-        return TILEP_MONS_ICE_FIEND;
-    case MONS_SHADOW_FIEND:
-        return TILEP_MONS_SHADOW_FIEND;
-    case MONS_BROWN_SNAKE:
-        return TILEP_MONS_BROWN_SNAKE;
-    case MONS_GIANT_LIZARD:
-        return TILEP_MONS_GIANT_LIZARD;
-    case MONS_SPECTRAL_WARRIOR:
-        return TILEP_MONS_SPECTRAL_WARRIOR;
-    case MONS_PULSATING_LUMP:
-        return TILEP_MONS_PULSATING_LUMP;
-    case MONS_STORM_DRAGON:
-        return TILEP_MONS_STORM_DRAGON;
-    case MONS_YAKTAUR:
-        return TILEP_MONS_YAKTAUR + _bow_offset(mon);
-    case MONS_DEATH_YAK:
-        return TILEP_MONS_DEATH_YAK;
-    case MONS_ROCK_TROLL:
-        return TILEP_MONS_ROCK_TROLL;
-    case MONS_STONE_GIANT:
-        return TILEP_MONS_STONE_GIANT;
-    case MONS_FLAYED_GHOST:
-        return TILEP_MONS_FLAYED_GHOST;
-    case MONS_FLAMING_CORPSE:
-        return TILEP_MONS_FLAMING_CORPSE;
-    case MONS_BUMBLEBEE:
-        return TILEP_MONS_BUMBLEBEE;
-    case MONS_REDBACK:
-        return TILEP_MONS_REDBACK;
-    case MONS_INSUBSTANTIAL_WISP:
-        return TILEP_MONS_INSUBSTANTIAL_WISP;
-    case MONS_VAPOUR:
-        return TILEP_MONS_VAPOUR;
-    case MONS_OGRE_MAGE:
-        return TILEP_MONS_OGRE_MAGE;
-    case MONS_SPINY_WORM:
-        return TILEP_MONS_SPINY_WORM;
-
-    case MONS_DANCING_WEAPON:
-    {
-        // Use item tile
-        item_def item = mitm[mon->inv[MSLOT_WEAPON]];
-        return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
-    }
-
-    case MONS_TITAN:
-        return TILEP_MONS_TITAN;
-    case MONS_GOLDEN_DRAGON:
-        return TILEP_MONS_GOLDEN_DRAGON;
-    case MONS_ELF:
-        return TILEP_MONS_ELF;
-    case MONS_LINDWURM:
-        return TILEP_MONS_LINDWURM;
-    case MONS_ELEPHANT_SLUG:
-        return TILEP_MONS_ELEPHANT_SLUG;
-    case MONS_WAR_DOG:
-        return TILEP_MONS_WAR_DOG;
-    case MONS_GREY_RAT:
-        return TILEP_MONS_GREY_RAT;
-    case MONS_GREEN_RAT:
-        return TILEP_MONS_GREEN_RAT;
-    case MONS_ORANGE_RAT:
-        return TILEP_MONS_ORANGE_RAT;
-    case MONS_BLACK_SNAKE:
-        return TILEP_MONS_BLACK_SNAKE;
-    case MONS_SHEEP:
-        return TILEP_MONS_SHEEP;
-    case MONS_GHOUL:
-        return TILEP_MONS_GHOUL;
-    case MONS_HOG:
-        return TILEP_MONS_HOG;
-    case MONS_GIANT_MOSQUITO:
-        return TILEP_MONS_GIANT_MOSQUITO;
-    case MONS_GIANT_CENTIPEDE:
-        return TILEP_MONS_GIANT_CENTIPEDE;
-    case MONS_IRON_TROLL:
-        return TILEP_MONS_IRON_TROLL;
-    case MONS_NAGA:
-        return TILEP_MONS_NAGA;
-    case MONS_FIRE_GIANT:
-        return TILEP_MONS_FIRE_GIANT;
-    case MONS_FROST_GIANT:
-        return TILEP_MONS_FROST_GIANT;
-    case MONS_FIREDRAKE:
-        return TILEP_MONS_FIREDRAKE;
-    case MONS_SHADOW_DRAGON:
-        return TILEP_MONS_SHADOW_DRAGON;
-    case MONS_YELLOW_SNAKE:
-        return TILEP_MONS_YELLOW_SNAKE;
-    case MONS_GREY_SNAKE:
-        return TILEP_MONS_GREY_SNAKE;
-    case MONS_DEEP_TROLL:
-        return TILEP_MONS_DEEP_TROLL;
-    case MONS_GIANT_BLOWFLY:
-        return TILEP_MONS_GIANT_BLOWFLY;
-    case MONS_RED_WASP:
-        return TILEP_MONS_RED_WASP;
-    case MONS_SWAMP_DRAGON:
-        return TILEP_MONS_SWAMP_DRAGON;
-    case MONS_SWAMP_DRAKE:
-        return TILEP_MONS_SWAMP_DRAKE;
-    case MONS_SOLDIER_ANT:
-        return TILEP_MONS_SOLDIER_ANT;
-    case MONS_HILL_GIANT:
-        return TILEP_MONS_HILL_GIANT;
-    case MONS_QUEEN_ANT:
-        return TILEP_MONS_QUEEN_ANT;
-    case MONS_ANT_LARVA:
-        return TILEP_MONS_ANT_LARVA;
-    case MONS_GIANT_FROG:
-        return TILEP_MONS_GIANT_FROG;
-    case MONS_GIANT_BROWN_FROG:
-        return TILEP_MONS_GIANT_BROWN_FROG;
-    case MONS_SPINY_FROG:
-        return TILEP_MONS_SPINY_FROG;
-    case MONS_BLINK_FROG:
-        return TILEP_MONS_BLINK_FROG;
-    case MONS_GIANT_COCKROACH:
-        return TILEP_MONS_GIANT_COCKROACH;
-    case MONS_SMALL_SNAKE:
-        return TILEP_MONS_SMALL_SNAKE;
-    case MONS_SHUGGOTH:
-        return TILE_TODO;
-    case MONS_WOLF:
-        return TILEP_MONS_WOLF;
-    case MONS_WARG:
-        return TILEP_MONS_WARG;
-    case MONS_BEAR:
-        return TILEP_MONS_BEAR;
-    case MONS_GRIZZLY_BEAR:
-        return TILEP_MONS_GRIZZLY_BEAR;
-    case MONS_POLAR_BEAR:
-        return TILEP_MONS_POLAR_BEAR;
-    case MONS_BLACK_BEAR:
-        return TILEP_MONS_BLACK_BEAR;
-    case MONS_SIMULACRUM_SMALL:
-        return TILEP_MONS_SIMULACRUM_SMALL;
-    case MONS_SIMULACRUM_LARGE:
-        return TILEP_MONS_SIMULACRUM_LARGE;
-    case MONS_WHITE_IMP:
-        return TILEP_MONS_WHITE_IMP;
-    case MONS_LEMURE:
-        return TILEP_MONS_LEMURE;
-    case MONS_UFETUBUS:
-        return TILEP_MONS_UFETUBUS;
-    case MONS_MANES:
-        return TILEP_MONS_MANES;
-    case MONS_MIDGE:
-        return TILEP_MONS_MIDGE;
-    case MONS_NEQOXEC:
-        return TILEP_MONS_NEQOXEC;
-    case MONS_ORANGE_DEMON:
-        return TILEP_MONS_ORANGE_DEMON;
-    case MONS_HELLWING:
-        return TILEP_MONS_HELLWING;
-    case MONS_SMOKE_DEMON:
-        return TILEP_MONS_SMOKE_DEMON;
-    case MONS_YNOXINUL:
-        return TILEP_MONS_YNOXINUL;
-    case MONS_EXECUTIONER:
-        return TILEP_MONS_EXECUTIONER;
-    case MONS_GREEN_DEATH:
-        return TILEP_MONS_GREEN_DEATH;
-    case MONS_BLUE_DEATH:
-        return TILEP_MONS_BLUE_DEATH;
-    case MONS_BALRUG:
-        return TILEP_MONS_BALRUG;
-    case MONS_CACODEMON:
-        return TILEP_MONS_CACODEMON;
-    case MONS_DEMONIC_CRAWLER:
-        return TILEP_MONS_DEMONIC_CRAWLER;
-    case MONS_SUN_DEMON:
-        return TILEP_MONS_SUN_DEMON;
-    case MONS_SHADOW_IMP:
-        return TILEP_MONS_SHADOW_IMP;
-    case MONS_SHADOW_DEMON:
-        return TILEP_MONS_SHADOW_DEMON;
-    case MONS_LOROCYPROCA:
-        return TILEP_MONS_LOROCYPROCA;
-    case MONS_SHADOW_WRAITH:
-        return TILEP_MONS_SHADOW_WRAITH;
-    case MONS_GIANT_AMOEBA:
-        return TILEP_MONS_GIANT_AMOEBA;
-    case MONS_GIANT_SLUG:
-        return TILEP_MONS_GIANT_SLUG;
-    case MONS_GIANT_SNAIL:
-        return TILEP_MONS_GIANT_SNAIL;
-    case MONS_SPATIAL_VORTEX:
-        return TILEP_MONS_SPATIAL_VORTEX;
-    case MONS_PIT_FIEND:
-        return TILEP_MONS_PIT_FIEND;
-    case MONS_BORING_BEETLE:
-        return TILEP_MONS_BORING_BEETLE;
-    case MONS_GARGOYLE:
-        return TILEP_MONS_GARGOYLE;
-    case MONS_METAL_GARGOYLE:
-        return TILEP_MONS_METAL_GARGOYLE;
-    case MONS_MOLTEN_GARGOYLE:
-        return TILEP_MONS_MOLTEN_GARGOYLE;
+    // program bug
     case MONS_PROGRAM_BUG:
         return TILEP_MONS_PROGRAM_BUG;
-    case MONS_MNOLEG:
-        return TILEP_MONS_MNOLEG;
-    case MONS_LOM_LOBON:
-        return TILEP_MONS_LOM_LOBON;
-    case MONS_CEREBOV:
-        return TILEP_MONS_CEREBOV;
-    case MONS_GLOORX_VLOQ:
-        return TILEP_MONS_GLOORX_VLOQ;
-    case MONS_MOLLUSC_LORD:
-        return TILE_TODO;
-    case MONS_NAGA_MAGE:
-        return TILEP_MONS_NAGA_MAGE;
-    case MONS_NAGA_WARRIOR:
-        return TILEP_MONS_NAGA_WARRIOR;
-    case MONS_ORC_WARLORD:
-        return TILEP_MONS_ORC_WARLORD;
+
+    // insects ('a')
+    case MONS_GIANT_COCKROACH:
+        return TILEP_MONS_GIANT_COCKROACH;
+    case MONS_GIANT_ANT:
+        return TILEP_MONS_GIANT_ANT;
+    case MONS_SOLDIER_ANT:
+        return TILEP_MONS_SOLDIER_ANT;
+
+    // batty monsters ('b')
+    case MONS_GIANT_BAT:
+        return TILEP_MONS_GIANT_BAT;
+    case MONS_BUTTERFLY:
+        return TILEP_MONS_BUTTERFLY + ((mon->colour)%7);
+
+    // centaurs ('c')
+    case MONS_CENTAUR:
+        return TILEP_MONS_CENTAUR + _bow_offset(mon);
+    case MONS_CENTAUR_WARRIOR:
+        return TILEP_MONS_CENTAUR_WARRIOR + _bow_offset(mon);
+    case MONS_YAKTAUR:
+        return TILEP_MONS_YAKTAUR + _bow_offset(mon);
+    case MONS_YAKTAUR_CAPTAIN:
+        return TILEP_MONS_YAKTAUR_CAPTAIN + _bow_offset(mon);
+
+    // elves ('e')
+    case MONS_ELF:
+        return TILEP_MONS_ELF;
     case MONS_DEEP_ELF_SOLDIER:
         return TILEP_MONS_DEEP_ELF_SOLDIER;
     case MONS_DEEP_ELF_FIGHTER:
@@ -621,6 +197,356 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_DEEP_ELF_SORCERER;
     case MONS_DEEP_ELF_DEATH_MAGE:
         return TILEP_MONS_DEEP_ELF_DEATH_MAGE;
+    case MONS_DEEP_ELF_BLADEMASTER:
+        return TILEP_MONS_DEEP_ELF_BLADEMASTER;
+    case MONS_DEEP_ELF_MASTER_ARCHER:
+        return TILEP_MONS_DEEP_ELF_MASTER_ARCHER;
+
+    // fungi ('f')
+    case MONS_FUNGUS:
+        return TILEP_MONS_FUNGUS;
+    case MONS_WANDERING_MUSHROOM:
+        return TILEP_MONS_WANDERING_MUSHROOM;
+
+    // goblins ('g')
+    case MONS_GOBLIN:
+        return TILEP_MONS_GOBLIN;
+    case MONS_HOBGOBLIN:
+        return TILEP_MONS_HOBGOBLIN;
+    case MONS_GNOLL:
+        return TILEP_MONS_GNOLL;
+    case MONS_BOGGART:
+        return TILEP_MONS_BOGGART;
+
+    // hounds ('h')
+    case MONS_JACKAL:
+        return TILEP_MONS_JACKAL;
+    case MONS_HOUND:
+        return TILEP_MONS_HOUND;
+    case MONS_WARG:
+        return TILEP_MONS_WARG;
+    case MONS_WOLF:
+        return TILEP_MONS_WOLF;
+    case MONS_WAR_DOG:
+        return TILEP_MONS_WAR_DOG;
+    case MONS_HOG:
+        return TILEP_MONS_HOG;
+    case MONS_HELL_HOUND:
+        return TILEP_MONS_HELL_HOUND;
+    case MONS_HELL_HOG:
+        return TILEP_MONS_HELL_HOG;
+
+    // slugs ('j')
+    case MONS_ELEPHANT_SLUG:
+        return TILEP_MONS_ELEPHANT_SLUG;
+    case MONS_GIANT_SLUG:
+        return TILEP_MONS_GIANT_SLUG;
+    case MONS_GIANT_SNAIL:
+        return TILEP_MONS_GIANT_SNAIL;
+
+    // killer bees ('k')
+    case MONS_KILLER_BEE:
+        return TILEP_MONS_KILLER_BEE;
+    case MONS_BUMBLEBEE:
+        return TILEP_MONS_BUMBLEBEE;
+
+    // lizards ('l')
+    case MONS_GIANT_NEWT:
+        return TILEP_MONS_GIANT_NEWT;
+    case MONS_GIANT_GECKO:
+        return TILEP_MONS_GIANT_GECKO;
+    case MONS_GIANT_IGUANA:
+        return TILEP_MONS_GIANT_IGUANA;
+    case MONS_GIANT_LIZARD:
+        return TILEP_MONS_GIANT_LIZARD;
+    case MONS_GILA_MONSTER:
+        return TILEP_MONS_GILA_MONSTER;
+    case MONS_KOMODO_DRAGON:
+        return TILEP_MONS_KOMODO_DRAGON;
+
+    // drakes (also 'l', but dragon type)
+    case MONS_SWAMP_DRAKE:
+        return TILEP_MONS_SWAMP_DRAKE;
+    case MONS_FIREDRAKE:
+        return TILEP_MONS_FIREDRAKE;
+    case MONS_LINDWURM:
+        return TILEP_MONS_LINDWURM;
+    case MONS_DEATH_DRAKE:
+        return TILEP_MONS_DEATH_DRAKE;
+
+    // merfolk ('m')
+    case MONS_MERFOLK:
+        if (in_water)
+            return TILEP_MONS_MERFOLK_FIGHTER_WATER;
+        else
+            return TILEP_MONS_MERFOLK_FIGHTER;
+    case MONS_MERMAID:
+        if (in_water)
+            return TILEP_MONS_MERMAID_WATER;
+        else
+            return TILEP_MONS_MERMAID;
+    case MONS_SIREN:
+        if (in_water)
+            return TILEP_MONS_SIREN_WATER;
+        else
+            return TILEP_MONS_SIREN;
+
+    // rotting monsters ('n')
+    case MONS_NECROPHAGE:
+        return TILEP_MONS_NECROPHAGE;
+    case MONS_GHOUL:
+        return TILEP_MONS_GHOUL;
+    case MONS_ROTTING_HULK:
+        return TILEP_MONS_ROTTING_HULK;
+
+    // orcs ('o')
+    case MONS_ORC:
+        return TILEP_MONS_ORC;
+    case MONS_ORC_WIZARD:
+        return TILEP_MONS_ORC_WIZARD;
+    case MONS_ORC_PRIEST:
+        return TILEP_MONS_ORC_PRIEST;
+    case MONS_ORC_WARRIOR:
+        return TILEP_MONS_ORC_WARRIOR;
+    case MONS_ORC_KNIGHT:
+        return TILEP_MONS_ORC_KNIGHT;
+    case MONS_ORC_WARLORD:
+        return TILEP_MONS_ORC_WARLORD;
+    case MONS_ORC_SORCERER:
+        return TILEP_MONS_ORC_SORCERER;
+    case MONS_ORC_HIGH_PRIEST:
+        return TILEP_MONS_ORC_HIGH_PRIEST;
+
+    // phantoms and ghosts ('p')
+    case MONS_PHANTOM:
+        return TILEP_MONS_PHANTOM;
+    case MONS_HUNGRY_GHOST:
+        return TILEP_MONS_HUNGRY_GHOST;
+    case MONS_FLAYED_GHOST:
+        return TILEP_MONS_FLAYED_GHOST;
+    case MONS_PLAYER_GHOST:
+        return TILEP_MONS_PLAYER_GHOST;
+    case MONS_INSUBSTANTIAL_WISP:
+        return TILEP_MONS_INSUBSTANTIAL_WISP;
+
+    // rodents ('r')
+    case MONS_RAT:
+        return TILEP_MONS_RAT;
+    case MONS_QUOKKA:
+        return TILEP_MONS_QUOKKA;
+    case MONS_GREY_RAT:
+        return TILEP_MONS_GREY_RAT;
+    case MONS_GREEN_RAT:
+        return TILEP_MONS_GREEN_RAT;
+    case MONS_ORANGE_RAT:
+        return TILEP_MONS_ORANGE_RAT;
+
+    // spiders ('s')
+    case MONS_GIANT_MITE:
+        return TILEP_MONS_GIANT_MITE;
+    case MONS_GIANT_CENTIPEDE:
+        return TILEP_MONS_GIANT_CENTIPEDE;
+    case MONS_SCORPION:
+        return TILEP_MONS_SCORPION;
+    case MONS_WOLF_SPIDER:
+        return TILEP_MONS_WOLF_SPIDER;
+    case MONS_TRAPDOOR_SPIDER:
+        return TILEP_MONS_TRAPDOOR_SPIDER;
+    case MONS_REDBACK:
+        return TILEP_MONS_REDBACK;
+
+    // minotaur ('t')
+    case MONS_MINOTAUR:
+        return TILEP_MONS_MINOTAUR;
+
+    // ugly things ('u')
+    case MONS_UGLY_THING :
+        return TILEP_MONS_UGLY_THING ;
+    case MONS_VERY_UGLY_THING:
+        return TILEP_MONS_VERY_UGLY_THING;
+
+    // vortices ('v')
+    case MONS_FIRE_VORTEX:
+        return TILEP_MONS_FIRE_VORTEX;
+    case MONS_SPATIAL_VORTEX:
+        return TILEP_MONS_SPATIAL_VORTEX;
+
+    // elementals (different symbols)
+    case MONS_AIR_ELEMENTAL:
+        return TILEP_MONS_AIR_ELEMENTAL;
+    case MONS_EARTH_ELEMENTAL:
+        return TILEP_MONS_EARTH_ELEMENTAL;
+    case MONS_FIRE_ELEMENTAL:
+        return TILEP_MONS_FIRE_ELEMENTAL;
+    case MONS_WATER_ELEMENTAL:
+        return TILEP_MONS_WATER_ELEMENTAL;
+
+    // worms and larvae ('w')
+    case MONS_KILLER_BEE_LARVA:
+        return TILEP_MONS_KILLER_BEE_LARVA;
+    case MONS_WORM:
+        return TILEP_MONS_WORM;
+    case MONS_ANT_LARVA:
+        return TILEP_MONS_ANT_LARVA;
+    case MONS_BRAIN_WORM:
+        return TILEP_MONS_BRAIN_WORM;
+    case MONS_SWAMP_WORM:
+        return TILEP_MONS_SWAMP_WORM;
+    case MONS_SPINY_WORM:
+        return TILEP_MONS_SPINY_WORM;
+
+    // small abominations ('x')
+    case MONS_UNSEEN_HORROR:
+        return TILEP_MONS_UNSEEN_HORROR;
+    case MONS_ABOMINATION_SMALL:
+        return TILEP_MONS_ABOMINATION_SMALL;
+
+    // flying insects ('y')
+    case MONS_YELLOW_WASP:
+        return TILEP_MONS_YELLOW_WASP;
+    case MONS_GIANT_MOSQUITO:
+        return TILEP_MONS_GIANT_MOSQUITO;
+    case MONS_GIANT_BLOWFLY:
+        return TILEP_MONS_GIANT_BLOWFLY;
+    case MONS_RED_WASP:
+        return TILEP_MONS_RED_WASP;
+    case MONS_MOTH_OF_WRATH:
+        return TILEP_MONS_MOTH_OF_WRATH;
+
+    // small zombies etc. ('z')
+    case MONS_ZOMBIE_SMALL:
+        return TILEP_MONS_ZOMBIE_SMALL;
+    case MONS_SIMULACRUM_SMALL:
+        return TILEP_MONS_SIMULACRUM_SMALL;
+    case MONS_SKELETON_SMALL:
+        return TILEP_MONS_SKELETON_SMALL;
+    case MONS_SKELETAL_WARRIOR:
+        return TILEP_MONS_SKELETAL_WARRIOR;
+    case MONS_FLYING_SKULL:
+        return TILEP_MONS_FLYING_SKULL;
+    case MONS_FLAMING_CORPSE:
+        return TILEP_MONS_FLAMING_CORPSE;
+    case MONS_CURSE_SKULL:
+        return TILEP_MONS_CURSE_SKULL;
+    case MONS_CURSE_TOE:
+        return TILEP_MONS_CURSE_TOE;
+
+    // angelic beings ('A')
+    case MONS_ANGEL:
+        return TILEP_MONS_ANGEL;
+    case MONS_DAEVA:
+        return TILEP_MONS_DAEVA;
+
+    // beetles ('B')
+    case MONS_GIANT_BEETLE:
+        return TILEP_MONS_GIANT_BEETLE;
+    case MONS_BOULDER_BEETLE:
+        return TILEP_MONS_BOULDER_BEETLE;
+    case MONS_BORING_BEETLE:
+        return TILEP_MONS_BORING_BEETLE;
+
+    // cyclops and giants ('C')
+    case MONS_HILL_GIANT:
+        return TILEP_MONS_HILL_GIANT;
+    case MONS_ETTIN:
+        return TILEP_MONS_ETTIN;
+    case MONS_CYCLOPS:
+        return TILEP_MONS_CYCLOPS;
+    case MONS_FIRE_GIANT:
+        return TILEP_MONS_FIRE_GIANT;
+    case MONS_FROST_GIANT:
+        return TILEP_MONS_FROST_GIANT;
+    case MONS_STONE_GIANT:
+        return TILEP_MONS_STONE_GIANT;
+    case MONS_TITAN:
+        return TILEP_MONS_TITAN;
+
+    // dragons ('D')
+    case MONS_WYVERN:
+        return TILEP_MONS_WYVERN;
+    case MONS_DRAGON:
+        return TILEP_MONS_DRAGON;
+    case MONS_HYDRA:
+        // Number of heads
+        return TILEP_MONS_HYDRA + std::min((int)mon->number, 7) - 1;
+    case MONS_ICE_DRAGON:
+        return TILEP_MONS_ICE_DRAGON;
+    case MONS_STEAM_DRAGON:
+        return TILEP_MONS_STEAM_DRAGON;
+    case MONS_SWAMP_DRAGON:
+        return TILEP_MONS_SWAMP_DRAGON;
+    case MONS_MOTTLED_DRAGON:
+        return TILEP_MONS_MOTTLED_DRAGON;
+    case MONS_QUICKSILVER_DRAGON:
+        return TILEP_MONS_QUICKSILVER_DRAGON;
+    case MONS_IRON_DRAGON:
+        return TILEP_MONS_IRON_DRAGON;
+    case MONS_STORM_DRAGON:
+        return TILEP_MONS_STORM_DRAGON;
+    case MONS_GOLDEN_DRAGON:
+        return TILEP_MONS_GOLDEN_DRAGON;
+    case MONS_SHADOW_DRAGON:
+        return TILEP_MONS_SHADOW_DRAGON;
+    case MONS_SKELETAL_DRAGON:
+        return TILEP_MONS_SKELETAL_DRAGON;
+    case MONS_SERPENT_OF_HELL:
+        return TILEP_MONS_SERPENT_OF_HELL;
+
+    // efreet ('E')
+    case MONS_EFREET:
+        return TILEP_MONS_EFREET;
+
+    // frogs ('F')
+    case MONS_GIANT_FROG:
+        return TILEP_MONS_GIANT_FROG;
+    case MONS_GIANT_BROWN_FROG:
+        return TILEP_MONS_GIANT_BROWN_FROG;
+    case MONS_SPINY_FROG:
+        return TILEP_MONS_SPINY_FROG;
+    case MONS_BLINK_FROG:
+        return TILEP_MONS_BLINK_FROG;
+
+    // eyes and spores ('G')
+    case MONS_GIANT_SPORE:
+        return TILEP_MONS_GIANT_SPORE;
+    case MONS_GIANT_EYEBALL:
+        return TILEP_MONS_GIANT_EYEBALL;
+    case MONS_EYE_OF_DRAINING:
+        return TILEP_MONS_EYE_OF_DRAINING;
+    case MONS_GIANT_ORANGE_BRAIN:
+        return TILEP_MONS_GIANT_ORANGE_BRAIN;
+    case MONS_GREAT_ORB_OF_EYES:
+        return TILEP_MONS_GREAT_ORB_OF_EYES;
+    case MONS_SHINING_EYE:
+        return TILEP_MONS_SHINING_EYE;
+    case MONS_EYE_OF_DEVASTATION:
+        return TILEP_MONS_EYE_OF_DEVASTATION;
+
+    // half-breeds ('H')
+    case MONS_HIPPOGRIFF:
+        return TILEP_MONS_HIPPOGRIFF;
+    case MONS_MANTICORE:
+        return TILEP_MONS_MANTICORE;
+    case MONS_GRIFFON:
+        return TILEP_MONS_GRIFFON;
+    case MONS_SPHINX:
+        return TILEP_MONS_SPHINX;
+
+    // ice beast ('I')
+    case MONS_ICE_BEAST:
+        return TILEP_MONS_ICE_BEAST;
+
+    // jellies ('J')
+    case MONS_OOZE:
+        return TILEP_MONS_OOZE;
+    case MONS_JELLY:
+        return TILEP_MONS_JELLY;
+    case MONS_SLIME_CREATURE:
+        return TILEP_MONS_SLIME_CREATURE;
+    case MONS_PULSATING_LUMP:
+        return TILEP_MONS_PULSATING_LUMP;
+    case MONS_GIANT_AMOEBA:
+        return TILEP_MONS_GIANT_AMOEBA;
     case MONS_BROWN_OOZE:
         return TILEP_MONS_BROWN_OOZE;
     case MONS_AZURE_JELLY:
@@ -631,12 +557,374 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_ACID_BLOB;
     case MONS_ROYAL_JELLY:
         return TILEP_MONS_ROYAL_JELLY;
+
+    // kobolds ('K')
+    case MONS_KOBOLD:
+        return TILEP_MONS_KOBOLD;
+    case MONS_BIG_KOBOLD:
+        return TILEP_MONS_BIG_KOBOLD;
+    case MONS_KOBOLD_DEMONOLOGIST:
+        return TILEP_MONS_KOBOLD_DEMONOLOGIST;
+
+    // liches ('L')
+    case MONS_LICH:
+        return TILEP_MONS_LICH;
+    case MONS_ANCIENT_LICH:
+        return TILEP_MONS_ANCIENT_LICH;
+
+    // mummies ('M')
+    case MONS_MUMMY:
+        return TILEP_MONS_MUMMY;
+    case MONS_GUARDIAN_MUMMY:
+        return TILEP_MONS_GUARDIAN_MUMMY;
+    case MONS_GREATER_MUMMY:
+        return TILEP_MONS_GREATER_MUMMY;
+    case MONS_MUMMY_PRIEST:
+        return TILEP_MONS_MUMMY_PRIEST;
+
+    // nagas ('N')
+    case MONS_NAGA:
+        return TILEP_MONS_NAGA;
+    case MONS_GUARDIAN_NAGA:
+        return TILEP_MONS_GUARDIAN_NAGA;
+    case MONS_NAGA_MAGE:
+        return TILEP_MONS_NAGA_MAGE;
+    case MONS_NAGA_WARRIOR:
+        return TILEP_MONS_NAGA_WARRIOR;
+    case MONS_GREATER_NAGA:
+        return TILEP_MONS_GREATER_NAGA;
+
+    // ogres ('O')
+    case MONS_OGRE:
+        return TILEP_MONS_OGRE;
+    case MONS_TWO_HEADED_OGRE:
+        return TILEP_MONS_TWO_HEADED_OGRE;
+    case MONS_OGRE_MAGE:
+        return TILEP_MONS_OGRE_MAGE;
+
+    // plants ('P')
+    case MONS_PLANT:
+        return TILEP_MONS_PLANT;
+    case MONS_OKLOB_PLANT:
+        return TILEP_MONS_OKLOB_PLANT;
+
+    // queen insects ('Q')
+    case MONS_QUEEN_BEE:
+        return TILEP_MONS_QUEEN_BEE;
+    case MONS_QUEEN_ANT:
+        return TILEP_MONS_QUEEN_ANT;
+
+    // rakshasa ('R')
+    case MONS_RAKSHASA:
+        return TILEP_MONS_RAKSHASA;
+    case MONS_RAKSHASA_FAKE:
+        return TILEP_MONS_RAKSHASA_FAKE;
+
+    // snakes ('S')
+    case MONS_SMALL_SNAKE:
+        return TILEP_MONS_SMALL_SNAKE;
+    case MONS_SNAKE:
+        return TILEP_MONS_SNAKE;
+    case MONS_BROWN_SNAKE:
+        return TILEP_MONS_BROWN_SNAKE;
+    case MONS_BLACK_SNAKE:
+        return TILEP_MONS_BLACK_SNAKE;
+    case MONS_YELLOW_SNAKE:
+        return TILEP_MONS_YELLOW_SNAKE;
+    case MONS_GREY_SNAKE:
+        return TILEP_MONS_GREY_SNAKE;
+
+    // trolls ('T')
+    case MONS_TROLL:
+        return TILEP_MONS_TROLL;
+    case MONS_ROCK_TROLL:
+        return TILEP_MONS_ROCK_TROLL;
+    case MONS_IRON_TROLL:
+        return TILEP_MONS_IRON_TROLL;
+    case MONS_DEEP_TROLL:
+        return TILEP_MONS_DEEP_TROLL;
+
+    // bears ('U')
+    case MONS_BEAR:
+        return TILEP_MONS_BEAR;
+    case MONS_GRIZZLY_BEAR:
+        return TILEP_MONS_GRIZZLY_BEAR;
+    case MONS_POLAR_BEAR:
+        return TILEP_MONS_POLAR_BEAR;
+    case MONS_BLACK_BEAR:
+        return TILEP_MONS_BLACK_BEAR;
+
+    // vampires ('V')
+    case MONS_VAMPIRE:
+        return TILEP_MONS_VAMPIRE;
+    case MONS_VAMPIRE_KNIGHT:
+        return TILEP_MONS_VAMPIRE_KNIGHT;
+    case MONS_VAMPIRE_MAGE:
+        return TILEP_MONS_VAMPIRE_MAGE;
+
+    // wraiths ('W')
+    case MONS_WIGHT:
+        return TILEP_MONS_WIGHT;
+    case MONS_WRAITH:
+        return TILEP_MONS_WRAITH;
+    case MONS_SHADOW_WRAITH:
+        return TILEP_MONS_SHADOW_WRAITH;
+    case MONS_FREEZING_WRAITH:
+        return TILEP_MONS_FREEZING_WRAITH;
+    case MONS_SPECTRAL_WARRIOR:
+        return TILEP_MONS_SPECTRAL_WARRIOR;
+    case MONS_SPECTRAL_THING:
+        return TILEP_MONS_SPECTRAL_THING;
+
+    // large abominations ('X')
+    case MONS_ABOMINATION_LARGE:
+        return TILEP_MONS_ABOMINATION_LARGE + ((mon->colour)%7);
+    case MONS_TENTACLED_MONSTROSITY:
+        return TILEP_MONS_TENTACLED_MONSTROSITY;
+    case MONS_ORB_GUARDIAN:
+        return TILEP_MONS_ORB_GUARDIAN;
+
+    // yaks and sheep ('Y')
+    case MONS_SHEEP:
+        return TILEP_MONS_SHEEP;
+    case MONS_YAK:
+        return TILEP_MONS_YAK;
+    case MONS_DEATH_YAK:
+        return TILEP_MONS_DEATH_YAK;
+
+    // large zombies etc. ('Z')
+    case MONS_ZOMBIE_LARGE:
+        return TILEP_MONS_ZOMBIE_LARGE;
+    case MONS_SKELETON_LARGE:
+        return TILEP_MONS_SKELETON_LARGE;
+    case MONS_SIMULACRUM_LARGE:
+        return TILEP_MONS_SIMULACRUM_LARGE;
+
+    // water monsters
+    case MONS_BIG_FISH:
+        return TILEP_MONS_BIG_FISH;
+    case MONS_GIANT_GOLDFISH:
+        return TILEP_MONS_GIANT_GOLDFISH;
+    case MONS_ELECTRICAL_EEL:
+        return TILEP_MONS_ELECTRICAL_EEL;
+    case MONS_JELLYFISH:
+        return TILEP_MONS_JELLYFISH;
+
+    // lava monsters
+    case MONS_LAVA_WORM:
+        return TILEP_MONS_LAVA_WORM;
+    case MONS_LAVA_FISH:
+        return TILEP_MONS_LAVA_FISH;
+    case MONS_LAVA_SNAKE:
+        return TILEP_MONS_LAVA_SNAKE;
+    case MONS_SALAMANDER:
+        return TILEP_MONS_SALAMANDER;
+
+    // monsters moving through rock
+    case MONS_ROCK_WORM:
+        return TILEP_MONS_ROCK_WORM;
+
+    // humans ('@')
+    case MONS_HUMAN:
+        return TILEP_MONS_HUMAN;
+    case MONS_HELL_KNIGHT:
+        return TILEP_MONS_HELL_KNIGHT;
+    case MONS_NECROMANCER:
+        return TILEP_MONS_NECROMANCER;
+    case MONS_WIZARD:
+        return TILEP_MONS_WIZARD;
+    case MONS_VAULT_GUARD:
+        return TILEP_MONS_VAULT_GUARD;
+    case MONS_SHAPESHIFTER:
+        return TILEP_MONS_SHAPESHIFTER;
+    case MONS_GLOWING_SHAPESHIFTER:
+        return TILEP_MONS_GLOWING_SHAPESHIFTER;
+    case MONS_KILLER_KLOWN:
+        return TILEP_MONS_KILLER_KLOWN;
+
+    // mimics
+    case MONS_GOLD_MIMIC:
+    case MONS_WEAPON_MIMIC:
+    case MONS_ARMOUR_MIMIC:
+    case MONS_SCROLL_MIMIC:
+    case MONS_POTION_MIMIC:
+    {
+      // Use item tile
+      item_def  item;
+      get_mimic_item( mon, item );
+      return tileidx_item(item);
+    }
+
+    case MONS_DANCING_WEAPON:
+    {
+        // Use item tile
+        item_def item = mitm[mon->inv[MSLOT_WEAPON]];
+        return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
+    }
+
+    // '5' demons
+    case MONS_IMP:
+        return TILEP_MONS_IMP;
+    case MONS_QUASIT:
+        return TILEP_MONS_QUASIT;
+    case MONS_WHITE_IMP:
+        return TILEP_MONS_WHITE_IMP;
+    case MONS_LEMURE:
+        return TILEP_MONS_LEMURE;
+    case MONS_UFETUBUS:
+        return TILEP_MONS_UFETUBUS;
+    case MONS_MANES:
+        return TILEP_MONS_MANES;
+    case MONS_MIDGE:
+        return TILEP_MONS_MIDGE;
+    case MONS_SHADOW_IMP:
+        return TILEP_MONS_SHADOW_IMP;
+
+    // '4' demons
+    case MONS_RED_DEVIL:
+        return TILEP_MONS_RED_DEVIL;
+    case MONS_HAIRY_DEVIL:
+        return TILEP_MONS_HAIRY_DEVIL;
+    case MONS_ROTTING_DEVIL:
+        return TILEP_MONS_ROTTING_DEVIL;
+    case MONS_BEAST:
+        return TILEP_MONS_BEAST;
+    case MONS_SMOKE_DEMON:
+        return TILEP_MONS_SMOKE_DEMON;
+
+    // '3' demons
+    case MONS_HELLION:
+        return TILEP_MONS_HELLION;
+    case MONS_TORMENTOR:
+        return TILEP_MONS_TORMENTOR;
+    case MONS_BLUE_DEVIL:
+        return TILEP_MONS_BLUE_DEVIL;
+    case MONS_IRON_DEVIL:
+        return TILEP_MONS_IRON_DEVIL;
+    case MONS_NEQOXEC:
+        return TILEP_MONS_NEQOXEC;
+    case MONS_ORANGE_DEMON:
+        return TILEP_MONS_ORANGE_DEMON;
+    case MONS_HELLWING:
+        return TILEP_MONS_HELLWING;
+    case MONS_YNOXINUL:
+        return TILEP_MONS_YNOXINUL;
+    case MONS_DEMONIC_CRAWLER:
+        return TILEP_MONS_DEMONIC_CRAWLER;
+    case MONS_SHADOW_DEMON:
+        return TILEP_MONS_SHADOW_DEMON;
+    case MONS_CHAOS_SPAWN:
+        return TILEP_MONS_CHAOS_SPAWN;
+
+    // '2' demon
+    case MONS_SUN_DEMON:
+        return TILEP_MONS_SUN_DEMON;
+    case MONS_REAPER:
+        return TILEP_MONS_REAPER;
+    case MONS_SOUL_EATER:
+        return TILEP_MONS_SOUL_EATER;
+    case MONS_ICE_DEVIL:
+        return TILEP_MONS_ICE_DEVIL;
+    case MONS_LOROCYPROCA:
+        return TILEP_MONS_LOROCYPROCA;
+
+    // '1' demons
+    case MONS_FIEND:
+        return TILEP_MONS_FIEND;
+    case MONS_ICE_FIEND:
+        return TILEP_MONS_ICE_FIEND;
+    case MONS_SHADOW_FIEND:
+        return TILEP_MONS_SHADOW_FIEND;
+    case MONS_PIT_FIEND:
+        return TILEP_MONS_PIT_FIEND;
+    case MONS_EXECUTIONER:
+        return TILEP_MONS_EXECUTIONER;
+    case MONS_GREEN_DEATH:
+        return TILEP_MONS_GREEN_DEATH;
+    case MONS_BLUE_DEATH:
+        return TILEP_MONS_BLUE_DEATH;
+    case MONS_BALRUG:
+        return TILEP_MONS_BALRUG;
+    case MONS_CACODEMON:
+        return TILEP_MONS_CACODEMON;
+
+    // non-living creatures
+    // golems ('8')
+    case MONS_CLAY_GOLEM:
+        return TILEP_MONS_CLAY_GOLEM;
+    case MONS_WOOD_GOLEM:
+        return TILEP_MONS_WOOD_GOLEM;
+    case MONS_IRON_GOLEM:
+        return TILEP_MONS_IRON_GOLEM;
+    case MONS_STONE_GOLEM:
+        return TILEP_MONS_STONE_GOLEM;
+    case MONS_CRYSTAL_GOLEM:
+        return TILEP_MONS_CRYSTAL_GOLEM;
+    case MONS_TOENAIL_GOLEM:
+        return TILEP_MONS_TOENAIL_GOLEM;
+    case MONS_ELECTRIC_GOLEM:
+        return TILEP_MONS_ELECTRIC_GOLEM;
+    // statues (also '8')
+    case MONS_ICE_STATUE:
+        return TILEP_ICE_STATUE;
+    case MONS_SILVER_STATUE:
+        return TILEP_SILVER_STATUE;
+    case MONS_ORANGE_STATUE:
+        return TILEP_ORANGE_CRYSTAL_STATUE;
+
+    // gargoyles ('9')
+    case MONS_GARGOYLE:
+        return TILEP_MONS_GARGOYLE;
+    case MONS_METAL_GARGOYLE:
+        return TILEP_MONS_METAL_GARGOYLE;
+    case MONS_MOLTEN_GARGOYLE:
+        return TILEP_MONS_MOLTEN_GARGOYLE;
+
+    // major demons ('&')
+    case MONS_PANDEMONIUM_DEMON:
+        return TILEP_MONS_PANDEMONIUM_DEMON;
+
+    // ball lightning / orb of fire ('*')
+    case MONS_BALL_LIGHTNING:
+        return TILEP_MONS_BALL_LIGHTNING;
+    case MONS_ORB_OF_FIRE:
+        return TILEP_MONS_ORB_OF_FIRE;
+
+    // other symbols
+    case MONS_VAPOUR:
+        return TILEP_MONS_VAPOUR;
+    case MONS_SHADOW:
+        return TILEP_MONS_SHADOW;
+    case MONS_DEATH_COB:
+        return TILEP_MONS_DEATH_COB;
+
+    // non-human uniques
+    case MONS_IJYB:
+        return TILEP_MONS_IJYB;
+    case MONS_URUG:
+        return TILEP_MONS_URUG;
+    case MONS_EROLCHA:
+        return TILEP_MONS_EROLCHA;
+    case MONS_SNORG:
+        return TILEP_MONS_SNORG;
+    case MONS_POLYPHEMUS:
+        return TILEP_MONS_POLYPHEMUS;
+    case MONS_ANTAEUS:
+        return TILEP_MONS_ANTAEUS;
+    case MONS_TIAMAT:
+        return TILEP_MONS_TIAMAT;
+    case MONS_XTAHUA:
+        return TILEP_MONS_XTAHUA;
+    case MONS_BORIS:
+        return TILEP_MONS_BORIS;
+    case MONS_MURRAY:
+        return TILEP_MONS_MURRAY;
+
+    // human uniques ('@')
     case MONS_TERENCE:
         return TILEP_MONS_TERENCE;
     case MONS_JESSICA:
         return TILEP_MONS_JESSICA;
-    case MONS_IJYB:
-        return TILEP_MONS_IJYB;
     case MONS_SIGMUND:
         return TILEP_MONS_SIGMUND;
     case MONS_BLORK_THE_ORC:
@@ -645,18 +933,12 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_EDMUND;
     case MONS_PSYCHE:
         return TILEP_MONS_PSYCHE;
-    case MONS_EROLCHA:
-        return TILEP_MONS_EROLCHA;
     case MONS_DONALD:
         return TILEP_MONS_DONALD;
-    case MONS_URUG:
-        return TILEP_MONS_URUG;
     case MONS_MICHAEL:
         return TILEP_MONS_MICHAEL;
     case MONS_JOSEPH:
         return TILEP_MONS_JOSEPH;
-    case MONS_SNORG:
-        return TILEP_MONS_SNORG;
     case MONS_ERICA:
         return TILEP_MONS_ERICA;
     case MONS_JOSEPHINE:
@@ -683,176 +965,30 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_WAYNE;
     case MONS_DUANE:
         return TILEP_MONS_DUANE;
-    case MONS_XTAHUA:
-        return TILEP_MONS_XTAHUA;
     case MONS_NORRIS:
         return TILEP_MONS_NORRIS;
     case MONS_FREDERICK:
         return TILEP_MONS_FREDERICK;
     case MONS_MARGERY:
         return TILEP_MONS_MARGERY;
-    case MONS_POLYPHEMUS:
-        return TILEP_MONS_POLYPHEMUS;
-    case MONS_BORIS:
-        return TILEP_MONS_BORIS;
-    // Draconians handled above
-    case MONS_MURRAY:
-        return TILEP_MONS_MURRAY;
-    case MONS_TIAMAT:
-        return TILEP_MONS_TIAMAT;
-    case MONS_DEEP_ELF_BLADEMASTER:
-        return TILEP_MONS_DEEP_ELF_BLADEMASTER;
-    case MONS_DEEP_ELF_MASTER_ARCHER:
-        return TILEP_MONS_DEEP_ELF_MASTER_ARCHER;
 
+    // unique major demons ('&')
+    case MONS_MNOLEG:
+        return TILEP_MONS_MNOLEG;
+    case MONS_LOM_LOBON:
+        return TILEP_MONS_LOM_LOBON;
+    case MONS_CEREBOV:
+        return TILEP_MONS_CEREBOV;
+    case MONS_GLOORX_VLOQ:
+        return TILEP_MONS_GLOORX_VLOQ;
     case MONS_GERYON:
         return TILEP_MONS_GERYON;
     case MONS_DISPATER:
         return TILEP_MONS_DISPATER;
     case MONS_ASMODEUS:
         return TILEP_MONS_ASMODEUS;
-    case MONS_ANTAEUS:
-        return TILEP_MONS_ANTAEUS;
     case MONS_ERESHKIGAL:
         return TILEP_MONS_ERESHKIGAL;
-
-    case MONS_ANCIENT_LICH:
-        return TILEP_MONS_ANCIENT_LICH;
-    case MONS_OOZE:
-        return TILEP_MONS_OOZE;
-    case MONS_VAULT_GUARD:
-        return TILEP_MONS_VAULT_GUARD;
-    case MONS_CURSE_SKULL:
-        return TILEP_MONS_CURSE_SKULL;
-    case MONS_VAMPIRE_KNIGHT:
-        return TILEP_MONS_VAMPIRE_KNIGHT;
-    case MONS_VAMPIRE_MAGE:
-        return TILEP_MONS_VAMPIRE_MAGE;
-    case MONS_SHINING_EYE:
-        return TILEP_MONS_SHINING_EYE;
-    case MONS_ORB_GUARDIAN:
-        return TILEP_MONS_ORB_GUARDIAN;
-    case MONS_DAEVA:
-        return TILEP_MONS_DAEVA;
-    case MONS_SPECTRAL_THING:
-        return TILEP_MONS_SPECTRAL_THING;
-    case MONS_GREATER_NAGA:
-        return TILEP_MONS_GREATER_NAGA;
-    case MONS_SKELETAL_DRAGON:
-        return TILEP_MONS_SKELETAL_DRAGON;
-    case MONS_TENTACLED_MONSTROSITY:
-        return TILEP_MONS_TENTACLED_MONSTROSITY;
-    case MONS_SPHINX:
-        return TILEP_MONS_SPHINX;
-    case MONS_ROTTING_HULK:
-        return TILEP_MONS_ROTTING_HULK;
-    case MONS_GUARDIAN_MUMMY:
-        return TILEP_MONS_GUARDIAN_MUMMY;
-    case MONS_GREATER_MUMMY:
-        return TILEP_MONS_GREATER_MUMMY;
-    case MONS_MUMMY_PRIEST:
-        return TILEP_MONS_MUMMY_PRIEST;
-    case MONS_CENTAUR_WARRIOR:
-        return TILEP_MONS_CENTAUR_WARRIOR + _bow_offset(mon);
-    case MONS_YAKTAUR_CAPTAIN:
-        return TILEP_MONS_YAKTAUR_CAPTAIN + _bow_offset(mon);
-    case MONS_KILLER_KLOWN:
-        return TILEP_MONS_KILLER_KLOWN;
-    case MONS_ELECTRIC_GOLEM:
-        return TILEP_MONS_ELECTRIC_GOLEM;
-    case MONS_BALL_LIGHTNING:
-        return TILEP_MONS_BALL_LIGHTNING;
-    case MONS_ORB_OF_FIRE:
-        return TILEP_MONS_ORB_OF_FIRE;
-    case MONS_QUOKKA:
-        return TILEP_MONS_QUOKKA;
-    case MONS_EYE_OF_DEVASTATION:
-        return TILEP_MONS_EYE_OF_DEVASTATION;
-    case MONS_MOTH_OF_WRATH:
-        return TILEP_MONS_MOTH_OF_WRATH;
-    case MONS_DEATH_COB:
-        return TILEP_MONS_DEATH_COB;
-    case MONS_CURSE_TOE:
-        return TILEP_MONS_CURSE_TOE;
-
-    case MONS_GOLD_MIMIC:
-    case MONS_WEAPON_MIMIC:
-    case MONS_ARMOUR_MIMIC:
-    case MONS_SCROLL_MIMIC:
-    case MONS_POTION_MIMIC:
-    {
-      // Use item tile
-      item_def  item;
-      get_mimic_item( mon, item );
-      return tileidx_item(item);
-    }
-
-    case MONS_HELL_HOG:
-        return TILEP_MONS_HELL_HOG;
-    case MONS_SERPENT_OF_HELL:
-        return TILEP_MONS_SERPENT_OF_HELL;
-    case MONS_BOGGART:
-        return TILEP_MONS_BOGGART;
-    case MONS_QUICKSILVER_DRAGON:
-        return TILEP_MONS_QUICKSILVER_DRAGON;
-    case MONS_IRON_DRAGON:
-        return TILEP_MONS_IRON_DRAGON;
-    case MONS_SKELETAL_WARRIOR:
-        return TILEP_MONS_SKELETAL_WARRIOR;
-    case MONS_PLAYER_GHOST:
-        return TILEP_MONS_PLAYER_GHOST;
-    case MONS_PANDEMONIUM_DEMON:
-        return TILEP_MONS_PANDEMONIUM_DEMON;
-    case MONS_GIANT_NEWT:
-        return TILEP_MONS_GIANT_NEWT;
-    case MONS_GIANT_GECKO:
-        return TILEP_MONS_GIANT_GECKO;
-    case MONS_GIANT_IGUANA:
-        return TILEP_MONS_GIANT_IGUANA;
-    case MONS_GILA_MONSTER:
-        return TILEP_MONS_GILA_MONSTER;
-    case MONS_KOMODO_DRAGON:
-        return TILEP_MONS_KOMODO_DRAGON;
-    case MONS_LAVA_WORM:
-        return TILEP_MONS_LAVA_WORM;
-    case MONS_LAVA_FISH:
-        return TILEP_MONS_LAVA_FISH;
-    case MONS_LAVA_SNAKE:
-        return TILEP_MONS_LAVA_SNAKE;
-    case MONS_SALAMANDER:
-        return TILEP_MONS_SALAMANDER;
-    case MONS_BIG_FISH:
-        return TILEP_MONS_BIG_FISH;
-    case MONS_GIANT_GOLDFISH:
-        return TILEP_MONS_GIANT_GOLDFISH;
-    case MONS_ELECTRICAL_EEL:
-        return TILEP_MONS_ELECTRICAL_EEL;
-    case MONS_JELLYFISH:
-        return TILEP_MONS_JELLYFISH;
-    case MONS_WATER_ELEMENTAL:
-        return TILEP_MONS_WATER_ELEMENTAL;
-    case MONS_SWAMP_WORM:
-        return TILEP_MONS_SWAMP_WORM;
-    case MONS_ROCK_WORM:
-        return TILEP_MONS_ROCK_WORM;
-    case MONS_ORANGE_STATUE:
-        return TILEP_ORANGE_CRYSTAL_STATUE;
-    case MONS_SILVER_STATUE:
-        return TILEP_SILVER_STATUE;
-    case MONS_ICE_STATUE:
-        return TILEP_ICE_STATUE;
-    case MONS_DEATH_DRAKE:
-        return TILEP_MONS_DEATH_DRAKE;
-    case MONS_MERFOLK:
-        if (in_water)
-            return TILEP_MONS_MERFOLK_FIGHTER_WATER;
-        else
-            return TILEP_MONS_MERFOLK_FIGHTER;
-    case MONS_MERMAID:
-        if (in_water)
-            return TILEP_MONS_MERMAID_WATER;
-        else
-            return TILEP_MONS_MERMAID;
     }
 
     return TILE_ERROR;

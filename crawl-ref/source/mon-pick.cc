@@ -2049,6 +2049,7 @@ int mons_shoals_level(int mcls)
         mlev++;
         break;
 
+    case MONS_SIREN:
     case MONS_YAKTAUR:
         mlev += 2;
         break;
@@ -2088,6 +2089,7 @@ int mons_shoals_rare(int mcls)
     case MONS_MERMAID:
         return 40;
 
+    case MONS_SIREN:
     case MONS_HIPPOGRIFF:
     case MONS_GIANT_BAT:
     case MONS_BUTTERFLY:
@@ -2244,6 +2246,7 @@ int mons_swamp_rare(int mcls)
     case MONS_NECROPHAGE:
         return 12;
 
+    case MONS_SIREN:
     case MONS_BLINK_FROG:
     case MONS_GIANT_AMOEBA:
     case MONS_GIANT_GECKO:

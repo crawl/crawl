@@ -1,3 +1,5 @@
+dc-misc/error MONS_PROGRAM_BUG
+
 %sdir dc-mon
 %rim 0
 shadow MONS_SHADOW /*' '*/
@@ -51,12 +53,14 @@ orange_demon MONS_ORANGE_DEMON /*'3'*/
 shadow_demon MONS_SHADOW_DEMON /*'3'*/
 tormentor MONS_TORMENTOR /*'3'*/
 ynoxinul MONS_YNOXINUL /*'3'*/
+chaos_spawn MONS_CHAOS_SPAWN /*'3'*/
 beast MONS_BEAST /*'4'*/
 hairy_devil MONS_HAIRY_DEVIL /*'4'*/
 red_devil MONS_RED_DEVIL /*'4'*/
 rotting_devil MONS_ROTTING_DEVIL /*'4'*/
 smoke_demon MONS_SMOKE_DEMON /*'4'*/
 imp MONS_IMP /*'5'*/
+quasit MONS_QUASIT /*'5'*/
 lemure MONS_LEMURE /*'5'*/
 manes MONS_MANES /*'5'*/
 midge MONS_MIDGE /*'5'*/
@@ -127,7 +131,6 @@ daeva MONS_DAEVA /*'A'*/
 boring_beetle MONS_BORING_BEETLE /*'B'*/
 boulder_beetle MONS_BOULDER_BEETLE /*'B'*/
 giant_beetle MONS_GIANT_BEETLE /*'B'*/
-program_bug MONS_PROGRAM_BUG /*'B'*/
 
 ## Giants
 %sdir dc-mon/unique
@@ -408,8 +411,6 @@ phantom MONS_PHANTOM /*'p'*/
 ghost MONS_PLAYER_GHOST /*'p'*/
 %rim 1
 
-quasit MONS_QUASIT /*'q'*/
-
 green_rat MONS_GREEN_RAT /*'r'*/
 grey_rat MONS_GREY_RAT /*'r'*/
 orange_rat MONS_ORANGE_RAT /*'r'*/
@@ -418,10 +419,10 @@ rat MONS_RAT /*'r'*/
 
 giant_centipede MONS_GIANT_CENTIPEDE /*'s'*/
 giant_mite MONS_GIANT_MITE /*'s'*/
-redback MONS_REDBACK /*'s'*/
 scorpion MONS_SCORPION /*'s'*/
 wolf_spider MONS_WOLF_SPIDER /*'s'*/
 trapdoor_spider MONS_TRAPDOOR_SPIDER /*'s'*/
+redback MONS_REDBACK /*'s'*/
 
 ugly_thing MONS_UGLY_THING /*'u'*/
 very_ugly_thing MONS_VERY_UGLY_THING /*'u'*/
@@ -437,6 +438,7 @@ lava_worm MONS_LAVA_WORM /*'w'*/
 spiny_worm MONS_SPINY_WORM /*'w'*/
 swamp_worm MONS_SWAMP_WORM /*'w'*/
 worm MONS_WORM /*'w'*/
+rock_worm MONS_ROCK_WORM /*'w' currently unused*/
 
 abomination_small MONS_ABOMINATION_SMALL /*'x'*/
 unseen_horror MONS_UNSEEN_HORROR /*'x'*/
@@ -465,7 +467,8 @@ merfolk_fighter MONS_MERFOLK_FIGHTER
 merfolk_fighter_water MONS_MERFOLK_FIGHTER_WATER
 mermaid MONS_MERMAID
 mermaid_water MONS_MERMAID_WATER
-rock_worm MONS_ROCK_WORM
+siren MONS_SIREN
+siren_water MONS_SIREN_WATER
 
 %sdir dc-dngn
 dngn_orange_crystal_statue ORANGE_CRYSTAL_STATUE

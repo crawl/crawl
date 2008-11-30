@@ -1635,7 +1635,6 @@ static bool _valid_morph( monsters *monster, int new_mclass )
 
         // Monsters still under development
         || new_mclass == MONS_ROCK_WORM
-        || new_mclass == MONS_TRAPDOOR_SPIDER
 
         // Other poly-unsuitable things.
         || new_mclass == MONS_ROYAL_JELLY
@@ -1652,11 +1651,8 @@ static bool _valid_morph( monsters *monster, int new_mclass )
     return (monster_habitable_grid(new_mclass, current_tile));
 }
 
-static bool _is_poly_power_unsuitable(
-    poly_power_type power,
-    int src_pow,
-    int tgt_pow,
-    int relax)
+static bool _is_poly_power_unsuitable( poly_power_type power,
+                                       int src_pow, int tgt_pow, int relax )
 {
     switch (power)
     {
@@ -1756,7 +1752,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     // player into a different type which can also behold the player,
     // the polymorph disrupts the beholding process.  Do this before
     // changing monster->type, since unbeholding can only happen while
-    // the monster is still a mermaid.
+    // the monster is still a mermaid/siren.
     update_beholders(monster, true);
 
     // the actual polymorphing:
@@ -2851,6 +2847,79 @@ static bool _pacified_leave_level(monsters *mon, std::vector<level_exit> e,
     return (false);
 }
 
+static int _count_water_neighbours(coord_def p)
+{
+    int deep_water_count = 0;
+    for (adjacent_iterator ai(p); ai; ++ai)
+        if (grd(p) == DNGN_DEEP_WATER)
+            deep_water_count++;
+
+    return (deep_water_count);
+}
+
+static bool _find_siren_water_target(monsters *mon)
+{
+    mpr("in _find_siren_water_target");
+    ASSERT(mon->type == MONS_SIREN);
+    if (mon->travel_target == MTRAV_SIREN && !one_chance_in(8))
+        return (true);
+
+    int water_count;
+    int best_water_count = 0;
+    coord_def best_target;
+    int best_num;
+
+    for (int k = 1; k <= LOS_RADIUS; k++)
+        for (int x = -1; x <= 1; x++)
+            for (int y = -1; y <= 1; y++)
+            {
+                if (x == 0 && y == 0)
+                    continue;
+
+                const coord_def c(mon->pos() + coord_def(k*x, k*y));
+                if (!grid_is_water(grd(c)))
+                    continue;
+
+                water_count = _count_water_neighbours(c);
+                if (water_count <= best_water_count)
+                    continue;
+
+                if (water_count > best_water_count)
+                {
+                    best_water_count = water_count;
+                    best_target = c;
+                    best_num = 1;
+                }
+                else // if (water_count == best_water_count)
+                {
+                    best_num++;
+                    if (one_chance_in(best_num))
+                        best_target = c;
+                }
+            }
+
+    if (best_water_count == 0)
+        return (false);
+
+    monster_pathfind mp;
+    if (mp.init_pathfind(mon, best_target))
+    {
+        mon->travel_path = mp.calc_waypoints();
+        if (!mon->travel_path.empty())
+        {
+            mprf("Found a path to (%d, %d) with %d surrounding water squares",
+                 best_target.x, best_target.y, best_water_count);
+
+            // Okay then, we found a path.  Let's use it!
+            mon->target = mon->travel_path[0];
+            mon->travel_target = MTRAV_SIREN;
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
 // Returns true if further handling neeeded.
 static bool _handle_monster_travelling(monsters *mon,
                                        const dungeon_feature_type can_move)
@@ -3245,6 +3314,9 @@ static void _handle_behaviour(monsters *mon)
             // Foe gone out of LOS?
             if (!proxFoe)
             {
+                if (mon->travel_target == MTRAV_SIREN)
+                    mon->travel_target = MTRAV_NONE;
+
                 if (mon->foe == MHITYOU && mon->is_travelling()
                     && mon->travel_target == MTRAV_PLAYER)
                 {
@@ -3334,6 +3406,17 @@ static void _handle_behaviour(monsters *mon)
             // by updating target x,y.
             if (mon->foe == MHITYOU)
             {
+                // The foe is the player.
+                if (mon->type == MONS_SIREN)
+                {
+                    if (player_beheld_by(mon)
+                        && (mon->pos() - you.pos()).rdist() < 6
+                        && _find_siren_water_target(mon))
+                    {
+                        break;
+                    }
+                }
+
                 if (_try_pathfind(mon, can_move, trans_wall_block))
                     break;
 
@@ -4569,6 +4652,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         break;
 
     case MONS_MERMAID:
+    case MONS_SIREN:
     {
         // Don't behold player already half down or up the stairs.
         if (!you.delay_queue.empty())

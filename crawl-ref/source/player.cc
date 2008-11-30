@@ -2624,7 +2624,7 @@ bool player_beheld_by( const monsters *mon )
         return (false);
 
     // Can this monster even behold you?
-    if (mon->type != MONS_MERMAID)
+    if (mons_genus(mon->type) != MONS_MERMAID)
         return (false);
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -2684,14 +2684,16 @@ void check_beholders()
     for (int i = you.beheld_by.size() - 1; i >= 0; i--)
     {
         const monsters* mon = &menv[you.beheld_by[i]];
-        if (!mon->alive() || mon->type != MONS_MERMAID)
+        if (!mon->alive() || mons_genus(mon->type) != MONS_MERMAID)
         {
 #if DEBUG
             if (!mon->alive())
                 mpr("Dead mermaid still beholding?", MSGCH_DIAGNOSTICS);
-            else if (mon->type != MONS_MERMAID)
+            else
+            {
                 mprf(MSGCH_DIAGNOSTICS, "Non-mermaid '%s' beholding?",
                      mon->name(DESC_PLAIN, true).c_str());
+            }
 #endif
 
             you.beheld_by.erase(you.beheld_by.begin() + i);

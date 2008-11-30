@@ -1736,7 +1736,8 @@ enum monster_type                      // (int) menv[].type
     MONS_SIMULACRUM_LARGE,
     MONS_MERFOLK,
     MONS_MERMAID,
-    MONS_FLAMING_CORPSE,               //  195
+    MONS_SIREN,                        //  195
+    MONS_FLAMING_CORPSE,
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,
@@ -2998,6 +2999,7 @@ enum montravel_target_type
     MTRAV_NONE = 0,
     MTRAV_PLAYER,      // Travelling to reach the player.
     MTRAV_PATROL,      // Travelling to reach the patrol point.
+    MTRAV_SIREN,       // Sirens travelling towards deep water.
     MTRAV_UNREACHABLE  // Not travelling because target is unreachable.
 };
 

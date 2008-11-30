@@ -366,7 +366,7 @@ ENDMAP
 # Death by starvation?
 NAME:   labyrinth_hungry_ghost
 TAGS:   lab allow_dup generate_awake
-WEIGHT: 5
+WEIGHT: 2
 KFEAT:  x = .
 KMONS:  x = hungry ghost
 MAP
