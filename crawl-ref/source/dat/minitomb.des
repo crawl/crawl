@@ -48,15 +48,15 @@ ENDMAP
 
 NAME:   enter_minitomb_2
 TAGS:   uniq_minitomb no_monster_gen
-COLOUR: C = yellow
-SUBST:  C:.
+COLOUR: ' = yellow
+SUBST:  ' = .
 : minitomb_portal(_G)
 MAP
 .......
 .cc=cc.
-.cCCCc.
-.cCOCc.
-.cCCCc.
+.c'''c.
+.c'O'c.
+.c'''c.
 .ccccc.
 .......
 ENDMAP
@@ -77,21 +77,18 @@ ENDMAP
 
 NAME:   enter_minitomb_4
 TAGS:   uniq_minitomb no_monster_gen
-COLOUR: C : yellow, x : white
-KFEAT:  C = floor
-#KFEAT:  1 = col:yellow floor
-KFEAT:  1 = floor
-KMONS:  1 = rat zombie / quokka zombie / goblin zombie
+COLOUR: 1 = yellow, ' = yellow, x = white
+MONS:   rat zombie / quokka zombie / goblin zombie
 : minitomb_portal(_G)
 MAP
 .........
 .xxxxxxx.
-.xCCOCCx.
-.xCCCCCx.
-.xCxCxCx.
-.x1xCx1x.
-.xxxCxxx.
-....C....
+.x''O''x.
+.x'''''x.
+.x'x'x'x.
+.x1x'x1x.
+.xxx'xxx.
+....'....
 ENDMAP
 
 
