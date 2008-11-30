@@ -362,7 +362,7 @@ local function ziggurat_create_loot_at(c)
   -- affects the loot randomly (separatedly on each stage).
   local depth = zig_depth()
   local nloot = depth
---  nloot = nloot + crawl.random2(math.floor(nloot * stair().amount / 10000))
+  nloot = nloot + crawl.random2(math.floor(nloot * zig().portal.amount / 10000))
 
   local function free_space_threshold(max)
     local function is_free_space(p)
