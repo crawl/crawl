@@ -522,7 +522,7 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_EYE_OF_DEVASTATION:
         return TILEP_MONS_EYE_OF_DEVASTATION;
 
-    // half-breeds ('H')
+    // hybrids ('H')
     case MONS_HIPPOGRIFF:
         return TILEP_MONS_HIPPOGRIFF;
     case MONS_MANTICORE:

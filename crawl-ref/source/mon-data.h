@@ -2096,7 +2096,7 @@ static monsterentry mondata[] = {
     HT_LAND, 7, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_BIG
 },
 
-// half-breeds ('H')
+// hybrids ('H')
 {
     MONS_HIPPOGRIFF, 'H', BROWN, "hippogriff",
     M_FLIES | M_WARM_BLOOD,
