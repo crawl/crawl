@@ -1707,6 +1707,23 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
     if (!pbolt.is_tracer)
         set_buffering(oldValue);
 #endif
+
+    if (!pbolt.is_tracer)
+    {
+        switch(pbolt.flavour)
+        {
+        case BEAM_HELLFIRE:
+        case BEAM_HELLFROST:
+            if (YOU_KILL(pbolt.thrower))
+            {
+                did_god_conduct(DID_UNHOLY, 2 + random2(3),
+                                pbolt.effect_known);
+            }
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 
@@ -1976,12 +1993,8 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             }
         }
         break;
-    default:
-        break;
-    }
 
-    if (pbolt.name == "hellfire")
-    {
+    case BEAM_HELLFIRE:
         resist = mons_res_fire(monster);
         if (resist > 2)
         {
@@ -2013,6 +2026,36 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
             hurted *= 12;       // hellfire
             hurted /= 10;
         }
+        break;
+
+    case BEAM_HELLFROST:
+        resist = mons_res_cold(monster);
+        if (resist > 2)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(monster, " appears unharmed.");
+
+            hurted = 0;
+        }
+        else if (resist > 0)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(monster, " partially resists.");
+
+            hurted /= 2;
+        }
+        else if (resist < 0)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(monster, " is frozen!");
+
+            hurted *= 12;       // hellfrost
+            hurted /= 10;
+        }
+        break;
+
+    default:
+        break;
     }
 
     return (hurted);
