@@ -41,10 +41,12 @@ function sewer_colours(e)
 end
 }}
 
+
 # Basic sewer entries ##########################################
+default-depth: D:3-6
+
 NAME:   portal_sewer_entry_a
 TAGS:   uniq_sewer no_monster_gen mini_float
-DEPTH:  D:3-7
 : sewer_portal(_G)
 COLOUR: W = green / cyan w:5
 SUBST:  1 = 11234444444444
@@ -67,7 +69,6 @@ ENDMAP
 NAME:   portal_sewer_entry_b
 TAGS:   uniq_sewer no_monster_gen
 ORIENT: float
-DEPTH:  D:3-7
 : sewer_portal(_G)
 SUBST:  '=W. , W=WW1
 KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ small snake / snake w:2 / \
@@ -85,7 +86,6 @@ ENDMAP
 
 NAME:    portal_sewer_entry_c
 TAGS:    uniq_sewer no_monster_gen
-DEPTH:   D:3-7
 : sewer_portal(_G)
 NSUBST:  c = 2:= / 2:n / *:c
 NSUBST:  W = 8:1 / *:W
@@ -105,7 +105,10 @@ MAP
 .........
 ENDMAP
 
+
+
 # The actual portal vaults #####################################
+default-depth:
 
 ############################################################################
 # Sewer with a small kobold camp, potion treasure and Ely/Zin altar.
