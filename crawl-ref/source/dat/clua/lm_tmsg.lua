@@ -36,10 +36,25 @@ end
 function TimedMessaging:init(tmarker, cm, verbose)
   self.entity = tmarker.props.entity or tmarker.props.desc
 
-  if not self.ranges and not self.visible then
-    self.ranges = { { 5000, 'stately ' }, { 4000, '' },
-                    { 2500, 'brisk ' },   { 1500, 'urgent ' },
-                    { 0, 'frantic ' } }
+  if not self.ranges and not self.visible and not self.messages then
+    self.ranges = {
+      { 5000, 'stately ' }, { 4000, '' },
+      { 2500, 'brisk ' },   { 1500, 'urgent ' },
+      { 0, 'frantic ' }
+    }
+  end
+
+  if not self.range_adjectives then
+    local function sqr(x)
+      return x * x
+    end
+
+    self.range_adjectives = {
+      { sqr(30), '$F, a long way away' },
+      { sqr(15), 'distant' },
+      { sqr(7), '$F nearby' },
+      { 0, '$F' }
+    }
   end
 
   self.check = self.check or tmarker.dur - 500
@@ -95,22 +110,49 @@ function TimedMessaging:proc_ranges(ranges, dur, fn)
   end
 end
 
+function TimedMessaging:player_distance2(cm)
+  local cx, cy = cm:pos()
+  local x, y = you.pos()
+  local dx, dy = cx - x, cy - y
+  return dx * dx + dy * dy
+end
+
+function TimedMessaging:choose_range_adjective(distance)
+  for _, dadj in ipairs(self.range_adjectives) do
+    if distance >= dadj[1] then
+      return dadj[2]
+    end
+  end
+end
+
+function TimedMessaging:range_adjective(cm, thing)
+  local adj = self:choose_range_adjective(self:player_distance2(cm))
+  if string.find(adj, '$F') then
+    return util.expand_entity(self.noisemaker, adj)
+  else
+    return crawl.article_a(#adj == 0 and self.noisemaker
+                           or adj .. ' ' .. self.noisemaker)
+  end
+end
+
 function TimedMessaging:say_message(cm, dur)
   if dur <= 0 then
-    self:emit_message(cm, self.finalmsg)
+    self:emit_message(nil, self.finalmsg)
     return
   end
 
+  local noisemaker = self:range_adjective(cm, self.noisemaker)
+
   self:proc_ranges(self.ranges, dur,
                    function (chk)
-                     self:emit_message(cm,
+                     self:emit_message(nil,
                                        "You hear the " .. chk[2] .. self.verb
-                                       .. " of " .. self.noisemaker .. ".")
+                                       .. " of " .. noisemaker .. ".")
                    end)
 
   self:proc_ranges(self.messages, dur,
                    function (chk)
-                     self:emit_message(cm, chk[2])
+                     self:emit_message(nil, chk[2])
                    end)
 end
 
@@ -122,7 +164,7 @@ function TimedMessaging:event(luamark, cmarker, event)
     end
 
     if self:perceptible(cmarker) then
-      self:say_message(nil, luamark.dur)
+      self:say_message(cmarker, luamark.dur)
     end
   end
 end

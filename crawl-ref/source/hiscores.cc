@@ -427,7 +427,7 @@ static const char *kill_method_names[] =
     "wild_magic", "xom", "statue", "rotting", "targeting", "spore",
     "tso_smiting", "petrification", "unknown", "something",
     "falling_down_stairs", "acid", "curare", "melting", "bleeding",
-    "beogh_smiting", "divine_wrath"
+    "beogh_smiting", "divine_wrath", "bounce", "reflect"
 };
 
 const char *kill_method_name(kill_method_type kmt)

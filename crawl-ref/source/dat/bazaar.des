@@ -19,7 +19,7 @@ function bazaar_portal()
                   .. "they move on!" },
       finalmsg = "You hear the last, dying notes of the bell.",
       verb = 'tolling',
-      noisemaker = 'a massive bell'
+      noisemaker = 'bell'
     }
   local blow = 200 + 30*(40 - you.absdepth()) + crawl.random2(200)
   local bhigh = blow + crawl.random2(blow) + 100

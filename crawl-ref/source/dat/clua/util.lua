@@ -214,9 +214,13 @@ function util.random_weighted_from(weightfn, list)
 end
 
 function util.expand_entity(entity, msg)
-  return string.gsub(msg, "$F%{(%w+)%}",
-                     function (desc)
-                       return crawl.grammar(entity, desc)
+  local msg_a =  string.gsub(msg, "$F%{(%w+)%}",
+                             function (desc)
+                               return crawl.grammar(entity, desc)
+                             end)
+  return string.gsub(msg_a, "$F",
+                     function ()
+                       return crawl.grammar(entity, 'a')
                      end)
 end
 

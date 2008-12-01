@@ -24,7 +24,7 @@ DEPTH:  12-27
                   .. "the gate is sealed!" },
       finalmsg = "You hear the last, dying ticks of the clock.",
       verb = 'ticking',
-      noisemaker = 'an ancient clock'
+      noisemaker = 'clock'
     }
 }}
 MARKER: O = lua: timed_marker {  \

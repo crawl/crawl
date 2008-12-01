@@ -15,6 +15,7 @@
 
 #include "enum.h"
 
+// Keep in sync with names in hiscores.cc.
 enum kill_method_type
 {
     KILLED_BY_MONSTER,                 // 0
