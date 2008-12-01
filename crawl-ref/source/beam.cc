@@ -2830,7 +2830,6 @@ void beam_drop_object( bolt &beam, item_def *item, const coord_def& _p )
         item = beam.item;
     ASSERT( item != NULL );
     ASSERT( is_valid_item(*item) );
-    ASSERT( item->quantity > 0);
 
 #ifdef DEBUG
     if (!beam.drop_item)
@@ -2876,7 +2875,25 @@ void beam_drop_object( bolt &beam, item_def *item, const coord_def& _p )
         }
 
         if (copy_item_to_grid( *item, p, 1 ))
+        {
             beam.dropped_item = true;
+            beam.item_pos     = p;
+
+            // Dropped item might have merged into stack
+            if (is_stackable_item(*item))
+            {
+                for (stack_iterator si(p); si; ++si)
+                {
+                    if (items_stack(*item, *si))
+                    {
+                        beam.item_index = si->index();
+                        break;
+                    }
+                }
+            }
+            else
+                beam.item_index = igrd(p);
+        }
         else
         {
 #ifdef DEBUG
