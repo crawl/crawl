@@ -4746,7 +4746,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                 you.duration[DUR_MESMERISED] = 7;
                 you.mesmerised_by.push_back(monster_index(monster));
                 mprf(MSGCH_WARN, "You are mesmerised by %s!",
-                                 monster->name(DESC_NOCAP_THE));
+                                 monster->name(DESC_NOCAP_THE).c_str());
             }
             else
             {
