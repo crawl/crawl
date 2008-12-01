@@ -607,6 +607,8 @@ bool tile_list_processor::write_data()
             lcname.c_str());
         fprintf(fp, "tile_info &tile_%s_info(unsigned int idx);\n",
             lcname.c_str());
+        fprintf(fp, "bool tile_%s_index(const char *str, unsigned int &idx);\n",
+            lcname.c_str());
 
         if (m_categories.size() > 0)
         {
@@ -644,6 +646,10 @@ bool tile_list_processor::write_data()
 
         fprintf(fp, "// This file has been automatically generated.\n\n");
         fprintf(fp, "#include \"tiledef-%s.h\"\n\n", lcname.c_str());
+        fprintf(fp, "#include <map>\n");
+        fprintf(fp, "#include <string>\n");
+        fprintf(fp, "#include <assert.h>\n");
+        fprintf(fp, "using namespace std;\n");
 
         fprintf(fp, "int _tile_%s_count[%s - %s] =\n{\n",
             lcname.c_str(), max.c_str(), m_start_value.c_str());
@@ -720,6 +726,56 @@ bool tile_list_processor::write_data()
 
             fprintf(fp, "};\n\n");
         }
+
+        fprintf(fp, "\nclass tile_%s_map : public map<string, int>\n"
+            "{\n"
+            "public:\n"
+            "    tile_%s_map();\n"
+            "} %s_name_map;\n\n",
+            lcname.c_str(), lcname.c_str(), lcname.c_str());
+
+        fprintf(fp,
+            "tile_%s_map::tile_%s_map()\n"
+            "{\n"
+            "    map<string, int>::iterator itr = begin();\n",
+            lcname.c_str(), lcname.c_str());
+
+        for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
+        {
+            const std::string &enumname = m_page.m_tiles[i]->enumname();
+            // Filler can't be looked up.
+            if (enumname.empty())
+                continue;
+
+            std::string lcenum = enumname;
+            for (unsigned int c = 0; c < enumname.size(); c++)
+                lcenum[c] = std::tolower(enumname[c]);
+
+            fprintf(fp, "    insert(itr, map<string, int>::value_type(\"%s\", %d + %s));\n",
+                lcenum.c_str(), i, m_start_value.c_str());
+        }
+
+        fprintf(fp, "}\n\n");
+
+        fprintf(fp,
+            "bool tile_%s_index(const char *str, unsigned int &idx)\n"
+            "{\n"
+            "    assert(str);\n"
+            "    if (!str)\n"
+            "        return false;\n"
+            "\n"
+            "    string lc = str;\n"
+            "    for (unsigned int i = 0; i < lc.size(); i++)\n"
+            "        lc[i] = tolower(lc[i]);\n"
+            "\n"
+            "    map<string, int>::const_iterator itr = %s_name_map.find(lc);\n"
+            "    if (itr == %s_name_map.end())\n"
+            "        return false;\n"
+            "\n"
+            "    idx = itr->second;\n"
+            "    return true;\n"
+            "}\n",
+            lcname.c_str(), lcname.c_str(), lcname.c_str());
     }
 
     delete[] part_min;

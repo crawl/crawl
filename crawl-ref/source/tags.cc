@@ -1975,12 +1975,16 @@ void tag_construct_level_tiles(writer &th)
     marshallByte(th, rle_count);
 
     // flavour
+    marshallShort(th, env.tile_default.wall);
+    marshallShort(th, env.tile_default.floor);
+    marshallShort(th, env.tile_default.special);
+
     for (int count_x = 0; count_x < GXM; count_x++)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
-            marshallByte(th, env.tile_flv[count_x][count_y].wall);
-            marshallByte(th, env.tile_flv[count_x][count_y].floor);
-            marshallByte(th, env.tile_flv[count_x][count_y].special);
+            marshallShort(th, env.tile_flv[count_x][count_y].wall);
+            marshallShort(th, env.tile_flv[count_x][count_y].floor);
+            marshallShort(th, env.tile_flv[count_x][count_y].special);
         }
 
     mcache.construct(th);
@@ -2305,12 +2309,16 @@ void tag_read_level_tiles(struct reader &th)
         }
 
     // flavour
+    env.tile_default.wall = unmarshallShort(th);
+    env.tile_default.floor = unmarshallShort(th);
+    env.tile_default.special = unmarshallShort(th);
+
     for (int x = 0; x < gx; x++)
         for (int y = 0; y < gy; y++)
         {
-            env.tile_flv[x][y].wall    = unmarshallByte(th);
-            env.tile_flv[x][y].floor   = unmarshallByte(th);
-            env.tile_flv[x][y].special = unmarshallByte(th);
+            env.tile_flv[x][y].wall    = unmarshallShort(th);
+            env.tile_flv[x][y].floor   = unmarshallShort(th);
+            env.tile_flv[x][y].special = unmarshallShort(th);
         }
 
     if (ver > TILETAG_PRE_MCACHE)
@@ -2324,6 +2332,9 @@ void tag_read_level_tiles(struct reader &th)
 static void tag_missing_level_tiles()
 {
 #ifdef USE_TILE
+    tile_init_default_flavour();
+    tile_clear_flavour();
+
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
         {
@@ -2337,8 +2348,6 @@ static void tag_missing_level_tiles()
     mcache.clear_all();
 
     TileNewLevel(true);
-
-
 #endif
 }
 

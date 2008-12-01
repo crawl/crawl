@@ -15,6 +15,7 @@
 #include "tiledef-player.h"
 
 #include "beam.h"
+#include "enum.h"
 
 enum tag_version
 {
@@ -92,13 +93,16 @@ void tile_draw_inv(int flag = -1);
 // Multiple pickup
 void tile_pick_menu();
 
-int get_num_wall_flavours();
-int get_num_floor_flavours();
-int get_num_floor_special_flavours();
-int get_wall_tile_idx();
-int get_floor_tile_idx();
-int get_floor_special_tile_idx();
+// Set the default type of walls and floors.
+void tile_init_default_flavour();
+// Get the default types of walls and floors
+void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv);
+// Clear the per-cell wall and floor flavors.
+void tile_clear_flavour();
+// Initialize per-cell types of walls and floors using defaults.
 void tile_init_flavour();
+
+void tile_floor_halo(dungeon_feature_type target, int tile);
 
 void tile_set_force_redraw_tiles(bool redraw);
 void tile_set_force_redraw_inv(bool redraw);
@@ -113,7 +117,7 @@ void TileResizeScreen(int x, int y);
 
 // display tile cursor, returns old cursor value there
 int TileDrawCursor(int x, int y, int flag);
-// display bolts
+
 void TileNewLevel(bool first_time);
 
 // edit player tile
@@ -121,14 +125,11 @@ void TilePlayerEdit();
 
 int item_unid_type(const item_def &item);
 
-// load wall tiles
-void TileLoadWall(bool wizard);
-
 void TileDrawTitle();
 
 int get_clean_map_idx(int tile_idx);
 
-/* Flags for drawing routines */
+// Flags for drawing routines
 enum tile_flags
 {
     // Foreground flags

@@ -1559,11 +1559,36 @@ static int dgn_fixup_stairs(lua_State *ls)
     return (0);
 }
 
+#ifdef USE_TILE
+static unsigned int _get_tile_idx(lua_State *ls, int arg)
+{
+    if (!lua_isstring(ls, arg))
+    {
+        luaL_argerror(ls, arg, "Expected string for tile name");
+        return 0;
+    }
+
+    const char *tile_name = luaL_checkstring(ls, arg);
+
+    unsigned int idx;
+    if (!tile_dngn_index(tile_name, idx))
+    {
+        std::string error = "Couldn't find tile '";
+        error += tile_name;
+        error += "'";
+        luaL_argerror(ls, arg, error.c_str());
+        return 0;
+    }
+
+    return idx;
+}
+#endif
+
 static int dgn_floor_halo(lua_State *ls)
 {
     std::string error = "";
 
-    const char* s1 = luaL_checkstring(ls, 1);
+    const char *s1 = luaL_checkstring(ls, 1);
     const dungeon_feature_type target = dungeon_feature_by_name(s1);
 
     if (target == DNGN_UNSEEN)
@@ -1573,7 +1598,7 @@ static int dgn_floor_halo(lua_State *ls)
         error += "'.  ";
     }
 
-    const char* s2 = luaL_checkstring(ls, 2);
+    const char *s2 = luaL_checkstring(ls, 2);
     short colour = str_to_colour(s2);
 
     if (colour == -1)
@@ -1614,6 +1639,24 @@ static int dgn_floor_halo(lua_State *ls)
                      }
             }
         }
+
+#ifdef USE_TILE
+    unsigned int tile = _get_tile_idx(ls, 3);
+    if (!tile)
+        return (0);
+    if (tile_dngn_count(tile) != 9)
+    {
+        error += "'";
+        error += luaL_checkstring(ls, 3);
+        error += "' is not a valid halo tile. It has ";
+        error += tile_dngn_count(tile);
+        error += " variations, but needs exactly 9.";
+        luaL_argerror(ls, 3, error.c_str());
+        return (0);
+    }
+
+    tile_floor_halo(target, tile);
+#endif
 
     return (0);
 }
@@ -2314,6 +2357,16 @@ BRANCHFN(parent_branch, string,
          br.parent_branch == NUM_BRANCHES ? ""
          : branches[br.parent_branch].abbrevname)
 
+#define LEVEL(lev, br, pos)                                             \
+    const char *level_name = luaL_checkstring(ls, pos);                 \
+    level_area_type lev = str_to_level_area_type(level_name);           \
+    if (lev == NUM_LEVEL_AREA_TYPES)                                    \
+        luaL_error(ls, "Expected level name");                          \
+    const char *branch_name = luaL_checkstring(ls, pos);                \
+    branch_type br = str_to_branch(branch_name);                        \
+    if (lev == LEVEL_DUNGEON && br == NUM_BRANCHES)                     \
+        luaL_error(ls, "Expected branch name");
+
 static void push_level_id(lua_State *ls, const level_id &lid)
 {
     // We're skipping the constructor; naughty, but level_id has no
@@ -2585,7 +2638,97 @@ LUAFN(_dgn_reuse_map)
     return (0);
 }
 
-static int dgn_debug_dump_map(lua_State *ls)
+LUAFN(dgn_lev_floortile)
+{
+#ifdef USE_TILE
+    LEVEL(lev, br, 1);
+
+    tile_flavour flv;
+    tile_default_flv(lev, br, flv);
+
+    const char *tile_name = tile_dngn_name(flv.floor);
+    PLUARET(string, tile_name);
+#else
+    PLUARET(string, "invalid");
+#endif
+}
+
+LUAFN(dgn_lev_rocktile)
+{
+#ifdef USE_TILE
+    LEVEL(lev, br, 1);
+
+    tile_flavour flv;
+    tile_default_flv(lev, br, flv);
+
+    const char *tile_name = tile_dngn_name(flv.wall);
+    PLUARET(string, tile_name);
+#else
+    PLUARET(string, "invalid");
+#endif
+}
+
+LUAFN(dgn_rocktile)
+{
+    MAP(ls, 1, map);
+
+#ifdef USE_TILE
+    unsigned short tile = _get_tile_idx(ls, 2);
+    map->rock_tile = tile;
+
+    const char *tile_name = tile_dngn_name(tile);
+    PLUARET(string, tile_name);
+#else
+    UNUSED(map);
+    PLUARET(string, "invalid");
+#endif
+}
+
+LUAFN(dgn_floortile)
+{
+    MAP(ls, 1, map);
+
+#ifdef USE_TILE
+    unsigned short tile = _get_tile_idx(ls, 2);
+    map->floor_tile = tile;
+
+    const char *tile_name = tile_dngn_name(tile);
+    PLUARET(string, tile_name);
+#else
+    UNUSED(map);
+    PLUARET(string, "invalid");
+#endif
+}
+
+LUAFN(dgn_change_rock_tile)
+{
+#ifdef USE_TILE
+    unsigned short tile = _get_tile_idx(ls, 1);
+    if (tile)
+        env.tile_default.wall = tile;
+
+    const char *tile_name = tile_dngn_name(tile);
+    PLUARET(string, tile_name);
+#else
+    PLUARET(string, "invalid");
+#endif
+}
+
+LUAFN(dgn_change_floor_tile)
+{
+#ifdef USE_TILE
+    unsigned short tile = _get_tile_idx(ls, 1);
+    if (tile)
+        env.tile_default.floor = tile;
+
+    const char *tile_name = tile_dngn_name(tile);
+    PLUARET(string, tile_name);
+#else
+    PLUARET(string, "invalid");
+#endif
+}
+
+LUAFN(dgn_debug_dump_map)
 {
     const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
     if (lua_isstring(ls, pos))
@@ -2722,6 +2865,13 @@ static const struct luaL_reg dgn_lib[] =
     { "find_marker_prop", _dgn_find_marker_prop },
 
     { "get_special_room_info", dgn_get_special_room_info },
+
+    { "rocktile", dgn_rocktile },
+    { "floortile", dgn_floortile },
+    { "change_rock_tile", dgn_change_rock_tile },
+    { "change_floor_tile", dgn_change_floor_tile },
+    { "lev_floortile", dgn_lev_floortile },
+    { "lev_rocktile", dgn_lev_rocktile },
 
     { "debug_dump_map", dgn_debug_dump_map },
 

@@ -649,6 +649,7 @@ public:
     map_def         *original;
 
     unsigned char   rock_colour, floor_colour;
+    int             rock_tile, floor_tile;
 
 private:
     // This map has been loaded from an index, and not fully realised.

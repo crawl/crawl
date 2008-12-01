@@ -67,16 +67,18 @@
      BFLAGS = 283,
      FLOORCOL = 284,
      ROCKCOL = 285,
-     COMMA = 286,
-     COLON = 287,
-     PERC = 288,
-     INTEGER = 289,
-     CHARACTER = 290,
-     STRING = 291,
-     MAP_LINE = 292,
-     MONSTER_NAME = 293,
-     ITEM_INFO = 294,
-     LUA_LINE = 295
+     FLOORTILE = 286,
+     ROCKTILE = 287,
+     COMMA = 288,
+     COLON = 289,
+     PERC = 290,
+     INTEGER = 291,
+     CHARACTER = 292,
+     STRING = 293,
+     MAP_LINE = 294,
+     MONSTER_NAME = 295,
+     ITEM_INFO = 296,
+     LUA_LINE = 297
    };
 #endif
 /* Tokens.  */
@@ -108,16 +110,18 @@
 #define BFLAGS 283
 #define FLOORCOL 284
 #define ROCKCOL 285
-#define COMMA 286
-#define COLON 287
-#define PERC 288
-#define INTEGER 289
-#define CHARACTER 290
-#define STRING 291
-#define MAP_LINE 292
-#define MONSTER_NAME 293
-#define ITEM_INFO 294
-#define LUA_LINE 295
+#define FLOORTILE 286
+#define ROCKTILE 287
+#define COMMA 288
+#define COLON 289
+#define PERC 290
+#define INTEGER 291
+#define CHARACTER 292
+#define STRING 293
+#define MAP_LINE 294
+#define MONSTER_NAME 295
+#define ITEM_INFO 296
+#define LUA_LINE 297
 
 
 
@@ -130,8 +134,8 @@ typedef union YYSTYPE
     const char *text;
     raw_range range;
 }
-/* Line 1489 of yacc.c.  */
-#line 135 "levcomp.tab.h"
+/* Line 1529 of yacc.c.  */
+#line 139 "levcomp.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

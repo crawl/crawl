@@ -28,355 +28,164 @@
 #include "tiles.h"
 #include "transfor.h"
 
-static int wall_flavours    = 0;
-static int floor_flavours   = 0;
-static int special_flavours = 0;
-static int wall_tile_idx    = 0;
-static int floor_tile_idx   = 0;
-static int special_tile_idx = 0;
-
-int get_num_wall_flavours()
+void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 {
-    return wall_flavours;
-}
+    flv.wall    = TILE_WALL_NORMAL;
+    flv.floor   = TILE_FLOOR_NORMAL;
+    flv.special = 0;
 
-int get_num_floor_flavours()
-{
-    return floor_flavours;
-}
-
-int get_num_floor_special_flavours()
-{
-    return special_flavours;
-}
-
-int get_wall_tile_idx()
-{
-    return wall_tile_idx;
-}
-
-int get_floor_tile_idx()
-{
-    return floor_tile_idx;
-}
-
-int get_floor_special_tile_idx()
-{
-    return special_tile_idx;
-}
-
-// TODO: Add this sort of determinism to the lua maps,
-//       at least for the portal vaults.
-void WallIdx(int &wall, int &floor, int &special)
-{
-    // Note: This function must be deterministic.
-
-    special = -1;
-
-    if (you.level_type == LEVEL_PANDEMONIUM)
+    if (lev == LEVEL_PANDEMONIUM)
     {
-        switch (env.rock_colour)
+        flv.floor = TILE_FLOOR_TOMB;
+        switch (random2(7))
         {
-        case BLUE:
-        case LIGHTBLUE:
-            wall  = TILE_WALL_ZOT_BLUE;
-            floor = TILE_FLOOR_TOMB;
-            break;
-
-        case RED:
-        case LIGHTRED:
-            wall  = TILE_WALL_ZOT_RED;
-            floor = TILE_FLOOR_TOMB;
-            break;
-
-        case MAGENTA:
-        case LIGHTMAGENTA:
-            wall  = TILE_WALL_ZOT_MAGENTA;
-            floor = TILE_FLOOR_TOMB;
-            break;
-
-        case GREEN:
-        case LIGHTGREEN:
-            wall  = TILE_WALL_ZOT_GREEN;
-            floor = TILE_FLOOR_TOMB;
-            break;
-
-        case CYAN:
-        case LIGHTCYAN:
-            wall  = TILE_WALL_ZOT_CYAN;
-            floor = TILE_FLOOR_TOMB;
-            break;
-
-        case BROWN:
-        case YELLOW:
-            wall  = TILE_WALL_ZOT_YELLOW;
-            floor = TILE_FLOOR_TOMB;
-            break;
-
-        case BLACK:
-        case WHITE:
         default:
-            wall  = TILE_WALL_ZOT_GRAY;
-            floor = TILE_FLOOR_TOMB;
-            break;
+        case 0: flv.wall = TILE_WALL_ZOT_BLUE; break;
+        case 1: flv.wall = TILE_WALL_ZOT_RED; break;
+        case 2: flv.wall = TILE_WALL_ZOT_MAGENTA; break;
+        case 3: flv.wall = TILE_WALL_ZOT_GREEN; break;
+        case 4: flv.wall = TILE_WALL_ZOT_CYAN; break;
+        case 5: flv.wall = TILE_WALL_ZOT_YELLOW; break;
+        case 6: flv.wall = TILE_WALL_ZOT_GRAY; break;
         }
 
-        unsigned int seen = you.get_place_info(LEVEL_PANDEMONIUM).levels_seen;
-
-        if ((seen + env.rock_colour) % 3 == 1)
-            wall = TILE_WALL_FLESH;
-        if ((seen + env.floor_colour) % 3 == 1)
-            floor = TILE_FLOOR_NERVES;
+        if (one_chance_in(3))
+            flv.wall = TILE_WALL_FLESH;
+        if (one_chance_in(3))
+            flv.floor = TILE_FLOOR_NERVES;
 
         return;
     }
-    else if (you.level_type == LEVEL_ABYSS)
+    else if (lev == LEVEL_ABYSS)
     {
-        switch (env.rock_colour)
+        flv.floor = TILE_FLOOR_NERVES;
+        switch (random2(6))
         {
-        case YELLOW:
-        case BROWN:
-            wall = TILE_WALL_HIVE;
-            break;
-        case RED:
-        case LIGHTRED:
-            wall = TILE_WALL_PEBBLE_RED;
-            break;
-        case GREEN:
-        case LIGHTGREEN:
-            wall = TILE_WALL_SLIME;
-            break;
-        case BLUE:
-            wall = TILE_WALL_ICE;
-            break;
-        case LIGHTGREY:
-        case WHITE:
-            wall = TILE_WALL_HALL;
-            break;
         default:
-            wall = TILE_WALL_UNDEAD;
-            break;
+        case 0: flv.wall = TILE_WALL_HIVE; break;
+        case 1: flv.wall = TILE_WALL_PEBBLE_RED; break;
+        case 2: flv.wall = TILE_WALL_SLIME; break;
+        case 3: flv.wall = TILE_WALL_ICE; break;
+        case 4: flv.wall = TILE_WALL_HALL; break;
+        case 5: flv.wall = TILE_WALL_UNDEAD; break;
         }
-        floor = TILE_FLOOR_NERVES;
         return;
     }
-    else if (you.level_type == LEVEL_LABYRINTH)
+    else if (lev == LEVEL_LABYRINTH)
     {
-        wall  = TILE_WALL_UNDEAD;
-        floor = TILE_FLOOR_TOMB;
+        flv.wall  = TILE_WALL_UNDEAD;
+        flv.floor = TILE_FLOOR_TOMB;
         return;
     }
-    else if (you.level_type == LEVEL_PORTAL_VAULT)
+    else if (lev == LEVEL_PORTAL_VAULT)
     {
-        if (you.level_type_name == "bazaar")
-        {
-            // Bazaar tiles here lean towards grass and dirt to emphasize
-            // both the non-hostile and other-wordly aspects of the
-            // portal vaults (i.e. they aren't in the dungeon, necessarily.)
-            int colour = env.floor_colour;
-            switch (colour)
-            {
-                case BLUE:
-                    wall    = TILE_WALL_BAZAAR_GRAY;
-                    floor   = TILE_FLOOR_BAZAAR_GRASS;
-                    special = TILE_FLOOR_BAZAAR_GRASS1_SPECIAL;
-                    return;
-
-                case RED:
-                    // Reds often have lava, which looks ridiculous
-                    // next to grass or dirt, so we'll use existing
-                    // floor and wall tiles here.
-                    wall    = TILE_WALL_PEBBLE_RED;
-                    floor   = TILE_FLOOR_VAULT;
-                    special = TILE_FLOOR_BAZAAR_VAULT_SPECIAL;
-                    return;
-
-                case LIGHTBLUE:
-                    wall    = TILE_WALL_HIVE;
-                    floor   = TILE_FLOOR_BAZAAR_GRASS;
-                    special = TILE_FLOOR_BAZAAR_GRASS2_SPECIAL;
-                    return;
-
-                case GREEN:
-                    wall    = TILE_WALL_BAZAAR_STONE;
-                    floor   = TILE_FLOOR_BAZAAR_GRASS;
-                    special = TILE_FLOOR_BAZAAR_GRASS1_SPECIAL;
-                    return;
-
-                case MAGENTA:
-                    wall    = TILE_WALL_BAZAAR_STONE;
-                    floor   = TILE_FLOOR_BAZAAR_DIRT;
-                    special = TILE_FLOOR_BAZAAR_DIRT_SPECIAL;
-                    return;
-
-                default:
-                    wall    = TILE_WALL_VAULT;
-                    floor   = TILE_FLOOR_VAULT;
-                    special = TILE_FLOOR_BAZAAR_VAULT_SPECIAL;
-                    return;
-            }
-        }
-        else if (you.level_type_name == "sewer")
-        {
-            wall  = TILE_WALL_SLIME;
-            floor = TILE_FLOOR_SLIME;
-            return;
-        }
-        else if (you.level_type_name == "ice cave")
-        {
-            wall  = TILE_WALL_ICE;
-            floor = TILE_FLOOR_ICE;
-            return;
-        }
+        // These should be handled in the respective lua files.
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_NORMAL;
+        return;
     }
 
-    int depth        = player_branch_depth();
-    int branch_depth = your_branch().depth;
-
-    switch (you.where_are_you)
+    switch (br)
     {
-        case BRANCH_MAIN_DUNGEON:
-            wall  = TILE_WALL_NORMAL;
-            floor = TILE_FLOOR_NORMAL;
-            return;
+    case BRANCH_MAIN_DUNGEON:
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_NORMAL;
+        return;
 
-        case BRANCH_HIVE:
-            wall  = TILE_WALL_HIVE;
-            floor = TILE_FLOOR_HIVE;
-            return;
+    case BRANCH_HIVE:
+        flv.wall  = TILE_WALL_HIVE;
+        flv.floor = TILE_FLOOR_HIVE;
+        return;
 
-        case BRANCH_VAULTS:
-            wall  = TILE_WALL_VAULT;
-            floor = TILE_FLOOR_VAULT;
-            return;
+    case BRANCH_VAULTS:
+        flv.wall  = TILE_WALL_VAULT;
+        flv.floor = TILE_FLOOR_VAULT;
+        return;
 
-        case BRANCH_ECUMENICAL_TEMPLE:
-            wall  = TILE_WALL_VINES;
-            floor = TILE_FLOOR_VINES;
-            return;
+    case BRANCH_ECUMENICAL_TEMPLE:
+        flv.wall  = TILE_WALL_VINES;
+        flv.floor = TILE_FLOOR_VINES;
+        return;
 
-        case BRANCH_ELVEN_HALLS:
-        case BRANCH_HALL_OF_BLADES:
-            wall  = TILE_WALL_HALL;
-            floor = TILE_FLOOR_HALL;
-            return;
+    case BRANCH_ELVEN_HALLS:
+    case BRANCH_HALL_OF_BLADES:
+        flv.wall  = TILE_WALL_HALL;
+        flv.floor = TILE_FLOOR_HALL;
+        return;
 
-        case BRANCH_TARTARUS:
-        case BRANCH_CRYPT:
-        case BRANCH_VESTIBULE_OF_HELL:
-            wall  = TILE_WALL_UNDEAD;
-            floor = TILE_FLOOR_TOMB;
-            return;
+    case BRANCH_TARTARUS:
+    case BRANCH_CRYPT:
+    case BRANCH_VESTIBULE_OF_HELL:
+        flv.wall  = TILE_WALL_UNDEAD;
+        flv.floor = TILE_FLOOR_TOMB;
+        return;
 
-        case BRANCH_TOMB:
-            wall  = TILE_WALL_TOMB;
-            floor = TILE_FLOOR_TOMB;
-            return;
+    case BRANCH_TOMB:
+        flv.wall  = TILE_WALL_TOMB;
+        flv.floor = TILE_FLOOR_TOMB;
+        return;
 
-        case BRANCH_DIS:
-            wall  = TILE_WALL_ZOT_CYAN;
-            floor = TILE_FLOOR_TOMB;
-            return;
+    case BRANCH_DIS:
+        flv.wall  = TILE_WALL_ZOT_CYAN;
+        flv.floor = TILE_FLOOR_TOMB;
+        return;
 
-        case BRANCH_GEHENNA:
-            wall  = TILE_WALL_ZOT_RED;
-            floor = TILE_FLOOR_ROUGH_RED;
-            return;
+    case BRANCH_GEHENNA:
+        flv.wall  = TILE_WALL_ZOT_RED;
+        flv.floor = TILE_FLOOR_ROUGH_RED;
+        return;
 
-        case BRANCH_COCYTUS:
-            wall  = TILE_WALL_ICE;
-            floor = TILE_FLOOR_ICE;
-            return;
+    case BRANCH_COCYTUS:
+        flv.wall  = TILE_WALL_ICE;
+        flv.floor = TILE_FLOOR_ICE;
+        return;
 
-        case BRANCH_ORCISH_MINES:
-            wall  = TILE_WALL_ORC;
-            floor = TILE_FLOOR_ORC;
-            return;
+    case BRANCH_ORCISH_MINES:
+        flv.wall  = TILE_WALL_ORC;
+        flv.floor = TILE_FLOOR_ORC;
+        return;
 
-        case BRANCH_LAIR:
-            wall  = TILE_WALL_LAIR;
-            floor = TILE_FLOOR_LAIR;
-            return;
+    case BRANCH_LAIR:
+        flv.wall  = TILE_WALL_LAIR;
+        flv.floor = TILE_FLOOR_LAIR;
+        return;
 
-        case BRANCH_SLIME_PITS:
-            wall  = TILE_WALL_SLIME;
-            floor = TILE_FLOOR_SLIME;
-            return;
+    case BRANCH_SLIME_PITS:
+        flv.wall  = TILE_WALL_SLIME;
+        flv.floor = TILE_FLOOR_SLIME;
+        return;
 
-        case BRANCH_SNAKE_PIT:
-            wall  = TILE_WALL_SNAKE;
-            floor = TILE_FLOOR_SNAKE;
-            return;
+    case BRANCH_SNAKE_PIT:
+        flv.wall  = TILE_WALL_SNAKE;
+        flv.floor = TILE_FLOOR_SNAKE;
+        return;
 
-        case BRANCH_SWAMP:
-            wall  = TILE_WALL_SWAMP;
-            floor = TILE_FLOOR_SWAMP;
-            return;
+    case BRANCH_SWAMP:
+        flv.wall  = TILE_WALL_SWAMP;
+        flv.floor = TILE_FLOOR_SWAMP;
+        return;
 
-        case BRANCH_SHOALS:
-            if (depth == branch_depth)
-                wall = TILE_WALL_VINES;
-            else
-                wall = TILE_WALL_YELLOW_ROCK;
+    case BRANCH_SHOALS:
+        flv.wall = TILE_WALL_YELLOW_ROCK;
+        flv.floor = TILE_FLOOR_SAND_STONE;
+        return;
 
-            floor = TILE_FLOOR_SAND_STONE;
-            return;
+    case BRANCH_HALL_OF_ZOT:
+        flv.wall  = TILE_WALL_ZOT_YELLOW;
+        flv.floor = TILE_FLOOR_TOMB;
+        return;
 
-        case BRANCH_HALL_OF_ZOT:
-            if (you.your_level - you.branch_stairs[7] <= 1)
-            {
-                wall  = TILE_WALL_ZOT_YELLOW;
-                floor = TILE_FLOOR_TOMB;
-                return;
-            }
-
-            switch (you.your_level - you.branch_stairs[7])
-            {
-                case 2:
-                    wall  = TILE_WALL_ZOT_GREEN;
-                    floor = TILE_FLOOR_TOMB;
-                    return;
-                case 3:
-                    wall  = TILE_WALL_ZOT_CYAN;
-                    floor = TILE_FLOOR_TOMB;
-                    return;
-                case 4:
-                    wall  = TILE_WALL_ZOT_BLUE;
-                    floor = TILE_FLOOR_TOMB;
-                    return;
-                case 5:
-                default:
-                    wall  = TILE_WALL_ZOT_MAGENTA;
-                    floor = TILE_FLOOR_TOMB;
-                    return;
-            }
-
-        case BRANCH_INFERNO:
-        case BRANCH_THE_PIT:
-        case BRANCH_CAVERNS:
-        case NUM_BRANCHES:
-            break;
-
-        // NOTE: there is no default case in this switch statement so that
-        // the compiler will issue a warning when new branches are created.
+    case BRANCH_INFERNO:
+    case BRANCH_THE_PIT:
+    case BRANCH_CAVERNS:
+    case NUM_BRANCHES:
+        break;
     }
-
-    wall  = TILE_WALL_NORMAL;
-    floor = TILE_FLOOR_NORMAL;
 }
 
-void TileLoadWall(bool wizard)
+void tile_init_default_flavour()
 {
-    WallIdx(wall_tile_idx, floor_tile_idx, special_tile_idx);
-
-    // Number of flavours are generated automatically...
-    floor_flavours = tile_dngn_count(floor_tile_idx);
-    wall_flavours  = tile_dngn_count(wall_tile_idx);
-
-    if (special_tile_idx != -1)
-        special_flavours = tile_dngn_count(special_tile_idx);
-    else
-        special_flavours = 0;
+    tile_default_flv(you.level_type, you.where_are_you, env.tile_default); 
 }
 
 int get_clean_map_idx(int tile_idx)

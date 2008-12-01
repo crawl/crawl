@@ -247,6 +247,8 @@ NSUBST:             { CBEGIN(ITEM_LIST); return NSUBST; }
 COLOUR:             { CBEGIN(ITEM_LIST); return COLOUR; }
 FLOORCOL:           { CBEGIN(ARGUMENT); return FLOORCOL; }
 ROCKCOL:            { CBEGIN(ARGUMENT); return ROCKCOL; }
+FLOORTILE:          { CBEGIN(ARGUMENT); return FLOORTILE; }
+ROCKTILE:           { CBEGIN(ARGUMENT); return ROCKTILE; }
 MONS:               { CBEGIN(MNAME); return MONS; }
 ITEM:               { CBEGIN(ITEM_LIST); return ITEM; }
 MARKER:             { CBEGIN(ARGUMENT); return MARKER; }

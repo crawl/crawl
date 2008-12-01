@@ -41,7 +41,6 @@ end
 
 function fixup_bazaar()
   dgn.fixup_stairs("stone_arch", "exit_portal_vault")
-  dgn.floor_halo("enter_shop", "yellow")
 
   if (dgn.get_floor_colour() == "black") then
     dgn.change_floor_colour(random_bazaar_colour())
@@ -50,6 +49,25 @@ function fixup_bazaar()
   if (dgn.get_rock_colour() == "black") then
     dgn.change_rock_colour("yellow")
   end
+
+  local default = {rock="wall_vault", floor="floor_vault", halo="halo_vault"}
+  local tileset = {
+    blue = {rock="wall_brick_gray", floor="floor_grass", halo="halo_grass"},
+    red = {rock="wall_pebble_red", floor="floor_vault", halo="halo_vault"},
+    lightblue = {rock="wall_hive", floor="floor_grass", halo="halo_grass2"},
+    magenta = {rock="wall_stone_gray", floor="floor_dirt", halo="halo_dirt"},
+    green = {rock="wall_stone_gray", floor="floor_grass", halo="halo_grass"},
+  }
+
+  local tile = tileset[dgn.get_floor_colour()]
+  if (tile == nil) then
+    tile = default
+  end
+
+  dgn.change_floor_tile(tile.floor)
+  dgn.change_rock_tile(tile.rock)
+
+  dgn.floor_halo("enter_shop", "yellow", tile.halo)
 end
 
 dgn.set_lt_callback("bazaar", "fixup_bazaar")

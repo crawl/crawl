@@ -792,6 +792,14 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
 
     if (place.map.rock_colour != BLACK)
         env.rock_colour = place.map.rock_colour;
+
+#ifdef USE_TILE
+    if (place.map.rock_tile != 0)
+        env.tile_default.wall = place.map.rock_tile;
+
+    if (place.map.floor_tile != 0)
+        env.tile_default.floor = place.map.floor_tile;
+#endif
 }
 
 static bool _ensure_vault_placed(bool vault_success)

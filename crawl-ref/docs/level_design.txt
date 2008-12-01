@@ -502,6 +502,14 @@ ROCKCOL:  yellow
           the vault appears in. Should only be used for bazaars and other
           portal vaults.
 
+FLOORTILE: (tile name string, e.g. "floor_tomb")
+          Like FLOORCOL, this overrides the default floor tiles used for
+          this level. If the tile specified has variations, those will be
+          used automatically.
+
+ROCKTILE: (tile name string, e.g. "wall_hive")
+          Same as FLOORTILE, but for rock walls.
+
 ITEM:     (list of items, separated by comma)
           These are used to help place specified items at specific places
           within a vault. They create an array with up to 8 positions. What's

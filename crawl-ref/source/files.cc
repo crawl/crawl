@@ -1144,6 +1144,12 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
             Generated_Levels.insert(level_id::current());
         }
 
+#ifdef USE_TILE
+        tiles.load_dungeon(NULL, you.pos().x, you.pos().y);
+        tile_init_default_flavour();
+        tile_clear_flavour();
+#endif
+
         _clear_env_map();
         builder(you.your_level, you.level_type);
         just_created_level = true;

@@ -31,11 +31,11 @@
 struct tile_flavour
 {
     // The floor tile to use.
-    unsigned char floor;
+    unsigned short floor;
     // The wall tile to use.
-    unsigned char wall;
+    unsigned short wall;
     // Used as a random value or for special cases e.g. (bazaars, gates).
-    unsigned char special;
+    unsigned short special;
 };
 
 // A glorified unsigned int that assists with ref-counting the mcache.
@@ -1621,12 +1621,13 @@ public:
 
 #ifdef USE_TILE
     // indexed by grid coords
-    FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg; // tile fg
-    FixedArray<unsigned int, GXM, GYM> tile_bk_bg; // tile bg
+    FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg;
+    FixedArray<unsigned int, GXM, GYM> tile_bk_bg;
     FixedArray<tile_flavour, GXM, GYM> tile_flv;
     // indexed by (show-1) coords
     FixedArray<unsigned int,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_fg;
     FixedArray<unsigned int,ENV_SHOW_DIAMETER-2,ENV_SHOW_DIAMETER-2> tile_bg;
+    tile_flavour tile_default;
 #endif
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list

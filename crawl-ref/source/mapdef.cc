@@ -1198,7 +1198,8 @@ map_def::map_def()
       weight_depth_mult(), weight_depth_div(), welcome_messages(), map(),
       mons(), items(), keyspecs(), prelude("dlprelude"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"), rock_colour(BLACK),
-      floor_colour(BLACK), index_only(false), cache_offset(0L)
+      floor_colour(BLACK), rock_tile(0), floor_tile(0),
+      index_only(false), cache_offset(0L)
 {
     init();
 }
@@ -1228,6 +1229,7 @@ void map_def::reinit()
     welcome_messages.clear();
 
     rock_colour = floor_colour = BLACK;
+    rock_tile = floor_tile = 0;
 
     // Chance of using this level. Nonzero chance should be used
     // sparingly. When selecting vaults for a place, first those

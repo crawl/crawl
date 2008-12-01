@@ -169,6 +169,14 @@ local function clamp_in_bounds(x, y)
   return clamp_in(x, 2, dgn.GXM - 3), clamp_in(y, 2, dgn.GYM - 3)
 end
 
+local function set_tiles_for_place(place)
+  local rock = dgn.lev_rocktile(place)
+  dgn.change_rock_tile(rock)
+
+  local floor = dgn.lev_floortile(place)
+  dgn.change_floor_tile(floor)
+end
+
 local function set_floor_colour(colour)
   if not zig().level.floor_colour then
     zig().level.floor_colour = colour
@@ -211,10 +219,14 @@ local function monster_creator_fn(arg)
   local atyp = type(arg)
   if atyp == "string" then
     local _, _, branch = string.find(arg, "^place:(%w+):")
+    local _, _, place = string.find(arg, "^place:(%w+):?")
     local mcreator = dgn.monster_fn(arg)
     local function mspec(x, y, nth)
       if branch then
         set_floor_colour(dgn.br_floorcol(branch))
+      end
+      if place then
+        set_tiles_for_place(place)
       end
       return mcreator(x, y)
     end

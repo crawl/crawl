@@ -31,21 +31,10 @@
 #include "travel.h"
 #include "view.h"
 
-static inline bool _is_bazaar()
-{
-    return (you.level_type == LEVEL_PORTAL_VAULT
-            && you.level_type_name == "bazaar");
-}
-
 static inline bool _is_sewers()
 {
     return (you.level_type == LEVEL_PORTAL_VAULT
             && you.level_type_name == "sewer");
-}
-
-static inline unsigned short _get_bazaar_special_colour()
-{
-    return YELLOW;
 }
 
 void TileNewLevel(bool first_time)
@@ -55,7 +44,6 @@ void TileNewLevel(bool first_time)
         for (int x = 0; x < GXM; x++)
             tiles.update_minimap(x, y);
 
-    TileLoadWall(false);
     if (first_time)
         tile_init_flavour();
 
@@ -2636,7 +2624,7 @@ int tileidx_zap(int colour)
 }
 
 // Modify wall tile index depending on floor/wall flavour.
-static inline void _finalize_tile(unsigned int *tile, bool is_special,
+static inline void _finalize_tile(unsigned int *tile,
                                   unsigned char wall_flv,
                                   unsigned char floor_flv,
                                   unsigned char special_flv)
@@ -2644,6 +2632,9 @@ static inline void _finalize_tile(unsigned int *tile, bool is_special,
     int orig = (*tile) & TILE_FLAG_MASK;
     int flag = (*tile) & (~TILE_FLAG_MASK);
 
+    // TODO enne - expose this as an option, so ziggurat can use it too.
+    // Alternatively, allow the stone type to be set.
+    // 
     // Hack: Swap rock/stone in crypt and tomb, because there are
     //       only stone walls.
     if ((you.where_are_you == BRANCH_CRYPT || you.where_are_you == BRANCH_TOMB)
@@ -2652,33 +2643,14 @@ static inline void _finalize_tile(unsigned int *tile, bool is_special,
         orig = TILE_WALL_NORMAL;
     }
 
-    // If there are special tiles for this level, then use them.
-    // Otherwise, we'll fall through to the next case and replace
-    // special tiles with normal floor.
-    if (orig == TILE_FLOOR_NORMAL && is_special
-        && get_num_floor_special_flavours() > 0)
-    {
-        (*tile) = get_floor_special_tile_idx() + special_flv;
-        ASSERT(special_flv < get_num_floor_special_flavours());
-    }
-    else if (orig == TILE_FLOOR_NORMAL)
-    {
+    if (orig == TILE_FLOOR_NORMAL)
         (*tile) = floor_flv;
-    }
     else if (orig == TILE_WALL_NORMAL)
-    {
         (*tile) = wall_flv;
-    }
     else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
-    {
-        if (special_flv > 3)
-            special_flv = 3;
-        (*tile) = orig + special_flv;
-    }
+        (*tile) = orig + std::min((int)special_flv, 3);
     else if (orig < TILE_DNGN_MAX)
-    {
         (*tile) = orig + (special_flv % tile_dngn_count(orig));
-    }
 
     (*tile) |= flag;
 }
@@ -3937,21 +3909,33 @@ int jitter(SpecialIdx i)
     return (i + random_range(-1, 1) + 8) % 8;
 }
 
+void tile_clear_flavour()
+{
+    for (int y = 0; y < GYM; y++)
+        for (int x = 0; x < GXM; x++)
+        {
+            env.tile_flv[x][y].floor = 0;
+            env.tile_flv[x][y].wall = 0;
+            env.tile_flv[x][y].special = 0;
+        }
+}
+
+// For floors and walls that have not already been set to a particular tile,
+// set them to a random instance of the default floor and wall tileset.
 void tile_init_flavour()
 {
-    const bool bazaar = _is_bazaar();
-    const unsigned short baz_col = _get_bazaar_special_colour();
-
-    for (int x = 0; x < GXM; x++)
-        for (int y = 0; y < GYM; y++)
+    for (int y = 0; y < GYM; y++)
+        for (int x = 0; x < GXM; x++)
         {
-            int max_wall_flavour  = get_num_wall_flavours() - 1;
-            int max_floor_flavour = get_num_floor_flavours() - 1;
-            int wall_flavour  = random_range(0, max_wall_flavour);
-            int floor_flavour = random_range(0, max_floor_flavour);
+            int max_wall_flavor = tile_dngn_count(env.tile_default.wall) - 1;
+            int max_floor_flavor = tile_dngn_count(env.tile_default.floor) - 1;
+            int wall_rnd = random_range(0, max_wall_flavor);
+            int floor_rnd = random_range(0, max_floor_flavor);
 
-            env.tile_flv[x][y].floor = get_floor_tile_idx() + floor_flavour;
-            env.tile_flv[x][y].wall = get_wall_tile_idx() + wall_flavour;
+            if (!env.tile_flv[x][y].floor)
+                env.tile_flv[x][y].floor = env.tile_default.floor + floor_rnd;
+            if (!env.tile_flv[x][y].wall)
+                env.tile_flv[x][y].wall = env.tile_default.wall + wall_rnd;
 
             if (grd[x][y] == DNGN_CLOSED_DOOR || grd[x][y] == DNGN_OPEN_DOOR)
             {
@@ -3985,183 +3969,202 @@ void tile_init_flavour()
             {
                 env.tile_flv[x][y].special = 0;
             }
-            else if (bazaar && env.grid_colours[x][y] == baz_col
-                     && grd[x][y] == DNGN_FLOOR)
-            {
-                int left_grd  = (x > 0) ? grd[x-1][y] : DNGN_ROCK_WALL;
-                int right_grd = (x < GXM - 1) ? grd[x+1][y] : DNGN_ROCK_WALL;
-                int up_grd    = (y > 0) ? grd[x][y-1] : DNGN_ROCK_WALL;
-                int down_grd  = (y < GYM - 1) ? grd[x][y+1] : DNGN_ROCK_WALL;
-                unsigned short left_col = (x > 0) ?
-                    env.grid_colours[x-1][y] : BLACK;
-                unsigned short right_col = (x < GXM - 1) ?
-                    env.grid_colours[x+1][y] : BLACK;
-                unsigned short up_col = (y > 0) ?
-                    env.grid_colours[x][y-1] : BLACK;
-                unsigned short down_col = (y < GYM - 1) ?
-                    env.grid_colours[x][y+1] : BLACK;
-
-                // The special tiles contains part floor and part special, so
-                // if there are adjacent floor or special tiles, we should
-                // do our best to "connect" them appropriately.  If there are
-                // are other tiles there (walls, doors, whatever...) then it
-                // doesn't matter.
-                bool l_nrm = (left_grd == DNGN_FLOOR && left_col != baz_col);
-                bool r_nrm = (right_grd == DNGN_FLOOR && right_col != baz_col);
-                bool u_nrm = (up_grd == DNGN_FLOOR && up_col != baz_col);
-                bool d_nrm = (down_grd == DNGN_FLOOR && down_col != baz_col);
-
-                bool l_spc = (left_grd == DNGN_FLOOR && left_col == baz_col);
-                bool r_spc = (right_grd == DNGN_FLOOR && right_col == baz_col);
-                bool u_spc = (up_grd == DNGN_FLOOR && up_col == baz_col);
-                bool d_spc = (down_grd == DNGN_FLOOR && down_col == baz_col);
-
-                if (l_nrm && r_nrm || u_nrm && d_nrm)
-                {
-                    // Not much to do here...
-                    env.tile_flv[x][y].special = SPECIAL_FULL;
-                }
-                else if (l_nrm)
-                {
-                    if (u_nrm)
-                        env.tile_flv[x][y].special = SPECIAL_NW;
-                    else if (d_nrm)
-                        env.tile_flv[x][y].special = SPECIAL_SW;
-                    else if (u_spc && d_spc)
-                        env.tile_flv[x][y].special = SPECIAL_W;
-                    else if (u_spc && r_spc)
-                        env.tile_flv[x][y].special = SPECIAL_SW;
-                    else if (d_spc && r_spc)
-                        env.tile_flv[x][y].special = SPECIAL_NW;
-                    else if (u_spc)
-                    {
-                        env.tile_flv[x][y].special = coinflip() ?
-                            SPECIAL_W : SPECIAL_SW;
-                    }
-                    else if (d_spc)
-                    {
-                        env.tile_flv[x][y].special = coinflip() ?
-                            SPECIAL_W : SPECIAL_NW;
-                    }
-                    else
-                        env.tile_flv[x][y].special = jitter(SPECIAL_W);
-                }
-                else if (r_nrm)
-                {
-                    if (u_nrm)
-                        env.tile_flv[x][y].special = SPECIAL_NE;
-                    else if (d_nrm)
-                        env.tile_flv[x][y].special = SPECIAL_SE;
-                    else if (u_spc && d_spc)
-                        env.tile_flv[x][y].special = SPECIAL_E;
-                    else if (u_spc && l_spc)
-                        env.tile_flv[x][y].special = SPECIAL_SE;
-                    else if (d_spc && l_spc)
-                        env.tile_flv[x][y].special = SPECIAL_NE;
-                    else if (u_spc)
-                        env.tile_flv[x][y].special = coinflip() ?
-                            SPECIAL_E : SPECIAL_SE;
-                    else if (d_spc)
-                        env.tile_flv[x][y].special = coinflip() ?
-                            SPECIAL_E : SPECIAL_NE;
-                    else
-                        env.tile_flv[x][y].special = jitter(SPECIAL_E);
-                }
-                else if (u_nrm)
-                {
-                    if (r_spc && l_spc)
-                        env.tile_flv[x][y].special = SPECIAL_N;
-                    else if (r_spc && d_spc)
-                        env.tile_flv[x][y].special = SPECIAL_NW;
-                    else if (l_spc && d_spc)
-                        env.tile_flv[x][y].special = SPECIAL_NE;
-                    else if (r_spc)
-                    {
-                        env.tile_flv[x][y].special = coinflip() ?
-                            SPECIAL_N : SPECIAL_NW;
-                    }
-                    else if (l_spc)
-                    {
-                        env.tile_flv[x][y].special = coinflip() ?
-                            SPECIAL_N : SPECIAL_NE;
-                    }
-                    else
-                        env.tile_flv[x][y].special = jitter(SPECIAL_N);
-                }
-                else if (d_nrm)
-                {
-                    if (r_spc && l_spc)
-                        env.tile_flv[x][y].special = SPECIAL_S;
-                    else if (r_spc && u_spc)
-                        env.tile_flv[x][y].special = SPECIAL_SW;
-                    else if (l_spc && u_spc)
-                        env.tile_flv[x][y].special = SPECIAL_SE;
-                    else if (r_spc)
-                    {
-                        env.tile_flv[x][y].special = coinflip() ?
-                            SPECIAL_S : SPECIAL_SW;
-                    }
-                    else if (l_spc)
-                    {
-                        env.tile_flv[x][y].special = coinflip() ?
-                            SPECIAL_S : SPECIAL_SE;
-                    }
-                    else
-                        env.tile_flv[x][y].special = jitter(SPECIAL_S);
-                }
-                else if (u_spc && d_spc)
-                {
-                    // We know this value is already initialized and
-                    // is necessarily in bounds.
-                    char t = env.tile_flv[x][y-1].special;
-                    if (t == SPECIAL_NE || t == SPECIAL_E)
-                        env.tile_flv[x][y].special = SPECIAL_E;
-                    else if (t == SPECIAL_NW || t == SPECIAL_W)
-                        env.tile_flv[x][y].special = SPECIAL_W;
-                    else
-                        env.tile_flv[x][y].special = SPECIAL_FULL;
-                }
-                else if (r_spc && l_spc)
-                {
-                    // We know this value is already initialized and
-                    // is necessarily in bounds.
-                    char t = env.tile_flv[x-1][y].special;
-                    if (t == SPECIAL_NW || t == SPECIAL_N)
-                        env.tile_flv[x][y].special = SPECIAL_N;
-                    else if (t == SPECIAL_SW || t == SPECIAL_S)
-                        env.tile_flv[x][y].special = SPECIAL_S;
-                    else
-                        env.tile_flv[x][y].special = SPECIAL_FULL;
-                }
-                else if (u_spc && l_spc)
-                {
-                    env.tile_flv[x][y].special = SPECIAL_SE;
-                }
-                else if (u_spc && r_spc)
-                {
-                    env.tile_flv[x][y].special = SPECIAL_SW;
-                }
-                else if (d_spc && l_spc)
-                {
-                    env.tile_flv[x][y].special = SPECIAL_NE;
-                }
-                else if (d_spc && r_spc)
-                {
-                    env.tile_flv[x][y].special = SPECIAL_NW;
-                }
-                else
-                {
-                    env.tile_flv[x][y].special = SPECIAL_FULL;
-                }
-            }
-            else
+            else if (!env.tile_flv[x][y].special)
             {
                 env.tile_flv[x][y].special = random2(256);
             }
         }
+}
 
-    if (!bazaar)
-        return;
+static bool _adjacent_target(dungeon_feature_type target, int x, int y)
+{
+    for (int i = -1; i <= 1; i++)
+        for (int j = -1; j <= 1; j++)
+        {
+            if (!map_bounds(x+i, y+j))
+                continue;
+            if (grd[x+i][y+j] == target)
+                return true;
+        }
+
+    return false;
+}
+
+void tile_floor_halo(dungeon_feature_type target, int tile)
+{
+    for (int x = 0; x < GXM; x++)
+    {
+        for (int y = 0; y < GYM; y++)
+        {
+            if (grd[x][y] < DNGN_FLOOR_MIN)
+                continue;
+            if (!_adjacent_target(target, x, y))
+                continue;
+
+            bool l_flr = (x > 0) ? grd[x-1][y] >= DNGN_FLOOR_MIN : false;
+            bool r_flr = (x < GXM - 1) ? grd[x+1][y] >= DNGN_FLOOR_MIN : false;
+            bool u_flr = (y > 0) ? grd[x][y-1] >= DNGN_FLOOR_MIN : false;
+            bool d_flr = (y < GYM - 1) ? grd[x][y+1] >= DNGN_FLOOR_MIN : false;
+
+            bool l_target = _adjacent_target(target, x-1, y);
+            bool r_target = _adjacent_target(target, x+1, y);
+            bool u_target = _adjacent_target(target, x, y-1);
+            bool d_target = _adjacent_target(target, x, y+1);
+
+            // The special tiles contains part floor and part special, so
+            // if there are adjacent floor or special tiles, we should
+            // do our best to "connect" them appropriately.  If there are
+            // are other tiles there (walls, doors, whatever...) then it
+            // doesn't matter.
+            bool l_nrm = (l_flr && !l_target);
+            bool r_nrm = (r_flr && !r_target);
+            bool u_nrm = (u_flr && !u_target);
+            bool d_nrm = (d_flr && !d_target);
+
+            bool l_spc = (l_flr && l_target);
+            bool r_spc = (r_flr && r_target);
+            bool u_spc = (u_flr && u_target);
+            bool d_spc = (d_flr && d_target);
+
+            if (l_nrm && r_nrm || u_nrm && d_nrm)
+            {
+                // Not much to do here...
+                env.tile_flv[x][y].floor = tile + SPECIAL_FULL;
+            }
+            else if (l_nrm)
+            {
+                if (u_nrm)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_NW;
+                else if (d_nrm)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_SW;
+                else if (u_spc && d_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_W;
+                else if (u_spc && r_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_SW;
+                else if (d_spc && r_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_NW;
+                else if (u_spc)
+                {
+                    env.tile_flv[x][y].floor = tile + (coinflip() ?
+                        SPECIAL_W : SPECIAL_SW);
+                }
+                else if (d_spc)
+                {
+                    env.tile_flv[x][y].floor = tile + (coinflip() ?
+                        SPECIAL_W : SPECIAL_NW);
+                }
+                else
+                    env.tile_flv[x][y].floor = tile + jitter(SPECIAL_W);
+            }
+            else if (r_nrm)
+            {
+                if (u_nrm)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_NE;
+                else if (d_nrm)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_SE;
+                else if (u_spc && d_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_E;
+                else if (u_spc && l_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_SE;
+                else if (d_spc && l_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_NE;
+                else if (u_spc)
+                    env.tile_flv[x][y].floor = tile + (coinflip() ?
+                        SPECIAL_E : SPECIAL_SE);
+                else if (d_spc)
+                    env.tile_flv[x][y].floor = tile + (coinflip() ?
+                        SPECIAL_E : SPECIAL_NE);
+                else
+                    env.tile_flv[x][y].floor = tile + jitter(SPECIAL_E);
+            }
+            else if (u_nrm)
+            {
+                if (r_spc && l_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_N;
+                else if (r_spc && d_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_NW;
+                else if (l_spc && d_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_NE;
+                else if (r_spc)
+                {
+                    env.tile_flv[x][y].floor = tile + (coinflip() ?
+                        SPECIAL_N : SPECIAL_NW);
+                }
+                else if (l_spc)
+                {
+                    env.tile_flv[x][y].floor = tile + (coinflip() ?
+                        SPECIAL_N : SPECIAL_NE);
+                }
+                else
+                    env.tile_flv[x][y].floor = tile + jitter(SPECIAL_N);
+            }
+            else if (d_nrm)
+            {
+                if (r_spc && l_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_S;
+                else if (r_spc && u_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_SW;
+                else if (l_spc && u_spc)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_SE;
+                else if (r_spc)
+                {
+                    env.tile_flv[x][y].floor = tile + (coinflip() ?
+                        SPECIAL_S : SPECIAL_SW);
+                }
+                else if (l_spc)
+                {
+                    env.tile_flv[x][y].floor = tile + (coinflip() ?
+                        SPECIAL_S : SPECIAL_SE);
+                }
+                else
+                    env.tile_flv[x][y].floor = tile + jitter(SPECIAL_S);
+            }
+            else if (u_spc && d_spc)
+            {
+                // We know this value is already initialized and
+                // is necessarily in bounds.
+                int t = env.tile_flv[x][y-1].floor - tile;
+                if (t == SPECIAL_NE || t == SPECIAL_E)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_E;
+                else if (t == SPECIAL_NW || t == SPECIAL_W)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_W;
+                else
+                    env.tile_flv[x][y].floor = tile + SPECIAL_FULL;
+            }
+            else if (r_spc && l_spc)
+            {
+                // We know this value is already initialized and
+                // is necessarily in bounds.
+                int t = env.tile_flv[x-1][y].floor - tile;
+                if (t == SPECIAL_NW || t == SPECIAL_N)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_N;
+                else if (t == SPECIAL_SW || t == SPECIAL_S)
+                    env.tile_flv[x][y].floor = tile + SPECIAL_S;
+                else
+                    env.tile_flv[x][y].floor = tile + SPECIAL_FULL;
+            }
+            else if (u_spc && l_spc)
+            {
+                env.tile_flv[x][y].floor = tile + SPECIAL_SE;
+            }
+            else if (u_spc && r_spc)
+            {
+                env.tile_flv[x][y].floor = tile + SPECIAL_SW;
+            }
+            else if (d_spc && l_spc)
+            {
+                env.tile_flv[x][y].floor = tile + SPECIAL_NE;
+            }
+            else if (d_spc && r_spc)
+            {
+                env.tile_flv[x][y].floor = tile + SPECIAL_NW;
+            }
+            else
+            {
+                env.tile_flv[x][y].floor = tile + SPECIAL_FULL;
+            }
+        }
+    }
 
     // Second pass for clean up.  The only bad part about the above
     // algorithm is that it could turn a block of floor like this:
@@ -4180,45 +4183,43 @@ void tile_init_flavour()
     // Generally the tiles don't fit with a north to the right or left
     // of a south tile.  What we really want to do is to separate the
     // two regions, by making 1 a SPECIAL_SE and 2 a SPECIAL_NW tile.
-    for (int x = 0; x < GXM - 1; x++)
-        for (int y = 0; y < GYM - 1; y++)
+    for (int y = 0; y < GYM - 1; y++)
+        for (int x = 0; x < GXM - 1; x++)
         {
-            if (grd[x][y] != DNGN_FLOOR || env.grid_colours[x][y] != baz_col)
+            int this_spc = env.tile_flv[x][y].floor - tile;
+            if (this_spc < 0 || this_spc > 8)
                 continue;
 
-            if (env.tile_flv[x][y].special != SPECIAL_N
-                && env.tile_flv[x][y].special != SPECIAL_S
-                && env.tile_flv[x][y].special != SPECIAL_E
-                && env.tile_flv[x][y].special != SPECIAL_W)
+            if (this_spc != SPECIAL_N && this_spc != SPECIAL_S
+                && this_spc != SPECIAL_E && this_spc != SPECIAL_W)
             {
                 continue;
             }
 
-            int right_flavour = x < GXM - 1 ? env.tile_flv[x+1][y].special
-                                           : SPECIAL_FULL;
-            int down_flavour  = y < GYM - 1 ? env.tile_flv[x][y+1].special
-                                           : SPECIAL_FULL;
-            int this_flavour  = env.tile_flv[x][y].special;
+            int right_spc = x < GXM - 1 ? env.tile_flv[x+1][y].floor - tile
+                                        : SPECIAL_FULL;
+            int down_spc  = y < GYM - 1 ? env.tile_flv[x][y+1].floor - tile
+                                        : SPECIAL_FULL;
 
-            if (this_flavour == SPECIAL_N && right_flavour == SPECIAL_S)
+            if (this_spc == SPECIAL_N && right_spc == SPECIAL_S)
             {
-                env.tile_flv[x][y].special = SPECIAL_NE;
-                env.tile_flv[x+1][y].special = SPECIAL_SW;
+                env.tile_flv[x][y].floor = tile + SPECIAL_NE;
+                env.tile_flv[x+1][y].floor = tile + SPECIAL_SW;
             }
-            else if (this_flavour == SPECIAL_S && right_flavour == SPECIAL_N)
+            else if (this_spc == SPECIAL_S && right_spc == SPECIAL_N)
             {
-                env.tile_flv[x][y].special = SPECIAL_SE;
-                env.tile_flv[x+1][y].special = SPECIAL_NW;
+                env.tile_flv[x][y].floor = tile + SPECIAL_SE;
+                env.tile_flv[x+1][y].floor = tile + SPECIAL_NW;
             }
-            else if (this_flavour == SPECIAL_E && down_flavour == SPECIAL_W)
+            else if (this_spc == SPECIAL_E && down_spc == SPECIAL_W)
             {
-                env.tile_flv[x][y].special = SPECIAL_SE;
-                env.tile_flv[x][y+1].special = SPECIAL_NW;
+                env.tile_flv[x][y].floor = tile + SPECIAL_SE;
+                env.tile_flv[x][y+1].floor = tile + SPECIAL_NW;
             }
-            else if (this_flavour == SPECIAL_W && down_flavour == SPECIAL_E)
+            else if (this_spc == SPECIAL_W && down_spc == SPECIAL_E)
             {
-                env.tile_flv[x][y].special = SPECIAL_NE;
-                env.tile_flv[x][y+1].special = SPECIAL_SW;
+                env.tile_flv[x][y].floor = tile + SPECIAL_NE;
+                env.tile_flv[x][y+1].floor = tile + SPECIAL_SW;
             }
         }
 }
@@ -4410,9 +4411,6 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
     int x, y;
     int count = 0;
 
-    const bool bazaar = _is_bazaar();
-    const unsigned short baz_col = _get_bazaar_special_colour();
-
     for (y = 0; y < crawl_view.viewsz.y; y++)
         for (x = 0; x < crawl_view.viewsz.x; x++)
         {
@@ -4423,7 +4421,6 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
             unsigned char wall_flv    = 0;
             unsigned char floor_flv   = 0;
             unsigned char special_flv = 0;
-            bool is_special  = false;
             const bool in_bounds = (map_bounds(gx, gy));
 
             if (in_bounds)
@@ -4431,14 +4428,11 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                 wall_flv    = env.tile_flv[gx][gy].wall;
                 floor_flv   = env.tile_flv[gx][gy].floor;
                 special_flv = env.tile_flv[gx][gy].special;
-                is_special  = (bazaar && env.grid_colours[gx][gy] == baz_col);
             }
 
-            _finalize_tile(&tileb[count+1], is_special,
-                           wall_flv, floor_flv, special_flv);
+            _finalize_tile(&tileb[count+1], wall_flv, floor_flv, special_flv);
 
             const coord_def gc(gx, gy);
-
             if (is_excluded(gc))
             {
                 if (is_exclude_root(gc))

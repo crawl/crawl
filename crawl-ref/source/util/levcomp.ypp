@@ -55,7 +55,7 @@ level_range set_range(const char *s, int start, int end)
 %token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS KMASK
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE WEIGHT MONS ITEM MARKER COLOUR
 %token <i>      PRELUDE MAIN VALIDATE VETO NSUBST WELCOME LFLAGS BFLAGS
-%token <i>      FLOORCOL ROCKCOL
+%token <i>      FLOORCOL ROCKCOL FLOORTILE ROCKTILE
 
 %token <i>      COMMA COLON PERC INTEGER CHARACTER
 
@@ -163,6 +163,8 @@ metaline        : place
                 | colour
                 | floorcol
                 | rockcol
+                | floortile
+                | rocktile
                 | shuffle
                 | tags
                 | lflags
@@ -369,6 +371,24 @@ rockcol         : ROCKCOL { }
                     lc_map.main.add(
                         yylineno,
                         make_stringf("rockcol(\"%s\")",
+                            quote_lua_string($2).c_str()));
+                }
+
+floortile       : FLOORTILE { }
+                | FLOORTILE STRING
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("floortile(\"%s\")",
+                            quote_lua_string($2).c_str()));
+                }
+
+rocktile        : ROCKTILE { }
+                | ROCKTILE STRING
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("rocktile(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
 

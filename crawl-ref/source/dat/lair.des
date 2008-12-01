@@ -764,10 +764,11 @@ ENDMAP
 # Shoal hut with rune inside
 #
 # Shoal:$ is hand-hacked to force lots of minivaults.
-NAME:    shoalhut_rune
-TAGS:    shoal_rune
-SHUFFLE: ABCD
-SUBST:   A:x, B:x, C:x=, D=+
+NAME:      shoalhut_rune
+TAGS:      shoal_rune
+SHUFFLE:   ABCD
+SUBST:     A:x, B:x, C:x=, D=+
+ROCKTILE:  wall_vines
 MAP
 .xxCxx.
 xx...xx

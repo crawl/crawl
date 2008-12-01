@@ -46,6 +46,8 @@ function ice_cave_colours(e)
   e.colour("< = white")
   e.rockcol("white")
   e.floorcol("blue")
+  e.rocktile("wall_ice")
+  e.floortile("floor_ice")
 end
 }}
 

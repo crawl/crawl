@@ -294,6 +294,8 @@ MARKER:   Z = lua:item_pickup_change_flags { \
           }
 FLOORCOL: magenta
 ROCKCOL:  lightmagenta
+FLOORTILE:floor_tomb
+ROCKTILE: wall_zot_magenta
 
 #traps
 SUBST:    C = c:1000 =
@@ -369,6 +371,8 @@ TAGS:     transparent
 ORIENT:   float
 FLOORCOL: lightgrey
 ROCKCOL:  lightgrey
+FLOORTILE:floor_tomb
+ROCKTILE: wall_zot_gray
 MAP
 .
 ENDMAP
@@ -379,6 +383,8 @@ TAGS:     transparent
 ORIENT:   float
 FLOORCOL: lightgrey
 ROCKCOL:  blue
+FLOORTILE:floor_tomb
+ROCKTILE: wall_zot_blue
 MAP
 .
 ENDMAP
@@ -389,6 +395,8 @@ TAGS:     transparent
 ORIENT:   float
 FLOORCOL: blue
 ROCKCOL:  lightblue
+FLOORTILE:floor_tomb
+ROCKTILE: wall_zot_cyan
 MAP
 .
 ENDMAP
@@ -399,6 +407,8 @@ TAGS:     transparent
 ORIENT:   float
 FLOORCOL: lightblue
 ROCKCOL:  magenta
+FLOORTILE:floor_tomb
+ROCKTILE: wall_zot_blue
 MAP
 .
 ENDMAP

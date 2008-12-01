@@ -1250,8 +1250,9 @@ void InventoryRegion::pack_verts()
 
             if (item.flag & TILEI_FLAG_FLOOR)
             {
-                add_quad(TEX_DUNGEON, get_floor_tile_idx()
-                         + m_flavour[i] % get_num_floor_flavours(), x, y);
+                int num_floor = tile_dngn_count(env.tile_default.floor);
+                add_quad(TEX_DUNGEON, env.tile_default.floor
+                         + m_flavour[i] % num_floor, x, y);
             }
             else
                 add_quad(TEX_DUNGEON, TILE_ITEM_SLOT, x, y);

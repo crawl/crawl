@@ -36,6 +36,8 @@ function sewer_colours(e)
   e.floorcol("lightgrey")
   e.colour("w = green")
   e.colour("W = lightgreen")
+  e.rocktile("wall_slime")
+  e.floortile("floor_slime")
 end
 }}
 

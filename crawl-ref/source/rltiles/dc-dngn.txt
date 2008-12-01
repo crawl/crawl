@@ -191,21 +191,21 @@ wall/wall_yellow_rock1
 wall/wall_yellow_rock2
 wall/wall_yellow_rock3
 
-wall/brick_gray0 WALL_BAZAAR_GRAY
+wall/brick_gray0 WALL_BRICK_GRAY
 wall/brick_gray1
 wall/brick_gray2
 wall/brick_gray3
 
-wall/stone_gray0 WALL_BAZAAR_STONE
+wall/stone_gray0 WALL_STONE_GRAY
 wall/stone_gray1
 wall/stone_gray2
 wall/stone_gray3
 
-floor/grass0 FLOOR_BAZAAR_GRASS
+floor/grass0 FLOOR_GRASS
 floor/grass1
 floor/grass2
 
-floor/grass_n FLOOR_BAZAAR_GRASS1_SPECIAL
+floor/grass_n HALO_GRASS
 floor/grass_ne 
 floor/grass_e
 floor/grass_se
@@ -215,8 +215,6 @@ floor/grass_w
 floor/grass_nw
 floor/grass_full
 
-## NOTE: wall_undead and floor_nerves are used for the corruption effect.
-## They need to go last.
 wall/undead0 WALL_UNDEAD
 wall/undead1
 wall/undead2
@@ -233,7 +231,7 @@ floor/floor_nerves6
 %start
 %compose floor/grass0
 %compose floor/pedestal_n
-%finish FLOOR_BAZAAR_GRASS2_SPECIAL
+%finish HALO_GRASS2
 %start
 %compose floor/grass1
 %compose floor/pedestal_ne
@@ -267,7 +265,7 @@ floor/pedestal_full
 %start
 %compose floor/rect_gray0
 %compose floor/pedestal_n
-%finish FLOOR_BAZAAR_VAULT_SPECIAL
+%finish HALO_VAULT
 %start
 %compose floor/rect_gray1
 %compose floor/pedestal_ne
@@ -298,11 +296,11 @@ floor/pedestal_full
 %finish
 floor/pedestal_full
 
-floor/dirt0 FLOOR_BAZAAR_DIRT
+floor/dirt0 FLOOR_DIRT
 floor/dirt1
 floor/dirt2
 
-floor/dirt_n FLOOR_BAZAAR_DIRT_SPECIAL
+floor/dirt_n HALO_DIRT
 floor/dirt_ne 
 floor/dirt_e
 floor/dirt_se
