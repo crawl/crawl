@@ -40,6 +40,8 @@ struct bolt
     unsigned    type;                  // missile gfx
     int         colour;
     beam_type   flavour;
+    bool        drop_item;             // should drop an item when done
+    item_def*   item;                  // item to drop
     coord_def   source;                // beam origin
     coord_def   target;                // intended target
     coord_def   pos;                   // actual position
@@ -57,15 +59,22 @@ struct bolt
 
     bool        affects_nothing;       // should not hit monsters or features
 
+    bool        effect_known;          // did we _know_ this would happen?
+
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?
-    bool        effect_known;          // did we _know_ this would happen?
+
     int         fr_count, foe_count;   // # of times a friend/foe is "hit"
     int         fr_power, foe_power;   // total levels/hit dice affected
     int         fr_hurt, foe_hurt;     // # of friends/foes actually hurt
     int         fr_helped, foe_helped; // # of friends/foes actually helped
 
+    bool        dropped_item;          // item has been dropped
+    coord_def   item_pos;              // position item was dropped at
+    int         item_index;            // mitm[index] of item
+
     // INTERNAL use - should not usually be set outside of beam.cc
+    int         range_used;
     bool        is_tracer;       // is this a tracer?
     bool        aimed_at_feet;   // this was aimed at self!
     bool        msg_generated;   // an appropriate msg was already mpr'd
@@ -80,6 +89,13 @@ struct bolt
     bool        dont_stop_fr;    // stop_attack_prompt() returned false for
                                  // friend
     bool        dont_stop_player; // player answered self target prompt with 'y'
+
+    int         bounces;         // # times beam bounced off walls
+    coord_def   bounce_pos;      // position of latest wall bounce,
+                                 // reset if a reflection happens
+
+    int         reflections;     // # times beam reflected off shields
+    int         reflector;       // latest thing to reflect beam
 
     ray_def     ray;             // shoot on this specific ray
 
@@ -104,7 +120,7 @@ dice_def calc_dice( int num_dice, int max_damage );
 
 // Test if the to-hit (attack) beats evasion (defence).
 bool test_beam_hit(int attack, int defence);
-void fire_beam(bolt &pbolt, item_def *item = NULL, bool drop_item = false);
+void fire_beam(bolt &pbolt);
 
 int explosion( bolt &pbolt, bool hole_in_the_middle = false,
                bool explode_in_wall = false,
@@ -139,8 +155,9 @@ bool zapping( zap_type ztype, int power, struct bolt &pbolt,
               bool needs_tracer = false, std::string msg = "" );
 bool player_tracer( zap_type ztype, int power, struct bolt &pbolt,
                     int range = 0 );
-int affect(bolt &beam, const coord_def& p, item_def *item = NULL,
-           bool affect_items = true);
-void beam_drop_object( bolt &beam, item_def *item, const coord_def& where );
+int affect(bolt &beam, const coord_def& p = coord_def(),
+           item_def *item = NULL, bool affect_items = true);
+void beam_drop_object( bolt &beam, item_def *item = NULL,
+                       const coord_def& where = coord_def() );
 
 #endif

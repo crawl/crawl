@@ -862,6 +862,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     pbolt.colour      = item.colour;
     pbolt.flavour     = BEAM_MISSILE;
     pbolt.thrower     = KILL_MON_MISSILE;
+    pbolt.item        = &item;
     pbolt.aux_source.clear();
 
     const launch_retval projected =
@@ -1183,7 +1184,8 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     else
         really_returns = false;
 
-    fire_beam( pbolt, &item, !really_returns );
+    pbolt.drop_item = !really_returns;
+    fire_beam( pbolt );
 
     // The item can be destroyed before returning.
     if (really_returns && mons_thrown_object_destroyed(&item, pbolt.target,
@@ -1197,7 +1199,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         // Fire beam in reverse.
         pbolt.setup_retrace();
         viewwindow(true, false);
-        fire_beam(pbolt, &item, false);
+        fire_beam(pbolt);
         msg::stream << "The weapon returns "
                     << (player_monster_visible(monster)?
                           ("to " + monster->name(DESC_NOCAP_THE))

@@ -763,7 +763,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
 
     // for death by monster
     if ((death_type == KILLED_BY_MONSTER || death_type == KILLED_BY_BEAM
-         || death_type == KILLED_BY_SPORE)
+         || death_type == KILLED_BY_SPORE
+         || death_type == KILLED_BY_REFLECTION)
         && !invalid_monster_index(death_source)
         && menv[death_source].type != -1)
     {
@@ -1637,6 +1638,43 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
     case KILLED_BY_TARGETTING:
         desc += terse? "shot self" : "Killed themselves with bad targeting";
+        needs_damage = true;
+        break;
+
+    case KILLED_BY_REFLECTION:
+        needs_damage = true;
+        if (terse)
+            desc += "reflected bolt";
+        else
+        {
+            desc += "Killed by a reflected ";
+            if (auxkilldata.empty())
+                desc += "bolt";
+            else
+                desc += auxkilldata;
+
+            if (!death_source_name.empty() && !oneline && !semiverbose)
+            {
+                desc += "\n";
+                desc += "             ";
+                desc += "... reflected by ";
+                desc += death_source_name;
+                needs_damage = false;
+            }
+        }
+        break;
+
+    case KILLED_BY_BOUNCE:
+        if (terse)
+            desc += "bounced beam";
+        else
+        {
+            desc += "Killed themselves with a bounced ";
+            if (auxkilldata.empty())
+                desc += "beam";
+            else
+                desc += auxkilldata;
+        }
         needs_damage = true;
         break;
 

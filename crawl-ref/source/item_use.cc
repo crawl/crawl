@@ -2032,6 +2032,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     item.quantity = 1;
     item.slot     = index_to_letter(item.link);
 
+    pbolt.item = &item;
+
     // Now start real firing!
     origin_set_unknown(item);
     std::string ammo_name;
@@ -2712,7 +2714,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             Options.tut_throw_counter++;
 
         // Dropping item copy, since the launched item might be different.
-        fire_beam(pbolt, &item, !did_return);
+        pbolt.drop_item = !did_return;
+        fire_beam(pbolt);
 
         // The item can be destroyed before returning.
         if (did_return && thrown_object_destroyed(&item, pbolt.target, true))
@@ -2728,7 +2731,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // Fire beam in reverse.
         pbolt.setup_retrace();
         viewwindow(true, false);
-        fire_beam(pbolt, &item, false);
+        fire_beam(pbolt);
 
         msg::stream << item.name(DESC_CAP_THE) << " returns to your pack!"
                     << std::endl;

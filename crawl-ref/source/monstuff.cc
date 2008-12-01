@@ -5816,10 +5816,12 @@ static bool _handle_throw(monsters *monster, bolt & beem)
     if (_is_player_or_mon_sanct(monster))
         return (false);
 
+    item_def *missile = &mitm[mon_item];
+
     // Throwing a net at a target that is already caught would be
     // completely useless, so bail out.
-    if (mitm[mon_item].base_type == OBJ_MISSILES
-        && mitm[mon_item].sub_type == MI_THROWING_NET
+    if (missile->base_type == OBJ_MISSILES
+        && missile->sub_type == MI_THROWING_NET
         && ( beem.target == you.pos() && you.caught()
              || mgrd(beem.target) != NON_MONSTER
              && mons_is_caught(&menv[mgrd(beem.target)])))
@@ -5840,6 +5842,9 @@ static bool _handle_throw(monsters *monster, bolt & beem)
 
     // Set fake damage for the tracer.
     beem.damage = dice_def(10, 10);
+
+    // Set item for tracer, even though it probably won't be used
+    beem.item = missile;
 
     // Fire tracer.
     fire_tracer( monster, beem );

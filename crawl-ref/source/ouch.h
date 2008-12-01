@@ -17,27 +17,27 @@
 
 enum kill_method_type
 {
-    KILLED_BY_MONSTER,                 //    0
+    KILLED_BY_MONSTER,                 // 0
     KILLED_BY_POISON,
     KILLED_BY_CLOUD,
-    KILLED_BY_BEAM,                    //    3
+    KILLED_BY_BEAM,                    // 3
     KILLED_BY_DEATHS_DOOR,  // should be deprecated, but you never know {dlb}
-    KILLED_BY_LAVA,                    //    5
+    KILLED_BY_LAVA,                    // 5
     KILLED_BY_WATER,
     KILLED_BY_STUPIDITY,
     KILLED_BY_WEAKNESS,
     KILLED_BY_CLUMSINESS,
-    KILLED_BY_TRAP,                    //   10
+    KILLED_BY_TRAP,                    // 10
     KILLED_BY_LEAVING,
     KILLED_BY_WINNING,
     KILLED_BY_QUITTING,
     KILLED_BY_DRAINING,
-    KILLED_BY_STARVATION,              //   15
+    KILLED_BY_STARVATION,              // 15
     KILLED_BY_FREEZING,
     KILLED_BY_BURNING,
     KILLED_BY_WILD_MAGIC,
     KILLED_BY_XOM,
-    KILLED_BY_STATUE,                  //   20
+    KILLED_BY_STATUE,                  // 20
     KILLED_BY_ROTTING,
     KILLED_BY_TARGETTING,
     KILLED_BY_SPORE,
@@ -51,7 +51,9 @@ enum kill_method_type
     KILLED_BY_MELTING,
     KILLED_BY_BLEEDING,
     KILLED_BY_BEOGH_SMITING,
-    KILLED_BY_DIVINE_WRATH,            // 34
+    KILLED_BY_DIVINE_WRATH,
+    KILLED_BY_BOUNCE,                  // 35
+    KILLED_BY_REFLECTION,
 
     NUM_KILLBY
 };

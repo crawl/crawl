@@ -343,7 +343,8 @@ enum special_armour_type
     SPARM_RESISTANCE,                  //   15
     SPARM_POSITIVE_ENERGY,
     SPARM_ARCHMAGI,
-    SPARM_PRESERVATION                //   18
+    SPARM_PRESERVATION,
+    SPARM_REFLECTION                   //   19
 };
 
 enum special_missile_type // to separate from weapons in general {dlb}
@@ -637,6 +638,12 @@ bool item_is_rechargable(const item_def &it, bool known = false);
 bool is_enchantable_weapon(const item_def &wpn, bool uncurse);
 bool is_enchantable_armour(const item_def &arm, bool uncurse);
 
+bool is_shield(const item_def &item);
+bool is_shield_incompatible(const item_def &weapon,
+                            const item_def *shield = NULL);
+bool shield_reflects(const item_def &shield);
+
+// Only works for armour/weapons/missiles
 // weapon functions:
 int weapon_rarity( int w_type );
 
@@ -721,11 +728,6 @@ size_type item_size( const item_def &item );
 
 bool is_colourful_item( const item_def &item );
 
-bool is_shield(const item_def &item);
-bool is_shield_incompatible(const item_def &weapon,
-                            const item_def *shield = NULL);
-
-// Only works for armour/weapons/missiles
 std::string item_base_name(const item_def &item);
 const char* weapon_base_name(unsigned char subtype);
 

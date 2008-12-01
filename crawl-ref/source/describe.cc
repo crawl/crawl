@@ -1343,6 +1343,11 @@ static std::string _describe_armour( const item_def &item, bool verbose )
             description += "It protects its wearer's possessions "
                 "from damage and destruction.";
             break;
+
+        case SPARM_REFLECTION:
+            description += "It reflects blocked things back in the "
+                "direction they came from.";
+            break;
         }
     }
 

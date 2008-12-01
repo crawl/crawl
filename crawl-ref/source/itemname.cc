@@ -338,6 +338,7 @@ static const char* armour_ego_name( special_armour_type sparm, bool terse )
         case SPARM_POSITIVE_ENERGY:   return "positive energy";
         case SPARM_ARCHMAGI:          return "the Archmagi";
         case SPARM_PRESERVATION:      return "preservation";
+        case SPARM_REFLECTION:        return "reflection";
         default:                      return "bugginess";
         }
     }
@@ -363,6 +364,7 @@ static const char* armour_ego_name( special_armour_type sparm, bool terse )
         case SPARM_POSITIVE_ENERGY:   return " {rN+}";
         case SPARM_ARCHMAGI:          return " {Archmagi}";
         case SPARM_PRESERVATION:      return " {rCorr, Cons}";
+        case SPARM_REFLECTION:        return " {rflct}";
         default:                      return " {buggy}";
         }
     }

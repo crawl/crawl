@@ -206,6 +206,9 @@ static void _beam_set_default_values(bolt &beam, int power)
     beam.is_beam        = false;             // default for all beams.
     beam.is_tracer      = false;             // default for all player beams
     beam.thrower        = KILL_YOU_MISSILE;  // missile from player
+    beam.dropped_item   = false;             // no item droped yet
+    beam.reflections    = 0;                 // no reflections yet
+    beam.bounces        = 0;                 // no bounces yet
     beam.aux_source.clear();                 // additional source info, unused
 }
 
@@ -278,6 +281,11 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.beam_cancelled = false;
     pbolt.dont_stop_foe  = pbolt.dont_stop_fr = pbolt.dont_stop_player = false;
 
+    // Clear misc
+    pbolt.dropped_item  = false;
+    pbolt.reflections   = 0;
+    pbolt.bounces       = 0;
+
     fire_beam(pbolt);
 
     // Should only happen if the player answered 'n' to one of those
@@ -291,6 +299,13 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
         you.turn_is_over = false;
         return (false);
     }
+
+    // Tracers shouldn't drop items.
+    ASSERT(!pbolt.dropped_item);
+
+    // Reset, since these are cumulative over recursive calls to fire_beam.
+    pbolt.reflections = 0;
+    pbolt.bounces     = 0;
 
     // Set to non-tracing for actual firing.
     pbolt.is_tracer = false;
@@ -1404,17 +1419,55 @@ static bool _affect_mon_in_wall(bolt &pbolt, item_def *item,
  *      3d. If no valid move or bounce is found, break
  *      4. Check for beam termination on target
  *      5. Affect the cell which the beam just moved into -> affect()
- *      6. Decrease remaining range appropriately
- *      7. Check for early out due to aimed_at_feet
- *      8. Draw the beam
- * 9. Drop an object where the beam 'landed'
- *10. Beams explode where the beam 'landed'
- *11. If no message generated yet, send "nothing happens" (enchantments only)
+ *      6. If the beam was reflected during affect() then return, since
+ *         a recursive call to fire_beam() took care of the rest.
+ *      7. Decrease remaining range appropriately
+ *      8. Check for early out due to aimed_at_feet
+ *      9. Draw the beam
+ *10. Drop an object where the beam 'landed'
+ *11. Beams explode where the beam 'landed'
+ *12. If no message generated yet, send "nothing happens" (enchantments only)
  *
  */
 
-void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
+void fire_beam(bolt &pbolt)
 {
+    const int reflections = pbolt.reflections;
+    if (reflections == 0)
+    {
+        // We aren't being recursively called.
+        beam_message_cache.clear();
+        pbolt.range_used = 0;
+    }
+
+    ASSERT(pbolt.range >= 0 && pbolt.range_used >=0);
+    ASSERT(pbolt.range_used <= pbolt.range);
+    ASSERT(!pbolt.drop_item || pbolt.item);
+    ASSERT(!pbolt.dropped_item);
+
+    if (pbolt.range == pbolt.range_used && pbolt.range > 0)
+    {
+#ifdef DEBUG
+        mprf(MSGCH_DIAGNOSTICS, "fire_beam() called on already done beam "
+             "'%s' (item = '%s')", pbolt.name.c_str(),
+             pbolt.item ? pbolt.item->name(DESC_PLAIN).c_str() : "none");
+#endif
+        return;
+    }
+
+    if (!pbolt.is_tracer && reflections == 0 && YOU_KILL(pbolt.thrower))
+    {
+        switch(pbolt.flavour)
+        {
+        case BEAM_HELLFIRE:
+        case BEAM_HELLFROST:
+            did_god_conduct(DID_UNHOLY, 2 + random2(3), pbolt.effect_known);
+            break;
+        default:
+            break;
+        }
+    }
+
     bool beamTerminate;     // Has beam been 'stopped' by something?
     coord_def &testpos(pbolt.pos);
     bool did_bounce = false;
@@ -1425,15 +1478,13 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
     // This fixes beams being in explosion after use as a tracer.
     pbolt.in_explosion_phase = false;
 
-    beam_message_cache.clear();
-
 #ifdef USE_TILE
     int tile_beam = -1;
 
-    if (item && !pbolt.is_tracer && pbolt.flavour == BEAM_MISSILE)
+    if (pbolt.item && !pbolt.is_tracer && pbolt.flavour == BEAM_MISSILE)
     {
         const coord_def diff = pbolt.target - pbolt.source;
-        tile_beam = tileidx_item_throw(*item, diff.x, diff.y);
+        tile_beam = tileidx_item_throw(*pbolt.item, diff.x, diff.y);
     }
 #endif
 
@@ -1475,9 +1526,6 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
     // Give chance for beam to affect one cell even if aimed_at_feet.
     beamTerminate = false;
 
-    // Setup range.
-    int rangeRemaining = pbolt.range;
-
     // Before we start drawing the beam, turn buffering off.
 #ifdef WIN32CONSOLE
     bool oldValue = true;
@@ -1501,7 +1549,11 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
                 // Should we ever get a tracer with a wall-affecting
                 // beam (possible I suppose), we'll quit tracing now.
                 if (!pbolt.is_tracer)
-                    rangeRemaining -= affect(pbolt, testpos, item);
+                {
+                    (void) affect(pbolt, testpos);
+                    if (pbolt.reflections > reflections)
+                        return;
+                }
 
                 // If it's still a wall, quit.
                 if (grid_is_solid(grd(testpos)))
@@ -1514,11 +1566,14 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
                 if (!_isBouncy(pbolt, grd(testpos)))
                 {
                     // Affect any monster that might be in the wall.
-                    rangeRemaining -= affect(pbolt, testpos, item);
+                    (void) affect(pbolt, testpos);
+                    if (pbolt.reflections > reflections)
+                        return;
 
                     do
                     {
                         ray.regress();
+                        pbolt.bounce_pos = ray.pos();
                     }
                     while (grid_is_solid(grd(ray.pos())));
 
@@ -1527,20 +1582,25 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
                 }
 
                 did_bounce = true;
+                pbolt.bounces++;
 
                 // bounce
                 do
                 {
                     do
+                    {
                         ray.regress();
+                        pbolt.bounce_pos = ray.pos();
+                    }
                     while (grid_is_solid(grd(ray.pos())));
 
                     ray.advance_and_bounce();
-                    rangeRemaining -= 2;
+                    pbolt.range_used += 2;
                 }
-                while (rangeRemaining > 0 && grid_is_solid(grd(ray.pos())));
+                while (pbolt.range_used < pbolt.range
+                       && grid_is_solid(grd(ray.pos())));
 
-                if (rangeRemaining < 1)
+                if (pbolt.range_used >= pbolt.range)
                     break;
 
                 testpos = ray.pos();
@@ -1578,7 +1638,11 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
             }
 
             if (!pbolt.affects_nothing)
-                rangeRemaining -= affect(pbolt, testpos, item);
+            {
+                (void) affect(pbolt, testpos);
+                if (pbolt.reflections > reflections)
+                    return;
+            }
 
             if (random_beam)
             {
@@ -1587,14 +1651,16 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
             }
         }
 
+        ASSERT(pbolt.reflections == reflections);
+
         if (pbolt.beam_cancelled)
             return;
 
         // Always decrease range by 1.
-        rangeRemaining--;
+        pbolt.range_used++;
 
         // Check for range termination.
-        if (rangeRemaining <= 0)
+        if (pbolt.range_used >= pbolt.range)
             beamTerminate = true;
 
         // Special case - beam was aimed at feet.
@@ -1656,10 +1722,8 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
     // The beam has finished, and terminated at tx, ty.
 
     // Leave an object, if applicable.
-    if (drop_item && item)
-        beam_drop_object(pbolt, item, testpos);
-
-    ASSERT(!drop_item || item);
+    if (pbolt.drop_item && pbolt.item && !pbolt.dropped_item)
+        beam_drop_object(pbolt);
 
     // Check for explosion.  NOTE that for tracers, we have to make a copy
     // of target co-ords and then reset after calling this -- tracers should
@@ -1707,23 +1771,6 @@ void fire_beam(bolt &pbolt, item_def *item, bool drop_item)
     if (!pbolt.is_tracer)
         set_buffering(oldValue);
 #endif
-
-    if (!pbolt.is_tracer)
-    {
-        switch(pbolt.flavour)
-        {
-        case BEAM_HELLFIRE:
-        case BEAM_HELLFROST:
-            if (YOU_KILL(pbolt.thrower))
-            {
-                did_god_conduct(DID_UNHOLY, 2 + random2(3),
-                                pbolt.effect_known);
-            }
-            break;
-        default:
-            break;
-        }
-    }
 }
 
 
@@ -2533,6 +2580,11 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
     pbolt.fr_helped     = pbolt.fr_hurt  = 0;
     pbolt.foe_helped    = pbolt.foe_hurt = 0;
 
+    // Clear misc
+    pbolt.dropped_item  = false;
+    pbolt.reflections   = 0;
+    pbolt.bounces       = 0;
+
     // If there's a specifically requested foe_ratio, honour it.
     if (!pbolt.foe_ratio)
     {
@@ -2554,8 +2606,15 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
     else
         fire_beam(pbolt);
 
+    // Tracers shouldn't drop items.
+    ASSERT(!pbolt.dropped_item);
+
+    // Reset, since these are cumulative over recursive calls to fire_beam.
+    pbolt.reflections = 0;
+    pbolt.bounces     = 0;
+
     // Unset tracer flag (convenience).
-    pbolt.is_tracer     = false;
+    pbolt.is_tracer = false;
 }
 
 bool check_line_of_sight( const coord_def& source, const coord_def& target )
@@ -2765,14 +2824,39 @@ static bool _beam_term_on_target(bolt &beam, const coord_def& p)
     return (false);
 }
 
-void beam_drop_object( bolt &beam, item_def *item, const coord_def& p )
+void beam_drop_object( bolt &beam, item_def *item, const coord_def& _p )
 {
+    if (!item)
+        item = beam.item;
     ASSERT( item != NULL );
+    ASSERT( is_valid_item(*item) );
+    ASSERT( item->quantity > 0);
 
-    // Conditions: beam is missile and not tracer.
+#ifdef DEBUG
+    if (!beam.drop_item)
+        mprf(MSGCH_DIAGNOSTICS, "beam_drop_object() called when beam.drop_item "
+             "is false (beam = %s, item = %s)", beam.name.c_str(),
+             item->name(DESC_PLAIN).c_str());
+#endif
+
     if (beam.is_tracer || beam.flavour != BEAM_MISSILE)
         return;
 
+    if (beam.dropped_item)
+    {
+#ifdef DEBUG
+        mprf(MSGCH_DIAGNOSTICS, "beam_drop_object() called after object "
+             "already dropped (beam = %s, item = %s)", beam.name.c_str(),
+             item->name(DESC_PLAIN).c_str());
+#endif
+        return;
+    }
+
+    coord_def p = _p;
+    if (!in_bounds(p))
+       p = beam.pos;
+
+    // Conditions: beam is missile and not tracer.
     if (YOU_KILL(beam.thrower)
             && !thrown_object_destroyed(item, p, false)
         || MON_KILL(beam.thrower)
@@ -2791,7 +2875,16 @@ void beam_drop_object( bolt &beam, item_def *item, const coord_def& p )
             }
         }
 
-        copy_item_to_grid( *item, p, 1 );
+        if (copy_item_to_grid( *item, p, 1 ))
+            beam.dropped_item = true;
+        else
+        {
+#ifdef DEBUG
+            mprf(MSGCH_DIAGNOSTICS, "beam_drop_object() unable to drop "
+                 "object (beam = %s, item = %s)", beam.name.c_str(),
+                 item->name(DESC_PLAIN).c_str());
+#endif
+        }
     }
 }
 
@@ -2806,7 +2899,7 @@ static bool _found_player(const bolt &beam, const coord_def& p)
     return (grid_distance(p, you.pos()) <= dist);
 }
 
-int affect(bolt &beam, const coord_def& p, item_def *item, bool affect_items)
+int affect(bolt &beam, const coord_def& _p, item_def *item, bool affect_items)
 {
     // Extra range used by hitting something.
     int rangeUsed = 0;
@@ -2815,10 +2908,20 @@ int affect(bolt &beam, const coord_def& p, item_def *item, bool affect_items)
     if (beam.flavour == BEAM_LINE_OF_SIGHT)
         return (0);
 
+    coord_def p = _p;
+    if (!in_bounds(_p))
+        p = beam.pos;
+
+    if (!item)
+        item = beam.item;
+
     if (grid_is_solid(grd(p)))
     {
         if (beam.is_tracer)          // Tracers always stop on walls.
+        {
+            beam.range_used += BEAM_STOP;
             return (BEAM_STOP);
+        }
 
         if (_affects_wall(beam, grd(p)))
             rangeUsed += _affect_wall(beam, p);
@@ -2843,6 +2946,7 @@ int affect(bolt &beam, const coord_def& p, item_def *item, bool affect_items)
                 }
             }
 
+            beam.range_used += rangeUsed;
             return (rangeUsed);
         }
     }
@@ -2876,7 +2980,10 @@ int affect(bolt &beam, const coord_def& p, item_def *item, bool affect_items)
         }
 
         if (_beam_term_on_target(beam, p))
+        {
+            beam.range_used += BEAM_STOP;
             return (BEAM_STOP);
+        }
     }
 
     // If there is a monster at this location, affect it.
@@ -2903,10 +3010,14 @@ int affect(bolt &beam, const coord_def& p, item_def *item, bool affect_items)
             }
 
             if (_beam_term_on_target(beam, p))
+            {
+                beam.range_used += BEAM_STOP;
                 return (BEAM_STOP);
+            }
         }
     }
 
+    beam.range_used += rangeUsed;
     return (rangeUsed);
 }
 
@@ -3277,7 +3388,16 @@ static void _beam_ouch(int dam, bolt &beam)
              beam.aux_source.c_str());
     }
     else if (YOU_KILL(beam.thrower) && beam.aux_source.empty())
-        ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING);
+    {
+        if (beam.reflections > 0)
+            ouch(dam, beam.reflector, KILLED_BY_REFLECTION,
+                 beam.name.c_str());
+        else if (beam.bounces > 0)
+            ouch(dam, NON_MONSTER, KILLED_BY_BOUNCE,
+                 beam.name.c_str());
+        else
+            ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING);
+    }
     else if (MON_KILL(beam.thrower))
     {
         ouch(dam, beam.beam_source, KILLED_BY_BEAM,
@@ -3437,6 +3557,54 @@ static bool _beam_is_harmless_player(bolt &beam)
     }
 }
 
+static bool _beam_is_reflectable( const bolt &beam, const item_def *item )
+{
+    if (beam.range_used >= beam.range)
+        return (false);
+
+    return (item && is_shield(*item) && shield_reflects(*item));
+}
+
+static void _ident_reflector(item_def *item)
+{
+    if (!is_artefact(*item))
+        set_ident_flags(*item, ISFLAG_KNOW_TYPE);
+}
+
+static void _reflect_beam(bolt &beam)
+{
+    beam.reflections++;
+
+    // If it bounced off a wall before being refleced then head back towards
+    // the wall.
+    if (beam.bounces > 0 && in_bounds(beam.bounce_pos))
+        beam.target = beam.bounce_pos;
+    else
+        beam.target = beam.source;
+
+    beam.source = beam.pos;
+
+    // Reset bounce_pos, so that if we somehow reflect again before reaching
+    // the wall that we won't keep heading towards the wall.
+    beam.bounce_pos.set(0, 0);
+
+    if (beam.pos == you.pos())
+        beam.reflector = NON_MONSTER;
+    else if (mgrd(beam.pos) != NON_MONSTER)
+        beam.reflector = mgrd(beam.pos);
+    else
+    {
+        beam.reflector = -1;
+#ifdef DEBUG
+        mprf(MSGCH_DIAGNOSTICS, "Bolt reflected by neither player nor "
+             "monster (bolt = %s, item = %s)", beam.name.c_str(),
+             beam.item ? beam.item->name(DESC_PLAIN).c_str() : "none");
+#endif
+    }
+
+    fire_beam(beam);
+}
+
 // Returns amount of extra range used up by affectation of the player.
 static int _affect_player( bolt &beam, item_def *item, bool affect_items )
 {
@@ -3549,7 +3717,16 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
 #endif
                     if (hit < block)
                     {
-                        mprf( "You block the %s.", beam.name.c_str() );
+                        if (_beam_is_reflectable(beam, you.shield()))
+                        {
+                            mprf( "Your %s reflects the %s!",
+                                  you.shield()->name(DESC_PLAIN).c_str(),
+                                  beam.name.c_str() );
+                            _ident_reflector(you.shield());
+                            _reflect_beam(beam);
+                        }
+                        else
+                            mprf( "You block the %s.", beam.name.c_str() );
                         you.shield_block_succeeded();
                         return (BEAM_STOP);
                     }
@@ -4421,12 +4598,30 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         {
             const int hit = random2( beam.hit * 130 / 100
                                      + mon->shield_block_penalty() );
-            if (hit < shield_block && mons_near(mon)
-                && player_monster_visible(mon))
+            if (hit < shield_block)
             {
-                mprf("%s blocks the %s.",
-                     mon->name(DESC_CAP_THE).c_str(),
-                     beam.name.c_str());
+                item_def *shield = mon->mslot_item(MSLOT_SHIELD);
+                if (_beam_is_reflectable(beam, shield))
+                {
+                    if (you.can_see(mon))
+                    {
+                        mprf("%s reflects the %s off %s %s!",
+                             mon->name(DESC_CAP_THE).c_str(),
+                             beam.name.c_str(),
+                             mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                             shield->name(DESC_PLAIN).c_str());
+                        _ident_reflector(shield);
+                    }
+                    else if (see_grid(beam.pos))
+                        mprf("The %s bounces off of thin air!",
+                             beam.name.c_str());
+
+                    _reflect_beam(beam);
+                }
+                else
+                    mprf("%s blocks the %s.",
+                         mon->name(DESC_CAP_THE).c_str(),
+                         beam.name.c_str());
 
                 mon->shield_block_succeeded();
                 return (BEAM_STOP);
@@ -5371,20 +5566,22 @@ static bool _nice_beam(monsters *mon, const bolt &beam)
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
 bolt::bolt() : range(0), type('*'),
                colour(BLACK),
-               flavour(BEAM_MAGIC), source(), target(), pos(), damage(0,0),
-               ench_power(0), hit(0),
+               flavour(BEAM_MAGIC), drop_item(false), item(NULL), source(),
+               target(), pos(), damage(0,0), ench_power(0), hit(0),
                thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT), name(),
                is_beam(false), is_explosion(false), is_big_cloud(false),
-               aimed_at_spot(false),
-               aux_source(), affects_nothing(false), obvious_effect(false),
-               effect_known(true), fr_count(0), foe_count(0), fr_power(0),
-               foe_power(0), fr_hurt(0), foe_hurt(0), fr_helped(0),
-               foe_helped(0), is_tracer(false), aimed_at_feet(false),
+               aimed_at_spot(false), aux_source(), affects_nothing(false),
+               effect_known(true), obvious_effect(false), fr_count(0),
+               foe_count(0), fr_power(0), foe_power(0), fr_hurt(0),
+               foe_hurt(0), fr_helped(0), foe_helped(0),
+               dropped_item(false), item_pos(), item_index(NON_ITEM),
+               range_used(0), is_tracer(false), aimed_at_feet(false),
                msg_generated(false), in_explosion_phase(false),
                smart_monster(false), can_see_invis(false),
                attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false),
                beam_cancelled(false), dont_stop_foe(false),
-               dont_stop_fr(false), dont_stop_player(false)
+               dont_stop_fr(false), dont_stop_player(false),
+               bounces(false), bounce_pos(), reflections(false), reflector(-1)
 {
 }
 
