@@ -1215,7 +1215,7 @@ bool melee_attack::player_apply_aux_unarmed()
     }
 
     if (def->hit_points < 1)
-        monster_die(def, KILL_YOU, NON_MONSTER);
+        _monster_die(def, KILL_YOU, NON_MONSTER);
 
     return (!def->alive());
 }
@@ -1849,6 +1849,25 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     return (!def->alive());
 }
 
+void melee_attack::_monster_die(monsters* monster, killer_type killer,
+                                int killer_index)
+{
+    const bool chaos = damage_brand == SPWPN_CHAOS;
+
+    // Copy defender before it gets reset by monster_die()
+    monsters* def_copy = NULL;
+    if (chaos)
+        def_copy = new monsters(*monster);
+
+    monster_die(monster, killer, killer_index);
+
+    if (chaos)
+    {
+        chaos_killed_defender(def_copy);
+        delete def_copy;
+    }
+}
+
 static bool is_boolean_resist(beam_type flavour)
 {
     switch (flavour)
@@ -2078,13 +2097,17 @@ bool melee_attack::distortion_affects_defender()
         emit_nodmg_hit_message();
 
         if (defender->atype() == ACT_PLAYER && attacker_visible
-            && weapon != NULL && !is_artefact(*weapon))
+            && weapon != NULL && !is_unrandom_artefact(*weapon)
+            && !is_fixed_artefact(*weapon))
         {
             // If the player is being sent to the Abyss by being attacked
             // with a distortion weapon, then we have to ID it before
             // the player goes to Abyss, while the weapon object is
             // still in memory.
-            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
+            if (is_random_artefact(*weapon))
+                randart_wpn_learn_prop(*weapon, RAP_BRAND);
+            else
+                set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
         }
         else if (defender_visible)
             obvious_effect = true;
@@ -2097,8 +2120,331 @@ bool melee_attack::distortion_affects_defender()
     return (false);
 }
 
+static bool _can_clone(const actor *defender, coord_def *pos, int *midx)
+{
+    pos->set(-1, -1);
+    *midx = NON_MONSTER;
+
+    // Maybe create a player ghost?
+    if (defender->atype() == ACT_PLAYER)
+        return (false);
+
+    const monsters* mon = dynamic_cast<const monsters*>(defender);
+
+    // No uniques, pandemonium lords or player ghosts.  Also, figuring
+    // out the name for the clone of a named monster isn't worth it.
+    if (mons_is_unique(mon->type) || mon->is_named() || mon->ghost.get())
+        return (false);
+
+    // Holy beings can't be duplicated by chaotic means.
+    if (mons_is_holy(mon))
+        return (false);
+
+    // Is there space for the clone?
+    int squares = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        const coord_def p = mon->pos() + Compass[i];
+
+        if (in_bounds(p) && p != you.pos() && mgrd(p) == NON_MONSTER
+            && monster_habitable_grid(mon, grd(p)))
+        {
+            if (one_chance_in(++squares))
+                *pos = p;
+        }
+    }
+    if (squares == 0)
+        return (false);
+
+    // Is there an open slot in menv?
+    for (int i = 0; i < MAX_MONSTERS; i++)
+        if (menv[i].type == -1)
+        {
+            *midx = i;
+            break;
+        }
+
+    if (*midx == NON_MONSTER)
+        return (false);
+
+    // Is the monster carrying an artefact?
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        const int index = mon->inv[i];
+
+        if (index == NON_ITEM)
+            continue;
+
+        if (is_artefact(mitm[index]))
+            return (false);
+    }
+
+    return (true);        
+}
+
+static bool _do_clone(monsters* orig, coord_def pos, int midx)
+{
+    bool obvious = false;
+
+    monsters &mon(menv[midx]);
+
+    mon = *orig;
+
+    mon.position = pos;
+    mgrd(pos)    = midx;
+
+    // Duplicate objects, or unequip them if they can't be duplicated.
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        const int old_index = orig->inv[i];
+
+        if (old_index == NON_ITEM)
+            continue;
+
+        const int new_index = get_item_slot(0);
+        if (new_index == NON_ITEM)
+        {
+            mon.unequip(mitm[old_index], i, 0, true);
+            mon.inv[i] = NON_ITEM;
+            continue;
+        }
+
+        mon.inv[i]      = new_index;
+        mitm[new_index] = mitm[old_index];
+    }
+
+    // The player shouldn't get new permanent followers from cloning.
+    if (mon.attitude == ATT_FRIENDLY && !mons_is_summoned(&mon))
+        mon.mark_summoned(6, true);
+
+    if (you.can_see(orig) && you.can_see(&mon))
+    {
+        simple_monster_message(orig, " is duplicated!");
+        obvious = true;
+    }
+
+    mark_interesting_monst(&mon, mon.behaviour);
+    if (you.can_see(&mon))
+    {
+        seen_monster(&mon);
+        viewwindow(true, false);
+    }
+
+    return (obvious);
+}
+
+enum chaos_type
+{
+    CHAOS_CLONE,
+    CHAOS_POLY,
+    CHAOS_POLY_UP,
+    CHAOS_MAKE_SHIFTER,
+    CHAOS_HEAL,
+    CHAOS_HASTE,
+    CHAOS_INVIS,
+    CHAOS_SLOW,
+    CHAOS_PARA,
+    CHAOS_PETRIFY,
+    NUM_CHAOS_TYPES
+};
+
+// XXX: We might want to vary the probabilites for the various effects
+// based on whether the source is weapon of chaos or a monster with
+// AF_CHAOS
+void melee_attack::chaos_affects_defender()
+{
+    coord_def  clone_pos;
+    int        clone_midx;
+    const bool mon        = defender->atype() == ACT_MONSTER;
+    const bool immune     = mon && mons_immune_magic(def);
+    const bool is_shifter = mon && mons_is_shapeshifter(def);
+    const bool is_chaotic = mon && mons_is_chaotic(def);
+    const bool can_clone  = _can_clone(defender, &clone_pos, &clone_midx);
+    const bool can_poly   = is_shifter || (defender->can_safely_mutate()
+                                           && !immune);
+
+    int clone_chance   = can_clone ? 1 : 0;
+    int poly_chance    = can_poly  ? 1 : 0;
+    int poly_up_chance = can_poly  ? 1 : 0;
+    int shifter_chance = can_poly  ? 1 : 0;
+
+    if (is_chaotic)
+    {
+        // Polymorphing might reduce amount of chaos in the world.
+        poly_chance    = 0;
+        poly_up_chance = 0;
+
+        // Chaos wants more chaos.
+        clone_chance *= 2;
+
+        // Chaos loves shifters.
+        if (is_shifter)
+        {
+            clone_chance   *= 2;
+            poly_up_chance  = 4;
+
+            // Already a shifter
+            shifter_chance = 0;
+        }
+    }
+
+    // NOTE: Must appear in exact same order as in chaos_type enumeration.
+    int probs[NUM_CHAOS_TYPES] =
+    {
+        clone_chance,   // CHAOS_CLONE
+        poly_chance,    // CHAOS_POLY
+        poly_up_chance, // CHAOS_POLY_UP
+        shifter_chance, // CHAOS_MAKE_SHIFTER
+
+        5,  // CHAOS_HEAL
+        5,  // CHAOS_HASTE
+        5,  // CHAOS_INVIS
+
+        15, // CHAOS_SLOW
+        15, // CHAOS_PARA
+        15, // CHAOS_PETRIFY
+    };
+
+    bolt beam;
+    beam.flavour = BEAM_NONE;
+
+    int choice = choose_random_weighted(probs, probs + NUM_CHAOS_TYPES);
+    switch(static_cast<chaos_type>(choice))
+    {
+    case CHAOS_CLONE:
+        ASSERT(can_clone);
+        ASSERT(defender->atype() == ACT_MONSTER);
+        obvious_effect = _do_clone(def, clone_pos, clone_midx);
+        break;
+
+    case CHAOS_POLY:
+        ASSERT(can_poly);
+        beam.flavour = BEAM_POLYMORPH;
+        break;
+ 
+    case CHAOS_POLY_UP:
+        ASSERT(can_poly);
+        ASSERT(defender->atype() == ACT_MONSTER);
+
+        obvious_effect = you.can_see(defender);
+        monster_polymorph(def, RANDOM_MONSTER, PPT_MORE, true);
+        break;
+ 
+    case CHAOS_MAKE_SHIFTER:
+        ASSERT(can_poly);
+        ASSERT(!is_shifter);
+        ASSERT(defender->atype() == ACT_MONSTER);
+
+        obvious_effect = you.can_see(defender);
+        def->add_ench(one_chance_in(3) ?
+            ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
+        // Immediately polymorph monster, just to make the effect obvious.
+        monster_polymorph(def, RANDOM_MONSTER, PPT_SAME, true);
+        break;
+ 
+    case CHAOS_HEAL:
+        beam.flavour = BEAM_HEALING;
+        break;
+ 
+    case CHAOS_HASTE:
+        beam.flavour = BEAM_HASTE;
+        break;
+
+    case CHAOS_INVIS:
+        beam.flavour = BEAM_INVISIBILITY;
+        break;
+
+    case CHAOS_SLOW:
+        beam.flavour = BEAM_SLOW;
+        break;
+
+    case CHAOS_PARA:
+        beam.flavour = BEAM_PARALYSIS;
+        break;
+
+    case CHAOS_PETRIFY:
+        beam.flavour = BEAM_PETRIFY;
+        break;
+
+    default:
+        ASSERT(!"Invalid chaos effect type");
+        break;
+    }
+
+    if (beam.flavour != BEAM_NONE)
+    {
+        beam.name         = atk_name(DESC_CAP_THE);
+        beam.range        = 1;
+        beam.colour       = BLACK;
+        beam.is_beam      = false;
+        beam.is_explosion = false;
+        beam.is_big_cloud = false;
+        beam.effect_known = false;
+
+        beam.thrower = (attacker->atype() == ACT_PLAYER) ? KILL_YOU
+                            : def->confused_by_you() ? KILL_YOU_CONF
+                            : KILL_MON;
+        beam.beam_source =
+            (attacker->atype() == ACT_PLAYER) ? MHITYOU : monster_index(atk);
+
+        beam.source = attacker->pos();
+        beam.target = defender->pos();
+        beam.pos    = defender->pos();
+
+        beam.damage = dice_def(damage_done + special_damage + aux_damage, 1);
+
+        beam.ench_power = beam.damage.num;
+
+        fire_beam(beam);
+
+        if (you.can_see(defender))
+            obvious_effect = beam.obvious_effect;
+    }
+
+    if (!you.can_see(attacker))
+        obvious_effect = false;
+}
+
+void melee_attack::chaos_affects_attacker()
+{
+}
+
+// NOTE: Isn't called if monster dies from poisoning caused by chaos.
+void melee_attack::chaos_killed_defender(monsters* def_copy)
+{
+}
+
+// NOTE: random_chaos_brand() and random_chaos_attack_flavour() should
+// return a set of effects that are roughly the same, to make it easy
+// for chaos_affects_defender() not to do duplicate effects caused
+// by the non-chaos brands/flavours they return.
+int melee_attack::random_chaos_brand()
+{
+    int brands[] = {SPWPN_FLAMING, SPWPN_FREEZING, SPWPN_ELECTROCUTION,
+                    SPWPN_VENOM, SPWPN_DRAINING, SPWPN_VAMPIRICISM,
+                    SPWPN_PAIN, SPWPN_DISTORTION, SPWPN_CONFUSE,
+                    SPWPN_CHAOS};
+    return (RANDOM_ELEMENT(brands));
+}
+
+mon_attack_flavour melee_attack::random_chaos_attack_flavour()
+{
+    mon_attack_flavour flavours[] =
+        {AF_FIRE, AF_COLD, AF_ELEC, AF_POISON_NASTY, AF_VAMPIRIC, AF_DISTORT,
+         AF_CONFUSE, AF_CHAOS};
+    return (RANDOM_ELEMENT(flavours));
+}
+
 bool melee_attack::apply_damage_brand()
 {
+    bool brand_was_known = false;
+
+    if (weapon)
+        if (is_random_artefact(*weapon))
+            brand_was_known = randart_known_wpn_property(*weapon, RAP_BRAND);
+        else
+            brand_was_known = item_type_known(*weapon);
+
     bool ret = false;
 
     // Monster resistance to the brand.
@@ -2106,7 +2452,14 @@ bool melee_attack::apply_damage_brand()
 
     special_damage = 0;
     obvious_effect = false;
-    switch (damage_brand)
+
+    int brand;
+    if (damage_brand == SPWPN_CHAOS)
+        brand = random_chaos_brand();
+    else
+        brand = damage_brand;
+
+    switch (brand)
     {
     case SPWPN_FLAMING:
         res = fire_res_apply_cerebov_downgrade( defender->res_fire() );
@@ -2306,8 +2659,6 @@ bool melee_attack::apply_damage_brand()
     {
         emit_nodmg_hit_message();
 
-        // FIXME Currently Confusing Touch is the *only* way to get
-        // here. Generalise.
         const int hdcheck =
             (defender->holiness() == MH_NATURAL? random2(30) : random2(22));
 
@@ -2323,26 +2674,42 @@ bool melee_attack::apply_damage_brand()
                 (attacker->atype() == ACT_PLAYER) ? MHITYOU
                                                   : monster_index(atk);
             mons_ench_f2( def, beam_temp );
+            obvious_effect = beam_temp.obvious_effect;
         }
 
-        if (attacker->atype() == ACT_PLAYER)
+        if (attacker->atype() == ACT_PLAYER && damage_brand == SPWPN_CONFUSE)
         {
+            ASSERT(you.duration[DUR_CONFUSING_TOUCH]);
             you.duration[DUR_CONFUSING_TOUCH] -= roll_dice(3, 5);
 
             if (you.duration[DUR_CONFUSING_TOUCH] < 1)
                 you.duration[DUR_CONFUSING_TOUCH] = 1;
+            obvious_effect = false;
         }
         break;
     }
+
+    case SPWPN_CHAOS:
+        chaos_affects_defender();
+        break;
     }
+
+    if (attacker->atype() == ACT_PLAYER && damage_brand == SPWPN_CHAOS)
+        // If your god objects to using chaos then it makes the
+        // brand obvious.
+        if (did_god_conduct(DID_CHAOS, 2 + random2(3), brand_was_known))
+            obvious_effect = true;
 
     if (!obvious_effect)
         obvious_effect = !special_damage_message.empty();
 
     if (obvious_effect && attacker_visible && weapon != NULL
-        && !is_artefact(*weapon))
+        && !is_unrandom_artefact(*weapon) && !is_fixed_artefact(*weapon))
     {
-        set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
+        if (is_random_artefact(*weapon))
+            randart_wpn_learn_prop(*weapon, RAP_BRAND);
+        else
+            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
     }
 
     return (ret);
@@ -2621,7 +2988,7 @@ bool melee_attack::player_check_monster_died()
 
         player_monattk_hit_effects(true);
 
-        monster_die(def, KILL_YOU, NON_MONSTER);
+        _monster_die(def, KILL_YOU, NON_MONSTER);
 
         return (true);
     }
@@ -3571,7 +3938,11 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 {
     // Most of this is from BWR 4.1.2.
 
-    switch (attk.flavour)
+    mon_attack_flavour flavour = attk.flavour;
+    if (flavour == AF_CHAOS)
+        flavour = random_chaos_attack_flavour();
+
+    switch (flavour)
     {
     default:
         break;
@@ -3811,6 +4182,10 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     case AF_NAPALM:
         mons_do_napalm();
         break;
+
+    case AF_CHAOS:
+        chaos_affects_defender();
+        break;
     }
 }
 
@@ -3822,6 +4197,7 @@ void melee_attack::mons_perform_attack_rounds()
     // Melee combat, tell attacker to wield its melee weapon.
     atk->wield_melee_weapon();
 
+    monsters* def_copy = NULL;
     for (attack_number = 0; attack_number < nrounds; ++attack_number)
     {
         // Monster went away?
@@ -3854,6 +4230,13 @@ void melee_attack::mons_perform_attack_rounds()
         damage_done = 0;
         mons_set_weapon(attk);
         to_hit = mons_to_hit();
+
+        const bool chaos_attack = attk.flavour == AF_CHAOS
+                                  || damage_brand == SPWPN_CHAOS;
+
+        // Make copy of monster before monster_die() resets it.
+        if (chaos_attack && defender->atype() == ACT_MONSTER && !def_copy)
+            def_copy = new monsters(*def);
 
         final_attack_delay = mons_attk_delay();
         if (damage_brand == SPWPN_SPEED)
@@ -3945,12 +4328,16 @@ void melee_attack::mons_perform_attack_rounds()
 
             defender->hurt(attacker, damage_done + special_damage);
 
-            // Yredelemnul's injury mirroring can kill the attacker.
-            if (!attacker->alive() || !defender->alive()
-                || attacker == defender)
+            if (!defender->alive())
             {
-                return;
+                if (chaos_attack && defender->atype() == ACT_MONSTER)
+                    chaos_killed_defender(def_copy);
+                break;
             }
+
+            // Yredelemnul's injury mirroring can kill the attacker.
+            if (!attacker->alive() || attacker == defender)
+                break;
 
             special_damage = 0;
             special_damage_message.clear();
@@ -3962,18 +4349,28 @@ void melee_attack::mons_perform_attack_rounds()
             if (special_damage > 0)
                 defender->hurt(attacker, special_damage);
 
+            if (!defender->alive())
+            {
+                if (chaos_attack && defender->atype() == ACT_MONSTER)
+                    chaos_killed_defender(def_copy);
+                break;
+            }
+
             // Yredelemnul's injury mirroring can kill the attacker.
             if (!attacker->alive())
-                return;
+                break;
         }
 
         item_def *weap = atk->mslot_item(MSLOT_WEAPON);
-        if (weap && weap->cursed() && is_range_weapon(*weap)
-            && !(weap->flags & ISFLAG_KNOW_CURSE))
+        if (weap && you.can_see(atk) && weap->cursed()
+            && is_range_weapon(*weap))
         {
             set_ident_flags( *weap, ISFLAG_KNOW_CURSE );
         }
     }
+
+    if (def_copy)
+        delete def_copy;
 }
 
 bool melee_attack::mons_perform_attack()

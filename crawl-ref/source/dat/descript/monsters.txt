@@ -50,6 +50,11 @@ Cerebov
 
 A violent and wrathful demon, Cerebov appears as a giant human covered in shining golden armour and wielding a huge twisted sword.
 %%%%
+Chaos spawn
+
+A being of pure chaos, its form is constantly shifitng, growing and then
+losing eyes, mouths, claws, and tentacles.
+%%%%
 Daeva
 
 A divine agent of the Shining One, it is a towering winged figure with an aura of brilliant golden light.

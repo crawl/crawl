@@ -981,6 +981,14 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 description += "It turns projectiles fired from it into "
                     "bolts of frost.";
                 break;
+            case SPWPN_CHAOS:
+                if (is_range_weapon(item))
+                    description += "Each time it fires it turns the launched "
+                        "projectile into a different, random type of bolt.";
+                else
+                    description += "Each time it hits an enemy it has a "
+                        "different, random effect.";
+                break;
             case SPWPN_VAMPIRICISM:
                 description += "It inflicts no extra harm, "
                     "but heals its wielder somewhat when "
@@ -1145,11 +1153,21 @@ static std::string _describe_ammo( const item_def &item )
     if (item.special && item_type_known(item))
     {
         description += "$$";
+        std::string bolt_name;
 
         switch (item.special)
         {
         case SPMSL_FLAME:
+            bolt_name = "flame";
+            // Intentional fall-through
         case SPMSL_ICE:
+            if (bolt_name.empty())
+                bolt_name = "ice";
+            // Intentional fall-through
+        case SPMSL_CHAOS:
+            if (bolt_name.empty())
+                bolt_name = "a random type";
+
             description += "When ";
 
             if (can_throw)
@@ -1163,7 +1181,7 @@ static std::string _describe_ammo( const item_def &item )
                 description += "fired from an appropriate launcher, ";
 
             description += "it turns into a bolt of ";
-            description += (item.special == SPMSL_FLAME) ? "flame" : "ice";
+            description += bolt_name;
             description += ".";
             break;
         case SPMSL_POISONED:

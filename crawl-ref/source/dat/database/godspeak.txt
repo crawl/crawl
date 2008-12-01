@@ -260,6 +260,11 @@ Xom casts you into the Abyss!
 
 The world seems to spin as Xom's maniacal laughter rings in your ears.
 %%%%
+# Xom upgrades a nearby hostile monster's weapon to a chaos brand
+Xom chaos upgrade
+
+"Have a taste of chaos, mortal."
+%%%%
 #####################
 # other effects
 #####################

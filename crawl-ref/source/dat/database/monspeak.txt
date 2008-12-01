@@ -2218,6 +2218,20 @@ _Xtahua_rare_
 # Specific non-unique monsters
 ##########################################
 %%%%
+# Chaos spawns shouldn't have coherent speech, since that would be too
+# orderly for beings of pure chaos.
+chaos spawn
+
+VISUAL:@The_monster@ grows dozens of eye stalks in order to get a better look at you.
+
+VISUAL:@The_monster@ splits into many small globs of multi-coloured light, then recombines.
+
+VISUAL:@The_monster@ breifly grows a face disturbingly similar to your own.
+
+@The_monster@ ululates chillingly with its many mouths.
+
+@The_monster@ gibbers incoherently in a cacophony of voices.
+%%%%
 crystal golem
 
 VISUAL:@The_monster@ glitters in the dim dungeon light.

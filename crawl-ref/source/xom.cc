@@ -202,6 +202,43 @@ static void _xom_makes_you_cast_random_spell(int sever)
     your_spells(spell, sever, false);
 }
 
+static void _try_brand_switch(const int item_index)
+{
+    if (item_index == NON_ITEM)
+        return;
+
+    item_def &item(mitm[item_index]);
+
+    if (is_unrandom_artefact(item) || is_fixed_artefact(item))
+        return;
+
+    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_MISSILES)
+        return;
+
+    int brand;
+    if (item.base_type == OBJ_WEAPONS)
+    {
+        // Only switch already branded items.
+        if (get_weapon_brand(item) == SPWPN_NORMAL)
+           return;
+
+        brand = (int) SPWPN_CHAOS;
+    }
+    else
+    {
+        // Only switch already branded items.
+        if (get_ammo_brand(item) == SPWPN_NORMAL)
+           return;
+
+        brand = (int) SPMSL_CHAOS;
+    }
+
+    if (is_random_artefact(item))
+        randart_set_property(item, RAP_BRAND, brand);
+    else
+        item.special = brand;
+}
+
 static void _xom_make_item(object_class_type base, int subtype, int power)
 {
     int thing_created =
@@ -213,6 +250,8 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
         return;
     }
 
+    _try_brand_switch(thing_created);
+
     god_acting gdact(GOD_XOM);
 
     move_item_to_grid(&thing_created, you.pos());
@@ -221,6 +260,24 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
     stop_running();
 
     origin_acquired(mitm[thing_created], GOD_XOM);
+}
+
+static void _xom_acquirement(object_class_type force_class)
+{
+    god_acting gdact(GOD_XOM);
+
+    int item_index = NON_ITEM;
+
+    if (!acquirement(force_class, GOD_XOM, false, &item_index)
+        || item_index == NON_ITEM)
+    {
+       god_speaks(GOD_XOM, "\"No, never mind.\"");
+       return;
+    }
+
+    _try_brand_switch(item_index);
+
+    stop_running();
 }
 
 static object_class_type _get_unrelated_wield_class(object_class_type ref)
@@ -269,7 +326,7 @@ static bool _xom_annoyance_gift(int power)
                 // For added humour, give the same sub-type.
                 _xom_make_item(weapon->base_type, weapon->sub_type, power * 3);
             else
-                acquirement(weapon->base_type, GOD_XOM);
+                _xom_acquirement(weapon->base_type);
             return (true);
         }
 
@@ -315,7 +372,7 @@ static bool _xom_annoyance_gift(int power)
                 _get_unrelated_wield_class(weapon->base_type);
 
             if (x_chance_in_y(power, 256))
-                acquirement(objtype, GOD_XOM);
+                _xom_acquirement(objtype);
             else
                 _xom_make_item(objtype, OBJ_RANDOM, power * 3);
             return (true);
@@ -365,7 +422,7 @@ static bool _xom_gives_item(int power)
 
         god_acting gdact(GOD_XOM);
 
-        acquirement(objtype, GOD_XOM);
+        _xom_acquirement(objtype);
     }
     else
     {
@@ -382,6 +439,185 @@ static bool _choose_mutatable_monster(const monsters* mon)
 {
     return (mon->alive() && mon->can_safely_mutate()
             && !mons_is_submerged(mon));
+}
+
+static bool _is_chaos_upgradeable(const item_def &item,
+                                  const monsters* mon)
+{
+    // Since Xom is a god he is capable of changing randarts, but not
+    // other artifacts.
+    if (is_artefact(item) && !is_random_artefact(item))
+       return (false);
+
+    // Only upgrade permanent items, since the player should get a
+    // chance to use the item if s/he can defeat the monster.
+    if (item.flags & ISFLAG_SUMMONED)
+        return (false);
+
+    // Don't know how to downgrade blessed blades to normal blades.
+    // Can be justified as good gods protecting blessed blades.
+    if (is_blessed_blade(item))
+        return (false);
+
+    // God gifts from good gods are protected.  Also, Beogh hates all
+    // the other gods so he'll protect his gifts as well.
+    if (item.orig_monnum < 0)
+    {
+        god_type iorig = static_cast<god_type>(-item.orig_monnum - 2);
+        if ((iorig > GOD_NO_GOD && iorig < NUM_GODS)
+            && (is_good_god(iorig) || iorig == GOD_BEOGH))
+        {
+            return (false);
+        }
+    }
+
+    // Leave branded items alone, since this is supposed to be an
+    // upgrade.
+    if (item.base_type == OBJ_MISSILES)
+    {
+        // Don't make boulders or throwing nets of chaos.
+        if (item.sub_type == MI_LARGE_ROCK
+            || item.sub_type == MI_THROWING_NET)
+        {
+            return (false);
+        }
+
+        if (get_ammo_brand(item) == SPMSL_NORMAL)
+            return (true);
+    }
+    else
+    {
+        // If the weapon is a launcher and the monster is either out
+        // of ammo or is carrying javelins then don't bother upgrading
+        // launcher.
+        if (is_range_weapon(item)
+            && (mon->inv[MSLOT_MISSILE] == NON_ITEM
+                || !has_launcher(mitm[mon->inv[MSLOT_MISSILE]])))
+        {
+            return (false);
+        }
+        if (get_weapon_brand(item) == SPWPN_NORMAL)
+            return (true);
+    }
+
+    return (false);
+}
+
+static bool _choose_chaos_upgrade(const monsters* mon)
+{
+    // Only choose monsters that will attack.
+    if (!mon->alive() || mons_attitude(mon) != ATT_HOSTILE
+        || mons_is_fleeing(mon) || mons_is_panicking(mon))
+    {
+       return (false);
+    }
+
+    if (mons_itemuse(mon) < MONUSE_STARTING_EQUIPMENT)
+        return (false);
+
+    // Holy beings are presumably protected by another god, unless they're
+    // gifts from Xom.
+    if (mons_is_holy(mon) && mon->god != GOD_XOM)
+        return (false);
+
+    // God gifts from good gods will be protected by their god from being
+    // given chaos weapons, while other gods won't mind the help in their
+    // servants killing the player.
+    if (mon->god != GOD_NO_GOD && is_good_god(mon->god))
+       return (false);
+
+    // Beogh presumably doesn't want Xom messing with his orcs, even if
+    // it would give them a better weapon.
+    if (mons_genus(mon->type) == MONS_ORC)
+        return (false);
+
+    mon_inv_type slots[] = {MSLOT_WEAPON, MSLOT_ALT_WEAPON, MSLOT_MISSILE};
+
+    // NOTE: Code assumes that the monster will only be carrying one
+    // missile launcher at a time.
+    bool special_launcher = false;
+    for (int i = 0; i < 3; i++)
+    {
+        const mon_inv_type slot = slots[i];
+        const int          midx = mon->inv[slot];
+
+        if (midx == NON_ITEM)
+            continue;
+        const item_def &item(mitm[midx]);
+
+        // Monster already has a chaos weapon, give upgrade to a different
+        // monster.
+        if (is_chaotic_item(item))
+            return (false);
+
+        if (_is_chaos_upgradeable(item, mon))
+        {
+            if (item.base_type != OBJ_MISSILES)
+                return (true);
+
+            // If for some weird reason a monster is carrying a bow
+            // and javelins then branding the javelins is okay since
+            // they won't be fired by the bow.
+            if (!special_launcher || !has_launcher(item))
+                return (true);
+        }
+
+        if (is_range_weapon(item))
+        {
+            // If the launcher alters its ammo then branding the monster's
+            // ammo won't be an upgrade.
+            int brand = get_weapon_brand(item);
+            if (brand == SPWPN_FLAME || brand == SPWPN_FROST
+                || brand == SPWPN_VENOM)
+            {
+                special_launcher = true;
+            }
+        }
+    }
+
+    return (false);
+}
+
+static void _do_chaos_upgrade(item_def &item, const monsters* mon)
+{
+    ASSERT(item.base_type == OBJ_MISSILES
+           || item.base_type == OBJ_WEAPONS);
+    ASSERT(!is_unrandom_artefact(item) && !is_fixed_artefact(item));
+
+    bool seen = false;
+    if (mon && you.can_see(mon) && item.base_type == OBJ_WEAPONS)
+    {
+        seen = true;
+
+        description_level_type desc = mons_friendly(mon) ? DESC_CAP_YOUR :
+                                                           DESC_CAP_THE;
+        std::string msg = mon->name(desc);
+        msg += "'s ";
+        msg = replace_all(msg, "s's", "s'"); // Proper posessive.
+
+        msg += item.name(DESC_PLAIN, false, false, false);
+
+        msg += " is briefly surrounded by a scintillating arua of "
+               "random colours.";
+
+        mpr(msg.c_str());
+    }
+
+    const int brand = (item.base_type == OBJ_WEAPONS) ? (int) SPWPN_CHAOS :
+                                                        (int) SPMSL_CHAOS;
+
+    if (is_random_artefact(item))
+    {
+        randart_set_property(item, RAP_BRAND, brand);
+        if (seen)
+            randart_wpn_learn_prop(item, RAP_BRAND);
+    }
+    else
+    {
+        item.special = brand;
+        if (seen)
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+    }
 }
 
 static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
@@ -402,8 +638,15 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
     if (dct == DEMON_GREATER && coinflip())
         demon = summon_any_holy_being(HOLY_BEING_WARRIOR);
     else
-        demon = summon_any_demon(
-            (use_greater_demons || dct != DEMON_GREATER) ? dct : DEMON_COMMON);
+    {
+        const demon_class_type dct2 =
+            (!use_greater_demons && dct == DEMON_GREATER) ? DEMON_COMMON : dct;
+
+        if (dct2 == DEMON_COMMON && one_chance_in(10))
+            demon = MONS_CHAOS_SPAWN;
+        else
+            demon = summon_any_demon(dct2);
+    }
 
     return (demon);
 }
@@ -772,6 +1015,37 @@ static bool _xom_is_bad(int sever)
         }
         else if (x_chance_in_y(7, sever))
         {
+            monsters *mon =
+                choose_random_nearby_monster(0, _choose_chaos_upgrade);
+
+            if (!mon)
+                continue;
+
+            god_speaks(GOD_XOM, _get_xom_speech("chaos upgrade").c_str());
+
+            mon_inv_type slots[] = {MSLOT_WEAPON, MSLOT_ALT_WEAPON,
+                                    MSLOT_MISSILE};
+            for (int i = 0; i < 3; i++)
+            {
+                int idx = mon->inv[slots[i]];
+                if (idx == NON_ITEM)
+                    continue;
+
+                item_def &item(mitm[idx]);
+                if (!_is_chaos_upgradeable(item, mon))
+                    continue;
+
+                _do_chaos_upgrade(item, mon);
+                done = true;
+                break;
+            }
+            ASSERT(done);
+
+            // Wake the monster up.
+            behaviour_event( mon, ME_ALERT, MHITYOU );
+        }
+        else if (x_chance_in_y(8, sever))
+        {
             if (you.can_safely_mutate()
                 && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
             {
@@ -793,7 +1067,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (x_chance_in_y(8, sever))
+        else if (x_chance_in_y(9, sever))
         {
             if (there_are_monsters_nearby(false, false))
             {
@@ -819,7 +1093,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (x_chance_in_y(9, sever))
+        else if (x_chance_in_y(10, sever))
         {
             std::string speech = _get_xom_speech("draining or torment");
 
@@ -850,7 +1124,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (x_chance_in_y(10, sever))
+        else if (x_chance_in_y(11, sever))
         {
             std::string speech = _get_xom_speech("hostile monster");
 
@@ -890,7 +1164,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (x_chance_in_y(11, sever))
+        else if (x_chance_in_y(12, sever))
         {
             god_speaks(GOD_XOM, _get_xom_speech("major miscast effect").c_str());
 

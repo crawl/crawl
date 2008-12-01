@@ -140,9 +140,8 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
-    int weap_brand = get_weapon_brand(*weapon);
     if ((you.is_undead || you.species == SP_DEMONSPAWN)
-        && (weap_brand == SPWPN_HOLY_WRATH || is_blessed_blade(*weapon)))
+        && is_holy_item(*weapon))
     {
         if (say_reason)
         {
@@ -632,6 +631,11 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
                 case SPWPN_PAIN:
                     mpr("A searing pain shoots up your arm!");
+                    break;
+
+                case SPWPN_CHAOS:
+                    mpr("It is briefly surrounded by a scintillating arua "
+                        "of random colours.");
                     break;
 
                 case SPWPN_SINGING_SWORD:
@@ -1649,12 +1653,15 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
 // positive: frost, negative: flame, zero: neither
 bool elemental_missile_beam(int launcher_brand, int ammo_brand)
 {
+    if (launcher_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
+        return (true);
+
     int element = (launcher_brand == SPWPN_FROST
                    + ammo_brand == SPMSL_ICE
                    - launcher_brand == SPWPN_FLAME
                    - ammo_brand == SPMSL_FLAME);
 
-    return (element);
+    return (element != 0);
 }
 
 // XXX This is a bit too generous, as it lets the player determine
@@ -1667,6 +1674,8 @@ static bool determines_ammo_brand(int bow_brand, int ammo_brand)
     if (bow_brand == SPWPN_FROST && ammo_brand == SPMSL_ICE)
         return (false);
     if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_POISONED)
+        return (false);
+    if (bow_brand == SPWPN_CHAOS && ammo_brand == SPMSL_CHAOS)
         return (false);
 
     return (true);
@@ -1739,6 +1748,140 @@ void _merge_ammo_in_inventory(int slot)
     }
 }
 
+std::string setup_chaos_ammo(bolt &pbolt, item_def ammo)
+{
+    ASSERT(!is_artefact(ammo));
+
+    const bool poisoned = (get_ammo_brand(ammo) == SPMSL_POISONED);
+
+    // Don't choose BEAM_POISON or BEAM_HEALING if we have poisoned ammo.
+    const int pois_weight = poisoned ? 0 : 10;
+    const int heal_weight = poisoned ? 0 : 10;
+
+    const beam_type flavour = static_cast<beam_type>(
+        random_choose_weighted( pois_weight, BEAM_POISON,
+                                heal_weight, BEAM_HEALING,
+
+                                10,  BEAM_FIRE,
+                                10,  BEAM_COLD,
+                                10,  BEAM_ELECTRICITY,
+                                10,  BEAM_NEG,
+                                10,  BEAM_ACID,
+                                10,  BEAM_HELLFIRE,
+                                10,  BEAM_NAPALM,
+                                10,  BEAM_HELLFROST,
+                                10,  BEAM_SLOW,
+                                10,  BEAM_HASTE,
+                                10,  BEAM_PARALYSIS,
+                                10,  BEAM_CONFUSION,
+                                10,  BEAM_INVISIBILITY,
+                                10,  BEAM_POLYMORPH,
+                                10,  BEAM_BANISH,
+                                10,  BEAM_DISINTEGRATION,
+                                0 ));
+
+    std::string name;
+    int colour;
+
+    if (poisoned)
+       name = "poison ";
+
+    switch(flavour)
+    {
+    case BEAM_POISON:
+        name  += "poison";
+        colour = EC_POISON;
+        break;
+    case BEAM_HEALING:
+        name  += "healing";
+        colour = EC_HEAL;
+        break;
+    case BEAM_FIRE:
+        name  += "flame";
+        colour = EC_FIRE;
+        break;
+    case BEAM_COLD:
+        name  += "frost";
+        colour = EC_ICE;
+        break;
+    case BEAM_ELECTRICITY:
+        name  += "lightning";
+        colour = EC_ELECTRICITY;
+        break;
+    case BEAM_NEG:
+        name  += "negative energy";
+        colour = EC_NECRO;
+        break;
+    case BEAM_ACID:
+        name  += "acid";
+        colour = YELLOW;
+        break;
+    case BEAM_HELLFIRE:
+        name  += "hellfire";
+        colour = EC_FIRE;
+        break;
+    case BEAM_NAPALM:
+        name  += "sticky fire";
+        colour = EC_FIRE;
+        break;
+    case BEAM_HELLFROST:
+        name  += "hellfrost";
+        colour = EC_ICE;
+        break;
+    case BEAM_SLOW:
+        name  += "slowing";
+        colour = EC_ENCHANT;
+        break;
+    case BEAM_HASTE:
+        name  += "hasting";
+        colour = EC_ENCHANT;
+        break;
+    case BEAM_PARALYSIS:
+        name  += "paralysis";
+        colour = EC_ENCHANT;
+        break;
+    case BEAM_CONFUSION:
+        name  += "confusion";
+        colour = EC_ENCHANT;
+        break;
+    case BEAM_INVISIBILITY:
+        name  += "invisibility";
+        colour = EC_ENCHANT;
+        break;
+    case BEAM_POLYMORPH:
+        name  += "polymorphing";
+        colour = EC_MUTAGENIC;
+        break;
+    case BEAM_BANISH:
+        name  += "banishment";
+        colour = EC_WARP;
+        break;
+    case BEAM_DISINTEGRATION:
+        name  += "disintegration";
+        colour = EC_DEATH;
+        break;
+    default:
+        ASSERT(!"Invalid chaos ammo flavour.");
+        break;
+    }
+
+    pbolt.name  = "bolt of ";
+    pbolt.name += name;    
+
+    pbolt.flavour = flavour;
+    pbolt.colour  = colour;
+    pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
+
+    // Get name for a plain arrow/bolt/dart/needle.
+    ammo.special = 0;
+
+    std::string ammo_name = ammo.name(DESC_NOCAP_A);
+    ammo_name += " of ";
+    ammo_name += name;
+
+    return ammo_name;
+}
+
 // throw_it - currently handles player throwing only.  Monster
 // throwing is handled in mstuff2:mons_throw()
 // Note: If teleport is true, assume that pbolt is already set up,
@@ -1784,6 +1927,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     pbolt.set_target(thr);
 
     item_def& thrown = you.inv[throw_2];
+
+    // Did we know the ammo's brand before throwing it?
+    const bool ammon_brand_known = item_type_known(thrown);
 
     // Get the ammo/weapon type.  Convenience.
     const object_class_type wepClass = thrown.base_type;
@@ -1888,6 +2034,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     // Now start real firing!
     origin_set_unknown(item);
+    std::string ammo_name;
 
     if (is_blood_potion(item) && thrown.quantity > 1)
     {
@@ -2389,8 +2536,19 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // and vice versa.
 
     // Note that bow_brand is known since the bow is equipped.
-    if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
-        && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
+
+    // Chaos overides flame and frost/ice.
+    if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
+    {
+        ammo_name = setup_chaos_ammo(pbolt, item);
+
+        // [dshaligram] Branded arrows are much stronger.
+        dice_mult = (dice_mult * 150) / 100;
+
+        pbolt.effect_known = false;
+    }
+    else if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
+             && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
     {
         // [dshaligram] Branded arrows are much stronger.
         dice_mult = (dice_mult * 150) / 100;
@@ -2407,9 +2565,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.thrower = KILL_YOU_MISSILE;
         pbolt.aux_source.clear();
     }
-
-    if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
-        && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
+    else if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_ICE)
+             && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
     {
         // [dshaligram] Branded arrows are much stronger.
         dice_mult = (dice_mult * 150) / 100;
@@ -2522,12 +2679,15 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
     }
 
+    if (ammo_name.empty())
+        ammo_name = ammo.name(DESC_NOCAP_A);
+
     // Create message.
     mprf( "%s %s%s %s.",
           teleport  ? "Magically, you" : "You",
           projected ? "" : "awkwardly ",
           projected == LRET_LAUNCHED ? "shoot" : "throw",
-          ammo.name(DESC_NOCAP_A).c_str() );
+          ammo_name.c_str() );
 
     // Ensure we're firing a 'missile'-type beam.
     pbolt.is_beam   = false;
@@ -2558,6 +2718,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (did_return && thrown_object_destroyed(&item, pbolt.target, true))
             did_return = false;
     }
+
+    if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
+        did_god_conduct(DID_CHAOS, 2 + random2(3),
+                        bow_brand == SPWPN_CHAOS || ammon_brand_known);
 
     if (did_return)
     {

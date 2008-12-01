@@ -742,6 +742,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
                            "have been avoided");
         dislikes.push_back("you polymorph monsters");
         dislikes.push_back("you eat the flesh of sentient beings");
+        dislikes.push_back("you use weapons or missiles of chaos");
         break;
 
     case GOD_SHINING_ONE:
@@ -2952,6 +2953,21 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_CHAOS:
+            if (you.religion == GOD_ZIN)
+            {
+                retval = true;
+                if (!known)
+                {
+                    simple_god_message(" forgives your inadvertent chaotic "
+                                       "act, just this once.");
+                    break;
+                }
+                piety_change = -level;
+                penance      = level;
+            }
+            break;
+
         case DID_DESTROY_ORCISH_IDOL:
             if (you.religion == GOD_BEOGH)
             {
@@ -2975,6 +2991,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         else
             _dock_piety(-piety_change, penance);
 
+#define DEBUG_DIAGNOSTICS 1
 #if DEBUG_DIAGNOSTICS
         if (retval)
         {
@@ -2992,7 +3009,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Holy", "Spell Memorise", "Spell Cast",
                 "Spell Practise", "Spell Nonutility", "Cards", "Stimulants",
                 "Drink Blood", "Cannibalism", "Eat Meat", "Eat Souled Being",
-                "Deliberate Mutation", "Cause Glowing",
+                "Deliberate Mutation", "Cause Glowing", "Use Chaos",
                 "Destroy Orcish Idol", "Create Life"
             };
 
@@ -3261,7 +3278,7 @@ bool is_holy_item(const item_def& item)
         {
         const int item_brand = get_weapon_brand(item);
 
-        retval = (item_brand == SPWPN_HOLY_WRATH);
+        retval = (item_brand == SPWPN_HOLY_WRATH || is_blessed_blade(item));
         break;
         }
     case OBJ_SCROLLS:
@@ -3329,6 +3346,40 @@ bool is_evil_item(const item_def& item)
     return (retval);
 }
 
+bool is_chaotic_item(const item_def& item)
+{
+    bool retval = false;
+
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        {
+        const int item_brand = get_weapon_brand(item);
+        retval = (item_brand == SPWPN_CHAOS);
+        }
+        break;
+    case OBJ_MISSILES:
+        {
+        const int item_brand = get_ammo_brand(item);
+        retval = (item_brand == SPMSL_CHAOS);
+        }
+        break;
+    case OBJ_WANDS:
+        retval = (item.sub_type == WAND_POLYMORPH_OTHER);
+        break;
+    case OBJ_POTIONS:
+        retval = (item.sub_type == POT_MUTATION);
+        break;
+    default:
+        break;
+    }
+
+    if (is_random_artefact(item) && randart_wpn_property(item, RAP_MUTAGENIC))
+        retval = true;
+
+    return (retval);
+}
+
 bool good_god_dislikes_item_handling(const item_def &item)
 {
     return (is_good_god(you.religion) && is_evil_item(item)
@@ -3346,19 +3397,8 @@ bool god_dislikes_item_handling(const item_def &item)
 
     if (you.religion == GOD_ZIN)
     {
-        if (((item.base_type == OBJ_POTIONS && item.sub_type == POT_MUTATION)
-             || (item.base_type == OBJ_WANDS
-                 && item.sub_type == WAND_POLYMORPH_OTHER))
-            && item_type_known(item))
-        {
+        if (item_type_known(item) && is_chaotic_item(item))
             return (true);
-        }
-
-        if (is_random_artefact(item)
-            && randart_known_wpn_property(item, RAP_MUTAGENIC))
-        {
-            return (true);
-        }
     }
 
     if (you.religion == GOD_SHINING_ONE)
@@ -3378,7 +3418,9 @@ bool god_dislikes_item_handling(const item_def &item)
             const int item_brand = get_ammo_brand(item);
 
             if (item_brand == SPMSL_POISONED || item_brand == SPMSL_CURARE)
+            {
                 return (true);
+            }
         }
         else if (item.base_type == OBJ_STAVES
                  && (item.sub_type == STAFF_POISON

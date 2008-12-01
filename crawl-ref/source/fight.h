@@ -13,6 +13,7 @@
 
 #include "externs.h"
 #include "randart.h"
+#include "mon-util.h"
 
 enum unarmed_attack_type
 {
@@ -198,6 +199,11 @@ private:
     // Returns true if the defender is banished.
     bool distortion_affects_defender();
 
+    void chaos_affects_defender();
+    void chaos_affects_attacker();
+    void chaos_killed_defender(monsters* def_copy);
+    int  random_chaos_brand();
+
 private:
     // Monster-attack specific stuff
     bool mons_attack_you();
@@ -221,6 +227,8 @@ private:
     void mons_do_napalm();
     std::string mons_defender_name();
     void wasp_paralyse_defender();
+
+    mon_attack_flavour random_chaos_attack_flavour();
 
 private:
     // Player-attack specific stuff
@@ -261,6 +269,7 @@ private:
     std::string player_why_missed();
     void player_warn_miss();
     void player_check_weapon_effects();
+    void _monster_die(monsters *monster, killer_type killer, int killer_index);
 };
 
 #endif

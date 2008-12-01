@@ -830,6 +830,7 @@ unsigned int item_value( item_def item, bool ident )
                 valued *= 50;
                 break;
 
+            case SPWPN_CHAOS:
             case SPWPN_SPEED:
                 valued *= 40;
                 break;

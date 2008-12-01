@@ -160,6 +160,8 @@ bool puton_item(int slot, bool prompt_finger = true);
 bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn);
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
 
+std::string setup_chaos_ammo(bolt &pbolt, item_def item);
+
 bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
               int acc_bonus = 0, dist *target = NULL);
 

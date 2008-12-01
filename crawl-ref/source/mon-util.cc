@@ -575,7 +575,8 @@ bool mons_is_chaotic(const monsters *mon)
         return (true);
 
     const int attk_flavour = mons_attack_spec(mon, 0).flavour;
-    return (attk_flavour == AF_MUTATE || attk_flavour == AF_ROT);
+    return (attk_flavour == AF_MUTATE || attk_flavour == AF_ROT
+            || attk_flavour == AF_CHAOS);
 }
 
 bool mons_is_poisoner(const monsters *mon)
@@ -738,13 +739,18 @@ int get_shout_noise_level(const shout_type shout)
     }
 }
 
-// Only the beast uses S_RANDOM for noise type.
+// Only beasts and chaos spawns uses S_RANDOM for noise type.
 // Pandemonium lords can also get here but this mostly used for the
 // "says" verb used for insults.
 static bool _shout_fits_monster(int type, int shout)
 {
-    if (shout == NUM_SHOUTS || shout >= NUM_LOUDNESS)
+    if (shout == NUM_SHOUTS || shout >= NUM_LOUDNESS || shout == S_SILENT)
         return (false);
+
+    // Chaos spawns can do anything but demon taunts, since they're
+    // not coherenet enough to actually say words.
+    if (type == MONS_CHAOS_SPAWN)
+        return (shout != S_DEMON_TAUNT);
 
     // For demon lords almost everything is fair game.
     // It's only used for the shouting verb ("say", "bellow", "roar", ...)
@@ -760,8 +766,6 @@ static bool _shout_fits_monster(int type, int shout)
     case S_WHINE:
     // The beast cannot speak.
     case S_DEMON_TAUNT:
-    // Silent is boring.
-    case S_SILENT:
         return (false);
     default:
         return (true);
@@ -1018,17 +1022,16 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
     ASSERT(smc);
     mon_attack_def attk = smc->attack[attk_number];
 
+    if (attk.type == AT_RANDOM)
+        attk.type = static_cast<mon_attack_type>(random_range(AT_HIT,
+                                                              AT_BUTT)); 
+
     if (attk.flavour == AF_KLOWN)
     {
-        switch (random2(6))
-        {
-        case 0: attk.flavour = AF_POISON_NASTY; break;
-        case 1: attk.flavour = AF_ROT; break;
-        case 2: attk.flavour = AF_DRAIN_XP; break;
-        case 3: attk.flavour = AF_FIRE; break;
-        case 4: attk.flavour = AF_COLD; break;
-        case 5: attk.flavour = AF_BLINK; break;
-        }
+        mon_attack_flavour flavours[] =
+            {AF_POISON_NASTY, AF_ROT, AF_DRAIN_XP, AF_FIRE, AF_COLD, AF_BLINK};
+
+        attk.flavour = RANDOM_ELEMENT(flavours);
     }
 
     return (zombified ? downscale_zombie_attack(mon, attk) : attk);
@@ -3637,6 +3640,10 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
         case SPWPN_DISTORTION:
             mpr("Its appearance distorts for a moment.");
             break;
+        case SPWPN_CHAOS:
+            mpr("It is briefly surrounded by a scintillating arua of "
+                "random colours.");
+            break;
 
         default:
             // A ranged weapon without special message is known to be unbranded.
@@ -3645,7 +3652,12 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
         }
 
         if (message_given)
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+        {
+            if (is_random_artefact(item))
+                randart_wpn_learn_prop(item, RAP_BRAND);
+            else
+                set_ident_flags(item, ISFLAG_KNOW_TYPE);
+        }
     }
 }
 
@@ -3739,7 +3751,12 @@ void monsters::unequip_weapon(item_def &item, int near, bool msg)
             message_given = false;
         }
         if (message_given)
-            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+        {
+            if (is_random_artefact(item))
+                randart_wpn_learn_prop(item, RAP_BRAND);
+            else
+                set_ident_flags(item, ISFLAG_KNOW_TYPE);
+        }
     }
 }
 
@@ -4687,6 +4704,8 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
     std::string str;
     char        ch = mons_char(type);
 
+    const bool rand = (type == MONS_CHAOS_SPAWN);
+
     switch(get_mon_shape(this))
     {
     case MON_SHAPE_CENTAUR:
@@ -4705,7 +4724,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
     case MON_SHAPE_QUADRUPED_TAILLESS:
     case MON_SHAPE_QUADRUPED_WINGED:
     case MON_SHAPE_ARACHNID:
-        if (type == MONS_SCORPION)
+        if (type == MONS_SCORPION || rand && one_chance_in(4))
             str = "pincer";
         else
         {
@@ -4738,7 +4757,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
         break;
 
     case MON_SHAPE_MISC:
-        if (ch == 'x' || ch == 'X')
+        if (ch == 'x' || ch == 'X' || rand)
         {
             str = "tentacle";
             break;
@@ -4768,14 +4787,25 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
 
             case MONS_GIANT_ORANGE_BRAIN:
             default:
-                str        = "body";
-                can_plural = false;
+                if (rand)
+                    str = "rhizome";
+                else
+                {
+                    str        = "body";
+                    can_plural = false;
+                }
                 break;
         }
     }
 
    if (str.empty())
+   {
+       // Reduce the chance of a random-shaped monster having hands.
+       if (rand && coinflip())
+           return (hand_name(plural, can_plural));
+          
        str = "hand";
+   }
 
    if (plural && *can_plural)
        str = pluralise(str);
@@ -4792,6 +4822,8 @@ std::string monsters::foot_name(bool plural, bool *can_plural) const
 
     std::string str;
     char        ch = mons_char(type);
+
+    const bool rand = (type == MONS_CHAOS_SPAWN);
 
     switch(get_mon_shape(this))
     {
@@ -4823,7 +4855,12 @@ std::string monsters::foot_name(bool plural, bool *can_plural) const
     case MON_SHAPE_QUADRUPED:
     case MON_SHAPE_QUADRUPED_TAILLESS:
     case MON_SHAPE_QUADRUPED_WINGED:
-        if (ch == 'h')
+        if (rand)
+        {
+            const char* feet[] = {"paw", "talon", "hoof"};
+            str = RANDOM_ELEMENT(feet);
+        }
+        else if (ch == 'h')
             str = "paw";
         else if (ch == 'l' || ch == 'D')
             str = "talon";
@@ -4862,7 +4899,7 @@ std::string monsters::foot_name(bool plural, bool *can_plural) const
         break;
 
     case MON_SHAPE_MISC:
-        if (ch == 'x' || ch == 'X')
+        if (ch == 'x' || ch == 'X' || rand)
         {
             str = "tentacle";
             break;
@@ -4877,7 +4914,13 @@ std::string monsters::foot_name(bool plural, bool *can_plural) const
     }
 
    if (str.empty())
+   {
+       // Reduce the chance of a random-shaped monster having feet.
+       if (rand && coinflip())
+           return (foot_name(plural, can_plural));
+          
        return (plural ? "feet" : "foot");
+   }
 
    if (plural && *can_plural)
        str = pluralise(str);
@@ -7679,6 +7722,9 @@ mon_body_shape get_mon_shape(const monsters *mon)
 
 mon_body_shape get_mon_shape(const int type)
 {
+    if (type == MONS_CHAOS_SPAWN)
+        return static_cast<mon_body_shape>(random2(MON_SHAPE_MISC + 1));
+
     switch(mons_char(type))
     {
     case 'a': // ants and cockroaches

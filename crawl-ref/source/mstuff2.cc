@@ -1040,9 +1040,16 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         monster->speed_increment += speed_delta;
     }
 
+    // Chaos overides flame and frost
+    if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
+    {
+        (void) setup_chaos_ammo(pbolt, item);
+        baseHit += 2;
+        exDamBonus += 6;
+    }
     // WEAPON or AMMO of FIRE
-    if (bow_brand == SPWPN_FLAME && ammo_brand != SPMSL_ICE
-        || ammo_brand == SPMSL_FLAME && bow_brand != SPWPN_FROST)
+    else if (bow_brand == SPWPN_FLAME && ammo_brand != SPMSL_ICE
+            || ammo_brand == SPMSL_FLAME && bow_brand != SPWPN_FROST)
     {
         baseHit += 2;
         exDamBonus += 6;

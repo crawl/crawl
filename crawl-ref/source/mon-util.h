@@ -49,7 +49,8 @@ enum mon_attack_type
     AT_TAIL_SLAP,
     AT_BUTT,
 
-    AT_SHOOT        // Attack representing missile damage for M_ARCHER.
+    AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
+    AT_RANDOM       // Anything but AT_SHOOT
 };
 
 enum mon_attack_flavour
@@ -79,7 +80,8 @@ enum mon_attack_flavour
     AF_KLOWN,
     AF_DISTORT,
     AF_RAGE,
-    AF_NAPALM
+    AF_NAPALM,
+    AF_CHAOS
 };
 
 // properties of the monster class (other than resists/vulnerabilities)

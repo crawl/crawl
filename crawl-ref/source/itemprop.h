@@ -98,6 +98,7 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     MAX_PAN_LORD_BRANDS = SPWPN_RETURNING,
 
     SPWPN_CONFUSE,
+    SPWPN_CHAOS,
     SPWPN_RANDART_I = 25,              //   25
     SPWPN_RANDART_II,
     SPWPN_RANDART_III,
@@ -354,7 +355,8 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_POISONED,                    //    3
     SPMSL_POISONED_II,                 //    4 - unused
     SPMSL_CURARE,                      //    5
-    SPMSL_RETURNING                    //    6
+    SPMSL_RETURNING,                   //    6
+    SPMSL_CHAOS                        //    7
 };
 
 enum special_ring_type // jewellery mitm[].special values
