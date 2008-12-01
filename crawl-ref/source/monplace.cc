@@ -2679,7 +2679,7 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
     // whether a tracked enemy has moved too much, in case we have to update
     // the path.
     if (pos != path[path.size() - 1])
-        waypoints.push_back(pos);
+        waypoints.push_back(path[path.size() - 1]);
 
     return (waypoints);
 }

@@ -1582,7 +1582,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg, bool mermaid)
     const int dist = loudness * loudness;
     const int player_distance = distance( you.pos(), where );
 
-    // message the player
+    // Message the player.
     if (player_distance <= dist && player_can_hear( where ))
     {
         if (msg)
@@ -1619,7 +1619,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg, bool mermaid)
             else if (mermaid && mons_primary_habitat(monster) == HT_WATER
                      && !mons_friendly(monster))
             {
-                // Mermaids call (hostile) aquatic monsters.
+                // Mermaids/sirens call (hostile) aquatic monsters.
                 behaviour_event( monster, ME_ALERT, MHITNOT, where );
             }
             else

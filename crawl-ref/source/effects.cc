@@ -2627,7 +2627,7 @@ void change_labyrinth(bool msg)
                 }
             }
         }
-        else if (one_chance_in(750))
+        else if (one_chance_in(500))
         {
             // Sometimes (rarely) add blood randomly, accumulating with time...
             env.map(p).property |= FPROP_BLOODY;
@@ -2680,7 +2680,7 @@ void change_labyrinth(bool msg)
                 }
             }
         }
-        else if (one_chance_in(150))
+        else if (one_chance_in(100))
         {
             // Occasionally add blood randomly, accumulating with time...
             env.map(p).property |= FPROP_BLOODY;

@@ -2847,73 +2847,131 @@ static bool _pacified_leave_level(monsters *mon, std::vector<level_exit> e,
     return (false);
 }
 
+// Counts deep water twice.
 static int _count_water_neighbours(coord_def p)
 {
-    int deep_water_count = 0;
+    int water_count = 0;
     for (adjacent_iterator ai(p); ai; ++ai)
-        if (grd(p) == DNGN_DEEP_WATER)
-            deep_water_count++;
-
-    return (deep_water_count);
+    {
+        if (grd(*ai) == DNGN_SHALLOW_WATER)
+            water_count++;
+        else if (grd(*ai) == DNGN_DEEP_WATER)
+            water_count += 2;
+    }
+    return (water_count);
 }
 
+// Pick the nearest water grid that is surrounded by the most
+// water squares within LoS.
 static bool _find_siren_water_target(monsters *mon)
 {
-    mpr("in _find_siren_water_target");
     ASSERT(mon->type == MONS_SIREN);
+
+    // Moving away could break the entrancement, so don't do this.
+    if ((mon->pos() - you.pos()).rdist() > 6)
+        return (false);
+
+    // Already completely surrounded by deep water.
+    if (_count_water_neighbours(mon->pos()) >= 16)
+        return (true);
+
     if (mon->travel_target == MTRAV_SIREN)
     {
-        coord_def targ_pos(mon->travel_path[mon->travel_path.size()-1]);
+        coord_def targ_pos(mon->travel_path[mon->travel_path.size() - 1]);
+#ifdef DEBUG_PATHFIND
+        mprf("siren target is (%d, %d), dist = %d",
+             targ_pos.x, targ_pos.y, (int) (mon->pos() - targ_pos).rdist());
+#endif
         if ((mon->pos() - targ_pos).rdist() > 2)
             return (true);
     }
 
-    int water_count;
+    monster_los lm;
+    lm.set_monster(mon);
+    lm.set_los_range(LOS_RADIUS);
+    lm.fill_los_field();
+
     int best_water_count = 0;
     coord_def best_target;
-    int best_num;
+    bool first = true;
 
-    for (int k = 1; k <= LOS_RADIUS; k++)
-        for (int x = -1; x <= 1; x++)
-            for (int y = -1; y <= 1; y++)
+    while (true)
+    {
+        int best_num = 0;
+        for (radius_iterator ri(mon->pos(), LOS_RADIUS, true, false);
+             ri; ++ri)
+        {
+            if (!grid_is_water(grd(*ri)))
+                continue;
+
+            // In the first iteration only count water grids that are
+            // not closer to the player than to the siren.
+            if (first && (mon->pos() - *ri).rdist() > (you.pos() - *ri).rdist())
+                continue;
+
+            // Counts deep water twice.
+            const int water_count = _count_water_neighbours(*ri);
+            if (water_count < best_water_count)
+                continue;
+
+            if (water_count > best_water_count)
             {
-                if (x == 0 && y == 0)
+                best_water_count = water_count;
+                best_target = *ri;
+                best_num = 1;
+            }
+            else // water_count == best_water_count
+            {
+                const int old_dist = (mon->pos() - best_target).rdist();
+                const int new_dist = (mon->pos() - *ri).rdist();
+                if (new_dist > old_dist)
                     continue;
 
-                const coord_def c(mon->pos() + coord_def(k*x, k*y));
-                if (!grid_is_water(grd(c)))
-                    continue;
-
-                water_count = _count_water_neighbours(c);
-                if (water_count <= best_water_count)
-                    continue;
-
-                if (water_count > best_water_count)
+                if (new_dist < old_dist)
                 {
-                    best_water_count = water_count;
-                    best_target = c;
+                    best_target = *ri;
                     best_num = 1;
                 }
-                else // if (water_count == best_water_count)
-                {
-                    best_num++;
-                    if (one_chance_in(best_num))
-                        best_target = c;
-                }
+                else if (one_chance_in(++best_num))
+                    best_target = *ri;
             }
+        }
 
-    if (best_water_count == 0)
+        if (!first || best_water_count > 0)
+            break;
+
+        // Else start the second iteration.
+        first = false;
+    }
+
+    if (!best_water_count)
         return (false);
 
+    // We're already optimally placed.
+    if (best_target == mon->pos())
+        return (true);
+
     monster_pathfind mp;
+#ifdef WIZARD
+    // Remove old highlighted areas to make place for the new ones.
+    for (rectangle_iterator ri(1); ri; ++ri)
+        env.map(*ri).property &= ~(FPROP_HIGHLIGHT);
+#endif
+
     if (mp.init_pathfind(mon, best_target))
     {
         mon->travel_path = mp.calc_waypoints();
+
         if (!mon->travel_path.empty())
         {
+#ifdef WIZARD
+            for (unsigned int i = 0; i < mon->travel_path.size(); i++)
+                env.map(mon->travel_path[i]).property |= FPROP_HIGHLIGHT;
+#endif
+#ifdef DEBUG_PATHFIND
             mprf("Found a path to (%d, %d) with %d surrounding water squares",
                  best_target.x, best_target.y, best_water_count);
-
+#endif
             // Okay then, we found a path.  Let's use it!
             mon->target = mon->travel_path[0];
             mon->travel_target = MTRAV_SIREN;
@@ -2930,7 +2988,7 @@ static bool _handle_monster_travelling(monsters *mon,
 {
 #ifdef DEBUG_PATHFIND
     mprf("Monster %s reached target (%d, %d)",
-         mon->name(DESC_PLAIN).c_str(), mon->target_x, mon->target_y);
+         mon->name(DESC_PLAIN).c_str(), mon->target.x, mon->target.y);
 #endif
 
     // Hey, we reached our first waypoint!
@@ -3110,7 +3168,7 @@ static bool _handle_monster_patrolling(monsters *mon)
         mprf("Monster %s (pp: %d, %d) is now patrolling to (%d, %d)",
              mon->name(DESC_PLAIN).c_str(),
              mon->patrol_point.x, mon->patrol_point.y,
-             mon->target_x, mon->target_y);
+             mon->target.x, mon->target.y);
 #endif
     }
 
@@ -3414,7 +3472,6 @@ static void _handle_behaviour(monsters *mon)
                 if (mon->type == MONS_SIREN)
                 {
                     if (player_mesmerised_by(mon)
-                        && (mon->pos() - you.pos()).rdist() < 6
                         && _find_siren_water_target(mon))
                     {
                         break;
@@ -4667,7 +4724,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                 || delay.type == DELAY_DESCENDING_STAIRS)
             {
 #ifdef DEBUG_DIAGNOSTICS
-                mpr("Taking stairs, don't behold.", MSGCH_DIAGNOSTICS);
+                mpr("Taking stairs, don't mesmerise.", MSGCH_DIAGNOSTICS);
 #endif
                 break;
             }
@@ -6843,7 +6900,6 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     if (grd(monster->pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
         && !monster_habitable_grid(monster, DNGN_DEEP_WATER))
     {
-        mpr("set seen_context...");
         monster->seen_context = "emerges from the water";
     }
     mgrd(monster->pos()) = NON_MONSTER;
