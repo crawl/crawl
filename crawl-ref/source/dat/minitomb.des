@@ -27,6 +27,8 @@ function minitomb_setup_features(e)
         e.colour("< = yellow")
         e.rockcol("white")
         e.floorcol("yellow")
+        e.rocktile("wall_tomb")
+        e.floortile("floor_tomb")
 end
 }}
 
