@@ -3,8 +3,6 @@
 # disable controlled teleports?
 #
 # Todo: 
-# add several types of cloud generators
-# timed entry (around 2000 turns), also for Sewer
 # some ice cave destination maps could be smaller
 
 ###############################################################################
@@ -17,7 +15,6 @@
 # of depth.
 #
 # Flavour: white colours, ice monsters, appropriate clouds.
-# Gameplay: 
 # The escape is at the start. The player can back away if s/he decides
 # some challenges are much to handle.
 #
@@ -51,13 +48,16 @@ function ice_cave_colours(e)
 end
 }}
 
-# Using this function will turn any ^ glyph on the map into a fog generator
-# of the following kind:
-#{{
-#function place_vapours()
-#subst("^ = lua:fog_machine{ pow_max = 20, delay_min = 50, delay_max = 300, size = 12, #start_clouds = 1, cloud_type = "freezing vapour"} ")
-#end
-#}}
+# Using this function will turn any ^ glyph on the map into a fog generator.
+# Any use requires two parameters as follows:
+# : place_fog(_G, "freezing vapour", 200)
+{{
+function place_fog(e, type, strength)
+   e.lua_marker(".", fog_machine { pow_max = strength, cloud_type = type,
+                     delay_min = 50, delay_max = 300, size = 12, 
+                     start_clouds = 1 } )
+end
+}}
 
 
 # Entries ##########################################
@@ -174,8 +174,6 @@ ENDMAP
 # small caves
 #
 # all start with a similar ice statue arrangement
-#
-# lacking possible random fog generators
 #
 # These have the starting point near the exit, so you can always retreat;
 # a middle point where there is some loot; and the end, where there is a
