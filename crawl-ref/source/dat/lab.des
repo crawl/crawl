@@ -15,7 +15,18 @@ TAGS:   luniq_lab chance_lab transparent trowel_portal allow_dup extra
 # chance to 2.85%.
 CHANCE: 50 : 285
 DEPTH:  12-27
-: messager = bell_clock_msg { initmsg="You hear a distant snort." }
+{{
+  local messager = 
+    timed_msg { 
+      initmsg = { "You hear a distant snort.",
+                  "Behold! There is an entrance to a minotaur's labyrinth "
+                  .. "on this level. Find the entrance quickly before "
+                  .. "the gate is sealed!" },
+      finalmsg = "You hear the last, dying ticks of the clock.",
+      verb = 'ticking',
+      noisemaker = 'an ancient clock'
+    }
+}}
 MARKER: O = lua: timed_marker {  \
                  low=400, high=600, msg=messager, floor = 'stone_arch' \
             }

@@ -376,14 +376,6 @@ local function ziggurat_create_loot_at(c)
   local nloot = depth
   nloot = nloot + crawl.random2(math.floor(nloot * zig().portal.amount / 10000))
 
-  local function free_space_threshold(max)
-    local function is_free_space(p)
-      return dgn.grid(p.x, p.y) == dgn.fnum("floor") and
-        #dgn.items_at(p.x, p.y) <= max
-    end
-    return is_free_space
-  end
-
   local function find_free_space(nspaces)
     local spaces = { }
     local function add_spaces(p)

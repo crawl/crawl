@@ -11,7 +11,16 @@
 lua {{
 
 function bazaar_portal()
-  local messager = bell_clock_msg { initmsg="You hear coins being counted." }
+  local messager =
+    timed_msg {
+      initmsg = { "You hear coins being counted.",
+                  "An interdimensional caravan has stopped on this level "
+                  .. "and set up a bazaar. Hurry and find its entrance before "
+                  .. "they move on!" },
+      finalmsg = "You hear the last, dying notes of the bell.",
+      verb = 'tolling',
+      noisemaker = 'a massive bell'
+    }
   local blow = 200 + 30*(40 - you.absdepth()) + crawl.random2(200)
   local bhigh = blow + crawl.random2(blow) + 100
   if not crawl.one_chance_in(6) then

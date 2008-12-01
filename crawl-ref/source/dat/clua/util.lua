@@ -18,6 +18,28 @@ function util.identity(x)
   return x
 end
 
+-- Returns the sublist of elements at indices [istart, iend) of the
+-- supplied list.
+function util.slice(list, istart, iend)
+  if not iend then
+    iend = #list + 1
+  end
+
+  local res = { }
+  for i = istart, iend - 1 do
+    table.insert(res, list[i])
+  end
+  return res
+end
+
+function util.partition(list, slice, increment)
+  local res = { }
+  for i = 1, #list, increment or slice do
+    table.insert(res, util.slice(list, i, i + slice))
+  end
+  return res
+end
+
 function util.curry(fn, ...)
   local params = { ... }
   if #params == 1 then
@@ -51,14 +73,7 @@ end
 
 -- Creates a string of the elements in list joined by separator.
 function util.join(sep, list)
-  local res = ""
-  for i, val in ipairs(list) do
-    if i > 1 then
-      res = res .. sep
-    end
-    res = res .. val
-  end
-  return res
+  return table.concat(list, sep)
 end
 
 -- Creates a set (a map of keys to true) from the list supplied.
@@ -70,10 +85,13 @@ function util.set(list)
   return set
 end
 
-function util.catlist(...)
-  local res = { }
+-- Appends the elements in any number of additional tables to the first table.
+function util.append(table, ...)
+  local res = table
   local tables = { ... }
-  if #tables == 1 then
+  if #tables == 0 then
+    return res
+  elseif #tables == 1 and #res == 0 then
     return tables[1]
   else
     for _, tab in ipairs(tables) do
@@ -83,6 +101,10 @@ function util.catlist(...)
     end
   end
   return res
+end
+
+function util.catlist(...)
+  return util.append({ }, ...)
 end
 
 function util.cathash(...)
@@ -189,6 +211,13 @@ function util.random_weighted_from(weightfn, list)
                  end
                end)
   return chosen
+end
+
+function util.expand_entity(entity, msg)
+  return string.gsub(msg, "$F%{(%w+)%}",
+                     function (desc)
+                       return crawl.grammar(entity, desc)
+                     end)
 end
 
 ----------------------------------------------------------

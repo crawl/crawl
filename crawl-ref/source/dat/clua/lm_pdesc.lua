@@ -24,12 +24,20 @@ function PortalDescriptor:read(marker, th)
   return self
 end
 
+function PortalDescriptor:unmangle(x)
+  if x and type(x) == 'function' then
+    return x(self)
+  else
+    return x
+  end
+end
+
 function PortalDescriptor:feature_description(marker)
-  return self.props.desc
+  return self:unmangle(self.props.desc)
 end
 
 function PortalDescriptor:property(marker, pname)
-  return self.props and self.props[pname] or ''
+  return self:unmangle(self.props and self.props[pname] or '')
 end
 
 function portal_desc(props)

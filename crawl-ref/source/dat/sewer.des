@@ -15,20 +15,37 @@
 
 {{
 function sewer_portal(e)
-  e.marker([[O = lua:one_way_stair { desc = "A glowing drain",
-                                     dst = "sewer",
-                                     dstorigin = "in the sewers",
-                                     overmap = "glowing drain",
-                                     floor = "stone_arch" }]])
+  local timeout_turns = crawl.random_range(1500, 2000)
+
+  local messager =
+    timed_msg {
+      visible = true,
+      -- $F{xxx} will be substituted with the 'entity' property of the timed
+      -- marker, or with the desc property (if entity is not set).
+      messages = time_messages(timeout_turns,
+                               "$F{The} is slowly rusting away.",
+                               "$F{The} is rusting away.",
+                               "$F{The} is quickly rusting away.",
+                               "$F{The} is falling apart.")
+    }
+
+  e.lua_marker('O',
+      timed_marker {
+        desc = "glowing drain",
+        entity = 'drain',
+        dst = "sewer",
+        dstorigin = "in the sewers",
+        overmap = "glowing drain",
+        turns = timeout_turns,
+        floor = "stone_arch",
+        msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightgreen")
 end
-}}
 
-# Use the following line in destination maps after all SUBST's have taken place
-# : sewer_colours(_G)
-# Note that the function also defines < to be the exit portal.
-{{
+-- Use the following line in destination maps after all SUBSTs
+-- : sewer_colours(_G)
+-- Note that the function also defines < to be the exit portal.
 function sewer_colours(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = darkgrey")
@@ -305,7 +322,7 @@ MONS:     worm / nothing w:3
 MONS:     ooze / nothing w:2
 # chances are good you'll find something to cross the deep water
 ITEM:     scroll of fear / scroll of fog / scroll of teleportation w:50 / \
-          scroll of blinking / scroll of identify / nothing 
+          scroll of blinking / scroll of identify / nothing
 ITEM:     potion of levitation w:50 / potion of invisibility / \
           potion of might / nothing
 # possibly rather generous loot, if you get to the center

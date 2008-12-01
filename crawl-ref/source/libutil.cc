@@ -341,9 +341,9 @@ std::string pluralise(const std::string &name,
         // knife -> knives
         return name.substr(0, name.length() - 2) + "ves";
     }
-    else if (ends_with(name, "ff"))
+    else if (ends_with(name, "staff"))
     {
-        // staff -> staves
+        // staff -> staves, but not hippogriff -> hippogrives.
         return name.substr(0, name.length() - 2) + "ves";
     }
     else if (ends_with(name, "f"))

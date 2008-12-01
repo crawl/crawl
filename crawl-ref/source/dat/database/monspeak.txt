@@ -2226,7 +2226,7 @@ VISUAL:@The_monster@ grows dozens of eye stalks in order to get a better look at
 
 VISUAL:@The_monster@ splits into many small globs of multi-coloured light, then recombines.
 
-VISUAL:@The_monster@ breifly grows a face disturbingly similar to your own.
+VISUAL:@The_monster@ briefly grows a face disturbingly similar to your own.
 
 @The_monster@ ululates chillingly with its many mouths.
 

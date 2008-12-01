@@ -6,37 +6,37 @@
 TimedMessaging = { }
 TimedMessaging.__index = TimedMessaging
 
-function TimedMessaging._new()
-  local m = { }
-  setmetatable(m, TimedMessaging)
+function TimedMessaging:new(m, nocheck)
+  m = m or { }
+  setmetatable(m, self)
+  self.__index = self
+
+  if not nocheck then
+    if not m.messages then
+      assert(m.noisemaker, "No noisemaker specified")
+      assert(m.verb, "No verb specified")
+    end
+
+    if m.visible and not m.messages then
+      error("No messages set for timer messager")
+    end
+  end
+
   return m
 end
 
-function TimedMessaging.new(pars)
-  pars = pars or { }
-  local m = TimedMessaging._new()
-  m.noisemaker = pars.noisemaker
-  m.verb       = pars.verb
-  m.finalmsg   = pars.finalmsg
-  m.ranges     = pars.ranges
-  m.initmsg    = pars.initmsg or ''
-  return m
+function TimedMessaging:channel()
+  if not self.sound_channel then
+    self.sound_channel =
+      crawl.msgch_num(self.visible and 'default' or 'sound')
+  end
+  return self.sound_channel
 end
 
 function TimedMessaging:init(tmarker, cm, verbose)
-  local lab = dgn.grid(cm:pos()) == dgn.feature_number('enter_labyrinth')
-  if not self.noisemaker then
-    self.noisemaker = lab and "an ancient clock" or "a massive bell"
-  end
+  self.entity = tmarker.props.entity or tmarker.props.desc
 
-  self.verb = self.verb or (lab and 'ticking' or 'tolling')
-
-  if not self.finalmsg then
-    self.finalmsg = lab and "last, dying ticks of the clock"
-                        or  "last, dying notes of the bell"
-  end
-
-  if not self.ranges then
+  if not self.ranges and not self.visible then
     self.ranges = { { 5000, 'stately ' }, { 4000, '' },
                     { 2500, 'brisk ' },   { 1500, 'urgent ' },
                     { 0, 'frantic ' } }
@@ -47,31 +47,71 @@ function TimedMessaging:init(tmarker, cm, verbose)
     self.check = 50
   end
 
-  if verbose and #self.initmsg > 0 and you.hear_pos(cm:pos()) then
-    crawl.mpr(self.initmsg, "sound")
-    if lab then
-      crawl.mpr("Behold! There is an entrance to a minotaur's labyrinth on this level. Find the entrance quickly before it seals the gate!",
-                "sound")
-    else
-      crawl.mpr("An interdimensional caravan has stopped on this level and set up a bazaar. Hurry and find its entrance before they move on!", "sound")
+  if verbose and self.initmsg then
+    self:emit_message(cm, self.initmsg)
+  end
+end
+
+function TimedMessaging:perceptible(cm)
+  if not cm then
+    return true
+  end
+
+  if self.visible then
+    return you.see_grid(cm:pos())
+  else
+    return you.hear_pos(cm:pos())
+  end
+end
+
+function TimedMessaging:emit_message(cm, msg)
+  if not msg or not self:perceptible(cm) then
+    return
+  end
+
+  if type(msg) == 'table' then
+    util.foreach(msg,
+                 function (m)
+                   self:emit_message(cm, m)
+                 end)
+  else
+    if #msg < 1 then
+      return
+    end
+
+    crawl.mpr(util.expand_entity(self.entity, msg), self:channel())
+  end
+end
+
+function TimedMessaging:proc_ranges(ranges, dur, fn)
+  if not ranges then
+    return
+  end
+  for _, chk in ipairs(ranges) do
+    if dur > chk[1] then
+      fn(chk, dur)
+      break
     end
   end
 end
 
-function TimedMessaging:say_message(dur)
-  self.sound_channel = self.sound_channel or crawl.msgch_num('sound')
+function TimedMessaging:say_message(cm, dur)
   if dur <= 0 then
-    crawl.mpr("You hear the " .. self.finalmsg .. ".", self.sound_channel)
+    self:emit_message(cm, self.finalmsg)
     return
   end
-  for _, chk in ipairs(self.ranges) do
-    if dur > chk[1] then
-      crawl.mpr("You hear the " .. chk[2] .. self.verb 
-                .. " of " .. self.noisemaker .. ".",
-                self.sound_channel)
-      break
-    end
-  end
+
+  self:proc_ranges(self.ranges, dur,
+                   function (chk)
+                     self:emit_message(cm,
+                                       "You hear the " .. chk[2] .. self.verb
+                                       .. " of " .. self.noisemaker .. ".")
+                   end)
+
+  self:proc_ranges(self.messages, dur,
+                   function (chk)
+                     self:emit_message(cm, chk[2])
+                   end)
 end
 
 function TimedMessaging:event(luamark, cmarker, event)
@@ -81,32 +121,69 @@ function TimedMessaging:event(luamark, cmarker, event)
       self.check = self.check - 250
     end
 
-    if you.hear_pos(cmarker:pos()) then
-      self:say_message(luamark.dur)
+    if self:perceptible(cmarker) then
+      self:say_message(nil, luamark.dur)
     end
   end
 end
 
 function TimedMessaging:write(th)
-  file.marshall(th, self.check)
-  file.marshall(th, self.noisemaker)
-  file.marshall(th, self.verb)
-  file.marshall(th, self.initmsg)
-  file.marshall(th, self.finalmsg)
-  lmark.marshall_table(th, self.ranges)
+  lmark.marshall_table(th, self)
 end
 
 function TimedMessaging.read(th)
-  local tm = TimedMessaging._new()
-  tm.check = file.unmarshall_number(th)
-  tm.noisemaker = file.unmarshall_string(th)
-  tm.verb = file.unmarshall_string(th)
-  tm.initmsg = file.unmarshall_string(th)
-  tm.finalmsg = file.unmarshall_string(th)
-  tm.ranges = lmark.unmarshall_table(th)
-  return tm
+  return TimedMessaging:new(lmark.unmarshall_table(th))
 end
 
-function bell_clock_msg(pars)
-  return TimedMessaging.new(pars)
+function timed_msg(pars)
+  return TimedMessaging:new(pars)
+end
+
+-- Accepts pairs of turns and messages used for a timer. For instance
+-- timer_interval_messages(500, 'You feel vaguely uneasy.',
+--                         250, 'You feel extremely uneasy.',
+--                         100, 'You feel a primal terror.')
+-- Will produce the first message when the timer has > 500 turns, the
+-- second message when the timer has <= 500 turns and >250 turns, and so on.
+-- Note that any given interval message will be repeated, usually every 50
+-- or 25 turns.
+function timer_interval_messages(...)
+  local breakpoints = util.partition({ ... }, 2)
+  -- Expand turn breakpoints into tenths of a turn.
+  util.foreach(breakpoints,
+               function (brk)
+                 brk[1] = brk[1] * 10
+               end)
+  return breakpoints
+end
+
+-- Accepts timer messages as with timer_interval_messages, but with no
+-- explicit intervals. Instead, the total turn count is divided by the
+-- number of messages to determine intervals.
+function time_messages(total_turns, ...)
+  local messages = { ... }
+
+  local n = #messages
+
+  -- Each interval is 1.2 * the previous (lower) interval.
+  local inflate = 1.2
+
+  local function power_sum(n)
+    local sum = 1
+    for i = 1, n - 1 do
+      sum = sum + inflate ^ i
+    end
+    return sum
+  end
+
+  local base_interval = total_turns / power_sum(n)
+
+  local res = { }
+  for i = 1, n - 1 do
+    local pow = n - i
+    total_turns = total_turns - base_interval * inflate ^ pow
+    table.insert(res, { math.floor(10 * total_turns), messages[i] } )
+  end
+  table.insert(res, { 0, messages[n] })
+  return res
 end

@@ -153,6 +153,11 @@ bool in_los(const coord_def &pos);
 bool in_vlos(int x, int y);
 bool in_vlos(const coord_def &pos);
 
+std::string thing_do_grammar(description_level_type dtype,
+                             bool add_stop,
+                             bool force_article,
+                             std::string desc);
+
 std::string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
 void full_describe_square(const coord_def &c);

@@ -2271,12 +2271,12 @@ void describe_floor()
         mpr("Beware, for starvation awaits!", MSGCH_EXAMINE);
 }
 
-static std::string _feature_do_grammar(description_level_type dtype,
-                                       bool add_stop,
-                                       bool force_article,
-                                       std::string desc)
+std::string thing_do_grammar(description_level_type dtype,
+                             bool add_stop,
+                             bool force_article,
+                             std::string desc)
 {
-    if (add_stop)
+    if (add_stop && (desc.empty() || desc[desc.length() - 1] != '.'))
         desc += ".";
     if (dtype == DESC_PLAIN || (!force_article && isupper(desc[0])))
     {
@@ -2320,7 +2320,7 @@ std::string feature_description(dungeon_feature_type grid,
     if (bloody)
         desc += ", spattered with blood";
 
-    return _feature_do_grammar(dtype, add_stop, grid_is_trap(grid), desc);
+    return thing_do_grammar(dtype, add_stop, grid_is_trap(grid), desc);
 }
 
 std::string raw_feature_description(dungeon_feature_type grid,
@@ -2592,7 +2592,7 @@ std::string feature_description(const coord_def& where, bool bloody,
         if (bloody)
             desc += ", spattered with blood";
 
-        return _feature_do_grammar(dtype, add_stop, false, desc);
+        return thing_do_grammar(dtype, add_stop, false, desc);
     }
 
     switch (grid)
@@ -2606,7 +2606,7 @@ std::string feature_description(const coord_def& where, bool bloody,
         return (shop_name(where, add_stop));
 
     case DNGN_ENTER_PORTAL_VAULT:
-        return (_feature_do_grammar(
+        return (thing_do_grammar(
                     dtype, add_stop, false,
                     _marker_feature_description(where)));
     default:

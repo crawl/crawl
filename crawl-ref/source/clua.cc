@@ -2149,6 +2149,16 @@ static int crawl_split(lua_State *ls)
     return (1);
 }
 
+static int _crawl_grammar(lua_State *ls)
+{
+    description_level_type ndesc = DESC_PLAIN;
+    if (lua_isstring(ls, 2))
+        ndesc = description_type_by_name(lua_tostring(ls, 2));
+    PLUARET(string,
+            thing_do_grammar(ndesc, false,
+                             false, luaL_checkstring(ls, 1)).c_str());
+}
+
 static int crawl_article_a(lua_State *ls)
 {
     const char *s = luaL_checkstring(ls, 1);
@@ -2296,6 +2306,7 @@ static const struct luaL_reg crawl_lib[] =
     { "message_filter", crawl_message_filter },
     { "trim",           crawl_trim },
     { "split",          crawl_split },
+    { "grammar",        _crawl_grammar },
     { "article_a",      crawl_article_a },
     { "game_started",   crawl_game_started },
     { "err_trace",      crawl_err_trace },
