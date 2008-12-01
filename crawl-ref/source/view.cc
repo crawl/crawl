@@ -413,13 +413,13 @@ static void _get_symbol( const coord_def& where,
             bool blocked_movement = false;
             if (!excluded_stairs
                 && object < NUM_FEATURES && object >= DNGN_MINMOVE
-                && you.duration[DUR_BEHELD])
+                && you.duration[DUR_MESMERISED])
             {
                 // Colour grids that cannot be reached due to beholders
                 // dark grey.
-                for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+                for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
                 {
-                    monsters& mon = menv[you.beheld_by[i]];
+                    monsters& mon = menv[you.mesmerised_by[i]];
                     const int olddist = grid_distance(you.pos(), mon.pos());
                     const int newdist = grid_distance(where, mon.pos());
 
@@ -687,16 +687,16 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
 
     if (feature_colour != DARKGREY)
         tc = feature_colour;
-    else if (you.duration[DUR_BEHELD])
+    else if (you.duration[DUR_MESMERISED])
     {
-        // If beheld, colour the few grids that can be reached anyway
+        // If mesmerised, colour the few grids that can be reached anyway
         // lightgrey.
         if (grd(p) >= DNGN_MINMOVE && mgrd(p) == NON_MONSTER)
         {
             bool blocked_movement = false;
-            for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+            for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
             {
-                monsters& mon = menv[you.beheld_by[i]];
+                monsters& mon = menv[you.mesmerised_by[i]];
                 const int olddist = grid_distance(you.pos(), mon.pos());
                 const int newdist = grid_distance(p, mon.pos());
 
@@ -1590,13 +1590,13 @@ bool noisy(int loudness, const coord_def& where, const char *msg, bool mermaid)
 
         you.check_awaken(dist - player_distance);
 
-        if (!mermaid && loudness >= 20 && you.duration[DUR_BEHELD])
+        if (!mermaid && loudness >= 20 && you.duration[DUR_MESMERISED])
         {
             mprf("For a moment, you cannot hear the mermaid%s!",
-                 you.beheld_by.size() == 1? "" : "s");
+                 you.mesmerised_by.size() == 1? "" : "s");
             mpr("You break out of your daze!", MSGCH_DURATION);
-            you.duration[DUR_BEHELD] = 0;
-            you.beheld_by.clear();
+            you.duration[DUR_MESMERISED] = 0;
+            you.mesmerised_by.clear();
         }
 
         ret = true;

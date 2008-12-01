@@ -533,8 +533,8 @@ void full_describe_view()
             std::vector<formatted_string> fss;
             std::string str = get_monster_desc(list_mons[i], true, DESC_CAP_A,
                                                true);
-            if (player_beheld_by(list_mons[i]))
-                str += ", beholding you";
+            if (player_mesmerised_by(list_mons[i]))
+                str += ", keeping you mesmerised";
 
             if (dam_level != MDAM_OKAY)
                 str += ", " + wound_str;
@@ -2772,8 +2772,8 @@ static void _describe_monster(const monsters *mon)
     std::string text = get_monster_desc(mon) + ".";
     print_formatted_paragraph(text, numcols);
 
-    if (player_beheld_by(mon))
-        mpr("You are beheld by her song.", MSGCH_EXAMINE);
+    if (player_mesmerised_by(mon))
+        mpr("You are mesmerised by her song.", MSGCH_EXAMINE);
 
     print_wounds(mon);
 

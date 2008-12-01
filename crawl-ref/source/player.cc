@@ -2617,10 +2617,10 @@ bool player_monster_visible( const monsters *mon )
     return (true);
 }
 
-// Returns true if player is beheld by a given monster.
-bool player_beheld_by( const monsters *mon )
+// Returns true if player is mesmerised by a given monster.
+bool player_mesmerised_by( const monsters *mon )
 {
-    if (!you.duration[DUR_BEHELD])
+    if (!you.duration[DUR_MESMERISED])
         return (false);
 
     // Can this monster even behold you?
@@ -2628,20 +2628,20 @@ bool player_beheld_by( const monsters *mon )
         return (false);
 
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "beheld_by.size: %d, DUR_BEHELD: %d, current mon: %d",
-                            you.beheld_by.size(), you.duration[DUR_BEHELD],
-                            monster_index(mon));
+    mprf(MSGCH_DIAGNOSTICS, "mesmerised_by.size: %d, DUR_MESMERISED: %d, "
+                            "current mon: %d", you.mesmerised_by.size(),
+                            you.duration[DUR_MESMERISED], monster_index(mon));
 #endif
 
-    if (you.beheld_by.empty()) // shouldn't happen
+    if (you.mesmerised_by.empty()) // shouldn't happen
     {
-        you.duration[DUR_BEHELD] = 0;
+        you.duration[DUR_MESMERISED] = 0;
         return (false);
     }
 
-    for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+    for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
     {
-         unsigned int which_mon = you.beheld_by[i];
+         unsigned int which_mon = you.mesmerised_by[i];
          if (monster_index(mon) == which_mon)
              return (true);
     }
@@ -2653,7 +2653,7 @@ bool player_beheld_by( const monsters *mon )
 // (e.g. monster dead) or one of several cases is met.
 void update_beholders(const monsters *mon, bool force)
 {
-    if (!player_beheld_by(mon)) // Not in list?
+    if (!player_mesmerised_by(mon)) // Not in list?
         return;
 
     // Is an update even necessary?
@@ -2661,46 +2661,46 @@ void update_beholders(const monsters *mon, bool force)
         || mon->has_ench(ENCH_CONFUSION) || mons_cannot_move(mon)
         || mon->asleep() || silenced(you.pos()) || silenced(mon->pos()))
     {
-        const std::vector<int> help = you.beheld_by;
-        you.beheld_by.clear();
+        const std::vector<int> help = you.mesmerised_by;
+        you.mesmerised_by.clear();
 
         for (unsigned int i = 0; i < help.size(); i++)
         {
              unsigned int which_mon = help[i];
              if (monster_index(mon) != which_mon)
-                 you.beheld_by.push_back(i);
+                 you.mesmerised_by.push_back(i);
         }
 
-        if (you.beheld_by.empty())
+        if (you.mesmerised_by.empty())
         {
             mpr("You are no longer entranced.", MSGCH_RECOVERY);
-            you.duration[DUR_BEHELD] = 0;
+            you.duration[DUR_MESMERISED] = 0;
         }
     }
 }
 
 void check_beholders()
 {
-    for (int i = you.beheld_by.size() - 1; i >= 0; i--)
+    for (int i = you.mesmerised_by.size() - 1; i >= 0; i--)
     {
-        const monsters* mon = &menv[you.beheld_by[i]];
+        const monsters* mon = &menv[you.mesmerised_by[i]];
         if (!mon->alive() || mons_genus(mon->type) != MONS_MERMAID)
         {
 #if DEBUG
             if (!mon->alive())
-                mpr("Dead mermaid still beholding?", MSGCH_DIAGNOSTICS);
+                mpr("Dead mermaid/siren still mesmerising?", MSGCH_DIAGNOSTICS);
             else
             {
-                mprf(MSGCH_DIAGNOSTICS, "Non-mermaid '%s' beholding?",
+                mprf(MSGCH_DIAGNOSTICS, "Non-mermaid/siren '%s' mesmerising?",
                      mon->name(DESC_PLAIN, true).c_str());
             }
 #endif
 
-            you.beheld_by.erase(you.beheld_by.begin() + i);
-            if (you.beheld_by.empty())
+            you.mesmerised_by.erase(you.mesmerised_by.begin() + i);
+            if (you.mesmerised_by.empty())
             {
                 mpr("You are no longer entranced.", MSGCH_RECOVERY);
-                you.duration[DUR_BEHELD] = 0;
+                you.duration[DUR_MESMERISED] = 0;
                 break;
             }
             continue;
@@ -2712,28 +2712,28 @@ void check_beholders()
         if (walls > 0)
         {
 #if DEBUG
-            mprf(MSGCH_DIAGNOSTICS, "%d walls between beholding '%s' "
+            mprf(MSGCH_DIAGNOSTICS, "%d walls between mesmerising '%s' "
                  "and player", walls, mon->name(DESC_PLAIN, true).c_str());
 #endif
-            you.beheld_by.erase(you.beheld_by.begin() + i);
-            if (you.beheld_by.empty())
+            you.mesmerised_by.erase(you.mesmerised_by.begin() + i);
+            if (you.mesmerised_by.empty())
             {
                 mpr("You are no longer entranced.", MSGCH_RECOVERY);
-                you.duration[DUR_BEHELD] = 0;
+                you.duration[DUR_MESMERISED] = 0;
                 break;
             }
             continue;
         }
     }
 
-    if (you.duration[DUR_BEHELD] > 0 && you.beheld_by.empty())
+    if (you.duration[DUR_MESMERISED] > 0 && you.mesmerised_by.empty())
     {
 #if DEBUG
-        mpr("Beheld with no mermaids left?", MSGCH_DIAGNOSTICS);
+        mpr("Mesmerised with no mermaids/sirens left?", MSGCH_DIAGNOSTICS);
 #endif
 
         mpr("You are no longer entranced.", MSGCH_RECOVERY);
-        you.duration[DUR_BEHELD] = 0;
+        you.duration[DUR_MESMERISED] = 0;
     }
 }
 
@@ -2853,27 +2853,27 @@ void forget_map(unsigned char chance_forgotten, bool force)
     if (force && !yesno("Really forget level map?", true, 'n'))
         return;
 
-    int radius = 25*25;
-    if (chance_forgotten < 100 && you.level_type == LEVEL_LABYRINTH
-        && you.species == SP_MINOTAUR)
+    // The radius is only used in labyrinths.
+    const bool use_lab_check = (!force && you.level_type == LEVEL_LABYRINTH
+                                && chance_forgotten < 100);
+    const int radius = (use_lab_check && you.species == SP_MINOTAUR) ? 40*40
+                                                                     : 25*25;
+    for (rectangle_iterator ri(1); ri; ++ri)
     {
-        radius = 40*40;
-    }
-    for (unsigned char xcount = 0; xcount < GXM; xcount++)
-        for (unsigned char ycount = 0; ycount < GYM; ycount++)
+        if (!see_grid(*ri)
+            && (force || x_chance_in_y(chance_forgotten, 100)
+                || use_lab_check && (you.pos()-*ri).abs() > radius))
         {
-            const coord_def c(xcount, ycount);
-            if (!see_grid(c)
-                && (force || x_chance_in_y(chance_forgotten, 100)
-                    || chance_forgotten < 100 && (you.pos()-c).abs() > radius))
-            {
-                env.map[xcount][ycount].clear();
-            }
-        }
-
+            env.map(*ri).clear();
 #ifdef USE_TILE
-    tiles.clear_minimap();
+            set_envmap_obj(*ri, 0);
+            tiles.update_minimap(ri->x, ri->y);
+            env.tile_bk_fg[ri->x][ri->y] = 0;
+            env.tile_bk_bg[ri->x][ri->y]
+                = tileidx_feature(DNGN_UNSEEN, ri->x, ri->y);
 #endif
+        }
+    }
 }
 
 void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
@@ -3920,8 +3920,9 @@ void display_char_status()
     if (you.confused())
         mpr("You are confused.");
 
-    if (you.duration[DUR_BEHELD])
-        mpr("You are beheld.");
+    // TODO: Distinguish between mermaids and sirens!
+    if (you.duration[DUR_MESMERISED])
+        mpr("You are mesmerised.");
 
     // How exactly did you get to show the status?
     if (you.duration[DUR_PARALYSIS])

@@ -111,12 +111,12 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
                 return (-1);         // early return {dlb}
             }
 
-            if (!wizard_blink && you.duration[DUR_BEHELD])
+            if (!wizard_blink && you.duration[DUR_MESMERISED])
             {
                 bool blocked_movement = false;
-                for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+                for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
                 {
-                    monsters& mon = menv[you.beheld_by[i]];
+                    monsters& mon = menv[you.mesmerised_by[i]];
                     const int olddist = grid_distance(you.pos(), mon.pos());
                     const int newdist = grid_distance(beam.target, mon.pos());
 

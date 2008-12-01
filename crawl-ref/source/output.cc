@@ -543,7 +543,7 @@ struct status_light
 // Prints burden, hunger,
 // pray, holy, teleport, regen, insulation, fly/lev, invis, silence,
 //   conf. touch, bargain, sage
-// confused, beheld, fire, poison, disease, rot, held, glow, swift,
+// confused, mesmerised, fire, poison, disease, rot, held, glow, swift,
 //   fast, slow, breath
 //
 // Note the usage of bad_ench_colour() correspond to levels that
@@ -688,8 +688,9 @@ static void _get_status_lights(std::vector<status_light>& out)
     if (you.duration[DUR_LOWERED_MR])
         out.push_back(status_light(RED, "-MR"));
 
-    if (you.duration[DUR_BEHELD])
-        out.push_back(status_light(RED, "Bhld"));
+    // TODO: Differentiate between mermaids and sirens!
+    if (you.duration[DUR_MESMERISED])
+        out.push_back(status_light(RED, "Mesm"));
 
     if (you.duration[DUR_LIQUID_FLAMES])
         out.push_back(status_light(RED, "Fire"));

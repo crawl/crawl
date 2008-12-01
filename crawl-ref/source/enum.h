@@ -1090,7 +1090,7 @@ enum duration_type
     DUR_CONF,
     DUR_PARALYSIS,
     DUR_SLOW,
-    DUR_BEHELD,
+    DUR_MESMERISED,
     DUR_HASTE,
     DUR_MIGHT,
     DUR_LEVITATION,

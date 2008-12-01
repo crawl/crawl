@@ -662,10 +662,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'H': // super-heal
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
-        if (you.duration[DUR_BEHELD])
+        if (you.duration[DUR_MESMERISED])
         {
-            you.duration[DUR_BEHELD] = 0;
-            you.beheld_by.clear();
+            you.duration[DUR_MESMERISED] = 0;
+            you.mesmerised_by.clear();
         }
         inc_hp( 10, true );
        // intentional fall-through
@@ -1666,12 +1666,12 @@ static bool _toggle_flag( bool* flag, const char* flagname )
     return *flag;
 }
 
-static bool _stairs_check_beheld()
+static bool _stairs_check_mesmerised()
 {
-    if (you.duration[DUR_BEHELD] && !you.confused())
+    if (you.duration[DUR_MESMERISED] && !you.confused())
     {
         mprf("You cannot move away from %s!",
-             menv[you.beheld_by[0]].name(DESC_NOCAP_THE, true).c_str());
+             menv[you.mesmerised_by[0]].name(DESC_NOCAP_THE, true).c_str());
         return (true);
     }
 
@@ -1688,7 +1688,7 @@ static void _go_upstairs()
 {
     const dungeon_feature_type ygrd = grd(you.pos());
 
-    if (_stairs_check_beheld())
+    if (_stairs_check_mesmerised())
         return;
 
     if (you.attribute[ATTR_HELD])
@@ -1731,7 +1731,7 @@ static void _go_downstairs()
     bool shaft = (get_trap_type(you.pos()) == TRAP_SHAFT
                   && grd(you.pos()) != DNGN_UNDISCOVERED_TRAP);
 
-    if (_stairs_check_beheld())
+    if (_stairs_check_mesmerised())
         return;
 
     if (shaft && you.flight_mode() == FL_LEVITATE)
@@ -2774,10 +2774,10 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SURE_BLADE,
                           "The bond with your blade fades away." );
 
-    if ( _decrement_a_duration(DUR_BEHELD, "You break out of your daze.",
+    if ( _decrement_a_duration(DUR_MESMERISED, "You break out of your daze.",
                                -1, 0, NULL, MSGCH_RECOVERY ))
     {
-        you.beheld_by.clear();
+        you.mesmerised_by.clear();
     }
 
     dec_slow_player();
@@ -4056,11 +4056,11 @@ static void _move_player(coord_def move)
     // You cannot move away from a mermaid but you CAN fight monsters on
     // neighbouring squares.
     monsters *beholder = NULL;
-    if (you.duration[DUR_BEHELD] && !you.confused())
+    if (you.duration[DUR_MESMERISED] && !you.confused())
     {
-        for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+        for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
         {
-             monsters& mon = menv[you.beheld_by[i]];
+             monsters& mon = menv[you.mesmerised_by[i]];
              int olddist = grid_distance(you.pos(), mon.pos());
              int newdist = grid_distance(targ, mon.pos());
 

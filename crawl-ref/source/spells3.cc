@@ -1275,12 +1275,12 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             mprf(MSGCH_DIAGNOSTICS, "Target square (%d,%d)", pos.x, pos.y );
 #endif
 
-            if (you.duration[DUR_BEHELD])
+            if (you.duration[DUR_MESMERISED])
             {
                 bool blocked_movement = false;
-                for (unsigned int i = 0; i < you.beheld_by.size(); i++)
+                for (unsigned int i = 0; i < you.mesmerised_by.size(); i++)
                 {
-                    monsters& mon = menv[you.beheld_by[i]];
+                    monsters& mon = menv[you.mesmerised_by[i]];
                     const int olddist = grid_distance(you.pos(), mon.pos());
                     const int newdist = grid_distance(pos, mon.pos());
 
@@ -1492,9 +1492,9 @@ bool entomb(int powc)
     {
         mpr("Walls emerge from the floor!");
 
-        for (int i = you.beheld_by.size() - 1; i >= 0; i--)
+        for (int i = you.mesmerised_by.size() - 1; i >= 0; i--)
         {
-            const monsters* mon = &menv[you.beheld_by[i]];
+            const monsters* mon = &menv[you.mesmerised_by[i]];
             int walls = num_feats_between(you.pos(), mon->pos(),
                                           DNGN_UNSEEN, DNGN_MAXWALL,
                                           true, true);
@@ -1502,9 +1502,9 @@ bool entomb(int powc)
             if (walls > 0)
             {
                 update_beholders(mon, true);
-                if (you.beheld_by.empty())
+                if (you.mesmerised_by.empty())
                 {
-                    you.duration[DUR_BEHELD] = 0;
+                    you.duration[DUR_MESMERISED] = 0;
                     break;
                 }
                 continue;

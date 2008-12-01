@@ -2861,8 +2861,12 @@ static bool _find_siren_water_target(monsters *mon)
 {
     mpr("in _find_siren_water_target");
     ASSERT(mon->type == MONS_SIREN);
-    if (mon->travel_target == MTRAV_SIREN && !one_chance_in(8))
-        return (true);
+    if (mon->travel_target == MTRAV_SIREN)
+    {
+        coord_def targ_pos(mon->travel_path[mon->travel_path.size()-1]);
+        if ((mon->pos() - targ_pos).rdist() > 2)
+            return (true);
+    }
 
     int water_count;
     int best_water_count = 0;
@@ -3409,7 +3413,7 @@ static void _handle_behaviour(monsters *mon)
                 // The foe is the player.
                 if (mon->type == MONS_SIREN)
                 {
-                    if (player_beheld_by(mon)
+                    if (player_mesmerised_by(mon)
                         && (mon->pos() - you.pos()).rdist() < 6
                         && _find_siren_water_target(mon))
                     {
@@ -4220,7 +4224,7 @@ static void _handle_nearby_ability(monsters *monster)
     // Okay then, don't speak.
 
     if (monster_can_submerge(monster, grd(monster->pos()))
-        && !player_beheld_by(monster) // No submerging if player entranced.
+        && !player_mesmerised_by(monster) // No submerging if player entranced.
         && !mons_is_lurking(monster)  // Handled elsewhere.
         && monster->wants_submerge())
     {
@@ -4693,10 +4697,10 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             break;
         }
 
-        bool already_beheld = player_beheld_by(monster);
+        bool already_mesmerised = player_mesmerised_by(monster);
 
         if (one_chance_in(5)
-            || monster->foe == MHITYOU && !already_beheld && coinflip())
+            || monster->foe == MHITYOU && !already_mesmerised && coinflip())
         {
             noisy(12, monster->pos(), NULL, true);
 
@@ -4704,14 +4708,14 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             {
                 simple_monster_message(monster,
                     make_stringf(" chants %s song.",
-                    already_beheld ? "her luring" : "a haunting").c_str(),
+                    already_mesmerised ? "her luring" : "a haunting").c_str(),
                     spl);
             }
             else
             {
-                // If you're already beheld by an invisible mermaid she can
-                // still prolong the enchantment; otherwise you "resist".
-                if (already_beheld)
+                // If you're already mesmerised by an invisible mermaid she
+                // can still prolong the enchantment; otherwise you "resist".
+                if (already_mesmerised)
                     mpr("You hear a luring song.", MSGCH_SOUND);
                 else
                 {
@@ -4728,30 +4732,32 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                 }
             }
 
-            // Once beheld by a particular monster, you cannot resist anymore.
-            if (!already_beheld
+            // Once mesmerised by a particular monster, you cannot resist
+            // anymore.
+            if (!already_mesmerised
                 && (you.species == SP_MERFOLK || you_resist_magic(100)))
             {
                 canned_msg(MSG_YOU_RESIST);
                 break;
             }
 
-            if (!you.duration[DUR_BEHELD])
+            if (!you.duration[DUR_MESMERISED])
             {
-                you.duration[DUR_BEHELD] = 7;
-                you.beheld_by.push_back(monster_index(monster));
-                mpr("You are beheld!", MSGCH_WARN);
+                you.duration[DUR_MESMERISED] = 7;
+                you.mesmerised_by.push_back(monster_index(monster));
+                mprf(MSGCH_WARN, "You are mesmerised by %s!",
+                                 monster->name(DESC_NOCAP_THE));
             }
             else
             {
-                you.duration[DUR_BEHELD] += 5;
-                if (!already_beheld)
-                    you.beheld_by.push_back(monster_index(monster));
+                you.duration[DUR_MESMERISED] += 5;
+                if (!already_mesmerised)
+                    you.mesmerised_by.push_back(monster_index(monster));
             }
             used = true;
 
-            if (you.duration[DUR_BEHELD] > 12)
-                you.duration[DUR_BEHELD] = 12;
+            if (you.duration[DUR_MESMERISED] > 12)
+                you.duration[DUR_MESMERISED] = 12;
         }
         break;
     }
@@ -6509,11 +6515,11 @@ void handle_monsters()
         // If the player got banished, discard pending monster actions.
         if (you.banished)
         {
-            // Clear list of beholding monsters.
-            if (you.duration[DUR_BEHELD])
+            // Clear list of mesmerisinging monsters.
+            if (you.duration[DUR_MESMERISED])
             {
-                you.beheld_by.clear();
-                you.duration[DUR_BEHELD] = 0;
+                you.mesmerised_by.clear();
+                you.duration[DUR_MESMERISED] = 0;
             }
             break;
         }

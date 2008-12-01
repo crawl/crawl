@@ -2608,11 +2608,33 @@ void change_labyrinth(bool msg)
         env.map(p).property |= FPROP_HIGHLIGHT;
 #endif
 
+        // Shift blood some most of the time.
+        if (is_bloodcovered(c))
+        {
+            if (one_chance_in(4))
+            {
+                int wall_count = 0;
+                coord_def old_adj(c);
+                for (adjacent_iterator ai(c); ai; ++ai)
+                    if (grid_is_wall(grd(*ai)) && one_chance_in(++wall_count))
+                        old_adj = *ai;
+
+                if (old_adj != c)
+                {
+                    if (!is_bloodcovered(old_adj))
+                        env.map(old_adj).property |= FPROP_BLOODY;
+                    env.map(c).property &= (~FPROP_BLOODY);
+                }
+            }
+        }
+        else if (one_chance_in(750))
+        {
+            // Sometimes (rarely) add blood randomly, accumulating with time...
+            env.map(p).property |= FPROP_BLOODY;
+        }
+
         // Rather than use old_grid directly, replace with an adjacent
         // wall type, preferably stone, rock, or metal.
-        // TODO: Blood is currently left on the grid even though it turned
-        //       into a wall or floor. Rather, it should be nudged aside to
-        //       a grid of similar type.
         old_grid = grd[p.x-1][p.y];
         if (!grid_is_wall(old_grid))
         {
@@ -2638,6 +2660,31 @@ void change_labyrinth(bool msg)
             old_grid = grd[p.x+1][p.y];
         }
         grd(p) = old_grid;
+
+        // Shift blood some of the time.
+        if (is_bloodcovered(p))
+        {
+            if (one_chance_in(4))
+            {
+                int floor_count = 0;
+                coord_def new_adj(p);
+                for (adjacent_iterator ai(c); ai; ++ai)
+                    if (_is_floor(grd(*ai)) && one_chance_in(++floor_count))
+                        new_adj = *ai;
+
+                if (new_adj != p)
+                {
+                    if (!is_bloodcovered(new_adj))
+                        env.map(new_adj).property |= FPROP_BLOODY;
+                    env.map(p).property &= (~FPROP_BLOODY);
+                }
+            }
+        }
+        else if (one_chance_in(150))
+        {
+            // Occasionally add blood randomly, accumulating with time...
+            env.map(p).property |= FPROP_BLOODY;
+        }
     }
 
     // The directions are used to randomly decide where to place items that
@@ -3464,7 +3511,7 @@ void update_corpses(double elapsedTime)
     // dry fountains may start flowing again
     if (fountain_checks > 0)
     {
-        for ( rectangle_iterator ri(1); ri; ++ri )
+        for (rectangle_iterator ri(1); ri; ++ri)
         {
             if (grd(*ri) >= DNGN_DRY_FOUNTAIN_BLUE
                 && grd(*ri) < DNGN_PERMADRY_FOUNTAIN)

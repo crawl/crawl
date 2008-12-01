@@ -695,7 +695,7 @@ public:
   bool banished;
   std::string banished_by;
 
-  std::vector<int> beheld_by; // monsters beholding player
+  std::vector<int> mesmerised_by; // monsters mesmerising player
 
   int  friendly_pickup;       // pickup setting for allies
 

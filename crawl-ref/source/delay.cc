@@ -393,6 +393,10 @@ void stop_delay( bool stop_stair_travel )
                              "back to %s.", butcher_verb.c_str(),
                              (multiple_corpses ? "s" : ""), weapon.c_str());
 
+            // Maybe we should do precisely that, but that would entirely
+            // defeat the purpose of the weapon swap.
+//            you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+
             if (Options.swap_when_safe)
             {
                 // Use weapon slot + 1, so weapon slot 'a' (== 0) doesn't
