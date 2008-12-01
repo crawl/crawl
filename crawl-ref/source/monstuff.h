@@ -159,7 +159,7 @@ monsters *choose_random_monster_on_level(
  * *********************************************************************** */
 bool swap_places(monsters *monster);
 bool swap_places(monsters *monster, const coord_def &loc);
-bool swap_check(monsters *monster, coord_def &loc);
+bool swap_check(monsters *monster, coord_def &loc, bool quiet = false);
 
 
 /* ***********************************************************************

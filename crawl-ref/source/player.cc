@@ -116,101 +116,105 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
            || !swapping && (mgrd(p) == NON_MONSTER
                             || mons_is_submerged( &menv[ mgrd(p) ])));
 
-    const int cloud = env.cgrid(p);
-    if (cloud != EMPTY_CLOUD && !you.confused())
+    // Don't prompt if force is true.
+    if (!force)
     {
-        const cloud_type ctype = env.cloud[ cloud ].type;
-        // Don't prompt if already in a cloud of the same type.
-        if (is_damaging_cloud(ctype, true)
-            && (env.cgrid(you.pos()) == EMPTY_CLOUD
-                || ctype != env.cloud[ env.cgrid(you.pos()) ].type))
+        const int cloud = env.cgrid(p);
+        if (cloud != EMPTY_CLOUD && !you.confused())
         {
-            std::string prompt = make_stringf(
-                                    "Really step into that cloud of %s?",
-                                    cloud_name(ctype).c_str());
-
-            if (!yesno(prompt.c_str(), false, 'n'))
+            const cloud_type ctype = env.cloud[ cloud ].type;
+            // Don't prompt if already in a cloud of the same type.
+            if (is_damaging_cloud(ctype, true)
+                && (env.cgrid(you.pos()) == EMPTY_CLOUD
+                    || ctype != env.cloud[ env.cgrid(you.pos()) ].type))
             {
-                canned_msg(MSG_OK);
-                you.turn_is_over = false;
-                return (false);
-            }
-        }
-    }
+                std::string prompt = make_stringf(
+                                        "Really step into that cloud of %s?",
+                                        cloud_name(ctype).c_str());
 
-    // If we're walking along, give a chance to avoid traps.
-    if (stepped && !force && !you.confused())
-    {
-        if (new_grid == DNGN_UNDISCOVERED_TRAP)
-        {
-            const int skill = 4 + you.skills[SK_TRAPS_DOORS]
-                                + player_mutation_level(MUT_ACUTE_VISION)
-                                - 2 * player_mutation_level(MUT_BLURRY_VISION);
-
-            if (random2(skill) > 6)
-            {
-                if (trap_def* ptrap = find_trap(p))
-                    ptrap->reveal();
-
-                viewwindow(true, false);
-
-                mprf( MSGCH_WARN,
-                      "Wait a moment, %s!  Do you really want to step there?",
-                      you.your_name );
-
-                if (!you.running.is_any_travel())
-                    more();
-
-                exercise( SK_TRAPS_DOORS, 3 );
-
-                you.turn_is_over = false;
-
-                return (false);
-            }
-        }
-        else if (new_grid == DNGN_TRAP_MAGICAL
-#ifdef CLUA_BINDINGS
-                 || new_grid == DNGN_TRAP_MECHANICAL
-                    && Options.trap_prompt
-#endif
-                 || new_grid == DNGN_TRAP_NATURAL)
-        {
-            const trap_type type = get_trap_type(p);
-            if (type == TRAP_ZOT)
-            {
-                if (!yes_or_no("Do you really want to step into the Zot trap"))
+                if (!yesno(prompt.c_str(), false, 'n'))
                 {
                     canned_msg(MSG_OK);
-                    stop_running();
                     you.turn_is_over = false;
                     return (false);
                 }
             }
-            else if (new_grid != DNGN_TRAP_MAGICAL && you.airborne())
-            {
-                // No prompt (shaft and mechanical traps ineffective, if flying)
-            }
-            else
-#ifdef CLUA_BINDINGS
-                 // Prompt for any trap where you might not have enough hp
-                 // as defined in init.txt (see trapwalk.lua)
-                 if (new_grid != DNGN_TRAP_MECHANICAL
-                     || !clua.callbooleanfn(false, "ch_cross_trap",
-                                            "s", trap_name(p.x, p.y)))
-#endif
-            {
-                std::string prompt = make_stringf(
-                    "Really step %s that %s?",
-                    (type == TRAP_ALARM) ? "onto" : "into",
-                    feature_description(new_grid, type,
-                                        false, DESC_BASENAME, false).c_str());
+        }
 
-                if (!yesno(prompt.c_str(), true, 'n'))
+        // If we're walking along, give a chance to avoid traps.
+        if (stepped && !you.confused())
+        {
+            if (new_grid == DNGN_UNDISCOVERED_TRAP)
+            {
+                const int skill = 4 + you.skills[SK_TRAPS_DOORS]
+                                    + player_mutation_level(MUT_ACUTE_VISION)
+                                    - 2 * player_mutation_level(MUT_BLURRY_VISION);
+
+                if (random2(skill) > 6)
                 {
-                    canned_msg(MSG_OK);
-                    stop_running();
+                    if (trap_def* ptrap = find_trap(p))
+                        ptrap->reveal();
+
+                    viewwindow(true, false);
+
+                    mprf( MSGCH_WARN,
+                          "Wait a moment, %s!  Do you really want to step there?",
+                          you.your_name );
+
+                    if (!you.running.is_any_travel())
+                        more();
+
+                    exercise( SK_TRAPS_DOORS, 3 );
+
                     you.turn_is_over = false;
+
                     return (false);
+                }
+            }
+            else if (new_grid == DNGN_TRAP_MAGICAL
+#ifdef CLUA_BINDINGS
+                     || new_grid == DNGN_TRAP_MECHANICAL
+                        && Options.trap_prompt
+#endif
+                     || new_grid == DNGN_TRAP_NATURAL)
+            {
+                const trap_type type = get_trap_type(p);
+                if (type == TRAP_ZOT)
+                {
+                    if (!yes_or_no("Do you really want to step into the Zot trap"))
+                    {
+                        canned_msg(MSG_OK);
+                        stop_running();
+                        you.turn_is_over = false;
+                        return (false);
+                    }
+                }
+                else if (new_grid != DNGN_TRAP_MAGICAL && you.airborne())
+                {
+                    // No prompt (shaft and mechanical traps ineffective, if flying)
+                }
+                else
+#ifdef CLUA_BINDINGS
+                     // Prompt for any trap where you might not have enough hp
+                     // as defined in init.txt (see trapwalk.lua)
+                     if (new_grid != DNGN_TRAP_MECHANICAL
+                         || !clua.callbooleanfn(false, "ch_cross_trap",
+                                                "s", trap_name(p.x, p.y)))
+#endif
+                {
+                    std::string prompt = make_stringf(
+                        "Really step %s that %s?",
+                        (type == TRAP_ALARM) ? "onto" : "into",
+                        feature_description(new_grid, type,
+                                            false, DESC_BASENAME, false).c_str());
+
+                    if (!yesno(prompt.c_str(), true, 'n'))
+                    {
+                        canned_msg(MSG_OK);
+                        stop_running();
+                        you.turn_is_over = false;
+                        return (false);
+                    }
                 }
             }
         }

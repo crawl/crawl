@@ -172,12 +172,12 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         }
         else
         {
-            // no longer held in net
+            // No longer held in net.
             clear_trapping_net();
 
             move_player_to_grid(beam.target, false, true, true);
 
-            // controlling teleport contaminates the player -- bwr
+            // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
                 contaminate_player( 1, true );
         }
@@ -190,7 +190,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
     crawl_state.cancel_cmd_repeat();
 
     return (1);
-}                               // end blink()
+}
 
 void random_blink(bool allow_partial_control, bool override_abyss)
 {

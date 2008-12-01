@@ -2004,7 +2004,7 @@ bool swap_places(monsters *monster, const coord_def &loc)
 
 // Returns true if this is a valid swap for this monster.  If true, then
 // the valid location is set in loc. (Otherwise loc becomes garbage.)
-bool swap_check(monsters *monster, coord_def &loc)
+bool swap_check(monsters *monster, coord_def &loc, bool quiet)
 {
     loc = you.pos();
 
@@ -2017,7 +2017,8 @@ bool swap_check(monsters *monster, coord_def &loc)
 
     if (mons_is_caught(monster))
     {
-        simple_monster_message(monster, " is held in a net!");
+        if (!quiet)
+            simple_monster_message(monster, " is held in a net!");
         return (false);
     }
 
@@ -2029,16 +2030,18 @@ bool swap_check(monsters *monster, coord_def &loc)
     {
         int num_found = 0;
 
-        for ( adjacent_iterator ai; ai; ++ai )
-            if (mgrd(*ai) == NON_MONSTER && _habitat_okay( monster, grd(*ai)))
-                if (one_chance_in(++num_found))
-                    loc = *ai;
+        for (adjacent_iterator ai; ai; ++ai)
+            if (mgrd(*ai) == NON_MONSTER && _habitat_okay( monster, grd(*ai))
+                && one_chance_in(++num_found))
+            {
+                loc = *ai;
+            }
 
         if (num_found)
             swap = true;
     }
 
-    if (!swap)
+    if (!swap && !quiet)
     {
         // Might not be ideal, but it's better than insta-killing
         // the monster... maybe try for a short blink instead? -- bwr
@@ -2048,7 +2051,7 @@ bool swap_check(monsters *monster, coord_def &loc)
     }
 
     return (swap);
-}                               // end swap_places()
+}
 
 void mons_get_damage_level( const monsters* monster, std::string& desc,
                             mon_dam_level_type& dam_level )
@@ -2868,7 +2871,7 @@ static bool _find_siren_water_target(monsters *mon)
     ASSERT(mon->type == MONS_SIREN);
 
     // Moving away could break the entrancement, so don't do this.
-    if ((mon->pos() - you.pos()).rdist() > 6)
+    if ((mon->pos() - you.pos()).rdist() >= 6)
         return (false);
 
     // Already completely surrounded by deep water.
@@ -3469,13 +3472,11 @@ static void _handle_behaviour(monsters *mon)
             if (mon->foe == MHITYOU)
             {
                 // The foe is the player.
-                if (mon->type == MONS_SIREN)
+                if (mon->type == MONS_SIREN
+                    && player_mesmerised_by(mon)
+                    && _find_siren_water_target(mon))
                 {
-                    if (player_mesmerised_by(mon)
-                        && _find_siren_water_target(mon))
-                    {
-                        break;
-                    }
+                    break;
                 }
 
                 if (_try_pathfind(mon, can_move, trans_wall_block))
@@ -4343,7 +4344,77 @@ static void _handle_nearby_ability(monsters *monster)
 
     default: break;
     }
-}                               // end handle_nearby_ability()
+}
+
+static bool _siren_movement_effect(const monsters *monster)
+{
+    bool do_resist = (you.attribute[ATTR_HELD] || you_resist_magic(70));
+
+    if (!do_resist)
+    {
+        coord_def dir(coord_def(0,0));
+        if (monster->pos().x < you.pos().x)
+            dir.x = -1;
+        else if (monster->pos().x > you.pos().x)
+            dir.x = 1;
+        if (monster->pos().y < you.pos().y)
+            dir.y = -1;
+        else if (monster->pos().y > you.pos().y)
+            dir.y = 1;
+
+        const coord_def newpos = you.pos() + dir;
+
+        if (!in_bounds(newpos) || is_grid_dangerous(grd(newpos)))
+        {
+            do_resist = true;
+        }
+        else
+        {
+            bool swapping = false;
+            monsters *mon;
+            if (mgrd(newpos) != NON_MONSTER)
+            {
+                mon = &menv[mgrd(newpos)];
+                if (mons_wont_attack(mon)
+                    && !mons_is_stationary(mon)
+                    && !mons_cannot_act(mon)
+                    && !mons_is_sleeping(mon)
+                    && swap_check(mon, you.pos(), true))
+                {
+                    swapping = true;
+                }
+                else if (!mons_is_submerged(mon))
+                    do_resist = true;
+            }
+
+            if (!do_resist)
+            {
+                const coord_def oldpos = you.pos();
+                mprf("The pull of her song draws you forwards.");
+
+                if (swapping)
+                {
+                    int swap_mon = mgrd(newpos);
+                    // Pick the monster up.
+                    mgrd(newpos) = NON_MONSTER;
+                    mon->moveto(oldpos);
+
+                    // Plunk it down.
+                    mgrd(mon->pos()) = swap_mon;
+
+                    mprf("You swap places with %s.",
+                         mon->name(DESC_NOCAP_THE).c_str());
+                }
+                move_player_to_grid(newpos, true, true, true);
+
+                if (swapping)
+                    mon->apply_location_effects(newpos);
+            }
+        }
+    }
+
+    return (do_resist);
+}
 
 //---------------------------------------------------------------
 //
@@ -4761,12 +4832,22 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         {
             noisy(12, monster->pos(), NULL, true);
 
+            bool did_resist = false;
             if (player_monster_visible(monster))
             {
                 simple_monster_message(monster,
                     make_stringf(" chants %s song.",
                     already_mesmerised ? "her luring" : "a haunting").c_str(),
                     spl);
+
+                if (monster->type == MONS_SIREN)
+                {
+                    if (_siren_movement_effect(monster))
+                    {
+                        canned_msg(MSG_YOU_RESIST); // flavour only
+                        did_resist = true;
+                    }
+                }
             }
             else
             {
@@ -4794,7 +4875,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             if (!already_mesmerised
                 && (you.species == SP_MERFOLK || you_resist_magic(100)))
             {
-                canned_msg(MSG_YOU_RESIST);
+                if (!did_resist)
+                    canned_msg(MSG_YOU_RESIST);
                 break;
             }
 
