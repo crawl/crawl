@@ -2373,13 +2373,22 @@ void melee_attack::chaos_affects_defender()
 
     if (beam.flavour != BEAM_NONE)
     {
-        beam.name         = atk_name(DESC_CAP_THE);
-        beam.range        = 1;
+        beam.type         = 0;
+        beam.range        = 0;
         beam.colour       = BLACK;
         beam.is_beam      = false;
         beam.is_explosion = false;
         beam.is_big_cloud = false;
         beam.effect_known = false;
+        beam.drop_item    = false;
+
+        if (weapon && you.can_see(attacker))
+        {
+            beam.name = weapon->name(DESC_NOCAP_A);
+            beam.item = weapon;
+        }
+        else
+            beam.name = atk_name(DESC_NOCAP_THE);
 
         beam.thrower = (attacker->atype() == ACT_PLAYER) ? KILL_YOU
                             : def->confused_by_you() ? KILL_YOU_CONF
@@ -2389,7 +2398,6 @@ void melee_attack::chaos_affects_defender()
 
         beam.source = attacker->pos();
         beam.target = defender->pos();
-        beam.pos    = defender->pos();
 
         beam.damage = dice_def(damage_done + special_damage + aux_damage, 1);
 
