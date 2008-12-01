@@ -261,16 +261,17 @@ ENDMAP
 ########################################################################
 # Small gnoll camp 1
 #
-NAME:  eino_small_gnoll_camp_1
-DEPTH: D:3-10
-TAGS:  uniq_gnoll_camp
-MONS:  gnoll
+NAME:   eino_small_gnoll_camp_1
+DEPTH:  D:3-10
+WEIGHT: 5
+TAGS:   uniq_gnoll_camp
+MONS:   gnoll
 # "gnoll seargeant" with guaranteed good gear
-MONS:  gnoll ; potion of healing | potion of heal wounds \ 
-             . whip ego:reaching |whip good_item no_uniq | \
-               spear ego:reaching | glaive \
-             . scale mail | chain mail
-MONS: jackal / hound
+MONS:   gnoll ; potion of healing | potion of heal wounds \ 
+              . whip ego:reaching |whip good_item no_uniq | \
+                spear ego:reaching | glaive \
+              . scale mail | chain mail
+MONS:  jackal / hound
 MAP
 xxxxxxxxxx
 x..3..xTxx
@@ -284,15 +285,16 @@ ENDMAP
 ########################################################################
 # Small gnoll camp 2
 #
-NAME:  eino_small_gnoll_camp_2
-DEPTH: D:3-10
-TAGS:  uniq_gnoll_camp
-MONS:  gnoll
+NAME:   eino_small_gnoll_camp_2
+DEPTH:  D:3-10
+WEIGHT: 5
+TAGS:   uniq_gnoll_camp
+MONS:   gnoll
 # "gnoll seargeant" with guaranteed good gear
-MONS:  gnoll ; potion of healing | potion of heal wounds \
-             . whip ego:reaching |whip good_item no_uniq | \
-               spear ego:reaching | glaive . scale mail | chain mail
-MONS:  jackal / hound
+MONS:   gnoll ; potion of healing | potion of heal wounds \
+              . whip ego:reaching |whip good_item no_uniq | \
+                spear ego:reaching | glaive . scale mail | chain mail
+MONS:   jackal / hound
 MAP
 xxxxxxxxxx
 xxxx33+%%x
