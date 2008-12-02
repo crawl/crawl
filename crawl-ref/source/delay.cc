@@ -349,8 +349,9 @@ void stop_delay( bool stop_stair_travel )
     case DELAY_BOTTLE_BLOOD:
     case DELAY_OFFER_CORPSE:
     {
+        // Corpse keeps track of work in plus2 field, see handle_delay(). -- bwr
         bool multiple_corpses    = false;
-        bool butcher_swap_warn   = false;
+        bool butcher_swap_setup  = false;
         int  butcher_swap_weapon = 0;
 
         for (unsigned int i = 1; i < you.delay_queue.size(); i++)
@@ -364,16 +365,16 @@ void stop_delay( bool stop_stair_travel )
             else if (you.delay_queue[i].type == DELAY_WEAPON_SWAP)
             {
                 butcher_swap_weapon = you.delay_queue[i].parm1;
-                butcher_swap_warn   = true;
+                butcher_swap_setup  = true;
                 break;
             }
             else
                 break;
         }
 
-        if (!butcher_swap_warn && delays_cleared[DELAY_WEAPON_SWAP] > 0)
+        if (!butcher_swap_setup && delays_cleared[DELAY_WEAPON_SWAP] > 0)
         {
-            butcher_swap_warn   = true;
+            butcher_swap_setup  = true;
             butcher_swap_weapon = cleared_delays_parm1[DELAY_WEAPON_SWAP];
         }
 
@@ -382,35 +383,27 @@ void stop_delay( bool stop_stair_travel )
                  delay.type == DELAY_BOTTLE_BLOOD ? "bottling blood from"
                                                   : "sacrificing");
 
-        // Corpse keeps track of work in plus2 field, see handle_delay(). -- bwr
-        if (butcher_swap_warn)
-        {
-            std::string weapon;
-            if (butcher_swap_weapon == -1)
-                weapon = "unarmed combat";
-            else
-            {
-                weapon = "your " +
-                    you.inv[butcher_swap_weapon].name(DESC_BASENAME);
-            }
-            mprf(MSGCH_WARN, "You stop %s the corpse%s; not switching "
-                             "back to %s.", butcher_verb.c_str(),
-                             (multiple_corpses ? "s" : ""), weapon.c_str());
+        mprf("You stop %s the corpse%s.", butcher_verb.c_str(),
+             multiple_corpses ? "s" : "");
 
+        _pop_delay();
+
+        if (butcher_swap_setup)
+        {
             // Use weapon slot + 1, so weapon slot 'a' (== 0) doesn't
             // return false when checking if
             // you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED].
             you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
                 = (butcher_swap_weapon == -1 ? ENDOFPACK
                                              : butcher_swap_weapon) + 1;
-        }
-        else
-        {
-            mprf("You stop %s the corpse%s.", butcher_verb.c_str(),
-                 multiple_corpses ? "s" : "");
+
+            // Possibly prompt if user wants to switch back from
+            // butchering tool in order to use their normal weapon to
+            // fight the interrupting monster.
+            if (!i_feel_safe())
+                handle_interrupted_swap(false, true);
         }
 
-        _pop_delay();
         break;
     }
     case DELAY_MEMORISE:
@@ -536,10 +529,16 @@ void stop_butcher_delay()
     }
 }
 
+static bool _is_butcher_delay(int delay)
+{
+    return (delay == DELAY_BUTCHER || delay == DELAY_BOTTLE_BLOOD
+            || delay == DELAY_OFFER_CORPSE);
+}
+
 void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
 {
     if (!you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
-        || !you_tran_can_wear(EQ_WEAPON))
+        || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act())
     {
         return;
     }
@@ -552,6 +551,8 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
     const bool       safe   = i_feel_safe() && !force_unsafe;
     const bool       prompt = Options.prompt_for_swap && !safe;
     const delay_type delay  = current_delay_action();
+
+    const char* prompt_str = "Switch back from butchering tool?";
 
     // If we're going to prompt then update the window so the player can
     // see what the monsters are.
@@ -575,8 +576,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
     else if (you.turn_is_over && delay == DELAY_NOT_DELAYED)
     {
         // Turn is over, set up a delay to do swapping next turn.
-        if (prompt && yesno("Switch back from butchering tool?", false)
-            || safe && swap_if_safe)
+        if (prompt && yesno(prompt_str, false) || safe && swap_if_safe)
         {
             start_delay(DELAY_WEAPON_SWAP, 1, weap);
             you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
@@ -587,8 +587,8 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
     {
         // If ATTR_WEAPON_SWAP_INTERRUPTED is set while a corpse is being
         // butchered/bottled/offered, then fake a weapon swap delay.
-        if (delay == DELAY_BUTCHER || delay == DELAY_BOTTLE_BLOOD
-           || delay == DELAY_OFFER_CORPSE)
+        if (_is_butcher_delay(delay)
+            && (safe || prompt && yesno(prompt_str, false)))
         {
             start_delay(DELAY_WEAPON_SWAP, 1, weap);
             you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
@@ -601,7 +601,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
         if (!swap_if_safe)
             return;
     }
-    else if (!prompt || !yesno("Switch back from butchering tool?", false))
+    else if (!prompt || !yesno(prompt_str, false))
     {
         return;
     }
@@ -1741,7 +1741,8 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                                     const activity_interrupt_data &at,
                                     int atype)
 {
-    if (ai == AI_SEE_MONSTER && is_run_delay(atype))
+    if (ai == AI_SEE_MONSTER && (is_run_delay(atype)
+                                 || _is_butcher_delay(atype)))
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
         if (!mon->visible())
