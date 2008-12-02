@@ -1983,7 +1983,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
         "<lightgreen>}</lightgreen> : miscellaneous items (e<w>v</w>oke)\n"
         "<lightmagenta>0</lightmagenta> : the Orb of Zot (Carry the Orb \n"
         "    to the surface and win!)\n"
-        "<yellow>$</yellow> : gold\n",
+        "<yellow>$</yellow> : gold (<w>$</w> counts gold)\n",
 
 
     cols.add_formatted(
@@ -2037,9 +2037,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>[</w> : display worn armour\n"
             "<w>)</w> : display current weapons\n"
             "<w>\"</w> : display worn jewellery\n"
-            "<w>$</w>: display gold in possession\n"
-            "<w>E</w> : display experience info\n"
-            "<w>V</w> : list monsters in sight\n",
+            "<w>$</w> : display gold in possession\n"
+            "<w>E</w> : display experience info\n",
             true, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -2050,6 +2049,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<w>;</w>   : examine occupied tile\n"
             "<w>x</w>   : eXamine surroundings/targets\n"
             "<w>X</w>   : eXamine level map\n"
+            "<w>V</w>   : list monsters and items in sight\n"
             "<w>Ctrl-O</w> : show dungeon Overview\n"
             "<w>Ctrl-A</w> : toggle auto-pickup\n"
             "<w>Ctrl-T</w> : change ally pickup behaviour\n",

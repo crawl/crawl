@@ -15,8 +15,8 @@ Some examples of search strings:
 <w>cure mutation</w> find all potions of cure mutation, including potions in shops.
 <w>cloak</w>         find all cloaks in the dungeon.
 <w>Lair:2</w>        find everything known to be on Lair:2.
-<w>Lair:[2-4]</w>    finds everything on Lair:2-4. Regexes are allowed! Note that
-              Lair:[3-10] will not work as intended, since [x-y] is a regex 
+<w>D:[2-4]</w>       finds everything on Lair:2-4. Regexes are allowed! Note that
+              D:[3-10] will not work as intended, since [x-y] is a regex 
               character range.
 <w>.</w>             is a shortcut to find everything on your current level.
 <w>..</w>            is a shortcut for listing all items you know.
