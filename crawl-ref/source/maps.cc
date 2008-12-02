@@ -195,17 +195,24 @@ static bool bad_map_place(const map_def &map, const coord_def &c,
     return (false);
 }
 
-void fit_region_into_map_bounds(coord_def &pos, const coord_def &size)
+void fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
+                                int margin)
 {
-    ASSERT(size.x <= GXM && size.y <= GYM);
-    if (pos.x < X_BOUND_1)
-        pos.x = X_BOUND_1;
-    if (pos.y < Y_BOUND_1)
-        pos.y = Y_BOUND_1;
-    if (pos.x + size.x - 1 > X_BOUND_2)
-        pos.x = X_BOUND_2 - size.x + 1;
-    if (pos.y + size.y - 1 > Y_BOUND_2)
-        pos.y = Y_BOUND_2 - size.y + 1;
+    const int X_1(X_BOUND_1 + margin);
+    const int X_2(X_BOUND_2 - margin);
+    const int Y_1(Y_BOUND_1 + margin);
+    const int Y_2(Y_BOUND_2 - margin);
+
+    ASSERT(size.x <= (X_2 - X_1 + 1) && size.y <= (Y_2 - Y_1 + 1));
+
+    if (pos.x < X_1)
+        pos.x = X_1;
+    if (pos.y < Y_1)
+        pos.y = Y_1;
+    if (pos.x + size.x - 1 > X_2)
+        pos.x = X_2 - size.x + 1;
+    if (pos.y + size.y - 1 > Y_2)
+        pos.y = Y_2 - size.y + 1;
 }
 
 static bool apply_vault_grid(map_def &def,

@@ -3711,7 +3711,7 @@ static bool _build_minivaults(int level_number, const map_def *vault,
     if (in_bounds(where))
     {
         coord_def tl(where - place.size / 2);
-        fit_region_into_map_bounds(tl, place.size);
+        fit_region_into_map_bounds(tl, place.size, 1);
         v1 = tl;
     }
     else if (!_find_minivault_place(place, v1, clobber))

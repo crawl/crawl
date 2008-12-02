@@ -34,7 +34,7 @@ function TimedMessaging:channel()
 end
 
 function TimedMessaging:init(tmarker, cm, verbose)
-  self.entity = tmarker.props.entity or tmarker.props.desc
+  self.entity = self.entity or tmarker.props.entity or tmarker.props.desc
 
   if not self.ranges and not self.visible and not self.messages then
     self.ranges = {
@@ -141,7 +141,8 @@ function TimedMessaging:say_message(cm, dur)
     return
   end
 
-  local noisemaker = self:range_adjective(cm, self.noisemaker)
+  local noisemaker =
+    self.noisemaker and self:range_adjective(cm, self.noisemaker)
 
   self:proc_ranges(self.ranges, dur,
                    function (chk)

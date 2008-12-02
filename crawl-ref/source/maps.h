@@ -23,7 +23,8 @@ int vault_main(vault_placement &vp,
 
 // Given a rectangular region, slides it to fit into the map. size must be
 // smaller than (GXM,GYM).
-void fit_region_into_map_bounds(coord_def &pos, const coord_def &size);
+void fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
+                                int margin = 0);
 
 const map_def *map_by_index(int index);
 int map_count();
