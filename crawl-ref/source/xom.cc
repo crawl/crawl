@@ -209,10 +209,14 @@ static void _try_brand_switch(const int item_index)
 
     item_def &item(mitm[item_index]);
 
+    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_MISSILES)
+        return;
+
     if (is_unrandom_artefact(item) || is_fixed_artefact(item))
         return;
 
-    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_MISSILES)
+    // Only do it 50% of the time.
+    if (coinflip())
         return;
 
     int brand;
