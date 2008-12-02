@@ -24,6 +24,9 @@
 #include "place.h"
 #include "player.h"
 #include "religion.h"
+#include "spl-book.h"
+#include "spl-cast.h"
+#include "spl-util.h"
 #include "stuff.h"
 
 #define KNOWN_PROPS_KEY    "randart_known_props"
@@ -361,6 +364,10 @@ void randart_desc_properties( const item_def &item,
                               randart_known_props_t &known,
                               bool force_fake_props)
 {
+    // Randart books have no randart properties.
+    if (item.base_type == OBJ_BOOKS)
+        return;
+
     randart_wpn_properties( item, proprt, known);
 
     if (!force_fake_props && item_ident( item, ISFLAG_KNOW_PROPERTIES ))
@@ -1090,6 +1097,66 @@ void static _get_randart_properties(const item_def &item,
     }
 }
 
+static bool _compare_spell_dificulties(spell_type a, spell_type b)
+{
+    return (spell_difficulty(a) < spell_difficulty(b));
+}
+
+static void _init_randart_book(item_def &book)
+{
+    spell_type spells[SPELLBOOK_SIZE];
+    int        spell_count = 0;
+
+    while(spell_count < SPELLBOOK_SIZE)
+    {
+        spell_type spl = static_cast<spell_type>(random2(NUM_SPELLS));
+
+        if (!is_valid_spell(spl))
+            continue;
+
+        // Skip monster only spells.
+        if (get_spell_flags(spl) & SPFLAG_MONSTER)
+            continue;
+
+        // Holy spells don't show up in books.
+        if (spell_typematch(spl, SPTYP_HOLY))
+            continue;
+
+        // Don't include schoolless spells, like Smiting.
+        if (get_spell_disciplines(spl) == 0)
+            continue;
+
+        // This spell passes all of the other checks.
+        if (spl == SPELL_DEBUGGING_RAY)
+            continue;
+
+        // No duplicate spells.
+        bool present = false;
+        for (int i = 0; i < spell_count; i++)
+            if (spells[i] == spl)
+            {
+                present = true;
+                break;
+            }
+        if (present)
+            continue;
+
+        spells[spell_count++] = spl;
+    }
+
+    std::sort(spells, spells + SPELLBOOK_SIZE, _compare_spell_dificulties);
+
+    CrawlHashTable &props = book.props;
+    if (!props.exists( SPELL_LIST_KEY ))
+        props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY];
+    spell_vec.set_max_size(SPELLBOOK_SIZE);
+
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+        spell_vec[i] = (long) spells[i];
+}
+
 void static _init_randart_properties(item_def &item)
 {
     ASSERT( is_random_artefact( item ) );
@@ -1110,6 +1177,12 @@ void static _init_randart_properties(item_def &item)
         for (int i = 0; i < RA_PROPERTIES; i++)
             rap[i] = (short) unrand->prpty[i];
 
+        return;
+    }
+
+    if (item.base_type == OBJ_BOOKS)
+    {
+        _init_randart_book(item);
         return;
     }
 
@@ -1260,6 +1333,8 @@ static std::string _get_artefact_type(const item_def &item,
 {
     switch (item.base_type)
     {
+    case OBJ_BOOKS:
+        return "book";
     case OBJ_WEAPONS:
         return "weapon";
     case OBJ_ARMOUR:
@@ -1298,7 +1373,8 @@ std::string artefact_name(const item_def &item, bool appearance)
 
     ASSERT(item.base_type == OBJ_WEAPONS
            || item.base_type == OBJ_ARMOUR
-           || item.base_type == OBJ_JEWELLERY);
+           || item.base_type == OBJ_JEWELLERY
+           || item.base_type == OBJ_BOOKS);
 
     if (is_fixed_artefact( item ))
         return _get_fixedart_name( item );
@@ -1908,6 +1984,9 @@ static bool _randart_is_conflicting( const item_def &item,
 
 bool randart_is_bad( const item_def &item, randart_properties_t &proprt )
 {
+    if (item.base_type == OBJ_BOOKS)
+        return (false);
+
     if (randart_wpn_num_props( proprt ) == 0)
         return (true);
 
@@ -1970,9 +2049,16 @@ bool make_item_randart( item_def &item )
 {
     if (item.base_type != OBJ_WEAPONS
         && item.base_type != OBJ_ARMOUR
-        && item.base_type != OBJ_JEWELLERY)
+        && item.base_type != OBJ_JEWELLERY
+        && item.base_type != OBJ_BOOKS)
     {
         return (false);
+    }
+
+    if (item.base_type == OBJ_BOOKS)
+    {
+       if (item.sub_type == BOOK_MANUAL || item.sub_type == BOOK_DESTRUCTION)
+           return (false);
     }
 
     // already is a randart

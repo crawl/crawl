@@ -429,7 +429,8 @@ static void _startup_tutorial()
 // Returns whether an item of this type can be an artefact, or cursed.
 static bool _item_type_can_be_artefact( int type)
 {
-    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY);
+    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
+            || type == OBJ_BOOKS);
 }
 
 static void _do_wizard_command(int wiz_command, bool silent_fail)
@@ -534,7 +535,12 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             }
         }
 
-        make_item_randart( you.inv[i] );
+        if (!make_item_randart( you.inv[i] ))
+        {
+            mpr("Failed to turn item into randart.");
+            break;
+        }
+
         if (Options.autoinscribe_randarts)
         {
             add_autoinscription(you.inv[i],

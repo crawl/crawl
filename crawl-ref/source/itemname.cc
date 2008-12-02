@@ -1466,6 +1466,14 @@ std::string item_def::name_aux( description_level_type desc,
         break;
 
     case OBJ_BOOKS:
+        if (is_random_artefact( *this ) && !dbname && !basename)
+        {
+            if (know_type)
+                buff << "book" << get_artefact_name(*this);
+            else
+                buff << get_artefact_name(*this) << "book";
+            break;
+        }
         if (basename)
             buff << (item_typ == BOOK_MANUAL ? "manual" : "book");
         else if (!know_type)
@@ -1560,7 +1568,8 @@ std::string item_def::name_aux( description_level_type desc,
         buff.str( pluralise(buff.str()) );
 
     // Disambiguation
-    if (!terse && !basename && !dbname && know_type)
+    if (!terse && !basename && !dbname && know_type &&
+        !is_random_artefact( *this ))
     {
         switch (this->base_type)
         {

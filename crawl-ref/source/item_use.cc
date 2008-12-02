@@ -4295,7 +4295,7 @@ static void handle_read_book(int item_slot)
             return;
         }
 
-        const spell_type spell = which_spell_in_book(book.sub_type,
+        const spell_type spell = which_spell_in_book(book,
                                                      letter_to_index(ltr));
         if (spell == SPELL_NO_SPELL)
         {

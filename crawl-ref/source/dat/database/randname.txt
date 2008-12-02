@@ -800,3 +800,14 @@ amulet appearance
 
 @jewellery appearance@ @amulet material@
 %%%%
+######################################################
+# Books (NOTE: just a placeholder for now)
+######################################################
+book
+
+@armour@
+%%%%
+book appearance
+
+@armour appearance@
+%%%%

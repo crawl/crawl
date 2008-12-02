@@ -2429,7 +2429,7 @@
 {
     SPELL_HELLFIRE_BURST, "Hellfire Burst",
      SPTYP_CONJURATION | SPTYP_FIRE,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_UNHOLY | SPFLAG_MONSTER,
      9,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -2441,7 +2441,7 @@
 {
     SPELL_VAMPIRE_SUMMON, "Vampire Summon",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY,
+     SPFLAG_UNHOLY | SPFLAG_MONSTER,
      3,
      0,
      -1, -1,
@@ -2453,7 +2453,7 @@
 {
     SPELL_BRAIN_FEED, "Brain Feed",
      SPTYP_NECROMANCY,
-     SPFLAG_UNHOLY | SPFLAG_TARGET,
+     SPFLAG_UNHOLY | SPFLAG_TARGET | SPFLAG_MONSTER,
      3,
      0,
      LOS_RADIUS, LOS_RADIUS,
@@ -2465,7 +2465,7 @@
 {
     SPELL_FAKE_RAKSHASA_SUMMON, "Rakshasa Summon",
      SPTYP_SUMMONING | SPTYP_NECROMANCY,
-     SPFLAG_UNHOLY,
+     SPFLAG_UNHOLY | SPFLAG_MONSTER,
      3,
      0,
      -1, -1,
@@ -2477,7 +2477,7 @@
 {
     SPELL_STEAM_BALL, "Steam Ball",
      SPTYP_CONJURATION | SPTYP_FIRE,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
      4,
      0,
      7, 7,
@@ -2489,7 +2489,7 @@
 {
     SPELL_SUMMON_UFETUBUS, "Summon Ufetubus",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY,
+     SPFLAG_UNHOLY | SPFLAG_MONSTER,
      4,
      0,
      -1, -1,
@@ -2501,7 +2501,7 @@
 {
     SPELL_SUMMON_BEAST, "Summon Beast",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY,
+     SPFLAG_UNHOLY | SPFLAG_MONSTER,
      4,
      0,
      -1, -1,
@@ -2513,7 +2513,7 @@
 {
     SPELL_ENERGY_BOLT, "Energy Bolt",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
      4,
      0,
      8, 8,
@@ -2525,7 +2525,7 @@
 {
     SPELL_POISON_SPLASH, "Poison Splash",
      SPTYP_POISON,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
      2,
      0,
      7, 7,
@@ -2537,7 +2537,7 @@
 {
     SPELL_SUMMON_UNDEAD, "Summon Undead",
      SPTYP_SUMMONING | SPTYP_NECROMANCY,
-     SPFLAG_NONE,
+     SPFLAG_MONSTER,
      7,
      0,
      -1, -1,
@@ -2549,7 +2549,7 @@
 {
     SPELL_CANTRIP, "Cantrip",
      SPTYP_NONE,
-     SPFLAG_NONE,
+     SPFLAG_MONSTER,
      1,
      0,
      -1, -1,
@@ -2561,7 +2561,7 @@
 {
     SPELL_QUICKSILVER_BOLT, "Quicksilver Bolt",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
      5,
      0,
      8, 8,
@@ -2573,7 +2573,7 @@
 {
     SPELL_METAL_SPLINTERS, "Metal Splinters",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
      5,
      0,
      5, 5,
@@ -2585,7 +2585,7 @@
 {
     SPELL_MIASMA, "Miasma",
      SPTYP_CONJURATION | SPTYP_NECROMANCY,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
      6,
      0,
      6, 6,
@@ -2597,7 +2597,7 @@
 {
     SPELL_SUMMON_DRAKES, "Summon Drakes",
      SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_MONSTER,
      6,
      0,
      -1, -1,
@@ -2609,7 +2609,7 @@
 {
     SPELL_BLINK_OTHER, "Blink Other",
      SPTYP_TRANSLOCATION,
-     SPFLAG_ESCAPE | SPFLAG_DIR_OR_TARGET,
+     SPFLAG_ESCAPE | SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
      2,
      0,
      LOS_RADIUS, LOS_RADIUS,
@@ -2621,7 +2621,7 @@
 {
     SPELL_SUMMON_MUSHROOMS, "Summon Mushrooms",
      SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_MONSTER,
      4,
      0,
      -1, -1,

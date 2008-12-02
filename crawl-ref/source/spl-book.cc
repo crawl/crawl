@@ -30,6 +30,7 @@
 #include "it_use3.h"
 #include "message.h"
 #include "player.h"
+#include "randart.h"
 #include "religion.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
@@ -686,6 +687,22 @@ static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
     },
 };
 
+spell_type which_spell_in_book(const item_def &book, int spl)
+{
+    ASSERT(book.base_type == OBJ_BOOKS || book.base_type == OBJ_STAVES);
+
+    const CrawlHashTable &props = book.props;
+    if (!props.exists( SPELL_LIST_KEY ))
+        return which_spell_in_book(book.book_number(), spl);
+
+    const CrawlVector &spells = props[SPELL_LIST_KEY].get_vector();
+
+    ASSERT( spells.get_type() == SV_LONG );
+    ASSERT( spells.size() == SPELLBOOK_SIZE );
+
+    return static_cast<spell_type>(spells[spl].get_long());
+}
+
 spell_type which_spell_in_book(int sbook_type, int spl)
 {
     ASSERT( sbook_type >= 0 );
@@ -703,7 +720,6 @@ int spellbook_contents( item_def &book, read_book_action_type action,
     bool update_screen = !fs;
 
     const int spell_levels = player_spell_levels();
-    const int type = book.book_number();
 
     bool spell_skills = false;
 
@@ -727,7 +743,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
     for (j = 0; j < SPELLBOOK_SIZE; j++)
     {
-        spell_type stype = which_spell_in_book(type, j);
+        spell_type stype = which_spell_in_book(book, j);
         if (stype == SPELL_NO_SPELL)
             continue;
 
@@ -936,6 +952,11 @@ int book_rarity(unsigned char which_book)
     }
 }
 
+bool is_valid_spell_in_book( const item_def &book, int spell )
+{
+    return which_spell_in_book(book, spell) != SPELL_NO_SPELL;
+}
+
 bool is_valid_spell_in_book( int splbook, int spell )
 {
     return which_spell_in_book(splbook, spell) != SPELL_NO_SPELL;
@@ -987,6 +1008,9 @@ static int _which_spellbook( void )
 bool player_can_read_spellbook( const item_def &book )
 {
     if (book.base_type != OBJ_BOOKS)
+        return (true);
+
+    if (book.props.exists( SPELL_LIST_KEY ))
         return (true);
 
     if ((book.sub_type == BOOK_ANNIHILATIONS
@@ -1041,7 +1065,7 @@ int read_book( item_def &book, read_book_action_type action )
     // Remember that this function is called from staff spells as well.
     const int keyin = spellbook_contents( book, action );
 
-    if (book.base_type == OBJ_BOOKS)
+    if (book.base_type == OBJ_BOOKS && !book.props.exists( SPELL_LIST_KEY ))
         mark_had_book(book.sub_type);
 
     redraw_screen();
@@ -1150,7 +1174,7 @@ bool player_can_memorise(const item_def &book)
 
     for (int j = 0; j < SPELLBOOK_SIZE; j++)
     {
-        const spell_type stype = which_spell_in_book(book.book_number(), j);
+        const spell_type stype = which_spell_in_book(book, j);
 
         if (stype == SPELL_NO_SPELL)
             continue;
@@ -1225,13 +1249,13 @@ bool learn_spell(int book)
     index = letter_to_index( spell );
 
     if (index >= SPELLBOOK_SIZE
-        || !is_valid_spell_in_book( you.inv[book].sub_type, index ))
+        || !is_valid_spell_in_book( you.inv[book], index ))
     {
         canned_msg( MSG_HUH );
         return (false);
     }
 
-    spell_type specspell = which_spell_in_book(you.inv[book].sub_type,index);
+    spell_type specspell = which_spell_in_book(you.inv[book], index);
 
     if (specspell == SPELL_NO_SPELL)
     {
@@ -1373,7 +1397,7 @@ int count_staff_spells(const item_def &item, bool need_id)
         return (0);
 
     int nspel = 0;
-    while (nspel < SPELLBOOK_SIZE && is_valid_spell_in_book(type, nspel))
+    while (nspel < SPELLBOOK_SIZE && is_valid_spell_in_book(item, nspel))
         ++nspel;
 
     return (nspel);
@@ -1468,16 +1492,13 @@ int staff_spell( int staff )
 
     const int idx = letter_to_index( keyin );
 
-    // converting sub_type into book index type
-    const int type = istaff.book_number();
-
-    if ((idx >= SPELLBOOK_SIZE) || !is_valid_spell_in_book(type, idx))
+    if ((idx >= SPELLBOOK_SIZE) || !is_valid_spell_in_book(istaff, idx))
     {
         canned_msg(MSG_HUH);
         return -1;
     }
 
-    const spell_type spell = which_spell_in_book( type, idx );
+    const spell_type spell = which_spell_in_book( istaff, idx );
     const int mana = spell_mana( spell ) * ROD_CHARGE_MULT;
     const int diff = spell_difficulty( spell );
 

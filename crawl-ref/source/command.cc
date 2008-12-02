@@ -1204,11 +1204,9 @@ static void _append_spells(std::string &desc, const item_def &item)
 
     desc += "$$Spells                             Type                      Level$";
 
-    const int type = item.book_number();
-
     for (int j = 0; j < 8; j++)
     {
-        spell_type stype = which_spell_in_book(type, j);
+        spell_type stype = which_spell_in_book(item, j);
         if (stype == SPELL_NO_SPELL)
             continue;
 

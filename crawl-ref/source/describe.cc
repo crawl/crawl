@@ -424,6 +424,9 @@ static void _trim_randart_inscrip( item_def& item )
 
 std::string randart_auto_inscription( const item_def& item )
 {
+    if (item.base_type == OBJ_BOOKS)
+        return("");
+
     const std::vector<std::string> propnames = _randart_propnames(item);
 
     return comma_separated_line(propnames.begin(), propnames.end(),

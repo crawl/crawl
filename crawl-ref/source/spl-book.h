@@ -13,6 +13,9 @@
 #include "externs.h"
 #include "FixVec.h"
 
+#define SPELLBOOK_SIZE 8
+#define SPELL_LIST_KEY "spell_list"
+
 class formatted_string;
 
 enum read_book_action_type
@@ -29,6 +32,7 @@ enum read_book_action_type
 int book_rarity(unsigned char which_book);
 
 
+bool is_valid_spell_in_book( const item_def &book, int spell );
 bool is_valid_spell_in_book( int splbook, int spell );
 
 
@@ -49,6 +53,7 @@ bool learn_spell(int book = -1);
 
 bool player_can_read_spellbook( const item_def &book );
 
+spell_type which_spell_in_book(const item_def &book, int spl);
 spell_type which_spell_in_book(int sbook_type, int spl);
 
 // returns amount practised (or -1 for abort)

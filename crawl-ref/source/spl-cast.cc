@@ -2084,7 +2084,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     default:
 #ifdef WIZARD
-        if (you.wizard && !allow_fail && is_valid_spell(spell))
+        if (you.wizard && !allow_fail && is_valid_spell(spell)
+            && (flags & SPFLAG_MONSTER))
         {
             _try_monster_cast(spell, powc, spd, beam);
             return (SPRET_SUCCESS);
@@ -2097,6 +2098,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         else
             mpr("Invalid spell!", MSGCH_ERROR);
 
+        return (SPRET_ABORT);
         break;
     }                           // end switch
 

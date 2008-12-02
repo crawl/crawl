@@ -27,7 +27,8 @@ enum spflag_type
     SPFLAG_MAPPING              = 0x0100,       // a mapping spell of some kind
     SPFLAG_ESCAPE               = 0x0200,       // useful for running away
     SPFLAG_RECOVERY             = 0x0400,       // healing or recovery spell
-    SPFLAG_AREA                 = 0x0800        // area affect
+    SPFLAG_AREA                 = 0x0800,       // area affect
+    SPFLAG_MONSTER              = 0x1000        // monster-only spell
 };
 
 enum spret_type
