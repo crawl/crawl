@@ -13,6 +13,7 @@ class formatted_string;
 class GenericTexture;
 class TilesTexture;
 
+#include <string>
 #include <vector>
 
 struct VColour

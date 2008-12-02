@@ -499,7 +499,7 @@ bool tile_list_processor::write_data()
 {
     if (m_name == "")
     {
-        fprintf(stderr, "Error: can't write data with no %name specified.\n");
+        fprintf(stderr, "Error: can't write data with no %%name specified.\n");
         return false;
     }
 
@@ -649,7 +649,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "#include <map>\n");
         fprintf(fp, "#include <string>\n");
         fprintf(fp, "#include <assert.h>\n");
-        fprintf(fp, "using namespace std;\n");
+        fprintf(fp, "using namespace std;\n\n");
 
         fprintf(fp, "int _tile_%s_count[%s - %s] =\n{\n",
             lcname.c_str(), max.c_str(), m_start_value.c_str());
@@ -736,8 +736,7 @@ bool tile_list_processor::write_data()
 
         fprintf(fp,
             "tile_%s_map::tile_%s_map()\n"
-            "{\n"
-            "    map<string, int>::iterator itr = begin();\n",
+            "{\n",
             lcname.c_str(), lcname.c_str());
 
         for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
@@ -751,7 +750,7 @@ bool tile_list_processor::write_data()
             for (unsigned int c = 0; c < enumname.size(); c++)
                 lcenum[c] = std::tolower(enumname[c]);
 
-            fprintf(fp, "    insert(itr, map<string, int>::value_type(\"%s\", %d + %s));\n",
+            fprintf(fp, "    insert(map<string, int>::value_type(\"%s\", %d + %s));\n",
                 lcenum.c_str(), i, m_start_value.c_str());
         }
 
