@@ -3847,8 +3847,9 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
 void melee_attack::mons_perform_attack_rounds()
 {
-    const int nrounds   = atk->has_hydra_multi_attack()? atk->number : 4;
-    const coord_def pos = defender->pos();
+    const int nrounds      = atk->has_hydra_multi_attack() ? atk->number : 4;
+    const coord_def pos    = defender->pos();
+    const bool was_delayed = you_are_delayed();
 
     // Melee combat, tell attacker to wield its melee weapon.
     atk->wield_melee_weapon();
@@ -3977,7 +3978,7 @@ void melee_attack::mons_perform_attack_rounds()
             defender->hurt(attacker, damage_done + special_damage);
 
             if (!defender->alive() || attacker == defender)
-                return;
+                break;
 
             special_damage = 0;
             special_damage_message.clear();
@@ -3996,6 +3997,13 @@ void melee_attack::mons_perform_attack_rounds()
         {
             set_ident_flags( *weap, ISFLAG_KNOW_CURSE );
         }
+    }
+
+    // Inivislbe monster might have interrupted butchering.
+    if (was_delayed && defender->atype() == ACT_PLAYER && perceived_attack
+        && !attacker_visible)
+    {
+        handle_interrupted_swap(false, true);
     }
 }
 

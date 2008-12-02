@@ -23,6 +23,7 @@
  */
 
 #include "AppHdr.h"
+#include "delay.h"
 #include "files.h"
 #include "version.h"
 
@@ -1339,6 +1340,18 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     if (load_mode != LOAD_VISITOR)
         dungeon_events.fire_event(DET_ENTERED_LEVEL);
+
+    if (load_mode == LOAD_ENTER_LEVEL)
+    {
+        // If butchering was interrupted by switching levels (banishment)
+        // then switch back from butchering tool if there's no hostiles
+        // nearby.
+        handle_interrupted_swap(true);
+
+        // Forget about interrupted butchering, since we probably aren't going
+        // to get back to the corpse in time to finish things.
+        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+    }
 
     return just_created_level;
 }                               // end load()

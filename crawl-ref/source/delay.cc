@@ -308,6 +308,10 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
     delay.parm2    = parm2;
     delay.started  = false;
 
+    // Paranoia
+    if (type == DELAY_WEAPON_SWAP)
+        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+
     // Handle zero-turn delays (possible with butchering).
     if (turns == 0)
     {
@@ -345,8 +349,9 @@ void stop_delay( bool stop_stair_travel )
     case DELAY_BOTTLE_BLOOD:
     case DELAY_OFFER_CORPSE:
     {
+        // Corpse keeps track of work in plus2 field, see handle_delay(). -- bwr
         bool multiple_corpses    = false;
-        bool butcher_swap_warn   = false;
+        bool butcher_swap_setup  = false;
         int  butcher_swap_weapon = 0;
 
         for (unsigned int i = 1; i < you.delay_queue.size(); i++)
@@ -360,16 +365,16 @@ void stop_delay( bool stop_stair_travel )
             else if (you.delay_queue[i].type == DELAY_WEAPON_SWAP)
             {
                 butcher_swap_weapon = you.delay_queue[i].parm1;
-                butcher_swap_warn   = true;
+                butcher_swap_setup  = true;
                 break;
             }
             else
                 break;
         }
 
-        if (!butcher_swap_warn && delays_cleared[DELAY_WEAPON_SWAP] > 0)
+        if (!butcher_swap_setup && delays_cleared[DELAY_WEAPON_SWAP] > 0)
         {
-            butcher_swap_warn   = true;
+            butcher_swap_setup  = true;
             butcher_swap_weapon = cleared_delays_parm1[DELAY_WEAPON_SWAP];
         }
 
@@ -378,38 +383,27 @@ void stop_delay( bool stop_stair_travel )
                  delay.type == DELAY_BOTTLE_BLOOD ? "bottling blood from"
                                                   : "sacrificing");
 
-        // Corpse keeps track of work in plus2 field, see handle_delay(). -- bwr
-        if (butcher_swap_warn)
-        {
-            std::string weapon;
-            if (butcher_swap_weapon == -1)
-                weapon = "unarmed combat";
-            else
-            {
-                weapon = "your " +
-                    you.inv[butcher_swap_weapon].name(DESC_BASENAME);
-            }
-            mprf(MSGCH_WARN, "You stop %s the corpse%s; not switching "
-                             "back to %s.", butcher_verb.c_str(),
-                             (multiple_corpses ? "s" : ""), weapon.c_str());
-
-            if (Options.swap_when_safe)
-            {
-                // Use weapon slot + 1, so weapon slot 'a' (== 0) doesn't
-                // return false when checking if
-                // you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED].
-                you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
-                    = (butcher_swap_weapon == -1 ? ENDOFPACK
-                                                 : butcher_swap_weapon) + 1;
-            }
-        }
-        else
-        {
-            mprf("You stop %s the corpse%s.", butcher_verb.c_str(),
-                 multiple_corpses ? "s" : "");
-        }
+        mprf("You stop %s the corpse%s.", butcher_verb.c_str(),
+             multiple_corpses ? "s" : "");
 
         _pop_delay();
+
+        if (butcher_swap_setup)
+        {
+            // Use weapon slot + 1, so weapon slot 'a' (== 0) doesn't
+            // return false when checking if
+            // you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED].
+            you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
+                = (butcher_swap_weapon == -1 ? ENDOFPACK
+                                             : butcher_swap_weapon) + 1;
+
+            // Possibly prompt if user wants to switch back from
+            // butchering tool in order to use their normal weapon to
+            // fight the interrupting monster.
+            if (!i_feel_safe())
+                handle_interrupted_swap(false, true);
+        }
+
         break;
     }
     case DELAY_MEMORISE:
@@ -543,6 +537,89 @@ void stop_butcher_delay()
     {
         stop_delay();
     }
+}
+
+static bool _is_butcher_delay(int delay)
+{
+    return (delay == DELAY_BUTCHER || delay == DELAY_BOTTLE_BLOOD
+            || delay == DELAY_OFFER_CORPSE);
+}
+
+void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
+{
+    if (!you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
+        || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act())
+    {
+        return;
+    }
+
+    // Decrease value by 1. (0 means attribute is false, 1 = a, 2 = b, ...)
+    int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;
+    if (weap == ENDOFPACK)
+        weap = -1;
+
+    const bool       safe   = i_feel_safe() && !force_unsafe;
+    const bool       prompt = Options.prompt_for_swap && !safe;
+    const delay_type delay  = current_delay_action();
+
+    const char* prompt_str = "Switch back from butchering tool?";
+
+    // If we're going to prompt then update the window so the player can
+    // see what the monsters are.
+    if (prompt)
+        viewwindow(true, false);
+
+    if (delay == DELAY_WEAPON_SWAP)
+    {
+        ASSERT(!"handle_interrupted_swap() called while already swapping "
+                "weapons");
+        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+        return;
+    }
+    else if (!you.turn_is_over
+             && (delay == DELAY_ASCENDING_STAIRS
+                 || delay == DELAY_DESCENDING_STAIRS))
+    {
+        // We just arrived on the level, let rest of function do its stuff.
+        ;
+    }
+    else if (you.turn_is_over && delay == DELAY_NOT_DELAYED)
+    {
+        // Turn is over, set up a delay to do swapping next turn.
+        if (prompt && yesno(prompt_str, false) || safe && swap_if_safe)
+        {
+            start_delay(DELAY_WEAPON_SWAP, 1, weap);
+            you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+        }
+        return;
+    }
+    else if (delay != DELAY_NOT_DELAYED)
+    {
+        // If ATTR_WEAPON_SWAP_INTERRUPTED is set while a corpse is being
+        // butchered/bottled/offered, then fake a weapon swap delay.
+        if (_is_butcher_delay(delay)
+            && (safe || prompt && yesno(prompt_str, false)))
+        {
+            start_delay(DELAY_WEAPON_SWAP, 1, weap);
+            you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+        }
+        return;
+    }
+
+    if (safe)
+    {
+        if (!swap_if_safe)
+            return;
+    }
+    else if (!prompt || !yesno(prompt_str, false))
+    {
+        return;
+    }
+
+    weapon_switch(weap);
+    print_stats();
+
+    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
 bool you_are_delayed( void )
@@ -1170,6 +1247,12 @@ static void _finish_delay(const delay_queue_item &delay)
             {
                 autopickup();
             }
+
+            // If we were interrupted while butchering (by poisonig, for
+            // example) then resumed butchering and finished, swap back from
+            // butchering tool if appropriate.
+            if (you.delay_queue.size() == 1)
+                handle_interrupted_swap(true);
         }
         else
         {
@@ -1206,6 +1289,11 @@ static void _finish_delay(const delay_queue_item &delay)
             offer_corpse(delay.parm1);
             StashTrack.update_stash(); // Don't stash-track this corpse anymore.
         }
+        // If we were interrupted while butchering (by poisonig, for
+        // example) then resumed butchering and finished, swap back from
+        // butchering tool if appropriate.
+        if (you.delay_queue.size() == 1)
+            handle_interrupted_swap(true);
         break;
     }
     case DELAY_DROP_ITEM:
@@ -1645,15 +1733,16 @@ static bool _should_stop_activity(const delay_queue_item &item,
             || Options.activity_interrupts[item.type][ai]);
 }
 
-inline static void _monster_warning(activity_interrupt_type ai,
+inline static bool _monster_warning(activity_interrupt_type ai,
                                     const activity_interrupt_data &at,
                                     int atype)
 {
-    if (ai == AI_SEE_MONSTER && is_run_delay(atype))
+    if (ai == AI_SEE_MONSTER && (is_run_delay(atype)
+                                 || _is_butcher_delay(atype)))
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
         if (!mon->visible())
-            return;
+            return (false);
         if (at.context == "already seen")
         {
             // Only say "comes into view" if the monster wasn't in view
@@ -1711,10 +1800,14 @@ inline static void _monster_warning(activity_interrupt_type ai,
 
         if (Options.tutorial_left)
             tutorial_first_monster(*mon);
+
+        return (true);
     }
+
+    return (false);
 }
 
-static void _paranoid_option_disable( activity_interrupt_type ai,
+static bool _paranoid_option_disable( activity_interrupt_type ai,
                                       const activity_interrupt_data &at )
 {
     if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
@@ -1747,7 +1840,10 @@ static void _paranoid_option_disable( activity_interrupt_type ai,
                 Options.tut_seen_invisible = you.num_turns;
             }
         }
+    return (true);
     }
+
+    return (false);
 }
 
 // Returns true if any activity was stopped.
@@ -1757,7 +1853,7 @@ bool interrupt_activity( activity_interrupt_type ai,
     if (_interrupts_blocked > 0)
         return (false);
 
-    _paranoid_option_disable(ai, at);
+    bool was_monst = _paranoid_option_disable(ai, at);
 
     if (crawl_state.is_repeating_cmd())
         return interrupt_cmd_repeat(ai, at);
@@ -1782,8 +1878,11 @@ bool interrupt_activity( activity_interrupt_type ai,
         if (is_sanctuary(you.x_pos, you.y_pos))
             return (false);
 
-        _monster_warning(ai, at, item.type);
+        was_monst = _monster_warning(ai, at, item.type) || was_monst;
         stop_delay();
+        if (was_monst)
+            handle_interrupted_swap(false, true);
+
         return (true);
     }
 
@@ -1802,8 +1901,13 @@ bool interrupt_activity( activity_interrupt_type ai,
             {
                 if (is_run_delay( you.delay_queue[j].type ))
                 {
-                    _monster_warning(ai, at, you.delay_queue[j].type);
+                    was_monst =
+                        _monster_warning(ai, at, you.delay_queue[j].type)
+                        || was_monst;
+
                     stop_delay();
+                    if (was_monst)
+                        handle_interrupted_swap(false, true);
                     return (true);
                 }
             }
@@ -1811,6 +1915,9 @@ bool interrupt_activity( activity_interrupt_type ai,
             // Non-run queued delays can be discarded without any processing.
             you.delay_queue.erase( you.delay_queue.begin() + i,
                                    you.delay_queue.end() );
+            if (was_monst)
+                handle_interrupted_swap(false, true);
+
             return (true);
         }
     }

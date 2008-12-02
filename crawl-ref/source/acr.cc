@@ -1469,23 +1469,6 @@ static void _input()
     if (need_to_autoinscribe())
         autoinscribe();
 
-    // XXX: Is there some smart way to avoid autoswitching back if we're
-    //      just about to continue butchering?
-    if (!you.turn_is_over && player_feels_safe
-        && you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
-    {
-        // Decrease value by 1. (0 means attribute is false, 1 = a, 2 = b, ...)
-        int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;
-        if (weap == ENDOFPACK)
-            weap = -1;
-
-        weapon_switch(weap);
-        print_stats();
-
-        // To prevent spam in case the weapon can't be switched back to.
-        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-    }
-
     handle_delay();
 
     _center_cursor();
