@@ -3001,6 +3001,7 @@ enum montravel_target_type
     MTRAV_PLAYER,      // Travelling to reach the player.
     MTRAV_PATROL,      // Travelling to reach the patrol point.
     MTRAV_SIREN,       // Sirens travelling towards deep water.
+    MTRAV_WALL,        // Earthworms travelling towards a wall.
     MTRAV_UNREACHABLE  // Not travelling because target is unreachable.
 };
 

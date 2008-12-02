@@ -661,6 +661,7 @@ int mons_standard_level(int mcls)
     case MONS_WRAITH:
     case MONS_UNSEEN_HORROR:
     case MONS_TRAPDOOR_SPIDER:
+    case MONS_ROCK_WORM:
         return 14;
 
     case MONS_ARMOUR_MIMIC:
@@ -948,6 +949,7 @@ int mons_standard_rare(int mcls)
 
     case MONS_EYE_OF_DRAINING:
     case MONS_TRAPDOOR_SPIDER:
+    case MONS_ROCK_WORM:
         return 33;
 
     case MONS_GIANT_SLUG:
@@ -1385,6 +1387,7 @@ int mons_lair_level(int mcls)
     case MONS_OKLOB_PLANT:
     case MONS_WYVERN:
     case MONS_TRAPDOOR_SPIDER:
+    case MONS_ROCK_WORM:
         mlev += 7;
         break;
 
@@ -1522,6 +1525,7 @@ int mons_lair_rare(int mcls)
     case MONS_YELLOW_WASP:
     case MONS_BUTTERFLY:
     case MONS_TRAPDOOR_SPIDER:
+    case MONS_ROCK_WORM:
         return 5;
 
     case MONS_GIANT_SPORE:

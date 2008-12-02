@@ -1633,9 +1633,6 @@ static bool _valid_morph( monsters *monster, int new_mclass )
         || new_mclass == MONS_PLAYER_GHOST
         || new_mclass == MONS_PANDEMONIUM_DEMON
 
-        // Monsters still under development
-        || new_mclass == MONS_ROCK_WORM
-
         // Other poly-unsuitable things.
         || new_mclass == MONS_ROYAL_JELLY
         || new_mclass == MONS_ORB_GUARDIAN
@@ -2985,6 +2982,101 @@ static bool _find_siren_water_target(monsters *mon)
     return (false);
 }
 
+static bool _find_wall_target(monsters *mon)
+{
+    ASSERT(mons_wall_shielded(mon));
+
+    if (mon->travel_target == MTRAV_WALL)
+    {
+        coord_def targ_pos(mon->travel_path[mon->travel_path.size() - 1]);
+
+        // Target grid might have changed since we started, like if the
+        // player destroys the wall the monster wants to hide in.
+        if (grid_is_solid(targ_pos)
+            && monster_habitable_grid(mon, grd(targ_pos)))
+        {
+            // Wall is still good.
+#ifdef DEBUG_PATHFIND
+            mprf("%s target is (%d, %d), dist = %d",
+                 mon->name(DESC_PLAIN, true).c_str(),
+                 targ_pos.x, targ_pos.y, (int) (mon->pos() - targ_pos).rdist());
+#endif
+            return (true);
+        }
+
+        mon->travel_path.clear();
+        mon->travel_target = MTRAV_NONE;
+    }
+
+    monster_los lm;
+    lm.set_monster(mon);
+    lm.set_los_range(LOS_RADIUS);
+    lm.fill_los_field();
+
+    int       best_dist             = INT_MAX;
+    bool      best_closer_to_player = false;
+    coord_def best_target;
+
+    for (radius_iterator ri(mon->pos(), LOS_RADIUS, true, false);
+         ri; ++ri)
+    {
+        if (!grid_is_solid(*ri)
+            || monster_habitable_grid(mon, grd(*ri)))
+        {
+            continue;
+        }
+
+        int  dist = (mon->pos() - *ri).rdist();
+        bool closer_to_player = false;
+        if (dist > (you.pos() - *ri).rdist())
+            closer_to_player = true;
+
+        if (dist < best_dist)
+        {
+            best_dist             = dist;
+            best_closer_to_player = closer_to_player;
+            best_target           = *ri;
+        }
+        else if (best_closer_to_player && !closer_to_player
+                 && dist == best_dist)
+        {
+            best_closer_to_player = false;
+            best_target           = *ri;
+        }
+    }
+
+    if (best_dist == INT_MAX || !in_bounds(best_target))
+        return (false);
+
+    monster_pathfind mp;
+#ifdef WIZARD
+    // Remove old highlighted areas to make place for the new ones.
+    for (rectangle_iterator ri(1); ri; ++ri)
+        env.map(*ri).property &= ~(FPROP_HIGHLIGHT);
+#endif
+
+    if (mp.init_pathfind(mon, best_target))
+    {
+        mon->travel_path = mp.calc_waypoints();
+
+        if (!mon->travel_path.empty())
+        {
+#ifdef WIZARD
+            for (unsigned int i = 0; i < mon->travel_path.size(); i++)
+                env.map(mon->travel_path[i]).property |= FPROP_HIGHLIGHT;
+#endif
+#ifdef DEBUG_PATHFIND
+            mprf("Found a path to (%d, %d)", best_target.x, best_target.y);
+#endif
+            // Okay then, we found a path.  Let's use it!
+            mon->target = mon->travel_path[0];
+            mon->travel_target = MTRAV_WALL;
+            return (true);
+        }
+    }
+    return (false);
+}
+
 // Returns true if further handling neeeded.
 static bool _handle_monster_travelling(monsters *mon,
                                        const dungeon_feature_type can_move)
@@ -3221,6 +3313,16 @@ static void _handle_behaviour(monsters *mon)
     {
         mon->target.set( 10 + random2(GXM - 10), 10 + random2(GYM - 10) );
         return;
+    }
+
+    if (mons_wall_shielded(mon) && grid_is_solid(mon->pos()))
+    {
+        // Monster is safe, so it's behaviour can be simplified to fleeing.
+        if (mon->behaviour == BEH_CORNERED || mon->behaviour == BEH_PANIC
+            || isScared)
+        {
+            mon->behaviour = BEH_FLEE;
+        }
     }
 
     const dungeon_feature_type can_move =
@@ -3624,18 +3726,13 @@ static void _handle_behaviour(monsters *mon)
             // possible to get a 'CORNERED' event, at which point
             // we can jump back to WANDER if the foe isn't present.
 
-            // XXX: If a monster can move through solid grids, then it
-            // should preferentially flee towards the nearest solid grid
-            // it can move through.  It will be (mostly) safe as soon as
-            // it enters the wall, and even if it isn't, once it moves
-            // again it will be on the other side of the wall and likely
-            // beyond the reach of the player.
-
             if (isFriendly)
             {
                 // Special-cased below so that it will flee *towards* you.
                 mon->target = you.pos();
             }
+            else if (mons_wall_shielded(mon) && _find_wall_target(mon))
+                ; // Wall target found.
             else if (proxFoe)
             {
                 // Special-cased below so that it will flee *from* the
@@ -3680,6 +3777,16 @@ static void _handle_behaviour(monsters *mon)
             mon->foe_memory = 0;
 
         mon->foe = new_foe;
+    }
+
+    if (mon->travel_target == MTRAV_WALL && grid_is_solid(mon->pos()))
+    {
+        if (mon->behaviour == BEH_FLEE)
+        {
+            // Monster is safe, so stay put.
+            mon->target.set(mon->pos().x, mon->pos().y);
+            mon->foe = MHITNOT;
+        }
     }
 }
 
@@ -4007,7 +4114,7 @@ static void _handle_movement(monsters *monster)
     mmov.x = (delta.x > 0) ? 1 : ((delta.x < 0) ? -1 : 0);
     mmov.y = (delta.y > 0) ? 1 : ((delta.y < 0) ? -1 : 0);
 
-    if (mons_is_fleeing(monster)
+    if (mons_is_fleeing(monster) && monster->travel_target != MTRAV_WALL
         && (!mons_friendly(monster)
             || monster->target != you.pos()))
     {
