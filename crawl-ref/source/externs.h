@@ -1857,8 +1857,8 @@ public:
     bool        easy_butcher;    // autoswap to butchering tool
     bool        always_confirm_butcher; // even if only one corpse
     bool        chunks_autopickup; // Autopickup chunks after butchering
-    bool        swap_when_safe;  // If autoswapped butchery was interrupted,
-                                 // swap weapon back when safe.
+    bool        prompt_for_swap; // Prompt to switch back from butchering
+                                 // tool if hostile monsters are around.
     bool        list_rotten;     // list slots for rotting corpses/chunks
     bool        default_target;  // start targeting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden

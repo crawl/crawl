@@ -2358,9 +2358,6 @@ mon_resist_type mons_ench_f2(monsters *monster, bolt &pbolt)
 
                 if (!player_monster_visible(monster))
                 {
-                    // Don't swap weapons just because you can't see it anymore!
-                    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-
                     // Also turn off autopickup.
                     Options.autopickup_on = false;
                     mpr("Deactivating autopickup; reactivate with Ctrl-A.",

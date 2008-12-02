@@ -1259,6 +1259,7 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
     }
 
     coord_def pos(1, 0);
+    bool      large_change = false;
 
     if (is_controlled)
     {
@@ -1328,6 +1329,9 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
             if (pos != you.pos())
                 clear_trapping_net();
 
+            if (!see_grid(pos))
+                large_change = true;
+
             you.moveto(pos);
 
             if (grd(you.pos()) != DNGN_FLOOR
@@ -1336,6 +1340,7 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
                 || env.cgrid(you.pos()) != EMPTY_CLOUD)
             {
                 is_controlled = false;
+                large_change  = false;
             }
             else
             {
@@ -1396,13 +1401,20 @@ static bool _teleport_player( bool allow_control, bool new_abyss_area )
         else if ( see_grid(newpos) )
             mpr("Your surroundings seem slightly different.");
         else
+        {
             mpr("Your surroundings suddenly seem different.");
+            large_change = true;
+        }
 
         you.position = newpos;
 
         // Necessary to update the view centre.
         you.moveto(you.pos());
+
     }
+
+    if (large_change)
+        handle_interrupted_swap(true);
 
     return !is_controlled;
 }

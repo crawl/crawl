@@ -58,7 +58,7 @@ The contents of this text are:
 4-i     Command Enhancements.
                 auto_list, easy_open, easy_unequip, easy_confirm, 
                 allow_self_target, easy_butcher, always_confirm_butcher, 
-                swap_when_safe, easy_quit_item_prompts, easy_exit_menu, 
+                prompt_for_swap, easy_quit_item_prompts, easy_exit_menu, 
                 sort_menus
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour,
@@ -976,10 +976,12 @@ always_confirm_butcher = false
         one corpse on the square. If there are multiple corpses on a 
         square, you will always be prompted, regardless of this option.
 
-swap_when_safe = true
+prompt_for_swap = true
         If both this and easy_butcher are true, then if an auto-switch
-        butchery is interrupted, the auto-switch will be reversed as
-        soon as you are safe again.
+        butchery is interrupted by a hostile monster, the game will
+        ask if you wish to switch back to your weapon.  It will also
+        prompt you if after butchery is interupted you teleport or
+        change levels and find yourself near hostile monsters.
 
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing 

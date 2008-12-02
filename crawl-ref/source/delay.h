@@ -77,6 +77,9 @@ bool is_run_delay(int delay);
 bool is_being_butchered(const item_def &item, bool just_first = true);
 bool is_vampire_feeding( void );
 void stop_butcher_delay();
+void handle_interrupted_swap(bool swap_if_safe = false,
+                             bool force_unsafe = false);
+
 void clear_macro_process_key_delay();
 
 const char *activity_interrupt_name(activity_interrupt_type ai);
