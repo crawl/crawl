@@ -1494,7 +1494,20 @@ bool acquirement(object_class_type class_wanted, int agent,
         if (!silenced(you.pos()) && !quiet)
             mprf(MSGCH_SOUND, grid_item_destruction_message(grd(you.pos())));
 
-        item_was_destroyed(mitm[igrd(you.pos())], NON_MONSTER);
+        if (agent > GOD_NO_GOD && agent < NUM_GODS)
+        {
+            if (agent == GOD_XOM)
+                simple_god_message(" snickers.", GOD_XOM);
+            else
+            {
+                ASSERT(!"God gave gift item while player was on grid which "
+                        "destroys items.");
+                mprf(MSGCH_ERROR, "%s gave a god gift while you were on "
+                                  "terrain which destroys items.",
+                     god_name((god_type) agent).c_str());
+            }
+        }
+
         *item_index = NON_ITEM;
     }
     else
@@ -1509,7 +1522,8 @@ bool acquirement(object_class_type class_wanted, int agent,
                 class_wanted = OBJ_POTIONS;
 
             thing_created = items( 1, class_wanted, type_wanted, true,
-                                   MAKE_GOOD_ITEM, MAKE_ITEM_RANDOM_RACE );
+                                   MAKE_GOOD_ITEM, MAKE_ITEM_RANDOM_RACE,
+                                   0, 0, agent );
 
             if (thing_created == NON_ITEM)
                 continue;
@@ -1729,7 +1743,6 @@ bool acquirement(object_class_type class_wanted, int agent,
             thing.inscription = "god gift";
             if (is_random_artefact(thing))
             {
-                origin_acquired(thing, agent);
                 if ( !is_unrandom_artefact(thing) )
                 {
                     // give another name that takes god gift into account
@@ -1747,7 +1760,6 @@ bool acquirement(object_class_type class_wanted, int agent,
         {
             if (!quiet)
                 canned_msg(MSG_SOMETHING_APPEARS);
-            origin_acquired(mitm[thing_created], agent);
         }
         *item_index = thing_created;
     }

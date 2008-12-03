@@ -203,8 +203,11 @@ static void _xom_makes_you_cast_random_spell(int sever)
 
 static void _xom_make_item(object_class_type base, int subtype, int power)
 {
+    god_acting gdact(GOD_XOM);
+
     int thing_created =
-        items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE);
+        items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE,
+              0, 0, GOD_XOM);
 
     if (thing_created == NON_ITEM)
     {
@@ -212,14 +215,10 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
         return;
     }
 
-    god_acting gdact(GOD_XOM);
-
     move_item_to_grid(&thing_created, you.x_pos, you.y_pos);
     mitm[thing_created].inscription = "god gift";
     canned_msg(MSG_SOMETHING_APPEARS);
     stop_running();
-
-    origin_acquired(mitm[thing_created], GOD_XOM);
 }
 
 static object_class_type _get_unrelated_wield_class(object_class_type ref)

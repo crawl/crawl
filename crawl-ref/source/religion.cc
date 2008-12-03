@@ -1023,7 +1023,8 @@ static void _give_nemelex_gift()
         _update_sacrifice_weights(choice);
 
         int thing_created = items( 1, OBJ_MISCELLANY, gift_type,
-                                   true, 1, MAKE_ITEM_RANDOM_RACE );
+                                   true, 1, MAKE_ITEM_RANDOM_RACE,
+                                   0, 0, GOD_NEMELEX_XOBEH );
 
         if (thing_created != NON_ITEM)
         {
@@ -1060,7 +1061,6 @@ static void _give_nemelex_gift()
             deck.inscription = "god gift";
 
             move_item_to_grid( &thing_created, you.x_pos, you.y_pos );
-            origin_acquired(deck, you.religion);
 
             simple_god_message(" grants you a gift!");
             more();
@@ -1873,7 +1873,8 @@ static void _do_god_gift(bool prayed_for)
                     else
                     {
                         int thing_created = items(1, OBJ_BOOKS, gift, true, 1,
-                                                  MAKE_ITEM_RANDOM_RACE);
+                                                  MAKE_ITEM_RANDOM_RACE,
+                                                  0, 0, you.religion);
                         if (thing_created == NON_ITEM)
                             return;
 
@@ -1883,7 +1884,6 @@ static void _do_god_gift(bool prayed_for)
                         {
                             success = true;
                             mitm[thing_created].inscription = "god gift";
-                            origin_acquired(mitm[thing_created], you.religion);
                         }
                     }
 
@@ -3882,7 +3882,8 @@ static bool _beogh_retribution()
             // Create item.
             int slot = items(0, OBJ_WEAPONS, WPN_CLUB + random2(13),
                              true, you.experience_level,
-                             am_orc ? MAKE_ITEM_NO_RACE : MAKE_ITEM_ORCISH);
+                             am_orc ? MAKE_ITEM_NO_RACE : MAKE_ITEM_ORCISH,
+                             0, 0, GOD_BEOGH);
 
             if (slot == -1)
                 continue;
