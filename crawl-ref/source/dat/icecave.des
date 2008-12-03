@@ -26,11 +26,12 @@ function ice_cave_portal(e)
                                "$F{The} is slowly melting away.",
                                "$F{The} is melting away.",
                                "$F{The} is quickly melting away.",
-                               "$F{The} has just melted away.")
+                               "$F{The} is almost completely melted.")
     }
 
   e.lua_marker('O',
       timed_marker {
+        disappear = "$F{The} melts and disappears.",
         desc = "A frozen archway",
         entity = 'archway',
         dst = "ice_cave",

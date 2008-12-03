@@ -21,14 +21,15 @@ function minitomb_portal(e)
       -- $F{xxx} will be substituted with the 'entity' property of the timed
       -- marker, or with the desc property (if entity is not set).
       messages = time_messages(timeout_turns,
+          "Nearby sand pours into $F{the}.",      
           "Nearby sand pours into $F{the}, lightly covering it.",
           "Nearby sand pours into $F{the}, greatly covering it.",
-          "Nearby sand pours into $F{the}, almost completely blocking access.",
-          "$F{The} has disappeared completely beneath the sand.")
+          "Nearby sand pours into $F{the}, almost completely blocking access.")
     }
 
   e.lua_marker('O',
       timed_marker {
+        disappear = "$F{The} has disappeared completely beneath the sand.",
         desc = "A sand-covered staircase",
         entity = 'staircase',
         dst = "minitomb",
