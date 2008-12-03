@@ -13,6 +13,7 @@
 #include <climits>
 #include <string.h>
 #include <stdio.h>
+#include <algorithm>
 
 #include "externs.h"
 
