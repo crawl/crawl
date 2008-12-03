@@ -13,15 +13,37 @@
 
 {{
 function minitomb_portal(e)
-        e.marker([[O = lua:one_way_stair { desc = "A dusty staircase",
-                                           dst  = "minitomb",
-                                           dstorigin = "in a tomb",
-                                           overmap = "dusty staircase",
-                                           floor = "stone_arch" }]])
-        e.kfeat("O = enter_portal_vault")
-        e.colour("O = yellow")
+ local timeout_turns = crawl.random_range(1500, 2000)
+
+  local messager =
+    timed_msg {
+      visible = true,
+      -- $F{xxx} will be substituted with the 'entity' property of the timed
+      -- marker, or with the desc property (if entity is not set).
+      messages = time_messages(timeout_turns,
+          "Nearby sand pours into $F{the}, lightly covering it.",
+          "Nearby sand pours into $F{the}, greatly covering it.",
+          "Nearby sand pours into $F{the}, almost completely blocking access.",
+          "$F{The} has disappeared completely beneath the sand.")
+    }
+
+  e.lua_marker('O',
+      timed_marker {
+        desc = "A sand-covered staircase",
+        entity = 'staircase',
+        dst = "minitomb",
+        dstorigin = "in a tomb",
+        overmap = "sand-covered staircase",
+        turns = timeout_turns,
+        floor = "stone_arch",
+        msg = messager })
+  e.kfeat("O = enter_portal_vault")
+  e.colour("O = yellow")
 end
 
+-- Use the following line in destination maps after all SUBSTs
+-- : minitomb_setup_features(_G)
+-- Note that the function also defines < to be the exit portal.
 function minitomb_setup_features(e)
         e.kfeat("< = exit_portal_vault")
         e.colour("< = yellow")
@@ -32,9 +54,9 @@ function minitomb_setup_features(e)
 end
 }}
 
-default-depth: D:4-8
 
 #### Portal entry vaults.
+default-depth: D:4-8
 
 NAME:   enter_minitomb_1
 TAGS:   uniq_minitomb no_monster_gen
@@ -94,7 +116,7 @@ MAP
 ENDMAP
 
 
-#### The portal vaults.####################################
+#### The portal vaults ####################################
 
 # Reset default depth to prevent random generation of portal vaults.
 default-depth:

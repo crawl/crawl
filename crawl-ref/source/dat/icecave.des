@@ -15,13 +15,31 @@
 
 {{
 function ice_cave_portal(e)
-  e.marker([[O = lua:one_way_stair { desc = "A frozen archway",
-                                     dst = "ice_cave",
-                                     dstname = "Ice Cave",
-                                     dstname_abbrev = "IceCv",
-                                     dstorigin = "in an ice cave",
-                                     overmap = "frozen archway",
-                                     floor = "stone_arch" }]])
+  local timeout_turns = crawl.random_range(1200, 1700)
+  
+  local messager = 
+    timed_msg {
+      visible = true,
+      -- $F{xxx} will be substituted with the 'entity' property of the timed
+      -- marker, or with the desc property (if entity is not set).
+      messages = time_messages(timeout_turns,
+                               "$F{The} is slowly melting away.",
+                               "$F{The} is melting away.",
+                               "$F{The} is quickly melting away.",
+                               "$F{The} has just melted away.")
+    }
+
+  e.lua_marker('O',
+      timed_marker {
+        desc = "A frozen archway",
+        entity = 'archway',
+        dst = "ice_cave",
+        dstname_abbrev = "IceCv",
+        dstorigin = "in an ince cave",
+        overmap = "frozen archway",
+        turns = timeout_turns,
+        floor = "stone_arch",
+        msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")
 end

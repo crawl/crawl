@@ -15,10 +15,6 @@ A deep blue altar of Sif Muna
 %%%%
 A dry fountain
 %%%%
-A dusty staircase
-
-It is said that some minor relatives of the pharao were entombed here.
-%%%%
 A flickering gateway to a bazaar
 
 Aside from the vendors who've set up their stores at various places in the 
@@ -155,6 +151,12 @@ of nightmare.
 A rock wall
 %%%%
 A roughly hewn altar of Beogh
+%%%%
+A sand-covered staircase
+
+You can make out a staircase leading downwards into a small tomb. Sand
+surrounds the staircase and is continuously pouring onto it.
+They said that some minor relatives of the pharaohs were entombed here.
 %%%%
 A shimmering altar of Xom
 %%%%
