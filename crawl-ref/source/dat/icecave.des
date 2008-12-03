@@ -31,7 +31,7 @@ function ice_cave_portal(e)
 
   e.lua_marker('O',
       timed_marker {
-        disappear = "$F{The} melts and disappears.",
+        disappear = "The archway melts and disappears.",
         desc = "A frozen archway",
         entity = 'archway',
         dst = "ice_cave",
@@ -39,7 +39,7 @@ function ice_cave_portal(e)
         dstorigin = "in an ice cave",
         overmap = "frozen archway",
         turns = timeout_turns,
-        floor = "stone_arch",
+        floor = "floor",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")

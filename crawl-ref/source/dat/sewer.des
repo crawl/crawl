@@ -31,7 +31,7 @@ function sewer_portal(e)
 
   e.lua_marker('O',
       timed_marker {
-        disappear = "$F{The} falls to bits.",
+        disappear = "The drain falls to bits.",
         desc = "glowing drain",
         entity = 'drain',
         dst = "sewer",

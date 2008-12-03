@@ -29,14 +29,14 @@ function minitomb_portal(e)
 
   e.lua_marker('O',
       timed_marker {
-        disappear = "$F{The} has disappeared completely beneath the sand.",
+        disappear = "The staircase has disappeared completely beneath the sand.",
         desc = "A sand-covered staircase",
         entity = 'staircase',
         dst = "minitomb",
         dstorigin = "in a tomb",
         overmap = "sand-covered staircase",
         turns = timeout_turns,
-        floor = "stone_arch",
+        floor = "floor",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = yellow")
