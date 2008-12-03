@@ -910,7 +910,7 @@ ENDMAP
 # Lava pond
 #
 NAME:  minivault_15
-MONS:  silver statue / ice statue
+KMONS: 1 = silver statue / ice statue
 KFEAT: 1 = <
 MAP
 .........
