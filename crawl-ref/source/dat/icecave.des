@@ -35,7 +35,7 @@ function ice_cave_portal(e)
         entity = 'archway',
         dst = "ice_cave",
         dstname_abbrev = "IceCv",
-        dstorigin = "in an ince cave",
+        dstorigin = "in an ice cave",
         overmap = "frozen archway",
         turns = timeout_turns,
         floor = "stone_arch",
@@ -311,15 +311,15 @@ x.................xxxxxxxxxxxxxxxxxx'xx"x
 xx...1.111.1....xx'xxxxxxxxxxxxxxxxx'xx"x
 xxx...1.1.1.....xxx'xxx''xxxxx''x'x'xx"xx
 xwxx..........xxxxxx'''xx'xxx'xx'x'xx"xxx
-xwwxx3x....x3xxxxxxxxxxxxx''$xxxxxxx"xxxx
+xwwxx4x....x4xxxxxxxxxxxxx''$xxxxxxx"xxxx
 xxwwxxxx..xxxxxxxxxxxxxxxxx$$$xxxx""xxxxx
 xxxwwxxx..xxxxxxxxxxxxxxxxx$$$$xx"xxxxxxx
 xxxwwxx..xxxxxxxxxxxxxxxxxxx$$"xxx"xxxxxx
 xxxwxx..xxxxxxxxxxxxxxxxxxxxxxx"x"xxxxxxx
 xxxwwx...xxxxxxxxxxxxxxxxxxxxxxx"xxxxxxxx
 xxxwwxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxwwxxx11.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxwwxxxx1.1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxwwxxx33.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxwwxxxx3.3xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxwwxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xwwxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
