@@ -57,7 +57,7 @@ function TimedMarker:timeout(marker, verbose, affect_player)
 
   if verbose then
     if you.see_grid(marker:pos()) then
-      crawl.mpr( self.props.disappear or
+      crawl.mpr( util.expand_entity(self.props.entity, self.props.disappear) or
                  dgn.feature_desc_at(x, y, "The") .. " disappears!")
     else
       crawl.mpr("The walls and floor vibrate strangely for a moment.")

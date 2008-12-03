@@ -214,6 +214,10 @@ function util.random_weighted_from(weightfn, list)
 end
 
 function util.expand_entity(entity, msg)
+  if not entity or not msg then
+    return msg
+  end
+
   local msg_a =  string.gsub(msg, "$F%{(%w+)%}",
                              function (desc)
                                return crawl.grammar(entity, desc)
