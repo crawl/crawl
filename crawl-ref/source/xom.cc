@@ -245,8 +245,11 @@ static void _try_brand_switch(const int item_index)
 
 static void _xom_make_item(object_class_type base, int subtype, int power)
 {
+    god_acting gdact(GOD_XOM);
+
     int thing_created =
-        items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE);
+        items(true, base, subtype, true, power, MAKE_ITEM_RANDOM_RACE,
+              0, 0, GOD_XOM);
 
     if (thing_created == NON_ITEM)
     {
@@ -256,14 +259,10 @@ static void _xom_make_item(object_class_type base, int subtype, int power)
 
     _try_brand_switch(thing_created);
 
-    god_acting gdact(GOD_XOM);
-
     move_item_to_grid(&thing_created, you.pos());
     mitm[thing_created].inscription = "god gift";
     canned_msg(MSG_SOMETHING_APPEARS);
     stop_running();
-
-    origin_acquired(mitm[thing_created], GOD_XOM);
 }
 
 static void _xom_acquirement(object_class_type force_class)

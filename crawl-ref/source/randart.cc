@@ -40,9 +40,65 @@ static const char* _get_fixedart_name(const item_def &item);
 // dungeon.cc and consists of giving it a few random things - plus &
 // plus2 mainly.
 
-static bool _god_fits_artefact(const god_type which_god, const item_def &item)
+static bool _god_fits_artefact(const god_type which_god, const item_def &item,
+                               bool name_check_only = false)
 {
     if (which_god == GOD_NO_GOD)
+        return (false);
+
+    // First check the item's base_type and sub_type, then check the
+    // item's brand and other randart properties.
+    bool type_bad = false;
+    switch (which_god)
+    {
+    case GOD_ELYVILON: // peaceful healer god, no weapons, no berserking
+        if (item.base_type == OBJ_WEAPONS)
+            type_bad = true;
+
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
+            type_bad = true;
+        break;
+
+    case GOD_OKAWARU: // precision fighter
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_INACCURACY)
+            type_bad = true;
+        break;
+
+    case GOD_ZIN:
+        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_HUNGER)
+            type_bad = true;
+        break;
+
+    case GOD_SIF_MUNA:
+    case GOD_KIKUBAAQUDGHA:
+    case GOD_VEHUMET:
+        // The magic gods: no weapons, no preventing spellcasting.
+        if (item.base_type == OBJ_WEAPONS)
+            type_bad = true;
+        break;
+
+    case GOD_TROG: // hates anything enhancing magic
+        if (item.base_type == OBJ_JEWELLERY && (item.sub_type == RING_WIZARDRY
+            || item.sub_type == RING_FIRE || item.sub_type == RING_ICE
+            || item.sub_type == RING_MAGICAL_POWER))
+        {
+            type_bad = true;
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    if (type_bad && !name_check_only)
+    {
+        ASSERT(!"God attempting to gift invalid type of item.");
+        mprf(MSGCH_ERROR, "%s attempting to gift invalid type of item.");
+        // Prevent infinite loop in make_item_randart()
+        return (true);
+    }
+
+    if (type_bad)
         return (false);
 
     const int brand = get_weapon_brand(item);
@@ -65,12 +121,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item)
         break;
 
     case GOD_ELYVILON: // peaceful healer god, no weapons, no berserking
-        if (item.base_type == OBJ_WEAPONS)
-            return (false);
-
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_RAGE)
-            return (false);
-
         if (randart_wpn_property(item, RAP_ANGRY)
             || randart_wpn_property(item, RAP_BERSERK))
         {
@@ -78,15 +128,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item)
         }
         break;
 
-    case GOD_OKAWARU: // precision fighter
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == AMU_INACCURACY)
-            return (false);
-        break;
-
     case GOD_ZIN:
-        if (item.base_type == OBJ_JEWELLERY && item.sub_type == RING_HUNGER)
-            return (false); // goes against food theme
-
         if (randart_wpn_property( item, RAP_MUTAGENIC ))
             return (false); // goes against anti-mutagenic theme
         break;
@@ -110,21 +152,11 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item)
     case GOD_SIF_MUNA:
     case GOD_KIKUBAAQUDGHA:
     case GOD_VEHUMET:
-        // The magic gods: no weapons, no preventing spellcasting.
-        if (item.base_type == OBJ_WEAPONS)
-            return (false);
-
         if (randart_wpn_property( item, RAP_PREVENT_SPELLCASTING ))
             return (false);
         break;
 
     case GOD_TROG: // hates anything enhancing magic
-        if (item.base_type == OBJ_JEWELLERY && (item.sub_type == RING_WIZARDRY
-            || item.sub_type == RING_FIRE || item.sub_type == RING_ICE
-            || item.sub_type == RING_MAGICAL_POWER))
-        {
-            return (false);
-        }
         if (brand == SPWPN_PAIN) // involves magic
             return (false);
 
@@ -242,7 +274,7 @@ static std::string _replace_name_parts(const std::string name_in,
             {
                 which_god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
             }
-            while (!_god_fits_artefact(which_god, item));
+            while (!_god_fits_artefact(which_god, item), true);
         }
 
         name = replace_all(name, "@god_name@", god_name(which_god, false));

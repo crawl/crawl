@@ -2648,7 +2648,8 @@ int items( int allow_uniques,       // not just true-false,
            int item_race,           // weapon / armour racial categories
                                     // item_race also gives type of rune!
            unsigned mapmask,
-           int force_ego)           // desired ego/brand
+           int force_ego,           // desired ego/brand
+           int agent)               // acquirement agent, if not -1
 {
     // TODO: Allow a combination of force_ego > 0 and
     // force_type == OBJ_RANDOM, so that (for example) you could have
@@ -2666,6 +2667,11 @@ int items( int allow_uniques,       // not just true-false,
         return (NON_ITEM);
 
     item_def& item(mitm[p]);
+
+    // make_item_randart() might do things differently based upon the
+    // acquirement agent, especially for god gifts.
+    if (agent != -1)
+        origin_acquired(item, agent);
 
     const bool force_good = (item_level == MAKE_GOOD_ITEM);
 
