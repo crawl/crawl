@@ -63,7 +63,7 @@ enum band_type
     BAND_SKELETAL_WARRIORS,
     BAND_DRACONIAN,             // 45
     BAND_PANDEMONIUM_DEMON,
-    BAND_HARPYES,               // 47
+    BAND_HARPIES,               // 47
     NUM_BANDS                   // always last
 };
 

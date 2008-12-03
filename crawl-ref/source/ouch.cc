@@ -490,6 +490,9 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     if (!num_dest)
         return (false);
 
+    if (flavour == BEAM_STEAL_FOOD)
+        return (true);
+
     switch (target_class)
     {
     case OBJ_SCROLLS:
@@ -506,8 +509,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
         break;
 
     case OBJ_FOOD:
-        if (flavour == BEAM_SPORE)
-            mpr("Some of your food is covered with spores!");
+        mpr("Some of your food is covered with spores!");
         break;
 
     default:
@@ -518,17 +520,18 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     }
 
     xom_is_stimulated((num_dest > 1) ? 32 : 16);
+
     return (true);
 }
 
-void expose_items_to_element(beam_type flavour, const coord_def& where,
+bool expose_items_to_element(beam_type flavour, const coord_def& where,
                              int strength)
 {
     int num_dest = 0;
 
     const int target_class = _get_target_class(flavour);
     if (target_class == OBJ_UNASSIGNED)
-        return;
+        return (false);
 
     for (stack_iterator si(where); si; ++si)
     {
@@ -550,37 +553,42 @@ void expose_items_to_element(beam_type flavour, const coord_def& where,
         }
     }
 
-    if (num_dest)
+    if (!num_dest)
+        return (false);
+
+    if (flavour == BEAM_STEAL_FOOD)
+        return (true);
+
+    if (see_grid(where))
     {
-        if (see_grid(where))
+        switch (target_class)
         {
-            switch (target_class)
-            {
-            case OBJ_SCROLLS:
-                mprf("You see %s of smoke.",
-                     (num_dest > 1) ? "some puffs" : "a puff");
-                break;
+        case OBJ_SCROLLS:
+            mprf("You see %s of smoke.",
+                 (num_dest > 1) ? "some puffs" : "a puff");
+            break;
 
-            case OBJ_POTIONS:
-                mprf("You see %s shatter.",
-                     (num_dest > 1) ? "some glass" : "glass");
-                break;
+        case OBJ_POTIONS:
+            mprf("You see %s shatter.",
+                 (num_dest > 1) ? "some glass" : "glass");
+            break;
 
-            case OBJ_FOOD:
-                mprf("You see %s of spores.",
-                     (num_dest > 1) ? "some clouds" : "a cloud");
-                break;
+        case OBJ_FOOD:
+            mprf("You see %s of spores.",
+                 (num_dest > 1) ? "some clouds" : "a cloud");
+            break;
 
-            default:
-                mprf("%s on the floor %s destroyed!",
-                     (num_dest > 1) ? "Some items" : "An item",
-                     (num_dest > 1) ? "were" : "was" );
-                break;
-            }
+        default:
+            mprf("%s on the floor %s destroyed!",
+                 (num_dest > 1) ? "Some items" : "An item",
+                 (num_dest > 1) ? "were" : "was" );
+            break;
         }
-
-        xom_is_stimulated((num_dest > 1) ? 32 : 16);
     }
+
+    xom_is_stimulated((num_dest > 1) ? 32 : 16);
+
+    return (true);
 }
 
 // Handle side-effects for exposure to element other than damage.  This

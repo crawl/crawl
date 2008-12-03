@@ -4056,6 +4056,14 @@ static bool _ranged_allied_monster_in_dir(monsters *mon, coord_def p)
 
         if (mons_aligned(monster_index(mon), mgrd(pos)))
         {
+            // Hostile monsters of normal intelligence only move aside for
+            // monsters of the same type.
+            if (mons_intel(mon) <= I_NORMAL && !mons_wont_attack(mon)
+                && mons_genus(mon->type) != mons_genus((&menv[mgrd(pos)])->type))
+            {
+                return (false);
+            }
+
             monsters *m = &menv[mgrd(pos)];
             if (mons_has_ranged_attack(m) || mons_has_ranged_spell(m))
                 return (true);
@@ -6395,8 +6403,9 @@ static void _handle_monster_move(int i, monsters *monster)
         monster->shield_blocks = 0;
 
         const int        cloud_num = env.cgrid(monster->pos());
-        const cloud_type cl_type   =
-            cloud_num == EMPTY_CLOUD ? CLOUD_NONE : env.cloud[cloud_num].type;
+        const cloud_type cl_type   = cloud_num == EMPTY_CLOUD ? CLOUD_NONE
+                                                    : env.cloud[cloud_num].type;
+
         if (cloud_num != EMPTY_CLOUD)
         {
             if (_mons_avoids_cloud(monster, cl_type))
@@ -6452,6 +6461,23 @@ static void _handle_monster_move(int i, monsters *monster)
 
         if (monster->speed >= 100)
         {
+            monster->speed_increment -= non_move_energy;
+            continue;
+        }
+
+        // Harpyes may eat food/corpses on the ground.
+        if (monster->type == MONS_HARPY && !mons_is_fleeing(monster)
+            && (mons_wont_attack(monster)
+                || (monster->pos() - you.pos()).rdist() > 1)
+            && (mons_is_wandering(monster) && one_chance_in(3)
+                || one_chance_in(5))
+            && expose_items_to_element(BEAM_STEAL_FOOD, monster->pos(), 10))
+        {
+            if (mons_near(monster) && player_monster_visible(monster))
+            {
+                simple_monster_message(monster,
+                                       " eats something on the ground.");
+            }
             monster->speed_increment -= non_move_energy;
             continue;
         }
@@ -6759,7 +6785,7 @@ void handle_monsters()
 
         _handle_monster_move(i, monster);
 
-        if (!invalid_monster(monster) && (monster->pos() != oldpos))
+        if (!invalid_monster(monster) && monster->pos() != oldpos)
             immobile_monster[i] = true;
 
         // If the player got banished, discard pending monster actions.

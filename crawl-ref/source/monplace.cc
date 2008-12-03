@@ -1459,7 +1459,7 @@ static band_type _choose_band( int mon_type, int power, int &band_size )
         band_size = 3 + random2(3);
         break;
     case MONS_HARPY:
-        band = BAND_HARPYES;
+        band = BAND_HARPIES;
         band_size = 2 + random2(3);
         break;
 
@@ -1568,7 +1568,7 @@ static monster_type _band_member(band_type band, int power)
         mon_type = MONS_YAK;
         break;
 
-    case BAND_HARPYES:
+    case BAND_HARPIES:
         mon_type = MONS_HARPY;
 
     case BAND_UGLY_THINGS:

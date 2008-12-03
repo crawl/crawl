@@ -537,7 +537,8 @@ bool mons_is_native_in_branch(const monsters *monster,
     case BRANCH_SHOALS:
         return (mons_species(monster->type) == MONS_CYCLOPS
                 || mons_species(monster->type) == MONS_MERFOLK
-                || mons_genus(monster->type) == MONS_MERMAID);
+                || mons_genus(monster->type) == MONS_MERMAID
+                || monster->type == MONS_HARPY);
 
     case BRANCH_SLIME_PITS:
         return (mons_species(monster->type) == MONS_JELLY);
@@ -2955,7 +2956,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 {
     gender_type gender = GENDER_NEUTER;
 
-    if (mons_genus(mon_type) == MONS_MERMAID)
+    if (mons_genus(mon_type) == MONS_MERMAID || mon_type == MONS_HARPY)
         gender = GENDER_FEMALE;
     else if (mons_is_unique(mon_type) && mon_type != MONS_PLAYER_GHOST)
     {

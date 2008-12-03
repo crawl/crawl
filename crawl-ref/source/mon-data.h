@@ -2158,7 +2158,7 @@ static monsterentry mondata[] = {
 {
     MONS_HARPY, 'H', GREEN, "harpy",
     M_FLIES | M_WARM_BLOOD | M_BATTY,
-    MR_NO_FLAGS,
+    MR_RES_POISON,
     1000, 10, MONS_HARPY, MONS_HARPY, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 10}, {AT_CLAW, AF_PLAIN, 8},
       {AT_CLAW, AF_STEAL_FOOD, 5}, AT_NO_ATK },

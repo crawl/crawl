@@ -131,6 +131,13 @@ Harold
 
 An evil human bounty hunter.
 %%%%
+harpy
+
+Harpies have roamed these coasts as long as seafarers can remember. They
+strike fear in the hearts of all sentient beings but not for their stings
+or claws. It is their way to steal food of the unwary causing many a men
+to starve to death.
+%%%%
 Ijyb
 
 A small and twisted goblin, wearing some ugly blue rags.
@@ -948,6 +955,10 @@ Half fish, half man, the merfolk are citizens of both water and land, and they'l
 mermaid
 
 A young woman with a fish tail in place of legs.  Mermaids love to sing and charm their audience.
+%%%%
+siren
+
+A young woman with a fish tail in place of legs.  Sirens are capable of casting a powerful spell over their audience.
 %%%%
 metal gargoyle
 

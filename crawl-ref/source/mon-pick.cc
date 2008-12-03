@@ -1710,6 +1710,7 @@ int mons_shoals_level(int mcls)
 
     case MONS_SIREN:
     case MONS_YAKTAUR:
+    case MONS_MANTICORE:
         mlev += 2;
         break;
 
@@ -1761,14 +1762,15 @@ int mons_shoals_rare(int mcls)
 
     case MONS_CYCLOPS:
     case MONS_CENTAUR_WARRIOR:
+    case MONS_HARPY:
         return 20;
 
     case MONS_STONE_GIANT:
     case MONS_YAKTAUR_CAPTAIN:
-    case MONS_HARPY:
         return 10;
 
     case MONS_OKLOB_PLANT:
+    case MONS_MANTICORE:
         return 5;
     default:
         return 0;

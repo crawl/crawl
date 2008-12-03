@@ -627,6 +627,14 @@ griffon
  His guarded gold."
     -Milton, _Paradise Lost_, Book II. 1667.
 %%%%
+harpy
+
+"Bird-bodied, girl-faced things they are; abominable their droppings, their hands are talons, their faces haggard with hunger insatiable."
+    -Virgil, Aeneid 3
+
+"And Phineus had scarcely taken the first morsel up when, with as little warning as a whirlwind or a lightning flash, they dropped from the clouds proclaiming their desire for food with raucous cries. The young lords saw them coming and raised the alarm. Yet they had hardly done so before the Harpyiai had devoured the whole meal and were on the wing once more, far out at sea. All they left was an intolerable stench."
+    -Apollonius Rhodius, Argonautica 2. 179 - 434
+%%%%
 hobgoblin
 
 "A foolish consistency is the hobgoblin of little minds."
