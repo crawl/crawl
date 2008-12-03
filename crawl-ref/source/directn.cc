@@ -2797,7 +2797,7 @@ static void _describe_monster(const monsters *mon)
         {
             // special case: batty monsters get set to BEH_WANDER as
             // part of their special behaviour.
-            if (!testbits(mon->flags, MF_BATTY))
+            if (!mons_is_batty(mon))
             {
                 mprf(MSGCH_EXAMINE, "%s doesn't appear to have noticed you.",
                      mon->pronoun(PRONOUN_CAP).c_str());

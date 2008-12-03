@@ -1024,7 +1024,7 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
 
     if (attk.type == AT_RANDOM)
         attk.type = static_cast<mon_attack_type>(random_range(AT_HIT,
-                                                              AT_BUTT)); 
+                                                              AT_BUTT));
 
     if (attk.flavour == AF_KLOWN)
     {
@@ -2470,7 +2470,7 @@ bool mons_is_lurking(const monsters *m)
 
 bool mons_is_batty(const monsters *m)
 {
-    return testbits(m->flags, MF_BATTY);
+    return mons_class_flag(m->type, M_BATTY);
 }
 
 bool mons_was_seen(const monsters *m)
@@ -4803,7 +4803,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
        // Reduce the chance of a random-shaped monster having hands.
        if (rand && coinflip())
            return (hand_name(plural, can_plural));
-          
+
        str = "hand";
    }
 
@@ -4918,7 +4918,7 @@ std::string monsters::foot_name(bool plural, bool *can_plural) const
        // Reduce the chance of a random-shaped monster having feet.
        if (rand && coinflip())
            return (foot_name(plural, can_plural));
-          
+
        return (plural ? "feet" : "foot");
    }
 

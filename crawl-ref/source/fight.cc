@@ -2179,7 +2179,7 @@ static bool _can_clone(const actor *defender, coord_def *pos, int *midx)
             return (false);
     }
 
-    return (true);        
+    return (true);
 }
 
 static bool _do_clone(monsters* orig, coord_def pos, int midx)
@@ -2321,7 +2321,7 @@ void melee_attack::chaos_affects_defender()
         ASSERT(can_poly);
         beam.flavour = BEAM_POLYMORPH;
         break;
- 
+
     case CHAOS_POLY_UP:
         ASSERT(can_poly);
         ASSERT(defender->atype() == ACT_MONSTER);
@@ -2329,7 +2329,7 @@ void melee_attack::chaos_affects_defender()
         obvious_effect = you.can_see(defender);
         monster_polymorph(def, RANDOM_MONSTER, PPT_MORE, true);
         break;
- 
+
     case CHAOS_MAKE_SHIFTER:
         ASSERT(can_poly);
         ASSERT(!is_shifter);
@@ -2341,11 +2341,11 @@ void melee_attack::chaos_affects_defender()
         // Immediately polymorph monster, just to make the effect obvious.
         monster_polymorph(def, RANDOM_MONSTER, PPT_SAME, true);
         break;
- 
+
     case CHAOS_HEAL:
         beam.flavour = BEAM_HEALING;
         break;
- 
+
     case CHAOS_HASTE:
         beam.flavour = BEAM_HASTE;
         break;
@@ -4193,6 +4193,22 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
     case AF_CHAOS:
         chaos_affects_defender();
+        break;
+
+    case AF_STEAL_FOOD:
+        // Monsters don't carry food.
+        if (defender->atype() != ACT_PLAYER)
+            break;
+
+        // Only use this attack sometimes.
+        if (!one_chance_in(3))
+            break;
+
+        if (expose_player_to_element(BEAM_STEAL_FOOD, 10) && needs_message)
+        {
+            mprf("%s steals some of your food!",
+                 atk_name(DESC_CAP_THE).c_str());
+        }
         break;
     }
 }

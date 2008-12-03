@@ -169,20 +169,29 @@ static inline mon_energy_usage MISSILE_ENERGY(int ae)
 static monsterentry mondata[] = {
 
 // monster 250: The Thing That Should Not Be(tm)
-// do not remove, or seekmonster will crash on unknown mc request
-// it is also a good prototype for new monsters
+// NOTE: Do not remove, or seekmonster will crash on unknown mc request!
+// It is also a good prototype for new monsters.
 {
+    // id, glyph, colour, name
     MONS_PROGRAM_BUG, 'B', LIGHTRED, "program bug",
+    // monster flags
     M_NO_EXP_GAIN,
+    // resistance flags
     MR_NO_FLAGS,
+    // mass, xp modifier, genus, species, holiness, magic resistance
     0, 10, MONS_PROGRAM_BUG, MONS_PROGRAM_BUG, MH_NATURAL, -3,
+    // up to four attacks
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    // hit points
     { 0, 0, 0, 0 },
+    // AC, EV, spells, corpse type, zombie size, shout type, intelligence
     0, 0, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT, I_PLANT,
+    // habitat, speed, energy usage, use type, body size
     HT_LAND, 0, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_HUGE
 },
 
-// real monsters begin here {dlb}:
+// Real monsters begin here {dlb}:
+
 // insects ('a')
 {
     MONS_GIANT_COCKROACH, 'a', BROWN, "giant cockroach",
@@ -220,7 +229,7 @@ static monsterentry mondata[] = {
 // batty monsters ('b')
 {
     MONS_GIANT_BAT, 'b', LIGHTGREY, "giant bat",
-    M_FLIES | M_SENSE_INVIS | M_WARM_BLOOD,
+    M_FLIES | M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY,
     MR_NO_FLAGS,
     150, 4, MONS_GIANT_BAT, MONS_GIANT_BAT, MH_NATURAL, -1,
     { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -985,7 +994,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_MERMAID, 'm', LIGHTCYAN, "cyan",
+    MONS_MERMAID, 'm', CYAN, "mermaid",
     M_SPELLCASTER | M_WARM_BLOOD | M_SPEAKS,
     MR_RES_POISON | MR_RES_COLD,
     500, 10, MONS_MERMAID, MONS_MERMAID, MH_NATURAL, -5,
@@ -1488,7 +1497,7 @@ static monsterentry mondata[] = {
 // small abominations ('x')
 {
     MONS_UNSEEN_HORROR, 'x', MAGENTA, "unseen horror",
-    M_SEE_INVIS | M_INVIS,
+    M_SEE_INVIS | M_INVIS | M_BATTY,
     MR_NO_FLAGS,
     0, 12, MONS_UNSEEN_HORROR, MONS_UNSEEN_HORROR, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1533,7 +1542,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GIANT_BLOWFLY, 'y', LIGHTGREY, "giant blowfly",
-    M_FLIES,
+    M_FLIES | M_BATTY,
     MR_VUL_POISON,
     200, 10, MONS_GIANT_BLOWFLY, MONS_GIANT_BLOWFLY, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2144,6 +2153,18 @@ static monsterentry mondata[] = {
     { 16, 3, 5, 0 },
     5, 5, MST_SPHINX, CE_CLEAN, Z_NOZOMBIE, S_SHOUT, I_HIGH,
     HT_LAND, 13, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_BIG
+},
+
+{
+    MONS_HARPY, 'H', GREEN, "harpy",
+    M_FLIES | M_WARM_BLOOD | M_BATTY,
+    MR_NO_FLAGS,
+    1000, 10, MONS_HARPY, MONS_HARPY, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 10}, {AT_CLAW, AF_PLAIN, 8},
+      {AT_CLAW, AF_STEAL_FOOD, 5}, AT_NO_ATK },
+    { 7, 3, 5, 0 },
+    2, 10, MST_NO_SPELLS, CE_CONTAMINATED, Z_BIG, S_SCREECH, I_ANIMAL,
+    HT_LAND, 30, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_MEDIUM
 },
 
 // ice beast ('I')

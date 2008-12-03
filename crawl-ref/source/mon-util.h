@@ -81,7 +81,8 @@ enum mon_attack_flavour
     AF_DISTORT,
     AF_RAGE,
     AF_NAPALM,
-    AF_CHAOS
+    AF_CHAOS,
+    AF_STEAL_FOOD
 };
 
 // properties of the monster class (other than resists/vulnerabilities)
@@ -201,7 +202,7 @@ enum mon_resist_flags
     MR_VUL_FIRE          = (1<< 9),
     MR_VUL_COLD          = (1<<10),
 
-    // melee armour resists/vulnerabilities
+    // Melee armour resists/vulnerabilities.
     // XXX: how to do combos (bludgeon/slice, bludgeon/pierce)
     MR_RES_PIERCE        = (1<<11),
     MR_RES_SLICE         = (1<<12),
@@ -211,9 +212,9 @@ enum mon_resist_flags
     MR_VUL_SLICE         = (1<<15),
     MR_VUL_BLUDGEON      = (1<<16),
 
-    // immune to stickiness of sticky flame.
-    MR_RES_STICKY_FLAME  = (1 << 17),
-    MR_RES_STEAM         = (1 << 18)
+    // Immune to stickiness of sticky flame.
+    MR_RES_STICKY_FLAME  = (1<<17),
+    MR_RES_STEAM         = (1<<18)
 };
 
 enum shout_type

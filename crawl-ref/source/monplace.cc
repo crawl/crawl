@@ -892,12 +892,6 @@ static int _place_monster_aux( const mgen_data &mg,
     if (mg.cls == MONS_GLOWING_SHAPESHIFTER)
         menv[id].add_ench(ENCH_GLOWING_SHAPESHIFTER);
 
-    if (mg.cls == MONS_GIANT_BAT || mg.cls == MONS_UNSEEN_HORROR
-        || mg.cls == MONS_GIANT_BLOWFLY)
-    {
-        menv[id].flags |= MF_BATTY;
-    }
-
     if (monster_can_submerge(&menv[id], grd(fpos)) && !one_chance_in(5))
         menv[id].add_ench(ENCH_SUBMERGED);
 
@@ -957,7 +951,7 @@ static int _place_monster_aux( const mgen_data &mg,
 
     menv[id].foe = mg.foe;
 
-    // Initialise pandemonium demons
+    // Initialise pandemonium demons.
     if (menv[id].type == MONS_PANDEMONIUM_DEMON)
     {
         ghost_demon ghost;
@@ -1464,6 +1458,10 @@ static band_type _choose_band( int mon_type, int power, int &band_size )
         band = BAND_DEATH_YAKS;
         band_size = 3 + random2(3);
         break;
+    case MONS_HARPY:
+        band = BAND_HARPYES;
+        band_size = 2 + random2(3);
+        break;
 
     // Journey -- Added Draconian Packs
     case MONS_WHITE_DRACONIAN:
@@ -1569,6 +1567,9 @@ static monster_type _band_member(band_type band, int power)
     case BAND_YAKS:
         mon_type = MONS_YAK;
         break;
+
+    case BAND_HARPYES:
+        mon_type = MONS_HARPY;
 
     case BAND_UGLY_THINGS:
         mon_type = ((power > 21 && one_chance_in(4)) ?

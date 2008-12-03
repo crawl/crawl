@@ -428,6 +428,7 @@ static int _get_target_class(beam_type flavour)
         break;
 
     case BEAM_SPORE:
+    case BEAM_STEAL_FOOD:
         target_class = OBJ_FOOD;
         break;
 
@@ -441,13 +442,13 @@ static int _get_target_class(beam_type flavour)
 // XXX: These expose functions could use being reworked into a real system...
 // the usage and implementation is currently very hacky.
 // Handles the destruction of inventory items from the elements.
-static void _expose_invent_to_element(beam_type flavour, int strength)
+static bool _expose_invent_to_element(beam_type flavour, int strength)
 {
     int num_dest = 0;
 
     const int target_class = _get_target_class( flavour );
     if (target_class == OBJ_UNASSIGNED)
-        return;
+        return (false);
 
     // Currently we test against each stack (and item in the stack)
     // independently at strength%... perhaps we don't want that either
@@ -458,13 +459,15 @@ static void _expose_invent_to_element(beam_type flavour, int strength)
         if (!is_valid_item(you.inv[i]))
             continue;
 
-        if (is_valid_item(you.inv[i])
-            && (you.inv[i].base_type == target_class
-                || target_class == OBJ_FOOD
-                   && you.inv[i].base_type == OBJ_CORPSES))
+        if (you.inv[i].base_type == target_class
+            || target_class == OBJ_FOOD
+               && you.inv[i].base_type == OBJ_CORPSES)
         {
-            if (player_item_conserve() && !one_chance_in(10))
+            if (flavour != BEAM_STEAL_FOOD
+                && player_item_conserve() && !one_chance_in(10))
+            {
                 continue;
+            }
 
             for (int j = 0; j < you.inv[i].quantity; ++j)
             {
@@ -484,36 +487,38 @@ static void _expose_invent_to_element(beam_type flavour, int strength)
         }
     }
 
-    if (num_dest > 0)
+    if (!num_dest)
+        return (false);
+
+    switch (target_class)
     {
-        switch (target_class)
-        {
-        case OBJ_SCROLLS:
-            mprf("%s you are carrying %s fire!",
-                 (num_dest > 1) ? "Some of the scrolls" : "A scroll",
-                 (num_dest > 1) ? "catch" : "catches" );
-            break;
+    case OBJ_SCROLLS:
+        mprf("%s you are carrying %s fire!",
+             (num_dest > 1) ? "Some of the scrolls" : "A scroll",
+             (num_dest > 1) ? "catch" : "catches" );
+        break;
 
-        case OBJ_POTIONS:
-            mprf("%s you are carrying %s and %s!",
-                 (num_dest > 1) ? "Some of the potions" : "A potion",
-                 (num_dest > 1) ? "freeze" : "freezes",
-                 (num_dest > 1) ? "shatter" : "shatters" );
-            break;
+    case OBJ_POTIONS:
+        mprf("%s you are carrying %s and %s!",
+             (num_dest > 1) ? "Some of the potions" : "A potion",
+             (num_dest > 1) ? "freeze" : "freezes",
+             (num_dest > 1) ? "shatter" : "shatters" );
+        break;
 
-        case OBJ_FOOD:
+    case OBJ_FOOD:
+        if (flavour == BEAM_SPORE)
             mpr("Some of your food is covered with spores!");
-            break;
+        break;
 
-        default:
-            mprf("%s you are carrying %s destroyed!",
-                 (num_dest > 1) ? "Some items" : "An item",
-                 (num_dest > 1) ? "were" : "was" );
-            break;
-        }
-
-        xom_is_stimulated((num_dest > 1) ? 32 : 16);
+    default:
+        mprf("%s you are carrying %s destroyed!",
+             (num_dest > 1) ? "Some items" : "An item",
+             (num_dest > 1) ? "were" : "was" );
+        break;
     }
+
+    xom_is_stimulated((num_dest > 1) ? 32 : 16);
+    return (true);
 }
 
 void expose_items_to_element(beam_type flavour, const coord_def& where,
@@ -588,7 +593,7 @@ void expose_items_to_element(beam_type flavour, const coord_def& where,
 // This function now calls _expose_invent_to_element() if strength > 0.
 //
 // XXX: This function is far from perfect and a work in progress.
-void expose_player_to_element(beam_type flavour, int strength)
+bool expose_player_to_element(beam_type flavour, int strength)
 {
     // Note that BEAM_TELEPORT is sent here when the player
     // blinks or teleports.
@@ -601,8 +606,10 @@ void expose_player_to_element(beam_type flavour, int strength)
             remove_condensation_shield();
     }
 
-    if (strength > 0)
-        _expose_invent_to_element( flavour, strength );
+    if (strength <= 0)
+        return (false);
+
+    return (_expose_invent_to_element( flavour, strength ));
 }
 
 void lose_level()

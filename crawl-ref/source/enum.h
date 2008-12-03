@@ -248,6 +248,7 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_RANDOM,
 
     BEAM_TORMENT_DAMAGE,        // Pseudo-beam for damage flavour.
+    BEAM_STEAL_FOOD,            // Pseudo-beam for harpyes stealing food.
 
     BEAM_LINE_OF_SIGHT          // only used for checking monster LOS
 };
@@ -1739,6 +1740,7 @@ enum monster_type                      // (int) menv[].type
     MONS_MERMAID,
     MONS_SIREN,                        //  195
     MONS_FLAMING_CORPSE,
+    MONS_HARPY,                        //  197
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,
@@ -2003,31 +2005,31 @@ enum mon_flight_type
 enum monster_flag_type
 {
     MF_CREATED_FRIENDLY   = 0x01,    // no benefit from killing
-    MF_BATTY              = 0x02,    // flutters like a bat
-    MF_JUST_SUMMONED      = 0x04,    // monster skips next available action
-    MF_TAKING_STAIRS      = 0x08,    // is following player through stairs
+    MF_JUST_SUMMONED      = 0x02,    // monster skips next available action
+    MF_TAKING_STAIRS      = 0x04,    // is following player through stairs
+    MF_INTERESTING        = 0x08,    // Player finds monster interesting
 
-    MF_INTERESTING        = 0x10,    // Player finds monster interesting
-    MF_SEEN               = 0x20,    // Player has already seen monster
-    MF_DIVINE_PROTECTION  = 0x40,    // Monster has divine protection.
-
-    MF_KNOWN_MIMIC        = 0x80,    // Mimic that has taken a swing at the PC,
+    MF_SEEN               = 0x10,    // Player has already seen monster
+    MF_DIVINE_PROTECTION  = 0x20,    // Monster has divine protection.
+    MF_KNOWN_MIMIC        = 0x40,    // Mimic that has taken a swing at the PC,
                                      // or that the player has inspected with ?
-    MF_BANISHED           = 0x100,   // Monster that has been banished.
-    MF_HARD_RESET         = 0x200,   // Summoned, should not drop gear on reset
-    MF_WAS_NEUTRAL        = 0x400,   // mirror to CREATED_FRIENDLY for neutrals
-    MF_ATT_CHANGE_ATTEMPT = 0x800,   // Saw player and attitude changed (or
+    MF_BANISHED           = 0x80,    // Monster that has been banished.
+
+    MF_HARD_RESET         = 0x100,   // Summoned, should not drop gear on reset
+    MF_WAS_NEUTRAL        = 0x200,   // mirror to CREATED_FRIENDLY for neutrals
+    MF_ATT_CHANGE_ATTEMPT = 0x400,   // Saw player and attitude changed (or
                                      // not); currently used for holy beings
                                      // (good god worshippers -> neutral)
                                      // and orcs (Beogh worshippers -> friendly)
-    MF_WAS_IN_VIEW        = 0x1000,  // Was in view during previous turn
-    MF_BAND_MEMBER        = 0x2000,  // Created as a member of a band
-    MF_GOT_HALF_XP        = 0x4000,  // Player already got half xp value earlier
-    MF_HONORARY_UNDEAD    = 0x8000,  // Consider this monster to have MH_UNDEAD
+    MF_WAS_IN_VIEW        = 0x800,   // Was in view during previous turn.
+
+    MF_BAND_MEMBER        = 0x1000,  // Created as a member of a band
+    MF_GOT_HALF_XP        = 0x2000,  // Player already got half xp value earlier
+    MF_HONORARY_UNDEAD    = 0x4000,  // Consider this monster to have MH_UNDEAD
                                      // holiness, regardless of its actual type;
                                      // currently used for abominations created
                                      // via Twisted Resurrection
-    MF_ENSLAVED_SOUL      = 0x10000  // An undead monster soul enslaved by
+    MF_ENSLAVED_SOUL      = 0x8000   // An undead monster soul enslaved by
                                      // Yredelemnul's power, or the natural
                                      // monster from whom the soul is taken
 };

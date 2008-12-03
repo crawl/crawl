@@ -738,6 +738,7 @@ int mons_standard_level(int mcls)
     case MONS_SKELETON_SMALL:
     case MONS_SPINY_WORM:
     case MONS_VERY_UGLY_THING:
+    case MONS_HARPY:
         return 20;
 
     case MONS_BOULDER_BEETLE:
@@ -1015,6 +1016,7 @@ int mons_standard_rare(int mcls)
     case MONS_STORM_DRAGON:
     case MONS_VERY_UGLY_THING:
     case MONS_WIZARD:
+    case MONS_HARPY:
         return 20;
 
     case MONS_BORING_BEETLE:
@@ -1713,6 +1715,7 @@ int mons_shoals_level(int mcls)
 
     case MONS_CENTAUR_WARRIOR:
     case MONS_CYCLOPS:          // will have a sheep band
+    case MONS_HARPY:
         mlev += 3;
         break;
 
@@ -1762,6 +1765,7 @@ int mons_shoals_rare(int mcls)
 
     case MONS_STONE_GIANT:
     case MONS_YAKTAUR_CAPTAIN:
+    case MONS_HARPY:
         return 10;
 
     case MONS_OKLOB_PLANT:
