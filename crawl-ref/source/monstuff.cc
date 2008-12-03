@@ -1617,6 +1617,7 @@ static bool _valid_morph( monsters *monster, int new_mclass )
 
     // Various inappropriate polymorph targets.
     if (mons_class_holiness( new_mclass ) != mons_holiness( monster )
+        || mons_class_flag( new_mclass, M_UNIQUE)       // no uniques
         || mons_class_flag( new_mclass, M_NO_EXP_GAIN ) // not helpless
         || new_mclass == mons_species( monster->type )  // must be different
         || new_mclass == MONS_PROGRAM_BUG
@@ -1634,12 +1635,10 @@ static bool _valid_morph( monsters *monster, int new_mclass )
         || new_mclass == MONS_PANDEMONIUM_DEMON
 
         // Other poly-unsuitable things.
-        || new_mclass == MONS_ROYAL_JELLY
         || new_mclass == MONS_ORB_GUARDIAN
         || new_mclass == MONS_ORANGE_STATUE
         || new_mclass == MONS_SILVER_STATUE
-        || new_mclass == MONS_ICE_STATUE
-        || new_mclass >= MONS_GERYON && new_mclass <= MONS_ERESHKIGAL)
+        || new_mclass == MONS_ICE_STATUE)
     {
         return (false);
     }
