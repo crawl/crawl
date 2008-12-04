@@ -644,13 +644,9 @@ static bool _animatable_remains(const item_def& item)
 static void _equip_undead(const coord_def &a, int corps, int monster,
                           int monnum)
 {
-// Delay this until after 0.4
-#if 0
-    monsters* mon = &menv[monster];
+    monsters*    mon  = &menv[monster];
 
-    monster_type type = static_cast<monster_type>(monnum);
-
-    if (mons_itemuse(mon) < MONUSE_STARTING_EQUIPMENT)
+    if (mons_class_itemuse(monnum) < MONUSE_STARTING_EQUIPMENT)
         return;
 
     // If the player picked up and dropped the corpse then all its
@@ -717,7 +713,7 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
         case OBJ_WEAPONS:
             if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
             {
-                if (mons_wields_two_weapons(type))
+                if (mons_wields_two_weapons(mon))
                     mslot = MSLOT_ALT_WEAPON;
                 else
                 {
@@ -778,7 +774,6 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
         if (mslot != MSLOT_ALT_WEAPON || mons_wields_two_weapons(mon))
             mon->equip(item, mslot, 0);
     } // while
-#endif
 }
 
 static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
