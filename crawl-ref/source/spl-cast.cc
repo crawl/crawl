@@ -976,16 +976,26 @@ int _setup_evaporate_cast()
 // Others are currently unused or unimplemented.
 spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 {
+    const bool wiz_cast = (crawl_state.prev_cmd == CMD_WIZARD && !allow_fail);
+
     dist spd;
     bolt beam;
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch().
-
-    if (_spell_is_uncastable(spell))
+    if (!wiz_cast && _spell_is_uncastable(spell))
         return (SPRET_ABORT);
 
     const unsigned int flags = get_spell_flags(spell);
+
+    ASSERT(wiz_cast || !(flags & SPFLAG_TESTING));
+    if ((flags & SPFLAG_TESTING) && !wiz_cast)
+    {
+        mprf(MSGCH_ERROR, "Spell %s is a testing spell, but you didn't use "
+                          "the &Z wizard command; please file a bug report.",
+             spell_title(spell));
+        return (SPRET_ABORT);
+    }
 
     int potion = -1;
 

@@ -175,6 +175,10 @@ Death's Door
 
 This spell is extremely powerful, but carries a degree of risk. It renders living casters nigh invulnerable to harm for a brief period, but can bring them dangerously close to death (how close depends on one's necromantic abilities). The spell can be cancelled at any time by any healing effect, and the caster will receive one warning shortly before the spell expires. Undead cannot use this spell. 
 %%%%
+Debugging Ray
+
+A ray which does massive damage (1500 hp) and always hits.
+%%%%
 Deflect Missiles
 
 This spell protects the caster from any kind of projectile attack, although particularly powerful attacks (lightning bolts, etc.) are deflected to a lesser extent than lighter missiles. 

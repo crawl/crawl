@@ -514,7 +514,9 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         if (prompt_failed(i))
             break;
 
-        if (!_item_type_can_be_artefact(you.inv[i].base_type))
+        item_def &item(you.inv[i]);
+
+        if (!_item_type_can_be_artefact(item.base_type))
         {
             mpr("That item cannot be turned into an artefact.");
             break;
@@ -529,13 +531,29 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
                 if (j == EQ_WEAPON)
                     you.wield_change = true;
 
-                if (is_random_artefact( you.inv[i] ))
+                if (is_random_artefact( item ))
                     unuse_randart( i );
                 break;
             }
         }
 
-        if (!make_item_randart( you.inv[i] ))
+        if (is_random_artefact(item))
+        {
+            if (!yesno("Is already a randart; wipe and re-use?"))
+            {
+                canned_msg( MSG_OK );
+                // If equipped, re-apply benefits.
+                if (j != NUM_EQUIP)
+                    use_randart( i );
+                return;
+            }
+
+            item.special = 0;
+            item.flags  &= ~ISFLAG_RANDART;
+            item.props.clear();
+        }
+  
+        if (!make_item_randart( item ))
         {
             mpr("Failed to turn item into randart.");
             break;
@@ -543,7 +561,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
         if (Options.autoinscribe_randarts)
         {
-            add_autoinscription(you.inv[i],
+            add_autoinscription(item,
                                 randart_auto_inscription(you.inv[i]));
         }
 
@@ -551,7 +569,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         if (j != NUM_EQUIP)
             use_randart( i );
 
-        mpr( you.inv[i].name(DESC_INVENTORY_EQUIP).c_str() );
+        mpr( item.name(DESC_INVENTORY_EQUIP).c_str() );
         break;
     }
     case '|':

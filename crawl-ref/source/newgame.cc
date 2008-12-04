@@ -859,7 +859,7 @@ static void _mark_starting_books()
 {
     for (int i = 0; i < ENDOFPACK; i++)
         if (is_valid_item(you.inv[i]) && you.inv[i].base_type == OBJ_BOOKS)
-            mark_had_book(you.inv[i].sub_type);
+            mark_had_book(you.inv[i]);
 }
 
 static void _racialise_starting_equipment()

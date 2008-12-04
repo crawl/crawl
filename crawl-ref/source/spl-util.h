@@ -136,5 +136,6 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
 const char *spelltype_name(unsigned int which_spelltype);
 
 int spell_type2skill (unsigned int which_spelltype);
+int spell_skill2type (unsigned int which_skill);
 
 #endif

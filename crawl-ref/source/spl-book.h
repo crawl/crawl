@@ -13,9 +13,6 @@
 #include "externs.h"
 #include "FixVec.h"
 
-#define SPELLBOOK_SIZE 8
-#define SPELL_LIST_KEY "spell_list"
-
 class formatted_string;
 
 enum read_book_action_type
@@ -35,8 +32,9 @@ int book_rarity(unsigned char which_book);
 bool is_valid_spell_in_book( const item_def &book, int spell );
 bool is_valid_spell_in_book( int splbook, int spell );
 
-
+void mark_had_book(const item_def &book);
 void mark_had_book(int booktype);
+
 // updated 24may2000 {dlb}
 /* ***********************************************************************
  * called from: it_use3 - item_use - spl-book
@@ -67,4 +65,9 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 int count_staff_spells(const item_def &item, bool need_id);
 int rod_shield_leakage();
 
+bool make_book_level_randart(item_def &book, int level = -1,
+                             int num_spells = -1);
+bool make_book_theme_randart(item_def &book,
+                             int school_one = 0, int school_two = 0,
+                             int num_spells = -1, int max_levels = -1);
 #endif

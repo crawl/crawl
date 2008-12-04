@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <algorithm>
 
 #ifdef DOS
  #include <conio.h>
@@ -37,6 +38,14 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+
+#define SPELL_LIST_KEY "spell_list"
+
+#define RANDART_BOOK_TYPE_KEY  "randart_book_type"
+#define RANDART_BOOK_LEVEL_KEY "randart_book_level"
+
+#define RANDART_BOOK_TYPE_LEVEL "level"
+#define RANDART_BOOK_TYPE_THEME "theme"
 
 #define SPELLBOOK_SIZE 8
 #define NUMBER_SPELLBOOKS 61
@@ -1032,9 +1041,38 @@ bool player_can_read_spellbook( const item_def &book )
     return (true);
 }
 
+void mark_had_book(const item_def &book)
+{
+    ASSERT(book.base_type == OBJ_BOOKS);
+
+    if (book.book_number() == BOOK_MANUAL
+        || book.book_number() == BOOK_DESTRUCTION)
+    {
+        return;
+    }
+
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    {
+        spell_type stype = which_spell_in_book(book, i);
+        if (stype == SPELL_NO_SPELL)
+            continue;
+
+        you.seen_spell[stype] = true;
+    }
+
+    if (!book.props.exists( SPELL_LIST_KEY ))
+        mark_had_book(book.book_number());
+}
 
 void mark_had_book(int booktype)
 {
+    ASSERT(booktype >= 0 && booktype < NUM_BOOKS);
+
+    if (booktype == BOOK_MANUAL || booktype == BOOK_DESTRUCTION)
+    {
+        return;
+    }
+
     you.had_book[booktype] = true;
 
     if ( booktype == BOOK_MINOR_MAGIC_I
@@ -1065,8 +1103,8 @@ int read_book( item_def &book, read_book_action_type action )
     // Remember that this function is called from staff spells as well.
     const int keyin = spellbook_contents( book, action );
 
-    if (book.base_type == OBJ_BOOKS && !book.props.exists( SPELL_LIST_KEY ))
-        mark_had_book(book.sub_type);
+    if (book.base_type == OBJ_BOOKS)
+        mark_had_book(book);
 
     redraw_screen();
 
@@ -1556,4 +1594,248 @@ int staff_spell( int staff )
     you.turn_is_over = true;
 
     return (roll_dice( 1, 1 + spell_difficulty(spell) / 2 ));
+}
+
+static bool _compare_spells(spell_type a, spell_type b)
+{
+    if (a == SPELL_NO_SPELL && b == SPELL_NO_SPELL)
+        return (false);
+    else if (a != SPELL_NO_SPELL && b == SPELL_NO_SPELL)
+        return (true);
+    else if (a == SPELL_NO_SPELL && b != SPELL_NO_SPELL)
+        return (false);
+
+    int level_a = spell_difficulty(a);
+    int level_b = spell_difficulty(b);
+
+    if (level_a != level_b)
+        return (level_a < level_b);
+
+    unsigned int schools_a = get_spell_disciplines(a);
+    unsigned int schools_b = get_spell_disciplines(b);
+
+    if (schools_a != schools_b && schools_a != 0 && schools_b != 0)
+    {
+        const char* a_type = NULL;
+        const char* b_type = NULL;
+
+        // Find lowest/earliest school for each spell.
+        for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+        {
+            int mask = 1 << i;
+            if (a_type == NULL && (schools_a & mask))
+                a_type = spelltype_name(mask);
+            if (b_type == NULL && (schools_b & mask))
+                b_type = spelltype_name(mask);
+        }
+        ASSERT(a_type != NULL && b_type != NULL);
+        return (strcmp(a_type, b_type));
+    }
+
+    return (strcmp(spell_title(a), spell_title(b)));
+}
+
+static bool _is_memorized(spell_type spell)
+{
+    for (int i = 0; i < 25; i++)
+    {
+        if (you.spells[i] == spell)
+            return (true);
+    }
+
+    return (false);
+}
+
+bool make_book_level_randart(item_def &book, int level,
+                             int num_spells)
+{
+    ASSERT(book.base_type == OBJ_BOOKS);
+    ASSERT(book.book_number()    != BOOK_MANUAL
+           && book.book_number() != BOOK_DESTRUCTION);
+    ASSERT(is_random_artefact(book));
+    ASSERT(!book.props.exists(SPELL_LIST_KEY));
+
+    god_type god;
+    (void) origin_is_god_gift(book, &god);
+
+    const bool avoid_uncastable = (god != GOD_NO_GOD && god != GOD_XOM)
+                                  || origin_is_acquirement(book);
+    const bool track_levels_had = origin_is_acquirement(book)
+                                  || god == GOD_SIF_MUNA;
+
+    if (level == -1)
+    {
+        int max_level =
+            avoid_uncastable ? std::min(9, you.get_experience_level())
+                             : 9;
+
+        level = random_range(1, max_level);
+
+        // Give a book of a level not seen before, preferably one with
+        // spells of a low enough level for the player to cast, or the
+        // lowest aviable level if all levels which the player can cast
+        // have already been given.
+        if (track_levels_had)
+        {
+            unsigned int seen_levels = you.attribute[ATTR_RND_LVL_BOOKS];
+            std::vector<int> vec;
+            for (int i = 1; i <= 9 && (vec.empty() || i <= max_level); i++)
+            {
+                if (!(seen_levels & (1 << i)))
+                    vec.push_back(i);
+            }
+            if (vec.size() > 0)
+                level = vec[random2(vec.size())];
+        }
+    }
+    ASSERT(level > 0 && level <= 9);
+
+    if (num_spells == -1)
+        num_spells = SPELLBOOK_SIZE;
+    ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
+
+
+    int god_discard        = 0;
+    int uncastable_discard = 0;
+
+    std::vector<spell_type> spell_list;
+    for (int i = 0; i < NUM_SPELLS; i++)
+    {
+        const spell_type spell = (spell_type) i;
+
+        if (!is_valid_spell(spell))
+            continue;
+
+        if (spell_difficulty(spell) != level)
+            continue;
+
+        const unsigned int flags   = get_spell_flags(spell);
+        const unsigned int schools = get_spell_disciplines(spell);
+
+        // Don't include schoolless spells, like Smiting.
+        if (schools == 0)
+            continue;
+
+        // Holy spells don't show up in books.
+        if (schools & SPTYP_HOLY)
+            continue;
+
+        if (flags & (SPFLAG_MONSTER | SPFLAG_CARD | SPFLAG_TESTING))
+            continue;
+
+        // Only wizards gets spells still under development.
+        if (flags & SPFLAG_DEVEL)
+        {
+#ifdef WIZARD
+            if (!you.wizard)
+                continue;
+#else
+            continue;
+#endif
+        }
+
+        if (avoid_uncastable && undead_cannot_memorise(spell, you.is_undead))
+        {
+            uncastable_discard++;
+            continue;
+        }
+
+        if (god_dislikes_spell_type(spell, god))
+        {
+            god_discard++;
+            continue;
+        }
+
+        // Passed all tests.
+        spell_list.push_back(spell);
+    }
+
+    if (spell_list.empty())
+    {
+        char buf[80];
+
+        if (god_discard > 0 && uncastable_discard == 0)
+            sprintf(buf, "%s disliked all level %d spells",
+                    god_name(god).c_str(), level);
+        else if (god_discard == 0 && uncastable_discard > 0)
+            sprintf(buf, "No level %d spells can be cast by you", level);
+        else if (god_discard > 0 && uncastable_discard > 0)
+            sprintf(buf, "All level %d spells are either disliked by %s "
+                         "or cannot be cast by you.",
+                    level, god_name(god).c_str());
+        else
+            sprintf(buf, "No level %d spells?!?!?!", level);
+
+        mprf(MSGCH_ERROR, "Could not create fixed level randart spellbook: %s",
+             buf);
+
+        return (false);
+    }
+    random_shuffle(spell_list.begin(), spell_list.end());
+
+    if (num_spells > (int) spell_list.size())
+    {
+        num_spells = spell_list.size();
+#if DEBUG || DEBUG_DIAGNOSTICS
+        // Not many level 8 or 9 spells
+        if (level < 8)
+        {
+            mprf(MSGCH_WARN, "More spells requested for fixed level (%d) "
+                             "randart spellbook than there are valid spells.",
+                 level);
+            mprf(MSGCH_WARN, "Discarded %d spells due to being uncastable and "
+                             "%d spells due to being disliked by %s.",
+                 uncastable_discard, god_discard, god_name(god).c_str());
+        }
+#endif
+    }
+
+    std::vector<bool> spell_used(spell_list.size(), false);
+    std::vector<bool> avoid_memorised(spell_list.size(), true);
+
+    spell_type chosen_spells[SPELLBOOK_SIZE];
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    {
+        chosen_spells[i] = SPELL_NO_SPELL;
+    }
+
+    int book_pos = 0;
+    while (book_pos < num_spells)
+    {
+        int spell_pos = random2(spell_list.size());
+
+        if (spell_used[spell_pos])
+            continue;
+
+        spell_type spell = spell_list[spell_pos];
+        ASSERT(spell != SPELL_NO_SPELL);
+
+        if (avoid_memorised[spell_pos] && _is_memorized(spell))
+        {
+           // Only once.
+           avoid_memorised[spell_pos] = false;
+           continue;
+        }
+
+        spell_used[spell_pos]     = true;
+        chosen_spells[book_pos++] = spell;
+    }
+    std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE,
+              _compare_spells);
+    ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
+
+    CrawlHashTable &props = book.props;
+    if (!props.exists( SPELL_LIST_KEY ))
+        props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY];
+    spell_vec.set_max_size(SPELLBOOK_SIZE);
+
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+        spell_vec[i] = (long) chosen_spells[i];
+
+    if (track_levels_had)
+        you.attribute[ATTR_RND_LVL_BOOKS] |= (1 << level);
+
+    return (true);
 }

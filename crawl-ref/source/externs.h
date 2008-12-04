@@ -876,7 +876,8 @@ public:
   FixedVector<unsigned char, NUM_MUTATIONS> demon_pow;
   unsigned char magic_contamination;
 
-  FixedVector<bool, NUM_BOOKS> had_book;
+  FixedVector<bool, NUM_BOOKS>  had_book;
+  FixedVector<bool, NUM_SPELLS> seen_spell;
 
   unsigned char normal_vision;        // how far the species gets to see
   unsigned char current_vision;       // current sight radius (cells)

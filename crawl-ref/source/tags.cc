@@ -1082,6 +1082,10 @@ static void tag_construct_you_items(writer &th)
     for (j = 0; j < NUM_BOOKS; ++j)
         marshallByte(th,you.had_book[j]);
 
+    marshallShort(th, NUM_SPELLS);
+    for (j = 0; j < NUM_SPELLS; ++j)
+        marshallByte(th,you.seen_spell[j]);
+
     // how many unrandarts?
     marshallShort(th, NO_UNRANDARTS);
 
@@ -1521,6 +1525,11 @@ static void tag_read_you_items(reader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
         you.had_book[j] = unmarshallByte(th);
+
+    // how many spells?
+    count_s = unmarshallShort(th);
+    for (j = 0; j < count_s; ++j)
+        you.seen_spell[j] = unmarshallByte(th);
 
     // how many unrandarts?
     count_s = unmarshallShort(th);

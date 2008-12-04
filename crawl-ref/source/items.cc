@@ -872,7 +872,7 @@ void origin_set_startequip(item_def &item)
     if (!origin_known(item))
     {
         item.orig_place  = 0xFFFF;
-        item.orig_monnum = -1;
+        item.orig_monnum = -IT_SRC_START;
     }
 }
 
@@ -900,8 +900,7 @@ void origin_purchased(item_def &item)
     // We don't need to check origin_known if it's a shop purchase
     item.orig_place  = get_packed_place();
     _origin_set_portal_vault(item);
-    // Hackiness
-    item.orig_monnum = -1;
+    item.orig_monnum = -IT_SRC_SHOP;
 }
 
 void origin_acquired(item_def &item, int agent)
@@ -909,8 +908,7 @@ void origin_acquired(item_def &item, int agent)
     // We don't need to check origin_known if it's a divine gift
     item.orig_place  = get_packed_place();
     _origin_set_portal_vault(item);
-    // Hackiness
-    item.orig_monnum = -2 - agent;
+    item.orig_monnum = -agent;
 }
 
 void origin_set_inventory(void (*oset)(item_def &item))
@@ -1066,22 +1064,42 @@ static std::string _article_it(const item_def &item)
 
 static bool _origin_is_original_equip(const item_def &item)
 {
-    return (item.orig_place == 0xFFFFU && item.orig_monnum == -1);
+    return (item.orig_place == 0xFFFFU && item.orig_monnum == -IT_SRC_START);
 }
 
-bool origin_is_god_gift(const item_def& item)
+bool origin_is_god_gift(const item_def& item, god_type *god)
 {
-    if (!origin_describable(item))
-        return false;
+    god_type junk;
+    if (god == NULL)
+        god = &junk;
+    *god = GOD_NO_GOD;
 
-    if (_origin_is_original_equip(item))
-        return false;
+    const int iorig = -item.orig_monnum;
+    if (iorig > GOD_NO_GOD && iorig < NUM_GODS)
+    {
+        *god = static_cast<god_type>(iorig);
+        return(true);
+    }
 
-    if (item.orig_monnum >= 0)
-        return false;
+    return (false);
+}
 
-    const int iorig = -item.orig_monnum - 2;
-    return (iorig > AQ_SCROLL && iorig < AQ_CARD_GENIE);
+bool origin_is_acquirement(const item_def& item, item_source_type *type)
+{
+    item_source_type junk;
+    if (type == NULL)
+        type = &junk;
+    *type = IT_SRC_NONE;
+
+    const int iorig = -item.orig_monnum;
+    if (iorig == AQ_SCROLL || iorig == AQ_CARD_GENIE
+        || iorig == AQ_WIZMODE)
+    {
+        *type = static_cast<item_source_type>(iorig);
+        return (true);
+    }
+
+    return (false);
 }
 
 std::string origin_desc(const item_def &item)
@@ -1097,11 +1115,14 @@ std::string origin_desc(const item_def &item)
     {
         if (item.orig_monnum < 0)
         {
-            int iorig = -item.orig_monnum - 2;
+            int iorig = -item.orig_monnum;
             switch (iorig)
             {
-            case -1:
+            case IT_SRC_SHOP:
                 desc += "You bought " + _article_it(item) + " in a shop ";
+                break;
+            case IT_SRC_START:
+                desc += "Buggy Original Equipment: ";
                 break;
             case AQ_SCROLL:
                 desc += "You acquired " + _article_it(item) + " ";

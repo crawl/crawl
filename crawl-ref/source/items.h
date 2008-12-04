@@ -12,16 +12,22 @@
 
 #include "externs.h"
 
-// Various ways to get the acquirement effect.
-enum acquirement_agent_type
+// Ways to get items, other than finding them on the ground or looting them
+// from slain monsters.
+enum item_source_type
 {
-    AQ_SCROLL   = 0,
+    IT_SRC_NONE   = 0,
 
     // Empty space for the gods
 
-    AQ_CARD_GENIE = 100,
+    AQ_SCROLL     = 100,
+    AQ_CARD_GENIE,
+    IT_SRC_START,
+    IT_SRC_SHOP,
 
-    AQ_WIZMODE          = 200
+    // Empty space for new non-wizmode acquisition methods
+
+    AQ_WIZMODE    = 200
 };
 
 bool is_valid_item( const item_def &item );
@@ -135,7 +141,9 @@ void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);
 void origin_set_unknown(item_def &item);
 void origin_set_inventory( void (*oset)(item_def &item) );
-bool origin_is_god_gift(const item_def& item);
+bool origin_is_god_gift(const item_def& item, god_type *god = NULL);
+bool origin_is_acquirement(const item_def& item,
+                           item_source_type *type = NULL);
 std::string origin_monster_name(const item_def &item);
 
 bool item_needs_autopickup(const item_def &);

@@ -14,21 +14,26 @@
 
 enum spflag_type
 {
-    SPFLAG_NONE                 = 0x0000,
-    SPFLAG_DIR_OR_TARGET        = 0x0001,       // use DIR_NONE targeting
-    SPFLAG_TARGET               = 0x0002,       // use DIR_TARGET targeting
-    SPFLAG_GRID                 = 0x0004,       // use DIR_GRID targeting
-    SPFLAG_DIR                  = 0x0008,       // use DIR_DIR targeting
-    SPFLAG_TARGETING_MASK       = 0x000f,       // used to test for targeting
-    SPFLAG_HELPFUL              = 0x0010,       // TARG_FRIENDS used
-    SPFLAG_NEUTRAL              = 0x0020,       // TARG_ANY used
-    SPFLAG_NOT_SELF             = 0x0040,       // aborts on isMe
-    SPFLAG_UNHOLY               = 0x0080,       // counts at "unholy"
-    SPFLAG_MAPPING              = 0x0100,       // a mapping spell of some kind
-    SPFLAG_ESCAPE               = 0x0200,       // useful for running away
-    SPFLAG_RECOVERY             = 0x0400,       // healing or recovery spell
-    SPFLAG_AREA                 = 0x0800,       // area affect
-    SPFLAG_MONSTER              = 0x1000        // monster-only spell
+    SPFLAG_NONE                 = 0x00000,
+    SPFLAG_DIR_OR_TARGET        = 0x00001,      // use DIR_NONE targeting
+    SPFLAG_TARGET               = 0x00002,      // use DIR_TARGET targeting
+    SPFLAG_GRID                 = 0x00004,      // use DIR_GRID targeting
+    SPFLAG_DIR                  = 0x00008,      // use DIR_DIR targeting
+    SPFLAG_TARGETING_MASK       = 0x0000f,      // used to test for targeting
+    SPFLAG_HELPFUL              = 0x00010,      // TARG_FRIENDS used
+    SPFLAG_NEUTRAL              = 0x00020,      // TARG_ANY used
+    SPFLAG_NOT_SELF             = 0x00040,      // aborts on isMe
+    SPFLAG_UNHOLY               = 0x00080,      // counts at "unholy"
+    SPFLAG_MAPPING              = 0x00100,      // a mapping spell of some kind
+    SPFLAG_ESCAPE               = 0x00200,      // useful for running away
+    SPFLAG_RECOVERY             = 0x00400,      // healing or recovery spell
+    SPFLAG_AREA                 = 0x00800,      // area affect
+    SPFLAG_BATTLE               = 0x01000,      // a non-Conjuration spell that
+                                                // is still a battle spell
+    SPFLAG_CARD                 = 0x02000,      // a card effect spell
+    SPFLAG_MONSTER              = 0x04000,      // monster-only spell
+    SPFLAG_TESTING              = 0x08000,      // a testing/debugging spell
+    SPFLAG_DEVEL                = 0x10000       // a spell under development
 };
 
 enum spret_type

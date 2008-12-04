@@ -2068,7 +2068,7 @@ static bool _describe_spells(const item_def &item)
     const int spell_index = letter_to_index(c);
 
     spell_type nthing =
-        which_spell_in_book(item.book_number(), spell_index);
+        which_spell_in_book(item, spell_index);
     if (nthing == SPELL_NO_SPELL)
         return (false);
 

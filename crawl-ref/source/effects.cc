@@ -1577,7 +1577,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         do_uncurse_item(thing);
 
         if (thing.base_type == OBJ_BOOKS)
-            mark_had_book(thing.sub_type);
+            mark_had_book(thing);
         else if (thing.base_type == OBJ_JEWELLERY)
         {
             switch (thing.sub_type)
@@ -1702,7 +1702,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             }
         }
 
-        if (agent > AQ_SCROLL && agent == you.religion)
+        if (agent > GOD_NO_GOD && agent < NUM_GODS && agent == you.religion)
         {
             thing.inscription = "god gift";
             if (is_random_artefact(thing))

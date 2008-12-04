@@ -108,8 +108,13 @@ bool is_evil_item(const item_def& item);
 bool is_chaotic_item(const item_def& item);
 bool good_god_dislikes_item_handling(const item_def &item);
 bool god_dislikes_item_handling(const item_def &item);
+
+bool god_dislikes_spell_type(spell_type spell, god_type god = you.religion);
+bool god_dislikes_spell_school(int school, god_type god = you.religion);
+
 bool trog_burn_spellbooks();
 bool ely_destroy_weapons();
+
 bool tso_unchivalric_attack_safe_monster(const monsters *mon);
 
 void mons_make_god_gift(monsters *mon, god_type god = you.religion);

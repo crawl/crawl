@@ -240,7 +240,7 @@
 {
     SPELL_TWIST, "Twist",
      SPTYP_TRANSLOCATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      1,
      25,
         LOS_RADIUS, LOS_RADIUS,
@@ -252,7 +252,7 @@
 {
     SPELL_FAR_STRIKE, "Far Strike",
      SPTYP_TRANSLOCATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      3,
      100,
         LOS_RADIUS, LOS_RADIUS,
@@ -276,7 +276,7 @@
 {
     SPELL_STRIKING, "Striking",
      0,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE,
      1,
      25,
      5, 5,
@@ -734,7 +734,7 @@
 {
     SPELL_ABJURATION_I, "Abjuration",
      SPTYP_SUMMONING,
-     SPFLAG_AREA | SPFLAG_NEUTRAL,
+     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
      3,
      200,
      -1, -1,
@@ -940,7 +940,7 @@
 {
     SPELL_PAIN, "Pain",
      SPTYP_NECROMANCY,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE,
      1,
      25,
      6, 6,
@@ -987,7 +987,7 @@
 {
     SPELL_VAMPIRIC_DRAINING, "Vampiric Draining",
      SPTYP_NECROMANCY,
-     SPFLAG_DIR | SPFLAG_NOT_SELF,
+     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      3,
      200,
      1, 1,
@@ -1035,7 +1035,7 @@
 {
     SPELL_BURN, "Burn", // used by wanderers
      SPTYP_FIRE,
-     SPFLAG_DIR | SPFLAG_NOT_SELF,
+     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      1,
      25,
      1, 1,
@@ -1047,7 +1047,7 @@
 {
     SPELL_FREEZE, "Freeze",
      SPTYP_ICE,
-     SPFLAG_DIR | SPFLAG_NOT_SELF,
+     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      1,
      25,
      1, 1,
@@ -1240,7 +1240,7 @@
 {
     SPELL_ABJURATION_II, "Abjuration",
      SPTYP_HOLY,
-     SPFLAG_AREA | SPFLAG_NEUTRAL,
+     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
      4,
      200,
      -1, -1,
@@ -1432,7 +1432,7 @@
 {
     SPELL_TUKIMAS_VORPAL_BLADE, "Tukima's Vorpal Blade",
      SPTYP_ENCHANTMENT,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
      -1, -1,
@@ -1444,7 +1444,7 @@
 {
     SPELL_FIRE_BRAND, "Fire Brand",
      SPTYP_ENCHANTMENT | SPTYP_FIRE,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
      -1, -1,
@@ -1456,7 +1456,7 @@
 {
     SPELL_FREEZING_AURA, "Freezing Aura",
      SPTYP_ENCHANTMENT | SPTYP_ICE,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
      -1, -1,
@@ -1468,7 +1468,7 @@
 {
     SPELL_LETHAL_INFUSION, "Lethal Infusion",
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
-     SPFLAG_NONE,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
      -1, -1,
@@ -1480,7 +1480,7 @@
 {
     SPELL_CRUSH, "Crush",
      SPTYP_EARTH,
-     SPFLAG_DIR | SPFLAG_NOT_SELF,
+     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_DEVEL | SPFLAG_BATTLE,
      1,
      25,
      1, 1,
@@ -1516,7 +1516,7 @@
 {
     SPELL_TOMB_OF_DOROKLOHE, "Tomb of Doroklohe",
      SPTYP_CONJURATION | SPTYP_EARTH, // conj makes more sense than tmig -- bwr
-     SPFLAG_NONE,
+     SPFLAG_CARD,
      7,
      0,
      -1, -1,
@@ -1637,7 +1637,7 @@
 {
     SPELL_POISON_AMMUNITION, "Poison Ammunition",
      SPTYP_ENCHANTMENT | SPTYP_POISON,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
      4,
      0,
      -1, -1,
@@ -1649,7 +1649,7 @@
 {
     SPELL_POISON_WEAPON, "Poison Weapon",
      SPTYP_ENCHANTMENT | SPTYP_POISON,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      0,
      -1, -1,
@@ -1697,7 +1697,7 @@
 {
     SPELL_DEBUGGING_RAY, "Debugging Ray",
      SPTYP_CONJURATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_TESTING,
      7,
      100,
      LOS_RADIUS, LOS_RADIUS,
@@ -1757,7 +1757,7 @@
 {
     SPELL_DISRUPT, "Disrupt",
      SPTYP_TRANSMIGRATION,
-     SPFLAG_DIR_OR_TARGET,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE | SPFLAG_DEVEL,
      1,
      25,
      7, 7,
@@ -1769,7 +1769,7 @@
 {
     SPELL_DISINTEGRATE, "Disintegrate",
      SPTYP_TRANSMIGRATION,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_CARD,
      6,
      200,
      6, 6,
@@ -1781,7 +1781,7 @@
 {
     SPELL_BLADE_HANDS, "Blade Hands",
      SPTYP_TRANSMIGRATION,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
      5,  // only removes weapon, so I raised this from 4 -- bwr
      200,
      -1, -1,
@@ -1913,7 +1913,7 @@
 {
     SPELL_ARC, "Arc",
      SPTYP_AIR,
-     SPFLAG_DIR | SPFLAG_NOT_SELF,
+     SPFLAG_DIR | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      1,
      25,
      1, 1,
@@ -1925,7 +1925,7 @@
 {
     SPELL_AIRSTRIKE, "Airstrike",
      SPTYP_AIR,
-     SPFLAG_TARGET | SPFLAG_NOT_SELF,
+     SPFLAG_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
@@ -1961,7 +1961,7 @@
 {
     SPELL_SURE_BLADE, "Sure Blade",
      SPTYP_ENCHANTMENT,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
      -1, -1,
@@ -1996,7 +1996,7 @@
 
 {
     SPELL_IGNITE_POISON, "Ignite Poison",
-     SPTYP_FIRE | SPTYP_TRANSMIGRATION,
+     SPTYP_FIRE | SPTYP_TRANSMIGRATION | SPFLAG_BATTLE,
      SPFLAG_AREA,
      6,
      200,
@@ -2081,7 +2081,7 @@
 {
     SPELL_DETECT_MAGIC, "Detect Magic",
      SPTYP_DIVINATION,
-     SPFLAG_NONE,
+     SPFLAG_DEVEL,
      1,
      0,
      -1, -1,
@@ -2141,7 +2141,7 @@
 {
     SPELL_WARP_BRAND, "Warp Weapon",
      SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
      7,     // this is high for a reason - Warp brands are very powerful.
      0,
      -1, -1,
@@ -2201,7 +2201,7 @@
 {
     SPELL_BEND, "Bend",
      SPTYP_TRANSLOCATION,
-     SPFLAG_DIR,
+     SPFLAG_DIR | SPFLAG_BATTLE,
      1,
      100,
      1, 1,
@@ -2285,7 +2285,7 @@
 {
     SPELL_SANDBLAST, "Sandblast",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      1,
      50,
      1, 2,
@@ -2309,7 +2309,7 @@
 {
     SPELL_MAXWELLS_SILVER_HAMMER, "Maxwell's Silver Hammer",
      SPTYP_TRANSMIGRATION | SPTYP_EARTH,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
      2,
      200,
      -1, -1,
@@ -2393,7 +2393,7 @@
 {
     SPELL_EXCRUCIATING_WOUNDS, "Excruciating Wounds",
      SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
-     SPFLAG_HELPFUL,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
      5,     // fairly high level - potentially one of the best brands
      200,
      -1, -1,

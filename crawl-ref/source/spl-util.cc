@@ -827,6 +827,33 @@ int spell_type2skill(unsigned int spelltype)
     }
 }                               // end spell_type2skill()
 
+int spell_skill2type(unsigned int skill)
+{
+    switch (skill)
+    {
+    case SK_CONJURATIONS:   return (SPTYP_CONJURATION);
+    case SK_ENCHANTMENTS:   return (SPTYP_ENCHANTMENT);
+    case SK_FIRE_MAGIC:     return (SPTYP_FIRE);
+    case SK_ICE_MAGIC:      return (SPTYP_ICE);
+    case SK_TRANSMIGRATION: return (SPTYP_TRANSMIGRATION);
+    case SK_NECROMANCY:     return (SPTYP_NECROMANCY);
+    case SK_SUMMONINGS:     return (SPTYP_SUMMONING);
+    case SK_DIVINATIONS:    return (SPTYP_DIVINATION);
+    case SK_TRANSLOCATIONS: return (SPTYP_TRANSLOCATION);
+    case SK_POISON_MAGIC:   return (SPTYP_POISON);
+    case SK_EARTH_MAGIC:    return (SPTYP_EARTH);
+    case SK_AIR_MAGIC:      return (SPTYP_AIR);
+
+    default:
+    case SPTYP_HOLY:
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "spell_skill2type: called with skill %u",
+             spelltype );
+#endif
+        return (-1);
+    }
+}                               // end spell_type2skill()
+
 /*
  **************************************************
  *                                                *

@@ -165,6 +165,8 @@ enum attribute_type
     ATTR_PURCHASES,            // Gold amount spent at shops.
     ATTR_DONATIONS,            // Gold amount donated to Zin.
     ATTR_MISC_SPENDING,        // Spending for things like ziggurats.
+    ATTR_RND_LVL_BOOKS,        // Bitfield of level-type randart spellbooks
+                               // player has seen.
     NUM_ATTRIBUTES
 };
 

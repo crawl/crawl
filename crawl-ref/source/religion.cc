@@ -62,6 +62,7 @@
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-book.h"
+#include "spl-cast.h"
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -3437,6 +3438,121 @@ bool god_dislikes_item_handling(const item_def &item)
 
         if (is_holy_item(item))
             return (true);
+    }
+
+    return (false);
+}
+
+bool god_dislikes_spell_type(spell_type spell, god_type god)
+{
+    if (god == GOD_NO_GOD)
+        return (false);
+
+    unsigned int flags   = get_spell_flags(spell);
+    unsigned int schools = get_spell_disciplines(spell);
+
+    if (is_good_god(god))
+    {
+        if ((flags & SPFLAG_UNHOLY) || (schools & SPTYP_NECROMANCY))
+            return (true);
+    }
+
+    switch(god)
+    {
+    case GOD_ZIN:
+        if (spell == SPELL_POLYMORPH_OTHER || spell == SPELL_ALTER_SELF)
+            return (true);
+        break;
+
+    case GOD_SHINING_ONE:
+        // TSO dislikes using poison, but is fine with curing it, resisting
+        // it or destroying it.
+        if ((schools & SPTYP_POISON) && spell != SPELL_CURE_POISON_I
+            && spell != SPELL_CURE_POISON_II && spell != SPELL_RESIST_POISON
+            && spell != SPELL_IGNITE_POISON)
+        {
+            return (true);
+        }
+
+        // He probably also wouldn't like spells which would put enemies
+        // into a state where attacking them would be unchivalrous.
+        if (spell == SPELL_CAUSE_FEAR || spell == SPELL_PARALYSE
+            || spell == SPELL_CONFUSE || spell == SPELL_MASS_CONFUSION
+            || spell == SPELL_SLEEP   || spell == SPELL_MASS_SLEEP)
+        {
+            return (true);
+        }
+        break;
+
+    case GOD_YREDELEMNUL:
+        if (schools & SPTYP_HOLY)
+            return (true);
+        break;
+
+    case GOD_XOM:
+        // Ideally, Xom would only like spells which have a random effect,
+        // are risky to use, or would otherwise amuse him, but that would
+        // be a really small number of spells.
+
+        // Xom would probably find these extra boring.
+        if (flags & (SPFLAG_HELPFUL | SPFLAG_NEUTRAL | SPFLAG_ESCAPE
+                     | SPFLAG_RECOVERY | SPFLAG_MAPPING))
+        {
+            return (true);
+        }
+
+        // Things are more fun for Xom the less the player knows in
+        // advance.
+        if (schools & SPTYP_DIVINATION)
+            return (true);
+
+        // Holy spells are probably too useful for Xom to find them
+        // interesting.
+        if (schools & SPTYP_HOLY)
+            return (true);
+        break;
+
+    case GOD_ELYVILON:
+        // A peaceful god of healing wouldn't like combat spells.
+        if (schools & SPTYP_CONJURATION)
+            return (true);
+
+        // Also doesn't like battle spells of the non-conjuration type.
+        if (flags & SPFLAG_BATTLE)
+            return true;
+        break;
+
+    default:
+        break;
+    }
+
+    return (false);
+}
+
+bool god_dislikes_spell_school(int school, god_type god)
+{
+    if (god == GOD_NO_GOD)
+        return (false);
+
+    if (is_good_god(god) && school == SPTYP_NECROMANCY)
+        return (true);
+
+    switch(god)
+    {
+    case GOD_SHINING_ONE:
+        return (school == SPTYP_POISON);
+
+    case GOD_YREDELEMNUL:
+        return (school == SPTYP_HOLY);
+
+    case GOD_XOM:
+        return (school == SPTYP_DIVINATION || school == SPTYP_HOLY);
+
+    case GOD_ELYVILON:
+        return (school == SPTYP_CONJURATION);
+
+    default:
+        break;
     }
 
     return (false);

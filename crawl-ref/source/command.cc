@@ -1050,7 +1050,22 @@ static bool _monster_filter(std::string key, std::string body)
 
 static bool _spell_filter(std::string key, std::string body)
 {
-    return (spell_by_name(key) == SPELL_NO_SPELL);
+    spell_type spell = spell_by_name(key);
+
+    if (spell == SPELL_NO_SPELL)
+        return (true);
+
+    if (get_spell_flags(spell) & (SPFLAG_MONSTER | SPFLAG_TESTING
+                                  | SPFLAG_DEVEL))
+    {
+#ifdef WIZARD
+        return (!you.wizard);
+#else
+        return (true);
+#endif
+    }
+
+    return (false);
 }
 
 static bool _item_filter(std::string key, std::string body)
@@ -1104,6 +1119,44 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
             keys[i] = feature_description(type, NUM_TRAPS, false, DESC_CAP_A,
                                           false);
         }
+    }
+}
+
+// Extra info on this item wasn't found anywhere else.
+static void _append_non_item(std::string &desc, std::string key)
+{
+    spell_type type = spell_by_name(key, true);
+
+    if (type == SPELL_NO_SPELL)
+        return;
+
+    unsigned int flags = get_spell_flags(type);
+
+    if (flags & SPFLAG_DEVEL)
+        desc += "$This spell is still being developped, and is only avaible "
+                "via the &Z wizard command.";
+    else if (flags & SPFLAG_TESTING)
+        desc += "$This is a testing spell, only avaible via the "
+                "&Z wizard command.";
+    else if (flags & SPFLAG_MONSTER)
+        desc += "$This is a monster-only spell, only avaible via the "
+                "&Z wizard command.";
+    else if (flags & SPFLAG_CARD)
+        desc += "$This is a card-effect spell, unavailable in ordinary "
+                "spellbooks.";
+    else
+        desc += "$Odd, this spell can't be found anywhere.  Please "
+                "file a bug report.";
+
+#ifdef WIZARD
+    if (!you.wizard)
+#else
+    if (true)
+#endif
+    {
+        if (flags & (SPFLAG_TESTING | SPFLAG_MONSTER | SPFLAG_DEVEL))
+            desc += "$$You aren't in wizard mode, so you shouldn't be "
+                    "seeing this entry.  Please file a bug report.";
     }
 }
 
@@ -1162,9 +1215,6 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
             if (which_spell_in_book(book, j) == type)
                 rods.push_back(item.name(DESC_PLAIN));
     }
-
-    if (books.empty() && rods.empty())
-        return (false);
 
     if (!books.empty())
     {
@@ -1359,6 +1409,8 @@ static bool _do_description(std::string key, std::string footer = "")
                     if (!_append_books(desc, mitm[thing_created], key))
                         _append_spells(desc, mitm[thing_created]);
                 }
+                else
+                    _append_non_item(desc, key);
 
                 // Now we don't need the item anymore.
                 destroy_item(thing_created);

@@ -26,14 +26,15 @@
 #include "player.h"
 #include "religion.h"
 #include "spl-book.h"
-#include "spl-cast.h"
-#include "spl-util.h"
 #include "stuff.h"
 
 #define KNOWN_PROPS_KEY    "randart_known_props"
 #define RANDART_PROPS_KEY  "randart_props"
 #define RANDART_NAME_KEY   "randart_name"
 #define RANDART_APPEAR_KEY "randart_appearance"
+
+#define SPELL_LIST_KEY "spell_list"
+#define SPELLBOOK_SIZE 8
 
 static const char* _get_fixedart_name(const item_def &item);
 
@@ -78,7 +79,12 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             type_bad = true;
         break;
 
-    case GOD_TROG: // hates anything enhancing magic
+    case GOD_TROG:
+        // Trog hates spell use.
+        if (item.base_type == OBJ_BOOKS)
+            type_bad = true;
+
+        // hates anything enhancing magic
         if (item.base_type == OBJ_JEWELLERY && (item.sub_type == RING_WIZARDRY
             || item.sub_type == RING_FIRE || item.sub_type == RING_ICE
             || item.sub_type == RING_MAGICAL_POWER))
@@ -171,27 +177,13 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     return (true);
 }
 
-static god_type _gift_from_god(const item_def item)
-{
-    // maybe god gift?
-    god_type god_gift = GOD_NO_GOD;
-
-    if (item.orig_monnum < 0)
-    {
-        int help = -item.orig_monnum - 2;
-        if (help > GOD_NO_GOD && help < NUM_GODS)
-            god_gift = static_cast<god_type>(help);
-    }
-
-    return god_gift;
-}
-
 static std::string _replace_name_parts(const std::string name_in,
-                                       const item_def item)
+                                       const item_def& item)
 {
     std::string name = name_in;
 
-    god_type god_gift = _gift_from_god(item);
+    god_type god_gift;
+    (void) origin_is_god_gift(item, &god_gift);
 
     // Don't allow "player's Death" type names for god gifts (except Xom!)
     if (name.find("@player_death@", 0) != std::string::npos
@@ -1130,67 +1122,12 @@ void static _get_randart_properties(const item_def &item,
     }
 }
 
-static bool _compare_spell_dificulties(spell_type a, spell_type b)
+static bool _init_randart_book(item_def &book)
 {
-    return (spell_difficulty(a) < spell_difficulty(b));
+    return make_book_level_randart(book, -1, 8);
 }
 
-static void _init_randart_book(item_def &book)
-{
-    spell_type spells[SPELLBOOK_SIZE];
-    int        spell_count = 0;
-
-    while(spell_count < SPELLBOOK_SIZE)
-    {
-        spell_type spl = static_cast<spell_type>(random2(NUM_SPELLS));
-
-        if (!is_valid_spell(spl))
-            continue;
-
-        // Skip monster only spells.
-        if (get_spell_flags(spl) & SPFLAG_MONSTER)
-            continue;
-
-        // Holy spells don't show up in books.
-        if (spell_typematch(spl, SPTYP_HOLY))
-            continue;
-
-        // Don't include schoolless spells, like Smiting.
-        if (get_spell_disciplines(spl) == 0)
-            continue;
-
-        // This spell passes all of the other checks.
-        if (spl == SPELL_DEBUGGING_RAY)
-            continue;
-
-        // No duplicate spells.
-        bool present = false;
-        for (int i = 0; i < spell_count; i++)
-            if (spells[i] == spl)
-            {
-                present = true;
-                break;
-            }
-        if (present)
-            continue;
-
-        spells[spell_count++] = spl;
-    }
-
-    std::sort(spells, spells + SPELLBOOK_SIZE, _compare_spell_dificulties);
-
-    CrawlHashTable &props = book.props;
-    if (!props.exists( SPELL_LIST_KEY ))
-        props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
-
-    CrawlVector &spell_vec = props[SPELL_LIST_KEY];
-    spell_vec.set_max_size(SPELLBOOK_SIZE);
-
-    for (int i = 0; i < SPELLBOOK_SIZE; i++)
-        spell_vec[i] = (long) spells[i];
-}
-
-void static _init_randart_properties(item_def &item)
+static bool _init_randart_properties(item_def &item)
 {
     ASSERT( is_random_artefact( item ) );
     CrawlHashTable &props = item.props;
@@ -1210,20 +1147,19 @@ void static _init_randart_properties(item_def &item)
         for (int i = 0; i < RA_PROPERTIES; i++)
             rap[i] = (short) unrand->prpty[i];
 
-        return;
+        return (true);
     }
 
     if (item.base_type == OBJ_BOOKS)
-    {
-        _init_randart_book(item);
-        return;
-    }
+        return _init_randart_book(item);
 
     randart_properties_t prop;
     _get_randart_properties(item, prop);
 
     for (int i = 0; i < RA_PROPERTIES; i++)
         rap[i] = (short) prop[i];
+
+    return (true);
 }
 
 void randart_wpn_properties( const item_def &item,
@@ -1432,7 +1368,7 @@ std::string artefact_name(const item_def &item, bool appearance)
         // for actually naming an item.
         item_orig = item.orig_monnum;
         if (item_orig < 0)
-            item_orig = -item_orig - 2;
+            item_orig = -item_orig;
         else
             item_orig = 0;
 
@@ -2111,13 +2047,23 @@ bool make_item_randart( item_def &item )
 
     item.flags |= ISFLAG_RANDART;
 
-    god_type god_gift = _gift_from_god(item);
+    god_type god_gift;
+    (void) origin_is_god_gift(item, &god_gift);
 
     do
     {
         item.special = (random_int() & RANDART_SEED_MASK);
         // Now that we found something, initialize the props array.
-        _init_randart_properties(item);
+        if (!_init_randart_properties(item))
+        {
+            // Something went wrong that no amount of changing
+            // item.special will fix.
+            item.special = 0;
+            item.props.erase(RANDART_PROPS_KEY);
+            item.props.erase(KNOWN_PROPS_KEY);
+            item.flags &= ~ISFLAG_RANDART;
+            return (false);
+        }
     }
     while (randart_is_bad(item)
            || god_gift != GOD_NO_GOD && !_god_fits_artefact(god_gift, item));
