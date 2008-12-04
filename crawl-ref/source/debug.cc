@@ -480,8 +480,20 @@ void wizard_create_spec_monster_name()
 
     if (!err.empty())
     {
-        mpr(err.c_str());
-        return;
+        // Try for a partial match, but not if the user accidently entered
+        // only a few letters.
+        monster_type partial = get_monster_by_name(specs);
+        if (strlen(specs) >= 3 && partial != NON_MONSTER)
+        {
+            mlist.clear();
+            err = mlist.add_mons(mons_type_name(partial, DESC_PLAIN));
+        }
+
+        if (!err.empty())
+        {
+            mpr(err.c_str());
+            return;
+        }
     }
 
     mons_spec mspec = mlist.get_monster(0);
