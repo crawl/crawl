@@ -10,6 +10,7 @@
 #include "defines.h"
 #include "directn.h"
 #include "initfile.h"
+#include "itemname.h" // is_vowel()
 #include "libutil.h"
 #include "externs.h"
 #include "macro.h"
@@ -334,7 +335,17 @@ std::string pluralise(const std::string &name,
     }
     else if (ends_with(name, "y"))
     {
-        return name.substr(0, name.length() - 1) + "ies";
+        if (name == "y")
+            return ("ys");
+        // sensibilitiy -> sensibilities
+        else if (name[name.length() - 2] == 'i')
+            return name.substr(0, name.length() - 1) + "es";
+        // day -> days, boy -> boys, etc
+        else if (is_vowel(name[name.length() - 2]))
+            return name + "s";
+        // jelly -> jellies
+        else
+            return name.substr(0, name.length() - 1) + "ies";
     }
     else if (ends_with(name, "fe"))
     {
