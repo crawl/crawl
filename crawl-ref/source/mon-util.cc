@@ -4356,6 +4356,12 @@ std::string monsters::conj_verb(const std::string &verb) const
     if (verb == "are")
         return ("is");
 
+    if (ends_with(verb, "f") || ends_with(verb, "fe")
+        || ends_with(verb, "y"))
+    {
+        return (verb + "s");
+    }
+
     return (pluralise(verb));
 }
 
