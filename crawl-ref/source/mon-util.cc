@@ -1979,6 +1979,9 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
             break;
         }
     }
+    else
+    {
+    }
 
     // Some monsters might want the name of a different creature.
     int nametype = mon.type;
@@ -2067,6 +2070,20 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         && is_vowel(result[2]))
     {
         result.insert(1, "n");
+    }
+
+    if (mons_is_unique(mon.type) && starts_with(result, "the "))
+    {
+        switch (desc)
+        {
+        case DESC_CAP_THE:
+        case DESC_CAP_A:
+            result = upcase_first(result);
+            break;
+
+        default:
+            break;
+        }
     }
 
     // All done.
@@ -2975,6 +2992,9 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
         case MONS_TIAMAT:
         case MONS_ERESHKIGAL:
             gender = GENDER_FEMALE;
+            break;
+        case MONS_ROYAL_JELLY:
+            gender = GENDER_NEUTER;
             break;
         default:
             gender = GENDER_MALE;

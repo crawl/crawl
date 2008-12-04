@@ -804,7 +804,7 @@ ENDMAP
 NAME:    slime_pit
 PLACE:   Slime:6
 ORIENT:  encompass
-MONS:    royal jelly
+MONS:    the royal jelly
 MONS:    acid blob
 MONS:    great orb of eyes / nothing
 SUBST:   ' : ' .:1,  ' : ' x:1,  ' = .x

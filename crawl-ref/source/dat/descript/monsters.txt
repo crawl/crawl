@@ -1196,7 +1196,7 @@ rotting hulk
 
 A shambling undead creature, related to the ghoul.
 %%%%
-royal jelly
+the royal jelly
 
 A particularly rich and golden gelatinous thing.
 %%%%
