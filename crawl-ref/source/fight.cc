@@ -2263,10 +2263,10 @@ void melee_attack::chaos_affects_defender()
     const bool can_poly   = is_shifter || (defender->can_safely_mutate()
                                            && !immune);
 
-    int clone_chance   = can_clone ? 1 : 0;
-    int poly_chance    = can_poly  ? 1 : 0;
-    int poly_up_chance = can_poly  ? 1 : 0;
-    int shifter_chance = can_poly  ? 1 : 0;
+    int clone_chance   = can_clone        ? 1 : 0;
+    int poly_chance    = can_poly         ? 1 : 0;
+    int poly_up_chance = can_poly  && mon ? 1 : 0;
+    int shifter_chance = can_poly  && mon ? 1 : 0;
 
     if (is_chaotic)
     {
@@ -2391,7 +2391,7 @@ void melee_attack::chaos_affects_defender()
             beam.name = atk_name(DESC_NOCAP_THE);
 
         beam.thrower = (attacker->atype() == ACT_PLAYER) ? KILL_YOU
-                            : def->confused_by_you() ? KILL_YOU_CONF
+                            : atk->confused_by_you() ? KILL_YOU_CONF
                             : KILL_MON;
         beam.beam_source =
             (attacker->atype() == ACT_PLAYER) ? MHITYOU : monster_index(atk);
