@@ -33,6 +33,7 @@
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
 #include "spl-util.h"
@@ -1788,16 +1789,15 @@ bool make_book_level_randart(item_def &book, int level,
     god_type god;
     (void) origin_is_god_gift(book, &god);
 
-    const bool avoid_uncastable = (god != GOD_NO_GOD && god != GOD_XOM)
-                                  || origin_is_acquirement(book);
+    const bool completely_random =
+        god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
     const bool track_levels_had = origin_is_acquirement(book)
                                   || god == GOD_SIF_MUNA;
 
     if (level == -1)
     {
         int max_level =
-            avoid_uncastable ? std::min(9, you.get_experience_level())
-                             : 9;
+            completely_random ? 9 : std::min(9, you.get_experience_level());
 
         level = random_range(1, max_level);
 
@@ -1828,7 +1828,7 @@ bool make_book_level_randart(item_def &book, int level,
     int uncastable_discard = 0;
 
     std::vector<spell_type> spell_list;
-    _get_spell_list(spell_list, level, god, avoid_uncastable,
+    _get_spell_list(spell_list, level, god, !completely_random,
                     god_discard, uncastable_discard);
 
     if (spell_list.empty())
@@ -1877,7 +1877,7 @@ bool make_book_level_randart(item_def &book, int level,
     }
 
     std::vector<bool> spell_used(spell_list.size(), false);
-    std::vector<bool> avoid_memorised(spell_list.size(), avoid_uncastable);
+    std::vector<bool> avoid_memorised(spell_list.size(), !completely_random);
 
     spell_type chosen_spells[SPELLBOOK_SIZE];
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
@@ -1925,6 +1925,180 @@ bool make_book_level_randart(item_def &book, int level,
     return (true);
 }
 
+static bool _get_weighted_discs(bool completely_random, god_type god,
+                                int &disc1, int &disc2)
+{
+    // Eliminate disciplines that the god disapproves of or from which
+    // all spells are discarded.
+    std::vector<int> ok_discs;
+    std::vector<int> skills;
+    for (int i = 0; i < SPTYP_LAST_EXPONENT; i++)
+    {
+        int disc = 1 << i;
+        if (god_dislikes_spell_discipline(disc, god))
+            continue;
+        int junk1 = 0, junk2 = 0;
+
+        std::vector<spell_type> spell_list;
+        _get_spell_list(spell_list, disc, disc, god, !completely_random,
+                        junk1, junk2);
+
+        if(spell_list.empty())
+            continue;
+
+        ok_discs.push_back(disc);
+        skills.push_back(spell_type2skill(disc));
+    }
+
+    int num_discs = ok_discs.size();
+
+    ASSERT( num_discs > 0 );
+    if (num_discs == 0)
+    {
+        mpr("No valid disciplines with which to make a themed ranadart "
+            "spellbook.", MSGCH_ERROR);
+        return (false);
+    }
+
+    int skill_weights[SPTYP_LAST_EXPONENT];
+    int apt_weights[SPTYP_LAST_EXPONENT];
+
+    memset(skill_weights, 0, SPTYP_LAST_EXPONENT * sizeof(int));
+    memset(apt_weights,   0, SPTYP_LAST_EXPONENT * sizeof(int));
+
+    if (completely_random)
+    {
+        for (int i = 0; i < num_discs; i++)
+        {
+            skill_weights[i] = 1;
+            apt_weights[i]   = 1;
+        }
+    }
+    else
+    {
+        int total_skills = 0;
+        for (int i = 0; i < num_discs; i++)
+        {
+            int skill = skills[i];
+            skill_weights[i] = you.skills[skill];
+
+            int apt = species_skills(skill, you.species);
+            apt_weights[i] = (int) ( (1.0 / (double) apt) * 1000000.0);
+
+            total_skills += skill_weights[i];
+        }
+
+        if (total_skills == 0)
+        {
+            for (int i = 0; i < num_discs; i++)
+                skill_weights[i] = apt_weights[i];
+        }
+    }
+
+    do {
+        disc1 = ok_discs[choose_random_weighted(skill_weights,
+                                                skill_weights + num_discs)];
+        disc2 = ok_discs[choose_random_weighted(apt_weights,
+                                                apt_weights + num_discs)];
+    } while(disciplines_conflict(disc1, disc2));
+
+    return (true);
+}
+
+static void _get_weighted_spells(bool completely_random, god_type god,
+                                 int disc1, int disc2,
+                                 int num_spells, int max_levels,
+                                 const std::vector<spell_type> &spell_list,
+                                 spell_type chosen_spells[])
+{
+    ASSERT(num_spells <= (int) spell_list.size());
+    ASSERT(num_spells <= SPELLBOOK_SIZE && num_spells > 0);
+    ASSERT(max_levels > 0);
+
+    int spell_weights[NUM_SPELLS];
+    memset(spell_weights, 0, NUM_SPELLS * sizeof(int));
+
+    if (completely_random)
+    {
+        for (unsigned int i = 0; i < spell_list.size(); i++)
+        {
+            spell_type spl = spell_list[i];
+            if (god == GOD_XOM)
+                spell_weights[spl] = count_bits(get_spell_disciplines(spl));
+            else
+                spell_weights[spl] = 1;
+        }
+    }
+    else
+    {
+        const int Spc = you.skills[SK_SPELLCASTING];
+        for (unsigned int i = 0; i < spell_list.size(); i++)
+        {
+            spell_type spell = spell_list[i];
+            unsigned int disciplines = get_spell_disciplines(spell);
+
+            int d = 1;
+            if ((disciplines & disc1) && (disciplines & disc2))
+                d = 2;
+
+            int c = 1;
+            if (!you.seen_spell[spell])
+                c = 4;
+            else if (!_is_memorized(spell))
+                c = 2;
+
+            int total_skill = 0;
+            int num_skills  = 0;
+            for (int j = 0; j < SPTYP_LAST_EXPONENT; j++)
+            {
+                int disc = 1 << j;
+
+                if (disciplines & disc)
+                {
+                    total_skill += you.skills[spell_type2skill(disc)];
+                    num_skills++;
+                }
+            }
+            int w = 1;
+            if (num_skills > 0)
+                w = (2 + (total_skill / num_skills)) / 3;
+            w = std::max(1, w);
+
+            int l = 5 - abs(3 * spell_difficulty(spell) - Spc) / 7;
+
+            int weight = d * c * w * l;
+
+            ASSERT(weight > 0);
+            spell_weights[spell] = weight;
+        }
+    }
+
+    int book_pos    = 0;
+    int spells_left = spell_list.size();
+    while(book_pos < num_spells && max_levels > 0 && spells_left > 0)
+    {
+        spell_type spell =
+            (spell_type) choose_random_weighted(spell_weights,
+                                                spell_weights + NUM_SPELLS);
+        ASSERT(is_valid_spell(spell));
+        ASSERT(spell_weights[spell] > 0);
+
+        int levels = spell_difficulty(spell);
+
+        if (levels > max_levels)
+        {
+            spell_weights[spell] = 0;
+            spells_left--;
+            continue;
+        }
+        chosen_spells[book_pos++] = spell;
+        spell_weights[spell]      = 0;
+        max_levels               -= levels;
+        spells_left--;
+    }
+    ASSERT(book_pos > 0 && max_levels >= 0);
+}
+
 bool make_book_theme_randart(item_def &book, int disc1, int disc2,
                              int num_spells, int max_levels)
 {
@@ -1937,8 +2111,8 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     god_type god;
     (void) origin_is_god_gift(book, &god);
 
-    const bool avoid_uncastable = (god != GOD_NO_GOD && god != GOD_XOM)
-                                  || origin_is_acquirement(book);
+    const bool completely_random =
+        god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
 
     if (num_spells == -1)
         num_spells = SPELLBOOK_SIZE;
@@ -1950,39 +2124,8 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     if (disc1 == 0 && disc2 == 0)
     {
-        // Eliminate disciplines that the god disapproves of or from which
-        // all spells are discarded.
-        std::vector<int> ok_discs;
-        for (int i = 0; i < SPTYP_LAST_EXPONENT; i++)
-        {
-            int disc = 1 << i;
-            if (god_dislikes_spell_discipline(disc, god))
-                continue;
-            int junk1 = 0, junk2 = 0;
-
-            std::vector<spell_type> spell_list;
-            _get_spell_list(spell_list, disc, disc, god, avoid_uncastable,
-                            junk1, junk2);
-
-            if(spell_list.empty())
-                continue;
-
-            ok_discs.push_back(i);
-        }
-
-        ASSERT( !ok_discs.empty() );
-        if (ok_discs.empty())
-        {
-            mpr("No valid disciplines with which to make a themed ranadart "
-                "spellbook.", MSGCH_ERROR);
+        if (!_get_weighted_discs(completely_random, god, disc1, disc2))
             return (false);
-        }
-
-        do
-        {
-            disc1 = 1 << ok_discs[random2(ok_discs.size())];
-            disc2 = 1 << ok_discs[random2(ok_discs.size())];
-        } while(disciplines_conflict(disc1, disc2));
     }
     else if (disc2 == 0)
         disc2 = disc1;
@@ -1995,39 +2138,19 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     int uncastable_discard = 0;
 
     std::vector<spell_type> spell_list;
-    _get_spell_list(spell_list, disc1, disc2, god, avoid_uncastable,
+    _get_spell_list(spell_list, disc1, disc2, god, !completely_random,
                     god_discard, uncastable_discard);
 
     if (num_spells > (int) spell_list.size())
         num_spells = spell_list.size();
 
-    std::vector<bool> spell_used(spell_list.size(), false);
-
     spell_type chosen_spells[SPELLBOOK_SIZE];
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
-    {
         chosen_spells[i] = SPELL_NO_SPELL;
-    }
 
-    int book_pos = 0;
-    while (book_pos < num_spells && max_levels > 0)
-    {
-        int spell_pos = random2(spell_list.size());
+    _get_weighted_spells(completely_random, god, disc1, disc2,
+                         num_spells, max_levels, spell_list, chosen_spells);
 
-        if (spell_used[spell_pos])
-            continue;
-
-        spell_type spell = spell_list[spell_pos];
-        ASSERT(spell != SPELL_NO_SPELL);
-
-        int spell_level = spell_difficulty(spell);
-        if (spell_level > max_levels)
-            continue;
-
-        spell_used[spell_pos]     = true;
-        chosen_spells[book_pos++] = spell;
-        max_levels               -= spell_level;
-    }
     std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE,
               _compare_spells);
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
@@ -2046,10 +2169,10 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     if (god != GOD_NO_GOD)
     {
         name  = '"';
-        name += god_name(god, false) + "'s book";
+        name += god_name(god, false) + "'s book ";
     }
 
-    name += " of ";
+    name += "of ";
     name += spelltype_long_name(disc1);
 
     if (disc1 != disc2)
