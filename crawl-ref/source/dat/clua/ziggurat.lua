@@ -659,7 +659,7 @@ local function ziggurat_rectangle_builder(e)
   end
 
   ziggurat_stairs(entry, exit)
-  ziggurat_furnish(c, entry, exit)
+  ziggurat_furnish(dgn.point(cx, cy), entry, exit)
 end
 
 -- builds elliptic ziggurat maps

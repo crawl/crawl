@@ -34,6 +34,9 @@ point_metatable.__add = function (a, b)
                           if type(b) == "number" then
                             return dgn.point(a.x + b, a.y + b)
                           else
+                            if a == nil or b == nil then
+                              error("Nil points: " .. debug.traceback())
+                            end
                             return dgn.point(a.x + b.x, a.y + b.y)
                           end
                         end
