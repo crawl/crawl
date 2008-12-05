@@ -33,9 +33,6 @@
 #define RANDART_NAME_KEY   "randart_name"
 #define RANDART_APPEAR_KEY "randart_appearance"
 
-#define SPELL_LIST_KEY "spell_list"
-#define SPELLBOOK_SIZE 8
-
 static const char* _get_fixedart_name(const item_def &item);
 
 // The initial generation of a randart is very simple - it occurs in
@@ -1124,7 +1121,7 @@ void static _get_randart_properties(const item_def &item,
 
 static bool _init_randart_book(item_def &book)
 {
-    return make_book_level_randart(book, -1, 8);
+    return make_book_theme_randart(book);
 }
 
 static bool _init_randart_properties(item_def &item)
@@ -1476,6 +1473,20 @@ std::string get_artefact_name( const item_def &item )
     if (item.props.exists(RANDART_APPEAR_KEY))
         return item.props[RANDART_APPEAR_KEY].get_string();
     return artefact_name(item, false);
+}
+
+void set_randart_name( item_def &item, const std::string &name )
+{
+    ASSERT( is_random_artefact( item ));
+    ASSERT( !name.empty() );
+    item.props[RANDART_NAME_KEY].get_string() = name;
+}
+
+void set_randart_appearance( item_def &item, const std::string &appear )
+{
+    ASSERT( is_random_artefact( item ));
+    ASSERT( !appear.empty() );
+    item.props[RANDART_APPEAR_KEY].get_string() = appear;
 }
 
 int find_unrandart_index(const item_def& artefact)
@@ -2039,6 +2050,8 @@ bool make_item_randart( item_def &item )
         return (false);
 
     ASSERT(!item.props.exists( KNOWN_PROPS_KEY ));
+    ASSERT(!item.props.exists( RANDART_NAME_KEY ));
+    ASSERT(!item.props.exists( RANDART_APPEAR_KEY ));
     item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(RA_PROPERTIES);
     CrawlVector &known = item.props[KNOWN_PROPS_KEY];
     known.set_max_size(RA_PROPERTIES);
@@ -2069,12 +2082,17 @@ bool make_item_randart( item_def &item )
            || god_gift != GOD_NO_GOD && !_god_fits_artefact(god_gift, item));
 
     // get true artefact name
-    ASSERT(!item.props.exists( RANDART_NAME_KEY ));
-    item.props[RANDART_NAME_KEY].get_string() = artefact_name(item, false);
+    if (item.props.exists( RANDART_NAME_KEY ))
+        ASSERT(item.props[RANDART_NAME_KEY].get_type() == SV_STR);
+    else
+        item.props[RANDART_NAME_KEY].get_string() = artefact_name(item, false);
 
     // get artefact appearance
-    ASSERT(!item.props.exists( RANDART_APPEAR_KEY ));
-    item.props[RANDART_APPEAR_KEY].get_string() = artefact_name(item, true);
+    if (item.props.exists( RANDART_APPEAR_KEY ))
+        ASSERT(item.props[RANDART_APPEAR_KEY].get_type() == SV_STR);
+    else
+        item.props[RANDART_APPEAR_KEY].get_string() =
+            artefact_name(item, true);
 
     return (true);
 }

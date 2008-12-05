@@ -2246,15 +2246,37 @@ std::string god_name( god_type which_god, bool long_name )
     return "";
 }
 
-god_type string_to_god(const char *name)
+god_type string_to_god(const char *_name, bool exact)
 {
-    god_type god;
+    std::string target(_name);
+    trim_string(target);
+    lowercase(target);
+
+    if (target.empty())
+        return (GOD_NO_GOD);
+
+    int      num_partials = 0;
+    god_type partial      = GOD_NO_GOD;
     for (int i = 0; i < NUM_GODS; ++i)
     {
-        god = (god_type) i;
-        if (name == god_name(god, false))
+        god_type    god  = (god_type) i;
+        std::string name = lowercase_string(god_name(god, false));
+
+        if (name == target)
             return (god);
+
+        if (!exact && name.find(target) != std::string::npos)
+        {
+            // Return nothing for ambiguous partial names.
+            num_partials++;
+            if (num_partials > 1)
+                return (GOD_NO_GOD);
+            partial = god;
+        }
     }
+
+    if (!exact && num_partials == 1)
+        return (partial);
 
     return (GOD_NO_GOD);
 }
@@ -3448,12 +3470,12 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
     if (god == GOD_NO_GOD)
         return (false);
 
-    unsigned int flags   = get_spell_flags(spell);
-    unsigned int schools = get_spell_disciplines(spell);
+    unsigned int flags       = get_spell_flags(spell);
+    unsigned int disciplines = get_spell_disciplines(spell);
 
     if (is_good_god(god))
     {
-        if ((flags & SPFLAG_UNHOLY) || (schools & SPTYP_NECROMANCY))
+        if ((flags & SPFLAG_UNHOLY) || (disciplines & SPTYP_NECROMANCY))
             return (true);
     }
 
@@ -3467,7 +3489,7 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
     case GOD_SHINING_ONE:
         // TSO dislikes using poison, but is fine with curing it, resisting
         // it or destroying it.
-        if ((schools & SPTYP_POISON) && spell != SPELL_CURE_POISON_I
+        if ((disciplines & SPTYP_POISON) && spell != SPELL_CURE_POISON_I
             && spell != SPELL_CURE_POISON_II && spell != SPELL_RESIST_POISON
             && spell != SPELL_IGNITE_POISON)
         {
@@ -3485,7 +3507,7 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         break;
 
     case GOD_YREDELEMNUL:
-        if (schools & SPTYP_HOLY)
+        if (disciplines & SPTYP_HOLY)
             return (true);
         break;
 
@@ -3503,18 +3525,18 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
 
         // Things are more fun for Xom the less the player knows in
         // advance.
-        if (schools & SPTYP_DIVINATION)
+        if (disciplines & SPTYP_DIVINATION)
             return (true);
 
         // Holy spells are probably too useful for Xom to find them
         // interesting.
-        if (schools & SPTYP_HOLY)
+        if (disciplines & SPTYP_HOLY)
             return (true);
         break;
 
     case GOD_ELYVILON:
-        // A peaceful god of healing wouldn't like combat spells.
-        if (schools & SPTYP_CONJURATION)
+        // A peaceful god of healing wouldn't like combat spells.  All
+        if (disciplines & SPTYP_CONJURATION)
             return (true);
 
         // Also doesn't like battle spells of the non-conjuration type.
@@ -3529,27 +3551,29 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
     return (false);
 }
 
-bool god_dislikes_spell_school(int school, god_type god)
+bool god_dislikes_spell_discipline(int discipline, god_type god)
 {
+    ASSERT(discipline < (1 << (SPTYP_LAST_EXPONENT + 1)));
+
     if (god == GOD_NO_GOD)
         return (false);
 
-    if (is_good_god(god) && school == SPTYP_NECROMANCY)
+    if (is_good_god(god) && (discipline & SPTYP_NECROMANCY))
         return (true);
 
     switch(god)
     {
     case GOD_SHINING_ONE:
-        return (school == SPTYP_POISON);
+        return (discipline & SPTYP_POISON);
 
     case GOD_YREDELEMNUL:
-        return (school == SPTYP_HOLY);
+        return (discipline & SPTYP_HOLY);
 
     case GOD_XOM:
-        return (school == SPTYP_DIVINATION || school == SPTYP_HOLY);
+        return (discipline & (SPTYP_DIVINATION | SPTYP_HOLY));
 
     case GOD_ELYVILON:
-        return (school == SPTYP_CONJURATION);
+        return (discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING));
 
     default:
         break;

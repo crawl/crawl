@@ -38,6 +38,7 @@
 #include "randart.h"
 #include "religion.h"
 #include "skills2.h"
+#include "spl-book.h"
 #include "state.h"
 #include "stuff.h"
 #include "view.h"
@@ -82,6 +83,13 @@ std::string item_def::name(description_level_type descrip,
 {
     if (descrip == DESC_NONE)
         return ("");
+
+    if (base_type == OBJ_BOOKS && (ident || item_type_known(*this))
+        && book_has_title(*this))
+    {
+        if (descrip != DESC_DBNAME)
+            descrip = DESC_PLAIN;
+    }
 
     const bool is_artefact = (is_fixed_artefact( *this )
                               || (is_random_artefact( *this )));
@@ -1469,7 +1477,12 @@ std::string item_def::name_aux( description_level_type desc,
         if (is_random_artefact( *this ) && !dbname && !basename)
         {
             if (know_type)
-                buff << "book" << get_artefact_name(*this);
+            {
+                if (book_has_title(*this))
+                    buff << get_artefact_name(*this);
+                else
+                    buff << "book " << get_artefact_name(*this);
+            }
             else
                 buff << get_artefact_name(*this) << "book";
             break;

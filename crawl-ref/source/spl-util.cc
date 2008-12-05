@@ -390,6 +390,17 @@ int count_bits(unsigned int bits)
     return (c);
 }
 
+// NOTE: Assumes that any single spell won't belong to conflicting
+// disciplines.
+bool disciplines_conflict(unsigned int disc1, unsigned int disc2)
+{
+    const unsigned int combined = disc1 | disc2;
+
+    return (   (combined & SPTYP_EARTH) && (combined & SPTYP_AIR)
+            || (combined & SPTYP_FIRE)  && (combined & SPTYP_ICE)
+            || (combined & SPTYP_HOLY)  && (combined & SPTYP_NECROMANCY));
+}
+
 const char *spell_title(spell_type spell)
 {
     return (_seekspell(spell)->title);

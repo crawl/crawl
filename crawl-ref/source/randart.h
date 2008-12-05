@@ -36,6 +36,12 @@ void set_unique_item_status( object_class_type base_type, int type,
 std::string get_artefact_name( const item_def &item );
 
 /* ***********************************************************************
+ * called from: spl-book
+ * *********************************************************************** */
+void set_randart_name( item_def &item, const std::string &name );
+void set_randart_appearance( item_def &item, const std::string &appear );
+
+/* ***********************************************************************
  * called from: effects
  * *********************************************************************** */
 std::string artefact_name( const item_def &item, bool appearance = false );

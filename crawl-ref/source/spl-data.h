@@ -566,7 +566,7 @@
 {
     SPELL_OLGREBS_TOXIC_RADIANCE, "Olgreb's Toxic Radiance",
      SPTYP_POISON,
-     SPFLAG_AREA,
+     SPFLAG_AREA | SPFLAG_BATTLE,
      4,
      0,
      -1, -1,
@@ -721,8 +721,8 @@
 
 {
     SPELL_SUMMON_SMALL_MAMMALS, "Summon Small Mammals",
-     SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPTYP_SUMMONING ,
+     SPFLAG_BATTLE,
      1,
      80,
      -1, -1,
@@ -746,7 +746,7 @@
 {
     SPELL_SUMMON_SCORPIONS, "Summon Scorpions",
      SPTYP_SUMMONING | SPTYP_POISON,
-     SPFLAG_NONE,
+     SPFLAG_BATTLE,
      4,
      200,
      -1, -1,
@@ -868,7 +868,7 @@
 {
     SPELL_SUMMON_SWARM, "Summon Swarm",
      SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_BATTLE,
      6,
      200,
      -1, -1,
@@ -880,7 +880,7 @@
 {
     SPELL_SUMMON_HORRIBLE_THINGS, "Summon Horrible Things",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE,
      8,
      200,
      -1, -1,
@@ -999,7 +999,7 @@
 {
     SPELL_SUMMON_WRAITHS, "Summon Wraiths",
      SPTYP_NECROMANCY | SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_BATTLE,
      7,
      200,
      -1, -1,
@@ -1059,7 +1059,7 @@
 {
     SPELL_SUMMON_ELEMENTAL, "Summon Elemental",
      SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_BATTLE,
      4,
      200,
      -1, -1,
@@ -1095,7 +1095,7 @@
 {
     SPELL_SUMMON_ICE_BEAST, "Summon Ice Beast",
      SPTYP_ICE | SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_BATTLE,
      5,
      200,
      -1, -1,
@@ -1119,7 +1119,7 @@
 {
     SPELL_CALL_IMP, "Call Imp",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE,
      3,
      200,
      -1, -1,
@@ -1384,7 +1384,7 @@
 {
     SPELL_SUMMON_DEMON, "Summon Demon",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE,
      5,
      200,
      -1, -1,
@@ -1396,7 +1396,7 @@
 {
     SPELL_DEMONIC_HORDE, "Demonic Horde",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE,
      6,
      200,
      -1, -1,
@@ -1408,7 +1408,7 @@
 {
     SPELL_SUMMON_GREATER_DEMON, "Summon Greater Demon",
      SPTYP_SUMMONING,
-     SPFLAG_UNHOLY,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE,
      7,
      200,
      -1, -1,
@@ -2009,7 +2009,7 @@
 {
     SPELL_STICKS_TO_SNAKES, "Sticks to Snakes",
      SPTYP_TRANSMIGRATION | SPTYP_SUMMONING,
-     SPFLAG_NONE,
+     SPFLAG_BATTLE,
      2,
      200,
      -1, -1,
@@ -2405,7 +2405,7 @@
 {
     SPELL_PORTAL_PROJECTILE, "Portal Projectile",
      SPTYP_TRANSLOCATION,
-     SPFLAG_TARGET,
+     SPFLAG_TARGET | SPFLAG_BATTLE,
      2,
      50,
      4, 8,

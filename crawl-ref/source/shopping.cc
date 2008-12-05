@@ -1610,7 +1610,28 @@ unsigned int item_value( item_def item, bool ident )
     case OBJ_BOOKS:
         valued = 150;
         if (item_type_known(item))
+        {
+            int rarity = 0;
+            if (is_random_artefact(item))
+            {
+                // Consider spellbook as rare as its rarest spell.
+                // NOTE: This probably undervalues a book if it contains
+                // lots of rare spells.
+                for (int i = 0; i < SPELLBOOK_SIZE; i++)
+                {
+                    spell_type spell = which_spell_in_book(item, i);
+                    if (spell == SPELL_NO_SPELL)
+                        continue;
+
+                    if (rarity > spell_rarity(spell))
+                        rarity = spell_rarity(spell);
+                }
+            }
+            else
+                rarity = book_rarity(item.sub_type);
+
             valued += book_rarity(item.sub_type) * 50;
+        }
         break;
 
     case OBJ_STAVES:

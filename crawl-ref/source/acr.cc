@@ -552,7 +552,22 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             item.flags  &= ~ISFLAG_RANDART;
             item.props.clear();
         }
-  
+
+        mpr("Fake item as gift from which god (ENTER to leave alone): ",
+            MSGCH_PROMPT);
+        char name[80]; 
+        if (!cancelable_get_line( name, sizeof( name ) ) && name[0])
+        {
+            god_type god = string_to_god(name, false);
+            if (god == GOD_NO_GOD)
+               mpr("No such god, leaving item origin alone.");
+            else
+            { 
+               mprf("God gift of %s.", god_name(god, false).c_str());
+               item.orig_monnum = -god;
+            }
+        }
+ 
         if (!make_item_randart( item ))
         {
             mpr("Failed to turn item into randart.");
@@ -3812,6 +3827,7 @@ static bool _initialise(void)
 
     init_feat_desc_cache();
     init_spell_name_cache();
+    init_spell_rarities();
     init_item_name_cache();
 
     cio_init();

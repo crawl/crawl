@@ -55,7 +55,7 @@ bool is_priest_god(god_type god);
 void simple_god_message(const char *event, god_type which_deity = you.religion);
 int piety_breakpoint(int i);
 std::string god_name(god_type which_god, bool long_name = false);
-god_type string_to_god(const char *name);
+god_type string_to_god(const char *name, bool exact = true);
 
 std::string get_god_powers(god_type which_god);
 std::string get_god_likes(god_type which_god, bool verbose = false);
@@ -109,8 +109,11 @@ bool is_chaotic_item(const item_def& item);
 bool good_god_dislikes_item_handling(const item_def &item);
 bool god_dislikes_item_handling(const item_def &item);
 
+// NOTE: As of now, these two functions only say if a god won't give a
+// spell/school when giving a gift.
 bool god_dislikes_spell_type(spell_type spell, god_type god = you.religion);
-bool god_dislikes_spell_school(int school, god_type god = you.religion);
+bool god_dislikes_spell_discipline(int discipline,
+                                   god_type god = you.religion);
 
 bool trog_burn_spellbooks();
 bool ely_destroy_weapons();

@@ -94,6 +94,7 @@ unsigned int get_spell_flags( spell_type which_spell );
 
 bool spell_typematch(spell_type which_spell, unsigned int which_discipline);
 unsigned int get_spell_disciplines( spell_type which_spell );
+bool disciplines_conflict(unsigned int disc1, unsigned int disc2);
 int count_bits( unsigned int bits );
 
 const char *spell_title(spell_type which_spell);

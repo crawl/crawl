@@ -13,6 +13,8 @@
 #include "externs.h"
 #include "FixVec.h"
 
+#define SPELLBOOK_SIZE 8
+
 class formatted_string;
 
 enum read_book_action_type
@@ -26,8 +28,9 @@ enum read_book_action_type
 /* ***********************************************************************
  * called from: dungeon - effects - shopping
  * *********************************************************************** */
-int book_rarity(unsigned char which_book);
-
+int  book_rarity(unsigned char which_book);
+int  spell_rarity(spell_type which_spell);
+void init_spell_rarities();
 
 bool is_valid_spell_in_book( const item_def &book, int spell );
 bool is_valid_spell_in_book( int splbook, int spell );
@@ -68,6 +71,8 @@ int rod_shield_leakage();
 bool make_book_level_randart(item_def &book, int level = -1,
                              int num_spells = -1);
 bool make_book_theme_randart(item_def &book,
-                             int school_one = 0, int school_two = 0,
+                             int disc1 = 0, int disc2 = 0,
                              int num_spells = -1, int max_levels = -1);
+
+bool book_has_title(const item_def &book);
 #endif

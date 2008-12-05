@@ -47,7 +47,6 @@
 #define RANDART_BOOK_TYPE_LEVEL "level"
 #define RANDART_BOOK_TYPE_THEME "theme"
 
-#define SPELLBOOK_SIZE 8
 #define NUMBER_SPELLBOOKS 61
 
 static spell_type spellbook_template_array[NUMBER_SPELLBOOKS][SPELLBOOK_SIZE] =
@@ -961,6 +960,60 @@ int book_rarity(unsigned char which_book)
     }
 }
 
+static unsigned char _lowest_rarity[NUM_SPELLS];
+
+void init_spell_rarities()
+{
+    for (int i = 0; i < NUM_SPELLS; i++)
+        _lowest_rarity[i] = 255;
+
+    for (int i = 0; i < NUM_BOOKS; i++)
+    {
+        const int rarity = book_rarity(i);
+
+        // Manuals, books of destruction, books only created as gifts
+        // from specific gods, and the unused Book of Healing.
+        if (rarity >= 20)
+            continue;
+
+        for (int j = 0; j < SPELLBOOK_SIZE; j++)
+        {
+            spell_type spell = which_spell_in_book(i, j);
+            if (spell == SPELL_NO_SPELL)
+                continue;
+
+#ifdef DEBUG
+            int unsigned flags = get_spell_flags(spell);
+
+            if (flags & (SPFLAG_MONSTER | SPFLAG_TESTING))
+            {
+                item_def item;
+                item.base_type = OBJ_BOOKS;
+                item.sub_type  = i;
+
+                end(1, false, "Spellbook '%s' contains invalid spell "
+                             "'%s'",
+                    item.name(DESC_PLAIN, false, true).c_str(),
+                    spell_title(spell));
+            }
+#endif
+
+            if (rarity < _lowest_rarity[spell])
+                _lowest_rarity[spell] = rarity;
+        }
+    }
+}
+
+int spell_rarity(spell_type which_spell)
+{
+    const int rarity = _lowest_rarity[which_spell];
+
+    if (rarity == 255)
+        return (-1);
+
+    return (rarity);
+}
+
 bool is_valid_spell_in_book( const item_def &book, int spell )
 {
     return which_spell_in_book(book, spell) != SPELL_NO_SPELL;
@@ -1646,6 +1699,83 @@ static bool _is_memorized(spell_type spell)
     return (false);
 }
 
+static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
+                            unsigned int disc1, unsigned int disc2,
+                            god_type god, bool avoid_uncastable,
+                            int &god_discard, int &uncastable_discard)
+{
+    for (int i = 0; i < NUM_SPELLS; i++)
+    {
+        const spell_type spell = (spell_type) i;
+
+        if (!is_valid_spell(spell))
+            continue;
+
+        // Only use spells available in books you might find laying about
+        // the dungeon.
+        if (spell_rarity(spell) == -1)
+            continue;
+
+        const unsigned int disciplines = get_spell_disciplines(spell);
+        if (level != -1)
+        {
+            if (spell_difficulty(spell) != level)
+                continue;
+        }
+        else if (!((disciplines & disc1) || (disciplines & disc2))
+                 || disciplines_conflict(disc1, disciplines)
+                 || disciplines_conflict(disc2, disciplines))
+        {
+            continue;
+        }
+
+        // Only wizards gets spells still under development.
+        const unsigned int flags = get_spell_flags(spell);
+        if (flags & SPFLAG_DEVEL)
+        {
+#ifdef WIZARD
+            if (!you.wizard)
+                continue;
+#else
+            continue;
+#endif
+        }
+
+        if (avoid_uncastable && undead_cannot_memorise(spell, you.is_undead))
+        {
+            uncastable_discard++;
+            continue;
+        }
+
+        if (god_dislikes_spell_type(spell, god))
+        {
+            god_discard++;
+            continue;
+        }
+
+        // Passed all tests.
+        spell_list.push_back(spell);
+    }
+}
+
+static void _get_spell_list(std::vector<spell_type> &spell_list,
+                            unsigned int disc1, unsigned int disc2,
+                            god_type god, bool avoid_uncastable,
+                            int &god_discard, int &uncastable_discard)
+{
+    _get_spell_list(spell_list, -1, disc1, disc2,
+                    god, avoid_uncastable, god_discard, uncastable_discard);
+}
+
+static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
+                            god_type god, bool avoid_uncastable,
+                            int &god_discard, int &uncastable_discard)
+{
+    _get_spell_list(spell_list, level, SPTYP_NONE, SPTYP_NONE,
+                    god, avoid_uncastable, god_discard, uncastable_discard);
+}
+
+
 bool make_book_level_randart(item_def &book, int level,
                              int num_spells)
 {
@@ -1694,61 +1824,12 @@ bool make_book_level_randart(item_def &book, int level,
         num_spells = SPELLBOOK_SIZE;
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
 
-
     int god_discard        = 0;
     int uncastable_discard = 0;
 
     std::vector<spell_type> spell_list;
-    for (int i = 0; i < NUM_SPELLS; i++)
-    {
-        const spell_type spell = (spell_type) i;
-
-        if (!is_valid_spell(spell))
-            continue;
-
-        if (spell_difficulty(spell) != level)
-            continue;
-
-        const unsigned int flags   = get_spell_flags(spell);
-        const unsigned int schools = get_spell_disciplines(spell);
-
-        // Don't include schoolless spells, like Smiting.
-        if (schools == 0)
-            continue;
-
-        // Holy spells don't show up in books.
-        if (schools & SPTYP_HOLY)
-            continue;
-
-        if (flags & (SPFLAG_MONSTER | SPFLAG_CARD | SPFLAG_TESTING))
-            continue;
-
-        // Only wizards gets spells still under development.
-        if (flags & SPFLAG_DEVEL)
-        {
-#ifdef WIZARD
-            if (!you.wizard)
-                continue;
-#else
-            continue;
-#endif
-        }
-
-        if (avoid_uncastable && undead_cannot_memorise(spell, you.is_undead))
-        {
-            uncastable_discard++;
-            continue;
-        }
-
-        if (god_dislikes_spell_type(spell, god))
-        {
-            god_discard++;
-            continue;
-        }
-
-        // Passed all tests.
-        spell_list.push_back(spell);
-    }
+    _get_spell_list(spell_list, level, god, avoid_uncastable,
+                    god_discard, uncastable_discard);
 
     if (spell_list.empty())
     {
@@ -1775,6 +1856,11 @@ bool make_book_level_randart(item_def &book, int level,
 
     if (num_spells > (int) spell_list.size())
     {
+        // Some gods (Elyvilon) dislike a lot of the higher level spells,
+        // so try a lower level.
+        if (god != GOD_NO_GOD && god != GOD_XOM)
+            return make_book_level_randart(book, level - 1, num_spells);
+
         num_spells = spell_list.size();
 #if DEBUG || DEBUG_DIAGNOSTICS
         // Not many level 8 or 9 spells
@@ -1791,7 +1877,7 @@ bool make_book_level_randart(item_def &book, int level,
     }
 
     std::vector<bool> spell_used(spell_list.size(), false);
-    std::vector<bool> avoid_memorised(spell_list.size(), true);
+    std::vector<bool> avoid_memorised(spell_list.size(), avoid_uncastable);
 
     spell_type chosen_spells[SPELLBOOK_SIZE];
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
@@ -1825,8 +1911,7 @@ bool make_book_level_randart(item_def &book, int level,
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
     CrawlHashTable &props = book.props;
-    if (!props.exists( SPELL_LIST_KEY ))
-        props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
+    props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
 
     CrawlVector &spell_vec = props[SPELL_LIST_KEY];
     spell_vec.set_max_size(SPELLBOOK_SIZE);
@@ -1838,4 +1923,155 @@ bool make_book_level_randart(item_def &book, int level,
         you.attribute[ATTR_RND_LVL_BOOKS] |= (1 << level);
 
     return (true);
+}
+
+bool make_book_theme_randart(item_def &book, int disc1, int disc2,
+                             int num_spells, int max_levels)
+{
+    ASSERT(book.base_type == OBJ_BOOKS);
+    ASSERT(book.book_number()    != BOOK_MANUAL
+           && book.book_number() != BOOK_DESTRUCTION);
+    ASSERT(is_random_artefact(book));
+    ASSERT(!book.props.exists(SPELL_LIST_KEY));
+
+    god_type god;
+    (void) origin_is_god_gift(book, &god);
+
+    const bool avoid_uncastable = (god != GOD_NO_GOD && god != GOD_XOM)
+                                  || origin_is_acquirement(book);
+
+    if (num_spells == -1)
+        num_spells = SPELLBOOK_SIZE;
+    ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
+
+    if (max_levels == -1)
+        max_levels = INT_MAX;
+    ASSERT(max_levels > 0);
+
+    if (disc1 == 0 && disc2 == 0)
+    {
+        // Eliminate disciplines that the god disapproves of or from which
+        // all spells are discarded.
+        std::vector<int> ok_discs;
+        for (int i = 0; i < SPTYP_LAST_EXPONENT; i++)
+        {
+            int disc = 1 << i;
+            if (god_dislikes_spell_discipline(disc, god))
+                continue;
+            int junk1 = 0, junk2 = 0;
+
+            std::vector<spell_type> spell_list;
+            _get_spell_list(spell_list, disc, disc, god, avoid_uncastable,
+                            junk1, junk2);
+
+            if(spell_list.empty())
+                continue;
+
+            ok_discs.push_back(i);
+        }
+
+        ASSERT( !ok_discs.empty() );
+        if (ok_discs.empty())
+        {
+            mpr("No valid disciplines with which to make a themed ranadart "
+                "spellbook.", MSGCH_ERROR);
+            return (false);
+        }
+
+        do
+        {
+            disc1 = 1 << ok_discs[random2(ok_discs.size())];
+            disc2 = 1 << ok_discs[random2(ok_discs.size())];
+        } while(disciplines_conflict(disc1, disc2));
+    }
+    else if (disc2 == 0)
+        disc2 = disc1;
+
+    ASSERT(disc1 < (1 << (SPTYP_LAST_EXPONENT + 1)));
+    ASSERT(disc2 < (1 << (SPTYP_LAST_EXPONENT + 1)));
+    ASSERT(count_bits(disc1) == 1 && count_bits(disc2) == 1);
+
+    int god_discard        = 0;
+    int uncastable_discard = 0;
+
+    std::vector<spell_type> spell_list;
+    _get_spell_list(spell_list, disc1, disc2, god, avoid_uncastable,
+                    god_discard, uncastable_discard);
+
+    if (num_spells > (int) spell_list.size())
+        num_spells = spell_list.size();
+
+    std::vector<bool> spell_used(spell_list.size(), false);
+
+    spell_type chosen_spells[SPELLBOOK_SIZE];
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    {
+        chosen_spells[i] = SPELL_NO_SPELL;
+    }
+
+    int book_pos = 0;
+    while (book_pos < num_spells && max_levels > 0)
+    {
+        int spell_pos = random2(spell_list.size());
+
+        if (spell_used[spell_pos])
+            continue;
+
+        spell_type spell = spell_list[spell_pos];
+        ASSERT(spell != SPELL_NO_SPELL);
+
+        int spell_level = spell_difficulty(spell);
+        if (spell_level > max_levels)
+            continue;
+
+        spell_used[spell_pos]     = true;
+        chosen_spells[book_pos++] = spell;
+        max_levels               -= spell_level;
+    }
+    std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE,
+              _compare_spells);
+    ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
+
+    CrawlHashTable &props = book.props;
+    props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
+
+    CrawlVector &spell_vec = props[SPELL_LIST_KEY];
+    spell_vec.set_max_size(SPELLBOOK_SIZE);
+
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+        spell_vec[i] = (long) chosen_spells[i];
+
+    std::string name;
+
+    if (god != GOD_NO_GOD)
+    {
+        name  = '"';
+        name += god_name(god, false) + "'s book";
+    }
+
+    name += " of ";
+    name += spelltype_long_name(disc1);
+
+    if (disc1 != disc2)
+    {
+        name += " and ";
+        name += spelltype_long_name(disc2);
+    }
+
+    if (god != GOD_NO_GOD)
+        name += '"';
+
+    set_randart_name(book, name);
+
+    return (true);
+}
+
+bool book_has_title(const item_def &book)
+{
+    ASSERT(book.base_type == OBJ_BOOKS);
+
+    if (!is_artefact(book))
+        return (false);
+
+    return (get_artefact_name(book)[0] == '"');
 }
