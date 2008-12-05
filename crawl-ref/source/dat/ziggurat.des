@@ -38,27 +38,6 @@ ENDMAP
 
 NAME:    enter_ziggurat_b
 DEPTH:   D:20-27, Zot, Pan
-MONS:    lich / ancient lich
-MONS:    angel / daeva
-MONS:    eye of draining / eye of devastation / giant eyeball / \
-         great orb of eyes / shining eye
-SHUFFLE: 123
-SUBST:   1=1..., 2=2.
-: ziggurat_portal(_G)
-MAP
-    ...
-   ..n..
-  ..nnn..
- ..nn1nn..
-..nn1O1nn..
- ..nn1nn..
-  ..nnn..
-   ..n..
-    ...
-ENDMAP
-
-NAME:    enter_ziggurat_c
-DEPTH:   D:20-27, Zot, Pan
 TAGS:    no_pool_fixup
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
@@ -78,6 +57,47 @@ MAP
    ..'..
 ENDMAP
 
+NAME:    enter_ziggurat_c
+DEPTH:   D:20-27, Zot, Pan
+MONS:    lich / ancient lich
+MONS:    angel / daeva
+MONS:    eye of draining / eye of devastation / giant eyeball / \
+         great orb of eyes / shining eye
+SHUFFLE: 123.
+SUBST:   1=1..., 2=2.
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..m..
+  ..mmm..
+ ..mm1mm..
+..mm1O1nn..
+ ..mm1mm..
+  ..mmm..
+   ..m..
+    ...
+ENDMAP
+
+NAME:    enter_ziggurat_d
+DEPTH:   D:20-27, Zot, Pan
+MONS:    lich / ancient lich
+MONS:    angel / daeva
+MONS:    eye of draining / eye of devastation / giant eyeball / \
+         great orb of eyes / shining eye
+SHUFFLE: 123.
+SUBST:   1=1..., 2=2.
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..n..
+  .nnnnn.
+ ..n.1.n..
+..nn1O1nn..
+ ..n.1.n..
+  .nnnnn.
+   ..n..
+    ...
+ENDMAP
 
 #######################################################################
 # Pillars for ziggurats.

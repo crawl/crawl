@@ -611,7 +611,7 @@ local function ziggurat_furnish(centre, entry, exit)
 
   local function needs_colour(p)
     return not dgn.in_vault(p.x, p.y)
-      and dgn.grid(p.x, p.y) == dgn.fnum("stone_wall")
+      and dgn.grid(p.x, p.y) == dgn.fnum("permarock_wall")
   end
 
   dgn.colour_map(needs_colour, zig().colour)
@@ -620,7 +620,7 @@ end
 -- builds ziggurat maps consisting of two overimposed rectangles
 local function ziggurat_rectangle_builder(e)
   local grid = dgn.grid
-  dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "stone_wall")
+  dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
 
   local area = map_area()
   area = math.floor(area*3/4)
@@ -669,7 +669,7 @@ end
 -- a=b*3/2 for zig_exc=100
 local function ziggurat_ellipse_builder(e)
   local grid = dgn.grid
-  dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "stone_wall")
+  dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
 
   local zig_exc = zig().zig_exc
 
@@ -703,7 +703,7 @@ end
 -- builds hexagonal ziggurat maps
 local function ziggurat_hexagon_builder(e)
   local grid = dgn.grid
-  dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "stone_wall")
+  dgn.fill_area(0, 0, dgn.GXM - 1, dgn.GYM - 1, "permarock_wall")
 
   local zig_exc = zig().zig_exc
 
