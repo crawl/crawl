@@ -84,13 +84,6 @@ std::string item_def::name(description_level_type descrip,
     if (descrip == DESC_NONE)
         return ("");
 
-    if (base_type == OBJ_BOOKS && (ident || item_type_known(*this))
-        && book_has_title(*this))
-    {
-        if (descrip != DESC_DBNAME)
-            descrip = DESC_PLAIN;
-    }
-
     const bool is_artefact = (is_fixed_artefact( *this )
                               || (is_random_artefact( *this )));
 
@@ -113,6 +106,13 @@ std::string item_def::name(description_level_type descrip,
         }
         else
             descrip = DESC_CAP_A;
+    }
+
+    if (base_type == OBJ_BOOKS && (ident || item_type_known(*this))
+        && book_has_title(*this))
+    {
+        if (descrip != DESC_DBNAME)
+            descrip = DESC_PLAIN;
     }
 
     if (terse && descrip != DESC_DBNAME)
