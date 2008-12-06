@@ -97,8 +97,8 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
 
     MAX_PAN_LORD_BRANDS = SPWPN_RETURNING,
 
-    SPWPN_CONFUSE,
     SPWPN_CHAOS,
+    SPWPN_CONFUSE,                     //   20
     SPWPN_RANDART_I = 25,              //   25
     SPWPN_RANDART_II,
     SPWPN_RANDART_III,

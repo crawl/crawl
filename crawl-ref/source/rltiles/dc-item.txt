@@ -175,6 +175,7 @@ i-pain BRAND_PAIN
 i-distortion BRAND_DISTORTION
 i-reaching BRAND_REACHING
 i-returning BRAND_RETURNING
+i-chaos BRAND_CHAOS
 i-venom BRAND_POISONED
 i-curare BRAND_CURARE
 %rim 1
