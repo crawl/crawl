@@ -2468,8 +2468,6 @@ bool melee_attack::apply_damage_brand()
     else
         brand = damage_brand;
 
-    mprf(MSGCH_DIAGNOSTICS, "brand = %d", brand);
-
     switch (brand)
     {
     case SPWPN_FLAMING:
