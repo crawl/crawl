@@ -2994,7 +2994,7 @@ void tilep_job_default(int job, int gender, int *parts)
         case JOB_HEALER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_WHITE;
             parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_WHITE;
-            parts[TILEP_PART_HAND1] = 38; // ?
+            parts[TILEP_PART_HAND1] = TILEP_HAND1_DAGGER;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_HEALER;
             break;
@@ -3075,7 +3075,7 @@ void tilep_job_default(int job, int gender, int *parts)
         case JOB_WARPER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
             parts[TILEP_PART_HELM]  = TILEP_HELM_GANDALF;
-            parts[TILEP_PART_HAND1] = 42;
+            parts[TILEP_PART_HAND1] = TILEP_HAND1_SARUMAN;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_WHITE;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             parts[TILEP_PART_CLOAK] = TILEP_CLOAK_RED;
@@ -3085,13 +3085,13 @@ void tilep_job_default(int job, int gender, int *parts)
             parts[TILEP_PART_BODY]  = TILEP_BODY_LEATHER_ARMOUR2;
             parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_BROWN;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_BOW;
-            parts[TILEP_PART_ARM]   = 7;
+            parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_BROWN;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN;
             break;
 
         case JOB_GLADIATOR:
             parts[TILEP_PART_HAND1] = TILEP_SHOW_EQUIP;
-            parts[TILEP_PART_HAND2] = 10;
+            parts[TILEP_PART_HAND2] = TILEP_HAND2_SHIELD_ROUND2;
 
             if (gender == TILEP_GENDER_MALE)
             {
@@ -3118,7 +3118,7 @@ void tilep_job_default(int job, int gender, int *parts)
             parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_SHORT_BROWN;
             parts[TILEP_PART_HAND1] = TILEP_SHOW_EQUIP;
             parts[TILEP_PART_HAND2] = TILEP_SHOW_EQUIP;
-            parts[TILEP_PART_BOOTS] = 11;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN3;
             break;
     }
 }
