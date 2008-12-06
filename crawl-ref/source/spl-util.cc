@@ -859,7 +859,7 @@ int spell_skill2type(unsigned int skill)
     case SPTYP_HOLY:
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "spell_skill2type: called with skill %u",
-             spelltype );
+             skill);
 #endif
         return (-1);
     }
