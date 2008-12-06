@@ -1852,7 +1852,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
 void melee_attack::_monster_die(monsters* monster, killer_type killer,
                                 int killer_index)
 {
-    const bool chaos = damage_brand == SPWPN_CHAOS;
+    const bool chaos = (damage_brand == SPWPN_CHAOS);
 
     // Copy defender before it gets reset by monster_die()
     monsters* def_copy = NULL;
@@ -2431,7 +2431,7 @@ int melee_attack::random_chaos_brand()
     int brands[] = {SPWPN_FLAMING, SPWPN_FREEZING, SPWPN_ELECTROCUTION,
                     SPWPN_VENOM, SPWPN_DRAINING, SPWPN_VAMPIRICISM,
                     SPWPN_PAIN, SPWPN_DISTORTION, SPWPN_CONFUSE,
-                    SPWPN_CHAOS};
+                    SPWPN_CHAOS, SPWPN_NORMAL};
     return (RANDOM_ELEMENT(brands));
 }
 
@@ -2448,11 +2448,12 @@ bool melee_attack::apply_damage_brand()
     bool brand_was_known = false;
 
     if (weapon)
+    {
         if (is_random_artefact(*weapon))
             brand_was_known = randart_known_wpn_property(*weapon, RAP_BRAND);
         else
             brand_was_known = item_type_known(*weapon);
-
+    }
     bool ret = false;
 
     // Monster resistance to the brand.
@@ -2466,6 +2467,8 @@ bool melee_attack::apply_damage_brand()
         brand = random_chaos_brand();
     else
         brand = damage_brand;
+
+    mprf(MSGCH_DIAGNOSTICS, "brand = %d", brand);
 
     switch (brand)
     {
@@ -2703,11 +2706,12 @@ bool melee_attack::apply_damage_brand()
     }
 
     if (attacker->atype() == ACT_PLAYER && damage_brand == SPWPN_CHAOS)
+    {
         // If your god objects to using chaos then it makes the
         // brand obvious.
         if (did_god_conduct(DID_CHAOS, 2 + random2(3), brand_was_known))
             obvious_effect = true;
-
+    }
     if (!obvious_effect)
         obvious_effect = !special_damage_message.empty();
 

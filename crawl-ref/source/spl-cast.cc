@@ -2430,7 +2430,7 @@ void MiscastEffect::do_miscast()
         sp_type = school;
         if (sp_type == SPTYP_RANDOM)
         {
-            // XXX: Monsters currently have no divintation miscasts.
+            // XXX: Monsters currently have no divination miscasts.
             do
             {
                 int exp = (random2(SPTYP_LAST_EXPONENT));
@@ -2803,7 +2803,7 @@ void MiscastEffect::_conjuration(int severity)
             break;
         case 1:
             you_msg        = "You are caught in a violent explosion!";
-            mon_msg_seen   = "@The_monster@ is caugh in a violent explosion!";
+            mon_msg_seen   = "@The_monster@ is caught in a violent explosion!";
             mon_msg_unseen = "A violent explosion happens from "
                              "out of thin air!";
 

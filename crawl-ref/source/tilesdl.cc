@@ -1049,9 +1049,7 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         desc.quantity = item.plus;
     }
     else
-    {
         desc.quantity = -1;
-    }
 
     if (item.base_type == OBJ_WEAPONS)
     {
@@ -1079,6 +1077,9 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
             break;
         case SPMSL_RETURNING:
             desc.special = TILE_BRAND_RETURNING;
+            break;
+        case SPMSL_CHAOS:
+            desc.special = TILE_BRAND_CHAOS;
             break;
         default:
             break;

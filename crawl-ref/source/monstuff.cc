@@ -3020,7 +3020,7 @@ static bool _find_wall_target(monsters *mon)
          ri; ++ri)
     {
         if (!grid_is_solid(*ri)
-            || monster_habitable_grid(mon, grd(*ri)))
+            || !monster_habitable_grid(mon, grd(*ri)))
         {
             continue;
         }
@@ -4148,14 +4148,15 @@ static void _handle_movement(monsters *monster)
     if (mmov.origin())
         return;
 
-    // Reproduced here is some semi-legacy code that makes monsters
-    // move somewhat randomly along oblique paths.  It is an exceedingly
-    // good idea, given crawl's unique line of sight properties.
-    //
-    // Added a check so that oblique movement paths aren't used when
-    // close to the target square. -- bwr
     if (delta.rdist() > 3)
     {
+        // Reproduced here is some semi-legacy code that makes monsters
+        // move somewhat randomly along oblique paths.  It is an exceedingly
+        // good idea, given crawl's unique line of sight properties.
+        //
+        // Added a check so that oblique movement paths aren't used when
+        // close to the target square. -- bwr
+
         // Sometimes we'll just move parallel the x axis.
         if (abs(delta.x) > abs(delta.y) && coinflip())
             mmov.y = 0;
@@ -4184,6 +4185,62 @@ static void _handle_movement(monsters *monster)
             good_move[count_x][count_y] =
                 _mon_can_move_to_pos(monster, coord_def(count_x-1, count_y-1));
         }
+
+    if (mons_wall_shielded(monster))
+    {
+        if (mmov.x != 0 && mmov.y != 0)
+        {
+            bool updown    = false;
+            bool leftright = false;
+
+            coord_def t = monster->pos() + coord_def(mmov.x, 0);
+            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+                updown = true;
+
+                      t = monster->pos() + coord_def(0, mmov.y);
+            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+                leftright = true;
+
+            if (updown && (!leftright || coinflip()))
+                mmov.y = 0;
+            else if (leftright)
+                mmov.x = 0;
+        }
+        else if (mmov.x == 0 && monster->target.x == monster->pos().x)
+        {
+            bool left  = false;
+            bool right = false;
+            coord_def t = monster->pos() + coord_def(-1, mmov.y);
+            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+                left = true;
+
+                      t = monster->pos() + coord_def(1, mmov.y);
+            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+                right = true;
+
+            if (left && (!right || coinflip()))
+                mmov.x = -1;
+            else if (right)
+                mmov.x = 1;
+        }
+        else if (mmov.y == 0 && monster->target.y == monster->pos().y)
+        {
+            bool up   = false;
+            bool down = false;
+            coord_def t = monster->pos() + coord_def(mmov.x, -1);
+            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+                up = true;
+
+                      t = monster->pos() + coord_def(mmov.x, 1);
+            if (in_bounds(t) && grid_is_rock(grd(t)) && !grid_is_permarock(grd(t)))
+                down = true;
+
+            if (up && (!down || coinflip()))
+                mmov.y = -1;
+            else if (down)
+                mmov.y = 1;
+        }
+    }
 
     // If the monster is moving in your direction, whether to attack or protect
     // you, or towards a monster it intends to attack, check whether we first
