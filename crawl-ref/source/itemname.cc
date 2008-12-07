@@ -445,7 +445,7 @@ static const char* wand_primary_string(int p)
     case 8:  return "ivory";
     case 9:  return "glass";
     case 10: return "lead";
-    case 11: return "plastic";
+    case 11: return "fluorescent";
     default: return "buggy";
     }
 }
@@ -640,7 +640,7 @@ static const char* amulet_primary_string(int p)
     case 10: return "bone";
     case 11: return "platinum";
     case 12: return "jade";
-    case 13: return "plastic";
+    case 13: return "fluorescent";
     default: return "buggy";
     }
 }

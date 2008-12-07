@@ -442,7 +442,7 @@ void item_colour( item_def &item )
         case 6:         //"silver wand"
             item.colour = WHITE;
             break;
-        case 11:        //"plastic wand"
+        case 11:        //"fluorescent wand"
             item.colour = random_colour();
             break;
         }
@@ -631,7 +631,7 @@ void item_colour( item_def &item )
             case 12:            //"jade amulet"
                 item.colour = GREEN;
                 break;
-            case 13:            //"plastic amulet"
+            case 13:            //"fluorescent amulet"
                 item.colour = random_colour();
             }
         }
