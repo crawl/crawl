@@ -204,14 +204,16 @@ include = travel_stoppers.txt
 # easy_open    = false
 # easy_unequip = false
 # easy_confirm = (none | safe)
-# allow_self_target = (yes | no | prompt)
 # easy_butcher = false
+# allow_self_target      = (yes | no | prompt)
 # always_confirm_butcher = true
 # prompt_for_swap        = false
 # easy_quit_item_prompts = false
 # easy_exit_menu         = false
+# msg_condense_repeats   = false
 # sort_menus = pickup: true : basename, qualname, curse, qty
-# msg_condense_repeats = false
+
+sort_menus = inv: true : equipped
 
 
 ##### 4-j	Messages and Display Enhancements #####
@@ -273,8 +275,7 @@ include = messages.txt
 # Colouring for the notes
 menu_colour = notes:white:Reached XP level
 
-# These lines will suppress extra feedback messages from 
-# travel/shift-running.
+# These lines will suppress extra feedback messages from travel/shift-running.
 #
 # message_colour = mute:warning:comes into view
 # message_colour = mute:You start (searching|resting)
