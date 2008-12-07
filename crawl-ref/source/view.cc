@@ -464,10 +464,11 @@ static void _get_symbol( const coord_def& where,
             }
             else
             {
+                // Colour closed shops grey.
+                if (grd(where) == DNGN_ENTER_SHOP && shop_is_closed(where))
+                    *colour = LIGHTGREY | colmask;
                 // Don't clobber with BLACK, because the colour should be
                 // already set.
-                if (shop_is_closed(where))
-                    *colour = LIGHTGREY | colmask;
                 else if (fdef.colour != BLACK)
                     *colour = fdef.colour | colmask;
 
@@ -481,7 +482,7 @@ static void _get_symbol( const coord_def& where,
             }
 
             if (object < NUM_REAL_FEATURES && inside_halo(where)
-                && ((object >= DNGN_FLOOR_MIN && object <= DNGN_FLOOR_MAX)
+                && (object >= DNGN_FLOOR_MIN && object <= DNGN_FLOOR_MAX
                     || object == DNGN_UNDISCOVERED_TRAP))
             {
                 *colour = YELLOW | colmask;
@@ -678,6 +679,9 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
     const bool terrain_seen = is_terrain_seen(p);
     const feature_def &fdef = Feature[grid_value];
     feature_colour = terrain_seen? fdef.seen_colour : fdef.map_colour;
+    // Colour closed shops grey.
+    if (terrain_seen && grd(p) == DNGN_ENTER_SHOP && shop_is_closed(p))
+        feature_colour = LIGHTGREY;
 
     if (terrain_seen && feature_colour != fdef.seen_em_colour
         && fdef.seen_em_colour)

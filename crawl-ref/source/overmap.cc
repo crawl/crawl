@@ -56,11 +56,11 @@ portal_note_map_type portal_vault_notes;
 portal_vault_colour_map_type portal_vault_colours;
 annotation_map_type level_annotations;
 
-static void seen_altar( god_type god, const coord_def& pos );
-static void seen_staircase(dungeon_feature_type which_staircase,
-                           const coord_def& pos);
-static void seen_other_thing(dungeon_feature_type which_thing,
-                             const coord_def& pos);
+static void _seen_altar( god_type god, const coord_def& pos );
+static void _seen_staircase(dungeon_feature_type which_staircase,
+                            const coord_def& pos);
+static void _seen_other_thing(dungeon_feature_type which_thing,
+                              const coord_def& pos);
 
 void seen_notable_thing( dungeon_feature_type which_thing,
                          const coord_def& pos )
@@ -74,11 +74,11 @@ void seen_notable_thing( dungeon_feature_type which_thing,
 
     const god_type god = grid_altar_god(which_thing);
     if (god != GOD_NO_GOD)
-        seen_altar( god, pos );
+        _seen_altar( god, pos );
     else if (grid_is_branch_stairs( which_thing ))
-        seen_staircase( which_thing, pos );
+        _seen_staircase( which_thing, pos );
     else
-        seen_other_thing( which_thing, pos );
+        _seen_other_thing( which_thing, pos );
 }
 
 static dungeon_feature_type portal_to_feature(portal_type p)
@@ -527,7 +527,7 @@ std::string overview_description_string()
 }
 
 template <typename Z, typename Key>
-inline static bool find_erase(Z &map, const Key &k)
+inline static bool _find_erase(Z &map, const Key &k)
 {
     if (map.find(k) != map.end())
     {
@@ -537,29 +537,29 @@ inline static bool find_erase(Z &map, const Key &k)
     return (false);
 }
 
-static bool unnotice_portal(const level_pos &pos)
+static bool _unnotice_portal(const level_pos &pos)
 {
-    return find_erase(portals_present, pos);
+    return _find_erase(portals_present, pos);
 }
 
-static bool unnotice_portal_vault(const level_pos &pos)
+static bool _unnotice_portal_vault(const level_pos &pos)
 {
-    (void) find_erase(portal_vault_colours, pos);
-    (void) find_erase(portal_vault_notes, pos);
-    return find_erase(portal_vaults_present, pos);
+    (void) _find_erase(portal_vault_colours, pos);
+    (void) _find_erase(portal_vault_notes, pos);
+    return _find_erase(portal_vaults_present, pos);
 }
 
-static bool unnotice_altar(const level_pos &pos)
+static bool _unnotice_altar(const level_pos &pos)
 {
-    return find_erase(altars_present, pos);
+    return _find_erase(altars_present, pos);
 }
 
-static bool unnotice_shop(const level_pos &pos)
+static bool _unnotice_shop(const level_pos &pos)
 {
-    return find_erase(shops_present, pos);
+    return _find_erase(shops_present, pos);
 }
 
-static bool unnotice_stair(const level_pos &pos)
+static bool _unnotice_stair(const level_pos &pos)
 {
     const dungeon_feature_type feat = grd(pos.pos);
     if (grid_is_branch_stairs(feat))
@@ -569,7 +569,7 @@ static bool unnotice_stair(const level_pos &pos)
             if (branches[i].entry_stairs == feat)
             {
                 const branch_type br = static_cast<branch_type>(i);
-                return (find_erase(stair_level, br));
+                return (_find_erase(stair_level, br));
             }
         }
     }
@@ -578,11 +578,11 @@ static bool unnotice_stair(const level_pos &pos)
 
 bool unnotice_feature(const level_pos &pos)
 {
-    return (unnotice_portal(pos)
-            || unnotice_portal_vault(pos)
-            || unnotice_altar(pos)
-            || unnotice_shop(pos)
-            || unnotice_stair(pos));
+    return (_unnotice_portal(pos)
+            || _unnotice_portal_vault(pos)
+            || _unnotice_altar(pos)
+            || _unnotice_shop(pos)
+            || _unnotice_stair(pos));
 }
 
 void display_overmap()
@@ -594,8 +594,8 @@ void display_overmap()
     redraw_screen();
 }
 
-void seen_staircase( dungeon_feature_type which_staircase,
-                     const coord_def& pos )
+static void _seen_staircase( dungeon_feature_type which_staircase,
+                             const coord_def& pos )
 {
     // which_staircase holds the grid value of the stair, must be converted
     // Only handles stairs, not gates or arches
@@ -604,9 +604,9 @@ void seen_staircase( dungeon_feature_type which_staircase,
     //   - entrances to the hells - always in vestibule
 
     int i;
-    for ( i = 0; i < NUM_BRANCHES; ++i )
+    for (i = 0; i < NUM_BRANCHES; ++i)
     {
-        if ( branches[i].entry_stairs == which_staircase )
+        if (branches[i].entry_stairs == which_staircase)
         {
             stair_level[branches[i].id] = level_id::current();
             break;
@@ -615,11 +615,11 @@ void seen_staircase( dungeon_feature_type which_staircase,
     ASSERT( i != NUM_BRANCHES );
 }
 
-// if player has seen an altar; record it
-void seen_altar( god_type god, const coord_def& pos )
+// If player has seen an altar; record it.
+static void _seen_altar( god_type god, const coord_def& pos )
 {
-    // can't record in abyss or pan.
-    if ( you.level_type != LEVEL_DUNGEON )
+    // Can't record in Abyss or Pan.
+    if (you.level_type != LEVEL_DUNGEON)
         return;
 
     level_pos where(level_id::current(), pos);
@@ -636,7 +636,7 @@ void unnotice_altar()
 
 portal_type feature_to_portal( unsigned char feat )
 {
-    switch ( feat )
+    switch (feat)
     {
     case DNGN_ENTER_LABYRINTH:
         return PORTAL_LABYRINTH;
@@ -651,19 +651,19 @@ portal_type feature_to_portal( unsigned char feat )
     }
 }
 
-// if player has seen any other thing; record it
-void seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
+// If player has seen any other thing; record it.
+void _seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
 {
-    if ( you.level_type != LEVEL_DUNGEON ) // can't record in abyss or pan.
+    if (you.level_type != LEVEL_DUNGEON) // Can't record in Abyss or Pan.
         return;
 
     level_pos where(level_id::current(), pos);
 
-    switch ( which_thing )
+    switch (which_thing)
     {
     case DNGN_ENTER_SHOP:
-        shops_present[where] =
-            static_cast<shop_type>(get_shop(pos)->type);
+        if (!shop_is_closed(pos))
+            shops_present[where] = static_cast<shop_type>(get_shop(pos)->type);
         break;
 
     case DNGN_ENTER_PORTAL_VAULT:
@@ -700,7 +700,7 @@ void seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
             portals_present[where] = portal;
         break;
     }
-}          // end seen_other_thing()
+}
 
 ////////////////////////////////////////////////////////////////////////
 

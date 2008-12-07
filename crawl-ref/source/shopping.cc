@@ -31,6 +31,7 @@
 #include "Kills.h"
 #include "macro.h"
 #include "notes.h"
+#include "overmap.h"
 #include "player.h"
 #include "randart.h"
 #include "spl-book.h"
@@ -1700,6 +1701,11 @@ void shop()
     }
 
     const bool bought_something = _in_a_shop(i);
+
+    // If the shop is now empty, erase it from the overmap.
+    if ( _shop_get_stock(i).empty() )
+        unnotice_feature(level_pos(level_id::current(), you.pos()));
+
     burden_change();
     redraw_screen();
 
