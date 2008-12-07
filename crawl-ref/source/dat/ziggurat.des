@@ -8,11 +8,10 @@
 : require("clua/ziggurat.lua")
 
 ### Entry vaults to ziggurats##########################################
+default-depth: D:21-27, Zot, Pan
 
 NAME: enter_the_ziggurat
-# FIXME: Ziggurat is still incomplete - enabled for testing porpoises.
 TAGS:   trowel_portal
-DEPTH:  D:20-27, Zot, Pan
 WEIGHT: 1
 : ziggurat_portal(_G)
 MAP
@@ -20,7 +19,6 @@ O
 ENDMAP
 
 NAME:   enter_ziggurat_a
-DEPTH:  D:20-27, Zot, Pan
 COLOUR: ; : cyan / lightblue
 COLOUR: ' = blue
 SUBST:  ' = .
@@ -37,7 +35,6 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_b
-DEPTH:   D:20-27, Zot, Pan
 TAGS:    no_pool_fixup
 SHUFFLE: wW' / l;_
 COLOUR:  ; = red
@@ -58,7 +55,6 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_c
-DEPTH:   D:20-27, Zot, Pan
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -79,7 +75,6 @@ MAP
 ENDMAP
 
 NAME:    enter_ziggurat_d
-DEPTH:   D:20-27, Zot, Pan
 MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
@@ -98,6 +93,62 @@ MAP
    ..n..
     ...
 ENDMAP
+
+### Shallow entry vaults to ziggurats##########################################
+default-depth: D:3-20
+
+NAME:   enter_ziggurat_a_teaser
+WEIGHT: 1
+COLOUR: ; : cyan / lightblue
+COLOUR: ' = blue
+SUBST:  ' = .
+SUBST:  ; = .
+: ziggurat_portal(_G)
+MAP
+.......
+.;;;;;.
+.;''';.
+.;'O';.
+.;''';.
+.;;;;;.
+.......
+ENDMAP
+
+NAME:    enter_ziggurat_c_teaser
+WEIGHT:  1
+MONS:    angel / daeva / nothing w:40
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..m..
+  ..mmm..
+ ..mm1mm..
+..mm.O.mm..
+ ..mm1mm..
+  ..mmm..
+   ..m..
+    ...
+ENDMAP
+
+NAME:    enter_ziggurat_d_teaser
+WEIGHT:  1
+MONS:    angel / daeva / nothing w:40
+: ziggurat_portal(_G)
+MAP
+    ...
+   ..n..
+  .nnnnn.
+ ..n.1.n..
+..nn.O.nn..
+ ..n.1.n..
+  .nnnnn.
+   ..n..
+    ...
+ENDMAP
+
+
+# Empty default-depth as vaults below may not occur randomly in the dungeon.
+default-depth:
 
 #######################################################################
 # Pillars for ziggurats.
