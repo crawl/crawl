@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string.h>
 #include <stdlib.h>
+#include <map>
 
 tile_list_processor::tile_list_processor() :
     m_last_enum(~0),
@@ -646,7 +647,6 @@ bool tile_list_processor::write_data()
 
         fprintf(fp, "// This file has been automatically generated.\n\n");
         fprintf(fp, "#include \"tiledef-%s.h\"\n\n", lcname.c_str());
-        fprintf(fp, "#include <map>\n");
         fprintf(fp, "#include <string>\n");
         fprintf(fp, "#include <assert.h>\n");
         fprintf(fp, "using namespace std;\n\n");
@@ -727,17 +727,15 @@ bool tile_list_processor::write_data()
             fprintf(fp, "};\n\n");
         }
 
-        fprintf(fp, "\nclass tile_%s_map : public map<string, int>\n"
-            "{\n"
-            "public:\n"
-            "    tile_%s_map();\n"
-            "} %s_name_map;\n\n",
-            lcname.c_str(), lcname.c_str(), lcname.c_str());
+        fprintf(fp, "\ntypedef std::pair<const char*, int> _tile_pair;\n\n");
 
         fprintf(fp,
-            "tile_%s_map::tile_%s_map()\n"
+            "_tile_pair %s_map_pairs[] =\n"
             "{\n",
-            lcname.c_str(), lcname.c_str());
+            lcname.c_str());
+
+        typedef std::map<std::string, int> sort_map;
+        sort_map table;
 
         for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
         {
@@ -750,11 +748,17 @@ bool tile_list_processor::write_data()
             for (unsigned int c = 0; c < enumname.size(); c++)
                 lcenum[c] = std::tolower(enumname[c]);
 
-            fprintf(fp, "    insert(map<string, int>::value_type(\"%s\", %d + %s));\n",
-                lcenum.c_str(), i, m_start_value.c_str());
+            table.insert(sort_map::value_type(lcenum, i));
         }
 
-        fprintf(fp, "}\n\n");
+        sort_map::iterator itor;
+        for (itor = table.begin(); itor != table.end(); itor++)
+        {
+            fprintf(fp, "    _tile_pair(\"%s\", %d + %s),\n",
+                itor->first.c_str(), itor->second, m_start_value.c_str());
+        }
+
+        fprintf(fp, "};\n\n");
 
         fprintf(fp,
             "bool tile_%s_index(const char *str, unsigned int &idx)\n"
@@ -767,14 +771,30 @@ bool tile_list_processor::write_data()
             "    for (unsigned int i = 0; i < lc.size(); i++)\n"
             "        lc[i] = tolower(lc[i]);\n"
             "\n"
-            "    map<string, int>::const_iterator itr = %s_name_map.find(lc);\n"
-            "    if (itr == %s_name_map.end())\n"
-            "        return false;\n"
+            "    int num_pairs = sizeof(%s_map_pairs) / sizeof(%s_map_pairs[0]);\n"
             "\n"
-            "    idx = itr->second;\n"
-            "    return true;\n"
+            "    int first = 0;\n"
+            "    int last = num_pairs - 1;\n"
+            "\n"
+            "    do\n"
+            "    {\n"
+            "        int half = (last - first) / 2 + first;\n"
+            "        int cmp = strcmp(str, %s_map_pairs[half].first);\n"
+            "        if (cmp < 0)\n"
+            "            last = half - 1;\n"
+            "        else if (cmp > 0)\n"
+            "            first = half + 1;\n"
+            "        else\n"
+            "        {\n"
+            "            idx = %s_map_pairs[half].second;\n"
+            "            return true;\n"
+            "        }\n"
+            "\n"
+            "    } while (first <= last);\n"
+            "\n"
+            "    return false;\n"
             "}\n",
-            lcname.c_str(), lcname.c_str(), lcname.c_str());
+            lcname.c_str(), lcname.c_str(), lcname.c_str(), lcname.c_str(), lcname.c_str());
     }
 
     delete[] part_min;
