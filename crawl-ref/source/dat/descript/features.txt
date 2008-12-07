@@ -31,7 +31,8 @@ quickly, probably to sell them elsewhere.
 A frozen archway
 
 A permanent cold front seems to surround this portal. Whatever lives on the
-other side, they will be full of grim and arctic fury.
+other side, they will be full of grim and arctic fury. You note that the
+archway is melting away.
 %%%%
 A fountain of clear blue water
 
@@ -57,7 +58,8 @@ Every settlement brings forth the unpleasant sewers and drains, ignored by
 most but hideaways for others. Old tales speak of dangerous creatures,
 bathing in disgustingly green water, preying on each other without mercy.
 The tales also tell of the valuable items left by daring and unfortunate
-visitors, left to collect dust in the damp caverns.
+visitors, left to collect dust in the damp caverns. You have an uncanny
+feeling that the drain will fall apart rather soon.
 %%%%
 A one-way gate leading to the halls of Pandemonium
 
@@ -155,8 +157,9 @@ A roughly hewn altar of Beogh
 A sand-covered staircase
 
 You can make out a staircase leading downwards into a small tomb. Sand
-surrounds the staircase and is continuously pouring onto it. They say
-that some distant relatives of the pharaohs were entombed here.
+surrounds the staircase and is continuously pouring onto it. Before long
+the staircase will be gone. They say that some distant relatives of the
+pharaohs were entombed here.
 %%%%
 A shimmering altar of Xom
 %%%%
