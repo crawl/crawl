@@ -466,7 +466,9 @@ static void _get_symbol( const coord_def& where,
             {
                 // Don't clobber with BLACK, because the colour should be
                 // already set.
-                if (fdef.colour != BLACK)
+                if (shop_is_closed(where))
+                    *colour = LIGHTGREY | colmask;
+                else if (fdef.colour != BLACK)
                     *colour = fdef.colour | colmask;
 
                 if (fdef.em_colour != fdef.colour && fdef.em_colour)

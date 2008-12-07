@@ -2603,8 +2603,15 @@ std::string feature_description(const coord_def& where, bool bloody,
         return (feature_description(grid, get_trap_type(where), bloody,
                                     dtype, add_stop));
     case DNGN_ENTER_SHOP:
-        return (shop_name(where, add_stop));
-
+    {
+        std::string desc = "";
+        if (shop_is_closed(where))
+        {
+            desc = "An abandoned shop";
+            return thing_do_grammar(dtype, add_stop, false, desc);
+        }
+        return shop_name(where, add_stop);
+    }
     case DNGN_ENTER_PORTAL_VAULT:
         return (thing_do_grammar(
                     dtype, add_stop, false,

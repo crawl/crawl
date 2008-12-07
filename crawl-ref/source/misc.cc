@@ -3065,13 +3065,17 @@ bool is_dragonkind(const actor *act, const monsters *mon)
         return (true);
     }
 
-    if (act->atype() == ACT_PLAYER
-        && you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+    if (act->atype() == ACT_PLAYER)
     {
-        return (true);
+        return (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
+                || you.attribute[ATTR_TRANSFORMATION] == TRAN_SERPENT_OF_HELL);
     }
-    else if (act->atype() == ACT_MONSTER
-        && mons_is_zombified(mon)
+    // else the actor is a monster
+
+    if (mon->type == MONS_SERPENT_OF_HELL)
+        return (true);
+
+    if (mons_is_zombified(mon)
         && (mons_genus(mon->base_monster) == MONS_DRAGON
             || mons_genus(mon->base_monster) == MONS_DRACONIAN))
     {
