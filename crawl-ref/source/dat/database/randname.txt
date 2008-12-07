@@ -1,25 +1,20 @@
-######################################################
+###############################################################################
 # Randart Names
 # -------------
 # randname.txt: lookup randart type
 #
-# This file contains the lists of keywords (and their
-# weights) for some lookup phrases of randart type,
-# namely "weapon", "armour" and "jewellery" as well as
-# in combination with those gods that occasionally
-# gift randarts, i.e. "Trog weapon", "Okawaru weapon",
-# "Okawaru armour", "Xom weapon", "Xom armour" and
-# "Xom jewellery". Incidentally, they are listed in
-# precisely that order. At the end of the file you
-# will also find a few lists of adjectives used for
+# This file contains the lists of keywords (and their weights) for some lookup
+# phrases of randart type, namely "weapon", "armour" and "jewellery" as well 
+# as in combination with those gods that occasionally gift randarts, i.e. 
+# "Trog weapon", "Okawaru weapon", "Okawaru armour", "Xom weapon", "Xom armour"
+# and "Xom jewellery". Incidentally, they are listed in precisely that order.
+# At the end of the file you will also find a few lists of adjectives used for
 # unidentified randart appearances.
 #
-# The syntax for keywords is the same as that of 
-# monster speech (see monster_speech.txt for the full
-# details). Any phrase encased in '@' symbols is one
-# the database will recognise as a keyword that needs
-# to be replaced. Definitions of such keywords can be
-# found in 4 different places:
+# The syntax for keywords is the same as that of monster speech (details are in
+# monster_speech.txt). Any phrase encased in '@' symbols is one the database
+# will recognise as a keyword that needs to be replaced. Definitions of such
+# keywords can be found in 4 different places:
 #
 #  o  rand_wpn.txt  - keywords used mainly for weapons
 #  o  rand_arm.txt  - keywords used mainly for armour
@@ -27,9 +22,8 @@
 #                     as well as for all three types
 #  o  hardcoded (randart.cc)
 #
-# The latter allows the use of phrases elsewhere 
-# defined in Crawl. The list of hardcoded keywords is
-# as follows:
+# The latter allows the use of phrases elsewhere defined in Crawl. The list of
+# hardcoded keywords is as follows:
 #
 #  * player_name     - player-chosen character name
 #  * player_species  - species of the character
@@ -37,38 +31,28 @@
 #  * god_name        - name of a random Crawl god
 #  * xom_name        - one of Xom's long names
 #
-# In the case of god_name this actually allows some 
-# more refined handling. In fact, the god will not be
-# picked entirely at random as there are some 
-# restrictions to make sure that e.g. no good god is
-# chosen for evil weapons, that Beogh isn't matched
-# with orc slaying, or that Zin doesn't get picked for 
+# In the case of god_name this actually allows some more refined handling. In
+# fact, the god will not be picked entirely at random as there are some 
+# restrictions to make sure that e.g. no good god is chosen for evil weapons,
+# that Beogh isn't matched with orc slaying, or that Zin doesn't get picked for
 # randarts with mutagenic properties.
 #
-# Randart names may only have a maximum length of 25
-# symbols (spaces included). This comparison takes
-# place after all replacements have been taken care
-# of, and the name is thus complete. If a name turns
-# out to be longer than this threshold, the game
-# will roll another one.
+# Randart names may only have a maximum length of 25 symbols (spaces included).
+# This comparison takes place after all replacements have been taken care of,
+# and the name is thus complete. If a name turns out to be longer than this
+# threshold, the game will roll another one.
 #
-# Note that weapons and armour use database names for
-# only half of all randarts created (the others are
-# entirely random names), for jewellery this is only 
-# the case for one in five randarts. These chances
-# are hardcoded.
+# Note that weapons and armour use database names for only half of all randarts
+# created (the others are entirely random names), for jewellery this is only
+# the case for one in five randarts. These chances are hardcoded.
 #
-# Feel free to play around with the keywords or their
-# weights. The default weight of an entry is w:10, and
-# an entry is picked with a chance of its weight out
-# of the sum of all weights for entries in a group.
-# Consequently if you set the weight of a keyword to
-# a really high value (say, 10,000) you can test how
-# it looks in the game. Even better, if you have
-# wizard mode compiled in (check the in-game 'V'ersion
-# information) you can use the wizard command '&o' to
-# create objects and '&+' to turn an ordinary object
-# into a randart.
+# Feel free to play around with the keywords or their weights. The default
+# weight of an entry is w:10, and an entry is picked with a chance of its
+# weight out of the sum of all weights for entries in a group. Consequently if
+# you set the weight of a keyword to a really high value (say, 10,000) you can
+# test how it looks in the game. Even better, if you have wizard mode compiled
+# in (check in-game '?V' version information) you can use the wizard command
+# '&o' to create objects and '&+' to turn an ordinary object into a randart.
 #
 # Have fun!
 ######################################################
@@ -649,13 +633,12 @@ w:160
 # Jewellry appearance
 ######################################################
 #
-# While for the appearance of randart weapons and armour you can
-# just stick an adjective in front of the object type name ("bloodstained
-# dagger"), unidentified non-artefact jewellry is described with both an
-# adjective and material ("runed wooden ring"), making a description
-# like "runed ring" a bit weird.  So give randart jewellery an adjective
-# that no non-artefact jewellery would have, plus a material that a
-# non-artefact might or might not have.
+# While for the appearance of randart weapons and armour you can just stick an
+# adjective in front of the object type name ("bloodstained dagger"),
+# unidentified non-artefact jewellry is described with both an adjective and
+# material ("runed wooden ring"), making a description like "runed ring" a bit
+# weird.  So give randart jewellery an adjective that no non-artefact jewellery
+# would have, plus a material that a non-artefact might or might not have.
 jewellery appearance
 
 scintillating
@@ -809,7 +792,7 @@ Book
 
 Tome
 
-Grimoir
+Grimoire
 
 Almanach
 
@@ -820,10 +803,16 @@ Volume
 Compendium
 
 Handbook
+
+Incunabulum
+
+Papyrus
 %%%%
 book_adjective
 
 glistering
+
+sparkling
 
 levitating
 
@@ -832,18 +821,43 @@ droning
 conspicuous
 
 inconspicuous
+
+colourful
+
+graven
+
+engraved
+
+antique
+
+yellowed
+
+rare
 %%%%
 book_magic
 
 Magic
 
+Theurgy
+
+the Arcane Arts
+
+Rites and Rhymes
+
+Secret Knowledge
+
 Casting
 
 Wizardry
 
+Sorcery
+
+Witchcraft
+
+Witchery
+
 Bewitchment
 
-Sorcery
 %%%%
 level book
 
