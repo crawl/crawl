@@ -433,6 +433,22 @@ static bool _item_type_can_be_artefact( int type)
             || type == OBJ_BOOKS);
 }
 
+static bool _make_book_randart(item_def &book)
+{
+    char type;
+
+    do
+    {
+        mpr("Make book fixed [t]heme or fixed [l]evel? ", MSGCH_PROMPT);
+        type = tolower(getch());
+    } while (type != 't' && type != 'l');
+
+    if (type == 'l')
+        return make_book_level_randart(book);
+    else
+        return make_book_theme_randart(book);
+}
+
 static void _do_wizard_command(int wiz_command, bool silent_fail)
 {
     ASSERT(you.wizard);
@@ -567,8 +583,16 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
                item.orig_monnum = -god;
             }
         }
- 
-        if (!make_item_randart( item ))
+
+        if (item.base_type == OBJ_BOOKS)
+        {
+            if (!_make_book_randart(item))
+            {
+                mpr("Failed to turn book into randart.");
+                break;
+            }
+        } 
+        else if (!make_item_randart( item ))
         {
             mpr("Failed to turn item into randart.");
             break;

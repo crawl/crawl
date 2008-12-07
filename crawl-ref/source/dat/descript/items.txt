@@ -183,6 +183,11 @@ book of changes
 A book of magic spells. Beware, for some of the more powerful
 grimoires are not to be toyed with.
 %%%%
+book of card effects
+
+A book of magic spells. Beware, for some of the more powerful
+grimoires are not to be toyed with.
+%%%%
 book of charms
 
 A book of magic spells. Beware, for some of the more powerful
@@ -224,6 +229,16 @@ A book of magic spells. Beware, for some of the more powerful
 grimoires are not to be toyed with.
 %%%%
 book of envenomations
+
+A book of magic spells. Beware, for some of the more powerful
+grimoires are not to be toyed with.
+%%%%
+book of fixed level
+
+A book of magic spells. Beware, for some of the more powerful
+grimoires are not to be toyed with.
+%%%%
+book of fixed theme
 
 A book of magic spells. Beware, for some of the more powerful
 grimoires are not to be toyed with.

@@ -1262,11 +1262,11 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
                 }
 
                 // If we don't have a book, try and get a new one.
-                if (type_wanted == NUM_BOOKS)
+                if (type_wanted > MAX_FIXED_BOOK)
                 {
                     do
                     {
-                        type_wanted = random2(NUM_BOOKS);
+                        type_wanted = random2(NUM_NORMAL_BOOKS);
                         if (one_chance_in(500))
                             break;
                     }
@@ -1274,12 +1274,8 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
                 }
 
                 // If the book is invalid find any valid one.
-                while (book_rarity(type_wanted) == 100
-                       || type_wanted == BOOK_DESTRUCTION
-                       || type_wanted == BOOK_MANUAL)
-                {
-                    type_wanted = random2(NUM_BOOKS);
-                }
+                while (book_rarity(type_wanted) == 100)
+                    type_wanted = random2(NUM_NORMAL_BOOKS);
                 break;
 
             case OBJ_STAVES:
@@ -1421,6 +1417,93 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
     return (type_wanted);
 }
 
+static void _do_book_acquirement(item_def &book, int agent)
+{
+    // items() shouldn't make book a randart for acquirement items.
+    ASSERT(!is_random_artefact(book));
+
+    // Non-normal books are rare enough without turning them into
+    // randart books.
+    if (book.sub_type > MAX_NORMAL_BOOK)
+        return;
+
+    int          level       = (you.skills[SK_SPELLCASTING] + 2) / 3;
+    unsigned int seen_levels = you.attribute[ATTR_RND_LVL_BOOKS];
+
+    if (agent == GOD_XOM)
+        level = random_range(1, 9);
+    else if (seen_levels & (1 << level))
+    {
+        // Give a book of a level not seen before, preferably one with
+        // spells of a low enough level for the player to cast, or the
+        // lowest aviable level if all levels which the player can cast
+        // have already been given.
+        int max_level = std::min(9, you.get_experience_level());
+       
+        std::vector<int> vec;
+        for (int i = 1; i <= 9 && (vec.empty() || i <= max_level); i++)
+        {
+            if (!(seen_levels & (1 << i)))
+                vec.push_back(i);
+        }
+        if (vec.size() > 0)
+            level = vec[random2(vec.size())];
+        else
+            level = -1;
+    }
+
+    int choice = random_choose_weighted(
+                               55, 0, // fixed themed
+                               24, 1, // leave alone
+             level == -1 ? 0 : 12, 2, // fixed level
+        agent == GOD_XOM ? 0 :  6, 3, // manual (too useful for Xom)
+                                0);
+
+    switch(choice)
+    {
+    case 0:
+        make_book_theme_randart(book, 0, 0, 7, 25);
+        break;
+
+    case 1:
+        // Leave alone
+        break;
+
+    case 2:
+    {
+        int num_spells = 7 - (level + 1) / 2 + random_range(1, 2);
+        make_book_level_randart(book, level, num_spells);
+        break;
+    }
+
+    // Spell discipline manual
+    case 3:
+    {
+        int weights[SK_POISON_MAGIC - SK_CONJURATIONS + 1];
+
+        for (int i = SK_CONJURATIONS; i <= SK_POISON_MAGIC; i++)
+        {
+            int w = std::max(0, 24 - you.skills[i])
+                * 100 / species_skills(i, you.species);
+
+            weights[i - SK_CONJURATIONS] = w;
+        }
+        int skill = choose_random_weighted(weights,
+                                           weights + ARRAYSZ(weights));
+        skill += SK_CONJURATIONS;
+
+        book.sub_type = BOOK_MANUAL;
+        book.plus = skill;
+        // Set number of reads possible before it "crumbles to dust".
+        book.plus2 = 3 + random2(15);
+        break;
+    }
+
+    default:
+        ASSERT(false);
+    }
+}
+
 bool acquirement(object_class_type class_wanted, int agent,
                  bool quiet, int* item_index)
 {
@@ -1450,9 +1533,18 @@ bool acquirement(object_class_type class_wanted, int agent,
         case 'f': class_wanted = OBJ_FOOD;       break;
         case 'g': class_wanted = OBJ_MISCELLANY; break;
         case 'h': class_wanted = OBJ_GOLD;       break;
-        default: break;
+        default:
+            // Lets wizards escape out of accidently choosing acquirement.
+            if (agent == AQ_WIZMODE)
+            {
+                canned_msg(MSG_OK);
+                return (false);
+            }
+            break;
         }
     }
+
+    const bool god_agent = agent > GOD_NO_GOD && agent < NUM_GODS;
 
     if (grid_destroys_items(grd(you.pos())))
     {
@@ -1460,7 +1552,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         if (!silenced(you.pos()) && !quiet)
             mprf(MSGCH_SOUND, grid_item_destruction_message(grd(you.pos())));
 
-        if (agent > GOD_NO_GOD && agent < NUM_GODS)
+        if (god_agent)
         {
             if (agent == GOD_XOM)
                 simple_god_message(" snickers.", GOD_XOM);
@@ -1487,7 +1579,11 @@ bool acquirement(object_class_type class_wanted, int agent,
             if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
                 class_wanted = OBJ_POTIONS;
 
-            thing_created = items( 1, class_wanted, type_wanted, true,
+            // Don't generate randart books in items(), we do that
+            // ourselves.
+            int want_arts = class_wanted == OBJ_BOOKS ? 0 : 1;
+
+            thing_created = items( want_arts, class_wanted, type_wanted, true,
                                    MAKE_GOOD_ITEM, MAKE_ITEM_RANDOM_RACE,
                                    0, 0, agent );
 
@@ -1577,7 +1673,10 @@ bool acquirement(object_class_type class_wanted, int agent,
         do_uncurse_item(thing);
 
         if (thing.base_type == OBJ_BOOKS)
+        {
+            _do_book_acquirement(thing, agent);
             mark_had_book(thing);
+        }
         else if (thing.base_type == OBJ_JEWELLERY)
         {
             switch (thing.sub_type)

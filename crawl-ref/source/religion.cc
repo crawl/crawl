@@ -3535,7 +3535,7 @@ bool god_dislikes_spell_type(spell_type spell, god_type god)
         break;
 
     case GOD_ELYVILON:
-        // A peaceful god of healing wouldn't like combat spells.  All
+        // A peaceful god of healing wouldn't like combat spells.
         if (disciplines & SPTYP_CONJURATION)
             return (true);
 

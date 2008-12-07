@@ -801,13 +801,69 @@ amulet appearance
 @jewellery appearance@ @amulet material@
 %%%%
 ######################################################
-# Books (NOTE: just a placeholder for now)
+# Books
 ######################################################
+book_noun
+
+Book
+
+Tome
+
+Grimoir
+
+Almanach
+
+Guide
+
+Volume
+
+Compendium
+
+Handbook
+%%%%
+book_adjective
+
+glistering
+
+levitating
+
+droning
+
+conspicuous
+
+inconspicuous
+%%%%
+book_magic
+
+Magic
+
+Casting
+
+Wizardry
+
+Bewitchment
+
+Sorcery
+%%%%
+level book
+
+"@book_magic@ 101"
+
+"Easy @book_magic@"
+
+"@book_magic@ in Simple Steps"
+
+"Thorough Guide to @book_magic@"
+
+"Last Secrets of @book_magic@"
+%%%%
+# Book name should be set in make_book_level_randart() or
+# make_book_theme_randart(), so if this gets picked there's a bug.
 book
 
-@armour@
+Book of Bugginess
 %%%%
 book appearance
 
-@armour appearance@
+@book_adjective@
 %%%%

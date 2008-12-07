@@ -1119,9 +1119,66 @@ void static _get_randart_properties(const item_def &item,
     }
 }
 
+static bool _redo_book(item_def &book)
+{
+    int num_spells  = 0;
+    int num_unknown = 0;
+
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    {
+        spell_type spell = which_spell_in_book(book, i);
+
+        if (spell == SPELL_NO_SPELL)
+            continue;
+
+        num_spells++;
+        if (!you.seen_spell[spell])
+            num_unknown++;
+    }
+
+    if (num_spells <= 5 && num_unknown == 0)
+        return (true);
+    else if (num_spells > 5 && num_unknown <= 1)
+        return (true);
+
+    return (false);
+}
+
 static bool _init_randart_book(item_def &book)
 {
-    return make_book_theme_randart(book);
+    ASSERT(book.sub_type == BOOK_RANDART_LEVEL
+           || book.sub_type == BOOK_RANDART_THEME);
+    ASSERT(book.plus != 0);
+
+    god_type god;
+    bool redo = !origin_is_god_gift(book, &god) || god != GOD_XOM;
+
+    // Plus and plus2 contain paramaters to make_book_foo_randart()
+    // which might get changed after the book has been made into a
+    // randart, so reset them on each iteration of the loop.
+    int  plus  = book.plus;
+    int  plus2 = book.plus2;
+    bool book_good;
+    for (int i = 0; i < 4; i++)
+    {
+        book.plus  = plus;
+        book.plus2 = plus2;
+
+        if (book.sub_type == BOOK_RANDART_LEVEL)
+            book_good = make_book_level_randart(book);
+        else
+            book_good = make_book_theme_randart(book);
+
+        if (!book_good)
+            continue;
+
+        if (redo && _redo_book(book))
+            continue;
+
+        break;
+    }
+
+    return (book_good);
 }
 
 static bool _init_randart_properties(item_def &item)
@@ -2037,8 +2094,11 @@ bool make_item_randart( item_def &item )
 
     if (item.base_type == OBJ_BOOKS)
     {
-       if (item.sub_type == BOOK_MANUAL || item.sub_type == BOOK_DESTRUCTION)
-           return (false);
+        if (item.sub_type != BOOK_RANDART_LEVEL
+            && item.sub_type != BOOK_RANDART_THEME)
+        {
+            return (false);
+        }
     }
 
     // already is a randart

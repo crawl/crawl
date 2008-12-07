@@ -212,16 +212,22 @@ public:
 template<typename Iterator>
 int choose_random_weighted(Iterator beg, const Iterator end)
 {
+    ASSERT(beg < end);
+
     int totalweight = 0;
-    int count = 0, result = 0;
+    int count = 0, result = 0, times_set = 0;
     while ( beg != end )
     {
         totalweight += *beg;
         if ( random2(totalweight) < *beg )
+        {
             result = count;
+            times_set++;
+        }
         ++count;
         ++beg;
     }
+    ASSERT(times_set > 0);
     return result;
 }
 

@@ -1121,7 +1121,7 @@ static bool _book_from_spell(const char* specs, item_def &item)
     if (type == SPELL_NO_SPELL)
         return (false);
 
-    for (int i = 0; i < NUM_BOOKS; i++)
+    for (int i = 0; i < NUM_FIXED_BOOKS; i++)
         for (int j = 0; j < 8; j++)
             if (which_spell_in_book(i, j) == type)
             {
@@ -1512,6 +1512,10 @@ bool get_item_by_name(item_def *item, char* specs,
             else
                 mpr( "Sorry, no books on that skill today." );
         }
+        else if (type_wanted == BOOK_RANDART_THEME)
+            make_book_theme_randart(*item);
+        else if (type_wanted == BOOK_RANDART_LEVEL)
+            make_book_level_randart(*item);
         break;
 
     case OBJ_WANDS:

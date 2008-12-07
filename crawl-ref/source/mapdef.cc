@@ -2782,8 +2782,22 @@ void item_list::parse_random_by_class(std::string c, item_spec &spec)
     if (c == "manual")
     {
         spec.base_type = OBJ_BOOKS;
-        spec.sub_type = BOOK_MANUAL;
-        spec.plus = -1;
+        spec.sub_type  = BOOK_MANUAL;
+        spec.plus      = -1;
+        return;
+    }
+    else if (c == "fixed theme book")
+    {
+        spec.base_type = OBJ_BOOKS;
+        spec.sub_type  = BOOK_RANDART_THEME;
+        spec.plus      = -1;
+        return;
+    }
+    else if (c == "fixed level book")
+    {
+        spec.base_type = OBJ_BOOKS;
+        spec.sub_type  = BOOK_RANDART_LEVEL;
+        spec.plus      = -1;
         return;
     }
 

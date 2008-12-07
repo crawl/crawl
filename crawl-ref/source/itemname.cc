@@ -841,6 +841,9 @@ static const char* book_type_name(int booktype)
     case BOOK_CANTRIPS:               return "Cantrips";
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
     case BOOK_STALKING:               return "Stalking";
+    case BOOK_RANDART_LEVEL:          return "Fixed Level";
+    case BOOK_RANDART_THEME:          return "Fixed Theme";
+    case BOOK_CARD_EFFECT:            return "Card Effects";
     default:                          return "Bugginess";
     }
 }
@@ -1476,15 +1479,9 @@ std::string item_def::name_aux( description_level_type desc,
     case OBJ_BOOKS:
         if (is_random_artefact( *this ) && !dbname && !basename)
         {
-            if (know_type)
-            {
-                if (book_has_title(*this))
-                    buff << get_artefact_name(*this);
-                else
-                    buff << "book " << get_artefact_name(*this);
-            }
-            else
-                buff << get_artefact_name(*this) << "book";
+            buff << get_artefact_name(*this);
+            if (!know_type)
+                buff << "book";
             break;
         }
         if (basename)

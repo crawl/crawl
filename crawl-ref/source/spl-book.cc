@@ -20,6 +20,7 @@
 
 #include "externs.h"
 #include "cio.h"
+#include "database.h"
 #include "debug.h"
 #include "delay.h"
 #include "food.h"
@@ -968,7 +969,7 @@ void init_spell_rarities()
     for (int i = 0; i < NUM_SPELLS; i++)
         _lowest_rarity[i] = 255;
 
-    for (int i = 0; i < NUM_BOOKS; i++)
+    for (int i = 0; i < NUM_FIXED_BOOKS; i++)
     {
         const int rarity = book_rarity(i);
 
@@ -1114,18 +1115,26 @@ void mark_had_book(const item_def &book)
         you.seen_spell[stype] = true;
     }
 
+    if (book.sub_type == BOOK_RANDART_LEVEL)
+    {
+        god_type god;
+        int      level = book.plus;
+        ASSERT(level > 0 && level <= 9);
+
+        if (origin_is_acquirement(book) ||
+            origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA)
+        {
+            you.attribute[ATTR_RND_LVL_BOOKS] |= (1 << level);
+        }
+    }
+
     if (!book.props.exists( SPELL_LIST_KEY ))
         mark_had_book(book.book_number());
 }
 
 void mark_had_book(int booktype)
 {
-    ASSERT(booktype >= 0 && booktype < NUM_BOOKS);
-
-    if (booktype == BOOK_MANUAL || booktype == BOOK_DESTRUCTION)
-    {
-        return;
-    }
+    ASSERT(booktype >= 0 && booktype <= MAX_FIXED_BOOK);
 
     you.had_book[booktype] = true;
 
@@ -1689,7 +1698,7 @@ static bool _compare_spells(spell_type a, spell_type b)
     return (strcmp(spell_title(a), spell_title(b)));
 }
 
-static bool _is_memorized(spell_type spell)
+static bool _is_memorised(spell_type spell)
 {
     for (int i = 0; i < 25; i++)
     {
@@ -1781,47 +1790,46 @@ bool make_book_level_randart(item_def &book, int level,
                              int num_spells)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
-    ASSERT(book.book_number()    != BOOK_MANUAL
-           && book.book_number() != BOOK_DESTRUCTION);
-    ASSERT(is_random_artefact(book));
-    ASSERT(!book.props.exists(SPELL_LIST_KEY));
 
     god_type god;
     (void) origin_is_god_gift(book, &god);
 
     const bool completely_random =
         god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
-    const bool track_levels_had = origin_is_acquirement(book)
-                                  || god == GOD_SIF_MUNA;
 
-    if (level == -1)
+    if (!is_random_artefact(book))
     {
-        int max_level =
-            completely_random ? 9 : std::min(9, you.get_experience_level());
-
-        level = random_range(1, max_level);
-
-        // Give a book of a level not seen before, preferably one with
-        // spells of a low enough level for the player to cast, or the
-        // lowest aviable level if all levels which the player can cast
-        // have already been given.
-        if (track_levels_had)
+        // Stuf parameters into book.plus and book.plus2, then call
+        // make_item_randart(), which will call us back.
+        if (level == -1)
         {
-            unsigned int seen_levels = you.attribute[ATTR_RND_LVL_BOOKS];
-            std::vector<int> vec;
-            for (int i = 1; i <= 9 && (vec.empty() || i <= max_level); i++)
-            {
-                if (!(seen_levels & (1 << i)))
-                    vec.push_back(i);
-            }
-            if (vec.size() > 0)
-                level = vec[random2(vec.size())];
+            int max_level =
+                completely_random ? 9 : std::min(9, you.get_experience_level());
+
+            level = random_range(1, max_level);
         }
+        ASSERT(level > 0 && level <= 9);
+
+        if (num_spells == -1)
+            num_spells = SPELLBOOK_SIZE;
+        ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
+
+        book.plus  = level;
+        book.plus2 = num_spells;
+
+        book.sub_type = BOOK_RANDART_LEVEL;
+        return (make_item_randart(book));
     }
+
+    // Being called from make_item_randart()
+
+    ASSERT(book.sub_type == BOOK_RANDART_LEVEL);
+    ASSERT(level == -1 && num_spells == -1);
+
+    level = book.plus;
     ASSERT(level > 0 && level <= 9);
 
-    if (num_spells == -1)
-        num_spells = SPELLBOOK_SIZE;
+    num_spells = book.plus2;
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
 
     int god_discard        = 0;
@@ -1896,7 +1904,7 @@ bool make_book_level_randart(item_def &book, int level,
         spell_type spell = spell_list[spell_pos];
         ASSERT(spell != SPELL_NO_SPELL);
 
-        if (avoid_memorised[spell_pos] && _is_memorized(spell))
+        if (avoid_memorised[spell_pos] && _is_memorised(spell))
         {
            // Only once.
            avoid_memorised[spell_pos] = false;
@@ -1911,6 +1919,7 @@ bool make_book_level_randart(item_def &book, int level,
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
     CrawlHashTable &props = book.props;
+    props.erase(SPELL_LIST_KEY);
     props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
 
     CrawlVector &spell_vec = props[SPELL_LIST_KEY];
@@ -1919,8 +1928,7 @@ bool make_book_level_randart(item_def &book, int level,
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
         spell_vec[i] = (long) chosen_spells[i];
 
-    if (track_levels_had)
-        you.attribute[ATTR_RND_LVL_BOOKS] |= (1 << level);
+    set_randart_name(book, getRandNameString("level book"));
 
     return (true);
 }
@@ -2044,7 +2052,7 @@ static void _get_weighted_spells(bool completely_random, god_type god,
             int c = 1;
             if (!you.seen_spell[spell])
                 c = 4;
-            else if (!_is_memorized(spell))
+            else if (!_is_memorised(spell))
                 c = 2;
 
             int total_skill = 0;
@@ -2103,10 +2111,6 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
                              int num_spells, int max_levels)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
-    ASSERT(book.book_number()    != BOOK_MANUAL
-           && book.book_number() != BOOK_DESTRUCTION);
-    ASSERT(is_random_artefact(book));
-    ASSERT(!book.props.exists(SPELL_LIST_KEY));
 
     god_type god;
     (void) origin_is_god_gift(book, &god);
@@ -2114,25 +2118,63 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     const bool completely_random =
         god == GOD_XOM || (god == GOD_NO_GOD && !origin_is_acquirement(book));
 
-    if (num_spells == -1)
-        num_spells = SPELLBOOK_SIZE;
+    if (!is_random_artefact(book))
+    {
+        // Stuff parameters into book.plus and book.plus2, then call
+        // make_item_randart(), which will then call us back.
+        if (num_spells == -1)
+            num_spells = SPELLBOOK_SIZE;
+        ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
+
+        if (max_levels == -1)
+            max_levels = 255;
+
+        if (disc1 == 0 && disc2 == 0)
+        {
+            if (!_get_weighted_discs(completely_random, god, disc1, disc2))
+                return (false);
+        }
+        else if (disc2 == 0)
+            disc2 = disc1;
+        ASSERT(disc1 < (1 << (SPTYP_LAST_EXPONENT + 1)));
+        ASSERT(disc2 < (1 << (SPTYP_LAST_EXPONENT + 1)));
+        ASSERT(count_bits(disc1) == 1 && count_bits(disc2) == 1);
+
+        int disc1_pos = 0, disc2_pos = 0;
+        for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+        {
+            if (disc1 & (1 << i))
+                disc1_pos = i;
+            if (disc2 & (1 << i))
+                disc2_pos = i;
+        }
+
+        book.plus  = num_spells | (max_levels << 8);
+        book.plus2 = disc1_pos  | (disc2_pos  << 8);
+
+        book.sub_type = BOOK_RANDART_THEME;
+        return (make_item_randart(book));
+    }
+
+    // We're being called from make_item_randart()
+
+    ASSERT(book.sub_type == BOOK_RANDART_THEME);
+    ASSERT(disc1 == 0 && disc2 == 0);
+    ASSERT(num_spells == -1 && max_levels == -1);
+
+    num_spells = book.plus & 0xFF;
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
 
-    if (max_levels == -1)
-        max_levels = INT_MAX;
+    max_levels = (book.plus >> 8) & 0xFF;
     ASSERT(max_levels > 0);
 
-    if (disc1 == 0 && disc2 == 0)
-    {
-        if (!_get_weighted_discs(completely_random, god, disc1, disc2))
-            return (false);
-    }
-    else if (disc2 == 0)
-        disc2 = disc1;
+    int disc1_pos = book.plus2 & 0xFF;
+    ASSERT(disc1_pos <= SPTYP_LAST_EXPONENT);
+    disc1 = 1 << disc1_pos;
 
-    ASSERT(disc1 < (1 << (SPTYP_LAST_EXPONENT + 1)));
-    ASSERT(disc2 < (1 << (SPTYP_LAST_EXPONENT + 1)));
-    ASSERT(count_bits(disc1) == 1 && count_bits(disc2) == 1);
+    int disc2_pos = (book.plus2 >> 8) & 0xFF;
+    ASSERT(disc2_pos <= SPTYP_LAST_EXPONENT);
+    disc2 = 1 << disc2_pos;
 
     int god_discard        = 0;
     int uncastable_discard = 0;
@@ -2156,6 +2198,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
     CrawlHashTable &props = book.props;
+    props.erase(SPELL_LIST_KEY);
     props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
 
     CrawlVector &spell_vec = props[SPELL_LIST_KEY];
@@ -2169,10 +2212,12 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     if (god != GOD_NO_GOD)
     {
         name  = '"';
-        name += god_name(god, false) + "'s book ";
+        name += god_name(god, false) + "'s ";
     }
 
-    name += "of ";
+    name += getRandNameString("book_noun");
+
+    name += " of ";
     name += spelltype_long_name(disc1);
 
     if (disc1 != disc2)
@@ -2185,6 +2230,9 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         name += '"';
 
     set_randart_name(book, name);
+
+    book.plus  = disc1;
+    book.plus2 = disc2;
 
     return (true);
 }

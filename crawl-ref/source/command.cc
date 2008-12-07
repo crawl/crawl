@@ -1196,7 +1196,7 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     std::vector<std::string> rods;
 
     item.base_type = OBJ_BOOKS;
-    for (int i = 0; i < NUM_BOOKS; i++)
+    for (int i = 0; i < NUM_FIXED_BOOKS; i++)
         for (int j = 0; j < 8; j++)
             if (which_spell_in_book(i, j) == type)
             {

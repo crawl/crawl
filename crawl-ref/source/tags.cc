@@ -1078,8 +1078,8 @@ static void tag_construct_you_items(writer &th)
     for (j = 0; j < 50; ++j)
         marshallByte(th,you.unique_items[j]);
 
-    marshallByte(th, NUM_BOOKS);
-    for (j = 0; j < NUM_BOOKS; ++j)
+    marshallByte(th, NUM_FIXED_BOOKS);
+    for (j = 0; j < NUM_FIXED_BOOKS; ++j)
         marshallByte(th,you.had_book[j]);
 
     marshallShort(th, NUM_SPELLS);

@@ -183,76 +183,78 @@ enum quiver_type
 
 enum beam_type                  // beam[].flavour
 {
-    BEAM_NONE,
+    BEAM_NONE,                    // 0
 
     BEAM_MISSILE,
     BEAM_MMISSILE,                //    and similarly irresistible things
     BEAM_FIRE,
     BEAM_COLD,
-    BEAM_MAGIC,
+    BEAM_MAGIC,                   // 5
     BEAM_ELECTRICITY,
     BEAM_POISON,
     BEAM_NEG,
     BEAM_ACID,
-    BEAM_MIASMA,
+    BEAM_MIASMA,                  // 10
 
     BEAM_SPORE,
     BEAM_POISON_ARROW,
     BEAM_HELLFIRE,
     BEAM_NAPALM,
-    BEAM_STEAM,
+    BEAM_STEAM,                   // 15
     BEAM_HELLFROST,
     BEAM_ENERGY,
     BEAM_HOLY,
     BEAM_FRAG,
-    BEAM_LAVA,
+    BEAM_LAVA,                    // 20
     BEAM_ICE,
     BEAM_NUKE,
-    BEAM_RANDOM,                  // 25 - currently translates into FIRE..ACID
+    BEAM_RANDOM,                  // currently translates into FIRE..ACID
+    // 24
 
     // Enchantments
-    BEAM_FIRST_ENCHANTMENT,
+    BEAM_FIRST_ENCHANTMENT = 25,  // 25
     BEAM_SLOW = BEAM_FIRST_ENCHANTMENT,
     BEAM_HASTE,
     BEAM_HEALING,
     BEAM_PARALYSIS,
     BEAM_CONFUSION,
-    BEAM_INVISIBILITY,
+    BEAM_INVISIBILITY,            // 30
     BEAM_DIGGING,
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
     BEAM_CHARM,
-    BEAM_BANISH,
+    BEAM_BANISH,                  // 35
     BEAM_DEGENERATE,
     BEAM_ENSLAVE_UNDEAD,
     BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
-    BEAM_DISPEL_UNDEAD,
+    BEAM_DISPEL_UNDEAD,           // 40
     BEAM_DISINTEGRATION,
     BEAM_ENSLAVE_DEMON,
     BEAM_BLINK,
     BEAM_PETRIFY,
-    BEAM_BACKLIGHT,
+    BEAM_BACKLIGHT,               // 45
     BEAM_SLEEP,
     BEAM_LAST_ENCHANTMENT = BEAM_SLEEP,
 
     // new beams for evaporate
-    BEAM_POTION_STINKING_CLOUD,
+    BEAM_POTION_STINKING_CLOUD,   // 47
     BEAM_POTION_POISON,
     BEAM_POTION_MIASMA,
-    BEAM_POTION_STEAM,
+    BEAM_POTION_STEAM,            // 50
     BEAM_POTION_FIRE,
     BEAM_POTION_COLD,
     BEAM_POTION_BLACK_SMOKE,
     BEAM_POTION_GREY_SMOKE,
-    BEAM_POTION_BLUE_SMOKE,
+    BEAM_POTION_BLUE_SMOKE,       // 55
     BEAM_POTION_PURP_SMOKE,
     BEAM_POTION_RANDOM,
 
     BEAM_TORMENT_DAMAGE,        // Pseudo-beam for damage flavour.
     BEAM_STEAL_FOOD,            // Pseudo-beam for harpyes stealing food.
 
-    BEAM_LINE_OF_SIGHT          // only used for checking monster LOS
+    BEAM_LINE_OF_SIGHT,         // 60 - only used for checking monster LOS
+    NUM_BEAMS
 };
 
 enum book_type
@@ -281,32 +283,49 @@ enum book_type
     BOOK_CLOUDS,
     BOOK_HEALING,                      //  XXX: not used
     BOOK_NECROMANCY,
-    BOOK_NECRONOMICON,
-    BOOK_CALLINGS,                     //   25
-    BOOK_CHARMS,
-    BOOK_DEMONOLOGY,
+    BOOK_CALLINGS,
+    BOOK_CHARMS,                       //   25
     BOOK_AIR,
     BOOK_SKY,
-    BOOK_DIVINATIONS,                  //   30
+    BOOK_DIVINATIONS,
     BOOK_WARP,
-    BOOK_ENVENOMATIONS,
-    BOOK_ANNIHILATIONS,
+    BOOK_ENVENOMATIONS,                //   30
     BOOK_UNLIFE,
-    BOOK_DESTRUCTION,                  //   35
     BOOK_CONTROL,
     BOOK_MUTATIONS,
     BOOK_TUKIMA,
-    BOOK_GEOMANCY,
-    BOOK_EARTH,                        //   40
-    BOOK_MANUAL,
+    BOOK_GEOMANCY,                     //   35
+    BOOK_EARTH,
     BOOK_WIZARDRY,
     BOOK_POWER,
     BOOK_CANTRIPS,                     //jmf: 04jan2000
-    BOOK_PARTY_TRICKS,           // 45 //jmf: 04jan2000
+    BOOK_PARTY_TRICKS,           // 40 //jmf: 04jan2000
     BOOK_BEASTS,
     BOOK_STALKING,         // renamed -- assassination was confusing  -- bwr
+    MAX_NORMAL_BOOK = BOOK_STALKING,
+
+    MIN_GOD_ONLY_BOOK,                      // 43
+    BOOK_ANNIHILATIONS = MIN_GOD_ONLY_BOOK, // 43
+    BOOK_DEMONOLOGY,
+    BOOK_NECRONOMICON,                      // 45
+    MAX_GOD_ONLY_BOOK = BOOK_NECRONOMICON,
+
+    MAX_FIXED_BOOK = MAX_GOD_ONLY_BOOK,
+
+    BOOK_RANDART_LEVEL,                     // 46
+    BOOK_RANDART_THEME,
+    BOOK_CARD_EFFECT,
+
+    MAX_MEMORISABLE_BOOK = BOOK_CARD_EFFECT,
+
+    BOOK_MANUAL,
+    BOOK_DESTRUCTION,                       // 50
     NUM_BOOKS
 };
+
+#define NUM_NORMAL_BOOKS     (MAX_NORMAL_BOOK + 1)
+#define NUM_FIXED_BOOKS      (MAX_FIXED_BOOK + 1)
+#define NUM_MEMORISABLE_BOOK (MAX_MEMORISABLE_BOOK + 1)
 
 enum branch_type                // you.where_are_you
 {

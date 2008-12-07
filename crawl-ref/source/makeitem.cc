@@ -2397,8 +2397,8 @@ static void _generate_scroll_item(item_def& item, int force_type,
     item.plus = 0;
 }
 
-static void _generate_book_item(item_def& item, int force_type,
-                                int item_level)
+static void _generate_book_item(item_def& item, int allow_uniques,
+                                int force_type, int item_level)
 {
     // determine special (description)
     item.special = random2(5);
@@ -2412,11 +2412,9 @@ static void _generate_book_item(item_def& item, int force_type,
     {
         do
         {
-            item.sub_type = random2(NUM_BOOKS);
+            item.sub_type = random2(NUM_NORMAL_BOOKS);
 
-            if (item.sub_type != BOOK_DESTRUCTION
-                && item.sub_type != BOOK_MANUAL
-                && book_rarity(item.sub_type) != 100
+            if (book_rarity(item.sub_type) != 100
                 && one_chance_in(10))
             {
                 item.sub_type = coinflip() ? BOOK_WIZARDRY : BOOK_POWER;
@@ -2428,9 +2426,7 @@ static void _generate_book_item(item_def& item, int force_type,
                 item.sub_type = BOOK_DESTRUCTION; // continue trying
             }
         }
-        while (item.sub_type == BOOK_DESTRUCTION
-               || item.sub_type == BOOK_MANUAL
-               || book_rarity(item.sub_type) == 100);
+        while (book_rarity(item.sub_type) == 100);
 
         // Tome of destruction: rare!
         if (item_level > 10 && x_chance_in_y(21 + item_level, 7000))
@@ -2455,6 +2451,36 @@ static void _generate_book_item(item_def& item, int force_type,
         }
         // Set number of reads possible before it "crumbles to dust".
         item.plus2 = 3 + random2(15);
+    }
+
+    // Manuals and books of destruction are rare enough without replacing
+    // them with randart books.
+    if (item.sub_type == BOOK_MANUAL || item.sub_type == BOOK_DESTRUCTION)
+        return;
+
+    // Only randomly generate randart books for OBJ_RANDOM, since randart
+    // spellbooks aren't merely of-the-same-type-but-better, but
+    // have an entirely different set of spells.
+    if (allow_uniques && item_level > 2 && force_type == OBJ_RANDOM
+        && x_chance_in_y(101 + item_level * 3, 4000))
+    {
+        // Same relative weights as acquirement
+        int choice = random_choose_weighted(
+            55, BOOK_RANDART_THEME,
+            12, BOOK_RANDART_LEVEL,
+             0);
+
+        item.sub_type = choice;
+    }
+
+    if (item.sub_type == BOOK_RANDART_THEME)
+        make_book_theme_randart(item, 0, 0, 7, 25);
+    else if (item.sub_type == BOOK_RANDART_LEVEL)
+    {
+        int max_level   = std::min( 9, std::max(1, item_level / 3) );
+        int spell_level = random_range(1, max_level);
+        int num_spells  = 7 - (spell_level + 1) / 2 + random_range(1, 2);
+        make_book_level_randart(item, spell_level, num_spells);
     }
 }
 
@@ -2756,7 +2782,7 @@ int items( int allow_uniques,       // not just true-false,
         break;
 
     case OBJ_BOOKS:
-        _generate_book_item(item, force_type, item_level);
+        _generate_book_item(item, allow_uniques, force_type, item_level);
         break;
 
     case OBJ_STAVES:

@@ -116,7 +116,8 @@ const bool InvEntry::is_item_glowing() const
                 || (is_artefact(*item)
                     && (item->base_type == OBJ_WEAPONS
                         || item->base_type == OBJ_MISSILES
-                        || item->base_type == OBJ_ARMOUR))));
+                        || item->base_type == OBJ_ARMOUR
+                        || item->base_type == OBJ_BOOKS))));
 }
 
 const bool InvEntry::is_item_ego() const
