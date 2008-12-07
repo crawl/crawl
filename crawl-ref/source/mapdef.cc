@@ -280,8 +280,13 @@ void level_range::reset()
 
 bool level_range::matches(const level_id &lid) const
 {
+    // Level types must always match.
+    if (lid.level_type != level_type)
+        return (false);
+
     if (lid.level_type != LEVEL_DUNGEON)
-        return (lid.level_type == level_type);
+        return (true);
+
     if (branch == NUM_BRANCHES)
         return (matches(absdungeon_depth(lid.branch, lid.depth)));
     else
