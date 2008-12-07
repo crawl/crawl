@@ -2140,7 +2140,12 @@ void inscribe_item(item_def &item, bool proper_prompt)
             _trim_randart_inscrip(item);
 
             if (!item.inscription.empty())
-                item.inscription += ", ";
+            {
+                if (ends_with(item.inscription, ","))
+                    item.inscription += " ";
+                else
+                    item.inscription += ", ";
+            }
 
             item.inscription += ainscrip;
             break;
