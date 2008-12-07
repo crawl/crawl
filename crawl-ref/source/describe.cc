@@ -439,7 +439,12 @@ void add_autoinscription( item_def &item, std::string ainscrip)
     _trim_randart_inscrip(item);
 
     if (!item.inscription.empty())
-        item.inscription += ", ";
+    {
+        if (ends_with(item.inscription, ","))
+            item.inscription += " ";
+        else
+            item.inscription += ", ";
+    }
 
     item.inscription += ainscrip;
 }

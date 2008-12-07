@@ -1587,6 +1587,13 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
                 _check_note_item(mitm[obj]);
 
+                const bool floor_god_gift
+                    = mitm[obj].inscription.find("god gift")
+                      != std::string::npos;
+                const bool inv_god_gift
+                    = you.inv[m].inscription.find("god gift")
+                      != std::string::npos;
+
                 // If the object on the ground is inscribed, but not
                 // the one in inventory, then the inventory object
                 // picks up the other's inscription.
@@ -1594,6 +1601,18 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
                     && you.inv[m].inscription.empty())
                 {
                     you.inv[m].inscription = mitm[obj].inscription;
+                }
+
+                // Remove god gift inscription unless both items have it.
+                if (floor_god_gift && !inv_god_gift
+                    || inv_god_gift && !floor_god_gift)
+                {
+                    you.inv[m].inscription
+                        = replace_all(you.inv[m].inscription,
+                                      "god gift, ", "");
+                    you.inv[m].inscription
+                        = replace_all(you.inv[m].inscription,
+                                      "god gift", "");
                 }
 
                 if (is_blood_potion(mitm[obj]))

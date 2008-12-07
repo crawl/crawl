@@ -1339,10 +1339,10 @@ void armour_wear_effects(const int item_slot)
     item_def &arm = you.inv[item_slot];
 
     const bool was_known = item_type_known(arm);
-    if (is_random_artefact(arm))
-        arm.flags |= ISFLAG_NOTED_ID;
 
     set_ident_flags(arm, ISFLAG_EQ_ARMOUR_MASK);
+    if (is_random_artefact(arm))
+        arm.flags |= ISFLAG_NOTED_ID;
 
     const equipment_type eq_slot = get_armour_slot(arm);
     const bool melded = (arm.link == you.equip[eq_slot]);
@@ -1352,10 +1352,6 @@ void armour_wear_effects(const int item_slot)
     {
         if (Options.autoinscribe_randarts && is_random_artefact( arm ))
             add_autoinscription( arm, randart_auto_inscription(arm));
-
-        // Make a note of it.
-        take_note(Note(NOTE_ID_ITEM, 0, 0, arm.name(DESC_NOCAP_A).c_str(),
-                       origin_desc(arm).c_str()));
     }
     if (!melded)
         mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
