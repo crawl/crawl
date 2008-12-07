@@ -1667,6 +1667,15 @@ unsigned int item_value( item_def item, bool ident )
     return (valued);
 }                               // end item_value()
 
+// Returns true if a shop is out of stock.
+bool shop_is_closed(const coord_def &where)
+{
+    for (int i = 0; i < MAX_SHOPS; i++)
+        if (env.shop[i].pos == where)
+            return _shop_get_stock(i).empty();
+
+    return (false);
+}
 
 void shop()
 {
@@ -1703,12 +1712,12 @@ shop_struct *get_shop(const coord_def& where)
     if (grd(where) != DNGN_ENTER_SHOP)
         return (NULL);
 
-    // find shop
+    // Find shop.
     for (int shoppy = 0; shoppy < MAX_SHOPS; shoppy ++)
     {
-        // find shop index plus a little bit of paranoia
-        if (env.shop[shoppy].pos == where &&
-            env.shop[shoppy].type != SHOP_UNASSIGNED)
+        // Find shop index plus a little bit of paranoia.
+        if (env.shop[shoppy].pos == where
+            && env.shop[shoppy].type != SHOP_UNASSIGNED)
         {
             return (&env.shop[shoppy]);
         }

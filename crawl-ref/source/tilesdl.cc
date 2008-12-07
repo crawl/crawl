@@ -190,6 +190,8 @@ bool TilesFramework::initialise()
         return false;
     }
 
+    init_player_map();
+
     m_region_tile = new DungeonRegion(&m_image, m_fonts[lbl_font].font,
                                       TILE_X, TILE_Y);
     m_region_map  = new MapRegion(Options.tile_map_pixels);

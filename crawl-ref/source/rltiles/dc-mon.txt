@@ -202,11 +202,9 @@ toenail_golem MONS_TOENAIL_GOLEM /*'8'*/
 wood_golem MONS_WOOD_GOLEM /*'8'*/
 
 ## Statues
-%sdir dc-dngn
-dngn_ice_statue ICE_STATUE /*'8'*/
-dngn_silver_statue SILVER_STATUE /*'8'*/
-dngn_orange_crystal_statue ORANGE_CRYSTAL_STATUE /*'8'*/
-%sdir dc-mon
+ice_statue ICE_STATUE /*'8'*/
+silver_statue SILVER_STATUE /*'8'*/
+orange_crystal_statue ORANGE_CRYSTAL_STATUE /*'8'*/
 
 ## Gargoyles
 gargoyle MONS_GARGOYLE /*'9'*/

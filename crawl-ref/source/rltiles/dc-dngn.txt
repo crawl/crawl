@@ -315,21 +315,11 @@ floor/lava1
 floor/lava2
 floor/lava3
 dngn_deep_water DNGN_DEEP_WATER
-dngn_deep_water
-dngn_deep_water
-dngn_deep_water
 dngn_shallow_water DNGN_SHALLOW_WATER
-dngn_shallow_water
-dngn_shallow_water
-dngn_shallow_water
+dngn_shallow_water_disturbance DNGN_SHALLOW_WATER_DISTURBANCE
 dngn_deep_water_murky DNGN_DEEP_WATER_MURKY
-dngn_deep_water_murky
-dngn_deep_water_murky
-dngn_deep_water_murky
 dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
-dngn_shallow_water_murky
-dngn_shallow_water_murky
-dngn_shallow_water_murky
+dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 
 wall/stone2_gray0 DNGN_STONE_WALL
 wall/stone2_gray1
@@ -373,20 +363,23 @@ rock_stairs_down DNGN_ROCK_STAIRS_DOWN
 stone_stairs_up DNGN_STONE_STAIRS_UP
 rock_stairs_up DNGN_ROCK_STAIRS_UP
 
+%sdir dc-dngn/shops
 ##dngn_enter_shop DNGN_ENTER_SHOP
 %shrink 0
 %back dngn_enter_shop
-shops/shop_general SHOP_GENERAL
-shops/shop_weapon SHOP_WEAPONS
-shops/shop_armour SHOP_ARMOUR
-shops/shop_food SHOP_FOOD
-shops/shop_books SHOP_BOOKS
-shops/shop_scrolls SHOP_SCROLLS
-shops/shop_wands SHOP_WANDS
-shops/shop_jewellery SHOP_JEWELLERY
-shops/shop_potions SHOP_POTIONS
+shop_general SHOP_GENERAL
+shop_weapon SHOP_WEAPONS
+shop_armour SHOP_ARMOUR
+shop_food SHOP_FOOD
+shop_books SHOP_BOOKS
+shop_scrolls SHOP_SCROLLS
+shop_wands SHOP_WANDS
+shop_jewellery SHOP_JEWELLERY
+shop_potions SHOP_POTIONS
 %back none
 %shrink 1
+dngn_enter_shop_closed SHOP_CLOSED
+%sdir dc-dngn
 
 dngn_enter_labyrinth DNGN_ENTER_LABYRINTH
 dngn_enter_dis DNGN_ENTER_DIS

@@ -2245,7 +2245,12 @@ static int _tileidx_trap(trap_type type)
 
 static int _tileidx_shop(coord_def where)
 {
+    if (shop_is_closed(where))
+        return TILE_SHOP_CLOSED;
+
     const shop_struct *shop = get_shop(where);
+    if (!shop)
+        return TILE_ERROR;
 
     switch (shop->type)
     {
@@ -2315,12 +2320,22 @@ int tileidx_feature(int object, int gx, int gy)
         }
         return TILE_DNGN_DEEP_WATER;
     case DNGN_SHALLOW_WATER:
+    {
+        int t = TILE_DNGN_SHALLOW_WATER;
         if (_is_sewers() || env.grid_colours[gx][gy] == GREEN
             || env.grid_colours[gx][gy] == LIGHTGREEN)
         {
-            return TILE_DNGN_SHALLOW_WATER_MURKY;
+            t = TILE_DNGN_SHALLOW_WATER_MURKY;
         }
-        return TILE_DNGN_SHALLOW_WATER;
+        if (mgrd[gx][gy] != NON_MONSTER)
+        {
+            monsters *mon = &menv[mgrd[gx][gy]];
+            // Add disturbance to tile.
+            if (mons_is_submerged(mon))
+                t++;
+        }
+        return (t);
+    }
     case DNGN_FLOOR:
     case DNGN_UNDISCOVERED_TRAP:
        return TILE_FLOOR_NORMAL;
@@ -2634,7 +2649,7 @@ static inline void _finalize_tile(unsigned int *tile,
 
     // TODO enne - expose this as an option, so ziggurat can use it too.
     // Alternatively, allow the stone type to be set.
-    // 
+    //
     // Hack: Swap rock/stone in crypt and tomb, because there are
     //       only stone walls.
     if ((you.where_are_you == BRANCH_CRYPT || you.where_are_you == BRANCH_TOMB)
