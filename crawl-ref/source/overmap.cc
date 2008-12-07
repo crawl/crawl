@@ -410,7 +410,7 @@ std::string overview_description_string()
     last_id.depth = 10000;
     std::map<level_pos, shop_type>::const_iterator ci_shops;
 
-    // there are at most 5 shops per level, plus 7 chars for the level
+    // There are at most 5 shops per level, plus 7 chars for the level
     // name, plus 4 for the spacing; that makes a total of 17
     // characters per shop.
     const int maxcolumn = get_number_of_cols() - 17;
@@ -662,8 +662,7 @@ void _seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
     switch (which_thing)
     {
     case DNGN_ENTER_SHOP:
-        if (!shop_is_closed(pos))
-            shops_present[where] = static_cast<shop_type>(get_shop(pos)->type);
+        shops_present[where] = static_cast<shop_type>(get_shop(pos)->type);
         break;
 
     case DNGN_ENTER_PORTAL_VAULT:
@@ -696,7 +695,7 @@ void _seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
 
     default:
         const portal_type portal = feature_to_portal(which_thing);
-        if ( portal != PORTAL_NONE )
+        if (portal != PORTAL_NONE)
             portals_present[where] = portal;
         break;
     }

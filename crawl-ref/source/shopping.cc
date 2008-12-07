@@ -1668,14 +1668,11 @@ unsigned int item_value( item_def item, bool ident )
     return (valued);
 }                               // end item_value()
 
-// Returns true if a shop is out of stock.
-bool shop_is_closed(const coord_def &where)
+static void _delete_shop(int i)
 {
-    for (int i = 0; i < MAX_SHOPS; i++)
-        if (env.shop[i].pos == where)
-            return _shop_get_stock(i).empty();
-
-    return (false);
+    grd(you.pos()) = DNGN_ABANDONED_SHOP;
+//    env.shop.erase(i);
+    unnotice_feature(level_pos(level_id::current(), you.pos()));
 }
 
 void shop()
@@ -1697,20 +1694,22 @@ void shop()
     {
         const shop_struct& shop = env.shop[i];
         mprf("%s appears to be closed.", shop_name(shop.pos).c_str());
+        _delete_shop(i);
         return;
     }
 
     const bool bought_something = _in_a_shop(i);
+    const std::string shopname = shop_name(env.shop[i].pos);
 
     // If the shop is now empty, erase it from the overmap.
     if ( _shop_get_stock(i).empty() )
-        unnotice_feature(level_pos(level_id::current(), you.pos()));
+        _delete_shop(i);
 
     burden_change();
     redraw_screen();
 
     if (bought_something)
-        mprf("Thank you for shopping at %s!", shop_name(env.shop[i].pos).c_str());
+        mprf("Thank you for shopping at %s!", shopname.c_str());
 }
 
 shop_struct *get_shop(const coord_def& where)

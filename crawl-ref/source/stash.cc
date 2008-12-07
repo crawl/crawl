@@ -118,13 +118,13 @@ void describe_stash(int x, int y)
         if (s)
         {
             std::string desc = "[Stash: "
-                       + s->description() + "]";
+                               + s->description() + "]";
             mpr(desc.c_str(), MSGCH_EXAMINE_FILTER);
         }
     }
 }
 
-static void fully_identify_item(item_def *item)
+static void _fully_identify_item(item_def *item)
 {
     if (!item || !is_valid_item(*item))
         return;
@@ -254,6 +254,7 @@ bool Stash::is_boring_feature(dungeon_feature_type feat)
     case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_ESCAPE_HATCH_UP:
     case DNGN_ENTER_SHOP:
+    case DNGN_ABANDONED_SHOP:
     case DNGN_UNDISCOVERED_TRAP:
         return (true);
     default:
@@ -653,7 +654,7 @@ void Stash::write(std::ostream &os, int refx, int refy,
         item_def item = items[i];
 
         if (identify)
-            fully_identify_item(&item);
+            _fully_identify_item(&item);
 
         std::string s = stash_item_name(item);
         strncpy(buf, s.c_str(), sizeof buf);
@@ -961,7 +962,7 @@ void ShopInfo::write(std::ostream &os, bool identify) const
             shop_item item = items[i];
 
             if (identify)
-                fully_identify_item(&item.item);
+                _fully_identify_item(&item.item);
 
             os << "  " << shop_item_name(item) << std::endl;
             std::string desc = shop_item_desc(item);
@@ -1186,8 +1187,7 @@ int LevelStashes::_num_enabled_stashes() const
 
 void LevelStashes::get_matching_stashes(
         const base_pattern &search,
-        std::vector<stash_search_result> &results)
-    const
+        std::vector<stash_search_result> &results) const
 {
     std::string lplace = "{" + m_place.describe() + "}";
     for (stashes_t::const_iterator iter = m_stashes.begin();
@@ -1438,7 +1438,6 @@ void StashTracker::update_visible_stashes(
 
     LevelStashes *lev = find_current_level();
     for (int cy = crawl_view.glos1.y; cy <= crawl_view.glos2.y; ++cy)
-    {
         for (int cx = crawl_view.glos1.x; cx <= crawl_view.glos2.x; ++cx)
         {
             if (!in_bounds(cx, cy) || !see_grid(cx, cy))
@@ -1458,7 +1457,6 @@ void StashTracker::update_visible_stashes(
             if (grid == DNGN_ENTER_SHOP)
                 get_shop(cx, cy);
         }
-    }
 
     if (lev && !lev->stash_count())
         remove_level();

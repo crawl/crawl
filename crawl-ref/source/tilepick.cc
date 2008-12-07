@@ -2245,9 +2245,6 @@ static int _tileidx_trap(trap_type type)
 
 static int _tileidx_shop(coord_def where)
 {
-    if (shop_is_closed(where))
-        return TILE_SHOP_CLOSED;
-
     const shop_struct *shop = get_shop(where);
     if (!shop)
         return TILE_ERROR;
@@ -2349,6 +2346,8 @@ int tileidx_feature(int object, int gx, int gy)
         return _tileidx_trap(get_trap_type(coord_def(gx, gy)));
     case DNGN_ENTER_SHOP:
         return _tileidx_shop(coord_def(gx,gy));
+    case DNGN_ABANDONED_SHOP:
+        return TILE_DNGN_ABANDONED_SHOP;
     case DNGN_ENTER_LABYRINTH:
         return TILE_DNGN_ENTER_LABYRINTH;
     case DNGN_STONE_STAIRS_DOWN_I:

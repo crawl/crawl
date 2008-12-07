@@ -1573,11 +1573,8 @@ std::string get_terse_square_desc(const coord_def &gc)
     {
         if (is_terrain_seen(gc))
         {
-            desc = feature_description(gc, false, DESC_PLAIN, false);
-            if (!see_grid(gc))
-            {
-                desc = "[" + desc + "]";
-            }
+            desc = "[" + feature_description(gc, false, DESC_PLAIN, false)
+                       + "]";
             is_feature = true;
         }
         else
@@ -2193,10 +2190,12 @@ static void _describe_feature(const coord_def& where, bool oos)
         return;
 
     dungeon_feature_type grid = grd(where);
-    if ( grid == DNGN_SECRET_DOOR )
+    if (grid == DNGN_SECRET_DOOR)
         grid = grid_secret_door_appearance(where);
 
-    std::string desc = feature_description(grid);
+    std::string desc;
+    desc = feature_description(grid);
+
     if (desc.length())
     {
         if (oos)
@@ -2429,6 +2428,8 @@ std::string raw_feature_description(dungeon_feature_type grid,
         return ("natural trap");
     case DNGN_ENTER_SHOP:
         return ("shop");
+    case DNGN_ABANDONED_SHOP:
+        return ("abandoned shop");
     case DNGN_ENTER_LABYRINTH:
         return ("labyrinth entrance");
     case DNGN_ENTER_DIS:
@@ -2575,10 +2576,10 @@ std::string feature_description(const coord_def& where, bool bloody,
                                 description_level_type dtype, bool add_stop)
 {
     dungeon_feature_type grid = grd(where);
-    if ( grid == DNGN_SECRET_DOOR )
+    if (grid == DNGN_SECRET_DOOR)
         grid = grid_secret_door_appearance(where);
 
-    if ( grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR )
+    if (grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR)
     {
         std::set<coord_def> all_door;
         find_connected_identical(where, grd(where), all_door);
@@ -2602,16 +2603,12 @@ std::string feature_description(const coord_def& where, bool bloody,
     case DNGN_TRAP_NATURAL:
         return (feature_description(grid, get_trap_type(where), bloody,
                                     dtype, add_stop));
+    case DNGN_ABANDONED_SHOP:
+        return thing_do_grammar(dtype, add_stop, false, "An abandoned shop");
+
     case DNGN_ENTER_SHOP:
-    {
-        std::string desc = "";
-        if (shop_is_closed(where))
-        {
-            desc = "An abandoned shop";
-            return thing_do_grammar(dtype, add_stop, false, desc);
-        }
         return shop_name(where, add_stop);
-    }
+
     case DNGN_ENTER_PORTAL_VAULT:
         return (thing_do_grammar(
                     dtype, add_stop, false,

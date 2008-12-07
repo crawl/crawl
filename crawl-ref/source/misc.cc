@@ -1683,6 +1683,8 @@ void up_stairs(dungeon_feature_type force_stair,
     {
         if (stair_find == DNGN_STONE_ARCH)
             mpr("There is nothing on the other side of the stone arch.");
+        else if (stair_find == DNGN_ABANDONED_SHOP)
+            mpr("This shop appears to be closed.");
         else
             mpr("You can't go up here.");
         return;

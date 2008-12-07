@@ -378,7 +378,7 @@ shop_jewellery SHOP_JEWELLERY
 shop_potions SHOP_POTIONS
 %back none
 %shrink 1
-dngn_enter_shop_closed SHOP_CLOSED
+dngn_abandoned_shop ABANDONED_SHOP
 %sdir dc-dngn
 
 dngn_enter_labyrinth DNGN_ENTER_LABYRINTH

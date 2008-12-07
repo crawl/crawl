@@ -464,12 +464,9 @@ static void _get_symbol( const coord_def& where,
             }
             else
             {
-                // Colour closed shops grey.
-                if (grd(where) == DNGN_ENTER_SHOP && shop_is_closed(where))
-                    *colour = LIGHTGREY | colmask;
                 // Don't clobber with BLACK, because the colour should be
                 // already set.
-                else if (fdef.colour != BLACK)
+                if (fdef.colour != BLACK)
                     *colour = fdef.colour | colmask;
 
                 if (fdef.em_colour != fdef.colour && fdef.em_colour)
@@ -679,9 +676,6 @@ screen_buffer_t colour_code_map( const coord_def& p, bool item_colour,
     const bool terrain_seen = is_terrain_seen(p);
     const feature_def &fdef = Feature[grid_value];
     feature_colour = terrain_seen? fdef.seen_colour : fdef.map_colour;
-    // Colour closed shops grey.
-    if (terrain_seen && grd(p) == DNGN_ENTER_SHOP && shop_is_closed(p))
-        feature_colour = LIGHTGREY;
 
     if (terrain_seen && feature_colour != fdef.seen_em_colour
         && fdef.seen_em_colour)
@@ -2819,6 +2813,7 @@ bool is_feature(int feature, const coord_def& where)
         case DNGN_ENTER_PORTAL_VAULT:
         case DNGN_EXIT_PORTAL_VAULT:
         case DNGN_ENTER_SHOP:
+        case DNGN_ABANDONED_SHOP:
         case DNGN_ENTER_DIS:
         case DNGN_ENTER_GEHENNA:
         case DNGN_ENTER_COCYTUS:
@@ -3999,14 +3994,14 @@ void init_feature_table( void )
             Feature[i].dchar        = DCHAR_WALL;
             Feature[i].colour       = EC_ROCK;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            Feature[i].minimap = MF_WALL;
+            Feature[i].minimap      = MF_WALL;
             break;
 
         case DNGN_STONE_WALL:
             Feature[i].dchar        = DCHAR_WALL;
             Feature[i].colour       = EC_STONE;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            Feature[i].minimap = MF_WALL;
+            Feature[i].minimap      = MF_WALL;
             break;
 
         case DNGN_CLEAR_ROCK_WALL:
@@ -4015,19 +4010,19 @@ void init_feature_table( void )
             Feature[i].dchar        = DCHAR_WALL;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             Feature[i].colour       = LIGHTCYAN;
-            Feature[i].minimap = MF_WALL;
+            Feature[i].minimap      = MF_WALL;
             break;
 
 
         case DNGN_OPEN_DOOR:
-            Feature[i].dchar  = DCHAR_DOOR_OPEN;
-            Feature[i].colour = LIGHTGREY;
+            Feature[i].dchar   = DCHAR_DOOR_OPEN;
+            Feature[i].colour  = LIGHTGREY;
             Feature[i].minimap = MF_DOOR;
             break;
 
         case DNGN_CLOSED_DOOR:
-            Feature[i].dchar  = DCHAR_DOOR_CLOSED;
-            Feature[i].colour = LIGHTGREY;
+            Feature[i].dchar   = DCHAR_DOOR_CLOSED;
+            Feature[i].colour  = LIGHTGREY;
             Feature[i].minimap = MF_DOOR;
             break;
 
@@ -4035,7 +4030,7 @@ void init_feature_table( void )
             Feature[i].dchar        = DCHAR_WALL;
             Feature[i].colour       = CYAN;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            Feature[i].minimap = MF_WALL;
+            Feature[i].minimap      = MF_WALL;
             break;
 
         case DNGN_SECRET_DOOR:
@@ -4043,19 +4038,19 @@ void init_feature_table( void )
             Feature[i].dchar        = DCHAR_WALL;
             Feature[i].colour       = EC_ROCK;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            Feature[i].minimap = MF_WALL;
+            Feature[i].minimap      = MF_WALL;
             break;
 
         case DNGN_GREEN_CRYSTAL_WALL:
             Feature[i].dchar        = DCHAR_WALL;
             Feature[i].colour       = GREEN;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            Feature[i].minimap = MF_WALL;
+            Feature[i].minimap      = MF_WALL;
             break;
 
         case DNGN_ORCISH_IDOL:
-            Feature[i].dchar  = DCHAR_STATUE;
-            Feature[i].colour = BROWN; // same as clay golem, I hope that's okay
+            Feature[i].dchar   = DCHAR_STATUE;
+            Feature[i].colour  = BROWN; // same as clay golem, I hope that's okay
             Feature[i].minimap = MF_WALL;
             break;
 
@@ -4063,30 +4058,30 @@ void init_feature_table( void )
             Feature[i].dchar        = DCHAR_WALL;
             Feature[i].colour       = YELLOW;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            Feature[i].minimap = MF_WALL;
+            Feature[i].minimap      = MF_WALL;
             break;
 
         case DNGN_GRANITE_STATUE:
-            Feature[i].dchar  = DCHAR_STATUE;
-            Feature[i].colour = DARKGREY;
+            Feature[i].dchar   = DCHAR_STATUE;
+            Feature[i].colour  = DARKGREY;
             Feature[i].minimap = MF_WALL;
             break;
 
         case DNGN_LAVA:
-            Feature[i].dchar  = DCHAR_WAVY;
-            Feature[i].colour = RED;
+            Feature[i].dchar   = DCHAR_WAVY;
+            Feature[i].colour  = RED;
             Feature[i].minimap = MF_LAVA;
             break;
 
         case DNGN_DEEP_WATER:
-            Feature[i].dchar  = DCHAR_WAVY;
-            Feature[i].colour = BLUE;
+            Feature[i].dchar   = DCHAR_WAVY;
+            Feature[i].colour  = BLUE;
             Feature[i].minimap = MF_WATER;
             break;
 
         case DNGN_SHALLOW_WATER:
-            Feature[i].dchar  = DCHAR_WAVY;
-            Feature[i].colour = CYAN;
+            Feature[i].dchar   = DCHAR_WAVY;
+            Feature[i].colour  = CYAN;
             Feature[i].minimap = MF_WATER;
             break;
 
@@ -4094,14 +4089,14 @@ void init_feature_table( void )
             Feature[i].dchar        = DCHAR_FLOOR;
             Feature[i].colour       = EC_FLOOR;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
-            Feature[i].minimap = MF_FLOOR;
+            Feature[i].minimap      = MF_FLOOR;
             break;
 
         case DNGN_FLOOR_SPECIAL:
             Feature[i].dchar        = DCHAR_FLOOR;
             Feature[i].colour       = YELLOW;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
-            Feature[i].minimap = MF_FLOOR;
+            Feature[i].minimap      = MF_FLOOR;
             break;
 
         case DNGN_EXIT_HELL:
@@ -4109,7 +4104,7 @@ void init_feature_table( void )
             Feature[i].colour      = LIGHTRED;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = LIGHTRED;
-            Feature[i].minimap = MF_STAIR_UP;
+            Feature[i].minimap     = MF_STAIR_UP;
             break;
 
         case DNGN_ENTER_HELL:
@@ -4118,35 +4113,35 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = RED;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_TRAP_MECHANICAL:
             Feature[i].colour     = LIGHTCYAN;
             Feature[i].dchar      = DCHAR_TRAP;
             Feature[i].map_colour = LIGHTCYAN;
-            Feature[i].minimap = MF_TRAP;
+            Feature[i].minimap    = MF_TRAP;
             break;
 
         case DNGN_TRAP_MAGICAL:
             Feature[i].colour     = MAGENTA;
             Feature[i].dchar      = DCHAR_TRAP;
             Feature[i].map_colour = MAGENTA;
-            Feature[i].minimap = MF_TRAP;
+            Feature[i].minimap    = MF_TRAP;
             break;
 
         case DNGN_TRAP_NATURAL:
             Feature[i].colour     = BROWN;
             Feature[i].dchar      = DCHAR_TRAP;
             Feature[i].map_colour = BROWN;
-            Feature[i].minimap = MF_TRAP;
+            Feature[i].minimap    = MF_TRAP;
             break;
 
         case DNGN_UNDISCOVERED_TRAP:
             Feature[i].dchar        = DCHAR_FLOOR;
             Feature[i].colour       = EC_FLOOR;
             Feature[i].magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
-            Feature[i].minimap = MF_FLOOR;
+            Feature[i].minimap      = MF_FLOOR;
             break;
 
         case DNGN_ENTER_SHOP:
@@ -4155,7 +4150,14 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = YELLOW;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
+            break;
+
+        case DNGN_ABANDONED_SHOP:
+            Feature[i].colour     = LIGHTGREY;
+            Feature[i].dchar      = DCHAR_ARCH;
+            Feature[i].map_colour = LIGHTGREY;
+            Feature[i].minimap    = MF_FLOOR;
             break;
 
         case DNGN_ENTER_LABYRINTH:
@@ -4164,7 +4166,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = CYAN;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_ENTER_PORTAL_VAULT:
@@ -4176,14 +4178,14 @@ void init_feature_table( void )
             Feature[i].colour      = EC_SHIMMER_BLUE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = EC_SHIMMER_BLUE;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_ESCAPE_HATCH_DOWN:
             Feature[i].dchar      = DCHAR_STAIRS_DOWN;
             Feature[i].colour     = BROWN;
             Feature[i].map_colour = BROWN;
-            Feature[i].minimap = MF_STAIR_DOWN;
+            Feature[i].minimap    = MF_STAIR_DOWN;
             break;
 
         case DNGN_STONE_STAIRS_DOWN_I:
@@ -4194,14 +4196,14 @@ void init_feature_table( void )
             Feature[i].em_colour      = WHITE;
             Feature[i].map_colour     = RED;
             Feature[i].seen_em_colour = WHITE;
-            Feature[i].minimap    = MF_STAIR_DOWN;
+            Feature[i].minimap        = MF_STAIR_DOWN;
             break;
 
         case DNGN_ESCAPE_HATCH_UP:
             Feature[i].dchar      = DCHAR_STAIRS_UP;
             Feature[i].colour     = BROWN;
             Feature[i].map_colour = BROWN;
-            Feature[i].minimap = MF_STAIR_UP;
+            Feature[i].minimap    = MF_STAIR_UP;
             break;
 
         case DNGN_STONE_STAIRS_UP_I:
@@ -4212,7 +4214,7 @@ void init_feature_table( void )
             Feature[i].map_colour     = GREEN;
             Feature[i].em_colour      = WHITE;
             Feature[i].seen_em_colour = WHITE;
-            Feature[i].minimap = MF_STAIR_UP;
+            Feature[i].minimap        = MF_STAIR_UP;
             break;
 
         case DNGN_ENTER_DIS:
@@ -4221,7 +4223,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = CYAN;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_ENTER_GEHENNA:
@@ -4230,7 +4232,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = RED;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_ENTER_COCYTUS:
@@ -4239,7 +4241,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = LIGHTCYAN;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_ENTER_TARTARUS:
@@ -4248,7 +4250,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = DARKGREY;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_ENTER_ABYSS:
@@ -4257,21 +4259,21 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = EC_RANDOM;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_EXIT_ABYSS:
             Feature[i].colour     = EC_RANDOM;
             Feature[i].dchar      = DCHAR_ARCH;
             Feature[i].map_colour = EC_RANDOM;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap    = MF_STAIR_BRANCH;
             break;
 
         case DNGN_STONE_ARCH:
             Feature[i].colour     = LIGHTGREY;
             Feature[i].dchar      = DCHAR_ARCH;
             Feature[i].map_colour = LIGHTGREY;
-            Feature[i].minimap = MF_FLOOR;
+            Feature[i].minimap    = MF_FLOOR;
             break;
 
         case DNGN_ENTER_PANDEMONIUM:
@@ -4280,7 +4282,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = LIGHTBLUE;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_EXIT_PANDEMONIUM:
@@ -4289,7 +4291,7 @@ void init_feature_table( void )
             Feature[i].dchar       = DCHAR_ARCH;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = LIGHTBLUE;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_TRANSIT_PANDEMONIUM:
@@ -4297,7 +4299,7 @@ void init_feature_table( void )
             Feature[i].dchar       = DCHAR_ARCH;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = LIGHTGREEN;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_ENTER_ORCISH_MINES:
@@ -4321,7 +4323,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = RED;
             Feature[i].seen_colour = YELLOW;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_ENTER_ZOT:
@@ -4330,7 +4332,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = MAGENTA;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_RETURN_FROM_ORCISH_MINES:
@@ -4353,7 +4355,7 @@ void init_feature_table( void )
             Feature[i].dchar       = DCHAR_STAIRS_UP;
             Feature[i].map_colour  = GREEN;
             Feature[i].seen_colour = YELLOW;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_RETURN_FROM_ZOT:
@@ -4361,7 +4363,7 @@ void init_feature_table( void )
             Feature[i].dchar       = DCHAR_ARCH;
             Feature[i].map_colour  = LIGHTGREY;
             Feature[i].seen_colour = MAGENTA;
-            Feature[i].minimap = MF_STAIR_BRANCH;
+            Feature[i].minimap     = MF_STAIR_BRANCH;
             break;
 
         case DNGN_ALTAR_ZIN:
@@ -4370,7 +4372,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = WHITE;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_SHINING_ONE:
@@ -4379,7 +4381,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = YELLOW;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_KIKUBAAQUDGHA:
@@ -4388,7 +4390,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = DARKGREY;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_YREDELEMNUL:
@@ -4397,7 +4399,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = EC_UNHOLY;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_XOM:
@@ -4406,7 +4408,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = EC_RANDOM;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_VEHUMET:
@@ -4415,7 +4417,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = EC_VEHUMET;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_OKAWARU:
@@ -4424,7 +4426,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = CYAN;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_MAKHLEB:
@@ -4433,7 +4435,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = EC_FIRE;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_SIF_MUNA:
@@ -4442,7 +4444,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = BLUE;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_TROG:
@@ -4451,7 +4453,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = RED;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_NEMELEX_XOBEH:
@@ -4460,7 +4462,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = LIGHTMAGENTA;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_ELYVILON:
@@ -4469,7 +4471,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = LIGHTGREY;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_LUGONU:
@@ -4478,7 +4480,7 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = GREEN;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_ALTAR_BEOGH:
@@ -4487,24 +4489,24 @@ void init_feature_table( void )
             Feature[i].flags      |= FFT_NOTABLE;
             Feature[i].map_colour  = DARKGREY;
             Feature[i].seen_colour = EC_BEOGH;
-            Feature[i].minimap = MF_FEATURE;
+            Feature[i].minimap     = MF_FEATURE;
             break;
 
         case DNGN_FOUNTAIN_BLUE:
-            Feature[i].colour = BLUE;
-            Feature[i].dchar  = DCHAR_FOUNTAIN;
+            Feature[i].colour  = BLUE;
+            Feature[i].dchar   = DCHAR_FOUNTAIN;
             Feature[i].minimap = MF_FEATURE;
             break;
 
         case DNGN_FOUNTAIN_SPARKLING:
-            Feature[i].colour = LIGHTBLUE;
-            Feature[i].dchar  = DCHAR_FOUNTAIN;
+            Feature[i].colour  = LIGHTBLUE;
+            Feature[i].dchar   = DCHAR_FOUNTAIN;
             Feature[i].minimap = MF_FEATURE;
             break;
 
         case DNGN_FOUNTAIN_BLOOD:
-            Feature[i].colour = RED;
-            Feature[i].dchar  = DCHAR_FOUNTAIN;
+            Feature[i].colour  = RED;
+            Feature[i].dchar   = DCHAR_FOUNTAIN;
             Feature[i].minimap = MF_FEATURE;
             break;
 
@@ -4512,98 +4514,98 @@ void init_feature_table( void )
         case DNGN_DRY_FOUNTAIN_SPARKLING:
         case DNGN_DRY_FOUNTAIN_BLOOD:
         case DNGN_PERMADRY_FOUNTAIN:
-            Feature[i].colour = LIGHTGREY;
-            Feature[i].dchar  = DCHAR_FOUNTAIN;
+            Feature[i].colour  = LIGHTGREY;
+            Feature[i].dchar   = DCHAR_FOUNTAIN;
             Feature[i].minimap = MF_FEATURE;
             break;
 
         case DNGN_INVIS_EXPOSED:
-            Feature[i].dchar = DCHAR_INVIS_EXPOSED;
+            Feature[i].dchar   = DCHAR_INVIS_EXPOSED;
             Feature[i].minimap = MF_MONS_HOSTILE;
             break;
 
         case DNGN_ITEM_DETECTED:
-            Feature[i].dchar = DCHAR_ITEM_DETECTED;
+            Feature[i].dchar   = DCHAR_ITEM_DETECTED;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_ORB:
-            Feature[i].dchar = DCHAR_ITEM_ORB;
+            Feature[i].dchar   = DCHAR_ITEM_ORB;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_WEAPON:
-            Feature[i].dchar = DCHAR_ITEM_WEAPON;
+            Feature[i].dchar   = DCHAR_ITEM_WEAPON;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_ARMOUR:
-            Feature[i].dchar = DCHAR_ITEM_ARMOUR;
+            Feature[i].dchar   = DCHAR_ITEM_ARMOUR;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_WAND:
-            Feature[i].dchar = DCHAR_ITEM_WAND;
+            Feature[i].dchar   = DCHAR_ITEM_WAND;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_FOOD:
-            Feature[i].dchar = DCHAR_ITEM_FOOD;
+            Feature[i].dchar   = DCHAR_ITEM_FOOD;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_SCROLL:
-            Feature[i].dchar = DCHAR_ITEM_SCROLL;
+            Feature[i].dchar   = DCHAR_ITEM_SCROLL;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_RING:
-            Feature[i].dchar = DCHAR_ITEM_RING;
+            Feature[i].dchar   = DCHAR_ITEM_RING;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_POTION:
-            Feature[i].dchar = DCHAR_ITEM_POTION;
+            Feature[i].dchar   = DCHAR_ITEM_POTION;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_MISSILE:
-            Feature[i].dchar = DCHAR_ITEM_MISSILE;
+            Feature[i].dchar   = DCHAR_ITEM_MISSILE;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_BOOK:
-            Feature[i].dchar = DCHAR_ITEM_BOOK;
+            Feature[i].dchar   = DCHAR_ITEM_BOOK;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_STAVE:
-            Feature[i].dchar = DCHAR_ITEM_STAVE;
+            Feature[i].dchar   = DCHAR_ITEM_STAVE;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_MISCELLANY:
-            Feature[i].dchar = DCHAR_ITEM_MISCELLANY;
+            Feature[i].dchar   = DCHAR_ITEM_MISCELLANY;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_CORPSE:
-            Feature[i].dchar = DCHAR_ITEM_CORPSE;
+            Feature[i].dchar   = DCHAR_ITEM_CORPSE;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_GOLD:
-            Feature[i].dchar = DCHAR_ITEM_GOLD;
+            Feature[i].dchar   = DCHAR_ITEM_GOLD;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_ITEM_AMULET:
-            Feature[i].dchar = DCHAR_ITEM_AMULET;
+            Feature[i].dchar   = DCHAR_ITEM_AMULET;
             Feature[i].minimap = MF_ITEM;
             break;
 
         case DNGN_CLOUD:
-            Feature[i].dchar = DCHAR_CLOUD;
+            Feature[i].dchar   = DCHAR_CLOUD;
             Feature[i].minimap = MF_SKIP;
             break;
         }

@@ -894,7 +894,7 @@ enum dungeon_char_type
 // * Any: edit direct.cc and add a description for the feature.
 // * Any: edit dat/descript.txt and add a long description if appropriate.
 // * Any: check the grid_* functions in misc.cc and make sure
-//   they return sane values for your new feature.
+//        they return sane values for your new feature.
 // * Any: edit dungeon.cc and add a symbol to map_feature() and
 //        vault_grid() for the feature, if you want vault maps to
 //        be able to use it.  If you do, also update
@@ -1072,6 +1072,7 @@ enum dungeon_feature_type
     DNGN_DRY_FOUNTAIN_SPARKLING,
     DNGN_DRY_FOUNTAIN_BLOOD,           //  205
     DNGN_PERMADRY_FOUNTAIN,
+    DNGN_ABANDONED_SHOP,
 
     NUM_REAL_FEATURES,                 //  207
 
