@@ -374,8 +374,10 @@ static void _place_monster_corpse(const monsters *monster, bool silent,
             if (you.can_see(monster))
                 simple_monster_message(monster, " turns back into a corpse!");
             else
+            {
                 mprf("%s appears out of nowhere!",
                      mitm[o].name(DESC_CAP_A).c_str());
+            }
         }
         const bool poison = (mons_corpse_effect(corpse_class) == CE_POISONOUS
                              && player_res_poison() <= 0);

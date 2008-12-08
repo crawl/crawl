@@ -354,12 +354,12 @@ std::string pluralise(const std::string &name,
     }
     else if (ends_with(name, "staff"))
     {
-        // staff -> staves, but not hippogriff -> hippogrives.
+        // staff -> staves
         return name.substr(0, name.length() - 2) + "ves";
     }
-    else if (ends_with(name, "f"))
+    else if (ends_with(name, "f") && !ends_with(name, "ff"))
     {
-        // elf -> elves
+        // elf -> elves, but not hippogriff -> hippogrives.
         return name.substr(0, name.length() - 1) + "ves";
     }
     else if (ends_with(name, "mage"))

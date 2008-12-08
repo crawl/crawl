@@ -39,6 +39,7 @@
 #include "macro.h"
 #include "message.h"
 #include "misc.h"
+#include "monplace.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "newgame.h"
@@ -1704,7 +1705,8 @@ void blood_smell( int strength, const coord_def& where )
         {
             // Let sleeping hounds lie.
             if (mons_is_sleeping(monster)
-                && mons_species(monster->type) != MONS_VAMPIRE)
+                && mons_species(monster->type) != MONS_VAMPIRE
+                && monster->type != MONS_SHARK)
             {
                 // 33% chance of sleeping on
                 // 33% of being disturbed (start BEH_WANDER)
@@ -1729,6 +1731,35 @@ void blood_smell( int strength, const coord_def& where )
                  monster->pos().x, monster->pos().y);
 #endif
             behaviour_event( monster, ME_ALERT, MHITNOT, where );
+
+            if (monster->type == MONS_SHARK)
+            {
+                // Sharks go into a battle frenzy if they smell blood.
+                monster_pathfind mp;
+                if (mp.init_pathfind(monster, where))
+                {
+                    mon_enchant ench = monster->get_ench(ENCH_BATTLE_FRENZY);
+                    const int dist = 15 - (monster->pos() - where).rdist();
+                    const int dur  = random_range(dist, dist*2)
+                                     * speed_to_duration(monster->speed);
+
+                    if (ench.ench != ENCH_NONE)
+                    {
+                        int level = ench.degree;
+                        if (level < 4 && one_chance_in(2*level))
+                            ench.degree++;
+                        ench.duration = std::max(ench.duration, dur);
+                        monster->update_ench(ench);
+                    }
+                    else
+                    {
+                        monster->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1,
+                                                      KC_OTHER, dur));
+                        simple_monster_message(monster, " is consumed with "
+                                                        "blood-lust!");
+                    }
+                }
+            }
         }
     }
 }

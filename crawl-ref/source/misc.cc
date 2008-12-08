@@ -1148,13 +1148,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
             env.map(where).property |= FPROP_BLOODY;
 
         if (smell_alert)
-        {
-            // If old or new blood on square, the smell reaches further.
-            if (testbits(env.map(where).property, FPROP_BLOODY))
-                blood_smell(12, where);
-            else // Still allow a lingering smell.
-                blood_smell(7, where);
-        }
+            blood_smell(12, where);
 
         if (spatter)
         {

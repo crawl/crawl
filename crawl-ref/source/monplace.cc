@@ -587,9 +587,6 @@ int place_monster(mgen_data mg, bool force_pos)
 #ifdef DEBUG_MON_CREATION
     mpr("in place_monster()", MSGCH_DIAGNOSTICS);
 #endif
-    int band_size = 0;
-    monster_type band_monsters[BIG_BAND];        // band monster types
-
     int tries = 0;
     dungeon_char_type stair_type = NUM_DCHAR_TYPES;
     int id = -1;
@@ -606,7 +603,8 @@ int place_monster(mgen_data mg, bool force_pos)
         return (-1);
 
     // (3) Decide on banding (good lord!)
-    band_size = 1;
+    int band_size = 1;
+    monster_type band_monsters[BIG_BAND];        // band monster types
     band_monsters[0] = mg.cls;
 
     if (mg.permit_bands())
@@ -616,6 +614,10 @@ int place_monster(mgen_data mg, bool force_pos)
 #endif
         const band_type band = _choose_band(mg.cls, mg.power, band_size);
         band_size++;
+        if (band_size > 1)
+            mprf("Monster type %d: Create a band (band size %d).",
+                 mg.cls, band_size);
+
         for (int i = 1; i < band_size; i++)
             band_monsters[i] = _band_member( band, mg.power );
     }
@@ -1210,7 +1212,7 @@ static band_type _choose_band( int mon_type, int power, int &band_size )
     mpr("in choose_band()", MSGCH_DIAGNOSTICS);
 #endif
     // init
-    band_size = 0;
+    band_size = 0; // Single monster, no band.
     band_type band = BAND_NO_BAND;
 
     switch (mon_type)
@@ -1571,6 +1573,7 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_HARPIES:
         mon_type = MONS_HARPY;
+        break;
 
     case BAND_UGLY_THINGS:
         mon_type = ((power > 21 && one_chance_in(4)) ?

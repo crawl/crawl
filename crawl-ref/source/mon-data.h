@@ -2979,6 +2979,18 @@ static monsterentry mondata[] = {
     HT_WATER, 10, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_LITTLE
 },
 
+{
+    MONS_SHARK, ';', YELLOW, "shark",
+    // Goes into a battle frenzy when it smells blood.
+    M_COLD_BLOOD | M_BLOOD_SCENT,
+    MR_NO_FLAGS,
+    0, 12, MONS_SHARK, MONS_SHARK, MH_NATURAL, -3,
+    { {AT_BITE, AF_PLAIN, 15}, {AT_BITE, AF_PLAIN, 8}, AT_NO_ATK, AT_NO_ATK },
+    { 7, 3, 5, 0 },
+    9, 5, MST_NO_SPELLS, CE_NOCORPSE, Z_BIG, S_SILENT, I_ANIMAL,
+    HT_WATER, 10, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_LARGE
+},
+
 // lava monsters
 {
     MONS_LAVA_WORM, 'w', RED, "lava worm",

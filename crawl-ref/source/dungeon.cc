@@ -3323,10 +3323,13 @@ static void _place_aquatic_monsters(int level_number, char level_type)
 
     if (water_spaces > 49)
     {
+        // This can probably be done in a better way with something
+        // like water_monster_rarity().
         for (int i = 0; i < 4; i++)
         {
             swimming_things[i] =
                 static_cast<monster_type>(MONS_BIG_FISH + random2(4));
+
             if (player_in_branch( BRANCH_SWAMP ) && !one_chance_in(3))
                 swimming_things[i] = MONS_SWAMP_WORM;
             else if (player_in_branch( BRANCH_SHOALS ))
@@ -3339,6 +3342,9 @@ static void _place_aquatic_monsters(int level_number, char level_type)
                     swimming_things[i] = MONS_SIREN;
             }
         }
+
+        if (level_number >= 9 && one_chance_in(4))
+            swimming_things[3] = MONS_SHARK;
 
         if (level_number >= 25 && one_chance_in(5))
             swimming_things[0] = MONS_WATER_ELEMENTAL;

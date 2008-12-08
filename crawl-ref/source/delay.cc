@@ -126,9 +126,9 @@ static int _recite_to_monsters(coord_def where, int pow, int unused)
         {
             simple_monster_message(mons, " speeds up in annoyance!");
         }
-        else if (!one_chance_in(3) &&
-                 mons->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, KC_YOU,
-                                            (16 + random2avg(13, 2)) * 10)))
+        else if (!one_chance_in(3)
+                 && mons->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, KC_YOU,
+                                              (16 + random2avg(13, 2)) * 10)))
         {
             simple_monster_message(mons, " goes into a battle-frenzy!");
         }
@@ -576,7 +576,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
     else if (you.turn_is_over && delay == DELAY_NOT_DELAYED)
     {
         // Turn is over, set up a delay to do swapping next turn.
-        if (prompt && yesno(prompt_str, false) || safe && swap_if_safe)
+        if (prompt && yesno(prompt_str, true, 'n') || safe && swap_if_safe)
         {
             start_delay(DELAY_WEAPON_SWAP, 1, weap);
             you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
