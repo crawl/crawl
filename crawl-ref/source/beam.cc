@@ -1438,6 +1438,67 @@ static beam_type _chaos_beam_flavour()
     return (flavour);
 }
 
+static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
+                                ray_def &old_ray, ray_def &new_ray)
+{
+    if (new_bolt.real_flavour != BEAM_CHAOS)
+        return;
+
+    double old_deg = old_ray.get_degrees();
+    double new_deg = new_ray.get_degrees();
+    double angle   = abs(old_deg - new_deg);
+
+    if (angle >= 180.0)
+        angle -= 180.0;
+
+    double max =  90.0 + (angle / 2.0);
+    double min = -90.0 + (angle / 2.0);
+
+    double shift = (double) random_range(min * 10000, max * 10000) / 10000.0;
+
+    if (new_deg < old_deg)
+        shift = -shift;
+    new_ray.set_degrees(new_deg + shift);
+
+#if DEBUG_DIAGNOSTICS || DEBUG_CHAOS_BOUNCE
+    mprf(MSGCH_DIAGNOSTICS,
+         "chaos beam: old_deg = %5.2f, new_deg = %5.2f, shift = %5.2f",
+         (float) old_deg, (float) new_deg, (float) shift);
+#endif
+
+    // Don't use up range in bouncing off walls, so that chaos beams have
+    // as many chances as possible to bounce.  They're like demented
+    // ping-pong balls on caffeine.
+    int range_spent = new_bolt.range_used - old_bolt.range_used;
+    new_bolt.range += range_spent;
+
+    // XXX HACK: This is to avoid a problem which seems to be caused by
+    // ray.advance(true) taking the shortest path but ray.regress() using raw
+    // advancement to backtrack: say that the user fires a chaos beam
+    // south-west into the corner, the bouncing code regresses it to point X,
+    // then it randomly changes direction to slightly south of
+    // due east:
+    //
+    //  #####
+    //  # @ #
+    //  #X  #
+    // Y#####
+    //
+    // The ray advances via shortest path into the wall grid two squares
+    // directly south of the player, and then tries to regress for another
+    // bounce.  However, it uses raw advancement to regress, which updates the
+    // internal floating point representation of the position, and since it's
+    // now travelling almost due west as it "regresses" it stays inside the
+    // wall until it reaches point Y.  (At least, I think that's what's
+    // happening.  The result is definitely the chaos beam passing through
+    // the corner and ending up outside the room)
+    //
+    // Everything else I've tried to fix this causes an assertion somewhere
+    // else.
+    new_ray.advance(true);
+    new_ray.regress();
+}
+
 /*
  * Beam pseudo code:
  *
@@ -1627,6 +1688,8 @@ void fire_beam(bolt &pbolt)
                 pbolt.bounces++;
 
                 // bounce
+                ray_def old_ray  = ray;
+                bolt    old_bolt = pbolt;
                 do
                 {
                     do
@@ -1641,6 +1704,9 @@ void fire_beam(bolt &pbolt)
                 }
                 while (pbolt.range_used < pbolt.range
                        && grid_is_solid(grd(ray.pos())));
+
+                if (!grid_is_solid(grd(ray.pos())))
+                    _munge_bounced_bolt(old_bolt, pbolt, old_ray, ray);
 
                 if (pbolt.range_used >= pbolt.range)
                     break;
@@ -1772,8 +1838,11 @@ void fire_beam(bolt &pbolt)
     }
 
     // Canned msg for enchantments that affected no-one, but only if the
-    // enchantment is yours.
-    if (pbolt.is_enchantment())
+    // enchantment is yours (and it wasn't a chaos beam, since with chaos
+    // enchantments are entirely random, and if it randomly attempts
+    // something which ends up having no obvious effect then the player
+    // isn't going to realize it).
+    if (pbolt.is_enchantment() && pbolt.real_flavour != BEAM_CHAOS)
     {
         if (!pbolt.is_tracer && !pbolt.msg_generated && !pbolt.obvious_effect
             && YOU_KILL(pbolt.thrower))
@@ -2698,8 +2767,7 @@ void mimic_alert(monsters *mimic)
 static bool _isBouncy(bolt &beam, unsigned char gridtype)
 {
     if ( beam.real_flavour == BEAM_CHAOS
-         && grid_is_solid(static_cast<dungeon_feature_type>(gridtype))
-         && coinflip() )
+         && grid_is_solid(static_cast<dungeon_feature_type>(gridtype)) )
     {
         return (true);
     }

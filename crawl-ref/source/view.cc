@@ -1931,6 +1931,84 @@ void ray_def::advance_and_bounce()
     set_reflect_point(oldaccx, oldaccy, &accx, &accy, blocked_x, blocked_y);
 }
 
+double ray_def::get_degrees() const
+{
+    if (slope > 100.0)
+    {
+        if (quadrant == 3 || quadrant == 2)
+            return (90.0);
+        else
+            return (270.0);
+    }
+    else if (double_is_zero(slope))
+    {
+        if (quadrant == 0 || quadrant == 3)
+            return (0.0);
+        else
+            return (180.0);
+    }
+
+    double deg = atan(slope) * 180.0 / M_PI;
+
+    switch (quadrant)
+    {
+    case 0:
+        return (360.0 - deg);
+
+    case 1:
+        return (180.0 + deg);
+
+    case 2:
+        return (180.0 - deg);
+
+    case 3:
+        return (deg);
+    }
+    ASSERT(!"ray has illegal quadrant");
+    return (0.0);
+}
+
+void ray_def::set_degrees(double deg)
+{
+    while (deg < 0.0)
+        deg += 360.0;
+    while (deg >= 360.0)
+        deg -= 360.0;
+
+    double _slope = tan(deg / 180.0 * M_PI);
+
+    if (double_is_zero(_slope))
+    {
+        slope = 0.0;
+
+        if (deg < 90.0 || deg > 270.0)
+            quadrant = 0; // right/east
+        else
+            quadrant = 1; // left/west
+    }
+    else if (_slope > 0)
+    {
+        slope = _slope;
+
+        if (deg >= 180.0 && deg <= 270.0)
+            quadrant = 1;
+        else
+            quadrant = 3;
+    }
+    else
+    {
+        slope = -_slope;
+
+        if (deg >= 90 && deg <= 180)
+            quadrant = 2;
+        else
+            quadrant = 0;
+    }
+
+    if (slope > 1000.0)
+        slope = 1000.0;
+}
+
 void ray_def::regress()
 {
     int opp_quadrant[4] = { 2, 3, 0, 1 };
