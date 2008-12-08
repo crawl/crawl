@@ -32,13 +32,15 @@ function ch_item_wieldable(it)
     end
 
     if spells["Sandblast"]
-            and string.find( item.name(it, "a"), " stones?$" )
+            and item.class(it, true) == "missile"
+            and string.find( item.name(it, "a"), " stones?" )
     then
         return true
     end
 
     if spells["Sticks to Snakes"]
-            and string.find( item.name(it, "a"), " arrows?$" )
+            and item.class(it, true) == "missile"
+            and string.find( item.name(it, "a"), " arrows?" )
     then
         return true
     end

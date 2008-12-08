@@ -136,7 +136,7 @@ void weapon_switch( int targ )
     if (targ == -1) // Unarmed Combat.
     {
         // Already unarmed?
-        if (you.equip[EQ_WEAPON] == -1)
+        if (!you.weapon())
             return;
 
         mpr( "You switch back to your bare hands." );
@@ -161,7 +161,7 @@ void weapon_switch( int targ )
     // Well yeah, but that's because interacting with the wielding
     // code is a mess... this whole function's purpose was to
     // isolate this hack until there's a proper way to do things. -- bwr
-    if (you.equip[EQ_WEAPON] != -1)
+    if (you.weapon())
         unwield_item(false);
 
     you.equip[EQ_WEAPON] = targ;
@@ -173,13 +173,25 @@ void weapon_switch( int targ )
     if (Options.chunks_autopickup || you.species == SP_VAMPIRE)
         autopickup();
 
+    // Same amount of time as normal wielding.
+    // FIXME: this duplicated code is begging for a bug.
+    if (you.weapon())
+    {
+        you.time_taken /= 2;
+    }
+    else                        // swapping to empty hands is faster
+    {
+        you.time_taken *= 3;
+        you.time_taken /= 10;
+    }
+
     you.turn_is_over = true;
 }
 
 // Look for a butchering implement. If fallback is true,
 // prompt the user if no obvious options exist.
 // Returns whether a weapon was switched.
-static int _find_butchering_implement(int &butcher_tool)
+static bool _find_butchering_implement(int &butcher_tool)
 {
     // When berserk, you can't change weapons. Sanity check!
     if (!can_wield(NULL, true))
@@ -209,7 +221,7 @@ static int _find_butchering_implement(int &butcher_tool)
     // Look for a butchering implement in your pack.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        const item_def& tool(you.inv[i]);
+        item_def& tool(you.inv[i]);
         if (is_valid_item( tool )
             && tool.base_type == OBJ_WEAPONS
             && can_cut_meat( tool )
@@ -241,7 +253,7 @@ static int _find_butchering_implement(int &butcher_tool)
 
     const int item_slot = prompt_invent_item(
                             "What would you like to use? (- for none)?",
-                            MT_INVLIST, OSEL_WIELD,
+                            MT_INVLIST, OSEL_BUTCHERY,
                             true, true, true, '-', -1, NULL, OPER_WIELD);
 
     if (prompt_failed(item_slot))
@@ -2011,6 +2023,9 @@ bool is_preferred_food(const item_def &food)
     }
 
     if (food.base_type != OBJ_FOOD)
+        return (false);
+    
+    if (is_poisonous(food))
         return (false);
 
     // Honeycombs are tasty for everyone.

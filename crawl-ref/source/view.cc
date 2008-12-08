@@ -3139,7 +3139,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
         arrange_features(features);
     }
 
-    char min_x = 80, max_x = 0, min_y = 0, max_y = 0;
+    int min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
     bool found_y = false;
 
     const int num_lines   = _get_number_of_lines_levelmap();
@@ -3534,13 +3534,17 @@ void show_map( coord_def &spec_place, bool travel_mode )
         {
             // Scrolling only happens when we don't have a large enough
             // display to show the known map.
-            if (scroll_y < 0 && ((screen_y += scroll_y) <= min_y + half_screen))
-                screen_y = min_y + half_screen;
-
-            if (scroll_y > 0 && ((screen_y += scroll_y) >= max_y - half_screen))
-                screen_y = max_y - half_screen;
-
-            scroll_y = 0;
+            if (scroll_y != 0)
+            {
+                const int old_screen_y = screen_y;
+                screen_y += scroll_y;
+                if (scroll_y < 0)
+                    screen_y = std::max(screen_y, min_y + half_screen);
+                else
+                    screen_y = std::min(screen_y, max_y - half_screen);
+                curs_y -= (screen_y - old_screen_y);
+                scroll_y = 0;
+            }
 
             if (curs_y + move_y < 1)
             {

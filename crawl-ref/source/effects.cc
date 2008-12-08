@@ -136,6 +136,7 @@ int holy_word_monsters(int x, int y, int pow, int caster)
     // Currently, holy word annoys the monsters it affects because it
     // can kill them, and because hostile monsters don't use it.
     behaviour_event(monster, ME_ANNOY, MHITYOU);
+    simple_monster_message(monster, " convulses!");
     hurt_monster(monster, hploss);
 
     if (hploss)
@@ -147,8 +148,6 @@ int holy_word_monsters(int x, int y, int pow, int caster)
             return retval;
         }
     }
-
-    simple_monster_message(monster, " convulses!");
 
     if (monster->speed_increment >= 25)
     {
@@ -1310,6 +1309,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
                 // If the book is invalid find any valid one.
                 while (book_rarity(type_wanted) == 100
+                       || type_wanted == BOOK_HEALING
                        || type_wanted == BOOK_DESTRUCTION
                        || type_wanted == BOOK_MANUAL)
                 {
@@ -1528,7 +1528,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             if (thing_created == NON_ITEM)
                 continue;
 
-            const item_def &doodad(mitm[thing_created]);
+            item_def &doodad(mitm[thing_created]);
             if (doodad.base_type == OBJ_WEAPONS
                    && !can_wield(&doodad, false, true)
                 || doodad.base_type == OBJ_ARMOUR
@@ -2936,6 +2936,10 @@ void update_level(double elapsedTime)
             heal_monster(mon, div_rand_round(turns * regen_rate, 50),
                          false);
         }
+
+        // Handle nets specially to remove the trapping property of the net.
+        if (mons_is_caught(mon))
+            mon->del_ench(ENCH_HELD, true);
 
         _catchup_monster_moves(mon, turns);
 

@@ -2023,7 +2023,8 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
         _print_character_info();
 
         textcolor( CYAN );
-        cprintf(EOL "You have a choice of books:" EOL);
+        cprintf(EOL "You have a choice of books:  "
+                "(Press %% for a list of aptitudes)" EOL);
 
         for (int i = 0; i < numbooks; ++i)
         {
@@ -2080,6 +2081,9 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
                     else
                         keyin = ('a' +  Options.prev_book - 1);
                 }
+            case '%':
+                list_commands('%');
+                return _choose_book(book, firstbook, numbooks);
             default:
                 break;
             }
@@ -2301,7 +2305,8 @@ static bool _choose_weapon()
         _print_character_info();
 
         textcolor( CYAN );
-        cprintf(EOL "You have a choice of weapons:" EOL);
+        cprintf(EOL "You have a choice of weapons:  "
+                "(Press %% for a list of aptitudes)" EOL);
 
         bool prevmatch = false;
         for (int i = 0; i < num_choices; i++)
@@ -2373,6 +2378,11 @@ static bool _choose_weapon()
                                  keyin = 'a' + i;
                     }
                 }
+            case '%':
+                list_commands('%');
+                return _choose_weapon();
+            default:
+                break;
            }
         }
         while (keyin != '*' && keyin != '+'
@@ -3834,10 +3844,10 @@ spec_query:
         break;
     // access to the help files
     case '?':
-        list_commands(false, '1');
+        list_commands('1');
         return choose_race();
     case '%':
-        list_commands(false, '%');
+        list_commands('%');
         return choose_race();
     default:
         break;

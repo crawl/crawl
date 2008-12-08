@@ -7292,9 +7292,8 @@ static bool _monster_move(monsters *monster)
     // If neither does, do nothing.
     if (good_move[mmov_x + 1][mmov_y + 1] == false)
     {
-        int current_distance = grid_distance(monster->x, monster->y,
-                                             monster->target_x,
-                                             monster->target_y);
+        int current_distance = distance(monster->x, monster->y,
+                                        monster->target_x, monster->target_y);
 
         int dir = -1;
         int i, mod, newdir;
@@ -7335,10 +7334,10 @@ static bool _monster_move(monsters *monster)
                 newdir = (dir + 8 + mod) % 8;
                 if (good_move[compass_x[newdir] + 1][compass_y[newdir] + 1])
                 {
-                    dist[i] = grid_distance(monster->x + compass_x[newdir],
-                                            monster->y + compass_y[newdir],
-                                            monster->target_x,
-                                            monster->target_y);
+                    dist[i] = distance(monster->x + compass_x[newdir],
+                                       monster->y + compass_y[newdir],
+                                       monster->target_x,
+                                       monster->target_y);
                 }
                 else
                 {

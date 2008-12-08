@@ -202,15 +202,11 @@ std::string item_def::name(description_level_type descrip,
 
         if (this->link == you.equip[EQ_WEAPON])
         {
-            if (you.inv[ you.equip[EQ_WEAPON] ].base_type == OBJ_WEAPONS
-                || item_is_staff( you.inv[ you.equip[EQ_WEAPON] ] ))
-            {
+            if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
                 buff << " (weapon)";
-            }
             else
-            {
                 buff << " (in hand)";
-            }
+
             equipped = true;
         }
         else if (this->link == you.equip[EQ_CLOAK]
@@ -238,12 +234,17 @@ std::string item_def::name(description_level_type descrip,
             buff << " (around neck)";
             equipped = true;
         }
+        else if (this->link == you.m_quiver->get_fire_item(NULL))
+        {
+            buff << " (quivered)";
+            equipped = true; // well, sort of
+        }
    }
 
    if (descrip != DESC_BASENAME)
    {
         const bool  tried  =  !ident && !equipped && item_type_tried(*this);
-        std::string tried_str = "";
+        std::string tried_str;
 
         if (tried)
         {
@@ -399,25 +400,25 @@ static const char* armour_ego_name( special_armour_type sparm, bool terse )
     {
         switch (sparm)
         {
-        case SPARM_RUNNING:           return " (run)";
-        case SPARM_FIRE_RESISTANCE:   return " (R-fire)";
-        case SPARM_COLD_RESISTANCE:   return " (R-cold)";
-        case SPARM_POISON_RESISTANCE: return " (R-poison)";
-        case SPARM_SEE_INVISIBLE:     return " (see invis)";
-        case SPARM_DARKNESS:          return " (darkness)";
-        case SPARM_STRENGTH:          return " (str)";
-        case SPARM_DEXTERITY:         return " (dex)";
-        case SPARM_INTELLIGENCE:      return " (int)";
-        case SPARM_PONDEROUSNESS:     return " (ponderous)";
-        case SPARM_LEVITATION:        return " (levitate)";
-        case SPARM_MAGIC_RESISTANCE:  return " (R-magic)";
-        case SPARM_PROTECTION:        return " (protect)";
-        case SPARM_STEALTH:           return " (stealth)";
-        case SPARM_RESISTANCE:        return " (resist)";
-        case SPARM_POSITIVE_ENERGY:   return " (R-neg)"; // ha ha
-        case SPARM_ARCHMAGI:          return " (Archmagi)";
-        case SPARM_PRESERVATION:      return " (preserve)";
-        default:                      return " (buggy)";
+        case SPARM_RUNNING:           return " {run}";
+        case SPARM_FIRE_RESISTANCE:   return " {rF+}";
+        case SPARM_COLD_RESISTANCE:   return " {rC+}";
+        case SPARM_POISON_RESISTANCE: return " {rPois}";
+        case SPARM_SEE_INVISIBLE:     return " {SInv}";
+        case SPARM_DARKNESS:          return " {darkness}";
+        case SPARM_STRENGTH:          return " {Str+3}";
+        case SPARM_DEXTERITY:         return " {Dex+3}";
+        case SPARM_INTELLIGENCE:      return " {Int+3}";
+        case SPARM_PONDEROUSNESS:     return " {ponderous}";
+        case SPARM_LEVITATION:        return " {Lev}";
+        case SPARM_MAGIC_RESISTANCE:  return " {MR}";
+        case SPARM_PROTECTION:        return " {AC+3}";
+        case SPARM_STEALTH:           return " {Stlth+}";
+        case SPARM_RESISTANCE:        return " {rC+ rF+}";
+        case SPARM_POSITIVE_ENERGY:   return " {rN+}";
+        case SPARM_ARCHMAGI:          return " {Archmagi}";
+        case SPARM_PRESERVATION:      return " {rCorr, Cons}";
+        default:                      return " {buggy}";
         }
     }
 }
@@ -2634,10 +2635,15 @@ const std::string menu_colour_item_prefix(const item_def &item, bool temp)
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:
     case OBJ_JEWELLERY:
-        if (item_is_equipped(item))
+        if (item_is_equipped(item, true))
             prefixes.push_back("equipped");
         if (is_artefact(item))
             prefixes.push_back("artefact");
+        break;
+
+    case OBJ_MISSILES:
+        if (item_is_equipped(item, true))
+            prefixes.push_back("equipped");
         break;
 
     default:

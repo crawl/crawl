@@ -946,16 +946,8 @@ static std::string _describe_weapon( const item_def &item, bool verbose)
                     "it drains the life of those it strikes.";
                 break;
             case SPWPN_SPEED:
-                if (is_range_weapon(item))
-                {
-                    description += "It allows its wielder to fire twice when "
-                           "they would otherwise have fired only once.";
-                }
-                else
-                {
-                    description += "It allows its wielder to attack twice when "
-                           "they would otherwise have struck only once.";
-                }
+                description += "Attacks with this weapon take half as long "
+                    "as usual.";
                 break;
             case SPWPN_VORPAL:
                 if (is_range_weapon(item))

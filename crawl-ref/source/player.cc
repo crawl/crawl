@@ -3731,7 +3731,7 @@ void display_char_status()
 
     if (you.haloed())
     {
-        int halo_size = halo_radius();
+        const int halo_size = halo_radius();
         if (halo_size > 6)
             mpr( "You are illuminated by a large divine halo." );
         else if (halo_size > 3)
@@ -3839,6 +3839,13 @@ void display_char_status()
         mpr("You are burdened.");
     else if (you.burden_state == BS_OVERLOADED)
         mpr("You are overloaded with stuff.");
+    else if (you.species == SP_KENKU && you.flight_mode() == FL_FLY)
+    {
+        if (you.travelling_light())
+            mpr("Your small burden allows quick flight.");
+        else
+            mpr("Your heavy burden is slowing your flight.");
+    }
 
     if (you.duration[DUR_SAGE])
         mprf("You are studying %s.", skill_name(you.sage_bonus_skill));
@@ -4174,8 +4181,8 @@ std::string species_name(species_type speci, int level, bool genus, bool adj,
         {
             switch (speci)
             {
-            case SP_MOUNTAIN_DWARF: res = "Mountain Dwarf"; break;
-            default:                res = "Dwarf";          break;
+            case SP_MOUNTAIN_DWARF: res = "Mountain Dwarf";            break;
+            default:                res = "Dwarf";                     break;
             }
         }
     }

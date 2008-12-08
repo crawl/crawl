@@ -2478,24 +2478,17 @@ item_def find_item_type(object_class_type base_type, std::string name)
     return (item);
 }
 
-bool item_is_equipped(const item_def &item)
+bool item_is_equipped(const item_def &item, bool quiver_too)
 {
     if (item.x != -1 || item.y != -1)
         return (false);
 
     for (int i = 0; i < NUM_EQUIP; i++)
-    {
-        if (you.equip[i] == EQ_NONE)
-            continue;
-
-        const item_def& eq(you.inv[you.equip[i]]);
-
-        if (!is_valid_item(eq))
-            continue;
-
-        if (&eq == &item)
+        if (item.link == you.equip[i])
             return (true);
-    }
+
+    if (quiver_too && item.link == you.m_quiver->get_fire_item(NULL))
+        return (true);
 
     return (false);
 }

@@ -1306,7 +1306,9 @@ static void _build_dungeon_level(int level_number, int level_type)
     if (dgn_level_vetoed)
         return;
 
-    _place_traps(level_number);
+    if (level_type != LEVEL_ABYSS)
+        _place_traps(level_number);
+
     _place_fog_machines(level_number);
 
     // Place items.

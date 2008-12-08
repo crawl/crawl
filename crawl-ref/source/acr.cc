@@ -1475,7 +1475,8 @@ static void _input()
 
     if (you_are_delayed())
     {
-        _world_reacts();
+        if (you.time_taken)
+            _world_reacts();
         return;
     }
 

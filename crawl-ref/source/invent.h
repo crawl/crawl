@@ -31,7 +31,8 @@ enum object_selector
     OSEL_ENCH_ARM  =  -7,
     OSEL_VAMP_EAT  =  -8,
     OSEL_DRAW_DECK =  -9,
-    OSEL_THROWABLE = -10
+    OSEL_THROWABLE = -10,
+    OSEL_BUTCHERY  = -11
 };
 
 #define PROMPT_ABORT        -1

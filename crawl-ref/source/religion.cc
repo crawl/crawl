@@ -690,6 +690,10 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         dislikes.push_back("cast spells");
         break;
 
+    case GOD_BEOGH:
+        dislikes.push_back("you destroy orcish idols");
+        break;
+
     default:
         break;
     }
@@ -3104,7 +3108,8 @@ bool god_dislikes_item_handling(const item_def &item)
             }
         }
         else if (item.base_type == OBJ_STAVES
-            && item.sub_type == STAFF_POISON || item.sub_type == STAFF_VENOM)
+                 && (item.sub_type == STAFF_POISON
+                     || item.sub_type == STAFF_VENOM))
         {
             return (true);
         }
