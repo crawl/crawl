@@ -139,4 +139,9 @@ item_types_pair item_types_by_name(std::string name);
 
 std::vector<std::string> item_name_list_for_glyph(unsigned glyph);
 
+/* ***********************************************************************
+ * called from: newgame
+ * *********************************************************************** */
+const char* wand_type_name(int wandtype);
+
 #endif

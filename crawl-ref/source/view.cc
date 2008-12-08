@@ -2817,14 +2817,12 @@ bool is_feature(int feature, const coord_def& where)
         case DNGN_ENTER_PORTAL_VAULT:
         case DNGN_EXIT_PORTAL_VAULT:
         case DNGN_ENTER_SHOP:
-        case DNGN_ABANDONED_SHOP:
         case DNGN_ENTER_DIS:
         case DNGN_ENTER_GEHENNA:
         case DNGN_ENTER_COCYTUS:
         case DNGN_ENTER_TARTARUS:
         case DNGN_ENTER_ABYSS:
         case DNGN_EXIT_ABYSS:
-        case DNGN_STONE_ARCH:
         case DNGN_ENTER_PANDEMONIUM:
         case DNGN_EXIT_PANDEMONIUM:
         case DNGN_TRANSIT_PANDEMONIUM:

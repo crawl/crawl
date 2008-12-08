@@ -1998,6 +1998,15 @@ The Hunter is a type of fighter who specialises in missile weapons. A
 Hunter starts with either some throwing weapons or a ranged weapon and
 some ammunition, as well as an edged weapon and a set of leathers.
 
+Artificers:
+-----------
+The Artificer is attuned to gadgets, mechanics, and magic elicited from arcane
+items as opposed to casting magic himself.  As a consequence, he enters the
+Dungeon with an assortment of wands. Artificers are skilled at Evoking magical
+items, finding Traps and Doors, have some prior experience with Scrolls of
+Recharging, and understand the basics of melee combat. Dwarves, Gnomes, and
+Spriggans are renowned for their skill in artifice.
+
 Wanderers:
 ----------
 Wanderers are people who have not learned a specific trade. Instead,

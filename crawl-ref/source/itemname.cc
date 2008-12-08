@@ -378,7 +378,7 @@ static const char* armour_ego_name( special_armour_type sparm, bool terse )
     }
 }
 
-static const char* wand_type_name(int wandtype)
+const char* wand_type_name(int wandtype)
 {
     switch (static_cast<wand_type>(wandtype))
     {

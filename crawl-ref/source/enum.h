@@ -1075,7 +1075,7 @@ enum dungeon_feature_type
     DNGN_PERMADRY_FOUNTAIN,
     DNGN_ABANDONED_SHOP,
 
-    NUM_REAL_FEATURES,                 //  207
+    NUM_REAL_FEATURES,                 //  208
 
     // Real terrain must all occur before 256 to guarantee it fits
     // into the unsigned char used for the grid!
@@ -1416,6 +1416,7 @@ enum job_type
     JOB_MONK,                          //   25
     JOB_WARPER,
     JOB_WANDERER,                      //   27
+    JOB_ARTIFICER,                     //   28 -Greenberg/Bane
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100

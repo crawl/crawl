@@ -187,7 +187,8 @@ static job_type old_jobs_order[] = {
     JOB_CHAOS_KNIGHT,       JOB_TRANSMUTER,
     JOB_HEALER,             JOB_REAVER,
     JOB_STALKER,            JOB_MONK,
-    JOB_WARPER,             JOB_WANDERER
+    JOB_WARPER,             JOB_WANDERER,
+    JOB_ARTIFICER
 };
 
 // First plain fighters, then religious fighters, then spell-casting
@@ -210,7 +211,8 @@ static job_type new_jobs_order[] = {
     // poison specialists and stabbers
     JOB_VENOM_MAGE,         JOB_STALKER,
     JOB_THIEF,              JOB_ASSASSIN,
-    JOB_HUNTER,             JOB_WANDERER
+    JOB_HUNTER,             JOB_ARTIFICER,
+    JOB_WANDERER
 };
 
 static job_type _get_class(const int index)
@@ -308,7 +310,7 @@ int get_species_by_abbrev( const char *abbrev )
 static const char * Class_Abbrev_List[ NUM_JOBS ] =
     { "Fi", "Wz", "Pr", "Th", "Gl", "Ne", "Pa", "As", "Be", "Hu",
       "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr", "DK", "VM",
-      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn" };
+      "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar" };
 
 static const char * Class_Name_List[ NUM_JOBS ] =
     { "Fighter", "Wizard", "Priest", "Thief", "Gladiator", "Necromancer",
@@ -316,7 +318,7 @@ static const char * Class_Name_List[ NUM_JOBS ] =
       "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
       "Earth Elementalist", "Crusader", "Death Knight", "Venom Mage",
       "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
-      "Monk", "Warper", "Wanderer" };
+      "Monk", "Warper", "Wanderer", "Artificer" };
 
 int get_class_index_by_abbrev( const char *abbrev )
 {
@@ -1822,6 +1824,20 @@ static char_choice_restriction _class_allowed(species_type speci,
             return (CC_UNRESTRICTED);
         }
 
+    case JOB_ARTIFICER:
+        switch (speci)
+        {
+            case SP_CENTAUR:
+            case SP_TROLL:
+            case SP_MINOTAUR:
+            case SP_OGRE:
+            case SP_MUMMY:
+            case SP_GHOUL:
+                return (CC_RESTRICTED);
+            default:
+                return (CC_UNRESTRICTED);
+        }
+
     case JOB_WANDERER:
         return (CC_RESTRICTED);
 
@@ -2019,7 +2035,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
 
         textcolor( CYAN );
         cprintf(EOL "You have a choice of books:  "
-                "(Press %% for a list of aptitudes)" EOL);
+                    "(Press %% for a list of aptitudes)" EOL);
 
         for (int i = 0; i < numbooks; ++i)
         {
@@ -2304,7 +2320,7 @@ static bool _choose_weapon()
 
         textcolor( CYAN );
         cprintf(EOL "You have a choice of weapons:  "
-                "(Press %% for a list of aptitudes)" EOL);
+                    "(Press %% for a list of aptitudes)" EOL);
 
         bool prevmatch = false;
         for (int i = 0; i < num_choices; i++)
@@ -2731,6 +2747,8 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_NECROMANCER:       s =  0; i =  6; d =  4; hp = 10; mp = 3; break;
 
     case JOB_WANDERER:          s =  2; i =  2; d =  2; hp = 11; mp = 1; break;
+
+    case JOB_ARTIFICER:         s =  3; i =  3; d =  4; hp = 13; mp = 0; break;
     default:                    s =  0; i =  0; d =  0; hp = 10; mp = 0; break;
     }
 
@@ -2855,6 +2873,9 @@ static void _give_basic_knowledge(job_type which_job)
         set_ident_type( OBJ_POTIONS, POT_CONFUSION, ID_KNOWN_TYPE );
         set_ident_type( OBJ_POTIONS, POT_POISON, ID_KNOWN_TYPE );
         break;
+
+    case JOB_ARTIFICER:
+        set_ident_type( OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE );
 
     default:
         break;
@@ -4177,6 +4198,96 @@ bool _needs_butchering_tool()
     return (true);
 }
 
+static bool _choose_wand()
+{
+    // Wand-choosing interface for Artificers -- Greenberg/Bane
+
+    const wand_type startwand[5] = { WAND_ENSLAVEMENT, WAND_CONFUSION,
+                                     WAND_MAGIC_DARTS, WAND_FROST, WAND_FLAME };
+    const int num_choices = 5;
+
+    int keyin = 0;
+    if (!Options.random_pick)
+    {
+        _print_character_info();
+
+        textcolor( CYAN );
+        cprintf(EOL "You have a choice of wands:  "
+                    "(Press %% for a list of aptitudes)" EOL);
+
+        for (int i = 0; i < num_choices; i++)
+        {
+            textcolor(LIGHTGREY);
+
+            const char letter = 'a' + i;
+            cprintf("%c - %s" EOL, letter, wand_type_name(startwand[i]));
+        }
+
+        textcolor(BROWN);
+        cprintf(EOL "* - Random choice; "
+                    "Bksp - Back to species and class selection; "
+                    "X - Quit" EOL);
+
+        cprintf(EOL);
+
+        do
+        {
+            textcolor( CYAN );
+            cprintf(EOL "Which wand? ");
+            textcolor( LIGHTGREY );
+
+            keyin = c_getch();
+
+            switch (keyin)
+            {
+            case 'X':
+                cprintf(EOL "Goodbye!");
+                end(0);
+                break;
+            case CK_BKSP:
+            case CK_ESCAPE:
+            case ' ':
+                return (false);
+            case '\r':
+            case '%':
+                list_commands('%');
+                return _choose_wand();
+            default:
+                break;
+           }
+        }
+        while (keyin != '*'  && (keyin < 'a' || keyin >= ('a' + num_choices)));
+    }
+
+    if (Options.random_pick || keyin == '*')
+    {
+        keyin = random2(num_choices);
+        keyin += 'a';
+    }
+
+    const wand_type choice = startwand[keyin - 'a'];
+    int nCharges;
+    switch (choice)
+    {
+    case WAND_MAGIC_DARTS:
+    case WAND_ENSLAVEMENT:
+        nCharges = 6;
+        break;
+    case WAND_FROST:
+    case WAND_FLAME:
+        nCharges = 7;
+        break;
+    default:
+        nCharges = 8;
+        break;
+    }
+
+    _newgame_make_item(3, EQ_NONE, OBJ_WANDS, choice, -1, 1,
+                          nCharges, 0);
+
+    return (true);
+}
+
 bool _give_items_skills()
 {
     char keyn;
@@ -5291,6 +5402,35 @@ bool _give_items_skills()
 
     case JOB_WANDERER:
         _create_wanderer();
+        break;
+
+    case JOB_ARTIFICER:
+        // Equipment. Knife and armor or robe.
+        _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+        _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR,
+                              ARM_LEATHER_ARMOUR, ARM_ROBE);
+        // 1 wand of random effects and one chosen lesser wand
+        _newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS, -1, 1,
+                6, 0);
+        // Choice of lesser wands: confusion (8), enslavement (8),
+        // slowing (8), magic dart (6), frost (7), flame (7)
+        if (!_choose_wand())
+            return (false);
+
+        // If a supporting wand was chosen, hand out a dagger instead of
+        // the knife.
+        if (you.inv[3].sub_type == WAND_CONFUSION
+            || you.inv[3].sub_type == WAND_ENSLAVEMENT)
+        {
+            you.inv[0].sub_type = WPN_DAGGER;
+        }
+
+        // Skills
+        you.skills[SK_EVOCATIONS] = 4;
+        you.skills[SK_TRAPS_DOORS] = 3;
+        //you.skills[SK_CROSSBOWS] = 2;
+        you.skills[SK_DODGING] = 2;
+        you.skills[SK_FIGHTING] = 1;
         break;
 
     default:
