@@ -448,7 +448,7 @@ void tag_followers()
 
 void untag_followers()
 {
-    for (int m = 0; m < MAX_MONSTERS; m++)
+    for (int m = 0; m < MAX_MONSTERS; ++m)
         menv[m].flags &= (~MF_TAKING_STAIRS);
 }
 
@@ -460,7 +460,7 @@ unsigned char get_ch()
         gotched = getch();
 
     return gotched;
-}                               // end get_ch()
+}
 
 void seed_rng(long seed)
 {

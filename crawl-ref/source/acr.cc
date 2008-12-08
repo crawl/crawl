@@ -1768,9 +1768,9 @@ static void _go_upstairs()
     if (_marker_vetoes_stair())
         return;
 
-    tag_followers();  // Only those beside us right now can follow.
-    start_delay( DELAY_ASCENDING_STAIRS,
-                 1 + (you.burden_state > BS_UNENCUMBERED) );
+    tag_followers(); // Only those beside us right now can follow.
+    start_delay(DELAY_ASCENDING_STAIRS,
+                1 + (you.burden_state > BS_UNENCUMBERED));
 }
 
 static void _go_downstairs()
@@ -1817,10 +1817,10 @@ static void _go_downstairs()
         if (_marker_vetoes_stair())
             return;
 
-        tag_followers();  // only those beside us right now can follow
-        start_delay( DELAY_DESCENDING_STAIRS,
-                     1 + (you.burden_state > BS_UNENCUMBERED),
-                     you.your_level );
+        tag_followers(); // Only those beside us right now can follow.
+        start_delay(DELAY_DESCENDING_STAIRS,
+                    1 + (you.burden_state > BS_UNENCUMBERED),
+                    you.your_level);
     }
 }
 
@@ -2769,7 +2769,7 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_TELEPORT))
     {
         // Only to a new area of the abyss sometimes (for abyss teleports).
-        you_teleport_now( true, one_chance_in(5) );
+        you_teleport_now(true, one_chance_in(5));
         untag_followers();
     }
 
