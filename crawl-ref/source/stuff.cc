@@ -340,8 +340,7 @@ static bool tag_follower_at(const coord_def &pos)
 
     monsters *fmenv = &menv[mgrd(pos)];
 
-    if (fmenv->type == MONS_PLAYER_GHOST
-        || !fmenv->alive()
+    if (!fmenv->alive()
         || !fmenv->can_use_stairs()
         || fmenv->incapacitated()
         || mons_is_stationary(fmenv))

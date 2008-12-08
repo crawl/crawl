@@ -5588,8 +5588,13 @@ bool monsters::is_patrolling() const
 
 bool monsters::can_use_stairs() const
 {
-    return (!mons_is_zombified(this)
-        || mons_enslaved_intact_soul(this));
+    if (type == MONS_PLAYER_GHOST)
+        return (false);
+
+    if (mons_is_zombified(this) && !mons_enslaved_intact_soul(this))
+        return (false);
+
+    return (true);
 }
 
 bool monsters::needs_transit() const
