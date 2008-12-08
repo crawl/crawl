@@ -2876,6 +2876,7 @@ static void _give_basic_knowledge(job_type which_job)
 
     case JOB_ARTIFICER:
         set_ident_type( OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE );
+        break;
 
     default:
         break;

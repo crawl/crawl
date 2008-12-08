@@ -614,9 +614,6 @@ int place_monster(mgen_data mg, bool force_pos)
 #endif
         const band_type band = _choose_band(mg.cls, mg.power, band_size);
         band_size++;
-        if (band_size > 1)
-            mprf("Monster type %d: Create a band (band size %d).",
-                 mg.cls, band_size);
 
         for (int i = 1; i < band_size; i++)
             band_monsters[i] = _band_member( band, mg.power );
@@ -1211,7 +1208,8 @@ static band_type _choose_band( int mon_type, int power, int &band_size )
 #ifdef DEBUG_MON_CREATION
     mpr("in choose_band()", MSGCH_DIAGNOSTICS);
 #endif
-    // init
+    // Band size describes the number of monsters in addition to
+    // the band leader.
     band_size = 0; // Single monster, no band.
     band_type band = BAND_NO_BAND;
 

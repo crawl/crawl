@@ -2980,7 +2980,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SHARK, ';', YELLOW, "shark",
+    MONS_SHARK, ';', WHITE, "shark",
     // Goes into a battle frenzy when it smells blood.
     M_COLD_BLOOD | M_BLOOD_SCENT,
     MR_NO_FLAGS,
