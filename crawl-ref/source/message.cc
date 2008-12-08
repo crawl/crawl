@@ -514,6 +514,14 @@ static void mpr_check_patterns(const std::string& message,
 {
     for (unsigned i = 0; i < Options.note_messages.size(); ++i)
     {
+        if (channel == MSGCH_EQUIPMENT || channel == MSGCH_FLOOR_ITEMS
+            || channel == MSGCH_MULTITURN_ACTION
+            || channel == MSGCH_EXAMINE || channel == MSGCH_EXAMINE_FILTER
+            || channel == MSGCH_TUTORIAL)
+        {
+            continue;
+        }
+
         if (Options.note_messages[i].matches(message))
         {
             take_note(Note( NOTE_MESSAGE, channel, param, message.c_str() ));

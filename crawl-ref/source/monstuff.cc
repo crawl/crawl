@@ -1431,6 +1431,7 @@ static bool _valid_morph( monsters *monster, int new_mclass )
 
     // Various inappropriate polymorph targets.
     if (mons_class_holiness( new_mclass ) != mons_holiness( monster )
+        || mons_class_flag( new_mclass, M_UNIQUE)       // no uniques
         || mons_class_flag( new_mclass, M_NO_EXP_GAIN ) // not helpless
         || new_mclass == mons_species( monster->type )  // must be different
         || new_mclass == MONS_PROGRAM_BUG

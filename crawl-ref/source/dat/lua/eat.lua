@@ -12,7 +12,7 @@ function prompt_eat(i)
     if item.quantity(i) > 1 then
         iname = "one of " .. iname
     end
-    crawl.formatted_mpr("Eat " .. iname .. "?", "prompt")
+    crawl.mpr("Eat " .. iname .. "?", "prompt")
 
     local res
     res = crawl.getch()

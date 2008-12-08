@@ -714,8 +714,16 @@ static bool efreet_flask(void)
         if (player_angers_monster(&menv[monster]))
             friendly = false;
 
-        mpr(friendly ? "\"Thank you for releasing me!\""
-                     : "It howls insanely!");
+        if (silenced(you.pos()))
+        {
+            mpr(friendly ? "It nods graciously at you."
+                         : "It snaps in your direction!", MSGCH_TALK_VISUAL);
+        }
+        else
+        {
+            mpr(friendly ? "\"Thank you for releasing me!\""
+                         : "It howls insanely!", MSGCH_TALK);
+        }
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);

@@ -3728,7 +3728,7 @@ static bool _build_minivaults(int level_number, int force_vault,
     if (in_bounds(where))
     {
         coord_def tl(where - place.size / 2);
-        fit_region_into_map_bounds(tl, place.size);
+        fit_region_into_map_bounds(tl, place.size, 1);
         v1x = tl.x;
         v1y = tl.y;
     }
