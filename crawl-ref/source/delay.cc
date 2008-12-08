@@ -1517,6 +1517,11 @@ static command_type _get_running_command()
     if (is_resting())
     {
         you.running.rest();
+
+#ifdef USE_TILE
+        tiles.redraw();
+#endif
+
         if (!is_resting() && you.running.hp == you.hp
             && you.running.mp == you.magic_points)
         {

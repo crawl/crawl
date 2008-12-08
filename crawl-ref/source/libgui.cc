@@ -343,7 +343,7 @@ void delay(int ms)
 
 void update_screen()
 {
-    tiles.redraw();
+    tiles.set_need_redraw();
 }
 
 int kbhit()

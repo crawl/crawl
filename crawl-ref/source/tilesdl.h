@@ -106,6 +106,7 @@ public:
     void clear_minimap();
     void update_inventory();
 
+    void set_need_redraw();
     void redraw();
 
     void place_cursor(cursor_type type, const coord_def &gc);
@@ -134,6 +135,7 @@ protected:
 
     SDL_Surface* m_context;
     bool m_fullscreen;
+    bool m_need_redraw;
 
     enum LayerID
     {

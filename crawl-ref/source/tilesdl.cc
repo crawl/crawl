@@ -79,6 +79,7 @@ TilesFramework::TilesFramework() :
     m_viewsc(0, 0),
     m_context(NULL),
     m_fullscreen(false),
+    m_need_redraw(false),
     m_active_layer(LAYER_CRT),
     m_buttons_held(0),
     m_key_mod(0),
@@ -591,6 +592,12 @@ int TilesFramework::getch_ck()
     unsigned int res = std::max(30, Options.tile_tooltip_ms);
     SDL_SetTimer(res, &_timer_callback);
 
+    if (m_need_redraw)
+    {
+        redraw();
+        last_redraw_tick = SDL_GetTicks();
+    }
+
     while (!key)
     {
         unsigned int ticks = 0;
@@ -944,6 +951,8 @@ void TilesFramework::cgotoxy(int x, int y, int region)
 
 void TilesFramework::redraw()
 {
+    m_need_redraw = false;
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
@@ -1273,4 +1282,9 @@ void TilesFramework::add_overlay(const coord_def &gc, int idx)
 void TilesFramework::clear_overlays()
 {
     m_region_tile->clear_overlays();
+}
+
+void TilesFramework::set_need_redraw()
+{
+    m_need_redraw = true;
 }
