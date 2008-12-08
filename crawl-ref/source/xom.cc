@@ -600,7 +600,7 @@ static void _do_chaos_upgrade(item_def &item, const monsters* mon)
 
         msg += item.name(DESC_PLAIN, false, false, false);
 
-        msg += " is briefly surrounded by a scintillating arua of "
+        msg += " is briefly surrounded by a scintillating aura of "
                "random colours.";
 
         mpr(msg.c_str());

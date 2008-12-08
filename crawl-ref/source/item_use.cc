@@ -634,7 +634,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
                     break;
 
                 case SPWPN_CHAOS:
-                    mpr("It is briefly surrounded by a scintillating arua "
+                    mpr("It is briefly surrounded by a scintillating aura "
                         "of random colours.");
                     break;
 

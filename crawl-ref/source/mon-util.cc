@@ -3706,7 +3706,7 @@ void monsters::equip_weapon(item_def &item, int near, bool msg)
             mpr("Its appearance distorts for a moment.");
             break;
         case SPWPN_CHAOS:
-            mpr("It is briefly surrounded by a scintillating arua of "
+            mpr("It is briefly surrounded by a scintillating aura of "
                 "random colours.");
             break;
 
