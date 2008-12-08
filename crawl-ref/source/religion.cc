@@ -3945,11 +3945,11 @@ static bool _zin_retribution()
 
                 coord_def mon_pos;
                 if (!monster_random_space(mon, mon_pos))
-                    continue;
+                    mon_pos = you.pos();
 
                 if (create_monster(
                         mgen_data::hostile_at(mon,
-                            mon_pos, 0, MG_FORCE_PLACE, true, god)) != -1)
+                            mon_pos, 0, 0, true, god)) != -1)
                 {
                     success = true;
                 }
