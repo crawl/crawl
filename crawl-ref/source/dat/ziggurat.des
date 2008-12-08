@@ -59,8 +59,8 @@ MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
-SHUFFLE: 123.
-SUBST:   1=1..., 2=2.
+SHUFFLE: 123x
+SUBST:   1=1..., 2=2., x=.
 : ziggurat_portal(_G)
 MAP
     ...
@@ -79,8 +79,8 @@ MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
-SHUFFLE: 123.
-SUBST:   1=1..., 2=2.
+SHUFFLE: 123x
+SUBST:   1=1..., 2=2., x=.
 : ziggurat_portal(_G)
 MAP
     ...
