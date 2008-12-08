@@ -947,7 +947,8 @@ static int _place_monster_aux( const mgen_data &mg,
 
     // dur should always be 1-6 for monsters that can be abjured.
     if (mg.abjuration_duration >= 1 && mg.abjuration_duration <= 6)
-        menv[id].mark_summoned( mg.abjuration_duration, true );
+        menv[id].mark_summoned( mg.abjuration_duration, true,
+                                mg.summon_type );
 
     menv[id].foe = mg.foe;
 

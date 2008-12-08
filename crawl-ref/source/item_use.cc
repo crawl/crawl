@@ -1748,140 +1748,6 @@ void _merge_ammo_in_inventory(int slot)
     }
 }
 
-std::string setup_chaos_ammo(bolt &pbolt, item_def ammo)
-{
-    ASSERT(!is_artefact(ammo));
-
-    const bool poisoned = (get_ammo_brand(ammo) == SPMSL_POISONED);
-
-    // Don't choose BEAM_POISON or BEAM_HEALING if we have poisoned ammo.
-    const int pois_weight = poisoned ? 0 : 10;
-    const int heal_weight = poisoned ? 0 : 10;
-
-    const beam_type flavour = static_cast<beam_type>(
-        random_choose_weighted( pois_weight, BEAM_POISON,
-                                heal_weight, BEAM_HEALING,
-
-                                10,  BEAM_FIRE,
-                                10,  BEAM_COLD,
-                                10,  BEAM_ELECTRICITY,
-                                10,  BEAM_NEG,
-                                10,  BEAM_ACID,
-                                10,  BEAM_HELLFIRE,
-                                10,  BEAM_NAPALM,
-                                10,  BEAM_HELLFROST,
-                                10,  BEAM_SLOW,
-                                10,  BEAM_HASTE,
-                                10,  BEAM_PARALYSIS,
-                                10,  BEAM_CONFUSION,
-                                10,  BEAM_INVISIBILITY,
-                                10,  BEAM_POLYMORPH,
-                                10,  BEAM_BANISH,
-                                10,  BEAM_DISINTEGRATION,
-                                0 ));
-
-    std::string name;
-    int colour;
-
-    if (poisoned)
-       name = "poison ";
-
-    switch(flavour)
-    {
-    case BEAM_POISON:
-        name  += "poison";
-        colour = EC_POISON;
-        break;
-    case BEAM_HEALING:
-        name  += "healing";
-        colour = EC_HEAL;
-        break;
-    case BEAM_FIRE:
-        name  += "flame";
-        colour = EC_FIRE;
-        break;
-    case BEAM_COLD:
-        name  += "frost";
-        colour = EC_ICE;
-        break;
-    case BEAM_ELECTRICITY:
-        name  += "lightning";
-        colour = EC_ELECTRICITY;
-        break;
-    case BEAM_NEG:
-        name  += "negative energy";
-        colour = EC_NECRO;
-        break;
-    case BEAM_ACID:
-        name  += "acid";
-        colour = YELLOW;
-        break;
-    case BEAM_HELLFIRE:
-        name  += "hellfire";
-        colour = EC_FIRE;
-        break;
-    case BEAM_NAPALM:
-        name  += "sticky fire";
-        colour = EC_FIRE;
-        break;
-    case BEAM_HELLFROST:
-        name  += "hellfrost";
-        colour = EC_ICE;
-        break;
-    case BEAM_SLOW:
-        name  += "slowing";
-        colour = EC_ENCHANT;
-        break;
-    case BEAM_HASTE:
-        name  += "hasting";
-        colour = EC_ENCHANT;
-        break;
-    case BEAM_PARALYSIS:
-        name  += "paralysis";
-        colour = EC_ENCHANT;
-        break;
-    case BEAM_CONFUSION:
-        name  += "confusion";
-        colour = EC_ENCHANT;
-        break;
-    case BEAM_INVISIBILITY:
-        name  += "invisibility";
-        colour = EC_ENCHANT;
-        break;
-    case BEAM_POLYMORPH:
-        name  += "polymorphing";
-        colour = EC_MUTAGENIC;
-        break;
-    case BEAM_BANISH:
-        name  += "banishment";
-        colour = EC_WARP;
-        break;
-    case BEAM_DISINTEGRATION:
-        name  += "disintegration";
-        colour = EC_DEATH;
-        break;
-    default:
-        ASSERT(!"Invalid chaos ammo flavour.");
-        break;
-    }
-
-    pbolt.name  = "bolt of ";
-    pbolt.name += name;    
-
-    pbolt.flavour = flavour;
-    pbolt.colour  = colour;
-    pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
-
-    // Get name for a plain arrow/bolt/dart/needle.
-    ammo.special = 0;
-
-    std::string ammo_name = ammo.name(DESC_NOCAP_A);
-    ammo_name += " of ";
-    ammo_name += name;
-
-    return ammo_name;
-}
-
 // throw_it - currently handles player throwing only.  Monster
 // throwing is handled in mstuff2:mons_throw()
 // Note: If teleport is true, assume that pbolt is already set up,
@@ -2542,12 +2408,23 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // Chaos overides flame and frost/ice.
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
     {
-        ammo_name = setup_chaos_ammo(pbolt, item);
+        // Chaos can't be poisoned, since that might conflict with
+        // the random healing effect or overlap with the random
+        // poisoning effect.
+        poisoned = false;
 
         // [dshaligram] Branded arrows are much stronger.
         dice_mult = (dice_mult * 150) / 100;
 
         pbolt.effect_known = false;
+
+        pbolt.flavour = BEAM_CHAOS;
+        pbolt.name    = "bolt of chaos";
+
+        pbolt.colour  = EC_RANDOM;
+        pbolt.type    = dchar_glyph(DCHAR_FIRED_BOLT);
+        pbolt.thrower = KILL_YOU_MISSILE;
+        pbolt.aux_source.clear();
     }
     else if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
              && ammo_brand != SPMSL_ICE && bow_brand != SPWPN_FROST)
@@ -2664,7 +2541,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     item_def ammo = item;
     if (ammo.base_type == OBJ_MISSILES)
     {
-        if (pbolt.flavour == BEAM_FIRE)
+        if (pbolt.flavour == BEAM_CHAOS)
+        {
+            ammo.special = SPMSL_CHAOS;
+        }
+        else if (pbolt.flavour == BEAM_FIRE)
         {
             if (ammo.special != SPMSL_FLAME)
                 ammo.special = SPMSL_FLAME;

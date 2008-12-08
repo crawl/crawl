@@ -2446,7 +2446,7 @@ void MiscastEffect::do_miscast()
     {
         severity = (pow * fail * (10 + pow) / 7 * WILD_MAGIC_NASTINESS) / 100;
 
-#if DEBUG_DIAGNOSTICS || DEBUG_MISCAT
+#if DEBUG_DIAGNOSTICS || DEBUG_MISCAST
         mprf(MSGCH_DIAGNOSTICS, "'%s' miscast power: %d",
              spell != SPELL_NO_SPELL ? spell_title(spell)
                                      : spelltype_short_name(sp_type),
@@ -2468,7 +2468,7 @@ void MiscastEffect::do_miscast()
             severity = 0;
     }
 
-#if DEBUG_DIAGNOSTICS || DEBUG_MISCAT
+#if DEBUG_DIAGNOSTICS || DEBUG_MISCAST
     mprf(MSGCH_DIAGNOSTICS, "Sptype: %s, severity: %d",
          spelltype_short_name(sp_type), severity );
 #endif
@@ -2714,6 +2714,15 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
         if (data.behaviour == BEH_FRIENDLY && abj_deg == 0)
             data.abjuration_duration = 6;
     }
+
+    // If data.abjuration_duration == 0 then data.summon_type will simply
+    // be ignored.
+    if (you.penance[god] > 0)
+        data.summon_type = MON_SUMM_WRATH;
+    else if (source == ZOT_TRAP_MISCAST)
+        data.summon_type = MON_SUMM_ZOT;
+    else
+        data.summon_type = MON_SUMM_MISCAST;
 
     return (create_monster(data) != -1);
 }

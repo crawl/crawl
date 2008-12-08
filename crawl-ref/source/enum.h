@@ -209,7 +209,7 @@ enum beam_type                  // beam[].flavour
     BEAM_ICE,
     BEAM_NUKE,
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
-    // 24
+    BEAM_CHAOS,
 
     // Enchantments
     BEAM_FIRST_ENCHANTMENT = 25,  // 25
@@ -411,6 +411,7 @@ enum cloud_type
     CLOUD_STEAM,
     CLOUD_MIASMA,
     CLOUD_MIST,
+    CLOUD_CHAOS,
     CLOUD_RANDOM = 98,
     CLOUD_DEBUGGING = 99    //   99: used once as 'nonexistent cloud' {dlb}
 };
@@ -3016,6 +3017,7 @@ enum zap_type
     ZAP_PETRIFY,
     ZAP_ENSLAVE_SOUL,
     ZAP_HELLFROST,
+    ZAP_CHAOS,
     NUM_ZAPS
 };
 

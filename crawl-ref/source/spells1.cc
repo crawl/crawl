@@ -1086,36 +1086,40 @@ void abjuration(int pow)
         if (mons_wont_attack(monster))
             continue;
 
-        mon_enchant abj = monster->get_ench(ENCH_ABJ);
-        if (abj.ench != ENCH_NONE)
+        int duration;
+        if (monster->is_summoned(&duration))
         {
             int sockage = std::max(fuzz_value(abjdur, 60, 30), 40);
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "%s abj: dur: %d, abj: %d",
-                 monster->name(DESC_PLAIN).c_str(), abj.duration, sockage);
+                 monster->name(DESC_PLAIN).c_str(), duration, sockage);
 #endif
 
+            bool shielded = false;
             // TSO and Trog's abjuration protection.
             if (mons_is_god_gift(monster, GOD_SHINING_ONE))
             {
                 sockage = sockage * (30 - monster->hit_dice) / 45;
-                if (sockage < abj.duration)
+                if (sockage < duration)
                 {
                     simple_god_message(" protects a fellow warrior from your evil magic!",
                                        GOD_SHINING_ONE);
+                    shielded = true;
                 }
             }
             else if (mons_is_god_gift(monster, GOD_TROG))
             {
                 sockage = sockage * 8 / 15;
-                if (sockage < abj.duration)
+                if (sockage < duration)
                 {
                     simple_god_message(" shields an ally from your puny magic!",
                                        GOD_TROG);
+                    shielded = true;
                 }
             }
 
-            if (!monster->lose_ench_duration(abj, sockage))
+            mon_enchant abj = monster->get_ench(ENCH_ABJ);
+            if (!monster->lose_ench_duration(abj, sockage) && !shielded)
                 simple_monster_message(monster, " shudders.");
         }
     }

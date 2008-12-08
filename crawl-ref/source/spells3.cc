@@ -546,7 +546,7 @@ bool cast_shadow_creatures(god_type god)
 
     const int monster =
         create_monster(
-            mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, 2,
+            mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, 2, SPELL_SHADOW_CREATURES,
                       you.pos(), you.pet_target,
                       MG_FORCE_BEH, god), false);
 

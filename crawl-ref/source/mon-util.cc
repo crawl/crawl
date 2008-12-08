@@ -2316,9 +2316,53 @@ bool mons_self_destructs(const monsters *m)
     return (m->type == MONS_GIANT_SPORE || m->type == MONS_BALL_LIGHTNING);
 }
 
-bool mons_is_summoned(const monsters *m)
+bool mons_is_summoned(const monsters *m, int *duration, int *summon_type)
 {
-    return (m->has_ench(ENCH_ABJ));
+    const mon_enchant abj = m->get_ench(ENCH_ABJ);
+    if (abj.ench == ENCH_NONE)
+    {
+        if (duration != NULL)
+            *duration = -1;
+        if (summon_type != NULL)
+            *summon_type = 0;
+
+        return (false);
+    }
+    if (duration != NULL)
+        *duration = abj.duration;
+
+    const mon_enchant summ = m->get_ench(ENCH_SUMMON);
+    if (summ.ench == ENCH_NONE)
+    {
+        if (summon_type != NULL)
+            *summon_type = 0;
+
+        return (true);
+    }
+    if (summon_type != NULL)
+        *summon_type = summ.degree;
+
+    switch(summ.degree)
+    {
+    // Temporarily dancing weapons are really there.
+    case SPELL_TUKIMAS_DANCE:
+
+    // A corpse/skeleton which was temporarily animated.
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_ANIMATE_SKELETON:
+
+    // Fire vortices are made from real fire.
+    case SPELL_FIRE_STORM:
+
+    // Clones aren't really summoned (though their equipment might be).
+    case MON_SUMM_CLONE:
+
+    // Some object which was animated, and thus not really summoned.
+    case MON_SUMM_ANIMATE:
+        return (false);
+    }
+
+    return (true);
 }
 
 bool mons_is_shapeshifter(const monsters *m)
@@ -6619,9 +6663,12 @@ void monsters::apply_enchantment(const mon_enchant &me)
     }
 }
 
-void monsters::mark_summoned(int longevity, bool mark_items)
+void monsters::mark_summoned(int longevity, bool mark_items, int summon_type)
 {
     add_ench( mon_enchant(ENCH_ABJ, longevity) );
+    if (summon_type != 0)
+        add_ench( mon_enchant(ENCH_SUMMON, summon_type, KC_OTHER, INT_MAX) );
+
     if (mark_items)
     {
         for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
@@ -6631,6 +6678,11 @@ void monsters::mark_summoned(int longevity, bool mark_items)
                 mitm[item].flags |= ISFLAG_SUMMONED;
         }
     }
+}
+
+bool monsters::is_summoned(int* duration, int* summon_type) const
+{
+    return mons_is_summoned(this, duration, summon_type);
 }
 
 void monsters::apply_enchantments()

@@ -1624,8 +1624,8 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, monster_type mon,
         create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, you.pos(),
-                      friendly ? you.pet_target : MHITYOU,
+                      dur, friendly ? MON_SUMM_AID : MON_SUMM_WRATH,
+                      you.pos(), friendly ? you.pet_target : MHITYOU,
                       MG_FORCE_BEH, god));
 
     if (monster == -1)
@@ -1709,7 +1709,7 @@ bool cast_tukimas_dance(int pow, god_type god,
             create_monster(
                 mgen_data(MONS_DANCING_WEAPON,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                          dur, you.pos(),
+                          dur, SPELL_TUKIMAS_DANCE, you.pos(),
                           friendly ? you.pet_target : MHITYOU,
                           0, god));
 

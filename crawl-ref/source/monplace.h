@@ -127,6 +127,11 @@ struct mgen_data
     // that aren't summoned.
     int             abjuration_duration;
 
+    // For summoned monsters this is their type of summoning, either the
+    // spell which summoned them or one of the values of the enumeration
+    // mon_summon_type in mon-util.h
+    int             summon_type;
+
     // Where the monster will be created.
     coord_def       pos;
 
@@ -189,10 +194,33 @@ struct mgen_data
               level_area_type ltype = you.level_type)
 
         : cls(mt), base_type(base), behaviour(beh),
-          abjuration_duration(abj), pos(p), foe(mfoe), flags(monflags),
-          god(which_god), number(monnumber), colour(moncolour),
+          abjuration_duration(abj), summon_type(0), pos(p), foe(mfoe),
+          flags(monflags), god(which_god), number(monnumber), colour(moncolour),
           power(monpower), proximity(prox), level_type(ltype), map_mask(0)
     {
+    }
+
+    mgen_data(monster_type mt,
+              beh_type beh,
+              int abj,
+              int st,
+              const coord_def &p = coord_def(-1, -1),
+              unsigned short mfoe = MHITNOT,
+              unsigned monflags = 0,
+              god_type which_god = GOD_NO_GOD,
+              monster_type base = MONS_PROGRAM_BUG,
+              int monnumber = 0,
+              int moncolour = BLACK,
+              int monpower = you.your_level,
+              proximity_type prox = PROX_ANYWHERE,
+              level_area_type ltype = you.level_type)
+
+        : cls(mt), base_type(base), behaviour(beh),
+          abjuration_duration(abj), summon_type(st), pos(p), foe(mfoe),
+          flags(monflags), god(which_god), number(monnumber), colour(moncolour),
+          power(monpower), proximity(prox), level_type(ltype), map_mask(0)
+    {
+        ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6));
     }
 
     bool permit_bands() const { return (flags & MG_PERMIT_BANDS); }
@@ -217,9 +245,10 @@ struct mgen_data
                                 int abj_deg = 0,
                                 unsigned flags = 0,
                                 bool alert = false,
-                                god_type god = GOD_NO_GOD)
+                                god_type god = GOD_NO_GOD,
+                                int summon_type = 0)
     {
-        return mgen_data(what, BEH_HOSTILE, abj_deg, where,
+        return mgen_data(what, BEH_HOSTILE, abj_deg, summon_type, where,
                          alert ? MHITYOU : MHITNOT,
                          flags, god);
     }

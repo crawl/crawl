@@ -411,6 +411,8 @@ cloud_type beam2cloud(beam_type flavour)
     case BEAM_MIASMA:
     case BEAM_POTION_MIASMA:
         return CLOUD_MIASMA;
+    case BEAM_CHAOS:
+        return CLOUD_CHAOS;
     case BEAM_RANDOM:
         return CLOUD_RANDOM;
     }
@@ -443,6 +445,8 @@ beam_type cloud2beam(cloud_type flavour)
         return BEAM_STEAM;
     case CLOUD_MIASMA:
         return BEAM_MIASMA;
+    case CLOUD_CHAOS:
+        return BEAM_CHAOS;
     case CLOUD_RANDOM:
         return BEAM_RANDOM;
     }
@@ -619,6 +623,7 @@ bool is_damaging_cloud(cloud_type type, bool temp)
         // ... unless a Ring of Flames is up and it's a fire cloud.
         if (temp && you.duration[DUR_FIRE_SHIELD])
             return (false);
+    case CLOUD_CHAOS:
     case CLOUD_COLD:
         return (true);
 
@@ -682,6 +687,8 @@ std::string cloud_name(cloud_type type)
         return "black smoke";
     case CLOUD_MIST:
         return "thin mist";
+    case CLOUD_CHAOS:
+        return "seething chaos";
     default:
         return "buggy goodness";
     }

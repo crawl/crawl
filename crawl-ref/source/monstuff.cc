@@ -308,9 +308,23 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
         mprf(MSGCH_SOUND, grid_item_destruction_message(grd(monster->pos())));
 }
 
-static void _place_monster_corpse(const monsters *monster)
+static void _place_monster_corpse(const monsters *monster, bool silent,
+                                  int summon_type)
 {
-    int corpse_class = mons_species(monster->type);
+    bool force        = false;
+    int  corpse_class = mons_species(monster->type);
+
+    // If this was a corpse that was temporarily animated then turn the
+    // monster back into a corpse.
+    if (mons_class_is_zombified(monster->type)
+        && (summon_type == SPELL_ANIMATE_DEAD
+            || summon_type == SPELL_ANIMATE_SKELETON
+            || summon_type == MON_SUMM_ANIMATE))
+    {
+        force        = true;
+        corpse_class = mons_zombie_base(monster);
+    }
+
     if (corpse_class == MONS_DRACONIAN)
         corpse_class = draco_subspecies(monster);
 
@@ -321,7 +335,7 @@ static void _place_monster_corpse(const monsters *monster)
 
     // Doesn't leave a corpse.
     if (mons_weight(corpse_class) == 0 || mons_enslaved_body_and_soul(monster)
-        || coinflip())
+        || (!force && coinflip()))
     {
         return;
     }
@@ -355,7 +369,15 @@ static void _place_monster_corpse(const monsters *monster)
     move_item_to_grid( &o, monster->pos() );
     if (see_grid(monster->pos()))
     {
-        const bool poison = (mons_corpse_effect(monster->type) == CE_POISONOUS
+        if (force && !silent)
+        {
+            if (you.can_see(monster))
+                simple_monster_message(monster, " turns back into a corpse!");
+            else
+                mprf("%s appears out of nowhere!",
+                     mitm[o].name(DESC_CAP_A).c_str());
+        }
+        const bool poison = (mons_corpse_effect(corpse_class) == CE_POISONOUS
                              && player_res_poison() <= 0);
         tutorial_dissection_reminder(!poison);
     }
@@ -864,6 +886,76 @@ static void _spore_goes_pop(monsters *monster, killer_type killer,
     mgrd(monster->pos()) = monster_index(monster);
 }
 
+void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
+                        bool summoned, int summon_type)
+{
+    // Chaos spawn always leave behind a cloud of chaos.
+    if (monster->type == MONS_CHAOS_SPAWN)
+    {
+        summoned = true;
+        corpse   = false;
+    }
+
+    if (!summoned)
+        return;
+
+    std::string prefix;
+    std::string msg   = " disappears in a puff of smoke!";
+    cloud_type  cloud = random_smoke_type();
+    int         dur   = 1 + random2(3);
+
+    if (corpse)
+    {
+        if (mons_weight(mons_species(monster->type)) == 0)
+            return;
+
+        prefix = "'s corpse";
+    }
+
+    switch(summon_type)
+    {
+    case SPELL_SHADOW_CREATURES:
+        msg   = " disolves into shadows!";
+        cloud = CLOUD_NONE;
+        break;
+
+    case MON_SUMM_CHAOS:
+        msg   = " degenerates into a cloud of primal chaos!";
+        cloud = CLOUD_CHAOS;
+        break;
+
+    case MON_SUMM_WRATH:
+    case MON_SUMM_AID:
+        if (is_good_god(monster->god))
+        {
+            msg   = " disolves into sparkling lights!";
+            cloud = CLOUD_NONE;
+        }
+        break;
+    }
+
+    if (monster->god == GOD_XOM && one_chance_in(10)
+        || cloud != CLOUD_NONE && monster->type == MONS_CHAOS_SPAWN)
+    {
+        msg   = " degenerates into a cloud of primal chaos!";
+        cloud = CLOUD_CHAOS;
+    }
+
+    if (mons_is_holy(monster) && summon_type != SPELL_SHADOW_CREATURES
+        && summon_type != MON_SUMM_CHAOS)
+    {
+            msg   = " disolves into sparkling lights!";
+            cloud = CLOUD_NONE;
+    }
+
+    if (!silent)
+        simple_monster_message(monster, (prefix + msg).c_str());
+
+    if (cloud != CLOUD_NONE)
+        place_cloud( cloud, monster->pos(), dur,
+                     monster->kill_alignment() );
+}
+
 void monster_die(monsters *monster, killer_type killer,
                  int killer_index, bool silent, bool wizard)
 {
@@ -882,9 +974,11 @@ void monster_die(monsters *monster, killer_type killer,
     if (mons_near(monster) || wizard)
         remove_auto_exclude(monster);
 
+          int summon_type    = 0;
+    const bool summoned      = mons_is_summoned(monster, NULL, &summon_type);
     const int monster_killed = monster_index(monster);
     const bool hard_reset    = testbits(monster->flags, MF_HARD_RESET);
-    const bool gives_xp      = !mons_is_summoned(monster)
+    const bool gives_xp      = !summoned
                                && !mons_enslaved_body_and_soul(monster);
 
     const bool drop_items    = !hard_reset && !mons_is_holy(monster);
@@ -1372,15 +1466,9 @@ void monster_die(monsters *monster, killer_type killer,
             // Monster doesn't die, just goes back to wherever it came from
             // This must only be called by monsters running out of time (or
             // abjuration), because it uses the beam variables! Or does it???
-            if (!silent)
-            {
-                simple_monster_message( monster,
-                                        " disappears in a puff of smoke!" );
-            }
-
-            place_cloud( random_smoke_type(),
-                         monster->pos(), 1 + random2(3),
-                         monster->kill_alignment() );
+            if (!wizard)
+                _monster_die_cloud(monster, false, silent, summoned,
+                                   summon_type);
 
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
@@ -1462,23 +1550,10 @@ void monster_die(monsters *monster, killer_type killer,
         curr_PlaceInfo += delta;
         curr_PlaceInfo.assert_validity();
 
-        if (monster->has_ench(ENCH_ABJ))
-        {
-            if (mons_weight(mons_species(monster->type)))
-            {
-                simple_monster_message(monster,
-                            "'s corpse disappears in a puff of smoke!");
-
-                place_cloud( random_smoke_type(),
-                             monster->pos(), 1 + random2(3),
-                             monster->kill_alignment() );
-            }
-        }
-        else
-        {
+        _monster_die_cloud(monster, true, silent, summoned, summon_type);
+        if (!summoned)
             // Have to add case for disintegration effect here? {dlb}
-            _place_monster_corpse(monster);
-        }
+            _place_monster_corpse(monster, silent, summon_type);
     }
 
     _fire_monster_death_event(monster, killer, killer_index);
@@ -1767,6 +1842,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     mon_enchant neutral   = monster->get_ench(ENCH_NEUTRAL);
     mon_enchant shifter   = monster->get_ench(ENCH_GLOWING_SHAPESHIFTER,
                                               ENCH_SHAPESHIFTER);
+    mon_enchant summon    = monster->get_ench(ENCH_SUMMON);
     mon_enchant tp        = monster->get_ench(ENCH_TP);
 
     // Note: define_monster() will clear out all enchantments! -- bwr
@@ -1776,6 +1852,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster->add_ench(charm);
     monster->add_ench(neutral);
     monster->add_ench(shifter);
+    monster->add_ench(summon);
     monster->add_ench(tp);
 
     monster->ench_countdown = old_ench_countdown;
@@ -1783,8 +1860,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     if (mons_class_flag(monster->type, M_INVIS))
         monster->add_ench(ENCH_INVIS);
 
-    if (!player_messaged && mons_near(monster)
-        && player_monster_visible(monster))
+    if (!player_messaged && you.can_see(monster))
     {
         mprf("%s appears out of thin air!", monster->name(DESC_CAP_A).c_str());
         player_messaged = true;

@@ -203,6 +203,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         {
             create_monster(
                 mgen_data(RANDOM_MONSTER, SAME_ATTITUDE(monster), 5,
+                          SPELL_SHADOW_CREATURES,
                           monster->pos(), monster->foe));
         }
         return;
@@ -931,9 +932,9 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     // fire/ice and incorrect ammo.  They now have the same restrictions
     // as players.
 
-    int bow_brand = SPWPN_NORMAL;
-    const int ammo_brand = get_ammo_brand(item);
-    const bool poison = (ammo_brand == SPMSL_POISONED);
+          int  bow_brand  = SPWPN_NORMAL;
+    const int  ammo_brand = get_ammo_brand(item);
+          bool poison     = (ammo_brand == SPMSL_POISONED);
 
     if (projected == LRET_LAUNCHED)
     {
@@ -1044,9 +1045,19 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
     // Chaos overides flame and frost
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
     {
-        (void) setup_chaos_ammo(pbolt, item);
-        baseHit += 2;
+        // Chaos can't be poisoned, since that might conflict with
+        // the random healing effect or overlap with the random
+        // poisoning effect.
+        poison = false;
+
+        baseHit    += 2;
         exDamBonus += 6;
+
+        pbolt.flavour  = BEAM_CHAOS;
+        pbolt.name     = "bolt of chaos";
+
+        pbolt.colour    = EC_RANDOM;
+        pbolt.type      = dchar_glyph(DCHAR_FIRED_ZAP);
     }
     // WEAPON or AMMO of FIRE
     else if (bow_brand == SPWPN_FLAME && ammo_brand != SPMSL_ICE
@@ -1797,27 +1808,36 @@ static int _monster_abjure_square(const coord_def &pos,
     if (!target->alive() || ((bool)wont_attack == mons_wont_attack(target)))
         return (0);
 
-    mon_enchant abj = target->get_ench(ENCH_ABJ);
-    if (abj.ench == ENCH_NONE)
+    int duration;
+
+    if (!target->is_summoned(&duration))
         return (0);
 
     pow = std::max(20, fuzz_value(pow, 40, 25));
 
     if (!actual)
-        return (pow > 40 || pow >= abj.duration);
+        return (pow > 40 || pow >= duration);
 
     // TSO and Trog's abjuration protection.
+    bool shielded = false;
     if (you.religion == GOD_SHINING_ONE)
     {
         pow = pow * (30 - target->hit_dice) / 30;
-        if (pow < abj.duration)
-            simple_god_message(" protects your fellow warrior from evil magic!");
+        if (pow < duration)
+        {
+            simple_god_message(" protects your fellow warrior from evil "
+                               "magic!");
+            shielded = true;
+        }
     }
     else if (you.religion == GOD_TROG)
     {
         pow = pow * 4 / 5;
-        if (pow < abj.duration)
+        if (pow < duration)
+        {
             simple_god_message(" shields your ally from puny magic!");
+            shielded = true;
+        }
     }
     else if (is_sanctuary(target->pos()))
     {
@@ -1828,10 +1848,11 @@ static int _monster_abjure_square(const coord_def &pos,
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Abj: dur: %d, pow: %d, ndur: %d",
-         abj.duration, pow, abj.duration - pow);
+         duration, pow, duration - pow);
 #endif
 
-    if (!target->lose_ench_duration(abj, pow))
+    mon_enchant abj = target->get_ench(ENCH_ABJ);
+    if (!target->lose_ench_duration(abj, pow) && !shielded)
         simple_monster_message(target, " shudders.");
 
     return (1);
@@ -2116,4 +2137,129 @@ void mons_clear_trapping_net(monsters *mon)
         remove_item_stationary(mitm[net]);
 
     mon->del_ench(ENCH_HELD, true);
+}
+
+bool mons_clonable(const monsters* mon, bool needs_adjacent)
+{
+    // No uniques, pandemonium lords or player ghosts.  Also, figuring
+    // out the name for the clone of a named monster isn't worth it.
+    if (mons_is_unique(mon->type) || mon->is_named() || mon->ghost.get())
+        return (false);
+
+    if (needs_adjacent)
+    {
+        // Is there space for the clone?
+        bool square_found = false;
+        for (int i = 0; i < 8; i++)
+        {
+            const coord_def p = mon->pos() + Compass[i];
+
+            if (in_bounds(p) && p != you.pos() && mgrd(p) == NON_MONSTER
+                && monster_habitable_grid(mon, grd(p)))
+            {
+                square_found = true;
+                break;
+            }
+        }
+        if (!square_found)
+            return (false);
+    }
+
+    // Is the monster carrying an artefact?
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        const int index = mon->inv[i];
+
+        if (index == NON_ITEM)
+            continue;
+
+        if (is_artefact(mitm[index]))
+            return (false);
+    }
+
+    return (true);
+}
+
+int clone_mons(const monsters* orig, bool quiet, bool* obvious,
+               coord_def pos)
+{
+    // Is there an open slot in menv?
+    int midx = NON_MONSTER;
+    for (int i = 0; i < MAX_MONSTERS; i++)
+        if (menv[i].type == -1)
+        {
+            midx = i;
+            break;
+        }
+
+    if (midx == NON_MONSTER)
+        return (NON_MONSTER);
+
+    if (!in_bounds(pos))
+    {
+        // Find an adjacent square.
+        int squares = 0;
+        for (int i = 0; i < 8; i++)
+        {
+            const coord_def p = orig->pos() + Compass[i];
+
+            if (in_bounds(p) && p != you.pos() && mgrd(p) == NON_MONSTER
+                && monster_habitable_grid(orig, grd(p)))
+            {
+                if (one_chance_in(++squares))
+                    pos = p;
+            }
+        }
+        if (squares == 0)
+            return (NON_MONSTER);
+    }
+
+    ASSERT(mgrd(pos) == NON_MONSTER && you.pos() != pos);
+
+    monsters &mon(menv[midx]);
+
+    mon          = *orig;
+    mon.position = pos;
+    mgrd(pos)    = midx;
+
+    // Duplicate objects, or unequip them if they can't be duplicated.
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        const int old_index = orig->inv[i];
+
+        if (old_index == NON_ITEM)
+            continue;
+
+        const int new_index = get_item_slot(0);
+        if (new_index == NON_ITEM)
+        {
+            mon.unequip(mitm[old_index], i, 0, true);
+            mon.inv[i] = NON_ITEM;
+            continue;
+        }
+
+        mon.inv[i]      = new_index;
+        mitm[new_index] = mitm[old_index];
+    }
+
+    bool _obvious;
+    if (obvious == NULL)
+        obvious = &_obvious;
+    *obvious = false;
+
+    if (you.can_see(orig) && you.can_see(&mon))
+    {
+        if (!quiet)
+            simple_monster_message(orig, " is duplicated!");
+        *obvious = true;
+    }
+
+    mark_interesting_monst(&mon, mon.behaviour);
+    if (you.can_see(&mon))
+    {
+        seen_monster(&mon);
+        viewwindow(true, false);
+    }
+
+    return (midx);
 }

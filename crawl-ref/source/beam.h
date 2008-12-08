@@ -40,6 +40,9 @@ struct bolt
     unsigned    type;                  // missile gfx
     int         colour;
     beam_type   flavour;
+    beam_type   real_flavour;          // for random and chaos beams this
+                                       // will remain the same while flavour
+                                       // changes
     bool        drop_item;             // should drop an item when done
     item_def*   item;                  // item to drop
     coord_def   source;                // beam origin

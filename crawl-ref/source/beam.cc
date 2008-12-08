@@ -93,6 +93,8 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt);
 static bool _nasty_beam(monsters *mon, const bolt &beam);
 static bool _nice_beam(monsters *mon, const bolt &beam);
 
+static beam_type _chaos_beam_flavour();
+
 static std::set<std::string> beam_message_cache;
 
 static bool _beam_is_blockable(bolt &pbolt)
@@ -146,10 +148,6 @@ void zap_animation(int colour, const monsters *mon, bool force)
 {
     coord_def p = you.pos();
 
-    // Default to whatever colour magic is today.
-    if (colour == -1)
-        colour = element_colour(EC_MAGIC);
-
     if (mon)
     {
         if (!force && !player_monster_visible( mon ))
@@ -165,6 +163,10 @@ void zap_animation(int colour, const monsters *mon, bool force)
 
     if (in_los_bounds(drawp))
     {
+        // Default to whatever colour magic is today.
+        if (colour == -1)
+            colour = EC_MAGIC;
+
 #ifdef USE_TILE
         tiles.add_overlay(p, tileidx_zap(colour));
 #else
@@ -185,6 +187,8 @@ static void _ench_animation( int flavour, const monsters *mon, bool force )
                      (flavour == BEAM_PAIN)          ? EC_UNHOLY :
                      (flavour == BEAM_DISPEL_UNDEAD) ? EC_HOLY :
                      (flavour == BEAM_POLYMORPH)     ? EC_MUTAGENIC :
+                     (flavour == BEAM_CHAOS
+                        || flavour == BEAM_RANDOM)   ? EC_RANDOM :
                      (flavour == BEAM_TELEPORT
                         || flavour == BEAM_BANISH
                         || flavour == BEAM_BLINK)    ? EC_WARP
@@ -201,6 +205,7 @@ static void _beam_set_default_values(bolt &beam, int power)
     beam.damage         = dice_def( 1, 0 );  // default for "0" beams (I think)
     beam.type           = 0;                 // default for "0" beams
     beam.flavour        = BEAM_MAGIC;        // default for "0" beams
+    beam.real_flavour   = BEAM_MAGIC;        // default for "0" beams
     beam.ench_power     = power;
     beam.obvious_effect = false;
     beam.is_beam        = false;             // default for all beams.
@@ -1348,6 +1353,7 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
     // Fill
     pbolt.name           = zinfo->name;
     pbolt.flavour        = zinfo->flavour;
+    pbolt.real_flavour   = zinfo->flavour;
     pbolt.colour         = zinfo->colour;
     pbolt.type           = dchar_glyph(zinfo->glyph);
     pbolt.obvious_effect = zinfo->always_obvious;
@@ -1405,6 +1411,33 @@ static bool _affect_mon_in_wall(bolt &pbolt, item_def *item,
     return (false);
 }
 
+static beam_type _chaos_beam_flavour()
+{
+    const beam_type flavour = static_cast<beam_type>(
+        random_choose_weighted(
+            10, BEAM_FIRE,
+            10, BEAM_COLD,
+            10, BEAM_ELECTRICITY,
+            10, BEAM_POISON,
+            10, BEAM_NEG,
+            10, BEAM_ACID,
+            10, BEAM_HELLFIRE,
+            10, BEAM_NAPALM,
+            10, BEAM_HELLFROST,
+            10, BEAM_SLOW,
+            10, BEAM_HASTE,
+            10, BEAM_HEALING,
+            10, BEAM_PARALYSIS,
+            10, BEAM_CONFUSION,
+            10, BEAM_INVISIBILITY,
+            10, BEAM_POLYMORPH,
+            10, BEAM_BANISH,
+            10, BEAM_DISINTEGRATION,
+            0 ));
+
+    return (flavour);
+}
+
 /*
  * Beam pseudo code:
  *
@@ -1432,6 +1465,8 @@ static bool _affect_mon_in_wall(bolt &pbolt, item_def *item,
 
 void fire_beam(bolt &pbolt)
 {
+    pbolt.real_flavour = pbolt.flavour;
+
     const int reflections = pbolt.reflections;
     if (reflections == 0)
     {
@@ -1536,6 +1571,13 @@ void fire_beam(bolt &pbolt)
     {
         testpos = ray.pos();
 
+        // Random beams: randomize before affect().
+        if (pbolt.real_flavour == BEAM_RANDOM)
+            pbolt.flavour = static_cast<beam_type>(
+                                random_range(BEAM_FIRE, BEAM_ACID));
+        else if (pbolt.real_flavour == BEAM_CHAOS)
+            pbolt.flavour = _chaos_beam_flavour();
+
         // Shooting through clouds affects accuracy.
         if (env.cgrid(testpos) != EMPTY_CLOUD)
             pbolt.hit = std::max(pbolt.hit - 2, 0);
@@ -1628,26 +1670,12 @@ void fire_beam(bolt &pbolt)
         // hit and the beam is type 'term on target'.
         if (!beamTerminate || !pbolt.is_explosion)
         {
-            // Random beams: randomize before affect().
-            bool random_beam = false;
-            if (pbolt.flavour == BEAM_RANDOM)
-            {
-                random_beam = true;
-                pbolt.flavour = static_cast<beam_type>(
-                                    random_range(BEAM_FIRE, BEAM_ACID));
-            }
 
             if (!pbolt.affects_nothing)
             {
                 (void) affect(pbolt, testpos);
                 if (pbolt.reflections > reflections)
                     return;
-            }
-
-            if (random_beam)
-            {
-                pbolt.flavour = BEAM_RANDOM;
-                pbolt.effect_known = false;
             }
         }
 
@@ -1667,8 +1695,13 @@ void fire_beam(bolt &pbolt)
         if (pbolt.aimed_at_feet)
             beamTerminate = true;
 
-        // Actually draw the beam/missile/whatever,
-        // if the player can see the cell.
+        // Reset chaos beams so that it won't be considered an invisible
+        // enchantment beam for the purposes of animation.
+        if (pbolt.real_flavour == BEAM_CHAOS)
+            pbolt.flavour = pbolt.real_flavour;
+
+        // Actually draw the beam/missile/whatever, if the player can see
+        // the cell.
         if (!pbolt.is_tracer && !pbolt.is_enchantment() && see_grid(testpos))
         {
             // We don't clean up the old position.
@@ -1696,7 +1729,8 @@ void fire_beam(bolt &pbolt)
 #ifndef USE_TILE
                 cgotoxy(drawpos.x, drawpos.y);
                 put_colour_ch(
-                    pbolt.colour == BLACK ? random_colour() : pbolt.colour,
+                    pbolt.colour == BLACK ? random_colour()
+                                          : element_colour(pbolt.colour),
                     pbolt.type );
 #endif
                 // Get curses to update the screen so we can see the beam.
@@ -2663,6 +2697,13 @@ void mimic_alert(monsters *mimic)
 
 static bool _isBouncy(bolt &beam, unsigned char gridtype)
 {
+    if ( beam.real_flavour == BEAM_CHAOS
+         && grid_is_solid(static_cast<dungeon_feature_type>(gridtype))
+         && coinflip() )
+    {
+        return (true);
+    }
+
     if (beam.is_enchantment())
         return (false);
 
@@ -3378,7 +3419,7 @@ static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p)
                 _whose_kill(beam) == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY;
 
             mons_place(
-                mgen_data(MONS_FIRE_VORTEX, att, 2, p,
+                mgen_data(MONS_FIRE_VORTEX, att, 2, SPELL_FIRE_STORM, p,
                           MHITNOT, 0, god));
         }
     }
@@ -3616,6 +3657,8 @@ static void _reflect_beam(bolt &beam)
 #endif
     }
 
+    beam.flavour = beam.real_flavour;
+
     fire_beam(beam);
 }
 
@@ -3809,7 +3852,7 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
             return (_range_used_on_hit(beam));
         }
 
-        _ench_animation( beam.flavour );
+        _ench_animation( beam.real_flavour );
 
         // these colors are misapplied - see mons_ench_f2() {dlb}
         switch (beam.flavour)
@@ -4404,7 +4447,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
 
         // Doing this here so that the player gets to see monsters
         // "flicker and vanish" when turning invisible....
-        _ench_animation( beam.flavour, mon );
+        _ench_animation( beam.real_flavour, mon );
 
         // now do enchantment affect
         mon_resist_type ench_result = _affect_monster_enchantment(beam, mon);
@@ -5184,6 +5227,8 @@ int explosion( bolt &beam, bool hole_in_the_middle,
                bool explode_in_wall, bool stop_at_statues,
                bool stop_at_walls, bool show_more, bool affect_items)
 {
+    beam.real_flavour = beam.flavour;
+
     if (in_bounds(beam.source) && beam.source != beam.target
         && (!explode_in_wall || stop_at_statues || stop_at_walls))
     {
@@ -5398,23 +5443,20 @@ int explosion( bolt &beam, bool hole_in_the_middle,
 static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly,
                             bool affect_items)
 {
-    bool random_beam = false;
     coord_def realpos = beam.target + p;
 
     if (!drawOnly)
     {
-        // Random beams: randomize before affect().
-        if (beam.flavour == BEAM_RANDOM)
-        {
-            random_beam  = true;
+        // Random/chaos beams: randomize before affect().
+        if (beam.real_flavour == BEAM_RANDOM)
             beam.flavour = static_cast<beam_type>(
                                random_range(BEAM_FIRE, BEAM_ACID) );
-        }
+        else if (beam.real_flavour == BEAM_CHAOS)
+            beam.flavour = _chaos_beam_flavour();
 
         affect(beam, realpos, NULL, affect_items);
 
-        if (random_beam)
-            beam.flavour = BEAM_RANDOM;
+        beam.flavour = beam.real_flavour;
     }
 
     // Early out for tracer.
@@ -5580,14 +5622,15 @@ static bool _nice_beam(monsters *mon, const bolt &beam)
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
 bolt::bolt() : range(0), type('*'),
                colour(BLACK),
-               flavour(BEAM_MAGIC), drop_item(false), item(NULL), source(),
-               target(), pos(), damage(0,0), ench_power(0), hit(0),
-               thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT), name(),
-               is_beam(false), is_explosion(false), is_big_cloud(false),
-               aimed_at_spot(false), aux_source(), affects_nothing(false),
-               effect_known(true), obvious_effect(false), fr_count(0),
-               foe_count(0), fr_power(0), foe_power(0), fr_hurt(0),
-               foe_hurt(0), fr_helped(0), foe_helped(0),
+               flavour(BEAM_MAGIC), real_flavour(BEAM_MAGIC), drop_item(false),
+               item(NULL), source(), target(), pos(), damage(0,0),
+               ench_power(0), hit(0), thrower(KILL_MISC), ex_size(0),
+               beam_source(MHITNOT), name(), is_beam(false),
+               is_explosion(false), is_big_cloud(false), aimed_at_spot(false),
+               aux_source(), affects_nothing(false), effect_known(true),
+               obvious_effect(false),
+               fr_count(0), foe_count(0), fr_power(0), foe_power(0),
+               fr_hurt(0), foe_hurt(0), fr_helped(0),foe_helped(0),
                dropped_item(false), item_pos(), item_index(NON_ITEM),
                range_used(0), is_tracer(false), aimed_at_feet(false),
                msg_generated(false), in_explosion_phase(false),

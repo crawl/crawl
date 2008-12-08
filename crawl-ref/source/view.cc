@@ -1532,6 +1532,10 @@ inline static void _update_cloud_grid(int cloudno)
         which_colour = EC_MIST;
         break;
 
+    case CLOUD_CHAOS:
+        which_colour = EC_RANDOM;
+        break;
+
     default:
         which_colour = LIGHTGREY;
         break;

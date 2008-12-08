@@ -742,7 +742,7 @@ static bool _xom_is_good(int sever)
 
             summons[i] =
                 create_monster(
-                    mgen_data(monster, BEH_FRIENDLY, 3,
+                    mgen_data(monster, BEH_FRIENDLY, 3, MON_SUMM_AID,
                         you.pos(), you.pet_target, MG_FORCE_BEH, GOD_XOM));
 
             if (summons[i] != -1)
@@ -818,7 +818,7 @@ static bool _xom_is_good(int sever)
 
         const int summons =
             create_monster(
-                mgen_data(mon, beha, 6,
+                mgen_data(mon, beha, 6, MON_SUMM_AID,
                     you.pos(), hitting, MG_FORCE_BEH, GOD_XOM));
 
         if (summons != -1)
@@ -1153,7 +1153,8 @@ static bool _xom_is_bad(int sever)
                     if (create_monster(
                             mgen_data::hostile_at(
                                 _xom_random_punishment_demon(sever),
-                                    you.pos(), 4, 0, true, GOD_XOM)) != -1)
+                                you.pos(), 4, 0, true, GOD_XOM,
+                                MON_SUMM_WRATH)) != -1)
                     {
                         success = true;
                     }

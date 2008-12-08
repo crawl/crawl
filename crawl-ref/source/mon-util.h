@@ -85,6 +85,21 @@ enum mon_attack_flavour
     AF_STEAL_FOOD
 };
 
+// Non-spell "summoning" types to give to monsters::mark_summoned(), or as
+// the fourth paramater of mgen_data's second constructor.
+//
+// Negative values since spells are non-negative.
+enum mon_summon_type
+{
+    MON_SUMM_CLONE = -10000, // Cloned from another monster
+    MON_SUMM_ANIMATE, // Item/feature/substance which was animated
+    MON_SUMM_CHAOS,   // Was made from pure chaos
+    MON_SUMM_MISCAST, // Spell miscast
+    MON_SUMM_ZOT,     // Zot trap
+    MON_SUMM_WRATH,   // Divine wrath
+    MON_SUMM_AID      // Divine aid
+};
+
 // properties of the monster class (other than resists/vulnerabilities)
 enum mons_class_flags
 {
@@ -547,7 +562,8 @@ bool mons_is_demon( int mc );
 bool mons_class_wields_two_weapons(int mc);
 bool mons_wields_two_weapons(const monsters *m);
 bool mons_self_destructs(const monsters *m);
-bool mons_is_summoned(const monsters *m);
+bool mons_is_summoned(const monsters *m, int* duration = NULL,
+                      int *summon_info = NULL);
 bool mons_is_shapeshifter(const monsters *m);
 
 // last updated 12may2000 {dlb}
