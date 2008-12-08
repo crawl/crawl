@@ -2331,8 +2331,9 @@ static void _describe_monster(const monsters *mon)
     {
         if (mons_is_sleeping(mon))
         {
-            mprf(MSGCH_EXAMINE, "%s appears to be resting.",
-                 mon->pronoun(PRONOUN_CAP).c_str());
+            mprf(MSGCH_EXAMINE, "%s appears to be %s.",
+                 mon->pronoun(PRONOUN_CAP).c_str(),
+                 mons_is_confused(mon) ? "sleepwalking" : "resting");
         }
         // Applies to both friendlies and hostiles
         else if (mons_is_fleeing(mon))
@@ -2448,8 +2449,11 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
         // Note that the only difference between DESC_BASENAME and DESC_PLAIN
         // is that basename will ignore mname, so the monster _must_ be named
         // for this to make any sense.
-        if (!(mon->mname).empty() && desc != mon->name(DESC_BASENAME))
+        if (!(mon->mname).empty() && desc != mon->name(DESC_BASENAME)
+            && mon->type != MONS_PLAYER_GHOST)
+        {
             desc += " the " + mon->name(DESC_BASENAME);
+        }
     }
     std::string weap = "";
 

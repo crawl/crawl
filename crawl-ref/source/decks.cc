@@ -1064,6 +1064,11 @@ bool deck_triple_draw()
 
     const int num_cards = cards_in_deck(deck);
 
+    // We have to identify the deck before removing cards from it.
+    // Otherwise, _remember_drawn_card() will implicitly call
+    // _deck_ident() when the deck might have no cards left.
+    _deck_ident(deck);
+
     if (num_cards == 1)
     {
         // Only one card to draw, so just draw it.

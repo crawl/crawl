@@ -1167,6 +1167,9 @@ bool melee_attack::player_aux_unarmed()
 
         if (!ely_block && (to_hit >= def->ev || one_chance_in(30)))
         {
+            // Upset the monster.
+            behaviour_event(def, ME_WHACK, MHITYOU);
+
             if (attack_shield_blocked(true))
                 continue;
             if (player_apply_aux_unarmed())
@@ -1536,7 +1539,7 @@ int melee_attack::player_stab(int damage)
 
     if (stab_bonus)
     {
-        // Lets make sure we have some damage to work with...
+        // Let's make sure we have some damage to work with...
         damage = std::max(1, damage);
 
         if (mons_is_sleeping(def))

@@ -1562,7 +1562,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         }
     }
     else if (dec_mitm_item_quantity( hand_used, 1 ))
-        monster->inv[returning ? MSLOT_WEAPON : MSLOT_MISSILE] = NON_ITEM;
+        monster->inv[returning ? hand_used : MSLOT_MISSILE] = NON_ITEM;
 
     return (true);
 }                               // end mons_throw()

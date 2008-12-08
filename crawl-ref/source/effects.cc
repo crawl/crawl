@@ -1830,8 +1830,8 @@ bool recharge_wand(int item_slot)
             break;
         }
 
-        // Don't display zap counts any more.
-        wand.plus2 = ZAPCOUNT_UNKNOWN;
+        // Reinitialize zap counts.
+        wand.plus2 = ZAPCOUNT_RECHARGED;
 
         const int new_charges =
             std::max<int>(
@@ -1841,9 +1841,18 @@ bool recharge_wand(int item_slot)
                          1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 )));
 
         const bool charged = new_charges > wand.plus;
-        mprf("%s %s for a moment.",
+
+        std::string desc;
+        if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))
+        {
+            snprintf(info, INFO_SIZE, " and now has %d charges", new_charges);
+            desc = info;
+        }
+        mprf("%s %s for a moment%s.",
              wand.name(DESC_CAP_YOUR).c_str(),
-             charged? "glows" : "flickers");
+             charged? "glows" : "flickers",
+             desc.c_str());
+
         wand.plus = new_charges;
     }
     else // It's a rod.
@@ -1972,7 +1981,7 @@ void yell(bool force)
 
     if (!you.duration[DUR_BERSERKER])
     {
-        std::string previous = "";
+        std::string previous;
         if (!(you.prev_targ == MHITNOT || you.prev_targ == MHITYOU))
         {
             monsters *target = &menv[you.prev_targ];
@@ -2077,6 +2086,7 @@ void yell(bool force)
         return;
     }
 
+    you.turn_is_over = true;
     you.pet_target = mons_targd;
     // Allow patrolling for "Stop fighting!" and "Wait here!"
     _set_friendly_foes(keyn == 's' || keyn == 'w');

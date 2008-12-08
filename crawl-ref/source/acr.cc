@@ -3486,6 +3486,12 @@ static int _check_adjacent(dungeon_feature_type feat, int &dx, int &dy)
 // to be opened (eg if you type ctrl + dir).
 static void _open_door(int move_x, int move_y, bool check_confused)
 {
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    {
+        mpr("You can't open doors in your present form.");
+        return;
+    }
+
     struct dist door_move;
     int dx, dy;             // door x, door y
 
@@ -3665,6 +3671,18 @@ static void _open_door(int move_x, int move_y, bool check_confused)
 
 static void _close_door(int door_x, int door_y)
 {
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
+    {
+        mpr("You can't close doors in your present form.");
+        return;
+    }
+
+    if (you.attribute[ATTR_HELD])
+    {
+        mpr("You can't close doors while held in a net.");
+        return;
+    }
+
     struct dist door_move;
     int dx, dy;             // door x, door y
 

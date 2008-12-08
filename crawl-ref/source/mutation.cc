@@ -1453,7 +1453,7 @@ static void _display_vampire_attributes()
                                 //Alive          Full       Satiated      Thirsty   Near...      Bloodless
        {"Metabolism           ", "very fast  ", "fast    ", "fast      ", "normal   ", "slow     ", "none  "},
 
-       {"Regeneration         ", "very fast  ", "fast    ", "normal    ", "normal   ", "slow     ", "none  "},
+       {"Regeneration         ", "very fast  ", "fast    ", "normal    ", "slow     ", "slow     ", "none  "},
 
        {"Stealth boost        ", "none       ", "none    ", "none      ", "minor    ", "major    ", "large "},
 
@@ -1464,7 +1464,7 @@ static void _display_vampire_attributes()
 
        {"Cold resistance      ", "           ", "        ", "          ", " +       ", " +       ", " ++   "},
 
-       {"Negative resistance  ", "           ", "        ", "          ", " +       ", " ++      ", " +++  "},
+       {"Negative resistance  ", "           ", "        ", " +        ", " ++      ", " +++     ", " +++  "},
 
        {"Torment resistance   ", "           ", "        ", "          ", "         ", "         ", " +    "},
 

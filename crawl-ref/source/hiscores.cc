@@ -960,7 +960,7 @@ void scorefile_entry::init()
      *    + 0.1 * Experience above 3,000,000
      *    + (distinct Runes +2)^2 * 1000, winners with distinct runes >= 3 only
      *    + value of Inventory, for winners only
-     *    + (250,000 * distinct Runes) * (25,000/(turns/rune)), for winners only
+     *    + (250,000 * d. runes) * (25,000/(turns/d. runes)), for winners only
      *
      */
 
@@ -1020,7 +1020,7 @@ void scorefile_entry::init()
     if (calc_item_values) // winners only
     {
         points += (250000 * num_diff_runes)
-                   * ( 25000 * num_diff_runes / (1+you.num_turns) );
+                   * ((25000.0 * num_diff_runes) / (1+you.num_turns));
     }
 
     // Players will have a hard time getting 1/10 of this (see XP cap):

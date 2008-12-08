@@ -698,8 +698,11 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     if (transform == TRAN_STATUE)
     {
-        if (eq == EQ_BODY_ARMOUR || eq == EQ_GLOVES || eq == EQ_SHIELD)
+        if (eq == EQ_BODY_ARMOUR || eq == EQ_GLOVES || eq == EQ_SHIELD
+            || eq == EQ_BOOTS)
+        {
             return (false);
+        }
         return (true);
     }
 
@@ -4258,7 +4261,7 @@ bool wearing_amulet(jewellery_type amulet, bool calc_unid)
 {
     if ( extrinsic_amulet_effect(amulet) )
         return (true);
-   
+
     if (you.equip[EQ_AMULET] == -1)
         return (false);
 

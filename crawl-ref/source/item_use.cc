@@ -3554,6 +3554,9 @@ void zap_wand( int slot )
     // Take off a charge.
     wand.plus--;
 
+    // Zap counts count from the last recharge.
+    if (wand.plus2 == ZAPCOUNT_RECHARGED)
+        wand.plus2 = 0;
     // Increment zap count.
     if (wand.plus2 >= 0)
         wand.plus2++;
@@ -4057,9 +4060,9 @@ bool enchant_armour( int &ac_change, bool quiet, item_def &arm )
                  arm.name(DESC_CAP_YOUR).c_str());
         }
 
-        ac_change = arm.plus;
+        ac_change = property(arm, PARM_AC);
         hide2armour(arm);
-        ac_change = arm.plus - ac_change;
+        ac_change = property(arm, PARM_AC) - ac_change;
 
         if (is_cursed)
             do_uncurse_item( arm );

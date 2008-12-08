@@ -2134,9 +2134,13 @@ void drop()
 
 static void _autoinscribe_item( item_def& item )
 {
-    /* if there's an inscription already, do nothing */
-    if ( item.inscription.size() > 0 )
+    // If there's an inscription already, do nothing - except
+    // for automatically generated inscriptions
+    if (!item.inscription.empty() && item.inscription != "god gift")
         return;
+
+    const std::string old_inscription = item.inscription;
+    item.inscription.clear();
 
     std::string iname = _autopickup_item_name(item);
 
@@ -2160,6 +2164,13 @@ static void _autoinscribe_item( item_def& item )
             // pass 80 characters.
             item.inscription += str;
         }
+    }
+    if ( !old_inscription.empty() )
+    {
+        if ( item.inscription.empty() )
+            item.inscription = old_inscription;
+        else
+            item.inscription = old_inscription + ", " + item.inscription;
     }
 }
 

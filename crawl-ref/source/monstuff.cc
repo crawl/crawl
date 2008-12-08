@@ -1831,6 +1831,13 @@ bool swap_check(monsters *monster, coord_def &loc)
 
     const int mgrid = grd[monster->x][monster->y];
 
+    // Don't move onto dangerous terrain.
+    if (is_grid_dangerous(mgrid))
+    {
+        canned_msg(MSG_UNTHINKING_ACT);
+        return (false);
+    }
+
     if (mons_is_caught(monster))
     {
         simple_monster_message(monster, " is held in a net!");
@@ -2753,7 +2760,7 @@ static void _handle_behaviour(monsters *mon)
                     {
                         if (mon->foe == MHITYOU)
                         {
-                            if (random2(you.skills[SK_STEALTH]/3))
+                            if (one_chance_in(you.skills[SK_STEALTH]/3))
                             {
                                 mon->target_x = you.x_pos;
                                 mon->target_y = you.y_pos;
