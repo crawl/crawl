@@ -2120,119 +2120,6 @@ bool melee_attack::distortion_affects_defender()
     return (false);
 }
 
-static bool _can_clone(const actor *defender, coord_def *pos, int *midx)
-{
-    pos->set(-1, -1);
-    *midx = NON_MONSTER;
-
-    // Maybe create a player ghost?
-    if (defender->atype() == ACT_PLAYER)
-        return (false);
-
-    const monsters* mon = dynamic_cast<const monsters*>(defender);
-
-    // No uniques, pandemonium lords or player ghosts.  Also, figuring
-    // out the name for the clone of a named monster isn't worth it.
-    if (mons_is_unique(mon->type) || mon->is_named() || mon->ghost.get())
-        return (false);
-
-    // Holy beings can't be duplicated by chaotic means.
-    if (mons_is_holy(mon))
-        return (false);
-
-    // Is there space for the clone?
-    int squares = 0;
-    for (int i = 0; i < 8; i++)
-    {
-        const coord_def p = mon->pos() + Compass[i];
-
-        if (in_bounds(p) && p != you.pos() && mgrd(p) == NON_MONSTER
-            && monster_habitable_grid(mon, grd(p)))
-        {
-            if (one_chance_in(++squares))
-                *pos = p;
-        }
-    }
-    if (squares == 0)
-        return (false);
-
-    // Is there an open slot in menv?
-    for (int i = 0; i < MAX_MONSTERS; i++)
-        if (menv[i].type == -1)
-        {
-            *midx = i;
-            break;
-        }
-
-    if (*midx == NON_MONSTER)
-        return (false);
-
-    // Is the monster carrying an artefact?
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-    {
-        const int index = mon->inv[i];
-
-        if (index == NON_ITEM)
-            continue;
-
-        if (is_artefact(mitm[index]))
-            return (false);
-    }
-
-    return (true);
-}
-
-static bool _do_clone(monsters* orig, coord_def pos, int midx)
-{
-    bool obvious = false;
-
-    monsters &mon(menv[midx]);
-
-    mon = *orig;
-
-    mon.position = pos;
-    mgrd(pos)    = midx;
-
-    // Duplicate objects, or unequip them if they can't be duplicated.
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-    {
-        const int old_index = orig->inv[i];
-
-        if (old_index == NON_ITEM)
-            continue;
-
-        const int new_index = get_item_slot(0);
-        if (new_index == NON_ITEM)
-        {
-            mon.unequip(mitm[old_index], i, 0, true);
-            mon.inv[i] = NON_ITEM;
-            continue;
-        }
-
-        mon.inv[i]      = new_index;
-        mitm[new_index] = mitm[old_index];
-    }
-
-    // The player shouldn't get new permanent followers from cloning.
-    if (mon.attitude == ATT_FRIENDLY && !mons_is_summoned(&mon))
-        mon.mark_summoned(6, true);
-
-    if (you.can_see(orig) && you.can_see(&mon))
-    {
-        simple_monster_message(orig, " is duplicated!");
-        obvious = true;
-    }
-
-    mark_interesting_monst(&mon, mon.behaviour);
-    if (you.can_see(&mon))
-    {
-        seen_monster(&mon);
-        viewwindow(true, false);
-    }
-
-    return (obvious);
-}
-
 enum chaos_type
 {
     CHAOS_CLONE,
@@ -2253,13 +2140,12 @@ enum chaos_type
 // AF_CHAOS
 void melee_attack::chaos_affects_defender()
 {
-    coord_def  clone_pos;
-    int        clone_midx;
     const bool mon        = defender->atype() == ACT_MONSTER;
     const bool immune     = mon && mons_immune_magic(def);
     const bool is_shifter = mon && mons_is_shapeshifter(def);
     const bool is_chaotic = mon && mons_is_chaotic(def);
-    const bool can_clone  = _can_clone(defender, &clone_pos, &clone_midx);
+    const bool can_clone  = mon && !mons_is_holy(def)
+                            && mons_clonable(def, true);
     const bool can_poly   = is_shifter || (defender->can_safely_mutate()
                                            && !immune);
 
@@ -2312,10 +2198,20 @@ void melee_attack::chaos_affects_defender()
     switch(static_cast<chaos_type>(choice))
     {
     case CHAOS_CLONE:
+    {
         ASSERT(can_clone);
         ASSERT(defender->atype() == ACT_MONSTER);
-        obvious_effect = _do_clone(def, clone_pos, clone_midx);
+
+        int clone_idx = clone_mons(def, false, &obvious_effect);
+        if (clone_idx != NON_MONSTER)
+        {
+            monsters &clone(menv[clone_idx]);
+            // The player shouldn't get new permanent followers from cloning.
+            if (clone.attitude == ATT_FRIENDLY && !mons_is_summoned(&clone))
+                clone.mark_summoned(6, true, MON_SUMM_CLONE);
+        }
         break;
+    }
 
     case CHAOS_POLY:
         ASSERT(can_poly);
