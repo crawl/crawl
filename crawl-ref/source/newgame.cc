@@ -4250,6 +4250,8 @@ static bool _choose_wand()
             case ' ':
                 return (false);
             case '\r':
+            case '\n':
+                break;
             case '%':
                 list_commands('%');
                 return _choose_wand();
