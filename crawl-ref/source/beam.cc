@@ -4806,7 +4806,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     }
 
     // Now hurt monster.
-    mon->hurt(beam.agent(), hurt_final, beam.flavour);
+    mon->hurt(beam.agent(), hurt_final, beam.flavour, false);
 
     if (mon->alive())
     {
@@ -4878,6 +4878,8 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         else if (hit_woke_orc)
             beogh_follower_convert(mon, true);
     }
+    else
+        monster_die(mon, beam.thrower, _beam_source(beam));
 
     return (_range_used_on_hit(beam));
 }
