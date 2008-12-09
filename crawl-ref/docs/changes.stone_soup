@@ -1,4 +1,4 @@
-Stone Soup 0.4.4 (2008????)
+Stone Soup 0.4.4 (20081210)
 ---------------------------
 
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
@@ -8,16 +8,40 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed time handling in dgl builds.
 * Fixed semi-controlled Blink.
 * Fixed '{' inscription.
-* Fixed Spriggans being capable to wield staves while wearing a shield.
+* Fixed crash when wiz-creating a nonexistent monster type.
+* Fixed broken monster movement away from player.
+* Fixed acquirement() giving Book of Bugginess.
+* Fixed auto-swapping rings and amulets taking twice as long as normal.
 * Fixed explosive tracers leaking information about invisible monsters.
 * Fixed real/fake rakshasa identity being leaked in descriptions.
-* Fixed broken spacing on religion screen.
-* Fixed doubled inscriptions in equipped items in dump.
+* Fixed =f inscription preventing wielding of stones.
+* Fixed Spriggans being capable to wield staves while wearing a shield.
 * Fixed monsters being created with both a shield and wielding a two-hander.
+* Fixed off-by-1 error when selecting starting weapon.
+* Fixed bats being capable of opening/closing doors.
+* Fixed Draconians getting redundant mutations.
+* Fixed secondary unarmed attacks not waking sleeping monsters.
+* Fixed incorrect high score calculation.
+* Fixed backwards stealth check.
+* Fixed recharged wands not being inscribed with zap counts.
 * Fixed bad names for god-gifted unrandarts.
 * Warn player if interlevel travel intends to take detours.
 * Make multi-corpse sacrifices take 1 turn only.
-* Mark staves of poison and rods of venom as disapproved by TSO.
+* All 't' commands now take a turn.
+* Shining eyes now gives mutagenic chunks, eyes of draining poisonous ones.
+* Identify Holy Wrath brand on failed wield.
+* Make Lichform discard holy wrath weapons.
+* Properly disable traps in the Abyss.
+* Don't allow monsters to polymorph into a unique.
+* List new amount of charges when recharging identified wands.
+* Don't prompt when swapping into dangerous terrain.
+* Makhleb accepts collateral demon kills again.
+* Only sharp weapons are now offered for butchering.
+* Added an aptitudes hotkey for the book/weapon choice submenus.
+* Properly allow monsters to pick up and use javelins.
+* Don't apply menu colouring to Wp: and Qv: lines.
+* Improved interrupted butchery behaviour.
+* Saner autopickup exceptions.
 
 Stone Soup 0.4.3 (20080731)
 ---------------------------

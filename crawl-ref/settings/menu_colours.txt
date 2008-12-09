@@ -21,7 +21,7 @@ menu = lightmagenta:.*orb.*Zot
 
 # Artefacts
 #
-menu = white:.*artefact.*
+menu = inventory:white:.*artefact.*
 
 #menu = white:.*identified.*artefact.*
 #menu = lightblue:.*unidentified.*artefact.*
@@ -59,6 +59,6 @@ menu = $evil:.*evil_item.*
 # Defaults for normal items
 #
 menu = lightred:.*equipped.* cursed
-menu = lightgreen:.*equipped.*
+menu = inventory:lightgreen:.*equipped.*
 menu = green:uncursed
 menu = red:cursed

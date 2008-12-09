@@ -153,7 +153,7 @@ The symbols on the map:
  e - second item from the list (here occassionally a book)
 
 
-D.   Map symbols
+C.   Map symbols
 ----------------
 
 Terrain
