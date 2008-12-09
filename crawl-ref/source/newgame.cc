@@ -2082,7 +2082,7 @@ static bool _choose_book( item_def& book, int firstbook, int numbooks )
                         keyin = ('a' +  Options.prev_book - 1);
                 }
             case '%':
-                list_commands('%');
+                list_commands(false, '%');
                 return _choose_book(book, firstbook, numbooks);
             default:
                 break;
@@ -2379,7 +2379,7 @@ static bool _choose_weapon()
                     }
                 }
             case '%':
-                list_commands('%');
+                list_commands(false, '%');
                 return _choose_weapon();
             default:
                 break;
@@ -3844,10 +3844,10 @@ spec_query:
         break;
     // access to the help files
     case '?':
-        list_commands('1');
+        list_commands(false, '1');
         return choose_race();
     case '%':
-        list_commands('%');
+        list_commands(false, '%');
         return choose_race();
     default:
         break;
