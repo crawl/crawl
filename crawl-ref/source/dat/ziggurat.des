@@ -116,7 +116,7 @@ ENDMAP
 
 NAME:    enter_ziggurat_c_teaser
 WEIGHT:  1
-MONS:    angel / daeva / nothing w:40
+MONS:    angel / nothing w:20
 : ziggurat_portal(_G)
 MAP
     ...
@@ -132,7 +132,7 @@ ENDMAP
 
 NAME:    enter_ziggurat_d_teaser
 WEIGHT:  1
-MONS:    angel / daeva / nothing w:40
+MONS:    angel / nothing w:20
 : ziggurat_portal(_G)
 MAP
     ...
