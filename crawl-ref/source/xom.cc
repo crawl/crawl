@@ -620,6 +620,14 @@ static void _do_chaos_upgrade(item_def &item, const monsters* mon)
         item.special = brand;
         if (seen)
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
+
+        // Make sure it's visibly special
+        if (!(item.flags & ISFLAG_COSMETIC_MASK))
+            item.flags |= ISFLAG_GLOWING;
+
+        // Make the pluses more like a randomly generated ego item
+        item.plus  += random2(5);
+        item.plus2 += random2(5);
     }
 }
 
