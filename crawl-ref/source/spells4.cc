@@ -2013,7 +2013,8 @@ bool cast_fragmentation(int pow, const dist& spd)
         // If damage dice are zero we assume that nothing happened at all.
         canned_msg(MSG_SPELL_FIZZLES);
     }
-    return true;
+
+    return (true);
 }
 
 void cast_twist(int pow)

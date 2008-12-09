@@ -6893,7 +6893,7 @@ static void _handle_monster_move(int i, monsters *monster)
     }
 
     if (monster->type != -1 && monster->hit_points < 1)
-            monster_die(monster, KILL_MISC, NON_MONSTER);
+        monster_die(monster, KILL_MISC, NON_MONSTER);
 }
 
 //---------------------------------------------------------------
@@ -7317,6 +7317,7 @@ void mons_check_pool(monsters *mons, const coord_def &oldpos,
                 killer  = KILL_MON;
                 killnum = monster_index(mons);
             }
+
             monster_die(mons, killer, killnum, true);
         }
     }

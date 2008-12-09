@@ -5359,9 +5359,10 @@ int monsters::hurt(const actor *agent, int amount, beam_type flavour,
         else
         {
             monster_die(this, KILL_MON,
-                        monster_index( dynamic_cast<const monsters*>(agent) ));
+                        monster_index(dynamic_cast<const monsters*>(agent)));
         }
     }
+
     return (amount);
 }
 
