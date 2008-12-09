@@ -1951,9 +1951,6 @@ static special_armour_type _determine_armour_ego(const item_def& item,
 
     case ARM_CLOAK:
     {
-        if (get_equip_race(item) == ISFLAG_DWARVEN)
-            break;
-
         const special_armour_type cloak_egos[] = {
             SPARM_POISON_RESISTANCE, SPARM_DARKNESS,
             SPARM_MAGIC_RESISTANCE, SPARM_PRESERVATION
