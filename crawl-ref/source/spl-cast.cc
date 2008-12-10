@@ -2188,11 +2188,13 @@ void exercise_spell( spell_type spell, bool spc, bool success )
 
 MiscastEffect::MiscastEffect(actor* _target, int _source, spell_type _spell,
                              int _pow, int _fail, std::string _cause,
-                             nothing_happens_when_type _nothing_happens) :
+                             nothing_happens_when_type _nothing_happens,
+                             std::string _hand_str, bool _can_plural) :
     target(_target), source(_source), cause(_cause), spell(_spell),
     school(SPTYP_NONE), pow(_pow), fail(_fail), level(-1), kc(KC_NCATEGORIES),
     kt(KILL_NONE), mon_target(NULL), mon_source(NULL),
-    nothing_happens_when(_nothing_happens)
+    nothing_happens_when(_nothing_happens), hand_str(_hand_str),
+    can_plural_hand(_can_plural)
 {
     ASSERT(is_valid_spell(_spell));
     unsigned int schools = get_spell_disciplines(_spell);
@@ -2206,11 +2208,13 @@ MiscastEffect::MiscastEffect(actor* _target, int _source, spell_type _spell,
 MiscastEffect::MiscastEffect(actor* _target, int _source,
                              spschool_flag_type _school, int _level,
                              std::string _cause,
-                             nothing_happens_when_type _nothing_happens) :
+                             nothing_happens_when_type _nothing_happens,
+                             std::string _hand_str, bool _can_plural) :
     target(_target), source(_source), cause(_cause), spell(SPELL_NO_SPELL),
     school(_school), pow(-1), fail(-1), level(_level), kc(KC_NCATEGORIES),
     kt(KILL_NONE), mon_target(NULL), mon_source(NULL),
-    nothing_happens_when(_nothing_happens)
+    nothing_happens_when(_nothing_happens), hand_str(_hand_str),
+    can_plural_hand(_can_plural)
 {
     ASSERT(!_cause.empty());
     ASSERT(count_bits(_school) == 1);
@@ -2224,11 +2228,13 @@ MiscastEffect::MiscastEffect(actor* _target, int _source,
 MiscastEffect::MiscastEffect(actor* _target, int _source,
                              spschool_flag_type _school, int _pow, int _fail,
                              std::string _cause,
-                             nothing_happens_when_type _nothing_happens) :
+                             nothing_happens_when_type _nothing_happens,
+                             std::string _hand_str, bool _can_plural) :
     target(_target), source(_source), cause(_cause), spell(SPELL_NO_SPELL),
     school(_school), pow(_pow), fail(_fail), level(-1), kc(KC_NCATEGORIES),
     kt(KILL_NONE), mon_target(NULL), mon_source(NULL),
-    nothing_happens_when(_nothing_happens)
+    nothing_happens_when(_nothing_happens), hand_str(_hand_str),
+    can_plural_hand(_can_plural)
 {
     ASSERT(!_cause.empty());
     ASSERT(count_bits(_school) == 1);
@@ -2356,6 +2362,10 @@ void MiscastEffect::init()
     if (source == MELEE_MISCAST)
         source_known = false;
 
+    if (hand_str.empty())
+        target->hand_name(true, &can_plural_hand);
+
+    // Explosion stuff.
     beam.is_beam      = false;
     beam.is_explosion = true;
 
@@ -2561,8 +2571,19 @@ void MiscastEffect::do_msg(bool suppress_nothing_happnes)
         return;
     }
 
-    msg = replace_all(msg, "@hand@",  target->hand_name(false));
-    msg = replace_all(msg, "@hands@", target->hand_name(true));
+    if (hand_str.empty())
+    {
+        msg = replace_all(msg, "@hand@",  target->hand_name(false));
+        msg = replace_all(msg, "@hands@", target->hand_name(true));
+    }
+    else
+    {
+        msg = replace_all(msg, "@hand@",  hand_str);
+        if (can_plural_hand)
+            msg = replace_all(msg, "@hands@", pluralise(hand_str));
+        else
+            msg = replace_all(msg, "@hands@", hand_str);
+    }
 
     if (target->atype() == ACT_MONSTER)
         msg = do_mon_str_replacements(msg, mon_target, S_SILENT);
@@ -2854,16 +2875,13 @@ void MiscastEffect::_conjuration(int severity)
 }
 
 static void _your_hands_glow(actor* target, std::string& you_msg,
-                             std::string& mon_msg_seen)
+                             std::string& mon_msg_seen, bool pluralize)
 {
     you_msg      = "Your @hands@ ";
     mon_msg_seen = "@The_monster@'s @hands@ ";
     // No message for invisible monsters.
 
-    bool pluralized = true;
-    target->hand_name(true, &pluralized);
-
-    if (pluralized)
+    if (pluralize)
     {
        you_msg      += "glow";
        mon_msg_seen += "glow";
@@ -2885,7 +2903,7 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(10))
         {
         case 0:
-            _your_hands_glow(target, you_msg, mon_msg_seen);
+            _your_hands_glow(target, you_msg, mon_msg_seen, can_plural_hand);
             break;
         case 1:
             you_msg      = "The air around you crackles with energy!";
@@ -3685,7 +3703,7 @@ void MiscastEffect::_transmigration(int severity)
         switch (random2(10))
         {
         case 0:
-            _your_hands_glow(target, you_msg, mon_msg_seen);
+            _your_hands_glow(target, you_msg, mon_msg_seen, can_plural_hand);
             break;
         case 1:
             you_msg        = "The air around you crackles with energy!";
@@ -4251,7 +4269,7 @@ void MiscastEffect::_air(int severity)
             bool pluralized = true;
             target->hand_name(true, &pluralized);
 
-            if (pluralized)
+            if (pluralized && hand_str.empty())
             {
                 you_msg      = "Sparks of electricity dance between your "
                                "@hands@.";

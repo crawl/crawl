@@ -145,6 +145,12 @@ public:
     // both attacker and defender are in water.
     bool      water_attack;
 
+    // Miscast to cause after special damage is done.  If miscast_level == 0
+    // the miscast is discarded if special_damage_message isn't empty.
+    int    miscast_level;
+    int    miscast_type;
+    actor* miscast_target;
+
 public:
     melee_attack(actor *attacker, actor *defender,
                  bool allow_unarmed = true, int attack_num = -1);
@@ -177,6 +183,9 @@ private:
 
     std::string atk_name(description_level_type desc) const;
     std::string def_name(description_level_type desc) const;
+    std::string wep_name(description_level_type desc = DESC_NOCAP_YOUR,
+                         unsigned long ignore_flags = ISFLAG_KNOW_CURSE
+                                                    | ISFLAG_KNOW_PLUSES) const;
 
     bool attack_shield_blocked(bool verbose);
     bool apply_damage_brand();
@@ -203,6 +212,7 @@ private:
     void chaos_affects_attacker();
     void chaos_killed_defender(monsters* def_copy);
     int  random_chaos_brand();
+    void do_miscast();
 
 private:
     // Monster-attack specific stuff

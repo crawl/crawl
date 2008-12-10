@@ -965,6 +965,7 @@ std::string item_def::name_aux( description_level_type desc,
 
     const bool __know_pluses =
         !basename && !qualname && !dbname
+        && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES)
         && (ident || item_ident(*this, ISFLAG_KNOW_PLUSES));
 
     const bool know_brand =

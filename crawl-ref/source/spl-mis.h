@@ -43,13 +43,16 @@ class MiscastEffect
 public:
     MiscastEffect(actor* _target, int _source, spell_type _spell, int _pow,
                   int _fail, std::string _cause = "",
-                  nothing_happens_when_type _nothing_happens = NH_DEFAULT);
+                  nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  std::string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, int _source, spschool_flag_type _school,
                   int _level, std::string _cause,
-                  nothing_happens_when_type _nothing_happens = NH_DEFAULT);
+                  nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  std::string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, int _source, spschool_flag_type _school,
                   int _pow, int _fail, std::string _cause,
-                  nothing_happens_when_type _nothing_happens = NH_DEFAULT);
+                  nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  std::string _hand_str = "", bool _can_plural_hand = true);
 
     void do_miscast();
 
@@ -74,6 +77,9 @@ private:
     monsters* mon_source;
 
     nothing_happens_when_type nothing_happens_when;
+
+    std::string hand_str;
+    bool        can_plural_hand;
 
     int    kill_source;
     actor* act_source;

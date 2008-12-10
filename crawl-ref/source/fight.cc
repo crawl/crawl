@@ -10,6 +10,7 @@
 #include "fight.h"
 
 #include <string.h>
+#include <sstream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <algorithm>
@@ -24,6 +25,7 @@
 #include "cloud.h"
 #include "debug.h"
 #include "delay.h"
+#include "dgnevent.h"
 #include "effects.h"
 #include "food.h"
 #include "it_use2.h"
@@ -53,6 +55,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "transfor.h"
+#include "traps.h"
 #include "tutorial.h"
 #include "view.h"
 #include "xom.h"
@@ -332,7 +335,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
       no_damage_message(), special_damage_message(), unarmed_attack(),
       shield(NULL), defender_shield(NULL),
       heavy_armour_penalty(0), can_do_unarmed(false),
-      water_attack(false)
+      water_attack(false), miscast_level(-1), miscast_type(SPTYP_NONE),
+      miscast_target(NULL)
 {
     init_attack();
 }
@@ -385,6 +389,10 @@ void melee_attack::init_attack()
 
     if (defender && defender->submerged())
         unarmed_ok = false;
+
+    miscast_level  = -1;
+    miscast_type   = SPTYP_NONE;
+    miscast_target = NULL;
 }
 
 std::string melee_attack::actor_name(const actor *a,
@@ -448,6 +456,40 @@ std::string melee_attack::def_name(description_level_type desc) const
     return actor_name(defender, desc, defender_visible, defender_invisible);
 }
 
+std::string melee_attack::wep_name(description_level_type desc,
+                                   unsigned long ignore_flags) const
+{
+    ASSERT(weapon != NULL);
+
+    if (attacker->atype() == ACT_PLAYER)
+        return weapon->name(desc, false, false, false, false, ignore_flags);
+
+    std::string name;
+    bool possessive = false;
+    if (desc == DESC_CAP_YOUR)
+    {
+        desc       = DESC_CAP_THE;
+        possessive = true;
+    }
+    else if (desc == DESC_NOCAP_YOUR)
+    {
+        desc       = DESC_NOCAP_THE;
+        possessive = true;
+    }
+
+    if (possessive)
+    {
+        name = atk_name(desc);
+        name += "'s ";
+        // Proper English-language possessive.
+        name = replace_all(name, "s's ", "s' ");
+    }
+
+    name += weapon->name(desc, false, false, false, false, ignore_flags);
+
+    return (name);
+}
+
 bool melee_attack::is_water_attack(const actor *attk,
                                    const actor *defn) const
 {
@@ -500,6 +542,8 @@ bool melee_attack::attack()
     identify_mimic(atk);
     identify_mimic(def);
 
+    const coord_def def_pos = defender->pos();
+
     if (attacker->atype() == ACT_PLAYER && attacker != defender)
     {
         if (stop_attack_prompt(def, false, false))
@@ -535,6 +579,9 @@ bool melee_attack::attack()
             xom_is_stimulated(255);
         else
             xom_is_stimulated(14);
+
+        if (damage_brand == SPWPN_CHAOS)
+            chaos_affects_attacker();
 
         return (false);
     }
@@ -593,6 +640,9 @@ bool melee_attack::attack()
                      feat_name.c_str());
             }
         }
+        if (damage_brand == SPWPN_CHAOS)
+            chaos_affects_attacker();
+
         return (true);
     }
 
@@ -618,6 +668,14 @@ bool melee_attack::attack()
             if (attacker->atype() == ACT_PLAYER || mons_friendly(atk))
                 remove_sanctuary(true);
         }
+    }
+
+    if (attacker->atype() == ACT_PLAYER)
+    {
+        if (damage_brand == SPWPN_CHAOS)
+            chaos_affects_attacker();
+
+        do_miscast();
     }
 
     enable_attack_conducts(conducts);
@@ -856,6 +914,8 @@ bool melee_attack::player_attack()
 // Returns true to end the attack round.
 bool melee_attack::player_aux_unarmed()
 {
+    unwind_var<int> save_brand(damage_brand);
+
     damage_brand = SPWPN_NORMAL;
     int uattack  = UNAT_NO_ATTACK;
     bool simple_miss_message = false;
@@ -1836,7 +1896,12 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
     }
 
     if (needs_message && !special_damage_message.empty())
+    {
         mprf("%s", special_damage_message.c_str());
+        // Don't do a message-only miscast right after a special damage
+        if (miscast_level == 0)
+            miscast_level = -1;
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Special damage to %s: %d",
@@ -2126,6 +2191,8 @@ enum chaos_type
     CHAOS_POLY,
     CHAOS_POLY_UP,
     CHAOS_MAKE_SHIFTER,
+    CHAOS_MISCAST,
+    CHAOS_RAGE,
     CHAOS_HEAL,
     CHAOS_HASTE,
     CHAOS_INVIS,
@@ -2148,11 +2215,14 @@ void melee_attack::chaos_affects_defender()
                             && mons_clonable(def, true);
     const bool can_poly   = is_shifter || (defender->can_safely_mutate()
                                            && !immune);
+    const bool can_rage   = defender->can_go_berserk();
 
-    int clone_chance   = can_clone        ? 1 : 0;
-    int poly_chance    = can_poly         ? 1 : 0;
-    int poly_up_chance = can_poly  && mon ? 1 : 0;
-    int shifter_chance = can_poly  && mon ? 1 : 0;
+    int clone_chance   = can_clone        ?  1 : 0;
+    int poly_chance    = can_poly         ?  1 : 0;
+    int poly_up_chance = can_poly  && mon ?  1 : 0;
+    int shifter_chance = can_poly  && mon ?  1 : 0;
+    int rage_chance    = can_rage         ? 10 : 0;
+    int miscast_chance = 10;
 
     if (is_chaotic)
     {
@@ -2174,6 +2244,17 @@ void melee_attack::chaos_affects_defender()
         }
     }
 
+    // A chaos self-attack increased the chance of certain effects,
+    // due to a short-circuit/feedback/resonance/whatever.
+    if (attacker == defender)
+    {
+        clone_chance   *= 2;
+        poly_chance    *= 2;
+        poly_up_chance *= 2;
+        shifter_chance *= 2;
+        miscast_chance *= 2;
+    }
+
     // NOTE: Must appear in exact same order as in chaos_type enumeration.
     int probs[NUM_CHAOS_TYPES] =
     {
@@ -2181,14 +2262,16 @@ void melee_attack::chaos_affects_defender()
         poly_chance,    // CHAOS_POLY
         poly_up_chance, // CHAOS_POLY_UP
         shifter_chance, // CHAOS_MAKE_SHIFTER
+        miscast_chance, // CHAOS_MISCAST
+        rage_chance,    // CHAOS_RAGE
 
-        5,  // CHAOS_HEAL
-        5,  // CHAOS_HASTE
-        5,  // CHAOS_INVIS
+        10, // CHAOS_HEAL
+        10, // CHAOS_HASTE
+        10, // CHAOS_INVIS
 
-        15, // CHAOS_SLOW
-        15, // CHAOS_PARA
-        15, // CHAOS_PETRIFY
+        10, // CHAOS_SLOW
+        10, // CHAOS_PARA
+        10, // CHAOS_PETRIFY
     };
 
     bolt beam;
@@ -2199,12 +2282,17 @@ void melee_attack::chaos_affects_defender()
     {
     case CHAOS_CLONE:
     {
-        ASSERT(can_clone);
+        ASSERT(can_clone && clone_chance > 0);
         ASSERT(defender->atype() == ACT_MONSTER);
 
-        int clone_idx = clone_mons(def, false, &obvious_effect);
+        int clone_idx = clone_mons(def, true, &obvious_effect);
         if (clone_idx != NON_MONSTER)
         {
+            if (obvious_effect)
+                special_damage_message =
+                    make_stringf("%s is duplicated!",
+                                 def_name(DESC_NOCAP_THE).c_str());
+
             monsters &clone(menv[clone_idx]);
             // The player shouldn't get new permanent followers from cloning.
             if (clone.attitude == ATT_FRIENDLY && !mons_is_summoned(&clone))
@@ -2214,12 +2302,12 @@ void melee_attack::chaos_affects_defender()
     }
 
     case CHAOS_POLY:
-        ASSERT(can_poly);
+        ASSERT(can_poly && poly_chance > 0);
         beam.flavour = BEAM_POLYMORPH;
         break;
 
     case CHAOS_POLY_UP:
-        ASSERT(can_poly);
+        ASSERT(can_poly && poly_up_chance > 0);
         ASSERT(defender->atype() == ACT_MONSTER);
 
         obvious_effect = you.can_see(defender);
@@ -2227,7 +2315,7 @@ void melee_attack::chaos_affects_defender()
         break;
 
     case CHAOS_MAKE_SHIFTER:
-        ASSERT(can_poly);
+        ASSERT(can_poly && shifter_chance > 0);
         ASSERT(!is_shifter);
         ASSERT(defender->atype() == ACT_MONSTER);
 
@@ -2236,6 +2324,34 @@ void melee_attack::chaos_affects_defender()
             ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
         // Immediately polymorph monster, just to make the effect obvious.
         monster_polymorph(def, RANDOM_MONSTER, PPT_SAME, true);
+        break;
+
+    case CHAOS_MISCAST:
+    {
+        int level = defender->get_experience_level();
+
+        // At level == 27 there's a 20.3% chance of a level 3 miscast.
+        int level1_chance = level;
+        int level2_chance = std::max( 0, level - 7);
+        int level3_chance = std::max( 0, level - 15);
+
+        level = random_choose_weighted(
+            level1_chance, 1,
+            level2_chance, 2,
+            level3_chance, 3,
+            0);
+
+        miscast_level  = level;
+        miscast_type   = SPTYP_RANDOM;
+        miscast_target = coinflip() ? attacker : defender;
+
+        break;
+    }
+
+    case CHAOS_RAGE:
+        ASSERT(can_rage && rage_chance > 0);
+        defender->go_berserk(false);
+        obvious_effect = you.can_see(defender);
         break;
 
     case CHAOS_HEAL:
@@ -2280,7 +2396,7 @@ void melee_attack::chaos_affects_defender()
 
         if (weapon && you.can_see(attacker))
         {
-            beam.name = weapon->name(DESC_NOCAP_A);
+            beam.name = wep_name(DESC_NOCAP_YOUR);
             beam.item = weapon;
         }
         else
@@ -2292,7 +2408,7 @@ void melee_attack::chaos_affects_defender()
         beam.beam_source =
             (attacker->atype() == ACT_PLAYER) ? MHITYOU : monster_index(atk);
 
-        beam.source = attacker->pos();
+        beam.source = defender->pos();
         beam.target = defender->pos();
 
         beam.damage = dice_def(damage_done + special_damage + aux_damage, 1);
@@ -2309,13 +2425,387 @@ void melee_attack::chaos_affects_defender()
         obvious_effect = false;
 }
 
+static bool _move_stairs(const actor* attacker, const actor* defender)
+{
+    const coord_def orig_pos  = attacker->pos();
+    const dungeon_feature_type stair_feat = grd(orig_pos);
+
+    if (grid_stair_direction(stair_feat) == CMD_NO_CMD)
+        return (false);
+
+    // Moving shops is too much trouble, and anyways the player can't
+    // use them to escape.
+    if (stair_feat == DNGN_ENTER_SHOP)
+        return false;
+
+    const bool stair_is_marker = env.markers.find(orig_pos, MAT_ANY);
+
+    coord_def dest(-1, -1);
+    // Prefer to send it under the defender.
+    if (defender->alive() && defender->pos() != attacker->pos())
+    {
+        dungeon_feature_type feat = grd(defender->pos());
+        if (!grid_destroys_items(feat) && !grid_is_solid(feat)
+            && !grid_is_water(feat) && !grid_is_trap(feat, true))
+        {
+            dest = defender->pos();
+        }
+
+        // Don't try to swap two markers.
+        if (stair_is_marker && env.markers.find(defender->pos(), MAT_ANY))
+            dest.set(-1, -1);
+    }
+
+    if (!in_bounds(dest))
+    {
+        radius_iterator ri(attacker->pos(), 1, true, false, true);
+
+        int squares = 0;
+        for (; ri; ++ri)
+        {
+            // Don't try to swap two markers.
+            if (stair_is_marker && env.markers.find(*ri, MAT_ANY))
+                continue;
+
+            dungeon_feature_type feat = grd(defender->pos());
+            if (!grid_destroys_items(feat) && !grid_is_solid(feat)
+                && !grid_is_water(feat) && !grid_is_trap(feat, true))
+            {
+                if (one_chance_in(++squares))
+                    dest = *ri;
+            }
+        }
+    }
+
+    if (!in_bounds(dest))
+        return (false);
+
+    ASSERT(dest != orig_pos);
+
+    const bool dest_is_marker            = env.markers.find(dest, MAT_ANY);
+    const dungeon_feature_type dest_feat = grd(defender->pos());
+
+    ASSERT(!(dest_is_marker && stair_is_marker));
+
+    dungeon_terrain_changed(orig_pos, dest_feat);
+    dungeon_terrain_changed(dest,      stair_feat);
+
+    if (stair_is_marker)
+    {
+        env.markers.move(orig_pos, dest);
+        dungeon_events.move_listeners(orig_pos, dest);
+    }
+    else if (dest_is_marker)
+    {
+        env.markers.move(dest, orig_pos);
+        dungeon_events.move_listeners(dest, orig_pos);
+    }
+
+    if (!see_grid(orig_pos) && !see_grid(dest))
+        return (true);
+
+    std::string orig_actor, dest_actor;
+    if (orig_pos == you.pos())
+        orig_actor = "you";
+    else if (mgrd(orig_pos) != NON_MONSTER)
+    {
+        monsters &mon(menv[mgrd(orig_pos)]);
+
+        if (you.can_see(&mon))
+            orig_actor = mon.name(DESC_NOCAP_THE);
+    }
+
+    if (dest == you.pos())
+        dest_actor = "you";
+    else if (mgrd(dest) != NON_MONSTER)
+    {
+        monsters &mon(menv[mgrd(dest)]);
+
+        if (you.can_see(&mon))
+            dest_actor = mon.name(DESC_NOCAP_THE);
+    }
+
+    std::string stair_name =
+        feature_description(dest, false,
+                            see_grid(orig_pos) ? DESC_CAP_THE : DESC_CAP_A,
+                            false);
+    std::string prep;
+
+    if (grid_stair_direction(stair_feat) == CMD_GO_DOWNSTAIRS
+        && (stair_name.find("stair") || grid_is_escape_hatch(stair_feat)))
+    {
+        prep = "beneath";
+    }
+    else if (grid_is_escape_hatch(stair_feat))
+        prep = "above";
+    else
+        prep = "beside";
+
+    std::ostringstream str;
+    str << stair_name << " ";
+    if (see_grid(orig_pos) && !see_grid(dest))
+    {
+        str << "suddenly disappears";
+        if (!orig_actor.empty())
+            str << " from " << prep << " " << orig_actor;
+    }
+    else if (!see_grid(orig_pos) && see_grid(dest))
+    {
+        str << "suddenly appears";
+        if (!dest_actor.empty())
+            str << " " << prep << " " << dest_actor;
+    }
+    else
+    {
+        str << "moves";
+        if (!orig_actor.empty())
+            str << " from " << prep << " " << orig_actor;
+        if (!dest_actor.empty())
+            str << " to " << prep << " " << dest_actor;
+    }
+    str << "!";
+    mpr(str.str().c_str());
+
+    return (true);
+}
+
+#define DID_AFFECT() \
+{ \
+    if (miscast_level == 0) \
+        miscast_level = -1; \
+    return; \
+}
+
 void melee_attack::chaos_affects_attacker()
 {
+    if (miscast_level >= 1 || !attacker->alive())
+        return;
+
+    // Move stairs out from under the attacker.
+    if (one_chance_in(100) && _move_stairs(attacker, defender))
+        DID_AFFECT();
+
+    // Dump attacker or items under attacker to another level.
+    if (is_valid_shaft_level()
+        && (attacker->will_trigger_shaft()
+            || igrd(attacker->pos()) != NON_ITEM)
+        && one_chance_in(1000))
+    {
+        (void) attacker->do_shaft();
+        DID_AFFECT();
+    }
+
+    // Make a loud noise.
+    if (weapon && player_can_hear(attacker->pos())
+        && one_chance_in(1000))
+    {
+        std::string msg = wep_name(DESC_CAP_YOUR);
+        msg += " twangs alarmingly!";
+
+        if (!you.can_see(attacker))
+            msg = "You hear a loud twang.";
+
+        noisy(15, attacker->pos(), msg.c_str());
+        DID_AFFECT();
+    }
+
+    return;
+}
+
+static void _find_remains(monsters* mon, int &corpse_class, int &corpse,
+                          int &last_item, std::vector<int> items)
+{
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        const int idx = mon->inv[i];
+
+        if (idx == NON_ITEM)
+            continue;
+
+        item_def &item(mitm[idx]);
+
+        if (!is_valid_item(item) || item.pos != mon->pos())
+            continue;
+
+        items.push_back(idx);
+    }
+
+    corpse    = NON_ITEM;
+    last_item = NON_ITEM;
+
+    corpse_class = mons_species(mon->type);
+
+    if (corpse_class == MONS_DRACONIAN)
+        corpse_class = draco_subspecies(mon);
+
+    if (mon->has_ench(ENCH_SHAPESHIFTER))
+        corpse_class = MONS_SHAPESHIFTER;
+    else if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        corpse_class = MONS_GLOWING_SHAPESHIFTER;
+
+    // Stop at first non-matching corpse, since the freshest corpse will
+    // be at the top of the stack.
+    for (stack_iterator si(mon->pos()); si; ++si)
+    {
+        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+        {
+            if (si->plus != corpse_class)
+                break;
+
+            // It should have just been dropped.
+            if (corpse_freshness(*si) != FRESHEST_CORPSE)
+                break;
+
+            // If there was an opportunity to butcher it then it can't
+            // have just been dropped.
+            if (si->plus2 != 0)
+                break;
+
+            // It can't have been just made if it was picked up or
+            // dropped.
+            if (si->flags & (ISFLAG_DROPPED | ISFLAG_BEEN_IN_INV))
+                break;
+
+            // If it's a hydra the number of heads must match.
+            if ((int) mon->number != si->props[MONSTER_NUMBER].get_long())
+                break;
+
+            // Got it!
+            corpse = si.link();
+            break;
+        }
+        else
+        {
+            // Last item which we're sure belonded to the monster.
+            for (unsigned int i = 0; i < items.size(); i++)
+            {
+                if (items[i] == si.link())
+                    last_item = si.link();
+            }
+        }
+    }
+}
+
+static bool _make_zombie(monsters* mon, int corpse_class, int corpse,
+                         int last_item)
+{
+    // If the monster dropped a corpse then don't waste it by turning
+    // it into a zombie.
+    if (corpse != NON_ITEM || !mons_class_can_be_zombified(corpse_class))
+        return (false);
+
+    int idx = get_item_slot();
+    if (idx != NON_ITEM && last_item != NON_ITEM)
+    {
+        // Fake a corpse
+        item_def &corpse_item(mitm[idx]);
+        corpse_item.base_type   = OBJ_CORPSES;
+        corpse_item.sub_type    = CORPSE_BODY;
+        corpse_item.plus        = corpse_class;
+        corpse_item.orig_monnum = mon->type + 1;
+        corpse_item.pos         = mon->pos();
+        corpse_item.quantity    = 1;
+        corpse_item.props[MONSTER_NUMBER] = short(mon->number);
+
+        // Insert it in the item stack right after the monster's
+        // last item, so it will be equipped with all the monster's
+        // items.
+        corpse_item.link = mitm[last_item].link;
+        mitm[last_item].link = idx;
+
+        if (animate_remains(mon->pos(), CORPSE_BODY, mon->behaviour,
+                            mon->foe, mon->god, true, true))
+        {
+            if (you.can_see(mon))
+                simple_monster_message(mon,
+                                       " instantly turns into a zombie!");
+            else if (see_grid(mon->pos()))
+                mpr("A zombie appears out of nowhere!");
+            return (true);
+        }
+    }
+    return (false);
 }
 
 // NOTE: Isn't called if monster dies from poisoning caused by chaos.
-void melee_attack::chaos_killed_defender(monsters* def_copy)
+void melee_attack::chaos_killed_defender(monsters* mon)
 {
+    ASSERT(mon->type != -1 && mon->type != MONS_PROGRAM_BUG);
+    ASSERT(in_bounds(mon->pos()));
+    ASSERT(!defender->alive());
+
+    if (!attacker->alive())
+        return;
+
+    int              corpse_class, corpse, last_item;
+    std::vector<int> items;
+    _find_remains(mon, corpse_class, corpse, last_item, items);
+
+    if (one_chance_in(100) &&
+        _make_zombie(mon, corpse_class, corpse, last_item))
+    {
+        DID_AFFECT();
+    }
+}
+
+void melee_attack::do_miscast()
+{
+    if (miscast_level == -1)
+        return;
+
+    ASSERT(miscast_target != NULL);
+    ASSERT(miscast_level >= 0 && miscast_level <= 3);
+    ASSERT(count_bits(miscast_type) == 1);
+
+    if (!miscast_target->alive())
+        return;
+
+    const bool chaos_brand = 
+        weapon && get_weapon_brand(*weapon) == SPWPN_CHAOS;
+
+    // If the miscast is happening on the attacker's side and is due to
+    // a chaos weapon then make smoke/sand/etc pour out of the weapon
+    // instead of the attacker's hands.
+    std::string hand_str;
+
+    std::string cause = atk_name(DESC_NOCAP_THE);
+    int         source;
+
+    const int ignore_mask = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
+
+    if (attacker->atype() == ACT_PLAYER)
+    {
+        source = NON_MONSTER;
+        if (chaos_brand)
+        {
+            cause = "a chaos effect from ";
+            // Ignore a lot of item flags to make cause as short as possible,
+            // so it will (hopefully) fit onto a single line in the death
+            // cause screen.
+            cause += wep_name(DESC_NOCAP_YOUR,
+                              ignore_mask
+                              | ISFLAG_COSMETIC_MASK | ISFLAG_RACIAL_MASK);
+
+            if (miscast_target == attacker)
+                hand_str = wep_name(DESC_PLAIN, ignore_mask);
+        }
+    }
+    else
+    {
+        source = attacker->mindex();
+
+        if (chaos_brand && miscast_target == attacker
+            && you.can_see(attacker))
+        {
+            hand_str = wep_name(DESC_PLAIN, ignore_mask);
+        }
+    }
+
+    MiscastEffect(miscast_target, source, (spschool_flag_type) miscast_type,
+                  miscast_level, cause, NH_NEVER, hand_str, false);
+
+    // Don't do miscast twice for one attack.
+    miscast_level = -1;
 }
 
 // NOTE: random_chaos_brand() and random_chaos_attack_flavour() should
@@ -2324,11 +2814,19 @@ void melee_attack::chaos_killed_defender(monsters* def_copy)
 // by the non-chaos brands/flavours they return.
 int melee_attack::random_chaos_brand()
 {
-    int brands[] = {SPWPN_FLAMING, SPWPN_FREEZING, SPWPN_ELECTROCUTION,
-                    SPWPN_VENOM, SPWPN_DRAINING, SPWPN_VAMPIRICISM,
-                    SPWPN_PAIN, SPWPN_DISTORTION, SPWPN_CONFUSE,
-                    SPWPN_CHAOS, SPWPN_NORMAL};
-    return (RANDOM_ELEMENT(brands));
+    return (random_choose_weighted(
+        15, SPWPN_NORMAL,
+        10, SPWPN_FLAMING,
+        10, SPWPN_FREEZING,
+        10, SPWPN_ELECTROCUTION,
+        10, SPWPN_VENOM,
+        10, SPWPN_CHAOS,
+         5, SPWPN_VORPAL,
+         5, SPWPN_DRAINING,
+         5, SPWPN_VAMPIRICISM,
+         2, SPWPN_CONFUSE,
+         2, SPWPN_DISTORTION,
+         0));
 }
 
 mon_attack_flavour melee_attack::random_chaos_attack_flavour()
@@ -2597,6 +3095,14 @@ bool melee_attack::apply_damage_brand()
     case SPWPN_CHAOS:
         chaos_affects_defender();
         break;
+    }
+
+    if (damage_brand == SPWPN_CHAOS && brand != SPWPN_CHAOS && !ret
+        && miscast_level == -1 && one_chance_in(20))
+    {
+        miscast_level  = 0;
+        miscast_type   = SPTYP_RANDOM;
+        miscast_target = coinflip() ? attacker : defender;
     }
 
     if (attacker->atype() == ACT_PLAYER && damage_brand == SPWPN_CHAOS)
@@ -4154,8 +4660,9 @@ void melee_attack::mons_perform_attack_rounds()
         mons_set_weapon(attk);
         to_hit = mons_to_hit();
 
-        const bool chaos_attack = attk.flavour == AF_CHAOS
-                                  || damage_brand == SPWPN_CHAOS;
+        const bool chaos_attack = damage_brand == SPWPN_CHAOS
+                                  || (attk.flavour == AF_CHAOS
+                                      && attacker != defender);
 
         // Make copy of monster before monster_die() resets it.
         if (chaos_attack && defender->atype() == ACT_MONSTER && !def_copy)
@@ -4249,25 +4756,55 @@ void melee_attack::mons_perform_attack_rounds()
             if (!special_damage_message.empty())
                 mprf("%s", special_damage_message.c_str());
 
+            // Defender banished, bail before chaos_killed_defender() is
+            // killed since the defender is still alive in the Abyss.
+            if (!defender->alive())
+            {
+                if (chaos_attack && attacker->alive())
+                    chaos_affects_attacker();
+
+                do_miscast();
+
+                break;
+            }
+
             defender->hurt(attacker, damage_done + special_damage);
 
             if (!defender->alive())
             {
                 if (chaos_attack && defender->atype() == ACT_MONSTER)
                     chaos_killed_defender(def_copy);
+
+                if (chaos_attack && attacker->alive())
+                    chaos_affects_attacker();
+
+                do_miscast();
                 break;
             }
 
             // Yredelemnul's injury mirroring can kill the attacker.
-            if (!attacker->alive() || attacker == defender)
+            // Also, bail if the monster is attacking itself without a weapon
+            // since intrinsic monster attack flavours aren't applied for
+            // self attacks.
+            if (!attacker->alive() || (attacker == defender && !weapon))
+            {
+                if (miscast_target == defender)
+                    do_miscast();
                 break;
+            }
 
             special_damage = 0;
             special_damage_message.clear();
             apply_damage_brand();
 
             if (!special_damage_message.empty())
+            {
                 mprf("%s", special_damage_message.c_str());
+                // Don't do message-only miscasts along with a special
+                // damage message.
+                if (miscast_level == 0)
+                    miscast_level = -1;
+            }
 
             if (special_damage > 0)
                 defender->hurt(attacker, special_damage);
@@ -4276,12 +4813,26 @@ void melee_attack::mons_perform_attack_rounds()
             {
                 if (chaos_attack && defender->atype() == ACT_MONSTER)
                     chaos_killed_defender(def_copy);
+
+                if (chaos_attack && attacker->alive())
+                    chaos_affects_attacker();
+
+                do_miscast();
                 break;
             }
+
+            if (chaos_attack && attacker->alive())
+                chaos_affects_attacker();
+
+            if (miscast_target == defender)
+                do_miscast();
 
             // Yredelemnul's injury mirroring can kill the attacker.
             if (!attacker->alive())
                 break;
+
+            if (miscast_target == attacker)
+                do_miscast();
         }
 
         item_def *weap = atk->mslot_item(MSLOT_WEAPON);

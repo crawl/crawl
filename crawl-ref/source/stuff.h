@@ -214,15 +214,21 @@ int choose_random_weighted(Iterator beg, const Iterator end)
 {
     ASSERT(beg < end);
 
+#if DEBUG
+    int times_set = 0;
+#endif
+
     int totalweight = 0;
-    int count = 0, result = 0, times_set = 0;
+    int count = 0, result = 0;
     while ( beg != end )
     {
         totalweight += *beg;
         if ( random2(totalweight) < *beg )
         {
             result = count;
+#if DEBUG
             times_set++;
+#endif
         }
         ++count;
         ++beg;

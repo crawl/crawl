@@ -44,6 +44,8 @@ public:
     }
 };
 
+#define FRESHEST_CORPSE 210
+
 #define YOU_KILL(x) ((x) == KILL_YOU || (x) == KILL_YOU_MISSILE \
                      || (x) == KILL_YOU_CONF)
 #define MON_KILL(x) ((x) == KILL_MON || (x) == KILL_MON_MISSILE)

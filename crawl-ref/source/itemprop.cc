@@ -28,6 +28,7 @@
 #include "it_use2.h"
 #include "macro.h"
 #include "mon-util.h"
+#include "monstuff.h"
 #include "notes.h"
 #include "player.h"
 #include "quiver.h"
@@ -2216,6 +2217,13 @@ bool food_is_rotten( const item_def &item )
                                        && item.sub_type == CORPSE_BODY
                                     || item.base_type == OBJ_FOOD
                                        && item.sub_type == FOOD_CHUNK);
+}
+
+int corpse_freshness( const item_def &item )
+{
+    ASSERT(item.base_type == OBJ_CORPSES);
+    ASSERT(item.special <= FRESHEST_CORPSE);
+    return (item.special);
 }
 
 // Returns true if item counts as a tool for tool size comparisons and msgs.

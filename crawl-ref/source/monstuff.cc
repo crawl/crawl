@@ -349,7 +349,7 @@ static void _place_monster_corpse(const monsters *monster, bool silent,
     mitm[o].plus      = corpse_class;
     mitm[o].plus2     = 0;    // butcher work done
     mitm[o].sub_type  = CORPSE_BODY;
-    mitm[o].special   = 210;  // rot time
+    mitm[o].special   = FRESHEST_CORPSE;  // rot time
     mitm[o].colour    = mons_class_colour(corpse_class);
     mitm[o].quantity  = 1;
     mitm[o].props[MONSTER_NUMBER] = short(monster->number);
