@@ -5560,6 +5560,16 @@ bool actor::can_pass_through(const coord_def &c) const
     return can_pass_through_feat(grd(c));
 }
 
+bool actor::is_habitable(const coord_def &_pos) const
+{
+    return is_habitable_feat(grd(_pos));
+}
+
+bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
+{
+    return can_pass_through_feat(actual_grid);
+}
+
 bool actor::handle_trap()
 {
     trap_def* trap = find_trap(pos());
@@ -6084,6 +6094,64 @@ item_def *player::weapon(int /* which_attack */)
     return slot_item(EQ_WEAPON);
 }
 
+bool actor::can_wield(const item_def* item, bool ignore_curse,
+                      bool ignore_brand, bool ignore_shield,
+                      bool ignore_transform) const
+{
+    if (item == NULL)
+    {
+        // Unarmed combat.
+        item_def fake;
+        fake.base_type = OBJ_UNASSIGNED;
+        return can_wield(fake, ignore_curse, ignore_brand, ignore_transform);
+    }
+    else
+        return can_wield(*item, ignore_curse, ignore_brand, ignore_transform);
+}
+
+bool player::can_wield(const item_def& item, bool ignore_curse,
+                       bool ignore_brand, bool ignore_shield,
+                       bool ignore_transform) const
+{
+    if (equip[EQ_WEAPON] != -1 && !ignore_curse)
+    {
+        if (item_cursed(inv[equip[EQ_WEAPON]]))
+            return (false);
+    }
+
+    // Unassigned means unarmed combat.
+    const bool two_handed = item.base_type == OBJ_UNASSIGNED
+                            || hands_reqd(item, body_size()) == HANDS_TWO;
+
+    if (two_handed && !ignore_shield && equip[EQ_SHIELD] != -1)
+        return (false);
+
+    return could_wield(item, ignore_brand, ignore_transform);
+}
+
+bool player::could_wield(const item_def &item, bool ignore_brand,
+                         bool /* ignore_transform */) const
+{
+    if (!check_weapon_wieldable_size(item, body_size(PSIZE_BODY)))
+        return (false);
+
+    if (!ignore_brand)
+    {
+        if (is_holy_item(item)
+            && (you.is_undead || you.species == SP_DEMONSPAWN))
+        {
+            return (false);
+        }
+    }
+
+#if 0
+    if (!ignore_transform  && !transform_can_equip_type( EQ_WEAPON ))
+        return (false);
+#endif
+
+    return (true);
+}
+
 item_def *player::shield()
 {
     if (!you_tran_can_wear(EQ_SHIELD))
@@ -6183,6 +6251,16 @@ bool player::alive() const
     // Simplistic, but if the player dies the game is over anyway, so
     // nobody can ask further questions.
     return (true);
+}
+
+bool player::is_summoned(int* _duration, int* summon_type) const
+{
+    if (_duration != NULL)
+        *_duration = -1;
+    if (summon_type != NULL)
+        *summon_type = 0;
+
+    return (false);
 }
 
 bool player::fumbles_attack(bool verbose)

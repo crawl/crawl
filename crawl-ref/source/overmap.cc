@@ -81,6 +81,30 @@ void seen_notable_thing( dungeon_feature_type which_thing,
         _seen_other_thing( which_thing, pos );
 }
 
+bool move_notable_thing(const coord_def& orig, const coord_def& dest)
+{
+    ASSERT(in_bounds(orig) && in_bounds(dest));
+    ASSERT(orig != dest);
+    ASSERT(!is_notable_terrain(grd(dest)));
+
+    if (!is_notable_terrain(grd(orig)))
+        return (false);
+
+    level_pos pos1(level_id::current(), orig);
+    level_pos pos2(level_id::current(), dest);
+
+    shops_present[pos2]         = shops_present[pos1];
+    altars_present[pos2]        = altars_present[pos1];
+    portals_present[pos2]       = portals_present[pos1];
+    portal_vaults_present[pos2] = portal_vaults_present[pos1];
+    portal_vault_notes[pos2]    = portal_vault_notes[pos1];
+    portal_vault_colours[pos2]  = portal_vault_colours[pos1];
+
+    unnotice_feature(pos1);
+
+    return (true);
+}
+
 static dungeon_feature_type portal_to_feature(portal_type p)
 {
     switch ( p )

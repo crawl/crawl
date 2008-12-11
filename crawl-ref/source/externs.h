@@ -236,6 +236,9 @@ public:
 
     virtual bool      alive() const = 0;
 
+    virtual bool is_summoned(int* duration = NULL,
+                             int* summon_type = NULL) const = 0;
+
     virtual void moveto(const coord_def &c) = 0;
     virtual const coord_def& pos() const { return position; }
     virtual coord_def& pos() { return position; }
@@ -253,6 +256,9 @@ public:
     virtual bool can_pass_through(int x, int y) const;
     virtual bool can_pass_through(const coord_def &c) const;
 
+    virtual bool is_habitable_feat(dungeon_feature_type actual_grid) const = 0;
+            bool is_habitable(const coord_def &pos) const;
+
     virtual size_type body_size(int psize = PSIZE_TORSO,
                                 bool base = false) const = 0;
     virtual int       body_weight() const = 0;
@@ -269,6 +275,20 @@ public:
         return const_cast<actor*>(this)->slot_item(eq);
     }
     virtual bool has_equipped(equipment_type eq, int sub_type) const;
+
+            bool can_wield(const item_def* item,
+                           bool ignore_curse = false,
+                           bool ignore_brand = false,
+                           bool ignore_shield = false,
+                           bool ignore_transform = false) const;
+    virtual bool can_wield(const item_def &item,
+                           bool ignore_curse = false,
+                           bool ignore_brand = false,
+                           bool ignore_shield = false,
+                           bool ignore_transform = false) const = 0;
+    virtual bool could_wield(const item_def &item,
+                             bool ignore_brand = false,
+                             bool ignore_transform = false) const = 0;
 
     virtual int hunger_level() const { return HS_ENGORGED; }
     virtual void make_hungry(int nutrition, bool silent = true)
@@ -968,12 +988,14 @@ public:
 
     god_type  deity() const;
     bool      alive() const;
-
+    bool      is_summoned(int* duration = NULL, int* summon_type = NULL) const;
+  
     bool      swimming() const;
     bool      submerged() const;
     bool      floundering() const;
     bool      extra_balanced() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
+    bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;
@@ -983,6 +1005,15 @@ public:
     bool      has_usable_claws(bool allow_tran = true) const;
     item_def *weapon(int which_attack = -1);
     item_def *shield();
+
+    bool      can_wield(const item_def &item,
+                        bool ignore_curse = false,
+                        bool ignore_brand = false,
+                        bool ignore_shield = false,
+                        bool ignore_transform = false) const;
+    bool      could_wield(const item_def &item,
+                          bool ignore_brand = false,
+                          bool ignore_transform = false) const;
 
     std::string name(description_level_type type,
                      bool force_visible = false) const;
@@ -1314,6 +1345,7 @@ public:
     bool      floundering() const;
     bool      extra_balanced() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
+    bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
     size_type body_size(int psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight() const;
     int       total_weight() const;
@@ -1326,6 +1358,15 @@ public:
     item_def *launcher();
     item_def *missiles();
     item_def *shield();
+
+    bool      can_wield(const item_def &item,
+                        bool ignore_curse = false,
+                        bool ignore_brand = false,
+                        bool ignore_shield = false,
+                        bool ignore_transform = false) const;
+    bool      could_wield(const item_def &item,
+                          bool ignore_brand = false,
+                          bool ignore_transform = false) const;
 
     int       missile_count();
     void      wield_melee_weapon(int near = -1);

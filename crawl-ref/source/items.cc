@@ -1521,7 +1521,8 @@ static void _got_item(item_def& item, int quant)
 
 // Returns quantity of items moved into player's inventory and -1 if
 // the player's inventory is full.
-int move_item_to_player( int obj, int quant_got, bool quiet )
+int move_item_to_player( int obj, int quant_got, bool quiet,
+                         bool ignore_burden )
 {
     if (item_is_stationary(mitm[obj]))
     {
@@ -1561,7 +1562,7 @@ int move_item_to_player( int obj, int quant_got, bool quiet )
 
     bool partial_pickup = false;
 
-    if (you.burden + imass > carrying_capacity())
+    if (!ignore_burden && (you.burden + imass > carrying_capacity()))
     {
         // calculate quantity we can actually pick up
         int part = (carrying_capacity() - you.burden) / unit_mass;

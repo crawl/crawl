@@ -308,11 +308,21 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
         mprf(MSGCH_SOUND, grid_item_destruction_message(grd(monster->pos())));
 }
 
-static void _place_monster_corpse(const monsters *monster, bool silent,
-                                  int summon_type)
+int fill_out_corpse(const monsters* monster, item_def& corpse,
+                    bool allow_weightless)
 {
-    bool force        = false;
-    int  corpse_class = mons_species(monster->type);
+    ASSERT(monster->type != -1 && monster->type != MONS_PROGRAM_BUG);
+    corpse.clear();
+
+    int summon_type;
+    if (mons_is_summoned(monster, NULL, &summon_type)
+        || mons_enslaved_body_and_soul(monster)
+        || (monster->flags & (MF_BANISHED | MF_HARD_RESET)))
+    {
+        return (-1);
+    }
+
+    int corpse_class = mons_species(monster->type);
 
     // If this was a corpse that was temporarily animated then turn the
     // monster back into a corpse.
@@ -321,7 +331,6 @@ static void _place_monster_corpse(const monsters *monster, bool silent,
             || summon_type == SPELL_ANIMATE_SKELETON
             || summon_type == MON_SUMM_ANIMATE))
     {
-        force        = true;
         corpse_class = mons_zombie_base(monster);
     }
 
@@ -334,28 +343,39 @@ static void _place_monster_corpse(const monsters *monster, bool silent,
         corpse_class = MONS_GLOWING_SHAPESHIFTER;
 
     // Doesn't leave a corpse.
-    if (mons_weight(corpse_class) == 0 || mons_enslaved_body_and_soul(monster)
-        || (!force && coinflip()))
-    {
-        return;
-    }
+    if (mons_weight(corpse_class) == 0 && !allow_weightless)
+        return (-1);
 
+    corpse.flags       = 0;
+    corpse.base_type   = OBJ_CORPSES;
+    corpse.plus        = corpse_class;
+    corpse.plus2       = 0;    // butcher work done
+    corpse.sub_type    = CORPSE_BODY;
+    corpse.special     = FRESHEST_CORPSE;  // rot time
+    corpse.quantity    = 1;
+    corpse.orig_monnum = monster->type + 1;
+    corpse.props[MONSTER_NUMBER] = short(monster->number);
+
+    corpse.colour = mons_class_colour(corpse_class);
+    if (corpse.colour == BLACK)
+        corpse.colour = monster->colour;
+
+    return (corpse_class);
+}
+
+static void _place_monster_corpse(const monsters *monster, bool silent)
+{
     int o = get_item_slot();
     if (o == NON_ITEM)
         return;
 
-    mitm[o].flags     = 0;
-    mitm[o].base_type = OBJ_CORPSES;
-    mitm[o].plus      = corpse_class;
-    mitm[o].plus2     = 0;    // butcher work done
-    mitm[o].sub_type  = CORPSE_BODY;
-    mitm[o].special   = FRESHEST_CORPSE;  // rot time
-    mitm[o].colour    = mons_class_colour(corpse_class);
-    mitm[o].quantity  = 1;
-    mitm[o].props[MONSTER_NUMBER] = short(monster->number);
+    const int corpse_class = fill_out_corpse(monster, mitm[o]);
 
-    if (mitm[o].colour == BLACK)
-        mitm[o].colour = monster->colour;
+    // Don't place a corpse?  If a zombified monster is somehow capable
+    // of leaving a corpse then always place it.
+    const bool force = mons_class_is_zombified(monster->type);
+    if (corpse_class == -1 || (!force && coinflip()))
+        return;
 
     if (grid_destroys_items(grd(monster->pos())))
     {
@@ -1553,9 +1573,9 @@ void monster_die(monsters *monster, killer_type killer,
         curr_PlaceInfo.assert_validity();
 
         _monster_die_cloud(monster, true, silent, summoned, summon_type);
+        // Have to add case for disintegration effect here? {dlb}
         if (!summoned)
-            // Have to add case for disintegration effect here? {dlb}
-            _place_monster_corpse(monster, silent, summon_type);
+            _place_monster_corpse(monster, silent);
     }
 
     _fire_monster_death_event(monster, killer, killer_index);

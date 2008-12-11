@@ -3360,6 +3360,11 @@ bool monsters::can_pass_through_feat(dungeon_feature_type grid) const
     return mons_can_pass(this, grid);
 }
 
+bool monsters::is_habitable_feat(dungeon_feature_type actual_grid) const
+{
+    return monster_habitable_grid(this, actual_grid);
+}
+
 bool monsters::can_drown() const
 {
     // Mummies can fall apart in water; ghouls, vampires, and demons can
@@ -3590,6 +3595,116 @@ item_def *monsters::weapon(int which_attack)
     }
 
     return (weap == NON_ITEM) ? NULL : &mitm[weap];
+}
+
+bool monsters::can_wield(const item_def& item, bool ignore_curse,
+                         bool ignore_brand, bool ignore_shield,
+                         bool ignore_transform) const
+{
+    // Monsters can only wield weapons or go unarmed (OBJ_UNASSIGNED
+    // means unarmed)
+    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_UNASSIGNED)
+        return (false);
+
+    // These *are* weapons, so they can't wield another weapon or
+    // unwield themselves.
+    if (type == MONS_DANCING_WEAPON)
+        return (false);
+
+    // MF_HARD_RESET means that all items the monster is carrying will
+    // disappear when it does, so it can't accept new items or give up
+    // the ones it has.
+    if (flags & MF_HARD_RESET)
+        return (false);
+
+    // Summoned items can only be held by summoned monsters.
+    if ((item.flags & ISFLAG_SUMMONED) && !is_summoned())
+        return (false);
+
+    item_def* weap1 = NULL;
+    if (inv[MSLOT_WEAPON] != NON_ITEM)
+        weap1 = &mitm[inv[MSLOT_WEAPON]];
+
+    int       avail_slots = 1;
+    item_def* weap2       = NULL;
+    if (mons_wields_two_weapons(this))
+    {
+        if (!weap1 || hands_reqd(*weap1, body_size()) != HANDS_TWO)
+            avail_slots = 2;
+
+        const int offhand = mons_offhand_weapon_index(this);
+        if (offhand != NON_ITEM)
+            weap2 = &mitm[offhand];
+    }
+
+    // If we're already wielding it, then of course we can wield it.
+    if (&item == weap1 || &item == weap2)
+        return(true);
+
+    // Barehanded needs two hands.
+    const bool two_handed = item.base_type == OBJ_UNASSIGNED
+                            || hands_reqd(item, body_size()) == HANDS_TWO;
+
+    item_def* _shield = NULL;
+    if (inv[MSLOT_SHIELD] != NON_ITEM)
+    {
+        ASSERT(!(weap1 && weap2));
+
+        if (!ignore_shield && two_handed)
+            return (false);
+
+        _shield = &mitm[inv[MSLOT_SHIELD]];
+    }
+
+    if (!ignore_curse)
+    {
+        int num_cursed = 0;
+        if (weap1 && item_cursed(*weap1))
+            num_cursed++;
+        if (weap2 && item_cursed(*weap2))
+            num_cursed++;
+        if (_shield && item_cursed(*_shield))
+            num_cursed++;
+
+        if (two_handed && num_cursed > 0 || num_cursed >= avail_slots)
+            return (false);
+    }
+
+    return could_wield(item, ignore_brand, ignore_transform);
+}
+
+bool monsters::could_wield(const item_def &item, bool ignore_brand,
+                           bool /* ignore_transform */) const
+{
+    ASSERT(is_valid_item(item));
+
+    // These *are* weapons, so they can't wield another weapon.
+    if (type == MONS_DANCING_WEAPON)
+        return (false);
+
+    // Monsters can't use fixed artefacts
+    if (is_fixed_artefact(item))
+        return (false);
+
+    // Wimpy monsters (e.g. kobold, goblin) can't use halberds etc.
+    if (!check_weapon_wieldable_size(item, body_size(PSIZE_BODY)))
+        return (false);
+
+    if (!ignore_brand)
+    {
+        // Demonic/undead monsters won't use holy weapons.
+        if (mons_is_unholy(this) && is_holy_item(item))
+            return (false);
+
+        // Holy monsters won't use demonic or chaotic weapons.
+        if (mons_holiness(this) == MH_HOLY
+            && (is_evil_item(item) || get_weapon_brand(item) == SPWPN_CHAOS))
+        {
+            return (false);
+        }
+    }
+
+    return (true);
 }
 
 
@@ -3855,7 +3970,7 @@ bool monsters::unequip(item_def &item, int slot, int near, bool force)
     if (!force && item.cursed())
         return (false);
 
-    if (!force && mons_near(this) && player_monster_visible(this))
+    if (!force && you.can_see(this))
         set_ident_flags(item, ISFLAG_KNOW_CURSE);
 
     switch (item.base_type)
@@ -4146,9 +4261,8 @@ bool monsters::pickup_throwable_weapon(item_def &item, int near)
 
 bool monsters::wants_weapon(const item_def &weap) const
 {
-    // monsters can't use fixed artefacts
-    if (is_fixed_artefact( weap ))
-        return (false);
+    if (!could_wield(weap))
+       return (false);
 
     // Blademasters and master archers like their starting weapon and
     // don't want another, thank you.
@@ -4158,10 +4272,6 @@ bool monsters::wants_weapon(const item_def &weap) const
         return (false);
     }
 
-    // Wimpy monsters (e.g. kobold, goblin) shouldn't pick up halberds etc.
-    if (!check_weapon_wieldable_size(weap, body_size(PSIZE_BODY)))
-        return (false);
-
     // Monsters capable of dual-wielding will always prefer two weapons
     // to a single two-handed one, however strong.
     if (mons_wields_two_weapons(this)
@@ -4170,21 +4280,12 @@ bool monsters::wants_weapon(const item_def &weap) const
         return (false);
     }
 
-    // Nobody picks up giant clubs.
-    // Starting equipment is okay, of course.
+    // Nobody picks up giant clubs. Starting equipment is okay, of course.
     if (weap.sub_type == WPN_GIANT_CLUB
         || weap.sub_type == WPN_GIANT_SPIKED_CLUB)
     {
         return (false);
     }
-
-    // Demonic/undead monsters won't pick up holy wrath.
-    if (get_weapon_brand(weap) == SPWPN_HOLY_WRATH && mons_is_unholy(this))
-        return (false);
-
-    // Holy monsters won't pick up demonic weapons.
-    if (mons_holiness(this) == MH_HOLY && is_evil_item(weap))
-        return (false);
 
     return (true);
 }

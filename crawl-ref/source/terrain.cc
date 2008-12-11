@@ -12,6 +12,7 @@
 
 #include <algorithm>
 
+#include "cloud.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "itemprop.h"
@@ -504,7 +505,9 @@ static void _dgn_check_terrain_monsters(const coord_def &pos)
 
 }
 
-// Um, what does this do? (jpeg)
+// Clear blood off of terrain that shouldn't have it.  Also clear
+// of blood if a bloody wall has been dug out and replaced by a floor,
+// or if a bloody floor has been replaced by a wall.
 static void _dgn_check_terrain_blood(const coord_def &pos,
                                      dungeon_feature_type old_feat,
                                      dungeon_feature_type new_feat)
@@ -528,6 +531,30 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
             env.map(pos).property &= ~(FPROP_BLOODY);
         }
     }
+}
+
+void _dgn_check_terrain_player(const coord_def pos)
+{
+    if (pos != you.pos())
+        return;
+
+    if (you.can_pass_through(pos) || !grid_is_solid(grd(pos)))
+    {
+        if (!you.airborne())
+        {
+            // If the monster can't stay submerged in the new terrain
+            // and there aren't any adjacent squares where it can
+            // stay submerged then move it.
+            if (mgrd(you.pos()) != NON_MONSTER
+                && !mons_is_submerged( &menv[ mgrd(you.pos()) ] ))
+            {
+                monster_teleport( &menv[ mgrd(you.pos()) ], true, false);
+            }
+            move_player_to_grid(pos, false, true, false);
+        }
+    }
+    else
+        you_teleport_now(true, false);
 }
 
 void dungeon_terrain_changed(const coord_def &pos,
@@ -558,28 +585,145 @@ void dungeon_terrain_changed(const coord_def &pos,
     _dgn_check_terrain_items(pos, preserve_items);
     _dgn_check_terrain_monsters(pos);
 
-    if (affect_player && pos == you.pos())
-    {
-        if (!grid_is_solid(grd(pos)))
-        {
-            if (!you.airborne())
-            {
-                // If the monster can't stay submerged in the new terrain
-                // and there aren't any adjacent squares where it can
-                // stay submerged then move it.
-                if (mgrd(you.pos()) != NON_MONSTER
-                    && !mons_is_submerged( &menv[ mgrd(you.pos()) ] ))
-                {
-                    monster_teleport( &menv[ mgrd(you.pos()) ], true, false);
-                }
-                move_player_to_grid(pos, false, true, false);
-            }
-        }
-        else
-            you_teleport_now(true, false);
-    }
+    if (affect_player)
+        _dgn_check_terrain_player(pos);
 
     set_terrain_changed(pos.x, pos.y);
+}
+
+bool swap_features(const coord_def &pos1, const coord_def &pos2,
+                   bool swap_everything)
+{
+    ASSERT(in_bounds(pos1) && in_bounds(pos2));
+    ASSERT(pos1 != pos2);
+
+    const dungeon_feature_type feat1 = grd(pos1);
+    const dungeon_feature_type feat2 = grd(pos2);
+
+    if (is_sanctuary(pos1) || is_sanctuary(pos2))
+        return (false);
+
+    if (is_notable_terrain(feat1) && !see_grid(pos1)
+        && is_terrain_known(pos1.x, pos1.y))
+    {
+        return (false);
+    }
+
+    if (is_notable_terrain(feat2) && !see_grid(pos2)
+        && is_terrain_known(pos2.x, pos2.y))
+    {
+        return (false);
+    }
+
+    const unsigned short col1 = env.grid_colours(pos1);
+    const unsigned short col2 = env.grid_colours(pos2);
+
+    const unsigned long prop1 = env.map(pos1).property;
+    const unsigned long prop2 = env.map(pos2).property;
+
+    trap_def* trap1 = find_trap(pos1);
+    trap_def* trap2 = find_trap(pos2);
+
+    // Find a temporary holding place for pos1 stuff to be moved to
+    // before pos2 is moved to pos1.
+    coord_def temp(-1, -1);
+    for (int x = X_BOUND_1 + 1; x < X_BOUND_2; x++)
+    {
+        for (int y = Y_BOUND_1 + 1; y < Y_BOUND_2; y++)
+        {
+            coord_def pos(x, y);
+            if (pos == pos1 || pos == pos2)
+                continue;
+
+            if (!env.markers.find(pos, MAT_ANY)
+                && !is_notable_terrain(grd(pos))
+                && env.cgrid(pos) == EMPTY_CLOUD)
+            {
+                temp = pos;
+                break;
+            }
+        }
+        if (in_bounds(temp))
+            break;
+    }
+
+    if (!in_bounds(temp))
+    {
+        mpr("swap_features(): No boring squares on level?", MSGCH_ERROR);
+        return (false);
+    }
+
+    (void) move_notable_thing(pos1, temp);
+    env.markers.move(pos1, temp);
+    dungeon_events.move_listeners(pos1, temp);
+    grd(pos1) = DNGN_UNSEEN;
+    env.map(pos1).property = 0;
+
+    (void) move_notable_thing(pos2, pos1);
+    env.markers.move(pos2, pos1);
+    dungeon_events.move_listeners(pos2, pos1);
+    grd(pos2) = feat1;
+    grd(pos1) = feat2;
+    env.map(pos1).property = prop2;
+    env.map(pos2).property = prop1;
+
+    (void) move_notable_thing(temp, pos2);
+    env.markers.move(temp, pos2);
+    dungeon_events.move_listeners(temp, pos2);
+
+    env.grid_colours(pos1) = col2;
+    env.grid_colours(pos2) = col1;
+
+    if (trap1)
+        trap1->pos = pos2;
+    if (trap2)
+        trap2->pos = pos1;
+
+    if (!swap_everything)
+    {
+        _dgn_check_terrain_items(pos1, false);
+        _dgn_check_terrain_monsters(pos1);
+        _dgn_check_terrain_player(pos1);
+        set_terrain_changed(pos1.x, pos1.y);
+
+        _dgn_check_terrain_items(pos2, false);
+        _dgn_check_terrain_monsters(pos2);
+        _dgn_check_terrain_player(pos2);
+        set_terrain_changed(pos2.x, pos2.y);
+        return (true);
+    }
+
+    const int i1 = igrd(pos1);
+    const int i2 = igrd(pos2);
+
+    igrd(pos1) = i2;
+    igrd(pos2) = i1;
+
+    const int m1 = mgrd(pos1);
+    const int m2 = mgrd(pos1);
+
+    mgrd(pos1) = m2;
+    mgrd(pos2) = m1;
+
+    move_cloud(env.cgrid(pos1), temp);
+    move_cloud(env.cgrid(pos2), pos1);
+    move_cloud(env.cgrid(temp), pos2);
+
+    if (pos1 == you.pos())
+    {
+        you.position = pos2;
+        viewwindow(true, false);
+    }
+    else if (pos2 == you.pos())
+    {
+        you.position = pos1;
+        viewwindow(true, false);
+    }
+
+    set_terrain_changed(pos1.x, pos1.y);
+    set_terrain_changed(pos2.x, pos2.y);
+
+    return (false);
 }
 
 // Returns true if we manage to scramble free.

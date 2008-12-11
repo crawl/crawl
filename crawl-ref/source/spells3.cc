@@ -777,8 +777,12 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
 }
 
 static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
-                           unsigned short hitting, god_type god, bool actual)
+                           unsigned short hitting, god_type god, bool actual,
+                           int* mon_index)
 {
+    if (mon_index != NULL)
+        *mon_index = -1;
+
     const item_def& item = mitm[corps];
 
     if (!_animatable_remains(item))
@@ -815,6 +819,8 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
                                       a, hitting,
                                       0, god,
                                       zombie_type, number));
+    if (mon_index != NULL)
+        *mon_index = monster;
 
     if (monster != -1)
     {
@@ -843,7 +849,7 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
 bool animate_remains(const coord_def &a, corpse_type class_allowed,
                      beh_type beha, unsigned short hitting,
                      god_type god, bool actual,
-                     bool quiet)
+                     bool quiet, int* mon_index)
 {
     if (is_sanctuary(a))
         return (false);
@@ -859,7 +865,8 @@ bool animate_remains(const coord_def &a, corpse_type class_allowed,
         {
             const bool was_butchering = is_being_butchered(*si);
 
-            success = _raise_remains(a, si.link(), beha, hitting, god, actual);
+            success = _raise_remains(a, si.link(), beha, hitting, god, actual,
+                                     mon_index);
 
             if (actual && success)
             {

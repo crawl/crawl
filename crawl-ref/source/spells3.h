@@ -130,7 +130,7 @@ bool cast_summon_horrible_things(int pow, god_type god = GOD_NO_GOD);
 bool animate_remains(const coord_def &a, corpse_type class_allowed,
                      beh_type beha, unsigned short hitting,
                      god_type god = GOD_NO_GOD, bool actual = true,
-                     bool quiet = false);
+                     bool quiet = false, int* mon_index = NULL);
 
 // last updated 24may2000 {dlb}
 /* ***********************************************************************

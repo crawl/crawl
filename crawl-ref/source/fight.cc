@@ -25,7 +25,6 @@
 #include "cloud.h"
 #include "debug.h"
 #include "delay.h"
-#include "dgnevent.h"
 #include "effects.h"
 #include "food.h"
 #include "it_use2.h"
@@ -2425,6 +2424,20 @@ void melee_attack::chaos_affects_defender()
         obvious_effect = false;
 }
 
+static bool _ok_dest_grid(const coord_def &dest)
+{
+    dungeon_feature_type feat = grd(dest);
+
+    if (grid_destroys_items(feat) || grid_is_solid(feat)
+        || grid_is_water(feat) || grid_is_trap(feat, true)
+        || is_notable_terrain(feat))
+    {
+        return (false);
+    }
+
+    return (true);
+}
+
 static bool _move_stairs(const actor* attacker, const actor* defender)
 {
     const coord_def orig_pos  = attacker->pos();
@@ -2433,27 +2446,24 @@ static bool _move_stairs(const actor* attacker, const actor* defender)
     if (grid_stair_direction(stair_feat) == CMD_NO_CMD)
         return (false);
 
-    // Moving shops is too much trouble, and anyways the player can't
-    // use them to escape.
+    // The player can't use shops to escape, so don't bother.
     if (stair_feat == DNGN_ENTER_SHOP)
         return false;
 
-    const bool stair_is_marker = env.markers.find(orig_pos, MAT_ANY);
+    // Don't move around notable terrain the player is aware of if it's
+    // out of sight.
+    if (is_notable_terrain(stair_feat)
+        && is_terrain_known(orig_pos.x, orig_pos.y) && !see_grid(orig_pos))
+    {
+        return (false);
+    }
 
     coord_def dest(-1, -1);
     // Prefer to send it under the defender.
-    if (defender->alive() && defender->pos() != attacker->pos())
+    if (defender->alive() && defender->pos() != attacker->pos()
+        && _ok_dest_grid(defender->pos()))
     {
-        dungeon_feature_type feat = grd(defender->pos());
-        if (!grid_destroys_items(feat) && !grid_is_solid(feat)
-            && !grid_is_water(feat) && !grid_is_trap(feat, true))
-        {
-            dest = defender->pos();
-        }
-
-        // Don't try to swap two markers.
-        if (stair_is_marker && env.markers.find(defender->pos(), MAT_ANY))
-            dest.set(-1, -1);
+        dest = defender->pos();
     }
 
     if (!in_bounds(dest))
@@ -2463,13 +2473,7 @@ static bool _move_stairs(const actor* attacker, const actor* defender)
         int squares = 0;
         for (; ri; ++ri)
         {
-            // Don't try to swap two markers.
-            if (stair_is_marker && env.markers.find(*ri, MAT_ANY))
-                continue;
-
-            dungeon_feature_type feat = grd(defender->pos());
-            if (!grid_destroys_items(feat) && !grid_is_solid(feat)
-                && !grid_is_water(feat) && !grid_is_trap(feat, true))
+            if (_ok_dest_grid(*ri))
             {
                 if (one_chance_in(++squares))
                     dest = *ri;
@@ -2482,25 +2486,10 @@ static bool _move_stairs(const actor* attacker, const actor* defender)
 
     ASSERT(dest != orig_pos);
 
-    const bool dest_is_marker            = env.markers.find(dest, MAT_ANY);
-    const dungeon_feature_type dest_feat = grd(defender->pos());
+    if (!swap_features(orig_pos, dest))
+        return (false);
 
-    ASSERT(!(dest_is_marker && stair_is_marker));
-
-    dungeon_terrain_changed(orig_pos, dest_feat);
-    dungeon_terrain_changed(dest,      stair_feat);
-
-    if (stair_is_marker)
-    {
-        env.markers.move(orig_pos, dest);
-        dungeon_events.move_listeners(orig_pos, dest);
-    }
-    else if (dest_is_marker)
-    {
-        env.markers.move(dest, orig_pos);
-        dungeon_events.move_listeners(dest, orig_pos);
-    }
-
+    // Is player aware of it happening?
     if (!see_grid(orig_pos) && !see_grid(dest))
         return (true);
 
@@ -2612,8 +2601,9 @@ void melee_attack::chaos_affects_attacker()
     return;
 }
 
-static void _find_remains(monsters* mon, int &corpse_class, int &corpse,
-                          int &last_item, std::vector<int> items)
+static void _find_remains(monsters* mon, int &corpse_class, int &corpse_index,
+                          item_def &fake_corpse, int &last_item,
+                          std::vector<int> items)
 {
     for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
     {
@@ -2630,18 +2620,12 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse,
         items.push_back(idx);
     }
 
-    corpse    = NON_ITEM;
-    last_item = NON_ITEM;
+    corpse_index = NON_ITEM;
+    last_item    = NON_ITEM;
 
-    corpse_class = mons_species(mon->type);
-
-    if (corpse_class == MONS_DRACONIAN)
-        corpse_class = draco_subspecies(mon);
-
-    if (mon->has_ench(ENCH_SHAPESHIFTER))
-        corpse_class = MONS_SHAPESHIFTER;
-    else if (mon->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-        corpse_class = MONS_GLOWING_SHAPESHIFTER;
+    corpse_class = fill_out_corpse(mon, fake_corpse, true);
+    if (corpse_class == -1 || mons_weight(corpse_class) == 0)
+        return;
 
     // Stop at first non-matching corpse, since the freshest corpse will
     // be at the top of the stack.
@@ -2649,29 +2633,21 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse,
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
-            if (si->plus != corpse_class)
+            if (si->orig_monnum != fake_corpse.orig_monnum
+                || si->plus != fake_corpse.plus
+                || si->plus2 != fake_corpse.plus2
+                || si->special != fake_corpse.special
+                || si->flags != fake_corpse.flags)
+            {
                 break;
-
-            // It should have just been dropped.
-            if (corpse_freshness(*si) != FRESHEST_CORPSE)
-                break;
-
-            // If there was an opportunity to butcher it then it can't
-            // have just been dropped.
-            if (si->plus2 != 0)
-                break;
-
-            // It can't have been just made if it was picked up or
-            // dropped.
-            if (si->flags & (ISFLAG_DROPPED | ISFLAG_BEEN_IN_INV))
-                break;
+            }
 
             // If it's a hydra the number of heads must match.
             if ((int) mon->number != si->props[MONSTER_NUMBER].get_long())
                 break;
 
             // Got it!
-            corpse = si.link();
+            corpse_index = si.link();
             break;
         }
         else
@@ -2686,47 +2662,71 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse,
     }
 }
 
-static bool _make_zombie(monsters* mon, int corpse_class, int corpse,
-                         int last_item)
+static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
+                         item_def &fake_corpse, int last_item)
 {
     // If the monster dropped a corpse then don't waste it by turning
     // it into a zombie.
-    if (corpse != NON_ITEM || !mons_class_can_be_zombified(corpse_class))
+    if (corpse_index != NON_ITEM || !mons_class_can_be_zombified(corpse_class))
         return (false);
 
-    int idx = get_item_slot();
+    // Good gods won't let their gifts/followers be raised as the undead.
+    if (is_good_god(mon->god))
+        return (false);
+
+    // First attempt to raise zombie fitted out with all its old equipment.
+    int zombie_index = -1;
+    int idx = get_item_slot(0);
     if (idx != NON_ITEM && last_item != NON_ITEM)
     {
-        // Fake a corpse
-        item_def &corpse_item(mitm[idx]);
-        corpse_item.base_type   = OBJ_CORPSES;
-        corpse_item.sub_type    = CORPSE_BODY;
-        corpse_item.plus        = corpse_class;
-        corpse_item.orig_monnum = mon->type + 1;
-        corpse_item.pos         = mon->pos();
-        corpse_item.quantity    = 1;
-        corpse_item.props[MONSTER_NUMBER] = short(mon->number);
+        mitm[idx]     = fake_corpse;
+        mitm[idx].pos = mon->pos();
 
-        // Insert it in the item stack right after the monster's
-        // last item, so it will be equipped with all the monster's
-        // items.
-        corpse_item.link = mitm[last_item].link;
+        // Insert it in the item stack right after the monster's last item, so
+        // it will be equipped with all the monster's items.
+        mitm[idx].link       = mitm[last_item].link;
         mitm[last_item].link = idx;
 
-        if (animate_remains(mon->pos(), CORPSE_BODY, mon->behaviour,
-                            mon->foe, mon->god, true, true))
-        {
-            if (you.can_see(mon))
-                simple_monster_message(mon,
-                                       " instantly turns into a zombie!");
-            else if (see_grid(mon->pos()))
-                mpr("A zombie appears out of nowhere!");
-            return (true);
-        }
+        void (animate_remains(mon->pos(), CORPSE_BODY, mon->behaviour,
+                              mon->foe, mon->god, true, true, &zombie_index));
     }
-    return (false);
+
+    // No equipment to get, or couldn't get it for some reason.
+    if (zombie_index == -1)
+    {
+        monster_type type = (mons_zombie_size(mon->type) == Z_SMALL) ?
+                            MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE;
+        zombie_index = create_monster(
+                           mgen_data(type, mon->behaviour, 0, mon->pos(),
+                                     mon->foe, MG_FORCE_PLACE, mon->god,
+                                     (monster_type) mon->type, mon->number));
+    }
+
+    if (zombie_index == -1)
+        return (false);
+
+    monsters *zombie = &menv[zombie_index];
+
+    // Attempt to force zombie into exact same spot.
+    if (zombie->pos() != mon->pos() && zombie->is_habitable(mon->pos()))
+        zombie->move_to_pos(mon->pos());
+
+    if (you.can_see(mon))
+    {
+        if (you.can_see(zombie))
+            simple_monster_message(mon, " instantly turns into a zombie!");
+        else if (last_item != NON_ITEM)
+            simple_monster_message(mon, "'s equipment vanishes!");
+    }
+    else
+        simple_monster_message(zombie, " appears from thin air!");
+
+    return (true);
 }
 
+// mon is a copy of the monster from before monster_die() was called,
+// though its hitpoints may be non-positive.
+//
 // NOTE: Isn't called if monster dies from poisoning caused by chaos.
 void melee_attack::chaos_killed_defender(monsters* mon)
 {
@@ -2737,12 +2737,20 @@ void melee_attack::chaos_killed_defender(monsters* mon)
     if (!attacker->alive())
         return;
 
-    int              corpse_class, corpse, last_item;
+    if (attacker->atype() == ACT_PLAYER && you.banished)
+        return;
+
+    if (mon->is_summoned() || (mon->flags & (MF_BANISHED | MF_HARD_RESET)))
+        return;
+
+    int              corpse_class, corpse_index, last_item;
+    item_def         fake_corpse;
     std::vector<int> items;
-    _find_remains(mon, corpse_class, corpse, last_item, items);
+    _find_remains(mon, corpse_class, corpse_index, fake_corpse, last_item,
+                  items);
 
     if (one_chance_in(100) &&
-        _make_zombie(mon, corpse_class, corpse, last_item))
+        _make_zombie(mon, corpse_class, corpse_index, fake_corpse, last_item))
     {
         DID_AFFECT();
     }
@@ -2758,6 +2766,9 @@ void melee_attack::do_miscast()
     ASSERT(count_bits(miscast_type) == 1);
 
     if (!miscast_target->alive())
+        return;
+
+    if (miscast_target->atype() == ACT_PLAYER && you.banished)
         return;
 
     const bool chaos_brand = 
