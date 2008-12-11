@@ -46,6 +46,7 @@ enum NOTE_TYPES
     NOTE_DEATH,                 /* needs: death cause */
     NOTE_BUY_ITEM,              /* needs: item name (string), price (int) */
     NOTE_DONATE_MONEY,          /* needs: amount of gold */
+    NOTE_SEEN_FEAT,             /* needs: feature seen (string) */
     NOTE_NUM_TYPES
 };
 

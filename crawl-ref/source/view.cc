@@ -43,6 +43,7 @@
 #include "monstuff.h"
 #include "mon-util.h"
 #include "newgame.h"
+#include "notes.h"
 #include "output.h"
 #include "overmap.h"
 #include "place.h"
@@ -255,6 +256,14 @@ void set_terrain_changed( int x, int y )
 
 void set_terrain_mapped( int x, int y )
 {
+    if (!(env.map[x][y].flags & (MAP_MAGIC_MAPPED_FLAG | MAP_SEEN_FLAG))
+        && grd[x][y] == DNGN_ENTER_LABYRINTH)
+    {
+        coord_def pos(x, y);
+        take_note(Note(NOTE_SEEN_FEAT, 0, 0,
+                       feature_description(pos, false, DESC_NOCAP_A).c_str()));
+    }
+
     env.map[x][y].flags &= (~MAP_CHANGED_FLAG);
     env.map[x][y].flags |= MAP_MAGIC_MAPPED_FLAG;
 #ifdef USE_TILE
@@ -264,6 +273,25 @@ void set_terrain_mapped( int x, int y )
 
 void set_terrain_seen( int x, int y )
 {
+    if (!(env.map[x][y].flags & (MAP_MAGIC_MAPPED_FLAG | MAP_SEEN_FLAG))
+        && grd[x][y] == DNGN_ENTER_LABYRINTH)
+    {
+        coord_def pos(x, y);
+        take_note(Note(NOTE_SEEN_FEAT, 0, 0,
+                       feature_description(pos, false, DESC_NOCAP_A).c_str()));
+    }
+
+    // Magic mapping doesn't reveal the description of the portal vault
+    // entrance.
+    if (!(env.map[x][y].flags & MAP_SEEN_FLAG)
+        && grd[x][y] == DNGN_ENTER_PORTAL_VAULT
+        && you.level_type != LEVEL_PORTAL_VAULT)
+    {
+        coord_def pos(x, y);
+        take_note(Note(NOTE_SEEN_FEAT, 0, 0,
+                       feature_description(pos, false, DESC_NOCAP_A).c_str()));
+    }
+
 #ifdef USE_TILE
     env.map[x][y].flags &= ~(MAP_DETECTED_ITEM);
     env.map[x][y].flags &= ~(MAP_DETECTED_MONSTER);

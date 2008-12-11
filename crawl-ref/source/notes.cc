@@ -124,7 +124,8 @@ static bool _is_noteworthy( const Note& note )
         || note.type == NOTE_LOSE_GOD
         || note.type == NOTE_PENANCE
         || note.type == NOTE_MOLLIFY_GOD
-        || note.type == NOTE_DEATH)
+        || note.type == NOTE_DEATH
+        || note.type == NOTE_SEEN_FEAT)
     {
         return (true);
     }
@@ -367,6 +368,8 @@ std::string Note::describe( bool when, bool where, bool what ) const
             break;
         case NOTE_MESSAGE:
             result << name;
+        case NOTE_SEEN_FEAT:
+            result << "Found " << name;
             break;
         default:
             result << "Buggy note description: unknown note type";
