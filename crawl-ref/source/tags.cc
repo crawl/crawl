@@ -1261,24 +1261,24 @@ static void tag_read_you(reader &th, char minorVersion)
 
     unmarshallCString(th, you.your_name, 30);
 
-    you.religion        = static_cast<god_type>(unmarshallByte(th));
-    you.piety           = unmarshallByte(th);
-    you.rotting         = unmarshallByte(th);
-    you.symbol          = unmarshallByte(th);
-    you.colour          = unmarshallByte(th);
-    you.pet_target      = unmarshallShort(th);
+    you.religion          = static_cast<god_type>(unmarshallByte(th));
+    you.piety             = unmarshallByte(th);
+    you.rotting           = unmarshallByte(th);
+    you.symbol            = unmarshallByte(th);
+    you.colour            = unmarshallByte(th);
+    you.pet_target        = unmarshallShort(th);
 
-    you.max_level       = unmarshallByte(th);
-    you.where_are_you   = static_cast<branch_type>( unmarshallByte(th) );
-    you.char_direction  = static_cast<game_direction_type>(unmarshallByte(th));
-    you.your_level      = unmarshallByte(th);
-    you.is_undead       = static_cast<undead_state_type>(unmarshallByte(th));
-    you.special_wield   = unmarshallByte(th);
-    you.berserk_penalty = unmarshallByte(th);
-    you.sage_bonus_skill = static_cast<skill_type>(unmarshallShort(th));
+    you.max_level         = unmarshallByte(th);
+    you.where_are_you     = static_cast<branch_type>( unmarshallByte(th) );
+    you.char_direction    = static_cast<game_direction_type>(unmarshallByte(th));
+    you.your_level        = unmarshallByte(th);
+    you.is_undead         = static_cast<undead_state_type>(unmarshallByte(th));
+    you.special_wield     = unmarshallByte(th);
+    you.berserk_penalty   = unmarshallByte(th);
+    you.sage_bonus_skill  = static_cast<skill_type>(unmarshallShort(th));
     you.sage_bonus_degree = unmarshallLong(th);
-    you.level_type      = static_cast<level_area_type>( unmarshallByte(th) );
-    you.level_type_name = unmarshallString(th);
+    you.level_type        = static_cast<level_area_type>( unmarshallByte(th) );
+    you.level_type_name   = unmarshallString(th);
 
     if (minorVersion >= TAG_MINOR_LUADGN)
     {

@@ -1762,7 +1762,7 @@ static bool _is_poly_power_unsuitable( poly_power_type power,
     }
 }
 
-// if targetc == RANDOM_MONSTER, then relpower indicates the desired
+// If targetc == RANDOM_MONSTER, then relpower indicates the desired
 // power of the new monster, relative to the current monster.
 // Relaxation still takes effect when needed, no matter what relpower
 // says.
@@ -1820,25 +1820,29 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     // Messaging.
     bool can_see = you.can_see(monster);
 
-    if (mons_is_shapeshifter(monster))
-        str_polymon = " changes into ";
-    else if (targetc == MONS_PULSATING_LUMP)
-        str_polymon = " degenerates into ";
-    else
-        str_polymon = " evaporates and reforms as ";
-
-    if (!can_see)
-        str_polymon += "something you cannot see!";
+    if (monster->type == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
+        str_polymon = " grows a second head!";
     else
     {
-        str_polymon += mons_type_name(targetc, DESC_NOCAP_A);
+        if (mons_is_shapeshifter(monster))
+            str_polymon = " changes into ";
+        else if (targetc == MONS_PULSATING_LUMP)
+            str_polymon = " degenerates into ";
+        else
+            str_polymon = " evaporates and reforms as ";
 
-        if (targetc == MONS_PULSATING_LUMP)
-            str_polymon += " of flesh";
+        if (!can_see)
+            str_polymon += "something you cannot see!";
+        else
+        {
+            str_polymon += mons_type_name(targetc, DESC_NOCAP_A);
 
-        str_polymon += "!";
+            if (targetc == MONS_PULSATING_LUMP)
+                str_polymon += " of flesh";
+
+            str_polymon += "!";
+        }
     }
-
     bool player_messaged = simple_monster_message(monster, str_polymon.c_str());
 
     // Even if the monster transforms from one type that can behold the

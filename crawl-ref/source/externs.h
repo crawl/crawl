@@ -1136,6 +1136,8 @@ struct player_save_info
     bool wizard;
     species_type species;
     std::string class_name;
+    god_type religion;
+
     player_save_info operator=(const player& rhs);
     bool operator<(const player_save_info& rhs) const;
     std::string short_desc() const;

@@ -20,7 +20,6 @@ Monsters
 * Make vampiric draining alert and anger its target.
 * Fixed draconians being able to strike 3 times per turn with their weapons.
 * Account for randart shields when scanning monsters' inventories for randarts.
-* Properly allow monsters to pick up and use ammo that doesn't need launchers.
 * Fixed monsters getting stuck in deep water after entering it while confused.
 * Zombies/skeletons no longer drown, but will still avoid water.
 * Make abominations resist poison.
@@ -34,20 +33,14 @@ Interface
 * Change exclusion commands to e, E, Ctrl-E (was Ctrl-X, x, Ctrl-E).
 * Switch off autopickup and autoswap if you see a monster turn invisible.
 * Shops now use shopping cart behaviour.
-* All 't' commands now take a turn.
 * Wizard commands can now be used from the wizard help screen.
 * With a full pack, check entire list of selected items to allow for merging.
-* Added an aptitudes hotkey for the book/weapon choice submenus.
 * Added an option to make menu colours apply to shops.
 * Greatly improved the monster view command ('V').
 * Purchases and donations are now noted.
-* Fixed recharged wands not being inscribed with zap counts.
-* Fixed auto-swapping rings and amulets taking twice as long as normal.
-* Only sharp weapons are now offered for butchering.
 * The database search now also prints armour base AC/EV and weapon plusses.
 * Add spells and books to book/spell descriptions when searching the database.
 * Allow wishing for specific fixed and randarts in wizard mode ('o' command).
-* Fixed =f inscription preventing wielding of stones.
 * Add food item based hunger descriptions to spells.
 
 Levels
@@ -58,7 +51,6 @@ Levels
 * The Orcish Mines are now completely interconnected via the branch bottom.
 * Ghosts may no longer appear in the Ecumenic Temple.
 * Traps now remember how much ammunition they have.
-* Properly disable traps in the Abyss.
 * Branch descriptions now mention depth and whether they contain a rune.
 * Fixed KMONS not accepting comma-separated list of alternative monsters.
 * Tweaked most of the oklob vaults to make them less dangerous.
@@ -91,7 +83,6 @@ Characters
 * Draining of the experience pool is now reduced by life protection.
 * Player and monster naga no longer flounder or lose stealth in shallow water.
 * Secondary unarmed attacks now wake sleeping monsters.
-* Fixed bats being capable of opening/closing doors.
 * Pure spellcasters don't start with a knife anymore.
 * Tweak starting choice restrictions.
 

@@ -5788,19 +5788,20 @@ void player::init()
 
 player_save_info player_save_info::operator=(const player& rhs)
 {
-    name = rhs.your_name;
-    experience = rhs.experience;
+    name             = rhs.your_name;
+    experience       = rhs.experience;
     experience_level = rhs.experience_level;
-    wizard = rhs.wizard;
-    species = rhs.species;
-    class_name = rhs.class_name;
-    return *this;
+    wizard           = rhs.wizard;
+    species          = rhs.species;
+    class_name       = rhs.class_name;
+    religion         = rhs.religion;
+    return (*this);
 }
 
 bool player_save_info::operator<(const player_save_info& rhs) const
 {
-    return experience < rhs.experience ||
-        (experience == rhs.experience && name < rhs.name);
+    return experience < rhs.experience
+           || (experience == rhs.experience && name < rhs.name);
 }
 
 std::string player_save_info::short_desc() const
@@ -5809,6 +5810,9 @@ std::string player_save_info::short_desc() const
     desc << name << ", a level " << experience_level << ' '
          << species_name(species, experience_level) << ' '
          << class_name;
+
+    if (religion != GOD_NO_GOD)
+        desc << " of " << god_name(religion);
 
 #ifdef WIZARD
     if (wizard)
