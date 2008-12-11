@@ -6,7 +6,7 @@
 # Note the regular (mini)vaults are no longer in vaults.des, they have been
 # moved to mini.des, float.des and large.des. Portal vaults live in portal.des.
 ###############################################################################
- 
+
 ##############################################################################
 # Vaults entries
 ##############################################################################
@@ -43,7 +43,7 @@ xxxxx.@.'''''
 ENDMAP
 
 ##############################################################################
-# Vault monsters near stair 
+# Vault monsters near stair
 #
 NAME: david_vaults_2
 TAGS: vault_entry
@@ -141,12 +141,12 @@ ENDMAP
 
 ##############################################################################
 # The Guard of Blades
-# 
+#
 NAME:    erik_vaults_1
 TAGS:    vault_entry
 MONS:    dancing weapon
 ORIENT:  float
-SHUFFLE: vcxxx 
+SHUFFLE: vcxxx
 MAP
 .............
 .............
@@ -158,10 +158,10 @@ MAP
 .............
 .............
 ENDMAP
- 
+
 ##############################################################################
 # Above As Below
-# 
+#
 NAME:    erik_vaults_2
 TAGS:    vault_entry
 MONS:    vault guard
@@ -184,9 +184,9 @@ ENDMAP
 # Vaults:8 last level of the vaults -- dungeon.cc will change all these 'x's
 ##############################################################################
 #
-# This map traditionally allows controlled teleports. Even with the now 
+# This map traditionally allows controlled teleports. Even with the now
 # random placement of the rune, this seems fine: two of the spots are
-# awkward to reach via teleport, and there is now always a monster on the 
+# awkward to reach via teleport, and there is now always a monster on the
 # rune.
 #
 NAME:    vaults_vault
@@ -213,7 +213,7 @@ SUBST:   I=., M=xx=, J=x, K=+, N=+, L=xx=
 SUBST:   ':$, ":*, ^=^., a:x.
 #
 # SW
-SHUFFLE: !_	
+SHUFFLE: !_
 SUBST:   ! = | * .:20
 SUBST:   _ = 8 9 .:20
 #
@@ -237,76 +237,63 @@ MONS: vault guard
 #
 validate {{ return glyphs_connected('O', '{') }}
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..x.........................x....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..x.xxxxxxxxxxx..xxxxxxxxJxIx....xxxxx.................xxxxx..xxxxxxxxx
-xxxxxxxxx..x.x'.'.'.'.'x..x........x.x....xxx...........-.........xxx..xxxxxxxxx
-xxxxxxxxx..x.x.'.'.'.'.x..x..^^^^..x.x....xxx...-.................xxx..xxxxxxxxx
-xxxxxxxxx..x.x'.'.'.'.'x..x..^||^..x.x....xx.........-.......-.....xx..xxxxxxxxx
-xxxxxxxxx..x.x.'.'.'.'.x..x..^O|^..x.x....xx.......................xx..xxxxxxxxx
-xxxxxxxxx..x.x'.'.'.'.'x..x..^||^..x.x....xx.-....xxxxxxxxxxx....-.xx..xxxxxxxxx
-xxxxxxxxx..x.x.'.'.'.'.x..x..^^^^..x.x....xx......x.........x......xx..xxxxxxxxx
-xxxxxxxxx..x.x'.'.'.'.'L..K........x.x....xx....xxU.........Uxx....xx..xxxxxxxxx
-xxxxxxxxx..x.N.'.'.'.'.xxxxxxxxxxxxx.x....xx..-.x....xxxxx....x....xx..xxxxxxxxx
-xxxxxxxxx..xMxxxxxxxxxxx99988......A.x....xx....x.-.Vx$$$xx...x.-..xx..xxxxxxxxx
-xxxxxxxxx..x...........G99xxxxxxxxDx.x....xx....x..xx$***$xx..x....xx..xxxxxxxxx
-xxxxxxxxx..x.xxxxxxxxxFx99x........x.x....xx.-..x..x$$*O*$$x-.x....xx..xxxxxxxxx
-xxxxxxxxx..x.x?????????x88x."""""".x.x....xx....x..xx$***$xx..x....xx..xxxxxxxxx
-xxxxxxxxx..x.x?????????x..x."""""".x.x....xx....x...Vx$$$xV...x..-.xx..xxxxxxxxx
-xxxxxxxxx..x.x?????????x..x."""""".x.x....xx..-.xxx-.xxxxx..Uxx....xx..xxxxxxxxx
-xxxxxxxxx..x.x?????????x..x."""""".x.x....xx......x.........x......xx..xxxxxxxxx
-xxxxxxxxx..x.x?????????x..x."""""".x.x....xx......xxxxxxxxxxx.-....xx..xxxxxxxxx
-xxxxxxxxx..x.x?????????x..x."""""".x.x....xxx...-.................xxx..xxxxxxxxx
-xxxxxxxxx..x.x?????????x..C........x.x....xxx........-....-.......xxx..xxxxxxxxx
-xxxxxxxxx..x.xxxxxxxxxEx..xxxxxxxxxx.a..11....xx................xxxxx..xxxxxxxxx
-xxxxxxxxx..x...........H..B............1111...xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxa..1....1..xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx............................1..(}..1..........................xxxxxxxxx
-xxxxxxxxx...........................11.[..{.11.........................xxxxxxxxx
-xxxxxxxxx............................1..])..1..........................xxxxxxxxx
-xxxxxxxxx.............................1....1...........................xxxxxxxxx
-xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxx.a...1111.axaxxaaxaxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..xx!x.x.x!x.x.x.x.x.x.x.x.a...11........................??x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x.x.x.x!x.x.x_x.x.a....a................Y..Z...??x..xxxxxxxxx
-xxxxxxxxx..xx.x!x.x.x.x.x.x.x.x!x.x.x.....x..Y..Y..Y..Y..Y..Z..Y..Y.x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x_x.x.x_x.x.x.x.x.x....a...Y..Y..Y..Z..Y..Y..Z...x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x_xx....x.Y..Y..Y..Y..Z..Y..Z..Y..x..xxxxxxxxx
-xxxxxxxxx..x.x.x!x.x.x.x.x.x.x!x.x.x.x....x..Y..Y..Z..Z..Y..Y..Y..Z.x..xxxxxxxxx
-xxxxxxxxx..xx.x_x.x.x!x.x.x.x.x.x.x.xx....a...Y..Z..Y..Y..Z..Y..Y...x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x_x.x.x.x.x.x.x.x.x....a.Y..Y..Z..Z..Y..Y..Y..Z..x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x!xx....x..Z..Y..Y..Y..Z..Y..Y..Y.x..xxxxxxxxx
-xxxxxxxxx..x_x.x!x.x.x.x.x.x!x.x_x.x.x....x...Y..Y..Z..Y..Z..Z..Y...x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x.Z..Z..Y..Y..Z..Y..Z..Z..x..xxxxxxxxx
-xxxxxxxxx..x.x.x_x.x.x.x.x.x.x.x.x_x.x....x..Y..Z..Y..Z..Z..Y..Z..Z.x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x_x.x.x.x.x.xx....x...Z..Z..Z..Y..Z..Z..Y...x..xxxxxxxxx
-xxxxxxxxx..x!x.x.x.x!x.x.x.x.x.x.x.x.x....x.Y..Z..Y..Z..Z..Z..Z..Z..x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x!x.x.x.x.x.xx....x..Z..Y..Z..Y.............x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x.x.x.x.x.x_x.x.x.x....x...Y..Z..Z..Z...ZZZZZZZZ.x..xxxxxxxxx
-xxxxxxxxx..xx.x_x.x.x.x.x.x.x.x.x.x_xx....x....Z..Y..Z..Y..Z........x..xxxxxxxxx
-xxxxxxxxx..x.x!x.x.x.x.x.x.x!x.x.x.x.x....x..Z..Z..Y..Z....Z..??????x..xxxxxxxxx
-xxxxxxxxx..xx.x.x.x.x.x.x_x.x.x.x.x.xx....x...Z..Y..Z..Z...Z..??????x..xxxxxxxxx
-xxxxxxxxx..x.x.x.x.x.x_x.x.x.x.x.x.x.x....x??..Y..Z..Z..Z..Z..??????x..xxxxxxxxx
-xxxxxxxxx..xO.x.x_x.x.x!x.x.x.x.x!x_xx....x??.................?????Ox..xxxxxxxxx
-xxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxx
-xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxx..............................................................xxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx..............................................................xxxx
+xxxx..............................................................xxxx
+xxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxx
+xxxx..x.........................x....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxx
+xxxx..x.xxxxxxxxxxx..xxxxxxxxJxIx....xxxxx.................xxxxx..xxxx
+xxxx..x.x'.'.'.'.'x..x........x.x....xxx...........-.........xxx..xxxx
+xxxx..x.x.'.'.'.'.x..x..^^^^..x.x....xxx...-.................xxx..xxxx
+xxxx..x.x'.'.'.'.'x..x..^||^..x.x....xx.........-.......-.....xx..xxxx
+xxxx..x.x.'.'.'.'.x..x..^O|^..x.x....xx.......................xx..xxxx
+xxxx..x.x'.'.'.'.'x..x..^||^..x.x....xx.-....xxxxxxxxxxx....-.xx..xxxx
+xxxx..x.x.'.'.'.'.x..x..^^^^..x.x....xx......x.........x......xx..xxxx
+xxxx..x.x'.'.'.'.'L..K........x.x....xx....xxU.........Uxx....xx..xxxx
+xxxx..x.N.'.'.'.'.xxxxxxxxxxxxx.x....xx..-.x....xxxxx....x....xx..xxxx
+xxxx..xMxxxxxxxxxxx99988......A.x....xx....x.-.Vx$$$xx...x.-..xx..xxxx
+xxxx..x...........G99xxxxxxxxDx.x....xx....x..xx$***$xx..x....xx..xxxx
+xxxx..x.xxxxxxxxxFx99x........x.x....xx.-..x..x$$*O*$$x-.x....xx..xxxx
+xxxx..x.x?????????x88x."""""".x.x....xx....x..xx$***$xx..x....xx..xxxx
+xxxx..x.x?????????x..x."""""".x.x....xx....x...Vx$$$xV...x..-.xx..xxxx
+xxxx..x.x?????????x..x."""""".x.x....xx..-.xxx-.xxxxx..Uxx....xx..xxxx
+xxxx..x.x?????????x..x."""""".x.x....xx......x.........x......xx..xxxx
+xxxx..x.x?????????x..x."""""".x.x....xx......xxxxxxxxxxx.-....xx..xxxx
+xxxx..x.x?????????x..x."""""".x.x....xxx...-.................xxx..xxxx
+xxxx..x.x?????????x..C........x.x....xxx........-....-.......xxx..xxxx
+xxxx..x.xxxxxxxxxEx..xxxxxxxxxx.a..11....xx................xxxxx..xxxx
+xxxx..x...........H..B............1111...xxxxxxxxxxxxxxxxxxxxxxx..xxxx
+xxxx..xxxxxxxxxxxxxxxxxxxxxxxxa..1....1..xxxxxxxxxxxxxxxxxxxxxxx..xxxx
+xxxx............................1..(}..1..........................xxxx
+xxxx...........................11.[..{.11.........................xxxx
+xxxx............................1..])..1..........................xxxx
+xxxx.............................1....1...........................xxxx
+xxxx..xxxxxxxxxxxxxxxxxxxxxxx.a...1111.axaxxaaxaxxxxxxxxxxxxxxxx..xxxx
+xxxx..xx!x.x.x!x.x.x.x.x.x.x.x.a...11........................??x..xxxx
+xxxx..x.x.x.x.x.x.x.x!x.x.x_x.x.a....a................Y..Z...??x..xxxx
+xxxx..xx.x!x.x.x.x.x.x.x.x!x.x.x.....x..Y..Y..Y..Y..Y..Z..Y..Y.x..xxxx
+xxxx..x.x.x.x.x_x.x.x_x.x.x.x.x.x....a...Y..Y..Y..Z..Y..Y..Z...x..xxxx
+xxxx..xx.x.x.x.x.x.x.x.x.x.x.x_xx....x.Y..Y..Y..Y..Z..Y..Z..Y..x..xxxx
+xxxx..x.x.x!x.x.x.x.x.x.x!x.x.x.x....x..Y..Y..Z..Z..Y..Y..Y..Z.x..xxxx
+xxxx..xx.x_x.x.x!x.x.x.x.x.x.x.xx....a...Y..Z..Y..Y..Z..Y..Y...x..xxxx
+xxxx..x.x.x.x.x_x.x.x.x.x.x.x.x.x....a.Y..Y..Z..Z..Y..Y..Y..Z..x..xxxx
+xxxx..xx.x.x.x.x.x.x.x.x.x.x.x!xx....x..Z..Y..Y..Y..Z..Y..Y..Y.x..xxxx
+xxxx..x_x.x!x.x.x.x.x.x!x.x_x.x.x....x...Y..Y..Z..Y..Z..Z..Y...x..xxxx
+xxxx..xx.x.x.x.x.x.x.x.x.x.x.x.xx....x.Z..Z..Y..Y..Z..Y..Z..Z..x..xxxx
+xxxx..x.x.x_x.x.x.x.x.x.x.x.x_x.x....x..Y..Z..Y..Z..Z..Y..Z..Z.x..xxxx
+xxxx..xx.x.x.x.x.x.x_x.x.x.x.x.xx....x...Z..Z..Z..Y..Z..Z..Y...x..xxxx
+xxxx..x!x.x.x.x!x.x.x.x.x.x.x.x.x....x.Y..Z..Y..Z..Z..Z..Z..Z..x..xxxx
+xxxx..xx.x.x.x.x.x.x!x.x.x.x.x.xx....x..Z..Y..Z..Y.............x..xxxx
+xxxx..x.x.x.x.x.x.x.x.x.x_x.x.x.x....x...Y..Z..Z..Z...ZZZZZZZZ.x..xxxx
+xxxx..xx.x_x.x.x.x.x.x.x.x.x.x_xx....x....Z..Y..Z..Y..Z........x..xxxx
+xxxx..x.x!x.x.x.x.x.x.x!x.x.x.x.x....x..Z..Z..Y..Z....Z..??????x..xxxx
+xxxx..xx.x.x.x.x.x.x_x.x.x.x.x.xx....x...Z..Y..Z..Z...Z..??????x..xxxx
+xxxx..x.x.x.x.x.x_x.x.x.x.x.x.x.x....x??..Y..Z..Z..Z..Z..??????x..xxxx
+xxxx..xO.x.x_x.x.x!x.x.x.x.x!x_xx....x??.................?????Ox..xxxx
+xxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxx
+xxxx..............................................................xxxx
+xxxx..............................................................xxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
@@ -320,40 +307,35 @@ ORIENT: north
 MONS: dancing weapon
 SHUFFLE: cv
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxxxxxxx
-xxxxxxxxccc....cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.....cccxxxxxxxx
-xxxxxxxxcc......cc...cc...cc...cc...cc...cc...cc...cc...cc...cc.......ccxxxxxxxx
-xxxxxxxxc..............................................................cxxxxxxxx
-xxxxxxxxc..........c..............c..............c..............c......cxxxxxxxx
-xxxxxxxxc.........ccc............ccc............ccc............ccc.....cxxxxxxxx
-xxxxxxxxc........ccccc..........ccccc..........ccccc..........ccccc....cxxxxxxxx
-xxxxxxxxc.........ccc............ccc............ccc...........ccccc....cxxxxxxxx
-xxxxxxxxc..........c..............c..............c.............ccc.....cxxxxxxxx
-xxxxxxxxc......................................................ccc.....cxxxxxxxx
-xxxxxxxxc.......................................................c......cxxxxxxxx
-xxxxxxxxc..............................................................cxxxxxxxx
-xxxxxxxxc..............................................................cxxxxxxxx
-xxxxxxxxc..............................................................cxxxxxxxx
-xxxxxxxxc..............................................................cxxxxxxxx
-xxxxxxxxc..............................................................cxxxxxxxx
-xxxxxxxxc..............................................................cxxxxxxxx
-xxxxxxxxc.......................................................c......cxxxxxxxx
-xxxxxxxxc......................................................ccc.....cxxxxxxxx
-xxxxxxxxc..........c..............c..............c.............ccc.....cxxxxxxxx
-xxxxxxxxc.........ccc............ccc............ccc...........ccccc....cxxxxxxxx
-xxxxxxxxc........ccccc..........ccccc..........ccccc..........ccccc....cxxxxxxxx
-xxxxxxxxc.........ccc............ccc............ccc............ccc.....cxxxxxxxx
-xxxxxxxxc..........c..............c..............c..............c......cxxxxxxxx
-xxxxxxxxc..............................................................cxxxxxxxx
-xxxxxxxxc.......cc...cc...cc...cc...cc...cc...cc...cc...cc...cc.......ccxxxxxxxx
-xxxxxxxxcc.....cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.....cccxxxxxxxx
-xxxxxxxxccc...ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxxxxxxx
-xxxxxxxxcccc.............................cccccccccccccccccccccccccccccccxxxxxxxx
-xxxxxxxxcccccccccccccccccccccccccccccc.@.cccccccccccccccccccccccccccccccxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
+xxxccc....cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.....cccxxx
+xxxcc......cc...cc...cc...cc...cc...cc...cc...cc...cc...cc.......ccxxx
+xxxc..............................................................cxxx
+xxxc..........c..............c..............c..............c......cxxx
+xxxc.........ccc............ccc............ccc............ccc.....cxxx
+xxxc........ccccc..........ccccc..........ccccc..........ccccc....cxxx
+xxxc.........ccc............ccc............ccc...........ccccc....cxxx
+xxxc..........c..............c..............c.............ccc.....cxxx
+xxxc......................................................ccc.....cxxx
+xxxc.......................................................c......cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc..............................................................cxxx
+xxxc.......................................................c......cxxx
+xxxc......................................................ccc.....cxxx
+xxxc..........c..............c..............c.............ccc.....cxxx
+xxxc.........ccc............ccc............ccc...........ccccc....cxxx
+xxxc........ccccc..........ccccc..........ccccc..........ccccc....cxxx
+xxxc.........ccc............ccc............ccc............ccc.....cxxx
+xxxc..........c..............c..............c..............c......cxxx
+xxxc..............................................................cxxx
+xxxc.......cc...cc...cc...cc...cc...cc...cc...cc...cc...cc.......ccxxx
+xxxcc.....cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.cccc.....cccxxx
+xxxccc...ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx
+xxxcccc.............................cccccccccccccccccccccccccccccccxxx
+xxxcccccccccccccccccccccccccccccc.@.cccccccccccccccccccccccccccccccxxx
 ENDMAP

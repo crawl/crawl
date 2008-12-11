@@ -4421,7 +4421,7 @@ ENDMAP
 NAME:    onia_ninara_010_handbag
 TAGS:    entry
 ORIENT:  float
-MONS:    w:30 rat / goblin / kobold 
+MONS:    w:30 rat / goblin / kobold
 MONS:    giant bat / w:6 small snake / w:2 snake / w:2 jackal / w:4 giant cockroach
 SUBST:   ! = $ %:30
 SUBST:   ? = .:20 ~
@@ -4454,31 +4454,26 @@ SUBST:    V = V T:2
 SUBST:    ' : x.
 WEIGHT:   5
 MAP
-xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx{xxxxxxxxxxx
-xxxxxxxxxx..xxxxxxxxxx
-xxxxxxxxxx(.[xxxxxxxxx
-xxxxxxxxx....'''xxxxxx
-xxxxxxxxx.....'''xxxxx
-xxxxxxxx......''''xxxx
-xxxxxxxx......'''xxxxx
-xxxxxxxx.......'xxxxxx
-xxxxxxx........xxxxxxx
-xxxxxxx.........xxxxx.
-xxxxxxx..............@
-xxxxxxx.........xxxxxx
-xxxxxxx.......V..xxxxx
-xxxxxx...........xxxxx
-xxxxxx.......V.V..xxxx
-xxxxxx.............xxx
-xxxxxxx.....V.V.V...xx
-xxxxxxx..............x
-xxxxxxxx@.@xxxxxxx@.xx
+xxxxxxxxxxxxxxxxx
+xxxxx{xxxxxxxxxxx
+xxxxx..xxxxxxxxxx
+xxxxx(.[xxxxxxxxx
+xxxx....'''xxxxxx
+xxxx.....'''xxxxx
+xxx......''''xxxx
+xxx......'''xxxxx
+xxx.......'xxxxxx
+xx........xxxxxxx
+xx.........xxxxx.
+xx..............@
+xx.........xxxxxx
+xx.......V..xxxxx
+x...........xxxxx
+x.......V.V..xxxx
+x.............xxx
+xx.....V.V.V...xx
+xx..............x
+xxx@.@xxxxxxx@.xx
 ENDMAP
 
 NAME:     entry_eino_001_b
@@ -4486,27 +4481,22 @@ TAGS:     entry no_monster_gen no_rotate
 ORIENT:   northwest
 WEIGHT:   5
 MAP
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx{xxxxxxxx
-xxxxxxxxxxxx..xxxxxxx
-xxxxxxxxxxxx...xxxwxx
-xxxxxxxxxxx....xwwwxx
-xxxxxxxxxxx..wwwwwwxx
-xxxxxxxwwwwwwWwwwxxxx
-xxxxxxwwwwwwww..xxxxx
-xxxxxxwwxx.......xxxx
-xxxxxxxxx........xxxx
-xxxxxxxxx.........xxx
-xxxxxxxxx..........xx
-xxxxxxxxx..........xx
-xxxxxxxxx...........@
-xxxxxxxxxxx.......xxx
-xxxxxxxxxxxxx.@.xxxxx
+xxxxxxxxxxxxxxxx
+xxxxxxx{xxxxxxxx
+xxxxxxx..xxxxxxx
+xxxxxxx...xxxwxx
+xxxxxx....xwwwxx
+xxxxxx..wwwwwwxx
+xxwwwwwwWwwwxxxx
+xwwwwwwww..xxxxx
+xwwxx.......xxxx
+xxxx........xxxx
+xxxx.........xxx
+xxxx..........xx
+xxxx..........xx
+xxxx...........@
+xxxxxx.......xxx
+xxxxxxxx.@.xxxxx
 ENDMAP
 
 ##############################################################
@@ -4519,23 +4509,17 @@ NSUBST:   A = 1:= / x
 SUBST:    % = % .:5
 WEIGHT:   2
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxx{.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx........xxxxxxx.%.%.%.%.%.xxxxx
-xxxxxxxxxxx..........(..xAxxxxAxxxx.xxxxx
-xxxxxxxxxxxxx.................xxxxxAxxxxx
-xxxxxxxxxxxxxxxx......................xxb
-xxxxxxxxxxxxxxxxxxx.............[.......@
-xxxxxxxxxxxxxxxxxxxxxxx.............xxxxb
-xxxxxxxxxxxxxxxxxxxxxxxxxb.@.bxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x{.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxx........xxxxxxx.%.%.%.%.%.xxxxx
+xxxxx.............xAxxxxAxxxx.xxxxx
+xxxxxxx.................xxxxxAxxxxx
+xxxxxxxxxx......................xxb
+xxxxxxxxxxxxx.....................@
+xxxxxxxxxxxxxxxxx.............xxxxb
+xxxxxxxxxxxxxxxxxxxb.@.bxxxxxxxxxxx
 ENDMAP
 
 NAME:     entry_eino_002_b
@@ -4544,28 +4528,25 @@ ORIENT:   northeast
 SHUFFLE:  bvc
 SUBST:    ' : x.
 WEIGHT:   4
+SHUFFLE:  IJ
+SUBST:    J = .
 MAP
-xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx
-xxxxxxxxx{xxxxxxxxx
-xxxxxxxx...xxxxxxxx
-xxxxxx.....xxxxxxxx
-xxxxx.....''xxxxxxx
-xxx.......''xxxxxxx
-xx.........'xxxxxxx
-.......(....'xxxxxx
-@.....ccI..''xxxxxx
-x....Icc...''xxxxxx
-x.....[....''xxxxxx
-...........'xxxxxxx
-@.........''xxxxxxx
-x........''xxxxxxxx
-xx.....xxxxxxxxxxxx
-xxx.@.xxxxxxxxxxxxx
+xxxxxxxxxxxxxx
+xxxxxxxxx{xxxx
+xxxxxxxx...xxx
+xxxxxx.....xxx
+xxxxx.....''xx
+xxx.......''xx
+xx.........'xx
+......J.....'x
+@.....ccI..''x
+x....Icc...''x
+x......J...''x
+...........'xx
+@.........''xx
+x........''xxx
+xx.....xxxxxxx
+xxx.@.xxxxxxxx
 ENDMAP
 
 NAME:     entry_eino_002_c
@@ -4574,30 +4555,25 @@ ORIENT:   northeast
 SUBST:    ' : x. , " : x. , ? = x.
 WEIGHT:   4
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?{xxxxxxxxx
-xxxxxxxxxx""xxxxxxxxxxxxxxx?...?xxxxxxxxx
-xxxxxxxxx""""xxxxxxxxxxx?.......?xxxxxxxx
-xxxxxxx""""""""xxxx?............?xxxxxxxx
-xxxxxx""""""....??.............'xxxxxxxxx
-xxxxx""".....................''xxxxxxxxxx
-xG.(x....................'''''xxxxxxxxxxx
-@.......?..........??.''''''xxxxxxxxxxxxx
-xG.%x..xxx?....[..xxxxx''''xxxxxxxxxxxxxx
-xxxxxxxxxxxxxxG.Gxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx?{xx
+xxxxxxxxxx""xxxxxxxxxxxxxxx?...?xx
+xxxxxxxxx""""xxxxxxxxxxx?.......?x
+xxxxxxx""""""""xxxx?............?x
+xxxxxx""""""....??.............'xx
+xxxxx""".....................''xxx
+xG..x....................'''''xxxx
+@.......?..........??.''''''xxxxxx
+xG.%x..xxx?.......xxxxx''''xxxxxxx
+xxxxxxxxxxxxxxG.Gxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ###########################################################
-NAME:   eino_entry_druids_welcome
-TAGS:   entry no_monster_gen
-ORIENT: float
-MONS:   plant
+NAME:    eino_entry_druids_welcome
+TAGS:    entry no_monster_gen
+ORIENT:  float
+MONS:    plant
 MAP
 x1......@......1x
 xw1...........1wx
@@ -4618,11 +4594,11 @@ TAGS:   entry no_monster_gen
 ORIENT: float
 MONS:   plant
 MAP
-xxxxxxxxxxxxxxxxxxx
-.11111111111111111.
-@.....[.{.(.......@
-.11111111111111111.
-xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx
+.111111111111111.
+@.....[.{.(.....@
+.111111111111111.
+xxxxxxxxxxxxxxxxx
 ENDMAP
 
 ###########################################################

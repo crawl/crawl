@@ -225,33 +225,28 @@ SHUFFLE: 23, 34
 MONS:    rat / green rat / nothing, grey rat / orange rat / nothing
 MONS:    green rat / orange rat / nothing, orange rat / rat
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx343.xx.xxxxxxxx.334433xxxxxxxxx23...xxxxxx
-xx.222...xxxxxxxx..224422xxxxxx1111...xxxxxxx
-x..111..xxxxxxxxx..111111.xxx.111...xxxxxxxxx
-xx.111..xxxxxxxxxx.11111..x......xxxxxxxxxxxx
-xxxx..xx.x.xxxxxx.xx..........xxxxxxxxxxxxxxx
-xxxxx.xxx.x..x.xx.x.xx....x.xxxxxxxxxxxxxxxxx
-xxxxx...x.xxx.x33xx.xxxx.xxxxxxxxxxxxxxxxxxxx
-xxxxxxx.x.xxxx221x.xxx...xxxxxxxxxxxxxxxxxxxx
-xxxxxxxx.xxxxx111.xxxx.xxxxxxxxxxxxxxxxxxxxxx
-       xx..xxx.x.x.xxx.xxxxxxxxxxxxxxxxxxxxxx
-       xxx..x.xx.x.xx.xxxxxxxxxxxxxxxxxxxxxxx
-       xxxxx..xx.xx.x.xxxxxxxxxxxxxxxxxxxxxxx
-       xxxxxxxx.xxxx.xxxxxxxxxxxxxxxxxxxxxxxx
-             xx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-             xxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-             xxx.xxx                   xxxxxx
-             xxxx.xx                   xxxxxx
-             xxx.xxx                   xxxxxx
-             xxxx.xx                   xxxxxx
-             xxxx@xx                   xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxx343.xx.xxxxxxxx.334433xxxxxxxxx23...x
+xx.222...xxxxxxxx..224422xxxxxx1111...xx
+x..111..xxxxxxxxx..111111.xxx.111...xxxx
+xx.111..xxxxxxxxxx.11111..x......xxxxxxx
+xxxx..xx.x.xxxxxx.xx..........xxxxxxxxxx
+xxxxx.xxx.x..x.xx.x.xx....x.xxxxxxxxxxxx
+xxxxx...x.xxx.x33xx.xxxx.xxxxxxxxxxxxxxx
+xxxxxxx.x.xxxx221x.xxx...xxxxxxxxxxxxxxx
+xxxxxxxx.xxxxx111.xxxx.xxxxxxxxxxxxxxxxx
+       xx..xxx.x.x.xxx.xxxxxxxxxxxxxxxxx
+       xxx..x.xx.x.xx.xxxxxxxxxxxxxxxxxx
+       xxxxx..xx.xx.x.xxxxxxxxxxxxxxxxxx
+       xxxxxxxx.xxxx.xxxxxxxxxxxxxxxxxxx
+             xx.xxxxxxxxxxxxxxxxxxxxxxxx
+             xxx.xxxxxxxxxxxxxxxxxxxxxxx
+             xxx.xxx                   x
+             xxxx.xx                   x
+             xxx.xxx                   x
+             xxxx.xx                   x
+             xxxx@xx                   x
 ENDMAP
 
 ############################################################################
@@ -260,8 +255,6 @@ ENDMAP
 NAME:    pond_and_an_island_with_a_cottage
 ORIENT:  float
 DEPTH:   Lair:3-9
-# A swamp version would be nice, but the dungeon generator destroys
-# the walls and the floors
 SUBST:   % = %%%%%$$$**|
 MONS:    patrolling necromancer / necromancer
 SHUFFLE: 23
@@ -441,55 +434,6 @@ _......'....._
  _..'....'.._ 
   _........_  
    ________   
-ENDMAP
-
-#############################################################################
-# Swampy vault, island version
-#
-# common version in float.des -evk
-# doesn't work yet?
-#
-NAME:    onia_ninara_012_swampy_vault_shoal
-TAGS:    no_pool_fixup no_monster_gen uniq_swamp_vault
-DEPTH:   Shoal
-ORIENT:  float
-SHUFFLE: AB@
-SUBST:   A : x, B : x
-SUBST:   D = .:30 W
-KFEAT:   E = w:20 . / x / w:50 W / w:30 w / ~
-KFEAT:   F = w:150 w / w:70 W / ~ / . / x
-KFEAT:   G = x / . / w / W
-KFEAT:   H = . / W
-KMONS:   D = Plant / w:200 nothing
-KMONS:   E = w:2 slime creature / swamp worm / giant blowfly /\
-             w:2 giant mosquito / w:1 electrical eel / w:1000 nothing
-KMONS:   F = w:2 slime creature / swamp worm / giant blowfly /\
-             w:2 giant mosquito / w:2 electrical eel / w:1000 nothing
-KMONS:   H = swamp drake / swamp dragon / hydra / w:20 nothing
-KITEM:   H = any good_item / any potion / w:20 nothing / gold
-MAP
- wwwwwwwwwwwwwwwwwww.wwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwww...wwwwwwwwwwwwwwwww
-wwwwwwxxxxxxxxxxxxxx@xxxxxxxxxxxxwwwwww
-wwwwxxxxxGGGxxxxxxGEDEExxxxGGxxxxxxwwww
-wwwxxxxGHHFFGGGGFFFEEDEEGGFFFxxGGxxxwww
-wwwxxFFFHHFFFFFGFFFFEEDEEFFFFFFFFGxxwww
-wwwxGGFFFFDDEEFFFFFEEDEEFFFFFFFFFFGxwww
-wwwxxGFFFFEEDDEEFFEEDEEFFFEEEFFFFGxxwww
-wwwxGFFFFFFFEEDEEEDDEEEEEEEDDEEEFFGxwww
-wwwxGGFFFFFFFEEDEDEEEEEEEDDEEDDDEEDBwww
-wwwxxGFFFFFFFFEEDEDDEDDDDEEEEEEEDDxxwww
-wwwxxxGFFFFFFEEDEEEEDEEEEEFFFFFFFFxxwww
-wwwxxxxFFFFFEEDEEFFFFDDFFFFFFFFFGGGxwww
-wwwxxxGFFFFEEDEEFFFFFFEDEFFFFFFFxxxxwww
-wwwxGGFFFFFFDEEFFFFFFFFEDFFFFFFGGxxwwww
-wwwxGFFFFFFEEDEEFFFFFFFFEDEFFFGxxxwwwww
-wwwxxGxxxGFEEDEEFFFFGGGFFHHHGxxxxwwwwww
-wwwwxxxxxxGFEEDEEGGxxxxxGFHGxxxxxwwwwww
-wwwwwwxxxxxGFDEGGxxxxwxxxxxGxxxxxwwwwww
-wwwwwwwwxxxxxAxxxxxxwwwxxxxxxxwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
- wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 ENDMAP
 
 ##############################################################################

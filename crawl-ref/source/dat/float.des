@@ -464,14 +464,12 @@ ENDMAP
 #############################################################################
 # Swampy vault
 #
-# island version for shoal in lair.des -evk
-#
 NAME:    onia_ninara_012_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen uniq_swamp_vault
 DEPTH:   D:16-20, Lair:3-10, Swamp, Snake, Slime
 ORIENT:  float
 SHUFFLE: AB@
-SUBST: x = .:30 W x:4 
+SUBST: x = .:30 W x:4
 SUBST: A : x, B : x
 SUBST: D = .:30 W
 KFEAT: E = w:20 . / x / w:50 W / w:30 w / ~
@@ -599,7 +597,74 @@ MAP
 .v!mFFFFFFvFF+BF..
 .vSmFFFFFFvFFvFF..
 .vvvvvBBvvvFFvFF..
-.vFFFFFFFFFFFvF.. 
-.vvvvvvvvvvvvv..  
-@...............  
+.vFFFFFFFFFFFvF..
+.vvvvvvvvvvvvv..
+@...............
+ENDMAP
+
+##############################################################################
+# A guard of gargoyles
+#
+# ORIENT: float ensures correct stair generation.
+#
+NAME:    gargoyle_guard
+ORIENT:  float
+TAGS:    patrolling no_monster_gen
+DEPTH:   D:10-18
+# you should be able to arrive both via stairs and via corridor
+SUBST:   { = {([)]}
+MONS:    gargoyle, metal gargoyle / gargoyle
+MAP
+xxxxxxxxxxxxxxxxxxx
+xxxxxxxxx2xxxxxxxxx
+xxxxx1x1x.x1x1xxxxx
+xxxxx.........xxxxx
+xxxx...........xxxx
+xxxx...........xxxx
+xxx...G..{..G...xxx
+xxxx...........xxxx
+xxxx...........xxxx
+xxxxx.........xxxxx
+xxxxx1x1x.x1x1xxxxx
+xxxxxxxxx.xxxxxxxxx
+xxxxxxxxx.xxxxxxxxx
+xxxxxxxxx.xxxxxxxxx
+xxxxxxxxx@xxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Ogre Cave, by Lemuel
+#
+NAME:    lemuel_ogre_cave
+ORIENT:  float
+DEPTH:   D:9-15, Orc
+TAGS:    no_pool_fixup
+MONS:    ogre, two-headed ogre, ogre-mage / Erolcha, plant / fungus
+MONS:    ogre zombie, two-headed ogre zombie
+SHUFFLE: WX/ZY , 12/12/67
+SUBST:   W:ww. , X:. , Z:x , Y:+.=
+SHUFFLE: *5/WW
+SUBST:   *=. , W=wW , !:$.
+SUBST:   5 = 5 6 = ^:5 I:5 F:5
+MAP
+              xxxxx
+          xxxxxx12xx
+         xx*..x.122xx
+ xxxxxxxxx5xxx...11xx
+xxWxxxxxxx*xxxxx....xx
+xxWWxxxxxx.xxxxxx**xxxx
+xWWWxxxxxx.xxxxxxx**xxxxx
+WWWW**xxxxx.xxxxxxx5xxxxxxxx
+xWWWW..xxxxx.xxxxxx.xccccccx
+xxWW....1xxx.xxxxx.xxc$$$$cx
+@..X...111..xxxxxx.xxc$$$$cx
+xxWWW...11xxxxxxx.xxxc!!!!cx
+xWWW....*xxxxxxx*..xxc+ccccx
+xxWWW..**xxxxxx*....x..xxxxx
+ xxWWWW*xxxxxxx*.11.Y.xx
+  xxWWWWWxxxxxxx1221xxx
+  xxxxWWWWxxxxxxx23xx
+  xxxxxWWxxxxxxxxx|xx
+  xxWWWWxxxxxxxxxxxx
+  WWWWxxx
 ENDMAP

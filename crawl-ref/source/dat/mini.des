@@ -243,7 +243,7 @@ ENDMAP
 NAME:  eino_house_with_fridge
 DEPTH: D:8-20, Lair:2-10, Vault:1-4
 TAGS:  no_monster_gen no_item_gen mini_float
-MONS:  necromancer, plant
+MONS:  necromancer / patrolling necromancer, plant
 MONS:  rat simulacrum / hound simulacrum / sheep simulacrum / bear simulacrum
 MAP
 ............
@@ -514,7 +514,7 @@ ENDMAP
 #
 NAME:  lemuel_jelly_drop_a
 MONS:  jelly
-TAGS:  unique_jelly_drop
+TAGS:  uniq_jelly_drop
 KFEAT: a = teleport trap
 DEPTH: D:8-27
 MAP
@@ -535,13 +535,13 @@ ENDMAP
 
 NAME:  lemuel_jelly_drop_b
 MONS:  jelly
-TAGS:  unique_jelly_drop
+TAGS:  uniq_jelly_drop
 KFEAT: a = teleport trap
 DEPTH: Vault
 MAP
 vvvvvvvvvvvv
-vvv......vvv 
-vv.vvvvvv.vv 
+vvv......vvv
+vv.vvvvvv.vv
 v1v.....vv.v 
 vvvvvvvv.v.v 
 vav111111vav 
@@ -1687,4 +1687,26 @@ kknSnkk
 kknnnkk
 kkkkkkk
 kkkkkkk
+ENDMAP
+
+##############################################################################
+# A room of rats, twice
+#
+NAME: rats_and_rats_again
+TAGS: mini_float
+DEPTH: D:8-14
+MONS: shadow imp
+MONS: rat w:40 / grey rat w:40 / green rat w:12 / orange rat w:1 / nothing
+MAP
+...........
+.xxx+++xxx.
+.x2222222x.
+.x2222222x.
+.x2222222x.
+.x2222222x.
+.x2221222x.
+.x2222222x.
+.x2222222x.
+.xxxxxxxxx.
+...........
 ENDMAP
