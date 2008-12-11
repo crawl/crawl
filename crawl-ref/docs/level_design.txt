@@ -241,17 +241,10 @@ ORIENT:   (float |encompass | north | northwest | ... | southeast)
               xrest....x       xrest........
               x...of...x       x.....of.....
               x...levelx       x.......level
-            ...which brings us to padding. With any some_direction orientation,
-            you need 6 layers of x-padding along any level-edge that the vault
-            borders. For instance, if your map is ORIENT: north, you must have a
-            6 deep border of rock wall (or any other kind of wall) along the
-            northern, eastern, and western edges of the map.
-          * "encompass": the vault completely occupies the entire level.
-            Padding is needed on all 4 sides.
 
-          ORIENT: float vaults need no padding and give a lot of
-          flexibility to the dungeon generator; float should generally
-          be preferred to other ORIENT: settings for new vaults.
+          ORIENT: float vaults give a lot of flexibility to the dungeon
+          generator; float should generally be preferred to other ORIENT:
+          settings for new vaults.
 
 
 DEPTH:    For random vaults, branch entry vaults, and minivaults, this
