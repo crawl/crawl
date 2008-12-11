@@ -2263,11 +2263,35 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
 
 mons_spec mons_list::get_hydra_spec(const std::string &name) const
 {
-    int nheads = atoi(name.c_str());
+    int         nheads = -1;
+    std::string prefix = name.substr(0, name.find("-"));
+
+    nheads = atoi(prefix.c_str());
+    if (nheads != 0)
+        ;
+    else if (prefix == "0")
+        nheads = 0;
+    else
+    {
+        // Might be "two-headed hydra" type string.
+        for (int i = 0; i <= 20; i++)
+            if (number_in_words(i) == prefix)
+            {
+                nheads = i;
+                break;
+            }
+    }
+
     if (nheads < 1)
         nheads = MONS_PROGRAM_BUG;  // What can I say? :P
-    else if (nheads > 19)
-        nheads = 19;
+    else if (nheads > 20)
+    {
+#if DEBUG || DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "Hydra spec wants %d heads, clamping to 20.",
+             nheads);
+#endif
+        nheads = 20;
+    }
 
     return mons_spec(MONS_HYDRA, MONS_PROGRAM_BUG, nheads);
 }
