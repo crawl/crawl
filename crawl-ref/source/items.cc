@@ -2616,8 +2616,8 @@ bool item_def::has_spells() const
 
 int item_def::book_number() const
 {
-    return (base_type == OBJ_BOOKS?   sub_type                      :
-            base_type == OBJ_STAVES?  sub_type + 50 - STAFF_SMITING :
+    return (base_type == OBJ_BOOKS?   sub_type                             :
+            base_type == OBJ_STAVES?  sub_type + NUM_BOOKS - STAFF_SMITING :
             -1);
 }
 
