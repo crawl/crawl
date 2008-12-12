@@ -2551,7 +2551,7 @@ bool go_berserk(bool intentional)
     return (true);
 }
 
-bool mons_is_safe(const struct monsters *mon, bool want_move)
+bool mons_is_safe(const monsters *mon, bool want_move)
 {
     int  dist    = grid_distance(you.pos(), mon->pos());
 

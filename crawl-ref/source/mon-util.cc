@@ -2913,10 +2913,11 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     return (ret);
 }
 
-static bool _ms_ranged_spell( spell_type monspell )
+static bool _ms_ranged_spell( spell_type monspell, bool attack_only )
 {
     switch (monspell)
     {
+    case SPELL_NO_SPELL:
     case SPELL_HASTE:
     case SPELL_LESSER_HEALING:
     case SPELL_GREATER_HEALING:
@@ -2924,6 +2925,19 @@ static bool _ms_ranged_spell( spell_type monspell )
     case SPELL_INVISIBILITY:
     case SPELL_BLINK:
         return (false);
+
+    // These spells are ranged, but aren't direct attack spells.
+    case SPELL_ANIMATE_DEAD:
+    case SPELL_ANIMATE_SKELETON:
+    case SPELL_SUMMON_DEMON:
+    case SPELL_SUMMON_GREATER_DEMON:
+    case SPELL_SUMMON_UNDEAD:
+    case SPELL_SUMMON_UFETUBUS:
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+    case SPELL_SUMMON_DRAKES:
+    case SPELL_SUMMON_MUSHROOMS:
+    case SPELL_SUMMON_ICE_BEAST:
+        return (!attack_only);
 
     default:
         break;
@@ -2966,7 +2980,7 @@ bool mons_has_los_ability( int mclass )
     return (false);
 }
 
-bool mons_has_ranged_spell( const monsters *mon )
+bool mons_has_ranged_spell( const monsters *mon, bool attack_only )
 {
     const int mclass = mon->type;
 
@@ -2977,7 +2991,7 @@ bool mons_has_ranged_spell( const monsters *mon )
     if (mons_class_flag( mclass, M_SPELLCASTER ))
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
-            if (_ms_ranged_spell( mon->spells[i] ))
+            if (_ms_ranged_spell( mon->spells[i], attack_only ))
                 return (true);
     }
 
@@ -4470,7 +4484,7 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
         else // None of these exceptions hold for throwing nets.
         {
             // Spellcasters should not waste time with ammunition.
-            if (mons_has_ranged_spell(this))
+            if (mons_has_ranged_spell(this, true))
                 return (false);
 
             // Monsters in a fight will only pick up missiles if doing so

@@ -3327,7 +3327,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     // const bool short_time = (range >= 5 + random2(10));
     const bool long_time  = (range >= (500 + roll_dice( 2, 500 )));
 
-    const bool ranged_attack = (mons_has_ranged_spell( mon )
+    const bool ranged_attack = (mons_has_ranged_spell( mon, true )
                                 || mons_has_ranged_attack( mon ));
 
 #if DEBUG_DIAGNOSTICS

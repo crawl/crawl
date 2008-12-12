@@ -2789,7 +2789,8 @@ static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
         if (!potentially_blocking && !mons_flies(mon)
             && (mons_intel(mon) < I_NORMAL
                 || mons_friendly(mon)
-                || !mons_has_ranged_spell(mon) && !mons_has_ranged_attack(mon)))
+                || (!mons_has_ranged_spell(mon, true)
+                    && !mons_has_ranged_attack(mon))))
         {
             const habitat_type habit = mons_primary_habitat(mon);
             if (you.lava_in_sight > 0 && habit != HT_LAVA
@@ -4167,7 +4168,7 @@ static bool _ranged_allied_monster_in_dir(monsters *mon, coord_def p)
             }
 
             monsters *m = &menv[mgrd(pos)];
-            if (mons_has_ranged_attack(m) || mons_has_ranged_spell(m))
+            if (mons_has_ranged_attack(m) || mons_has_ranged_spell(m, true))
                 return (true);
         }
         break;
