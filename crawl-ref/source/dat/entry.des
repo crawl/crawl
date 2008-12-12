@@ -33,7 +33,7 @@ NAME:    whats_in_store_for_you
 TAGS:    entry no_monster_gen no_pool_fixup no_item_gen
 ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
-SUBST:   A== , B=@ , C=x , D=x
+SUBST:   A==+++++ , B=@ , C=x , D=x
 NSUBST:  T = 1=T... / *=.
 KFEAT:   T = net trap
 # Seemingly pointless, since there are no active foes here... but
@@ -3564,6 +3564,23 @@ x@##.x
 ENDMAP
 
 ##############################################################################
+# Windows and large door
+NAME:    david_entry_074
+TAGS:    entry no_monster_gen no_rotate
+ORIENT:  float
+MAP
+.......
+.xxmmmxx.
+.x.....x.
+.m..{..m.
+.m.....m.
+.x.....x.
+.xx+++xx.
+.........
+ENDMAP
+
+
+##############################################################################
 # Erik's entry vaults
 ##############################################################################
 
@@ -3601,7 +3618,7 @@ NAME:    erik_entry_001_b
 TAGS:    entry
 ORIENT:  float
 MONS:    gnoll
-WEIGHT:  3
+WEIGHT:  2
 SHUFFLE: {[(
 SUBST:   c : cxxx
 MAP
@@ -3628,7 +3645,7 @@ NAME:    erik_entry_001_c
 TAGS:    entry
 ORIENT:  float
 MONS:    centaur, orc
-WEIGHT:  3
+WEIGHT:  2
 SHUFFLE: {[(
 SUBST:   c : cxxx
 MAP
@@ -3653,7 +3670,7 @@ ENDMAP
 
 NAME:    erik_entry_001_d
 TAGS:    entry
-WEIGHT:  3
+WEIGHT:  2
 ORIENT:  float
 MONS:    orc
 SHUFFLE: {[(
@@ -3680,8 +3697,8 @@ ENDMAP
 
 ##############################################################################
 # Triangle
-NAME: erik_entry_002
-TAGS: entry
+NAME:   erik_entry_002
+TAGS:   entry
 ORIENT: float
 MAP
             xxx
@@ -3759,8 +3776,8 @@ ENDMAP
 
 ##############################################################################
 # Game-of-Life Blinker Ship
-NAME: erik_entry_005
-TAGS: entry
+NAME:    erik_entry_005
+TAGS:    entry
 ORIENT:  float
 SHUFFLE: cxxx
 MAP
@@ -3792,8 +3809,8 @@ ENDMAP
 
 ##############################################################################
 # Refuge
-NAME: matt_entry_001
-TAGS: entry no_monster_gen
+NAME:   matt_entry_001
+TAGS:   entry no_monster_gen
 ORIENT: float
 MAP
 xxxxx@xxxxxxxx@xxxx
@@ -3817,9 +3834,9 @@ ENDMAP
 
 ##############################################################################
 # Grand Opening
-NAME: matt_entry_002
-TAGS: entry
-ORIENT: float
+NAME:    matt_entry_002
+TAGS:    entry
+ORIENT:  float
 SHUFFLE: TV
 MAP
 xxxxxxxxxx@xxxxxxxxxx
@@ -3843,8 +3860,8 @@ ENDMAP
 
 ##############################################################################
 # Diagonals
-NAME: matt_entry_003
-TAGS: entry no_monster_gen
+NAME:   matt_entry_003
+TAGS:   entry no_monster_gen
 ORIENT: float
 SUBST:  ':x., ":x., ?:x., _:x.
 MAP
@@ -3870,9 +3887,10 @@ ENDMAP
 
 ##############################################################################
 # Debris
-NAME: matt_entry_004
-TAGS: entry
-ORIENT: float
+NAME:    matt_entry_004
+TAGS:    entry
+ORIENT:  float
+WEIGHT:  2
 SHUFFLE: {[(
 SUBST:   ' : . x ':40
 SUBST:   '=x.
@@ -3902,8 +3920,8 @@ ENDMAP
 
 ##############################################################################
 # Spirals
-NAME: matt_entry_005
-TAGS: entry
+NAME:    matt_entry_005
+TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(
 MAP
@@ -3926,8 +3944,8 @@ ENDMAP
 
 ##############################################################################
 # More LOS fun
-NAME: matt_entry_006
-TAGS: entry no_monster_gen
+NAME:   matt_entry_006
+TAGS:   entry no_monster_gen
 ORIENT: float
 MAP
         x+x
@@ -3958,8 +3976,8 @@ ENDMAP
 ##############################################################################
 # Tucked-away holy place
 #
-NAME: matt_entry_007_a
-TAGS: entry no_monster_gen
+NAME:    matt_entry_007_a
+TAGS:    entry no_monster_gen
 ORIENT:  float
 WEIGHT:  1
 SHUFFLE: {[(<
@@ -4028,25 +4046,20 @@ SHUFFLE: [{
 SUBST:   ' : . x ':40, '=x.
 SUBST:   c : cxxx, [ = [ T
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx....xxxxxxxxxxxxxxx....xx..xxx.''xxxxxx
-xxxxxxxxxx''........xx...''.........''...'..xx...xx
-xxxxxxxx'....ccccc...xxx.....ccccc......'......x..@
-xxxxxx....cccc...cccc.....cccc...cccc.......''..xxx
-xxxxxx..ccc.........ccc+ccc.........ccc....''..xxxx
-xxxxxx'.c......{......+.+......[......+.........xxx
-xxxxxx'.ccc.........ccc+ccc.........ccc...''...xxxx
-xxxxxx....cccc...cccc.....cccc...cccc......'..'.xxx
-xxxxxx.......ccccc......'....ccccc......'.....xxxxx
-xxxxxx'................'..xx........'....'....xxxxx
-xxxxxx.''..xxx...''.....'..xx....'''..''.xxx''.xxxx
-xxxxxx'xxxxxxxxxxxxxx..xxx.xxx..xxx....xxxxxx...xxx
-xxxxxxxxxxxxxxxxxxxxxx@xxxxxxxx@xxxxxx@xxxxxxxx@xxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx....xxxxxxxxxxxxxxx....xx..xxx.''xxxxxx
+xxxxx''........xx...''.........''...'..xx...xx
+xxx'....ccccc...xxx.....ccccc......'......x..@
+x....cccc...cccc.....cccc...cccc.......''..xxx
+x..ccc.........ccc+ccc.........ccc....''..xxxx
+x'.c......{......+.+......[......+.........xxx
+x'.ccc.........ccc+ccc.........ccc...''...xxxx
+x....cccc...cccc.....cccc...cccc......'..'.xxx
+x.......ccccc......'....ccccc......'.....xxxxx
+x'................'..xx........'....'....xxxxx
+x.''..xxx...''.....'..xx....'''..''.xxx''.xxxx
+x'xxxxxxxxxxxxxx..xxx.xxx..xxx....xxxxxx...xxx
+xxxxxxxxxxxxxxxxx@xxxxxxxx@xxxxxx@xxxxxxxx@xxx
 ENDMAP
 
 ##############################################################
@@ -4054,35 +4067,36 @@ ENDMAP
 NAME: entry_elethiomel_002
 TAGS: entry no_monster_gen no_rotate
 ORIENT:  west
+WEIGHT:  2
 MONS:    rat, goblin, giant bat, kobold
 ITEM:    sausage / beef jerky, nothing, nothing
 SHUFFLE: {[(, 234, ef~
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx@x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx+x
-xxxxxxxxxxxxxxxx.xxxxxxxxxxx.xx
-xxxxxxxxxxxxxxx...xxxxxxxxx...xx
-xxxxxxxxxxxxxx.....xxxxxxx.....xx
-xxxxxxxxxxxxx.......xxxxx.......xx
-xxxxxxxxxx.+....{....xxx....2....xx
-xxxxxxxxxx+xx.......xxxxx.......xxxx
-xxxxxxxxxx.xxx.....xxx.xxx.....xxx.xx
-xxxxxxxxx...xxx...xxx...xxx...xxx...xx
-xxxxxxxx.....xxx.xxx.....xxxexxx.....xx
-xxxxxxx.......xx+xx..1.1..xx+xx.......xx 
-xxxxxx....[....+.+...1d....+.+~...3....+@
-xxxxxxx.......xx+xx...1...xx+xx.......xx 
-xxxxxxxx.....xxx.xxx.....xxxfxxx.....xx
-xxxxxxxxx...xxx...xxx...xxx...xxx...xx
-xxxxxxxxxx.xxx.....xxx.xxx.....xxx.xx
-xxxxxxxxxx+xx.......xxxxx.......xxxx
-xxxxxxxxxx.+....(....xxx....4....xx
-xxxxxxxxxxxxx.......xxxxx.......xx
-xxxxxxxxxxxxxx.....xxxxxxx.....xx
-xxxxxxxxxxxxxxx...xxxxxxxxx...xx
-xxxxxxxxxxxxxxxx.xxxxxxxxxxx.xx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx+x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxx@x
+xxxxxxxxxxxxxxxxxxxxxxx@x
+xxxxxxxxxxxxxxxxxxxxxxx+x
+xxxxxxxxxxx.xxxxxxxxxxx.xx
+xxxxxxxxxx...xxxxxxxxx...xx
+xxxxxxxxx.....xxxxxxx.....xx
+xxxxxxxx.......xxxxx.......xx
+xxxxx.+....{....xxx....2....xx
+xxxxx+xx.......xxxxx.......xxxx
+xxxxx.xxx.....xxx.xxx.....xxx.xx
+xxxx...xxx...xxx...xxx...xxx...xx
+xxx.....xxx.xxx.....xxxexxx.....xx
+xx.......xx+xx..1.1..xx+xx.......xx 
+x....[....+.+...1d....+.+~...3....+@
+xx.......xx+xx...1...xx+xx.......xx 
+xxx.....xxx.xxx.....xxxfxxx.....xx
+xxxx...xxx...xxx...xxx...xxx...xx
+xxxxx.xxx.....xxx.xxx.....xxx.xx
+xxxxx+xx.......xxxxx.......xxxx
+xxxxx.+....(....xxx....4....xx
+xxxxxxxx.......xxxxx.......xx
+xxxxxxxxx.....xxxxxxx.....xx
+xxxxxxxxxx...xxxxxxxxx...xx
+xxxxxxxxxxx.xxxxxxxxxxx.xx
+xxxxxxxxxxxxxxxxxxxxxxx+x
+xxxxxxxxxxxxxxxxxxxxxxx@x
 ENDMAP
 
 ##############################################################
@@ -4091,6 +4105,7 @@ NAME: entry_elethiomel_003
 TAGS: entry no_monster_gen no_rotate
 ITEM: any armour / any weapon / nothing
 ORIENT:  float
+WEIGHT:  2
 SHUFFLE: {[(
 SUBST:   c : cx
 MAP
