@@ -255,7 +255,7 @@ ENCHANT:@The_monster@ becomes transparent for a moment.
 
 ENCHANT:@The_monster@ glows brightly for a moment.
 
-ENCHANT:@possessive@ fingertips start to glow.
+ENCHANT:@Possessive@ fingertips start to glow.
 %%%%
 _wizard_medium_
 
