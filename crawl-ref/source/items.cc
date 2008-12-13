@@ -212,7 +212,7 @@ bool is_valid_item( const item_def &item )
 // Reduce quantity of an inventory item, do cleanup if item goes away.
 //
 // Returns true if stack of items no longer exists.
-bool dec_inv_item_quantity( int obj, int amount )
+bool dec_inv_item_quantity( int obj, int amount, bool suppress_burden )
 {
     bool ret = false;
 
@@ -253,7 +253,8 @@ bool dec_inv_item_quantity( int obj, int amount )
         you.inv[obj].quantity -= amount;
     }
 
-    burden_change();
+    if ( !suppress_burden )
+        burden_change();
 
     return (ret);
 }
@@ -285,14 +286,16 @@ bool dec_mitm_item_quantity( int obj, int amount )
     return (false);
 }
 
-void inc_inv_item_quantity( int obj, int amount )
+void inc_inv_item_quantity( int obj, int amount, bool suppress_burden )
 {
     if (you.equip[EQ_WEAPON] == obj)
         you.wield_change = true;
 
     you.m_quiver->on_inv_quantity_changed(obj, amount);
     you.inv[obj].quantity += amount;
-    burden_change();
+
+    if ( !suppress_burden )
+        burden_change();
 }
 
 void inc_mitm_item_quantity( int obj, int amount )
@@ -2368,7 +2371,6 @@ bool can_autopickup()
 
 static void _do_autopickup()
 {
-    //David Loewenstern 6/99
     int n_did_pickup   = 0;
     int n_tried_pickup = 0;
 

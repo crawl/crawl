@@ -1741,7 +1741,7 @@ void _merge_ammo_in_inventory(int slot)
             if (!done_anything)
                 mpr("You combine your ammunition.");
 
-            inc_inv_item_quantity(slot, you.inv[i].quantity);
+            inc_inv_item_quantity(slot, you.inv[i].quantity, true);
             dec_inv_item_quantity(i, you.inv[i].quantity);
             done_anything = true;
         }

@@ -32,11 +32,11 @@ enum item_source_type
 
 bool is_valid_item( const item_def &item );
 
-bool dec_inv_item_quantity( int obj, int amount );
-bool dec_mitm_item_quantity( int obj, int amount );
+bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden = false);
+bool dec_mitm_item_quantity(int obj, int amount);
 
-void inc_inv_item_quantity( int obj, int amount );
-void inc_mitm_item_quantity( int obj, int amount );
+void inc_inv_item_quantity(int obj, int amount, bool suppress_burden = false);
+void inc_mitm_item_quantity(int obj, int amount);
 
 bool move_item_to_grid( int *const obj, const coord_def& p );
 void move_item_stack_to_grid( const coord_def& from, const coord_def& to );
