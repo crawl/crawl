@@ -136,6 +136,7 @@
      6,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -148,6 +149,7 @@
      5,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -160,6 +162,7 @@
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      false
@@ -172,6 +175,7 @@
      1,
      0,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      true
@@ -184,6 +188,7 @@
      5,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -196,6 +201,7 @@
      1,
      25,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -208,6 +214,7 @@
      6,
      200,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -220,6 +227,7 @@
      4,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -232,6 +240,7 @@
      1,
      1000,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      false
@@ -244,6 +253,7 @@
      1,
      25,
         LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -256,6 +266,7 @@
      3,
      100,
         LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -268,6 +279,7 @@
      7,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -280,6 +292,7 @@
      1,
      25,
      5, 5,
+     0,
      NULL,
      true,
      false
@@ -292,6 +305,7 @@
      3,
      100,
      4, 4,
+     0,
      NULL,
      false,
      false
@@ -304,6 +318,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -316,6 +331,7 @@
      6,
      200,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -328,6 +344,7 @@
      6,
      200,
      7, 7,
+     0,
      NULL,
      true,
      false
@@ -340,6 +357,7 @@
      5,
      200,
      5, 12,
+     0,
      NULL,
      true,
      false
@@ -352,6 +370,7 @@
      5,
      200,
      5, 5,
+     0,
      NULL,
      true,
      false
@@ -364,6 +383,7 @@
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -376,6 +396,7 @@
      3,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -390,6 +411,7 @@
          // not that much better than Invisibility.  -- bwr
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      true
@@ -402,6 +424,7 @@
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -414,6 +437,7 @@
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -426,6 +450,7 @@
      3,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -438,6 +463,7 @@
      6,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      true
@@ -450,6 +476,7 @@
      2,
      50,
      7, 7,
+     0,
      NULL,
      true,
      false
@@ -462,6 +489,7 @@
      2,
      50,
      8, 8,
+     0,
      NULL,
      true,
      false
@@ -474,6 +502,7 @@
      7,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -486,6 +515,7 @@
      7,
      200,
      6, 6,
+     0,
      "Where do you want to put it?",
      true,
      false
@@ -498,6 +528,7 @@
      3,
      200,
      8, 8,
+     0,
      NULL,
      true,
      false
@@ -510,6 +541,7 @@
      8,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -522,6 +554,7 @@
      2,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -534,6 +567,7 @@
      2,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -546,6 +580,7 @@
      2,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -558,6 +593,7 @@
      5,
      200,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -570,6 +606,7 @@
      4,
      0,
      -1, -1,
+     0,
      NULL,
      true,
      false
@@ -582,6 +619,7 @@
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -594,6 +632,7 @@
      2,
      0,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      true
@@ -606,6 +645,7 @@
      6,
      0,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      true
@@ -618,6 +658,7 @@
      3,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -630,6 +671,7 @@
      5,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -642,6 +684,7 @@
      8,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -654,6 +697,7 @@
      4,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -666,6 +710,7 @@
      6,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -678,6 +723,7 @@
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     4, // SPTYP_NONE spells have no default noise level
      "Smite whom?",
      false,
      false
@@ -690,6 +736,7 @@
      3,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -702,6 +749,7 @@
      7,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -714,6 +762,7 @@
      3,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -726,6 +775,7 @@
      1,
      80,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -738,6 +788,7 @@
      3,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -750,6 +801,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -762,6 +814,7 @@
      2,
      150,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -774,6 +827,7 @@
      6,
      200,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -786,6 +840,7 @@
      8,
      200,
      4, 4,
+     0,
      NULL,
      true,
      false
@@ -798,6 +853,7 @@
      3,
      1000,
      7, 7,
+     0,
      NULL,
      true,
      false
@@ -810,6 +866,7 @@
      6,
      200,
      6, 6,
+     0,
      "Where do you want to put it?",
      true,
      false
@@ -822,6 +879,7 @@
      9,
      200,
      6, 6,
+     0,
      "Where?",
      true,
      false
@@ -834,6 +892,7 @@
      2,
      50,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -846,6 +905,7 @@
      2,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -860,6 +920,7 @@
      4,
      100,
      5, 5,
+     0,
      NULL,
      true,
      false
@@ -872,6 +933,7 @@
      6,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -884,6 +946,7 @@
      8,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -896,6 +959,7 @@
      4,
      200,
         LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -908,6 +972,7 @@
      4,
      45,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -920,6 +985,7 @@
      3,
      100,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      true
@@ -932,6 +998,7 @@
      4,
      0,
        -1, -1,
+     0,
      NULL,
      false,
      true
@@ -944,6 +1011,7 @@
      1,
      25,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -956,6 +1024,7 @@
      5,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -968,6 +1037,7 @@
      6,
      200,
      -1, -1,
+     0,
      NULL,
      true
 },
@@ -979,6 +1049,7 @@
      1,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -991,6 +1062,7 @@
      3,
      200,
      1, 1,
+     0,
      NULL,
      false,
      false
@@ -1003,6 +1075,7 @@
      7,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1015,6 +1088,7 @@
      2,
      50,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1027,6 +1101,7 @@
      5,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1039,6 +1114,7 @@
      1,
      25,
      1, 1,
+     0,
      NULL,
      false,
      false
@@ -1051,6 +1127,7 @@
      1,
      25,
      1, 1,
+     0,
      NULL,
      false,
      false
@@ -1063,6 +1140,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1075,6 +1153,7 @@
      5,
      200,
      -1, -1,
+     0,
      NULL,
      true,
      false
@@ -1087,6 +1166,7 @@
      4,
      100,
      5, 5,
+     0,
      NULL,
      true,
      false
@@ -1099,6 +1179,7 @@
      5,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1111,6 +1192,7 @@
      3,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1123,6 +1205,7 @@
      3,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1135,6 +1218,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1147,6 +1231,7 @@
      3,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1159,6 +1244,7 @@
      4,
      100,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -1171,6 +1257,7 @@
      7,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1183,6 +1270,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1195,6 +1283,7 @@
      6,         // why is this the only holy spell with a secondary? {dlb}
      200,
      8, 8,
+     0,
      NULL,
      true,
      false
@@ -1208,6 +1297,7 @@
      8,
      200,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -1220,6 +1310,7 @@
      7,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1232,6 +1323,7 @@
      8,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1244,6 +1336,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1256,6 +1349,7 @@
      1,
      50,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1268,6 +1362,7 @@
      6,
      200,
      7, 7,
+     0,
      NULL,
      true,
      false
@@ -1280,6 +1375,7 @@
      5,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1292,6 +1388,7 @@
      3,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1304,6 +1401,7 @@
      3,
      200,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -1316,6 +1414,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      true,
      false
@@ -1328,6 +1427,7 @@
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      false
@@ -1340,6 +1440,7 @@
      1,
      25,
      7, 7,
+     0,
      NULL,
      true,
      false
@@ -1352,6 +1453,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1364,6 +1466,7 @@
      3,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1376,6 +1479,7 @@
      9,
      200,
      7, 7,
+     0,
      NULL,
      true,
      false
@@ -1388,6 +1492,7 @@
      5,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1400,6 +1505,7 @@
      6,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1412,6 +1518,7 @@
      7,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1424,6 +1531,7 @@
      2,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1436,6 +1544,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1448,6 +1557,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1460,6 +1570,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1472,6 +1583,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1484,6 +1596,7 @@
      1,
      25,
      1, 1,
+     0,
      NULL,
      false,
      false
@@ -1496,6 +1609,7 @@
      6,
      200,
      5, 5,
+     0,
      NULL,
      true,
      false
@@ -1508,6 +1622,7 @@
      3,
      50,
      5, 5,
+     0,
      NULL,
      true,
      false
@@ -1520,6 +1635,7 @@
      7,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1533,6 +1649,7 @@
      6,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1545,6 +1662,7 @@
      1,
      25,
      8, 8,
+     0,
      NULL,
      true,
      false
@@ -1557,6 +1675,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1569,6 +1688,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1581,6 +1701,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1593,6 +1714,7 @@
      7,
      200,
      7, 12,
+     0,
      NULL,
      true,
      false
@@ -1604,7 +1726,8 @@
      SPFLAG_MAPPING,
      2,
      60,                        // not 50, note the fuzz
-        -1, -1,
+     -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1617,6 +1740,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1629,6 +1753,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1641,6 +1766,7 @@
      4,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1653,6 +1779,7 @@
      2,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1665,6 +1792,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1677,6 +1805,7 @@
      2,
      0,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      false
@@ -1689,6 +1818,7 @@
      7,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1701,6 +1831,7 @@
      7,
      100,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      false
@@ -1713,6 +1844,7 @@
      3,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1725,6 +1857,7 @@
      7,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1737,6 +1870,7 @@
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      false
@@ -1749,6 +1883,7 @@
      3,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1761,6 +1896,7 @@
      1,
      25,
      7, 7,
+     0,
      NULL,
      false,
      false
@@ -1773,6 +1909,7 @@
      6,
      200,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -1785,6 +1922,7 @@
      5,  // only removes weapon, so I raised this from 4 -- bwr
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1797,6 +1935,7 @@
      6,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1809,6 +1948,7 @@
      4, // doesn't allow for equipment, so I lowered this from 5 -- bwr
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1821,6 +1961,7 @@
      8,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1833,6 +1974,7 @@
      8,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1845,6 +1987,7 @@
      9,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1857,6 +2000,7 @@
      6,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1869,6 +2013,7 @@
      6,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1881,6 +2026,7 @@
      7,
      200,
      5, 5,
+     0,
      NULL,
      true,
      false
@@ -1893,6 +2039,7 @@
      4,
      100,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -1905,6 +2052,7 @@
      9,
      200,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -1917,6 +2065,7 @@
      1,
      25,
      1, 1,
+     0,
      NULL,
      false,
      false
@@ -1929,6 +2078,7 @@
      4,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      false
@@ -1941,6 +2091,7 @@
      5,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1953,6 +2104,7 @@
      1,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -1965,6 +2117,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -1977,6 +2130,7 @@
      1,
      25,
      1, 2,
+     0,
      NULL,
      false,
      false
@@ -1989,6 +2143,7 @@
      3,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -2001,6 +2156,7 @@
      6,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2013,6 +2169,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2025,6 +2182,7 @@
      3,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2037,6 +2195,7 @@
      9,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2049,6 +2208,7 @@
      5,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2061,6 +2221,7 @@
      2,
      56,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -2073,6 +2234,7 @@
      7,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2085,6 +2247,7 @@
      1,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -2097,6 +2260,7 @@
      1,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -2109,6 +2273,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -2121,6 +2286,7 @@
      5,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -2133,6 +2299,7 @@
      1,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2145,6 +2312,7 @@
      7,     // this is high for a reason - Warp brands are very powerful.
      0,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -2157,6 +2325,7 @@
      5,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2169,6 +2338,7 @@
      9,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2181,6 +2351,7 @@
      7,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2193,6 +2364,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2205,6 +2377,7 @@
      1,
      100,
      1, 1,
+     0,
      NULL,
      false,
      false
@@ -2217,6 +2390,7 @@
      1,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -2229,6 +2403,7 @@
      4,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2241,6 +2416,7 @@
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
      200,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -2253,6 +2429,7 @@
      4,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2265,6 +2442,7 @@
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      "Fragment what (e.g. a wall or monster)?",
      false,
      false
@@ -2277,6 +2455,7 @@
      9,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -2289,6 +2468,7 @@
      1,
      50,
      1, 2,
+     0,
      NULL,
      true,
      false
@@ -2301,6 +2481,7 @@
      5,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      false
@@ -2313,6 +2494,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -2325,6 +2507,7 @@
      4,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -2337,6 +2520,7 @@
      3,
      100,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -2349,6 +2533,7 @@
      2,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      true
@@ -2361,6 +2546,7 @@
      6,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2373,6 +2559,7 @@
      7,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2385,6 +2572,7 @@
      8,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2397,6 +2585,7 @@
      5,     // fairly high level - potentially one of the best brands
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2409,6 +2598,7 @@
      2,
      50,
      4, 8,
+     0,
      NULL,
      false,
      false
@@ -2421,6 +2611,7 @@
      5,
      200,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2433,6 +2624,7 @@
      9,
      200,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -2445,6 +2637,7 @@
      3,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2457,6 +2650,7 @@
      3,
      0,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      false,
      false
@@ -2469,6 +2663,7 @@
      3,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2481,6 +2676,7 @@
      4,
      0,
      7, 7,
+     0,
      NULL,
      true,
      false
@@ -2493,6 +2689,7 @@
      4,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2505,6 +2702,7 @@
      4,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2517,6 +2715,7 @@
      4,
      0,
      8, 8,
+     0,
      NULL,
      true,
      false
@@ -2529,6 +2728,7 @@
      2,
      0,
      7, 7,
+     0,
      NULL,
      true,
      false
@@ -2541,6 +2741,7 @@
      7,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false,
@@ -2553,6 +2754,7 @@
      1,
      0,
      -1, -1,
+     1, // SPTYP_NONE spells have no default noise level
      NULL,
      false,
      false
@@ -2565,6 +2767,7 @@
      5,
      0,
      8, 8,
+     0,
      NULL,
      true,
      false
@@ -2577,6 +2780,7 @@
      5,
      0,
      5, 5,
+     0,
      NULL,
      true,
      false
@@ -2589,6 +2793,7 @@
      6,
      0,
      6, 6,
+     0,
      NULL,
      true,
      false
@@ -2601,6 +2806,7 @@
      6,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2613,6 +2819,7 @@
      2,
      0,
      LOS_RADIUS, LOS_RADIUS,
+     0,
      NULL,
      true,
      false
@@ -2625,6 +2832,7 @@
      4,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false
@@ -2637,6 +2845,7 @@
      0,
      0,
      -1, -1,
+     0,
      NULL,
      false,
      false

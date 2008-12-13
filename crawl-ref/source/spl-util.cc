@@ -40,6 +40,31 @@
 #include <conio.h>
 #endif
 
+struct spell_desc
+{
+    int id;
+    const char  *title;
+    unsigned int disciplines; // bitfield
+    unsigned int flags;       // bitfield
+    unsigned int level;
+    int power_cap;
+
+    // At power 0, you get min_range. At power power_cap, you get max_range.
+    int min_range;
+    int max_range;
+
+    // How much louder or quieter the spell is than the default.
+    int noise_mod;
+
+    const char  *target_prompt;
+
+    // If a monster is casting this, does it need a tracer?
+    bool         ms_needs_tracer;
+
+    // The spell can be used no matter what the monster's foe is.
+    bool         ms_utility;
+};
+
 static struct spell_desc spelldata[] = {
 #include "spl-data.h"
 };
@@ -921,4 +946,23 @@ int spell_range(spell_type spell, int pow, bool real_cast)
 
     // Round appropriately.
     return ((pow*(maxrange - minrange) + powercap/2) / powercap + minrange);
+}
+
+int spell_noise(spell_type spell)
+{
+    const spell_desc *desc = _seekspell(spell);
+
+    return desc->noise_mod + spell_noise(desc->disciplines, desc->level);
+}
+
+int spell_noise(unsigned int disciplines, int level)
+{
+    if (disciplines == SPTYP_NONE)
+        return (0);
+    else if (disciplines & SPTYP_CONJURATION)
+        return (level);
+    else if (disciplines && !(disciplines & (SPTYP_POISON | SPTYP_AIR)))
+        return div_round_up(level * 3, 4);
+    else
+        return div_round_up(level, 2);
 }

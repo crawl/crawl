@@ -4941,7 +4941,6 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
                 if (mons_should_fire(beem))
                 {
                     _make_mons_stop_fleeing(monster);
-                    simple_monster_message( monster, " makes a gesture!", spl );
 
                     mons_cast(monster, beem, spell_cast);
                     used = true;
@@ -5602,19 +5601,6 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
     return (msp[5] == spell);
 }
 
-static const char *_orb_of_fire_glow()
-{
-    static const char *orb_glows[] =
-    {
-        " glows yellow.",
-        " glows bright magenta.",
-        " glows deep purple.",       // Smoke on the Water
-        " glows red.",
-        " emits a lurid red light.",
-    };
-    return RANDOM_ELEMENT(orb_glows);
-}
-
 static bool _mons_announce_cast(monsters *monster, bool nearby,
                                 spell_type spell_cast,
                                 spell_type draco_breath)
@@ -5624,154 +5610,25 @@ static bool _mons_announce_cast(monsters *monster, bool nearby,
 
     if (nearby)
     {
-        // Handle monsters within range of player.
-        if (monster->type == MONS_GERYON)
+        if (spell_cast == draco_breath)
         {
-            if (silenced(monster->pos()))
-                return (false);
-
-            simple_monster_message( monster, " winds a great silver horn.",
-                                    spl );
-        }
-        else if (mons_is_demon( monster->type ))
-        {
-            simple_monster_message( monster, " gestures.", spl );
-        }
-        else
-        {
-            switch (monster->type)
+            if (simple_monster_message(monster, " breathes.", spl))
+                return (true);
+            else
             {
-            default:
-                if (spell_cast == draco_breath)
+                if (!silenced(monster->pos())
+                    && !silenced(you.pos()))
                 {
-                    if (!simple_monster_message(monster, " breathes.", spl))
-                    {
-                        if (!silenced(monster->pos())
-                            && !silenced(you.pos()))
-                        {
-                            mpr("You hear a roar.", MSGCH_SOUND);
-                        }
-                    }
-                    break;
+                    mpr("You hear a roar.", MSGCH_SOUND);
+                    return (true);
                 }
-
-                if (silenced(monster->pos()))
-                    return (false);
-
-                if (mons_class_flag(monster->type, M_PRIEST))
-                {
-                    switch (random2(3))
-                    {
-                    case 0:
-                        simple_monster_message(monster, " prays.", spl);
-                        break;
-                    case 1:
-                        simple_monster_message(monster,
-                                               " mumbles some strange prayers.",
-                                               spl);
-                        break;
-                    case 2:
-                    default:
-                        simple_monster_message(monster,
-                                               " utters an invocation.", spl);
-                        break;
-                    }
-                }
-                else // not a priest
-                {
-                    switch (random2(3))
-                    {
-                    case 0:
-                        // XXX: could be better, chosen to match the
-                        // ones in monspeak.cc... has the problem
-                        // that it doesn't suggest a vocal component. -- bwr
-                        if (player_monster_visible(monster))
-                        {
-                            simple_monster_message(monster,
-                                                   " gestures wildly.", spl );
-                        }
-                        break;
-                    case 1:
-                        simple_monster_message(monster,
-                                               " mumbles some strange words.",
-                                               spl);
-                        break;
-                    case 2:
-                    default:
-                        simple_monster_message(monster, " casts a spell.", spl);
-                        break;
-                    }
-                }
-                break;
-
-            case MONS_BALL_LIGHTNING:
-                monster->hit_points = -1;
-                break;
-
-            case MONS_STEAM_DRAGON:
-            case MONS_MOTTLED_DRAGON:
-            case MONS_STORM_DRAGON:
-            case MONS_GOLDEN_DRAGON:
-            case MONS_SHADOW_DRAGON:
-            case MONS_SWAMP_DRAGON:
-            case MONS_SWAMP_DRAKE:
-            case MONS_DEATH_DRAKE:
-            case MONS_HELL_HOG:
-            case MONS_SERPENT_OF_HELL:
-            case MONS_QUICKSILVER_DRAGON:
-            case MONS_IRON_DRAGON:
-                if (!simple_monster_message(monster, " breathes.", spl))
-                {
-                    if (!silenced(monster->pos())
-                        && !silenced(you.pos()))
-                    {
-                        mpr("You hear a roar.", MSGCH_SOUND);
-                    }
-                }
-                break;
-
-            case MONS_VAPOUR:
-                monster->add_ench(ENCH_SUBMERGED);
-                break;
-
-            case MONS_BRAIN_WORM:
-            case MONS_ELECTRIC_GOLEM:
-            case MONS_ICE_STATUE:
-                // These don't show any signs that they're casting a spell.
-                break;
-
-            case MONS_GREAT_ORB_OF_EYES:
-            case MONS_SHINING_EYE:
-            case MONS_EYE_OF_DEVASTATION:
-                simple_monster_message(monster, " gazes.", spl);
-                break;
-
-            case MONS_GIANT_ORANGE_BRAIN:
-                simple_monster_message(monster, " pulsates.", spl);
-                break;
-
-            case MONS_NAGA:
-            case MONS_NAGA_WARRIOR:
-                simple_monster_message(monster, " spits poison.", spl);
-                break;
-
-            case MONS_ORB_OF_FIRE:
-                simple_monster_message(monster, _orb_of_fire_glow(), spl);
-                break;
             }
         }
-    }
-    else
-    {
-        // Handle far-away monsters.
-        if (monster->type == MONS_GERYON
-            && !silenced(you.pos()))
-        {
-            mpr("You hear a weird and mournful sound.", MSGCH_SOUND);
-        }
+        else if (monster->type == -1)
+            monster->hit_points = -1;
     }
 
-    return (true);
+    return (false);
 }
 
 //---------------------------------------------------------------
@@ -5796,6 +5653,16 @@ static bool _handle_spell(monsters *monster, bolt &beem)
         || mons_is_submerged(monster)
         || !mons_class_flag(monster->type, M_SPELLCASTER)
            && draco_breath == SPELL_NO_SPELL)
+    {
+        return (false);
+    }
+
+    // Geryon can't summon beasts if he's silenced since he uses a horn,
+    // and we have to check for him explicitly since he's neither a priest
+    // nor a wizard.
+    if (silenced(monster->pos())
+        && (monster->type == MONS_GERYON
+            || mons_class_flag(monster->type, M_PRIEST | M_ACTUAL_SPELLS)))
     {
         return (false);
     }
@@ -6074,11 +5941,9 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             return (false);
         }
 
-        if (!_mons_announce_cast(monster, monsterNearby,
-                                 spell_cast, draco_breath))
-        {
-            return (false);
-        }
+        const bool did_noise = 
+            _mons_announce_cast(monster, monsterNearby,
+                                 spell_cast, draco_breath);
 
         // FINALLY! determine primary spell effects {dlb}:
         if (spell_cast == SPELL_BLINK)
@@ -6086,6 +5951,9 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             // Why only cast blink if nearby? {dlb}
             if (monsterNearby)
             {
+                if (!did_noise)
+                    mons_cast_noise(monster, beem, spell_cast);
+
                 simple_monster_message(monster, " blinks!");
                 monster_blink(monster);
 
@@ -6099,7 +5967,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             if (spell_needs_foe(spell_cast))
                 _make_mons_stop_fleeing(monster);
 
-            mons_cast(monster, beem, spell_cast);
+            mons_cast(monster, beem, spell_cast, !did_noise);
             mmov.reset();
             monster->lose_energy(EUT_SPELL);
         }

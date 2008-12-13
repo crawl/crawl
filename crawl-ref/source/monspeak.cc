@@ -482,10 +482,17 @@ bool mons_speaks(const monsters *monster)
         return (false);
     }
 
-    // We have a speech string, now parse and act on it.
-    msg = do_mon_str_replacements(msg, monster);
+    mons_speaks_msg(monster, msg, MSGCH_TALK, silence);
+    return (true);
+}                               // end mons_speaks = end of routine
 
-    std::vector<std::string> lines = split_string("\n", msg);
+void mons_speaks_msg(const monsters *monster, const std::string &msg,
+                     const msg_channel_type def_chan, const bool silence)
+{
+    // We have a speech string, now parse and act on it.
+    std::string _msg = do_mon_str_replacements(msg, monster);
+
+    std::vector<std::string> lines = split_string("\n", _msg);
 
     for (int i = 0, size = lines.size(); i < size; i++)
     {
@@ -498,7 +505,7 @@ bool mons_speaks(const monsters *monster)
         // function as spells and danger warning... everything else
         // just goes into the talk channel -- bwr
         // [jpeg] Added MSGCH_TALK_VISUAL for silent "chatter"
-        msg_channel_type msg_type = MSGCH_TALK;
+        msg_channel_type msg_type = def_chan;
 
         std::string param = "";
         std::string::size_type pos = line.find(":");
@@ -556,6 +563,4 @@ bool mons_speaks(const monsters *monster)
 
         mpr(line.c_str(), msg_type);
     }
-
-    return (true);
-}                               // end mons_speaks = end of routine
+}

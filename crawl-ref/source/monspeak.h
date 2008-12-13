@@ -11,5 +11,8 @@
 #include "externs.h"
 
 bool mons_speaks(const monsters *monster);
+void mons_speaks_msg(const monsters *monster, const std::string &msg,
+                     const msg_channel_type def_chan = MSGCH_TALK,
+                     const bool silence = false);
 
 #endif

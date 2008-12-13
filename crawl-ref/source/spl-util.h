@@ -37,30 +37,6 @@ enum spschool_flag_type
 struct bolt;
 struct dist;
 
-struct spell_desc
-{
-    int id;
-    const char  *title;
-    unsigned int disciplines; // bitfield
-    unsigned int flags;       // bitfield
-    unsigned int level;
-    int power_cap;
-
-    // At power 0, you get min_range. At power power_cap, you get max_range.
-    int min_range;
-    int max_range;
-
-    const char  *target_prompt;
-
-
-    // If a monster is casting this, does it need a tracer?
-    bool         ms_needs_tracer;
-
-    // The spell can be used no matter what the monster's foe is.
-    bool         ms_utility;
-};
-
-
 bool is_valid_spell(spell_type spell);
 void init_spell_descs(void);
 void init_spell_name_cache();
@@ -79,6 +55,8 @@ int spell_mana(spell_type which_spell);
 int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
 int spell_range(spell_type spell, int pow, bool real_cast);
+int spell_noise(spell_type spell);
+int spell_noise(unsigned int disciplines, int level);
 
 const char *get_spell_target_prompt( spell_type which_spell );
 

@@ -1067,6 +1067,14 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     if (powc == 0)
         powc = calc_spell_power( spell, true );
 
+    const god_type god =
+        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
+                                      : GOD_NO_GOD;
+
+    // Make some noise if it's actually the player casting.
+    if (god == GOD_NO_GOD)
+        noisy( spell_noise(spell), you.pos() );
+
     if (allow_fail)
     {
         int spfl = random2avg(100, 3);
@@ -1135,10 +1143,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Spell #%d, power=%d", spell, powc);
 #endif
-
-    const god_type god =
-        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
-                                      : GOD_NO_GOD;
 
     switch (spell)
     {

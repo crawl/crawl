@@ -18,7 +18,9 @@ struct bolt;
 
 bolt mons_spells(monsters *mons, spell_type spell_cast, int power);
 void setup_dragon(monsters *monster, bolt &pbolt);
-void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast);
+void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
+               bool do_noise = true);
+void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast);
 void setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast);
 bool mons_throw(monsters *monster, bolt &pbolt, int hand_used);
 bool mons_thrown_object_destroyed( item_def *item, const coord_def& where,

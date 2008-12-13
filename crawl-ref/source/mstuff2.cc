@@ -17,6 +17,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "database.h"
 #include "debug.h"
 #include "effects.h"
 #include "item_use.h"
@@ -26,6 +27,7 @@
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"
+#include "monspeak.h"
 #include "monstuff.h"
 #include "mon-util.h"
 #include "player.h"
@@ -117,7 +119,8 @@ static bool _los_free_spell(spell_type spell_cast)
         || spell_cast == SPELL_AIRSTRIKE;
 }
 
-void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
+void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
+               bool do_noise)
 {
     // Always do setup.  It might be done already, but it doesn't
     // hurt to do it again (cheap).
@@ -140,13 +143,22 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (monster->foe == MHITYOU || monster->foe == MHITNOT)
         {
             if (monsterNearby)
+            {
+                if (do_noise)
+                    mons_cast_noise(monster, pbolt, spell_cast);
                 direct_effect(monster, spell_cast, pbolt, &you);
+            }
             return;
         }
 
+        if (do_noise)
+            mons_cast_noise(monster, pbolt, spell_cast);
         direct_effect(monster, spell_cast, pbolt, monster->get_foe());
         return;
     }
+
+    if (do_noise)
+        mons_cast_noise(monster, pbolt, spell_cast);
 
     switch (spell_cast)
     {
@@ -360,8 +372,6 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
         if (!monsterNearby || mons_friendly(monster))
             return;
 
-        simple_monster_message(monster, " calls on the powers of Hell!");
-
         torment(monster_index(monster), monster->pos());
         return;
 
@@ -489,6 +499,134 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast)
     }
     else
         fire_beam(pbolt);
+}
+
+void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
+{
+    const bool unseen = !you.can_see(monster);
+    const bool silent = silenced(monster->pos());
+
+    if (unseen && silent)
+        return;
+
+    const bool priest = mons_class_flag(monster->type, M_PRIEST);
+    const bool wizard = mons_class_flag(monster->type, M_ACTUAL_SPELLS);
+    const bool innate = !(priest || wizard);
+
+    int noise;
+    if(silent || innate)
+        noise = 0;
+    else
+        noise = spell_noise(spell_cast);
+
+    const std::string cast_str = " cast";
+    std::string suffix;
+    if (silent)
+        suffix = " silent";
+    else if (unseen)
+        suffix = " unseen";
+
+    std::string key;
+
+    // First try the individual spell.
+    key             = spell_title(spell_cast) + cast_str;
+    std::string msg = getSpeakString(key + suffix);
+
+    if (msg.empty() && silent)
+        msg = getSpeakString(key);
+
+    // Second, try the individual monster.
+    if (msg.empty())
+    {
+        key  = mons_type_name(monster->type, DESC_PLAIN);
+        key += cast_str;
+        msg  = getSpeakString(key + suffix);
+
+        if (msg.empty() && silent)
+            msg = getSpeakString(key);
+    }
+
+    // Third, try generic priest or wizard messages.
+    if (msg.empty() && !innate)
+    {
+        if (priest)
+            key = "priest";
+        else
+            key = "wizard";
+
+        key += cast_str;
+        msg  = getSpeakString(key + suffix);
+
+        if (msg.empty() && silent)
+            msg = getSpeakString(key);
+    }
+
+    // Fourth, try the monster's species.
+    if (msg.empty())
+    {
+        key  = mons_type_name(mons_species(monster->type), DESC_PLAIN);
+        key += cast_str;
+        msg  = getSpeakString(key + suffix);
+
+        if (msg.empty() && silent)
+            msg = getSpeakString(key);
+    }
+
+    // Fifth, try the monster's genus.
+    if (msg.empty())
+    {
+        key  = mons_type_name(mons_genus(monster->type), DESC_PLAIN);
+        key += cast_str;
+        msg  = getSpeakString(key + suffix);
+
+        if (msg.empty() && silent)
+            msg = getSpeakString(key);
+    }
+
+    // Lastly, maybe it's a demon.
+    if (msg.empty() && mons_is_demon(monster->type))
+    {
+        key  = "demon";
+        key += cast_str;
+        msg  = getSpeakString(key + suffix);
+
+        if (msg.empty() && silent)
+            msg = getSpeakString(key);
+    }
+
+    if (msg.empty())
+    {
+        if (silent)
+            return;
+
+        noisy(noise, monster->pos());
+        return;
+    }
+
+    const msg_channel_type chan =
+        (unseen                 ? MSGCH_SOUND :
+         mons_friendly(monster) ? MSGCH_FRIEND_SPELL :
+                                  MSGCH_MONSTER_SPELL);
+
+    if (silent)
+    {
+        mons_speaks_msg(monster, msg, chan, true);
+        return;
+    }
+
+    if (msg.find(" roar") != std::string::npos)
+        noise = get_shout_noise_level(S_ROAR);
+    else if (msg.find(" breathes") != std::string::npos)
+    {
+        shout_type type = mons_shouts(monster->type);
+        if(type == S_SILENT)
+            type = S_ROAR;
+        noise = get_shout_noise_level(type);
+    }
+
+    // noisy() returns true if the player heard the noise.
+    if (noisy(noise, monster->pos()) || !unseen)
+        mons_speaks_msg(monster, msg, chan);
 }
 
 // Set up bolt structure for monster spell casting.

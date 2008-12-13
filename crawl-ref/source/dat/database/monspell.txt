@@ -1,0 +1,103 @@
+#####################################################
+# Individual spells.
+#####################################################
+%%%%
+Poison Splash cast
+
+@The_monster@ spits poison.
+%%%%
+Poison Splash cast unseen
+
+You hear a spitting sound.
+%%%%
+Symbol of Torment cast
+
+@The_monster@ calls on the powers of Hell!
+%%%%
+Symbol of Torment cast unseen
+
+@The_something@ calls on the powers of Hell!
+#####################################################
+# Priest and wizard casting messages.
+#####################################################
+%%%%
+priest cast
+
+@The_monster@ prays.
+
+@The_monster@ mumbles some strange prayers.
+
+@The_monster@ utters an invocation.
+%%%%
+priest cast unseen
+
+You hear some strange, mumbled prayers.
+%%%%
+wizard cast
+
+@The_monster@ gestures wildly.
+
+@The_monster@ mumbles some strange words.
+
+@The_monster@ casts a spell.
+%%%%
+wizard cast unseen
+
+You hear some strange, mumbled words.
+########################################################################
+# Monster genus and species messages.
+########################################################################
+%%%%
+demon cast
+
+@The_monster@ gestures.
+%%%%
+dragon cast
+
+@The_monster@ breaths.
+%%%%
+dragon cast unseen
+
+You hear a roar.
+%%%%
+curse skull cast
+
+@The_monster@ rattles @possessive@ jaw.
+
+@The_monster@ casts a spell.
+%%%%
+curse skull cast unseen
+
+You hear the clattering of teeth.
+%%%%
+giant eyeball cast
+
+@The_monster@ gazes.
+########################################################################
+# Individual monsters
+########################################################################
+%%%%
+Geryon cast
+
+@The_monster@ winds a great silver horn.
+%%%%
+Geryon cast unseen
+
+You hear a weird and mournful sound.
+%%%%
+giant orange brain cast
+
+@The_monster@ pulsates.
+%%%%
+orb of fire cast
+
+@The_monster@ glows yellow.
+
+@The_monster@ glows bright magenta.
+
+@The_monster@ glows deep purple.
+
+@The_monster@ glows red.
+
+@The_monster@ emits a lurid red light.
+%%%%
