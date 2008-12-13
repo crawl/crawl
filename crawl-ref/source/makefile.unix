@@ -90,7 +90,7 @@ LIB = -l$(LIBCURS) -L$(LUASRC) -l$(LUALIB) $(LIBDBM)
 
 INCLUDES := $(INCLUDES) -Iutil -I. -I$(LUASRC) $(EXTRA_INCLUDES)
 
-CFWARN := -Wall -Wwrite-strings -Wshadow -pedantic
+CFWARN := -Wall -Wno-parentheses -Wwrite-strings -Wshadow -pedantic
 
 CFOTHERS := -fsigned-char -D$(OS_TYPE) $(EXTRA_FLAGS) -DCLUA_BINDINGS
 

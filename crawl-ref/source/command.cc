@@ -1387,7 +1387,7 @@ static bool _do_description(std::string key, std::string footer = "")
             if (thing_created != NON_ITEM)
             {
                 char name[80];
-                snprintf(name, 80, key.c_str());
+                strncpy(name, key.c_str(), sizeof(name));
                 if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
                 {
                     append_weapon_stats(desc, mitm[thing_created]);
