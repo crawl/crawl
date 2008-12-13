@@ -5312,7 +5312,7 @@ int monsters::shield_bonus() const
         if (incapacitated())
             return (0);
 
-        int shld_c = property(*shld, PARM_AC);
+        int shld_c = property(*shld, PARM_AC) + shld->plus;
         return (random2avg(shld_c + hit_dice * 2 / 3, 2));
     }
     return (-100);

@@ -2550,19 +2550,7 @@ int player_shield_class(void)   //jmf: changes for new spell
     else
     {
         const item_def& item = you.inv[shield];
-
-        switch (item.sub_type)
-        {
-        case ARM_BUCKLER:
-            base_shield = 3;   // +3/20 per skill level    max 7
-            break;
-        case ARM_SHIELD:
-            base_shield = 5;   // +5/20 per skill level    max 11
-            break;
-        case ARM_LARGE_SHIELD:
-            base_shield = 7;   // +7/20 per skill level    max 16
-            break;
-        }
+        base_shield = property(item, PARM_AC);
 
         int racial_bonus = _player_armour_racial_bonus(item) * 2 / 3;
 
