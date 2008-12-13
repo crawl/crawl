@@ -54,7 +54,7 @@ demon cast
 %%%%
 dragon cast
 
-@The_monster@ breaths.
+@The_monster@ breathes.
 %%%%
 dragon cast unseen
 
