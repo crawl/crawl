@@ -3014,7 +3014,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         else
             _dock_piety(-piety_change, penance);
 
-#define DEBUG_DIAGNOSTICS 1
 #if DEBUG_DIAGNOSTICS
         if (retval)
         {
