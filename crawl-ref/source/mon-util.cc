@@ -2105,7 +2105,34 @@ std::string mons_type_name(int type, description_level_type desc )
         }
     }
 
-    result += get_monster_data(type)->name;
+    switch(type)
+    {
+    case RANDOM_MONSTER:
+        result += "random monster";
+        return (result);
+    case RANDOM_DRACONIAN:
+        result += "random draconian";
+        return (result);
+    case RANDOM_BASE_DRACONIAN:
+        result += "random base draconian";
+        return (result);
+    case RANDOM_NONBASE_DRACONIAN:
+        result += "random nonbase draconian";
+        return (result);
+    case WANDERING_MONSTER:
+        result += "wandering monster";
+        return (result);
+    }
+
+    const monsterentry *me = get_monster_data(type);
+    ASSERT(me != NULL);
+    if (me == NULL)
+    {
+        result += make_stringf("invalid type %d", type);
+        return (result);
+    }
+
+    result += me->name;
 
     // Vowel fix: Change 'a orc' to 'an orc'.
     if (result.length() >= 3

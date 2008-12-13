@@ -1726,7 +1726,10 @@ static void tag_construct_level(writer &th)
     marshallCoord(th, env.sanctuary_pos);
     marshallByte(th, env.sanctuary_time);
 
+    marshallLong(th, env.spawn_random_rate);
+
     env.markers.write(th);
+    env.properties.write(th);
 }
 
 void marshallItem(writer &th, const item_def &item)
@@ -2003,6 +2006,7 @@ void tag_construct_level_tiles(writer &th)
 
 static void tag_read_level( reader &th, char minorVersion )
 {
+
     env.floor_colour = unmarshallByte(th);
     env.rock_colour  = unmarshallByte(th);
 
@@ -2070,7 +2074,12 @@ static void tag_read_level( reader &th, char minorVersion )
     unmarshallCoord(th, env.sanctuary_pos);
     env.sanctuary_time = unmarshallByte(th);
 
+    env.spawn_random_rate = unmarshallLong(th);
+
     env.markers.read(th, minorVersion);
+
+    env.properties.clear();
+    env.properties.read(th);
 }
 
 static void tag_read_level_items(reader &th, char minorVersion)

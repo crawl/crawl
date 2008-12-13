@@ -340,6 +340,18 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
 
 void spawn_random_monsters();
 
+/* ***********************************************************************
+ * called from: luadgn
+ * *********************************************************************** */
+void set_vault_mon_list(const std::vector<mons_spec> &list);
+
+void get_vault_mon_list(std::vector<mons_spec> &list);
+
+/* ***********************************************************************
+ * called from: files
+ * *********************************************************************** */
+void setup_vault_mon_list();
+
 class monster_pathfind
 {
 public:

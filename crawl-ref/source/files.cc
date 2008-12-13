@@ -9,6 +9,7 @@
 #include "AppHdr.h"
 #include "delay.h"
 #include "files.h"
+#include "monplace.h"
 #include "version.h"
 
 #include <string.h>
@@ -1291,6 +1292,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         _save_level( you.your_level, you.level_type, you.where_are_you );
 
     setup_environment_effects();
+
+    setup_vault_mon_list();
 
     // Inform user of level's annotation.
     if (load_mode != LOAD_VISITOR

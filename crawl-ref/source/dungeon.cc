@@ -883,6 +883,9 @@ static void _reset_level()
     dgn_check_connectivity = false;
     dgn_zones        = 0;
 
+    // Forget level properties.
+    env.properties.clear();
+
     // Blank level with DNGN_ROCK_WALL.
     grd.init(DNGN_ROCK_WALL);
     env.grid_colours.init(BLACK);
@@ -923,6 +926,26 @@ static void _reset_level()
     }
     else
         env.level_flags = 0;
+
+    // Set default random monster generation rate (smaller is more often,
+    // except that 0 == no random monsters).
+    if (you.level_type == LEVEL_DUNGEON)
+    {
+        if (you.where_are_you == BRANCH_ECUMENICAL_TEMPLE)
+            env.spawn_random_rate = 0;
+        else
+            env.spawn_random_rate = 240;
+    }
+    else if (you.level_type == LEVEL_ABYSS
+             || you.level_type == LEVEL_PANDEMONIUM)
+    {
+        // Abyss spawn rate is set for those characters that start out in the
+        // Abyss; otherwise the number is ignored in the Abyss.
+        env.spawn_random_rate = 50;
+    }
+    else
+        // No random monsters in Labyrinths and portal vaualts.
+        env.spawn_random_rate = 0;
 
     env.floor_colour = BLACK;
     env.rock_colour  = BLACK;

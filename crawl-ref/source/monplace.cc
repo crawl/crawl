@@ -29,6 +29,14 @@
 #include "traps.h"
 #include "view.h"
 
+static std::vector<int> vault_mon_types;
+static std::vector<int> vault_mon_bases;
+static std::vector<int> vault_mon_weights;
+
+#define VAULT_MON_TYPES_KEY   "vault_mon_types"
+#define VAULT_MON_BASES_KEY   "vault_mon_bases"
+#define VAULT_MON_WEIGHTS_KEY "vault_mon_weights"
+
 // NEW place_monster -- note that power should be set to:
 // 51 for abyss
 // 52 for pandemonium
@@ -40,6 +48,14 @@
 // 2 attempts to avoid player LOS
 
 #define BIG_BAND        20
+
+static monster_type _resolve_monster_type(monster_type mon_type,
+                                          proximity_type proximity,
+                                          monster_type &base_type,
+                                          coord_def &pos,
+                                          unsigned mmask,
+                                          dungeon_char_type *stair_type,
+                                          int *lev_mons);
 
 static void _define_zombie( int mid, monster_type ztype,
                             monster_type cs, int power, coord_def pos );
@@ -219,10 +235,19 @@ void spawn_random_monsters()
         return;
     }
 
+    if (env.spawn_random_rate == 0)
+    {
+#ifdef DEBUG_MON_CREATION
+        mpr("random monster gen turned off", MSGCH_DIAGNOSTICS);
+#endif
+        return;
+    }
+
+    const int rate = (you.char_direction == GDT_DESCENDING) ?
+                     env.spawn_random_rate : 8;
+
     // Place normal dungeon monsters,  but not in player LOS.
-    if (you.level_type == LEVEL_DUNGEON
-        && !player_in_branch( BRANCH_ECUMENICAL_TEMPLE )
-        && x_chance_in_y(5, (you.char_direction == GDT_DESCENDING) ? 240 : 8))
+    if (you.level_type == LEVEL_DUNGEON && x_chance_in_y(5, rate))
     {
 #ifdef DEBUG_MON_CREATION
         mpr("Create wandering monster...", MSGCH_DIAGNOSTICS);
@@ -245,7 +270,8 @@ void spawn_random_monsters()
     // look a bit strange for a place as chaotic as the Abyss. Then again,
     // the player is unlikely to meet all of them and notice this.)
     if (you.level_type == LEVEL_ABYSS
-        && (you.char_direction != GDT_GAME_START || one_chance_in(10)))
+        && (you.char_direction != GDT_GAME_START
+            || x_chance_in_y(5, rate)))
     {
         mons_place(mgen_data(WANDERING_MONSTER));
         viewwindow(true, false);
@@ -253,28 +279,58 @@ void spawn_random_monsters()
     }
 
     // Place Pandemonium monsters.
-    if (you.level_type == LEVEL_PANDEMONIUM && one_chance_in(10))
+    if (you.level_type == LEVEL_PANDEMONIUM && x_chance_in_y(5, rate))
     {
         pandemonium_mons();
         viewwindow(true, false);
+        return;
     }
 
-    // No monsters in the Labyrinth, or the Ecumenical Temple, or in Bazaars.
+    // A portal vault *might* decide to turn on random monster spawning,
+    // but it's off by default.
+    if (you.level_type == LEVEL_PORTAL_VAULT && x_chance_in_y(5, rate))
+    {
+        mons_place(mgen_data(WANDERING_MONSTER));
+        viewwindow(true, false);
+    }
+
+    // No random monsters in the Labyrinth.
 }
 
 monster_type pick_random_monster(const level_id &place)
 {
-    int level = place.absdepth();
+    int level;
+    if (place.level_type == LEVEL_PORTAL_VAULT)
+        level = you.your_level;
+    else
+        level = place.absdepth();
     return pick_random_monster(place, level, level);
 }
 
 monster_type pick_random_monster(const level_id &place, int power,
                                  int &lev_mons)
 {
-    if (place.level_type == LEVEL_LABYRINTH
-        || place.level_type == LEVEL_PORTAL_VAULT)
-    {
+    if (place.level_type == LEVEL_LABYRINTH)
         return (MONS_PROGRAM_BUG);
+
+    if (place == BRANCH_ECUMENICAL_TEMPLE)
+        return (MONS_PROGRAM_BUG);
+
+    if (place.level_type == LEVEL_PORTAL_VAULT)
+    {
+        monster_type      base_type = (monster_type) 0;
+        coord_def         dummy1;
+        dungeon_char_type dummy2;
+        monster_type type =
+            _resolve_monster_type(RANDOM_MONSTER, PROX_ANYWHERE, base_type,
+                                  dummy1, 0, &dummy2, &lev_mons);
+
+#if DEBUG || DEBUG_DIAGNOSTICS
+        if (base_type != 0 && base_type != MONS_PROGRAM_BUG)
+            mpr("Random portal vault mon discarding base type.",
+                MSGCH_ERROR);
+#endif
+        return (type);
     }
 
     monster_type mon_type = MONS_PROGRAM_BUG;
@@ -395,7 +451,7 @@ bool drac_colour_incompatible(int drac, int colour)
 
 static monster_type _resolve_monster_type(monster_type mon_type,
                                           proximity_type proximity,
-                                          monster_type base_type,
+                                          monster_type &base_type,
                                           coord_def &pos,
                                           unsigned mmask,
                                           dungeon_char_type *stair_type,
@@ -495,6 +551,44 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             mon_type = MONS_DANCING_WEAPON;
         else
         {
+            if (you.level_type == LEVEL_PORTAL_VAULT)
+            {
+                if (vault_mon_types.size() == 0)
+                    return (MONS_PROGRAM_BUG);
+
+                int i = choose_random_weighted(vault_mon_weights.begin(),
+                                               vault_mon_weights.end());
+                int type = vault_mon_types[i];
+                int base = vault_mon_bases[i];
+
+                if (type == -1)
+                {
+                    place = level_id::from_packed_place(base);
+                    // If lev_mons is set to you.your_level, it was probably
+                    // set as a default meaning "the current dungeon depth",
+                    // which for a portal vault using it's own definition
+                    // of random monsters means "the depth of whatever place
+                    // we're using for picking the random monster".
+                    if (*lev_mons == you.your_level)
+                        *lev_mons = place.absdepth();
+                    // pick_random_monster() is called below
+                }
+                else
+                {
+                    base_type = (monster_type) base;
+                    mon_type  = (monster_type) type;
+                    if (mon_type == RANDOM_DRACONIAN
+                        || mon_type == RANDOM_BASE_DRACONIAN
+                        || mon_type == RANDOM_NONBASE_DRACONIAN)
+                    {
+                        mon_type =
+                            _resolve_monster_type(mon_type, proximity,
+                                                  base_type, pos, mmask,
+                                                  stair_type, lev_mons);
+                    }
+                    return (mon_type);
+                }
+            }
             // Now pick a monster of the given branch and level.
             mon_type = pick_random_monster(place, *lev_mons, *lev_mons);
         }
@@ -2835,4 +2929,135 @@ void monster_pathfind::update_pos(coord_def npos, int total)
     }
 
     add_new_pos(npos, total);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Random monsters for portal vaults.
+//
+/////////////////////////////////////////////////////////////////////////////
+
+void set_vault_mon_list(const std::vector<mons_spec> &list)
+{
+    CrawlHashTable &props = env.properties;
+
+    props.erase(VAULT_MON_TYPES_KEY);
+    props.erase(VAULT_MON_BASES_KEY);
+    props.erase(VAULT_MON_WEIGHTS_KEY);
+
+    unsigned int size = list.size();
+    if (size == 0)
+    {
+        setup_vault_mon_list();
+        return;
+    }
+
+    props[VAULT_MON_TYPES_KEY].new_vector(SV_LONG).resize(size);
+    props[VAULT_MON_BASES_KEY].new_vector(SV_LONG).resize(size);
+    props[VAULT_MON_WEIGHTS_KEY].new_vector(SV_LONG).resize(size);
+
+    CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY];
+    CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY];
+    CrawlVector &weight_vec = props[VAULT_MON_WEIGHTS_KEY];
+
+    for (unsigned int i = 0; i < size; i++)
+    {
+        const mons_spec &spec = list[i];
+
+        if (spec.place.is_valid())
+        {
+            ASSERT(spec.place.level_type != LEVEL_LABYRINTH
+                   && spec.place.level_type != LEVEL_PORTAL_VAULT);
+            type_vec[i] = (long) -1;
+            base_vec[i] = (long) spec.place.packed_place();
+        }
+        else
+        {
+            ASSERT(spec.mid != RANDOM_MONSTER
+                   && spec.monbase != RANDOM_MONSTER);
+            type_vec[i] = (long) spec.mid;
+            base_vec[i] = (long) spec.monbase;
+        }
+        weight_vec[i] = (long) spec.genweight;
+    }
+
+    setup_vault_mon_list();
+}
+
+void get_vault_mon_list(std::vector<mons_spec> &list)
+{
+    list.clear();
+
+    CrawlHashTable &props = env.properties;
+
+    if (!props.exists(VAULT_MON_TYPES_KEY))
+        return;
+
+    ASSERT(props.exists(VAULT_MON_BASES_KEY));
+    ASSERT(props.exists(VAULT_MON_WEIGHTS_KEY));
+
+    CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY];
+    CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY];
+    CrawlVector &weight_vec = props[VAULT_MON_WEIGHTS_KEY];
+
+    ASSERT(type_vec.size() == base_vec.size());
+    ASSERT(type_vec.size() == weight_vec.size());
+
+    unsigned int size = type_vec.size();
+    for (unsigned int i = 0; i < size; i++)
+    {
+        int type = (long) type_vec[i];
+        int base = (long) base_vec[i];
+
+        mons_spec spec;
+
+        if (type == -1)
+        {
+            spec.place = level_id::from_packed_place(base);
+            ASSERT(spec.place.is_valid());
+            ASSERT(spec.place.level_type != LEVEL_LABYRINTH
+                   && spec.place.level_type != LEVEL_PORTAL_VAULT);
+        }
+        else
+        {
+            spec.mid     = type;
+            spec.monbase = (monster_type) base;
+            ASSERT(spec.mid != RANDOM_MONSTER
+                   && spec.monbase != RANDOM_MONSTER);
+        }
+        spec.genweight = (long) weight_vec[i];
+
+        list.push_back(spec);
+    }
+}
+
+void setup_vault_mon_list()
+{
+    vault_mon_types.clear();
+    vault_mon_bases.clear();
+    vault_mon_weights.clear();
+
+    std::vector<mons_spec> list;
+    get_vault_mon_list(list);
+
+    unsigned int size = list.size();
+
+    vault_mon_types.resize(size);
+    vault_mon_bases.resize(size);
+    vault_mon_weights.resize(size);
+
+    for (unsigned int i = 0; i < size; i++)
+    {
+        if (list[i].place.is_valid())
+        {
+            vault_mon_types[i] = -1;
+            vault_mon_bases[i] = list[i].place.packed_place();
+        }
+        else
+        {
+            vault_mon_types[i] = list[i].mid;
+            vault_mon_bases[i] = list[i].monbase;
+        }
+        vault_mon_weights[i] = list[i].genweight;
+    }
 }

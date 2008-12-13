@@ -491,6 +491,7 @@ public:
     }
 
     static level_id parse_level_id(const std::string &s) throw (std::string);
+    static level_id from_packed_place(const unsigned short place);
 
     unsigned short packed_place() const;
     std::string describe(bool long_name = false, bool with_number = true) const;
@@ -1685,7 +1686,16 @@ public:
     FixedVector< monster_type, 20 >          mons_alloc;
     map_markers                              markers;
 
-    double                   elapsed_time; // used during level load
+    // Place to associate arbitrary data with a particular level.
+    // Sort of like player::atribute
+    CrawlHashTable properties;
+
+    // Rate at which random monsters spawn, with lower numbers making
+    // them spawn more often (5 or less causes one to spawn about every
+    // 5 turns).  Set to 0 to stop random generation.
+    int spawn_random_rate;
+
+    double elapsed_time; // used during level load
 
     // Number of turns the player has spent on this level.
     int turns_on_level;

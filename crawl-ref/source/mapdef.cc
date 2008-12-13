@@ -1990,6 +1990,19 @@ mons_spec mons_list::get_monster(int index)
     return (pick_monster( mons[index] ));
 }
 
+mons_spec mons_list::get_monster(int slot_index, int list_index) const
+{
+    if (slot_index < 0 || slot_index >= (int) mons.size())
+        return mons_spec(RANDOM_MONSTER);
+
+    const mons_spec_list &list = mons[slot_index].mlist;
+
+    if (list_index < 0 || list_index >= (int) list.size())
+        return mons_spec(RANDOM_MONSTER);
+
+    return list[list_index];
+}
+
 void mons_list::clear()
 {
     mons.clear();

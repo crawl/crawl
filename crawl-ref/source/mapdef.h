@@ -447,12 +447,14 @@ public:
     void clear();
 
     mons_spec get_monster(int index);
+    mons_spec get_monster(int slot_index, int list_index) const;
 
     // Returns an error string if the monster is unrecognised.
     std::string add_mons(const std::string &s, bool fix_slot = false);
     std::string set_mons(int slot, const std::string &s);
 
-    size_t size() const { return mons.size(); }
+    size_t size()              const { return mons.size(); }
+    size_t slot_size(int slot) const { return mons[slot].mlist.size(); }
 
 private:
     typedef std::vector<mons_spec> mons_spec_list;

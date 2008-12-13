@@ -3118,6 +3118,17 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
     return level_id(br, dep);
 }
 
+level_id level_id::from_packed_place(const unsigned short place)
+{
+    level_id id;
+
+    id.branch     = (branch_type) place_branch(place);
+    id.depth      = place_depth(place);
+    id.level_type = (level_area_type) place_type(place);
+
+    return (id);
+}
+
 // NOTE: see also marshall_level_id
 void level_id::save(writer& outf) const
 {

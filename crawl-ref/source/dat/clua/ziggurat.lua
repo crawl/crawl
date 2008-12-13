@@ -230,7 +230,7 @@ local function monster_creator_fn(arg)
       end
       return mcreator(x, y)
     end
-    return { fn = mspec }
+    return { fn = mspec, spec = arg }
   elseif atyp == "table" then
     if not arg.cond or arg.cond() then
       return util.cathash(monster_creator_fn(arg.spec), arg)
@@ -273,6 +273,9 @@ mset_if(depth_lt(6), "place:Pan")
 
 local drac_creator = dgn.monster_fn("random draconian")
 local function mons_drac_gen(x, y, nth)
+  if nth == 1 then
+    dgn.set_random_mon_list("random draconian")
+  end
   set_random_floor_colour()
   return drac_creator(x, y)
 end
@@ -283,6 +286,7 @@ local pan_critter_fn = dgn.monster_fn("place:Pan")
 local function mons_panlord_gen(x, y, nth)
   set_random_floor_colour()
   if nth == 1 then
+    dgn.set_random_mon_list("place:Pan")
     return pan_lord_fn(x, y)
   else
     return pan_critter_fn(x, y)
@@ -590,6 +594,10 @@ end
 
 local function ziggurat_furnish(centre, entry, exit)
   local monster_generation = choose_monster_set()
+
+  if type(monster_generation.spec) == "string" then
+    dgn.set_random_mon_list(monster_generation.spec)
+  end
 
   -- If we're going to spawn jellies, do our loot protection thing.
   if monster_generation.jelly_protect then

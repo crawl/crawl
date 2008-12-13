@@ -28,6 +28,7 @@
 #include "maps.h"
 #include "misc.h"
 #include "mon-util.h"
+#include "monplace.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -599,6 +600,108 @@ static int dgn_change_branch_flags(lua_State *ls)
     lua_pushboolean(ls, changed1 || changed2);
 
     return (1);
+}
+
+static int dgn_set_random_mon_list(lua_State *ls)
+{
+    if (you.level_type != LEVEL_PORTAL_VAULT)
+    {
+        luaL_error(ls, "Can only be used in portal vaults.");
+        return (0);
+    }
+
+    mons_list mlist = _lua_get_mlist(ls, 1);
+
+    if (mlist.size() == 0)
+        return (0);
+
+    if (mlist.size() > 1)
+    {
+        luaL_argerror(ls, 1, "Mon list must contain only one slot.");
+        return (0);
+    }
+
+    const int num_mons = mlist.slot_size(0);
+
+    if (num_mons == 0)
+    {
+        luaL_argerror(ls, 1, "Mon list is empty.");
+        return (0);
+    }
+
+    std::vector<mons_spec> mons;
+    int num_lords = 0;
+    for (int i = 0; i < num_mons; i++)
+    {
+        mons_spec mon = mlist.get_monster(0, i);
+
+        // Pandemonium lords are pseudo-unique, so don't randomly generate
+        // them.
+        if (mon.mid == MONS_PANDEMONIUM_DEMON)
+        {
+            num_lords++;
+            continue;
+        }
+
+        std::string name;
+        if (mon.place.is_valid())
+        {
+            if (mon.place.level_type == LEVEL_LABYRINTH
+                || mon.place.level_type == LEVEL_PORTAL_VAULT)
+            {
+                std::string err;
+                err = make_stringf("mon #%d: Can't use Lab or Portal as a "
+                                   "monster place.", i + 1);
+                luaL_argerror(ls, 1, err.c_str());
+                return(0);
+            }
+            name = mon.place.describe();
+        }
+        else
+        {
+            if (mon.mid == RANDOM_MONSTER || mon.monbase == RANDOM_MONSTER)
+            {
+                std::string err;
+                err = make_stringf("mon #%d: can't use random monster in "
+                                   "list specifying random monsters", i + 1);
+                luaL_argerror(ls, 1, err.c_str());
+                return(0);
+            }
+            name = mons_type_name(mon.mid, DESC_PLAIN);
+        }
+
+        mons.push_back(mon);
+
+        if (mon.number != 0)
+            mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : number for %s "
+                              "being discarded.",
+                 name.c_str());
+
+        if (mon.band)
+            mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : band request for "
+                              "%s being ignored.",
+                 name.c_str());
+
+        if (mon.colour != BLACK)
+            mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : colour for "
+                              "%s being ignored.",
+                 name.c_str());
+
+        if (mon.items.size() > 0)
+            mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : items for "
+                              "%s being ignored.",
+                 name.c_str());
+    } // for (int i = 0; i < num_mons; i++)
+
+    if (mons.size() == 0 && num_lords > 0)
+    {
+        luaL_argerror(ls, 1, "Mon list contains only pandemonium lords.");
+        return (0);
+    }
+
+    set_vault_mon_list(mons);
+
+    return (0);
 }
 
 static int dgn_chance(lua_State *ls)
@@ -2799,6 +2902,7 @@ static const struct luaL_reg dgn_lib[] =
     { "items_at", dgn_items_at },
     { "change_level_flags", dgn_change_level_flags },
     { "change_branch_flags", dgn_change_branch_flags },
+    { "set_random_mon_list", dgn_set_random_mon_list },
     { "get_floor_colour", dgn_get_floor_colour },
     { "get_rock_colour",  dgn_get_rock_colour },
     { "change_floor_colour", dgn_change_floor_colour },
