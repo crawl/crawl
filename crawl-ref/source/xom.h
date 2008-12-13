@@ -18,6 +18,7 @@ enum xom_message_type
     NUM_XOM_MESSAGE_TYPES
 };
 
+void xom_tick();
 void xom_is_stimulated(int maxinterestingness,
                        xom_message_type message_type = XM_NORMAL,
                        bool force_message = false);

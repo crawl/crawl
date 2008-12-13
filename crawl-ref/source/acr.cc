@@ -924,7 +924,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 'X':
-        xom_acts(abs(you.piety - 100));
+        if (you.religion == GOD_XOM)
+            xom_acts(abs(you.piety - 100));
+        else
+            xom_acts(coinflip(), random_range(0, MAX_PIETY - 100));
         break;
 
     case 'z':

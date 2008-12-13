@@ -6536,40 +6536,8 @@ void handle_god_time()
         switch (you.religion)
         {
         case GOD_XOM:
-        {
-            // Xom semi-randomly drifts your piety.
-            int delta;
-            const char *origfavour = describe_xom_favour();
-            const bool good = you.piety > (MAX_PIETY / 2);
-            int size = abs(you.piety - 100);
-            delta = (x_chance_in_y(511, 1000) ? 1 : -1);
-            size += delta;
-            you.piety = (MAX_PIETY / 2) + (good ? size : -size);
-            const char *newfavour = describe_xom_favour();
-            if (strcmp(origfavour, newfavour))
-            {
-                // Dampen oscillation across announcement boundaries.
-                size += delta * 2;
-                you.piety = (MAX_PIETY / 2) + (good ? size : -size);
-            }
-
-            // ...but he gets bored... (I re-use gift_timeout for this
-            // instead of making a separate field because I don't want
-            // to learn how to save and restore a new field).  In this
-            // usage, the "gift" is the gift you give to Xom of
-            // something interesting happening.
-            if (you.gift_timeout == 1)
-            {
-                simple_god_message(" is getting BORED.");
-                you.gift_timeout = 0;
-            }
-            else if (you.gift_timeout > 1)
-                you.gift_timeout -= random2(2);
-
-            if (one_chance_in(20))
-                xom_acts(abs(you.piety - 100));
+            xom_tick();
             break;
-        }
 
         // These gods like long-standing worshippers.
         case GOD_ELYVILON:

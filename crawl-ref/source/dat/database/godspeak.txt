@@ -230,6 +230,20 @@ Xom's power touches on you for a moment.
 
 You hear Xom's maniacal laughter.
 %%%%
+Xom rearrange the pieces
+
+Xom decides to rearrange the pieces.
+%%%%
+Xom teleportation journey
+
+Whee!
+
+Let's go for a ride!
+%%%%
+Xom confusion
+
+Heh heh heh...
+%%%%
 # 25% chance of draining, else torment
 Xom draining or torment
 

@@ -27,7 +27,9 @@
 #include "player.h"
 #include "randart.h"
 #include "religion.h"
+#include "spells1.h"
 #include "spells2.h"
+#include "spells3.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
 #include "spl-util.h"
@@ -93,15 +95,18 @@ static const char *_xom_message_arrays[NUM_XOM_MESSAGE_TYPES][6] =
 
 const char *describe_xom_favour()
 {
-    return (you.piety > 160) ? "A beloved toy of Xom." :
-           (you.piety > 145) ? "A favourite toy of Xom." :
-           (you.piety > 130) ? "A very special toy of Xom." :
-           (you.piety > 115) ? "A special toy of Xom." :
+    if (you.gift_timeout < 1)
+        return "A BORING thing.";
+    else
+        return (you.piety > 180) ? "A beloved toy of Xom." :
+           (you.piety > 160) ? "A favourite toy of Xom." :
+           (you.piety > 140) ? "A very special toy of Xom." :
+           (you.piety > 120) ? "A special toy of Xom." :
            (you.piety > 100) ? "A toy of Xom." :
-           (you.piety >  85) ? "A plaything of Xom." :
-           (you.piety >  70) ? "A special plaything of Xom." :
-           (you.piety >  55) ? "A very special plaything of Xom." :
-           (you.piety >  40) ? "A favourite plaything of Xom."
+           (you.piety >  80) ? "A plaything of Xom." :
+           (you.piety >  60) ? "A special plaything of Xom." :
+           (you.piety >  40) ? "A very special plaything of Xom." :
+           (you.piety >  20) ? "A favourite plaything of Xom."
                              : "A beloved plaything of Xom.";
 }
 
@@ -121,7 +126,7 @@ static std::string _get_xom_speech(const std::string key)
 bool xom_is_nice()
 {
     // If you.gift_timeout was 0, then Xom was BORED.  He HATES that.
-    return (you.gift_timeout > 0 && you.piety > (MAX_PIETY / 2)) || coinflip();
+    return (you.gift_timeout > 0 && you.piety > (MAX_PIETY / 2));
 }
 
 static void _xom_is_stimulated(int maxinterestingness,
@@ -167,6 +172,44 @@ void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
 {
     _xom_is_stimulated(maxinterestingness, _xom_message_arrays[message_type],
                        force_message);
+}
+
+void xom_tick()
+{
+    // Xom semi-randomly drifts your piety.
+    int delta;
+    const char *origfavour = describe_xom_favour();
+    const bool good = you.piety > (MAX_PIETY / 2);
+    int size = abs(you.piety - 100);
+    delta = (x_chance_in_y(511, 1000) ? 1 : -1);
+    size += delta;
+    you.piety = (MAX_PIETY / 2) + (good ? size : -size);
+    const char *newfavour = describe_xom_favour();
+    if (strcmp(origfavour, newfavour))
+    {
+        // Dampen oscillation across announcement boundaries.
+        size += delta * 8;
+        you.piety = (MAX_PIETY / 2) + (good ? size : -size);
+    }
+
+    // ...but he gets bored...
+    if (one_chance_in(2))
+        you.gift_timeout--;
+
+    newfavour = describe_xom_favour();
+
+    if (strcmp(origfavour, newfavour)) {
+        char buf[8192];
+        strcpy(buf, "Your title is now: ");
+        strcat(buf, newfavour);
+        god_speaks( you.religion, buf );
+    }
+
+    if (you.gift_timeout == 1)
+        simple_god_message(" is getting BORED.");
+
+    if (one_chance_in(20))
+        xom_acts(abs(you.piety - 100));
 }
 
 void xom_is_stimulated(int maxinterestingness, const std::string& message,
@@ -215,8 +258,8 @@ static void _try_brand_switch(const int item_index)
     if (is_unrandom_artefact(item) || is_fixed_artefact(item))
         return;
 
-    // Only do it 50% of the time.
-    if (coinflip())
+    // Only do it some of the time.
+    if (one_chance_in(3))
         return;
 
     int brand;
@@ -398,7 +441,7 @@ static bool _xom_gives_item(int power)
         god_speaks(GOD_XOM, _get_xom_speech("armour gift").c_str());
         _xom_make_item(OBJ_ARMOUR,
                        one_chance_in(10) ? ARM_CLOAK :
-                                get_random_body_armour_type(you.your_level * 2),
+                                get_random_body_armour_type(power * 2),
                        power * 3);
         return (true);
     }
@@ -633,7 +676,7 @@ static void _do_chaos_upgrade(item_def &item, const monsters* mon)
 
 static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
 {
-    const int roll = random2(1000 - (27 - you.experience_level) * 10);
+    const int roll = random2(1000 - (MAX_PIETY - sever) * 3);
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "_xom_random_demon(); sever = %d, roll: %d",
          sever, roll);
@@ -662,21 +705,6 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
     return (demon);
 }
 
-// Returns a demon suitable for use in Xom's punishments, filtering out
-// the really nasty ones early on.
-static monster_type _xom_random_punishment_demon(int sever)
-{
-    monster_type demon = MONS_PROGRAM_BUG;
-
-    do
-        demon = _xom_random_demon(sever);
-    while ((demon == MONS_HELLION
-            && you.experience_level < 12
-            && !one_chance_in(3 + (12 - you.experience_level) / 2)));
-
-    return (demon);
-}
-
 // The nicer stuff.  Note: these things are not necessarily nice.
 static bool _xom_is_good(int sever)
 {
@@ -695,7 +723,6 @@ static bool _xom_is_good(int sever)
                               POT_MIGHT, POT_INVISIBILITY, POT_BERSERK_RAGE,
                               POT_EXPERIENCE, -1));
 
-        // Downplay this one a bit.
         if (pot == POT_EXPERIENCE && !one_chance_in(6))
             pot = POT_BERSERK_RAGE;
 
@@ -718,6 +745,26 @@ static bool _xom_is_good(int sever)
         done = true;
     }
     else if (x_chance_in_y(4, sever))
+    {
+        monsters *monster;
+        for (unsigned i = 0; i < MAX_MONSTERS; i++)
+        {
+            monster = &menv[i];
+
+            if (monster->type == -1 || !mons_near(monster) || mons_wont_attack(monster) || one_chance_in(20))
+                continue;
+                
+            if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY, random2(sever))))
+            {
+                if (!done)
+                    god_speaks(GOD_XOM, _get_xom_speech("confusion").c_str());
+                done = true;
+                if (player_monster_visible( monster ))
+                    simple_monster_message(monster, " looks rather confused.");
+            }
+        }
+    }
+    else if (x_chance_in_y(5, sever))
     {
         // XXX: Can we clean up this ugliness, please?
         const int numdemons =
@@ -799,13 +846,13 @@ static bool _xom_is_good(int sever)
         delete[] is_demonic;
         delete[] summons;
     }
-    else if (x_chance_in_y(5, sever))
+    else if (x_chance_in_y(6, sever))
     {
         _xom_gives_item(sever);
 
         done = true;
     }
-    else if (x_chance_in_y(6, sever))
+    else if (x_chance_in_y(7, sever))
     {
         monster_type mon = _xom_random_demon(sever);
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
@@ -841,7 +888,7 @@ static bool _xom_is_good(int sever)
             done = true;
         }
     }
-    else if (x_chance_in_y(7, sever))
+    else if (x_chance_in_y(8, sever))
     {
         if (there_are_monsters_nearby(false, false))
         {
@@ -862,19 +909,69 @@ static bool _xom_is_good(int sever)
                         ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
                 }
 
+                // player_angers_monster() will turn the monster against you 
+                // only if the monster hates your religion.  No monsters hate 
+                // Xom-religion, so this will only have an effect if you are not 
+                // currently a worshipper of Xom, e.g. if you just abandoned him 
+                // or if you drew a Card of Xom or something.
                 player_angers_monster(mon);
 
                 done = true;
             }
         }
     }
-    else if (x_chance_in_y(8, sever))
+    else if (x_chance_in_y(9, sever))
     {
         _xom_gives_item(sever);
 
         done = true;
     }
-    else if (x_chance_in_y(9, sever))
+    else if (x_chance_in_y(10, sever) && (you.level_type != LEVEL_ABYSS))
+    {
+        // rearrange the pieces -- blink every monster on this level and the player
+
+        // Every now and then, Xom also confuses them all.
+        bool confusem = one_chance_in(10);
+	
+        // Not just every monster in sight -- oh no.  Every monster on this level!
+        monsters *monster;
+        for (unsigned i = 0; i < MAX_MONSTERS; i++)
+        {
+            monster = &menv[i];
+                
+            if (monster->type == -1)
+                continue;
+
+            if (monster_blink(monster))
+            {
+                if (!done)
+                    god_speaks(GOD_XOM, _get_xom_speech("rearrange the pieces").c_str());
+                done = true;
+                if (confusem)
+                    if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY, random2(sever))))
+                        if (player_monster_visible( monster ))
+                            simple_monster_message(monster, " looks rather confused.");
+            }
+            // If he blinked at least one monster, blink the player too and this act is considered "done".
+            if (done)
+                random_blink(false);
+        }
+    }
+    else if (x_chance_in_y(11, sever) && (you.level_type != LEVEL_ABYSS))
+    {
+        // The Xom teleportation train takes you on instant teleportation to 
+        // a few random areas, stopping randomly but mostly likely in an area 
+        // that is not dangerous to you.
+        god_speaks(GOD_XOM, _get_xom_speech("teleportation journey").c_str());
+        do {
+            you_teleport_now(false);
+            more();
+            if (one_chance_in(10))
+                break;
+        } while (x_chance_in_y(3, 4) || player_in_a_dangerous_place());
+        done = true;
+    }
+    else if (x_chance_in_y(12, sever))
     {
         // This can fail with radius 1, or in open areas.
         if (vitrify_area(random2avg(sever / 2, 3) + 1))
@@ -884,7 +981,7 @@ static bool _xom_is_good(int sever)
             done = true;
         }
     }
-    else if (x_chance_in_y(10, sever))
+    else if (x_chance_in_y(13, sever) && x_chance_in_y(16, how_mutated()))
     {
         if (you.can_safely_mutate()
             && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
@@ -907,7 +1004,7 @@ static bool _xom_is_good(int sever)
             }
         }
     }
-    else if (x_chance_in_y(11, sever))
+    else if (x_chance_in_y(14, sever))
     {
         monster_type mon = _xom_random_demon(sever);
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
@@ -943,7 +1040,7 @@ static bool _xom_is_good(int sever)
             done = true;
         }
     }
-    else if (x_chance_in_y(12, sever))
+    else if (x_chance_in_y(15, sever))
     {
         if (player_in_a_dangerous_place())
         {
@@ -1024,7 +1121,19 @@ static bool _xom_is_bad(int sever)
 
             done = true;
         }
-        else if (x_chance_in_y(7, sever))
+        else if (x_chance_in_y(7, sever) && (you.level_type != LEVEL_ABYSS))
+        {
+            // The Xom teleportation train takes you on instant teleportation to 
+            // a few random areas, stopping if an area is dangerous to you or 
+            // randomly stopping.
+            god_speaks(GOD_XOM, _get_xom_speech("teleportation journey").c_str());
+            do {
+                you_teleport_now(false);
+                more();
+            } while (x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
+            done = true;
+        }
+        else if (x_chance_in_y(8, sever))
         {
             monsters *mon =
                 choose_random_nearby_monster(0, _choose_chaos_upgrade);
@@ -1055,7 +1164,7 @@ static bool _xom_is_bad(int sever)
             // Wake the monster up.
             behaviour_event( mon, ME_ALERT, MHITYOU );
         }
-        else if (x_chance_in_y(8, sever))
+        else if (x_chance_in_y(9, sever))
         {
             if (you.can_safely_mutate()
                 && player_mutation_level(MUT_MUTATION_RESISTANCE) < 3)
@@ -1078,7 +1187,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (x_chance_in_y(9, sever))
+        else if (x_chance_in_y(10, sever))
         {
             if (there_are_monsters_nearby(false, false))
             {
@@ -1104,7 +1213,30 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (x_chance_in_y(10, sever))
+        else if (x_chance_in_y(11, sever))
+        {
+            std::string speech = _get_xom_speech("confusion");
+            if (confuse_player(random2(sever)+1, false)) {
+                done = true;
+                // Well, sometimes Xom gets carried away and starts confusing other 
+                // creatures too.
+                if (coinflip()) {
+                    monsters* monster;
+                    for (unsigned i = 0; i < MAX_MONSTERS; i++) {
+                        monster = &menv[i];
+                        
+                        if (monster->type == -1 || !mons_near(monster) || one_chance_in(20))
+                            continue;
+                        
+                        if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY, random2(sever)))) {
+                            if (player_monster_visible( monster ))
+                                simple_monster_message(monster, " looks rather confused.");
+                        }
+                    }
+                }
+            } 
+        }
+        else if (x_chance_in_y(12, sever))
         {
             std::string speech = _get_xom_speech("draining or torment");
 
@@ -1135,7 +1267,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (x_chance_in_y(11, sever))
+        else if (x_chance_in_y(13, sever))
         {
             std::string speech = _get_xom_speech("hostile monster");
 
@@ -1160,7 +1292,7 @@ static bool _xom_is_bad(int sever)
                 {
                     if (create_monster(
                             mgen_data::hostile_at(
-                                _xom_random_punishment_demon(sever),
+                                _xom_random_demon(sever),
                                 you.pos(), 4, 0, true, GOD_XOM,
                                 MON_SUMM_WRATH)) != -1)
                     {
@@ -1176,7 +1308,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (x_chance_in_y(12, sever))
+        else if (x_chance_in_y(14, sever))
         {
             god_speaks(GOD_XOM, _get_xom_speech("major miscast effect").c_str());
 
@@ -1255,8 +1387,15 @@ void xom_acts(bool niceness, int sever)
         }
     }
 
-    if (you.religion == GOD_XOM && coinflip())
+    if (you.religion == GOD_XOM && one_chance_in(2)) {
         you.piety = MAX_PIETY - you.piety;
+
+        char buf[8192];
+        strcpy(buf, "Your title is now: ");
+        const char *newfavour = describe_xom_favour();
+        strcat(buf, newfavour);
+        god_speaks( you.religion, buf );
+    }
 }
 
 static void _xom_check_less_runes(int runes_gone)
