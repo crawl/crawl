@@ -1430,6 +1430,8 @@ static void _do_book_acquirement(item_def &book, int agent)
     int          level       = (you.skills[SK_SPELLCASTING] + 2) / 3;
     unsigned int seen_levels = you.attribute[ATTR_RND_LVL_BOOKS];
 
+    level = std::max(1, level);
+
     if (agent == GOD_XOM)
         level = random_range(1, 9);
     else if (seen_levels & (1 << level))
@@ -1452,12 +1454,14 @@ static void _do_book_acquirement(item_def &book, int agent)
             level = -1;
     }
 
-    int choice = random_choose_weighted(
-                               55, 0, // fixed themed
-                               24, 1, // leave alone
-             level == -1 ? 0 : 12, 2, // fixed level
-        agent == GOD_XOM ? 0 :  6, 3, // manual (too useful for Xom)
-                                0);
+    int choice_weights[4] = {
+                               55, // fixed themed
+                               24, // leave alone
+             level == -1 ? 0 : 12, // fixed level
+        agent == GOD_XOM ? 0 :  6, // manual (too useful for Xom)
+        };
+
+    int choice = choose_random_weighted(choice_weights, choice_weights + 4);
 
     switch(choice)
     {
@@ -1480,6 +1484,7 @@ static void _do_book_acquirement(item_def &book, int agent)
     case 3:
     {
         int weights[SK_POISON_MAGIC - SK_CONJURATIONS + 1];
+        int total_weights = 0;
 
         for (int i = SK_CONJURATIONS; i <= SK_POISON_MAGIC; i++)
         {
@@ -1487,7 +1492,16 @@ static void _do_book_acquirement(item_def &book, int agent)
                 * 100 / species_skills(i, you.species);
 
             weights[i - SK_CONJURATIONS] = w;
+            total_weights += w;
         }
+
+        // Are we too skilled to get any manuals?
+        if (total_weights == 0)
+        {
+            _do_book_acquirement(book, agent);
+            return;
+        }
+
         int skill = choose_random_weighted(weights,
                                            weights + ARRAYSZ(weights));
         skill += SK_CONJURATIONS;
