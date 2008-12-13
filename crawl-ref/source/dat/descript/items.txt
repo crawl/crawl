@@ -1188,8 +1188,12 @@ your possessions.
 %%%%
 scroll of enchant armour
 
-This scroll places an enchantment on a piece of armour. It can also 
-be used to enchant the hides of certain exotic creatures.
+This scroll places an enchantment on a piece of armour. Most armour
+can only be enchanted to +2, except for body armour and bardings which
+can be enchanted to +8. Using the scroll on well-enchanted items may
+not work.
+
+It can also be used to enchant the hides of certain exotic creatures.
 %%%%
 scroll of enchant weapon i
 
@@ -1279,8 +1283,9 @@ scroll of vorpalise weapon
 
 This scroll enchants a weapon so as to make it far more effective at
 inflicting harm on its wielder's enemies. Using it on a weapon already
-affected by some kind of special enchantment (other than that produced
-by a normal scroll of enchant weapon) is not advised.
+affected by some kind of permanent branding is not advised. On the
+other hand, the scroll can make permanent the temporary branding of
+weapons obtained from some spells.
 %%%%
 scroll of vulnerability
 
