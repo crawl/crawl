@@ -214,6 +214,7 @@ static void _beam_set_default_values(bolt &beam, int power)
     beam.dropped_item   = false;             // no item droped yet
     beam.reflections    = 0;                 // no reflections yet
     beam.bounces        = 0;                 // no bounces yet
+    beam.seen           = false;             // not seen yet
     beam.aux_source.clear();                 // additional source info, unused
 }
 
@@ -288,6 +289,7 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
 
     // Clear misc
     pbolt.dropped_item  = false;
+    pbolt.seen          = false;
     pbolt.reflections   = 0;
     pbolt.bounces       = 0;
 
@@ -311,6 +313,9 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     // Reset, since these are cumulative over recursive calls to fire_beam.
     pbolt.reflections = 0;
     pbolt.bounces     = 0;
+
+    // Haven't seen it yet in the actual firing.
+    pbolt.seen = false;
 
     // Set to non-tracing for actual firing.
     pbolt.is_tracer = false;
@@ -1526,20 +1531,39 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
 
 void fire_beam(bolt &pbolt)
 {
+    ASSERT(!pbolt.name.empty());
+    ASSERT(pbolt.flavour > BEAM_NONE && pbolt.flavour < NUM_BEAMS);
+    ASSERT(!pbolt.drop_item || pbolt.item);
+    ASSERT(!pbolt.dropped_item);
+
     pbolt.real_flavour = pbolt.flavour;
 
     const int reflections = pbolt.reflections;
     if (reflections == 0)
     {
-        // We aren't being recursively called.
+        // We aren't being recursively called, so initialize some stuff.
         beam_message_cache.clear();
         pbolt.range_used = 0;
+
+        // pbolt.seen might be set by caller to supress this.
+        if (!pbolt.seen && see_grid(pbolt.source) && pbolt.range > 0
+            && pbolt.type != 0 && pbolt.name[0] != '0')
+        {
+            pbolt.seen = true;
+            int midx = mgrd(pbolt.source);
+
+            if (!pbolt.is_tracer && !YOU_KILL(pbolt.thrower)
+                && !crawl_state.is_god_acting()
+                && (midx == NON_MONSTER || !you.can_see(&menv[midx])))
+            {
+                mprf("%s appears from out of thin air!",
+                     article_a(pbolt.name, false).c_str());
+            }
+        }
     }
 
     ASSERT(pbolt.range >= 0 && pbolt.range_used >=0);
     ASSERT(pbolt.range_used <= pbolt.range);
-    ASSERT(!pbolt.drop_item || pbolt.item);
-    ASSERT(!pbolt.dropped_item);
 
     if (pbolt.range == pbolt.range_used && pbolt.range > 0)
     {
@@ -1719,6 +1743,19 @@ void fire_beam(bolt &pbolt)
         // couldn't find any path: bouncy, fuzzy, or not - so break.
         if (grid_is_solid(grd(testpos)))
             break;
+
+        const bool was_seen = pbolt.seen;
+        if (!was_seen && pbolt.range > 0 && pbolt.type != 0
+            && pbolt.name[0] != '0' && see_grid(testpos))
+        {
+            pbolt.seen = true;
+        }
+
+        if (!was_seen && pbolt.seen && !pbolt.is_tracer)
+        {
+            mprf("%s appears from out of your range of vision.",
+                 article_a(pbolt.name, false).c_str());
+        }
 
         // Check for "target termination"
         // occurs when beam can be targetted at empty
@@ -2712,6 +2749,9 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
     // Reset, since these are cumulative over recursive calls to fire_beam.
     pbolt.reflections = 0;
     pbolt.bounces     = 0;
+
+    // Hasn't been seen yet in the real firing.
+    pbolt.seen        = false;
 
     // Unset tracer flag (convenience).
     pbolt.is_tracer = false;
@@ -5695,18 +5735,18 @@ bolt::bolt() : range(0), type('*'),
                flavour(BEAM_MAGIC), real_flavour(BEAM_MAGIC), drop_item(false),
                item(NULL), source(), target(), pos(), damage(0,0),
                ench_power(0), hit(0), thrower(KILL_MISC), ex_size(0),
-               beam_source(MHITNOT), name(), is_beam(false),
+               beam_source(MHITNOT), name(), short_name(), is_beam(false),
                is_explosion(false), is_big_cloud(false), aimed_at_spot(false),
                aux_source(), affects_nothing(false), effect_known(true),
                obvious_effect(false),
                fr_count(0), foe_count(0), fr_power(0), foe_power(0),
                fr_hurt(0), foe_hurt(0), fr_helped(0),foe_helped(0),
                dropped_item(false), item_pos(), item_index(NON_ITEM),
-               range_used(0), is_tracer(false), aimed_at_feet(false),
-               msg_generated(false), in_explosion_phase(false),
-               smart_monster(false), can_see_invis(false),
-               attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false),
-               beam_cancelled(false), dont_stop_foe(false),
+               seen(false), range_used(0), is_tracer(false),
+               aimed_at_feet(false), msg_generated(false),
+               in_explosion_phase(false), smart_monster(false),
+               can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
+               chose_ray(false), beam_cancelled(false), dont_stop_foe(false),
                dont_stop_fr(false), dont_stop_player(false),
                bounces(false), bounce_pos(), reflections(false), reflector(-1)
 {
@@ -5775,4 +5815,114 @@ bool bolt::is_enchantment() const
 {
     return (this->flavour >= BEAM_FIRST_ENCHANTMENT
             && this->flavour <= BEAM_LAST_ENCHANTMENT);
+}
+
+std::string bolt::get_short_name()
+{
+    if (!short_name.empty())
+        return (short_name);
+
+    if (item != NULL && is_valid_item(*item))
+        return item->name(DESC_NOCAP_A, false, false, false, false,
+                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK 
+                          | ISFLAG_RACIAL_MASK);
+
+    if (real_flavour == BEAM_RANDOM || real_flavour == BEAM_CHAOS)
+        flavour = real_flavour;
+
+    if (flavour == BEAM_FIRE && name == "sticky fire")
+        return ("sticky fire");
+
+    if (flavour == BEAM_ELECTRICITY && is_beam)
+        return ("lightning");
+
+    if (flavour == BEAM_NONE || flavour == BEAM_MISSILE
+        || flavour == BEAM_MMISSILE)
+    {
+        return (name);
+    }
+
+    return beam_type_name(flavour);
+}
+
+std::string beam_type_name(beam_type type)
+{
+    switch(type)
+    {
+    case BEAM_NONE: return("none");
+    case BEAM_MISSILE: return("missile");
+    case BEAM_MMISSILE: return("magic missile");
+
+    case BEAM_POTION_FIRE:
+    case BEAM_FIRE: return("fire");
+
+    case BEAM_POTION_COLD:
+    case BEAM_COLD: return("cold");
+
+    case BEAM_MAGIC: return("magic");
+    case BEAM_ELECTRICITY: return("electricity");
+
+    case BEAM_POTION_STINKING_CLOUD:
+    case BEAM_POTION_POISON:
+    case BEAM_POISON: return("poison");
+
+    case BEAM_NEG: return("negative energy");
+    case BEAM_ACID: return("acid");
+
+    case BEAM_MIASMA:
+    case BEAM_POTION_MIASMA: return("miasma");
+
+    case BEAM_SPORE: return("spores");
+    case BEAM_POISON_ARROW: return("poison arrow");
+    case BEAM_HELLFIRE: return("hellfire");
+    case BEAM_NAPALM: return("sticky fire");
+
+    case BEAM_POTION_STEAM:
+    case BEAM_STEAM: return("steam");
+
+    case BEAM_HELLFROST: return("hellfrost");
+    case BEAM_ENERGY: return("energy");
+    case BEAM_HOLY: return("holy power");
+    case BEAM_FRAG: return("fragments");
+    case BEAM_LAVA: return("magma");
+    case BEAM_ICE: return("ice");
+    case BEAM_NUKE: return("nuke");
+    case BEAM_RANDOM: return("random");
+    case BEAM_CHAOS: return("chaos");
+    case BEAM_SLOW: return("slow");
+    case BEAM_HASTE: return("haste");
+    case BEAM_HEALING: return("healing");
+    case BEAM_PARALYSIS: return("paralysis");
+    case BEAM_CONFUSION: return("confusion");
+    case BEAM_INVISIBILITY: return("invisibility");
+    case BEAM_DIGGING: return("digging");
+    case BEAM_TELEPORT: return("teleportation");
+    case BEAM_POLYMORPH: return("polymorph");
+    case BEAM_CHARM: return("enslave");
+    case BEAM_BANISH: return("banishment");
+    case BEAM_DEGENERATE: return("degenration");
+    case BEAM_ENSLAVE_UNDEAD: return("enslave undead");
+    case BEAM_ENSLAVE_SOUL: return("enslave soul");
+    case BEAM_PAIN: return("pain");
+    case BEAM_DISPEL_UNDEAD: return("dispel undead");
+    case BEAM_DISINTEGRATION: return("disintegration");
+    case BEAM_ENSLAVE_DEMON: return("enlsave demon");
+    case BEAM_BLINK: return("blink");
+    case BEAM_PETRIFY: return("petrify");
+    case BEAM_BACKLIGHT: return("backlight");
+    case BEAM_SLEEP: return("sleep");
+    case BEAM_POTION_BLACK_SMOKE: return("black smoke");
+    case BEAM_POTION_GREY_SMOKE: return("grey smoke");
+    case BEAM_POTION_BLUE_SMOKE: return("blue smoke");
+    case BEAM_POTION_PURP_SMOKE: return("purple smoke");
+    case BEAM_POTION_RANDOM: return("random potion");
+    case BEAM_TORMENT_DAMAGE: return("torment damage");
+    case BEAM_STEAL_FOOD: return("steal food");
+    case BEAM_LINE_OF_SIGHT: return("line of sight");
+    case NUM_BEAMS:
+        DEBUGSTR("invalid beam type");
+        return("INVALID");
+    }
+    DEBUGSTR("unknown beam type");
+    return("UNKNOWN");
 }

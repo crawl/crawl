@@ -54,6 +54,7 @@ struct bolt
     char        ex_size;               // explosion radius (0==none)
     int         beam_source;           // NON_MONSTER or monster index #
     std::string name;
+    std::string short_name;
     bool        is_beam;               // beams? (can hits multiple targets?)
     bool        is_explosion;
     bool        is_big_cloud;          // expands into big_cloud at endpoint
@@ -75,6 +76,8 @@ struct bolt
     bool        dropped_item;          // item has been dropped
     coord_def   item_pos;              // position item was dropped at
     int         item_index;            // mitm[index] of item
+
+    bool        seen;                  // Has player seen the beam?
 
     // INTERNAL use - should not usually be set outside of beam.cc
     int         range_used;
@@ -117,6 +120,10 @@ public:
     killer_type  killer() const;
 
     actor* agent() const;
+
+    // Returns member short_name if set, otherwise some reasonble string
+    // for a short name, most likely the name of the beam's flavour.
+    std::string get_short_name();
 };
 
 dice_def calc_dice( int num_dice, int max_damage );
@@ -162,5 +169,7 @@ int affect(bolt &beam, const coord_def& p = coord_def(),
            item_def *item = NULL, bool affect_items = true);
 void beam_drop_object( bolt &beam, item_def *item = NULL,
                        const coord_def& where = coord_def() );
+
+std::string beam_type_name(beam_type type);
 
 #endif

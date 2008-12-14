@@ -12,7 +12,7 @@ You hear a spitting sound.
 %%%%
 Draconian Breath cast
 
-@The_monster@ breathes.
+@The_monster@ breathes @beam@ at @target@.
 %%%%
 Draconian Breath cast unseen
 
@@ -78,7 +78,7 @@ demon cast
 %%%%
 dragon cast
 
-@The_monster@ breathes.
+@The_monster@ breathes @beam@ at @target@.
 %%%%
 dragon cast unseen
 
