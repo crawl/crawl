@@ -32,8 +32,11 @@ enum spflag_type
                                                 // is still a battle spell
     SPFLAG_CARD                 = 0x02000,      // a card effect spell
     SPFLAG_MONSTER              = 0x04000,      // monster-only spell
-    SPFLAG_TESTING              = 0x08000,      // a testing/debugging spell
-    SPFLAG_DEVEL                = 0x10000       // a spell under development
+    SPFLAG_INNATE               = 0x08000,      // an innate spell, even if
+                                                // use by a priest/wizard
+    SPFLAG_NOISY                = 0x10000,      // makes noise, even if innate
+    SPFLAG_TESTING              = 0x20000,      // a testing/debugging spell
+    SPFLAG_DEVEL                = 0x40000       // a spell under development
 };
 
 enum spret_type

@@ -142,7 +142,15 @@ enum mons_class_flags
     M_SPECIAL_ABILITY   = (1<<26),        // XXX: eventually make these spells?
     M_NO_REGEN          = (1<<27),        // cannot regenerate
 
-    M_NO_SKELETON       = (1<<29),        // boneless corpses
+    M_SPELL_NO_SILENT   = (1<<28),        // cannot cast spells when silenced,
+                                          // even though it's not a priest or
+                                          // wizard
+
+    M_NOISY_SPELLS      = (1<<29),        // can cast spells when silenced, but
+                                          // casting makes noise when not
+                                          // silenced
+
+    M_NO_SKELETON       = (1<<30),        // boneless corpses
     M_NO_EXP_GAIN       = (1<<31)         // worth 0 xp
 };
 

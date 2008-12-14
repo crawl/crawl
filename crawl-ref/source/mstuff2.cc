@@ -36,6 +36,7 @@
 #include "spells1.h"
 #include "spells3.h"
 #include "spells4.h"
+#include "spl-cast.h"
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "stuff.h"
@@ -503,21 +504,67 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
 void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
 {
+    bool force_silent = false;
+
+    spell_type real_spell = spell_cast;
+
+    if (spell_cast == SPELL_DRACONIAN_BREATH)
+    {
+        int type = monster->type;
+        if (mons_genus(type) == MONS_DRACONIAN)
+            type = draco_subspecies(monster);
+
+        switch(type)
+        {
+        case MONS_MOTTLED_DRACONIAN:
+            real_spell = SPELL_STICKY_FLAME_SPLASH;
+            break;
+
+        case MONS_YELLOW_DRACONIAN:
+            real_spell = SPELL_ACID_SPLASH;
+            break;
+
+        case MONS_PLAYER_GHOST:
+            // Draining breath is silent.
+            force_silent = true;
+            break;
+
+        default:
+            break;
+        }
+    }
+    else if (monster->type == MONS_SHADOW_DRAGON)
+        // Draining breath is silent.
+        force_silent = true;
+
     const bool unseen = !you.can_see(monster);
-    const bool silent = silenced(monster->pos());
+    const bool silent = silenced(monster->pos()) || force_silent;
 
     if (unseen && silent)
         return;
 
+    const unsigned int flags = get_spell_flags(real_spell);
+
     const bool priest = mons_class_flag(monster->type, M_PRIEST);
     const bool wizard = mons_class_flag(monster->type, M_ACTUAL_SPELLS);
-    const bool innate = !(priest || wizard);
+    const bool innate = !(priest || wizard) || (flags & SPFLAG_INNATE);
 
     int noise;
-    if(silent || innate)
+    if(silent
+       || (innate
+           && !mons_class_flag(monster->type, M_SPELL_NO_SILENT
+                                            | M_NOISY_SPELLS)
+           && !(flags & SPFLAG_NOISY)))
+    {
         noise = 0;
+    }
     else
-        noise = spell_noise(spell_cast);
+    {
+        if (mons_genus(monster->type) == MONS_DRAGON)
+            noise = get_shout_noise_level(S_ROAR);
+        else
+            noise = spell_noise(real_spell);
+    }
 
     const std::string cast_str = " cast";
     std::string suffix;
@@ -529,7 +576,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     std::string key;
 
     // First try the individual spell.
-    key             = spell_title(spell_cast) + cast_str;
+    key             = spell_title(real_spell) + cast_str;
     std::string msg = getSpeakString(key + suffix);
 
     if (msg.empty() && silent)
@@ -602,6 +649,25 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         noisy(noise, monster->pos());
         return;
     }
+
+    std::string target = "something";
+
+    if (pbolt.target == you.pos())
+        target = "you";
+    else if (see_grid(pbolt.target))
+    {
+        int midx = mgrd(pbolt.target);
+        if (midx != NON_MONSTER)
+        {
+            monsters* mtarg = &menv[midx];
+
+            if (you.can_see(mtarg))
+                target = mtarg->name(mons_friendly(mtarg) ? DESC_NOCAP_YOUR :
+                                                            DESC_NOCAP_THE);
+        }
+    }
+
+    msg = replace_all(msg, "@target@", target);
 
     const msg_channel_type chan =
         (unseen                 ? MSGCH_SOUND :
@@ -848,101 +914,6 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
             monster->flags |= MF_KNOWN_MIMIC;
         else
             monster->flags &= ~MF_KNOWN_MIMIC;
-    }
-}
-
-void setup_dragon(struct monsters *monster, bolt &pbolt)
-{
-    const int type = (mons_genus(monster->type) == MONS_DRACONIAN)
-                            ? draco_subspecies(monster) : monster->type;
-    int scaling = 100;
-
-    pbolt.name.clear();
-    switch (type)
-    {
-    case MONS_FIREDRAKE:
-    case MONS_HELL_HOUND:
-    case MONS_DRAGON:
-    case MONS_LINDWURM:
-    case MONS_XTAHUA:
-        pbolt.name      += "blast of flame";
-        pbolt.aux_source = "blast of fiery breath";
-        pbolt.flavour    = BEAM_FIRE;
-        pbolt.colour     = RED;
-        pbolt.range      = 6;
-        break;
-
-    case MONS_ICE_DRAGON:
-        pbolt.name      += "blast of cold";
-        pbolt.aux_source = "blast of icy breath";
-        pbolt.flavour    = BEAM_COLD;
-        pbolt.colour     = WHITE;
-        pbolt.range      = 7;
-        break;
-
-    case MONS_RED_DRACONIAN:
-        pbolt.name      += "searing blast";
-        pbolt.aux_source = "blast of searing breath";
-        pbolt.flavour    = BEAM_FIRE;
-        pbolt.colour     = RED;
-        pbolt.range      = 6;
-        scaling          = 65;
-        break;
-
-    case MONS_WHITE_DRACONIAN:
-        pbolt.name      += "chilling blast";
-        pbolt.aux_source = "blast of chilling breath";
-        pbolt.flavour    = BEAM_COLD;
-        pbolt.colour     = WHITE;
-        pbolt.range      = 7;
-        scaling = 65;
-        break;
-
-    case MONS_PLAYER_GHOST: // draconians only
-        pbolt.name      += "blast of negative energy";
-        pbolt.aux_source = "blast of draining breath";
-        pbolt.flavour    = BEAM_NEG;
-        pbolt.colour     = DARKGREY;
-        pbolt.range      = LOS_RADIUS;
-        scaling = 65;
-        break;
-
-    default:
-        DEBUGSTR("Bad monster class in setup_dragon()");
-        break;
-    }
-
-#ifdef DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "bolt name: '%s'", pbolt.name.c_str() );
-#endif
-
-    pbolt.damage      = dice_def( 3, (monster->hit_dice * 2) );
-    pbolt.damage.size = scaling * pbolt.damage.size / 100;
-    pbolt.type        = dchar_glyph(DCHAR_FIRED_ZAP);
-    pbolt.hit         = 30;
-    pbolt.beam_source = monster_index(monster);
-    pbolt.thrower     = KILL_MON;
-    pbolt.is_beam     = true;
-
-    // Accuracy is lowered by one quarter if the dragon is attacking
-    // a target that is wielding a weapon of dragon slaying (which
-    // makes the dragon/draconian avoid looking at the foe).
-    // FIXME: This effect is not yet implemented for player draconians
-    // or characters in dragon form breathing at monsters wielding a
-    // weapon with this brand.
-    if (is_dragonkind(monster, monster))
-    {
-        if (actor *foe = monster->get_foe())
-        {
-            if (const item_def *weapon = foe->weapon())
-            {
-                if (get_weapon_brand(*weapon) == SPWPN_DRAGON_SLAYING)
-                {
-                    pbolt.hit *= 3;
-                    pbolt.hit /= 4;
-                }
-            }
-        }
     }
 }
 
@@ -1415,7 +1386,58 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
 
     beam.range = spell_range(spell_cast, power, true);
 
-    switch (spell_cast)
+    const int drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
+                            ? draco_subspecies(mons) : mons->type;
+
+    int real_spell = spell_cast;
+
+    if (spell_cast == SPELL_DRACONIAN_BREATH)
+    {
+        switch(drac_type)
+        {
+        case MONS_BLACK_DRACONIAN:
+            real_spell = SPELL_LIGHTNING_BOLT;
+            break;
+
+        case MONS_MOTTLED_DRACONIAN:
+            real_spell = SPELL_STICKY_FLAME_SPLASH;
+            break;
+
+        case MONS_YELLOW_DRACONIAN:
+            real_spell = SPELL_ACID_SPLASH;
+            break;
+
+        case MONS_GREEN_DRACONIAN:
+            real_spell = SPELL_POISONOUS_CLOUD;
+            break;
+
+        case MONS_PURPLE_DRACONIAN:
+            real_spell = SPELL_ISKENDERUNS_MYSTIC_BLAST;
+            break;
+
+        case MONS_RED_DRACONIAN:
+            real_spell = SPELL_FIRE_BREATH;
+            break;
+
+        case MONS_WHITE_DRACONIAN:
+            real_spell = SPELL_COLD_BREATH;
+            break;
+
+        case MONS_PALE_DRACONIAN:
+            real_spell = SPELL_STEAM_BALL;
+            break;
+
+        case MONS_PLAYER_GHOST:
+            // Handled later
+            break;
+
+        default:
+            DEBUGSTR("Invalid monster using draconian breath spell");
+            break;
+        }
+    }
+
+    switch (real_spell)
     {
     case SPELL_MAGIC_DART:
         beam.colour   = LIGHTMAGENTA;     // inv_colour [throw_2];
@@ -1763,6 +1785,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.is_beam    = true;
         break;
 
+    case SPELL_STICKY_FLAME_SPLASH:
     case SPELL_STICKY_FLAME:
         beam.colour   = RED;
         beam.name     = "sticky flame";
@@ -1838,6 +1861,17 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
         beam.thrower  = KILL_MON_MISSILE;
         beam.flavour  = BEAM_POISON;
+        beam.is_beam  = false;
+        break;
+
+    case SPELL_ACID_SPLASH:
+        beam.colour   = YELLOW;
+        beam.name     = "splash of acid";
+        beam.damage   = dice_def( 3, 7 );
+        beam.hit      = 20 + (3 * mons->hit_dice);
+        beam.type     = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower  = KILL_MON_MISSILE;
+        beam.flavour  = BEAM_ACID;
         beam.is_beam  = false;
         break;
 
@@ -1927,8 +1961,89 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power )
         beam.is_beam    = true;
         break;
 
+    case SPELL_FIRE_BREATH:
+        beam.name       = "blast of flame";
+        beam.aux_source = "blast of fiery breath";
+        beam.damage     = dice_def( 3, (mons->hit_dice * 2) );
+        beam.colour     = RED;
+        beam.type       = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower    = KILL_MON;
+        beam.hit        = 30;
+        beam.flavour    = BEAM_FIRE;
+        beam.is_beam    = true;
+        break;
+
+    case SPELL_COLD_BREATH:
+        beam.name        = "blast of cold";
+        beam.aux_source  = "blast of icy breath";
+        beam.damage      = dice_def( 3, (mons->hit_dice * 2) );
+        beam.colour      = WHITE;
+        beam.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower     = KILL_MON;
+        beam.hit         = 30;
+        beam.flavour     = BEAM_COLD;
+        beam.is_beam     = true;
+        break;
+
+    case SPELL_DRACONIAN_BREATH:
+        beam.damage      = dice_def( 3, (mons->hit_dice * 2) );
+        beam.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.thrower     = KILL_MON;
+        beam.hit         = 30;
+        beam.is_beam     = true;
+        break;
+
     default:
         DEBUGSTR("Unknown spell");
+    }
+
+    if (spell_cast == SPELL_DRACONIAN_BREATH)
+    {
+        int scaling = 100;
+        switch(drac_type)
+        {
+        case MONS_RED_DRACONIAN:
+            beam.name       = "searing blast";
+            beam.aux_source = "blast of searing breath";
+            scaling         = 65;
+            break;
+
+        case MONS_WHITE_DRACONIAN:
+            beam.name       = "chilling blast";
+            beam.aux_source = "blast of chilling breath";
+            scaling         = 65;
+            break;
+
+        case MONS_PLAYER_GHOST: // draconians only
+            beam.name       = "blast of negative energy";
+            beam.aux_source = "blast of draining breath";
+            beam.flavour    = BEAM_NEG;
+            beam.colour     = DARKGREY;
+            scaling         = 65;
+            break;
+        }
+        beam.damage.size = scaling * beam.damage.size / 100;
+    }
+
+    // Accuracy is lowered by one quarter if the dragon is attacking
+    // a target that is wielding a weapon of dragon slaying (which
+    // makes the dragon/draconian avoid looking at the foe).
+    // FIXME: This effect is not yet implemented for player draconians
+    // or characters in dragon form breathing at monsters wielding a
+    // weapon with this brand.
+    if (is_dragonkind(mons, mons))
+    {
+        if (actor *foe = mons->get_foe())
+        {
+            if (const item_def *weapon = foe->weapon())
+            {
+                if (get_weapon_brand(*weapon) == SPWPN_DRAGON_SLAYING)
+                {
+                    beam.hit *= 3;
+                    beam.hit /= 4;
+                }
+            }
+        }
     }
 
     return (beam);

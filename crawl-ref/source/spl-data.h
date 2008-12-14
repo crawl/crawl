@@ -2724,11 +2724,11 @@
 {
     SPELL_POISON_SPLASH, "Poison Splash",
      SPTYP_POISON,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
      2,
      0,
      7, 7,
-     0,
+     2,
      NULL,
      true,
      false
@@ -2835,6 +2835,71 @@
      0,
      NULL,
      false,
+     false
+},
+
+{
+    SPELL_ACID_SPLASH, "Acid Splash",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     5,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_STICKY_FLAME_SPLASH, "Sticky Flame Splash",
+     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     4,
+     100,
+     5, 5,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_FIRE_BREATH, "Fire Breath",
+     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     5,
+     0,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_COLD_BREATH, "Cold Breath",
+     SPTYP_CONJURATION | SPTYP_ICE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     5,
+     0,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_DRACONIAN_BREATH, "Draconian Breath",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     8,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
      false
 },
 

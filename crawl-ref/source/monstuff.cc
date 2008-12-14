@@ -74,7 +74,6 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 static bool _is_trap_safe(const monsters *monster, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monsters *monster);
-static bool _plant_spit(monsters *monster, bolt &pbolt);
 static spell_type _map_wand_to_mspell(int wand_type);
 
 // [dshaligram] Doesn't need to be extern.
@@ -4715,6 +4714,8 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     const msg_channel_type spl = (mons_friendly(monster) ? MSGCH_FRIEND_SPELL
                                                          : MSGCH_MONSTER_SPELL);
 
+    spell_type spell = SPELL_NO_SPELL;
+
     switch (mclass)
     {
     case MONS_ORC_KNIGHT:
@@ -4864,8 +4865,22 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             break;
 
         if (one_chance_in(3))
-            used = _plant_spit(monster, beem);
+        {
+            spell = SPELL_ACID_SPLASH;
+            setup_mons_cast(monster, beem, spell);
 
+            // Fire tracer.
+            fire_tracer(monster, beem);
+
+            // Good idea?
+            if (mons_should_fire(beem))
+            {
+                _make_mons_stop_fleeing(monster);
+                mons_cast(monster, beem, spell);
+                mmov.reset();
+                used = true;
+            }
+        }
         break;
 
     case MONS_MOTH_OF_WRATH:
@@ -5020,16 +5035,27 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             break;
         }
     }
+    // Intentional fallthrough
+
+    case MONS_WHITE_DRACONIAN:
+    case MONS_RED_DRACONIAN:
+        spell = SPELL_DRACONIAN_BREATH;
+    // Intentional fallthrough
+
+    case MONS_ICE_DRAGON:
+        if (spell == SPELL_NO_SPELL)
+            spell = SPELL_COLD_BREATH;
+    // Intentional fallthrough
 
     // Dragon breath weapons:
     case MONS_DRAGON:
     case MONS_HELL_HOUND:
-    case MONS_ICE_DRAGON:
     case MONS_LINDWURM:
     case MONS_FIREDRAKE:
     case MONS_XTAHUA:
-    case MONS_WHITE_DRACONIAN:
-    case MONS_RED_DRACONIAN:
+        if (spell == SPELL_NO_SPELL)
+            spell = SPELL_FIRE_BREATH;
+
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
@@ -5039,7 +5065,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         if (monster->type != MONS_HELL_HOUND && x_chance_in_y(3, 13)
             || one_chance_in(10))
         {
-            setup_dragon(monster, beem);
+            setup_mons_cast(monster, beem, spell);
 
             // Fire tracer.
             fire_tracer(monster, beem);
@@ -5048,8 +5074,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             if (mons_should_fire(beem))
             {
                 _make_mons_stop_fleeing(monster);
-                simple_monster_message(monster, " breathes.", spl);
-                fire_beam(beem);
+                mons_cast(monster, beem, spell);
                 mmov.reset();
                 used = true;
             }
@@ -5545,31 +5570,11 @@ static spell_type _get_draconian_breath_spell( monsters *monster )
     {
         switch (draco_subspecies( monster ))
         {
-        case MONS_BLACK_DRACONIAN:
-            draco_breath = SPELL_LIGHTNING_BOLT;
-            break;
-
-        case MONS_PALE_DRACONIAN:
-            draco_breath = SPELL_STEAM_BALL;
-            break;
-
-        case MONS_GREEN_DRACONIAN:
-            draco_breath = SPELL_POISONOUS_CLOUD;
-            break;
-
-        case MONS_PURPLE_DRACONIAN:
-            draco_breath = SPELL_ISKENDERUNS_MYSTIC_BLAST;
-            break;
-
-        case MONS_MOTTLED_DRACONIAN:
-            draco_breath = SPELL_STICKY_FLAME;
-            break;
-
         case MONS_DRACONIAN:
         case MONS_YELLOW_DRACONIAN:     // already handled as ability
-        case MONS_RED_DRACONIAN:        // already handled as ability
-        case MONS_WHITE_DRACONIAN:      // already handled as ability
+            break;
         default:
+            draco_breath = SPELL_DRACONIAN_BREATH;
             break;
         }
     }
@@ -5601,36 +5606,6 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
     return (msp[5] == spell);
 }
 
-static bool _mons_announce_cast(monsters *monster, bool nearby,
-                                spell_type spell_cast,
-                                spell_type draco_breath)
-{
-    const msg_channel_type spl = (mons_friendly(monster) ? MSGCH_FRIEND_SPELL
-                                                         : MSGCH_MONSTER_SPELL);
-
-    if (nearby)
-    {
-        if (spell_cast == draco_breath)
-        {
-            if (simple_monster_message(monster, " breathes.", spl))
-                return (true);
-            else
-            {
-                if (!silenced(monster->pos())
-                    && !silenced(you.pos()))
-                {
-                    mpr("You hear a roar.", MSGCH_SOUND);
-                    return (true);
-                }
-            }
-        }
-        else if (monster->type == -1)
-            monster->hit_points = -1;
-    }
-
-    return (false);
-}
-
 //---------------------------------------------------------------
 //
 // handle_spell
@@ -5657,12 +5632,9 @@ static bool _handle_spell(monsters *monster, bolt &beem)
         return (false);
     }
 
-    // Geryon can't summon beasts if he's silenced since he uses a horn,
-    // and we have to check for him explicitly since he's neither a priest
-    // nor a wizard.
     if (silenced(monster->pos())
-        && (monster->type == MONS_GERYON
-            || mons_class_flag(monster->type, M_PRIEST | M_ACTUAL_SPELLS)))
+        && mons_class_flag(monster->type,
+                           M_PRIEST | M_ACTUAL_SPELLS | M_SPELL_NO_SILENT))
     {
         return (false);
     }
@@ -5941,9 +5913,8 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             return (false);
         }
 
-        const bool did_noise = 
-            _mons_announce_cast(monster, monsterNearby,
-                                 spell_cast, draco_breath);
+        if (monster->type == MONS_BALL_LIGHTNING)
+            monster->hit_points = -1;
 
         // FINALLY! determine primary spell effects {dlb}:
         if (spell_cast == SPELL_BLINK)
@@ -5951,8 +5922,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             // Why only cast blink if nearby? {dlb}
             if (monsterNearby)
             {
-                if (!did_noise)
-                    mons_cast_noise(monster, beem, spell_cast);
+                mons_cast_noise(monster, beem, spell_cast);
 
                 simple_monster_message(monster, " blinks!");
                 monster_blink(monster);
@@ -5967,7 +5937,7 @@ static bool _handle_spell(monsters *monster, bolt &beem)
             if (spell_needs_foe(spell_cast))
                 _make_mons_stop_fleeing(monster);
 
-            mons_cast(monster, beem, spell_cast, !did_noise);
+            mons_cast(monster, beem, spell_cast);
             mmov.reset();
             monster->lose_energy(EUT_SPELL);
         }
@@ -7953,49 +7923,6 @@ forget_it:
 
     return ret;
 }                               // end monster_move()
-
-static void _setup_plant_spit(monsters *monster, bolt &pbolt)
-{
-    pbolt.name        = "acid";
-    pbolt.type        = dchar_glyph(DCHAR_FIRED_ZAP);
-    // immobile plants get long-range spit...
-    pbolt.range       = LOS_RADIUS;
-    pbolt.colour      = YELLOW;
-    pbolt.flavour     = BEAM_ACID;
-    pbolt.beam_source = monster_index(monster);
-    pbolt.damage      = dice_def( 3, 7 );
-    pbolt.hit         = 20 + (3 * monster->hit_dice);
-    pbolt.thrower     = KILL_MON_MISSILE;
-    pbolt.aux_source.clear();
-}
-
-static bool _plant_spit(monsters *monster, bolt &pbolt)
-{
-    bool did_spit = false;
-
-    char spit_string[INFO_SIZE];
-
-    _setup_plant_spit(monster, pbolt);
-
-    // Fire tracer.
-    fire_tracer(monster, pbolt);
-
-    if (mons_should_fire(pbolt))
-    {
-        _make_mons_stop_fleeing(monster);
-        strcpy( spit_string, " spits" );
-        if (pbolt.target == you.pos())
-            strcat( spit_string, " at you" );
-
-        strcat( spit_string, "." );
-        simple_monster_message( monster, spit_string );
-
-        fire_beam( pbolt );
-        did_spit = true;
-    }
-
-    return (did_spit);
-}
 
 static void _mons_in_cloud(monsters *monster)
 {

@@ -2,11 +2,35 @@
 # Individual spells.
 #####################################################
 %%%%
+Acid Splash cast
+
+@The_monster@ spits acid at @target@.
+%%%%
+Acid Splash cast unseen
+
+You hear a spitting sound.
+%%%%
+Draconian Breath cast
+
+@The_monster@ breathes.
+%%%%
+Draconian Breath cast unseen
+
+You hear a roar.
+%%%%
 Poison Splash cast
 
-@The_monster@ spits poison.
+@The_monster@ spits poison at @target@.
 %%%%
 Poison Splash cast unseen
+
+You hear a spitting sound.
+%%%%
+Sticky Flame Splash cast
+
+@The_monster@ spits sticky flame at @target@.
+%%%%
+Sticky Flame Splash cast unseen
 
 You hear a spitting sound.
 %%%%

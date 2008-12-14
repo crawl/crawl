@@ -17,7 +17,6 @@
 struct bolt;
 
 bolt mons_spells(monsters *mons, spell_type spell_cast, int power);
-void setup_dragon(monsters *monster, bolt &pbolt);
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                bool do_noise = true);
 void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast);
