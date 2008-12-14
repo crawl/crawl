@@ -648,6 +648,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "// This file has been automatically generated.\n\n");
         fprintf(fp, "#include \"tiledef-%s.h\"\n\n", lcname.c_str());
         fprintf(fp, "#include <string>\n");
+        fprintf(fp, "#include <string.h>\n");
         fprintf(fp, "#include <assert.h>\n");
         fprintf(fp, "using namespace std;\n\n");
 
