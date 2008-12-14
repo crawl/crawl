@@ -896,6 +896,22 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         } // else hp <= 0
     }
 
+    if (crawl_state.is_god_acting()
+        && crawl_state.which_god_acting() == GOD_XOM
+        && crawl_state.other_gods_acting().size() == 0)
+    {
+        if (aux == NULL || strstr(aux, "Xom") == NULL)
+            death_type = KILLED_BY_XOM;
+
+        // Xom should only cause death if the player is under penance or
+        // Xom is bored.
+        if (!you.penance[GOD_XOM]
+            && !(you.religion == GOD_XOM && you.gift_timeout == 0))
+        {
+            return;
+        }
+    }
+
     // Construct scorefile entry.
     scorefile_entry se(dam, death_source, death_type, aux);
 

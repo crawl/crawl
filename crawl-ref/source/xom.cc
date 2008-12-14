@@ -711,6 +711,10 @@ static bool _xom_is_good(int sever)
 {
     bool done = false;
 
+    // Did Xom (already) kill the player?
+    if (you.hp <= 0)
+        return (true);
+
     god_acting gdact(GOD_XOM);
 
     // This series of random calls produces a poisson-looking
@@ -1047,6 +1051,9 @@ static bool _xom_is_good(int sever)
         {
             if (you.hp <= random2(201))
                 you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
+            else
+                // Make sure we don't directly kill the player.
+                you.hp += 90;
 
             god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
 
@@ -1070,6 +1077,11 @@ static bool _xom_is_good(int sever)
                 mpr("Your divine protection wanes.");
                 you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
             }
+            else
+            {
+                you.hp -= 90;
+                you.hp  = std::max(1, you.hp);
+            }
 
             done = true;
         }
@@ -1082,10 +1094,19 @@ static bool _xom_is_bad(int sever)
 {
     bool done = false;
 
+    // Xom will only directly kill you with a bad effect if you're under
+    // penance from him or he's bored.
+    const bool nasty = you.penance[GOD_XOM]
+                       || (you.religion == GOD_XOM && you.gift_timeout == 0);
+
     god_acting gdact(GOD_XOM);
 
     while (!done)
     {
+        // Did Xom kill the player?
+        if (you.hp <= 0)
+            return (true);
+
         if (x_chance_in_y(3, sever))
         {
             god_speaks(GOD_XOM, _get_xom_speech("zero miscast effect").c_str());
@@ -1095,7 +1116,7 @@ static bool _xom_is_bad(int sever)
 
             done = true;
         }
-        else if (x_chance_in_y(4, sever))
+        else if (x_chance_in_y(4, sever) && (nasty || you.hp > 12))
         {
             god_speaks(GOD_XOM, _get_xom_speech("minor miscast effect").c_str());
 
@@ -1106,14 +1127,41 @@ static bool _xom_is_bad(int sever)
         }
         else if (x_chance_in_y(5, sever))
         {
-            god_speaks(GOD_XOM, _get_xom_speech("lose stats").c_str());
+            stat_type stat = STAT_RANDOM;
+            int       max  = 3;
 
-            lose_stat(STAT_RANDOM, 1 + random2(3), true,
-                      "the capriciousness of Xom" );
+            // Don't kill the player unless Xom is being nasty.
+            if (!nasty)
+            {
+                // Make sure not to lower strength so much that the player
+                // will die once might wears off.
+                char      vals[3] =
+                    {you.strength - (you.duration[DUR_MIGHT] ? 5 : 0),
+                     you.dex, you.intel};
+                stat_type types[3] = {STAT_STRENGTH, STAT_DEXTERITY,
+                                      STAT_INTELLIGENCE};
+
+                int count = 0;
+                for (int i = 0; i < 3; i++)
+                {
+                    int val = vals[i];
+
+                    if (val > 1 && one_chance_in(++count))
+                    {
+                        stat = types[i];
+                        max  = val - 1;
+                    }
+                }
+                if (count == 0)
+                    continue;
+            }
+
+            god_speaks(GOD_XOM, _get_xom_speech("lose stats").c_str());
+            lose_stat(stat, 1 + random2(max), true, "the vengeance of Xom" );
 
             done = true;
         }
-        else if (x_chance_in_y(6, sever))
+        else if (x_chance_in_y(6, sever) && (nasty || you.hp > 25))
         {
             god_speaks(GOD_XOM, _get_xom_speech("medium miscast effect").c_str());
 
@@ -1243,14 +1291,14 @@ static bool _xom_is_bad(int sever)
 
             if (one_chance_in(4))
             {
-                if (player_prot_life() < 3)
+                if (player_prot_life() < 3 && (nasty || you.experience > 0))
                 {
                     god_speaks(GOD_XOM, speech.c_str());
 
                     drain_exp();
-                    if (random2(sever) > 3)
+                    if (random2(sever) > 3 && (nasty || you.experience > 0))
                         drain_exp();
-                    if (random2(sever) > 3)
+                    if (random2(sever) > 3 && (nasty || you.experience > 0))
                         drain_exp();
 
                     done = true;
@@ -1309,7 +1357,7 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (x_chance_in_y(14, sever))
+        else if (x_chance_in_y(14, sever) && (nasty || you.hp > 30))
         {
             god_speaks(GOD_XOM, _get_xom_speech("major miscast effect").c_str());
 
@@ -1364,6 +1412,13 @@ void xom_acts(bool niceness, int sever)
         }
     }
 
+    int orig_hp  = you.hp;
+    int orig_str = you.strength;
+    int orig_dex = you.dex;
+    int orig_int = you.intel;
+
+    FixedVector<unsigned char, NUM_MUTATIONS> orig_mutation = you.mutation;
+
     if (niceness && !one_chance_in(5))
     {
         // Good stuff.
@@ -1375,6 +1430,41 @@ void xom_acts(bool niceness, int sever)
         // Bad mojo.
         while (!_xom_is_bad(sever))
             ;
+    }
+
+    if (you.hp <= 0 || you.strength <= 0 || you.dex <= 0 || you.intel <= 0)
+    {
+        // ouch() returned early because the player died from the Xom effect
+        // even though neither is the player under penance nor is Xom bored.
+        mpr("You die...");
+        god_speaks(GOD_XOM, _get_xom_speech("accidental homicide").c_str());
+
+        int changes = 0;
+        for (int i = 0; i < NUM_MUTATIONS; i++)
+        {
+            if (orig_mutation[i] != you.mutation[i])
+                changes++;
+        }
+
+        if (changes > 0)
+        {
+            std::string str = "Xom undoes your latest mutation";
+            if (changes > 1)
+                str += "s";
+            str += ".";
+            god_speaks(GOD_XOM, str.c_str());
+        }
+
+        you.mutation = orig_mutation;
+
+        you.hp       = orig_hp;
+        you.strength = orig_str;
+        you.dex      = orig_dex;
+        you.intel    = orig_int;
+
+        you.max_strength = std::max(you.max_strength, you.strength);
+        you.max_intel    = std::max(you.max_intel, you.intel);
+        you.max_dex      = std::max(you.max_dex, you.dex);
     }
 
     // Drawing the Xom card from Nemelex's decks of oddities or punishment.

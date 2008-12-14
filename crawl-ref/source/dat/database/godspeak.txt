@@ -348,6 +348,11 @@ Xom's power brushes against you for a moment.
 
 You hear Xom's avuncular chuckle.
 %%%%
+Xom accidental homicide
+
+"Oops, I didn't mean to do *that*!"
+Xom brings you back to life.
+%%%%
 ############################################
 # Beogh rants on destroying an orcish idol #
 ############################################
