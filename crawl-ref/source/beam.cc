@@ -1531,12 +1531,14 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
 
 void fire_beam(bolt &pbolt)
 {
-    ASSERT(!pbolt.name.empty());
     ASSERT(pbolt.flavour > BEAM_NONE && pbolt.flavour < NUM_BEAMS);
     ASSERT(!pbolt.drop_item || pbolt.item);
     ASSERT(!pbolt.dropped_item);
 
     pbolt.real_flavour = pbolt.flavour;
+
+    const bool beam_invisible =
+        pbolt.type == 0 || (!pbolt.name.empty() && pbolt.name[0] == '0');
 
     const int reflections = pbolt.reflections;
     if (reflections == 0)
@@ -1547,7 +1549,7 @@ void fire_beam(bolt &pbolt)
 
         // pbolt.seen might be set by caller to supress this.
         if (!pbolt.seen && see_grid(pbolt.source) && pbolt.range > 0
-            && pbolt.type != 0 && pbolt.name[0] != '0')
+            && !beam_invisible)
         {
             pbolt.seen = true;
             int midx = mgrd(pbolt.source);
@@ -1745,8 +1747,8 @@ void fire_beam(bolt &pbolt)
             break;
 
         const bool was_seen = pbolt.seen;
-        if (!was_seen && pbolt.range > 0 && pbolt.type != 0
-            && pbolt.name[0] != '0' && see_grid(testpos))
+        if (!was_seen && pbolt.range > 0 && !beam_invisible 
+            && see_grid(testpos))
         {
             pbolt.seen = true;
         }
