@@ -252,14 +252,15 @@ static void _try_brand_switch(const int item_index)
 
     item_def &item(mitm[item_index]);
 
-    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_MISSILES)
+    // Only apply to melee weapons for the player.
+    if (item.base_type != OBJ_WEAPONS || is_range_weapon(item))
         return;
 
     if (is_unrandom_artefact(item) || is_fixed_artefact(item))
         return;
 
     // Only do it some of the time.
-    if (one_chance_in(3))
+    if (one_chance_in(5))
         return;
 
     int brand;

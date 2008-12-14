@@ -2209,7 +2209,6 @@ void melee_attack::chaos_affects_defender()
     const bool mon        = defender->atype() == ACT_MONSTER;
     const bool immune     = mon && mons_immune_magic(def);
     const bool is_shifter = mon && mons_is_shapeshifter(def);
-    const bool is_chaotic = mon && mons_is_chaotic(def);
     const bool can_clone  = mon && !mons_is_holy(def)
                             && mons_clonable(def, true);
     const bool can_poly   = is_shifter || (defender->can_safely_mutate()
@@ -2223,25 +2222,9 @@ void melee_attack::chaos_affects_defender()
     int rage_chance    = can_rage         ? 10 : 0;
     int miscast_chance = 10;
 
-    if (is_chaotic)
-    {
-        // Polymorphing might reduce amount of chaos in the world.
-        poly_chance    = 0;
-        poly_up_chance = 0;
-
-        // Chaos wants more chaos.
-        clone_chance *= 2;
-
-        // Chaos loves shifters.
-        if (is_shifter)
-        {
-            clone_chance   *= 2;
-            poly_up_chance  = 4;
-
-            // Already a shifter
-            shifter_chance = 0;
-        }
-    }
+    if (is_shifter)
+        // Already a shifter
+        shifter_chance = 0;
 
     // A chaos self-attack increased the chance of certain effects,
     // due to a short-circuit/feedback/resonance/whatever.
@@ -2252,6 +2235,18 @@ void melee_attack::chaos_affects_defender()
         poly_up_chance *= 2;
         shifter_chance *= 2;
         miscast_chance *= 2;
+
+        // Inform player that something is up.
+        if (see_grid(defender->pos()))
+        {
+            if (defender->atype() == ACT_PLAYER)
+                mpr("You give off a flash of multi-coloured light!");
+            else if (you.can_see(defender))
+                simple_monster_message(def, " gives off a flash of "
+                                       "multi-coloured light!");
+            else
+                mpr("There is a flash of multi-coloured light!");
+        }
     }
 
     // NOTE: Must appear in exact same order as in chaos_type enumeration.
