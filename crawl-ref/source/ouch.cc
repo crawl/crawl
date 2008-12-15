@@ -896,20 +896,31 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         } // else hp <= 0
     }
 
+    // Is the player being killed by a direct act of Xom?
     if (crawl_state.is_god_acting()
         && crawl_state.which_god_acting() == GOD_XOM
         && crawl_state.other_gods_acting().size() == 0)
     {
-        if (aux == NULL || strstr(aux, "Xom") == NULL)
-            death_type = KILLED_BY_XOM;
-
-        // Xom should only cause death if the player is under penance or
+        // Xom should only kill his worhsippers if they're under penance or
         // Xom is bored.
-        if (!you.penance[GOD_XOM]
-            && !(you.religion == GOD_XOM && you.gift_timeout == 0))
+        if (you.religion == GOD_XOM && !you.penance[GOD_XOM]
+            && you.gift_timeout > 0)
         {
             return;
         }
+
+        // Also don't kill wizards testing Xom acts.
+        if (crawl_state.prev_cmd == CMD_WIZARD)
+            return;
+
+        // Ensure some minimal informfullness about Xom's involvment.
+        if (aux == NULL)
+        {
+            if (death_type != KILLED_BY_XOM)
+                aux = "Xom";
+        }
+        else if(strstr(aux, "Xom") == NULL)
+            death_type = KILLED_BY_XOM;
     }
 
     // Construct scorefile entry.

@@ -351,6 +351,9 @@ You hear Xom's avuncular chuckle.
 Xom accidental homicide
 
 "Oops, I didn't mean to do *that*!"
+%%%%
+Xom resurrection
+
 Xom brings you back to life.
 %%%%
 ############################################

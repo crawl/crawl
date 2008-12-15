@@ -1613,7 +1613,113 @@ static int calc_mutation_amusement_value(mutation_type which_mutation)
     return (amusement);
 }
 
-static bool accept_mutation(mutation_type mutat, bool ignore_rarity = false)
+static bool _is_deadly(mutation_type mutat, bool delete_mut)
+{
+    if (delete_mut)
+    {
+        // First handle non-stat related problems.
+        if ( mutat == MUT_HEAT_RESISTANCE && grd(you.pos()) == DNGN_LAVA
+             && player_res_fire() == 1 && !you.airborne() )
+        {
+            // Don't let player instantly fry to a crisp in lava.
+            return (true);
+        }
+
+        // Swap things around to the same effect, but as if we were gaining
+        // a mutation, or return early if deleting the mutation is never
+        // a problem.
+        switch(mutat)
+        {
+        case MUT_GREY2_SCALES:
+        case MUT_METALLIC_SCALES:
+        case MUT_YELLOW_SCALES:
+        case MUT_RED2_SCALES:
+        case MUT_WEAK:
+        case MUT_DOPEY:
+        case MUT_CLUMSY:
+            return (false);
+
+        case MUT_STRONG_STIFF:
+            mutat = MUT_FLEXIBLE_WEAK;
+            break;
+
+        case MUT_FLEXIBLE_WEAK:
+            mutat = MUT_STRONG_STIFF;
+            break;
+
+        case MUT_STRONG:
+            mutat = MUT_WEAK;
+            break;
+
+        case MUT_CLEVER:
+            mutat = MUT_DOPEY;
+            break;
+
+        case MUT_AGILE:
+            mutat = MUT_CLUMSY;
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    unsigned char cur_level = you.mutation[mutat];
+
+    char *stat_ptr = &you.dex; // Default for the scales.
+    char  amnt     = 1;
+    char  mod      = 0;
+ 
+    switch(mutat)
+    {
+    case MUT_GREY2_SCALES:
+        if (cur_level == 0 || cur_level == 2)
+            amnt = 1;
+        else
+            amnt = 0;
+        break;
+
+    case MUT_METALLIC_SCALES:
+        if (cur_level == 0)
+            amnt = 2;
+        else
+            amnt = 1;
+        break;
+
+    case MUT_YELLOW_SCALES:
+    case MUT_RED2_SCALES:
+        if (cur_level == 0)
+            amnt = 0;
+        else
+            amnt = 1;
+        break;
+
+    case MUT_FLEXIBLE_WEAK:
+    case MUT_WEAK:
+        stat_ptr = &you.strength;
+        // Take might into account so we don't lower base strength below
+        // one.
+        if (you.duration[DUR_MIGHT])
+            mod = -5;
+        break;
+
+    case MUT_DOPEY:
+        stat_ptr = &you.intel;
+
+    case MUT_STRONG_STIFF:
+    case MUT_CLUMSY:
+        stat_ptr = &you.dex;
+        break;
+
+    default:
+        return (false);
+    }
+
+    return (amnt >= (*stat_ptr + mod));
+}
+
+static bool accept_mutation(mutation_type mutat, bool ignore_rarity = false,
+                            bool non_fatal = false, bool delete_mut = false)
 {
     if (mutat == RANDOM_MUTATION
         || mutation_defs[mutat].mutation == RANDOM_MUTATION)
@@ -1621,7 +1727,15 @@ static bool accept_mutation(mutation_type mutat, bool ignore_rarity = false)
         return (false);
     }
 
+    if (delete_mut)
+    {
+        return (!non_fatal || !_is_deadly(mutat, delete_mut));
+    }
+
     if (you.mutation[mutat] >= mutation_defs[mutat].levels)
+        return (false);
+
+    if (non_fatal && _is_deadly(mutat, delete_mut))
         return (false);
 
     if (ignore_rarity)
@@ -1633,7 +1747,7 @@ static bool accept_mutation(mutation_type mutat, bool ignore_rarity = false)
     return (x_chance_in_y(rarity, 10));
 }
 
-static mutation_type get_random_xom_mutation()
+static mutation_type get_random_xom_mutation(bool non_fatal = false)
 {
     mutation_type mutat = NUM_MUTATIONS;
     do
@@ -1657,13 +1771,14 @@ static mutation_type get_random_xom_mutation()
             }
         }
     }
-    while (!accept_mutation(mutat));
+    while (!accept_mutation(mutat, false, non_fatal));
 
     return (mutat);
 }
 
 static mutation_type get_random_mutation(bool prefer_good,
-                                         int preferred_multiplier)
+                                         int preferred_multiplier,
+                                         bool non_fatal = false)
 {
     int cweight = 0;
     mutation_type chosen = NUM_MUTATIONS;
@@ -1673,7 +1788,7 @@ static mutation_type get_random_mutation(bool prefer_good,
             continue;
 
         const mutation_type curr = static_cast<mutation_type>(i);
-        if (!accept_mutation(curr, true))
+        if (!accept_mutation(curr, true, non_fatal))
             continue;
 
         const bool weighted = mutation_defs[i].bad != prefer_good;
@@ -1689,10 +1804,20 @@ static mutation_type get_random_mutation(bool prefer_good,
     return (chosen);
 }
 
-bool mutate(mutation_type which_mutation, bool failMsg,
-            bool force_mutation, bool god_gift,
-            bool stat_gain_potion, bool demonspawn)
+static bool _is_random(mutation_type which_mutation)
 {
+    return (which_mutation == RANDOM_MUTATION
+            || which_mutation == RANDOM_XOM_MUTATION
+            || which_mutation == RANDOM_GOOD_MUTATION
+            || which_mutation == RANDOM_BAD_MUTATION);
+}
+
+bool mutate(mutation_type which_mutation, bool failMsg,
+            bool force_mutation, bool god_gift, bool stat_gain_potion,
+            bool demonspawn, bool non_fatal)
+{
+    ASSERT(!non_fatal || _is_random(which_mutation));
+
     if (demonspawn)
         force_mutation = true;
 
@@ -1788,7 +1913,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             if (!one_chance_in(3) && !god_gift && !force_mutation)
                 return (false);
             else
-                return (delete_mutation(RANDOM_MUTATION));
+                return (delete_mutation(RANDOM_MUTATION, failMsg,
+                                        force_mutation, non_fatal));
         }
     }
 
@@ -1800,21 +1926,23 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             if (one_chance_in(1000))
                 return (false);
         }
-        while (!accept_mutation(mutat));
+        while (!accept_mutation(mutat, false, non_fatal));
     }
     else if (which_mutation == RANDOM_XOM_MUTATION)
     {
-        if ((mutat = get_random_xom_mutation()) == NUM_MUTATIONS)
+        if ((mutat = get_random_xom_mutation(non_fatal)) == NUM_MUTATIONS)
             return (false);
     }
     else if (which_mutation == RANDOM_GOOD_MUTATION)
     {
-        if ((mutat = get_random_mutation(true, 500)) == NUM_MUTATIONS)
+        mutat = get_random_mutation(true, 500, non_fatal);
+        if (mutat == NUM_MUTATIONS)
             return (false);
     }
     else if (which_mutation == RANDOM_BAD_MUTATION)
     {
-        if ((mutat = get_random_mutation(false, 500)) == NUM_MUTATIONS)
+        mutat = get_random_mutation(false, 500, non_fatal);
+        if (mutat == NUM_MUTATIONS)
             return (false);
     }
 
@@ -2219,8 +2347,10 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 }
 
 bool delete_mutation(mutation_type which_mutation, bool failMsg,
-                     bool force_mutation)
+                     bool force_mutation, bool non_fatal)
 {
+    ASSERT(!non_fatal || _is_random(which_mutation));
+
     mutation_type mutat = which_mutation;
 
     if (!force_mutation)
@@ -2251,6 +2381,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
                     && mutat != MUT_AGILE)
                 && (mutat != MUT_WEAK && mutat != MUT_DOPEY
                     && mutat != MUT_CLUMSY))
+               || !accept_mutation(mutat, true, non_fatal, true)
                || random2(10) >= mutation_defs[mutat].rarity
                || you.demon_pow[mutat] >= you.mutation[mutat]
                || (which_mutation == RANDOM_GOOD_MUTATION

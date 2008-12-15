@@ -1002,8 +1002,11 @@ static bool _xom_is_good(int sever)
 
             for (int i = random2(4); i >= 0; --i)
             {
-                if (mutate(RANDOM_GOOD_MUTATION, failMsg, false, true))
+                if (mutate(RANDOM_GOOD_MUTATION, failMsg, false, true, false,
+                           false, true))
+                {
                     done = true;
+                }
                 else
                     failMsg = false;
             }
@@ -1051,9 +1054,6 @@ static bool _xom_is_good(int sever)
         {
             if (you.hp <= random2(201))
                 you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 1;
-            else
-                // Make sure we don't directly kill the player.
-                you.hp += 90;
 
             god_speaks(GOD_XOM, "The area is suffused with divine lightning!");
 
@@ -1077,11 +1077,10 @@ static bool _xom_is_good(int sever)
                 mpr("Your divine protection wanes.");
                 you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION] = 0;
             }
-            else
-            {
-                you.hp -= 90;
-                you.hp  = std::max(1, you.hp);
-            }
+
+            // Don't accidentally kill the player when doing a good
+            // act.
+            you.hp  = std::max(1, you.hp);
 
             done = true;
         }
@@ -1229,8 +1228,11 @@ static bool _xom_is_bad(int sever)
 
                 for (int i = random2(4); i >= 0; --i)
                 {
-                    if (mutate(RANDOM_XOM_MUTATION, failMsg, false, true))
+                    if (mutate(RANDOM_XOM_MUTATION, failMsg, false, true,
+                               false, false, !nasty))
+                    {
                         done = true;
+                    }
                     else
                         failMsg = false;
                 }
@@ -1412,12 +1414,16 @@ void xom_acts(bool niceness, int sever)
         }
     }
 
-    int orig_hp  = you.hp;
-    int orig_str = you.strength;
-    int orig_dex = you.dex;
-    int orig_int = you.intel;
+    const dungeon_feature_type orig_feat = grd(you.pos());
 
-    FixedVector<unsigned char, NUM_MUTATIONS> orig_mutation = you.mutation;
+    const int orig_hp = you.hp;
+
+          char* stat_ptrs[3]  = {&you.strength, &you.intel, &you.dex};
+    const char  orig_stats[3] = {*(stat_ptrs[0]), *(stat_ptrs[1]),
+                                 *(stat_ptrs[2])};
+
+    const FixedVector<unsigned char, NUM_MUTATIONS> orig_mutation
+        = you.mutation;
 
     if (niceness && !one_chance_in(5))
     {
@@ -1432,39 +1438,93 @@ void xom_acts(bool niceness, int sever)
             ;
     }
 
+    bool already_oopsed = false;
     if (you.hp <= 0 || you.strength <= 0 || you.dex <= 0 || you.intel <= 0)
     {
         // ouch() returned early because the player died from the Xom effect
         // even though neither is the player under penance nor is Xom bored.
         mpr("You die...");
         god_speaks(GOD_XOM, _get_xom_speech("accidental homicide").c_str());
+        god_speaks(GOD_XOM, _get_xom_speech("resurrection").c_str());
 
-        int changes = 0;
-        for (int i = 0; i < NUM_MUTATIONS; i++)
+        already_oopsed = true;
+
+        if (you.hp <= 0)
+            you.hp = orig_hp;
+
+        mutation_type dex_muts[5] = {MUT_GREY2_SCALES, MUT_METALLIC_SCALES,
+                                     MUT_YELLOW_SCALES, MUT_RED2_SCALES,
+                                     MUT_STRONG_STIFF};
+
+        for (int i = 0; i < 5; i++)
         {
-            if (orig_mutation[i] != you.mutation[i])
-                changes++;
+            mutation_type bad = dex_muts[i];
+
+            while (you.dex <= 0 && you.mutation[bad] > orig_mutation[bad])
+                delete_mutation(bad, true, true);
+        }
+        while(you.dex <= 0
+              && you.mutation[MUT_FLEXIBLE_WEAK] <
+                     orig_mutation[MUT_FLEXIBLE_WEAK])
+        { 
+            mutate(MUT_FLEXIBLE_WEAK, true, true, true);
         }
 
-        if (changes > 0)
+        while (you.strength <= 0
+               && you.mutation[MUT_FLEXIBLE_WEAK] >
+                      orig_mutation[MUT_FLEXIBLE_WEAK])
         {
-            std::string str = "Xom undoes your latest mutation";
-            if (changes > 1)
-                str += "s";
-            str += ".";
-            god_speaks(GOD_XOM, str.c_str());
+            delete_mutation(MUT_FLEXIBLE_WEAK, true, true);
+        }
+        while (you.strength <= 0
+               && you.mutation[MUT_STRONG_STIFF] <
+                      orig_mutation[MUT_STRONG_STIFF])
+        {
+            mutate(MUT_STRONG_STIFF, true, true, true);
         }
 
-        you.mutation = orig_mutation;
+        mutation_type bad_muts[3]  = { MUT_WEAK, MUT_DOPEY, MUT_CLUMSY };
+        mutation_type good_muts[3] = { MUT_STRONG, MUT_CLEVER, MUT_AGILE };
 
-        you.hp       = orig_hp;
-        you.strength = orig_str;
-        you.dex      = orig_dex;
-        you.intel    = orig_int;
+        for (int i = 0; i < 3; i++)
+        {
+            while (*(stat_ptrs[i]) <= 0)
+            {
+                mutation_type good = good_muts[i];
+                mutation_type bad  = bad_muts[i];
+                if (you.mutation[bad] > orig_mutation[bad]
+                    || you.mutation[good] < orig_mutation[good])
+                {
+                    mutate(good, true, true, true);
+                }
+                else
+                {
+                    *(stat_ptrs[i]) = orig_stats[i];
+                    break;
+                }
+            }
+        }
 
         you.max_strength = std::max(you.max_strength, you.strength);
         you.max_intel    = std::max(you.max_intel, you.intel);
         you.max_dex      = std::max(you.max_dex, you.dex);
+    }
+
+    // Or maybe Xom accidentally tossed you in deep water or lava.
+    dungeon_feature_type feat = grd(you.pos());
+    if (feat != orig_feat && !you.airborne()
+        && (feat == DNGN_DEEP_WATER && !you.swimming()
+            || feat == DNGN_LAVA && player_res_fire() <= 0))
+    {
+        if (!already_oopsed)
+        {
+            mpr("You die...");
+            god_speaks(GOD_XOM,
+                       _get_xom_speech("accidental homicide").c_str());
+            god_speaks(GOD_XOM, _get_xom_speech("resurrection").c_str());
+        }
+
+        you.teleport(true);
     }
 
     // Drawing the Xom card from Nemelex's decks of oddities or punishment.
