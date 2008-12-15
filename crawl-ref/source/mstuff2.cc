@@ -1372,7 +1372,8 @@ bool mons_thrown_object_destroyed( item_def *item, const coord_def& where,
     if (returning && !destroyed)
         hostile_grid = false;
 
-    if (hostile_grid)
+    // Summoned items go poof if they're not returning.
+    if (hostile_grid || !returning && (item->flags & ISFLAG_SUMMONED))
     {
         // No destruction sound here.  Too much message spam otherwise.
         item_was_destroyed(*item, midx);
@@ -2537,4 +2538,74 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
     }
 
     return (midx);
+}
+
+std::string summoned_poof_msg(const monsters* monster, bool plural)
+{
+    int  summon_type = 0;
+    bool valid_mon   = false;
+    if (monster != NULL && !invalid_monster(monster))
+    {
+        (void) monster->is_summoned(NULL, &summon_type);
+        valid_mon = true;
+    }
+
+    std::string msg      = "disappear%s in a puff of smoke";
+    bool        no_chaos = false;
+
+    switch(summon_type)
+    {
+    case SPELL_SHADOW_CREATURES:
+        msg      = "disolve%s into shadows";
+        no_chaos = true;
+        break;
+
+    case MON_SUMM_CHAOS:
+        msg = "degenerate%s into a cloud of primal chaos";
+        break;
+
+    case MON_SUMM_WRATH:
+    case MON_SUMM_AID:
+        if (valid_mon && is_good_god(monster->god))
+        {
+            msg      = "disolve%s into sparkling lights";
+            no_chaos = true;
+        }
+        break;
+    }
+
+    if (valid_mon)
+    {
+        if (monster->god == GOD_XOM && !no_chaos && one_chance_in(10)
+            || monster->type == MONS_CHAOS_SPAWN)
+        {
+            msg = "degenerate%s into a cloud of primal chaos";
+        }
+
+        if (mons_is_holy(monster) && summon_type != SPELL_SHADOW_CREATURES
+            && summon_type != MON_SUMM_CHAOS)
+        {
+            msg = "disolve%s into sparkling lights";
+        }
+    }
+
+    // Conjugate.
+    msg = make_stringf(msg.c_str(), plural ? "" : "s");
+
+    return (msg);
+}
+
+std::string summoned_poof_msg(const int midx, const item_def &item)
+{
+    if (midx == NON_MONSTER)
+        return summoned_poof_msg(NULL, item);
+    else
+        return summoned_poof_msg(&menv[midx], item);
+}
+
+std::string summoned_poof_msg(const monsters* monster, const item_def &item)
+{
+    ASSERT(item.flags & ISFLAG_SUMMONED);
+
+    return summoned_poof_msg(monster, item.quantity > 1);
 }

@@ -920,60 +920,29 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
     if (!summoned)
         return;
 
-    std::string prefix;
-    std::string msg   = " disappears in a puff of smoke!";
-    cloud_type  cloud = random_smoke_type();
-    int         dur   = 1 + random2(3);
-
+    std::string prefix = " ";
     if (corpse)
     {
         if (mons_weight(mons_species(monster->type)) == 0)
             return;
 
-        prefix = "'s corpse";
+        prefix = "'s corpse ";
     }
 
-    switch(summon_type)
-    {
-    case SPELL_SHADOW_CREATURES:
-        msg   = " disolves into shadows!";
-        cloud = CLOUD_NONE;
-        break;
+    std::string msg = summoned_poof_msg(monster);
+    msg += "!";
 
-    case MON_SUMM_CHAOS:
-        msg   = " degenerates into a cloud of primal chaos!";
+    cloud_type cloud = CLOUD_NONE;
+    if (msg.find("smoke") != std::string::npos)
+        cloud = random_smoke_type();
+    else if (msg.find("chaos") != std::string::npos)
         cloud = CLOUD_CHAOS;
-        break;
-
-    case MON_SUMM_WRATH:
-    case MON_SUMM_AID:
-        if (is_good_god(monster->god))
-        {
-            msg   = " disolves into sparkling lights!";
-            cloud = CLOUD_NONE;
-        }
-        break;
-    }
-
-    if (monster->god == GOD_XOM && one_chance_in(10)
-        || cloud != CLOUD_NONE && monster->type == MONS_CHAOS_SPAWN)
-    {
-        msg   = " degenerates into a cloud of primal chaos!";
-        cloud = CLOUD_CHAOS;
-    }
-
-    if (mons_is_holy(monster) && summon_type != SPELL_SHADOW_CREATURES
-        && summon_type != MON_SUMM_CHAOS)
-    {
-            msg   = " disolves into sparkling lights!";
-            cloud = CLOUD_NONE;
-    }
 
     if (!silent)
         simple_monster_message(monster, (prefix + msg).c_str());
 
     if (cloud != CLOUD_NONE)
-        place_cloud( cloud, monster->pos(), dur,
+        place_cloud( cloud, monster->pos(), 1 + random2(3),
                      monster->kill_alignment() );
 }
 
@@ -1002,7 +971,7 @@ void monster_die(monsters *monster, killer_type killer,
     const bool gives_xp      = !summoned
                                && !mons_enslaved_body_and_soul(monster);
 
-    const bool drop_items    = !hard_reset && !mons_is_holy(monster);
+    const bool drop_items    = !hard_reset;
 
     const bool mons_reset( killer == KILL_RESET || killer == KILL_DISMISSED );
 

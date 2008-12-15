@@ -3003,6 +3003,22 @@ void beam_drop_object( bolt &beam, item_def *item, const coord_def& _p )
     if (!in_bounds(p))
        p = beam.pos;
 
+    if (item->flags & ISFLAG_SUMMONED)
+    {
+        if (see_grid(p))
+        {
+            mprf("%s %s!",
+                 item->name(DESC_CAP_THE).c_str(),
+                 summoned_poof_msg(beam.beam_source, *item).c_str());
+        }
+        item_was_destroyed(*item, beam.beam_source);
+
+        beam.dropped_item = true;
+        beam.item_pos     = p;
+        beam.item_index   = NON_ITEM;
+        return;
+    }
+
     // Conditions: beam is missile and not tracer.
     if (YOU_KILL(beam.thrower)
             && !thrown_object_destroyed(item, p, false)

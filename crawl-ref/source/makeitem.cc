@@ -3662,7 +3662,8 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 // Hands out ammunition fitting the monster's launcher (if any), or else any
 // throwable weapon depending on the monster type.
 static void _give_ammo(monsters *mon, int level,
-                       item_make_species_type item_race)
+                       item_make_species_type item_race,
+                       bool mons_summoned)
 {
     // Note that item_race is not reset for this section.
     if (const item_def *launcher = mon->launcher())
@@ -3763,7 +3764,7 @@ static void _give_ammo(monsters *mon, int level,
                     qty = 3 + random2(6);
                 }
             }
-            if (one_chance_in(6))
+            if (one_chance_in(6) && !mons_summoned)
             {
                 weap_class = OBJ_MISSILES;
                 weap_type = MI_THROWING_NET;
@@ -3781,6 +3782,9 @@ static void _give_ammo(monsters *mon, int level,
             // fall through
         case MONS_HAROLD: // bounty hunters
         case MONS_JOZEF:  // up to 5 nets
+            if (mons_summoned)
+                break;
+
             weap_class = OBJ_MISSILES;
             weap_type = MI_THROWING_NET;
             qty = 1;
@@ -4149,7 +4153,8 @@ void give_armour(monsters *mon, int level)
         mitm[thing_created].colour = force_colour;
 }
 
-void give_item(int mid, int level_number) //mv: cleanup+minor changes
+void give_item(int mid, int level_number,
+               bool mons_summoned) //mv: cleanup+minor changes
 {
     monsters *mons = &menv[mid];
 
@@ -4159,7 +4164,7 @@ void give_item(int mid, int level_number) //mv: cleanup+minor changes
 
     const item_make_species_type item_race = _give_weapon(mons, level_number);
 
-    _give_ammo(mons, level_number, item_race);
+    _give_ammo(mons, level_number, item_race, mons_summoned);
     give_armour(mons, 1 + level_number / 2);
     give_shield(mons, 1 + level_number / 2);
 }

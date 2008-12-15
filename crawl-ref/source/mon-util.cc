@@ -3733,13 +3733,23 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
 
     if (!ignore_brand)
     {
+        const int brand = get_weapon_brand(item);
+
+        // Draconians won't use dragon slaying weapons.
+        if (brand == SPWPN_DRAGON_SLAYING && is_dragonkind(this, this))
+            return (false);
+
+        // Orcs won't use orc slaying weapons.
+        if (brand == SPWPN_ORC_SLAYING && is_orckind(this, this))
+            return (false);
+
         // Demonic/undead monsters won't use holy weapons.
         if (mons_is_unholy(this) && is_holy_item(item))
             return (false);
 
         // Holy monsters won't use demonic or chaotic weapons.
-        if (mons_holiness(this) == MH_HOLY
-            && (is_evil_item(item) || get_weapon_brand(item) == SPWPN_CHAOS))
+        if ((mons_holiness(this) == MH_HOLY || is_good_god(god))
+            && (is_evil_item(item) || brand == SPWPN_CHAOS))
         {
             return (false);
         }
@@ -4111,32 +4121,62 @@ bool monsters::drop_item(int eslot, int near)
     if (item_index == NON_ITEM)
         return (true);
 
+    item_def &item(mitm[item_index]);
+
     // Unequip equipped items before dropping them; unequip() prevents
     // cursed items from being removed.
     bool was_unequipped = false;
     if (eslot == MSLOT_WEAPON || eslot == MSLOT_ARMOUR
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this))
     {
-        if (!unequip(mitm[item_index], eslot, near))
+        if (!unequip(item, eslot, near))
             return (false);
         was_unequipped = true;
     }
 
-    const std::string iname = mitm[item_index].name(DESC_NOCAP_A);
-    if (!move_item_to_grid(&item_index, pos()))
+    bool on_floor = true;
+
+    if (item.flags & ISFLAG_SUMMONED)
+    {
+        on_floor = false;
+
+        if (need_message(near))
+            mprf("%s %s as %s drops %s!",
+                 item.name(DESC_CAP_THE).c_str(),
+                 summoned_poof_msg(this, item).c_str(),
+                 name(DESC_NOCAP_THE).c_str(),
+                 item.quantity > 1 ? "them" : "it");
+
+        item_was_destroyed(item, mindex());
+    }
+    else if (!move_item_to_grid(&item_index, pos()))
     {
         // Re-equip item if we somehow failed to drop it.
         if (was_unequipped)
-            equip(mitm[item_index], eslot, near);
+            equip(item, eslot, near);
 
         return (false);
     }
 
-    if (mons_friendly(this))
-        mitm[item_index].flags |= ISFLAG_DROPPED_BY_ALLY;
+    if (on_floor)
+    {
+        if (mons_friendly(this))
+            item.flags |= ISFLAG_DROPPED_BY_ALLY;
 
-    if (need_message(near))
-        mprf("%s drops %s.", name(DESC_CAP_THE).c_str(), iname.c_str());
+        if (need_message(near))
+            mprf("%s drops %s.", name(DESC_CAP_THE).c_str(),
+                 item.name(DESC_NOCAP_A).c_str());
+
+        dungeon_feature_type feat = grd(pos());
+        if (grid_destroys_items(feat))
+        {
+            if ( player_can_hear(pos()) )
+                mprf(MSGCH_SOUND, grid_item_destruction_message(feat));
+
+            item_was_destroyed(item, mindex());
+            unlink_item(item_index);
+        }
+    }
 
     inv[eslot] = NON_ITEM;
     return (true);
