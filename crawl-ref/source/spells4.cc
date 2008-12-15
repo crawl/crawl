@@ -1674,6 +1674,13 @@ bool cast_fragmentation(int pow, const dist& spd)
     bool hole = true;
     const char *what = NULL;
 
+    ray_def ray;
+    if ( !find_ray(you.pos(), spd.target, false, ray) )
+    {
+        mpr("There's a wall in the way!");
+        return false;
+    }
+
     //FIXME: If (player typed '>' to attack floor) goto do_terrain;
     beam.beam_source = MHITYOU;
     beam.thrower     = KILL_YOU;
