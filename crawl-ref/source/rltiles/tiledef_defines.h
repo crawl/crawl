@@ -1,7 +1,7 @@
 #ifndef TILEDEF_DEFINES_H
 #define TILEDEF_DEFINES_H
 
-#include <assert.h>
+#include <cassert>
 
 class tile_info
 {

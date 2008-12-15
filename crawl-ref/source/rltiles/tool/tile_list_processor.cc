@@ -1,11 +1,13 @@
 #include "tile_list_processor.h"
 
-#include <assert.h>
+#include <cassert>
 #include <iostream>
 #include <fstream>
 #include <string.h>
 #include <stdlib.h>
 #include <map>
+
+using namespace std;
 
 tile_list_processor::tile_list_processor() :
     m_last_enum(~0),
@@ -648,8 +650,8 @@ bool tile_list_processor::write_data()
         fprintf(fp, "// This file has been automatically generated.\n\n");
         fprintf(fp, "#include \"tiledef-%s.h\"\n\n", lcname.c_str());
         fprintf(fp, "#include <string>\n");
-        fprintf(fp, "#include <string.h>\n");
-        fprintf(fp, "#include <assert.h>\n");
+        fprintf(fp, "#include <cstring>\n");
+        fprintf(fp, "#include <cassert>\n");
         fprintf(fp, "using namespace std;\n\n");
 
         fprintf(fp, "int _tile_%s_count[%s - %s] =\n{\n",
