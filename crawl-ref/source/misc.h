@@ -69,13 +69,15 @@ std::string weird_smell();
 
 std::string weird_sound();
 
-bool mons_is_safe(const monsters *mon, bool want_move = false);
+bool mons_is_safe(const monsters *mon, bool want_move = false,
+                  bool consider_user_options = true);
 bool need_auto_exclude(const monsters *mon, bool sleepy = false);
 void remove_auto_exclude(const monsters *mon, bool sleepy = false);
 
 std::vector<monsters*> get_nearby_monsters(bool want_move = false,
                                            bool just_check = false,
                                            bool dangerous_only = false,
+                                           bool consider_user_options = true,
                                            bool require_visible = true,
                                            int range = -1);
 
@@ -83,7 +85,8 @@ bool i_feel_safe(bool announce = false, bool want_move = false,
                  bool just_monsters = false, int range = -1);
 
 bool there_are_monsters_nearby(bool dangerous_only = false,
-                               bool require_visible = true);
+                               bool require_visible = true,
+                               bool consider_user_options = false);
 
 void setup_environment_effects();
 

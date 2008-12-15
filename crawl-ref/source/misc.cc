@@ -2551,7 +2551,8 @@ bool go_berserk(bool intentional)
     return (true);
 }
 
-bool mons_is_safe(const monsters *mon, bool want_move)
+bool mons_is_safe(const monsters *mon, bool want_move,
+                  bool consider_user_options)
 {
     int  dist    = grid_distance(you.pos(), mon->pos());
 
@@ -2567,19 +2568,22 @@ bool mons_is_safe(const monsters *mon, bool want_move)
                        && !mons_has_los_ability(mon->type));
 
 #ifdef CLUA_BINDINGS
-    bool moving = (!you.delay_queue.empty()
+    if (consider_user_options)
+    {
+        bool moving = (!you.delay_queue.empty()
                        && is_run_delay(you.delay_queue.front().type)
                        && you.delay_queue.front().type != DELAY_REST
-                   || you.running < RMODE_NOT_RUNNING
-                   || want_move);
-
-    bool result = is_safe;
-
-    if (clua.callfn("ch_mon_is_safe", "Mbbd>b",
-                    mon, is_safe, moving, dist,
-                    &result))
-    {
-        is_safe = result;
+                       || you.running < RMODE_NOT_RUNNING
+                       || want_move);
+        
+        bool result = is_safe;
+    
+        if (clua.callfn("ch_mon_is_safe", "Mbbd>b",
+                        mon, is_safe, moving, dist,
+                        &result))
+        {
+            is_safe = result;
+        }
     }
 #endif
 
@@ -2639,6 +2643,7 @@ void remove_auto_exclude(const monsters *mon, bool sleepy)
 std::vector<monsters*> get_nearby_monsters(bool want_move,
                                            bool just_check,
                                            bool dangerous_only,
+                                           bool consider_user_options,
                                            bool require_visible,
                                            int range)
 {
@@ -2658,7 +2663,8 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
                 && (!require_visible || player_monster_visible(mon))
                 && !mons_is_submerged(mon)
                 && (!mons_is_mimic(mon->type) || mons_is_known_mimic(mon))
-                && (!dangerous_only || !mons_is_safe(mon, want_move)))
+                && (!dangerous_only || !mons_is_safe(mon, want_move,
+                                                     consider_user_options)))
             {
                 mons.push_back(mon);
                 if (just_check) // stop once you find one
@@ -2697,7 +2703,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
 
     // Monster check.
     std::vector<monsters*> visible =
-        get_nearby_monsters(want_move, !announce, true, true, range);
+        get_nearby_monsters(want_move, !announce, true, true, true, range);
 
     // No monsters found.
     if (visible.empty())
@@ -2725,10 +2731,12 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
     return (false);
 }
 
-bool there_are_monsters_nearby(bool dangerous_only, bool require_visible)
+bool there_are_monsters_nearby(bool dangerous_only, bool require_visible,
+                               bool consider_user_options)
 {
-    return (!get_nearby_monsters(false, true,
-                                 dangerous_only, require_visible).empty());
+    return (!get_nearby_monsters(false, true, dangerous_only,
+                                 consider_user_options,
+                                 require_visible).empty());
 }
 
 static const char *shop_types[] = {
