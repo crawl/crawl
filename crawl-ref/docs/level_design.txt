@@ -574,7 +574,8 @@ MONS:     (list of monsters)
           builder sees a "1" in the vault definition, the second for "2,"
           etc. Note that if, for example, you place a 3 on the map, but your
           MONS: line has no third position, the 3 will be filled with
-          RANDOM_MONSTER.
+          RANDOM_MONSTER. Also note that for entry vaults (D:1), all monsters
+          in sight of the hero are removed. This does not hold for plants.
           You can use weights as for ITEM: lines.
 
           Individual monsters may be prefixed with the "generate_awake"

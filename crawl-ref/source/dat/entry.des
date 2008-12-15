@@ -1,5 +1,15 @@
 ###############################################################################
 # entry.des - entry vaults for D:1 only.
+#
+# Entry vaults should provide atmosphere and nice starting points. The idea
+# is neither to get a grip on most of D:1 nor to hand out some starting gear.
+# Therefore, try to come up with small maps. Avoid placing guaranteed items.
+# The same holds for any features which might trigger start-scumming, like
+# fountains or altars.
+# Also avoid ASCII art. It probably won't work in Tiles anyway.
+#
+# Note that at the start of the game, the dungeon builder removes all monsters
+# in view of the player. Zero experience monsters like plants are exempt.
 ###############################################################################
 
 
@@ -4652,6 +4662,53 @@ x.....x..W..x.....x
 ....xxxx...xxxx....
 ..xxxxxxx@xxxxxxx..
 ENDMAP
+
+################################################################################
+NAME:    entry_aquarium_01
+TAGS:    entry
+ORIENT:  float
+KMASK:   w = no_monster_gen
+KMONS:   Z = shark / giant goldfish
+KFEAT:   Z = w
+KMASK:   Z = no_monster_gen
+SHUFFLE: TTV
+WEIGHT:  5
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+x.....................x
+x.............G...G...x
+x..mmmmmmmmm....(.....x
+@..mwwwwwwwm.T......T.x
+@..mwwwZwwwm....{.....x
+@..mwwwwwwwm.T......T.x
+x..mmmmmmmmm....[.....x
+x.............G...G...x
+x.....................x
+xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   entry_aquarium_02
+TAGS:   entry
+ORIENT: float
+KMASK:  w = no_monster_gen
+KMONS:  Z = shark / giant goldfish
+KFEAT:  Z = w
+KMASK:  Z = no_monster_gen
+WEIGHT: 5
+MAP
+xxxxxxxxxxxxxxx
+x....(.{.[....x
+x.G.xxxxxxx.G.x
+x.............x
+x.mmmmm.mmmmm.x
+x.mwwwm.mwwwm.x
+x.mwZwm.mwZwm.x
+x.mwwwm.mwwwm.x
+x.mmmmm.mmmmm.x
+x.............x
+xx@xxxxxxxxx@xx
+ENDMAP
+
 
 ##############################################################
 # Miscellaneous entries
