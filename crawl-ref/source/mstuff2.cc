@@ -1582,7 +1582,8 @@ bool mons_thrown_object_destroyed( item_def *item, int x, int y,
     if (returning && !destroyed)
         hostile_grid = false;
 
-    if (hostile_grid)
+    // Summoned items go poof if they're not returning.
+    if (hostile_grid || !returning && (item->flags & ISFLAG_SUMMONED))
     {
         // No destruction sound here.  Too much message spam otherwise.
         item_was_destroyed(*item, midx);

@@ -922,19 +922,23 @@ static int _place_monster_aux( const mgen_data &mg,
 
     menv[id].flags |= MF_JUST_SUMMONED;
 
+    // dur should always be 1-6 for monsters that can be abjured.
+    const bool summoned = mg.abjuration_duration >= 1
+                       && mg.abjuration_duration <= 6;
+
     if (mg.cls == MONS_DANCING_WEAPON && mg.number != 1) // ie not from spell
     {
-        give_item( id, mg.power );
+        give_item( id, mg.power, summoned );
 
         if (menv[id].inv[MSLOT_WEAPON] != NON_ITEM)
             menv[id].colour = mitm[ menv[id].inv[MSLOT_WEAPON] ].colour;
     }
     else if (mons_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
-        give_item( id, mg.power );
+        give_item( id, mg.power, summoned );
         // Give these monsters a second weapon -- bwr
         if (mons_wields_two_weapons(mg.cls))
-            give_item( id, mg.power );
+            give_item( id, mg.power, summoned );
 
         unwind_var<int> save_speedinc(menv[id].speed_increment);
         menv[id].wield_melee_weapon(false);
@@ -970,8 +974,7 @@ static int _place_monster_aux( const mgen_data &mg,
         menv[id].behaviour = BEH_WANDER;
     }
 
-    // dur should always be 1-6 for monsters that can be abjured.
-    if (mg.abjuration_duration >= 1 && mg.abjuration_duration <= 6)
+    if (summoned)
         menv[id].mark_summoned( mg.abjuration_duration, true );
 
     menv[id].foe = mg.foe;

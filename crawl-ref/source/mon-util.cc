@@ -3585,32 +3585,61 @@ bool monsters::drop_item(int eslot, int near)
     if (index == NON_ITEM)
         return (true);
 
+    item_def &item(mitm[index]);
+
     // Unequip equipped items before dropping them; unequip() prevents
     // cursed items from being removed.
     bool was_unequipped = false;
     if (eslot == MSLOT_WEAPON || eslot == MSLOT_ARMOUR
         || eslot == MSLOT_ALT_WEAPON && mons_wields_two_weapons(this))
     {
-        if (!unequip(mitm[index], eslot, near))
+        if (!unequip(item, eslot, near))
             return (false);
         was_unequipped = true;
     }
 
-    const std::string iname = mitm[index].name(DESC_NOCAP_A);
-    if (!move_item_to_grid(&index, x, y))
+    bool on_floor = true;
+
+    if (item.flags & ISFLAG_SUMMONED)
+    {
+        on_floor = false;
+
+        if (need_message(near))
+            mprf("%s disappear%s in a puff of smoke as %s drops it!",
+                 item.name(DESC_CAP_THE).c_str(),
+                 item.quantity == 1 ? "s" : "",
+                 name(DESC_NOCAP_THE).c_str());
+
+        item_was_destroyed(item, monster_index(this));
+    }
+    else if (!move_item_to_grid(&index, x, y))
     {
         // Re-equip item if we somehow failed to drop it.
         if (was_unequipped)
-            equip(mitm[index], eslot, near);
+            equip(item, eslot, near);
 
         return (false);
     }
 
-    if (mons_friendly(this))
-        mitm[index].flags |= ISFLAG_DROPPED_BY_ALLY;
+    if (on_floor)
+    {
+        if (mons_friendly(this))
+            item.flags |= ISFLAG_DROPPED_BY_ALLY;
 
-    if (need_message(near))
-        mprf("%s drops %s.", name(DESC_CAP_THE).c_str(), iname.c_str());
+        if (need_message(near))
+            mprf("%s drops %s.", name(DESC_CAP_THE).c_str(),
+                 item.name(DESC_NOCAP_A).c_str());
+
+        dungeon_feature_type feat = grd(pos());
+        if (grid_destroys_items(feat))
+        {
+            if ( player_can_hear(pos()) )
+                mprf(MSGCH_SOUND, grid_item_destruction_message(feat));
+
+            item_was_destroyed(item, monster_index(this));
+            unlink_item(index);
+        }
+    }
 
     inv[eslot] = NON_ITEM;
     return (true);

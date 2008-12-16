@@ -713,7 +713,7 @@ void monster_die(monsters *monster, killer_type killer, int i, bool silent)
     const bool gives_xp      = !monster->has_ench(ENCH_ABJ);
 
           bool in_transit    = false;
-          bool drop_items    = !hard_reset && !mons_is_holy(monster);
+          bool drop_items    = !hard_reset;
 
 #ifdef DGL_MILESTONES
     _check_kill_milestone(monster, killer, i);

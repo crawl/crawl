@@ -3071,6 +3071,18 @@ void beam_drop_object( bolt &beam, item_def *item, int x, int y )
     if (beam.is_tracer || beam.flavour != BEAM_MISSILE)
         return;
 
+    if (item->flags & ISFLAG_SUMMONED)
+    {
+        if (see_grid(x, y))
+        {
+            mprf("%s disappears in a puff of smoke!",
+                 item->name(DESC_CAP_THE).c_str());
+        }
+        item_was_destroyed(*item, beam.beam_source);
+
+        return;
+    }
+
     if (YOU_KILL(beam.thrower)
             && !thrown_object_destroyed(item, x, y, false)
         || MON_KILL(beam.thrower)
