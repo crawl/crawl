@@ -509,7 +509,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_INVISIBILITY,
      SPELL_NO_SPELL,
      },
-     
+
     // 43 - Book of Annihilations -- Vehumet special
     {SPELL_ISKENDERUNS_MYSTIC_BLAST,
      SPELL_POISON_ARROW,
@@ -531,7 +531,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-     
+
     // 45 - Necronomicon -- Kikubaaqudgha special
     {SPELL_SYMBOL_OF_TORMENT,
      SPELL_CONTROL_UNDEAD,
@@ -586,7 +586,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-     
+
     // 50 - Tome of Destruction
     {SPELL_NO_SPELL,
      SPELL_NO_SPELL,
@@ -597,7 +597,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,
      },
-     
+
     // Rods - start at NUM_BOOKS.
 
     // 51 - Rod of smiting
@@ -2242,12 +2242,21 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     name += getRandNameString("book_noun");
 
     name += " of ";
-    name += spelltype_long_name(disc1);
+    std::string type_name = getRandNameString(spelltype_long_name(disc1));
+    if (type_name.empty())
+        name += spelltype_long_name(disc1);
+    else
+        name += type_name;
 
     if (disc1 != disc2)
     {
         name += " and ";
-        name += spelltype_long_name(disc2);
+        type_name = getRandNameString(spelltype_long_name(disc2));
+
+        if (type_name.empty())
+            name += spelltype_long_name(disc2);
+        else
+            name += type_name;
     }
 
     if (god != GOD_NO_GOD)

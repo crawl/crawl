@@ -630,12 +630,12 @@ w:160
 @general appearance@
 %%%%
 ######################################################
-# Jewellry appearance
+# Jewellery appearance
 ######################################################
 #
 # While for the appearance of randart weapons and armour you can just stick an
 # adjective in front of the object type name ("bloodstained dagger"),
-# unidentified non-artefact jewellry is described with both an adjective and
+# unidentified non-artefact jewellery is described with both an adjective and
 # material ("runed wooden ring"), making a description like "runed ring" a bit
 # weird.  So give randart jewellery an adjective that no non-artefact jewellery
 # would have, plus a material that a non-artefact might or might not have.
@@ -880,4 +880,124 @@ Book of Bugginess
 book appearance
 
 @book_adjective@
+%%%%
+Conjuration
+
+Conjuration
+%%%%
+Enchantment
+
+Enchantment
+
+Bewitchment
+%%%%
+Fire
+
+Fire
+
+Flames
+
+Heat
+
+the Volcanoes
+
+the Blaze
+
+Ignition
+
+the Arsonist
+%%%%
+Ice
+
+Ice
+
+Snow
+
+Cold
+
+Snowflakes
+
+the Glaciers
+
+the Frostbite
+%%%%
+Transmigration
+
+Transmigration
+
+Transmutation
+
+Transformation
+
+Shape Shifting
+
+Changing
+
+Moulding
+%%%%
+Necromancy
+
+Necromancy
+
+Evil
+
+Darkness
+
+Dark Rites
+
+Stolen Souls
+
+the Dark Arts
+%%%%
+Summoning
+
+Summoning
+
+Calling
+
+Creation
+%%%%
+Divination
+
+Divination
+%%%%
+Translocation
+
+Translocation
+
+Displacement
+%%%%
+Poison
+
+Poison
+
+Venom
+
+Toxins
+
+Poisoning
+%%%%
+Earth
+
+Earth
+
+Stones
+
+Clay
+
+the Mountains
+%%%%
+Air
+
+Air
+
+Lightness
+
+Weightlessness
+
+Flight
+
+the Birds
+
+the Feather
 %%%%
