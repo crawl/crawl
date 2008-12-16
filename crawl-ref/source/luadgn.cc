@@ -604,7 +604,10 @@ static int dgn_change_branch_flags(lua_State *ls)
 
 static int dgn_set_random_mon_list(lua_State *ls)
 {
-    if (you.level_type != LEVEL_PORTAL_VAULT)
+    // Don't complain if we're being called when the map is being loaded
+    // and validated.
+    if (you.level_type != LEVEL_PORTAL_VAULT &&
+        !(you.start_time == 0 && !you.entering_level && !Generating_Level))
     {
         luaL_error(ls, "Can only be used in portal vaults.");
         return (0);
@@ -667,6 +670,8 @@ static int dgn_set_random_mon_list(lua_State *ls)
                 luaL_argerror(ls, 1, err.c_str());
                 return(0);
             }
+            if (mon.mid == -1)
+                mon.mid = MONS_PROGRAM_BUG;
             name = mons_type_name(mon.mid, DESC_PLAIN);
         }
 
