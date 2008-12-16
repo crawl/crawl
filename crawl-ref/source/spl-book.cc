@@ -1737,7 +1737,7 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
         if (!is_valid_spell(spell))
             continue;
 
-        // Only use spells available in books you might find laying about
+        // Only use spells available in books you might find lying about
         // the dungeon.
         if (spell_rarity(spell) == -1)
             continue;
@@ -1755,7 +1755,7 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
             continue;
         }
 
-        // Only wizards gets spells still under development.
+        // Only wizard mode gets spells still under development.
         const unsigned int flags = get_spell_flags(spell);
         if (flags & SPFLAG_DEVEL)
         {
@@ -1860,14 +1860,18 @@ bool make_book_level_randart(item_def &book, int level,
         char buf[80];
 
         if (god_discard > 0 && uncastable_discard == 0)
+        {
             sprintf(buf, "%s disliked all level %d spells",
                     god_name(god).c_str(), level);
+        }
         else if (god_discard == 0 && uncastable_discard > 0)
             sprintf(buf, "No level %d spells can be cast by you", level);
         else if (god_discard > 0 && uncastable_discard > 0)
+        {
             sprintf(buf, "All level %d spells are either disliked by %s "
                          "or cannot be cast by you.",
                     level, god_name(god).c_str());
+        }
         else
             sprintf(buf, "No level %d spells?!?!?!", level);
 
@@ -1905,9 +1909,7 @@ bool make_book_level_randart(item_def &book, int level,
 
     spell_type chosen_spells[SPELLBOOK_SIZE];
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
-    {
         chosen_spells[i] = SPELL_NO_SPELL;
-    }
 
     int book_pos = 0;
     while (book_pos < num_spells)
@@ -1949,7 +1951,20 @@ bool make_book_level_randart(item_def &book, int level,
     if (god != GOD_NO_GOD)
         name += god_name(god, false) + "'s ";
 
-    name += getRandNameString("level book");
+    std::string difficulty;
+    if (level <= 3)
+        difficulty = "easy";
+    else if (level <= 6)
+        difficulty = "moderate";
+    else
+        difficulty = "difficult";
+
+    std::string bookname = getRandNameString(difficulty + " level book");
+    bookname = uppercase_first(bookname);
+    if (bookname.empty())
+        bookname = getRandNameString("book");
+
+    name += bookname;
     name += '"';
 
     set_randart_name(book, name);
@@ -2217,8 +2232,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     _get_weighted_spells(completely_random, god, disc1, disc2,
                          num_spells, max_levels, spell_list, chosen_spells);
 
-    std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE,
-              _compare_spells);
+    std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
     CrawlHashTable &props = book.props;
@@ -2228,8 +2242,35 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     CrawlVector &spell_vec = props[SPELL_LIST_KEY];
     spell_vec.set_max_size(SPELLBOOK_SIZE);
 
+    int count[SPTYP_LAST_EXPONENT+1];
+    for (int k = 0; k <= SPTYP_LAST_EXPONENT; k++)
+        count[k] = 0;
+
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    {
         spell_vec[i] = (long) chosen_spells[i];
+        for (int k = 0; k <= SPTYP_LAST_EXPONENT; k++)
+            if (spell_typematch( chosen_spells[i], 1 << k ))
+                count[k]++;
+    }
+
+    int max1 = 0;
+    int max2 = 0;
+    for (int k = 1; k <= SPTYP_LAST_EXPONENT; k++)
+    {
+        if (count[k] > count[max1])
+        {
+            max2 = max1;
+            max1 = k;
+        }
+        else if (max2 == max1 || count[k] > count[max2])
+            max2 = k;
+    }
+    disc1 = 1 << max1;
+    if (max1 != max2 && count[max2] > 0 && count[max2] >= count[max1]/3)
+        disc2 = 1 << max2;
+    else
+        disc2 = disc1;
 
     std::string name;
 

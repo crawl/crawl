@@ -786,6 +786,16 @@ amulet appearance
 ######################################################
 # Books
 ######################################################
+# Book name should be set in make_book_level_randart() or
+# make_book_theme_randart(), so if this gets picked there's a bug.
+book
+
+Book of Bugginess
+%%%%
+book appearance
+
+@book_adjective@
+%%%%
 book_noun
 
 Book
@@ -834,13 +844,20 @@ yellowed
 
 rare
 %%%%
+the_book_magic
+
+w:1
+// capitalize later as needed
+the Arcane Arts
+
+w:9
+@book_magic@
+%%%%
 book_magic
 
 Magic
 
 Theurgy
-
-The Arcane Arts
 
 Rites and Rhymes
 
@@ -855,31 +872,41 @@ Sorcery
 Witchcraft
 
 Witchery
-
-Bewitchment
-
 %%%%
-level book
+# level 1-3
+easy level book
 
-@book_magic@ 101
+@the_book_magic@ 101
 
 Easy @book_magic@
 
-@book_magic@ in Simple Steps
+@the_book_magic@ in Simple Steps
 
-Thorough Guide to @book_magic@
+Early Guide to @book_magic@
 
-Last Secrets of @book_magic@
+@the_book_magic@ for Beginners
 %%%%
-# Book name should be set in make_book_level_randart() or
-# make_book_theme_randart(), so if this gets picked there's a bug.
-book
+# level 4-6
+moderate level book
 
-Book of Bugginess
+Advanced Steps in @the_book_magic@
+
+Advanced Guide to @the_book_magic@
+
+Further Steps in @the_book_magic@
+
+Improve Your @book_magic@
 %%%%
-book appearance
+# level 7-9
+difficult level book
 
-@book_adjective@
+Thorough Guide to @the_book_magic@
+
+Last Secrets of @the_book_magic@
+
+Arcane Secrets of @book_magic@
+
+Intricacies of @the_book_magic@
 %%%%
 Conjuration
 
