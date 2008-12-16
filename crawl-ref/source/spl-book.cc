@@ -1950,6 +1950,8 @@ bool make_book_level_randart(item_def &book, int level,
 
     if (god != GOD_NO_GOD)
         name += god_name(god, false) + "'s ";
+    else if (one_chance_in(3))
+        name += make_name(random_int(), false) + "'s ";
 
     std::string difficulty;
     if (level <= 3)
@@ -2146,6 +2148,24 @@ static void _get_weighted_spells(bool completely_random, god_type god,
     ASSERT(book_pos > 0 && max_levels >= 0);
 }
 
+bool _spells_need_disc2(spell_type chosen_spells[], int d1, int d2)
+{
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+    {
+        if (chosen_spells[i] == SPELL_NO_SPELL)
+            break;
+
+        // If a spell matches the second type but not the first,
+        // we need the second in the title.
+        if (!spell_typematch( chosen_spells[i], d1 )
+            && spell_typematch( chosen_spells[i], d2))
+        {
+            return (true);
+        }
+    }
+    return (false);
+}
+
 bool make_book_theme_randart(item_def &book, int disc1, int disc2,
                              int num_spells, int max_levels)
 {
@@ -2175,6 +2195,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         }
         else if (disc2 == 0)
             disc2 = disc1;
+
         ASSERT(disc1 < (1 << (SPTYP_LAST_EXPONENT + 1)));
         ASSERT(disc2 < (1 << (SPTYP_LAST_EXPONENT + 1)));
         ASSERT(count_bits(disc1) == 1 && count_bits(disc2) == 1);
@@ -2242,6 +2263,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     CrawlVector &spell_vec = props[SPELL_LIST_KEY];
     spell_vec.set_max_size(SPELLBOOK_SIZE);
 
+    // Count how often each spell school appears in the book.
     int count[SPTYP_LAST_EXPONENT+1];
     for (int k = 0; k <= SPTYP_LAST_EXPONENT; k++)
         count[k] = 0;
@@ -2249,11 +2271,15 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
     {
         spell_vec[i] = (long) chosen_spells[i];
+        if (chosen_spells[i] == SPELL_NO_SPELL)
+            continue;
+
         for (int k = 0; k <= SPTYP_LAST_EXPONENT; k++)
             if (spell_typematch( chosen_spells[i], 1 << k ))
                 count[k]++;
     }
 
+    // Remember the two dominant spell schools ...
     int max1 = 0;
     int max2 = 0;
     for (int k = 1; k <= SPTYP_LAST_EXPONENT; k++)
@@ -2266,41 +2292,80 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         else if (max2 == max1 || count[k] > count[max2])
             max2 = k;
     }
+
+    // ... and change disc1 and disc2 accordingly.
     disc1 = 1 << max1;
-    if (max1 != max2 && count[max2] > 0 && count[max2] >= count[max1]/3)
+    if (max1 != max2
+        && (count[max2] > 1 || _spells_need_disc2(chosen_spells,
+                                                  1 << max1, 1 << max2)))
+    {
         disc2 = 1 << max2;
+    }
     else
         disc2 = disc1;
 
     std::string name;
 
+    bool need_quotes = true;
     if (god != GOD_NO_GOD)
     {
         name  = '"';
         name += god_name(god, false) + "'s ";
     }
+    else if (one_chance_in(5)) // Occasionally, use a random name.
+    {
+        name  = '"';
+        name += make_name(random_int(), false) + "'s ";
+    }
+    else
+        need_quotes = false;
 
     name += getRandNameString("book_noun");
-
     name += " of ";
-    std::string type_name = getRandNameString(spelltype_long_name(disc1));
-    if (type_name.empty())
-        name += spelltype_long_name(disc1);
-    else
-        name += type_name;
 
-    if (disc1 != disc2)
+    // For the actual name there's a 50% chance of getting something like
+    //  Flames and Displacement (Fire/Translocation), else
+    //  Fiery Translocation
+    std::string type_name;
+    if (disc1 != disc2 && coinflip())
     {
-        name += " and ";
-        type_name = getRandNameString(spelltype_long_name(disc2));
+        std::string search = spelltype_long_name(disc2);
+        type_name = getRandNameString(search + " adj");
+    }
 
+    if (type_name.empty())
+    {
+        // No adjective found, use the normal method of combining two nouns.
+        type_name = getRandNameString(spelltype_long_name(disc1));
         if (type_name.empty())
-            name += spelltype_long_name(disc2);
+            name += spelltype_long_name(disc1);
+        else
+            name += type_name;
+
+        if (disc1 != disc2)
+        {
+            name += " and ";
+            type_name = getRandNameString(spelltype_long_name(disc2));
+
+            if (type_name.empty())
+                name += spelltype_long_name(disc2);
+            else
+                name += type_name;
+        }
+    }
+    else
+    {
+        name += type_name + " ";
+
+        // Add the noun for the first discipline.
+        type_name = getRandNameString(spelltype_long_name(disc1));
+        if (type_name.empty())
+            name += spelltype_long_name(disc1);
         else
             name += type_name;
     }
 
-    if (god != GOD_NO_GOD)
+    if (need_quotes)
         name += '"';
 
     set_randart_name(book, name);

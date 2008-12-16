@@ -1441,7 +1441,7 @@ static void _do_book_acquirement(item_def &book, int agent)
         // lowest aviable level if all levels which the player can cast
         // have already been given.
         int max_level = std::min(9, you.get_experience_level());
-       
+
         std::vector<int> vec;
         for (int i = 1; i <= 9 && (vec.empty() || i <= max_level); i++)
         {

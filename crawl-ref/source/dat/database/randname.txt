@@ -908,6 +908,7 @@ Arcane Secrets of @book_magic@
 
 Intricacies of @the_book_magic@
 %%%%
+# synonyms for predominant spell schools
 Conjuration
 
 Conjuration
@@ -1027,4 +1028,77 @@ Flight
 the Birds
 
 the Feather
+%%%%
+# adjectives for secondary spell school
+Conjuration adj
+
+Destructive
+%%%%
+Enchantment adj
+
+Entchanted
+%%%%
+Fire adj
+
+Fiery
+
+Scorching
+%%%%
+Ice adj
+
+Glacial
+
+Freezing
+
+Icy
+%%%%
+Transmigration adj
+
+Shifting
+%%%%
+Necromancy adj
+
+Dark
+
+Evil
+
+Lethal
+%%%%
+Summoning adj
+
+Creative
+%%%%
+Divination adj
+
+Spiritual
+%%%%
+Translocation adj
+
+Spatial
+%%%%
+Poison adj
+
+Poisonous
+
+Venomous
+
+Toxic
+%%%%
+Earth adj
+
+Earthen
+
+Ashen
+
+Dusty
+%%%%
+Air adj
+
+Aerial
+
+Flying
+
+Floating
+
+Feathery
 %%%%
