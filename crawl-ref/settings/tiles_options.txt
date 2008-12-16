@@ -1,7 +1,7 @@
 ### The following lines define the colours of various objects within the
 ### tiles minimap. See options_guide.txt for more details.
 
-tile_show_items = !?/%=([)X}+\_.
+# tile_show_items = !?/%=([)X}+\_.
 
 # tile_title_screen = false
 

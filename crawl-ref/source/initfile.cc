@@ -828,7 +828,7 @@ void game_options::reset_options()
 #endif
 
 #ifdef USE_TILE
-    tile_show_items[0]   = '0';
+    strcpy(tile_show_items, "!?/%=([)X}+\\_.");
     tile_title_screen    = true;
     // minimap colours
     tile_player_col      = MAP_WHITE;
