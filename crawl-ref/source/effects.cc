@@ -1820,9 +1820,11 @@ bool acquirement(object_class_type class_wanted, int agent,
             thing.inscription = "god gift";
             if (is_random_artefact(thing))
             {
-                if (!is_unrandom_artefact(thing))
+                if (!is_unrandom_artefact(thing)
+                    && !thing.base_type == OBJ_BOOKS)
                 {
-                    // Give another name that takes god gift into account.
+                    // Give another name that takes god gift into account;
+                    // artefact books already do that.
                     thing.props["randart_name"].get_string() =
                         artefact_name(thing, false);
                 }

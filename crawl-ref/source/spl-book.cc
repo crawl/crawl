@@ -1944,7 +1944,15 @@ bool make_book_level_randart(item_def &book, int level,
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
         spell_vec[i] = (long) chosen_spells[i];
 
-    set_randart_name(book, getRandNameString("level book"));
+    std::string name = "\"";
+
+    if (god != GOD_NO_GOD)
+        name += god_name(god, false) + "'s ";
+
+    name += getRandNameString("level book");
+    name += '"';
+
+    set_randart_name(book, name);
 
     return (true);
 }

@@ -840,7 +840,7 @@ Magic
 
 Theurgy
 
-the Arcane Arts
+The Arcane Arts
 
 Rites and Rhymes
 
@@ -861,15 +861,15 @@ Bewitchment
 %%%%
 level book
 
-"@book_magic@ 101"
+@book_magic@ 101
 
-"Easy @book_magic@"
+Easy @book_magic@
 
-"@book_magic@ in Simple Steps"
+@book_magic@ in Simple Steps
 
-"Thorough Guide to @book_magic@"
+Thorough Guide to @book_magic@
 
-"Last Secrets of @book_magic@"
+Last Secrets of @book_magic@
 %%%%
 # Book name should be set in make_book_level_randart() or
 # make_book_theme_randart(), so if this gets picked there's a bug.
