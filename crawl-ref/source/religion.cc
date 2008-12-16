@@ -2283,7 +2283,14 @@ god_type string_to_god(const char *_name, bool exact)
 
 void god_speaks(god_type god, const char *mesg)
 {
-    mpr(mesg, MSGCH_GOD, god);
+    monsters fake_mon;
+    fake_mon.type       = MONS_PROGRAM_BUG;
+    fake_mon.hit_points = 1;
+    fake_mon.god        = god;
+    fake_mon.position   = you.pos();
+    fake_mon.mname      = "FAKE GOD MONSTER";
+
+    mpr(do_mon_str_replacements(mesg, &fake_mon).c_str(), MSGCH_GOD, god);
 }
 
 static bool _do_god_revenge(conduct_type thing_done)
