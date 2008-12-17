@@ -1737,6 +1737,7 @@ bool apply_to_level(const level_id &level, bool preserve_current,
 bool apply_to_all_dungeons(bool (*applicator)())
 {
     const level_id original = level_id::current();
+    const int your_old_level = you.your_level;
 
     // Apply to current level, then save it out.
     bool success = applicator();
@@ -1760,6 +1761,8 @@ bool apply_to_all_dungeons(bool (*applicator)())
         }
 
     _restore_level(original);
+    if (you.level_type != LEVEL_DUNGEON)
+        you.your_level = your_old_level;
 
     return (success);
 }

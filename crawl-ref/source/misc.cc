@@ -1563,7 +1563,7 @@ static void _player_change_level_reset()
     if (you.pet_target != MHITYOU)
         you.pet_target = MHITNOT;
 
-    you.prev_grd_targ = coord_def(0, 0);
+    you.prev_grd_targ.reset();
 }
 
 static level_id _stair_destination_override()
