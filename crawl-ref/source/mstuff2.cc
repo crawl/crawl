@@ -2598,7 +2598,7 @@ std::string summoned_poof_msg(const monsters* monster, bool plural)
 std::string summoned_poof_msg(const int midx, const item_def &item)
 {
     if (midx == NON_MONSTER)
-        return summoned_poof_msg(NULL, item);
+        return summoned_poof_msg(static_cast<const monsters*>(NULL), item);
     else
         return summoned_poof_msg(&menv[midx], item);
 }
