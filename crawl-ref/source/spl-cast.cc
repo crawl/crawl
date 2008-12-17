@@ -1041,7 +1041,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         }
 
-        beam.range = spell_range(spell, powc, true);
+        // FIXME: Code duplication (see similar line below).
+        int range_power = (powc == 0 ? calc_spell_power(spell, true) : powc);
+        beam.range = spell_range(spell, range_power, true);
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe)
         {
