@@ -2420,7 +2420,8 @@ static void _generate_book_item(item_def& item, int allow_uniques,
             if (!one_chance_in(100)
                 && x_chance_in_y(book_rarity(item.sub_type)-1, item_level+1))
             {
-                item.sub_type = BOOK_DESTRUCTION; // continue trying
+                // If this book is really rare for this depth, continue trying.
+                continue;
             }
         }
         while (book_rarity(item.sub_type) == 100);
