@@ -859,7 +859,6 @@ the Arcane Arts
 w:1
 the Hermit's Heritage
 
-w:50
 @book_magic@
 %%%%
 book_magic
@@ -934,16 +933,14 @@ Second Course in @book_magic@
 w:1
 Improve Your @book_magic@
 
-w:1
-Mastering @book_magic@
 %%%%
-# powerful casters, used for high level books
-powerful caster
+% powerful casters, used for high level books
+powerful_caster
 
 Archmage
 
 w:3
-Deep Elf King
+Deep Elf Lorekeeper
 
 w:3
 Blind Seer
@@ -951,11 +948,15 @@ Blind Seer
 w:3
 Prophet
 
-w:3
-Boris
-
 w:1
 Greatest Mummy
+%%%%
+the_powerful_caster
+
+the @powerful_caster@
+
+w:3
+Boris
 
 w:1
 Sif Muna
@@ -974,15 +975,18 @@ Intricacies of @the_book_magic@
 @book_noun@ of Greatest Risks and Utility
 
 w:5
-Last @book_noun@ of the @powerful caster@
+Last @book_noun@ of @the_powerful_caster@
 
 w:5
-Lost @book_noun@ of the @powerful caster@
+Lost @book_noun@ of @the_powerful_caster@
 
 w:1
-@powerful caster@'s testament
+Testament of @the_powerful_caster@
+
+w:1
+Mastering @book_magic@
 %%%%
-# synonyms for predominant spell schools
+% synonyms for predominant spell schools
 Conjuration
 
 Conjuration
@@ -1064,7 +1068,7 @@ Changing
 Moulding
 %%%%
 % for necromantic books
-Evil adjective
+Evil_adjective
 
 Evil
 
@@ -1077,7 +1081,7 @@ Sinister
 Unholy
 %%%%
 % also for necromantic books
-Evil noun
+Evil_noun
 
 Rites
 
@@ -1099,7 +1103,7 @@ Darkness
 
 Stolen Souls
 
-w:30
+w:60
 @Evil_adjective@ @Evil_noun@
 %%%%
 Summoning
@@ -1110,13 +1114,14 @@ Calling
 
 Creation
 
-Illusion
-
 Entourage
 
 Companions
 
 Escort
+
+w:1
+Illusion
 %%%%
 Divination
 
@@ -1184,7 +1189,7 @@ Birds
 
 Feathers
 %%%%
-# adjectives for secondary spell school
+% adjectives for secondary spell school
 Conjuration adj
 
 Destructive
