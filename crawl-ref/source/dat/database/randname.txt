@@ -853,12 +853,13 @@ torn
 the_book_magic
 
 w:9
-// capitalize later as needed
+# capitalize later as needed
 the Arcane Arts
 
 w:1
 the Hermit's Heritage
 
+w:90
 @book_magic@
 %%%%
 book_magic
@@ -934,7 +935,7 @@ w:1
 Improve Your @book_magic@
 
 %%%%
-% powerful casters, used for high level books
+# powerful casters, used for high level books
 powerful_caster
 
 Archmage
@@ -986,7 +987,7 @@ Testament of @the_powerful_caster@
 w:1
 Mastering @book_magic@
 %%%%
-% synonyms for predominant spell schools
+# synonyms for predominant spell schools
 Conjuration
 
 Conjuration
@@ -1067,7 +1068,7 @@ Changing
 
 Moulding
 %%%%
-% for necromantic books
+# for necromantic books
 Evil_adjective
 
 Evil
@@ -1080,7 +1081,7 @@ Sinister
 
 Unholy
 %%%%
-% also for necromantic books
+# also for necromantic books
 Evil_noun
 
 Rites
@@ -1135,7 +1136,9 @@ Foreboding
 
 Prediction
 
-Omen
+Omens
+
+Sight
 %%%%
 Translocation
 
@@ -1189,7 +1192,7 @@ Birds
 
 Feathers
 %%%%
-% adjectives for secondary spell school
+# adjectives for secondary spell school
 Conjuration adj
 
 Destructive
@@ -1214,6 +1217,12 @@ Bewitching
 Captivating
 
 Fetching
+
+Enthralling
+
+Ensnaring
+
+Entrancing
 %%%%
 Fire adj
 
@@ -1266,10 +1275,17 @@ Doomed
 Sinister
 
 Unholy
+
+Ghastly
+
+w:5
+Twisted
 %%%%
 Summoning adj
 
 Creative
+
+Supportive
 %%%%
 Divination adj
 
@@ -1277,7 +1293,11 @@ Divine
 
 Prophetic
 
+w:5
 All-Knowing
+
+w:5
+All-Seeing
 
 Spiritual
 %%%%
@@ -1293,6 +1313,11 @@ Warped
 
 w:5
 Unstable
+
+w:5
+Twisted
+
+Quantum
 %%%%
 Poison adj
 
