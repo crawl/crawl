@@ -19,7 +19,7 @@ DEPTH:  12-27
   local messager = 
     timed_msg { 
       initmsg = { "You hear a distant snort.",
-                  "Behold! There is an entrance to a minotaur's labyrinth "
+                  "Hark! There is an entrance to a minotaur's labyrinth "
                   .. "on this level. Find the entrance quickly before "
                   .. "the gate is sealed!" },
       finalmsg = "You hear the last, dying ticks of the clock.",
