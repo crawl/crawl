@@ -804,6 +804,19 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         wizard_create_spec_monster_name();
         break;
 
+    case 'R':
+        sprintf(specs, "Set monster spawn rate to what? (now %d) ",
+                env.spawn_random_rate);
+        mpr( specs, MSGCH_PROMPT );
+
+        get_input_line( specs, sizeof( specs ) );
+        if (specs[0] != '\0')
+        {
+            if (tmp = atoi(specs))
+                env.spawn_random_rate = tmp;
+        }
+        break;
+
     case 'r':
         wizard_change_species();
         break;

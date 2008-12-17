@@ -2300,6 +2300,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-A</w> : generate new Abyss area\n"
                        "<w>b</w>      : controlled blink\n"
                        "<w>B</w>      : banish yourself to the Abyss\n"
+                       "<w>R</w>      : change monster spawn rate\n"
                        "<w>k</w>      : shift section of a labyrinth\n"
                        "<w>u</w>/<w>d</w>    : shift up/down one level\n"
                        "<w>~</w>      : go to a specific level\n"
