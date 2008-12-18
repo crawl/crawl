@@ -2148,22 +2148,31 @@ static void _get_weighted_spells(bool completely_random, god_type god,
     ASSERT(book_pos > 0 && max_levels >= 0);
 }
 
-bool _spells_need_disc2(spell_type chosen_spells[], int d1, int d2)
+static void _remove_nondiscipline_spells(spell_type chosen_spells[],
+                                         int d1, int d2)
 {
+    int replace = -1;
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
     {
         if (chosen_spells[i] == SPELL_NO_SPELL)
             break;
 
-        // If a spell matches the second type but not the first,
-        // we need the second in the title.
-        if (!spell_typematch( chosen_spells[i], d1 )
-            && spell_typematch( chosen_spells[i], d2))
+        // If a spell matches neither the first nor the second type
+        // (that may be the same) remove it.
+        if (!spell_typematch(chosen_spells[i], d1)
+            && !spell_typematch(chosen_spells[i], d2))
         {
-            return (true);
+            chosen_spells[i] = SPELL_NO_SPELL;
+            if (replace == -1)
+                replace = i;
+        }
+        else if (replace != -1)
+        {
+            chosen_spells[replace] = chosen_spells[i];
+            chosen_spells[i] = SPELL_NO_SPELL;
+            replace++;
         }
     }
-    return (false);
 }
 
 bool make_book_theme_randart(item_def &book, int disc1, int disc2,
@@ -2270,7 +2279,6 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
     {
-        spell_vec[i] = (long) chosen_spells[i];
         if (chosen_spells[i] == SPELL_NO_SPELL)
             continue;
 
@@ -2282,27 +2290,53 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     // Remember the two dominant spell schools ...
     int max1 = 0;
     int max2 = 0;
+    int num1 = 1;
+    int num2 = 0;
     for (int k = 1; k <= SPTYP_LAST_EXPONENT; k++)
     {
         if (count[k] > count[max1])
         {
             max2 = max1;
+            num2 = num1;
             max1 = k;
+            num1 = 1;
         }
-        else if (max2 == max1 || count[k] > count[max2])
-            max2 = k;
+        else
+        {
+            if (count[k] == count[max1])
+                num1++;
+
+            if (max2 == max1 || count[k] > count[max2])
+            {
+                max2 = k;
+                if (count[k] == count[max1])
+                    num2 = num1;
+                else
+                    num2 = 1;
+            }
+            else if (count[k] == count[max2])
+                num2++;
+        }
     }
+
+    // If there are several "secondary" disciplines with the same count
+    // ignore all of them. Same, if the secondary discipline appears only once.
+    if (num2 > 1 && num1 > num2 || count[max2] < 2)
+        max2 = max1;
+
+    // Remove spells that don't fit either discipline.
+    _remove_nondiscipline_spells(chosen_spells, 1 << max1, 1 << max2);
+
+    // Finally fill the spell vector.
+    for (int i = 0; i < SPELLBOOK_SIZE; i++)
+        spell_vec[i] = (long) chosen_spells[i];
 
     // ... and change disc1 and disc2 accordingly.
     disc1 = 1 << max1;
-    if (max1 != max2
-        && (count[max2] > 1 || _spells_need_disc2(chosen_spells,
-                                                  1 << max1, 1 << max2)))
-    {
-        disc2 = 1 << max2;
-    }
-    else
+    if (max1 == max2)
         disc2 = disc1;
+    else
+        disc2 = 1 << max2;
 
     std::string name;
 
@@ -2355,14 +2389,22 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     }
     else
     {
-        name += type_name + " ";
+        std::string bookname = type_name + " ";
 
         // Add the noun for the first discipline.
         type_name = getRandNameString(spelltype_long_name(disc1));
         if (type_name.empty())
-            name += spelltype_long_name(disc1);
+            bookname += spelltype_long_name(disc1);
         else
-            name += type_name;
+        {
+            if (type_name.find("the ", 0) != std::string::npos)
+            {
+                type_name = replace_all(type_name, "the ", "");
+                bookname = "the " + bookname;
+            }
+            bookname += type_name;
+        }
+        name += bookname;
     }
 
     if (need_quotes)

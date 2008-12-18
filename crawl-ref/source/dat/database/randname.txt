@@ -988,6 +988,8 @@ w:1
 Mastering @book_magic@
 %%%%
 # synonyms for predominant spell schools
+# variants starting with the definite article will get "the" prepended
+# to the adjective version
 Conjuration
 
 Conjuration
@@ -1008,7 +1010,8 @@ Arcane Weapons
 w:1
 Blows and Bruises
 
-w:1 Damage Dealing
+w:1
+Damage Dealing
 %%%%
 Enchantment
 
@@ -1032,13 +1035,13 @@ Flames
 
 Heat
 
-Volcanoes
+the Volcanoes
 
-Blaze
+the Blaze
 
 Ignition
 
-Arsonist
+the Arsonist
 %%%%
 Ice
 
@@ -1048,11 +1051,11 @@ Snow
 
 Cold
 
-Snowflakes
+the Snowflakes
 
-Glaciers
+the Glacier
 
-Frostbite
+the Frostbite
 %%%%
 Transmigration
 
@@ -1115,14 +1118,17 @@ Calling
 
 Creation
 
-Entourage
+the Entourage
 
 Companions
 
-Escort
+the Escort
 
 w:1
 Illusion
+
+w:2
+Slavery
 %%%%
 Divination
 
@@ -1139,6 +1145,10 @@ Prediction
 Omens
 
 Sight
+
+Visions
+
+Truth
 %%%%
 Translocation
 
@@ -1176,7 +1186,7 @@ Clay
 
 the Mountains
 
-Rock
+the Rocks
 %%%%
 Air
 
@@ -1188,7 +1198,7 @@ Weightlessness
 
 Flight
 
-Birds
+the Birds
 
 Feathers
 %%%%

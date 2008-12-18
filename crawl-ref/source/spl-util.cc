@@ -94,7 +94,7 @@ void init_spell_descs(void)
     // which corrupts the heap.
     for (unsigned int i = 0; i < SPELLDATASIZE - 1; i++)
         spell_list[spelldata[i].id] = i;
-}                               // end init_spell_descs()
+}
 
 typedef std::map<std::string, spell_type> spell_name_map;
 static spell_name_map spell_name_cache;
