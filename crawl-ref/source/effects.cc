@@ -1466,7 +1466,7 @@ static void _do_book_acquirement(item_def &book, int agent)
     switch(choice)
     {
     case 0:
-        make_book_theme_randart(book, 0, 0, 7, 25);
+        make_book_theme_randart(book, 0, 0, 7, 22);
         break;
 
     case 1:

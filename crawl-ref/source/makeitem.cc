@@ -2472,7 +2472,7 @@ static void _generate_book_item(item_def& item, int allow_uniques,
     }
 
     if (item.sub_type == BOOK_RANDART_THEME)
-        make_book_theme_randart(item, 0, 0, 7, 25);
+        make_book_theme_randart(item, 0, 0, 7, 22);
     else if (item.sub_type == BOOK_RANDART_LEVEL)
     {
         int max_level   = std::min( 9, std::max(1, item_level / 3) );

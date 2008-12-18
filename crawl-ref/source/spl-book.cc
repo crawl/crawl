@@ -2321,7 +2321,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     // If there are several "secondary" disciplines with the same count
     // ignore all of them. Same, if the secondary discipline appears only once.
-    if (num2 > 1 && num1 > num2 || count[max2] < 2)
+    if (num2 > 1 && count[max1] > count[max2] || count[max2] < 2)
         max2 = max1;
 
     // Remove spells that don't fit either discipline.
