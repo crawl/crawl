@@ -1678,7 +1678,7 @@ static void _restore_level(const level_id &original)
 {
     // Reload the original level.
     you.where_are_you = original.branch;
-    you.your_level = original.absdepth();
+    you.your_level = original.dungeon_absdepth();
     you.level_type = original.level_type;
 
     load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
@@ -1710,7 +1710,7 @@ bool apply_to_level(const level_id &level, bool preserve_current,
             _save_level(you.your_level, you.level_type, you.where_are_you);
 
         you.where_are_you = level.branch;
-        you.your_level = level.absdepth();
+        you.your_level = level.dungeon_absdepth();
         you.level_type = level.level_type;
 
         // Load the dungeon level...

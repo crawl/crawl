@@ -3026,6 +3026,12 @@ level_id level_id::current()
     return id;
 }
 
+int level_id::dungeon_absdepth() const
+{
+    ASSERT(branch != NUM_BRANCHES && depth != -1);
+    return absdungeon_depth(branch, depth);
+}
+
 int level_id::absdepth() const
 {
     switch (level_type)

@@ -503,7 +503,16 @@ public:
         level_type = LEVEL_DUNGEON;
     }
 
+    // Returns the absolute depth in the dungeon for the level_id;
+    // non-dungeon branches (specifically Abyss and Pan) will return
+    // depths suitable for use in monster and item generation. If
+    // you're looking for a depth to set you.your_level to, use
+    // dungeon_absdepth().
     int absdepth() const;
+
+    // Returns the absolute depth in the dungeon for the level_id, corresponding
+    // to you.your_level.
+    int dungeon_absdepth() const;
 
     bool is_valid() const
     {
@@ -990,7 +999,7 @@ public:
     god_type  deity() const;
     bool      alive() const;
     bool      is_summoned(int* duration = NULL, int* summon_type = NULL) const;
-  
+
     bool      swimming() const;
     bool      submerged() const;
     bool      floundering() const;
