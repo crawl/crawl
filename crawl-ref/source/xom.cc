@@ -707,7 +707,7 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
 }
 
 // The nicer stuff.  Note: these things are not necessarily nice.
-static bool _xom_is_good(int sever)
+static bool _xom_is_good(int sever, int tension)
 {
     bool done = false;
 
@@ -720,7 +720,8 @@ static bool _xom_is_good(int sever)
     // This series of random calls produces a poisson-looking
     // distribution: initial hump, plus a long-ish tail.
 
-    if (x_chance_in_y(2, sever))
+    // Don't make player berserk if there's no danger.
+    if (tension > 0 && x_chance_in_y(2, sever))
     {
         potion_type pot =
             static_cast<potion_type>(
@@ -769,7 +770,8 @@ static bool _xom_is_good(int sever)
             }
         }
     }
-    else if (x_chance_in_y(5, sever))
+    // Pointless to send in help if there's no danger.
+    else if (tension > 0 && x_chance_in_y(5, sever))
     {
         // XXX: Can we clean up this ugliness, please?
         const int numdemons =
@@ -1012,7 +1014,8 @@ static bool _xom_is_good(int sever)
             }
         }
     }
-    else if (x_chance_in_y(14, sever))
+    // Pointless to send in help if there's no danger.
+    else if (tension > 0 && x_chance_in_y(14, sever))
     {
         monster_type mon = _xom_random_demon(sever);
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
@@ -1089,7 +1092,7 @@ static bool _xom_is_good(int sever)
     return (done);
 }
 
-static bool _xom_is_bad(int sever)
+static bool _xom_is_bad(int sever, int tension)
 {
     bool done = false;
 
@@ -1264,7 +1267,8 @@ static bool _xom_is_bad(int sever)
                 }
             }
         }
-        else if (x_chance_in_y(11, sever))
+        // Pointless to confuse player if there's no danger nearby.
+        else if (tension > 0 && x_chance_in_y(11, sever))
         {
             std::string speech = _get_xom_speech("confusion");
             if (confuse_player(random2(sever)+1, false)) {
@@ -1395,11 +1399,12 @@ void xom_acts(bool niceness, int sever)
 
     sever = std::max(1, sever);
 
+    god_type which_god = GOD_XOM;
     // Drawing the Xom card from Nemelex's decks of oddities or punishment.
     if (crawl_state.is_god_acting()
         && crawl_state.which_god_acting() != GOD_XOM)
     {
-        god_type which_god = crawl_state.which_god_acting();
+        which_god = crawl_state.which_god_acting();
 
         if (crawl_state.is_god_retribution())
         {
@@ -1413,6 +1418,12 @@ void xom_acts(bool niceness, int sever)
             simple_god_message(" calls in a favour from Xom.", which_god);
         }
     }
+
+    const int tension = get_tension(which_god);
+
+#if DEBUG_RELIGION || DEBUG_XOM || DEBUG_TENSION
+    mprf(MSGCH_DIAGNOSTICS, "xom tension: %d", tension);
+#endif
 
     const dungeon_feature_type orig_feat = grd(you.pos());
 
@@ -1428,13 +1439,13 @@ void xom_acts(bool niceness, int sever)
     if (niceness && !one_chance_in(5))
     {
         // Good stuff.
-        while (!_xom_is_good(sever))
+        while (!_xom_is_good(sever, tension))
             ;
     }
     else
     {
         // Bad mojo.
-        while (!_xom_is_bad(sever))
+        while (!_xom_is_bad(sever, tension))
             ;
     }
 

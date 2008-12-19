@@ -3034,6 +3034,9 @@ static void _decrement_durations()
 
     if (_decrement_a_duration(DUR_DIVINE_STAMINA))
         remove_divine_stamina();
+
+    _decrement_a_duration(DUR_REPEL_STAIRS_MOVE);
+    _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB);
 }
 
 static void _check_banished()
@@ -3240,6 +3243,11 @@ static void _world_reacts()
 
     if (you.cannot_act() && any_messages())
         more();
+
+#if DEBUG_TENSION || DEBUG_RELIGION
+    if (you.religion != GOD_NO_GOD)
+        mprf(MSGCH_DIAGNOSTICS, "TENSION = %d", get_tension());
+#endif
 }
 
 #ifdef DGL_SIMPLE_MESSAGING

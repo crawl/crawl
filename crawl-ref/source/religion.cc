@@ -6692,3 +6692,151 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon)
             || mons_is_evil(mon)
             || (holiness != MH_NATURAL && holiness != MH_HOLY));
 }
+
+int get_tension(god_type god)
+{
+    ASSERT(god != GOD_NO_GOD);
+
+    int total = 0;
+
+    for (int midx = 0; midx < MAX_MONSTERS; midx++)
+    {
+        const monsters* mons = &menv[midx];
+
+        if (!mons->alive())
+            continue;
+
+        if (see_grid(mons->pos()))
+            ; // Monster is nearby
+        else
+        {
+            // Is the monster trying to get somewhere nearby?
+            coord_def    target;
+            unsigned int travel_size = mons->travel_path.size();
+
+            if (travel_size > 0)
+                target = mons->travel_path[travel_size - 1];
+            else
+                target = mons->target;
+
+            // Monster is neither nearby nor trying to get near us.
+            if (!in_bounds(target) || !see_grid(target))
+                continue;
+        }
+
+        const mon_attitude_type att = mons_attitude(mons);
+        if (att == ATT_GOOD_NEUTRAL)
+            continue;
+
+        if (mons_cannot_act(mons) || mons->asleep() || mons_is_fleeing(mons))
+        {
+            continue;
+        }
+
+        int exper = exper_value(mons);
+        if (exper <= 0)
+            continue;
+
+        // Almost dead monsters don't count as much.
+        exper *= mons->hit_points;
+        exper /= mons->max_hit_points;
+
+        const bool gift = mons_is_god_gift(mons, god);
+
+        if (att == ATT_HOSTILE)
+        {
+            // God is punishing you with a hostile gift, so it doesn't
+            // count towards tension.
+            if (gift)
+                continue;
+        }
+        else if (att == ATT_FRIENDLY)
+        {
+            // Friendly monsters being around to help you reduce tension.
+            exper = -exper;
+
+            // If it's a god gift it reduces tension even more, since the
+            // god is already helping you out.
+            if (gift)
+                exper *= 2;
+        }
+        else
+            // Neutral monsters aren't as much of a threat.
+            exper /= 2;
+
+        if (att != ATT_FRIENDLY)
+        {
+            if (!mons_player_visible(mons))
+                exper /= 2;
+            if (!player_monster_visible(mons))
+                exper *= 2;
+        }
+
+        if (mons->confused() || mons->caught())
+            exper /= 2;
+
+        if (mons->has_ench(ENCH_SLOW))
+        {
+            exper *= 2;
+            exper /= 3;
+        }
+
+        if (mons->has_ench(ENCH_HASTE))
+        {
+            exper *= 3;
+            exper /= 2;
+        }
+
+        if (mons->has_ench(ENCH_BERSERK))
+            exper *= 2;
+
+        total += exper;
+    }
+    const int scale = 1;
+
+    int tension = total;
+
+    // Tension goes up inversly proportional to the % of max hp you
+    // have.
+    tension *= (scale + 1) * you.hp_max;
+    tension /= you.hp_max + scale * you.hp;
+
+    // Divides by 1 at level 1, 200 at level 27.
+    const int exp_lev  = you.get_experience_level();
+    const int exp_need = exp_needed(exp_lev + 1);
+    const int factor   = ceil(sqrt(exp_need / 30.0));
+    const int div      = 1 + factor;
+
+    tension /= div;
+
+    if (you.level_type == LEVEL_ABYSS)
+        tension = std::max(2, tension);
+
+    if (you.cannot_act())
+    {
+        tension *= 10;
+        tension  = std::max(1, tension);
+
+        return (tension);
+    }
+
+    if (you.confused())
+        tension *= 2;
+
+    if (you.caught())
+        tension *= 2;
+
+    if (you.duration[DUR_SLOW])
+    {
+        tension *= 3;
+        tension /= 2;
+    }
+
+    if (you.duration[DUR_HASTE])
+    {
+        tension *= 2;
+        tension /= 3;
+    }
+
+    return std::max(0, tension);
+}
