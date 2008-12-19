@@ -1658,6 +1658,46 @@ static bool _marker_vetoes_level_change()
     return (marker_vetoes_operation("veto_level_change"));
 }
 
+static bool _stair_moves_pre(dungeon_feature_type stair)
+{
+    if (crawl_state.prev_cmd == CMD_WIZARD)
+        return (false);
+
+    if (stair != grd(you.pos()))
+        return (false);
+
+    if (grid_stair_direction(stair) == CMD_NO_CMD)
+        return (false);
+
+    if (!you.duration[DUR_REPEL_STAIRS_CLIMB])
+        return (false);
+
+    int pct;
+    if (you.duration[DUR_REPEL_STAIRS_MOVE])
+        pct = 29;
+    else
+        pct = 50;
+
+    if (!x_chance_in_y(pct, 100))
+        return (false);
+
+    // Get feature name before sliding stair over.
+    std::string stair_str =
+        feature_description(you.pos(), false, DESC_CAP_THE, false);
+
+    if (!slide_feature_over(you.pos(), coord_def(-1, -1), false))
+        return (false);
+
+    std::string verb = stair_climb_verb(stair);
+
+    mprf("%s moves away as you attempt to %s it!", stair_str.c_str(),
+         verb.c_str());
+
+    you.turn_is_over = true;
+
+    return (true);
+}
+
 void up_stairs(dungeon_feature_type force_stair,
                entry_cause_type entry_cause)
 {
@@ -1683,6 +1723,9 @@ void up_stairs(dungeon_feature_type force_stair,
             mpr("You can't go up here.");
         return;
     }
+
+    if (_stair_moves_pre(stair_find))
+        return;
 
     // Since the overloaded message set turn_is_over, I'm assuming that
     // the overloaded character makes an attempt... so we're doing this
@@ -2039,6 +2082,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         return;
     }
 
+    if (_stair_moves_pre(stair_find))
+        return;
 
     if (shaft)
     {
@@ -2194,13 +2239,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     {
         std::string fall_where = "down the stairs";
 
-        if (stair_find == DNGN_ENTER_ABYSS
-            || stair_find == DNGN_ENTER_PANDEMONIUM
-            || stair_find == DNGN_TRANSIT_PANDEMONIUM
-            || stair_find == DNGN_ENTER_PORTAL_VAULT)
-        {
+        if (!grid_is_staircase(stair_find))
             fall_where = "through the gate";
-        }
 
         mprf("In your confused state, you trip and fall %s.",
              fall_where.c_str());

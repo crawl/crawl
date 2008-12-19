@@ -10,7 +10,6 @@
 #include "fight.h"
 
 #include <string.h>
-#include <sstream>
 #include <stdlib.h>
 #include <stdio.h>
 #include <algorithm>
@@ -2419,20 +2418,6 @@ void melee_attack::chaos_affects_defender()
         obvious_effect = false;
 }
 
-static bool _ok_dest_grid(const coord_def &dest)
-{
-    dungeon_feature_type feat = grd(dest);
-
-    if (grid_destroys_items(feat) || grid_is_solid(feat)
-        || grid_is_water(feat) || grid_is_trap(feat, true)
-        || is_notable_terrain(feat))
-    {
-        return (false);
-    }
-
-    return (true);
-}
-
 static bool _move_stairs(const actor* attacker, const actor* defender)
 {
     const coord_def orig_pos  = attacker->pos();
@@ -2455,102 +2440,10 @@ static bool _move_stairs(const actor* attacker, const actor* defender)
 
     coord_def dest(-1, -1);
     // Prefer to send it under the defender.
-    if (defender->alive() && defender->pos() != attacker->pos()
-        && _ok_dest_grid(defender->pos()))
-    {
+    if (defender->alive() && defender->pos() != attacker->pos())
         dest = defender->pos();
-    }
 
-    if (!in_bounds(dest))
-    {
-        radius_iterator ri(attacker->pos(), 1, true, false, true);
-
-        int squares = 0;
-        for (; ri; ++ri)
-        {
-            if (_ok_dest_grid(*ri))
-            {
-                if (one_chance_in(++squares))
-                    dest = *ri;
-            }
-        }
-    }
-
-    if (!in_bounds(dest))
-        return (false);
-
-    ASSERT(dest != orig_pos);
-
-    if (!swap_features(orig_pos, dest))
-        return (false);
-
-    // Is player aware of it happening?
-    if (!see_grid(orig_pos) && !see_grid(dest))
-        return (true);
-
-    std::string orig_actor, dest_actor;
-    if (orig_pos == you.pos())
-        orig_actor = "you";
-    else if (mgrd(orig_pos) != NON_MONSTER)
-    {
-        monsters &mon(menv[mgrd(orig_pos)]);
-
-        if (you.can_see(&mon))
-            orig_actor = mon.name(DESC_NOCAP_THE);
-    }
-
-    if (dest == you.pos())
-        dest_actor = "you";
-    else if (mgrd(dest) != NON_MONSTER)
-    {
-        monsters &mon(menv[mgrd(dest)]);
-
-        if (you.can_see(&mon))
-            dest_actor = mon.name(DESC_NOCAP_THE);
-    }
-
-    std::string stair_name =
-        feature_description(dest, false,
-                            see_grid(orig_pos) ? DESC_CAP_THE : DESC_CAP_A,
-                            false);
-    std::string prep;
-
-    if (grid_stair_direction(stair_feat) == CMD_GO_DOWNSTAIRS
-        && (stair_name.find("stair") || grid_is_escape_hatch(stair_feat)))
-    {
-        prep = "beneath";
-    }
-    else if (grid_is_escape_hatch(stair_feat))
-        prep = "above";
-    else
-        prep = "beside";
-
-    std::ostringstream str;
-    str << stair_name << " ";
-    if (see_grid(orig_pos) && !see_grid(dest))
-    {
-        str << "suddenly disappears";
-        if (!orig_actor.empty())
-            str << " from " << prep << " " << orig_actor;
-    }
-    else if (!see_grid(orig_pos) && see_grid(dest))
-    {
-        str << "suddenly appears";
-        if (!dest_actor.empty())
-            str << " " << prep << " " << dest_actor;
-    }
-    else
-    {
-        str << "moves";
-        if (!orig_actor.empty())
-            str << " from " << prep << " " << orig_actor;
-        if (!dest_actor.empty())
-            str << " to " << prep << " " << dest_actor;
-    }
-    str << "!";
-    mpr(str.str().c_str());
-
-    return (true);
+    return slide_feature_over(attacker->pos(), dest);
 }
 
 #define DID_AFFECT() \

@@ -11,6 +11,7 @@
 
 #include "enum.h"
 
+class  actor;
 struct coord_def;
 
 // last updated 12may2000 {dlb}
@@ -29,11 +30,16 @@ bool grid_is_solid(const coord_def &c);
 bool grid_is_rock(dungeon_feature_type grid);
 bool grid_is_permarock(dungeon_feature_type grid);
 bool grid_is_stone_stair(dungeon_feature_type grid);
+bool grid_is_staircase(dungeon_feature_type grid);
 bool grid_is_escape_hatch(dungeon_feature_type grid);
 bool grid_is_trap(dungeon_feature_type grid, bool undiscovered_too = false);
 command_type grid_stair_direction(dungeon_feature_type grid);
 bool grid_sealable_portal(dungeon_feature_type grid);
 bool grid_is_portal(dungeon_feature_type grid);
+
+std::string grid_preposition(dungeon_feature_type grid, bool active = false,
+                             const actor* who = NULL);
+std::string stair_climb_verb(dungeon_feature_type grid);
 
 bool grid_is_water(dungeon_feature_type grid);
 bool grid_is_watery(dungeon_feature_type grid);
@@ -62,7 +68,11 @@ void dungeon_terrain_changed(const coord_def &pos,
                              bool preserve_items = false);
 
 bool swap_features(const coord_def &pos1, const coord_def &pos2,
-                   bool swap_everything = false);
+                   bool swap_everything = false, bool announce = true);
+
+bool slide_feature_over(const coord_def &src,
+                        coord_def prefered_dest = coord_def(-1, -1),
+                        bool announce = true);
 
 bool is_critical_feature(dungeon_feature_type feat);
 

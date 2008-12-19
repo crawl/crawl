@@ -1349,6 +1349,31 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     if (load_mode == LOAD_ENTER_LEVEL)
     {
+        // 50% chance of repelling the stair you just came through.
+        if (you.duration[DUR_REPEL_STAIRS_MOVE]
+            || you.duration[DUR_REPEL_STAIRS_CLIMB])
+        {
+            dungeon_feature_type feat = grd(you.pos());
+            if (feat != DNGN_ENTER_SHOP
+                && grid_stair_direction(feat) != CMD_NO_CMD
+                && grid_stair_direction(stair_taken) != CMD_NO_CMD
+                && coinflip()
+                && slide_feature_over(you.pos(), coord_def(-1, -1), false))
+            {
+                std::string stair_str =
+                    feature_description(feat, NUM_TRAPS, false,
+                                        DESC_CAP_THE, false);
+                std::string verb = stair_climb_verb(feat);
+
+                mprf("%s slides away from you right after you %s through it!",
+                     stair_str.c_str(), verb.c_str());
+            }
+        }
+
+        // Stairs running from you is done now that you actually caught one.
+        you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
+        you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
+
         // If butchering was interrupted by switching levels (banishment)
         // then switch back from butchering tool if there's no hostiles
         // nearby.

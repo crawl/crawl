@@ -105,6 +105,7 @@ enum card_type
     CARD_SPADE,                 // dig
     CARD_TROWEL,                // create feature/vault
     CARD_MINEFIELD,             // plant traps
+    CARD_STAIRS,                // moves stairs around
 
     CARD_GENIE,                 // acquirement OR rotting/deterioration
     CARD_BARGAIN,               // shopping discount

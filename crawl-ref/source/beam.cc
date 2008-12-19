@@ -1531,7 +1531,7 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
 
 void fire_beam(bolt &pbolt)
 {
-    ASSERT(pbolt.flavour > BEAM_NONE && pbolt.flavour < NUM_BEAMS);
+    ASSERT(pbolt.flavour > BEAM_NONE && pbolt.flavour < BEAM_FIRST_PSEUDO);
     ASSERT(!pbolt.drop_item || pbolt.item);
     ASSERT(!pbolt.dropped_item);
 
@@ -1539,6 +1539,9 @@ void fire_beam(bolt &pbolt)
 
     const bool beam_invisible =
         pbolt.type == 0 || (!pbolt.name.empty() && pbolt.name[0] == '0');
+
+    ASSERT(pbolt.flavour != BEAM_VISUAL
+           || (!beam_invisible && pbolt.colour != BLACK));
 
     const int reflections = pbolt.reflections;
     if (reflections == 0)
@@ -1554,8 +1557,8 @@ void fire_beam(bolt &pbolt)
             pbolt.seen = true;
             int midx = mgrd(pbolt.source);
 
-            if (!pbolt.is_tracer && !YOU_KILL(pbolt.thrower)
-                && !crawl_state.is_god_acting()
+            if (pbolt.flavour != BEAM_VISUAL && !pbolt.is_tracer
+                && !YOU_KILL(pbolt.thrower) && !crawl_state.is_god_acting()
                 && (midx == NON_MONSTER || !you.can_see(&menv[midx])))
             {
                 mprf("%s appears from out of thin air!",
@@ -1611,21 +1614,18 @@ void fire_beam(bolt &pbolt)
 #endif
 
 #if DEBUG_DIAGNOSTICS
-    if (pbolt.flavour != BEAM_LINE_OF_SIGHT)
-    {
-        mprf( MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
-              "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
-              (pbolt.is_beam) ? "beam" : "missile",
-              (pbolt.is_explosion) ? "*" :
-              (pbolt.is_big_cloud) ? "+" : "",
-              (pbolt.is_tracer) ? " tracer" : "",
-              pbolt.name.c_str(),
-              pbolt.source.x, pbolt.source.y,
-              pbolt.target.x, pbolt.target.y,
-              pbolt.type, pbolt.colour, pbolt.flavour,
-              pbolt.hit, pbolt.damage.num, pbolt.damage.size,
-              pbolt.range);
-    }
+    mprf( MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
+          "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
+          (pbolt.is_beam) ? "beam" : "missile",
+          (pbolt.is_explosion) ? "*" :
+          (pbolt.is_big_cloud) ? "+" : "",
+          (pbolt.is_tracer) ? " tracer" : "",
+          pbolt.name.c_str(),
+          pbolt.source.x, pbolt.source.y,
+          pbolt.target.x, pbolt.target.y,
+          pbolt.type, pbolt.colour, pbolt.flavour,
+          pbolt.hit, pbolt.damage.num, pbolt.damage.size,
+          pbolt.range);
 #endif
 
     // init
@@ -1753,7 +1753,8 @@ void fire_beam(bolt &pbolt)
             pbolt.seen = true;
         }
 
-        if (!was_seen && pbolt.seen && !pbolt.is_tracer)
+        if (pbolt.flavour != BEAM_VISUAL && !was_seen && pbolt.seen
+            && !pbolt.is_tracer)
         {
             mprf("%s appears from out of your range of vision.",
                  article_a(pbolt.name, false).c_str());
@@ -1824,7 +1825,7 @@ void fire_beam(bolt &pbolt)
             if (tile_beam != -1 && in_los_bounds(drawpos))
             {
                 tiles.add_overlay(testpos, tile_beam);
-                delay(15);
+                delay(pbolt.delay);
             }
             else
 #endif
@@ -1841,7 +1842,7 @@ void fire_beam(bolt &pbolt)
                 // Get curses to update the screen so we can see the beam.
                 update_screen();
 
-                delay(15);
+                delay(pbolt.delay);
 
 #ifdef MISSILE_TRAILS_OFF
                 // mv: It's not optimal but is usually enough.
@@ -2939,13 +2940,6 @@ static void _beam_explodes(bolt &beam, const coord_def& p)
 
 static bool _beam_term_on_target(bolt &beam, const coord_def& p)
 {
-    if (beam.flavour == BEAM_LINE_OF_SIGHT)
-    {
-        if (beam.thrower != KILL_YOU_MISSILE)
-            beam.foe_count++;
-        return (true);
-    }
-
     // Generic - all explosion-type beams can be targeted at empty space,
     // and will explode there.  This semantic also means that a creature
     // in the target cell will have no chance to dodge or block, so we
@@ -3085,16 +3079,20 @@ int affect(bolt &beam, const coord_def& _p, item_def *item, bool affect_items)
     // Extra range used by hitting something.
     int rangeUsed = 0;
 
-    // Line of sight never affects anything.
-    if (beam.flavour == BEAM_LINE_OF_SIGHT)
-        return (0);
-
     coord_def p = _p;
     if (!in_bounds(_p))
         p = beam.pos;
 
     if (!item)
         item = beam.item;
+
+    if (beam.flavour == BEAM_VISUAL)
+    {
+        if (mgrd(p) != NON_MONSTER)
+            behaviour_event( &menv[mgrd(p)], ME_DISTURB );
+
+        return (0);
+    }
 
     if (grid_is_solid(grd(p)))
     {
@@ -3654,6 +3652,7 @@ static bool _beam_is_harmless(bolt &beam, monsters *mon)
     // The others are handled here.
     switch (beam.flavour)
     {
+    case BEAM_VISUAL:
     case BEAM_DIGGING:
         return (true);
 
@@ -3704,6 +3703,7 @@ static bool _beam_is_harmless_player(bolt &beam)
     // The others are handled here.
     switch (beam.flavour)
     {
+    case BEAM_VISUAL:
     case BEAM_DIGGING:
         return (true);
 
@@ -5756,7 +5756,7 @@ bolt::bolt() : range(0), type('*'),
                beam_source(MHITNOT), name(), short_name(), is_beam(false),
                is_explosion(false), is_big_cloud(false), aimed_at_spot(false),
                aux_source(), affects_nothing(false), effect_known(true),
-               obvious_effect(false),
+               delay(15), obvious_effect(false),
                fr_count(0), foe_count(0), fr_power(0), foe_power(0),
                fr_hurt(0), foe_hurt(0), fr_helped(0),foe_helped(0),
                dropped_item(false), item_pos(), item_index(NON_ITEM),
@@ -5934,9 +5934,9 @@ std::string beam_type_name(beam_type type)
     case BEAM_POTION_BLUE_SMOKE: return("blue smoke");
     case BEAM_POTION_PURP_SMOKE: return("purple smoke");
     case BEAM_POTION_RANDOM: return("random potion");
+    case BEAM_VISUAL: return ("visual effects");
     case BEAM_TORMENT_DAMAGE: return("torment damage");
     case BEAM_STEAL_FOOD: return("steal food");
-    case BEAM_LINE_OF_SIGHT: return("line of sight");
     case NUM_BEAMS:
         DEBUGSTR("invalid beam type");
         return("INVALID");

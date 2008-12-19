@@ -11,6 +11,7 @@
 #include "terrain.h"
 
 #include <algorithm>
+#include <sstream>
 
 #include "cloud.h"
 #include "dgnevent.h"
@@ -51,6 +52,20 @@ bool grid_is_stone_stair(dungeon_feature_type grid)
     default:
         return (false);
     }
+}
+
+bool grid_is_staircase(dungeon_feature_type grid)
+{
+    if (grid_is_stone_stair(grid))
+        return (true);
+
+    // All branch entries/exits are staircases, except for Zot.
+    if (grid == DNGN_ENTER_ZOT || grid == DNGN_RETURN_FROM_ZOT)
+        return (false);
+
+    return (grid >= DNGN_ENTER_FIRST_BRANCH && grid <= DNGN_ENTER_LAST_BRANCH
+            ||   grid >= DNGN_RETURN_FROM_FIRST_BRANCH
+              && grid <= DNGN_RETURN_FROM_LAST_BRANCH);
 }
 
 bool grid_is_escape_hatch(dungeon_feature_type grid)
@@ -488,21 +503,7 @@ static void _dgn_check_terrain_monsters(const coord_def &pos)
 {
     const int mindex = mgrd(pos);
     if (mindex != NON_MONSTER)
-    {
-        monsters *mons = &menv[mindex];
-
-        if (mons->has_ench(ENCH_SUBMERGED)
-            && !monster_can_submerge(mons, grd(pos)))
-        {
-            mons->del_ench(ENCH_SUBMERGED);
-        }
-
-        if (grid_is_solid(grd(pos)))
-            monster_teleport(mons, true, false);
-        else
-            mons_check_pool(mons, mons->pos(), KILL_MISC, -1);
-    }
-
+        menv[mindex].apply_location_effects(pos);
 }
 
 // Clear blood off of terrain that shouldn't have it.  Also clear
@@ -538,20 +539,15 @@ void _dgn_check_terrain_player(const coord_def pos)
     if (pos != you.pos())
         return;
 
-    if (you.can_pass_through(pos) || !grid_is_solid(grd(pos)))
+    if (you.can_pass_through(pos))
     {
-        if (!you.airborne())
-        {
-            // If the monster can't stay submerged in the new terrain
-            // and there aren't any adjacent squares where it can
-            // stay submerged then move it.
-            if (mgrd(you.pos()) != NON_MONSTER
-                && !mons_is_submerged( &menv[ mgrd(you.pos()) ] ))
-            {
-                monster_teleport( &menv[ mgrd(you.pos()) ], true, false);
-            }
-            move_player_to_grid(pos, false, true, false);
-        }
+        // If the monster can't stay submerged in the new terrain and
+        // there aren't any adjacent squares where it can stay
+        // submerged then move it.
+        const int midx = mgrd(you.pos());
+        if ( midx != NON_MONSTER && !mons_is_submerged( &menv[midx] ) )
+            monster_teleport( &menv[midx], true, false);
+        move_player_to_grid(pos, false, true, true);
     }
     else
         you_teleport_now(true, false);
@@ -591,17 +587,105 @@ void dungeon_terrain_changed(const coord_def &pos,
     set_terrain_changed(pos.x, pos.y);
 }
 
-bool swap_features(const coord_def &pos1, const coord_def &pos2,
-                   bool swap_everything)
+static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 {
-    ASSERT(in_bounds(pos1) && in_bounds(pos2));
-    ASSERT(pos1 != pos2);
+    dungeon_feature_type orig_feat = grd(dest_pos);
+
+    std::string orig_name =
+        feature_description(dest_pos, false,
+                            see_grid(orig_pos) ? DESC_CAP_THE : DESC_CAP_A,
+                            false);
+
+    std::string prep = grid_preposition(orig_feat, true);
+
+    std::string orig_actor, dest_actor;
+    if (orig_pos == you.pos())
+        orig_actor = "you";
+    else if (mgrd(orig_pos) != NON_MONSTER)
+    {
+        monsters &mon(menv[mgrd(orig_pos)]);
+
+        if (you.can_see(&mon))
+            orig_actor = mon.name(DESC_NOCAP_THE);
+    }
+
+    if (dest_pos == you.pos())
+        dest_actor = "you";
+    else if (mgrd(dest_pos) != NON_MONSTER)
+    {
+        monsters &mon(menv[mgrd(dest_pos)]);
+
+        if (you.can_see(&mon))
+            dest_actor = mon.name(DESC_NOCAP_THE);
+    }
+
+    std::ostringstream str;
+    str << orig_name << " ";
+    if (see_grid(orig_pos) && !see_grid(dest_pos))
+    {
+        str << "suddenly disappears";
+        if (!orig_actor.empty())
+            str << " from " << prep << " " << orig_actor;
+    }
+    else if (!see_grid(orig_pos) && see_grid(dest_pos))
+    {
+        str << "suddenly appears";
+        if (!dest_actor.empty())
+            str << " " << prep << " " << dest_actor;
+    }
+    else
+    {
+        str << "moves";
+        if (!orig_actor.empty())
+            str << " from " << prep << " " << orig_actor;
+        if (!dest_actor.empty())
+            str << " to " << prep << " " << dest_actor;
+    }
+    str << "!";
+    mpr(str.str().c_str());
+}
+
+static void _announce_swap(coord_def pos1, coord_def pos2)
+{
+    if (!see_grid(pos1) && !see_grid(pos2))
+        return;
 
     const dungeon_feature_type feat1 = grd(pos1);
     const dungeon_feature_type feat2 = grd(pos2);
 
+    if (feat1 == feat2)
+        return;
+
+    const bool notable_seen1 = is_notable_terrain(feat1) && see_grid(pos1);
+    const bool notable_seen2 = is_notable_terrain(feat2) && see_grid(pos2);
+    coord_def orig_pos, dest_pos;
+
+    if (notable_seen1 && notable_seen2)
+    {
+        _announce_swap_real(pos1, pos2);
+        _announce_swap_real(pos2, pos1);
+    }
+    else if (notable_seen1)
+        _announce_swap_real(pos2, pos1);
+    else if (notable_seen2)
+        _announce_swap_real(pos1, pos2);
+    else if (see_grid(pos2))
+        _announce_swap_real(pos1, pos2);
+    else
+        _announce_swap_real(pos2, pos1);
+}
+
+bool swap_features(const coord_def &pos1, const coord_def &pos2,
+                   bool swap_everything, bool announce)
+{
+    ASSERT(in_bounds(pos1) && in_bounds(pos2));
+    ASSERT(pos1 != pos2);
+
     if (is_sanctuary(pos1) || is_sanctuary(pos2))
         return (false);
+
+    const dungeon_feature_type feat1 = grd(pos1);
+    const dungeon_feature_type feat2 = grd(pos2);
 
     if (is_notable_terrain(feat1) && !see_grid(pos1)
         && is_terrain_known(pos1.x, pos1.y))
@@ -623,6 +707,9 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
     trap_def* trap1 = find_trap(pos1);
     trap_def* trap2 = find_trap(pos2);
+
+    shop_struct* shop1 = get_shop(pos1);
+    shop_struct* shop2 = get_shop(pos2);
 
     // Find a temporary holding place for pos1 stuff to be moved to
     // before pos2 is moved to pos1.
@@ -662,14 +749,15 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     (void) move_notable_thing(pos2, pos1);
     env.markers.move(pos2, pos1);
     dungeon_events.move_listeners(pos2, pos1);
-    grd(pos2) = feat1;
-    grd(pos1) = feat2;
     env.map(pos1).property = prop2;
     env.map(pos2).property = prop1;
 
     (void) move_notable_thing(temp, pos2);
     env.markers.move(temp, pos2);
     dungeon_events.move_listeners(temp, pos2);
+
+    grd(pos2) = feat1;
+    grd(pos1) = feat2;
 
     env.grid_colours(pos1) = col2;
     env.grid_colours(pos2) = col1;
@@ -678,6 +766,11 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
         trap1->pos = pos2;
     if (trap2)
         trap2->pos = pos1;
+
+    if (shop1)
+        shop1->pos = pos2;
+    if (shop2)
+        shop2->pos = pos1;
 
     if (!swap_everything)
     {
@@ -690,6 +783,9 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
         _dgn_check_terrain_monsters(pos2);
         _dgn_check_terrain_player(pos2);
         set_terrain_changed(pos2.x, pos2.y);
+
+        if (announce)
+            _announce_swap(pos1, pos2);
         return (true);
     }
 
@@ -699,11 +795,27 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     igrd(pos1) = i2;
     igrd(pos2) = i1;
 
+    if (igrd(pos1) != NON_ITEM)
+    {
+        for (stack_iterator si(igrd(pos1)); si; ++si)
+            si->pos = pos1;
+    }
+    if (igrd(pos2) != NON_ITEM)
+    {
+        for (stack_iterator si(igrd(pos2)); si; ++si)
+            si->pos = pos2;
+    }
+
     const int m1 = mgrd(pos1);
     const int m2 = mgrd(pos1);
 
     mgrd(pos1) = m2;
     mgrd(pos2) = m1;
+
+    if (mgrd(pos1) != NON_MONSTER)
+        menv[mgrd(pos1)].position = pos1;
+    if (mgrd(pos2) != NON_MONSTER)
+        menv[mgrd(pos2)].position = pos2;
 
     move_cloud(env.cgrid(pos1), temp);
     move_cloud(env.cgrid(pos2), pos1);
@@ -723,7 +835,77 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     set_terrain_changed(pos1.x, pos1.y);
     set_terrain_changed(pos2.x, pos2.y);
 
-    return (false);
+    if (announce)
+        _announce_swap(pos1, pos2);
+
+    return (true);
+}
+
+static bool _ok_dest_grid(const actor* orig_actor,
+                          const dungeon_feature_type orig_feat,
+                          const coord_def dest_pos)
+{
+    const dungeon_feature_type dest_feat = grd(dest_pos);
+
+    if (orig_feat == dest_feat)
+        return (false);
+
+    if (is_notable_terrain(dest_feat))
+        return (false);
+
+    actor* dest_actor = NULL;
+
+    if (dest_pos == you.pos())
+        dest_actor = dynamic_cast<actor*>(&you);
+    else if (mgrd(dest_pos) != NON_MONSTER)
+        dest_actor = dynamic_cast<actor*>(&menv[mgrd(dest_pos)]);
+
+    if (orig_actor && !orig_actor->is_habitable_feat(dest_feat))
+        return (false);
+    if (dest_actor && !dest_actor->is_habitable_feat(orig_feat))
+        return (false);
+
+    return (true);
+}
+
+bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
+                        bool announce)
+{
+    ASSERT(in_bounds(src));
+
+    const dungeon_feature_type orig_feat = grd(src);
+    actor* orig_actor = NULL;
+
+    if (src == you.pos())
+        orig_actor = dynamic_cast<actor*>(&you);
+    else if (mgrd(src) != NON_MONSTER)
+        orig_actor = dynamic_cast<actor*>(&menv[mgrd(src)]);
+
+    if (in_bounds(prefered_dest)
+        && _ok_dest_grid(orig_actor, orig_feat, prefered_dest))
+    {
+        ASSERT(prefered_dest != src);
+    }
+    else
+    {
+        radius_iterator ri(src, 1, true, false, true);
+
+        int squares = 0;
+        for (; ri; ++ri)
+        {
+            if (_ok_dest_grid(orig_actor, orig_feat, *ri))
+            {
+                if (one_chance_in(++squares))
+                    prefered_dest = *ri;
+            }
+        }
+    }
+
+    if (!in_bounds(prefered_dest))
+        return (false);
+
+    ASSERT(prefered_dest != src);
+    return swap_features(src, prefered_dest, false, announce);
 }
 
 // Returns true if we manage to scramble free.
@@ -855,4 +1037,68 @@ dungeon_feature_type feat_by_desc(std::string desc)
         return (i->second);
 
     return (DNGN_UNSEEN);
+}
+
+std::string grid_preposition(dungeon_feature_type grid, bool active,
+                             const actor* who)
+{
+    const bool         airborne = !who || who->airborne();
+    const command_type dir      = grid_stair_direction(grid);
+
+    if (dir == CMD_NO_CMD)
+    {
+        if (grid == DNGN_STONE_ARCH)
+            return "beside";
+        else if (grid_is_solid(grid))
+        {
+            if (active)
+                return "around";
+            else
+                return "inside";
+        }
+        else if (!airborne && grid >= DNGN_LAVA && grid <= DNGN_WATER_STUCK)
+        {
+            if (active)
+                return "around";
+            else
+                return "in";
+        }
+        else
+        {
+            if (active)
+                return "over";
+            else
+                return "above";
+        }
+    }
+
+    if (dir == CMD_GO_DOWNSTAIRS
+        && (grid_is_staircase(grid) || grid_is_escape_hatch(grid)))
+    {
+        if (active)
+            return "over";
+        else
+            return "above";
+    }
+    else if (grid_is_escape_hatch(grid))
+    {
+        if (active)
+            return "under";
+        else
+            return "beneath";
+    }
+    else
+        return "beside";
+}
+
+std::string stair_climb_verb(dungeon_feature_type grid)
+{
+    ASSERT(grid_stair_direction(grid) != CMD_NO_CMD);
+
+    if (grid_is_staircase(grid))
+        return "climb";
+    else if (grid_is_escape_hatch(grid))
+        return "use";
+    else
+        return "pass through";
 }

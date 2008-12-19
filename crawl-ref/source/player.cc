@@ -308,6 +308,32 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     if (trap_def* ptrap = find_trap(you.pos()))
         ptrap->trigger(you, !stepped); // blinking makes it hard to evade
 
+    command_type stair_dir = grid_stair_direction(new_grid);
+
+    if (stepped && stair_dir != CMD_NO_CMD
+        && you.duration[DUR_REPEL_STAIRS_MOVE])
+    {
+        int pct;
+        if (you.duration[DUR_REPEL_STAIRS_CLIMB])
+            pct = 29;
+        else
+            pct = 50;
+
+        if (x_chance_in_y(pct, 100))
+        {
+            if (slide_feature_over(you.pos(), coord_def(-1, -1), false))
+            {
+                std::string stair_str =
+                    feature_description(new_grid, NUM_TRAPS, false,
+                                        DESC_CAP_THE, false);
+                std::string prep = grid_preposition(new_grid, true, &you);
+
+                mprf("%s slides away as you move %s it!", stair_str.c_str(),
+                     prep.c_str());
+            }
+        }
+    }
+
     return (true);
 }
 

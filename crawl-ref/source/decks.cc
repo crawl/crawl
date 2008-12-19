@@ -276,6 +276,7 @@ const char* card_name(card_type card)
     case CARD_DOWSING:         return "Dowsing";
     case CARD_TROWEL:          return "the Trowel";
     case CARD_MINEFIELD:       return "the Minefield";
+    case CARD_STAIRS:          return "the Stairs";
     case CARD_GENIE:           return "the Genie";
     case CARD_TOMB:            return "the Tomb";
     case CARD_WATER:           return "Water";
@@ -1550,6 +1551,161 @@ static void _minefield_card(int power, deck_rarity_type rarity)
     }
 }
 
+static int stair_draw_count = 0;
+
+static void _move_stair(coord_def stair_pos, bool away)
+{
+    ASSERT(stair_pos != you.pos());
+
+    dungeon_feature_type feat = grd(stair_pos);
+    ASSERT(grid_stair_direction(feat) != CMD_NO_CMD);
+
+    coord_def begin, towards;
+
+    if (away)
+    {
+        begin   = you.pos();
+        towards = stair_pos;
+    }
+    else
+    {
+        // Can't move towards player if it's already adjacent.
+        if (adjacent(you.pos(), stair_pos))
+            return;
+
+        begin   = stair_pos;
+        towards = you.pos();
+    }
+
+    ray_def ray;
+    if (!find_ray(begin, towards, true, ray, 0, true))
+    {
+        mpr("Couldn't find ray between player and stairs.", MSGCH_ERROR);
+        return;
+    }
+
+    // Don't start off under the player.
+    if (away)
+        ray.advance();
+
+    bool found_stairs = false;
+    int  past_stairs  = 0;
+    while ( in_bounds(ray.pos()) && see_grid(ray.pos())
+            && !grid_is_solid(ray.pos()) && ray.pos() != you.pos() )
+    {
+        if (ray.pos() == stair_pos)
+            found_stairs = true;
+        if (found_stairs)
+            past_stairs++;
+        ray.advance();
+    }
+    past_stairs--;
+
+    if (!away && grid_is_solid(ray.pos()))
+        // Transparent wall between stair and player.
+        return;
+
+    if (away && !found_stairs)
+    {
+        if (grid_is_solid(ray.pos()))
+            // Transparent wall between stair and player.
+            return;
+
+        mpr("Ray didn't cross stairs.", MSGCH_ERROR);
+    }
+
+    if (away && past_stairs <= 0)
+        // Stairs already at edge, can't move further away.
+        return;
+
+    if ( !in_bounds(ray.pos()) || ray.pos() == you.pos() )
+        ray.regress();
+
+    while (!see_grid(ray.pos()) || grd(ray.pos()) != DNGN_FLOOR)
+    {
+        ray.regress();
+        if (!in_bounds(ray.pos()) || ray.pos() == you.pos()
+            || ray.pos() == stair_pos)
+        {
+            // No squares in path are a plain floor.
+            return;
+        }
+    }
+
+    ASSERT(stair_pos != ray.pos());
+
+    std::string stair_str =
+        feature_description(stair_pos, false, DESC_CAP_THE, false);
+
+    mprf("%s slides %s you!", stair_str.c_str(),
+         away ? "away from" : "towards");
+
+    // Animate stair moving.
+    const feature_def &feat_def = get_feature_def(feat);
+
+    bolt beam;
+
+    beam.range   = INFINITE_DISTANCE;
+    beam.flavour = BEAM_VISUAL;
+    beam.type    = feat_def.symbol;
+    beam.colour  = feat_def.colour;
+    beam.source  = stair_pos;
+    beam.target  = ray.pos();
+    beam.delay   = 50; // Make beam animation slower than normal.
+    beam.name    = "STAIR BEAM";
+
+    beam.aimed_at_spot = true;
+
+    fire_beam(beam);
+
+    // Clear out "missile trails"
+    viewwindow(true, false);
+
+    if (!swap_features(stair_pos, ray.pos(), false, false))
+        mprf(MSGCH_ERROR, "_move_stair(): failed to move %s",
+             stair_str.c_str());
+}
+
+static void _stairs_card(int power, deck_rarity_type rarity)
+{
+    UNUSED(power);
+    UNUSED(rarity);
+
+    you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
+    you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
+
+    if (grid_stair_direction(grd(you.pos())) == CMD_NO_CMD)
+        you.duration[DUR_REPEL_STAIRS_MOVE] = 1000;
+    else
+        you.duration[DUR_REPEL_STAIRS_CLIMB] = 1000;
+
+    std::vector<coord_def> stairs_avail;
+
+    radius_iterator ri(you.pos(), LOS_RADIUS, false, true, true);
+    for (; ri; ++ri)
+    {
+        dungeon_feature_type feat = grd(*ri);
+        if (grid_stair_direction(feat) != CMD_NO_CMD
+            && feat != DNGN_ENTER_SHOP)
+        {
+            stairs_avail.push_back(*ri);
+        }
+    }
+
+    if (stairs_avail.size() == 0)
+    {
+        mpr("No stairs available to move.");
+        return;
+    }
+
+    std::random_shuffle(stairs_avail.begin(), stairs_avail.end());
+
+    for (unsigned int i = 0; i < stairs_avail.size(); i++)
+        _move_stair(stairs_avail[i], stair_draw_count % 2);
+
+    stair_draw_count++;
+}
+
 static int _drain_monsters(coord_def where, int pow, int garbage)
 {
     UNUSED( garbage );
@@ -2794,6 +2950,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_GLASS:            _glass_card(power, rarity); break;
     case CARD_DOWSING:          _dowsing_card(power, rarity); break;
     case CARD_MINEFIELD:        _minefield_card(power, rarity); break;
+    case CARD_STAIRS:           _stairs_card(power, rarity); break;
     case CARD_GENIE:            _genie_card(power, rarity); break;
     case CARD_CURSE:            _curse_card(power, rarity); break;
     case CARD_WARPWRIGHT:       _warpwright_card(power, rarity); break;

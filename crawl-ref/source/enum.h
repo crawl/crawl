@@ -250,10 +250,15 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_PURP_SMOKE,
     BEAM_POTION_RANDOM,
 
-    BEAM_TORMENT_DAMAGE,        // Pseudo-beam for damage flavour.
-    BEAM_STEAL_FOOD,            // Pseudo-beam for harpyes stealing food.
+    BEAM_LAST_REAL = BEAM_POTION_RANDOM,
 
-    BEAM_LINE_OF_SIGHT,         // 60 - only used for checking monster LOS
+    // For getting the visual effect of a beam.
+    BEAM_VISUAL,                // 58
+
+    BEAM_TORMENT_DAMAGE,        // Pseudo-beam for damage flavour.
+    BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
+    BEAM_STEAL_FOOD,            // {60} Pseudo-beam for harpies stealing food.
+
     NUM_BEAMS
 };
 
@@ -637,6 +642,8 @@ enum command_type
     CMD_TARGET_WIZARD_PATHFIND,
     CMD_TARGET_WIZARD_GAIN_LEVEL,
     CMD_TARGET_WIZARD_MISCAST,
+    CMD_TARGET_WIZARD_MAKE_SUMMONED,
+    CMD_TARGET_WIZARD_POLYMORPH,
     CMD_TARGET_MOUSE_MOVE,
     CMD_TARGET_MOUSE_SELECT,
     CMD_TARGET_HELP,
@@ -1170,6 +1177,8 @@ enum duration_type
     DUR_TELEPATHY,
     DUR_PETRIFIED,
     DUR_LOWERED_MR,
+    DUR_REPEL_STAIRS_MOVE,
+    DUR_REPEL_STAIRS_CLIMB,
 
     NUM_DURATIONS
 };

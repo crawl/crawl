@@ -7154,7 +7154,8 @@ void monsters::check_redraw(const coord_def &old) const
 
 void monsters::apply_location_effects(const coord_def &oldpos)
 {
-    dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
+    if (oldpos != pos())
+        dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
 
     // monsters stepping on traps:
     trap_def* ptrap = find_trap(pos());

@@ -65,6 +65,8 @@ struct bolt
 
     bool        effect_known;          // did we _know_ this would happen?
 
+    int         delay;                 // delay used when drawing beam.
+
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?
 
