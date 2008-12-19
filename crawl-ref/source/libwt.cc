@@ -202,11 +202,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     }
 
     // I'll be damned if I have to parse lpCmdLine myself...
-    int argc;
+    int argc = 0;
     LPWSTR *wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
-    // Windows 98 fix.
-    if (!wargv)
-        argc = 0;
     char **argv   = new char*[argc];
     int args_len  = wcslen(GetCommandLineW()) + argc;
     char *args    = new char[args_len];

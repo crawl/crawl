@@ -25,6 +25,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed backwards stealth check.
 * Fixed recharged wands not being inscribed with zap counts.
 * Fixed bad names for god-gifted unrandarts.
+* Fixed crash related to running on Windows 98.
 * Warn player if interlevel travel intends to take detours.
 * Make multi-corpse sacrifices take 1 turn only.
 * All 't' commands now take a turn.
