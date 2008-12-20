@@ -2155,7 +2155,7 @@ public:
     std::string tile_font_tip_file;
     int         tile_font_tip_size;
     bool        tile_key_repeat;
-    bool        tile_full_screen;
+    screen_mode tile_full_screen;
     int         tile_window_width;
     int         tile_window_height;
     int         tile_map_pixels;

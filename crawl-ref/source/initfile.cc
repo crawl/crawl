@@ -849,22 +849,22 @@ void game_options::reset_options()
 
     // font selection
     tile_font_crt_file = "VeraMono.ttf";
-    tile_font_crt_size = 15;
+    tile_font_crt_size = 0;
     tile_font_stat_file = "VeraMono.ttf";
-    tile_font_stat_size = 16;
+    tile_font_stat_size = 0;
     tile_font_msg_file = "VeraMono.ttf";
-    tile_font_msg_size = 14;
+    tile_font_msg_size = 0;
     tile_font_tip_file = "VeraMono.ttf";
-    tile_font_tip_size = 15;
+    tile_font_tip_size = 0;
     tile_font_lbl_file = "Vera.ttf";
-    tile_font_lbl_size = 14;
+    tile_font_lbl_size = 0;
 
     // window layout
     tile_key_repeat = true;
-    tile_full_screen = false;
-    tile_window_width = 1024;
-    tile_window_height = 768;
-    tile_map_pixels = 4;
+    tile_full_screen = SCREENMODE_AUTO;
+    tile_window_width = 0;
+    tile_window_height = 0;
+    tile_map_pixels = 0;
     tile_tooltip_ms = 1000;
 #endif
 
@@ -2998,7 +2998,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else INT_OPTION(tile_font_lbl_size, 1, INT_MAX);
     else BOOL_OPTION(tile_key_repeat);
-    else BOOL_OPTION(tile_full_screen);
+    else if (key == "tile_full_screen")
+        tile_full_screen = (screen_mode)_read_bool(field, tile_full_screen);
     else INT_OPTION(tile_window_width, 1, INT_MAX);
     else INT_OPTION(tile_window_height, 1, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);

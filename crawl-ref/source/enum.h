@@ -3056,6 +3056,15 @@ enum mlist_targetting_type
 };
 #endif
 
+#ifdef USE_TILE
+enum screen_mode
+{
+    SCREENMODE_WINDOW = 0,
+    SCREENMODE_FULL   = 1,
+    SCREENMODE_AUTO   = 2
+};
+#endif
+
 #ifdef WIZARD
 
 enum wizard_option_type

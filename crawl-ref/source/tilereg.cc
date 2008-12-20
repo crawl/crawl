@@ -172,8 +172,11 @@ bool Region::mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy)
 {
     int x = mouse_x - ox - sx;
     int y = mouse_y - oy - sy;
+
     bool valid = (x >= 0 && y >= 0);
 
+    ASSERT(dx > 0);
+    ASSERT(dy > 0);
     x /= dx;
     y /= dy;
     valid &= ((unsigned int)x < mx && (unsigned int)y < my);
@@ -1718,6 +1721,8 @@ MapRegion::MapRegion(unsigned int pixsz) :
     m_buf(NULL),
     m_far_view(false)
 {
+    ASSERT(pixsz > 0);
+
     dx = pixsz;
     dy = pixsz;
     clear();

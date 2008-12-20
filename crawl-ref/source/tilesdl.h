@@ -187,6 +187,9 @@ protected:
     unsigned int m_last_tick_moved;
 
     std::string m_tooltip;
+
+    int m_screen_width;
+    int m_screen_height;
 };
 
 // Main interface for tiles functions

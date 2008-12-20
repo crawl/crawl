@@ -19,6 +19,20 @@
 #include <SDL_opengl.h>
 #include <SDL_image.h>
 
+// Default Screen Settings
+// width, height, map, crt, stat, msg, tip, lbl
+static int _screen_sizes[4][8] =
+{
+    // Default
+    {1024, 700, 4, 15, 16, 14, 15, 14},
+    // Eee PC 900+
+    {1024, 600, 3, 14, 14, 12, 13, 12},
+    // Small screen
+    {800, 600, 3, 14, 11, 12, 13, 12},
+    // Eee PC
+    {800, 480, 3, 13, 12, 10, 13, 11}
+};
+
 // Note: these defaults should match the OpenGL defaults
 GLState::GLState() :
     array_vertex(false),
@@ -130,6 +144,12 @@ bool TilesFramework::initialise()
         return false;
     }
 
+    {
+        const SDL_VideoInfo* video_info = SDL_GetVideoInfo();
+        m_screen_width = video_info->current_w;
+        m_screen_height = video_info->current_h;
+    }
+
     SDL_EnableUNICODE(true);
 
     SDL_WM_SetCaption(CRAWL " " VERSION, CRAWL);
@@ -158,11 +178,30 @@ bool TilesFramework::initialise()
     }
 
     unsigned int flags = SDL_OPENGL;
-    if (Options.tile_full_screen)
-        flags |= SDL_FULLSCREEN;
 
-    m_windowsz.x = Options.tile_window_width;
-    m_windowsz.y = Options.tile_window_height;
+    bool too_small = (m_screen_width < 1024 || m_screen_height < 800);
+    if (Options.tile_full_screen == SCREENMODE_FULL
+        || (Options.tile_full_screen == SCREENMODE_AUTO && too_small))
+    {
+        flags |= SDL_FULLSCREEN;
+    }
+
+    if (Options.tile_window_width && Options.tile_window_height)
+    {
+        m_windowsz.x = Options.tile_window_width;
+        m_windowsz.y = Options.tile_window_height;
+    }
+    else if (flags & SDL_FULLSCREEN)
+    {
+        // By default, fill the whole screen.
+        m_windowsz.x = m_screen_width;
+        m_windowsz.y = m_screen_height;
+    }
+    else
+    {
+        m_windowsz.x = std::max(800, m_screen_width - 100);
+        m_windowsz.y = std::max(480, m_screen_height - 100);
+    }
 
     m_context = SDL_SetVideoMode(m_windowsz.x, m_windowsz.y, 0, flags);
     if (!m_context)
@@ -173,6 +212,28 @@ bool TilesFramework::initialise()
 
     if (!m_image.load_textures())
         return false;
+
+    // Find which set of _screen_sizes to use.
+    int auto_size = 0;
+    int num_screen_sizes = sizeof(_screen_sizes) / sizeof(_screen_sizes[0]);
+    do
+    {
+        if (m_windowsz.x >= _screen_sizes[auto_size][0]
+            && m_windowsz.y >= _screen_sizes[auto_size][1])
+        {
+            break;
+        }
+    } while (++auto_size < num_screen_sizes - 1);
+
+    // Auto pick map and font sizes if option is zero.
+#define AUTO(x,y) (x = (x) ? (x) : _screen_sizes[auto_size][(y)])
+    AUTO(Options.tile_map_pixels, 2);
+    AUTO(Options.tile_font_crt_size, 3);
+    AUTO(Options.tile_font_stat_size, 4);
+    AUTO(Options.tile_font_msg_size, 5);
+    AUTO(Options.tile_font_tip_size, 6);
+    AUTO(Options.tile_font_lbl_size, 7);
+#undef AUTO
 
     int crt_font = load_font(Options.tile_font_crt_file.c_str(),
                              Options.tile_font_crt_size, true, true);
