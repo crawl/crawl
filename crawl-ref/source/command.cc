@@ -1127,7 +1127,7 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
 // Extra info on this item wasn't found anywhere else.
 static void _append_non_item(std::string &desc, std::string key)
 {
-    spell_type type = spell_by_name(key, true);
+    spell_type type = spell_by_name(key);
 
     if (type == SPELL_NO_SPELL)
         return;
