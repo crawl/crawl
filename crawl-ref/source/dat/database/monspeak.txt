@@ -12,7 +12,7 @@
 ############################################################
 
 ############################################################
-# Library of randomized word/phrase substitutions.
+# Library of randomised word/phrase substitutions.
 # The keys will have to be changed in the unlikely event that 
 # monsters are ever given names like "yells" or "begs".
 ############################################################

@@ -853,7 +853,7 @@ torn
 the_book_magic
 
 w:9
-# capitalize later as needed
+# capitalise later as needed
 the Arcane Arts
 
 w:1

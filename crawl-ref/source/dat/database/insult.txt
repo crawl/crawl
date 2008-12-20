@@ -42,7 +42,7 @@ Thy @body_or_spiritual_part@ shall be my @meal@!
 
 I @will_or_shall@ @feast_or_devour@ thy @body_or_spiritual_part@!
 %%%%
-# capitalized "flee" verbs
+# capitalised "flee" verbs
 run_away
 
 Away with thee
@@ -97,7 +97,7 @@ Take thy face hence
 
 Turn tail
 %%%%
-# capitalized synonyms for "give up"
+# capitalised synonyms for "give up"
 give_up
 
 Abandon hope
