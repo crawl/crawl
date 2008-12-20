@@ -583,7 +583,7 @@ static bool _choose_chaos_upgrade(const monsters* mon)
     // NOTE: Code assumes that the monster will only be carrying one
     // missile launcher at a time.
     bool special_launcher = false;
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; ++i)
     {
         const mon_inv_type slot = slots[i];
         const int          midx = mon->inv[slot];
@@ -753,13 +753,13 @@ static bool _xom_is_good(int sever, int tension)
     else if (x_chance_in_y(4, sever))
     {
         monsters *monster;
-        for (unsigned i = 0; i < MAX_MONSTERS; i++)
+        for (unsigned i = 0; i < MAX_MONSTERS; ++i)
         {
             monster = &menv[i];
 
             if (monster->type == -1 || !mons_near(monster) || mons_wont_attack(monster) || one_chance_in(20))
                 continue;
-                
+
             if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY, random2(sever))))
             {
                 if (!done)
@@ -916,10 +916,10 @@ static bool _xom_is_good(int sever, int tension)
                         ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
                 }
 
-                // player_angers_monster() will turn the monster against you 
-                // only if the monster hates your religion.  No monsters hate 
-                // Xom-religion, so this will only have an effect if you are not 
-                // currently a worshipper of Xom, e.g. if you just abandoned him 
+                // player_angers_monster() will turn the monster against you
+                // only if the monster hates your religion.  No monsters hate
+                // Xom-religion, so this will only have an effect if you are not
+                // currently a worshipper of Xom, e.g. if you just abandoned him
                 // or if you drew a Card of Xom or something.
                 player_angers_monster(mon);
 
@@ -942,10 +942,10 @@ static bool _xom_is_good(int sever, int tension)
 	
         // Not just every monster in sight -- oh no.  Every monster on this level!
         monsters *monster;
-        for (unsigned i = 0; i < MAX_MONSTERS; i++)
+        for (unsigned i = 0; i < MAX_MONSTERS; ++i)
         {
             monster = &menv[i];
-                
+
             if (monster->type == -1)
                 continue;
 
@@ -966,16 +966,18 @@ static bool _xom_is_good(int sever, int tension)
     }
     else if (x_chance_in_y(11, sever) && (you.level_type != LEVEL_ABYSS))
     {
-        // The Xom teleportation train takes you on instant teleportation to 
-        // a few random areas, stopping randomly but mostly likely in an area 
+        // The Xom teleportation train takes you on instant teleportation to
+        // a few random areas, stopping randomly but mostly likely in an area
         // that is not dangerous to you.
         god_speaks(GOD_XOM, _get_xom_speech("teleportation journey").c_str());
-        do {
+        do
+        {
             you_teleport_now(false);
             more();
             if (one_chance_in(10))
                 break;
-        } while (x_chance_in_y(3, 4) || player_in_a_dangerous_place());
+        }
+        while (x_chance_in_y(3, 4) || player_in_a_dangerous_place());
         done = true;
     }
     else if (x_chance_in_y(12, sever))
@@ -1144,7 +1146,7 @@ static bool _xom_is_bad(int sever, int tension)
                                       STAT_INTELLIGENCE};
 
                 int count = 0;
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 3; ++i)
                 {
                     int val = vals[i];
 
@@ -1174,14 +1176,16 @@ static bool _xom_is_bad(int sever, int tension)
         }
         else if (x_chance_in_y(7, sever) && (you.level_type != LEVEL_ABYSS))
         {
-            // The Xom teleportation train takes you on instant teleportation to 
-            // a few random areas, stopping if an area is dangerous to you or 
+            // The Xom teleportation train takes you on instant teleportation to
+            // a few random areas, stopping if an area is dangerous to you or
             // randomly stopping.
             god_speaks(GOD_XOM, _get_xom_speech("teleportation journey").c_str());
-            do {
+            do
+            {
                 you_teleport_now(false);
                 more();
-            } while (x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
+            }
+            while (x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
             done = true;
         }
         else if (x_chance_in_y(8, sever))
@@ -1196,7 +1200,7 @@ static bool _xom_is_bad(int sever, int tension)
 
             mon_inv_type slots[] = {MSLOT_WEAPON, MSLOT_ALT_WEAPON,
                                     MSLOT_MISSILE};
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; ++i)
             {
                 int idx = mon->inv[slots[i]];
                 if (idx == NON_ITEM)
@@ -1273,23 +1277,24 @@ static bool _xom_is_bad(int sever, int tension)
             std::string speech = _get_xom_speech("confusion");
             if (confuse_player(random2(sever)+1, false)) {
                 done = true;
-                // Well, sometimes Xom gets carried away and starts confusing other 
+                // Well, sometimes Xom gets carried away and starts confusing other
                 // creatures too.
                 if (coinflip()) {
                     monsters* monster;
-                    for (unsigned i = 0; i < MAX_MONSTERS; i++) {
+                    for (unsigned i = 0; i < MAX_MONSTERS; ++i)
+                    {
                         monster = &menv[i];
-                        
+
                         if (monster->type == -1 || !mons_near(monster) || one_chance_in(20))
                             continue;
-                        
+
                         if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY, random2(sever)))) {
                             if (player_monster_visible( monster ))
                                 simple_monster_message(monster, " looks rather confused.");
                         }
                     }
                 }
-            } 
+            }
         }
         else if (x_chance_in_y(12, sever))
         {
@@ -1467,7 +1472,7 @@ void xom_acts(bool niceness, int sever)
                                      MUT_YELLOW_SCALES, MUT_RED2_SCALES,
                                      MUT_STRONG_STIFF};
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; ++i)
         {
             mutation_type bad = dex_muts[i];
 
@@ -1477,7 +1482,7 @@ void xom_acts(bool niceness, int sever)
         while(you.dex <= 0
               && you.mutation[MUT_FLEXIBLE_WEAK] <
                      orig_mutation[MUT_FLEXIBLE_WEAK])
-        { 
+        {
             mutate(MUT_FLEXIBLE_WEAK, true, true, true);
         }
 
@@ -1497,7 +1502,7 @@ void xom_acts(bool niceness, int sever)
         mutation_type bad_muts[3]  = { MUT_WEAK, MUT_DOPEY, MUT_CLUMSY };
         mutation_type good_muts[3] = { MUT_STRONG, MUT_CLEVER, MUT_AGILE };
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; ++i)
         {
             while (*(stat_ptrs[i]) <= 0)
             {
