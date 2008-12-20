@@ -341,7 +341,6 @@ static bool tag_follower_at(const coord_def &pos)
     monsters *fmenv = &menv[mgrd(pos)];
 
     if (!fmenv->alive()
-        || !fmenv->can_use_stairs()
         || fmenv->incapacitated()
         || mons_is_stationary(fmenv))
     {
@@ -378,18 +377,25 @@ static bool tag_follower_at(const coord_def &pos)
         }
     }
 
-    // Monster is chasing player through stairs.
-    fmenv->flags |= MF_TAKING_STAIRS;
+    // Return true for monsters that can't use stairs (so that friendly
+    // monsters adjacent to them can still follow you through stairs),
+    // but don't tag them as followers.
+    if (fmenv->can_use_stairs())
+    {
+        // Monster is chasing player through stairs.
+        fmenv->flags |= MF_TAKING_STAIRS;
 
-    // Clear patrolling/travel markers.
-    fmenv->patrol_point.reset();
-    fmenv->travel_path.clear();
-    fmenv->travel_target = MTRAV_NONE;
+        // Clear patrolling/travel markers.
+        fmenv->patrol_point.reset();
+        fmenv->travel_path.clear();
+        fmenv->travel_target = MTRAV_NONE;
 
 #if DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",
-         fmenv->name(DESC_CAP_THE, true).c_str() );
+        mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",
+             fmenv->name(DESC_CAP_THE, true).c_str() );
 #endif
+    }
+
     return (true);
 }
 
