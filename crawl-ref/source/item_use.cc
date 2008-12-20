@@ -4438,7 +4438,7 @@ void read_scroll(int slot)
     case SCR_SUMMONING:
         if (create_monster(
                 mgen_data(MONS_ABOMINATION_SMALL, BEH_FRIENDLY,
-                          6, you.pos(), you.pet_target)) != -1)
+                          0, you.pos(), you.pet_target)) != -1)
         {
             mpr("A horrible Thing appears!");
         }
