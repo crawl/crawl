@@ -73,6 +73,7 @@ void wizard_create_spec_monster(void);
 void wizard_create_spec_monster_name(void);
 void wizard_create_spec_object(void);
 void wizard_tweak_object(void);
+void wizard_make_object_randart(void);
 void wizard_exercise_skill(void);
 void wizard_set_skill_level(void);
 void wizard_set_all_skills(void);
@@ -81,6 +82,7 @@ void wizard_change_species( void );
 void wizard_set_xl();
 void wizard_get_religion( void );
 void wizard_set_stats( void );
+void wizard_edit_durations( void );
 void wizard_draw_card();
 void wizard_dismiss_all_monsters(bool force_all = false);
 void wizard_place_stairs( bool down );
@@ -89,6 +91,7 @@ void wizard_interlevel_travel();
 void debug_make_trap( void );
 void debug_make_shop( void );
 void debug_place_map();
+
 // Honest debugging functions.
 void debug_item_scan( void );
 void debug_mons_scan();
@@ -109,10 +112,14 @@ void debug_stethoscope(int mon);
 
 class monsters;
 class coord_def;
+
 void wizard_apply_monster_blessing(monsters* mon);
 void wizard_give_monster_item(monsters* mon);
 void wizard_move_player_or_monster(const coord_def& where);
+void wizard_make_monster_summoned(monsters* mon);
+void wizard_polymorph_monster(monsters* mon);
 void debug_make_monster_shout(monsters* mon);
+
 void debug_pathfind(int mid);
 void debug_miscast( int target );
 

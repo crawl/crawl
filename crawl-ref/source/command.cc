@@ -763,11 +763,13 @@ static const char *targeting_help_1 =
     "<h>Wizard targeting comands:</h>\n"
     "<w>g</w>: give item to monster\n"
     "<w>s</w>: force monster to shout or speak\n"
+    "<w>S</w>: make monster a summoned monster\n"
     "<w>F</w>: cycle monster friendly/good neutral/neutral/hostile\n"
     "<w>P</w>: apply divine blessing to monster\n"
     "<w>m</w>: move monster or player\n"
     "<w>M</w>: cause spell miscast for monster or player\n"
     "<w>w</w>: calculate shortest path to any point on the map\n"
+    "<w>~</w>: polymorph monster to specific type\n"
 #endif
 ;
 
@@ -2260,6 +2262,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>^</w>      : gain piety\n"
                        "<w>_</w>      : gain religion\n"
                        "<w>@</w>      : set Str Int Dex\n"
+                       "<w>Ctrl-D</w> : change enchantments/durations\n"
                        "\n"
                        "<yellow>Other player related effects</yellow>\n"
                        "<w>c</w>      : card effect\n"

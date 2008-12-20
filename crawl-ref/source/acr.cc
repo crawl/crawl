@@ -426,27 +426,10 @@ static void _startup_tutorial()
 }
 
 #ifdef WIZARD
-// Returns whether an item of this type can be an artefact, or cursed.
-static bool _item_type_can_be_artefact( int type)
+// Returns whether an item of this type can be cursed.
+static bool _item_type_can_be_cursed( int type)
 {
-    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
-            || type == OBJ_BOOKS);
-}
-
-static bool _make_book_randart(item_def &book)
-{
-    char type;
-
-    do
-    {
-        mpr("Make book fixed [t]heme or fixed [l]evel? ", MSGCH_PROMPT);
-        type = tolower(getch());
-    } while (type != 't' && type != 'l');
-
-    if (type == 'l')
-        return make_book_level_randart(book);
-    else
-        return make_book_theme_randart(book);
+    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY);
 }
 
 static void _do_wizard_command(int wiz_command, bool silent_fail)
@@ -522,95 +505,11 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
         break;
     }
+
     case '+':
-    {
-        int i = prompt_invent_item( "Make an artefact out of which item?",
-                                    MT_INVLIST, -1 );
-
-        if (prompt_failed(i))
-            break;
-
-        item_def &item(you.inv[i]);
-
-        if (!_item_type_can_be_artefact(item.base_type))
-        {
-            mpr("That item cannot be turned into an artefact.");
-            break;
-        }
-
-        int j;
-        // Set j == equipment slot of chosen item, remove old randart benefits.
-        for (j = 0; j < NUM_EQUIP; j++)
-        {
-            if (you.equip[j] == i)
-            {
-                if (j == EQ_WEAPON)
-                    you.wield_change = true;
-
-                if (is_random_artefact( item ))
-                    unuse_randart( i );
-                break;
-            }
-        }
-
-        if (is_random_artefact(item))
-        {
-            if (!yesno("Is already a randart; wipe and re-use?"))
-            {
-                canned_msg( MSG_OK );
-                // If equipped, re-apply benefits.
-                if (j != NUM_EQUIP)
-                    use_randart( i );
-                return;
-            }
-
-            item.special = 0;
-            item.flags  &= ~ISFLAG_RANDART;
-            item.props.clear();
-        }
-
-        mpr("Fake item as gift from which god (ENTER to leave alone): ",
-            MSGCH_PROMPT);
-        char name[80];
-        if (!cancelable_get_line( name, sizeof( name ) ) && name[0])
-        {
-            god_type god = string_to_god(name, false);
-            if (god == GOD_NO_GOD)
-               mpr("No such god, leaving item origin alone.");
-            else
-            {
-               mprf("God gift of %s.", god_name(god, false).c_str());
-               item.orig_monnum = -god;
-            }
-        }
-
-        if (item.base_type == OBJ_BOOKS)
-        {
-            if (!_make_book_randart(item))
-            {
-                mpr("Failed to turn book into randart.");
-                break;
-            }
-        }
-        else if (!make_item_randart( item ))
-        {
-            mpr("Failed to turn item into randart.");
-            break;
-        }
-
-        if (Options.autoinscribe_randarts)
-        {
-            add_autoinscription(item,
-                                randart_auto_inscription(you.inv[i]));
-        }
-
-        // If equipped, apply new randart benefits.
-        if (j != NUM_EQUIP)
-            use_randart( i );
-
-        mpr( item.name(DESC_INVENTORY_EQUIP).c_str() );
+        wizard_make_object_randart();
         break;
-    }
+
     case '|':
         // Create all unrandarts.
         for (tmp = 1; tmp < NO_UNRANDARTS; tmp++)
@@ -688,10 +587,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
         if (item_cursed(item))
             do_uncurse_item(item);
-        else if (_item_type_can_be_artefact(item.base_type))
+        else if (_item_type_can_be_cursed(item.base_type))
             do_curse_item(item);
         else
-            mpr("That item cannot be cursed.");
+            mpr("That type of item cannot be cursed.");
         break;
     }
 
@@ -805,15 +704,76 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 'R':
-        sprintf(specs, "Set monster spawn rate to what? (now %d) ",
-                env.spawn_random_rate);
-        mpr( specs, MSGCH_PROMPT );
+        mpr( "(c)hange spawn rate or (s)pawn monsters? ", MSGCH_PROMPT );
+        tmp = tolower(getch());
 
-        get_input_line( specs, sizeof( specs ) );
-        if (specs[0] != '\0')
+        if (tmp != 'c' && tmp != 's')
         {
+            canned_msg( MSG_OK );
+            break;
+        }
+
+        if (tmp == 'c')
+        {
+            sprintf(specs, "Set monster spawn rate to what? (now %d) ",
+                    env.spawn_random_rate);
+            mpr(specs, MSGCH_PROMPT );
+
+            if (cancelable_get_line( specs, sizeof( specs ) )
+                || strlen(specs) == 0)
+            {
+                canned_msg( MSG_OK );
+                break;
+            }
+
             if (tmp = atoi(specs))
                 env.spawn_random_rate = tmp;
+        }
+        else
+        {
+            // 50 spots are reserved for non-wandering monsters.
+            int max_spawn = MAX_MONSTERS - 50;
+            for (int i = 0; i < MAX_MONSTERS; i++)
+            {
+                if (menv[i].alive())
+                    max_spawn--;
+            }
+
+            if (max_spawn <= 0)
+            {
+                mpr("Level already filled with monsters, get rid of some "
+                    "of them first.", MSGCH_PROMPT);
+                return;
+            }
+
+            sprintf(specs, "Spawn how many random monsters (max %d)? ",
+                    max_spawn);
+            mpr(specs, MSGCH_PROMPT );
+
+            if (cancelable_get_line( specs, sizeof( specs ) )
+                || strlen(specs) == 0)
+            {
+                canned_msg( MSG_OK );
+                break;
+            }
+
+            int num = atoi(specs);
+            if (num <= 0)
+            {
+                canned_msg( MSG_OK );
+                break;
+            }
+            num = std::max(num, max_spawn);
+
+            int curr_rate = env.spawn_random_rate;
+            // Each call to spawn_random_monsters() will spawn one with
+            // the rate at 5 or less.
+            env.spawn_random_rate = 5;
+
+            for (int i = 0; i < num; i++)
+                spawn_random_monsters();
+
+            env.spawn_random_rate = curr_rate;
         }
         break;
 
@@ -1063,6 +1023,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case '@':
         wizard_set_stats();
+        break;
+
+    case CONTROL('D'):
+        wizard_edit_durations();
         break;
 
     case '^':

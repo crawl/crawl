@@ -837,6 +837,8 @@ void debug_list_monsters()
 
     std::sort(mon_nums, mon_nums + MAX_MONSTERS, _sort_monster_list);
 
+    int total_exp = 0, total_adj_exp = 0;
+
     std::string prev_name = "";
     int         count     = 0;
 
@@ -862,6 +864,19 @@ void debug_list_monsters()
         nfound++;
         count++;
         prev_name = name;
+
+        int exp = exper_value(m);
+        total_exp += exp;
+
+        if ((m->flags & (MF_WAS_NEUTRAL | MF_CREATED_FRIENDLY))
+            || m->has_ench(ENCH_ABJ))
+        {
+            continue;
+        }
+        if (m->flags & MF_GOT_HALF_XP)
+            exp /= 2;
+
+        total_adj_exp += exp;
     }
 
     char buf[80];
@@ -872,7 +887,13 @@ void debug_list_monsters()
     mons.push_back(buf);
 
     mpr_comma_separated_list("Monsters: ", mons);
-    mprf("%d monsters", nfound);
+
+    if (total_adj_exp == total_exp)
+        mprf("%d monsters, %d total exp value",
+             nfound, total_exp);
+    else
+        mprf("%d monsters, %d total exp value (%d adjusted)",
+             nfound, total_exp, total_adj_exp);
 }
 
 #endif
@@ -1824,8 +1845,119 @@ void wizard_tweak_object(void)
         }
     }
 }
-#endif
 
+// Returns whether an item of this type can be an artefact.
+static bool _item_type_can_be_artefact( int type)
+{
+    return (type == OBJ_WEAPONS || type == OBJ_ARMOUR || type == OBJ_JEWELLERY
+            || type == OBJ_BOOKS);
+}
+
+static bool _make_book_randart(item_def &book)
+{
+    char type;
+
+    do
+    {
+        mpr("Make book fixed [t]heme or fixed [l]evel? ", MSGCH_PROMPT);
+        type = tolower(getch());
+    } while (type != 't' && type != 'l');
+
+    if (type == 'l')
+        return make_book_level_randart(book);
+    else
+        return make_book_theme_randart(book);
+}
+
+void wizard_make_object_randart()
+{
+    int i = prompt_invent_item( "Make an artefact out of which item?",
+                                MT_INVLIST, -1 );
+
+    if (prompt_failed(i))
+        return;
+
+    item_def &item(you.inv[i]);
+
+    if (!_item_type_can_be_artefact(item.base_type))
+    {
+        mpr("That item cannot be turned into an artefact.");
+        return;
+    }
+
+    int j;
+    // Set j == equipment slot of chosen item, remove old randart benefits.
+    for (j = 0; j < NUM_EQUIP; j++)
+    {
+        if (you.equip[j] == i)
+        {
+            if (j == EQ_WEAPON)
+                you.wield_change = true;
+
+            if (is_random_artefact( item ))
+                unuse_randart( i );
+            break;
+        }
+    }
+
+    if (is_random_artefact(item))
+    {
+        if (!yesno("Is already a randart; wipe and re-use?"))
+        {
+            canned_msg( MSG_OK );
+            // If equipped, re-apply benefits.
+            if (j != NUM_EQUIP)
+                use_randart( i );
+            return;
+        }
+
+        item.special = 0;
+        item.flags  &= ~ISFLAG_RANDART;
+        item.props.clear();
+    }
+
+    mpr("Fake item as gift from which god (ENTER to leave alone): ",
+        MSGCH_PROMPT);
+    char name[80];
+    if (!cancelable_get_line( name, sizeof( name ) ) && name[0])
+    {
+        god_type god = string_to_god(name, false);
+        if (god == GOD_NO_GOD)
+           mpr("No such god, leaving item origin alone.");
+        else
+        {
+           mprf("God gift of %s.", god_name(god, false).c_str());
+           item.orig_monnum = -god;
+        }
+    }
+
+    if (item.base_type == OBJ_BOOKS)
+    {
+        if (!_make_book_randart(item))
+        {
+            mpr("Failed to turn book into randart.");
+            return;
+        }
+    }
+    else if (!make_item_randart( item ))
+    {
+        mpr("Failed to turn item into randart.");
+        return;
+    }
+
+    if (Options.autoinscribe_randarts)
+    {
+        add_autoinscription(item,
+                            randart_auto_inscription(you.inv[i]));
+    }
+
+    // If equipped, apply new randart benefits.
+    if (j != NUM_EQUIP)
+        use_randart( i );
+
+    mpr( item.name(DESC_INVENTORY_EQUIP).c_str() );
+}
+#endif
 
 #ifdef DEBUG_DIAGNOSTICS
 // Prints a number of useful (for debugging, that is) stats on monsters.
@@ -3750,6 +3882,182 @@ void wizard_set_stats()
     you.redraw_evasion      = true;
 }
 
+static const char* dur_names[NUM_DURATIONS] =
+{
+    "invis",
+    "conf",
+    "paralysis",
+    "slow",
+    "mesmerised",
+    "haste",
+    "might",
+    "levitation",
+    "berserker",
+    "poisoning",
+    "confusing touch",
+    "sure blade",
+    "backlight",
+    "deaths door",
+    "fire shield",
+    "building rage",
+    "exhausted",
+    "liquid flames",
+    "icy armour",
+    "repel missiles",
+    "prayer",
+    "piety pool",
+    "divine vigour",
+    "divine stamina",
+    "divine shield",
+    "regeneration",
+    "swiftness",
+    "stonemail",
+    "controlled flight",
+    "teleport",
+    "control teleport",
+    "breath weapon",
+    "transformation",
+    "death channel",
+    "deflect missiles",
+    "forescry",
+    "see invisible",
+    "weapon brand",
+    "silence",
+    "condensation shield",
+    "stoneskin",
+    "repel undead",
+    "gourmand",
+    "bargain",
+    "insulation",
+    "resist poison",
+    "resist fire",
+    "resist cold",
+    "slaying",
+    "stealth",
+    "magic shield",
+    "sleep",
+    "sage",
+    "telepathy",
+    "petrified",
+    "lowered mr",
+    "repel stairs move",
+    "repel stairs climb"
+};
+
+void wizard_edit_durations( void )
+{
+    std::vector<int> durs;
+    size_t max_len = 0;
+
+    for (int i = 0; i < NUM_DURATIONS; i++)
+    {
+        if (!you.duration[i])
+            continue;
+
+        max_len = std::max(strlen(dur_names[i]), max_len);
+        durs.push_back(i);
+    }
+
+    if (durs.size() > 0)
+    {
+        for (unsigned int i = 0; i < durs.size(); i++)
+        {
+            int dur = durs[i];
+            mprf(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, max_len,
+                 dur_names[dur], you.duration[dur]);
+        }
+        mpr("", MSGCH_PROMPT);
+        mpr("Edit which duration (letter or name)? ", MSGCH_PROMPT);
+    }
+    else
+        mpr("Edit which duration (name)? ", MSGCH_PROMPT);
+
+    char buf[80];
+
+    if (cancelable_get_line_autohist(buf, sizeof buf) || strlen(buf) == 0)
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    strcpy(buf, lowercase_string(trimmed_string(buf)).c_str());
+
+    if (strlen(buf) == 0)
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    int choice = -1;
+
+    if (strlen(buf) == 1)
+    {
+        if (durs.size() == 0)
+        {
+            mpr("No existing durations to choose from.", MSGCH_PROMPT);
+            return;
+        }
+        choice = buf[0] - 'a';
+
+        if (choice < 0 || choice >= (int) durs.size())
+        {
+            mpr("Invalid choice.", MSGCH_PROMPT);
+            return;
+        }
+        choice = durs[choice];
+    }
+    else
+    {
+        std::vector<int>         matches;
+        std::vector<std::string> match_names;
+        max_len = 0;
+
+        for (int i = 0; i < NUM_DURATIONS; i++)
+        {
+            if (strcmp(dur_names[i], buf) == 0)
+            {
+                choice = i;
+                break;
+            }
+            if (strstr(dur_names[i], buf) != NULL)
+            {
+                matches.push_back(i);
+                match_names.push_back(dur_names[i]);
+            }
+        }
+        if (choice != -1)
+            ;
+        else if (matches.size() == 1)
+            choice = matches[0];
+        else if (matches.size() == 0)
+        {
+            mprf(MSGCH_PROMPT, "No durations matching '%s'.", buf);
+            return;
+        }
+        else
+        {
+            std::string prefix = "No exact match for duration '";
+            prefix += buf;
+            prefix += "', possible matches are: ";
+
+            mpr_comma_separated_list(prefix, match_names, " and ", ", ",
+                                     MSGCH_DIAGNOSTICS);
+            return;
+        }
+    }
+
+    sprintf(buf, "Set '%s' to: ", dur_names[choice]);
+    int num = _debug_prompt_for_int(buf, false);
+
+    if (num == 0)
+    {
+        mpr("Can't set duration directly to 0, setting it to 1 instead.",
+            MSGCH_PROMPT);
+        num = 1;
+    }
+    you.duration[choice] = num;
+}
+
 void wizard_draw_card()
 {
     msg::streams(MSGCH_PROMPT) << "Which card? " << std::endl;
@@ -3890,6 +4198,33 @@ void debug_place_map()
     debug_load_map_by_name(what);
 }
 
+// Make all of the monster's original equipment disappear, unless it's a fixed
+// artefact or unrand artefact.
+static void _vanish_orig_eq(monsters* mons)
+{
+    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+    {
+        if (mons->inv[i] == NON_ITEM)
+            continue;
+
+        item_def &item(mitm[mons->inv[i]]);
+
+        if (!is_valid_item(item))
+            continue;
+
+        if (item.orig_place != 0 || item.orig_monnum != 0
+            || !item.inscription.empty()
+            || is_unrandom_artefact(item)
+            || is_fixed_artefact(item)
+            || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN | ISFLAG_NOTED_GET
+                              | ISFLAG_BEEN_IN_INV) ) )
+        {
+            continue;
+        }
+        item.flags |= ISFLAG_SUMMONED;
+    }
+}
+
 // Dismisses all monsters on the level or all monsters that match a user
 // specified regex.
 void wizard_dismiss_all_monsters(bool force_all)
@@ -3907,6 +4242,18 @@ void wizard_dismiss_all_monsters(bool force_all)
         }
     }
 
+    // Make all of the monsters' original equipment disappear unless "keepitem"
+    // is found in the regex (except for fixed arts and unrand arts).
+    bool keep_item = false;
+    if (strstr(buf, "keepitem") != NULL)
+    {
+        std::string str = replace_all(buf, "keepitem", "");
+        trim_string(str);
+        strcpy(buf, str.c_str());
+
+        keep_item = true;
+    }
+
     // Dismiss all
     if (buf[0] == '\0' || force_all)
     {
@@ -3916,7 +4263,11 @@ void wizard_dismiss_all_monsters(bool force_all)
             monsters *monster = &menv[mon];
 
             if (monster->alive())
+            {
+                if (!keep_item)
+                    _vanish_orig_eq(monster);
                 monster_die(monster, KILL_DISMISSED, NON_MONSTER, false, true);
+            }
         }
         return;
     }
@@ -3928,7 +4279,11 @@ void wizard_dismiss_all_monsters(bool force_all)
         monsters *monster = &menv[mon];
 
         if (monster->alive() && tpat.matches(monster->name(DESC_PLAIN)))
+        {
+            if (!keep_item)
+                _vanish_orig_eq(monster);
             monster_die(monster, KILL_DISMISSED, NON_MONSTER, false, true);
+        }
     }
 }
 
@@ -4374,6 +4729,132 @@ void wizard_move_player_or_monster(const coord_def& where)
         _move_monster(where, mid);
 
     already_moving = false;
+}
+
+void wizard_make_monster_summoned(monsters* mon)
+{
+    int summon_type = 0;
+    if (mon->is_summoned(NULL, &summon_type) || summon_type != 0)
+    {
+        mpr("Monster is already summoned.", MSGCH_PROMPT);
+        return;
+    }
+
+    if (mons_is_unique(mon->type))
+    {
+        mpr("Can't make unique monsters summoned.");
+        return;
+    }
+
+    int dur = _debug_prompt_for_int("What summon longevity (1 to 6)? ", true);
+
+    if (dur < 1 || dur > 6)
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    mpr("[a] clone [b] animated [c] chaos [d] miscast [e] zot", MSGCH_PROMPT);
+    mpr("[f] wrath [g] aid                [m] misc    [s] spell",
+        MSGCH_PROMPT);
+
+    mpr("Which summon type? ", MSGCH_PROMPT);
+
+    char choice = tolower(getch());
+
+    if (!(choice >= 'a' && choice <= 'g') && choice != 'm' && choice != 's')
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    int type = 0;
+
+    switch (choice)
+    {
+        case 'a': type = MON_SUMM_CLONE; break;
+        case 'b': type = MON_SUMM_ANIMATE; break;
+        case 'c': type = MON_SUMM_CHAOS; break;
+        case 'd': type = MON_SUMM_MISCAST; break;
+        case 'e': type = MON_SUMM_ZOT; break;
+        case 'f': type = MON_SUMM_WRATH; break;
+        case 'g': type = MON_SUMM_AID; break;
+        case 'm': type = 0; break;
+
+        case 's':
+        {
+            char specs[80];
+
+            mpr( "Cast which spell by name? ", MSGCH_PROMPT );
+            get_input_line( specs, sizeof( specs ) );
+
+            if (specs[0] == '\0')
+            {
+                canned_msg( MSG_OK );
+                return;
+            }
+
+            spell_type spell = spell_by_name(specs, true);
+            if (spell == SPELL_NO_SPELL)
+            {
+                mpr("No such spell.", MSGCH_PROMPT);
+                return;
+            }
+            type = (int) spell;
+            break;
+        }
+
+        default:
+            DEBUGSTR("Invalid summon type choice.");
+            break;
+    }
+
+    mon->mark_summoned(dur, true, type);
+}
+
+void wizard_polymorph_monster(monsters* mon)
+{
+    int old_type =  mon->type;
+    int type     = _debug_prompt_for_monster();
+
+    if (type == -1)
+    {
+        canned_msg( MSG_OK );
+        return;
+    }
+
+    if (invalid_monster_class(type) || type == MONS_PROGRAM_BUG)
+    {
+        mpr("Invalid monster type.", MSGCH_PROMPT);
+        return;
+    }
+
+    if (type == old_type)
+    {
+        mpr("Old type and new type are the same, not polymorphing.");
+        return;
+    }
+
+    if (mons_species(type) == mons_species(old_type))
+    {
+        mpr("Target species must be different than current species.");
+        return;
+    }
+
+    monster_polymorph(mon, (monster_type) type, PPT_SAME, true);
+
+    if (!mon->alive())
+    {
+        mpr("Polymorph killed monster?", MSGCH_ERROR);
+        return;
+    }
+
+    mon->check_redraw(mon->pos());
+
+    if (mon->type == old_type)
+        mpr("Polymorph failed.");
+    else if (mon->type != type)
+        mpr("Monster turned into something other than the desired type.");
 }
 
 void debug_pathfind(int mid)

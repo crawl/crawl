@@ -1415,6 +1415,27 @@ void direction(dist& moves, targeting_type restricts,
 
             debug_miscast(mid);
             break;
+
+        case CMD_TARGET_WIZARD_MAKE_SUMMONED:
+            if (!you.wizard || !in_bounds(moves.target))
+                break;
+            mid = mgrd(moves.target);
+            if (mid == NON_MONSTER) // can put in terrain description here
+                break;
+
+            wizard_make_monster_summoned(&menv[mid]);
+            break;
+
+        case CMD_TARGET_WIZARD_POLYMORPH:
+            if (!you.wizard || !in_bounds(moves.target))
+                break;
+            mid = mgrd(moves.target);
+            if (mid == NON_MONSTER) // can put in terrain description here
+                break;
+
+            wizard_polymorph_monster(&menv[mid]);
+            break;
+
 #endif
         case CMD_TARGET_DESCRIBE:
             full_describe_square(moves.target);
