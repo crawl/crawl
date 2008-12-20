@@ -279,8 +279,9 @@ distclean: clean clean-lua clean-sql
 $(GAME): $(GAME_DEPENDS)
 	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
 
-debug: $(GAME_DEPENDS)
-	${CXX} ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
+.PHONY : debug
+
+debug: $(GAME)
 
 profile: $(GAME_DEPENDS)
 	${CXX} -g -p ${LDFLAGS} $(CFLAGS) $(OBJECTS) -o $(GAME) $(LIB)
