@@ -5269,7 +5269,7 @@ static bool _handle_reaching(monsters *monster)
     }
 
     return ret;
-}                               // end handle_reaching()
+}
 
 //---------------------------------------------------------------
 //
@@ -5335,7 +5335,7 @@ static bool _handle_scroll(monsters *monster)
             simple_monster_message(monster, " reads a scroll.");
             create_monster(
                 mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(monster),
-                          2, monster->pos(), monster->foe) );
+                          0, monster->pos(), monster->foe));
             read  = true;
             ident = ID_KNOWN_TYPE;
         }
