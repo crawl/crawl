@@ -5581,7 +5581,19 @@ bool actor::is_habitable(const coord_def &_pos) const
 
 bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
 {
-    return can_pass_through_feat(actual_grid);
+    if (!can_pass_through_feat(actual_grid))
+        return (false);
+
+    if (airborne())
+        return (true);
+
+    if (actual_grid == DNGN_LAVA
+        || actual_grid == DNGN_DEEP_WATER && !can_swim())
+    {
+        return (false);
+    }
+
+    return (true);
 }
 
 bool actor::handle_trap()
