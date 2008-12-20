@@ -2556,7 +2556,7 @@ std::string summoned_poof_msg(const monsters* monster, bool plural)
     switch(summon_type)
     {
     case SPELL_SHADOW_CREATURES:
-        msg      = "disolve%s into shadows";
+        msg      = "dissolve%s into shadows";
         no_chaos = true;
         break;
 
@@ -2568,7 +2568,7 @@ std::string summoned_poof_msg(const monsters* monster, bool plural)
     case MON_SUMM_AID:
         if (valid_mon && is_good_god(monster->god))
         {
-            msg      = "disolve%s into sparkling lights";
+            msg      = "dissolve%s into sparkling lights";
             no_chaos = true;
         }
         break;
@@ -2585,7 +2585,7 @@ std::string summoned_poof_msg(const monsters* monster, bool plural)
         if (mons_is_holy(monster) && summon_type != SPELL_SHADOW_CREATURES
             && summon_type != MON_SUMM_CHAOS)
         {
-            msg = "disolve%s into sparkling lights";
+            msg = "dissolve%s into sparkling lights";
         }
     }
 
