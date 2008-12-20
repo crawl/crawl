@@ -896,6 +896,8 @@ void untransform(void)
             you.hp = you.hp_max;
     }
     calc_hp();
+
+    handle_interrupted_swap(true);
 }                               // end untransform()
 
 // XXX: This whole system is a mess as it still relies on special
