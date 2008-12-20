@@ -5088,6 +5088,9 @@ void viewwindow(bool draw_it, bool do_updates)
 
         const bool map = player_in_mappable_area();
         const bool draw =
+#ifdef USE_TILE
+            !is_resting() &&
+#endif
             (!you.running || Options.travel_delay > -1) && !you.asleep();
 
         int bufcount = 0;
@@ -5357,6 +5360,7 @@ void viewwindow(bool draw_it, bool do_updates)
         if (draw)
         {
 #ifdef USE_TILE
+            tiles.set_need_redraw();
             tiles.load_dungeon(&tileb[0], you.pos().x, you.pos().y);
             tiles.update_inventory();
 #else
