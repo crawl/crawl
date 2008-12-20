@@ -107,6 +107,7 @@ public:
     void update_inventory();
 
     void set_need_redraw();
+    bool need_redraw() const;
     void redraw();
 
     void place_cursor(cursor_type type, const coord_def &gc);

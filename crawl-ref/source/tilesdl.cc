@@ -1288,3 +1288,8 @@ void TilesFramework::set_need_redraw()
 {
     m_need_redraw = true;
 }
+
+bool TilesFramework::need_redraw() const
+{
+    return m_need_redraw;
+}

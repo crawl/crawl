@@ -784,6 +784,20 @@ static void _print_status_lights(int y)
     }
 }
 
+static bool _need_stats_printed()
+{
+    return you.redraw_hit_points
+           || you.redraw_magic_points
+           || you.redraw_armour_class
+           || you.redraw_evasion
+           || you.redraw_strength
+           || you.redraw_intelligence
+           || you.redraw_dexterity
+           || you.redraw_experience
+           || you.wield_change
+           || you.redraw_quiver;
+}
+
 void print_stats(void)
 {
     textcolor(LIGHTGREY);
@@ -796,6 +810,10 @@ void print_stats(void)
         you.redraw_hit_points = true;
     if (MP_Bar.wants_redraw())
         you.redraw_magic_points = true;
+
+#ifdef USE_TILE
+    bool has_changed = _need_stats_printed();
+#endif
 
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp ( 1, 3); }
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp ( 1, 4); }
@@ -862,7 +880,12 @@ void print_stats(void)
     }
     textcolor(LIGHTGREY);
 
+#ifdef USE_TILE
+    if (has_changed)
+        update_screen();
+#else
     update_screen();
+#endif
 }
 
 static std::string _level_description_string_hud()

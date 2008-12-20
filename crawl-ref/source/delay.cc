@@ -1519,7 +1519,8 @@ static command_type _get_running_command()
         you.running.rest();
 
 #ifdef USE_TILE
-        tiles.redraw();
+        if (tiles.need_redraw())
+            tiles.redraw();
 #endif
 
         if (!is_resting() && you.running.hp == you.hp
