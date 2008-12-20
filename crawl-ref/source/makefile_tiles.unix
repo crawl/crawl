@@ -186,11 +186,12 @@ all: $(GAME)
 DEPENDENCY_MKF := makefile.dep
 
 depend: $(OBJECTS:.o=.cc)
-	rm -f $(DEPENDENCY_MKF)
+	rm -f $(DEPENDENCY_MKF).tmp
 	@for i in $^; do \
 	    echo "Updating dependencies for $$i"; \
-	    $(CXX) -MM $(CFLAGS) $$i >>$(DEPENDENCY_MKF) 2>/dev/null; \
+	    $(CXX) -MM $(CFLAGS) $$i >>$(DEPENDENCY_MKF).tmp 2>/dev/null; \
 	done
+	mv -f $(DEPENDENCY_MKF).tmp $(DEPENDENCY_MKF)
 
 -include $(DEPENDENCY_MKF)
 
