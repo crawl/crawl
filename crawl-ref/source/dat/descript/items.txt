@@ -1267,7 +1267,7 @@ Reading this scroll removes curses from the items you are using.
 scroll of summoning
 
 This scroll opens a conduit to the Abyss and draws a terrible beast to
-this world for a limited time.
+this world.
 %%%%
 scroll of teleportation
 
