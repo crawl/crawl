@@ -5810,6 +5810,9 @@ void player::init()
     if (m_quiver)
         delete m_quiver;
     m_quiver = new player_quiver;
+
+    // Currently only set if Xom accidentally kills the player.
+    reset_escaped_death();
 }
 
 player_save_info player_save_info::operator=(const player& rhs)
@@ -7290,4 +7293,15 @@ bool player::do_shaft()
     down_stairs(your_level, force_stair);
 
     return (true);
+}
+
+bool player::did_escape_death() const
+{
+    return (escaped_death_cause != NUM_KILLBY);
+}
+
+void player::reset_escaped_death()
+{
+    escaped_death_cause = NUM_KILLBY;
+    escaped_death_aux   = "";
 }

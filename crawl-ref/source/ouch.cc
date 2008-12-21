@@ -911,7 +911,10 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         && crawl_state.which_god_acting() == GOD_XOM
         && crawl_state.other_gods_acting().size() == 0)
     {
-        // Xom should only kill his worhsippers if they're under penance or
+        you.escaped_death_cause = death_type;
+        you.escaped_death_aux   = aux == NULL ? "" : aux;
+
+        // Xom should only kill his worshippers if they're under penance or
         // Xom is bored.
         if (you.religion == GOD_XOM && !you.penance[GOD_XOM]
             && you.gift_timeout > 0)
@@ -920,11 +923,14 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         }
 
         // Also don't kill wizards testing Xom acts.
-        if (crawl_state.prev_cmd == CMD_WIZARD)
+        if (crawl_state.prev_cmd == CMD_WIZARD && you.religion != GOD_XOM)
             return;
 
+        // Okay, you *didn't* escape death.
+        you.reset_escaped_death();
+
         // Ensure some minimal informfullness about Xom's involvment.
-        if (aux == NULL)
+        if (aux == NULL || strlen(aux) == 0)
         {
             if (death_type != KILLED_BY_XOM)
                 aux = "Xom";

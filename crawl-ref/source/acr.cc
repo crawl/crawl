@@ -1453,6 +1453,9 @@ static void _input()
     religion_turn_start();
     check_beholders();
 
+    // Currently only set if Xom accidentally kills the player.
+    you.reset_escaped_death();
+
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
         && kbhit())
     {

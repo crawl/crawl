@@ -950,6 +950,9 @@ public:
   PlaceInfo global_info;
   player_quiver* m_quiver;
 
+  int         escaped_death_cause;
+  std::string escaped_death_aux;
+
 protected:
   FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
   FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
@@ -1134,6 +1137,9 @@ public:
                                               bool dungeon_only = false) const;
 
     bool do_shaft();
+
+    bool did_escape_death() const;
+    void reset_escaped_death();
 };
 
 extern player you;

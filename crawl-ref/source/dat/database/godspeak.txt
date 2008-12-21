@@ -352,6 +352,10 @@ Xom accidental homicide
 
 "Oops, I didn't mean to do *that*!"
 %%%%
+Xom weird death
+
+"How'd *that* happen?  Weird."
+%%%%
 Xom resurrection
 
 Xom brings you back to life.
