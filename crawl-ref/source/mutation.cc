@@ -1705,6 +1705,7 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
 
     case MUT_DOPEY:
         stat_ptr = &you.intel;
+        break;
 
     case MUT_STRONG_STIFF:
     case MUT_CLUMSY:
