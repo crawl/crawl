@@ -2906,7 +2906,7 @@
 {
     SPELL_NO_SPELL, "nonexistent spell",
      0,
-     0,
+     SPFLAG_TESTING,
      0,
      0,
      -1, -1,

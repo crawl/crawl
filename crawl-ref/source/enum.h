@@ -2574,27 +2574,27 @@ enum species_type
 
 enum spell_type
 {
-    SPELL_IDENTIFY,                    //    0
+    SPELL_NO_SPELL,                    //    0
+    SPELL_IDENTIFY,
     SPELL_TELEPORT_SELF,
     SPELL_CAUSE_FEAR,
     SPELL_CREATE_NOISE,
-    SPELL_REMOVE_CURSE,
-    SPELL_MAGIC_DART,                  //    5
+    SPELL_REMOVE_CURSE,                //    5
+    SPELL_MAGIC_DART,
     SPELL_FIREBALL,
     SPELL_SWAP,
     SPELL_APPORTATION,
-    SPELL_TWIST,
-    SPELL_FAR_STRIKE,                  //   10
+    SPELL_TWIST,                       //   10
+    SPELL_FAR_STRIKE,
     SPELL_DELAYED_FIREBALL,
     SPELL_STRIKING,
     SPELL_CONJURE_FLAME,
-    SPELL_DIG,
-    SPELL_BOLT_OF_FIRE,                //   15
+    SPELL_DIG,                         //   15
+    SPELL_BOLT_OF_FIRE,
     SPELL_BOLT_OF_COLD,
     SPELL_LIGHTNING_BOLT,
-    SPELL_BOLT_OF_MAGMA,               //   18
-    // 19
-    SPELL_POLYMORPH_OTHER = 20,        //   20
+    SPELL_BOLT_OF_MAGMA,
+    SPELL_POLYMORPH_OTHER,             //   20
     SPELL_SLOW,
     SPELL_HASTE,
     SPELL_PARALYSE,
@@ -2793,8 +2793,7 @@ enum spell_type
     SPELL_COLD_BREATH,
     SPELL_DRACONIAN_BREATH,
 
-    NUM_SPELLS,
-    SPELL_NO_SPELL = 250
+    NUM_SPELLS
 };
 
 enum slot_select_mode

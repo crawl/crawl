@@ -89,10 +89,7 @@ void init_spell_descs(void)
     for (int i = 0; i < NUM_SPELLS; i++)
         spell_list[i] = -1;
 
-    // can only use up to SPELLDATASIZE _MINUS ONE_, or the
-    // last entry tries to set spell_list[SPELL_NO_SPELL]
-    // which corrupts the heap.
-    for (unsigned int i = 0; i < SPELLDATASIZE - 1; i++)
+    for (unsigned int i = 0; i < SPELLDATASIZE; i++)
         spell_list[spelldata[i].id] = i;
 }
 
@@ -901,14 +898,18 @@ int spell_skill2type(unsigned int skill)
 //jmf: Simplified; moved init code to top function, init_spell_descs().
 static spell_desc *_seekspell(spell_type spell)
 {
+    ASSERT(spell >= 0 && spell < NUM_SPELLS);
+
     const int index = spell_list[spell];
     ASSERT(index != -1);
+
     return (&spelldata[index]);
 }
 
 bool is_valid_spell(spell_type spell)
 {
-    return (spell < NUM_SPELLS && spell_list[spell] != -1);
+    return (spell > SPELL_NO_SPELL && spell < NUM_SPELLS
+            && spell_list[spell] != -1);
 }
 
 static bool _cloud_helper(cloud_func func, const coord_def& where,
