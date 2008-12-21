@@ -2286,6 +2286,8 @@ god_type string_to_god(const char *_name, bool exact)
 
 void god_speaks(god_type god, const char *mesg)
 {
+    int orig_mon = mgrd(you.pos());
+
     monsters fake_mon;
     fake_mon.type       = MONS_PROGRAM_BUG;
     fake_mon.hit_points = 1;
@@ -2294,6 +2296,9 @@ void god_speaks(god_type god, const char *mesg)
     fake_mon.mname      = "FAKE GOD MONSTER";
 
     mpr(do_mon_str_replacements(mesg, &fake_mon).c_str(), MSGCH_GOD, god);
+
+    fake_mon.reset();
+    mgrd(you.pos()) = orig_mon;
 }
 
 static bool _do_god_revenge(conduct_type thing_done)
@@ -6736,7 +6741,7 @@ int get_tension(god_type god)
         }
 
         const mon_attitude_type att = mons_attitude(mons);
-        if (att == ATT_GOOD_NEUTRAL)
+        if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
             continue;
 
         if (mons_cannot_act(mons) || mons->asleep() || mons_is_fleeing(mons))
@@ -6771,9 +6776,6 @@ int get_tension(god_type god)
             if (gift)
                 exper *= 2;
         }
-        else
-            // Neutral monsters aren't as much of a threat.
-            exper /= 2;
 
         if (att != ATT_FRIENDLY)
         {
