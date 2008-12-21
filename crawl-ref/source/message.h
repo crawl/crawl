@@ -83,6 +83,7 @@ void replay_messages();
 
 void set_colour(char set_message_colour);
 
+void reset_more_autoclear();
 
 // last updated 13oct2003 {dlb}
 /* ***********************************************************************

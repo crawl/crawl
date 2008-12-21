@@ -368,9 +368,6 @@ static void do_message_print( msg_channel_type channel, int param,
     buff[199] = 0;
 
     mpr(buff, channel, param);
-
-    if (channel == MSGCH_ERROR)
-        interrupt_activity( AI_FORCE_INTERRUPT );
 }
 
 void mprf( msg_channel_type channel, int param, const char *format, ... )
@@ -692,6 +689,9 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param)
     message_out( Message_Line, colour, inf,
                  Options.delay_message_clear? 2 : 1 );
 
+    if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
+        reset_more_autoclear();
+
     for (unsigned i = 0; i < Options.force_more_message.size(); ++i)
     {
         if (Options.force_more_message[i].is_filtered( channel, imsg ))
@@ -704,6 +704,9 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param)
     }
 
     mpr_store_messages(imsg, channel, param);
+
+    if (channel == MSGCH_ERROR)
+        interrupt_activity( AI_FORCE_INTERRUPT );
 }
 
 
@@ -756,6 +759,12 @@ void formatted_mpr(const formatted_string& fs, msg_channel_type channel,
 
     mpr_formatted_output(fs, colour);
     mpr_store_messages(imsg, channel, param);
+
+    if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
+        reset_more_autoclear();
+
+    if (channel == MSGCH_ERROR)
+        interrupt_activity( AI_FORCE_INTERRUPT );
 }
 
 // Output given string as formatted message(s), but check patterns
@@ -850,6 +859,13 @@ void mesclr( bool force )
     Message_Line = 0;
 }
 
+static bool autoclear_more = false;
+
+void reset_more_autoclear()
+{
+    autoclear_more = false;
+}
+
 void more(void)
 {
 #ifdef DEBUG_DIAGNOSTICS
@@ -860,7 +876,7 @@ void more(void)
     }
 #endif
 
-    if (crawl_state.is_replaying_keys())
+    if (crawl_state.is_replaying_keys() || autoclear_more)
     {
         mesclr();
         return;
@@ -891,6 +907,8 @@ void more(void)
         }
         while (keypress != ' ' && keypress != '\r' && keypress != '\n'
                && keypress != ESCAPE && keypress != -1);
+        if (keypress == ESCAPE)
+            autoclear_more = true;
     }
     mesclr(true);
 }                               // end more()

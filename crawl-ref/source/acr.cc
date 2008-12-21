@@ -1524,6 +1524,9 @@ static void _input()
         return;
     }
 
+    // Stop autoclearing more now that we have control back.
+    reset_more_autoclear();
+
     if (need_to_autopickup())
         autopickup();
 
