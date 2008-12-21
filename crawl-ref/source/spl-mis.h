@@ -44,15 +44,21 @@ public:
     MiscastEffect(actor* _target, int _source, spell_type _spell, int _pow,
                   int _fail, std::string _cause = "",
                   nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  int _lethality_margin = 0,
                   std::string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, int _source, spschool_flag_type _school,
                   int _level, std::string _cause,
                   nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  int _lethality_margin = 0,
                   std::string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, int _source, spschool_flag_type _school,
                   int _pow, int _fail, std::string _cause,
                   nothing_happens_when_type _nothing_happens = NH_DEFAULT,
+                  int _lethality_margin = 0,
                   std::string _hand_str = "", bool _can_plural_hand = true);
+
+
+    ~MiscastEffect();
 
     void do_miscast();
 
@@ -78,6 +84,8 @@ private:
 
     nothing_happens_when_type nothing_happens_when;
 
+    int lethality_margin;
+
     std::string hand_str;
     bool        can_plural_hand;
 
@@ -97,6 +105,9 @@ private:
 
     msg_channel_type msg_ch;
 
+    int  recursion_depth;
+    bool did_msg;
+
 private:
     void init();
     std::string get_default_cause();
@@ -104,11 +115,14 @@ private:
     bool neither_end_silenced();
 
     void do_msg(bool suppress_nothing_happens = false);
-    void _ouch(int dam, beam_type flavour = BEAM_NONE);
-    void _explosion();
+    bool _ouch(int dam, beam_type flavour = BEAM_NONE);
+    bool _explosion();
+    bool _lose_stat(unsigned char which_stat, unsigned char stat_loss);
     void _potion_effect(int pot_eff, int pow);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
     void send_abyss();
+
+    bool avoid_lethal(int dam);
 
     void _conjuration(int severity);
     void _enchantment(int severity);

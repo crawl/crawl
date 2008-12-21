@@ -2984,27 +2984,29 @@ int how_mutated(bool all, bool levels)
     return (j);
 }
 
-bool give_bad_mutation(bool failMsg, bool force_mutation)
+bool give_bad_mutation(bool failMsg, bool force_mutation, bool non_fatal)
 {
     mutation_type mutat = NUM_MUTATIONS;
 
-    switch (random2(13))
-    {
-    case 0: mutat = MUT_CARNIVOROUS; break;
-    case 1: mutat = MUT_HERBIVOROUS; break;
-    case 2: mutat = MUT_FAST_METABOLISM; break;
-    case 3: mutat = MUT_WEAK; break;
-    case 4: mutat = MUT_DOPEY; break;
-    case 5: mutat = MUT_CLUMSY; break;
-    case 6: mutat = MUT_TELEPORT; break;
-    case 7: mutat = MUT_DEFORMED; break;
-    case 8: mutat = MUT_SCREAM; break;
-    case 9: mutat = MUT_DETERIORATION; break;
-    case 10: mutat = MUT_BLURRY_VISION; break;
-    case 11: mutat = MUT_FRAIL; break;
-    case 12: mutat = MUT_LOW_MAGIC; break;
-    }
-
+    do {
+        switch (random2(13))
+        {
+        case 0: mutat = MUT_CARNIVOROUS; break;
+        case 1: mutat = MUT_HERBIVOROUS; break;
+        case 2: mutat = MUT_FAST_METABOLISM; break;
+        case 3: mutat = MUT_WEAK; break;
+        case 4: mutat = MUT_DOPEY; break;
+        case 5: mutat = MUT_CLUMSY; break;
+        case 6: mutat = MUT_TELEPORT; break;
+        case 7: mutat = MUT_DEFORMED; break;
+        case 8: mutat = MUT_SCREAM; break;
+        case 9: mutat = MUT_DETERIORATION; break;
+        case 10: mutat = MUT_BLURRY_VISION; break;
+        case 11: mutat = MUT_FRAIL; break;
+        case 12: mutat = MUT_LOW_MAGIC; break;
+        }
+    } while (non_fatal && !accept_mutation(mutat, true, true));
+    
     const bool result = mutate(mutat, failMsg, force_mutation);
     if (result)
         learned_something_new(TUT_YOU_MUTATED);

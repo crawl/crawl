@@ -2701,7 +2701,7 @@ void melee_attack::do_miscast()
     }
 
     MiscastEffect(miscast_target, source, (spschool_flag_type) miscast_type,
-                  miscast_level, cause, NH_NEVER, hand_str, false);
+                  miscast_level, cause, NH_NEVER, 0, hand_str, false);
 
     // Don't do miscast twice for one attack.
     miscast_level = -1;

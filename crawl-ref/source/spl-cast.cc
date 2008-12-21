@@ -2192,15 +2192,19 @@ void exercise_spell( spell_type spell, bool spc, bool success )
         did_god_conduct( DID_SPELL_PRACTISE, exer_norm );
 }
 
+#define MAX_RECURSE 100
+
 MiscastEffect::MiscastEffect(actor* _target, int _source, spell_type _spell,
                              int _pow, int _fail, std::string _cause,
                              nothing_happens_when_type _nothing_happens,
-                             std::string _hand_str, bool _can_plural) :
+                             int _lethality_margin, std::string _hand_str,
+                             bool _can_plural) :
     target(_target), source(_source), cause(_cause), spell(_spell),
     school(SPTYP_NONE), pow(_pow), fail(_fail), level(-1), kc(KC_NCATEGORIES),
     kt(KILL_NONE), mon_target(NULL), mon_source(NULL),
-    nothing_happens_when(_nothing_happens), hand_str(_hand_str),
-    can_plural_hand(_can_plural)
+    nothing_happens_when(_nothing_happens),
+    lethality_margin(_lethality_margin),
+    hand_str(_hand_str), can_plural_hand(_can_plural)
 {
     ASSERT(is_valid_spell(_spell));
     unsigned int schools = get_spell_disciplines(_spell);
@@ -2215,12 +2219,14 @@ MiscastEffect::MiscastEffect(actor* _target, int _source,
                              spschool_flag_type _school, int _level,
                              std::string _cause,
                              nothing_happens_when_type _nothing_happens,
-                             std::string _hand_str, bool _can_plural) :
+                             int _lethality_margin, std::string _hand_str,
+                             bool _can_plural) :
     target(_target), source(_source), cause(_cause), spell(SPELL_NO_SPELL),
     school(_school), pow(-1), fail(-1), level(_level), kc(KC_NCATEGORIES),
     kt(KILL_NONE), mon_target(NULL), mon_source(NULL),
-    nothing_happens_when(_nothing_happens), hand_str(_hand_str),
-    can_plural_hand(_can_plural)
+    nothing_happens_when(_nothing_happens),
+    lethality_margin(_lethality_margin),
+    hand_str(_hand_str), can_plural_hand(_can_plural)
 {
     ASSERT(!_cause.empty());
     ASSERT(count_bits(_school) == 1);
@@ -2235,12 +2241,14 @@ MiscastEffect::MiscastEffect(actor* _target, int _source,
                              spschool_flag_type _school, int _pow, int _fail,
                              std::string _cause,
                              nothing_happens_when_type _nothing_happens,
-                             std::string _hand_str, bool _can_plural) :
+                             int _lethality_margin, std::string _hand_str,
+                             bool _can_plural) :
     target(_target), source(_source), cause(_cause), spell(SPELL_NO_SPELL),
     school(_school), pow(_pow), fail(_fail), level(-1), kc(KC_NCATEGORIES),
     kt(KILL_NONE), mon_target(NULL), mon_source(NULL),
-    nothing_happens_when(_nothing_happens), hand_str(_hand_str),
-    can_plural_hand(_can_plural)
+    nothing_happens_when(_nothing_happens),
+    lethality_margin(_lethality_margin),
+    hand_str(_hand_str), can_plural_hand(_can_plural)
 {
     ASSERT(!_cause.empty());
     ASSERT(count_bits(_school) == 1);
@@ -2248,6 +2256,11 @@ MiscastEffect::MiscastEffect(actor* _target, int _source,
 
     init();
     do_miscast();
+}
+
+MiscastEffect::~MiscastEffect()
+{
+    ASSERT(recursion_depth == 0);
 }
 
 void MiscastEffect::init()
@@ -2259,6 +2272,10 @@ void MiscastEffect::init()
 
     ASSERT(target != NULL);
     ASSERT(target->alive());
+
+    ASSERT(lethality_margin == 0 || target->atype() == ACT_PLAYER);
+
+    recursion_depth = 0;
 
     source_known = target_known = false;
 
@@ -2417,10 +2434,16 @@ bool MiscastEffect::neither_end_silenced()
 
 void MiscastEffect::do_miscast()
 {
+    ASSERT(recursion_depth >= 0 && recursion_depth < MAX_RECURSE);
+
+    if (recursion_depth == 0)
+        did_msg = false;
+
+    unwind_var<int> unwind_depth(recursion_depth);
+    recursion_depth++;
+
     // Repeated calls to do_miscast() on a single object instance have
-    // killed a target which was alive when the object was created,
-    // or the target is a dead but not-yet-exploded giant spore or
-    // ball lightning.
+    // killed a target which was alive when the object was created.
     if (!target->alive())
     {
         mprf(MSGCH_DIAGNOSTICS, "Miscast target '%s' already dead",
@@ -2537,8 +2560,12 @@ void MiscastEffect::do_miscast()
 
 void MiscastEffect::do_msg(bool suppress_nothing_happnes)
 {
+    ASSERT(!did_msg);
+
     if (mon_target != NULL && !mons_near(mon_target))
         return;
+
+    did_msg = true;
 
     std::string msg;
 
@@ -2597,12 +2624,14 @@ void MiscastEffect::do_msg(bool suppress_nothing_happnes)
     mpr(msg.c_str(), msg_ch);
 }
 
-void MiscastEffect::_ouch(int dam, beam_type flavour)
+bool MiscastEffect::_ouch(int dam, beam_type flavour)
 {
-    do_msg(true);
+    // Delay do_msg() until after avoid_lethal()
 
     if (target->atype() == ACT_MONSTER)
     {
+        do_msg(true);
+
         bolt beem;
 
         beem.flavour = flavour;
@@ -2613,6 +2642,13 @@ void MiscastEffect::_ouch(int dam, beam_type flavour)
     }
     else
     {
+        dam = check_your_resists(dam, flavour);
+
+        if (avoid_lethal(dam))
+            return (false);
+
+        do_msg(true);
+
         kill_method_type method;
 
         if (source == NON_MONSTER && spell != SPELL_NO_SPELL)
@@ -2639,21 +2675,76 @@ void MiscastEffect::_ouch(int dam, beam_type flavour)
         else
             method = KILLED_BY_SOMETHING;
 
-        dam = check_your_resists(dam, flavour);
-
         bool see_source = mon_source ? you.can_see(mon_source) : false;
         ouch(dam, kill_source, method, cause.c_str(), see_source);
     }
+    return (true);
 }
 
-void MiscastEffect::_explosion()
+bool MiscastEffect::_explosion()
 {
     ASSERT(!beam.name.empty());
     ASSERT(beam.damage.num != 0 && beam.damage.size != 0);
     ASSERT(beam.flavour != BEAM_NONE);
 
+    int max_dam = beam.damage.num * beam.damage.size;
+    max_dam = check_your_resists(max_dam, beam.flavour);
+    if (avoid_lethal(max_dam))
+        return (false);
+
     do_msg(true);
     explosion(beam, false, true);
+
+    return (true);
+}
+
+bool MiscastEffect::_lose_stat(unsigned char which_stat,
+                               unsigned char stat_loss)
+{
+    if (lethality_margin <= 0)
+        return lose_stat(which_stat, stat_loss, false, cause);
+
+    if (which_stat == STAT_RANDOM)
+    {
+        const int might = you.duration[DUR_MIGHT] ? 5 : 0;
+
+        std::vector<unsigned char> stat_types;
+        if ((you.strength - might - stat_loss) > 0)
+            stat_types.push_back(STAT_STRENGTH);
+        if ((you.intel - stat_loss) > 0)
+            stat_types.push_back(STAT_INTELLIGENCE);
+        if ((you.dex - stat_loss) > 0)
+            stat_types.push_back(STAT_DEXTERITY);
+
+        if (stat_types.size() == 0)
+        {
+            if (avoid_lethal(you.hp))
+                return (false);
+            else
+                return lose_stat(which_stat, stat_loss, false, cause);
+        }
+
+        which_stat = stat_types[random2(stat_types.size())];
+    }
+
+    int val;
+
+    switch(which_stat)
+    {
+        case STAT_STRENGTH: val = you.strength; break;
+        case STAT_INTELLIGENCE: val = you.intel; break;
+        case STAT_DEXTERITY: val = you.dex; break;
+
+        default: DEBUGSTR("Invalid stat type."); return (false);
+    }
+
+    if ((val - stat_loss) <= 0)
+    {
+        if (avoid_lethal(you.hp))
+            return (false);
+    }
+
+    return lose_stat(which_stat, stat_loss, false, cause);
 }
 
 void MiscastEffect::_potion_effect(int pot_eff, int pot_pow)
@@ -2706,6 +2797,38 @@ void MiscastEffect::send_abyss()
     }
 
     target->banish(cause);
+}
+
+bool MiscastEffect::avoid_lethal(int dam)
+{
+    if (lethality_margin <= 0 || (you.hp - dam) > lethality_margin)
+        return (false);
+
+    if (recursion_depth == MAX_RECURSE)
+    {
+#if DEBUG_DIAGNOSTICS || DEBUG_MISCAST
+        mpr("Couldn't avoid lethal miscast: too much recursion.",
+            MSGCH_ERROR);
+#endif
+        return (false);
+    }
+
+    if (did_msg)
+    {
+#if DEBUG_DIAGNOSTICS || DEBUG_MISCAST
+        mpr("Couldn't avoid lethal miscast: already printed message for this "
+            "miscast.", MSGCH_ERROR);
+#endif
+        return (false);
+    }
+
+#if DEBUG_DIAGNOSTICS || DEBUG_MISCAST
+    mpr("Avoided lethal miscast.", MSGCH_DIAGNOSTICS);
+#endif
+
+    do_miscast();
+
+    return (true);
 }
 
 bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
@@ -3097,8 +3220,8 @@ void MiscastEffect::_translocation(int severity)
             you_msg        = "Space bends around you!";
             mon_msg_seen   = "Space bends around @the_monster@!";
             mon_msg_unseen = "A piece of empty space twists and distorts.";
-            _ouch(4 + random2avg(7, 2));
-            target->blink(false);
+            if (_ouch(4 + random2avg(7, 2)))
+                target->blink(false);
             break;
         case 5:
             if (_create_monster(MONS_SPATIAL_VORTEX, 3))
@@ -3127,7 +3250,8 @@ void MiscastEffect::_translocation(int severity)
             mon_msg_seen   = "Space warps around @the_monster!";
             mon_msg_unseen = "A piece of empty space twists and writhes.";
 
-            _ouch(5 + random2avg(9, 2));
+            if (!_ouch(5 + random2avg(9, 2)))
+                return;
 
             if (one_chance_in(3))
                 target->teleport(true);
@@ -3173,7 +3297,9 @@ void MiscastEffect::_translocation(int severity)
             mon_msg_seen   = "Space warps crazily around @the_monster@!";
             mon_msg_unseen = "A rift temporarily opens in the fabric of space!";
 
-            _ouch(9 + random2avg(17, 2));
+            if (!_ouch(9 + random2avg(17, 2)))
+                return;
+
             you_teleport_now( true );
             potion_effect(POT_CONFUSION, 60);
             break;
@@ -3435,12 +3561,11 @@ void MiscastEffect::_divination_you(int severity)
         case 0:
             if (you.is_undead)
                 mpr("You suddenly recall your previous life!");
-            else if (lose_stat(STAT_INTELLIGENCE, 1 + random2(3),
-                               false, cause))
+            else if (_lose_stat(STAT_INTELLIGENCE, 1 + random2(3)))
             {
                 mpr("You have damaged your brain!");
             }
-            else
+            else if (!did_msg)
                 mpr("You have a terrible headache.");
             break;
         case 1:
@@ -3466,12 +3591,11 @@ void MiscastEffect::_divination_you(int severity)
         case 2:
             if (you.is_undead)
                 mpr("You suddenly recall your previous life.");
-            else if (lose_stat(STAT_INTELLIGENCE, 3 + random2(3),
-                               false, cause))
+            else if (_lose_stat(STAT_INTELLIGENCE, 3 + random2(3)))
             {
                 mpr("You have damaged your brain!");
             }
-            else
+            else if (!did_msg)
                 mpr("You have a terrible headache.");
             break;
         }
@@ -3593,7 +3717,8 @@ void MiscastEffect::_necromancy(int severity)
             }
             break;
         }
-        do_msg();
+        if (!did_msg)
+            do_msg();
         break;
 
     case 2:         // much nastier
@@ -3623,7 +3748,11 @@ void MiscastEffect::_necromancy(int severity)
             if (target->atype() == ACT_PLAYER && !player_prot_life()
                 && one_chance_in(3))
             {
-                drain_exp();
+                if (lethality_margin == 0 || you.experience > 0
+                    || !avoid_lethal(you.hp))
+                {
+                    drain_exp();
+                }
                 break;
             }               // otherwise it just flows through...
 
@@ -3632,6 +3761,7 @@ void MiscastEffect::_necromancy(int severity)
             if (target->res_torment())
             {
                 you_msg = "You feel weird for a moment.";
+                do_msg();
             }
             else
             {
@@ -3639,7 +3769,6 @@ void MiscastEffect::_necromancy(int severity)
                           "your body!";
                 _ouch(15 + random2avg(23, 2));
             }
-            do_msg();
             break;
         }
         break;
@@ -3684,6 +3813,12 @@ void MiscastEffect::_necromancy(int severity)
             break;
 
         case 4:
+            if (lethality_margin > 0 && you.experience == 0
+                && avoid_lethal(you.hp))
+            {
+                return;
+            }
+
             mpr("You are engulfed in negative energy!");
 
             if (!player_prot_life())
@@ -3693,7 +3828,7 @@ void MiscastEffect::_necromancy(int severity)
             }               // otherwise it just flows through...
 
         case 5:
-            lose_stat(STAT_RANDOM, 1 + random2avg(7, 2), false, cause);
+            _lose_stat(STAT_RANDOM, 1 + random2avg(7, 2));
             break;
 
         }
@@ -3799,31 +3934,48 @@ void MiscastEffect::_transmigration(int severity)
         switch (random2(3))
         {
         case 0:
-            if (target->atype() == ACT_PLAYER)
-            {
-                mpr("Your body is flooded with distortional energies!");
-                you.magic_contamination += random2avg(35, 3);
-            }
+            you_msg = "Your body is flooded with distortional energies!";
 
-            _ouch(3 + random2avg(18, 2));
+            if (_ouch(3 + random2avg(18, 2)) && target->atype() == ACT_PLAYER)
+                you.magic_contamination += random2avg(35, 3);
             break;
 
         case 1:
+            // HACK: Avoid lethality before deleting mutation, since
+            // afterwards a message would already have been given.
+            if (lethality_margin > 0
+                && (you.hp - lethality_margin) <= 27
+                && avoid_lethal(you.hp))
+            {
+                return;
+            }
+
             if (target->atype() == ACT_PLAYER)
             {
-                mpr("You feel very strange.");
-                delete_mutation(RANDOM_MUTATION);
+                you_msg = "You feel very strange.";
+                delete_mutation(RANDOM_MUTATION, true, false,
+                                lethality_margin > 0);
             }
             _ouch(5 + random2avg(23, 2));
             break;
 
         case 2:
+            // HACK: Avoid lethality before giving mutation, since
+            // afterwards a message would already have been given.
+            if (lethality_margin > 0
+                && (you.hp - lethality_margin) <= 27
+                && avoid_lethal(you.hp))
+            {
+                return;
+            }
+
             if (target->atype() == ACT_PLAYER)
             {
-                mpr("Your body is distorted in a weirdly horrible way!");
-                const bool failMsg = !give_bad_mutation();
+                you_msg = "Your body is distorted in a weirdly horrible way!";
+                const bool failMsg = !give_bad_mutation(true, false,
+                                                        lethality_margin > 0);
                 if (coinflip())
-                    give_bad_mutation(failMsg);
+                    give_bad_mutation(failMsg, false, lethality_margin > 0);
             }
             _ouch(5 + random2avg(23, 2));
             break;
@@ -3908,7 +4060,10 @@ void MiscastEffect::_fire(int severity)
             mon_msg_seen = "Flames sear @the_monster@.";
 
             if (target->res_fire() < 0)
-                _ouch(2 + random2avg(13, 2));
+            {
+                if (!_ouch(2 + random2avg(13, 2)))
+                    return;
+            }
             else
                 do_msg();
             target->expose_to_element(BEAM_FIRE, 3);
@@ -3925,8 +4080,8 @@ void MiscastEffect::_fire(int severity)
             mon_msg_seen   = "@The_monster@ is blasted with fire.";
             mon_msg_unseen = "A flame briefly burns in thin air.";
 
-            _ouch(5 + random2avg(29, 2), BEAM_FIRE);
-            target->expose_to_element(BEAM_FIRE, 5);
+            if (_ouch(5 + random2avg(29, 2), BEAM_FIRE))
+                target->expose_to_element(BEAM_FIRE, 5);
             break;
 
         case 1:
@@ -3953,9 +4108,8 @@ void MiscastEffect::_fire(int severity)
             mon_msg_unseen = "A large flame burns hotly for a moment in the "
                              "thin air.";
 
-            _ouch(9 + random2avg(33, 2), BEAM_FIRE);
-
-            target->expose_to_element(BEAM_FIRE, 10);
+            if (_ouch(9 + random2avg(33, 2), BEAM_FIRE))
+                target->expose_to_element(BEAM_FIRE, 10);
             break;
         case 1:
             all_msg = "There is a sudden and violent explosion of flames!";
@@ -4059,7 +4213,10 @@ void MiscastEffect::_ice(int severity)
             mon_msg_seen = "@The_monster@ is covered in a thin layer of ice.";
 
             if (target->res_cold() < 0)
-                _ouch(4 + random2avg(5, 2));
+            {
+                if (!_ouch(4 + random2avg(5, 2)))
+                    return;
+            }
             else
                 do_msg();
             target->expose_to_element(BEAM_COLD, 2);
@@ -4074,9 +4231,8 @@ void MiscastEffect::_ice(int severity)
             you_msg = "Heat is drained from your body.";
             // Monster messages needed.
 
-            _ouch(5 + random2(6) + random2(7), BEAM_COLD);
-
-            target->expose_to_element(BEAM_COLD, 4);
+            if (_ouch(5 + random2(6) + random2(7), BEAM_COLD))
+                target->expose_to_element(BEAM_COLD, 4);
             break;
 
         case 1:
@@ -4102,9 +4258,8 @@ void MiscastEffect::_ice(int severity)
             you_msg      = "You are blasted with ice!";
             mon_msg_seen = "@The_monster@ is blasted with ice!";
 
-            _ouch(9 + random2avg(23, 2), BEAM_ICE);
-
-            target->expose_to_element(BEAM_COLD, 9);
+            if (_ouch(9 + random2avg(23, 2), BEAM_ICE))
+                target->expose_to_element(BEAM_COLD, 9);
             break;
         case 1:
             you_msg        = "Freezing gasses pour from your @hands@!";
@@ -4504,7 +4659,7 @@ void MiscastEffect::_poison(int severity)
             if (player_res_poison())
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
-                lose_stat(STAT_RANDOM, 1, false, cause);
+                _lose_stat(STAT_RANDOM, 1);
             break;
         }
         break;
@@ -4534,7 +4689,7 @@ void MiscastEffect::_poison(int severity)
             if (player_res_poison())
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
-                lose_stat(STAT_RANDOM, 1 + random2avg(5, 2), false, cause);
+                _lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));
             break;
         }
         break;

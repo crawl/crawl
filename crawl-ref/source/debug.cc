@@ -5090,6 +5090,13 @@ void debug_miscast( int target_index )
 
     while (target->alive() && repeats-- > 0)
     {
+        if (kbhit())
+        {
+            mpr("Key pressed, interrupting miscast testing.");
+            getchm();
+            break;
+        }
+
         miscast->do_miscast();
         if (level != 0)
             _miscast_screen_update();

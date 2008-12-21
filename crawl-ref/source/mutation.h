@@ -66,7 +66,8 @@ const char *mutation_name(mutation_type which_mutat, int level = -1);
 /* ***********************************************************************
  * called from: items - spells
  * *********************************************************************** */
-bool give_bad_mutation(bool failMsg = true, bool force_mutation = false);
+bool give_bad_mutation(bool failMsg = true, bool force_mutation = false,
+                       bool non_fatal = false);
 
 // last updated 12may2000 {dlb}
 /* ***********************************************************************

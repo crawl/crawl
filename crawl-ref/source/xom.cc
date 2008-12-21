@@ -1103,6 +1103,14 @@ static bool _xom_is_bad(int sever, int tension)
     const bool nasty = you.penance[GOD_XOM]
                        || (you.religion == GOD_XOM && you.gift_timeout == 0);
 
+    // If not being nasty then prevent spell miscasts from killing the
+    // player.
+    int lethality_margin;
+    if (nasty)
+        lethality_margin = 0;
+    else
+        lethality_margin = random_range(1, 4);
+
     god_acting gdact(GOD_XOM);
 
     while (!done)
@@ -1120,12 +1128,13 @@ static bool _xom_is_bad(int sever, int tension)
 
             done = true;
         }
-        else if (x_chance_in_y(4, sever) && (nasty || you.hp > 12))
+        else if (x_chance_in_y(4, sever))
         {
             god_speaks(GOD_XOM, _get_xom_speech("minor miscast effect").c_str());
 
             MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, random2(2),
-                           "the capriciousness of Xom");
+                          "the capriciousness of Xom", NH_DEFAULT,
+                          lethality_margin);
 
             done = true;
         }
@@ -1165,12 +1174,13 @@ static bool _xom_is_bad(int sever, int tension)
 
             done = true;
         }
-        else if (x_chance_in_y(6, sever) && (nasty || you.hp > 25))
+        else if (x_chance_in_y(6, sever))
         {
             god_speaks(GOD_XOM, _get_xom_speech("medium miscast effect").c_str());
 
             MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, random2(3),
-                           "the capriciousness of Xom");
+                          "the capriciousness of Xom", NH_DEFAULT,
+                          lethality_margin);
 
             done = true;
         }
@@ -1368,12 +1378,13 @@ static bool _xom_is_bad(int sever, int tension)
                 }
             }
         }
-        else if (x_chance_in_y(14, sever) && (nasty || you.hp > 30))
+        else if (x_chance_in_y(14, sever))
         {
             god_speaks(GOD_XOM, _get_xom_speech("major miscast effect").c_str());
 
             MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, random2(4),
-                          "the severe capriciousness of Xom");
+                          "the severe capriciousness of Xom", NH_DEFAULT,
+                          lethality_margin);
 
             done = true;
         }
