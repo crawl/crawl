@@ -2068,8 +2068,11 @@ static bool _god_accepts_prayer(god_type god)
 {
     harm_protection_type hpt = god_protects_from_harm(god, false);
 
-    if (hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME)
+    if (hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME
+        || hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
+    {
         return (true);
+    }
 
     if (god_likes_butchery(god))
         return (true);
@@ -6380,6 +6383,7 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     const int min_piety = piety_breakpoint(0);
     bool praying = (you.duration[DUR_PRAYER]
                     && random2(you.piety) >= min_piety);
+    bool reliable = (you.piety > 130);
     bool anytime = (one_chance_in(10) || x_chance_in_y(you.piety, 1000));
     bool penance = (you.penance[god] > 0);
 
@@ -6399,8 +6403,13 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     case GOD_ELYVILON:
         if (!actual || praying || anytime)
         {
-            return (you.piety >= min_piety) ? HPT_PRAYING_PLUS_ANYTIME
-                                            : HPT_ANYTIME;
+            if (you.piety >= min_piety)
+            {
+                return (reliable) ? HPT_RELIABLE_PRAYING_PLUS_ANYTIME
+                                  : HPT_PRAYING_PLUS_ANYTIME;
+            }
+            else
+                return (HPT_ANYTIME);
         }
         break;
     default:

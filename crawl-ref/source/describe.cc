@@ -3121,10 +3121,15 @@ void describe_god( god_type which_god, bool give_title )
         if (harm_protection_type hpt =
                 god_protects_from_harm(which_god, false))
         {
+            have_any = true;
+
             int prayer_prot = 0;
 
-            if (hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME)
+            if (hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME
+                || hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
+            {
                 prayer_prot = 100 - 3000/you.piety;
+            }
 
             int prot_chance = 10 + you.piety/10 + prayer_prot; // chance * 100
 
@@ -3134,12 +3139,21 @@ void describe_god( god_type which_god, bool give_title )
                                                   : "occasionally";
             const char *when =
                 (hpt == HPT_PRAYING)              ? " during prayer" :
-                (hpt == HPT_PRAYING_PLUS_ANYTIME) ? ", especially during prayer"
+                (hpt == HPT_PRAYING_PLUS_ANYTIME) ? ", especially during prayer" :
+                (hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
+                                                  ? ", and always does so during prayer"
                                                   : "";
 
-            have_any = true;
-            cprintf("%s %s watches over you%s." EOL,
-                    god_name(which_god).c_str(), how, when);
+            std::string buf = god_name(which_god);
+            buf += " ";
+            buf += how;
+            buf += " watches over you";
+            buf += when;
+            buf += ".";
+
+            _print_final_god_abil_desc(which_god, buf,
+                (hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME) ?
+                    ABIL_HARM_PROTECTION_II : ABIL_HARM_PROTECTION);
         }
 
         if (which_god == GOD_ZIN)
@@ -3184,8 +3198,11 @@ void describe_god( god_type which_god, bool give_title )
         else if (which_god == GOD_ELYVILON)
         {
             have_any = true;
-            cprintf("You can call upon %s to destroy weapons lying on the "
-                    "ground." EOL, god_name(which_god).c_str());
+            std::string buf = "You can call upon ";
+            buf += god_name(which_god);
+            buf += " to destroy weapons lying on the ground.";
+            _print_final_god_abil_desc(which_god, buf,
+                                       ABIL_ELYVILON_DESTROY_WEAPONS);
         }
         else if (which_god == GOD_YREDELEMNUL)
         {

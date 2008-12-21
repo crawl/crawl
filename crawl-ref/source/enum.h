@@ -107,7 +107,9 @@ enum ability_type
     ABIL_ROTTING,
     ABIL_TORMENT_II,
     ABIL_TRAN_BAT,
-    ABIL_RENOUNCE_RELIGION = 250             //  250
+    ABIL_HARM_PROTECTION,
+    ABIL_HARM_PROTECTION_II,
+    ABIL_RENOUNCE_RELIGION = 250            //  250
 };
 
 enum activity_interrupt_type

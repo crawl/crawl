@@ -114,7 +114,7 @@ The Trickster's followers gain various ways to influence fate when playing cards
 %%%%
 Elyvilon powers
 
-The healer god offers followers various means to heal themselves and others, including ones to rid their body from effects surpassing those of simple damage. Elyvilon will occasionally directly intervene to save a follower's life, and is almost certain to do so during prayer.
+The healer god offers followers various means to heal themselves and others, including ones to rid their body from effects surpassing those of simple damage. Elyvilon will occasionally directly intervene to save a follower's life, and is almost certain to do so during prayer. At high enough piety, the latter becomes certain, but at a cost of piety.
 %%%%
 Lugonu powers
 

@@ -301,6 +301,9 @@ static const ability_def Ability_List[] =
     { ABIL_ROTTING, "Rotting", 4, 4, 0, 2, ABFLAG_NONE },
     { ABIL_TORMENT_II, "Call Torment", 9, 0, 0, 3, ABFLAG_PAIN },
 
+    { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm", 0, 0, 0, 0, ABFLAG_PIETY },
+
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
 
@@ -1877,6 +1880,11 @@ static bool _do_ability(const ability_def& abil)
             crawl_state.zero_turns_taken();
             return (false);
         }
+        break;
+
+    case ABIL_HARM_PROTECTION:
+    case ABIL_HARM_PROTECTION_II:
+        // Activated via prayer elsewhere.
         break;
 
     case ABIL_RENOUNCE_RELIGION:

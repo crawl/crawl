@@ -23,6 +23,7 @@ enum harm_protection_type
     HPT_PRAYING,
     HPT_ANYTIME,
     HPT_PRAYING_PLUS_ANYTIME,
+    HPT_RELIABLE_PRAYING_PLUS_ANYTIME,
     NUM_HPTS
 };
 
