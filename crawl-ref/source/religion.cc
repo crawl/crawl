@@ -3238,7 +3238,7 @@ void gain_piety(int pgn)
     you.piety += pgn;
     you.piety = MIN(MAX_PIETY, you.piety);
 
-    for ( int i = 0; i < MAX_GOD_ABILITIES; ++i )
+    for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
         if (you.piety >= piety_breakpoint(i)
             && old_piety < piety_breakpoint(i))
@@ -6668,8 +6668,10 @@ int piety_rank(int piety)
         piety = you.piety;
 
     for (int i = 0; i < numbreakpoints; ++i)
+    {
         if (piety >= breakpoints[i])
             return numbreakpoints - i;
+    }
 
     return 0;
 }
