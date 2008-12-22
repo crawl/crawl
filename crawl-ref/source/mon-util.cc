@@ -3758,7 +3758,6 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
     return (true);
 }
 
-
 bool monsters::can_throw_large_rocks() const
 {
     return (type == MONS_STONE_GIANT
