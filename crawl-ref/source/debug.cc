@@ -4810,6 +4810,7 @@ void wizard_make_monster_summoned(monsters* mon)
     }
 
     mon->mark_summoned(dur, true, type);
+    mpr("Monster is now summoned.");
 }
 
 void wizard_polymorph_monster(monsters* mon)
