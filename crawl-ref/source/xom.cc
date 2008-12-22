@@ -1174,7 +1174,7 @@ static void _xom_zero_miscast()
         if (you.species == SP_HILL_ORC)
             priority.push_back("The idol of Beogh turns to glare at you.");
         else
-            priority.push_back("The orish idol turns to glare at you.");
+            priority.push_back("The orcish idol turns to glare at you.");
     }
 
     if (in_view[DNGN_GRANITE_STATUE])
