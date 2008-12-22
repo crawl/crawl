@@ -740,8 +740,8 @@ int get_shout_noise_level(const shout_type shout)
     }
 }
 
-// Only beasts and chaos spawns uses S_RANDOM for noise type.
-// Pandemonium lords can also get here but this mostly used for the
+// Only beasts and chaos spawns use S_RANDOM for noise type.
+// Pandemonium lords can also get here but this is mostly used for the
 // "says" verb used for insults.
 static bool _shout_fits_monster(int type, int shout)
 {
@@ -749,7 +749,7 @@ static bool _shout_fits_monster(int type, int shout)
         return (false);
 
     // Chaos spawns can do anything but demon taunts, since they're
-    // not coherenet enough to actually say words.
+    // not coherent enough to actually say words.
     if (type == MONS_CHAOS_SPAWN)
         return (shout != S_DEMON_TAUNT);
 
