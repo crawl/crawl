@@ -1299,7 +1299,8 @@ static void _append_spells(std::string &desc, const item_def &item)
 
 }
 
-static bool _do_description(std::string key, std::string footer = "")
+static bool _do_description(std::string key, std::string type,
+                            std::string footer = "")
 {
     std::string desc  = getLongDescription(key);
     std::string quote = getQuoteString(key);
@@ -1386,7 +1387,8 @@ static bool _do_description(std::string key, std::string footer = "")
         else
         {
             int thing_created = get_item_slot();
-            if (thing_created != NON_ITEM)
+            if (thing_created != NON_ITEM
+                && (type == "item" || type == "spell"))
             {
                 char name[80];
                 strncpy(name, key.c_str(), sizeof(name));
@@ -1604,7 +1606,7 @@ static bool _find_description(bool &again, std::string& error_inout)
         return (false);
     }
     else if (key_list.size() == 1)
-        return _do_description(key_list[0]);
+        return _do_description(key_list[0], type);
 
     if (exact_match)
     {
@@ -1612,7 +1614,7 @@ static bool _find_description(bool &again, std::string& error_inout)
         footer += regex;
         footer += "'.  To see non-exact matches, press space.";
 
-        if (!_do_description(regex, footer))
+        if (!_do_description(regex, type, footer))
         {
             DEBUGSTR("do_description() returned false for exact_match");
             return (false);
@@ -1690,7 +1692,7 @@ static bool _find_description(bool &again, std::string& error_inout)
             else
                 key = *((std::string*) sel[0]->data);
 
-            if (_do_description(key))
+            if (_do_description(key, type))
             {
                 if (getch() == 0)
                     getch();
