@@ -354,7 +354,7 @@ Xom accidental homicide
 %%%%
 Xom weird death
 
-"How'd *that* happen?  Weird."
+"How'd *that* happen? Weird."
 %%%%
 Xom resurrection
 
@@ -494,6 +494,8 @@ lecture_modifier
 lengthy
 
 passionate
+
+righteous
 
 stern
 %%%%
