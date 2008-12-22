@@ -6237,6 +6237,8 @@ std::string player::foot_name(bool plural, bool *can_plural) const
         str         = "lowest portion";
         *can_plural = false;
     }
+    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+        str = "back leg";
     else if (!transform_changed_physiology())
     {
         if (player_mutation_level(MUT_HOOVES))

@@ -35,6 +35,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "transfor.h"
 #include "view.h"
 #include "xom.h"
 
@@ -1113,6 +1114,395 @@ static bool _xom_is_good(int sever, int tension)
     return (done);
 }
 
+// Is the equipment type usable, and the slot is empty?
+static bool _could_wear_eq(equipment_type eq)
+{
+    if (!you_tran_can_wear(eq, true))
+        return (false);
+
+    return (you.slot_item(eq) == NULL);
+}
+
+static item_def* _tran_get_eq(equipment_type eq)
+{
+    if (you_tran_can_wear(eq, true))
+        return you.slot_item(eq);
+    else
+        return (NULL);
+}
+
+// Which types of dungeon features are in view?
+static void _get_in_view(bool in_view[])
+{
+    for (int i = 0; i < NUM_REAL_FEATURES; i++)
+        in_view[i] = false;
+
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+        in_view[grd(*ri)] = true;    
+}
+
+static void _xom_zero_miscast()
+{
+    std::vector<std::string> messages;
+    std::vector<std::string> priority;
+
+    // Assure that messages vector has at least one element.
+    messages.push_back("Nothing appears to happen...  Ominous!");
+
+    ///////////////////////////////////
+    // Dungeon feature dependant stuff.
+
+    bool in_view[NUM_REAL_FEATURES];
+    _get_in_view(in_view);
+
+    if (in_view[DNGN_LAVA])
+        messages.push_back("The lava spits out sparks!");
+
+    if (in_view[DNGN_DEEP_WATER] || in_view[DNGN_SHALLOW_WATER])
+    {
+        messages.push_back("The water briefly bubbles.");
+        messages.push_back("The water briefly swirls.");
+        messages.push_back("The water briefly glows.");
+    }
+
+    if (in_view[DNGN_DEEP_WATER])
+        messages.push_back("From the corner of your eye you spot something "
+                           "lurking in the deep water.");
+
+    if (in_view[DNGN_ORCISH_IDOL])
+    {
+        if (you.species == SP_HILL_ORC)
+            priority.push_back("The idol of Beogh turns to glare at you.");
+        else
+            priority.push_back("The orish idol turns to glare at you.");
+    }
+
+    if (in_view[DNGN_GRANITE_STATUE])
+        priority.push_back("The granite statue turns to stare at you.");
+
+    if (in_view[DNGN_WAX_WALL])
+        priority.push_back("The wax wall pulsates ominously.");
+
+    if (in_view[DNGN_FOUNTAIN_BLUE] || in_view[DNGN_FOUNTAIN_SPARKLING])
+    {
+        priority.push_back("The water in the fountain briefly bubbles.");
+        priority.push_back("The water in the fountain briefly swirls.");
+        priority.push_back("The water in the fountain briefly glows.");
+    }
+
+    if (in_view[DNGN_DRY_FOUNTAIN_BLUE]
+        || in_view[DNGN_DRY_FOUNTAIN_SPARKLING]
+        || in_view[DNGN_PERMADRY_FOUNTAIN])
+    {
+        priority.push_back("Water briefly sprays from the dry fountain.");
+        priority.push_back("Dust puffs up from the dry fountain.");
+    }
+
+    if (in_view[DNGN_STONE_ARCH])
+        priority.push_back("The stone arch briefly shows a sunny meadow on "
+                           "the other side.");
+
+    const dungeon_feature_type feat = grd(you.pos());
+
+    if (!grid_is_solid(feat) && grid_stair_direction(feat) == CMD_NO_CMD
+        && !grid_is_trap(feat) && feat != DNGN_STONE_ARCH
+        && feat != DNGN_OPEN_DOOR && feat != DNGN_ABANDONED_SHOP)
+    {
+        const std::string feat_name = 
+            feature_description(you.pos(), false, DESC_CAP_THE, false);
+
+        if (you.airborne())
+        {
+            // Kenku fly a lot, so don't put airborne messages into the
+            // priority vector for them.
+            std::vector<std::string>* vec;
+            if (you.species == SP_KENKU)
+                vec = &messages;
+            else
+                vec = &priority;
+
+            vec->push_back(feat_name
+                           + " seems to fall away from under you!");
+            vec->push_back(feat_name
+                           + " seems to rush up at you!");
+            if (feat == DNGN_DEEP_WATER || feat == DNGN_SHALLOW_WATER)
+                priority.push_back("Something invisible splashes into the "
+                                   "water beneath you!");
+        }
+        else if (feat == DNGN_DEEP_WATER || feat == DNGN_SHALLOW_WATER)
+        {
+            priority.push_back("The water briefly recedes away from you.");
+            priority.push_back("Something invisible splashes into the water "
+                               "beside you!");
+        }
+        else if (feat == DNGN_FLOOR)
+        {
+            messages.push_back("The floor shifts under you alarmingly!");
+            messages.push_back("The floor vibrates.");
+        }
+    }
+
+    if (!grid_destroys_items(feat) && !grid_is_solid(feat))
+    {
+        int count = 0;
+        int idx   = -1;
+
+        for (int i = 0; i < ENDOFPACK; i++)
+        {
+            const item_def &item(you.inv[i]);
+            if (is_valid_item(item) && !item_is_equipped(item)
+                && !item_is_critical(item))
+            {
+                if (one_chance_in(++count))
+                    idx = i;
+            }
+        }
+        if (idx != -1)
+        {
+            item_def &item(you.inv[idx]);
+            std::string name;
+            if (item.quantity == 1)
+                name = item.name(DESC_CAP_YOUR, false, false, false);
+            else
+            {
+                name  = "One of ";
+                name += item.name(DESC_NOCAP_YOUR, false, false, false);
+            }
+            messages.push_back(name + " falls out of your pack, then "
+                               "immediately jumps back in!");
+        }
+    }
+
+    ////////////////////////////////////////////
+    // Body, player spcies, transformations, etc
+
+    const int transform = you.attribute[ATTR_TRANSFORMATION];
+
+    if (you.species == SP_MUMMY && you_tran_can_wear(EQ_BODY_ARMOUR))
+    {
+        messages.push_back("You briefly get tangled in your bandages.");
+        if (!you.airborne() && !you.swimming())
+            messages.push_back("You trip over your bandages.");
+    }
+
+    if (transform != TRAN_SPIDER && transform != TRAN_AIR)
+    {
+        std::string str = "A monocle briefly appears over your ";
+        str += coinflip() ? "right" : "left";
+        str += " eye.";
+        messages.push_back(str);
+    }
+
+    if (!player_genus(GENPC_DRACONIAN) && you.species != SP_MUMMY
+        && (transform == TRAN_NONE || transform == TRAN_BLADE_HANDS))
+    {
+        messages.push_back("Your eyebrows briefly feel very bushy.");
+    }
+
+    ///////////////////////////
+    // Equipment related stuff.
+    item_def* item;
+
+    if (_could_wear_eq(EQ_WEAPON))
+    {
+        std::string str = "A fancy cane briefly appears in your ";
+        str += you.hand_name(true);
+        str += ".";
+
+        messages.push_back(str);
+    }
+
+    if (_tran_get_eq(EQ_CLOAK) != NULL)
+        messages.push_back("Your cloak billows in an unfelt wind.");
+
+    if (item = _tran_get_eq(EQ_HELMET))
+    {
+        std::string str = "Your ";
+        str += item->name(DESC_BASENAME, false, false, false);
+        str += " leaps into the air, briefly spins, then lands on your "
+               "head again!";
+
+        messages.push_back(str);
+    }
+
+    if ((item = _tran_get_eq(EQ_BOOTS)) && item->sub_type == ARM_BOOTS
+        && !you.cannot_act())
+    {
+        std::string name = item->name(DESC_BASENAME, false, false, false);
+        name = replace_all(name, "pair of ", "");
+
+        std::string str = "You compulsively click the heels of your ";
+        str += name;
+        str += " together three times.";
+
+        messages.push_back(str);
+    }
+
+    if (item = _tran_get_eq(EQ_SHIELD))
+    {
+        std::string str = "Your ";
+        str += item->name(DESC_BASENAME, false, false, false);
+        str += " spins!";
+
+        messages.push_back(str);
+    }
+
+    if (item = _tran_get_eq(EQ_BODY_ARMOUR))
+    {
+        std::string str;
+        std::string name = item->name(DESC_BASENAME, false, false, false);
+
+        if (name.find("dragon") != std::string::npos)
+        {
+            str  = "The scales on your ";
+            str += name;
+            str += " wiggle briefly.";
+        }
+        else if (item->sub_type == ARM_ANIMAL_SKIN)
+        {
+            str  = "The fur on your ";
+            str += name;
+            str += " grows longer at an alarming rate, then retracts back "
+                   "to normal.";
+        }
+        else if (item->sub_type == ARM_LEATHER_ARMOUR)
+        {
+            str  = "Your ";
+            str += name;
+            str += " briefly grows fur, then returns to normal.";
+        }
+        else if (item->sub_type == ARM_ROBE)
+        {
+            str  = "You briefly become tangled in your ";
+            str += pluralise(name);
+            str += ".";
+        }
+        else if (item->sub_type >= ARM_RING_MAIL &&
+                 item->sub_type <= ARM_PLATE_MAIL)
+        {
+            str  = "Your ";
+            str += name;
+            str += " briefly appears rusty.";
+        }
+
+        if (!str.empty())
+            messages.push_back(str);            
+    }
+
+    if (priority.size() > 0 && coinflip())
+        mpr(priority[random2(priority.size())].c_str());
+    else
+        mpr(messages[random2(messages.size())].c_str());
+}
+
+static void _get_hand_type(std::string &hand, bool &can_plural)
+{
+    hand       = "";
+    can_plural = true;
+
+    const int transform = you.attribute[ATTR_TRANSFORMATION];
+
+    if (transform == TRAN_AIR)
+        return;
+
+    std::vector<std::string> hand_vec;
+    std::vector<bool>        plural_vec;
+    bool                     plural;
+
+    hand_vec.push_back(you.hand_name(false, &plural));
+    plural_vec.push_back(plural);
+
+    if (you.species != SP_NAGA || transform_changed_physiology())
+    {
+        item_def* item;
+        if ((item = _tran_get_eq(EQ_BOOTS)) && item->sub_type == ARM_BOOTS)
+        {
+            hand_vec.push_back("boot");
+            plural = true;
+        }
+        else
+            hand_vec.push_back(you.foot_name(false, &plural));
+        plural_vec.push_back(plural);
+    }
+
+    if (transform == TRAN_SPIDER)
+    {
+        hand_vec.push_back("mandible");
+        plural_vec.push_back(true);
+    }
+    else if (you.species != SP_MUMMY || transform_changed_physiology())
+    {
+        hand_vec.push_back("nose");
+        plural_vec.push_back(false);
+    }
+
+    if (transform == TRAN_BAT
+        || you.species != SP_MUMMY && !transform_changed_physiology())
+    {
+        hand_vec.push_back("ear");
+        plural_vec.push_back(true);
+    }
+
+    if (!transform_changed_physiology())
+    {
+        hand_vec.push_back("elbow");
+        plural_vec.push_back(true);
+    }
+
+    ASSERT(hand_vec.size() == plural_vec.size());
+    ASSERT(hand_vec.size() > 0);
+
+    const unsigned int choice = random2(hand_vec.size());
+
+    hand       = hand_vec[choice];
+    can_plural = plural_vec[choice];
+}
+
+static void _xom_miscast(const int max_level, const bool nasty)
+{
+    ASSERT(max_level >= 0 && max_level <= 3);
+
+    const char* speeches[4] = {
+        "zero miscast effect",
+        "minor miscast effect",
+        "medium miscast effect",
+        "major miscast effect"
+    };
+
+    const char* causes[4] = {
+        "the mischief of Xom",
+        "the capriciousness of Xom",
+        "the capriciousness of Xom",
+        "the severe capriciousness of Xom"
+    };
+
+    const char* speech_str = speeches[max_level];
+    const char* cause_str  = causes[max_level];
+
+    const int level = random2(max_level + 1);
+
+    if (level == 0 && one_chance_in(20))
+    {
+        god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
+        _xom_zero_miscast();
+        return;
+    }
+
+    std::string hand_str;
+    bool        can_plural;
+
+    _get_hand_type(hand_str, can_plural);
+
+    // If not being nasty then prevent spell miscasts from killing the
+    // player.
+    const int lethality_margin  = nasty ? 0 : random_range(1, 4);
+
+    god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
+
+    MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, level, cause_str, NH_DEFAULT,
+                  lethality_margin, hand_str, can_plural);
+}
+
 static bool _xom_is_bad(int sever, int tension)
 {
     bool done = false;
@@ -1121,14 +1511,6 @@ static bool _xom_is_bad(int sever, int tension)
     // penance from him or he's bored.
     const bool nasty = you.penance[GOD_XOM]
                        || (you.religion == GOD_XOM && you.gift_timeout == 0);
-
-    // If not being nasty then prevent spell miscasts from killing the
-    // player.
-    int lethality_margin;
-    if (nasty)
-        lethality_margin = 0;
-    else
-        lethality_margin = random_range(1, 4);
 
     god_acting gdact(GOD_XOM);
 
@@ -1140,21 +1522,12 @@ static bool _xom_is_bad(int sever, int tension)
 
         if (x_chance_in_y(3, sever))
         {
-            god_speaks(GOD_XOM, _get_xom_speech("zero miscast effect").c_str());
-
-            MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, 0,
-                          "the mischief of Xom");
-
+            _xom_miscast(0, nasty);
             done = true;
         }
         else if (x_chance_in_y(4, sever))
         {
-            god_speaks(GOD_XOM, _get_xom_speech("minor miscast effect").c_str());
-
-            MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, random2(2),
-                          "the capriciousness of Xom", NH_DEFAULT,
-                          lethality_margin);
-
+            _xom_miscast(1, nasty);
             done = true;
         }
         else if (x_chance_in_y(5, sever))
@@ -1195,12 +1568,7 @@ static bool _xom_is_bad(int sever, int tension)
         }
         else if (x_chance_in_y(6, sever))
         {
-            god_speaks(GOD_XOM, _get_xom_speech("medium miscast effect").c_str());
-
-            MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, random2(3),
-                          "the capriciousness of Xom", NH_DEFAULT,
-                          lethality_margin);
-
+            _xom_miscast(2, nasty);
             done = true;
         }
         else if (x_chance_in_y(7, sever) && (you.level_type != LEVEL_ABYSS))
@@ -1399,12 +1767,7 @@ static bool _xom_is_bad(int sever, int tension)
         }
         else if (x_chance_in_y(14, sever))
         {
-            god_speaks(GOD_XOM, _get_xom_speech("major miscast effect").c_str());
-
-            MiscastEffect(&you, -GOD_XOM, SPTYP_RANDOM, random2(4),
-                          "the severe capriciousness of Xom", NH_DEFAULT,
-                          lethality_margin);
-
+            _xom_miscast(3, nasty);
             done = true;
         }
         else if (one_chance_in(sever))

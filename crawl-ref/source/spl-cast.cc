@@ -4428,9 +4428,12 @@ void MiscastEffect::_air(int severity)
         case 5:
         {
             bool pluralized = true;
-            target->hand_name(true, &pluralized);
+            if (!hand_str.empty())
+                pluralized = can_plural_hand;
+            else
+                target->hand_name(true, &pluralized);
 
-            if (pluralized && hand_str.empty())
+            if (pluralized)
             {
                 you_msg      = "Sparks of electricity dance between your "
                                "@hands@.";

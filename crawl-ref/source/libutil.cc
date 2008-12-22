@@ -390,6 +390,8 @@ std::string pluralise(const std::string &name,
         // efreet -> efreeti. Not sure this is correct.
         return name + "i";
     }
+    else if (name == "foot")
+        return "feet";
 
     return name + "s";
 }
