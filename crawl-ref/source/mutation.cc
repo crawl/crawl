@@ -1669,7 +1669,7 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
     char *stat_ptr = &you.dex; // Default for the scales.
     char  amnt     = 1;
     char  mod      = 0;
- 
+
     switch(mutat)
     {
     case MUT_GREY2_SCALES:
@@ -3007,7 +3007,7 @@ bool give_bad_mutation(bool failMsg, bool force_mutation, bool non_fatal)
         case 12: mutat = MUT_LOW_MAGIC; break;
         }
     } while (non_fatal && !accept_mutation(mutat, true, true));
-    
+
     const bool result = mutate(mutat, failMsg, force_mutation);
     if (result)
         learned_something_new(TUT_YOU_MUTATED);

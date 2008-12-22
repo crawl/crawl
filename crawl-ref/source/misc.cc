@@ -2615,9 +2615,9 @@ bool mons_is_safe(const monsters *mon, bool want_move,
                        && you.delay_queue.front().type != DELAY_REST
                        || you.running < RMODE_NOT_RUNNING
                        || want_move);
-        
+
         bool result = is_safe;
-    
+
         if (clua.callfn("ch_mon_is_safe", "Mbbd>b",
                         mon, is_safe, moving, dist,
                         &result))

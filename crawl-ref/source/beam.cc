@@ -1747,7 +1747,7 @@ void fire_beam(bolt &pbolt)
             break;
 
         const bool was_seen = pbolt.seen;
-        if (!was_seen && pbolt.range > 0 && !beam_invisible 
+        if (!was_seen && pbolt.range > 0 && !beam_invisible
             && see_grid(testpos))
         {
             pbolt.seen = true;
@@ -5842,7 +5842,7 @@ std::string bolt::get_short_name()
 
     if (item != NULL && is_valid_item(*item))
         return item->name(DESC_NOCAP_A, false, false, false, false,
-                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK 
+                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
                           | ISFLAG_RACIAL_MASK);
 
     if (real_flavour == BEAM_RANDOM || real_flavour == BEAM_CHAOS)

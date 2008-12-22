@@ -1011,7 +1011,7 @@ static std::string _origin_place_desc(const item_def &item)
     {
         return item.props[PORTAL_VAULT_ORIGIN_KEY].get_string();
     }
-    
+
     return prep_branch_level_name(item.orig_place);
 }
 

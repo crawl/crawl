@@ -185,7 +185,7 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 
 void tile_init_default_flavour()
 {
-    tile_default_flv(you.level_type, you.where_are_you, env.tile_default); 
+    tile_default_flv(you.level_type, you.where_are_you, env.tile_default);
 }
 
 int get_clean_map_idx(int tile_idx)

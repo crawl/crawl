@@ -2659,7 +2659,7 @@ void melee_attack::do_miscast()
     if (miscast_target->atype() == ACT_PLAYER && you.banished)
         return;
 
-    const bool chaos_brand = 
+    const bool chaos_brand =
         weapon && get_weapon_brand(*weapon) == SPWPN_CHAOS;
 
     // If the miscast is happening on the attacker's side and is due to
