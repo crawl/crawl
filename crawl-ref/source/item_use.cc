@@ -522,6 +522,8 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 mpr("You really shouldn't be using a holy item like this.");
             else if (is_evil_item(item) && is_good_god(you.religion))
                 mpr("You really shouldn't be using an evil item like this.");
+            else if (is_chaotic_item(item) && you.religion == GOD_ZIN)
+                mpr("You really shouldn't be using a chaotic item like this.");
         }
 
         const bool was_known = item_type_known(item);
@@ -2604,8 +2606,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
 
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
+    {
         did_god_conduct(DID_CHAOS, 2 + random2(3),
                         bow_brand == SPWPN_CHAOS || ammon_brand_known);
+    }
 
     if (did_return)
     {
