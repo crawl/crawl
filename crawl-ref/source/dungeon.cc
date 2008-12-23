@@ -5034,7 +5034,23 @@ static void _vault_grid( vault_placement &place,
             monster_level = 30;
 
         if (vgrid != '8' && vgrid != '9' && vgrid != '0')
+        {
             monster_type_thing = place.map.mons.get_monster(vgrid - '1');
+            // Is a map for a specific place trying to place a unique which
+            // somehow already got created?
+            if (place.map.place.is_valid()
+                && !invalid_monster_class(monster_type_thing.mid)
+                && mons_is_unique(monster_type_thing.mid)
+                && you.unique_creatures[monster_type_thing.mid])
+            {
+                mprf(MSGCH_ERROR, "ERROR: %s already generated somewhere "
+                     "else; please file a bug report.",
+                     mons_type_name(monster_type_thing.mid,
+                                    DESC_CAP_THE).c_str());
+                // Force it to be generated anyways.
+                you.unique_creatures[monster_type_thing.mid] = false;
+            }
+        }
 
         _dgn_place_monster(place, monster_type_thing, monster_level, where);
     }
