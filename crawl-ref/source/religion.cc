@@ -748,7 +748,8 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     case GOD_SHINING_ONE:
         dislikes.push_back("you poison a monster");
-        dislikes.push_back("you attack in an unchivalric manner");
+        dislikes.push_back("you attack an intelligent monster in an "
+                           "unchivalric manner");
         break;
 
     case GOD_ELYVILON:
