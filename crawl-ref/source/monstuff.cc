@@ -741,8 +741,9 @@ static void _fire_monster_death_event(monsters *monster,
                                       int i)
 {
     // Banished monsters aren't technically dead, so no death event
-    // for them.
-    if (killer != KILL_RESET)
+    // for them.  Except for the Royal Jelly, since we don't want to
+    // keep the slime pit vaults locked up if it somehow gets banished.
+    if (killer != KILL_RESET || monster->type == MONS_ROYAL_JELLY)
     {
         dungeon_events.fire_event(
             dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
