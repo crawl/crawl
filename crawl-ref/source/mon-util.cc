@@ -3201,7 +3201,7 @@ bool monster_senior(const monsters *m1, const monsters *m2)
         return (m1->hit_dice > m2->hit_dice);
 
     // Monsters that are smart enough to use stairs can push past monsters
-    // too stupid to use stairs (e.g. zombies).
+    // that are too stupid to use stairs (e.g. zombies).
     if (m1->can_use_stairs() && !m2->can_use_stairs())
         return (true);
 
