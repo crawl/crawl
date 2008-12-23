@@ -2147,7 +2147,7 @@ void pray()
     }
     else if (!_god_accepts_prayer(you.religion))
     {
-        simple_god_message(" ignores you.");
+        simple_god_message(" ignores your prayer.");
         return;
     }
 
