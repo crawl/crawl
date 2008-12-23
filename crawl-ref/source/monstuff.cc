@@ -1821,6 +1821,11 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     // the monster is still a mermaid/siren.
     update_beholders(monster, true);
 
+    // Inform listenerns that the original monster is gone (and
+    // unlock the vaults on Slime:6 if it's the Royal Jelly which
+    // was changed).
+    _fire_monster_death_event(monster, KILL_MISC, NON_MONSTER);
+
     // the actual polymorphing:
     const int  old_hp     = monster->hit_points;
     const int  old_hp_max = monster->max_hit_points;
