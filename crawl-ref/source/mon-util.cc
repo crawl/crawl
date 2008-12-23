@@ -3200,10 +3200,14 @@ bool monster_senior(const monsters *m1, const monsters *m2)
     if (mchar1 == '&' && isdigit(mchar2) && m1->type != MONS_GERYON)
         return (m1->hit_dice > m2->hit_dice);
 
-    // Monsters that are smart enough to use stairs can push past monsters
-    // that are too stupid to use stairs (e.g. zombies).
-    if (m1->can_use_stairs() && !m2->can_use_stairs())
+    // If they're the same holiness, monsters smart enough to use stairs can
+    // push past monsters too stupid to use stairs (so that e.g. non-zombified
+    // undead can push past zombified undead).
+    if (m1->holiness() == m2->holiness() && m1->can_use_stairs()
+        && !m2->can_use_stairs())
+    {
         return (true);
+    }
 
     if (m1->type == MONS_QUEEN_BEE
         && (m2->type == MONS_KILLER_BEE
