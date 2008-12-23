@@ -63,16 +63,19 @@ void MenuDisplayTile::draw_stock_item(int index, const MenuEntry *me)
 void MenuDisplayTile::set_offset(int lines)
 {
     tiles.get_menu()->set_offset(lines);
+    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
 }
 
 void MenuDisplayTile::draw_more()
 {
     tiles.get_menu()->set_more(m_menu->get_more());
+    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
 }
 
 void MenuDisplayTile::set_num_columns(int columns)
 {
     tiles.get_menu()->set_num_columns(columns);
+    m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
 }
 #endif
 
@@ -264,11 +267,17 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
         sel.clear();
     }
 
+    // Reset offset to default.
+    mdisplay->set_offset(1 + !!title);
 
     // Lose lines for the title + room for -more- line.
+#ifdef USE_TILE
+    pagesize = max_pagesize - !!title - 1;
+#else
     pagesize = get_number_of_lines() - !!title - 1;
     if (max_pagesize > 0 && pagesize > max_pagesize)
         pagesize = max_pagesize;
+#endif
 
     do_menu();
 

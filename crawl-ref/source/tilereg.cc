@@ -2496,12 +2496,20 @@ void MenuRegion::place_entries()
     m_line_buf.clear();
 
     TextureID tex = TEX_MAX;
-    int height = 2;
-    int prev_height = height;
 
     int column = 0;
     const int max_columns = std::min(2, m_max_columns);
     const int column_width = mx / max_columns;
+
+    int lines = count_linebreaks(m_more);
+    int more_height = (lines + 1) * m_font_entry->char_height();
+    m_font_buf.add(m_more, sx + ox, ey - oy - more_height);
+
+    int height = 0;
+    int end_height = my - more_height;
+
+    const int max_entry_height = std::max((int)m_font_entry->char_height() * 2,
+                                          max_tile_height);
 
     for (unsigned int i = 0; i < m_entries.size(); i++)
     {
@@ -2514,12 +2522,18 @@ void MenuRegion::place_entries()
             continue;
         }
 
+        if (height + max_entry_height > end_height)
+        {
+            height = 0;
+            column++;
+        }
+
         int text_width = m_font_entry->string_width(m_entries[i].text);
         int text_height = m_font_entry->char_height();
 
         if (m_entries[i].heading)
         {
-            m_entries[i].sx = heading_indent;
+            m_entries[i].sx = heading_indent + column * column_width;
             m_entries[i].ex = m_entries[i].sx + text_width;
             m_entries[i].sy = height;
             m_entries[i].ey = m_entries[i].sy + text_height;
@@ -2527,26 +2541,15 @@ void MenuRegion::place_entries()
             m_font_buf.add(m_entries[i].text, m_entries[i].sx, m_entries[i].sy);
 
             height += text_height;
-            prev_height = height;
-            column = 0;
         }
         else
         {
-            int entry_start;
-            if (column > 0)
-            {
-                entry_start = column * column_width;
-                m_entries[i].sy = prev_height;
-            }
-            else
-            {
-                entry_start = 0;
-                m_entries[i].sy = height;
-            }
-
-            int text_sx = entry_start + text_indent;
+            m_entries[i].sy = height;
+            int entry_start = column * column_width;
+            int text_sx = text_indent + entry_start;
 
             int entry_height;
+            
             if (m_entries[i].tile)
             {
                 m_entries[i].sx = entry_start + tile_indent;
@@ -2601,21 +2604,20 @@ void MenuRegion::place_entries()
 
                 m_font_buf.add(split, text_sx, text_sy);
 
-                m_entries[i].ex = entry_start + column_width;
-
                 entry_height = std::max(entry_height, string_height);
+                m_entries[i].ex = entry_start + column_width;
             }
             else
             {
-                m_entries[i].ex = entry_start + column_width;
+                if (max_columns == 1)
+                    m_entries[i].ex = text_sx + text_width;
+                else
+                    m_entries[i].ex = entry_start + column_width;
                 m_font_buf.add(m_entries[i].text, text_sx, text_sy);
             }
 
             m_entries[i].ey = m_entries[i].sy + entry_height;
-
-            prev_height = m_entries[i].sy;
-            height = std::max(height, m_entries[i].ey);
-            column = (column + 1) % max_columns;
+            height = m_entries[i].ey;
         }
 
         if (m_entries[i].selected)
@@ -2627,10 +2629,6 @@ void MenuRegion::place_entries()
 
         height += entry_buffer;
     }
-
-    int lines = count_linebreaks(m_more);
-    int more_height = (lines + 1) * m_font_entry->char_height();
-    m_font_buf.add(m_more, sx + ox, ey - oy - more_height);
 }
 
 void MenuRegion::render()
@@ -2697,13 +2695,21 @@ void MenuRegion::on_resize()
 
 int MenuRegion::maxpagesize() const
 {
-    // TODO enne - this could be much smarter.  Also, columns?
-    return my / 32 - 2;
+    // TODO enne - this is a conservative guess.
+    // It would be better to make menus use a dynamic number of items per page,
+    // but it'd require a lot more refactoring of menu.cc to handle that.
+
+    int lines = count_linebreaks(m_more);
+    int more_height = (lines + 1) * m_font_entry->char_height();
+
+    int pagesize = ((my - more_height) / 32) * m_max_columns;
+    return pagesize;
 }
 
 void MenuRegion::set_offset(int lines)
 {
-    oy = (lines - 1) * m_font_entry->char_height();
+    oy = (lines - 1) * m_font_entry->char_height() + 4;
+    my = wy - oy;
 }
 
 void MenuRegion::set_more(const formatted_string &more)
