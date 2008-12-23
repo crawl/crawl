@@ -1146,6 +1146,17 @@ static void _xom_zero_miscast()
     std::vector<std::string> messages;
     std::vector<std::string> priority;
 
+    std::vector<int> inv_items;
+    for (int i = 0; i < ENDOFPACK; i++)
+    {
+        const item_def &item(you.inv[i]);
+        if (is_valid_item(item) && !item_is_equipped(item)
+            && !item_is_critical(item))
+        {
+            inv_items.push_back(i);
+        }
+    }
+
     // Assure that messages vector has at least one element.
     messages.push_back("Nothing appears to happen...  Ominous!");
 
@@ -1182,6 +1193,19 @@ static void _xom_zero_miscast()
 
     if (in_view[DNGN_WAX_WALL])
         priority.push_back("The wax wall pulsates ominously.");
+
+    if (in_view[DNGN_CLEAR_ROCK_WALL] || in_view[DNGN_CLEAR_STONE_WALL]
+        || in_view[DNGN_CLEAR_PERMAROCK_WALL])
+    {
+        messages.push_back("Dim shapes swim through the translucent wall.");
+    }
+
+    if (in_view[DNGN_GREEN_CRYSTAL_WALL])
+        messages.push_back("Dim shapes swim through the green crystal wall.");
+
+    if (in_view[DNGN_METAL_WALL])
+        messages.push_back("Tendrils of electricity crawl over the metal "
+                           "wall!");
 
     if (in_view[DNGN_FOUNTAIN_BLUE] || in_view[DNGN_FOUNTAIN_SPARKLING])
     {
@@ -1235,42 +1259,25 @@ static void _xom_zero_miscast()
             priority.push_back("Something invisible splashes into the water "
                                "beside you!");
         }
-        else if (feat == DNGN_FLOOR)
-        {
-            messages.push_back("The floor shifts under you alarmingly!");
-            messages.push_back("The floor vibrates.");
-        }
     }
 
-    if (!grid_destroys_items(feat) && !grid_is_solid(feat))
+    if (!grid_destroys_items(feat) && !grid_is_solid(feat)
+        && inv_items.size() > 0)
     {
-        int count = 0;
-        int idx   = -1;
+        int idx = inv_items[random2(inv_items.size())];
 
-        for (int i = 0; i < ENDOFPACK; i++)
+        const item_def &item(you.inv[idx]);
+
+        std::string name;
+        if (item.quantity == 1)
+            name = item.name(DESC_CAP_YOUR, false, false, false);
+        else
         {
-            const item_def &item(you.inv[i]);
-            if (is_valid_item(item) && !item_is_equipped(item)
-                && !item_is_critical(item))
-            {
-                if (one_chance_in(++count))
-                    idx = i;
-            }
+            name  = "One of ";
+            name += item.name(DESC_NOCAP_YOUR, false, false, false);
         }
-        if (idx != -1)
-        {
-            item_def &item(you.inv[idx]);
-            std::string name;
-            if (item.quantity == 1)
-                name = item.name(DESC_CAP_YOUR, false, false, false);
-            else
-            {
-                name  = "One of ";
-                name += item.name(DESC_NOCAP_YOUR, false, false, false);
-            }
-            messages.push_back(name + " falls out of your pack, then "
-                               "immediately jumps back in!");
-        }
+        messages.push_back(name + " falls out of your pack, then "
+                           "immediately jumps back in!");
     }
 
     ////////////////////////////////////////////
@@ -1296,7 +1303,7 @@ static void _xom_zero_miscast()
     if (!player_genus(GENPC_DRACONIAN) && you.species != SP_MUMMY
         && (transform == TRAN_NONE || transform == TRAN_BLADE_HANDS))
     {
-        messages.push_back("Your eyebrows briefly feel very bushy.");
+        messages.push_back("Your eyebrows briefly feel incredibly bushy.");
     }
 
     ///////////////////////////
@@ -1306,7 +1313,7 @@ static void _xom_zero_miscast()
     if (_could_wear_eq(EQ_WEAPON))
     {
         std::string str = "A fancy cane briefly appears in your ";
-        str += you.hand_name(true);
+        str += you.hand_name(false);
         str += ".";
 
         messages.push_back(str);
@@ -1319,8 +1326,8 @@ static void _xom_zero_miscast()
     {
         std::string str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);
-        str += " leaps into the air, briefly spins, then lands on your "
-               "head again!";
+        str += " leaps into the air, briefly spins, then lands back on "
+               "your head!";
 
         messages.push_back(str);
     }
@@ -1386,7 +1393,24 @@ static void _xom_zero_miscast()
         }
 
         if (!str.empty())
-            messages.push_back(str);            
+            messages.push_back(str);
+    }
+
+    ////////
+    // Misc.
+    if (inv_items.size() > 0)
+    {
+        int idx = inv_items[random2(inv_items.size())];
+
+        item = &you.inv[idx];
+
+        std::string name = item->name(DESC_CAP_YOUR, false, false, false);
+        std::string verb = coinflip() ? "glow" : "vibrate";
+
+        if (item->quantity == 1)
+            verb += "s";
+
+        messages.push_back(name + " briefly " + verb + ".");
     }
 
     if (priority.size() > 0 && coinflip())

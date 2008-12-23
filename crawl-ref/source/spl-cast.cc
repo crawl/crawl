@@ -2374,7 +2374,7 @@ void MiscastEffect::init()
     {
         if (starts_with(cause, "a "))
             cause.replace(cause.begin(), cause.begin() + 1, "an indirect");
-        if (starts_with(cause, "an "))
+        else if (starts_with(cause, "an "))
             cause.replace(cause.begin(), cause.begin() + 2, "an indirect");
         else
             cause = replace_all(cause, "death curse", "indirect death curse");
@@ -2523,7 +2523,6 @@ void MiscastEffect::do_miscast()
     // the target around.
     beam.source = target->pos();
     beam.target = target->pos();
-    beam.pos    = target->pos();
 
     all_msg = you_msg = mon_msg = mon_msg_seen = mon_msg_unseen = "";
     msg_ch  = MSGCH_PLAIN;
@@ -2551,7 +2550,7 @@ void MiscastEffect::do_miscast()
         break;
 
     default:
-        ASSERT(false);
+        DEBUGSTR("Invalid miscast spell discipline.");
     }
 
     if (target->atype() == ACT_PLAYER)
@@ -2604,19 +2603,27 @@ void MiscastEffect::do_msg(bool suppress_nothing_happnes)
         return;
     }
 
+    bool plural;
+
     if (hand_str.empty())
     {
-        msg = replace_all(msg, "@hand@",  target->hand_name(false));
+        msg = replace_all(msg, "@hand@",  target->hand_name(false, &plural));
         msg = replace_all(msg, "@hands@", target->hand_name(true));
     }
     else
     {
+        plural = can_plural_hand;
         msg = replace_all(msg, "@hand@",  hand_str);
         if (can_plural_hand)
             msg = replace_all(msg, "@hands@", pluralise(hand_str));
         else
             msg = replace_all(msg, "@hands@", hand_str);
     }
+
+    if (plural)
+        msg = replace_all(msg, "@hand_conj@", "");
+    else
+        msg = replace_all(msg, "@hand_conj@", "s");
 
     if (target->atype() == ACT_MONSTER)
         msg = do_mon_str_replacements(msg, mon_target, S_SILENT);
@@ -2662,13 +2669,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
             if (god == GOD_XOM && you.penance[GOD_XOM] == 0)
                 method = KILLED_BY_XOM;
             else
-            {
                 method = KILLED_BY_DIVINE_WRATH;
-
-                if (you.penance[god] == 0)
-                   mpr("God making you miscast, but not under penance.",
-                       MSGCH_DIAGNOSTICS);
-            }
         }
         else if (source >= 0 && source < NON_MONSTER)
             method = KILLED_BY_MONSTER;
@@ -2877,12 +2878,40 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     return (create_monster(data) != -1);
 }
 
+static bool _has_hair(actor* target)
+{
+    // Don't bother for monsters.
+    if (target->atype() == ACT_MONSTER)
+        return (false);
+
+    return (!transform_changed_physiology() && you.species != SP_GHOUL
+            && you.species != SP_KENKU && !player_genus(GENPC_DRACONIAN));
+}
+
+static std::string _hair_str(actor* target, bool &plural)
+{
+    ASSERT(target->atype() == ACT_PLAYER);
+
+    if (you.species == SP_MUMMY)
+    {
+        plural = true;
+        return "bandages";
+    }
+    else
+    {
+        plural = false;
+        return "hair";
+    }
+}
+
 void MiscastEffect::_conjuration(int severity)
 {
+    int num;
     switch (severity)
     {
     case 0:         // just a harmless message
-        switch (random2(10))
+        num = 10 + (_has_hair(target) ? 1 : 0);
+        switch (random2(num))
         {
         case 0:
             you_msg      = "Sparks fly from your @hands@!";
@@ -2928,6 +2957,15 @@ void MiscastEffect::_conjuration(int severity)
                 all_msg = "You smell something strange.";
             else if (you.species == SP_MUMMY)
                 you_msg = "Your bandages flutter.";
+            break;
+        case 10:
+        {
+            // Player only (for now).
+            bool plural;
+            std::string hair = _hair_str(target, plural);
+            you_msg = make_stringf("Your %s stand%s on end.", hair.c_str(),
+                                   plural ? "" : "s");
+        }
         }
         do_msg();
         break;
@@ -3838,10 +3876,12 @@ void MiscastEffect::_necromancy(int severity)
 
 void MiscastEffect::_transmigration(int severity)
 {
+    int num;
     switch (severity)
     {
     case 0:         // just a harmless message
-        switch (random2(10))
+        num = 10 + (_has_hair(target) ? 1 : 0);
+        switch (random2(num))
         {
         case 0:
             _your_hands_glow(target, you_msg, mon_msg_seen, can_plural_hand);
@@ -3887,6 +3927,14 @@ void MiscastEffect::_transmigration(int severity)
             else if (you.species == SP_MUMMY)
                 you_msg = "Your bandages flutter.";
             break;
+        case 10:
+        {
+            // Player only (for now).
+            bool plural;
+            std::string hair = _hair_str(target, plural);
+            you_msg = make_stringf("Your %s momentarily turn%s into snakes!",
+                                   hair.c_str(), plural ? "" : "s");
+        }
         }
         do_msg();
         break;
@@ -4146,10 +4194,21 @@ void MiscastEffect::_fire(int severity)
 
 void MiscastEffect::_ice(int severity)
 {
+    const dungeon_feature_type feat = grd(you.pos());
+
+    const bool frostable_feat =
+        (feat == DNGN_FLOOR || grid_altar_god(feat) != GOD_NO_GOD
+         || grid_is_staircase(feat) || grid_is_water(feat));
+
+    const std::string feat_name = (feat == DNGN_FLOOR ? "the " : "") +
+        feature_description(you.pos(), false, DESC_NOCAP_THE);
+
+    int num;
     switch (severity)
     {
     case 0:         // just a harmless message
-        switch (random2(10))
+        num = 10 + (frostable_feat ? 1 : 0);
+        switch (random2(num))
         {
         case 0:
             you_msg = "You shiver with cold.";
@@ -4169,7 +4228,7 @@ void MiscastEffect::_ice(int severity)
             // Monster messages needed.
             break;
         case 4:
-            you_msg = "Your @hands@ feel numb with cold.";
+            you_msg = "Your @hands@ feel@hand_conj@ numb with cold.";
             // Monster messages needed.
             break;
         case 5:
@@ -4196,6 +4255,12 @@ void MiscastEffect::_ice(int severity)
             }
             else if (target->atype() == ACT_PLAYER)
                 you_msg = "A snowflake lands on your nose.";
+            break;
+        case 10:
+            if (grid_is_water(feat))
+                all_msg  = "A thin layer of ice forms on " + feat_name;
+            else
+                all_msg  = "Frost spreads across " + feat_name;
             break;
         }
         do_msg();
@@ -4275,13 +4340,20 @@ void MiscastEffect::_ice(int severity)
     }
 }
 
+static bool _on_floor(actor* target)
+{
+    return (!you.airborne() && grd(you.pos()) == DNGN_FLOOR);
+}
+
 void MiscastEffect::_earth(int severity)
 {
+    int num;
     switch (severity)
     {
     case 0:         // just a harmless message
     case 1:
-        switch (random2(10))
+        num = 11 + (_on_floor(target) ? 2 : 0);
+        switch (random2(num))
         {
         case 0:
             you_msg = "You feel earthy.";
@@ -4338,6 +4410,24 @@ void MiscastEffect::_earth(int severity)
             // Monster messages needed.
             break;
         }
+        case 10:
+            if (target->cannot_move())
+            {
+                you_msg      = "You briefly vibrate.";
+                mon_msg_seen = "@The_monster@ briefly vibrates.";
+            }
+            else
+            {
+                you_msg      = "You momentarily stiffen.";
+                mon_msg_seen = "@The_monster@ momentariliy stiffens.";
+            }
+            break;
+        case 11:
+            all_msg = "The floor vibrates.";
+            break;
+        case 12:
+            all_msg = "The floor shifts beneath you alarmingly!";
+            break;
         }
         do_msg();
         break;
@@ -4399,10 +4489,12 @@ void MiscastEffect::_earth(int severity)
 
 void MiscastEffect::_air(int severity)
 {
+    int num;
     switch (severity)
     {
     case 0:         // just a harmless message
-        switch (random2(10))
+        num = 10 + (_has_hair(target) ? 1 : 0);
+        switch (random2(num))
         {
         case 0:
             you_msg = "Ouch! You gave yourself an electric shock.";
@@ -4479,10 +4571,18 @@ void MiscastEffect::_air(int severity)
             else if (you.species == SP_MUMMY)
                 you_msg = "Your bandages flutter.";
             break;
+        case 10:
+        {
+            // Player only (for now).
+            bool plural;
+            std::string hair = _hair_str(target, plural);
+            you_msg = make_stringf("Your %s stand%s on end.", hair.c_str(),
+                                   plural ? "" : "s");
+            break;
+        }
         }
         do_msg();
         break;
-
     case 1:         // a bit less harmless stuff
         switch (random2(2))
         {
