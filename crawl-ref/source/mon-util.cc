@@ -3152,7 +3152,8 @@ bool monster_shover(const monsters *m)
         return (false);
 
     // Efreet and fire elementals are disqualified because they leave behind
-    // clouds of flame. Rotting devils trail clouds of miasma.
+    // clouds of flame. Rotting devils are disqualified because they trail
+    // clouds of miasma.
     if (m->type == MONS_EFREET || m->type == MONS_FIRE_ELEMENTAL
         || m->type == MONS_ROTTING_DEVIL || m->type == MONS_CURSE_TOE)
     {
