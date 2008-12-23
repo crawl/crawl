@@ -954,8 +954,8 @@ static bool _grab_follower_at(const coord_def &pos)
     if (!fmenv || !fmenv->alive())
         return (false);
 
-    // Monster has to be already tagged in order to follow.
-    if (!testbits( fmenv->flags, MF_TAKING_STAIRS ))
+    // The monster has to already be tagged in order to follow.
+    if (!testbits(fmenv->flags, MF_TAKING_STAIRS))
         return (false);
 
     level_id dest = level_id::current();
@@ -978,7 +978,7 @@ static void _grab_followers()
     const bool can_follow = level_type_allows_followers(you.level_type);
 
     // Handle nearby ghosts.
-    for ( adjacent_iterator ai; ai; ++ai )
+    for (adjacent_iterator ai; ai; ++ai)
     {
         if (mgrd(*ai) == NON_MONSTER)
             continue;

@@ -301,7 +301,7 @@ radius_iterator radius_iterator::operator--(int dummy)
 }
 
 // Crude, but functional.
-std::string make_time_string( time_t abs_time, bool terse )
+std::string make_time_string(time_t abs_time, bool terse)
 {
     const int days  = abs_time / 86400;
     const int hours = (abs_time % 86400) / 3600;
@@ -325,12 +325,12 @@ std::string make_time_string( time_t abs_time, bool terse )
     return buff.str();
 }
 
-void set_redraw_status( unsigned long flags )
+void set_redraw_status(unsigned long flags)
 {
     you.redraw_status_flags |= flags;
 }
 
-static bool tag_follower_at(const coord_def &pos)
+static bool _tag_follower_at(const coord_def &pos)
 {
     if (!in_bounds(pos) || pos == you.pos())
         return (false);
@@ -340,7 +340,9 @@ static bool tag_follower_at(const coord_def &pos)
 
     monsters *fmenv = &menv[mgrd(pos)];
 
-    if (!fmenv->alive()
+    if (fmenv->type == MONS_PLAYER_GHOST
+        || !fmenv->alive()
+        || !fmenv->can_use_stairs()
         || fmenv->incapacitated()
         || mons_is_stationary(fmenv))
     {
@@ -377,24 +379,18 @@ static bool tag_follower_at(const coord_def &pos)
         }
     }
 
-    // Return true for monsters that can't use stairs (so that friendly
-    // monsters adjacent to them can still follow you through stairs),
-    // but don't tag them as followers.
-    if (fmenv->can_use_stairs())
-    {
-        // Monster is chasing player through stairs.
-        fmenv->flags |= MF_TAKING_STAIRS;
+    // Monster is chasing player through stairs.
+    fmenv->flags |= MF_TAKING_STAIRS;
 
-        // Clear patrolling/travel markers.
-        fmenv->patrol_point.reset();
-        fmenv->travel_path.clear();
-        fmenv->travel_target = MTRAV_NONE;
+    // Clear patrolling/travel markers.
+    fmenv->patrol_point.reset();
+    fmenv->travel_path.clear();
+    fmenv->travel_target = MTRAV_NONE;
 
 #if DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",
-             fmenv->name(DESC_CAP_THE, true).c_str() );
+    mprf(MSGCH_DIAGNOSTICS, "%s is marked for following.",
+         fmenv->name(DESC_CAP_THE, true).c_str() );
 #endif
-    }
 
     return (true);
 }
@@ -403,7 +399,7 @@ static int follower_tag_radius2()
 {
     // If only friendlies are adjacent, we set a max radius of 6, otherwise
     // only adjacent friendlies may follow.
-    for ( adjacent_iterator ai; ai; ++ai )
+    for (adjacent_iterator ai; ai; ++ai)
         if (const monsters *mon = monster_at(*ai))
             if (!mons_friendly(mon))
                 return (2);
@@ -437,7 +433,7 @@ void tag_followers()
                         continue;
                     }
                     travel_point_distance[fp.x][fp.y] = 1;
-                    if (tag_follower_at(fp))
+                    if (_tag_follower_at(fp))
                     {
                         // If we've run out of our follower allowance, bail.
                         if (--n_followers <= 0)

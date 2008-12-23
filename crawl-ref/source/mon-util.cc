@@ -3153,11 +3153,14 @@ bool monster_shover(const monsters *m)
     // Efreet and fire elementals are disqualified because they leave behind
     // clouds of flame. Rotting devils trail clouds of miasma.
     if (m->type == MONS_EFREET || m->type == MONS_FIRE_ELEMENTAL
-        || m->type == MONS_ROTTING_DEVIL
-        || m->type == MONS_CURSE_TOE)
+        || m->type == MONS_ROTTING_DEVIL || m->type == MONS_CURSE_TOE)
     {
         return (false);
     }
+
+    // Monsters too stupid to use stairs (e.g. zombies) are also disqualified.
+    if (!m->can_use_stairs())
+        return (false);
 
     // Smiters profit from staying back and smiting.
     if (_mons_can_smite(m))
@@ -3167,11 +3170,10 @@ bool monster_shover(const monsters *m)
 
     // Somewhat arbitrary: giants and dragons are too big to get past anything,
     // beetles are too dumb (arguable), dancing weapons can't communicate, eyes
-    // aren't pushers and shovers, zombies are zombies. Worms and elementals
-    // are on the list because all 'w' are currently unrelated.
+    // aren't pushers and shovers. Worms and elementals are on the list because
+    // all 'w' are currently unrelated.
     return (mchar != 'C' && mchar != 'B' && mchar != '(' && mchar != 'D'
-            && mchar != 'G' && mchar != 'Z' && mchar != 'z'
-            && mchar != 'w' && mchar != '#');
+            && mchar != 'G' && mchar != 'w' && mchar != '#');
 }
 
 // Returns true if m1 and m2 are related, and m1 is higher up the totem pole
@@ -3185,8 +3187,8 @@ bool monster_senior(const monsters *m1, const monsters *m2)
     if (!me1 || !me2)
         return (false);
 
-    int mchar1 = me1->showchar,
-        mchar2 = me2->showchar;
+    int mchar1 = me1->showchar;
+    int mchar2 = me2->showchar;
 
     // If both are demons, the smaller number is the nastier demon.
     if (isdigit(mchar1) && isdigit(mchar2))
@@ -3197,9 +3199,10 @@ bool monster_senior(const monsters *m1, const monsters *m2)
     if (mchar1 == '&' && isdigit(mchar2) && m1->type != MONS_GERYON)
         return (m1->hit_dice > m2->hit_dice);
 
-    // Skeletal warriors can push past zombies large and small.
-    if (m1->type == MONS_SKELETAL_WARRIOR && (mchar2 == 'z' || mchar2 == 'Z'))
-        return (m1->hit_dice > m2->hit_dice);
+    // Monsters that are smart enough to use stairs can push past monsters
+    // too stupid to use stairs (e.g. zombies).
+    if (m1->can_use_stairs() && !m2->can_use_stairs())
+        return (true);
 
     if (m1->type == MONS_QUEEN_BEE
         && (m2->type == MONS_KILLER_BEE
@@ -5770,13 +5773,7 @@ bool monsters::is_patrolling() const
 
 bool monsters::can_use_stairs() const
 {
-    if (type == MONS_PLAYER_GHOST)
-        return (false);
-
-    if (mons_is_zombified(this) && !mons_enslaved_intact_soul(this))
-        return (false);
-
-    return (true);
+    return (!mons_is_zombified(this) || mons_enslaved_intact_soul(this));
 }
 
 bool monsters::needs_transit() const

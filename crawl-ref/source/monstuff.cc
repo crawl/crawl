@@ -4106,6 +4106,7 @@ static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
         if (mons_aligned(monster_index(mon), mgrd(pos[i])))
             return (true);
     }
+
     return (false);
 }
 

@@ -5417,6 +5417,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
         monster_drop_ething(mon);
     }
 
+    mon->colour = EC_UNHOLY;
     mon->flags |= MF_ENSLAVED_SOUL;
 
     if (mons_is_unique(type))

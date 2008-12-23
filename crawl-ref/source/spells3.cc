@@ -1034,7 +1034,7 @@ bool cast_twisted_resurrection(int pow, god_type god)
     int total_mass = 0;
     int rotted = 0;
 
-    for ( stack_iterator si(you.pos()); si; ++si )
+    for (stack_iterator si(you.pos()); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {

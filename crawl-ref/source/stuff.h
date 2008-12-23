@@ -14,7 +14,7 @@
 #include <map>
 
 std::string make_time_string(time_t abs_time, bool terse = false);
-void set_redraw_status( unsigned long flags );
+void set_redraw_status(unsigned long flags);
 void tag_followers();
 void untag_followers();
 
