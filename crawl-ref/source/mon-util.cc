@@ -3159,7 +3159,8 @@ bool monster_shover(const monsters *m)
         return (false);
     }
 
-    // Monsters too stupid to use stairs (e.g. zombies) are also disqualified.
+    // Monsters too stupid to use stairs (e.g. zombified undead) are also
+    // disqualified.
     if (!m->can_use_stairs())
         return (false);
 
