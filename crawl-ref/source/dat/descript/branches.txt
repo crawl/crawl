@@ -34,6 +34,10 @@ Swamp
 
 A swampy waste land, complete with ooze, muck, flies, and large slavering
 carnivorous monsters.
+
+The Swamp is five levels deep and contains the decaying rune. A dungeon
+features only one of the Swamp or Shoals branches. If the Swamp is
+present, the entry is located between Lair:2 and Lair:7.
 %%%%
 Shoals
 
@@ -45,7 +49,7 @@ wonder: who is the predator? And who is the prey?
 
 The Shoals are five levels deep and contain the barnacled rune. A dungeon
 features only one of the Swamp or Shoals branches. If the Shoals are 
-present, the entry is located between Lair: and Lair:
+present, the entry is located between Lair:2 and Lair:7.
 %%%%
 Slime Pits
 
