@@ -508,7 +508,7 @@ static bool _is_chaos_upgradeable(const item_def &item,
         return (false);
 
     // God gifts from good gods are protected.  Also, Beogh hates all
-    // the other gods so he'll protect his gifts as well.
+    // the other gods, so he'll protect his gifts as well.
     if (item.orig_monnum < 0)
     {
         god_type iorig = static_cast<god_type>(-item.orig_monnum);
@@ -544,6 +544,7 @@ static bool _is_chaos_upgradeable(const item_def &item,
         {
             return (false);
         }
+
         if (get_weapon_brand(item) == SPWPN_NORMAL)
             return (true);
     }
@@ -563,14 +564,14 @@ static bool _choose_chaos_upgrade(const monsters* mon)
     if (mons_itemuse(mon) < MONUSE_STARTING_EQUIPMENT)
         return (false);
 
-    // Holy beings are presumably protected by another god, unless they're
-    // gifts from Xom.
+    // Holy beings are presumably protected by another god, unless
+    // they're gifts from Xom.
     if (mons_is_holy(mon) && mon->god != GOD_XOM)
         return (false);
 
-    // God gifts from good gods will be protected by their god from being
-    // given chaos weapons, while other gods won't mind the help in their
-    // servants killing the player.
+    // God gifts from good gods will be protected by their god from
+    // being given chaos weapons, while other gods won't mind the help
+    // in their servants killing the player.
     if (mon->god != GOD_NO_GOD && is_good_god(mon->god))
        return (false);
 
@@ -593,8 +594,8 @@ static bool _choose_chaos_upgrade(const monsters* mon)
             continue;
         const item_def &item(mitm[midx]);
 
-        // Monster already has a chaos weapon, give upgrade to a different
-        // monster.
+        // The monster already has a chaos weapon.  Give the upgrade to
+        // a different monster.
         if (is_chaotic_item(item))
             return (false);
 
@@ -603,8 +604,8 @@ static bool _choose_chaos_upgrade(const monsters* mon)
             if (item.base_type != OBJ_MISSILES)
                 return (true);
 
-            // If for some weird reason a monster is carrying a bow
-            // and javelins then branding the javelins is okay since
+            // If, for some weird reason, a monster is carrying a bow
+            // and javelins, then branding the javelins is okay, since
             // they won't be fired by the bow.
             if (!special_launcher || !has_launcher(item))
                 return (true);
@@ -612,8 +613,8 @@ static bool _choose_chaos_upgrade(const monsters* mon)
 
         if (is_range_weapon(item))
         {
-            // If the launcher alters its ammo then branding the monster's
-            // ammo won't be an upgrade.
+            // If the launcher alters its ammo, then branding the
+            // monster's ammo won't be an upgrade.
             int brand = get_weapon_brand(item);
             if (brand == SPWPN_FLAME || brand == SPWPN_FROST
                 || brand == SPWPN_VENOM)
@@ -641,7 +642,7 @@ static void _do_chaos_upgrade(item_def &item, const monsters* mon)
                                                            DESC_CAP_THE;
         std::string msg = mon->name(desc);
         msg += "'s ";
-        msg = replace_all(msg, "s's", "s'"); // Proper posessive.
+        msg = replace_all(msg, "s's", "s'"); // Proper possessive.
 
         msg += item.name(DESC_PLAIN, false, false, false);
 
@@ -666,11 +667,11 @@ static void _do_chaos_upgrade(item_def &item, const monsters* mon)
         if (seen)
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
-        // Make sure it's visibly special
+        // Make sure it's visibly special.
         if (!(item.flags & ISFLAG_COSMETIC_MASK))
             item.flags |= ISFLAG_GLOWING;
 
-        // Make the pluses more like a randomly generated ego item
+        // Make the pluses more like a randomly generated ego item.
         item.plus  += random2(5);
         item.plus2 += random2(5);
     }
@@ -736,7 +737,7 @@ static bool _xom_is_good(int sever, int tension)
     // This series of random calls produces a poisson-looking
     // distribution: initial hump, plus a long-ish tail.
 
-    // Don't make player berserk if there's no danger.
+    // Don't make the player berserk if there's no danger.
     if (tension > 0 && x_chance_in_y(2, sever))
     {
         potion_type pot =
@@ -786,7 +787,7 @@ static bool _xom_is_good(int sever, int tension)
             }
         }
     }
-    // Pointless to send in help if there's no danger.
+    // It's pointless to send in help if there's no danger.
     else if (tension > 0 && x_chance_in_y(5, sever))
     {
         // XXX: Can we clean up this ugliness, please?
@@ -944,12 +945,14 @@ static bool _xom_is_good(int sever, int tension)
     }
     else if (x_chance_in_y(10, sever) && (you.level_type != LEVEL_ABYSS))
     {
-        // rearrange the pieces -- blink every monster on this level and the player
+        // Rearrange the pieces - blink every monster on this level and
+        // the player.
 
         // Every now and then, Xom also confuses them all.
         bool confusem = one_chance_in(10);
-	
-        // Not just every monster in sight -- oh no.  Every monster on this level!
+
+        // Not just every monster in sight - oh no.  Every monster on
+        // this level!
         monsters *monster;
         for (unsigned i = 0; i < MAX_MONSTERS; ++i)
         {
@@ -962,13 +965,21 @@ static bool _xom_is_good(int sever, int tension)
             {
                 if (!done)
                     god_speaks(GOD_XOM, _get_xom_speech("rearrange the pieces").c_str());
+
                 done = true;
+
                 if (confusem)
+                {
                     if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY, random2(sever))))
-                        if (player_monster_visible( monster ))
+                    {
+                        if (player_monster_visible(monster))
                             simple_monster_message(monster, " looks rather confused.");
+                    }
+                }
             }
-            // If he blinked at least one monster, blink the player too and this act is considered "done".
+
+            // If he blinked at least one monster, blink the player,
+            // too, and then consider this act done.
             if (done)
                 random_blink(false);
         }
@@ -987,6 +998,7 @@ static bool _xom_is_good(int sever, int tension)
                 break;
         }
         while (x_chance_in_y(3, 4) || player_in_a_dangerous_place());
+
         done = true;
     }
     else if (x_chance_in_y(12, sever))
@@ -1025,7 +1037,7 @@ static bool _xom_is_good(int sever, int tension)
             }
         }
     }
-    // Pointless to send in help if there's no danger.
+    // It's pointless to send in help if there's no danger.
     else if (tension > 0 && x_chance_in_y(14, sever))
     {
         monster_type mon = _xom_random_demon(sever);
@@ -1107,7 +1119,7 @@ static bool _xom_is_good(int sever, int tension)
     return (done);
 }
 
-// Is the equipment type usable, and the slot is empty?
+// Is the equipment type usable, and is the slot empty?
 static bool _could_wear_eq(equipment_type eq)
 {
     if (!you_tran_can_wear(eq, true))
@@ -1131,7 +1143,7 @@ static void _get_in_view(bool in_view[])
         in_view[i] = false;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-        in_view[grd(*ri)] = true;    
+        in_view[grd(*ri)] = true;
 }
 
 static void _xom_zero_miscast()
@@ -1150,8 +1162,8 @@ static void _xom_zero_miscast()
         }
     }
 
-    // Assure that messages vector has at least one element.
-    messages.push_back("Nothing appears to happen...  Ominous!");
+    // Assure that the messages vector has at least one element.
+    messages.push_back("Nothing appears to happen... Ominous!");
 
     ///////////////////////////////////
     // Dungeon feature dependant stuff.
@@ -1225,7 +1237,7 @@ static void _xom_zero_miscast()
         && !grid_is_trap(feat) && feat != DNGN_STONE_ARCH
         && feat != DNGN_OPEN_DOOR && feat != DNGN_ABANDONED_SHOP)
     {
-        const std::string feat_name = 
+        const std::string feat_name =
             feature_description(you.pos(), false, DESC_CAP_THE, false);
 
         if (you.airborne())
@@ -1510,8 +1522,8 @@ static void _xom_miscast(const int max_level, const bool nasty)
 
     _get_hand_type(hand_str, can_plural);
 
-    // If not being nasty then prevent spell miscasts from killing the
-    // player.
+    // If Xom's not being nasty, then prevent spell miscasts from
+    // killing the player.
     const int lethality_margin  = nasty ? 0 : random_range(1, 4);
 
     god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
@@ -1525,7 +1537,7 @@ static bool _xom_is_bad(int sever, int tension)
     bool done = false;
 
     // Xom will only directly kill you with a bad effect if you're under
-    // penance from him or he's bored.
+    // penance from him, or if he's bored.
     const bool nasty = you.penance[GOD_XOM]
                        || (you.religion == GOD_XOM && you.gift_timeout == 0);
 
@@ -1590,9 +1602,9 @@ static bool _xom_is_bad(int sever, int tension)
         }
         else if (x_chance_in_y(7, sever) && (you.level_type != LEVEL_ABYSS))
         {
-            // The Xom teleportation train takes you on instant teleportation to
-            // a few random areas, stopping if an area is dangerous to you or
-            // randomly stopping.
+            // The Xom teleportation train takes you on instant
+            // teleportation to a few random areas, stopping if either
+            // an area is dangerous to you or randomly.
             god_speaks(GOD_XOM, _get_xom_speech("teleportation journey").c_str());
             do
             {
@@ -1600,6 +1612,7 @@ static bool _xom_is_bad(int sever, int tension)
                 more();
             }
             while (x_chance_in_y(3, 4) && !player_in_a_dangerous_place());
+
             done = true;
         }
         else if (x_chance_in_y(8, sever))
@@ -1631,7 +1644,7 @@ static bool _xom_is_bad(int sever, int tension)
             ASSERT(done);
 
             // Wake the monster up.
-            behaviour_event( mon, ME_ALERT, MHITYOU );
+            behaviour_event(mon, ME_ALERT, MHITYOU);
         }
         else if (x_chance_in_y(9, sever))
         {
@@ -1683,15 +1696,18 @@ static bool _xom_is_bad(int sever, int tension)
                 }
             }
         }
-        // Pointless to confuse player if there's no danger nearby.
+        // It's pointless to confuse player if there's no danger nearby.
         else if (tension > 0 && x_chance_in_y(11, sever))
         {
             std::string speech = _get_xom_speech("confusion");
-            if (confuse_player(random2(sever)+1, false)) {
+            if (confuse_player(random2(sever)+1, false))
+            {
                 done = true;
-                // Well, sometimes Xom gets carried away and starts confusing other
-                // creatures too.
-                if (coinflip()) {
+
+                // Sometimes Xom gets carried away and starts confusing
+                // other creatures too.
+                if (coinflip())
+                {
                     monsters* monster;
                     for (unsigned i = 0; i < MAX_MONSTERS; ++i)
                     {
@@ -1701,7 +1717,7 @@ static bool _xom_is_bad(int sever, int tension)
                             continue;
 
                         if (monster->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_FRIENDLY, random2(sever)))) {
-                            if (player_monster_visible( monster ))
+                            if (player_monster_visible(monster))
                                 simple_monster_message(monster, " looks rather confused.");
                         }
                     }
@@ -1814,7 +1830,7 @@ static void _handle_accidental_death(const int orig_hp,
         && you.escaped_death_aux.empty()
         && !_player_is_dead())
     {
-        // Player is fine.
+        // The player is fine.
         return;
     }
 
@@ -1938,9 +1954,9 @@ void xom_acts(bool niceness, int sever)
 #ifdef WIZARD
     if (_player_is_dead())
     {
-        // Should only happen if the player used wizard mode to escape from
-        // death via stat loss, or used wizard mode to escape death from
-        // deep water or lava.
+        // This should only happen if the player used wizard mode to
+        // escape from death via stat loss, or if the player used wizard
+        // mode to escape death from deep water or lava.
         ASSERT(you.wizard && !you.did_escape_death());
         if (_feat_is_deadly(grd(you.pos())))
             mpr("Player is standing in deadly terrain, skipping Xom act.",
