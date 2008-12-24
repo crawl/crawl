@@ -1410,8 +1410,8 @@ int element_colour( int element, bool no_random )
         break;
 
     case EC_BEOGH:
-        ret = (tmp_rand < 60) ? LIGHTRED // plain Orc (+ orcish idol) colour
-                              : BROWN;   // Orcish mines wall colour
+        ret = (tmp_rand < 60) ? LIGHTRED // plain Orc colour
+                              : BROWN;   // Orcish mines wall/idol colour
         break;
 
     case EC_CRYSTAL:
