@@ -930,7 +930,7 @@ static bool _xom_is_good(int sever, int tension)
                 }
 
                 monster_polymorph(mon, RANDOM_MONSTER,
-                    mons_wont_attack(mon) ? PPT_MORE : PPT_LESS, true);
+                    mons_wont_attack(mon) ? PPT_MORE : PPT_LESS);
 
                 done = true;
             }
@@ -1677,7 +1677,7 @@ static bool _xom_is_bad(int sever, int tension)
                     }
 
                     monster_polymorph(mon, RANDOM_MONSTER,
-                        mons_wont_attack(mon) ? PPT_LESS : PPT_MORE, true);
+                        mons_wont_attack(mon) ? PPT_LESS : PPT_MORE);
 
                     done = true;
                 }
