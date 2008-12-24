@@ -3432,7 +3432,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         force_item     = true;
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.colour    = WHITE;        // forced by force_item above {dlb}
+        item.colour    = YELLOW;       // forced by force_item above {dlb}
 
         item.sub_type  = (one_chance_in(4) ? WPN_GREAT_MACE
                                            : WPN_MACE);
