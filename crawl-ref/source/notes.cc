@@ -368,6 +368,7 @@ std::string Note::describe( bool when, bool where, bool what ) const
             break;
         case NOTE_MESSAGE:
             result << name;
+            break;
         case NOTE_SEEN_FEAT:
             result << "Found " << name;
             break;

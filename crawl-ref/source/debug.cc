@@ -412,9 +412,8 @@ void wizard_cast_spec_spell_name(void)
     char specs[80];
 
     mpr( "Cast which spell by name? ", MSGCH_PROMPT );
-    get_input_line( specs, sizeof( specs ) );
-
-    if (specs[0] == '\0')
+    if (cancelable_get_line_autohist( specs, sizeof( specs ) )
+        || specs[0] == '\0')
     {
         canned_msg( MSG_OK );
         crawl_state.cancel_cmd_repeat();
@@ -1348,7 +1347,8 @@ bool get_item_by_name(item_def *item, char* specs,
     item->special   = 0;
     item->flags     = 0;
     item->quantity  = 1;
-    set_ident_flags( *item, ISFLAG_IDENT_MASK );
+    // Don't use set_ident_flags(), to avoid getting a spurious ID note.
+    item->flags    |= ISFLAG_IDENT_MASK;
 
     if (class_wanted == OBJ_MISCELLANY)
     {
