@@ -923,21 +923,14 @@ static bool _xom_is_good(int sever, int tension)
                 god_speaks(GOD_XOM,
                            _get_xom_speech("good monster polymorph").c_str());
 
-                monster_polymorph(mon, RANDOM_MONSTER,
-                    mons_wont_attack(mon) ? PPT_MORE : PPT_LESS, true);
-
                 if (one_chance_in(8) && !mons_is_shapeshifter(mon))
                 {
                     mon->add_ench(one_chance_in(3) ?
                         ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
                 }
 
-                // player_angers_monster() will turn the monster against you
-                // only if the monster hates your religion.  No monsters hate
-                // Xom-religion, so this will only have an effect if you are not
-                // currently a worshipper of Xom, e.g. if you just abandoned him
-                // or if you drew a Card of Xom or something.
-                player_angers_monster(mon);
+                monster_polymorph(mon, RANDOM_MONSTER,
+                    mons_wont_attack(mon) ? PPT_MORE : PPT_LESS, true);
 
                 done = true;
             }
@@ -1677,16 +1670,14 @@ static bool _xom_is_bad(int sever, int tension)
                 {
                     god_speaks(GOD_XOM, _get_xom_speech("bad monster polymorph").c_str());
 
-                    monster_polymorph(mon, RANDOM_MONSTER,
-                        mons_wont_attack(mon) ? PPT_LESS : PPT_MORE, true);
-
                     if (one_chance_in(8) && !mons_is_shapeshifter(mon))
                     {
                         mon->add_ench(one_chance_in(3) ?
                             ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
                     }
 
-                    player_angers_monster(mon);
+                    monster_polymorph(mon, RANDOM_MONSTER,
+                        mons_wont_attack(mon) ? PPT_LESS : PPT_MORE, true);
 
                     done = true;
                 }
