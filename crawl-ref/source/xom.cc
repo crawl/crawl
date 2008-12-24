@@ -253,7 +253,7 @@ static void _try_brand_switch(const int item_index)
 
     item_def &item(mitm[item_index]);
 
-    // Only apply to melee weapons for the player.
+    // Only apply it to melee weapons for the player.
     if (item.base_type != OBJ_WEAPONS || is_range_weapon(item))
         return;
 
