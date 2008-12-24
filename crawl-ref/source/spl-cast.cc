@@ -193,6 +193,20 @@ int list_spells(bool toggle_with_I)
 {
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
         MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING);
+#ifdef USE_TILE
+    {
+        // [enne] - Hack.  Make title an item so that it's aligned.
+        ToggleableMenuEntry* me =
+            new ToggleableMenuEntry(
+                " Your Spells                      Type          "
+                "                Success   Level",
+                " Your Spells                      Power         "
+                "Range           Hunger    Level",
+                MEL_ITEM);
+        me->colour = BLUE;
+        spell_menu.add_entry(me);
+    }
+#else
     spell_menu.set_title(
         new ToggleableMenuEntry(
             " Your Spells                      Type          "
@@ -200,6 +214,7 @@ int list_spells(bool toggle_with_I)
             " Your Spells                      Power         "
             "Range           Hunger    Level",
             MEL_TITLE));
+#endif
     spell_menu.set_highlighter(NULL);
     spell_menu.add_toggle_key('!');
     if (toggle_with_I)
