@@ -982,10 +982,10 @@ static unsigned char _lowest_rarity[NUM_SPELLS];
 
 void init_spell_rarities()
 {
-    for (int i = 0; i < NUM_SPELLS; i++)
+    for (int i = 0; i < NUM_SPELLS; ++i)
         _lowest_rarity[i] = 255;
 
-    for (int i = 0; i < NUM_FIXED_BOOKS; i++)
+    for (int i = 0; i < NUM_FIXED_BOOKS; ++i)
     {
         const int rarity = book_rarity(i);
 
@@ -994,14 +994,14 @@ void init_spell_rarities()
         if (rarity >= 20)
             continue;
 
-        for (int j = 0; j < SPELLBOOK_SIZE; j++)
+        for (int j = 0; j < SPELLBOOK_SIZE; ++j)
         {
             spell_type spell = which_spell_in_book(i, j);
             if (spell == SPELL_NO_SPELL)
                 continue;
 
 #ifdef DEBUG
-            int unsigned flags = get_spell_flags(spell);
+            unsigned int flags = get_spell_flags(spell);
 
             if (flags & (SPFLAG_MONSTER | SPFLAG_TESTING))
             {
