@@ -317,6 +317,8 @@ int TilesFramework::load_font(const char *font_file, int font_size,
 
 void TilesFramework::load_dungeon(unsigned int *tileb, int gx, int gy)
 {
+    m_active_layer = LAYER_NORMAL;
+
     unsigned int ox = m_region_tile->mx/2;
     unsigned int oy = m_region_tile->my/2;
     m_region_tile->load_dungeon(tileb, gx - ox, gy - oy);

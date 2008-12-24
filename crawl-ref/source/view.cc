@@ -3337,7 +3337,6 @@ void show_map( coord_def &spec_place, bool travel_mode )
     int i, j;
 
     int move_x = 0, move_y = 0, scroll_y = 0;
-    int getty = 0;
 
     // Vector to track all features we can travel to, in order of distance.
     std::vector<coord_def> features;
@@ -3404,7 +3403,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
 
     int curs_x = you.pos().x - start_x + 1;
     int curs_y = you.pos().y - screen_y + half_screen + 1;
-    int search_feat = 0, search_found = 0, anchor_x = -1, anchor_y = -1;
+    int search_found = 0, anchor_x = -1, anchor_y = -1;
 
     bool map_alive  = true;
     bool redraw_map = true;
@@ -3453,214 +3452,13 @@ void show_map( coord_def &spec_place, bool travel_mode )
         redraw_map = true;
 
         c_input_reset(true);
-        getty = unmangle_direction_keys(getchm(KC_LEVELMAP), KC_LEVELMAP,
-                                        false, false);
-#ifdef USE_TILE
-        if (getty == CK_MOUSE_B4)
-            getty = '-';
-        else if (getty == CK_MOUSE_B5)
-            getty = '+';
-#endif
+        int key = unmangle_direction_keys(getchm(KC_LEVELMAP), KC_LEVELMAP,
+                                          false, false);
+        command_type cmd = key_to_command(key, KC_LEVELMAP);
+        if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
+            cmd = CMD_NO_CMD;
 
-        c_input_reset(false);
-
-        switch (getty)
-        {
-        case '?':
-            show_levelmap_help();
-            break;
-
-        case CONTROL('C'):
-            clear_map();
-            break;
-
-        case CONTROL('F'):
-            forget_map(100, true);
-            break;
-
-        case CONTROL('W'):
-            travel_cache.add_waypoint(start_x + curs_x - 1,
-                                      start_y + curs_y - 1);
-            // We need to do this all over again so that the user can jump
-            // to the waypoint he just created.
-            features.clear();
-            find_travel_pos(you.pos(), NULL, NULL, &features);
-            // Sort features into the order the player is likely to prefer.
-            arrange_features(features);
-            break;
-
-        // Cycle the radius of an exclude.
-        case 'e':
-        {
-            const coord_def p(start_x + curs_x - 1, start_y + curs_y - 1);
-            if (is_exclude_root(p))
-                cycle_exclude_radius(p);
-            else
-                toggle_exclude(p);
-
-            _reset_travel_colours(features);
-            break;
-        }
-
-        case CONTROL('E'):
-            clear_excludes();
-            _reset_travel_colours(features);
-            break;
-
-        case 'b':
-        case '1':
-            move_x = -1;
-            move_y = 1;
-            break;
-
-        case 'j':
-        case '2':
-            move_y = 1;
-            move_x = 0;
-            break;
-
-        case 'u':
-        case '9':
-            move_x = 1;
-            move_y = -1;
-            break;
-
-        case 'k':
-        case '8':
-            move_y = -1;
-            move_x = 0;
-            break;
-
-        case 'y':
-        case '7':
-            move_y = -1;
-            move_x = -1;
-            break;
-
-        case 'h':
-        case '4':
-            move_x = -1;
-            move_y = 0;
-            break;
-
-        case 'n':
-        case '3':
-            move_y = 1;
-            move_x = 1;
-            break;
-
-        case 'l':
-        case '6':
-            move_x = 1;
-            move_y = 0;
-            break;
-
-        case 'B':
-            move_x = -block_step;
-            move_y = block_step;
-            break;
-
-        case 'J':
-            move_y = block_step;
-            move_x = 0;
-            break;
-
-        case 'U':
-            move_x = block_step;
-            move_y = -block_step;
-            break;
-
-        case 'K':
-            move_y = -block_step;
-            move_x = 0;
-            break;
-
-        case 'Y':
-            move_y = -block_step;
-            move_x = -block_step;
-            break;
-
-        case 'H':
-            move_x = -block_step;
-            move_y = 0;
-            break;
-
-        case 'N':
-            move_y = block_step;
-            move_x = block_step;
-            break;
-
-        case 'L':
-            move_x = block_step;
-            move_y = 0;
-            break;
-
-        case '+':
-            move_y = 20;
-            move_x = 0;
-            scroll_y = 20;
-            break;
-
-        case '-':
-            move_y = -20;
-            move_x = 0;
-            scroll_y = -20;
-            break;
-
-        case '<':
-        case '>':
-        case '@':
-        case '\t':
-        case '^':
-        case '_':
-        case 'E':
-        case 'F':
-        case 'W':
-        case 'I':
-        case '*':
-        case '/':
-        case '\'':
-        {
-            bool forward = true;
-
-            if (getty == '/' || getty == ';')
-                forward = false;
-
-            if (getty == '/' || getty == '*' || getty == ';' || getty == '\'')
-                getty = 'I';
-
-            if (anchor_x == -1)
-            {
-                anchor_x = start_x + curs_x - 1;
-                anchor_y = start_y + curs_y - 1;
-            }
-            if (search_feat != getty)
-            {
-                search_feat         = getty;
-                search_found        = 0;
-            }
-            if (travel_mode)
-            {
-                search_found = _find_feature(features, getty, curs_x, curs_y,
-                                             start_x, start_y,
-                                             search_found,
-                                             &move_x, &move_y,
-                                             forward);
-            }
-            else
-            {
-                search_found = _find_feature(getty, curs_x, curs_y,
-                                             start_x, start_y,
-                                             anchor_x, anchor_y,
-                                             search_found, &move_x, &move_y);
-            }
-            break;
-        }
-
-        case CK_MOUSE_MOVE:
-            break;
-
-        case CK_MOUSE_CLICK:
+        if (key == CK_MOUSE_CLICK)
         {
             const c_mouse_event cme = get_mouse_event();
             const coord_def curp(start_x + curs_x - 1, start_y + curs_y - 1);
@@ -3682,14 +3480,221 @@ void show_map( coord_def &spec_place, bool travel_mode )
                 move_y = delta.y;
                 move_x = delta.x;
             }
+        }
+
+        c_input_reset(false);
+
+        switch (cmd)
+        {
+        case CMD_MAP_HELP:
+            show_levelmap_help();
+            break;
+
+        case CMD_MAP_CLEAR_MAP:
+            clear_map();
+            break;
+
+        case CMD_MAP_FORGET:
+            forget_map(100, true);
+            break;
+
+        case CMD_MAP_ADD_WAYPOINT:
+            travel_cache.add_waypoint(start_x + curs_x - 1,
+                                      start_y + curs_y - 1);
+            // We need to do this all over again so that the user can jump
+            // to the waypoint he just created.
+            features.clear();
+            find_travel_pos(you.pos(), NULL, NULL, &features);
+            // Sort features into the order the player is likely to prefer.
+            arrange_features(features);
+            break;
+
+        // Cycle the radius of an exclude.
+        case CMD_MAP_EXCLUDE_AREA:
+        {
+            const coord_def p(start_x + curs_x - 1, start_y + curs_y - 1);
+            if (is_exclude_root(p))
+                cycle_exclude_radius(p);
+            else
+                toggle_exclude(p);
+
+            _reset_travel_colours(features);
             break;
         }
 
-        case '.':
-        case '\r':
-        case 'S':
-        case ',':
-        case ';':
+        case CMD_MAP_CLEAR_EXCLUDES:
+            clear_excludes();
+            _reset_travel_colours(features);
+            break;
+
+        case CMD_MAP_MOVE_DOWN_LEFT:
+            move_x = -1;
+            move_y = 1;
+            break;
+
+        case CMD_MAP_MOVE_DOWN:
+            move_y = 1;
+            move_x = 0;
+            break;
+
+        case CMD_MAP_MOVE_UP_RIGHT:
+            move_x = 1;
+            move_y = -1;
+            break;
+
+        case CMD_MAP_MOVE_UP:
+            move_y = -1;
+            move_x = 0;
+            break;
+
+        case CMD_MAP_MOVE_UP_LEFT:
+            move_y = -1;
+            move_x = -1;
+            break;
+
+        case CMD_MAP_MOVE_LEFT:
+            move_x = -1;
+            move_y = 0;
+            break;
+
+        case CMD_MAP_MOVE_DOWN_RIGHT:
+            move_y = 1;
+            move_x = 1;
+            break;
+
+        case CMD_MAP_MOVE_RIGHT:
+            move_x = 1;
+            move_y = 0;
+            break;
+
+        case CMD_MAP_JUMP_DOWN_LEFT:
+            move_x = -block_step;
+            move_y = block_step;
+            break;
+
+        case CMD_MAP_JUMP_DOWN:
+            move_y = block_step;
+            move_x = 0;
+            break;
+
+        case CMD_MAP_JUMP_UP_RIGHT:
+            move_x = block_step;
+            move_y = -block_step;
+            break;
+
+        case CMD_MAP_JUMP_UP:
+            move_y = -block_step;
+            move_x = 0;
+            break;
+
+        case CMD_MAP_JUMP_UP_LEFT:
+            move_y = -block_step;
+            move_x = -block_step;
+            break;
+
+        case CMD_MAP_JUMP_LEFT:
+            move_x = -block_step;
+            move_y = 0;
+            break;
+
+        case CMD_MAP_JUMP_DOWN_RIGHT:
+            move_y = block_step;
+            move_x = block_step;
+            break;
+
+        case CMD_MAP_JUMP_RIGHT:
+            move_x = block_step;
+            move_y = 0;
+            break;
+
+        case CMD_MAP_SCROLL_DOWN:
+            move_y = 20;
+            move_x = 0;
+            scroll_y = 20;
+            break;
+
+        case CMD_MAP_SCROLL_UP:
+            move_y = -20;
+            move_x = 0;
+            scroll_y = -20;
+            break;
+
+        case CMD_MAP_FIND_YOU:
+            move_x = you.pos().x - (start_x + curs_x - 1);
+            move_y = you.pos().y - (start_y + curs_y - 1);
+            break;
+
+        case CMD_MAP_FIND_UPSTAIR:
+        case CMD_MAP_FIND_DOWNSTAIR:
+        case CMD_MAP_FIND_PORTAL:
+        case CMD_MAP_FIND_TRAP:
+        case CMD_MAP_FIND_ALTAR:
+        case CMD_MAP_FIND_EXCLUDED:
+        case CMD_MAP_FIND_F:
+        case CMD_MAP_FIND_WAYPOINT:
+        case CMD_MAP_FIND_STASH:
+        case CMD_MAP_FIND_STASH_REVERSE:
+        {
+            bool forward = (cmd != CMD_MAP_FIND_STASH_REVERSE);
+
+            int getty;
+            switch (cmd)
+            {
+            case CMD_MAP_FIND_UPSTAIR:
+                getty = '<';
+                break;
+            case CMD_MAP_FIND_DOWNSTAIR:
+                getty = '>';
+                break;
+            case CMD_MAP_FIND_PORTAL:
+                getty = '\t';
+                break;
+            case CMD_MAP_FIND_TRAP:
+                getty = '^';
+                break;
+            case CMD_MAP_FIND_ALTAR:
+                getty = '_';
+                break;
+            case CMD_MAP_FIND_EXCLUDED:
+                getty = 'E';
+                break;
+            case CMD_MAP_FIND_F:
+                getty = 'F';
+                break;
+            case CMD_MAP_FIND_WAYPOINT:
+                getty = 'W';
+                break;
+            default:
+            case CMD_MAP_FIND_STASH:
+            case CMD_MAP_FIND_STASH_REVERSE:
+                getty = 'I';
+                break;
+            }
+
+            if (anchor_x == -1)
+            {
+                anchor_x = start_x + curs_x - 1;
+                anchor_y = start_y + curs_y - 1;
+            }
+            if (travel_mode)
+            {
+                search_found = _find_feature(features, getty, curs_x, curs_y,
+                                             start_x, start_y,
+                                             search_found,
+                                             &move_x, &move_y,
+                                             forward);
+            }
+            else
+            {
+                search_found = _find_feature(getty, curs_x, curs_y,
+                                             start_x, start_y,
+                                             anchor_x, anchor_y,
+                                             search_found, &move_x, &move_y);
+            }
+            break;
+        }
+
+        case CMD_MAP_GOTO_TARGET:
         {
             int x = start_x + curs_x - 1, y = start_y + curs_y - 1;
             if (travel_mode && x == you.pos().x && y == you.pos().y)
@@ -3710,7 +3715,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
         }
 
 #ifdef WIZARD
-        case 'T':
+        case CMD_MAP_WIZARD_TELEPORT:
         {
             if (!you.wizard)
                 break;
@@ -3723,6 +3728,7 @@ void show_map( coord_def &spec_place, bool travel_mode )
         }
 #endif
 
+        case CMD_MAP_EXIT_MAP:
         default:
             if (travel_mode)
             {
