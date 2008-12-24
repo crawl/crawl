@@ -1599,7 +1599,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SIMULACRUM_SMALL, 'z', WHITE, "small simulacrum",
+    MONS_SIMULACRUM_SMALL, 'z', EC_ICE, "small simulacrum",
     M_EVIL,
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     0, 6, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_SMALL, MH_UNDEAD, -1,
@@ -2923,7 +2923,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SIMULACRUM_LARGE, 'Z', WHITE, "large simulacrum",
+    MONS_SIMULACRUM_LARGE, 'Z', EC_ICE, "large simulacrum",
     M_EVIL,
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     0, 6, MONS_SIMULACRUM_SMALL, MONS_SIMULACRUM_LARGE, MH_UNDEAD, -1,
