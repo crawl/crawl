@@ -3759,7 +3759,7 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
 
         // Holy monsters won't use evil or chaotic weapons.
         if ((mons_holiness(this) == MH_HOLY || is_good_god(god))
-            && (is_evil_item(item) || brand == SPWPN_CHAOS))
+            && (is_evil_item(item) || is_chaotic_item(item)))
         {
             return (false);
         }
