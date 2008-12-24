@@ -94,7 +94,7 @@ bool god_hates_killing(god_type god, const monsters* mon);
 bool god_likes_butchery(god_type god);
 bool god_hates_butchery(god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
-void divine_retribution(god_type god);
+bool divine_retribution(god_type god);
 
 bool zin_sustenance(bool actual = true);
 bool yred_injury_mirror(bool actual = true);

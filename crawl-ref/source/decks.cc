@@ -2580,7 +2580,24 @@ static void _genie_card(int power, deck_rarity_type rarity)
 // Special case for *your* god, maybe?
 static void _godly_wrath()
 {
-    divine_retribution(static_cast<god_type>(random2(NUM_GODS - 1) + 1));
+    int tries = 100;
+    while (tries-- > 0)
+    {
+        god_type god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
+
+        // Don't recursively make player draw from the Deck of Punishment.
+        if (god == GOD_NEMELEX_XOBEH)
+            continue;
+
+        // Stop once we find a god willing to punish the player.
+        if (divine_retribution(god))
+            break;
+    }
+
+    if (tries <= 0)
+    {
+        mpr("You somehow manage to escape divine attention...");
+    }
 }
 
 static void _curse_card(int power, deck_rarity_type rarity)

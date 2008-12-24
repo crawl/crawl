@@ -4727,7 +4727,7 @@ static bool _nemelex_retribution()
     return (true);
 }
 
-void divine_retribution( god_type god )
+bool divine_retribution( god_type god )
 {
     ASSERT(god != GOD_NO_GOD);
 
@@ -4737,12 +4737,13 @@ void divine_retribution( god_type god )
     if ((god == you.religion && is_good_god(god))
         || (god != you.religion && !god_hates_your_god(god)))
     {
-        return;
+        return (false);
     }
 
     god_acting gdact(god, true);
 
-    bool do_more = true;
+    bool do_more    = true;
+    bool did_retrib = true;
     switch (god)
     {
     // One in ten chance that Xom might do something good...
@@ -4762,7 +4763,12 @@ void divine_retribution( god_type god )
     case GOD_ELYVILON:      do_more = _elyvilon_retribution(); break;
 
     default:
-        do_more = false;
+#if DEBUG_DIAGNOSTICS || DEBUG_RELIGION
+        mprf(MSGCH_DIAGNOSTICS, "No retribution defined for %s.",
+             god_name(god).c_str());
+#endif
+        do_more    = false;
+        did_retrib = false;
         break;
     }
 
@@ -4789,6 +4795,8 @@ void divine_retribution( god_type god )
     // Just the thought of retribution mollifies the god by at least a
     // point...the punishment might have reduced penance further.
     dec_penance(god, 1 + random2(3));
+
+    return (did_retrib);
 }
 
 static bool _holy_beings_on_level_attitude_change()
