@@ -237,7 +237,8 @@ public:
 class Menu
 {
 public:
-    Menu( int flags = MF_MULTISELECT, const std::string& tagname = "" );
+    Menu(int flags = MF_MULTISELECT, const std::string& tagname = "",
+         bool text_only = true);
 
     // Initializes a Menu from a formatted_string as follows:
     //
@@ -328,9 +329,6 @@ protected:
     unsigned char lastch;
 
     bool alive;
-
-    // For tiles, whether this is a menu that can display graphics.
-    bool text_only;
 
     int last_selected;
 

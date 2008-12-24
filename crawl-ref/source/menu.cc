@@ -20,6 +20,7 @@
 
 MenuDisplay::MenuDisplay(Menu *menu) : m_menu(menu)
 {
+    m_menu->set_maxpagesize(get_number_of_lines());
 }
 
 MenuDisplayText::MenuDisplayText(Menu *menu) : MenuDisplay(menu), m_starty(1)
@@ -79,15 +80,18 @@ void MenuDisplayTile::set_num_columns(int columns)
 }
 #endif
 
-Menu::Menu( int _flags, const std::string& tagname )
+Menu::Menu( int _flags, const std::string& tagname, bool text_only )
  : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL), title(NULL),
    flags(_flags), tag(tagname), first_entry(0), y_offset(0),
    pagesize(0), max_pagesize(0), more("-more-", true), items(),
    sel(), select_filter(), highlighter(new MenuHighlighter), num(-1),
-   lastch(0), alive(false), text_only(true), last_selected(-1)
+   lastch(0), alive(false), last_selected(-1)
 {
 #ifdef USE_TILE
-    mdisplay = new MenuDisplayTile(this);
+    if (text_only)
+        mdisplay = new MenuDisplayText(this);
+    else
+        mdisplay = new MenuDisplayTile(this);
 #else
     mdisplay = new MenuDisplayText(this);
 #endif
@@ -107,7 +111,7 @@ Menu::Menu( const formatted_string &fs )
    lastch(0), alive(false), last_selected(-1)
 {
 #ifdef USE_TILE
-    mdisplay = new MenuDisplayTile(this);
+    mdisplay = new MenuDisplayText(this);
 #else
     mdisplay = new MenuDisplayText(this);
 #endif
@@ -272,10 +276,7 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 
     // Lose lines for the title + room for -more- line.
 #ifdef USE_TILE
-    if (text_only)
-        pagesize = get_number_of_lines() - !!title - 1;
-    else
-        pagesize = max_pagesize - !!title - 1;
+    pagesize = max_pagesize - !!title - 1;
 #else
     pagesize = get_number_of_lines() - !!title - 1;
     if (max_pagesize > 0 && pagesize > max_pagesize)
