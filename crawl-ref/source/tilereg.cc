@@ -2549,7 +2549,7 @@ void MenuRegion::place_entries()
             int text_sx = text_indent + entry_start;
 
             int entry_height;
-            
+
             if (m_entries[i].tile)
             {
                 m_entries[i].sx = entry_start + tile_indent;
