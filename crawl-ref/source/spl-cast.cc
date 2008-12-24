@@ -1392,7 +1392,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         //
         //     The casting of this spell still costs a turn.  So
         //     casting Delayed Fireball and immediately releasing
-        //     the fireball is only slightly different than casting
+        //     the fireball is only slightly different from casting
         //     a regular Fireball (monsters act in the middle instead
         //     of at the end).  This is why we allow for the spell
         //     level discount so that Fireball is free with this spell

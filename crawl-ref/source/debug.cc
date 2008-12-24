@@ -4851,7 +4851,7 @@ void wizard_polymorph_monster(monsters* mon)
 
     if (mons_species(type) == mons_species(old_type))
     {
-        mpr("Target species must be different than current species.");
+        mpr("Target species must be different from current species.");
         return;
     }
 

@@ -4507,7 +4507,7 @@ static void _update_replay_state()
             crawl_state.repeat_cmd_keys  = repeat_again_rec.keys;
 
             // Setting up the "previous command key sequence"
-            // for a repeated command is different than normal,
+            // for a repeated command is different from normal,
             // since in addition to all of the keystrokes for
             // the command, it needs the repeat command plus the
             // number of repeats at the very beginning of the
