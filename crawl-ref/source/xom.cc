@@ -924,14 +924,17 @@ static bool _xom_is_good(int sever, int tension)
                 god_speaks(GOD_XOM,
                            _get_xom_speech("good monster polymorph").c_str());
 
+                bool made_shifter = false;
+
                 if (one_chance_in(8) && !mons_is_shapeshifter(mon))
                 {
                     mon->add_ench(one_chance_in(3) ?
                         ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
+                    made_shifter = true;
                 }
 
                 monster_polymorph(mon, RANDOM_MONSTER,
-                    mons_wont_attack(mon) ? PPT_MORE : PPT_LESS, true);
+                    mons_wont_attack(mon) ? PPT_MORE : PPT_LESS, made_shifter);
 
                 done = true;
             }
@@ -1683,14 +1686,17 @@ static bool _xom_is_bad(int sever, int tension)
                 {
                     god_speaks(GOD_XOM, _get_xom_speech("bad monster polymorph").c_str());
 
+                    bool made_shifter = false;
+
                     if (one_chance_in(8) && !mons_is_shapeshifter(mon))
                     {
                         mon->add_ench(one_chance_in(3) ?
                             ENCH_GLOWING_SHAPESHIFTER : ENCH_SHAPESHIFTER);
+                        made_shifter = true;
                     }
 
                     monster_polymorph(mon, RANDOM_MONSTER,
-                        mons_wont_attack(mon) ? PPT_LESS : PPT_MORE, true);
+                        mons_wont_attack(mon) ? PPT_LESS : PPT_MORE, made_shifter);
 
                     done = true;
                 }
