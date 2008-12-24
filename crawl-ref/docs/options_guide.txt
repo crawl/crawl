@@ -54,7 +54,7 @@ The contents of this text are:
                 trap_prompt, rest_wait_both, auto_exclude
 4-h     Stashes.
                 stash_filter, annotate_item_class,
-                annoate_item_dropped
+                annotate_item_dropped
 4-i     Command Enhancements.
                 auto_list, easy_open, easy_unequip, easy_confirm, 
                 allow_self_target, easy_butcher, always_confirm_butcher, 
