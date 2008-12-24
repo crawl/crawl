@@ -84,7 +84,7 @@ Menu::Menu( int _flags, const std::string& tagname )
    flags(_flags), tag(tagname), first_entry(0), y_offset(0),
    pagesize(0), max_pagesize(0), more("-more-", true), items(),
    sel(), select_filter(), highlighter(new MenuHighlighter), num(-1),
-   lastch(0), alive(false), last_selected(-1)
+   lastch(0), alive(false), text_only(true), last_selected(-1)
 {
 #ifdef USE_TILE
     mdisplay = new MenuDisplayTile(this);
@@ -272,7 +272,10 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 
     // Lose lines for the title + room for -more- line.
 #ifdef USE_TILE
-    pagesize = max_pagesize - !!title - 1;
+    if (text_only)
+        pagesize = get_number_of_lines() - !!title - 1;
+    else
+        pagesize = max_pagesize - !!title - 1;
 #else
     pagesize = get_number_of_lines() - !!title - 1;
     if (max_pagesize > 0 && pagesize > max_pagesize)

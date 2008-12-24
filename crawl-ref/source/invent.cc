@@ -274,6 +274,7 @@ InvMenu::InvMenu(int mflags)
       title_annotate(NULL)
 {
     mdisplay->set_num_columns(2);
+    text_only = false;
 }
 
 // Returns vector of item_def pointers to each item_def in the given

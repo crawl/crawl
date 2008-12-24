@@ -329,6 +329,9 @@ protected:
 
     bool alive;
 
+    // For tiles, whether this is a menu that can display graphics.
+    bool text_only;
+
     int last_selected;
 
     MenuDisplay *mdisplay;
