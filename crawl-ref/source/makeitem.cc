@@ -550,7 +550,7 @@ void item_colour( item_def &item )
         break;
 
     case OBJ_JEWELLERY:
-        /* unrandarts have already been coloured */
+        // unrandarts have already been coloured
         if (is_unrandom_artefact( item ))
             break;
         else if (is_random_artefact( item ))
@@ -3912,7 +3912,8 @@ void give_shield(monsters *mon, int level)
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
         break;
 
-    default: break;
+    default:
+        break;
     }
 }
 
