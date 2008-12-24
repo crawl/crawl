@@ -72,7 +72,7 @@ mon_glyph = giant lizard : green
 # black means randomly coloured
 mon_glyph = gila monster : black
 
-# snakes and naga
+# snakes and nagas
 mon_glyph = small snake : lightgreen
 mon_glyph = snake : green
 mon_glyph = black snake : darkgrey
@@ -131,7 +131,7 @@ mon_glyph = gargoyle : darkgrey g
 mon_glyph = metal gargoyle : cyan g
 mon_glyph = molten gargoyle : red g
 
-# undead
+# undead and demons
 mon_glyph = shadow demon : darkgrey
 mon_glyph = shadow imp : darkgrey
 mon_glyph = Shadow Fiend : darkgrey
