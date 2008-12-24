@@ -6829,14 +6829,14 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_GLOWING_SHAPESHIFTER:     // This ench never runs out!
         // Number of actions is fine for shapeshifters.
         if (type == MONS_GLOWING_SHAPESHIFTER || one_chance_in(4))
-            monster_polymorph(this, RANDOM_MONSTER, PPT_SAME);
+            monster_polymorph(this, RANDOM_MONSTER);
         break;
 
     case ENCH_SHAPESHIFTER:     // This ench never runs out!
         if (type == MONS_SHAPESHIFTER
             || x_chance_in_y(1000 / (15 * hit_dice / 5), 1000))
         {
-            monster_polymorph(this, RANDOM_MONSTER, PPT_SAME);
+            monster_polymorph(this, RANDOM_MONSTER);
         }
         break;
 
