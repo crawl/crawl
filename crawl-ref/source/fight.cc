@@ -178,8 +178,8 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
     return your_to_hit;
 }
 
-// Calculates your to-hit roll. If random_factor is true, be
-// stochastic; if false, determinstic (e.g. for chardumps.)
+// Calculates your to-hit roll. If random_factor is true, be stochastic;
+// if false, determinstic (e.g. for chardumps).
 int calc_your_to_hit( bool random_factor )
 {
     melee_attack attk(&you, NULL);
