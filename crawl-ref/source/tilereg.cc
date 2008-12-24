@@ -1338,6 +1338,9 @@ void InventoryRegion::pack_verts()
 
             if (item.flag & TILEI_FLAG_TRIED)
                 add_quad(TEX_DEFAULT, TILE_TRIED, x, y, 0, TILE_Y / 2, false);
+
+            if (item.flag & TILEI_FLAG_INVALID)
+                add_quad(TEX_DEFAULT, TILE_MESH, x, y);
         }
     }
 }

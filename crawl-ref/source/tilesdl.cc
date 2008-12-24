@@ -1179,19 +1179,20 @@ void TilesFramework::update_inventory()
     // item.base_type <-> char conversion table
     const static char *obj_syms = ")([/%#?=!#+\\0}x";
 
-    const unsigned int mx = m_region_self_inv->mx;
-    const unsigned int my = m_region_self_inv->my;
+    const int mx = m_region_self_inv->mx;
+    const int my = m_region_self_inv->my;
 
-    unsigned int max_pack_row = (ENDOFPACK-1) / mx + 1;
-    unsigned int max_pack_items = max_pack_row * mx;
+    int max_pack_row = (ENDOFPACK-1) / mx + 1;
+    int max_pack_items = max_pack_row * mx;
 
-    unsigned int num_ground = 0;
+    int num_ground = 0;
     for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         num_ground++;
 
     // If the inventory is full, show at least one row of the ground.
-    unsigned int min_ground = std::min(num_ground, mx);
+    int min_ground = std::min(num_ground, mx);
     max_pack_items = std::min(max_pack_items, mx * my - min_ground);
+    max_pack_items = std::min(ENDOFPACK, max_pack_items);
 
     for (unsigned int c = 0; c < strlen(Options.tile_show_items); c++)
     {
@@ -1234,19 +1235,21 @@ void TilesFramework::update_inventory()
         }
     }
 
-    int remaining = mx*my- inv.size();
+    int remaining = mx*my - inv.size();
     int empty_on_this_row = mx - inv.size() % mx;
 
     // If we're not on the last row...
     if (inv.size() < mx * (my-1))
     {
-        if ((int)num_ground > remaining - empty_on_this_row)
+        if (num_ground > remaining - empty_on_this_row)
         {
             // Fill out part of this row.
             int fill = remaining - num_ground;
             for (int i = 0; i < fill; i++)
             {
                 InventoryTile desc;
+                if (inv.size() >= max_pack_items)
+                    desc.flag |= TILEI_FLAG_INVALID;
                 inv.push_back(desc);
             }
         }
@@ -1256,18 +1259,23 @@ void TilesFramework::update_inventory()
             while (inv.size() % mx != 0)
             {
                 InventoryTile desc;
+                if (inv.size() >= max_pack_items)
+                    desc.flag |= TILEI_FLAG_INVALID;
                 inv.push_back(desc);
             }
 
             // Add extra rows, if needed.
             unsigned int ground_rows =
-                std::max(((int)num_ground-1) / (int)mx + 1, 1);
+                std::max((num_ground-1) / mx + 1, 1);
 
-            while (inv.size() / mx + ground_rows < my)
+            while (inv.size() / mx + ground_rows < my
+                   && inv.size() < max_pack_items)
             {
                 for (unsigned int i = 0; i < mx; i++)
                 {
                     InventoryTile desc;
+                    if (inv.size() >= max_pack_items)
+                        desc.flag |= TILEI_FLAG_INVALID;
                     inv.push_back(desc);
                 }
             }
