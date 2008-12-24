@@ -170,9 +170,10 @@ void init_mon_name_cache()
         const int          mtype = mondata[i].mc;
         const monster_type mon   = monster_type(mtype);
 
-        // Deal sensibly with duplicate entries; refuse or allow the insert,
-        // depending on which should take precedence.  Mostly we don't care,
-        // except looking up "rakshasa" and getting _FAKE breaks ?/M rakshasa.
+        // Deal sensibly with duplicate entries; refuse or allow the
+        // insert, depending on which should take precedence.  Mostly we
+        // don't care, except looking up "rakshasa" and getting _FAKE
+        // breaks ?/M rakshasa.
         if (Mon_Name_Cache.find(name) != Mon_Name_Cache.end())
         {
             if (mon == MONS_RAKSHASA_FAKE
