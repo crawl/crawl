@@ -2186,7 +2186,6 @@ static int _monster_abjuration(const monsters *caster, bool actual)
         // We could further tune this by the actual amount of abjuration
         // damage done to each summon, but the player will probably never
         // notice. :-)
-        //
         while (number_hit-- > 0)
             pow = pow * 90 / 100;
 
