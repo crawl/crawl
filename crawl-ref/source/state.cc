@@ -112,6 +112,12 @@ void game_state::cancel_cmd_again(std::string reason)
         mpr(reason.c_str());
 }
 
+void game_state::cancel_cmd_all(std::string reason)
+{
+    cancel_cmd_repeat(reason);
+    cancel_cmd_again(reason);
+}
+
 void game_state::cant_cmd_repeat(std::string reason)
 {
     if (reason.empty())
@@ -126,6 +132,12 @@ void game_state::cant_cmd_again(std::string reason)
         reason = "Can't redo that command.";
 
     cancel_cmd_again(reason);
+}
+
+void game_state::cant_cmd_any(std::string reason)
+{
+    cant_cmd_repeat(reason);
+    cant_cmd_again(reason);
 }
 
 // The method is called to prevent the "no repeating zero turns

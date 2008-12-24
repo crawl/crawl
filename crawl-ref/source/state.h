@@ -88,9 +88,11 @@ public:
 
     void cancel_cmd_repeat(std::string reason = "");
     void cancel_cmd_again(std::string reason = "");
+    void cancel_cmd_all(std::string reason = "");
 
     void cant_cmd_repeat(std::string reason = "");
     void cant_cmd_again(std::string reason = "");
+    void cant_cmd_any(std::string reason = "");
 
     void zero_turns_taken();
 

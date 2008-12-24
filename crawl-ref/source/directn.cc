@@ -370,25 +370,25 @@ static void _direction_again(dist& moves, targeting_type restricts,
         {
             moves.isCancel = true;
 
-            crawl_state.cancel_cmd_repeat("You can no longer see the dungeon "
-                                          "square you previously targeted.");
+            crawl_state.cancel_cmd_all("You can no longer see the dungeon "
+                                       "square you previously targeted.");
             return;
         }
         else if (you.prev_grd_targ == you.pos())
         {
             moves.isCancel = true;
 
-            crawl_state.cancel_cmd_repeat("You are now standing on your "
-                                          "previously targeted dungeon "
-                                          "square.");
+            crawl_state.cancel_cmd_all("You are now standing on your "
+                                       "previously targeted dungeon "
+                                       "square.");
             return;
         }
         else if (!_is_target_in_range(you.prev_grd_targ, range))
         {
             moves.isCancel = true;
 
-            crawl_state.cancel_cmd_repeat("Your previous target is now out of "
-                                          "range.");
+            crawl_state.cancel_cmd_all("Your previous target is now out of "
+                                       "range.");
             return;
         }
 
@@ -416,16 +416,16 @@ static void _direction_again(dist& moves, targeting_type restricts,
         {
             moves.isCancel = true;
 
-            crawl_state.cancel_cmd_repeat("Your target is gone.");
+            crawl_state.cancel_cmd_all("Your target is gone.");
 
             return;
         }
-        else if (!_is_target_in_range(you.prev_grd_targ, range))
+        else if (!_is_target_in_range(montarget->pos(), range))
         {
             moves.isCancel = true;
 
-            crawl_state.cancel_cmd_repeat("Your previous target is now out of "
-                                          "range.");
+            crawl_state.cancel_cmd_all("Your previous target is now out of "
+                                       "range.");
             return;
         }
 
