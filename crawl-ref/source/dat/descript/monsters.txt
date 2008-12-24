@@ -52,8 +52,7 @@ A violent and wrathful demon, Cerebov appears as a giant human covered in shinin
 %%%%
 Chaos spawn
 
-A being of pure chaos, its form is constantly shifitng, growing and then
-losing eyes, mouths, claws, and tentacles.
+A being of pure chaos, its form is constantly shifting, growing and then losing eyes, mouths, claws, and tentacles.
 %%%%
 Daeva
 
