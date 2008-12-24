@@ -2304,7 +2304,7 @@ void melee_attack::chaos_affects_defender()
         ASSERT(defender->atype() == ACT_MONSTER);
 
         obvious_effect = you.can_see(defender);
-        monster_polymorph(def, RANDOM_MONSTER, PPT_MORE, true);
+        monster_polymorph(def, RANDOM_MONSTER, PPT_MORE);
         break;
 
     case CHAOS_MAKE_SHIFTER:
