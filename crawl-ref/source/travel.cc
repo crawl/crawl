@@ -2639,13 +2639,18 @@ static int _find_transtravel_stair( const level_id &cur,
             // Okay, we don't seem to have a distance available to us, which
             // means we're either (a) not standing on stairs or (b) whoever
             // initiated interlevel travel didn't call
-            // _populate_stair_distances.  Assuming we're not on stairs, that
+            // _populate_stair_distances or (c) we're trying to travel to
+            // a non-traversable square. Assuming we're not on stairs, that
             // situation can arise only if interlevel travel has been triggered
             // for a location on the same level. If that's the case, we can get
             // the distance off the travel_point_distance matrix.
+
             deltadist = travel_point_distance[target.pos.x][target.pos.y];
+
+            // If deltadist is zero, travel is trying to occur to a non-seeded
+            // square, so bail.  This can happen if trying to travel to a wall.
             if (!deltadist && stair != target.pos)
-                deltadist = -1;
+                return (-1);
         }
 
         if (deltadist != -1)
