@@ -743,9 +743,14 @@ static void _fire_monster_death_event(monsters *monster,
     int type = monster->type;
 
     // Treat whatever the Royal Jelly polymorphed into as if it were still
-    // the Royal Jelly.
-    if (monster->mname == "shaped Royal Jelly")
+    // the Royal Jelly (but if a player chooses the character name
+    // "shaped Royal Jelly" don't unlock the vaults when the player's
+    // ghost is killed).
+    if (monster->mname == "shaped Royal Jelly"
+        && monster->type != MONS_PLAYER_GHOST)
+    {
         type = MONS_ROYAL_JELLY;
+    }
 
     // Banished monsters aren't technically dead, so no death event
     // for them.
