@@ -163,6 +163,52 @@ f, t           CMD_TARGET_MAYBE_PREV_TARGET
 /              CMD_TARGET_OBJ_CYCLE_BACK
 *, '           CMD_TARGET_OBJ_CYCLE_FORWARD
 
+Level-map commands
+------------------
+?         CMD_MAP_HELP
+^C        CMD_CLEAR_MAP
+^F        CMD_MAP_FORGET
+^W        CMD_MAP_ADD_WAYPOINT
+e         CMD_MAP_EXCLUDE_AREA (cycle through radiuses and toggle off/on)
+^E        CMD_MAP_CLEAR_EXCLUDES
++         CMD_MAP_SCROLL_DOWN
+-         CMD_MAP_SCROLL_UP
+., \r, ;  CMD_MAP_GOTO_TARGET
+ESCAPE    CMD_MAP_EXIT_MAP
+
+Move cursor one step in a given direction
+b         CMD_MAP_MOVE_DOWN_LEFT
+h         CMD_MAP_MOVE_LEFT
+j         CMD_MAP_MOVE_DOWN
+k         CMD_MAP_MOVE_UP
+l         CMD_MAP_MOVE_RIGHT
+n         CMD_MAP_MOVE_DOWN_RIGHT
+u         CMD_MAP_MOVE_UP_RIGHT
+y         CMD_MAP_MOVE_UP_LEFT
+
+Move cursor several steps in a given direction
+B         CMD_MAP_MOVE_DOWN_LEFT
+H         CMD_MAP_MOVE_LEFT
+J         CMD_MAP_MOVE_DOWN
+K         CMD_MAP_MOVE_UP
+L         CMD_MAP_MOVE_RIGHT
+N         CMD_MAP_MOVE_DOWN_RIGHT
+U         CMD_MAP_MOVE_UP_RIGHT
+Y         CMD_MAP_MOVE_UP_LEFT
+
+Find a particular feature
+<         CMD_MAP_FIND_UPSTAIR
+>         CMD_MAP_FIND_DOWNSTAIR
+@         CMD_MAP_FIND_YOU
+\t        CMD_MAP_FIND_PORTAL
+^         CMD_MAP_FIND_TRAP
+_         CMD_MAP_FIND_ALTAR
+E         CMD_MAP_FIND_EXCLUDED
+F         CMD_MAP_FIND_F
+W         CMD_MAP_FIND_WAYPOINT
+*         CMD_MAP_FIND_STASH
+/         CMD_MAP_FIND_STASH_REVERSE (cycle through stashes, in reverse)
+
 Wiz-mode targetting sub-commands
 --------------------------------
 g         CMD_TARGET_WIZARD_GIVE_ITEM
