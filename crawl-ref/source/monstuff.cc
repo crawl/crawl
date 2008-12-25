@@ -738,27 +738,49 @@ static bool _slime_pit_unlock_onlevel()
 
 static void _fire_monster_death_event(monsters *monster,
                                       killer_type killer,
-                                      int i)
+                                      int i, bool polymorph)
 {
+    int type = monster->type;
+
+    // Treat whatever the Royal Jelly polymorphed into as if it were still
+    // the Royal Jelly.
+    if (monster->mname == "shaped Royal Jelly")
+        type = MONS_ROYAL_JELLY;
+
     // Banished monsters aren't technically dead, so no death event
     // for them.
-    if (killer != KILL_RESET)
+    if (killer == KILL_RESET)
     {
-        dungeon_events.fire_event(
-            dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
-                      monster_index(monster), killer));
-
-        if (monster->type == MONS_ROYAL_JELLY)
+        // Give player a hint that banishing the Royal Jelly means the
+        // Slime:6 vaults stay locked.
+        if (type == MONS_ROYAL_JELLY)
         {
-            const level_id target(BRANCH_SLIME_PITS, 6);
-            if (is_existing_level(target))
-            {
-                apply_to_level(
-                    target,
-                    true,
-                    target == level_id::current() ? _slime_pit_unlock_onlevel
-                                                  : _slime_pit_unlock_offlevel);
-            }
+            if (you.can_see(monster))
+                mpr("You feel a great sense of loss.");
+            else
+                mpr("You feel a great sense of loss, and the brush of the "
+                    "Abyss.");
+        }
+        return;
+    }
+
+    dungeon_events.fire_event(
+        dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
+                  monster_index(monster), killer));
+
+    // Don't unlock the Slime:6 vaults if the "death" was actually the
+    // Royal Jelly polymorphing into something else; the player still
+    // has to kill whatever it polymorphed into.
+    if (type == MONS_ROYAL_JELLY && !polymorph)
+    {
+        const level_id target(BRANCH_SLIME_PITS, 6);
+        if (is_existing_level(target))
+        {
+            apply_to_level(
+                target,
+                true,
+                target == level_id::current() ? _slime_pit_unlock_onlevel
+                                              : _slime_pit_unlock_offlevel);
         }
     }
 }
@@ -1546,7 +1568,7 @@ void monster_die(monsters *monster, killer_type killer,
             _place_monster_corpse(monster, silent);
     }
 
-    _fire_monster_death_event(monster, killer, killer_index);
+    _fire_monster_death_event(monster, killer, killer_index, false);
 
     const coord_def mwhere = monster->pos();
     if (drop_items)
@@ -1738,6 +1760,9 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
                        poly_power_type power,
                        bool force_beh)
 {
+    ASSERT(!(monster->flags & MF_TAKING_STAIRS));
+    ASSERT(!(monster->flags & MF_BANISHED) || you.level_type == LEVEL_ABYSS);
+
     std::string str_polymon;
     int source_power, target_power, relax;
     int tries = 1000;
@@ -1820,21 +1845,41 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     // the monster is still a mermaid/siren.
     update_beholders(monster, true);
 
-    // Inform listeners that the original monster is gone (and
-    // unlock the vaults on Slime:6 if it's the Royal Jelly which
-    // was changed).
-    _fire_monster_death_event(monster, KILL_MISC, NON_MONSTER);
+    // Inform listeners that the original monster is gone.
+    _fire_monster_death_event(monster, KILL_MISC, NON_MONSTER, true);
 
     // the actual polymorphing:
+    unsigned long flags =
+        monster->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
+                           | MF_WAS_IN_VIEW | MF_BAND_MEMBER
+                           | MF_HONORARY_UNDEAD);
+
+    std::string name;
+
+    // Preserve the names of uniques and named monsters.
+    if (!monster->mname.empty())
+        name = monster->mname;
+    else if (mons_is_unique(monster->type))
+    {
+        flags |= MF_INTERESTING;
+
+        name = monster->name(DESC_PLAIN, true);
+        if (monster->type == MONS_ROYAL_JELLY)
+        {
+            name   = "shaped Royal Jelly";
+            flags |= MF_NAME_SUFFIX;
+        }
+
+        // "Blork the orc" and similar.
+        const size_t the_pos = name.find(" the ");
+        if (the_pos != std::string::npos)
+            name = name.substr(0, the_pos);
+    }
+
     const int  old_hp     = monster->hit_points;
     const int  old_hp_max = monster->max_hit_points;
     const bool old_mon_caught = mons_is_caught(monster);
     const char old_ench_countdown = monster->ench_countdown;
-
-    // deal with mons_sec
-    monster->type         = targetc;
-    monster->base_monster = MONS_PROGRAM_BUG;
-    monster->number       = 0;
 
     mon_enchant abj       = monster->get_ench(ENCH_ABJ);
     mon_enchant charm     = monster->get_ench(ENCH_CHARM);
@@ -1844,8 +1889,16 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     mon_enchant summon    = monster->get_ench(ENCH_SUMMON);
     mon_enchant tp        = monster->get_ench(ENCH_TP);
 
+    // deal with mons_sec
+    monster->type         = targetc;
+    monster->base_monster = MONS_PROGRAM_BUG;
+    monster->number       = 0;
+
     // Note: define_monster() will clear out all enchantments! -- bwr
     define_monster( monster_index(monster) );
+
+    monster->flags = flags;
+    monster->mname = name;
 
     monster->add_ench(abj);
     monster->add_ench(charm);
@@ -4500,7 +4553,8 @@ static void _handle_nearby_ability(monsters *monster)
 
 #define MON_SPEAK_CHANCE 21
 
-    if (mons_class_flag(monster->type, M_SPEAKS)
+    if ((mons_class_flag(monster->type, M_SPEAKS)
+         || !monster->mname.empty())
         && (!mons_is_wandering(monster) || monster->attitude == ATT_NEUTRAL)
         && one_chance_in(MON_SPEAK_CHANCE))
     {

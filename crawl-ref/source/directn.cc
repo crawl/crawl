@@ -1581,29 +1581,21 @@ std::string get_terse_square_desc(const coord_def &gc)
 {
     std::string desc;
     const char *unseen_desc = "[unseen terrain]";
-    bool is_feature = false;
     if (gc == you.pos())
-    {
         desc = you.your_name;
-    }
     else if (!map_bounds(gc))
-    {
         desc = unseen_desc;
-    }
     else if (!see_grid(gc))
     {
         if (is_terrain_seen(gc))
         {
             desc = "[" + feature_description(gc, false, DESC_PLAIN, false)
                        + "]";
-            is_feature = true;
         }
         else
-        {
             desc = unseen_desc;
-        }
     }
-    else if (mgrd(gc) != NON_MONSTER)
+    else if (mgrd(gc) != NON_MONSTER && you.can_see(&menv[mgrd(gc)]))
     {
         const monsters &mons = menv[mgrd(gc)];
 
@@ -1614,24 +1606,12 @@ std::string get_terse_square_desc(const coord_def &gc)
             desc = item.name(DESC_PLAIN);
         }
         else
-        {
-            desc = mons.name(DESC_PLAIN);
-            if (mons.has_base_name())
-            {
-                desc += ", ";
-                desc += mons.base_name(DESC_NOCAP_THE);
-            }
-        }
+            desc = mons.full_name(DESC_PLAIN, true);
     }
     else if (igrd(gc) != NON_ITEM)
-    {
         desc = mitm[igrd(gc)].name(DESC_PLAIN);
-    }
     else
-    {
         desc = feature_description(gc, false, DESC_PLAIN, false);
-        is_feature = true;
-    }
 
     return desc;
 }
@@ -2899,14 +2879,7 @@ std::string get_monster_desc(const monsters *mon, bool full_desc,
     std::string desc = "";
     if (mondtype != DESC_NONE)
     {
-        desc = mon->name(mondtype);
-        // For named monsters also mention the base type in the form of
-        // "Morbeogh the orc priest", "Sigmund the human zombie".
-        // Note that the only difference between DESC_BASENAME and DESC_PLAIN
-        // is that basename will ignore mname, so the monster _must_ be named
-        // for this to make any sense.
-        if (mon->has_base_name())
-            desc += " the " + mon->name(DESC_BASENAME);
+        desc = mon->full_name(mondtype);
 
         if (print_attitude)
         {

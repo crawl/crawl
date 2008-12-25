@@ -1078,6 +1078,11 @@ _Agnes_rare_
 
 ## END Agnes ##
 %%%%
+# In case Blork ends up polymorphed.
+Blork
+
+@Blork the orc@
+%%%%
 Blork the orc
 
 @_Blork_common_@

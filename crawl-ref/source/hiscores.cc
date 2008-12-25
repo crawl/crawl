@@ -813,9 +813,8 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_NOCAP_A;
 
         death_source_name = monster->name(desc, death);
-        if (monster->has_base_name())
-            death_source_name +=
-                ", " + monster->base_name(desc, death);
+        if (death || you.can_see(monster))
+            death_source_name = monster->full_name(desc, true);
 
         if (monster->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";

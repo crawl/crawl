@@ -1418,6 +1418,10 @@ public:
     // "orc priest".
     std::string base_name(description_level_type type,
                           bool force_visible = false) const;
+    // Full name of the monster.  For an orc priest named Arbolt, full_name()
+    // will return "Arbolt the orc priest".
+    std::string full_name(description_level_type type,
+                          bool use_comma = false) const;
     std::string pronoun(pronoun_type pro, bool force_visible = false) const;
     std::string conj_verb(const std::string &verb) const;
     std::string hand_name(bool plural, bool *can_plural = NULL) const;

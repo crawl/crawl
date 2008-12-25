@@ -1262,11 +1262,7 @@ void monster_pane_info::to_string( int count, std::string& desc,
         if (mons_is_mimic(m_mon->type))
             out << mons_type_name(m_mon->type, DESC_PLAIN);
         else
-        {
-            out << m_mon->name(DESC_PLAIN);
-            if (!(m_mon->mname).empty() && m_mon->type != MONS_PLAYER_GHOST)
-                out << " the " << mons_type_name(m_mon->type, DESC_PLAIN);
-        }
+            out << m_mon->full_name(DESC_PLAIN);
     }
     else
     {

@@ -4922,7 +4922,11 @@ std::string monsters::name(description_level_type desc, bool force_vis) const
     if (possessive)
         desc = DESC_NOCAP_THE;
 
-    std::string monnam = _str_monam(*this, desc, force_vis);
+    std::string monnam;
+    if ((flags & MF_NAME_MASK) && (force_vis || you.can_see(this)))
+        monnam = full_name(desc);
+    else
+        monnam = _str_monam(*this, desc, force_vis);
 
     return (possessive ? apostrophise(monnam) : monnam);
 }
@@ -4938,6 +4942,38 @@ std::string monsters::base_name(description_level_type desc, bool force_vis)
             const_cast<monsters*>(this)->mname, "");
         return (name(desc, force_vis));
     }
+}
+
+std::string monsters::full_name(description_level_type desc,
+                                bool use_comma) const
+{
+    std::string title = _str_monam(*this, desc, true);
+
+    if (has_base_name())
+    {
+        const unsigned long flag = flags & MF_NAME_MASK;
+        if (flag == MF_NAME_SUFFIX)
+        {
+            title  = base_name(desc, true);
+            title += " ";
+            title += mname;
+        }
+        else if (flag == MF_NAME_NO_THE)
+        {
+            title += " ";
+            title += base_name(DESC_PLAIN, true);
+        }
+        else if (flag == MF_NAME_REPLACE)
+            ;
+        else
+        {
+            if (use_comma)
+                title += ",";
+            title += " ";
+            title += base_name(DESC_NOCAP_THE, true);
+        }
+    }
+    return (title);
 }
 
 std::string monsters::pronoun(pronoun_type pro, bool force_visible) const
@@ -7796,11 +7832,10 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     std::string msg = in_msg;
     description_level_type nocap = DESC_NOCAP_THE, cap = DESC_CAP_THE;
 
-    std::string name =
-        monster->is_named()? monster->name(DESC_CAP_THE) : "";
-
-    if (!name.empty() && player_monster_visible(monster))
+    if (monster->is_named() && player_monster_visible(monster))
     {
+        std::string name = monster->name(DESC_CAP_THE);
+
         msg = replace_all(msg, "@the_something@", name);
         msg = replace_all(msg, "@The_something@", name);
         msg = replace_all(msg, "@the_monster@",   name);

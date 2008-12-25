@@ -2406,13 +2406,7 @@ void describe_monsters(const monsters& mons)
     std::ostringstream body;
     std::string title, prefix, suffix, quote;
 
-    const std::string capname = mons.name(DESC_CAP_A);
-    title = capname;
-    if (mons.has_base_name())
-    {
-        title += ", ";
-        title += mons.base_name(DESC_NOCAP_THE, false);
-    }
+    title = mons.full_name(DESC_CAP_A, true);
 
     std::string db_name = mons.base_name(DESC_DBNAME);
     if (mons_is_mimic(mons.type) && mons.type != MONS_GOLD_MIMIC)

@@ -2069,9 +2069,16 @@ enum monster_flag_type
                                      // holiness, regardless of its actual type;
                                      // currently used for abominations created
                                      // via Twisted Resurrection
-    MF_ENSLAVED_SOUL      = 0x8000   // An undead monster soul enslaved by
+    MF_ENSLAVED_SOUL      = 0x8000,  // An undead monster soul enslaved by
                                      // Yredelemnul's power, or the natural
                                      // monster from whom the soul is taken
+
+    MF_NAME_SUFFIX        = 0x10000, // mname is a suffix.
+    MF_NAME_NO_THE        = 0x20000, // mname is a prefix with no "the"
+                                     // between it and the monster type name.
+    MF_NAME_REPLACE       = 0x30000, // mname entirely replaces normal monster
+                                     // name.
+    MF_NAME_MASK          = 0x30000
 };
 
 // Adding slots breaks saves. YHBW.

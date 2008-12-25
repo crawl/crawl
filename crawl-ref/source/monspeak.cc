@@ -200,6 +200,27 @@ static std::string _player_ghost_speak_str(const monsters *monster,
     return msg;
 }
 
+// If the monster was originally a unique which has been polymorphed into
+// a non-unique, is its current monter type capable of using it's old
+// speech?
+static bool _polyd_can_speak(const monsters* monster)
+{
+    // Wizard and priest monsters can always speak.
+    if (mons_class_flag(monster->type, M_ACTUAL_SPELLS | M_PRIEST))
+        return (true);
+
+    // Silent or non-sentient monsters can't use the original speech.
+    if (mons_intel(monster) < I_NORMAL
+        || mons_shouts(monster->type) == S_SILENT)
+    {
+        return (false);
+    }
+
+    // Does it have the proper vocal equipment?
+    const mon_body_shape shape = get_mon_shape(monster);
+    return (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA);
+}
+
 // Returns true if something is said.
 bool mons_speaks(const monsters *monster)
 {
@@ -316,7 +337,15 @@ bool mons_speaks(const monsters *monster)
         msg = _get_speak_string(prefixes, "pandemonium lord", monster);
     }
     else
-        msg = _get_speak_string(prefixes, monster->name(DESC_PLAIN), monster);
+    {
+        if (!monster->mname.empty() && _polyd_can_speak(monster))
+            msg = _get_speak_string(prefixes, monster->name(DESC_PLAIN),
+                                    monster);
+
+        if (msg.empty())
+            msg = _get_speak_string(prefixes, monster->base_name(DESC_PLAIN),
+                                    monster);
+    }
 
     // The exact name brought no results, try monster genus.
     if ((msg.empty() || msg == "__NEXT")
