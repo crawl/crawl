@@ -166,7 +166,7 @@ f, t           CMD_TARGET_MAYBE_PREV_TARGET
 Level-map commands
 ------------------
 ?         CMD_MAP_HELP
-^C        CMD_CLEAR_MAP
+^C        CMD_MAP_CLEAR_MAP
 ^F        CMD_MAP_FORGET
 ^W        CMD_MAP_ADD_WAYPOINT
 e         CMD_MAP_EXCLUDE_AREA (cycle through radiuses and toggle off/on)
