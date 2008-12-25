@@ -169,7 +169,7 @@ Level-map commands
 ^C        CMD_MAP_CLEAR_MAP
 ^F        CMD_MAP_FORGET
 ^W        CMD_MAP_ADD_WAYPOINT
-e         CMD_MAP_EXCLUDE_AREA (cycle through radiuses and toggle off/on)
+e         CMD_MAP_EXCLUDE_AREA (cycle through radii and toggle off/on)
 ^E        CMD_MAP_CLEAR_EXCLUDES
 +         CMD_MAP_SCROLL_DOWN
 -         CMD_MAP_SCROLL_UP
