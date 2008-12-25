@@ -30,6 +30,7 @@ int div_round_up( int num, int den );
 bool one_chance_in(int a_million);
 bool x_chance_in_y(int x, int y);
 int random2(int randmax);
+int maybe_random2( int x, bool random_factor );
 int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
 const char* random_choose_string(const char* first, ...);

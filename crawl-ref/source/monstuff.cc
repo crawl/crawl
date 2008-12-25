@@ -873,7 +873,6 @@ static void _spore_goes_pop(monsters *monster, killer_type killer,
     beam.is_explosion = true;
     beam.beam_source  = monster_index(monster);
     beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.pos          = monster->pos();
     beam.source       = monster->pos();
     beam.target       = monster->pos();
     beam.thrower      = killer;
@@ -930,7 +929,8 @@ static void _spore_goes_pop(monsters *monster, killer_type killer,
     // Detach monster from the grid first, so it doesn't get hit by
     // its own explosion. (GDL)
     mgrd(monster->pos()) = NON_MONSTER;
-    explosion(beam, false, false, true, true, mons_near(monster));
+    // FIXME: show_more == mons_near(monster)
+    beam.explode();
     mgrd(monster->pos()) = monster_index(monster);
 }
 
@@ -4847,7 +4847,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         {
             _make_mons_stop_fleeing(monster);
             simple_monster_message(monster, " spits lava!");
-            fire_beam(beem);
+            beem.fire();
             used = true;
         }
         break;
@@ -4884,7 +4884,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
             _make_mons_stop_fleeing(monster);
             simple_monster_message(monster,
                                    " shoots out a bolt of electricity!");
-            fire_beam(beem);
+            beem.fire();
             used = true;
         }
         break;
@@ -5049,7 +5049,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         {
             _make_mons_stop_fleeing(monster);
             simple_monster_message(monster, " flicks its tail!");
-            fire_beam(beem);
+            beem.fire();
             used = true;
             // Decrement # of volleys left.
             monster->number--;
@@ -5572,11 +5572,11 @@ static bool _handle_wand(monsters *monster, bolt &beem)
         // charge expenditure {dlb}
         wand.plus--;
         beem.is_tracer = false;
-        fire_beam(beem);
+        beem.fire();
 
         if (was_visible)
         {
-            if (niceWand || beem.name != "0" || beem.obvious_effect)
+            if (niceWand || !beem.is_enchantment() || beem.obvious_effect)
                 set_ident_type(OBJ_WANDS, wand_type, ID_KNOWN_TYPE);
             else
                 set_ident_type(OBJ_WANDS, wand_type, ID_MON_TRIED_TYPE);
@@ -7997,7 +7997,7 @@ static void _mons_in_cloud(monsters *monster)
                                   ((random2avg(16, 3) + 6) * 10) / speed );
 
         hurted -= random2(1 + monster->ac);
-        break;                  // to damage routine at end {dlb}
+        break;
 
     case CLOUD_STINK:
         simple_monster_message(monster, " is engulfed in noxious gasses!");
@@ -8014,11 +8014,11 @@ static void _mons_in_cloud(monsters *monster)
         if (mons_class_is_confusable(monster->type)
             && 1 + random2(27) >= monster->hit_dice)
         {
-            mons_ench_f2(monster, beam);
+            beam.apply_enchantment_to_monster(monster);
         }
 
         hurted += (random2(3) * 10) / speed;
-        break;                  // to damage routine at end {dlb}
+        break;
 
     case CLOUD_COLD:
         simple_monster_message(monster, " is engulfed in freezing vapours!");
@@ -8030,7 +8030,7 @@ static void _mons_in_cloud(monsters *monster)
                                   ((6 + random2avg(16, 3)) * 10) / speed );
 
         hurted -= random2(1 + monster->ac);
-        break;                  // to damage routine at end {dlb}
+        break;
 
     case CLOUD_POISON:
         simple_monster_message(monster, " is engulfed in a cloud of poison!");
@@ -8046,7 +8046,7 @@ static void _mons_in_cloud(monsters *monster)
 
         if (mons_res_poison(monster) < 0)
             hurted += (random2(4) * 10) / speed;
-        break;                  // to damage routine at end {dlb}
+        break;
 
     case CLOUD_STEAM:
     {
@@ -8063,7 +8063,7 @@ static void _mons_in_cloud(monsters *monster)
                 (random2avg(steam_base_damage, 2) * 10) / speed);
 
         hurted -= random2(1 + monster->ac);
-        break;                  // to damage routine at end {dlb}
+        break;
     }
 
     case CLOUD_MIASMA:
@@ -8080,10 +8080,10 @@ static void _mons_in_cloud(monsters *monster)
         beam.flavour = BEAM_SLOW;
 
         if (one_chance_in(3))
-            mons_ench_f2(monster, beam);
+            beam.apply_enchantment_to_monster(monster);
 
         hurted += (10 * random2avg(12, 3)) / speed;    // 3
-        break;              // to damage routine at end {dlb}
+        break;
 
     default:                // 'harmless' clouds -- colored smoke, etc {dlb}.
         return;

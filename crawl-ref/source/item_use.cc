@@ -1873,7 +1873,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         pbolt.foe_helped    = pbolt.foe_hurt = 0;
         pbolt.foe_ratio     = 100;
 
-        fire_beam(pbolt);
+        pbolt.fire();
 
         // Should only happen if the player answered 'n' to one of those
         // "Fire through friendly?" prompts.
@@ -2588,9 +2588,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (teleport)
     {
         // Violating encapsulation somewhat...oh well.
-        hit = (affect(pbolt, pbolt.target, &item) != 0);
+        pbolt.use_target_as_pos = true;
+        pbolt.affect_cell();
         if (acc_bonus != DEBUG_COOKIE)
-            beam_drop_object(pbolt, &item, pbolt.target);
+            pbolt.drop_object();
     }
     else
     {
@@ -2599,7 +2600,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // Dropping item copy, since the launched item might be different.
         pbolt.drop_item = !did_return;
-        fire_beam(pbolt);
+        pbolt.fire();
 
         // The item can be destroyed before returning.
         if (did_return && thrown_object_destroyed(&item, pbolt.target, true))
@@ -2617,7 +2618,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         // Fire beam in reverse.
         pbolt.setup_retrace();
         viewwindow(true, false);
-        fire_beam(pbolt);
+        pbolt.fire();
 
         msg::stream << item.name(DESC_CAP_THE) << " returns to your pack!"
                     << std::endl;

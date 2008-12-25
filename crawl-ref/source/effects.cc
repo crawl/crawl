@@ -268,6 +268,10 @@ void immolation(int caster, bool known)
 {
     const char *aux = "immolation";
 
+    bolt beam;
+    // The scroll of immolation doesn't affect items.
+    beam.affects_items = (caster != IMMOLATION_SCROLL);
+
     if (caster < 0)
     {
         switch (caster)
@@ -284,7 +288,6 @@ void immolation(int caster, bool known)
         caster = IMMOLATION_GENERIC;
     }
 
-    bolt beam;
     beam.flavour      = BEAM_FIRE;
     beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage       = dice_def(3, 10);
@@ -298,9 +301,7 @@ void immolation(int caster, bool known)
     beam.is_explosion = true;
     beam.effect_known = known;
 
-    // The scroll of immolation doesn't affect items.
-    explosion(beam, false, false, true, true, true,
-              caster != IMMOLATION_SCROLL);
+    beam.explode();
 }
 
 static std::string _who_banished(const std::string &who)
@@ -3176,8 +3177,7 @@ void handle_time(long time_delta)
 
                 boom.ench_power = (you.magic_contamination * 5);
                 boom.ex_size = std::min(9, you.magic_contamination / 15);
-
-                explosion(boom);
+                boom.explode();
             }
 
             // we want to warp the player, not do good stuff!

@@ -5632,16 +5632,12 @@ void monsters::rot(actor *agent, int rotlevel, int immed_rot)
 
 void monsters::confuse(int strength)
 {
-    bolt beam_temp;
-    beam_temp.flavour = BEAM_CONFUSION;
-    mons_ench_f2( this, beam_temp );
+    enchant_monster_with_flavour(this, BEAM_CONFUSION, strength);
 }
 
 void monsters::paralyse(int strength)
 {
-    bolt paralysis;
-    paralysis.flavour = BEAM_PARALYSIS;
-    mons_ench_f2(this, paralysis);
+    enchant_monster_with_flavour(this, BEAM_PARALYSIS, strength);
 }
 
 void monsters::petrify(int strength)
@@ -5649,16 +5645,12 @@ void monsters::petrify(int strength)
     if (mons_is_insubstantial(type))
         return;
 
-    bolt petrif;
-    petrif.flavour = BEAM_PETRIFY;
-    mons_ench_f2(this, petrif);
+    enchant_monster_with_flavour(this, BEAM_PETRIFY, strength);
 }
 
 void monsters::slow_down(int strength)
 {
-    bolt slow;
-    slow.flavour = BEAM_SLOW;
-    mons_ench_f2(this, slow);
+    enchant_monster_with_flavour(this, BEAM_SLOW, strength);
 }
 
 void monsters::set_ghost(const ghost_demon &g)
@@ -7487,28 +7479,14 @@ item_type_id_state_type monsters::drink_potion_effect(potion_type ptype)
         break;
 
     case POT_SPEED:
-    {
-        // XXX FIXME Extract haste() function from mons_ench_f2().
-        bolt beem;
-        beem.target = pos();
-        beem.flavour = BEAM_HASTE;
-        mons_ench_f2(this, beem);
-        if (beem.obvious_effect)
+        if (enchant_monster_with_flavour(this, BEAM_HASTE))
             ident = ID_KNOWN_TYPE;
         break;
-    }
 
     case POT_INVISIBILITY:
-    {
-        // XXX FIXME Extract go_invis() function from mons_ench_f2().
-        bolt beem;
-        beem.target = pos();
-        beem.flavour = BEAM_INVISIBILITY;
-        mons_ench_f2(this, beem);
-        if (beem.obvious_effect)
+        if (enchant_monster_with_flavour(this, BEAM_INVISIBILITY))
             ident = ID_KNOWN_TYPE;
         break;
-    }
 
     default:
         break;

@@ -2538,6 +2538,7 @@ void MiscastEffect::do_miscast()
     // the target around.
     beam.source = target->pos();
     beam.target = target->pos();
+    beam.use_target_as_pos = true;
 
     all_msg = you_msg = mon_msg = mon_msg_seen = mon_msg_unseen = "";
     msg_ch  = MSGCH_PLAIN;
@@ -2709,7 +2710,7 @@ bool MiscastEffect::_explosion()
         return (false);
 
     do_msg(true);
-    explosion(beam, false, true);
+    beam.explode();
 
     return (true);
 }

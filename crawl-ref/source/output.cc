@@ -784,6 +784,7 @@ static void _print_status_lights(int y)
     }
 }
 
+#ifdef USE_TILE
 static bool _need_stats_printed()
 {
     return you.redraw_hit_points
@@ -797,6 +798,7 @@ static bool _need_stats_printed()
            || you.wield_change
            || you.redraw_quiver;
 }
+#endif
 
 void print_stats(void)
 {

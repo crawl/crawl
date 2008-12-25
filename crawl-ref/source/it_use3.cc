@@ -899,7 +899,7 @@ void tome_of_power(int slot)
         beam.is_tracer = false;
         beam.is_explosion = true;
 
-        explosion(beam);
+        beam.explode();
         xom_is_stimulated(255);
     }
     else if (one_chance_in(36))

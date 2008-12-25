@@ -494,12 +494,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     if (spell_is_direct_explosion(spell_cast))
     {
         const actor *foe = monster->get_foe();
-        const bool need_more =
-            foe && (foe == &you || see_grid(foe->pos()));
-        explosion(pbolt, false, false, true, true, need_more);
+        const bool need_more = foe && (foe == &you || see_grid(foe->pos()));
+        pbolt.explode(need_more);
     }
     else
-        fire_beam(pbolt);
+        pbolt.fire();
 }
 
 void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
@@ -1321,7 +1320,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         really_returns = false;
 
     pbolt.drop_item = !really_returns;
-    fire_beam( pbolt );
+    pbolt.fire();
 
     // The item can be destroyed before returning.
     if (really_returns && mons_thrown_object_destroyed(&item, pbolt.target,
@@ -1335,7 +1334,7 @@ bool mons_throw(struct monsters *monster, struct bolt &pbolt, int hand_used)
         // Fire beam in reverse.
         pbolt.setup_retrace();
         viewwindow(true, false);
-        fire_beam(pbolt);
+        pbolt.fire();
         msg::stream << "The weapon returns "
                     << (player_monster_visible(monster)?
                           ("to " + monster->name(DESC_NOCAP_THE))

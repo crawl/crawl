@@ -268,13 +268,14 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.ench_power   = pow;      // used for radius
     beam.hit          = 20 + pow / 10;
     beam.damage       = calc_dice(8, 5 + pow);
+    beam.affects_items = false;
 }
 
 void cast_fire_storm(int pow, bolt &beam)
 {
     setup_fire_storm(&you, pow, beam);
 
-    if (explosion(beam, false, false, true, true, false) > 0)
+    if (beam.explode(false))
         mpr("A raging storm of fire appears!");
 
     viewwindow(true, false);
@@ -416,7 +417,7 @@ void cast_chain_lightning(int pow)
             if ((beam.damage.size /= 2) < 3)
                 beam.damage.size = 3;
         }
-        fire_beam( beam );
+        beam.fire();
     }
 
     more();
@@ -585,7 +586,7 @@ bool stinking_cloud( int pow, bolt &beem )
         beem.fr_count      = 0;
         beem.flavour       = BEAM_POTION_STINKING_CLOUD;
         beem.is_tracer     = true;
-        fire_beam(beem);
+        beem.fire();
 
         if (beem.beam_cancelled)
         {
@@ -598,7 +599,7 @@ bool stinking_cloud( int pow, bolt &beem )
     // Really fire.
     beem.flavour   = BEAM_MMISSILE;
     beem.is_tracer = false;
-    fire_beam(beem);
+    beem.fire();
 
     return (true);
 }

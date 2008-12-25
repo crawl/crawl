@@ -1355,7 +1355,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 
     beam_type real_flavour = beem.flavour;
     beem.flavour           = tracer_flavour;
-    fire_beam(beem);
+    beem.fire();
 
     if (beem.beam_cancelled)
     {
@@ -1370,7 +1370,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     // Really fire.
     beem.flavour = real_flavour;
     beem.is_tracer = false;
-    fire_beam(beem);
+    beem.fire();
 
     // Use up a potion.
     if (is_blood_potion(potion))
@@ -2010,7 +2010,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         if (what != NULL)
             mprf("The %s shatters!", what);
 
-        explosion(beam, hole, true);
+        beam.explode(true, hole);
 
         if (grid == DNGN_ORCISH_IDOL)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);

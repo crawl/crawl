@@ -935,10 +935,9 @@ void beogh_follower_convert(monsters *monster, bool orc_hit)
             random2(you.piety / 15) + random2(4 + you.experience_level / 3)
               > random2(hd) + hd + random2(5))
         {
-            int wpn = you.equip[EQ_WEAPON];
-            if (wpn != -1
-                && you.inv[wpn].base_type == OBJ_WEAPONS
-                && get_weapon_brand( you.inv[wpn] ) == SPWPN_ORC_SLAYING
+            if (you.weapon()
+                && you.weapon()->base_type == OBJ_WEAPONS
+                && get_weapon_brand( *you.weapon() ) == SPWPN_ORC_SLAYING
                 && coinflip()) // 50% chance of conversion failing
             {
                 msg::stream << monster->name(DESC_CAP_THE)

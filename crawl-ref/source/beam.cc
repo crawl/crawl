@@ -62,79 +62,43 @@
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
 
-static FixedArray < int, 19, 19 > explode_map;
-
 // Helper functions (some of these should probably be public).
-static bool _affects_wall(const bolt &beam, int wall_feature);
-static bool _isBouncy(bolt &beam, unsigned char gridtype);
-static int _beam_source(const bolt &beam);
-static std::string _beam_zapper(const bolt &beam);
-static bool _beam_term_on_target(bolt &beam, const coord_def& p);
-static void _beam_explodes(bolt &beam, const coord_def& p);
-static int  _affect_wall(bolt &beam, const coord_def& p);
-static int  _affect_place_clouds(bolt &beam, const coord_def& p);
-static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p);
-static int  _affect_player(bolt &beam, item_def *item = NULL,
-                           bool affect_items = true);
-static int  _affect_monster(bolt &beam, monsters *mon, item_def *item = NULL);
-static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon);
-static void _beam_paralyses_monster( bolt &pbolt, monsters *monster );
-static void _beam_petrifies_monster( bolt &pbolt, monsters *monster );
-static int  _range_used_on_hit(bolt &beam);
-static void _explosion1(bolt &pbolt);
-static void _explosion_map(bolt &beam, const coord_def& p,
-                           int count, int r);
-static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly,
-                            bool affect_items = true);
-
 static void _ench_animation(int flavour, const monsters *mon = NULL,
                             bool force = false);
 static void _zappy(zap_type z_type, int power, bolt &pbolt);
-static bool _nasty_beam(monsters *mon, const bolt &beam);
-static bool _nice_beam(monsters *mon, const bolt &beam);
 
 static beam_type _chaos_beam_flavour();
 
 static std::set<std::string> beam_message_cache;
 
-static bool _beam_is_blockable(bolt &pbolt)
+bool bolt::is_blockable() const
 {
     // BEAM_ELECTRICITY is added here because chain lighting is not
     // a true beam (stops at the first target it gets to and redirects
     // from there)... but we don't want it shield blockable.
-    return (!pbolt.is_beam && !pbolt.is_explosion
-            && pbolt.flavour != BEAM_ELECTRICITY);
+    return (!is_beam && !is_explosion && flavour != BEAM_ELECTRICITY);
 }
 
-// Kludge to suppress multiple redundant messages for a single beam.
-static void _beam_mpr(msg_channel_type channel, const char *s, ...)
+void bolt::emit_message(msg_channel_type chan, const char* m)
 {
-    va_list args;
-    va_start(args, s);
+    const std::string message = m;
+    if (message_cache.find(message) == message_cache.end())
+        mpr(m, chan);
 
-    char buf[500];
-    vsnprintf(buf, sizeof buf, s, args);
-
-    va_end(args);
-
-    std::string message = buf;
-    if (beam_message_cache.find(message) == beam_message_cache.end())
-        mpr(message.c_str(), channel);
-
-    beam_message_cache.insert(message);
+    message_cache.insert(message);
 }
 
-static kill_category _whose_kill(const bolt &beam)
+kill_category bolt::whose_kill() const
 {
-    if (YOU_KILL(beam.thrower))
+    if (YOU_KILL(thrower))
         return (KC_YOU);
-    else if (MON_KILL(beam.thrower))
+    else if (MON_KILL(thrower))
     {
-        if (beam.beam_source == ANON_FRIENDLY_MONSTER)
+        if (beam_source == ANON_FRIENDLY_MONSTER)
             return (KC_FRIENDLY);
-        if (!invalid_monster_index(beam.beam_source))
+        if (!invalid_monster_index(beam_source))
         {
-            const monsters *mon = &menv[beam.beam_source];
+            const monsters *mon = &menv[beam_source];
             if (mons_friendly(mon))
                 return (KC_FRIENDLY);
         }
@@ -211,7 +175,6 @@ static void _beam_set_default_values(bolt &beam, int power)
     beam.is_beam        = false;             // default for all beams.
     beam.is_tracer      = false;             // default for all player beams
     beam.thrower        = KILL_YOU_MISSILE;  // missile from player
-    beam.dropped_item   = false;             // no item droped yet
     beam.reflections    = 0;                 // no reflections yet
     beam.bounces        = 0;                 // no bounces yet
     beam.seen           = false;             // not seen yet
@@ -254,7 +217,7 @@ bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
     if (ztype == ZAP_DIGGING)
         pbolt.aimed_at_spot = false;
 
-    fire_beam(pbolt);
+    pbolt.fire();
 
     return (true);
 }
@@ -269,7 +232,9 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     if (you.confused())
         return (true);
 
+    // FIXME: can this be removed?
     _beam_set_default_values(pbolt, power);
+    _zappy(ztype, power, pbolt);
     pbolt.name = "unimportant";
 
     pbolt.is_tracer      = true;
@@ -288,12 +253,11 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.dont_stop_foe  = pbolt.dont_stop_fr = pbolt.dont_stop_player = false;
 
     // Clear misc
-    pbolt.dropped_item  = false;
     pbolt.seen          = false;
     pbolt.reflections   = 0;
     pbolt.bounces       = 0;
 
-    fire_beam(pbolt);
+    pbolt.fire();
 
     // Should only happen if the player answered 'n' to one of those
     // "Fire through friendly?" prompts.
@@ -306,9 +270,6 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
         you.turn_is_over = false;
         return (false);
     }
-
-    // Tracers shouldn't drop items.
-    ASSERT(!pbolt.dropped_item);
 
     // Reset, since these are cumulative over recursive calls to fire_beam.
     pbolt.reflections = 0;
@@ -798,7 +759,7 @@ const zap_info zap_data[] = {
     {
         ZAP_BONE_SHARDS,
         "spray of bone shards",
-        // Incoming power is highly dependant on mass (see spells3.cc).
+        // Incoming power is highly dependent on mass (see spells3.cc).
         // Basic function is power * 15 + mass...  with the largest
         // available mass (3000) we get a power of 4500 at a power
         // level of 100 (for 3d20).
@@ -1394,24 +1355,18 @@ static void _zappy( zap_type z_type, int power, bolt &pbolt )
 // The wall will always shield the monster if the beam bounces off the
 // wall, and a monster can't use a metal wall to shield itself from
 // electricity.
-static bool _affect_mon_in_wall(bolt &pbolt, item_def *item,
-                                const coord_def& where)
+bool bolt::can_affect_wall_monster(const monsters* mon) const
 {
-    UNUSED(item);
-
-    int mid = mgrd(where);
-
-    if (mid == NON_MONSTER)
+    const bool superconductor = (grd(mon->pos()) == DNGN_METAL_WALL
+                                 && flavour == BEAM_ELECTRICITY);
+    if (mons_wall_shielded(mon) && !superconductor)
         return (false);
 
-    if (pbolt.is_enchantment()
-        || (!pbolt.is_explosion && !pbolt.is_big_cloud
-            && (grd(where) == DNGN_METAL_WALL
-                || pbolt.flavour != BEAM_ELECTRICITY)))
-    {
-        if (!mons_wall_shielded(&menv[mid]))
-            return (true);
-    }
+    if (is_bouncy(grd(mon->pos())))
+        return (false);
+
+    if (is_enchantment() || (!is_explosion && !is_big_cloud))
+        return (true);
 
     return (false);
 }
@@ -1504,418 +1459,521 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     new_ray.regress();
 }
 
-/*
- * Beam pseudo code:
- *
- * 1. Calculate stepx and stepy - algorithms depend on finding a step axis
- *    which results in a line of rise 1 or less (ie 45 degrees or less)
- * 2. Calculate range.  Tracers always have max range, otherwise the beam
- *    will have somewhere between range and rangeMax
- * 3. Loop tracing out the line:
- *      3a. Check for walls and wall affecting beams
- *      3b. If no valid move is found, try a fuzzy move
- *      3c. If no valid move is yet found, try bouncing
- *      3d. If no valid move or bounce is found, break
- *      4. Check for beam termination on target
- *      5. Affect the cell which the beam just moved into -> affect()
- *      6. If the beam was reflected during affect() then return, since
- *         a recursive call to fire_beam() took care of the rest.
- *      7. Decrease remaining range appropriately
- *      8. Check for early out due to aimed_at_feet
- *      9. Draw the beam
- *10. Drop an object where the beam 'landed'
- *11. Beams explode where the beam 'landed'
- *12. If no message generated yet, send "nothing happens" (enchantments only)
- *
- */
-
-void fire_beam(bolt &pbolt)
+bool bolt::invisible() const
 {
-    ASSERT(pbolt.flavour > BEAM_NONE && pbolt.flavour < BEAM_FIRST_PSEUDO);
-    ASSERT(!pbolt.drop_item || pbolt.item);
-    ASSERT(!pbolt.dropped_item);
+    return (type == 0 || is_enchantment());
+}
 
-    pbolt.real_flavour = pbolt.flavour;
+void bolt::initialize_fire()
+{
+    ASSERT(flavour > BEAM_NONE && flavour < BEAM_FIRST_PSEUDO);
+    ASSERT(!drop_item || item);
+    ASSERT(range >= 0);
 
-    const bool beam_invisible =
-        pbolt.type == 0 || (!pbolt.name.empty() && pbolt.name[0] == '0');
+    real_flavour = flavour;
 
-    ASSERT(pbolt.flavour != BEAM_VISUAL
-           || (!beam_invisible && pbolt.colour != BLACK));
+    // Fix some things which the tracer might have set.
+    range_used = 0;
+    in_explosion_phase = false;
+    use_target_as_pos = false;
 
-    const int reflections = pbolt.reflections;
-    if (reflections == 0)
+    message_cache.clear();
+
+    // seen might be set by caller to supress this.
+    if (!seen && see_grid(source) && range > 0 && !invisible() )
     {
-        // We aren't being recursively called, so initialize some stuff.
-        beam_message_cache.clear();
-        pbolt.range_used = 0;
+        seen = true;
+        const int midx = mgrd(source);
 
-        // pbolt.seen might be set by caller to supress this.
-        if (!pbolt.seen && see_grid(pbolt.source) && pbolt.range > 0
-            && !beam_invisible)
+        if (flavour != BEAM_VISUAL
+            && !is_tracer
+            && !YOU_KILL(thrower)
+            && !crawl_state.is_god_acting()
+            && (midx == NON_MONSTER || !you.can_see(&menv[midx])))
         {
-            pbolt.seen = true;
-            int midx = mgrd(pbolt.source);
-
-            if (pbolt.flavour != BEAM_VISUAL && !pbolt.is_tracer
-                && !YOU_KILL(pbolt.thrower) && !crawl_state.is_god_acting()
-                && (midx == NON_MONSTER || !you.can_see(&menv[midx])))
-            {
-                mprf("%s appears from out of thin air!",
-                     article_a(pbolt.name, false).c_str());
-            }
+            mprf("%s appears from out of thin air!",
+                 article_a(name, false).c_str());
         }
     }
 
-    ASSERT(pbolt.range >= 0 && pbolt.range_used >=0);
-    ASSERT(pbolt.range_used <= pbolt.range);
-
-    if (pbolt.range == pbolt.range_used && pbolt.range > 0)
-    {
-#ifdef DEBUG
-        mprf(MSGCH_DIAGNOSTICS, "fire_beam() called on already done beam "
-             "'%s' (item = '%s')", pbolt.name.c_str(),
-             pbolt.item ? pbolt.item->name(DESC_PLAIN).c_str() : "none");
+#if DEBUG_DIAGNOSTICS
+    mprf( MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
+          "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
+          (is_beam) ? "beam" : "missile",
+          (is_explosion) ? "*" :
+          (is_big_cloud) ? "+" : "",
+          (is_tracer) ? " tracer" : "",
+          name.c_str(),
+          source.x, source.y,
+          target.x, target.y,
+          type, colour, flavour,
+          hit, damage.num, damage.size,
+          range);
 #endif
-        return;
-    }
+}
 
-    if (!pbolt.is_tracer && reflections == 0 && YOU_KILL(pbolt.thrower))
+void bolt::apply_beam_conducts()
+{
+    if (!is_tracer && YOU_KILL(thrower))
     {
-        switch(pbolt.flavour)
+        switch (flavour)
         {
         case BEAM_HELLFIRE:
         case BEAM_HELLFROST:
-            did_god_conduct(DID_UNHOLY, 2 + random2(3), pbolt.effect_known);
+            did_god_conduct(DID_UNHOLY, 2 + random2(3), effect_known);
             break;
         default:
             break;
         }
     }
+}
 
-    bool beamTerminate;     // Has beam been 'stopped' by something?
-    coord_def &testpos(pbolt.pos);
-    bool did_bounce = false;
-    cursor_control coff(false);
-
-    // [ds] Forcing the beam out of explosion phase here - currently
-    // no caller relies on the beam already being in_explosion_phase.
-    // This fixes beams being in explosion after use as a tracer.
-    pbolt.in_explosion_phase = false;
-
-#ifdef USE_TILE
-    int tile_beam = -1;
-
-    if (pbolt.item && !pbolt.is_tracer && pbolt.flavour == BEAM_MISSILE)
-    {
-        const coord_def diff = pbolt.target - pbolt.source;
-        tile_beam = tileidx_item_throw(*pbolt.item, diff.x, diff.y);
-    }
-#endif
-
-#if DEBUG_DIAGNOSTICS
-    mprf( MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
-          "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
-          (pbolt.is_beam) ? "beam" : "missile",
-          (pbolt.is_explosion) ? "*" :
-          (pbolt.is_big_cloud) ? "+" : "",
-          (pbolt.is_tracer) ? " tracer" : "",
-          pbolt.name.c_str(),
-          pbolt.source.x, pbolt.source.y,
-          pbolt.target.x, pbolt.target.y,
-          pbolt.type, pbolt.colour, pbolt.flavour,
-          pbolt.hit, pbolt.damage.num, pbolt.damage.size,
-          pbolt.range);
-#endif
-
-    // init
-    pbolt.aimed_at_feet = (pbolt.target == pbolt.source);
-    pbolt.msg_generated = false;
-
-    ray_def ray;
-
-    if (pbolt.chose_ray)
-        ray = pbolt.ray;
-    else
+void bolt::choose_ray()
+{
+    if (!chose_ray || reflections > 0)
     {
         ray.fullray_idx = -1;   // to quiet valgrind
-        find_ray( pbolt.source, pbolt.target, true, ray, 0, true );
+        find_ray( source, target, true, ray, 0, true );
+    }
+}
+
+
+// Draw the bolt at p if needed.
+void bolt::draw(const coord_def& p)
+{
+    if (is_tracer || is_enchantment() || !see_grid(p))
+        return;
+
+    // We don't clean up the old position.
+    // First, most people like to see the full path,
+    // and second, it is hard to do it right with
+    // respect to killed monsters, cloud trails, etc.
+
+    const coord_def drawpos = grid2view(p);
+
+#ifdef USE_TILE
+    if (tile_beam == -1)
+        tile_beam = tileidx_bolt(*this);
+
+    if (tile_beam != -1 && in_los_bounds(drawpos))
+    {
+        tiles.add_overlay(p, tile_beam);
+        delay(draw_delay);
+    }
+    else
+#endif
+    {
+        // bounds check
+        if (in_los_bounds(drawpos))
+        {
+#ifndef USE_TILE
+            cgotoxy(drawpos.x, drawpos.y);
+            put_colour_ch(
+                colour == BLACK ? random_colour() : element_colour(colour),
+                type);
+#endif
+            // Get curses to update the screen so we can see the beam.
+            update_screen();
+            delay(draw_delay);
+        }
+    }
+}
+
+void bolt::bounce()
+{
+    ray_def old_ray  = ray;
+    bolt    old_bolt = *this;
+    do
+    {
+        do {
+            ray.regress();
+        } while (grid_is_solid(grd(ray.pos())));
+        bounce_pos = ray.pos();
+        ray.advance_and_bounce();
+        range_used += 2;
+    } while (range_used < range && grid_is_solid(grd(ray.pos())));
+
+    if (!grid_is_solid(grd(ray.pos())))
+        _munge_bounced_bolt(old_bolt, *this, old_ray, ray);
+}
+
+void bolt::fake_flavour()
+{
+    if (real_flavour == BEAM_RANDOM)
+        flavour = static_cast<beam_type>(random_range(BEAM_FIRE, BEAM_ACID));
+    else if (real_flavour == BEAM_CHAOS)
+        flavour = _chaos_beam_flavour();
+}
+
+void bolt::digging_wall_effect()
+{
+    const dungeon_feature_type feat = grd(pos());
+    if (feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
+    {
+        grd(pos()) = DNGN_FLOOR;
+        // Mark terrain as changed so travel excludes can be updated
+        // as necessary.
+        // XXX: This doesn't work for some reason: after digging
+        //      the wrong grids are marked excluded.
+        set_terrain_changed(pos());
+
+        // Blood does not transfer onto floor.
+        if (is_bloodcovered(pos()))
+            env.map(pos()).property &= ~(FPROP_BLOODY);
+
+        if (!msg_generated)
+        {
+            if (!silenced(you.pos()))
+            {
+                mpr("You hear a grinding noise.", MSGCH_SOUND);
+                obvious_effect = true;
+            }
+                    
+            msg_generated = true;
+        }
+    }
+    else if (grid_is_wall(feat))
+    {
+        finish_beam();
+    }
+}
+
+void bolt::fire_wall_effect()
+{
+    // Fire only affects wax walls.
+    if (grd(pos()) != DNGN_WAX_WALL)
+    {
+        finish_beam();
+        return;
     }
 
-    if (!pbolt.aimed_at_feet)
-        ray.advance_through(pbolt.target);
-
-    // Give chance for beam to affect one cell even if aimed_at_feet.
-    beamTerminate = false;
-
-    // Before we start drawing the beam, turn buffering off.
-#ifdef WIN32CONSOLE
-    bool oldValue = true;
-    if (!pbolt.is_tracer)
-        oldValue = set_buffering(false);
-#endif
-    while (!beamTerminate)
+    if (!is_superhot())
     {
-        testpos = ray.pos();
-
-        // Random beams: randomize before affect().
-        if (pbolt.real_flavour == BEAM_RANDOM)
-            pbolt.flavour = static_cast<beam_type>(
-                                random_range(BEAM_FIRE, BEAM_ACID));
-        else if (pbolt.real_flavour == BEAM_CHAOS)
-            pbolt.flavour = _chaos_beam_flavour();
-
-        // Shooting through clouds affects accuracy.
-        if (env.cgrid(testpos) != EMPTY_CLOUD)
-            pbolt.hit = std::max(pbolt.hit - 2, 0);
-
-        // See if tx, ty is blocked by something.
-        if (grid_is_solid(grd(testpos)))
+        // No actual effect.
+        if (flavour != BEAM_HELLFIRE)
         {
-            // First, check to see if this beam affects walls.
-            if (_affects_wall(pbolt, grd(testpos)))
+            if (see_grid(pos()))
             {
-                // Should we ever get a tracer with a wall-affecting
-                // beam (possible I suppose), we'll quit tracing now.
-                if (!pbolt.is_tracer)
-                {
-                    (void) affect(pbolt, testpos);
-                    if (pbolt.reflections > reflections)
-                        return;
-                }
-
-                // If it's still a wall, quit.
-                if (grid_is_solid(grd(testpos)))
-                    break;      // breaks from line tracing
+                emit_message(MSGCH_PLAIN,
+                             "The wax appears to soften slightly.");
             }
+            else if (player_can_smell())
+                emit_message(MSGCH_PLAIN, "You smell warm wax.");
+        }
+    }
+    else
+    {
+        // Destroy the wall.
+        grd(pos()) = DNGN_FLOOR;
+        if (see_grid(pos()))
+            emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
+        else if (player_can_smell())
+            emit_message(MSGCH_PLAIN, "You smell burning wax.");
+            
+        place_cloud(CLOUD_FIRE, pos(), random2(10)+15, whose_kill(), killer());
+            
+        obvious_effect = true;
+    }
+    finish_beam();
+}
+
+void bolt::nuke_wall_effect()
+{
+    const dungeon_feature_type feat = grd(pos());
+
+    if (feat == DNGN_ROCK_WALL
+        || feat == DNGN_WAX_WALL
+        || feat == DNGN_CLEAR_ROCK_WALL)
+    {
+        // FIXME: Blood *does* transfer to the floor here?
+        grd(pos()) = DNGN_FLOOR;
+        if (player_can_hear(pos()))
+        {
+            mpr("You hear a grinding noise.", MSGCH_SOUND);
+            obvious_effect = true;
+        }
+    }
+    else if (feat == DNGN_ORCISH_IDOL || feat == DNGN_GRANITE_STATUE)
+    {
+        grd(pos()) = DNGN_FLOOR;
+
+        // Blood does not transfer onto floor.
+        if (is_bloodcovered(pos()))
+            env.map(pos()).property &= ~(FPROP_BLOODY);
+            
+        if (player_can_hear(pos()))
+        {
+            if (!see_grid(pos()))
+                mpr("You hear a hideous screaming!", MSGCH_SOUND);
             else
             {
-                // BEGIN bounce case.  Bouncing protects any monster
-                // in the wall.
-                if (!_isBouncy(pbolt, grd(testpos)))
-                {
-                    // Affect any monster that might be in the wall.
-                    (void) affect(pbolt, testpos);
-                    if (pbolt.reflections > reflections)
-                        return;
-
-                    do
-                    {
-                        ray.regress();
-                        pbolt.bounce_pos = ray.pos();
-                    }
-                    while (grid_is_solid(grd(ray.pos())));
-
-                    testpos = ray.pos();
-                    break;          // breaks from line tracing
-                }
-
-                did_bounce = true;
-                pbolt.bounces++;
-
-                // bounce
-                ray_def old_ray  = ray;
-                bolt    old_bolt = pbolt;
-                do
-                {
-                    do
-                    {
-                        ray.regress();
-                        pbolt.bounce_pos = ray.pos();
-                    }
-                    while (grid_is_solid(grd(ray.pos())));
-
-                    ray.advance_and_bounce();
-                    pbolt.range_used += 2;
-                }
-                while (pbolt.range_used < pbolt.range
-                       && grid_is_solid(grd(ray.pos())));
-
-                if (!grid_is_solid(grd(ray.pos())))
-                    _munge_bounced_bolt(old_bolt, pbolt, old_ray, ray);
-
-                if (pbolt.range_used >= pbolt.range)
-                    break;
-
-                testpos = ray.pos();
-            } // end else - beam doesn't affect walls
-        } // endif - are we in a wall wall?
-
-        // At this point, if grd(testpos) is still a wall, we
-        // couldn't find any path: bouncy, fuzzy, or not - so break.
-        if (grid_is_solid(grd(testpos)))
-            break;
-
-        const bool was_seen = pbolt.seen;
-        if (!was_seen && pbolt.range > 0 && !beam_invisible
-            && see_grid(testpos))
-        {
-            pbolt.seen = true;
-        }
-
-        if (pbolt.flavour != BEAM_VISUAL && !was_seen && pbolt.seen
-            && !pbolt.is_tracer)
-        {
-            mprf("%s appears from out of your range of vision.",
-                 article_a(pbolt.name, false).c_str());
-        }
-
-        // Check for "target termination"
-        // occurs when beam can be targetted at empty
-        // cell (e.g. a mage wants an explosion to happen
-        // between two monsters).
-
-        // In this case, don't affect the cell - players and
-        // monsters have no chance to dodge or block such
-        // a beam, and we want to avoid silly messages.
-        if (testpos == pbolt.target)
-            beamTerminate = _beam_term_on_target(pbolt, testpos);
-
-        // Affect the cell, except in the special case noted
-        // above -- affect() will early out if something gets
-        // hit and the beam is type 'term on target'.
-        if (!beamTerminate || !pbolt.is_explosion)
-        {
-
-            if (!pbolt.affects_nothing)
-            {
-                (void) affect(pbolt, testpos);
-                if (pbolt.reflections > reflections)
-                    return;
+                mpr("The statue screams as its substance crumbles away!",
+                    MSGCH_SOUND);
             }
         }
+        else if (see_grid(pos()))
+            mpr("The statue twists and shakes as its substance crumbles away!");
 
-        ASSERT(pbolt.reflections == reflections);
+        if (feat == DNGN_ORCISH_IDOL && beam_source == NON_MONSTER)
+            did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
+        
+        obvious_effect = true;
+    }
+    finish_beam();
+}
 
-        if (pbolt.beam_cancelled)
+void bolt::finish_beam()
+{
+    range_used = range;
+}
+
+void bolt::affect_wall()
+{
+    if (flavour == BEAM_DIGGING)
+        digging_wall_effect();
+    else if (is_fiery())
+        fire_wall_effect();
+    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
+        nuke_wall_effect();
+
+    if (grid_is_solid(pos()))
+        finish_beam();
+}
+
+coord_def bolt::pos() const
+{
+    if (in_explosion_phase || use_target_as_pos)
+        return target;
+    else
+        return ray.pos();
+}
+
+void bolt::hit_wall()
+{
+    const dungeon_feature_type feat = grd(pos());
+    ASSERT( grid_is_solid(feat) );
+        
+    if (affects_wall(feat))
+        affect_wall();
+    else if (is_bouncy(feat) && !in_explosion_phase)
+        bounce();
+    else
+    {
+        // Affect a creature in the wall, if any.
+        if (!invalid_monster_index(mgrd(pos())))
+            affect_monster( &menv[mgrd(pos())] );
+
+        // Regress for explosions: blow up one step earlier.
+        if (is_explosion && !in_explosion_phase)
+        {
+            do {
+                ray.regress();
+            } while (grid_is_solid(ray.pos()));
+            finish_beam();
+        }
+    }
+}
+
+void bolt::affect_cell()
+{
+    // Shooting through clouds affects accuracy.
+    if (env.cgrid(pos()) != EMPTY_CLOUD)
+        hit = std::max(hit - 2, 0);
+        
+    fake_flavour();
+
+    const coord_def old_pos = pos();
+    const bool was_solid = grid_is_solid(grd(pos()));
+    if (was_solid)
+    {
+        const int mid = mgrd(pos());
+
+        // Some special casing.
+        if (!invalid_monster_index(mid))
+        {
+            monsters* const mon = &menv[mid];
+            if (can_affect_wall_monster(mon))
+                affect_monster(mon);
+            else
+            {
+                mprf("The %s protects %s from harm.",
+                     raw_feature_description(grd(mon->pos())).c_str(),
+                     mon->name(DESC_NOCAP_THE).c_str());
+            }
+        }
+        
+        // Note that this can change the ray position
+        // and the solidity of the wall.
+        hit_wall();
+    }
+
+    // We don't want to hit a monster in a wall square twice.
+    const bool still_wall = (was_solid && old_pos == pos());
+    if (!still_wall && !invalid_monster_index(mgrd(pos())))
+        affect_monster( &menv[mgrd(pos())] );
+
+    // If the player can ever walk through walls, this will
+    // need special-casing too.
+    if (found_player())
+        affect_player();
+
+    if (!grid_is_solid(grd(pos())))
+        affect_ground();
+}
+
+// This saves some important things before calling fire().
+void bolt::fire()
+{
+    if (is_tracer)
+    {
+        bolt boltcopy = *this;
+        do_fire();
+
+        target = boltcopy.target;
+        source = boltcopy.source;
+        aimed_at_spot = boltcopy.aimed_at_spot;
+        range_used = boltcopy.range_used;
+        bounces = boltcopy.bounces;
+        bounce_pos = boltcopy.bounce_pos;
+        reflections = boltcopy.reflections;
+        reflector = boltcopy.reflector;
+        auto_hit = boltcopy.auto_hit;
+        ray = boltcopy.ray;
+    }
+    else
+        do_fire();
+}
+
+void bolt::do_fire()
+{
+    initialize_fire();
+    
+    if (range <= range_used && range > 0)
+    {
+#ifdef DEBUG
+        mprf(MSGCH_DIAGNOSTICS, "fire_beam() called on already done beam "
+             "'%s' (item = '%s')", name.c_str(),
+             item ? item->name(DESC_PLAIN).c_str() : "none");
+#endif
+        return;
+    }
+
+    apply_beam_conducts();
+    cursor_control coff(false);
+
+#ifdef USE_TILE
+    tile_beam = -1;
+
+    if (item && !is_tracer && flavour == BEAM_MISSILE)
+    {
+        const coord_def diff = target - source;
+        tile_beam = tileidx_item_throw(*item, diff.x, diff.y);
+    }
+#endif
+
+    msg_generated = false;
+    if (target == source)
+    {
+        auto_hit = true;
+        aimed_at_spot = true;
+        use_target_as_pos = true;
+    }
+    else
+    {
+        choose_ray();
+        // Take *one* step, so as not to hurt the source.
+        ray.advance_through(target);
+    }
+
+#ifdef WIN32CONSOLE
+    // Before we start drawing the beam, turn buffering off.
+    bool oldValue = true;
+    if (!is_tracer)
+        oldValue = set_buffering(false);
+#endif
+
+    while (true)
+    {
+        affect_cell();
+
+        range_used++;
+        if (range_used >= range)
+            break;
+
+        if (beam_cancelled)
             return;
 
-        // Always decrease range by 1.
-        pbolt.range_used++;
+        if (stop_at_target() && pos() == target)
+            break;
 
-        // Check for range termination.
-        if (pbolt.range_used >= pbolt.range)
-            beamTerminate = true;
+        const bool was_seen = seen;
+        if (!was_seen && range > 0 && !invisible() && see_grid(pos()))
+            seen = true;
 
-        // Special case - beam was aimed at feet.
-        if (pbolt.aimed_at_feet)
-            beamTerminate = true;
+        if (flavour != BEAM_VISUAL && !was_seen && seen && !is_tracer)
+        {
+            mprf("%s appears from out of your range of vision.",
+                 article_a(name, false).c_str());
+        }
 
         // Reset chaos beams so that it won't be considered an invisible
         // enchantment beam for the purposes of animation.
-        if (pbolt.real_flavour == BEAM_CHAOS)
-            pbolt.flavour = pbolt.real_flavour;
+        if (real_flavour == BEAM_CHAOS)
+            flavour = real_flavour;
 
         // Actually draw the beam/missile/whatever, if the player can see
         // the cell.
-        if (!pbolt.is_tracer && !pbolt.is_enchantment() && see_grid(testpos))
-        {
-            // We don't clean up the old position.
-            // First, most people like to see the full path,
-            // and second, it is hard to do it right with
-            // respect to killed monsters, cloud trails, etc.
+        draw(pos());
 
-            // Draw new position.
-            coord_def drawpos = grid2view(testpos);
-
-#ifdef USE_TILE
-            if (tile_beam == -1)
-                tile_beam = tileidx_bolt(pbolt);
-
-            if (tile_beam != -1 && in_los_bounds(drawpos))
-            {
-                tiles.add_overlay(testpos, tile_beam);
-                delay(pbolt.delay);
-            }
-            else
-#endif
-            // bounds check
-            if (in_los_bounds(drawpos))
-            {
-#ifndef USE_TILE
-                cgotoxy(drawpos.x, drawpos.y);
-                put_colour_ch(
-                    pbolt.colour == BLACK ? random_colour()
-                                          : element_colour(pbolt.colour),
-                    pbolt.type );
-#endif
-                // Get curses to update the screen so we can see the beam.
-                update_screen();
-
-                delay(pbolt.delay);
-
-#ifdef MISSILE_TRAILS_OFF
-                // mv: It's not optimal but is usually enough.
-                if (!pbolt.is_beam)
-                    viewwindow(true, false);
-#endif
-            }
-
-        }
-
-        if (!did_bounce)
-            ray.advance_through(pbolt.target);
+        // A bounce takes away the meaning from the target.
+        if (bounces == 0)
+            ray.advance_through(target);
         else
             ray.advance(true);
-    } // end- while !beamTerminate
-
-    // The beam has finished, and terminated at tx, ty.
-
-    // Leave an object, if applicable.
-    if (pbolt.drop_item && pbolt.item && !pbolt.dropped_item)
-        beam_drop_object(pbolt);
-
-    // Check for explosion.  NOTE that for tracers, we have to make a copy
-    // of target co-ords and then reset after calling this -- tracers should
-    // never change any non-tracers fields in the beam structure. -- GDL
-    coord_def targetcopy = pbolt.target;
-
-    _beam_explodes(pbolt, testpos);
-
-    if (pbolt.is_tracer)
-    {
-        pbolt.target = targetcopy;
     }
+
+    // The beam has terminated.
+    affect_endpoint();
+
+    // Tracers need nothing further.
+    if (is_tracer)
+        return;
 
     // Canned msg for enchantments that affected no-one, but only if the
     // enchantment is yours (and it wasn't a chaos beam, since with chaos
     // enchantments are entirely random, and if it randomly attempts
     // something which ends up having no obvious effect then the player
     // isn't going to realize it).
-    if (pbolt.is_enchantment() && pbolt.real_flavour != BEAM_CHAOS)
+    if (!msg_generated && !obvious_effect && is_enchantment()
+        && real_flavour != BEAM_CHAOS && YOU_KILL(thrower))
     {
-        if (!pbolt.is_tracer && !pbolt.msg_generated && !pbolt.obvious_effect
-            && YOU_KILL(pbolt.thrower))
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-        }
+        canned_msg(MSG_NOTHING_HAPPENS);
     }
 
-    if (!pbolt.is_tracer && !invalid_monster_index(pbolt.beam_source))
+    // Reactions if a monster zapped the beam.
+    if (!invalid_monster_index(beam_source))
     {
-        if (pbolt.foe_hurt == 0 && pbolt.fr_hurt > 0)
+        if (foe_hurt == 0 && fr_hurt > 0)
             xom_is_stimulated(128);
-        else if (pbolt.foe_helped > 0 && pbolt.fr_helped == 0)
+        else if (foe_helped > 0 && fr_helped == 0)
             xom_is_stimulated(128);
 
         // Allow friendlies to react to projectiles, except when in
         // sanctuary when pet_target can only be explicitly changed by
         // the player.
-        const monsters *mon = &menv[pbolt.beam_source];
-        if (pbolt.foe_hurt > 0 && !mons_wont_attack(mon)
+        const monsters *mon = &menv[beam_source];
+        if (foe_hurt > 0 && !mons_wont_attack(mon)
             && you.pet_target == MHITNOT && env.sanctuary_time <= 0)
         {
-            you.pet_target = pbolt.beam_source;
+            you.pet_target = beam_source;
         }
     }
 
     // That's it!
 #ifdef WIN32CONSOLE
-    if (!pbolt.is_tracer)
-        set_buffering(oldValue);
+    set_buffering(oldValue);
 #endif
 }
-
 
 // Returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
 // attack -- damage from clouds and branded weapons handled elsewhere.
@@ -2025,7 +2083,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                 simple_monster_message(monster, " appears unharmed.");
         }
         else if (res <= 0 && doFlavouredEffects && !one_chance_in(3))
-            poison_monster(monster, _whose_kill(pbolt));
+            poison_monster(monster, pbolt.whose_kill());
 
         break;
     }
@@ -2043,11 +2101,11 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                 // Poison arrow can poison any living thing regardless of
                 // poison resistance. -- bwr
                 if (mons_has_lifeforce(monster))
-                    poison_monster(monster, _whose_kill(pbolt), 2, true);
+                    poison_monster(monster, pbolt.whose_kill(), 2, true);
             }
         }
         else if (doFlavouredEffects)
-            poison_monster(monster, _whose_kill(pbolt), 4);
+            poison_monster(monster, pbolt.whose_kill(), 4);
 
         break;
 
@@ -2106,13 +2164,13 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                 return (hurted);
 
             if (mons_res_poison(monster) <= 0)
-                poison_monster(monster, _whose_kill(pbolt));
+                poison_monster(monster, pbolt.whose_kill());
 
             if (one_chance_in(3 + 2 * mons_res_negative_energy(monster)))
             {
                 bolt beam;
                 beam.flavour = BEAM_SLOW;
-                mons_ench_f2(monster, beam);
+                beam.apply_enchantment_to_monster(monster);
             }
         }
         break;
@@ -2378,178 +2436,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
     return (msg_generated);
 }
 
-// Monster has probably failed save, now it gets enchanted somehow.
-// * Returns MON_RESIST if monster is unaffected due to magic resist.
-// * Returns MON_UNAFFECTED if monster is immune to enchantment.
-// * Returns MON_AFFECTED in all other cases (already enchanted, etc).
-mon_resist_type mons_ench_f2(monsters *monster, bolt &pbolt)
-{
-    switch (pbolt.flavour)      // put in magic resistance
-    {
-    case BEAM_SLOW:
-        // try to remove haste, if monster is hasted
-        if (monster->del_ench(ENCH_HASTE))
-        {
-            if (simple_monster_message(monster,
-                                       " is no longer moving quickly."))
-            {
-                pbolt.obvious_effect = true;
-            }
-
-            return (MON_AFFECTED);
-        }
-
-        // not hasted, slow it
-        if (!monster->has_ench(ENCH_SLOW)
-            && !mons_is_stationary(monster)
-            && monster->add_ench(mon_enchant(ENCH_SLOW, 0, _whose_kill(pbolt))))
-        {
-            if (!mons_is_paralysed(monster) && !mons_is_petrified(monster)
-                && simple_monster_message(monster, " seems to slow down."))
-            {
-                pbolt.obvious_effect = true;
-            }
-        }
-        return (MON_AFFECTED);
-
-    case BEAM_HASTE:
-        if (monster->del_ench(ENCH_SLOW))
-        {
-            if (simple_monster_message(monster, " is no longer moving slowly."))
-                pbolt.obvious_effect = true;
-
-            return (MON_AFFECTED);
-        }
-
-        // Not slowed, haste it.
-        if (!monster->has_ench(ENCH_HASTE)
-            && !mons_is_stationary(monster)
-            && monster->add_ench(ENCH_HASTE))
-        {
-            if (!mons_is_paralysed(monster) && !mons_is_petrified(monster)
-                && simple_monster_message(monster, " seems to speed up."))
-            {
-                pbolt.obvious_effect = true;
-            }
-        }
-        return (MON_AFFECTED);
-
-    case BEAM_HEALING:
-        if (YOU_KILL(pbolt.thrower))
-        {
-            if (cast_healing(5 + pbolt.damage.roll(), monster->pos()) > 0)
-                pbolt.obvious_effect = true;
-            pbolt.msg_generated = true; // to avoid duplicate "nothing happens"
-        }
-        else if (heal_monster( monster, 5 + pbolt.damage.roll(), false ))
-        {
-            if (monster->hit_points == monster->max_hit_points)
-            {
-                if (simple_monster_message(monster,
-                                           "'s wounds heal themselves!"))
-                {
-                    pbolt.obvious_effect = true;
-                }
-            }
-            else if (simple_monster_message(monster, " is healed somewhat."))
-                pbolt.obvious_effect = true;
-        }
-        return (MON_AFFECTED);
-
-    case BEAM_PARALYSIS:
-        _beam_paralyses_monster(pbolt, monster);
-        return (MON_AFFECTED);
-
-    case BEAM_PETRIFY:
-        _beam_petrifies_monster(pbolt, monster);
-        return (MON_AFFECTED);
-
-    case BEAM_CONFUSION:
-        if (!mons_class_is_confusable(monster->type))
-            return (MON_UNAFFECTED);
-
-        if (monster->add_ench( mon_enchant(ENCH_CONFUSION, 0,
-                               _whose_kill(pbolt)) ))
-        {
-            // Put in an exception for things you won't notice becoming
-            // confused.
-            if (simple_monster_message(monster, " appears confused."))
-                pbolt.obvious_effect = true;
-        }
-        return (MON_AFFECTED);
-
-    case BEAM_INVISIBILITY:
-    {
-        // Store the monster name before it becomes an "it" -- bwr
-        const std::string monster_name = monster->name(DESC_CAP_THE);
-
-        if (!monster->has_ench(ENCH_INVIS)
-            && monster->add_ench(ENCH_INVIS))
-        {
-            // A casting of invisibility erases backlight.
-            monster->del_ench(ENCH_BACKLIGHT);
-
-            // Can't use simple_monster_message() here, since it checks
-            // for visibility of the monster (and it's now invisible).
-            // -- bwr
-            if (mons_near( monster ))
-            {
-                mprf("%s flickers %s",
-                     monster_name.c_str(),
-                     player_monster_visible(monster) ? "for a moment."
-                                                     : "and vanishes!" );
-
-                if (!player_monster_visible(monster))
-                {
-                    // Also turn off autopickup.
-                    Options.autopickup_on = false;
-                    mpr("Deactivating autopickup; reactivate with Ctrl-A.",
-                        MSGCH_WARN);
-
-                    if (Options.tutorial_left)
-                    {
-                        learned_something_new(TUT_INVISIBLE_DANGER);
-                        Options.tut_seen_invisible = you.num_turns;
-                    }
-                }
-            }
-
-            pbolt.obvious_effect = true;
-        }
-        return (MON_AFFECTED);
-    }
-    case BEAM_CHARM:
-        if (player_will_anger_monster(monster))
-        {
-            simple_monster_message(monster, " is repulsed!");
-            return (MON_OTHER);
-        }
-
-        if (monster->add_ench(ENCH_CHARM))
-        {
-            // Put in an exception for fungi, plants and other things
-            // you won't notice becoming charmed.
-            if (simple_monster_message(monster, " is charmed."))
-                pbolt.obvious_effect = true;
-        }
-        return (MON_AFFECTED);
-
-    default:
-        break;
-    }
-
-    return (MON_AFFECTED);
-}
-
-// degree is ignored.
-static void _slow_monster(monsters *mon, int /* degree */)
-{
-    bolt beam;
-    beam.flavour = BEAM_SLOW;
-    mons_ench_f2(mon, beam);
-}
-
-static void _beam_paralyses_monster(bolt &pbolt, monsters *monster)
+void bolt::apply_bolt_paralysis(monsters *monster)
 {
     if (!monster->has_ench(ENCH_PARALYSIS)
         && monster->add_ench(ENCH_PARALYSIS)
@@ -2557,20 +2444,18 @@ static void _beam_paralyses_monster(bolt &pbolt, monsters *monster)
             || monster->has_ench(ENCH_PETRIFYING)))
     {
         if (simple_monster_message(monster, " suddenly stops moving!"))
-            pbolt.obvious_effect = true;
+            obvious_effect = true;
 
-        mons_check_pool(monster, monster->pos(), pbolt.killer(),
-                        pbolt.beam_source);
+        mons_check_pool(monster, monster->pos(), killer(), beam_source);
     }
 }
-
 
 // Petrification works in two stages. First the monster is slowed down in
 // all of its actions and cannot move away (petrifying), and when that times
 // out it remains properly petrified (no movement or actions). The second
 // part is similar to paralysis, except that insubstantial monsters can't be
 // affected and that stabbing damage is drastically reduced.
-static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
+void bolt::apply_bolt_petrify(monsters *monster)
 {
     int petrifying = monster->has_ench(ENCH_PETRIFYING);
     if (monster->has_ench(ENCH_PETRIFIED))
@@ -2584,7 +2469,7 @@ static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
             if (!monster->has_ench(ENCH_PARALYSIS)
                 && simple_monster_message(monster, " stops moving altogether!"))
             {
-                pbolt.obvious_effect = true;
+                obvious_effect = true;
             }
         }
     }
@@ -2595,10 +2480,9 @@ static void _beam_petrifies_monster(bolt &pbolt, monsters *monster)
         // will run out sooner and result in plain petrification behaviour.
         monster->add_ench(ENCH_PETRIFYING);
         if (simple_monster_message(monster, " is moving more slowly."))
-            pbolt.obvious_effect = true;
+            obvious_effect = true;
 
-        mons_check_pool(monster, monster->pos(), pbolt.killer(),
-                        pbolt.beam_source);
+        mons_check_pool(monster, monster->pos(), killer(), beam_source);
     }
 }
 
@@ -2626,7 +2510,7 @@ bool curare_hits_monster(actor *agent, monsters *monster, kill_category who,
         }
 
         if (monster->alive())
-            _slow_monster(monster, levels);
+            enchant_monster_with_flavour(monster, BEAM_SLOW);
     }
 
     // Deities take notice.
@@ -2721,7 +2605,6 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
     pbolt.foe_helped    = pbolt.foe_hurt = 0;
 
     // Clear misc
-    pbolt.dropped_item  = false;
     pbolt.reflections   = 0;
     pbolt.bounces       = 0;
 
@@ -2742,12 +2625,9 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
 
     // Fire!
     if (explode_only)
-        explosion(pbolt, false, false, true, true, false);
+        pbolt.explode(false);
     else
-        fire_beam(pbolt);
-
-    // Tracers shouldn't drop items.
-    ASSERT(!pbolt.dropped_item);
+        pbolt.fire();
 
     // Reset, since these are cumulative over recursive calls to fire_beam.
     pbolt.reflections = 0;
@@ -2807,676 +2687,319 @@ void mimic_alert(monsters *mimic)
         mimic->flags |= MF_KNOWN_MIMIC;
 }
 
-static bool _isBouncy(bolt &beam, unsigned char gridtype)
+bool bolt::is_bouncy(dungeon_feature_type feat) const
 {
-    if ( beam.real_flavour == BEAM_CHAOS
-         && grid_is_solid(static_cast<dungeon_feature_type>(gridtype)) )
-    {
+    if (real_flavour == BEAM_CHAOS && grid_is_solid(feat))
         return (true);
-    }
 
-    if (beam.is_enchantment())
+    if (is_enchantment())
         return (false);
 
-    if (beam.flavour == BEAM_ELECTRICITY && gridtype != DNGN_METAL_WALL)
+    if (flavour == BEAM_ELECTRICITY && feat != DNGN_METAL_WALL)
         return (true);
 
-    if ((beam.flavour == BEAM_FIRE || beam.flavour == BEAM_COLD)
-         && gridtype == DNGN_GREEN_CRYSTAL_WALL )
+    if ((flavour == BEAM_FIRE || flavour == BEAM_COLD)
+        && feat == DNGN_GREEN_CRYSTAL_WALL )
     {
         return (true);
     }
-    return (false);
-}
-
-static void _beam_explodes(bolt &beam, const coord_def& p)
-{
-    cloud_type cl_type;
-
-    // This will be the last thing this beam does.  Set target_x
-    // and target_y to hold explosion co'ords.
-
-    beam.target = p;
-
-    // Generic explosion.
-    if (beam.is_explosion)
-    {
-        _explosion1(beam);
-        return;
-    }
-
-    if (beam.flavour >= BEAM_POTION_STINKING_CLOUD
-        && beam.flavour <= BEAM_POTION_RANDOM)
-    {
-        switch (beam.flavour)
-        {
-        case BEAM_POTION_STINKING_CLOUD:
-            beam.colour = GREEN;
-            break;
-
-        case BEAM_POTION_POISON:
-            beam.colour = (coinflip() ? GREEN : LIGHTGREEN);
-            break;
-
-        case BEAM_POTION_MIASMA:
-        case BEAM_POTION_BLACK_SMOKE:
-            beam.colour = DARKGREY;
-            break;
-
-        case BEAM_POTION_STEAM:
-        case BEAM_POTION_GREY_SMOKE:
-            beam.colour = LIGHTGREY;
-            break;
-
-        case BEAM_POTION_FIRE:
-            beam.colour = (coinflip() ? RED : LIGHTRED);
-            break;
-
-        case BEAM_POTION_COLD:
-            beam.colour = (coinflip() ? BLUE : LIGHTBLUE);
-            break;
-
-        case BEAM_POTION_BLUE_SMOKE:
-            beam.colour = LIGHTBLUE;
-            break;
-
-        case BEAM_POTION_PURP_SMOKE:
-            beam.colour = MAGENTA;
-            break;
-
-        case BEAM_POTION_RANDOM:
-        default:
-            // Leave it the colour of the potion, the clouds will colour
-            // themselves on the next refresh. -- bwr
-            break;
-        }
-
-        _explosion1(beam);
-        return;
-    }
-
-    if (beam.is_tracer)
-        return;
-
-    // cloud producer -- POISON BLAST
-    if (beam.name == "blast of poison")
-    {
-        big_cloud(CLOUD_POISON, _whose_kill(beam), beam.killer(), p,
-                  0, 7 + random2(5));
-        return;
-    }
-
-    // cloud producer -- FOUL VAPOR (SWAMP DRAKE?)
-    if (beam.name == "foul vapour")
-    {
-        cl_type = (beam.flavour == BEAM_MIASMA) ? CLOUD_MIASMA : CLOUD_STINK;
-        big_cloud( cl_type, _whose_kill(beam), beam.killer(), p, 0, 9 );
-        return;
-    }
-
-    if (beam.name == "freezing blast")
-    {
-        big_cloud( CLOUD_COLD, _whose_kill(beam), beam.killer(), p,
-                   random_range(10, 15), 9 );
-        return;
-    }
-
-    // special cases - orbs & blasts of cold
-    if (beam.name == "orb of electricity"
-        || beam.name == "metal orb"
-        || beam.name == "great blast of cold")
-    {
-        _explosion1( beam );
-        return;
-    }
-
-    // cloud producer only -- stinking cloud
-    if (beam.name == "ball of vapour")
-    {
-        _explosion1( beam );
-        return;
-    }
-}
-
-static bool _beam_term_on_target(bolt &beam, const coord_def& p)
-{
-    // Generic - all explosion-type beams can be targeted at empty space,
-    // and will explode there.  This semantic also means that a creature
-    // in the target cell will have no chance to dodge or block, so we
-    // DON'T affect() the cell if this function returns true!
-
-    if (beam.is_explosion || beam.is_big_cloud)
-        return (true);
-
-    // POISON BLAST
-    if (beam.name == "blast of poison")
-        return (true);
-
-    // FOUL VAPOR (SWAMP DRAKE)
-    if (beam.name == "foul vapour")
-        return (true);
-
-    // STINKING CLOUD
-    if (beam.name == "ball of vapour")
-        return (true);
-
-    if (beam.aimed_at_spot && p == beam.target)
-        return (true);
 
     return (false);
 }
 
-void beam_drop_object( bolt &beam, item_def *item, const coord_def& _p )
+static int _potion_beam_flavour_to_colour(beam_type flavour)
 {
-    if (!item)
-        item = beam.item;
-    ASSERT( item != NULL );
-    ASSERT( is_valid_item(*item) );
-
-#ifdef DEBUG
-    if (!beam.drop_item)
-        mprf(MSGCH_DIAGNOSTICS, "beam_drop_object() called when beam.drop_item "
-             "is false (beam = %s, item = %s)", beam.name.c_str(),
-             item->name(DESC_PLAIN).c_str());
-#endif
-
-    if (beam.is_tracer || beam.flavour != BEAM_MISSILE)
-        return;
-
-    if (beam.dropped_item)
+    switch (flavour)
     {
-#ifdef DEBUG
-        mprf(MSGCH_DIAGNOSTICS, "beam_drop_object() called after object "
-             "already dropped (beam = %s, item = %s)", beam.name.c_str(),
-             item->name(DESC_PLAIN).c_str());
-#endif
+    case BEAM_POTION_STINKING_CLOUD:
+        return (GREEN);
+
+    case BEAM_POTION_POISON:
+        return (coinflip() ? GREEN : LIGHTGREEN);
+
+    case BEAM_POTION_MIASMA:
+    case BEAM_POTION_BLACK_SMOKE:
+        return (DARKGREY);
+
+    case BEAM_POTION_STEAM:
+    case BEAM_POTION_GREY_SMOKE:
+        return (LIGHTGREY);
+
+    case BEAM_POTION_FIRE:
+        return (coinflip() ? RED : LIGHTRED);
+
+    case BEAM_POTION_COLD:
+        return (coinflip() ? BLUE : LIGHTBLUE);
+
+    case BEAM_POTION_BLUE_SMOKE:
+        return (LIGHTBLUE);
+
+    case BEAM_POTION_PURP_SMOKE:
+        return (MAGENTA);
+
+    case BEAM_POTION_RANDOM:
+    default:
+        // Leave it the colour of the potion, the clouds will colour
+        // themselves on the next refresh. -- bwr
+        return (-1);
+    }
+    return (-1);
+}
+
+void bolt::affect_endpoint()
+{
+    // Leave an object, if applicable.
+    if (drop_item && item)
+        drop_object();
+
+    if (is_explosion)
+    {
+        refine_for_explosion();
+        explode();
         return;
     }
 
-    coord_def p = _p;
-    if (!in_bounds(p))
-       p = beam.pos;
+    if (flavour >= BEAM_POTION_STINKING_CLOUD && flavour <= BEAM_POTION_RANDOM)
+    {
+        int newcolour = _potion_beam_flavour_to_colour(flavour);
+        if (newcolour >= 0)
+            colour = newcolour;
+        explode();
+        return;
+    }
 
+    if (is_tracer)
+        return;
+
+    // FIXME: why don't these just have is_explosion set?
+    // They don't explode in tracers: why not?
+    if  (name == "orb of electricity"
+        || name == "metal orb"
+        || name == "great blast of cold"
+        || name == "ball of vapour")
+    {
+        explode();
+    }
+
+    if (name == "blast of poison")
+        big_cloud(CLOUD_POISON, whose_kill(), killer(), pos(), 0, 7+random2(5));
+
+    if (name == "foul vapour")
+    {
+        const cloud_type cl_type = (flavour == BEAM_MIASMA) ? CLOUD_MIASMA
+                                                            : CLOUD_STINK;
+        big_cloud(cl_type, whose_kill(), killer(), pos(), 0, 9);
+    }
+
+    if (name == "freezing blast")
+    {
+        big_cloud(CLOUD_COLD, whose_kill(), killer(), pos(),
+                  random_range(10, 15), 9);
+    }
+}
+
+bool bolt::stop_at_target() const
+{
+    if (is_explosion
+        || is_big_cloud
+        || aimed_at_spot
+        || name == "blast of poison"
+        || name == "foul vapour"
+        || name == "ball of vapour")
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
+void bolt::drop_object()
+{
+    ASSERT( item != NULL && is_valid_item(*item) );
+
+    // Conditions: beam is missile and not tracer.
+    if (is_tracer || flavour != BEAM_MISSILE)
+        return;
+
+    // Summoned creatures' thrown items disappear.
     if (item->flags & ISFLAG_SUMMONED)
     {
-        if (see_grid(p))
+        if (see_grid(pos()))
         {
             mprf("%s %s!",
                  item->name(DESC_CAP_THE).c_str(),
-                 summoned_poof_msg(beam.beam_source, *item).c_str());
+                 summoned_poof_msg(beam_source, *item).c_str());
         }
-        item_was_destroyed(*item, beam.beam_source);
-
-        beam.dropped_item = true;
-        beam.item_pos     = p;
-        beam.item_index   = NON_ITEM;
+        item_was_destroyed(*item, beam_source);
         return;
     }
 
-    // Conditions: beam is missile and not tracer.
-    if (YOU_KILL(beam.thrower)
-            && !thrown_object_destroyed(item, p, false)
-        || MON_KILL(beam.thrower)
-            && !mons_thrown_object_destroyed(item, p, false, beam.beam_source))
+    if (YOU_KILL(thrower) && !thrown_object_destroyed(item, pos(), false)
+        || MON_KILL(thrower)
+           && !mons_thrown_object_destroyed(item, pos(), false, beam_source))
     {
         if (item->sub_type == MI_THROWING_NET)
         {
             // Player or monster on position is caught in net.
-            if (you.pos() == p && you.attribute[ATTR_HELD]
-                || mgrd(p) != NON_MONSTER &&
-                   mons_is_caught(&menv[mgrd(p)]))
+            if (you.pos() == pos() && you.attribute[ATTR_HELD]
+                || mgrd(pos()) != NON_MONSTER &&
+                   mons_is_caught(&menv[mgrd(pos())]))
             {
                 // If no trapping net found mark this one.
-                if (get_trapping_net(p, true) == NON_ITEM)
+                if (get_trapping_net(pos(), true) == NON_ITEM)
                     set_item_stationary(*item);
             }
         }
 
-        if (copy_item_to_grid( *item, p, 1 ))
-        {
-            beam.dropped_item = true;
-            beam.item_pos     = p;
-
-            // Dropped item might have merged into stack
-            if (is_stackable_item(*item))
-            {
-                for (stack_iterator si(p); si; ++si)
-                {
-                    if (items_stack(*item, *si))
-                    {
-                        beam.item_index = si->index();
-                        break;
-                    }
-                }
-            }
-            else
-                beam.item_index = igrd(p);
-        }
-        else
-        {
-#ifdef DEBUG
-            mprf(MSGCH_DIAGNOSTICS, "beam_drop_object() unable to drop "
-                 "object (beam = %s, item = %s)", beam.name.c_str(),
-                 item->name(DESC_PLAIN).c_str());
-#endif
-        }
+        copy_item_to_grid(*item, pos(), 1);
     }
 }
 
 // Returns true if the beam hits the player, fuzzing the beam if necessary
 // for monsters without see invis firing tracers at the player.
-static bool _found_player(const bolt &beam, const coord_def& p)
+bool bolt::found_player() const
 {
-    const bool needs_fuzz = (beam.is_tracer && !beam.can_see_invis
-                             && you.invisible() && !YOU_KILL(beam.thrower));
+    const bool needs_fuzz = (is_tracer && !can_see_invis
+                             && you.invisible() && !YOU_KILL(thrower));
     const int dist = needs_fuzz? 2 : 0;
 
-    return (grid_distance(p, you.pos()) <= dist);
+    return (grid_distance(pos(), you.pos()) <= dist);
 }
 
-int affect(bolt &beam, const coord_def& _p, item_def *item, bool affect_items)
+void bolt::affect_ground()
 {
-    // Extra range used by hitting something.
-    int rangeUsed = 0;
+    if (is_tracer)
+        return;
 
-    coord_def p = _p;
-    if (!in_bounds(_p))
-        p = beam.pos;
-
-    if (!item)
-        item = beam.item;
-
-    if (beam.flavour == BEAM_VISUAL)
+    if (affects_items)
     {
-        if (mgrd(p) != NON_MONSTER)
-            behaviour_event( &menv[mgrd(p)], ME_DISTURB );
-
-        return (0);
+        const int burn_power = (is_explosion) ? 5 : (is_beam) ? 3 : 2;
+        expose_items_to_element(flavour, pos(), burn_power);
+        affect_place_clouds();
     }
-
-    if (grid_is_solid(grd(p)))
-    {
-        if (beam.is_tracer)          // Tracers always stop on walls.
-        {
-            beam.range_used += BEAM_STOP;
-            return (BEAM_STOP);
-        }
-
-        if (_affects_wall(beam, grd(p)))
-            rangeUsed += _affect_wall(beam, p);
-
-        // If it's still a wall, quit - we can't do anything else to a
-        // wall (but we still might be able to do something to any
-        // monster inside the wall).  Otherwise effects (like clouds,
-        // etc.) are still possible.
-        if (grid_is_solid(grd(p)))
-        {
-            int mid = mgrd(p);
-            if (mid != NON_MONSTER)
-            {
-                monsters *mon = &menv[mid];
-                if (_affect_mon_in_wall(beam, NULL, p))
-                    rangeUsed += _affect_monster( beam, mon, item );
-                else if (you.can_see(mon))
-                {
-                    mprf("The %s protects %s from harm.",
-                         raw_feature_description(grd(mon->pos())).c_str(),
-                         mon->name(DESC_NOCAP_THE).c_str());
-                }
-            }
-
-            beam.range_used += rangeUsed;
-            return (rangeUsed);
-        }
-    }
-
-    // grd(p) will NOT be a wall for the remainder of this function.
-
-    // If not a tracer, affect items and place clouds.
-    if (!beam.is_tracer)
-    {
-        if (affect_items)
-        {
-            const int burn_power = (beam.is_explosion) ? 5 :
-                                        (beam.is_beam) ? 3 : 2;
-
-            expose_items_to_element(beam.flavour, p, burn_power);
-        }
-        rangeUsed += _affect_place_clouds(beam, p);
-    }
-
-    // If player is at this location, try to affect unless term_on_target.
-    if (_found_player(beam, p))
-    {
-        // Done this way so that poison blasts affect the target once (via
-        // place_cloud) and explosion spells only affect the target once
-        // (during the explosion phase, not an initial hit during the
-        // beam phase).
-        if (!beam.is_big_cloud
-            && (!beam.is_explosion || beam.in_explosion_phase))
-        {
-            rangeUsed += _affect_player( beam, item, affect_items );
-        }
-
-        if (_beam_term_on_target(beam, p))
-        {
-            beam.range_used += BEAM_STOP;
-            return (BEAM_STOP);
-        }
-    }
-
-    // If there is a monster at this location, affect it.
-    // Submerged monsters aren't really there. -- bwr
-    int mid = mgrd(p);
-    if (mid != NON_MONSTER)
-    {
-        monsters *mon = &menv[mid];
-        const bool invisible = YOU_KILL(beam.thrower) && !you.can_see(mon);
-
-        // Monsters submerged in shallow water can be targeted by beams
-        // aimed at that spot.
-        if (mon->alive()
-            // Don't stop tracers on invisible monsters.
-            && (!invisible || !beam.is_tracer)
-            && (!mon->submerged()
-                || beam.aimed_at_spot && beam.target == mon->pos()
-                   && grd(mon->pos()) == DNGN_SHALLOW_WATER))
-        {
-            if (!beam.is_big_cloud
-                && (!beam.is_explosion || beam.in_explosion_phase))
-            {
-                rangeUsed += _affect_monster( beam, &menv[mid], item );
-            }
-
-            if (_beam_term_on_target(beam, p))
-            {
-                beam.range_used += BEAM_STOP;
-                return (BEAM_STOP);
-            }
-        }
-    }
-
-    beam.range_used += rangeUsed;
-    return (rangeUsed);
 }
 
-static bool _is_fiery(const bolt &beam)
+bool bolt::is_fiery() const
 {
-    return (beam.flavour == BEAM_FIRE || beam.flavour == BEAM_HELLFIRE
-            || beam.flavour == BEAM_LAVA);
+    return (flavour == BEAM_FIRE
+            || flavour == BEAM_HELLFIRE
+            || flavour == BEAM_LAVA);
 }
 
-static bool _is_superhot(const bolt &beam)
+bool bolt::is_superhot() const
 {
-    if (!_is_fiery(beam))
+    if (!is_fiery())
         return (false);
 
-    return (beam.name == "bolt of fire"
-            || beam.name == "bolt of magma"
-            || beam.name.find("hellfire") != std::string::npos
-               && beam.in_explosion_phase);
+    return (name == "bolt of fire"
+            || name == "bolt of magma"
+            || name.find("hellfire") != std::string::npos
+               && in_explosion_phase);
 }
 
-static bool _affects_wall(const bolt &beam, int wall)
+bool bolt::affects_wall(dungeon_feature_type wall) const
 {
     // digging
-    if (beam.flavour == BEAM_DIGGING)
+    if (flavour == BEAM_DIGGING)
         return (true);
 
     // FIXME: There should be a better way to test for ZAP_DISRUPTION
     // vs. ZAP_DISINTEGRATION.
-    if (beam.flavour == BEAM_DISINTEGRATION && beam.damage.num >= 3)
+    if (flavour == BEAM_DISINTEGRATION && damage.num >= 3)
         return (true);
 
-    if (_is_fiery(beam) && wall == DNGN_WAX_WALL)
+    if (is_fiery() && wall == DNGN_WAX_WALL)
         return (true);
 
     // eye of devastation?
-    if (beam.flavour == BEAM_NUKE)
+    if (flavour == BEAM_NUKE)
         return (true);
 
     return (false);
 }
 
-// Returns amount of extra range used up by affectation of this wall.
-static int _affect_wall(bolt &beam, const coord_def& p)
+void bolt::affect_place_clouds()
 {
-    int rangeUsed = 0;
+    if (in_explosion_phase)
+        affect_place_explosion_clouds();
 
-    // DIGGING
-    if (beam.flavour == BEAM_DIGGING)
+    const coord_def p = pos();
+
+    // Is there already a cloud here?
+    const int cloudidx = env.cgrid(p);
+    if (cloudidx != EMPTY_CLOUD)
     {
-        if (grd(p) == DNGN_STONE_WALL
-            || grd(p) == DNGN_METAL_WALL
-            || grd(p) == DNGN_PERMAROCK_WALL
-            || grd(p) == DNGN_CLEAR_STONE_WALL
-            || grd(p) == DNGN_CLEAR_PERMAROCK_WALL
-            || !in_bounds(p))
-        {
-            return (0);
-        }
-
-        if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_CLEAR_ROCK_WALL)
-        {
-            grd(p) = DNGN_FLOOR;
-            // Mark terrain as changed so travel excludes can be updated
-            // as necessary.
-            // XXX: This doesn't work for some reason: after digging
-            //      the wrong grids are marked excluded.
-            set_terrain_changed(p);
-
-            // Blood does not transfer onto floor.
-            if (is_bloodcovered(p))
-                env.map(p).property &= ~(FPROP_BLOODY);
-
-            if (!beam.msg_generated)
-            {
-                if (!silenced(you.pos()))
-                {
-                    mpr("You hear a grinding noise.", MSGCH_SOUND);
-                    beam.obvious_effect = true;
-                }
-
-                beam.msg_generated = true;
-            }
-        }
-
-        return (rangeUsed);
-    }
-    // END DIGGING EFFECT
-
-    // FIRE effect
-    if (_is_fiery(beam))
-    {
-        const int wgrd = grd(p);
-        if (wgrd != DNGN_WAX_WALL)
-            return (0);
-
-        if (!_is_superhot(beam))
-        {
-            if (beam.flavour != BEAM_HELLFIRE)
-            {
-                if (see_grid(p))
-                {
-                    _beam_mpr(MSGCH_PLAIN,
-                             "The wax appears to soften slightly.");
-                }
-                else if (player_can_smell())
-                    _beam_mpr(MSGCH_PLAIN, "You smell warm wax.");
-            }
-
-            return (BEAM_STOP);
-        }
-
-        grd(p) = DNGN_FLOOR;
-        if (see_grid(p))
-            _beam_mpr(MSGCH_PLAIN, "The wax bubbles and burns!");
-        else if (player_can_smell())
-            _beam_mpr(MSGCH_PLAIN, "You smell burning wax.");
-
-        place_cloud(CLOUD_FIRE, p, random2(10) + 15, _whose_kill(beam),
-                    beam.killer());
-
-        beam.obvious_effect = true;
-
-        return (BEAM_STOP);
-    }
-
-    // NUKE / DISRUPT
-    if (beam.flavour == BEAM_DISINTEGRATION || beam.flavour == BEAM_NUKE)
-    {
-        int targ_grid = grd(p);
-
-        if ((targ_grid == DNGN_ROCK_WALL || targ_grid == DNGN_WAX_WALL
-                 || targ_grid == DNGN_CLEAR_ROCK_WALL)
-            && in_bounds(p))
-        {
-            grd(p) = DNGN_FLOOR;
-            if (!silenced(you.pos()))
-            {
-                mpr("You hear a grinding noise.", MSGCH_SOUND);
-                beam.obvious_effect = true;
-            }
-        }
-
-        if (targ_grid == DNGN_ORCISH_IDOL
-            || targ_grid == DNGN_GRANITE_STATUE)
-        {
-            grd(p) = DNGN_FLOOR;
-
-            // Blood does not transfer onto floor.
-            if (is_bloodcovered(p))
-                env.map(p).property &= ~(FPROP_BLOODY);
-
-            if (!silenced(you.pos()))
-            {
-                if (!see_grid( p ))
-                    mpr("You hear a hideous screaming!", MSGCH_SOUND);
-                else
-                {
-                    mpr("The statue screams as its substance crumbles away!",
-                        MSGCH_SOUND);
-                }
-            }
-            else if (see_grid(p))
-                mpr("The statue twists and shakes as its substance crumbles away!");
-
-            if (targ_grid == DNGN_ORCISH_IDOL
-                && beam.beam_source == NON_MONSTER)
-            {
-                did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
-            }
-
-            beam.obvious_effect = true;
-        }
-
-        return (BEAM_STOP);
-    }
-
-    return (rangeUsed);
-}
-
-static int _affect_place_clouds(bolt &beam, const coord_def& p)
-{
-    if (beam.in_explosion_phase)
-    {
-        _affect_place_explosion_clouds( beam, p );
-        return (0);       // return value irrelevant for explosions
-    }
-
-    // check for CLOUD HITS
-    if (env.cgrid(p) != EMPTY_CLOUD)     // hit a cloud
-    {
-        // polymorph randomly changes clouds in its path
-        if (beam.flavour == BEAM_POLYMORPH)
-        {
-            env.cloud[ env.cgrid(p) ].type =
-                static_cast<cloud_type>(1 + random2(8));
-        }
-
-        // now exit (all enchantments)
-        if (beam.is_enchantment())
-            return (0);
-
-        int clouty = env.cgrid(p);
+        cloud_type& ctype = env.cloud[cloudidx].type;
+        // Polymorph randomly changes clouds in its path
+        if (flavour == BEAM_POLYMORPH)
+            ctype = static_cast<cloud_type>(1 + random2(8));
 
         // fire cancelling cold & vice versa
-        if ((env.cloud[clouty].type == CLOUD_COLD
-             && (beam.flavour == BEAM_FIRE
-                 || beam.flavour == BEAM_LAVA))
-            || (env.cloud[clouty].type == CLOUD_FIRE
-                && beam.flavour == BEAM_COLD))
+        if ((ctype == CLOUD_COLD
+             && (flavour == BEAM_FIRE || flavour == BEAM_LAVA))
+            || (ctype == CLOUD_FIRE && flavour == BEAM_COLD))
         {
             if (player_can_hear(p))
                 mpr("You hear a sizzling sound!", MSGCH_SOUND);
 
-            delete_cloud( clouty );
-            return (5);
+            delete_cloud(cloudidx);
+            range_used += 5;
         }
-    }
-
-    // POISON BLAST
-    if (beam.name == "blast of poison")
-        place_cloud( CLOUD_POISON, p, random2(4) + 2, _whose_kill(beam),
-                     beam.killer() );
-
-    // FIRE/COLD over water/lava
-    if (grd(p) == DNGN_LAVA && beam.flavour == BEAM_COLD
-        || grid_is_watery(grd(p)) && _is_fiery(beam))
-    {
-        place_cloud( CLOUD_STEAM, p, 2 + random2(5), _whose_kill(beam),
-                     beam.killer() );
-    }
-
-    if (grid_is_watery(grd(p)) && beam.flavour == BEAM_COLD
-        && beam.damage.num * beam.damage.size > 35)
-    {
-        place_cloud( CLOUD_COLD, p, beam.damage.num * beam.damage.size / 30 + 1,
-                     _whose_kill(beam), beam.killer() );
-    }
-
-    // GREAT BLAST OF COLD
-    if (beam.name == "great blast of cold")
-        place_cloud( CLOUD_COLD, p, random2(5) + 3, _whose_kill(beam),
-                     beam.killer() );
-
-
-    // BALL OF STEAM
-    if (beam.name == "ball of steam")
-        place_cloud( CLOUD_STEAM, p, random2(5) + 2, _whose_kill(beam),
-                     beam.killer() );
-
-    if (beam.flavour == BEAM_MIASMA)
-        place_cloud( CLOUD_MIASMA, p, random2(5) + 2, _whose_kill(beam),
-                     beam.killer() );
-
-    // POISON GAS
-    if (beam.name == "poison gas")
-        place_cloud( CLOUD_POISON, p, random2(4) + 3, _whose_kill(beam),
-                     beam.killer() );
-
-    return (0);
-}
-
-static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p)
-{
-    cloud_type cl_type;
-    int duration;
-
-    // First check: FIRE/COLD over water/lava.
-    if (grd(p) == DNGN_LAVA && beam.flavour == BEAM_COLD
-         || grid_is_watery(grd(p)) && _is_fiery(beam))
-    {
-        place_cloud( CLOUD_STEAM, p, 2 + random2(5), _whose_kill(beam) );
         return;
     }
 
-    if (beam.flavour >= BEAM_POTION_STINKING_CLOUD
-        && beam.flavour <= BEAM_POTION_RANDOM)
-    {
-        duration = roll_dice( 2, 3 + beam.ench_power / 20 );
+    // No clouds here, free to make new ones.
+    const dungeon_feature_type feat = grd(p);
 
-        switch (beam.flavour)
+    if (name == "blast of poison")
+        place_cloud(CLOUD_POISON, p, random2(4) + 2, whose_kill(), killer());
+
+    // Fire/cold over water/lava
+    if (feat == DNGN_LAVA && flavour == BEAM_COLD
+        || grid_is_watery(feat) && is_fiery())
+    {
+        place_cloud(CLOUD_STEAM, p, 2 + random2(5), whose_kill(), killer());
+    }
+
+    if (grid_is_watery(feat) && flavour == BEAM_COLD
+        && damage.num * damage.size > 35)
+    {
+        place_cloud(CLOUD_COLD, p, damage.num * damage.size / 30 + 1,
+                    whose_kill(), killer());
+    }
+
+    if (name == "great blast of cold")
+        place_cloud(CLOUD_COLD, p, random2(5) + 3, whose_kill(), killer());
+
+    if (name == "ball of steam")
+        place_cloud(CLOUD_STEAM, p, random2(5) + 2, whose_kill(), killer());
+
+    if (flavour == BEAM_MIASMA)
+        place_cloud(CLOUD_MIASMA, p, random2(5) + 2, whose_kill(), killer());
+
+    if (name == "poison gas")
+        place_cloud(CLOUD_POISON, p, random2(4) + 3, whose_kill(), killer());
+
+}
+
+void bolt::affect_place_explosion_clouds()
+{
+    const coord_def p = pos();
+
+    // First check: fire/cold over water/lava.
+    if (grd(p) == DNGN_LAVA && flavour == BEAM_COLD
+        || grid_is_watery(grd(p)) && is_fiery())
+    {
+        place_cloud(CLOUD_STEAM, p, 2 + random2(5), whose_kill(), killer());
+        return;
+    }
+
+    if (flavour >= BEAM_POTION_STINKING_CLOUD && flavour <= BEAM_POTION_RANDOM)
+    {
+        const int duration = roll_dice(2, 3 + ench_power / 20);
+        cloud_type cl_type;
+
+        switch (flavour)
         {
         case BEAM_POTION_STINKING_CLOUD:
         case BEAM_POTION_POISON:
@@ -3488,7 +3011,7 @@ static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p)
         case BEAM_POTION_GREY_SMOKE:
         case BEAM_POTION_BLUE_SMOKE:
         case BEAM_POTION_PURP_SMOKE:
-            cl_type = beam2cloud(beam.flavour);
+            cl_type = beam2cloud(flavour);
             break;
 
         case BEAM_POTION_RANDOM:
@@ -3511,27 +3034,27 @@ static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p)
             break;
         }
 
-        place_cloud( cl_type, p, duration, _whose_kill(beam) );
+        place_cloud(cl_type, p, duration, whose_kill(), killer());
     }
 
     // then check for more specific explosion cloud types.
-    if (beam.name == "ice storm")
-        place_cloud( CLOUD_COLD, p, 2 + random2avg(5, 2), _whose_kill(beam) );
+    if (name == "ice storm")
+        place_cloud(CLOUD_COLD, p, 2 + random2avg(5,2), whose_kill(), killer());
 
-    if (beam.name == "stinking cloud")
+    if (name == "stinking cloud")
     {
-        duration =  1 + random2(4) + random2( (beam.ench_power / 50) + 1 );
-        place_cloud( CLOUD_STINK, p, duration, _whose_kill(beam) );
+        const int duration =  1 + random2(4) + random2((ench_power / 50) + 1);
+        place_cloud( CLOUD_STINK, p, duration, whose_kill(), killer() );
     }
 
-    if (beam.name == "great blast of fire")
+    if (name == "great blast of fire")
     {
-        duration = 1 + random2(5) + roll_dice( 2, beam.ench_power / 5 );
+        int duration = 1 + random2(5) + roll_dice(2, ench_power / 5);
 
         if (duration > 20)
             duration = 20 + random2(4);
 
-        place_cloud( CLOUD_FIRE, p, duration, _whose_kill(beam) );
+        place_cloud( CLOUD_FIRE, p, duration, whose_kill(), killer() );
 
         if (grd(p) == DNGN_FLOOR && mgrd(p) == NON_MONSTER
             && one_chance_in(4))
@@ -3540,7 +3063,7 @@ static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p)
                 (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                               : GOD_NO_GOD;
             const beh_type att =
-                _whose_kill(beam) == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY;
+                whose_kill() == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY;
 
             mons_place(
                 mgen_data(MONS_FIRE_VORTEX, att, 2, SPELL_FIRE_STORM, p,
@@ -3550,71 +3073,59 @@ static void _affect_place_explosion_clouds(bolt &beam, const coord_def& p)
 }
 
 // A little helper function to handle the calling of ouch()...
-static void _beam_ouch(int dam, bolt &beam)
+void bolt::internal_ouch(int dam)
 {
     monsters *monst = NULL;
-    if (!invalid_monster_index(beam.beam_source)
-        && menv[beam.beam_source].type != -1)
-    {
-        monst = &menv[beam.beam_source];
-    }
+    if (!invalid_monster_index(beam_source) && menv[beam_source].type != -1)
+        monst = &menv[beam_source];
 
     // The order of this is important.
     if (monst && (monst->type == MONS_GIANT_SPORE
                   || monst->type == MONS_BALL_LIGHTNING))
     {
-        ouch(dam, beam.beam_source, KILLED_BY_SPORE,
-             beam.aux_source.c_str());
+        ouch(dam, beam_source, KILLED_BY_SPORE, aux_source.c_str());
     }
-    else if (YOU_KILL(beam.thrower) && beam.aux_source.empty())
+    else if (YOU_KILL(thrower) && aux_source.empty())
     {
-        if (beam.reflections > 0)
-            ouch(dam, beam.reflector, KILLED_BY_REFLECTION,
-                 beam.name.c_str());
-        else if (beam.bounces > 0)
-            ouch(dam, NON_MONSTER, KILLED_BY_BOUNCE,
-                 beam.name.c_str());
+        if (reflections > 0)
+            ouch(dam, reflector, KILLED_BY_REFLECTION, name.c_str());
+        else if (bounces > 0)
+            ouch(dam, NON_MONSTER, KILLED_BY_BOUNCE, name.c_str());
         else
             ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING);
     }
-    else if (MON_KILL(beam.thrower))
-    {
-        ouch(dam, beam.beam_source, KILLED_BY_BEAM,
-             beam.aux_source.c_str());
-    }
+    else if (MON_KILL(thrower))
+        ouch(dam, beam_source, KILLED_BY_BEAM, aux_source.c_str());
     else // KILL_MISC || (YOU_KILL && aux_source)
-    {
-        ouch(dam, beam.beam_source, KILLED_BY_WILD_MAGIC,
-             beam.aux_source.c_str());
-    }
+        ouch(dam, beam_source, KILLED_BY_WILD_MAGIC, aux_source.c_str());
 }
 
 // [ds] Apply a fuzz if the monster lacks see invisible and is trying to target
 // an invisible player. This makes invisibility slightly more powerful.
-static bool _fuzz_invis_tracer(bolt &beem)
+bool bolt::fuzz_invis_tracer()
 {
     // Did the monster have a rough idea of where you are?
-    int dist = grid_distance(beem.target, you.pos());
+    int dist = grid_distance(target, you.pos());
 
     // No, ditch this.
     if (dist > 2)
         return (false);
 
-    const int beam_src = _beam_source(beem);
+    const int beam_src = beam_source_as_target();
     if (beam_src != MHITNOT && beam_src != MHITYOU)
     {
         // Monsters that can sense invisible
         const monsters *mon = &menv[beam_src];
         if (mons_sense_invis(mon))
-            return (!dist);
+            return (dist == 0);
     }
 
     // Apply fuzz now.
     coord_def fuzz( random_range(-2, 2), random_range(-2, 2) );
-    coord_def newtarget = beem.target + fuzz;
+    coord_def newtarget = target + fuzz;
 
     if (in_bounds(newtarget))
-        beem.target = newtarget;
+        target = newtarget;
 
     // Fire away!
     return (true);
@@ -3632,9 +3143,9 @@ bool test_beam_hit(int attack, int defence)
             || random2(attack) >= random2avg(defence, 2));
 }
 
-static std::string _beam_zapper(const bolt &beam)
+std::string bolt::zapper() const
 {
-    const int beam_src = _beam_source(beam);
+    const int beam_src = beam_source_as_target();
     if (beam_src == MHITYOU)
         return ("self");
     else if (beam_src == MHITNOT)
@@ -3643,14 +3154,14 @@ static std::string _beam_zapper(const bolt &beam)
         return menv[beam_src].name(DESC_PLAIN);
 }
 
-static bool _beam_is_harmless(bolt &beam, monsters *mon)
+bool bolt::is_harmless(const monsters *mon) const
 {
-    // For enchantments, this is already handled in _nasty_beam().
-    if (beam.is_enchantment())
-        return (!_nasty_beam(mon, beam));
+    // For enchantments, this is already handled in nasty_to().
+    if (is_enchantment())
+        return (!nasty_to(mon));
 
     // The others are handled here.
-    switch (beam.flavour)
+    switch (flavour)
     {
     case BEAM_VISUAL:
     case BEAM_DIGGING:
@@ -3689,19 +3200,19 @@ static bool _beam_is_harmless(bolt &beam, monsters *mon)
     }
 }
 
-static bool _beam_is_harmless_player(bolt &beam)
+bool bolt::harmless_to_player() const
 {
 #ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "beam flavour: %d", beam.flavour);
+    mprf(MSGCH_DIAGNOSTICS, "beam flavour: %d", flavour);
 #endif
 
     // Shouldn't happen anyway since enchantments are either aimed at self
     // (not prompted) or cast at monsters and don't explode or bounce.
-    if (beam.is_enchantment())
+    if (is_enchantment())
         return (false);
 
     // The others are handled here.
-    switch (beam.flavour)
+    switch (flavour)
     {
     case BEAM_VISUAL:
     case BEAM_DIGGING:
@@ -3738,12 +3249,12 @@ static bool _beam_is_harmless_player(bolt &beam)
     }
 }
 
-static bool _beam_is_reflectable( const bolt &beam, const item_def *item )
+bool bolt::is_reflectable(const item_def *it) const
 {
-    if (beam.range_used >= beam.range)
+    if (range_used >= range)
         return (false);
 
-    return (item && is_shield(*item) && shield_reflects(*item));
+    return (it && is_shield(*it) && shield_reflects(*it));
 }
 
 static void _ident_reflector(item_def *item)
@@ -3752,488 +3263,487 @@ static void _ident_reflector(item_def *item)
         set_ident_flags(*item, ISFLAG_KNOW_TYPE);
 }
 
-static void _reflect_beam(bolt &beam)
+void bolt::reflect()
 {
-    beam.reflections++;
+    reflections++;
 
-    // If it bounced off a wall before being refleced then head back towards
+    // If it bounced off a wall before being reflected then head back towards
     // the wall.
-    if (beam.bounces > 0 && in_bounds(beam.bounce_pos))
-        beam.target = beam.bounce_pos;
+    if (bounces > 0 && in_bounds(bounce_pos))
+        target = bounce_pos;
     else
-        beam.target = beam.source;
+        target = source;
 
-    beam.source = beam.pos;
+    source = pos();
 
     // Reset bounce_pos, so that if we somehow reflect again before reaching
     // the wall that we won't keep heading towards the wall.
-    beam.bounce_pos.set(0, 0);
+    bounce_pos.reset();
 
-    if (beam.pos == you.pos())
-        beam.reflector = NON_MONSTER;
-    else if (mgrd(beam.pos) != NON_MONSTER)
-        beam.reflector = mgrd(beam.pos);
+    if (pos() == you.pos())
+        reflector = NON_MONSTER;
+    else if (mgrd(pos()) != NON_MONSTER)
+        reflector = mgrd(source);
     else
     {
-        beam.reflector = -1;
+        reflector = -1;
 #ifdef DEBUG
         mprf(MSGCH_DIAGNOSTICS, "Bolt reflected by neither player nor "
-             "monster (bolt = %s, item = %s)", beam.name.c_str(),
-             beam.item ? beam.item->name(DESC_PLAIN).c_str() : "none");
+             "monster (bolt = %s, item = %s)", name.c_str(),
+             item ? item->name(DESC_PLAIN).c_str() : "none");
 #endif
     }
 
-    beam.flavour = beam.real_flavour;
-
-    fire_beam(beam);
+    flavour = real_flavour;
+    choose_ray();
 }
 
-// Returns amount of extra range used up by affectation of the player.
-static int _affect_player( bolt &beam, item_def *item, bool affect_items )
+void bolt::tracer_affect_player()
 {
-    // Digging -- don't care.
-    if (beam.flavour == BEAM_DIGGING)
-        return (0);
-
-    // Check for tracer.
-    if (beam.is_tracer)
+    // Check whether thrower can see player, unless thrower == player.
+    if (YOU_KILL(thrower))
     {
-        // Check whether thrower can see player, unless thrower == player.
-        if (YOU_KILL(beam.thrower))
+        // Don't ask if we're aiming at ourselves.
+        if (!aimed_at_feet && !dont_stop_player && !harmless_to_player())
         {
-            // Don't ask if we're aiming at ourselves.
-            if (!beam.aimed_at_feet && !beam.dont_stop_player
-                && !_beam_is_harmless_player(beam))
+            if (yesno("That beam is likely to hit you. Continue anyway?",
+                      false, 'n'))
             {
-                if (yesno("That beam is likely to hit you. Continue anyway?",
-                    false, 'n'))
-                {
-                    beam.fr_count += 1;
-                    beam.fr_power += you.experience_level;
-                    beam.dont_stop_player = true;
-                }
-                else
-                {
-                    beam.beam_cancelled = true;
-                    return (BEAM_STOP);
-                }
-            }
-        }
-        else if (beam.can_see_invis || !you.invisible()
-                 || _fuzz_invis_tracer(beam))
-        {
-            if (mons_att_wont_attack(beam.attitude))
-            {
-                beam.fr_count += 1;
-                beam.fr_power += you.experience_level;
+                fr_count++;
+                fr_power += you.experience_level;
+                dont_stop_player = true;
             }
             else
             {
-                beam.foe_count++;
-                beam.foe_power += you.experience_level;
+                beam_cancelled = true;
+                finish_beam();
             }
         }
-        return (_range_used_on_hit(beam));
+    }
+    else if (can_see_invis || !you.invisible() || fuzz_invis_tracer())
+    {
+        if (mons_att_wont_attack(attitude))
+        {
+            fr_count++;
+            fr_power += you.experience_level;
+        }
+        else
+        {
+            foe_count++;
+            foe_power += you.experience_level;
+        }
+    }
+    range_used += range_used_on_hit();
+}
+
+bool bolt::misses_player()
+{
+    if (is_explosion || aimed_at_feet || auto_hit || is_enchantment())
+        return (false);
+
+    const int dodge = player_evasion();
+    int real_tohit = hit;
+    
+    // Monsters shooting at an invisible player are very inaccurate.
+    if (you.invisible() && !can_see_invis)
+        real_tohit /= 2;
+
+    if (is_beam)
+    {
+        // Beams can be dodged.
+        if (player_light_armour(true) && !aimed_at_feet && coinflip())
+            exercise(SK_DODGING, 1);
+
+        if (you.duration[DUR_DEFLECT_MISSILES])
+            real_tohit = random2(real_tohit * 2) / 3;
+        else if (you.duration[DUR_REPEL_MISSILES]
+                 || player_mutation_level(MUT_REPULSION_FIELD) == 3)
+        {
+            real_tohit -= random2(real_tohit / 2);
+        }
+
+        if (!test_beam_hit(real_tohit, dodge))
+        {
+            mprf("The %s misses you.", name.c_str());
+            return (true);
+        }
+    }
+    else if (is_blockable())
+    {
+        // Non-beams can be blocked or dodged.
+        if (you.shield()
+            && !aimed_at_feet
+            && player_shield_class() > 0)
+        {
+            // We use the original to-hit here.
+            const int testhit = random2(hit * 130 / 100
+                                        + you.shield_block_penalty());
+
+            const int block = you.shield_bonus();
+
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Beamshield: hit: %d, block %d",
+                 testhit, block);
+#endif
+            if (testhit < block)
+            {
+                if (is_reflectable(you.shield()))
+                {
+                    mprf( "Your %s reflects the %s!",
+                          you.shield()->name(DESC_PLAIN).c_str(),
+                          name.c_str() );
+                    _ident_reflector(you.shield());
+                    reflect();
+                }
+                else
+                {
+                    mprf( "You block the %s.", name.c_str() );
+                    finish_beam();
+                }
+                you.shield_block_succeeded();
+                return (true);
+            }
+
+            // Some training just for the "attempt".
+            if (coinflip())
+                exercise(SK_SHIELDS, one_chance_in(3) ? 1 : 0);
+        }
+
+        if (player_light_armour(true) && !aimed_at_feet && coinflip())
+            exercise(SK_DODGING, 1);
+
+        if (you.duration[DUR_DEFLECT_MISSILES])
+            real_tohit = random2(real_tohit / 2);
+        else if (you.duration[DUR_REPEL_MISSILES]
+                 || player_mutation_level(MUT_REPULSION_FIELD) == 3)
+        {
+            real_tohit = random2(real_tohit);
+        }
+
+        // miss message
+        if (!test_beam_hit(real_tohit, dodge))
+        {
+            mprf("The %s misses you.", name.c_str());
+            return (true);
+        }
+    }
+    return (false);
+}
+
+void bolt::affect_player_enchantment()
+{
+    if ((has_saving_throw() || flavour == BEAM_POLYMORPH)
+        && you_resist_magic(ench_power))
+    {
+        // You resisted it.
+
+        // Give a message.
+        bool need_msg = true;
+        if (thrower != KILL_YOU_MISSILE && !invalid_monster_index(beam_source))
+        {
+            monsters *mon = &menv[beam_source];
+            if (!player_monster_visible(mon))
+            {
+                mpr("Something tries to affect you, but you resist.");
+                need_msg = false;
+            }
+        }
+        if (need_msg)
+            canned_msg(MSG_YOU_RESIST);
+
+        // You *could* have gotten a free teleportation in the Abyss,
+        // but no, you resisted.
+        if (flavour == BEAM_TELEPORT && you.level_type == LEVEL_ABYSS)
+            xom_is_stimulated(255);
+
+        range_used += range_used_on_hit();
+        return;
+    }
+        
+    // You didn't resist it.
+    _ench_animation( real_flavour );
+
+    bool nasty = true, nice = false;
+
+    switch (flavour)
+    {
+    case BEAM_SLEEP:
+        you.put_to_sleep(ench_power);
+        break;
+
+    case BEAM_BACKLIGHT:
+        if (!you.duration[DUR_INVIS])
+        {
+            if (you.duration[DUR_BACKLIGHT])
+                mpr("You glow brighter.");
+            else
+                mpr("You are outlined in light.");
+
+            you.duration[DUR_BACKLIGHT] += random_range(15, 35);
+            if (you.duration[DUR_BACKLIGHT] > 250)
+                you.duration[DUR_BACKLIGHT] = 250;
+
+            obvious_effect = true;
+        }
+        else
+        {
+            mpr("You feel strangely conspicuous.");
+
+            you.duration[DUR_BACKLIGHT] += random_range(3, 5);
+            if (you.duration[DUR_BACKLIGHT] > 250)
+                you.duration[DUR_BACKLIGHT] = 250;
+
+            obvious_effect = true;
+        }
+        break;
+
+    case BEAM_POLYMORPH:
+        if (MON_KILL(thrower))
+        {
+            mpr("Strange energies course through your body.");
+            you.mutate();
+            obvious_effect = true;
+        }
+        else if (get_ident_type(OBJ_WANDS, WAND_POLYMORPH_OTHER)
+                 == ID_KNOWN_TYPE)
+        {
+            mpr("This is polymorph other only!");
+        }
+        else
+            canned_msg( MSG_NOTHING_HAPPENS );
+
+        break;
+
+    case BEAM_SLOW:
+        potion_effect( POT_SLOWING, ench_power );
+        obvious_effect = true;
+        break;
+
+    case BEAM_HASTE:
+        potion_effect( POT_SPEED, ench_power );
+        contaminate_player( 1, effect_known );
+        obvious_effect = true;
+        nasty = false;
+        nice  = true;
+        break;
+
+    case BEAM_HEALING:
+        potion_effect( POT_HEAL_WOUNDS, ench_power );
+        obvious_effect = true;
+        nasty = false;
+        nice  = true;
+        break;
+
+    case BEAM_PARALYSIS:
+        potion_effect( POT_PARALYSIS, ench_power );
+        obvious_effect = true;
+        break;
+
+    case BEAM_PETRIFY:
+        you.petrify( ench_power );
+        obvious_effect = true;
+        break;
+
+    case BEAM_CONFUSION:
+        potion_effect( POT_CONFUSION, ench_power );
+        obvious_effect = true;
+        break;
+
+    case BEAM_INVISIBILITY:
+        potion_effect( POT_INVISIBILITY, ench_power );
+        contaminate_player( 1 + random2(2), effect_known );
+        obvious_effect = true;
+        nasty = false;
+        nice  = true;
+        break;
+
+    case BEAM_TELEPORT:
+        you_teleport();
+
+        // An enemy helping you escape while in the Abyss, or an
+        // enemy stabilizing a teleport that was about to happen.
+        if (!mons_att_wont_attack(attitude)
+            && you.level_type == LEVEL_ABYSS)
+        {
+            xom_is_stimulated(255);
+        }
+
+        obvious_effect = true;
+        break;
+
+    case BEAM_BLINK:
+        random_blink(false);
+        obvious_effect = true;
+        break;
+
+    case BEAM_CHARM:
+        potion_effect( POT_CONFUSION, ench_power );
+        obvious_effect = true;
+        break;     // enslavement - confusion?
+
+    case BEAM_BANISH:
+        if (YOU_KILL(thrower))
+        {
+            mpr("This spell isn't strong enough to banish yourself.");
+            break;
+        }
+        if (you.level_type == LEVEL_ABYSS)
+        {
+            mpr("You feel trapped.");
+            break;
+        }
+        you.banished        = true;
+        you.banished_by     = zapper();
+        obvious_effect = true;
+        break;
+
+    case BEAM_PAIN:
+        if (player_res_torment())
+        {
+            mpr("You are unaffected.");
+            break;
+        }
+
+        mpr("Pain shoots through your body!");
+
+        if (aux_source.empty())
+            aux_source = "by nerve-wracking pain";
+
+        internal_ouch(damage.roll());
+        obvious_effect = true;
+        break;
+
+    case BEAM_DISPEL_UNDEAD:
+        if (!you.is_undead)
+        {
+            mpr("You are unaffected.");
+            break;
+        }
+
+        mpr( "You convulse!" );
+
+        if (aux_source.empty())
+            aux_source = "by dispel undead";
+
+        if (you.is_undead == US_SEMI_UNDEAD)
+        {
+            if (you.hunger_state == HS_ENGORGED)
+                damage.size /= 2;
+            else if (you.hunger_state > HS_SATIATED)
+            {
+                damage.size *= 2;
+                damage.size /= 3;
+            }
+        }
+        internal_ouch(damage.roll());
+        obvious_effect = true;
+        break;
+
+    case BEAM_DISINTEGRATION:
+        mpr("You are blasted!");
+
+        if (aux_source.empty())
+            aux_source = "a disintegration bolt";
+
+        internal_ouch(damage.roll());
+        obvious_effect = true;
+        break;
+
+    default:
+        // _All_ enchantments should be enumerated here!
+        mpr("Software bugs nibble your toes!");
+        break;
+    }
+
+    if (nasty)
+    {
+        if (mons_att_wont_attack(attitude))
+        {
+            fr_hurt++;
+            if (beam_source == NON_MONSTER)
+            {
+                // Beam from player rebounded and hit player.
+                if (!aimed_at_feet)
+                    xom_is_stimulated(255);
+            }
+            else
+            {
+                // Beam from an ally or neutral.
+                xom_is_stimulated(128);
+            }
+        }
+        else
+            foe_hurt++;
+    }
+
+    if (nice)
+    {
+        if (mons_att_wont_attack(attitude))
+            fr_helped++;
+        else
+        {
+            foe_helped++;
+            xom_is_stimulated(128);
+        }
+    }
+
+    // Regardless of effect, we need to know if this is a stopper
+    // or not - it seems all of the above are.
+    range_used += range_used_on_hit();
+}
+
+
+void bolt::affect_player()
+{
+    // Digging -- don't care.
+    if (flavour == BEAM_DIGGING)
+        return;
+
+    if (is_tracer)
+    {
+        tracer_affect_player();
+        return;
     }
 
     // Trigger an interrupt, so travel will stop on misses
     // which generate smoke.
-    if (!YOU_KILL(beam.thrower))
+    if (!YOU_KILL(thrower))
         interrupt_activity(AI_MONSTER_ATTACKS);
 
-    // BEGIN real beam code
-    beam.msg_generated = true;
-
-    // Use beamHit, NOT beam.hit, for modification of tohit.. geez!
-    int beamHit = beam.hit;
-
-    // Monsters shooting at an invisible player are very inaccurate.
-    if (you.invisible() && !beam.can_see_invis)
-        beamHit /= 2;
-
-    if (!beam.is_enchantment())
+    if (is_enchantment())
     {
-        if (!beam.is_explosion && !beam.aimed_at_feet)
-        {
-            // BEGIN BEAM/MISSILE
-            int dodge = player_evasion();
-
-            if (beam.is_beam)
-            {
-                // Beams can be dodged.
-                if (player_light_armour(true)
-                    && !beam.aimed_at_feet && coinflip())
-                {
-                    exercise(SK_DODGING, 1);
-                }
-
-                if (you.duration[DUR_DEFLECT_MISSILES])
-                    beamHit = random2(beamHit * 2) / 3;
-                else if (you.duration[DUR_REPEL_MISSILES]
-                         || player_mutation_level(MUT_REPULSION_FIELD) == 3)
-                {
-                    beamHit -= random2(beamHit / 2);
-                }
-
-                if (!test_beam_hit(beamHit, dodge))
-                {
-                    mprf("The %s misses you.", beam.name.c_str());
-                    return (0);           // no extra used by miss!
-                }
-            }
-            else if (_beam_is_blockable(beam))
-            {
-                // Non-beams can be blocked or dodged.
-                if (you.shield()
-                    && !beam.aimed_at_feet
-                    && player_shield_class() > 0)
-                {
-                    int exer = one_chance_in(3) ? 1 : 0;
-                    const int hit = random2( beam.hit * 130 / 100
-                                             + you.shield_block_penalty() );
-
-                    const int block = you.shield_bonus();
-
-#ifdef DEBUG_DIAGNOSTICS
-                    mprf(MSGCH_DIAGNOSTICS, "Beamshield: hit: %d, block %d",
-                         hit, block);
-#endif
-                    if (hit < block)
-                    {
-                        if (_beam_is_reflectable(beam, you.shield()))
-                        {
-                            mprf( "Your %s reflects the %s!",
-                                  you.shield()->name(DESC_PLAIN).c_str(),
-                                  beam.name.c_str() );
-                            _ident_reflector(you.shield());
-                            _reflect_beam(beam);
-                        }
-                        else
-                            mprf( "You block the %s.", beam.name.c_str() );
-                        you.shield_block_succeeded();
-                        return (BEAM_STOP);
-                    }
-
-                    // Some training just for the "attempt".
-                    if (coinflip())
-                        exercise( SK_SHIELDS, exer );
-                }
-
-                if (player_light_armour(true) && !beam.aimed_at_feet
-                    && coinflip())
-                {
-                    exercise(SK_DODGING, 1);
-                }
-
-                if (you.duration[DUR_DEFLECT_MISSILES])
-                    beamHit = random2(beamHit / 2);
-                else if (you.duration[DUR_REPEL_MISSILES]
-                         || player_mutation_level(MUT_REPULSION_FIELD) == 3)
-                {
-                    beamHit = random2(beamHit);
-                }
-
-                // miss message
-                if (!test_beam_hit(beamHit, dodge))
-                {
-                    mprf("The %s misses you.", beam.name.c_str());
-                    return (0);
-                }
-            }
-        }
-    }
-    else
-    {
-        bool nasty = true, nice = false;
-
-        // BEGIN enchantment beam
-        if (beam.flavour != BEAM_HASTE
-            && beam.flavour != BEAM_INVISIBILITY
-            && beam.flavour != BEAM_HEALING
-            && beam.flavour != BEAM_POLYMORPH
-            && beam.flavour != BEAM_DISPEL_UNDEAD
-            && (beam.flavour != BEAM_TELEPORT && beam.flavour != BEAM_BANISH
-                || !beam.aimed_at_feet)
-            && you_resist_magic( beam.ench_power ))
-        {
-            bool need_msg = true;
-            if (beam.thrower != KILL_YOU_MISSILE
-                && !invalid_monster_index(beam.beam_source))
-            {
-                monsters *mon = &menv[beam.beam_source];
-                if (!player_monster_visible(mon))
-                {
-                    mpr("Something tries to affect you, but you resist.");
-                    need_msg = false;
-                }
-            }
-            if (need_msg)
-                canned_msg(MSG_YOU_RESIST);
-
-            // You *could* have gotten a free teleportation in the Abyss,
-            // but no, you resisted.
-            if (beam.flavour != BEAM_TELEPORT && you.level_type == LEVEL_ABYSS)
-                xom_is_stimulated(255);
-
-            return (_range_used_on_hit(beam));
-        }
-
-        _ench_animation( beam.real_flavour );
-
-        // these colors are misapplied - see mons_ench_f2() {dlb}
-        switch (beam.flavour)
-        {
-        case BEAM_SLEEP:
-            you.put_to_sleep(beam.ench_power);
-            break;
-
-        case BEAM_BACKLIGHT:
-            if (!you.duration[DUR_INVIS])
-            {
-                if (you.duration[DUR_BACKLIGHT])
-                    mpr("You glow brighter.");
-                else
-                    mpr("You are outlined in light.");
-
-                you.duration[DUR_BACKLIGHT] += random_range(15, 35);
-                if (you.duration[DUR_BACKLIGHT] > 250)
-                    you.duration[DUR_BACKLIGHT] = 250;
-
-                beam.obvious_effect = true;
-            }
-            else
-            {
-                mpr("You feel strangely conspicuous.");
-
-                you.duration[DUR_BACKLIGHT] += random_range(3, 5);
-                if (you.duration[DUR_BACKLIGHT] > 250)
-                    you.duration[DUR_BACKLIGHT] = 250;
-
-                beam.obvious_effect = true;
-            }
-            break;
-
-        case BEAM_POLYMORPH:
-            if (MON_KILL(beam.thrower))
-            {
-                mpr("Strange energies course through your body.");
-                you.mutate();
-                beam.obvious_effect = true;
-            }
-            else if (get_ident_type(OBJ_WANDS, WAND_POLYMORPH_OTHER)
-                     == ID_KNOWN_TYPE)
-            {
-                mpr("This is polymorph other only!");
-            }
-            else
-                canned_msg( MSG_NOTHING_HAPPENS );
-
-            break;
-
-        case BEAM_SLOW:
-            potion_effect( POT_SLOWING, beam.ench_power );
-            beam.obvious_effect = true;
-            break;
-
-        case BEAM_HASTE:
-            potion_effect( POT_SPEED, beam.ench_power );
-            contaminate_player( 1, beam.effect_known );
-            beam.obvious_effect = true;
-            nasty = false;
-            nice  = true;
-            break;
-
-        case BEAM_HEALING:
-            potion_effect( POT_HEAL_WOUNDS, beam.ench_power );
-            beam.obvious_effect = true;
-            nasty = false;
-            nice  = true;
-            break;
-
-        case BEAM_PARALYSIS:
-            potion_effect( POT_PARALYSIS, beam.ench_power );
-            beam.obvious_effect = true;
-            break;
-
-        case BEAM_PETRIFY:
-            you.petrify( beam.ench_power );
-            beam.obvious_effect = true;
-            break;
-
-        case BEAM_CONFUSION:
-            potion_effect( POT_CONFUSION, beam.ench_power );
-            beam.obvious_effect = true;
-            break;
-
-        case BEAM_INVISIBILITY:
-            potion_effect( POT_INVISIBILITY, beam.ench_power );
-            contaminate_player( 1 + random2(2), beam.effect_known );
-            beam.obvious_effect = true;
-            nasty = false;
-            nice  = true;
-            break;
-
-        case BEAM_TELEPORT:
-            you_teleport();
-
-            // An enemy helping you escape while in the Abyss, or an
-            // enemy stabilizing a teleport that was about to happen.
-            if (!mons_att_wont_attack(beam.attitude)
-                && you.level_type == LEVEL_ABYSS)
-            {
-                xom_is_stimulated(255);
-            }
-
-            beam.obvious_effect = true;
-            break;
-
-        case BEAM_BLINK:
-            random_blink(false);
-            beam.obvious_effect = true;
-            break;
-
-        case BEAM_CHARM:
-            potion_effect( POT_CONFUSION, beam.ench_power );
-            beam.obvious_effect = true;
-            break;     // enslavement - confusion?
-
-        case BEAM_BANISH:
-            if (YOU_KILL(beam.thrower))
-            {
-                mpr("This spell isn't strong enough to banish yourself.");
-                break;
-            }
-            if (you.level_type == LEVEL_ABYSS)
-            {
-                mpr("You feel trapped.");
-                break;
-            }
-            you.banished        = true;
-            you.banished_by     = _beam_zapper(beam);
-            beam.obvious_effect = true;
-            break;
-
-        case BEAM_PAIN:
-            if (player_res_torment())
-            {
-                mpr("You are unaffected.");
-                break;
-            }
-
-            mpr("Pain shoots through your body!");
-
-            if (beam.aux_source.empty())
-                beam.aux_source = "by nerve-wracking pain";
-
-            _beam_ouch(beam.damage.roll(), beam);
-            beam.obvious_effect = true;
-            break;
-
-        case BEAM_DISPEL_UNDEAD:
-            if (!you.is_undead)
-            {
-                mpr("You are unaffected.");
-                break;
-            }
-
-            mpr( "You convulse!" );
-
-            if (beam.aux_source.empty())
-                beam.aux_source = "by dispel undead";
-
-            if (you.is_undead == US_SEMI_UNDEAD)
-            {
-                if (you.hunger_state == HS_ENGORGED)
-                    beam.damage.size /= 2;
-                else if (you.hunger_state > HS_SATIATED)
-                {
-                    beam.damage.size *= 2;
-                    beam.damage.size /= 3;
-                }
-            }
-            _beam_ouch(beam.damage.roll(), beam);
-            beam.obvious_effect = true;
-            break;
-
-        case BEAM_DISINTEGRATION:
-            mpr("You are blasted!");
-
-            if (beam.aux_source.empty())
-                beam.aux_source = "a disintegration bolt";
-
-            _beam_ouch(beam.damage.roll(), beam);
-            beam.obvious_effect = true;
-            break;
-
-        default:
-            // _All_ enchantments should be enumerated here!
-            mpr("Software bugs nibble your toes!");
-            break;
-        }
-
-        if (nasty)
-        {
-            if (mons_att_wont_attack(beam.attitude))
-            {
-                beam.fr_hurt++;
-                if (beam.beam_source == NON_MONSTER)
-                {
-                    // Beam from player rebounded and hit player.
-                    if (!beam.aimed_at_feet)
-                        xom_is_stimulated(255);
-                }
-                else
-                {
-                    // Beam from an ally or neutral.
-                    xom_is_stimulated(128);
-                }
-            }
-            else
-                beam.foe_hurt++;
-        }
-
-        if (nice)
-        {
-            if (mons_att_wont_attack(beam.attitude))
-                beam.fr_helped++;
-            else
-            {
-                beam.foe_helped++;
-                xom_is_stimulated(128);
-            }
-        }
-
-        // Regardless of affect, we need to know if this is a stopper
-        // or not - it seems all of the above are.
-        return (_range_used_on_hit(beam));
-
-        // END enchantment beam
+        affect_player_enchantment();
+        return;
     }
 
-    // THE BEAM IS NOW GUARANTEED TO BE A NON-ENCHANTMENT WHICH HIT
+    msg_generated = true;
 
-    const bool engulfs = (beam.is_explosion || beam.is_big_cloud);
+    if (misses_player())
+        return;
+
+    const bool engulfs = (is_explosion || is_big_cloud);
     mprf( "The %s %s you!",
-          beam.name.c_str(), (engulfs) ? "engulfs" : "hits" );
+          name.c_str(), (engulfs) ? "engulfs" : "hits" );
 
+    // FIXME: Lots of duplicated code here (compare handling of
+    // monsters)
     int hurted = 0;
-    int burn_power = (beam.is_explosion) ? 5 :
-                          (beam.is_beam) ? 3 : 2;
+    int burn_power = (is_explosion) ? 5 : (is_beam) ? 3 : 2;
 
     // Roll the damage.
-    hurted += beam.damage.roll();
+    hurted += damage.roll();
 
 #if DEBUG_DIAGNOSTICS
     int roll = hurted;
 #endif
 
     int armour_damage_reduction = random2( 1 + player_AC() );
-    if (beam.flavour == BEAM_ELECTRICITY)
+    if (flavour == BEAM_ELECTRICITY)
         armour_damage_reduction /= 2;
     hurted -= armour_damage_reduction;
 
-    // shrapnel
-    if (beam.flavour == BEAM_FRAG && !player_light_armour())
+    // shrapnel has triple AC reduction
+    if (flavour == BEAM_FRAG && !player_light_armour())
     {
         hurted -= random2( 1 + player_AC() );
         hurted -= random2( 1 + player_AC() );
@@ -4257,13 +3767,12 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
     bool was_affected = false;
     int  old_hp       = you.hp;
 
-    if (hurted < 0)
-        hurted = 0;
+    hurted = std::max(hurted, 0);
 
     // If the beam is an actual missile or of the MMISSILE type (Earth magic)
     // we might bleed on the floor.
     if (!engulfs
-        && (beam.flavour == BEAM_MISSILE || beam.flavour == BEAM_MMISSILE))
+        && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE))
     {
         int blood = hurted/2; // assumes DVORP_PIERCING, factor: 0.5
         if (blood > you.hp)
@@ -4272,9 +3781,9 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
         bleed_onto_floor(you.pos(), -1, blood, true);
     }
 
-    hurted = check_your_resists( hurted, beam.flavour );
+    hurted = check_your_resists( hurted, flavour );
 
-    if (beam.flavour == BEAM_MIASMA && hurted > 0)
+    if (flavour == BEAM_MIASMA && hurted > 0)
     {
         if (player_res_poison() <= 0)
         {
@@ -4300,7 +3809,7 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
         else if (item->special == SPMSL_POISONED)
         {
             if (!player_res_poison()
-                && (hurted || beam.ench_power == AUTOMATIC_HIT
+                && (hurted || ench_power == AUTOMATIC_HIT
                               && x_chance_in_y(90 - 3 * player_AC(), 100)))
             {
                 poison_player(1 + random2(3));
@@ -4311,7 +3820,7 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
         {
             if (x_chance_in_y(90 - 3 * player_AC(), 100))
             {
-                curare_hits_player(actor_to_death_source(beam.agent()),
+                curare_hits_player(actor_to_death_source(agent()),
                                    1 + random2(3));
                 was_affected = true;
             }
@@ -4319,7 +3828,7 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
     }
 
     // Sticky flame.
-    if (beam.name == "sticky flame")
+    if (name == "sticky flame")
     {
         if (!player_res_sticky_flame())
         {
@@ -4328,25 +3837,25 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
         }
     }
 
-    if (affect_items)
+    if (affects_items)
     {
         // Simple cases for scroll burns.
-        if (beam.flavour == BEAM_LAVA || beam.name == "hellfire")
+        if (flavour == BEAM_LAVA || name == "hellfire")
             expose_player_to_element(BEAM_LAVA, burn_power);
 
         // More complex (geez..)
-        if (beam.flavour == BEAM_FIRE && beam.name != "ball of steam")
+        if (flavour == BEAM_FIRE && name != "ball of steam")
             expose_player_to_element(BEAM_FIRE, burn_power);
 
         // Potions exploding.
-        if (beam.flavour == BEAM_COLD)
+        if (flavour == BEAM_COLD)
             expose_player_to_element(BEAM_COLD, burn_power);
 
-        if (beam.flavour == BEAM_ACID)
+        if (flavour == BEAM_ACID)
             splash_with_acid(5);
 
         // Spore pops.
-        if (beam.in_explosion_phase && beam.flavour == BEAM_SPORE)
+        if (in_explosion_phase && flavour == BEAM_SPORE)
             expose_player_to_element(BEAM_SPORE, burn_power);
     }
 
@@ -4356,35 +3865,35 @@ static int _affect_player( bolt &beam, item_def *item, bool affect_items )
 
     if (hurted > 0 || old_hp < you.hp || was_affected)
     {
-        if (mons_att_wont_attack(beam.attitude))
+        if (mons_att_wont_attack(attitude))
         {
-            beam.fr_hurt++;
+            fr_hurt++;
 
             // Beam from player rebounded and hit player.
             // Xom's amusement at the player's being damaged is handled
             // elsewhere.
-            if (beam.beam_source == NON_MONSTER)
+            if (beam_source == NON_MONSTER)
             {
-                if (!beam.aimed_at_feet)
+                if (!aimed_at_feet)
                     xom_is_stimulated(255);
             }
             else if (was_affected)
                 xom_is_stimulated(128);
         }
         else
-            beam.foe_hurt++;
+            foe_hurt++;
     }
 
-    _beam_ouch(hurted, beam);
+    internal_ouch(hurted);
 
-    return (_range_used_on_hit( beam ));
+    range_used += range_used_on_hit();
 }
 
-static int _beam_source(const bolt &beam)
+int bolt::beam_source_as_target() const
 {
-    return (MON_KILL(beam.thrower)     ? beam.beam_source :
-            beam.thrower == KILL_MISC  ? MHITNOT
-                                       : MHITYOU);
+    return (MON_KILL(thrower)     ? beam_source :
+            thrower == KILL_MISC  ? MHITNOT
+                                  : MHITYOU);
 }
 
 static int _name_to_skill_level(const std::string& name)
@@ -4408,87 +3917,376 @@ static int _name_to_skill_level(const std::string& name)
     return (2 * you.skills[type]);
 }
 
-static void _update_hurt_or_helped(bolt &beam, monsters *mon)
+void bolt::update_hurt_or_helped(monsters *mon)
 {
-    if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
+    if (!mons_atts_aligned(attitude, mons_attitude(mon)))
     {
-        if (_nasty_beam(mon, beam))
-            beam.foe_hurt++;
-        else if (_nice_beam(mon, beam))
-            beam.foe_helped++;
+        if (nasty_to(mon))
+            foe_hurt++;
+        else if (nice_to(mon))
+            foe_helped++;
     }
     else
     {
-        if (_nasty_beam(mon, beam))
+        if (nasty_to(mon))
         {
-            beam.fr_hurt++;
+            fr_hurt++;
 
             // Harmful beam from this monster rebounded and hit the monster.
-            int midx = monster_index(mon);
-            if (midx == beam.beam_source)
+            if (!is_tracer
+                && static_cast<int>(monster_index(mon)) == beam_source)
+            {
                 xom_is_stimulated(128);
+            }
         }
-        else if (_nice_beam(mon, beam))
-            beam.fr_helped++;
+        else if (nice_to(mon))
+            fr_helped++;
     }
 }
 
-// Returns amount of range used up by affectation of this monster.
-static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
+void bolt::tracer_enchantment_affect_monster(monsters* mon)
 {
-    const int tid = mgrd(mon->pos());
-    const int mons_type  = menv[tid].type;
-    const int thrower    = YOU_KILL(beam.thrower) ? KILL_YOU_MISSILE
-                                                  : KILL_MON_MISSILE;
-    const bool submerged = mon->submerged();
+    handle_stop_attack_prompt(mon);
+    if (!beam_cancelled)       
+        range_used += range_used_on_hit();
+}
 
-    int hurt;
-    int hurt_final;
+// Return false if we should skip handling this monster.
+bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final)
+{
+    // preac: damage before AC modifier
+    // postac: damage after AC modifier
+    // final: damage after AC and resists
+    // All these are invalid if we return false.
 
-    // digging -- don't care.
-    if (beam.flavour == BEAM_DIGGING)
-        return (0);
+    // Tracers get the mean.
+    if (is_tracer)
+        preac = (damage.num * (damage.size + 1)) / 2;
+    else
+        preac = damage.roll();
 
-    // fire storm creates these, so we'll avoid affecting them
-    if (beam.name == "great blast of fire"
-        && mon->type == MONS_FIRE_VORTEX)
+    // Submerged monsters get some perks.
+    if (mon->submerged())
     {
-        return (0);
+        // The beam will pass overhead unless it's aimed at them.
+        if (!aimed_at_spot)
+            return false;
+        
+        // Electricity is ineffective.
+        if (flavour == BEAM_ELECTRICITY)
+        {
+            if (!is_tracer && see_grid(mon->pos()))
+                mprf("The %s arcs harmlessly into the water.", name.c_str());
+            finish_beam();
+            return false;
+        }
+
+        // Otherwise, 1/3 damage reduction.
+        preac = (preac * 2) / 3;
     }
 
-    // check for tracer
-    if (beam.is_tracer)
+    postac = preac - maybe_random2(1 + mon->ac, !is_tracer);
+
+    // Fragmentation has triple AC reduction.
+    if (flavour == BEAM_FRAG)
     {
-        // Can we see this monster?
-        if (!beam.can_see_invis && menv[tid].invisible()
-            || (thrower == KILL_YOU_MISSILE && !see_grid(mon->pos())))
-        {
-            // Can't see this monster, ignore it.
-            return 0;
-        }
+        postac -= maybe_random2(1 + mon->ac, !is_tracer);
+        postac -= maybe_random2(1 + mon->ac, !is_tracer);
+    }
 
-        // Is this a self-detonating monster? Don't consider it either way
-        // if it is.
-        if (mons_self_destructs(mon))
-            return (BEAM_STOP);
+    postac = std::max(postac, 0);
 
-        if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
+    // Don't do side effects (beam might miss or be a tracer.)
+    final = mons_adjust_flavoured(mon, *this, preac, false);
+
+    return true;
+}
+
+void bolt::handle_stop_attack_prompt(monsters* mon)
+{
+    if ((thrower == KILL_YOU_MISSILE || thrower == KILL_YOU)
+        && !is_harmless(mon))
+    {
+        if ((fr_count == 1 && !dont_stop_fr)
+            || (foe_count == 1 && !dont_stop_foe))
         {
-            beam.foe_count += 1;
-            beam.foe_power += mons_power(mons_type);
+            const bool on_target = (target == mon->pos());           
+            if (stop_attack_prompt(mon, true, on_target))
+            {
+                beam_cancelled = true;
+                finish_beam();
+            }
+            else
+            {
+                if (fr_count == 1)
+                    dont_stop_fr = true;
+                else if (foe_count == 1)
+                    dont_stop_foe = true;
+            }
         }
+    }
+}
+
+
+void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
+{
+    int preac, post, final;
+    if ( !determine_damage(mon, preac, post, final) )
+        return;
+
+    // Maybe the user wants to cancel at this point.
+    handle_stop_attack_prompt(mon);
+    if (beam_cancelled)
+        return;
+    
+    // Check only if actual damage.
+    if (final > 0)
+    {
+        // Monster could be hurt somewhat, but only apply the
+        // monster's power based on how badly it is affected.
+        // For example, if a fire giant (power 16) threw a
+        // fireball at another fire giant, and it only took
+        // 1/3 damage, then power of 5 would be applied to
+        // foe_power or fr_power.
+
+        // Counting foes is only important for monster tracers.
+        if (!mons_atts_aligned(attitude, mons_attitude(mon)))
+            foe_power += 2 * final * mons_power(mon->type) / preac;
         else
+            fr_power += 2 * final * mons_power(mon->type) / preac;
+    }
+    
+    // Either way, we could hit this monster, so update range used.
+    range_used += range_used_on_hit();
+}
+
+void bolt::tracer_affect_monster(monsters* mon)
+{
+    // Ignore unseen monsters.
+    if (!can_see_invis && mon->invisible()
+        || (YOU_KILL(thrower) && !see_grid(mon->pos())))
+    {
+        return;
+    }
+
+    // Ignore self-detonating monsters.
+    if (mons_self_destructs(mon))
+        return;
+
+    // Update friend or foe encountered.
+    if (!mons_atts_aligned(attitude, mons_attitude(mon)))
+    {
+        foe_count++;
+        foe_power += mons_power(mon->type);
+    }
+    else
+    {
+        fr_count++;
+        fr_power += mons_power(mon->type);
+    }
+
+    if (is_enchantment())
+        tracer_enchantment_affect_monster(mon);
+    else
+        tracer_nonenchantment_affect_monster(mon);
+}
+
+void bolt::enchantment_affect_monster(monsters* mon)
+{
+    // Submerged monsters are unaffected by enchantments.
+    if (mon->submerged())
+        return;
+
+    god_conduct_trigger conducts[3];
+    disable_attack_conducts(conducts);
+    
+    bool hit_woke_orc = false;
+
+    // Nasty enchantments will annoy the monster, and are considered
+    // naughty (even if a monster might resist).
+    if (nasty_to(mon))
+    {
+        if (YOU_KILL(thrower))
         {
-            beam.fr_count += 1;
-            beam.fr_power += mons_power(mons_type);
+            if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
+                remove_sanctuary(true);
+            
+            set_attack_conducts(conducts, mon, player_monster_visible(mon));
+
+            if (you.religion == GOD_BEOGH
+                && mons_species(mon->type) == MONS_ORC
+                && mons_is_sleeping(mon) && !player_under_penance()
+                && you.piety >= piety_breakpoint(2) && mons_near(mon))
+            {
+                hit_woke_orc = true;
+            }
+        }
+        behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+    }
+    else
+        behaviour_event(mon, ME_ALERT, beam_source_as_target());
+
+    enable_attack_conducts(conducts);
+
+    // Doing this here so that the player gets to see monsters
+    // "flicker and vanish" when turning invisible....
+    _ench_animation( real_flavour, mon );
+
+    // Try to hit the monster with the enchantment.
+    const mon_resist_type ench_result = try_enchant_monster(mon);
+
+    if (mon->alive())           // Aftereffects.
+    {
+        // Mimics become known.
+        if (mons_is_mimic(mon->type))
+            mimic_alert(mon);
+
+        // Message or record the success/failure.
+        switch (ench_result)
+        {
+        case MON_RESIST:
+            if (simple_monster_message(mon, " resists."))
+                msg_generated = true;
+            break;
+        case MON_UNAFFECTED:
+            if (simple_monster_message(mon, " is unaffected."))
+                msg_generated = true;
+            break;
+        case MON_AFFECTED:
+        case MON_OTHER:         // Should this really be here?
+            update_hurt_or_helped(mon);
+            break;
+        }
+
+        if (hit_woke_orc)
+            beogh_follower_convert(mon, true);
+    }
+
+    range_used += range_used_on_hit();
+}
+
+void bolt::monster_post_hit(monsters* mon, int dmg)
+{
+    if (YOU_KILL(thrower) && mons_near(mon))
+        print_wounds(mon);
+
+    // Don't annoy friendlies or good neutrals if the player's beam
+    // did no damage.  Hostiles will still take umbrage.
+    if (dmg > 0 || !mons_wont_attack(mon) || !YOU_KILL(thrower))
+        behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+
+    // Sticky flame.
+    if (name == "sticky flame")
+    {
+        const int levels = std::min(4, 1 + random2(mon->hit_dice) / 2);
+        napalm_monster(mon, whose_kill(), levels);
+    }
+
+    bool wake_mimic = true;
+
+    // Handle missile effects.
+    if (item && item->base_type == OBJ_MISSILES)
+    {
+        if (item->special == SPMSL_POISONED)
+        {
+            int num_levels = 0;
+            // ench_power == AUTOMATIC_HIT if this is a poisoned needle.
+            if (ench_power == AUTOMATIC_HIT
+                && x_chance_in_y(90 - 3 * mon->ac, 100))
+            {
+                num_levels = 2;
+            }
+            else if (random2(dmg) - random2(mon->ac) > 0)
+                num_levels = 1;
+
+            int num_success = 0;
+            if (YOU_KILL(thrower))
+            {
+                const int skill_level = _name_to_skill_level(name);
+                if (x_chance_in_y(skill_level + 25, 50))
+                    num_success++;
+                if (x_chance_in_y(skill_level, 50))
+                    num_success++;
+            }
+            else
+                num_success = 1;
+
+            if (num_success)
+            {
+                if (num_success == 2)
+                    num_levels++;
+                poison_monster(mon, whose_kill(), num_levels);
+            }
+        }
+        else if (item->special == SPMSL_CURARE)
+        {
+            if (ench_power == AUTOMATIC_HIT
+                && curare_hits_monster(agent(), mon, whose_kill(), 2)
+                && !mon->alive())
+            {
+                wake_mimic = false;
+            }
         }
     }
-    else if ((beam.flavour == BEAM_DISINTEGRATION || beam.flavour == BEAM_NUKE)
-             && mons_is_statue(mons_type) && !mons_is_icy(mons_type))
+
+    if (wake_mimic && mons_is_mimic(mon->type))
+        mimic_alert(mon);
+    else if (dmg)
+        beogh_follower_convert(mon, true);
+}
+
+// Return true if the block succeeded (including reflections.)
+bool bolt::attempt_block(monsters* mon)
+{
+    const int shield_block = mon->shield_bonus();
+    bool rc = false;
+    if (shield_block > 0)
     {
+        const int ht = random2(hit * 130 / 100 + mon->shield_block_penalty());
+        if (ht < shield_block)
+        {
+            rc = true;
+            item_def *shield = mon->mslot_item(MSLOT_SHIELD);
+            if (this->is_reflectable(shield))
+            {
+                if (you.can_see(mon))
+                {
+                    mprf("%s reflects the %s off %s %s!",
+                         mon->name(DESC_CAP_THE).c_str(),
+                         name.c_str(),
+                         mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                         shield->name(DESC_PLAIN).c_str());
+                    _ident_reflector(shield);
+                }
+                else if (see_grid(pos()))
+                    mprf("The %s bounces off of thin air!", name.c_str());
+
+                reflect();
+            }
+            else
+                mprf("%s blocks the %s.",
+                     mon->name(DESC_CAP_THE).c_str(),
+                     name.c_str());
+
+            mon->shield_block_succeeded();
+            finish_beam();
+        }
+    }
+
+    return (rc);
+}
+
+bool bolt::handle_statue_disintegration(monsters* mon)
+{
+    bool rc = false;
+    if ((flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
+        && mons_is_statue(mon->type) && !mons_is_icy(mon->type))
+    {
+        rc = true;
+        // Disintegrate the statue.
         if (!silenced(you.pos()))
         {
-            if (!see_grid( mon->pos() ))
+            if (!see_grid(mon->pos()))
                 mpr("You hear a hideous screaming!", MSGCH_SOUND);
             else
             {
@@ -4496,226 +4294,73 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
                     MSGCH_SOUND);
             }
         }
-        else if (see_grid( mon->pos() ))
+        else if (see_grid(mon->pos()))
         {
-                mpr("The statue twists and shakes as its substance "
-                    "crumbles away!");
+            mpr("The statue twists and shakes as its substance "
+                "crumbles away!");
         }
-        beam.obvious_effect = true;
-        _update_hurt_or_helped(beam, mon);
-        mon->hurt(beam.agent(), INSTANT_DEATH);
-        return (BEAM_STOP);
+        obvious_effect = true;
+        update_hurt_or_helped(mon);
+        mon->hurt(agent(), INSTANT_DEATH);
+        // Stop here.
+        finish_beam();
     }
+    return (rc);
+}
 
-    bool hit_woke_orc = false;
-    if (beam.is_enchantment()) // enchantments: no to-hit check
+void bolt::affect_monster(monsters* mon)
+{
+    // First some special cases.
+
+    // Digging doesn't affect monsters (should it harm earth elementals?)
+    if (flavour == BEAM_DIGGING)
+        return;
+
+    // Fire storm creates these, so we'll avoid affecting them
+    if (name == "great blast of fire" && mon->type == MONS_FIRE_VORTEX)
+        return;
+
+    // Handle tracers separately.
+    if (is_tracer)
     {
-        if (beam.is_tracer)
-        {
-            if (beam.thrower == KILL_YOU_MISSILE || beam.thrower == KILL_YOU)
-            {
-                if (!_beam_is_harmless(beam, mon)
-                    && (beam.fr_count == 1 && !beam.dont_stop_fr
-                        || beam.foe_count == 1 && !beam.dont_stop_foe))
-                {
-                    const bool target = (beam.target == mon->pos());
-
-                    if (stop_attack_prompt(mon, true, target))
-                    {
-                        beam.beam_cancelled = true;
-                        return (BEAM_STOP);
-                    }
-                    if (beam.fr_count == 1 && !beam.dont_stop_fr)
-                        beam.dont_stop_fr = true;
-                    else
-                        beam.dont_stop_foe = true;
-                }
-            }
-
-            return (_range_used_on_hit(beam));
-        }
-
-        // BEGIN non-tracer enchantment
-
-        // Submerged monsters are unaffected by enchantments.
-        if (submerged)
-            return (0);
-
-        god_conduct_trigger conducts[3];
-        disable_attack_conducts(conducts);
-
-        // Nasty enchantments will annoy the monster, and are considered
-        // naughty (even if a monster might resist).
-        if (_nasty_beam(mon, beam))
-        {
-            if (YOU_KILL(beam.thrower))
-            {
-                if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
-                    remove_sanctuary(true);
-
-                set_attack_conducts(conducts, mon, player_monster_visible(mon));
-
-                if (you.religion == GOD_BEOGH
-                    && mons_species(mon->type) == MONS_ORC
-                    && mons_is_sleeping(mon) && !player_under_penance()
-                    && you.piety >= piety_breakpoint(2) && mons_near(mon))
-                {
-                    hit_woke_orc = true;
-                }
-            }
-
-            behaviour_event(mon, ME_ANNOY, _beam_source(beam));
-        }
-        else
-            behaviour_event(mon, ME_ALERT, _beam_source(beam));
-
-        enable_attack_conducts(conducts);
-
-        // Doing this here so that the player gets to see monsters
-        // "flicker and vanish" when turning invisible....
-        _ench_animation( beam.real_flavour, mon );
-
-        // now do enchantment affect
-        mon_resist_type ench_result = _affect_monster_enchantment(beam, mon);
-        if (mon->alive())
-        {
-            if (mons_is_mimic(mon->type))
-                mimic_alert(mon);
-
-            switch (ench_result)
-            {
-            case MON_RESIST:
-                if (simple_monster_message(mon, " resists."))
-                    beam.msg_generated = true;
-                break;
-            case MON_UNAFFECTED:
-                if (simple_monster_message(mon, " is unaffected."))
-                    beam.msg_generated = true;
-                break;
-            default:
-                _update_hurt_or_helped(beam, mon);
-                break;
-            }
-        }
-        if (hit_woke_orc)
-            beogh_follower_convert(mon, true);
-
-        return (_range_used_on_hit(beam));
-
-        // END non-tracer enchantment
+        tracer_affect_monster(mon);
+        return;
     }
 
-
-    // BEGIN non-enchantment (could still be tracer)
-    if (submerged && !beam.aimed_at_spot)
-        return (0);                   // missed me!
-
-    // We need to know how much the monster _would_ be hurt by this, before
-    // we decide if it actually hits.
-
-    // Roll the damage:
-    hurt = beam.damage.roll();
-
-    // Water absorbs some of the damage for submerged monsters.
-    if (submerged)
+    // Visual - wake monsters.
+    if (flavour == BEAM_VISUAL)
     {
-        // Can't hurt submerged water creatures with electricity.
-        if (beam.flavour == BEAM_ELECTRICITY)
-        {
-            if (see_grid(mon->pos()) && !beam.is_tracer)
-            {
-                mprf("The %s arcs harmlessly into the water.",
-                     beam.name.c_str());
-            }
-            return (BEAM_STOP);
-        }
-
-        hurt = hurt * 2 / 3;
+        behaviour_event( mon, ME_DISTURB );
+        return;
     }
 
-    hurt_final = hurt;
+    // Special case: disintegrate (or Shatter) a statue.
+    // Since disintegration is an enchantment, it has to be handled
+    // here.
+    if (handle_statue_disintegration(mon))
+        return;
 
-    if (beam.is_tracer)
-        hurt_final -= std::max(mon->ac / 2, 0);
-    else
-        hurt_final -= random2(1 + mon->ac);
-
-    if (beam.flavour == BEAM_FRAG)
+    if (is_enchantment())
     {
-        hurt_final -= random2(1 + mon->ac);
-        hurt_final -= random2(1 + mon->ac);
+        // no to-hit check
+        enchantment_affect_monster(mon);
+        return;
     }
 
-    if (hurt_final < 0)
-        hurt_final = 0;
+    if (mon->submerged() && !aimed_at_spot)
+        return;                 // passes overhead
 
-    const int raw_damage = hurt_final;
-
-    // Check monster resists, _without_ side effects (since the
-    // beam/missile might yet miss!)
-    hurt_final = mons_adjust_flavoured( mon, beam, raw_damage, false );
+    // We need to know how much the monster _would_ be hurt by this,
+    // before we decide if it actually hits.
+    int preac, postac, final;
+    if ( !determine_damage(mon, preac, postac, final) )
+        return;
 
 #if DEBUG_DIAGNOSTICS
-    if (!beam.is_tracer)
-    {
-        mprf(MSGCH_DIAGNOSTICS,
-             "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d",
-             mon->name(DESC_PLAIN).c_str(), hurt, raw_damage, hurt_final);
-    }
+    mprf(MSGCH_DIAGNOSTICS,
+         "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d",
+         mon->name(DESC_PLAIN).c_str(), preac, postac, final);
 #endif
-
-    // Now, we know how much this monster would (probably) be
-    // hurt by this beam.
-    if (beam.is_tracer)
-    {
-        if (beam.thrower == KILL_YOU_MISSILE || beam.thrower == KILL_YOU)
-        {
-            if (!_beam_is_harmless(beam, mon)
-                && (beam.fr_count == 1 && !beam.dont_stop_fr
-                    || beam.foe_count == 1 && !beam.dont_stop_foe))
-            {
-                const bool target = (beam.target == mon->pos());
-
-                if (stop_attack_prompt(mon, true, target))
-                {
-                    beam.beam_cancelled = true;
-                    return (BEAM_STOP);
-                }
-                if (beam.fr_count == 1 && !beam.dont_stop_fr)
-                    beam.dont_stop_fr = true;
-                else
-                    beam.dont_stop_foe = true;
-            }
-        }
-
-        // Check only if actual damage.
-        if (hurt_final > 0 && hurt > 0)
-        {
-            // Monster could be hurt somewhat, but only apply the
-            // monster's power based on how badly it is affected.
-            // For example, if a fire giant (power 16) threw a
-            // fireball at another fire giant, and it only took
-            // 1/3 damage, then power of 5 would be applied to
-            // foe_power or fr_power.
-            if (!mons_atts_aligned(beam.attitude, mons_attitude(mon)))
-            {
-                // Counting foes is only important for monster tracers.
-                beam.foe_power += 2 * hurt_final * mons_power(mons_type)
-                                                    / hurt;
-            }
-            else
-            {
-                beam.fr_power += 2 * hurt_final * mons_power(mons_type)
-                                                   / hurt;
-            }
-        }
-
-        // Either way, we could hit this monster, so return range used.
-        return (_range_used_on_hit(beam));
-    }
-    // END non-enchantment (could still be tracer)
-
-    // BEGIN real non-enchantment beam
 
     // Player beams which hit friendlies or good neutrals will annoy
     // them and be considered naughty if they do damage (this is so as
@@ -4726,16 +4371,17 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    if (_nasty_beam(mon, beam))
+    bool hit_woke_orc = false;
+    if (nasty_to(mon))
     {
-        if (YOU_KILL(beam.thrower) && hurt_final > 0)
+        if (YOU_KILL(thrower) && final > 0)
         {
             // It's not the player's fault if he didn't see the monster or
             // the monster was caught in an unexpected blast of ?immolation.
             const bool okay =
                 (!player_monster_visible(mon)
-                 || beam.aux_source == "reading a scroll of immolation"
-                    && !beam.effect_known);
+                 || aux_source == "reading a scroll of immolation"
+                    && !effect_known);
 
             if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
                 remove_sanctuary(true);
@@ -4744,7 +4390,7 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
         }
 
         if (you.religion == GOD_BEOGH && mons_species(mon->type) == MONS_ORC
-            && mons_is_sleeping(mon) && YOU_KILL(beam.thrower)
+            && mons_is_sleeping(mon) && YOU_KILL(thrower)
             && !player_under_penance() && you.piety >= piety_breakpoint(2)
             && mons_near(mon))
         {
@@ -4753,10 +4399,11 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     }
 
     // Explosions always 'hit'.
-    const bool engulfs = (beam.is_explosion || beam.is_big_cloud);
+    const bool engulfs = (is_explosion || is_big_cloud);
 
-    int beam_hit = beam.hit;
-    if (menv[tid].invisible() && !beam.can_see_invis)
+    // Make a copy of the to-hit before we modify it.
+    int beam_hit = hit;
+    if (mon->invisible() && !this->can_see_invis)
         beam_hit /= 2;
 
     // FIXME We're randomising mon->evasion, which is further
@@ -4765,191 +4412,84 @@ static int _affect_monster(bolt &beam, monsters *mon, item_def *item)
     if (!engulfs && !test_beam_hit(beam_hit, random2(mon->ev)))
     {
         // If the PLAYER cannot see the monster, don't tell them anything!
-        if (player_monster_visible( &menv[tid] ) && mons_near(mon))
+        if (player_monster_visible(mon) && mons_near(mon))
         {
-            msg::stream << "The " << beam.name << " misses "
+            msg::stream << "The " << name << " misses "
                         << mon->name(DESC_NOCAP_THE) << '.' << std::endl;
         }
-        return (0);
+        return;
     }
 
     // The monster may block the beam.
-    if (!engulfs && _beam_is_blockable(beam))
-    {
-        const int shield_block = mon->shield_bonus();
-        if (shield_block > 0)
-        {
-            const int hit = random2( beam.hit * 130 / 100
-                                     + mon->shield_block_penalty() );
-            if (hit < shield_block)
-            {
-                item_def *shield = mon->mslot_item(MSLOT_SHIELD);
-                if (_beam_is_reflectable(beam, shield))
-                {
-                    if (you.can_see(mon))
-                    {
-                        mprf("%s reflects the %s off %s %s!",
-                             mon->name(DESC_CAP_THE).c_str(),
-                             beam.name.c_str(),
-                             mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
-                             shield->name(DESC_PLAIN).c_str());
-                        _ident_reflector(shield);
-                    }
-                    else if (see_grid(beam.pos))
-                        mprf("The %s bounces off of thin air!",
-                             beam.name.c_str());
+    if (!engulfs && is_blockable() && attempt_block(mon))
+        return;
 
-                    _reflect_beam(beam);
-                }
-                else
-                    mprf("%s blocks the %s.",
-                         mon->name(DESC_CAP_THE).c_str(),
-                         beam.name.c_str());
-
-                mon->shield_block_succeeded();
-                return (BEAM_STOP);
-            }
-        }
-    }
-
-    _update_hurt_or_helped(beam, mon);
-
+    update_hurt_or_helped(mon);
     enable_attack_conducts(conducts);
 
     // The beam hit.
     if (mons_near(mon))
     {
         mprf("The %s %s %s.",
-             beam.name.c_str(),
+             name.c_str(),
              engulfs? "engulfs" : "hits",
-             player_monster_visible(&menv[tid]) ?
+             player_monster_visible(mon) ?
                  mon->name(DESC_NOCAP_THE).c_str() : "something");
 
     }
     else
     {
         // The player might hear something, if _they_ fired a missile
-        // (not beam).
-        if (!silenced(you.pos()) && beam.flavour == BEAM_MISSILE
-            && YOU_KILL(beam.thrower))
+        // (not magic beam).
+        if (!silenced(you.pos()) && flavour == BEAM_MISSILE
+            && YOU_KILL(thrower))
         {
-            mprf(MSGCH_SOUND, "The %s hits something.", beam.name.c_str());
+            mprf(MSGCH_SOUND, "The %s hits something.", name.c_str());
         }
     }
 
     // handling of missiles
-    if (item && item->base_type == OBJ_MISSILES
+    if (item
+        && item->base_type == OBJ_MISSILES
         && item->sub_type == MI_THROWING_NET)
     {
-        monster_caught_in_net(mon, beam);
+        monster_caught_in_net(mon, *this);
     }
 
-    // Note that hurt_final was calculated above, so we don't need it again.
-    // just need to apply flavoured specials (since we called with
-    // doFlavouredEffects = false above).
-    hurt_final = mons_adjust_flavoured(mon, beam, raw_damage);
+    // Apply flavoured specials.
+    mons_adjust_flavoured(mon, *this, postac, true);
 
     // If the beam is an actual missile or of the MMISSILE type (Earth magic)
     // we might bleed on the floor.
     if (!engulfs
-        && (beam.flavour == BEAM_MISSILE || beam.flavour == BEAM_MMISSILE)
-        && !mons_is_summoned(mon) && !mons_is_submerged(mon))
+        && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE)
+        && !mons_is_summoned(mon) && !mon->submerged())
     {
         // Using raw_damage instead of the flavoured one!
-        int blood = raw_damage/2; // assumes DVORP_PIERCING, factor: 0.5
-        if (blood > mon->hit_points)
-            blood = mon->hit_points;
-
+        // assumes DVORP_PIERCING, factor: 0.5
+        const int blood = std::min(postac/2, mon->hit_points); 
         bleed_onto_floor(mon->pos(), mon->type, blood, true);
     }
 
     // Now hurt monster.
-    mon->hurt(beam.agent(), hurt_final, beam.flavour, false);
+    mon->hurt(agent(), final, flavour, false);
 
     if (mon->alive())
-    {
-        if (thrower == KILL_YOU_MISSILE && mons_near(mon))
-            print_wounds(mon);
-
-        // Don't annoy friendlies or good neutrals if the player's beam
-        // did no damage.  Hostiles will still take umbrage.
-        if (hurt_final > 0 || !mons_wont_attack(mon) || !YOU_KILL(beam.thrower))
-            behaviour_event(mon, ME_ANNOY, _beam_source(beam));
-
-        // Sticky flame.
-        if (beam.name == "sticky flame")
-        {
-            int levels = std::min(4, 1 + random2(mon->hit_dice) / 2);
-            napalm_monster(mon, _whose_kill(beam), levels);
-        }
-
-        bool wake_mimic = true;
-
-        // Handle missile effects.
-        if (item && item->base_type == OBJ_MISSILES)
-        {
-            if (item->special == SPMSL_POISONED)
-            {
-                int num_levels = 0;
-                // ench_power == AUTOMATIC_HIT if this is a poisoned needle.
-                if (beam.ench_power == AUTOMATIC_HIT
-                    && x_chance_in_y(90 - 3 * mon->ac, 100))
-                {
-                    num_levels = 2;
-                }
-                else if (random2(hurt_final) - random2(mon->ac) > 0)
-                    num_levels = 1;
-
-                int num_success = 0;
-                if (YOU_KILL(beam.thrower))
-                {
-                    const int skill_level = _name_to_skill_level(beam.name);
-                    if (x_chance_in_y(skill_level + 25, 50))
-                        num_success++;
-                    if (x_chance_in_y(skill_level, 50))
-                        num_success++;
-                }
-                else
-                    num_success = 1;
-
-                if (num_success)
-                {
-                    if (num_success == 2)
-                        num_levels++;
-                    poison_monster(mon, _whose_kill(beam), num_levels);
-                }
-            }
-            else if (item->special == SPMSL_CURARE)
-            {
-                if (beam.ench_power == AUTOMATIC_HIT
-                    && curare_hits_monster(beam.agent(),
-                                           mon, _whose_kill(beam), 2)
-                    && !mon->alive())
-                {
-                    wake_mimic = false;
-                }
-            }
-        }
-
-        if (wake_mimic && mons_is_mimic(mon->type))
-            mimic_alert(mon);
-        else if (hit_woke_orc)
-            beogh_follower_convert(mon, true);
-    }
+        monster_post_hit(mon, final);
     else
-        monster_die(mon, beam.thrower, _beam_source(beam));
+        monster_die(mon, thrower, beam_source_as_target());
 
-    return (_range_used_on_hit(beam));
+    range_used += range_used_on_hit();
 }
 
-bool _beam_has_saving_throw(const bolt& beam)
+bool bolt::has_saving_throw() const
 {
-    if (beam.aimed_at_feet)
+    if (aimed_at_feet)
         return (false);
 
     bool rc = true;
 
-    switch (beam.flavour)
+    switch (flavour)
     {
     case BEAM_HASTE:
     case BEAM_HEALING:
@@ -4985,7 +4525,7 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
 
     case BEAM_ENSLAVE_SOUL:
         rc = (mons_holiness(mon) == MH_NATURAL
-            && mon->attitude != ATT_FRIENDLY);
+              && mon->attitude != ATT_FRIENDLY);
         break;
 
     case BEAM_DISPEL_UNDEAD:
@@ -5013,42 +4553,57 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
     return rc;
 }
 
-static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon)
+bool enchant_monster_with_flavour(monsters* mon, beam_type flavour, int powc)
+{
+    bolt dummy;
+    dummy.flavour = flavour;
+    dummy.ench_power = powc;
+    dummy.apply_enchantment_to_monster(mon);
+    return dummy.obvious_effect;
+}
+
+mon_resist_type bolt::try_enchant_monster(monsters *mon)
 {
     // Early out if the enchantment is meaningless.
-    if (!_ench_flavour_affects_monster(beam.flavour, mon))
+    if (!_ench_flavour_affects_monster(flavour, mon))
         return (MON_UNAFFECTED);
 
     // Check magic resistance.
-    if (_beam_has_saving_throw(beam))
+    if (has_saving_throw())
     {
         if (mons_immune_magic(mon))
             return (MON_UNAFFECTED);
-        if (check_mons_resist_magic(mon, beam.ench_power))
+        if (check_mons_resist_magic(mon, ench_power))
             return (MON_RESIST);
     }
 
-    switch (beam.flavour)
+    return (apply_enchantment_to_monster(mon));
+}
+
+mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
+{
+    // Gigantic-switches-R-Us
+    switch (flavour)
     {
     case BEAM_TELEPORT:
         if (you.can_see(mon))
-            beam.obvious_effect = true;
+            obvious_effect = true;
         monster_teleport(mon, false);
         return (MON_AFFECTED);
 
     case BEAM_BLINK:
         if (you.can_see(mon))
-            beam.obvious_effect = true;
+            obvious_effect = true;
         monster_blink(mon);
         return (MON_AFFECTED);
 
     case BEAM_POLYMORPH:
         if (mon->mutate())
-            beam.obvious_effect = true;
-        if (YOU_KILL(beam.thrower))
+            obvious_effect = true;
+        if (YOU_KILL(thrower))
         {
             did_god_conduct(DID_DELIBERATE_MUTATING, 2 + random2(3),
-                            beam.effect_known);
+                            effect_known);
         }
         return (MON_AFFECTED);
 
@@ -5057,18 +4612,18 @@ static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon)
             simple_monster_message(mon, " wobbles for a moment.");
         else
             mon->banish();
-        beam.obvious_effect = true;
+        obvious_effect = true;
         return (MON_AFFECTED);
 
     case BEAM_DEGENERATE:
         if (monster_polymorph(mon, MONS_PULSATING_LUMP))
-            beam.obvious_effect = true;
+            obvious_effect = true;
         return (MON_AFFECTED);
 
     case BEAM_DISPEL_UNDEAD:
         if (simple_monster_message(mon, " convulses!"))
-            beam.obvious_effect = true;
-        mon->hurt(beam.agent(), beam.damage.roll());
+            obvious_effect = true;
+        mon->hurt(agent(), damage.roll());
         return (MON_AFFECTED);
 
     case BEAM_ENSLAVE_UNDEAD:
@@ -5076,13 +4631,12 @@ static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon)
         const god_type god =
             (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                           : GOD_NO_GOD;
-
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
-             "HD: %d; pow: %d", mon->hit_dice, beam.ench_power);
+             "HD: %d; pow: %d", mon->hit_dice, ench_power);
 #endif
 
-        beam.obvious_effect = true;
+        obvious_effect = true;
         if (player_will_anger_monster(mon))
         {
             simple_monster_message(mon, " is repulsed!");
@@ -5103,7 +4657,7 @@ static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon)
     case BEAM_ENSLAVE_SOUL:
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
-             "HD: %d; pow: %d", mon->hit_dice, beam.ench_power);
+             "HD: %d; pow: %d", mon->hit_dice, ench_power);
 #endif
 
         if (!mons_can_be_zombified(mon) || mons_intel(mon) < I_NORMAL)
@@ -5112,10 +4666,10 @@ static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon)
             return (MON_OTHER);
         }
 
-        if (mon->hit_dice >= random2(beam.ench_power / 2))
+        if (mon->hit_dice >= random2(ench_power / 2))
             return (MON_RESIST);
 
-        beam.obvious_effect = true;
+        obvious_effect = true;
         mon->flags |= MF_ENSLAVED_SOUL;
         simple_monster_message(mon, "'s soul is now ripe for the taking.");
         return (MON_AFFECTED);
@@ -5123,16 +4677,16 @@ static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon)
     case BEAM_ENSLAVE_DEMON:
 #if DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS,
-             "HD: %d; pow: %d", mon->hit_dice, beam.ench_power);
+             "HD: %d; pow: %d", mon->hit_dice, ench_power);
 #endif
 
-        if (mon->hit_dice * 11 / 2 >= random2(beam.ench_power)
+        if (mon->hit_dice * 11 / 2 >= random2(ench_power)
             || mons_is_unique(mon->type))
         {
             return (MON_RESIST);
         }
 
-        beam.obvious_effect = true;
+        obvious_effect = true;
         if (player_will_anger_monster(mon))
         {
             simple_monster_message(mon, " is repulsed!");
@@ -5151,171 +4705,310 @@ static mon_resist_type _affect_monster_enchantment(bolt &beam, monsters *mon)
 
     case BEAM_PAIN:             // pain/agony
         if (simple_monster_message(mon, " convulses in agony!"))
-            beam.obvious_effect = true;
+            obvious_effect = true;
 
-        if (beam.name.find("agony") != std::string::npos) // agony
+        if (name.find("agony") != std::string::npos) // agony
             mon->hit_points = std::max(mon->hit_points/2, 1);
         else                    // pain
-            mon->hurt(beam.agent(), beam.damage.roll(), beam.flavour);
+            mon->hurt(agent(), damage.roll(), flavour);
         return (MON_AFFECTED);
 
     case BEAM_DISINTEGRATION:   // disrupt/disintegrate
         if (simple_monster_message(mon, " is blasted."))
-            beam.obvious_effect = true;
-        mon->hurt(beam.agent(), beam.damage.roll(), beam.flavour);
+            obvious_effect = true;
+        mon->hurt(agent(), damage.roll(), flavour);
         return (MON_AFFECTED);
 
     case BEAM_SLEEP:
         if (simple_monster_message(mon, " looks drowsy..."))
-            beam.obvious_effect = true;
+            obvious_effect = true;
         mon->put_to_sleep();
         return (MON_AFFECTED);
 
     case BEAM_BACKLIGHT:
-        if (backlight_monsters(mon->pos(), beam.hit, 0))
+        if (backlight_monsters(mon->pos(), hit, 0))
         {
-            beam.obvious_effect = true;
+            obvious_effect = true;
             return (MON_AFFECTED);
         }
         return (MON_UNAFFECTED);
 
-    default:
-        return (mons_ench_f2(mon, beam));
+    case BEAM_SLOW:
+        // try to remove haste, if monster is hasted
+        if (mon->del_ench(ENCH_HASTE))
+        {
+            if (simple_monster_message(mon, " is no longer moving quickly."))
+                obvious_effect = true;
+            return (MON_AFFECTED);
+        }
+
+        // not hasted, slow it
+        if (!mon->has_ench(ENCH_SLOW)
+            && !mons_is_stationary(mon)
+            && mon->add_ench(mon_enchant(ENCH_SLOW, 0, whose_kill())))
+        {
+            if (!mons_is_paralysed(mon) && !mons_is_petrified(mon)
+                && simple_monster_message(mon, " seems to slow down."))
+            {
+                obvious_effect = true;
+            }
+        }
+        return (MON_AFFECTED);
+
+    case BEAM_HASTE:
+        if (mon->del_ench(ENCH_SLOW))
+        {
+            if (simple_monster_message(mon, " is no longer moving slowly."))
+                obvious_effect = true;
+
+            return (MON_AFFECTED);
+        }
+
+        // Not slowed, haste it.
+        if (!mon->has_ench(ENCH_HASTE)
+            && !mons_is_stationary(mon)
+            && mon->add_ench(ENCH_HASTE))
+        {
+            if (!mons_is_paralysed(mon) && !mons_is_petrified(mon)
+                && simple_monster_message(mon, " seems to speed up."))
+            {
+                obvious_effect = true;
+            }
+        }
+        return (MON_AFFECTED);
+
+    case BEAM_HEALING:
+        if (YOU_KILL(thrower))
+        {
+            if (cast_healing(5 + damage.roll(), mon->pos()) > 0)
+                obvious_effect = true;
+            msg_generated = true; // to avoid duplicate "nothing happens"
+        }
+        else if (heal_monster(mon, 5 + damage.roll(), false))
+        {
+            if (mon->hit_points == mon->max_hit_points)
+            {
+                if (simple_monster_message(mon, "'s wounds heal themselves!"))
+                    obvious_effect = true;
+            }
+            else if (simple_monster_message(mon, " is healed somewhat."))
+                obvious_effect = true;
+        }
+        return (MON_AFFECTED);
+
+    case BEAM_PARALYSIS:
+        apply_bolt_paralysis(mon);
+        return (MON_AFFECTED);
+
+    case BEAM_PETRIFY:
+        apply_bolt_petrify(mon);
+        return (MON_AFFECTED);
+
+    case BEAM_CONFUSION:
+        if (!mons_class_is_confusable(mon->type))
+            return (MON_UNAFFECTED);
+
+        if (mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, whose_kill())))
+        {
+            // FIXME: Put in an exception for things you won't notice
+            // becoming confused.
+            if (simple_monster_message(mon, " appears confused."))
+                obvious_effect = true;
+        }
+        return (MON_AFFECTED);
+
+    case BEAM_INVISIBILITY:
+    {
+        // Store the monster name before it becomes an "it" -- bwr
+        const std::string monster_name = mon->name(DESC_CAP_THE);
+
+        if (!mon->has_ench(ENCH_INVIS) && mon->add_ench(ENCH_INVIS))
+        {
+            // A casting of invisibility erases backlight.
+            mon->del_ench(ENCH_BACKLIGHT);
+
+            // Can't use simple_monster_message() here, since it checks
+            // for visibility of the monster (and it's now invisible).
+            // -- bwr
+            if (mons_near(mon))
+            {
+                mprf("%s flickers %s",
+                     monster_name.c_str(),
+                     player_monster_visible(mon) ? "for a moment."
+                                                 : "and vanishes!" );
+
+                if (!player_monster_visible(mon))
+                {
+                    // Also turn off autopickup.
+                    Options.autopickup_on = false;
+                    mpr("Deactivating autopickup; reactivate with Ctrl-A.",
+                        MSGCH_WARN);
+
+                    if (Options.tutorial_left)
+                    {
+                        learned_something_new(TUT_INVISIBLE_DANGER);
+                        Options.tut_seen_invisible = you.num_turns;
+                    }
+                }
+            }
+
+            obvious_effect = true;
+        }
+        return (MON_AFFECTED);
     }
+    case BEAM_CHARM:
+        if (player_will_anger_monster(mon))
+        {
+            simple_monster_message(mon, " is repulsed!");
+            return (MON_OTHER);
+        }
+
+        if (mon->add_ench(ENCH_CHARM))
+        {
+            // FIXME: Put in an exception for fungi, plants and other
+            // things you won't notice becoming charmed.
+            if (simple_monster_message(mon, " is charmed."))
+                obvious_effect = true;
+        }
+        return (MON_AFFECTED);
+
+    default:
+        break;
+    }
+
+    return (MON_AFFECTED);
 }
 
 
 // Extra range used on hit.
-static int _range_used_on_hit(bolt &beam)
+int bolt::range_used_on_hit() const
 {
     // Non-beams can only affect one thing (player/monster).
-    if (!beam.is_beam)
+    if (!is_beam)
         return (BEAM_STOP);
 
-    if (beam.is_enchantment())
-        return (beam.flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
+    if (is_enchantment())
+        return (flavour == BEAM_DIGGING ? 0 : BEAM_STOP);
 
     // Hellfire stops for nobody!
-    if (beam.name == "hellfire")
+    if (name == "hellfire")
         return (0);
 
     // Generic explosion.
-    if (beam.is_explosion || beam.is_big_cloud)
+    if (is_explosion || is_big_cloud)
         return (BEAM_STOP);
 
     // Plant spit.
-    if (beam.flavour == BEAM_ACID)
+    if (flavour == BEAM_ACID)
         return (BEAM_STOP);
 
     // Lava doesn't go far, but it goes through most stuff.
-    if (beam.flavour == BEAM_LAVA)
+    if (flavour == BEAM_LAVA)
         return (1);
 
-    // If it isn't lightning, reduce range by a lot.
-    if (beam.flavour != BEAM_ELECTRICITY)
-        return (2);
+    // Lightning goes through things.
+    if (flavour == BEAM_ELECTRICITY)
+        return (0);
 
-    return (0);
+    return (2);
 }
 
-// Takes a bolt and refines it for use in the explosion function. Called
-// from missile() and beam() in beam.cc. Explosions which do not follow from
-// beams (eg scrolls of immolation) bypass this function.
-static void _explosion1(bolt &pbolt)
+// Takes a bolt and refines it for use in the explosion function.
+// Explosions which do not follow from beams (e.g., scrolls of
+// immolation) bypass this function.
+void bolt::refine_for_explosion()
 {
-    int ex_size = 1;
-    // convenience
-    coord_def p = pbolt.target;
+    ex_size = 1;
     const char *seeMsg  = NULL;
     const char *hearMsg = NULL;
 
     // Assume that the player can see/hear the explosion, or
     // gets burned by it anyway.  :)
-    pbolt.msg_generated = true;
+    msg_generated = true;
 
-    if (pbolt.name == "hellfire")
+    if (name == "hellfire")
     {
         seeMsg  = "The hellfire explodes!";
         hearMsg = "You hear a strangely unpleasant explosion.";
 
-        pbolt.type    = dchar_glyph(DCHAR_FIRED_BURST);
-        pbolt.flavour = BEAM_HELLFIRE;
+        type    = dchar_glyph(DCHAR_FIRED_BURST);
+        flavour = BEAM_HELLFIRE;
     }
 
-    if (pbolt.name == "golden flame")
+    if (name == "golden flame")
     {
         seeMsg  = "The flame explodes!";
         hearMsg = "You feel a deep, resonant explosion.";
 
-        pbolt.type    = dchar_glyph(DCHAR_FIRED_BURST);
-        pbolt.flavour = BEAM_HOLY;
+        type    = dchar_glyph(DCHAR_FIRED_BURST);
+        flavour = BEAM_HOLY;
         ex_size = 2;
     }
 
-    if (pbolt.name == "fireball")
+    if (name == "fireball")
     {
         seeMsg  = "The fireball explodes!";
         hearMsg = "You hear an explosion.";
 
-        pbolt.type    = dchar_glyph(DCHAR_FIRED_BURST);
-        pbolt.flavour = BEAM_FIRE;
+        type    = dchar_glyph(DCHAR_FIRED_BURST);
+        flavour = BEAM_FIRE;
         ex_size = 1;
     }
 
-    if (pbolt.name == "orb of electricity")
+    if (name == "orb of electricity")
     {
         seeMsg  = "The orb of electricity explodes!";
         hearMsg = "You hear a clap of thunder!";
 
-        pbolt.type       = dchar_glyph(DCHAR_FIRED_BURST);
-        pbolt.flavour    = BEAM_ELECTRICITY;
-        pbolt.colour     = LIGHTCYAN;
-        pbolt.damage.num = 1;
-        ex_size          = 2;
+        type       = dchar_glyph(DCHAR_FIRED_BURST);
+        flavour    = BEAM_ELECTRICITY;
+        colour     = LIGHTCYAN;
+        damage.num = 1;
+        ex_size    = 2;
     }
 
-    if (pbolt.name == "orb of energy")
+    if (name == "orb of energy")
     {
         seeMsg  = "The orb of energy explodes.";
         hearMsg = "You hear an explosion.";
     }
 
-    if (pbolt.name == "metal orb")
+    if (name == "metal orb")
     {
         seeMsg  = "The orb explodes into a blast of deadly shrapnel!";
         hearMsg = "You hear an explosion!";
 
-        pbolt.name    = "blast of shrapnel";
-        pbolt.type    = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.flavour = BEAM_FRAG;     // Sets it from pure damage to shrapnel
-                                       // (which is absorbed extra by armour).
+        name    = "blast of shrapnel";
+        type    = dchar_glyph(DCHAR_FIRED_ZAP);
+        flavour = BEAM_FRAG;     // Sets it from pure damage to shrapnel
+                                 // (which is absorbed extra by armour).
     }
 
-    if (pbolt.name == "great blast of cold")
+    if (name == "great blast of cold")
     {
         seeMsg  = "The blast explodes into a great storm of ice!";
         hearMsg = "You hear a raging storm!";
 
-        pbolt.name       = "ice storm";
-        pbolt.type       = dchar_glyph(DCHAR_FIRED_ZAP);
-        pbolt.colour     = WHITE;
-        ex_size          = 2 + (random2( pbolt.ench_power ) > 75);
+        name       = "ice storm";
+        type       = dchar_glyph(DCHAR_FIRED_ZAP);
+        colour     = WHITE;
+        ex_size          = 2 + (random2( ench_power ) > 75);
     }
 
-    if (pbolt.name == "ball of vapour")
+    if (name == "ball of vapour")
     {
         seeMsg     = "The ball expands into a vile cloud!";
         hearMsg    = "You hear a gentle \'poof\'.";
-        if (!pbolt.is_tracer)
-            pbolt.name = "stinking cloud";
+        if (!is_tracer)
+            name = "stinking cloud";
     }
 
-    if (pbolt.name == "potion")
+    if (name == "potion")
     {
         seeMsg     = "The potion explodes!";
         hearMsg    = "You hear an explosion!";
-        if (!pbolt.is_tracer)
-            pbolt.name = "cloud";
+        if (!is_tracer)
+            name = "cloud";
     }
 
     if (seeMsg == NULL)
@@ -5325,316 +5018,199 @@ static void _explosion1(bolt &pbolt)
     }
 
 
-    if (!pbolt.is_tracer && *seeMsg && *hearMsg)
+    if (!is_tracer && *seeMsg && *hearMsg)
     {
         // Check for see/hear/no msg.
-        if (see_grid(p) || p == you.pos())
+        if (see_grid(target) || target == you.pos())
             mpr(seeMsg);
         else
         {
-            if (!player_can_hear(p))
-                pbolt.msg_generated = false;
+            if (!player_can_hear(target))
+                msg_generated = false;
             else
                 mpr(hearMsg, MSGCH_SOUND);
         }
     }
-
-    pbolt.ex_size = ex_size;
-    explosion( pbolt );
 }
 
+typedef std::vector< std::vector<coord_def> > sweep_type;
+
+static sweep_type _radial_sweep(int r)
+{
+    sweep_type result;
+    sweep_type::value_type work;
+
+    // Center first.
+    work.push_back( coord_def(0,0) );
+    result.push_back(work);
+    
+    for (int rad = 1; rad <= r; ++rad)
+    {
+        work.clear();
+
+        for (int d = -rad; d <= rad; ++d)
+        {
+            // Don't put the corners in twice!
+            if (d != rad && d != -rad)
+            {
+                work.push_back( coord_def(-rad, d) );
+                work.push_back( coord_def(+rad, d) );
+            }
+
+            work.push_back( coord_def(d, -rad) );
+            work.push_back( coord_def(d, +rad) );
+        }
+        result.push_back(work);
+    }
+    return result;
+}
 
 #define MAX_EXPLOSION_RADIUS 9
 
-// explosion() is considered to emanate from beam->target_x, target_y
-// and has a radius equal to ex_size.  The explosion will respect
-// boundaries like walls, but go through/around statues/idols/etc.
-//
-// For each cell affected by the explosion, affect() is called.
-int explosion( bolt &beam, bool hole_in_the_middle,
-               bool explode_in_wall, bool stop_at_statues,
-               bool stop_at_walls, bool show_more, bool affect_items)
+bool bolt::explode(bool show_more, bool hole_in_the_middle)
 {
-    beam.real_flavour = beam.flavour;
+    real_flavour = flavour;
+    const int r = std::min(ex_size, MAX_EXPLOSION_RADIUS);
+    in_explosion_phase = true;
 
-    if (in_bounds(beam.source) && beam.source != beam.target
-        && (!explode_in_wall || stop_at_statues || stop_at_walls))
+    if (is_sanctuary(pos()))
     {
-        ray_def ray;
-        int     max_dist = grid_distance(beam.source, beam.target);
-
-        ray.fullray_idx = -1; // to quiet valgrind
-        find_ray( beam.source, beam.target, true, ray, 0, true );
-
-        // Can cast explosions out from statues or walls.
-        if (ray.pos() == beam.source)
-        {
-            max_dist--;
-            ray.advance(true);
-        }
-
-        int dist = 0;
-        while (dist++ <= max_dist && ray.pos() != beam.target)
-        {
-            if (grid_is_solid(ray.pos()))
-            {
-                bool is_wall = grid_is_wall(grd(ray.pos()));
-                if (!stop_at_statues && !is_wall)
-                {
-#if DEBUG_DIAGNOSTICS
-                    mpr("Explosion beam passing over a statue or other "
-                        "non-wall solid feature.", MSGCH_DIAGNOSTICS);
-#endif
-                    continue;
-                }
-                else if (!stop_at_walls && is_wall)
-                {
-#if DEBUG_DIAGNOSTICS
-                    mpr("Explosion beam passing through a wall.",
-                        MSGCH_DIAGNOSTICS);
-#endif
-                    continue;
-                }
-
-#if DEBUG_DIAGNOSTICS
-                if (!is_wall && stop_at_statues)
-                {
-                    mpr("Explosion beam stopped by a statue or other "
-                        "non-wall solid feature.", MSGCH_DIAGNOSTICS);
-                }
-                else if (is_wall && stop_at_walls)
-                {
-                    mpr("Explosion beam stopped by a by wall.",
-                        MSGCH_DIAGNOSTICS);
-                }
-                else
-                {
-                    mpr("Explosion beam stopped by someting buggy.",
-                        MSGCH_DIAGNOSTICS);
-                }
-#endif
-
-                break;
-            }
-            ray.advance(true);
-        } // while (dist++ <= max_dist)
-
-        // Backup so we don't explode inside the wall.
-        if (!explode_in_wall && grid_is_wall(grd(ray.pos())))
-        {
-#if DEBUG_DIAGNOSTICS
-            int old_x = ray.x();
-            int old_y = ray.y();
-#endif
-            ray.regress();
-#if DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Can't explode in a solid wall, backing up a step "
-                 "along the beam path from (%d, %d) to (%d, %d)",
-                 old_x, old_y, ray.x(), ray.y());
-#endif
-        }
-        beam.target = ray.pos();
-    } // if (!explode_in_wall)
-
-    int r = beam.ex_size;
-
-    // Beam is now an explosion.
-    beam.in_explosion_phase = true;
-
-    if (is_sanctuary(beam.target))
-    {
-        if (!beam.is_tracer && see_grid(beam.target) && !beam.name.empty())
+        if (!is_tracer && see_grid(pos()) && !name.empty())
         {
             mprf(MSGCH_GOD, "By Zin's power, the %s is contained.",
-                 beam.name.c_str());
+                 name.c_str());
+            return (true);
         }
-        return (-1);
+        return (false);
     }
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "explosion at (%d, %d) : t=%d c=%d f=%d hit=%d dam=%dd%d",
-         beam.target.x, beam.target.y,
-         beam.type, beam.colour, beam.flavour,
-         beam.hit, beam.damage.num, beam.damage.size );
+         pos().x, pos().y, type, colour, flavour, hit, damage.num, damage.size);
 #endif
 
-    // For now, we don't support explosions greater than 9 radius.
-    if (r > MAX_EXPLOSION_RADIUS)
-        r = MAX_EXPLOSION_RADIUS;
-
     // make a noise
-    noisy(10 + 5 * r, beam.target);
+    noisy(10 + 5 * r, pos());
 
-    // set map to INT_MAX
-    explode_map.init(INT_MAX);
+    // Run DFS to determine which cells are influenced
+    explosion_map exp_map;
+    exp_map.init(INT_MAX);
+    determine_affected_cells(exp_map, coord_def(), 0, r, true, true);
 
-    // Discover affected cells - recursion is your friend!
-    // this is done to model an explosion's behaviour around
-    // corners where a simple 'line of sight' isn't quite
-    // enough.  This might be slow for really big explosions,
-    // as the recursion runs approximately as R^2.
-    _explosion_map(beam, coord_def(0, 0), 0, r);
-
-    // Go through affected cells, drawing effect and
-    // calling affect() for each.  Now, we get a bit
-    // fancy, drawing all radius 0 effects, then radius 1,
-    // radius 2, etc.  It looks a bit better that way.
-
-    // turn buffering off
 #ifdef WIN32CONSOLE
+    // turn buffering off
     bool oldValue = true;
-    if (!beam.is_tracer)
+    if (!is_tracer)
         oldValue = set_buffering(false);
 #endif
 
-    // --------------------- begin boom ---------------
+    // We get a bit fancy, drawing all radius 0 effects, then radius
+    // 1, radius 2, etc.  It looks a bit better that way.
+    const std::vector< std::vector<coord_def> > sweep = _radial_sweep(r);
+    const coord_def centre(9,9);
 
-    bool drawing = true;
-    for (int i = 0; i < 2; i++)
+    typedef sweep_type::const_iterator siter;
+    typedef sweep_type::value_type::const_iterator viter;
+
+    // Draw pass.
+    if (!is_tracer)
     {
-        // do center -- but only if its affected
-        if (!hole_in_the_middle)
-            _explosion_cell(beam, coord_def(0, 0), drawing, affect_items);
-
-        // do the rest of it
-        for (int rad = 1; rad <= r; rad ++)
+        for (siter ci = sweep.begin(); ci != sweep.end(); ++ci)
         {
-            // do sides
-            for (int ay = 1 - rad; ay <= rad - 1; ay += 1)
+            for (viter cci = ci->begin(); cci != ci->end(); ++cci)
             {
-                if (explode_map[-rad+9][ay+9] < INT_MAX)
-                {
-                    _explosion_cell(beam, coord_def(-rad, ay), drawing,
-                                    affect_items);
-                }
-                if (explode_map[rad+9][ay+9] < INT_MAX)
-                {
-                    _explosion_cell(beam, coord_def(rad, ay), drawing,
-                                    affect_items);
-                }
-            }
+                const coord_def delta = *cci;
 
-            // do top & bottom
-            for (int ax = -rad; ax <= rad; ax += 1)
-            {
-                if (explode_map[ax+9][-rad+9] < INT_MAX)
-                {
-                    _explosion_cell(beam, coord_def(ax, -rad), drawing,
-                                    affect_items);
-                }
-                if (explode_map[ax+9][rad+9] < INT_MAX)
-                {
-                    _explosion_cell(beam, coord_def(ax, rad), drawing,
-                                    affect_items);
-                }
-            }
+                if (delta.origin() && hole_in_the_middle)
+                    continue;
 
-            // new-- delay after every 'ring' {gdl}
-            // If we don't refresh curses we won't
-            // guarantee that the explosion is visible.
-            if (drawing)
-                update_screen();
-            // Only delay on real explosion.
-            if (!beam.is_tracer && drawing)
-                delay(50);
+                if (exp_map(delta + centre) < INT_MAX)
+                    explosion_draw_cell(delta + pos());
+            }
+            update_screen();
+            delay(50);
         }
-
-        drawing = false;
     }
 
+    // Affect pass.
     int cells_seen = 0;
-    for ( int i = -9; i <= 9; ++i )
-        for ( int j = -9; j <= 9; ++j )
-            if ( explode_map[i+9][j+9]
-                 && see_grid(beam.target + coord_def(i,j)))
+    for (siter ci = sweep.begin(); ci != sweep.end(); ++ci)
+    {
+        for (viter cci = ci->begin(); cci != ci->end(); ++cci)
+        {
+            const coord_def delta = *cci;
+            if (delta.origin() && hole_in_the_middle)
+                continue;
+            
+            if (exp_map(delta + centre) < INT_MAX)
             {
-                cells_seen++;
-            }
+                if (see_grid(delta + pos()))
+                    ++cells_seen;
 
-    // ---------------- end boom --------------------------
+                explosion_affect_cell(delta + pos());
+            }
+        }
+    }
 
 #ifdef WIN32CONSOLE
-    if (!beam.is_tracer)
+    if (!is_tracer)
         set_buffering(oldValue);
 #endif
 
-    // Duplicate old behaviour - pause after entire explosion
-    // has been drawn.
-    if (!beam.is_tracer && cells_seen > 0 && show_more)
+    // Pause after entire explosion has been drawn.
+    if (!is_tracer && cells_seen > 0 && show_more)
         more();
 
-    return (cells_seen);
+    return (cells_seen > 0);
 }
 
-static void _explosion_cell(bolt &beam, const coord_def& p, bool drawOnly,
-                            bool affect_items)
+void bolt::explosion_draw_cell(const coord_def& p)
 {
-    coord_def realpos = beam.target + p;
-
-    if (!drawOnly)
+    if (see_grid(p))
     {
-        // Random/chaos beams: randomize before affect().
-        if (beam.real_flavour == BEAM_RANDOM)
-            beam.flavour = static_cast<beam_type>(
-                               random_range(BEAM_FIRE, BEAM_ACID) );
-        else if (beam.real_flavour == BEAM_CHAOS)
-            beam.flavour = _chaos_beam_flavour();
-
-        affect(beam, realpos, NULL, affect_items);
-
-        beam.flavour = beam.real_flavour;
-    }
-
-    // Early out for tracer.
-    if (beam.is_tracer)
-        return;
-
-    if (drawOnly)
-    {
-        const coord_def drawpos = grid2view(realpos);
-
-        // XXX Don't you always see your own grid?
-        if (see_grid(realpos) || realpos == you.pos())
-        {
+        const coord_def drawpos = grid2view(p);
 #ifdef USE_TILE
-            if (in_los_bounds(drawpos))
-                tiles.add_overlay(realpos, tileidx_bolt(beam));
+        if (in_los_bounds(drawpos))
+            tiles.add_overlay(p, tileidx_bolt(*this));
 #else
-            // bounds check
-            if (in_los_bounds(drawpos))
-            {
-                cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
-                put_colour_ch(
-                    beam.colour == BLACK ? random_colour() : beam.colour,
-                    dchar_glyph( DCHAR_EXPLOSION ) );
-            }
-#endif
+        // bounds check
+        if (in_los_bounds(drawpos))
+        {
+            cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
+            put_colour_ch(
+                colour == BLACK ? random_colour() : colour,
+                dchar_glyph(DCHAR_EXPLOSION));
         }
+#endif
     }
 }
 
-static void _explosion_map( bolt &beam, const coord_def& p,
-                           int count, int r )
+void bolt::explosion_affect_cell(const coord_def& p)
 {
-    // Check to see out of range.
-    if (p.abs() > r*(r+1))
-        return;
+    fake_flavour();
+    target = p;
+    affect_cell();
+    flavour = real_flavour;
+}
 
-    // Check count.
-    if (count > 10*r)
-        return;
+// Uses DFS
+void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
+                                    int count, int r,
+                                    bool stop_at_statues, bool stop_at_walls)
+{
+    const coord_def centre(9,9);
+    const coord_def loc = pos() + delta;
 
-    const coord_def loc(beam.target + p);
-
-    // Make sure we haven't run off the map.
-    if (!map_bounds(loc))
+    // A bunch of tests for edge cases.
+    if (delta.rdist() > centre.rdist()
+        || (delta.abs() > r*(r+1))
+        || (count > 10*r)
+        || !map_bounds(loc)
+        || is_sanctuary(loc))
+    {
         return;
-
-    // Check sanctuary.
-    if (is_sanctuary(loc))
-        return;
+    }
 
     const dungeon_feature_type dngn_feat = grd(loc);
 
@@ -5643,31 +5219,39 @@ static void _explosion_map( bolt &beam, const coord_def& p,
     // Explosion originates from rock/statue (e.g. Lee's rapid
     // deconstruction) - in this case, ignore solid cells at the
     // center of the explosion.
-
     if (grid_is_wall(dngn_feat)
         || dngn_feat == DNGN_SECRET_DOOR
         || dngn_feat == DNGN_CLOSED_DOOR)
     {
-        if (!(_affects_wall(beam, dngn_feat) && p.origin()))
+        if (stop_at_walls && !(delta.origin() && affects_wall(dngn_feat)))
             return;
     }
 
-    // Hmm, I think we're ok.
-    explode_map(p + coord_def(9,9)) = count;
+    if (grid_is_solid(dngn_feat) && !grid_is_wall(dngn_feat) && stop_at_statues)
+        return;
+
+    // Hmm, I think we're OK.
+    m(delta + centre) = std::min(count, m(delta + centre));
 
     // Now recurse in every direction.
     for (int i = 0; i < 8; i++)
     {
-        // Is that cell already covered by a recursion that was closer
-        // to the center?
-        if (explode_map(p + coord_def(9,9) + Compass[i]) <= count)
+        const coord_def new_delta = delta + Compass[i];
+
+        if (new_delta.rdist() > centre.rdist())
+            continue;
+
+        // Is that cell already covered?
+        if (m(new_delta + centre) <= count)
             continue;
 
         int cadd = 5;
-        if (p.x * Compass[i].x < 0 || p.y * Compass[i].y < 0)
+        // Changing direction (e.g. looking around a wall) costs more.
+        if (delta.x * Compass[i].x < 0 || delta.y * Compass[i].y < 0)
             cadd = 17;
 
-        _explosion_map( beam, p + Compass[i], count + cadd, r);
+        determine_affected_cells(m, new_delta, count + cadd, r,
+                                 stop_at_statues, stop_at_walls);
     }
 }
 
@@ -5679,64 +5263,60 @@ static void _explosion_map( bolt &beam, const coord_def& p,
 // Only enchantments should need the actual monster type
 // to determine this; non-enchantments are pretty
 // straightforward.
-static bool _nasty_beam(monsters *mon, const bolt &beam)
+bool bolt::nasty_to(const monsters *mon) const
 {
     // Take care of non-enchantments.
-    if (!beam.is_enchantment())
+    if (!is_enchantment())
         return (true);
 
     // Now for some non-hurtful enchantments.
-    if (beam.flavour == BEAM_DIGGING)
+    if (flavour == BEAM_DIGGING)
         return (false);
 
-    // haste/healing/invisibility
-    if (_nice_beam(mon, beam))
+    // Positive effects
+    if (nice_to(mon))
         return (false);
 
     // No charming holy beings!
-    if (beam.flavour == BEAM_CHARM)
+    if (flavour == BEAM_CHARM)
         return (mons_is_holy(mon));
 
     // Friendly and good neutral monsters don't mind being teleported.
-    if (beam.flavour == BEAM_TELEPORT)
+    if (flavour == BEAM_TELEPORT)
         return (!mons_wont_attack(mon));
 
     // degeneration / sleep / enslave soul
-    if (beam.flavour == BEAM_DEGENERATE || beam.flavour == BEAM_SLEEP
-        || beam.flavour == BEAM_ENSLAVE_SOUL)
+    if (flavour == BEAM_DEGENERATE
+        || flavour == BEAM_SLEEP
+        || flavour == BEAM_ENSLAVE_SOUL)
     {
         return (mons_holiness(mon) == MH_NATURAL);
     }
 
     // dispel undead / control undead
-    if (beam.flavour == BEAM_DISPEL_UNDEAD
-        || beam.flavour == BEAM_ENSLAVE_UNDEAD)
-    {
+    if (flavour == BEAM_DISPEL_UNDEAD || flavour == BEAM_ENSLAVE_UNDEAD)
         return (mons_holiness(mon) == MH_UNDEAD);
-    }
 
     // pain/agony
-    if (beam.flavour == BEAM_PAIN)
+    if (flavour == BEAM_PAIN)
         return (!mons_res_negative_energy(mon));
 
     // control demon
-    if (beam.flavour == BEAM_ENSLAVE_DEMON)
+    if (flavour == BEAM_ENSLAVE_DEMON)
         return (mons_holiness(mon) == MH_DEMONIC);
 
     // everything else is considered nasty by everyone
     return (true);
 }
 
-static bool _nice_beam(monsters *mon, const bolt &beam)
+// Return true if the bolt is considered nice by mon.
+// This is not the inverse of nasty_to(): the bolt needs to be
+// actively positive.
+bool bolt::nice_to(const monsters *mon) const
 {
-    // haste/healing/invisibility
-    if (beam.flavour == BEAM_HASTE || beam.flavour == BEAM_HEALING
-        || beam.flavour == BEAM_INVISIBILITY)
-    {
-        return (true);
-    }
-
-    return (false);
+    return (flavour == BEAM_HASTE
+            || flavour == BEAM_HEALING
+            || flavour == BEAM_INVISIBILITY);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -5751,22 +5331,21 @@ static bool _nice_beam(monsters *mon, const bolt &beam)
 bolt::bolt() : range(0), type('*'),
                colour(BLACK),
                flavour(BEAM_MAGIC), real_flavour(BEAM_MAGIC), drop_item(false),
-               item(NULL), source(), target(), pos(), damage(0,0),
+               item(NULL), source(), target(), damage(0,0),
                ench_power(0), hit(0), thrower(KILL_MISC), ex_size(0),
                beam_source(MHITNOT), name(), short_name(), is_beam(false),
                is_explosion(false), is_big_cloud(false), aimed_at_spot(false),
                aux_source(), affects_nothing(false), effect_known(true),
-               delay(15), obvious_effect(false),
+               draw_delay(15), obvious_effect(false),
                fr_count(0), foe_count(0), fr_power(0), foe_power(0),
                fr_hurt(0), foe_hurt(0), fr_helped(0),foe_helped(0),
-               dropped_item(false), item_pos(), item_index(NON_ITEM),
                seen(false), range_used(0), is_tracer(false),
                aimed_at_feet(false), msg_generated(false),
                in_explosion_phase(false), smart_monster(false),
                can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
                chose_ray(false), beam_cancelled(false), dont_stop_foe(false),
                dont_stop_fr(false), dont_stop_player(false),
-               bounces(false), bounce_pos(), reflections(false), reflector(-1)
+               bounces(false), bounce_pos(), reflections(0), reflector(-1)
 {
 }
 
@@ -5811,8 +5390,8 @@ void bolt::set_target(const dist &d)
 
 void bolt::setup_retrace()
 {
-    if (pos.x && pos.y)
-        target = pos;
+    if (pos().x && pos().y)
+        target = pos();
 
     std::swap(source, target);
     affects_nothing = true;
@@ -5823,7 +5402,7 @@ actor* bolt::agent() const
 {
     if (YOU_KILL(this->thrower))
         return (&you);
-    else if (this->beam_source < NON_MONSTER && this->beam_source >= 0)
+    else if (!invalid_monster_index(beam_source))
         return (&menv[this->beam_source]);
     else
         return (NULL);

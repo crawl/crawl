@@ -33,6 +33,9 @@ enum mon_resist_type
 };
 
 struct dist;
+
+typedef FixedArray<int, 19, 19> explosion_map;
+
 struct bolt
 {
     // INPUT parameters set by caller
@@ -47,11 +50,10 @@ struct bolt
     item_def*   item;                  // item to drop
     coord_def   source;                // beam origin
     coord_def   target;                // intended target
-    coord_def   pos;                   // actual position
     dice_def    damage;
     int         ench_power, hit;
     killer_type thrower;               // what kind of thing threw this?
-    char        ex_size;               // explosion radius (0==none)
+    int         ex_size;               // explosion radius (0==none)
     int         beam_source;           // NON_MONSTER or monster index #
     std::string name;
     std::string short_name;
@@ -62,10 +64,11 @@ struct bolt
     std::string aux_source;            // source of KILL_MISC beams
 
     bool        affects_nothing;       // should not hit monsters or features
+    bool        affects_items;         // hits items on ground/inventory
 
     bool        effect_known;          // did we _know_ this would happen?
 
-    int         delay;                 // delay used when drawing beam.
+    int         draw_delay;            // delay used when drawing beam.
 
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?
@@ -74,10 +77,6 @@ struct bolt
     int         fr_power, foe_power;   // total levels/hit dice affected
     int         fr_hurt, foe_hurt;     // # of friends/foes actually hurt
     int         fr_helped, foe_helped; // # of friends/foes actually helped
-
-    bool        dropped_item;          // item has been dropped
-    coord_def   item_pos;              // position item was dropped at
-    int         item_index;            // mitm[index] of item
 
     bool        seen;                  // Has player seen the beam?
 
@@ -105,53 +104,153 @@ struct bolt
     int         reflections;     // # times beam reflected off shields
     int         reflector;       // latest thing to reflect beam
 
+    bool        use_target_as_pos; // pos() should return ::target
+    bool        auto_hit;
+
     ray_def     ray;             // shoot on this specific ray
 
+#ifdef USE_TILE
+    int         tile_beam;
+#endif
 
 public:
-    // A constructor to try and fix some of the bugs that occur because
-    // this struct never seems to be properly initialized.  Definition
-    // is over in beam.cc.
     bolt();
 
-    bool is_enchantment() const; // no block/dodge, but mag resist
-    void set_target(const dist &);
+    bool is_enchantment() const; // no block/dodge, use magic resist
+    void set_target(const dist &targ);
     void setup_retrace();
 
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
     killer_type  killer() const;
 
+    kill_category whose_kill() const;
+
     actor* agent() const;
 
-    // Returns member short_name if set, otherwise some reasonble string
+    void fire();
+
+    // Returns member short_name if set, otherwise some reasonable string
     // for a short name, most likely the name of the beam's flavour.
     std::string get_short_name();
+
+    // Assume that all saving throws are failed, actually apply
+    // the enchantment.
+    mon_resist_type apply_enchantment_to_monster(monsters* mon);
+
+    // Return whether any affected cell was seen.
+    bool explode(bool show_more = true, bool hole_in_the_middle = false);
+
+private:
+    void do_fire();
+    coord_def pos() const;
+
+    // Lots of properties of the beam.
+    bool is_blockable() const;
+    bool is_superhot() const;
+    bool is_fiery() const;
+    bool affects_wall(dungeon_feature_type wall) const;
+    bool is_bouncy(dungeon_feature_type feat) const;
+    bool can_affect_wall_monster(const monsters* mon) const;
+    bool stop_at_target() const;
+    bool invisible() const;
+    bool has_saving_throw() const;
+    bool is_harmless(const monsters *mon) const;
+    bool harmless_to_player() const;
+    bool is_reflectable(const item_def *item) const;
+    bool nasty_to(const monsters* mon) const;
+    bool nice_to(const monsters* mon) const;
+    bool found_player() const;
+
+    int beam_source_as_target() const;
+    int range_used_on_hit() const;
+
+    std::string zapper() const;
+
+    std::set<std::string> message_cache;
+    void emit_message(msg_channel_type chan, const char* msg);
+    void step();
+    void hit_wall();
+
+    // Functions which handle actually affecting things. They all
+    // operate on the beam's current position (i.e., whatever pos()
+    // returns.)
+public:
+    void affect_cell();
+    void affect_wall();
+    void affect_monster( monsters* m );
+    void affect_player();
+    void affect_ground();
+    void affect_place_clouds();
+    void affect_place_explosion_clouds();
+    void affect_endpoint();
+
+    // Stuff when a monster or player is hit.
+    void affect_player_enchantment();
+    void tracer_affect_player();
+    void tracer_affect_monster(monsters* mon);
+    bool handle_statue_disintegration(monsters* mon);
+    void apply_bolt_paralysis(monsters *monster);
+    void apply_bolt_petrify(monsters *monster);
+    void enchantment_affect_monster(monsters* mon);
+    mon_resist_type try_enchant_monster(monsters *mon);
+    void tracer_enchantment_affect_monster(monsters* mon);
+    void tracer_nonenchantment_affect_monster(monsters* mon);
+    void update_hurt_or_helped(monsters *mon);
+    bool attempt_block(monsters* mon);
+    void handle_stop_attack_prompt(monsters* mon);
+    bool determine_damage(monsters* mon, int& preac, int& postac, int& final);
+    void monster_post_hit(monsters* mon, int dmg);
+    bool misses_player();
+
+    void initialize_fire();
+    void apply_beam_conducts();
+    void choose_ray();
+    void draw(const coord_def& p);
+    void bounce();
+    void reflect();
+    void fake_flavour();
+    void digging_wall_effect();
+    void fire_wall_effect();
+    void nuke_wall_effect();
+    void drop_object();
+    void finish_beam();
+    bool fuzz_invis_tracer();
+
+    void internal_ouch(int dam);
+
+    // Various explosion-related stuff.
+    void refine_for_explosion();
+    void explosion_draw_cell(const coord_def& p);
+    void explosion_affect_cell(const coord_def& p);
+    void determine_affected_cells(explosion_map& m, const coord_def& delta,
+                                  int count, int r,
+                                  bool stop_at_statues, bool stop_at_walls);
 };
 
 dice_def calc_dice( int num_dice, int max_damage );
 
 // Test if the to-hit (attack) beats evasion (defence).
 bool test_beam_hit(int attack, int defence);
-void fire_beam(bolt &pbolt);
 
+/* FIXME: remove this
 int explosion( bolt &pbolt, bool hole_in_the_middle = false,
                bool explode_in_wall = false,
                bool stop_at_statues = true,
                bool stop_at_walls   = true,
                bool show_more       = true,
                bool affect_items    = true);
+*/
 
 int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                           bool doFlavouredEffects = true);
 
+// Return whether the effect was visible.
+bool enchant_monster_with_flavour(monsters* mon, beam_type flavour,
+                                  int powc = 0);
 
 // returns true if messages were generated during the enchantment
 bool mass_enchantment( enchant_type wh_enchant, int pow, int who,
                        int *m_succumbed = NULL, int *m_attempted = NULL );
-
-
-mon_resist_type mons_ench_f2(monsters *monster, bolt &pbolt);
-
 
 bool curare_hits_monster(actor *agent, monsters *monster, kill_category who,
                          int levels = 1);
@@ -167,10 +266,6 @@ bool zapping( zap_type ztype, int power, struct bolt &pbolt,
               bool needs_tracer = false, std::string msg = "" );
 bool player_tracer( zap_type ztype, int power, struct bolt &pbolt,
                     int range = 0 );
-int affect(bolt &beam, const coord_def& p = coord_def(),
-           item_def *item = NULL, bool affect_items = true);
-void beam_drop_object( bolt &beam, item_def *item = NULL,
-                       const coord_def& where = coord_def() );
 
 std::string beam_type_name(beam_type type);
 

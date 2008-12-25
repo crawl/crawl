@@ -587,6 +587,16 @@ bool coinflip( void )
     return (static_cast<bool>( random2(2) ));
 }
 
+// Returns random2(x) if random_factor is true, otherwise the mean.
+int maybe_random2( int x, bool random_factor )
+{
+    if (random_factor)
+        return random2(x);
+    else
+        return x / 2;
+}
+
+
 void push_rng_state()
 {
     push_mt_state();

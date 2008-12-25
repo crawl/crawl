@@ -1651,12 +1651,11 @@ static void _move_stair(coord_def stair_pos, bool away)
     beam.colour  = feat_def.colour;
     beam.source  = stair_pos;
     beam.target  = ray.pos();
-    beam.delay   = 50; // Make beam animation slower than normal.
     beam.name    = "STAIR BEAM";
+    beam.draw_delay = 50; // Make beam animation slower than normal.
 
     beam.aimed_at_spot = true;
-
-    fire_beam(beam);
+    beam.fire();
 
     // Clear out "missile trails"
     viewwindow(true, false);

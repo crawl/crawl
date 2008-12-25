@@ -5473,7 +5473,7 @@ static void _tso_blasts_cleansing_flame(const char *message)
         beam.ex_size      = 2;
         beam.is_tracer    = false;
         beam.is_explosion = true;
-        explosion(beam);
+        beam.explode();
     }
 }
 

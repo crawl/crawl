@@ -1099,7 +1099,7 @@ static bool _xom_is_good(int sever, int tension)
             beam.ex_size      = 2;
             beam.is_tracer    = false;
             beam.is_explosion = true;
-            explosion(beam);
+            beam.explode();
 
             if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
             {

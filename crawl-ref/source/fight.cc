@@ -135,15 +135,6 @@ int effective_stat_bonus( int wepType )
 #endif
 }
 
-// Returns random2(x) if random_factor is true, otherwise the mean.
-static int maybe_random2( int x, bool random_factor )
-{
-    if (random_factor)
-        return random2(x);
-    else
-        return x / 2;
-}
-
 // Returns the to-hit for your extra unarmed.attacks.
 // DOES NOT do the final roll (i.e., random2(your_to_hit)).
 static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
@@ -2408,7 +2399,7 @@ void melee_attack::chaos_affects_defender()
 
         beam.ench_power = beam.damage.num;
 
-        fire_beam(beam);
+        beam.fire();
 
         if (you.can_see(defender))
             obvious_effect = beam.obvious_effect;
@@ -2975,7 +2966,7 @@ bool melee_attack::apply_damage_brand()
             beam_temp.beam_source =
                 (attacker->atype() == ACT_PLAYER) ? MHITYOU
                                                   : monster_index(atk);
-            mons_ench_f2( def, beam_temp );
+            beam_temp.apply_enchantment_to_monster(def);
             obvious_effect = beam_temp.obvious_effect;
         }
 
