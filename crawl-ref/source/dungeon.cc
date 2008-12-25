@@ -787,6 +787,12 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
     set_level_flags(place.map.level_flags.flags_set, true);
     unset_level_flags(place.map.level_flags.flags_unset, true);
 
+    if (place.map.random_mons.size() > 0)
+    {
+        ASSERT(you.level_type == LEVEL_PORTAL_VAULT);
+        set_vault_mon_list(place.map.random_mons);
+    }
+
     if (place.map.floor_colour != BLACK)
         env.floor_colour = place.map.floor_colour;
 

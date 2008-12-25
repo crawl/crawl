@@ -640,6 +640,8 @@ public:
     mons_list       mons;
     item_list       items;
 
+    std::vector<mons_spec> random_mons;
+
     map_flags       level_flags, branch_flags;
 
     keyed_specs     keyspecs;

@@ -1201,9 +1201,9 @@ dlua_set_map::~dlua_set_map()
 map_def::map_def()
     : name(), tags(), place(), depths(), orient(), chance(), weight(),
       weight_depth_mult(), weight_depth_div(), welcome_messages(), map(),
-      mons(), items(), keyspecs(), prelude("dlprelude"), main("dlmain"),
-      validate("dlvalidate"), veto("dlveto"), rock_colour(BLACK),
-      floor_colour(BLACK), rock_tile(0), floor_tile(0),
+      mons(), items(), random_mons(), keyspecs(), prelude("dlprelude"),
+      main("dlmain"), validate("dlvalidate"), veto("dlveto"),
+      rock_colour(BLACK), floor_colour(BLACK), rock_tile(0), floor_tile(0),
       index_only(false), cache_offset(0L)
 {
     init();
@@ -1227,6 +1227,7 @@ void map_def::init()
 void map_def::reinit()
 {
     items.clear();
+    random_mons.clear();
     keyspecs.clear();
     level_flags.clear();
     branch_flags.clear();
