@@ -3968,7 +3968,6 @@ static bool _initialise(void)
 
 #ifdef USE_TILE
     tiles.initialise_items();
-    TileNewLevel(newc);
 #endif
 
     set_cursor_enabled(false);

@@ -1850,11 +1850,8 @@ void up_stairs(dungeon_feature_type force_stair,
 
     const coord_def stair_pos = you.pos();
 
-#ifdef USE_TILE
-    const bool newlevel =
-#endif
-        load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
-             old_level, old_where);
+    load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
+         old_level, old_where);
 
     set_entry_cause(entry_cause, old_level_type);
     entry_cause = you.entry_cause;
@@ -1887,10 +1884,6 @@ void up_stairs(dungeon_feature_type force_stair,
 
     // Tell stash-tracker and travel that we've changed levels.
     trackers_init_new_level(true);
-
-#ifdef USE_TILE
-    TileNewLevel(newlevel);
-#endif // USE_TILE
 
     if (collect_travel_data)
     {
@@ -2454,10 +2447,6 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         mpr( "You sense a powerful magical force warping space.", MSGCH_WARN );
 
     trackers_init_new_level(true);
-
-#ifdef USE_TILE
-    TileNewLevel(newlevel);
-#endif // USE_TILE
 
     viewwindow(true, true);
 

@@ -1119,6 +1119,14 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes)
         _do_lost_items(old_level_type);
 
+#ifdef USE_TILE
+    if (make_changes)
+    {
+        tiles.clear_minimap();
+        tiles.load_dungeon(NULL, you.pos().x, you.pos().y);
+    }
+#endif
+
     // Try to open level savefile.
 #ifdef DEBUG_LEVEL_LOAD
     mprf(MSGCH_DIAGNOSTICS, "Try to open file %s", cha_fil.c_str());
@@ -1147,7 +1155,6 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         }
 
 #ifdef USE_TILE
-        tiles.load_dungeon(NULL, you.pos().x, you.pos().y);
         tile_init_default_flavour();
         tile_clear_flavour();
 #endif
@@ -1239,6 +1246,11 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         place_transiting_monsters();
         place_transiting_items();
     }
+
+#ifdef USE_TILE
+    if (make_changes)
+        TileNewLevel(just_created_level);
+#endif
 
     _redraw_all();
 
