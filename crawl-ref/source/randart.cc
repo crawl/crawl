@@ -110,9 +110,9 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
         return (false);
     else if (is_good_god(which_god)
-            && (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
-                || brand == SPWPN_VAMPIRICISM
-                || randart_wpn_property(item, RAP_CURSED) != 0))
+             && (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
+                 || brand == SPWPN_VAMPIRICISM
+                 || randart_wpn_property(item, RAP_CURSED) != 0))
     {
         return (false);
     }
@@ -853,8 +853,10 @@ void static _get_randart_properties(const item_def &item,
         }
     }
 
-    // This can't be right. random2(boolean) == 0, always. (jpeg)
-//    bool done_powers = (random2(12 < power_level));
+    // This used to be: bool done_powers = (random2(12 < power_level));
+    // ... which can't be right. random2(boolean) == 0, always.
+    // So it's probably more along the lines of... (jpeg)
+//    bool done_powers = (random2(12) < power_level);
 
    // Try to improve items that still have a low power level.
    bool done_powers = x_chance_in_y(power_level, 12);
@@ -1116,6 +1118,8 @@ void static _get_randart_properties(const item_def &item,
             proprt[RAP_CURSED] = 1 + random2(5);
         else
             proprt[RAP_CURSED] = -1;
+
+        mprf("Set RAP_CURSED to %d", proprt[RAP_CURSED]);
     }
 }
 
@@ -1211,7 +1215,14 @@ static bool _init_randart_properties(item_def &item)
     _get_randart_properties(item, prop);
 
     for (int i = 0; i < RA_PROPERTIES; i++)
+    {
+        if (i == RAP_CURSED && prop[i] < 0)
+        {
+            do_curse_item(item);
+            continue;
+        }
         rap[i] = (short) prop[i];
+    }
 
     return (true);
 }
@@ -2101,11 +2112,11 @@ bool make_item_randart( item_def &item )
         }
     }
 
-    // already is a randart
+    // This already is a randart.
     if (item.flags & ISFLAG_RANDART)
         return (true);
 
-    // not a truly random artefact
+    // Not a truly random artefact.
     if (item.flags & ISFLAG_UNRANDART)
         return (false);
 
@@ -2151,8 +2162,7 @@ bool make_item_randart( item_def &item )
     if (item.props.exists( RANDART_APPEAR_KEY ))
         ASSERT(item.props[RANDART_APPEAR_KEY].get_type() == SV_STR);
     else
-        item.props[RANDART_APPEAR_KEY].get_string() =
-            artefact_name(item, true);
+        item.props[RANDART_APPEAR_KEY].get_string() = artefact_name(item, true);
 
     return (true);
 }
@@ -2179,8 +2189,14 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     _init_randart_properties(item);
 
     item.special = unrand->prpty[ RAP_BRAND ];
-    if (unrand->prpty[ RAP_CURSED ] != 0)
+    if (item.special != 0)
+    {
         do_curse_item( item );
+
+        // If the property doesn't allow for recursing, clear it now.
+        if (item.special < 0)
+            item.special = 0;
+    }
 
     // get true artefact name
     ASSERT(!item.props.exists( RANDART_NAME_KEY ));
@@ -2193,12 +2209,12 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     set_unrandart_exist( unrand_index, true );
 
     return (true);
-}                               // end make_item_unrandart()
+}
 
 const char *unrandart_descrip( int which_descrip, const item_def &item )
 {
-// Eventually it would be great to have randomly generated descriptions
-// for randarts.
+    // Eventually it would be great to have randomly generated descriptions
+    // for randarts.
     const unrandart_entry *unrand = _seekunrandart( item );
 
     return ((which_descrip == 0) ? unrand->spec_descrip1 :

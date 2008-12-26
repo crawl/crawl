@@ -132,7 +132,7 @@ Apart from the standard items you'll find lying around in the dungeon, you might
 * unrandart: an artefact that looks like a randart but is really predefined. There's no further difference except that players "in the know" can recognize such an item by its special description and/or colour.
 * fixed art: an artefact that does not use the random artefact properties but instead has unique hardcoded effects and descriptions.
 
-All three types cannot be enchanted or branded, neither temporarily not permanently.
+None of the three types can be enchanted or branded, neither temporarily nor permanently.
 %%%%
 ##############################################
 # Questions about the development process.
@@ -192,7 +192,7 @@ There are several areas where you can get creative and outside help is much appr
 * tiles (For this you'll need the sourcecode, check the rltiles/ folder.)
 
 If you've got some great addition, you can send it over the mailing list, or post it as a Sourceforge item.
-You can also help us by giving feedback on the most recent version or trunk (downloadable from http://crawl.develz.org/).
+You can also help us by giving feedback on the most recent version or trunk (downloadable from http://crawl.develz.org).
 
 Thanks a lot for your support!
 %%%%
@@ -202,7 +202,7 @@ Is there a way for me to play the new version before it is released?
 %%%%
 A:beta
 
-There certainly is! You can play "trunk" (what will eventually become the next version) online on http://crawl.develz.org/trunk/, or you can download it from the same site. Note that trunk may be buggy, and that many changes will invalidate your saved games. If that doesn't bother you, go ahead and play. Be sure to leave some feedback/suggestions/bug reports on the Sourceforge trackers.
+There certainly is! You can play "trunk" (what will eventually become the next version) online on http://crawl.develz.org, or you can download it from the same site. Note that trunk may be buggy, and that many changes will invalidate your saved games. If that doesn't bother you, go ahead and play. Be sure to leave some feedback/suggestions/bug reports on the Sourceforge trackers.
 %%%%
 Q:interact
 
@@ -210,14 +210,33 @@ Is there a way for me to interact with other players?
 %%%%
 A:interact
 
-If you play online on http://crawl.akrasiac.org/ or http://crawl.develz.org/trunk/ you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages. 
+If you play online on http://crawl.akrasiac.org/ or http://crawl.develz.org you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages. 
 Check docs/ssh_guide.txt for an explanation about how to play online. You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Something Awful forum or the rec.games.roguelike.misc newsgroup.
 %%%%
-Q:tiles
+##############################################
+# Questions about the Tiles version
+##############################################
+Q:tiles online
 
 Can I play Tiles online?
 %%%%
-A:tiles
+A:tiles online
 
 Sadly, no, that's not possible at the moment. We do hope that one day this will be different, but so far we haven't even decided how to go about it, and it's still far off. If you can, do give the console version a try: playing online is certainly worth it.
+%%%%
+Q:tiles graphics
+
+Is there a way for me to replace some of the tiles with different ones?
+%%%%
+A:tiles graphics
+
+Not without compiling, no. If you can compile (or get someone to do it for you), either directly replace the tiles in the rltiles/ folder, or change the paths in the dc-xxxx.txt files. You may also need to delete or rename the *.png files in rltiles/. Upon compilation, the newly rolled *.png files are copied into the dat/tiles/ folder which is where the game accesses the tiles it needs.
+%%%%
+Q:tiles options
+
+Is there a way to modify the size of the tiles screen, the font etc?
+%%%%
+A:tiles options
+
+Yes. Play around with the options in settings/tiles_options.txt until you're satisfied.
 %%%%

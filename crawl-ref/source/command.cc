@@ -1428,6 +1428,8 @@ static bool _do_description(std::string key, std::string type,
     return (true);
 }
 
+// Reads all questions from database/FAQ.txt, outputs them in the form of
+// a selectable menu and prints the corresponding answer for a chosen question.
 static bool _handle_FAQ()
 {
     clrscr();
@@ -1439,25 +1441,40 @@ static bool _handle_FAQ()
         mpr("No questions found in FAQ! Please submit a bug report!");
         return (false);
     }
-    Menu FAQmenu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
-                 | MF_ALWAYS_SHOW_MORE);
-    FAQmenu.set_more(formatted_string::parse_string("Choose a question!"));
+    Menu FAQmenu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING);
+//    FAQmenu.set_more(formatted_string::parse_string("Choose a question!"));
     MenuEntry *title = new MenuEntry("Frequently Asked Questions");
     title->colour = YELLOW;
     FAQmenu.set_title(title);
+    const int width = std::min(80, get_number_of_cols());
 
     for (unsigned int i = 0, size = question_keys.size(); i < size; i++)
     {
         const char letter = index_to_letter(i);
 
-        MenuEntry *me = new MenuEntry(getFAQ_Question(question_keys[i]),
-                                      MEL_ITEM, 1, letter);
+        std::string question = getFAQ_Question(question_keys[i]);
+        // Wraparound if the question is longer than fits into a line.
+        linebreak_string2(question, width - 4);
+        std::vector<formatted_string> fss;
+        formatted_string::parse_string_to_multiple(question, fss);
 
-        me->data = (void*) &question_keys[i];
-        FAQmenu.add_entry(me);
+        MenuEntry *me;
+        for (unsigned int j = 0; j < fss.size(); j++)
+        {
+            if (j == 0)
+            {
+                me = new MenuEntry(question, MEL_ITEM, 1, letter);
+                me->data = (void*) &question_keys[i];
+            }
+            else
+            {
+                question = "    " + fss[j].tostring();
+                me = new MenuEntry(question, MEL_ITEM, 1);
+            }
+            FAQmenu.add_entry(me);
+        }
     }
 
-    const int width = std::min(80, get_number_of_cols());
     while (true)
     {
         std::vector<MenuEntry*> sel = FAQmenu.show();
@@ -1473,7 +1490,7 @@ static bool _handle_FAQ()
             std::string answer = getFAQ_Answer(key);
             if (answer.empty())
             {
-                mpr("No answer found in FAQ! Please submit a bug report!");
+                mpr("No answer found in the FAQ! Please submit a bug report!");
                 return (false);
             }
             answer = "Q: " + getFAQ_Question(key) + EOL + "A: " + answer;
