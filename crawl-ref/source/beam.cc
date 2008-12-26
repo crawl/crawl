@@ -1764,6 +1764,9 @@ void bolt::hit_wall()
             do {
                 ray.regress();
             } while (ray.pos() != source && grid_is_solid(ray.pos()));
+            // target is where the explosion is centered, so update it.
+            if (is_explosion)
+                target = ray.pos();
         }
         finish_beam();
     }
@@ -3445,8 +3448,7 @@ bool bolt::misses_player()
     return (false);
 }
 
-void bolt::affect_player_enchantment()
-{
+void bolt::affect_player_enchantment() {
     if ((has_saving_throw() || flavour == BEAM_POLYMORPH)
         && you_resist_magic(ench_power))
     {
@@ -4279,12 +4281,14 @@ bool bolt::attempt_block(monsters* mon)
                 reflect();
             }
             else
+            {
                 mprf("%s blocks the %s.",
                      mon->name(DESC_CAP_THE).c_str(),
                      name.c_str());
+                finish_beam();
+            }
 
             mon->shield_block_succeeded();
-            finish_beam();
         }
     }
 
@@ -5087,7 +5091,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     ASSERT(!in_explosion_phase);
     ASSERT(ex_size > 0);
 
-    real_flavour = flavour;
+    flavour = real_flavour;
     const int r = std::min(ex_size, MAX_EXPLOSION_RADIUS);
     in_explosion_phase = true;
 
@@ -5206,10 +5210,16 @@ void bolt::explosion_draw_cell(const coord_def& p)
 
 void bolt::explosion_affect_cell(const coord_def& p)
 {
+    // pos() = target during an explosion, so restore it after affecting
+    // the cell.
+    const coord_def orig_pos = target;
+
     fake_flavour();
     target = p;
     affect_cell();
     flavour = real_flavour;
+
+    target = orig_pos;
 }
 
 // Uses DFS
