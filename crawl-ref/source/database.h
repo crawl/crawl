@@ -68,4 +68,7 @@ std::string getHelpString(const std::string &topic);
 std::string getMiscString(const std::string &misc,
                           const std::string &suffix = "");
 
+std::vector<std::string> getAllFAQKeys(void);
+std::string getFAQ_Question(const std::string &key);
+std::string getFAQ_Answer(const std::string &question);
 #endif

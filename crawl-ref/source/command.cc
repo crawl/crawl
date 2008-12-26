@@ -1425,6 +1425,64 @@ static bool _do_description(std::string key, std::string type,
     key = uppercase_first(key);
     linebreak_string2(footer, width - 1);
     print_description(desc, key, suffix, prefix, footer, quote);
+    return (true);
+}
+
+static bool _handle_FAQ()
+{
+    clrscr();
+    viewwindow(true, false);
+
+    std::vector<std::string> question_keys = getAllFAQKeys();
+    if (question_keys.empty())
+    {
+        mpr("No questions found in FAQ! Please submit a bug report!");
+        return (false);
+    }
+    Menu FAQmenu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING
+                 | MF_ALWAYS_SHOW_MORE);
+    FAQmenu.set_more(formatted_string::parse_string("Choose a question!"));
+    MenuEntry *title = new MenuEntry("Frequently Asked Questions");
+    title->colour = YELLOW;
+    FAQmenu.set_title(title);
+
+    for (unsigned int i = 0, size = question_keys.size(); i < size; i++)
+    {
+        const char letter = index_to_letter(i);
+
+        MenuEntry *me = new MenuEntry(getFAQ_Question(question_keys[i]),
+                                      MEL_ITEM, 1, letter);
+
+        me->data = (void*) &question_keys[i];
+        FAQmenu.add_entry(me);
+    }
+
+    const int width = std::min(80, get_number_of_cols());
+    while (true)
+    {
+        std::vector<MenuEntry*> sel = FAQmenu.show();
+        redraw_screen();
+        if (sel.empty())
+            return (false);
+        else
+        {
+            ASSERT(sel.size() == 1);
+            ASSERT(sel[0]->hotkeys.size() == 1);
+
+            std::string key = *((std::string*) sel[0]->data);
+            std::string answer = getFAQ_Answer(key);
+            if (answer.empty())
+            {
+                mpr("No answer found in FAQ! Please submit a bug report!");
+                return (false);
+            }
+            answer = "Q: " + getFAQ_Question(key) + EOL + "A: " + answer;
+            linebreak_string2(answer, width - 1);
+            print_description(answer);
+            if (getch() == 0)
+                getch();
+        }
+    }
 
     return (true);
 }
@@ -1436,7 +1494,7 @@ static bool _find_description(bool &again, std::string& error_inout)
     clrscr();
     viewwindow(true, false);
 
-    if (! error_inout.empty())
+    if (!error_inout.empty())
         mpr(error_inout.c_str(), MSGCH_PROMPT);
     mpr("Describe a (M)onster, (S)pell, s(K)ill, (I)tem, (F)eature, (G)od "
         "or (B)ranch?", MSGCH_PROMPT);
@@ -1707,7 +1765,7 @@ static int _keyhelp_keyfilter(int ch)
 {
     switch (ch)
     {
-      case ':':
+    case ':':
         // If the game has begun, show notes.
         if (crawl_state.need_save)
         {
@@ -1716,8 +1774,8 @@ static int _keyhelp_keyfilter(int ch)
         }
         break;
 
-      case '/':
-      {
+    case '/':
+    {
         bool again = false;
         std::string error;
         do
@@ -1734,13 +1792,28 @@ static int _keyhelp_keyfilter(int ch)
         viewwindow(true, false);
 
         return -1;
-      }
-      case 'v':
-      case 'V':
-      {
+    }
+
+    case 'q':
+    case 'Q':
+    {
+        bool again;
+        do
+        {
+            // resets 'again'
+            again = _handle_FAQ();
+            if (again)
+                mesclr(true);
+        }
+        while (again);
+
+        return -1;
+    }
+
+    case 'v':
+    case 'V':
         _print_version();
         return -1;
-      }
     }
     return ch;
 }
@@ -1827,6 +1900,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>&</w>: Options help\n"
             "<w>%</w>: Table of aptitudes\n"
             "<w>/</w>: Lookup description\n"
+            "<w>Q</w>: FAQ\n"
 #ifdef USE_TILE
             "<w>T</w>: Tiles key help\n"
 #endif

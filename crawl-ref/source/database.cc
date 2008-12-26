@@ -102,6 +102,10 @@ static TextDB AllDBs[] =
     TextDB( "db/help",               // database for outsourced help texts
             "database/help.txt",
             NULL),
+
+    TextDB( "db/FAQ",                // database for Frequently Asked Questions
+            "database/FAQ.txt",
+            NULL),
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
@@ -111,6 +115,7 @@ static TextDB& ShoutDB       = AllDBs[3];
 static TextDB& MiscDB        = AllDBs[4];
 static TextDB& QuotesDB      = AllDBs[5];
 static TextDB& HelpDB        = AllDBs[6];
+static TextDB& FAQDB         = AllDBs[7];
 
 // ----------------------------------------------------------------------
 // TextDB
@@ -697,6 +702,32 @@ std::string getRandNameString(const std::string &itemtype,
 std::string getHelpString(const std::string &topic)
 {
     return _query_database(HelpDB.get(), topic, false, true);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// FAQ DB specific functions.
+std::vector<std::string> getAllFAQKeys()
+{
+    if (!FAQDB.get())
+    {
+        std::vector<std::string> empty;
+        return (empty);
+    }
+
+    return database_find_keys(FAQDB.get(), "^q.+", false);
+}
+
+std::string getFAQ_Question(const std::string &key)
+{
+//    mprf("Question key: %s", key.c_str());
+    return _query_database(FAQDB.get(), key, false, true);
+}
+
+std::string getFAQ_Answer(const std::string &question)
+{
+    std::string key = "a" + question.substr(1, question.length()-1);
+//    mprf("Answer key: %s", key.c_str());
+    return _query_database(FAQDB.get(), key, false, true);
 }
 
 /////////////////////////////////////////////////////////////////////////////

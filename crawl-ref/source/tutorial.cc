@@ -271,8 +271,8 @@ static job_type _get_tutorial_job(unsigned int type)
 // position into normal closed doors.
 void tutorial_zap_secret_doors()
 {
-    for ( radius_iterator ri(you.pos(), 10, true, false); ri; ++ri )
-        if ( grd(*ri) == DNGN_SECRET_DOOR )
+    for (radius_iterator ri(you.pos(), 10, true, false); ri; ++ri)
+        if (grd(*ri) == DNGN_SECRET_DOOR)
             grd(*ri) = DNGN_CLOSED_DOOR;
 }
 
