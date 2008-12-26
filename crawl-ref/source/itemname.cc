@@ -2471,8 +2471,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_REGENERATION:
         case RING_SUSTENANCE:
             return (you.is_undead
-                    && (!temp || you.species == SP_VAMPIRE
-                                 && you.hunger_state == HS_STARVING));
+                    && (you.species != SP_VAMPIRE
+                        || temp && you.hunger_state == HS_STARVING));
 
         case RING_SEE_INVISIBLE:
             return (player_mutation_level(MUT_ACUTE_VISION));

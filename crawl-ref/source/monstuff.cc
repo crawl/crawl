@@ -1612,7 +1612,7 @@ static bool _jelly_divide(monsters *parent)
     int num_spots = 0;
 
     // First, find a suitable spot for the child {dlb}:
-    for ( adjacent_iterator ai(parent->pos()); ai; ++ai )
+    for (adjacent_iterator ai(parent->pos()); ai; ++ai)
     {
         if (mgrd(*ai) == NON_MONSTER
             && parent->can_pass_through(*ai)
@@ -2673,7 +2673,7 @@ static void _find_all_level_exits(std::vector<level_exit> &e)
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         if (!in_bounds(*ri))
-                continue;
+            continue;
 
         const dungeon_feature_type gridc = grd(*ri);
 
@@ -2769,6 +2769,12 @@ static void _set_no_path_found(monsters *mon)
     _mark_neighbours_target_unreachable(mon);
 }
 
+static bool _target_is_unreachable(monsters *mon)
+{
+    return (mon->travel_target == MTRAV_UNREACHABLE
+            || mon->travel_target == MTRAV_KNOWN_UNREACHABLE);
+}
+
 // The monster is trying to get to the player (MHITYOU).
 // Check whether there's an unobstructed path to the player (in sight!),
 // either by using an existing travel_path or calculating a new one.
@@ -2850,7 +2856,7 @@ static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
 
     // Even if the target has been to "unreachable" (the monster already tried,
     // and failed, to find a path) there's a chance of trying again.
-    if (mon->travel_target != MTRAV_UNREACHABLE || one_chance_in(12))
+    if (!_target_is_unreachable(mon) || one_chance_in(12))
     {
 #ifdef DEBUG_PATHFIND
         mprf("%s: Player out of reach! What now?",
@@ -2892,37 +2898,7 @@ static bool _try_pathfind(monsters *mon, const dungeon_feature_type can_move,
 #ifdef DEBUG_PATHFIND
         mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
-        const bool native = mons_is_native_in_branch(mon);
-
-        int range = 0;
-        switch (mons_intel(mon))
-        {
-        case I_PLANT:
-            range = 2;
-            break;
-        case I_INSECT:
-            range = 4;
-            break;
-        case I_ANIMAL:
-            range = 5;
-            break;
-        case I_NORMAL:
-            range = LOS_RADIUS;
-            break;
-        default:
-            // Highly intelligent monsters can find their way
-            // anywhere. (range == 0 means no restriction.)
-            break;
-        }
-
-        if (range)
-        {
-            if (native)
-                range += 3;
-            else if (mons_class_flag(mon->type, M_BLOOD_SCENT))
-                range++;
-        }
-
+        const int range = mons_tracking_range(mon);
         if (range > 0 && dist > range)
         {
             mon->travel_target = MTRAV_UNREACHABLE;
@@ -8333,7 +8309,7 @@ bool shift_monster( monsters *mon, coord_def p )
     if (p.origin())
         p = mon->pos();
 
-    for ( adjacent_iterator ai(p); ai; ++ai )
+    for (adjacent_iterator ai(p); ai; ++ai)
     {
         // Don't drop on anything but vanilla floor right now.
         if (grd(*ai) != DNGN_FLOOR)

@@ -719,14 +719,12 @@ std::vector<std::string> getAllFAQKeys()
 
 std::string getFAQ_Question(const std::string &key)
 {
-//    mprf("Question key: %s", key.c_str());
     return _query_database(FAQDB.get(), key, false, true);
 }
 
 std::string getFAQ_Answer(const std::string &question)
 {
     std::string key = "a" + question.substr(1, question.length()-1);
-//    mprf("Answer key: %s", key.c_str());
     return _query_database(FAQDB.get(), key, false, true);
 }
 

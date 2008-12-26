@@ -3056,7 +3056,8 @@ enum montravel_target_type
     MTRAV_PATROL,      // Travelling to reach the patrol point.
     MTRAV_SIREN,       // Sirens travelling towards deep water.
     MTRAV_WALL,        // Earthworms travelling towards a wall.
-    MTRAV_UNREACHABLE  // Not travelling because target is unreachable.
+    MTRAV_UNREACHABLE, // Not travelling because target is unreachable.
+    MTRAV_KNOWN_UNREACHABLE // As above, and the player knows this.
 };
 
 #ifndef USE_TILE

@@ -143,7 +143,7 @@ The game keeps crashing. / I think I found a bug. What do I do?
 %%%%
 A:bug
 
-Please submit a bug report on Sourceforge, and give as much information as you can. (What were you doing at the time? What did you expect to happen, what happened instead? etc.) Sometimes a screenshot can be helpful. For crashes, or monsters/items/levels behaving oddly, we probably need a save file. To be on the safe side, attach the entire zipped save of the character on question. If there are error messages, please write them down. 
+Please submit a bug report on Sourceforge, and give as much information as you can. (What were you doing at the time? What did you expect to happen, what happened instead? etc.) Sometimes a screenshot can be helpful. For crashes, or monsters/items/levels behaving oddly, we probably need a save file. To be on the safe side, attach the entire zipped save of the character in question. If there are error messages, please write them down. 
 If you don't log in to Sourceforge or leave an email address at least check the thread from time to time in case we have some more questions. Thanks in advance!
 %%%%
 Q:ideas

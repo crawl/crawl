@@ -62,6 +62,7 @@ static void _init_equipment_removal(std::set<equipment_type> &rem_stuff,
         break;
 
     case TRAN_LICH:
+        // Liches may wear anything.
         rem_stuff.clear();
         break;
 

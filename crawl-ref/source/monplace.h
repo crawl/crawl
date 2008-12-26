@@ -352,6 +352,8 @@ void get_vault_mon_list(std::vector<mons_spec> &list);
  * *********************************************************************** */
 void setup_vault_mon_list();
 
+int mons_tracking_range(const monsters *mon);
+
 class monster_pathfind
 {
 public:
@@ -361,7 +363,8 @@ public:
     // public methods
     void set_range(int r);
     bool init_pathfind(monsters *mon, coord_def dest,
-                       bool diag = true, bool msg = false);
+                       bool diag = true, bool msg = false,
+                       bool pass_unmapped = false);
     bool init_pathfind(coord_def src, coord_def dest,
                        bool diag = true, bool msg = false);
     bool start_pathfind(bool msg = false);
@@ -389,6 +392,11 @@ protected:
 
     // If false, do not move diagonally along the path.
     bool allow_diagonals;
+
+    // If true, unmapped terrain is treated as traversable no matter the
+    // monster involved.
+    // (Used for player estimates of whether a monster can travel somewhere.)
+    bool traverse_unmapped;
 
     // Maximum range to search between start and target. None, if zero.
     int range;

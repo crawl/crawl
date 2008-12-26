@@ -2472,6 +2472,41 @@ monster_type summon_any_dragon(dragon_class_type dct)
 // (These requirements are usually preference of habitat of a specific monster
 // or a limit of the distance between start and any grid on the path.)
 
+int mons_tracking_range(const monsters *mon)
+{
+
+    int range = 0;
+    switch (mons_intel(mon))
+    {
+    case I_PLANT:
+        range = 2;
+        break;
+    case I_INSECT:
+        range = 4;
+        break;
+    case I_ANIMAL:
+        range = 5;
+        break;
+    case I_NORMAL:
+        range = LOS_RADIUS;
+        break;
+    default:
+        // Highly intelligent monsters can find their way
+        // anywhere. (range == 0 means no restriction.)
+        break;
+    }
+
+    if (range)
+    {
+        if (mons_is_native_in_branch(mon))
+            range += 3;
+        else if (mons_class_flag(mon->type, M_BLOOD_SCENT))
+            range++;
+    }
+
+    return (range);
+}
+
 //#define DEBUG_PATHFIND
 monster_pathfind::monster_pathfind()
     : mons(), target(), range(0), min_length(0), max_length(0), dist(), prev()
@@ -2491,7 +2526,7 @@ void monster_pathfind::set_range(int r)
 // The main method in the monster_pathfind class.
 // Returns true if a path was found, else false.
 bool monster_pathfind::init_pathfind(monsters *mon, coord_def dest, bool diag,
-                                     bool msg)
+                                     bool msg, bool pass_unmapped)
 {
     mons   = mon;
 
@@ -2499,7 +2534,8 @@ bool monster_pathfind::init_pathfind(monsters *mon, coord_def dest, bool diag,
     start  = dest;
     target = mon->pos();
     pos    = start;
-    allow_diagonals = diag;
+    allow_diagonals   = diag;
+    traverse_unmapped = pass_unmapped;
 
     // Easy enough. :P
     if (start == target)
@@ -2786,6 +2822,9 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
 
 bool monster_pathfind::traversable(const coord_def p)
 {
+    if (traverse_unmapped && grd(p) == DNGN_UNSEEN)
+        return (true);
+
     if (mons)
         return mons_traversable(p);
 

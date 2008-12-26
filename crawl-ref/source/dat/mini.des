@@ -45,7 +45,7 @@ ENDMAP
 ###########################################################################
 # Small areas with translucent rock (glass) columns which you can duck
 # behind, but still see the monster you're ducking from (and they can
-# still see you
+# still see you)
 NAME:  glass_columns_a
 DEPTH: D, Elf, Crypt
 WEIGHT: 5

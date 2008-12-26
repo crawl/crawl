@@ -55,6 +55,7 @@
 #include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"
+#include "monplace.h"
 #include "mon-util.h"
 #include "monstuff.h"
 #include "ouch.h"
@@ -2580,6 +2581,41 @@ bool go_berserk(bool intentional)
     return (true);
 }
 
+// Returns true if the monster has a path to the player, or it has to be
+// assumed that this is the case.
+static bool _mons_has_path_to_player(const monsters *mon)
+{
+    int m = monster_index(mon);
+
+    // Don't consider sleeping monsters safe, in case the player would
+    // rather retreat and try another path for maximum stabbing chances.
+    if (mons_is_sleeping(mon))
+        return (true);
+
+    // If the monster is awake and knows a path towards the player
+    // (even though the player cannot know this) treat it as unsafe.
+    if (mon->travel_target == MTRAV_PLAYER)
+        return (true);
+
+    if (mon->travel_target == MTRAV_KNOWN_UNREACHABLE)
+        return (false);
+
+    // Try to find a path from monster to player, using the map as it's
+    // known to the player and assuming unknown terrain to be traversable.
+    monster_pathfind mp;
+    const int range = mons_tracking_range(mon);
+    if (range > 0)
+        mp.set_range(range);
+
+    if (mp.init_pathfind(&menv[m], you.pos(), true, false, true))
+        return (true);
+
+    // Now we know the monster cannot possibly reach the player.
+    menv[m].travel_target = MTRAV_KNOWN_UNREACHABLE;
+
+    return (false);
+}
+
 bool mons_is_safe(const monsters *mon, bool want_move,
                   bool consider_user_options)
 {
@@ -2593,6 +2629,7 @@ bool mons_is_safe(const monsters *mon, bool want_move,
 #endif
                        // Only seen through glass walls?
                     || !see_grid_no_trans(mon->pos())
+                       && !_mons_has_path_to_player(mon)
                        && !mons_has_ranged_spell(mon)
                        && !mons_has_los_ability(mon->type));
 
@@ -2682,7 +2719,7 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
     std::vector<monsters*> mons;
 
     // Sweep every visible square within range.
-    for ( radius_iterator ri(you.pos(), range); ri; ++ri )
+    for (radius_iterator ri(you.pos(), range); ri; ++ri)
     {
         const unsigned short targ_monst = env.mgrid(*ri);
         if (targ_monst != NON_MONSTER)
@@ -2753,9 +2790,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
             tutorial_first_monster(m);
     }
     else if (announce && visible.size() > 1)
-    {
         mprf(MSGCH_WARN, "Not with these monsters around!");
-    }
 
     return (false);
 }
