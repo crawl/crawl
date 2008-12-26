@@ -834,7 +834,7 @@
         0, 0, 0, 0, 0, 0,
         0, 0, 1, 0, 1,          // prevent spellcasting, prevent teleport
         0, 0, 0, 0, 0,
-        -1, 0                    // cursed
+        -1, 0                   // cursed
     }
     ,
         "",

@@ -1646,26 +1646,15 @@ static void _print_overview_screen_equip(column_composer& cols,
         int eqslot = e_order[i];
 
         char slot_name_lwr[15];
-        snprintf(slot_name_lwr, sizeof slot_name_lwr, "%s", equip_slot_to_name(eqslot));
+        snprintf(slot_name_lwr, sizeof slot_name_lwr, "%s",
+                 equip_slot_to_name(eqslot));
         strlwr(slot_name_lwr);
 
         char slot[15] = "";
         // uncomment (and change 42 to 33) to bring back slot names
         // snprintf(slot, sizeof slot, "%-7s: ", equip_slot_to_name(eqslot);
 
-        if (!you_can_wear(e_order[i], true))
-        {
-            snprintf(buf, sizeof buf,
-                     "%s<darkgrey>(%s unavailable)</darkgrey>",
-                     slot, slot_name_lwr);
-        }
-        else if (!you_tran_can_wear(e_order[i], true))
-        {
-            snprintf(buf, sizeof buf,
-                     "%s<darkgrey>(%s currently unavailable)</darkgrey>",
-                     slot, slot_name_lwr);
-        }
-        else if (you.equip[ e_order[i] ] != -1)
+        if (you.equip[ e_order[i] ] != -1)
         {
             const int item_idx    = you.equip[e_order[i]];
             const item_def& item  = you.inv[item_idx];
@@ -1681,21 +1670,37 @@ static void _print_overview_screen_equip(column_composer& cols,
                      colname);
             equip_chars.push_back(equip_char);
         }
-        else if (!you_can_wear(e_order[i]))
+        else if (e_order[i] == EQ_WEAPON
+                 && you.skills[SK_UNARMED_COMBAT])
         {
-            snprintf(buf, sizeof buf,
-                     "%s<lightgrey>(%s restricted)</lightgrey>",
-                     slot, slot_name_lwr);
+            snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
         }
         else if (e_order[i] == EQ_WEAPON
                  && you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
         {
             snprintf(buf, sizeof buf, "%s  - Blade Hands", slot);
         }
-        else if (e_order[i] == EQ_WEAPON
-                 && you.skills[SK_UNARMED_COMBAT])
+        else if (e_order[i] == EQ_BOOTS
+                 && (you.species == SP_NAGA || you.species == SP_CENTAUR))
         {
-            snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
+            snprintf(buf, sizeof buf,
+                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr);
+        }
+        else if (!you_can_wear(e_order[i], true))
+        {
+            snprintf(buf, sizeof buf,
+                     "<darkgrey>(%s unavailable)</darkgrey>", slot_name_lwr);
+        }
+        else if (!you_tran_can_wear(e_order[i], true))
+        {
+            snprintf(buf, sizeof buf,
+                     "<darkgrey>(%s currently unavailable)</darkgrey>",
+                     slot_name_lwr);
+        }
+        else if (!you_can_wear(e_order[i]))
+        {
+            snprintf(buf, sizeof buf,
+                     "<lightgrey>(%s restricted)</lightgrey>", slot_name_lwr);
         }
         else
         {

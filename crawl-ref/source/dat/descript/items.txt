@@ -1482,7 +1482,8 @@ end
 %%%%
 tome of destruction
 
-An extremely powerful but unpredictable book of magic.
+An extremely powerful but unpredictable book of wild magic.
+Warning: Reading may be hazardous to you or your surroundings!
 %%%%
 trident
 

@@ -681,8 +681,11 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         return (false);
 
     // Everyone else can wear jewellery, at least.
-    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET)
+    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_RINGS
+        || eq == EQ_AMULET)
+    {
         return (true);
+    }
 
     // These cannot use anything but jewellery.
     if (transform == TRAN_SPIDER || transform == TRAN_DRAGON
@@ -998,9 +1001,11 @@ int player_regen(void)
         rr += 100;
 
     // troll leather (except for trolls)
-    if (player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR ) &&
-        you.species != SP_TROLL)
+    if (player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR )
+        && you.species != SP_TROLL)
+    {
         rr += 30;
+    }
 
     // fast heal mutation
     rr += player_mutation_level(MUT_REGENERATION) * 20;
@@ -2028,17 +2033,16 @@ static int _player_armour_racial_bonus(const item_def& item)
 int player_AC(void)
 {
     int AC = 0;
-    int i;                      // loop variable
 
-    for (i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
+    for (int eq = EQ_CLOAK; eq <= EQ_BODY_ARMOUR; ++eq)
     {
-        if (i == EQ_SHIELD)
+        if (eq == EQ_SHIELD)
             continue;
 
-        if (!player_wearing_slot(i))
+        if (!player_wearing_slot(eq))
             continue;
 
-        const item_def& item = you.inv[you.equip[i]];
+        const item_def& item = you.inv[you.equip[eq]];
         const int ac_value = property(item, PARM_AC ) * 100;
         int racial_bonus   = _player_armour_racial_bonus(item);
 
@@ -2048,7 +2052,7 @@ int player_AC(void)
 
         // The deformed don't fit into body armour very well.
         // (This includes nagas and centaurs.)
-        if (i == EQ_BODY_ARMOUR && player_mutation_level(MUT_DEFORMED))
+        if (eq == EQ_BODY_ARMOUR && player_mutation_level(MUT_DEFORMED))
             AC -= ac_value / 2;
     }
 
@@ -4444,10 +4448,10 @@ bool items_give_ability(const int slot, randart_prop_type abil)
 {
     for (int i = EQ_WEAPON; i < NUM_EQUIP; i++)
     {
-        const int eq = you.equip[i];
-
-        if (eq == -1)
+        if (!player_wearing_slot(i))
             continue;
+
+        const int eq = you.equip[i];
 
         // skip item to compare with
         if (eq == slot)
@@ -4488,10 +4492,9 @@ bool items_give_ability(const int slot, randart_prop_type abil)
    a given property. Slow if any randarts are worn, so avoid where possible. */
 int scan_randarts(randart_prop_type which_property, bool calc_unid)
 {
-    int i = 0;
     int retval = 0;
 
-    for (i = EQ_WEAPON; i < NUM_EQUIP; i++)
+    for (int i = EQ_WEAPON; i < NUM_EQUIP; ++i)
     {
         if (!player_wearing_slot(i))
             continue;
@@ -6685,7 +6688,7 @@ bool player::permanent_levitation() const
     // in order to actually cancel levitation (by setting
     // DUR_LEVITATION to 1.) Note that antimagic() won't do this.
     return (airborne() && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
-               && you.duration[DUR_LEVITATION] > 1);
+            && you.duration[DUR_LEVITATION] > 1);
 }
 
 bool player::permanent_flight() const

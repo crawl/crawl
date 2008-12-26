@@ -1855,17 +1855,17 @@ static void _print_friendly_pickup_setting(bool was_changed)
 
     if (you.friendly_pickup == FRIENDLY_PICKUP_NONE)
     {
-        mprf("Your intelligent, permanent allies are %sforbidden to pick up anything at all.",
+        mprf("Your intelligent allies are %sforbidden to pick up anything at all.",
              now.c_str());
     }
     else if (you.friendly_pickup == FRIENDLY_PICKUP_FRIEND)
     {
-        mprf("Your intelligent, permanent allies may %sonly pick up items dropped by allies.",
+        mprf("Your intelligent allies may %sonly pick up items dropped by allies.",
              now.c_str());
     }
     else if (you.friendly_pickup == FRIENDLY_PICKUP_ALL)
     {
-        mprf("Your intelligent, permanent allies may %spick up anything they need.", now.c_str());
+        mprf("Your intelligent allies may %spick up anything they need.", now.c_str());
     }
     else
     {
