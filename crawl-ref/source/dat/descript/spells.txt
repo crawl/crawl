@@ -433,7 +433,7 @@ This spell drains the heat from the caster and his or her surroundings, causing 
 %%%%
 Pain
 
-This spell inflicts an extremely painful injury upon one living creature. 
+This spell inflicts an extremely painful injury upon one living creature. The caster suffers minor damage from the backlash.
 %%%%
 Paralyse
 
