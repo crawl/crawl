@@ -1414,13 +1414,30 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     double max =  90.0 + (angle / 2.0);
     double min = -90.0 + (angle / 2.0);
 
-    double shift = (double) random_range(min * 10000, max * 10000) / 10000.0;
+    double shift;
 
-    if (new_deg < old_deg)
-        shift = -shift;
-    new_ray.set_degrees(new_deg + shift);
+    ray_def temp_ray = new_ray;
+    for (int tries = 0; tries < 20; tries++)
+    {
+        shift = (double) random_range(min * 10000, max * 10000) / 10000.0;
 
-#if DEBUG_DIAGNOSTICS || DEBUG_CHAOS_BOUNCE
+        if (new_deg < old_deg)
+            shift = -shift;
+        temp_ray.set_degrees(new_deg + shift);
+
+        // Don't bounce straight into another wall.  Can happen if the beam
+        // is shot into an inside corner.
+        ray_def test_ray = temp_ray;
+        test_ray.advance(true);
+        if (in_bounds(test_ray.pos()) && !grid_is_solid(test_ray.pos()))
+            break;
+
+        shift    = 0.0;
+        temp_ray = new_ray;
+    }
+
+    new_ray = temp_ray;
+#if DEBUG_DIAGNOSTICS || DEBUG_BEAM || DEBUG_CHAOS_BOUNCE
     mprf(MSGCH_DIAGNOSTICS,
          "chaos beam: old_deg = %5.2f, new_deg = %5.2f, shift = %5.2f",
          (float) old_deg, (float) new_deg, (float) shift);
@@ -1431,32 +1448,6 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     // ping-pong balls on caffeine.
     int range_spent = new_bolt.range_used - old_bolt.range_used;
     new_bolt.range += range_spent;
-
-    // XXX HACK: This is to avoid a problem which seems to be caused by
-    // ray.advance(true) taking the shortest path but ray.regress() using raw
-    // advancement to backtrack: say that the user fires a chaos beam
-    // south-west into the corner, the bouncing code regresses it to point X,
-    // then it randomly changes direction to slightly south of
-    // due east:
-    //
-    //  #####
-    //  # @ #
-    //  #X  #
-    // Y#####
-    //
-    // The ray advances via shortest path into the wall grid two squares
-    // directly south of the player, and then tries to regress for another
-    // bounce.  However, it uses raw advancement to regress, which updates the
-    // internal floating point representation of the position, and since it's
-    // now travelling almost due west as it "regresses" it stays inside the
-    // wall until it reaches point Y.  (At least, I think that's what's
-    // happening.  The result is definitely the chaos beam passing through
-    // the corner and ending up outside the room)
-    //
-    // Everything else I've tried to fix this causes an assertion somewhere
-    // else.
-    new_ray.advance(true);
-    new_ray.regress();
 }
 
 bool bolt::invisible() const
@@ -1469,6 +1460,8 @@ void bolt::initialize_fire()
     ASSERT(flavour > BEAM_NONE && flavour < BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || item);
     ASSERT(range >= 0);
+    ASSERT(chose_ray && in_bounds(ray.pos())
+           || !chose_ray && in_bounds(source));
 
     real_flavour = flavour;
 
@@ -1763,14 +1756,16 @@ void bolt::hit_wall()
         if (!invalid_monster_index(mgrd(pos())))
             affect_monster( &menv[mgrd(pos())] );
 
-        // Regress for explosions: blow up one step earlier.
-        if (is_explosion && !in_explosion_phase)
+        // Regress for explosions: blow up in an open grid (if regressing
+        // makes any sense).  Also regress when dropping items.
+        if (!aimed_at_spot
+            && ((is_explosion && !in_explosion_phase) || drop_item))
         {
             do {
                 ray.regress();
-            } while (grid_is_solid(ray.pos()));
-            finish_beam();
+            } while (ray.pos() != source && grid_is_solid(ray.pos()));
         }
+        finish_beam();
     }
 }
 
@@ -1874,8 +1869,8 @@ void bolt::do_fire()
     msg_generated = false;
     if (target == source)
     {
-        auto_hit = true;
-        aimed_at_spot = true;
+        auto_hit          = true;
+        aimed_at_spot     = true;
         use_target_as_pos = true;
     }
     else
@@ -1892,7 +1887,7 @@ void bolt::do_fire()
         oldValue = set_buffering(false);
 #endif
 
-    while (true)
+    while (in_bounds(pos()))
     {
         affect_cell();
 
@@ -1905,6 +1900,8 @@ void bolt::do_fire()
 
         if (stop_at_target() && pos() == target)
             break;
+
+        ASSERT(!grid_is_solid(grd(pos())));
 
         const bool was_seen = seen;
         if (!was_seen && range > 0 && !invisible() && see_grid(pos()))
@@ -1930,6 +1927,24 @@ void bolt::do_fire()
             ray.advance_through(target);
         else
             ray.advance(true);
+    }
+
+    if (!in_bounds(pos()))
+    {
+        ASSERT(!aimed_at_spot);
+#ifdef DEBUG
+        mprf(MSGCH_DIAGNOSTICS, "fire_beam(): beam '%s' passed off edge of "
+             "map (item = '%s')", name.c_str(),
+             item ? item->name(DESC_PLAIN).c_str() : "none");
+#endif
+
+        int tries = std::max(GXM, GYM);
+
+        while (!in_bounds(ray.pos()) && tries-- > 0)
+            ray.regress();
+
+        // Something bizarre happening if we can't get back onto the map.
+        ASSERT(in_bounds(pos()));
     }
 
     // The beam has terminated.
@@ -5069,6 +5084,9 @@ static sweep_type _radial_sweep(int r)
 
 bool bolt::explode(bool show_more, bool hole_in_the_middle)
 {
+    ASSERT(!in_explosion_phase);
+    ASSERT(ex_size > 0);
+
     real_flavour = flavour;
     const int r = std::min(ex_size, MAX_EXPLOSION_RADIUS);
     in_explosion_phase = true;
