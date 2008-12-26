@@ -1722,6 +1722,9 @@ void bolt::finish_beam()
 
 void bolt::affect_wall()
 {
+    if (is_tracer)
+        return;
+
     if (flavour == BEAM_DIGGING)
         digging_wall_effect();
     else if (is_fiery())
@@ -1765,7 +1768,7 @@ void bolt::hit_wall()
                 ray.regress();
             } while (ray.pos() != source && grid_is_solid(ray.pos()));
             // target is where the explosion is centered, so update it.
-            if (is_explosion)
+            if (is_explosion && !is_tracer)
                 target = ray.pos();
         }
         finish_beam();
@@ -1904,7 +1907,8 @@ void bolt::do_fire()
         if (stop_at_target() && pos() == target)
             break;
 
-        ASSERT(!grid_is_solid(grd(pos())));
+        ASSERT(!grid_is_solid(grd(pos()))
+               || (is_tracer && affects_wall(grd(pos()))));
 
         const bool was_seen = seen;
         if (!was_seen && range > 0 && !invisible() && see_grid(pos()))
