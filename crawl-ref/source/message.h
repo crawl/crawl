@@ -16,20 +16,6 @@
 #include "enum.h"
 #include "mpr.h"
 
-class message_item {
-public:
-    msg_channel_type    channel;        // message channel
-    int                 param;          // param for channel (god, enchantment)
-    std::string         text;           // text of message
-    int                 repeats;
-
-    message_item() : channel(NUM_MESSAGE_CHANNELS), param(0), text(""),
-                     repeats(0)
-        {
-        }
-};
-
-
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: ability - acr - command - direct - effects - item_use -

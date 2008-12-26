@@ -38,6 +38,20 @@
 #include "view.h"
 #include "menu.h"
 
+class message_item {
+public:
+    msg_channel_type    channel;        // message channel
+    int                 param;          // param for channel (god, enchantment)
+    unsigned char       colour;
+    std::string         text;           // text of message
+    int                 repeats;
+
+    message_item() : channel(NUM_MESSAGE_CHANNELS), param(0), colour(BLACK),
+                     text(""), repeats(0)
+        {
+        }
+};
+
 // Circular buffer for keeping past messages.
 message_item Store_Message[ NUM_STORED_MESSAGES ];    // buffer of old messages
 int Next_Message = 0;                                 // end of messages
@@ -46,7 +60,11 @@ int Message_Line = 0;                // line of next (previous?) message
 int New_Message_Count = 0;
 
 static bool suppress_messages = false;
-static void base_mpr(const char *inf, msg_channel_type channel, int param);
+static void base_mpr(const char *inf, msg_channel_type channel, int param,
+                     unsigned char colour);
+static unsigned char prepare_message(const std::string& imsg,
+                                     msg_channel_type channel,
+                                     int param);
 
 namespace msg
 {
@@ -419,6 +437,8 @@ void mpr(const char *inf, msg_channel_type channel, int param)
         return;
     }
 
+    unsigned char colour = prepare_message(help, channel, param);
+
     char mbuf[400];
     size_t i = 0;
     const int stepsize = get_number_of_cols() - 1;
@@ -459,7 +479,7 @@ void mpr(const char *inf, msg_channel_type channel, int param)
         else
             i += stepsize;
 
-        base_mpr(mbuf, channel, param);
+        base_mpr(mbuf, channel, param, colour);
     }
 }
 
@@ -577,7 +597,8 @@ static bool channel_message_history(msg_channel_type channel)
 
 // Adds a given message to the message history.
 static void mpr_store_messages(const std::string& message,
-                               msg_channel_type channel, int param)
+                               msg_channel_type channel, int param,
+                               unsigned char colour)
 {
     const int num_lines = crawl_view.msgsz.y;
 
@@ -593,7 +614,8 @@ static void mpr_store_messages(const std::string& message,
         message_item &prev_message = Store_Message[prev_message_num];
 
         if (prev_message.repeats > 0 && prev_message.channel == channel
-            && prev_message.param == param && prev_message.text == message)
+            && prev_message.param == param && prev_message.text == message
+            && prev_message.colour == colour)
         {
             prev_message.repeats++;
             was_repeat = true;
@@ -617,6 +639,7 @@ static void mpr_store_messages(const std::string& message,
     {
         // Put the message into Store_Message, and move the '---' line forward
         Store_Message[ Next_Message ].text    = message;
+        Store_Message[ Next_Message ].colour  = colour;
         Store_Message[ Next_Message ].channel = channel;
         Store_Message[ Next_Message ].param   = param;
         Store_Message[ Next_Message ].repeats = 1;
@@ -632,13 +655,20 @@ static bool need_prefix = false;
 // Does the work common to base_mpr and formatted_mpr.
 // Returns the default colour of the message, or MSGCOL_MUTED if
 // the message should be suppressed.
-static int prepare_message(const std::string& imsg, msg_channel_type channel,
-                           int param)
+static unsigned char prepare_message(const std::string& imsg,
+                                     msg_channel_type channel,
+                                     int param)
 {
     if (suppress_messages)
         return MSGCOL_MUTED;
 
-    int colour = channel_to_colour( channel, param );
+    if (silenced(you.pos())
+        && (channel == MSGCH_SOUND || channel == MSGCH_TALK))
+    {
+        return MSGCOL_MUTED;
+    }
+
+    unsigned char colour = (unsigned char) channel_to_colour( channel, param );
 
     const std::vector<message_colour_mapping>& mcm
                = Options.message_colour_mappings;
@@ -654,31 +684,32 @@ static int prepare_message(const std::string& imsg, msg_channel_type channel,
     }
 
     if (colour != MSGCOL_MUTED)
-    {
         mpr_check_patterns(imsg, channel, param);
+
+    return colour;
+}
+
+static void handle_more(int colour)
+{
+    if (colour != MSGCOL_MUTED)
+    {
         flush_input_buffer( FLUSH_ON_MESSAGE );
         const int num_lines = crawl_view.msgsz.y;
 
         if (New_Message_Count == num_lines - 1)
             more();
     }
-
-    return colour;
 }
 
-static void base_mpr(const char *inf, msg_channel_type channel, int param)
+static void base_mpr(const char *inf, msg_channel_type channel, int param,
+                     unsigned char colour)
 {
     const std::string imsg = inf;
-    const int colour = prepare_message( imsg, channel, param );
 
     if (colour == MSGCOL_MUTED)
         return;
 
-    if (silenced(you.pos())
-        && (channel == MSGCH_SOUND || channel == MSGCH_TALK))
-    {
-        return;
-    }
+    handle_more(colour);
 
     if (need_prefix)
     {
@@ -703,7 +734,7 @@ static void base_mpr(const char *inf, msg_channel_type channel, int param)
         }
     }
 
-    mpr_store_messages(imsg, channel, param);
+    mpr_store_messages(imsg, channel, param, colour);
 
     if (channel == MSGCH_ERROR)
         interrupt_activity( AI_FORCE_INTERRUPT );
@@ -757,8 +788,10 @@ void formatted_mpr(const formatted_string& fs, msg_channel_type channel,
     if (colour == MSGCOL_MUTED)
         return;
 
+    handle_more(colour);
+
     mpr_formatted_output(fs, colour);
-    mpr_store_messages(imsg, channel, param);
+    mpr_store_messages(imsg, channel, param, colour);
 
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
         reset_more_autoclear();
@@ -828,7 +861,7 @@ void formatted_message_history(const std::string &st_nocolor,
                 break;
             }
         }
-        mpr_store_messages(fs.to_colour_string(), channel, param);
+        mpr_store_messages(fs.to_colour_string(), channel, param, colour);
     }
 }
 
@@ -965,6 +998,7 @@ void save_messages(writer& outf)
          marshallString4( outf, Store_Message[i].text );
          marshallLong( outf, (long) Store_Message[i].channel );
          marshallLong( outf, Store_Message[i].param );
+         marshallByte( outf, Store_Message[i].colour );
          marshallLong( outf, Store_Message[i].repeats );
     }
 }
@@ -979,11 +1013,12 @@ void load_messages(reader& inf)
         unmarshallString4( inf, text );
 
         msg_channel_type channel = (msg_channel_type) unmarshallLong( inf );
-        int param                = unmarshallLong( inf );
-        int repeats              = unmarshallLong( inf );
+        int           param      = unmarshallLong( inf );
+        unsigned char colour     = unmarshallByte( inf);
+        int           repeats    = unmarshallLong( inf );
 
         for (int k = 0; k < repeats; k++)
-             mpr_store_messages(text, channel, param);
+             mpr_store_messages(text, channel, param, colour);
     }
 }
 
@@ -1039,13 +1074,10 @@ void replay_messages(void)
             if (line == first_message && i != 0)
                 break;
 
-            int colour = prepare_message( Store_Message[ line ].text,
-                                          Store_Message[ line ].channel,
-                                          Store_Message[ line ].param );
-            if (colour == MSGCOL_MUTED)
-                continue;
+            unsigned char colour = Store_Message[ line ].colour;
+            ASSERT(colour != MSGCOL_MUTED);
 
-            textcolor( colour );
+            textcolor( Store_Message[ line ].colour );
 
             std::string text = Store_Message[line].text;
 
