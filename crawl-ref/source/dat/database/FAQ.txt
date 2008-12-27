@@ -26,8 +26,12 @@ What exactly is the goal of this game?
 %%%%
 A:goal
 
-To survive and to win, obviously. For this you need to find the fabled Orb of Zot deep down in the dungeon and bring it back to the surface. However, to enter the realm of Zot, you'll first need to collect a couple of runes.
-If you're new to the game you really shouldn't worry about this, though. Just try to delve as deeply as possible and have fun exploring the many side branches in Crawl.
+To survive and to win, obviously. For this you need to find the fabled
+Orb of Zot deep down in the dungeon and bring it back to the surface.
+However, to enter the realm of Zot, you'll first need to collect a couple
+of runes. If you're new to the game you really shouldn't worry about this,
+though. Just try to delve as deeply as possible and have fun exploring the
+many side branches in Crawl.
 %%%%
 Q:drop
 
@@ -35,7 +39,10 @@ How can I drop/pick up only part of a stack?
 %%%%
 A:drop
 
-Press 'd' (or ','), followed by a number (the amount), and finally the item's letter. For pickup, this is only possible when choosing items from a menu. Stacks that are picked up only in part are selected with '#' rather than '+'.
+Press 'd' (or ','), followed by a number (the amount), and finally the
+item's letter. For pickup, this is only possible when choosing items from
+a menu. Stacks that are picked up only in part are selected with '#' rather
+than '+'.
 %%%%
 Q:downstairs
 
@@ -43,7 +50,13 @@ I can't find any downstairs. Am I missing something?
 %%%%
 A:downstairs
 
-While this might be a bug, chances are the downstairs are somewhere in a room closed off by a secret door. If you search (with '5') in suspicious looking corridors and along walls near empty terrain, you will eventually find one. Alternatively, if you are in one of the branches, you might also have reached its lowest level and have to turn around to explore another one. Check the database description ("?/b") for the number of levels per branch.
+While this might be a bug, chances are the downstairs are somewhere in a
+room closed off by a secret door. If you search (with '5') in suspicious
+looking corridors and along walls near empty terrain, you will eventually
+find one. Alternatively, if you are in one of the branches, you might also
+have reached its lowest level and have to turn around to explore another
+one. Check the database description ("?/b") for the number of levels per
+branch.
 %%%%
 Q:stuck
 
@@ -51,7 +64,10 @@ I teleported and ended up in a closed room without any exits. Am I stuck?
 %%%%
 A:stuck
 
-Hopefully not. Search all the walls with '5' in case there's a secret door. If you really can't find any, it could be a bug and need fixing, so please report it on our Sourceforge tracker. In the meantime, you can try to escape with digging, disintegration or teleportation.
+Hopefully not. Search all the walls with '5' in case there's a secret door.
+If you really can't find any, it could be a bug and need fixing, so please
+report it on our Sourceforge tracker. In the meantime, you can try to escape
+with digging, disintegration or teleportation.
 %%%%
 Q:survival
 
@@ -59,10 +75,20 @@ How can I avoid dying all the time? Can you give me some playing tips?
 %%%%
 A:survival
 
-If you've got trouble even reaching the Temple, you might want to try out the Tutorial for some general playing hints. (To do this, press 'T' in the character selection menu.) Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. 
-In general, treat each new monster you meet with utmost caution and keep an eye on your hit points and magic.
+If you've got trouble even reaching the Temple, you might want to try out
+the Tutorial for some general playing hints. (To do this, press 'T' in the
+character selection menu.) Also, there are easy playing combinations and
+more challenging ones (marked in dark grey on the selection screen). If you
+are new to Crawl, sticking to the easier ones is advisable. In general,
+treat each new monster you meet with utmost caution and keep an eye on your
+hit points and magic.
 
-For specific hints dealing with a particular character, you can press '#' in-game to create a "dump" in your morgue folder that you can then post on the rec.games.roguelike.misc group or in the Something Awful forum, so other players can comment on your equipment, skills or spell selection. Please try to trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list).
+For specific hints dealing with a particular character, you can press '#'
+in-game to create a "dump" in your morgue folder that you can then post on
+the rec.games.roguelike.misc group or in the Something Awful forum, so
+other players can comment on your equipment, skills or spell selection.
+Please try to trim your dump by removing stuff unnecessary for this task
+(such as the extensive Vanquished list).
 %%%%
 Q:cheating
 
@@ -70,15 +96,31 @@ Is there a cheating mode to Crawl where I can play without dying?
 %%%%
 A:cheating
 
-Not a cheating mode, exactly, but if your compilation supports it you can play in wizard mode (access with '&') where you are prompted whenever you're about to die, and have access to a number of nifty commands to create equipment, travel to distant branches, or fiddle with your stats or skills. Note that wizard mode games will never appear on the highscore list.
+Not a cheating mode, exactly, but if your compilation supports it you can
+play in wizard mode (access with '&') where you are prompted whenever you're
+about to die, and have access to a number of nifty commands to create
+equipment, travel to distant branches, or fiddle with your stats or skills.
+Note that wizard mode games will never appear on the highscore list.
+
+Many players reckon long-time use of wizard mode to be detrimental to your
+playing skills. On the other hand, we are thankful for bug reports using
+wizard mode for reproducing and exploring bugs 
 %%%%
 Q:weapons
 
-I've got a +6, +2 broad axe of Foo and a +3, +5 randart long sword of Bar. How can I tell which one is better?
+I've got a +6, +2 broad axe of Foo and a +3, +5 randart long sword of Bar.
+How can I tell which one is better?
 %%%%
 A:weapons
 
-"Better" depends on a number of factors, such as your weapon skills, whether it's one or two-handed, the randart properties, the weapon brand, and the monsters you're about to face. In general, switching from a weapon type you are already highly skilled with to another one that you have no skill in is a waste of time. The brands may greatly differ in damage output but you can get a good idea by bashing a few comparatively harmless monsters with each and comparing the results. Of the enchantments, damage is usually more important unless you hardly ever manage to hit with a weapon.
+"Better" depends on a number of factors, such as your weapon skills, whether
+it's one or two-handed, the randart properties, the weapon brand, and the
+monsters you're about to face. In general, switching from a weapon type you
+are already highly skilled with to another one that you have no skill in is
+a waste of time. The brands may greatly differ in damage output but you can
+get a good idea by bashing a few comparatively harmless monsters with each
+and comparing the results. Of the enchantments, damage is usually more
+important unless you hardly ever manage to hit with a weapon.
 %%%%
 Q:religion
 
@@ -86,8 +128,10 @@ Which gods would you recommend to a beginning player?
 %%%%
 A:religion
 
-The easiest gods to play are probably Trog (for Berserkers), Sif Muna (for mages), Beogh (for orcs) and Xom (for general fun). 
-When you reach the Temple for the first time be sure to read all gods' descriptions and take your time in deciding which way to go.
+The easiest gods to play are probably Trog (for Berserkers), Sif Muna (for
+mages), Beogh (for orcs) and Xom (for general fun). When you reach the
+Temple for the first time be sure to read all gods' descriptions and take
+your time in deciding which way to go.
 %%%%
 Q:starving
 
@@ -95,30 +139,46 @@ My characters keep starving. What am I doing wrong?
 %%%%
 A:starving
 
-It's possible that you simply spend too much time on cleared levels where not enough monsters are generated to dine on. You might also be too choosy about what you eat: unless you are herbivorous you will have to occasionally eat monster chunks, even those that sometimes make you sick (coloured brown in the menu and the prompt). If you worship a god who enjoys sacrifices pay attention to your own hunger status and wait until the end of prayer before chopping a corpse if need be. Also, casting (difficult) spells will make you hungry, but a high Intelligence will lessen this effect.
+It's possible that you simply spend too much time on cleared levels where
+not enough monsters are generated to dine on. You might also be too choosy
+about what you eat: unless you are herbivorous you will have to occasionally
+eat monster chunks, even those that sometimes make you sick (coloured brown
+in the menu and the prompt). If you worship a god who enjoys sacrifices pay
+attention to your own hunger status and wait until the end of prayer before
+chopping a corpse if need be. Also, casting (difficult) spells will make you
+hungry, but a high Intelligence will lessen this effect.
 %%%%
 Q:ghosts
 
-I keep getting murdered by my own ghosts. Is there an option to deactivate them?
+I keep getting murdered by my own ghosts. Is there an option to deactivate
+them?
 %%%%
 A:ghosts
 
-No, there isn't. On the plus side, once a ghost has been loaded onto a level, it won't be loaded again - unless you happen to die on that level. Keep in mind that you don't absolutely have to fight every monster you meet, and with ghosts it's even easier: they cannot leave the level they were created on. Alternatively, you could play a couple of strong species/class combinations for the sole purpose of busting those ghosts, for example Berserkers or a spellcaster who's learned Dispel Undead.
+No, there isn't. On the plus side, once a ghost has been loaded onto a level,
+it won't be loaded again - unless you happen to die on that level. Keep in
+mind that you don't absolutely have to fight every monster you meet, and with
+ghosts it's even easier: they cannot leave the level they were created on.
+Alternatively, you could play a couple of strong species/class combinations
+for the sole purpose of busting those ghosts, for example Berserkers or a
+spellcaster who's learned Dispel Undead.
 %%%%
 Q:abyss
 
-I've somehow ended up in a place called "Abyss". How do I get out of here? (SPOILERS)
+I've somehow ended up in a place called "Abyss". How do I get out of here?
+(SPOILERS)
 %%%%
 A:abyss
 
-If you are in the Abyss for the first time, chances of getting out are slim. Still, here are a few general hints:
+If you are in the Abyss for the first time, chances of getting out are slim.
+Still, here are a few general hints:
 * You need to find a gateway leading out of the Abyss. These are rare!
 * Don't stick around to fight, move as much as possible!
-* Try to avoid going straight into one direction: the Abyss wraps around, so you'll end up where you came from.
-* If you have it, use defensive equipment (weapon of protection, amulet of resist mutation).
-* Use teleportation as a means to (hopefully) end up in a completely new part of the Abyss. 
-* Keep in mind that teleportation might take much longer to kick in than in the Dungeon.
-* Consider switching your allegiance to Lugonu to get out of there, then deal with your old god's displeasure later.
+* The Abyss wraps around, so try to avoid going straight into one direction.
+* If you have it, use defensive equipment (weapon of protection etc.).
+* Use teleportation to hopefully end up in a completely new part of the Abyss.
+* Teleportation might take much longer to kick in than in the Dungeon.
+* Consider switching your allegiance to Lugonu to get out of there.
 %%%%
 Q:randart
 
@@ -126,13 +186,36 @@ What do the terms "randart" and "fixedart" signify?
 %%%%
 A:randart
 
-Apart from the standard items you'll find lying around in the dungeon, you might also stumble upon artefacts which come in three varieties:
+Apart from the standard items you'll find lying around in the dungeon, you
+might also stumble upon artefacts which come in three varieties:
 
 * randart: a random artefact, usually a weapon or type of armour with random properties such as conferring resistances or abilities
 * unrandart: an artefact that looks like a randart but is really predefined. There's no further difference except that players "in the know" can recognize such an item by its special description and/or colour.
 * fixed art: an artefact that does not use the random artefact properties but instead has unique hardcoded effects and descriptions.
 
 None of the three types can be enchanted or branded, neither temporarily nor permanently.
+%%%%
+Q:oklobs
+
+Oklob plants suck! Do you plan to remove them at last?
+%%%%
+A:oklobs
+
+No. Oklob plants provide an interesting challenge. Resist to urge to kill
+them at once. Also use your resources. A hint: they cannot see invisible.
+%%%%
+Q:instadeath
+
+I went down these stairs and got killed instantly! Is this a bug?
+%%%%
+A: instadeath
+
+Probably not. While your death might be an ill-placed vault (this would be
+a bug), it is generally just really bad luck. We believe that a game is more
+fun if the risk of death is real. This means that such instant deaths cannot
+be fully avoided, as Crawl relies on randomness for posing challenges. It is
+important to realise that for really good players, the margin of such deaths
+is really slim...
 %%%%
 ##############################################
 # Questions about the development process.
@@ -143,8 +226,17 @@ The game keeps crashing. / I think I found a bug. What do I do?
 %%%%
 A:bug
 
-Please submit a bug report on Sourceforge, and give as much information as you can. (What were you doing at the time? What did you expect to happen, what happened instead? etc.) Sometimes a screenshot can be helpful. For crashes, or monsters/items/levels behaving oddly, we probably need a save file. To be on the safe side, attach the entire zipped save of the character in question. If there are error messages, please write them down. 
-If you don't log in to Sourceforge or leave an email address at least check the thread from time to time in case we have some more questions. Thanks in advance!
+Please submit a bug report on Sourceforge, and give as much information as
+you can. (What were you doing at the time? What did you expect to happen,
+what happened instead? etc.) Sometimes a screenshot can be helpful. For
+crashes, or monsters/items/levels behaving oddly, we probably need a save
+file. To be on the safe side, attach the entire zipped save of the character
+in question. If there are error messages, please write them down. Short of a
+save file, a guide on how to reproduce the crash (or bug) can be useful; you
+can use wizard mode for this.
+If you don't log in to Sourceforge or leave an email address at least check
+the thread from time to time in case we have some more questions. Thanks in
+advance!
 %%%%
 Q:ideas
 
@@ -152,9 +244,14 @@ I've got millions of ideas! Can I join the team?
 %%%%
 A:ideas
 
-No, you can't. All of the devteam members submitted a number of code-intensive patches and/or took over responsibility over an important side project before joining. Once you've become indispensible to the team and we start wondering how we ever got along without you, we _may_ ask you to join you, but don't hold your breath.
+No, you can't. All of the devteam members submitted a number of code-intensive
+patches and/or took over responsibility over an important side project before
+joining. Once you've become indispensible to the team and we start wondering
+how we ever got along without you, we _may_ ask you to join you, but don't
+hold your breath.
 
-Please submit your ideas to the Feature Requests tracker of Sourceforge. If they catch the interest of at least one coder, chances are they'll make it into the game.
+Please submit your ideas to the Feature Requests tracker of Sourceforge. If
+they catch the interest of at least one coder, chances are they'll make it into the game.
 %%%%
 Q:feature
 
@@ -162,14 +259,22 @@ Hey! Why did you close my feature request?
 %%%%
 A:feature
 
-If you are logged in to Sourceforge when submitting your feature request, or choose to "Monitor" the resulting thread while logged in, you will get an email any time someone replies to (or fiddles with) this thread. Once a thread has been closed, you can still access it by setting the Status to closed and then clicking Browse, thus searching for all closed requests.
+If you are logged in to Sourceforge when submitting your feature request, or
+choose to "Monitor" the resulting thread while logged in, you will get an
+email any time someone replies to (or fiddles with) this thread. Once a thread
+has been closed, you can still access it by setting the Status to closed and
+then clicking Browse, thus searching for all closed requests.
 
-We always try to give a reason for closing a request, but it usually boils down to 3 reasons:
+We always try to give a reason for closing a request, but it usually boils
+down to three reasons:
 * It doesn't fit into the Crawl world as we see it.
 * It violates Crawl's philosophy to avoid grinding and spoiler-heavy stuff.
 * We just don't think it's interesting enough to ever be implemented.
 
-Please don't let this stop you from bringing up more suggestions. Already the next one might be one generating heavy interest and excitement. Do try to be specific in your suggestions. If you cannot even explain the basics of your idea, why should we bother to flesh it out, let alone code it?
+Please don't let this stop you from bringing up more suggestions. Already the
+next one might be one generating heavy interest and excitement. Do try to be
+specific in your suggestions. If you cannot even explain the basics of your
+idea, why should we bother to flesh it out, let alone code it?
 %%%%
 Q:patch
 
@@ -177,7 +282,12 @@ I've written a patch for a cool new feature! Where should I send it?
 %%%%
 A:patch
 
-Please submit it to the Patches tracker on Sourceforge. Keep in mind that without previous discussions, we may not be able to use the patch, or it might need heavy modification. In general, it is safer to first file your suggestions under Feature Requests and wait for people to become enthousiastic and give feedback before you submit a patch. If you want, you can also write a patch that implements an existing FR or fixes a bug.
+Please submit it to the Patches tracker on Sourceforge. Keep in mind that
+without previous discussions, we may not be able to use the patch, or it
+might need heavy modification. In general, it is safer to first file your
+suggestions under Feature Requests and wait for people to become
+enthousiastic and give feedback before you submit a patch. If you want,
+you can also write a patch that implements an existing FR or fixes a bug.
 %%%%
 Q:help
 
@@ -185,14 +295,16 @@ I cannot code, but I'd really like to help improve the game. What can I do?
 %%%%
 A:help
 
-There are several areas where you can get creative and outside help is much appreciated. These are:
+There are several areas where you can get creative and outside help is much
+appreciated. These are:
 * the maps/vaults (see dat/ folder, docs/level_design.txt)
 * monster speech (see dat/database/, docs/monster_speech.txt)
 * monster/item/spell descriptions (see dat/descript/)
 * tiles (For this you'll need the sourcecode, check the rltiles/ folder.)
 
-If you've got some great addition, you can send it over the mailing list, or post it as a Sourceforge item.
-You can also help us by giving feedback on the most recent version or trunk (downloadable from http://crawl.develz.org).
+If you've got some cool addition, you can send it over the mailing list, or
+post it as a Sourceforge item. You can also help us by giving feedback on
+the most recent version or trunk (downloadable from http://crawl.develz.org).
 
 Thanks a lot for your support!
 %%%%
@@ -202,7 +314,12 @@ Is there a way for me to play the new version before it is released?
 %%%%
 A:beta
 
-There certainly is! You can play "trunk" (what will eventually become the next version) online on http://crawl.develz.org, or you can download it from the same site. Note that trunk may be buggy, and that many changes will invalidate your saved games. If that doesn't bother you, go ahead and play. Be sure to leave some feedback/suggestions/bug reports on the Sourceforge trackers.
+There certainly is! You can play "trunk" (what will eventually become the
+next version) online on http://crawl.develz.org, or you can download it from
+the same site. Note that trunk may be buggy, and that many changes will
+invalidate your saved games. If that doesn't bother you, go ahead and play.
+Be sure to leave some feedback/suggestions/bug reports on the Sourceforge
+trackers.
 %%%%
 Q:interact
 
@@ -210,8 +327,13 @@ Is there a way for me to interact with other players?
 %%%%
 A:interact
 
-If you play online on http://crawl.akrasiac.org/ or http://crawl.develz.org you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages. 
-Check docs/ssh_guide.txt for an explanation about how to play online. You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Something Awful forum or the rec.games.roguelike.misc newsgroup.
+If you play online on http://crawl.akrasiac.org or http://crawl.develz.org
+you can watch games in progress, other players can watch you while you play,
+and you can kill other players' ghosts. You can even send and receive 
+messages.
+Check docs/ssh_guide.txt for an explanation about how to play online. You can
+also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the
+Something Awful forum or the rec.games.roguelike.misc newsgroup.
 %%%%
 ##############################################
 # Questions about the Tiles version
@@ -222,7 +344,10 @@ Can I play Tiles online?
 %%%%
 A:tiles online
 
-Sadly, no, that's not possible at the moment. We do hope that one day this will be different, but so far we haven't even decided how to go about it, and it's still far off. If you can, do give the console version a try: playing online is certainly worth it.
+Sadly, no, that's not possible at the moment. We do hope that one day this
+will be different, but so far we haven't even decided how to go about it,
+and it's still far off. If you can, do give the console version a try:
+playing online is certainly worth it.
 %%%%
 Q:tiles graphics
 
@@ -230,7 +355,12 @@ Is there a way for me to replace some of the tiles with different ones?
 %%%%
 A:tiles graphics
 
-Not without compiling, no. If you can compile (or get someone to do it for you), either directly replace the tiles in the rltiles/ folder, or change the paths in the dc-xxxx.txt files. You may also need to delete or rename the *.png files in rltiles/. Upon compilation, the newly rolled *.png files are copied into the dat/tiles/ folder which is where the game accesses the tiles it needs.
+Not without compiling, no. If you can compile (or get someone to do it for
+you), either directly replace the tiles in the rltiles/ folder, or change
+the paths in the dc-xxxx.txt files. You may also need to delete or rename
+the *.png files in rltiles/. Upon compilation, the newly rolled *.png files
+are copied into the dat/tiles/ folder which is where the game accesses the
+tiles it needs.
 %%%%
 Q:tiles options
 
@@ -238,5 +368,6 @@ Is there a way to modify the size of the tiles screen, the font etc?
 %%%%
 A:tiles options
 
-Yes. Play around with the options in settings/tiles_options.txt until you're satisfied.
+Yes. Play around with the options in settings/tiles_options.txt until
+you're satisfied.
 %%%%
