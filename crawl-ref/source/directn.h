@@ -171,13 +171,21 @@ int dos_direction_unmunge(int doskey);
 
 std::string feature_description(const coord_def& where, bool bloody = false,
                                 description_level_type dtype = DESC_CAP_A,
-                                bool add_stop = true);
+                                bool add_stop = true, bool base_desc = false);
 std::string raw_feature_description(dungeon_feature_type grid,
-                                    trap_type tr = NUM_TRAPS);
+                                    trap_type tr = NUM_TRAPS,
+                                    bool base_desc = false);
 std::string feature_description(dungeon_feature_type grid,
                                 trap_type trap = NUM_TRAPS, bool bloody = false,
                                 description_level_type dtype = DESC_CAP_A,
-                                bool add_stop = true);
+                                bool add_stop = true, bool base_desc = false);
+
+void set_feature_desc_short(dungeon_feature_type grid,
+                            const std::string &desc);
+void set_feature_desc_short(const std::string &base_name,
+                            const std::string &desc);
+
+void setup_feature_descs_short();
 
 std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 

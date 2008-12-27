@@ -52,6 +52,13 @@ void describe_god( god_type which_god, bool give_title );
  * *********************************************************************** */
 void describe_feature_wide(int x, int y);
 
+// last updated 24 Dec 2008 {mpc}
+/* ***********************************************************************
+ * called from: luadgn
+ * *********************************************************************** */
+void set_feature_desc_long(const std::string &raw_name,
+                           const std::string &desc);
+
 /* ***********************************************************************
  * called from: item_use - shopping
  * *********************************************************************** */

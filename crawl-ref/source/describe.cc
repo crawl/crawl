@@ -50,6 +50,8 @@
 #include "tutorial.h"
 #include "xom.h"
 
+#define LONG_DESC_KEY "long_desc_key"
+
 // ========================================================================
 //      Internal Functions
 // ========================================================================
@@ -1995,17 +1997,52 @@ static std::string _get_feature_description_wide(int feat)
 
 void describe_feature_wide(int x, int y)
 {
-    std::string desc = feature_description(coord_def(x, y));
-    desc += "$$";
+    const coord_def pos(x, y);
+    const dungeon_feature_type feat = grd(pos);
 
-    // Get rid of trailing .$$ before lookup
+    std::string desc = feature_description(pos, false, DESC_CAP_A, false);
     std::string db_name =
-        grd[x][y] == DNGN_ENTER_SHOP ? "A shop"
-                                     : desc.substr(0, desc.length() - 3);
+        grd[x][y] == DNGN_ENTER_SHOP ? "A shop" : desc;
+    std::string long_desc = getLongDescription(db_name);
 
-    desc += getLongDescription(db_name);
+    desc += ".$$";
+
+    // If we couldn't find a description in the database then see if
+    // the feature's base name is different.
+    if (long_desc.empty())
+    {
+        db_name   = feature_description(pos, false, DESC_CAP_A, false, true);
+        long_desc = getLongDescription(db_name);
+    }
+
+    bool custom_desc = false;
+
+    const CrawlHashTable &props = env.properties;
+    if (props.exists(LONG_DESC_KEY))
+    {
+        const CrawlHashTable &desc_table = props[LONG_DESC_KEY].get_table();
+
+        // First try the modified name, then the base name.
+        std::string key = raw_feature_description(feat);
+        if (!desc_table.exists(key))
+            key = raw_feature_description(feat, NUM_TRAPS, true);
+
+        if (desc_table.exists(key))
+        {
+            long_desc   = desc_table[key].get_string();
+            custom_desc = true;
+        }
+
+        std::string quote = getQuoteString(key);
+        if (!quote.empty())
+            db_name = key;
+    }
+
+    desc += long_desc;
+
     // For things which require logic
-    desc += _get_feature_description_wide(grd[x][y]);
+    if (!custom_desc)
+        desc += _get_feature_description_wide(grd[x][y]);
 
     std::string quote = getQuoteString(db_name);
 
@@ -2018,6 +2055,24 @@ void describe_feature_wide(int x, int y)
 
     if (getch() == 0)
         getch();
+}
+
+void set_feature_desc_long(const std::string &raw_name,
+                           const std::string &desc)
+{
+    ASSERT(!raw_name.empty());
+
+    CrawlHashTable &props = env.properties;
+
+    if (!props.exists(LONG_DESC_KEY))
+        props[LONG_DESC_KEY].new_table(SV_STR);
+
+    CrawlHashTable &desc_table = props[LONG_DESC_KEY];
+
+    if (desc.empty())
+        desc_table.erase(raw_name);
+    else
+        desc_table[raw_name] = desc;
 }
 
 // Returns true if spells can be shown to player.

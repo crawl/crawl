@@ -610,7 +610,7 @@ CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
 
 #define GET_VAL_PTR(x, _type, value) \
     ASSERT((flags & SFLAG_UNSET) || !(flags & SFLAG_CONST_VAL)); \
-    if (type != (x)) \
+    if (type != (x) || (flags & SFLAG_UNSET)) \
     { \
         if (type == SV_NONE) \
         { \

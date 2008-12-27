@@ -46,6 +46,26 @@ function ice_cave_portal(e)
 end
 }}
 
+{{
+-- Alter short feature descriptions for all ice cave destination vaults.
+function ice_cave_feat_descs()
+    dgn.set_feature_desc_short("rock wall", "ice covered $BASE")
+    dgn.set_feature_desc_short("gate leading back to the Dungeon",
+                               "ice covered $BASE")
+    dgn.set_feature_desc_short("empty arch of ancient stone",
+                               "ice choked $BASE")
+    dgn.set_feature_desc_short("Some shallow water",
+                               "Some ice crusted shallow water")
+    dgn.set_feature_desc_short("Some deep water",
+                               "Some ice crusted deep water")
+
+    dgn.set_feature_desc_long("Some deep water",
+                              "It looks freezing!");
+end
+
+dgn.set_lt_callback("ice_cave", "ice_cave_feat_descs")
+}}
+
 # For destination (not entry) vaults, use the following line after all
 # substitutions have been performed:
 # : ice_cave_colours(_G)

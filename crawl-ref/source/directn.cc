@@ -57,6 +57,12 @@
 
 #include "macro.h"
 
+#define SHORT_DESC_KEY "short_desc_key"
+
+typedef std::map<std::string, std::string> desc_map;
+
+static desc_map base_desc_to_short;
+
 enum LOSSelect
 {
     LOS_ANY      = 0x00,
@@ -2314,17 +2320,17 @@ std::string thing_do_grammar(description_level_type dtype,
 std::string feature_description(dungeon_feature_type grid,
                                 trap_type trap, bool bloody,
                                 description_level_type dtype,
-                                bool add_stop)
+                                bool add_stop, bool base_desc)
 {
-    std::string desc = raw_feature_description(grid, trap);
+    std::string desc = raw_feature_description(grid, trap, base_desc);
     if (bloody)
         desc += ", spattered with blood";
 
     return thing_do_grammar(dtype, add_stop, grid_is_trap(grid), desc);
 }
 
-std::string raw_feature_description(dungeon_feature_type grid,
-                                    trap_type trap)
+static std::string _base_feature_desc(dungeon_feature_type grid,
+                                      trap_type trap)
 {
     if (grid_is_trap(grid) && trap != NUM_TRAPS)
     {
@@ -2551,6 +2557,69 @@ std::string raw_feature_description(dungeon_feature_type grid,
     }
 }
 
+std::string raw_feature_description(dungeon_feature_type grid,
+                                    trap_type trap, bool base_desc)
+{
+    std::string base_str = _base_feature_desc(grid, trap);
+
+    if (base_desc)
+        return (base_str);
+
+    desc_map::iterator i = base_desc_to_short.find(base_str);
+
+    if (i != base_desc_to_short.end())
+        return (i->second);
+
+    return (base_str);
+}
+
+void set_feature_desc_short(dungeon_feature_type grid,
+                            const std::string &desc)
+{
+    set_feature_desc_short(_base_feature_desc(grid, NUM_TRAPS), desc);
+}
+
+void set_feature_desc_short(const std::string &base_name,
+                            const std::string &_desc)
+{
+    ASSERT(!base_name.empty());
+
+    CrawlHashTable &props = env.properties;
+
+    if (!props.exists(SHORT_DESC_KEY))
+        props[SHORT_DESC_KEY].new_table(SV_STR);
+
+    CrawlHashTable &desc_table = props[SHORT_DESC_KEY];
+
+    if (_desc.empty())
+    {
+        base_desc_to_short.erase(base_name);
+        desc_table.erase(base_name);
+    }
+    else
+    {
+        std::string desc = replace_all(_desc, "$BASE", base_name);
+        base_desc_to_short[base_name] = desc;
+        desc_table[base_name]         = desc;
+    }
+}
+
+void setup_feature_descs_short()
+{
+    base_desc_to_short.clear();
+
+    const CrawlHashTable &props = env.properties;
+
+    if (!props.exists(SHORT_DESC_KEY))
+        return;
+
+    const CrawlHashTable &desc_table = props[SHORT_DESC_KEY].get_table();
+
+    CrawlHashTable::const_iterator i;
+    for (i = desc_table.begin(); i != desc_table.end(); ++i)
+        base_desc_to_short[i->first] = i->second.get_string();
+}
+
 static std::string _marker_feature_description(const coord_def &p)
 {
     std::vector<map_marker*> markers = env.markers.get_markers_at(p);
@@ -2574,7 +2643,8 @@ static bool _interesting_feature(dungeon_feature_type feat)
 #endif
 
 std::string feature_description(const coord_def& where, bool bloody,
-                                description_level_type dtype, bool add_stop)
+                                description_level_type dtype, bool add_stop,
+                                bool base_desc)
 {
     dungeon_feature_type grid = grd(where);
     if (grid == DNGN_SECRET_DOOR)
@@ -2603,7 +2673,7 @@ std::string feature_description(const coord_def& where, bool bloody,
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
         return (feature_description(grid, get_trap_type(where), bloody,
-                                    dtype, add_stop));
+                                    dtype, add_stop, base_desc));
     case DNGN_ABANDONED_SHOP:
         return thing_do_grammar(dtype, add_stop, false, "An abandoned shop");
 
@@ -2615,7 +2685,8 @@ std::string feature_description(const coord_def& where, bool bloody,
                     dtype, add_stop, false,
                     _marker_feature_description(where)));
     default:
-        return (feature_description(grid, NUM_TRAPS, bloody, dtype, add_stop));
+        return (feature_description(grid, NUM_TRAPS, bloody, dtype, add_stop,
+                                    base_desc));
     }
 }
 
