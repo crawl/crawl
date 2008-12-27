@@ -2579,6 +2579,13 @@ void describe_monsters(const monsters& mons)
         break;
     }
 
+    if (!mons.can_use_stairs())
+    {
+        body << mons_pronoun(static_cast<monster_type>(mons.type),
+                             PRONOUN_CAP, true)
+             << " is incapable of using stairs.$";
+    }
+
     std::string symbol_suffix = "__";
     symbol_suffix += symbol;
     symbol_suffix += "_suffix";

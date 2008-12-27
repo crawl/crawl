@@ -589,8 +589,33 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                     return (mon_type);
                 }
             }
-            // Now pick a monster of the given branch and level.
-            mon_type = pick_random_monster(place, *lev_mons, *lev_mons);
+
+            int tries = 0;
+            while (tries++ < 300)
+            {
+                // Now pick a monster of the given branch and level.
+                mon_type = pick_random_monster(place, *lev_mons, *lev_mons);
+
+                // Don't allow zombified monsters to be placed at stairs.
+                if (proximity != PROX_NEAR_STAIRS
+                    || !mons_class_is_zombified(mon_type))
+                {
+                    break;
+                }
+            }
+
+            if (proximity == PROX_NEAR_STAIRS && tries >= 300)
+            {
+                proximity = PROX_AWAY_FROM_PLAYER;
+
+                // Reset target level.
+                if (*stair_type == DCHAR_STAIRS_DOWN)
+                    --*lev_mons;
+                else if (*stair_type == DCHAR_STAIRS_UP)
+                    ++*lev_mons;
+
+                mon_type = pick_random_monster(place, *lev_mons, *lev_mons);
+            }
         }
     }
     return (mon_type);
@@ -851,10 +876,10 @@ int place_monster(mgen_data mg, bool force_pos)
         if (shoved)
         {
             msg += " shoves you out of the ";
-            if (stair_type != DCHAR_ARCH)
-                msg += "stairwell!";
-            else
+            if (stair_type == DCHAR_ARCH)
                 msg += "gateway!";
+            else
+                msg += "stairwell!";
             mpr(msg.c_str());
         }
         else if (!msg.empty())
@@ -863,9 +888,13 @@ int place_monster(mgen_data mg, bool force_pos)
                 msg += " comes up the stairs.";
             else if (stair_type == DCHAR_STAIRS_UP)
                 msg += " comes down the stairs.";
-            else
+            else if (stair_type == DCHAR_ARCH)
                 msg += " comes through the gate.";
-            mpr(msg.c_str());
+            else
+                msg = "";
+
+            if (!msg.empty())
+                mpr(msg.c_str());
         }
 
         // Special case: must update the view for monsters created

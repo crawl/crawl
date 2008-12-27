@@ -1118,8 +1118,6 @@ void static _get_randart_properties(const item_def &item,
             proprt[RAP_CURSED] = 1 + random2(5);
         else
             proprt[RAP_CURSED] = -1;
-
-        mprf("Set RAP_CURSED to %d", proprt[RAP_CURSED]);
     }
 }
 
