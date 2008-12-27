@@ -2786,6 +2786,8 @@ void bolt::affect_endpoint()
         int newcolour = _potion_beam_flavour_to_colour(flavour);
         if (newcolour >= 0)
             colour = newcolour;
+
+        ex_size = std::max(1, ex_size);
         explode();
         return;
     }
