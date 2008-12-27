@@ -655,6 +655,24 @@ bool you_tran_can_wear(const item_def &item)
 
 bool you_tran_can_wear(int eq, bool check_mutation)
 {
+    if (eq == EQ_NONE)
+        return (true);
+
+    if (eq == EQ_STAFF)
+        eq = EQ_WEAPON;
+    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2)
+        eq = EQ_LEFT_RING;
+
+    const int transform = you.attribute[ATTR_TRANSFORMATION];
+
+    // Clouds cannot wear anything.
+    if (transform == TRAN_AIR)
+        return (false);
+
+    // Everybody else can wear at least some type of armour.
+    if (eq == EQ_ALL_ARMOUR)
+        return (true);
+
     // Not a transformation, but also temporary -> check first.
     if (check_mutation)
     {
@@ -670,22 +688,17 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         }
     }
 
-    const int transform = you.attribute[ATTR_TRANSFORMATION];
-
     // No further restrictions.
     if (transform == TRAN_NONE || transform == TRAN_LICH)
         return (true);
 
-    // Bats cannot wear anything except amulets, clouds obviously nothing.
-    if (transform == TRAN_BAT && eq != EQ_AMULET || transform == TRAN_AIR)
+    // Bats cannot wear anything except amulets.
+    if (transform == TRAN_BAT && eq != EQ_AMULET)
         return (false);
 
     // Everyone else can wear jewellery, at least.
-    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_RINGS
-        || eq == EQ_AMULET)
-    {
+    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET)
         return (true);
-    }
 
     // These cannot use anything but jewellery.
     if (transform == TRAN_SPIDER || transform == TRAN_DRAGON

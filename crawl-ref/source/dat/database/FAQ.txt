@@ -41,7 +41,7 @@ A:drop
 
 Press 'd' (or ','), followed by a number (the amount), and finally the
 item's letter. For pickup, this is only possible when choosing items from
-a menu. Stacks that are picked up only in part are selected with '#' rather
+a menu. Stacks that are selected only in part are marked with '#' rather
 than '+'.
 %%%%
 Q:downstairs
@@ -108,19 +108,19 @@ wizard mode for reproducing and exploring bugs
 %%%%
 Q:weapons
 
-I've got a +6, +2 broad axe of Foo and a +3, +5 randart long sword of Bar.
-How can I tell which one is better?
+I've got a broad axe of Foo and a randart long sword of Bar. How can I tell 
+which one is better?
 %%%%
 A:weapons
 
-"Better" depends on a number of factors, such as your weapon skills, whether
-it's one or two-handed, the randart properties, the weapon brand, and the
-monsters you're about to face. In general, switching from a weapon type you
-are already highly skilled with to another one that you have no skill in is
-a waste of time. The brands may greatly differ in damage output but you can
-get a good idea by bashing a few comparatively harmless monsters with each
-and comparing the results. Of the enchantments, damage is usually more
-important unless you hardly ever manage to hit with a weapon.
+"Better" depends on a number of factors, such as your weapon skills, 
+whether it's one or two-handed, the randart properties, the weapon brand, 
+and the monsters you're about to face. In general, switching from a weapon 
+type you are already highly skilled with to another one that you have no 
+skill in is a waste of time. The brands may greatly differ in damage output 
+but you can get a good idea by bashing a few comparatively harmless monsters 
+with each and comparing the results. Of the enchantments, damage is usually
+more important unless you hardly ever manage to hit with a weapon.
 %%%%
 Q:religion
 
@@ -155,10 +155,11 @@ them?
 %%%%
 A:ghosts
 
-No, there isn't. On the plus side, once a ghost has been loaded onto a level,
-it won't be loaded again - unless you happen to die on that level. Keep in
-mind that you don't absolutely have to fight every monster you meet, and with
-ghosts it's even easier: they cannot leave the level they were created on.
+No, there isn't. On the plus side, once a ghost has been loaded onto a 
+level, it won't be loaded again - unless you happen to die on that level. 
+Keep in mind that you don't absolutely have to fight every monster you meet, 
+and with ghosts it's even easier: they cannot leave the level they were 
+created on.
 Alternatively, you could play a couple of strong species/class combinations
 for the sole purpose of busting those ghosts, for example Berserkers or a
 spellcaster who's learned Dispel Undead.
@@ -170,8 +171,8 @@ I've somehow ended up in a place called "Abyss". How do I get out of here?
 %%%%
 A:abyss
 
-If you are in the Abyss for the first time, chances of getting out are slim.
-Still, here are a few general hints:
+If you are in the Abyss for the first time, chances of getting out are 
+slim. Still, here are a few general hints:
 * You need to find a gateway leading out of the Abyss. These are rare!
 * Don't stick around to fight, move as much as possible!
 * The Abyss wraps around, so try to avoid going straight into one direction.
@@ -189,33 +190,39 @@ A:randart
 Apart from the standard items you'll find lying around in the dungeon, you
 might also stumble upon artefacts which come in three varieties:
 
-* randart: a random artefact, usually a weapon or type of armour with random properties such as conferring resistances or abilities
-* unrandart: an artefact that looks like a randart but is really predefined. There's no further difference except that players "in the know" can recognize such an item by its special description and/or colour.
-* fixed art: an artefact that does not use the random artefact properties but instead has unique hardcoded effects and descriptions.
+* randart: a random artefact, usually a weapon or type of armour with 
+  random properties such as conferring resistances or abilities
+* unrandart: an artefact that looks like a randart but is really 
+  predefined. There's no further difference except that players "in the know"
+  can recognize such an item by its special description and/or colour.
+* fixedart: an artefact that does not use the random artefact properties but 
+  instead has unique hardcoded effects and descriptions.
 
-None of the three types can be enchanted or branded, neither temporarily nor permanently.
+None of the three types can be enchanted or branded, neither temporarily nor 
+permanently.
 %%%%
 Q:oklobs
 
-Oklob plants suck! Do you plan to remove them at last?
+Oklob plants suck! Are you planning to remove them at last?
 %%%%
 A:oklobs
 
-No. Oklob plants provide an interesting challenge. Resist to urge to kill
-them at once. Also use your resources. A hint: they cannot see invisible.
+No. We think that Oklob plants provide an interesting challenge.
+Resist the urge to kill them at once. If you absolutely need to bypass them
+use your resources wisely. A hint: They cannot see invisible.
 %%%%
 Q:instadeath
 
 I went down these stairs and got killed instantly! Is this a bug?
 %%%%
-A: instadeath
+A:instadeath
 
-Probably not. While your death might be an ill-placed vault (this would be
-a bug), it is generally just really bad luck. We believe that a game is more
-fun if the risk of death is real. This means that such instant deaths cannot
-be fully avoided, as Crawl relies on randomness for posing challenges. It is
-important to realise that for really good players, the margin of such deaths
-is really slim...
+Probably not. While your death might be due to an ill-placed vault (this 
+would be a bug), it is generally just really bad luck. We believe that a 
+game is more fun if the risk of death is real. This means that such instant 
+deaths cannot be fully avoided as Crawl relies on randomness for posing 
+challenges. It is important to realize that for highly skilled players, the 
+margin of such deaths is really slim...
 %%%%
 ##############################################
 # Questions about the development process.
@@ -229,14 +236,14 @@ A:bug
 Please submit a bug report on Sourceforge, and give as much information as
 you can. (What were you doing at the time? What did you expect to happen,
 what happened instead? etc.) Sometimes a screenshot can be helpful. For
-crashes, or monsters/items/levels behaving oddly, we probably need a save
+crashes or monsters/items/levels behaving oddly, we probably need a save
 file. To be on the safe side, attach the entire zipped save of the character
 in question. If there are error messages, please write them down. Short of a
 save file, a guide on how to reproduce the crash (or bug) can be useful; you
 can use wizard mode for this.
 If you don't log in to Sourceforge or leave an email address at least check
-the thread from time to time in case we have some more questions. Thanks in
-advance!
+the thread from time to time in case we have some more questions. 
+Thanks in advance!
 %%%%
 Q:ideas
 
@@ -244,14 +251,15 @@ I've got millions of ideas! Can I join the team?
 %%%%
 A:ideas
 
-No, you can't. All of the devteam members submitted a number of code-intensive
-patches and/or took over responsibility over an important side project before
-joining. Once you've become indispensible to the team and we start wondering
-how we ever got along without you, we _may_ ask you to join you, but don't
-hold your breath.
+No, you can't. All of the devteam members submitted a number of code 
+intensive patches and/or took over responsibility over an important side 
+project before joining. Once you've become indispensible to the team and we 
+start wondering how we ever got along without you, we _may_ ask you to join 
+you, but don't hold your breath.
 
 Please submit your ideas to the Feature Requests tracker of Sourceforge. If
-they catch the interest of at least one coder, chances are they'll make it into the game.
+they catch the interest of at least one coder, chances are they'll make it 
+into the game.
 %%%%
 Q:feature
 
@@ -259,11 +267,11 @@ Hey! Why did you close my feature request?
 %%%%
 A:feature
 
-If you are logged in to Sourceforge when submitting your feature request, or
-choose to "Monitor" the resulting thread while logged in, you will get an
-email any time someone replies to (or fiddles with) this thread. Once a thread
-has been closed, you can still access it by setting the Status to closed and
-then clicking Browse, thus searching for all closed requests.
+If you are logged in to Sourceforge when submitting your feature request, 
+or choose to "Monitor" the resulting thread while logged in, you will get 
+an email any time someone replies to (or fiddles with) this thread. Once a 
+thread has been closed, you can still access it by setting the Status to 
+closed and then clicking Browse, thus searching for all closed requests.
 
 We always try to give a reason for closing a request, but it usually boils
 down to three reasons:
@@ -300,7 +308,7 @@ appreciated. These are:
 * the maps/vaults (see dat/ folder, docs/level_design.txt)
 * monster speech (see dat/database/, docs/monster_speech.txt)
 * monster/item/spell descriptions (see dat/descript/)
-* tiles (For this you'll need the sourcecode, check the rltiles/ folder.)
+* tiles (For this you'll need the source code, check the rltiles/ folder.)
 
 If you've got some cool addition, you can send it over the mailing list, or
 post it as a Sourceforge item. You can also help us by giving feedback on
