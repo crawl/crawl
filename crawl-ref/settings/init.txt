@@ -195,7 +195,16 @@ include = travel_stoppers.txt
 
 ##### 4-h	Stashes ###############################
 #
-# stash_filter = 14, 4:21
+
+# 14 filters out corpses
+# stash_filter = 14
+
+stash_filter = scroll of curse armour, scroll of curse weapon, scroll of noise
+stash_filter = scroll of immolation, scroll of random uselessness
+stash_filter = scroll of paper
+
+stash_filter = ring of hunger, amulet of inaccuracy
+
 # annotate_item_class = true
 # annotate_item_dropped = true
 
@@ -342,7 +351,7 @@ note_skill_max  = true
 note_all_spells = true
 note_items    = rod of, acquirement, preservation, running, of Zot
 note_messages = You pass through the gate
-note_messages = [bB]anish.*Abyss
+note_messages = cast .* Abyss
 note_messages = Your scales start
 note_messages = protects you from harm
 note_messages = You fall through a shaft

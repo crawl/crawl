@@ -180,22 +180,33 @@ void Stash::filter(const std::string &str)
 {
     std::string base = str;
 
-    base.erase(base.find_last_not_of(" \n\t") + 1);
-    base.erase(0, base.find_first_not_of(" \n\t"));
-
     unsigned char subc = 255;
+    std::string   subs = "";
     std::string::size_type cpos = base.find(":", 0);
     if (cpos != std::string::npos)
     {
-        std::string subs = base.substr(cpos + 1);
         subc = atoi(subs.c_str());
 
         base = base.substr(0, cpos);
     }
 
-    const object_class_type basec =
-        static_cast<object_class_type>(atoi(base.c_str()));
-    filter(basec, subc);
+    const int base_num = atoi(base.c_str());
+    if (base_num == 0 && base != "0" || subc == 0 && subs != "0")
+    {
+        item_types_pair pair = item_types_by_name(str);
+        if (pair.base_type == OBJ_UNASSIGNED)
+        {
+            Options.report_error("Invalid stash filter '" + str + "'");
+            return;
+        }
+        filter(pair.base_type, pair.sub_type);
+    }
+    else
+    {
+        const object_class_type basec =
+            static_cast<object_class_type>(base_num);
+        filter(basec, subc);
+    }
 }
 
 void Stash::filter(object_class_type base, unsigned char sub)
@@ -216,6 +227,8 @@ bool Stash::is_filtered(const item_def &item)
             && (filter.sub_type == 255
                 || item.sub_type == filter.sub_type))
         {
+            if (filter.sub_type != 255 && !item_type_known(item))
+                return (false);
             return (true);
         }
     }

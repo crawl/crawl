@@ -913,11 +913,23 @@ when the stash-tracker tracked only specific stashes that you asked it
 to. Modern Crawls track all items in the dungeon without the need for
 explicit steps.
 
-stash_filter = <list of numbers>
-        This option allows filtering certain classes of items when 
-        searching stashes.
+stash_filter = <list of item names or numbers>
+        This option prevents certain items or classes of items from being
+        rembered by the stash tracker.
+
         For example:
+
+             stash_filter = scroll of noise, scroll of curse weapon
+
+        will make the stash-tracker ignore scrolls of noise and scrolls
+        of curse weapon.  The item names must be exact, and must be
+        singular, not plural.
+
+        It can also be used the filter entire classes of items by their
+        number.  For example:
+
              stash_filter = 14, 4:21
+
         filters corpses (14) as well as food of the subtype chunks (4:21).
 
 annotate_item_class = false

@@ -209,6 +209,10 @@ int main( int argc, char *argv[] )
     // Init monsters up front - needed to handle the mon_glyph option right.
     init_monsters(mcolour);
 
+    // Init name cache so that we can parse stash_filter by item name.
+    init_properties();
+    init_item_name_cache();
+
     // Read the init file.
     init_file_error = read_init_file();
 
@@ -3812,7 +3816,6 @@ static bool _initialise(void)
     init_char_table(Options.char_set);
     init_feature_table();
     init_monster_symbols();
-    init_properties();
     init_spell_descs();        // This needs to be way up top. {dlb}
     init_mon_name_cache();
 
@@ -3847,7 +3850,6 @@ static bool _initialise(void)
     init_feat_desc_cache();
     init_spell_name_cache();
     init_spell_rarities();
-    init_item_name_cache();
 
     cio_init();
 
