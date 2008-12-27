@@ -90,7 +90,34 @@ void init_spell_descs(void)
         spell_list[i] = -1;
 
     for (unsigned int i = 0; i < SPELLDATASIZE; i++)
-        spell_list[spelldata[i].id] = i;
+    {
+        spell_desc &data = spelldata[i];
+
+#if DEBUG
+        if (data.id < SPELL_NO_SPELL || data.id >= NUM_SPELLS)
+            end(1, false, "spell #%d has invalid id %d", i, data.id);
+
+        if (data.title == NULL || strlen(data.title) == 0)
+            end(1, false, "spell #%d, id %d has no name", i, data.id);
+
+        if (data.level < 1 || data.level > 9)
+            end(1, false, "spell '%s' has invalid level %d",
+                data.title, data.level);
+
+        if (data.min_range > data.max_range)
+            end(1, false, "spell '%s' has min_range larger than max_range",
+                data.title);
+
+        if (data.flags & SPFLAG_TARGETING_MASK)
+        {
+            if (data.min_range <= -1 || data.max_range <= 0)
+                end(1, false, "targeted/directed spell '%s' has invalid range",
+                    data.title);
+        }
+#endif
+
+        spell_list[data.id] = i;
+    }
 }
 
 typedef std::map<std::string, spell_type> spell_name_map;

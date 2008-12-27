@@ -163,8 +163,6 @@ static void _ench_animation( int flavour, const monsters *mon, bool force )
 
 static void _beam_set_default_values(bolt &beam, int power)
 {
-    if (beam.range <= 0)
-        beam.range = LOS_RADIUS;
     beam.hit            = 0;                 // default for "0" beams (I think)
     beam.damage         = dice_def( 1, 0 );  // default for "0" beams (I think)
     beam.type           = 0;                 // default for "0" beams
@@ -1457,18 +1455,52 @@ bool bolt::invisible() const
 
 void bolt::initialize_fire()
 {
+    if (chose_ray)
+    {
+        ASSERT(in_bounds(ray.pos()));
+
+        if (source == coord_def())
+            source = ray.pos();
+    }
+
+    if (range == -1)
+    {
+#if DEBUG
+        if (is_tracer)
+        {
+            mpr("Tracer with range == -1, skipping.", MSGCH_ERROR);
+            return;
+        }
+
+        std::string item_name   = item ? item->name(DESC_PLAIN, false, true)
+                                       : "none";
+        std::string source_name = "unknown";
+        if (beam_source == NON_MONSTER && source == you.pos())
+        {
+            source_name = "player";
+        }
+        else if (!invalid_monster_index(beam_source))
+            source_name = menv[beam_source].name(DESC_PLAIN, true);
+
+        mprf(MSGCH_ERROR, "beam '%s' (source '%s', item '%s') has range -1; "
+                          "setting to LOS_RADIUS",
+             name.c_str(), source_name.c_str(), item_name.c_str());
+#endif
+        range = LOS_RADIUS;
+    }
+
+    ASSERT(!name.empty() || is_tracer);
+    ASSERT(in_bounds(source));
     ASSERT(flavour > BEAM_NONE && flavour < BEAM_FIRST_PSEUDO);
-    ASSERT(!drop_item || item);
+    ASSERT(!drop_item || item && is_valid_item(*item));
     ASSERT(range >= 0);
-    ASSERT(chose_ray && in_bounds(ray.pos())
-           || !chose_ray && in_bounds(source));
 
     real_flavour = flavour;
 
     // Fix some things which the tracer might have set.
-    range_used = 0;
+    range_used         = 0;
     in_explosion_phase = false;
-    use_target_as_pos = false;
+    use_target_as_pos  = false;
 
     message_cache.clear();
 
@@ -1939,14 +1971,8 @@ void bolt::do_fire()
     if (!in_bounds(pos()))
     {
         ASSERT(!aimed_at_spot);
-#ifdef DEBUG
-        mprf(MSGCH_DIAGNOSTICS, "fire_beam(): beam '%s' passed off edge of "
-             "map (item = '%s')", name.c_str(),
-             item ? item->name(DESC_PLAIN).c_str() : "none");
-#endif
 
         int tries = std::max(GXM, GYM);
-
         while (!in_bounds(ray.pos()) && tries-- > 0)
             ray.regress();
 
