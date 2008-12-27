@@ -3819,6 +3819,11 @@ static bool _initialise(void)
     init_spell_descs();        // This needs to be way up top. {dlb}
     init_mon_name_cache();
 
+    // init_item_name_cache() needs to be redone after init_char_table()
+    // and init_feature_table() have been called, so that the glyphs will
+    // be set to use with item_names_by_glyph_cache.
+    init_item_name_cache();
+
     msg::initialise_mpr_streams();
 
     // Init item array.

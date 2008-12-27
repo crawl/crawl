@@ -29,6 +29,7 @@
 #include "notes.h"
 #include "overmap.h"
 #include "place.h"
+#include "randart.h"
 #include "shopping.h"
 #include "spl-book.h"
 #include "stash.h"
@@ -227,6 +228,8 @@ bool Stash::is_filtered(const item_def &item)
             && (filter.sub_type == 255
                 || item.sub_type == filter.sub_type))
         {
+            if (is_artefact(item))
+                return (false);
             if (filter.sub_type != 255 && !item_type_known(item))
                 return (false);
             return (true);

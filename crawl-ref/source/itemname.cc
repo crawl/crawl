@@ -2715,6 +2715,9 @@ void init_item_name_cache()
         -1
     };
 
+    item_names_cache.clear();
+    item_names_by_glyph_cache.clear();
+
     for (int i = 0; sub_type_limits[i] != -1; i++)
     {
         object_class_type base_type = static_cast<object_class_type>(i);
@@ -2722,6 +2725,16 @@ void init_item_name_cache()
 
         for (unsigned char sub_type = 0; sub_type < num_sub_types; sub_type++)
         {
+            if (base_type == OBJ_BOOKS)
+            {
+                if (sub_type == BOOK_RANDART_LEVEL
+                    || sub_type == BOOK_RANDART_THEME)
+                {
+                    // These are randart only and have no fixed names.
+                    continue;
+                }
+            }
+
             int o = items(0, base_type, sub_type, true, 1,
                           MAKE_ITEM_NO_RACE);
 
@@ -2754,7 +2767,8 @@ void init_item_name_cache()
             if (item_names_cache.find(name) == item_names_cache.end())
             {
                 item_names_cache[name] = pair;
-                item_names_by_glyph_cache[glyph].push_back(name);
+                if (glyph)
+                    item_names_by_glyph_cache[glyph].push_back(name);
             }
         }
     }
