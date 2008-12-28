@@ -358,7 +358,7 @@ static void _sdump_gold(dump_params &par)
     if (you.attribute[ATTR_DONATIONS] > 0)
     {
         lines++;
-        text += make_stringf("You %sdonated %d gold pices.\n", have,
+        text += make_stringf("You %sdonated %d gold pieces.\n", have,
                              you.attribute[ATTR_DONATIONS]);
     }
 

@@ -159,7 +159,7 @@ A tall bounty hunter.
 %%%%
 Killer Klown
 
-A comical figure full of life and laughter.  It looks very happy to see you... but is there a slightly malicious cast to its features?  Is that red facepaint or something altogether less pleasant?
+A comical figure full of life and laughter.  It looks very happy to see you... but is there a slightly malicious cast to its features?  Is that red face paint or something altogether less pleasant?
 %%%%
 Lom Lobon
 
@@ -390,7 +390,7 @@ A disembodied toe, hanging in the air and radiating an intense field of negative
 %%%%
 cyclops
 
-A giant with one eye in the centre of its forehead.  Despite their lack of binocular vision, cyclopes throw boulders with fearsome accuracy.
+A giant with one eye in the centre of its forehead.  Despite their lack of binocular vision, cyclopi throw boulders with fearsome accuracy.
 %%%%
 # Only used in lookup mode, not when examining an actual monster.
 dancing weapon
@@ -463,7 +463,7 @@ deep elf priest
 
 This deep elf is a servant of an ancient dark god. Deep elves are extremely 
 hostile towards any alien outside their tribe, including deep elves from 
-elsewhere. Noone ever made success in understanding the religious standings
+elsewhere. No one ever made success in understanding the religious standings
 of these elves.
 %%%%
 deep elf soldier

@@ -3733,7 +3733,7 @@ static void _close_door(coord_def move)
 
             if (you.pos() == dc)
             {
-                mprf("There's a thickheaded creature in the %sway!", noun);
+                mprf("There's a thick-headed creature in the %sway!", noun);
                 return;
             }
         }

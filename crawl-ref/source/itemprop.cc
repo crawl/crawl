@@ -1322,7 +1322,7 @@ bool check_armour_shape( const item_def &item, bool quiet )
 }
 
 // If known is true, only returns true for *known* weapons of electrocution.
-bool item_is_rechargable(const item_def &it, bool known)
+bool item_is_rechargeable(const item_def &it, bool known)
 {
     // These are obvious...
     if (it.base_type == OBJ_WANDS || item_is_rod(it))

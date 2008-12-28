@@ -175,7 +175,7 @@ Summon Divine Warrior
 
 Summoned Angels and Daevas are powerful warriors against evil. They might be blessed by the Shining One to stay longer or even permanently in this world.
 %%%%
-# Both Kikubaaqudgha and Yredelmnul.
+# Both Kikubaaqudgha and Yredelemnul.
 Recall Undead Slaves
 
 Recall your undead followers from anywhere on the level to your immediate surroundings.

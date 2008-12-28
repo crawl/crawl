@@ -760,7 +760,7 @@ static const char *targeting_help_1 =
     "<w>Shift-Dir</w> : shoot straight-line beam\n"
 #ifdef WIZARD
     " \n"
-    "<h>Wizard targeting comands:</h>\n"
+    "<h>Wizard targeting commands:</h>\n"
     "<w>g</w>: give item to monster\n"
     "<w>s</w>: force monster to shout or speak\n"
     "<w>S</w>: make monster a summoned monster\n"
@@ -1135,13 +1135,13 @@ static void _append_non_item(std::string &desc, std::string key)
     unsigned int flags = get_spell_flags(type);
 
     if (flags & SPFLAG_DEVEL)
-        desc += "$This spell is still being developped, and is only avaible "
+        desc += "$This spell is still being developed, and is only available "
                 "via the &Z wizard command.";
     else if (flags & SPFLAG_TESTING)
-        desc += "$This is a testing spell, only avaible via the "
+        desc += "$This is a testing spell, only available via the "
                 "&Z wizard command.";
     else if (flags & SPFLAG_MONSTER)
-        desc += "$This is a monster-only spell, only avaible via the "
+        desc += "$This is a monster-only spell, only available via the "
                 "&Z wizard command.";
     else if (flags & SPFLAG_CARD)
         desc += "$This is a card-effect spell, unavailable in ordinary "

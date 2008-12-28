@@ -244,7 +244,7 @@ speaking
 
 @The_weapon@ @points_out@ the lack of singing @not_swords@. 
 
-@The_weapon@ embarks on a lenghty monologue about murderous music.
+@The_weapon@ embarks on a lengthy monologue about murderous music.
 
 @The_weapon@ compliments itself on its singing voice.
 

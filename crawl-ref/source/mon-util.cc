@@ -5050,7 +5050,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
     case MON_SHAPE_INSECT:
     case MON_SHAPE_INSECT_WINGED:
     case MON_SHAPE_CENTIPEDE:
-        str = "antena";
+        str = "antenna";
         break;
 
     case MON_SHAPE_SNAIL:

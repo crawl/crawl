@@ -644,7 +644,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         }
         else
         {
-            mpr("Bug in determing level exit.");
+            mpr("Bug in determining level exit.");
             return DNGN_UNSEEN;
         }
     }
@@ -677,7 +677,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         return DNGN_UNSEEN;
     }
 
-    mpr("Impossible occurence in find_appropriate_stairs()");
+    mpr("Impossible occurrence in find_appropriate_stairs()");
     return DNGN_UNSEEN;
 }
 #endif
@@ -2706,7 +2706,7 @@ void debug_item_statistics( void )
         return;
     }
 
-    mpr( "Generate stats for: [a] aquirement [b] randart properties");
+    mpr( "Generate stats for: [a] acquirement [b] randart properties");
 
     const int keyin = tolower( get_ch() );
     switch ( keyin )
@@ -5066,7 +5066,7 @@ void debug_miscast( int target_index )
 
     // Handle repeats ourselves since miscasts are likely to interrupt
     // command repetions, especially if the player is the target.
-    int repeats = _debug_prompt_for_int("Number of repitions? ", true);
+    int repeats = _debug_prompt_for_int("Number of repetitions? ", true);
     if (repeats < 1)
     {
         canned_msg(MSG_OK);

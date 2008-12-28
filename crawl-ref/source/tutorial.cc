@@ -691,7 +691,7 @@ void tutorial_death_screen()
     std::string text;
 
     mpr( "Condolences! Your character's premature death is a sad, but "
-         "common occurence in Crawl. Rest assured that with diligence and "
+         "common occurrence in Crawl. Rest assured that with diligence and "
          "playing experience your characters will last longer.",
          MSGCH_TUTORIAL);
 
@@ -1418,7 +1418,7 @@ static void _new_god_conduct()
     text.str("");
 
     text << "\nYou can check your god's likes and dislikes, as well as your "
-            "current standing and divine abilites, by typing <w>^</w>"
+            "current standing and divine abilities, by typing <w>^</w>"
 #ifdef USE_TILE
             " (alternatively press <w>Shift</w> while "
             "<w>right-clicking</w> on your avatar)"
@@ -2803,7 +2803,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "\nAlternatively, you can dump all information pertaining to "
                 "your character into a text file with the <w>#</w> command. "
                 "You can then find said file in the <w>morgue/</w> folder (<w>"
-             << you.your_name << ".txt</w>) and read it at your leasure. Also, "
+             << you.your_name << ".txt</w>) and read it at your leisure. Also, "
                 "such a file will automatically be created upon death (the "
                 "filename will then also contain the date) but that won't be "
                 "of much use to you now.";
@@ -2881,7 +2881,7 @@ static std::string _tut_target_mode(bool spells = false)
 {
    std::string result;
    result = "then be taken to target mode with the nearest monster or previous "
-            "target already targetted. You can also cycle through all hostile "
+            "target already targeted. You can also cycle through all hostile "
             "monsters in sight with <w>+</w> or <w>-</w>. "
             "Once you're aiming at the correct monster, simply hit "
             "<w>f</w>, <w>Enter</w> or <w>.</w> to shoot at it. "
@@ -3445,7 +3445,7 @@ void tutorial_describe_item(const item_def &item)
             break;
 
        case OBJ_MISCELLANY:
-            ostr << "Miscellanous items sometimes harbour magical powers. Try "
+            ostr << "Miscellaneous items sometimes harbour magical powers. Try "
                     "<w>w</w>ielding and e<w>v</w>oking it"
 #ifdef USE_TILE
                     ", either of which can be done by clicking on it"
@@ -3579,7 +3579,7 @@ void tutorial_describe_feature(dungeon_feature_type feat)
                         "dangerous task.\n\n"
 
                         "You can safely pass over a mechanical trap if "
-                        "you're flying or leviating.";
+                        "you're flying or levitating.";
             }
             else
             {

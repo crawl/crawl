@@ -2629,7 +2629,7 @@ LUAFN(dgn_set_level_type_name_abbrev)
     if (!lua_isstring(ls, 1))
     {
         luaL_argerror(ls, 1, "Expected string for level type name "
-                             "abberviation");
+                             "abbreviation");
         return(0);
     }
 

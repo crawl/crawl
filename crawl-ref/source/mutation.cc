@@ -704,8 +704,8 @@ const char *lose_mutation[][3] = {
     {"You feel an ache in your throat.", "You feel an ache in your throat.",
      "You feel an ache in your throat."},
 
-    {"You feel slightly disorientated.", "You feel slightly disorientated.",
-     "You feel slightly disorientated."},
+    {"You feel slightly disoriented.", "You feel slightly disoriented.",
+     "You feel slightly disoriented."},
 
 // 30
     {"A chill runs up and down your throat.",

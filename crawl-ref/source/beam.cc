@@ -5561,13 +5561,13 @@ std::string beam_type_name(beam_type type)
     case BEAM_POLYMORPH: return("polymorph");
     case BEAM_CHARM: return("enslave");
     case BEAM_BANISH: return("banishment");
-    case BEAM_DEGENERATE: return("degenration");
+    case BEAM_DEGENERATE: return("degeneration");
     case BEAM_ENSLAVE_UNDEAD: return("enslave undead");
     case BEAM_ENSLAVE_SOUL: return("enslave soul");
     case BEAM_PAIN: return("pain");
     case BEAM_DISPEL_UNDEAD: return("dispel undead");
     case BEAM_DISINTEGRATION: return("disintegration");
-    case BEAM_ENSLAVE_DEMON: return("enlsave demon");
+    case BEAM_ENSLAVE_DEMON: return("enslave demon");
     case BEAM_BLINK: return("blink");
     case BEAM_PETRIFY: return("petrify");
     case BEAM_BACKLIGHT: return("backlight");

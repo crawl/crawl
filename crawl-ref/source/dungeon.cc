@@ -397,7 +397,7 @@ bool set_level_flags(unsigned long flags, bool silent)
     if (you.skills[SK_TRANSLOCATIONS] > 0
         && could_control && !can_control && !silent)
     {
-        mpr("You sense the appearence of a powerful magical force "
+        mpr("You sense the appearance of a powerful magical force "
             "which warps space.", MSGCH_WARN);
     }
 

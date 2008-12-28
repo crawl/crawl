@@ -349,7 +349,7 @@ static std::string _no_selectables_message(int item_selector)
     case OSEL_MEMORISE:
         return("You aren't carrying any spellbooks.");
     case OSEL_RECHARGE:
-        return("You aren't carrying any rechargable items.");
+        return("You aren't carrying any rechargeable items.");
     case OSEL_ENCH_ARM:
         return("You aren't carrying any armour which can be enchanted "
                "further.");
@@ -843,7 +843,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (itype == OBJ_SCROLLS || itype == OBJ_BOOKS);
 
     case OSEL_RECHARGE:
-        return (item_is_rechargable(i, true));
+        return (item_is_rechargeable(i, true));
 
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true));

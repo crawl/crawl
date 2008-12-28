@@ -914,7 +914,7 @@ static void _try_monster_cast(spell_type spell, int powc,
         return;
     }
 
-    mpr("Invalid player spell, attemtping to cast it as monster spell.");
+    mpr("Invalid player spell, attempting to cast it as monster spell.");
 
     monsters* mon = &menv[midx];
 
@@ -4435,7 +4435,7 @@ void MiscastEffect::_earth(int severity)
             else
             {
                 you_msg      = "You momentarily stiffen.";
-                mon_msg_seen = "@The_monster@ momentariliy stiffens.";
+                mon_msg_seen = "@The_monster@ momentarily stiffens.";
             }
             break;
         case 11:
@@ -4462,7 +4462,7 @@ void MiscastEffect::_earth(int severity)
             case 1:
                 you_msg        = "You are blasted with sand!";
                 mon_msg_seen   = "@The_monster@ is blasted with sand!";
-                mon_msg_unseen = "A minature sandstorm briefly appears!";
+                mon_msg_unseen = "A miniature sandstorm briefly appears!";
                 break;
             case 2:
                 you_msg        = "Rocks fall onto you out of nowhere!";
@@ -4644,7 +4644,7 @@ void MiscastEffect::_air(int severity)
                              "discharges!";
             mon_msg_seen   = "@The_monster@ is caught in an explosion of "
                              "electrical discharges!";
-            mon_msg_unseen = "Elecectrical discharges explodes from out of "
+            mon_msg_unseen = "Electrical discharges explodes from out of "
                              "thin air!";
 
             beam.type    = dchar_glyph(DCHAR_FIRED_BURST);
@@ -4910,5 +4910,5 @@ std::string spell_range_string(spell_type spell)
     else
         return std::string("@") + std::string(range, '.')
             + "<darkgrey>" + std::string(maxrange - range, '.')
-            + "</dargrey>";
+            + "</darkgrey>";
 }
