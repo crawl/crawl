@@ -90,7 +90,7 @@ static void _init_equipment_removal(std::set<equipment_type> &rem_stuff,
     }
 }
 
-bool remove_equipment(std::set<equipment_type> removed)
+bool remove_equipment(std::set<equipment_type> removed, bool meld)
 {
     if (removed.find(EQ_WEAPON) != removed.end()
         && you.equip[EQ_WEAPON] != -1)
@@ -109,8 +109,11 @@ bool remove_equipment(std::set<equipment_type> removed)
         if (e == EQ_WEAPON || you.equip[e] == -1)
             continue;
 
-        mprf("%s melds into your body.",
-             you.inv[you.equip[e]].name(DESC_CAP_YOUR).c_str());
+        if (meld)
+        {
+            mprf("%s melds into your body.",
+                 you.inv[you.equip[e]].name(DESC_CAP_YOUR).c_str());
+        }
 
         if (e == EQ_LEFT_RING || e == EQ_RIGHT_RING || e == EQ_AMULET)
         {
@@ -120,6 +123,14 @@ bool remove_equipment(std::set<equipment_type> removed)
         else // armour
         {
             unwear_armour( you.equip[e] );
+        }
+
+        if (!meld)
+        {
+            mprf("%s falls away!",
+                 you.inv[you.equip[e]].name(DESC_CAP_YOUR).c_str());
+
+            you.equip[e] = -1;
         }
     }
 
@@ -197,11 +208,18 @@ static bool _unmeld_equipment(std::set<equipment_type> melded)
     return (true);
 }
 
-bool remove_one_equip(equipment_type eq)
+bool unmeld_one_equip(equipment_type eq)
+{
+    std::set<equipment_type> e;
+    e.insert(eq);
+    return _unmeld_equipment(e);
+}
+
+bool remove_one_equip(equipment_type eq, bool meld)
 {
     std::set<equipment_type> r;
     r.insert(eq);
-    return remove_equipment(r);
+    return remove_equipment(r, meld);
 }
 
 static bool _tran_may_meld_cursed(int transformation)

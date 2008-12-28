@@ -2182,7 +2182,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
         // Hooves and talons force boots off.
         if (you_tran_can_wear(EQ_BOOTS))
-            remove_one_equip(EQ_BOOTS);
+            remove_one_equip(EQ_BOOTS, false);
         break;
 
     case MUT_CLAWS:
@@ -2194,7 +2194,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         // mutation yet, so we have to check for level 2 or higher claws
         // here.
         if (you.mutation[mutat] >= 2 && you_tran_can_wear(EQ_GLOVES))
-            remove_one_equip(EQ_GLOVES);
+            remove_one_equip(EQ_GLOVES, false);
         break;
 
     case MUT_HORNS:
@@ -2206,7 +2206,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
             && you_tran_can_wear(EQ_HELMET))
         {
-            remove_one_equip(EQ_HELMET);
+            remove_one_equip(EQ_HELMET, false);
         }
         break;
 

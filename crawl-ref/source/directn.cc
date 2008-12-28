@@ -2265,7 +2265,7 @@ void describe_floor()
 
     msg_channel_type channel = MSGCH_EXAMINE;
 
-    // Water is not terribly important if you don't mind it-
+    // Water is not terribly important if you don't mind it.
     if ((grd(you.pos()) == DNGN_DEEP_WATER
             || grd(you.pos()) == DNGN_SHALLOW_WATER)
         && player_likes_water())

@@ -1242,11 +1242,9 @@ void search_around( bool only_adjacent )
     // Traps and doors stepdown skill:
     // skill/(2x-1) for squares at distance x
     int max_dist = (you.skills[SK_TRAPS_DOORS] + 1) / 2;
-    if ( max_dist > 5 )
+    if (max_dist > 5)
         max_dist = 5;
-    if ( max_dist > 1 && only_adjacent )
-        max_dist = 1;
-    if ( max_dist < 1 )
+    if (only_adjacent && max_dist > 1 || max_dist < 1)
         max_dist = 1;
 
     for (radius_iterator ri(you.pos(), max_dist); ri; ++ri )
@@ -1297,21 +1295,36 @@ void search_around( bool only_adjacent )
     }
 }
 
-void merfolk_start_swimming(void)
+bool merfolk_change_is_safe(bool quiet)
+{
+    // If already transformed, no subsequent transformation necessary.
+    if (!player_is_airborne() && grid_is_water(grd(you.pos())))
+        return (true);
+
+    std::set<equipment_type> r;
+    r.insert(EQ_BOOTS);
+    if (!player_light_armour())
+        r.insert(EQ_BODY_ARMOUR);
+
+    if (check_transformation_stat_loss(r, quiet))
+        return (false);
+
+    return (true);
+}
+
+void merfolk_start_swimming()
 {
     if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
         untransform();
 
-    std::set<equipment_type> removed;
-    removed.insert(EQ_BOOTS);
+    remove_one_equip(EQ_BOOTS);
 
     // Perhaps a bit to easy for the player, but we allow merfolk
     // to slide out of heavy body armour freely when entering water,
     // rather than handling emcumbered swimming. -- bwr
     if (!player_light_armour())
-        removed.insert(EQ_BODY_ARMOUR);
+        remove_one_equip(EQ_BODY_ARMOUR, false);
 
-    remove_equipment(removed);
     you.redraw_evasion = true;
 }
 

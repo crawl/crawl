@@ -895,6 +895,9 @@ void game_options::reset_options()
     mp_colour.clear();
     mp_colour.push_back(std::pair<int, int>(50, YELLOW));
     mp_colour.push_back(std::pair<int, int>(25, RED));
+    stat_colour.clear();
+    stat_colour.push_back(std::pair<int, int>(1, LIGHTRED));
+    stat_colour.push_back(std::pair<int, int>(3, RED));
 
     force_autopickup.clear();
     note_monsters.clear();
@@ -2484,6 +2487,30 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
             mp_colour.push_back(std::pair<int, int>(mp_percent, scolour));
+        }
+    }
+    else if (key == "stat_colour" || key == "stat_color")
+    {
+        stat_colour.clear();
+        std::vector<std::string> thesplit = split_string(",", field);
+        for (unsigned i = 0; i < thesplit.size(); ++i)
+        {
+            std::vector<std::string> insplit = split_string(":", thesplit[i]);
+
+            if (insplit.size() == 0 || insplit.size() > 2
+                || insplit.size() == 1 && i != 0)
+            {
+                crawl_state.add_startup_error(
+                    make_stringf("Bad stat_colour string: %s\n", field.c_str()));
+                break;
+            }
+
+            int stat_limit = 1;
+            if (insplit.size() == 2 )
+                stat_limit = atoi(insplit[0].c_str());
+
+            int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
+            stat_colour.push_back(std::pair<int, int>(stat_limit, scolour));
         }
     }
     else if (key == "note_skill_levels")

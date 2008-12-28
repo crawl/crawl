@@ -61,7 +61,7 @@ The contents of this text are:
                 prompt_for_swap, easy_quit_item_prompts, easy_exit_menu, 
                 sort_menus
 4-j     Message and Display Improvements.
-                hp_warning, mp_warning, hp_colour, mp_colour,
+                hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, delay_message_clear,
                 message_colour, show_inventory_weights, show_gold_turns,
                 show_beam, item_stack_summary_minimum, list_rotten,
@@ -1151,6 +1151,13 @@ hp_colour = 50:yellow, 25:red
 
 mp_colour = 50:yellow, 25:red
         mp_colour does to Magic what hp_colour does to Health.
+
+stat_colour = 1:lightred, 3:red
+        stat_colour colours your stats if they drop below a given value,
+        in the order of their definition. This check takes place before
+        the ones for e.g. Might or degeneration.
+        For normal grey colouring, set it to
+           stat_colour = 7
 
 status_caption_colour = brown
         Sets the colour that is used to display the captions in the status

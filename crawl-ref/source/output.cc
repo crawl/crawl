@@ -53,8 +53,8 @@
 // Color for captions like 'Health:', 'Str:', etc.
 #define HUD_CAPTION_COLOR Options.status_caption_colour
 
-// Color for values, which come after captions.
-static const short HUD_VALUE_COLOR = LIGHTGREY;
+// Colour for values, which come after captions.
+static const short HUD_VALUE_COLOUR = LIGHTGREY;
 
 // ----------------------------------------------------------------------
 // colour_bar
@@ -227,7 +227,7 @@ void update_turn_count()
     cgotoxy(19+6, 8, GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
-    textcolor(HUD_VALUE_COLOR);
+    textcolor(HUD_VALUE_COLOUR);
     cprintf("%ld", you.num_turns);
     textcolor(LIGHTGREY);
 }
@@ -280,20 +280,21 @@ static const char* _describe_hunger(int& color)
 static void _print_stats_mp(int x, int y)
 {
     // Calculate colour
-    short mp_colour = HUD_VALUE_COLOR;
+    short mp_colour = HUD_VALUE_COLOUR;
     {
         int mp_percent = (you.max_magic_points == 0
                           ? 100
                           : (you.magic_points * 100) / you.max_magic_points);
-        for ( unsigned int i = 0; i < Options.mp_colour.size(); ++i )
-            if ( mp_percent <= Options.mp_colour[i].first )
+
+        for (unsigned int i = 0; i < Options.mp_colour.size(); ++i)
+            if (mp_percent <= Options.mp_colour[i].first)
                 mp_colour = Options.mp_colour[i].second;
     }
 
     cgotoxy(x+8, y, GOTO_STAT);
     textcolor(mp_colour);
     cprintf("%d", you.magic_points);
-    textcolor(HUD_VALUE_COLOR);
+    textcolor(HUD_VALUE_COLOUR);
     cprintf("/%d", you.max_magic_points );
 
     int col = _count_digits(you.magic_points)
@@ -310,7 +311,7 @@ static void _print_stats_hp(int x, int y)
     const int max_max_hp = get_real_hp(true, true);
 
     // Calculate colour
-    short hp_colour = HUD_VALUE_COLOR;
+    short hp_colour = HUD_VALUE_COLOUR;
     {
         const int hp_percent =
             (you.hp * 100) / (max_max_hp ? max_max_hp : you.hp);
@@ -327,7 +328,7 @@ static void _print_stats_hp(int x, int y)
     cprintf(max_max_hp != you.hp_max ? "HP: " : "Health: ");
     textcolor(hp_colour);
     cprintf( "%d", you.hp );
-    textcolor(HUD_VALUE_COLOR);
+    textcolor(HUD_VALUE_COLOUR);
     cprintf( "/%d", you.hp_max );
     if (max_max_hp != you.hp_max)
         cprintf( " (%d)", max_max_hp );
@@ -336,8 +337,48 @@ static void _print_stats_hp(int x, int y)
     for (int i = 18-col; i > 0; i--)
         cprintf(" ");
 
-    if (! Options.classic_hud)
+    if (!Options.classic_hud)
         HP_Bar.draw(19, y, you.hp, you.hp_max);
+}
+
+short _get_stat_colour(stat_type stat)
+{
+    int val = 0, max_val = 0;
+    switch (stat)
+    {
+    case STAT_STRENGTH:
+        val     = you.strength;
+        max_val = you.max_strength;
+        break;
+    case STAT_INTELLIGENCE:
+        val     = you.intel;
+        max_val = you.max_intel;
+        break;
+    case STAT_DEXTERITY:
+        val     = you.dex;
+        max_val = you.max_dex;
+        break;
+    default:
+        ASSERT(false);
+    }
+
+    // Check the stat_colour option for warning thresholds.
+    for (unsigned int i = 0; i < Options.stat_colour.size(); ++i)
+        if (val <= Options.stat_colour[i].first)
+            return (Options.stat_colour[i].second);
+
+    // Stat is magically increased.
+    if (you.duration[DUR_DIVINE_STAMINA]
+        || stat == STAT_STRENGTH && you.duration[DUR_MIGHT])
+    {
+        return (LIGHTBLUE);  // no end of effect warning
+    }
+
+    // Stat is degenerated.
+    if (val < max_val)
+        return (YELLOW);
+
+    return (HUD_VALUE_COLOUR);
 }
 
 // XXX: alters state!  Does more than just print!
@@ -353,13 +394,7 @@ static void _print_stats_str(int x, int y)
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    if (you.duration[DUR_MIGHT] || you.duration[DUR_DIVINE_STAMINA])
-        textcolor(LIGHTBLUE);  // no end of effect warning
-    else if (you.strength < you.max_strength)
-        textcolor(YELLOW);
-    else
-        textcolor(HUD_VALUE_COLOR);
-
+    textcolor(_get_stat_colour(STAT_STRENGTH));
     cprintf( "%d", you.strength );
 
     if (you.strength != you.max_strength)
@@ -382,13 +417,7 @@ static void _print_stats_int(int x, int y)
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    if (you.duration[DUR_DIVINE_STAMINA])
-        textcolor(LIGHTBLUE);  // no end of effect warning
-    else if (you.intel < you.max_intel)
-        textcolor(YELLOW);
-    else
-        textcolor(HUD_VALUE_COLOR);
-
+    textcolor(_get_stat_colour(STAT_INTELLIGENCE));
     cprintf( "%d", you.intel );
 
     if (you.intel != you.max_intel)
@@ -409,13 +438,7 @@ static void _print_stats_dex(int x, int y)
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    if (you.duration[DUR_DIVINE_STAMINA])
-        textcolor(LIGHTBLUE);  // no end of effect warning
-    else if (you.dex < you.max_dex)
-        textcolor(YELLOW);
-    else
-        textcolor(HUD_VALUE_COLOR);
-
+    textcolor(_get_stat_colour(STAT_DEXTERITY));
     cprintf( "%d", you.dex );
 
     if (you.dex != you.max_dex)
@@ -433,7 +456,7 @@ static void _print_stats_ac(int x, int y)
     else if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
         textcolor( LIGHTBLUE );
     else
-        textcolor( HUD_VALUE_COLOR );
+        textcolor( HUD_VALUE_COLOUR );
     cprintf( "%2d ", player_AC() );
 
     // SH: (two lines lower)
@@ -441,14 +464,14 @@ static void _print_stats_ac(int x, int y)
     if (you.duration[DUR_CONDENSATION_SHIELD] || you.duration[DUR_DIVINE_SHIELD])
         textcolor( LIGHTBLUE );
     else
-        textcolor( HUD_VALUE_COLOR );
+        textcolor( HUD_VALUE_COLOUR );
     cprintf( "%2d ", player_shield_class() );
 }
 
 static void _print_stats_ev(int x, int y)
 {
     cgotoxy(x+4, y, GOTO_STAT);
-    textcolor(you.duration[DUR_FORESCRY] ? LIGHTBLUE : HUD_VALUE_COLOR);
+    textcolor(you.duration[DUR_FORESCRY] ? LIGHTBLUE : HUD_VALUE_COLOUR);
     cprintf( "%2d ", player_evasion() );
 }
 
@@ -834,7 +857,7 @@ void print_stats(void)
         // Increase y-value for all following lines.
         yhack = 1;
         cgotoxy(1+6, 8, GOTO_STAT);
-        textcolor(HUD_VALUE_COLOR);
+        textcolor(HUD_VALUE_COLOUR);
         cprintf("%d", you.gold);
     }
 
@@ -843,7 +866,7 @@ void print_stats(void)
         cgotoxy(1,8 + yhack, GOTO_STAT);
         textcolor(Options.status_caption_colour);
         cprintf("Exp Pool: ");
-        textcolor(HUD_VALUE_COLOR);
+        textcolor(HUD_VALUE_COLOUR);
 #if DEBUG_DIAGNOSTICS
         cprintf("%d/%d (%d) ",
                 you.skill_cost_level, you.exp_available, you.experience);
@@ -935,7 +958,7 @@ void print_stats_level()
     textcolor(HUD_CAPTION_COLOR);
     cprintf("Place: ");
 
-    textcolor(HUD_VALUE_COLOR);
+    textcolor(HUD_VALUE_COLOUR);
 #if DEBUG_DIAGNOSTICS
     cprintf( "(%d) ", you.your_level + 1 );
 #endif
@@ -1658,14 +1681,20 @@ static void _print_overview_screen_equip(column_composer& cols,
         {
             const int item_idx    = you.equip[e_order[i]];
             const item_def& item  = you.inv[item_idx];
-            const char* colname   = colour_to_str(item.colour).c_str();
+
+            // Colour melded equipment dark grey.
+            const char* colname   =
+                player_wearing_slot(e_order[i]) ?
+                    colour_to_str(item.colour).c_str() : "darkgrey";
+
             const char equip_char = index_to_letter(item_idx);
 
             snprintf(buf, sizeof buf,
-                     "%s<w>%c</w> - <%s>%s</%s>",
+                     "%s<w>%c</w> - <%s>%s%s</%s>",
                      slot,
                      equip_char,
                      colname,
+                     !player_wearing_slot(e_order[i]) ? "melded " : "",
                      item.name(DESC_PLAIN, true).substr(0,42).c_str(),
                      colname);
             equip_chars.push_back(equip_char);

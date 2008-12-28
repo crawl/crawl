@@ -232,6 +232,7 @@ sort_menus = inv: true : equipped
 # mp_warning = 0
 # hp_colour = 50:yellow, 25:red
 # mp_colour = 50:yellow, 25:red
+# stat_colour = 1:lightred, 3:red
 
 # status_caption_colour        = yellow
 # classic_hud                  = true

@@ -223,48 +223,64 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     // Only consider terrain if player is not levitating.
     if (!player_is_airborne())
     {
-        // XXX: at some point we're going to need to fix the swimming
-        // code to handle burden states.
-        if (is_grid_dangerous(new_grid))
+        bool merfolk_check = false;
+        if (you.species == SP_MERFOLK)
         {
-            // lava and dangerous deep water (ie not merfolk)
-            const coord_def entry = (stepped) ? you.pos() : p;
+            if (grid_is_water(new_grid))
+                merfolk_check = true;
 
-            if (stepped && !force && !you.confused())
-            {
-                canned_msg(MSG_UNTHINKING_ACT);
-                return (false);
-            }
-
-            // Have to move now so fall_into_a_pool will work.
-            you.moveto(p);
-
-            viewwindow( true, false );
-
-            // If true, we were shifted and so we're done.
-            if (fall_into_a_pool( entry, allow_shift, new_grid ))
-                return (true);
-        }
-        else if (new_grid == DNGN_SHALLOW_WATER || new_grid == DNGN_DEEP_WATER)
-        {
             // Safer water effects.
-            if (you.species == SP_MERFOLK)
+            if (grid_is_water(new_grid) && !grid_is_water(old_grid))
             {
-                if (old_grid != DNGN_SHALLOW_WATER
-                    && old_grid != DNGN_DEEP_WATER)
+                // Check for fatal stat loss due to transforming.
+                // Also handles the warning message.
+                if (!merfolk_change_is_safe())
                 {
-                    if (stepped)
-                        mpr("Your legs become a tail as you enter the water.");
-                    else
-                        mpr("Your legs become a tail as you dive into the water.");
-
-                    merfolk_start_swimming();
+                    stop_running();
+                    you.turn_is_over = false;
+                    return (false);
                 }
-            }
-            else if (!player_likes_water())
-            {
-                ASSERT( new_grid != DNGN_DEEP_WATER );
 
+                if (stepped)
+                    mpr("Your legs become a tail as you enter the water.");
+                else
+                    mpr("Your legs become a tail as you dive into the water.");
+
+                merfolk_start_swimming();
+            }
+            else if (!grid_is_water(new_grid) && grid_is_water(old_grid))
+            {
+                unmeld_one_equip(EQ_BOOTS);
+                you.redraw_evasion = true;
+            }
+        }
+
+        if (!merfolk_check)
+        {
+            // XXX: at some point we're going to need to fix the swimming
+            // code to handle burden states.
+            if (is_grid_dangerous(new_grid))
+            {
+                // Lava and dangerous deep water (ie not merfolk).
+                const coord_def entry = (stepped) ? you.pos() : p;
+
+                if (stepped && !force && !you.confused())
+                {
+                    canned_msg(MSG_UNTHINKING_ACT);
+                    return (false);
+                }
+
+                // Have to move now so fall_into_a_pool will work.
+                you.moveto(p);
+
+                viewwindow( true, false );
+
+                // If true, we were shifted and so we're done.
+                if (fall_into_a_pool( entry, allow_shift, new_grid ))
+                    return (true);
+            }
+            else if (new_grid == DNGN_SHALLOW_WATER && !player_likes_water())
+            {
                 if (!stepped)
                     noisy(SL_SPLASH, you.pos(), "Splash!");
 
@@ -282,11 +298,6 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                         mpr( "... and don't expect to remain undetected." );
                 }
             }
-        }
-        else if (!grid_is_water(new_grid) && grid_is_water(old_grid)
-                 && you.species == SP_MERFOLK)
-        {
-            you.redraw_evasion = true;
         }
     }
 
@@ -5886,7 +5897,9 @@ bool player::in_water() const
 
 bool player::can_swim() const
 {
-    return (species == SP_MERFOLK);
+    // Transforming could be fatal if it would cause unequipment of
+    // stat-boosting boots or heavy armour.
+    return (species == SP_MERFOLK && merfolk_change_is_safe(true));
 }
 
 bool player::swimming() const

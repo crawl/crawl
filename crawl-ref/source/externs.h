@@ -1996,6 +1996,7 @@ public:
 
     std::vector<std::pair<int, int> > hp_colour;
     std::vector<std::pair<int, int> > mp_colour;
+    std::vector<std::pair<int, int> > stat_colour;
 
     std::string map_file_name;   // name of mapping file to use
     std::vector<std::pair<text_pattern, bool> > force_autopickup;

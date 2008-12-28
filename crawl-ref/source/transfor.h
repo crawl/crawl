@@ -60,8 +60,9 @@ bool transform(int pow, transformation_type which_trans, bool quiet = false);
 /* ***********************************************************************
  * called from: mutation - transfor
  * *********************************************************************** */
-bool remove_equipment( std::set<equipment_type> remove_stuff );
-bool remove_one_equip(equipment_type eq);
+bool remove_equipment(std::set<equipment_type> remove_stuff, bool meld = true);
+bool remove_one_equip(equipment_type eq, bool meld = true);
+bool unmeld_one_equip(equipment_type eq);
 
 bool transform_changed_physiology( bool phys_scales = false );
 
