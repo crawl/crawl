@@ -43,6 +43,7 @@ public:
     virtual void read(reader &);
     virtual std::string debug_describe() const = 0;
     virtual std::string feature_description() const;
+    virtual std::string feature_description_long() const;
     virtual std::string property(const std::string &pname) const;
 
     static map_marker *read_marker(reader &);
@@ -115,6 +116,7 @@ public:
     map_marker *clone() const;
     std::string debug_describe() const;
     std::string feature_description() const;
+    std::string feature_description_long() const;
     std::string property(const std::string &pname) const;
 
     bool notify_dgn_event(const dgn_event &e);

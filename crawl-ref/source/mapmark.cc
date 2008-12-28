@@ -71,6 +71,11 @@ std::string map_marker::feature_description() const
     return ("");
 }
 
+std::string map_marker::feature_description_long() const
+{
+    return ("");
+}
+
 std::string map_marker::property(const std::string &pname) const
 {
     return ("");
@@ -380,6 +385,11 @@ std::string map_lua_marker::debug_describe() const
 std::string map_lua_marker::feature_description() const
 {
     return (call_str_fn("feature_description"));
+}
+
+std::string map_lua_marker::feature_description_long() const
+{
+    return (call_str_fn("feature_description_long"));
 }
 
 std::string map_lua_marker::property(const std::string &pname) const

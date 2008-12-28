@@ -33,6 +33,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "macro.h"
+#include "mapmark.h"
 #include "menu.h"
 #include "message.h"
 #include "monstuff.h"
@@ -1990,6 +1991,18 @@ std::string get_item_description( const item_def &item, bool verbose,
     return description.str();
 }                               // end get_item_description()
 
+static std::string _marker_feature_description(const coord_def &pos)
+{
+    std::vector<map_marker*> markers = env.markers.get_markers_at(pos);
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        const std::string desc = markers[i]->feature_description_long();
+        if (!desc.empty())
+            return (desc);
+    }
+    return ("");
+}
+
 static std::string _get_feature_description_wide(int feat)
 {
     return std::string();
@@ -2017,8 +2030,18 @@ void describe_feature_wide(int x, int y)
 
     bool custom_desc = false;
 
+    if (feat == DNGN_ENTER_PORTAL_VAULT)
+    {
+        std::string _desc = _marker_feature_description(pos);
+        if (!_desc.empty())
+        {
+            long_desc   = _desc;
+            custom_desc = true;
+        }
+    }
+
     const CrawlHashTable &props = env.properties;
-    if (props.exists(LONG_DESC_KEY))
+    if (!custom_desc && props.exists(LONG_DESC_KEY))
     {
         const CrawlHashTable &desc_table = props[LONG_DESC_KEY].get_table();
 

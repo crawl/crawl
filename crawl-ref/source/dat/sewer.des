@@ -15,6 +15,14 @@
 
 {{
 function sewer_portal(e)
+  local desc_long =
+"Every settlement brings forth the unpleasant sewers and drains, ignored by "..
+"most but hideaways for others. Old tales speak of dangerous creatures, "..
+"bathing in disgustingly green water, preying on each other without mercy.  "..
+"The tales also tell of the valuable items left by daring and unfortunate "..
+"visitors, left to collect dust in the damp caverns. You have an uncanny "..
+"feeling that the drain will fall apart rather soon."
+
   local timeout_turns = crawl.random_range(1500, 2000)
 
   local messager =
@@ -33,6 +41,7 @@ function sewer_portal(e)
       timed_marker {
         disappear = "The drain falls to bits.",
         desc = "glowing drain",
+        desc_long = desc_long,
         entity = 'drain',
         dst = "sewer",
         dstorigin = "in the sewers",

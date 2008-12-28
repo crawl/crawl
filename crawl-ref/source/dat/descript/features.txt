@@ -15,25 +15,6 @@ A deep blue altar of Sif Muna
 %%%%
 A dry fountain
 %%%%
-A flickering gateway to a bazaar
-
-Aside from the vendors who've set up their stores at various places in the 
-dungeon, there are others trying to make a living by traveling from place 
-to place. Bazaars feature a number of different shops and often have better 
-stock than the sedentary ones, sometimes even at a bargain. 
-Once you hear the clinking of coins, be sure to hurry up and find the 
-impromptu marketplace before the caravan moves on!
-
-Also be warned that their nomadic lifestyle has taught these sellers to 
-appropriate any items an adventurer might leave behind, and then leave 
-quickly, probably to sell them elsewhere.
-%%%%
-A frozen archway
-
-A permanent cold front seems to surround this portal. Whatever lives on the
-other side, they will be full of grim and arctic fury. You note that the
-archway is melting away.
-%%%%
 A fountain of clear blue water
 
 'q'uaff to drink from this fountain. But it's far more pretty than useful, unless you're trying to fetch the Orb without eating, I guess.
@@ -51,15 +32,6 @@ A gate leading back out of this place
 A gate leading out of Pandemonium
 %%%%
 A gate leading to another region of Pandemonium
-%%%%
-A glowing drain
-
-Every settlement brings forth the unpleasant sewers and drains, ignored by
-most but hideaways for others. Old tales speak of dangerous creatures,
-bathing in disgustingly green water, preying on each other without mercy.
-The tales also tell of the valuable items left by daring and unfortunate
-visitors, left to collect dust in the damp caverns. You have an uncanny
-feeling that the drain will fall apart rather soon.
 %%%%
 A one-way gate leading to the halls of Pandemonium
 

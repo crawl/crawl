@@ -36,6 +36,10 @@ function PortalDescriptor:feature_description(marker)
   return self:unmangle(self.props.desc)
 end
 
+function PortalDescriptor:feature_description_long(marker)
+  return self:unmangle(self.props.desc_long)
+end
+
 function PortalDescriptor:property(marker, pname)
   return self:unmangle(self.props and self.props[pname] or '')
 end
