@@ -519,6 +519,8 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_GRIFFON;
     case MONS_SPHINX:
         return TILEP_MONS_SPHINX;
+    case MONS_HARPY:
+        return TILEP_MONS_HARPY;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:
@@ -695,6 +697,8 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_GIANT_GOLDFISH;
     case MONS_ELECTRICAL_EEL:
         return TILEP_MONS_ELECTRICAL_EEL;
+    case MONS_SHARK:
+        return TILEP_MONS_SHARK;
     case MONS_JELLYFISH:
         return TILEP_MONS_JELLYFISH;
 

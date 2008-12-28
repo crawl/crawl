@@ -81,6 +81,7 @@ big_fish MONS_BIG_FISH /*';'*/
 giant_goldfish MONS_GIANT_GOLDFISH /*';'*/
 electrical_eel MONS_ELECTRICAL_EEL /*';'*/
 lava_fish MONS_LAVA_FISH /*';'*/
+shark MONS_SHARK /*';'*/
 jellyfish MONS_JELLYFISH /*'J'*/
 
 ## Beetles
@@ -314,6 +315,7 @@ hippogriff MONS_HIPPOGRIFF /*'H'*/
 manticore MONS_MANTICORE /*'H'*/
 griffon MONS_GRIFFON /*'H'*/
 sphinx MONS_SPHINX /*'H'*/
+harpy MONS_HARPY /*'H'*/
 
 ## Ice beast only
 ice_beast MONS_ICE_BEAST /*'I'*/

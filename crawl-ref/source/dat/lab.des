@@ -369,7 +369,7 @@ ENDMAP
 NAME:   labyrinth_single_monster
 TAGS:   lab allow_dup generate_awake
 KFEAT:  x = .
-KMONS:  x = trapdoor spider / w:3 wandering mushroom
+KMONS:  x = trapdoor spider / w:2 wandering mushroom
 MAP
 x
 ENDMAP
