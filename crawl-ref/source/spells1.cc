@@ -563,12 +563,13 @@ bool conjure_flame(int pow)
 
 bool stinking_cloud( int pow, bolt &beem )
 {
-    beem.name        = "ball of vapour";
+    beem.name        = "stinking cloud";
     beem.colour      = GREEN;
     beem.range       = 6;
     beem.damage      = dice_def( 1, 0 );
     beem.hit         = 20;
     beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+    beem.flavour     = BEAM_POTION_STINKING_CLOUD;
     beem.ench_power  = pow;
     beem.beam_source = MHITYOU;
     beem.thrower     = KILL_YOU;
@@ -584,7 +585,6 @@ bool stinking_cloud( int pow, bolt &beem )
         beem.smart_monster = true;
         beem.attitude      = ATT_FRIENDLY;
         beem.fr_count      = 0;
-        beem.flavour       = BEAM_POTION_STINKING_CLOUD;
         beem.is_tracer     = true;
         beem.fire();
 
@@ -597,7 +597,6 @@ bool stinking_cloud( int pow, bolt &beem )
     }
 
     // Really fire.
-    beem.flavour   = BEAM_MMISSILE;
     beem.is_tracer = false;
     beem.fire();
 
