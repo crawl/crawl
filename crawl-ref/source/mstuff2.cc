@@ -158,6 +158,19 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         return;
     }
 
+#ifdef DEBUG
+    const unsigned int flags = get_spell_flags(spell_cast);
+
+    ASSERT(!(flags & (SPFLAG_TESTING | SPFLAG_MAPPING)));
+
+    // Targeted spells need a valid target.
+    ASSERT(!(flags & SPFLAG_TARGETING_MASK) || in_bounds(pbolt.target));
+
+    // Don't target harmful spells at self unless confused.
+    ASSERT(monster->pos() != pbolt.target || monster->confused()
+           || (flags & (SPFLAG_HELPFUL | SPFLAG_ESCAPE | SPFLAG_RECOVERY)));
+#endif
+
     if (do_noise)
         mons_cast_noise(monster, pbolt, spell_cast);
 
@@ -817,6 +830,9 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     {
         pbolt.target = monster->pos();
     }
+
+    if (pbolt.target == pbolt.source)
+        pbolt.aimed_at_feet = true;
 }
 
 bool monster_random_space(const monsters *monster, coord_def& target,

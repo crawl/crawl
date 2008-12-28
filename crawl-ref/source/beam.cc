@@ -1463,6 +1463,9 @@ void bolt::initialize_fire()
             source = ray.pos();
     }
 
+    if (target == source)
+        range = 0;
+
     if (range == -1)
     {
 #if DEBUG
@@ -1494,6 +1497,7 @@ void bolt::initialize_fire()
     ASSERT(flavour > BEAM_NONE && flavour < BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || item && is_valid_item(*item));
     ASSERT(range >= 0);
+    ASSERT(!aimed_at_feet || source == target);
 
     real_flavour = flavour;
 
@@ -1909,7 +1913,6 @@ void bolt::do_fire()
     {
         auto_hit          = true;
         aimed_at_spot     = true;
-        aimed_at_feet     = true;
         use_target_as_pos = true;
     }
     else
