@@ -1909,6 +1909,7 @@ void bolt::do_fire()
     {
         auto_hit          = true;
         aimed_at_spot     = true;
+        aimed_at_feet     = true;
         use_target_as_pos = true;
     }
     else
