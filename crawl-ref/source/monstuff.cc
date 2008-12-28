@@ -820,6 +820,10 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
             return;
     }
 
+    // beam code might give an index of MHITYOU for the player.
+    if (YOU_KILL(killer))
+        index = NON_MONSTER;
+
     // Killed by a Zot trap, a god, etc.
     if (index != NON_MONSTER && invalid_monster_index(index))
         return;
