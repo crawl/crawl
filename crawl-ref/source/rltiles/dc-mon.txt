@@ -1,3 +1,6 @@
+## used for Detect Creatures
+dc-mon/panlord/pandemonium_demon MONS_PANDEMONIUM_DEMON
+
 dc-misc/error MONS_PROGRAM_BUG
 
 ### Animals
@@ -118,11 +121,8 @@ sheep MONS_SHEEP /*'Y'*/
 yak MONS_YAK /*'Y'*/
 death_yak MONS_DEATH_YAK /*'Y'*/
 
-### Non-animal monsters
+### Elemental monsters
 %sdir dc-mon
-%rim 0
-shadow MONS_SHADOW /*' '*/
-%rim 1
 earth_elemental MONS_EARTH_ELEMENTAL /*'#'*/
 fire_elemental MONS_FIRE_ELEMENTAL /*'#'*/
 water_elemental MONS_WATER_ELEMENTAL /*'{'*/
@@ -133,7 +133,12 @@ spatial_vortex MONS_SPATIAL_VORTEX /*'v'*/
 vapour MONS_VAPOUR /*'#'*/
 %rim 1
 death_cob MONS_DEATH_COB /*'%'*/
+ball_lightning MONS_BALL_LIGHTNING /*'*'*/
+%rim 0
+orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
+%rim 1
 
+### Demonic monsters
 ## Arch demons
 %sdir dc-mon/unique
 asmodeus MONS_ASMODEUS /*'&'*/
@@ -144,14 +149,9 @@ geryon MONS_GERYON /*'&'*/
 gloorx_vloq MONS_GLOORX_VLOQ /*'&'*/
 lom_lobon MONS_LOM_LOBON /*'&'*/
 mnoleg MONS_MNOLEG /*'&'*/
-%sdir dc-mon
-pandemonium_demon MONS_PANDEMONIUM_DEMON /*'&'*/
-ball_lightning MONS_BALL_LIGHTNING /*'*'*/
-%rim 0
-orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
-%rim 1
 
 ## Demons 1-5
+%sdir dc-mon/demons
 balrug MONS_BALRUG /*'1'*/
 blue_death MONS_BLUE_DEATH /*'1'*/
 cacodemon MONS_CACODEMON /*'1'*/
@@ -191,7 +191,29 @@ shadow_imp MONS_SHADOW_IMP /*'5'*/
 ufetubus MONS_UFETUBUS /*'5'*/
 white_imp MONS_WHITE_IMP /*'5'*/
 
+efreet MONS_EFREET /*'E'*/
+
+rakshasa MONS_RAKSHASA /*'R'*/
+rakshasa MONS_RAKSHASA_FAKE /*'R'*/
+
+## Abominations
+abomination_large MONS_ABOMINATION_LARGE /*'X'*/
+abomination_large1
+abomination_large2
+abomination_large3
+abomination_large4
+abomination_large5
+abomination_large6
+tentacled_monstrosity MONS_TENTACLED_MONSTROSITY /*'X'*/
+
+ugly_thing MONS_UGLY_THING /*'u'*/
+very_ugly_thing MONS_VERY_UGLY_THING /*'u'*/
+
+unseen_horror MONS_UNSEEN_HORROR /*'x'*/
+abomination_small MONS_ABOMINATION_SMALL /*'x'*/
+
 ## Golems
+%sdir dc-mon
 clay_golem MONS_CLAY_GOLEM /*'8'*/
 crystal_golem MONS_CRYSTAL_GOLEM /*'8'*/
 %rim 0
@@ -217,7 +239,7 @@ human MONS_HUMAN /*'@'*/
 hell_knight MONS_HELL_KNIGHT /*'@'*/
 necromancer MONS_NECROMANCER /*'@'*/
 wizard MONS_WIZARD /*'@'*/
-vault_guard0 MONS_VAULT_GUARD /*'@'*/
+vault_guard MONS_VAULT_GUARD /*'@'*/
 shapeshifter MONS_SHAPESHIFTER /*'@'*/
 glowing_shapeshifter MONS_GLOWING_SHAPESHIFTER /*'@'*/
 killer_klown MONS_KILLER_KLOWN /*'@'*/
@@ -298,9 +320,6 @@ shadow_dragon MONS_SHADOW_DRAGON /*'D'*/
 skeletal_dragon MONS_SKELETAL_DRAGON /*'D'*/
 serpent_of_hell MONS_SERPENT_OF_HELL /*'D'*/
 
-## Efreet only
-efreet MONS_EFREET /*'E'*/
-
 ## Eyes
 giant_spore MONS_GIANT_SPORE /*'G'*/
 giant_eyeball MONS_GIANT_EYEBALL /*'G'*/
@@ -351,11 +370,11 @@ greater_mummy MONS_GREATER_MUMMY /*'M'*/
 mummy_priest MONS_MUMMY_PRIEST /*'M'*/
 
 ## Nagas
-naga0 MONS_NAGA /*'N'*/
+naga MONS_NAGA /*'N'*/
 guardian_naga MONS_GUARDIAN_NAGA /*'N'*/
 naga_mage MONS_NAGA_MAGE /*'N'*/
-naga_warrior0 MONS_NAGA_WARRIOR /*'N'*/
-greater_naga0 MONS_GREATER_NAGA /*'N'*/
+naga_warrior MONS_NAGA_WARRIOR /*'N'*/
+greater_naga MONS_GREATER_NAGA /*'N'*/
 
 %sdir dc-mon/unique
 erolcha MONS_EROLCHA /*'O'*/
@@ -366,9 +385,6 @@ ogre_mage MONS_OGRE_MAGE /*'O'*/
 
 plant MONS_PLANT /*'P'*/
 oklob_plant MONS_OKLOB_PLANT /*'P'*/
-
-rakshasa MONS_RAKSHASA /*'R'*/
-rakshasa MONS_RAKSHASA_FAKE /*'R'*/
 
 %sdir dc-mon/unique
 snorg MONS_SNORG /*'T'*/
@@ -389,14 +405,6 @@ freezing_wraith MONS_FREEZING_WRAITH /*'W'*/
 spectral_warrior MONS_SPECTRAL_WARRIOR /*'W'*/
 spectral_thing MONS_SPECTRAL_THING /*'W'*/
 
-abomination_large MONS_ABOMINATION_LARGE /*'X'*/
-abomination_large1
-abomination_large2
-abomination_large3
-abomination_large4
-abomination_large5
-abomination_large6
-tentacled_monstrosity MONS_TENTACLED_MONSTROSITY /*'X'*/
 orb_guardian MONS_ORB_GUARDIAN /*'X'*/
 
 zombie_large MONS_ZOMBIE_LARGE /*'Z'*/
@@ -413,9 +421,9 @@ yaktaur_captain MONS_YAKTAUR_CAPTAIN /*'c'*/
 yaktaur_captain-melee MONS_YAKTAUR_CAPTAIN_MELEE
 
 elf MONS_ELF /*'e'*/
-deep_elf_fighter0 MONS_DEEP_ELF_FIGHTER /*'e'*/
-deep_elf_soldier0 MONS_DEEP_ELF_SOLDIER /*'e'*/
-deep_elf_knight0 MONS_DEEP_ELF_KNIGHT /*'e'*/
+deep_elf_fighter MONS_DEEP_ELF_FIGHTER /*'e'*/
+deep_elf_soldier MONS_DEEP_ELF_SOLDIER /*'e'*/
+deep_elf_knight MONS_DEEP_ELF_KNIGHT /*'e'*/
 deep_elf_mage MONS_DEEP_ELF_MAGE /*'e'*/
 deep_elf_sorcerer MONS_DEEP_ELF_SORCERER /*'e'*/
 deep_elf_conjurer MONS_DEEP_ELF_CONJURER /*'e'*/
@@ -434,9 +442,9 @@ wandering_mushroom MONS_WANDERING_MUSHROOM /*'f'*/
 %sdir dc-mon/unique
 ijyb MONS_IJYB /*'g'*/
 %sdir dc-mon
-goblin0 MONS_GOBLIN /*'g'*/
-hobgoblin0 MONS_HOBGOBLIN /*'g'*/
-gnoll0 MONS_GNOLL /*'g'*/
+goblin MONS_GOBLIN /*'g'*/
+hobgoblin MONS_HOBGOBLIN /*'g'*/
+gnoll MONS_GNOLL /*'g'*/
 boggart MONS_BOGGART /*'g'*/
 
 merfolk_fighter MONS_MERFOLK_FIGHTER /*'m'*/
@@ -456,16 +464,17 @@ rotting_hulk MONS_ROTTING_HULK /*'n'*/
 blork_the_orc MONS_BLORK_THE_ORC /*'o'*/
 urug MONS_URUG /*'o'*/
 %sdir dc-mon
-orc0 MONS_ORC /*'o'*/
+orc MONS_ORC /*'o'*/
 orc_wizard MONS_ORC_WIZARD /*'o'*/
 orc_priest MONS_ORC_PRIEST /*'o'*/
-orc_warrior0 MONS_ORC_WARRIOR /*'o'*/
-orc_knight0 MONS_ORC_KNIGHT /*'o'*/
-orc_warlord0 MONS_ORC_WARLORD /*'o'*/
+orc_warrior MONS_ORC_WARRIOR /*'o'*/
+orc_knight MONS_ORC_KNIGHT /*'o'*/
+orc_warlord MONS_ORC_WARLORD /*'o'*/
 orc_sorcerer MONS_ORC_SORCERER /*'o'*/
 orc_high_priest MONS_ORC_HIGH_PRIEST /*'o'*/
 
 %rim 0
+shadow MONS_SHADOW /*' '*/
 insubstantial_wisp MONS_INSUBSTANTIAL_WISP /*'p'*/
 phantom MONS_PHANTOM /*'p'*/
 ghost MONS_PLAYER_GHOST /*'p'*/
@@ -473,16 +482,10 @@ ghost MONS_PLAYER_GHOST /*'p'*/
 flayed_ghost MONS_FLAYED_GHOST /*'p'*/
 hungry_ghost MONS_HUNGRY_GHOST /*'p'*/
 
-ugly_thing MONS_UGLY_THING /*'u'*/
-very_ugly_thing MONS_VERY_UGLY_THING /*'u'*/
-
-unseen_horror MONS_UNSEEN_HORROR /*'x'*/
-abomination_small MONS_ABOMINATION_SMALL /*'x'*/
-
 zombie_small MONS_ZOMBIE_SMALL /*'z'*/
 skeleton_small MONS_SKELETON_SMALL /*'z'*/
 simulacrum_small MONS_SIMULACRUM_SMALL /*'z'*/
-skeletal_warrior0 MONS_SKELETAL_WARRIOR /*'z'*/
+skeletal_warrior MONS_SKELETAL_WARRIOR /*'z'*/
 %rim 0
 flaming_corpse MONS_FLAMING_CORPSE /*'z'*/
 %rim 1

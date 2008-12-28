@@ -83,7 +83,6 @@ num9 NUM9
 tried TRIED
 
 slot_eq ITEM_SLOT_EQUIP
-slot_melded ITEM_SLOT_MELDED
 slot_cursed ITEM_SLOT_CURSED
 slot_eq_cursed ITEM_SLOT_EQUIP_CURSED
 ray ITEM_SLOT_SELECTED

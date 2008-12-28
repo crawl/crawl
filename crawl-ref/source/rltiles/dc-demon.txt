@@ -1,5 +1,5 @@
 %rim 1
-%sdir dc-mon/demon
+%sdir dc-mon/panlord
 
 demon_body_fat DEMON_BODY
 demon_body_fatter

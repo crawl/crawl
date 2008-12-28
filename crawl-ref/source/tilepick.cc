@@ -998,21 +998,13 @@ int tileidx_monster(const monsters *mons, bool detected)
         ch |= TILE_FLAG_POISON;
 
     if (mons_friendly(mons))
-    {
         ch |= TILE_FLAG_PET;
-    }
     else if (mons_neutral(mons))
-    {
         ch |= TILE_FLAG_NEUTRAL;
-    }
     else if (mons_looks_stabbable(mons))
-    {
         ch |= TILE_FLAG_STAB;
-    }
     else if (mons_looks_distracted(mons))
-    {
         ch |= TILE_FLAG_MAY_STAB;
-    }
 
     std::string damage_desc;
     mon_dam_level_type damage_level;

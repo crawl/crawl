@@ -187,7 +187,7 @@ item/gem/stone MI_STONE
 effect/stone0 MI_STONE0
 sling_bullet MI_SLING_BULLET
 effect/sling_bullet0 MI_SLING_BULLET0
-ya MI_ARROW
+arrow MI_ARROW
 effect/arrow0 MI_ARROW0
 effect/arrow1 MI_ARROW1
 effect/arrow2 MI_ARROW2
@@ -308,6 +308,12 @@ gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
 swamp_dragon_hide ARM_SWAMP_DRAGON_HIDE
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
 
+leather_cloak ARM_CLOAK
+cloak2
+cloak3
+cloak4
+
+%sdir item/armour/bardings
 naga_barding_blue ARM_NAGA_BARDING
 naga_barding_metal
 naga_barding_magenta
@@ -317,10 +323,7 @@ centaur_barding_metal
 centaur_barding_magenta
 centaur_barding_red
 
-elven_shield ARM_SHIELD
-shield_kite2
-shield_round2
-
+%sdir item/armour/shields
 #dwarvish_roundshield ARM_BUCKLER
 %rim 0
 buckler ARM_BUCKLER
@@ -328,15 +331,15 @@ buckler2
 buckler3
 %rim 1
 
+elven_shield ARM_SHIELD
+shield_kite2
+shield_round2
+
 large_shield ARM_LARGE_SHIELD
 shield_large2
 shield_kite3
 
-leather_cloak ARM_CLOAK
-cloak2
-cloak3
-cloak4
-
+%sdir item/armour/headgear
 #####ARM_HELMET
 elven_leather_helm THELM_CAP
 wizard_hat THELM_WIZARD_HAT
@@ -347,6 +350,7 @@ etched_helmet
 helm3
 helm_visor1
 
+%sdir item/armour
 ###### GLOVES
 glove1 ARM_GLOVES
 glove3
@@ -402,7 +406,7 @@ i-disintegration WAND_DISINTEGRATION
 %back none
 #################OBJ_FOOD
 %sdir item/food
-tripe_ration FOOD_MEAT_RATION
+meat_ration FOOD_MEAT_RATION
 bread_ration FOOD_BREAD_RATION
 pear FOOD_PEAR
 apple FOOD_APPLE
@@ -728,13 +732,17 @@ misc_orb ORB
 
 #OBJ_MISCELLANY
 misc_bottle MISC_BOTTLED_EFREET
+misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY
+misc_crystal MISC_CRYSTAL_BALL_OF_FIXATION
 misc_crystal MISC_CRYSTAL_BALL_OF_SEEING
 misc_fan MISC_AIR_ELEMENTAL_FAN
 misc_lamp MISC_LAMP_OF_FIRE
 misc_stone MISC_STONE_OF_EARTH_ELEMENTALS
 misc_lantern MISC_LANTERN_OF_SHADOWS
 misc_horn MISC_HORN_OF_GERYON
+misc_box MISC_EMPTY_EBONY_CASKET
 misc_box MISC_BOX_OF_BEASTS
+misc_disc MISC_DISC_OF_STORMS
 misc_deck MISC_DECK
 %start
 %compose misc_deck
@@ -846,11 +854,6 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose misc_deck_legendary
 %compose i-deck_defense
 %finish
-misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY
-misc_box MISC_EMPTY_EBONY_CASKET
-misc_crystal MISC_CRYSTAL_BALL_OF_FIXATION
-misc_disc MISC_DISC_OF_STORMS
-misc_altar MISC_PORTABLE_ALTAR_OF_NEMELEX
 misc_rune MISC_RUNE_OF_ZOT
 runes/rune_tartarus MISC_RUNE_TARTARUS
 runes/rune_cocytus MISC_RUNE_COCYTUS
