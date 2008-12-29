@@ -1657,7 +1657,7 @@ void bolt::digging_wall_effect()
                 mpr("You hear a grinding noise.", MSGCH_SOUND);
                 obvious_effect = true;
             }
-                    
+
             msg_generated = true;
         }
     }
@@ -1698,9 +1698,9 @@ void bolt::fire_wall_effect()
             emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
         else if (player_can_smell())
             emit_message(MSGCH_PLAIN, "You smell burning wax.");
-            
+
         place_cloud(CLOUD_FIRE, pos(), random2(10)+15, whose_kill(), killer());
-            
+
         obvious_effect = true;
     }
     finish_beam();
@@ -1729,7 +1729,7 @@ void bolt::nuke_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.map(pos()).property &= ~(FPROP_BLOODY);
-            
+
         if (player_can_hear(pos()))
         {
             if (!see_grid(pos()))
@@ -1745,7 +1745,7 @@ void bolt::nuke_wall_effect()
 
         if (feat == DNGN_ORCISH_IDOL && beam_source == NON_MONSTER)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
-        
+
         obvious_effect = true;
     }
     finish_beam();
@@ -1784,7 +1784,7 @@ void bolt::hit_wall()
 {
     const dungeon_feature_type feat = grd(pos());
     ASSERT( grid_is_solid(feat) );
-        
+
     if (affects_wall(feat))
         affect_wall();
     else if (is_bouncy(feat) && !in_explosion_phase)
@@ -1816,7 +1816,7 @@ void bolt::affect_cell()
     // Shooting through clouds affects accuracy.
     if (env.cgrid(pos()) != EMPTY_CLOUD)
         hit = std::max(hit - 2, 0);
-        
+
     fake_flavour();
 
     const coord_def old_pos = pos();
@@ -1838,7 +1838,7 @@ void bolt::affect_cell()
                      mon->name(DESC_NOCAP_THE).c_str());
             }
         }
-        
+
         // Note that this can change the ray position
         // and the solidity of the wall.
         hit_wall();
@@ -1884,7 +1884,7 @@ void bolt::fire()
 void bolt::do_fire()
 {
     initialize_fire();
-    
+
     if (range <= range_used && range > 0)
     {
 #ifdef DEBUG
@@ -2675,6 +2675,8 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
         }
     }
 
+    pbolt.in_explosion_phase = false;
+
     // Fire!
     if (explode_only)
         pbolt.explode(false);
@@ -3397,7 +3399,7 @@ bool bolt::misses_player()
 
     const int dodge = player_evasion();
     int real_tohit = hit;
-    
+
     // Monsters shooting at an invisible player are very inaccurate.
     if (you.invisible() && !can_see_invis)
         real_tohit /= 2;
@@ -3512,7 +3514,7 @@ void bolt::affect_player_enchantment() {
         range_used += range_used_on_hit();
         return;
     }
-        
+
     // You didn't resist it.
     _ench_animation( real_flavour );
 
@@ -4000,7 +4002,7 @@ void bolt::update_hurt_or_helped(monsters *mon)
 void bolt::tracer_enchantment_affect_monster(monsters* mon)
 {
     handle_stop_attack_prompt(mon);
-    if (!beam_cancelled)       
+    if (!beam_cancelled)
         range_used += range_used_on_hit();
 }
 
@@ -4024,7 +4026,7 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final)
         // The beam will pass overhead unless it's aimed at them.
         if (!aimed_at_spot)
             return false;
-        
+
         // Electricity is ineffective.
         if (flavour == BEAM_ELECTRICITY)
         {
@@ -4063,7 +4065,7 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
         if ((fr_count == 1 && !dont_stop_fr)
             || (foe_count == 1 && !dont_stop_foe))
         {
-            const bool on_target = (target == mon->pos());           
+            const bool on_target = (target == mon->pos());
             if (stop_attack_prompt(mon, true, on_target))
             {
                 beam_cancelled = true;
@@ -4091,7 +4093,7 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
     handle_stop_attack_prompt(mon);
     if (beam_cancelled)
         return;
-    
+
     // Check only if actual damage.
     if (final > 0)
     {
@@ -4108,7 +4110,7 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
         else
             fr_power += 2 * final * mons_power(mon->type) / preac;
     }
-    
+
     // Either way, we could hit this monster, so update range used.
     range_used += range_used_on_hit();
 }
@@ -4152,7 +4154,7 @@ void bolt::enchantment_affect_monster(monsters* mon)
 
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
-    
+
     bool hit_woke_orc = false;
 
     // Nasty enchantments will annoy the monster, and are considered
@@ -4163,7 +4165,7 @@ void bolt::enchantment_affect_monster(monsters* mon)
         {
             if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
                 remove_sanctuary(true);
-            
+
             set_attack_conducts(conducts, mon, player_monster_visible(mon));
 
             if (you.religion == GOD_BEOGH
@@ -4365,6 +4367,10 @@ bool bolt::handle_statue_disintegration(monsters* mon)
 
 void bolt::affect_monster(monsters* mon)
 {
+    // Don't hit dead monsters.
+    if (!mon->alive())
+        return;
+
     // First some special cases.
 
     // Digging doesn't affect monsters (should it harm earth elementals?)
@@ -4522,7 +4528,7 @@ void bolt::affect_monster(monsters* mon)
     {
         // Using raw_damage instead of the flavoured one!
         // assumes DVORP_PIERCING, factor: 0.5
-        const int blood = std::min(postac/2, mon->hit_points); 
+        const int blood = std::min(postac/2, mon->hit_points);
         bleed_onto_floor(mon->pos(), mon->type, blood, true);
     }
 
@@ -5100,7 +5106,7 @@ static sweep_type _radial_sweep(int r)
     // Center first.
     work.push_back( coord_def(0,0) );
     result.push_back(work);
-    
+
     for (int rad = 1; rad <= r; ++rad)
     {
         work.clear();
@@ -5202,7 +5208,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             const coord_def delta = *cci;
             if (delta.origin() && hole_in_the_middle)
                 continue;
-            
+
             if (exp_map(delta + centre) < INT_MAX)
             {
                 if (see_grid(delta + pos()))

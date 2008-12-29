@@ -700,6 +700,7 @@ monster_type draco_subspecies(const monsters *mon)
         case WHITE:
             return MONS_WHITE_DRACONIAN;
         case BLUE:  // black
+        case DARKGREY:
             return MONS_BLACK_DRACONIAN;
         case GREEN:
             return MONS_GREEN_DRACONIAN;

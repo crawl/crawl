@@ -509,6 +509,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     {
         const actor *foe = monster->get_foe();
         const bool need_more = foe && (foe == &you || see_grid(foe->pos()));
+        pbolt.in_explosion_phase = false;
         pbolt.explode(need_more);
     }
     else

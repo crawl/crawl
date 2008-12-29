@@ -2835,7 +2835,7 @@ void losight(env_show_grid &sh,
                 const int realx = x_p + xdiff * xmult;
                 const int realy = y_p + ydiff * ymult;
 
-                if (realx < 0 || realx > 79 || realy < 0 || realy > 69)
+                if (!map_bounds(realx, realy))
                     continue;
 
                 coord_def real(realx, realy);
