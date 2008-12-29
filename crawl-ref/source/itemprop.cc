@@ -1373,13 +1373,16 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
     // only uncursed.
     if (wpn.base_type == OBJ_WEAPONS)
     {
-        if (is_artefact(wpn) || wpn.plus >= 9 && wpn.plus2 >= 9)
+        if (is_artefact(wpn)
+            || wpn.plus >= MAX_WPN_ENCHANT && wpn.plus2 >= MAX_WPN_ENCHANT)
+        {
             return (uncurse && item_cursed(wpn));
+        }
     }
     // Highly enchanted missiles, which have only one stat, cannot be
     // enchanted or uncursed, since missiles cannot be artefacts or
     // cursed.
-    else if (wpn.plus >= 9)
+    else if (wpn.plus >= MAX_WPN_ENCHANT)
         return (false);
 
     return (true);

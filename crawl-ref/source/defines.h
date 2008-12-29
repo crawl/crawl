@@ -196,8 +196,10 @@ const int LABYRINTH_BORDER = 4;
 #define SL_TRAP_ZOT                     30
 
 // Maximum enchantment on weapons/armour/secondary armours
+// This is the same as for ammunition.
+#define MAX_WPN_ENCHANT                 9
+
 // Note: use armour_max_enchant(item) to get the correct limit for item
-#define MAX_WPN_ENCHANT                 5
 #define MAX_ARM_ENCHANT                 5
 #define MAX_SEC_ENCHANT                 2
 

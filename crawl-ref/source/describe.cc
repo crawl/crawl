@@ -1119,12 +1119,18 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
     if (!is_artefact(item))
     {
         if (item_ident( item, ISFLAG_KNOW_PLUSES )
-            && item.plus >= 9 && item.plus2 >= 9)
+            && item.plus >= MAX_WPN_ENCHANT && item.plus2 >= MAX_WPN_ENCHANT)
         {
             description += "$It is maximally enchanted.";
         }
         else
-            description += "$It can be maximally enchanted to +9, +9.";
+        {
+            description += "$It can be maximally enchanted to +";
+            _append_value(description, MAX_WPN_ENCHANT, false);
+            description += ", +";
+            _append_value(description, MAX_WPN_ENCHANT, false);
+            description += ".";
+        }
     }
 
     return (description);
@@ -1254,10 +1260,14 @@ static std::string _describe_ammo( const item_def &item )
 
     append_missile_info(description);
 
-    if (item_ident( item, ISFLAG_KNOW_PLUSES ) && item.plus >= 9)
+    if (item_ident( item, ISFLAG_KNOW_PLUSES ) && item.plus >= MAX_WPN_ENCHANT)
         description += "$It is maximally enchanted.";
     else
-        description += "$It can be maximally enchanted to +9.";
+    {
+        description += "$It can be maximally enchanted to +";
+        _append_value(description, MAX_WPN_ENCHANT, false);
+        description += ".";
+    }
 
     return (description);
 }
@@ -1435,7 +1445,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         const int max_ench = armour_max_enchant(item);
         if (item.plus < max_ench || !item_ident( item, ISFLAG_KNOW_PLUSES ))
         {
-            description += "$It can be maximally enchanted to ";
+            description += "$It can be maximally enchanted to +";
             _append_value(description, max_ench, false);
             description += ".";
         }
