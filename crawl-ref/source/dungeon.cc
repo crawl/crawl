@@ -313,6 +313,13 @@ bool builder(int level_number, int level_type)
             Level_Unique_Maps.clear();
             Level_Unique_Tags.clear();
             _dgn_map_colour_fixup();
+
+#if DEBUG_MONS_SCAN
+            // If debug_mons_scan() find a problem while Generating_Level is
+            // still true then it will announce that a problem was caused
+            // during level generation.
+            debug_mons_scan();
+#endif
             return (true);
         }
 

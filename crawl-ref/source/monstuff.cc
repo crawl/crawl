@@ -1972,11 +1972,9 @@ bool monster_blink(monsters *monster)
 
     mons_clear_trapping_net(monster);
 
-    mgrd(monster->pos()) = NON_MONSTER;
     const coord_def oldplace = monster->pos();
-
-    monster->moveto(near);
-    mgrd(near) = monster_index(monster);
+    if (!monster->move_to_pos(near))
+        return (false);
 
     if (player_monster_visible(monster) && mons_near(monster))
         seen_monster(monster);
@@ -2123,6 +2121,12 @@ bool swap_places(monsters *monster, const coord_def &loc)
 {
     ASSERT(map_bounds(loc));
     ASSERT(_habitat_okay(monster, grd(loc)));
+
+    if (mgrd(loc) != NON_MONSTER)
+    {
+        mpr("Something prevents you from swapping places.");
+        return (false);
+    }
 
     mpr("You swap places.");
 
@@ -4681,6 +4685,14 @@ static bool _siren_movement_effect(const monsters *monster)
 
                 if (swapping)
                 {
+                    if (mgrd(oldpos) != NON_MONSTER)
+                    {
+                        mprf("Something prevents you from swapping places "
+                             "with %s.",
+                             mon->name(DESC_NOCAP_THE).c_str());
+                        return (do_resist);
+                    }
+
                     int swap_mon = mgrd(newpos);
                     // Pick the monster up.
                     mgrd(newpos) = NON_MONSTER;
@@ -6386,11 +6398,37 @@ static void _handle_monster_move(int i, monsters *monster)
     int non_move_energy = std::min(entry->energy_usage.move,
                                    entry->energy_usage.swim);
 
+#if DEBUG_MONS_SCAN
+    bool monster_was_floating = mgrd(monster->pos()) != monster->mindex();
+#endif
+
     while (monster->has_action_energy())
     {
         // The continues & breaks are WRT this.
         if (!monster->alive())
             break;
+
+#if DEBUG_MONS_SCAN
+        if (!monster_was_floating
+            && mgrd(monster->pos()) != monster->mindex())
+        {
+            mprf(MSGCH_ERROR, "Monster %s became detached from mgrd "
+                              "in _handle_monster_move() loop",
+                 monster->name(DESC_PLAIN, true).c_str());
+            mpr("[[[[[[[[[[[[[[[[[[", MSGCH_WARN);
+            debug_mons_scan();
+            mpr("]]]]]]]]]]]]]]]]]]", MSGCH_WARN);
+            monster_was_floating = true;
+        }
+        else if (monster_was_floating
+                 && mgrd(monster->pos()) == monster->mindex())
+        {
+            mprf(MSGCH_DIAGNOSTICS, "Monster %s re-attached itself to mgrd "
+                                    "in _handle_monster_move() loop",
+                 monster->name(DESC_PLAIN, true).c_str());
+            monster_was_floating = false;
+        }
+#endif
 
         if (monster->speed_increment >= old_energy)
         {

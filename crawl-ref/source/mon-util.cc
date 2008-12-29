@@ -4916,6 +4916,9 @@ bool monsters::has_base_name() const
 
 std::string monsters::name(description_level_type desc, bool force_vis) const
 {
+    if (type == -1)
+        return ("INVALID MONSTER");
+
     const bool possessive =
         (desc == DESC_NOCAP_YOUR || desc == DESC_NOCAP_ITS);
 
@@ -5280,6 +5283,7 @@ int monsters::get_experience_level() const
 
 void monsters::moveto( const coord_def& c )
 {
+    ASSERT(mgrd(c) == NON_MONSTER || c == pos());
     position = c;
 }
 

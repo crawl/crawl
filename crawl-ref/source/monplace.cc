@@ -975,6 +975,8 @@ static int _place_monster_aux( const mgen_data &mg,
             return (-1);
     }
 
+    ASSERT(mgrd(fpos) == NON_MONSTER);
+
     // Now, actually create the monster. (Wheeee!)
     menv[id].type         = mg.cls;
     menv[id].base_monster = mg.base_type;

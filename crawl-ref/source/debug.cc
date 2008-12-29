@@ -2253,6 +2253,15 @@ void debug_item_scan( void )
 #endif
 
 #if DEBUG_MONS_SCAN
+static void _announce_level_prob(bool warned)
+{
+    if (!warned && Generating_Level)
+    {
+        mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
+        mpr("mgrd problem occurred during level generation", MSGCH_ERROR);
+    }
+}
+
 void debug_mons_scan()
 {
     bool warned = false;
@@ -2260,15 +2269,27 @@ void debug_mons_scan()
         for (int x = 0; x < GXM; ++x)
         {
             const int mons = mgrd[x][y];
-            if (mons != NON_MONSTER &&
-                menv[mons].pos() != coord_def(x, y))
+            if (mons == NON_MONSTER)
+                continue;
+            const monsters *m = &menv[mons];
+            if (m->pos() != coord_def(x, y))
             {
-                const monsters *m = &menv[mons];
+                _announce_level_prob(warned);
                 mprf(MSGCH_WARN,
-                     "Bogosity: mgrd at %d,%d points at %s, "
-                     "but monster is at %d,%d",
+                     "Bogosity: mgrd at (%d,%d) points at %s, "
+                     "but monster is at (%d,%d)",
                      x, y, m->name(DESC_PLAIN, true).c_str(),
                      m->pos().x, m->pos().y);
+                if (!m->alive())
+                    mpr("Additionally, it isn't alive.", MSGCH_WARN);
+                warned = true;
+            }
+            else if (!m->alive())
+            {
+                _announce_level_prob(warned);
+                mprf(MSGCH_WARN,
+                     "mgrd at (%d,%d) points at dead monster %s",
+                     x, y, m->name(DESC_PLAIN, true).c_str());
                 warned = true;
             }
         }
@@ -2280,6 +2301,7 @@ void debug_mons_scan()
             continue;
         if (mgrd(m->pos()) != i)
         {
+            _announce_level_prob(warned);
             mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d)",
                  m->name(DESC_PLAIN, true).c_str(), m->pos().x, m->pos().y);
             warned = true;
@@ -2308,6 +2330,10 @@ void debug_mons_scan()
             }
         }
     }
+
+    if (warned && Generating_Level)
+        mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
+
     // If there are warnings, force the dev to notice. :P
     if (warned)
         more();
