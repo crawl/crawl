@@ -653,7 +653,7 @@ static void _sdump_religion(dump_params &par)
     }
 }
 
-static bool dump_item_origin(const item_def &item, int value)
+static bool _dump_item_origin(const item_def &item, int value)
 {
 #define fs(x) (flags & (x))
     const int flags = Options.dump_item_origins;
@@ -661,10 +661,11 @@ static bool dump_item_origin(const item_def &item, int value)
         return (true);
 
     if (fs(IODS_ARTEFACTS)
-            && (is_random_artefact(item) || is_fixed_artefact(item))
-            && item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        && (is_random_artefact(item) || is_fixed_artefact(item))
+        && item_ident(item, ISFLAG_KNOW_PROPERTIES))
+    {
         return (true);
-
+    }
     if (fs(IODS_EGO_ARMOUR) && item.base_type == OBJ_ARMOUR
         && item_type_known( item ))
     {
@@ -682,16 +683,22 @@ static bool dump_item_origin(const item_def &item, int value)
         return (true);
 
     if (fs(IODS_RUNES) && item.base_type == OBJ_MISCELLANY
-            && item.sub_type == MISC_RUNE_OF_ZOT)
+        && item.sub_type == MISC_RUNE_OF_ZOT)
+    {
         return (true);
+    }
 
     if (fs(IODS_RODS) && item.base_type == OBJ_STAVES
-            && item_is_rod(item))
+        && item_is_rod(item))
+    {
         return (true);
+    }
 
     if (fs(IODS_STAVES) && item.base_type == OBJ_STAVES
-            && !item_is_rod(item))
+        && !item_is_rod(item))
+    {
         return (true);
+    }
 
     if (fs(IODS_BOOKS) && item.base_type == OBJ_BOOKS)
         return (true);
@@ -790,7 +797,7 @@ static void _sdump_inventory(dump_params &par)
                         }
 
                         if (origin_describable(you.inv[j])
-                            && dump_item_origin(you.inv[j], ival))
+                            && _dump_item_origin(you.inv[j], ival))
                         {
                             text += "\n" "   (" + origin_desc(you.inv[j]) + ")";
                         }

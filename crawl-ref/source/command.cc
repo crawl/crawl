@@ -1247,58 +1247,6 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     return (true);
 }
 
-// Adds a list of all spells contained in a book or rod to its
-// description string.
-static void _append_spells(std::string &desc, const item_def &item)
-{
-    if (!item.has_spells())
-        return;
-
-    desc += "$$Spells                             Type                      Level$";
-
-    for (int j = 0; j < 8; j++)
-    {
-        spell_type stype = which_spell_in_book(item, j);
-        if (stype == SPELL_NO_SPELL)
-            continue;
-
-        std::string name = spell_title(stype);
-        desc += name;
-        for (unsigned int i = 0; i < 35 - name.length(); i++)
-             desc += " ";
-
-        name = "";
-        if (item.base_type == OBJ_STAVES)
-            name += "Evocations";
-        else
-        {
-            bool already = false;
-
-            for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
-            {
-                if (spell_typematch( stype, 1 << i ))
-                {
-                    if (already)
-                        name += "/" ;
-
-                    name += spelltype_name( 1 << i );
-                    already = true;
-                }
-            }
-        }
-        desc += name;
-
-        for (unsigned int i = 36; i < 65 - name.length(); i++)
-             desc += " ";
-
-        char sval[3];
-        itoa( spell_difficulty( stype ), sval, 10 );
-        desc += sval;
-        desc += "$";
-    }
-
-}
-
 static bool _do_description(std::string key, std::string type,
                             std::string footer = "")
 {
@@ -1411,7 +1359,7 @@ static bool _do_description(std::string key, std::string type,
                          || get_item_by_name(&mitm[thing_created], name, OBJ_STAVES))
                 {
                     if (!_append_books(desc, mitm[thing_created], key))
-                        _append_spells(desc, mitm[thing_created]);
+                        append_spells(desc, mitm[thing_created]);
                 }
                 else
                     _append_non_item(desc, key);

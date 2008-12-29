@@ -1137,8 +1137,8 @@ void mark_had_book(const item_def &book)
         int      level = book.plus;
         ASSERT(level > 0 && level <= 9);
 
-        if (origin_is_acquirement(book) ||
-            origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA)
+        if (origin_is_acquirement(book)
+            || origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA)
         {
             you.attribute[ATTR_RND_LVL_BOOKS] |= (1 << level);
         }
@@ -1191,6 +1191,7 @@ int read_book( item_def &book, read_book_action_type action )
     // from memorise as well.
 
     set_ident_flags( book, ISFLAG_KNOW_TYPE );
+    set_ident_flags( book, ISFLAG_IDENT_MASK);
 
     return (keyin);
 }
@@ -1714,13 +1715,11 @@ static bool _compare_spells(spell_type a, spell_type b)
     return (strcmp(spell_title(a), spell_title(b)));
 }
 
-static bool _is_memorised(spell_type spell)
+bool is_memorised(spell_type spell)
 {
     for (int i = 0; i < 25; i++)
-    {
         if (you.spells[i] == spell)
             return (true);
-    }
 
     return (false);
 }
@@ -1802,8 +1801,7 @@ static void _get_spell_list(std::vector<spell_type> &spell_list, int level,
 }
 
 
-bool make_book_level_randart(item_def &book, int level,
-                             int num_spells)
+bool make_book_level_randart(item_def &book, int level, int num_spells)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -1815,7 +1813,7 @@ bool make_book_level_randart(item_def &book, int level,
 
     if (!is_random_artefact(book))
     {
-        // Stuf parameters into book.plus and book.plus2, then call
+        // Stuff parameters into book.plus and book.plus2, then call
         // make_item_randart(), which will call us back.
         if (level == -1)
         {
@@ -1922,7 +1920,7 @@ bool make_book_level_randart(item_def &book, int level,
         spell_type spell = spell_list[spell_pos];
         ASSERT(spell != SPELL_NO_SPELL);
 
-        if (avoid_memorised[spell_pos] && _is_memorised(spell))
+        if (avoid_memorised[spell_pos] && is_memorised(spell))
         {
            // Only once.
            avoid_memorised[spell_pos] = false;
@@ -2044,12 +2042,14 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
         }
     }
 
-    do {
+    do
+    {
         disc1 = ok_discs[choose_random_weighted(skill_weights,
                                                 skill_weights + num_discs)];
         disc2 = ok_discs[choose_random_weighted(apt_weights,
                                                 apt_weights + num_discs)];
-    } while(disciplines_conflict(disc1, disc2));
+    }
+    while(disciplines_conflict(disc1, disc2));
 
     return (true);
 }
@@ -2093,7 +2093,7 @@ static void _get_weighted_spells(bool completely_random, god_type god,
             int c = 1;
             if (!you.seen_spell[spell])
                 c = 4;
-            else if (!_is_memorised(spell))
+            else if (!is_memorised(spell))
                 c = 2;
 
             int total_skill = 0;
@@ -2124,7 +2124,7 @@ static void _get_weighted_spells(bool completely_random, god_type god,
 
     int book_pos    = 0;
     int spells_left = spell_list.size();
-    while(book_pos < num_spells && max_levels > 0 && spells_left > 0)
+    while (book_pos < num_spells && max_levels > 0 && spells_left > 0)
     {
         spell_type spell =
             (spell_type) choose_random_weighted(spell_weights,

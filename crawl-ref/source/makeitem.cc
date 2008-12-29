@@ -2424,7 +2424,7 @@ static void _generate_book_item(item_def& item, int allow_uniques,
                 continue;
             }
         }
-        while (book_rarity(item.sub_type) == 100);
+        while (item.sub_type == BOOK_HEALING);
 
         // Tome of destruction: rare!
         if (item_level > 10 && x_chance_in_y(21 + item_level, 7000))
@@ -2664,7 +2664,7 @@ static void _generate_misc_item(item_def& item, int force_type, int item_race)
 
 // Returns item slot or NON_ITEM if it fails.
 int items( int allow_uniques,       // not just true-false,
-                                    //     because of BCR acquirement hack
+                                    // because of BCR acquirement hack
            object_class_type force_class, // desired OBJECTS class {dlb}
            int force_type,          // desired SUBTYPE - enum varies by OBJ
            bool dont_place,         // don't randomly place item on level
@@ -2681,9 +2681,9 @@ int items( int allow_uniques,       // not just true-false,
     // force_ego = SPWPN_VORPAL, and a random weapon of a type
     // appropriate for the vorpal brand will be chosen.
     ASSERT(force_ego <= 0
-           || (force_class == OBJ_WEAPONS || force_class == OBJ_ARMOUR
-                   || force_class == OBJ_MISSILES)
-               && force_type != OBJ_RANDOM);
+           || force_type != OBJ_RANDOM
+              && (force_class == OBJ_WEAPONS || force_class == OBJ_ARMOUR
+                  || force_class == OBJ_MISSILES));
 
     // Find an empty slot for the item (with culling if required).
     int p = get_item_slot(10);

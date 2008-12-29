@@ -1061,7 +1061,7 @@ bool origin_is_god_gift(const item_def& item, god_type *god)
     if (iorig > GOD_NO_GOD && iorig < NUM_GODS)
     {
         *god = static_cast<god_type>(iorig);
-        return(true);
+        return (true);
     }
 
     return (false);
@@ -2570,16 +2570,16 @@ bool item_is_equipped(const item_def &item, bool quiver_too)
 bool item_def::has_spells() const
 {
     return ((base_type == OBJ_BOOKS && item_type_known(*this)
-            && sub_type != BOOK_DESTRUCTION
-            && sub_type != BOOK_MANUAL)
+               && sub_type != BOOK_DESTRUCTION
+               && sub_type != BOOK_MANUAL)
             || count_staff_spells(*this, true) > 1);
 }
 
 int item_def::book_number() const
 {
-    return (base_type == OBJ_BOOKS?   sub_type                             :
-            base_type == OBJ_STAVES?  sub_type + NUM_BOOKS - STAFF_SMITING :
-            -1);
+    return (base_type == OBJ_BOOKS  ? sub_type                             :
+            base_type == OBJ_STAVES ? sub_type + NUM_BOOKS - STAFF_SMITING
+                                    : -1);
 }
 
 bool item_def::cursed() const

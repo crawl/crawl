@@ -59,6 +59,7 @@ spell_type which_spell_in_book(int sbook_type, int spl);
 
 // returns amount practised (or -1 for abort)
 int staff_spell( int zap_device_2 );
+bool is_memorised(spell_type spell);
 
 bool undead_cannot_memorise(spell_type spell, char being);
 

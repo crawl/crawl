@@ -1186,8 +1186,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
                     // much too good (most spells, lots of books here,
                     // id wand charges, gives magic resistance),
                     // something will eventually have to be done.  -- bwr
-                    if (best_any >= SK_FIGHTING
-                                && best_any <= SK_STAVES)
+                    if (best_any >= SK_FIGHTING && best_any <= SK_STAVES)
                     {
                         // Fighter mages get the fighting enchantment books
                         if (!you.had_book[BOOK_WAR_CHANTS])
@@ -1275,7 +1274,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
                 }
 
                 // If the book is invalid find any valid one.
-                while (book_rarity(type_wanted) == 100)
+                while (type_wanted == BOOK_HEALING)
                     type_wanted = random2(NUM_NORMAL_BOOKS);
                 break;
 
@@ -1423,8 +1422,8 @@ static void _do_book_acquirement(item_def &book, int agent)
     // items() shouldn't make book a randart for acquirement items.
     ASSERT(!is_random_artefact(book));
 
-    // Non-normal books are rare enough without turning them into
-    // randart books.
+    // Non-normal books (i.e. manuals/book of destruction) are rare enough
+    // without turning them into randart books.
     if (book.sub_type > MAX_NORMAL_BOOK)
         return;
 
@@ -1445,36 +1444,35 @@ static void _do_book_acquirement(item_def &book, int agent)
 
         std::vector<int> vec;
         for (int i = 1; i <= 9 && (vec.empty() || i <= max_level); i++)
-        {
             if (!(seen_levels & (1 << i)))
                 vec.push_back(i);
-        }
+
         if (vec.size() > 0)
             level = vec[random2(vec.size())];
         else
             level = -1;
     }
 
-    int choice_weights[4] = {
-                               55, // fixed themed
-                               24, // leave alone
-             level == -1 ? 0 : 12, // fixed level
-        agent == GOD_XOM ? 0 :  6, // manual (too useful for Xom)
-        };
+    int choice = random_choose_weighted(
+            55, BOOK_RANDART_THEME,
+            24, book.sub_type,
+            level == -1 ? 0 : 12, BOOK_RANDART_LEVEL,
+       agent == GOD_XOM ? 0 : 6, BOOK_MANUAL, // too useful for Xom
+            0);
 
-    int choice = choose_random_weighted(choice_weights, choice_weights + 4);
+    // No changes.
+    if (choice == book.sub_type)
+        return;
 
-    switch(choice)
+    book.sub_type = choice;
+
+    switch (choice)
     {
-    case 0:
+    case BOOK_RANDART_THEME:
         make_book_theme_randart(book, 0, 0, 7, 22);
         break;
 
-    case 1:
-        // Leave alone
-        break;
-
-    case 2:
+    case BOOK_RANDART_LEVEL:
     {
         int num_spells = 7 - (level + 1) / 2 + random_range(1, 2);
         make_book_level_randart(book, level, num_spells);
@@ -1482,7 +1480,7 @@ static void _do_book_acquirement(item_def &book, int agent)
     }
 
     // Spell discipline manual
-    case 3:
+    case BOOK_MANUAL:
     {
         int weights[SK_POISON_MAGIC - SK_CONJURATIONS + 1];
         int total_weights = 0;
@@ -1559,15 +1557,13 @@ bool acquirement(object_class_type class_wanted, int agent,
         }
     }
 
-    const bool god_agent = agent > GOD_NO_GOD && agent < NUM_GODS;
-
     if (grid_destroys_items(grd(you.pos())))
     {
         // How sad (and stupid).
         if (!silenced(you.pos()) && !quiet)
             mprf(MSGCH_SOUND, grid_item_destruction_message(grd(you.pos())));
 
-        if (god_agent)
+        if (agent > GOD_NO_GOD && agent < NUM_GODS)
         {
             if (agent == GOD_XOM)
                 simple_god_message(" snickers.", GOD_XOM);
@@ -1596,7 +1592,7 @@ bool acquirement(object_class_type class_wanted, int agent,
 
             // Don't generate randart books in items(), we do that
             // ourselves.
-            int want_arts = class_wanted == OBJ_BOOKS ? 0 : 1;
+            int want_arts = (class_wanted == OBJ_BOOKS ? 0 : 1);
 
             thing_created = items( want_arts, class_wanted, type_wanted, true,
                                    MAKE_GOOD_ITEM, MAKE_ITEM_RANDOM_RACE,
@@ -1660,6 +1656,20 @@ bool acquirement(object_class_type class_wanted, int agent,
                     thing_created = NON_ITEM;
                     continue;
                 }
+            }
+
+            // Sif Muna shouldn't gift Vehumet or Kiku's special books.
+            // (The spells therein are still fair game for randart books.)
+            if (agent == GOD_SIF_MUNA
+                && doodad.sub_type >= MIN_GOD_ONLY_BOOK
+                && doodad.sub_type <= MAX_GOD_ONLY_BOOK)
+            {
+                ASSERT(doodad.base_type == OBJ_BOOKS);
+
+                // Try again.
+                destroy_item(thing_created);
+                thing_created = NON_ITEM;
+                continue;
             }
             break;
         }
@@ -1822,7 +1832,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             if (is_random_artefact(thing))
             {
                 if (!is_unrandom_artefact(thing)
-                    && !thing.base_type == OBJ_BOOKS)
+                    && thing.base_type != OBJ_BOOKS)
                 {
                     // Give another name that takes god gift into account;
                     // artefact books already do that.

@@ -1153,7 +1153,7 @@ static bool _init_randart_book(item_def &book)
     ASSERT(book.plus != 0);
 
     god_type god;
-    bool redo = !origin_is_god_gift(book, &god) || god != GOD_XOM;
+    bool redo = (!origin_is_god_gift(book, &god) || god != GOD_XOM);
 
     // Plus and plus2 contain paramaters to make_book_foo_randart()
     // which might get changed after the book has been made into a
@@ -2110,7 +2110,7 @@ bool make_item_randart( item_def &item )
         }
     }
 
-    // This already is a randart.
+    // This item already is a randart.
     if (item.flags & ISFLAG_RANDART)
         return (true);
 

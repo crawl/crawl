@@ -27,6 +27,8 @@ enum item_description_type
     NUM_IDESC
 };
 
+void append_spells(std::string &desc, const item_def &item);
+
 // last updated 12may2000 {dlb}
 /* ***********************************************************************
  * called from: chardump - spells4

@@ -2832,15 +2832,21 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         {
             const std::string &ch = choices[i];
             if (ch == "artefacts" || ch == "artifacts"
-                    || ch == "artefact" || ch == "artifact")
+                || ch == "artefact" || ch == "artifact")
+            {
                 dump_item_origins |= IODS_ARTEFACTS;
+            }
             else if (ch == "ego_arm" || ch == "ego armour"
-                    || ch == "ego_armour")
+                     || ch == "ego_armour")
+            {
                 dump_item_origins |= IODS_EGO_ARMOUR;
+            }
             else if (ch == "ego_weap" || ch == "ego weapon"
-                    || ch == "ego_weapon" || ch == "ego weapons"
-                    || ch == "ego_weapons")
+                     || ch == "ego_weapon" || ch == "ego weapons"
+                     || ch == "ego_weapons")
+            {
                 dump_item_origins |= IODS_EGO_WEAPON;
+            }
             else if (ch == "jewellery" || ch == "jewelry")
                 dump_item_origins |= IODS_JEWELLERY;
             else if (ch == "runes")

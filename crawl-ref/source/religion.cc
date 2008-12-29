@@ -1987,7 +1987,7 @@ static void _do_god_gift(bool prayed_for)
                 }
 
                 if (gift != NUM_BOOKS
-                    && !(grid_destroys_items(grd(you.pos()))))
+                    && !grid_destroys_items(grd(you.pos())))
                 {
                     if (gift == OBJ_RANDOM)
                         success = acquirement(OBJ_BOOKS, you.religion);

@@ -1625,6 +1625,58 @@ static std::string _describe_deck( const item_def &item )
     return (description);
 }
 
+// Adds a list of all spells contained in a book or rod to its
+// description string.
+void append_spells(std::string &desc, const item_def &item)
+{
+    if (!item.has_spells())
+        return;
+
+    desc += "$$Spells                             Type                      Level$";
+
+    for (int j = 0; j < 8; j++)
+    {
+        spell_type stype = which_spell_in_book(item, j);
+        if (stype == SPELL_NO_SPELL)
+            continue;
+
+        std::string name = (is_memorised(stype)) ? "*" : "";
+                    name += spell_title(stype);
+        desc += name;
+        for (unsigned int i = 0; i < 35 - name.length(); i++)
+             desc += " ";
+
+        name = "";
+        if (item.base_type == OBJ_STAVES)
+            name += "Evocations";
+        else
+        {
+            bool already = false;
+
+            for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+            {
+                if (spell_typematch( stype, 1 << i ))
+                {
+                    if (already)
+                        name += "/" ;
+
+                    name += spelltype_name( 1 << i );
+                    already = true;
+                }
+            }
+        }
+        desc += name;
+
+        for (unsigned int i = 36; i < 65 - name.length(); i++)
+             desc += " ";
+
+        char sval[3];
+        itoa( spell_difficulty( stype ), sval, 10 );
+        desc += sval;
+        desc += "$";
+    }
+}
+
 // ========================================================================
 //      Public Functions
 // ========================================================================
@@ -1714,7 +1766,8 @@ std::string get_item_description( const item_def &item, bool verbose,
         description << ".$";
     }
     else if (verbose || (item.base_type != OBJ_WEAPONS
-                         && item.base_type != OBJ_ARMOUR))
+                         && item.base_type != OBJ_ARMOUR
+                         && item.base_type != OBJ_BOOKS))
     {
         description << "$$";
 
@@ -1779,7 +1832,7 @@ std::string get_item_description( const item_def &item, bool verbose,
     std::string desc;
     switch (item.base_type)
     {
-    // Weapons, armour, jewellery might be artefacts.
+    // Weapons, armour, jewellery, books might be artefacts.
     case OBJ_WEAPONS:
         desc = _describe_weapon( item, verbose );
         if (desc.empty())
@@ -1802,6 +1855,22 @@ std::string get_item_description( const item_def &item, bool verbose,
             need_extra_line = false;
         else
             description << desc;
+        break;
+
+    case OBJ_BOOKS:
+        if (!player_can_read_spellbook( item ))
+        {
+            description << "$This book is beyond your current level of "
+                           "understanding.";
+        }
+        else if (!verbose && is_random_artefact( item ))
+        {
+            append_spells( desc, item );
+            if (desc.empty())
+                need_extra_line = false;
+            else
+                description << desc;
+        }
         break;
 
     case OBJ_MISSILES:
@@ -1903,14 +1972,6 @@ std::string get_item_description( const item_def &item, bool verbose,
     case OBJ_MISCELLANY:
         if (is_deck(item))
             description << _describe_deck( item );
-        break;
-
-    case OBJ_BOOKS:
-        if (!player_can_read_spellbook( item ))
-        {
-            description << "$This book is beyond your current level of "
-                           "understanding.";
-        }
         break;
 
     case OBJ_POTIONS:
