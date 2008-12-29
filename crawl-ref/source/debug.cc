@@ -2259,6 +2259,35 @@ static void _announce_level_prob(bool warned)
     {
         mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
         mpr("mgrd problem occurred during level generation", MSGCH_ERROR);
+
+        extern std::string dgn_Build_Method;
+
+        mprf("dgn_Build_Method = %s", dgn_Build_Method.c_str());
+        mprf("dgn_Layout_Type  = %s", dgn_Layout_Type.c_str());
+
+        extern bool river_level, lake_level, many_pools_level;
+
+        if (river_level)
+            mpr("river level");
+        if (lake_level)
+            mpr("lake level");
+        if (many_pools_level)
+            mpr("many pools level");
+
+        std::vector<std::string> vault_names;
+
+        for (unsigned int i = 0; i < Level_Vaults.size(); i++)
+            vault_names.push_back(Level_Vaults[i].map.name);
+
+        if (Level_Vaults.size() > 0)
+            mpr_comma_separated_list("Level_Vaults: ", vault_names);
+        vault_names.clear();
+
+        for (unsigned int i = 0; i < Temp_Vaults.size(); i++)
+            vault_names.push_back(Temp_Vaults[i].map.name);
+
+        if (Level_Vaults.size() > 0)
+            mpr_comma_separated_list("Temp_Vaults: ", vault_names);
     }
 }
 

@@ -235,6 +235,10 @@ std::set<std::string> Level_Unique_Tags;
 std::string dgn_Build_Method;
 std::string dgn_Layout_Type;
 
+// Used by debug_mons_scan() when announcing that a just generated level
+// has floating/detached monsters.
+bool river_level, lake_level, many_pools_level;
+
 bool Generating_Level = false;
 
 static int can_create_vault = true;
@@ -309,17 +313,18 @@ bool builder(int level_number, int level_type)
 
         if (!dgn_level_vetoed && _valid_dungeon_level(level_number, level_type))
         {
-            dgn_Layout_Type.clear();
-            Level_Unique_Maps.clear();
-            Level_Unique_Tags.clear();
-            _dgn_map_colour_fixup();
-
 #if DEBUG_MONS_SCAN
             // If debug_mons_scan() find a problem while Generating_Level is
             // still true then it will announce that a problem was caused
             // during level generation.
             debug_mons_scan();
 #endif
+
+            dgn_Layout_Type.clear();
+            Level_Unique_Maps.clear();
+            Level_Unique_Tags.clear();
+            _dgn_map_colour_fixup();
+
             return (true);
         }
 
@@ -890,6 +895,10 @@ static void _reset_level()
     dgn_Layout_Type.clear();
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
+
+    river_level      = false;
+    lake_level       = false;
+    many_pools_level = false;
 
     can_create_vault = true;
     use_random_maps  = true;
@@ -5319,6 +5328,8 @@ static void _place_pool(dungeon_feature_type pool_type, unsigned char pool_x1,
 
 static void _many_pools(dungeon_feature_type pool_type)
 {
+    many_pools_level = true;
+
     if (player_in_branch( BRANCH_COCYTUS ))
         pool_type = DNGN_DEEP_WATER;
     else if (player_in_branch( BRANCH_GEHENNA ))
@@ -7534,6 +7545,8 @@ static void _build_river( dungeon_feature_type river_type ) //mv
     if (player_in_branch( BRANCH_CRYPT ) || player_in_branch( BRANCH_TOMB ))
         return;
 
+    river_level = true;
+
     // if (one_chance_in(10))
     //     _build_river(river_type);
 
@@ -7581,6 +7594,8 @@ static void _build_lake(dungeon_feature_type lake_type) //mv
 
     if (player_in_branch(BRANCH_CRYPT) || player_in_branch(BRANCH_TOMB))
         return;
+
+    lake_level = true;
 
     // if (one_chance_in (10))
     //     _build_lake(lake_type);
