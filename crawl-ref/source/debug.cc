@@ -2286,7 +2286,7 @@ static void _announce_level_prob(bool warned)
         for (unsigned int i = 0; i < Temp_Vaults.size(); i++)
             vault_names.push_back(Temp_Vaults[i].map.name);
 
-        if (Level_Vaults.size() > 0)
+        if (Temp_Vaults.size() > 0)
             mpr_comma_separated_list("Temp_Vaults: ", vault_names);
     }
 }
