@@ -7116,9 +7116,9 @@ static bool _monster_swaps_places( monsters *mon, const coord_def& delta )
     // Okay, do the swap!
     _swim_or_move_energy(mon);
 
-    mon->moveto(n);
+    mon->pos() = n;
     mgrd(n) = monster_index(mon);
-    m2->moveto(c);
+    m2->pos() = c;
     const int m2i = monster_index(m2);
     ASSERT(m2i >= 0 && m2i < MAX_MONSTERS);
     mgrd(c) = m2i;
