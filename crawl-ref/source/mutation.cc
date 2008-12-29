@@ -1125,17 +1125,16 @@ formatted_string describe_mutations()
         break;
 
     case SP_MUMMY:
-        result += "You are";
-        if (you.experience_level > 25)
-            result += " very strongly";
-        else if (you.experience_level > 12)
-            result += " strongly";
-
-        result += " in touch with the powers of death." EOL;
         result += "Your flesh is vulnerable to fire." EOL;
-
         if (you.experience_level > 12)
+        {
+            result += "You are";
+            if (you.experience_level > 25)
+                result += " strongly";
+
+            result += " in touch with the powers of death." EOL;
             result += "You can restore your body by infusing magical energy." EOL;
+        }
         have_any = true;
         break;
 
@@ -1218,17 +1217,6 @@ formatted_string describe_mutations()
         break;
 
     case SP_VAMPIRE:
-        if (you.hunger_state < HS_SATIATED)
-        {
-            if (you.experience_level >= 13)
-            {
-                result += "<green>";
-                result += "You are";
-                result += " in touch with the powers of death." EOL;
-                result += "</green>";
-            }
-        }
-
         if (you.hunger_state == HS_STARVING)
             result += "<green>You do not heal.</green>" EOL;
         else if (you.hunger_state <= HS_HUNGRY)

@@ -1443,7 +1443,7 @@ bool learn_spell(int book)
                             : "absorb"));
 
     snprintf(info, INFO_SIZE, "Memorise %s?", spell_title(specspell));
-    if ( !yesno(info, true, 0, false) )
+    if ( !yesno(info, true, 'n', false) )
     {
         canned_msg( MSG_OK );
         return (false);

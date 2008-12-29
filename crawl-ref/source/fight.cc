@@ -712,6 +712,9 @@ static bool _vamp_wants_blood_from_monster(const monsters *mon)
     if (you.hunger_state == HS_ENGORGED)
         return (false);
 
+    if (mons_is_summoned(mon))
+        return (false);
+
     if (!mons_has_blood(mon->type))
         return (false);
 

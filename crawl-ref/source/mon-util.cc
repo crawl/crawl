@@ -930,8 +930,8 @@ bool mons_class_can_be_zombified(int mc)
 bool mons_can_be_zombified(const monsters *mon)
 {
     return (mons_class_can_be_zombified(mon->type)
-        && !mons_is_summoned(mon)
-        && !mons_enslaved_body_and_soul(mon));
+            && !mons_is_summoned(mon)
+            && !mons_enslaved_body_and_soul(mon));
 }
 
 bool mons_enslaved_body_and_soul(const monsters *mon)

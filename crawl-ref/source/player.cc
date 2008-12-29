@@ -1656,12 +1656,6 @@ int player_spec_death()
         if (you.experience_level >= 26)
             sd++;
     }
-    else if (you.species == SP_VAMPIRE)
-    {
-        // Vampires get bonus only when thirsty
-        if (you.experience_level >= 13 && you.hunger_state < HS_SATIATED)
-            sd++;
-    }
 
     // transformations:
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
@@ -3206,12 +3200,6 @@ void level_change(bool skip_attribute_increase)
                     mpr("You can now bottle potions of blood from chopped up "
                         "corpses.");
                 }
-                else if (you.experience_level == 13)
-                {
-                    mprf( MSGCH_INTRINSIC_GAIN,
-                          "You feel %sin touch with the powers of death.",
-                          (you.hunger_state < HS_SATIATED ? "" : "strangely "));
-                }
                 break;
             case SP_NAGA:
                 // lower because of HD raise -- bwr
@@ -3787,16 +3775,12 @@ void display_char_status()
                 attrib.push_back("significantly resist cold");
                 attrib.push_back("strongly resist negative energy");
                 attrib.push_back("resist torment");
-                if (you.experience_level >= 13)
-                    attrib.push_back("are in touch with the powers of death");
                 attrib.push_back("do not heal!");
                 break;
             case HS_NEAR_STARVING:
                 attrib.push_back("resist poison");
                 attrib.push_back("significantly resist cold");
                 attrib.push_back("strongly resist negative energy");
-                if (you.experience_level >= 13)
-                    attrib.push_back("are in touch with the powers of death");
                 attrib.push_back("have an extremely slow metabolism");
                 attrib.push_back("heal slowly!");
                 break;
@@ -3805,8 +3789,6 @@ void display_char_status()
                 attrib.push_back("resist poison");
                 attrib.push_back("resist cold");
                 attrib.push_back("significantly resist negative energy");
-                if (you.experience_level >= 13)
-                    attrib.push_back("are in touch with the powers of death");
                 if (you.hunger_state == HS_HUNGRY)
                     attrib.push_back("have a slow metabolism");
                 else
