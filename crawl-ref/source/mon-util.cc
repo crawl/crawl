@@ -5283,7 +5283,6 @@ int monsters::get_experience_level() const
 
 void monsters::moveto( const coord_def& c )
 {
-    ASSERT(mgrd(c) == NON_MONSTER || c == pos());
     position = c;
 }
 
