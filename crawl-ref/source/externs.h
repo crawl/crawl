@@ -310,6 +310,8 @@ public:
                                   bool *can_plural = NULL) const = 0;
     virtual std::string foot_name(bool plural,
                                   bool *can_plural = NULL) const = 0;
+    virtual std::string arm_name(bool plural,
+                                 bool *can_plural = NULL) const = 0;
 
     virtual bool fumbles_attack(bool verbose = true) = 0;
 
@@ -387,6 +389,7 @@ public:
 
     virtual bool paralysed() const = 0;
     virtual bool cannot_move() const = 0;
+    virtual bool cannot_act() const = 0;
     virtual bool confused() const = 0;
     virtual bool caught() const = 0;
     virtual bool asleep() const { return (false); }
@@ -1034,6 +1037,7 @@ public:
     std::string conj_verb(const std::string &verb) const;
     std::string hand_name(bool plural, bool *can_plural = NULL) const;
     std::string foot_name(bool plural, bool *can_plural = NULL) const;
+    std::string arm_name(bool plural, bool *can_plural = NULL) const;
 
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
@@ -1094,6 +1098,7 @@ public:
 
     bool paralysed() const;
     bool cannot_move() const;
+    bool cannot_act() const;
     bool confused() const;
     bool caught() const;
     bool backlit(bool check_haloed = true) const;
@@ -1103,8 +1108,6 @@ public:
     void put_to_sleep(int power = 0);
     void awake();
     void check_awaken(int disturbance);
-
-    bool cannot_act() const;
 
     bool can_throw_large_rocks() const;
 
@@ -1426,6 +1429,7 @@ public:
     std::string conj_verb(const std::string &verb) const;
     std::string hand_name(bool plural, bool *can_plural = NULL) const;
     std::string foot_name(bool plural, bool *can_plural = NULL) const;
+    std::string arm_name(bool plural, bool *can_plural = NULL) const;
 
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;

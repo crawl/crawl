@@ -549,24 +549,26 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         // Draining breath is silent.
         force_silent = true;
 
-    const bool unseen = !you.can_see(monster);
-    const bool silent = silenced(monster->pos()) || force_silent;
+    const bool unseen    = !you.can_see(monster);
+    const bool silent    = silenced(monster->pos()) || force_silent;
+    const bool no_silent = mons_class_flag(monster->type, M_SPELL_NO_SILENT);
 
-    if (unseen && silent)
+    if (unseen && silent || silent && no_silent)
         return;
 
     const unsigned int flags = get_spell_flags(real_spell);
 
     const bool priest = mons_class_flag(monster->type, M_PRIEST);
     const bool wizard = mons_class_flag(monster->type, M_ACTUAL_SPELLS);
-    const bool innate = !(priest || wizard) || (flags & SPFLAG_INNATE);
+    const bool innate = !(priest || wizard || no_silent)
+                       || (flags & SPFLAG_INNATE);
 
     int noise;
     if(silent
        || (innate
-           && !mons_class_flag(monster->type, M_SPELL_NO_SILENT
-                                            | M_NOISY_SPELLS)
-           && !(flags & SPFLAG_NOISY)))
+           && !mons_class_flag(monster->type, M_NOISY_SPELLS)
+           && !(flags & SPFLAG_NOISY)
+           && mons_genus(monster->type) != MONS_DRAGON))
     {
         noise = 0;
     }
@@ -579,78 +581,101 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     }
 
     const std::string cast_str = " cast";
-    std::string suffix;
+
+    const std::string    spell_name = spell_title(real_spell);
+    const mon_body_shape shape      = get_mon_shape(monster);
+
+    std::vector<std::string> key_list;
+
+    // First try the spells name.
+    if (shape <= MON_SHAPE_NAGA && !innate)
+    {
+        if (priest || wizard)
+            key_list.push_back(spell_name + cast_str + " real");
+        if (mons_intel(monster) >= I_NORMAL)
+            key_list.push_back(spell_name + cast_str + " gestures");
+    }
+    key_list.push_back(spell_name + cast_str);
+
+    const unsigned int num_spell_keys = key_list.size();
+
+    // Next the monster type name, then species name, then genus name.
+    key_list.push_back(mons_type_name(monster->type, DESC_PLAIN) + cast_str);
+    key_list.push_back(mons_type_name(mons_species(monster->type), DESC_PLAIN)
+                       + cast_str);
+    key_list.push_back(mons_type_name(mons_genus(monster->type), DESC_PLAIN)
+                       + cast_str);
+
+    // Last, generic wizard, priest or demon.
+    if (wizard)
+        key_list.push_back("wizard" + cast_str);
+    else if (priest)
+        key_list.push_back("priest" + cast_str);
+    else if (mons_is_demon(monster->type))
+        key_list.push_back("demon" + cast_str);
+
+    // For targeted spells, try with the targeted suffix first.
+    if (in_bounds(pbolt.target) && pbolt.target != monster->pos()
+        && (flags & SPFLAG_TARGETING_MASK))
+    {
+        for (unsigned int i = key_list.size() - 1; i >= num_spell_keys; i--)
+        {
+            std::string str = key_list[i] + " targeted";
+            key_list.insert(key_list.begin() + i, str);
+        }
+    }
+
+    std::string prefix;
     if (silent)
-        suffix = " silent";
+        prefix = "silent ";
     else if (unseen)
-        suffix = " unseen";
+        prefix = "unseen ";
 
-    std::string key;
+    std::string msg;
+    for (unsigned int i = 0; i < key_list.size(); i++)
+    {
+        const std::string key = key_list[i];
 
-    // First try the individual spell.
-    key             = spell_title(real_spell) + cast_str;
-    std::string msg = getSpeakString(key + suffix);
+        msg = getSpeakString(prefix + key);
+        if (msg == "__NONE")
+        {
+            msg = "";
+            break;
+        }
+        else if (msg == "__NEXT")
+        {
+            msg = "";
+            if (i < num_spell_keys)
+                i = num_spell_keys - 1;
+            else if (ends_with(key, " targeted"))
+                i++;
+            continue;
+        }
+        else if (!msg.empty())
+            break;
 
-    if (msg.empty() && silent)
+        // If we got no message and we're using the silent prefix, then
+        // try again without the prefix.
+        if (prefix != "silent")
+            continue;
+
         msg = getSpeakString(key);
-
-    // Second, try the individual monster.
-    if (msg.empty())
-    {
-        key  = mons_type_name(monster->type, DESC_PLAIN);
-        key += cast_str;
-        msg  = getSpeakString(key + suffix);
-
-        if (msg.empty() && silent)
-            msg = getSpeakString(key);
-    }
-
-    // Third, try generic priest or wizard messages.
-    if (msg.empty() && !innate)
-    {
-        if (priest)
-            key = "priest";
-        else
-            key = "wizard";
-
-        key += cast_str;
-        msg  = getSpeakString(key + suffix);
-
-        if (msg.empty() && silent)
-            msg = getSpeakString(key);
-    }
-
-    // Fourth, try the monster's species.
-    if (msg.empty())
-    {
-        key  = mons_type_name(mons_species(monster->type), DESC_PLAIN);
-        key += cast_str;
-        msg  = getSpeakString(key + suffix);
-
-        if (msg.empty() && silent)
-            msg = getSpeakString(key);
-    }
-
-    // Fifth, try the monster's genus.
-    if (msg.empty())
-    {
-        key  = mons_type_name(mons_genus(monster->type), DESC_PLAIN);
-        key += cast_str;
-        msg  = getSpeakString(key + suffix);
-
-        if (msg.empty() && silent)
-            msg = getSpeakString(key);
-    }
-
-    // Lastly, maybe it's a demon.
-    if (msg.empty() && mons_is_demon(monster->type))
-    {
-        key  = "demon";
-        key += cast_str;
-        msg  = getSpeakString(key + suffix);
-
-        if (msg.empty() && silent)
-            msg = getSpeakString(key);
+        if (msg == "__NONE")
+        {
+            msg = "";
+            break;
+        }
+        else if (msg == "__NEXT")
+        {
+            msg = "";
+            if (i < num_spell_keys)
+                i = num_spell_keys - 1;
+            else if (ends_with(key, " targeted"))
+                i++;
+            continue;
+        }
+        else if (!msg.empty())
+            break;
     }
 
     if (msg.empty())
@@ -662,9 +687,17 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         return;
     }
 
+    /////////////////////
+    // We have a message.
+    /////////////////////
+
     std::string target = "something";
-    if (pbolt.target == you.pos())
+    if (!(flags & SPFLAG_TARGETING_MASK) || !in_bounds(pbolt.target))
+        target = "NO TARGET";
+    else if (pbolt.target == you.pos())
         target = "you";
+    else if (pbolt.target == monster->pos())
+        target = monster->pronoun(PRONOUN_REFLEXIVE);
     else if (see_grid(pbolt.target))
     {
         int midx = mgrd(pbolt.target);
@@ -684,13 +717,16 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
 	// fired.
     std::string beam_name;
     if (pbolt.flavour <= BEAM_NONE
-        || pbolt.flavour >= NUM_BEAMS
+        || pbolt.flavour > BEAM_LAST_REAL
         || pbolt.name.empty())
     {
         beam_name = "INVALID BEAM";
     }
-    else if (pbolt.type == 0 || pbolt.name[0] == '0')
+    else if (pbolt.type == 0 || pbolt.type == ' ' || pbolt.name[0] == '0'
+             || pbolt.is_enchantment())
+    {
         beam_name = "INVISIBLE BEAM";
+    }
     else
         beam_name = pbolt.get_short_name();
 
@@ -705,16 +741,6 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     {
         mons_speaks_msg(monster, msg, chan, true);
         return;
-    }
-
-    if (msg.find(" roar") != std::string::npos)
-        noise = get_shout_noise_level(S_ROAR);
-    else if (msg.find(" breathes") != std::string::npos)
-    {
-        shout_type type = mons_shouts(monster->type);
-        if(type == S_SILENT)
-            type = S_ROAR;
-        noise = get_shout_noise_level(type);
     }
 
     // noisy() returns true if the player heard the noise.

@@ -5233,6 +5233,36 @@ std::string monsters::foot_name(bool plural, bool *can_plural) const
    return (str);
 }
 
+std::string monsters::arm_name(bool plural, bool *can_plural) const
+{
+    mon_body_shape shape = get_mon_shape(this);
+
+    if (shape > MON_SHAPE_NAGA)
+        return hand_name(plural, can_plural);
+
+    if (can_plural != NULL)
+        *can_plural = true;
+
+    std::string str;
+    switch(mons_genus(type))
+    {
+    case MONS_NAGA:
+    case MONS_DRACONIAN: str = "scaled arm"; break;
+
+    case MONS_MUMMY: str = "bandaged wrapped arm"; break;
+
+    case MONS_SKELETAL_WARRIOR:
+    case MONS_LICH:  str = "bony arm"; break;
+
+    default: str = "arm"; break;
+    }
+
+   if (plural)
+       str = pluralise(str);
+
+   return (str);
+}
+
 int monsters::id() const
 {
     return (type);
@@ -7902,6 +7932,49 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                       monster->pronoun(PRONOUN_CAP_POSSESSIVE));
     msg = replace_all(msg, "@possessive@",
                       monster->pronoun(PRONOUN_NOCAP_POSSESSIVE));
+
+    // Body parts.
+    bool        can_plural = false;
+    std::string part_str   = monster->hand_name(false, &can_plural);
+
+    msg = replace_all(msg, "@hand@", part_str);
+    msg = replace_all(msg, "@Hand@", upcase_first(part_str));
+
+    if (!can_plural)
+        part_str = "NO PLURAL HANDS";
+    else
+        part_str = monster->hand_name(true);
+
+    msg = replace_all(msg, "@hands@", part_str);
+    msg = replace_all(msg, "@Hands@", upcase_first(part_str));
+
+    can_plural = false;
+    part_str   = monster->arm_name(false, &can_plural);
+
+    msg = replace_all(msg, "@arm@", part_str);
+    msg = replace_all(msg, "@Arm@", upcase_first(part_str));
+
+    if (!can_plural)
+        part_str = "NO PLURAL ARMS";
+    else
+        part_str = monster->arm_name(true);
+
+    msg = replace_all(msg, "@arms@", part_str);
+    msg = replace_all(msg, "@Arms@", upcase_first(part_str));
+
+    can_plural = false;
+    part_str   = monster->foot_name(false, &can_plural);
+
+    msg = replace_all(msg, "@foot@", part_str);
+    msg = replace_all(msg, "@Foot@", upcase_first(part_str));
+
+    if (!can_plural)
+        part_str = "NO PLURAL FOOT";
+    else
+        part_str = monster->foot_name(true);
+
+    msg = replace_all(msg, "@feet@", part_str);
+    msg = replace_all(msg, "@Feet@", upcase_first(part_str));
 
     // Replace with "you are" for atheists.
     msg = replace_all(msg, "@god_is@", _replace_god_name(true, false));

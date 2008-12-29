@@ -6295,6 +6295,29 @@ std::string player::foot_name(bool plural, bool *can_plural) const
     return str;
 }
 
+std::string player::arm_name(bool plural, bool *can_plural) const
+{
+    if (transform_changed_physiology())
+        return hand_name(plural, can_plural);
+
+    if (can_plural != NULL)
+        *can_plural = true;
+
+    std::string str = "arm";
+
+    if (player_genus(GENPC_DRACONIAN) || you.species == SP_NAGA)
+        str = "scaled arm";
+    else if (you.species == SP_KENKU)
+        str = "feathered arm";
+    else if (you.species == SP_MUMMY)
+        str = "bandaged wrapped arm";
+
+    if (plural)
+        str = pluralise(str);
+
+    return (str);
+}
+
 int player::id() const
 {
     return (-1);

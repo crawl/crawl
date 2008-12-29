@@ -1,12 +1,68 @@
+# This file contains the messages used to "announce" a spell, like
+# "The wizard mumbles some strange words."  The messages are looked
+# up in the following order by the following keys:
+#
+# 1) The name of the spell being cast:
+#   a) If being cast by a wizard or priest monster with arms, first try
+#      with the suffix "real".
+#   b) If being cast by a monster of normal or higher intelligence with arms,
+#      try with the suffix "gestures".
+#   c) Next, try without any suffix.
+# 2) The name of the monster's type.
+# 3) The name of the monster's species.
+# 4) The name of the monster's genus.
+# 5) "priest" if the monster is a priest type, "wizard" if it's a wizard type,
+#    or "demon" if it's demonic.
+#
+# For 2 to 5, if the spell has a target it will first add the suffix
+# "targeted" to the lookup key before trying without the suffix.
+#
+# For all lookups, if the monster is unseen by the player it will add the
+# prefix "unseen" to the key, or if the player or monster is silenced
+# it will prefix "silent" to the key (if the monster is both unseen and
+# unheard no message is ever given).  If using the prefix "silent" gives
+# no results it will try again without the prefix, assuming that the
+# spell has no sound component.
+#
+# To give no message use the string "__NONE", and to skip the current
+# lookup method and move onto the next one use the string "__NEXT".
+
 #####################################################
 # Individual spells.
+#####################################################
+%%%%
+unseen Animate Dead cast real
+
+You hear @something@ calling out to the dead.
+%%%%
+Animate Dead cast real
+
+@The_monster@ gestures at the surounding area while chanting.
+
+@The_monster@ throws @possessive@ @arms@ wide while chanting.
+%%%%
+Animate Dead cast gestures
+
+@The_monster@ gestures at the surounding.
+
+@The_monster@ throws @possessive@ @arms@ wide.
+%%%%
+Symbol of Torment cast
+
+@The_monster@ calls on the powers of Hell!
+%%%%
+unseen Symbol of Torment cast
+
+@The_something@ calls on the powers of Hell!
+#####################################################
+# Individual innate spells (breathing and spitting).
 #####################################################
 %%%%
 Acid Splash cast
 
 @The_monster@ spits acid at @target@.
 %%%%
-Acid Splash cast unseen
+unseen Acid Splash cast
 
 You hear a spitting sound.
 %%%%
@@ -14,7 +70,7 @@ Draconian Breath cast
 
 @The_monster@ breathes @beam@ at @target@.
 %%%%
-Draconian Breath cast unseen
+unseen Draconian Breath cast
 
 You hear a roar.
 %%%%
@@ -22,7 +78,7 @@ Poison Splash cast
 
 @The_monster@ spits poison at @target@.
 %%%%
-Poison Splash cast unseen
+unseen Poison Splash cast
 
 You hear a spitting sound.
 %%%%
@@ -30,73 +86,9 @@ Sticky Flame Splash cast
 
 @The_monster@ spits sticky flame at @target@.
 %%%%
-Sticky Flame Splash cast unseen
+unseen Sticky Flame Splash cast
 
 You hear a spitting sound.
-%%%%
-Symbol of Torment cast
-
-@The_monster@ calls on the powers of Hell!
-%%%%
-Symbol of Torment cast unseen
-
-@The_something@ calls on the powers of Hell!
-#####################################################
-# Priest and wizard casting messages.
-#####################################################
-%%%%
-priest cast
-
-@The_monster@ prays.
-
-@The_monster@ mumbles some strange prayers.
-
-@The_monster@ utters an invocation.
-%%%%
-priest cast unseen
-
-You hear some strange, mumbled prayers.
-%%%%
-wizard cast
-
-@The_monster@ gestures wildly.
-
-@The_monster@ mumbles some strange words.
-
-@The_monster@ casts a spell.
-%%%%
-wizard cast unseen
-
-You hear some strange, mumbled words.
-########################################################################
-# Monster genus and species messages.
-########################################################################
-%%%%
-demon cast
-
-@The_monster@ gestures.
-%%%%
-dragon cast
-
-@The_monster@ breathes @beam@ at @target@.
-%%%%
-dragon cast unseen
-
-You hear a roar.
-%%%%
-curse skull cast
-
-@The_monster@ rattles @possessive@ jaw.
-
-@The_monster@ casts a spell.
-%%%%
-curse skull cast unseen
-
-You hear the clattering of teeth.
-%%%%
-giant eyeball cast
-
-@The_monster@ gazes.
 ########################################################################
 # Individual monsters
 ########################################################################
@@ -105,7 +97,7 @@ Geryon cast
 
 @The_monster@ winds a great silver horn.
 %%%%
-Geryon cast unseen
+unseen Geryon cast
 
 You hear a weird and mournful sound.
 %%%%
@@ -124,4 +116,95 @@ orb of fire cast
 @The_monster@ glows red.
 
 @The_monster@ emits a lurid red light.
+%%%%
+# Sphinxes can't gesture or point.
+sphinx cast
+
+@The_monster@ mumbles some strange words.
+
+@The_monster@ casts a spell.
+########################################################################
+# Monster species and genus messages.
+########################################################################
+%%%%
+dragon cast targeted
+
+@The_monster@ breathes @beam@ at @target@.
+%%%%
+dragon cast
+
+@The_monster@ USED A NON-TARGETED DRAGON SPELL.  Please file a bug report.
+%%%%
+unseen dragon cast
+
+You hear a roar.
+%%%%
+curse skull cast
+
+@The_monster@ rattles @possessive@ jaw.
+
+@The_monster@ casts a spell.
+%%%%
+unseen curse skull cast
+
+You hear the clattering of teeth.
+%%%%
+giant eyeball cast targeted
+
+@The_monster@ gazes at @target@.
+%%%%
+giant eyeball cast
+
+@The_monster@ looks around.
+######################################################
+# Generic priest, wizard and demonic casting messages.
+######################################################
+%%%%
+priest cast targeted
+
+@The_monster@ prays against @target@.
+
+@The_monster@ mumbles some strange prayers against @target@.
+
+@The_monster@ utters an invocation against @target@.
+%%%%
+priest cast
+
+@The_monster@ prays.
+
+@The_monster@ mumbles some strange prayers.
+
+@The_monster@ utters an invocation.
+%%%%
+unseen priest cast
+
+You hear some strange, mumbled prayers.
+%%%%
+wizard cast targeted
+
+@The_monster@ gestures at @target@ while chanting.
+
+@The_monster@ points at @target@ and mumbles some strange words.
+
+@The_monster@ casts a spell at @target@.
+%%%%
+wizard cast
+
+@The_monster@ gestures wildly while chanting.
+
+@The_monster@ mumbles some strange words.
+
+@The_monster@ casts a spell.
+%%%%
+unseen wizard cast
+
+You hear some strange, mumbled words.
+%%%%
+demon cast targeted
+
+@The_monster@ gestures at @target@.
+%%%%
+demon cast
+
+@The_monster@ gestures.
 %%%%
