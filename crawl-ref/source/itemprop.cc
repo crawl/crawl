@@ -1004,8 +1004,11 @@ int armour_max_enchant( const item_def &item )
     const int eq_slot = get_armour_slot( item );
 
     int max_plus = MAX_SEC_ENCHANT;
-    if (eq_slot == EQ_BODY_ARMOUR || eq_slot == EQ_SHIELD)
+    if (eq_slot == EQ_BODY_ARMOUR || item.sub_type == ARM_CENTAUR_BARDING
+        || item.sub_type == ARM_NAGA_BARDING)
+    {
         max_plus = MAX_ARM_ENCHANT;
+    }
 
     return (max_plus);
 }
@@ -1366,8 +1369,8 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
     if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES)
         return (false);
 
-    // Artefacts or highly enchanted weapons cannot be enchanted, only
-    // uncursed.
+    // Artefacts or highly enchanted weapons cannot be enchanted,
+    // only uncursed.
     if (wpn.base_type == OBJ_WEAPONS)
     {
         if (is_artefact(wpn) || wpn.plus >= 9 && wpn.plus2 >= 9)
@@ -1393,12 +1396,8 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse)
 
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.
-    if (is_artefact(arm) || (arm.plus >= 2
-        && (arm.sub_type >= ARM_CLOAK && arm.sub_type <= ARM_BOOTS
-            || is_shield(arm))))
-    {
+    if (is_artefact(arm) || arm.plus >= armour_max_enchant(arm))
         return (uncurse && item_cursed(arm));
-    }
 
     return (true);
 }

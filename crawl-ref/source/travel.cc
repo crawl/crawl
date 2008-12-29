@@ -3753,7 +3753,10 @@ void TravelCache::add_waypoint(int x, int y)
     }
 
     if (keyin < '0' || keyin > '9')
+    {
+        canned_msg(MSG_OK);
         return;
+    }
 
     int waynum = keyin - '0';
 
@@ -3764,11 +3767,29 @@ void TravelCache::add_waypoint(int x, int y)
     const level_id &lid = level_id::current();
 
     const bool overwrite = waypoints[waynum].is_valid();
+
+    std::string old_dest =
+        overwrite ? get_trans_travel_dest(waypoints[waynum], false, true) : "";
+    level_id old_lid = (overwrite ? waypoints[waynum].id : lid);
+
     waypoints[waynum].id  = lid;
     waypoints[waynum].pos = pos;
 
-    mprf("%s waypoint %d to your current position.",
-         overwrite ? "Reset" : "Set new", waynum);
+    std::string new_dest = get_trans_travel_dest(waypoints[waynum],
+                                                 false, true);
+    mesclr();
+    if (overwrite)
+    {
+        if (lid == old_lid) // same level
+            mprf("Waypoint %d re-assigned to your current position.", waynum);
+        else
+        {
+            mprf("Waypoint %d re-assigned from %s to %s.",
+                 waynum, old_dest.c_str(), new_dest.c_str());
+        }
+    }
+    else
+        mprf("Waypoint %d assigned to %s.", waynum, new_dest.c_str());
 
     update_waypoints();
 }

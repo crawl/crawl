@@ -1116,6 +1116,17 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
+    if (!is_artefact(item))
+    {
+        if (item_ident( item, ISFLAG_KNOW_PLUSES )
+            && item.plus >= 9 && item.plus2 >= 9)
+        {
+            description += "$It is maximally enchanted.";
+        }
+        else
+            description += "$It can be maximally enchanted to +9, +9.";
+    }
+
     return (description);
 }
 
@@ -1242,6 +1253,11 @@ static std::string _describe_ammo( const item_def &item )
     }
 
     append_missile_info(description);
+
+    if (item_ident( item, ISFLAG_KNOW_PLUSES ) && item.plus >= 9)
+        description += "$It is maximally enchanted.";
+    else
+        description += "$It can be maximally enchanted to +9.";
 
     return (description);
 }
@@ -1412,6 +1428,19 @@ static std::string _describe_armour( const item_def &item, bool verbose )
             description += "This is a heavy armour. Wearing it will "
                 "exercise Armour.";
         }
+    }
+
+    if (!is_artefact(item))
+    {
+        const int max_ench = armour_max_enchant(item);
+        if (item.plus < max_ench || !item_ident( item, ISFLAG_KNOW_PLUSES ))
+        {
+            description += "$It can be maximally enchanted to ";
+            _append_value(description, max_ench, false);
+            description += ".";
+        }
+        else
+            description += "$It is maximally enchanted.";
     }
 
     return description;
@@ -1881,7 +1910,8 @@ std::string get_item_description( const item_def &item, bool verbose,
         if (item_type_known(item))
         {
             const int max_charges = 3 * wand_charge_value(item.sub_type);
-            if (item.plus < max_charges)
+            if (item.plus < max_charges
+                || !item_ident(item, ISFLAG_KNOW_PLUSES))
             {
                 description << "$It can have at most " << max_charges
                             << " charges.";
