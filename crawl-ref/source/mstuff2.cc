@@ -2249,7 +2249,7 @@ bool silver_statue_effects(monsters *mons)
             mgen_data(
                 summon_any_demon((coinflip() ? DEMON_COMMON
                                              : DEMON_LESSER)),
-                BEH_HOSTILE, 5, foe->pos(), MHITYOU));
+                SAME_ATTITUDE(mons), 5, foe->pos(), mons->foe));
         return (true);
     }
     return (false);
