@@ -6827,12 +6827,12 @@ void player::rot(actor *who, int rotlevel, int immed_rot)
         disease_player( 50 + random2(100) );
 }
 
-void player::confuse(int str)
+void player::confuse(actor *who, int str)
 {
     confuse_player(str);
 }
 
-void player::paralyse(int str)
+void player::paralyse(actor *who, int str)
 {
     int &paralysis(duration[DUR_PARALYSIS]);
 
@@ -6846,7 +6846,7 @@ void player::paralyse(int str)
         paralysis = 13;
 }
 
-void player::petrify(int str)
+void player::petrify(actor *who, int str)
 {
     int &petrif(duration[DUR_PETRIFIED]);
 
@@ -6859,7 +6859,7 @@ void player::petrify(int str)
     petrif = std::min(13, petrif);
 }
 
-void player::slow_down(int str)
+void player::slow_down(actor *foe, int str)
 {
     ::slow_player( str );
 }

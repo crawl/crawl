@@ -338,10 +338,10 @@ public:
     virtual void teleport(bool right_now = false, bool abyss_shift = false) = 0;
     virtual void poison(actor *attacker, int amount = 1) = 0;
     virtual bool sicken(int amount) = 0;
-    virtual void paralyse(int strength) = 0;
-    virtual void petrify(int strength) = 0;
-    virtual void slow_down(int strength) = 0;
-    virtual void confuse(int strength) = 0;
+    virtual void paralyse(actor *attacker, int strength) = 0;
+    virtual void petrify(actor *attacker, int strength) = 0;
+    virtual void slow_down(actor *attacker, int strength) = 0;
+    virtual void confuse(actor *attacker, int strength) = 0;
     virtual void rot(actor *attacker, int rotlevel, int immediate_rot) = 0;
     virtual void expose_to_element(beam_type element, int strength = 0) = 0;
     virtual void drain_stat(int stat, int amount, actor* attacker) { }
@@ -1061,10 +1061,10 @@ public:
     void make_hungry(int nutrition, bool silent = true);
     void poison(actor *agent, int amount = 1);
     bool sicken(int amount);
-    void paralyse(int str);
-    void petrify(int str);
-    void slow_down(int str);
-    void confuse(int strength);
+    void paralyse(actor *, int str);
+    void petrify(actor *, int str);
+    void slow_down(actor *, int str);
+    void confuse(actor *, int strength);
     void rot(actor *agent, int rotlevel, int immed_rot);
     void heal(int amount, bool max_too = false);
     int hurt(const actor *attacker, int amount,
@@ -1323,6 +1323,8 @@ public:
 
     void react_to_damage(int damage, beam_type flavour);
 
+    void forget_random_spell();
+
     void add_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void remove_enchantment_effect(const mon_enchant &me, bool quiet = false);
     void apply_enchantments();
@@ -1489,10 +1491,10 @@ public:
 
     void poison(actor *agent, int amount = 1);
     bool sicken(int strength);
-    void paralyse(int str);
-    void petrify(int str);
-    void slow_down(int str);
-    void confuse(int strength);
+    void paralyse(actor *, int str);
+    void petrify(actor *, int str);
+    void slow_down(actor *, int str);
+    void confuse(actor *, int strength);
     void rot(actor *agent, int rotlevel, int immed_rot);
     int hurt(const actor *attacker, int amount,
              beam_type flavour = BEAM_MISSILE,
@@ -1558,6 +1560,11 @@ struct cloud_struct
     unsigned char spread_rate;
     kill_category whose;
     killer_type   killer;
+
+    cloud_struct() : pos(), type(CLOUD_NONE), decay(0), spread_rate(0),
+                     whose(KC_OTHER), killer(KILL_NONE)
+    {
+    }
 
     void set_whose(kill_category _whose);
     void set_killer(killer_type _killer);

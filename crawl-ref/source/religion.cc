@@ -4145,7 +4145,7 @@ static bool _zin_retribution()
             you.put_to_sleep();
             break;
         case 2:
-            you.paralyse(3 + random2(10));
+            you.paralyse(NULL, 3 + random2(10));
             break;
         }
         break;

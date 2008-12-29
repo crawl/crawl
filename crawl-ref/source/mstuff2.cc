@@ -24,6 +24,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
+#include "Kills.h"
 #include "message.h"
 #include "misc.h"
 #include "monplace.h"
@@ -2237,7 +2238,8 @@ static int _monster_abjuration(const monsters *caster, bool actual)
 
 bool silver_statue_effects(monsters *mons)
 {
-    if ((mons_player_visible(mons) || one_chance_in(3)) && !one_chance_in(3))
+    actor *foe = mons->get_foe();
+    if (foe && mons->can_see(foe) && !one_chance_in(3))
     {
         const std::string msg =
             "'s eyes glow " + weird_glowing_colour() + '.';
@@ -2247,7 +2249,7 @@ bool silver_statue_effects(monsters *mons)
             mgen_data(
                 summon_any_demon((coinflip() ? DEMON_COMMON
                                              : DEMON_LESSER)),
-                BEH_HOSTILE, 5, you.pos(), MHITYOU));
+                BEH_HOSTILE, 5, foe->pos(), MHITYOU));
         return (true);
     }
     return (false);
@@ -2255,12 +2257,21 @@ bool silver_statue_effects(monsters *mons)
 
 bool orange_statue_effects(monsters *mons)
 {
-    if ((mons_player_visible(mons) || one_chance_in(3))
-        && !one_chance_in(3))
+    actor *foe = mons->get_foe();
+    if (foe && mons->can_see(foe) && !one_chance_in(3))
     {
-        mpr("A hostile presence attacks your mind!", MSGCH_WARN);
+        if (you.can_see(foe))
+        {
+            if (foe == &you)
+                mprf(MSGCH_WARN, "A hostile presence attacks your mind!");
+            else if (you.can_see(mons))
+                mprf(MSGCH_WARN, "%s fixes %s piercing gaze on %s.",
+                     mons->name(DESC_CAP_THE).c_str(),
+                     mons->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                     foe->name(DESC_NOCAP_THE).c_str());
+        }
 
-        MiscastEffect( &you, monster_index(mons), SPTYP_DIVINATION,
+        MiscastEffect( foe, monster_index(mons), SPTYP_DIVINATION,
                        random2(15), random2(150),
                        "an orange crystal statue");
         return (true);

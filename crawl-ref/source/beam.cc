@@ -2562,7 +2562,7 @@ bool curare_hits_monster(actor *agent, monsters *monster, kill_category who,
         }
 
         if (monster->alive())
-            enchant_monster_with_flavour(monster, BEAM_SLOW);
+            enchant_monster_with_flavour(monster, agent, BEAM_SLOW);
     }
 
     // Deities take notice.
@@ -3593,7 +3593,7 @@ void bolt::affect_player_enchantment() {
         break;
 
     case BEAM_PETRIFY:
-        you.petrify( ench_power );
+        you.petrify( agent(), ench_power );
         obvious_effect = true;
         break;
 
@@ -4608,11 +4608,13 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
     return rc;
 }
 
-bool enchant_monster_with_flavour(monsters* mon, beam_type flavour, int powc)
+bool enchant_monster_with_flavour(monsters* mon, actor *foe,
+                                  beam_type flavour, int powc)
 {
     bolt dummy;
     dummy.flavour = flavour;
     dummy.ench_power = powc;
+    dummy.set_agent(foe);
     dummy.apply_enchantment_to_monster(mon);
     return dummy.obvious_effect;
 }
@@ -5460,6 +5462,23 @@ void bolt::setup_retrace()
     std::swap(source, target);
     affects_nothing = true;
     aimed_at_spot   = true;
+}
+
+void bolt::set_agent(actor *actor)
+{
+    // NULL actor is fine by us.
+    if (!actor)
+        return;
+
+    if (actor->atype() == ACT_PLAYER)
+    {
+        thrower = KILL_YOU_MISSILE;
+    }
+    else
+    {
+        thrower = KILL_MON_MISSILE;
+        beam_source = monster_index(dynamic_cast<monsters*>(actor));
+    }
 }
 
 actor* bolt::agent() const

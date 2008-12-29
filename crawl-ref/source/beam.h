@@ -118,6 +118,7 @@ public:
 
     bool is_enchantment() const; // no block/dodge, use magic resist
     void set_target(const dist &targ);
+    void set_agent(actor *agent);
     void setup_retrace();
 
     // Returns YOU_KILL or MON_KILL, depending on the source of the beam.
@@ -245,8 +246,8 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                           bool doFlavouredEffects = true);
 
 // Return whether the effect was visible.
-bool enchant_monster_with_flavour(monsters* mon, beam_type flavour,
-                                  int powc = 0);
+bool enchant_monster_with_flavour(monsters* mon, actor *atk,
+                                  beam_type flavour, int powc = 0);
 
 // returns true if messages were generated during the enchantment
 bool mass_enchantment( enchant_type wh_enchant, int pow, int who,

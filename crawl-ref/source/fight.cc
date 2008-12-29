@@ -4215,9 +4215,9 @@ void melee_attack::wasp_paralyse_defender()
     if (defender->res_poison() <= 0)
     {
         if (one_chance_in(paralyse_roll))
-            defender->paralyse( roll_dice(1, 3) );
+            defender->paralyse( attacker, roll_dice(1, 3) );
         else
-            defender->slow_down( roll_dice(1, 3) );
+            defender->slow_down( attacker, roll_dice(1, 3) );
     }
 }
 
@@ -4440,7 +4440,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         if (one_chance_in(10)
             || (damage_done > 2 && one_chance_in(3)))
         {
-            defender->confuse(1 + random2(3 + atk->hit_dice));
+            defender->confuse(attacker, 1 + random2(3 + atk->hit_dice));
         }
         break;
 

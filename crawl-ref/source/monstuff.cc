@@ -6556,7 +6556,7 @@ static void _handle_monster_move(int i, monsters *monster)
             }
         }
 
-        if (mons_is_lurking(monster))
+        if (mons_is_lurking(monster) || mons_is_submerged(monster))
         {
             // Lurking monsters only stop lurking if their target is right
             // next to them, otherwise they just sit there.

@@ -5663,27 +5663,27 @@ void monsters::rot(actor *agent, int rotlevel, int immed_rot)
     }
 }
 
-void monsters::confuse(int strength)
+void monsters::confuse(actor *atk, int strength)
 {
-    enchant_monster_with_flavour(this, BEAM_CONFUSION, strength);
+    enchant_monster_with_flavour(this, atk, BEAM_CONFUSION, strength);
 }
 
-void monsters::paralyse(int strength)
+void monsters::paralyse(actor *atk, int strength)
 {
-    enchant_monster_with_flavour(this, BEAM_PARALYSIS, strength);
+    enchant_monster_with_flavour(this, atk, BEAM_PARALYSIS, strength);
 }
 
-void monsters::petrify(int strength)
+void monsters::petrify(actor *atk, int strength)
 {
     if (mons_is_insubstantial(type))
         return;
 
-    enchant_monster_with_flavour(this, BEAM_PETRIFY, strength);
+    enchant_monster_with_flavour(this, atk, BEAM_PETRIFY, strength);
 }
 
-void monsters::slow_down(int strength)
+void monsters::slow_down(actor *atk, int strength)
 {
-    enchant_monster_with_flavour(this, BEAM_SLOW, strength);
+    enchant_monster_with_flavour(this, atk, BEAM_SLOW, strength);
 }
 
 void monsters::set_ghost(const ghost_demon &g)
@@ -5984,6 +5984,17 @@ bool monsters::add_ench(const mon_enchant &ench)
         add_enchantment_effect(ench);
 
     return (true);
+}
+
+void monsters::forget_random_spell()
+{
+    int which_spell = -1;
+    int count = 0;
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (spells[i] != SPELL_NO_SPELL && one_chance_in(++count))
+            which_spell = i;
+    if (which_spell != -1)
+        spells[which_spell] = SPELL_NO_SPELL;
 }
 
 void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
@@ -7512,12 +7523,12 @@ item_type_id_state_type monsters::drink_potion_effect(potion_type ptype)
         break;
 
     case POT_SPEED:
-        if (enchant_monster_with_flavour(this, BEAM_HASTE))
+        if (enchant_monster_with_flavour(this, this, BEAM_HASTE))
             ident = ID_KNOWN_TYPE;
         break;
 
     case POT_INVISIBILITY:
-        if (enchant_monster_with_flavour(this, BEAM_INVISIBILITY))
+        if (enchant_monster_with_flavour(this, this, BEAM_INVISIBILITY))
             ident = ID_KNOWN_TYPE;
         break;
 

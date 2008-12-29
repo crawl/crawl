@@ -925,6 +925,13 @@ static void _reset_level()
         menv[i].reset();
 
     env.mons_alloc.init(MONS_PROGRAM_BUG);
+
+    // Zap clouds
+    env.cgrid.init(EMPTY_CLOUD);
+
+    const cloud_struct empty;
+    env.cloud.init(empty);
+
     mgrd.init(NON_MONSTER);
     igrd.init(NON_ITEM);
 

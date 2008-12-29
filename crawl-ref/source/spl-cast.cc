@@ -2461,8 +2461,10 @@ void MiscastEffect::do_miscast()
     // killed a target which was alive when the object was created.
     if (!target->alive())
     {
+#ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Miscast target '%s' already dead",
              target->name(DESC_PLAIN, true).c_str());
+#endif
         return;
     }
 
@@ -2484,13 +2486,8 @@ void MiscastEffect::do_miscast()
         sp_type = school;
         if (sp_type == SPTYP_RANDOM)
         {
-            // XXX: Monsters currently have no divination miscasts.
-            do
-            {
-                int exp = (random2(SPTYP_LAST_EXPONENT));
-                sp_type = (spschool_flag_type) (1 << exp);
-            } while (sp_type == SPTYP_DIVINATION
-                     && target->atype() == ACT_MONSTER);
+            int exp = (random2(SPTYP_LAST_EXPONENT));
+            sp_type = (spschool_flag_type) (1 << exp);
         }
     }
 
@@ -2788,13 +2785,13 @@ void MiscastEffect::_potion_effect(int pot_eff, int pot_pow)
             }
             // Intentional fallthrough if that didn't work.
         case POT_SLOWING:
-            target->slow_down(pot_pow);
+            target->slow_down(act_source, pot_pow);
             break;
         case POT_PARALYSIS:
-            target->paralyse(pot_pow);
+            target->paralyse(act_source, pot_pow);
             break;
         case POT_CONFUSION:
-            target->confuse(pot_pow);
+            target->confuse(act_source, pot_pow);
             break;
 
         default:
@@ -3662,6 +3659,42 @@ void MiscastEffect::_divination_you(int severity)
 // XXX: Monster divination miscasts.
 void MiscastEffect::_divination_mon(int severity)
 {
+    switch (severity)
+    {
+    case 0:         // just a harmless message
+        mon_msg_seen = "@The_monster@ looks momentarily confused.";
+        break;
+
+    case 1:         // more annoying things
+        switch (random2(2))
+        {
+        case 0:
+            mon_msg_seen = "@The_monster@ looks slightly disoriented.";
+            break;
+        case 1:
+            mon_target->confuse(
+                act_source,
+                1 + random2(3 + act_source->get_experience_level()));
+            break;
+        }
+        break;
+
+    case 2:         // even more annoying things
+        mon_msg_seen = "@The_monster@ shudders.";
+        mon_target->confuse(
+            act_source,
+            5 + random2(3 + act_source->get_experience_level()));
+        break;
+
+    case 3:         // nasty
+        mon_msg_seen = "@The_monster@ reels.";
+        if (one_chance_in(7))
+            mon_target->forget_random_spell();
+        mon_target->confuse(
+            act_source,
+            8 + random2(3 + act_source->get_experience_level()));
+        break;
+    }
 }
 
 void MiscastEffect::_necromancy(int severity)
