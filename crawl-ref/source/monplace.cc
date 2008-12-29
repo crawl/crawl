@@ -991,6 +991,34 @@ static int _place_monster_aux( const mgen_data &mg,
     else
         define_monster(id);
 
+    // Give priestly monsters a god (unless the monster is a god gift, in
+    // which case its god will be set elsewhere).
+    if (mg.god == GOD_NO_GOD &&
+        mons_class_flag(mg.cls, M_PRIEST))
+    {
+        switch(mons_genus(mg.cls))
+        {
+        case MONS_ORC:
+            menv[id].god = GOD_BEOGH;
+            break;
+        case MONS_MUMMY:
+            menv[id].god = coinflip() ? GOD_KIKUBAAQUDGHA : GOD_YREDELEMNUL;
+            break;
+        case MONS_ELF:
+        {
+            god_type gods[] = {GOD_KIKUBAAQUDGHA, GOD_YREDELEMNUL,
+                               GOD_MAKHLEB};
+            menv[id].god = RANDOM_ELEMENT(gods);
+            break;
+        }
+        default:
+            mprf(MSGCH_ERROR, "ERROR: Invalid monster priest '%s'",
+                 menv[id].name(DESC_PLAIN, true).c_str());
+            ASSERT(false);
+            break;
+        }
+    }
+
     // If the caller requested a specific colour for this monster,
     // apply it now.
     if (mg.colour != BLACK)

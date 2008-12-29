@@ -2078,7 +2078,8 @@ enum monster_flag_type
                                      // between it and the monster type name.
     MF_NAME_REPLACE       = 0x30000, // mname entirely replaces normal monster
                                      // name.
-    MF_NAME_MASK          = 0x30000
+    MF_NAME_MASK          = 0x30000,
+    MF_GOD_GIFT           = 0x40000  // Is a god gift.
 };
 
 // Adding slots breaks saves. YHBW.

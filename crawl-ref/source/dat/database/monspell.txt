@@ -162,23 +162,31 @@ giant eyeball cast
 %%%%
 priest cast targeted
 
-@The_monster@ prays against @target@.
+@The_monster@ calls down the wrath of @God@ upon @target@.
 
-@The_monster@ mumbles some strange prayers against @target@.
+@The_monster@ mumbles some strange prayers to @God@ against @target@.
 
-@The_monster@ utters an invocation against @target@.
+@The_monster@ invokes the aid of @God@ against @target@.
 %%%%
 priest cast
 
-@The_monster@ prays.
+@The_monster@ prays to @God@.
 
-@The_monster@ mumbles some strange prayers.
+@The_monster@ mumbles some strange prayers to @God@.
 
-@The_monster@ utters an invocation.
+@The_monster@ utters an invocation to @God@.
+%%%%
+unseen priest cast targeted
+
+You hear some @something@ call the down wrath of @God@ upon @target@.
+
+You hear @something@ mumble some strange prayers to @God@ against @target@.
+
+You hear @something@ invoke the aid of @God@ against @target@.
 %%%%
 unseen priest cast
 
-You hear some strange, mumbled prayers.
+You hear some strange, mumbled prayers to @God@.
 %%%%
 wizard cast targeted
 

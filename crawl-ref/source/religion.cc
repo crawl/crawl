@@ -1192,12 +1192,32 @@ static void _give_nemelex_gift()
 
 void mons_make_god_gift(monsters *mon, god_type god)
 {
+    const god_type acting_god =
+        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
+                                      : GOD_NO_GOD;
+
+    if (god == GOD_NO_GOD && acting_god == GOD_NO_GOD)
+        return;
+
+    if (god == GOD_NO_GOD)
+        god = acting_god;
+
+    ASSERT(acting_god == GOD_NO_GOD || god == acting_god);
+    ASSERT(mon->god == GOD_NO_GOD || mon->god == god);
+
     mon->god = god;
+
+#if DEBUG
+    if (mon->flags & MF_GOD_GIFT)
+        mprf(MSGCH_DIAGNOSTICS, "Monster '%s' is already a gift of god '%s'",
+             mon->name(DESC_PLAIN, true).c_str(), god_name(god).c_str());
+#endif
+    mon->flags |= MF_GOD_GIFT;
 }
 
 bool mons_is_god_gift(const monsters *mon, god_type god)
 {
-    return (mon->god == god);
+    return ((mon->flags & MF_GOD_GIFT) && mon->god == god);
 }
 
 static bool _is_yred_enslaved_body_and_soul(const monsters* mon)

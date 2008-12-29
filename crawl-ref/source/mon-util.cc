@@ -7984,6 +7984,12 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@player_god@", _replace_god_name(false, false));
     msg = replace_all(msg, "@Player_god@", _replace_god_name(false, true));
 
+    // The monster's god, not the player's.
+    if (monster->god == GOD_NO_GOD)
+        msg = replace_all(msg, "@God@", "NO GOD");
+    else
+        msg = replace_all(msg, "@God@", god_name(monster->god));
+
     // Replace with species specific insults.
     if (msg.find("@species_insult_") != std::string::npos)
     {
