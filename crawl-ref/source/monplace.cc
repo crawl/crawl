@@ -993,10 +993,11 @@ static int _place_monster_aux( const mgen_data &mg,
     else
         define_monster(id);
 
-    // Give priestly monsters a god (unless the monster is a god gift, in
-    // which case its god will be set elsewhere).
-    if (mg.god == GOD_NO_GOD &&
-        mons_class_flag(mg.cls, M_PRIEST))
+    // Is it a god gift?
+    if (mg.god != GOD_NO_GOD)
+        menv[id].flags |= MF_GOD_GIFT;
+    // Not a god gift, give priestly monsters a god.
+    else if ( mons_class_flag(mg.cls, M_PRIEST))
     {
         switch(mons_genus(mg.cls))
         {
