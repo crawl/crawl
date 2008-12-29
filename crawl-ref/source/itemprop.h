@@ -635,6 +635,7 @@ bool  check_armour_size( const item_def &item, size_type size );
 bool  check_armour_shape( const item_def &item, bool quiet );
 
 bool item_is_rechargeable(const item_def &it, bool known = false);
+int wand_charge_value(int type);
 bool is_enchantable_weapon(const item_def &wpn, bool uncurse);
 bool is_enchantable_armour(const item_def &arm, bool uncurse);
 

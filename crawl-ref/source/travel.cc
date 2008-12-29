@@ -3763,8 +3763,12 @@ void TravelCache::add_waypoint(int x, int y)
 
     const level_id &lid = level_id::current();
 
+    const bool overwrite = waypoints[waynum].is_valid();
     waypoints[waynum].id  = lid;
     waypoints[waynum].pos = pos;
+
+    mprf("%s waypoint %d to your current position.",
+         overwrite ? "Reset" : "Set new", waynum);
 
     update_waypoints();
 }

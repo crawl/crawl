@@ -191,7 +191,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_HIGH_ELF (3)
      100,                       // SK_FIGHTING
@@ -234,7 +234,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      130,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_GREY_ELF (4)
      140,                       // SK_FIGHTING
@@ -277,7 +277,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      110,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (90 * 75) / 100,           // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_DEEP_ELF (5)
      150,                       // SK_FIGHTING
@@ -320,7 +320,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      80,                        // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (90 * 75) / 100,           // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_SLUDGE_ELF (6)
      80,                        // SK_FIGHTING
@@ -363,7 +363,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      80,                        // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (110 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_MOUNTAIN_DWARF (8)
      70,                        // SK_FIGHTING
@@ -405,8 +405,8 @@ const int spec_skills[ NUM_SPECIES ][40] =
      70,                        // SK_EARTH_MAGIC
      130,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
-     (60 * 75) / 100,           // SK_EVOCATIONS
-     },
+     (90 * 75) / 100,           // SK_EVOCATIONS
+    },
 
     {                           // SP_HALFLING (9)
      120,                       // SK_FIGHTING
@@ -449,7 +449,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      120,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (90 * 75) / 100,           // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_HILL_ORC (10)
      70,                        // SK_FIGHTING
@@ -492,7 +492,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      110,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_KOBOLD (11)
      80,                        // SK_FIGHTING
@@ -535,7 +535,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (80 * 75) / 100,           // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_MUMMY (12)
      100,                       // SK_FIGHTING
@@ -578,7 +578,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      140,                       // SK_POISON_MAGIC
      (140 * 75) / 100,          // SK_INVOCATIONS
      (140 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_NAGA (13)
      100,                       // SK_FIGHTING
@@ -621,7 +621,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      60,                        // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_GNOME (14)
      100,                       // SK_FIGHTING
@@ -664,7 +664,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      130,                       // SK_POISON_MAGIC
      (120 * 75) / 100,          // SK_INVOCATIONS
      (60 * 75) / 100,           // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_OGRE (15)
       70,                       // SK_FIGHTING
@@ -707,7 +707,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      180,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (180 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_TROLL (16)
      140,                       // SK_FIGHTING
@@ -750,7 +750,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      160,                       // SK_POISON_MAGIC
      (150 * 75) / 100,          // SK_INVOCATIONS
      (180 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_RED_DRACONIAN (18)
      90,                        // SK_FIGHTING
@@ -793,7 +793,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_WHITE_DRACONIAN (19)
      90,                        // SK_FIGHTING
@@ -836,7 +836,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_GREEN_DRACONIAN (20)
      90,                        // SK_FIGHTING
@@ -879,7 +879,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      70,                        // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_YELLOW_DRACONIAN (21)
      90,                        // SK_FIGHTING
@@ -922,7 +922,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_GREY_DRACONIAN (22)
      90,                        // SK_FIGHTING
@@ -965,7 +965,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_BLACK_DRACONIAN (23)
      90,                        // SK_FIGHTING
@@ -1008,7 +1008,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_PURPLE_DRACONIAN (24)
      90,                        // SK_FIGHTING
@@ -1051,7 +1051,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (90 * 75) / 100,           // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_MOTTLED_DRACONIAN (25)
      90,                        // SK_FIGHTING
@@ -1094,7 +1094,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_PALE_DRACONIAN (26)
      90,                        // SK_FIGHTING
@@ -1137,7 +1137,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (90 * 75) / 100,           // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_BASE_DRACONIAN (29)
      90,                        // SK_FIGHTING
@@ -1180,7 +1180,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_CENTAUR (30)
      100,                       // SK_FIGHTING
@@ -1223,7 +1223,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      130,                       // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (130 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_DEMIGOD (31)
      110,                       // SK_FIGHTING
@@ -1266,7 +1266,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      110,                       // SK_POISON_MAGIC
      (110 * 75) / 100,          // SK_INVOCATIONS
      (110 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_SPRIGGAN (32)
      150,                       // SK_FIGHTING
@@ -1309,7 +1309,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (130 * 75) / 100,          // SK_INVOCATIONS
      (70 * 75) / 100,           // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_MINOTAUR (33)
      70,                        // SK_FIGHTING
@@ -1352,7 +1352,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      170,                       // SK_POISON_MAGIC
      (130 * 75) / 100,          // SK_INVOCATIONS
      (170 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_DEMONSPAWN (34)
      100,                       // SK_FIGHTING
@@ -1395,7 +1395,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (80 * 75) / 100,           // SK_INVOCATIONS
      (110 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_GHOUL (35)
      80,                        // SK_FIGHTING
@@ -1438,7 +1438,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (110 * 75) / 100,          // SK_INVOCATIONS
      (130 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_KENKU (36)
      100,                       // SK_FIGHTING
@@ -1481,7 +1481,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      100,                       // SK_POISON_MAGIC
      (160 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_MERFOLK (37)
      80,                        // SK_FIGHTING
@@ -1524,7 +1524,7 @@ const int spec_skills[ NUM_SPECIES ][40] =
      80,                        // SK_POISON_MAGIC
      (100 * 75) / 100,          // SK_INVOCATIONS
      (100 * 75) / 100,          // SK_EVOCATIONS
-     },
+    },
 
     {                           // SP_VAMPIRE (38)
      110,                       // SK_FIGHTING
@@ -1580,55 +1580,6 @@ const int spec_skills[ NUM_SPECIES ][40] =
     // SP_OGRE_MAGE placeholder
     {
     },
-
-
-/* ******************************************************
-
-// base draconian
-    {
-         90,               // SK_FIGHTING
-        100,               // SK_SHORT_BLADES
-        100,               // SK_LONG_BLADES
-        100,               // SK_UNUSED_1
-        100,               // SK_AXES
-        100,               // SK_MACES_FLAILS
-        100,               // SK_POLEARMS
-        100,               // SK_STAVES
-        120,               // SK_SLINGS
-        120,               // SK_BOWS
-        120,               // SK_CROSSBOWS
-        120,               // SK_DARTS
-        120,               // SK_THROWING
-        200,               // SK_ARMOUR
-        120,               // SK_DODGING
-        120,               // SK_STEALTH
-        100,               // SK_STABBING
-        100,               // SK_SHIELDS
-        100,               // SK_TRAPS_DOORS
-        100,               // SK_UNARMED_COMBAT
-        100,               // undefined
-        100,               // undefined
-        100,               // undefined
-        100,               // undefined
-        100,               // undefined
-        100,               // SK_SPELLCASTING
-        100,               // SK_CONJURATIONS
-        120,               // SK_ENCHANTMENTS
-        100,               // SK_SUMMONINGS
-        100,               // SK_NECROMANCY
-        100,               // SK_TRANSLOCATIONS
-        100,               // SK_TRANSMIGRATION
-        100,               // SK_DIVINATIONS
-        100,               // SK_FIRE_MAGIC
-        100,               // SK_ICE_MAGIC
-        100,               // SK_AIR_MAGIC
-        100,               // SK_EARTH_MAGIC
-        100,               // SK_POISON_MAGIC
-        100,               // SK_INVOCATIONS
-        100,               // SK_EVOCATIONS
-    },
-
-****************************************************** */
 
 };
 

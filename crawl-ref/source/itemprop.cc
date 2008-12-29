@@ -1336,6 +1336,31 @@ bool item_is_rechargeable(const item_def &it, bool known)
             && (!known || item_type_known(it)));
 }
 
+// Max. charges are 3 times this value.
+int wand_charge_value(int type)
+{
+    switch (type)
+    {
+    case WAND_INVISIBILITY:
+    case WAND_FIREBALL:
+    case WAND_TELEPORTATION:
+    case WAND_HEALING:
+    case WAND_HASTING:
+        return 3;
+
+    case WAND_LIGHTNING:
+    case WAND_DRAINING:
+        return 4;
+
+    case WAND_FIRE:
+    case WAND_COLD:
+        return 5;
+
+    default:
+        return 8;
+    }
+}
+
 bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
 {
     if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES)

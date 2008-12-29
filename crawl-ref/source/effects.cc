@@ -1895,30 +1895,7 @@ bool recharge_wand(int item_slot)
     int charge_gain = 0;
     if (wand.base_type == OBJ_WANDS)
     {
-        switch (wand.sub_type)
-        {
-        case WAND_INVISIBILITY:
-        case WAND_FIREBALL:
-        case WAND_TELEPORTATION:
-        case WAND_HEALING:
-        case WAND_HASTING:
-            charge_gain = 3;
-            break;
-
-        case WAND_LIGHTNING:
-        case WAND_DRAINING:
-            charge_gain = 4;
-            break;
-
-        case WAND_FIRE:
-        case WAND_COLD:
-            charge_gain = 5;
-            break;
-
-        default:
-            charge_gain = 8;
-            break;
-        }
+        charge_gain = wand_charge_value(wand.sub_type);
 
         // Reinitialize zap counts.
         wand.plus2 = ZAPCOUNT_RECHARGED;
@@ -1930,7 +1907,7 @@ bool recharge_wand(int item_slot)
                          wand.plus +
                          1 + random2avg( ((charge_gain - 1) * 3) + 1, 3 )));
 
-        const bool charged = new_charges > wand.plus;
+        const bool charged = (new_charges > wand.plus);
 
         std::string desc;
         if (charged && item_ident(wand, ISFLAG_KNOW_PLUSES))

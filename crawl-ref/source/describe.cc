@@ -1878,8 +1878,23 @@ std::string get_item_description( const item_def &item, bool verbose,
         break;
 
     case OBJ_WANDS:
-        if (item_ident( item, ISFLAG_KNOW_PLUSES ) && item.plus == 0)
-            description << "Unfortunately, it has no charges left.";
+        if (item_type_known(item))
+        {
+            const int max_charges = 3 * wand_charge_value(item.sub_type);
+            if (item.plus < max_charges)
+            {
+                description << "$It can have at most " << max_charges
+                            << " charges.";
+            }
+            else
+                description << "$It is fully charged.";
+        }
+
+        if (item_ident( item, ISFLAG_KNOW_PLUSES ) && item.plus == 0
+            || item.plus2 == ZAPCOUNT_EMPTY)
+        {
+            description << "$Unfortunately, it has no charges left.";
+        }
         description << "$";
         break;
 
