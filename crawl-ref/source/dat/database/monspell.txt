@@ -37,13 +37,13 @@ You hear @something@ calling out to the dead.
 %%%%
 Animate Dead cast real
 
-@The_monster@ gestures at the surounding area while chanting.
+@The_monster@ gestures at the surrounding area while chanting.
 
 @The_monster@ throws @possessive@ @arms@ wide while chanting.
 %%%%
 Animate Dead cast gestures
 
-@The_monster@ gestures at the surounding.
+@The_monster@ gestures at the surrounding area.
 
 @The_monster@ throws @possessive@ @arms@ wide.
 %%%%
