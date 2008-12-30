@@ -1866,6 +1866,7 @@ void bolt::fire()
         bolt boltcopy = *this;
         do_fire();
 
+        // FIXME: we should have a better idea of what gets changed!
         target = boltcopy.target;
         source = boltcopy.source;
         aimed_at_spot = boltcopy.aimed_at_spot;
@@ -1876,6 +1877,9 @@ void bolt::fire()
         reflector = boltcopy.reflector;
         auto_hit = boltcopy.auto_hit;
         ray = boltcopy.ray;
+        colour = boltcopy.colour;
+        flavour = boltcopy.flavour;
+        real_flavour = boltcopy.real_flavour;
     }
     else
         do_fire();
