@@ -3562,7 +3562,7 @@ void zap_wand(int slot)
     wand.plus--;
 
     // Zap counts count from the last recharge.
-    if (wand.plus2 == ZAPCOUNT_RECHARGED)
+    if (wand.plus2 == ZAPCOUNT_MAX_CHARGED || wand.plus2 == ZAPCOUNT_RECHARGED)
         wand.plus2 = 0;
     // Increment zap count.
     if (wand.plus2 >= 0)
@@ -4391,6 +4391,7 @@ void read_scroll(int slot)
     // It is the exception, not the rule, that the scroll will not
     // be identified. {dlb}
     bool id_the_scroll = true;  // to prevent unnecessary repetition
+    bool tried_on_item = false; // used to modify item (?EA, ?RC, ?ID)
 
     switch (which_scroll)
     {
@@ -4545,27 +4546,39 @@ void read_scroll(int slot)
 
     case SCR_VORPALISE_WEAPON:
         id_the_scroll = _vorpalise_weapon();
-        if ( !id_the_scroll )
+        if (!id_the_scroll)
             canned_msg(MSG_NOTHING_HAPPENS);
         break;
 
     case SCR_IDENTIFY:
         if (!item_type_known(scroll))
+        {
             id_the_scroll = _scroll_modify_item(scroll);
+            if (!id_the_scroll)
+                tried_on_item = true;
+        }
         else
             identify(-1);
         break;
 
     case SCR_RECHARGING:
         if (!item_type_known(scroll))
+        {
             id_the_scroll = _scroll_modify_item(scroll);
+            if (!id_the_scroll)
+                tried_on_item = true;
+        }
         else
             recharge_wand(-1);
         break;
 
     case SCR_ENCHANT_ARMOUR:
         if (!item_type_known(scroll))
+        {
             id_the_scroll = _scroll_modify_item(scroll);
+            if (!id_the_scroll)
+                tried_on_item = true;
+        }
         else
             _handle_enchant_armour(-1);
         break;
@@ -4633,8 +4646,9 @@ void read_scroll(int slot)
         break;
     }
 
-    set_ident_type(scroll,
-                   (id_the_scroll) ? ID_KNOWN_TYPE : ID_TRIED_TYPE);
+    set_ident_type(scroll, id_the_scroll ? ID_KNOWN_TYPE :
+                           tried_on_item ? ID_TRIED_ITEM_TYPE
+                                         : ID_TRIED_TYPE);
 
     // Finally, destroy and identify the scroll.
     // Scrolls of immolation were already destroyed earlier.

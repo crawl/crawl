@@ -846,7 +846,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (item_is_rechargeable(i, true));
 
     case OSEL_ENCH_ARM:
-        return (is_enchantable_armour(i, true));
+        return (is_enchantable_armour(i, true, true));
 
     case OSEL_VAMP_EAT:
         return (itype == OBJ_CORPSES && i.sub_type == CORPSE_BODY

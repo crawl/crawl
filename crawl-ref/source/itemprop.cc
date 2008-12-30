@@ -1324,12 +1324,30 @@ bool check_armour_shape( const item_def &item, bool quiet )
     return (true);
 }
 
-// If known is true, only returns true for *known* weapons of electrocution.
+// If known is true, only returns true for *known* weapons of electrocution,
+// and returns false for wands/rods known to be fully charged.
 bool item_is_rechargeable(const item_def &it, bool known)
 {
     // These are obvious...
-    if (it.base_type == OBJ_WANDS || item_is_rod(it))
+    if (it.base_type == OBJ_WANDS)
+    {
+        if (known && (it.plus == ZAPCOUNT_MAX_CHARGED
+                      || item_ident(it, ISFLAG_KNOW_PLUSES)
+                         && it.plus < 3 * wand_charge_value(it.sub_type)))
+        {
+            return (false);
+        }
         return (true);
+    }
+    else if (item_is_rod(it))
+    {
+        if (known && item_ident(it, ISFLAG_KNOW_PLUSES))
+        {
+            return (it.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT
+                    || it.plus < it.plus2);
+        }
+        return (true);
+    }
 
     // ...but electric weapons can also be charged.
     return (it.base_type == OBJ_WEAPONS
@@ -1388,7 +1406,9 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse)
     return (true);
 }
 
-bool is_enchantable_armour(const item_def &arm, bool uncurse)
+// Returns whether a piece of armour can be enchanted further.
+// If unknown is true, unidentified armour will return true.
+bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
 {
     if (arm.base_type != OBJ_ARMOUR)
         return (false);
@@ -1396,6 +1416,13 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse)
     // Melded armour cannot be enchanted.
     if (!you_tran_can_wear(arm) && item_is_equipped(arm))
         return (false);
+
+    // If we don't know the plusses, assume enchanting is possible.
+    if (unknown && !is_known_artefact(arm)
+        && !item_ident(arm, ISFLAG_KNOW_PLUSES ))
+    {
+        return (true);
+    }
 
     // Artefacts or highly enchanted armour cannot be enchanted, only
     // uncursed.

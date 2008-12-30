@@ -1116,7 +1116,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         }
     }
 
-    if (!is_artefact(item))
+    if (!is_known_artefact(item))
     {
         if (item_ident( item, ISFLAG_KNOW_PLUSES )
             && item.plus >= MAX_WPN_ENCHANT && item.plus2 >= MAX_WPN_ENCHANT)
@@ -1440,7 +1440,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         }
     }
 
-    if (!is_artefact(item))
+    if (!is_known_artefact(item))
     {
         const int max_ench = armour_max_enchant(item);
         if (item.plus < max_ench || !item_ident( item, ISFLAG_KNOW_PLUSES ))
@@ -1724,7 +1724,7 @@ bool is_dumpable_artefact( const item_def &item, bool verbose)
 {
     bool ret = false;
 
-    if (is_artefact( item ) )
+    if (is_known_artefact( item ))
     {
         ret = item_ident( item, ISFLAG_KNOW_PROPERTIES );
     }
@@ -1820,7 +1820,7 @@ std::string get_item_description( const item_def &item, bool verbose,
         {
             std::string db_name = item.name(DESC_DBNAME, true, false, false);
             std::string db_desc = getLongDescription(db_name);
-            if (!noquote && !is_artefact(item))
+            if (!noquote && !is_known_artefact(item))
             {
                 const unsigned int lineWidth = get_number_of_cols();
                 const          int height    = get_number_of_lines();
@@ -2004,23 +2004,32 @@ std::string get_item_description( const item_def &item, bool verbose,
         break;
 
     case OBJ_STAVES:
-        if (item_type_known(item))
+        if (item_is_rod( item ))
         {
-            if (item_is_rod( item ))
+            description <<
+                "$It uses its own mana reservoir for casting spells, and "
+                "recharges automatically by channeling mana from its "
+                "wielder.";
+
+            const int max_charges = MAX_ROD_CHARGE * ROD_CHARGE_MULT;
+            if (item_ident(item, ISFLAG_KNOW_PLUSES)
+                && item.plus2 >= max_charges && item.plus >= item.plus2)
             {
-                description <<
-                    "$It uses its own mana reservoir for casting spells, and "
-                    "recharges automatically by channeling mana from its "
-                    "wielder.";
+                description << "$It is fully charged.";
             }
             else
             {
-                description <<
-                    "$Damage rating: 7    Accuracy rating: +6    "
-                    "Attack delay: 120%";
-
-                description << "$$It falls into the 'staves' category.";
+                description << "$It can have at most " << max_charges
+                            << " charges.";
             }
+        }
+        else
+        {
+            description <<
+                "$Damage rating: 7    Accuracy rating: +6    "
+                "Attack delay: 120%";
+
+            description << "$$It falls into the 'staves' category.";
         }
         break;
 

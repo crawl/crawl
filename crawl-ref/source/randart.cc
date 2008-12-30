@@ -324,6 +324,14 @@ bool does_unrandart_exist(int whun)
     return (unrandart_exist[whun]);
 }
 
+bool is_known_artefact( const item_def &item )
+{
+    if (!item_type_known(item))
+        return (false);
+
+    return (is_artefact(item));
+}
+
 bool is_artefact( const item_def &item )
 {
     return (is_random_artefact(item) || is_fixed_artefact(item));

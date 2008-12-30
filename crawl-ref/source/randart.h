@@ -20,6 +20,7 @@
 #define RANDART_SEED_MASK  0x00ffffff
 
 
+bool is_known_artefact( const item_def &item );
 bool is_artefact( const item_def &item );
 bool is_random_artefact( const item_def &item );
 bool is_unrandom_artefact( const item_def &item );

@@ -250,6 +250,8 @@ std::string item_def::name(description_level_type descrip,
 
             if (id_type == ID_MON_TRIED_TYPE)
                 tried_str = "tried by monster";
+            else if (id_type == ID_TRIED_ITEM_TYPE)
+                tried_str = "tried on item";
             else
                 tried_str = "tried";
         }
@@ -1247,6 +1249,8 @@ std::string item_def::name_aux( description_level_type desc,
         {
             if (item_plus2 == ZAPCOUNT_EMPTY)
                 buff << " {empty}";
+            else if (item_plus2 == ZAPCOUNT_MAX_CHARGED)
+                buff << " {fully recharged}";
             else if (item_plus2 == ZAPCOUNT_RECHARGED)
                 buff << " {recharged}";
             else if (item_plus2 > 0)
@@ -1704,8 +1708,9 @@ bool item_type_tried( const item_def& item )
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
     if (idt != NUM_IDTYPE && item.sub_type < 50)
     {
-        return ( type_ids[idt][item.sub_type] == ID_TRIED_TYPE
-                 || type_ids[idt][item.sub_type] == ID_MON_TRIED_TYPE);
+        return (type_ids[idt][item.sub_type] == ID_TRIED_TYPE
+                || type_ids[idt][item.sub_type] == ID_MON_TRIED_TYPE
+                || type_ids[idt][item.sub_type] == ID_TRIED_ITEM_TYPE);
     }
     else
         return (false);

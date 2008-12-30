@@ -567,7 +567,8 @@ enum zap_count_type
 {
     ZAPCOUNT_EMPTY = -1,
     ZAPCOUNT_UNKNOWN = -2,
-    ZAPCOUNT_RECHARGED = -3
+    ZAPCOUNT_RECHARGED = -3,
+    ZAPCOUNT_MAX_CHARGED = -4
 };
 
 void init_properties(void);
@@ -637,7 +638,8 @@ bool  check_armour_shape( const item_def &item, bool quiet );
 bool item_is_rechargeable(const item_def &it, bool known = false);
 int wand_charge_value(int type);
 bool is_enchantable_weapon(const item_def &wpn, bool uncurse);
-bool is_enchantable_armour(const item_def &arm, bool uncurse);
+bool is_enchantable_armour(const item_def &arm, bool uncurse,
+                           bool unknown = false);
 
 bool is_shield(const item_def &item);
 bool is_shield_incompatible(const item_def &weapon,

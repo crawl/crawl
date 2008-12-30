@@ -588,7 +588,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
         // If ATTR_WEAPON_SWAP_INTERRUPTED is set while a corpse is being
         // butchered/bottled/offered, then fake a weapon swap delay.
         if (_is_butcher_delay(delay)
-            && (safe || prompt && yesno(prompt_str, false)))
+            && (safe || prompt && yesno(prompt_str, true, 'n')))
         {
             start_delay(DELAY_WEAPON_SWAP, 1, weap);
             you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
@@ -601,7 +601,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
         if (!swap_if_safe)
             return;
     }
-    else if (!prompt || !yesno(prompt_str, false))
+    else if (!prompt || !yesno(prompt_str, true, 'n'))
     {
         return;
     }

@@ -1921,12 +1921,15 @@ bool recharge_wand(int item_slot)
              desc.c_str());
 
         wand.plus = new_charges;
+
+        if (!charged)
+            wand.plus2 = ZAPCOUNT_MAX_CHARGED;
     }
     else // It's a rod.
     {
         bool work = false;
 
-        if (wand.plus2 <= MAX_ROD_CHARGE * ROD_CHARGE_MULT)
+        if (wand.plus2 < MAX_ROD_CHARGE * ROD_CHARGE_MULT)
         {
             wand.plus2 += ROD_CHARGE_MULT;
 

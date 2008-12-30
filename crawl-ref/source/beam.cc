@@ -3490,7 +3490,8 @@ bool bolt::misses_player()
     return (false);
 }
 
-void bolt::affect_player_enchantment() {
+void bolt::affect_player_enchantment()
+{
     if ((has_saving_throw() || flavour == BEAM_POLYMORPH)
         && you_resist_magic(ench_power))
     {
@@ -4606,9 +4607,9 @@ bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
         break;
 
     case BEAM_SLEEP:
-        rc = !mon->has_ench(ENCH_SLEEP_WARY)     // slept recently
-            && mons_holiness(mon) == MH_NATURAL  // no unnatural
-            && mons_res_cold(mon) <= 0;          // can't be hibernated
+        rc = !mon->has_ench(ENCH_SLEEP_WARY)      // slept recently
+             && mons_holiness(mon) == MH_NATURAL  // no unnatural
+             && mons_res_cold(mon) <= 0;          // can't be hibernated
         break;
 
     default:
