@@ -4295,6 +4295,8 @@ static void _vulnerability_scroll()
                 mon.add_ench(lowered_mr);
 
             // Annoying but not enough to turn friendlies against you.
+            // XXX: This will turn allies of int >= I_NORMAL hostile.
+            //      Not intended?
             behaviour_event(&mon, ME_ANNOY, MHITYOU);
         }
     }

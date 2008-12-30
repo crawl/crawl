@@ -3239,6 +3239,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
 
 static monster_type _pick_unique(int lev)
 {
+    // Doesn't include Polyphemus who only appears in the Shoals.
     int which_unique =
         ((lev > 19) ? random_range(MONS_LOUISE, MONS_BORIS) :
          (lev > 16) ? random_range(MONS_ERICA, MONS_FRANCES) :
@@ -3395,13 +3396,17 @@ static void _place_aquatic_monsters(int level_number, char level_type)
             }
         }
 
-        if (level_number >= 9 && one_chance_in(4))
+        // Don't place sharks in the Swamp.
+        if (!player_in_branch(BRANCH_SWAMP)
+            && level_number >= 9 && one_chance_in(4))
+        {
             swimming_things[3] = MONS_SHARK;
+        }
 
         if (level_number >= 25 && one_chance_in(5))
             swimming_things[0] = MONS_WATER_ELEMENTAL;
 
-        if (player_in_branch( BRANCH_COCYTUS ))
+        if (player_in_branch(BRANCH_COCYTUS))
             swimming_things[3] = MONS_WATER_ELEMENTAL;
 
         _place_monster_vector(swimming_things, level_number,
