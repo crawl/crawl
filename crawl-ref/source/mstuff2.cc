@@ -708,8 +708,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
             monsters* mtarg = &menv[midx];
 
             if (you.can_see(mtarg))
-                target = mtarg->name(mons_friendly(mtarg) ? DESC_NOCAP_YOUR :
-                                                            DESC_NOCAP_THE);
+                target = mtarg->name(DESC_NOCAP_THE);
         }
     }
 
