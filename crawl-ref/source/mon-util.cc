@@ -3130,7 +3130,6 @@ static bool _mons_can_smite(const monsters *monster)
         if (hspell_pass[i] == SPELL_SYMBOL_OF_TORMENT
             || hspell_pass[i] == SPELL_SMITING
             || hspell_pass[i] == SPELL_HELLFIRE_BURST
-            || hspell_pass[i] == SPELL_ICE_STORM
             || hspell_pass[i] == SPELL_FIRE_STORM)
         {
             return (true);
