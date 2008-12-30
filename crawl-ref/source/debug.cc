@@ -2280,19 +2280,53 @@ static void _announce_level_prob(bool warned)
             vault_names.push_back(Level_Vaults[i].map.name);
 
         if (Level_Vaults.size() > 0)
-            mpr_comma_separated_list("Level_Vaults: ", vault_names);
+            mpr_comma_separated_list("Level_Vaults: ", vault_names,
+                                     " and ", ", ", MSGCH_WARN);
         vault_names.clear();
 
         for (unsigned int i = 0; i < Temp_Vaults.size(); i++)
             vault_names.push_back(Temp_Vaults[i].map.name);
 
         if (Temp_Vaults.size() > 0)
-            mpr_comma_separated_list("Temp_Vaults: ", vault_names);
+            mpr_comma_separated_list("Temp_Vaults: ", vault_names,
+                                     " and ", ", ", MSGCH_WARN);
     }
+}
+
+static bool _inside_vault(const vault_placement& place, const coord_def &pos)
+{
+    const coord_def delta = pos - place.pos;
+
+    return (delta.x >= 0 && delta.y >= 0
+            && delta.x < place.size.x && delta.y < place.size.y);
+}
+
+static std::vector<std::string> _in_vaults(const coord_def &pos)
+{
+    std::vector<std::string> out;
+
+    for (unsigned int i = 0; i < Level_Vaults.size(); i++)
+    {
+        const vault_placement &vault = Level_Vaults[i];
+        if (_inside_vault(vault, pos))
+            out.push_back(vault.map.name);
+    }
+
+    for (unsigned int i = 0; i < Temp_Vaults.size(); i++)
+    {
+        const vault_placement &vault = Temp_Vaults[i];
+        if (_inside_vault(vault, pos))
+            out.push_back(vault.map.name);
+    }
+
+    return (out);
 }
 
 void debug_mons_scan()
 {
+    std::vector<coord_def> bogus_pos;
+    std::vector<int>       bogus_idx;
+
     bool warned = false;
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
@@ -2300,9 +2334,14 @@ void debug_mons_scan()
             const int mons = mgrd[x][y];
             if (mons == NON_MONSTER)
                 continue;
+
             const monsters *m = &menv[mons];
-            if (m->pos() != coord_def(x, y))
+            const coord_def pos(x, y);
+            if (m->pos() != pos)
             {
+                bogus_pos.push_back(pos);
+                bogus_idx.push_back(mons);
+
                 _announce_level_prob(warned);
                 mprf(MSGCH_WARN,
                      "Bogosity: mgrd at (%d,%d) points at %s, "
@@ -2323,13 +2362,22 @@ void debug_mons_scan()
             }
         }
 
+    std::vector<int> floating_mons;
+    bool             is_floating[MAX_MONSTERS];
+
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
+        is_floating[i] = false;
+
         const monsters *m = &menv[i];
         if (!m->alive())
             continue;
+
         if (mgrd(m->pos()) != i)
         {
+            floating_mons.push_back(i);
+            is_floating[i] = true;
+
             _announce_level_prob(warned);
             mprf(MSGCH_WARN, "Floating monster: %s at (%d,%d)",
                  m->name(DESC_PLAIN, true).c_str(), m->pos().x, m->pos().y);
@@ -2360,12 +2408,85 @@ void debug_mons_scan()
         }
     }
 
-    if (warned && Generating_Level)
-        mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
+    // No problems?
+    if (!warned)
+        return;
 
-    // If there are warnings, force the dev to notice. :P
-    if (warned)
+    // If this wasn't the result of generating a level then there's nothing
+    // more to report.
+    if (!Generating_Level)
+    {
+        // Force the dev to notice problems. :P
         more();
+        return;
+    }
+
+    // No vaults to report on?
+    if (Level_Vaults.size() == 0 && Temp_Vaults.size() == 0)
+    {
+        mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
+        // Force the dev to notice problems. :P
+        more();
+        return;
+    }
+
+    mpr("");
+
+    for (unsigned int i = 0; i < floating_mons.size(); i++)
+    {
+        const int       idx = floating_mons[i];
+        const monsters* mon = &menv[idx];
+        std::vector<std::string> vaults = _in_vaults(mon->pos());
+
+        std::string str =
+            make_stringf("Floating monster %s (%d, %d)",
+                         mon->name(DESC_PLAIN, true).c_str(),
+                         mon->pos().x, mon->pos().y);
+
+        if (vaults.size() == 0)
+            mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
+        else
+            mpr_comma_separated_list(str + " in vault(s) ", vaults,
+                                     " and ", ", ", MSGCH_WARN);
+    }
+
+    mpr("");
+
+    for (unsigned int i = 0; i < bogus_pos.size(); i++)
+    {
+        const coord_def pos = bogus_pos[i];
+        const int       idx = bogus_idx[i];
+        const monsters* mon = &menv[idx];
+
+        std::string str =
+            make_stringf("Bogus mgrd (%d, %d) pointing to %s",
+                         pos.x, pos.y, mon->name(DESC_PLAIN, true).c_str());
+
+        std::vector<std::string> vaults = _in_vaults(pos);
+
+        if (vaults.size() == 0)
+            mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
+        else
+            mpr_comma_separated_list(str + " in vault(s) ", vaults,
+                                     " and ", ", ", MSGCH_WARN);
+
+        // Don't report on same monster twice.
+        if (is_floating[idx])
+            continue;
+
+        str    = "Monster pointed to";
+        vaults = _in_vaults(mon->pos());
+
+        if (vaults.size() == 0)
+            mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
+        else
+            mpr_comma_separated_list(str + " in vault(s) ", vaults,
+                                     " and ", ", ", MSGCH_WARN);
+    }
+
+    mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
+    // Force the dev to notice problems. :P
+    more();
 }
 #endif
 
