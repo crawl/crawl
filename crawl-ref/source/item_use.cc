@@ -4093,7 +4093,8 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
 
     // Even if not affected, it may be uncursed.
     if (!is_enchantable_armour(arm, false)
-        || arm.plus >= 3 && x_chance_in_y(arm.plus, 8))
+        || arm.plus > MAX_SEC_ENCHANT
+           && x_chance_in_y(arm.plus, MAX_ARM_ENCHANT))
     {
         if (is_cursed)
         {

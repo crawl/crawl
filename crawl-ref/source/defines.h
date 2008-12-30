@@ -200,7 +200,7 @@ const int LABYRINTH_BORDER = 4;
 #define MAX_WPN_ENCHANT                 9
 
 // Note: use armour_max_enchant(item) to get the correct limit for item
-#define MAX_ARM_ENCHANT                 5
+#define MAX_ARM_ENCHANT                 8
 #define MAX_SEC_ENCHANT                 2
 
 // some shortcuts:
