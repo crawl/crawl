@@ -4533,7 +4533,10 @@ static bool _mons_avoids_cloud(const monsters *monster, cloud_type cl_type)
 //---------------------------------------------------------------
 static void _handle_nearby_ability(monsters *monster)
 {
-    if (!mons_near(monster)
+    actor *foe = monster->get_foe();
+    if (!foe
+        || !mons_near(monster, monster->foe)
+        || !monster->can_see(foe)
         || mons_is_sleeping(monster)
         || mons_is_submerged(monster))
     {
@@ -4594,17 +4597,20 @@ static void _handle_nearby_ability(monsters *monster)
         break;
 
     case MONS_GIANT_EYEBALL:
-        if (coinflip() && !mons_friendly(monster)
+        if (coinflip()
             && !mons_is_wandering(monster)
             && !mons_is_fleeing(monster)
             && !mons_is_pacified(monster)
             && !_is_player_or_mon_sanct(monster))
         {
-            simple_monster_message(monster, " stares at you.");
+            if (you.can_see(monster) && you.can_see(foe))
+                mprf("%s stares at %s.",
+                     monster->name(DESC_CAP_THE).c_str(),
+                     foe->name(DESC_NOCAP_THE).c_str());
 
-            int &paralysis(you.duration[DUR_PARALYSIS]);
-            if (!paralysis || (paralysis < 10 && one_chance_in(1 + paralysis)))
-                paralysis += 2 + random2(3);
+            // Subtly different from old paralysis behaviour, but
+            // it'll do.
+            foe->paralyse(monster, 2 + random2(3));
         }
         break;
 

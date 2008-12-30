@@ -7085,7 +7085,7 @@ actor *monsters::get_foe() const
     if (foe == MHITNOT)
         return (NULL);
     else if (foe == MHITYOU)
-        return (&you);
+        return (mons_friendly(this)? NULL : &you);
 
     // Must be a monster!
     monsters *my_foe = &menv[foe];
