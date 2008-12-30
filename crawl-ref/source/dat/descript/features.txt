@@ -147,6 +147,10 @@ as to the quality or nature of their goods.
 %%%%
 A silver altar of Elyvilon
 %%%%
+A slime covered rock wall
+
+This rock wall has is thickly coated with bright green slime.  Ewwwwww.
+%%%%
 A sparkling altar of Nemelex Xobeh
 %%%%
 A staircase back to the Crypt

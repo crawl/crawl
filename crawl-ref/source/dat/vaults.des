@@ -235,6 +235,20 @@ SUBST:   * = * |:2
 #
 MONS: vault guard
 #
+{{
+  local detail = "is etched with murals depicting, in great and gruesome "..
+"detail, exactly what will be done to anyone caught stealing from the "..
+"Vaults.  It makes you feel queasy."
+
+  dgn.set_feature_desc_short("metal wall", "heavily etched metal wall")
+  dgn.set_feature_desc_long("metal wall", "This metal wall " .. detail)
+
+  dgn.set_feature_desc_short("wall of green crystal",
+                             "heavily etched wall of green crystal")
+  dgn.set_feature_desc_long("wall of green crystal",
+                            "This wall of green crystal " .. detail)
+}}
+#
 validate {{ return glyphs_connected('O', '{') }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -2565,6 +2565,19 @@ std::string raw_feature_description(dungeon_feature_type grid,
     if (base_desc)
         return (base_str);
 
+    if (you.level_type == LEVEL_DUNGEON)
+    {
+        switch(you.where_are_you)
+        {
+            case BRANCH_SLIME_PITS:
+                if (grid == DNGN_ROCK_WALL)
+                    base_str = "slime covered rock wall";
+                break;
+            default:
+                break;
+        }
+    }
+
     desc_map::iterator i = base_desc_to_short.find(base_str);
 
     if (i != base_desc_to_short.end())
