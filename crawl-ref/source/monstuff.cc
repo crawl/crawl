@@ -1282,7 +1282,7 @@ void monster_die(monsters *monster, killer_type killer,
                 && gives_xp)
             {
                 const int type = monster->type;
-                const int spectre_type = mons_species(type);
+                const monster_type spectre_type = mons_species(type);
                 const std::string name_plain = monster->name(DESC_PLAIN);
 
                 // Don't allow 0-headed hydras to become spectral hydras.
