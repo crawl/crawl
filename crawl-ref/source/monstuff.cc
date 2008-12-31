@@ -1747,6 +1747,9 @@ static bool _valid_morph( monsters *monster, int new_mclass )
         || new_mclass == MONS_PLAYER_GHOST
         || new_mclass == MONS_PANDEMONIUM_DEMON
 
+        // Only for use by game testers or in the arena.
+        || new_mclass == MONS_TEST_SPAWNER
+
         // Other poly-unsuitable things.
         || new_mclass == MONS_ORB_GUARDIAN
         || new_mclass == MONS_ORANGE_STATUE
@@ -5888,9 +5891,12 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 return (false);
             }
 
+            const bolt orig_beem = beem;
             // Up to four tries to pick a spell.
             for (int loopy = 0; loopy < 4; ++loopy)
             {
+                beem = orig_beem;
+
                 bool spellOK = false;
 
                 // Setup spell - monsters that are fleeing or pacified
@@ -6400,7 +6406,6 @@ static void _swim_or_move_energy(monsters *mon)
 static void _handle_monster_move(int i, monsters *monster)
 {
     bool brkk = false;
-    bolt beem;
     FixedArray <unsigned int, 19, 19> show;
 
     monster->hit_points = std::min(monster->max_hit_points,
@@ -6483,6 +6488,12 @@ static void _handle_monster_move(int i, monsters *monster)
         // The continues & breaks are WRT this.
         if (!monster->alive())
             break;
+
+        bolt beem;
+
+        beem.source      = monster->pos();
+        beem.target      = monster->target;
+        beem.beam_source = monster->mindex();
 
 #if DEBUG_MONS_SCAN
         if (!monster_was_floating
@@ -6744,8 +6755,6 @@ static void _handle_monster_move(int i, monsters *monster)
                 continue;
         }
         _handle_nearby_ability( monster );
-
-        beem.target = monster->target;
 
         if (!mons_is_sleeping(monster)
             && !mons_is_wandering(monster)
