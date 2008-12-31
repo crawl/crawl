@@ -58,10 +58,10 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           dungeon_char_type *stair_type,
                                           int *lev_mons);
 
-static void _define_zombie( int mid, monster_type ztype,
-                            monster_type cs, int power, coord_def pos );
+static void _define_zombie(int mid, monster_type ztype,
+                           monster_type cs, int power, coord_def pos);
 static monster_type _band_member(band_type band, int power);
-static band_type _choose_band(int mon_type, int power, int &band_size );
+static band_type _choose_band(int mon_type, int power, int &band_size);
 // static int _place_monster_aux(int mon_type, beh_type behaviour, int target,
 //                               int px, int py, int power, int extra,
 //                               bool first_band_member, int dur = 0);
@@ -265,7 +265,7 @@ void spawn_random_monsters()
 
         mgen_data mg(WANDERING_MONSTER);
         mg.proximity = prox;
-        mons_place( mg );
+        mons_place(mg);
         viewwindow(true, false);
         return;
     }
@@ -924,7 +924,7 @@ int place_monster(mgen_data mg, bool force_pos)
             break;
 
         band_template.cls = band_monsters[i];
-        const int band_id = _place_monster_aux( band_template, false );
+        const int band_id = _place_monster_aux(band_template, false);
         if (band_id != -1 && band_id != NON_MONSTER)
             menv[band_id].flags |= MF_BAND_MEMBER;
     }
@@ -933,8 +933,8 @@ int place_monster(mgen_data mg, bool force_pos)
     return (id);
 }
 
-static int _place_monster_aux( const mgen_data &mg,
-                               bool first_band_member, bool force_pos )
+static int _place_monster_aux(const mgen_data &mg,
+                              bool first_band_member, bool force_pos)
 {
     int id = -1;
     coord_def fpos;
@@ -994,7 +994,7 @@ static int _place_monster_aux( const mgen_data &mg,
 
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
-        _define_zombie( id, mg.base_type, mg.cls, mg.power, fpos );
+        _define_zombie(id, mg.base_type, mg.cls, mg.power, fpos);
     else
         define_monster(id);
 
@@ -1271,7 +1271,7 @@ static void _define_zombie( int mid, monster_type ztype,
             // Check for rarity.. and OOD - identical to mons_place()
             int level, diff, chance;
 
-            level = mons_level( cls ) - 4;
+            level = mons_level(cls) - 4;
             diff  = level - power;
 
             chance = (ignore_rarity) ? 100
@@ -1369,7 +1369,7 @@ static void _define_zombie( int mid, monster_type ztype,
     menv[mid].colour       = mons_class_colour(cs);
 }
 
-static band_type _choose_band( int mon_type, int power, int &band_size )
+static band_type _choose_band(int mon_type, int power, int &band_size)
 {
 #ifdef DEBUG_MON_CREATION
     mpr("in choose_band()", MSGCH_DIAGNOSTICS);
@@ -2036,7 +2036,7 @@ static monster_type _pick_zot_exit_defender()
     return static_cast<monster_type>(mon_type);
 }
 
-int mons_place( mgen_data mg )
+int mons_place(mgen_data mg)
     // int mon_type, beh_type behaviour, int target, bool summoned,
     //             int px, int py, int level_type, proximity_type proximity,
     //             int extra, int dur, bool permit_bands )
@@ -2350,7 +2350,7 @@ int create_monster(mgen_data mg, bool fail_msg)
 
     // Determine whether creating a monster is successful (summd != -1) {dlb}:
     // then handle the outcome. {dlb}:
-    if (fail_msg && summd == -1 && see_grid( mg.pos ))
+    if (fail_msg && summd == -1 && see_grid(mg.pos))
         mpr("You see a puff of smoke.");
 
     // The return value is either -1 (failure of some sort)
