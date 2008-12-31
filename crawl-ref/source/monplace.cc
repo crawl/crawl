@@ -2090,7 +2090,7 @@ int mons_place( mgen_data mg )
 
     monsters *creation = &menv[mid];
 
-    mons_make_god_gift(creation, mg.god);
+    creation->god = mg.god;
 
     // Look at special cases: CHARMED, FRIENDLY, NEUTRAL, GOOD_NEUTRAL,
     // HOSTILE.
