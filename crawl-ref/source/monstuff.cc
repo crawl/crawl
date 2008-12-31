@@ -1281,9 +1281,7 @@ void monster_die(monsters *monster, killer_type killer,
                 && mons_can_be_zombified(monster)
                 && gives_xp)
             {
-                const int type = monster->type;
-                const monster_type spectre_type = mons_species(type);
-                const std::string name_plain = monster->name(DESC_PLAIN);
+                const monster_type spectre_type = mons_species(monster->type);
 
                 // Don't allow 0-headed hydras to become spectral hydras.
                 if (spectre_type != MONS_HYDRA || monster->number != 0)
@@ -1300,14 +1298,14 @@ void monster_die(monsters *monster, killer_type killer,
                         if (death_message)
                             mpr("A glowing mist starts to gather...");
 
-                        if (mons_is_unique(type))
+                        if (mons_is_unique(monster->type))
                         {
-                            menv[spectre].mname = name_plain;
+                            menv[spectre].mname = monster->name(DESC_PLAIN);
 
                             // Special case for Blork the orc: shorten
                             // his name to "Blork" to avoid mentions of
                             // "Blork the orc the spectral orc".
-                            if (type == MONS_BLORK_THE_ORC)
+                            if (monster->type == MONS_BLORK_THE_ORC)
                                 menv[spectre].mname = "Blork";
                         }
                     }
