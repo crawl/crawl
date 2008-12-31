@@ -51,6 +51,7 @@
 #include "spells4.h"
 #include "spl-mis.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "transfor.h"
 #include "traps.h"
@@ -369,9 +370,10 @@ void melee_attack::init_attack()
         defender_shield = defender->shield();
 
     water_attack       = is_water_attack(attacker, defender);
-    attacker_visible   = attacker->visible();
+    attacker_visible   = attacker->visible() || crawl_state.arena;
     attacker_invisible = (!attacker_visible && see_grid(attacker->pos()));
-    defender_visible   = (defender && defender->visible());
+    defender_visible   = (defender &&
+                          (defender->visible() || crawl_state.arena));
     defender_invisible = (!defender_visible && defender
                           && see_grid(defender->pos()));
     needs_message      = (attacker_visible || defender_visible);

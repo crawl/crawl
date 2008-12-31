@@ -23,6 +23,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "religion.h"
+#include "state.h"
 #include "stuff.h"
 #include "spells4.h"
 #include "terrain.h"
@@ -226,6 +227,9 @@ static void _hell_spawn_random_monsters()
 // one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
 void spawn_random_monsters()
 {
+    if (crawl_state.arena)
+        return;
+
 #ifdef DEBUG_MON_CREATION
     mpr("in spawn_random_monsters()", MSGCH_DIAGNOSTICS);
 #endif

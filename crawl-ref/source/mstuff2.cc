@@ -166,10 +166,6 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     // Targeted spells need a valid target.
     ASSERT(!(flags & SPFLAG_TARGETING_MASK) || in_bounds(pbolt.target));
-
-    // Don't target harmful spells at self unless confused.
-    ASSERT(monster->pos() != pbolt.target || monster->confused()
-           || (flags & (SPFLAG_HELPFUL | SPFLAG_ESCAPE | SPFLAG_RECOVERY)));
 #endif
 
     if (do_noise)

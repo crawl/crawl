@@ -2919,6 +2919,9 @@ void forget_map(unsigned char chance_forgotten, bool force)
 void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
                unsigned int* actual_avail_gain)
 {
+    if (crawl_state.arena)
+        return;
+
     if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
         exp_gained = div_rand_round( exp_gained, 4 );
 
@@ -6941,6 +6944,9 @@ bool player::visible_to(const actor *looker) const
 
 bool player::can_see(const actor *target) const
 {
+    if (crawl_state.arena)
+        return target->visible_to(this);
+
     if (this == target)
         return visible_to(target);
 

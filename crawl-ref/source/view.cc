@@ -202,6 +202,8 @@ void set_envmap_col( int x, int y, int colour )
 
 bool is_sanctuary(const coord_def& p)
 {
+    if (!map_bounds(p))
+        return (false);
     return (testbits(env.map(p).property, FPROP_SANCTUARY_1)
             || testbits(env.map(p).property, FPROP_SANCTUARY_2));
 }
@@ -1183,7 +1185,7 @@ void force_monster_shout(monsters* monster)
 
 inline static bool _update_monster_grid(const monsters *monster)
 {
-    const coord_def e = monster->pos() - you.pos() + coord_def(9,9);
+    const coord_def e = monster->pos() - crawl_view.glosc() + coord_def(9,9);
 
     if (!player_monster_visible( monster ))
     {
@@ -1476,11 +1478,13 @@ inline static void _update_item_grid(const coord_def &gp, const coord_def &ep)
 
 void item_grid()
 {
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, true, false); ri; ++ri)
+    const coord_def c(crawl_view.glosc());
+    for (radius_iterator ri(c, LOS_RADIUS, true, false);
+         ri; ++ri)
     {
         if (igrd(*ri) != NON_ITEM)
         {
-            const coord_def ep = *ri - you.pos() + coord_def(9, 9);
+            const coord_def ep = *ri - c + coord_def(9, 9);
             if (env.show(ep))
                 _update_item_grid(*ri, ep);
         }
@@ -1505,7 +1509,8 @@ void get_mons_glyph( const monsters *mons, unsigned *glych,
 inline static void _update_cloud_grid(int cloudno)
 {
     int which_colour = LIGHTGREY;
-    const coord_def e = env.cloud[cloudno].pos - you.pos() + coord_def(9,9);
+    const coord_def e = env.cloud[cloudno].pos - crawl_view.glosc()
+        + coord_def(9,9);
 
     switch (env.cloud[cloudno].type)
     {
@@ -2813,6 +2818,18 @@ void losight(env_show_grid &sh,
     // clear out sh
     sh.init(0);
 
+    if (crawl_state.arena)
+    {
+        for (int y = -ENV_SHOW_OFFSET; y <= ENV_SHOW_OFFSET; ++y)
+            for (int x = -ENV_SHOW_OFFSET; x <= ENV_SHOW_OFFSET; ++x)
+            {
+                const coord_def pos = center + coord_def(x, y);
+                if (map_bounds(pos))
+                    sh[x + sh_xo][y + sh_yo] = gr(pos);
+            }
+        return;
+    }
+
     const unsigned int num_cellrays = compressed_ray_x.size();
     const unsigned int num_words = (num_cellrays + LONGSIZE - 1) / LONGSIZE;
 
@@ -3912,6 +3929,9 @@ bool mons_near(const monsters *monster, unsigned short foe)
 
     if (foe == MHITYOU)
     {
+        if (crawl_state.arena)
+            return (true);
+
         if ( grid_distance(monster->pos(), you.pos()) <= LOS_RADIUS )
         {
             const coord_def diff = monster->pos() - you.pos() + coord_def(9,9);
@@ -3971,7 +3991,8 @@ bool see_grid( const env_show_grid &show,
 // Answers the question: "Is a grid within character's line of sight?"
 bool see_grid( const coord_def &p )
 {
-    return see_grid(env.show, you.pos(), p);
+    return (crawl_state.arena && crawl_view.in_grid_los(p))
+        || see_grid(env.show, you.pos(), p);
 }
 
 // Answers the question: "Would a grid be within character's line of sight,
@@ -4932,8 +4953,11 @@ static void _update_env_show(const coord_def &gp, const coord_def &ep)
         _update_item_grid(gp, ep);
 
     const int cloud = env.cgrid(gp);
-    if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE)
+    if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
+        && env.cloud[cloud].pos == gp)
+    {
         _update_cloud_grid(cloud);
+    }
 
     const monsters *mons = monster_at(gp);
     if (mons && mons->alive())
@@ -5064,11 +5088,14 @@ void viewwindow(bool draw_it, bool do_updates)
 
     int count_x, count_y;
 
-    losight( env.show, grd, you.pos() ); // Must be done first.
+    if (map_bounds(you.pos()))
+    {
+        losight( env.show, grd, you.pos() ); // Must be done first.
 
-    // What would be visible, if all of the translucent walls were
-    // made opaque.
-    losight( env.no_trans_show, grd, you.pos(), true );
+        // What would be visible, if all of the translucent walls were
+        // made opaque.
+        losight( env.no_trans_show, grd, you.pos(), true );
+    }
 
 #ifdef USE_TILE
     tile_draw_floor();
@@ -5180,7 +5207,7 @@ void viewwindow(bool draw_it, bool do_updates)
                     tileb[bufcount + 1] = bg | tile_unseen_flag(gc);
 #endif
                 }
-                else if (gc == you.pos())
+                else if (gc == you.pos() && !crawl_state.arena)
                 {
                     int             object = env.show(ep);
                     unsigned short  colour = env.show_col(ep);

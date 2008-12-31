@@ -324,6 +324,8 @@ void write_level_connectivity(writer &th);
 
 bool builder(int level_number, int level_type);
 
+coord_def dgn_find_feature_marker(dungeon_feature_type feat);
+
 // Set floor/wall colour based on the mons_alloc array. Used for
 // Abyss and Pan.
 void dgn_set_colours_from_monsters();
@@ -344,10 +346,10 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest);
 
 class mons_spec;
-bool dgn_place_monster(mons_spec &mspec,
-                       int monster_level, const coord_def& where,
-                       bool force_pos = false, bool generate_awake = false,
-                       bool patrolling = false);
+int dgn_place_monster(mons_spec &mspec,
+                      int monster_level, const coord_def& where,
+                      bool force_pos = false, bool generate_awake = false,
+                      bool patrolling = false);
 
 class item_list;
 void dgn_place_multiple_items(item_list &list,
@@ -359,6 +361,8 @@ bool unset_level_flags(unsigned long flags, bool silent = false);
 
 void dgn_set_lt_callback(std::string level_type_name,
                          std::string callback_name);
+
+void dgn_reset_level();
 
 // Returns true if the given square is okay for use by any character,
 // but always false for squares in non-transparent vaults. This

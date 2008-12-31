@@ -46,6 +46,7 @@
 #include "shopping.h" // for item values
 #include "spells3.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "tiles.h"
@@ -1972,15 +1973,14 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     // (Uniques don't get this, because their names are proper nouns.)
     if (!mons_is_unique(mon.type))
     {
+        const bool use_your = !crawl_state.arena && mons_friendly(&mon);
         switch (desc)
         {
         case DESC_CAP_THE:
-            result = (mons_friendly(&mon) ? "Your "
-                                          : "The ");
+            result = (use_your ? "Your " : "The ");
             break;
         case DESC_NOCAP_THE:
-            result = (mons_friendly(&mon) ? "your "
-                                          : "the ");
+            result = (use_your ? "your " : "the ");
             break;
         case DESC_CAP_A:
             result = "A ";
@@ -7870,7 +7870,9 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@the_monster@",   name);
         msg = replace_all(msg, "@The_monster@",   name);
     }
-    else if (monster->attitude == ATT_FRIENDLY && !mons_is_unique(monster->type)
+    else if (monster->attitude == ATT_FRIENDLY
+             && !mons_is_unique(monster->type)
+             && !crawl_state.arena
              && player_monster_visible(monster))
     {
         nocap = DESC_PLAIN;

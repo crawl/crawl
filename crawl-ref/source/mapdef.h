@@ -417,7 +417,9 @@ class mons_spec
     int  mid;
     level_id place;
     monster_type monbase;     // Base monster for zombies and dracs.
+    mon_attitude_type attitude;
     int  number;              // Head count for hydras
+    int  quantity;            // Number of monsters (usually 1).
     int  genweight, mlevel;
     bool fix_mons;
     bool generate_awake;
@@ -432,9 +434,10 @@ class mons_spec
               int num = 0,
               int gw = 10, int ml = 0,
               bool _fixmons = false, bool awaken = false, bool patrol = false)
-        : mid(id), place(), monbase(base), number(num), genweight(gw),
-          mlevel(ml), fix_mons(_fixmons), generate_awake(awaken),
-          patrolling(false), band(false), colour(BLACK), items()
+        : mid(id), place(), monbase(base), attitude(ATT_HOSTILE), number(num),
+          quantity(1), genweight(gw), mlevel(ml), fix_mons(_fixmons),
+          generate_awake(awaken), patrolling(false), band(false),
+          colour(BLACK), items()
     {
     }
 };

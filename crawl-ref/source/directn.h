@@ -74,6 +74,11 @@ public:
         return viewp + viewhalfsz;
     }
 
+    coord_def glosc() const
+    {
+        return (glos1 + glos2) / 2;
+    }
+
     bool in_grid_los(const coord_def &c) const
     {
         return (c.x >= glos1.x && c.x <= glos2.x

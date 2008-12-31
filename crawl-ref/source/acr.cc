@@ -43,6 +43,7 @@
 
 #include "abl-show.h"
 #include "abyss.h"
+#include "arena.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cio.h"
@@ -135,6 +136,8 @@ char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
 
 int stealth;                    // externed in view.cc
 
+void world_reacts();
+
 static key_recorder repeat_again_rec;
 
 // Clockwise, around the compass from north (same order as enum RUN_DIR)
@@ -160,7 +163,6 @@ static void _close_door(coord_def move);
 static void _start_running( int dir, int mode );
 
 static void _prep_input();
-static void _world_reacts();
 static command_type _get_next_cmd();
 static keycode_type _get_next_keycode();
 static command_type _keycode_to_command( keycode_type key );
@@ -1527,7 +1529,7 @@ static void _input()
         crawl_state.cancel_cmd_repeat("Cannot move, cancelling command "
                                       "repetition.");
 
-        _world_reacts();
+        world_reacts();
         return;
     }
 
@@ -1547,13 +1549,13 @@ static void _input()
     if (you_are_delayed() && current_delay_action() != DELAY_MACRO_PROCESS_KEY)
     {
         if (you.time_taken)
-            _world_reacts();
+            world_reacts();
         return;
     }
 
     if (you.turn_is_over)
     {
-        _world_reacts();
+        world_reacts();
         return;
     }
 
@@ -1622,7 +1624,7 @@ static void _input()
         if (apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
 
-        _world_reacts();
+        world_reacts();
     }
     else
         viewwindow(true, false);
@@ -3049,7 +3051,7 @@ static void _check_sanctuary()
     decrease_sanctuary_radius();
 }
 
-static void _world_reacts()
+void world_reacts()
 {
     crawl_state.clear_god_acting();
 
@@ -3080,7 +3082,8 @@ static void _world_reacts()
         search_around(false); // Check nonadjacent squares too.
     }
 
-    stealth = check_stealth();
+    if (!crawl_state.arena)
+        stealth = check_stealth();
 
 #ifdef DEBUG_STEALTH
     // Too annoying for regular diagnostics.
@@ -3090,7 +3093,7 @@ static void _world_reacts()
     if (you.special_wield != SPWLD_NONE)
         special_wielded();
 
-    if (one_chance_in(10))
+    if (!crawl_state.arena && one_chance_in(10))
     {
         // this is instantaneous
         if (player_teleport() > 0 && one_chance_in(100 / player_teleport()))
@@ -3099,7 +3102,7 @@ static void _world_reacts()
             you_teleport_now( false, true ); // to new area of the Abyss
     }
 
-    if (env.cgrid(you.pos()) != EMPTY_CLOUD)
+    if (!crawl_state.arena && env.cgrid(you.pos()) != EMPTY_CLOUD)
         in_a_cloud();
 
     if (you.level_type == LEVEL_DUNGEON && you.duration[DUR_TELEPATHY])
@@ -3149,7 +3152,7 @@ static void _world_reacts()
 
     viewwindow(true, true);
 
-    if (Options.stash_tracking)
+    if (Options.stash_tracking && !crawl_state.arena)
     {
         StashTrack.update_visible_stashes(
             Options.stash_tracking == STM_ALL ? StashTracker::ST_AGGRESSIVE
@@ -3871,6 +3874,12 @@ static bool _initialise(void)
         end(0, false);
     }
 #endif
+
+    if (crawl_state.arena)
+    {
+        run_arena();
+        end(0, false);
+    }
 
     // Sets up a new game.
     const bool newc = new_game();

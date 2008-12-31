@@ -36,6 +36,7 @@
 #include "religion.h"
 #include "spells2.h"
 #include "spells4.h"
+#include "state.h"
 #include "stuff.h"
 #include "view.h"
 
@@ -266,7 +267,7 @@ bool mons_speaks(const monsters *monster)
 
         prefixes.push_back("neutral");
     }
-    else if (mons_friendly(monster))
+    else if (mons_friendly(monster) && !crawl_state.arena)
         prefixes.push_back("friendly");
     else
         prefixes.push_back("hostile");

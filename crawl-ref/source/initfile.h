@@ -74,6 +74,8 @@ public:
 
     int map_gen_iters;
 
+    std::string arena_teams;
+
 public:
     void add_rcdir(const std::string &dir);
 };

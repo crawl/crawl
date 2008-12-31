@@ -710,6 +710,8 @@ void game_options::reset_options()
     travel_delay           = 20;
     travel_stair_cost      = 500;
 
+    arena_delay            = 600;
+
     // Sort only pickup menus by default.
     sort_menus.clear();
     set_menu_sort("pickup: true");
@@ -3280,6 +3282,7 @@ enum commandline_option_type {
     CLO_MORGUE,
     CLO_MACRO,
     CLO_MAPSTAT,
+    CLO_ARENA,
 
     CLO_NOPS
 };
@@ -3287,7 +3290,7 @@ enum commandline_option_type {
 static const char *cmd_ops[] = {
     "scores", "name", "race", "class", "pizza", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
-    "mapstat"
+    "mapstat", "arena"
 };
 
 const int num_cmd_ops = CLO_NOPS;
@@ -3419,6 +3422,15 @@ bool parse_args( int argc, char **argv, bool rc_only )
             }
             else
                 SysEnv.map_gen_iters = 100;
+            break;
+
+        case CLO_ARENA:
+            crawl_state.arena = true;
+            if (next_is_param)
+            {
+                SysEnv.arena_teams = next_arg;
+                nextUsed = true;
+            }
             break;
 
         case CLO_MACRO:

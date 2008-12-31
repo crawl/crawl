@@ -1,0 +1,26 @@
+NAME: arena_level
+TAGS: arena_level no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = .
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X...............X
+X.......B.......X
+X...............X
+X...............X
+X...............X
+X...............X
+X...............X
+X.......O.......X
+X...............X
+X...............X
+X...............X
+X...............X
+X...............X
+X.......A.......X
+X...............X
+XXXXXXXXXXXXXXXXX
+ENDMAP

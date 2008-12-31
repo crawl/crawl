@@ -1500,6 +1500,9 @@ void get_monster_pane_info(std::vector<monster_pane_info>& mons)
 // they have to be consolidated, and 1 otherwise.
 int update_monster_pane()
 {
+    if (!map_bounds(you.pos()))
+        return (-1);
+
     const int max_print = crawl_view.mlistsz.y;
     textbackground(BLACK);
 

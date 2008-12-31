@@ -86,7 +86,6 @@ coord_def spec_room::random_spot() const
 
 // DUNGEON BUILDERS
 static void _build_dungeon_level(int level_number, int level_type);
-static void _reset_level();
 static bool _valid_dungeon_level(int level_number, int level_type);
 
 static bool _find_in_area(int sx, int sy, int ex, int ey,
@@ -296,7 +295,7 @@ bool builder(int level_number, int level_type)
         mapgen_report_map_build_start();
 #endif
 
-        _reset_level();
+        dgn_reset_level();
 
         // If we're getting low on available retries, disable random vaults
         // and minivaults (special levels will still be placed).
@@ -885,7 +884,7 @@ static bool _valid_dungeon_level(int level_number, int level_type)
     return (true);
 }
 
-static void _reset_level()
+void dgn_reset_level()
 {
     dgn_level_vetoed = false;
     Level_Unique_Maps.clear();
@@ -4218,7 +4217,7 @@ bool dgn_place_map(const map_def *mdef, bool clobber, bool make_no_exits,
         {
             // For encompass maps, clear the entire level.
             unwind_bool levgen(Generating_Level, true);
-            _reset_level();
+            dgn_reset_level();
             dungeon_events.clear();
             const bool res = dgn_place_map(mdef, clobber, make_no_exits,
                                            where);
@@ -4629,9 +4628,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 }
 
 
-bool dgn_place_monster(mons_spec &mspec,
-                       int monster_level, const coord_def& where,
-                       bool force_pos, bool generate_awake, bool patrolling)
+int dgn_place_monster(mons_spec &mspec,
+                      int monster_level, const coord_def& where,
+                      bool force_pos, bool generate_awake, bool patrolling)
 {
     if (mspec.mid != -1)
     {
@@ -4655,8 +4654,11 @@ bool dgn_place_monster(mons_spec &mspec,
         {
             // Don't place a unique monster a second time.
             // (Boris is handled specially.)
-            if (mons_is_unique(mid) && you.unique_creatures[mid])
-                return (false);
+            if (mons_is_unique(mid) && you.unique_creatures[mid]
+                && !crawl_state.arena)
+            {
+                return (-1);
+            }
 
             const int montype = mons_class_is_zombified(mid) ? mspec.monbase
                                                              : mid;
@@ -4701,9 +4703,31 @@ bool dgn_place_monster(mons_spec &mspec,
 
         mg.power     = monster_level;
         mg.behaviour = (m_generate_awake) ? BEH_WANDER : BEH_SLEEP;
+        switch (mspec.attitude)
+        {
+        case ATT_FRIENDLY:
+            mg.behaviour = BEH_FRIENDLY;
+            break;
+        case ATT_NEUTRAL:
+            mg.behaviour = BEH_NEUTRAL;
+            break;
+        case ATT_GOOD_NEUTRAL:
+            mg.behaviour = BEH_GOOD_NEUTRAL;
+            break;
+        default:
+            break;
+        }
         mg.base_type = mspec.monbase;
         mg.number    = mspec.number;
         mg.colour    = mspec.colour;
+
+        coord_def place(where);
+        if (!force_pos && mgrd(place) != NON_MONSTER
+            && mg.cls != RANDOM_MONSTER && mg.cls < NUM_MONSTERS)
+        {
+            place = find_newmons_square_contiguous(mg.cls, where, 6);
+        }
+
         mg.pos       = where;
 
         if (mons_class_is_zombified(mg.base_type))
@@ -4723,9 +4747,9 @@ bool dgn_place_monster(mons_spec &mspec,
         const int mindex = place_monster(mg, true);
         if (mindex != -1 && mspec.items.size() > 0)
             _dgn_give_mon_spec_items(mspec, mindex, mid, monster_level);
-        return (mindex != -1);
+        return (mindex);
     }
-    return (false);
+    return (-1);
 }
 
 static bool _dgn_place_monster( const vault_placement &place, mons_spec &mspec,
@@ -4737,8 +4761,8 @@ static bool _dgn_place_monster( const vault_placement &place, mons_spec &mspec,
     const bool patrolling
         = mspec.patrolling || place.map.has_tag("patrolling");
 
-    return dgn_place_monster(mspec, monster_level, where, false,
-                             generate_awake, patrolling);
+    return (-1 != dgn_place_monster(mspec, monster_level, where, false,
+                                    generate_awake, patrolling));
 }
 
 static bool _dgn_place_one_monster( const vault_placement &place,
@@ -7702,7 +7726,7 @@ static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
     return (np.nearest);
 }
 
-static coord_def _dgn_find_feature_marker(dungeon_feature_type feat)
+coord_def dgn_find_feature_marker(dungeon_feature_type feat)
 {
     std::vector<map_marker*> markers = env.markers.get_all();
     for (int i = 0, size = markers.size(); i < size; ++i)
@@ -7720,7 +7744,7 @@ static coord_def _dgn_find_feature_marker(dungeon_feature_type feat)
 
 static coord_def _dgn_find_labyrinth_entry_point()
 {
-    return (_dgn_find_feature_marker(DNGN_ENTER_LABYRINTH));
+    return (dgn_find_feature_marker(DNGN_ENTER_LABYRINTH));
 }
 
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
@@ -7736,7 +7760,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
 
     if (stair_to_find == DNGN_EXIT_PORTAL_VAULT)
     {
-        const coord_def pos(_dgn_find_feature_marker(stair_to_find));
+        const coord_def pos(dgn_find_feature_marker(stair_to_find));
         if (in_bounds(pos))
         {
             if (map_marker *marker = env.markers.find(pos, MAT_FEATURE))
@@ -7761,7 +7785,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
 
     if (stair_to_find == DNGN_STONE_ARCH)
     {
-        const coord_def pos(_dgn_find_feature_marker(stair_to_find));
+        const coord_def pos(dgn_find_feature_marker(stair_to_find));
         if (in_bounds(pos) && grd(pos) == stair_to_find)
             return (pos);
     }
@@ -7781,7 +7805,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
 
     if (stair_to_find == your_branch().exit_stairs)
     {
-        const coord_def pos(_dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I));
+        const coord_def pos(dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I));
         if (in_bounds(pos) && grd(pos) == stair_to_find)
             return (pos);
     }
@@ -7922,7 +7946,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         }
 
     // Last attempt: look for marker.
-    const coord_def pos(_dgn_find_feature_marker(stair_to_find));
+    const coord_def pos(dgn_find_feature_marker(stair_to_find));
     if (in_bounds(pos))
         return (pos);
 

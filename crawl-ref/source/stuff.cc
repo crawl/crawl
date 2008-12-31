@@ -766,7 +766,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
     }
 
 #if defined(WIN32CONSOLE) || defined(DOS) || defined(DGL_PAUSE_AFTER_ERROR)
-    if (exit_code)
+    if (exit_code && !crawl_state.arena)
     {
         fprintf(stderr, "Hit Enter to continue...\n");
         getchar();

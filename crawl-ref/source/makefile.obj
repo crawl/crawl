@@ -4,6 +4,7 @@ OBJECTS = \
 abl-show.o \
 abyss.o \
 acr.o \
+arena.o \
 beam.o \
 branch.o \
 chardump.o \

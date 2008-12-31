@@ -2022,6 +2022,8 @@ public:
     bool        pickup_dropped; // Pickup dropped objects
     int         travel_delay;   // How long to pause between travel moves
 
+    int         arena_delay;
+
     // Messages that stop travel
     std::vector<message_filter> travel_stop_message;
     std::vector<message_filter> force_more_message;

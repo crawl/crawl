@@ -2090,6 +2090,22 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         mspec.patrolling     = strip_tag(mon_str, "patrolling");
         mspec.band           = strip_tag(mon_str, "band");
 
+        if (!mon_str.empty() && isdigit(mon_str[0]))
+        {
+            // Look for space after initial digits.
+            std::string::size_type pos =
+                mon_str.find_first_not_of("0123456789");
+            if (pos != std::string::npos && mon_str[pos] == ' ')
+            {
+                const std::string mcount = mon_str.substr(0, pos);
+                const int count = atoi(mcount.c_str());
+                if (count >= 1 && count <= 99)
+                    mspec.quantity = count;
+
+                mon_str = mon_str.substr(pos);
+            }
+        }
+
         // place:Elf:7 to choose monsters appropriate for that level,
         // for example.
         const std::string place = strip_tag_prefix(mon_str, "place:");
@@ -2179,8 +2195,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             }
             else if (mons_class_itemuse(mid) < MONUSE_STARTING_EQUIPMENT)
             {
-                error = make_stringf("Monster '%s' can't use items.",
-                                     mon_str.c_str());
+                if (mid != MONS_DANCING_WEAPON || mspec.items.size() > 1)
+                    error = make_stringf("Monster '%s' can't use items.",
+                                         mon_str.c_str());
             }
         }
 

@@ -509,7 +509,8 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
 
     // Give a message for monsters dying out of sight.
     if (need_xp_msg && exp_gain > 0
-        && (!mons_near(monster) || !you.can_see(monster)))
+        && (!mons_near(monster) || !you.can_see(monster))
+        && !crawl_state.arena)
     {
         mpr("You feel a bit more experienced.");
     }
@@ -3403,6 +3404,41 @@ static bool _handle_monster_patrolling(monsters *mon)
     return (false);
 }
 
+static void _arena_set_foe(monsters *mons)
+{
+    const int mind = monster_index(mons);
+
+    int nearest = -1;
+    int best_distance = -1;
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        if (mind == i)
+            continue;
+
+        const monsters *other(&menv[i]);
+        if (!other->alive() || mons_aligned(mind, i))
+            continue;
+
+        const int distance = grid_distance(mons->pos(), other->pos());
+        if (best_distance == -1 || distance < best_distance)
+        {
+            best_distance = distance;
+            nearest = i;
+        }
+    }
+
+    if (nearest != -1)
+    {
+        mons->foe = nearest;
+        mons->target = menv[nearest].pos();
+    }
+    else
+    {
+        mons->foe = MHITNOT;
+        mons->target = mons->pos();
+    }
+}
+
 //---------------------------------------------------------------
 //
 // handle_behaviour
@@ -3441,10 +3477,20 @@ static void _handle_behaviour(monsters *mon)
     bool patrolling = mon->is_patrolling();
     static std::vector<level_exit> e;
     static int                     e_index = -1;
+
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
     {
         mon->target.set( 10 + random2(GXM - 10), 10 + random2(GYM - 10) );
+        return;
+    }
+
+    if (crawl_state.arena)
+    {
+        if (!mon->get_foe() || one_chance_in(3))
+            mon->foe = MHITNOT;
+        if (mon->foe == MHITNOT || mon->foe == MHITYOU)
+            _arena_set_foe(mon);
         return;
     }
 
@@ -4060,7 +4106,7 @@ bool simple_monster_message(const monsters *monster, const char *event,
                             description_level_type descrip)
 {
 
-    if (mons_near( monster )
+    if ((mons_near( monster ) || crawl_state.arena)
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
             || player_monster_visible(monster)))
     {
@@ -4250,7 +4296,9 @@ static void _handle_movement(monsters *monster)
         delta = you.pos() - monster->pos();
     }
     else
+    {
         delta = monster->target - monster->pos();
+    }
 
     // Move the monster.
     mmov.x = (delta.x > 0) ? 1 : ((delta.x < 0) ? -1 : 0);
@@ -6526,6 +6574,7 @@ static void _handle_monster_move(int i, monsters *monster)
         }
 
         _handle_behaviour(monster);
+        ASSERT(!crawl_state.arena || monster->foe != MHITYOU);
 
         // Submerging monsters will hide from clouds.
         if (cloud_num != EMPTY_CLOUD && _mons_avoids_cloud(monster, cl_type)

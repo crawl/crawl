@@ -909,6 +909,13 @@ void more(void)
     }
 #endif
 
+    if (crawl_state.arena)
+    {
+        delay(Options.arena_delay);
+        mesclr();
+        return;
+    }
+
     if (crawl_state.is_replaying_keys() || autoclear_more)
     {
         mesclr();

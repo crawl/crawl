@@ -42,6 +42,8 @@ struct game_state
 
     bool map_stat_gen;      // Set if we're generating stats on maps.
 
+    bool arena;             // Set if we're in arena mode.
+
     bool unicode_ok;        // Is unicode support available?
 
     std::string (*glyph2strfn)(unsigned glyph);
