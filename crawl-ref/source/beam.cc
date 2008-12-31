@@ -2817,17 +2817,6 @@ void bolt::affect_endpoint()
         return;
     }
 
-    if (flavour >= BEAM_POTION_STINKING_CLOUD && flavour <= BEAM_POTION_RANDOM)
-    {
-        int newcolour = _potion_beam_flavour_to_colour(flavour);
-        if (newcolour >= 0)
-            colour = newcolour;
-
-        ex_size = std::max(1, ex_size);
-        explode();
-        return;
-    }
-
     if (is_tracer)
         return;
 
@@ -5076,7 +5065,15 @@ void bolt::refine_for_explosion()
         seeMsg     = "The potion explodes!";
         hearMsg    = "You hear an explosion!";
         if (!is_tracer)
+        {
+
             name = "cloud";
+            ASSERT(flavour >= BEAM_POTION_STINKING_CLOUD
+                   && flavour <= BEAM_POTION_RANDOM);
+            const int newcolour = _potion_beam_flavour_to_colour(flavour);
+            if (newcolour >= 0)
+                colour = newcolour;
+        }
     }
 
     if (seeMsg == NULL)

@@ -1251,6 +1251,8 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     beem.hit        = you.dex / 2 + roll_dice( 2, you.skills[SK_THROWING] / 2 + 1 );
     beem.damage     = dice_def( 1, 0 );  // no damage, just producing clouds
     beem.ench_power = pow;               // used for duration only?
+    beem.is_explosion = true;
+    beem.range      = 8;
 
     beem.flavour    = BEAM_POTION_STINKING_CLOUD;
     beam_type tracer_flavour = BEAM_MMISSILE;
