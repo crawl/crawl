@@ -557,7 +557,7 @@ This spell eliminates all sound near the caster. This makes reading scrolls, cas
 %%%%
 Simulacrum
 
-This spell uses a piece of flesh in hand to create a replica of the original being out of ice. This magic is unstable so eventually the replica will sublimate into a freezing cloud, if it isn't hacked or melted into a small puddle of water first. 
+This spell uses a piece of flesh in hand to create a replica of the original being out of ice. This magic is unstable so eventually the replica will sublimate into a freezing cloud, if it isn't hacked or melted into a small puddle of water first. Note that simulacra are incapable of leaving the level they were created on via stairs.
 %%%%
 Slow
 
