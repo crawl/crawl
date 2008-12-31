@@ -2645,15 +2645,15 @@ void describe_monsters(const monsters& mons)
         if (player_can_smell())
         {
             if (player_mutation_level(MUT_SAPROVOROUS) == 3)
-                body << "It smells great!$";
+                body << "$It smells great!$";
             else
-                body << "It stinks.$";
+                body << "$It stinks.$";
         }
         break;
 
     case MONS_SWAMP_DRAKE:
         if (player_can_smell())
-            body << "It smells horrible.$";
+            body << "$It smells horrible.$";
         break;
 
     case MONS_NAGA:
@@ -2662,26 +2662,26 @@ void describe_monsters(const monsters& mons)
     case MONS_GUARDIAN_NAGA:
     case MONS_GREATER_NAGA:
         if (you.species == SP_NAGA)
-            body << "It is particularly attractive.$";
+            body << "$It is particularly attractive.$";
         else
-            body << "It is strange and repulsive.$";
+            body << "$It is strange and repulsive.$";
         break;
 
     case MONS_VAMPIRE:
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
         if (you.is_undead == US_ALIVE)
-            body << "It wants to drink your blood!$";
+            body << "$It wants to drink your blood!$";
         break;
 
     case MONS_REAPER:
         if (you.is_undead == US_ALIVE)
-            body <<  "It has come for your soul!$";
+            body <<  "$It has come for your soul!$";
         break;
 
     case MONS_ELF:
         // These are only possible from polymorphing or shapeshifting.
-        body << "This one is remarkably plain looking.$";
+        body << "$This one is remarkably plain looking.$";
         break;
 
     case MONS_DRACONIAN:
@@ -2701,7 +2701,7 @@ void describe_monsters(const monsters& mons)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
-        body << _describe_draconian( &mons );
+        body << "$" << _describe_draconian( &mons );
         break;
     }
     case MONS_PLAYER_GHOST:
@@ -2714,7 +2714,7 @@ void describe_monsters(const monsters& mons)
 
     case MONS_URUG:
         if (player_can_smell())
-            body << "He smells terrible.$";
+            body << "$He smells terrible.$";
         break;
 
     case MONS_PROGRAM_BUG:
@@ -2729,8 +2729,8 @@ void describe_monsters(const monsters& mons)
 
     if (!mons_can_use_stairs(&mons))
     {
-        body << mons_pronoun(static_cast<monster_type>(mons.type),
-                             PRONOUN_CAP, true)
+        body << "$" << mons_pronoun(static_cast<monster_type>(mons.type),
+                                    PRONOUN_CAP, true)
              << " is incapable of using stairs.$";
     }
 
