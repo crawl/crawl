@@ -2065,7 +2065,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         }
         else if (original < hurted)
         {
-            if (mons_is_icy(monster))
+            if (mons_is_icy(monster->type))
             {
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " melts!");
@@ -2285,7 +2285,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         }
         else if (hurted > original)
         {
-            if (mons_is_icy(monster))
+            if (mons_is_icy(monster->type))
             {
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " melts!");
@@ -2316,7 +2316,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         }
         else if (resist < 0)
         {
-            if (mons_is_icy(monster))
+            if (mons_is_icy(monster->type))
             {
                 if (doFlavouredEffects)
                     simple_monster_message(monster, " melts!");
@@ -2375,10 +2375,10 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
         if (mons_friendly(monster))
             return (true);
 
-        if (mons_class_holiness(monster->type) != MH_UNDEAD)
+        if (mons_holiness(monster) != MH_UNDEAD)
             return (true);
 
-        if (check_mons_resist_magic( monster, pow ))
+        if (check_mons_resist_magic(monster, pow))
         {
             simple_monster_message(monster,
                                    mons_immune_magic(monster)? " is unaffected."

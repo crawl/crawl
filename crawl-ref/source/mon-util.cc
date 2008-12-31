@@ -594,17 +594,12 @@ bool mons_is_poisoner(const monsters *mon)
             || attk_flavour == AF_POISON_STR);
 }
 
-bool mons_is_icy(const monsters *mon)
+bool mons_is_icy(int mc)
 {
-    return (mons_is_icy(mon->type));
-}
-
-bool mons_is_icy(int mtype)
-{
-    return (mtype == MONS_ICE_BEAST
-            || mtype == MONS_SIMULACRUM_SMALL
-            || mtype == MONS_SIMULACRUM_LARGE
-            || mtype == MONS_ICE_STATUE);
+    return (mc == MONS_ICE_BEAST
+            || mc == MONS_SIMULACRUM_SMALL
+            || mc == MONS_SIMULACRUM_LARGE
+            || mc == MONS_ICE_STATUE);
 }
 
 bool invalid_monster(const monsters *mon)
@@ -816,7 +811,7 @@ bool mons_see_invis(const monsters *mon)
     return (false);
 }
 
-bool mon_can_see_monster( const monsters *mon, const monsters *targ )
+bool mon_can_see_monster(const monsters *mon, const monsters *targ)
 {
     if (!mon->mon_see_grid(targ->pos()))
         return (false);
@@ -824,10 +819,9 @@ bool mon_can_see_monster( const monsters *mon, const monsters *targ )
     return (mons_monster_visible(mon, targ));
 }
 
-
 // This does NOT do line of sight!  It checks the targ's visibility
 // with respect to mon's perception, but doesn't do walls or range.
-bool mons_monster_visible( const monsters *mon, const monsters *targ )
+bool mons_monster_visible(const monsters *mon, const monsters *targ)
 {
     if (targ->has_ench(ENCH_SUBMERGED)
         || targ->invisible() && !mons_see_invis(mon))
@@ -840,7 +834,7 @@ bool mons_monster_visible( const monsters *mon, const monsters *targ )
 
 // This does NOT do line of sight!  It checks the player's visibility
 // with respect to mon's perception, but doesn't do walls or range.
-bool mons_player_visible( const monsters *mon )
+bool mons_player_visible(const monsters *mon)
 {
     if (you.invisible())
     {
@@ -933,6 +927,16 @@ bool mons_can_be_zombified(const monsters *mon)
     return (mons_class_can_be_zombified(mon->type)
             && !mons_is_summoned(mon)
             && !mons_enslaved_body_and_soul(mon));
+}
+
+bool mons_class_can_use_stairs(int mc)
+{
+    return (!mons_class_is_zombified(mc));
+}
+
+bool mons_can_use_stairs(const monsters *mon)
+{
+    return (!mons_is_zombified(mon) || mons_enslaved_intact_soul(mon));
 }
 
 bool mons_enslaved_body_and_soul(const monsters *mon)
@@ -3163,7 +3167,7 @@ bool monster_shover(const monsters *m)
 
     // Monsters too stupid to use stairs (e.g. zombified undead) are also
     // disqualified.
-    if (!m->can_use_stairs())
+    if (!mons_can_use_stairs(m))
         return (false);
 
     // Smiters profit from staying back and smiting.
@@ -3206,8 +3210,8 @@ bool monster_senior(const monsters *m1, const monsters *m2)
     // If they're the same holiness, monsters smart enough to use stairs can
     // push past monsters too stupid to use stairs (so that e.g. non-zombified
     // undead can push past zombified undead).
-    if (m1->holiness() == m2->holiness() && m1->can_use_stairs()
-        && !m2->can_use_stairs())
+    if (m1->holiness() == m2->holiness() && mons_can_use_stairs(m1)
+        && !mons_can_use_stairs(m2))
     {
         return (true);
     }
@@ -5846,18 +5850,13 @@ bool monsters::is_patrolling() const
     return (!patrol_point.origin());
 }
 
-bool monsters::can_use_stairs() const
-{
-    return (!mons_is_zombified(this) || mons_enslaved_intact_soul(this));
-}
-
 bool monsters::needs_transit() const
 {
     return ((mons_is_unique(type)
                 || (flags & MF_BANISHED)
                 || you.level_type == LEVEL_DUNGEON
                    && hit_dice > 8 + random2(25)
-                   && can_use_stairs())
+                   && mons_can_use_stairs(this))
             && !mons_is_summoned(this));
 }
 

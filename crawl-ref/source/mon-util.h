@@ -493,9 +493,9 @@ mon_itemuse_type mons_itemuse(const monsters *mon);
  * *********************************************************************** */
 bool mons_see_invis(const monsters *mon);
 bool mons_sense_invis(const monsters *mon);
-bool mon_can_see_monster( const monsters *mon, const monsters *targ );
-bool mons_monster_visible( const monsters *mon, const monsters *targ );
-bool mons_player_visible( const monsters *mon );
+bool mon_can_see_monster(const monsters *mon, const monsters *targ);
+bool mons_monster_visible(const monsters *mon, const monsters *targ);
+bool mons_player_visible(const monsters *mon);
 
 
 // last updated 12may2000 {dlb}
@@ -638,6 +638,8 @@ bool mons_class_is_zombified(int mc);
 bool mons_is_zombified(const monsters *monster);
 bool mons_class_can_be_zombified(int mc);
 bool mons_can_be_zombified(const monsters *mon);
+bool mons_class_can_use_stairs(int mc);
+bool mons_can_use_stairs(const monsters *mon);
 bool mons_enslaved_body_and_soul(const monsters *mon);
 bool mons_enslaved_twisted_soul(const monsters *mon);
 bool mons_enslaved_intact_soul(const monsters *mon);
@@ -765,8 +767,7 @@ bool mons_is_holy(const monsters *mon);
 bool mons_is_evil(const monsters *mon);
 bool mons_is_unholy(const monsters *mon);
 bool mons_is_evil_or_unholy(const monsters *mon);
-bool mons_is_icy(const monsters *mon);
-bool mons_is_icy(int mtype);
+bool mons_is_icy(int mc);
 bool mons_has_lifeforce(const monsters *mon);
 monster_type mons_genus(int mc);
 monster_type mons_species(int mc);

@@ -342,8 +342,8 @@ static bool _tag_follower_at(const coord_def &pos)
 
     if (fmenv->type == MONS_PLAYER_GHOST
         || !fmenv->alive()
-        || !fmenv->can_use_stairs()
         || fmenv->incapacitated()
+        || !mons_can_use_stairs(fmenv)
         || mons_is_stationary(fmenv))
     {
         return (false);

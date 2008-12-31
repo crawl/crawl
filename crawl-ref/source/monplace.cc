@@ -596,9 +596,10 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 // Now pick a monster of the given branch and level.
                 mon_type = pick_random_monster(place, *lev_mons, *lev_mons);
 
-                // Don't allow zombified monsters to be placed at stairs.
+                // Don't allow monsters too stupid to use stairs (e.g.
+                // zombified undead) to be placed at stairs.
                 if (proximity != PROX_NEAR_STAIRS
-                    || !mons_class_is_zombified(mon_type))
+                    || mons_class_can_use_stairs(mon_type))
                 {
                     break;
                 }

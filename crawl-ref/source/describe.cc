@@ -2727,7 +2727,7 @@ void describe_monsters(const monsters& mons)
         break;
     }
 
-    if (!mons.can_use_stairs())
+    if (!mons_can_use_stairs(&mons))
     {
         body << mons_pronoun(static_cast<monster_type>(mons.type),
                              PRONOUN_CAP, true)
