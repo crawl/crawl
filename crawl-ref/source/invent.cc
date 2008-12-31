@@ -173,6 +173,11 @@ void InvEntry::select(int qty)
     MenuEntry::select(qty);
 }
 
+std::string InvEntry::get_filter_text() const
+{
+    return (filtering_item_prefix(*item) + " " + get_text());
+}
+
 std::string InvEntry::get_text() const
 {
     std::ostringstream tstr;

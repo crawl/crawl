@@ -2221,6 +2221,7 @@ private:
     typedef std::map<std::string, std::string> string_map;
     string_map               aliases;
     string_map               variables;
+    std::set<std::string>    constants; // Variables that can't be changed
     std::set<std::string>    included; // Files we've included already.
 
 public:

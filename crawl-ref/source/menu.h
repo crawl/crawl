@@ -138,6 +138,11 @@ struct MenuEntry
             selected_qty = (qty == -1? quantity : qty);
     }
 
+    virtual std::string get_filter_text() const
+    {
+        return get_text();
+    }
+
 #ifdef USE_TILE
     virtual bool tile(int &idx, TextureID &tex) const
     {

@@ -675,7 +675,7 @@ bool Menu::is_selectable(int item) const
     if (select_filter.empty())
         return (true);
 
-    std::string text = items[item]->get_text();
+    std::string text = items[item]->get_filter_text();
     for (int i = 0, count = select_filter.size(); i < count; ++i)
     {
         if (select_filter[i].matches(text))

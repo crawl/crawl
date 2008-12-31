@@ -99,6 +99,8 @@ public:
 
     virtual void select( int qty = -1 );
 
+    virtual std::string get_filter_text() const;
+
 #ifdef USE_TILE
     virtual bool tile(int &tile, TextureID &tex) const;
 #endif

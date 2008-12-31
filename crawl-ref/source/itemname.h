@@ -128,6 +128,8 @@ void set_ident_type( object_class_type basetype, int subtype,
  * *********************************************************************** */
 const std::string menu_colour_item_prefix(const item_def &item,
                                           bool temp = true);
+const std::string filtering_item_prefix(const item_def &item,
+                                        bool temp = true);
 const std::string get_menu_colour_prefix_tags(item_def &item,
                                               description_level_type desc);
 const std::string get_message_colour_tags(item_def &item,

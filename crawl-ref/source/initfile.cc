@@ -933,6 +933,11 @@ void game_options::reset_options()
 
     // Forget any files we remembered as included.
     included.clear();
+
+    // Forget variables and such.
+    aliases.clear();
+    variables.clear();
+    constants.clear();
 }
 
 void game_options::clear_cset_overrides()
@@ -1561,7 +1566,13 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
 void game_options::add_alias(const std::string &key, const std::string &val)
 {
     if (key[0] == '$')
-        variables[key.substr(1)] = val;
+    {
+        std::string name = key.substr(1);
+        // Don't alter if it's a constant.
+        if (constants.find(name) != constants.end())
+            return;
+        variables[name] = val;
+    }
     else
         aliases[key] = val;
 }
@@ -3042,6 +3053,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if(key == "bindkey")
     {
         _bindkey(field);
+    }
+    else if (key == "constant")
+    {
+        if (variables.find(field) == variables.end())
+            report_error(make_stringf("No variable named '%s' to make "
+                                      "constant", field.c_str()));
+        else if (constants.find(field) != constants.end())
+            report_error(make_stringf("'%s' is already a constant",
+                                      field.c_str()));
+        else
+            constants.insert(field);
     }
 
     // Catch-all else, copies option into map

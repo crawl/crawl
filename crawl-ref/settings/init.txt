@@ -96,6 +96,8 @@ autopickup = $?!+"/%
 # There is a long list of autopickup exceptions in
 include = autopickup_exceptions.txt
 
+drop_filter = useless_item
+
 # default_autopickup = false
 # autopickup_no_burden = true
 # pickup_thrown = false

@@ -2508,11 +2508,16 @@ bool is_useless_item(const item_def &item, bool temp)
     }
 }
 
-const std::string menu_colour_item_prefix(const item_def &item, bool temp)
+static const std::string _item_prefix(const item_def &item, bool temp,
+                                      bool filter)
 {
     std::vector<std::string> prefixes;
 
-    if (item_ident(item, ISFLAG_KNOW_TYPE))
+    // No identified/unidentified for filtering, since the user might
+    // want to filter on "ident" to find scrolls of identify.
+    if (filter)
+        ;
+    else if (item_ident(item, ISFLAG_KNOW_TYPE))
         prefixes.push_back("identified");
     else
     {
@@ -2584,7 +2589,12 @@ const std::string menu_colour_item_prefix(const item_def &item, bool temp)
         else if (is_preferred_food(item))
             prefixes.push_back("preferred");
 
-        if (is_poisonous(item))
+        // Don't include these for filtering, since the user might want
+        // to use "muta" to search for "potion of cure mutation", and
+        // similar.
+        if (filter)
+            ;
+        else if (is_poisonous(item))
             prefixes.push_back("poisonous");
         else if (is_mutagenic(item))
             prefixes.push_back("mutagenic");
@@ -2622,13 +2632,23 @@ const std::string menu_colour_item_prefix(const item_def &item, bool temp)
         break;
     }
 
-    if (Options.menu_colour_prefix_class)
+    if (Options.menu_colour_prefix_class && !filter)
         prefixes.push_back(item_class_name(item.base_type, true));
 
     std::string result = comma_separated_line(prefixes.begin(), prefixes.end(),
                                               " ", " ");
 
     return result;
+}
+
+const std::string menu_colour_item_prefix(const item_def &item, bool temp)
+{
+    return _item_prefix(item, temp, false);
+}
+
+const std::string filtering_item_prefix(const item_def &item, bool temp)
+{
+    return _item_prefix(item, temp, true);
 }
 
 const std::string get_menu_colour_prefix_tags(item_def &item,
