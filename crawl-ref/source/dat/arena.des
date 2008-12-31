@@ -1,5 +1,5 @@
-NAME: arena_level
-TAGS: arena_level no_mons_gen
+NAME: arena_default
+TAGS: arena_default no_mons_gen
 MARKER: A = feat: stone_stairs_up_i
 MARKER: B = feat: stone_stairs_down_i
 MARKER: O = feat: escape_hatch_up
@@ -23,4 +23,309 @@ X...............X
 X.......A.......X
 X...............X
 XXXXXXXXXXXXXXXXX
+ENDMAP
+
+# Metal-lined vault, when electricity reflection is important
+NAME: arena_metal
+TAGS: arena_metal no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = .
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXXXX
+XvvvvvvvvvvvvvvvvvX
+Xv...............vX
+Xv.......B.......vX
+Xv...............vX
+Xv...............vX
+Xv...............vX
+Xv...............vX
+Xv...............vX
+Xv.......O.......vX
+Xv...............vX
+Xv...............vX
+Xv...............vX
+Xv...............vX
+Xv...............vX
+Xv.......A.......vX
+Xv...............vX
+XvvvvvvvvvvvvvvvvvX
+XXXXXXXXXXXXXXXXXXX
+ENDMAP
+# Especially for immobile monsters... all locations are in LOS of each other
+NAME: arena_small
+TAGS: arena_small no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = .
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+Xvvvvvv.B.vvvvvvX
+Xvvvv.......vvvvX
+Xvvvv.......vvvvX
+Xvvv.........vvvX
+Xvvv....O....vvvX
+Xvvv.........vvvX
+Xvvvv.......vvvvX
+Xvvvv.......vvvvX
+Xvvvvvv.A.vvvvvvX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
+# for fine-tuning interactions
+NAME: arena_narrow
+TAGS: arena_narrow no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = .
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+XXXXXX.....XXXXXX
+XXXXXX..B..XXXXXX
+XXXXXX.....XXXXXX
+XXXXXX.....XXXXXX
+XXXXXX.....XXXXXX
+XXXXXX.....XXXXXX
+XXXXXX.....XXXXXX
+XXXXXX..O..XXXXXX
+XXXXXX.....XXXXXX
+XXXXXX.....XXXXXX
+XXXXXX.....XXXXXX
+XXXXXX.....XXXXXX
+XXXXXX.....XXXXXX
+XXXXXX..A..XXXXXX
+XXXXXX.....XXXXXX
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME: arena_corridor
+TAGS: arena_corridor no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = .
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+XXXXXXXXBXXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXXOXXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXX.XXXXXXXX
+XXXXXXXXAXXXXXXXX
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME: arena_pillarred
+TAGS: arena_pillarred no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = G
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X...............X
+X.G...G.B.G...G.X
+X...............X
+X...G...G...G...X
+X...............X
+X.G...G...G...G.X
+X...............X
+X...G...O...G...X
+X...............X
+X.G...G...G...G.X
+X...............X
+X...G...G...G...X
+X...............X
+X.G...G.A.G...G.X
+X...............X
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME: arena_lattice
+TAGS: arena_lattice no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = X
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X...............X
+X.X...X.B.X...X.X
+X...............X
+X...X...X...X...X
+X...............X
+X.X...X...X...X.X
+X...............X
+X...X...O...X...X
+X...............X
+X.X...X...X...X.X
+X...............X
+X...X...X...X...X
+X...............X
+X.X...X.A.X...X.X
+X...............X
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME: arena_river
+TAGS: arena_river no_mons_gen no_pool_fixup
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = w
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X...............X
+X.......B.......X
+X...............X
+X...............X
+Xw..............X
+Xww.............X
+Xwww....wwwww...X
+X.wwwwwwOwwwwww.X
+X...wwwww....wwwX
+X.............wwX
+X..............wX
+X...............X
+X...............X
+X.......A.......X
+X...............X
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME: arena_swamp
+TAGS: arena_swamp no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = x
+SUBST: . = w:30 W .:5
+SUBST: x = W .:5
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X........xx.....X
+X.......B..x....X
+X..........x....X
+X..........x....X
+X..........x....X
+X.........x.....X
+X........x......X
+X.......O.......X
+X......x........X
+X.....x.........X
+X....x..........X
+X....x..........X
+X....x..........X
+X....x..A.......X
+X.....xx........X
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME: arena_lava
+TAGS: arena_lava no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = x
+SUBST: . = l:30 .
+SUBST: x = .
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X........xx.....X
+X.......B..x....X
+X..........x....X
+X..........x....X
+X..........x....X
+X.........x.....X
+X........x......X
+X.......O.......X
+X......x........X
+X.....x.........X
+X....x..........X
+X....x..........X
+X....x..........X
+X....x..A.......X
+X.....xx........X
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME: arena_baffles
+TAGS: arena_baffles no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = X
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+X...X...B...X...X
+X.X.X.X.X.X.X.X.X
+X.......X.......X
+X.XXXXX.X.XXXXX.X
+X.......X.......X
+X.X.X.X.X.X.X.X.X
+X...X.......X...X
+XXX.X.XXOXX.X.XXX
+X...X.......X...X
+X.X.X.X.X.X.X.X.X
+X.......X.......X
+X.XXXXX.X.XXXXX.X
+X.......X.......X
+X.X.X.X.X.X.X.X.X
+X...X...A...X...X
+XXXXXXXXXXXXXXXXX
+ENDMAP
+
+NAME: arena_glassbaffles
+TAGS: arena_glassbaffles no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = o
+ORIENT: encompass
+MAP
+ooooooooooooooooo
+o...o...B...o...o
+o.o.o.o.o.o.o.o.o
+o.......o.......o
+o.ooooo.o.ooooo.o
+o.......o.......o
+o.o.o.o.o.o.o.o.o
+o...o.......o...o
+ooo.o.ooOoo.o.ooo
+o...o.......o...o
+o.o.o.o.o.o.o.o.o
+o.......o.......o
+o.ooooo.o.ooooo.o
+o.......o.......o
+o.o.o.o.o.o.o.o.o
+o...o...A...o...o
+ooooooooooooooooo
 ENDMAP

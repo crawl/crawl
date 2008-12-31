@@ -46,6 +46,7 @@ namespace arena
     int trials_done = 0;
     int team_a_wins = 0;
     bool allow_summons = true;
+    std::string arena_type = "";
     faction faction_a(true);
     faction faction_b(false);
 
@@ -123,7 +124,12 @@ namespace arena
         const unwind_stringset mtags(you.uniq_map_tags);
         const unwind_stringset mnames(you.uniq_map_names);
 
-        const map_def *map = random_map_for_tag("arena_level", false);
+        std::string map_name = "arena_" + arena_type;
+        const map_def *map = random_map_for_tag(map_name.c_str(), false);
+
+        if (!map)
+            throw make_stringf("No arena maps named \"%s\"", arena_type.c_str());
+
         ASSERT(map);
         dgn_place_map(map, true, true);
 
@@ -167,6 +173,11 @@ namespace arena
             && !total_trials)
             total_trials = ntrials;
 
+        arena_type = strip_tag_prefix(spec, "arena:");
+
+        if (arena_type.empty())
+            arena_type = "default";
+
         std::vector<std::string> factions = split_string(" v ", spec);
 
         if (factions.size() == 1)
@@ -195,7 +206,6 @@ namespace arena
         unwind_var< FixedVector<bool, NUM_MONSTERS> >
             uniq(you.unique_creatures);
 
-        parse_monster_spec();
         coord_def place_a(dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I));
         coord_def place_b(dgn_find_feature_marker(DNGN_STONE_STAIRS_DOWN_I));
         faction_a.place_at(place_a);
@@ -275,6 +285,7 @@ namespace arena
         throw (std::string)
     {
         //no_messages mx;
+        parse_monster_spec();
         setup_level();
 
         // Monster set up may block waiting for matchups.
