@@ -5405,8 +5405,8 @@ static bool _handle_scroll(monsters *monster)
                 ident = ID_KNOWN_TYPE;
                 mprf("%s appears!", menv[mon].name(DESC_CAP_A).c_str());
             }
-            else
-                mpr("Nothing appears to happen");
+            else if (you.can_see(monster))
+                mpr("Nothing appears to happen.");
         }
         break;
     }
