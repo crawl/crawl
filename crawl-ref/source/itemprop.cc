@@ -765,7 +765,8 @@ void set_equip_race( item_def &item, unsigned long flags )
         case OBJ_WEAPONS:
             if (weapon_skill(item) == SK_POLEARMS
                 || (weapon_skill(item) == SK_LONG_BLADES
-                    && item.sub_type != WPN_FALCHION)
+                    && item.sub_type != WPN_FALCHION
+                    && item.sub_type != WPN_LONG_SWORD)
                 || item.sub_type == WPN_QUICK_BLADE
                 || item.sub_type == WPN_CLUB
                 || item.sub_type == WPN_WHIP

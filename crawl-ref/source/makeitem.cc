@@ -1013,6 +1013,8 @@ static item_status_flag_type _determine_weapon_race(const item_def& item,
             break;
 
         case WPN_LONG_SWORD:
+            if (one_chance_in(6))
+                rc = ISFLAG_DWARVEN;
             if (one_chance_in(4))
                 rc = ISFLAG_ORCISH;
             if (coinflip())
