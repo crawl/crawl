@@ -79,7 +79,7 @@ Torment yourself and the monsters around you.
 %%%%
 Raise Dead
 
-Bring the corpses in your vicinity back to life.
+Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on via stairs.
 %%%%
 Control Demon
 
@@ -192,11 +192,11 @@ Summon the personification of Death, which, depending on your Invocations skill,
 # Yredelemnul
 Animate Remains
 
-Reanimate a single corpse or skeleton as a follower. Note that zombies and skeletons cannot leave the level they were created on.
+Reanimate a single corpse or skeleton as a follower. Note that zombies and skeletons cannot leave the level they were created on via stairs.
 %%%%
 Animate Dead ability
 
-Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on.
+Reanimate all corpses and skeletons in your vicinity as followers. Note that zombies and skeletons cannot leave the level they were created on via stairs.
 %%%%
 Drain Life
 
