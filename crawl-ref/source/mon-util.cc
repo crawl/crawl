@@ -5104,7 +5104,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
                 else
                 {
                     str        = "body";
-                    can_plural = false;
+                    *can_plural = false;
                 }
                 break;
         }
