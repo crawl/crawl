@@ -5396,11 +5396,17 @@ static bool _handle_scroll(monsters *monster)
         if (mons_near(monster))
         {
             simple_monster_message(monster, " reads a scroll.");
-            create_monster(
+            int mon = create_monster(
                 mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(monster),
                           0, monster->pos(), monster->foe));
             read  = true;
-            ident = ID_KNOWN_TYPE;
+            if (mon != -1 && you.can_see(&menv[mon]))
+            {
+                ident = ID_KNOWN_TYPE;
+                mprf("%s appears!", menv[mon].name(DESC_CAP_A).c_str());
+            }
+            else
+                mpr("Nothing appears to happen");
         }
         break;
     }
