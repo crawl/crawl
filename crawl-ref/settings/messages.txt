@@ -4,36 +4,37 @@ msc := message_colour
 
 # Really important messages
 #
-msc = lightred:drains you
-msc = lightred:feel drained
-msc = lightred:strangely unstable
-msc = lightred:curare-tipped.*hits you
-msc = lightred:Space warps.* around you
-msc = lightred:Space bends around you
-msc = lightred:acid corrodes
-msc = lightred:you are carrying w.* destroyed
-msc = lightred:you are carrying catche?s? fire
-msc = lightred:you are carrying freezes? and shatters?
-msc = lightred:Some of your food is covered with spores
-msc = lightred:lose your buoyancy
-msc = lightred:sense of stasis
-msc = lightred:clumsily bash
-msc = lightred:goes berserk!
+msc = $danger:drains you
+msc = $danger:feel drained
+msc = $danger:strangely unstable
+msc = $danger:curare-tipped.*hits you
+msc = $danger:Space warps.* around you
+msc = $danger:Space bends around you
+msc = $danger:lose your buoyancy
+msc = $danger:sense of stasis
+msc = $danger:clumsily bash
+msc = $danger:goes berserk!
+
+msc = $item_dmg:acid corrodes
+msc = $item_dmg:you are carrying w.* destroyed
+msc = $item_dmg:you are carrying catche?s? fire
+msc = $item_dmg:you are carrying freezes? and shatters?
+msc = $item_dmg:Some of your food is covered with spores
 
 # Less urgent, but still significant messages
 #
-msc = yellow:ticking.*clock
-msc = yellow:distant snort
-msc = yellow:coins.*counted
-msc = yellow:tolling.*bell
+msc = $warning:ticking.*clock
+msc = $warning:distant snort
+msc = $warning:coins.*counted
+msc = $warning:tolling.*bell
 msc = lightcyan:LOW MAGIC WARNING
-msc = yellow:fails to return
+msc = $warning:fails to return
 
 # Unimportant messages and combat clutter
 #
-msc = darkgrey:You start (resting|searching)
-msc = darkgrey:Unknown command
-msc = darkgrey:disappears in a puff of smoke
+msc = $boring:You start (resting|searching)
+msc = $boring:Unknown command
+msc = $boring:disappears in a puff of smoke
 #
-msc = darkgrey:plain:miss(es)? (the|you|it)
-msc = darkgrey:but (do no|doesn't do any) damage
+msc = $boring:plain:miss(es)? (the|you|it)
+msc = $boring:but (do no|doesn't do any) damage

@@ -283,6 +283,13 @@ menu_colour = inventory:white:\w \+\s
 menu_colour = inventory:white:\w \#\s
 
 # Colouring of messages
+# Messages are colour coded in standard_colours.txt as follows:
+#
+#   lightred   = really important messages  ($danger)
+#   yellow     = significant messages       ($warning)
+#   lightred   = item damaged/destryoed     ($item_dmg [same as $danger])
+#   darkgrey   = boring, message clutter    ($boring)
+#
 include = messages.txt
 
 # Colouring for the notes
