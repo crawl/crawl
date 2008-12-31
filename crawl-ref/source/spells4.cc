@@ -1709,44 +1709,6 @@ bool cast_fragmentation(int pow, const dist& spd)
 
         switch (mon->type)
         {
-        case MONS_ICE_STATUE:           // blast of ice fragments
-        case MONS_ICE_BEAST:
-        case MONS_SIMULACRUM_SMALL:
-        case MONS_SIMULACRUM_LARGE:
-            explode         = true;
-            beam.name       = "icy blast";
-            beam.colour     = WHITE;
-            beam.damage.num = 2;
-            beam.flavour    = BEAM_ICE;
-            if (player_hurt_monster(midx, beam.damage.roll()))
-                beam.damage.num++;
-            break;
-
-        case MONS_FLYING_SKULL:         // blast of bone
-        case MONS_SKELETON_SMALL:
-        case MONS_SKELETON_LARGE:
-        case MONS_SKELETAL_DRAGON:
-        case MONS_SKELETAL_WARRIOR:
-            mprf("The %s explodes into sharp fragments of bone!",
-                 (mon->type == MONS_FLYING_SKULL) ? "skull" : "skeleton");
-
-            explode     = true;
-            beam.name   = "blast of bone shards";
-            beam.colour = LIGHTGREY;
-
-            if (x_chance_in_y(pow / 5, 50))        // potential insta-kill
-            {
-                monster_die(mon, KILL_YOU, NON_MONSTER);
-                beam.damage.num = 4;
-            }
-            else
-            {
-                beam.damage.num = 2;
-                if (player_hurt_monster(midx, beam.damage.roll()))
-                    beam.damage.num += 2;
-            }
-            goto all_done;      // i.e. no "Foo Explodes!"
-
         case MONS_WOOD_GOLEM:
             simple_monster_message(mon, " shudders violently!");
 
@@ -1819,6 +1781,41 @@ bool cast_fragmentation(int pow, const dist& spd)
             break;
 
         default:
+            if (mons_is_icy(mon->type)) // blast of ice
+            {
+                explode         = true;
+                beam.name       = "icy blast";
+                beam.colour     = WHITE;
+                beam.damage.num = 2;
+                    beam.flavour    = BEAM_ICE;
+                if (player_hurt_monster(midx, beam.damage.roll()))
+                    beam.damage.num++;
+                break;
+            }
+            else if (mons_is_skeletal(mon->type)
+                || mon->type == MONS_FLYING_SKULL) // blast of bone
+            {
+                mprf("The %s explodes into sharp fragments of bone!",
+                     (mon->type == MONS_FLYING_SKULL) ? "skull" : "skeleton");
+
+                explode     = true;
+                beam.name   = "blast of bone shards";
+                beam.colour = LIGHTGREY;
+
+                if (x_chance_in_y(pow / 5, 50)) // potential insta-kill
+                {
+                    monster_die(mon, KILL_YOU, NON_MONSTER);
+                    beam.damage.num = 4;
+                }
+                else
+                {
+                      beam.damage.num = 2;
+                      if (player_hurt_monster(midx, beam.damage.roll()))
+                          beam.damage.num += 2;
+                  }
+                  goto all_done; // i.e., no "Foo Explodes!"
+            }
+            else
             {
                 const bool petrifying = mons_is_petrifying(mon);
                 const bool petrified = mons_is_petrified(mon) && !petrifying;

@@ -602,6 +602,14 @@ bool mons_is_icy(int mc)
             || mc == MONS_ICE_STATUE);
 }
 
+bool mons_is_skeletal(int mc)
+{
+    return (mc == MONS_SKELETON_SMALL
+            || mc == MONS_SKELETON_LARGE
+            || mc == MONS_SKELETAL_DRAGON
+            || mc == MONS_SKELETAL_WARRIOR);
+}
+
 bool invalid_monster(const monsters *mon)
 {
     return (!mon || mon->type == -1);
