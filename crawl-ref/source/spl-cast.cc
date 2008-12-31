@@ -1047,7 +1047,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
         const bool dont_cancel_me = testbits(flags, SPFLAG_AREA);
 
-        const int range = spell_range(spell, powc, false);
+
+        // FIXME: Code duplication (see similar line below).
+        int range_power = (powc == 0 ? calc_spell_power(spell, true) : powc);
+
+        const int range = spell_range(spell, range_power, false);
 
         if (!spell_direction(spd, beam, dir, targ, range,
                              needs_path, true, dont_cancel_me, prompt,
@@ -1056,8 +1060,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
             return (SPRET_ABORT);
         }
 
-        // FIXME: Code duplication (see similar line below).
-        int range_power = (powc == 0 ? calc_spell_power(spell, true) : powc);
         beam.range = spell_range(spell, range_power, true);
 
         if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe)
