@@ -1992,6 +1992,9 @@ enum monster_type                      // (int) menv[].type
     MONS_SILVER_STATUE,
     MONS_ICE_STATUE,
 
+    // Testing monsters
+    MONS_TEST_SPAWNER,
+
     NUM_MONSTERS,                      // used for polymorph
     RANDOM_MONSTER = 1000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
 
@@ -2200,6 +2203,7 @@ enum mon_spellbook_type
     MST_CURSE_TOE,
     MST_RUPERT,                         // 135
     MST_ICE_STATUE,
+    MST_TEST_SPAWNER,
     NUM_MSTYPES,
     MST_NO_SPELLS = 250
 };

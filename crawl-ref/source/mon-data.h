@@ -4377,6 +4377,22 @@ static monsterentry mondata[] = {
     { 18, 0, 0, 250 },
     10, 30, MST_ERESHKIGAL, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT, I_HIGH,
     HT_LAND, 14, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_LARGE
+},
+
+// Impossible to hit, impossible to damage, immune to everything,
+// unkillable, just sits there doing nothing but casting Shadow Creatures
+// over and over.
+{
+    MONS_TEST_SPAWNER, 'X', WHITE, "test spawner",
+    M_SPELLCASTER | M_STATIONARY | M_REGEN | M_INSUBSTANTIAL,
+    mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_HELLFIRE
+        | MR_RES_COLD | MR_RES_ASPHYX | MR_RES_ACID
+        | MR_RES_STICKY_FLAME | MR_RES_STEAM, 127),
+    0, 15, MONS_TEST_SPAWNER, MONS_TEST_SPAWNER, MH_NONLIVING, MAG_IMMUNE,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 1000, 1000, 0, 0 },
+    127, 127, MST_TEST_SPAWNER, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT, I_PLANT,
+    HT_LAND, 14, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_LARGE
 }
 
 /*
