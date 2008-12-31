@@ -25,11 +25,11 @@ This spell causes aberrations to form in the caster's body, leaving the caster i
 %%%%
 Animate Dead
 
-This spell causes the dead to rise up and serve the caster; every corpse within a certain distance of the caster is affected. By means of this spell, powerful casters could press into service an army of the mindless undead. Note that zombies are incapable of leaving the level they were created on.
+This spell causes the dead to rise up and serve the caster; every corpse within a certain distance of the caster is affected. By means of this spell, powerful casters could press into service an army of the mindless undead. Note that zombies are incapable of leaving the level they were created on via stairs.
 %%%%
 Animate Skeleton
 
-This spell raises an inert skeleton to a state of unlife. Skeletons cannot leave the level they were created on.
+This spell raises an inert skeleton to a state of unlife. Note that skeletons are incapable of leaving the level they were created on via stairs.
 %%%%
 Apportation
 
@@ -169,7 +169,7 @@ This spell removes poison from the caster's system.
 %%%%
 Death Channel
 
-This spell raises living creatures slain by the caster into a state of unliving slavery as spectral horrors. 
+This spell raises living creatures slain by the caster into a state of unliving slavery as spectral things. Note that spectral things are incapable of leaving the level they were created on via stairs.
 %%%%
 Death's Door
 
