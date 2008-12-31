@@ -1000,7 +1000,10 @@ static int _place_monster_aux( const mgen_data &mg,
 
     // Is it a god gift?
     if (mg.god != GOD_NO_GOD)
+    {
+        menv[id].god    = mg.god;
         menv[id].flags |= MF_GOD_GIFT;
+    }
     // Not a god gift, give priestly monsters a god.
     else if (mons_class_flag(mg.cls, M_PRIEST))
     {
