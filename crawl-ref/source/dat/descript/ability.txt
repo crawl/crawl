@@ -205,7 +205,6 @@ Drain the life force of the monsters surrounding you.
 Enslave Soul
 
 Mark a monster's living soul as yours, once the monster dies. The soul will retain at least some of the monster's faculties, and sometimes even the monster's equipment. However, you can only enslave one soul at any given time. Note that enslaved souls, whether twisted or intact, can leave the level they were created on via stairs.
-
 %%%%
 # Okawaru
 Might
