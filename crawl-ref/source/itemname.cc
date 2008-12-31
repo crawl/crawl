@@ -2502,10 +2502,39 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_STAVES:
         if (you.religion == GOD_TROG && !item_is_rod(item))
             return (true);
+        break;
+
+    case OBJ_FOOD:
+        if (item.sub_type != FOOD_CHUNK || !is_inedible(item))
+            return (false);
+
+        if (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
+            || you.has_spell(SPELL_SIMULACRUM))
+        {
+            return (false);
+        }
+        return (true);
+
+    case OBJ_CORPSES:
+        if (item.sub_type != CORPSE_SKELETON)
+            return (false);
+
+        if (you.has_spell(SPELL_BONE_SHARDS)
+            || you.has_spell(SPELL_ANIMATE_DEAD)
+            || you.has_spell(SPELL_ANIMATE_SKELETON)
+            || you.mutation[MUT_RAISE_DEAD]
+            || you.religion == GOD_YREDELEMNUL
+               && you.piety >= piety_breakpoint(0))
+        {
+            return (false);
+        }
+
+        return (true);
 
     default:
         return (false);
     }
+    return (false);
 }
 
 static const std::string _item_prefix(const item_def &item, bool temp,
