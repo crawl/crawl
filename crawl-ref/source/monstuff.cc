@@ -5406,7 +5406,7 @@ static bool _handle_scroll(monsters *monster)
                 mprf("%s appears!", menv[mon].name(DESC_CAP_A).c_str());
             }
             else if (you.can_see(monster))
-                mpr("Nothing appears to happen.");
+                canned_msg(MSG_NOTHING_HAPPENS);
         }
         break;
     }
