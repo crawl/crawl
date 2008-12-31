@@ -1261,7 +1261,7 @@ void monster_die(monsters *monster, killer_type killer,
                 if (you.magic_points < you.max_magic_points)
                 {
                     mpr("You feel your power returning.");
-                    inc_mp( 1 + random2(monster->hit_dice / 2), false );
+                    inc_mp(1 + random2(monster->hit_dice / 2), false);
                 }
             }
 
@@ -1281,18 +1281,36 @@ void monster_die(monsters *monster, killer_type killer,
                 && mons_can_be_zombified(monster)
                 && gives_xp)
             {
-                const monster_type spectre = mons_species(monster->type);
+                const int type = monster->type;
+                const int spectre_type = mons_species(type);
+                const std::string name_plain = monster->name(DESC_PLAIN);
 
                 // Don't allow 0-headed hydras to become spectral hydras.
-                if ((spectre != MONS_HYDRA || monster->number != 0)
-                    && create_monster(
-                        mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY,
-                                  0, monster->pos(), you.pet_target,
-                                  0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
-                                  spectre, monster->number)) != -1)
+                if (spectre_type != MONS_HYDRA || monster->number != 0)
                 {
-                    if (death_message)
-                        mpr("A glowing mist starts to gather...");
+                    const int spectre =
+                        create_monster(
+                            mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY,
+                                0, monster->pos(), you.pet_target,
+                                0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
+                                spectre_type, monster->number)) != -1)
+
+                    if (spectre != -1)
+                    {
+                        if (death_message)
+                            mpr("A glowing mist starts to gather...");
+
+                        if (mons_is_unique(type))
+                        {
+                            menv[spectre].mname = name_plain;
+
+                            // Special case for Blork the orc: shorten
+                            // his name to "Blork" to avoid mentions of
+                            // "Blork the orc the spectral orc".
+                            if (type == MONS_BLORK_THE_ORC)
+                                menv[spectre].mname = "Blork";
+                        }
+                    }
                 }
             }
             break;
