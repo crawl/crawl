@@ -72,7 +72,7 @@ Being skilled in Staves makes becoming skilled in Polearms easier.
 Slings
 
 Being skilled in a particular type of ranged attack will let you deal 
-more damage when using the appropriate launcher an dammunition.
+more damage when using the appropriate launcher and ammunition.
 
 If you're already trained in Throwing, you'll pick up the Slings skill
 faster, and vice versa.
@@ -90,7 +90,7 @@ more damage when using the appropriate launcher and ammunition.
 Darts
 
 Being skilled in a particular type of ranged attack will let you deal 
-more damage when using the appropriate launcher an dammunition.
+more damage when using the appropriate launcher and ammunition.
 %%%%
 Throwing
 
