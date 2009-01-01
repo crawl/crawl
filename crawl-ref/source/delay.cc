@@ -465,12 +465,11 @@ void stop_delay( bool stop_stair_travel )
         item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
                                         : mitm[delay.parm2]);
 
-        if (mons_skeleton(corpse.plus))
-        {
-            mpr("All blood oozes out of the corpse!");
-            bleed_onto_floor(you.pos(), corpse.plus, delay.duration, false);
-            turn_corpse_into_skeleton(corpse, 90);
-        }
+        mpr("All blood oozes out of the corpse!");
+        bleed_onto_floor(you.pos(), corpse.plus, delay.duration, false);
+
+        if (mons_skeleton(corpse.plus) && one_chance_in(4))
+            turn_corpse_into_skeleton(corpse);
         else
         {
             if (delay.parm1)
@@ -1093,7 +1092,7 @@ static void _finish_delay(const delay_queue_item &delay)
         vampire_nutrition_per_turn(corpse, 1);
 
         if (mons_skeleton(corpse.plus) && !one_chance_in(4))
-            turn_corpse_into_skeleton(corpse, 90);
+            turn_corpse_into_skeleton(corpse);
         else
         {
             if (delay.parm1)
@@ -1214,7 +1213,10 @@ static void _finish_delay(const delay_queue_item &delay)
 
                 item_def &corpse = mitm[delay.parm1];
 
-                turn_corpse_into_chunks(corpse);
+                if (mons_skeleton(corpse.plus) && one_chance_in(4))
+                    turn_corpse_into_skeleton_and_chunks(corpse);
+                else
+                    turn_corpse_into_chunks(corpse);
 
                 if (you.duration[DUR_BERSERKER]
                     && you.berserk_penalty != NO_BERSERK_PENALTY)

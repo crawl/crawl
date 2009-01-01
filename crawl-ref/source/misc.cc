@@ -132,10 +132,7 @@ static void _create_monster_hide(int mons_class)
     move_item_to_grid(&o, you.pos());
 }
 
-// Vampire draining corpses currently leaves them a time of 90, while
-// the default time is 200. I'm not sure whether this is for balancing
-// reasons or just an arbitrary difference. (jpeg)
-void turn_corpse_into_skeleton(item_def &item, int time)
+void turn_corpse_into_skeleton(item_def &item)
 {
     ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
 
@@ -153,7 +150,7 @@ void turn_corpse_into_skeleton(item_def &item, int time)
         item.plus = MONS_RAT;
 
     item.sub_type = CORPSE_SKELETON;
-    item.special  = time;
+    item.special  = 200;
     item.colour   = LIGHTGREY;
 }
 
@@ -178,6 +175,24 @@ void turn_corpse_into_chunks(item_def &item)
     // Happens after the corpse has been butchered.
     if (monster_descriptor(item.plus, MDSC_LEAVES_HIDE) && !one_chance_in(3))
         _create_monster_hide(item.plus);
+}
+
+void turn_corpse_into_skeleton_and_chunks(item_def &item)
+{
+    ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
+
+    if (mons_skeleton(item.plus))
+    {
+        int o = get_item_slot();
+        if (o != NON_ITEM)
+        {
+            item_def &skel = item;
+            turn_corpse_into_skeleton(skel);
+            copy_item_to_grid(skel, you.pos());
+        }
+    }
+
+    turn_corpse_into_chunks(item);
 }
 
 // Initialize blood potions with a vector of timers.

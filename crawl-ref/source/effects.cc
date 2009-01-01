@@ -2949,9 +2949,15 @@ static void _rot_inventory_food(long time_delta)
                 continue;
             }
 
-            // Carried skeletons are not destroyed.
             if (you.inv[i].sub_type == CORPSE_SKELETON)
+            {
+                if (you.equip[EQ_WEAPON] == i)
+                    unwield_item();
+
+                destroy_item(you.inv[i]);
+                burden_changed_by_rot = true;
                 continue;
+            }
 
             if (!mons_skeleton(you.inv[i].plus))
             {

@@ -4741,7 +4741,8 @@ bool monsters::eat_corpse(item_def &item, int near)
 
     // Assume that eating a corpse requires butchering it.
     //
-    // Use logic from misc.cc:turn_corpse_into_chunks().
+    // Use logic from misc.cc:turn_corpse_into_chunks() and
+    // the butchery-related delays in delay.cc:stop_delay().
 
     const int max_chunks = mons_weight(item.plus) / 150;
 
@@ -4749,7 +4750,10 @@ bool monsters::eat_corpse(item_def &item, int near)
     if (!food_is_rotten(item))
         bleed_onto_floor(pos(), item.plus, max_chunks, true);
 
-    destroy_item(item.index());
+    if (mons_skeleton(item.plus) && one_chance_in(4))
+        turn_corpse_into_skeleton(item);
+    else
+        destroy_item(item.index());
 
     return (true);
 }
