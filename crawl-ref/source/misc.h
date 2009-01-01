@@ -104,8 +104,8 @@ int speed_to_duration(int speed);
 
 bool scramble(void);
 
-bool interrupt_cmd_repeat( activity_interrupt_type ai,
-                           const activity_interrupt_data &at );
+bool interrupt_cmd_repeat(activity_interrupt_type ai,
+                          const activity_interrupt_data &at);
 
 void reveal_secret_door(const coord_def& p);
 
