@@ -24,8 +24,8 @@ bool merfolk_change_is_safe(bool quiet = false);
 void merfolk_start_swimming();
 void new_level();
 void trackers_init_new_level(bool transit);
-void turn_corpse_into_skeleton(item_def &corpse, int time = 200);
-void turn_corpse_into_chunks( item_def &item );
+void turn_corpse_into_skeleton(item_def &item, int time = 200);
+void turn_corpse_into_chunks(item_def &item);
 
 void init_stack_blood_potions( item_def &stack, int age = -1 );
 void maybe_coagulate_blood_potions_floor( int obj );

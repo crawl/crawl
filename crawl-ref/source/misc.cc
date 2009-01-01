@@ -80,21 +80,20 @@
 #include "view.h"
 #include "xom.h"
 
-static void create_monster_hide(int mons_class)
+static void _create_monster_hide(int mons_class)
 {
     int o = get_item_slot();
     if (o == NON_ITEM)
         return;
 
-    mitm[o].quantity = 1;
-
     // These values are common to all: {dlb}
     mitm[o].base_type = OBJ_ARMOUR;
+    mitm[o].quantity  = 1;
     mitm[o].plus      = 0;
     mitm[o].plus2     = 0;
     mitm[o].special   = 0;
     mitm[o].flags     = 0;
-    mitm[o].colour    = mons_class_colour( mons_class );
+    mitm[o].colour    = mons_class_colour(mons_class);
 
     // These values cannot be set by a reasonable formula: {dlb}
     switch (mons_class)
@@ -130,61 +129,54 @@ static void create_monster_hide(int mons_class)
         break;
     }
 
-    move_item_to_grid( &o, you.pos() );
+    move_item_to_grid(&o, you.pos());
 }
 
 // Vampire draining corpses currently leaves them a time of 90, while the
 // default time is 200. I'm not sure whether this is for balancing reasons
 // or just an arbitrary difference. (jpeg)
-void turn_corpse_into_skeleton(item_def &corpse, int time)
+void turn_corpse_into_skeleton(item_def &item, int time)
 {
-    ASSERT(corpse.base_type == OBJ_CORPSES && corpse.sub_type == CORPSE_BODY);
+    ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
 
     // Some monsters' corpses lack the structure to leave skeletons behind.
-    if (!mons_skeleton(corpse.plus))
+    if (!mons_skeleton(item.plus))
         return;
 
     // While it is possible to distinguish draconian corpses by colour, their
     // skeletons are indistinguishable.
-    if (mons_genus(corpse.plus) == MONS_DRACONIAN
-        && corpse.plus != MONS_DRACONIAN)
-    {
-        corpse.plus = MONS_DRACONIAN;
-    }
+    if (mons_genus(item.plus) == MONS_DRACONIAN && item.plus != MONS_DRACONIAN)
+        item.plus = MONS_DRACONIAN;
     // The same goes for rat corpses.
-    else if (mons_genus(corpse.plus) == MONS_RAT
-        && corpse.plus != MONS_RAT)
-    {
-        corpse.plus = MONS_RAT;
-    }
+    else if (mons_genus(item.plus) == MONS_RAT && item.plus != MONS_RAT)
+        item.plus = MONS_RAT;
 
-    corpse.sub_type = CORPSE_SKELETON;
-    corpse.special  = time;
-    corpse.colour   = LIGHTGREY;
+    item.sub_type = CORPSE_SKELETON;
+    item.special  = time;
+    item.colour   = LIGHTGREY;
 }
 
-void turn_corpse_into_chunks( item_def &item )
+void turn_corpse_into_chunks(item_def &item)
 {
-    ASSERT( item.base_type == OBJ_CORPSES );
+    ASSERT(item.base_type == OBJ_CORPSES);
 
-    const int mons_class = item.plus;
-    const int max_chunks = mons_weight( mons_class ) / 150;
+    const int max_chunks = mons_weight(item.plus) / 150;
 
     // Only fresh corpses bleed enough to colour the ground.
     if (!food_is_rotten(item))
-        bleed_onto_floor(you.pos(), mons_class, max_chunks, true);
+        bleed_onto_floor(you.pos(), item.plus, max_chunks, true);
 
     item.base_type = OBJ_FOOD;
     item.sub_type  = FOOD_CHUNK;
-    item.quantity  = 1 + random2( max_chunks );
-    item.quantity = stepdown_value( item.quantity, 4, 4, 12, 12 );
+    item.quantity  = 1 + random2(max_chunks);
+    item.quantity  = stepdown_value(item.quantity, 4, 4, 12, 12);
 
     if (you.species != SP_VAMPIRE)
         item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     // Happens after the corpse has been butchered.
-    if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
-        create_monster_hide(mons_class);
+    if (monster_descriptor(item.plus, MDSC_LEAVES_HIDE) && !one_chance_in(3))
+        _create_monster_hide(item.plus);
 }
 
 // Initialize blood potions with a vector of timers.
@@ -364,7 +356,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
     }
 
     // Else, create a new stack of potions.
-    int o = get_item_slot( 20 );
+    int o = get_item_slot(20);
     if (o == NON_ITEM)
         return;
 
@@ -393,7 +385,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
 
     ASSERT(timer_new.size() == coag_count);
     props_new.assert_validity();
-    move_item_to_grid( &o, blood.pos );
+    move_item_to_grid(&o, blood.pos);
 
     dec_mitm_item_quantity(obj, rot_count + coag_count);
     ASSERT(timer.size() == blood.quantity);
@@ -722,7 +714,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
     ASSERT(timer_new.size() == coag_count);
     props_new.assert_validity();
-    move_item_to_grid( &o, you.pos() );
+    move_item_to_grid(&o, you.pos());
 
     blood.quantity -= rot_count + coag_count;
     if (blood.quantity < 1)
@@ -960,7 +952,7 @@ void turn_corpse_into_blood_potions( item_def &item )
 
     // Happens after the blood has been bottled.
     if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
-        create_monster_hide(mons_class);
+        _create_monster_hide(mons_class);
 }
 
 // A variation of the mummy curse:
@@ -1008,7 +1000,6 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
                 you.inv[obj].quantity -= amount;
 
             you.inv[m].quantity += amount;
-
             return;
         }
     }
@@ -1047,7 +1038,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     // Okay, inventory is full.
 
     // Check whether we can merge with an existing stack on the floor.
-    for ( stack_iterator si(you.pos()); si; ++si )
+    for (stack_iterator si(you.pos()); si; ++si)
     {
         if (si->base_type == OBJ_POTIONS && si->sub_type == POT_DECAY)
         {
@@ -1072,10 +1063,11 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
         potion2.flags     = 0;
         potion2.special   = 0;
 
-        copy_item_to_grid( potion2, you.pos() );
-   }
-   // Is decreased even if the decay stack goes splat.
-   dec_inv_item_quantity(obj, amount);
+        copy_item_to_grid(potion2, you.pos());
+    }
+
+    // Is decreased even if the decay stack goes splat.
+    dec_inv_item_quantity(obj, amount);
 }
 
 // Checks whether the player or a monster is capable of bleeding.

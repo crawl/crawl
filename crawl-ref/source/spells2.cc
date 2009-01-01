@@ -235,7 +235,7 @@ int corpse_rot(int pow)
             {
                 if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
                 {
-                    // Found a corpse. Skeletonise it if possible.
+                    // Found a corpse.  Skeletonise it if possible.
                     if (!mons_skeleton(si->plus))
                         destroy_item(si->index());
                     else

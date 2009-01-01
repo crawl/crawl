@@ -1040,25 +1040,25 @@ void cast_swap(int pow)
 
 static int _make_a_rot_cloud(const coord_def& where, int pow, cloud_type ctype)
 {
-    for ( stack_iterator si(where); si; ++si )
+    for (stack_iterator si(where); si; ++si)
     {
-        if (si->base_type == OBJ_CORPSES
-            && si->sub_type == CORPSE_BODY)
+        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
+            // Found a corpse.  Skeletonise it if possible.
             if (!mons_skeleton(si->plus))
                 destroy_item(si->index());
             else
                 turn_corpse_into_skeleton(*si);
 
             place_cloud(ctype, where,
-                        (3 + random2(pow / 4) + random2(pow / 4) +
-                         random2(pow / 4)),
+                        (3 + random2(pow / 4) + random2(pow / 4)
+                           + random2(pow / 4)),
                         KC_YOU);
-            return 1;
+            return (1);
         }
     }
 
-    return 0;
+    return (0);
 }
 
 int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
