@@ -5620,6 +5620,9 @@ static bool _handle_wand(monsters *monster, bolt &beem)
         return (false);
     }
 
+    if (beem.target == monster->pos())
+        beem.aimed_at_feet = true;
+
     // Fire tracer, if necessary.
     if (!niceWand)
     {
