@@ -420,6 +420,10 @@ TAGS:     Tags go an a TAGS: line and are space-separated. You can have several
              Can be applied only to particular symbols with KMASK.
           * "no_pool_fixup": prevents water squares next to land from being
              randomly converted from deep water (the default) to shallow.
+          * "no_wall_fixup": In Dis, the Vaults and the Crypt a vault's
+             rock walls will be changed to be the same as the wall type of
+             the rest of the level.  If you don't want that to happen then
+             use this tag.
           * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
              the vaults with this tag can be used in a game.
           * "luniq": specifies that this vault can be used only once on a

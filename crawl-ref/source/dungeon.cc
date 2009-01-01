@@ -774,6 +774,9 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
     if (place.map.has_tag("no_pool_fixup"))
         _mask_vault(place, MMT_NO_POOL);
 
+    if (place.map.has_tag("no_wall_fixup"))
+        _mask_vault(place, MMT_NO_WALL);
+
     if (!place.map.has_tag("transparent"))
         _mask_vault(place, MMT_OPAQUE);
 
@@ -1076,7 +1079,7 @@ static void _fixup_walls()
             vault_wall = DNGN_STONE_WALL;
         }
 
-        _replace_area(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,vault_wall);
+        _replace_area(0,0,GXM-1,GYM-1,DNGN_ROCK_WALL,vault_wall,MMT_NO_WALL);
     }
 }
 
