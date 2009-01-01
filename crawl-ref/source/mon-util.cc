@@ -4722,27 +4722,35 @@ bool monsters::pickup_gold(item_def &item, int near)
     return pickup(item, MSLOT_GOLD, near);
 }
 
-bool monsters::eat_corpse(item_def &carrion, int near)
+bool monsters::eat_corpse(item_def &item, int near)
 {
     if (!mons_eats_corpses(this))
         return (false);
 
-    hit_points += 1 + random2(mons_weight(carrion.plus)) / 100;
+    hit_points += 1 + random2(mons_weight(item.plus)) / 100;
 
     // Limited growth factor here -- should 77 really be the cap? {dlb}:
-    if (hit_points > 100)
-        hit_points = 100;
-
-    if (hit_points > max_hit_points)
-        max_hit_points = hit_points;
+    hit_points = std::min(100, hit_points);
+    max_hit_points = std::max(hit_points, max_hit_points);
 
     if (need_message(near))
     {
         mprf("%s eats %s.", name(DESC_CAP_THE).c_str(),
-             carrion.name(DESC_NOCAP_THE).c_str());
+             item.name(DESC_NOCAP_THE).c_str());
     }
 
-    destroy_item( carrion.index() );
+    // Assume that eating a corpse requires butchering it.
+    //
+    // Use logic from misc.cc:turn_corpse_into_chunks().
+
+    const int max_chunks = mons_weight(item.plus) / 150;
+
+    // Only fresh corpses bleed enough to colour the ground.
+    if (!food_is_rotten(item))
+        bleed_onto_floor(pos(), item.plus, max_chunks, true);
+
+    destroy_item(item.index());
+
     return (true);
 }
 

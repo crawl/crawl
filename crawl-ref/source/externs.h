@@ -1407,7 +1407,7 @@ public:
     bool      pickup_armour(item_def &item, int near, bool force);
     bool      pickup_misc(item_def &item, int near);
     bool      pickup_missile(item_def &item, int near, bool force);
-    bool      eat_corpse(item_def &carrion, int near);
+    bool      eat_corpse(item_def &item, int near);
     void      equip(item_def &item, int slot, int near = -1);
     bool      unequip(item_def &item, int slot, int near = -1,
                       bool force = false);
