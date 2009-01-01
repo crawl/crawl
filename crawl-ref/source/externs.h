@@ -2023,6 +2023,9 @@ public:
     int         travel_delay;   // How long to pause between travel moves
 
     int         arena_delay;
+    bool        arena_dump_msgs;
+    bool        arena_dump_msgs_all;
+    bool        arena_list_eq;
 
     // Messages that stop travel
     std::vector<message_filter> travel_stop_message;

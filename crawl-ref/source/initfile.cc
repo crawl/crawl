@@ -711,6 +711,9 @@ void game_options::reset_options()
     travel_stair_cost      = 500;
 
     arena_delay            = 600;
+    arena_dump_msgs        = false;
+    arena_dump_msgs_all    = false;
+    arena_list_eq          = false;
 
     // Sort only pickup menus by default.
     sort_menus.clear();
@@ -3067,6 +3070,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
             constants.insert(field);
     }
+    else INT_OPTION(arena_delay, 1, INT_MAX);
+    else BOOL_OPTION(arena_dump_msgs);
+    else BOOL_OPTION(arena_dump_msgs_all);
+    else BOOL_OPTION(arena_list_eq);
 
     // Catch-all else, copies option into map
     else if (runscript)

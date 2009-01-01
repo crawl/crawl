@@ -49,8 +49,8 @@ namespace arena
     std::string arena_type = "";
     faction faction_a(true);
     faction faction_b(false);
-
     FILE *file = NULL;
+    int message_pos = 0;
 
     void adjust_monsters()
     {
@@ -70,6 +70,32 @@ namespace arena
                         spells[i] = SPELL_NO_SPELL;
                 }
             }
+        }
+    }
+
+    void list_eq(int imon)
+    {
+        if (!Options.arena_list_eq || file == NULL)
+            return;
+
+        const monsters* mon = &menv[imon];
+
+        std::vector<int> items;
+
+        for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
+            if (mon->inv[i] != NON_ITEM)
+                items.push_back(mon->inv[i]);
+
+        if (items.size() == 0)
+            return;
+
+        fprintf(file, "%s:\n", mon->name(DESC_PLAIN, true).c_str());
+
+        for (unsigned int i = 0; i < items.size(); i++)
+        {
+            item_def &item = mitm[items[i]];
+            fprintf(file, "        %s\n",
+                    item.name(DESC_PLAIN, false, true).c_str());
         }
     }
 
@@ -95,6 +121,7 @@ namespace arena
                 if (imon == -1)
                     end(1, false, "Failed to create monster at (%d,%d)",
                         place.x, place.y);
+                list_eq(imon);
             }
         }
     }
@@ -369,6 +396,20 @@ namespace arena
         return (false);
     }
 
+
+    void dump_messages()
+    {
+        if (!Options.arena_dump_msgs || file == NULL)
+            return;
+
+        std::vector<std::string> messages =
+            get_recent_messages(message_pos,
+                                !Options.arena_dump_msgs_all);
+
+        for (unsigned int i = 0; i < messages.size(); i++)
+            fprintf(file, "%s\n", messages[i].c_str());
+    }
+
     void do_fight()
     {
         mesclr(true);
@@ -388,6 +429,7 @@ namespace arena
                 world_reacts();
                 delay(Options.arena_delay);
                 mesclr();
+                dump_messages();
             }
             viewwindow(true, false);
         }
@@ -403,8 +445,15 @@ namespace arena
 
         show_fight_banner(true);
 
-        mprf("Winner: %s!",
+        const char *msg;
+        if (Options.arena_dump_msgs || Options.arena_list_eq)
+            msg = "---------- Winner: %s! ----------";
+        else
+            msg = "Winner: %s!";
+
+        mprf(msg,
              team_a_won ? faction_a.desc.c_str() : faction_b.desc.c_str());
+        dump_messages();
     }
 
     void global_setup()
@@ -417,6 +466,9 @@ namespace arena
         {
             std::string spec = find_monster_spec();
             fprintf(file, "%s\n", spec.c_str());
+
+            if (Options.arena_dump_msgs || Options.arena_list_eq)
+                fprintf(file, "========================================\n");
         }
 
         expand_mlist(5);
@@ -433,7 +485,11 @@ namespace arena
     void write_results()
     {
         if (file != NULL)
+        {
+            if (Options.arena_dump_msgs || Options.arena_list_eq)
+                fprintf(file, "========================================\n");
             fprintf(file, "%d-%d\n", team_a_wins, trials_done - team_a_wins);
+        }
     }
 
     void write_error(const std::string &error)

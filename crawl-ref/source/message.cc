@@ -997,6 +997,38 @@ std::string get_last_messages(int mcount)
     return text;
 }
 
+std::vector<std::string> get_recent_messages(int &message_pos,
+                                             bool dumpworthy_only,
+                                             std::vector<int> *channels)
+{
+    ASSERT(message_pos >= 0 && message_pos < NUM_STORED_MESSAGES);
+
+    std::vector<int> _channels;
+    if (channels == NULL)
+        channels = &_channels;
+
+    std::vector<std::string> out;
+
+    while (message_pos != Next_Message)
+    {
+        const message_item &msg = Store_Message[message_pos++];
+
+        if (message_pos >= NUM_STORED_MESSAGES)
+            message_pos -= NUM_STORED_MESSAGES;
+
+        if (msg.text.empty())
+            continue;
+
+        if (dumpworthy_only && !is_channel_dumpworthy(msg.channel))
+            continue;
+
+        out.push_back(formatted_string::parse_string(msg.text).tostring());
+        channels->push_back( (int) msg.channel );
+    }
+
+    return (out);
+}
+
 void save_messages(writer& outf)
 {
     marshallLong( outf, Next_Message );
