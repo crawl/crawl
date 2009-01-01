@@ -551,7 +551,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     const bool silent    = silenced(monster->pos()) || force_silent;
     const bool no_silent = mons_class_flag(monster->type, M_SPELL_NO_SILENT);
 
-    if (unseen && silent || silent && no_silent)
+    if (unseen && silent)
         return;
 
     const unsigned int flags = get_spell_flags(real_spell);
@@ -612,14 +612,28 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     else if (mons_is_demon(monster->type))
         key_list.push_back("demon" + cast_str);
 
-    // For targeted spells, try with the targeted suffix first.
-    if (in_bounds(pbolt.target) && pbolt.target != monster->pos()
-        && (flags & SPFLAG_TARGETING_MASK))
+    const bool visible_beam = pbolt.type != 0 && pbolt.type != ' '
+                           && pbolt.name[0] != '0'
+                           && !pbolt.is_enchantment();
+
+    const bool targeted = in_bounds(pbolt.target)
+        && pbolt.target != monster->pos()
+        && (flags & SPFLAG_TARGETING_MASK);
+
+    if (targeted)
     {
+        // For targeted spells, try with the targeted suffix first.
         for (unsigned int i = key_list.size() - 1; i >= num_spell_keys; i--)
         {
             std::string str = key_list[i] + " targeted";
             key_list.insert(key_list.begin() + i, str);
+        }
+
+        // Generic beam messages.
+        if (visible_beam)
+        {
+            key_list.push_back(pbolt.short_name + " beam " + cast_str);
+            key_list.push_back("beam catchall cast");
         }
     }
 
@@ -719,8 +733,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     {
         beam_name = "INVALID BEAM";
     }
-    else if (pbolt.type == 0 || pbolt.type == ' ' || pbolt.name[0] == '0'
-             || pbolt.is_enchantment())
+    else if (!visible_beam)
     {
         beam_name = "INVISIBLE BEAM";
     }

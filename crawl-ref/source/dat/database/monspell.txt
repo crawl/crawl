@@ -13,6 +13,8 @@
 # 4) The name of the monster's genus.
 # 5) "priest" if the monster is a priest type, "wizard" if it's a wizard type,
 #    or "demon" if it's demonic.
+# 6) If the spell uses a targeted, visible beam, it will try
+#    "<beam_short_name> beam cast", then "beam catchall cast".
 #
 # For 2 to 5, if the spell has a target it will first add the suffix
 # "targeted" to the lookup key before trying without the suffix.
@@ -46,6 +48,30 @@ Animate Dead cast gestures
 @The_monster@ gestures at the surrounding area.
 
 @The_monster@ throws @possessive@ @arms@ wide.
+%%%%
+Lesser Healing cast real
+
+__NEXT
+%%%%
+Lesser Healing cast gestures
+
+@The_monster@ briefly glows while making a small gesture.
+%%%%
+Lesser Healing cast
+
+@The_monster@ briefly glows.
+%%%%
+Greater Healing cast real
+
+__NEXT
+%%%%
+Greater Healing cast gestures
+
+@The_monster@ briefly glows brightly while making a large gesture.
+%%%%
+Greater Healing cast
+
+@The_monster@ briefly glows brightly.
 %%%%
 Symbol of Torment cast
 
@@ -215,4 +241,11 @@ demon cast targeted
 demon cast
 
 @The_monster@ gestures.
+%%%%
+######################################################
+# Generic beam messages.
+######################################################
+beam catchall cast
+
+@The_monster@ throws @beam@ at @target@.
 %%%%
