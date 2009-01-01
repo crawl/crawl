@@ -159,7 +159,7 @@ void turn_corpse_into_skeleton(item_def &item, int time)
 
 void turn_corpse_into_chunks(item_def &item)
 {
-    ASSERT(item.base_type == OBJ_CORPSES);
+    ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
 
     const int max_chunks = mons_weight(item.plus) / 150;
 
@@ -931,18 +931,18 @@ int num_blood_potions_from_corpse(int mons_class, int chunk_type)
 }
 
 // If autopickup is active, the potions are auto-picked up after creation.
-void turn_corpse_into_blood_potions( item_def &item )
+void turn_corpse_into_blood_potions(item_def &item)
 {
-    ASSERT( item.base_type == OBJ_CORPSES );
-    ASSERT( !food_is_rotten(item) );
+    ASSERT(item.base_type == OBJ_CORPSES);
+    ASSERT(!food_is_rotten(item));
 
     const int mons_class = item.plus;
-    ASSERT( can_bottle_blood_from_corpse(mons_class) );
+    ASSERT(can_bottle_blood_from_corpse(mons_class));
 
     item.base_type = OBJ_POTIONS;
     item.sub_type  = POT_BLOOD;
     item_colour(item);
-    item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+    item.flags    &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     item.quantity = num_blood_potions_from_corpse(mons_class);
 

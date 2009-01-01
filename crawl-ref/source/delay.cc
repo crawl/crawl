@@ -461,6 +461,7 @@ void stop_delay( bool stop_stair_travel )
     {
         mpr("You stop draining the corpse.");
         _xom_check_corpse_waste();
+
         item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
                                         : mitm[delay.parm2]);
 
@@ -1175,7 +1176,10 @@ static void _finish_delay(const delay_queue_item &delay)
             if (delay.type == DELAY_BOTTLE_BLOOD)
             {
                 mpr("You finish bottling this corpse's blood.");
-                turn_corpse_into_blood_potions(mitm[delay.parm1]);
+
+                item_def &corpse = mitm[delay.parm1];
+
+                turn_corpse_into_blood_potions(corpse);
             }
             else
             {
@@ -1208,7 +1212,9 @@ static void _finish_delay(const delay_queue_item &delay)
                     mpr("What a waste.");
                 }
 
-                turn_corpse_into_chunks(mitm[delay.parm1]);
+                item_def &corpse = mitm[delay.parm1];
+
+                turn_corpse_into_skeleton_and_chunks(corpse);
 
                 if (you.duration[DUR_BERSERKER]
                     && you.berserk_penalty != NO_BERSERK_PENALTY)
