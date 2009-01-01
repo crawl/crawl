@@ -3406,6 +3406,17 @@ bool remove_ring(int slot, bool announce)
     return (true);
 }
 
+int _wand_range(zap_type ztype)
+{
+    // FIXME: Eventually we should have sensible values here.
+    return (8);
+}
+
+int _max_wand_range()
+{
+    return (8);
+}
+
 void zap_wand(int slot)
 {
     bolt beam;
@@ -3455,6 +3466,8 @@ void zap_wand(int slot)
     if (you.equip[EQ_WEAPON] == item_slot)
         you.wield_change = true;
 
+    const zap_type type_zapped = wand.zap();
+
     bool has_charges = true;
     if (wand.plus < 1)
     {
@@ -3496,8 +3509,10 @@ void zap_wand(int slot)
         }
     }
 
+    int tracer_range = (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
+        _wand_range(type_zapped) : _max_wand_range();
     message_current_target();
-    direction(zap_wand, DIR_NONE, targ_mode);
+    direction(zap_wand, DIR_NONE, targ_mode, tracer_range);
 
     if (!zap_wand.isValid)
     {
@@ -3524,22 +3539,23 @@ void zap_wand(int slot)
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
         beam.effect_known = false;
 
-    zap_type type_zapped = static_cast<zap_type>(wand.zap());
     beam.source = you.pos();
     beam.set_target(zap_wand);
-
     beam.aimed_at_feet = (beam.target == you.pos());
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
     // flavour). Don't use the tracer if firing at self.
-    if (!beam.aimed_at_feet
-        && !player_tracer(beam.effect_known ? type_zapped
-                                            : ZAP_DEBUGGING_RAY,
-                          2 * (you.skills[SK_EVOCATIONS] - 1),
-                          beam, beam.effect_known ? 0 : 17))
+    if (!beam.aimed_at_feet)
     {
-        return;
+        beam.range = tracer_range;
+        if (!player_tracer(beam.effect_known ? type_zapped
+                                             : ZAP_DEBUGGING_RAY,
+                           2 * (you.skills[SK_EVOCATIONS] - 1),
+                           beam, beam.effect_known ? 0 : 17))
+        {
+            return;
+        }
     }
 
     // Zapping the wand isn't risky if you aim it away from all monsters
@@ -3555,6 +3571,8 @@ void zap_wand(int slot)
         xom_is_stimulated(255);
     }
 
+    // Reset range.
+    beam.range = _wand_range(type_zapped);
     // zapping() updates beam.
     zapping( type_zapped, 30 + roll_dice(2, you.skills[SK_EVOCATIONS]), beam );
 
