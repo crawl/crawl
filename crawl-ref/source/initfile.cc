@@ -3070,7 +3070,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
             constants.insert(field);
     }
-    else INT_OPTION(arena_delay, 1, INT_MAX);
+    else INT_OPTION(arena_delay, 0, INT_MAX);
     else BOOL_OPTION(arena_dump_msgs);
     else BOOL_OPTION(arena_dump_msgs_all);
     else BOOL_OPTION(arena_list_eq);
