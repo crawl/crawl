@@ -222,8 +222,9 @@ static bool _find_butchering_implement(int &butcher_tool)
             && can_cut_meat( tool )
             && can_wield( &tool )
             // Don't even suggest autocursing items.
+            // Note that unknown autocursing is OK.
             && (!is_random_artefact(tool)
-                || !randart_known_wpn_property(tool, RAP_CURSED)))
+                || (randart_known_wpn_property(tool, RAP_CURSED) <= 0)))
         {
             if (Options.easy_butcher
                 && item_known_uncursed(tool)
