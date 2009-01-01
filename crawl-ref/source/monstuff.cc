@@ -2291,6 +2291,10 @@ static bool _wounded_damaged(int monster_type)
 void behaviour_event(monsters *mon, int event, int src,
                      coord_def src_pos)
 {
+    ASSERT(src >= 0 && src <= MHITYOU);
+    ASSERT(!crawl_state.arena || src != MHITYOU);
+    ASSERT(in_bounds(src_pos) || src_pos == coord_def());
+
     beh_type old_behaviour = mon->behaviour;
 
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
@@ -2488,6 +2492,9 @@ void behaviour_event(monsters *mon, int event, int src,
         // unsubmerge.
         mon->behaviour = BEH_LURK;
     }
+
+    ASSERT(!crawl_state.arena
+           || mon->foe != MHITYOU && mon->target != you.pos());
 }
 
 static bool _choose_random_patrol_target_grid(monsters *mon)

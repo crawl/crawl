@@ -1213,6 +1213,8 @@ inline static bool _update_monster_grid(const monsters *monster)
 
 void monster_grid(bool do_updates)
 {
+    do_updates = do_updates && !crawl_state.arena;
+
     monsters *monster = NULL;
 
     for (int s = 0; s < MAX_MONSTERS; s++)
