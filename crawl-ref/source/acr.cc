@@ -1614,6 +1614,12 @@ static void _input()
         // the keys to repeat are recorded.
         if (cmd == CMD_REPEAT_CMD)
             return;
+
+        // If the command was CMD_PREV_CMD_AGAIN then _input() has been
+        // recursively called by _do_prev_cmd_again() via process_command()
+        // to re-do the command, so there's nothing more to do.
+        if (cmd == CMD_PREV_CMD_AGAIN)
+            return;
     }
 
     if (need_to_autoinscribe())
