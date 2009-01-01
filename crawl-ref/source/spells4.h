@@ -41,6 +41,7 @@ void cast_intoxicate(int pow);
 void cast_mass_sleep(int pow);
 void cast_passwall(int pow);
 void cast_rotting(int pow);
+bool wielding_rocks();
 bool cast_sandblast(int powc, bolt &beam);
 void cast_see_invisible(int pow);
 

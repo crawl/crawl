@@ -2467,7 +2467,7 @@
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF | SPFLAG_BATTLE,
      1,
      50,
-     1, 2,
+     1, 1,                      // Special-cased!
      0,
      NULL,
      true,

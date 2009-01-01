@@ -29,6 +29,7 @@
 #include "monstuff.h"
 #include "notes.h"
 #include "player.h"
+#include "spells4.h"
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
@@ -958,11 +959,28 @@ int spell_power_cap(spell_type spell)
     return (_seekspell(spell)->power_cap);
 }
 
+// Sandblast range is 1 if not wielding rocks, 1-2 if you are.
+// For targetting purposes, of course, be optimistic about range.
+static int _sandblast_range(int pow, bool real_cast)
+{
+    int res = 1;
+
+    if (wielding_rocks() && (!real_cast || coinflip()))
+            res = 2;
+
+    return (res);
+}
+
+
 int spell_range(spell_type spell, int pow, bool real_cast)
 {
     const int minrange = _seekspell(spell)->min_range;
     const int maxrange = _seekspell(spell)->max_range;
     ASSERT(maxrange >= minrange);
+
+    // Some cases need to be handled specially.
+    if (spell == SPELL_SANDBLAST)
+        return _sandblast_range(pow, real_cast);
 
     if (minrange == maxrange)
         return minrange;

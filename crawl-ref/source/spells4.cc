@@ -2345,19 +2345,23 @@ int cast_apportation(int pow)
     return (done);
 }
 
-bool cast_sandblast(int pow, bolt &beam)
+bool wielding_rocks()
 {
-    bool big = false;
-
+    bool rc = false;
     if (you.weapon())
     {
         const item_def& wpn(*you.weapon());
-        big = (wpn.base_type == OBJ_MISSILES
-               && (wpn.sub_type == MI_STONE || wpn.sub_type == MI_LARGE_ROCK));
+        rc = (wpn.base_type == OBJ_MISSILES
+              && (wpn.sub_type == MI_STONE || wpn.sub_type == MI_LARGE_ROCK));
     }
+    return (rc);
+}
 
-    bool success = zapping(big ? ZAP_SANDBLAST
-                               : ZAP_SMALL_SANDBLAST, pow, beam, true);
+bool cast_sandblast(int pow, bolt &beam)
+{
+    const bool big = wielding_rocks();
+    const bool success = zapping(big ? ZAP_SANDBLAST
+                                     : ZAP_SMALL_SANDBLAST, pow, beam, true);
 
     if (big && success)
         dec_inv_item_quantity( you.equip[EQ_WEAPON], 1 );
