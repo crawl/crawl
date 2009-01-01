@@ -8095,7 +8095,7 @@ static void _mons_in_cloud(monsters *monster)
             return;
         }
 
-        simple_monster_message(monster, " is engulfed in flame!");
+        simple_monster_message(monster, " is engulfed in flames!");
 
         hurted +=
             resist_adjust_damage( monster,
