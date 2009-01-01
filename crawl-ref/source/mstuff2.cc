@@ -722,6 +722,69 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         }
     }
 
+    // Monster might be aiming past the real target, or maybe some fuzz has
+    // been applied because the monster can't see the target.
+    if (target == "something" && targeted)
+    {
+        bolt tracer = pbolt;
+
+        fire_tracer(monster, tracer);
+
+        const std::vector<coord_def> &path = tracer.path_taken;
+
+        bool mons_targ_aligned = false;
+
+        for (unsigned int i = 0; i < path.size(); i++)
+        {
+            const coord_def pos = path[i];
+
+            if (pos == monster->pos())
+                continue;
+
+            const int midx = mgrd(pos);
+            if (pos == you.pos())
+            {
+                // Be egotistical and assume that the monster is aiming at
+                // the player, rather than the player being in the path of
+                // a beam aimed at an ally.
+                if (!mons_wont_attack(monster))
+                {
+                    target = "you";
+                    break;
+                }
+                // If the ally is confused or aiming at an invisible enemy,
+                // with the player in the path, act like it's targeted at
+                // the player if there isn't any visible target earlier
+                // in the path.
+                else if (target == "something")
+                {
+                    target            = "you";
+                    mons_targ_aligned = true;
+                }
+            }
+            else if (visible_beam && midx != NON_MONSTER
+                     && you.can_see(&menv[midx]))
+            {
+                bool        is_aligned = mons_aligned(midx, monster->mindex());
+                std::string name       = menv[midx].name(DESC_NOCAP_THE);
+
+                if (target == "something")
+                {
+                    mons_targ_aligned = is_aligned;
+                    target            = name;
+                }
+                // If the first target was aligned with the beam source then
+                // the first subsequent non-aligned monster in the path will
+                // take it's place.
+                else if (mons_targ_aligned && !is_aligned)
+                {
+                    mons_targ_aligned = false;
+                    target            = name;
+                }
+            }
+        }
+    }
+
     msg = replace_all(msg, "@target@", target);
 
     // Don't check for pbolt.seen, since we get called before the beam is

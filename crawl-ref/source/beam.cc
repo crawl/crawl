@@ -254,6 +254,7 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.seen          = false;
     pbolt.reflections   = 0;
     pbolt.bounces       = 0;
+    pbolt.path_taken.clear();
 
     pbolt.fire();
 
@@ -1950,6 +1951,8 @@ void bolt::do_fire()
         ASSERT(!grid_is_solid(grd(pos()))
                || (is_tracer && affects_wall(grd(pos()))));
 
+        path_taken.push_back(pos());
+
         const bool was_seen = seen;
         if (!was_seen && range > 0 && !invisible() && see_grid(pos()))
             seen = true;
@@ -2663,6 +2666,7 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
     // Clear misc
     pbolt.reflections   = 0;
     pbolt.bounces       = 0;
+    pbolt.path_taken.clear();
 
     // If there's a specifically requested foe_ratio, honour it.
     if (!pbolt.foe_ratio)
@@ -5413,7 +5417,7 @@ bolt::bolt() : range(0), type('*'),
                effect_known(true), draw_delay(15), obvious_effect(false),
                fr_count(0), foe_count(0), fr_power(0), foe_power(0),
                fr_hurt(0), foe_hurt(0), fr_helped(0),foe_helped(0),
-               seen(false), range_used(0), is_tracer(false),
+               seen(false), path_taken(), range_used(0), is_tracer(false),
                aimed_at_feet(false), msg_generated(false),
                in_explosion_phase(false), smart_monster(false),
                can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),

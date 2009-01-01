@@ -80,6 +80,8 @@ struct bolt
 
     bool        seen;                  // Has player seen the beam?
 
+    std::vector<coord_def> path_taken; // Path beam took.
+
     // INTERNAL use - should not usually be set outside of beam.cc
     int         range_used;
     bool        is_tracer;       // is this a tracer?
