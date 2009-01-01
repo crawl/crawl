@@ -425,6 +425,8 @@ namespace arena
                 // Move hero offscreen.
                 you.position.y = -1;
                 you.time_taken = 10;
+                // Make sure we don't starve.
+                you.hunger = 10999;
                 //report_foes();
                 world_reacts();
                 delay(Options.arena_delay);

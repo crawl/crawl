@@ -836,6 +836,8 @@ static void _yred_mirrors_injury(int dam, int death_source)
 void ouch(int dam, int death_source, kill_method_type death_type,
           const char *aux, bool see_source)
 {
+    ASSERT(!crawl_state.arena);
+
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity( AI_HP_LOSS, &hpl );
 
