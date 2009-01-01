@@ -46,6 +46,7 @@ namespace arena
     int trials_done = 0;
     int team_a_wins = 0;
     bool allow_summons = true;
+    bool do_alert = false;
     std::string arena_type = "";
     faction faction_a(true);
     faction faction_b(false);
@@ -71,6 +72,45 @@ namespace arena
                 }
             }
         }
+    }
+
+    void alert_faction(bool friendly)
+    {
+        int alerter;
+        for (int i = 0; i < MAX_MONSTERS; i++)
+        {
+            const monsters *mon = &menv[i];
+            if (!mon->alive())
+                continue;
+            if (mons_friendly(mon) != friendly)
+            {
+                alerter = i;
+                break;
+            }
+        }
+
+        // Move player aside so that behaviour_event() default src_pos
+        // isn't the same as the player's position, in order to avoid an
+        // assertion.
+        you.position = coord_def(-1, -1);
+
+        for (int i = 0; i < MAX_MONSTERS; i++)
+        {
+            monsters *mon = &menv[i];
+            if (!mon->alive())
+                continue;
+            if (mons_friendly(mon) == friendly)
+                behaviour_event(mon, ME_ALERT, alerter);
+        }
+    }
+
+    void alert_monsters()
+    {
+        if (!do_alert)
+            return;
+
+        alert_faction(true);
+        alert_faction(false);
     }
 
     void list_eq(int imon)
@@ -196,6 +236,7 @@ namespace arena
         std::string spec = find_monster_spec();
 
         allow_summons = !strip_tag(spec, "no_summons");
+        do_alert      = strip_tag(spec, "alert");
 
         const int ntrials = strip_number_tag(spec, "t:");
         if (ntrials != TAG_UNFOUND && ntrials >= 1 && ntrials <= 99
@@ -246,6 +287,7 @@ namespace arena
         faction_a.place_at(place_a);
         faction_b.place_at(place_b);
         adjust_monsters();
+        alert_monsters();
     }
 
     void show_fight_banner(bool after_fight = false)
