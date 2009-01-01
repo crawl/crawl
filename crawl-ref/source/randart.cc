@@ -98,7 +98,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     {
         ASSERT(!"God attempting to gift invalid type of item.");
         mprf(MSGCH_ERROR, "%s attempting to gift invalid type of item.");
-        // Prevent infinite loop in make_item_randart()
+        // Prevent infinite loop in make_item_randart().
         return (true);
     }
 
@@ -133,7 +133,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_ZIN:
-        if (randart_wpn_property( item, RAP_MUTAGENIC ))
+        if (randart_wpn_property(item, RAP_MUTAGENIC))
             return (false); // goes against anti-mutagenic theme
         break;
 
@@ -141,8 +141,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (item.base_type == OBJ_WEAPONS && brand != SPWPN_HOLY_WRATH)
             return (false);
 
-        if (randart_wpn_property( item, RAP_INVISIBLE )
-            || randart_wpn_property( item, RAP_STEALTH ) > 0)
+        if (randart_wpn_property(item, RAP_INVISIBLE)
+            || randart_wpn_property(item, RAP_STEALTH) > 0)
         {
             return (false);
         }
@@ -156,15 +156,15 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     case GOD_SIF_MUNA:
     case GOD_KIKUBAAQUDGHA:
     case GOD_VEHUMET:
-        if (randart_wpn_property( item, RAP_PREVENT_SPELLCASTING ))
+        if (randart_wpn_property(item, RAP_PREVENT_SPELLCASTING))
             return (false);
         break;
 
     case GOD_TROG: // hates anything enhancing magic
-        if (brand == SPWPN_PAIN) // involves magic
+        if (brand == SPWPN_PAIN) // involves necromantic magic
             return (false);
 
-        if (randart_wpn_property( item, RAP_MAGICAL_POWER ))
+        if (randart_wpn_property(item, RAP_MAGICAL_POWER))
             return (false);
 
     default:
@@ -182,7 +182,8 @@ static std::string _replace_name_parts(const std::string name_in,
     god_type god_gift;
     (void) origin_is_god_gift(item, &god_gift);
 
-    // Don't allow "player's Death" type names for god gifts (except Xom!)
+    // Don't allow "player's Death" type names for god gifts (except
+    // for those from Xom).
     if (name.find("@player_death@", 0) != std::string::npos
         || name.find("@player_doom@", 0) != std::string::npos)
     {
@@ -248,22 +249,20 @@ static std::string _replace_name_parts(const std::string name_in,
             name = replace_all(name, "@branch_name@", place);
     }
 
-    // occasionally use long name for Xom (see religion.cc)
+    // Occasionally use long name for Xom (see religion.cc).
     name = replace_all(name, "@xom_name@", god_name(GOD_XOM, coinflip()));
 
     if (name.find("@god_name@", 0) != std::string::npos)
     {
         god_type which_god;
 
-        // God gifts will always get the gifting god's name
+        // God gifts will always get the gifting god's name.
         if (god_gift != GOD_NO_GOD)
             which_god = god_gift;
         else
         {
             do
-            {
                 which_god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
-            }
             while (!_god_fits_artefact(which_god, item, true));
         }
 
