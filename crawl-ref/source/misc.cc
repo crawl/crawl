@@ -132,19 +132,20 @@ static void _create_monster_hide(int mons_class)
     move_item_to_grid(&o, you.pos());
 }
 
-// Vampire draining corpses currently leaves them a time of 90, while the
-// default time is 200. I'm not sure whether this is for balancing reasons
-// or just an arbitrary difference. (jpeg)
+// Vampire draining corpses currently leaves them a time of 90, while
+// the default time is 200. I'm not sure whether this is for balancing
+// reasons or just an arbitrary difference. (jpeg)
 void turn_corpse_into_skeleton(item_def &item, int time)
 {
     ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
 
-    // Some monsters' corpses lack the structure to leave skeletons behind.
+    // Some monsters' corpses lack the structure to leave skeletons
+    // behind.
     if (!mons_skeleton(item.plus))
         return;
 
-    // While it is possible to distinguish draconian corpses by colour, their
-    // skeletons are indistinguishable.
+    // While it is possible to distinguish draconian corpses by colour,
+    // their skeletons are indistinguishable.
     if (mons_genus(item.plus) == MONS_DRACONIAN && item.plus != MONS_DRACONIAN)
         item.plus = MONS_DRACONIAN;
     // The same goes for rat corpses.

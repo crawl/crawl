@@ -3585,7 +3585,7 @@ void update_corpses(double elapsedTime)
 
     const long rot_time = static_cast<long>(elapsedTime / 20.0);
 
-    for (int c = 0; c < MAX_ITEMS; c++)
+    for (int c = 0; c < MAX_ITEMS; ++c)
     {
         item_def &it = mitm[c];
 
@@ -3601,13 +3601,11 @@ void update_corpses(double elapsedTime)
         if (rot_time >= it.special && !is_being_butchered(it))
         {
             if (it.base_type == OBJ_FOOD)
-            {
                 destroy_item(c);
-            }
             else
             {
                 if (it.sub_type == CORPSE_SKELETON
-                    || !mons_skeleton( it.plus ))
+                    || !mons_skeleton(it.plus))
                 {
                     destroy_item(c);
                 }
@@ -3616,16 +3614,14 @@ void update_corpses(double elapsedTime)
             }
         }
         else
-        {
             it.special -= rot_time;
-        }
     }
 
     int fountain_checks = static_cast<int>(elapsedTime / 1000.0);
     if (x_chance_in_y(static_cast<int>(elapsedTime) % 1000, 1000))
         fountain_checks += 1;
 
-    // dry fountains may start flowing again
+    // Dry fountains may start flowing again.
     if (fountain_checks > 0)
     {
         for (rectangle_iterator ri(1); ri; ++ri)

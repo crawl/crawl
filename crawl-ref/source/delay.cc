@@ -464,19 +464,20 @@ void stop_delay( bool stop_stair_travel )
         item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
                                         : mitm[delay.parm2]);
 
-        if (!mons_skeleton( corpse.plus ))
-        {
-            if (delay.parm1)
-                dec_inv_item_quantity( delay.parm2, 1 );
-            else
-                dec_mitm_item_quantity( delay.parm2, 1 );
-        }
-        else
+        if (mons_skeleton(corpse.plus))
         {
             mpr("All blood oozes out of the corpse!");
             bleed_onto_floor(you.pos(), corpse.plus, delay.duration, false);
             turn_corpse_into_skeleton(corpse, 90);
         }
+        else
+        {
+            if (delay.parm1)
+                dec_inv_item_quantity(delay.parm2, 1);
+            else
+                dec_mitm_item_quantity(delay.parm2, 1);
+        }
+
         did_god_conduct(DID_DRINK_BLOOD, 8);
         delay.duration = 0;
         _pop_delay();
@@ -1064,7 +1065,7 @@ static void _finish_delay(const delay_queue_item &delay)
             }
         }
 
-        unwear_armour( delay.parm1 );
+        unwear_armour(delay.parm1);
 
         you.redraw_armour_class = true;
         you.redraw_evasion = true;
@@ -1087,17 +1088,18 @@ static void _finish_delay(const delay_queue_item &delay)
 
         item_def &corpse = (delay.parm1 ? you.inv[delay.parm2]
                                         : mitm[delay.parm2]);
+
         vampire_nutrition_per_turn(corpse, 1);
 
-        if (!mons_skeleton( corpse.plus ) || one_chance_in(4))
+        if (mons_skeleton(corpse.plus) && one_chance_in(4))
+            turn_corpse_into_skeleton(corpse, 90);
+        else
         {
             if (delay.parm1)
-                dec_inv_item_quantity( delay.parm2, 1 );
+                dec_inv_item_quantity(delay.parm2, 1);
             else
-                dec_mitm_item_quantity( delay.parm2, 1 );
+                dec_mitm_item_quantity(delay.parm2, 1);
         }
-        else
-            turn_corpse_into_skeleton(corpse, 90);
         break;
     }
     case DELAY_MEMORISE:
@@ -1173,7 +1175,7 @@ static void _finish_delay(const delay_queue_item &delay)
             if (delay.type == DELAY_BOTTLE_BLOOD)
             {
                 mpr("You finish bottling this corpse's blood.");
-                turn_corpse_into_blood_potions( mitm[ delay.parm1 ] );
+                turn_corpse_into_blood_potions(mitm[delay.parm1]);
             }
             else
             {
@@ -1205,7 +1207,8 @@ static void _finish_delay(const delay_queue_item &delay)
                 {
                     mpr("What a waste.");
                 }
-                turn_corpse_into_chunks( mitm[ delay.parm1 ] );
+
+                turn_corpse_into_chunks(mitm[delay.parm1]);
 
                 if (you.duration[DUR_BERSERKER]
                     && you.berserk_penalty != NO_BERSERK_PENALTY)
