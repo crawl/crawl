@@ -2198,7 +2198,7 @@ enum chaos_type
 
 // XXX: We might want to vary the probabilities for the various effects
 // based on whether the source is weapon of chaos or a monster with
-// AF_CHAOS
+// AF_CHAOS.
 void melee_attack::chaos_affects_defender()
 {
     const bool mon        = defender->atype() == ACT_MONSTER;
