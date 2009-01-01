@@ -1214,7 +1214,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
                 item_def &corpse = mitm[delay.parm1];
 
-                turn_corpse_into_skeleton_and_chunks(corpse);
+                turn_corpse_into_chunks(corpse);
 
                 if (you.duration[DUR_BERSERKER]
                     && you.berserk_penalty != NO_BERSERK_PENALTY)
