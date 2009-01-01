@@ -50,6 +50,8 @@ namespace arena
     faction faction_a(true);
     faction faction_b(false);
 
+    FILE *file = NULL;
+
     void adjust_monsters()
     {
         if (!allow_summons)
@@ -197,6 +199,12 @@ namespace arena
             throw make_stringf("Bad monster spec \"%s\": %s",
                                spec.c_str(),
                                err.c_str());
+        }
+
+        if (faction_a.desc == faction_b.desc)
+        {
+            faction_a.desc += " (A)";
+            faction_b.desc += " (B)";
         }
     }
 
@@ -401,25 +409,41 @@ namespace arena
 
     void global_setup()
     {
+        if (file != NULL)
+            end(0, false, "Results file already open");
+        file = fopen("arena.result", "w");
+
+        if (file != NULL)
+        {
+            std::string spec = find_monster_spec();
+            fprintf(file, "%s\n", spec.c_str());
+        }
+
         expand_mlist(5);
+    }
+
+    void global_shutdown()
+    {
+        if (file != NULL)
+            fclose(file);
+
+        file = NULL;
     }
 
     void write_results()
     {
-        if (FILE *f = fopen("arena.result", "w"))
-        {
-            fprintf(f, "%d-%d\n", team_a_wins, trials_done - team_a_wins);
-            fclose(f);
-        }
+        if (file != NULL)
+            fprintf(file, "%d-%d\n", team_a_wins, trials_done - team_a_wins);
     }
 
     void write_error(const std::string &error)
     {
-        if (FILE *f = fopen("arena.result", "w"))
+        if (file != NULL)
         {
-            fprintf(f, "err: %s\n", error.c_str());
-            fclose(f);
+            fprintf(file, "err: %s\n", error.c_str());
+            fclose(file);
         }
+        file = NULL;
     }
 
     void simulate()
@@ -458,4 +482,5 @@ void run_arena()
 {
     arena::global_setup();
     arena::simulate();
+    arena::global_shutdown();
 }
