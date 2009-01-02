@@ -270,13 +270,6 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
         return (false);
     }
 
-    // Reset, since these are cumulative over recursive calls to fire_beam.
-    pbolt.reflections = 0;
-    pbolt.bounces     = 0;
-
-    // Haven't seen it yet in the actual firing.
-    pbolt.seen = false;
-
     // Set to non-tracing for actual firing.
     pbolt.is_tracer = false;
     return (true);
@@ -1872,10 +1865,6 @@ void bolt::fire()
         source = boltcopy.source;
         aimed_at_spot = boltcopy.aimed_at_spot;
         range_used = boltcopy.range_used;
-        bounces = boltcopy.bounces;
-        bounce_pos = boltcopy.bounce_pos;
-        reflections = boltcopy.reflections;
-        reflector = boltcopy.reflector;
         auto_hit = boltcopy.auto_hit;
         ray = boltcopy.ray;
         colour = boltcopy.colour;
@@ -2690,13 +2679,6 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
         pbolt.explode(false);
     else
         pbolt.fire();
-
-    // Reset, since these are cumulative over recursive calls to fire_beam.
-    pbolt.reflections = 0;
-    pbolt.bounces     = 0;
-
-    // Hasn't been seen yet in the real firing.
-    pbolt.seen        = false;
 
     // Unset tracer flag (convenience).
     pbolt.is_tracer = false;
