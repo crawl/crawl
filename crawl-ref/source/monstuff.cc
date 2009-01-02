@@ -5428,7 +5428,8 @@ static bool _handle_potion(monsters *monster, bolt & beem)
         monster->lose_energy(EUT_ITEM);
         rc = true;
     }
-    return rc;
+
+    return (rc);
 }
 
 static bool _handle_reaching(monsters *monster)
