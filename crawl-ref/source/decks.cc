@@ -1889,7 +1889,7 @@ static void _metamorphosis_card(int power, deck_rarity_type rarity)
     }
 
     // Might fail, e.g. because of cursed equipment or potential death by
-    // stat loss. Aren't we being nice?
+    // stat loss. Aren't we being nice? (jpeg)
     if (!transform(random2(power/4), trans, true))
         canned_msg(MSG_NOTHING_HAPPENS);
 }
@@ -3037,7 +3037,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
             set_hunger(12000, true);
         break;
 
-    case NUM_CARDS:
+    default:
         mpr("You have drawn a buggy card!");
         break;
     }

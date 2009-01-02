@@ -2048,6 +2048,8 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         return;
     }
 
+    // If we get here the item is not an artefact.
+
     if (is_helmet(item) && one_chance_in(3))
         set_helmet_random_desc(item);
 
@@ -2064,7 +2066,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         set_equip_race(item, _determine_armour_race(item, item_race));
 
     // Dwarven armour is high-quality.
-    if ( get_equip_race(item) == ISFLAG_DWARVEN && coinflip() )
+    if (get_equip_race(item) == ISFLAG_DWARVEN && coinflip())
         item.plus++;
 
     const bool force_good = (item_level == MAKE_GOOD_ITEM);

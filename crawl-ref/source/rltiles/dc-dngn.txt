@@ -325,11 +325,11 @@ wall/stone2_gray0 DNGN_STONE_WALL
 wall/stone2_gray1
 wall/stone2_gray2
 wall/stone2_gray3
-dngn_metal_wall DNGN_METAL_WALL
-dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL
 
-dngn_wax_wall DNGN_WAX_WALL
-dngn_transparent_wall DNGN_TRANSPARENT_WALL
+wall/dngn_metal_wall DNGN_METAL_WALL
+wall/dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL
+wall/dngn_wax_wall DNGN_WAX_WALL
+wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL
 
 dngn_closed_door DNGN_CLOSED_DOOR
 gate_closed_left DNGN_GATE_CLOSED_LEFT
