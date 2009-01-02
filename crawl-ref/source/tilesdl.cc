@@ -139,6 +139,11 @@ void TilesFramework::shutdown()
 
 bool TilesFramework::initialise()
 {
+#ifdef WIN32TILES
+    putenv("SDL_VIDEO_WINDOW_POS=center");
+    putenv("SDL_VIDEO_CENTERED=1");
+#endif
+
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
     {
         printf("Failed to initialise SDL: %s\n", SDL_GetError());

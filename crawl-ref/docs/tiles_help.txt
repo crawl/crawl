@@ -1,3 +1,10 @@
+                  Tiles suggestions
+
+Crawl 0.5 renders graphics using OpenGL and SDL.  For most video cards,
+this should be faster than the 0.4 version.  However, the default driver
+that ships with Windows is extremely slow.  If you are having performance
+problems, be sure to update your video card driver as a first step.
+
                   Tiles mouseclick item interaction
 
 If you're playing with Tiles compiled, you'll find several shortcuts to 
