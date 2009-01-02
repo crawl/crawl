@@ -1568,6 +1568,14 @@ void monster_die(monsters *monster, killer_type killer,
         }
     }
 
+    if (!mons_reset)
+    {
+        _monster_die_cloud(monster, true, silent, summoned, summon_type);
+        // Have to add case for disintegration effect here? {dlb}
+        if (!summoned)
+            _place_monster_corpse(monster, silent);
+    }
+
     if (!mons_reset && !crawl_state.arena)
     {
         you.kills->record_kill(monster, killer, pet_kill);
@@ -1593,11 +1601,6 @@ void monster_die(monsters *monster, killer_type killer,
 
         curr_PlaceInfo += delta;
         curr_PlaceInfo.assert_validity();
-
-        _monster_die_cloud(monster, true, silent, summoned, summon_type);
-        // Have to add case for disintegration effect here? {dlb}
-        if (!summoned)
-            _place_monster_corpse(monster, silent);
     }
 
     _fire_monster_death_event(monster, killer, killer_index, false);
