@@ -191,8 +191,8 @@ void tile::corpsify(int corpse_width, int corpse_height,
                 continue;
 
             // map new center to old center, including image scale
-            int x1 = ((x - m_width/2) * image_scale) + centerx;
-            int y1 = ((y - m_height/2) * height_proj * image_scale) + centery;
+            int x1 = (int)((x - m_width/2)*image_scale) + centerx;
+            int y1 = (int)((y - m_height/2)*height_proj*image_scale) + centery;
 
             if (y >= cy)
             {
