@@ -613,7 +613,7 @@ namespace arena
             do_fight();
 
             if (trials_done < total_trials)
-                delay(Options.arena_delay * 8);
+                delay(Options.arena_delay * 5);
         } while (trials_done < total_trials);
 
         if (total_trials > 0)
@@ -621,8 +621,8 @@ namespace arena
             mprf("Final score: %s (%d); %s (%d)",
                  faction_a.desc.c_str(), team_a_wins,
                  faction_b.desc.c_str(), trials_done - team_a_wins);
-            delay(Options.arena_delay * 8);
         }
+        delay(Options.arena_delay * 5);
 
         write_results();
     }

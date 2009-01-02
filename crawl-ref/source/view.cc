@@ -5099,7 +5099,7 @@ void viewwindow(bool draw_it, bool do_updates)
     }
     else
     {
-        losight(env.show, grd, crawl_view.vgrdc);
+        losight(env.show, grd, crawl_view.glosc());
     }
 
 #ifdef USE_TILE

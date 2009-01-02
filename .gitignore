@@ -14,6 +14,13 @@ mapgen.log
 \#*
 TAGS
 
+arena.result
+
+# Tile copied files
+crawl-ref/source/dat/tiles/dngn.png
+crawl-ref/source/dat/tiles/main.png
+crawl-ref/source/dat/tiles/player.png
+
 # The Crawl executable.
 crawl-ref/source/crawl
 

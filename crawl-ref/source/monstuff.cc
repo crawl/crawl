@@ -1989,7 +1989,7 @@ static coord_def _random_monster_nearby_habitable_space(const monsters& mon,
                                                         bool respect_los)
 {
     const bool respect_sanctuary = mons_wont_attack(&mon);
-    
+
     coord_def target;
     int tries;
     {
@@ -3566,6 +3566,8 @@ static void _handle_behaviour(monsters *mon)
             mon->foe = MHITNOT;
         if (mon->foe == MHITNOT || mon->foe == MHITYOU)
             _arena_set_foe(mon);
+        if (mon->behaviour == BEH_WANDER)
+            mon->behaviour = BEH_SEEK;
         return;
     }
 
