@@ -7459,6 +7459,8 @@ bool monsters::can_drink_potion(potion_type ptype) const
     {
     case MONS_LICH:
     case MONS_MUMMY:
+    case MONS_SKELETAL_WARRIOR:
+    case MONS_WRAITH:
         rc = false;
         break;
     default:
