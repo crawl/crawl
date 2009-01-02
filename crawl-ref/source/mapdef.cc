@@ -2578,6 +2578,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "holy_wrath",
         "electrocution",
         "orc_slaying",
+        "dragon_slaying"
         "venom",
         "protection",
         "draining",
@@ -2586,11 +2587,11 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "flame",
         "frost",
         "vampiricism",
-        "disruption",
         "pain",
         "distortion",
         "reaching",
         "returning",
+        "chaos",
         "confuse",
         NULL
     };
