@@ -842,9 +842,10 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     if (pbolt.target.origin())
         pbolt.target = monster->target;
 
-    // set bolt type
+    // set bolt type and range
     if (_los_free_spell(spell_cast))
     {
+        pbolt.range = 0;
         switch (spell_cast)
         {
         case SPELL_BRAIN_FEED:
@@ -931,7 +932,10 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     }
 
     if (pbolt.target == pbolt.source)
+    {
         pbolt.aimed_at_feet = true;
+        pbolt.range         = 0;
+    }
 }
 
 bool monster_random_space(const monsters *monster, coord_def& target,
