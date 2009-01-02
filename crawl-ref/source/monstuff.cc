@@ -5199,6 +5199,10 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     case MONS_MERMAID:
     case MONS_SIREN:
     {
+        // Don't behold observer in the arena.
+        if (crawl_state.arena)
+            break;
+
         // Don't behold player already half down or up the stairs.
         if (!you.delay_queue.empty())
         {
