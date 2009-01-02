@@ -1002,12 +1002,6 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     {
         pbolt.target = monster->pos();
     }
-
-    if (pbolt.target == pbolt.source)
-    {
-        pbolt.aimed_at_feet = true;
-        pbolt.range         = 0;
-    }
 }
 
 bool monster_random_space(const monsters *monster, coord_def& target,

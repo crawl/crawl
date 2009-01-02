@@ -3541,12 +3541,13 @@ void zap_wand(int slot)
 
     beam.source = you.pos();
     beam.set_target(zap_wand);
-    beam.aimed_at_feet = (beam.target == you.pos());
+
+    bool aimed_at_self = (beam.target == you.pos());
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
     // flavour). Don't use the tracer if firing at self.
-    if (!beam.aimed_at_feet)
+    if (!aimed_at_self)
     {
         beam.range = tracer_range;
         if (!player_tracer(beam.effect_known ? type_zapped
@@ -3562,7 +3563,7 @@ void zap_wand(int slot)
     // and yourself, unless there's a nearby invisible enemy and you're
     // trying to hit it at random.
     const bool risky = dangerous && (beam.fr_count || beam.foe_count
-                                     || invis_enemy || beam.aimed_at_feet);
+                                     || invis_enemy || aimed_at_self);
 
     if (risky && alreadyknown && wand.sub_type == WAND_RANDOM_EFFECTS)
     {

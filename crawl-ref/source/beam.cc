@@ -1458,7 +1458,13 @@ void bolt::initialize_fire()
     }
 
     if (target == source)
-        range = 0;
+    {
+        range             = 0;
+        aimed_at_feet     = true;
+        auto_hit          = true;
+        aimed_at_spot     = true;
+        use_target_as_pos = true;
+    }
 
     if (range == -1)
     {
@@ -1903,13 +1909,7 @@ void bolt::do_fire()
 #endif
 
     msg_generated = false;
-    if (target == source)
-    {
-        auto_hit          = true;
-        aimed_at_spot     = true;
-        use_target_as_pos = true;
-    }
-    else
+    if (!aimed_at_feet)
     {
         choose_ray();
         // Take *one* step, so as not to hurt the source.
@@ -3241,16 +3241,16 @@ bool bolt::harmless_to_player() const
     mprf(MSGCH_DIAGNOSTICS, "beam flavour: %d", flavour);
 #endif
 
-    // Shouldn't happen anyway since enchantments are either aimed at self
-    // (not prompted) or cast at monsters and don't explode or bounce.
-    if (is_enchantment())
-        return (false);
-
-    // The others are handled here.
     switch (flavour)
     {
     case BEAM_VISUAL:
     case BEAM_DIGGING:
+        return (true);
+
+    // Positive enchantments.
+    case BEAM_HASTE:
+    case BEAM_HEALING:
+    case BEAM_INVISIBILITY:
         return (true);
 
     // Cleansing flame doesn't affect player's followers.
