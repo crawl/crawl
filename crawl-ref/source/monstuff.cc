@@ -6499,12 +6499,6 @@ static void _handle_monster_move(int i, monsters *monster)
         if (!monster->alive())
             break;
 
-        bolt beem;
-
-        beem.source      = monster->pos();
-        beem.target      = monster->target;
-        beem.beam_source = monster->mindex();
-
 #if DEBUG_MONS_SCAN
         if (!monster_was_floating
             && mgrd(monster->pos()) != monster->mindex())
@@ -6765,6 +6759,12 @@ static void _handle_monster_move(int i, monsters *monster)
                 continue;
         }
         _handle_nearby_ability( monster );
+
+        bolt beem;
+
+        beem.source      = monster->pos();
+        beem.target      = monster->target;
+        beem.beam_source = monster->mindex();
 
         if (!mons_is_sleeping(monster)
             && !mons_is_wandering(monster)
