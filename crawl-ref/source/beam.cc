@@ -1459,6 +1459,11 @@ bool bolt::invisible() const
 
 void bolt::initialize_fire()
 {
+    // Fix some things which the tracer might have set.
+    range_used         = 0;
+    in_explosion_phase = false;
+    use_target_as_pos  = false;
+
     if (chose_ray)
     {
         ASSERT(in_bounds(ray.pos()));
@@ -1510,11 +1515,6 @@ void bolt::initialize_fire()
     ASSERT(!aimed_at_feet || source == target);
 
     real_flavour = flavour;
-
-    // Fix some things which the tracer might have set.
-    range_used         = 0;
-    in_explosion_phase = false;
-    use_target_as_pos  = false;
 
     message_cache.clear();
 
