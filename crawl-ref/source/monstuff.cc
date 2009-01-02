@@ -1983,21 +1983,77 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     return (player_messaged);
 }
 
-bool monster_blink(monsters *monster)
+// If the returned value is mon.pos(), then nothing was found.
+static coord_def _random_monster_nearby_habitable_space(const monsters& mon,
+                                                        bool allow_adjacent,
+                                                        bool respect_los)
 {
-    coord_def near;
-
+    const bool respect_sanctuary = mons_wont_attack(&mon);
+    
+    coord_def target;
+    int tries;
     {
-        unwind_var<env_show_grid> visible_grid( env.show );
-        losight(env.show, grd, monster->pos(), true);
+        // Save LOS, because we're going to clobber it with monster LOS.
+        unwind_var<env_show_grid> visible_grid(env.show);
 
-        if (!random_near_space(monster->pos(), near,
-                               false, true,
-                               !mons_wont_attack(monster)))
+        // Do the clobbering.
+        losight(env.show, grd, mon.pos(), true);
+
+        for (tries = 0; tries < 150; ++tries)
         {
-            return (false);
+            const coord_def delta(random2(14), random2(14));
+
+            // Check that we don't get something too close to the
+            // starting point.
+            if (delta.origin())
+                continue;
+
+            if (delta.rdist() == 1 && !allow_adjacent)
+                continue;
+
+            // Update target.
+            target = delta + mon.pos();
+
+            // Check that the target is valid and survivable.
+            if (!in_bounds(target))
+                continue;
+
+            if (!monster_habitable_grid(&mon, grd(target)))
+                continue;
+
+            if (respect_sanctuary && is_sanctuary(target))
+                continue;
+
+            // Check that we didn't go through clear walls.
+            if (num_feats_between(target, mon.pos(),
+                                  DNGN_CLEAR_ROCK_WALL,
+                                  DNGN_CLEAR_PERMAROCK_WALL,
+                                  true, true) > 0)
+            {
+                continue;
+            }
+
+            // Note that this uses the clobbered LOS!
+            if (respect_los && !see_grid(target))
+                continue;
+
+            // Survived everything, break out (with a good value of target.)
+            break;
         }
     }
+
+    if (tries == 150)
+        target = mon.pos();
+
+    return (target);
+}
+
+bool monster_blink(monsters *monster)
+{
+    coord_def near = _random_monster_nearby_habitable_space(*monster, false,
+                                                            true);
+    if (near == monster->pos())
+        return (false);
 
     mons_clear_trapping_net(monster);
 

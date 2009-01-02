@@ -952,16 +952,15 @@ static bool _xom_is_good(int sever, int tension)
         // the player.
 
         // Every now and then, Xom also confuses them all.
-        bool confusem = one_chance_in(10);
+        const bool confusem = one_chance_in(10);
 
         // Not just every monster in sight - oh no.  Every monster on
         // this level!
-        monsters *monster;
         for (unsigned i = 0; i < MAX_MONSTERS; ++i)
         {
-            monster = &menv[i];
+            monsters* monster = &menv[i];
 
-            if (monster->type == -1)
+            if (!monster->alive())
                 continue;
 
             if (monster_blink(monster))
