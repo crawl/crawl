@@ -733,7 +733,7 @@ static int _get_random_coagulated_blood_desc()
     return PDESCQ(qualifier, colour);
 }
 
-static void _initialise_item_descriptions()
+void initialise_item_descriptions()
 {
     // Must remember to check for already existing colours/combinations.
     you.item_description.init(255);
@@ -1232,7 +1232,7 @@ game_start:
     _give_basic_spells(you.char_class);
     _give_basic_knowledge(you.char_class);
 
-    _initialise_item_descriptions();
+    initialise_item_descriptions();
 
     _reassess_starting_skills();
     calc_total_skill_points();

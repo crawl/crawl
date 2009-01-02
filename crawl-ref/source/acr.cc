@@ -3883,6 +3883,8 @@ static bool _initialise(void)
 
     if (crawl_state.arena)
     {
+        run_map_preludes();
+        initialise_item_descriptions();
 #ifdef USE_TILE
         tiles.initialise_items();
 #endif

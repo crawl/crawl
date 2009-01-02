@@ -6,6 +6,7 @@
 #include "cio.h"
 #include "dungeon.h"
 #include "initfile.h"
+#include "items.h"
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
@@ -201,8 +202,16 @@ namespace arena
         if (!map)
             throw make_stringf("No arena maps named \"%s\"", arena_type.c_str());
 
+#ifdef USE_TILE
+        tile_init_default_flavour();
+        tile_clear_flavour();
+#endif
+
         ASSERT(map);
-        dgn_place_map(map, true, true);
+        bool success = dgn_place_map(map, true, true);
+        if (!success)
+            throw make_stringf("Failed to create arena named \"%s\"", arena_type.c_str());
+        link_items();
 
         if (!env.rock_colour)
             env.rock_colour = CYAN;
@@ -210,8 +219,6 @@ namespace arena
             env.floor_colour = LIGHTGREY;
 
 #ifdef USE_TILE
-        tile_init_default_flavour();
-        tile_clear_flavour();
         TileNewLevel(true);
 #endif
     }

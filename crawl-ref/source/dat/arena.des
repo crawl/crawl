@@ -1,3 +1,34 @@
+lua {{
+function randomise_colours(e)
+    local colours = {
+        "blue", "green", "cyan", "red", "magenta", "brown",
+        "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
+        "lightred", "lightmagenta", "yellow", "white"
+    }
+
+    local walls = {
+        "wall_normal", "wall_hall", "wall_hive", "wall_ice", "wall_lair",
+        "wall_orc", "wall_snake", "wall_swamp", "wall_tomb", "wall_vault",
+        "wall_zot_blue", "wall_zot_cyan", "wall_zot_gray", "wall_zot_green",
+        "wall_zot_magenta", "wall_zot_red", "wall_zot_yellow", "wall_flesh",
+        "wall_vines", "wall_pebble_red", "wall_yellow_rock", "wall_brick_gray",
+        "wall_stone_gray", "wall_undead"
+    }
+
+    local floors = {
+        "floor_normal", "floor_hall", "floor_hive", "floor_ice", "floor_lair",
+        "floor_orc", "floor_snake", "floor_swamp", "floor_tomb", "floor_vault",
+        "floor_vines", "floor_rough_red", "floor_sand_stone", "floor_grass",
+        "floor_nerves", "floor_dirt"
+    }
+
+    e.rockcol(util.random_from(colours))
+    e.floorcol(util.random_from(colours))
+    e.rocktile(util.random_from(walls))
+    e.floortile(util.random_from(floors))
+end
+}}
+
 NAME: arena_default
 TAGS: arena_default no_mons_gen
 MARKER: A = feat: stone_stairs_up_i
@@ -328,4 +359,35 @@ o.......o.......o
 o.o.o.o.o.o.o.o.o
 o...o...A...o...o
 ooooooooooooooooo
+ENDMAP
+
+NAME: arena_items
+TAGS: arena_items no_mons_gen no_item_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = .
+ORIENT: encompass
+ITEM: any
+ITEM: any potion
+ITEM: any wand
+: randomise_colours(_G)
+MAP
+XXXXXXXXXXXXXXXXX
+XX.............XX
+X.......B.......X
+X.....ddddd.....X
+X.....eeeee.....X
+X......fff......X
+X......ddd......X
+X...............X
+X.......O.......X
+X...............X
+X......ddd......X
+X......fff......X
+X.....eeeee.....X
+X.....ddddd.....X
+X.......A.......X
+XX.............XX
+XXXXXXXXXXXXXXXXX
 ENDMAP
