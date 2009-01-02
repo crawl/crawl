@@ -699,7 +699,7 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
 
         // Stop equipping monster if the item probably didn't originally
         // belong to the monster.
-        if ( (origin_known(item) && (item.orig_monnum - 1) != monnum)
+        if ((origin_known(item) && (item.orig_monnum - 1) != monnum)
             || (item.flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
             || item.base_type == OBJ_CORPSES)
         {
@@ -708,7 +708,7 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
 
         mon_inv_type mslot;
 
-        switch(item.base_type)
+        switch (item.base_type)
         {
         case OBJ_WEAPONS:
             if (mon->inv[MSLOT_WEAPON] != NON_ITEM)
@@ -726,7 +726,8 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
                         return;
                     }
                     else
-                        // The undead are too stupid to switch between weapons.
+                        // The undead are too stupid to switch between
+                        // weapons.
                         continue;
                 }
             }
