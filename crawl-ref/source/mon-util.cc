@@ -3358,6 +3358,14 @@ bool monsters::wants_submerge() const
         return (true);
     }
 
+    // Trapdoor spiders only hide themsleves under the floor when they
+    // can't see their prey.
+    if (type == MONS_TRAPDOOR_SPIDER)
+    {
+        const actor* _foe = get_foe();
+        return (_foe == NULL || !can_see(_foe));
+    }
+
     const bool has_ranged_attack = (type == MONS_ELECTRICAL_EEL
                                     || type == MONS_LAVA_SNAKE
                                     || mons_genus(type) == MONS_MERMAID
@@ -6103,6 +6111,18 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 {
     if (me.ench != ENCH_SUBMERGED)
         return (true);
+
+    // Trapdoor spiders only unsubmerge when their foe is in sight if
+    // the foe is right next to them.
+    if (mon->type == MONS_TRAPDOOR_SPIDER)
+    {
+        const actor* foe = mon->get_foe();
+        if (foe != NULL && mon->can_see(foe)
+            && !adjacent(mon->pos(), foe->pos()))
+        {
+            return (false);
+        }
+    }
 
     int midx = monster_index(mon);
 
