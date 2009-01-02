@@ -580,12 +580,12 @@ bool stinking_cloud( int pow, bolt &beem )
     if (beem.target != you.pos())
     {
         // Fire tracer.
-        beem.source        = you.pos();
-        beem.can_see_invis = player_see_invis();
-        beem.smart_monster = true;
-        beem.attitude      = ATT_FRIENDLY;
-        beem.fr_count      = 0;
-        beem.is_tracer     = true;
+        beem.source            = you.pos();
+        beem.can_see_invis     = player_see_invis();
+        beem.smart_monster     = true;
+        beem.attitude          = ATT_FRIENDLY;
+        beem.friend_info.count = 0;
+        beem.is_tracer         = true;
         beem.fire();
 
         if (beem.beam_cancelled)

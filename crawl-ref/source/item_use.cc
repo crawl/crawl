@@ -1867,11 +1867,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (!teleport && !you.confused())
     {
         // Init tracer variables.
-        pbolt.foe_count     = pbolt.fr_count = 0;
-        pbolt.foe_power     = pbolt.fr_power = 0;
-        pbolt.fr_helped     = pbolt.fr_hurt  = 0;
-        pbolt.foe_helped    = pbolt.foe_hurt = 0;
-        pbolt.foe_ratio     = 100;
+        pbolt.foe_info.reset();
+        pbolt.friend_info.reset();
+        pbolt.foe_ratio = 100;
 
         pbolt.fire();
 
@@ -3562,8 +3560,10 @@ void zap_wand(int slot)
     // Zapping the wand isn't risky if you aim it away from all monsters
     // and yourself, unless there's a nearby invisible enemy and you're
     // trying to hit it at random.
-    const bool risky = dangerous && (beam.fr_count || beam.foe_count
-                                     || invis_enemy || aimed_at_self);
+    const bool risky = dangerous && (beam.friend_info.count
+                                     || beam.foe_info.count
+                                     || invis_enemy
+                                     || aimed_at_self);
 
     if (risky && alreadyknown && wand.sub_type == WAND_RANDOM_EFFECTS)
     {

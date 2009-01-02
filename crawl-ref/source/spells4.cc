@@ -1346,14 +1346,14 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
         break;
     }
 
-    // Fire tracer.
+    // Fire tracer. FIXME: use player_tracer() here!
     beem.source         = you.pos();
     beem.can_see_invis  = player_see_invis();
     beem.smart_monster  = true;
     beem.attitude       = ATT_FRIENDLY;
-    beem.fr_count       = 0;
     beem.beam_cancelled = false;
     beem.is_tracer      = true;
+    beem.friend_info.reset();
 
     beam_type real_flavour = beem.flavour;
     beem.flavour           = tracer_flavour;

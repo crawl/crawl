@@ -36,6 +36,18 @@ struct dist;
 
 typedef FixedArray<int, 19, 19> explosion_map;
 
+struct tracer_info
+{
+    int count;                         // # of times something "hit"
+    int power;                         // total levels/hit dice affected
+    int hurt;                          // # of things actually hurt
+    int helped;                        // # of things actually helped
+    bool dont_stop;                    // Player said not to stop on this
+
+    tracer_info();
+    void reset();
+};
+
 struct bolt
 {
     // INPUT parameters set by caller
@@ -73,11 +85,6 @@ struct bolt
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?
 
-    int         fr_count, foe_count;   // # of times a friend/foe is "hit"
-    int         fr_power, foe_power;   // total levels/hit dice affected
-    int         fr_hurt, foe_hurt;     // # of friends/foes actually hurt
-    int         fr_helped, foe_helped; // # of friends/foes actually helped
-
     bool        seen;                  // Has player seen the beam?
 
     std::vector<coord_def> path_taken; // Path beam took.
@@ -87,16 +94,17 @@ struct bolt
     bool        is_tracer;       // is this a tracer?
     bool        aimed_at_feet;   // this was aimed at self!
     bool        msg_generated;   // an appropriate msg was already mpr'd
-    bool        in_explosion_phase;   // explosion phase (as opposed to beam phase)
+    bool     in_explosion_phase; // explosion phase (as opposed to beam phase)
     bool        smart_monster;   // tracer firer can guess at other mons. resists?
     bool        can_see_invis;   // tracer firer can see invisible?
     mon_attitude_type attitude;  // attitude of whoever fired tracer
     int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
+
+    tracer_info foe_info;
+    tracer_info friend_info;
+
     bool        chose_ray;       // do we want a specific ray?
     bool        beam_cancelled;  // stop_attack_prompt() returned true
-    bool        dont_stop_foe;   // stop_attack_prompt() returned false for foe
-    bool        dont_stop_fr;    // stop_attack_prompt() returned false for
-                                 // friend
     bool        dont_stop_player; // player answered self target prompt with 'y'
 
     int         bounces;         // # times beam bounced off walls
@@ -106,7 +114,7 @@ struct bolt
     int         reflections;     // # times beam reflected off shields
     int         reflector;       // latest thing to reflect beam
 
-    bool        use_target_as_pos; // pos() should return ::target
+    bool        use_target_as_pos; // pos() should return ::target()
     bool        auto_hit;
 
     ray_def     ray;             // shoot on this specific ray

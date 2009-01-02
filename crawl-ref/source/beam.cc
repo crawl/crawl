@@ -71,6 +71,17 @@ static beam_type _chaos_beam_flavour();
 
 static std::set<std::string> beam_message_cache;
 
+tracer_info::tracer_info()
+{
+    reset();
+}
+
+void tracer_info::reset()
+{
+    count = power = hurt = helped = 0;
+    dont_stop = false;
+}
+
 bool bolt::is_blockable() const
 {
     // BEAM_ELECTRICITY is added here because chain lighting is not
@@ -242,13 +253,12 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.attitude       = ATT_FRIENDLY;
 
     // Init tracer variables.
-    pbolt.foe_count      = pbolt.fr_count = 0;
-    pbolt.foe_power      = pbolt.fr_power = 0;
-    pbolt.fr_helped      = pbolt.fr_hurt  = 0;
-    pbolt.foe_helped     = pbolt.foe_hurt = 0;
-    pbolt.foe_ratio      = 100;
-    pbolt.beam_cancelled = false;
-    pbolt.dont_stop_foe  = pbolt.dont_stop_fr = pbolt.dont_stop_player = false;
+    pbolt.friend_info.reset();
+    pbolt.foe_info.reset();
+
+    pbolt.foe_ratio        = 100;
+    pbolt.beam_cancelled   = false;
+    pbolt.dont_stop_player = false;
 
     // Clear misc
     pbolt.seen          = false;
@@ -2001,16 +2011,16 @@ void bolt::do_fire()
     // Reactions if a monster zapped the beam.
     if (!invalid_monster_index(beam_source))
     {
-        if (foe_hurt == 0 && fr_hurt > 0)
+        if (foe_info.hurt == 0 && friend_info.hurt > 0)
             xom_is_stimulated(128);
-        else if (foe_helped > 0 && fr_helped == 0)
+        else if (foe_info.helped > 0 && friend_info.helped == 0)
             xom_is_stimulated(128);
 
         // Allow friendlies to react to projectiles, except when in
         // sanctuary when pet_target can only be explicitly changed by
         // the player.
         const monsters *mon = &menv[beam_source];
-        if (foe_hurt > 0 && !mons_wont_attack(mon)
+        if (foe_info.hurt > 0 && !mons_wont_attack(mon)
             && you.pet_target == MHITNOT && env.sanctuary_time <= 0)
         {
             you.pet_target = beam_source;
@@ -2628,11 +2638,8 @@ bool napalm_monster(monsters *monster, kill_category who, int levels,
 //  Used by monsters in "planning" which spell to cast. Fires off a "tracer"
 //  which tells the monster what it'll hit if it breathes/casts etc.
 //
-//  The output from this tracer function is four variables in the beam struct:
-//  fr_count, foe_count: a count of how many friends and foes will (probably)
-//  be hit by this beam
-//  fr_power, foe_power: a measure of how many 'friendly' hit dice it will
-//  affect, and how many 'unfriendly' hit dice.
+//  The output from this tracer function is written into the
+//  tracer_info variables (friend_info and foe_info.)
 //
 //  Note that beam properties must be set, as the tracer will take them
 //  into account, as well as the monster's intelligence.
@@ -2647,10 +2654,8 @@ void fire_tracer(const monsters *monster, bolt &pbolt, bool explode_only)
     pbolt.attitude      = mons_attitude(monster);
 
     // Init tracer variables.
-    pbolt.foe_count     = pbolt.fr_count = 0;
-    pbolt.foe_power     = pbolt.fr_power = 0;
-    pbolt.fr_helped     = pbolt.fr_hurt  = 0;
-    pbolt.foe_helped    = pbolt.foe_hurt = 0;
+    pbolt.foe_info.reset();
+    pbolt.friend_info.reset();
 
     // Clear misc
     pbolt.reflections   = 0;
@@ -3344,8 +3349,8 @@ void bolt::tracer_affect_player()
             if (yesno("That beam is likely to hit you. Continue anyway?",
                       false, 'n'))
             {
-                fr_count++;
-                fr_power += you.experience_level;
+                friend_info.count++;
+                friend_info.power += you.experience_level;
                 dont_stop_player = true;
             }
             else
@@ -3359,13 +3364,13 @@ void bolt::tracer_affect_player()
     {
         if (mons_att_wont_attack(attitude))
         {
-            fr_count++;
-            fr_power += you.experience_level;
+            friend_info.count++;
+            friend_info.power += you.experience_level;
         }
         else
         {
-            foe_count++;
-            foe_power += you.experience_level;
+            foe_info.count++;
+            foe_info.power += you.experience_level;
         }
     }
     range_used += range_used_on_hit();
@@ -3694,7 +3699,7 @@ void bolt::affect_player_enchantment()
     {
         if (mons_att_wont_attack(attitude))
         {
-            fr_hurt++;
+            friend_info.hurt++;
             if (beam_source == NON_MONSTER)
             {
                 // Beam from player rebounded and hit player.
@@ -3708,16 +3713,16 @@ void bolt::affect_player_enchantment()
             }
         }
         else
-            foe_hurt++;
+            foe_info.hurt++;
     }
 
     if (nice)
     {
         if (mons_att_wont_attack(attitude))
-            fr_helped++;
+            friend_info.helped++;
         else
         {
-            foe_helped++;
+            foe_info.helped++;
             xom_is_stimulated(128);
         }
     }
@@ -3902,7 +3907,7 @@ void bolt::affect_player()
     {
         if (mons_att_wont_attack(attitude))
         {
-            fr_hurt++;
+            friend_info.hurt++;
 
             // Beam from player rebounded and hit player.
             // Xom's amusement at the player's being damaged is handled
@@ -3916,7 +3921,7 @@ void bolt::affect_player()
                 xom_is_stimulated(128);
         }
         else
-            foe_hurt++;
+            foe_info.hurt++;
     }
 
     internal_ouch(hurted);
@@ -3957,15 +3962,15 @@ void bolt::update_hurt_or_helped(monsters *mon)
     if (!mons_atts_aligned(attitude, mons_attitude(mon)))
     {
         if (nasty_to(mon))
-            foe_hurt++;
+            foe_info.hurt++;
         else if (nice_to(mon))
-            foe_helped++;
+            foe_info.helped++;
     }
     else
     {
         if (nasty_to(mon))
         {
-            fr_hurt++;
+            friend_info.hurt++;
 
             // Harmful beam from this monster rebounded and hit the monster.
             if (!is_tracer
@@ -3975,7 +3980,7 @@ void bolt::update_hurt_or_helped(monsters *mon)
             }
         }
         else if (nice_to(mon))
-            fr_helped++;
+            friend_info.helped++;
     }
 }
 
@@ -4042,8 +4047,8 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
     if ((thrower == KILL_YOU_MISSILE || thrower == KILL_YOU)
         && !is_harmless(mon))
     {
-        if ((fr_count == 1 && !dont_stop_fr)
-            || (foe_count == 1 && !dont_stop_foe))
+        if ((friend_info.count == 1 && !friend_info.dont_stop)
+            || (foe_info.count == 1 && !foe_info.dont_stop))
         {
             const bool on_target = (target == mon->pos());
             if (stop_attack_prompt(mon, true, on_target))
@@ -4053,10 +4058,10 @@ void bolt::handle_stop_attack_prompt(monsters* mon)
             }
             else
             {
-                if (fr_count == 1)
-                    dont_stop_fr = true;
-                else if (foe_count == 1)
-                    dont_stop_foe = true;
+                if (friend_info.count == 1)
+                    friend_info.dont_stop = true;
+                else if (foe_info.count == 1)
+                    foe_info.dont_stop = true;
             }
         }
     }
@@ -4081,14 +4086,13 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
         // monster's power based on how badly it is affected.
         // For example, if a fire giant (power 16) threw a
         // fireball at another fire giant, and it only took
-        // 1/3 damage, then power of 5 would be applied to
-        // foe_power or fr_power.
+        // 1/3 damage, then power of 5 would be applied.
 
         // Counting foes is only important for monster tracers.
         if (!mons_atts_aligned(attitude, mons_attitude(mon)))
-            foe_power += 2 * final * mons_power(mon->type) / preac;
+            foe_info.power += 2 * final * mons_power(mon->type) / preac;
         else
-            fr_power += 2 * final * mons_power(mon->type) / preac;
+            friend_info.power += 2 * final * mons_power(mon->type) / preac;
     }
 
     // Either way, we could hit this monster, so update range used.
@@ -4111,13 +4115,13 @@ void bolt::tracer_affect_monster(monsters* mon)
     // Update friend or foe encountered.
     if (!mons_atts_aligned(attitude, mons_attitude(mon)))
     {
-        foe_count++;
-        foe_power += mons_power(mon->type);
+        foe_info.count++;
+        foe_info.power += mons_power(mon->type);
     }
     else
     {
-        fr_count++;
-        fr_power += mons_power(mon->type);
+        friend_info.count++;
+        friend_info.power += mons_power(mon->type);
     }
 
     if (is_enchantment())
@@ -5397,14 +5401,11 @@ bolt::bolt() : range(-2), type('*'),
                is_explosion(false), is_big_cloud(false), aimed_at_spot(false),
                aux_source(), affects_nothing(false), affects_items(false),
                effect_known(true), draw_delay(15), obvious_effect(false),
-               fr_count(0), foe_count(0), fr_power(0), foe_power(0),
-               fr_hurt(0), foe_hurt(0), fr_helped(0),foe_helped(0),
                seen(false), path_taken(), range_used(0), is_tracer(false),
                aimed_at_feet(false), msg_generated(false),
                in_explosion_phase(false), smart_monster(false),
                can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
-               chose_ray(false), beam_cancelled(false), dont_stop_foe(false),
-               dont_stop_fr(false), dont_stop_player(false),
+               chose_ray(false), beam_cancelled(false), dont_stop_player(false),
                bounces(false), bounce_pos(), reflections(0), reflector(-1)
 {
 }

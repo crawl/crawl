@@ -2629,7 +2629,8 @@ bool mons_should_fire(struct bolt &beam)
     mprf(MSGCH_DIAGNOSTICS,
          "tracer: foes %d (pow: %d), friends %d (pow: %d), "
          "foe_ratio: %d, smart: %s",
-         beam.foe_count, beam.foe_power, beam.fr_count, beam.fr_power,
+         beam.foe_info.count, beam.foe_info.power,
+         beam.friend_info.count, beam.friend_info.power,
          beam.foe_ratio, beam.smart_monster ? "yes" : "no");
 #endif
     // Use of foeRatio:
@@ -2639,19 +2640,20 @@ bool mons_should_fire(struct bolt &beam)
     // friends when considering collateral damage.
 
     // Quick check - did we in fact get any foes?
-    if (beam.foe_count == 0)
+    if (beam.foe_info.count == 0)
         return (false);
 
     if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
         return (false);
 
     // If we hit no friends, fire away.
-    if (beam.fr_count == 0)
+    if (beam.friend_info.count == 0)
         return (true);
 
     // Only fire if they do acceptably low collateral damage.
-    return (beam.foe_power >=
-            div_round_up(beam.foe_ratio * (beam.foe_power + beam.fr_power),
+    return (beam.foe_info.power >=
+            div_round_up(beam.foe_ratio *
+                         (beam.foe_info.power + beam.friend_info.power),
                          100));
 }
 
