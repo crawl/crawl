@@ -2307,6 +2307,8 @@ god_type string_to_god(const char *_name, bool exact)
 
 void god_speaks(god_type god, const char *mesg)
 {
+    ASSERT(!crawl_state.arena);
+
     int orig_mon = mgrd(you.pos());
 
     monsters fake_mon;
@@ -2348,6 +2350,8 @@ static bool _do_god_revenge(conduct_type thing_done)
 bool did_god_conduct(conduct_type thing_done, int level, bool known,
                      const monsters *victim)
 {
+    ASSERT(!crawl_state.arena);
+
     bool retval = false;
 
     if (you.religion != GOD_NO_GOD && you.religion != GOD_XOM)

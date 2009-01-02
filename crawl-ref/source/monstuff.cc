@@ -1174,6 +1174,9 @@ void monster_die(monsters *monster, killer_type killer,
                     mpr("That felt strangely unrewarding.");
             }
 
+            if (crawl_state.arena)
+                break;
+
             // killing triggers tutorial lesson
             _tutorial_inspect_kill();
 
@@ -1325,6 +1328,9 @@ void monster_die(monsters *monster, killer_type killer,
                                        MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
             }
+
+            if (crawl_state.arena)
+                break;
 
             // No piety loss if god gifts killed by other monsters.
             // Also, dancing weapons aren't really friendlies.
@@ -1562,7 +1568,7 @@ void monster_die(monsters *monster, killer_type killer,
         }
     }
 
-    if (!mons_reset)
+    if (!mons_reset && !crawl_state.arena)
     {
         you.kills->record_kill(monster, killer, pet_kill);
 
