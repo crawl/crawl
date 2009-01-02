@@ -710,8 +710,8 @@ void static _get_randart_properties(const item_def &item,
                                                 : SPWPN_VORPAL + random2(3);
 
                 if (atype == WPN_BLOWGUN
-                    && (proprt[RAP_BRAND] == SPWPN_VORPAL
-                        || proprt[RAP_BRAND] == SPWPN_VENOM))
+                    && proprt[RAP_BRAND] != SPWPN_SPEED
+                    && proprt[RAP_BRAND] != SPWPN_PROTECTION)
                 {
                     proprt[RAP_BRAND] = SPWPN_NORMAL;
                 }
