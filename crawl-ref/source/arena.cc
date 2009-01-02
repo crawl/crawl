@@ -206,6 +206,12 @@ namespace arena
             env.rock_colour = CYAN;
         if (!env.floor_colour)
             env.floor_colour = LIGHTGREY;
+
+#ifdef USE_TILE
+        tile_init_default_flavour();
+        tile_clear_flavour();
+        TileNewLevel(true);
+#endif
     }
 
     std::string find_monster_spec()

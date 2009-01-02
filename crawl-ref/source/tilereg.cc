@@ -1939,7 +1939,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
         if (m_far_view)
         {
             m_far_view = false;
-            tiles.load_dungeon(you.pos().x, you.pos().y);
+            tiles.load_dungeon(crawl_view.vgrdc);
             return 0;
         }
         return 0;
@@ -1953,7 +1953,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
     {
     case MouseEvent::MOVE:
         if (m_far_view)
-            tiles.load_dungeon(gc.x, gc.y);
+            tiles.load_dungeon(gc);
         return 0;
     case MouseEvent::PRESS:
         if (event.button == MouseEvent::LEFT)
@@ -1966,13 +1966,14 @@ int MapRegion::handle_mouse(MouseEvent &event)
         else if (event.button == MouseEvent::RIGHT)
         {
             m_far_view = true;
-            tiles.load_dungeon(gc.x, gc.y);
+            tiles.load_dungeon(gc);
         }
         return CK_MOUSE_CMD;
     case MouseEvent::RELEASE:
         if ((event.button == MouseEvent::RIGHT) && m_far_view)
         {
-            tiles.load_dungeon(you.pos().x, you.pos().y);
+            m_far_view = false;
+            tiles.load_dungeon(crawl_view.vgrdc);
         }
         return 0;
     default:

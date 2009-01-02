@@ -865,3 +865,4 @@ drchead_red RED
 drchead_white WHITE
 %end
 
+dc-misc/error ERROR

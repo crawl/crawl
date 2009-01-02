@@ -72,6 +72,7 @@ protected:
 
 inline const tile_info &TilesTexture::get_info(int idx)
 {
+    ASSERT(m_info_func);
     return m_info_func(idx);
 }
 

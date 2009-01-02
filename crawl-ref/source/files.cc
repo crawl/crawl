@@ -1123,7 +1123,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes)
     {
         tiles.clear_minimap();
-        tiles.load_dungeon(NULL, you.pos().x, you.pos().y);
+        tiles.load_dungeon(NULL, crawl_view.vgrdc);
     }
 #endif
 

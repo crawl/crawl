@@ -3883,6 +3883,10 @@ static bool _initialise(void)
 
     if (crawl_state.arena)
     {
+#ifdef USE_TILE
+        tiles.initialise_items();
+#endif
+
         run_arena();
         end(0, false);
     }

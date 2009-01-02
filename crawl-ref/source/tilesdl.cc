@@ -5,6 +5,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
+#include "state.h"
 #include "stuff.h"
 #include "tiles.h"
 #include "tilesdl.h"
@@ -315,21 +316,21 @@ int TilesFramework::load_font(const char *font_file, int font_size,
     return (m_fonts.size() - 1);
 }
 
-void TilesFramework::load_dungeon(unsigned int *tileb, int gx, int gy)
+void TilesFramework::load_dungeon(unsigned int *tileb, const coord_def &gc)
 {
     m_active_layer = LAYER_NORMAL;
 
     unsigned int ox = m_region_tile->mx/2;
     unsigned int oy = m_region_tile->my/2;
-    m_region_tile->load_dungeon(tileb, gx - ox, gy - oy);
+    m_region_tile->load_dungeon(tileb, gc.x - ox, gc.y - oy);
 
-    coord_def win_start(gx - ox, gy - oy);
-    coord_def win_end(gx + ox + 1, gy + oy + 1);
+    coord_def win_start(gc.x - ox, gc.y - oy);
+    coord_def win_end(gc.x + ox + 1, gc.y + oy + 1);
 
     m_region_map->set_window(win_start, win_end);
 }
 
-void TilesFramework::load_dungeon(int cx, int cy)
+void TilesFramework::load_dungeon(const coord_def &cen)
 {
     int wx = m_region_tile->mx;
     int wy = m_region_tile->my;
@@ -344,8 +345,8 @@ void TilesFramework::load_dungeon(int cx, int cy)
             unsigned int fg;
             unsigned int bg;
 
-            const coord_def gc(cx + x - wx/2,
-                               cy + y - wy/2);
+            const coord_def gc(cen.x + x - wx/2,
+                               cen.y + y - wy/2);
             const coord_def ep = view2show(grid2view(gc));
 
             // mini "viewwindow" routine
@@ -368,7 +369,7 @@ void TilesFramework::load_dungeon(int cx, int cy)
                 bg = env.tile_bg[ep.x-1][ep.y-1];
             }
 
-            if (gc.x == cx && gc.y == cy)
+            if (gc.x == cen.x && gc.y == cen.y)
                 bg |= TILE_FLAG_CURSOR1;
 
             tb[count++] = fg;
@@ -376,7 +377,7 @@ void TilesFramework::load_dungeon(int cx, int cy)
         }
     }
 
-    load_dungeon(tb, cx, cy);
+    load_dungeon(tb, cen);
     tiles.redraw();
 }
 
@@ -1173,7 +1174,7 @@ void TilesFramework::update_inventory()
 {
     std::vector<InventoryTile> inv;
 
-    if (!Options.tile_show_items)
+    if (!Options.tile_show_items || crawl_state.arena)
         return;
 
     // item.base_type <-> char conversion table

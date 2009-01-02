@@ -1185,7 +1185,7 @@ void force_monster_shout(monsters* monster)
 
 inline static bool _update_monster_grid(const monsters *monster)
 {
-    const coord_def e = monster->pos() - crawl_view.glosc() + coord_def(9,9);
+    const coord_def e = grid2show(monster->pos());
 
     if (!player_monster_visible( monster ))
     {
@@ -1511,8 +1511,7 @@ void get_mons_glyph( const monsters *mons, unsigned *glych,
 inline static void _update_cloud_grid(int cloudno)
 {
     int which_colour = LIGHTGREY;
-    const coord_def e = env.cloud[cloudno].pos - crawl_view.glosc()
-        + coord_def(9,9);
+    const coord_def e = grid2show(env.cloud[cloudno].pos);
 
     switch (env.cloud[cloudno].type)
     {
@@ -3443,9 +3442,8 @@ void show_map( coord_def &spec_place, bool travel_mode )
             // Note: Tile versions just center on the current cursor
             // location.  It silently ignores everything else going
             // on in this function.  --Enne
-            unsigned int cx = start_x + curs_x - 1;
-            unsigned int cy = start_y + curs_y - 1;
-            tiles.load_dungeon(cx, cy);
+            coord_def cen(start_x + curs_x - 1, start_y + curs_y - 1);
+            tiles.load_dungeon(cen);
 #else
             _draw_level_map(start_x, start_y, travel_mode);
 
@@ -3936,7 +3934,7 @@ bool mons_near(const monsters *monster, unsigned short foe)
 
         if ( grid_distance(monster->pos(), you.pos()) <= LOS_RADIUS )
         {
-            const coord_def diff = monster->pos() - you.pos() + coord_def(9,9);
+            const coord_def diff = grid2show(monster->pos());
             if (env.show(diff))
                 return (true);
         }
@@ -5395,7 +5393,7 @@ void viewwindow(bool draw_it, bool do_updates)
         {
 #ifdef USE_TILE
             tiles.set_need_redraw();
-            tiles.load_dungeon(&tileb[0], you.pos().x, you.pos().y);
+            tiles.load_dungeon(&tileb[0], crawl_view.vgrdc);
             tiles.update_inventory();
 #else
             you.last_view_update = you.num_turns;

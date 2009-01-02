@@ -983,7 +983,7 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_ERESHKIGAL;
     }
 
-    return TILE_ERROR;
+    return TILEP_ERROR;
 }
 
 int tileidx_monster(const monsters *mons, bool detected)
@@ -2239,7 +2239,7 @@ static int _tileidx_trap(trap_type type)
     case TRAP_SHAFT:
         return TILE_DNGN_TRAP_SHAFT;
     default:
-        return TILE_ERROR;
+        return TILE_DNGN_ERROR;
     }
 }
 
@@ -2247,7 +2247,7 @@ static int _tileidx_shop(coord_def where)
 {
     const shop_struct *shop = get_shop(where);
     if (!shop)
-        return TILE_ERROR;
+        return TILE_DNGN_ERROR;
 
     switch (shop->type)
     {
@@ -2273,7 +2273,7 @@ static int _tileidx_shop(coord_def where)
         case SHOP_GENERAL_ANTIQUE:
             return TILE_SHOP_GENERAL;
         default:
-            return TILE_ERROR;
+            return TILE_DNGN_ERROR;
     }
 }
 
@@ -2463,7 +2463,7 @@ int tileidx_feature(int object, int gx, int gy)
        return TILE_DNGN_DRY_FOUNTAIN;
     }
 
-    return TILE_ERROR;
+    return TILE_DNGN_ERROR;
 }
 
 static int _tileidx_cloud(int type, int decay)
@@ -4241,9 +4241,8 @@ void tile_floor_halo(dungeon_feature_type target, int tile)
 // Called from view.cc.
 void tile_draw_floor()
 {
-    int cx, cy;
-    for (cy = 0; cy < env.tile_fg.height(); cy++)
-        for (cx = 0; cx < env.tile_fg.width(); cx++)
+    for (int cy = 0; cy < env.tile_fg.height(); cy++)
+        for (int cx = 0; cx < env.tile_fg.width(); cx++)
         {
             const coord_def ep(cx+1, cy+1);
             const coord_def gc = view2grid(show2view(ep));
@@ -4428,9 +4427,8 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
     for (y = 0; y < crawl_view.viewsz.y; y++)
         for (x = 0; x < crawl_view.viewsz.x; x++)
         {
-            // View coords are not centered on you, but on (cx,cy)
-            const int gx = view2gridX(x + 1) + cx - you.pos().x;
-            const int gy = view2gridY(y + 1) + cy - you.pos().y;
+            const int gx = view2gridX(x + crawl_view.viewp.x);
+            const int gy = view2gridY(y + crawl_view.viewp.y);
 
             unsigned char wall_flv    = 0;
             unsigned char floor_flv   = 0;

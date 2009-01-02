@@ -433,3 +433,5 @@ dc-misc/travel_exclusion TRAVEL_EXCLUSION_BG
 dc-misc/travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
 dc-misc/slot ITEM_SLOT
 effect/sanctuary SANCTUARY
+
+dc-misc/error DNGN_ERROR
