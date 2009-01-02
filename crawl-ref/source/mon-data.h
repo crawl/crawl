@@ -3364,7 +3364,7 @@ static monsterentry mondata[] = {
        AT_NO_ATK },
     { 7, 3, 5, 0 },
     5, 9, MST_SMOKE_DEMON, CE_NOCORPSE, Z_NOZOMBIE, S_ROAR, I_NORMAL,
-    HT_LAND, 9, DEFAULT_ENERGY, MONUSE_WEAPONS_ARMOUR, SIZE_SMALL
+    HT_LAND, 9, DEFAULT_ENERGY, MONUSE_OPEN_DOORS, SIZE_SMALL
 },
 
 // middle demons ('3')
