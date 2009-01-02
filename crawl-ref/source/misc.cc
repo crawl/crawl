@@ -179,14 +179,12 @@ void turn_corpse_into_chunks(item_def &item)
 
 void turn_corpse_into_skeleton_and_chunks(item_def &item)
 {
-    ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
-
     if (mons_skeleton(item.plus))
     {
         int o = get_item_slot();
         if (o != NON_ITEM)
         {
-            item_def &skel = item;
+            item_def skel = item;
             turn_corpse_into_skeleton(skel);
             copy_item_to_grid(skel, you.pos());
         }
