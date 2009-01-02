@@ -153,6 +153,10 @@ sphinx cast
 # Monster species and genus messages.
 ########################################################################
 %%%%
+angel cast targeted
+
+@The_monster@ calls down the wrath of @God@ upon @target@.
+%%%%
 dragon cast targeted
 
 @The_monster@ breathes @beam@ @at@ @target@.

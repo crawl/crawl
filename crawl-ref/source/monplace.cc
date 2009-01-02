@@ -1030,6 +1030,11 @@ static int _place_monster_aux(const mgen_data &mg,
             break;
         }
     }
+    // Angels and Daevas belong to TSO
+    else if (mons_class_holiness(mg.cls) == MH_HOLY)
+    {
+        menv[id].god = GOD_SHINING_ONE;
+    }
 
     // If the caller requested a specific colour for this monster,
     // apply it now.
