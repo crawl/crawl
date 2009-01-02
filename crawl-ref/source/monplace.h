@@ -362,6 +362,7 @@ public:
 
     // public methods
     void set_range(int r);
+    coord_def next_pos(const coord_def &p) const;
     bool init_pathfind(monsters *mon, coord_def dest,
                        bool diag = true, bool msg = false,
                        bool pass_unmapped = false);

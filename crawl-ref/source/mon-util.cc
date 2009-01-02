@@ -3167,7 +3167,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 
 // Checks if the monster can use smiting/torment to attack without
 // unimpeded LOS to the player.
-static bool _mons_can_smite(const monsters *monster)
+bool mons_has_smite_attack(const monsters *monster)
 {
     if (monster->type == MONS_FIEND)
         return (true);
@@ -3214,7 +3214,7 @@ bool monster_shover(const monsters *m)
         return (false);
 
     // Smiters profit from staying back and smiting.
-    if (_mons_can_smite(m))
+    if (mons_has_smite_attack(m))
         return (false);
 
     int mchar = me->showchar;

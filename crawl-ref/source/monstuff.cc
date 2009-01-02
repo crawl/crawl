@@ -3479,6 +3479,42 @@ static bool _handle_monster_patrolling(monsters *mon)
     return (false);
 }
 
+static void _check_wander_target(monsters *mon, bool isPacified = false,
+                                 dungeon_feature_type can_move = DNGN_UNSEEN)
+{
+    // default wander behaviour
+    if (mon->pos() == mon->target
+        || mons_is_batty(mon) || !isPacified && one_chance_in(20))
+    {
+        bool need_target = true;
+
+        if (!can_move)
+            can_move = (mons_amphibious(mon))
+                ? DNGN_DEEP_WATER : DNGN_SHALLOW_WATER;
+
+        if (mon->is_travelling())
+            need_target = _handle_monster_travelling(mon, can_move);
+
+        // If we still need a target because we're not travelling
+        // (any more), check for patrol routes instead.
+        if (need_target && mon->is_patrolling())
+            need_target = _handle_monster_patrolling(mon);
+
+        // XXX: This is really dumb wander behaviour... instead of
+        // changing the goal square every turn, better would be to
+        // have the monster store a direction and have the monster
+        // head in that direction for a while, then shift the
+        // direction to the left or right.  We're changing this so
+        // wandering monsters at least appear to have some sort of
+        // attention span.  -- bwr
+        if (need_target)
+        {
+            mon->target.set(10 + random2(GXM - 10),
+                            10 + random2(GYM - 10));
+        }
+    }
+}
+
 static void _arena_set_foe(monsters *mons)
 {
     const int mind = monster_index(mons);
@@ -3495,7 +3531,9 @@ static void _arena_set_foe(monsters *mons)
             continue;
 
         const int distance = grid_distance(mons->pos(), other->pos());
-        if (best_distance == -1 || distance < best_distance)
+        if ((best_distance == -1 || distance < best_distance)
+            && mons->can_see(other))
+
         {
             best_distance = distance;
             nearest = i;
@@ -3506,12 +3544,16 @@ static void _arena_set_foe(monsters *mons)
     {
         mons->foe = nearest;
         mons->target = menv[nearest].pos();
+        mons->behaviour = BEH_SEEK;
     }
     else
     {
         mons->foe = MHITNOT;
-        mons->target = mons->pos();
+        mons->behaviour = BEH_WANDER;
     }
+
+    if (mons->behaviour == BEH_WANDER)
+        _check_wander_target(mons);
 }
 
 //---------------------------------------------------------------
@@ -3566,8 +3608,6 @@ static void _handle_behaviour(monsters *mon)
             mon->foe = MHITNOT;
         if (mon->foe == MHITNOT || mon->foe == MHITYOU)
             _arena_set_foe(mon);
-        if (mon->behaviour == BEH_WANDER)
-            mon->behaviour = BEH_SEEK;
         return;
     }
 
@@ -3583,6 +3623,7 @@ static void _handle_behaviour(monsters *mon)
 
     const dungeon_feature_type can_move =
         (mons_amphibious(mon)) ? DNGN_DEEP_WATER : DNGN_SHALLOW_WATER;
+
 
     // Validate current target exists.
     if (mon->foe != MHITNOT && mon->foe != MHITYOU
@@ -3921,32 +3962,7 @@ static void _handle_behaviour(monsters *mon)
                 break;
             }
 
-            // default wander behaviour
-            if (mon->pos() == mon->target
-                || mons_is_batty(mon) || !isPacified && one_chance_in(20))
-            {
-                bool need_target = true;
-                if (mon->is_travelling())
-                    need_target = _handle_monster_travelling(mon, can_move);
-
-                // If we still need a target because we're not travelling
-                // (any more), check for patrol routes instead.
-                if (need_target && patrolling)
-                    need_target = _handle_monster_patrolling(mon);
-
-                // XXX: This is really dumb wander behaviour... instead of
-                // changing the goal square every turn, better would be to
-                // have the monster store a direction and have the monster
-                // head in that direction for a while, then shift the
-                // direction to the left or right.  We're changing this so
-                // wandering monsters at least appear to have some sort of
-                // attention span.  -- bwr
-                if (need_target)
-                {
-                    mon->target.set(10 + random2(GXM - 10),
-                                    10 + random2(GYM - 10));
-                }
-            }
+            _check_wander_target(mon, isPacified, can_move);
 
             // During their wanderings, monsters will eventually relax
             // their guard (stupid ones will do so faster, smart
@@ -4375,6 +4391,28 @@ static void _handle_movement(monsters *monster)
     else
     {
         delta = monster->target - monster->pos();
+
+        if (crawl_state.arena)
+        {
+            const bool ranged =
+                mons_has_ranged_attack(monster)
+                || mons_has_ranged_spell(monster);
+
+            // Smiters are happy if they have clear visibility through glass,
+            // but other monsters must go around.
+            const bool glass_ok = mons_has_smite_attack(monster);
+
+            // Monsters in the arena are smarter than the norm and
+            // always pathfind to their targets.
+            if (delta.abs() > 2
+                && (!ranged ||
+                    !monster->mon_see_grid(monster->target, !glass_ok)))
+            {
+                monster_pathfind mp;
+                if (mp.init_pathfind(monster, monster->target))
+                    delta = mp.next_pos(monster->pos()) - monster->pos();
+            }
+        }
     }
 
     // Move the monster.
@@ -6010,7 +6048,8 @@ static bool _handle_spell(monsters *monster, bolt &beem)
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))
                 {
-                    const bool explode = spell_is_direct_explosion(spell_cast);
+                    const bool explode =
+                        spell_is_direct_explosion(spell_cast);
                     fire_tracer(monster, beem, explode);
                     // Good idea?
                     if (mons_should_fire(beem))
@@ -6844,7 +6883,7 @@ static void _handle_monster_move(int i, monsters *monster)
         {
             // Prevents unfriendlies from nuking you from offscreen.
             // How nice!
-            if (mons_friendly(monster) || mons_near(monster))
+            if (mons_friendly(monster) || mons_near(monster, monster->foe))
             {
                 // [ds] Special abilities shouldn't overwhelm spellcasting
                 // in monsters that have both. This aims to give them both

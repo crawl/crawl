@@ -52,6 +52,8 @@ namespace arena
     std::string arena_type = "";
     faction faction_a(true);
     faction faction_b(false);
+    coord_def place_a, place_b;
+
     FILE *file = NULL;
     int message_pos = 0;
     level_id place;
@@ -74,6 +76,17 @@ namespace arena
                         spells[i] = SPELL_NO_SPELL;
                 }
             }
+        }
+
+        for (int i = 0; i < MAX_MONSTERS; i++)
+        {
+            monsters *mon = &menv[i];
+            if (!mon->alive())
+                continue;
+
+            const bool friendly = mons_friendly(mon);
+            // Set target to the opposite faction's home base.
+            mon->target = friendly ? place_b : place_a;
         }
     }
 
@@ -264,6 +277,10 @@ namespace arena
         if (arena_type.empty())
             arena_type = "default";
 
+        const int arena_delay = strip_number_tag(spec, "delay:");
+        if (arena_delay >= 0 && arena_delay < 2000)
+            Options.arena_delay = arena_delay;
+
         std::string arena_place = strip_tag_prefix(spec, "arena_place:");
         if (!arena_place.empty())
         {
@@ -313,8 +330,8 @@ namespace arena
         unwind_var< FixedVector<bool, NUM_MONSTERS> >
             uniq(you.unique_creatures);
 
-        coord_def place_a(dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I));
-        coord_def place_b(dgn_find_feature_marker(DNGN_STONE_STAIRS_DOWN_I));
+        place_a = dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I);
+        place_b = dgn_find_feature_marker(DNGN_STONE_STAIRS_DOWN_I);
         faction_a.place_at(place_a);
         faction_b.place_at(place_b);
         adjust_monsters();
@@ -515,8 +532,15 @@ namespace arena
             cursor_control coff(false);
             while (fight_is_on())
             {
-                if (kbhit() && getch() == ESCAPE)
-                    end(0, false, "Canceled contest at user request");
+                if (kbhit())
+                {
+                    const int ch = getch();
+                    if (ch == ESCAPE || tolower(ch) == 'q' ||
+                        ch == CONTROL('G'))
+                    {
+                        end(0, false, "Canceled contest at user request");
+                    }
+                }
 
                 viewwindow(true, false);
                 unwind_var<coord_def> pos(you.position);

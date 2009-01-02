@@ -775,8 +775,9 @@ monster_type mons_genus(int mc);
 monster_type mons_species(int mc);
 
 bool mons_looks_stabbable(const monsters *m);
-
 bool mons_looks_distracted(const monsters *m);
+
+bool mons_has_smite_attack(const monsters *monster);
 
 bool check_mons_resist_magic(const monsters *monster, int pow);
 
