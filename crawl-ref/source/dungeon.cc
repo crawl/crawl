@@ -4668,12 +4668,8 @@ int dgn_place_monster(mons_spec &mspec,
 
             const habitat_type habitat = mons_class_primary_habitat(montype);
 
-            if (habitat != HT_LAND
-                && (habitat != HT_WATER || !mons_class_amphibious(montype))
-                && (habitat != HT_ROCK || !mons_class_wall_shielded(montype)))
-            {
+            if (!monster_habitable_grid(montype, grd(where)))
                 grd(where) = habitat2grid(habitat);
-            }
         }
 
         mgen_data mg(static_cast<monster_type>(mid));
@@ -4728,10 +4724,10 @@ int dgn_place_monster(mons_spec &mspec,
         if (!force_pos && mgrd(place) != NON_MONSTER
             && mg.cls != RANDOM_MONSTER && mg.cls < NUM_MONSTERS)
         {
-            place = find_newmons_square_contiguous(mg.cls, where, 6);
+            place = find_newmons_square_contiguous(mg.cls, where, 7);
         }
 
-        mg.pos       = where;
+        mg.pos       = place;
 
         if (mons_class_is_zombified(mg.base_type))
         {

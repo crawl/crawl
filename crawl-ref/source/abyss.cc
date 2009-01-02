@@ -675,7 +675,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         const coord_def p( pos.x + random2avg(4, 3) + random2(3),
                            pos.y + random2avg(4, 3) + random2(3) );
         if (!in_bounds(p) || p == you.pos() || mgrd(p) != NON_MONSTER
-            || !grid_compatible(DNGN_FLOOR, grd(p), true))
+            || !grid_compatible(DNGN_FLOOR, grd(p)))
         {
             continue;
         }

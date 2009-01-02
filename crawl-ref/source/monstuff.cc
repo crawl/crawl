@@ -6746,7 +6746,8 @@ static void _handle_monster_move(int i, monsters *monster)
             // Same for friendlies if friendly_pickup is set to "none".
             if (!mons_neutral(monster) && !monster->has_ench(ENCH_CHARM)
                 && (!mons_friendly(monster)
-                    || you.friendly_pickup > FRIENDLY_PICKUP_NONE))
+                    || you.friendly_pickup > FRIENDLY_PICKUP_NONE
+                    || crawl_state.arena))
             {
                 if (_handle_pickup(monster))
                 {

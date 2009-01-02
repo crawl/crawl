@@ -167,16 +167,15 @@ namespace arena
 
             for (int q = 0; q < spec.quantity; ++q)
             {
-                const coord_def loc =
-                    find_newmons_square_contiguous(MONS_GIANT_BAT, pos, 6);
+                const coord_def loc = pos;
                 if (!in_bounds(loc))
                     break;
 
                 const int imon = dgn_place_monster(spec, you.your_level,
                                                    loc, false, true, false);
                 if (imon == -1)
-                    end(1, false, "Failed to create monster at (%d,%d)",
-                        loc.x, loc.y);
+                    end(1, false, "Failed to create monster at (%d,%d) grd: %s",
+                        loc.x, loc.y, dungeon_feature_name(grd(loc)));
                 list_eq(imon);
             }
         }
@@ -223,7 +222,8 @@ namespace arena
         ASSERT(map);
         bool success = dgn_place_map(map, true, true);
         if (!success)
-            throw make_stringf("Failed to create arena named \"%s\"", arena_type.c_str());
+            throw make_stringf("Failed to create arena named \"%s\"",
+                               arena_type.c_str());
         link_items();
 
         if (!env.rock_colour)

@@ -324,8 +324,7 @@ void mark_interesting_monst(monsters* monster,
                             beh_type behaviour = BEH_SLEEP);
 
 bool grid_compatible(dungeon_feature_type grid_wanted,
-                     dungeon_feature_type actual_grid,
-                     bool generation = false);
+                     dungeon_feature_type actual_grid);
 bool monster_habitable_grid(const monsters *m,
                             dungeon_feature_type actual_grid);
 bool monster_habitable_grid(int monster_class,

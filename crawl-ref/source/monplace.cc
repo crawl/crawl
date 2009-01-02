@@ -72,7 +72,7 @@ static int _place_monster_aux(const mgen_data &mg, bool first_band_member,
 // Returns whether actual_grid is compatible with grid_wanted for monster
 // movement (or for monster generation, if generation is true).
 bool grid_compatible(dungeon_feature_type grid_wanted,
-                     dungeon_feature_type actual_grid, bool generation)
+                     dungeon_feature_type actual_grid)
 {
     // XXX What in Xom's name is DNGN_WATER_STUCK? It looks like an artificial
     // device to slow down fiery monsters flying over water.
@@ -80,7 +80,7 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
     {
         return (actual_grid >= DNGN_FLOOR
                     && actual_grid != DNGN_BUILDER_SPECIAL_WALL
-                || !generation && actual_grid == DNGN_SHALLOW_WATER);
+                || actual_grid == DNGN_SHALLOW_WATER);
     }
 
     if (grid_wanted >= DNGN_ROCK_WALL
@@ -95,7 +95,7 @@ bool grid_compatible(dungeon_feature_type grid_wanted,
     return (grid_wanted == actual_grid
             || (grid_wanted == DNGN_DEEP_WATER
                 && (actual_grid == DNGN_SHALLOW_WATER
-                    || !generation && actual_grid == DNGN_FOUNTAIN_BLUE)));
+                    || actual_grid == DNGN_FOUNTAIN_BLUE)));
 }
 
 // Can this monster survive on actual_grid?
@@ -664,8 +664,7 @@ static int _is_near_stairs(coord_def &p)
  * creatures in fountains.
  */
 static bool _valid_monster_location(const mgen_data &mg,
-                                    const coord_def &mg_pos,
-                                    bool force_location)
+                                    const coord_def &mg_pos)
 {
     const int montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                          : mg.cls);
@@ -682,9 +681,9 @@ static bool _valid_monster_location(const mgen_data &mg,
         return (false);
 
     // Is the monster happy where we want to put it?
-    if (!grid_compatible(grid_preferred, grd(mg_pos), !force_location)
+    if (!grid_compatible(grid_preferred, grd(mg_pos))
         && (grid_nonpreferred == grid_preferred
-            || !grid_compatible(grid_nonpreferred, grd(mg_pos), !force_location)))
+            || !grid_compatible(grid_nonpreferred, grd(mg_pos))))
     {
         return (false);
     }
@@ -701,9 +700,9 @@ static bool _valid_monster_location(const mgen_data &mg,
     return (true);
 }
 
-static bool _valid_monster_location(mgen_data &mg, bool force_location)
+static bool _valid_monster_location(mgen_data &mg)
 {
-    return _valid_monster_location(mg, mg.pos, force_location);
+    return _valid_monster_location(mg, mg.pos);
 }
 
 int place_monster(mgen_data mg, bool force_pos)
@@ -784,7 +783,7 @@ int place_monster(mgen_data mg, bool force_pos)
             if (mg.proximity != PROX_NEAR_STAIRS)
                 mg.pos = random_in_bounds();
 
-            if (!_valid_monster_location(mg, false))
+            if (!_valid_monster_location(mg))
                 continue;
 
             // Is the grid verboten?
@@ -846,7 +845,7 @@ int place_monster(mgen_data mg, bool force_pos)
             break;
         } // end while... place first monster
     }
-    else if (!_valid_monster_location(mg, true))
+    else if (!_valid_monster_location(mg))
     {
         // Sanity check that the specified position is valid.
         return (-1);
@@ -971,7 +970,7 @@ static int _place_monster_aux(const mgen_data &mg,
             fpos = mg.pos + coord_def( random_range(-3, 3),
                                        random_range(-3, 3) );
 
-            if (_valid_monster_location(mg, fpos, false))
+            if (_valid_monster_location(mg, fpos))
                 break;
         }
 
@@ -2185,7 +2184,7 @@ public:
         {
             return (false);
         }
-        if (!grid_compatible(grid_wanted, grd(dc), true))
+        if (!grid_compatible(grid_wanted, grd(dc)))
         {
             if (passable.find(grd(dc)) != passable.end())
                 good_square(dc);
