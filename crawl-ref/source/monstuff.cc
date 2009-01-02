@@ -3521,6 +3521,9 @@ static void _arena_set_foe(monsters *mons)
 
     int nearest = -1;
     int best_distance = -1;
+
+    int nearest_unseen = -1;
+    int best_unseen_distance = -1;
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         if (mind == i)
@@ -3531,6 +3534,25 @@ static void _arena_set_foe(monsters *mons)
             continue;
 
         const int distance = grid_distance(mons->pos(), other->pos());
+        const bool seen = mons->can_see(other);
+
+        if (seen)
+        {
+            if (best_distance == -1 || distance < best_distance)
+            {
+                best_distance = distance;
+                nearest = i;
+            }
+        }
+        else
+        {
+            if (best_unseen_distance == -1 || distance < best_unseen_distance)
+            {
+                best_unseen_distance = distance;
+                nearest_unseen = i;
+            }
+        }
+
         if ((best_distance == -1 || distance < best_distance)
             && mons->can_see(other))
 
@@ -3546,14 +3568,18 @@ static void _arena_set_foe(monsters *mons)
         mons->target = menv[nearest].pos();
         mons->behaviour = BEH_SEEK;
     }
+    else if (nearest_unseen != -1)
+    {
+        mons->target = menv[nearest_unseen].pos();
+        mons->behaviour = BEH_WANDER;
+    }
     else
     {
         mons->foe = MHITNOT;
         mons->behaviour = BEH_WANDER;
+        if (mons->behaviour == BEH_WANDER)
+            _check_wander_target(mons);
     }
-
-    if (mons->behaviour == BEH_WANDER)
-        _check_wander_target(mons);
 }
 
 //---------------------------------------------------------------
