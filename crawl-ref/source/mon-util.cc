@@ -7472,7 +7472,7 @@ bool monsters::can_drink_potion(potion_type ptype) const
                     && holiness() != MH_PLANT);
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
-            return (mons_species() != MONS_VAMPIRE);
+            return (mons_species() == MONS_VAMPIRE);
         default:
             break;
         }
