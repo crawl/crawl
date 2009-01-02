@@ -46,12 +46,14 @@ namespace arena
     int trials_done = 0;
     int team_a_wins = 0;
     bool allow_summons = true;
+    bool no_immobile  = false;
     bool do_alert = false;
     std::string arena_type = "";
     faction faction_a(true);
     faction faction_b(false);
     FILE *file = NULL;
     int message_pos = 0;
+    level_id place;
 
     void adjust_monsters()
     {
@@ -151,16 +153,16 @@ namespace arena
 
             for (int q = 0; q < spec.quantity; ++q)
             {
-                const coord_def place =
+                const coord_def loc =
                     find_newmons_square_contiguous(MONS_GIANT_BAT, pos, 6);
-                if (!in_bounds(place))
+                if (!in_bounds(loc))
                     break;
 
                 const int imon = dgn_place_monster(spec, you.your_level,
-                                                   place, false, true, false);
+                                                   loc, false, true, false);
                 if (imon == -1)
                     end(1, false, "Failed to create monster at (%d,%d)",
-                        place.x, place.y);
+                        loc.x, loc.y);
                 list_eq(imon);
             }
         }
@@ -243,6 +245,7 @@ namespace arena
 
         allow_summons = !strip_tag(spec, "no_summons");
         do_alert      = strip_tag(spec, "alert");
+        no_immobile   = strip_tag(spec, "no_immobile");
 
         const int ntrials = strip_number_tag(spec, "t:");
         if (ntrials != TAG_UNFOUND && ntrials >= 1 && ntrials <= 99
@@ -253,6 +256,20 @@ namespace arena
 
         if (arena_type.empty())
             arena_type = "default";
+
+        std::string arena_place = strip_tag_prefix(spec, "arena_place:");
+        if (!arena_place.empty())
+        {
+            try {
+                place = level_id::parse_level_id(arena_place);
+            }
+            catch (const std::string &err)
+            {
+                throw make_stringf("Bad place '%s': %s",
+                                   arena_place.c_str(),
+                                   err.c_str());
+            }
+        }
 
         std::vector<std::string> factions = split_string(" v ", spec);
 
@@ -285,6 +302,7 @@ namespace arena
     void setup_monsters()
         throw (std::string)
     {
+
         unwind_var< FixedVector<bool, NUM_MONSTERS> >
             uniq(you.unique_creatures);
 
@@ -351,7 +369,15 @@ namespace arena
         strcpy(you.your_name, "Arena");
 
         you.hp = you.hp_max = 99;
-        you.your_level = 20;
+
+        if (place.is_valid())
+        {
+            you.level_type    = place.level_type;
+            you.where_are_you = place.branch;
+            you.your_level    = place.absdepth();
+        }
+        else
+            you.your_level = 20;
 
         Options.show_gold_turns = false;
 
@@ -458,6 +484,23 @@ namespace arena
             fprintf(file, "%s\n", messages[i].c_str());
     }
 
+    void cull_immobile()
+    {
+        if (!no_immobile)
+            return;
+
+        for (int i = 0; i < MAX_MONSTERS; i++)
+        {
+            monsters* mon = &menv[i];
+
+            if (!mon->alive())
+                continue;
+
+            if (mons_is_stationary(mon) && mon->is_summoned())
+                monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
+        }
+    }
+
     void do_fight()
     {
         mesclr(true);
@@ -477,6 +520,7 @@ namespace arena
                 you.hunger = 10999;
                 //report_foes();
                 world_reacts();
+                cull_immobile();
                 delay(Options.arena_delay);
                 mesclr();
                 dump_messages();
