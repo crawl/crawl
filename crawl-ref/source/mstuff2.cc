@@ -849,7 +849,10 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         } // for (unsigned int i = 0; i < path.size(); i++)
         // If the monster gestures to create an invisible beam then
         // assume that anything close to the beam is the intended target.
-        if ((!visible_beam && gestured) || target == "nothing")
+        // Also, if the monster gestures to create a visible beam but it
+        // misses still say that the monster gestured "at" the target,
+        // rather than "past".
+        if (gestured || target == "nothing")
             targ_prep = "at";
     } // if (target == "nothing" && targeted)
 
