@@ -92,7 +92,7 @@ namespace arena
 
     void alert_faction(bool friendly)
     {
-        int alerter;
+        int alerter = 0;
         for (int i = 0; i < MAX_MONSTERS; i++)
         {
             const monsters *mon = &menv[i];

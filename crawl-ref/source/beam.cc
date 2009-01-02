@@ -16,6 +16,7 @@
 #include <iostream>
 #include <set>
 #include <algorithm>
+#include <cmath>
 
 #ifdef DOS
 #include <dos.h>
@@ -1408,7 +1409,7 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
 
     double old_deg = old_ray.get_degrees();
     double new_deg = new_ray.get_degrees();
-    double angle   = abs(old_deg - new_deg);
+    double angle   = fabs(old_deg - new_deg);
 
     if (angle >= 180.0)
         angle -= 180.0;
@@ -1421,7 +1422,8 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     ray_def temp_ray = new_ray;
     for (int tries = 0; tries < 20; tries++)
     {
-        shift = (double) random_range(min * 10000, max * 10000) / 10000.0;
+        shift = (double) random_range((int)(min * 10000),
+			              (int)(max * 10000)) / 10000.0;
 
         if (new_deg < old_deg)
             shift = -shift;
