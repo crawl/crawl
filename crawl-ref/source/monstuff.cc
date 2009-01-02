@@ -4623,6 +4623,9 @@ static void _handle_movement(monsters *monster)
             }
         }
     }
+
+    if (mmov.origin() && monster->behaviour == BEH_WANDER && crawl_state.arena)
+        _check_wander_target(monster);
 }
 
 static void _make_mons_stop_fleeing(monsters *mon)
