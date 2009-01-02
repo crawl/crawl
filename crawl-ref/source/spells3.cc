@@ -644,7 +644,7 @@ static bool _animatable_remains(const item_def& item)
 static void _equip_undead(const coord_def &a, int corps, int monster,
                           int monnum)
 {
-    monsters*    mon  = &menv[monster];
+    monsters* mon = &menv[monster];
 
     if (mons_class_itemuse(monnum) < MONUSE_STARTING_EQUIPMENT)
         return;
