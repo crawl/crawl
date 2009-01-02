@@ -58,9 +58,9 @@ kobold CORPSE_KOBOLD /* K */
 big_kobold CORPSE_BIG_KOBOLD
 
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-greater_naga0 CORPSE_GREATER_NAGA /* N */
+greater_naga CORPSE_GREATER_NAGA /* N */
 guardian_naga CORPSE_GUARDIAN_NAGA /* N */
-naga0 CORPSE_NAGA /* N */
+naga CORPSE_NAGA /* N */
 ###naga_mage CORPSE_NAGA_MAGE /* N */
 ###naga_warrior CORPSE_NAGA_WARRIOR /* N */
 
@@ -133,9 +133,9 @@ death_drake CORPSE_DEATH_DRAKE /* d */
 ##deep_elf_summoner CORPSE_DEEP_ELF_SUMMONER /* e */
 elf CORPSE_ELF /* e */
 
-gnoll0 CORPSE_GNOLL /* g */
-goblin0 CORPSE_GOBLIN /* g */
-hobgoblin0 CORPSE_HOBGOBLIN /* g */
+gnoll CORPSE_GNOLL /* g */
+goblin CORPSE_GOBLIN /* g */
+hobgoblin CORPSE_HOBGOBLIN /* g */
 
 %sdir dc-mon/animals
 hog CORPSE_HOG /* h */
@@ -172,7 +172,7 @@ ghoul CORPSE_GHOUL /* n */
 necrophage CORPSE_NECROPHAGE /* n */
 
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-orc0 CORPSE_ORC /* o */
+orc CORPSE_ORC /* o */
 ###orc_high_priest CORPSE_ORC_HIGH_PRIEST /* o */
 ###orc_priest CORPSE_ORC_PRIEST /* o */
 ###orc_sorcerer CORPSE_ORC_SORCERER /* o */
@@ -193,7 +193,7 @@ scorpion CORPSE_SCORPION /* s */
 wolf_spider CORPSE_WOLF_SPIDER /* s */
 trapdoor_spider CORPSE_TRAPDOOR_SPIDER /* s */
 
-%sdir dc-mon
+%sdir dc-mon/demons
 ugly_thing CORPSE_UGLY_THING /* u */
 very_ugly_thing CORPSE_VERY_UGLY_THING /* u */
 
