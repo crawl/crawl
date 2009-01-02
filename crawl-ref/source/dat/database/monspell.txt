@@ -86,7 +86,7 @@ unseen Symbol of Torment cast
 %%%%
 Acid Splash cast
 
-@The_monster@ spits acid at @target@.
+@The_monster@ spits acid @at@ @target@.
 %%%%
 unseen Acid Splash cast
 
@@ -94,7 +94,7 @@ You hear a spitting sound.
 %%%%
 Draconian Breath cast
 
-@The_monster@ breathes @beam@ at @target@.
+@The_monster@ breathes @beam@ @at@ @target@.
 %%%%
 unseen Draconian Breath cast
 
@@ -102,7 +102,7 @@ You hear a roar.
 %%%%
 Poison Splash cast
 
-@The_monster@ spits poison at @target@.
+@The_monster@ spits poison @at@ @target@.
 %%%%
 unseen Poison Splash cast
 
@@ -110,7 +110,7 @@ You hear a spitting sound.
 %%%%
 Sticky Flame Splash cast
 
-@The_monster@ spits sticky flame at @target@.
+@The_monster@ spits sticky flame @at@ @target@.
 %%%%
 unseen Sticky Flame Splash cast
 
@@ -155,7 +155,7 @@ sphinx cast
 %%%%
 dragon cast targeted
 
-@The_monster@ breathes @beam@ at @target@.
+@The_monster@ breathes @beam@ @at@ @target@.
 %%%%
 dragon cast
 
@@ -177,7 +177,7 @@ You hear the clattering of teeth.
 %%%%
 giant eyeball cast targeted
 
-@The_monster@ gazes at @target@.
+@The_monster@ gazes @at@ @target@.
 %%%%
 giant eyeball cast
 
@@ -247,5 +247,5 @@ demon cast
 ######################################################
 beam catchall cast
 
-@The_monster@ throws @beam@ at @target@.
+@The_monster@ throws @beam@ @at@ @target@.
 %%%%

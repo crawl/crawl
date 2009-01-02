@@ -586,9 +586,9 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     std::vector<std::string> key_list;
 
     // First try the spells name.
-    if (shape <= MON_SHAPE_NAGA && !innate)
+    if (shape <= MON_SHAPE_NAGA)
     {
-        if (priest || wizard)
+        if (!innate && (priest || wizard))
             key_list.push_back(spell_name + cast_str + " real");
         if (mons_intel(monster) >= I_NORMAL)
             key_list.push_back(spell_name + cast_str + " gestures");
@@ -616,9 +616,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                            && pbolt.name[0] != '0'
                            && !pbolt.is_enchantment();
 
-    const bool targeted = in_bounds(pbolt.target)
-        && pbolt.target != monster->pos()
-        && (flags & SPFLAG_TARGETING_MASK);
+    const bool targeted = flags & SPFLAG_TARGETING_MASK;
 
     if (targeted)
     {
@@ -632,7 +630,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
         // Generic beam messages.
         if (visible_beam)
         {
-            key_list.push_back(pbolt.short_name + " beam " + cast_str);
+            key_list.push_back(pbolt.get_short_name() + " beam " + cast_str);
             key_list.push_back("beam catchall cast");
         }
     }
@@ -703,14 +701,27 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     // We have a message.
     /////////////////////
 
-    std::string target = "something";
-    if (!(flags & SPFLAG_TARGETING_MASK) || !in_bounds(pbolt.target))
+    bolt tracer = pbolt;
+    if (targeted)
+    {
+        // For a targeted but rangeless spell make the range positive so that
+        // fire_tracer() will fill out path_taken.
+        if (pbolt.range == 0 && pbolt.target != monster->pos())
+            tracer.range = ENV_SHOW_DIAMETER;
+
+        fire_tracer(monster, tracer);
+    }
+
+    std::string targ_prep = "at";
+    std::string target    = "nothing";
+
+    if (!targeted)
         target = "NO TARGET";
     else if (pbolt.target == you.pos())
         target = "you";
     else if (pbolt.target == monster->pos())
         target = monster->pronoun(PRONOUN_REFLEXIVE);
-    else if (see_grid(pbolt.target))
+    else if (in_bounds(pbolt.target) && see_grid(pbolt.target))
     {
         int midx = mgrd(pbolt.target);
         if (midx != NON_MONSTER)
@@ -723,17 +734,43 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
     }
 
     // Monster might be aiming past the real target, or maybe some fuzz has
-    // been applied because the monster can't see the target.
-    if (target == "something" && targeted)
+    // been applied because the target is invisible.
+    if (target == "nothing" && targeted)
     {
-        bolt tracer = pbolt;
+        if (pbolt.aimed_at_spot)
+        {
+            int count = 0;
+            for (adjacent_iterator ai(pbolt.target); ai; ++ai)
+            {
+                if (*ai == monster->pos())
+                    continue;
 
-        fire_tracer(monster, tracer);
+                if (*ai == you.pos())
+                {
+                    targ_prep = "next to";
+                    target    = "you";
+                    break;
+                }
+
+                const int midx = mgrd(*ai);
+
+                if (midx != NON_MONSTER && you.can_see(&menv[midx]))
+                {
+                    targ_prep = "next to";
+                    if (one_chance_in(count++))
+                        target = menv[midx].name(DESC_NOCAP_THE);
+                }
+            }
+        }
+
+        const bool gestured = msg.find("Gesture") != std::string::npos
+                           || msg.find(" gesture") != std::string::npos
+                           || msg.find("Point") != std::string::npos
+                           || msg.find(" point") != std::string::npos;
+        const bool visible_path      = visible_beam || gestured;
+              bool mons_targ_aligned = false;
 
         const std::vector<coord_def> &path = tracer.path_taken;
-
-        bool mons_targ_aligned = false;
-
         for (unsigned int i = 0; i < path.size(); i++)
         {
             const coord_def pos = path[i];
@@ -749,26 +786,28 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                 // a beam aimed at an ally.
                 if (!mons_wont_attack(monster))
                 {
-                    target = "you";
+                    targ_prep = "at";
+                    target    = "you";
                     break;
                 }
                 // If the ally is confused or aiming at an invisible enemy,
                 // with the player in the path, act like it's targeted at
                 // the player if there isn't any visible target earlier
                 // in the path.
-                else if (target == "something")
+                else if (target == "nothing")
                 {
                     target            = "you";
+                    targ_prep         = "at";
                     mons_targ_aligned = true;
                 }
             }
-            else if (visible_beam && midx != NON_MONSTER
+            else if (visible_path && midx != NON_MONSTER
                      && you.can_see(&menv[midx]))
             {
                 bool        is_aligned = mons_aligned(midx, monster->mindex());
                 std::string name       = menv[midx].name(DESC_NOCAP_THE);
 
-                if (target == "something")
+                if (target == "nothing")
                 {
                     mons_targ_aligned = is_aligned;
                     target            = name;
@@ -781,24 +820,54 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                     mons_targ_aligned = false;
                     target            = name;
                 }
+                targ_prep = "at";
             }
-        }
-    }
+            else if (visible_path && target == "nothing")
+            {
+                int count = 0;
+                for (adjacent_iterator ai(pbolt.target); ai; ++ai)
+                {
+                    if (*ai == monster->pos())
+                        continue;
 
+                    if (*ai == you.pos())
+                    {
+                        targ_prep = "past";
+                        target    = "you";
+                        break;
+                    }
+
+                    const int midx2 = mgrd(*ai);
+                    if (midx2 != NON_MONSTER && you.can_see(&menv[midx2]))
+                    {
+                        targ_prep = "past";
+                        if (one_chance_in(count++))
+                            target = menv[midx2].name(DESC_NOCAP_THE);
+                    }
+                }
+            }
+        } // for (unsigned int i = 0; i < path.size(); i++)
+        // If the monster gestures to create an invisible beam then
+        // assume that anything close to the beam is the intended target.
+        if ((!visible_beam && gestured) || target == "nothing")
+            targ_prep = "at";
+    } // if (target == "nothing" && targeted)
+
+    msg = replace_all(msg, "@at@",     targ_prep);
     msg = replace_all(msg, "@target@", target);
 
-    // Don't check for pbolt.seen, since we get called before the beam is
-	// fired.
     std::string beam_name;
-    if (pbolt.flavour <= BEAM_NONE
-        || pbolt.flavour > BEAM_LAST_REAL
-        || pbolt.name.empty())
+    if (!targeted)
+    {
+        beam_name = "NON TARGETED BEAM";
+    }
+    else if (pbolt.name.empty())
     {
         beam_name = "INVALID BEAM";
     }
-    else if (!visible_beam)
+    else if (!tracer.seen)
     {
-        beam_name = "INVISIBLE BEAM";
+        beam_name = "UNSEEN BEAM";
     }
     else
         beam_name = pbolt.get_short_name();
