@@ -883,6 +883,7 @@ bool animate_remains(const coord_def &a, corpse_type class_allowed,
                 if (was_butchering)
                     xom_is_stimulated(255);
             }
+
             break;
         }
     }
