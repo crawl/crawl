@@ -5383,7 +5383,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
         monster->lose_energy(EUT_SPECIAL);
 
     return (used);
-}                               // end handle_special_ability()
+}
 
 //---------------------------------------------------------------
 //
