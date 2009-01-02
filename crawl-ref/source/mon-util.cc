@@ -7485,36 +7485,31 @@ bool monsters::can_drink_potion(potion_type ptype) const
 
 bool monsters::should_drink_potion(potion_type ptype) const
 {
-    bool rc = false;
     switch (ptype)
     {
     case POT_HEALING:
-        rc = (hit_points <= max_hit_points / 2)
-            || has_ench(ENCH_POISON)
-            || has_ench(ENCH_SICK)
-            || has_ench(ENCH_CONFUSION)
-            || has_ench(ENCH_ROT);
-        break;
+        return (hit_points <= max_hit_points / 2)
+                || has_ench(ENCH_POISON)
+                || has_ench(ENCH_SICK)
+                || has_ench(ENCH_CONFUSION)
+                || has_ench(ENCH_ROT);
     case POT_HEAL_WOUNDS:
-        rc = (hit_points <= max_hit_points / 2);
-        break;
+        return (hit_points <= max_hit_points / 2);
     case POT_BLOOD:
     case POT_BLOOD_COAGULATED:
-        rc = (hit_points <= max_hit_points / 2);
-        break;
+        return (hit_points <= max_hit_points / 2);
     case POT_SPEED:
-        rc = !has_ench(ENCH_HASTE);
-        break;
+        return (!has_ench(ENCH_HASTE));
     case POT_INVISIBILITY:
         // We're being nice: friendlies won't go invisible
         // if the player won't be able to see them.
-        rc = !has_ench(ENCH_INVIS)
-            && (player_see_invis(false) || !mons_friendly(this));
-        break;
+        return (!has_ench(ENCH_INVIS)
+                && (player_see_invis(false) || !mons_friendly(this)));
     default:
         break;
     }
-    return rc;
+
+    return (false);
 }
 
 // Return the ID status gained.
