@@ -53,6 +53,7 @@ public:
 
     std::string description() const;
     std::string feature_description() const;
+    std::vector<item_def> get_items() const;
 
     bool show_menu(const std::string &place, bool can_travel) const;
 
@@ -100,7 +101,7 @@ private:
     dungeon_feature_type feat;
     trap_type trap;
 
-    std::vector<item_def>   items;
+    std::vector<item_def> items;
 
     /*
      * If true (the default), the stash-tracker is a lot more likely to consider
@@ -227,11 +228,13 @@ public:
     // Returns true if the square at (x,y) contains potentially interesting
     // swag that merits a personal visit (for EXPLORE_GREEDY).
     bool  needs_visit(int x, int y) const;
-    bool  needs_visit(const coord_def& c) const {
+    bool  needs_visit(const coord_def& c) const
+    {
         return needs_visit(c.x, c.y);
     }
     bool  shop_needs_visit(int x, int y) const;
-    bool  shop_needs_visit(const coord_def& c) const {
+    bool  shop_needs_visit(const coord_def& c) const
+    {
         return shop_needs_visit(c.x, c.y);
     }
 
@@ -357,6 +360,7 @@ extern StashTracker StashTrack;
 bool is_stash(int x, int y);
 inline bool is_stash( const coord_def& p ) { return is_stash(p.x, p.y); }
 void describe_stash(int x, int y);
+std::vector<item_def> item_list_in_stash( coord_def pos );
 
 std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive = false);

@@ -125,6 +125,26 @@ void describe_stash(int x, int y)
     }
 }
 
+
+std::vector<item_def> Stash::get_items() const
+{
+    return items;
+}
+
+std::vector<item_def> item_list_in_stash( coord_def pos )
+{
+    std::vector<item_def> ret;
+
+    LevelStashes *ls = StashTrack.find_current_level();
+    if (ls)
+    {
+        Stash *s = ls->find_stash(pos.x, pos.y);
+        ret = s->get_items();
+    }
+
+    return ret;
+}
+
 static void _fully_identify_item(item_def *item)
 {
     if (!item || !is_valid_item(*item))
@@ -372,7 +392,8 @@ void Stash::update()
 
             // If this is unverified, forget last item on stack. This isn't
             // terribly clever, but it prevents the vector swelling forever.
-            if (!verified) items.pop_back();
+            if (!verified)
+                items.pop_back();
 
             // Items are different. We'll put this item in the front of our
             // vector, and mark this as unverified
@@ -1450,7 +1471,7 @@ void StashTracker::update_visible_stashes(
                                     StashTracker::stash_update_mode mode)
 {
     if (is_level_untrackable())
-        return ;
+        return;
 
     LevelStashes *lev = find_current_level();
     for (int cy = crawl_view.glos1.y; cy <= crawl_view.glos2.y; ++cy)
@@ -1823,11 +1844,10 @@ bool StashTracker::display_search_results(
         sel = stashmenu.show();
 
         if (stashmenu.request_toggle_sort_method)
-        {
             return (true);
-        }
 
-        if (sel.size() == 1 && stashmenu.menu_action == StashSearchMenu::ACT_EXAMINE)
+        if (sel.size() == 1
+            && stashmenu.menu_action == StashSearchMenu::ACT_EXAMINE)
         {
             stash_search_result *res =
                 static_cast<stash_search_result *>(sel[0]->data);

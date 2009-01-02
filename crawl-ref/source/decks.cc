@@ -3037,7 +3037,8 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
             set_hunger(12000, true);
         break;
 
-    default:
+    case NUM_CARDS:
+        // The compiler will complain if any card remains unhandled.
         mpr("You have drawn a buggy card!");
         break;
     }

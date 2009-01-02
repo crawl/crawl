@@ -1390,7 +1390,6 @@ static bool _handle_FAQ()
         return (false);
     }
     Menu FAQmenu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING);
-//    FAQmenu.set_more(formatted_string::parse_string("Choose a question!"));
     MenuEntry *title = new MenuEntry("Frequently Asked Questions");
     title->colour = YELLOW;
     FAQmenu.set_title(title);
@@ -1438,8 +1437,8 @@ static bool _handle_FAQ()
             std::string answer = getFAQ_Answer(key);
             if (answer.empty())
             {
-                mpr("No answer found in the FAQ! Please submit a bug report!");
-                return (false);
+                answer = "No answer found in the FAQ! Please submit a "
+                         "bug report!";
             }
             answer = "Q: " + getFAQ_Question(key) + EOL + "A: " + answer;
             linebreak_string2(answer, width - 1);

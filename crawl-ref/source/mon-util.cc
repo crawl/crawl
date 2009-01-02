@@ -2956,8 +2956,32 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
     return (ret);
 }
 
+static bool _ms_los_spell( spell_type monspell )
+{
+    switch (monspell)
+    {
+    case SPELL_SUMMON_DEMON:
+    case SPELL_SUMMON_GREATER_DEMON:
+    case SPELL_SUMMON_UNDEAD:
+    case SPELL_SUMMON_UFETUBUS:
+    case SPELL_SUMMON_HORRIBLE_THINGS:
+    case SPELL_SUMMON_DRAKES:
+    case SPELL_SUMMON_MUSHROOMS:
+    case SPELL_SUMMON_ICE_BEAST:
+        return (true);
+
+    default:
+        return (false);
+    }
+}
+
+
 static bool _ms_ranged_spell( spell_type monspell, bool attack_only )
 {
+    // These spells are ranged, but aren't direct attack spells.
+    if (!attack_only && _ms_los_spell(monspell))
+        return (true);
+
     switch (monspell)
     {
     case SPELL_NO_SPELL:
@@ -2969,24 +2993,15 @@ static bool _ms_ranged_spell( spell_type monspell, bool attack_only )
     case SPELL_BLINK:
         return (false);
 
-    // These spells are ranged, but aren't direct attack spells.
+    // The animation spells don't work through transparent walls and thus
+    // are listed here instead of above.
     case SPELL_ANIMATE_DEAD:
     case SPELL_ANIMATE_SKELETON:
-    case SPELL_SUMMON_DEMON:
-    case SPELL_SUMMON_GREATER_DEMON:
-    case SPELL_SUMMON_UNDEAD:
-    case SPELL_SUMMON_UFETUBUS:
-    case SPELL_SUMMON_HORRIBLE_THINGS:
-    case SPELL_SUMMON_DRAKES:
-    case SPELL_SUMMON_MUSHROOMS:
-    case SPELL_SUMMON_ICE_BEAST:
         return (!attack_only);
 
     default:
-        break;
+        return (true);
     }
-
-    return (true);
 }
 
 bool mons_is_magic_user( const monsters *mon )
@@ -3019,6 +3034,24 @@ bool mons_has_los_ability( int mclass )
     // Beholding just needs LOS.
     if (mons_genus(mclass) == MONS_MERMAID)
         return (true);
+
+    return (false);
+}
+
+bool mons_has_los_attack(const monsters *mon)
+{
+    const int mclass = mon->type;
+
+    // Monsters may have spell like abilities.
+    if (mons_has_los_ability(mclass))
+        return (true);
+
+    if (mons_class_flag( mclass, M_SPELLCASTER ))
+    {
+        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+            if (_ms_los_spell( mon->spells[i] ))
+                return (true);
+    }
 
     return (false);
 }
@@ -3360,7 +3393,7 @@ bool monsters::wants_submerge() const
         return (true);
     }
 
-    // Trapdoor spiders only hide themsleves under the floor when they
+    // Trapdoor spiders only hide themselves under the floor when they
     // can't see their prey.
     if (type == MONS_TRAPDOOR_SPIDER)
     {

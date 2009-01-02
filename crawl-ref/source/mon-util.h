@@ -714,6 +714,7 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell );
 
 bool mons_is_magic_user( const monsters *mon );
 bool mons_has_los_ability( int mclass );
+bool mons_has_los_attack(const monsters *mon);
 bool mons_has_ranged_spell( const monsters *mon, bool attack_only = false );
 bool mons_has_ranged_attack( const monsters *mon );
 

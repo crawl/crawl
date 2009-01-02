@@ -1765,6 +1765,9 @@ bool move_item_to_grid( int *const obj, const coord_def& p )
         set_branch_flags(BFLAG_HAS_ORB);
     }
 
+//     if (see_grid(p))
+//        StashTrack.update_stash(p);
+
     return (true);
 }
 

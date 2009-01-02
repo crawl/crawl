@@ -456,13 +456,10 @@ void full_describe_view()
     const coord_def end = start + crawl_view.viewsz - coord_def(1,1);
 
     std::vector<const monsters*> list_mons;
-    std::vector<const item_def*> list_items;
+    std::vector<item_def> list_items;
 
-    // Iterate over viewport and get all the items in view.
-    // FIXME: This includes unknown stashes. I guess for stashes never
-    // seen before I could simply only add the top item (though I don't
-    // know how to do that) but what about stashes that changed since
-    // you last saw them? Just list the old content?
+    // Iterate over viewport and grab all items known (or thought)
+    // to be in the stashes in view.
     for (rectangle_iterator ri(start, end); ri; ++ri)
     {
         if (!in_bounds(*ri) || !see_grid(*ri))
@@ -470,12 +467,14 @@ void full_describe_view()
 
         const int oid = igrd(*ri);
 
-        if (oid != NON_ITEM)
-        {
-            std::vector<const item_def*> items;
-            item_list_on_square( items, oid, true );
-            list_items.insert(list_items.end(), items.begin(), items.end());
-        }
+        if (oid == NON_ITEM)
+            continue;
+
+        std::vector<item_def> items = item_list_in_stash(*ri);
+        if (items.empty())
+            continue;
+
+        list_items.insert(list_items.end(), items.begin(), items.end());
     }
 
     // Get monsters via the monster_pane_info, sorted by difficulty.
@@ -533,9 +532,6 @@ void full_describe_view()
             mon_dam_level_type dam_level;
             mons_get_damage_level(list_mons[i], wound_str, dam_level);
 
-            // Get monster description.
-            // TODO: Show monsters being friendly or neutral, if not by
-            //       colour, then by description.
             std::vector<formatted_string> fss;
             std::string str = get_monster_desc(list_mons[i], true, DESC_CAP_A,
                                                true);
@@ -579,10 +575,9 @@ void full_describe_view()
             const char letter = index_to_letter(menu_index);
 
             unsigned glyph_char;
-            // TODO: check if this can be used instead of
-            // manually doing so with item_specialness --yy
             unsigned short glyph_col;
-            get_item_glyph( list_items[i], &glyph_char, &glyph_col );
+            const item_def &item = list_items[i];
+            get_item_glyph( &item, &glyph_char, &glyph_col );
 
             const std::string col_string = colour_to_str(glyph_col);
             const std::string prefix = "(<" + col_string + ">"
@@ -590,11 +585,11 @@ void full_describe_view()
                                        + "</" + col_string + ">) ";
 
             const std::string str = prefix +
-                uppercase_first(list_items[i]->name(DESC_PLAIN));
+                uppercase_first(item.name(DESC_PLAIN));
 
             MenuEntry *me = new MenuEntry(str, MEL_ITEM, 1, letter);
             me->data = reinterpret_cast<void*>(
-                const_cast<item_def*>(list_items[i]));
+                const_cast<item_def*>(&item));
             me->tag = "i";
             me->quantity = 2; // Hack to make items selectable.
             desc_menu.add_entry(me);
