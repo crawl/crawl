@@ -673,6 +673,8 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_TENTACLED_MONSTROSITY;
     case MONS_ORB_GUARDIAN:
         return TILEP_MONS_ORB_GUARDIAN;
+    case MONS_TEST_SPAWNER:
+        return TILEP_MONS_TEST_SPAWNER;
 
     // yaks and sheep ('Y')
     case MONS_SHEEP:
@@ -2279,6 +2281,8 @@ static int _tileidx_shop(coord_def where)
 
 int tileidx_feature(int object, int gx, int gy)
 {
+    ASSERT(object < NUM_REAL_FEATURES);
+
     switch (object)
     {
     case DNGN_UNSEEN:

@@ -5088,13 +5088,18 @@ void viewwindow(bool draw_it, bool do_updates)
 
     int count_x, count_y;
 
-    if (map_bounds(you.pos()))
+    if (!crawl_state.arena)
     {
-        losight( env.show, grd, you.pos() ); // Must be done first.
+        // Must be done first.
+        losight(env.show, grd, you.pos());
 
         // What would be visible, if all of the translucent walls were
         // made opaque.
-        losight( env.no_trans_show, grd, you.pos(), true );
+        losight(env.no_trans_show, grd, you.pos(), true);
+    }
+    else
+    {
+        losight(env.show, grd, crawl_view.vgrdc);
     }
 
 #ifdef USE_TILE
