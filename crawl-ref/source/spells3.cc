@@ -941,6 +941,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
             for (stack_iterator si(a); si; ++si)
             {
                 const bool was_butchering = is_being_butchered(*si, false);
+
                 if (animate_remains(a, CORPSE_BODY, beha, hitting, god,
                                      actual, true))
                 {
