@@ -7455,40 +7455,32 @@ static inline monster_type _royal_jelly_ejectable_monster()
 
 bool monsters::can_drink_potion(potion_type ptype) const
 {
-    bool rc = true;
-
-    switch (mons_species())
+    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
-    case MONS_LICH:
-    case MONS_MUMMY:
-    case MONS_SKELETAL_WARRIOR:
-    case MONS_WRAITH:
-        rc = false;
-        break;
-    default:
-        break;
-    }
-
-    switch (ptype)
-    {
-    case POT_HEALING:
-    case POT_HEAL_WOUNDS:
-        if (holiness() == MH_UNDEAD
-            || holiness() == MH_NONLIVING
-            || holiness() == MH_PLANT)
+        if (mons_is_skeletal(type) || mons_is_insubstantial(type)
+            || mons_species() == MONS_LICH || mons_species() == MONS_MUMMY)
         {
-            rc = false;
+            return (false);
         }
-        break;
-    case POT_BLOOD:
-    case POT_BLOOD_COAGULATED:
-        rc = (mons_species() == MONS_VAMPIRE);
-        break;
-    default:
-        break;
+
+        switch (ptype)
+        {
+        case POT_HEALING:
+        case POT_HEAL_WOUNDS:
+            return (holiness() != MH_UNDEAD
+                    && holiness() != MH_NONLIVING
+                    && holiness() != MH_PLANT);
+        case POT_BLOOD:
+        case POT_BLOOD_COAGULATED:
+            return (mons_species() != MONS_VAMPIRE);
+        default:
+            break;
+        }
+
+        return (true);
     }
 
-    return rc;
+    return (false);
 }
 
 bool monsters::should_drink_potion(potion_type ptype) const
