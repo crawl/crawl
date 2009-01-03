@@ -2083,15 +2083,19 @@ int tileidx_item(const item_def &item)
         }
 
     case OBJ_BOOKS:
-        type= special % 10;
-        if (type < 2)
+        switch (special % 10)
+        {
+        default:
+        case 0:
+        case 1:
             return TILE_BOOK_PAPER_OFFSET + colour;
-        if (type == 2)
+        case 2:
             return TILE_BOOK_LEATHER_OFFSET + special/10;
-        if (type == 3)
+        case 3:
             return TILE_BOOK_METAL_OFFSET + special/10;
-        if (type == 4)
+        case 4:
             return TILE_BOOK_PAPYRUS;
+        }
 
     case OBJ_STAVES:
         if (item_is_rod(item))
