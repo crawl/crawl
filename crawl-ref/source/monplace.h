@@ -77,8 +77,7 @@ enum demon_class_type
 
 enum holy_being_class_type
 {
-    HOLY_BEING_WARRIOR,                //    0: Daeva or Angel
-    HOLY_BEING_RANDOM                  //    any of the above
+    HOLY_BEING_WARRIOR                 //    0: Daeva or Angel
 };
 
 enum dragon_class_type

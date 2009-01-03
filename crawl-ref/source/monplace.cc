@@ -2464,9 +2464,6 @@ monster_type summon_any_holy_being(holy_being_class_type hbct)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
-    if (hbct == HOLY_BEING_RANDOM)
-        hbct = static_cast<holy_being_class_type>(random2(HOLY_BEING_RANDOM));
-
     switch (hbct)
     {
     case HOLY_BEING_WARRIOR:
