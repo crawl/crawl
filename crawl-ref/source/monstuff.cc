@@ -4851,7 +4851,8 @@ static void _handle_nearby_ability(monsters *monster)
         break;
 
     case MONS_EYE_OF_DRAINING:
-        if (coinflip() && !mons_friendly(monster)
+        if (coinflip()
+            && foe->atype() == ACT_PLAYER
             && !mons_is_wandering(monster)
             && !mons_is_fleeing(monster)
             && !mons_is_pacified(monster)
