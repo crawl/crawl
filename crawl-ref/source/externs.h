@@ -1925,6 +1925,8 @@ public:
     int         scroll_margin_x;
     int         scroll_margin_y;
 
+    bool        verbose_monster_pane;
+
     bool        autopickup_on;
     int         default_friendly_pickup;
     bool        show_more_prompt;

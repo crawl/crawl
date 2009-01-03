@@ -638,6 +638,8 @@ void game_options::reset_options()
     scroll_margin_x  = 2;
     scroll_margin_y  = 2;
 
+    verbose_monster_pane = false;
+
     autopickup_on = true;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
     show_more_prompt = true;
@@ -2347,6 +2349,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(center_on_scroll);
     else BOOL_OPTION(symmetric_scroll);
+    else BOOL_OPTION(verbose_monster_pane);
     else if (key == "scroll_margin_x")
     {
         scroll_margin_x = atoi(field.c_str());

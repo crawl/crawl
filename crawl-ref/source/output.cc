@@ -1277,6 +1277,46 @@ bool monster_pane_info::less_than(const monster_pane_info& m1,
     return (false);
 }
 
+static std::string _verbose_info(const monsters* m)
+{
+    if (mons_is_caught(m))
+        return (" (caught)");
+
+    if (mons_behaviour_perceptible(m))
+    {
+        if (mons_is_petrified(m))
+            return(" (petrified)");
+        if (mons_is_paralysed(m))
+            return(" (paralysed)");
+        if (mons_is_petrifying(m))
+            return(" (petrifying)");
+        if (mons_is_confused(m))
+            return(" (confused)");
+        if (mons_is_fleeing(m))
+            return(" (fleeing)");
+        if (mons_is_sleeping(m))
+            return(" (sleeping)");
+        if (mons_is_wandering(m))
+            return(" (wandering)");
+        if (m->foe == MHITNOT && !mons_is_batty(m) && !mons_neutral(m)
+            && !mons_friendly(m))
+        {
+            return (" (unaware)");
+        }
+    }
+
+    if (m->has_ench(ENCH_STICKY_FLAME))
+        return (" (burning)");
+
+    if (m->has_ench(ENCH_ROT))
+        return (" (rotting)");
+
+    if (m->has_ench(ENCH_INVIS))
+        return (" (invisible)");
+
+    return ("");
+}
+
 void monster_pane_info::to_string( int count, std::string& desc,
                                    int& desc_color) const
 {
@@ -1324,6 +1364,8 @@ void monster_pane_info::to_string( int count, std::string& desc,
     {
         if (m_mon->has_ench(ENCH_BERSERK))
             out << " (berserk)";
+        else if (Options.verbose_monster_pane)
+            out << _verbose_info(m_mon);
         else if (mons_looks_stabbable(m_mon))
             out << " (resting)";
         else if (mons_looks_distracted(m_mon))

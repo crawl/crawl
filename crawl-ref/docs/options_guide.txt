@@ -665,6 +665,11 @@ trap_item_brand = none
         use this brand, the items on the square are hidden by the trap
         symbol (^) and the trap symbol is branded.
 
+verbose_monster_pane = false
+        If set to true when using the console version of Crawl (rather than
+        the tiles version), the pane listing the monsters in sight will give
+        more detailed information than just "distracted" or "resting".
+
 4-e     Level Map Functions.
 ----------------------------
 
