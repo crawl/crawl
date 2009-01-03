@@ -628,12 +628,10 @@ void full_describe_view()
 #ifdef USE_TILE
             // Highlight selected monster on the screen.
             const coord_def gc(m->pos());
-            tiles.place_cursor(CURSOR_MOUSE, gc);
-            // No terse description for now, could be nice though. (jpeg)
-            // (They disappear right away.)
-            //const std::string &desc = get_terse_square_desc(gc);
-            //tiles.add_text_tag(TAG_CELL_DESC, desc, gc);
-            //tiles.redraw();
+            tiles.place_cursor(CURSOR_TUTORIAL, gc);
+            const std::string &desc = get_terse_square_desc(gc);
+            tiles.clear_text_tags(TAG_TUTORIAL);
+            tiles.add_text_tag(TAG_TUTORIAL, desc, gc);
 #endif
             mesclr();
             _describe_monster( m );
