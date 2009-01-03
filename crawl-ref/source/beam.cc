@@ -4377,7 +4377,7 @@ void bolt::affect_monster(monsters* mon)
     // Visual - wake monsters.
     if (flavour == BEAM_VISUAL)
     {
-        behaviour_event( mon, ME_DISTURB );
+        behaviour_event( mon, ME_DISTURB, beam_source, source );
         return;
     }
 
