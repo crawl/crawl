@@ -131,11 +131,6 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
 
     beh->compass        = true;
 
-#ifdef USE_TILE
-    // Force update of mouse cursor to direction-compatible location.
-    tiles.place_cursor(CURSOR_MOUSE, tiles.get_cursor());
-#endif
-
     do
     {
         const command_type key_command = beh->get_command();
@@ -155,8 +150,10 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
             if (delta.x < -1 || delta.x > 1
                 || delta.y < -1 || delta.y > 1)
             {
-                // This shouldn't happen.
-                continue;
+                tiles.place_cursor(CURSOR_MOUSE, gc);
+                delta = tiles.get_cursor() - you.pos();
+                ASSERT(delta.x >= -1 && delta.x <= 1);
+                ASSERT(delta.y >= -1 && delta.y <= 1);
             }
 
             moves.delta = delta;
@@ -184,6 +181,10 @@ void direction_choose_compass( dist& moves, targeting_behaviour *beh)
         }
     }
     while (!moves.isCancel && moves.delta.origin());
+
+#ifdef USE_TILE
+    tiles.place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+#endif
 }
 
 static int _targeting_cmd_to_compass( command_type command )

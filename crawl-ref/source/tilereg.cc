@@ -972,7 +972,7 @@ void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
     // cursor next to the player to let them know that their
     // spell/wand will only go one square.
     if (mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR
-        && type == CURSOR_MOUSE)
+        && type == CURSOR_MOUSE && gc != NO_CURSOR)
     {
         coord_def delta = gc - you.pos();
 
