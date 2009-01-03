@@ -4447,7 +4447,6 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         {
             drain_defender();
         }
-
         break;
 
     case AF_PARALYSE:
