@@ -2083,6 +2083,12 @@ int tileidx_item(const item_def &item)
         }
 
     case OBJ_BOOKS:
+        if (is_random_artefact(item))
+        {
+            // TODO enne - need artefact book tiles...
+            special = special % 70;
+        }
+
         switch (special % 10)
         {
         default:
