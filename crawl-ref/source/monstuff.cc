@@ -859,13 +859,13 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
     }
 }
 
-static void _spore_goes_pop(monsters *monster, killer_type killer,
+static bool _spore_goes_pop(monsters *monster, killer_type killer,
                             int killer_index, bool pet_kill, bool wizard)
 {
     if (monster->hit_points > 0 || monster->hit_points <= -15 || wizard
         || killer == KILL_RESET || killer == KILL_DISMISSED)
     {
-        return;
+        return false;
     }
 
     if (killer == KILL_MISC)
@@ -916,27 +916,36 @@ static void _spore_goes_pop(monsters *monster, killer_type killer,
         msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
                                         << static_cast<int>(type)
                                         << std::endl;
-        return;
+        return false;
     }
 
+    bool saw = false;
     if (you.can_see(monster))
     {
+        saw = true;
         viewwindow(true, false);
         if (is_sanctuary(monster->pos()))
             mpr(sanct_msg, MSGCH_GOD);
         else
-            mpr(msg);
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, msg);
     }
 
     if (is_sanctuary(monster->pos()))
-        return;
+        return false;
 
     // Detach monster from the grid first, so it doesn't get hit by
     // its own explosion. (GDL)
     mgrd(monster->pos()) = NON_MONSTER;
+
+    // Exploding kills the monster a bit earlier than normal.
+    monster->hit_points = -16;
+    if (saw)
+        viewwindow(true, false);
+
     // FIXME: show_more == mons_near(monster)
     beam.explode();
-    mgrd(monster->pos()) = monster_index(monster);
+
+    // Monster died in explosion, so don't re-attach it to the grid.
 }
 
 void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
@@ -1072,10 +1081,13 @@ void monster_die(monsters *monster, killer_type killer,
 
     const bool pet_kill = _is_pet_kill(killer, killer_index);
 
+    bool did_death_message = false;
+
     if (monster->type == MONS_GIANT_SPORE
         || monster->type == MONS_BALL_LIGHTNING)
     {
-        _spore_goes_pop(monster, killer, killer_index, pet_kill, wizard);
+        did_death_message =
+            _spore_goes_pop(monster, killer, killer_index, pet_kill, wizard);
     }
     else if (monster->type == MONS_FIRE_VORTEX
              || monster->type == MONS_SPATIAL_VORTEX)
@@ -1136,8 +1148,8 @@ void monster_die(monsters *monster, killer_type killer,
         }
     }
 
-    bool death_message = (!silent && mons_near(monster)
-                          && player_monster_visible(monster));
+    bool death_message = !silent && !did_death_message && mons_near(monster)
+                         && player_monster_visible(monster);
 
     switch (killer)
     {

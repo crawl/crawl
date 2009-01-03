@@ -1221,7 +1221,7 @@ void monster_grid(bool do_updates)
     {
         monster = &menv[s];
 
-        if (monster->type != -1 && mons_near(monster))
+        if (monster->alive() && mons_near(monster))
         {
             if (do_updates && (mons_is_sleeping(monster)
                                || mons_is_wandering(monster))
