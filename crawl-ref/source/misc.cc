@@ -1261,6 +1261,8 @@ void generate_random_blood_spatter_on_level()
 
 void search_around( bool only_adjacent )
 {
+    ASSERT(!crawl_state.arena);
+
     // Traps and doors stepdown skill:
     // skill/(2x-1) for squares at distance x
     int max_dist = (you.skills[SK_TRAPS_DOORS] + 1) / 2;
@@ -2571,6 +2573,8 @@ std::string weird_sound()
 
 bool scramble(void)
 {
+    ASSERT(!crawl_state.arena);
+
     // Statues are too stiff and heavy to scramble out of the water.
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
         return (false);
@@ -2586,6 +2590,8 @@ bool scramble(void)
 
 bool go_berserk(bool intentional)
 {
+    ASSERT(!crawl_state.arena);
+
     if (!you.can_go_berserk(intentional))
         return (false);
 

@@ -362,8 +362,11 @@ namespace arena
         you.mutation[MUT_ACUTE_VISION] = 3;
 
         coord_def yplace(dgn_find_feature_marker(DNGN_ESCAPE_HATCH_UP));
-        // Fix up the viewport.
+        // Fix up the viewport.  Temporarily unset arena mode to avoid
+        // assertion.
+        crawl_state.arena = false;
         you.moveto(yplace);
+        crawl_state.arena = true;
 
         strcpy(you.your_name, "Arena");
 

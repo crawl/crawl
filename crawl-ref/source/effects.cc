@@ -158,6 +158,8 @@ int holy_word(int pow, int caster, const coord_def& where, bool silent)
 
 int torment_player(int pow, int caster)
 {
+    ASSERT(!crawl_state.arena);
+
     UNUSED(pow);
 
     // [dshaligram] Switched to using ouch() instead of dec_hp() so that
@@ -266,6 +268,8 @@ int torment(int caster, const coord_def& where)
 
 void immolation(int caster, bool known)
 {
+    ASSERT(!crawl_state.arena);
+
     const char *aux = "immolation";
 
     bolt beam;
@@ -311,6 +315,8 @@ static std::string _who_banished(const std::string &who)
 
 void banished(dungeon_feature_type gate_type, const std::string &who)
 {
+    ASSERT(!crawl_state.arena);
+
 #ifdef DGL_MILESTONES
     if (gate_type == DNGN_ENTER_ABYSS)
     {
@@ -457,6 +463,8 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
 
 bool forget_spell(void)
 {
+    ASSERT(!crawl_state.arena);
+
     if (!you.spell_no)
         return (false);
 
@@ -692,6 +700,8 @@ void direct_effect(monsters *source, spell_type spell,
 
 void random_uselessness(int scroll_slot)
 {
+    ASSERT(!crawl_state.arena);
+
     int temp_rand = random2(8);
 
     // If this isn't from a scroll, skip the first two possibilities.
@@ -1520,6 +1530,8 @@ static void _do_book_acquirement(item_def &book, int agent)
 bool acquirement(object_class_type class_wanted, int agent,
                  bool quiet, int* item_index)
 {
+    ASSERT(!crawl_state.arena);
+
     int thing_created = NON_ITEM;
 
     if (item_index == NULL)
@@ -1987,6 +1999,8 @@ static void _set_allies_patrol_point(bool clear = false)
 
 void yell(bool force)
 {
+    ASSERT(!crawl_state.arena);
+
     bool targ_prev = false;
     int mons_targd = MHITNOT;
     struct dist targ;
@@ -2168,6 +2182,8 @@ void yell(bool force)
 
 bool forget_inventory(bool quiet)
 {
+    ASSERT(!crawl_state.arena);
+
     int items_forgotten = 0;
 
     for (int i = 0; i < ENDOFPACK; i++)
@@ -3465,6 +3481,8 @@ static void _catchup_monster_moves(monsters *mon, int turns)
 //---------------------------------------------------------------
 void update_level(double elapsedTime)
 {
+    ASSERT(!crawl_state.arena);
+
     const int turns = static_cast<int>(elapsedTime / 10.0);
 
 #if DEBUG_DIAGNOSTICS

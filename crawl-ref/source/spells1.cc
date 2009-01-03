@@ -62,6 +62,8 @@ static bool _abyss_blocks_teleport(bool cblink)
 // contamination.
 int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 {
+    ASSERT(!crawl_state.arena);
+
     dist beam;
 
     if (crawl_state.is_repeating_cmd())
@@ -194,6 +196,8 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
 void random_blink(bool allow_partial_control, bool override_abyss)
 {
+    ASSERT(!crawl_state.arena);
+
     bool success = false;
     coord_def target;
 

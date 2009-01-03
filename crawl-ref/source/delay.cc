@@ -296,6 +296,7 @@ static void _clear_pending_delays()
 
 void start_delay( delay_type type, int turns, int parm1, int parm2 )
 {
+    ASSERT(!crawl_state.arena);
     ASSERT(!crawl_state.is_repeating_cmd() || type == DELAY_MACRO);
 
     _interrupts_blocked = 0; // Just to be safe
@@ -330,6 +331,8 @@ void stop_delay( bool stop_stair_travel )
 
     if (you.delay_queue.empty())
         return;
+
+    ASSERT(!crawl_state.arena);
 
     delay_queue_item delay = you.delay_queue.front();
 

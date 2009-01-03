@@ -991,6 +991,8 @@ int _setup_evaporate_cast()
 // Others are currently unused or unimplemented.
 spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 {
+    ASSERT(!crawl_state.arena);
+
     const bool wiz_cast = (crawl_state.prev_cmd == CMD_WIZARD && !allow_fail);
 
     dist spd;

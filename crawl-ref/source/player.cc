@@ -100,6 +100,7 @@ static void _attribute_increase();
 bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                           bool force, bool swapping )
 {
+    ASSERT(!crawl_state.arena);
     ASSERT( in_bounds( p ) );
 
     // assuming that entering the same square means coming from above (levitate)
@@ -995,6 +996,8 @@ int player_damage_brand( void )
 
 int player_teleport(bool calc_unid)
 {
+    ASSERT(!crawl_state.arena);
+
     int tp = 0;
 
     // rings
@@ -2894,6 +2897,8 @@ bool you_resist_magic(int power)
 // force is true for forget_map command on level map.
 void forget_map(unsigned char chance_forgotten, bool force)
 {
+    ASSERT(!crawl_state.arena);
+
     if (force && !yesno("Really forget level map?", true, 'n'))
         return;
 
@@ -3584,6 +3589,7 @@ void level_change(bool skip_attribute_increase)
 // - 12mar2000 {dlb}
 int check_stealth(void)
 {
+    ASSERT(!crawl_state.arena);
 #ifdef WIZARD
     // Extreme stealthiness can be enforced by wizmode stealth setting.
     if (you.skills[SK_STEALTH] > 27)
@@ -4537,6 +4543,8 @@ int scan_randarts(randart_prop_type which_property, bool calc_unid)
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
                  const char *cause, bool see_source)
 {
+    ASSERT(!crawl_state.arena);
+
     char *ptr_stat = NULL;
     char *ptr_stat_max = NULL;
     bool *ptr_redraw = NULL;
@@ -4671,6 +4679,8 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
 
 void dec_hp(int hp_loss, bool fatal, const char *aux)
 {
+    ASSERT(!crawl_state.arena);
+
     if (!fatal && you.hp < 1)
         you.hp = 1;
 
@@ -4693,6 +4703,8 @@ void dec_hp(int hp_loss, bool fatal, const char *aux)
 
 void dec_mp(int mp_loss)
 {
+    ASSERT(!crawl_state.arena);
+
     if (mp_loss < 1)
         return;
 
@@ -4714,6 +4726,8 @@ void dec_mp(int mp_loss)
 
 bool enough_hp(int minimum, bool suppress_msg)
 {
+    ASSERT(!crawl_state.arena);
+
     // We want to at least keep 1 HP. -- bwr
     if (you.hp < minimum + 1)
     {
@@ -4730,6 +4744,8 @@ bool enough_hp(int minimum, bool suppress_msg)
 
 bool enough_mp(int minimum, bool suppress_msg)
 {
+    ASSERT(!crawl_state.arena);
+
     if (you.magic_points < minimum)
     {
         if (!suppress_msg)
@@ -4747,6 +4763,8 @@ bool enough_mp(int minimum, bool suppress_msg)
 // resulting max value is subject to penalties, bonuses, and scalings.
 void inc_mp(int mp_gain, bool max_too)
 {
+    ASSERT(!crawl_state.arena);
+
     if (mp_gain < 1)
         return;
 
@@ -4772,6 +4790,8 @@ void inc_mp(int mp_gain, bool max_too)
 // To avoid message spam, don't take notes when HP increases.
 void inc_hp(int hp_gain, bool max_too)
 {
+    ASSERT(!crawl_state.arena);
+
     if (hp_gain < 1)
         return;
 
@@ -4863,6 +4883,8 @@ void dec_max_mp( int mp_loss )
 // Use of floor: false = hp max, true = hp min. {dlb}
 void deflate_hp(int new_level, bool floor)
 {
+    ASSERT(!crawl_state.arena);
+
     if (floor && you.hp < new_level)
         you.hp = new_level;
     else if (!floor && you.hp > new_level)
@@ -4876,6 +4898,8 @@ void deflate_hp(int new_level, bool floor)
 // resulting max value is subject to penalties, bonuses, and scalings.
 void set_hp(int new_amount, bool max_too)
 {
+    ASSERT(!crawl_state.arena);
+
     if (you.hp != new_amount)
         you.hp = new_amount;
 
@@ -4899,6 +4923,8 @@ void set_hp(int new_amount, bool max_too)
 // resulting max value is subject to penalties, bonuses, and scalings.
 void set_mp(int new_amount, bool max_too)
 {
+    ASSERT(!crawl_state.arena);
+
     if (you.magic_points != new_amount)
         you.magic_points = new_amount;
 
@@ -4992,6 +5018,8 @@ static int _get_contamination_level()
 // status_only is true only for the status output
 void contaminate_player(int change, bool controlled, bool status_only)
 {
+    ASSERT(!crawl_state.arena);
+
     // get current contamination level
     int old_level = _get_contamination_level();
     int new_level = 0;
@@ -5065,6 +5093,8 @@ void contaminate_player(int change, bool controlled, bool status_only)
 
 bool confuse_player(int amount, bool resistable)
 {
+    ASSERT(!crawl_state.arena);
+
     if (amount <= 0)
         return (false);
 
@@ -5097,6 +5127,8 @@ bool confuse_player(int amount, bool resistable)
 
 bool curare_hits_player(int agent, int amount)
 {
+    ASSERT(!crawl_state.arena);
+
     poison_player(amount);
 
     const bool res_poison = player_res_poison() > 0;
@@ -5125,6 +5157,8 @@ bool curare_hits_player(int agent, int amount)
 
 bool poison_player(int amount, bool force)
 {
+    ASSERT(!crawl_state.arena);
+
     if (!force && player_res_poison() > 0 || amount <= 0)
         return (false);
 
@@ -5198,6 +5232,8 @@ void reduce_poison_player(int amount)
 
 bool napalm_player(int amount)
 {
+    ASSERT(!crawl_state.arena);
+
     if (player_res_sticky_flame() > 0 || amount <= 0)
         return (false);
 
@@ -5253,6 +5289,8 @@ void dec_napalm_player()
 
 bool slow_player(int amount)
 {
+    ASSERT(!crawl_state.arena);
+
     if (amount <= 0)
         return (false);
 
@@ -5310,6 +5348,8 @@ void dec_slow_player()
 
 void haste_player(int amount)
 {
+    ASSERT(!crawl_state.arena);
+
     if (amount <= 0)
         return;
 
@@ -5390,6 +5430,8 @@ void dec_disease_player()
 
 bool rot_player(int amount)
 {
+    ASSERT(!crawl_state.arena);
+
     if (amount <= 0)
         return (false);
 
@@ -6384,6 +6426,8 @@ static bool _equipment_make_berserk()
 
 void player::attacking(actor *other)
 {
+    ASSERT(!crawl_state.arena);
+
     if (other && other->atype() == ACT_MONSTER)
     {
         const monsters *mon = dynamic_cast<monsters*>(other);
@@ -6448,6 +6492,8 @@ void player::god_conduct(conduct_type thing_done, int level)
 
 void player::banish(const std::string &who)
 {
+    ASSERT(!crawl_state.arena);
+
     banished    = true;
     banished_by = who;
 }
@@ -6782,6 +6828,8 @@ void player::blink(bool allow_partial_control)
 
 void player::teleport(bool now, bool abyss_shift)
 {
+    ASSERT(!crawl_state.arena);
+
     if (now)
         you_teleport_now(true, abyss_shift);
     else
@@ -6841,6 +6889,8 @@ void player::confuse(actor *who, int str)
 
 void player::paralyse(actor *who, int str)
 {
+    ASSERT(!crawl_state.arena);
+
     int &paralysis(duration[DUR_PARALYSIS]);
 
     mprf( "You %s the ability to move!",
@@ -6855,6 +6905,8 @@ void player::paralyse(actor *who, int str)
 
 void player::petrify(actor *who, int str)
 {
+    ASSERT(!crawl_state.arena);
+
     int &petrif(duration[DUR_PETRIFIED]);
 
     mprf( "You %s the ability to move!",
@@ -6915,6 +6967,8 @@ kill_category player::kill_alignment() const
 
 bool player::sicken(int amount)
 {
+    ASSERT(!crawl_state.arena);
+
     if (is_undead || amount <= 0)
         return (false);
 
@@ -6986,6 +7040,8 @@ bool player::can_safely_mutate() const
 
 bool player::mutate()
 {
+    ASSERT(!crawl_state.arena);
+
     if (!can_mutate())
         return (false);
 
@@ -7008,6 +7064,8 @@ bool player::is_icy() const
 
 void player::moveto(const coord_def &c)
 {
+    ASSERT(!crawl_state.arena);
+
     const bool real_move = (c != pos());
     position = c;
     crawl_view.set_player_at(c);
@@ -7045,6 +7103,8 @@ bool player::can_throw_large_rocks() const
 
 void player::put_to_sleep(int)
 {
+    ASSERT(!crawl_state.arena);
+
     if (duration[DUR_BERSERKER] || asleep())   // No cumulative sleeps.
         return;
 
@@ -7067,6 +7127,8 @@ void player::put_to_sleep(int)
 
 void player::awake()
 {
+    ASSERT(!crawl_state.arena);
+
     duration[DUR_SLEEP] = 0;
     mpr("You wake up.");
     you.flash_colour = BLACK;

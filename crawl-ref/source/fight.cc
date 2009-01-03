@@ -4854,6 +4854,8 @@ static bool wielded_weapon_check(const item_def *weapon)
 // Returns true if you hit the monster.
 bool you_attack(int monster_attacked, bool unarmed_attacks)
 {
+    ASSERT(!crawl_state.arena);
+
     monsters *defender = &menv[monster_attacked];
 
     melee_attack attk(&you, defender, unarmed_attacks);
@@ -4912,6 +4914,8 @@ static void mons_lose_attack_energy(monsters *attacker, int wpn_speed,
 // A monster attacking the player.
 bool monster_attack(int monster_attacking, bool allow_unarmed)
 {
+    ASSERT(!crawl_state.arena);
+
     monsters *attacker = &menv[monster_attacking];
 
     // Friendly and good neutral monsters won't attack unless confused.
