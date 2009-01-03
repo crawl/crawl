@@ -1915,8 +1915,12 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     if (desc == DESC_NONE)
         return ("");
 
+    const bool arena_submerged = crawl_state.arena && !force_seen
+                              && mons_is_submerged(&mon);
+
     // Handle non-visible case first.
-    if (!force_seen && !player_monster_visible(&mon))
+    if (!force_seen && !player_monster_visible(&mon)
+        && !arena_submerged)
     {
         switch (desc)
         {
@@ -1997,6 +2001,9 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     else
     {
     }
+
+    if (arena_submerged)
+        result += "submerged ";
 
     // Some monsters might want the name of a different creature.
     int nametype = mon.type;
@@ -6117,6 +6124,8 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
                 mprf("%s hides itself under the floor.",
                      name(DESC_CAP_A, true).c_str() );
             }
+            else if (crawl_state.arena)
+                mprf("%s submerges.", name(DESC_CAP_A, true).c_str() );
         }
         break;
 
@@ -6490,6 +6499,8 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     mprf("%s leaps out from its hiding place under the floor!",
                          name(DESC_CAP_A, true).c_str() );
                 }
+                else if (crawl_state.arena)
+                    mprf("%s surfaces.", name(DESC_CAP_A, true).c_str() );
             }
         }
         else if (mons_near(this)

@@ -1154,7 +1154,8 @@ void monster_die(monsters *monster, killer_type killer,
     }
 
     bool death_message = !silent && !did_death_message && mons_near(monster)
-                         && player_monster_visible(monster);
+                         && (player_monster_visible(monster)
+                             || crawl_state.arena);
 
     switch (killer)
     {
@@ -4257,7 +4258,7 @@ bool simple_monster_message(const monsters *monster, const char *event,
 
     if ((mons_near( monster ) || crawl_state.arena)
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
-            || player_monster_visible(monster)))
+            || player_monster_visible(monster) || crawl_state.arena))
     {
         char buff[INFO_SIZE];
 
