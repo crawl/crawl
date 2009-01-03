@@ -2,6 +2,7 @@
 #include "itemname.h"
 #include "items.h"
 #include "itemprop.h"
+#include "files.h"
 #include "mon-util.h"
 #include "player.h"
 #include "randart.h"
@@ -107,6 +108,33 @@ TilesFramework::~TilesFramework()
 {
 }
 
+static void _init_consoles()
+{
+#ifdef WIN32TILES
+    typedef BOOL (WINAPI *ac_func)(DWORD);
+    ac_func attach_console = (ac_func)GetProcAddress(
+        GetModuleHandle(TEXT("kernel32.dll")), "AttachConsole");
+
+    if (attach_console)
+    {
+        // Redirect output to the console
+        attach_console((DWORD)-1);
+        freopen("CONOUT$", "wb", stdout);
+        freopen("CONOUT$", "wb", stderr);
+    }
+#endif
+}
+
+static void _shutdown_console()
+{
+#ifdef WIN32TILES
+    typedef BOOL (WINAPI *fc_func)(void);
+    fc_func free_console = (fc_func)GetProcAddress(
+        GetModuleHandle(TEXT("kernel32.dll")), "FreeConsole");
+    if (free_console)
+        free_console();
+#endif
+}
 void TilesFramework::shutdown()
 {
     delete m_region_tile;
@@ -135,6 +163,8 @@ void TilesFramework::shutdown()
     }
 
     SDL_Quit();
+
+    _shutdown_console();
 }
 
 bool TilesFramework::initialise()
@@ -143,6 +173,8 @@ bool TilesFramework::initialise()
     putenv("SDL_VIDEO_WINDOW_POS=center");
     putenv("SDL_VIDEO_CENTERED=1");
 #endif
+
+    _init_consoles();
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
     {
@@ -742,8 +774,9 @@ int TilesFramework::getch_ck()
                 break;
 
             case SDL_QUIT:
-                // TODO enne
-                exit(0);
+                save_game(true);
+                ASSERT(!"Shouldn't get here");
+                break;
 
             case SDL_USEREVENT:
             default:
