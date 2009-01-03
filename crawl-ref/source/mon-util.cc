@@ -1064,7 +1064,7 @@ int mons_damage(int mc, int rt)
 
 bool mons_immune_magic(const monsters *mon)
 {
-    return get_monster_data(mon->type)->resist_magic == MAG_IMMUNE;
+    return (get_monster_data(mon->type)->resist_magic == MAG_IMMUNE);
 }
 
 int mons_resist_magic( const monsters *mon )
@@ -2206,7 +2206,7 @@ bool give_monster_proper_name(monsters *mon, bool orcs_only)
 // See mons_init for initialization of mon_entry array.
 monsterentry *get_monster_data(int p_monsterid)
 {
-    if (p_monsterid > 0 && p_monsterid < NUM_MONSTERS)
+    if (p_monsterid >= 0 && p_monsterid < NUM_MONSTERS)
         return (&mondata[mon_entry[p_monsterid]]);
     else
         return (NULL);
