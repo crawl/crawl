@@ -2378,10 +2378,11 @@ static int dgn_create_monster(lua_State *ls)
     for (int i = 0, size = mlist.size(); i < size; ++i)
     {
         mons_spec mspec = mlist.get_monster(i);
-        if (dgn_place_monster(mspec, you.your_level, c,
-                              false, false, false))
+        const int mid = dgn_place_monster(mspec, you.your_level, c,
+                                          false, false, false);
+        if (mid != -1)
         {
-            push_monster(ls, &menv[mgrd(c)]);
+            push_monster(ls, &menv[mid]);
             return (1);
         }
     }
@@ -2418,23 +2419,23 @@ static int dgn_create_item(lua_State *ls)
     return (0);
 }
 
-static std::auto_ptr<lua_datum> _dgn_map_bad_bounds_fn;
+static std::auto_ptr<lua_datum> _dgn_map_safe_bounds_fn;
 
-static bool _lua_map_place_invalid(const map_def &map,
-                                   const coord_def &c,
-                                   const coord_def &size)
+static bool _lua_map_place_valid(const map_def &map,
+                                 const coord_def &c,
+                                 const coord_def &size)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "lua_map_place_invalid: (%d,%d) (%d,%d)",
          c.x, c.y, size.x, size.y);
 #endif
 
-    lua_stack_cleaner clean(_dgn_map_bad_bounds_fn->lua);
+    lua_stack_cleaner clean(_dgn_map_safe_bounds_fn->lua);
 
     // Push the Lua function onto the stack.
-    _dgn_map_bad_bounds_fn->push();
+    _dgn_map_safe_bounds_fn->push();
 
-    lua_State *ls = _dgn_map_bad_bounds_fn->lua;
+    lua_State *ls = _dgn_map_safe_bounds_fn->lua;
 
     // Push map, pos.x, pos.y, size.x, size.y
     clua_push_map(ls, const_cast<map_def*>(&map));
@@ -2459,12 +2460,12 @@ LUAFN(dgn_with_map_bounds_fn)
     if (lua_gettop(ls) != 2 || !lua_isfunction(ls, 1) || !lua_isfunction(ls, 2))
         luaL_error(ls, "Expected map-bounds check fn and action fn.");
 
-    _dgn_map_bad_bounds_fn.reset(new lua_datum(vm, 1, false));
+    _dgn_map_safe_bounds_fn.reset(new lua_datum(vm, 1, false));
 
     int err = 0;
     {
-        unwind_var<map_place_check_t> mpc(map_place_invalid,
-                                          _lua_map_place_invalid);
+        unwind_var<map_place_check_t> mpc(map_place_valid,
+                                          _lua_map_place_valid);
 
         // All set, call our friend, the second function.
         ASSERT(lua_isfunction(ls, -1));
@@ -2476,7 +2477,7 @@ LUAFN(dgn_with_map_bounds_fn)
         // happen when lua_call does its longjmp.
         err = lua_pcall(ls, 0, 1, 0);
 
-        _dgn_map_bad_bounds_fn.reset(NULL);
+        _dgn_map_safe_bounds_fn.reset(NULL);
     }
 
     if (err)
@@ -2670,9 +2671,8 @@ LUAFN(dgn_map_by_tag)
 {
     if (const char *tag = luaL_checkstring(ls, 1))
     {
-        const bool mini = _lua_boolean(ls, 2, true);
         const bool check_depth = _lua_boolean(ls, 3, true);
-        return _lua_push_map(ls, random_map_for_tag(tag, mini, check_depth));
+        return _lua_push_map(ls, random_map_for_tag(tag, check_depth));
     }
     return (0);
 }
@@ -2687,8 +2687,7 @@ LUAFN(dgn_map_in_depth)
 LUAFN(dgn_map_by_place)
 {
     const level_id lid = _lua_level_id(ls, 1);
-    const bool mini = _lua_boolean(ls, 2, true);
-    return _lua_push_map(ls, random_map_for_place(lid, mini));
+    return _lua_push_map(ls, random_map_for_place(lid));
 }
 
 LUAFN(_dgn_place_map)

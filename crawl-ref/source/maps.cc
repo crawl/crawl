@@ -30,8 +30,9 @@
 #include "stuff.h"
 #include "terrain.h"
 
-static bool bad_map_place(const map_def &map, const coord_def &c,
-                          const coord_def &size);
+static bool _safe_vault_place(const map_def &md,
+                              const coord_def &c,
+                              const coord_def &size);
 
 static int write_vault(map_def &mdef,
                        vault_placement &,
@@ -46,7 +47,7 @@ static bool resolve_map(map_def &def);
 // Globals: Use unwind_var to modify!
 
 // Checks whether a map place is valid.
-map_place_check_t map_place_invalid = bad_map_place;
+map_place_check_t map_place_valid = _safe_vault_place;
 
 // If non-empty, any floating vault's @ exit must land on these point.
 point_vector map_anchor_points;
@@ -66,8 +67,7 @@ static map_vector vdefs;
 
 // Make sure that vault_n, where n is a number, is a vault which can be put
 // anywhere, while other vault names are for specific level ranges, etc.
-int vault_main( vault_placement &place,
-                const map_def *vault,
+int vault_main( vault_placement &place, const map_def *vault,
                 bool check_place)
 {
 #ifdef DEBUG_DIAGNOSTICS
@@ -78,9 +78,9 @@ int vault_main( vault_placement &place,
         mapgen_report_map_try(*vault);
 #endif
 
-    // Return value of zero forces dungeon.cc to regenerate the level, except
-    // for branch entry vaults where dungeon.cc just rejects the vault and
-    // places a vanilla entry.
+    // Return value of MAP_NONE forces dungeon.cc to regenerate the
+    // level, except for branch entry vaults where dungeon.cc just
+    // rejects the vault and places a vanilla entry.
 
     return (write_vault( const_cast<map_def&>(*vault), place, check_place ));
 }
@@ -155,46 +155,6 @@ static bool resolve_map(map_def &map)
     return (true);
 }
 
-// Determines if the region specified by (x, y, x + width - 1, y + height - 1)
-// is a bad place to build a vault.
-static bool bad_map_place(const map_def &map, const coord_def &c,
-                          const coord_def &size)
-{
-    const std::vector<std::string> &lines = map.map.get_lines();
-    for (rectangle_iterator r(c, c + size - 1); r; ++r)
-    {
-        const coord_def &p(*r);
-        const coord_def dp = p - c;
-        if (lines[dp.y][dp.x] == ' ')
-            continue;
-
-        if (dgn_Map_Mask[p.x][p.y])
-            return (true);
-
-        if (igrd(p) != NON_ITEM || mgrd(p) != NON_MONSTER)
-            return (true);
-
-        const dungeon_feature_type grid = grd(p);
-
-        if (!grid_is_opaque(grid)
-            && grid != DNGN_FLOOR
-            && grid != DNGN_SHALLOW_WATER
-            && grid != DNGN_CLOSED_DOOR
-            && grid != DNGN_OPEN_DOOR
-            && grid != DNGN_SECRET_DOOR)
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Rejecting place because of %s at (%d,%d)",
-                 dungeon_feature_name(grid), p.x, p.y);
-#endif
-            return (true);
-        }
-    }
-
-    return (false);
-}
-
 void fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
                                 int margin)
 {
@@ -213,6 +173,115 @@ void fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
         pos.x = X_2 - size.x + 1;
     if (pos.y + size.y - 1 > Y_2)
         pos.y = Y_2 - size.y + 1;
+}
+
+// Used for placement of vaults.
+static bool _may_overwrite_feature(const dungeon_feature_type grid,
+                                   bool water_ok, bool wall_ok = true)
+{
+    // Deep water grids may be overwritten if water_ok == true.
+    if (grid == DNGN_DEEP_WATER)
+        return (water_ok);
+
+    // Handle all other non-LOS blocking grids here.
+    if (!grid_is_opaque(grid)
+        && grid != DNGN_FLOOR
+        && grid != DNGN_SHALLOW_WATER
+        && grid != DNGN_CLOSED_DOOR
+        && grid != DNGN_OPEN_DOOR
+        && grid != DNGN_SECRET_DOOR)
+    {
+        return (false);
+    }
+
+    if (grid_is_wall(grid))
+        return (wall_ok);
+
+    // Otherwise, feel free to clobber this feature.
+    return (true);
+}
+
+static bool _safe_vault_place(const map_def &map,
+                              const coord_def &c,
+                              const coord_def &size)
+{
+    if (size.zero())
+        return (true);
+
+    const bool water_ok = map.has_tag("water_ok");
+    const std::vector<std::string> &lines = map.map.get_lines();
+
+    for (rectangle_iterator ri(c, c + size - 1); ri; ++ri)
+    {
+        const coord_def &cp(*ri);
+        const coord_def &dp(cp - c);
+
+        if (lines[dp.y][dp.x] == ' ')
+            continue;
+
+        if (dgn_Map_Mask[cp.x][cp.y])
+            return (false);
+
+        const dungeon_feature_type dfeat = grd(cp);
+
+        // Don't overwrite features other than floor, rock wall, doors,
+        // nor water, if !water_ok.
+        if (!_may_overwrite_feature(dfeat, water_ok))
+            return (false);
+
+        // Don't overwrite items or monsters, either!
+        if (igrd(cp) != NON_ITEM || mgrd(cp) != NON_MONSTER)
+            return (false);
+    }
+
+    return (true);
+}
+
+static bool _connected_minivault_place(const coord_def &c,
+                                       const vault_placement &place)
+{
+    if (place.size.zero())
+        return (true);
+
+    // Must not be completely isolated.
+    const bool water_ok = place.map.has_tag("water_ok");
+    const std::vector<std::string> &lines = place.map.map.get_lines();
+
+    for (rectangle_iterator ri(c, c + place.size - 1); ri; ++ri)
+    {
+        const coord_def &ci(*ri);
+
+        if (lines[ci.y - c.y][ci.x - c.x] == ' ')
+            continue;
+
+        if (_may_overwrite_feature(grd(ci), water_ok, false))
+            return (true);
+    }
+
+    return (false);
+}
+
+static coord_def _find_minivault_place(
+    const vault_placement &place,
+    bool check_place)
+{
+    // [ds] The margin around the edges of the map where the minivault
+    // won't be placed. Purely arbitrary as far as I can see.
+    const int margin = MAPGEN_BORDER * 2;
+
+    // Find a target area which can be safely overwritten.
+    for (int tries = 0; tries < 600; ++tries)
+    {
+        coord_def v1(random_range( margin, GXM - margin - place.size.x ),
+                     random_range( margin, GYM - margin - place.size.y ));
+
+        if (check_place && !map_place_valid(place.map, v1, place.size))
+            continue;
+
+        if (_connected_minivault_place(v1, place))
+            return (v1);
+    }
+    return (coord_def(-1, -1));
 }
 
 static bool apply_vault_grid(map_def &def,
@@ -255,10 +324,17 @@ static bool apply_vault_grid(map_def &def,
     // Floating maps can go anywhere, ask the map_def to suggest a place.
     if (orient == MAP_FLOAT)
     {
+        const bool minivault = def.has_tag("minivault");
         if (map_bounds(place.pos))
         {
             start = place.pos - size / 2;
-            fit_region_into_map_bounds(start, size);
+            fit_region_into_map_bounds(start, size, minivault ? 2 : 0);
+        }
+        else if (minivault)
+        {
+            start = _find_minivault_place(place, check_place);
+            if (map_bounds(start))
+                fit_region_into_map_bounds(start, size, 2);
         }
         else
             start = def.float_place();
@@ -267,7 +343,7 @@ static bool apply_vault_grid(map_def &def,
     if (!map_bounds(start))
         return (false);
 
-    if (check_place && map_place_invalid(def, start, size))
+    if (check_place && !_safe_vault_place(def, start, size))
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Bad vault place: (%d,%d) dim (%d,%d)",
@@ -366,9 +442,9 @@ public:
         return (sel == TAG || place.is_valid());
     }
 
-    static map_selector by_place(const level_id &place, bool mini)
+    static map_selector by_place(const level_id &place)
     {
-        return map_selector(map_selector::PLACE, place, "", mini, false);
+        return map_selector(map_selector::PLACE, place, "", false, false);
     }
 
     static map_selector by_depth(const level_id &place, bool mini)
@@ -376,12 +452,12 @@ public:
         return map_selector(map_selector::DEPTH, place, "", mini, true);
     }
 
-    static map_selector by_tag(const std::string &tag, bool mini,
+    static map_selector by_tag(const std::string &tag,
                                bool check_depth,
                                const level_id &place = level_id::current())
     {
         return map_selector(map_selector::TAG, place, tag,
-                            mini, check_depth);
+                            false, check_depth);
     }
 
 private:
@@ -412,7 +488,6 @@ bool map_selector::accept(const map_def &mapdef) const
     {
     case PLACE:
         return (mapdef.place == place
-                && mapdef.is_minivault() == mini
                 && !mapdef.has_tag("layout")
                 && map_matches_layout_type(mapdef)
                 && vault_unforbidden(mapdef));
@@ -431,7 +506,7 @@ bool map_selector::accept(const map_def &mapdef) const
                 && (!check_layout || map_matches_layout_type(mapdef))
                 && vault_unforbidden(mapdef));
     case TAG:
-        return (mapdef.has_tag(tag) && mapdef.is_minivault() == mini
+        return (mapdef.has_tag(tag)
                 && (!check_depth || !mapdef.has_depth()
                     || mapdef.is_usable_in(place))
                 && map_matches_layout_type(mapdef)
@@ -549,7 +624,7 @@ static const map_def *_random_map_in_list(const map_selector &sel,
             // a lookup for that tag.
             if (!chance_tag.empty())
             {
-                map_selector msel = map_selector::by_tag(chance_tag, sel.mini,
+                map_selector msel = map_selector::by_tag(chance_tag,
                                                          sel.check_depth,
                                                          sel.place);
                 msel.ignore_chance = true;
@@ -602,10 +677,9 @@ static const map_def *_random_map_by_selector(const map_selector &sel)
 }
 
 // Returns a map for which PLACE: matches the given place.
-const map_def *random_map_for_place(const level_id &place, bool want_minivault)
+const map_def *random_map_for_place(const level_id &place)
 {
-    return _random_map_by_selector(
-        map_selector::by_place(place, want_minivault));
+    return _random_map_by_selector(map_selector::by_place(place));
 }
 
 const map_def *random_map_in_depth(const level_id &place, bool want_minivault)
@@ -615,11 +689,10 @@ const map_def *random_map_in_depth(const level_id &place, bool want_minivault)
 }
 
 const map_def *random_map_for_tag(const std::string &tag,
-                                  bool want_minivault,
                                   bool check_depth)
 {
     return _random_map_by_selector(
-        map_selector::by_tag(tag, want_minivault, check_depth));
+        map_selector::by_tag(tag, check_depth));
 }
 
 int map_count()
@@ -628,11 +701,10 @@ int map_count()
 }
 
 int map_count_for_tag(const std::string &tag,
-                      bool want_minivault,
                       bool check_depth)
 {
     return _eligible_maps_for_selector(
-        map_selector::by_tag(tag, want_minivault, check_depth)).size();
+        map_selector::by_tag(tag, check_depth)).size();
 }
 
 /////////////////////////////////////////////////////////////////////////////

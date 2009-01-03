@@ -3935,7 +3935,7 @@ bool mons_near(const monsters *monster, unsigned short foe)
         if ( grid_distance(monster->pos(), you.pos()) <= LOS_RADIUS )
         {
             const coord_def diff = grid2show(monster->pos());
-            if (env.show(diff))
+            if (show_bounds(diff) && env.show(diff))
                 return (true);
         }
         return (false);

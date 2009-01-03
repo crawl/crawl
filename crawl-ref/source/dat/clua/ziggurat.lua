@@ -452,8 +452,7 @@ local function ziggurat_create_loot_vault(entry, exit)
   end
 
   local connect_point = exit - inc * 3
-
-  local map = dgn.map_by_tag("ziggurat_loot_chamber", false)
+  local map = dgn.map_by_tag("ziggurat_loot_chamber")
 
   if not map then
     return exit
@@ -467,7 +466,7 @@ local function ziggurat_create_loot_vault(entry, exit)
     return res
   end
 
-  local function bad_loot_bounds(map, px, py, xs, ys)
+  local function good_loot_bounds(map, px, py, xs, ys)
     local vc = dgn.point(px + math.floor(xs / 2),
                          py + math.floor(ys / 2))
 
@@ -485,11 +484,11 @@ local function ziggurat_create_loot_vault(entry, exit)
     local linc = (exit - vc):sgn()
     -- The map's positions should be at the same increment to the exit
     -- as the exit is to the entrance, else reject the place.
-    return not (inc == linc) or not safe_area()
+    return (inc == linc) and safe_area()
   end
 
   local function connect_loot_chamber()
-    return dgn.with_map_bounds_fn(bad_loot_bounds, place_loot_chamber)
+    return dgn.with_map_bounds_fn(good_loot_bounds, place_loot_chamber)
   end
 
   local res = dgn.with_map_anchors(connect_point.x, connect_point.y,

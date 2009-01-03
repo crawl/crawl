@@ -80,8 +80,30 @@ Random minivaults:
 dungeon builder has already constructed fully otherwise (the level may
 include other vaults).
 
-Minivaults are distinguished from normal vaults solely by the absence of an
-ORIENT: declaration. Any map without a specified ORIENT: is a minivault.
+Minivaults are distinguished from normal vaults by the absence of an
+ORIENT: declaration. Any map without a specified ORIENT: is a
+minivault. Minivaults are handled like floating vaults (ORIENT: float
+vaults) in most respects. The differences are:
+
+1. Floating vaults may be placed before the rest of the level layout
+   is generated, and the rest of the level may be built around the floating
+   vault. This is never the case for minivaults.
+
+2. Floating vaults may be placed anywhere in the map, including places
+   completely separated from the rest of the level by rock. The
+   dungeon builder will then connect the exits from the floating vault
+   to the rest of the level, usually producing obvious "passages" from
+   the floating vault to the main body of the level.
+
+   In contrast, minivaults are placed such that at least one square of
+   the minivault overlaps with an existing part of the level, and are
+   thus more likely to look like part of the level. Unlike floating
+   vaults, the dungeon builder assumes that any one square of overlap
+   is enough to connect the minivault to the rest of the level and
+   makes no effort to connect exits from the minivault to the level.
+   You can ask the dungeon builder to connect exits from your
+   minivault with the "mini_float" tag.
+
 
 
 B.   Sample Map
@@ -229,8 +251,7 @@ ORIENT:   (float |encompass | north | northwest | ... | southeast)
           Some kind of ORIENT: line is mandatory for vaults; skipping
           ORIENT: makes your map a minivault. As a rule of thumb, if
           you're writing a small random map, skip the ORIENT: line and
-          make it a minivault. For special levels and (branch) entry
-          vaults, you do need an ORIENT: line.
+          make it a minivault.
 
           * "float": The dungeon builder puts your vault wherever it wants to.
           * "some_direction": The vault lies along that side of the map:

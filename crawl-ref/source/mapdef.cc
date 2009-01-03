@@ -1590,7 +1590,7 @@ bool map_def::has_depth() const
 
 bool map_def::is_minivault() const
 {
-    return (orient == MAP_NONE);
+    return (has_tag("minivault"));
 }
 
 // Tries to dock a floating vault - push it to one edge of the level.
@@ -1848,6 +1848,13 @@ std::string map_def::resolve()
 void map_def::fixup()
 {
     normalise();
+
+    // Fixup minivaults into floating vaults tagged "minivault".
+    if (orient == MAP_NONE)
+    {
+        orient = MAP_FLOAT;
+        tags += " minivault";
+    }
 }
 
 bool map_def::has_tag(const std::string &tagwanted) const

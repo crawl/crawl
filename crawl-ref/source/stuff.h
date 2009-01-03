@@ -167,6 +167,13 @@ inline bool map_bounds(const coord_def &p)
     return map_bounds(p.x, p.y);
 }
 
+// Determines if the coordinate is within bounds of an LOS array.
+inline bool show_bounds(const coord_def &p)
+{
+    return (p.x >= 0 && p.x < ENV_SHOW_DIAMETER
+            && p.y >= 0 && p.y < ENV_SHOW_DIAMETER);
+}
+
 int grid_distance( const coord_def& p1, const coord_def& p2 );
 int grid_distance( int x, int y, int x2, int y2 );
 int distance( const coord_def& p1, const coord_def& p2 );

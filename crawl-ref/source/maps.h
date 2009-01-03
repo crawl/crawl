@@ -17,8 +17,7 @@
 
 class map_def;
 
-int vault_main(vault_placement &vp,
-               const map_def *vault,
+int vault_main(vault_placement &vp, const map_def *vault,
                bool check_place = false);
 
 // Given a rectangular region, slides it to fit into the map. size must be
@@ -28,14 +27,13 @@ void fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
 
 const map_def *map_by_index(int index);
 int map_count();
-int map_count_for_tag(const std::string &tag, bool want_minivault,
-                      bool check_depth = false);
+int map_count_for_tag(const std::string &tag, bool check_depth = false);
 
 const map_def *find_map_by_name(const std::string &name);
-const map_def *random_map_for_place(const level_id &place, bool mini = false);
+const map_def *random_map_for_place(const level_id &place);
 const map_def *random_map_in_depth(const level_id &lid,
                                    bool want_minivault = false);
-const map_def *random_map_for_tag(const std::string &tag, bool want_minivault,
+const map_def *random_map_for_tag(const std::string &tag,
                                   bool check_depth = false);
 void add_parsed_map(const map_def &md);
 
@@ -63,7 +61,7 @@ typedef bool (*map_place_check_t)(const map_def &, const coord_def &c,
 
 typedef std::vector<coord_def> point_vector;
 
-extern map_place_check_t map_place_invalid;
+extern map_place_check_t map_place_valid;
 extern point_vector      map_anchor_points;
 
 const int              MAP_CACHE_VERSION = 1009;
