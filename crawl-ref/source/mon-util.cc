@@ -5673,13 +5673,25 @@ god_type monsters::deity() const
 int monsters::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
+    // Already dead?
+    if (hit_points < 1 || type == -1)
+        return (0);
+
     if (amount == INSTANT_DEATH)
         amount = hit_points;
-    else if (amount <= 0)
+    else if (hit_dice < 1)
+        amount = hit_points;
+    else if (amount <= 0 && hit_points <= max_hit_points)
         return (0);
 
     amount = std::min(amount, hit_points);
     hit_points -= amount;
+
+    if (hit_points > max_hit_points)
+    {
+        amount    += hit_points - max_hit_points;
+        hit_points = max_hit_points;
+    }
 
     // Allow the victim to exhibit passive damage behaviour (royal jelly).
     react_to_damage(amount, flavour);

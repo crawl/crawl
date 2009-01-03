@@ -1731,16 +1731,7 @@ static int _drain_monsters(coord_def where, int pow, int garbage)
             }
 
             mon.max_hit_points -= 2 + random2(pow/50);
-            mon.hit_points -= 2 + random2(50);
-
-            if (mon.hit_points >= mon.max_hit_points)
-                mon.hit_points = mon.max_hit_points;
-
-            if (mon.hit_dice < 1)
-                mon.hit_points = 0;
-
-            if (mon.hit_points <= 0)
-                monster_die(&mon, KILL_YOU, NON_MONSTER);
+            mon.hurt(&you, 2 + random2(50), BEAM_NEG);
         }
     }
     return 1;
@@ -1759,7 +1750,6 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
 
     dist target;
-    bolt beam;
     zap_type ztype = ZAP_DEBUGGING_RAY;
     const zap_type firezaps[3]   = { ZAP_FLAME, ZAP_STICKY_FLAME, ZAP_FIRE };
     const zap_type frostzaps[3]  = { ZAP_FROST, ZAP_ICE_BOLT, ZAP_COLD };
@@ -1815,6 +1805,9 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     snprintf(info, INFO_SIZE, "You have drawn %s.  Aim where? ",
                               card_name(card));
 
+
+    bolt beam;
+    beam.range = LOS_RADIUS;
     if (spell_direction(target, beam, DIR_NONE, TARG_ENEMY,
                         LOS_RADIUS, true, true, false, info)
         && player_tracer(ZAP_DEBUGGING_RAY, power/4, beam))

@@ -8465,11 +8465,6 @@ unsigned int monster_index(const monsters *monster)
     return (monster - menv.buffer());
 }
 
-int hurt_monster(monsters * victim, int damage_dealt)
-{
-    return (victim->hurt(NULL, damage_dealt));
-}
-
 bool heal_monster(monsters * patient, int health_boost,
                   bool permit_growth)
 {

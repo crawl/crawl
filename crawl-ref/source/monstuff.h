@@ -195,8 +195,6 @@ unsigned int monster_index(const monsters *monster);
 void mons_get_damage_level(const monsters*, std::string& desc,
                            mon_dam_level_type&);
 
-int hurt_monster(monsters *victim, int damage_dealt);
-
 bool heal_monster(monsters *patient, int health_boost, bool permit_growth);
 
 void seen_monster(monsters *monster);

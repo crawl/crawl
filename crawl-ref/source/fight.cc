@@ -2068,13 +2068,7 @@ void melee_attack::drain_monster()
     }
 
     def->max_hit_points -= 2 + random2(3);
-    def->hit_points -= 2 + random2(3);
-
-    if (def->hit_points >= def->max_hit_points)
-        def->hit_points = def->max_hit_points;
-
-    if (def->hit_dice < 1)
-        def->hit_points = 0;
+    def->hurt(attacker, 2 + random2(3), BEAM_NEG, false);
 
     special_damage = 1 + (random2(damage_done) / 2);
     attacker->god_conduct(DID_NECROMANCY, 2);
