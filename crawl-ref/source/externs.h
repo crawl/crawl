@@ -2028,6 +2028,7 @@ public:
     bool        arena_dump_msgs;
     bool        arena_dump_msgs_all;
     bool        arena_list_eq;
+    bool        arena_force_ai;
 
     // Messages that stop travel
     std::vector<message_filter> travel_stop_message;

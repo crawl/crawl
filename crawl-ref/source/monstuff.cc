@@ -3643,11 +3643,18 @@ static void _handle_behaviour(monsters *mon)
 
     if (crawl_state.arena)
     {
-        if (!mon->get_foe() || one_chance_in(3))
+        if (Options.arena_force_ai)
+        {
+            if (!mon->get_foe() || one_chance_in(3))
+                mon->foe = MHITNOT;
+            if (mon->foe == MHITNOT || mon->foe == MHITYOU)
+                _arena_set_foe(mon);
+            return;
+        }
+        // If we're not forcing monsters to attack, just make sure they're
+        // not targeting the player in arena mode.
+        else if (mon->foe == MHITYOU)
             mon->foe = MHITNOT;
-        if (mon->foe == MHITNOT || mon->foe == MHITYOU)
-            _arena_set_foe(mon);
-        return;
     }
 
     if (mons_wall_shielded(mon) && grid_is_solid(mon->pos()))
@@ -4431,7 +4438,7 @@ static void _handle_movement(monsters *monster)
     {
         delta = monster->target - monster->pos();
 
-        if (crawl_state.arena)
+        if (crawl_state.arena && Options.arena_force_ai)
         {
             const bool ranged =
                 mons_has_ranged_attack(monster)
@@ -4662,9 +4669,6 @@ static void _handle_movement(monsters *monster)
             }
         }
     }
-
-    if (mmov.origin() && monster->behaviour == BEH_WANDER && crawl_state.arena)
-        _check_wander_target(monster);
 }
 
 static void _make_mons_stop_fleeing(monsters *mon)

@@ -222,8 +222,9 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
         return (true);
     }
 
-    if ((pos = s.find(tag + " ")) != std::string::npos
-        || (pos = s.find(" " + tag)) != std::string::npos)
+    if ((pos = s.find(tag + " ")) == 0
+        || ((pos = s.find(" " + tag)) != std::string::npos
+            && pos + tag.length() + 1 == s.length()))
     {
         s.erase(pos, tag.length() + 1);
         trim_string(s);
@@ -256,6 +257,18 @@ std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
     trim_string(s);
 
     return (argument);
+}
+
+// Get a boolean flag from embedded tags in a string, using "<flag>"
+// for true and "no_<flag>" for false. If neither tag is found,
+// returns the default value.
+bool strip_bool_tag(std::string &s, const std::string &name, bool defval)
+{
+    if (strip_tag(s, name))
+        return (true);
+    if (strip_tag(s, "no_" + name))
+        return (false);
+    return (defval);
 }
 
 int strip_number_tag(std::string &s, const std::string &tagprefix)

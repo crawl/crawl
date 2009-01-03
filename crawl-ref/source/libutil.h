@@ -39,6 +39,8 @@ bool ends_with(const std::string &s, const std::string &suffix);
 #define TAG_UNFOUND -20404
 bool strip_tag(std::string &s, const std::string &tag, bool nopad = false);
 int strip_number_tag(std::string &s, const std::string &tagprefix);
+bool strip_bool_tag(std::string &s, const std::string &name,
+                    bool defval = false);
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix);
 
 std::string article_a(const std::string &name, bool lowercase = true);
