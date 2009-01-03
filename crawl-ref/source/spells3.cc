@@ -664,9 +664,7 @@ static void _equip_undead(const coord_def &a, int corps, int monster,
     {
         item_def item(mitm[objl]);
 
-        if (item.base_type == OBJ_CORPSES)
-            first_obj = NON_ITEM;
-        else if (first_obj == NON_ITEM)
+        if (item.base_type != OBJ_CORPSES && first_obj == NON_ITEM)
             first_obj = objl;
 
         objl = item.link;
