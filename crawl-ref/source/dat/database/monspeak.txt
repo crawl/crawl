@@ -1384,6 +1384,10 @@ _Francis_rare_
 Frederick
 
 @_mercenary_guard_@
+
+w:1
+VISUAL:@The_monster@ polishes @possessive@ monocle.
+
 %%%%
 # A twisted goblin
 Ijyb
