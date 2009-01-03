@@ -1785,12 +1785,23 @@ item_type_id_state_type get_ident_type(object_class_type basetype, int subtype)
         return ID_UNKNOWN_TYPE;
 }
 
+class DiscEntry : public InvEntry
+{
+public:
+    DiscEntry(InvEntry* inv) : InvEntry(*inv->item)
+    {
+    }
+
+    virtual std::string get_text() const
+    {
+        return std::string(" ") + item->name(DESC_PLAIN);
+    }
+};
+
 static MenuEntry *discoveries_item_mangle(MenuEntry *me)
 {
     InvEntry *ie = dynamic_cast<InvEntry*>(me);
-    MenuEntry *newme = new MenuEntry;
-    newme->text = std::string(" ") + ie->item->name(DESC_PLAIN);
-    newme->quantity = 0;
+    DiscEntry *newme = new DiscEntry(ie);
     delete me;
 
     return (newme);
