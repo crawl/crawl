@@ -2587,9 +2587,7 @@ static void _godly_wrath()
     }
 
     if (tries <= 0)
-    {
         mpr("You somehow manage to escape divine attention...");
-    }
 }
 
 static void _curse_card(int power, deck_rarity_type rarity)
