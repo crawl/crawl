@@ -6886,7 +6886,7 @@ int get_tension(god_type god)
             continue;
 
         if (see_grid(mons->pos()))
-            ; // Monster is nearby
+            ; // Monster is nearby.
         else
         {
             // Is the monster trying to get somewhere nearby?
@@ -6929,11 +6929,12 @@ int get_tension(god_type god)
         }
         else if (att == ATT_FRIENDLY)
         {
-            // Friendly monsters being around to help you reduce tension.
+            // Friendly monsters being around to help you reduce
+            // tension.
             exper = -exper;
 
-            // If it's a god gift it reduces tension even more, since the
-            // god is already helping you out.
+            // If it's a god gift, it reduces tension even more, since
+            // the god is already helping you out.
             if (gift)
                 exper *= 2;
         }
@@ -6970,8 +6971,8 @@ int get_tension(god_type god)
 
     int tension = total;
 
-    // Tension goes up inversly proportional to the % of max hp you
-    // have.
+    // Tension goes up inversely proportional to the percentage of max
+    // hp you have.
     tension *= (scale + 1) * you.hp_max;
     tension /= you.hp_max + scale * you.hp;
 

@@ -878,7 +878,8 @@ static bool _xom_is_good(int sever, int tension)
 
         done = true;
     }
-    else if (x_chance_in_y(7, sever))
+    // It's pointless to send in help if there's no danger.
+    else if (tension > 0 && x_chance_in_y(7, sever))
     {
         monster_type mon = _xom_random_demon(sever);
         const bool is_demonic = (mons_class_holiness(mon) == MH_DEMONIC);
@@ -1634,6 +1635,7 @@ static bool _xom_is_bad(int sever, int tension)
 
             mon_inv_type slots[] = {MSLOT_WEAPON, MSLOT_ALT_WEAPON,
                                     MSLOT_MISSILE};
+
             for (int i = 0; i < 3; ++i)
             {
                 int idx = mon->inv[slots[i]];
