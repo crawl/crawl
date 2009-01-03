@@ -969,6 +969,22 @@ void turn_corpse_into_blood_potions(item_def &item)
         _create_monster_hide(mons_class);
 }
 
+void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
+{
+    if (mons_skeleton(item.plus))
+    {
+        int o = get_item_slot();
+        if (o != NON_ITEM)
+        {
+            item_def skel = item;
+            turn_corpse_into_skeleton(skel);
+            copy_item_to_grid(skel, you.pos());
+        }
+    }
+
+    turn_corpse_into_blood_potions(item);
+}
+
 // A variation of the mummy curse:
 // Instead of trashing the entire stack, split the stack and only turn part
 // of it into POT_DECAY.

@@ -1178,7 +1178,10 @@ static void _finish_delay(const delay_queue_item &delay)
 
                 item_def &corpse = mitm[delay.parm1];
 
-                turn_corpse_into_blood_potions(corpse);
+                if (mons_skeleton(corpse.plus) && one_chance_in(4))
+                    turn_corpse_into_skeleton_and_blood_potions(corpse);
+                else
+                    turn_corpse_into_blood_potions(corpse);
             }
             else
             {
