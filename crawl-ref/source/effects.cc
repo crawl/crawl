@@ -3057,6 +3057,15 @@ static void _rot_inventory_food(long time_delta)
 // This function is called about every 20 turns.
 void handle_time(long time_delta)
 {
+    // Update all of the corpses, food chunks and potions of blood on
+    // the floor.
+    update_corpses(time_delta);
+
+    spawn_random_monsters();
+
+    if (crawl_state.arena)
+        return;
+
     // Nasty things happen to people who spend too long in Hell.
     if (player_in_hell() && coinflip())
         _hell_effects();
@@ -3268,10 +3277,6 @@ void handle_time(long time_delta)
         yell(true);
     }
 
-    // Update all of the corpses, food chunks and potions of blood on
-    // the floor.
-    update_corpses(time_delta);
-
     _rot_inventory_food(time_delta);
 
     // Exercise armour *xor* stealth skill: {dlb}
@@ -3309,7 +3314,6 @@ void handle_time(long time_delta)
         if (one_chance_in(10))
             change_labyrinth();
     }
-    spawn_random_monsters();
 }
 
 // Move monsters around to fake them walking around while player was
