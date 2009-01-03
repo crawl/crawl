@@ -202,13 +202,12 @@ protected:
     struct MenuRegionEntry
     {
         formatted_string text;
-        int tile;
-        TextureID texture;
         int sx, ex, sy, ey;
         bool selected;
         bool heading;
         char key;
         bool valid;
+        std::vector<tile_def> tiles;
     };
 
     ImageManager *m_image;
@@ -223,7 +222,7 @@ protected:
     ShapeBuffer m_shape_buf;
     LineBuffer m_line_buf;
     FontBuffer m_font_buf;
-    TileBuffer m_tile_buf;
+    FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
 };
 
 class TileRegion : public Region

@@ -2390,7 +2390,7 @@ int CRTRegion::handle_mouse(MouseEvent &event)
 
 MenuRegion::MenuRegion(ImageManager *im, FTFont *entry) :
     m_image(im), m_font_entry(entry), m_mouse_idx(-1),
-    m_max_columns(1), m_dirty(false), m_font_buf(entry), m_tile_buf(NULL)
+    m_max_columns(1), m_dirty(false), m_font_buf(entry)
 {
     ASSERT(m_image);
     ASSERT(m_font_entry);
@@ -2399,6 +2399,9 @@ MenuRegion::MenuRegion(ImageManager *im, FTFont *entry) :
     dy = 1;
 
     m_entries.resize(128);
+
+    for (int i = 0; i < TEX_MAX; i++)
+        m_tile_buf[i].set_tex(&m_image->m_textures[i]);
 }
 
 void MenuRegion::set_num_columns(int columns)
@@ -2495,11 +2498,10 @@ void MenuRegion::place_entries()
     const VColour selected_colour(50, 50, 10, 255);
 
     m_font_buf.clear();
-    m_tile_buf.clear();
     m_shape_buf.clear();
     m_line_buf.clear();
-
-    TextureID tex = TEX_MAX;
+    for (int t = 0; t < TEX_MAX; t++)
+        m_tile_buf[t].clear();
 
     int column = 0;
     const int max_columns = std::min(2, m_max_columns);
@@ -2554,18 +2556,20 @@ void MenuRegion::place_entries()
 
             int entry_height;
 
-            if (m_entries[i].tile)
+            if (m_entries[i].tiles.size() > 0)
             {
                 m_entries[i].sx = entry_start + tile_indent;
                 entry_height = std::max(max_tile_height, text_height);
 
-                // Currently, menus only support one texture at a time.
-                tex = m_entries[i].texture;
-                ASSERT(m_entries[i].texture == tex || tex == TEX_MAX);
-
-                m_tile_buf.set_tex(&m_image->m_textures[tex]);
-                m_tile_buf.add(m_entries[i].tile, m_entries[i].sx,
-                               m_entries[i].sy);
+                for (unsigned int t = 0; t < m_entries[i].tiles.size(); t++)
+                {
+                    // NOTE: This is not perfect. Tiles will be drawn
+                    // sorted by texture first, e.g. you can never draw
+                    // a dungeon tile over a monster tile.
+                    int tile = m_entries[i].tiles[t].tile;
+                    TextureID tex = m_entries[i].tiles[t].tex;
+                    m_tile_buf[tex].add(tile, m_entries[i].sx, m_entries[i].sy);
+                }
             }
             else
             {
@@ -2646,7 +2650,8 @@ void MenuRegion::render()
 
     m_shape_buf.draw();
     m_line_buf.draw();
-    m_tile_buf.draw();
+    for (int i = 0; i < TEX_MAX; i++)
+        m_tile_buf[i].draw();
     m_font_buf.draw();
 }
 
@@ -2654,7 +2659,8 @@ void MenuRegion::clear()
 {
     m_shape_buf.clear();
     m_line_buf.clear();
-    m_tile_buf.clear();
+    for (int i = 0; i < TEX_MAX; i++)
+        m_tile_buf[i].clear();
     m_font_buf.clear();
 
     m_more.clear();
@@ -2685,8 +2691,8 @@ void MenuRegion::set_entry(int idx, const std::string &str, int colour,
     e.selected = me->selected();
     e.key = me->hotkeys.size() > 0 ? me->hotkeys[0] : 0;
     e.sx = e.sy = e.ex = e.ey = 0;
-    if (!me->tile(e.tile, e.texture))
-        e.tile = 0;
+    e.tiles.clear();
+    me->get_tiles(e.tiles);
 
     m_dirty = true;
 }
@@ -2738,9 +2744,6 @@ bool ImageManager::load_textures()
         return false;
 
     if (!m_textures[TEX_DOLL].load_texture("player.png", mip))
-        return false;
-
-    if (!m_textures[TEX_TITLE].load_texture("title.png", mip))
         return false;
 
     m_textures[TEX_DUNGEON].set_info(TILE_DNGN_MAX, &tile_dngn_info);

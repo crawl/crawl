@@ -144,9 +144,9 @@ struct MenuEntry
     }
 
 #ifdef USE_TILE
-    virtual bool tile(int &idx, TextureID &tex) const
+    virtual bool get_tiles(std::vector<tile_def>& tileset) const
     {
-        return false;
+        return (false);
     }
 #endif
 };

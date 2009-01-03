@@ -14,8 +14,15 @@ enum TextureID
     TEX_DUNGEON,
     TEX_DEFAULT,
     TEX_DOLL,
-    TEX_TITLE,
     TEX_MAX
+};
+
+struct tile_def
+{
+    tile_def(int _tile, TextureID _tex) : tile(_tile), tex(_tex) {}
+
+    int tile;
+    TextureID tex;
 };
 
 class GenericTexture

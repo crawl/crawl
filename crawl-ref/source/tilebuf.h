@@ -87,7 +87,7 @@ protected:
 class TileBuffer : public VertBuffer<PTVert>
 {
 public:
-    TileBuffer(const TilesTexture *tex);
+    TileBuffer(const TilesTexture *tex = NULL);
     void add(int idx, float x, float y);
 
     // Note: this could invalidate previous additions if they were

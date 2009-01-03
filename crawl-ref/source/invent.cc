@@ -417,15 +417,19 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
 }
 
 #ifdef USE_TILE
-bool InvEntry::tile(int &idx, TextureID &tex) const
+bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (quantity <= 0)
         return (false);
 
-    idx = tileidx_item(*item);
-    tex = TEX_DEFAULT;
+    int idx = tileidx_item(*item);
+    if (!idx)
+        return (false);
 
-    return (idx != 0);
+    tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_DUNGEON));
+    tileset.push_back(tile_def(idx, TEX_DEFAULT));
+
+    return (true);
 }
 #endif
 
