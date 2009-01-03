@@ -865,7 +865,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     if (monster->hit_points > 0 || monster->hit_points <= -15 || wizard
         || killer == KILL_RESET || killer == KILL_DISMISSED)
     {
-        return false;
+        return (false);
     }
 
     if (killer == KILL_MISC)
@@ -931,7 +931,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     }
 
     if (is_sanctuary(monster->pos()))
-        return false;
+        return (false);
 
     // Detach monster from the grid first, so it doesn't get hit by
     // its own explosion. (GDL)
@@ -946,6 +946,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     beam.explode();
 
     // Monster died in explosion, so don't re-attach it to the grid.
+    return (true);
 }
 
 void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
