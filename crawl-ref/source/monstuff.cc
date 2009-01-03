@@ -2376,7 +2376,7 @@ void behaviour_event(monsters *mon, int event, int src,
 {
     ASSERT(src >= 0 && src <= MHITYOU);
     ASSERT(!crawl_state.arena || src != MHITYOU);
-    ASSERT(in_bounds(src_pos) || src_pos == coord_def());
+    ASSERT(in_bounds(src_pos) || src_pos.origin());
 
     beh_type old_behaviour = mon->behaviour;
 
@@ -2556,6 +2556,7 @@ void behaviour_event(monsters *mon, int event, int src,
 
     // Do any resultant foe or state changes.
     _handle_behaviour(mon);
+    ASSERT(in_bounds(mon->target) || mon->target.origin());
 
     const bool wasLurking =
         (old_behaviour == BEH_LURK && !mons_is_lurking(mon));
@@ -3527,8 +3528,8 @@ static void _check_wander_target(monsters *mon, bool isPacified = false,
         // attention span.  -- bwr
         if (need_target)
         {
-            mon->target.set(10 + random2(GXM - 10),
-                            10 + random2(GYM - 10));
+            mon->target.set(10 + random2(X_BOUND_2 - 10),
+                            10 + random2(Y_BOUND_2 - 10));
         }
     }
 }
@@ -3648,7 +3649,8 @@ static void _handle_behaviour(monsters *mon)
     // Check for confusion -- early out.
     if (mon->has_ench(ENCH_CONFUSION))
     {
-        mon->target.set( 10 + random2(GXM - 10), 10 + random2(GYM - 10) );
+        mon->target.set( 10 + random2(X_BOUND_2 - 10),
+                         10 + random2(Y_BOUND_2 - 10) );
         return;
     }
 
@@ -3945,8 +3947,8 @@ static void _handle_behaviour(monsters *mon)
                 // Sometimes, your friends will wander a bit.
                 if (isFriendly && one_chance_in(8))
                 {
-                    mon->target.set(10 + random2(GXM - 10),
-                                    10 + random2(GYM - 10));
+                    mon->target.set(10 + random2(X_BOUND_2 - 10),
+                                    10 + random2(Y_BOUND_2 - 10));
                     mon->foe = MHITNOT;
                     new_beh  = BEH_WANDER;
                 }
@@ -4000,8 +4002,8 @@ static void _handle_behaviour(monsters *mon)
                         mon->travel_target = MTRAV_NONE;
                         patrolling = false;
                         mon->patrol_point = coord_def(0, 0);
-                        mon->target.set(10 + random2(GXM - 10),
-                                        10 + random2(GYM - 10));
+                        mon->target.set(10 + random2(X_BOUND_2 - 10),
+                                        10 + random2(Y_BOUND_2 - 10));
                     }
                 }
 
@@ -6756,6 +6758,7 @@ static void _handle_monster_move(int i, monsters *monster)
 
         _handle_behaviour(monster);
         ASSERT(!crawl_state.arena || monster->foe != MHITYOU);
+        ASSERT(in_bounds(monster->target) || monster->target.origin());
 
         // Submerging monsters will hide from clouds.
         if (cloud_num != EMPTY_CLOUD && _mons_avoids_cloud(monster, cl_type)
@@ -7009,8 +7012,8 @@ static void _handle_monster_move(int i, monsters *monster)
                     if (mons_is_batty(monster))
                     {
                         monster->behaviour = BEH_WANDER;
-                        monster->target.set(10 + random2(GXM - 10),
-                                            10 + random2(GYM - 10));
+                        monster->target.set(10 + random2(X_BOUND_2 - 10),
+                                            10 + random2(Y_BOUND_2 - 10));
                         // monster->speed_increment -= monster->speed;
                     }
 
@@ -7036,8 +7039,8 @@ static void _handle_monster_move(int i, monsters *monster)
                     if (mons_is_batty(monster))
                     {
                         monster->behaviour = BEH_WANDER;
-                        monster->target.set(10 + random2(GXM - 10),
-                                            10 + random2(GYM - 10));
+                        monster->target.set(10 + random2(X_BOUND_2 - 10),
+                                            10 + random2(Y_BOUND_2 - 10));
                     }
                     DEBUG_ENERGY_USE("monster_attack()");
                 }
@@ -7061,12 +7064,14 @@ static void _handle_monster_move(int i, monsters *monster)
         }
         update_beholders(monster);
 
-        // Reevaluate behaviour, since the monster's
-        // surroundings have changed (it may have moved,
-        // or died for that matter).  Don't bother for
-        // dead monsters.  :)
-        if (monster->type != -1)
+        // Reevaluate behaviour, since the monster's surroundings have
+        // changed (it may have moved, or died for that matter).  Don't
+        // bother for dead monsters.  :)
+        if (monster->alive())
+        {
             _handle_behaviour(monster);
+            ASSERT(in_bounds(monster->target) || monster->target.origin());
+        }
 
     }
 
