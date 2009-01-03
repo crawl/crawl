@@ -415,6 +415,33 @@ void mprf( const char *format, ... )
 
 void mpr(const char *inf, msg_channel_type channel, int param)
 {
+    if (crawl_state.arena)
+    {
+        switch(channel)
+        {
+        case MSGCH_PROMPT:
+        case MSGCH_GOD:
+        case MSGCH_PRAY:
+        case MSGCH_DURATION:
+        case MSGCH_FOOD:
+        case MSGCH_RECOVERY:
+        case MSGCH_INTRINSIC_GAIN:
+        case MSGCH_MUTATION:
+        case MSGCH_ROTTEN_MEAT:
+        case MSGCH_EQUIPMENT:
+        case MSGCH_FLOOR_ITEMS:
+        case MSGCH_MULTITURN_ACTION:
+        case MSGCH_EXAMINE:
+        case MSGCH_EXAMINE_FILTER:
+        case MSGCH_TUTORIAL:
+            DEBUGSTR("Invalid channel '%s' in arena mode",
+                     channel_to_str(channel).c_str());
+            break;
+        default:
+            break;
+        }
+    }
+
     if (!crawl_state.io_inited)
     {
         if (channel == MSGCH_ERROR)
