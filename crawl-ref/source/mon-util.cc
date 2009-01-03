@@ -6156,9 +6156,9 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     if (me.ench != ENCH_SUBMERGED)
         return (true);
 
-    // Trapdoor spiders only unsubmerge when their foe is in sight if
-    // the foe is right next to them.
-    if (mon->type == MONS_TRAPDOOR_SPIDER)
+    // Lurking monsters only unsubmerge when their foe is in sight if the foe
+    // is right next to them.
+    if (mons_is_lurking(mon))
     {
         const actor* foe = mon->get_foe();
         if (foe != NULL && mon->can_see(foe)
