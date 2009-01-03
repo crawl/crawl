@@ -1120,7 +1120,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         _do_lost_items(old_level_type);
 
 #ifdef USE_TILE
-    if (make_changes)
+    if (load_mode != LOAD_VISITOR)
     {
         tiles.clear_minimap();
         tiles.load_dungeon(NULL, crawl_view.vgrdc);
@@ -1248,7 +1248,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 
 #ifdef USE_TILE
-    if (make_changes)
+    if (load_mode != LOAD_VISITOR)
         TileNewLevel(just_created_level);
 #endif
 
