@@ -2887,6 +2887,11 @@ static void _place_extra_vaults()
             && can_create_vault)
         {
             const map_def *vault = random_map_in_depth(level_id::current());
+
+            // Encompass vaults can't be used as secondaries.
+            if (!vault || vault->orient == MAP_ENCOMPASS)
+                break;
+
             if (vault && _build_secondary_vault(you.your_level, vault, -1))
             {
                 const map_def &map(*vault);
@@ -4099,11 +4104,6 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
                                    int rune_subst, bool clobber,
                                    bool no_exits, const coord_def &where)
 {
-    // Don't waste time trying to place encompass vaults as
-    // secondaries.
-    if (vault->orient == MAP_ENCOMPASS)
-        return (false);
-
     if (_build_vaults(level_number, vault, rune_subst, true, !clobber,
                       no_exits, where))
     {

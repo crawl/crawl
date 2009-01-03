@@ -543,6 +543,7 @@ ENDMAP
 ##############################################################################
 
 NAME:    antaeus_in_days_of_yore
+TAGS:    no_rotate
 PLACE:   Coc:7
 ORIENT:  encompass
 SHUFFLE: $|, 2X
