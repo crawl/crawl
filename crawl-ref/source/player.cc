@@ -957,6 +957,10 @@ int player_equip_ego_type( int slot, int special )
         // Check all armour slots:
         for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
         {
+            // ... but skip ones you can't currently use!
+            if (!you_tran_can_wear(i))
+                continue;
+
             if (you.equip[i] != -1
                 && get_armour_ego_type( you.inv[you.equip[i]] ) == special)
             {

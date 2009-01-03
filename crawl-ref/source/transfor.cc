@@ -252,10 +252,19 @@ static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
         if (you.equip[e] == -1)
             continue;
 
-        if (item_cursed( you.inv[ you.equip[e] ]))
+        const item_def item = you.inv[ you.equip[e] ];
+        if (item_cursed(item))
         {
             if (e != EQ_WEAPON && _tran_may_meld_cursed(trans))
                 continue;
+
+            // Wielding a cursed non-weapon/non-staff won't hinder
+            // transformations.
+            if (e == EQ_WEAPON && item.base_type != OBJ_WEAPONS
+                && item.base_type != OBJ_STAVES)
+            {
+                continue;
+            }
 
             if (!quiet)
             {
@@ -308,6 +317,15 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
         equipment_type e = *iter;
         if (you.equip[e] == -1)
             continue;
+
+        // Wielding a stat-boosting non-weapon/non-staff won't hinder
+        // transformations.
+        if (e == EQ_WEAPON)
+        {
+            const item_def item = you.inv[ you.equip[e] ];
+            if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_STAVES)
+                continue;
+        }
 
         item_def item = you.inv[you.equip[e]];
         if (item.base_type == OBJ_JEWELLERY)

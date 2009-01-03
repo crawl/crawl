@@ -962,8 +962,8 @@ Boris
 w:1
 Sif Muna
 %%%%
-# level 7-9
-difficult level book
+# level 7-9, books in the form of "XYZ's <bookname>"
+difficult level book owner
 
 Thorough Guide to @the_book_magic@
 
@@ -975,6 +975,15 @@ Intricacies of @the_book_magic@
 
 @book_noun@ of Greatest Risks and Utility
 
+w:1
+Mastering @book_magic@
+%%%%
+# level 7-9, books without being named after their owner/author
+difficult level book
+
+w:50
+@difficult level book owner@
+
 w:5
 Last @book_noun@ of @the_powerful_caster@
 
@@ -983,9 +992,6 @@ Lost @book_noun@ of @the_powerful_caster@
 
 w:1
 Testament of @the_powerful_caster@
-
-w:1
-Mastering @book_magic@
 %%%%
 # synonyms for predominant spell schools
 # variants starting with the definite article will get "the" prepended

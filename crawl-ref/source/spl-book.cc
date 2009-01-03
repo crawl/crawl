@@ -1944,22 +1944,35 @@ bool make_book_level_randart(item_def &book, int level, int num_spells)
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
         spell_vec[i] = (long) chosen_spells[i];
 
+    bool has_owner = true;
     std::string name = "\"";
 
     if (god != GOD_NO_GOD)
         name += god_name(god, false) + "'s ";
     else if (one_chance_in(3))
         name += make_name(random_int(), false) + "'s ";
-
-    std::string difficulty;
-    if (level <= 3)
-        difficulty = "easy";
-    else if (level <= 6)
-        difficulty = "moderate";
     else
-        difficulty = "difficult";
+        has_owner = false;
 
-    std::string bookname = getRandNameString(difficulty + " level book");
+    std::string lookup;
+    if (level <= 3)
+        lookup = "easy";
+    else if (level <= 6)
+        lookup = "moderate";
+    else
+        lookup = "difficult";
+
+    lookup += " level book";
+
+    std::string bookname;
+    // First try for names respecting the book's previous owner/author
+    // (if one exists), then check for general difficulty.
+    if (has_owner)
+        bookname = getRandNameString(lookup + " owner");
+
+    if (!has_owner || bookname.empty())
+        bookname = getRandNameString(lookup);
+
     bookname = uppercase_first(bookname);
     if (bookname.empty())
         bookname = getRandNameString("book");

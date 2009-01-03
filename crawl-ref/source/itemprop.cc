@@ -1332,9 +1332,10 @@ bool item_is_rechargeable(const item_def &it, bool known)
     // These are obvious...
     if (it.base_type == OBJ_WANDS)
     {
-        if (known && (it.plus == ZAPCOUNT_MAX_CHARGED
+        // Don't offer wands already maximally charged.
+        if (known && (it.plus2 == ZAPCOUNT_MAX_CHARGED
                       || item_ident(it, ISFLAG_KNOW_PLUSES)
-                         && it.plus < 3 * wand_charge_value(it.sub_type)))
+                         && it.plus >= 3 * wand_charge_value(it.sub_type)))
         {
             return (false);
         }
