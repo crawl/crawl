@@ -685,15 +685,16 @@ monster_type mons_genus(int mc)
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
         || mc == RANDOM_NONBASE_DRACONIAN)
     {
-        return MONS_DRACONIAN;
+        return (MONS_DRACONIAN);
     }
+
     ASSERT(smc);
     return (smc->genus);
 }
 
 monster_type draco_subspecies(const monsters *mon)
 {
-    ASSERT( mons_genus( mon->type ) == MONS_DRACONIAN );
+    ASSERT(mons_genus(mon->type) == MONS_DRACONIAN);
 
     if (mon->type == MONS_TIAMAT)
     {
@@ -2205,12 +2206,8 @@ bool give_monster_proper_name(monsters *mon, bool orcs_only)
 // See mons_init for initialization of mon_entry array.
 monsterentry *get_monster_data(int p_monsterid)
 {
-    const int me =
-        p_monsterid != -1 && p_monsterid < NUM_MONSTERS?
-        mon_entry[p_monsterid] : -1;
-
-    if (me >= 0)                // PARANOIA
-        return (&mondata[me]);
+    if (p_monsterid > 0 && p_monsterid < NUM_MONSTERS)
+        return (&mondata[mon_entry[p_monsterid]]);
     else
         return (NULL);
 }
