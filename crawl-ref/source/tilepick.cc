@@ -4297,15 +4297,6 @@ void tile_place_item(int x, int y, int idx)
         env.tile_bg[x-1][y-1] |= TILE_FLAG_CURSOR3;
 }
 
-void tile_place_item_bk(int gx, int gy, int idx)
-{
-    int t = tileidx_item(mitm[idx]);
-    env.tile_bk_fg[gx][gy] = t;
-
-    if (item_needs_autopickup(mitm[idx]))
-        env.tile_bk_bg[gx][gy] |= TILE_FLAG_CURSOR3;
-}
-
 // Called from item() in view.cc
 void tile_place_item_marker(int x, int y, int idx)
 {
