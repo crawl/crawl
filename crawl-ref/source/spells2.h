@@ -61,13 +61,13 @@ bool cast_summon_elemental(int pow, god_type god = GOD_NO_GOD,
 bool cast_summon_ice_beast(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_ugly_thing(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_dragon(int pow, god_type god = GOD_NO_GOD);
-bool summon_berserker(int pow, god_type god = GOD_NO_GOD,
+bool summon_berserker(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                       bool force_hostile = false);
-bool summon_holy_warrior(int pow, god_type god = GOD_NO_GOD,
+bool summon_holy_warrior(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                          bool force_hostile = false, bool permanent = false,
                          bool quiet = false);
 bool summon_holy_being_type(monster_type mon, int pow,
-                            god_type god = GOD_NO_GOD);
+                            god_type god = GOD_NO_GOD, int spell = 0);
 bool cast_tukimas_dance(int pow, god_type god = GOD_NO_GOD,
                         bool force_hostile = false);
 bool cast_conjure_ball_lightning(int pow, god_type god = GOD_NO_GOD);

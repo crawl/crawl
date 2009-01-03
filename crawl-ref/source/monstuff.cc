@@ -1306,7 +1306,7 @@ void monster_die(monsters *monster, killer_type killer,
                     const int spectre =
                         create_monster(
                             mgen_data(MONS_SPECTRAL_THING, BEH_FRIENDLY,
-                                0, monster->pos(), you.pet_target,
+                                0, 0, monster->pos(), you.pet_target,
                                 0, static_cast<god_type>(you.attribute[ATTR_DIVINE_DEATH_CHANNEL]),
                                 spectre_type, monster->number));
 
@@ -5628,7 +5628,7 @@ static bool _handle_scroll(monsters *monster)
             simple_monster_message(monster, " reads a scroll.");
             int mon = create_monster(
                 mgen_data(MONS_ABOMINATION_SMALL, SAME_ATTITUDE(monster),
-                          0, monster->pos(), monster->foe));
+                          0, 0, monster->pos(), monster->foe));
             read  = true;
             if (mon != -1 && you.can_see(&menv[mon]))
             {

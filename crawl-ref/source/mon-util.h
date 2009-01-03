@@ -85,8 +85,8 @@ enum mon_attack_flavour
     AF_STEAL_FOOD
 };
 
-// Non-spell "summoning" types to give to monsters::mark_summoned(), or as
-// the fourth parameter of mgen_data's second constructor.
+// Non-spell "summoning" types to give to monsters::mark_summoned(), or
+// as the fourth parameter of mgen_data's constructor.
 //
 // Negative values since spells are non-negative.
 enum mon_summon_type

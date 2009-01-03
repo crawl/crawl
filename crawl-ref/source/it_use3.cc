@@ -226,7 +226,7 @@ void special_wielded()
         {
             create_monster(
                 mgen_data(MONS_SHADOW, BEH_FRIENDLY,
-                          2, you.pos(), you.pet_target));
+                          2, 0, you.pos(), you.pet_target));
             did_god_conduct(DID_NECROMANCY, 1);
         }
         break;
@@ -715,7 +715,7 @@ static bool efreet_flask(void)
         create_monster(
             mgen_data(MONS_EFREET,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      0, you.pos(),
+                      0, 0, you.pos(),
                       friendly ? you.pet_target : MHITYOU,
                       MG_FORCE_BEH));
 
@@ -1008,7 +1008,7 @@ static bool box_of_beasts()
         }
 
         if (create_monster(
-                mgen_data(beasty, beha, 2 + random2(4),
+                mgen_data(beasty, beha, 2 + random2(4), 0,
                           you.pos(), hitting)) != -1)
         {
             success = true;

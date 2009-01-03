@@ -939,7 +939,7 @@ static int _yred_random_servants(int threshold, bool force_hostile = false)
         if (create_monster(
                 mgen_data(mon,
                           !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                          0, you.pos(),
+                          0, 0, you.pos(),
                           !force_hostile ? you.pet_target : MHITYOU,
                           0, GOD_YREDELEMNUL)) != -1)
         {
@@ -1532,7 +1532,7 @@ static bool _beogh_blessing_reinforcement()
 
         int monster =
             create_monster(
-                mgen_data(follower_type, BEH_FRIENDLY, 0,
+                mgen_data(follower_type, BEH_FRIENDLY, 0, 0,
                           you.pos(), you.pet_target, 0, GOD_BEOGH));
 
         if (monster != -1)
@@ -4029,7 +4029,7 @@ static bool _tso_retribution()
 
         for (int i = 0; i < how_many; ++i)
         {
-            if (summon_holy_warrior(100, god, true, true, true))
+            if (summon_holy_warrior(100, god, 0, true, true, true))
                 success = true;
         }
 
@@ -4415,7 +4415,7 @@ static bool _trog_retribution()
 
                 points -= cost;
 
-                if (summon_berserker(cost * 20, god, true))
+                if (summon_berserker(cost * 20, god, 0, true))
                     count++;
             }
         }

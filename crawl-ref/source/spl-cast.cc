@@ -1543,11 +1543,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_SUMMON_ANGEL:
-        summon_holy_being_type(MONS_ANGEL, powc, god);
+        summon_holy_being_type(MONS_ANGEL, powc, god, (int)spell);
         break;
 
     case SPELL_SUMMON_DAEVA:
-        summon_holy_being_type(MONS_DAEVA, powc, god);
+        summon_holy_being_type(MONS_DAEVA, powc, god, (int)spell);
         break;
 
     case SPELL_TUKIMAS_DANCE:
@@ -2881,14 +2881,17 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
             data.abjuration_duration = 6;
     }
 
-    // If data.abjuration_duration == 0 then data.summon_type will simply
-    // be ignored.
-    if (you.penance[god] > 0)
-        data.summon_type = MON_SUMM_WRATH;
-    else if (source == ZOT_TRAP_MISCAST)
-        data.summon_type = MON_SUMM_ZOT;
-    else
-        data.summon_type = MON_SUMM_MISCAST;
+    // If data.abjuration_duration == 0, then data.summon_type will
+    // simply be ignored.
+    if (data.abjuration_duration != 0)
+    {
+        if (you.penance[god] > 0)
+            data.summon_type = MON_SUMM_WRATH;
+        else if (source == ZOT_TRAP_MISCAST)
+            data.summon_type = MON_SUMM_ZOT;
+        else
+            data.summon_type = MON_SUMM_MISCAST;
+    }
 
     return (create_monster(data) != -1);
 }

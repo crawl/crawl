@@ -2574,7 +2574,7 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
         monster_type type = (mons_zombie_size(mon->type) == Z_SMALL) ?
                             MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE;
         zombie_index = create_monster(
-                           mgen_data(type, mon->behaviour, 0, mon->pos(),
+                           mgen_data(type, mon->behaviour, 0, 0, mon->pos(),
                                      mon->foe, MG_FORCE_PLACE, mon->god,
                                      (monster_type) mon->type, mon->number));
     }

@@ -110,13 +110,14 @@ bool remove_curse(bool suppress_msg);
 bool cast_sublimation_of_blood(int pow);
 
 bool cast_call_imp(int pow, god_type god = GOD_NO_GOD);
-bool summon_lesser_demon(int pow, god_type god = GOD_NO_GOD,
+bool summon_lesser_demon(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                          bool quiet = false);
-bool summon_common_demon(int pow, god_type god = GOD_NO_GOD,
+bool summon_common_demon(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                          bool quiet = false);
-bool summon_greater_demon(int pow, god_type god = GOD_NO_GOD,
+bool summon_greater_demon(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                           bool quiet = false);
-bool summon_demon_type(monster_type mon, int pow, god_type god = GOD_NO_GOD);
+bool summon_demon_type(monster_type mon, int pow, god_type god = GOD_NO_GOD,
+                       int spell = 0);
 bool cast_summon_demon(int pow, god_type god = GOD_NO_GOD);
 bool cast_demonic_horde(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_greater_demon(int pow, god_type god = GOD_NO_GOD);

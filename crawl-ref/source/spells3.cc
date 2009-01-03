@@ -406,8 +406,9 @@ bool cast_call_imp(int pow, god_type god)
 
     const int monster =
         create_monster(
-            mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
-                      you.pet_target,
+            mgen_data(mon, BEH_FRIENDLY,
+                      dur, SPELL_CALL_IMP,
+                      you.pos(), you.pet_target,
                       MG_FORCE_BEH, god));
 
     if (monster != -1)
@@ -426,9 +427,9 @@ bool cast_call_imp(int pow, god_type god)
     return (success);
 }
 
-static bool _summon_demon_wrapper(int pow, god_type god, monster_type mon,
-                                  int dur, bool friendly, bool charmed,
-                                  bool quiet)
+static bool _summon_demon_wrapper(int pow, god_type god, int spell,
+                                  monster_type mon, int dur, bool friendly,
+                                  bool charmed, bool quiet)
 {
     bool success = false;
 
@@ -437,7 +438,8 @@ static bool _summon_demon_wrapper(int pow, god_type god, monster_type mon,
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY :
                           charmed ? BEH_CHARMED : BEH_HOSTILE,
-                      dur, you.pos(),
+                      dur, spell,
+                      you.pos(),
                       friendly ? you.pet_target : MHITYOU,
                       MG_FORCE_BEH, god));
 
@@ -457,41 +459,43 @@ static bool _summon_demon_wrapper(int pow, god_type god, monster_type mon,
     return (success);
 }
 
-static bool _summon_demon_wrapper(int pow, god_type god, demon_class_type dct,
-                                  int dur, bool friendly, bool charmed,
-                                  bool quiet)
+static bool _summon_demon_wrapper(int pow, god_type god, int spell,
+                                  demon_class_type dct, int dur, bool friendly,
+                                  bool charmed, bool quiet)
 {
     monster_type mon = summon_any_demon(dct);
 
-    return _summon_demon_wrapper(pow, god, mon, dur, friendly, charmed, quiet);
+    return _summon_demon_wrapper(pow, god, spell, mon, dur, friendly, charmed,
+                                 quiet);
 }
 
-bool summon_lesser_demon(int pow, god_type god,
+bool summon_lesser_demon(int pow, god_type god, int spell,
                          bool quiet)
 {
-    return _summon_demon_wrapper(pow, god, DEMON_LESSER,
+    return _summon_demon_wrapper(pow, god, spell, DEMON_LESSER,
                                  std::min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
-bool summon_common_demon(int pow, god_type god,
+bool summon_common_demon(int pow, god_type god, int spell,
                          bool quiet)
 {
-    return _summon_demon_wrapper(pow, god, DEMON_COMMON,
+    return _summon_demon_wrapper(pow, god, spell, DEMON_COMMON,
                                  std::min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
-bool summon_greater_demon(int pow, god_type god,
+bool summon_greater_demon(int pow, god_type god, int spell,
                           bool quiet)
 {
-    return _summon_demon_wrapper(pow, god, DEMON_GREATER,
+    return _summon_demon_wrapper(pow, god, spell, DEMON_GREATER,
                                  5, false, random2(pow) > 5, quiet);
 }
 
-bool summon_demon_type(monster_type mon, int pow, god_type god)
+bool summon_demon_type(monster_type mon, int pow, god_type god,
+                       int spell)
 {
-    return _summon_demon_wrapper(pow, god, mon,
+    return _summon_demon_wrapper(pow, god, spell, mon,
                                  std::min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, false);
 }
@@ -500,7 +504,7 @@ bool cast_summon_demon(int pow, god_type god)
 {
     mpr("You open a gate to Pandemonium!");
 
-    bool success = summon_common_demon(pow, god);
+    bool success = summon_common_demon(pow, god, SPELL_SUMMON_DEMON);
 
     if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -518,7 +522,7 @@ bool cast_demonic_horde(int pow, god_type god)
 
     for (int i = 0; i < how_many; ++i)
     {
-        if (summon_lesser_demon(pow, god, true))
+        if (summon_lesser_demon(pow, god, SPELL_DEMONIC_HORDE, true))
             success = true;
     }
 
@@ -532,7 +536,7 @@ bool cast_summon_greater_demon(int pow, god_type god)
 {
     mpr("You open a gate to Pandemonium!");
 
-    bool success = summon_greater_demon(pow, god);
+    bool success = summon_greater_demon(pow, god, SPELL_SUMMON_GREATER_DEMON);
 
     if (!success)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -591,7 +595,8 @@ bool cast_summon_horrible_things(int pow, god_type god)
     while (how_many_big > 0)
     {
         if (create_monster(
-               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY, 6,
+               mgen_data(MONS_TENTACLED_MONSTROSITY, BEH_FRIENDLY,
+                         6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), you.pet_target,
                          0, god)) != -1)
         {
@@ -604,7 +609,8 @@ bool cast_summon_horrible_things(int pow, god_type god)
     while (how_many_small > 0)
     {
         if (create_monster(
-               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY, 6,
+               mgen_data(MONS_ABOMINATION_LARGE, BEH_FRIENDLY,
+                         6, SPELL_SUMMON_HORRIBLE_THINGS,
                          you.pos(), you.pet_target,
                          0, god)) != -1)
         {
@@ -812,7 +818,7 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
 
     const int monster = create_monster(
                             mgen_data(mon, beha,
-                                      0, a, hitting,
+                                      0, 0, a, hitting,
                                       0, god,
                                       zombie_type, number));
     if (mon_index != NULL)
@@ -1002,7 +1008,8 @@ bool cast_simulacrum(int pow, god_type god)
         {
             if (create_monster(
                     mgen_data(MONS_SIMULACRUM_SMALL, BEH_FRIENDLY,
-                              6, you.pos(), you.pet_target,
+                              6, SPELL_SIMULACRUM,
+                              you.pos(), you.pet_target,
                               0, god, mon)) != -1)
             {
                 count++;
@@ -1084,7 +1091,8 @@ bool cast_twisted_resurrection(int pow, god_type god)
     const int monster =
         create_monster(
             mgen_data(mon, BEH_FRIENDLY,
-                      0, you.pos(), you.pet_target,
+                      0, SPELL_TWISTED_RESURRECTION,
+                      you.pos(), you.pet_target,
                       MG_FORCE_BEH, god,
                       MONS_PROGRAM_BUG, 0, colour));
 
@@ -1135,7 +1143,8 @@ bool cast_summon_wraiths(int pow, god_type god)
         create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      5, you.pos(),
+                      5, SPELL_SUMMON_WRAITHS,
+                      you.pos(),
                       friendly ? you.pet_target : MHITYOU,
                       MG_FORCE_BEH, god));
 

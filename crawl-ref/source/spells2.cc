@@ -942,7 +942,7 @@ bool summon_animals(int pow)
         if (create_monster(
                 mgen_data(mon,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                          4, you.pos(),
+                          4, 0, you.pos(),
                           friendly ? you.pet_target : MHITYOU)) != -1)
         {
             success = true;
@@ -961,7 +961,8 @@ bool cast_summon_butterflies(int pow, god_type god)
     for (int i = 0; i < how_many; ++i)
     {
         if (create_monster(
-                mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY, 3,
+                mgen_data(MONS_BUTTERFLY, BEH_FRIENDLY,
+                          3, SPELL_SUMMON_BUTTERFLIES,
                           you.pos(), you.pet_target,
                           0, god)) != -1)
         {
@@ -1020,7 +1021,8 @@ bool cast_summon_small_mammals(int pow, god_type god)
         count++;
 
         if (create_monster(
-                mgen_data(mon, BEH_FRIENDLY, 3,
+                mgen_data(mon, BEH_FRIENDLY,
+                          3, SPELL_SUMMON_SMALL_MAMMALS,
                           you.pos(), you.pet_target,
                           0, god)) != -1)
         {
@@ -1077,7 +1079,8 @@ bool cast_sticks_to_snakes(int pow, god_type god)
                 mon = MONS_SMALL_SNAKE;
 
             if (create_monster(
-                    mgen_data(mon, beha, dur,
+                    mgen_data(mon, beha,
+                              dur, SPELL_STICKS_TO_SNAKES,
                               you.pos(), hitting,
                               0, god)) != -1)
             {
@@ -1124,7 +1127,8 @@ bool cast_sticks_to_snakes(int pow, god_type god)
             mon = MONS_GREY_SNAKE;
 
         if (create_monster(
-                mgen_data(mon, beha, dur,
+                mgen_data(mon, beha,
+                          dur, SPELL_STICKS_TO_SNAKES,
                           you.pos(), hitting,
                           0, god)) != -1)
         {
@@ -1164,7 +1168,8 @@ bool cast_summon_scorpions(int pow, god_type god)
         if (create_monster(
                 mgen_data(MONS_SCORPION,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                          3, you.pos(),
+                          3, SPELL_SUMMON_SCORPIONS,
+                          you.pos(),
                           friendly ? you.pet_target : MHITYOU,
                           0, god)) != -1)
         {
@@ -1248,7 +1253,8 @@ bool cast_summon_swarm(int pow, god_type god,
         if (create_monster(
                 mgen_data(mon,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                          dur, you.pos(),
+                          dur, !permanent ? SPELL_SUMMON_SWARM : 0,
+                          you.pos(),
                           friendly ? you.pet_target : MHITYOU,
                           0, god)) != -1)
         {
@@ -1307,7 +1313,8 @@ bool cast_call_canine_familiar(int pow, god_type god)
     if (create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, you.pos(),
+                      dur, SPELL_CALL_CANINE_FAMILIAR,
+                      you.pos(),
                       friendly ? you.pet_target : MHITYOU,
                       0, god)) != -1)
     {
@@ -1448,7 +1455,8 @@ bool cast_summon_elemental(int pow, god_type god,
     if (create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, targ,
+                      dur, SPELL_SUMMON_ELEMENTAL,
+                      targ,
                       friendly ? you.pet_target : MHITYOU,
                       0, god)) == -1)
     {
@@ -1471,7 +1479,8 @@ bool cast_summon_ice_beast(int pow, god_type god)
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
     if (create_monster(
-            mgen_data(mon, BEH_FRIENDLY, dur,
+            mgen_data(mon, BEH_FRIENDLY,
+                      dur, SPELL_SUMMON_ICE_BEAST,
                       you.pos(), you.pet_target,
                       0, god)) != -1)
     {
@@ -1496,7 +1505,8 @@ bool cast_summon_ugly_thing(int pow, god_type god)
     if (create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, you.pos(),
+                      dur, SPELL_SUMMON_UGLY_THING,
+                      you.pos(),
                       friendly ? you.pet_target : MHITYOU,
                       0, god)) != -1)
     {
@@ -1525,7 +1535,8 @@ bool cast_summon_dragon(int pow, god_type god)
     if (create_monster(
             mgen_data(MONS_DRAGON,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      3, you.pos(),
+                      3, SPELL_SUMMON_DRAGON,
+                      you.pos(),
                       friendly ? you.pet_target : MHITYOU,
                       0, god)) != -1)
     {
@@ -1541,7 +1552,8 @@ bool cast_summon_dragon(int pow, god_type god)
     return (false);
 }
 
-bool summon_berserker(int pow, god_type god, bool force_hostile)
+bool summon_berserker(int pow, god_type god, int spell,
+                      bool force_hostile)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
@@ -1591,7 +1603,8 @@ bool summon_berserker(int pow, god_type god, bool force_hostile)
         create_monster(
             mgen_data(mon,
                       !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, you.pos(),
+                      dur, spell,
+                      you.pos(),
                       !force_hostile ? you.pet_target : MHITYOU,
                       0, god));
 
@@ -1617,8 +1630,9 @@ bool summon_berserker(int pow, god_type god, bool force_hostile)
     return (true);
 }
 
-static bool _summon_holy_being_wrapper(int pow, god_type god, monster_type mon,
-                                       int dur, bool friendly, bool quiet)
+static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
+                                       monster_type mon, int dur, bool friendly,
+                                       bool quiet)
 {
     UNUSED(pow);
 
@@ -1626,8 +1640,9 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, monster_type mon,
         create_monster(
             mgen_data(mon,
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, friendly ? MON_SUMM_AID : MON_SUMM_WRATH,
-                      you.pos(), friendly ? you.pet_target : MHITYOU,
+                      dur, spell,
+                      you.pos(),
+                      friendly ? you.pet_target : MHITYOU,
                       MG_FORCE_BEH, god));
 
     if (monster == -1)
@@ -1649,29 +1664,31 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, monster_type mon,
     return (true);
 }
 
-static bool _summon_holy_being_wrapper(int pow, god_type god,
-                                       holy_being_class_type hbct,
-                                       int dur, bool friendly, bool quiet)
+static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
+                                       holy_being_class_type hbct, int dur,
+                                       bool friendly, bool quiet)
 {
     monster_type mon = summon_any_holy_being(hbct);
 
-    return _summon_holy_being_wrapper(pow, god, mon, dur, friendly, quiet);
+    return _summon_holy_being_wrapper(pow, god, spell, mon, dur, friendly,
+                                      quiet);
 }
 
-bool summon_holy_warrior(int pow, god_type god,
+bool summon_holy_warrior(int pow, god_type god, int spell,
                          bool force_hostile, bool permanent,
                          bool quiet)
 {
-    return _summon_holy_being_wrapper(pow, god, HOLY_BEING_WARRIOR,
+    return _summon_holy_being_wrapper(pow, god, spell, HOLY_BEING_WARRIOR,
                                       !permanent ?
                                           std::min(2 + (random2(pow) / 4), 6) :
                                           0,
                                       !force_hostile, quiet);
 }
 
-bool summon_holy_being_type(monster_type mon, int pow, god_type god)
+bool summon_holy_being_type(monster_type mon, int pow,
+                            god_type god, int spell)
 {
-    return _summon_holy_being_wrapper(pow, god, mon,
+    return _summon_holy_being_wrapper(pow, god, spell, mon,
                                       std::min(2 + (random2(pow) / 4), 6),
                                       true, false);
 }

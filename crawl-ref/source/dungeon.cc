@@ -3303,7 +3303,7 @@ static int _place_uniques(int level_number, char level_type)
         if (which_unique == MONS_PROGRAM_BUG)
             break;
 
-        mgen_data mg(which_unique, BEH_SLEEP, 0,
+        mgen_data mg(which_unique, BEH_SLEEP, 0, 0,
                      coord_def(), MHITNOT, MG_PERMIT_BANDS,
                      GOD_NO_GOD, MONS_PROGRAM_BUG, 0, BLACK,
                      level_number, PROX_ANYWHERE);

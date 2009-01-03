@@ -182,28 +182,7 @@ struct mgen_data
     mgen_data(monster_type mt = RANDOM_MONSTER,
               beh_type beh = BEH_HOSTILE,
               int abj = 0,
-              const coord_def &p = coord_def(-1, -1),
-              unsigned short mfoe = MHITNOT,
-              unsigned monflags = 0,
-              god_type which_god = GOD_NO_GOD,
-              monster_type base = MONS_PROGRAM_BUG,
-              int monnumber = 0,
-              int moncolour = BLACK,
-              int monpower = you.your_level,
-              proximity_type prox = PROX_ANYWHERE,
-              level_area_type ltype = you.level_type)
-
-        : cls(mt), base_type(base), behaviour(beh),
-          abjuration_duration(abj), summon_type(0), pos(p), foe(mfoe),
-          flags(monflags), god(which_god), number(monnumber), colour(moncolour),
-          power(monpower), proximity(prox), level_type(ltype), map_mask(0)
-    {
-    }
-
-    mgen_data(monster_type mt,
-              beh_type beh,
-              int abj,
-              int st,
+              int st = 0,
               const coord_def &p = coord_def(-1, -1),
               unsigned short mfoe = MHITNOT,
               unsigned monflags = 0,
@@ -237,7 +216,7 @@ struct mgen_data
                                 const coord_def &where,
                                 unsigned flags = 0)
     {
-        return mgen_data(what, BEH_SLEEP, 0, where, MHITNOT, flags);
+        return mgen_data(what, BEH_SLEEP, 0, 0, where, MHITNOT, flags);
     }
 
     static mgen_data hostile_at(monster_type what,
