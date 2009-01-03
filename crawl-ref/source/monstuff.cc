@@ -20,6 +20,7 @@
 
 #include "externs.h"
 
+#include "arena.h"
 #include "beam.h"
 #include "cloud.h"
 #include "database.h"
@@ -996,6 +997,9 @@ void monster_die(monsters *monster, killer_type killer,
 
     if (!silent && _monster_avoided_death(monster, killer, killer_index))
         return;
+
+    if (crawl_state.arena)
+        arena_monster_died(monster, killer, killer_index, silent);
 
     mons_clear_trapping_net(monster);
 
@@ -3584,7 +3588,13 @@ static void _arena_set_foe(monsters *mons)
     else if (nearest_unseen != -1)
     {
         mons->target = menv[nearest_unseen].pos();
-        mons->behaviour = BEH_WANDER;
+        if (mons->type == MONS_TEST_SPAWNER)
+        {
+            mons->foe       = nearest_unseen;
+            mons->behaviour = BEH_SEEK;
+        }
+        else
+            mons->behaviour = BEH_WANDER;
     }
     else
     {

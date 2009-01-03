@@ -12,6 +12,7 @@
 
 #include "monplace.h"
 
+#include "arena.h"
 #include "branch.h"
 #include "directn.h" // for the Compass
 #include "externs.h"
@@ -314,6 +315,13 @@ monster_type pick_random_monster(const level_id &place)
 monster_type pick_random_monster(const level_id &place, int power,
                                  int &lev_mons)
 {
+    if (crawl_state.arena)
+    {
+        monster_type type = arena_pick_random_monster(place, power, lev_mons);
+        if (type != RANDOM_MONSTER)
+            return (type);
+    }
+
     if (place.level_type == LEVEL_LABYRINTH)
         return (MONS_PROGRAM_BUG);
 
@@ -387,6 +395,8 @@ monster_type pick_random_monster(const level_id &place, int power,
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
+            if (crawl_state.arena && arena_veto_random_monster(mon_type))
+                continue;
         }
         while (random2avg(100, 2) > mons_rare_abyss(mon_type)
                && !one_chance_in(100));
@@ -411,6 +421,9 @@ monster_type pick_random_monster(const level_id &place, int power,
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
+
+            if (crawl_state.arena && arena_veto_random_monster(mon_type))
+                continue;
 
             level  = mons_level(mon_type, place);
             diff   = level - lev_mons;
@@ -1134,6 +1147,9 @@ static int _place_monster_aux(const mgen_data &mg,
 
     if (player_monster_visible(&menv[id]) && mons_near(&menv[id]))
         seen_monster(&menv[id]);
+
+    if (crawl_state.arena)
+        arena_placed_monster(&menv[id], mg, first_band_member);
 
     return (id);
 }

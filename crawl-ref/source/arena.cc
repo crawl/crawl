@@ -10,6 +10,7 @@
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
+#include "mon-pick.h"
 #include "mon-util.h"
 #include "monstuff.h"
 #include "monplace.h"
@@ -46,13 +47,16 @@ namespace arena
 
     int trials_done = 0;
     int team_a_wins = 0;
-    bool allow_summons = true;
-    bool no_immobile  = false;
-    bool do_alert = false;
+    bool allow_summons   = true;
+    bool allow_zero_xp   = false;
+    bool allow_immobile  = true;
     std::string arena_type = "";
     faction faction_a(true);
     faction faction_b(false);
     coord_def place_a, place_b;
+    bool contest_canceled = false;
+    bool cycle_random     = false;
+    int  cycle_random_pos = -1;
 
     FILE *file = NULL;
     int message_pos = 0;
@@ -88,45 +92,6 @@ namespace arena
             // Set target to the opposite faction's home base.
             mon->target = friendly ? place_b : place_a;
         }
-    }
-
-    void alert_faction(bool friendly)
-    {
-        int alerter = 0;
-        for (int i = 0; i < MAX_MONSTERS; i++)
-        {
-            const monsters *mon = &menv[i];
-            if (!mon->alive())
-                continue;
-            if (mons_friendly(mon) != friendly)
-            {
-                alerter = i;
-                break;
-            }
-        }
-
-        // Move player aside so that behaviour_event() default src_pos
-        // isn't the same as the player's position, in order to avoid an
-        // assertion.
-        you.position = coord_def(-1, -1);
-
-        for (int i = 0; i < MAX_MONSTERS; i++)
-        {
-            monsters *mon = &menv[i];
-            if (!mon->alive())
-                continue;
-            if (mons_friendly(mon) == friendly)
-                behaviour_event(mon, ME_ALERT, alerter);
-        }
-    }
-
-    void alert_monsters()
-    {
-        if (!do_alert)
-            return;
-
-        alert_faction(true);
-        alert_faction(false);
     }
 
     void list_eq(int imon)
@@ -266,9 +231,11 @@ namespace arena
         Options.arena_force_ai =
             strip_bool_tag(spec, "force_ai", Options.arena_force_ai);
 
-        allow_summons = !strip_tag(spec, "no_summons");
-        do_alert      = strip_tag(spec, "alert");
-        no_immobile   = strip_tag(spec, "no_immobile");
+        allow_summons  = !strip_tag(spec, "no_summons");
+        allow_immobile = !strip_tag(spec, "no_immobile");
+        allow_zero_xp  =  strip_tag(spec, "allow_zero_xp");
+
+        cycle_random = strip_tag(spec, "cycle_random");
 
         const int ntrials = strip_number_tag(spec, "t:");
         if (ntrials != TAG_UNFOUND && ntrials >= 1 && ntrials <= 99
@@ -296,6 +263,12 @@ namespace arena
                                    arena_place.c_str(),
                                    err.c_str());
             }
+            if (place.level_type == LEVEL_LABYRINTH)
+                throw (std::string("Can't set arena place to the "
+                                   "labyrinth."));
+            else if (place.level_type == LEVEL_PORTAL_VAULT)
+                throw (std::string("Can't set arena place to a portal "
+                                   "vault."));
         }
 
         std::vector<std::string> factions = split_string(" v ", spec);
@@ -338,7 +311,6 @@ namespace arena
         faction_a.place_at(place_a);
         faction_b.place_at(place_b);
         adjust_monsters();
-        alert_monsters();
     }
 
     void show_fight_banner(bool after_fight = false)
@@ -503,28 +475,23 @@ namespace arena
         if (!Options.arena_dump_msgs || file == NULL)
             return;
 
+        std::vector<int> channels;
         std::vector<std::string> messages =
             get_recent_messages(message_pos,
-                                !Options.arena_dump_msgs_all);
+                                !Options.arena_dump_msgs_all,
+                                &channels);
 
         for (unsigned int i = 0; i < messages.size(); i++)
-            fprintf(file, "%s\n", messages[i].c_str());
-    }
-
-    void cull_immobile()
-    {
-        if (!no_immobile)
-            return;
-
-        for (int i = 0; i < MAX_MONSTERS; i++)
         {
-            monsters* mon = &menv[i];
+            std::string msg  = messages[i];
+            int         chan = channels[i];
 
-            if (!mon->alive())
-                continue;
-
-            if (mons_is_stationary(mon) && mon->is_summoned())
-                monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
+            if (chan == MSGCH_ERROR)
+                msg = "ERROR: " + msg;
+            else if (chan == MSGCH_DIAGNOSTICS)
+                msg = "DIAG: " + msg;
+                
+            fprintf(file, "%s\n", msg.c_str());
         }
     }
 
@@ -541,7 +508,9 @@ namespace arena
                     if (ch == ESCAPE || tolower(ch) == 'q' ||
                         ch == CONTROL('G'))
                     {
-                        end(0, false, "Canceled contest at user request");
+                        contest_canceled = true;
+                        mpr("Canceled contest at user request");
+                        return;
                     }
                 }
 
@@ -554,7 +523,6 @@ namespace arena
                 you.hunger = 10999;
                 //report_foes();
                 world_reacts();
-                cull_immobile();
                 delay(Options.arena_delay);
                 mesclr();
                 dump_messages();
@@ -648,7 +616,7 @@ namespace arena
 
             if (trials_done < total_trials)
                 delay(Options.arena_delay * 5);
-        } while (trials_done < total_trials);
+        } while (!contest_canceled && trials_done < total_trials);
 
         if (total_trials > 0)
         {
@@ -661,6 +629,60 @@ namespace arena
         write_results();
     }
 }
+
+/////////////////////////////////////////////////////////////////////////////
+
+// Various arena callbacks
+
+monster_type arena_pick_random_monster(const level_id &place, int power,
+                                       int &lev_mons)
+{
+    if (!arena::cycle_random)
+        return (RANDOM_MONSTER);
+
+    for (int tries = 0; tries <= NUM_MONSTERS; tries++)
+    {
+        arena::cycle_random_pos++;
+        if (arena::cycle_random_pos >= NUM_MONSTERS)
+            arena::cycle_random_pos = 0;
+
+        const monster_type type = (monster_type) arena::cycle_random_pos;
+
+        if (mons_rarity(type, place) == 0)
+            continue;
+
+        if (arena_veto_random_monster(type))
+            continue;
+
+        return (type);
+    }
+
+    end(1, false, "No random monsters for place '%s'",
+        arena::place.describe().c_str());
+    return (NUM_MONSTERS);
+}
+
+bool arena_veto_random_monster(monster_type type)
+{
+    if (!arena::allow_immobile && mons_class_is_stationary(type))   
+        return (true);
+    if (!arena::allow_zero_xp && mons_class_flag(type, M_NO_EXP_GAIN))
+        return (true);
+
+    return (false);
+}
+
+void arena_placed_monster(monsters *monster, const mgen_data &mg,
+                          bool first_band_member)
+{
+}
+
+void arena_monster_died(monsters *monster, killer_type killer,
+                        int killer_index, bool silent)
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 void run_arena()
 {
