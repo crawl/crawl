@@ -189,7 +189,21 @@ std::string InvEntry::get_text() const
         tstr << '#';
     else
         tstr << '+';
+
+    if (InvEntry::show_glyph)
+    {
+        unsigned glyph_char;
+        unsigned short glyph_col;
+        get_item_glyph( item, &glyph_char, &glyph_col );
+
+        const std::string col_string = colour_to_str(glyph_col);
+        const std::string prefix = " (<" + col_string + ">"
+                                   + static_cast<char>(glyph_char)
+                                   + "</" + col_string + ">)";
+        tstr << prefix;
+    }
     tstr << ' ' << text;
+
     if (InvEntry::show_prices)
     {
         const int value = item_value(*item, show_prices);
@@ -272,6 +286,13 @@ InvShowPrices::InvShowPrices(bool doshow)
 InvShowPrices::~InvShowPrices()
 {
     InvEntry::set_show_prices(false);
+}
+
+bool InvEntry::show_glyph = false;
+
+void InvEntry::set_show_glyph(bool doshow)
+{
+    show_glyph = doshow;
 }
 
 InvMenu::InvMenu(int mflags)
@@ -399,7 +420,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
 bool InvEntry::tile(int &idx, TextureID &tex) const
 {
     if (quantity <= 0)
-        return false;
+        return (false);
 
     idx = tileidx_item(*item);
     tex = TEX_DEFAULT;

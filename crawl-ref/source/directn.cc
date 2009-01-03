@@ -30,6 +30,7 @@
 #include "describe.h"
 #include "dungeon.h"
 #include "initfile.h"
+#include "invent.h"
 #include "itemname.h"
 #include "items.h"
 #include "mapmark.h"
@@ -490,9 +491,13 @@ void full_describe_view()
         mprf("Neither monsters nor items are visible.");
         return;
     }
-
-    Menu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
-                    /*MF_ALWAYS_SHOW_MORE |*/ MF_ALLOW_FORMATTING);
+/*
+    InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
+                      MF_ALLOW_FORMATTING,
+                      "description", false);
+*/
+    InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE |
+                      /*MF_ALWAYS_SHOW_MORE |*/ MF_ALLOW_FORMATTING);
 
     desc_menu.set_highlighter(NULL);
     desc_menu.set_title(
@@ -573,10 +578,10 @@ void full_describe_view()
         {
             ++menu_index;
             const char letter = index_to_letter(menu_index);
-
+            const item_def &item = list_items[i];
+/*
             unsigned glyph_char;
             unsigned short glyph_col;
-            const item_def &item = list_items[i];
             get_item_glyph( &item, &glyph_char, &glyph_col );
 
             const std::string col_string = colour_to_str(glyph_col);
@@ -586,11 +591,18 @@ void full_describe_view()
 
             const std::string str = prefix +
                 uppercase_first(item.name(DESC_PLAIN));
-
-            MenuEntry *me = new MenuEntry(str, MEL_ITEM, 1, letter);
-            me->data = reinterpret_cast<void*>(
-                const_cast<item_def*>(&item));
+*/
+            InvEntry *me = new InvEntry(item);
+//            MenuEntry *me = new MenuEntry(str, MEL_ITEM, 1, letter);
+//            me->item = item;
+//            me->data = reinterpret_cast<void*>(
+//                const_cast<item_def*>(&item));
+#ifndef USE_TILE
+            // Show glyphs only for ASCII.
+            me->set_show_glyph(true);
+#endif
             me->tag = "i";
+            me->hotkeys[0] = letter;
             me->quantity = 2; // Hack to make items selectable.
             desc_menu.add_entry(me);
         }

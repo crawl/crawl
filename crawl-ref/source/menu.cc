@@ -564,9 +564,10 @@ void Menu::draw_select_count(int count, bool force)
     {
         char buf[100] = "";
         if (count)
+        {
             snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
                     (count > 1? "s" : ""));
-
+        }
         draw_title_suffix(buf);
     }
 }
@@ -1741,18 +1742,20 @@ int ToggleableMenu::pre_process(int key)
          toggle_keys.end() )
     {
         // Toggle all menu entries
-        for ( unsigned int i = 0; i < items.size(); ++i )
+        for (unsigned int i = 0; i < items.size(); ++i)
         {
             ToggleableMenuEntry* const p =
                 dynamic_cast<ToggleableMenuEntry*>(items[i]);
-            if ( p )
+
+            if (p)
                 p->toggle();
         }
 
         // Toggle title
         ToggleableMenuEntry* const pt =
             dynamic_cast<ToggleableMenuEntry*>(title);
-        if ( pt )
+
+        if (pt)
             pt->toggle();
 
         // Redraw

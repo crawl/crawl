@@ -2660,9 +2660,8 @@ void MenuRegion::clear()
     m_more.clear();
 
     for (unsigned int i = 0; i < m_entries.size(); i++)
-    {
         m_entries[i].valid = false;
-    }
+
     m_mouse_idx = -1;
 }
 
