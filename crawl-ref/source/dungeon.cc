@@ -4724,7 +4724,7 @@ int dgn_place_monster(mons_spec &mspec,
         if (!force_pos && mgrd(place) != NON_MONSTER
             && mg.cls != RANDOM_MONSTER && mg.cls < NUM_MONSTERS)
         {
-            place = find_newmons_square_contiguous(mg.cls, where, 7);
+            place = find_newmons_square_contiguous(mg.cls, where, 0);
         }
 
         mg.pos       = place;
