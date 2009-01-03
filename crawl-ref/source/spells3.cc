@@ -546,7 +546,8 @@ bool cast_shadow_creatures(god_type god)
 
     const int monster =
         create_monster(
-            mgen_data(RANDOM_MONSTER, BEH_FRIENDLY, 2, SPELL_SHADOW_CREATURES,
+            mgen_data(RANDOM_MONSTER, BEH_FRIENDLY,
+                      2, SPELL_SHADOW_CREATURES,
                       you.pos(), you.pet_target,
                       MG_FORCE_BEH, god), false);
 
@@ -810,8 +811,8 @@ static bool _raise_remains(const coord_def &a, int corps, beh_type beha,
     }
 
     const int monster = create_monster(
-                            mgen_data(mon, beha, 0,
-                                      a, hitting,
+                            mgen_data(mon, beha,
+                                      0, a, hitting,
                                       0, god,
                                       zombie_type, number));
     if (mon_index != NULL)

@@ -107,8 +107,8 @@ static void _do_high_level_summon(monsters *monster, bool monsterNearby,
             continue;
 
         create_monster(
-            mgen_data(which_mons, SAME_ATTITUDE(monster), duration,
-                      monster->pos(), monster->foe));
+            mgen_data(which_mons, SAME_ATTITUDE(monster),
+                      duration, monster->pos(), monster->foe));
     }
 }
 
@@ -225,9 +225,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
-                mgen_data(RANDOM_MONSTER, SAME_ATTITUDE(monster), 5,
-                          SPELL_SHADOW_CREATURES,
-                          monster->pos(), monster->foe));
+                mgen_data(RANDOM_MONSTER, SAME_ATTITUDE(monster),
+                          5, spell_cast, monster->pos(), monster->foe));
         }
         return;
 
@@ -237,8 +236,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
             create_monster(
-                mgen_data(MONS_RAKSHASA_FAKE, SAME_ATTITUDE(monster), 3,
-                          monster->pos(), monster->foe));
+                mgen_data(MONS_RAKSHASA_FAKE, SAME_ATTITUDE(monster),
+                          3, monster->pos(), monster->foe));
         }
         return;
 
@@ -272,8 +271,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                                                       : MONS_UGLY_THING);
 
             create_monster(
-                mgen_data(mon, SAME_ATTITUDE(monster), duration,
-                          monster->pos(), monster->foe));
+                mgen_data(mon, SAME_ATTITUDE(monster),
+                          duration, monster->pos(), monster->foe));
         }
         return;
 
@@ -291,8 +290,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(summon_any_demon(DEMON_LESSER),
-                          SAME_ATTITUDE(monster), duration,
-                          monster->pos(), monster->foe));
+                          SAME_ATTITUDE(monster),
+                          duration, monster->pos(), monster->foe));
         }
         return;
 
@@ -306,8 +305,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
-                mgen_data(MONS_SCORPION, SAME_ATTITUDE(monster), duration,
-                          monster->pos(), monster->foe));
+                mgen_data(MONS_SCORPION, SAME_ATTITUDE(monster),
+                          duration, monster->pos(), monster->foe));
         }
         return;
 
@@ -319,21 +318,21 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
             create_monster(
-                mgen_data(MONS_UFETUBUS, SAME_ATTITUDE(monster), duration,
-                          monster->pos(), monster->foe));
+                mgen_data(MONS_UFETUBUS, SAME_ATTITUDE(monster),
+                          duration, monster->pos(), monster->foe));
         }
         return;
 
     case SPELL_SUMMON_BEAST:       // Geryon
         create_monster(
-            mgen_data(MONS_BEAST, SAME_ATTITUDE(monster), 4,
-                      monster->pos(), monster->foe));
+            mgen_data(MONS_BEAST, SAME_ATTITUDE(monster),
+                      4, monster->pos(), monster->foe));
         return;
 
     case SPELL_SUMMON_ICE_BEAST:
         create_monster(
-            mgen_data(MONS_ICE_BEAST, SAME_ATTITUDE(monster), 5,
-                      monster->pos(), monster->foe));
+            mgen_data(MONS_ICE_BEAST, SAME_ATTITUDE(monster),
+                      5, monster->pos(), monster->foe));
         return;
 
     case SPELL_SUMMON_MUSHROOMS:   // Summon swarms of icky crawling fungi.
@@ -366,9 +365,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         const int n = 2 + random2(monster->hit_dice / 4);
         for (int i = 0; i < n; ++i)
         {
-            create_monster(mgen_data(MONS_BALL_LIGHTNING,
-                                     SAME_ATTITUDE(monster), 2,
-                                     monster->pos(), monster->foe));
+            create_monster(
+                mgen_data(MONS_BALL_LIGHTNING, SAME_ATTITUDE(monster),
+                          2, monster->pos(), monster->foe));
         }
         return;
     }
@@ -397,8 +396,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(summon_any_demon(DEMON_GREATER),
-                          SAME_ATTITUDE(monster), duration,
-                          monster->pos(), monster->foe));
+                          SAME_ATTITUDE(monster),
+                          duration, monster->pos(), monster->foe));
         }
         return;
 
@@ -431,8 +430,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             for (int i = 0, size = monsters.size(); i < size; ++i)
             {
                 create_monster(
-                    mgen_data(monsters[i], SAME_ATTITUDE(monster), duration,
-                              monster->pos(), monster->foe));
+                    mgen_data(monsters[i], SAME_ATTITUDE(monster),
+                              duration, monster->pos(), monster->foe));
             }
         }
         return;
@@ -2746,7 +2745,7 @@ std::string summoned_poof_msg(const monsters* monster, bool plural)
     std::string msg      = "disappear%s in a puff of smoke";
     bool        no_chaos = false;
 
-    switch(summon_type)
+    switch (summon_type)
     {
     case SPELL_SHADOW_CREATURES:
         msg      = "dissolve%s into shadows";

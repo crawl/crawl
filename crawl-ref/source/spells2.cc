@@ -1446,9 +1446,11 @@ bool cast_summon_elemental(int pow, god_type god,
                         && random2(100) >= unfriendly);
 
     if (create_monster(
-            mgen_data(mon, friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                      dur, targ, friendly ? you.pet_target : MHITYOU, 0, god))
-        == -1)
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE,
+                      dur, targ,
+                      friendly ? you.pet_target : MHITYOU,
+                      0, god)) == -1)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return (false);
@@ -1469,8 +1471,8 @@ bool cast_summon_ice_beast(int pow, god_type god)
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
     if (create_monster(
-            mgen_data(mon, BEH_FRIENDLY, dur, you.pos(),
-                      you.pet_target,
+            mgen_data(mon, BEH_FRIENDLY, dur,
+                      you.pos(), you.pet_target,
                       0, god)) != -1)
     {
         mpr("A chill wind blows around you.");
@@ -1709,7 +1711,8 @@ bool cast_tukimas_dance(int pow, god_type god,
             create_monster(
                 mgen_data(MONS_DANCING_WEAPON,
                           friendly ? BEH_FRIENDLY : BEH_HOSTILE,
-                          dur, SPELL_TUKIMAS_DANCE, you.pos(),
+                          dur, SPELL_TUKIMAS_DANCE,
+                          you.pos(),
                           friendly ? you.pet_target : MHITYOU,
                           0, god));
 
@@ -1785,7 +1788,8 @@ bool cast_conjure_ball_lightning(int pow, god_type god)
 
         int monster =
             mons_place(
-                mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY, 0,
+                mgen_data(MONS_BALL_LIGHTNING, BEH_FRIENDLY,
+                          0, SPELL_CONJURE_BALL_LIGHTNING,
                           target, MHITNOT, 0, god));
 
         if (monster != -1)

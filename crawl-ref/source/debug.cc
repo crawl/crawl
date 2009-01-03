@@ -454,8 +454,7 @@ void wizard_create_spec_monster(void)
     {
         create_monster(
             mgen_data::sleeper_at(
-                static_cast<monster_type>(mon),
-                you.pos()));
+                static_cast<monster_type>(mon), you.pos()));
     }
 }
 #endif

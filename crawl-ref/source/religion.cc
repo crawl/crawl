@@ -4709,7 +4709,7 @@ static bool _lugonu_retribution()
         bool success = false;
         int how_many = 1 + (you.experience_level / 7);
 
-        for (int loopy = 0; loopy < how_many; loopy++)
+        for (int loopy = 0; loopy < how_many; ++loopy)
         {
             if (create_monster(
                    mgen_data::hostile_at(

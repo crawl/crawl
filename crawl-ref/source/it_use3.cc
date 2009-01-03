@@ -391,8 +391,8 @@ static bool evoke_horn_of_geryon()
     {
         mpr("You produce a hideous howling noise!", MSGCH_SOUND);
         create_monster(
-            mgen_data(MONS_BEAST, BEH_HOSTILE,
-                      4, you.pos(), MHITYOU));
+            mgen_data::hostile_at(MONS_BEAST,
+                you.pos(), 4, 0, true));
     }
     return (rc);
 }
@@ -405,16 +405,15 @@ static bool evoke_sceptre_of_asmodeus()
     else if (one_chance_in(20))
     {
         // Summon devils, maybe a Fiend.
-        const monster_type mtype = (one_chance_in(4) ? MONS_FIEND :
-                                    summon_any_demon(DEMON_COMMON));
-        const bool good_summon =
-            create_monster(
-                mgen_data(mtype, BEH_HOSTILE,
-                          6, you.pos(), MHITYOU)) != -1;
+        const monster_type mon = (one_chance_in(4) ? MONS_FIEND :
+                                     summon_any_demon(DEMON_COMMON));
+        const bool good_summon = create_monster(
+                                     mgen_data::hostile_at(mon,
+                                         you.pos(), 6, 0, true)) != -1;
 
         if (good_summon)
         {
-            if (mtype == MONS_FIEND)
+            if (mon == MONS_FIEND)
                 mpr("\"Your arrogance condemns you, mortal!\"");
             else
                 mpr("The Sceptre summons one of its servants.");
@@ -424,15 +423,16 @@ static bool evoke_sceptre_of_asmodeus()
     }
     else
     {
-        // Cast a destructive spell
+        // Cast a destructive spell.
         const spell_type spl = static_cast<spell_type>(
-            random_choose_weighted( 114, SPELL_BOLT_OF_FIRE,
-                                    57,  SPELL_LIGHTNING_BOLT,
-                                    57,  SPELL_BOLT_OF_DRAINING,
-                                    12,  SPELL_HELLFIRE,
-                                    0 ));
-        your_spells( spl, you.skills[SK_EVOCATIONS] * 8, false );
+            random_choose_weighted(114, SPELL_BOLT_OF_FIRE,
+                                   57,  SPELL_LIGHTNING_BOLT,
+                                   57,  SPELL_BOLT_OF_DRAINING,
+                                   12,  SPELL_HELLFIRE,
+                                   0));
+        your_spells(spl, you.skills[SK_EVOCATIONS] * 8, false);
     }
+
     return (rc);
 }
 
@@ -905,8 +905,8 @@ void tome_of_power(int slot)
     else if (one_chance_in(36))
     {
         if (create_monster(
-                mgen_data(MONS_ABOMINATION_SMALL, BEH_HOSTILE,
-                          6, you.pos(), MHITYOU)) != -1)
+                mgen_data::hostile_at(MONS_ABOMINATION_SMALL,
+                    you.pos(), 6, 0, true)) != -1)
         {
             mpr("A horrible Thing appears!");
             mpr("It doesn't look too friendly.");

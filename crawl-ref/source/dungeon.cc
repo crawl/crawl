@@ -4897,7 +4897,7 @@ static void _vault_grid( vault_placement &place,
     if (vgrid == 'F' && one_chance_in(100))
     {
         vgrid = '.';
-        create_monster(mgen_data::hostile_at( _random_evil_statue(), where));
+        create_monster(mgen_data::hostile_at(_random_evil_statue(), where));
     }
 
     // First, set base tile for grids {dlb}:
@@ -6436,7 +6436,7 @@ static void _labyrinth_place_items(const coord_def &end)
 static void _labyrinth_place_exit(const coord_def &end)
 {
     _labyrinth_place_items(end);
-    mons_place( mgen_data::sleeper_at(MONS_MINOTAUR, end, MG_PATROLLING) );
+    mons_place(mgen_data::sleeper_at(MONS_MINOTAUR, end, MG_PATROLLING));
     grd(end) = DNGN_ESCAPE_HATCH_UP;
 }
 

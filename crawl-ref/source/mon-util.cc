@@ -7627,7 +7627,7 @@ void monsters::react_to_damage(int damage, beam_type flavour)
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Trying to spawn %d jellies.", tospawn);
 #endif
-        const beh_type sbehaviour = SAME_ATTITUDE(this);
+        const beh_type beha = SAME_ATTITUDE(this);
         int spawned = 0;
         for (int i = 0; i < tospawn; ++i)
         {
@@ -7636,10 +7636,9 @@ void monsters::react_to_damage(int damage, beam_type flavour)
             if (!in_bounds(jpos))
                 continue;
 
-            const int nmons =
-                mons_place(
-                    mgen_data( jelly, sbehaviour, 0, jpos,
-                               foe, true ) );
+            const int nmons = mons_place(
+                                  mgen_data(jelly, beha, 0, 0,
+                                            jpos, foe, true));
 
             if (nmons != -1 && nmons != NON_MONSTER)
             {

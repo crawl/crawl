@@ -669,7 +669,7 @@ static void _initialise_level_corrupt_seeds(int power)
 
 static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
-    // Thirty tries for a place
+    // Thirty tries for a place.
     for (int i = 0; i < 30; ++i)
     {
         const coord_def p( pos.x + random2avg(4, 3) + random2(3),
@@ -688,10 +688,11 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         const beh_type beh =
             one_chance_in(5 + you.skills[SK_INVOCATIONS] / 4) ? BEH_HOSTILE
                                                               : BEH_NEUTRAL;
-        const int mid = create_monster( mgen_data( mons, beh, 5, p ) );
+        const int mid = create_monster(mgen_data(mons, beh, 5, 0, p));
 
         return (mid != -1);
     }
+
     return (false);
 }
 

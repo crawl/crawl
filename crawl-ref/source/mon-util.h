@@ -86,7 +86,7 @@ enum mon_attack_flavour
 };
 
 // Non-spell "summoning" types to give to monsters::mark_summoned(), or as
-// the fourth paramater of mgen_data's second constructor.
+// the fourth parameter of mgen_data's second constructor.
 //
 // Negative values since spells are non-negative.
 enum mon_summon_type
