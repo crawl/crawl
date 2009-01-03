@@ -6878,7 +6878,7 @@ int get_tension(god_type god)
 
     int total = 0;
 
-    for (int midx = 0; midx < MAX_MONSTERS; midx++)
+    for (int midx = 0; midx < MAX_MONSTERS; ++midx)
     {
         const monsters* mons = &menv[midx];
 
@@ -6908,9 +6908,7 @@ int get_tension(god_type god)
             continue;
 
         if (mons_cannot_act(mons) || mons->asleep() || mons_is_fleeing(mons))
-        {
             continue;
-        }
 
         int exper = exper_value(mons);
         if (exper <= 0)

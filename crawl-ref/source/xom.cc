@@ -2007,7 +2007,7 @@ void xom_acts(bool niceness, int sever)
     const int tension = get_tension(which_god);
 
 #if DEBUG_RELIGION || DEBUG_XOM || DEBUG_TENSION
-    mprf(MSGCH_DIAGNOSTICS, "xom tension: %d", tension);
+    mprf(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
 #endif
 
     const int  orig_hp       = you.hp;
