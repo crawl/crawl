@@ -6475,6 +6475,11 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     seen_context = "bursts forth";
                 else
                     seen_context = "surfaces";
+
+                // and fire activity interrupts
+                interrupt_activity(AI_SEE_MONSTER,
+                                   activity_interrupt_data(this,
+                                                           seen_context));
             }
             else if (!quiet)
             {
