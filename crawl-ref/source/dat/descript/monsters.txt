@@ -92,8 +92,7 @@ An especially cunning ogre mage.
 %%%%
 Eustachio
 
-An apprentice summoner with a flowing moustache.  He has funny ideas about
-honour.
+An apprentice summoner with a flowing moustache.  He has funny ideas about honour.
 %%%%
 Executioner
 
@@ -236,7 +235,7 @@ A cyclops shepherd, he is very protective of his charges.
 %%%%
 Prince Ribbit
 
-A handsome prince before he was cursed, now adventures for a cure.
+A handsome prince before he was cursed, he now adventures for a cure.
 %%%%
 Psyche
 
@@ -244,8 +243,7 @@ A fair-haired mage, wandering and seemingly half-mad with grief and guilt.
 %%%%
 Roxanne
 
-A beautiful sapphire statue of a famous earth mage who disappeared after a
-catastrophic spell failure.
+A beautiful sapphire statue of a famous earth mage who disappeared after a catastrophic spell failure.
 %%%%
 Rupert
 
@@ -284,8 +282,7 @@ A hairy troll, angry and mean.
 %%%%
 Sonja
 
-A graceful kobold assassin.  Admire her graceful pirouettes, thrill at her
-daring leaps!  But watch out for her knives!
+A graceful kobold assassin.  Admire her graceful pirouettes, thrill at her daring leaps!  But watch out for her knives!
 %%%%
 Terence
 
