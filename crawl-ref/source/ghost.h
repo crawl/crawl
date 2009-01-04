@@ -5,7 +5,7 @@
  * Created for Dungeon Crawl Reference by dshaligram on
  * Thu Mar 15 20:10:20 2007 UTC.
  *
- * Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
+ * Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef GHOST_H

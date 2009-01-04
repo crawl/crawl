@@ -3,7 +3,7 @@
  *  Summary:    Monster level-up code.
  *  Written by: dshaligram on Fri Oct 26 08:33:37 2007 UTC
  *
- *  Modified for Crawl Reference by $Author: dshaligram $ on $Date: 2007-10-25T09:49:39.320031Z $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

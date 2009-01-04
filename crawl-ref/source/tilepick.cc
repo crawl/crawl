@@ -2,7 +2,7 @@
  *  File:       tilepick.cc
  *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
  *
- *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

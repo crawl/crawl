@@ -2,7 +2,7 @@
  *  File:       tilefont.h
  *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
  *
- *  Modified for Crawl Reference by $Author: ennewalker $ on $Date: 2008-03-07 $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #ifndef TILEFONT_H

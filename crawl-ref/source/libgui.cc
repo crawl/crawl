@@ -3,7 +3,7 @@
  *  Summary:    Functions that any display port needs to implement.
  *  Written by: M.Itakura
  *
- *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
 #include "AppHdr.h"

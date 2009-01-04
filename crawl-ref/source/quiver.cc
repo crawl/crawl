@@ -2,7 +2,7 @@
  *  File:       quiver.cc
  *  Summary:    Player quiver functionality
  *
- *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-06-23 23:30:08 +0200 (Mo, 23 Jun 2008) $
+ *  Modified for Crawl Reference by $Author$ on $Date$
  *
  *  - Only change last_used when actually using
  *  - Not changing Qv; nobody knows about internals

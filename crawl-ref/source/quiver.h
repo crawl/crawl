@@ -2,7 +2,7 @@
  *  File:       quiver.h
  *  Summary:    Player quiver functionality
  *
- *  Last modified by $Author: $ on $Date: $
+ *  Last modified by $Author$ on $Date$
  */
 
 #ifndef QUIVER_H
