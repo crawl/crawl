@@ -18,15 +18,21 @@ int main(int argc, char **argv)
     strcpy(dest, argv[1]);
 
     size_t len = strlen(dest);
-    if (strcmp(&dest[len-4], ".bmp"))
+    if (!strcmp(&dest[len-4], ".bmp"))
     {
-        printf("File '%s' does not end in bmp.\n", argv[1]);
+        dest[len-3] = 'p';
+        dest[len-2] = 'n';
+        dest[len-1] = 'g';
+    }
+    else if (!strcmp(&dest[len-4], ".png"))
+    {
+        // ok as-is.
+    }
+    else
+    {
+        printf("File '%s' does not end in bmp or png.\n", argv[1]);
         return -2;
     }
-
-    dest[len-3] = 'p';
-    dest[len-2] = 'n';
-    dest[len-1] = 'g';
 
     tile conv;
     if (!conv.load(argv[1]))
