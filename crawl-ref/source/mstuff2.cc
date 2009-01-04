@@ -563,7 +563,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast)
                        || (flags & SPFLAG_INNATE);
 
     int noise;
-    if(silent
+    if (silent
        || (innate
            && !mons_class_flag(monster->type, M_NOISY_SPELLS)
            && !(flags & SPFLAG_NOISY)
