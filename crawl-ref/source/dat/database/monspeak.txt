@@ -3017,7 +3017,7 @@ _hostile_orc_beogh_unbeliever_rare_
 
 @The_monster@ @orc_says@, "Beogh's messiah is just a fairy-tale."
 
-@The_monster@ says, "Even if there was a messiah, it wouldn't be you."
+@The_monster@ says, "Even if there were a messiah, it wouldn't be you."
 %%%%
 _hostile_orc_beogh_believer_rare_
 
