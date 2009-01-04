@@ -6,6 +6,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "monspeak.h"
 
 #include <stdlib.h>

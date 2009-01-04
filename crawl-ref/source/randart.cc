@@ -7,6 +7,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "randart.h"
 
 #include <cstdlib>

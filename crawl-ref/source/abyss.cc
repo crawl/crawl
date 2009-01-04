@@ -7,6 +7,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "abyss.h"
 
 #include <stdlib.h>

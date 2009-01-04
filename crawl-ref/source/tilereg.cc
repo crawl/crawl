@@ -8,6 +8,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "cio.h"
 #include "debug.h"
 #include "describe.h"

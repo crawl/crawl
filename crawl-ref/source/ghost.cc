@@ -9,6 +9,7 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
 
 #include "ghost.h"
 

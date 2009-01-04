@@ -6,6 +6,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "tilebuf.h"
 #include "tilefont.h"
 #include "defines.h"

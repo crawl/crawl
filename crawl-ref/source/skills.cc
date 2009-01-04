@@ -7,6 +7,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "skills.h"
 
 #include <string.h>

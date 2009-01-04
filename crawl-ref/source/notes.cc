@@ -7,6 +7,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include <vector>
 #include <sstream>
 #include <iomanip>

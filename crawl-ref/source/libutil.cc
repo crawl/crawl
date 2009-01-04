@@ -7,6 +7,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "defines.h"
 #include "directn.h"
 #include "initfile.h"

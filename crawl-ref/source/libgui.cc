@@ -6,11 +6,13 @@
  *  Modified for Crawl Reference by $Author: j-p-e-g $ on $Date: 2008-03-07 $
  */
 
+#include "AppHdr.h"
+REVISION("$Rev$");
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "AppHdr.h"
 #include "cio.h"
 #include "defines.h"
 #include "describe.h"

@@ -7,6 +7,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "chardump.h"
 #include "shopping.h"
 #include "message.h"

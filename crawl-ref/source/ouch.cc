@@ -7,6 +7,7 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
 
 #include <string.h>
 #include <string>

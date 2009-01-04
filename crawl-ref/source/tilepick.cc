@@ -6,6 +6,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #ifdef USE_TILE
 #include <stdio.h>
 #include "decks.h"

@@ -34,7 +34,7 @@
 #endif
 
 #include "AppHdr.h"
-#include "externs.h"
+REVISION("$Rev$");
 
 #include "branch.h"
 #include "files.h"

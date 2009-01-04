@@ -8,6 +8,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "spells1.h"
 
 #include <string.h>

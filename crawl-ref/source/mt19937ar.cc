@@ -41,6 +41,9 @@
    email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
 */
 
+#include "AppHdr.h"
+REVISION("$Rev$");
+
 #include <stdio.h>
 #include <string.h>
 #include <stack>

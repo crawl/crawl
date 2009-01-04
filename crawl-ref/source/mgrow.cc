@@ -7,6 +7,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "enum.h"
 #include "mgrow.h"
 #include "mon-util.h"

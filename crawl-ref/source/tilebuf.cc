@@ -7,6 +7,9 @@
  *  Modified for Crawl Reference by $Author: ennewalker $ on $Date: 2008-10-11 $
  */
 
+#include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "tilebuf.h"
 #include "tilefont.h"
 #include "tilesdl.h"

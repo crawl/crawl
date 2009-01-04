@@ -10,7 +10,8 @@
 
 // Every .cc must include AppHdr or bad things happen.
 #include "AppHdr.h"
-#include "externs.h"
+REVISION("$Rev$");
+
 #include "cio.h"
 #include <termios.h>
 #include <conio.h>

@@ -6,8 +6,11 @@
  *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
-#include <cctype>
 #include "AppHdr.h"
+REVISION("$Rev$");
+
+#include <cctype>
+
 #include "cio.h"
 #include "menu.h"
 #include "macro.h"

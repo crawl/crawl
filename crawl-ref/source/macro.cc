@@ -23,6 +23,7 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
 
 #define MACRO_CC
 #include "macro.h"

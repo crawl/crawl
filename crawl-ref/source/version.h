@@ -61,14 +61,13 @@ int svn_revision();
 class check_revision
 {
 public:
-    check_revision(int rev);
+    check_revision(const char *rev_string);
     static int max_rev;
 };
 
-// This macro is meant to be used once per source file, e.g. "REVISION($Rev$);"
+// This macro is meant to be used once per source file.
 // It can't be put in header files, as there's no way to generate a unique
 // object name across includes.  Blame the lack of cross-platform __COUNTER__.
-//#define REVISION(rev) static check_revision check_this_source_file_revision(rev)
-#define REVISION(rev)
+#define REVISION(rev) static check_revision check_this_source_file_revision(rev)
 
 #endif

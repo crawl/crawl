@@ -7,6 +7,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "branch.h"
 #include "chardump.h"
 #include "cio.h"

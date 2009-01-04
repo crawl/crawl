@@ -7,6 +7,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "items.h"
 #ifdef USE_TILE
  #include "cio.h"

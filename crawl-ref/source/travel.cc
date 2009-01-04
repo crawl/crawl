@@ -10,6 +10,8 @@
  *   refactor.
  */
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "files.h"
 #include "FixAry.h"
 #include "branch.h"

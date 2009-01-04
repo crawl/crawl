@@ -8,6 +8,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "dgnevent.h"
 #include "stuff.h"
 #include <algorithm>

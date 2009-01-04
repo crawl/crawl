@@ -6,6 +6,9 @@
  *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
+#include "AppHdr.h"
+REVISION("$Rev$");
+
 #include <iostream>
 #include <cstdarg>
 #include <cstdio>
@@ -13,7 +16,6 @@
 #include <cstdlib>
 #include <algorithm>
 
-#include "AppHdr.h"
 #include "branch.h"
 #include "describe.h"
 #include "directn.h"

@@ -6,6 +6,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "branch.h"
 #include "cloud.h"
 #include "externs.h"

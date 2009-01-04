@@ -1,4 +1,5 @@
 #include "AppHdr.h"
+REVISION("$Rev$");
 
 #include "files.h"
 #include "tiles.h"

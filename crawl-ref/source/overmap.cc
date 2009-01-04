@@ -10,6 +10,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "overmap.h"
 
 #include <string.h>

@@ -1,5 +1,5 @@
 #include "AppHdr.h"
-#include "externs.h"
+REVISION("$Rev$");
 
 #if defined(WIN32CONSOLE)
 

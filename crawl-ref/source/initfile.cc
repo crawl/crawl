@@ -7,7 +7,7 @@
  */
 
 #include "AppHdr.h"
-#include "externs.h"
+REVISION("$Rev$");
 
 #include "initfile.h"
 

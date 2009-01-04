@@ -10,6 +10,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "quiver.h"
 
 #include "invent.h"

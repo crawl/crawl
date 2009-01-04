@@ -6,6 +6,9 @@
  *  Modified for Crawl Reference by $Author$ on $Date$
  */
 
+#include "AppHdr.h"
+REVISION("$Rev$");
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -14,7 +17,6 @@
 #include <sstream>
 #include <algorithm>
 
-#include "AppHdr.h"
 #include "abyss.h"
 #include "branch.h"
 #include "chardump.h"

@@ -9,6 +9,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "cio.h"
 
 #include <cstring>

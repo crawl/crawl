@@ -7,6 +7,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "delay.h"
 #include "files.h"
 #include "monplace.h"

@@ -6,6 +6,7 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
 
 #include <algorithm>
 #include <sstream>

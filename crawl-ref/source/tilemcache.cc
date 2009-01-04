@@ -1,3 +1,6 @@
+#include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "tilemcache.h"
 #include "tags.h"
 #include "ghost.h"

@@ -6,6 +6,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "decks.h"
 
 #include <iostream>

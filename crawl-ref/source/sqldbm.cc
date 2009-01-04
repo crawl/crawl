@@ -7,6 +7,8 @@
  */
 
 #include "AppHdr.h"
+REVISION("$Rev$");
+
 #include "sqldbm.h"
 #include "stuff.h"
 #include <cstring>

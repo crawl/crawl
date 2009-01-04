@@ -60,6 +60,7 @@
 #endif
 
 #include "AppHdr.h"
+REVISION("$Rev$");
 
 #include "abl-show.h"
 #include "branch.h"
