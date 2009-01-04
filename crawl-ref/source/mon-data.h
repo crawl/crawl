@@ -3110,7 +3110,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SHAPESHIFTER, '@', LIGHTRED, "shapeshifter",
-    M_NO_FLAGS,
+    M_NO_SKELETON,
     MR_NO_FLAGS,
     600, 10, MONS_SHAPESHIFTER, MONS_SHAPESHIFTER, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3121,7 +3121,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_GLOWING_SHAPESHIFTER, '@', RED, "glowing shapeshifter",
-    M_GLOWS,
+    M_NO_SKELETON | M_GLOWS,
     MR_NO_FLAGS,
     600, 10, MONS_SHAPESHIFTER, MONS_GLOWING_SHAPESHIFTER, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
