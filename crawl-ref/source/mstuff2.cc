@@ -114,11 +114,11 @@ static void _do_high_level_summon(monsters *monster, bool monsterNearby,
 
 static bool _los_free_spell(spell_type spell_cast)
 {
-    return spell_cast == SPELL_HELLFIRE_BURST
+    return (spell_cast == SPELL_HELLFIRE_BURST
         || spell_cast == SPELL_BRAIN_FEED
         || spell_cast == SPELL_SMITING
         || spell_cast == SPELL_FIRE_STORM
-        || spell_cast == SPELL_AIRSTRIKE;
+        || spell_cast == SPELL_AIRSTRIKE);
 }
 
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
