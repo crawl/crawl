@@ -21,11 +21,13 @@ Levels
 Monsters
 --------
 * Disallow zombified monsters' use of stairs.
+* New monsters: trapdoor spider, rock worm, flaming corpse, chaos spawn.
+* Several cool new uniques.
+* Polymorphed uniques retain their spells and speech.
 * Reintroduce chance of orc wizards and priests in orc bands.
 * Monsters of the same type will now attempt to surround the player.
 * Implemented monster miscasts: caused by Zot traps or mummy curses.
 * Make all allies (including zombies) avoid Zot traps known to the player.
-* New monsters: trapdoor spider, rock worm, flaming corpse.
 * Ghosts don't get holy wrath branded attacks anymore.
 * Monsters will now drink !healing to cure confusion etc.
 * Allies no longer mind being teleported by the player.
@@ -34,7 +36,10 @@ Monsters
 * Fixed draconians being able to strike 3 times per turn with their weapons.
 * Account for randart shields when scanning monsters' inventories for randarts.
 * Fixed monsters getting stuck in deep water after entering it while confused.
+* Monsters behind glass but with a path to the player interrupt rest/travel.
+* Monsters raised from the dead are now equipped with equipment from the pile.
 * Zombies/skeletons no longer drown, but will still avoid water.
+* Fixed summoned monsters taking non-summoned items with them.
 * Make abominations resist poison.
 * Better handling of amphibious monsters in the code.
 
@@ -49,16 +54,21 @@ Interface
 * Wizard commands can now be used from the wizard help screen.
 * With a full pack, check entire list of selected items to allow for merging.
 * Added an option to make menu colours apply to shops.
+* Added stat_colour option to highlight dangerously low stats.
+* Pressing Esc at -More- automatically clears all queued -More- prompts.
 * Greatly improved the monster view command ('V').
+* Add FAQ to help screen.
 * Purchases and donations are now noted.
 * The database search now also prints armour base AC/EV and weapon plusses.
 * Add spells and books to book/spell descriptions when searching the database.
+* Item descriptions generally are a much more useful now.
 * Allow wishing for specific fixed and randarts in wizard mode ('o' command).
 * Add food item based hunger descriptions to spells.
 
 Items
 -----
 * New scroll: ?vulnerability, applying to all creatures in LoS including you.
+* Introduce randart spellbooks with random spell selections.
 * Make missile enchantment decrease chance of item destruction.
 * Freezing weapons can now slow cold-blooded monsters.
 * The staff of channeling now trains Evocations.
@@ -67,6 +77,7 @@ Items
 * Eliminate RAP_ANGRY and RAP_BERSERK for missile weapons.
 * Ammo that IDs through throwing now merges in your pack instantaneously.
 * ?immolation doesn't burn scrolls anymore.
+* ?summoning creates a permanent abomination.
 * Vorpalise weapon now fixes temporary brands instead of EWIII.
 * Nemelex-gifted decks now ID after drawing one card.
 * Decks of punishment are no longer randomly generated.
@@ -77,6 +88,7 @@ Items
 Characters
 ----------
 * Merged Ogre-Mages into Ogres with completely new aptitudes.
+* Added Artificer class.
 * Transformations now cause worn equipment to be melded rather than removed.
 * Vampires can no longer heal via potions of blood or non-fresh corpses.
 * Overhaul nutrition values and duration for Vampires feeding on corpses.
@@ -101,6 +113,7 @@ Gods
 Tiles
 -----
 * Overhauled and improved tiles code, now using SDL.
+* Adding auto-sizing for font, map, and window sizes.
 * Graphical menu improvements: some menus are now clickable and show icons.
 * Mouse clicks on the map when unsafe now travel one square in that direction.
 * Improved a number of tiles, and added some new ones. (Pandemonium lords!)
@@ -110,6 +123,7 @@ Tiles
 Miscellaneous
 -------------
 * Greatly reduced ranges (both player and monster), now mostly capped by LOS.
+* Added arena mode to watch monsters fighting other monsters.
 * Poison Weapon is now a level 2 spell.
 * Extension will now also extend temporary weapon brands.
 * Lua errors now report the line numbers of the actual code.
@@ -118,6 +132,7 @@ Miscellaneous
 * Lee's Rapid Deconstruction deals great damage to petrified monsters.
 * Rewrite and clean up (among others) beam and trap code.
 * Increased Silence range from 6+0 to 6+1.
+* Many useful new wizard commands.
 
 
 Stone Soup 0.4.4 (20081220)

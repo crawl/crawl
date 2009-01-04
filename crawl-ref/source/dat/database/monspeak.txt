@@ -2979,7 +2979,7 @@ _hostile_beogh_speech_
 w:4
 @_hostile_beogh_speech_rare_@
 %%%%
-_hostile__orc_beogh_unbeliever_common_
+_hostile_orc_beogh_unbeliever_common_
 
 @The_monster@ @orc_says@, "I don't believe in Beogh!"
 
