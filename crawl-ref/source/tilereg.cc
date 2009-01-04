@@ -38,15 +38,15 @@
 
 coord_def Region::NO_CURSOR(-1, -1);
 
-unsigned int TextRegion::print_x;
-unsigned int TextRegion::print_y;
+int TextRegion::print_x;
+int TextRegion::print_y;
 TextRegion *TextRegion::text_mode = NULL;
 int TextRegion::text_col = 0;
 
 TextRegion *TextRegion::cursor_region= NULL;
 int TextRegion::cursor_flag = 0;
-unsigned int TextRegion::cursor_x;
-unsigned int TextRegion::cursor_y;
+int TextRegion::cursor_x;
+int TextRegion::cursor_y;
 
 const int map_colours[MAX_MAP_COL][3] =
 {
@@ -109,7 +109,7 @@ Region::Region() :
 {
 }
 
-void Region::resize(unsigned int _mx, unsigned int _my)
+void Region::resize(int _mx, int _my)
 {
     mx = _mx;
     my = _my;
@@ -117,7 +117,7 @@ void Region::resize(unsigned int _mx, unsigned int _my)
     recalculate();
 }
 
-void Region::place(unsigned int _sx, unsigned int _sy, unsigned int margin)
+void Region::place(int _sx, int _sy, int margin)
 {
     sx = _sx;
     sy = _sy;
@@ -137,8 +137,8 @@ void Region::resize_to_fit(int _wx, int _wy)
         return;
     }
 
-    unsigned int inner_x = _wx - 2 * ox;
-    unsigned int inner_y = _wy - 2 * oy;
+    int inner_x = _wx - 2 * ox;
+    int inner_y = _wy - 2 * oy;
 
     mx = dx ? inner_x / dx : 0;
     my = dy ? inner_y / dy : 0;
@@ -163,7 +163,7 @@ Region::~Region()
 {
 }
 
-bool Region::inside(unsigned int x, unsigned int y)
+bool Region::inside(int x, int y)
 {
     return (x >= sx && y >= sy && x <= ex && y <= ey);
 }
@@ -179,7 +179,7 @@ bool Region::mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy)
     ASSERT(dy > 0);
     x /= dx;
     y /= dy;
-    valid &= ((unsigned int)x < mx && (unsigned int)y < my);
+    valid &= (x < mx && y < my);
 
     cx = x;
     cy = y;
@@ -187,7 +187,7 @@ bool Region::mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy)
     return valid;
 }
 
-TileRegion::TileRegion(ImageManager* im, FTFont *tag_font, unsigned int tile_x, unsigned int tile_y)
+TileRegion::TileRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_y)
 {
     ASSERT(im);
     ASSERT(tag_font);
@@ -203,12 +203,12 @@ TileRegion::~TileRegion()
 }
 
 DungeonRegion::DungeonRegion(ImageManager* im, FTFont *tag_font,
-                             unsigned int tile_x, unsigned int tile_y) :
+                             int tile_x, int tile_y) :
     TileRegion(im, tag_font, tile_x, tile_y),
     m_cx_to_gx(0),
     m_cy_to_gy(0)
 {
-    for (unsigned int i = 0; i < CURSOR_MAX; i++)
+    for (int i = 0; i < CURSOR_MAX; i++)
         m_cursor[i] = NO_CURSOR;
 }
 
@@ -223,7 +223,7 @@ void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy
     if (!tileb)
         return;
 
-    unsigned int len = 2 * crawl_view.viewsz.x * crawl_view.viewsz.y;
+    int len = 2 * crawl_view.viewsz.x * crawl_view.viewsz.y;
     m_tileb.resize(len);
     // TODO enne - move this function into dungeonregion
     tile_finish_dngn(tileb, cx_to_gx + mx/2, cy_to_gy + my/2);
@@ -235,7 +235,7 @@ void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy
     place_cursor(CURSOR_TUTORIAL, m_cursor[CURSOR_TUTORIAL]);
 }
 
-void TileRegion::add_quad(TextureID tex, unsigned int idx, unsigned int x, unsigned int y, int ofs_x, int ofs_y, bool centre, int ymax)
+void TileRegion::add_quad(TextureID tex, unsigned int idx, int x, int y, int ofs_x, int ofs_y, bool centre, int ymax)
 {
     // Generate quad
     //
@@ -275,7 +275,7 @@ void TileRegion::add_quad(TextureID tex, unsigned int idx, unsigned int x, unsig
     m_verts.push_back(v);
 }
 
-void DungeonRegion::draw_background(unsigned int bg, unsigned int x, unsigned int y)
+void DungeonRegion::draw_background(unsigned int bg, int x, int y)
 {
     unsigned int bg_idx = bg & TILE_FLAG_MASK;
     if (bg_idx >= TILE_DNGN_WAX_WALL)
@@ -287,7 +287,7 @@ void DungeonRegion::draw_background(unsigned int bg, unsigned int x, unsigned in
     if (bg & TILE_FLAG_BLOOD)
     {
         tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
-        unsigned int offset = flv.special % tile_dngn_count(TILE_BLOOD);
+        int offset = flv.special % tile_dngn_count(TILE_BLOOD);
         add_quad(TEX_DUNGEON, TILE_BLOOD + offset, x, y);
     }
 
@@ -312,7 +312,7 @@ void DungeonRegion::draw_background(unsigned int bg, unsigned int x, unsigned in
         add_quad(TEX_DUNGEON, TILE_RAY_OUT_OF_RANGE, x, y);
 }
 
-void DungeonRegion::draw_player(unsigned int x, unsigned int y)
+void DungeonRegion::draw_player(int x, int y)
 {
     dolls_data default_doll;
     dolls_data player_doll;
@@ -439,8 +439,7 @@ void DungeonRegion::draw_player(unsigned int x, unsigned int y)
     draw_doll(result, x, y);
 }
 
-void DungeonRegion::draw_doll(const dolls_data &doll, unsigned int x,
-                              unsigned int y)
+void DungeonRegion::draw_doll(const dolls_data &doll, int x, int y)
 {
     int p_order[TILEP_PART_MAX] =
     {
@@ -490,7 +489,7 @@ void DungeonRegion::draw_doll(const dolls_data &doll, unsigned int x,
     }
 }
 
-void DungeonRegion::draw_mcache(mcache_entry *entry, unsigned int x, unsigned int y)
+void DungeonRegion::draw_mcache(mcache_entry *entry, int x, int y)
 {
     ASSERT(entry);
 
@@ -508,7 +507,7 @@ void DungeonRegion::draw_mcache(mcache_entry *entry, unsigned int x, unsigned in
     }
 }
 
-void DungeonRegion::draw_foreground(unsigned int bg, unsigned int fg, unsigned int x, unsigned int y)
+void DungeonRegion::draw_foreground(unsigned int bg, unsigned int fg, int x, int y)
 {
     unsigned int fg_idx = fg & TILE_FLAG_MASK;
     unsigned int bg_idx = bg & TILE_FLAG_MASK;
@@ -953,7 +952,7 @@ bool DungeonRegion::on_screen(const coord_def &gc) const
     int x = gc.x - m_cx_to_gx;
     int y = gc.y - m_cy_to_gy;
 
-    return (x >= 0 && (unsigned int)x < mx && y >= 0 && (unsigned int)y < my);
+    return (x >= 0 && x < mx && y >= 0 && y < my);
 }
 
 // Returns the index into m_tileb for the foreground tile.
@@ -1112,7 +1111,7 @@ bool InventoryTile::empty() const
     return (idx == -1);
 }
 
-InventoryRegion::InventoryRegion(ImageManager* im, FTFont *tag_font, unsigned tile_x, unsigned int tile_y) :
+InventoryRegion::InventoryRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_y) :
     TileRegion(im, tag_font, tile_x, tile_y),
     m_flavour(NULL), m_cursor(NO_CURSOR), m_need_to_pack(false)
 {
@@ -1136,24 +1135,24 @@ void InventoryRegion::on_resize()
         return;
 
     m_flavour = new unsigned char[mx * my];
-    for (unsigned int i = 0; i < mx * my; i++)
+    for (int i = 0; i < mx * my; i++)
     {
         m_flavour[i] = random2((unsigned char)~0);
     }
 }
 
-void InventoryRegion::update(unsigned int num, InventoryTile *items)
+void InventoryRegion::update(int num, InventoryTile *items)
 {
     m_items.clear();
-    for (unsigned int i = 0; i < num; i++)
+    for (int i = 0; i < num; i++)
         m_items.push_back(items[i]);
 
     m_need_to_pack = true;
 }
 
-void InventoryRegion::update_slot(unsigned int slot, InventoryTile &desc)
+void InventoryRegion::update_slot(int slot, InventoryTile &desc)
 {
-    while (m_items.size() <= slot)
+    while (m_items.size() <= (unsigned int)slot)
     {
         InventoryTile temp;
         m_items.push_back(temp);
@@ -1202,8 +1201,8 @@ void InventoryRegion::render()
 
         bool floor = m_items[curs_index].flag & TILEI_FLAG_FLOOR;
 
-        float x = m_cursor.x * dx + sx + ox + dx / 2;
-        float y = m_cursor.y * dy + sy + oy;
+        int x = m_cursor.x * dx + sx + ox + dx / 2;
+        int y = m_cursor.y * dy + sy + oy;
 
         const coord_def min_pos(sx, sy - dy);
         const coord_def max_pos(ex, ey);
@@ -1214,13 +1213,13 @@ void InventoryRegion::render()
         else
             desc = you.inv[idx].name(DESC_INVENTORY_EQUIP);
 
-        m_tag_font->render_string((unsigned int)x, (unsigned int)y,
+        m_tag_font->render_string(x, y,
                                   desc.c_str(),
                                   min_pos, max_pos, WHITE, false, 200);
     }
 }
 
-void InventoryRegion::add_quad_char(char c, unsigned int x, unsigned int y, int ofs_x, int ofs_y)
+void InventoryRegion::add_quad_char(char c, int x, int y, int ofs_x, int ofs_y)
 {
     int num = c - '0';
     assert(num >=0 && num <= 9);
@@ -1239,12 +1238,12 @@ void InventoryRegion::pack_verts()
 
     // Pack base separately, as it comes from a different texture...
     unsigned int i = 0;
-    for (unsigned int y = 0; y < my; y++)
+    for (int y = 0; y < my; y++)
     {
         if (i >= m_items.size())
             break;
 
-        for (unsigned int x = 0; x < mx; x++)
+        for (int x = 0; x < mx; x++)
         {
             if (i >= m_items.size())
                 break;
@@ -1266,12 +1265,12 @@ void InventoryRegion::pack_verts()
     m_base_verts = m_verts.size();
 
     i = 0;
-    for (unsigned int y = 0; y < my; y++)
+    for (int y = 0; y < my; y++)
     {
         if (i >= m_items.size())
             break;
 
-        for (unsigned int x = 0; x < mx; x++)
+        for (int x = 0; x < mx; x++)
         {
             if (i >= m_items.size())
                 break;
@@ -1303,7 +1302,7 @@ void InventoryRegion::pack_verts()
 
             if (item.quantity != -1)
             {
-                unsigned int num = item.quantity;
+                int num = item.quantity;
                 // If you have that many, who cares.
                 if (num > 999)
                     num = 999;
@@ -1720,7 +1719,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     return true;
 }
 
-MapRegion::MapRegion(unsigned int pixsz) :
+MapRegion::MapRegion(int pixsz) :
     m_buf(NULL),
     m_far_view(false)
 {
@@ -1801,15 +1800,15 @@ void MapRegion::render()
     std::vector<map_vertex> verts;
     verts.reserve(4 * (m_max_gx - m_min_gx + 1) * (m_max_gy - m_min_gy + 1));
 
-    for (unsigned int x = m_min_gx; x <= m_max_gx; x++)
+    for (int x = m_min_gx; x <= m_max_gx; x++)
     {
-        for (unsigned int y = m_min_gy; y <= m_max_gy; y++)
+        for (int y = m_min_gy; y <= m_max_gy; y++)
         {
             map_feature f = (map_feature)m_buf[x + y * mx];
             map_colour c = m_colours[f];
 
-            unsigned int pos_x = x - m_min_gx;
-            unsigned int pos_y = y - m_min_gy;
+            int pos_x = x - m_min_gx;
+            int pos_y = y - m_min_gy;
 
             map_vertex v;
             v.r = map_colours[c][0];
@@ -1861,17 +1860,17 @@ void MapRegion::render()
     v.b = map_colours[c][2];
     v.a = 255;
 
-    v.x = (int)dx * (m_win_start.x - (int)m_min_gx);
-    v.y = (int)dy * (m_win_start.y - (int)m_min_gy);
+    v.x = dx * (m_win_start.x - m_min_gx);
+    v.y = dy * (m_win_start.y - m_min_gy);
     verts.push_back(v);
 
-    v.y = (int)dy * (m_win_end.y - (int)m_min_gy) + 1;
+    v.y = dy * (m_win_end.y - m_min_gy) + 1;
     verts.push_back(v);
 
-    v.x = (int)dx * (m_win_end.x - (int)m_min_gx) + 1;
+    v.x = dx * (m_win_end.x - m_min_gx) + 1;
     verts.push_back(v);
 
-    v.y = (int)dy * (m_win_start.y - (int)m_min_gy);
+    v.y = dy * (m_win_start.y - m_min_gy);
     verts.push_back(v);
 
     glVertexPointer(2, GL_FLOAT, sizeof(map_vertex), &verts[0].x);
@@ -1886,7 +1885,7 @@ void MapRegion::update_offsets()
     oy = (wy - dy * (m_max_gy - m_min_gy)) / 2;
 }
 
-void MapRegion::set(unsigned int gx, unsigned int gy, map_feature f)
+void MapRegion::set(int gx, int gy, map_feature f)
 {
     ASSERT((unsigned int)f <= (unsigned char)~0);
     m_buf[gx + gy * mx] = f;
@@ -1992,13 +1991,13 @@ bool MapRegion::update_tip_text(std::string& tip)
 
 void TextRegion::scroll()
 {
-    for (unsigned int idx = 0; idx < mx*(my-1); idx++)
+    for (int idx = 0; idx < mx*(my-1); idx++)
     {
         cbuf[idx] = cbuf[idx + mx];
         abuf[idx] = abuf[idx + mx];
     }
 
-    for (unsigned int idx = mx*(my-1); idx < mx*my; idx++)
+    for (int idx = mx*(my-1); idx < mx*my; idx++)
     {
         cbuf[idx] = ' ';
         abuf[idx] = 0;
@@ -2028,11 +2027,11 @@ void TextRegion::on_resize()
     delete cbuf;
     delete abuf;
 
-    unsigned int size = mx * my;
+    int size = mx * my;
     cbuf = new unsigned char[size];
     abuf = new unsigned char[size];
 
-    for (unsigned int i = 0; i < size; i++)
+    for (int i = 0; i < size; i++)
     {
         cbuf[i] = ' ';
         abuf[i] = 0;
@@ -2090,7 +2089,7 @@ void TextRegion::addstr(char *buffer)
         cgotoxy(print_x+1, print_y+1);
 }
 
-void TextRegion::addstr_aux(char *buffer, unsigned int len)
+void TextRegion::addstr_aux(char *buffer, int len)
 {
     int x = print_x - cx_ofs;
     int y = print_y - cy_ofs;
@@ -2100,7 +2099,7 @@ void TextRegion::addstr_aux(char *buffer, unsigned int len)
 
     adjust_region(&head, &tail, y);
 
-    for (unsigned int i = 0; i < len && x + i < mx; i++)
+    for (int i = 0; i < len && x + i < mx; i++)
     {
         cbuf[adrs+x+i] = buffer[i];
         abuf[adrs+x+i] = text_col;
@@ -2116,7 +2115,7 @@ void TextRegion::clear_to_end_of_line()
     int adrs = cy * mx;
 
     ASSERT(adrs + mx - 1 < mx * my);
-    for (unsigned int i = cx; i < mx; i++)
+    for (int i = cx; i < mx; i++)
     {
         cbuf[adrs+i] = ' ';
         abuf[adrs+i] = col;
@@ -2167,12 +2166,12 @@ void TextRegion::cgotoxy(int x, int y)
     }
 }
 
-int  TextRegion::wherex()
+int TextRegion::wherex()
 {
     return print_x + 1;
 }
 
-int  TextRegion::wherey()
+int TextRegion::wherey()
 {
     return print_y + 1;
 }
@@ -2219,7 +2218,7 @@ void TextRegion::render()
 
 void TextRegion::clear()
 {
-    for (unsigned int i = 0; i < mx * my; i++)
+    for (int i = 0; i < mx * my; i++)
     {
         cbuf[i] = ' ';
         abuf[i] = 0;
@@ -2318,12 +2317,12 @@ void MessageRegion::render()
 
     if (m_overlay)
     {
-        unsigned int height;
+        int height;
         bool found = false;
         for (height = my; height > 0; height--)
         {
             unsigned char *buf = &cbuf[mx * (height - 1)];
-            for (unsigned int x = 0; x < mx; x++)
+            for (int x = 0; x < mx; x++)
             {
                 if (buf[x] != ' ')
                 {
@@ -2340,7 +2339,7 @@ void MessageRegion::render()
         {
             height *= m_font->char_height();
             box_vert verts[4];
-            for (unsigned int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
             {
                 verts[i].r = 100;
                 verts[i].g = 100;
@@ -2752,8 +2751,8 @@ bool ImageManager::load_textures()
     return true;
 }
 
-static void _copy_onto(unsigned char *pixels, unsigned int width,
-                       unsigned int height, unsigned char *src,
+static void _copy_onto(unsigned char *pixels, int width,
+                       int height, unsigned char *src,
                        const tile_info &inf, bool blend)
 {
     unsigned char *dest = &pixels[4 * (inf.sy * width + inf.sx)];
@@ -2763,9 +2762,9 @@ static void _copy_onto(unsigned char *pixels, unsigned int width,
 
     if (blend)
     {
-        for (unsigned int r = 0; r < inf.height; r++)
+        for (int r = 0; r < inf.height; r++)
         {
-            for (unsigned int c = 0; c < inf.width; c++)
+            for (int c = 0; c < inf.width; c++)
             {
                 unsigned char a = src[3];
                 unsigned char inv_a = 255 - src[3];
@@ -2782,7 +2781,7 @@ static void _copy_onto(unsigned char *pixels, unsigned int width,
     }
     else
     {
-        for (unsigned int r = 0; r < inf.height; r++)
+        for (int r = 0; r < inf.height; r++)
         {
             memcpy(dest, src, src_row_size);
 
@@ -2794,8 +2793,7 @@ static void _copy_onto(unsigned char *pixels, unsigned int width,
 
 // Copy an image at inf from pixels into dest.
 static void _copy_into(unsigned char *dest, unsigned char *pixels,
-                       unsigned int width,
-                       unsigned int height, const tile_info &inf,
+                       int width, int height, const tile_info &inf,
                        int ofs_x = 0, int ofs_y = 0)
 {
     unsigned char *src = &pixels[4 * (inf.sy * width + inf.sx)];
@@ -2835,8 +2833,8 @@ static void _copy_into(unsigned char *dest, unsigned char *pixels,
 }
 
 // Stores "over" on top of "under" in the location of "over".
-static bool _copy_under(unsigned char *pixels, unsigned int width,
-                        unsigned int height, int idx_under, int idx_over,
+static bool _copy_under(unsigned char *pixels, int width,
+                        int height, int idx_under, int idx_over,
                         int uofs_x = 0, int uofs_y = 0)
 {
     const tile_info &under = tile_main_info(idx_under);
@@ -2870,8 +2868,8 @@ static bool _copy_under(unsigned char *pixels, unsigned int width,
     return true;
 }
 
-static bool _process_item_image(unsigned char *pixels,
-                                unsigned int width, unsigned int height)
+static bool _process_item_image(unsigned char *pixels, unsigned int width,
+                                unsigned int height)
 {
     bool success = true;
     for (int i = 0; i < NUM_POTIONS; i++)
@@ -2938,7 +2936,7 @@ bool ImageManager::load_item_texture()
 
 void ImageManager::unload_textures()
 {
-    for (unsigned int i = 0; i < TEX_MAX; i++)
+    for (int i = 0; i < TEX_MAX; i++)
     {
         m_textures[i].unload_texture();
     }

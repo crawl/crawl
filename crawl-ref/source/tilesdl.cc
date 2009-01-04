@@ -1239,7 +1239,7 @@ void TilesFramework::update_inventory()
 
     for (unsigned int c = 0; c < strlen(Options.tile_show_items); c++)
     {
-        if (inv.size() >= max_pack_items)
+        if ((int)inv.size() >= max_pack_items)
             break;
 
         const char *find = strchr(obj_syms, Options.tile_show_items[c]);
@@ -1250,7 +1250,7 @@ void TilesFramework::update_inventory()
         // First, normal inventory
         for (int i = 0; i < ENDOFPACK; i++)
         {
-            if (inv.size() >= max_pack_items)
+            if ((int)inv.size() >= max_pack_items)
                 break;
 
             if (!is_valid_item(you.inv[i]) || you.inv[i].quantity == 0)
@@ -1282,7 +1282,7 @@ void TilesFramework::update_inventory()
     int empty_on_this_row = mx - inv.size() % mx;
 
     // If we're not on the last row...
-    if (inv.size() < mx * (my-1))
+    if ((int)inv.size() < mx * (my-1))
     {
         if (num_ground > remaining - empty_on_this_row)
         {
@@ -1291,7 +1291,7 @@ void TilesFramework::update_inventory()
             for (int i = 0; i < fill; i++)
             {
                 InventoryTile desc;
-                if (inv.size() >= max_pack_items)
+                if ((int)inv.size() >= max_pack_items)
                     desc.flag |= TILEI_FLAG_INVALID;
                 inv.push_back(desc);
             }
@@ -1302,7 +1302,7 @@ void TilesFramework::update_inventory()
             while (inv.size() % mx != 0)
             {
                 InventoryTile desc;
-                if (inv.size() >= max_pack_items)
+                if ((int)inv.size() >= max_pack_items)
                     desc.flag |= TILEI_FLAG_INVALID;
                 inv.push_back(desc);
             }
@@ -1311,13 +1311,13 @@ void TilesFramework::update_inventory()
             unsigned int ground_rows =
                 std::max((num_ground-1) / mx + 1, 1);
 
-            while (inv.size() / mx + ground_rows < my
-                   && inv.size() < max_pack_items)
+            while ((int)(inv.size() / mx + ground_rows) < my
+                   && ((int)inv.size()) < max_pack_items)
             {
-                for (unsigned int i = 0; i < mx; i++)
+                for (int i = 0; i < mx; i++)
                 {
                     InventoryTile desc;
-                    if (inv.size() >= max_pack_items)
+                    if ((int)inv.size() >= max_pack_items)
                         desc.flag |= TILEI_FLAG_INVALID;
                     inv.push_back(desc);
                 }
@@ -1328,7 +1328,7 @@ void TilesFramework::update_inventory()
     // Then, as many ground items as we can fit.
     for (unsigned int c = 0; c < strlen(Options.tile_show_items); c++)
     {
-        if (inv.size() >= mx * my)
+        if ((int)inv.size() >= mx * my)
             break;
 
         const char *find = strchr(obj_syms, Options.tile_show_items[c]);
@@ -1338,7 +1338,7 @@ void TilesFramework::update_inventory()
 
         for (int i = igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         {
-            if (inv.size() >= mx * my)
+            if ((int)inv.size() >= mx * my)
                 break;
 
             if (mitm[i].base_type != type)
@@ -1352,7 +1352,7 @@ void TilesFramework::update_inventory()
         }
     }
 
-    while (inv.size() < mx * my)
+    while ((int)inv.size() < mx * my)
     {
         InventoryTile desc;
         desc.flag = TILEI_FLAG_FLOOR;

@@ -40,15 +40,15 @@ public:
     Region();
     virtual ~Region();
 
-    void resize(unsigned int mx, unsigned int my);
-    void place(unsigned int sx, unsigned int sy, unsigned int margin);
+    void resize(int mx, int my);
+    void place(int sx, int sy, int margin);
     void resize_to_fit(int wx, int wy);
 
     // Returns true if the mouse position is over the region
     // If true, then cx and cy are set in the range [0..mx-1], [0..my-1]
     virtual bool mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy);
 
-    bool inside(unsigned int px, unsigned int py);
+    bool inside(int px, int py);
     virtual bool update_tip_text(std::string &tip) { return false; }
     virtual int handle_mouse(MouseEvent &event) = 0;
 
@@ -61,28 +61,28 @@ public:
     // |margin| text/tile area            |margin|
 
     // Offset in pixels
-    unsigned int ox;
-    unsigned int oy;
+    int ox;
+    int oy;
 
     // Unit size
-    unsigned int dx;
-    unsigned int dy;
+    int dx;
+    int dy;
 
     // Region size in dx/dy
-    unsigned int mx;
-    unsigned int my;
+    int mx;
+    int my;
 
     // Width of the region in pixels
-    unsigned int wx;
-    unsigned int wy;
+    int wx;
+    int wy;
 
     // Start position in pixels (top left)
-    unsigned int sx;
-    unsigned int sy;
+    int sx;
+    int sy;
 
     // End position in pixels (bottom right)
-    unsigned int ex;
-    unsigned int ey;
+    int ex;
+    int ey;
 
     static coord_def NO_CURSOR;
 
@@ -106,16 +106,16 @@ public:
     // TODO enne - move these to TilesFramework?
 
     // where now printing? what color?
-    static unsigned int print_x;
-    static unsigned int print_y;
+    static int print_x;
+    static int print_y;
     static int text_col;
     // which region now printing?
     static class TextRegion *text_mode;
     // display cursor? where is the cursor now?
     static int cursor_flag;
     static class TextRegion *cursor_region;
-    static unsigned int cursor_x;
-    static unsigned int cursor_y;
+    static int cursor_x;
+    static int cursor_y;
 
     // class methods
     static void cgotoxy(int x, int y);
@@ -138,7 +138,7 @@ public:
     int cy_ofs; //cursor y offset
 
     void addstr(char *buffer);
-    void addstr_aux(char *buffer, unsigned int len);
+    void addstr_aux(char *buffer, int len);
     void adjust_region(int *x1, int *x2, int y);
     void scroll();
 
@@ -229,11 +229,11 @@ class TileRegion : public Region
 {
 public:
     TileRegion(ImageManager *im, FTFont *tag_font,
-               unsigned int tile_x, unsigned int tile_y);
+               int tile_x, int tile_y);
     ~TileRegion();
 
 protected:
-    void add_quad(TextureID tex, unsigned int idx, unsigned int x, unsigned int y, int ofs_x = 0, int ofs_y = 0, bool centre = true, int ymax = -1);
+    void add_quad(TextureID tex, unsigned int idx, int x, int y, int ofs_x = 0, int ofs_y = 0, bool centre = true, int ymax = -1);
 
     ImageManager *m_image;
 
@@ -274,7 +274,7 @@ class DungeonRegion : public TileRegion
 {
 public:
     DungeonRegion(ImageManager *im, FTFont *tag_font,
-                  unsigned int tile_x, unsigned int tile_y);
+                  int tile_x, int tile_y);
     virtual ~DungeonRegion();
 
     virtual void render();
@@ -297,11 +297,11 @@ public:
     void clear_overlays();
 
 protected:
-    void draw_background(unsigned int bg, unsigned int x, unsigned int y);
-    void draw_mcache(mcache_entry *entry, unsigned int x, unsigned int y);
-    void draw_player(unsigned int x, unsigned int y);
-    void draw_foreground(unsigned int bg, unsigned int fg, unsigned int x, unsigned int y);
-    void draw_doll(const dolls_data &doll, unsigned int x, unsigned int y);
+    void draw_background(unsigned int bg, int x, int y);
+    void draw_mcache(mcache_entry *entry, int x, int y);
+    void draw_player(int x, int y);
+    void draw_foreground(unsigned int bg, unsigned int fg, int x, int y);
+    void draw_doll(const dolls_data &doll, int x, int y);
     void draw_cursor(cursor_type type, unsigned int tile);
 
     int get_buffer_index(const coord_def &gc);
@@ -346,7 +346,7 @@ class InventoryRegion : public TileRegion
 {
 public:
     InventoryRegion(ImageManager *im, FTFont *tag_font,
-                    unsigned int tile_x, unsigned int tile_y);
+                    int tile_x, int tile_y);
     virtual ~InventoryRegion();
 
     virtual void clear();
@@ -354,18 +354,18 @@ public:
     virtual void on_resize();
     virtual int handle_mouse(MouseEvent &event);
 
-    void update(unsigned int num, InventoryTile *items);
-    void update_slot(unsigned int slot, InventoryTile &item);
+    void update(int num, InventoryTile *items);
+    void update_slot(int slot, InventoryTile &item);
     virtual bool update_tip_text(std::string &tip);
 
 protected:
-    void pack_tile(unsigned int x, unsigned int y, unsigned int idx);
+    void pack_tile(int x, int y, int idx);
     void pack_verts();
-    void add_quad_char(char c, unsigned int x, unsigned int y, int ox, int oy);
+    void add_quad_char(char c, int x, int y, int ox, int oy);
     void place_cursor(const coord_def &cursor);
     unsigned int cursor_index() const;
 
-    unsigned int m_base_verts;
+    int m_base_verts;
     std::vector<InventoryTile> m_items;
     unsigned char *m_flavour;
 
@@ -406,7 +406,7 @@ enum map_colour
 class MapRegion : public Region
 {
 public:
-    MapRegion(unsigned int pixsz);
+    MapRegion(int pixsz);
     ~MapRegion();
 
     virtual void render();
@@ -415,7 +415,7 @@ public:
     virtual bool update_tip_text(std::string &tip);
 
     void init_colours();
-    void set(unsigned int gx, unsigned int gy, map_feature f);
+    void set(int gx, int gy, map_feature f);
     void set_window(const coord_def &start, const coord_def &end);
 
 protected:
@@ -423,7 +423,7 @@ protected:
     void update_offsets();
 
     map_colour m_colours[MF_MAX];
-    unsigned int m_min_gx, m_max_gx, m_min_gy, m_max_gy;
+    int m_min_gx, m_max_gx, m_min_gy, m_max_gy;
     coord_def m_win_start;
     coord_def m_win_end;
     unsigned char *m_buf;
