@@ -1396,7 +1396,7 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_POLYMORPH,
             10, BEAM_BANISH,
             10, BEAM_DISINTEGRATION,
-            0 ));
+            0));
 
     return (flavour);
 }
