@@ -7,6 +7,7 @@
 #include "dungeon.h"
 #include "initfile.h"
 #include "items.h"
+#include "itemname.h" // for make_name()
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
@@ -45,16 +46,24 @@ namespace arena
 
     int total_trials = 0;
 
+    bool contest_canceled = false;
+
     int trials_done = 0;
     int team_a_wins = 0;
+
     bool allow_summons   = true;
     bool allow_zero_xp   = false;
     bool allow_immobile  = true;
+    bool name_monsters   = false;
+    bool random_uniques  = false;
+
+    std::vector<int> uniques_list;
+
     std::string arena_type = "";
     faction faction_a(true);
     faction faction_b(false);
     coord_def place_a, place_b;
-    bool contest_canceled = false;
+
     bool cycle_random     = false;
     int  cycle_random_pos = -1;
 
@@ -242,7 +251,9 @@ namespace arena
         allow_immobile = !strip_tag(spec, "no_immobile");
         allow_zero_xp  =  strip_tag(spec, "allow_zero_xp");
 
-        cycle_random = strip_tag(spec, "cycle_random");
+        cycle_random   = strip_tag(spec, "cycle_random");
+        name_monsters  = strip_tag(spec, "names");
+        random_uniques = strip_tag(spec, "random_uniques");
 
         const int ntrials = strip_number_tag(spec, "t:");
         if (ntrials != TAG_UNFOUND && ntrials >= 1 && ntrials <= 99
@@ -487,10 +498,17 @@ namespace arena
             std::string msg  = messages[i];
             int         chan = channels[i];
 
-            if (chan == MSGCH_ERROR)
-                msg = "ERROR: " + msg;
-            else if (chan == MSGCH_DIAGNOSTICS)
-                msg = "DIAG: " + msg;
+            std::string prefix;
+            switch(chan)
+            {
+                case MSGCH_ERROR: prefix = "ERROR: "; break;
+                case MSGCH_DIAGNOSTICS: prefix = "DIAG: "; break;
+                case MSGCH_SOUND: prefix = "SOUND: "; break;
+
+                case MSGCH_TALK_VISUAL:
+                case MSGCH_TALK: prefix = "TALK: "; break;
+            }
+            msg = prefix + msg;
 
             fprintf(file, "%s\n", msg.c_str());
         }
@@ -569,6 +587,20 @@ namespace arena
         }
 
         expand_mlist(5);
+
+        for (int i = 0; i < NUM_MONSTERS; i++)
+        {
+            if (i == MONS_PLAYER_GHOST)
+                continue;
+
+            // Skip the royal jelly for now, since if it gets hit by multiple
+            // explosions it can cause an assertion.
+            if (i == MONS_ROYAL_JELLY)
+                continue;
+
+            if (mons_is_unique(i))
+                uniques_list.push_back(i);
+        }
     }
 
     void global_shutdown()
@@ -638,6 +670,15 @@ namespace arena
 monster_type arena_pick_random_monster(const level_id &place, int power,
                                        int &lev_mons)
 {
+    if (arena::random_uniques)
+    {
+        const std::vector<int> &uniques = arena::uniques_list;
+
+        monster_type type = (monster_type) uniques[random2(uniques.size())];
+        you.unique_creatures[type] = false;
+        return (type);
+    }
+
     if (!arena::cycle_random)
         return (RANDOM_MONSTER);
 
@@ -649,7 +690,7 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
 
         const monster_type type = (monster_type) arena::cycle_random_pos;
 
-        if (mons_rarity(type, place) == 0)
+        if (!mons_is_unique(type))
             continue;
 
         if (arena_veto_random_monster(type))
@@ -676,6 +717,8 @@ bool arena_veto_random_monster(monster_type type)
 void arena_placed_monster(monsters *monster, const mgen_data &mg,
                           bool first_band_member)
 {
+    if (arena::name_monsters && !monster->is_named())
+        monster->mname = make_name(random_int(), false);
 }
 
 void arena_monster_died(monsters *monster, killer_type killer,
