@@ -4549,12 +4549,14 @@ int dgn_place_monster(mons_spec &mspec,
 
         coord_def place(where);
         if (!force_pos && mgrd(place) != NON_MONSTER
-            && mg.cls != RANDOM_MONSTER && mg.cls < NUM_MONSTERS)
+            && (mg.cls < NUM_MONSTERS || mg.cls == RANDOM_MONSTER))
         {
-            place = find_newmons_square_contiguous(mg.cls, where, 0);
+            const monster_type habitat_target =
+                mg.cls == RANDOM_MONSTER ? MONS_GIANT_BAT : mg.cls;
+            place = find_newmons_square_contiguous(habitat_target, where, 0);
         }
 
-        mg.pos       = place;
+        mg.pos = place;
 
         if (mons_class_is_zombified(mg.base_type))
         {
