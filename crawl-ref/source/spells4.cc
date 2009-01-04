@@ -890,7 +890,8 @@ static int _distortion_monsters(coord_def where, int pow, int message)
     int specdam = 0;
     monsters *defender = &menv[monster_attacked];
 
-    if (defender->type == MONS_BLINK_FROG)      // any others resist?
+    if (defender->type == MONS_BLINK_FROG
+        || defender->type == MONS_PRINCE_RIBBIT)      // any others resist?
     {
         int hp = defender->hit_points;
         int max_hp = defender->max_hit_points;
@@ -963,7 +964,8 @@ int disperse_monsters(coord_def where, int pow, int message)
 
     monsters *defender = &menv[monster_attacked];
 
-    if (defender->type == MONS_BLINK_FROG)
+    if (defender->type == MONS_BLINK_FROG
+        || defender->type == MONS_PRINCE_RIBBIT)
     {
         simple_monster_message(defender, " resists.");
         return 1;
@@ -1010,6 +1012,7 @@ static int _spell_swap_func(coord_def where, int pow, int message)
     monsters *defender = &menv[monster_attacked];
 
     if (defender->type == MONS_BLINK_FROG
+        || defender->type == MONS_PRINCE_RIBBIT
         || check_mons_resist_magic( defender, pow ))
     {
         simple_monster_message( defender, mons_immune_magic(defender) ?

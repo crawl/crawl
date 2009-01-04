@@ -1584,7 +1584,7 @@ int find_unrandart_index(const item_def& artefact)
 static unrandart_entry *_seekunrandart( const item_def &item )
 {
     const int idx = find_unrandart_index(item);
-    if ( idx == -1 )
+    if (idx == -1)
         return &unranddata[0];  // dummy unrandart
     else
         return &unranddata[idx];

@@ -230,6 +230,20 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
+    case SPELL_WATER_ELEMENTALS:
+        if (_mons_abjured(monster, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(4) + random2(monster->hit_dice / 7 + 1);
+
+        for (sumcount = 0; sumcount < sumcount2; sumcount++)
+        {
+            create_monster(
+                mgen_data(MONS_WATER_ELEMENTAL, SAME_ATTITUDE(monster), 3,
+                          spell_cast, monster->pos(), monster->foe));
+        }
+        return;
+
     case SPELL_FAKE_RAKSHASA_SUMMON:
         sumcount2 = (coinflip() ? 2 : 3);
 
@@ -960,6 +974,7 @@ void setup_mons_cast(monsters *monster, bolt &pbolt,
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_CANTRIP:
     case SPELL_BERSERKER_RAGE:
+    case SPELL_WATER_ELEMENTALS:
         return;
     default:
         break;

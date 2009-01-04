@@ -1417,6 +1417,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         break;
 
     case MONS_ORC_WARLORD:
+    case MONS_SAINT_ROKA:
         band_size = 5 + random2(5);   // warlords have large bands
         // intentional fall through
     case MONS_ORC_KNIGHT:
@@ -1582,58 +1583,72 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
         band = BAND_NAGAS;
         band_size = 3 + random2(4);
         break;
+
     case MONS_WAR_DOG:
         band = BAND_WAR_DOGS;
         band_size = 2 + random2(4);
         break;
+
     case MONS_GREY_RAT:
         band = BAND_GREY_RATS;
         band_size = 4 + random2(6);
         break;
+
     case MONS_GREEN_RAT:
         band = BAND_GREEN_RATS;
         band_size = 4 + random2(6);
         break;
+
     case MONS_ORANGE_RAT:
         band = BAND_ORANGE_RATS;
         band_size = 3 + random2(4);
         break;
+
     case MONS_SHEEP:
         band = BAND_SHEEP;
         band_size = 3 + random2(5);
         break;
+
     case MONS_GHOUL:
         band = BAND_GHOULS;
         band_size = 2 + random2(3);
         break;
+
     case MONS_HOG:
         band = BAND_HOGS;
         band_size = 1 + random2(3);
         break;
+
     case MONS_GIANT_MOSQUITO:
         band = BAND_GIANT_MOSQUITOES;
         band_size = 1 + random2(3);
         break;
+
     case MONS_DEEP_TROLL:
         band = BAND_DEEP_TROLLS;
         band_size = 3 + random2(3);
         break;
+
     case MONS_HELL_HOG:
         band = BAND_HELL_HOGS;
         band_size = 1 + random2(3);
         break;
+
     case MONS_BOGGART:
         band = BAND_BOGGARTS;
         band_size = 2 + random2(3);
         break;
+
     case MONS_BLINK_FROG:
         band = BAND_BLINK_FROGS;
         band_size = 2 + random2(3);
         break;
+
     case MONS_SKELETAL_WARRIOR:
         band = BAND_SKELETAL_WARRIORS;
         band_size = 2 + random2(3);
         break;
+
     case MONS_CYCLOPS:
         if (one_chance_in(5) || player_in_branch(BRANCH_SHOALS))
         {
@@ -1641,10 +1656,12 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
             band_size = 2 + random2(3);
         }
         break;
+
     case MONS_POLYPHEMUS:
         band = BAND_DEATH_YAKS;
         band_size = 3 + random2(3);
         break;
+
     case MONS_HARPY:
         band = BAND_HARPIES;
         band_size = 2 + random2(3);
@@ -1665,6 +1682,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
             band_size = random_range(2, 4);
         }
         break;
+
     case MONS_DRACONIAN_CALLER:
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_SCORCHER:
@@ -1678,10 +1696,21 @@ static band_type _choose_band(int mon_type, int power, int &band_size)
             band_size = random_range(3, 6);
         }
         break;
+
     case MONS_TIAMAT:
         band = BAND_DRACONIAN;
         // yup, scary
         band_size = random_range(3,6) + random_range(3,6) + 2;
+        break;
+
+    case MONS_ILSUIW:
+        band = BAND_ILSUIW;
+        band_size = 3 + random2(3);
+        break;
+
+    case MONS_AZRAEL:
+        band = BAND_AZRAEL;
+        band_size = 4 + random2(5);
         break;
     } // end switch
 
@@ -1973,6 +2002,14 @@ static monster_type _band_member(band_type band, int power)
                                     MONS_RED_DRACONIAN );       // 3 in 34
         break;
     }
+    case BAND_ILSUIW:
+        mon_type = coinflip()? MONS_MERFOLK : MONS_MERMAID;
+        break;
+
+    case BAND_AZRAEL:
+        mon_type = coinflip()? MONS_FIRE_ELEMENTAL : MONS_HELL_HOUND;
+        break;
+
     default:
         break;
     }

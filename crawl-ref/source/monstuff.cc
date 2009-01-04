@@ -4991,6 +4991,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     {
     case MONS_ORC_KNIGHT:
     case MONS_ORC_WARLORD:
+    case MONS_SAINT_ROKA:
         if (is_sanctuary(monster->pos()))
             break;
 
@@ -5243,6 +5244,7 @@ static bool _handle_special_ability(monsters *monster, bolt & beem)
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_BLINK_FROG:
     case MONS_KILLER_KLOWN:
+    case MONS_PRINCE_RIBBIT:
         if (one_chance_in(7) || mons_is_caught(monster) && one_chance_in(3))
         {
             simple_monster_message(monster, " blinks.");

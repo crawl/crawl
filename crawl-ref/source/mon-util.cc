@@ -633,7 +633,8 @@ bool mons_is_statue(int mc)
 {
     return (mc == MONS_ORANGE_STATUE
             || mc == MONS_SILVER_STATUE
-            || mc == MONS_ICE_STATUE);
+            || mc == MONS_ICE_STATUE
+            || mc == MONS_ROXANNE);
 }
 
 bool mons_is_mimic(int mc)
@@ -3129,6 +3130,10 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
         case MONS_ERICA:
         case MONS_TIAMAT:
         case MONS_ERESHKIGAL:
+        case MONS_ROXANNE:
+        case MONS_SONJA:
+        case MONS_ILSUIW:
+        case MONS_NERGALLE:
             gender = GENDER_FEMALE;
             break;
         case MONS_ROYAL_JELLY:
@@ -4908,6 +4913,10 @@ bool monsters::pickup_item(item_def &item, int near, bool force)
         return pickup_scroll(item, near);
     case OBJ_POTIONS:
         return pickup_potion(item, near);
+    case OBJ_BOOKS:
+        if (force)
+            return pickup_misc(item, near);
+        // else fall through
     default:
         return (false);
     }
@@ -7513,6 +7522,9 @@ static inline monster_type _royal_jelly_ejectable_monster()
 
 bool monsters::can_drink_potion(potion_type ptype) const
 {
+    if (mons_class_is_stationary(this->type))
+        return (false);
+
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
         if (mons_is_skeletal(type) || mons_is_insubstantial(type)

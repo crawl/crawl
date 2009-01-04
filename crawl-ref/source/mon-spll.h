@@ -506,105 +506,6 @@
       }
     },
 
-    {  MST_GERYON,
-      {
-       SPELL_SUMMON_BEAST,
-       SPELL_SUMMON_BEAST,
-       SPELL_NO_SPELL,
-       SPELL_SUMMON_BEAST,
-       SPELL_NO_SPELL,
-       SPELL_SUMMON_BEAST
-      }
-    },
-
-    {  MST_DISPATER,
-      {
-       SPELL_SUMMON_GREATER_DEMON,
-       SPELL_BOLT_OF_IRON,
-       SPELL_SUMMON_DEMON,
-       SPELL_LIGHTNING_BOLT,
-       SPELL_HELLFIRE,
-       SPELL_SUMMON_GREATER_DEMON
-      }
-    },
-
-    {  MST_ASMODEUS,
-      {
-       SPELL_BOLT_OF_FIRE,
-       SPELL_HELLFIRE,
-       SPELL_SUMMON_DEMON,
-       SPELL_SUMMON_GREATER_DEMON,
-       SPELL_BOLT_OF_DRAINING,
-       SPELL_TELEPORT_SELF
-      }
-    },
-
-    {  MST_ERESHKIGAL,
-      {
-       SPELL_BOLT_OF_DRAINING,
-       SPELL_BOLT_OF_COLD,
-       SPELL_SUMMON_GREATER_DEMON,
-       SPELL_SYMBOL_OF_TORMENT,
-       SPELL_PARALYSE,
-       SPELL_LESSER_HEALING
-      }
-    },
-
-    {  MST_ANTAEUS,
-      {
-       SPELL_BOLT_OF_COLD,
-       SPELL_LIGHTNING_BOLT,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL
-      }
-    },
-
-    {  MST_MNOLEG,
-      {
-       SPELL_SUMMON_GREATER_DEMON,
-       SPELL_SMITING,
-       SPELL_INVISIBILITY,
-       SPELL_SUMMON_HORRIBLE_THINGS,
-       SPELL_SUMMON_HORRIBLE_THINGS,
-       SPELL_TELEPORT_SELF
-      }
-    },
-
-    {  MST_LOM_LOBON,
-      {
-       SPELL_ICE_STORM,
-       SPELL_CONJURE_BALL_LIGHTNING,
-       SPELL_GREATER_HEALING,
-       SPELL_BLINK,
-       SPELL_BLINK,
-       SPELL_TELEPORT_SELF
-      }
-    },
-
-    {  MST_CEREBOV,
-      {
-       SPELL_FIRE_STORM,
-       SPELL_BOLT_OF_IRON,
-       SPELL_HASTE,
-       SPELL_HASTE,
-       SPELL_SUMMON_GREATER_DEMON,
-       SPELL_HASTE
-      }
-    },
-
-    {  MST_GLOORX_VLOQ,
-      {
-       SPELL_POISON_ARROW,
-       SPELL_MIASMA,
-       SPELL_SYMBOL_OF_TORMENT,
-       SPELL_BOLT_OF_DRAINING,
-       SPELL_DISPEL_UNDEAD,
-       SPELL_INVISIBILITY
-      }
-    },
-
     {  MST_TITAN,
       {
        SPELL_LIGHTNING_BOLT,
@@ -1047,6 +948,21 @@
       }
     },
 
+    {  MST_ICE_STATUE,
+      {
+       SPELL_BOLT_OF_COLD,
+       SPELL_ICE_BOLT,
+       SPELL_NO_SPELL,
+       SPELL_FREEZING_CLOUD,
+       SPELL_SUMMON_ICE_BEAST,
+       SPELL_SUMMON_ICE_BEAST
+      }
+    },
+
+    // ---------------------
+    // unique's "spellbooks"
+    // ---------------------
+
     // Crusader theme.
     {  MST_RUPERT,
       {
@@ -1059,14 +975,157 @@
       }
     },
 
-    {  MST_ICE_STATUE,
+    { MST_ROXANNE,
+      {
+       SPELL_LEHUDIBS_CRYSTAL_SPEAR,
+       SPELL_BOLT_OF_IRON,
+       SPELL_BOLT_OF_MAGMA,
+       SPELL_STONE_ARROW,
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_SANDBLAST
+      }
+    },
+
+    {  MST_SONJA,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_BLINK,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
+    { MST_EUSTACHIO,
+      {
+       SPELL_SUMMON_SMALL_MAMMALS,
+       SPELL_CALL_IMP,
+       SPELL_BLINK,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_BLINK
+      }
+    },
+
+    { MST_ILSUIW,
+      {
+       SPELL_THROW_FROST, // was: SPELL_CONFUSED
+       SPELL_SLOW,
+       SPELL_INVISIBILITY,
+       SPELL_BLINK,
+       SPELL_WATER_ELEMENTALS,
+       SPELL_WATER_ELEMENTALS
+      }
+    },
+
+    {  MST_PRINCE_RIBBIT,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
+    {  MST_GERYON,
+      {
+       SPELL_SUMMON_BEAST,
+       SPELL_SUMMON_BEAST,
+       SPELL_NO_SPELL,
+       SPELL_SUMMON_BEAST,
+       SPELL_NO_SPELL,
+       SPELL_SUMMON_BEAST
+      }
+    },
+
+    {  MST_DISPATER,
+      {
+       SPELL_SUMMON_GREATER_DEMON,
+       SPELL_BOLT_OF_IRON,
+       SPELL_SUMMON_DEMON,
+       SPELL_LIGHTNING_BOLT,
+       SPELL_HELLFIRE,
+       SPELL_SUMMON_GREATER_DEMON
+      }
+    },
+
+    {  MST_ASMODEUS,
+      {
+       SPELL_BOLT_OF_FIRE,
+       SPELL_HELLFIRE,
+       SPELL_SUMMON_DEMON,
+       SPELL_SUMMON_GREATER_DEMON,
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
+    {  MST_ERESHKIGAL,
+      {
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_BOLT_OF_COLD,
+       SPELL_SUMMON_GREATER_DEMON,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_PARALYSE,
+       SPELL_LESSER_HEALING
+      }
+    },
+
+    {  MST_ANTAEUS,
       {
        SPELL_BOLT_OF_COLD,
-       SPELL_ICE_BOLT,
+       SPELL_LIGHTNING_BOLT,
        SPELL_NO_SPELL,
-       SPELL_FREEZING_CLOUD,
-       SPELL_SUMMON_ICE_BEAST,
-       SPELL_SUMMON_ICE_BEAST
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_MNOLEG,
+      {
+       SPELL_SUMMON_GREATER_DEMON,
+       SPELL_SMITING,
+       SPELL_INVISIBILITY,
+       SPELL_SUMMON_HORRIBLE_THINGS,
+       SPELL_SUMMON_HORRIBLE_THINGS,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
+    {  MST_LOM_LOBON,
+      {
+       SPELL_ICE_STORM,
+       SPELL_CONJURE_BALL_LIGHTNING,
+       SPELL_GREATER_HEALING,
+       SPELL_BLINK,
+       SPELL_BLINK,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
+    {  MST_CEREBOV,
+      {
+       SPELL_FIRE_STORM,
+       SPELL_BOLT_OF_IRON,
+       SPELL_HASTE,
+       SPELL_HASTE,
+       SPELL_SUMMON_GREATER_DEMON,
+       SPELL_HASTE
+      }
+    },
+
+    {  MST_GLOORX_VLOQ,
+      {
+       SPELL_POISON_ARROW,
+       SPELL_MIASMA,
+       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_BOLT_OF_DRAINING,
+       SPELL_DISPEL_UNDEAD,
+       SPELL_INVISIBILITY
       }
     },
 

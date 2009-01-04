@@ -1078,6 +1078,41 @@ _Agnes_rare_
 
 ## END Agnes ##
 %%%%
+# efreet
+Azrael
+
+@_Azrael_common_@
+
+w:2
+@_Azrael_rare_@
+%%%%
+adj_flammable
+
+flammable
+
+inflammable
+%%%%
+_Azrael_common_
+
+@The_monster@ laughs insanely.
+
+@The_monster@ howls in rage.
+
+@The_monster@ screams, "No! No! YES! No!"
+
+@The_monster@ screams, "Burn! Burn! All of it must BURN!"
+
+VISUAL:@The_monster@ blows smoke rings.
+%%%%
+_Azrael_rare_
+
+@The_monster@ grins and asks, "Are you @adj_flammable@?"
+
+@The_monster@ says, "We're having tasty @player_genus@ kabobs tonight!"
+
+VISUAL:@The_monster@ whirls about in circles.
+## END Azrael ##
+%%%%
 # In case Blork ends up polymorphed.
 Blork
 
@@ -1326,6 +1361,38 @@ _Erolcha_rare_
 @The_monster@ screams, "Erolcha angry!"
 ## END Erolcha ##
 %%%%
+# apprentice summoner, has funny ideas about honour
+Eustachio
+
+@_Eustachio_common_@
+
+w:5
+@_Eustachio_rare_@
+%%%%
+_Eustachio_common_
+
+@The_monster@ screams, "At last I'll have my revenge!"
+
+@The_monster@ screams, "Hey, you killed my favorite bat!"
+
+@The_monster@ says, "Summoning is fun!"
+
+@The_monster@ says, "My allies will avenge me."
+%%%%
+_Eustachio_rare_
+
+@The_monster@ yells, "Perjured traitor, DIE!"
+
+VISUAL:@The_monster@ twirls his moustache.
+
+# doesn't really work if there are no summons nearby
+#VISUAL:@The_monster@ strokes his familiar.
+
+SPELL:@The_monster@ calls on the powers of Hell!
+
+@The_monster@ brags, "I can call spirits from the vastly deeps."
+## END Eustachio ##
+%%%%
 # A mercenary guarding the dungeon
 Frances
 
@@ -1471,6 +1538,53 @@ _Harold_rare_
 
 @The_monster@ says, "Mine is not to reason why.  Mine's to do, yours to die."
 ## END Harold ##
+%%%%
+# a pretty merfolk witch
+Ilsuiw
+
+@_Ilsuiw_common_@
+
+w:5
+@_Ilsuiw_rare_@
+%%%%
+_Ilsuiw_common_
+
+@The_monster@ asks, "Won't you come swim with me?"
+
+@The_monster@ whispers, "Come on in, the water's fine."
+
+@The_monster@ sings a @strange_or_haunting@ @chanty@.
+
+VISUAL:@The_monster@ runs @possessive@ fingers through @possessive@ long green hair.
+%%%%
+_Ilsuiw_rare_
+
+VISUAL:@The_monster@ gazes at you @hypnot_or_seductively@.
+
+@The_monster@ sings, "To sleep, to sleep ... mayhap to drown."
+
+@The_monster@ says, "It's lovely beneath the waves -- you'll see!"
+
+@The_monster@ asks, "Do you dare to walk upon the beach?"
+%%%%
+hypnot_or_seductively
+
+hypnotically
+
+seductively
+%%%%
+strange_or_haunting
+
+strange
+
+haunting
+%%%%
+chanty
+
+sea-chanty
+
+melody
+## END Ilsuiw ##
 %%%%
 # A sorceress disturbed by player
 Jessica
@@ -1822,6 +1936,32 @@ VISUAL:@The_monster@ seems to say something.
 VISUAL:@The_monster@ says something you can't hear.  It was probably not a compliment.
 ## END silenced Murray ##
 %%%%
+# ugly orc sorceress
+Nergalle
+
+@_Nergalle_common_@
+
+@_Nergalle_rare_@
+%%%%
+_Nergalle_common_
+
+VISUAL:@The_monster@ grimaces horribly.
+
+@The_monster@ mutters something to herself.
+
+@The_monster@ asks, "There's a tasty morsel, hm?"
+%%%%
+_Nergalle_rare_
+
+@The_monster@ yells, "What are YOU looking at?"
+
+@The_monster@ shouts, "Kill, kill, my pretties!"
+
+@The_monster@ says, "THAT's why. How awful. You!"
+
+@The_monster@ blows @possessive@ nose.
+## END Nergalle ##
+%%%%
 # A skilled warrior looking for some fame.  More kills = more fame.
 Norbert
 
@@ -1967,6 +2107,42 @@ VISUAL:@The_monster@ looks around for something heavy to throw at you.
 @The_monster@ says, "@player_genus@ for dinner? Sounds delicious!"
 ## END Polyphemus ##
 %%%%
+Prince Ribbit
+
+@_Prince_Ribbit_common_@
+
+w:2
+@_Prince_Ribbit_rare_@
+%%%%
+_Prince_Ribbit_common_
+
+@The_monster@ croaks regally.
+
+@The_monster@ lets out a mournful croak.
+
+VISUAL:@The_monster@ hops awkwardly around.
+
+VISUAL:@The_monster@ catches a @_frog_food_@ with @possessive@ tongue.
+%%%%
+_Prince_Ribbit_rare_
+
+@The_monster@ asks, "Just a little smooch?"
+
+@The_monster@ sighs, "It's not easy being green!"
+
+@The_monster@ says, "You're just another fly to me."
+%%%%
+_frog_food_
+
+fly
+
+w:5
+bug
+
+w:1
+small bird
+## END Prince Ribbit ##
+%%%%
 # An insane sorceress
 Psyche
 
@@ -2058,6 +2234,95 @@ _Rupert_rare_
 @The_monster@ screams, "Red!  No, blue!"
 ## END Rupert ##
 %%%%
+# a sapphire statue of an earth mage
+Roxanne
+
+@_Roxanne_common_@
+
+w:5
+@_Roxanne_medium_@
+
+w:1
+@_Roxanne_rare_@
+%%%%
+_Roxanne_common_
+
+@The_monster@ says, "Come a little closer, will you?"
+
+@The_monster@ mutters, "When I said I wanted to live forever... this was not what I had in mind."
+
+@The_monster@ says, "At least I didn't end up somewhere with nobody to talk to."
+
+@The_monster@ wails, "NOOOO!"
+
+w:20
+__NONE
+%%%%
+_Roxanne_medium_
+
+@The_monster@ asks, "Could you be a darling and pick up those spellbooks for me?"
+
+@The_monster@ asks, "Say, could you scratch my back for me?"
+
+@The_monster@ sighs and says, "It wouldn't be so bad were it not for the bird droppings."
+%%%%
+_Roxanne_rare_
+
+@The_monster@ shouts, "I'd kick your ass right now if I could just get over there!"
+
+@The_monster@ prays for a Stone to Flesh spell.
+
+@The_monster@ wonders, "Maybe oil would work?  Probably not."
+
+@The_monster@ says, "They said I was crazy for my new spells... Turns out they were right."
+## END Roxanne ##
+%%%%
+# orc warlord
+# Only used if the player is not a Hill Orc.
+Saint Roka
+
+w:7
+@related Saint Roka@
+
+@The_monster@ says, "Down here, you're an orc or you're nobody."
+
+@The_monster@ says, "In the orcish mines, orcs kill the likes of you."
+%%%%
+related Saint Roka
+
+w:2
+@_generic_orc_speech_@
+
+@The_monster@ calls out, "Orcs! Behind me!"
+
+@The_monster@ calls out, "Only Beogh rules here!"
+
+@The_monster@ says, "I shall smite you and smash you."
+
+@The_monster@ lets out a mighty cry!
+
+@The_monster@ cries, "Beogh give me strength!"
+
+@The_monster@ cries, "In the name of Beogh, DIE!"
+
+@The_monster@ calls out, "Join me or die!"
+%%%%
+# need different speech if you also worship Beogh
+related beogh Saint Roka
+
+@related Saint Roka@
+
+w:20
+@_hostile_orc_beogh_believer_common_@
+
+w:5
+@_hostile_orc_beogh_believer_rare_@
+
+w:1
+@The_monster@ shouts, "There can only be one messiah: ME!"
+
+## END Saint Roka ##
+%%%%
 # Mad old wizard
 Sigmund
 
@@ -2105,6 +2370,39 @@ VISUAL:@The_monster@ tries to bite you.
 
 @The_monster@ whispers, "You'll know eternity soon."
 ## END Sigmund ##
+%%%%
+# female kobold assassin
+Sonja
+
+@_Sonja_common_@
+
+w:5
+@_Sonja_rare_@
+%%%%
+_Sonja_common_
+
+@The_monster@ says, "I'm academy-trained, you know."
+
+@The_monster@ shouts, "Too slow!"
+
+VISUAL:@The_monster@ twirls her cape.
+
+VISUAL:@The_monster@ bows elegantly.
+
+VISUAL:@The_monster@ plants her feet in a plie.
+%%%%
+_Sonja_rare_
+
+@The_monster@ shouts, "Hah! Missed me again!"
+
+@The_monster@ says, "The Royal Ballet doesn't accept kobolds.  That's why I went into killing people."
+
+@The_monster@ says, "If only old Madame Brzewit could see me now!"
+
+@The_monster@ shouts, "Some dancing partner you are!"
+
+@The_monster@ says, "Someone hired me to kill you, but I'm not supposed to say who."
+## END Sonja ##
 %%%%
 # A fighter who likes to kill
 Terence
@@ -2681,14 +2979,14 @@ _hostile_beogh_speech_
 w:4
 @_hostile_beogh_speech_rare_@
 %%%%
-_hostile_beogh_speech_common_
+_hostile__orc_beogh_unbeliever_common_
 
-# unbelievers
 @The_monster@ @orc_says@, "I don't believe in Beogh!"
 
 @The_monster@ @shouts@, "You're not the messiah, I am!"
+%%%%
+_hostile_orc_beogh_believer_common_
 
-# orcs doubting you
 @The_monster@ mutters, "You're NOT the saviour of the Orcs."
 
 @The_monster@ grumbles, "You're not even a proper Orc..."
@@ -2713,19 +3011,19 @@ _hostile_beogh_speech_common_
 
 VISUAL:@The_monster@ grimaces.
 %%%%
-_hostile_beogh_speech_rare_
+_hostile_orc_beogh_unbeliever_rare_
 
-# unbelievers
 @The_monster@ @orc_says@, "Orcs don't need Beogh!"
 
 @The_monster@ @orc_says@, "Beogh's messiah is just a fairy-tale."
 
-# orcs doubting you
+@The_monster@ says, "Even if there was a messiah, it wouldn't be you."
+%%%%
+_hostile_orc_beogh_believer_rare_
+
 @The_monster@ laughs, "You, our saviour!?"
 
 @The_monster@ @shouts@, "Orcs!  @player_name@ is lying!"
-
-@The_monster@ says, "Even if there was a messiah, it wouldn't be you."
 
 @The_monster@ @orc_says@, "For a messiah, you look rather @orc_pathetic@."
 
@@ -2736,6 +3034,27 @@ _hostile_beogh_speech_rare_
 VISUAL:@The_monster@ shakes @possessive@ head.
 
 VISUAL:@The_monster@ stares at you quizzically.
+%%%%
+_hostile_beogh_speech_common_
+
+# unbelievers
+w:1
+@_hostile_orc_beogh_unbeliever_common_@
+
+# orcs doubting you
+w:6
+@_hostile_orc_beogh_believer_common_@
+%%%%
+_hostile_beogh_speech_rare_
+
+# unbelievers
+w:3
+@_hostile_orc_beogh_unbeliever_rare_@
+
+# orcs doubting you
+w:7
+@_hostile_orc_beogh_believer_rare_@
+
 ###################################################
 # Orcish followers of Beogh's messiah
 ###################################################

@@ -2162,13 +2162,17 @@ static void _get_weighted_spells(bool completely_random, god_type god,
 }
 
 static void _remove_nondiscipline_spells(spell_type chosen_spells[],
-                                         int d1, int d2)
+                                         int d1, int d2,
+                                         spell_type exclude = SPELL_NO_SPELL)
 {
     int replace = -1;
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
     {
         if (chosen_spells[i] == SPELL_NO_SPELL)
             break;
+
+        if (chosen_spells[i] == exclude)
+            continue;
 
         // If a spell matches neither the first nor the second type
         // (that may be the same) remove it.
@@ -2188,8 +2192,18 @@ static void _remove_nondiscipline_spells(spell_type chosen_spells[],
     }
 }
 
+// Takes a book of any type, a spell discipline or two, the number of spells
+// (up to 8), the total spell levels of all spells, a spell that absolutely
+// has to be included, and the name of whomever the book should be named after.
+// With all that information the book is turned into a random artefact
+// containing random spells of the given disciplines (random if none set).
+// NOTE: This function calls make_item_randart() which recursively calls
+//       make_book_theme_randart() again but without all those parameters,
+//       so they have to be stored in the book attributes so as to not
+//       forget them.
 bool make_book_theme_randart(item_def &book, int disc1, int disc2,
-                             int num_spells, int max_levels)
+                             int num_spells, int max_levels,
+                             spell_type incl_spell, std::string owner)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -2201,6 +2215,12 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     if (!is_random_artefact(book))
     {
+        // Store spell and owner for later use.
+        if (incl_spell != SPELL_NO_SPELL)
+            book.props["spell"].get_long() = incl_spell;
+        if (!owner.empty())
+            book.props["owner"].get_string() = owner;
+
         // Stuff parameters into book.plus and book.plus2, then call
         // make_item_randart(), which will then call us back.
         if (num_spells == -1)
@@ -2238,8 +2258,14 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         return (make_item_randart(book));
     }
 
-    // We're being called from make_item_randart()
+    // Re-read spell and owner, if applicable.
+    if (incl_spell == SPELL_NO_SPELL && book.props.exists("spell"))
+        incl_spell = (spell_type) book.props["spell"].get_long();
 
+    if (owner.empty() && book.props.exists("owner"))
+        owner = book.props["owner"].get_string();
+
+    // We're being called from make_item_randart()
     ASSERT(book.sub_type == BOOK_RANDART_THEME);
     ASSERT(disc1 == 0 && disc2 == 0);
     ASSERT(num_spells == -1 && max_levels == -1);
@@ -2274,6 +2300,23 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     _get_weighted_spells(completely_random, god, disc1, disc2,
                          num_spells, max_levels, spell_list, chosen_spells);
+
+    if (!is_valid_spell(incl_spell))
+        incl_spell = SPELL_NO_SPELL;
+    else
+    {
+        bool is_included = false;
+        for (int i = 0; i < SPELLBOOK_SIZE; i++)
+        {
+            if (chosen_spells[i] == incl_spell)
+            {
+                is_included = true;
+                break;
+            };
+        }
+        if (!is_included)
+            chosen_spells[0] = incl_spell;
+    }
 
     std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
@@ -2338,7 +2381,8 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
         max2 = max1;
 
     // Remove spells that don't fit either discipline.
-    _remove_nondiscipline_spells(chosen_spells, 1 << max1, 1 << max2);
+    _remove_nondiscipline_spells(chosen_spells, 1 << max1, 1 << max2,
+                                 incl_spell);
 
     // Finally fill the spell vector.
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
@@ -2354,18 +2398,17 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     std::string name;
 
     bool need_quotes = true;
-    if (god != GOD_NO_GOD)
-    {
-        name  = '"';
-        name += god_name(god, false) + "'s ";
-    }
+    if (!owner.empty())
+        name = owner;
+    else if (god != GOD_NO_GOD)
+        name = god_name(god, false);
     else if (one_chance_in(5)) // Occasionally, use a random name.
-    {
-        name  = '"';
-        name += make_name(random_int(), false) + "'s ";
-    }
+        name = make_name(random_int(), false);
     else
         need_quotes = false;
+
+    if (need_quotes)
+        name = '"' + name + "'s ";
 
     name += getRandNameString("book_noun");
     name += " of ";
@@ -2429,6 +2472,15 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     book.plus2 = disc2;
 
     return (true);
+}
+
+// Give Roxanne a randart spellbook of the disciplines Transmigration/Earth
+// that includes Statue Form and is named after her.
+void make_book_Roxanne_special(item_def *book)
+{
+    int disc =  coinflip() ? SPTYP_TRANSMIGRATION : SPTYP_EARTH;
+    make_book_theme_randart(*book, disc, 0, 5, 19,
+                            SPELL_STATUE_FORM, "Roxanne");
 }
 
 bool book_has_title(const item_def &book)

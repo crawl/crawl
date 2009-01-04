@@ -1563,12 +1563,12 @@ enum menu_type
 
 enum mon_holy_type
 {
-    MH_HOLY,                           //    0 - was -1
-    MH_NATURAL,                        //    1 - was 0
-    MH_UNDEAD,                         //    2 - was 1
-    MH_DEMONIC,                        //    3 - was 2
-    MH_NONLIVING,                      //    golems and other constructs
-    MH_PLANT                           //    plants
+    MH_HOLY,                           //  0
+    MH_NATURAL,                        //  1
+    MH_UNDEAD,                         //  2
+    MH_DEMONIC,                        //  3
+    MH_NONLIVING,                      //  4, golems and other constructs
+    MH_PLANT                           //  5, plants
 };
 
 enum targ_mode_type
@@ -1579,7 +1579,7 @@ enum targ_mode_type
     TARG_NUM_MODES
 };
 
-// note this order is very sensitive... look at mons_is_unique()
+// NOTE: Changing this order will break saves!
 enum monster_type                      // (int) menv[].type
 {
     MONS_GIANT_ANT,                    //    0
@@ -1910,7 +1910,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DEEP_ELF_BLADEMASTER,         //  330
     MONS_DEEP_ELF_MASTER_ARCHER,
 
-    // The Lords of Hell:
+    // The Lords of Hell (also unique):
     MONS_GERYON = 340,                 //  340
     MONS_DISPATER,
     MONS_ASMODEUS,
@@ -1991,6 +1991,16 @@ enum monster_type                      // (int) menv[].type
     MONS_ORANGE_STATUE,
     MONS_SILVER_STATUE,
     MONS_ICE_STATUE,
+
+    // Third batch of uniques
+    MONS_ROXANNE = 450, // -- statue, too!
+    MONS_SONJA,
+    MONS_EUSTACHIO,
+    MONS_AZRAEL,
+    MONS_ILSUIW,
+    MONS_PRINCE_RIBBIT,                // 455
+    MONS_NERGALLE,
+    MONS_SAINT_ROKA,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2123,87 +2133,94 @@ enum mon_spellbook_type
     MST_BRAIN_WORM,
     MST_GIANT_ORANGE_BRAIN,
     MST_RAKSHASA,
-    MST_GREAT_ORB_OF_EYES,              // 55
+    MST_GREAT_ORB_OF_EYES,             //  55
     MST_ORC_SORCERER,
     MST_STEAM_DRAGON,
-    MST_HELL_KNIGHT_I,
+    MST_HELL_KNIGHT_I    = 60,
     MST_HELL_KNIGHT_II,
-    MST_NECROMANCER_I,                  // 60
+    MST_NECROMANCER_I    = 65,
     MST_NECROMANCER_II,
-    MST_WIZARD_I,
+    MST_WIZARD_I         = 70,
     MST_WIZARD_II,
     MST_WIZARD_III,
-    MST_WIZARD_IV,                      // 65
+    MST_WIZARD_IV,
     MST_WIZARD_V,
-    MST_ORC_PRIEST,
+    MST_ORC_PRIEST       = 80,
     MST_ORC_HIGH_PRIEST,
     MST_MOTTLED_DRAGON,
-    MST_ICE_FIEND,                      // 70
+    MST_ICE_FIEND,
     MST_SHADOW_FIEND,
-    MST_TORMENTOR,
+    MST_TORMENTOR,                     //  85
     MST_STORM_DRAGON,
     MST_WHITE_IMP,
-    MST_YNOXINUL,                       // 75
+    MST_YNOXINUL,
     MST_NEQOXEC,
-    MST_HELLWING,
+    MST_HELLWING,                      //  90
     MST_SMOKE_DEMON,
     MST_CACODEMON,
-    MST_GREEN_DEATH,                    // 80
+    MST_GREEN_DEATH,
     MST_BALRUG,
-    MST_BLUE_DEATH,
-    MST_GERYON,
+    MST_BLUE_DEATH,                    //  95
+    MST_TITAN,
+    MST_GOLDEN_DRAGON,
+    MST_DEEP_ELF_SUMMONER,
+    MST_DEEP_ELF_CONJURER_I,
+    MST_DEEP_ELF_CONJURER_II,          // 100
+    MST_DEEP_ELF_PRIEST,
+    MST_DEEP_ELF_HIGH_PRIEST,
+    MST_DEEP_ELF_DEMONOLOGIST,
+    MST_DEEP_ELF_ANNIHILATOR,
+    MST_DEEP_ELF_SORCERER,             // 105
+    MST_DEEP_ELF_DEATH_MAGE,
+    MST_KOBOLD_DEMONOLOGIST,
+    MST_NAGA,
+    MST_NAGA_MAGE,
+    MST_CURSE_SKULL,                   // 110
+    MST_SHINING_EYE,
+    MST_FROST_GIANT,
+    MST_ANGEL,
+    MST_DAEVA,
+    MST_SHADOW_DRAGON,                 // 115
+    MST_SPHINX,
+    MST_MUMMY,
+    MST_ELECTRIC_GOLEM,
+    MST_ORB_OF_FIRE,
+    MST_SHADOW_IMP,                    // 120
+    MST_GHOST,
+    MST_HELL_HOG,
+    MST_SWAMP_DRAGON,
+    MST_SWAMP_DRAKE,
+    MST_SERPENT_OF_HELL,               // 125
+    MST_BOGGART,
+    MST_EYE_OF_DEVASTATION,
+    MST_QUICKSILVER_DRAGON,
+    MST_IRON_DRAGON,
+    MST_SKELETAL_WARRIOR,              // 130
+    MST_MYSTIC,
+    MST_DEATH_DRAKE,
+    MST_DRAC_SCORCHER, // As Bioster would say.. pig*s
+    MST_DRAC_CALLER,
+    MST_DRAC_SHIFTER,                  // 135
+    MST_CURSE_TOE,
+    MST_ICE_STATUE,
+    // unique monsters' "spellbooks"
+    MST_RUPERT = 140,
+    MST_ROXANNE,
+    MST_SONJA,
+    MST_EUSTACHIO,
+    MST_ILSUIW,
+    MST_PRINCE_RIBBIT,
+    MST_GERYON = 150,
     MST_DISPATER,
-    MST_ASMODEUS,                       // 85
+    MST_ASMODEUS,
     MST_ERESHKIGAL,
-    MST_ANTAEUS,                        // 87
-    MST_MNOLEG                = 90,
+    MST_ANTAEUS,
+    MST_MNOLEG = 160,
     MST_LOM_LOBON,
     MST_CEREBOV,
     MST_GLOORX_VLOQ,
-    MST_TITAN,
-    MST_GOLDEN_DRAGON,                  // 95
-    MST_DEEP_ELF_SUMMONER,
-    MST_DEEP_ELF_CONJURER_I,
-    MST_DEEP_ELF_CONJURER_II,
-    MST_DEEP_ELF_PRIEST,
-    MST_DEEP_ELF_HIGH_PRIEST,           // 100
-    MST_DEEP_ELF_DEMONOLOGIST,
-    MST_DEEP_ELF_ANNIHILATOR,
-    MST_DEEP_ELF_SORCERER,
-    MST_DEEP_ELF_DEATH_MAGE,
-    MST_KOBOLD_DEMONOLOGIST,            // 105
-    MST_NAGA,
-    MST_NAGA_MAGE,
-    MST_CURSE_SKULL,
-    MST_SHINING_EYE,
-    MST_FROST_GIANT,                    // 110
-    MST_ANGEL,
-    MST_DAEVA,
-    MST_SHADOW_DRAGON,
-    MST_SPHINX,
-    MST_MUMMY,                          // 115
-    MST_ELECTRIC_GOLEM,
-    MST_ORB_OF_FIRE,
-    MST_SHADOW_IMP,
-    MST_GHOST,
-    MST_HELL_HOG,                       // 120
-    MST_SWAMP_DRAGON,
-    MST_SWAMP_DRAKE,
-    MST_SERPENT_OF_HELL,
-    MST_BOGGART,
-    MST_EYE_OF_DEVASTATION,             // 125
-    MST_QUICKSILVER_DRAGON,
-    MST_IRON_DRAGON,
-    MST_SKELETAL_WARRIOR,
-    MST_MYSTIC,
-    MST_DEATH_DRAKE,                    // 130
-    MST_DRAC_SCORCHER, // As Bioster would say.. pig*s
-    MST_DRAC_CALLER,
-    MST_DRAC_SHIFTER,
-    MST_CURSE_TOE,
-    MST_RUPERT,                         // 135
-    MST_ICE_STATUE,
-    MST_TEST_SPAWNER,
+
+    MST_TEST_SPAWNER = 170,
     NUM_MSTYPES,
     MST_NO_SPELLS = 250
 };
@@ -2811,6 +2828,7 @@ enum spell_type
     SPELL_FIRE_BREATH,
     SPELL_COLD_BREATH,
     SPELL_DRACONIAN_BREATH,
+    SPELL_WATER_ELEMENTALS,
 
     NUM_SPELLS
 };

@@ -24,6 +24,10 @@ Asmodeus
 
 One of the arch-demons who dwell in the depths of Hell.
 %%%%
+Azrael
+
+A powerful, belligerent Efreet. (Is there any other kind?)
+%%%%
 Balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.
@@ -86,6 +90,11 @@ Erolcha
 
 An especially cunning ogre mage.
 %%%%
+Eustachio
+
+An apprentice summoner with a flowing moustache.  He has funny ideas about
+honour.
+%%%%
 Executioner
 
 A horribly powerful demon.
@@ -141,6 +150,10 @@ Ijyb
 
 A small and twisted goblin, wearing some ugly blue rags.
 %%%%
+Ilsuiw
+
+A cunning merfolk water-witch, who uses her beauty and spellcraft to draw unwitting adventurers to their death.
+%%%%
 Jessica
 
 An evil apprentice sorceress.
@@ -193,6 +206,10 @@ Murray
 
 A demonic skull rolling along the dungeon floor.
 %%%%
+Nergalle
+
+A withered sorceress, exceptionally ugly even by orc standards.
+%%%%
 Norbert
 
 A skilled warrior.
@@ -214,15 +231,29 @@ Pit Fiend
 A huge winged fiend with incredibly tough skin.
 %%%%
 Polyphemus
+
+A cyclops shepherd, he is very protective of his charges.
+%%%%
+Prince Ribbit
+
+A handsome prince before he was cursed, now adventures for a cure.
 %%%%
 Psyche
 
-A fair-haired mage, wandering and seemingly half-mad 
-with grief and guilt.
+A fair-haired mage, wandering and seemingly half-mad with grief and guilt.
+%%%%
+Roxanne
+
+A beautiful sapphire statue of a famous earth mage who disappeared after a
+catastrophic spell failure.
 %%%%
 Rupert
 
 An evil crusader.
+%%%%
+Saint Roka
+
+A mighty warlord. Some orcs even say he is the Chosen One of Beogh.
 %%%%
 Serpent of Hell
 
@@ -250,6 +281,11 @@ Sigmund
 Snorg
 
 A hairy troll, angry and mean.
+%%%%
+Sonja
+
+A graceful kobold assassin.  Admire her graceful pirouettes, thrill at her
+daring leaps!  But watch out for her knives!
 %%%%
 Terence
 

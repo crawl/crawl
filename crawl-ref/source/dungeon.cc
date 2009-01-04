@@ -3222,8 +3222,8 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     return (true);
 }
 
-// Doesn't include Polyphemus (only appears in the Shoals), Murray (Hell),
-// or Tiamat (Zot).
+// Doesn't include Polyphemus or Ilsuiw (only appear in the Shoals),
+// Murray (Hell), or Tiamat (Zot).
 static monster_type _choose_unique_by_depth(int step)
 {
     int ret;
@@ -3239,29 +3239,32 @@ static monster_type _choose_unique_by_depth(int step)
         break;
     case 2: // depth <= 9
         ret = random_choose(MONS_BLORK_THE_ORC, MONS_EDMUND, MONS_PSYCHE,
-                            MONS_EROLCHA, -1);
+                            MONS_EROLCHA, MONS_PRINCE_RIBBIT, -1);
         break;
     case 3: // depth <= 13
         ret = random_choose(MONS_PSYCHE, MONS_EROLCHA, MONS_DONALD, MONS_URUG,
-                            MONS_MICHAEL, -1);
+                            MONS_MICHAEL, MONS_PRINCE_RIBBIT, -1);
         break;
     case 4: // depth <= 16
         ret = random_choose(MONS_URUG, MONS_MICHAEL, MONS_JOSEPH, MONS_SNORG,
                             MONS_ERICA, MONS_JOSEPHINE, MONS_HAROLD,
-                            MONS_NORBERT, MONS_JOZEF, -1);
+                            MONS_NORBERT, MONS_JOZEF, MONS_AZRAEL,
+                            MONS_EUSTACHIO, MONS_SONJA, -1);
         break;
     case 5: // depth <= 19
         ret = random_choose(MONS_SNORG, MONS_ERICA, MONS_JOSEPHINE,
                             MONS_HAROLD, MONS_NORBERT, MONS_JOZEF, MONS_AGNES,
                             MONS_MAUD, MONS_LOUISE, MONS_FRANCIS, MONS_FRANCES,
-                            -1);
+                            MONS_AZRAEL, MONS_EUSTACHIO, MONS_NERGALLE,
+                            MONS_SONJA, -1);
         break;
     case 6: // depth > 19
     default:
         ret = random_choose(MONS_LOUISE, MONS_FRANCIS, MONS_FRANCES,
                             MONS_RUPERT, MONS_WAYNE, MONS_DUANE, MONS_XTAHUA,
                             MONS_NORRIS, MONS_FREDERICK, MONS_MARGERY,
-                            MONS_BORIS, -1);
+                            MONS_BORIS, MONS_ROXANNE, MONS_NERGALLE,
+                            MONS_SAINT_ROKA, -1);
     }
 
     return static_cast<monster_type>(ret);
@@ -3281,16 +3284,22 @@ static monster_type _pick_unique(int lev)
 
     // If applicable, replace it with one of the uniques appearing
     // only in some branches.
-    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL) && one_chance_in(7))
-        which_unique = MONS_MURRAY;
-
-    if (player_in_branch(BRANCH_HALL_OF_ZOT) && one_chance_in(3))
-        which_unique = MONS_TIAMAT;
-
-    if (player_in_branch(BRANCH_SHOALS) && player_branch_depth() > 1
-        && coinflip())
+    if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
     {
-        which_unique = MONS_POLYPHEMUS;
+        if (one_chance_in(7))
+            which_unique = MONS_MURRAY;
+    }
+    else if (player_in_branch(BRANCH_HALL_OF_ZOT))
+    {
+        if (one_chance_in(3))
+            which_unique = MONS_TIAMAT;
+    }
+    else if (player_in_branch(BRANCH_SHOALS))
+    {
+        if (player_branch_depth() > 1 && coinflip())
+            which_unique = MONS_POLYPHEMUS;
+        else if (player_branch_depth() > 2 && coinflip())
+            which_unique = MONS_ILSUIW;
     }
 
     return static_cast<monster_type>(which_unique);
@@ -3349,6 +3358,7 @@ static int _place_uniques(int level_number, char level_type)
             ++num_placed;
         }
     }
+
     return num_placed;
 }
 

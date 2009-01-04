@@ -2904,6 +2904,19 @@
 },
 
 {
+    SPELL_WATER_ELEMENTALS, "Summon Water Elementals",
+     SPTYP_SUMMONING,
+     SPFLAG_NONE,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,
