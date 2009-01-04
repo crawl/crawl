@@ -4797,7 +4797,7 @@ bool monsters::eat_corpse(item_def &item, int near)
     if (!food_is_rotten(item))
         bleed_onto_floor(pos(), item.plus, max_chunks, true);
 
-    if (mons_skeleton(item.plus) && one_chance_in(4))
+    if (mons_skeleton(item.plus) && one_chance_in(3))
         turn_corpse_into_skeleton(item);
     else
         destroy_item(item.index());

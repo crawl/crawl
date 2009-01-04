@@ -471,7 +471,7 @@ void stop_delay( bool stop_stair_travel )
         mpr("All blood oozes out of the corpse!");
         bleed_onto_floor(you.pos(), corpse.plus, delay.duration, false);
 
-        if (mons_skeleton(corpse.plus) && one_chance_in(4))
+        if (mons_skeleton(corpse.plus) && one_chance_in(3))
             turn_corpse_into_skeleton(corpse);
         else
         {
@@ -1094,7 +1094,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
         vampire_nutrition_per_turn(corpse, 1);
 
-        if (mons_skeleton(corpse.plus) && one_chance_in(4))
+        if (mons_skeleton(corpse.plus) && one_chance_in(3))
             turn_corpse_into_skeleton(corpse);
         else
         {
@@ -1181,7 +1181,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
                 item_def &corpse = mitm[delay.parm1];
 
-                if (mons_skeleton(corpse.plus) && one_chance_in(4))
+                if (mons_skeleton(corpse.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_blood_potions(corpse);
                 else
                     turn_corpse_into_blood_potions(corpse);
@@ -1219,7 +1219,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
                 item_def &corpse = mitm[delay.parm1];
 
-                if (mons_skeleton(corpse.plus) && one_chance_in(4))
+                if (mons_skeleton(corpse.plus) && one_chance_in(3))
                     turn_corpse_into_skeleton_and_chunks(corpse);
                 else
                     turn_corpse_into_chunks(corpse);
