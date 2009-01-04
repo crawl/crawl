@@ -497,6 +497,18 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_DELETE:
         return CK_DELETE + offset;
 
+    case SDLK_NUMLOCK:
+    case SDLK_CAPSLOCK:
+    case SDLK_SCROLLOCK:
+    case SDLK_RMETA:
+    case SDLK_LMETA:
+    case SDLK_LSUPER:
+    case SDLK_RSUPER:
+    case SDLK_MODE:
+    case SDLK_COMPOSE:
+        // Don't handle these.
+        return 0;
+
     case SDLK_F1:
     case SDLK_F2:
     case SDLK_F3:
@@ -512,15 +524,6 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_F13:
     case SDLK_F14:
     case SDLK_F15:
-    case SDLK_NUMLOCK:
-    case SDLK_CAPSLOCK:
-    case SDLK_SCROLLOCK:
-    case SDLK_RMETA:
-    case SDLK_LMETA:
-    case SDLK_LSUPER:
-    case SDLK_RSUPER:
-    case SDLK_MODE:
-    case SDLK_COMPOSE:
     case SDLK_HELP:
     case SDLK_PRINT:
     case SDLK_SYSREQ:
