@@ -53,4 +53,22 @@
 #define VERSION_DETAIL BUILD_DATE
 #endif
 
+// Returns the largest SVN revision number that a source file has been updated
+// to.  This is not perfectly accurate, but should be good enough for save
+// files, as breaking a save almost always involves changing a source file.
+int svn_revision();
+
+class check_revision
+{
+public:
+    check_revision(int rev);
+    static int max_rev;
+};
+
+// This macro is meant to be used once per source file, e.g. "REVISION($Rev$);"
+// It can't be put in header files, as there's no way to generate a unique
+// object name across includes.  Blame the lack of cross-platform __COUNTER__.
+//#define REVISION(rev) static check_revision check_this_source_file_revision(rev)
+#define REVISION(rev)
+
 #endif
