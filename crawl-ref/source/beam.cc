@@ -207,7 +207,7 @@ bool zapping(zap_type ztype, int power, bolt &pbolt, bool needs_tracer,
     // For player bolts, check whether tracer goes through friendlies.
     // NOTE: Whenever zapping() is called with a randomized value for power
     // (or effect), player_tracer should be called directly with the highest
-    // power possible respecting current skill, experience level etc.
+    // power possible respecting current skill, experience level, etc.
 
     if (needs_tracer && pbolt.thrower == KILL_YOU_MISSILE
         && !player_tracer(ztype, power, pbolt))
