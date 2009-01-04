@@ -3222,18 +3222,65 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     return (true);
 }
 
+// Doesn't include Polyphemus (only appears in the Shoals), Murray (Hell),
+// or Tiamat (Zot).
+static monster_type _choose_unique_by_depth(int step)
+{
+    int ret;
+    switch (step)
+    {
+    case 0: // depth <= 3
+        ret = random_choose(MONS_TERENCE, MONS_JESSICA, MONS_IJYB,
+                            MONS_SIGMUND, -1);
+        break;
+    case 1: // depth <= 7
+        ret = random_choose(MONS_IJYB, MONS_SIGMUND, MONS_BLORK_THE_ORC,
+                            MONS_EDMUND, -1);
+        break;
+    case 2: // depth <= 9
+        ret = random_choose(MONS_BLORK_THE_ORC, MONS_EDMUND, MONS_PSYCHE,
+                            MONS_EROLCHA, -1);
+        break;
+    case 3: // depth <= 13
+        ret = random_choose(MONS_PSYCHE, MONS_EROLCHA, MONS_DONALD, MONS_URUG,
+                            MONS_MICHAEL, -1);
+        break;
+    case 4: // depth <= 16
+        ret = random_choose(MONS_URUG, MONS_MICHAEL, MONS_JOSEPH, MONS_SNORG,
+                            MONS_ERICA, MONS_JOSEPHINE, MONS_HAROLD,
+                            MONS_NORBERT, MONS_JOZEF, -1);
+        break;
+    case 5: // depth <= 19
+        ret = random_choose(MONS_SNORG, MONS_ERICA, MONS_JOSEPHINE,
+                            MONS_HAROLD, MONS_NORBERT, MONS_JOZEF, MONS_AGNES,
+                            MONS_MAUD, MONS_LOUISE, MONS_FRANCIS, MONS_FRANCES,
+                            -1);
+        break;
+    case 6: // depth > 19
+    default:
+        ret = random_choose(MONS_LOUISE, MONS_FRANCIS, MONS_FRANCES,
+                            MONS_RUPERT, MONS_WAYNE, MONS_DUANE, MONS_XTAHUA,
+                            MONS_NORRIS, MONS_FREDERICK, MONS_MARGERY,
+                            MONS_BORIS, -1);
+    }
+
+    return static_cast<monster_type>(ret);
+}
+
 static monster_type _pick_unique(int lev)
 {
-    // Doesn't include Polyphemus who only appears in the Shoals.
+    // First, pick generic unique depending on depth.
     int which_unique =
-        ((lev > 19) ? random_range(MONS_LOUISE, MONS_BORIS) :
-         (lev > 16) ? random_range(MONS_ERICA, MONS_FRANCES) :
-         (lev > 13) ? random_range(MONS_URUG, MONS_JOZEF) :
-         (lev >  9) ? random_range(MONS_PSYCHE, MONS_MICHAEL) :
-         (lev >  7) ? random_range(MONS_BLORK_THE_ORC, MONS_EROLCHA) :
-         (lev >  3) ? random_range(MONS_IJYB, MONS_EDMUND) :
-                      random_range(MONS_TERENCE, MONS_SIGMUND));
+        ((lev <=  3) ? _choose_unique_by_depth(0) :
+         (lev <=  7) ? _choose_unique_by_depth(1) :
+         (lev <=  9) ? _choose_unique_by_depth(2) :
+         (lev <= 13) ? _choose_unique_by_depth(3) :
+         (lev <= 16) ? _choose_unique_by_depth(4) :
+         (lev <= 19) ? _choose_unique_by_depth(5) :
+                       _choose_unique_by_depth(6));
 
+    // If applicable, replace it with one of the uniques appearing
+    // only in some branches.
     if (player_in_branch(BRANCH_VESTIBULE_OF_HELL) && one_chance_in(7))
         which_unique = MONS_MURRAY;
 
@@ -3281,8 +3328,8 @@ static int _place_uniques(int level_number, char level_type)
             which_unique = _pick_unique(level_number);
         }
 
-        // Usually, we'll have quit after a few tries. Make sure we don't
-        // create unique[-1] by accident.
+        // Usually, we'll have quit after a few tries. Make sure we have
+        // a valid unique.
         if (which_unique == MONS_PROGRAM_BUG)
             break;
 
