@@ -282,7 +282,7 @@ void init_monster_symbols()
 const mon_resist_def &get_mons_class_resists(int mc)
 {
     const monsterentry *me = get_monster_data(mc);
-    return (me? me->resists : get_monster_data(MONS_PROGRAM_BUG)->resists);
+    return (me ? me->resists : get_monster_data(MONS_PROGRAM_BUG)->resists);
 }
 
 mon_resist_def get_mons_resists(const monsters *mon)
