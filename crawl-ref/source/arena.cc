@@ -60,7 +60,7 @@ namespace arena
 
     FILE *file = NULL;
     int message_pos = 0;
-    level_id place;
+    level_id place(BRANCH_MAIN_DUNGEON, 20);
 
     void adjust_monsters()
     {
@@ -160,6 +160,13 @@ namespace arena
 
     void setup_level()
     {
+        if (place.is_valid())
+        {
+            you.level_type    = place.level_type;
+            you.where_are_you = place.branch;
+            you.your_level    = place.absdepth();
+        }
+
         dgn_reset_level();
 
         for (int x = 0; x < GXM; ++x)
@@ -372,15 +379,6 @@ namespace arena
 
         you.hp = you.hp_max = 99;
 
-        if (place.is_valid())
-        {
-            you.level_type    = place.level_type;
-            you.where_are_you = place.branch;
-            you.your_level    = place.absdepth();
-        }
-        else
-            you.your_level = 20;
-
         Options.show_gold_turns = false;
 
         show_fight_banner();
@@ -493,7 +491,7 @@ namespace arena
                 msg = "ERROR: " + msg;
             else if (chan == MSGCH_DIAGNOSTICS)
                 msg = "DIAG: " + msg;
-                
+
             fprintf(file, "%s\n", msg.c_str());
         }
     }
@@ -667,7 +665,7 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
 
 bool arena_veto_random_monster(monster_type type)
 {
-    if (!arena::allow_immobile && mons_class_is_stationary(type))   
+    if (!arena::allow_immobile && mons_class_is_stationary(type))
         return (true);
     if (!arena::allow_zero_xp && mons_class_flag(type, M_NO_EXP_GAIN))
         return (true);
