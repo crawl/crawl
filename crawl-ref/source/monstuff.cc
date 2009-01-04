@@ -4907,7 +4907,7 @@ static bool _siren_movement_effect(const monsters *monster)
         else
         {
             bool swapping = false;
-            monsters *mon;
+            monsters *mon = NULL;
             if (mgrd(newpos) != NON_MONSTER)
             {
                 mon = &menv[mgrd(newpos)];
