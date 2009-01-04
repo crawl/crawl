@@ -2720,7 +2720,7 @@ static monsterentry mondata[] = {
     { {AT_BITE, AF_PLAIN, 4}, {AT_CLAW, AF_PLAIN, 4}, {AT_CLAW, AF_PLAIN, 4},
        AT_NO_ATK },
     { 6, 3, 3, 0 },
-    2, 8, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_GROWL, I_ANIMAL,
+    2, 8, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_GROWL, I_ANIMAL,
     HT_LAND, 10, DEFAULT_ENERGY, MONUSE_NOTHING, SIZE_MEDIUM
 },
 
