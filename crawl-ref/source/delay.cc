@@ -1094,7 +1094,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
         vampire_nutrition_per_turn(corpse, 1);
 
-        if (mons_skeleton(corpse.plus) && !one_chance_in(4))
+        if (mons_skeleton(corpse.plus) && one_chance_in(4))
             turn_corpse_into_skeleton(corpse);
         else
         {
