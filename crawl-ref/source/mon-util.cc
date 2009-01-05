@@ -6455,7 +6455,10 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     }
     case ENCH_ABJ:
     case ENCH_SHORT_LIVED:
-        add_ench(mon_enchant(ENCH_ABJ));
+        // Set duration to -1 so that monster_die() and any of its
+        // callees can tell that the monster ran out of time or was
+        // abjured.
+        add_ench(mon_enchant(ENCH_ABJ, 0, KC_OTHER, -1));
 
         if (this->has_ench(ENCH_BERSERK))
             simple_monster_message(this, " is no longer berserk.");
@@ -7968,6 +7971,9 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     else if (foe->atype() == ACT_PLAYER)
     {
         foe_species = species_name(you.species, 1, true);
+
+        msg = replace_all(msg, " @to_foe@", "");
+        msg = replace_all(msg, " @at_foe@", "");
 
         msg = replace_all(msg, "@player_only@", "");
         msg = replace_all(msg, " @foe,@", ",");
