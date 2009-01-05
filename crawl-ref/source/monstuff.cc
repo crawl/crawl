@@ -1537,8 +1537,6 @@ void monster_die(monsters *monster, killer_type killer,
             // This must only be called by monsters running out of time (or
             // abjuration), because it uses the beam variables! Or does it???
             if (!wizard)
-                _monster_die_cloud(monster, false, silent, summoned,
-                                   summon_type);
 
             // KILL_RESET monsters no longer lose their whole inventory, only
             // items they were generated with.
@@ -1606,9 +1604,10 @@ void monster_die(monsters *monster, killer_type killer,
         }
     }
 
+    _monster_die_cloud(monster, !mons_reset, silent, summoned, summon_type);
+
     if (!mons_reset)
     {
-        _monster_die_cloud(monster, true, silent, summoned, summon_type);
         // Have to add case for disintegration effect here? {dlb}
         if (!summoned)
             _place_monster_corpse(monster, silent);
