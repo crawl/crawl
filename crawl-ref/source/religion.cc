@@ -1924,8 +1924,7 @@ static void _do_god_gift(bool prayed_for)
         case GOD_YREDELEMNUL:
             if (random2(you.piety) >= piety_breakpoint(2) && one_chance_in(4))
             {
-                // The maximum threshold occurs at 120 piety, or
-                // piety_breakpoint(5).
+                // The maximum threshold occurs at piety_breakpoint(5).
                 int threshold = (you.piety - piety_breakpoint(2)) * 20 / 9;
                 int how_many = _yred_random_servants(threshold);
 
