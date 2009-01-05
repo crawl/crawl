@@ -2318,6 +2318,7 @@ void god_speaks(god_type god, const char *mesg)
     fake_mon.hit_points = 1;
     fake_mon.god        = god;
     fake_mon.position   = you.pos();
+    fake_mon.foe        = MHITYOU;
     fake_mon.mname      = "FAKE GOD MONSTER";
 
     mpr(do_mon_str_replacements(mesg, &fake_mon).c_str(), MSGCH_GOD, god);

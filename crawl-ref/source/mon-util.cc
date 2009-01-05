@@ -7896,24 +7896,25 @@ void mon_enchant::set_duration(const monsters *mons, const mon_enchant *added)
         maxduration = duration;
 }
 
-// Replaces @player_god@ and @god_is@ with player's god name
+// Replaces @foe_god@ and @god_is@ with foe's god name
 // special handling for atheists: use "you"/"You" instead.
-static std::string _replace_god_name(bool need_verb = false,
+static std::string _replace_god_name(god_type god, bool need_verb = false,
                                      bool capital = false)
 {
     std::string result =
-          (you.religion == GOD_NO_GOD ? (capital ? "You" : "you")
-                                      : god_name(you.religion, false));
+          (god == GOD_NO_GOD ? (capital ? "You" : "you")
+                             : god_name(god, false));
     if (need_verb)
     {
         result +=
-          (you.religion == GOD_NO_GOD ? " are" : " is");
+          (god == GOD_NO_GOD ? " are" : " is");
     }
 
     return (result);
 }
 
-static std::string _get_species_insult(const std::string type)
+static std::string _get_species_insult(const std::string &species,
+                                       const std::string &type)
 {
     std::string lookup = "insult ";
     // Get species genus.
@@ -7953,6 +7954,78 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                                     const monsters* monster, int s_type)
 {
     std::string msg = in_msg;
+
+    const actor*    foe   = (!crawl_state.arena && mons_wont_attack(monster)
+                             && invalid_monster_index(monster->foe)) ?
+                            &you : monster->get_foe();
+    const monsters* m_foe = (foe && foe->atype() == ACT_MONSTER) ?
+                            dynamic_cast<const monsters*>(foe) : NULL;
+
+    std::string foe_species;
+
+    if (foe == NULL)
+        ;
+    else if (foe->atype() == ACT_PLAYER)
+    {
+        foe_species = species_name(you.species, 1, true);
+
+        msg = replace_all(msg, "@player_only@", "");
+        msg = replace_all(msg, " @foe,@", ",");
+
+        msg = replace_all(msg, "@player", "@foe");
+        msg = replace_all(msg, "@Player", "@Foe");
+
+        msg = replace_all(msg, "@foe@", "you");
+        msg = replace_all(msg, "@Foe@", "You");
+
+        msg = replace_all(msg, "@foe_name@", you.your_name);
+        msg = replace_all(msg, "@foe_species@", species_name(you.species, 1));
+        msg = replace_all(msg, "@foe_genus@", foe_species);
+        msg = replace_all(msg, "@foe_genus_plural@",
+                          _pluralise_player_genus());
+    }
+    else
+    {
+        std::string foe_name;
+        if (you.can_see(m_foe) || crawl_state.arena)
+        {
+            if (m_foe->attitude == ATT_FRIENDLY
+                && !mons_is_unique(m_foe->type)
+                && !crawl_state.arena)
+            {
+                foe_name = m_foe->name(DESC_NOCAP_YOUR);
+            }
+            else
+                foe_name = m_foe->name(DESC_NOCAP_THE);
+        }
+        else
+            foe_name = "something";
+
+        msg = replace_all(msg, " @to_foe@", " to @foe@");
+        msg = replace_all(msg, " @at_foe@", " at @foe@");
+        msg = replace_all(msg, "@foe,@",    "@foe@,");
+
+        msg = replace_all(msg, "@foe@", foe_name);
+        msg = replace_all(msg, "@Foe@", upcase_first(foe_name));
+
+        if (m_foe->is_named())
+            msg = replace_all(msg, "@foe_name@",
+                              m_foe->name(DESC_PLAIN, true));
+
+        std::string species = mons_type_name(mons_species(m_foe->type),
+                                             DESC_PLAIN);
+
+        msg = replace_all(msg, "@foe_species@", species);
+
+        std::string genus = mons_type_name(mons_genus(m_foe->type),
+                                           DESC_PLAIN);
+
+        msg = replace_all(msg, "@foe_genus@", genus);
+        msg = replace_all(msg, "@foe_genus_plural@", pluralise(genus));
+
+        foe_species = genus;
+    }
+
     description_level_type nocap = DESC_NOCAP_THE, cap = DESC_CAP_THE;
 
     if (monster->is_named() && player_monster_visible(monster))
@@ -8000,13 +8073,6 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@feature@", "buggy unseen feature");
     }
 
-    msg = replace_all(msg, "@player_name@", you.your_name);
-    msg = replace_all(msg, "@player_species@",
-                      species_name(you.species, 1).c_str());
-    msg = replace_all(msg, "@player_genus@",
-                      species_name(you.species, 1, true, false).c_str());
-    msg = replace_all(msg, "@player_genus_plural@",
-                      _pluralise_player_genus().c_str());
 
     if (player_monster_visible(monster))
     {
@@ -8093,13 +8159,21 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@feet@", part_str);
     msg = replace_all(msg, "@Feet@", upcase_first(part_str));
 
-    // Replace with "you are" for atheists.
-    msg = replace_all(msg, "@god_is@", _replace_god_name(true, false));
-    msg = replace_all(msg, "@God_is@", _replace_god_name(true, true));
+    if (foe != NULL)
+    {
+        const god_type god = foe->deity();
 
-    // No verb needed,
-    msg = replace_all(msg, "@player_god@", _replace_god_name(false, false));
-    msg = replace_all(msg, "@Player_god@", _replace_god_name(false, true));
+        // Replace with "you are" for atheists.
+        msg = replace_all(msg, "@god_is@",
+                          _replace_god_name(god, true, false));
+        msg = replace_all(msg, "@God_is@", _replace_god_name(god, true, true));
+
+        // No verb needed,
+        msg = replace_all(msg, "@foe_god@",
+                          _replace_god_name(god, false, false));
+        msg = replace_all(msg, "@foe_god@",
+                          _replace_god_name(god, false, true));
+    }
 
     // The monster's god, not the player's.
     if (monster->god == GOD_NO_GOD)
@@ -8108,14 +8182,14 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@God@", god_name(monster->god));
 
     // Replace with species specific insults.
-    if (msg.find("@species_insult_") != std::string::npos)
+    if (foe != NULL && msg.find("@species_insult_") != std::string::npos)
     {
         msg = replace_all(msg, "@species_insult_adj1@",
-                               _get_species_insult("adj1"));
+                               _get_species_insult(foe_species, "adj1"));
         msg = replace_all(msg, "@species_insult_adj2@",
-                               _get_species_insult("adj2"));
+                               _get_species_insult(foe_species, "adj2"));
         msg = replace_all(msg, "@species_insult_noun@",
-                               _get_species_insult("noun"));
+                               _get_species_insult(foe_species, "noun"));
     }
 
     static const char * sound_list[] =

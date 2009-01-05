@@ -513,6 +513,57 @@ end of wpnnoise.txt.
 The best way to learn about how variables and other concepts can be
 used is probably to see how it has been done for existing messages.
 
+Speaking to the player vs to another monster
+--------------------------------------------
+
+If a message contains a variable starting with "@player", then that message
+will only be used by friendly/good-neutral monsters, or by hostile/neutral
+monsters which have the player as their foe (and it will never be used in the
+arena).  Additionally, any message containing a line starting with "You" or
+ending in a bare "you." (but not a quoted "you.") will also be considered
+player centric.  You can also make a message player-centric by appending
+"@player_only@" to the end of any of the lines in the message, which will be
+removed before displaying it to the player.
+
+If you want a message to be able to apply to a foe which is another monster in
+*addition* to the player, you can replace "@player" with "@foe" to have the
+variable filled out with a string appropriate for the foe being either the
+player or another monster.  If "@foe_name@" is present then the message will
+only be used on monster foes which are named, and if "@foe_god@" or "@god_is@"
+is present then it will only be used on priestly monsters or god gift monsters.
+"@Foe@" or "@foe@" will be replaced with "You" or "you" if directed at the
+player, or if directed at another monster be the same as "@The_monster@" or
+"@the_monster@", but with the foe monster's name rather than the speaking
+monster's name
+
+If you want to indicate which monster a message is directed at, you can put in
+"@to_foe@" or "@at_foe@" to fill in the foe name when the message is directed
+at a monster; when directed at the player the variable will be removed.  For
+example, with the message:
+
+    @The_monster@ says @to_foe@, "Defend yourself!"
+
+If directed at an orc will expand to:
+
+    @The_monster@ says to the orc, "Defend yourself!"
+
+but if directed at the player will expand to:
+
+    @The_monster@ says, "Defend yourself!"
+
+You can do something similar with "@foe,@" for asking questions and the like.
+For example:
+
+    @The_monster@ asks @foe,@ "Who are you?"
+
+when directed at an orc will expand to:
+
+    @The_monster@ asks the orc, "Who are you?"
+
+and when directed at the player will expand to:
+
+    @The_monster@ asks, "Who are you?"
+
 Channels
 --------
 

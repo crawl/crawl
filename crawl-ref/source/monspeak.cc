@@ -45,12 +45,12 @@ REVISION("$Rev$");
 // Try the exact key lookup along with the entire prefix list.
 // If that fails, start ignoring hostile/religion/silence, in that order,
 // first skipping hostile, then hostile *and* religion, then all three.
-static std::string _try_exact_string(const std::vector<std::string> prefixes,
-                                     const std::string key,
-                                     bool ignore_hostile  = false,
-                                     bool ignore_related  = false,
-                                     bool ignore_religion = false,
-                                     bool ignore_silenced = false)
+static std::string __try_exact_string(const std::vector<std::string> &prefixes,
+                                      const std::string &key,
+                                      bool ignore_hostile  = false,
+                                      bool ignore_related  = false,
+                                      bool ignore_religion = false,
+                                      bool ignore_silenced = false)
 {
     bool hostile  = false;
     bool related  = false;
@@ -95,29 +95,117 @@ static std::string _try_exact_string(const std::vector<std::string> prefixes,
     if (msg.empty())
     {
         if (hostile) // skip hostile
-            msg = _try_exact_string(prefixes, key, true);
+            msg = __try_exact_string(prefixes, key, true);
         else if (related)
         {
             if (religion) // skip hostile and religion
-                msg = _try_exact_string(prefixes, key, true, false, true);
+                msg = __try_exact_string(prefixes, key, true, false, true);
             else // skip hostile and related
-                msg = _try_exact_string(prefixes, key, true, true);
+                msg = __try_exact_string(prefixes, key, true, true);
         }
         else if (religion) // skip hostile, related and religion
-            msg = _try_exact_string(prefixes, key, true, true, true);
+            msg = __try_exact_string(prefixes, key, true, true, true);
         // 50% use non-verbal monster speech,
         // 50% try for more general silenced monster message instead
         else if (silenced && coinflip()) // skip all
-            msg = _try_exact_string(prefixes, key, true, true, true, true);
+            msg = __try_exact_string(prefixes, key, true, true, true, true);
     }
     return msg;
 }
 
-static std::string _get_speak_string(const std::vector<std::string> prefixes,
-                                     const std::string key,
-                                     const monsters *monster)
+static bool _invalid_msg(const std::string &msg, bool no_player, bool no_foe,
+                         bool no_foe_name, bool no_god)
 {
-    std::string msg = _try_exact_string(prefixes, key);
+    if (no_player
+        && (msg.find("@player") != std::string::npos
+            || msg.find("@Player") != std::string::npos
+            || msg.find(":You") != std::string::npos))
+    {
+        return (true);
+    }
+
+    if (no_player)
+    {
+        std::vector<std::string> lines = split_string("\n", msg);
+        for (unsigned int i = 0; i < lines.size(); i++)
+        {
+            if (starts_with(lines[i], "You")
+                || ends_with(lines[i], "you."))
+            {
+                return (true);
+            }
+        }
+    }
+
+    if (no_foe && (msg.find("@foe") != std::string::npos
+                   || msg.find("@Foe") != std::string::npos
+                   || msg.find("foe@") != std::string::npos
+                   || msg.find("@species") != std::string::npos))
+    {
+        return (true);
+    }
+
+    if (no_god && (msg.find("_god@") != std::string::npos
+                   || msg.find("@god_") != std::string::npos))
+    {
+        return (true);
+    }
+
+    if (no_foe_name && msg.find("@foe_name@") != std::string::npos)
+        return (true);
+
+    return (false);
+}
+
+static std::string _try_exact_string(const std::vector<std::string> &prefixes,
+                                     const std::string &key,
+                                     bool no_player, bool no_foe,
+                                     bool no_foe_name, bool no_god,
+                                     bool ignore_hostile  = false,
+                                     bool ignore_related  = false,
+                                     bool ignore_religion = false,
+                                     bool ignore_silenced = false)
+{
+    std::string msg;
+    for (int tries = 0; tries < 10; tries++)
+    {
+        msg = 
+            __try_exact_string(prefixes, key, ignore_hostile, ignore_related,
+                               ignore_religion, ignore_silenced);
+
+        // If the first message was non-empty and discarded then discard
+        // all subsequent empty messages, so as to not replace an
+        // invalid non-empty message with an empty one.
+        if (msg.empty())
+        {
+            if (tries == 0)
+                return (msg);
+            else
+            {
+                tries--;
+                continue;
+            }
+        }
+
+        if (_invalid_msg(msg, no_player, no_foe, no_foe_name, no_god))
+        {
+            msg = "";
+            continue;
+        }
+        break;
+    }
+
+    return (msg);
+}
+
+static std::string __get_speak_string(const std::vector<std::string> &prefixes,
+                                      const std::string &key,
+                                      const monsters *monster,
+                                      bool no_player, bool no_foe,
+                                      bool no_foe_name, bool no_god)
+{
+    std::string msg = _try_exact_string(prefixes, key, no_player, no_foe,
+                                        no_foe_name, no_god);
 
     if (!msg.empty())
         return msg;
@@ -178,6 +266,45 @@ static std::string _get_speak_string(const std::vector<std::string> prefixes,
     return msg;
 }
 
+static std::string _get_speak_string(const std::vector<std::string> &prefixes,
+                                     const std::string &key,
+                                     const monsters *monster,
+                                     bool no_player, bool no_foe,
+                                     bool no_foe_name, bool no_god)
+{
+    std::string msg;
+    for (int tries = 0; tries < 10; tries++)
+    {
+        msg = 
+            __get_speak_string(prefixes, key, monster, no_player, no_foe,
+                               no_foe_name, no_god);
+
+        // If the first message was non-empty and discarded then discard
+        // all subsequent empty messages, so as to not replace an
+        // invalid non-empty message with an empty one.
+        if (msg.empty())
+        {
+            if (tries == 0)
+                return (msg);
+            else
+            {
+                tries--;
+                continue;
+            }
+        }
+
+        if (_invalid_msg(msg, no_player, no_foe, no_foe_name, no_god))
+        {
+            msg = "";
+            continue;
+        }
+
+        break;
+    }
+
+    return (msg);
+}
+
 // Player ghosts with different classes can potentially speak different
 // things.
 static std::string _player_ghost_speak_str(const monsters *monster,
@@ -204,7 +331,7 @@ static std::string _player_ghost_speak_str(const monsters *monster,
 }
 
 // If the monster was originally a unique which has been polymorphed into
-// a non-unique, is its current monter type capable of using it's old
+// a non-unique, is its current monter type capable of using its old
 // speech?
 static bool _polyd_can_speak(const monsters* monster)
 {
@@ -287,27 +414,48 @@ bool mons_speaks(const monsters *monster)
     if (monster->has_ench(ENCH_CONFUSION))
         prefixes.push_back("confused");
 
-    // animals only look at the current player form,
-    // smart monsters at the actual player genus
-    if (is_player_same_species(monster->type,
-                               mons_intel(monster) <= I_ANIMAL))
+    const actor*    foe   = (!crawl_state.arena && mons_wont_attack(monster)
+                             && invalid_monster_index(monster->foe)) ?
+                            &you : monster->get_foe();
+    const monsters* m_foe = (foe && foe->atype() == ACT_MONSTER) ?
+                            dynamic_cast<const monsters*>(foe) : NULL;
+
+    // animals only look at the current player form, smart monsters at the
+    // actual player genus
+    if (!foe || foe->atype() == ACT_PLAYER)
     {
-        prefixes.push_back("related"); // maybe overkill for Beogh?
+        if (is_player_same_species(monster->type,
+                                   mons_intel(monster) <= I_ANIMAL))
+        {
+            prefixes.push_back("related"); // maybe overkill for Beogh?
+        }
     }
+    else
+    {
+        if (mons_genus(monster->mons_species()) ==
+            mons_genus(foe->mons_species()))
+        {
+            prefixes.push_back("related");
+        }
+    }
+
+    const god_type god = foe               ? foe->deity() :
+                         crawl_state.arena ? GOD_NO_GOD :
+                                             you.religion;
 
     // Add Beogh to list of prefixes for orcs (hostile and friendly) if you
     // worship Beogh. (This assumes your being a Hill Orc, so might have odd
     // results in wizard mode.) Don't count charmed orcs.
-    if (you.religion == GOD_BEOGH && mons_genus(monster->type) == MONS_ORC
+    if (god == GOD_BEOGH && mons_genus(monster->type) == MONS_ORC
         && !monster->has_ench(ENCH_CHARM))
     {
         prefixes.push_back("beogh");
     }
     else
     {
-        if (is_good_god(you.religion))
+        if (is_good_god(god))
             prefixes.push_back("good god");
-        else if (is_evil_god(you.religion))
+        else if (is_evil_god(god))
             prefixes.push_back("evil god");
     }
 
@@ -325,6 +473,18 @@ bool mons_speaks(const monsters *monster)
 }
 #endif
 
+    const bool no_foe      = foe == NULL;
+    const bool no_player   = crawl_state.arena
+                             || (!mons_wont_attack(monster)
+                                 && (!foe || foe->atype() != ACT_PLAYER));
+    const bool mon_foe     = m_foe != NULL;
+    const bool no_god      = no_foe || (mon_foe && foe->deity() == GOD_NO_GOD);
+    const bool named_foe   = !no_foe
+        && (!mon_foe || (m_foe->is_named()
+                         && m_foe->type != MONS_ROYAL_JELLY));
+    const bool no_foe_name = !named_foe
+                          || (mon_foe && (m_foe->flags & MF_NAME_MASK));
+
     std::string msg;
 
     // First, try its exact name
@@ -337,17 +497,20 @@ bool mons_speaks(const monsters *monster)
     {
         // Pandemonium demons have randomly generated names,
         // so use "pandemonium lord" instead.
-        msg = _get_speak_string(prefixes, "pandemonium lord", monster);
+        msg = _get_speak_string(prefixes, "pandemonium lord", monster,
+                                no_player, no_foe, no_foe_name, no_god);
     }
     else
     {
         if (!monster->mname.empty() && _polyd_can_speak(monster))
             msg = _get_speak_string(prefixes, monster->name(DESC_PLAIN),
-                                    monster);
+                                    monster, no_player, no_foe, no_foe_name,
+                                    no_god);
 
         if (msg.empty())
             msg = _get_speak_string(prefixes, monster->base_name(DESC_PLAIN),
-                                    monster);
+                                    monster, no_player, no_foe, no_foe_name,
+                                    no_god);
     }
 
     // The exact name brought no results, try monster genus.
@@ -356,7 +519,7 @@ bool mons_speaks(const monsters *monster)
     {
         msg = _get_speak_string(prefixes,
                        mons_type_name(mons_genus(monster->type), DESC_PLAIN),
-                       monster);
+                       monster, no_player, no_foe, no_foe_name, no_god);
     }
 
     // __NONE means to be silent, and __NEXT means to try the next,
@@ -388,7 +551,8 @@ bool mons_speaks(const monsters *monster)
 
         key += mons_char(monster->type);
         key += "'";
-        msg = _get_speak_string(prefixes, key, monster);
+        msg = _get_speak_string(prefixes, key, monster, no_player, no_foe,
+                                no_foe_name, no_god);
     }
 
     if (msg == "__NONE")
@@ -441,7 +605,8 @@ bool mons_speaks(const monsters *monster)
     }
 
     if (msg.empty() || msg == "__NEXT")
-        msg = _get_speak_string(prefixes, get_mon_shape_str(shape), monster);
+        msg = _get_speak_string(prefixes, get_mon_shape_str(shape), monster,
+                                no_player, no_foe, no_foe_name, no_god);
 
     if (msg == "__NONE")
     {
@@ -462,18 +627,18 @@ bool mons_speaks(const monsters *monster)
         if (shape == MON_SHAPE_HUMANOID_WINGED_TAILED)
         {
             shape = MON_SHAPE_HUMANOID_TAILED;
-            msg = _get_speak_string(prefixes,
-                                    get_mon_shape_str(shape),
-                                    monster);
+            msg = _get_speak_string(prefixes, get_mon_shape_str(shape),
+                                    monster, no_player, no_foe, no_foe_name,
+                                    no_god);
 
             // Only be silent if both tailed and winged return __NONE
             if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
             {
                 shape = MON_SHAPE_HUMANOID_WINGED;
                 std::string msg2;
-                msg2 = _get_speak_string(prefixes,
-                                         get_mon_shape_str(shape),
-                                         monster);
+                msg2 = _get_speak_string(prefixes, get_mon_shape_str(shape),
+                                         monster, no_player, no_foe,
+                                         no_foe_name, no_god);
 
                 if (msg == "__NONE" && msg2 == "__NONE")
                 {
@@ -492,9 +657,9 @@ bool mons_speaks(const monsters *monster)
         if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
         {
             shape = MON_SHAPE_HUMANOID;
-            msg = _get_speak_string(prefixes,
-                                    get_mon_shape_str(shape),
-                                    monster);
+            msg = _get_speak_string(prefixes, get_mon_shape_str(shape),
+                                    monster, no_player, no_foe, no_foe_name,
+                                    no_god);
         }
     }
     if (msg.empty() || msg == "__NONE")
@@ -512,6 +677,16 @@ bool mons_speaks(const monsters *monster)
             << "__NEXT used by shape-based speech string for monster '"
             << monster->name(DESC_PLAIN) << "'" << std::endl;
         return (false);
+    }
+
+    if (foe == NULL)
+        msg = replace_all(msg, "__YOU_RESIST", "__NOTHING_HAPPENS");
+    else if (foe->atype() == ACT_MONSTER)
+    {
+        if (you.can_see(foe))
+            msg = replace_all(msg, "__YOU_RESIST", "@The_monster@ resists.");
+        else
+            msg = replace_all(msg, "__YOU_RESIST", "__NOTHING_HAPPENS");
     }
 
     mons_speaks_msg(monster, msg, MSGCH_TALK, silence);
