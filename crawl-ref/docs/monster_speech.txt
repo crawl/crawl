@@ -92,6 +92,11 @@ carefully constructed monster speech never gets printed, and this
 documentation also doesn't help you solve the problem, you might want
 to post a bug report on Dungeon Crawl's SourceForge site [1].
 
+The exception to the above is when the monster goes away due to dying, being
+banished, or a summoned monster being abjured or having it's time run out.  In
+that case the monster always speaks if the player can see the grid the monster
+is on (assuming that there's a speech entry defined for that occasion, of
+course).
 
 B.  A simple example
 ====================
@@ -386,13 +391,34 @@ and the only hardcoded keywords are "noisy weapon" for weapons with
 the noises property, and "singing sword" for (who'd have guessed?) the
 Singing Sword.
 
+Death speech
+------------
+You can define messages for the monster to give for when it goes away in three
+different manners:
+
+* If it really died, then the game will look up a speech entry with the
+  same keys as usual, but with " killed" appended to all the keys.
+
+* If it was banished, then the game will append " banished" to all the
+  lookup keys.
+
+* If the monster was summoned and rather than being killed was abjured or
+  ran out of time, then the game will append " unsummoned" to all of the
+  lookup keys.
+
+The game will always do a lookup in these circumstances if the player can see
+the square the monster is on, so if you only want a death message to be given
+occasionally then make one of the messages "__NONE" and give it a high weight.
+
+Of course, if no keys with the given suffix are in the database then the
+monster will say nothing in that circumstance.
+
 Special monster speech
 ----------------------
-Rarely, monster speech will also rely on hard-coded keys, such as
-Boris' "return_speech". If such a hard-coded key is changed or removed,
-the speech in question will simply not be printed. This may look odd in
-the game, but will have no other effect. Sometimes, default messages
-will be output instead.
+Rarely, monster speech will also rely on hard-coded keys.  If such a hard-coded
+key is changed or removed, the speech in question will simply not be printed.
+This may look odd in the game, but will have no other effect. Sometimes,
+default messages will be output instead.
 
 God speech
 ----------

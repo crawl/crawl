@@ -996,6 +996,11 @@ void monster_die(monsters *monster, killer_type killer,
     if (invalid_monster(monster))
         return;
 
+    // If a monster was banished to the abyss and then killed there,
+    // then it's death wasn't a banishment.
+    if (you.level_type == LEVEL_ABYSS)
+        monster->flags &= ~MF_BANISHED;
+
     if (!silent && _monster_avoided_death(monster, killer, killer_index))
         return;
 
@@ -1012,7 +1017,9 @@ void monster_die(monsters *monster, killer_type killer,
         remove_auto_exclude(monster);
 
           int summon_type    = 0;
-    const bool summoned      = mons_is_summoned(monster, NULL, &summon_type);
+          int duration       = 0;
+    const bool summoned      = mons_is_summoned(monster, &duration,
+                                                &summon_type);
     const int monster_killed = monster_index(monster);
     const bool hard_reset    = testbits(monster->flags, MF_HARD_RESET);
     const bool gives_xp      = !summoned
@@ -1574,17 +1581,18 @@ void monster_die(monsters *monster, killer_type killer,
             monster->foe = killer_index;
     }
 
-    if (monster->type == MONS_BORIS && monster->foe != MHITNOT && !in_transit)
+
+    if (!silent && !wizard && see_grid(monster->pos()))
+    {
+        // Make sure that the monster looks dead.
+        if (monster->alive() && !in_transit && (!summoned || duration > 0))
+            monster->hit_points = -1;
+        mons_speaks(monster);
+    }
+
+    if (monster->type == MONS_BORIS && !in_transit)
     {
         // XXX: Actual blood curse effect for Boris? -- bwr
-
-        // Provide the player with an ingame clue to Boris' return.  -- bwr
-        std::string msg = getSpeakString("Boris return_speech");
-        if (!msg.empty())
-        {
-            msg = do_mon_str_replacements(msg, monster);
-            mpr(msg.c_str(), MSGCH_TALK);
-        }
 
         // Now that Boris is dead, he's a valid target for monster
         // creation again. -- bwr

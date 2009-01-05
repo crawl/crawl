@@ -1245,7 +1245,7 @@ _Boris_rare_
 
 @The_monster@ says @to_foe@, "Join the legion of my servants."
 %%%%
-Boris return_speech
+Boris killed
 
 @_Boris_return_common_@
 
@@ -1260,9 +1260,9 @@ _Boris_return_common_
 
 @The_monster@ says @to_foe@, "This isn't over yet!"
 
-@The_monster@ says @to_foe@, "I'll be back!"
+@The_monster@ says, "I'll be back!"
 
-@The_monster@ says @to_foe@, "This isn't the end, it's only just beginning!"
+@The_monster@ says, "This isn't the end, it's only just beginning!"
 %%%%
 _Boris_return_rare_
 
@@ -1271,6 +1271,10 @@ _Boris_return_rare_
 @The_monster@ says @to_foe@, "You cannot defeat me so easily!"
 
 @The_monster@ says @to_foe@, "We will meet again!"
+%%%%
+Boris unsummoned
+
+@The_monster@ says, "You can't fire me, I quit!"
 ## END Boris ##
 %%%%
 # An adventurer hating competition

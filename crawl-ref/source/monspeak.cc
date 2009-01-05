@@ -267,11 +267,19 @@ static std::string __get_speak_string(const std::vector<std::string> &prefixes,
 }
 
 static std::string _get_speak_string(const std::vector<std::string> &prefixes,
-                                     const std::string &key,
+                                     std::string key,
                                      const monsters *monster,
                                      bool no_player, bool no_foe,
                                      bool no_foe_name, bool no_god)
 {
+    int duration = 1;
+    if (monster->hit_points <= 0)
+        key += " killed";
+    else if (monster->flags & MF_BANISHED)
+        key += " banished";
+    else if (monster->is_summoned(&duration) && duration <= 0)
+        key += " unsummoned";
+
     std::string msg;
     for (int tries = 0; tries < 10; tries++)
     {
@@ -354,44 +362,55 @@ static bool _polyd_can_speak(const monsters* monster)
 // Returns true if something is said.
 bool mons_speaks(const monsters *monster)
 {
-    // Invisible monster tries to remain unnoticed.  Unless they're
-    // confused, since then they're too confused to realize they
-    // should stay silent, but only if the player can see them, so as
-    // to not have to deal with cases of speaking monsters which the
-    // player can't see.
-    if (monster->invisible() && !(player_monster_visible(monster)
-                                  && monster->has_ench(ENCH_CONFUSION)))
-    {
-        return (false);
-    }
+    ASSERT(!invalid_monster_class(monster->type));
 
-    // Silenced monsters only "speak" 1/3 as often as non-silenced,
-    // unless they're normally silent (S_SILENT).  Use
-    // get_monster_data(monster->type) to bypass mon_shouts()
-    // replacing S_RANDOM with a random value.
-    if (silenced(monster->pos())
-        && get_monster_data(monster->type)->shouts != S_SILENT)
+    // Monsters always talk on death, even if invisible/silenced/etc
+    int duration = -1;
+    const bool force_speak = !monster->alive()
+        || !(monster->flags & MF_BANISHED)
+        || (monster->is_summoned(&duration) && duration <= 0);
+
+    if (!force_speak)
     {
-        if (!one_chance_in(3))
+       // Invisible monster tries to remain unnoticed.  Unless they're
+       // confused, since then they're too confused to realize they
+       // should stay silent, but only if the player can see them, so as
+       // to not have to deal with cases of speaking monsters which the
+       // player can't see.
+       if (monster->invisible() && !(player_monster_visible(monster)
+                                     && monster->has_ench(ENCH_CONFUSION)))
+       {
+           return (false);
+       }
+
+        // Silenced monsters only "speak" 1/3 as often as non-silenced,
+        // unless they're normally silent (S_SILENT).  Use
+        // get_monster_data(monster->type) to bypass mon_shouts()
+        // replacing S_RANDOM with a random value.
+        if (silenced(monster->pos())
+            && get_monster_data(monster->type)->shouts != S_SILENT)
+        {
+            if (!one_chance_in(3))
+                return (false);
+        }
+
+        // Berserk monsters just want your hide.
+        if (monster->has_ench(ENCH_BERSERK))
+            return (false);
+
+        // Monsters in a battle frenzy are likewise occupied.
+        if (monster->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))
+            return (false);
+
+        // Charmed monsters aren't too expressive.
+        if (monster->has_ench(ENCH_CHARM) && !one_chance_in(3))
             return (false);
     }
-
-    // Berserk monsters just want your hide.
-    if (monster->has_ench(ENCH_BERSERK))
-        return (false);
-
-    // Monsters in a battle frenzy are likewise occupied.
-    if (monster->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))
-        return (false);
-
-    // Charmed monsters aren't too expressive.
-    if (monster->has_ench(ENCH_CHARM) && !one_chance_in(3))
-        return (false);
 
     std::vector<std::string> prefixes;
     if (mons_neutral(monster))
     {
-        if (coinflip()) // Neutrals speak half as often.
+        if (!force_speak && coinflip()) // Neutrals speak half as often.
             return (false);
 
         prefixes.push_back("neutral");
