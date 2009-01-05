@@ -1054,8 +1054,6 @@ static void tag_construct_you(writer &th)
     revision += VERSION_DETAIL;
     marshallString(th, revision);
     marshallLong(th, svn_revision());
-
-    printf("REVSAVE: (%s), (%d)\n", revision.c_str(), svn_revision());
 }
 
 static void tag_construct_you_items(writer &th)
