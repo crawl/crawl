@@ -574,6 +574,9 @@ namespace arena
 
     void global_setup()
     {
+        // Set various options from the arena spec's tags
+        parse_monster_spec();
+
         if (file != NULL)
             end(0, false, "Results file already open");
         file = fopen("arena.result", "w");
@@ -599,8 +602,11 @@ namespace arena
             if (i == MONS_ROYAL_JELLY)
                 continue;
 
-            if (mons_is_unique(i))
+            if (mons_is_unique(i)
+                && !arena_veto_random_monster( (monster_type) i))
+            {
                 uniques_list.push_back(i);
+            }
         }
     }
 
@@ -691,7 +697,7 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
 
         const monster_type type = (monster_type) arena::cycle_random_pos;
 
-        if (!mons_is_unique(type))
+        if (mons_rarity(type, place) == 0)
             continue;
 
         if (arena_veto_random_monster(type))
