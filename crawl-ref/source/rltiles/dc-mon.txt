@@ -93,6 +93,11 @@ boring_beetle MONS_BORING_BEETLE /*'B'*/
 boulder_beetle MONS_BOULDER_BEETLE /*'B'*/
 
 ## Frogs
+%sdir dc-mon/unique
+%rim 0
+prince_ribbit MONS_PRINCE_RIBBIT
+%rim 1
+%sdir dc-mon/animals
 giant_frog MONS_GIANT_FROG /*'F'*/
 giant_brown_frog MONS_GIANT_BROWN_FROG /*'F'*/
 %rim 0

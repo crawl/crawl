@@ -915,6 +915,20 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_BORIS;
     case MONS_MURRAY:
         return TILEP_MONS_MURRAY;
+    case MONS_ROXANNE:
+        return TILEP_ORANGE_CRYSTAL_STATUE; // TODO enne
+    case MONS_SONJA:
+        return TILEP_MONS_KOBOLD; // TODO enne
+    case MONS_AZRAEL:
+        return TILEP_MONS_EFREET; // TODO enne
+    case MONS_ILSUIW:
+        return TILEP_MONS_MERMAID; // TODO enne
+    case MONS_PRINCE_RIBBIT:
+        return TILEP_MONS_PRINCE_RIBBIT;
+    case MONS_NERGALLE:
+        return TILEP_MONS_ORC_SORCERER; // TODO enne
+    case MONS_SAINT_ROKA:
+        return TILEP_MONS_ORC_PRIEST; // TODO enne
 
     // human uniques ('@')
     case MONS_TERENCE:
@@ -967,6 +981,8 @@ static int _tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_FREDERICK;
     case MONS_MARGERY:
         return TILEP_MONS_MARGERY;
+    case MONS_EUSTACHIO:
+        return TILEP_MONS_HUMAN; // TODO enne
 
     // unique major demons ('&')
     case MONS_MNOLEG:
