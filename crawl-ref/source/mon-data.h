@@ -4081,7 +4081,7 @@ static monsterentry mondata[] = {
 {
     // Roxanne obviously can't use items, but we want to equip her with
     // a spellbook, so MONUSE_STARTING_EQUIPMENT is necessary.
-    MONS_ROXANNE, '8', LIGHTGREEN, "Roxanne",
+    MONS_ROXANNE, '8', BLUE, "Roxanne",
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_STATIONARY | M_SPEAKS,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 2),
     0, 10, MONS_CLAY_GOLEM, MONS_ROXANNE, MH_NONLIVING, MAG_IMMUNE,

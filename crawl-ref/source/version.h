@@ -35,6 +35,9 @@
 #define VER_NUM  "0.5"
 #define VER_QUAL "-svn"
 
+// Undefine for official releases.
+#define BUILD_REVISION
+
 // last updated 07august2001 {mv}
 /* ***********************************************************************
  * called from: chardump - command - newgame
@@ -45,13 +48,7 @@
 /* ***********************************************************************
  * called from: command
  * *********************************************************************** */
-#define BUILD_DATE __DATE__
-
-#ifdef BUILD_REVISION
-#define VERSION_DETAIL "r" BUILD_REVISION "/" BUILD_DATE
-#else
-#define VERSION_DETAIL BUILD_DATE
-#endif
+#define VERSION_DETAIL __DATE__
 
 // Returns the largest SVN revision number that a source file has been updated
 // to.  This is not perfectly accurate, but should be good enough for save

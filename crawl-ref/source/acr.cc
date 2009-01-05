@@ -312,6 +312,9 @@ static void _show_commandline_options_help()
     puts("  -tscores [N]           terse highscore list");
     puts("  -vscores [N]           verbose highscore list");
     puts("  -scorefile <filename>  scorefile to report on");
+    puts("");
+    puts("Arena options: (Stage a tournament between various monsters.)");
+    puts("  -arena \"<monster list> v <monster list> arena:<arena map>\"");
 }
 
 static void _wanderer_startup_message()

@@ -99,7 +99,12 @@ static const char *features[] = {
 static std::string _get_version_information(void)
 {
     std::string result  = "This is <w>";
-                result += CRAWL " " VERSION "</w> (" VERSION_DETAIL ").";
+                result += CRAWL " " VERSION "</w> (";
+#ifdef BUILD_REVISION
+                result += "r" + number_to_string(svn_revision()) + ", ";
+#endif
+                result += VERSION_DETAIL ").";
+
     result += "\n\n";
 
     return (result);
