@@ -27,6 +27,8 @@ extern void world_reacts();
 
 namespace arena
 {
+    void write_error(const std::string &error);
+
     // A faction is just a big list of monsters. Monsters will be dropped
     // around the appropriate marker.
     struct faction
@@ -327,8 +329,21 @@ namespace arena
 
         place_a = dgn_find_feature_marker(DNGN_STONE_STAIRS_UP_I);
         place_b = dgn_find_feature_marker(DNGN_STONE_STAIRS_DOWN_I);
-        faction_a.place_at(place_a);
-        faction_b.place_at(place_b);
+
+        // Place the different factions in different orders on
+        // alternating rounds so that one side doesn't get the
+        // first-move advantage for all rounds.
+        if (trials_done & 1)
+        {
+            faction_a.place_at(place_a);
+            faction_b.place_at(place_b);
+        }
+        else
+        {
+            faction_b.place_at(place_b);
+            faction_a.place_at(place_a);
+        }
+
         adjust_monsters();
     }
 
@@ -575,7 +590,15 @@ namespace arena
     void global_setup()
     {
         // Set various options from the arena spec's tags
-        parse_monster_spec();
+        try
+        {
+            parse_monster_spec();
+        }
+        catch (const std::string &error)
+        {
+            write_error(error);
+            end(0, false, "%s", error.c_str());
+        }
 
         if (file != NULL)
             end(0, false, "Results file already open");
