@@ -929,6 +929,8 @@ int place_monster(mgen_data mg, bool force_pos)
     if (band_size > 1)
         menv[id].flags |= MF_BAND_MEMBER;
 
+    const bool priest = mons_class_flag(mon->type, M_PRIEST);
+
     mgen_data band_template = mg;
     // (5) For each band monster, loop call to place_monster_aux().
     for (int i = 1; i < band_size; i++)
@@ -939,7 +941,13 @@ int place_monster(mgen_data mg, bool force_pos)
         band_template.cls = band_monsters[i];
         const int band_id = _place_monster_aux(band_template, false);
         if (band_id != -1 && band_id != NON_MONSTER)
+        {
             menv[band_id].flags |= MF_BAND_MEMBER;
+            // Priestly band leaders should have an entourage of the
+            // same religion.
+            if (priest)
+                menv[band_id].god = mon->god;
+        }
     }
 
     // Placement of first monster, at least, was a success.
@@ -1042,6 +1050,12 @@ static int _place_monster_aux(const mgen_data &mg,
             ASSERT(false);
             break;
         }
+    }
+    // 6 out of 7 non-priestly orcs are believers.
+    else if (mons_genus(mg.cls) == MONS_ORC)
+    {
+        if (x_chance_in_y(6, 7))
+            menv[id].god = GOD_BEOGH;
     }
     // Angels and Daevas belong to TSO
     else if (mons_class_holiness(mg.cls) == MH_HOLY)

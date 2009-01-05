@@ -5662,6 +5662,10 @@ void beogh_convert_orc(monsters *orc, bool emergency,
     // become hostile later on, it won't count as a good kill.
     orc->flags |= MF_CREATED_FRIENDLY;
 
+    // Prevent assertion if the orc was previously worshipping a different
+    // god rather than already worhsipping Beogh or being an athiest.
+    orc->god = GOD_NO_GOD;
+
     mons_make_god_gift(orc, GOD_BEOGH);
 
     if (orc->is_patrolling())

@@ -1559,7 +1559,7 @@ VISUAL:@The_monster@ runs @possessive@ fingers through @possessive@ long green h
 %%%%
 _Ilsuiw_rare_
 
-VISUAL:@The_monster@ gazes at you @hypnot_or_seductively@.
+VISUAL:@The_monster@ gazes at @foe@ @hypnot_or_seductively@.
 
 @The_monster@ sings, "To sleep, to sleep ... mayhap to drown."
 
@@ -2313,10 +2313,10 @@ related beogh Saint Roka
 @related Saint Roka@
 
 w:20
-@_hostile_orc_beogh_believer_common_@
+@_hostile_orc_beogh_believer_speech_common_@
 
 w:5
-@_hostile_orc_beogh_believer_rare_@
+@_hostile_orc_beogh_believer_speech_rare_@
 
 w:1
 @The_monster@ shouts @at_foe@, "There can only be one messiah: ME!"
@@ -2968,8 +2968,22 @@ burn
 maim
 %%%%
 #######################################################
-# Heretic orcs, not believing in Beogh or doubting the
-# saviour story.
+# Heretic orcs, not believing in Beogh.
+#######################################################
+related unbeliever orc
+
+# hostile orcs shouldn't be too talkative
+w:60
+__NONE
+
+w:1
+@_generic_orc_speech_@
+
+w:5
+@_hostile_orc_beogh_unbeliever_speech_@
+%%%%
+#######################################################
+# Heretic orcs, doubting the saviour story.
 #######################################################
 related beogh orc
 
@@ -2981,22 +2995,29 @@ w:1
 @_generic_orc_speech_@
 
 w:5
-@_hostile_beogh_speech_@
+@_hostile_orc_beogh_believer_speech_@
 %%%%
-_hostile_beogh_speech_
+_hostile_orc_beogh_believer_speech_
 
-@_hostile_beogh_speech_common_@
+@_hostile_orc_beogh_believer_speech_common_@
 
 w:4
-@_hostile_beogh_speech_rare_@
+@_hostile_orc_beogh_believer_speech_rare_@
 %%%%
-_hostile_orc_beogh_unbeliever_common_
+_hostile_orc_beogh_unbeliever_speech_
+
+@_hostile_orc_beogh_unbeliever_speech_common_@
+
+w:4
+@_hostile_orc_beogh_unbeliever_speech_rare_@
+%%%%
+_hostile_orc_beogh_unbeliever_speech_common_
 
 @The_monster@ @orc_says_to_foe@, "I don't believe in Beogh!"
 
 @The_monster@ @shouts@ @at_foe@, "You're not the messiah, I am!"
 %%%%
-_hostile_orc_beogh_believer_common_
+_hostile_orc_beogh_believer_speech_common_
 
 @The_monster@ mutters @at_foe@, "You're NOT the saviour of the Orcs."
 
@@ -3022,7 +3043,7 @@ _hostile_orc_beogh_believer_common_
 
 VISUAL:@The_monster@ grimaces.
 %%%%
-_hostile_orc_beogh_unbeliever_rare_
+_hostile_orc_beogh_unbeliever_speech_rare_
 
 @The_monster@ @orc_says_to_foe@, "Orcs don't need Beogh!"
 
@@ -3030,7 +3051,7 @@ _hostile_orc_beogh_unbeliever_rare_
 
 @The_monster@ says @to_foe@, "Even if there were a messiah, it wouldn't be you."
 %%%%
-_hostile_orc_beogh_believer_rare_
+_hostile_orc_beogh_believer_speech_rare_
 
 @The_monster@ laughs @at_foe@, "You, our saviour!?"
 
@@ -3044,28 +3065,7 @@ _hostile_orc_beogh_believer_rare_
 
 VISUAL:@The_monster@ shakes @possessive@ head.
 
-VISUAL:@The_monster@ stares at you quizzically.
-%%%%
-_hostile_beogh_speech_common_
-
-# unbelievers
-w:1
-@_hostile_orc_beogh_unbeliever_common_@
-
-# orcs doubting you
-w:6
-@_hostile_orc_beogh_believer_common_@
-%%%%
-_hostile_beogh_speech_rare_
-
-# unbelievers
-w:3
-@_hostile_orc_beogh_unbeliever_rare_@
-
-# orcs doubting you
-w:7
-@_hostile_orc_beogh_believer_rare_@
-
+VISUAL:@The_monster@ stares at you quizzically. @player_only@
 ###################################################
 # Orcish followers of Beogh's messiah
 ###################################################
