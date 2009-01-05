@@ -1051,10 +1051,12 @@ static void _give_species_bonus_mp()
     }
 }
 
+#if DEBUG
 static bool _species_is_undead( const species_type speci )
 {
     return (speci == SP_MUMMY || speci == SP_GHOUL || speci == SP_VAMPIRE);
 }
+#endif
 
 undead_state_type get_undead_state(const species_type sp)
 {
