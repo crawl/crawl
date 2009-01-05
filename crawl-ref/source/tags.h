@@ -45,6 +45,8 @@ enum tag_major_version
 };
 
 // Minor version will be reset to zero when major version changes.
+// Tags are checked with >=, so a minor version of 11 would logically include
+// the dungeon Lua changes.
 enum tag_minor_version
 {
     TAG_MINOR_PIETY    =  2,     // Added piety_hysteresis
@@ -57,7 +59,9 @@ enum tag_minor_version
     TAG_MINOR_PATHFIND =  9,     // Added monster pathfinding.
     TAG_MINOR_TRTARGET = 10,     // Added travel target.
     TAG_MINOR_LUADGN   = 11,     // Allow dungeon Lua to persist data.
-    TAG_MINOR_VERSION            // Current version
+    // Bump version past 12.
+    TAG_MINOR_SVNREV   = 13,     // Added SVN revision
+    TAG_MINOR_VERSION  = 13      // Current version.  (Keep equal to max.)
 };
 
 

@@ -1032,17 +1032,30 @@ static void tag_construct_you(writer &th)
     for (unsigned int k = 0; k < you.mesmerised_by.size(); k++)
          marshallByte(th, you.mesmerised_by[k]);
 
-    // minorVersion 2 starts here
+    // minorVersion TAG_MINOR_PIETY starts here
     marshallByte(th, you.piety_hysteresis);
 
-    // minorVersion 3 starts here
+    // minorVersion TAG_MINOR_QUIVER starts here
     you.m_quiver->save(th);
 
-    // minorVersion 7 starts here
+    // minorVersion TAG_MINOR_FPICKUP starts here
     marshallByte(th, you.friendly_pickup);
 
+    // minorVersion TAG_MINOR_LUADGN starts here
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
+
+    // minorVersion TAG_MINOR_SVNREV starts here
+    // Write a human-readable string out on the off chance that
+    // we fail to be able to read this file back in using some later version.
+    std::string revision = "SVN:";
+    revision += number_to_string(svn_revision());
+    revision += ":";
+    revision += VERSION_DETAIL;
+    marshallString(th, revision);
+    marshallLong(th, svn_revision());
+
+    printf("REVSAVE: (%s), (%d)\n", revision.c_str(), svn_revision());
 }
 
 static void tag_construct_you_items(writer &th)
@@ -1458,6 +1471,15 @@ static void tag_read_you(reader &th, char minorVersion)
         if (!dlua.callfn("dgn_load_data", "u", &th))
             mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
                  dlua.error.c_str());
+    }
+
+    if (minorVersion >= TAG_MINOR_SVNREV)
+    {
+        std::string rev_str = unmarshallString(th);
+        int rev_int = unmarshallLong(th);
+
+        UNUSED(rev_str);
+        UNUSED(rev_int);
     }
 }
 
