@@ -42,6 +42,7 @@ REVISION("$Rev$");
 #include "spl-cast.h"
 #include "spl-mis.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "traps.h"
 #include "view.h"
@@ -467,7 +468,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         // spells (ie orc priest) can be toned down a bit. -- bwr
         //
         // XXX: Needs expansion, and perhaps different priest/mage flavours.
-        switch (random2(buff_only ? 4 : 7))
+        switch (random2((buff_only || crawl_state.arena) ? 4 : 7))
         {
         case 0:
             simple_monster_message(monster, " glows brightly for a moment.",
