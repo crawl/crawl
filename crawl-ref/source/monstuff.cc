@@ -1563,7 +1563,18 @@ void monster_die(monsters *monster, killer_type killer,
             break;
     }
 
-    if (monster->type == MONS_BORIS && !in_transit)
+    // Make sure Boris has a foe to address
+    if (monster->foe == MHITNOT)
+    {
+        // Hostile monsters outside of the arena always have you as a
+        // foe.
+        if (!mons_wont_attack(monster) && !crawl_state.arena)
+            monster->foe = MHITYOU;
+        else if (!invalid_monster_index(killer_index))
+            monster->foe = killer_index;
+    }
+
+    if (monster->type == MONS_BORIS && monster->foe != MHITNOT && !in_transit)
     {
         // XXX: Actual blood curse effect for Boris? -- bwr
 
