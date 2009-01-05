@@ -7964,6 +7964,9 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     const monsters* m_foe = (foe && foe->atype() == ACT_MONSTER) ?
                             dynamic_cast<const monsters*>(foe) : NULL;
 
+    if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
+        s_type = mons_shouts(monster->type);
+
     std::string foe_species;
 
     if (foe == NULL)
@@ -8006,6 +8009,11 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         }
         else
             foe_name = "something";
+
+        std::string prep = "at";
+        if (s_type == S_SILENT || s_type == S_SHOUT || s_type == S_NORMAL)
+            prep = "to";
+        msg = replace_all(msg, "@says@ @to_foe@", "@says@ " + prep + " @foe@");
 
         msg = replace_all(msg, " @to_foe@", " to @foe@");
         msg = replace_all(msg, " @at_foe@", " at @foe@");
@@ -8222,9 +8230,6 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "shouts",       // S_LOUD
         "screams"       // S_VERY_LOUD
     };
-
-    if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
-        s_type = mons_shouts(monster->type);
 
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
     {
